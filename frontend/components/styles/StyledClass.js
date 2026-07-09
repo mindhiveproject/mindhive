@@ -1133,10 +1133,10 @@ const StyledClass = styled.div`
 
       .summaryStatus {
         display: inline-flex;
-        align-items: center;
+        align-items: flex-start;
         flex-shrink: 0;
-        padding: 2px 10px;
-        border-radius: 100px;
+        padding: 6px 12px;
+        border-radius: 12px;
         background: #f0f4f6;
         color: #5f6871;
         font-size: 12px;
@@ -1234,6 +1234,39 @@ const StyledClass = styled.div`
     .classTabMatchingRoundForm {
       display: grid;
       gap: 18px;
+    }
+
+    .classTabMatchingRoundChipRow,
+    .classTabMatchingRoundAlgoChipRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .classTabMatchingRoundPanel {
+      display: grid;
+      gap: 18px;
+    }
+
+    .classTabMatchingRoundFooter {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px 16px;
+      padding-top: 8px;
+      margin-top: 4px;
+      border-top: 1px solid #ece9e6;
+
+      .matchingRoundUnsavedHint {
+        margin: 0;
+        margin-right: auto;
+        font-size: 13px;
+        line-height: 18px;
+        color: #8a6d3b;
+        font-weight: 500;
+      }
     }
 
     .classTabRoundSwitcher {

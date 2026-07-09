@@ -228,6 +228,14 @@
 	},
 	"introductionVideo": "Introduction Video",
 	"locationFilter": "Location",
+	"mentorPreferences": {
+		"classType": {
+			"title": "Class type"
+		},
+		"gradeLevel": {
+			"title": "Grade level"
+		}
+	},
 	"myOpportunitiesList": {
 		"capacity": "Capacity {{count}}",
 		"delete": "Delete",

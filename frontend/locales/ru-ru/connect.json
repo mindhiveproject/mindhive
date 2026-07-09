@@ -228,6 +228,14 @@
 	},
 	"introductionVideo": "Вводное видео",
 	"locationFilter": "Расположение",
+	"mentorPreferences": {
+		"classType": {
+			"title": ""
+		},
+		"gradeLevel": {
+			"title": ""
+		}
+	},
 	"myOpportunitiesList": {
 		"capacity": "",
 		"delete": "",

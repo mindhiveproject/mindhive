@@ -228,6 +228,14 @@
 	},
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
+	"mentorPreferences": {
+		"classType": {
+			"title": ""
+		},
+		"gradeLevel": {
+			"title": ""
+		}
+	},
 	"myOpportunitiesList": {
 		"capacity": "",
 		"delete": "",

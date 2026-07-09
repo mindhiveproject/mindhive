@@ -228,6 +228,14 @@
 	},
 	"introductionVideo": "فيديو المقدمة",
 	"locationFilter": "موقع",
+	"mentorPreferences": {
+		"classType": {
+			"title": ""
+		},
+		"gradeLevel": {
+			"title": ""
+		}
+	},
 	"myOpportunitiesList": {
 		"capacity": "",
 		"delete": "",

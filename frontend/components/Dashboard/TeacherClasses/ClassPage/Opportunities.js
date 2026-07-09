@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@apollo/client";
 import absoluteUrl from "next-absolute-url";
 import useTranslation from "next-translate/useTranslation";
@@ -55,6 +55,18 @@ export default function ClassOpportunities({ myclass }) {
 
   const [selectedNetworkId, setSelectedNetworkId] = useState(null);
   const [previewOpportunityId, setPreviewOpportunityId] = useState(null);
+  const navigationGuardRef = useRef(null);
+
+  const handleNetworkSelect = useCallback((networkId) => {
+    if (networkId === selectedNetworkId) return;
+    const guard = navigationGuardRef.current;
+    if (guard && !guard()) return;
+    setSelectedNetworkId(networkId);
+  }, [selectedNetworkId]);
+
+  const handleRegisterNavigationGuard = useCallback((guard) => {
+    navigationGuardRef.current = guard;
+  }, []);
 
   useEffect(() => {
     if (networks.length === 0) {
@@ -144,7 +156,7 @@ export default function ClassOpportunities({ myclass }) {
                   label={network.title}
                   shape="square"
                   selected={network.id === selectedNetworkId}
-                  onClick={() => setSelectedNetworkId(network.id)}
+                  onClick={() => handleNetworkSelect(network.id)}
                   leading={GLOBE_ICON}
                   ariaLabel={network.title}
                 />
@@ -180,6 +192,7 @@ export default function ClassOpportunities({ myclass }) {
             selectedNetworkId={selectedNetworkId}
             selectedNetwork={selectedNetwork}
             onPreviewOpportunity={setPreviewOpportunityId}
+            onRegisterNavigationGuard={handleRegisterNavigationGuard}
           />
 
           <section className="classTabSection">

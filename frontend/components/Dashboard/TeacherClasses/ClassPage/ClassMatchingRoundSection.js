@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../lib/useForm";
 import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
 import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import {
   GET_CONNECT_ROUND,
@@ -32,17 +33,104 @@ const ROUND_STATUS_KEYS = {
   archived: "archived",
 };
 
+function getRoundStatusParts(status, t) {
+  const key = ROUND_STATUS_KEYS[status];
+  if (!key) return { short: status, hint: "" };
+  return {
+    short: t(`opportunities.matchingRound.status.${key}`, {}, {
+      default: status,
+    }),
+    hint: t(`opportunities.matchingRound.status.${key}Hint`, {}, {
+      default: "",
+    }),
+  };
+}
+
+function RoundStatusLabel({ status, t, variant = "chip" }) {
+  const { short, hint } = getRoundStatusParts(status, t);
+  const isChip = variant === "chip";
+  return (
+    <span
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: isChip ? "1px" : "2px",
+        textAlign: "left",
+      }}
+    >
+      <span
+        style={{
+          fontWeight: 600,
+          fontSize: isChip ? "12px" : "14px",
+          lineHeight: isChip ? "16px" : "18px",
+          color: "#5f6871",
+        }}
+      >
+        {short}
+      </span>
+      {hint ? (
+        <span
+          style={{
+            fontWeight: 500,
+            fontSize: isChip ? "11px" : "12px",
+            lineHeight: isChip ? "14px" : "16px",
+            color: "#6a6a6a",
+          }}
+        >
+          {hint}
+        </span>
+      ) : null}
+    </span>
+  );
+}
+
 const ALGO_I18N_KEYS = {
   stable_matching: "stableMatching",
   score_based: "scoreBased",
   teacher_curated: "teacherCurated",
 };
 
+const PANELS = {
+  settings: "settings",
+  review: "review",
+  selected: "selected",
+  questions: "questions",
+};
+
+function buildSnapshot(inputs, opportunityIds, questionIds) {
+  return {
+    title: inputs.title || "",
+    description: inputs.description || "",
+    status: inputs.status || "preferences_open",
+    openAt: inputs.openAt || "",
+    closeAt: inputs.closeAt || "",
+    matchingAlgorithm: inputs.matchingAlgorithm || "stable_matching",
+    opportunities: [...opportunityIds].sort(),
+    questions: [...questionIds].sort(),
+  };
+}
+
+function snapshotsEqual(a, b) {
+  if (!a || !b) return a === b;
+  return (
+    a.title === b.title &&
+    a.description === b.description &&
+    a.status === b.status &&
+    a.openAt === b.openAt &&
+    a.closeAt === b.closeAt &&
+    a.matchingAlgorithm === b.matchingAlgorithm &&
+    JSON.stringify(a.opportunities) === JSON.stringify(b.opportunities) &&
+    JSON.stringify(a.questions) === JSON.stringify(b.questions)
+  );
+}
+
 export default function ClassMatchingRoundSection({
   myclass,
   selectedNetworkId,
   selectedNetwork,
   onPreviewOpportunity,
+  onRegisterNavigationGuard,
 }) {
   const { t } = useTranslation("classes");
   const [activeRoundId, setActiveRoundId] = useState(null);
@@ -51,6 +139,9 @@ export default function ClassMatchingRoundSection({
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [formInitialized, setFormInitialized] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [activePanel, setActivePanel] = useState(PANELS.settings);
+  const [snapshotRevision, setSnapshotRevision] = useState(0);
+  const savedSnapshotRef = useRef(null);
 
   const classNetworkIds = useMemo(
     () => new Set((myclass?.networks || []).map((n) => n.id)),
@@ -81,7 +172,7 @@ export default function ClassMatchingRoundSection({
 
   const isNew = !activeRoundId;
 
-  const { data: roundData, loading: loadingRound } = useQuery(
+  const { data: roundData } = useQuery(
     GET_CONNECT_ROUND,
     {
       variables: { id: activeRoundId },
@@ -94,9 +185,53 @@ export default function ClassMatchingRoundSection({
 
   const { inputs, handleChange, handleMultipleUpdate } = useForm(EMPTY_FORM);
 
+  const captureSnapshot = useCallback(
+    (nextInputs, nextOpportunities, nextQuestions) => {
+      savedSnapshotRef.current = buildSnapshot(
+        nextInputs,
+        nextOpportunities,
+        nextQuestions,
+      );
+      setSnapshotRevision((revision) => revision + 1);
+    },
+    [],
+  );
+
+  const isDirty = useMemo(() => {
+    if (!formInitialized || !savedSnapshotRef.current) return false;
+    const current = buildSnapshot(
+      inputs,
+      selectedOpportunities,
+      selectedQuestions,
+    );
+    return !snapshotsEqual(current, savedSnapshotRef.current);
+  }, [
+    formInitialized,
+    inputs,
+    selectedOpportunities,
+    selectedQuestions,
+    snapshotRevision,
+  ]);
+
+  const confirmIfDirty = useCallback(() => {
+    if (!isDirty) return true;
+    return window.confirm(
+      t("opportunities.matchingRound.unsavedChangesConfirm", {}, {
+        default: "You have unsaved changes. Leave without saving?",
+      }),
+    );
+  }, [isDirty, t]);
+
+  useEffect(() => {
+    if (!onRegisterNavigationGuard) return;
+    onRegisterNavigationGuard(confirmIfDirty);
+    return () => onRegisterNavigationGuard(null);
+  }, [confirmIfDirty, onRegisterNavigationGuard]);
+
   useEffect(() => {
     setExplicitNewRound(false);
     setExpanded(false);
+    setActivePanel(PANELS.settings);
   }, [selectedNetworkId]);
 
   useEffect(() => {
@@ -104,6 +239,7 @@ export default function ClassMatchingRoundSection({
       setActiveRoundId(null);
       setExplicitNewRound(false);
       setFormInitialized(false);
+      savedSnapshotRef.current = null;
       return;
     }
 
@@ -111,6 +247,7 @@ export default function ClassMatchingRoundSection({
       setActiveRoundId(null);
       setExplicitNewRound(false);
       setFormInitialized(false);
+      savedSnapshotRef.current = null;
       return;
     }
 
@@ -120,6 +257,7 @@ export default function ClassMatchingRoundSection({
     if (!activeRoundId || !stillValid) {
       setActiveRoundId(roundsForNetwork[0].id);
       setFormInitialized(false);
+      setActivePanel(PANELS.settings);
     }
   }, [
     selectedNetworkId,
@@ -132,28 +270,36 @@ export default function ClassMatchingRoundSection({
     if (!selectedNetworkId) return;
 
     if (isNew) {
-      handleMultipleUpdate(
-        buildSuggestedRoundDefaults(myclass?.title, selectedNetwork?.title),
+      const defaults = buildSuggestedRoundDefaults(
+        myclass?.title,
+        selectedNetwork?.title,
       );
+      handleMultipleUpdate(defaults);
       setSelectedOpportunities([]);
       setSelectedQuestions([]);
       setFormInitialized(true);
+      captureSnapshot(defaults, [], []);
       return;
     }
 
     if (!round || round.id !== activeRoundId) return;
 
-    handleMultipleUpdate({
+    const nextInputs = {
       title: round.title || "",
       description: round.description || "",
       status: round.status || "preferences_open",
       openAt: toDateInputValue(round.openAt),
       closeAt: toDateInputValue(round.closeAt),
       matchingAlgorithm: round.matchingAlgorithm || "stable_matching",
-    });
-    setSelectedOpportunities((round.opportunities || []).map((o) => o.id));
-    setSelectedQuestions((round.questions || []).map((q) => q.id));
+    };
+    const nextOpportunities = (round.opportunities || []).map((o) => o.id);
+    const nextQuestions = (round.questions || []).map((q) => q.id);
+
+    handleMultipleUpdate(nextInputs);
+    setSelectedOpportunities(nextOpportunities);
+    setSelectedQuestions(nextQuestions);
     setFormInitialized(true);
+    captureSnapshot(nextInputs, nextOpportunities, nextQuestions);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNew, round?.id, activeRoundId, selectedNetworkId, myclass?.title, selectedNetwork?.title]);
 
@@ -174,13 +320,19 @@ export default function ClassMatchingRoundSection({
   );
   const networkOpportunities = opportunitiesData?.opportunities || [];
 
+  const selectedNetworkOpportunities = useMemo(
+    () =>
+      networkOpportunities.filter((opportunity) =>
+        selectedOpportunities.includes(opportunity.id),
+      ),
+    [networkOpportunities, selectedOpportunities],
+  );
+
   const statusOptions = useMemo(
     () =>
-      Object.entries(ROUND_STATUS_KEYS).map(([value, key]) => ({
+      Object.entries(ROUND_STATUS_KEYS).map(([value]) => ({
         value,
-        label: t(`opportunities.matchingRound.status.${key}`, {}, {
-          default: value,
-        }),
+        label: <RoundStatusLabel status={value} t={t} variant="menu" />,
       })),
     [t],
   );
@@ -194,6 +346,41 @@ export default function ClassMatchingRoundSection({
         }),
       })),
     [t],
+  );
+
+  const panelOptions = useMemo(
+    () => [
+      {
+        id: PANELS.settings,
+        label: t("opportunities.matchingRound.panels.settings", {}, {
+          default: "Settings",
+        }),
+      },
+      {
+        id: PANELS.review,
+        label: t("opportunities.matchingRound.panels.reviewOpportunities", {}, {
+          default: "Review opportunities",
+        }),
+      },
+      {
+        id: PANELS.selected,
+        label:
+          selectedOpportunities.length > 0
+            ? `${t("opportunities.matchingRound.panels.selectedOpportunities", {}, {
+                default: "Selected opportunities",
+              })} (${selectedOpportunities.length})`
+            : t("opportunities.matchingRound.panels.selectedOpportunities", {}, {
+                default: "Selected opportunities",
+              }),
+      },
+      {
+        id: PANELS.questions,
+        label: t("opportunities.matchingRound.panels.questions", {}, {
+          default: "Round questions",
+        }),
+      },
+    ],
+    [selectedOpportunities.length, t],
   );
 
   const [createConnectRound, { loading: creating }] = useMutation(
@@ -224,11 +411,9 @@ export default function ClassMatchingRoundSection({
     );
   };
 
-  const roundStatusLabel = (status) => {
-    const key = ROUND_STATUS_KEYS[status];
-    if (!key) return status;
-    return t(`opportunities.matchingRound.status.${key}`, {}, { default: status });
-  };
+  const roundStatusLabel = (status) => (
+    <RoundStatusLabel status={status} t={t} variant="chip" />
+  );
 
   const algoHint = (algo) => {
     const key = ALGO_I18N_KEYS[algo];
@@ -238,6 +423,37 @@ export default function ClassMatchingRoundSection({
       {},
       { default: "" },
     );
+  };
+
+  const handleStatusChange = async (value) => {
+    const previousStatus = inputs.status;
+    const nextInputs = { ...inputs, status: value };
+    handleMultipleUpdate({ status: value });
+
+    if (isNew || !activeRoundId) return;
+
+    try {
+      await updateConnectRound({
+        variables: {
+          id: activeRoundId,
+          input: {
+            status: value || "preferences_open",
+            updatedAt: new Date().toISOString(),
+            publishedAt:
+              value === "published" && !round?.publishedAt
+                ? new Date().toISOString()
+                : undefined,
+          },
+        },
+      });
+      captureSnapshot(
+        nextInputs,
+        selectedOpportunities,
+        selectedQuestions,
+      );
+    } catch {
+      handleMultipleUpdate({ status: previousStatus });
+    }
   };
 
   const handleSave = async () => {
@@ -254,61 +470,90 @@ export default function ClassMatchingRoundSection({
     const opportunitiesConnect = selectedOpportunities.map((id) => ({ id }));
     const questionsConnect = selectedQuestions.map((id) => ({ id }));
 
-    if (isNew) {
-      const result = await createConnectRound({
-        variables: {
-          input: {
-            title: inputs.title,
-            description: inputs.description || "",
-            classNetwork: { connect: { id: selectedNetworkId } },
-            status: inputs.status || "preferences_open",
-            openAt: toIsoOrNull(inputs.openAt),
-            closeAt: toIsoOrNull(inputs.closeAt),
-            matchingAlgorithm: inputs.matchingAlgorithm || "stable_matching",
-            opportunities: opportunitiesConnect.length
-              ? { connect: opportunitiesConnect }
-              : undefined,
-            questions: questionsConnect.length
-              ? { connect: questionsConnect }
-              : undefined,
-          },
-        },
-      });
-      const newId = result?.data?.createConnectRound?.id;
-      if (newId) {
-        setExplicitNewRound(false);
-        setActiveRoundId(newId);
-        setFormInitialized(false);
-      }
-    } else {
-      await updateConnectRound({
-        variables: {
-          id: activeRoundId,
-          input: {
-            title: inputs.title,
-            description: inputs.description || "",
-            classNetwork: { connect: { id: selectedNetworkId } },
-            status: inputs.status || "preferences_open",
-            openAt: toIsoOrNull(inputs.openAt),
-            closeAt: toIsoOrNull(inputs.closeAt),
-            matchingAlgorithm: inputs.matchingAlgorithm || "stable_matching",
-            opportunities: { set: opportunitiesConnect },
-            questions: { set: questionsConnect },
-            updatedAt: new Date().toISOString(),
-            publishedAt:
-              inputs.status === "published" && !round?.publishedAt
-                ? new Date().toISOString()
+    try {
+      if (isNew) {
+        const result = await createConnectRound({
+          variables: {
+            input: {
+              title: inputs.title,
+              description: inputs.description || "",
+              classNetwork: { connect: { id: selectedNetworkId } },
+              status: inputs.status || "preferences_open",
+              openAt: toIsoOrNull(inputs.openAt),
+              closeAt: toIsoOrNull(inputs.closeAt),
+              matchingAlgorithm: inputs.matchingAlgorithm || "stable_matching",
+              opportunities: opportunitiesConnect.length
+                ? { connect: opportunitiesConnect }
                 : undefined,
+              questions: questionsConnect.length
+                ? { connect: questionsConnect }
+                : undefined,
+            },
           },
-        },
-      });
+        });
+        const newId = result?.data?.createConnectRound?.id;
+        if (newId) {
+          captureSnapshot(inputs, selectedOpportunities, selectedQuestions);
+          setExplicitNewRound(false);
+          setActiveRoundId(newId);
+          setActivePanel(PANELS.settings);
+        }
+      } else {
+        await updateConnectRound({
+          variables: {
+            id: activeRoundId,
+            input: {
+              title: inputs.title,
+              description: inputs.description || "",
+              classNetwork: { connect: { id: selectedNetworkId } },
+              status: inputs.status || "preferences_open",
+              openAt: toIsoOrNull(inputs.openAt),
+              closeAt: toIsoOrNull(inputs.closeAt),
+              matchingAlgorithm: inputs.matchingAlgorithm || "stable_matching",
+              opportunities: { set: opportunitiesConnect },
+              questions: { set: questionsConnect },
+              updatedAt: new Date().toISOString(),
+              publishedAt:
+                inputs.status === "published" && !round?.publishedAt
+                  ? new Date().toISOString()
+                  : undefined,
+            },
+          },
+        });
+        captureSnapshot(inputs, selectedOpportunities, selectedQuestions);
+      }
+    } catch (error) {
+      console.error("Failed to save matching round", error);
+      alert(
+        t("opportunities.matchingRound.saveFailed", {}, {
+          default: "Could not save the matching round. Please try again.",
+        }),
+      );
     }
   };
 
-  const handleStartNewRound = () => {
+  const beginNewRound = () => {
     setExplicitNewRound(true);
     setActiveRoundId(null);
     setFormInitialized(false);
+    setActivePanel(PANELS.settings);
+  };
+
+  const handleStartNewRound = () => {
+    if (!confirmIfDirty()) return;
+    beginNewRound();
+  };
+
+  const handleRoundSwitcherChange = (value) => {
+    if (!confirmIfDirty()) return;
+    if (value === "new") {
+      beginNewRound();
+      return;
+    }
+    setExplicitNewRound(false);
+    setActiveRoundId(value);
+    setFormInitialized(false);
+    setActivePanel(PANELS.settings);
   };
 
   const handleOpenCreate = () => {
@@ -316,14 +561,16 @@ export default function ClassMatchingRoundSection({
       setExplicitNewRound(false);
       setActiveRoundId(null);
       setFormInitialized(false);
+    } else if (!confirmIfDirty()) {
+      return;
     } else {
-      handleStartNewRound();
+      beginNewRound();
     }
     setExpanded(true);
+    setActivePanel(PANELS.settings);
   };
 
-  const loading =
-    loadingRounds || (!isNew && loadingRound && !round) || !formInitialized;
+  const loading = loadingRounds || !formInitialized;
 
   const activeRoundSummary = roundsForNetwork.find((r) => r.id === activeRoundId);
   const hasRoundForNetwork = roundsForNetwork.length > 0 && !isNew;
@@ -372,21 +619,236 @@ export default function ClassMatchingRoundSection({
 
   const handleToggleExpand = () => {
     if (!canToggleExpand) return;
+    if (expanded && !confirmIfDirty()) return;
     setExpanded((prev) => !prev);
   };
 
   const statusChipTriggerStyle = {
-    borderRadius: "100px",
+    borderRadius: "12px",
     border: "none",
-    padding: "2px 10px",
+    padding: "6px 12px",
     height: "auto",
     minHeight: "24px",
     fontSize: "12px",
     fontWeight: 600,
     lineHeight: "18px",
+    alignItems: "flex-start",
     background: noRoundForNetwork ? "#f5f0e8" : "#f0f4f6",
     color: noRoundForNetwork ? "#8a6d3b" : "#5f6871",
   };
+
+  const renderQuestionsPanel = () => (
+    <div className="classTabMatchingRoundPanel">
+      <p className="subsectionHint">
+        {t("opportunities.matchingRound.fields.questionsHint", {}, {
+          default:
+            "Students answer these once when participating. Pick from approved library questions.",
+        })}
+      </p>
+      {libraryQuestions.length === 0 ? (
+        <p className="classTabEmptyInline">
+          {t("opportunities.matchingRound.noLibraryQuestions", {}, {
+            default:
+              "No approved library questions yet. Add some in the Question library.",
+          })}
+        </p>
+      ) : (
+        <div className="classTabCheckboxList">
+          {libraryQuestions.map((question) => {
+            const checked = selectedQuestions.includes(question.id);
+            return (
+              <label
+                key={question.id}
+                className={`classTabCheckboxRow${checked ? " selected" : ""}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => toggleQuestion(question.id)}
+                />
+                <div className="checkboxBody">
+                  <div className="checkboxTitle">{question.prompt}</div>
+                  <p className="checkboxMeta">
+                    {question.questionType}
+                    {question.isRequired ? " · required" : ""}
+                    {typeof question.weight === "number"
+                      ? ` · weight ${question.weight}`
+                      : ""}
+                  </p>
+                </div>
+              </label>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+
+  const renderReviewPanel = () => (
+    <div className="classTabMatchingRoundPanel">
+      <p className="subsectionHint">
+        {t("opportunities.matchingRound.fields.opportunitiesHint", {}, {
+          default:
+            "Select which published opportunities students can rank in this round.",
+        })}
+      </p>
+      {networkOpportunities.length === 0 ? (
+        <p className="classTabEmptyInline">
+          {t("opportunities.matchingRound.noOpportunitiesInNetwork", {}, {
+            default:
+              "No opportunities have been added to this class network yet.",
+          })}
+        </p>
+      ) : (
+        <MatchingRoundOpportunitiesGrid
+          opportunities={networkOpportunities}
+          selectedIds={selectedOpportunities}
+          onSelectionChange={handleOpportunitySelectionChange}
+          onPreview={onPreviewOpportunity}
+        />
+      )}
+    </div>
+  );
+
+  const renderSelectedPanel = () => (
+    <div className="classTabMatchingRoundPanel">
+      <MatchingRoundOpportunitiesGrid
+        opportunities={selectedNetworkOpportunities}
+        selectedIds={selectedOpportunities}
+        selectionMode="readOnly"
+        onPreview={onPreviewOpportunity}
+        emptyMessage={t("opportunities.matchingRound.selectedOpportunitiesEmpty", {}, {
+          default:
+            "No opportunities selected yet. Use Review opportunities to add some.",
+        })}
+      />
+    </div>
+  );
+
+  const renderSettingsPanel = () => (
+    <div className="classTabMatchingRoundPanel">
+      {roundsForNetwork.length > 1 && (
+        <div className="classTabRoundSwitcher">
+          <label className="classTabFormField">
+            <span className="fieldLabel">
+              {t("opportunities.matchingRound.roundSwitcherLabel", {}, {
+                default: "Matching round",
+              })}
+            </span>
+            <select
+              value={activeRoundId || "new"}
+              onChange={(e) => handleRoundSwitcherChange(e.target.value)}
+            >
+              {roundsForNetwork.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.title}
+                </option>
+              ))}
+              <option value="new">
+                {t("opportunities.matchingRound.newRound", {}, {
+                  default: "New round",
+                })}
+              </option>
+            </select>
+          </label>
+        </div>
+      )}
+
+      <label className="classTabFormField">
+        <span className="fieldLabel">
+          {t("opportunities.matchingRound.fields.title", {}, {
+            default: "Title",
+          })}
+        </span>
+        <input
+          type="text"
+          name="title"
+          value={inputs.title}
+          onChange={handleChange}
+        />
+      </label>
+
+      <label className="classTabFormField">
+        <span className="fieldLabel">
+          {t("opportunities.matchingRound.fields.description", {}, {
+            default: "Description",
+          })}
+        </span>
+        <textarea
+          name="description"
+          value={inputs.description}
+          onChange={handleChange}
+          rows={3}
+        />
+      </label>
+
+      <div className="classTabFormGrid classTabFormGridTwo">
+        <label className="classTabFormField">
+          <span className="fieldLabel">
+            {t("opportunities.matchingRound.fields.openAt", {}, {
+              default: "Preferences open from",
+            })}
+          </span>
+          <input
+            type="date"
+            name="openAt"
+            value={inputs.openAt}
+            onChange={handleChange}
+          />
+        </label>
+        <label className="classTabFormField">
+          <span className="fieldLabel">
+            {t("opportunities.matchingRound.fields.closeAt", {}, {
+              default: "Preferences close on",
+            })}
+          </span>
+          <input
+            type="date"
+            name="closeAt"
+            value={inputs.closeAt}
+            onChange={handleChange}
+          />
+        </label>
+      </div>
+
+      <div className="classTabFormField">
+        <span className="fieldLabel">
+          {t("opportunities.matchingRound.fields.algorithm", {}, {
+            default: "Matching algorithm",
+          })}
+        </span>
+        <span className="fieldHint">
+          {t("opportunities.matchingRound.algorithmHint", {}, {
+            default:
+              "The algorithm runs when you click Run matching on the matches dashboard — not when you save here.",
+          })}
+        </span>
+        <div
+          className="classTabMatchingRoundAlgoChipRow"
+          role="radiogroup"
+          aria-label={t("opportunities.matchingRound.fields.algorithm", {}, {
+            default: "Matching algorithm",
+          })}
+        >
+          {algorithmOptions.map((option) => (
+            <Chip
+              key={option.value}
+              label={option.label}
+              shape="square"
+              selected={inputs.matchingAlgorithm === option.value}
+              onClick={() =>
+                handleMultipleUpdate({ matchingAlgorithm: option.value })
+              }
+              ariaLabel={option.label}
+            />
+          ))}
+        </div>
+        {algoHint(inputs.matchingAlgorithm) ? (
+          <p className="fieldAlgoHint">{algoHint(inputs.matchingAlgorithm)}</p>
+        ) : null}
+      </div>
+    </div>
+  );
 
   return (
     <section className="classTabSection classTabExpandableCard">
@@ -453,7 +915,8 @@ export default function ClassMatchingRoundSection({
               fitContent
               value={inputs.status}
               options={statusOptions}
-              onChange={(value) => handleMultipleUpdate({ status: value })}
+              onChange={handleStatusChange}
+              disabled={updating}
               ariaLabel={t("opportunities.matchingRound.fields.status", {}, {
                 default: "Status",
               })}
@@ -491,238 +954,71 @@ export default function ClassMatchingRoundSection({
                 "Set up a matching round for your class. Students rank opportunities and the algorithm assigns matches when you run it.",
             })}
           </p>
+
+          <div
+            className="classTabMatchingRoundChipRow"
+            role="tablist"
+            aria-label={t("opportunities.matchingRound.title", {}, {
+              default: "Matching round",
+            })}
+          >
+            {panelOptions.map((panel) => (
+              <Chip
+                key={panel.id}
+                label={panel.label}
+                shape="square"
+                selected={activePanel === panel.id}
+                onClick={() => setActivePanel(panel.id)}
+                ariaLabel={panel.label}
+              />
+            ))}
+          </div>
+
           <div className="classTabMatchingRoundForm">
-          {roundsForNetwork.length > 1 && (
-            <div className="classTabRoundSwitcher">
-              <label className="classTabFormField">
-                <span className="fieldLabel">
-                  {t("opportunities.matchingRound.roundSwitcherLabel", {}, {
-                    default: "Matching round",
+            {activePanel === PANELS.settings && renderSettingsPanel()}
+            {activePanel === PANELS.review && renderReviewPanel()}
+            {activePanel === PANELS.selected && renderSelectedPanel()}
+            {activePanel === PANELS.questions && renderQuestionsPanel()}
+
+            <div className="classTabMatchingRoundFooter">
+              {isDirty ? (
+                <p className="matchingRoundUnsavedHint">
+                  {t("opportunities.matchingRound.unsavedChanges", {}, {
+                    default: "Unsaved changes",
                   })}
-                </span>
-                <select
-                  value={activeRoundId || "new"}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "new") {
-                      handleStartNewRound();
-                    } else {
-                      setExplicitNewRound(false);
-                      setActiveRoundId(value);
-                      setFormInitialized(false);
-                    }
+                </p>
+              ) : null}
+              {!isNew && (
+                <Link
+                  href={{
+                    pathname: "/dashboard/connect/matches",
+                    query: { round: activeRoundId },
                   }}
+                  className="classTabSecondaryLink"
                 >
-                  {roundsForNetwork.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.title}
-                    </option>
-                  ))}
-                  <option value="new">
-                    {t("opportunities.matchingRound.newRound", {}, {
-                      default: "New round",
-                    })}
-                  </option>
-                </select>
-              </label>
-            </div>
-          )}
-
-          <label className="classTabFormField">
-            <span className="fieldLabel">
-              {t("opportunities.matchingRound.fields.title", {}, {
-                default: "Title",
-              })}
-            </span>
-            <input
-              type="text"
-              name="title"
-              value={inputs.title}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label className="classTabFormField">
-            <span className="fieldLabel">
-              {t("opportunities.matchingRound.fields.description", {}, {
-                default: "Description",
-              })}
-            </span>
-            <textarea
-              name="description"
-              value={inputs.description}
-              onChange={handleChange}
-              rows={3}
-            />
-          </label>
-
-          <div className="classTabFormGrid classTabFormGridTwo">
-            <label className="classTabFormField">
-              <span className="fieldLabel">
-                {t("opportunities.matchingRound.fields.openAt", {}, {
-                  default: "Preferences open from",
-                })}
-              </span>
-              <input
-                type="date"
-                name="openAt"
-                value={inputs.openAt}
-                onChange={handleChange}
-              />
-            </label>
-            <label className="classTabFormField">
-              <span className="fieldLabel">
-                {t("opportunities.matchingRound.fields.closeAt", {}, {
-                  default: "Preferences close on",
-                })}
-              </span>
-              <input
-                type="date"
-                name="closeAt"
-                value={inputs.closeAt}
-                onChange={handleChange}
-              />
-            </label>
-          </div>
-
-          <label className="classTabFormField">
-            <span className="fieldLabel">
-              {t("opportunities.matchingRound.fields.algorithm", {}, {
-                default: "Matching algorithm",
-              })}
-            </span>
-            <span className="fieldHint">
-              {t("opportunities.matchingRound.algorithmHint", {}, {
-                default:
-                  "The algorithm runs when you click Run matching on the matches dashboard — not when you save here.",
-              })}
-            </span>
-            <DropdownSelect
-              value={inputs.matchingAlgorithm}
-              options={algorithmOptions}
-              onChange={(value) =>
-                handleMultipleUpdate({ matchingAlgorithm: value })
-              }
-              ariaLabel={t("opportunities.matchingRound.fields.algorithm", {}, {
-                default: "Matching algorithm",
-              })}
-            />
-            {algoHint(inputs.matchingAlgorithm) ? (
-              <p className="fieldAlgoHint">{algoHint(inputs.matchingAlgorithm)}</p>
-            ) : null}
-          </label>
-
-          <div className="classTabFormSubsection">
-            <h4>
-              {t("opportunities.matchingRound.fields.opportunities", {}, {
-                default: "Opportunities in this round",
-              })}
-            </h4>
-            <p className="subsectionHint">
-              {t("opportunities.matchingRound.fields.opportunitiesHint", {}, {
-                default:
-                  "Select which published opportunities students can rank in this round.",
-              })}
-            </p>
-            {networkOpportunities.length === 0 ? (
-              <p className="classTabEmptyInline">
-                {t("opportunities.matchingRound.noOpportunitiesInNetwork", {}, {
-                  default:
-                    "No opportunities have been added to this class network yet.",
-                })}
-              </p>
-            ) : (
-              <MatchingRoundOpportunitiesGrid
-                opportunities={networkOpportunities}
-                selectedIds={selectedOpportunities}
-                onSelectionChange={handleOpportunitySelectionChange}
-                onPreview={onPreviewOpportunity}
-              />
-            )}
-          </div>
-
-          <div className="classTabFormSubsection">
-            <h4>
-              {t("opportunities.matchingRound.fields.questions", {}, {
-                default: "Round questions",
-              })}
-            </h4>
-            <p className="subsectionHint">
-              {t("opportunities.matchingRound.fields.questionsHint", {}, {
-                default:
-                  "Students answer these once when participating. Pick from approved library questions.",
-              })}
-            </p>
-            {libraryQuestions.length === 0 ? (
-              <p className="classTabEmptyInline">
-                {t("opportunities.matchingRound.noLibraryQuestions", {}, {
-                  default:
-                    "No approved library questions yet. Add some in the Question library.",
-                })}
-              </p>
-            ) : (
-              <div className="classTabCheckboxList">
-                {libraryQuestions.map((question) => {
-                  const checked = selectedQuestions.includes(question.id);
-                  return (
-                    <label
-                      key={question.id}
-                      className={`classTabCheckboxRow${checked ? " selected" : ""}`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleQuestion(question.id)}
-                      />
-                      <div className="checkboxBody">
-                        <div className="checkboxTitle">{question.prompt}</div>
-                        <p className="checkboxMeta">
-                          {question.questionType}
-                          {question.isRequired ? " · required" : ""}
-                          {typeof question.weight === "number"
-                            ? ` · weight ${question.weight}`
-                            : ""}
-                        </p>
-                      </div>
-                    </label>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          <div className="classTabFormActions">
-            {!isNew && (
-              <Link
-                href={{
-                  pathname: "/dashboard/connect/matches",
-                  query: { round: activeRoundId },
-                }}
-                className="classTabSecondaryLink"
+                  {t("opportunities.matchingRound.manageMatches", {}, {
+                    default: "Manage matches",
+                  })}
+                </Link>
+              )}
+              <Button
+                variant="filled"
+                onClick={handleSave}
+                disabled={saving}
               >
-                {t("opportunities.matchingRound.manageMatches", {}, {
-                  default: "Manage matches",
-                })}
-              </Link>
-            )}
-            <Button
-              variant="filled"
-              onClick={handleSave}
-              disabled={saving}
-            >
-              {saving
-                ? t("opportunities.matchingRound.saving", {}, {
-                    default: "Saving…",
-                  })
-                : isNew
-                  ? t("opportunities.matchingRound.createRound", {}, {
-                      default: "Create round",
+                {saving
+                  ? t("opportunities.matchingRound.saving", {}, {
+                      default: "Saving…",
                     })
-                  : t("opportunities.matchingRound.saveRound", {}, {
-                      default: "Save changes",
-                    })}
-            </Button>
-          </div>
+                  : isNew
+                    ? t("opportunities.matchingRound.createRound", {}, {
+                        default: "Create round",
+                      })
+                    : t("opportunities.matchingRound.saveRound", {}, {
+                        default: "Save changes",
+                      })}
+              </Button>
+            </div>
           </div>
         </div>
       ) : null}

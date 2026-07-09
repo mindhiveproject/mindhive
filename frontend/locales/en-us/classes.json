@@ -714,19 +714,35 @@
 			"noOpportunitiesInNetwork": "No opportunities have been added to this class network yet.",
 			"noRoundForNetwork": "No matching round for this network yet.",
 			"notSetUp": "Not set up",
+			"panels": {
+				"questions": "Additional student questions",
+				"reviewOpportunities": "Review opportunities",
+				"selectedOpportunities": "Selected opportunities",
+				"settings": "Settings"
+			},
 			"roundSwitcherLabel": "Matching round",
+			"saveFailed": "Could not save the matching round. Please try again.",
 			"saveRound": "Save changes",
 			"saving": "Saving…",
+			"selectedOpportunitiesCount": "{{count}} selected",
+			"selectedOpportunitiesEmpty": "No opportunities selected yet. Use Review opportunities to add some.",
 			"selectNetworkFirst": "Select a class network above to set up a matching round.",
 			"status": {
 				"archived": "Archived",
+				"archivedHint": "Round finished",
 				"matching": "Matching",
-				"preferencesClosed": "Round closed to students",
-				"preferencesOpen": "Round open to students",
-				"published": "Published"
+				"matchingHint": "Review proposed matches",
+				"preferencesClosed": "Closed",
+				"preferencesClosedHint": "Students can review, not edit",
+				"preferencesOpen": "Open",
+				"preferencesOpenHint": "Students can rank opportunities",
+				"published": "Published",
+				"publishedHint": "Final matches visible to students"
 			},
 			"title": "Matching round",
-			"titleRequired": "Title is required."
+			"titleRequired": "Title is required.",
+			"unsavedChanges": "Unsaved changes",
+			"unsavedChangesConfirm": "You have unsaved changes. Leave without saving?"
 		},
 		"networkOpportunitiesDescription": "Opportunities are published to class networks. A matching round draws from opportunities in the selected network. Click one to preview its content.",
 		"networkOpportunitiesTitle": "Network opportunities",

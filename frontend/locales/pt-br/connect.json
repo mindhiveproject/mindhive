@@ -228,6 +228,14 @@
 	},
 	"introductionVideo": "Vídeo de introdução",
 	"locationFilter": "Localização",
+	"mentorPreferences": {
+		"classType": {
+			"title": ""
+		},
+		"gradeLevel": {
+			"title": ""
+		}
+	},
 	"myOpportunitiesList": {
 		"capacity": "",
 		"delete": "",

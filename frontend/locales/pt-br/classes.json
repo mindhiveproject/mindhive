@@ -697,6 +697,16 @@
 				"status": "",
 				"title": ""
 			},
+			"grid": {
+				"columns": {
+					"info": "",
+					"name": "",
+					"organization": "",
+					"review": "",
+					"sponsor": ""
+				},
+				"review": ""
+			},
 			"loading": "",
 			"manageMatches": "",
 			"newRound": "",
@@ -704,9 +714,18 @@
 			"noOpportunitiesInNetwork": "",
 			"noRoundForNetwork": "",
 			"notSetUp": "",
+			"panels": {
+				"questions": "",
+				"reviewOpportunities": "",
+				"selectedOpportunities": "",
+				"settings": ""
+			},
 			"roundSwitcherLabel": "",
+			"saveFailed": "",
 			"saveRound": "",
 			"saving": "",
+			"selectedOpportunitiesCount": "",
+			"selectedOpportunitiesEmpty": "",
 			"selectNetworkFirst": "",
 			"status": {
 				"archived": "",
@@ -716,7 +735,9 @@
 				"published": ""
 			},
 			"title": "",
-			"titleRequired": ""
+			"titleRequired": "",
+			"unsavedChanges": "",
+			"unsavedChangesConfirm": ""
 		},
 		"networkOpportunitiesDescription": "",
 		"networkOpportunitiesTitle": "",

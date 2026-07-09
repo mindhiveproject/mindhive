@@ -91,6 +91,8 @@ export default function MatchingRoundOpportunitiesGrid({
   selectedIds,
   onSelectionChange,
   onPreview,
+  selectionMode = "multi",
+  emptyMessage,
 }) {
   const { t } = useTranslation("classes");
   const gridRef = useRef(null);
@@ -254,6 +256,7 @@ export default function MatchingRoundOpportunitiesGrid({
   );
 
   useEffect(() => {
+    if (selectionMode === "readOnly") return;
     const api = gridRef.current?.api;
     if (!api) return;
 
@@ -264,7 +267,11 @@ export default function MatchingRoundOpportunitiesGrid({
         node.setSelected(shouldSelect);
       }
     });
-  }, [selectedIds, rowData]);
+  }, [selectedIds, rowData, selectionMode]);
+
+  if (rowData.length === 0 && emptyMessage) {
+    return <p className="classTabEmptyInline">{emptyMessage}</p>;
+  }
 
   return (
     <div className="classTabTable ag-theme-quartz matchingRoundOpportunitiesGrid">
@@ -273,12 +280,16 @@ export default function MatchingRoundOpportunitiesGrid({
         rowData={rowData}
         columnDefs={columnDefs}
         getRowId={(params) => params.data?.id}
-        rowSelection={{
-          mode: "multiRow",
-          checkboxes: true,
-          headerCheckbox: true,
-        }}
-        onSelectionChanged={handleSelectionChanged}
+        {...(selectionMode === "multi"
+          ? {
+              rowSelection: {
+                mode: "multiRow",
+                checkboxes: true,
+                headerCheckbox: true,
+              },
+              onSelectionChanged: handleSelectionChanged,
+            }
+          : {})}
         pagination
         paginationPageSize={10}
         paginationPageSizeSelector={[10, 20, 50]}
