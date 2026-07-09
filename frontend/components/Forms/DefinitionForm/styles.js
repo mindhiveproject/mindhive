@@ -70,7 +70,7 @@ export const FieldShell = styled.label`
   input[type="date"],
   input[type="url"],
   textarea {
-    border: 1px solid #d3dae0;
+    border: 1px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "#d3dae0")};
     border-radius: 8px;
     padding: 10px 12px;
     font-family: "Lato", sans-serif;
@@ -79,9 +79,9 @@ export const FieldShell = styled.label`
     background: #ffffff;
 
     &:focus {
-      outline: 2px solid #336f8a;
+      outline: 2px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "#336f8a")};
       outline-offset: -1px;
-      border-color: #336f8a;
+      border-color: ${({ $hasError }) => ($hasError ? "#c0392b" : "#336f8a")};
     }
 
     &:disabled {
@@ -114,3 +114,10 @@ export const ReadOnlyBanner = styled.div`
   font-size: 14px;
   line-height: 1.5;
 `;
+
+export function fieldShellErrorProps(error) {
+  return {
+    $hasError: Boolean(error),
+    "data-field-error": error ? "true" : undefined,
+  };
+}

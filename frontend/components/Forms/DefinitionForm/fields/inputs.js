@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import { Dropdown } from "semantic-ui-react";
 
 import { fieldLabel, fieldHelper, fieldPlaceholder, optionLabel } from "../i18n";
-import { FieldShell, ReadOnlyBanner } from "../styles";
+import { FieldShell, ReadOnlyBanner, fieldShellErrorProps } from "../styles";
 
 function LabelHeader({ field, locale }) {
   const label = fieldLabel(field, locale);
@@ -31,7 +31,7 @@ function ErrorRow({ error }) {
 
 export function TextInput({ field, value, onChange, error, locale, disabled }) {
   return (
-    <FieldShell>
+    <FieldShell {...fieldShellErrorProps(error)}>
       <LabelHeader field={field} locale={locale} />
       <input
         type="text"
@@ -53,7 +53,7 @@ export function TextareaInput({ field, value, onChange, error, locale, disabled 
     return String(value).trim().split(/\s+/).filter(Boolean).length;
   }, [value, wordLimit]);
   return (
-    <FieldShell>
+    <FieldShell {...fieldShellErrorProps(error)}>
       <LabelHeader field={field} locale={locale} />
       <textarea
         value={value ?? ""}
@@ -75,7 +75,7 @@ export function TextareaInput({ field, value, onChange, error, locale, disabled 
 export function NumberInput({ field, value, onChange, error, locale, disabled }) {
   const { min, max } = field?.validation || {};
   return (
-    <FieldShell>
+    <FieldShell {...fieldShellErrorProps(error)}>
       <LabelHeader field={field} locale={locale} />
       <input
         type="number"
@@ -96,7 +96,7 @@ export function NumberInput({ field, value, onChange, error, locale, disabled })
 
 export function DateInput({ field, value, onChange, error, locale, disabled }) {
   return (
-    <FieldShell>
+    <FieldShell {...fieldShellErrorProps(error)}>
       <LabelHeader field={field} locale={locale} />
       <input
         type="date"
@@ -113,7 +113,7 @@ export function CheckboxInput({ field, value, onChange, error, locale, disabled 
   const label = fieldLabel(field, locale);
   const helper = fieldHelper(field, locale);
   return (
-    <FieldShell as="div">
+    <FieldShell as="div" {...fieldShellErrorProps(error)}>
       <label className="checkbox-row">
         <input
           type="checkbox"
@@ -145,7 +145,7 @@ export function SelectInput({ field, value, onChange, error, locale, disabled })
       }));
   }, [field?.options, locale]);
   return (
-    <FieldShell as="div">
+    <FieldShell as="div" {...fieldShellErrorProps(error)}>
       <LabelHeader field={field} locale={locale} />
       <Dropdown
         selection
@@ -181,7 +181,7 @@ export function MultiselectInput({
       }));
   }, [field?.options, locale]);
   return (
-    <FieldShell as="div">
+    <FieldShell as="div" {...fieldShellErrorProps(error)}>
       <LabelHeader field={field} locale={locale} />
       <Dropdown
         selection

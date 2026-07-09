@@ -9,7 +9,7 @@ import { useCallback } from "react";
 import TipTapEditor from "../../../TipTap/Main";
 
 import { fieldLabel, fieldHelper } from "../i18n";
-import { FieldShell } from "../styles";
+import { FieldShell, fieldShellErrorProps } from "../styles";
 
 export default function RichText({
   field,
@@ -25,7 +25,7 @@ export default function RichText({
   );
 
   return (
-    <FieldShell as="div">
+    <FieldShell as="div" {...fieldShellErrorProps(error)}>
       <span className="label-text">
         {fieldLabel(field, locale)}
         {field.isRequired && <span className="required">*</span>}

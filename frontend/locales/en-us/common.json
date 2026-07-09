@@ -27,6 +27,17 @@
 		"username": "Username"
 	},
 	"cancel": "Cancel",
+	"definitionForm": {
+		"fieldRequired": "This field is required.",
+		"fixMultipleFields": "Please fix the following fields: {{fields}}",
+		"fixSingleField": "Please fix {{field}} before saving.",
+		"invalidFormat": "Invalid format.",
+		"max": "Must be at most {{max}}.",
+		"maxLength": "Must be at most {{max}} characters.",
+		"min": "Must be at least {{min}}.",
+		"saveFailed": "Save failed. Please try again.",
+		"wordLimit": "Must be at most {{max}} words."
+	},
 	"classes": {
 		"typeClassTitle": "Type class title"
 	},
