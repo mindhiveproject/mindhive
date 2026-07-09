@@ -21,12 +21,15 @@
 //   />
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import { RESOLVE_FORM_DEFINITION } from "../../Queries/FormDefinition";
 import CardRenderer from "./CardRenderer";
+import { fieldLabel } from "./i18n";
 import { hydrate, buildUpdate } from "./storage";
-import { validateValues } from "./validation";
+import { getVisibleFields } from "./visibility";
+import { validateValues, formatFieldError } from "./validation";
 
 const Shell = styled.form`
   display: flex;
@@ -72,6 +75,14 @@ const Loading = styled.div`
   color: #5f6871;
 `;
 
+function scrollToFirstFieldError() {
+  requestAnimationFrame(() => {
+    document
+      .querySelector('[data-field-error="true"]')
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+}
+
 export default function DefinitionForm({
   definitionKey,
   entity,
@@ -84,6 +95,7 @@ export default function DefinitionForm({
   readOnly = false,
   specialCardComponents = {},
 }) {
+  const { t } = useTranslation("common");
   const { data, loading, error } = useQuery(RESOLVE_FORM_DEFINITION, {
     variables: {
       key: definitionKey,
@@ -95,9 +107,8 @@ export default function DefinitionForm({
 
   const definition = data?.resolveFormDefinition;
 
-  // Flatten all fields across all cards for hydration / validation /
-  // update-building. Card-level filtering for rendering happens
-  // separately in CardRenderer.
+  // Flatten all fields across all cards for hydration and update-building.
+  // Validation uses getVisibleFields() so hidden cards are not checked.
   const allFields = useMemo(() => {
     if (!definition?.cards) return [];
     const out = [];
@@ -112,6 +123,8 @@ export default function DefinitionForm({
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const entityStatus = values.status ?? entity?.status ?? null;
 
   // Hydrate values whenever the definition, entity, or related entities change.
   useEffect(() => {
@@ -134,21 +147,60 @@ export default function DefinitionForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (readOnly || submitting) return;
-    const validationErrors = validateValues(values, allFields);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      setSubmitError(
-        "Please fix the highlighted fields before saving."
-      );
+
+    const visibleFields = getVisibleFields(definition, {
+      viewerRoles,
+      entityStatus,
+    });
+    const rawErrors = validateValues(values, visibleFields);
+
+    if (Object.keys(rawErrors).length > 0) {
+      const formattedErrors = {};
+      const failingLabels = [];
+
+      for (const [name, detail] of Object.entries(rawErrors)) {
+        const field = visibleFields.find((f) => f.name === name);
+        formattedErrors[name] = formatFieldError(field, detail, t);
+        if (field) {
+          failingLabels.push(fieldLabel(field, locale));
+        }
+      }
+
+      setErrors(formattedErrors);
+
+      const banner =
+        failingLabels.length === 1
+          ? t(
+              "definitionForm.fixSingleField",
+              { field: failingLabels[0] },
+              { default: "Please fix {{field}} before saving." }
+            )
+          : t(
+              "definitionForm.fixMultipleFields",
+              { fields: failingLabels.join(", ") },
+              {
+                default:
+                  "Please fix the following fields: {{fields}}",
+              }
+            );
+
+      setSubmitError(banner);
+      scrollToFirstFieldError();
       return;
     }
+
     setSubmitError(null);
     const updateInput = buildUpdate(values, allFields, entity, related);
     setSubmitting(true);
     try {
       await onSubmit(updateInput);
     } catch (err) {
-      setSubmitError(err?.message || "Save failed. Please try again.");
+      setSubmitError(
+        err?.message ||
+          t("definitionForm.saveFailed", {}, {
+            default: "Save failed. Please try again.",
+          })
+      );
     } finally {
       setSubmitting(false);
     }
@@ -182,7 +234,7 @@ export default function DefinitionForm({
           card={card}
           locale={locale}
           viewerRoles={viewerRoles}
-          entityStatus={entity?.status}
+          entityStatus={entityStatus}
           values={values}
           errors={errors}
           onFieldChange={handleFieldChange}

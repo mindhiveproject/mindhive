@@ -8,7 +8,7 @@ import { useQuery } from "@apollo/client";
 
 import { GET_TAGS } from "../../../Queries/Tag";
 import { fieldLabel, fieldHelper, fieldPlaceholder } from "../i18n";
-import { FieldShell } from "../styles";
+import { FieldShell, fieldShellErrorProps } from "../styles";
 
 export default function TagMultiselect({
   field,
@@ -33,7 +33,7 @@ export default function TagMultiselect({
   }, [data]);
 
   return (
-    <FieldShell as="div">
+    <FieldShell as="div" {...fieldShellErrorProps(error)}>
       <span className="label-text">
         {fieldLabel(field, locale)}
         {field.isRequired && <span className="required">*</span>}

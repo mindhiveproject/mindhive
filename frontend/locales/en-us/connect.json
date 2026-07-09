@@ -228,6 +228,14 @@
 	},
 	"introductionVideo": "Introduction Video",
 	"locationFilter": "Location",
+	"mentorPreferences": {
+		"classType": {
+			"title": "Class type"
+		},
+		"gradeLevel": {
+			"title": "Grade level"
+		}
+	},
 	"myOpportunitiesList": {
 		"capacity": "Capacity {{count}}",
 		"delete": "Delete",
@@ -306,6 +314,10 @@
 			"urbanInfrastructure": "Urban Infrastructure"
 		},
 		"categorizationOther": "Other category",
+		"classNetworksEmptyWarning": "Teachers will not see this opportunity in their review queue until you select at least one class network.",
+		"classNetworksHint": "Select one or more class networks you belong to. Teachers in those networks can review this opportunity.",
+		"classNetworksNoMembership": "You are not a member of any class networks yet.",
+		"classNetworksTitle": "Class networks",
 		"competencies": "Competencies",
 		"competenciesDescription": "List any specific skills or qualifications that would be useful for students to have in order to successfully address this problem and complete the capstone project. For example, user experience design, software programming, economics/financial analysis, public policy analysis, quantitative research/analysis, engineering skills (mechanical, electrical, etc). Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
 		"coverImage": "Cover image",
@@ -384,10 +396,6 @@
 		"loading": "Loading opportunity…",
 		"mentorNotes": "Mentor notes",
 		"mentorNotesDescription": "Name, title, contact, and availability of the day-to-day mentor. If no mentor is available, describe the gaps and CUSP can help identify support.",
-		"classNetworksEmptyWarning": "Teachers will not see this opportunity in their review queue until you select at least one class network.",
-		"classNetworksHint": "Select one or more class networks you belong to. Teachers in those networks can review this opportunity.",
-		"classNetworksNoMembership": "You are not a member of any class networks yet.",
-		"classNetworksTitle": "Class networks",
 		"offeredInNetworks": "Offered in class networks",
 		"offeredInNetworksHint": "Pick which networks can see this opportunity.",
 		"overview": {

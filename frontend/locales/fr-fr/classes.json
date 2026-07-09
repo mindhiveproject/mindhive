@@ -640,6 +640,7 @@
 		"classSectionsNav": "Sections de classe",
 		"dashboard": "Tableau de bord",
 		"mentors": "Mentors",
+		"opportunities": "",
 		"projects": "Projets",
 		"resources": "Ressources",
 		"settings": "Paramètres",
@@ -675,7 +676,145 @@
 	"noStudies": "Les étudiants n’ont pas encore créé d’études.",
 	"noteNewStudents": "Remarque : les nouveaux étudiants ne pourront pas rejoindre votre classe.",
 	"numberOfStudents": "Nombre d'étudiants",
-	"onlyTeachersMentorsAssignCards": "Seuls les enseignants et les mentors peuvent attribuer des cartes",
+	"onlyTeachersMentorsAssignCards": "",
+	"opportunities": {
+		"compactInvite": {
+			"description": "",
+			"title": ""
+		},
+		"copyLink": "",
+		"loadingOpportunities": "",
+		"matchingRound": {
+			"algorithm": {
+				"scoreBased": "",
+				"scoreBasedHint": "",
+				"stableMatching": "",
+				"stableMatchingHint": "",
+				"teacherCurated": "",
+				"teacherCuratedHint": ""
+			},
+			"algorithmHint": "",
+			"collapseLabel": "",
+			"createRound": "",
+			"description": "",
+			"expandLabel": "",
+			"fields": {
+				"algorithm": "",
+				"closeAt": "",
+				"description": "",
+				"network": "",
+				"networkHint": "",
+				"openAt": "",
+				"opportunities": "",
+				"opportunitiesHint": "",
+				"questions": "",
+				"questionsHint": "",
+				"status": "",
+				"title": ""
+			},
+			"grid": {
+				"columns": {
+					"info": "",
+					"name": "",
+					"organization": "",
+					"review": "",
+					"sponsor": ""
+				},
+				"review": ""
+			},
+			"loading": "",
+			"manageMatches": "",
+			"newRound": "",
+			"noLibraryQuestions": "",
+			"noOpportunitiesInNetwork": "",
+			"noRoundForNetwork": "",
+			"notSetUp": "",
+			"panels": {
+				"questions": "",
+				"reviewOpportunities": "",
+				"selectedOpportunities": "",
+				"settings": ""
+			},
+			"roundSwitcherLabel": "",
+			"saveFailed": "",
+			"saveRound": "",
+			"saving": "",
+			"selectedOpportunitiesCount": "",
+			"selectedOpportunitiesEmpty": "",
+			"selectNetworkFirst": "",
+			"status": {
+				"archived": "",
+				"matching": "",
+				"preferencesClosed": "",
+				"preferencesOpen": "",
+				"published": ""
+			},
+			"title": "",
+			"titleRequired": "",
+			"unsavedChanges": "",
+			"unsavedChangesConfirm": ""
+		},
+		"networkOpportunitiesDescription": "",
+		"networkOpportunitiesTitle": "",
+		"networkSection": {
+			"description": "",
+			"title": ""
+		},
+		"networkSelectorLabel": "",
+		"networkSelectorPlaceholder": "",
+		"noNetworks": "",
+		"noOpportunities": "",
+		"preview": {
+			"aboutTitle": "",
+			"allowsTeamPreferences": "",
+			"available": "",
+			"capacity": "",
+			"close": "",
+			"groupFormatOptions": {
+				"either": "",
+				"individual": "",
+				"team": ""
+			},
+			"hostedBy": "",
+			"loading": "",
+			"mentor": "",
+			"mentorContact": "",
+			"no": "",
+			"notFound": "",
+			"opportunityDetails": "",
+			"organization": "",
+			"preferences": "",
+			"projectCategory": "",
+			"publicRating": "",
+			"ratingsTitle": "",
+			"status": "",
+			"teamSize": "",
+			"teamSizeSolo": "",
+			"teamSizeTeam": "",
+			"timeCommitment": "",
+			"verifiedOrganization": "",
+			"viewOrganization": "",
+			"yes": ""
+		},
+		"rowMeta": {
+			"byMentor": "",
+			"capacity": "",
+			"teamOf": ""
+		},
+		"selectNetworkFirst": "",
+		"sponsorLinkLabel": "",
+		"sponsorSignupDescription": "",
+		"sponsorSignupTitle": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": ""
+		}
+	},
 	"participants": "Participants",
 	"pleaseTypeDelete": "Veuillez taper SUPPRIMER pour supprimer votre classe",
 	"projectBoard": {

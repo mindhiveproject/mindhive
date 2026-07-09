@@ -78,6 +78,17 @@
 		"question": "Como você gostaria que usássemos seus dados?",
 		"science": "Você pode usar meus dados para fins científicos e/ou educacionais"
 	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
+	},
 	"discoverDescription": "Navegue pela nossa coleção de estudos, tarefas e pesquisas criadas por alunos do ensino médio do programa MindHive e cientistas parceiros. Participe de estudos ou visualize tarefas e pesquisas.",
 	"discoverHeader": "Descubra estudos, tarefas e pesquisas",
 	"documents": {
@@ -303,7 +314,8 @@
 		"loginHere": "Faça login aqui",
 		"participant": "Participante do estudo",
 		"scientist": "Cientista",
-		"sponsor": "Patrocinador",
+		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "Estudante",
 		"teacher": "Professor",
 		"title": "Qual função melhor descreve você?"

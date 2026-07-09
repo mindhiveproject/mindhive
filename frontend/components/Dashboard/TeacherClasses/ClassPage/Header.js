@@ -147,8 +147,19 @@ export default function Header({ user, myclass }) {
     titleDisplayTrimmed ||
     t("header.titleFallback", {}, { default: "Untitled class" });
   const creatorImageUrl = myclass?.creator?.image?.url;
+  const teacherId = myclass?.creator?.id;
   const teacherUsername = myclass?.creator?.username ?? "";
-  const mentors = (myclass?.mentors || []).filter((mentor) => mentor?.username);
+  const seenUsernames = new Set(
+    teacherUsername ? [teacherUsername.toLowerCase()] : [],
+  );
+  const mentors = (myclass?.mentors || []).filter((mentor) => {
+    if (!mentor?.username) return false;
+    if (teacherId && mentor.id === teacherId) return false;
+    const key = mentor.username.toLowerCase();
+    if (seenUsernames.has(key)) return false;
+    seenUsernames.add(key);
+    return true;
+  });
   const mentorTooltip = t("header.mentorsPanelTooltip", {}, {
     default: "Mentor accounts associated with this class.",
   });

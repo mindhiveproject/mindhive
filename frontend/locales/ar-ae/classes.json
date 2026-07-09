@@ -640,6 +640,7 @@
 		"classSectionsNav": "أقسام الصفوف",
 		"dashboard": "لوحة القيادة",
 		"mentors": "المرشدين",
+		"opportunities": "",
 		"projects": "المشاريع",
 		"resources": "موارد",
 		"settings": "إعدادات",
@@ -675,7 +676,145 @@
 	"noStudies": "لم يقم الطلاب بإنشاء أي دراسات بعد.",
 	"noteNewStudents": "ملاحظة: لن يتمكن الطلاب الجدد من الانضمام إلى صفك",
 	"numberOfStudents": "عدد الطلاب",
-	"onlyTeachersMentorsAssignCards": "لا يُسمح إلا للمعلمين والموجهين بتوزيع البطاقات",
+	"onlyTeachersMentorsAssignCards": "",
+	"opportunities": {
+		"compactInvite": {
+			"description": "",
+			"title": ""
+		},
+		"copyLink": "",
+		"loadingOpportunities": "",
+		"matchingRound": {
+			"algorithm": {
+				"scoreBased": "",
+				"scoreBasedHint": "",
+				"stableMatching": "",
+				"stableMatchingHint": "",
+				"teacherCurated": "",
+				"teacherCuratedHint": ""
+			},
+			"algorithmHint": "",
+			"collapseLabel": "",
+			"createRound": "",
+			"description": "",
+			"expandLabel": "",
+			"fields": {
+				"algorithm": "",
+				"closeAt": "",
+				"description": "",
+				"network": "",
+				"networkHint": "",
+				"openAt": "",
+				"opportunities": "",
+				"opportunitiesHint": "",
+				"questions": "",
+				"questionsHint": "",
+				"status": "",
+				"title": ""
+			},
+			"grid": {
+				"columns": {
+					"info": "",
+					"name": "",
+					"organization": "",
+					"review": "",
+					"sponsor": ""
+				},
+				"review": ""
+			},
+			"loading": "",
+			"manageMatches": "",
+			"newRound": "",
+			"noLibraryQuestions": "",
+			"noOpportunitiesInNetwork": "",
+			"noRoundForNetwork": "",
+			"notSetUp": "",
+			"panels": {
+				"questions": "",
+				"reviewOpportunities": "",
+				"selectedOpportunities": "",
+				"settings": ""
+			},
+			"roundSwitcherLabel": "",
+			"saveFailed": "",
+			"saveRound": "",
+			"saving": "",
+			"selectedOpportunitiesCount": "",
+			"selectedOpportunitiesEmpty": "",
+			"selectNetworkFirst": "",
+			"status": {
+				"archived": "",
+				"matching": "",
+				"preferencesClosed": "",
+				"preferencesOpen": "",
+				"published": ""
+			},
+			"title": "",
+			"titleRequired": "",
+			"unsavedChanges": "",
+			"unsavedChangesConfirm": ""
+		},
+		"networkOpportunitiesDescription": "",
+		"networkOpportunitiesTitle": "",
+		"networkSection": {
+			"description": "",
+			"title": ""
+		},
+		"networkSelectorLabel": "",
+		"networkSelectorPlaceholder": "",
+		"noNetworks": "",
+		"noOpportunities": "",
+		"preview": {
+			"aboutTitle": "",
+			"allowsTeamPreferences": "",
+			"available": "",
+			"capacity": "",
+			"close": "",
+			"groupFormatOptions": {
+				"either": "",
+				"individual": "",
+				"team": ""
+			},
+			"hostedBy": "",
+			"loading": "",
+			"mentor": "",
+			"mentorContact": "",
+			"no": "",
+			"notFound": "",
+			"opportunityDetails": "",
+			"organization": "",
+			"preferences": "",
+			"projectCategory": "",
+			"publicRating": "",
+			"ratingsTitle": "",
+			"status": "",
+			"teamSize": "",
+			"teamSizeSolo": "",
+			"teamSizeTeam": "",
+			"timeCommitment": "",
+			"verifiedOrganization": "",
+			"viewOrganization": "",
+			"yes": ""
+		},
+		"rowMeta": {
+			"byMentor": "",
+			"capacity": "",
+			"teamOf": ""
+		},
+		"selectNetworkFirst": "",
+		"sponsorLinkLabel": "",
+		"sponsorSignupDescription": "",
+		"sponsorSignupTitle": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": ""
+		}
+	},
 	"participants": "مشاركون",
 	"pleaseTypeDelete": "الرجاء كتابة DELETE لحذف صفك",
 	"projectBoard": {

@@ -247,6 +247,7 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         firstName
         lastName
         bio
+        email
         tagline
         organization
         department

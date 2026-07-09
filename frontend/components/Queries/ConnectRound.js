@@ -143,11 +143,19 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
       availableFrom
       availableTo
       timeCommitment
+      coverImageUrl
+      coverImage {
+        url
+      }
       mentor {
         id
         username
         firstName
         lastName
+      }
+      organization {
+        id
+        name
       }
     }
   }

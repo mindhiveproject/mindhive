@@ -390,10 +390,18 @@ export default function DropdownSelect({
       };
 
   const triggerIcon = icon === undefined ? CHEVRON : icon;
-  const tooltipContent =
-    typeof displayLabel === "string" || typeof displayLabel === "number"
-      ? String(displayLabel)
-      : "";
+  const isPlainTextLabel =
+    typeof displayLabel === "string" || typeof displayLabel === "number";
+  const tooltipContent = isPlainTextLabel ? String(displayLabel) : "";
+  const resolvedLabelSpanStyle = isPlainTextLabel
+    ? labelSpanStyle
+    : {
+        flex: "1 1 0%",
+        minWidth: 0,
+        maxWidth: "100%",
+        textAlign: "left",
+        overflow: "hidden",
+      };
 
   const buttonNode = (
     <button
@@ -409,7 +417,7 @@ export default function DropdownSelect({
       }}
       style={triggerMerged}
     >
-      <span ref={labelRef} style={labelSpanStyle}>
+      <span ref={labelRef} style={resolvedLabelSpanStyle}>
         {displayLabel}
       </span>
       {triggerIcon != null ? (

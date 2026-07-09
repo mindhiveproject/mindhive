@@ -78,6 +78,17 @@
 		"question": "How would you like us to use your data?",
 		"science": "You can use my data for science and/or educational purposes"
 	},
+	"definitionForm": {
+		"fieldRequired": "This field is required.",
+		"fixMultipleFields": "Please fix the following fields: {{fields}}",
+		"fixSingleField": "Please fix {{field}} before saving.",
+		"invalidFormat": "Invalid format.",
+		"max": "Must be at most {{max}}.",
+		"maxLength": "Must be at most {{max}} characters.",
+		"min": "Must be at least {{min}}.",
+		"saveFailed": "Save failed. Please try again.",
+		"wordLimit": "Must be at most {{max}} words."
+	},
 	"discoverDescription": "Browse our collection of studies, tasks and surveys created by high school students in the MindHive program and partner scientists. Participate in studies or preview tasks and surveys.",
 	"discoverHeader": "Discover studies, tasks and surveys",
 	"documents": {

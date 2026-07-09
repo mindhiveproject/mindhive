@@ -10,7 +10,7 @@ export default function OpportunitiesMain({ query, user }) {
   const showReviewQueue = tab === "review" && (isTeacher || isAdmin);
 
   return (
-    <RoleGuard allow={["mentor", "teacher"]}>
+    <RoleGuard allow={["mentor", "teacher", "admin"]}>
       {op ? (
         <OpportunityEditor query={query} user={user} opportunityId={op} />
       ) : showReviewQueue ? (

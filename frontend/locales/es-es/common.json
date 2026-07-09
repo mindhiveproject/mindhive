@@ -78,6 +78,17 @@
 		"question": "¿Cómo desea que utilicemos sus datos?",
 		"science": "Puedes utilizar mis datos con fines científicos y/o educativos."
 	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
+	},
 	"discoverDescription": "Explora nuestra colección de estudios, tareas y encuestas creadas por estudiantes de secundaria del programa MindHive y científicos colaboradores. Participa en estudios o consulta las tareas y encuestas.",
 	"discoverHeader": "Descubra estudios, tareas y encuestas",
 	"documents": {
@@ -303,7 +314,8 @@
 		"loginHere": "Inicie sesión aquí",
 		"participant": "Participante del estudio",
 		"scientist": "Científico",
-		"sponsor": "Patrocinador",
+		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "Alumno",
 		"teacher": "Maestro",
 		"title": "¿Qué rol te describe mejor?"
