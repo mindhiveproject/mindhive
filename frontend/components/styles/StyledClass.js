@@ -1071,6 +1071,447 @@ const StyledClass = styled.div`
       align-items: center;
     }
 
+    .classTabNetworkInvite {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 16px;
+      padding-top: 16px;
+      margin-top: 4px;
+      border-top: 1px solid #ece9e6;
+
+      .networkInviteText {
+        display: grid;
+        gap: 2px;
+        min-width: 180px;
+        flex: 1;
+      }
+
+      .networkInviteTitle {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 22px;
+        color: #171717;
+      }
+
+      .networkInviteDescription {
+        margin: 0;
+        font-size: 13px;
+        line-height: 18px;
+        color: #625b71;
+      }
+
+      .networkInviteActions {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+      }
+    }
+
+    .classTabExpandableCard {
+      gap: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .classTabExpandableHeaderBar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: stretch;
+      gap: 0;
+      min-height: 72px;
+
+      .matchingRoundHeaderActions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-shrink: 0;
+        padding: 16px 24px 16px 12px;
+      }
+
+      .summaryStatus {
+        display: inline-flex;
+        align-items: flex-start;
+        flex-shrink: 0;
+        padding: 6px 12px;
+        border-radius: 12px;
+        background: #f0f4f6;
+        color: #5f6871;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 18px;
+
+        &.summaryStatusMuted {
+          background: #f5f0e8;
+          color: #8a6d3b;
+        }
+      }
+    }
+
+    .classTabExpandableHeaderToggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      min-width: 0;
+      min-height: 100%;
+      padding: 16px 12px 16px 24px;
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 0;
+
+      &:hover:not(:disabled) {
+        background: #DEF8FB;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #336f8a;
+        outline-offset: -2px;
+      }
+
+      &:disabled,
+      &.isDisabled {
+        cursor: default;
+      }
+
+      .expandableHeaderMain {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+        flex: 1;
+
+        h3 {
+          margin: 0;
+          font-family: "Inter", sans-serif;
+          font-size: 22px;
+          font-weight: 700;
+          line-height: 30px;
+          color: #171717;
+        }
+      }
+
+      .summaryRoundTitleMuted {
+        color: #625b71;
+      }
+
+      .expandableSummaryHint {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #625b71;
+      }
+
+      .expandableChevron {
+        flex-shrink: 0;
+        opacity: 0.7;
+        transition: transform 0.2s ease;
+
+        &.expanded {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .classTabExpandableBody {
+      display: grid;
+      gap: 16px;
+      padding: 0 24px 24px;
+      border-top: 1px solid #ece9e6;
+
+      .expandableBodyDescription {
+        margin: 16px 0 0;
+        font-size: 15px;
+        line-height: 22px;
+        color: #625b71;
+      }
+    }
+
+    .classTabMatchingRoundForm {
+      display: grid;
+      gap: 18px;
+    }
+
+    .classTabMatchingRoundChipRow,
+    .classTabMatchingRoundAlgoChipRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .classTabMatchingRoundPanel {
+      display: grid;
+      gap: 18px;
+    }
+
+    .classTabMatchingRoundFooter {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px 16px;
+      padding-top: 8px;
+      margin-top: 4px;
+      border-top: 1px solid #ece9e6;
+
+      .matchingRoundUnsavedHint {
+        margin: 0;
+        margin-right: auto;
+        font-size: 13px;
+        line-height: 18px;
+        color: #8a6d3b;
+        font-weight: 500;
+      }
+    }
+
+    .classTabRoundSwitcher {
+      max-width: 420px;
+    }
+
+    .classTabFormGrid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .classTabFormGridTwo {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      @media (max-width: 700px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .classTabFormField {
+      display: grid;
+      align-content: start;
+      gap: 6px;
+      font-size: 14px;
+      color: #625b71;
+
+      .fieldLabel {
+        font-weight: 600;
+        color: #171717;
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .fieldHint,
+      .fieldAlgoHint {
+        margin: 0;
+        font-size: 12px;
+        line-height: 18px;
+        color: #888;
+      }
+
+      .fieldAlgoHint {
+        padding: 8px 12px;
+        border: 1px solid #ece9e6;
+        border-radius: 10px;
+        background: #f9faf9;
+        color: #625b71;
+      }
+
+      input[type="text"],
+      input[type="date"],
+      textarea,
+      select {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #d9d6d2;
+        border-radius: 12px;
+        background: #ffffff;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        color: #171717;
+        outline: none;
+        box-sizing: border-box;
+
+        &:focus-visible {
+          border-color: #336f8a;
+        }
+
+        &:disabled {
+          background: #f3f3f2;
+          color: #625b71;
+        }
+      }
+
+      textarea {
+        min-height: 72px;
+        resize: vertical;
+      }
+    }
+
+    .classTabFormSubsection {
+      display: grid;
+      gap: 10px;
+      padding-top: 4px;
+
+      h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 22px;
+        color: #171717;
+      }
+
+      .subsectionHint,
+      .classTabEmptyInline {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #625b71;
+      }
+    }
+
+    .classTabCheckboxList {
+      display: grid;
+      gap: 8px;
+    }
+
+    .classTabCheckboxRow {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid #ece9e6;
+      border-radius: 12px;
+      background: #ffffff;
+      cursor: pointer;
+
+      &.selected {
+        border-color: #c8d8df;
+        background: #eef5f9;
+      }
+
+      input {
+        margin-top: 3px;
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+
+      .checkboxBody {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+      }
+
+      .checkboxTitle {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        color: #171717;
+      }
+
+      .checkboxMeta {
+        margin: 0;
+        font-size: 12px;
+        line-height: 18px;
+        color: #625b71;
+
+        &.expired {
+          color: #b3261e;
+        }
+      }
+
+      .expiredBadge {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 8px;
+        padding: 2px 8px;
+        border-radius: 100px;
+        background: #f8e1e1;
+        color: #b3261e;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 16px;
+      }
+    }
+
+    .classTabFormActions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 4px;
+    }
+
+    .matchingRoundOpportunitiesGrid {
+      min-height: 200px;
+      width: 100%;
+
+      .ag-root-wrapper {
+        border-radius: 12px;
+        overflow: hidden;
+      }
+    }
+
+    .matchingRoundOppInfoBtn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: 1.5px solid #d9d6d2;
+      border-radius: 100px;
+      background: transparent;
+      color: #625b71;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+
+      &:hover {
+        background: #eef5f9;
+        border-color: #c8d8df;
+        color: #336f8a;
+      }
+    }
+
+    .matchingRoundOppInfoTooltip {
+      display: grid;
+      gap: 6px;
+      max-width: 320px;
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .expired {
+        color: #b3261e;
+      }
+    }
+
+    .classTabSecondaryLink {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid #336f8a;
+      color: #336f8a;
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      text-decoration: none;
+
+      &:hover {
+        background: #eef5f9;
+      }
+    }
+
     .classTabOpportunityList {
       display: grid;
       gap: 10px;

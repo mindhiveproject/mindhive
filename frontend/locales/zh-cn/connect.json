@@ -228,6 +228,14 @@
 	},
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
+	"mentorPreferences": {
+		"classType": {
+			"title": ""
+		},
+		"gradeLevel": {
+			"title": ""
+		}
+	},
 	"myOpportunitiesList": {
 		"capacity": "",
 		"delete": "",
@@ -306,6 +314,10 @@
 			"urbanInfrastructure": "城市基础设施"
 		},
 		"categorizationOther": "其他类别",
+		"classNetworksEmptyWarning": "",
+		"classNetworksHint": "",
+		"classNetworksNoMembership": "",
+		"classNetworksTitle": "",
 		"competencies": "能力",
 		"competenciesDescription": "请列出学生为成功解决此问题并完成毕业设计项目所需具备的任何具体技能或资质。例如：用户体验设计、软件编程、经济/金融分析、公共政策分析、定量研究/分析、工程技能（机械、电气等）。此处提供的信息可能会用于CUSP网站、其他宣传材料以及面向学生的城市科学强化课程描述中。",
 		"coverImage": "封面图片",

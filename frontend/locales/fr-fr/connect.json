@@ -228,6 +228,14 @@
 	},
 	"introductionVideo": "Vidéo d'introduction",
 	"locationFilter": "Emplacement",
+	"mentorPreferences": {
+		"classType": {
+			"title": ""
+		},
+		"gradeLevel": {
+			"title": ""
+		}
+	},
 	"myOpportunitiesList": {
 		"capacity": "",
 		"delete": "",
@@ -306,6 +314,10 @@
 			"urbanInfrastructure": "Infrastructures urbaines"
 		},
 		"categorizationOther": "Autre catégorie",
+		"classNetworksEmptyWarning": "",
+		"classNetworksHint": "",
+		"classNetworksNoMembership": "",
+		"classNetworksTitle": "",
 		"competencies": "Compétences",
 		"competenciesDescription": "Veuillez indiquer les compétences et qualifications spécifiques qui seraient utiles aux étudiants pour aborder ce problème et mener à bien le projet de fin d'études. Par exemple : conception d'expérience utilisateur, programmation logicielle, analyse économique et financière, analyse des politiques publiques, recherche et analyse quantitative, compétences en ingénierie (mécanique, électrique, etc.). Les informations fournies ici pourront être utilisées sur le site web du CUSP, dans d'autres supports promotionnels et dans les descriptions du cours intensif en sciences urbaines.",
 		"coverImage": "Image de couverture",

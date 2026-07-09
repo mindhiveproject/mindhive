@@ -209,10 +209,12 @@ function ProfilePanel({ imageSrc, name, lines = [] }) {
       style={{
         display: "flex",
         alignItems: "flex-start",
+        width: "fit-content",
         gap: 14,
         padding: 14,
         borderRadius: 12,
         background: "#f7f9f8",
+        border: "1px solid #A1A1A1",
       }}
     >
       {imageSrc ? (
@@ -225,6 +227,8 @@ function ProfilePanel({ imageSrc, name, lines = [] }) {
             borderRadius: "50%",
             objectFit: "cover",
             flex: "none",
+            boxShadow: "0 0 0 1px #A1A1A1", // outer border using box-shadow
+       
           }}
         />
       ) : (
@@ -271,9 +275,46 @@ function chipLeadingImage(src, alt) {
   );
 }
 
-export default function OpportunityPreviewModal({ open, opportunityId, onClose }) {
+export default function OpportunityPreviewModal({
+  open,
+  opportunityId,
+  onClose,
+  matchingRoundContext,
+}) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
+
+  const isInMatchingRound =
+    opportunityId &&
+    matchingRoundContext?.selectedOpportunityIds?.includes(opportunityId);
+  const isToggling =
+    matchingRoundContext?.togglingOpportunityId === opportunityId;
+  const canManage = matchingRoundContext?.canManageOpportunities;
+  const showNoRoundHint = matchingRoundContext?.noRoundForNetwork;
+  const showMatchingRoundSection = Boolean(matchingRoundContext);
+
+  const handleToggleMatchingRound = () => {
+    if (!opportunityId || !canManage || isToggling) return;
+    matchingRoundContext?.toggleOpportunity?.(opportunityId);
+  };
+
+  const matchingRoundTitle =
+    matchingRoundContext?.roundTitle ||
+    t("opportunities.matchingRound.title", {}, { default: "Matching round" });
+
+  const matchingRoundButtonLabel = isToggling
+    ? t("opportunities.preview.matchingRound.saving", {}, { default: "Saving…" })
+    : isInMatchingRound
+      ? t(
+          "opportunities.preview.matchingRound.removeFromRound",
+          { title: matchingRoundTitle },
+          { default: "Remove from {{title}}" },
+        )
+      : t(
+          "opportunities.preview.matchingRound.addToRound",
+          { title: matchingRoundTitle },
+          { default: "Add to {{title}}" },
+        );
 
   const { data, loading } = useQuery(EXPLORE_OPPORTUNITY_DETAIL, {
     variables: { id: opportunityId },
@@ -757,56 +798,58 @@ export default function OpportunityPreviewModal({ open, opportunityId, onClose }
                   </div>
                 </PreviewSection>
               )}
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                {opp.organization ? (
+                  <PreviewSection
+                    title={t("opportunities.preview.hostedBy", {}, { default: "Hosted by" })}
+                  >
+                    <ProfilePanel
+                      imageSrc={orgLogo}
+                      name={opp.organization.name}
+                      lines={[
+                        opp.organization.tagline,
+                        [opp.organization.department, opp.organization.location]
+                          .filter(Boolean)
+                          .join(" · "),
+                        opp.organization.primaryDomain,
+                        opp.organization.website,
+                        opp.organization.verified
+                          ? t("opportunities.preview.verifiedOrganization", {}, {
+                              default: "Verified organization",
+                            })
+                          : null,
+                      ]}
+                    />
+                    {opp.organization.mission ? (
+                      <p style={BODY_TEXT_STYLE}>{opp.organization.mission}</p>
+                    ) : null}
+                  </PreviewSection>
+                ) : null}
 
-              {opp.organization ? (
-                <PreviewSection
-                  title={t("opportunities.preview.hostedBy", {}, { default: "Hosted by" })}
-                >
-                  <ProfilePanel
-                    imageSrc={orgLogo}
-                    name={opp.organization.name}
-                    lines={[
-                      opp.organization.tagline,
-                      [opp.organization.department, opp.organization.location]
-                        .filter(Boolean)
-                        .join(" · "),
-                      opp.organization.primaryDomain,
-                      opp.organization.website,
-                      opp.organization.verified
-                        ? t("opportunities.preview.verifiedOrganization", {}, {
-                            default: "Verified organization",
-                          })
-                        : null,
-                    ]}
-                  />
-                  {opp.organization.mission ? (
-                    <p style={BODY_TEXT_STYLE}>{opp.organization.mission}</p>
-                  ) : null}
-                </PreviewSection>
-              ) : null}
-
-              {opp.mentor ? (
-                <PreviewSection
-                  title={t("opportunities.preview.mentorContact", {}, { default: "Your contact" })}
-                >
-                  <ProfilePanel
-                    imageSrc={mentorAvatar}
-                    name={mentorName}
-                    lines={[
-                      opp.mentor.tagline,
-                      [opp.mentor.organization, opp.mentor.department]
-                        .filter(Boolean)
-                        .join(" · "),
-                      opp.mentor.primaryDomain,
-                      opp.mentor.timeCommitment
-                        ? `${t("opportunities.preview.timeCommitment", {}, { default: "Time commitment" })}: ${opp.mentor.timeCommitment}`
-                        : null,
-                    ]}
-                  />
-                  {opp.mentor.bio ? <p style={BODY_TEXT_STYLE}>{opp.mentor.bio}</p> : null}
-                </PreviewSection>
-              ) : null}
-
+                {opp.mentor ? (
+                  <PreviewSection
+                    title={t("opportunities.preview.mentorContact", {}, { default: "Your contact" })}
+                  >
+                    <ProfilePanel
+                      imageSrc={mentorAvatar}
+                      name={mentorName}
+                      lines={[
+                        opp.mentor.tagline,
+                        opp.mentor.email,
+                        [opp.mentor.organization, opp.mentor.department]
+                          .filter(Boolean)
+                          .join(" · "),
+                        opp.mentor.primaryDomain,
+                        opp.mentor.timeCommitment
+                          ? `${t("opportunities.preview.timeCommitment", {}, { default: "Time commitment" })}: ${opp.mentor.timeCommitment}`
+                          : null,
+                      ]}
+                    />
+                    {opp.mentor.bio ? <p style={BODY_TEXT_STYLE}>{opp.mentor.bio}</p> : null}
+                  </PreviewSection>
+                ) : null}
+              </div>
               {opp.ratings?.length > 0 ? (
                 <PreviewSection
                   title={t("opportunities.preview.ratingsTitle", {}, {
@@ -856,9 +899,42 @@ export default function OpportunityPreviewModal({ open, opportunityId, onClose }
         </StyledModal>
       </Modal.Content>
       <Modal.Actions style={{ padding: "1rem 1.5rem", gap: "8px" }}>
-        <Button variant="outline" onClick={onClose}>
-          {t("opportunities.preview.close", {}, { default: "Close" })}
-        </Button>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            width: "100%",
+            flexWrap: "wrap",
+          }}
+        >
+          {showMatchingRoundSection ? (
+            showNoRoundHint ? (
+              <span style={{ fontSize: 13, color: "#5f6871" }}>
+                {t("opportunities.preview.matchingRound.noRoundHint", {}, {
+                  default:
+                    "Create a matching round above to include this opportunity.",
+                })}
+              </span>
+            ) : canManage ? (
+              <Button
+                variant={isInMatchingRound ? "outline" : "filled"}
+                onClick={handleToggleMatchingRound}
+                disabled={isToggling}
+              >
+                {matchingRoundButtonLabel}
+              </Button>
+            ) : (
+              <span />
+            )
+          ) : (
+            <span />
+          )}
+          <Button variant="outline" onClick={onClose}>
+            {t("opportunities.preview.close", {}, { default: "Close" })}
+          </Button>
+        </div>
       </Modal.Actions>
     </Modal>
   );

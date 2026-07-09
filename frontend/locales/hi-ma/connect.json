@@ -228,6 +228,14 @@
 	},
 	"introductionVideo": "परिचय वीडियो",
 	"locationFilter": "",
+	"mentorPreferences": {
+		"classType": {
+			"title": ""
+		},
+		"gradeLevel": {
+			"title": ""
+		}
+	},
 	"myOpportunitiesList": {
 		"capacity": "",
 		"delete": "",
@@ -306,6 +314,10 @@
 			"urbanInfrastructure": ""
 		},
 		"categorizationOther": "",
+		"classNetworksEmptyWarning": "",
+		"classNetworksHint": "",
+		"classNetworksNoMembership": "",
+		"classNetworksTitle": "",
 		"competencies": "",
 		"competenciesDescription": "",
 		"coverImage": "",
