@@ -256,6 +256,11 @@
 			"many": "",
 			"one": ""
 		},
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "प्रायोजक: {{name}}",
+			"submitted": "प्रस्तुत किया गया {{date}}"
+		},
 		"searchLabel": "",
 		"searchPlaceholder": "",
 		"status": {

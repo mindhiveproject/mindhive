@@ -13,6 +13,8 @@ import setResourceTemplateCards from "./setResourceTemplateCards";
 import applyTemplateBoardChanges from "./applyTemplateBoardChanges";
 import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
 import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
+import backfillOpportunityMultiselectFields from "./backfillOpportunityMultiselectFields";
+import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
 import resolveFormDefinition from "./resolveFormDefinition";
@@ -80,6 +82,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         ): ApplyTemplateBoardChangesResult
         backfillMediaAssetOrigins(limit: Int): Int!
         backfillOpportunityProposalData(limit: Int, dryRun: Boolean): Int!
+        backfillOpportunityMultiselectFields(limit: Int, dryRun: Boolean): Int!
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
         # One-off seeder for the global Opportunity FormDefinition.
@@ -115,6 +118,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       }
     `,
     resolvers: {
+      Opportunity: opportunityMultiselectResolvers,
       Query: {
         resolveFormDefinition,
       },
@@ -132,6 +136,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         applyTemplateBoardChanges,
         backfillMediaAssetOrigins,
         backfillOpportunityProposalData,
+        backfillOpportunityMultiselectFields,
         followUser,
         unfollowUser,
         seedOpportunityForm,

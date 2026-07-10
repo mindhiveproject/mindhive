@@ -705,8 +705,8 @@
 					"review": "Review",
 					"sponsor": "Sponsor"
 				},
-				"review": "Review",
-				"remove": "Remove"
+				"remove": "Remove",
+				"review": "Review"
 			},
 			"loading": "Loading matching round…",
 			"manageMatches": "Manage matches",

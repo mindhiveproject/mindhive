@@ -256,6 +256,11 @@
 			"many": "",
 			"one": ""
 		},
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Sponsor: {{name}}",
+			"submitted": "Ingediend {{date}}"
+		},
 		"searchLabel": "",
 		"searchPlaceholder": "",
 		"status": {

@@ -256,6 +256,11 @@
 			"many": "{{average}} · {{count}} ratings",
 			"one": "{{average}} · {{count}} rating"
 		},
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Sponsor: {{name}}",
+			"submitted": "Submitted {{date}}"
+		},
 		"searchLabel": "Search opportunities by title",
 		"searchPlaceholder": "Search by title…",
 		"status": {

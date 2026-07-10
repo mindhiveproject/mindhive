@@ -282,13 +282,10 @@ export const Opportunity = list({
       // fields (e.g. mentor from session) are not wiped by raw GraphQL input.
       const data = { ...resolvedData };
 
-      // GraphQL multiselect inputs arrive as arrays; SQLite stores JSON strings.
-      const multiselectFields = ["preferGradeLevels", "preferClassType"];
-      for (const key of multiselectFields) {
-        if (Array.isArray(data[key])) {
-          data[key] = JSON.stringify(data[key]);
-        }
-      }
+      // Multiselect serialization is handled by Keystone's multiselect field
+      // (jsonFieldTypePolyfilledForSQLite on dev SQLite). Do not JSON.stringify
+      // here — on PostgreSQL that stores a string scalar in a Json column and
+      // breaks GraphQL list resolution ("Expected Iterable") on read.
 
       if (operation !== "update" || !data.status) {
         return data;

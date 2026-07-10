@@ -664,11 +664,11 @@
 	"onlyTeachersMentorsAssignCards": "",
 	"opportunities": {
 		"compactInvite": {
-			"description": "",
-			"title": ""
+			"description": "प्रायोजकों के साथ साझा करने के लिए लिंक को कॉपी करें ताकि वे चयनित क्लास नेटवर्क में शामिल हो सकें।",
+			"title": "प्रायोजकों को आमंत्रित करें"
 		},
-		"copyLink": "",
-		"loadingOpportunities": "",
+		"copyLink": "लिंक की प्रतिलिपि करें",
+		"loadingOpportunities": "अवसरों को लोड किया जा रहा है…",
 		"matchingRound": {
 			"algorithm": {
 				"scoreBased": "",
@@ -705,6 +705,7 @@
 					"review": "",
 					"sponsor": ""
 				},
+				"remove": "",
 				"review": ""
 			},
 			"loading": "",
@@ -717,9 +718,12 @@
 			"panels": {
 				"questions": "",
 				"reviewOpportunities": "",
+				"reviewOpportunitiesWithCount": "",
 				"selectedOpportunities": "",
+				"selectedOpportunitiesWithCount": "",
 				"settings": ""
 			},
+			"reviewOpportunitiesEmpty": "",
 			"roundSwitcherLabel": "",
 			"saveFailed": "",
 			"saveRound": "",
@@ -729,10 +733,15 @@
 			"selectNetworkFirst": "",
 			"status": {
 				"archived": "",
+				"archivedHint": "",
 				"matching": "",
+				"matchingHint": "",
 				"preferencesClosed": "",
+				"preferencesClosedHint": "",
 				"preferencesOpen": "",
-				"published": ""
+				"preferencesOpenHint": "",
+				"published": "",
+				"publishedHint": ""
 			},
 			"title": "",
 			"titleRequired": "",
@@ -762,6 +771,13 @@
 			},
 			"hostedBy": "",
 			"loading": "",
+			"matchingRound": {
+				"addToRound": "",
+				"noRoundHint": "",
+				"removeFromRound": "",
+				"saving": "",
+				"toggleFailed": ""
+			},
 			"mentor": "",
 			"mentorContact": "",
 			"no": "",

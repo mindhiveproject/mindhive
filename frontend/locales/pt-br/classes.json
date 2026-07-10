@@ -664,11 +664,11 @@
 	"onlyTeachersMentorsAssignCards": "",
 	"opportunities": {
 		"compactInvite": {
-			"description": "",
-			"title": ""
+			"description": "Copie o link para compartilhar com os patrocinadores para que eles possam participar da rede da turma selecionada.",
+			"title": "Convidar patrocinadores"
 		},
-		"copyLink": "",
-		"loadingOpportunities": "",
+		"copyLink": "Link de cópia",
+		"loadingOpportunities": "Oportunidades de carregamento…",
 		"matchingRound": {
 			"algorithm": {
 				"scoreBased": "",
@@ -705,6 +705,7 @@
 					"review": "",
 					"sponsor": ""
 				},
+				"remove": "",
 				"review": ""
 			},
 			"loading": "",
@@ -717,9 +718,12 @@
 			"panels": {
 				"questions": "",
 				"reviewOpportunities": "",
+				"reviewOpportunitiesWithCount": "",
 				"selectedOpportunities": "",
+				"selectedOpportunitiesWithCount": "",
 				"settings": ""
 			},
+			"reviewOpportunitiesEmpty": "",
 			"roundSwitcherLabel": "",
 			"saveFailed": "",
 			"saveRound": "",
@@ -729,10 +733,15 @@
 			"selectNetworkFirst": "",
 			"status": {
 				"archived": "",
+				"archivedHint": "",
 				"matching": "",
+				"matchingHint": "",
 				"preferencesClosed": "",
+				"preferencesClosedHint": "",
 				"preferencesOpen": "",
-				"published": ""
+				"preferencesOpenHint": "",
+				"published": "",
+				"publishedHint": ""
 			},
 			"title": "",
 			"titleRequired": "",
@@ -762,6 +771,13 @@
 			},
 			"hostedBy": "",
 			"loading": "",
+			"matchingRound": {
+				"addToRound": "",
+				"noRoundHint": "",
+				"removeFromRound": "",
+				"saving": "",
+				"toggleFailed": ""
+			},
 			"mentor": "",
 			"mentorContact": "",
 			"no": "",

@@ -256,6 +256,11 @@
 			"many": "",
 			"one": ""
 		},
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Patrocinador: {{name}}",
+			"submitted": "Enviado {{date}}"
+		},
 		"searchLabel": "",
 		"searchPlaceholder": "",
 		"status": {
