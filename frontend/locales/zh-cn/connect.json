@@ -256,6 +256,11 @@
 			"many": "",
 			"one": ""
 		},
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "赞助商： {{name}}",
+			"submitted": "已提交 {{date}}"
+		},
 		"searchLabel": "",
 		"searchPlaceholder": "",
 		"status": {

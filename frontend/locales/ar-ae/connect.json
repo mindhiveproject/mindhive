@@ -256,6 +256,11 @@
 			"many": "",
 			"one": ""
 		},
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "الراعي: {{name}}",
+			"submitted": "تم الإرسال {{date}}"
+		},
 		"searchLabel": "",
 		"searchPlaceholder": "",
 		"status": {

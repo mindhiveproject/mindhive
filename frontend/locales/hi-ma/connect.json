@@ -256,6 +256,11 @@
 			"many": "",
 			"one": ""
 		},
+		"rowMeta": {
+			"dates": "",
+			"sponsor": "",
+			"submitted": ""
+		},
 		"searchLabel": "",
 		"searchPlaceholder": "",
 		"status": {
