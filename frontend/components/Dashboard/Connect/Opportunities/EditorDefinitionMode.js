@@ -6,11 +6,12 @@
 // (media, rich text, custom application questions). EditorSwitch picks
 // which one renders based on the NEXT_PUBLIC_USE_CUSTOMIZABLE_FORMS
 // env flag.
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
+import { UserContext } from "../../../Global/Authorized";
 import DefinitionForm from "../../../Forms/DefinitionForm";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
 import {
@@ -27,6 +28,7 @@ import useConnectRole from "../useConnectRole";
 import {
   buildClassNetworksMutationInput,
   collectMemberClassNetworks,
+  isNewOpportunityId,
 } from "../../../../lib/opportunityClassNetworks";
 
 const Shell = styled.div`
@@ -82,7 +84,8 @@ function rolesForViewer(connectRole) {
 
 export default function EditorDefinitionMode({ opportunityId }) {
   const router = useRouter();
-  const isNew = !opportunityId;
+  const user = useContext(UserContext);
+  const isNew = isNewOpportunityId(opportunityId);
   const connectRole = useConnectRole();
   const viewerRoles = rolesForViewer(connectRole);
 
@@ -144,7 +147,12 @@ export default function EditorDefinitionMode({ opportunityId }) {
 
     setFlash(null);
     if (isNew) {
-      const res = await createOpportunity({ variables: { input } });
+      const createInput = {
+        ...input,
+        ...(user?.id ? { mentor: { connect: { id: user.id } } } : {}),
+        ...(myOrgId ? { organization: { connect: { id: myOrgId } } } : {}),
+      };
+      const res = await createOpportunity({ variables: { input: createInput } });
       const newId = res?.data?.createOpportunity?.id;
       if (newId) {
         router.replace(

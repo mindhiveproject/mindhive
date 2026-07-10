@@ -27,7 +27,10 @@ import Chip from "../../../DesignSystem/Chip";
 import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
 import OpportunityProposalSection from "./OpportunityProposalSection";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
-import { collectMemberClassNetworks } from "../../../../lib/opportunityClassNetworks";
+import {
+  collectMemberClassNetworks,
+  isNewOpportunityId,
+} from "../../../../lib/opportunityClassNetworks";
 import {
   PROPOSAL_EMPTY_FORM,
   PROPOSAL_WORD_LIMITS,
@@ -413,7 +416,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
   const { sendEmail } = useEmail();
-  const isNew = opportunityId === "new";
+  const isNew = isNewOpportunityId(opportunityId);
   const isReviewRoute = router.query?.review === "1";
   const { hasExpandedOpportunityEditor, isAdmin, isTeacher } = deriveRoles(user);
 

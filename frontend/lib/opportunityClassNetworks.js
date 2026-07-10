@@ -1,3 +1,7 @@
+export function isNewOpportunityId(opportunityId) {
+  return !opportunityId || opportunityId === "new";
+}
+
 export function dedupeNetworks(networks) {
   const seen = new Map();
   (networks || []).forEach((network) => {
