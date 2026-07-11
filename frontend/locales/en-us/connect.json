@@ -272,6 +272,8 @@
 			"preSelected": "Pre-selected",
 			"published": "Published"
 		},
+		"statusChangeLabel": "Change opportunity status",
+		"statusChangeUseEditor": "Complete required fields in the editor before submitting for review.",
 		"statusFilterLabel": "Filter by status",
 		"statusFilterPlaceholder": "All statuses",
 		"teamOf": "Team of {{size}}",

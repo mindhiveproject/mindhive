@@ -272,6 +272,8 @@
 			"preSelected": "",
 			"published": ""
 		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
 		"statusFilterLabel": "",
 		"statusFilterPlaceholder": "",
 		"teamOf": "",

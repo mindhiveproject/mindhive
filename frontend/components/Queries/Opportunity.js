@@ -10,6 +10,7 @@ export const MY_OPPORTUNITIES = gql`
           title
           shortDescription
           status
+          guidelinesAcknowledged
           studentCapacity
           teamSize
           availableFrom
