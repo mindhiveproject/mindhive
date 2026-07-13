@@ -665,6 +665,8 @@
 	"opportunities": {
 		"compactInvite": {
 			"description": "Copie o link para compartilhar com os patrocinadores para que eles possam participar da rede da turma selecionada.",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
 			"title": "Convidar patrocinadores"
 		},
 		"copyLink": "Link de cópia",
@@ -681,7 +683,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",

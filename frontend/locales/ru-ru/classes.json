@@ -665,6 +665,8 @@
 	"opportunities": {
 		"compactInvite": {
 			"description": "Скопируйте ссылку, чтобы поделиться ею со спонсорами, чтобы они могли присоединиться к сети выбранного класса.",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
 			"title": "Пригласить спонсоров"
 		},
 		"copyLink": "Копировать ссылку",
@@ -681,7 +683,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",

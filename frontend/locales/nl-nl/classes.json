@@ -665,6 +665,8 @@
 	"opportunities": {
 		"compactInvite": {
 			"description": "Kopieer de link om te delen met sponsors, zodat zij zich kunnen aansluiten bij het netwerk van de geselecteerde groep.",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
 			"title": "Nodig sponsors uit"
 		},
 		"copyLink": "Kopieer link",
@@ -681,7 +683,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",

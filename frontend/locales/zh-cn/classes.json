@@ -665,6 +665,8 @@
 	"opportunities": {
 		"compactInvite": {
 			"description": "复制链接分享给赞助商，以便他们加入所选的课程网络。",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
 			"title": "邀请赞助商"
 		},
 		"copyLink": "复制链接",
@@ -681,7 +683,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",

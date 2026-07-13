@@ -664,7 +664,9 @@
 	"onlyTeachersMentorsAssignCards": "Only teachers and mentors can assign cards",
 	"opportunities": {
 		"compactInvite": {
-			"description": "Copy the link to share with sponsors so they can join the selected class network.",
+			"description": "Copy a link for new sponsors to sign up and join this network, or for existing sponsors to join the network only.",
+			"inviteToNetworkLink": "Invite to network only",
+			"signupAndInviteLink": "Signup + invite to network",
 			"title": "Invite sponsors"
 		},
 		"copyLink": "Copy link",
@@ -681,7 +683,6 @@
 			"algorithmHint": "The algorithm runs when you click Run matching on the matches dashboard — not when you save here.",
 			"collapseLabel": "Collapse matching round settings",
 			"createRound": "Create round",
-			"description": "Set up a matching round for your class. Students rank opportunities and the algorithm assigns matches when you run it.",
 			"expandLabel": "Expand matching round settings",
 			"fields": {
 				"algorithm": "Matching algorithm",

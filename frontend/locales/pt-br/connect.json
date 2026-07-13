@@ -364,6 +364,7 @@
 			"yes": "Sim"
 		},
 		"descriptionPlaceholder": "O que os alunos farão? O que eles aprenderão?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Resultados esperados",
 		"expectedDeliverablesDescription": "Descreva os resultados esperados da Equipe de Projeto Final ao término do projeto (por exemplo, instrumentos de pesquisa ou avaliação, minutas de políticas e procedimentos, listas de recursos, análise de grandes conjuntos de dados, um relatório abrangente, recomendações sobre como prosseguir, etc.). Aproximadamente 250 palavras.",
 		"fieldWorkLikelihood": "Qual a probabilidade de o projeto exigir trabalho de campo ou visitas ao local (tanto na cidade de Nova Iorque como fora dela)?",

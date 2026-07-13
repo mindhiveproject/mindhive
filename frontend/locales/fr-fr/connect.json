@@ -364,6 +364,7 @@
 			"yes": "Oui"
 		},
 		"descriptionPlaceholder": "Que feront les élèves ? Qu'apprendront-ils ?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Livrables attendus",
 		"expectedDeliverablesDescription": "Veuillez décrire les livrables attendus de l'équipe Capstone à la fin du projet (par exemple : questionnaires ou outils d'évaluation, ébauches de politiques et de procédures, listes de ressources, analyse de grands ensembles de données, rapport complet, recommandations sur la marche à suivre, etc.). Environ 250 mots.",
 		"fieldWorkLikelihood": "Dans quelle mesure le projet nécessiterait-il un travail de terrain ou des visites de sites (à New York ou ailleurs) ?",

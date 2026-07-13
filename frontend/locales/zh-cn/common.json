@@ -19,6 +19,16 @@
 	},
 	"auth": {
 		"checkYourMail": "检查你的电子邮件",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "电子邮件",
 		"forgotPassword": "忘记密码了吗？",
 		"login": "登录",

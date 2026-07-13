@@ -665,6 +665,8 @@
 	"opportunities": {
 		"compactInvite": {
 			"description": "Copiez le lien pour le partager avec les sponsors afin qu'ils puissent rejoindre le réseau de la classe sélectionnée.",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
 			"title": "Inviter des sponsors"
 		},
 		"copyLink": "Copier le lien",
@@ -681,7 +683,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",

@@ -665,6 +665,8 @@
 	"opportunities": {
 		"compactInvite": {
 			"description": "",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
 			"title": ""
 		},
 		"copyLink": "",
@@ -681,7 +683,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",

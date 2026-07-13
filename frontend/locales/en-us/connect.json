@@ -364,6 +364,7 @@
 			"yes": "Yes"
 		},
 		"descriptionPlaceholder": "What will students do? What will they learn?",
+		"existingVideoFile": "Current video file",
 		"expectedDeliverables": "Expected deliverables",
 		"expectedDeliverablesDescription": "Please describe the deliverables that are expected of the Capstone Team at the completion of the project (i.e. survey or evaluation instruments, draft policies and procedures, resource lists, analysis of large datasets, a comprehensive report, recommendations on how to proceed, etc.). Approximately 250 words.",
 		"fieldWorkLikelihood": "How likely would the project require field work or site visits (either within NYC or outside)?",
@@ -399,7 +400,6 @@
 		"guidelinesTitle": "Understanding of Proposal Guidelines",
 		"guidelinesWarning": "Tick the guidelines checkbox before publishing.",
 		"introVideo": "Intro video",
-		"existingVideoFile": "Current video file",
 		"introVideoHint": "Upload a video file or paste an embed URL (YouTube, Vimeo). Uploaded files are stored on our cloud bucket.",
 		"introVideoUrlHint": "Or paste a video URL (the URL itself — not the full <iframe> embed code). Supports YouTube, Vimeo, Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload size: {{maxMb}} MB.",
 		"issueRelevance": "Organizational relevance",

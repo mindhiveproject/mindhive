@@ -364,6 +364,7 @@
 			"yes": ""
 		},
 		"descriptionPlaceholder": "",
+		"existingVideoFile": "",
 		"expectedDeliverables": "",
 		"expectedDeliverablesDescription": "",
 		"fieldWorkLikelihood": "",

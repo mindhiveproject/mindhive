@@ -1155,13 +1155,6 @@ export default function ClassMatchingRoundSection({
 
       {expanded && selectedNetworkId && !loading ? (
         <div className="classTabExpandableBody">
-          <p className="expandableBodyDescription">
-            {t("opportunities.matchingRound.description", {}, {
-              default:
-                "Set up a matching round for your class. Students rank opportunities and the algorithm assigns matches when you run it.",
-            })}
-          </p>
-
           <div
             className="classTabMatchingRoundChipRow"
             role="tablist"

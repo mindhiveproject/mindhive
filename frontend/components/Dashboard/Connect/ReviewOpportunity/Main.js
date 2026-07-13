@@ -430,7 +430,7 @@ export default function ReviewOpportunityMain({ query }) {
         type="button"
         onClick={() => router.push("/dashboard/connect/review-queue")}
       >
-        ← Review queue
+        ← Review queuesdfsdf
       </BackLink>
 
       <TopBar>

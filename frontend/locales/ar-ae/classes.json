@@ -665,6 +665,8 @@
 	"opportunities": {
 		"compactInvite": {
 			"description": "انسخ الرابط لمشاركته مع الرعاة حتى يتمكنوا من الانضمام إلى شبكة الفصل الدراسي المختار.",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
 			"title": "دعوة الرعاة"
 		},
 		"copyLink": "نسخ الوصلة",
@@ -681,7 +683,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",

@@ -364,6 +364,7 @@
 			"yes": "Ja"
 		},
 		"descriptionPlaceholder": "Wat gaan de leerlingen doen? Wat gaan ze leren?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Verwachte resultaten",
 		"expectedDeliverablesDescription": "Beschrijf de resultaten die van het Capstone-team worden verwacht bij de afronding van het project (bijv. enquête- of evaluatie-instrumenten, conceptbeleid en -procedures, bronnenlijsten, analyse van grote datasets, een uitgebreid rapport, aanbevelingen voor de vervolgstappen, enz.). Ongeveer 250 woorden.",
 		"fieldWorkLikelihood": "Hoe waarschijnlijk is het dat het project veldwerk of locatiebezoeken vereist (zowel binnen als buiten New York City)?",

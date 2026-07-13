@@ -364,6 +364,7 @@
 			"yes": "Sí"
 		},
 		"descriptionPlaceholder": "¿Qué harán los estudiantes? ¿Qué aprenderán?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Entregables previstos",
 		"expectedDeliverablesDescription": "Describa los entregables que se esperan del equipo del proyecto final al concluirlo (por ejemplo, instrumentos de encuesta o evaluación, borradores de políticas y procedimientos, listas de recursos, análisis de grandes conjuntos de datos, un informe completo, recomendaciones sobre cómo proceder, etc.). Aproximadamente 250 palabras.",
 		"fieldWorkLikelihood": "¿Qué probabilidades hay de que el proyecto requiera trabajo de campo o visitas al sitio (ya sea dentro o fuera de la ciudad de Nueva York)?",

@@ -665,6 +665,8 @@
 	"opportunities": {
 		"compactInvite": {
 			"description": "प्रायोजकों के साथ साझा करने के लिए लिंक को कॉपी करें ताकि वे चयनित क्लास नेटवर्क में शामिल हो सकें।",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
 			"title": "प्रायोजकों को आमंत्रित करें"
 		},
 		"copyLink": "लिंक की प्रतिलिपि करें",
@@ -681,7 +683,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",

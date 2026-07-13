@@ -19,6 +19,16 @@
 	},
 	"auth": {
 		"checkYourMail": "Revisa tu correo electrónico",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "Correo electrónico",
 		"forgotPassword": "¿Olvidaste tu contraseña?",
 		"login": "Acceso",

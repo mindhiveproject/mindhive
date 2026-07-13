@@ -364,6 +364,7 @@
 			"yes": "是的"
 		},
 		"descriptionPlaceholder": "学生们会做什么？他们会学到什么？",
+		"existingVideoFile": "",
 		"expectedDeliverables": "预期交付成果",
 		"expectedDeliverablesDescription": "请描述项目完成后，毕业设计团队需要交付的成果（例如：调查或评估工具、政策和程序草案、资源清单、大型数据集分析、综合报告、后续工作建议等）。字数约250字。",
 		"fieldWorkLikelihood": "该项目有多大可能需要实地考察或现场勘察（无论是在纽约市内还是纽约市外）？",
