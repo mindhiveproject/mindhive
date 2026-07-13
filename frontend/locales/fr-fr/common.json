@@ -19,6 +19,16 @@
 	},
 	"auth": {
 		"checkYourMail": "Vérifiez votre courrier électronique",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "E-mail",
 		"forgotPassword": "Mot de passe oublié?",
 		"login": "Se connecter",

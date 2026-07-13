@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Dropdown } from "semantic-ui-react";
 
@@ -441,6 +442,7 @@ function QuestionInput({ question, value, onChange }) {
 
 export default function ParticipateSubmission({ roundId, user }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const { data, loading, refetch } = useQuery(GET_PARTICIPATE_VIEW, {
     variables: { roundId },
     fetchPolicy: "cache-and-network",
@@ -793,6 +795,29 @@ export default function ParticipateSubmission({ roundId, user }) {
     );
   }
 
+  if (round.status === "draft") {
+    return (
+      <Shell>
+        <TopBar>
+          <div>
+            <BackLink type="button" onClick={handleCancel}>
+              <Icon name="arrow left" /> Back to rounds
+            </BackLink>
+            <h1>{round.title}</h1>
+          </div>
+        </TopBar>
+        <Card>
+          <p className="helper">
+            {t("matchingRound.notAvailableYet", {}, {
+              default:
+                "This round is not available yet. Your teacher is still setting it up.",
+            })}
+          </p>
+        </Card>
+      </Shell>
+    );
+  }
+
   const now = Date.now();
   const openAtMs = round.openAt ? new Date(round.openAt).getTime() : null;
   const closeAtMs = round.closeAt ? new Date(round.closeAt).getTime() : null;
@@ -807,7 +832,12 @@ export default function ParticipateSubmission({ roundId, user }) {
     round.status === "preferences_open" && inTimeWindow && !submitted;
 
   let lockReason = null;
-  if (round.status !== "preferences_open") {
+  if (round.status === "draft") {
+    lockReason = t("matchingRound.notAvailableYet", {}, {
+      default:
+        "This round is not available yet. Your teacher is still setting it up.",
+    });
+  } else if (round.status !== "preferences_open") {
     lockReason = `Preferences are ${round.status.replace("_", " ")} for this round. You can review what you submitted, but changes are no longer accepted.`;
   } else if (beforeOpen) {
     const openDate = new Date(round.openAt).toLocaleDateString();

@@ -231,7 +231,7 @@ export default function RoundEditor({ roundId }) {
     handleMultipleUpdate({
       title: round.title || "",
       description: round.description || "",
-      status: round.status || "preferences_open",
+      status: round.status || "draft",
       openAt: toDateInputValue(round.openAt),
       closeAt: toDateInputValue(round.closeAt),
       matchingAlgorithm: round.matchingAlgorithm || "stable_matching",
@@ -291,6 +291,19 @@ export default function RoundEditor({ roundId }) {
     );
   };
 
+  const handleStatusChange = (value) => {
+    if (
+      inputs.status === "draft" &&
+      value === "preferences_open" &&
+      !window.confirm(
+        "Students in this network will see this round and can submit preferences. Continue?"
+      )
+    ) {
+      return;
+    }
+    handleMultipleUpdate({ status: value });
+  };
+
   const handleSave = async () => {
     if (!inputs.title?.trim()) {
       alert("Title is required.");
@@ -311,7 +324,7 @@ export default function RoundEditor({ roundId }) {
             title: inputs.title,
             description: inputs.description || "",
             classNetwork: { connect: { id: selectedNetwork } },
-            status: inputs.status || "preferences_open",
+            status: inputs.status || "draft",
             openAt: toIsoOrNull(inputs.openAt),
             closeAt: toIsoOrNull(inputs.closeAt),
             matchingAlgorithm:
@@ -333,7 +346,7 @@ export default function RoundEditor({ roundId }) {
             title: inputs.title,
             description: inputs.description || "",
             classNetwork: { connect: { id: selectedNetwork } },
-            status: inputs.status || "preferences_open",
+            status: inputs.status || "draft",
             openAt: toIsoOrNull(inputs.openAt),
             closeAt: toIsoOrNull(inputs.closeAt),
             matchingAlgorithm:
@@ -471,9 +484,7 @@ export default function RoundEditor({ roundId }) {
               selection
               options={STATUS_OPTIONS}
               value={inputs.status}
-              onChange={(_, { value }) =>
-                handleMultipleUpdate({ status: value })
-              }
+              onChange={(_, { value }) => handleStatusChange(value)}
             />
           </Field>
           <Field>

@@ -116,7 +116,7 @@ const POST_ACCEPTED = new Set(["accepted", "published", "closed"]);
 function isStepDone(index, status, scopeComplete) {
   switch (index) {
     case 0:
-      return status !== "draft";
+      return status !== "draft" && status !== "returned";
     case 1:
       return POST_PRESELECT.has(status);
     case 2:
@@ -131,7 +131,7 @@ function isStepDone(index, status, scopeComplete) {
 }
 
 export function getActiveStepIndex(status, scopeComplete) {
-  if (status === "draft") return 0;
+  if (status === "draft" || status === "returned") return 0;
   if (status === "pending_review") return 1;
   if (status === "pre_selected") return 2;
   if (status === "accepted") return scopeComplete ? 4 : 3;
@@ -151,6 +151,9 @@ function getStepVisual(index, activeIndex, stepRole, viewerRole, done) {
 }
 
 function getContextKey(activeIndex, viewerRole, status) {
+  if (status === "returned") {
+    return viewerRole === "sponsor" ? "returnedRevise" : "waitingReturnedRevise";
+  }
   if (status === "published") return "published";
   if (status === "closed") return "closed";
   if (status === "archived") return "archived";
@@ -178,6 +181,10 @@ function getContextKey(activeIndex, viewerRole, status) {
 const CONTEXT_DEFAULTS = {
   sponsorSubmit:
     "Submit your proposal when you're ready for teacher review.",
+  returnedRevise:
+    "A teacher returned your proposal — review their notes, make changes, then resubmit.",
+  waitingReturnedRevise:
+    "Waiting for the sponsor to revise and resubmit their returned proposal.",
   teacherPreSelect: "Review the proposal and pre-select this sponsor.",
   waitingTeacherPreSelect:
     "Waiting for a teacher to review and pre-select your proposal.",

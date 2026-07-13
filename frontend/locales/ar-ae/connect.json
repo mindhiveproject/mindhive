@@ -228,6 +228,15 @@
 	},
 	"introductionVideo": "فيديو المقدمة",
 	"locationFilter": "موقع",
+	"matchingRound": {
+		"draftBanner": "",
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": ""
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -256,6 +265,8 @@
 			"many": "",
 			"one": ""
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
 			"sponsor": "الراعي: {{name}}",
@@ -270,8 +281,12 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"resubmit": "",
+			"returned": ""
 		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
 		"statusFilterLabel": "",
 		"statusFilterPlaceholder": "",
 		"teamOf": "",
@@ -353,6 +368,7 @@
 			"yes": "نعم"
 		},
 		"descriptionPlaceholder": "ماذا سيفعل الطلاب؟ وماذا سيتعلمون؟",
+		"existingVideoFile": "",
 		"expectedDeliverables": "المخرجات المتوقعة",
 		"expectedDeliverablesDescription": "يرجى وصف المخرجات المتوقعة من فريق مشروع التخرج عند إتمام المشروع (مثل: أدوات الاستبيان أو التقييم، مسودات السياسات والإجراءات، قوائم الموارد، تحليل مجموعات البيانات الكبيرة، تقرير شامل، توصيات حول كيفية المضي قدماً، إلخ). حوالي 250 كلمة.",
 		"fieldWorkLikelihood": "ما مدى احتمالية أن يتطلب المشروع أعمالاً ميدانية أو زيارات للموقع (سواء داخل مدينة نيويورك أو خارجها)؟",
@@ -529,7 +545,9 @@
 		"relevantLinksLabel": "ملصق",
 		"relevantLinksRemove": "يزيل",
 		"relevantLinksUrl": "عنوان URL",
+		"requestsAppointment": "",
 		"researchQuestion": "ما هو سؤال البحث/نطاق البحث الذي سيتم استكشافه أو ما هي المشكلة التي تريد معالجتها؟",
+		"returnedBanner": "",
 		"review": {
 			"accept": "قبول العرض",
 			"acceptConfirm": "هل تقبل هذا المقترح؟ سيتم إخطار الجهة الراعية لاستكمال النطاق النهائي.",
@@ -553,6 +571,11 @@
 			"scopeIncomplete": "يجب على الجهة الراعية إكمال نطاق المشروع قبل أن تتمكن من النشر.",
 			"sponsorLabel": "راعي",
 			"submittedLabel": "مُقَدَّم"
+		},
+		"reviewNotes": {
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
 		},
 		"save": "حفظ التغييرات",
 		"saving": "إنقاذ...",
@@ -583,6 +606,7 @@
 			"draft": "مسودة (غير مرئية للطلاب)",
 			"pre_selected": "أسئلة متابعة مختارة مسبقًا (أكمل الأسئلة)",
 			"published": "نشرت",
+			"returned": "",
 			"submitted": "تم تقديمه للمراجعة"
 		},
 		"studentCapacity": "الطاقة الاستيعابية للطلاب",
@@ -631,6 +655,7 @@
 				"archived": "",
 				"closed": "",
 				"published": "تم نشر هذه الفرصة للطلاب.",
+				"returnedRevise": "",
 				"sponsorFollowUp": "أكمل استبيان المتابعة أدناه.",
 				"sponsorScope": "أكمل نطاق المشروع أدناه.",
 				"sponsorSubmit": "قدّم اقتراحك عندما تكون جاهزاً لمراجعة المعلم.",
@@ -638,6 +663,7 @@
 				"teacherPreSelect": "راجع المقترح واختر هذا الراعي مبدئياً.",
 				"teacherPublish": "قم بمراجعة نطاق الفرصة ونشرها.",
 				"waitingFollowUp": "في انتظار أن يكمل الراعي استبيان المتابعة.",
+				"waitingReturnedRevise": "",
 				"waitingScope": "في انتظار استكمال نطاق المشروع من قبل الجهة الراعية.",
 				"waitingTeacherAccept": "في انتظار موافقة أحد المعلمين على اقتراحك.",
 				"waitingTeacherPreSelect": "في انتظار قيام أحد المعلمين بمراجعة مقترحك واختياره مبدئياً.",
@@ -770,6 +796,20 @@
 		}
 	},
 	"returnDashboard": "العودة إلى لوحة المعلومات",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "",
 		"description": "",

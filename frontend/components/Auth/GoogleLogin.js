@@ -1,6 +1,7 @@
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { GoogleLogin } from "react-google-login";
 import { useRouter } from "next/dist/client/router";
+import useTranslation from "next-translate/useTranslation";
 
 const clientID =
   "1042393944588-od9nbqtdfefltmpq8kjnnhir0lbb14se.apps.googleusercontent.com";
@@ -8,40 +9,81 @@ const clientID =
 import { GOOGLE_LOGIN } from "../Mutations/Auth";
 import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
+import { completeClassNetworkInviteAfterAuth } from "../../lib/joinClassNetwork";
 
-export default function LoginWithGoogle({}) {
+export default function LoginWithGoogle({
+  classNetwork,
+  redirectType,
+  redirectTo,
+  onInviteError,
+  disabled = false,
+}) {
   const router = useRouter();
+  const apolloClient = useApolloClient();
+  const { t } = useTranslation("common");
   const [googleLogin, { loading }] = useMutation(GOOGLE_LOGIN);
 
-  const [signin, { data: signinData, loading: signinLoading }] = useMutation(
-    SIGNIN_MUTATION,
-    {
-      refetchQueries: [{ query: CURRENT_USER_QUERY }],
-    }
-  );
+  const [signin] = useMutation(SIGNIN_MUTATION, {
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  });
 
   const handleSuccess = async (e) => {
+    if (disabled) return;
+
     const res = await googleLogin({
       variables: { token: e.tokenId },
     });
     const email = res?.data?.googleLogin?.email;
-    // Normalize email to lowercase
     const normalizedEmail = email?.toLowerCase().trim();
-    // log in user
     const login = await signin({
       variables: {
         email: normalizedEmail,
         password: e.tokenId,
       },
     });
-    if (login?.data?.authenticateProfileWithPassword?.item?.id) {
-      router.push({
-        pathname: "/dashboard",
+
+    if (!login?.data?.authenticateProfileWithPassword?.item?.id) return;
+
+    if (classNetwork) {
+      const result = await completeClassNetworkInviteAfterAuth({
+        apolloClient,
+        classNetworkId: classNetwork,
+        redirectType,
+        redirectTo,
+        router,
       });
+      if (!result.ok && result.error === "wrongRole") {
+        onInviteError?.(
+          t("auth.classNetworkInvite.wrongRole", {}, {
+            default:
+              "This invite is for sponsors. Sign up as a sponsor or use a sponsor account to join.",
+          }),
+          "wrongRole",
+        );
+      } else if (!result.ok) {
+        onInviteError?.(
+          t("auth.classNetworkInvite.joinFailed", {}, {
+            default:
+              "We could not add you to this class network. Please try again.",
+          }),
+          "joinFailed",
+        );
+      }
+      return;
     }
+
+    if (redirectType === "JoinStudyFlow" && redirectTo) {
+      router.push({
+        pathname: "/join/details",
+        query: { id: redirectTo, guest: false },
+      });
+      return;
+    }
+
+    router.push({ pathname: "/dashboard" });
   };
 
-  const handleFailure = (e) => {
+  const handleFailure = () => {
     alert("There was an error, please try again.");
   };
 
@@ -49,7 +91,12 @@ export default function LoginWithGoogle({}) {
     <GoogleLogin
       clientId={clientID}
       render={(renderProps) => (
-        <button className="googleButton" onClick={renderProps.onClick}>
+        <button
+          type="button"
+          className="googleButton"
+          onClick={renderProps.onClick}
+          disabled={disabled || loading}
+        >
           <div>
             <img src="/assets/signup/google.png" alt="icon" height="20" />
           </div>

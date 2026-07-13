@@ -320,6 +320,7 @@ export default function ExploreDetail({ opportunityId }) {
       });
     });
     const rounds = Array.from(seen.values()).filter((r) => {
+      if (r.status === "draft") return false;
       const now = Date.now();
       const openAt = r.openAt ? new Date(r.openAt).getTime() : null;
       const closeAt = r.closeAt ? new Date(r.closeAt).getTime() : null;
@@ -815,11 +816,11 @@ export default function ExploreDetail({ opportunityId }) {
               </span>
             )}
           </div>
-          {opp.mentor?.publicReadableId && (
+          {opp.mentor?.publicId && (
             <Link
               href={{
                 pathname: "/dashboard/connect/with",
-                query: { id: opp.mentor.publicReadableId },
+                query: { id: opp.mentor.publicId },
               }}
               passHref
               legacyBehavior

@@ -10,6 +10,7 @@ export const MY_OPPORTUNITIES = gql`
           title
           shortDescription
           status
+          guidelinesAcknowledged
           studentCapacity
           teamSize
           availableFrom
@@ -30,6 +31,9 @@ export const MY_OPPORTUNITIES = gql`
           publicRatingCount
           createdAt
           updatedAt
+          reviewNotes {
+            id
+          }
         }
       }
     }
@@ -68,6 +72,8 @@ export const GET_OPPORTUNITY = gql`
       preferGradeLevels
       preferGroupFormat
       preferClassType
+      sponsorIsMentor
+      mentorNotes
       status
       extraDetails
       classNetworks {
@@ -115,6 +121,21 @@ export const GET_OPPORTUNITY = gql`
       specificSkills
       createdAt
       updatedAt
+      reviewNotes(orderBy: { createdAt: desc }) {
+        id
+        body
+        createdAt
+        author {
+          id
+          username
+          firstName
+          lastName
+        }
+        round {
+          id
+          title
+        }
+      }
     }
   }
 `;
@@ -253,7 +274,7 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         department
         primaryDomain
         timeCommitment
-        publicReadableId
+        publicId
         image {
           keystoneImage {
             url

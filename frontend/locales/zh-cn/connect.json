@@ -228,6 +228,15 @@
 	},
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
+	"matchingRound": {
+		"draftBanner": "",
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": ""
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -256,6 +265,8 @@
 			"many": "",
 			"one": ""
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
 			"sponsor": "赞助商： {{name}}",
@@ -270,8 +281,12 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"resubmit": "",
+			"returned": ""
 		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
 		"statusFilterLabel": "",
 		"statusFilterPlaceholder": "",
 		"teamOf": "",
@@ -353,6 +368,7 @@
 			"yes": "是的"
 		},
 		"descriptionPlaceholder": "学生们会做什么？他们会学到什么？",
+		"existingVideoFile": "",
 		"expectedDeliverables": "预期交付成果",
 		"expectedDeliverablesDescription": "请描述项目完成后，毕业设计团队需要交付的成果（例如：调查或评估工具、政策和程序草案、资源清单、大型数据集分析、综合报告、后续工作建议等）。字数约250字。",
 		"fieldWorkLikelihood": "该项目有多大可能需要实地考察或现场勘察（无论是在纽约市内还是纽约市外）？",
@@ -529,7 +545,9 @@
 		"relevantLinksLabel": "标签",
 		"relevantLinksRemove": "消除",
 		"relevantLinksUrl": "网址",
+		"requestsAppointment": "",
 		"researchQuestion": "你们的研究问题/研究范围是什么？或者，你们想要解决什么问题？",
+		"returnedBanner": "",
 		"review": {
 			"accept": "接受提议",
 			"acceptConfirm": "接受此方案吗？我们将通知赞助商完成最终方案范围的确定。",
@@ -553,6 +571,11 @@
 			"scopeIncomplete": "项目发起人必须先完成项目范围界定，你才能发布。",
 			"sponsorLabel": "赞助",
 			"submittedLabel": "已提交"
+		},
+		"reviewNotes": {
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
 		},
 		"save": "保存更改",
 		"saving": "保存...",
@@ -583,6 +606,7 @@
 			"draft": "草稿（学生不可见）",
 			"pre_selected": "预选（完成后续问题）",
 			"published": "发布",
+			"returned": "",
 			"submitted": "已提交审核"
 		},
 		"studentCapacity": "学生容量",
@@ -631,6 +655,7 @@
 				"archived": "",
 				"closed": "",
 				"published": "这项机会已向学生公布。",
+				"returnedRevise": "",
 				"sponsorFollowUp": "请完成以下后续问卷。",
 				"sponsorScope": "请完成以下项目范围说明。",
 				"sponsorSubmit": "准备好供教师审阅后，再提交提案。",
@@ -638,6 +663,7 @@
 				"teacherPreSelect": "审阅提案并预先选定该赞助商。",
 				"teacherPublish": "审核范围并发布机会。",
 				"waitingFollowUp": "等待赞助商完成后续问卷。",
+				"waitingReturnedRevise": "",
 				"waitingScope": "等待赞助商完成项目范围界定。",
 				"waitingTeacherAccept": "等待老师接受你的提议。",
 				"waitingTeacherPreSelect": "等待老师审阅并初步筛选您的提案。",
@@ -770,6 +796,20 @@
 		}
 	},
 	"returnDashboard": "返回仪表板",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "",
 		"description": "",

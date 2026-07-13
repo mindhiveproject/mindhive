@@ -95,6 +95,13 @@ const Card = styled.div`
   }
 `;
 
+const ReviewNotesCard = styled(Card)`
+  border: 1px solid rgba(160, 144, 224, 0.45);
+  h2 {
+    color: #3f288f;
+  }
+`;
+
 const Row = styled.div`
   display: grid;
   gap: 20px;
@@ -285,11 +292,17 @@ function StatusBanner({ children, variant = "success" }) {
           border: "1px solid #b6dec7",
           color: "#1d6b3a",
         }
-      : {
-          background: "#eef5f9",
-          border: "1px solid #c5dde8",
-          color: "#336f8a",
-        };
+      : variant === "warning"
+        ? {
+            background: "#fff4e6",
+            border: "1px solid #f0c987",
+            color: "#b45309",
+          }
+        : {
+            background: "#eef5f9",
+            border: "1px solid #c5dde8",
+            color: "#336f8a",
+          };
   return (
     <div
       style={{
@@ -443,6 +456,13 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const adminStatusOptions = [
     ...sponsorStatusOptions,
     {
+      key: "returned",
+      text: t("opportunityEditor.statusOptions.returned", {}, {
+        default: "Returned (sponsor revising)",
+      }),
+      value: "returned",
+    },
+    {
       key: "pre_selected",
       text: t("opportunityEditor.statusOptions.pre_selected", {}, {
         default: "Pre-selected (awaiting acceptance)",
@@ -479,7 +499,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
     },
   ];
 
-  const statusOptions = isAdmin ? adminStatusOptions : sponsorStatusOptions;
   const ADMIN_ONLY_STATUSES = SPONSOR_LOCKED_STATUSES;
 
   const { data: existing, loading: loadingOpportunity } = useQuery(
@@ -614,6 +633,24 @@ export default function OpportunityEditor({ opportunityId, user }) {
     !!opportunity?.acceptedAt;
   const scopeComplete = !!inputs.scopeDescription?.trim();
   const fieldDisabled = isFieldReadOnly;
+  const reviewNotes = opportunity?.reviewNotes || [];
+
+  const statusOptions = useMemo(() => {
+    if (isAdmin) return adminStatusOptions;
+    if (inputs.status === "returned") {
+      return [
+        {
+          key: "returned",
+          text: t("opportunityEditor.statusOptions.returned", {}, {
+            default: "Returned (revise and resubmit)",
+          }),
+          value: "returned",
+        },
+        sponsorStatusOptions.find((option) => option.value === "pending_review"),
+      ].filter(Boolean);
+    }
+    return sponsorStatusOptions;
+  }, [isAdmin, inputs.status, t]);
 
   useEffect(() => {
     if (!opportunity) return;
@@ -948,7 +985,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
           input: {
             ...baseInput,
             classNetworks: { set: networkConnect },
-            updatedAt: new Date().toISOString(),
           },
         },
       });
@@ -1031,7 +1067,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
 
     const reviewInput = {
       status: nextStatus,
-      updatedAt: new Date().toISOString(),
       preSelectedAt:
         nextStatus === "pre_selected" && !opportunity?.preSelectedAt
           ? new Date().toISOString()
@@ -1131,6 +1166,87 @@ export default function OpportunityEditor({ opportunityId, user }) {
             default: "You are reviewing this opportunity as a teacher.",
           })}
         </StatusBanner>
+      )}
+
+      {!isReviewMode && inputs.status === "returned" && (
+        <StatusBanner variant="warning">
+          {t("opportunityEditor.returnedBanner", {}, {
+            default:
+              "A teacher returned your proposal — review their notes below, make changes, then resubmit for review.",
+          })}
+        </StatusBanner>
+      )}
+
+      {!isReviewMode && reviewNotes.length > 0 && (
+        <ReviewNotesCard>
+          <h2>
+            {t("opportunityEditor.reviewNotes.title", {}, {
+              default: "Review notes",
+            })}
+          </h2>
+          <div style={{ display: "grid", gap: 12 }}>
+            {reviewNotes.map((note) => (
+              <div
+                key={note.id}
+                style={{
+                  padding: 14,
+                  borderRadius: 10,
+                  background: "#faf8ff",
+                  border: "1px solid rgba(160, 144, 224, 0.35)",
+                  boxShadow: "0 2px 10px rgba(111, 38, 206, 0.08)",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 8,
+                    flexWrap: "wrap",
+                    marginBottom: 8,
+                    fontSize: 13,
+                    color: "#5f6871",
+                  }}
+                >
+                  <span style={{ fontWeight: 600, color: "#171717" }}>
+                    {[
+                      note.author?.firstName,
+                      note.author?.lastName,
+                    ]
+                      .filter(Boolean)
+                      .join(" ") ||
+                      note.author?.username ||
+                      t("opportunityEditor.reviewNotes.unknownAuthor", {}, {
+                        default: "Reviewer",
+                      })}
+                  </span>
+                  <span>
+                    {note.round?.title
+                      ? t("opportunityEditor.reviewNotes.roundLabel", {
+                          title: note.round.title,
+                        }, {
+                          default: "Round: {{title}}",
+                        })
+                      : null}
+                    {note.createdAt
+                      ? ` · ${new Date(note.createdAt).toLocaleString()}`
+                      : null}
+                  </span>
+                </div>
+                <p
+                  style={{
+                    margin: 0,
+                    whiteSpace: "pre-wrap",
+                    color: "#171717",
+                    fontSize: 14,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {note.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </ReviewNotesCard>
       )}
 
       <Card>
@@ -1251,11 +1367,37 @@ export default function OpportunityEditor({ opportunityId, user }) {
                 default: "Upload a video file or paste an embed URL.",
               })}
             </span>
+            {opportunity?.videoFile?.url && !videoFileUpload && (
+              <div style={{ marginBottom: 8, fontSize: 13 }}>
+                <a
+                  href={opportunity.videoFile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#336f8a", fontWeight: 600 }}
+                >
+                  {opportunity.videoFile.filename ||
+                    t("opportunityEditor.existingVideoFile", {}, {
+                      default: "Current video file",
+                    })}
+                </a>
+                {opportunity.videoFile.filesize ? (
+                  <span style={{ color: "#5f6871", marginLeft: 8 }}>
+                    ({Math.round(opportunity.videoFile.filesize / 1024 / 1024)}{" "}
+                    MB)
+                  </span>
+                ) : null}
+              </div>
+            )}
             <input
               type="file"
               accept="video/*"
               onChange={(e) => pickVideoFile(e.target.files?.[0] || null)}
             />
+            {videoFileUpload && (
+              <div style={{ fontSize: 12, color: "#1d8f47", marginTop: 4 }}>
+                Ready to upload: {videoFileUpload.name}
+              </div>
+            )}
             <input
               type="text"
               name="videoUrl"

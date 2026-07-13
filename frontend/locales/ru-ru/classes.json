@@ -665,6 +665,8 @@
 	"opportunities": {
 		"compactInvite": {
 			"description": "Скопируйте ссылку, чтобы поделиться ею со спонсорами, чтобы они могли присоединиться к сети выбранного класса.",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
 			"title": "Пригласить спонсоров"
 		},
 		"copyLink": "Копировать ссылку",
@@ -681,7 +683,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",
@@ -715,6 +716,7 @@
 			"noOpportunitiesInNetwork": "",
 			"noRoundForNetwork": "",
 			"notSetUp": "",
+			"openConfirm": "",
 			"panels": {
 				"questions": "",
 				"reviewOpportunities": "",
@@ -723,6 +725,7 @@
 				"selectedOpportunitiesWithCount": "",
 				"settings": ""
 			},
+			"revertToDraftConfirm": "",
 			"reviewOpportunitiesEmpty": "",
 			"roundSwitcherLabel": "",
 			"saveFailed": "",
@@ -734,6 +737,8 @@
 			"status": {
 				"archived": "",
 				"archivedHint": "",
+				"draft": "",
+				"draftHint": "",
 				"matching": "",
 				"matchingHint": "",
 				"preferencesClosed": "",
@@ -788,6 +793,16 @@
 			"projectCategory": "",
 			"publicRating": "",
 			"ratingsTitle": "",
+			"returnModal": {
+				"cancel": "",
+				"confirm": "",
+				"error": "",
+				"helper": "",
+				"placeholder": "",
+				"submitting": "",
+				"title": ""
+			},
+			"returnToSponsor": "",
 			"status": "",
 			"teamSize": "",
 			"teamSizeSolo": "",
@@ -798,8 +813,14 @@
 			"yes": ""
 		},
 		"rowMeta": {
+			"availabilityLabel": "",
 			"byMentor": "",
 			"capacity": "",
+			"capacityLabel": "",
+			"lastUpdated": "",
+			"lastUpdatedLabel": "",
+			"sponsorLabel": "",
+			"statusLabel": "",
 			"teamOf": ""
 		},
 		"selectNetworkFirst": "",
@@ -813,7 +834,8 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"returned": ""
 		}
 	},
 	"participants": "Участники",

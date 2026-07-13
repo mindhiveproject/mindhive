@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@apollo/client";
+import Link from "next/link";
 import styled from "styled-components";
 import { Icon } from "semantic-ui-react";
 
@@ -92,9 +93,13 @@ export default function ProfilePage({ query, user }) {
   const unofficialBio = profile?.bioInformal || "";
   const hasBioContent = officialBio.trim() || unofficialBio.trim();
 
-  const locationText = [profile?.location, profile?.timezone]
-    .filter(Boolean)
-    .join(" · ");
+  const linkedOrg = profile?.organizations?.[0] || null;
+  const orgLabel = profile?.organization || linkedOrg?.name || null;
+  const orgDepartment = profile?.department || null;
+  const hasOrgMeta = orgLabel || orgDepartment;
+
+  const locationText = profile?.location || null;
+  const hasInterestChips = interestChips.length > 0;
 
   const fullName = profile?.firstName || profile?.lastName
     ? `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim()
@@ -129,13 +134,30 @@ export default function ProfilePage({ query, user }) {
                     <a href={`mailto:${profile?.email}`}>{profile?.email}</a>
                   </MetaItem>
                 )}
-                {profile?.organization && (
+                {hasOrgMeta && (
                   <MetaItem>
                     <Icon name="building outline" />
-                    <span>
-                      {profile?.organization}
-                      {profile?.role ? ` · ${profile?.role}` : ""}
-                    </span>
+                    {linkedOrg?.id ? (
+                      <Link
+                        href={{
+                          pathname: "/dashboard/connect/organizations",
+                          query: { org: linkedOrg.id },
+                        }}
+                        aria-label={t(
+                          "organizationsDetail.viewOrganization",
+                          { name: orgLabel || linkedOrg.name },
+                          { default: "View organization {{name}}" },
+                        )}
+                      >
+                        {orgLabel}
+                        {orgDepartment ? ` · ${orgDepartment}` : ""}
+                      </Link>
+                    ) : (
+                      <span>
+                        {orgLabel}
+                        {orgDepartment ? ` · ${orgDepartment}` : ""}
+                      </span>
+                    )}
                   </MetaItem>
                 )}
                 {locationText && (
@@ -175,11 +197,39 @@ export default function ProfilePage({ query, user }) {
             </Avatar>
           </HeaderSection>
 
-          {hasBioContent && (
+          {(hasBioContent || hasInterestChips) && (
             <>
               <CardDivider />
 
-              <ContentColumns>
+              {hasBioContent && hasInterestChips ? (
+                <ContentColumns>
+                  <MainColumn>
+                    {officialBio.trim() && (
+                      <Section>
+                        <SectionTitle>{t("officialBio")}</SectionTitle>
+                        <BodyCopy>{officialBio}</BodyCopy>
+                      </Section>
+                    )}
+                    {unofficialBio.trim() && (
+                      <Section>
+                        <SectionTitle>{t("unofficialBio")}</SectionTitle>
+                        <BodyCopy>{unofficialBio}</BodyCopy>
+                      </Section>
+                    )}
+                  </MainColumn>
+
+                  <SideColumn>
+                    <ChipContainer>
+                      <SectionTitle>{t("interests.interests")}</SectionTitle>
+                      <ChipList>
+                        {interestChips.map((label) => (
+                          <InterestTag key={label}>{label}</InterestTag>
+                        ))}
+                      </ChipList>
+                    </ChipContainer>
+                  </SideColumn>
+                </ContentColumns>
+              ) : hasBioContent ? (
                 <MainColumn>
                   {officialBio.trim() && (
                     <Section>
@@ -194,33 +244,16 @@ export default function ProfilePage({ query, user }) {
                     </Section>
                   )}
                 </MainColumn>
-
-                <SideColumn>
-                  {/* {availabilityChips.length > 0 && (
-                    <Section>
-                      <SectionTitle>{t("availability")}</SectionTitle>
-                      <ChipList>
-                        {availabilityChips.map((label) => (
-                          <Chip key={label} $variant="blue">
-                            {label}
-                          </Chip>
-                        ))}
-                      </ChipList>
-                    </Section>
-                  )} */}
-
-                  {interestChips.length > 0 && (
-                    <ChipContainer>
-                      <SectionTitle>{t("interests.interests")}</SectionTitle>
-                      <ChipList>
-                        {interestChips.map((label) => (
-                          <InterestTag key={label}>{label}</InterestTag>
-                        ))}
-                      </ChipList>
-                    </ChipContainer>
-                  )}
-                </SideColumn>
-              </ContentColumns>
+              ) : (
+                <ChipContainer>
+                  <SectionTitle>{t("interests.interests")}</SectionTitle>
+                  <ChipList>
+                    {interestChips.map((label) => (
+                      <InterestTag key={label}>{label}</InterestTag>
+                    ))}
+                  </ChipList>
+                </ChipContainer>
+              )}
             </>
           )}
 

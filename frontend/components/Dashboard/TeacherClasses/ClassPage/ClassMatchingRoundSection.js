@@ -26,6 +26,7 @@ import {
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
 
 const ROUND_STATUS_KEYS = {
+  draft: "draft",
   preferences_open: "preferencesOpen",
   preferences_closed: "preferencesClosed",
   matching: "matching",
@@ -102,7 +103,7 @@ function buildSnapshot(inputs, opportunityIds, questionIds) {
   return {
     title: inputs.title || "",
     description: inputs.description || "",
-    status: inputs.status || "preferences_open",
+    status: inputs.status || "draft",
     openAt: inputs.openAt || "",
     closeAt: inputs.closeAt || "",
     matchingAlgorithm: inputs.matchingAlgorithm || "stable_matching",
@@ -300,7 +301,7 @@ export default function ClassMatchingRoundSection({
     const nextInputs = {
       title: round.title || "",
       description: round.description || "",
-      status: round.status || "preferences_open",
+      status: round.status || "draft",
       openAt: toDateInputValue(round.openAt),
       closeAt: toDateInputValue(round.closeAt),
       matchingAlgorithm: round.matchingAlgorithm || "stable_matching",
@@ -546,6 +547,33 @@ export default function ClassMatchingRoundSection({
 
   const handleStatusChange = async (value) => {
     const previousStatus = inputs.status;
+
+    if (
+      previousStatus === "draft" &&
+      value === "preferences_open" &&
+      !window.confirm(
+        t("opportunities.matchingRound.openConfirm", {}, {
+          default:
+            "Students in this network will see this round and can submit preferences. Continue?",
+        })
+      )
+    ) {
+      return;
+    }
+
+    if (
+      value === "draft" &&
+      previousStatus !== "draft" &&
+      !window.confirm(
+        t("opportunities.matchingRound.revertToDraftConfirm", {}, {
+          default:
+            "Reverting to draft hides this round from students. Continue?",
+        })
+      )
+    ) {
+      return;
+    }
+
     const nextInputs = { ...inputs, status: value };
     handleMultipleUpdate({ status: value });
 
@@ -556,7 +584,7 @@ export default function ClassMatchingRoundSection({
         variables: {
           id: activeRoundId,
           input: {
-            status: value || "preferences_open",
+            status: value || "draft",
             updatedAt: new Date().toISOString(),
             publishedAt:
               value === "published" && !round?.publishedAt
@@ -597,7 +625,7 @@ export default function ClassMatchingRoundSection({
               title: inputs.title,
               description: inputs.description || "",
               classNetwork: { connect: { id: selectedNetworkId } },
-              status: inputs.status || "preferences_open",
+              status: inputs.status || "draft",
               openAt: toIsoOrNull(inputs.openAt),
               closeAt: toIsoOrNull(inputs.closeAt),
               matchingAlgorithm: inputs.matchingAlgorithm || "stable_matching",
@@ -625,7 +653,7 @@ export default function ClassMatchingRoundSection({
               title: inputs.title,
               description: inputs.description || "",
               classNetwork: { connect: { id: selectedNetworkId } },
-              status: inputs.status || "preferences_open",
+              status: inputs.status || "draft",
               openAt: toIsoOrNull(inputs.openAt),
               closeAt: toIsoOrNull(inputs.closeAt),
               matchingAlgorithm: inputs.matchingAlgorithm || "stable_matching",
@@ -736,6 +764,7 @@ export default function ClassMatchingRoundSection({
     onMatchingRoundContextChange({
       roundTitle: displayRoundTitle,
       activeRoundId,
+      selectedNetworkId,
       selectedOpportunityIds: selectedOpportunities,
       canManageOpportunities,
       noRoundForNetwork: Boolean(noRoundForNetwork),
@@ -748,6 +777,7 @@ export default function ClassMatchingRoundSection({
     onMatchingRoundContextChange,
     displayRoundTitle,
     activeRoundId,
+    selectedNetworkId,
     selectedOpportunities,
     canManageOpportunities,
     noRoundForNetwork,
@@ -1127,13 +1157,6 @@ export default function ClassMatchingRoundSection({
 
       {expanded && selectedNetworkId && !loading ? (
         <div className="classTabExpandableBody">
-          <p className="expandableBodyDescription">
-            {t("opportunities.matchingRound.description", {}, {
-              default:
-                "Set up a matching round for your class. Students rank opportunities and the algorithm assigns matches when you run it.",
-            })}
-          </p>
-
           <div
             className="classTabMatchingRoundChipRow"
             role="tablist"
@@ -1149,6 +1172,7 @@ export default function ClassMatchingRoundSection({
                 selected={activePanel === panel.id}
                 onClick={() => setActivePanel(panel.id)}
                 ariaLabel={panel.label}
+                style={activePanel === panel.id ? undefined : { border: "none" }}
               />
             ))}
           </div>
@@ -1167,8 +1191,7 @@ export default function ClassMatchingRoundSection({
                   })}
                 </p>
               ) : null}
-              {/* TODO: Add back in when we have a matches dashboard */}
-              {/* {!isNew && (
+              {!isNew && (
                 <Link
                   href={{
                     pathname: "/dashboard/connect/matches",
@@ -1180,7 +1203,7 @@ export default function ClassMatchingRoundSection({
                     default: "Manage matches",
                   })}
                 </Link>
-              )} */}
+              )}
               {isDirty ? (
               <Button
                 variant="filled"

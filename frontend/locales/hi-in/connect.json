@@ -228,6 +228,15 @@
 	},
 	"introductionVideo": "परिचय वीडियो",
 	"locationFilter": "जगह",
+	"matchingRound": {
+		"draftBanner": "",
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": ""
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -256,6 +265,8 @@
 			"many": "",
 			"one": ""
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
 			"sponsor": "प्रायोजक: {{name}}",
@@ -270,8 +281,12 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"resubmit": "",
+			"returned": ""
 		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
 		"statusFilterLabel": "",
 		"statusFilterPlaceholder": "",
 		"teamOf": "",
@@ -353,6 +368,7 @@
 			"yes": "हाँ"
 		},
 		"descriptionPlaceholder": "छात्र क्या करेंगे? वे क्या सीखेंगे?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "अपेक्षित परिणाम",
 		"expectedDeliverablesDescription": "कृपया परियोजना के पूर्ण होने पर कैपस्टोन टीम से अपेक्षित परिणामों का वर्णन करें (जैसे सर्वेक्षण या मूल्यांकन उपकरण, नीति और प्रक्रियाओं का मसौदा, संसाधन सूचियाँ, बड़े डेटासेट का विश्लेषण, एक व्यापक रिपोर्ट, आगे की कार्यवाही के लिए सिफारिशें आदि)। लगभग 250 शब्द।",
 		"fieldWorkLikelihood": "इस परियोजना में फील्ड वर्क या साइट विजिट (न्यूयॉर्क शहर के भीतर या बाहर) की कितनी संभावना है?",
@@ -529,7 +545,9 @@
 		"relevantLinksLabel": "लेबल",
 		"relevantLinksRemove": "निकालना",
 		"relevantLinksUrl": "यूआरएल",
+		"requestsAppointment": "",
 		"researchQuestion": "शोध का प्रश्न/क्षेत्र क्या है जिसकी पड़ताल की जानी है या आप किस समस्या का समाधान करना चाहते हैं?",
+		"returnedBanner": "",
 		"review": {
 			"accept": "प्रस्ताव स्वीकार करें",
 			"acceptConfirm": "क्या आप इस प्रस्ताव को स्वीकार करते हैं? प्रायोजक को अंतिम कार्यक्षेत्र को पूरा करने के लिए सूचित कर दिया जाएगा।",
@@ -553,6 +571,11 @@
 			"scopeIncomplete": "प्रकाशन से पहले प्रायोजक को परियोजना के दायरे को पूरा करना होगा।",
 			"sponsorLabel": "प्रायोजक",
 			"submittedLabel": "प्रस्तुत"
+		},
+		"reviewNotes": {
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
 		},
 		"save": "परिवर्तनों को सुरक्षित करें",
 		"saving": "सहेजा जा रहा है...",
@@ -583,6 +606,7 @@
 			"draft": "मसौदा (छात्रों को दिखाई नहीं देगा)",
 			"pre_selected": "पूर्व-चयनित (अनुवर्ती प्रश्नों को पूरा करें)",
 			"published": "प्रकाशित",
+			"returned": "",
 			"submitted": "समीक्षा के लिए प्रस्तुत किया गया"
 		},
 		"studentCapacity": "छात्र क्षमता",
@@ -631,6 +655,7 @@
 				"archived": "",
 				"closed": "",
 				"published": "यह अवसर छात्रों के लिए प्रकाशित किया गया है।",
+				"returnedRevise": "",
 				"sponsorFollowUp": "नीचे दिए गए अनुवर्ती प्रश्नावली को पूरा करें।",
 				"sponsorScope": "नीचे दिए गए प्रोजेक्ट स्कोप को पूरा करें।",
 				"sponsorSubmit": "जब आप शिक्षक समीक्षा के लिए तैयार हों, तब अपना प्रस्ताव जमा करें।",
@@ -638,6 +663,7 @@
 				"teacherPreSelect": "प्रस्ताव की समीक्षा करें और इस प्रायोजक का पूर्व-चयन करें।",
 				"teacherPublish": "अवसर के दायरे की समीक्षा करें और उसे प्रकाशित करें।",
 				"waitingFollowUp": "प्रायोजक द्वारा अनुवर्ती प्रश्नावली को पूरा करने की प्रतीक्षा है।",
+				"waitingReturnedRevise": "",
 				"waitingScope": "प्रायोजक द्वारा परियोजना के दायरे को पूरा करने की प्रतीक्षा है।",
 				"waitingTeacherAccept": "किसी शिक्षक द्वारा आपके प्रस्ताव को स्वीकार करने की प्रतीक्षा है।",
 				"waitingTeacherPreSelect": "शिक्षक द्वारा आपके प्रस्ताव की समीक्षा और प्रारंभिक चयन की प्रतीक्षा है।",
@@ -770,6 +796,20 @@
 		}
 	},
 	"returnDashboard": "डैशबोर्ड पर लौटें",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "",
 		"description": "",

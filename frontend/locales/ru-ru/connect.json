@@ -228,6 +228,15 @@
 	},
 	"introductionVideo": "Вводное видео",
 	"locationFilter": "Расположение",
+	"matchingRound": {
+		"draftBanner": "",
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": ""
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -256,6 +265,8 @@
 			"many": "",
 			"one": ""
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
 			"sponsor": "Спонсор: {{name}}",
@@ -270,8 +281,12 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"resubmit": "",
+			"returned": ""
 		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
 		"statusFilterLabel": "",
 		"statusFilterPlaceholder": "",
 		"teamOf": "",
@@ -353,6 +368,7 @@
 			"yes": "Да"
 		},
 		"descriptionPlaceholder": "Что будут делать студенты? Чему они научатся?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Ожидаемые результаты",
 		"expectedDeliverablesDescription": "Пожалуйста, опишите результаты работы, которые ожидаются от команды, выполняющей итоговый проект (например, инструменты опроса или оценки, проекты политик и процедур, списки ресурсов, анализ больших массивов данных, подробный отчет, рекомендации по дальнейшим действиям и т. д.). Примерно 250 слов.",
 		"fieldWorkLikelihood": "Насколько вероятно, что проект потребует проведения полевых работ или посещения объектов (как в Нью-Йорке, так и за его пределами)?",
@@ -529,7 +545,9 @@
 		"relevantLinksLabel": "Этикетка",
 		"relevantLinksRemove": "Удалять",
 		"relevantLinksUrl": "URL-адрес",
+		"requestsAppointment": "",
 		"researchQuestion": "В чём заключается исследовательский вопрос/область исследования ИЛИ в чём заключается проблема, которую вы хотите решить?",
+		"returnedBanner": "",
 		"review": {
 			"accept": "Принять предложение",
 			"acceptConfirm": "Принимаете это предложение? Спонсор будет уведомлен для завершения окончательного определения объема работ.",
@@ -553,6 +571,11 @@
 			"scopeIncomplete": "Для публикации результатов необходимо, чтобы спонсор завершил разработку проекта.",
 			"sponsorLabel": "Спонсор",
 			"submittedLabel": "Поданный"
+		},
+		"reviewNotes": {
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
 		},
 		"save": "Сохранить изменения",
 		"saving": "Сохранение...",
@@ -583,6 +606,7 @@
 			"draft": "Черновик (недоступен для просмотра студентами)",
 			"pre_selected": "Предварительно отобранные (ответьте на дополнительные вопросы)",
 			"published": "Опубликовано",
+			"returned": "",
 			"submitted": "Представлено на рассмотрение"
 		},
 		"studentCapacity": "Вместимость для студентов",
@@ -631,6 +655,7 @@
 				"archived": "",
 				"closed": "",
 				"published": "Данная возможность доступна для студентов.",
+				"returnedRevise": "",
 				"sponsorFollowUp": "Заполните приведенную ниже анкету для последующего наблюдения.",
 				"sponsorScope": "Заполните описание объема проекта ниже.",
 				"sponsorSubmit": "Отправьте свое предложение, когда будете готовы к рассмотрению преподавателем.",
@@ -638,6 +663,7 @@
 				"teacherPreSelect": "Ознакомьтесь с предложением и предварительно выберите этого спонсора.",
 				"teacherPublish": "Проанализируйте масштабы проекта и опубликуйте информацию о предлагаемых возможностях.",
 				"waitingFollowUp": "Ожидается, что спонсор заполнит анкету для последующего наблюдения.",
+				"waitingReturnedRevise": "",
 				"waitingScope": "Ожидается, что спонсор завершит определение объема работ по проекту.",
 				"waitingTeacherAccept": "Ожидаю, пока кто-нибудь из учителей примет ваше предложение.",
 				"waitingTeacherPreSelect": "Ожидаем, пока преподаватель рассмотрит и предварительно отберет ваше предложение.",
@@ -770,6 +796,20 @@
 		}
 	},
 	"returnDashboard": "Вернуться на панель инструментов",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "",
 		"description": "",

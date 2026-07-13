@@ -55,6 +55,24 @@ function normalizeRelationshipValue(raw) {
     .filter(Boolean);
 }
 
+function toDateInputValue(iso) {
+  if (!iso) return "";
+  try {
+    return new Date(iso).toISOString().slice(0, 10);
+  } catch {
+    return "";
+  }
+}
+
+function toIsoOrNull(dateStr) {
+  if (!dateStr) return null;
+  try {
+    return new Date(dateStr).toISOString();
+  } catch {
+    return null;
+  }
+}
+
 function defaultForType(t) {
   switch (t) {
     case "checkbox":
@@ -83,6 +101,13 @@ export function hydrate(entity, fields, related) {
     if (f.fieldType === "tag_multiselect") {
       // Normalize whether or not raw is present.
       values[f.name] = normalizeRelationshipValue(raw);
+      continue;
+    }
+
+    if (f.fieldType === "date") {
+      values[f.name] = isEmpty(raw)
+        ? f.defaultValue ?? ""
+        : toDateInputValue(raw);
       continue;
     }
 
@@ -128,6 +153,11 @@ export function buildUpdate(values, fields, entity, related) {
         } else if (v === null) {
           target.columns[col] = null;
         }
+        continue;
+      }
+
+      if (f.fieldType === "date") {
+        target.columns[col] = v ? toIsoOrNull(v) : null;
         continue;
       }
 

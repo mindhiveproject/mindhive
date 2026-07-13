@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Dropdown, Label } from "semantic-ui-react";
 
@@ -169,6 +170,15 @@ const STATUS_OPTIONS = [
   { key: "cancelled", text: "Cancelled", value: "cancelled" },
 ];
 
+const ROUND_STATUS_LABELS = {
+  draft: "Draft",
+  preferences_open: "Preferences open",
+  preferences_closed: "Preferences closed",
+  matching: "Matching",
+  published: "Published",
+  archived: "Archived",
+};
+
 function displayName(profile) {
   if (!profile) return "Unknown";
   return (
@@ -179,6 +189,7 @@ function displayName(profile) {
 
 export default function RoundMatches({ roundId }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const { data, loading, refetch } = useQuery(ROUND_MATCH_VIEW, {
     variables: { roundId },
     fetchPolicy: "cache-and-network",
@@ -218,7 +229,40 @@ export default function RoundMatches({ roundId }) {
     }
   );
 
+  const [opening, setOpening] = useState(false);
   const [running, setRunning] = useState(false);
+
+  const isDraft = round?.status === "draft";
+  const canPublish =
+    round?.status === "matching" || round?.status === "preferences_closed";
+
+  const handleOpenPreferences = async () => {
+    if (
+      !window.confirm(
+        t("matchingRound.openConfirm", {}, {
+          default:
+            "Students in this network will see this round and can submit preferences. Continue?",
+        })
+      )
+    ) {
+      return;
+    }
+    setOpening(true);
+    try {
+      await updateRound({
+        variables: {
+          id: round.id,
+          input: {
+            status: "preferences_open",
+            updatedAt: new Date().toISOString(),
+          },
+        },
+      });
+      await refetch();
+    } finally {
+      setOpening(false);
+    }
+  };
 
   const handleRunMatching = async () => {
     if (
@@ -350,6 +394,8 @@ export default function RoundMatches({ roundId }) {
   }
 
   const proposedCount = matches.filter((m) => m.status === "proposed").length;
+  const roundStatusLabel =
+    ROUND_STATUS_LABELS[round.status] || round.status.replace(/_/g, " ");
 
   return (
     <Shell>
@@ -360,7 +406,7 @@ export default function RoundMatches({ roundId }) {
           </BackLink>
           <h1>Matches · {round.title}</h1>
           <div style={{ marginTop: 6, color: "#5f6871", fontSize: 13 }}>
-            Round status: {round.status.replace("_", " ")} ·{" "}
+            Round status: {roundStatusLabel} ·{" "}
             {matches.length} match{matches.length === 1 ? "" : "es"} ·{" "}
             {preferences.filter((p) => p.status === "submitted").length} submitted
             preference
@@ -371,6 +417,38 @@ export default function RoundMatches({ roundId }) {
         </div>
       </TopBar>
 
+      {isDraft && (
+        <Card
+          style={{
+            border: "1px solid #d3dae0",
+            background: "#f7f9f8",
+          }}
+        >
+          <p className="helper" style={{ margin: 0 }}>
+            {t("matchingRound.draftBanner", {}, {
+              default:
+                "This round is in draft. Students cannot see it until you open preferences.",
+            })}
+          </p>
+          <ButtonRow>
+            <Button
+              type="button"
+              $primary
+              onClick={handleOpenPreferences}
+              disabled={opening || publishing}
+            >
+              {opening
+                ? t("matchingRound.openingPreferences", {}, {
+                    default: "Opening…",
+                  })
+                : t("matchingRound.openPreferences", {}, {
+                    default: "Open preferences",
+                  })}
+            </Button>
+          </ButtonRow>
+        </Card>
+      )}
+
       <Card>
         <h2>Algorithm controls</h2>
         <p className="helper">
@@ -379,6 +457,22 @@ export default function RoundMatches({ roundId }) {
           opportunity&apos;s capacity. Existing <em>proposed</em> matches will be
           replaced — manually-edited or active matches are preserved.
         </p>
+        {!canPublish && !isDraft && proposedCount > 0 && (
+          <p className="helper">
+            {t("matchingRound.publishRequiresMatching", {}, {
+              default:
+                "Set the round status to Matching before publishing final matches.",
+            })}
+          </p>
+        )}
+        {isDraft && proposedCount > 0 && (
+          <p className="helper">
+            {t("matchingRound.publishDisabledWhileDraft", {}, {
+              default:
+                "Open preferences and move the round to Matching before publishing matches.",
+            })}
+          </p>
+        )}
         <ButtonRow>
           <Button
             type="button"
@@ -399,7 +493,7 @@ export default function RoundMatches({ roundId }) {
             type="button"
             $primary
             onClick={handlePublish}
-            disabled={publishing || proposedCount === 0}
+            disabled={publishing || proposedCount === 0 || !canPublish}
           >
             {publishing ? "Publishing…" : "Publish matches"}
           </Button>

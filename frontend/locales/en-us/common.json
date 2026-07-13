@@ -19,6 +19,16 @@
 	},
 	"auth": {
 		"checkYourMail": "Check your email",
+		"classNetworkInvite": {
+			"alreadyMember": "You are already a member of this class network.",
+			"bannerDescription": "Log in to join this class network and connect with teachers and students.",
+			"bannerTitle": "You're joining {{networkTitle}}",
+			"invalidNetwork": "This class network invite link is invalid or has expired.",
+			"joinFailed": "We could not add you to this class network. Please try again.",
+			"joining": "Joining class network…",
+			"signUpAsSponsor": "Sign up as a sponsor instead",
+			"wrongRole": "This invite is for sponsors. Sign up as a sponsor or use a sponsor account to join."
+		},
 		"email": "Email",
 		"forgotPassword": "Forgot your password?",
 		"login": "Login",

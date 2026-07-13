@@ -26,13 +26,14 @@ export const ConnectRound = list({
 
     status: select({
       options: [
+        { label: "Draft", value: "draft" },
         { label: "Preferences Open", value: "preferences_open" },
         { label: "Preferences Closed", value: "preferences_closed" },
         { label: "Matching", value: "matching" },
         { label: "Published", value: "published" },
         { label: "Archived", value: "archived" },
       ],
-      defaultValue: "preferences_open",
+      defaultValue: "draft",
     }),
 
     openAt: timestamp(),

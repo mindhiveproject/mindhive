@@ -6,7 +6,7 @@ import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import { MY_OPPORTUNITIES } from "../../../Queries/Opportunity";
-import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
+import { DELETE_OPPORTUNITY, UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import Button from "../../../DesignSystem/Button";
 import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import FilterBar from "../FilterBar";
@@ -54,6 +54,7 @@ const Empty = styled.div`
 const STATUS_KEYS = {
   draft: "draft",
   pending_review: "pendingReview",
+  returned: "returned",
   pre_selected: "preSelected",
   accepted: "accepted",
   published: "published",
@@ -63,13 +64,26 @@ const STATUS_KEYS = {
 
 const STATUS_DEFAULTS = {
   draft: "Draft",
-  pending_review: "Pending Review",
+  pending_review: "Submitted",
+  returned: "Returned",
   pre_selected: "Pre-selected",
   accepted: "Accepted",
   published: "Published",
   closed: "Closed",
   archived: "Archived",
 };
+
+const SPONSOR_STATUS_VALUES = ["draft", "pending_review"];
+
+const SPONSOR_LOCKED_STATUSES = new Set([
+  "pre_selected",
+  "accepted",
+  "published",
+  "closed",
+  "archived",
+]);
+
+const ADMIN_STATUS_VALUES = Object.keys(STATUS_KEYS);
 
 const TabRow = styled.div`
   display: flex;
@@ -118,6 +132,39 @@ const FILTER_TRIGGER_STYLE = {
   padding: "0 14px 0 18px",
 };
 
+function getSponsorCardStatusValues(status) {
+  if (status === "returned") {
+    return ["returned", "pending_review"];
+  }
+  return SPONSOR_STATUS_VALUES;
+}
+
+function buildCardStatusOptions(values, t, { currentStatus, isAdmin } = {}) {
+  return values.map((value) => {
+    if (!isAdmin && currentStatus === "returned" && value === "pending_review") {
+      return {
+        value,
+        label: t("myOpportunitiesList.status.resubmit", {}, {
+          default: "Resubmit",
+        }),
+      };
+    }
+
+    const key = STATUS_KEYS[value];
+    return {
+      value,
+      label: t(`myOpportunitiesList.status.${key}`, {}, {
+        default: STATUS_DEFAULTS[value],
+      }),
+    };
+  });
+}
+
+function isStatusEditable(opportunity, isAdmin) {
+  if (isAdmin) return true;
+  return !SPONSOR_LOCKED_STATUSES.has(opportunity.status);
+}
+
 export default function OpportunitiesList({ user }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
@@ -127,6 +174,10 @@ export default function OpportunitiesList({ user }) {
     fetchPolicy: "cache-and-network",
   });
   const [deleteOpportunity] = useMutation(DELETE_OPPORTUNITY);
+  const [updateOpportunity, { loading: statusUpdating }] = useMutation(
+    UPDATE_OPPORTUNITY,
+  );
+  const [updatingStatusId, setUpdatingStatusId] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
 
@@ -140,6 +191,20 @@ export default function OpportunitiesList({ user }) {
     return t(`myOpportunitiesList.status.${key}`, {}, {
       default: STATUS_DEFAULTS[status] || status,
     });
+  };
+
+  const cardStatusOptions = useMemo(
+    () => buildCardStatusOptions(ADMIN_STATUS_VALUES, t, { isAdmin: true }),
+    [t],
+  );
+
+  const getCardStatusOptions = (opportunity) => {
+    if (isAdmin) return cardStatusOptions;
+    return buildCardStatusOptions(
+      getSponsorCardStatusValues(opportunity.status),
+      t,
+      { currentStatus: opportunity.status, isAdmin: false },
+    );
   };
 
   const networkOptions = useMemo(() => {
@@ -189,6 +254,45 @@ export default function OpportunitiesList({ user }) {
       pathname: "/dashboard/connect/opportunities",
       query: { op: id },
     });
+  };
+
+  const handleStatusChange = async (opportunity, nextStatus) => {
+    if (!nextStatus || nextStatus === opportunity.status) return;
+
+    if (nextStatus !== "draft" && !opportunity.guidelinesAcknowledged) {
+      alert(
+        t("opportunityEditor.validation.guidelines", {}, {
+          default:
+            "Please tick the guidelines acknowledgment in the Publishing card before changing the status away from Draft.",
+        }),
+      );
+      return;
+    }
+
+    // List view cannot validate full proposal fields — send sponsors to the editor.
+    if (!isAdmin && nextStatus === "pending_review") {
+      alert(
+        t("myOpportunitiesList.statusChangeUseEditor", {}, {
+          default:
+            "Complete required fields in the editor before submitting for review.",
+        }),
+      );
+      handleEdit(opportunity.id);
+      return;
+    }
+
+    setUpdatingStatusId(opportunity.id);
+    try {
+      await updateOpportunity({
+        variables: {
+          id: opportunity.id,
+          input: { status: nextStatus },
+        },
+      });
+      await refetch();
+    } finally {
+      setUpdatingStatusId(null);
+    }
   };
 
   return (
@@ -332,23 +436,54 @@ export default function OpportunitiesList({ user }) {
 
       {filtered.length > 0 && (
         <OpportunityCompactGrid>
-          {filtered.map((opportunity) => (
-            <OpportunityCompactCard
-              key={opportunity.id}
-              title={opportunity.title}
-              status={opportunity.status}
-              statusLabel={statusLabel(opportunity.status)}
-              metaLine={buildMyOpportunityMetaLine(opportunity, t)}
-              editLabel={t("myOpportunitiesList.edit", {}, {
-                default: "Edit",
-              })}
-              deleteLabel={t("myOpportunitiesList.delete", {}, {
-                default: "Delete",
-              })}
-              onEdit={() => handleEdit(opportunity.id)}
-              onDelete={() => handleDelete(opportunity.id)}
-            />
-          ))}
+          {filtered.map((opportunity) => {
+            const editable = isStatusEditable(opportunity, isAdmin);
+            const hasReviewNotes = (opportunity.reviewNotes?.length ?? 0) > 0;
+            const showReviewCommentsCta = hasReviewNotes && !isAdmin;
+            return (
+              <OpportunityCompactCard
+                key={opportunity.id}
+                title={opportunity.title}
+                status={opportunity.status}
+                statusLabel={statusLabel(opportunity.status)}
+                statusOptions={editable ? getCardStatusOptions(opportunity) : undefined}
+                statusChangeLabel={t("myOpportunitiesList.statusChangeLabel", {}, {
+                  default: "Change opportunity status",
+                })}
+                statusUpdating={
+                  statusUpdating && updatingStatusId === opportunity.id
+                }
+                onStatusChange={
+                  editable
+                    ? (nextStatus) => handleStatusChange(opportunity, nextStatus)
+                    : undefined
+                }
+                metaLine={buildMyOpportunityMetaLine(opportunity, t)}
+                reviewNoteHint={
+                  showReviewCommentsCta
+                    ? t("myOpportunitiesList.reviewCommentsWaiting", {}, {
+                        default: "Teacher review comments are waiting for you.",
+                      })
+                    : undefined
+                }
+                editHighlight={showReviewCommentsCta}
+                editLabel={
+                  showReviewCommentsCta
+                    ? t("myOpportunitiesList.reviewCommentsEdit", {}, {
+                        default: "Review comments & Resubmit",
+                      })
+                    : t("myOpportunitiesList.edit", {}, {
+                        default: "Edit",
+                      })
+                }
+                deleteLabel={t("myOpportunitiesList.delete", {}, {
+                  default: "Delete",
+                })}
+                onEdit={() => handleEdit(opportunity.id)}
+                onDelete={() => handleDelete(opportunity.id)}
+              />
+            );
+          })}
         </OpportunityCompactGrid>
       )}
     </Shell>

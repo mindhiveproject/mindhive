@@ -19,6 +19,16 @@
 	},
 	"auth": {
 		"checkYourMail": "Controleer uw e-mail",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "E-mail",
 		"forgotPassword": "Wachtwoord vergeten?",
 		"login": "Login",

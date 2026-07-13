@@ -228,6 +228,15 @@
 	},
 	"introductionVideo": "Introductievideo",
 	"locationFilter": "Plaats",
+	"matchingRound": {
+		"draftBanner": "",
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": ""
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -256,6 +265,8 @@
 			"many": "",
 			"one": ""
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
 			"sponsor": "Sponsor: {{name}}",
@@ -270,8 +281,12 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"resubmit": "",
+			"returned": ""
 		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
 		"statusFilterLabel": "",
 		"statusFilterPlaceholder": "",
 		"teamOf": "",
@@ -353,6 +368,7 @@
 			"yes": "Ja"
 		},
 		"descriptionPlaceholder": "Wat gaan de leerlingen doen? Wat gaan ze leren?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Verwachte resultaten",
 		"expectedDeliverablesDescription": "Beschrijf de resultaten die van het Capstone-team worden verwacht bij de afronding van het project (bijv. enquête- of evaluatie-instrumenten, conceptbeleid en -procedures, bronnenlijsten, analyse van grote datasets, een uitgebreid rapport, aanbevelingen voor de vervolgstappen, enz.). Ongeveer 250 woorden.",
 		"fieldWorkLikelihood": "Hoe waarschijnlijk is het dat het project veldwerk of locatiebezoeken vereist (zowel binnen als buiten New York City)?",
@@ -529,7 +545,9 @@
 		"relevantLinksLabel": "Etiket",
 		"relevantLinksRemove": "Verwijderen",
 		"relevantLinksUrl": "Url",
+		"requestsAppointment": "",
 		"researchQuestion": "Wat is de onderzoeksvraag/het onderzoeksgebied dat onderzocht moet worden, OF welk probleem wilt u aanpakken?",
+		"returnedBanner": "",
 		"review": {
 			"accept": "Voorstel accepteren",
 			"acceptConfirm": "Gaat u akkoord met dit voorstel? De opdrachtgever wordt op de hoogte gesteld om de definitieve scope te bepalen.",
@@ -553,6 +571,11 @@
 			"scopeIncomplete": "De opdrachtgever moet de projectomvang volledig hebben vastgesteld voordat u kunt publiceren.",
 			"sponsorLabel": "Sponsor",
 			"submittedLabel": "Ingediend"
+		},
+		"reviewNotes": {
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
 		},
 		"save": "Wijzigingen opslaan",
 		"saving": "Besparing...",
@@ -583,6 +606,7 @@
 			"draft": "Conceptversie (niet zichtbaar voor studenten)",
 			"pre_selected": "Vooraf geselecteerd (volledige vervolgvragen)",
 			"published": "Gepubliceerd",
+			"returned": "",
 			"submitted": "Ingediend ter beoordeling"
 		},
 		"studentCapacity": "Studentencapaciteit",
@@ -631,6 +655,7 @@
 				"archived": "",
 				"closed": "",
 				"published": "Deze vacature is speciaal voor studenten gepubliceerd.",
+				"returnedRevise": "",
 				"sponsorFollowUp": "Vul de onderstaande vervolgvragenlijst in.",
 				"sponsorScope": "Vul de projectomschrijving hieronder in.",
 				"sponsorSubmit": "Dien je voorstel in wanneer je klaar bent voor beoordeling door de docent.",
@@ -638,6 +663,7 @@
 				"teacherPreSelect": "Bekijk het voorstel en selecteer deze sponsor.",
 				"teacherPublish": "Beoordeel de reikwijdte en publiceer de vacature.",
 				"waitingFollowUp": "Wachten tot de sponsor de vervolgvragenlijst heeft ingevuld.",
+				"waitingReturnedRevise": "",
 				"waitingScope": "Wachten tot de opdrachtgever de projectomschrijving compleet heeft.",
 				"waitingTeacherAccept": "Wachten tot een docent je voorstel accepteert.",
 				"waitingTeacherPreSelect": "Je wacht tot een docent je voorstel heeft beoordeeld en een voorselectie heeft gemaakt.",
@@ -770,6 +796,20 @@
 		}
 	},
 	"returnDashboard": "Terug naar dashboard",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "",
 		"description": "",

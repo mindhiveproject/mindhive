@@ -12,7 +12,9 @@ import { useContext, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useMutation, useQuery } from "@apollo/client";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../../DesignSystem/Button";
 import { UserContext } from "../../../Global/Authorized";
 import { REVIEW_OPPORTUNITY } from "../../../Queries/OpportunityReviewNote";
 import {
@@ -21,6 +23,8 @@ import {
 } from "../../../Mutations/OpportunityReviewNote";
 import { UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import useConnectRole from "../useConnectRole";
+import ReturnOpportunityModal from "../ReturnOpportunityModal";
+import { isReturnableOpportunityStatus } from "../returnOpportunityUtils";
 
 const Shell = styled.div`
   display: flex;
@@ -150,6 +154,7 @@ const StatusPill = styled.span`
   background: ${({ $status }) => {
     if ($status === "accepted" || $status === "published") return "#1d6b3a";
     if ($status === "pending_review") return "#8a6d3b";
+    if ($status === "returned") return "#b45309";
     if ($status === "archived" || $status === "closed") return "#5f6871";
     if ($status === "pre_selected") return "#336f8a";
     return "#5f6871";
@@ -281,6 +286,7 @@ function fmtDate(d) {
 
 export default function ReviewOpportunityMain({ query }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const me = useContext(UserContext);
   const { isAdmin } = useConnectRole();
   const oppId = query?.op;
@@ -305,13 +311,17 @@ export default function ReviewOpportunityMain({ query }) {
   const [status, setStatus] = useState(null);
   const [statusFlash, setStatusFlash] = useState(null);
   const [noteBody, setNoteBody] = useState("");
+  const [returnModalOpen, setReturnModalOpen] = useState(false);
+
+  const reviewRefetchQueries = useMemo(
+    () => [{ query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } }],
+    [oppId, roundId]
+  );
 
   const [updateOpportunity, { loading: updatingStatus }] = useMutation(
     UPDATE_OPPORTUNITY,
     {
-      refetchQueries: [
-        { query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } },
-      ],
+      refetchQueries: reviewRefetchQueries,
       awaitRefetchQueries: true,
     }
   );
@@ -319,19 +329,26 @@ export default function ReviewOpportunityMain({ query }) {
   const [createNote, { loading: creatingNote }] = useMutation(
     CREATE_REVIEW_NOTE,
     {
-      refetchQueries: [
-        { query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } },
-      ],
+      refetchQueries: reviewRefetchQueries,
       awaitRefetchQueries: true,
     }
   );
 
   const [deleteNote] = useMutation(DELETE_REVIEW_NOTE, {
-    refetchQueries: [
-      { query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } },
-    ],
+    refetchQueries: reviewRefetchQueries,
     awaitRefetchQueries: true,
   });
+
+  const currentStatus = status || opportunity?.status;
+  const canReturnToSponsor =
+    (isReviewerOnRound || isAdmin) &&
+    opportunity?.status &&
+    isReturnableOpportunityStatus(opportunity.status);
+
+  const handleReturnSuccess = () => {
+    setReturnModalOpen(false);
+    router.push("/dashboard/connect/review-queue");
+  };
 
   if (!oppId || !roundId) {
     return (
@@ -422,8 +439,6 @@ export default function ReviewOpportunityMain({ query }) {
     await deleteNote({ variables: { id: noteId } });
   };
 
-  const currentStatus = status || opportunity.status;
-
   return (
     <Shell>
       <BackLink
@@ -468,6 +483,13 @@ export default function ReviewOpportunityMain({ query }) {
             </select>
           </label>
           {statusFlash ? <span className="saved">{statusFlash}</span> : null}
+          {canReturnToSponsor ? (
+            <Button variant="outline" onClick={() => setReturnModalOpen(true)}>
+              {t("reviewOpportunity.returnToSponsor", {}, {
+                default: "Return to sponsor",
+              })}
+            </Button>
+          ) : null}
         </StatusBar>
       </Card>
 
@@ -615,6 +637,15 @@ export default function ReviewOpportunityMain({ query }) {
           </NoteList>
         )}
       </Card>
+      <ReturnOpportunityModal
+        open={returnModalOpen}
+        onClose={() => setReturnModalOpen(false)}
+        onSuccess={handleReturnSuccess}
+        opportunityId={opportunity.id}
+        roundId={round.id}
+        mentorId={opportunity.mentor?.id}
+        refetchQueries={reviewRefetchQueries}
+      />
     </Shell>
   );
 }
