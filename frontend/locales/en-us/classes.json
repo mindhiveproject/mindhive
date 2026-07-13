@@ -807,6 +807,15 @@
 				"title": "Return with comments"
 			},
 			"returnToSponsor": "Return with comments",
+			"reviewNotes": {
+				"cancel": "Cancel",
+				"edit": "Edit",
+				"empty": "No review notes for this round yet.",
+				"save": "Save",
+				"saving": "Saving…",
+				"title": "Review notes",
+				"updatedAt": "Updated {{date}}"
+			},
 			"sponsorIsMentor": "Sponsor is mentor",
 			"status": "Status",
 			"teamSize": "Team size",

@@ -807,6 +807,15 @@
 				"title": ""
 			},
 			"returnToSponsor": "",
+			"reviewNotes": {
+				"cancel": "",
+				"edit": "",
+				"empty": "",
+				"save": "",
+				"saving": "",
+				"title": "",
+				"updatedAt": ""
+			},
 			"sponsorIsMentor": "",
 			"status": "",
 			"teamSize": "",
