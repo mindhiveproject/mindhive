@@ -69,6 +69,8 @@ export const GET_OPPORTUNITY = gql`
       preferGradeLevels
       preferGroupFormat
       preferClassType
+      sponsorIsMentor
+      mentorNotes
       status
       extraDetails
       classNetworks {

@@ -399,6 +399,7 @@
 		"guidelinesTitle": "Understanding of Proposal Guidelines",
 		"guidelinesWarning": "Tick the guidelines checkbox before publishing.",
 		"introVideo": "Intro video",
+		"existingVideoFile": "Current video file",
 		"introVideoHint": "Upload a video file or paste an embed URL (YouTube, Vimeo). Uploaded files are stored on our cloud bucket.",
 		"introVideoUrlHint": "Or paste a video URL (the URL itself — not the full <iframe> embed code). Supports YouTube, Vimeo, Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload size: {{maxMb}} MB.",
 		"issueRelevance": "Organizational relevance",

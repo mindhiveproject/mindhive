@@ -143,13 +143,13 @@ const PREFER_GROUP_FORMAT_OPTIONS: Option[] = [
 
 const PREFER_GRADE_LEVELS_OPTIONS: Option[] = [
   { value: "middle", label: "Middle school" },
-  { value: "nine_ten", label: "9th – 10th grade" },
-  { value: "eleven_twelve", label: "11th – 12th grade" },
+  { value: "nine", label: "9th – 10th grade" },
+  { value: "eleven", label: "11th – 12th grade" },
 ];
 
 const PREFER_CLASS_TYPE_OPTIONS: Option[] = [
   { value: "accelerated", label: "Accelerated" },
-  { value: "non_accelerated", label: "Non-accelerated" },
+  { value: "nonAccelerated", label: "Non-accelerated" },
   { value: "ell", label: "English-language learners" },
 ];
 

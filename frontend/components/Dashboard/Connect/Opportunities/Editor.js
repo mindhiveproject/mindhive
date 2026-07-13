@@ -1249,11 +1249,37 @@ export default function OpportunityEditor({ opportunityId, user }) {
                 default: "Upload a video file or paste an embed URL.",
               })}
             </span>
+            {opportunity?.videoFile?.url && !videoFileUpload && (
+              <div style={{ marginBottom: 8, fontSize: 13 }}>
+                <a
+                  href={opportunity.videoFile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#336f8a", fontWeight: 600 }}
+                >
+                  {opportunity.videoFile.filename ||
+                    t("opportunityEditor.existingVideoFile", {}, {
+                      default: "Current video file",
+                    })}
+                </a>
+                {opportunity.videoFile.filesize ? (
+                  <span style={{ color: "#5f6871", marginLeft: 8 }}>
+                    ({Math.round(opportunity.videoFile.filesize / 1024 / 1024)}{" "}
+                    MB)
+                  </span>
+                ) : null}
+              </div>
+            )}
             <input
               type="file"
               accept="video/*"
               onChange={(e) => pickVideoFile(e.target.files?.[0] || null)}
             />
+            {videoFileUpload && (
+              <div style={{ fontSize: 12, color: "#1d8f47", marginTop: 4 }}>
+                Ready to upload: {videoFileUpload.name}
+              </div>
+            )}
             <input
               type="text"
               name="videoUrl"

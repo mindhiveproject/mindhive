@@ -1242,6 +1242,11 @@ const StyledClass = styled.div`
       flex-wrap: wrap;
       gap: 10px;
       align-items: center;
+      justify-content: space-between;
+      border: 1.5px solid #ece9e6;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 12px;
     }
 
     .classTabMatchingRoundPanel {

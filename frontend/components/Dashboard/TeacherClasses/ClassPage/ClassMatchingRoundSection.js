@@ -1177,6 +1177,7 @@ export default function ClassMatchingRoundSection({
                 selected={activePanel === panel.id}
                 onClick={() => setActivePanel(panel.id)}
                 ariaLabel={panel.label}
+                style={activePanel === panel.id ? undefined : { border: "none" }}
               />
             ))}
           </div>
