@@ -198,7 +198,7 @@ export const EXPLORE_ORGANIZATION_DETAIL = gql`
         username
         firstName
         lastName
-        publicReadableId
+        publicId
         tagline
         image {
           keystoneImage {

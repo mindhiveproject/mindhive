@@ -416,6 +416,7 @@ export const PUBLIC_USER_QUERY = gql`
       bio
       location
       organization
+      department
       tagline
       introVideo
       passion
@@ -435,6 +436,14 @@ export const PUBLIC_USER_QUERY = gql`
         title
         slug
         description
+      }
+      organizations {
+        id
+        name
+        tagline
+        logo {
+          url
+        }
       }
     }
   }

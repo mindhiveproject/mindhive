@@ -816,11 +816,11 @@ export default function ExploreDetail({ opportunityId }) {
               </span>
             )}
           </div>
-          {opp.mentor?.publicReadableId && (
+          {opp.mentor?.publicId && (
             <Link
               href={{
                 pathname: "/dashboard/connect/with",
-                query: { id: opp.mentor.publicReadableId },
+                query: { id: opp.mentor.publicId },
               }}
               passHref
               legacyBehavior

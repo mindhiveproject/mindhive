@@ -254,7 +254,7 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         department
         primaryDomain
         timeCommitment
-        publicReadableId
+        publicId
         image {
           keystoneImage {
             url

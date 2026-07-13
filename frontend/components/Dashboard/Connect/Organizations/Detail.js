@@ -462,13 +462,13 @@ export default function OrganizationDetail({ organizationId }) {
                   )}
                 </div>
               );
-              if (member.publicReadableId) {
+              if (member.publicId) {
                 return (
                   <Link
                     key={member.id}
                     href={{
                       pathname: "/dashboard/connect/with",
-                      query: { id: member.publicReadableId },
+                      query: { id: member.publicId },
                     }}
                     passHref
                     legacyBehavior

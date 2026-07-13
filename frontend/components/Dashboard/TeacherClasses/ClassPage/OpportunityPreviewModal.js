@@ -333,7 +333,7 @@ export default function OpportunityPreviewModal({
     opp?.mentor?.image?.image?.publicUrlTransformed ||
     null;
   const orgLogo = opp?.organization?.logo?.url || null;
-  const mentorProfileId = opp?.mentor?.publicReadableId || null;
+  const mentorProfileId = opp?.mentor?.publicId || null;
   const orgId = opp?.organization?.id || null;
   const mentorProfileUrl = mentorProfileId
     ? `/dashboard/connect/with?id=${encodeURIComponent(mentorProfileId)}`
