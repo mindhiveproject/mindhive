@@ -764,6 +764,7 @@ export default function ClassMatchingRoundSection({
     onMatchingRoundContextChange({
       roundTitle: displayRoundTitle,
       activeRoundId,
+      selectedNetworkId,
       selectedOpportunityIds: selectedOpportunities,
       canManageOpportunities,
       noRoundForNetwork: Boolean(noRoundForNetwork),
@@ -776,6 +777,7 @@ export default function ClassMatchingRoundSection({
     onMatchingRoundContextChange,
     displayRoundTitle,
     activeRoundId,
+    selectedNetworkId,
     selectedOpportunities,
     canManageOpportunities,
     noRoundForNetwork,

@@ -265,6 +265,8 @@
 			"many": "",
 			"one": ""
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
 			"sponsor": "Patrocinador: {{name}}",
@@ -279,7 +281,9 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"resubmit": "",
+			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
@@ -541,7 +545,9 @@
 		"relevantLinksLabel": "Etiqueta",
 		"relevantLinksRemove": "Eliminar",
 		"relevantLinksUrl": "URL",
+		"requestsAppointment": "",
 		"researchQuestion": "¿Cuál es la pregunta/alcance de la investigación que se va a explorar O cuál es el problema que se quiere abordar?",
+		"returnedBanner": "",
 		"review": {
 			"accept": "Aceptar propuesta",
 			"acceptConfirm": "¿Acepta esta propuesta? Se notificará al patrocinador para que complete el alcance final.",
@@ -565,6 +571,11 @@
 			"scopeIncomplete": "El patrocinador debe completar el alcance del proyecto antes de que usted pueda publicarlo.",
 			"sponsorLabel": "Patrocinador",
 			"submittedLabel": "Enviado"
+		},
+		"reviewNotes": {
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
 		},
 		"save": "Guardar cambios",
 		"saving": "Ahorro...",
@@ -595,6 +606,7 @@
 			"draft": "Borrador (no visible para los estudiantes)",
 			"pre_selected": "Preseleccionados (completar las preguntas de seguimiento)",
 			"published": "Publicado",
+			"returned": "",
 			"submitted": "Presentado para revisión"
 		},
 		"studentCapacity": "Capacidad de estudiantes",
@@ -643,6 +655,7 @@
 				"archived": "",
 				"closed": "",
 				"published": "Esta oportunidad ha sido publicada para estudiantes.",
+				"returnedRevise": "",
 				"sponsorFollowUp": "Complete el cuestionario de seguimiento a continuación.",
 				"sponsorScope": "Complete el alcance del proyecto a continuación.",
 				"sponsorSubmit": "Envía tu propuesta cuando estés listo para que el profesor la revise.",
@@ -650,6 +663,7 @@
 				"teacherPreSelect": "Revise la propuesta y preseleccione a este patrocinador.",
 				"teacherPublish": "Revisar el alcance y publicar la oportunidad.",
 				"waitingFollowUp": "Estamos esperando a que el patrocinador complete el cuestionario de seguimiento.",
+				"waitingReturnedRevise": "",
 				"waitingScope": "Estamos a la espera de que el patrocinador complete el alcance del proyecto.",
 				"waitingTeacherAccept": "Esperando a que un profesor acepte tu propuesta.",
 				"waitingTeacherPreSelect": "Esperando a que un profesor revise y preseleccione tu propuesta.",
@@ -782,6 +796,20 @@
 		}
 	},
 	"returnDashboard": "Regresar al panel de control",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "",
 		"description": "",

@@ -793,6 +793,16 @@
 			"projectCategory": "Project category",
 			"publicRating": "Public rating",
 			"ratingsTitle": "What past participants said",
+			"returnModal": {
+				"cancel": "Cancel",
+				"confirm": "Return to sponsor",
+				"error": "Could not return this opportunity. Please try again.",
+				"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
+				"placeholder": "Optional note for the sponsor…",
+				"submitting": "Returning…",
+				"title": "Return to sponsor"
+			},
+			"returnToSponsor": "Return to sponsor",
 			"status": "Status",
 			"teamSize": "Team size",
 			"teamSizeSolo": "Solo",
@@ -824,7 +834,8 @@
 			"draft": "Draft",
 			"pendingReview": "Pending review",
 			"preSelected": "Pre-selected",
-			"published": "Published"
+			"published": "Published",
+			"returned": "Returned"
 		}
 	},
 	"participants": "Participants",

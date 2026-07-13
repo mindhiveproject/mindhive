@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
@@ -7,14 +7,18 @@ import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import StyledModal from "../../../styles/StyledModal";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../Queries/Opportunity";
+import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../Queries/ConnectRound";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import { hydrateProposalInputs } from "../../Connect/Opportunities/OpportunityProposalConfig";
+import ReturnOpportunityModal from "../../Connect/ReturnOpportunityModal";
+import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
 const STATUS_KEYS = {
   draft: "draft",
   pending_review: "pendingReview",
+  returned: "returned",
   pre_selected: "preSelected",
   accepted: "accepted",
   published: "published",
@@ -283,6 +287,7 @@ export default function OpportunityPreviewModal({
 }) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
+  const [returnModalOpen, setReturnModalOpen] = useState(false);
 
   const isInMatchingRound =
     opportunityId &&
@@ -349,6 +354,41 @@ export default function OpportunityPreviewModal({
   const statusLabel = statusKey
     ? t(`opportunities.status.${statusKey}`, {}, { default: opp?.status })
     : opp?.status;
+
+  const activeRoundId = matchingRoundContext?.activeRoundId;
+  const selectedNetworkId = matchingRoundContext?.selectedNetworkId;
+  const canReturnToSponsor =
+    canManage &&
+    activeRoundId &&
+    opp?.status &&
+    isReturnableOpportunityStatus(opp.status);
+
+  const returnRefetchQueries = useMemo(() => {
+    const queries = [
+      {
+        query: EXPLORE_OPPORTUNITY_DETAIL,
+        variables: { id: opportunityId },
+      },
+    ];
+    if (activeRoundId) {
+      queries.push({
+        query: GET_CONNECT_ROUND,
+        variables: { id: activeRoundId },
+      });
+    }
+    if (selectedNetworkId) {
+      queries.push({
+        query: NETWORK_OPPORTUNITIES_FOR_ROUND,
+        variables: { classNetworkId: selectedNetworkId },
+      });
+    }
+    return queries;
+  }, [opportunityId, activeRoundId, selectedNetworkId]);
+
+  const handleReturnSuccess = () => {
+    setReturnModalOpen(false);
+    onClose?.();
+  };
 
   const categoryKey = CATEGORY_LABELS[opp?.projectCategory];
   const categoryLabel = categoryKey
@@ -912,6 +952,13 @@ export default function OpportunityPreviewModal({
           <Button variant="outline" onClick={onClose}>
             {t("opportunities.preview.close", {}, { default: "Close" })}
           </Button>
+          {canReturnToSponsor ? (
+            <Button variant="outline" onClick={() => setReturnModalOpen(true)}>
+              {t("opportunities.preview.returnToSponsor", {}, {
+                default: "Return to sponsor",
+              })}
+            </Button>
+          ) : null}
           {showMatchingRoundSection ? (
             showNoRoundHint ? (
               <span style={{ fontSize: 13, color: "#5f6871" }}>
@@ -936,6 +983,15 @@ export default function OpportunityPreviewModal({
           )}
         </div>
       </Modal.Actions>
+      <ReturnOpportunityModal
+        open={returnModalOpen}
+        onClose={() => setReturnModalOpen(false)}
+        onSuccess={handleReturnSuccess}
+        opportunityId={opportunityId}
+        roundId={activeRoundId}
+        mentorId={opp?.mentor?.id}
+        refetchQueries={returnRefetchQueries}
+      />
     </Modal>
   );
 }

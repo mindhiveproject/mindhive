@@ -31,6 +31,9 @@ export const MY_OPPORTUNITIES = gql`
           publicRatingCount
           createdAt
           updatedAt
+          reviewNotes {
+            id
+          }
         }
       }
     }
@@ -118,6 +121,21 @@ export const GET_OPPORTUNITY = gql`
       specificSkills
       createdAt
       updatedAt
+      reviewNotes(orderBy: { createdAt: desc }) {
+        id
+        body
+        createdAt
+        author {
+          id
+          username
+          firstName
+          lastName
+        }
+        round {
+          id
+          title
+        }
+      }
     }
   }
 `;

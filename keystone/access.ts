@@ -287,9 +287,8 @@ export const rules = {
     };
   },
   // OpportunityReviewNote query: visible to the author, any reviewer on
-  // the same round, the round creator, the opportunity's mentor, or admins.
-  // (Notes are scoped to a (opportunity, round) pair so cross-round
-  // leakage isn't a concern.)
+  // the same round, the round creator, class-network/class teachers,
+  // the opportunity's mentor, or admins.
   connectReviewNoteVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageUsers({ session })) return true;
@@ -299,6 +298,14 @@ export const rules = {
         { author: { id: { equals: me } } },
         { round: { createdBy: { id: { equals: me } } } },
         { round: { reviewers: { some: { id: { equals: me } } } } },
+        { round: { classNetwork: { creator: { id: { equals: me } } } } },
+        {
+          round: {
+            classNetwork: {
+              classes: { some: { creator: { id: { equals: me } } } },
+            },
+          },
+        },
         { opportunity: { mentor: { id: { equals: me } } } },
       ],
     };

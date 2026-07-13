@@ -793,6 +793,16 @@
 			"projectCategory": "",
 			"publicRating": "",
 			"ratingsTitle": "",
+			"returnModal": {
+				"cancel": "",
+				"confirm": "",
+				"error": "",
+				"helper": "",
+				"placeholder": "",
+				"submitting": "",
+				"title": ""
+			},
+			"returnToSponsor": "",
 			"status": "",
 			"teamSize": "",
 			"teamSizeSolo": "",
@@ -824,7 +834,8 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"returned": ""
 		}
 	},
 	"participants": "مشاركون",

@@ -88,6 +88,11 @@ const OPPORTUNITY_STATUS_CHIP_COLORS = {
     border: "#e8d4a8",
     color: "#8a6d3b",
   },
+  returned: {
+    background: "#E4DFF6",
+    border: "#3F288F",
+    color: "#b45309",
+  },
   pre_selected: {
     background: "#e8f2f7",
     border: "#b8d4e3",
@@ -199,6 +204,49 @@ const DELETE_CHIP_STYLE = {
   color: "#b3261e",
   borderColor: "#e8c4c4",
 };
+
+const ReviewNoteHint = styled.p`
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #6f26ce;
+`;
+
+const ReviewCommentsButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #3f288f;
+  background: #3f288f;
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.25;
+  cursor: pointer;
+  text-align: center;
+  max-width: 100%;
+  box-sizing: border-box;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+
+  &:hover {
+    background: #8340e0;
+    box-shadow: 0 2px 10px rgba(63, 40, 143, 0.35);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #a090e0;
+    outline-offset: 2px;
+  }
+`;
 
 function getStatusTriggerStyle(status) {
   const colors = getStatusChipColors(status);
@@ -312,6 +360,8 @@ export default function OpportunityCompactCard({
   onEdit,
   onDelete,
   editLabel,
+  editHighlight = false,
+  reviewNoteHint,
   deleteLabel,
   reviewHref,
   reviewLabel,
@@ -347,10 +397,17 @@ export default function OpportunityCompactCard({
         ) : null}
       </TitleRow>
       {metaLine ? <Meta>{metaLine}</Meta> : null}
+      {reviewNoteHint ? <ReviewNoteHint>{reviewNoteHint}</ReviewNoteHint> : null}
       {(onEdit || onDelete || reviewHref) && (
         <Actions>
           {onEdit ? (
-            <Chip label={editLabel} onClick={onEdit} ariaLabel={editLabel} shape="square" />
+            editHighlight ? (
+              <ReviewCommentsButton type="button" onClick={onEdit}>
+                {editLabel}
+              </ReviewCommentsButton>
+            ) : (
+              <Chip label={editLabel} onClick={onEdit} ariaLabel={editLabel} shape="square" />
+            )
           ) : null}
           {reviewHref ? (
             <Chip

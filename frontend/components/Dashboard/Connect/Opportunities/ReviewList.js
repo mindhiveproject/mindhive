@@ -81,12 +81,14 @@ const Empty = styled.div`
 
 const REVIEW_STATUS_KEYS = {
   pending_review: "pendingReview",
+  returned: "returned",
   pre_selected: "preSelected",
   accepted: "accepted",
 };
 
 const REVIEW_STATUS_DEFAULTS = {
   pending_review: "Submitted for review",
+  returned: "Returned",
   pre_selected: "Pre-selected",
   accepted: "Accepted",
 };

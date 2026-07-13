@@ -205,6 +205,8 @@ export const Opportunity = list({
       options: [
         { label: "Draft", value: "draft" },
         { label: "Pending Review", value: "pending_review" },
+        // Teacher returned the proposal — sponsor revises and resubmits.
+        { label: "Returned", value: "returned" },
         // Teacher has pre-selected the proposal — sponsor completes follow-up
         // questionnaire before full acceptance.
         { label: "Pre-selected", value: "pre_selected" },
@@ -318,6 +320,10 @@ export const Opportunity = list({
       ) {
         data.acceptedAt = new Date().toISOString();
       }
+      if (nextStatus === "returned" && prevStatus !== "returned") {
+        data.preSelectedAt = null;
+        data.acceptedAt = null;
+      }
       return data;
     },
     // Email reviewers when an opportunity transitions to "pending_review"
@@ -330,14 +336,18 @@ export const Opportunity = list({
         const becamePending =
           item.status === "pending_review" &&
           originalItem?.status !== "pending_review";
-        if (!becamePending) return;
+        const becameReturned =
+          item.status === "returned" &&
+          originalItem?.status !== "returned";
+
+        if (!becamePending && !becameReturned) return;
 
         const fresh = await context.sudo().query.Opportunity.findOne({
           where: { id: String(item.id) },
           query: `
             id
             title
-            mentor { id firstName lastName username }
+            mentor { id email firstName lastName username }
             rounds {
               id
               title
@@ -347,8 +357,33 @@ export const Opportunity = list({
         });
         if (!fresh) return;
 
+        const actorId = context.session?.itemId;
         const mentorId = fresh.mentor?.id;
         const mentorName = reviewerDisplayName(fresh.mentor);
+
+        if (becameReturned && fresh.mentor?.email && mentorId !== actorId) {
+          const link = `${frontendUrl()}/dashboard/connect/opportunities?op=${fresh.id}`;
+          try {
+            await sendNotificationEmail(
+              fresh.mentor.email,
+              `Your Capstone proposal was returned: "${fresh.title}"`,
+              `Hi ${mentorName},\n\n` +
+                `A teacher has returned your Capstone proposal "${fresh.title}" for revision. ` +
+                `Open the link below to read their notes, make changes, and resubmit for review.`,
+              link
+            );
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error(
+              `Mentor return notification failed for ${fresh.mentor.email}:`,
+              e
+            );
+          }
+          return;
+        }
+
+        if (!becamePending) return;
+
         const seen = new Set<string>();
 
         for (const round of fresh.rounds || []) {

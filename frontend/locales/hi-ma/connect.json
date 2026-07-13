@@ -265,6 +265,8 @@
 			"many": "",
 			"one": ""
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
 		"rowMeta": {
 			"dates": "",
 			"sponsor": "",
@@ -279,7 +281,9 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"resubmit": "",
+			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
@@ -541,7 +545,9 @@
 		"relevantLinksLabel": "",
 		"relevantLinksRemove": "",
 		"relevantLinksUrl": "",
+		"requestsAppointment": "",
 		"researchQuestion": "",
+		"returnedBanner": "",
 		"review": {
 			"accept": "",
 			"acceptConfirm": "",
@@ -565,6 +571,11 @@
 			"scopeIncomplete": "",
 			"sponsorLabel": "",
 			"submittedLabel": ""
+		},
+		"reviewNotes": {
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
 		},
 		"save": "",
 		"saving": "",
@@ -595,6 +606,7 @@
 			"draft": "",
 			"pre_selected": "",
 			"published": "",
+			"returned": "",
 			"submitted": ""
 		},
 		"studentCapacity": "",
@@ -643,6 +655,7 @@
 				"archived": "",
 				"closed": "",
 				"published": "",
+				"returnedRevise": "",
 				"sponsorFollowUp": "",
 				"sponsorScope": "",
 				"sponsorSubmit": "",
@@ -650,6 +663,7 @@
 				"teacherPreSelect": "",
 				"teacherPublish": "",
 				"waitingFollowUp": "",
+				"waitingReturnedRevise": "",
 				"waitingScope": "",
 				"waitingTeacherAccept": "",
 				"waitingTeacherPreSelect": "",
@@ -782,6 +796,20 @@
 		}
 	},
 	"returnDashboard": "",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "",
 		"description": "",

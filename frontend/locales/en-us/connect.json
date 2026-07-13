@@ -265,6 +265,8 @@
 			"many": "{{average}} · {{count}} ratings",
 			"one": "{{average}} · {{count}} rating"
 		},
+		"reviewCommentsEdit": "Review comments & Resubmit",
+		"reviewCommentsWaiting": "Teacher review comments are waiting for you.",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
 			"sponsor": "Sponsor: {{name}}",
@@ -277,9 +279,11 @@
 			"archived": "Archived",
 			"closed": "Closed",
 			"draft": "Draft",
-			"pendingReview": "Pending Review",
+			"pendingReview": "Submitted",
 			"preSelected": "Pre-selected",
-			"published": "Published"
+			"published": "Published",
+			"resubmit": "Resubmit",
+			"returned": "Returned"
 		},
 		"statusChangeLabel": "Change opportunity status",
 		"statusChangeUseEditor": "Complete required fields in the editor before submitting for review.",
@@ -541,7 +545,9 @@
 		"relevantLinksLabel": "Label",
 		"relevantLinksRemove": "Remove",
 		"relevantLinksUrl": "URL",
+		"requestsAppointment": "Would you like to schedule an appointment with a MindHive team member?",
 		"researchQuestion": "What is the research question/scope to be explored OR what is the problem that you want to address?",
+		"returnedBanner": "A teacher returned your proposal — review their notes below, make changes, then resubmit for review.",
 		"review": {
 			"accept": "Accept proposal",
 			"acceptConfirm": "Accept this proposal? The sponsor will be notified to complete the final scope.",
@@ -565,6 +571,11 @@
 			"scopeIncomplete": "The sponsor must complete the project scope before you can publish.",
 			"sponsorLabel": "Sponsor",
 			"submittedLabel": "Submitted"
+		},
+		"reviewNotes": {
+			"roundLabel": "Round: {{title}}",
+			"title": "Review notes",
+			"unknownAuthor": "Reviewer"
 		},
 		"save": "Save changes",
 		"saving": "Saving…",
@@ -595,6 +606,7 @@
 			"draft": "Draft (not visible to students)",
 			"pre_selected": "Pre-selected (awaiting acceptance)",
 			"published": "Published",
+			"returned": "Returned (revise and resubmit)",
 			"submitted": "Submitted for review"
 		},
 		"studentCapacity": "Student capacity",
@@ -643,6 +655,7 @@
 				"archived": "This opportunity is archived.",
 				"closed": "This opportunity is closed.",
 				"published": "This opportunity has been published for students.",
+				"returnedRevise": "A teacher returned your proposal — review their notes, make changes, then resubmit.",
 				"sponsorFollowUp": "",
 				"sponsorScope": "Complete the project scope below.",
 				"sponsorSubmit": "Submit your proposal when you're ready for teacher review.",
@@ -650,6 +663,7 @@
 				"teacherPreSelect": "Review the proposal and pre-select this sponsor.",
 				"teacherPublish": "Review the scope and publish the opportunity.",
 				"waitingFollowUp": "",
+				"waitingReturnedRevise": "Waiting for the sponsor to revise and resubmit their returned proposal.",
 				"waitingScope": "Waiting for the sponsor to complete the project scope.",
 				"waitingTeacherAccept": "Waiting for a teacher to accept your proposal.",
 				"waitingTeacherPreSelect": "Waiting for a teacher to review and pre-select your proposal.",
@@ -782,6 +796,20 @@
 		}
 	},
 	"returnDashboard": "Return to Dashboard",
+	"returnModal": {
+		"cancel": "Cancel",
+		"confirm": "Return to sponsor",
+		"emailMessage": "A teacher has returned your Capstone proposal for revision. Open your opportunity to read their notes, make changes, and resubmit for review.",
+		"emailTitle": "Your Capstone proposal was returned",
+		"error": "Could not return this opportunity. Please try again.",
+		"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
+		"placeholder": "Optional note for the sponsor…",
+		"submitting": "Returning…",
+		"title": "Return to sponsor"
+	},
+	"reviewOpportunity": {
+		"returnToSponsor": "Return to sponsor"
+	},
 	"roleGuard": {
 		"backLink": "Back to Connect",
 		"description": "Your account doesn't have access to this section yet. If you think this is a mistake, ask your teacher or an administrator.",

@@ -15,6 +15,7 @@ import {
 const OPPORTUNITY_STATUS_KEYS = {
   draft: "draft",
   pending_review: "pendingReview",
+  returned: "returned",
   pre_selected: "preSelected",
   accepted: "accepted",
   published: "published",

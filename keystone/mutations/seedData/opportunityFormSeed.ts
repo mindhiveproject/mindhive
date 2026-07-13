@@ -191,6 +191,7 @@ const GUIDELINES_HTML = [
 const STATUS_OPTIONS_ADMIN: Option[] = [
   { value: "draft", label: "Draft" },
   { value: "pending_review", label: "Submitted for review" },
+  { value: "returned", label: "Returned" },
   { value: "pre_selected", label: "Pre-selected" },
   { value: "accepted", label: "Accepted" },
   { value: "published", label: "Published" },

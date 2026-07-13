@@ -54,6 +54,7 @@ const Empty = styled.div`
 const STATUS_KEYS = {
   draft: "draft",
   pending_review: "pendingReview",
+  returned: "returned",
   pre_selected: "preSelected",
   accepted: "accepted",
   published: "published",
@@ -63,7 +64,8 @@ const STATUS_KEYS = {
 
 const STATUS_DEFAULTS = {
   draft: "Draft",
-  pending_review: "Pending Review",
+  pending_review: "Submitted",
+  returned: "Returned",
   pre_selected: "Pre-selected",
   accepted: "Accepted",
   published: "Published",
@@ -130,6 +132,34 @@ const FILTER_TRIGGER_STYLE = {
   padding: "0 14px 0 18px",
 };
 
+function getSponsorCardStatusValues(status) {
+  if (status === "returned") {
+    return ["returned", "pending_review"];
+  }
+  return SPONSOR_STATUS_VALUES;
+}
+
+function buildCardStatusOptions(values, t, { currentStatus, isAdmin } = {}) {
+  return values.map((value) => {
+    if (!isAdmin && currentStatus === "returned" && value === "pending_review") {
+      return {
+        value,
+        label: t("myOpportunitiesList.status.resubmit", {}, {
+          default: "Resubmit",
+        }),
+      };
+    }
+
+    const key = STATUS_KEYS[value];
+    return {
+      value,
+      label: t(`myOpportunitiesList.status.${key}`, {}, {
+        default: STATUS_DEFAULTS[value],
+      }),
+    };
+  });
+}
+
 function isStatusEditable(opportunity, isAdmin) {
   if (isAdmin) return true;
   return !SPONSOR_LOCKED_STATUSES.has(opportunity.status);
@@ -163,15 +193,19 @@ export default function OpportunitiesList({ user }) {
     });
   };
 
-  const cardStatusOptions = useMemo(() => {
-    const values = isAdmin ? ADMIN_STATUS_VALUES : SPONSOR_STATUS_VALUES;
-    return values.map((value) => ({
-      value,
-      label: t(`myOpportunitiesList.status.${STATUS_KEYS[value]}`, {}, {
-        default: STATUS_DEFAULTS[value],
-      }),
-    }));
-  }, [isAdmin, t]);
+  const cardStatusOptions = useMemo(
+    () => buildCardStatusOptions(ADMIN_STATUS_VALUES, t, { isAdmin: true }),
+    [t],
+  );
+
+  const getCardStatusOptions = (opportunity) => {
+    if (isAdmin) return cardStatusOptions;
+    return buildCardStatusOptions(
+      getSponsorCardStatusValues(opportunity.status),
+      t,
+      { currentStatus: opportunity.status, isAdmin: false },
+    );
+  };
 
   const networkOptions = useMemo(() => {
     const seen = new Map();
@@ -404,13 +438,15 @@ export default function OpportunitiesList({ user }) {
         <OpportunityCompactGrid>
           {filtered.map((opportunity) => {
             const editable = isStatusEditable(opportunity, isAdmin);
+            const hasReviewNotes = (opportunity.reviewNotes?.length ?? 0) > 0;
+            const showReviewCommentsCta = hasReviewNotes && !isAdmin;
             return (
               <OpportunityCompactCard
                 key={opportunity.id}
                 title={opportunity.title}
                 status={opportunity.status}
                 statusLabel={statusLabel(opportunity.status)}
-                statusOptions={editable ? cardStatusOptions : undefined}
+                statusOptions={editable ? getCardStatusOptions(opportunity) : undefined}
                 statusChangeLabel={t("myOpportunitiesList.statusChangeLabel", {}, {
                   default: "Change opportunity status",
                 })}
@@ -423,9 +459,23 @@ export default function OpportunitiesList({ user }) {
                     : undefined
                 }
                 metaLine={buildMyOpportunityMetaLine(opportunity, t)}
-                editLabel={t("myOpportunitiesList.edit", {}, {
-                  default: "Edit",
-                })}
+                reviewNoteHint={
+                  showReviewCommentsCta
+                    ? t("myOpportunitiesList.reviewCommentsWaiting", {}, {
+                        default: "Teacher review comments are waiting for you.",
+                      })
+                    : undefined
+                }
+                editHighlight={showReviewCommentsCta}
+                editLabel={
+                  showReviewCommentsCta
+                    ? t("myOpportunitiesList.reviewCommentsEdit", {}, {
+                        default: "Review comments & Resubmit",
+                      })
+                    : t("myOpportunitiesList.edit", {}, {
+                        default: "Edit",
+                      })
+                }
                 deleteLabel={t("myOpportunitiesList.delete", {}, {
                   default: "Delete",
                 })}

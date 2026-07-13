@@ -265,6 +265,8 @@
 			"many": "",
 			"one": ""
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
 			"sponsor": "Sponsor : {{name}}",
@@ -279,7 +281,9 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"resubmit": "",
+			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
@@ -541,7 +545,9 @@
 		"relevantLinksLabel": "Étiquette",
 		"relevantLinksRemove": "Retirer",
 		"relevantLinksUrl": "URL",
+		"requestsAppointment": "",
 		"researchQuestion": "Quelle est la question de recherche/le champ d'étude à explorer OU quel est le problème que vous souhaitez aborder ?",
+		"returnedBanner": "",
 		"review": {
 			"accept": "Accepter la proposition",
 			"acceptConfirm": "Accepter cette proposition ? Le commanditaire sera informé afin de finaliser le périmètre du projet.",
@@ -565,6 +571,11 @@
 			"scopeIncomplete": "Le commanditaire doit finaliser le périmètre du projet avant toute publication.",
 			"sponsorLabel": "Parrainer",
 			"submittedLabel": "Soumis"
+		},
+		"reviewNotes": {
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
 		},
 		"save": "Sauvegarder les modifications",
 		"saving": "Économie...",
@@ -595,6 +606,7 @@
 			"draft": "Brouillon (non visible pour les étudiants)",
 			"pre_selected": "Présélectionné (répondre aux questions de suivi complètes)",
 			"published": "Publié",
+			"returned": "",
 			"submitted": "Soumis pour examen"
 		},
 		"studentCapacity": "Capacité étudiante",
@@ -643,6 +655,7 @@
 				"archived": "",
 				"closed": "",
 				"published": "Cette offre d'emploi a été publiée à l'intention des étudiants.",
+				"returnedRevise": "",
 				"sponsorFollowUp": "Veuillez compléter le questionnaire de suivi ci-dessous.",
 				"sponsorScope": "Complétez le périmètre du projet ci-dessous.",
 				"sponsorSubmit": "Soumettez votre proposition lorsque vous serez prêt(e) pour l'examen par les enseignants.",
@@ -650,6 +663,7 @@
 				"teacherPreSelect": "Examinez la proposition et présélectionnez ce sponsor.",
 				"teacherPublish": "Examiner le périmètre et publier l'opportunité.",
 				"waitingFollowUp": "En attente que le commanditaire remplisse le questionnaire de suivi.",
+				"waitingReturnedRevise": "",
 				"waitingScope": "En attente que le commanditaire finalise le périmètre du projet.",
 				"waitingTeacherAccept": "En attente qu'un professeur accepte votre proposition.",
 				"waitingTeacherPreSelect": "En attente de la présélection de votre proposition par un enseignant.",
@@ -782,6 +796,20 @@
 		}
 	},
 	"returnDashboard": "Retour au tableau de bord",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "",
 		"description": "",
