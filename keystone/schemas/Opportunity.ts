@@ -274,7 +274,17 @@ export const Opportunity = list({
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
-    updatedAt: timestamp(),
+    updatedAt: timestamp({
+      defaultValue: { kind: "now" },
+      hooks: {
+        async resolveInput({ operation }) {
+          if (operation === "update") {
+            return new Date().toISOString();
+          }
+          return undefined;
+        },
+      },
+    }),
   },
   hooks: {
     async resolveInput({ operation, inputData, resolvedData, item }) {

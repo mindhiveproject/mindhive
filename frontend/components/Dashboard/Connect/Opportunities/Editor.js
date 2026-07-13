@@ -948,7 +948,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
           input: {
             ...baseInput,
             classNetworks: { set: networkConnect },
-            updatedAt: new Date().toISOString(),
           },
         },
       });
@@ -1031,7 +1030,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
 
     const reviewInput = {
       status: nextStatus,
-      updatedAt: new Date().toISOString(),
       preSelectedAt:
         nextStatus === "pre_selected" && !opportunity?.preSelectedAt
           ? new Date().toISOString()

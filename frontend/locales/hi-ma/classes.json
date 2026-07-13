@@ -802,8 +802,14 @@
 			"yes": ""
 		},
 		"rowMeta": {
+			"availabilityLabel": "",
 			"byMentor": "",
 			"capacity": "",
+			"capacityLabel": "",
+			"lastUpdated": "",
+			"lastUpdatedLabel": "",
+			"sponsorLabel": "",
+			"statusLabel": "",
 			"teamOf": ""
 		},
 		"selectNetworkFirst": "",

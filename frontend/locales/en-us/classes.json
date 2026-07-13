@@ -802,8 +802,14 @@
 			"yes": "Yes"
 		},
 		"rowMeta": {
+			"availabilityLabel": "Available",
 			"byMentor": "By {{name}}",
 			"capacity": "Capacity {{count}}",
+			"capacityLabel": "Capacity",
+			"lastUpdated": "Last updated {{date}}",
+			"lastUpdatedLabel": "Last updated",
+			"sponsorLabel": "Sponsor",
+			"statusLabel": "Status",
 			"teamOf": "Team of {{size}}"
 		},
 		"selectNetworkFirst": "Select a class network above to continue.",

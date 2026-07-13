@@ -1454,15 +1454,32 @@ const StyledClass = styled.div`
       }
     }
 
-    .matchingRoundOppInfoBtn {
-      display: inline-flex;
+    .matchingRoundOppInfoGridCell {
+      padding: 0 !important;
+      height: 100%;
+
+      .ag-cell-wrapper,
+      .ag-cell-value,
+      .ag-react-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        align-items: stretch;
+      }
+    }
+
+    .matchingRoundOppInfoCell {
+      display: flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
       padding: 0;
-      border: 1.5px solid #d9d6d2;
-      border-radius: 100px;
+      border: none;
+      border-radius: 0;
       background: transparent;
       color: #625b71;
       font-family: "Inter", sans-serif;
@@ -1473,9 +1490,13 @@ const StyledClass = styled.div`
 
       &:hover {
         background: #eef5f9;
-        border-color: #c8d8df;
         color: #336f8a;
       }
+    }
+
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCell {
+      background: #eef5f9;
+      color: #336f8a;
     }
 
     .matchingRoundOppInfoTooltip {
@@ -1487,6 +1508,7 @@ const StyledClass = styled.div`
         margin: 0;
         font-size: 14px;
         line-height: 20px;
+        color: #171717;
       }
 
       .expired {

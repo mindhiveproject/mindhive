@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect, useLayoutEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useLayoutEffect, cloneElement, isValidElement } from "react";
 import { createPortal } from "react-dom";
 
 const defaultIconStyle = {
@@ -132,6 +132,7 @@ function buildPortalFixedPlacement(position, rect) {
  * @param {React.ReactNode} [action] - Optional node (e.g. link/button) rendered below the tooltip content. When present, the tooltip is interactive: it stays visible when the pointer is over the trigger or the tooltip so the user can click the action. The trigger is also keyboard-activatable and tap/click-to-toggle so touch users can open it; outside tap and Escape dismiss when opened that way.
  * @param {"left"|"right"|"bottomLeft"|"bottomRight"|"topRight"} [position="bottomLeft"] - Tooltip placement.
  * @param {boolean} [portal=false] - Render the tooltip in `document.body` with `position: fixed` so it is not clipped by ancestor `overflow: hidden`. Ignored when `action` is set (interactive tooltips must stay inside the wrapper hover target).
+ * @param {"hover"|"click"} [trigger="hover"] - `hover` shows on pointer enter; `click` toggles on trigger click only (outside tap and Escape dismiss).
  */
 export default function InfoTooltip({
   content,
@@ -144,7 +145,9 @@ export default function InfoTooltip({
   action,
   position = "bottomLeft",
   portal = false,
+  trigger = "hover",
 }) {
+  const clickMode = trigger === "click";
   const [triggerHover, setTriggerHover] = useState(false);
   const [tooltipHover, setTooltipHover] = useState(false);
   /** Tap/click-to-open so tactile devices can use interactive tooltips (action prop). */
@@ -154,49 +157,54 @@ export default function InfoTooltip({
   const hideTimeoutRef = useRef(null);
   const wrapperRef = useRef(null);
 
-  const visible =
-    action != null ? triggerHover || tooltipHover || tapPinned : triggerHover;
+  const visible = clickMode
+    ? tapPinned
+    : action != null
+      ? triggerHover || tooltipHover || tapPinned
+      : triggerHover;
   const usePortal = Boolean(portal && action == null);
 
   const handleTriggerClick = useCallback(
     (e) => {
-      if (action == null) return;
+      if (action == null && !clickMode) return;
       e.stopPropagation();
       setTapPinned((p) => !p);
     },
-    [action]
+    [action, clickMode]
   );
 
   const handleTriggerKeyDown = useCallback(
     (e) => {
-      if (action == null) return;
+      if (action == null && !clickMode) return;
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         setTapPinned((p) => !p);
       }
     },
-    [action]
+    [action, clickMode]
   );
 
   useEffect(() => {
-    if (action == null || !tapPinned) return;
+    if ((!clickMode && action == null) || !tapPinned) return;
     const onPointerDown = (e) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-        setTapPinned(false);
-      }
+      if (!(e.target instanceof Element)) return;
+      const root = wrapperRef.current;
+      if (root?.contains(e.target)) return;
+      if (e.target.closest(`[${TOOLTIP_PANEL_ATTR}]`)) return;
+      setTapPinned(false);
     };
     document.addEventListener("pointerdown", onPointerDown, true);
     return () => document.removeEventListener("pointerdown", onPointerDown, true);
-  }, [action, tapPinned]);
+  }, [action, clickMode, tapPinned]);
 
   useEffect(() => {
-    if (action == null || !tapPinned) return;
+    if ((!clickMode && action == null) || !tapPinned) return;
     const onKeyDown = (e) => {
       if (e.key === "Escape") setTapPinned(false);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [action, tapPinned]);
+  }, [action, clickMode, tapPinned]);
 
   const clearShowTimeout = useCallback(() => {
     if (showTimeoutRef.current != null) {
@@ -269,6 +277,11 @@ export default function InfoTooltip({
 
   const useCustomTrigger = content != null && children != null;
 
+  const handleClickToggle = useCallback((e) => {
+    e.stopPropagation();
+    setTapPinned((p) => !p);
+  }, []);
+
   const handleInteractiveZoneClick = useCallback(
     (e) => {
       if (action == null || !useCustomTrigger) return;
@@ -304,8 +317,13 @@ export default function InfoTooltip({
     transform: visible
       ? `${portalTransformPrefix}${transformVisible}`
       : `${portalTransformPrefix}${transformHidden}`,
-    ...(action != null && { pointerEvents: visible ? "auto" : "none" }),
+    ...((clickMode || action != null) && {
+      pointerEvents: visible ? "auto" : "none",
+    }),
     ...(usePortal && { zIndex: PORTAL_Z_INDEX }),
+    ...(clickMode && {
+      visibility: visible ? "visible" : "hidden",
+    }),
   };
 
   const baseWrapperStyle = useCustomTrigger
@@ -340,13 +358,22 @@ export default function InfoTooltip({
     <div
       ref={wrapperRef}
       style={wrapperStyle}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={action != null && useCustomTrigger ? handleInteractiveZoneClick : undefined}
+      data-infotooltip-open={visible ? "true" : undefined}
+      onMouseEnter={clickMode ? undefined : handleMouseEnter}
+      onMouseLeave={clickMode ? undefined : handleMouseLeave}
+      onClick={
+        clickMode && useCustomTrigger
+          ? handleClickToggle
+          : action != null && useCustomTrigger
+            ? handleInteractiveZoneClick
+            : undefined
+      }
     >
       {useCustomTrigger ? (
-        children
-      ) : action != null ? (
+        isValidElement(children) && (clickMode || action != null)
+          ? cloneElement(children, { "aria-expanded": visible })
+          : children
+      ) : clickMode || action != null ? (
         <span
           role="button"
           tabIndex={0}

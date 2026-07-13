@@ -30,25 +30,47 @@ function displayName(profile) {
   );
 }
 
+function formatDateTime(iso) {
+  if (!iso) return null;
+  try {
+    return new Date(iso).toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch {
+    return null;
+  }
+}
+
 function OpportunityInfoContent({ opportunity, t }) {
   const mentorName = displayName(opportunity.mentor);
   const from = formatDateShort(opportunity.availableFrom);
   const to = formatDateShort(opportunity.availableTo);
   const expired = isExpired(opportunity.availableTo);
   const statusKey = OPPORTUNITY_STATUS_KEYS[opportunity.status];
+  const lastUpdated = formatDateTime(
+    opportunity.updatedAt || opportunity.createdAt,
+  );
+  const statusLabel = statusKey
+    ? t(`opportunities.status.${statusKey}`, {}, { default: opportunity.status })
+    : opportunity.status;
 
   return (
     <div className="matchingRoundOppInfoTooltip">
       {opportunity.shortDescription ? (
         <p>{opportunity.shortDescription}</p>
       ) : null}
+      {mentorName ? (
+        <p>
+          {t("opportunities.rowMeta.byMentor", { name: mentorName }, {
+            default: "By {{name}}",
+          })}
+        </p>
+      ) : null}
       <p>
-        {mentorName
-          ? t("opportunities.rowMeta.byMentor", { name: mentorName }, {
-              default: "By {{name}}",
-            })
-          : null}
-        {mentorName ? " · " : ""}
         {t(
           "opportunities.rowMeta.capacity",
           { count: opportunity.studentCapacity ?? 1 },
@@ -70,16 +92,21 @@ function OpportunityInfoContent({ opportunity, t }) {
       )}
       {opportunity.status ? (
         <p>
-          {t(
-            `opportunities.status.${statusKey}`,
-            {},
-            { default: opportunity.status },
-          )}
+          {statusLabel}
           {expired
             ? ` · ${t("opportunities.matchingRound.expired", {}, {
                 default: "Expired",
               })}`
             : ""}
+        </p>
+      ) : null}
+      {lastUpdated ? (
+        <p>
+          {t(
+            "opportunities.rowMeta.lastUpdated",
+            { date: lastUpdated },
+            { default: "Last updated {{date}}" },
+          )}
         </p>
       ) : null}
     </div>
@@ -119,23 +146,25 @@ export default function MatchingRoundOpportunitiesGrid({
         <InfoTooltip
           portal
           position="left"
-          delayMs={1000}
+          trigger="click"
           content={<OpportunityInfoContent opportunity={opportunity} t={t} />}
+          tooltipStyle={{ width: "320px", maxWidth: "min(320px, calc(100vw - 24px))" }}
           wrapperStyle={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: "stretch",
+            justifyContent: "stretch",
             width: "100%",
             height: "100%",
+            alignSelf: "stretch",
           }}
         >
           <button
             type="button"
-            className="matchingRoundOppInfoBtn"
+            className="matchingRoundOppInfoCell"
             aria-label={t("opportunities.matchingRound.grid.columns.info", {}, {
               default: "More information",
             })}
-            onClick={(e) => e.stopPropagation()}
+            aria-haspopup="dialog"
           >
             !
           </button>
@@ -291,10 +320,8 @@ export default function MatchingRoundOpportunitiesGrid({
       width: 52,
       maxWidth: 52,
       pinned: "right",
+      cellClass: "matchingRoundOppInfoGridCell",
       cellStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
         padding: 0,
       },
     });
