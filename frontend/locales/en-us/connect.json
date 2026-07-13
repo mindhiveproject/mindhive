@@ -228,6 +228,15 @@
 	},
 	"introductionVideo": "Introduction Video",
 	"locationFilter": "Location",
+	"matchingRound": {
+		"draftBanner": "This round is in draft. Students cannot see it until you open preferences.",
+		"notAvailableYet": "This round is not available yet. Your teacher is still setting it up.",
+		"openConfirm": "Students in this network will see this round and can submit preferences. Continue?",
+		"openingPreferences": "Opening…",
+		"openPreferences": "Open preferences",
+		"publishDisabledWhileDraft": "Open preferences and move the round to Matching before publishing matches.",
+		"publishRequiresMatching": "Set the round status to Matching before publishing final matches."
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": "Class type"

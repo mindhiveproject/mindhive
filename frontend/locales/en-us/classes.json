@@ -715,6 +715,7 @@
 			"noOpportunitiesInNetwork": "No opportunities have been added to this class network yet.",
 			"noRoundForNetwork": "No matching round for this network yet.",
 			"notSetUp": "Not set up",
+			"openConfirm": "Students in this network will see this round and can submit preferences. Continue?",
 			"panels": {
 				"questions": "Additional student questions",
 				"reviewOpportunities": "Review opportunities",
@@ -723,6 +724,7 @@
 				"selectedOpportunitiesWithCount": "Selected opportunities ({{count}})",
 				"settings": "Settings"
 			},
+			"revertToDraftConfirm": "Reverting to draft hides this round from students. Continue?",
 			"reviewOpportunitiesEmpty": "All network opportunities are already in this round. Remove some from Selected opportunities to review more.",
 			"roundSwitcherLabel": "Matching round",
 			"saveFailed": "Could not save the matching round. Please try again.",
@@ -734,6 +736,8 @@
 			"status": {
 				"archived": "Archived",
 				"archivedHint": "Round finished",
+				"draft": "Draft",
+				"draftHint": "Only you can see this round",
 				"matching": "Matching",
 				"matchingHint": "Review proposed matches",
 				"preferencesClosed": "Closed",

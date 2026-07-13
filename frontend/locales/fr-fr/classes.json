@@ -715,6 +715,7 @@
 			"noOpportunitiesInNetwork": "",
 			"noRoundForNetwork": "",
 			"notSetUp": "",
+			"openConfirm": "",
 			"panels": {
 				"questions": "",
 				"reviewOpportunities": "",
@@ -723,6 +724,7 @@
 				"selectedOpportunitiesWithCount": "",
 				"settings": ""
 			},
+			"revertToDraftConfirm": "",
 			"reviewOpportunitiesEmpty": "",
 			"roundSwitcherLabel": "",
 			"saveFailed": "",
@@ -734,6 +736,8 @@
 			"status": {
 				"archived": "",
 				"archivedHint": "",
+				"draft": "",
+				"draftHint": "",
 				"matching": "",
 				"matchingHint": "",
 				"preferencesClosed": "",

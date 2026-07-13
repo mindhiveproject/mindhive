@@ -320,6 +320,7 @@ export default function ExploreDetail({ opportunityId }) {
       });
     });
     const rounds = Array.from(seen.values()).filter((r) => {
+      if (r.status === "draft") return false;
       const now = Date.now();
       const openAt = r.openAt ? new Date(r.openAt).getTime() : null;
       const closeAt = r.closeAt ? new Date(r.closeAt).getTime() : null;

@@ -146,11 +146,13 @@ export default function ParticipateList() {
       });
     });
   });
-  const rounds = Array.from(roundsById.values()).sort((a, b) => {
-    const aDate = a.openAt || a.closeAt || "";
-    const bDate = b.openAt || b.closeAt || "";
-    return bDate.localeCompare(aDate);
-  });
+  const rounds = Array.from(roundsById.values())
+    .filter((r) => r.status !== "draft")
+    .sort((a, b) => {
+      const aDate = a.openAt || a.closeAt || "";
+      const bDate = b.openAt || b.closeAt || "";
+      return bDate.localeCompare(aDate);
+    });
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState(null);

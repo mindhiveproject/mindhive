@@ -903,12 +903,15 @@ export default function OpportunityPreviewModal({
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             gap: 16,
             width: "100%",
             flexWrap: "wrap",
           }}
         >
+          <Button variant="outline" onClick={onClose}>
+            {t("opportunities.preview.close", {}, { default: "Close" })}
+          </Button>
           {showMatchingRoundSection ? (
             showNoRoundHint ? (
               <span style={{ fontSize: 13, color: "#5f6871" }}>
@@ -931,9 +934,6 @@ export default function OpportunityPreviewModal({
           ) : (
             <span />
           )}
-          <Button variant="outline" onClick={onClose}>
-            {t("opportunities.preview.close", {}, { default: "Close" })}
-          </Button>
         </div>
       </Modal.Actions>
     </Modal>

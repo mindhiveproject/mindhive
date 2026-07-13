@@ -101,6 +101,7 @@ const Empty = styled.div`
 
 
 const STATUS_COLORS = {
+  draft: "grey",
   preferences_open: "green",
   preferences_closed: "yellow",
   matching: "blue",
@@ -109,6 +110,7 @@ const STATUS_COLORS = {
 };
 
 const STATUS_LABELS = {
+  draft: "Draft",
   preferences_open: "Preferences open",
   preferences_closed: "Preferences closed",
   matching: "Matching",
