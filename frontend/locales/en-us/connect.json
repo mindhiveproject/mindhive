@@ -801,17 +801,17 @@
 	"returnDashboard": "Return to Dashboard",
 	"returnModal": {
 		"cancel": "Cancel",
-		"confirm": "Return to sponsor",
+		"confirm": "Return with comments",
 		"emailMessage": "A teacher has returned your Capstone proposal for revision. Open your opportunity to read their notes, make changes, and resubmit for review.",
 		"emailTitle": "Your Capstone proposal was returned",
 		"error": "Could not return this opportunity. Please try again.",
 		"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
 		"placeholder": "Optional note for the sponsor…",
 		"submitting": "Returning…",
-		"title": "Return to sponsor"
+		"title": "Return with comments"
 	},
 	"reviewOpportunity": {
-		"returnToSponsor": "Return to sponsor"
+		"returnToSponsor": "Return with comments"
 	},
 	"roleGuard": {
 		"backLink": "Back to Connect",

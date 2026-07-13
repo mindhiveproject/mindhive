@@ -774,6 +774,7 @@
 				"individual": "",
 				"team": ""
 			},
+			"guidelinesAcknowledged": "",
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
@@ -785,6 +786,7 @@
 			},
 			"mentor": "",
 			"mentorContact": "",
+			"mentorNotes": "",
 			"no": "",
 			"notFound": "",
 			"opportunityDetails": "",
@@ -793,6 +795,7 @@
 			"projectCategory": "",
 			"publicRating": "",
 			"ratingsTitle": "",
+			"requestsAppointment": "",
 			"returnModal": {
 				"cancel": "",
 				"confirm": "",
@@ -803,6 +806,7 @@
 				"title": ""
 			},
 			"returnToSponsor": "",
+			"sponsorIsMentor": "",
 			"status": "",
 			"teamSize": "",
 			"teamSizeSolo": "",

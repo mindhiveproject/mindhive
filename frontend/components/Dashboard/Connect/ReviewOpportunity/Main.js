@@ -486,7 +486,7 @@ export default function ReviewOpportunityMain({ query }) {
           {canReturnToSponsor ? (
             <Button variant="outline" onClick={() => setReturnModalOpen(true)}>
               {t("reviewOpportunity.returnToSponsor", {}, {
-                default: "Return to sponsor",
+                default: "Return with comments",
               })}
             </Button>
           ) : null}

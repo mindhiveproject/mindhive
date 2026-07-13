@@ -156,10 +156,10 @@ function formatDate(value) {
   }
 }
 
-function MetaItem({ label, value }) {
+function MetaItem({ label, value, style }) {
   if (value == null || value === "") return null;
   return (
-    <div style={META_ITEM_STYLE}>
+    <div style={style ? { ...META_ITEM_STYLE, ...style } : META_ITEM_STYLE}>
       <div style={META_LABEL_STYLE}>{label}</div>
       <div style={META_VALUE_STYLE}>{value}</div>
     </div>
@@ -176,16 +176,24 @@ function PreviewSection({ title, children }) {
   );
 }
 
+const ANSWER_BOX_STYLE = {
+  padding: "12px 14px",
+  borderRadius: 10,
+  background: "#f7f9f8",
+};
+
 function TextBlock({ label, value, html = false }) {
   if (!value) return null;
   return (
-    <div style={{ display: "grid", gap: 6 }}>
+    <div style={{ display: "grid", gap: 8 }}>
       <strong style={{ fontSize: 14, color: "#171717" }}>{label}</strong>
-      {html ? (
-        <ReadOnlyTipTap dangerouslySetInnerHTML={{ __html: value }} />
-      ) : (
-        <p style={BODY_TEXT_STYLE}>{value}</p>
-      )}
+      <div style={ANSWER_BOX_STYLE}>
+        {html ? (
+          <ReadOnlyTipTap dangerouslySetInnerHTML={{ __html: value }} />
+        ) : (
+          <p style={BODY_TEXT_STYLE}>{value}</p>
+        )}
+      </div>
     </div>
   );
 }
@@ -563,6 +571,15 @@ export default function OpportunityPreviewModal({
                   label={t("opportunities.preview.status", {}, { default: "Status" })}
                   value={statusLabel}
                 />
+                {opp.requestsAppointment ? (
+                  <MetaItem
+                    label={t("opportunities.preview.requestsAppointment", {}, {
+                      default: "Appointment requested",
+                    })}
+                    value={t("opportunities.preview.yes", {}, { default: "Yes" })}
+                    style={{ background: "#FDF2D0" }}
+                  />
+                ) : null}
                 <MetaItem
                   label={t("opportunities.preview.available", {}, { default: "Available" })}
                   value={from || to ? `${from || "—"} → ${to || "—"}` : null}
@@ -871,21 +888,73 @@ export default function OpportunityPreviewModal({
                   <PreviewSection
                     title={t("opportunities.preview.mentorContact", {}, { default: "Your contact" })}
                   >
-                    <ProfilePanel
-                      imageSrc={mentorAvatar}
-                      name={mentorName}
-                      lines={[
-                        opp.mentor.tagline,
-                        opp.mentor.email,
-                        [opp.mentor.organization, opp.mentor.department]
-                          .filter(Boolean)
-                          .join(" · "),
-                        opp.mentor.primaryDomain,
-                        opp.mentor.timeCommitment
-                          ? `${t("opportunities.preview.timeCommitment", {}, { default: "Time commitment" })}: ${opp.mentor.timeCommitment}`
-                          : null,
-                      ]}
-                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        alignItems: "flex-start",
+                        gap: 12,
+                      }}
+                    >
+                      <ProfilePanel
+                        imageSrc={mentorAvatar}
+                        name={mentorName}
+                        lines={[
+                          opp.mentor.tagline,
+                          opp.mentor.email,
+                          [opp.mentor.organization, opp.mentor.department]
+                            .filter(Boolean)
+                            .join(" · "),
+                          opp.mentor.primaryDomain,
+                          opp.mentor.timeCommitment
+                            ? `${t("opportunities.preview.timeCommitment", {}, { default: "Time commitment" })}: ${opp.mentor.timeCommitment}`
+                            : null,
+                        ]}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: 10,
+                          flex: "1 1 180px",
+                          minWidth: 160,
+                        }}
+                      >
+                        {opp.guidelinesAcknowledged ? (
+                          <MetaItem
+                            label={t("opportunities.preview.guidelinesAcknowledged", {}, {
+                              default: "Guidelines acknowledged",
+                            })}
+                            value={
+                              opp.guidelinesAcknowledgedAt
+                                ? formatDate(opp.guidelinesAcknowledgedAt)
+                                : t("opportunities.preview.yes", {}, { default: "Yes" })
+                            }
+                            style={{ background: "#e3f4ec" }}
+                          />
+                        ) : null}
+                        {opp.sponsorIsMentor != null ? (
+                          <MetaItem
+                            label={t("opportunities.preview.sponsorIsMentor", {}, {
+                              default: "Sponsor is mentor",
+                            })}
+                            value={
+                              opp.sponsorIsMentor
+                                ? t("opportunities.preview.yes", {}, { default: "Yes" })
+                                : t("opportunities.preview.no", {}, { default: "No" })
+                            }
+                          />
+                        ) : null}
+                      </div>
+                    </div>
+                    {!opp.sponsorIsMentor && opp.mentorNotes ? (
+                      <TextBlock
+                        label={t("opportunities.preview.mentorNotes", {}, {
+                          default: "Mentor notes",
+                        })}
+                        value={opp.mentorNotes}
+                      />
+                    ) : null}
                     {opp.mentor.bio ? <p style={BODY_TEXT_STYLE}>{opp.mentor.bio}</p> : null}
                   </PreviewSection>
                 ) : null}
@@ -955,7 +1024,7 @@ export default function OpportunityPreviewModal({
           {canReturnToSponsor ? (
             <Button variant="outline" onClick={() => setReturnModalOpen(true)}>
               {t("opportunities.preview.returnToSponsor", {}, {
-                default: "Return to sponsor",
+                default: "Return with comments",
               })}
             </Button>
           ) : null}

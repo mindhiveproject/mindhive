@@ -774,6 +774,7 @@
 				"individual": "Individual",
 				"team": "Team"
 			},
+			"guidelinesAcknowledged": "Guidelines acknowledged",
 			"hostedBy": "Hosted by",
 			"loading": "Loading opportunity…",
 			"matchingRound": {
@@ -785,6 +786,7 @@
 			},
 			"mentor": "Mentor",
 			"mentorContact": "Your contact",
+			"mentorNotes": "Mentor notes",
 			"no": "No",
 			"notFound": "Opportunity not found, or no longer available.",
 			"opportunityDetails": "Opportunity details",
@@ -793,16 +795,18 @@
 			"projectCategory": "Project category",
 			"publicRating": "Public rating",
 			"ratingsTitle": "What past participants said",
+			"requestsAppointment": "Appointment requested",
 			"returnModal": {
 				"cancel": "Cancel",
-				"confirm": "Return to sponsor",
+				"confirm": "Return with comments",
 				"error": "Could not return this opportunity. Please try again.",
 				"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
 				"placeholder": "Optional note for the sponsor…",
 				"submitting": "Returning…",
-				"title": "Return to sponsor"
+				"title": "Return with comments"
 			},
-			"returnToSponsor": "Return to sponsor",
+			"returnToSponsor": "Return with comments",
+			"sponsorIsMentor": "Sponsor is mentor",
 			"status": "Status",
 			"teamSize": "Team size",
 			"teamSizeSolo": "Solo",

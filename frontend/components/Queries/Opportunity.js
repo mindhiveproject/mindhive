@@ -262,6 +262,11 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       preferClassType
       publicRatingAverage
       publicRatingCount
+      requestsAppointment
+      guidelinesAcknowledged
+      guidelinesAcknowledgedAt
+      sponsorIsMentor
+      mentorNotes
       mentor {
         id
         username
