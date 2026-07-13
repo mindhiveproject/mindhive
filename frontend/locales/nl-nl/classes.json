@@ -701,6 +701,7 @@
 			"grid": {
 				"columns": {
 					"info": "",
+					"infoReturned": "",
 					"name": "",
 					"organization": "",
 					"review": "",

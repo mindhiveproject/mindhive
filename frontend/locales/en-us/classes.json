@@ -701,6 +701,7 @@
 			"grid": {
 				"columns": {
 					"info": "More information",
+					"infoReturned": "More information — returned",
 					"name": "Opportunity name",
 					"organization": "Organization",
 					"review": "Review",

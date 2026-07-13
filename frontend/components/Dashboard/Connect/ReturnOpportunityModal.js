@@ -105,7 +105,7 @@ export default function ReturnOpportunityModal({
     <Modal open={open} onClose={handleClose} size="small">
       <Modal.Header>
         {t("returnModal.title", {}, {
-          default: "Return to sponsor",
+          default: "Return with comments",
         })}
       </Modal.Header>
       <Modal.Content>
@@ -139,7 +139,7 @@ export default function ReturnOpportunityModal({
         <Button variant="filled" onClick={handleConfirm} disabled={submitting}>
           {submitting
             ? t("returnModal.submitting", {}, { default: "Returning…" })
-            : t("returnModal.confirm", {}, { default: "Return to sponsor" })}
+            : t("returnModal.confirm", {}, { default: "Return with comments" })}
         </Button>
       </Modal.Actions>
     </Modal>
