@@ -547,6 +547,7 @@
 		"relevantLinksUrl": "Url",
 		"requestsAppointment": "",
 		"researchQuestion": "Wat is de onderzoeksvraag/het onderzoeksgebied dat onderzocht moet worden, OF welk probleem wilt u aanpakken?",
+		"resubmit": "",
 		"returnedBanner": "",
 		"review": {
 			"accept": "Voorstel accepteren",
@@ -573,6 +574,7 @@
 			"submittedLabel": "Ingediend"
 		},
 		"reviewNotes": {
+			"empty": "",
 			"roundLabel": "",
 			"title": "",
 			"unknownAuthor": ""
@@ -598,6 +600,7 @@
 		"sponsorIsMentor": "Ik ben ook de dagelijkse mentor voor dit project (vink dit uit als iemand anders de mentorrol op zich neemt).",
 		"sponsorStatusHint": "Zet de status op 'Ingediend voor beoordeling' wanneer uw voorstel klaar is — een docent zal het beoordelen.",
 		"sponsorStatusLocked": "— vergrendeld. Een docent of beheerder zal de status bijwerken.",
+		"sponsorStatusReturnedHint": "",
 		"status": "Toestand",
 		"statusOptions": {
 			"accepted": "Geaccepteerd (volledige eindopdracht)",

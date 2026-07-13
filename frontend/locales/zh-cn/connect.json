@@ -547,6 +547,7 @@
 		"relevantLinksUrl": "网址",
 		"requestsAppointment": "",
 		"researchQuestion": "你们的研究问题/研究范围是什么？或者，你们想要解决什么问题？",
+		"resubmit": "",
 		"returnedBanner": "",
 		"review": {
 			"accept": "接受提议",
@@ -573,6 +574,7 @@
 			"submittedLabel": "已提交"
 		},
 		"reviewNotes": {
+			"empty": "",
 			"roundLabel": "",
 			"title": "",
 			"unknownAuthor": ""
@@ -598,6 +600,7 @@
 		"sponsorIsMentor": "我也是这个项目的日常指导老师（如果由其他人担任指导老师，请取消勾选）。",
 		"sponsorStatusHint": "当您的提案准备就绪时，请将其设置为“已提交审核”——老师将对其进行审核。",
 		"sponsorStatusLocked": "— 已锁定。教师或管理员将更新状态。",
+		"sponsorStatusReturnedHint": "",
 		"status": "地位",
 		"statusOptions": {
 			"accepted": "已接受（完整最终范围）",

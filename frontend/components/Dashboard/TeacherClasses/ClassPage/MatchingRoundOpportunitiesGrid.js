@@ -23,6 +23,10 @@ const OPPORTUNITY_STATUS_KEYS = {
   archived: "archived",
 };
 
+function isReturnedOpportunity(opportunity) {
+  return opportunity?.status === "returned";
+}
+
 function displayName(profile) {
   if (!profile) return null;
   return (
@@ -143,6 +147,15 @@ export default function MatchingRoundOpportunitiesGrid({
       const opportunity = params?.data;
       if (!opportunity) return null;
 
+      const returned = isReturnedOpportunity(opportunity);
+      const infoLabel = returned
+        ? t("opportunities.matchingRound.grid.columns.infoReturned", {}, {
+            default: "More information — returned",
+          })
+        : t("opportunities.matchingRound.grid.columns.info", {}, {
+            default: "More information",
+          });
+
       return (
         <InfoTooltip
           portal
@@ -161,10 +174,10 @@ export default function MatchingRoundOpportunitiesGrid({
         >
           <button
             type="button"
-            className="matchingRoundOppInfoCell"
-            aria-label={t("opportunities.matchingRound.grid.columns.info", {}, {
-              default: "More information",
-            })}
+            className={`matchingRoundOppInfoCell${
+              returned ? " matchingRoundOppInfoCellReturned" : ""
+            }`}
+            aria-label={infoLabel}
             aria-haspopup="dialog"
           >
             !
@@ -174,6 +187,25 @@ export default function MatchingRoundOpportunitiesGrid({
     },
     [t],
   );
+
+  const getRowClass = useCallback((params) => {
+    if (isReturnedOpportunity(params?.data)) {
+      return "matchingRoundOppRowReturned";
+    }
+    return undefined;
+  }, []);
+
+  const postSortRows = useCallback(({ nodes }) => {
+    if (!nodes?.length) return;
+    const active = [];
+    const returned = [];
+    for (const node of nodes) {
+      if (isReturnedOpportunity(node?.data)) returned.push(node);
+      else active.push(node);
+    }
+    nodes.length = 0;
+    nodes.push(...active, ...returned);
+  }, []);
 
   const ReviewButtonRenderer = useCallback(
     (params) => {
@@ -380,6 +412,8 @@ export default function MatchingRoundOpportunitiesGrid({
         rowData={rowData}
         columnDefs={columnDefs}
         getRowId={(params) => params.data?.id}
+        getRowClass={getRowClass}
+        postSortRows={postSortRows}
         {...(selectionMode === "multi"
           ? {
               rowSelection: {

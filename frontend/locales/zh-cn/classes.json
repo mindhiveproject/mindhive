@@ -701,6 +701,7 @@
 			"grid": {
 				"columns": {
 					"info": "",
+					"infoReturned": "",
 					"name": "",
 					"organization": "",
 					"review": "",
@@ -774,6 +775,7 @@
 				"individual": "",
 				"team": ""
 			},
+			"guidelinesAcknowledged": "",
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
@@ -785,6 +787,7 @@
 			},
 			"mentor": "",
 			"mentorContact": "",
+			"mentorNotes": "",
 			"no": "",
 			"notFound": "",
 			"opportunityDetails": "",
@@ -793,6 +796,7 @@
 			"projectCategory": "",
 			"publicRating": "",
 			"ratingsTitle": "",
+			"requestsAppointment": "",
 			"returnModal": {
 				"cancel": "",
 				"confirm": "",
@@ -803,6 +807,16 @@
 				"title": ""
 			},
 			"returnToSponsor": "",
+			"reviewNotes": {
+				"cancel": "",
+				"edit": "",
+				"empty": "",
+				"save": "",
+				"saving": "",
+				"title": "",
+				"updatedAt": ""
+			},
+			"sponsorIsMentor": "",
 			"status": "",
 			"teamSize": "",
 			"teamSizeSolo": "",

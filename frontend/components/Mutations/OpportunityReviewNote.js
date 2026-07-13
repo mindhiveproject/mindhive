@@ -19,6 +19,16 @@ export const CREATE_REVIEW_NOTE = gql`
   }
 `;
 
+export const UPDATE_REVIEW_NOTE = gql`
+  mutation UPDATE_REVIEW_NOTE($id: ID!, $input: OpportunityReviewNoteUpdateInput!) {
+    updateOpportunityReviewNote(where: { id: $id }, data: $input) {
+      id
+      body
+      updatedAt
+    }
+  }
+`;
+
 export const DELETE_REVIEW_NOTE = gql`
   mutation DELETE_REVIEW_NOTE($id: ID!) {
     deleteOpportunityReviewNote(where: { id: $id }) {

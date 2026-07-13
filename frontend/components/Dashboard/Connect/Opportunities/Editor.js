@@ -48,12 +48,22 @@ const Shell = styled.div`
   border-radius: 32px 0 0 32px;
 `;
 
-const TopBar = styled.div`
+const TopBar = styled.div.attrs({ className: "Editor__TopBar" })`
+  position: sticky;
+  /* Sit just under ConnectNavigationBar (~71px) inside the dashboard scroll container */
+  top: 70px;
+  z-index: 5;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 12px 16px;
+  margin: -8px calc(-1 * clamp(16px, 6vw, 64px)) 8px;
+  padding: 16px clamp(16px, 6vw, 64px);
+  background: rgba(247, 249, 248, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(211, 218, 224, 0.85);
 
   h1 {
     margin: 0;
@@ -862,12 +872,19 @@ export default function OpportunityEditor({ opportunityId, user }) {
     if (exceedsWordLimit(inputs.title, WORD_LIMITS.title)) {
       return validateWordLimits();
     }
-    if (inputs.status === "pending_review" && !validateSponsorSubmission()) {
+
+    // Returned proposals: primary save action is Resubmit → pending_review.
+    const isResubmitting = !isAdmin && inputs.status === "returned";
+    const nextStatus = isResubmitting
+      ? "pending_review"
+      : inputs.status || "draft";
+
+    if (nextStatus === "pending_review" && !validateSponsorSubmission()) {
       return;
     }
     if (
       showFinalScope &&
-      ["accepted", "published"].includes(inputs.status) &&
+      ["accepted", "published"].includes(nextStatus) &&
       !validateScopeComplete()
     ) {
       return;
@@ -876,7 +893,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
     // Acknowledgment is required for any progression past Draft — both when a
     // sponsor submits for review AND when an admin publishes. Keeps the
     // mutual-expectations check at the gate of the first non-draft state.
-    if (inputs.status !== "draft" && !inputs.guidelinesAcknowledged) {
+    if (nextStatus !== "draft" && !inputs.guidelinesAcknowledged) {
       alert(
         t("opportunityEditor.validation.guidelines", {}, {
           default:
@@ -918,7 +935,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
       preferGradeLevels: selectedGrades,
       preferGroupFormat: inputs.preferGroupFormat || "either",
       preferClassType: selectedClassTypes,
-      status: inputs.status || "draft",
+      status: nextStatus,
       proposalData: buildProposalData(inputs),
       sponsorIsMentor: !!inputs.sponsorIsMentor,
       mentorNotes: inputs.mentorNotes || "",
@@ -936,11 +953,11 @@ export default function OpportunityEditor({ opportunityId, user }) {
       // "accepted" (this typically happens via an admin tool, but if it's
       // set in the editor we still mark the moment).
       acceptedAt:
-        inputs.status === "accepted" && !opportunity?.acceptedAt
+        nextStatus === "accepted" && !opportunity?.acceptedAt
           ? new Date().toISOString()
           : opportunity?.acceptedAt || null,
       preSelectedAt:
-        inputs.status === "pre_selected" && !opportunity?.preSelectedAt
+        nextStatus === "pre_selected" && !opportunity?.preSelectedAt
           ? new Date().toISOString()
           : opportunity?.preSelectedAt || null,
     };
@@ -1158,6 +1175,24 @@ export default function OpportunityEditor({ opportunityId, user }) {
                 })}
           </h1>
         </div>
+        {!isReviewMode && (
+          <Actions>
+            <Button type="button" onClick={handleCancel} disabled={saving}>
+              {t("opportunityEditor.cancel", {}, { default: "Cancel" })}
+            </Button>
+            <Button type="button" $primary onClick={handleSave} disabled={saving}>
+              {saving
+                ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+                : isNew
+                ? t("opportunityEditor.create", {}, {
+                    default: "Create opportunity",
+                  })
+                : inputs.status === "returned"
+                ? t("opportunityEditor.resubmit", {}, { default: "Resubmit" })
+                : t("opportunityEditor.save", {}, { default: "Save changes" })}
+            </Button>
+          </Actions>
+        )}
       </TopBar>
 
       {isReviewMode && (
@@ -1168,22 +1203,31 @@ export default function OpportunityEditor({ opportunityId, user }) {
         </StatusBanner>
       )}
 
-      {!isReviewMode && inputs.status === "returned" && (
-        <StatusBanner variant="warning">
-          {t("opportunityEditor.returnedBanner", {}, {
-            default:
-              "A teacher returned your proposal — review their notes below, make changes, then resubmit for review.",
-          })}
-        </StatusBanner>
-      )}
-
-      {!isReviewMode && reviewNotes.length > 0 && (
+      {!isReviewMode &&
+        (reviewNotes.length > 0 || inputs.status === "returned") && (
         <ReviewNotesCard>
           <h2>
             {t("opportunityEditor.reviewNotes.title", {}, {
               default: "Review notes",
             })}
           </h2>
+          {inputs.status === "returned" ? (
+            <p
+              style={{
+                margin: 0,
+                fontSize: 14,
+                lineHeight: 1.5,
+                color: "#3f288f",
+                fontWeight: 600,
+              }}
+            >
+              {t("opportunityEditor.returnedBanner", {}, {
+                default:
+                  "A teacher returned your proposal — review their notes below, make changes, then resubmit for review.",
+              })}
+            </p>
+          ) : null}
+          {reviewNotes.length > 0 ? (
           <div style={{ display: "grid", gap: 12 }}>
             {reviewNotes.map((note) => (
               <div
@@ -1246,6 +1290,13 @@ export default function OpportunityEditor({ opportunityId, user }) {
               </div>
             ))}
           </div>
+          ) : (
+            <p style={{ margin: 0, color: "#5f6871", fontSize: 14 }}>
+              {t("opportunityEditor.reviewNotes.empty", {}, {
+                default: "No review notes were attached.",
+              })}
+            </p>
+          )}
         </ReviewNotesCard>
       )}
 
@@ -1903,7 +1954,9 @@ export default function OpportunityEditor({ opportunityId, user }) {
           <span className="label-text">
             {t("opportunityEditor.status", {}, { default: "Status" })}
           </span>
-          {!isAdmin && ADMIN_ONLY_STATUSES.has(inputs.status) ? (
+          {!isAdmin &&
+          (ADMIN_ONLY_STATUSES.has(inputs.status) ||
+            inputs.status === "returned") ? (
             <div
               style={{
                 display: "flex",
@@ -1911,8 +1964,12 @@ export default function OpportunityEditor({ opportunityId, user }) {
                 gap: 10,
                 padding: "10px 14px",
                 borderRadius: 10,
-                background: "#f7f9f8",
-                border: "1px solid #d3dae0",
+                background:
+                  inputs.status === "returned" ? "#faf8ff" : "#f7f9f8",
+                border:
+                  inputs.status === "returned"
+                    ? "1px solid rgba(160, 144, 224, 0.45)"
+                    : "1px solid #d3dae0",
                 color: "#171717",
                 fontSize: 14,
               }}
@@ -1922,10 +1979,15 @@ export default function OpportunityEditor({ opportunityId, user }) {
                 {inputs.status.replace("_", " ")}
               </strong>
               <span style={{ color: "#5f6871", fontSize: 13 }}>
-                {t("opportunityEditor.sponsorStatusLocked", {}, {
-                  default:
-                    "— locked. A teacher or admin will update the status.",
-                })}
+                {inputs.status === "returned"
+                  ? t("opportunityEditor.sponsorStatusReturnedHint", {}, {
+                      default:
+                        "— use Resubmit above when your changes are ready.",
+                    })
+                  : t("opportunityEditor.sponsorStatusLocked", {}, {
+                      default:
+                        "— locked. A teacher or admin will update the status.",
+                    })}
               </span>
             </div>
           ) : (
@@ -1938,7 +2000,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
               }
             />
           )}
-          {!isAdmin && !isTeacher && (
+          {!isAdmin && !isTeacher && inputs.status !== "returned" && (
             <span className="hint" style={{ marginTop: 4 }}>
               {t("opportunityEditor.sponsorStatusHint", {}, {
                 default:
@@ -2065,21 +2127,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
           </div>
         )}
       </Card>
-      )}
-
-      {!isReviewMode && (
-      <Actions>
-        <Button type="button" onClick={handleCancel} disabled={saving}>
-          {t("opportunityEditor.cancel", {}, { default: "Cancel" })}
-        </Button>
-        <Button type="button" $primary onClick={handleSave} disabled={saving}>
-          {saving
-            ? t("opportunityEditor.saving", {}, { default: "Saving…" })
-            : isNew
-            ? t("opportunityEditor.create", {}, { default: "Create opportunity" })
-            : t("opportunityEditor.save", {}, { default: "Save changes" })}
-        </Button>
-      </Actions>
       )}
     </Shell>
   );

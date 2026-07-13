@@ -7,6 +7,7 @@ import useForm from "../../../../lib/useForm";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import DropdownSelect from "../../../DesignSystem/DropdownSelect";
+import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import {
   GET_CONNECT_ROUND,
   MY_CONNECT_ROUNDS,
@@ -17,6 +18,7 @@ import {
   CREATE_CONNECT_ROUND,
   UPDATE_CONNECT_ROUND,
 } from "../../../Mutations/ConnectRound";
+import { UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import {
   EMPTY_FORM,
   buildSuggestedRoundDefaults,
@@ -33,6 +35,15 @@ const ROUND_STATUS_KEYS = {
   published: "published",
   archived: "archived",
 };
+
+/** Statuses that should not be overwritten when adding to a matching round. */
+const OPPORTUNITY_STATUS_AT_OR_BEYOND_PRESELECTED = new Set([
+  "pre_selected",
+  "accepted",
+  "published",
+  "closed",
+  "archived",
+]);
 
 function getRoundStatusParts(status, t) {
   const key = ROUND_STATUS_KEYS[status];
@@ -342,6 +353,48 @@ export default function ClassMatchingRoundSection({
   );
   const networkOpportunities = opportunitiesData?.opportunities || [];
 
+  const [updateOpportunity] = useMutation(UPDATE_OPPORTUNITY, {
+    refetchQueries: selectedNetworkId
+      ? [
+          {
+            query: NETWORK_OPPORTUNITIES_FOR_ROUND,
+            variables: { classNetworkId: selectedNetworkId },
+          },
+        ]
+      : [],
+  });
+
+  const markOpportunitiesPreSelected = useCallback(
+    async (opportunityIds) => {
+      if (!opportunityIds?.length) return;
+
+      const byId = new Map(
+        networkOpportunities.map((opportunity) => [opportunity.id, opportunity]),
+      );
+      const idsToUpdate = opportunityIds.filter((id) => {
+        const opportunity = byId.get(id);
+        return (
+          opportunity &&
+          !OPPORTUNITY_STATUS_AT_OR_BEYOND_PRESELECTED.has(opportunity.status)
+        );
+      });
+
+      if (!idsToUpdate.length) return;
+
+      await Promise.all(
+        idsToUpdate.map((id) =>
+          updateOpportunity({
+            variables: {
+              id,
+              input: { status: "pre_selected" },
+            },
+          }),
+        ),
+      );
+    },
+    [networkOpportunities, updateOpportunity],
+  );
+
   const selectedNetworkOpportunities = useMemo(() => {
     const selectedSet = new Set(selectedOpportunities);
     return sortOpportunitiesByTitle(
@@ -355,6 +408,14 @@ export default function ClassMatchingRoundSection({
       networkOpportunities.filter((opportunity) => !selectedSet.has(opportunity.id)),
     );
   }, [networkOpportunities, selectedOpportunities]);
+
+  const reviewOpportunitiesCount = useMemo(
+    () =>
+      reviewNetworkOpportunities.filter(
+        (opportunity) => opportunity.status !== "returned",
+      ).length,
+    [reviewNetworkOpportunities],
+  );
 
   const statusOptions = useMemo(
     () =>
@@ -387,10 +448,10 @@ export default function ClassMatchingRoundSection({
       {
         id: PANELS.review,
         label:
-          reviewNetworkOpportunities.length > 0
+          reviewOpportunitiesCount > 0
             ? t(
                 "opportunities.matchingRound.panels.reviewOpportunitiesWithCount",
-                { count: reviewNetworkOpportunities.length },
+                { count: reviewOpportunitiesCount },
                 { default: "Review opportunities ({{count}})" },
               )
             : t("opportunities.matchingRound.panels.reviewOpportunities", {}, {
@@ -417,7 +478,7 @@ export default function ClassMatchingRoundSection({
         }),
       },
     ],
-    [reviewNetworkOpportunities.length, selectedOpportunities.length, t],
+    [reviewOpportunitiesCount, selectedOpportunities.length, t],
   );
 
   const [createConnectRound, { loading: creating }] = useMutation(
@@ -446,6 +507,9 @@ export default function ClassMatchingRoundSection({
         return;
       }
 
+      const previousSet = new Set(selectedOpportunities);
+      const newlySelectedIds = nextIds.filter((id) => !previousSet.has(id));
+
       if (isNew || !activeRoundId) {
         setSelectedOpportunities(nextIds);
         return;
@@ -464,6 +528,7 @@ export default function ClassMatchingRoundSection({
             },
           },
         });
+        await markOpportunitiesPreSelected(newlySelectedIds);
         setSelectedOpportunities(nextIds);
         captureSnapshot(inputs, nextIds, selectedQuestions);
       } catch (error) {
@@ -484,6 +549,7 @@ export default function ClassMatchingRoundSection({
       activeRoundId,
       togglingOpportunityId,
       updateConnectRound,
+      markOpportunitiesPreSelected,
       inputs,
       selectedQuestions,
       captureSnapshot,
@@ -616,6 +682,14 @@ export default function ClassMatchingRoundSection({
 
     const opportunitiesConnect = selectedOpportunities.map((id) => ({ id }));
     const questionsConnect = selectedQuestions.map((id) => ({ id }));
+    const previouslySavedOpportunityIds = new Set(
+      savedSnapshotRef.current?.opportunities || [],
+    );
+    const newlySelectedOpportunityIds = isNew
+      ? selectedOpportunities
+      : selectedOpportunities.filter(
+          (id) => !previouslySavedOpportunityIds.has(id),
+        );
 
     try {
       if (isNew) {
@@ -640,6 +714,7 @@ export default function ClassMatchingRoundSection({
         });
         const newId = result?.data?.createConnectRound?.id;
         if (newId) {
+          await markOpportunitiesPreSelected(newlySelectedOpportunityIds);
           captureSnapshot(inputs, selectedOpportunities, selectedQuestions);
           setExplicitNewRound(false);
           setActiveRoundId(newId);
@@ -667,6 +742,7 @@ export default function ClassMatchingRoundSection({
             },
           },
         });
+        await markOpportunitiesPreSelected(newlySelectedOpportunityIds);
         captureSnapshot(inputs, selectedOpportunities, selectedQuestions);
       }
     } catch (error) {
@@ -1157,25 +1233,18 @@ export default function ClassMatchingRoundSection({
 
       {expanded && selectedNetworkId && !loading ? (
         <div className="classTabExpandableBody">
-          <div
-            className="classTabMatchingRoundChipRow"
-            role="tablist"
-            aria-label={t("opportunities.matchingRound.title", {}, {
-              default: "Matching round",
-            })}
-          >
+          <Navbar style={{ paddingLeft: 0}}>
             {panelOptions.map((panel) => (
-              <Chip
+              <NavbarItem
                 key={panel.id}
-                label={panel.label}
-                shape="square"
                 selected={activePanel === panel.id}
                 onClick={() => setActivePanel(panel.id)}
-                ariaLabel={panel.label}
-                style={activePanel === panel.id ? undefined : { border: "none" }}
-              />
+                style={{backgroundColor: activePanel === panel.id ? "#DEF8FB" : "transparent"}}
+              >
+                {panel.label}
+              </NavbarItem>
             ))}
-          </div>
+          </Navbar>
 
           <div className="classTabMatchingRoundForm">
             {activePanel === PANELS.settings && renderSettingsPanel()}

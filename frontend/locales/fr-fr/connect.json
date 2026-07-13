@@ -547,6 +547,7 @@
 		"relevantLinksUrl": "URL",
 		"requestsAppointment": "",
 		"researchQuestion": "Quelle est la question de recherche/le champ d'étude à explorer OU quel est le problème que vous souhaitez aborder ?",
+		"resubmit": "",
 		"returnedBanner": "",
 		"review": {
 			"accept": "Accepter la proposition",
@@ -573,6 +574,7 @@
 			"submittedLabel": "Soumis"
 		},
 		"reviewNotes": {
+			"empty": "",
 			"roundLabel": "",
 			"title": "",
 			"unknownAuthor": ""
@@ -598,6 +600,7 @@
 		"sponsorIsMentor": "Je suis également le mentor au quotidien pour ce projet (décochez cette case si quelqu'un d'autre sera le mentor).",
 		"sponsorStatusHint": "Indiquez « Soumis pour évaluation » lorsque votre proposition sera prête — un enseignant l’examinera.",
 		"sponsorStatusLocked": "— Verrouillé. Un enseignant ou un administrateur mettra à jour le statut.",
+		"sponsorStatusReturnedHint": "",
 		"status": "Statut",
 		"statusOptions": {
 			"accepted": "Accepté (portée finale complète)",

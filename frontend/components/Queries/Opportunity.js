@@ -262,6 +262,11 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       preferClassType
       publicRatingAverage
       publicRatingCount
+      requestsAppointment
+      guidelinesAcknowledged
+      guidelinesAcknowledgedAt
+      sponsorIsMentor
+      mentorNotes
       mentor {
         id
         username
@@ -307,6 +312,22 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       scopeDescription
       potentialActivities
       specificSkills
+      reviewNotes(orderBy: { createdAt: desc }) {
+        id
+        body
+        createdAt
+        updatedAt
+        author {
+          id
+          username
+          firstName
+          lastName
+        }
+        round {
+          id
+          title
+        }
+      }
       ratings(
         where: { isPublic: { equals: true } }
         orderBy: { createdAt: desc }

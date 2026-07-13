@@ -547,6 +547,7 @@
 		"relevantLinksUrl": "URL",
 		"requestsAppointment": "Would you like to schedule an appointment with a MindHive team member?",
 		"researchQuestion": "What is the research question/scope to be explored OR what is the problem that you want to address?",
+		"resubmit": "Resubmit",
 		"returnedBanner": "A teacher returned your proposal — review their notes below, make changes, then resubmit for review.",
 		"review": {
 			"accept": "Accept proposal",
@@ -573,6 +574,7 @@
 			"submittedLabel": "Submitted"
 		},
 		"reviewNotes": {
+			"empty": "No review notes were attached.",
 			"roundLabel": "Round: {{title}}",
 			"title": "Review notes",
 			"unknownAuthor": "Reviewer"
@@ -598,6 +600,7 @@
 		"sponsorIsMentor": "I'm also the day-to-day mentor for this project (uncheck if someone else will be mentoring)",
 		"sponsorStatusHint": "Set to Submitted for review when your proposal is ready — a teacher will review it.",
 		"sponsorStatusLocked": "— locked. A teacher or admin will update the status.",
+		"sponsorStatusReturnedHint": "— use Resubmit above when your changes are ready.",
 		"status": "Status",
 		"statusOptions": {
 			"accepted": "Accepted (complete final scope)",
@@ -798,17 +801,17 @@
 	"returnDashboard": "Return to Dashboard",
 	"returnModal": {
 		"cancel": "Cancel",
-		"confirm": "Return to sponsor",
+		"confirm": "Return with comments",
 		"emailMessage": "A teacher has returned your Capstone proposal for revision. Open your opportunity to read their notes, make changes, and resubmit for review.",
 		"emailTitle": "Your Capstone proposal was returned",
 		"error": "Could not return this opportunity. Please try again.",
 		"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
 		"placeholder": "Optional note for the sponsor…",
 		"submitting": "Returning…",
-		"title": "Return to sponsor"
+		"title": "Return with comments"
 	},
 	"reviewOpportunity": {
-		"returnToSponsor": "Return to sponsor"
+		"returnToSponsor": "Return with comments"
 	},
 	"roleGuard": {
 		"backLink": "Back to Connect",

@@ -1238,7 +1238,6 @@ const StyledClass = styled.div`
       gap: 18px;
     }
 
-    .classTabMatchingRoundChipRow,
     .classTabMatchingRoundAlgoChipRow {
       display: flex;
       flex-wrap: wrap;
@@ -1482,6 +1481,20 @@ const StyledClass = styled.div`
         border-radius: 12px;
         overflow: hidden;
       }
+
+      .matchingRoundOppRowReturned {
+        background-color: #f3f3f3 !important;
+        color: #8a8680;
+
+        &.ag-row-hover,
+        &.ag-row-selected {
+          background-color: #ebebeb !important;
+        }
+
+        .ag-cell {
+          color: #8a8680;
+        }
+      }
     }
 
     .matchingRoundOppInfoGridCell {
@@ -1522,11 +1535,26 @@ const StyledClass = styled.div`
         background: #eef5f9;
         color: #336f8a;
       }
+
+      &.matchingRoundOppInfoCellReturned {
+        background: #E6E6E6;
+        color: #3f288f;
+
+        &:hover {
+          background: #E6E6E6;
+          color: #3f288f;
+        }
+      }
     }
 
     [data-infotooltip-open="true"] .matchingRoundOppInfoCell {
       background: #eef5f9;
       color: #336f8a;
+    }
+
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturned {
+      background: #d6cef0;
+      color: #3f288f;
     }
 
     .matchingRoundOppInfoTooltip {
