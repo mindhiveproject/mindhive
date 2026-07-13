@@ -269,18 +269,6 @@ export default function OpportunitiesList({ user }) {
       return;
     }
 
-    // List view cannot validate full proposal fields — send sponsors to the editor.
-    if (!isAdmin && nextStatus === "pending_review") {
-      alert(
-        t("myOpportunitiesList.statusChangeUseEditor", {}, {
-          default:
-            "Complete required fields in the editor before submitting for review.",
-        }),
-      );
-      handleEdit(opportunity.id);
-      return;
-    }
-
     setUpdatingStatusId(opportunity.id);
     try {
       await updateOpportunity({
@@ -439,7 +427,10 @@ export default function OpportunitiesList({ user }) {
           {filtered.map((opportunity) => {
             const editable = isStatusEditable(opportunity, isAdmin);
             const hasReviewNotes = (opportunity.reviewNotes?.length ?? 0) > 0;
-            const showReviewCommentsCta = hasReviewNotes && !isAdmin;
+            const showReviewCommentsCta =
+              !isAdmin &&
+              opportunity.status === "returned" &&
+              hasReviewNotes;
             return (
               <OpportunityCompactCard
                 key={opportunity.id}

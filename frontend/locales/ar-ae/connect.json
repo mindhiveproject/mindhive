@@ -547,6 +547,7 @@
 		"relevantLinksUrl": "عنوان URL",
 		"requestsAppointment": "",
 		"researchQuestion": "ما هو سؤال البحث/نطاق البحث الذي سيتم استكشافه أو ما هي المشكلة التي تريد معالجتها؟",
+		"resubmit": "",
 		"returnedBanner": "",
 		"review": {
 			"accept": "قبول العرض",
@@ -573,6 +574,7 @@
 			"submittedLabel": "مُقَدَّم"
 		},
 		"reviewNotes": {
+			"empty": "",
 			"roundLabel": "",
 			"title": "",
 			"unknownAuthor": ""
@@ -598,6 +600,7 @@
 		"sponsorIsMentor": "أنا أيضاً المرشد اليومي لهذا المشروع (قم بإلغاء تحديد الخيار إذا كان شخص آخر سيقوم بالإرشاد)",
 		"sponsorStatusHint": "قم بتعيين حالة \"تم الإرسال\" للمراجعة عندما يكون اقتراحك جاهزًا - سيقوم أحد المعلمين بمراجعته.",
 		"sponsorStatusLocked": "— مغلق. سيقوم أحد المعلمين أو المشرفين بتحديث الحالة.",
+		"sponsorStatusReturnedHint": "",
 		"status": "حالة",
 		"statusOptions": {
 			"accepted": "مقبول (النطاق النهائي الكامل)",

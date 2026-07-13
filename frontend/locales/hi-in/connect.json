@@ -547,6 +547,7 @@
 		"relevantLinksUrl": "यूआरएल",
 		"requestsAppointment": "",
 		"researchQuestion": "शोध का प्रश्न/क्षेत्र क्या है जिसकी पड़ताल की जानी है या आप किस समस्या का समाधान करना चाहते हैं?",
+		"resubmit": "",
 		"returnedBanner": "",
 		"review": {
 			"accept": "प्रस्ताव स्वीकार करें",
@@ -573,6 +574,7 @@
 			"submittedLabel": "प्रस्तुत"
 		},
 		"reviewNotes": {
+			"empty": "",
 			"roundLabel": "",
 			"title": "",
 			"unknownAuthor": ""
@@ -598,6 +600,7 @@
 		"sponsorIsMentor": "मैं इस प्रोजेक्ट का दैनिक मार्गदर्शक भी हूँ (यदि कोई और मार्गदर्शक होगा तो इस विकल्प को अनचेक करें)",
 		"sponsorStatusHint": "जब आपका प्रस्ताव तैयार हो जाए तो उसे समीक्षा के लिए प्रस्तुत करें पर सेट कर दें — एक शिक्षक इसकी समीक्षा करेगा।",
 		"sponsorStatusLocked": "— लॉक किया गया है। शिक्षक या व्यवस्थापक स्थिति को अपडेट करेंगे।",
+		"sponsorStatusReturnedHint": "",
 		"status": "स्थिति",
 		"statusOptions": {
 			"accepted": "स्वीकृत (अंतिम कार्यक्षेत्र पूर्ण)",
