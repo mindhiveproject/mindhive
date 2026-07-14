@@ -63,6 +63,67 @@ const StyledModal = styled.div`
     display: grid;
     background: red;
   }
+  .classNetworkDetail {
+    display: grid;
+    gap: 18px;
+
+    p {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      letter-spacing: normal;
+    }
+  }
+  .classNetworkDetailTitle {
+    margin: 0;
+    color: #171717;
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 30px;
+    letter-spacing: normal;
+  }
+  .classNetworkDetailDescription {
+    color: #3d3d3d;
+    font-size: 15px;
+    line-height: 22px;
+  }
+  .classNetworkDetailSummary {
+    display: grid;
+    gap: 12px;
+  }
+  .classNetworkDetailRow {
+    display: grid;
+    gap: 6px;
+    padding: 14px 16px;
+    border: 1px solid #ece9e6;
+    border-radius: 14px;
+    background: #fbfbfa;
+  }
+  .classNetworkDetailLabel {
+    color: #625b71;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+  .classNetworkDetailValue {
+    color: #171717;
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 22px;
+  }
+
+  .classNetworkDetailNames {
+    display: grid;
+    gap: 8px;
+    margin: 2px 0 0;
+    padding-left: 20px;
+    color: #3d3d3d;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+  }
   .modalTwoSideContent {
     display: grid;
     align-content: baseline;

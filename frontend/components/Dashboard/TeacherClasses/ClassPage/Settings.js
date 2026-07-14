@@ -6,13 +6,13 @@ import useTranslation from "next-translate/useTranslation";
 import { DELETE_CLASS, EDIT_CLASS } from "../../../Mutations/Classes";
 import { GET_CLASSES, GET_CLASS } from "../../../Queries/Classes";
 
-import { Modal, Button } from "semantic-ui-react";
+import { Modal, Button as SemanticButton } from "semantic-ui-react";
 
 import StyledModal from "../../../styles/StyledModal";
 
 import { useRouter } from "next/router";
 
-import Chip from "../../../DesignSystem/Chip";
+import DesignSystemButton from "../../../DesignSystem/Button";
 import CurriculumTypeSelector from "./CurriculumTypeSelector";
 import {
   DEFAULT_CURRICULUM_TYPE,
@@ -23,6 +23,7 @@ export default function Settings({ myclass, user }) {
   const { t } = useTranslation("classes");
   const [inputValue, setInputValue] = useState({});
   const [open, setOpen] = useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState(null);
   const [assignableToStudents, setAssignableToStudents] = useState(
     myclass?.settings?.assignableToStudents ?? false
   );
@@ -59,6 +60,7 @@ export default function Settings({ myclass, user }) {
   };
 
   const router = useRouter();
+  const classNetworks = myclass?.networks || [];
 
   const [updateClassSettings, { loading: updatingSettings }] = useMutation(
     EDIT_CLASS,
@@ -159,38 +161,192 @@ export default function Settings({ myclass, user }) {
       },
     ],
   });
-  
+
+  const formatNetworkClassCount = (count) =>
+    count === 1
+      ? t("classNetworkClassCountSingle", { count }, {
+          default: "{{count}} linked class",
+        })
+      : t("classNetworkClassCountPlural", { count }, {
+          default: "{{count}} linked classes",
+        });
+
+  const formatNetworkOrganizationCount = (count) =>
+    count === 1
+      ? t("classNetworkOrganizationCountSingle", { count }, {
+          default: "{{count}} organization",
+        })
+      : t("classNetworkOrganizationCountPlural", { count }, {
+          default: "{{count}} organizations",
+        });
+
+  const formatNetworkOpportunityCount = (count) =>
+    count === 1
+      ? t("classNetworkOpportunityCountSingle", { count }, {
+          default: "{{count}} opportunity",
+        })
+      : t("classNetworkOpportunityCountPlural", { count }, {
+          default: "{{count}} opportunities",
+        });
+
   return (
     <div className="settings">
-      {myclass?.networks.length > 0 && (
+      {classNetworks.length > 0 && (
         <section className="settingsSection">
           <div className="settingsSectionHeader">
             <h3>{t("classNetworks")}</h3>
           </div>
-          {myclass?.networks.map((network) => (
-            <div className="networkCard" key={network?.id || network?.title}>
-              <Chip
-                className="classNetworkChip"
-                label={network?.title}
-                shape="square"
-              />
-              <p>{network?.description}</p>
-              <p>
-                {t("createdByOn", {
-                  username: network?.creator?.username,
-                  date: moment(network?.createdAt).format("MMMM D, YYYY"),
-                })}
-              </p>
-              <p>{t("classes")}</p>
-              <ul>
-                {network?.classes.map((cl) => (
-                  <li key={cl?.id || cl?.title}>{cl?.title}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className="networkCardGrid">
+            {classNetworks.map((network) => {
+              const networkClasses = network?.classes || [];
+              const networkOrganizations = network?.memberOrganizations || [];
+              const title =
+                network?.title ||
+                t("classNetworkUntitled", {}, { default: "Untitled network" });
+
+              return (
+                <div
+                  className="networkCard"
+                  key={network?.id || network?.title}
+                >
+                  <div className="networkCardHeader">
+                    <h4 className="networkCardTitle">{title}</h4>
+                  </div>
+                  {network?.description ? (
+                    <p className="networkCardDescription">
+                      {network.description}
+                    </p>
+                  ) : null}
+                  <div className="networkCardMeta">
+                    <span>{formatNetworkClassCount(networkClasses.length)}</span>
+                    {networkOrganizations.length > 0 ? (
+                      <>
+                        <span aria-hidden>•</span>
+                        <span>
+                          {formatNetworkOrganizationCount(
+                            networkOrganizations.length
+                          )}
+                        </span>
+                      </>
+                    ) : null}
+                  </div>
+                  <DesignSystemButton
+                    variant="outline"
+                    type="button"
+                    className="networkCardAction"
+                    onClick={() => setSelectedNetwork(network)}
+                    aria-label={t(
+                      "classNetworkOpenDetailsAria",
+                      { title },
+                      { default: "Open details for {{title}}" }
+                    )}
+                  >
+                    {t("classNetworkViewDetails", {}, {
+                      default: "View details",
+                    })}
+                  </DesignSystemButton>
+                </div>
+              );
+            })}
+          </div>
         </section>
       )}
+
+      <Modal
+        open={!!selectedNetwork}
+        onClose={() => setSelectedNetwork(null)}
+        size="small"
+      >
+        <Modal.Header>
+          {t("classNetworkDetailsTitle", {}, {
+            default: "Class network details",
+          })}
+        </Modal.Header>
+        <Modal.Content scrolling>
+          <Modal.Description>
+            <StyledModal>
+              <div className="classNetworkDetail">
+                <h3 className="classNetworkDetailTitle">
+                  {selectedNetwork?.title ||
+                    t("classNetworkUntitled", {}, {
+                      default: "Untitled network",
+                    })}
+                </h3>
+                {selectedNetwork?.description ? (
+                  <p className="classNetworkDetailDescription">
+                    {selectedNetwork.description}
+                  </p>
+                ) : null}
+                <div className="classNetworkDetailSummary">
+                  <div className="classNetworkDetailRow">
+                    <span className="classNetworkDetailLabel">
+                      {t("classNetworkLinkedClasses", {}, {
+                        default: "Linked classes",
+                      })}
+                    </span>
+                    <strong className="classNetworkDetailValue">
+                      {formatNetworkClassCount(
+                        selectedNetwork?.classes?.length || 0
+                      )}
+                    </strong>
+                  </div>
+                  {selectedNetwork?.memberOrganizations?.length > 0 ? (
+                    <div className="classNetworkDetailRow">
+                      <span className="classNetworkDetailLabel">
+                        {t("classNetworkMemberOrganizations", {}, {
+                          default: "Member organizations",
+                        })}
+                      </span>
+                      <strong className="classNetworkDetailValue">
+                        {formatNetworkOrganizationCount(
+                          selectedNetwork.memberOrganizations.length
+                        )}
+                      </strong>
+                      <ul className="classNetworkDetailNames">
+                        {selectedNetwork.memberOrganizations.map((org) => (
+                          <li key={org?.id || org?.name}>{org?.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                  <div className="classNetworkDetailRow">
+                    <span className="classNetworkDetailLabel">
+                      {t("classNetworkOpportunities", {}, {
+                        default: "Opportunities",
+                      })}
+                    </span>
+                    <strong className="classNetworkDetailValue">
+                      {formatNetworkOpportunityCount(
+                        selectedNetwork?.opportunities?.length || 0
+                      )}
+                    </strong>
+                  </div>
+                  <div className="classNetworkDetailRow">
+                    <span className="classNetworkDetailLabel">
+                      {t("classNetworkCreationDate", {}, {
+                        default: "Creation date",
+                      })}
+                    </span>
+                    <strong className="classNetworkDetailValue">
+                      {moment(selectedNetwork?.createdAt).format(
+                        "MMMM D, YYYY"
+                      )}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            </StyledModal>
+          </Modal.Description>
+        </Modal.Content>
+        <Modal.Actions>
+          <DesignSystemButton
+            variant="text"
+            onClick={() => setSelectedNetwork(null)}
+          >
+            {t("close", {}, { default: "Close" })}
+          </DesignSystemButton>
+        </Modal.Actions>
+      </Modal>
 
       <section className="settingsSection">
         <div className="settingsSectionHeader">
@@ -339,7 +495,7 @@ export default function Settings({ myclass, user }) {
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
-            <Button
+            <SemanticButton
               style={{ background: "#D53533", color: "#FFFFFF" }}
               content={t("delete")}
               onClick={() => {
@@ -354,7 +510,7 @@ export default function Settings({ myclass, user }) {
                 setOpen(false);
               }}
             />
-            <Button content={t("cancel")} onClick={() => setOpen(false)} />
+            <SemanticButton content={t("cancel")} onClick={() => setOpen(false)} />
           </Modal.Actions>
         </Modal>
       </section>

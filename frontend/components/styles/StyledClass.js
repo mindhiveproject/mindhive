@@ -1793,28 +1793,85 @@ const StyledClass = styled.div`
       }
     }
 
+    .networkCardGrid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
     .networkCard {
       display: grid;
-      gap: 8px;
-      padding: 20px;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      padding: 14px;
       border: 1px solid #e6e6e6;
       border-radius: 16px;
       background: #ffffff;
+      color: inherit;
+      font-family: "Inter", sans-serif;
+      text-align: left;
+      box-shadow: 0 6px 18px rgba(23, 23, 23, 0.03);
+      transition: border-color 0.2s ease, background-color 0.2s ease,
+        box-shadow 0.2s ease, transform 0.2s ease;
+    }
 
-      h2,
-      p {
-        margin: 0;
-      }
+    .networkCard:hover,
+    .networkCard:focus-within {
+      border-color: rgba(51, 111, 138, 0.45);
+      background: #f6f9f8;
+      box-shadow: 0 10px 24px rgba(23, 23, 23, 0.08);
+      transform: translateY(-1px);
+    }
 
-      .classNetworkChip {
-        justify-self: start;
-      }
+    .networkCardHeader {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+    }
 
-      h2 {
-        font-size: 18px;
-        line-height: 24px;
-        color: #171717;
-      }
+    .networkCardTitle {
+      display: -webkit-box;
+      margin: 0;
+      overflow: hidden;
+      color: #171717;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 22px;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .networkCardDescription {
+      display: -webkit-box;
+      overflow: hidden;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .networkCardMeta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      color: #a1a1a1;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .networkCardAction {
+      justify-self: start;
+      color: var(--MH-Theme-Primary-Dark, #336f8a);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
     }
 
     .curriculumTypeSelector {
@@ -1952,6 +2009,10 @@ const StyledClass = styled.div`
       }
 
       .informationBlock {
+        grid-template-columns: 1fr;
+      }
+
+      .networkCardGrid {
         grid-template-columns: 1fr;
       }
     }
