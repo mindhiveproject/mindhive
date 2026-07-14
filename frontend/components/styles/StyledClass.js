@@ -1874,6 +1874,13 @@ const StyledClass = styled.div`
       line-height: 18px;
     }
 
+    .networkCardActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
     .curriculumTypeSelector {
       border: none;
       margin: 0;

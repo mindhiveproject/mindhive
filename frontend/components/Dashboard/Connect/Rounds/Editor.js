@@ -11,7 +11,7 @@ import {
   MY_CONNECT_ROUNDS,
   NETWORK_OPPORTUNITIES_FOR_ROUND,
 } from "../../../Queries/ConnectRound";
-import { MY_CLASS_NETWORKS_FOR_OPPORTUNITY } from "../../../Queries/Opportunity";
+import { OPPORTUNITY_EDITOR_CLASS_NETWORKS } from "../../../Queries/Opportunity";
 import { QUESTION_LIBRARY } from "../../../Queries/ConnectQuestion";
 import {
   CREATE_CONNECT_ROUND,
@@ -29,6 +29,7 @@ import {
   formatDateShort,
   isExpired,
 } from "./roundFormConfig";
+import { collectMemberClassNetworks } from "../../../../lib/opportunityClassNetworks";
 
 const BACK_CHEVRON = (
   <svg
@@ -264,8 +265,8 @@ export default function RoundEditor({ roundId }) {
     }
   );
 
-  const { data: networksData } = useQuery(MY_CLASS_NETWORKS_FOR_OPPORTUNITY);
-  const allNetworks = networksData?.classNetworks || [];
+  const { data: networksData } = useQuery(OPPORTUNITY_EDITOR_CLASS_NETWORKS);
+  const allNetworks = collectMemberClassNetworks(networksData?.authenticatedItem);
 
   const round = existing?.connectRound;
 

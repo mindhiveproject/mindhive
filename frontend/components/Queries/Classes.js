@@ -83,10 +83,19 @@ export const GET_CLASS = gql`
         title
         description
         creator {
+          id
           username
+        }
+        admins {
+          id
+          username
+          firstName
+          lastName
+          email
         }
         classes {
           id
+          title
         }
         memberOrganizations {
           id

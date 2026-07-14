@@ -15,10 +15,12 @@ export function dedupeNetworks(networks) {
 export function collectMemberClassNetworks(me) {
   if (!me) return [];
   const fromProfile = me.memberOfClassNetworks || [];
+  const fromCreated = me.classNetworksCreated || [];
+  const fromAdmin = me.adminOfClassNetworks || [];
   const fromOrgs = (me.organizations || []).flatMap(
     (org) => org.memberOfClassNetworks || [],
   );
-  return dedupeNetworks([...fromProfile, ...fromOrgs]);
+  return dedupeNetworks([...fromProfile, ...fromCreated, ...fromAdmin, ...fromOrgs]);
 }
 
 export function buildClassNetworksMutationInput(selectedNetworkIds, isNew) {

@@ -850,6 +850,7 @@
 		"description": "",
 		"roles": {
 			"admin": "",
+			"classNetworkAdmin": "",
 			"mentor": "",
 			"student": "",
 			"teacher": ""

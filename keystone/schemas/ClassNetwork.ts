@@ -9,14 +9,19 @@ import {
   checkbox,
   json,
 } from "@keystone-6/core/fields";
+import { rules, isSignedIn } from "../access";
 
 export const ClassNetwork = list({
   access: {
     operation: {
       query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      update: rules.classNetworkMutate,
+      delete: rules.classNetworkMutate,
     },
   },
   fields: {
@@ -35,10 +40,68 @@ export const ClassNetwork = list({
         },
       },
     }),
+    admins: relationship({
+      ref: "Profile.adminOfClassNetworks",
+      many: true,
+      hooks: {
+        async resolveInput({ context, operation, inputData }) {
+          if (operation !== "create") {
+            return inputData.admins;
+          }
+
+          const creatorId = context.session?.itemId;
+          if (!creatorId) {
+            return inputData.admins;
+          }
+
+          const existing = inputData.admins || {};
+          const existingConnect = Array.isArray(existing.connect)
+            ? existing.connect
+            : [];
+          const hasCreator = existingConnect.some(
+            (item: { id?: string }) => item?.id === creatorId
+          );
+
+          return {
+            ...existing,
+            connect: hasCreator
+              ? existingConnect
+              : [...existingConnect, { id: creatorId }],
+          };
+        },
+      },
+    }),
     classes: relationship({ ref: "Class.networks", many: true }),
     memberProfiles: relationship({
       ref: "Profile.memberOfClassNetworks",
       many: true,
+      hooks: {
+        async resolveInput({ context, operation, inputData }) {
+          if (operation !== "create") {
+            return inputData.memberProfiles;
+          }
+
+          const creatorId = context.session?.itemId;
+          if (!creatorId) {
+            return inputData.memberProfiles;
+          }
+
+          const existing = inputData.memberProfiles || {};
+          const existingConnect = Array.isArray(existing.connect)
+            ? existing.connect
+            : [];
+          const hasCreator = existingConnect.some(
+            (item: { id?: string }) => item?.id === creatorId
+          );
+
+          return {
+            ...existing,
+            connect: hasCreator
+              ? existingConnect
+              : [...existingConnect, { id: creatorId }],
+          };
+        },
+      },
     }),
     memberOrganizations: relationship({
       ref: "Organization.memberOfClassNetworks",
@@ -60,5 +123,12 @@ export const ClassNetwork = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+  },
+  hooks: {
+    validateInput: async ({ operation, context, addValidationError }) => {
+      if (operation === "create" && !context.session?.itemId) {
+        addValidationError("You must be signed in to create a class network.");
+      }
+    },
   },
 });

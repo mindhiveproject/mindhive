@@ -75,6 +75,7 @@ const ROLE_KEYS = {
   mentor: "roleGuard.roles.mentor",
   teacher: "roleGuard.roles.teacher",
   admin: "roleGuard.roles.admin",
+  classNetworkAdmin: "roleGuard.roles.classNetworkAdmin",
 };
 
 const ROLE_DEFAULTS = {
@@ -82,6 +83,7 @@ const ROLE_DEFAULTS = {
   mentor: "mentors",
   teacher: "teachers",
   admin: "admins",
+  classNetworkAdmin: "class-network admins",
 };
 
 export default function RoleGuard({ allow, children }) {
@@ -92,6 +94,7 @@ export default function RoleGuard({ allow, children }) {
     if (r === "teacher") return roles.isTeacher;
     if (r === "mentor") return roles.isMentor;
     if (r === "student") return roles.isStudent;
+    if (r === "classNetworkAdmin") return roles.isClassNetworkAdmin;
     return false;
   });
 

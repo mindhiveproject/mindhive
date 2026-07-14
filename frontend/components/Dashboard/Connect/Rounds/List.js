@@ -150,13 +150,31 @@ function formatDate(value) {
   }
 }
 
+function collectManagedRounds(profile) {
+  const seen = new Map();
+  (profile?.connectRoundsCreated || []).forEach((round) => {
+    if (round?.id) seen.set(round.id, round);
+  });
+  (profile?.adminOfClassNetworks || []).forEach((network) => {
+    (network?.connectRounds || []).forEach((round) => {
+      if (round?.id && !seen.has(round.id)) {
+        seen.set(round.id, round);
+      }
+    });
+  });
+  return Array.from(seen.values());
+}
+
 export default function RoundsList() {
   const { data, loading, refetch } = useQuery(MY_CONNECT_ROUNDS, {
     fetchPolicy: "cache-and-network",
   });
   const [deleteConnectRound] = useMutation(DELETE_CONNECT_ROUND);
 
-  const rounds = data?.authenticatedItem?.connectRoundsCreated || [];
+  const rounds = useMemo(
+    () => collectManagedRounds(data?.authenticatedItem),
+    [data],
+  );
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState(null);

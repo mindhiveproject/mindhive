@@ -4,6 +4,10 @@ import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
 import { DELETE_CLASS, EDIT_CLASS } from "../../../Mutations/Classes";
+import {
+  ADD_CLASS_NETWORK_ADMIN,
+  REMOVE_CLASS_NETWORK_ADMIN,
+} from "../../../Mutations/ClassNetwork";
 import { GET_CLASSES, GET_CLASS } from "../../../Queries/Classes";
 
 import { Modal, Button as SemanticButton } from "semantic-ui-react";
@@ -18,12 +22,25 @@ import {
   DEFAULT_CURRICULUM_TYPE,
   normalizeCurriculumType,
 } from "../../../../lib/curriculumTypes";
+import { deriveRoles } from "../../Connect/useConnectRole";
+
+function displayProfileName(profile) {
+  return (
+    `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() ||
+    profile?.username ||
+    profile?.email ||
+    ""
+  );
+}
 
 export default function Settings({ myclass, user }) {
   const { t } = useTranslation("classes");
   const [inputValue, setInputValue] = useState({});
   const [open, setOpen] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState(null);
+  const [adminNetwork, setAdminNetwork] = useState(null);
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminFeedback, setAdminFeedback] = useState(null);
   const [assignableToStudents, setAssignableToStudents] = useState(
     myclass?.settings?.assignableToStudents ?? false
   );
@@ -61,6 +78,7 @@ export default function Settings({ myclass, user }) {
 
   const router = useRouter();
   const classNetworks = myclass?.networks || [];
+  const { canManageClassNetwork } = deriveRoles(user);
 
   const [updateClassSettings, { loading: updatingSettings }] = useMutation(
     EDIT_CLASS,
@@ -69,6 +87,37 @@ export default function Settings({ myclass, user }) {
       refetchQueries: [{ query: GET_CLASS, variables: { code: myclass?.code } }],
     }
   );
+  const classRefetch = [
+    { query: GET_CLASS, variables: { code: myclass?.code } },
+  ];
+  const [addNetworkAdmin, { loading: addingNetworkAdmin }] = useMutation(
+    ADD_CLASS_NETWORK_ADMIN,
+    { refetchQueries: classRefetch, awaitRefetchQueries: true }
+  );
+  const [removeNetworkAdmin, { loading: removingNetworkAdmin }] = useMutation(
+    REMOVE_CLASS_NETWORK_ADMIN,
+    { refetchQueries: classRefetch, awaitRefetchQueries: true }
+  );
+
+  useEffect(() => {
+    if (selectedNetwork?.id) {
+      const freshSelectedNetwork = classNetworks.find(
+        (n) => n?.id === selectedNetwork.id
+      );
+      if (freshSelectedNetwork && freshSelectedNetwork !== selectedNetwork) {
+        setSelectedNetwork(freshSelectedNetwork);
+      }
+    }
+
+    if (adminNetwork?.id) {
+      const freshAdminNetwork = classNetworks.find(
+        (n) => n?.id === adminNetwork.id
+      );
+      if (freshAdminNetwork && freshAdminNetwork !== adminNetwork) {
+        setAdminNetwork(freshAdminNetwork);
+      }
+    }
+  }, [adminNetwork, classNetworks, selectedNetwork]);
 
   const updateAssignableToStudents = (value) => {
     setAssignableToStudents(value);
@@ -189,6 +238,114 @@ export default function Settings({ myclass, user }) {
           default: "{{count}} opportunities",
         });
 
+  const handleSelectNetwork = (network) => {
+    setSelectedNetwork(network);
+  };
+
+  const handleCloseNetworkDetails = () => {
+    setSelectedNetwork(null);
+  };
+
+  const handleOpenAdminModal = (network) => {
+    setAdminNetwork(network);
+    setAdminEmail("");
+    setAdminFeedback(null);
+  };
+
+  const handleCloseAdminModal = () => {
+    setAdminNetwork(null);
+    setAdminEmail("");
+    setAdminFeedback(null);
+  };
+
+  const handleAddNetworkAdmin = async () => {
+    const email = adminEmail.trim().toLowerCase();
+    if (!adminNetwork?.id || !email) {
+      setAdminFeedback({
+        kind: "error",
+        text: t("classNetworkAdminEmailRequired", {}, {
+          default: "Enter an email address first.",
+        }),
+      });
+      return;
+    }
+
+    if (
+      (adminNetwork.admins || []).some(
+        (admin) => admin?.email?.toLowerCase() === email
+      )
+    ) {
+      setAdminFeedback({
+        kind: "error",
+        text: t("classNetworkAdminAlreadyAdded", {}, {
+          default: "That person is already an admin for this network.",
+        }),
+      });
+      return;
+    }
+
+    try {
+      await addNetworkAdmin({
+        variables: { networkId: adminNetwork.id, email },
+      });
+      setAdminEmail("");
+      setAdminFeedback({
+        kind: "ok",
+        text: t("classNetworkAdminAdded", {}, {
+          default: "Class-network admin added.",
+        }),
+      });
+    } catch (err) {
+      setAdminFeedback({
+        kind: "error",
+        text:
+          err?.message ||
+          t("classNetworkAdminAddError", {}, {
+            default: "Failed to add class-network admin.",
+          }),
+      });
+    }
+  };
+
+  const handleRemoveNetworkAdmin = async (profileId) => {
+    if (!adminNetwork?.id || !profileId) return;
+    const confirmed = window.confirm(
+      t("classNetworkAdminRemoveConfirm", {}, {
+        default:
+          "Remove this class-network admin? They will lose network management access.",
+      })
+    );
+    if (!confirmed) return;
+
+    try {
+      await removeNetworkAdmin({
+        variables: { networkId: adminNetwork.id, profileId },
+      });
+      setAdminFeedback({
+        kind: "ok",
+        text: t("classNetworkAdminRemoved", {}, {
+          default: "Class-network admin removed.",
+        }),
+      });
+    } catch (err) {
+      setAdminFeedback({
+        kind: "error",
+        text:
+          err?.message ||
+          t("classNetworkAdminRemoveError", {}, {
+            default: "Failed to remove class-network admin.",
+          }),
+      });
+    }
+  };
+
+  const adminNetworkAdmins = adminNetwork?.admins || [];
+  const canManageSelectedNetwork =
+    !!selectedNetwork?.id && canManageClassNetwork(selectedNetwork.id);
+  const canManageAdminNetwork =
+    !!adminNetwork?.id && canManageClassNetwork(adminNetwork.id);
+  const adminMutationLoading = addingNetworkAdmin || removingNetworkAdmin;
+
   return (
     <div className="settings">
       {classNetworks.length > 0 && (
@@ -230,21 +387,40 @@ export default function Settings({ myclass, user }) {
                       </>
                     ) : null}
                   </div>
-                  <DesignSystemButton
-                    variant="outline"
-                    type="button"
-                    className="networkCardAction"
-                    onClick={() => setSelectedNetwork(network)}
-                    aria-label={t(
-                      "classNetworkOpenDetailsAria",
-                      { title },
-                      { default: "Open details for {{title}}" }
-                    )}
-                  >
-                    {t("classNetworkViewDetails", {}, {
-                      default: "View details",
-                    })}
-                  </DesignSystemButton>
+                  <div className="networkCardActions">
+                    <DesignSystemButton
+                      variant="outline"
+                      type="button"
+                      className="networkCardAction"
+                      onClick={() => handleSelectNetwork(network)}
+                      aria-label={t(
+                        "classNetworkOpenDetailsAria",
+                        { title },
+                        { default: "Open details for {{title}}" }
+                      )}
+                    >
+                      {t("classNetworkViewDetails", {}, {
+                        default: "View details",
+                      })}
+                    </DesignSystemButton>
+                    {canManageClassNetwork(network?.id) ? (
+                      <DesignSystemButton
+                        variant="outline"
+                        type="button"
+                        className="networkCardAction"
+                        onClick={() => handleOpenAdminModal(network)}
+                        aria-label={t(
+                          "classNetworkManageAdminsAria",
+                          { title },
+                          { default: "Manage admins for {{title}}" }
+                        )}
+                      >
+                        {t("classNetworkManageAdmins", {}, {
+                          default: "Manage admins",
+                        })}
+                      </DesignSystemButton>
+                    ) : null}
+                  </div>
                 </div>
               );
             })}
@@ -254,7 +430,7 @@ export default function Settings({ myclass, user }) {
 
       <Modal
         open={!!selectedNetwork}
-        onClose={() => setSelectedNetwork(null)}
+        onClose={handleCloseNetworkDetails}
         size="small"
       >
         <Modal.Header>
@@ -341,7 +517,158 @@ export default function Settings({ myclass, user }) {
         <Modal.Actions>
           <DesignSystemButton
             variant="text"
-            onClick={() => setSelectedNetwork(null)}
+            onClick={handleCloseNetworkDetails}
+          >
+            {t("close", {}, { default: "Close" })}
+          </DesignSystemButton>
+          {canManageSelectedNetwork ? (
+            <DesignSystemButton
+              variant="filled"
+              type="button"
+              onClick={() => {
+                handleOpenAdminModal(selectedNetwork);
+                handleCloseNetworkDetails();
+              }}
+            >
+              {t("classNetworkManageAdmins", {}, {
+                default: "Manage admins",
+              })}
+            </DesignSystemButton>
+          ) : null}
+        </Modal.Actions>
+      </Modal>
+
+      <Modal
+        open={!!adminNetwork}
+        onClose={handleCloseAdminModal}
+        size="small"
+      >
+        <Modal.Header>
+          {t("classNetworkAdminsModalTitle", {}, {
+            default: "Manage network admins",
+          })}
+        </Modal.Header>
+        <Modal.Content scrolling>
+          <Modal.Description>
+            <StyledModal>
+              <div className="classNetworkDetail">
+                <h3 className="classNetworkDetailTitle">
+                  {adminNetwork?.title ||
+                    t("classNetworkUntitled", {}, {
+                      default: "Untitled network",
+                    })}
+                </h3>
+                <div className="classNetworkAdmins">
+                  <div className="classNetworkAdminsHeader">
+                    <h4>
+                      {t("classNetworkAdminsTitle", {}, {
+                        default: "Network admins",
+                      })}
+                    </h4>
+                    <p>
+                      {t("classNetworkAdminsDescription", {}, {
+                        default:
+                          "Admins can manage this class network and related Connect workflows.",
+                      })}
+                    </p>
+                  </div>
+
+                  {adminNetworkAdmins.length > 0 ? (
+                    <ul className="classNetworkAdminList">
+                      {adminNetworkAdmins.map((admin) => (
+                        <li key={admin.id} className="classNetworkAdminRow">
+                          <div>
+                            <strong>{displayProfileName(admin)}</strong>
+                            {admin.email ? <span>{admin.email}</span> : null}
+                          </div>
+                          {canManageAdminNetwork ? (
+                            <DesignSystemButton
+                              variant="outline"
+                              type="button"
+                              disabled={adminMutationLoading}
+                              onClick={() => handleRemoveNetworkAdmin(admin.id)}
+                            >
+                              {t("classNetworkAdminRemove", {}, {
+                                default: "Remove",
+                              })}
+                            </DesignSystemButton>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="classNetworkAdminEmpty">
+                      {t("classNetworkAdminsEmpty", {}, {
+                        default: "No admins have been assigned yet.",
+                      })}
+                    </p>
+                  )}
+
+                  {canManageAdminNetwork ? (
+                    <div className="classNetworkAdminForm">
+                      <label htmlFor="classNetworkAdminEmail">
+                        {t("classNetworkAdminEmailLabel", {}, {
+                          default: "Add admin by email",
+                        })}
+                      </label>
+                      <div className="classNetworkAdminFormRow">
+                        <input
+                          id="classNetworkAdminEmail"
+                          type="email"
+                          value={adminEmail}
+                          placeholder={t(
+                            "classNetworkAdminEmailPlaceholder",
+                            {},
+                            { default: "teacher@example.com" }
+                          )}
+                          onChange={(event) =>
+                            setAdminEmail(event.target.value)
+                          }
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              handleAddNetworkAdmin();
+                            }
+                          }}
+                        />
+                        <DesignSystemButton
+                          variant="filled"
+                          type="button"
+                          disabled={adminMutationLoading}
+                          onClick={handleAddNetworkAdmin}
+                        >
+                          {adminMutationLoading
+                            ? t("classNetworkAdminAdding", {}, {
+                                default: "Adding...",
+                              })
+                            : t("classNetworkAdminAdd", {}, {
+                                default: "Add admin",
+                              })}
+                        </DesignSystemButton>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {adminFeedback ? (
+                    <p
+                      className={
+                        adminFeedback.kind === "error"
+                          ? "classNetworkAdminFeedback error"
+                          : "classNetworkAdminFeedback"
+                      }
+                    >
+                      {adminFeedback.text}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            </StyledModal>
+          </Modal.Description>
+        </Modal.Content>
+        <Modal.Actions>
+          <DesignSystemButton
+            variant="text"
+            onClick={handleCloseAdminModal}
           >
             {t("close", {}, { default: "Close" })}
           </DesignSystemButton>

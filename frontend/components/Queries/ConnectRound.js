@@ -17,6 +17,9 @@ export const MY_CONNECT_ROUNDS = gql`
           classNetwork {
             id
             title
+            admins {
+              id
+            }
           }
           opportunities {
             id
@@ -25,6 +28,34 @@ export const MY_CONNECT_ROUNDS = gql`
           }
           createdAt
           updatedAt
+        }
+        adminOfClassNetworks {
+          id
+          title
+          connectRounds(orderBy: { createdAt: desc }) {
+            id
+            title
+            description
+            status
+            openAt
+            closeAt
+            publishedAt
+            matchingAlgorithm
+            classNetwork {
+              id
+              title
+              admins {
+                id
+              }
+            }
+            opportunities {
+              id
+              title
+              status
+            }
+            createdAt
+            updatedAt
+          }
         }
       }
     }
@@ -46,6 +77,9 @@ export const GET_CONNECT_ROUND = gql`
       classNetwork {
         id
         title
+        admins {
+          id
+        }
       }
       opportunities {
         id

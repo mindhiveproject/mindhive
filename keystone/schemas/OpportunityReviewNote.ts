@@ -29,6 +29,7 @@ async function canCreateReviewNoteForPair(
       classNetwork {
         id
         creator { id }
+        admins { id }
         classes { id creator { id } }
       }
     `,
@@ -47,6 +48,13 @@ async function canCreateReviewNoteForPair(
   }
   if (opportunity.mentor?.id === userId) return true;
   if (round.classNetwork?.creator?.id === userId) return true;
+  if (
+    (round.classNetwork?.admins || []).some(
+      (admin: { id: string }) => admin.id === userId
+    )
+  ) {
+    return true;
+  }
   if (
     (round.classNetwork?.classes || []).some(
       (c: { creator?: { id: string } }) => c.creator?.id === userId

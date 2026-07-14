@@ -151,6 +151,14 @@ export const EXPLORE_CONTEXT = gql`
         favoriteOpportunities {
           id
         }
+        classNetworksCreated {
+          id
+          title
+        }
+        adminOfClassNetworks {
+          id
+          title
+        }
         studentIn {
           id
           networks {
@@ -449,6 +457,14 @@ export const MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY = gql`
   query MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY {
     authenticatedItem {
       ... on Profile {
+        classNetworksCreated {
+          id
+          title
+        }
+        adminOfClassNetworks {
+          id
+          title
+        }
         memberOfClassNetworks {
           id
           title
@@ -468,6 +484,14 @@ export const OPPORTUNITY_EDITOR_CLASS_NETWORKS = gql`
   query OPPORTUNITY_EDITOR_CLASS_NETWORKS {
     authenticatedItem {
       ... on Profile {
+        classNetworksCreated {
+          id
+          title
+        }
+        adminOfClassNetworks {
+          id
+          title
+        }
         memberOfClassNetworks {
           id
           title

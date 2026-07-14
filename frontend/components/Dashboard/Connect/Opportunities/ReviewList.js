@@ -96,6 +96,12 @@ const REVIEW_STATUS_DEFAULTS = {
 
 function collectReviewerNetworkIds(me) {
   const ids = new Set();
+  (me?.classNetworksCreated || []).forEach((network) => {
+    if (network?.id) ids.add(network.id);
+  });
+  (me?.adminOfClassNetworks || []).forEach((network) => {
+    if (network?.id) ids.add(network.id);
+  });
   const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || []];
   groups.forEach((classes) => {
     classes.forEach((cls) => {

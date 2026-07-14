@@ -850,6 +850,7 @@
 		"description": "Your account doesn't have access to this section yet. If you think this is a mistake, ask your teacher or an administrator.",
 		"roles": {
 			"admin": "admins",
+			"classNetworkAdmin": "class-network admins",
 			"mentor": "mentors",
 			"student": "students",
 			"teacher": "teachers"

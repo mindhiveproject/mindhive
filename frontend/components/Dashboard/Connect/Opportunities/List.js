@@ -169,8 +169,8 @@ function isStatusEditable(opportunity, isAdmin) {
 export default function OpportunitiesList({ user }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
-  const { isTeacher, isAdmin } = deriveRoles(user);
-  const showReviewTab = isTeacher || isAdmin;
+  const { isTeacher, isAdmin, isClassNetworkAdmin } = deriveRoles(user);
+  const showReviewTab = isTeacher || isAdmin || isClassNetworkAdmin;
   const { data, loading, refetch } = useQuery(MY_OPPORTUNITIES, {
     fetchPolicy: "cache-and-network",
   });

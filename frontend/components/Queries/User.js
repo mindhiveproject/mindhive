@@ -66,6 +66,14 @@ export const CURRENT_USER_QUERY = gql`
         mentorIn {
           id
         }
+        classNetworksCreated {
+          id
+          title
+        }
+        adminOfClassNetworks {
+          id
+          title
+        }
         memberOfClassNetworks {
           id
           title
