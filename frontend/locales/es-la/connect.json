@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "Los cambios no guardados se perderán. Haz clic en Cancelar para volver y guardar los cambios."
 	},
 	"exploreConnect": "Explora Conectar",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "¿En qué temas te gustaría apoyar a los estudiantes? Selecciona algunos temas y áreas de interés de la lista a continuación para que otros miembros de la comunidad sepan dónde te entusiasma contribuir. Esto nos ayudará a conectarte con estudiantes y compañeros que comparten tus pasiones.",
 		"interests": "Intereses",
@@ -228,14 +231,34 @@
 	},
 	"introductionVideo": "Vídeo de introducción",
 	"locationFilter": "Ubicación",
+	"matchesRound": {
+		"backLink": ""
+	},
 	"matchingRound": {
 		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
 		"notAvailableYet": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
 		"publishDisabledWhileDraft": "",
-		"publishRequiresMatching": ""
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -798,6 +821,14 @@
 			"title": "Organización"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "Regresar al panel de control",
 	"returnModal": {
 		"cancel": "",
@@ -811,6 +842,7 @@
 		"title": ""
 	},
 	"reviewOpportunity": {
+		"backLink": "",
 		"returnToSponsor": ""
 	},
 	"roleGuard": {

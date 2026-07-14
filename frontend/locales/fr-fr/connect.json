@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "Vos modifications non enregistrées seront perdues. Cliquez sur Annuler pour revenir en arrière et enregistrer vos modifications."
 	},
 	"exploreConnect": "Explorer Connect",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "Sur quels sujets souhaiteriez-vous soutenir les étudiants ? Sélectionnez quelques sujets et centres d'intérêt dans la liste ci-dessous pour informer les autres membres de la communauté de votre intérêt. Cela nous permettra de vous mettre en contact avec des étudiants et des pairs qui partagent vos passions.",
 		"interests": "Intérêts",
@@ -228,14 +231,34 @@
 	},
 	"introductionVideo": "Vidéo d'introduction",
 	"locationFilter": "Emplacement",
+	"matchesRound": {
+		"backLink": ""
+	},
 	"matchingRound": {
 		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
 		"notAvailableYet": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
 		"publishDisabledWhileDraft": "",
-		"publishRequiresMatching": ""
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -798,6 +821,14 @@
 			"title": "Organisation"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "Retour au tableau de bord",
 	"returnModal": {
 		"cancel": "",
@@ -811,6 +842,7 @@
 		"title": ""
 	},
 	"reviewOpportunity": {
+		"backLink": "",
 		"returnToSponsor": ""
 	},
 	"roleGuard": {

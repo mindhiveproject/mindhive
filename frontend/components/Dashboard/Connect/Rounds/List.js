@@ -7,6 +7,7 @@ import { Icon, Label, Dropdown } from "semantic-ui-react";
 import { MY_CONNECT_ROUNDS } from "../../../Queries/ConnectRound";
 import { DELETE_CONNECT_ROUND } from "../../../Mutations/ConnectRound";
 import FilterBar from "../FilterBar";
+import Button from "../../../DesignSystem/Button";
 
 const Shell = styled.div`
   display: flex;
@@ -37,25 +38,6 @@ const TopBar = styled.div`
     margin: 4px 0 0;
     color: #5f6871;
     font-size: 14px;
-  }
-`;
-
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: none;
-  background: #336f8a;
-  color: #ffffff;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-
-  &:hover {
-    background: #244f63;
   }
 `;
 
@@ -118,7 +100,7 @@ const CardActions = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;
@@ -230,10 +212,9 @@ export default function RoundsList() {
             query: { round: "new" },
           }}
         >
-          <PrimaryButton type="button">
-            <Icon name="plus" />
+          <Button type="button" variant="filled">
             New round
-          </PrimaryButton>
+          </Button>
         </Link>
       </TopBar>
 

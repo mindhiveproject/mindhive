@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "Несохраненные изменения будут потеряны. Нажмите «Отмена», чтобы вернуться и сохранить изменения."
 	},
 	"exploreConnect": "Исследуйте Подключиться",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "Какие темы вы хотели бы поддержать студентов? Выберите несколько тем и направлений из списка ниже, чтобы другие участники сообщества знали, в чём вы хотели бы участвовать. Это поможет нам найти вас среди студентов и коллег, разделяющих ваши увлечения.",
 		"interests": "Интересы",
@@ -228,14 +231,34 @@
 	},
 	"introductionVideo": "Вводное видео",
 	"locationFilter": "Расположение",
+	"matchesRound": {
+		"backLink": ""
+	},
 	"matchingRound": {
 		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
 		"notAvailableYet": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
 		"publishDisabledWhileDraft": "",
-		"publishRequiresMatching": ""
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -798,6 +821,14 @@
 			"title": "Организация"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "Вернуться на панель инструментов",
 	"returnModal": {
 		"cancel": "",
@@ -811,6 +842,7 @@
 		"title": ""
 	},
 	"reviewOpportunity": {
+		"backLink": "",
 		"returnToSponsor": ""
 	},
 	"roleGuard": {

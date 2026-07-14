@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "ستفقد التغييرات غير المحفوظة. انقر فوق \"إلغاء\" للعودة وحفظ التغييرات."
 	},
 	"exploreConnect": "استكشف الاتصال",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "ما هي المواضيع التي ترغب بدعم الطلاب فيها؟ اختر بعض المواضيع ومجالات الاهتمام من القائمة أدناه لإعلام أعضاء مجتمعنا الآخرين بالمجالات التي ترغب بالمساهمة فيها. سيساعدنا هذا على ربطك بالطلاب والزملاء الذين يشاركونك شغفك.",
 		"interests": "الإهتمامات",
@@ -228,14 +231,34 @@
 	},
 	"introductionVideo": "فيديو المقدمة",
 	"locationFilter": "موقع",
+	"matchesRound": {
+		"backLink": ""
+	},
 	"matchingRound": {
 		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
 		"notAvailableYet": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
 		"publishDisabledWhileDraft": "",
-		"publishRequiresMatching": ""
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -798,6 +821,14 @@
 			"title": "منظمة"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "العودة إلى لوحة المعلومات",
 	"returnModal": {
 		"cancel": "",
@@ -811,6 +842,7 @@
 		"title": ""
 	},
 	"reviewOpportunity": {
+		"backLink": "",
 		"returnToSponsor": ""
 	},
 	"roleGuard": {

@@ -23,6 +23,7 @@ import {
   DELETE_QUESTION,
 } from "../../../Mutations/ConnectQuestion";
 import { deriveRoles } from "../useConnectRole";
+import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
 import OpportunityProposalSection from "./OpportunityProposalSection";
@@ -38,17 +39,58 @@ import {
   hydrateProposalInputs,
 } from "./OpportunityProposalConfig";
 
+const BACK_CHEVRON = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const STATUS_CHIP_KEY_BY_VALUE = {
+  draft: "draft",
+  pending_review: "pendingReview",
+  returned: "returned",
+  pre_selected: "preSelected",
+  accepted: "accepted",
+  published: "published",
+  archived: "archived",
+  closed: "closed",
+};
+
+const STATUS_CHIP_DEFAULTS = {
+  draft: "Draft",
+  pending_review: "Submitted",
+  returned: "Returned",
+  pre_selected: "Pre-selected",
+  accepted: "Accepted",
+  published: "Published",
+  archived: "Archived",
+  closed: "Closed",
+};
+
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
+  /* Connect nav (~70px) + compact sticky topbar (~56px) */
+  scroll-padding-top: 126px;
 `;
 
-const TopBar = styled.div.attrs({ className: "Editor__TopBar" })`
+const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
   position: sticky;
   /* Sit just under ConnectNavigationBar (~71px) inside the dashboard scroll container */
   top: 70px;
@@ -57,35 +99,73 @@ const TopBar = styled.div.attrs({ className: "Editor__TopBar" })`
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px 16px;
+  gap: 8px 16px;
   margin: -8px calc(-1 * clamp(16px, 6vw, 64px)) 8px;
-  padding: 16px clamp(16px, 6vw, 64px);
+  padding: 10px clamp(16px, 6vw, 64px);
   background: rgba(247, 249, 248, 0.92);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(211, 218, 224, 0.85);
+`;
+
+const TopBarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 220px;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-width: 0;
+  flex: 1 1 auto;
 
   h1 {
     margin: 0;
+    min-width: 0;
+    max-width: 100%;
     font-family: "Lato", sans-serif;
-    font-size: clamp(24px, 3vw, 32px);
+    font-size: clamp(20px, 2.8vw, 26px);
     font-weight: 600;
     color: #171717;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
 const BackLink = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   background: none;
   border: none;
+  border-radius: 8px;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
-  padding: 0;
+
+  &:hover:not(:disabled) {
+    background: rgba(51, 111, 138, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
+  }
 `;
 
 const Card = styled.div`
@@ -199,29 +279,11 @@ const CheckboxRow = styled.div`
 
 const Actions = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: flex-end;
-  flex-wrap: wrap;
-`;
-
-const Button = styled.button`
-  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: 1px solid ${({ $primary }) => ($primary ? "#336f8a" : "#d3dae0")};
-  background: ${({ $primary }) => ($primary ? "#336f8a" : "#ffffff")};
-  color: ${({ $primary }) => ($primary ? "#ffffff" : "#336f8a")};
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  flex-wrap: wrap;
+  flex: 0 0 auto;
 `;
 
 const GRADE_OPTIONS = [
@@ -1147,50 +1209,121 @@ export default function OpportunityEditor({ opportunityId, user }) {
     );
   }
 
+  const entityTitle = (inputs.title || "").trim();
+  const pageTitle = entityTitle
+    ? entityTitle
+    : isReviewMode
+    ? t("opportunityEditor.review.pageTitle", {}, {
+        default: "Review opportunities",
+      })
+    : isNew
+    ? t("opportunityEditor.pageTitleNew", {}, {
+        default: "New opportunity",
+      })
+    : t("opportunityEditor.pageTitleEdit", {}, {
+        default: "Edit opportunity",
+      });
+
+  const statusChipKey = STATUS_CHIP_KEY_BY_VALUE[inputs.status];
+  const statusChipLabel =
+    !isNew && statusChipKey
+      ? t(`myOpportunitiesList.status.${statusChipKey}`, {}, {
+          default: STATUS_CHIP_DEFAULTS[inputs.status] || statusChipKey,
+        })
+      : null;
+
+  const reviewPrimaryAction = (() => {
+    if (!isReviewMode) return null;
+    if (inputs.status === "pending_review") {
+      return {
+        nextStatus: "pre_selected",
+        label: t("opportunityEditor.review.preSelect", {}, {
+          default: "Pre-select sponsor",
+        }),
+      };
+    }
+    if (inputs.status === "pre_selected") {
+      return {
+        nextStatus: "accepted",
+        label: t("opportunityEditor.review.accept", {}, {
+          default: "Accept proposal",
+        }),
+      };
+    }
+    if (inputs.status === "accepted") {
+      return {
+        nextStatus: "published",
+        label: t("opportunityEditor.review.publish", {}, {
+          default: "Publish opportunity",
+        }),
+      };
+    }
+    return null;
+  })();
+
+  const primaryBusy = saving;
+  const backLabel = isReviewMode
+    ? t("opportunityEditor.review.backLink", {}, {
+        default: "Back to review queue",
+      })
+    : t("opportunityEditor.backLink", {}, {
+        default: "Back to opportunities",
+      });
+  const editPrimaryLabel = saving
+    ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+    : isNew
+    ? t("opportunityEditor.create", {}, {
+        default: "Create opportunity",
+      })
+    : inputs.status === "returned"
+    ? t("opportunityEditor.resubmit", {}, { default: "Resubmit" })
+    : t("opportunityEditor.save", {}, { default: "Save changes" });
+
   return (
     <Shell>
       <TopBar>
-        <div>
-          <BackLink type="button" onClick={handleCancel}>
-            <Icon name="arrow left" />{" "}
-            {isReviewMode
-              ? t("opportunityEditor.review.backLink", {}, {
-                  default: "Back to review queue",
-                })
-              : t("opportunityEditor.backLink", {}, {
-                  default: "Back to opportunities",
-                })}
+        <TopBarLeft>
+          <BackLink
+            type="button"
+            onClick={handleCancel}
+            disabled={primaryBusy}
+            aria-label={backLabel}
+            title={backLabel}
+          >
+            {BACK_CHEVRON}
           </BackLink>
-          <h1>
-            {isReviewMode
-              ? t("opportunityEditor.review.pageTitle", {}, {
-                  default: "Review opportunities",
-                })
-              : isNew
-              ? t("opportunityEditor.pageTitleNew", {}, {
-                  default: "New opportunity",
-                })
-              : t("opportunityEditor.pageTitleEdit", {}, {
-                  default: "Edit opportunity",
-                })}
-          </h1>
-        </div>
-        {!isReviewMode && (
+          <TitleRow>
+            <h1 title={pageTitle}>{pageTitle}</h1>
+            {statusChipLabel && (
+              <Chip shape="pill" label={statusChipLabel} />
+            )}
+          </TitleRow>
+        </TopBarLeft>
+        {(!isReviewMode || reviewPrimaryAction) && (
           <Actions>
-            <Button type="button" onClick={handleCancel} disabled={saving}>
-              {t("opportunityEditor.cancel", {}, { default: "Cancel" })}
-            </Button>
-            <Button type="button" $primary onClick={handleSave} disabled={saving}>
-              {saving
-                ? t("opportunityEditor.saving", {}, { default: "Saving…" })
-                : isNew
-                ? t("opportunityEditor.create", {}, {
-                    default: "Create opportunity",
-                  })
-                : inputs.status === "returned"
-                ? t("opportunityEditor.resubmit", {}, { default: "Resubmit" })
-                : t("opportunityEditor.save", {}, { default: "Save changes" })}
-            </Button>
+            {isReviewMode ? (
+              <Button
+                type="button"
+                variant="filled"
+                onClick={() =>
+                  handleReviewAction(reviewPrimaryAction.nextStatus)
+                }
+                disabled={primaryBusy}
+              >
+                {primaryBusy
+                  ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+                  : reviewPrimaryAction.label}
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="filled"
+                onClick={handleSave}
+                disabled={primaryBusy}
+              >
+                {editPrimaryLabel}
+              </Button>
+            )}
           </Actions>
         )}
       </TopBar>
@@ -1732,7 +1865,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
                         border: "1px solid #e8c4c4",
                         background: "#fff",
                         color: "#b3261e",
-                        fontFamily: "Nunito",
+                        fontFamily: "Inter",
                         fontWeight: 600,
                         fontSize: 12,
                         cursor: "pointer",
@@ -1861,7 +1994,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
               <div>
                 <Button
                   type="button"
-                  $primary
+                  variant="filled"
                   onClick={handleAddQuestion}
                   disabled={addingQuestion}
                 >
@@ -1890,44 +2023,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
             scopeComplete={scopeComplete}
             viewerRole="teacher"
           />
-          <Actions style={{ justifyContent: "flex-start" }}>
-            {inputs.status === "pending_review" && (
-              <Button
-                type="button"
-                $primary
-                onClick={() => handleReviewAction("pre_selected")}
-                disabled={updating}
-              >
-                {t("opportunityEditor.review.preSelect", {}, {
-                  default: "Pre-select sponsor",
-                })}
-              </Button>
-            )}
-            {inputs.status === "pre_selected" && (
-              <Button
-                type="button"
-                $primary
-                onClick={() => handleReviewAction("accepted")}
-                disabled={updating}
-              >
-                {t("opportunityEditor.review.accept", {}, {
-                  default: "Accept proposal",
-                })}
-              </Button>
-            )}
-            {inputs.status === "accepted" && (
-              <Button
-                type="button"
-                $primary
-                onClick={() => handleReviewAction("published")}
-                disabled={updating}
-              >
-                {t("opportunityEditor.review.publish", {}, {
-                  default: "Publish opportunity",
-                })}
-              </Button>
-            )}
-          </Actions>
         </Card>
       )}
 

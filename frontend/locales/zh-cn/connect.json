@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "您未保存的更改将会丢失。点击“取消”按钮返回并保存您的更改。"
 	},
 	"exploreConnect": "探索连接",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "您想在哪些主题上为学生提供支持？请从下方列表中选择一些您感兴趣的主题和领域，让其他社区成员了解您乐于贡献的内容。这有助于我们将您与志同道合的学生和同学联系起来。",
 		"interests": "兴趣",
@@ -228,14 +231,34 @@
 	},
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
+	"matchesRound": {
+		"backLink": ""
+	},
 	"matchingRound": {
 		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
 		"notAvailableYet": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
 		"publishDisabledWhileDraft": "",
-		"publishRequiresMatching": ""
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -798,6 +821,14 @@
 			"title": "组织"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "返回仪表板",
 	"returnModal": {
 		"cancel": "",
@@ -811,6 +842,7 @@
 		"title": ""
 	},
 	"reviewOpportunity": {
+		"backLink": "",
 		"returnToSponsor": ""
 	},
 	"roleGuard": {

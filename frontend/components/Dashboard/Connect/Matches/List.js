@@ -83,7 +83,7 @@ const Action = styled.div`
     border: 1px solid #336f8a;
     background: #336f8a;
     color: #ffffff;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;

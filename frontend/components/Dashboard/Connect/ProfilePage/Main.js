@@ -333,7 +333,7 @@ const NameRow = styled.div`
   gap: 15px;
   
   .h1 {
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 46px;
     font-weight: 700;
     line-height: 52px;
@@ -347,7 +347,7 @@ const PronounTag = styled.span`
   border-radius: 8px;
   background: #edf2ee;
   color: #171717;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
@@ -355,7 +355,7 @@ const PronounTag = styled.span`
 
 const Tagline = styled.p`
   margin: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
@@ -414,7 +414,7 @@ const MetaItem = styled.div`
   justify-content: center;
   gap: 10px;
   color: #171717;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
@@ -459,7 +459,7 @@ const ConnectButton = styled.button`
   border: 2px solid #336F8A;
   background: #336F8A;
   color: white;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 800;
   font-size: 16px;
   line-height: 24px;
@@ -563,7 +563,7 @@ const InterestTag = styled.span`
   // border: 1px solid #a1a1a1;
   background: #f3f3f3;
   color: #171717;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 12px;
   line-height: 20px;

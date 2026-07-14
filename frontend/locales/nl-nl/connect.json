@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "Je niet-opgeslagen wijzigingen gaan verloren. Klik op Annuleren om terug te keren en je wijzigingen op te slaan."
 	},
 	"exploreConnect": "Ontdekken Verbinden",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "Met welke onderwerpen zou je studenten willen ondersteunen? Selecteer een aantal onderwerpen en interessegebieden uit de onderstaande lijst om andere communityleden te laten weten waar je graag een bijdrage aan wilt leveren. Zo kunnen we je in contact brengen met studenten en medestudenten die jouw passies delen.",
 		"interests": "Interesses",
@@ -228,14 +231,34 @@
 	},
 	"introductionVideo": "Introductievideo",
 	"locationFilter": "Plaats",
+	"matchesRound": {
+		"backLink": ""
+	},
 	"matchingRound": {
 		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
 		"notAvailableYet": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
 		"publishDisabledWhileDraft": "",
-		"publishRequiresMatching": ""
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -798,6 +821,14 @@
 			"title": "Organisatie"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "Terug naar dashboard",
 	"returnModal": {
 		"cancel": "",
@@ -811,6 +842,7 @@
 		"title": ""
 	},
 	"reviewOpportunity": {
+		"backLink": "",
 		"returnToSponsor": ""
 	},
 	"roleGuard": {
