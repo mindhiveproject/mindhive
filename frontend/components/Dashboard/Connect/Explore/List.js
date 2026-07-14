@@ -189,7 +189,7 @@ const Pagination = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;

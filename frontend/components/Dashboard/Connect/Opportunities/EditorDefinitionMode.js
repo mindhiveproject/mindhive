@@ -9,6 +9,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import { UserContext } from "../../../Global/Authorized";
@@ -31,44 +32,104 @@ import {
   isNewOpportunityId,
 } from "../../../../lib/opportunityClassNetworks";
 
+const BACK_CHEVRON = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
+  scroll-padding-top: 126px;
 `;
 
-const TopBar = styled.div`
+const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
+  position: sticky;
+  top: 70px;
+  z-index: 5;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
   flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: -8px calc(-1 * clamp(16px, 6vw, 64px)) 8px;
+  padding: 10px clamp(16px, 6vw, 64px);
+  background: rgba(247, 249, 248, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(211, 218, 224, 0.85);
+`;
+
+const TopBarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 220px;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-width: 0;
+  flex: 1 1 auto;
 
   h1 {
     margin: 0;
+    min-width: 0;
+    max-width: 100%;
     font-family: "Lato", sans-serif;
-    font-size: clamp(24px, 3vw, 32px);
+    font-size: clamp(20px, 2.8vw, 26px);
     font-weight: 600;
     color: #171717;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
 const BackLink = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   background: none;
   border: none;
+  border-radius: 8px;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
-  padding: 0;
+
+  &:hover:not(:disabled) {
+    background: rgba(51, 111, 138, 0.08);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
+  }
 `;
 
 function rolesForViewer(connectRole) {
@@ -84,6 +145,7 @@ function rolesForViewer(connectRole) {
 
 export default function EditorDefinitionMode({ opportunityId }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const user = useContext(UserContext);
   const isNew = isNewOpportunityId(opportunityId);
   const connectRole = useConnectRole();
@@ -113,8 +175,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
     );
   }, [opportunity?.id]);
 
-  // Resolve the viewer's organization so per-org definition variants
-  // can be picked up when they exist.
   const { data: orgData } = useQuery(GET_MY_ORGANIZATION, {
     fetchPolicy: "cache-and-network",
   });
@@ -170,21 +230,47 @@ export default function EditorDefinitionMode({ opportunityId }) {
   };
 
   if (!isNew && oppLoading && !opportunity) {
-    return <Shell>Loading opportunity…</Shell>;
+    return (
+      <Shell>
+        {t("opportunityEditor.loading", {}, {
+          default: "Loading opportunity…",
+        })}
+      </Shell>
+    );
   }
+
+  const entityTitle = (opportunity?.title || "").trim();
+  const pageTitle = entityTitle
+    ? entityTitle
+    : isNew
+    ? t("opportunityEditor.pageTitleNew", {}, {
+        default: "New opportunity",
+      })
+    : t("opportunityEditor.pageTitleEdit", {}, {
+        default: "Edit opportunity",
+      });
+  const backLabel = t("opportunityEditor.backLink", {}, {
+    default: "Back to opportunities",
+  });
 
   return (
     <Shell>
       <TopBar>
-        <BackLink
-          type="button"
-          onClick={() =>
-            router.push({ pathname: "/dashboard/connect/opportunities" })
-          }
-        >
-          ← Back
-        </BackLink>
-        <h1>{isNew ? "New opportunity" : opportunity?.title || "Opportunity"}</h1>
+        <TopBarLeft>
+          <BackLink
+            type="button"
+            onClick={() =>
+              router.push({ pathname: "/dashboard/connect/opportunities" })
+            }
+            aria-label={backLabel}
+            title={backLabel}
+          >
+            {BACK_CHEVRON}
+          </BackLink>
+          <TitleRow>
+            <h1 title={pageTitle}>{pageTitle}</h1>
+          </TitleRow>
+        </TopBarLeft>
       </TopBar>
       {flash ? (
         <div style={{ color: "#1d6b3a", fontSize: 14 }}>{flash}</div>
@@ -201,7 +287,13 @@ export default function EditorDefinitionMode({ opportunityId }) {
         viewerRoles={viewerRoles}
         locale={router.locale}
         onSubmit={handleSubmit}
-        saveLabel={isNew ? "Create opportunity" : "Save changes"}
+        saveLabel={
+          isNew
+            ? t("opportunityEditor.create", {}, {
+                default: "Create opportunity",
+              })
+            : t("opportunityEditor.save", {}, { default: "Save changes" })
+        }
       />
     </Shell>
   );

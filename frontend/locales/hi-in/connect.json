@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "आपके द्वारा सहेजे न गए परिवर्तन नष्ट हो जाएंगे। अपने परिवर्तनों को सहेजने के लिए वापस लौटने हेतु रद्द करें पर क्लिक करें।"
 	},
 	"exploreConnect": "कनेक्ट का अन्वेषण करें",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "आप किन विषयों पर छात्रों का समर्थन करना चाहेंगे? नीचे दी गई सूची में से कुछ विषय और रुचि के क्षेत्र चुनें ताकि समुदाय के अन्य सदस्यों को पता चल सके कि आप कहाँ योगदान देने के लिए उत्सुक हैं। इससे हमें आपको उन छात्रों और साथियों से जोड़ने में मदद मिलेगी जो आपकी रुचियों को साझा करते हैं।",
 		"interests": "रुचियां",
@@ -228,14 +231,34 @@
 	},
 	"introductionVideo": "परिचय वीडियो",
 	"locationFilter": "जगह",
+	"matchesRound": {
+		"backLink": ""
+	},
 	"matchingRound": {
 		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
 		"notAvailableYet": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
 		"publishDisabledWhileDraft": "",
-		"publishRequiresMatching": ""
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -798,6 +821,14 @@
 			"title": "संगठन"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "डैशबोर्ड पर लौटें",
 	"returnModal": {
 		"cancel": "",
@@ -811,6 +842,7 @@
 		"title": ""
 	},
 	"reviewOpportunity": {
+		"backLink": "",
 		"returnToSponsor": ""
 	},
 	"roleGuard": {
@@ -818,6 +850,7 @@
 		"description": "",
 		"roles": {
 			"admin": "",
+			"classNetworkAdmin": "",
 			"mentor": "",
 			"student": "",
 			"teacher": ""

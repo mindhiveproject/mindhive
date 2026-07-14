@@ -21,6 +21,7 @@ const Shell = styled.div`
   flex-direction: column;
   gap: 32px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
@@ -96,7 +97,7 @@ const TabRow = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 14px;
     text-decoration: none;
@@ -168,8 +169,8 @@ function isStatusEditable(opportunity, isAdmin) {
 export default function OpportunitiesList({ user }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
-  const { isTeacher, isAdmin } = deriveRoles(user);
-  const showReviewTab = isTeacher || isAdmin;
+  const { isTeacher, isAdmin, isClassNetworkAdmin } = deriveRoles(user);
+  const showReviewTab = isTeacher || isAdmin || isClassNetworkAdmin;
   const { data, loading, refetch } = useQuery(MY_OPPORTUNITIES, {
     fetchPolicy: "cache-and-network",
   });
@@ -266,6 +267,18 @@ export default function OpportunitiesList({ user }) {
             "Please tick the guidelines acknowledgment in the Publishing card before changing the status away from Draft.",
         }),
       );
+      return;
+    }
+
+    // List view cannot validate full proposal fields — send sponsors to the editor.
+    if (!isAdmin && nextStatus === "pending_review") {
+      alert(
+        t("myOpportunitiesList.statusChangeUseEditor", {}, {
+          default:
+            "Complete required fields in the editor before submitting for review.",
+        }),
+      );
+      handleEdit(opportunity.id);
       return;
     }
 
@@ -427,10 +440,7 @@ export default function OpportunitiesList({ user }) {
           {filtered.map((opportunity) => {
             const editable = isStatusEditable(opportunity, isAdmin);
             const hasReviewNotes = (opportunity.reviewNotes?.length ?? 0) > 0;
-            const showReviewCommentsCta =
-              !isAdmin &&
-              opportunity.status === "returned" &&
-              hasReviewNotes;
+            const showReviewCommentsCta = hasReviewNotes && !isAdmin;
             return (
               <OpportunityCompactCard
                 key={opportunity.id}

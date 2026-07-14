@@ -57,7 +57,7 @@ const Row = styled.div`
     background: #336f8a;
     color: #ffffff;
     border: none;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
@@ -110,7 +110,7 @@ const ReviewerRow = styled.li`
     background: none;
     border: 1px solid #f5c2bf;
     color: #c0392b;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 12px;
     font-weight: 600;
     border-radius: 100px;

@@ -14,6 +14,11 @@ import applyTemplateBoardChanges from "./applyTemplateBoardChanges";
 import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
 import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
 import backfillOpportunityMultiselectFields from "./backfillOpportunityMultiselectFields";
+import backfillClassNetworkAdmins from "./backfillClassNetworkAdmins";
+import {
+  addClassNetworkAdmin,
+  removeClassNetworkAdmin,
+} from "./classNetworkAdmins";
 import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
@@ -83,6 +88,16 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillMediaAssetOrigins(limit: Int): Int!
         backfillOpportunityProposalData(limit: Int, dryRun: Boolean): Int!
         backfillOpportunityMultiselectFields(limit: Int, dryRun: Boolean): Int!
+        backfillClassNetworkAdmins(limit: Int, dryRun: Boolean): Int!
+        addClassNetworkAdmin(
+          networkId: ID!
+          profileId: ID
+          email: String
+        ): ClassNetwork
+        removeClassNetworkAdmin(
+          networkId: ID!
+          profileId: ID!
+        ): ClassNetwork
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
         # One-off seeder for the global Opportunity FormDefinition.
@@ -137,6 +152,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillMediaAssetOrigins,
         backfillOpportunityProposalData,
         backfillOpportunityMultiselectFields,
+        backfillClassNetworkAdmins,
+        addClassNetworkAdmin,
+        removeClassNetworkAdmin,
         followUser,
         unfollowUser,
         seedOpportunityForm,

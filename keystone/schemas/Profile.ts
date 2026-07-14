@@ -164,6 +164,10 @@ export const Profile = list({
       ref: "ClassNetwork.creator",
       many: true,
     }),
+    adminOfClassNetworks: relationship({
+      ref: "ClassNetwork.admins",
+      many: true,
+    }),
     memberOfClassNetworks: relationship({
       ref: "ClassNetwork.memberProfiles",
       many: true,

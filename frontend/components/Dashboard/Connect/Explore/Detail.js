@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Label } from "semantic-ui-react";
 
@@ -74,19 +75,44 @@ const Shell = styled.div`
   border-radius: 32px 0 0 32px;
 `;
 
+const BACK_CHEVRON = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
 const BackLink = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   background: none;
   border: none;
+  border-radius: 8px;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
-  padding: 0;
-  width: max-content;
+
+  &:hover:not(:disabled) {
+    background: rgba(51, 111, 138, 0.08);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
+  }
 `;
 
 const HeroCover = styled.div`
@@ -289,6 +315,10 @@ function Stars({ value }) {
 
 export default function ExploreDetail({ opportunityId }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
+  const backLabel = t("exploreDetail.backLink", {}, {
+    default: "Back to all opportunities",
+  });
   const { data, loading, refetch } = useQuery(EXPLORE_OPPORTUNITY_DETAIL, {
     variables: { id: opportunityId },
     fetchPolicy: "cache-and-network",
@@ -362,8 +392,13 @@ export default function ExploreDetail({ opportunityId }) {
     return (
       <Shell>
         <p>Opportunity not found, or no longer available.</p>
-        <BackLink type="button" onClick={() => router.back()}>
-          <Icon name="arrow left" /> Back
+        <BackLink
+          type="button"
+          onClick={() => router.back()}
+          aria-label={backLabel}
+          title={backLabel}
+        >
+          {BACK_CHEVRON}
         </BackLink>
       </Shell>
     );
@@ -391,8 +426,13 @@ export default function ExploreDetail({ opportunityId }) {
 
   return (
     <Shell>
-      <BackLink type="button" onClick={() => router.back()}>
-        <Icon name="arrow left" /> Back to all opportunities
+      <BackLink
+        type="button"
+        onClick={() => router.back()}
+        aria-label={backLabel}
+        title={backLabel}
+      >
+        {BACK_CHEVRON}
       </BackLink>
 
       {coverSrc && <HeroCover $src={coverSrc} />}
@@ -464,7 +504,7 @@ export default function ExploreDetail({ opportunityId }) {
                 borderRadius: 100,
                 background: "#1d6b3a",
                 color: "#ffffff",
-                fontFamily: "Nunito, sans-serif",
+                fontFamily: "Inter, sans-serif",
                 fontWeight: 600,
                 fontSize: 14,
                 textDecoration: "none",
@@ -506,7 +546,7 @@ export default function ExploreDetail({ opportunityId }) {
                 border: `1px solid ${isFavorite ? "#e8174c" : "#d3dae0"}`,
                 background: isFavorite ? "#ffeef2" : "#ffffff",
                 color: isFavorite ? "#e8174c" : "#5f6871",
-                fontFamily: "Nunito, sans-serif",
+                fontFamily: "Inter, sans-serif",
                 fontWeight: 600,
                 fontSize: 13,
                 cursor: "pointer",

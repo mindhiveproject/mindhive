@@ -58,7 +58,7 @@ const Shell = styled.div`
     border: 1px solid #336f8a;
     background: #336f8a;
     color: #ffffff;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 14px;
     text-decoration: none;
@@ -75,6 +75,7 @@ const ROLE_KEYS = {
   mentor: "roleGuard.roles.mentor",
   teacher: "roleGuard.roles.teacher",
   admin: "roleGuard.roles.admin",
+  classNetworkAdmin: "roleGuard.roles.classNetworkAdmin",
 };
 
 const ROLE_DEFAULTS = {
@@ -82,6 +83,7 @@ const ROLE_DEFAULTS = {
   mentor: "mentors",
   teacher: "teachers",
   admin: "admins",
+  classNetworkAdmin: "class-network admins",
 };
 
 export default function RoleGuard({ allow, children }) {
@@ -92,6 +94,7 @@ export default function RoleGuard({ allow, children }) {
     if (r === "teacher") return roles.isTeacher;
     if (r === "mentor") return roles.isMentor;
     if (r === "student") return roles.isStudent;
+    if (r === "classNetworkAdmin") return roles.isClassNetworkAdmin;
     return false;
   });
 

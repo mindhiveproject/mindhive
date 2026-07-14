@@ -6,11 +6,12 @@ import { deriveRoles } from "../useConnectRole";
 
 export default function OpportunitiesMain({ query, user }) {
   const { op, tab } = query;
-  const { isTeacher, isAdmin } = deriveRoles(user);
-  const showReviewQueue = tab === "review" && (isTeacher || isAdmin);
+  const { isTeacher, isAdmin, isClassNetworkAdmin } = deriveRoles(user);
+  const showReviewQueue =
+    tab === "review" && (isTeacher || isAdmin || isClassNetworkAdmin);
 
   return (
-    <RoleGuard allow={["mentor", "teacher", "admin"]}>
+    <RoleGuard allow={["mentor", "teacher", "admin", "classNetworkAdmin"]}>
       {op ? (
         <OpportunityEditor query={query} user={user} opportunityId={op} />
       ) : showReviewQueue ? (
