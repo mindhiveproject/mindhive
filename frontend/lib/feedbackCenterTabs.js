@@ -44,6 +44,15 @@ export function getMilestoneKeyFromStage(stage) {
 }
 
 export function buildFeedbackCenterTabs(milestones = [], t) {
+  // Base tabs are ALWAYS included — a single template-scope milestone
+  // shouldn't hide the standard Proposals / In Review / Project Report tabs
+  // for every user on the platform. Template tabs extend the base set.
+  const baseTabs = FEEDBACK_CENTER_TABS.map((tab) => ({
+    ...tab,
+    label: t(tab.labelKey, {}, { default: tab.milestoneKey }),
+    isCustom: false,
+  }));
+
   const templateTabs = milestones
     .filter(
       (m) =>
@@ -60,15 +69,7 @@ export function buildFeedbackCenterTabs(milestones = [], t) {
       isCustom: true,
     }));
 
-  if (templateTabs.length > 0) {
-    return templateTabs;
-  }
-
-  return FEEDBACK_CENTER_TABS.map((tab) => ({
-    ...tab,
-    label: t(tab.labelKey, {}, { default: tab.milestoneKey }),
-    isCustom: false,
-  }));
+  return [...baseTabs, ...templateTabs];
 }
 
 export function resolveStageFromQuery(stage, milestones = []) {

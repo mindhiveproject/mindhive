@@ -85,7 +85,20 @@ export function getMilestoneByActionCardType(actionCardType, milestones = []) {
 
 export function getMilestoneByKey(key, milestones = []) {
   if (!key) return null;
-  return milestones.find((m) => m?.key === key || m?.id === key) || null;
+  // Case-insensitive on the `key` field: legacy call sites (feedbackCenterTabs
+  // constants, Study.status literals, URL selectors) still use UPPERCASE
+  // (SUBMITTED_AS_PROPOSAL, PEER_REVIEW, PROJECT_REPORT), but seeded and
+  // template-created milestones store lowercase (`submitted_as_proposal`, etc.).
+  // Normalize on both sides so lookups match either flavour without forcing a
+  // migration of every Study.status / Review.stage caller. `id` stays strict.
+  const needle = typeof key === "string" ? key.toLowerCase() : key;
+  return (
+    milestones.find(
+      (m) =>
+        (typeof m?.key === "string" && m.key.toLowerCase() === needle) ||
+        m?.id === key
+    ) || null
+  );
 }
 
 export function resolveReviewFormKey(milestone, curriculumType) {

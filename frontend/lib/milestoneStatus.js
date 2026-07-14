@@ -130,10 +130,22 @@ export function buildDualWriteUpdate(
   }
 
   if (milestone.statusTarget === "study") {
-    patch.study = {
+    // `study` is a relationship on ProposalBoard, so Keystone types the input
+    // as StudyRelateToOneForUpdateInput — raw scalar fields are rejected. Wrap
+    // the write in `{ update: {...} }` so Keystone runs a nested update on the
+    // linked Study row.
+    const studyUpdate = {
       dataCollectionStatus: entry.status,
       dataCollectionOpenForParticipation: !!openForParticipation,
     };
+    // Restore the pre-milestone-refactor behavior: when a student submits the
+    // data-collection action for the first time, stamp Study.dataCollectionData
+    // to REAL_DATA. Research exports key on this field; leaving it at the
+    // default NOT_DEFINED silently undercounts real-data submissions.
+    if (entry.status === "SUBMITTED") {
+      studyUpdate.dataCollectionData = "REAL_DATA";
+    }
+    patch.study = { update: studyUpdate };
   }
 
   return patch;

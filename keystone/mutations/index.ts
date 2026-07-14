@@ -31,6 +31,7 @@ import updateTemplateMilestone from "./updateTemplateMilestone";
 import backfillLinkActionCardsToMilestones from "./backfillLinkActionCardsToMilestones";
 import backfillLowercaseKeys from "./backfillLowercaseKeys";
 import backfillProjectBoardFormScope from "./backfillProjectBoardFormScope";
+import backfillProposalBoardPublicIds from "./backfillProposalBoardPublicIds";
 import syncClassTemplateBoards from "./syncClassTemplateBoards";
 import { GraphQLSchema } from "graphql";
 
@@ -135,6 +136,13 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # from scope=global to scope=project_board with proposalBoard
         # set from the owning template milestone.
         backfillProjectBoardFormScope(dryRun: Boolean): [String!]!
+        # One-shot: stamp publicId on ProposalSection and ProposalCard so
+        # the propagation matcher can pair template↔clone rows by identity
+        # instead of by position. Safe to run BEFORE the new propagation
+        # code deploys — it aligns clones to templates at the current
+        # positional snapshot, before any post-fix reorder is possible.
+        # Dry-run by default. Returns a list of change descriptions.
+        backfillProposalBoardPublicIds(limit: Int, dryRun: Boolean): [String!]!
         createTemplateMilestone(input: CreateTemplateMilestoneInput!): Milestone
         updateTemplateMilestone(input: UpdateTemplateMilestoneInput!): Milestone
       }
@@ -210,6 +218,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillLinkActionCardsToMilestones,
         backfillLowercaseKeys,
         backfillProjectBoardFormScope,
+        backfillProposalBoardPublicIds,
         createTemplateMilestone,
         updateTemplateMilestone,
       },

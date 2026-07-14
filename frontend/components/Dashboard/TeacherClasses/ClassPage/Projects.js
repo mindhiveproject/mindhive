@@ -51,6 +51,7 @@ export default function ClassProjects({ myclass, user, query }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
   const { action, board, template } = query || {};
+  const isEditing = action === "edit" && !!board;
 
   const closeCreateModal = () => {
     router.replace({
@@ -59,7 +60,17 @@ export default function ClassProjects({ myclass, user, query }) {
     });
   };
 
-  if (action === "edit" && board) {
+  // useQuery must run on every render (Rules of Hooks). Skip the network call
+  // when we're in edit mode so we don't fire an unused query, but keep the
+  // hook itself unconditional — otherwise toggling `action` between renders
+  // changes the hook count and React throws "Rendered more hooks than during
+  // the previous render.".
+  const { data } = useQuery(CLASS_PROJECTS_QUERY, {
+    variables: { classId: myclass?.id },
+    skip: isEditing,
+  });
+
+  if (isEditing) {
     return (
       <ProjectsBoardEditor
         myclass={myclass}
@@ -68,10 +79,6 @@ export default function ClassProjects({ myclass, user, query }) {
       />
     );
   }
-
-  const { data } = useQuery(CLASS_PROJECTS_QUERY, {
-    variables: { classId: myclass?.id },
-  });
 
   const projects = data?.proposalBoards || [];
 
