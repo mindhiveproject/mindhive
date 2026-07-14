@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { useQuery } from "@apollo/client";
+import { useMemo, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
@@ -7,14 +7,19 @@ import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import StyledModal from "../../../styles/StyledModal";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../Queries/Opportunity";
+import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../Queries/ConnectRound";
+import { UPDATE_REVIEW_NOTE } from "../../../Mutations/OpportunityReviewNote";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import { hydrateProposalInputs } from "../../Connect/Opportunities/OpportunityProposalConfig";
+import ReturnOpportunityModal from "../../Connect/ReturnOpportunityModal";
+import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
 const STATUS_KEYS = {
   draft: "draft",
   pending_review: "pendingReview",
+  returned: "returned",
   pre_selected: "preSelected",
   accepted: "accepted",
   published: "published",
@@ -152,10 +157,165 @@ function formatDate(value) {
   }
 }
 
-function MetaItem({ label, value }) {
+function formatDateTime(value) {
+  if (!value) return null;
+  try {
+    return new Date(value).toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch {
+    return null;
+  }
+}
+
+const REVIEW_NOTE_CARD_STYLE = {
+  display: "grid",
+  gap: 8,
+  padding: 14,
+  borderRadius: 10,
+  background: "#faf8ff",
+  border: "1px solid rgba(160, 144, 224, 0.35)",
+  boxShadow: "0 2px 10px rgba(111, 38, 206, 0.08)",
+};
+
+function ReviewNoteCard({ note, isOwn, t, onSave, saving }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(note.body || "");
+
+  const authorLabel = displayName(note.author);
+  const updatedLabel = note.updatedAt
+    ? t(
+        "opportunities.preview.reviewNotes.updatedAt",
+        { date: formatDateTime(note.updatedAt) },
+        { default: "Updated {{date}}" },
+      )
+    : formatDateTime(note.createdAt);
+
+  const handleStartEdit = () => {
+    setDraft(note.body || "");
+    setEditing(true);
+  };
+
+  const handleCancel = () => {
+    setDraft(note.body || "");
+    setEditing(false);
+  };
+
+  const handleSave = async () => {
+    const body = draft.trim();
+    if (!body || body === (note.body || "").trim()) {
+      setEditing(false);
+      return;
+    }
+    try {
+      await onSave?.(note.id, body);
+      setEditing(false);
+    } catch {
+      // Keep edit mode open so the teacher can retry.
+    }
+  };
+
+  return (
+    <div style={REVIEW_NOTE_CARD_STYLE}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 8,
+          flexWrap: "wrap",
+          fontSize: 13,
+          color: "#5f6871",
+        }}
+      >
+        <span style={{ fontWeight: 600, color: "#171717" }}>
+          {authorLabel || "—"}
+        </span>
+        {updatedLabel ? <span>{updatedLabel}</span> : null}
+      </div>
+
+      {editing ? (
+        <>
+          <textarea
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            rows={4}
+            disabled={saving}
+            style={{
+              width: "100%",
+              resize: "vertical",
+              padding: "10px 12px",
+              borderRadius: 8,
+              border: "1px solid #d3dae0",
+              fontFamily: "inherit",
+              fontSize: 14,
+              lineHeight: 1.5,
+              color: "#171717",
+            }}
+          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 8,
+              flexWrap: "wrap",
+            }}
+          >
+            <Button variant="outline" onClick={handleCancel} disabled={saving}>
+              {t("opportunities.preview.reviewNotes.cancel", {}, {
+                default: "Cancel",
+              })}
+            </Button>
+            <Button
+              variant="filled"
+              onClick={handleSave}
+              disabled={saving || !draft.trim()}
+            >
+              {saving
+                ? t("opportunities.preview.reviewNotes.saving", {}, {
+                    default: "Saving…",
+                  })
+                : t("opportunities.preview.reviewNotes.save", {}, {
+                    default: "Save",
+                  })}
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <p style={{ ...BODY_TEXT_STYLE, margin: 0 }}>{note.body}</p>
+          {isOwn ? (
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                variant="text"
+                onClick={handleStartEdit}
+                style={{
+                  padding: 0,
+                  minWidth: 0,
+                  height: "fit-content",
+                  fontSize: 13,
+                  fontWeight: 600,
+                }}
+              >
+                {t("opportunities.preview.reviewNotes.edit", {}, {
+                  default: "Edit",
+                })}
+              </Button>
+            </div>
+          ) : null}
+        </>
+      )}
+    </div>
+  );
+}
+
+function MetaItem({ label, value, style }) {
   if (value == null || value === "") return null;
   return (
-    <div style={META_ITEM_STYLE}>
+    <div style={style ? { ...META_ITEM_STYLE, ...style } : META_ITEM_STYLE}>
       <div style={META_LABEL_STYLE}>{label}</div>
       <div style={META_VALUE_STYLE}>{value}</div>
     </div>
@@ -172,16 +332,24 @@ function PreviewSection({ title, children }) {
   );
 }
 
+const ANSWER_BOX_STYLE = {
+  padding: "12px 14px",
+  borderRadius: 10,
+  background: "#f7f9f8",
+};
+
 function TextBlock({ label, value, html = false }) {
   if (!value) return null;
   return (
-    <div style={{ display: "grid", gap: 6 }}>
+    <div style={{ display: "grid", gap: 8 }}>
       <strong style={{ fontSize: 14, color: "#171717" }}>{label}</strong>
-      {html ? (
-        <ReadOnlyTipTap dangerouslySetInnerHTML={{ __html: value }} />
-      ) : (
-        <p style={BODY_TEXT_STYLE}>{value}</p>
-      )}
+      <div style={ANSWER_BOX_STYLE}>
+        {html ? (
+          <ReadOnlyTipTap dangerouslySetInnerHTML={{ __html: value }} />
+        ) : (
+          <p style={BODY_TEXT_STYLE}>{value}</p>
+        )}
+      </div>
     </div>
   );
 }
@@ -283,6 +451,8 @@ export default function OpportunityPreviewModal({
 }) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
+  const [returnModalOpen, setReturnModalOpen] = useState(false);
+  const [editingNoteId, setEditingNoteId] = useState(null);
 
   const isInMatchingRound =
     opportunityId &&
@@ -323,6 +493,7 @@ export default function OpportunityPreviewModal({
   });
 
   const opp = data?.opportunity;
+  const viewerId = data?.authenticatedItem?.id;
   const proposal = useMemo(() => hydrateProposalInputs(opp), [opp]);
 
   const coverSrc = opp?.coverImage?.url || opp?.coverImageUrl || null;
@@ -333,7 +504,7 @@ export default function OpportunityPreviewModal({
     opp?.mentor?.image?.image?.publicUrlTransformed ||
     null;
   const orgLogo = opp?.organization?.logo?.url || null;
-  const mentorProfileId = opp?.mentor?.publicReadableId || null;
+  const mentorProfileId = opp?.mentor?.publicId || null;
   const orgId = opp?.organization?.id || null;
   const mentorProfileUrl = mentorProfileId
     ? `/dashboard/connect/with?id=${encodeURIComponent(mentorProfileId)}`
@@ -349,6 +520,69 @@ export default function OpportunityPreviewModal({
   const statusLabel = statusKey
     ? t(`opportunities.status.${statusKey}`, {}, { default: opp?.status })
     : opp?.status;
+
+  const activeRoundId = matchingRoundContext?.activeRoundId;
+  const selectedNetworkId = matchingRoundContext?.selectedNetworkId;
+  const canReturnToSponsor =
+    canManage &&
+    activeRoundId &&
+    opp?.status &&
+    isReturnableOpportunityStatus(opp.status);
+
+  const roundReviewNotes = useMemo(() => {
+    const notes = opp?.reviewNotes || [];
+    if (!activeRoundId) return [];
+    return notes.filter((note) => note.round?.id === activeRoundId);
+  }, [opp?.reviewNotes, activeRoundId]);
+
+  const returnRefetchQueries = useMemo(() => {
+    const queries = [
+      {
+        query: EXPLORE_OPPORTUNITY_DETAIL,
+        variables: { id: opportunityId },
+      },
+    ];
+    if (activeRoundId) {
+      queries.push({
+        query: GET_CONNECT_ROUND,
+        variables: { id: activeRoundId },
+      });
+    }
+    if (selectedNetworkId) {
+      queries.push({
+        query: NETWORK_OPPORTUNITIES_FOR_ROUND,
+        variables: { classNetworkId: selectedNetworkId },
+      });
+    }
+    return queries;
+  }, [opportunityId, activeRoundId, selectedNetworkId]);
+
+  const [updateReviewNote, { loading: savingNote }] = useMutation(
+    UPDATE_REVIEW_NOTE,
+    {
+      refetchQueries: returnRefetchQueries,
+      awaitRefetchQueries: true,
+    },
+  );
+
+  const handleSaveReviewNote = async (noteId, body) => {
+    setEditingNoteId(noteId);
+    try {
+      await updateReviewNote({
+        variables: {
+          id: noteId,
+          input: { body },
+        },
+      });
+    } finally {
+      setEditingNoteId(null);
+    }
+  };
+
+  const handleReturnSuccess = () => {
+    setReturnModalOpen(false);
+    onClose?.();
+  };
 
   const categoryKey = CATEGORY_LABELS[opp?.projectCategory];
   const categoryLabel = categoryKey
@@ -509,6 +743,27 @@ export default function OpportunityPreviewModal({
                 </p>
               ) : null}
 
+              {canManage && activeRoundId && roundReviewNotes.length > 0 ? (
+                <PreviewSection
+                  title={t("opportunities.preview.reviewNotes.title", {}, {
+                    default: "Review notes",
+                  })}
+                >
+                  <div style={{ display: "grid", gap: 10 }}>
+                    {roundReviewNotes.map((note) => (
+                      <ReviewNoteCard
+                        key={note.id}
+                        note={note}
+                        isOwn={Boolean(viewerId && note.author?.id === viewerId)}
+                        t={t}
+                        onSave={handleSaveReviewNote}
+                        saving={savingNote && editingNoteId === note.id}
+                      />
+                    ))}
+                  </div>
+                </PreviewSection>
+              ) : null}
+
               <PreviewSection
                 title={t("opportunities.preview.opportunityDetails", {}, { default: "Opportunity details" })}
               >
@@ -523,6 +778,15 @@ export default function OpportunityPreviewModal({
                   label={t("opportunities.preview.status", {}, { default: "Status" })}
                   value={statusLabel}
                 />
+                {opp.requestsAppointment ? (
+                  <MetaItem
+                    label={t("opportunities.preview.requestsAppointment", {}, {
+                      default: "Appointment requested",
+                    })}
+                    value={t("opportunities.preview.yes", {}, { default: "Yes" })}
+                    style={{ background: "#FDF2D0" }}
+                  />
+                ) : null}
                 <MetaItem
                   label={t("opportunities.preview.available", {}, { default: "Available" })}
                   value={from || to ? `${from || "—"} → ${to || "—"}` : null}
@@ -831,21 +1095,73 @@ export default function OpportunityPreviewModal({
                   <PreviewSection
                     title={t("opportunities.preview.mentorContact", {}, { default: "Your contact" })}
                   >
-                    <ProfilePanel
-                      imageSrc={mentorAvatar}
-                      name={mentorName}
-                      lines={[
-                        opp.mentor.tagline,
-                        opp.mentor.email,
-                        [opp.mentor.organization, opp.mentor.department]
-                          .filter(Boolean)
-                          .join(" · "),
-                        opp.mentor.primaryDomain,
-                        opp.mentor.timeCommitment
-                          ? `${t("opportunities.preview.timeCommitment", {}, { default: "Time commitment" })}: ${opp.mentor.timeCommitment}`
-                          : null,
-                      ]}
-                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        alignItems: "flex-start",
+                        gap: 12,
+                      }}
+                    >
+                      <ProfilePanel
+                        imageSrc={mentorAvatar}
+                        name={mentorName}
+                        lines={[
+                          opp.mentor.tagline,
+                          opp.mentor.email,
+                          [opp.mentor.organization, opp.mentor.department]
+                            .filter(Boolean)
+                            .join(" · "),
+                          opp.mentor.primaryDomain,
+                          opp.mentor.timeCommitment
+                            ? `${t("opportunities.preview.timeCommitment", {}, { default: "Time commitment" })}: ${opp.mentor.timeCommitment}`
+                            : null,
+                        ]}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: 10,
+                          flex: "1 1 180px",
+                          minWidth: 160,
+                        }}
+                      >
+                        {opp.guidelinesAcknowledged ? (
+                          <MetaItem
+                            label={t("opportunities.preview.guidelinesAcknowledged", {}, {
+                              default: "Guidelines acknowledged",
+                            })}
+                            value={
+                              opp.guidelinesAcknowledgedAt
+                                ? formatDate(opp.guidelinesAcknowledgedAt)
+                                : t("opportunities.preview.yes", {}, { default: "Yes" })
+                            }
+                            style={{ background: "#e3f4ec" }}
+                          />
+                        ) : null}
+                        {opp.sponsorIsMentor != null ? (
+                          <MetaItem
+                            label={t("opportunities.preview.sponsorIsMentor", {}, {
+                              default: "Sponsor is mentor",
+                            })}
+                            value={
+                              opp.sponsorIsMentor
+                                ? t("opportunities.preview.yes", {}, { default: "Yes" })
+                                : t("opportunities.preview.no", {}, { default: "No" })
+                            }
+                          />
+                        ) : null}
+                      </div>
+                    </div>
+                    {!opp.sponsorIsMentor && opp.mentorNotes ? (
+                      <TextBlock
+                        label={t("opportunities.preview.mentorNotes", {}, {
+                          default: "Mentor notes",
+                        })}
+                        value={opp.mentorNotes}
+                      />
+                    ) : null}
                     {opp.mentor.bio ? <p style={BODY_TEXT_STYLE}>{opp.mentor.bio}</p> : null}
                   </PreviewSection>
                 ) : null}
@@ -903,12 +1219,22 @@ export default function OpportunityPreviewModal({
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             gap: 16,
             width: "100%",
             flexWrap: "wrap",
           }}
         >
+          <Button variant="outline" onClick={onClose}>
+            {t("opportunities.preview.close", {}, { default: "Close" })}
+          </Button>
+          {canReturnToSponsor ? (
+            <Button variant="outline" onClick={() => setReturnModalOpen(true)}>
+              {t("opportunities.preview.returnToSponsor", {}, {
+                default: "Return with comments",
+              })}
+            </Button>
+          ) : null}
           {showMatchingRoundSection ? (
             showNoRoundHint ? (
               <span style={{ fontSize: 13, color: "#5f6871" }}>
@@ -931,11 +1257,17 @@ export default function OpportunityPreviewModal({
           ) : (
             <span />
           )}
-          <Button variant="outline" onClick={onClose}>
-            {t("opportunities.preview.close", {}, { default: "Close" })}
-          </Button>
         </div>
       </Modal.Actions>
+      <ReturnOpportunityModal
+        open={returnModalOpen}
+        onClose={() => setReturnModalOpen(false)}
+        onSuccess={handleReturnSuccess}
+        opportunityId={opportunityId}
+        roundId={activeRoundId}
+        mentorId={opp?.mentor?.id}
+        refetchQueries={returnRefetchQueries}
+      />
     </Modal>
   );
 }

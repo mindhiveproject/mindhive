@@ -92,7 +92,7 @@ const NameBlock = styled.div`
 
   .name {
     margin: 0;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 15px;
     color: #1d1b20;
@@ -106,7 +106,7 @@ const NameBlock = styled.div`
 
   .subtitle {
     margin: 4px 0 0;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 400;
     font-size: 13px;
     color: #49454f;
@@ -148,7 +148,7 @@ const Description = styled.div`
 
   p {
     margin: 0;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     line-height: 20px;
     color: #49454f;

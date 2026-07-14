@@ -19,6 +19,16 @@
 	},
 	"auth": {
 		"checkYourMail": "Проверьте свою электронную почту",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "Электронная почта",
 		"forgotPassword": "Забыли пароль?",
 		"login": "Авторизоваться",

@@ -13,6 +13,13 @@ import setResourceTemplateCards from "./setResourceTemplateCards";
 import applyTemplateBoardChanges from "./applyTemplateBoardChanges";
 import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
 import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
+import backfillOpportunityMultiselectFields from "./backfillOpportunityMultiselectFields";
+import backfillClassNetworkAdmins from "./backfillClassNetworkAdmins";
+import {
+  addClassNetworkAdmin,
+  removeClassNetworkAdmin,
+} from "./classNetworkAdmins";
+import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
 import resolveFormDefinition from "./resolveFormDefinition";
@@ -93,6 +100,17 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         syncClassTemplateBoards(classId: ID!): Class
         backfillMediaAssetOrigins(limit: Int): Int!
         backfillOpportunityProposalData(limit: Int, dryRun: Boolean): Int!
+        backfillOpportunityMultiselectFields(limit: Int, dryRun: Boolean): Int!
+        backfillClassNetworkAdmins(limit: Int, dryRun: Boolean): Int!
+        addClassNetworkAdmin(
+          networkId: ID!
+          profileId: ID
+          email: String
+        ): ClassNetwork
+        removeClassNetworkAdmin(
+          networkId: ID!
+          profileId: ID!
+        ): ClassNetwork
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
         # One-off seeder for the global Opportunity FormDefinition.
@@ -185,6 +203,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       }
     `,
     resolvers: {
+      Opportunity: opportunityMultiselectResolvers,
       Query: {
         resolveFormDefinition,
         resolveMilestonesForBoard,
@@ -204,6 +223,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         syncClassTemplateBoards,
         backfillMediaAssetOrigins,
         backfillOpportunityProposalData,
+        backfillOpportunityMultiselectFields,
+        backfillClassNetworkAdmins,
+        addClassNetworkAdmin,
+        removeClassNetworkAdmin,
         followUser,
         unfollowUser,
         seedOpportunityForm,

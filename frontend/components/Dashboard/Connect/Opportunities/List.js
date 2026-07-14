@@ -1,20 +1,27 @@
 import { useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import styled from "styled-components";
-import { Icon, Label, Dropdown } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { MY_OPPORTUNITIES } from "../../../Queries/Opportunity";
-import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
+import { DELETE_OPPORTUNITY, UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
+import Button from "../../../DesignSystem/Button";
+import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import FilterBar from "../FilterBar";
 import { deriveRoles } from "../useConnectRole";
+import OpportunityCompactCard, {
+  buildMyOpportunityMetaLine,
+  OpportunityCompactGrid,
+} from "./OpportunityCompactCard";
 
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
@@ -36,130 +43,19 @@ const TopBar = styled.div`
   }
 `;
 
-const PrimaryLink = styled(Link)`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: none;
-  background: #336f8a;
-  color: #ffffff;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  text-decoration: none;
-
-  &:hover {
-    background: #244f63;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #171717;
-    outline-offset: 2px;
-  }
-`;
-
-const Grid = styled.div`
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-`;
-
-const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px;
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-
-  h3 {
-    margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
-    color: #171717;
-  }
-
-  p {
-    margin: 0;
-    color: #5f6871;
-    font-size: 14px;
-    line-height: 20px;
-  }
-`;
-
-const CardMeta = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 12px;
-  color: #888;
-
-  span {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-`;
-
-const CardActions = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid #eef1f2;
-
-  a,
-  button {
-    flex: 1;
-    padding: 8px 12px;
-    border-radius: 100px;
-    border: 1px solid #d3dae0;
-    background: #ffffff;
-    color: #336f8a;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-
-    &:focus-visible {
-      outline: 2px solid #336f8a;
-      outline-offset: 2px;
-    }
-  }
-
-  button.danger {
-    border-color: #e8c4c4;
-    color: #b3261e;
-  }
-`;
-
 const Empty = styled.div`
   padding: 48px 24px;
   text-align: center;
   background: #ffffff;
   border-radius: 16px;
   color: #5f6871;
+  font-family: "Inter", sans-serif;
 `;
-
-const STATUS_COLORS = {
-  draft: "grey",
-  pending_review: "yellow",
-  pre_selected: "orange",
-  accepted: "olive",
-  published: "green",
-  closed: "blue",
-  archived: "black",
-};
 
 const STATUS_KEYS = {
   draft: "draft",
   pending_review: "pendingReview",
+  returned: "returned",
   pre_selected: "preSelected",
   accepted: "accepted",
   published: "published",
@@ -169,7 +65,8 @@ const STATUS_KEYS = {
 
 const STATUS_DEFAULTS = {
   draft: "Draft",
-  pending_review: "Pending Review",
+  pending_review: "Submitted",
+  returned: "Returned",
   pre_selected: "Pre-selected",
   accepted: "Accepted",
   published: "Published",
@@ -177,14 +74,17 @@ const STATUS_DEFAULTS = {
   archived: "Archived",
 };
 
-function formatDate(value) {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return null;
-  }
-}
+const SPONSOR_STATUS_VALUES = ["draft", "pending_review"];
+
+const SPONSOR_LOCKED_STATUSES = new Set([
+  "pre_selected",
+  "accepted",
+  "published",
+  "closed",
+  "archived",
+]);
+
+const ADMIN_STATUS_VALUES = Object.keys(STATUS_KEYS);
 
 const TabRow = styled.div`
   display: flex;
@@ -197,7 +97,7 @@ const TabRow = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 14px;
     text-decoration: none;
@@ -215,24 +115,76 @@ const TabRow = styled.div`
   }
 `;
 
-function DecorativeIcon({ name }) {
-  return <Icon name={name} aria-hidden />;
+const FilterSelect = styled.div`
+  flex: 0 0 180px;
+
+  &.network {
+    flex-basis: 220px;
+  }
+`;
+
+const FILTER_TRIGGER_STYLE = {
+  height: "42px",
+  minHeight: "42px",
+  border: "1px solid #d3dae0",
+  borderRadius: "12px",
+  background: "#ffffff",
+  color: "#171717",
+  padding: "0 14px 0 18px",
+};
+
+function getSponsorCardStatusValues(status) {
+  if (status === "returned") {
+    return ["returned", "pending_review"];
+  }
+  return SPONSOR_STATUS_VALUES;
+}
+
+function buildCardStatusOptions(values, t, { currentStatus, isAdmin } = {}) {
+  return values.map((value) => {
+    if (!isAdmin && currentStatus === "returned" && value === "pending_review") {
+      return {
+        value,
+        label: t("myOpportunitiesList.status.resubmit", {}, {
+          default: "Resubmit",
+        }),
+      };
+    }
+
+    const key = STATUS_KEYS[value];
+    return {
+      value,
+      label: t(`myOpportunitiesList.status.${key}`, {}, {
+        default: STATUS_DEFAULTS[value],
+      }),
+    };
+  });
+}
+
+function isStatusEditable(opportunity, isAdmin) {
+  if (isAdmin) return true;
+  return !SPONSOR_LOCKED_STATUSES.has(opportunity.status);
 }
 
 export default function OpportunitiesList({ user }) {
+  const router = useRouter();
   const { t } = useTranslation("connect");
-  const { isTeacher, isAdmin } = deriveRoles(user);
-  const showReviewTab = isTeacher || isAdmin;
+  const { isTeacher, isAdmin, isClassNetworkAdmin } = deriveRoles(user);
+  const showReviewTab = isTeacher || isAdmin || isClassNetworkAdmin;
   const { data, loading, refetch } = useQuery(MY_OPPORTUNITIES, {
     fetchPolicy: "cache-and-network",
   });
   const [deleteOpportunity] = useMutation(DELETE_OPPORTUNITY);
+  const [updateOpportunity, { loading: statusUpdating }] = useMutation(
+    UPDATE_OPPORTUNITY,
+  );
+  const [updatingStatusId, setUpdatingStatusId] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
 
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState(null);
-  const [networkFilter, setNetworkFilter] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [networkFilter, setNetworkFilter] = useState("");
 
   const statusLabel = (status) => {
     const key = STATUS_KEYS[status];
@@ -240,6 +192,20 @@ export default function OpportunitiesList({ user }) {
     return t(`myOpportunitiesList.status.${key}`, {}, {
       default: STATUS_DEFAULTS[status] || status,
     });
+  };
+
+  const cardStatusOptions = useMemo(
+    () => buildCardStatusOptions(ADMIN_STATUS_VALUES, t, { isAdmin: true }),
+    [t],
+  );
+
+  const getCardStatusOptions = (opportunity) => {
+    if (isAdmin) return cardStatusOptions;
+    return buildCardStatusOptions(
+      getSponsorCardStatusValues(opportunity.status),
+      t,
+      { currentStatus: opportunity.status, isAdmin: false },
+    );
   };
 
   const networkOptions = useMemo(() => {
@@ -250,9 +216,8 @@ export default function OpportunitiesList({ user }) {
       });
     });
     return Array.from(seen.values()).map((n) => ({
-      key: n.id,
-      text: n.title,
       value: n.id,
+      label: n.title,
     }));
   }, [opportunities]);
 
@@ -283,6 +248,52 @@ export default function OpportunitiesList({ user }) {
     }
     await deleteOpportunity({ variables: { id } });
     refetch();
+  };
+
+  const handleEdit = (id) => {
+    router.push({
+      pathname: "/dashboard/connect/opportunities",
+      query: { op: id },
+    });
+  };
+
+  const handleStatusChange = async (opportunity, nextStatus) => {
+    if (!nextStatus || nextStatus === opportunity.status) return;
+
+    if (nextStatus !== "draft" && !opportunity.guidelinesAcknowledged) {
+      alert(
+        t("opportunityEditor.validation.guidelines", {}, {
+          default:
+            "Please tick the guidelines acknowledgment in the Publishing card before changing the status away from Draft.",
+        }),
+      );
+      return;
+    }
+
+    // List view cannot validate full proposal fields — send sponsors to the editor.
+    if (!isAdmin && nextStatus === "pending_review") {
+      alert(
+        t("myOpportunitiesList.statusChangeUseEditor", {}, {
+          default:
+            "Complete required fields in the editor before submitting for review.",
+        }),
+      );
+      handleEdit(opportunity.id);
+      return;
+    }
+
+    setUpdatingStatusId(opportunity.id);
+    try {
+      await updateOpportunity({
+        variables: {
+          id: opportunity.id,
+          input: { status: nextStatus },
+        },
+      });
+      await refetch();
+    } finally {
+      setUpdatingStatusId(null);
+    }
   };
 
   return (
@@ -316,17 +327,19 @@ export default function OpportunitiesList({ user }) {
               </Link>
             </TabRow>
           )}
-          <PrimaryLink
-            href={{
-              pathname: "/dashboard/connect/opportunities",
-              query: { op: "new" },
-            }}
+          <Button
+            variant="primary"
+            onClick={() =>
+              router.push({
+                pathname: "/dashboard/connect/opportunities",
+                query: { op: "new" },
+              })
+            }
           >
-            <DecorativeIcon name="plus" />
             {t("myOpportunitiesList.newButton", {}, {
               default: "New opportunity",
             })}
-          </PrimaryLink>
+          </Button>
         </div>
       </TopBar>
 
@@ -344,40 +357,57 @@ export default function OpportunitiesList({ user }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Dropdown
-            selection
-            clearable
-            placeholder={t("myOpportunitiesList.statusFilterPlaceholder", {}, {
-              default: "All statuses",
-            })}
-            aria-label={t("myOpportunitiesList.statusFilterLabel", {}, {
-              default: "Filter by status",
-            })}
-            options={Object.entries(STATUS_KEYS).map(([value, key]) => ({
-              key: value,
-              text: t(`myOpportunitiesList.status.${key}`, {}, {
-                default: STATUS_DEFAULTS[value],
-              }),
-              value,
-            }))}
-            value={statusFilter}
-            onChange={(_, { value }) => setStatusFilter(value || null)}
-          />
-          {networkOptions.length > 0 && (
-            <Dropdown
-              selection
-              clearable
-              search
-              placeholder={t("myOpportunitiesList.networkFilterPlaceholder", {}, {
-                default: "All networks",
+          <FilterSelect>
+            <DropdownSelect
+              value={statusFilter}
+              onChange={(value) => setStatusFilter(value)}
+              placeholder={t("myOpportunitiesList.statusFilterPlaceholder", {}, {
+                default: "All statuses",
               })}
-              aria-label={t("myOpportunitiesList.networkFilterLabel", {}, {
-                default: "Filter by network",
+              ariaLabel={t("myOpportunitiesList.statusFilterLabel", {}, {
+                default: "Filter by status",
               })}
-              options={networkOptions}
-              value={networkFilter}
-              onChange={(_, { value }) => setNetworkFilter(value || null)}
+              triggerStyle={FILTER_TRIGGER_STYLE}
+              options={[
+                {
+                  value: "",
+                  label: t("myOpportunitiesList.statusFilterPlaceholder", {}, {
+                    default: "All statuses",
+                  }),
+                },
+                ...Object.entries(STATUS_KEYS).map(([value, key]) => ({
+                  value,
+                  label: t(`myOpportunitiesList.status.${key}`, {}, {
+                    default: STATUS_DEFAULTS[value],
+                  }),
+                })),
+              ]}
             />
+          </FilterSelect>
+          {networkOptions.length > 0 && (
+            <FilterSelect className="network">
+              <DropdownSelect
+                value={networkFilter}
+                onChange={(value) => setNetworkFilter(value)}
+                searchableSingle
+                placeholder={t("myOpportunitiesList.networkFilterPlaceholder", {}, {
+                  default: "All networks",
+                })}
+                ariaLabel={t("myOpportunitiesList.networkFilterLabel", {}, {
+                  default: "Filter by network",
+                })}
+                triggerStyle={FILTER_TRIGGER_STYLE}
+                options={[
+                  {
+                    value: "",
+                    label: t("myOpportunitiesList.networkFilterPlaceholder", {}, {
+                      default: "All networks",
+                    }),
+                  },
+                  ...networkOptions,
+                ]}
+              />
+            </FilterSelect>
           )}
         </FilterBar>
       )}
@@ -405,126 +435,58 @@ export default function OpportunitiesList({ user }) {
         </Empty>
       )}
 
-      <Grid>
-        {filtered.map((opportunity) => {
-          const from = formatDate(opportunity.availableFrom);
-          const to = formatDate(opportunity.availableTo);
-          const coverSrc =
-            opportunity.coverImage?.url || opportunity.coverImageUrl || null;
-          const networkCount = opportunity.classNetworks?.length || 0;
-          const ratingCount = opportunity.publicRatingCount || 0;
-          return (
-            <Card key={opportunity.id}>
-              {coverSrc && (
-                <div
-                  role="img"
-                  aria-label={opportunity.title}
-                  style={{
-                    margin: "-20px -20px 12px",
-                    height: 120,
-                    overflow: "hidden",
-                    borderRadius: "16px 16px 0 0",
-                    background: `url(${coverSrc}) center/cover no-repeat #eef1f2`,
-                  }}
-                />
-              )}
-              <h3>{opportunity.title}</h3>
-              <Label
-                color={STATUS_COLORS[opportunity.status] || "grey"}
-                size="tiny"
-              >
-                {statusLabel(opportunity.status)}
-              </Label>
-              {opportunity.shortDescription && (
-                <p>{opportunity.shortDescription}</p>
-              )}
-              <CardMeta>
-                {(from || to) && (
-                  <span>
-                    <DecorativeIcon name="calendar outline" />
-                    {from || "—"} → {to || "—"}
-                  </span>
-                )}
-                <span>
-                  <DecorativeIcon name="users" />
-                  {t("myOpportunitiesList.capacity", {
-                    count: opportunity.studentCapacity ?? 1,
-                  }, {
-                    default: "Capacity {{count}}",
-                  })}
-                </span>
-                {opportunity.teamSize > 1 && (
-                  <span>
-                    <DecorativeIcon name="group" />
-                    {t("myOpportunitiesList.teamOf", {
-                      size: opportunity.teamSize,
-                    }, {
-                      default: "Team of {{size}}",
-                    })}
-                  </span>
-                )}
-                {networkCount > 0 && (
-                  <span>
-                    <DecorativeIcon name="sitemap" />
-                    {networkCount === 1
-                      ? t(
-                          "myOpportunitiesList.networkCount.one",
-                          { count: networkCount },
-                          { default: "{{count}} network" }
-                        )
-                      : t(
-                          "myOpportunitiesList.networkCount.many",
-                          { count: networkCount },
-                          { default: "{{count}} networks" }
-                        )}
-                  </span>
-                )}
-                {ratingCount > 0 && (
-                  <span>
-                    <span style={{ color: "#f5b800" }} aria-hidden>
-                      ★
-                    </span>
-                    {ratingCount === 1
-                      ? t(
-                          "myOpportunitiesList.rating.one",
-                          {
-                            average: opportunity.publicRatingAverage?.toFixed(1),
-                            count: ratingCount,
-                          },
-                          { default: "{{average}} · {{count}} rating" }
-                        )
-                      : t(
-                          "myOpportunitiesList.rating.many",
-                          {
-                            average: opportunity.publicRatingAverage?.toFixed(1),
-                            count: ratingCount,
-                          },
-                          { default: "{{average}} · {{count}} ratings" }
-                        )}
-                  </span>
-                )}
-              </CardMeta>
-              <CardActions>
-                <Link
-                  href={{
-                    pathname: "/dashboard/connect/opportunities",
-                    query: { op: opportunity.id },
-                  }}
-                >
-                  {t("myOpportunitiesList.edit", {}, { default: "Edit" })}
-                </Link>
-                <button
-                  type="button"
-                  className="danger"
-                  onClick={() => handleDelete(opportunity.id)}
-                >
-                  {t("myOpportunitiesList.delete", {}, { default: "Delete" })}
-                </button>
-              </CardActions>
-            </Card>
-          );
-        })}
-      </Grid>
+      {filtered.length > 0 && (
+        <OpportunityCompactGrid>
+          {filtered.map((opportunity) => {
+            const editable = isStatusEditable(opportunity, isAdmin);
+            const hasReviewNotes = (opportunity.reviewNotes?.length ?? 0) > 0;
+            const showReviewCommentsCta = hasReviewNotes && !isAdmin;
+            return (
+              <OpportunityCompactCard
+                key={opportunity.id}
+                title={opportunity.title}
+                status={opportunity.status}
+                statusLabel={statusLabel(opportunity.status)}
+                statusOptions={editable ? getCardStatusOptions(opportunity) : undefined}
+                statusChangeLabel={t("myOpportunitiesList.statusChangeLabel", {}, {
+                  default: "Change opportunity status",
+                })}
+                statusUpdating={
+                  statusUpdating && updatingStatusId === opportunity.id
+                }
+                onStatusChange={
+                  editable
+                    ? (nextStatus) => handleStatusChange(opportunity, nextStatus)
+                    : undefined
+                }
+                metaLine={buildMyOpportunityMetaLine(opportunity, t)}
+                reviewNoteHint={
+                  showReviewCommentsCta
+                    ? t("myOpportunitiesList.reviewCommentsWaiting", {}, {
+                        default: "Teacher review comments are waiting for you.",
+                      })
+                    : undefined
+                }
+                editHighlight={showReviewCommentsCta}
+                editLabel={
+                  showReviewCommentsCta
+                    ? t("myOpportunitiesList.reviewCommentsEdit", {}, {
+                        default: "Review comments & Resubmit",
+                      })
+                    : t("myOpportunitiesList.edit", {}, {
+                        default: "Edit",
+                      })
+                }
+                deleteLabel={t("myOpportunitiesList.delete", {}, {
+                  default: "Delete",
+                })}
+                onEdit={() => handleEdit(opportunity.id)}
+                onDelete={() => handleDelete(opportunity.id)}
+              />
+            );
+          })}
+        </OpportunityCompactGrid>
+      )}
     </Shell>
   );
 }

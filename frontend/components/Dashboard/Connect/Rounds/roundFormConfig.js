@@ -1,4 +1,5 @@
 export const STATUS_OPTIONS = [
+  { key: "draft", text: "Draft", value: "draft" },
   { key: "preferences_open", text: "Preferences open", value: "preferences_open" },
   { key: "preferences_closed", text: "Preferences closed", value: "preferences_closed" },
   { key: "matching", text: "Matching", value: "matching" },
@@ -39,7 +40,7 @@ export const ALGO_DESCRIPTIONS = {
 export const EMPTY_FORM = {
   title: "",
   description: "",
-  status: "preferences_open",
+  status: "draft",
   openAt: "",
   closeAt: "",
   matchingAlgorithm: "stable_matching",
@@ -97,7 +98,7 @@ export function buildSuggestedRoundDefaults(classTitle, networkTitle) {
   return {
     title: `${classTitle || "Class"} — ${networkTitle || "Network"} matching`,
     description: "",
-    status: "preferences_open",
+    status: "draft",
     openAt: toDateInputValueFromDate(today),
     closeAt: toDateInputValueFromDate(closeDate),
     matchingAlgorithm: "stable_matching",

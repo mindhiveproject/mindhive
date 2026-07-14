@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "Несохраненные изменения будут потеряны. Нажмите «Отмена», чтобы вернуться и сохранить изменения."
 	},
 	"exploreConnect": "Исследуйте Подключиться",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "Какие темы вы хотели бы поддержать студентов? Выберите несколько тем и направлений из списка ниже, чтобы другие участники сообщества знали, в чём вы хотели бы участвовать. Это поможет нам найти вас среди студентов и коллег, разделяющих ваши увлечения.",
 		"interests": "Интересы",
@@ -228,6 +231,35 @@
 	},
 	"introductionVideo": "Вводное видео",
 	"locationFilter": "Расположение",
+	"matchesRound": {
+		"backLink": ""
+	},
+	"matchingRound": {
+		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -271,6 +303,32 @@
 		"statusFilterPlaceholder": "Все статусы",
 		"teamOf": "Команда из {{size}}",
 		"unknownSponsor": "Неизвестный"
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Спонсор: {{name}}",
+			"submitted": "Отправлено {{date}}"
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": "",
+			"resubmit": "",
+			"returned": ""
+		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
 	},
 	"nav": {
 		"connect": "Соединять",
@@ -348,6 +406,7 @@
 			"yes": "Да"
 		},
 		"descriptionPlaceholder": "Что будут делать студенты? Чему они научатся?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Ожидаемые результаты",
 		"expectedDeliverablesDescription": "Пожалуйста, опишите результаты работы, которые ожидаются от команды, выполняющей итоговый проект (например, инструменты опроса или оценки, проекты политик и процедур, списки ресурсов, анализ больших массивов данных, подробный отчет, рекомендации по дальнейшим действиям и т. д.). Примерно 250 слов.",
 		"fieldWorkLikelihood": "Насколько вероятно, что проект потребует проведения полевых работ или посещения объектов (как в Нью-Йорке, так и за его пределами)?",
@@ -524,7 +583,10 @@
 		"relevantLinksLabel": "Этикетка",
 		"relevantLinksRemove": "Удалять",
 		"relevantLinksUrl": "URL-адрес",
+		"requestsAppointment": "",
 		"researchQuestion": "В чём заключается исследовательский вопрос/область исследования ИЛИ в чём заключается проблема, которую вы хотите решить?",
+		"resubmit": "",
+		"returnedBanner": "",
 		"review": {
 			"accept": "Принять предложение",
 			"acceptConfirm": "Принимаете это предложение? Спонсор будет уведомлен для завершения окончательного определения объема работ.",
@@ -549,6 +611,12 @@
 			"sponsorLabel": "Спонсор",
 			"submittedLabel": "Поданный"
 		},
+		"reviewNotes": {
+			"empty": "",
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
+		},
 		"save": "Сохранить изменения",
 		"saving": "Сохранение...",
 		"specialConsiderations": {
@@ -570,6 +638,7 @@
 		"sponsorIsMentor": "Я также являюсь наставником в рамках этого проекта (снимите галочку, если наставником будет кто-то другой).",
 		"sponsorStatusHint": "Когда ваше предложение будет готово, установите флажок «Отправлено на рассмотрение» — его проверит преподаватель.",
 		"sponsorStatusLocked": "— Заблокировано. Преподаватель или администратор обновит статус.",
+		"sponsorStatusReturnedHint": "",
 		"status": "Положение дел",
 		"statusOptions": {
 			"accepted": "Принято (полностью завершен окончательный объем работ)",
@@ -578,6 +647,7 @@
 			"draft": "Черновик (недоступен для просмотра студентами)",
 			"pre_selected": "Предварительно отобранные (ответьте на дополнительные вопросы)",
 			"published": "Опубликовано",
+			"returned": "",
 			"submitted": "Представлено на рассмотрение"
 		},
 		"studentCapacity": "Вместимость для студентов",
@@ -626,6 +696,7 @@
 				"archived": "Данная возможность заархивирована.",
 				"closed": "Данная возможность закрыта.",
 				"published": "Данная возможность доступна для студентов.",
+				"returnedRevise": "",
 				"sponsorFollowUp": "Заполните приведенную ниже анкету для последующего наблюдения.",
 				"sponsorScope": "Заполните описание объема проекта ниже.",
 				"sponsorSubmit": "Отправьте свое предложение, когда будете готовы к рассмотрению преподавателем.",
@@ -633,6 +704,7 @@
 				"teacherPreSelect": "Ознакомьтесь с предложением и предварительно выберите этого спонсора.",
 				"teacherPublish": "Проанализируйте масштабы проекта и опубликуйте информацию о предлагаемых возможностях.",
 				"waitingFollowUp": "Ожидается, что спонсор заполнит анкету для последующего наблюдения.",
+				"waitingReturnedRevise": "",
 				"waitingScope": "Ожидается, что спонсор завершит определение объема работ по проекту.",
 				"waitingTeacherAccept": "Ожидаю, пока кто-нибудь из учителей примет ваше предложение.",
 				"waitingTeacherPreSelect": "Ожидаем, пока преподаватель рассмотрит и предварительно отберет ваше предложение.",
@@ -764,7 +836,30 @@
 			"title": "Организация"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "Вернуться на панель инструментов",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"backLink": "",
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "Вернуться к подключению",
 		"description": "В вашем аккаунте пока нет доступа к этому разделу. Если вы считаете, что это ошибка, обратитесь к учителю или администратору.",
@@ -773,6 +868,11 @@
 			"mentor": "Наставники",
 			"student": "Студенты",
 			"teacher": "учителя"
+			"admin": "",
+			"classNetworkAdmin": "",
+			"mentor": "",
+			"student": "",
+			"teacher": ""
 		},
 		"title": "Эта область предназначена для {{roles}}"
 	},

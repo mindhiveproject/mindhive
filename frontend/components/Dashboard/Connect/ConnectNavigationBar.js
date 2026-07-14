@@ -100,7 +100,14 @@ function ConnectNavDropdown({
 
 export default function ConnectNavigationBar() {
   const { t } = useTranslation("connect");
-  const { isAdmin, isTeacher, isMentor, isStudent, isReviewer } =
+  const {
+    isAdmin,
+    isTeacher,
+    isMentor,
+    isStudent,
+    isReviewer,
+    isClassNetworkAdmin,
+  } =
     useConnectRole();
 
   const connectOptions = useMemo(
@@ -154,7 +161,7 @@ export default function ConnectNavigationBar() {
         value: "matchingRounds",
         label: t("nav.matchingRounds", {}, { default: "Matching rounds" }),
         href: "/dashboard/connect/rounds",
-        visible: isTeacher || isAdmin,
+        visible: isTeacher || isAdmin || isClassNetworkAdmin,
       },
       {
         value: "questionLibrary",
@@ -172,7 +179,7 @@ export default function ConnectNavigationBar() {
         value: "matches",
         label: t("nav.matches", {}, { default: "Matches" }),
         href: "/dashboard/connect/matches",
-        visible: isTeacher || isAdmin,
+        visible: isTeacher || isAdmin || isClassNetworkAdmin,
       },
       {
         value: "reviewQueue",
@@ -185,7 +192,15 @@ export default function ConnectNavigationBar() {
     return items
       .filter((item) => item.visible)
       .map(({ value, label, href }) => ({ value, label, href }));
-  }, [t, isAdmin, isTeacher, isMentor, isStudent, isReviewer]);
+  }, [
+    t,
+    isAdmin,
+    isTeacher,
+    isMentor,
+    isStudent,
+    isReviewer,
+    isClassNetworkAdmin,
+  ]);
 
   return (
     <NavigationBar

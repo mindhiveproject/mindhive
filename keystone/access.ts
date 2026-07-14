@@ -274,6 +274,19 @@ export const rules = {
       members: { some: { id: { equals: me } } },
     };
   },
+  // ClassNetwork: creators and explicitly assigned network admins manage
+  // network metadata/membership. Global user managers keep full override.
+  classNetworkMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { creator: { id: { equals: me } } },
+        { admins: { some: { id: { equals: me } } } },
+      ],
+    };
+  },
   // ConnectPreferenceItem inherits from its parent preference's submitter / round creator.
   connectPreferenceItemVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
@@ -287,9 +300,8 @@ export const rules = {
     };
   },
   // OpportunityReviewNote query: visible to the author, any reviewer on
-  // the same round, the round creator, the opportunity's mentor, or admins.
-  // (Notes are scoped to a (opportunity, round) pair so cross-round
-  // leakage isn't a concern.)
+  // the same round, the round creator, class-network admins/class teachers,
+  // the opportunity's mentor, or admins.
   connectReviewNoteVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageUsers({ session })) return true;
@@ -299,6 +311,15 @@ export const rules = {
         { author: { id: { equals: me } } },
         { round: { createdBy: { id: { equals: me } } } },
         { round: { reviewers: { some: { id: { equals: me } } } } },
+        { round: { classNetwork: { creator: { id: { equals: me } } } } },
+        { round: { classNetwork: { admins: { some: { id: { equals: me } } } } } },
+        {
+          round: {
+            classNetwork: {
+              classes: { some: { creator: { id: { equals: me } } } },
+            },
+          },
+        },
         { opportunity: { mentor: { id: { equals: me } } } },
       ],
     };

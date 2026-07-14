@@ -10,6 +10,7 @@ export const MY_OPPORTUNITIES = gql`
           title
           shortDescription
           status
+          guidelinesAcknowledged
           studentCapacity
           teamSize
           availableFrom
@@ -30,6 +31,9 @@ export const MY_OPPORTUNITIES = gql`
           publicRatingCount
           createdAt
           updatedAt
+          reviewNotes {
+            id
+          }
         }
       }
     }
@@ -68,6 +72,8 @@ export const GET_OPPORTUNITY = gql`
       preferGradeLevels
       preferGroupFormat
       preferClassType
+      sponsorIsMentor
+      mentorNotes
       status
       extraDetails
       classNetworks {
@@ -115,6 +121,21 @@ export const GET_OPPORTUNITY = gql`
       specificSkills
       createdAt
       updatedAt
+      reviewNotes(orderBy: { createdAt: desc }) {
+        id
+        body
+        createdAt
+        author {
+          id
+          username
+          firstName
+          lastName
+        }
+        round {
+          id
+          title
+        }
+      }
     }
   }
 `;
@@ -129,6 +150,14 @@ export const EXPLORE_CONTEXT = gql`
         id
         favoriteOpportunities {
           id
+        }
+        classNetworksCreated {
+          id
+          title
+        }
+        adminOfClassNetworks {
+          id
+          title
         }
         studentIn {
           id
@@ -241,6 +270,11 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       preferClassType
       publicRatingAverage
       publicRatingCount
+      requestsAppointment
+      guidelinesAcknowledged
+      guidelinesAcknowledgedAt
+      sponsorIsMentor
+      mentorNotes
       mentor {
         id
         username
@@ -253,7 +287,7 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         department
         primaryDomain
         timeCommitment
-        publicReadableId
+        publicId
         image {
           keystoneImage {
             url
@@ -286,6 +320,22 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       scopeDescription
       potentialActivities
       specificSkills
+      reviewNotes(orderBy: { createdAt: desc }) {
+        id
+        body
+        createdAt
+        updatedAt
+        author {
+          id
+          username
+          firstName
+          lastName
+        }
+        round {
+          id
+          title
+        }
+      }
       ratings(
         where: { isPublic: { equals: true } }
         orderBy: { createdAt: desc }
@@ -407,6 +457,14 @@ export const MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY = gql`
   query MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY {
     authenticatedItem {
       ... on Profile {
+        classNetworksCreated {
+          id
+          title
+        }
+        adminOfClassNetworks {
+          id
+          title
+        }
         memberOfClassNetworks {
           id
           title
@@ -426,6 +484,14 @@ export const OPPORTUNITY_EDITOR_CLASS_NETWORKS = gql`
   query OPPORTUNITY_EDITOR_CLASS_NETWORKS {
     authenticatedItem {
       ... on Profile {
+        classNetworksCreated {
+          id
+          title
+        }
+        adminOfClassNetworks {
+          id
+          title
+        }
         memberOfClassNetworks {
           id
           title

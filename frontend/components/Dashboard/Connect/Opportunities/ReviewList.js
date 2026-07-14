@@ -3,19 +3,24 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { Label } from "semantic-ui-react";
 
 import {
   EXPLORE_CONTEXT,
   PENDING_OPPORTUNITIES_FOR_REVIEW,
 } from "../../../Queries/Opportunity";
 import { deriveRoles } from "../useConnectRole";
+import OpportunityCompactCard, {
+  buildReviewOpportunityMetaLine,
+  OpportunityCompactGrid,
+  OpportunityListSection,
+} from "./OpportunityCompactCard";
 
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
@@ -48,7 +53,7 @@ const TabRow = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 14px;
     text-decoration: none;
@@ -66,119 +71,37 @@ const TabRow = styled.div`
   }
 `;
 
-const Grid = styled.div`
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-`;
-
-const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px;
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-
-  h3 {
-    margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
-    color: #171717;
-  }
-
-  p {
-    margin: 0;
-    color: #5f6871;
-    font-size: 14px;
-    line-height: 20px;
-  }
-`;
-
-const CardMeta = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 12px;
-  color: #888;
-`;
-
-const CardActions = styled.div`
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid #eef1f2;
-
-  a {
-    display: block;
-    padding: 8px 12px;
-    border-radius: 100px;
-    border: 1px solid #d3dae0;
-    background: #ffffff;
-    color: #336f8a;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    text-align: center;
-    text-decoration: none;
-
-    &:focus-visible {
-      outline: 2px solid #336f8a;
-      outline-offset: 2px;
-    }
-  }
-`;
-
 const Empty = styled.div`
   padding: 48px 24px;
   text-align: center;
   background: #ffffff;
   border-radius: 16px;
   color: #5f6871;
+  font-family: "Inter", sans-serif;
 `;
 
-const CATEGORY_LABELS = {
-  urban_health: "Urban Health",
-  urban_environment: "Urban Environment",
-  urban_infrastructure: "Urban Infrastructure",
-  other: "Other",
+const REVIEW_STATUS_KEYS = {
+  pending_review: "pendingReview",
+  returned: "returned",
+  pre_selected: "preSelected",
+  accepted: "accepted",
 };
 
-const STATUS_COLORS = {
-  pending_review: "yellow",
-  pre_selected: "orange",
-  accepted: "olive",
-};
-
-const REVIEW_STATUS_LABELS = {
+const REVIEW_STATUS_DEFAULTS = {
   pending_review: "Submitted for review",
+  returned: "Returned",
   pre_selected: "Pre-selected",
   accepted: "Accepted",
 };
 
-function formatDate(value) {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return null;
-  }
-}
-
-function sponsorName(mentor, t) {
-  if (!mentor) {
-    return t("myOpportunitiesList.unknownSponsor", {}, { default: "Unknown" });
-  }
-  const full = [mentor.firstName, mentor.lastName].filter(Boolean).join(" ");
-  return (
-    full ||
-    mentor.username ||
-    t("myOpportunitiesList.unknownSponsor", {}, { default: "Unknown" })
-  );
-}
-
 function collectReviewerNetworkIds(me) {
   const ids = new Set();
+  (me?.classNetworksCreated || []).forEach((network) => {
+    if (network?.id) ids.add(network.id);
+  });
+  (me?.adminOfClassNetworks || []).forEach((network) => {
+    if (network?.id) ids.add(network.id);
+  });
   const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || []];
   groups.forEach((classes) => {
     classes.forEach((cls) => {
@@ -215,6 +138,18 @@ export default function ReviewList({ user }) {
     });
   }, [data, isAdmin, reviewerNetworkIds]);
 
+  const statusLabel = (status) => {
+    const key = REVIEW_STATUS_KEYS[status];
+    if (key) {
+      return t(`myOpportunitiesList.status.${key}`, {}, {
+        default: REVIEW_STATUS_DEFAULTS[status] || status,
+      });
+    }
+    return t(`opportunityEditor.statusOptions.${status}`, {}, {
+      default: status,
+    });
+  };
+
   return (
     <Shell>
       <TopBar>
@@ -245,78 +180,42 @@ export default function ReviewList({ user }) {
         </TabRow>
       </TopBar>
 
-      {loading && opportunities.length === 0 && (
-        <Empty>
-          {t("opportunityEditor.loading", {}, { default: "Loading…" })}
-        </Empty>
-      )}
+      <OpportunityListSection>
+        {loading && opportunities.length === 0 && (
+          <Empty>
+            {t("opportunityEditor.loading", {}, { default: "Loading…" })}
+          </Empty>
+        )}
 
-      {!loading && opportunities.length === 0 && (
-        <Empty>
-          {t("opportunityEditor.review.empty", {}, {
-            default: "No opportunities are waiting for review.",
-          })}
-        </Empty>
-      )}
+        {!loading && opportunities.length === 0 && (
+          <Empty>
+            {t("opportunityEditor.review.empty", {}, {
+              default: "No opportunities are waiting for review.",
+            })}
+          </Empty>
+        )}
 
-      <Grid>
-        {opportunities.map((opportunity) => {
-          const category =
-            opportunity.projectCategory === "other"
-              ? opportunity.projectCategoryOther || CATEGORY_LABELS.other
-              : CATEGORY_LABELS[opportunity.projectCategory] ||
-                opportunity.projectCategory;
-          return (
-            <Card key={opportunity.id}>
-              <h3>{opportunity.title}</h3>
-              <Label
-                color={STATUS_COLORS[opportunity.status] || "grey"}
-                size="tiny"
-              >
-                {REVIEW_STATUS_LABELS[opportunity.status] ||
-                  t(`opportunityEditor.statusOptions.${opportunity.status}`, {}, {
-                    default: opportunity.status,
-                  })}
-              </Label>
-              {opportunity.shortDescription && (
-                <p>{opportunity.shortDescription}</p>
-              )}
-              <CardMeta>
-                {category && <span>{category}</span>}
-                <span>
-                  {t("opportunityEditor.review.sponsorLabel", {}, {
-                    default: "Sponsor",
-                  })}
-                  : {sponsorName(opportunity.mentor, t)}
-                </span>
-                {opportunity.organization?.name && (
-                  <span>{opportunity.organization.name}</span>
-                )}
-                {formatDate(opportunity.updatedAt) && (
-                  <span>
-                    {t("opportunityEditor.review.submittedLabel", {}, {
-                      default: "Submitted",
-                    })}
-                    : {formatDate(opportunity.updatedAt)}
-                  </span>
-                )}
-              </CardMeta>
-              <CardActions>
-                <Link
-                  href={{
-                    pathname: "/dashboard/connect/opportunities",
-                    query: { op: opportunity.id, review: "1" },
-                  }}
-                >
-                  {t("opportunityEditor.review.reviewButton", {}, {
-                    default: "Review",
-                  })}
-                </Link>
-              </CardActions>
-            </Card>
-          );
-        })}
-      </Grid>
+        {opportunities.length > 0 && (
+          <OpportunityCompactGrid>
+            {opportunities.map((opportunity) => (
+              <OpportunityCompactCard
+                key={opportunity.id}
+                title={opportunity.title}
+                status={opportunity.status}
+                statusLabel={statusLabel(opportunity.status)}
+                metaLine={buildReviewOpportunityMetaLine(opportunity, t)}
+                reviewHref={{
+                  pathname: "/dashboard/connect/opportunities",
+                  query: { op: opportunity.id, review: "1" },
+                }}
+                reviewLabel={t("opportunityEditor.review.reviewButton", {}, {
+                  default: "Review",
+                })}
+              />
+            ))}
+          </OpportunityCompactGrid>
+        )}
+      </OpportunityListSection>
     </Shell>
   );
 }

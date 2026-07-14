@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "As alterações não salvas serão perdidas. Clique em Cancelar para retornar e salvar suas alterações."
 	},
 	"exploreConnect": "Explorar Conectar",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "Em quais tópicos você gostaria de apoiar os alunos? Selecione alguns tópicos e áreas de interesse da lista abaixo para que outros membros da comunidade saibam em quais áreas você tem interesse em contribuir. Isso nos ajudará a conectar você com alunos e colegas que compartilham suas paixões.",
 		"interests": "Interesses",
@@ -228,6 +231,35 @@
 	},
 	"introductionVideo": "Vídeo de introdução",
 	"locationFilter": "Localização",
+	"matchesRound": {
+		"backLink": ""
+	},
+	"matchingRound": {
+		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -271,6 +303,32 @@
 		"statusFilterPlaceholder": "Todos os status",
 		"teamOf": "Equipe de {{size}}",
 		"unknownSponsor": "Desconhecido"
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Patrocinador: {{name}}",
+			"submitted": "Enviado {{date}}"
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": "",
+			"resubmit": "",
+			"returned": ""
+		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
 	},
 	"nav": {
 		"connect": "Conectar",
@@ -348,6 +406,7 @@
 			"yes": "Sim"
 		},
 		"descriptionPlaceholder": "O que os alunos farão? O que eles aprenderão?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Resultados esperados",
 		"expectedDeliverablesDescription": "Descreva os resultados esperados da Equipe de Projeto Final ao término do projeto (por exemplo, instrumentos de pesquisa ou avaliação, minutas de políticas e procedimentos, listas de recursos, análise de grandes conjuntos de dados, um relatório abrangente, recomendações sobre como prosseguir, etc.). Aproximadamente 250 palavras.",
 		"fieldWorkLikelihood": "Qual a probabilidade de o projeto exigir trabalho de campo ou visitas ao local (tanto na cidade de Nova Iorque como fora dela)?",
@@ -524,7 +583,10 @@
 		"relevantLinksLabel": "Rótulo",
 		"relevantLinksRemove": "Remover",
 		"relevantLinksUrl": "URL",
+		"requestsAppointment": "",
 		"researchQuestion": "Qual é a questão/âmbito da pesquisa a ser explorada OU qual é o problema que você deseja abordar?",
+		"resubmit": "",
+		"returnedBanner": "",
 		"review": {
 			"accept": "Aceitar proposta",
 			"acceptConfirm": "Aceita esta proposta? O patrocinador será notificado para finalizar o escopo.",
@@ -549,6 +611,12 @@
 			"sponsorLabel": "Patrocinador",
 			"submittedLabel": "Enviado"
 		},
+		"reviewNotes": {
+			"empty": "",
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
+		},
 		"save": "Salvar alterações",
 		"saving": "Salvando...",
 		"specialConsiderations": {
@@ -570,6 +638,7 @@
 		"sponsorIsMentor": "Eu também sou o mentor do dia a dia deste projeto (desmarque se outra pessoa for ser o mentor).",
 		"sponsorStatusHint": "Marque como \"Enviado para revisão\" quando sua proposta estiver pronta — um professor irá analisá-la.",
 		"sponsorStatusLocked": "— bloqueado. Um professor ou administrador atualizará o status.",
+		"sponsorStatusReturnedHint": "",
 		"status": "Status",
 		"statusOptions": {
 			"accepted": "Aceito (escopo final completo)",
@@ -578,6 +647,7 @@
 			"draft": "Rascunho (não visível para alunos)",
 			"pre_selected": "Pré-selecionados (responder às perguntas de acompanhamento)",
 			"published": "Publicados",
+			"returned": "",
 			"submitted": "Submetido para revisão."
 		},
 		"studentCapacity": "Capacidade de alunos",
@@ -626,6 +696,7 @@
 				"archived": "Esta oportunidade está arquivada.",
 				"closed": "Esta oportunidade já foi encerrada.",
 				"published": "Esta oportunidade foi divulgada para estudantes.",
+				"returnedRevise": "",
 				"sponsorFollowUp": "Responda ao questionário de acompanhamento abaixo.",
 				"sponsorScope": "Preencha o escopo do projeto abaixo.",
 				"sponsorSubmit": "Envie sua proposta quando estiver pronto para a avaliação dos professores.",
@@ -633,6 +704,7 @@
 				"teacherPreSelect": "Analise a proposta e pré-selecione este patrocinador.",
 				"teacherPublish": "Analise o escopo e publique a oportunidade.",
 				"waitingFollowUp": "Aguardando o patrocinador concluir o questionário de acompanhamento.",
+				"waitingReturnedRevise": "",
 				"waitingScope": "Aguardando que o patrocinador finalize o escopo do projeto.",
 				"waitingTeacherAccept": "Aguardando que um professor aceite sua proposta.",
 				"waitingTeacherPreSelect": "Aguardando que um professor revise e pré-selecione sua proposta.",
@@ -764,7 +836,30 @@
 			"title": "Organização"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "Voltar ao painel",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"backLink": "",
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "Voltar ao Connect",
 		"description": "Sua conta ainda não tem acesso a esta seção. Se você acha que isso é um engano, pergunte ao seu professor ou a um administrador.",
@@ -773,6 +868,11 @@
 			"mentor": "Mentores",
 			"student": "Estudantes",
 			"teacher": "Professores"
+			"admin": "",
+			"classNetworkAdmin": "",
+			"mentor": "",
+			"student": "",
+			"teacher": ""
 		},
 		"title": "Esta área é para {{roles}}"
 	},

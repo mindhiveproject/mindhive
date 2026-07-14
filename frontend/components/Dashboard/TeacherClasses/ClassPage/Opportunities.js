@@ -54,8 +54,11 @@ export default function ClassOpportunities({ myclass }) {
     (network) => network.id === selectedNetworkId,
   );
 
-  const sponsorSignupLink = selectedNetworkId
+  const sponsorSignupAndInviteLink = selectedNetworkId
     ? `${origin}/signup/sponsor?classNetwork=${selectedNetworkId}`
+    : "";
+  const sponsorNetworkInviteLink = selectedNetworkId
+    ? `${origin}/login?classNetwork=${selectedNetworkId}`
     : "";
 
   return (
@@ -118,13 +121,32 @@ export default function ClassOpportunities({ myclass }) {
                   <p className="networkInviteDescription">
                     {t("opportunities.compactInvite.description", {}, {
                       default:
-                        "Copy the link to share with sponsors so they can join the selected class network.",
+                        "Copy a link for new sponsors to sign up and join this network, or for existing sponsors to join the network only.",
                     })}
                   </p>
                 </div>
                 <div className="networkInviteActions">
-                  <CopyButton value={sponsorSignupLink} style={{ fontWeight: 500 }}>
-                    {t("opportunities.copyLink", {}, { default: "Copy link" })}
+                  <CopyButton
+                    value={sponsorSignupAndInviteLink}
+                    style={{ fontWeight: 500 }}
+                    ariaLabel={t("opportunities.compactInvite.signupAndInviteLink", {}, {
+                      default: "Signup + invite to network",
+                    })}
+                  >
+                    {t("opportunities.compactInvite.signupAndInviteLink", {}, {
+                      default: "Signup + invite to network",
+                    })}
+                  </CopyButton>
+                  <CopyButton
+                    value={sponsorNetworkInviteLink}
+                    style={{ fontWeight: 500 }}
+                    ariaLabel={t("opportunities.compactInvite.inviteToNetworkLink", {}, {
+                      default: "Invite to network only",
+                    })}
+                  >
+                    {t("opportunities.compactInvite.inviteToNetworkLink", {}, {
+                      default: "Invite to network only",
+                    })}
                   </CopyButton>
                 </div>
               </div>

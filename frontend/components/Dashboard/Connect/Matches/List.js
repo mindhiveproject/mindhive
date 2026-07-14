@@ -83,7 +83,7 @@ const Action = styled.div`
     border: 1px solid #336f8a;
     background: #336f8a;
     color: #ffffff;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;
@@ -101,6 +101,7 @@ const Empty = styled.div`
 
 
 const STATUS_COLORS = {
+  draft: "grey",
   preferences_open: "green",
   preferences_closed: "yellow",
   matching: "blue",
@@ -109,6 +110,7 @@ const STATUS_COLORS = {
 };
 
 const STATUS_LABELS = {
+  draft: "Draft",
   preferences_open: "Preferences open",
   preferences_closed: "Preferences closed",
   matching: "Matching",
@@ -116,12 +118,30 @@ const STATUS_LABELS = {
   archived: "Archived",
 };
 
+function collectManagedRounds(profile) {
+  const seen = new Map();
+  (profile?.connectRoundsCreated || []).forEach((round) => {
+    if (round?.id) seen.set(round.id, round);
+  });
+  (profile?.adminOfClassNetworks || []).forEach((network) => {
+    (network?.connectRounds || []).forEach((round) => {
+      if (round?.id && !seen.has(round.id)) {
+        seen.set(round.id, round);
+      }
+    });
+  });
+  return Array.from(seen.values());
+}
+
 export default function MatchesList() {
   const { data, loading } = useQuery(MY_CONNECT_ROUNDS, {
     fetchPolicy: "cache-and-network",
   });
 
-  const rounds = data?.authenticatedItem?.connectRoundsCreated || [];
+  const rounds = useMemo(
+    () => collectManagedRounds(data?.authenticatedItem),
+    [data],
+  );
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState(null);

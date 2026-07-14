@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "Los cambios no guardados se perderán. Haz clic en Cancelar para volver y guardar los cambios."
 	},
 	"exploreConnect": "Explora Conectar",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "¿En qué temas te gustaría apoyar a los estudiantes? Selecciona algunos temas y áreas de interés de la lista a continuación para que otros miembros de la comunidad sepan dónde te entusiasma contribuir. Esto nos ayudará a conectarte con estudiantes y compañeros que comparten tus pasiones.",
 		"interests": "Intereses",
@@ -228,6 +231,35 @@
 	},
 	"introductionVideo": "Vídeo de introducción",
 	"locationFilter": "Ubicación",
+	"matchesRound": {
+		"backLink": ""
+	},
+	"matchingRound": {
+		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -271,6 +303,32 @@
 		"statusFilterPlaceholder": "Todos los estados",
 		"teamOf": "Equipo de {{size}}",
 		"unknownSponsor": "Desconocido"
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Patrocinador: {{name}}",
+			"submitted": "Enviado {{date}}"
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": "",
+			"resubmit": "",
+			"returned": ""
+		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
 	},
 	"nav": {
 		"connect": "Conectar",
@@ -348,6 +406,7 @@
 			"yes": "Sí"
 		},
 		"descriptionPlaceholder": "¿Qué harán los estudiantes? ¿Qué aprenderán?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Entregables previstos",
 		"expectedDeliverablesDescription": "Describa los entregables que se esperan del equipo del proyecto final al concluirlo (por ejemplo, instrumentos de encuesta o evaluación, borradores de políticas y procedimientos, listas de recursos, análisis de grandes conjuntos de datos, un informe completo, recomendaciones sobre cómo proceder, etc.). Aproximadamente 250 palabras.",
 		"fieldWorkLikelihood": "¿Qué probabilidades hay de que el proyecto requiera trabajo de campo o visitas al sitio (ya sea dentro o fuera de la ciudad de Nueva York)?",
@@ -524,7 +583,10 @@
 		"relevantLinksLabel": "Etiqueta",
 		"relevantLinksRemove": "Eliminar",
 		"relevantLinksUrl": "URL",
+		"requestsAppointment": "",
 		"researchQuestion": "¿Cuál es la pregunta/alcance de la investigación que se va a explorar O cuál es el problema que se quiere abordar?",
+		"resubmit": "",
+		"returnedBanner": "",
 		"review": {
 			"accept": "Aceptar propuesta",
 			"acceptConfirm": "¿Acepta esta propuesta? Se notificará al patrocinador para que complete el alcance final.",
@@ -549,6 +611,12 @@
 			"sponsorLabel": "Patrocinador",
 			"submittedLabel": "Enviado"
 		},
+		"reviewNotes": {
+			"empty": "",
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
+		},
 		"save": "Guardar cambios",
 		"saving": "Ahorro...",
 		"specialConsiderations": {
@@ -570,6 +638,7 @@
 		"sponsorIsMentor": "También soy el mentor del día a día de este proyecto (desmarque esta casilla si otra persona será el mentor).",
 		"sponsorStatusHint": "Cuando tu propuesta esté lista, márcala como \"Enviada para revisión\"; un profesor la revisará.",
 		"sponsorStatusLocked": "— Bloqueado. Un profesor o administrador actualizará el estado.",
+		"sponsorStatusReturnedHint": "",
 		"status": "Estado",
 		"statusOptions": {
 			"accepted": "Aceptado (alcance final completo)",
@@ -578,6 +647,7 @@
 			"draft": "Borrador (no visible para los estudiantes)",
 			"pre_selected": "Preseleccionados (completar las preguntas de seguimiento)",
 			"published": "Publicado",
+			"returned": "",
 			"submitted": "Presentado para revisión"
 		},
 		"studentCapacity": "Capacidad de estudiantes",
@@ -626,6 +696,7 @@
 				"archived": "Esta oportunidad está archivada.",
 				"closed": "Esta oportunidad ya no está disponible.",
 				"published": "Esta oportunidad ha sido publicada para estudiantes.",
+				"returnedRevise": "",
 				"sponsorFollowUp": "Complete el cuestionario de seguimiento a continuación.",
 				"sponsorScope": "Complete el alcance del proyecto a continuación.",
 				"sponsorSubmit": "Envía tu propuesta cuando estés listo para que el profesor la revise.",
@@ -633,6 +704,7 @@
 				"teacherPreSelect": "Revise la propuesta y preseleccione a este patrocinador.",
 				"teacherPublish": "Revisar el alcance y publicar la oportunidad.",
 				"waitingFollowUp": "Estamos esperando a que el patrocinador complete el cuestionario de seguimiento.",
+				"waitingReturnedRevise": "",
 				"waitingScope": "Estamos a la espera de que el patrocinador complete el alcance del proyecto.",
 				"waitingTeacherAccept": "Esperando a que un profesor acepte tu propuesta.",
 				"waitingTeacherPreSelect": "Esperando a que un profesor revise y preseleccione tu propuesta.",
@@ -764,7 +836,30 @@
 			"title": "Organización"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "Regresar al panel de control",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"backLink": "",
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "Volver a conectar",
 		"description": "Tu cuenta aún no tiene acceso a esta sección. Si crees que se trata de un error, consulta con tu profesor o un administrador.",

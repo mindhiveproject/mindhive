@@ -85,7 +85,7 @@ const StatusGroup = styled.div`
 
   h3 {
     margin: 0;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 12px;
     font-weight: 700;
     color: #5f6871;

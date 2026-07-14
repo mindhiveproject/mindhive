@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@apollo/client";
+import Link from "next/link";
 import styled from "styled-components";
 import { Icon } from "semantic-ui-react";
 
@@ -92,9 +93,13 @@ export default function ProfilePage({ query, user }) {
   const unofficialBio = profile?.bioInformal || "";
   const hasBioContent = officialBio.trim() || unofficialBio.trim();
 
-  const locationText = [profile?.location, profile?.timezone]
-    .filter(Boolean)
-    .join(" · ");
+  const linkedOrg = profile?.organizations?.[0] || null;
+  const orgLabel = profile?.organization || linkedOrg?.name || null;
+  const orgDepartment = profile?.department || null;
+  const hasOrgMeta = orgLabel || orgDepartment;
+
+  const locationText = profile?.location || null;
+  const hasInterestChips = interestChips.length > 0;
 
   const fullName = profile?.firstName || profile?.lastName
     ? `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim()
@@ -129,13 +134,30 @@ export default function ProfilePage({ query, user }) {
                     <a href={`mailto:${profile?.email}`}>{profile?.email}</a>
                   </MetaItem>
                 )}
-                {profile?.organization && (
+                {hasOrgMeta && (
                   <MetaItem>
                     <Icon name="building outline" />
-                    <span>
-                      {profile?.organization}
-                      {profile?.role ? ` · ${profile?.role}` : ""}
-                    </span>
+                    {linkedOrg?.id ? (
+                      <Link
+                        href={{
+                          pathname: "/dashboard/connect/organizations",
+                          query: { org: linkedOrg.id },
+                        }}
+                        aria-label={t(
+                          "organizationsDetail.viewOrganization",
+                          { name: orgLabel || linkedOrg.name },
+                          { default: "View organization {{name}}" },
+                        )}
+                      >
+                        {orgLabel}
+                        {orgDepartment ? ` · ${orgDepartment}` : ""}
+                      </Link>
+                    ) : (
+                      <span>
+                        {orgLabel}
+                        {orgDepartment ? ` · ${orgDepartment}` : ""}
+                      </span>
+                    )}
                   </MetaItem>
                 )}
                 {locationText && (
@@ -175,11 +197,39 @@ export default function ProfilePage({ query, user }) {
             </Avatar>
           </HeaderSection>
 
-          {hasBioContent && (
+          {(hasBioContent || hasInterestChips) && (
             <>
               <CardDivider />
 
-              <ContentColumns>
+              {hasBioContent && hasInterestChips ? (
+                <ContentColumns>
+                  <MainColumn>
+                    {officialBio.trim() && (
+                      <Section>
+                        <SectionTitle>{t("officialBio")}</SectionTitle>
+                        <BodyCopy>{officialBio}</BodyCopy>
+                      </Section>
+                    )}
+                    {unofficialBio.trim() && (
+                      <Section>
+                        <SectionTitle>{t("unofficialBio")}</SectionTitle>
+                        <BodyCopy>{unofficialBio}</BodyCopy>
+                      </Section>
+                    )}
+                  </MainColumn>
+
+                  <SideColumn>
+                    <ChipContainer>
+                      <SectionTitle>{t("interests.interests")}</SectionTitle>
+                      <ChipList>
+                        {interestChips.map((label) => (
+                          <InterestTag key={label}>{label}</InterestTag>
+                        ))}
+                      </ChipList>
+                    </ChipContainer>
+                  </SideColumn>
+                </ContentColumns>
+              ) : hasBioContent ? (
                 <MainColumn>
                   {officialBio.trim() && (
                     <Section>
@@ -194,33 +244,16 @@ export default function ProfilePage({ query, user }) {
                     </Section>
                   )}
                 </MainColumn>
-
-                <SideColumn>
-                  {/* {availabilityChips.length > 0 && (
-                    <Section>
-                      <SectionTitle>{t("availability")}</SectionTitle>
-                      <ChipList>
-                        {availabilityChips.map((label) => (
-                          <Chip key={label} $variant="blue">
-                            {label}
-                          </Chip>
-                        ))}
-                      </ChipList>
-                    </Section>
-                  )} */}
-
-                  {interestChips.length > 0 && (
-                    <ChipContainer>
-                      <SectionTitle>{t("interests.interests")}</SectionTitle>
-                      <ChipList>
-                        {interestChips.map((label) => (
-                          <InterestTag key={label}>{label}</InterestTag>
-                        ))}
-                      </ChipList>
-                    </ChipContainer>
-                  )}
-                </SideColumn>
-              </ContentColumns>
+              ) : (
+                <ChipContainer>
+                  <SectionTitle>{t("interests.interests")}</SectionTitle>
+                  <ChipList>
+                    {interestChips.map((label) => (
+                      <InterestTag key={label}>{label}</InterestTag>
+                    ))}
+                  </ChipList>
+                </ChipContainer>
+              )}
             </>
           )}
 
@@ -300,7 +333,7 @@ const NameRow = styled.div`
   gap: 15px;
   
   .h1 {
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 46px;
     font-weight: 700;
     line-height: 52px;
@@ -314,7 +347,7 @@ const PronounTag = styled.span`
   border-radius: 8px;
   background: #edf2ee;
   color: #171717;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
@@ -322,7 +355,7 @@ const PronounTag = styled.span`
 
 const Tagline = styled.p`
   margin: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
@@ -381,7 +414,7 @@ const MetaItem = styled.div`
   justify-content: center;
   gap: 10px;
   color: #171717;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
@@ -426,7 +459,7 @@ const ConnectButton = styled.button`
   border: 2px solid #336F8A;
   background: #336F8A;
   color: white;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 800;
   font-size: 16px;
   line-height: 24px;
@@ -530,7 +563,7 @@ const InterestTag = styled.span`
   // border: 1px solid #a1a1a1;
   background: #f3f3f3;
   color: #171717;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 12px;
   line-height: 20px;

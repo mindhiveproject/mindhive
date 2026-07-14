@@ -12,7 +12,10 @@ import { useContext, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useMutation, useQuery } from "@apollo/client";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
 import { UserContext } from "../../../Global/Authorized";
 import { REVIEW_OPPORTUNITY } from "../../../Queries/OpportunityReviewNote";
 import {
@@ -21,45 +24,120 @@ import {
 } from "../../../Mutations/OpportunityReviewNote";
 import { UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import useConnectRole from "../useConnectRole";
+import ReturnOpportunityModal from "../ReturnOpportunityModal";
+import { isReturnableOpportunityStatus } from "../returnOpportunityUtils";
 
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
+  scroll-padding-top: 126px;
 `;
 
-const BackLink = styled.button`
-  background: none;
-  border: none;
-  color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 0;
-  width: max-content;
+const BACK_CHEVRON = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
+  position: sticky;
+  top: 70px;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: -8px calc(-1 * clamp(16px, 6vw, 64px)) 8px;
+  padding: 10px clamp(16px, 6vw, 64px);
+  background: rgba(247, 249, 248, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(211, 218, 224, 0.85);
 `;
 
-const TopBar = styled.div`
+const TopBarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 220px;
+`;
+
+const TitleRow = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
 
   h1 {
     margin: 0;
+    min-width: 0;
+    max-width: 100%;
     font-family: "Lato", sans-serif;
-    font-size: clamp(24px, 4vw, 36px);
+    font-size: clamp(20px, 2.8vw, 26px);
+    font-weight: 600;
     color: #171717;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .round-meta {
     color: #5f6871;
     font-size: 13px;
   }
+`;
+
+const BackLink = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: #336f8a;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: rgba(51, 111, 138, 0.08);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
+  }
+`;
+
+const Actions = styled.div`
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
 `;
 
 const Card = styled.section`
@@ -138,24 +216,6 @@ const StatusBar = styled.div`
   }
 `;
 
-const StatusPill = styled.span`
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #ffffff;
-  background: ${({ $status }) => {
-    if ($status === "accepted" || $status === "published") return "#1d6b3a";
-    if ($status === "pending_review") return "#8a6d3b";
-    if ($status === "archived" || $status === "closed") return "#5f6871";
-    if ($status === "pre_selected") return "#336f8a";
-    return "#5f6871";
-  }};
-`;
-
 const NoteForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -178,7 +238,7 @@ const NoteForm = styled.form`
     background: #336f8a;
     color: #ffffff;
     border: none;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
@@ -232,7 +292,7 @@ const NoteRow = styled.li`
     background: none;
     border: 1px solid #f5c2bf;
     color: #c0392b;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 11px;
     font-weight: 600;
     border-radius: 100px;
@@ -281,6 +341,7 @@ function fmtDate(d) {
 
 export default function ReviewOpportunityMain({ query }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const me = useContext(UserContext);
   const { isAdmin } = useConnectRole();
   const oppId = query?.op;
@@ -305,13 +366,17 @@ export default function ReviewOpportunityMain({ query }) {
   const [status, setStatus] = useState(null);
   const [statusFlash, setStatusFlash] = useState(null);
   const [noteBody, setNoteBody] = useState("");
+  const [returnModalOpen, setReturnModalOpen] = useState(false);
+
+  const reviewRefetchQueries = useMemo(
+    () => [{ query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } }],
+    [oppId, roundId]
+  );
 
   const [updateOpportunity, { loading: updatingStatus }] = useMutation(
     UPDATE_OPPORTUNITY,
     {
-      refetchQueries: [
-        { query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } },
-      ],
+      refetchQueries: reviewRefetchQueries,
       awaitRefetchQueries: true,
     }
   );
@@ -319,19 +384,26 @@ export default function ReviewOpportunityMain({ query }) {
   const [createNote, { loading: creatingNote }] = useMutation(
     CREATE_REVIEW_NOTE,
     {
-      refetchQueries: [
-        { query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } },
-      ],
+      refetchQueries: reviewRefetchQueries,
       awaitRefetchQueries: true,
     }
   );
 
   const [deleteNote] = useMutation(DELETE_REVIEW_NOTE, {
-    refetchQueries: [
-      { query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } },
-    ],
+    refetchQueries: reviewRefetchQueries,
     awaitRefetchQueries: true,
   });
+
+  const currentStatus = status || opportunity?.status;
+  const canReturnToSponsor =
+    (isReviewerOnRound || isAdmin) &&
+    opportunity?.status &&
+    isReturnableOpportunityStatus(opportunity.status);
+
+  const handleReturnSuccess = () => {
+    setReturnModalOpen(false);
+    router.push("/dashboard/connect/review-queue");
+  };
 
   if (!oppId || !roundId) {
     return (
@@ -367,16 +439,28 @@ export default function ReviewOpportunityMain({ query }) {
   }
 
   if (!isReviewerOnRound && !isAdmin) {
+    const backLabel = t("reviewOpportunity.backLink", {}, {
+      default: "Back to review queue",
+    });
     return (
       <Shell>
-        <BackLink
-          type="button"
-          onClick={() =>
-            router.push("/dashboard/connect/review-queue")
-          }
-        >
-          ← Review queue
-        </BackLink>
+        <TopBar>
+          <TopBarLeft>
+            <BackLink
+              type="button"
+              onClick={() =>
+                router.push("/dashboard/connect/review-queue")
+              }
+              aria-label={backLabel}
+              title={backLabel}
+            >
+              {BACK_CHEVRON}
+            </BackLink>
+            <TitleRow>
+              <h1>Not authorized</h1>
+            </TitleRow>
+          </TopBarLeft>
+        </TopBar>
         <Card>
           <h2>Not authorized</h2>
           <p>
@@ -422,23 +506,44 @@ export default function ReviewOpportunityMain({ query }) {
     await deleteNote({ variables: { id: noteId } });
   };
 
-  const currentStatus = status || opportunity.status;
+  const pageTitle = opportunity.title || "";
+  const backLabel = t("reviewOpportunity.backLink", {}, {
+    default: "Back to review queue",
+  });
+  const returnLabel = t("reviewOpportunity.returnToSponsor", {}, {
+    default: "Return with comments",
+  });
 
   return (
     <Shell>
-      <BackLink
-        type="button"
-        onClick={() => router.push("/dashboard/connect/review-queue")}
-      >
-        ← Review queue
-      </BackLink>
-
       <TopBar>
-        <h1>{opportunity.title}</h1>
-        <div className="round-meta">
-          Reviewing in round <strong>{round.title}</strong> · created by{" "}
-          {displayName(round.createdBy)}
-        </div>
+        <TopBarLeft>
+          <BackLink
+            type="button"
+            onClick={() => router.push("/dashboard/connect/review-queue")}
+            aria-label={backLabel}
+            title={backLabel}
+          >
+            {BACK_CHEVRON}
+          </BackLink>
+          <TitleRow>
+            <h1 title={pageTitle}>{pageTitle}</h1>
+            <div className="round-meta">
+              Reviewing in round <strong>{round.title}</strong> · created by{" "}
+              {displayName(round.createdBy)}
+            </div>
+          </TitleRow>
+        </TopBarLeft>
+        {canReturnToSponsor ? (
+          <Actions>
+            <Button
+              variant="filled"
+              onClick={() => setReturnModalOpen(true)}
+            >
+              {returnLabel}
+            </Button>
+          </Actions>
+        ) : null}
       </TopBar>
 
       {isMentorOfOpp ? (
@@ -452,7 +557,7 @@ export default function ReviewOpportunityMain({ query }) {
       <Card>
         <h2>Status</h2>
         <StatusBar>
-          <StatusPill $status={currentStatus}>{currentStatus}</StatusPill>
+          <Chip shape="pill" label={currentStatus} selected />
           <label>
             Change to{" "}
             <select
@@ -615,6 +720,15 @@ export default function ReviewOpportunityMain({ query }) {
           </NoteList>
         )}
       </Card>
+      <ReturnOpportunityModal
+        open={returnModalOpen}
+        onClose={() => setReturnModalOpen(false)}
+        onSuccess={handleReturnSuccess}
+        opportunityId={opportunity.id}
+        roundId={round.id}
+        mentorId={opportunity.mentor?.id}
+        refetchQueries={reviewRefetchQueries}
+      />
     </Shell>
   );
 }

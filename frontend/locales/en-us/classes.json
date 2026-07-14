@@ -434,7 +434,40 @@
 		"titleRequired": "Please enter a class title."
 	},
 	"className": "Class name",
+	"classNetworkAdminAdd": "Add admin",
+	"classNetworkAdminAdded": "Class-network admin added.",
+	"classNetworkAdminAddError": "Failed to add class-network admin.",
+	"classNetworkAdminAdding": "Adding...",
+	"classNetworkAdminAlreadyAdded": "That person is already an admin for this network.",
+	"classNetworkAdminEmailLabel": "Add admin by email",
+	"classNetworkAdminEmailPlaceholder": "teacher@example.com",
+	"classNetworkAdminEmailRequired": "Enter an email address first.",
+	"classNetworkAdminRemove": "Remove",
+	"classNetworkAdminRemoveConfirm": "Remove this class-network admin? They will lose network management access.",
+	"classNetworkAdminRemoved": "Class-network admin removed.",
+	"classNetworkAdminRemoveError": "Failed to remove class-network admin.",
+	"classNetworkAdminsDescription": "Admins can manage this class network and related Connect workflows.",
+	"classNetworkAdminsEmpty": "No admins have been assigned yet.",
+	"classNetworkAdminsModalTitle": "Manage network admins",
+	"classNetworkAdminsTitle": "Network admins",
+	"classNetworkClassCountPlural": "{{count}} linked classes",
+	"classNetworkClassCountSingle": "{{count}} linked class",
+	"classNetworkCreationDate": "Creation date",
+	"classNetworkDetailsTitle": "Class network details",
+	"classNetworkLinkedClasses": "Linked classes",
+	"classNetworkManageAdmins": "Manage admins",
+	"classNetworkManageAdminsAria": "Manage admins for {{title}}",
+	"classNetworkMemberOrganizations": "Member organizations",
+	"classNetworkOpenDetailsAria": "Open details for {{title}}",
+	"classNetworkOpportunities": "Opportunities",
+	"classNetworkOpportunityCountPlural": "{{count}} opportunities",
+	"classNetworkOpportunityCountSingle": "{{count}} opportunity",
+	"classNetworkOrganizationCountPlural": "{{count}} organizations",
+	"classNetworkOrganizationCountSingle": "{{count}} organization",
 	"classNetworks": "Class networks",
+	"classNetworkUntitled": "Untitled network",
+	"classNetworkViewDetails": "View details",
+	"close": "Close",
 	"collaborators": "Collaborator(s)",
 	"common": {
 		"errorLoading": "Error loading assignment",
@@ -679,7 +712,9 @@
 	"onlyTeachersMentorsAssignCards": "Only teachers and mentors can assign cards",
 	"opportunities": {
 		"compactInvite": {
-			"description": "Copy the link to share with sponsors so they can join the selected class network.",
+			"description": "Copy a link for new sponsors to sign up and join this network, or for existing sponsors to join the network only.",
+			"inviteToNetworkLink": "Invite to network only",
+			"signupAndInviteLink": "Signup + invite to network",
 			"title": "Invite sponsors"
 		},
 		"copyLink": "Copy link",
@@ -696,7 +731,6 @@
 			"algorithmHint": "The algorithm runs when you click Run matching on the matches dashboard — not when you save here.",
 			"collapseLabel": "Collapse matching round settings",
 			"createRound": "Create round",
-			"description": "Set up a matching round for your class. Students rank opportunities and the algorithm assigns matches when you run it.",
 			"expandLabel": "Expand matching round settings",
 			"fields": {
 				"algorithm": "Matching algorithm",
@@ -715,13 +749,14 @@
 			"grid": {
 				"columns": {
 					"info": "More information",
+					"infoReturned": "More information — returned",
 					"name": "Opportunity name",
 					"organization": "Organization",
 					"review": "Review",
 					"sponsor": "Sponsor"
 				},
-				"review": "Review",
-				"remove": "Remove"
+				"remove": "Remove",
+				"review": "Review"
 			},
 			"loading": "Loading matching round…",
 			"manageMatches": "Manage matches",
@@ -730,6 +765,7 @@
 			"noOpportunitiesInNetwork": "No opportunities have been added to this class network yet.",
 			"noRoundForNetwork": "No matching round for this network yet.",
 			"notSetUp": "Not set up",
+			"openConfirm": "Students in this network will see this round and can submit preferences. Continue?",
 			"panels": {
 				"questions": "Additional student questions",
 				"reviewOpportunities": "Review opportunities",
@@ -738,6 +774,7 @@
 				"selectedOpportunitiesWithCount": "Selected opportunities ({{count}})",
 				"settings": "Settings"
 			},
+			"revertToDraftConfirm": "Reverting to draft hides this round from students. Continue?",
 			"reviewOpportunitiesEmpty": "All network opportunities are already in this round. Remove some from Selected opportunities to review more.",
 			"roundSwitcherLabel": "Matching round",
 			"saveFailed": "Could not save the matching round. Please try again.",
@@ -749,6 +786,8 @@
 			"status": {
 				"archived": "Archived",
 				"archivedHint": "Round finished",
+				"draft": "Draft",
+				"draftHint": "Only you can see this round",
 				"matching": "Matching",
 				"matchingHint": "Review proposed matches",
 				"preferencesClosed": "Closed",
@@ -784,6 +823,7 @@
 				"individual": "Individual",
 				"team": "Team"
 			},
+			"guidelinesAcknowledged": "Guidelines acknowledged",
 			"hostedBy": "Hosted by",
 			"loading": "Loading opportunity…",
 			"matchingRound": {
@@ -795,6 +835,7 @@
 			},
 			"mentor": "Mentor",
 			"mentorContact": "Your contact",
+			"mentorNotes": "Mentor notes",
 			"no": "No",
 			"notFound": "Opportunity not found, or no longer available.",
 			"opportunityDetails": "Opportunity details",
@@ -803,6 +844,27 @@
 			"projectCategory": "Project category",
 			"publicRating": "Public rating",
 			"ratingsTitle": "What past participants said",
+			"requestsAppointment": "Appointment requested",
+			"returnModal": {
+				"cancel": "Cancel",
+				"confirm": "Return with comments",
+				"error": "Could not return this opportunity. Please try again.",
+				"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
+				"placeholder": "Optional note for the sponsor…",
+				"submitting": "Returning…",
+				"title": "Return with comments"
+			},
+			"returnToSponsor": "Return with comments",
+			"reviewNotes": {
+				"cancel": "Cancel",
+				"edit": "Edit",
+				"empty": "No review notes for this round yet.",
+				"save": "Save",
+				"saving": "Saving…",
+				"title": "Review notes",
+				"updatedAt": "Updated {{date}}"
+			},
+			"sponsorIsMentor": "Sponsor is mentor",
 			"status": "Status",
 			"teamSize": "Team size",
 			"teamSizeSolo": "Solo",
@@ -813,8 +875,14 @@
 			"yes": "Yes"
 		},
 		"rowMeta": {
+			"availabilityLabel": "Available",
 			"byMentor": "By {{name}}",
 			"capacity": "Capacity {{count}}",
+			"capacityLabel": "Capacity",
+			"lastUpdated": "Last updated {{date}}",
+			"lastUpdatedLabel": "Last updated",
+			"sponsorLabel": "Sponsor",
+			"statusLabel": "Status",
 			"teamOf": "Team of {{size}}"
 		},
 		"selectNetworkFirst": "Select a class network above to continue.",
@@ -828,7 +896,8 @@
 			"draft": "Draft",
 			"pendingReview": "Pending review",
 			"preSelected": "Pre-selected",
-			"published": "Published"
+			"published": "Published",
+			"returned": "Returned"
 		}
 	},
 	"participants": "Participants",

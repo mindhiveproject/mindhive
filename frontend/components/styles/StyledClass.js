@@ -1243,8 +1243,10 @@ const StyledClass = styled.div`
 
       .networkInviteActions {
         display: flex;
+        flex-wrap: wrap;
         flex-shrink: 0;
         align-items: center;
+        gap: 10px;
       }
     }
 
@@ -1358,7 +1360,7 @@ const StyledClass = styled.div`
     .classTabExpandableBody {
       display: grid;
       gap: 16px;
-      padding: 0 24px 24px;
+      padding: 12px 24px 24px;
       border-top: 1px solid #ece9e6;
 
       .expandableBodyDescription {
@@ -1374,12 +1376,16 @@ const StyledClass = styled.div`
       gap: 18px;
     }
 
-    .classTabMatchingRoundChipRow,
     .classTabMatchingRoundAlgoChipRow {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       align-items: center;
+      justify-content: space-between;
+      border: 1.5px solid #ece9e6;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 12px;
     }
 
     .classTabMatchingRoundPanel {
@@ -1585,22 +1591,76 @@ const StyledClass = styled.div`
     .matchingRoundOpportunitiesGrid {
       min-height: 200px;
       width: 100%;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .ag-body-vertical-scroll-viewport,
+      .ag-body-horizontal-scroll-viewport,
+      .ag-center-cols-viewport,
+      .ag-body-viewport {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .ag-body-vertical-scroll-viewport::-webkit-scrollbar,
+      .ag-body-horizontal-scroll-viewport::-webkit-scrollbar,
+      .ag-center-cols-viewport::-webkit-scrollbar,
+      .ag-body-viewport::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+      }
 
       .ag-root-wrapper {
         border-radius: 12px;
         overflow: hidden;
       }
+
+      .matchingRoundOppRowReturned {
+        background-color: #f3f3f3 !important;
+        color: #8a8680;
+
+        &.ag-row-hover,
+        &.ag-row-selected {
+          background-color: #ebebeb !important;
+        }
+
+        .ag-cell {
+          color: #8a8680;
+        }
+      }
     }
 
-    .matchingRoundOppInfoBtn {
-      display: inline-flex;
+    .matchingRoundOppInfoGridCell {
+      padding: 0 !important;
+      height: 100%;
+
+      .ag-cell-wrapper,
+      .ag-cell-value,
+      .ag-react-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        align-items: stretch;
+      }
+    }
+
+    .matchingRoundOppInfoCell {
+      display: flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
       padding: 0;
-      border: 1.5px solid #d9d6d2;
-      border-radius: 100px;
+      border: none;
+      border-radius: 0;
       background: transparent;
       color: #625b71;
       font-family: "Inter", sans-serif;
@@ -1611,9 +1671,28 @@ const StyledClass = styled.div`
 
       &:hover {
         background: #eef5f9;
-        border-color: #c8d8df;
         color: #336f8a;
       }
+
+      &.matchingRoundOppInfoCellReturned {
+        background: #E6E6E6;
+        color: #3f288f;
+
+        &:hover {
+          background: #E6E6E6;
+          color: #3f288f;
+        }
+      }
+    }
+
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCell {
+      background: #eef5f9;
+      color: #336f8a;
+    }
+
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturned {
+      background: #d6cef0;
+      color: #3f288f;
     }
 
     .matchingRoundOppInfoTooltip {
@@ -1625,6 +1704,7 @@ const StyledClass = styled.div`
         margin: 0;
         font-size: 14px;
         line-height: 20px;
+        color: #171717;
       }
 
       .expired {
@@ -1860,28 +1940,92 @@ const StyledClass = styled.div`
       }
     }
 
+    .networkCardGrid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
     .networkCard {
       display: grid;
-      gap: 8px;
-      padding: 20px;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      padding: 14px;
       border: 1px solid #e6e6e6;
       border-radius: 16px;
       background: #ffffff;
+      color: inherit;
+      font-family: "Inter", sans-serif;
+      text-align: left;
+      box-shadow: 0 6px 18px rgba(23, 23, 23, 0.03);
+      transition: border-color 0.2s ease, background-color 0.2s ease,
+        box-shadow 0.2s ease, transform 0.2s ease;
+    }
 
-      h2,
-      p {
-        margin: 0;
-      }
+    .networkCard:hover,
+    .networkCard:focus-within {
+      border-color: rgba(51, 111, 138, 0.45);
+      background: #f6f9f8;
+      box-shadow: 0 10px 24px rgba(23, 23, 23, 0.08);
+      transform: translateY(-1px);
+    }
 
-      .classNetworkChip {
-        justify-self: start;
-      }
+    .networkCardHeader {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+    }
 
-      h2 {
-        font-size: 18px;
-        line-height: 24px;
-        color: #171717;
-      }
+    .networkCardTitle {
+      display: -webkit-box;
+      margin: 0;
+      overflow: hidden;
+      color: #171717;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 22px;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .networkCardDescription {
+      display: -webkit-box;
+      overflow: hidden;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .networkCardMeta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      color: #a1a1a1;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .networkCardAction {
+      justify-self: start;
+      color: var(--MH-Theme-Primary-Dark, #336f8a);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
+    }
+
+    .networkCardActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
     }
 
     .curriculumTypeSelector {
@@ -2019,6 +2163,10 @@ const StyledClass = styled.div`
       }
 
       .informationBlock {
+        grid-template-columns: 1fr;
+      }
+
+      .networkCardGrid {
         grid-template-columns: 1fr;
       }
     }

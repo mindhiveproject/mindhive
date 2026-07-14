@@ -434,7 +434,40 @@
 		"titleRequired": "Por favor, insira o título da disciplina."
 	},
 	"className": "Nome da classe",
+	"classNetworkAdminAdd": "",
+	"classNetworkAdminAdded": "",
+	"classNetworkAdminAddError": "",
+	"classNetworkAdminAdding": "",
+	"classNetworkAdminAlreadyAdded": "",
+	"classNetworkAdminEmailLabel": "",
+	"classNetworkAdminEmailPlaceholder": "",
+	"classNetworkAdminEmailRequired": "",
+	"classNetworkAdminRemove": "",
+	"classNetworkAdminRemoveConfirm": "",
+	"classNetworkAdminRemoved": "",
+	"classNetworkAdminRemoveError": "",
+	"classNetworkAdminsDescription": "",
+	"classNetworkAdminsEmpty": "",
+	"classNetworkAdminsModalTitle": "",
+	"classNetworkAdminsTitle": "",
+	"classNetworkClassCountPlural": "",
+	"classNetworkClassCountSingle": "",
+	"classNetworkCreationDate": "",
+	"classNetworkDetailsTitle": "",
+	"classNetworkLinkedClasses": "",
+	"classNetworkManageAdmins": "",
+	"classNetworkManageAdminsAria": "",
+	"classNetworkMemberOrganizations": "",
+	"classNetworkOpenDetailsAria": "",
+	"classNetworkOpportunities": "",
+	"classNetworkOpportunityCountPlural": "",
+	"classNetworkOpportunityCountSingle": "",
+	"classNetworkOrganizationCountPlural": "",
+	"classNetworkOrganizationCountSingle": "",
 	"classNetworks": "Redes de classes",
+	"classNetworkUntitled": "",
+	"classNetworkViewDetails": "",
+	"close": "",
 	"collaborators": "Colaborador(es)",
 	"common": {
 		"errorLoading": "Erro ao carregar a atribuição",
@@ -679,11 +712,13 @@
 	"onlyTeachersMentorsAssignCards": "",
 	"opportunities": {
 		"compactInvite": {
-			"description": "",
-			"title": ""
+			"description": "Copie o link para compartilhar com os patrocinadores para que eles possam participar da rede da turma selecionada.",
+			"inviteToNetworkLink": "",
+			"signupAndInviteLink": "",
+			"title": "Convidar patrocinadores"
 		},
-		"copyLink": "",
-		"loadingOpportunities": "",
+		"copyLink": "Link de cópia",
+		"loadingOpportunities": "Oportunidades de carregamento…",
 		"matchingRound": {
 			"algorithm": {
 				"scoreBased": "",
@@ -696,7 +731,6 @@
 			"algorithmHint": "",
 			"collapseLabel": "",
 			"createRound": "",
-			"description": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",
@@ -715,11 +749,13 @@
 			"grid": {
 				"columns": {
 					"info": "",
+					"infoReturned": "",
 					"name": "",
 					"organization": "",
 					"review": "",
 					"sponsor": ""
 				},
+				"remove": "",
 				"review": ""
 			},
 			"loading": "",
@@ -729,12 +765,17 @@
 			"noOpportunitiesInNetwork": "",
 			"noRoundForNetwork": "",
 			"notSetUp": "",
+			"openConfirm": "",
 			"panels": {
 				"questions": "",
 				"reviewOpportunities": "",
+				"reviewOpportunitiesWithCount": "",
 				"selectedOpportunities": "",
+				"selectedOpportunitiesWithCount": "",
 				"settings": ""
 			},
+			"revertToDraftConfirm": "",
+			"reviewOpportunitiesEmpty": "",
 			"roundSwitcherLabel": "",
 			"saveFailed": "",
 			"saveRound": "",
@@ -744,10 +785,17 @@
 			"selectNetworkFirst": "",
 			"status": {
 				"archived": "",
+				"archivedHint": "",
+				"draft": "",
+				"draftHint": "",
 				"matching": "",
+				"matchingHint": "",
 				"preferencesClosed": "",
+				"preferencesClosedHint": "",
 				"preferencesOpen": "",
-				"published": ""
+				"preferencesOpenHint": "",
+				"published": "",
+				"publishedHint": ""
 			},
 			"title": "",
 			"titleRequired": "",
@@ -775,10 +823,19 @@
 				"individual": "",
 				"team": ""
 			},
+			"guidelinesAcknowledged": "",
 			"hostedBy": "",
 			"loading": "",
+			"matchingRound": {
+				"addToRound": "",
+				"noRoundHint": "",
+				"removeFromRound": "",
+				"saving": "",
+				"toggleFailed": ""
+			},
 			"mentor": "",
 			"mentorContact": "",
+			"mentorNotes": "",
 			"no": "",
 			"notFound": "",
 			"opportunityDetails": "",
@@ -787,6 +844,27 @@
 			"projectCategory": "",
 			"publicRating": "",
 			"ratingsTitle": "",
+			"requestsAppointment": "",
+			"returnModal": {
+				"cancel": "",
+				"confirm": "",
+				"error": "",
+				"helper": "",
+				"placeholder": "",
+				"submitting": "",
+				"title": ""
+			},
+			"returnToSponsor": "",
+			"reviewNotes": {
+				"cancel": "",
+				"edit": "",
+				"empty": "",
+				"save": "",
+				"saving": "",
+				"title": "",
+				"updatedAt": ""
+			},
+			"sponsorIsMentor": "",
 			"status": "",
 			"teamSize": "",
 			"teamSizeSolo": "",
@@ -797,8 +875,14 @@
 			"yes": ""
 		},
 		"rowMeta": {
+			"availabilityLabel": "",
 			"byMentor": "",
 			"capacity": "",
+			"capacityLabel": "",
+			"lastUpdated": "",
+			"lastUpdatedLabel": "",
+			"sponsorLabel": "",
+			"statusLabel": "",
 			"teamOf": ""
 		},
 		"selectNetworkFirst": "",
@@ -812,7 +896,8 @@
 			"draft": "",
 			"pendingReview": "",
 			"preSelected": "",
-			"published": ""
+			"published": "",
+			"returned": ""
 		}
 	},
 	"participants": "Participantes",

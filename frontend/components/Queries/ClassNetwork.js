@@ -11,6 +11,13 @@ export const GET_ALL_NETWORKS = gql`
         id
         username
       }
+      admins {
+        id
+        username
+        firstName
+        lastName
+        email
+      }
       settings
       classes {
         id
@@ -32,6 +39,13 @@ export const GET_NETWORK = gql`
       creator {
         id
         username
+      }
+      admins {
+        id
+        username
+        firstName
+        lastName
+        email
       }
       settings
       classes {

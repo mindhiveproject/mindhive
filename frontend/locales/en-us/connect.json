@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "Your unsaved changes will be lost. Click Cancel to return and save your changes."
 	},
 	"exploreConnect": "Explore Connect",
+	"exploreDetail": {
+		"backLink": "Back to all opportunities"
+	},
 	"interests": {
 		"description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
 		"interests": "Interests",
@@ -228,6 +231,35 @@
 	},
 	"introductionVideo": "Introduction Video",
 	"locationFilter": "Location",
+	"matchesRound": {
+		"backLink": "Back to matches"
+	},
+	"matchingRound": {
+		"draftBanner": "This round is in draft. Students cannot see it until you open preferences.",
+		"editor": {
+			"backLink": "Back to rounds",
+			"create": "Create round",
+			"manageMatches": "Manage matches",
+			"pageTitleEdit": "Edit round",
+			"pageTitleNew": "New matching round",
+			"save": "Save changes",
+			"saving": "Saving…"
+		},
+		"notAvailableYet": "This round is not available yet. Your teacher is still setting it up.",
+		"openConfirm": "Students in this network will see this round and can submit preferences. Continue?",
+		"openingPreferences": "Opening…",
+		"openPreferences": "Open preferences",
+		"publishDisabledWhileDraft": "Open preferences and move the round to Matching before publishing matches.",
+		"publishRequiresMatching": "Set the round status to Matching before publishing final matches.",
+		"submission": {
+			"backLink": "Back to rounds",
+			"saveDraft": "Save draft",
+			"saving": "Saving…",
+			"statusDraft": "Draft saved",
+			"statusSubmitted": "Submitted",
+			"submit": "Submit preferences"
+		}
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": "Class type"
@@ -256,6 +288,13 @@
 			"many": "{{average}} · {{count}} ratings",
 			"one": "{{average}} · {{count}} rating"
 		},
+		"reviewCommentsEdit": "Review comments & Resubmit",
+		"reviewCommentsWaiting": "Teacher review comments are waiting for you.",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Sponsor: {{name}}",
+			"submitted": "Submitted {{date}}"
+		},
 		"searchLabel": "Search opportunities by title",
 		"searchPlaceholder": "Search by title…",
 		"status": {
@@ -263,10 +302,14 @@
 			"archived": "Archived",
 			"closed": "Closed",
 			"draft": "Draft",
-			"pendingReview": "Pending Review",
+			"pendingReview": "Submitted",
 			"preSelected": "Pre-selected",
-			"published": "Published"
+			"published": "Published",
+			"resubmit": "Resubmit",
+			"returned": "Returned"
 		},
+		"statusChangeLabel": "Change opportunity status",
+		"statusChangeUseEditor": "Complete required fields in the editor before submitting for review.",
 		"statusFilterLabel": "Filter by status",
 		"statusFilterPlaceholder": "All statuses",
 		"teamOf": "Team of {{size}}",
@@ -348,6 +391,7 @@
 			"yes": "Yes"
 		},
 		"descriptionPlaceholder": "What will students do? What will they learn?",
+		"existingVideoFile": "Current video file",
 		"expectedDeliverables": "Expected deliverables",
 		"expectedDeliverablesDescription": "Please describe the deliverables that are expected of the Capstone Team at the completion of the project (i.e. survey or evaluation instruments, draft policies and procedures, resource lists, analysis of large datasets, a comprehensive report, recommendations on how to proceed, etc.). Approximately 250 words.",
 		"fieldWorkLikelihood": "How likely would the project require field work or site visits (either within NYC or outside)?",
@@ -524,7 +568,10 @@
 		"relevantLinksLabel": "Label",
 		"relevantLinksRemove": "Remove",
 		"relevantLinksUrl": "URL",
+		"requestsAppointment": "Would you like to schedule an appointment with a MindHive team member?",
 		"researchQuestion": "What is the research question/scope to be explored OR what is the problem that you want to address?",
+		"resubmit": "Resubmit",
+		"returnedBanner": "A teacher returned your proposal — review their notes below, make changes, then resubmit for review.",
 		"review": {
 			"accept": "Accept proposal",
 			"acceptConfirm": "Accept this proposal? The sponsor will be notified to complete the final scope.",
@@ -549,6 +596,12 @@
 			"sponsorLabel": "Sponsor",
 			"submittedLabel": "Submitted"
 		},
+		"reviewNotes": {
+			"empty": "No review notes were attached.",
+			"roundLabel": "Round: {{title}}",
+			"title": "Review notes",
+			"unknownAuthor": "Reviewer"
+		},
 		"save": "Save changes",
 		"saving": "Saving…",
 		"specialConsiderations": {
@@ -570,6 +623,7 @@
 		"sponsorIsMentor": "I'm also the day-to-day mentor for this project (uncheck if someone else will be mentoring)",
 		"sponsorStatusHint": "Set to Submitted for review when your proposal is ready — a teacher will review it.",
 		"sponsorStatusLocked": "— locked. A teacher or admin will update the status.",
+		"sponsorStatusReturnedHint": "— use Resubmit above when your changes are ready.",
 		"status": "Status",
 		"statusOptions": {
 			"accepted": "Accepted (complete final scope)",
@@ -578,6 +632,7 @@
 			"draft": "Draft (not visible to students)",
 			"pre_selected": "Pre-selected (awaiting acceptance)",
 			"published": "Published",
+			"returned": "Returned (revise and resubmit)",
 			"submitted": "Submitted for review"
 		},
 		"studentCapacity": "Student capacity",
@@ -626,6 +681,7 @@
 				"archived": "This opportunity is archived.",
 				"closed": "This opportunity is closed.",
 				"published": "This opportunity has been published for students.",
+				"returnedRevise": "A teacher returned your proposal — review their notes, make changes, then resubmit.",
 				"sponsorFollowUp": "",
 				"sponsorScope": "Complete the project scope below.",
 				"sponsorSubmit": "Submit your proposal when you're ready for teacher review.",
@@ -633,6 +689,7 @@
 				"teacherPreSelect": "Review the proposal and pre-select this sponsor.",
 				"teacherPublish": "Review the scope and publish the opportunity.",
 				"waitingFollowUp": "",
+				"waitingReturnedRevise": "Waiting for the sponsor to revise and resubmit their returned proposal.",
 				"waitingScope": "Waiting for the sponsor to complete the project scope.",
 				"waitingTeacherAccept": "Waiting for a teacher to accept your proposal.",
 				"waitingTeacherPreSelect": "Waiting for a teacher to review and pre-select your proposal.",
@@ -764,12 +821,36 @@
 			"title": "Organization"
 		}
 	},
+	"questionEditor": {
+		"backLink": "Back to library",
+		"create": "Create question",
+		"pageTitleEdit": "Edit question",
+		"pageTitleNew": "New library question",
+		"save": "Save changes",
+		"saving": "Saving…"
+	},
 	"returnDashboard": "Return to Dashboard",
+	"returnModal": {
+		"cancel": "Cancel",
+		"confirm": "Return with comments",
+		"emailMessage": "A teacher has returned your Capstone proposal for revision. Open your opportunity to read their notes, make changes, and resubmit for review.",
+		"emailTitle": "Your Capstone proposal was returned",
+		"error": "Could not return this opportunity. Please try again.",
+		"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
+		"placeholder": "Optional note for the sponsor…",
+		"submitting": "Returning…",
+		"title": "Return with comments"
+	},
+	"reviewOpportunity": {
+		"backLink": "Back to review queue",
+		"returnToSponsor": "Return with comments"
+	},
 	"roleGuard": {
 		"backLink": "Back to Connect",
 		"description": "Your account doesn't have access to this section yet. If you think this is a mistake, ask your teacher or an administrator.",
 		"roles": {
 			"admin": "admins",
+			"classNetworkAdmin": "class-network admins",
 			"mentor": "mentors",
 			"student": "students",
 			"teacher": "teachers"

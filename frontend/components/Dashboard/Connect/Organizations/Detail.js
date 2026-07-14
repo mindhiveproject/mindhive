@@ -12,24 +12,45 @@ const Shell = styled.div`
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 `;
 
+const BACK_CHEVRON = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
 const BackLink = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   background: none;
   border: none;
+  border-radius: 8px;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
-  padding: 0;
-  width: max-content;
+
+  &:hover:not(:disabled) {
+    background: rgba(51, 111, 138, 0.08);
+  }
 
   &:focus-visible {
     outline: 2px solid #336f8a;
@@ -341,15 +362,20 @@ export default function OrganizationDetail({ organizationId }) {
     );
   }
 
+  const backLabel = t("organizationsDetail.back", {}, { default: "Back" });
   const opensInNewTab = t("a11y.opensInNewTab", {}, {
     default: "(opens in new tab)",
   });
 
   return (
     <Shell>
-      <BackLink type="button" onClick={() => router.back()}>
-        <DecorativeIcon name="arrow left" />
-        {t("organizationsDetail.back", {}, { default: "Back" })}
+      <BackLink
+        type="button"
+        onClick={() => router.back()}
+        aria-label={backLabel}
+        title={backLabel}
+      >
+        {BACK_CHEVRON}
       </BackLink>
 
       <Hero>
@@ -462,13 +488,13 @@ export default function OrganizationDetail({ organizationId }) {
                   )}
                 </div>
               );
-              if (member.publicReadableId) {
+              if (member.publicId) {
                 return (
                   <Link
                     key={member.id}
                     href={{
                       pathname: "/dashboard/connect/with",
-                      query: { id: member.publicReadableId },
+                      query: { id: member.publicId },
                     }}
                     passHref
                     legacyBehavior

@@ -43,3 +43,41 @@ export const UPDATE_NETWORK = gql`
     }
   }
 `;
+
+export const ADD_CLASS_NETWORK_ADMIN = gql`
+  mutation ADD_CLASS_NETWORK_ADMIN(
+    $networkId: ID!
+    $profileId: ID
+    $email: String
+  ) {
+    addClassNetworkAdmin(
+      networkId: $networkId
+      profileId: $profileId
+      email: $email
+    ) {
+      id
+      admins {
+        id
+        username
+        firstName
+        lastName
+        email
+      }
+    }
+  }
+`;
+
+export const REMOVE_CLASS_NETWORK_ADMIN = gql`
+  mutation REMOVE_CLASS_NETWORK_ADMIN($networkId: ID!, $profileId: ID!) {
+    removeClassNetworkAdmin(networkId: $networkId, profileId: $profileId) {
+      id
+      admins {
+        id
+        username
+        firstName
+        lastName
+        email
+      }
+    }
+  }
+`;

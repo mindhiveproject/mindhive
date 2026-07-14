@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "Je niet-opgeslagen wijzigingen gaan verloren. Klik op Annuleren om terug te keren en je wijzigingen op te slaan."
 	},
 	"exploreConnect": "Ontdekken Verbinden",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "Met welke onderwerpen zou je studenten willen ondersteunen? Selecteer een aantal onderwerpen en interessegebieden uit de onderstaande lijst om andere communityleden te laten weten waar je graag een bijdrage aan wilt leveren. Zo kunnen we je in contact brengen met studenten en medestudenten die jouw passies delen.",
 		"interests": "Interesses",
@@ -228,6 +231,35 @@
 	},
 	"introductionVideo": "Introductievideo",
 	"locationFilter": "Plaats",
+	"matchesRound": {
+		"backLink": ""
+	},
+	"matchingRound": {
+		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -271,6 +303,32 @@
 		"statusFilterPlaceholder": "Alle statussen",
 		"teamOf": "Team van {{size}}",
 		"unknownSponsor": "Onbekend"
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Sponsor: {{name}}",
+			"submitted": "Ingediend {{date}}"
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": "",
+			"resubmit": "",
+			"returned": ""
+		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
 	},
 	"nav": {
 		"connect": "Aansluiten",
@@ -348,6 +406,7 @@
 			"yes": "Ja"
 		},
 		"descriptionPlaceholder": "Wat gaan de leerlingen doen? Wat gaan ze leren?",
+		"existingVideoFile": "",
 		"expectedDeliverables": "Verwachte resultaten",
 		"expectedDeliverablesDescription": "Beschrijf de resultaten die van het Capstone-team worden verwacht bij de afronding van het project (bijv. enquête- of evaluatie-instrumenten, conceptbeleid en -procedures, bronnenlijsten, analyse van grote datasets, een uitgebreid rapport, aanbevelingen voor de vervolgstappen, enz.). Ongeveer 250 woorden.",
 		"fieldWorkLikelihood": "Hoe waarschijnlijk is het dat het project veldwerk of locatiebezoeken vereist (zowel binnen als buiten New York City)?",
@@ -524,7 +583,10 @@
 		"relevantLinksLabel": "Etiket",
 		"relevantLinksRemove": "Verwijderen",
 		"relevantLinksUrl": "Url",
+		"requestsAppointment": "",
 		"researchQuestion": "Wat is de onderzoeksvraag/het onderzoeksgebied dat onderzocht moet worden, OF welk probleem wilt u aanpakken?",
+		"resubmit": "",
+		"returnedBanner": "",
 		"review": {
 			"accept": "Voorstel accepteren",
 			"acceptConfirm": "Gaat u akkoord met dit voorstel? De opdrachtgever wordt op de hoogte gesteld om de definitieve scope te bepalen.",
@@ -549,6 +611,12 @@
 			"sponsorLabel": "Sponsor",
 			"submittedLabel": "Ingediend"
 		},
+		"reviewNotes": {
+			"empty": "",
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
+		},
 		"save": "Wijzigingen opslaan",
 		"saving": "Besparing...",
 		"specialConsiderations": {
@@ -570,6 +638,7 @@
 		"sponsorIsMentor": "Ik ben ook de dagelijkse mentor voor dit project (vink dit uit als iemand anders de mentorrol op zich neemt).",
 		"sponsorStatusHint": "Zet de status op 'Ingediend voor beoordeling' wanneer uw voorstel klaar is — een docent zal het beoordelen.",
 		"sponsorStatusLocked": "— vergrendeld. Een docent of beheerder zal de status bijwerken.",
+		"sponsorStatusReturnedHint": "",
 		"status": "Toestand",
 		"statusOptions": {
 			"accepted": "Geaccepteerd (volledige eindopdracht)",
@@ -578,6 +647,7 @@
 			"draft": "Conceptversie (niet zichtbaar voor studenten)",
 			"pre_selected": "Vooraf geselecteerd (volledige vervolgvragen)",
 			"published": "Gepubliceerd",
+			"returned": "",
 			"submitted": "Ingediend ter beoordeling"
 		},
 		"studentCapacity": "Studentencapaciteit",
@@ -626,6 +696,7 @@
 				"archived": "Deze vacature is gearchiveerd.",
 				"closed": "Deze mogelijkheid is niet meer beschikbaar.",
 				"published": "Deze vacature is speciaal voor studenten gepubliceerd.",
+				"returnedRevise": "",
 				"sponsorFollowUp": "Vul de onderstaande vervolgvragenlijst in.",
 				"sponsorScope": "Vul de projectomschrijving hieronder in.",
 				"sponsorSubmit": "Dien je voorstel in wanneer je klaar bent voor beoordeling door de docent.",
@@ -633,6 +704,7 @@
 				"teacherPreSelect": "Bekijk het voorstel en selecteer deze sponsor.",
 				"teacherPublish": "Beoordeel de reikwijdte en publiceer de vacature.",
 				"waitingFollowUp": "Wachten tot de sponsor de vervolgvragenlijst heeft ingevuld.",
+				"waitingReturnedRevise": "",
 				"waitingScope": "Wachten tot de opdrachtgever de projectomschrijving compleet heeft.",
 				"waitingTeacherAccept": "Wachten tot een docent je voorstel accepteert.",
 				"waitingTeacherPreSelect": "Je wacht tot een docent je voorstel heeft beoordeeld en een voorselectie heeft gemaakt.",
@@ -764,7 +836,30 @@
 			"title": "Organisatie"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "Terug naar dashboard",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"backLink": "",
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "Terug naar Verbinden",
 		"description": "Je account heeft nog geen toegang tot dit gedeelte. Als je denkt dat dit een fout is, neem dan contact op met je docent of een beheerder.",
@@ -773,6 +868,11 @@
 			"mentor": "Mentoren",
 			"student": "studenten",
 			"teacher": "leraren"
+			"admin": "",
+			"classNetworkAdmin": "",
+			"mentor": "",
+			"student": "",
+			"teacher": ""
 		},
 		"title": "Dit gebied is voor {{roles}}"
 	},

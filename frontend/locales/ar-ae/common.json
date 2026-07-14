@@ -19,6 +19,16 @@
 	},
 	"auth": {
 		"checkYourMail": "تحقق من بريدك الإلكتروني",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "بريد إلكتروني",
 		"forgotPassword": "نسيت كلمة السر؟",
 		"login": "تسجيل الدخول",

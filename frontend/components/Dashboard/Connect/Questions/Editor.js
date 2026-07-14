@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { Icon, Dropdown } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 
 import useForm from "../../../../lib/useForm";
 import {
@@ -13,45 +14,120 @@ import {
   CREATE_QUESTION,
   UPDATE_QUESTION,
 } from "../../../Mutations/ConnectQuestion";
+import Button from "../../../DesignSystem/Button";
+
+const BACK_CHEVRON = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
+      fill="currentColor"
+    />
+  </svg>
+);
 
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
+  scroll-padding-top: 126px;
 `;
 
-const TopBar = styled.div`
+const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
+  position: sticky;
+  top: 70px;
+  z-index: 5;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px 16px;
+  margin: -8px calc(-1 * clamp(16px, 6vw, 64px)) 8px;
+  padding: 10px clamp(16px, 6vw, 64px);
+  background: rgba(247, 249, 248, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(211, 218, 224, 0.85);
+`;
+
+const TopBarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 220px;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-width: 0;
+  flex: 1 1 auto;
 
   h1 {
     margin: 0;
+    min-width: 0;
+    max-width: 100%;
     font-family: "Lato", sans-serif;
-    font-size: clamp(24px, 3vw, 32px);
+    font-size: clamp(20px, 2.8vw, 26px);
     font-weight: 600;
     color: #171717;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
 const BackLink = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   background: none;
   border: none;
+  border-radius: 8px;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
-  padding: 0;
+
+  &:hover:not(:disabled) {
+    background: rgba(51, 111, 138, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
+  }
+`;
+
+const Actions = styled.div`
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
 `;
 
 const Card = styled.div`
@@ -128,33 +204,6 @@ const Field = styled.label`
   }
 `;
 
-const Actions = styled.div`
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-`;
-
-const Button = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: 1px solid ${({ $primary }) => ($primary ? "#336f8a" : "#d3dae0")};
-  background: ${({ $primary }) => ($primary ? "#336f8a" : "#ffffff")};
-  color: ${({ $primary }) => ($primary ? "#ffffff" : "#336f8a")};
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
 const TYPE_OPTIONS = [
   { key: "short_text", text: "Short text", value: "short_text" },
   { key: "long_text", text: "Long text", value: "long_text" },
@@ -207,6 +256,7 @@ function textToOptions(text) {
 
 export default function QuestionEditor({ questionId }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const isNew = questionId === "new";
 
   const { data: existing, loading: loadingQuestion } = useQuery(GET_QUESTION, {
@@ -303,15 +353,52 @@ export default function QuestionEditor({ questionId }) {
     );
   }
 
+  const entityTitle = (inputs.prompt || "").trim();
+  const pageTitle = entityTitle
+    ? entityTitle
+    : isNew
+    ? t("questionEditor.pageTitleNew", {}, {
+        default: "New library question",
+      })
+    : t("questionEditor.pageTitleEdit", {}, {
+        default: "Edit question",
+      });
+  const backLabel = t("questionEditor.backLink", {}, {
+    default: "Back to library",
+  });
+  const primaryLabel = saving
+    ? t("questionEditor.saving", {}, { default: "Saving…" })
+    : isNew
+    ? t("questionEditor.create", {}, { default: "Create question" })
+    : t("questionEditor.save", {}, { default: "Save changes" });
+
   return (
     <Shell>
       <TopBar>
-        <div>
-          <BackLink type="button" onClick={handleCancel}>
-            <Icon name="arrow left" /> Back to library
+        <TopBarLeft>
+          <BackLink
+            type="button"
+            onClick={handleCancel}
+            disabled={saving}
+            aria-label={backLabel}
+            title={backLabel}
+          >
+            {BACK_CHEVRON}
           </BackLink>
-          <h1>{isNew ? "New library question" : "Edit question"}</h1>
-        </div>
+          <TitleRow>
+            <h1 title={pageTitle}>{pageTitle}</h1>
+          </TitleRow>
+        </TopBarLeft>
+        <Actions>
+          <Button
+            type="button"
+            variant="filled"
+            onClick={handleSave}
+            disabled={saving}
+          >
+            {primaryLabel}
+          </Button>
+        </Actions>
       </TopBar>
 
       <Card>
@@ -444,19 +531,6 @@ export default function QuestionEditor({ questionId }) {
           </Field>
         </Card>
       )}
-
-      <Actions>
-        <Button type="button" onClick={handleCancel} disabled={saving}>
-          Cancel
-        </Button>
-        <Button type="button" $primary onClick={handleSave} disabled={saving}>
-          {saving
-            ? "Saving…"
-            : isNew
-            ? "Create question"
-            : "Save changes"}
-        </Button>
-      </Actions>
     </Shell>
   );
 }

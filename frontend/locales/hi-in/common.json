@@ -19,6 +19,16 @@
 	},
 	"auth": {
 		"checkYourMail": "अपने ईमेल की जाँच करें",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "ईमेल",
 		"forgotPassword": "अपना कूट शब्द भूल गए?",
 		"login": "लॉग इन करें",

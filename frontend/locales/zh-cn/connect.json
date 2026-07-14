@@ -200,6 +200,9 @@
 		"unsavedChangesWarning": "您未保存的更改将会丢失。点击“取消”按钮返回并保存您的更改。"
 	},
 	"exploreConnect": "探索连接",
+	"exploreDetail": {
+		"backLink": ""
+	},
 	"interests": {
 		"description": "您想在哪些主题上为学生提供支持？请从下方列表中选择一些您感兴趣的主题和领域，让其他社区成员了解您乐于贡献的内容。这有助于我们将您与志同道合的学生和同学联系起来。",
 		"interests": "兴趣",
@@ -228,6 +231,35 @@
 	},
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
+	"matchesRound": {
+		"backLink": ""
+	},
+	"matchingRound": {
+		"draftBanner": "",
+		"editor": {
+			"backLink": "",
+			"create": "",
+			"manageMatches": "",
+			"pageTitleEdit": "",
+			"pageTitleNew": "",
+			"save": "",
+			"saving": ""
+		},
+		"notAvailableYet": "",
+		"openConfirm": "",
+		"openingPreferences": "",
+		"openPreferences": "",
+		"publishDisabledWhileDraft": "",
+		"publishRequiresMatching": "",
+		"submission": {
+			"backLink": "",
+			"saveDraft": "",
+			"saving": "",
+			"statusDraft": "",
+			"statusSubmitted": "",
+			"submit": ""
+		}
+	},
 	"mentorPreferences": {
 		"classType": {
 			"title": ""
@@ -271,6 +303,32 @@
 		"statusFilterPlaceholder": "所有状态",
 		"teamOf": "团队人数： {{size}}",
 		"unknownSponsor": "未知"
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "赞助商： {{name}}",
+			"submitted": "已提交 {{date}}"
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": "",
+			"resubmit": "",
+			"returned": ""
+		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
 	},
 	"nav": {
 		"connect": "连接",
@@ -348,6 +406,7 @@
 			"yes": "是的"
 		},
 		"descriptionPlaceholder": "学生们会做什么？他们会学到什么？",
+		"existingVideoFile": "",
 		"expectedDeliverables": "预期交付成果",
 		"expectedDeliverablesDescription": "请描述项目完成后，毕业设计团队需要交付的成果（例如：调查或评估工具、政策和程序草案、资源清单、大型数据集分析、综合报告、后续工作建议等）。字数约250字。",
 		"fieldWorkLikelihood": "该项目有多大可能需要实地考察或现场勘察（无论是在纽约市内还是纽约市外）？",
@@ -524,7 +583,10 @@
 		"relevantLinksLabel": "标签",
 		"relevantLinksRemove": "消除",
 		"relevantLinksUrl": "网址",
+		"requestsAppointment": "",
 		"researchQuestion": "你们的研究问题/研究范围是什么？或者，你们想要解决什么问题？",
+		"resubmit": "",
+		"returnedBanner": "",
 		"review": {
 			"accept": "接受提议",
 			"acceptConfirm": "接受此方案吗？我们将通知赞助商完成最终方案范围的确定。",
@@ -549,6 +611,12 @@
 			"sponsorLabel": "赞助",
 			"submittedLabel": "已提交"
 		},
+		"reviewNotes": {
+			"empty": "",
+			"roundLabel": "",
+			"title": "",
+			"unknownAuthor": ""
+		},
 		"save": "保存更改",
 		"saving": "保存...",
 		"specialConsiderations": {
@@ -570,6 +638,7 @@
 		"sponsorIsMentor": "我也是这个项目的日常指导老师（如果由其他人担任指导老师，请取消勾选）。",
 		"sponsorStatusHint": "当您的提案准备就绪时，请将其设置为“已提交审核”——老师将对其进行审核。",
 		"sponsorStatusLocked": "— 已锁定。教师或管理员将更新状态。",
+		"sponsorStatusReturnedHint": "",
 		"status": "地位",
 		"statusOptions": {
 			"accepted": "已接受（完整最终范围）",
@@ -578,6 +647,7 @@
 			"draft": "草稿（学生不可见）",
 			"pre_selected": "预选（完成后续问题）",
 			"published": "发布",
+			"returned": "",
 			"submitted": "已提交审核"
 		},
 		"studentCapacity": "学生容量",
@@ -626,6 +696,7 @@
 				"archived": "此机会已存档。",
 				"closed": "此机会已关闭。",
 				"published": "这项机会已向学生公布。",
+				"returnedRevise": "",
 				"sponsorFollowUp": "请完成以下后续问卷。",
 				"sponsorScope": "请完成以下项目范围说明。",
 				"sponsorSubmit": "准备好供教师审阅后，再提交提案。",
@@ -633,6 +704,7 @@
 				"teacherPreSelect": "审阅提案并预先选定该赞助商。",
 				"teacherPublish": "审核范围并发布机会。",
 				"waitingFollowUp": "等待赞助商完成后续问卷。",
+				"waitingReturnedRevise": "",
 				"waitingScope": "等待赞助商完成项目范围界定。",
 				"waitingTeacherAccept": "等待老师接受你的提议。",
 				"waitingTeacherPreSelect": "等待老师审阅并初步筛选您的提案。",
@@ -764,7 +836,30 @@
 			"title": "组织"
 		}
 	},
+	"questionEditor": {
+		"backLink": "",
+		"create": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"save": "",
+		"saving": ""
+	},
 	"returnDashboard": "返回仪表板",
+	"returnModal": {
+		"cancel": "",
+		"confirm": "",
+		"emailMessage": "",
+		"emailTitle": "",
+		"error": "",
+		"helper": "",
+		"placeholder": "",
+		"submitting": "",
+		"title": ""
+	},
+	"reviewOpportunity": {
+		"backLink": "",
+		"returnToSponsor": ""
+	},
 	"roleGuard": {
 		"backLink": "返回连接",
 		"description": "您的账户目前没有权限访问此部分内容。如果您认为这是一个错误，请咨询您的老师或管理员。",
@@ -773,6 +868,11 @@
 			"mentor": "导师",
 			"student": "学生",
 			"teacher": "教师"
+			"admin": "",
+			"classNetworkAdmin": "",
+			"mentor": "",
+			"student": "",
+			"teacher": ""
 		},
 		"title": "此区域用于 {{roles}}"
 	},
