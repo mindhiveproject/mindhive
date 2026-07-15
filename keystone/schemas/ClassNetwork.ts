@@ -28,7 +28,11 @@ export const ClassNetwork = list({
     title: text({ isIndexed: "unique", validation: { isRequired: true } }),
     description: text(),
     isPublic: checkbox({ defaultValue: false, isFilterable: true }),
-    settings: json(),
+    settings: json({
+      defaultValue: {
+        type: "feedback_network",
+      },
+    }),
     creator: relationship({
       ref: "Profile.classNetworksCreated",
       hooks: {

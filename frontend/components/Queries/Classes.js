@@ -83,6 +83,7 @@ export const GET_CLASS = gql`
         title
         description
         isPublic
+        settings
         creator {
           id
           username

@@ -48,6 +48,7 @@ export const GET_PUBLIC_CLASS_NETWORKS = gql`
       title
       description
       isPublic
+      settings
       classes {
         id
         title

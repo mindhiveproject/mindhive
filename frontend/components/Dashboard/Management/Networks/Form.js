@@ -6,8 +6,12 @@ import { StyledForm } from "../../../styles/StyledForm";
 
 export default function NetworkForm({ inputs, handleChange }) {
   const { t } = useTranslation("connect");
-  const { data, loading, error } = useQuery(GET_ALL_CLASSES);
+  const { data } = useQuery(GET_ALL_CLASSES);
   const classes = data?.classes || [];
+  const networkType =
+    inputs?.settings?.type === "school_network"
+      ? "school_network"
+      : "feedback_network";
 
   const options = classes.map((cl) => ({
     key: cl.id,
@@ -22,6 +26,23 @@ export default function NetworkForm({ inputs, handleChange }) {
       target: {
         name: "classes",
         value: data.value.map((id) => ({ id: id })),
+      },
+    });
+  };
+
+  const handleNetworkTypeChange = (event) => {
+    const currentSettings =
+      inputs?.settings && typeof inputs.settings === "object"
+        ? inputs.settings
+        : {};
+
+    handleChange({
+      target: {
+        name: "settings",
+        value: {
+          ...currentSettings,
+          type: event.target.value,
+        },
       },
     });
   };
@@ -71,6 +92,42 @@ export default function NetworkForm({ inputs, handleChange }) {
               default:
                 "Public networks can be explored in Connect and joined by class teachers.",
             })}
+          </p>
+        </label>
+
+        <label htmlFor="networkType">
+          <p>
+            {t("classNetworks.form.typeLabel", {}, {
+              default: "Network type",
+            })}
+          </p>
+          <select
+            id="networkType"
+            name="networkType"
+            value={networkType}
+            onChange={handleNetworkTypeChange}
+          >
+            <option value="feedback_network">
+              {t("classNetworks.form.typeFeedbackLabel", {}, {
+                default: "Feedback network",
+              })}
+            </option>
+            <option value="school_network">
+              {t("classNetworks.form.typeSchoolLabel", {}, {
+                default: "Class network",
+              })}
+            </option>
+          </select>
+          <p>
+            {networkType === "school_network"
+              ? t("classNetworks.form.typeSchoolDescription", {}, {
+                  default:
+                    "Connect classes from the same high school or university to share project board templates, resources, and assignments.",
+                })
+              : t("classNetworks.form.typeFeedbackDescription", {}, {
+                  default:
+                    "Temporarily link classes from any institution to find reviewers and opportunities.",
+                })}
           </p>
         </label>
 

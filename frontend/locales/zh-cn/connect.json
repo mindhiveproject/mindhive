@@ -84,7 +84,12 @@
 		"close": "",
 		"form": {
 			"isPublicDescription": "",
-			"isPublicLabel": ""
+			"isPublicLabel": "",
+			"typeFeedbackDescription": "",
+			"typeFeedbackLabel": "",
+			"typeLabel": "",
+			"typeSchoolDescription": "",
+			"typeSchoolLabel": ""
 		},
 		"loadError": "",
 		"loading": "",

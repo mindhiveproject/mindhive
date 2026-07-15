@@ -208,6 +208,7 @@ export async function associateClassWithPublicNetwork(
           title
           description
           isPublic
+          settings
         }
       `,
     });
@@ -222,6 +223,7 @@ export async function associateClassWithPublicNetwork(
         title
         description
         isPublic
+        settings
       }
     `,
   });
@@ -252,6 +254,7 @@ export async function removeClassFromNetwork(
           title
           description
           isPublic
+          settings
         }
       `,
     });
@@ -269,6 +272,7 @@ export async function removeClassFromNetwork(
         title
         description
         isPublic
+        settings
       }
     `,
   });

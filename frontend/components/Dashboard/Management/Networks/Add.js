@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 
@@ -12,7 +11,11 @@ import useForm from "../../../../lib/useForm";
 export default function AddNetwork({}) {
   const router = useRouter();
 
-  const { inputs, handleChange } = useForm({ classes: [], isPublic: false });
+  const { inputs, handleChange } = useForm({
+    classes: [],
+    isPublic: false,
+    settings: { type: "feedback_network" },
+  });
 
   const [
     createNetwork,

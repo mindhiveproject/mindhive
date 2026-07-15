@@ -31,12 +31,24 @@ function stripHtml(html) {
   return html.replace(/<[^>]*>/g, "").trim();
 }
 
+const CLASS_NETWORK_TYPES = {
+  SCHOOL: "school_network",
+  FEEDBACK: "feedback_network",
+};
+
+function getClassNetworkType(network) {
+  return network?.settings?.type === CLASS_NETWORK_TYPES.SCHOOL
+    ? CLASS_NETWORK_TYPES.SCHOOL
+    : CLASS_NETWORK_TYPES.FEEDBACK;
+}
+
 export default function Settings({ myclass, user }) {
   const { t } = useTranslation("classes");
   const [inputValue, setInputValue] = useState({});
   const [open, setOpen] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState(null);
   const [associateNetworkOpen, setAssociateNetworkOpen] = useState(false);
+  const [associateNetworkType, setAssociateNetworkType] = useState(null);
   const [associationFeedback, setAssociationFeedback] = useState(null);
   const [classDescription, setClassDescription] = useState(
     myclass?.description || ""
@@ -82,6 +94,12 @@ export default function Settings({ myclass, user }) {
 
   const router = useRouter();
   const classNetworks = myclass?.networks || [];
+  const schoolClassNetworks = classNetworks.filter(
+    (network) => getClassNetworkType(network) === CLASS_NETWORK_TYPES.SCHOOL
+  );
+  const feedbackClassNetworks = classNetworks.filter(
+    (network) => getClassNetworkType(network) === CLASS_NETWORK_TYPES.FEEDBACK
+  );
   const { isAdmin, isClassNetworkAdmin } = deriveRoles(user);
   const canAccessNetworkManagement = isAdmin || isClassNetworkAdmin;
   const linkedNetworkIds = new Set(
@@ -119,7 +137,10 @@ export default function Settings({ myclass, user }) {
   );
   const publicNetworks = publicNetworksData?.classNetworks || [];
   const availablePublicNetworks = publicNetworks.filter(
-    (network) => !linkedNetworkIds.has(network?.id)
+    (network) =>
+      !linkedNetworkIds.has(network?.id) &&
+      (!associateNetworkType ||
+        getClassNetworkType(network) === associateNetworkType)
   );
 
   useEffect(() => {
@@ -279,13 +300,15 @@ export default function Settings({ myclass, user }) {
     setSelectedNetwork(null);
   };
 
-  const handleOpenAssociateNetwork = () => {
+  const handleOpenAssociateNetwork = (networkType) => {
+    setAssociateNetworkType(networkType);
     setAssociationFeedback(null);
     setAssociateNetworkOpen(true);
   };
 
   const handleCloseAssociateNetwork = () => {
     setAssociateNetworkOpen(false);
+    setAssociateNetworkType(null);
     setAssociationFeedback(null);
   };
 
@@ -349,28 +372,161 @@ export default function Settings({ myclass, user }) {
     router.push("/dashboard/connect/networks?mode=manage");
   };
 
+  const associationModalTitle =
+    associateNetworkType === CLASS_NETWORK_TYPES.SCHOOL
+      ? t("classNetworkAssociateSchoolModalTitle", {}, {
+          default: "Associate class network",
+        })
+      : associateNetworkType === CLASS_NETWORK_TYPES.FEEDBACK
+      ? t("classNetworkAssociateFeedbackModalTitle", {}, {
+          default: "Associate feedback network",
+        })
+      : t("classNetworkAssociateModalTitle", {}, {
+          default: "Associate class with network",
+        });
+
+  const associationModalDescription =
+    associateNetworkType === CLASS_NETWORK_TYPES.SCHOOL
+      ? t("classNetworkAssociateSchoolModalDescription", {}, {
+          default:
+            "Choose a public class network to associate with this class.",
+        })
+      : associateNetworkType === CLASS_NETWORK_TYPES.FEEDBACK
+      ? t("classNetworkAssociateFeedbackModalDescription", {}, {
+          default:
+            "Choose a public feedback network to associate with this class.",
+        })
+      : t("classNetworkAssociateModalDescription", {}, {
+          default: "Choose a public class network to associate with this class.",
+        });
+
+  const associationEmptyMessage =
+    associateNetworkType === CLASS_NETWORK_TYPES.SCHOOL
+      ? t("classNetworkAssociationSchoolEmpty", {}, {
+          default:
+            "There are no public class networks available to associate.",
+        })
+      : associateNetworkType === CLASS_NETWORK_TYPES.FEEDBACK
+      ? t("classNetworkAssociationFeedbackEmpty", {}, {
+          default:
+            "There are no public feedback networks available to associate.",
+        })
+      : t("classNetworkAssociationEmpty", {}, {
+          default: "There are no public networks available to associate.",
+        });
+
+  const renderNetworkSection = ({
+    title: sectionTitle,
+    description,
+    networks,
+    emptyMessage,
+    networkType,
+    associateButtonLabel,
+  }) => (
+    <div className="networkTypeSection">
+      <div className="networkTypeSectionHeader">
+        <h4>{sectionTitle}</h4>
+        <p>{description}</p>
+      </div>
+      {networks.length > 0 ? (
+        <div className="networkCardGrid">
+          {networks.map((network) => {
+            const networkClasses = network?.classes || [];
+            const networkOrganizations = network?.memberOrganizations || [];
+            const networkTitle =
+              network?.title ||
+              t("classNetworkUntitled", {}, { default: "Untitled network" });
+
+            return (
+              <div className="networkCard" key={network?.id || networkTitle}>
+                <div className="networkCardHeader">
+                  <h4 className="networkCardTitle">{networkTitle}</h4>
+                </div>
+                {network?.description ? (
+                  <p className="networkCardDescription">{network.description}</p>
+                ) : null}
+                <div className="networkCardMeta">
+                  <span>{formatNetworkClassCount(networkClasses.length)}</span>
+                  {networkOrganizations.length > 0 ? (
+                    <>
+                      <span aria-hidden>•</span>
+                      <span>
+                        {formatNetworkOrganizationCount(
+                          networkOrganizations.length
+                        )}
+                      </span>
+                    </>
+                  ) : null}
+                </div>
+                <div className="networkCardActions">
+                  <DesignSystemButton
+                    variant="outline"
+                    type="button"
+                    className="networkCardAction"
+                    onClick={() => handleSelectNetwork(network)}
+                    aria-label={t(
+                      "classNetworkOpenDetailsAria",
+                      { title: networkTitle },
+                      { default: "Open details for {{title}}" }
+                    )}
+                  >
+                    {t("classNetworkViewDetails", {}, {
+                      default: "View details",
+                    })}
+                  </DesignSystemButton>
+                  <DesignSystemButton
+                    variant="text"
+                    type="button"
+                    className="networkCardAction"
+                    disabled={removingNetwork}
+                    onClick={() => handleRemoveNetwork(network)}
+                    aria-label={t(
+                      "classNetworkRemoveAria",
+                      { title: networkTitle },
+                      { default: "Remove {{title}} from this class" }
+                    )}
+                  >
+                    {t("classNetworkRemoveFromClass", {}, {
+                      default: "Remove from class",
+                    })}
+                  </DesignSystemButton>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="networkEmptyState">{emptyMessage}</p>
+      )}
+      <div className="networkTypeSectionActions">
+        <DesignSystemButton
+          variant="filled"
+          type="button"
+          onClick={() => handleOpenAssociateNetwork(networkType)}
+        >
+          {associateButtonLabel}
+        </DesignSystemButton>
+      </div>
+    </div>
+  );
+
   return (
     <div className="settings">
       <section className="settingsSection">
         <div className="settingsSectionHeader">
-          <h3>{t("classNetworks")}</h3>
+          <h3>
+            {t("classNetworkSettingsTitle", {}, {
+              default: "Network settings",
+            })}
+          </h3>
           <p>
             {t("classNetworksSettingsDescription", {}, {
               default:
                 "Associate this class with public networks, or review the networks already connected to this class.",
             })}
           </p>
-          <div className="networkSectionActions">
-            <DesignSystemButton
-              variant="filled"
-              type="button"
-              onClick={handleOpenAssociateNetwork}
-            >
-              {t("classNetworkAssociateButton", {}, {
-                default: "Associate class with network",
-              })}
-            </DesignSystemButton>
-            {classNetworks.length > 0 && canAccessNetworkManagement ? (
+          {classNetworks.length > 0 && canAccessNetworkManagement ? (
+            <div className="networkSectionActions">
               <DesignSystemButton
                 variant="outline"
                 type="button"
@@ -380,88 +536,46 @@ export default function Settings({ myclass, user }) {
                   default: "Manage network",
                 })}
               </DesignSystemButton>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
         </div>
-        {classNetworks.length > 0 ? (
-          <div className="networkCardGrid">
-            {classNetworks.map((network) => {
-              const networkClasses = network?.classes || [];
-              const networkOrganizations = network?.memberOrganizations || [];
-              const title =
-                network?.title ||
-                t("classNetworkUntitled", {}, { default: "Untitled network" });
-
-              return (
-                <div
-                  className="networkCard"
-                  key={network?.id || network?.title}
-                >
-                  <div className="networkCardHeader">
-                    <h4 className="networkCardTitle">{title}</h4>
-                  </div>
-                  {network?.description ? (
-                    <p className="networkCardDescription">
-                      {network.description}
-                    </p>
-                  ) : null}
-                  <div className="networkCardMeta">
-                    <span>{formatNetworkClassCount(networkClasses.length)}</span>
-                    {networkOrganizations.length > 0 ? (
-                      <>
-                        <span aria-hidden>•</span>
-                        <span>
-                          {formatNetworkOrganizationCount(
-                            networkOrganizations.length
-                          )}
-                        </span>
-                      </>
-                    ) : null}
-                  </div>
-                  <div className="networkCardActions">
-                    <DesignSystemButton
-                      variant="outline"
-                      type="button"
-                      className="networkCardAction"
-                      onClick={() => handleSelectNetwork(network)}
-                      aria-label={t(
-                        "classNetworkOpenDetailsAria",
-                        { title },
-                        { default: "Open details for {{title}}" }
-                      )}
-                    >
-                      {t("classNetworkViewDetails", {}, {
-                        default: "View details",
-                      })}
-                    </DesignSystemButton>
-                    <DesignSystemButton
-                      variant="text"
-                      type="button"
-                      className="networkCardAction"
-                      disabled={removingNetwork}
-                      onClick={() => handleRemoveNetwork(network)}
-                      aria-label={t(
-                        "classNetworkRemoveAria",
-                        { title },
-                        { default: "Remove {{title}} from this class" }
-                      )}
-                    >
-                      {t("classNetworkRemoveFromClass", {}, {
-                        default: "Remove from class",
-                      })}
-                    </DesignSystemButton>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <p className="networkEmptyState">
-            {t("classNetworkNoneAssociated", {}, {
-              default: "This class is not associated with a network yet.",
-            })}
-          </p>
-        )}
+        <div className="networkTypeSections">
+          {renderNetworkSection({
+            title: t("classNetworkSchoolSectionTitle", {}, {
+              default: "Class networks",
+            }),
+            description: t("classNetworkSchoolSectionDescription", {}, {
+              default:
+                "A class network is meant to connect classes of the same high school or universities together with the goal of sharing project board templates, resources, and assignments.",
+            }),
+            networks: schoolClassNetworks,
+            emptyMessage: t("classNetworkSchoolSectionEmpty", {}, {
+              default: "This class is not associated with a class network yet.",
+            }),
+            networkType: CLASS_NETWORK_TYPES.SCHOOL,
+            associateButtonLabel: t("classNetworkAssociateSchoolButton", {}, {
+              default: "Associate class network",
+            }),
+          })}
+          {renderNetworkSection({
+            title: t("classNetworkFeedbackSectionTitle", {}, {
+              default: "Feedback networks",
+            }),
+            description: t("classNetworkFeedbackSectionDescription", {}, {
+              default:
+                "A feedback network is a temporary link between classes of any institution to find reviewers, and opportunities.",
+            }),
+            networks: feedbackClassNetworks,
+            emptyMessage: t("classNetworkFeedbackSectionEmpty", {}, {
+              default:
+                "This class is not associated with a feedback network yet.",
+            }),
+            networkType: CLASS_NETWORK_TYPES.FEEDBACK,
+            associateButtonLabel: t("classNetworkAssociateFeedbackButton", {}, {
+              default: "Associate feedback network",
+            }),
+          })}
+        </div>
       </section>
 
       <section className="settingsSection">
@@ -594,20 +708,13 @@ export default function Settings({ myclass, user }) {
         onClose={handleCloseAssociateNetwork}
         size="small"
       >
-        <Modal.Header>
-          {t("classNetworkAssociateModalTitle", {}, {
-            default: "Associate class with network",
-          })}
-        </Modal.Header>
+        <Modal.Header>{associationModalTitle}</Modal.Header>
         <Modal.Content scrolling>
           <Modal.Description>
             <StyledModal>
               <div className="classNetworkDetail">
                 <p className="classNetworkDetailDescription">
-                  {t("classNetworkAssociateModalDescription", {}, {
-                    default:
-                      "Choose a public class network to associate with this class.",
-                  })}
+                  {associationModalDescription}
                 </p>
                 {publicNetworksLoading ? (
                   <p className="classNetworkAdminEmpty">
@@ -651,10 +758,7 @@ export default function Settings({ myclass, user }) {
                   </ul>
                 ) : (
                   <p className="classNetworkAdminEmpty">
-                    {t("classNetworkAssociationEmpty", {}, {
-                      default:
-                        "There are no public networks available to associate.",
-                    })}
+                    {associationEmptyMessage}
                   </p>
                 )}
 

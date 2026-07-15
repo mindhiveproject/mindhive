@@ -1823,6 +1823,49 @@ const StyledClass = styled.div`
       }
     }
 
+    .networkTypeSections {
+      display: grid;
+      gap: 18px;
+    }
+
+    .networkTypeSection {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid #ece9e6;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .networkTypeSectionHeader {
+      display: grid;
+      gap: 6px;
+
+      h4 {
+        margin: 0;
+        color: #171717;
+        font-family: "Inter", sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 24px;
+      }
+
+      p {
+        margin: 0;
+        color: #625b71;
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+
+    .networkTypeSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
     .networkCardGrid {
       display: grid;
       gap: 12px;

@@ -84,7 +84,12 @@
 		"close": "Close",
 		"form": {
 			"isPublicDescription": "Public networks can be explored in Connect and joined by class teachers.",
-			"isPublicLabel": "Public network"
+			"isPublicLabel": "Public network",
+			"typeFeedbackDescription": "Temporarily link classes from any institution to find reviewers and opportunities.",
+			"typeFeedbackLabel": "Feedback network",
+			"typeLabel": "Network type",
+			"typeSchoolDescription": "Connect classes from the same high school or university to share project board templates, resources, and assignments.",
+			"typeSchoolLabel": "Class network"
 		},
 		"loadError": "Unable to load class networks.",
 		"loading": "Loading networks...",

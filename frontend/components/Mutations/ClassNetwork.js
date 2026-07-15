@@ -60,6 +60,7 @@ export const ASSOCIATE_CLASS_WITH_PUBLIC_NETWORK = gql`
         title
         description
         isPublic
+        settings
       }
     }
   }
@@ -74,6 +75,7 @@ export const REMOVE_CLASS_FROM_NETWORK = gql`
         title
         description
         isPublic
+        settings
       }
     }
   }
