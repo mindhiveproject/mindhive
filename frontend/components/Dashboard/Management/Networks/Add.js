@@ -12,7 +12,7 @@ import useForm from "../../../../lib/useForm";
 export default function AddNetwork({}) {
   const router = useRouter();
 
-  const { inputs, handleChange } = useForm({ classes: [] });
+  const { inputs, handleChange } = useForm({ classes: [], isPublic: false });
 
   const [
     createNetwork,
@@ -26,6 +26,10 @@ export default function AddNetwork({}) {
     e.preventDefault();
     await createNetwork({
       variables: {
+        title: inputs.title,
+        description: inputs.description,
+        isPublic: !!inputs.isPublic,
+        settings: inputs.settings,
         classes: inputs.classes.map((cl) => ({
           id: cl?.id,
         })),

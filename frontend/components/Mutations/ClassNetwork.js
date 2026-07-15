@@ -5,6 +5,7 @@ export const CREATE_NETWORK = gql`
   mutation CREATE_NETWORK(
     $title: String!
     $description: String
+    $isPublic: Boolean
     $settings: JSON
     $classes: [ClassWhereUniqueInput!]
   ) {
@@ -12,6 +13,7 @@ export const CREATE_NETWORK = gql`
       data: {
         title: $title
         description: $description
+        isPublic: $isPublic
         settings: $settings
         classes: { connect: $classes }
       }
@@ -27,6 +29,7 @@ export const UPDATE_NETWORK = gql`
     $id: ID!
     $title: String
     $description: String
+    $isPublic: Boolean
     $settings: JSON
     $classes: [ClassWhereUniqueInput!]
   ) {
@@ -35,11 +38,43 @@ export const UPDATE_NETWORK = gql`
       data: {
         title: $title
         description: $description
+        isPublic: $isPublic
         settings: $settings
         classes: { set: $classes }
       }
     ) {
       id
+    }
+  }
+`;
+
+export const ASSOCIATE_CLASS_WITH_PUBLIC_NETWORK = gql`
+  mutation ASSOCIATE_CLASS_WITH_PUBLIC_NETWORK(
+    $classId: ID!
+    $networkId: ID!
+  ) {
+    associateClassWithPublicNetwork(classId: $classId, networkId: $networkId) {
+      id
+      networks {
+        id
+        title
+        description
+        isPublic
+      }
+    }
+  }
+`;
+
+export const REMOVE_CLASS_FROM_NETWORK = gql`
+  mutation REMOVE_CLASS_FROM_NETWORK($classId: ID!, $networkId: ID!) {
+    removeClassFromNetwork(classId: $classId, networkId: $networkId) {
+      id
+      networks {
+        id
+        title
+        description
+        isPublic
+      }
     }
   }
 `;

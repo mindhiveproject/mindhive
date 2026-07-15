@@ -1829,6 +1829,25 @@ const StyledClass = styled.div`
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 
+    .networkSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .networkEmptyState {
+      margin: 0;
+      padding: 16px;
+      border: 1px dashed #d3dae0;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
     .networkCard {
       display: grid;
       gap: 10px;

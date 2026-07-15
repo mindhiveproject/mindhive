@@ -11,6 +11,7 @@ import ExploreMain from "./Explore/Main";
 import OrganizationsMain from "./Organizations/Main";
 import ReviewQueueMain from "./ReviewQueue/Main";
 import ReviewOpportunityMain from "./ReviewOpportunity/Main";
+import ClassNetworksMain from "./ClassNetworks/Main";
 import ConnectNavigationBar from "./ConnectNavigationBar";
 
 export default function ConnectMain({ query, user }) {
@@ -38,6 +39,8 @@ export default function ConnectMain({ query, user }) {
     content = <ExploreMain query={query} user={user} />;
   } else if (selector === "organizations") {
     content = <OrganizationsMain query={query} user={user} />;
+  } else if (selector === "networks") {
+    content = <ClassNetworksMain query={query} user={user} />;
   } else if (selector === "review-queue") {
     content = <ReviewQueueMain />;
   } else if (selector === "review") {

@@ -6,6 +6,11 @@ type NetworkAdminArgs = {
   email?: string | null;
 };
 
+type AssociateClassArgs = {
+  classId: string;
+  networkId: string;
+};
+
 const ADMIN_PERMISSION_NAMES = new Set(["ADMIN", "TEACHER"]);
 
 function hasNetworkAuthority(session: any, network: any): boolean {
@@ -36,6 +41,49 @@ async function getNetwork(context: any, networkId: string) {
     throw new Error("Class network not found.");
   }
   return network;
+}
+
+async function getPublicNetwork(context: any, networkId: string) {
+  const network = await context.sudo().query.ClassNetwork.findOne({
+    where: { id: networkId },
+    query: `
+      id
+      isPublic
+    `,
+  });
+
+  if (!network) {
+    throw new Error("Class network not found.");
+  }
+  if (!network.isPublic) {
+    throw new Error("Only public class networks can be joined from class settings.");
+  }
+  return network;
+}
+
+async function getEditableClass(context: any, classId: string) {
+  const classItem = await context.sudo().query.Class.findOne({
+    where: { id: classId },
+    query: `
+      id
+      creator { id }
+      networks { id }
+    `,
+  });
+
+  if (!classItem) {
+    throw new Error("Class not found.");
+  }
+  return classItem;
+}
+
+function assertCanManageClass(context: any, classItem: any) {
+  const canManageClass =
+    permissions.canManageUsers({ session: context.session }) ||
+    classItem.creator?.id === context.session.itemId;
+  if (!canManageClass) {
+    throw new Error("You are not allowed to update this class.");
+  }
 }
 
 async function getTargetProfile(context: any, args: NetworkAdminArgs) {
@@ -128,6 +176,101 @@ export async function addClassNetworkAdmin(
     where: { id: args.networkId },
     data,
     query: "id admins { id username firstName lastName email } memberProfiles { id }",
+  });
+}
+
+export async function associateClassWithPublicNetwork(
+  _root: unknown,
+  { classId, networkId }: AssociateClassArgs,
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to associate a class network.");
+  }
+
+  await getPublicNetwork(context, networkId);
+  const classItem = await getEditableClass(context, classId);
+  assertCanManageClass(context, classItem);
+
+  const alreadyLinked = (classItem.networks || []).some(
+    (network: { id: string }) => network.id === networkId
+  );
+  if (!alreadyLinked) {
+    return context.sudo().query.Class.updateOne({
+      where: { id: classId },
+      data: {
+        networks: { connect: [{ id: networkId }] },
+      },
+      query: `
+        id
+        networks {
+          id
+          title
+          description
+          isPublic
+        }
+      `,
+    });
+  }
+
+  return context.sudo().query.Class.findOne({
+    where: { id: classId },
+    query: `
+      id
+      networks {
+        id
+        title
+        description
+        isPublic
+      }
+    `,
+  });
+}
+
+export async function removeClassFromNetwork(
+  _root: unknown,
+  { classId, networkId }: AssociateClassArgs,
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to remove a class network.");
+  }
+
+  const classItem = await getEditableClass(context, classId);
+  assertCanManageClass(context, classItem);
+
+  const linked = (classItem.networks || []).some(
+    (network: { id: string }) => network.id === networkId
+  );
+  if (!linked) {
+    return context.sudo().query.Class.findOne({
+      where: { id: classId },
+      query: `
+        id
+        networks {
+          id
+          title
+          description
+          isPublic
+        }
+      `,
+    });
+  }
+
+  return context.sudo().query.Class.updateOne({
+    where: { id: classId },
+    data: {
+      networks: { disconnect: [{ id: networkId }] },
+    },
+    query: `
+      id
+      networks {
+        id
+        title
+        description
+        isPublic
+      }
+    `,
   });
 }
 

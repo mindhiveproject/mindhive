@@ -1,9 +1,11 @@
 import { GET_ALL_CLASSES } from "../../../Queries/Classes";
 import { Dropdown } from "semantic-ui-react";
 import { useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 import { StyledForm } from "../../../styles/StyledForm";
 
 export default function NetworkForm({ inputs, handleChange }) {
+  const { t } = useTranslation("connect");
   const { data, loading, error } = useQuery(GET_ALL_CLASSES);
   const classes = data?.classes || [];
 
@@ -49,6 +51,27 @@ export default function NetworkForm({ inputs, handleChange }) {
             onChange={handleChange}
             required
           />
+        </label>
+
+        <label htmlFor="isPublic">
+          <p>
+            {t("classNetworks.form.isPublicLabel", {}, {
+              default: "Public network",
+            })}
+          </p>
+          <input
+            type="checkbox"
+            id="isPublic"
+            name="isPublic"
+            checked={!!inputs.isPublic}
+            onChange={handleChange}
+          />
+          <p>
+            {t("classNetworks.form.isPublicDescription", {}, {
+              default:
+                "Public networks can be explored in Connect and joined by class teachers.",
+            })}
+          </p>
         </label>
 
         <label htmlFor="classes">
