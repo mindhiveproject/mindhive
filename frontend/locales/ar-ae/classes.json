@@ -396,6 +396,10 @@
 	"cancel": "يلغي",
 	"cardAssignmentDisabled": "لا يمكن تخصيص البطاقات للطلاب",
 	"cardAssignmentEnabled": "يمكن تخصيص البطاقات للطلاب",
+	"classDescriptionSettingsDescription": "",
+	"classDescriptionSettingsEmptyHint": "",
+	"classDescriptionSettingsTitle": "",
+	"classDescriptionUpdateError": "",
 	"classes": "الفئة(الفئات)",
 	"classesList": {
 		"className": "اسم الفصل",

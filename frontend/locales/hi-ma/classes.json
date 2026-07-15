@@ -396,6 +396,10 @@
 	"cancel": "रद्द करना",
 	"cardAssignmentDisabled": "",
 	"cardAssignmentEnabled": "",
+	"classDescriptionSettingsDescription": "",
+	"classDescriptionSettingsEmptyHint": "",
+	"classDescriptionSettingsTitle": "",
+	"classDescriptionUpdateError": "",
 	"classes": "वर्ग",
 	"classesList": {
 		"className": "कक्षा का नाम",

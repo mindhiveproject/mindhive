@@ -295,6 +295,29 @@ const StyledClass = styled.div`
       //   background: #FDF2D0;
       // }
     }
+    .classHeaderDescriptionHtml {
+      width: 100%;
+      min-width: 0;
+      color: #3d3d3d;
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      line-height: 22px;
+      overflow-wrap: anywhere;
+
+      p {
+        margin: 0 0 8px;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      ul,
+      ol {
+        margin: 8px 0;
+        padding-left: 22px;
+      }
+    }
     .classHeaderMetaRow {
       display: flex;
       align-items: center;
@@ -1747,6 +1770,13 @@ const StyledClass = styled.div`
       font-weight: 600;
       line-height: 22px;
       color: #171717;
+    }
+
+    .classDescriptionSettingsHint {
+      margin: 0;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
     }
 
     .settingsChoiceGroup {

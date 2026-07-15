@@ -396,6 +396,10 @@
 	"cancel": "Annuler",
 	"cardAssignmentDisabled": "Les cartes ne peuvent pas être attribuées aux élèves",
 	"cardAssignmentEnabled": "Des cartes peuvent être attribuées aux élèves",
+	"classDescriptionSettingsDescription": "",
+	"classDescriptionSettingsEmptyHint": "",
+	"classDescriptionSettingsTitle": "",
+	"classDescriptionUpdateError": "",
 	"classes": "Classe(s)",
 	"classesList": {
 		"className": "Nom de la classe",

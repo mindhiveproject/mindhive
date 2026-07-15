@@ -396,6 +396,10 @@
 	"cancel": "Отмена",
 	"cardAssignmentDisabled": "Карты не могут быть выданы студентам.",
 	"cardAssignmentEnabled": "Карты могут быть выданы студентам.",
+	"classDescriptionSettingsDescription": "",
+	"classDescriptionSettingsEmptyHint": "",
+	"classDescriptionSettingsTitle": "",
+	"classDescriptionUpdateError": "",
 	"classes": "Класс(ы)",
 	"classesList": {
 		"className": "Имя класса",

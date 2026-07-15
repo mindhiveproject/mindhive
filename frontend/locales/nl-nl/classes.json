@@ -396,6 +396,10 @@
 	"cancel": "Annuleren",
 	"cardAssignmentDisabled": "Kaarten kunnen niet aan studenten worden toegewezen.",
 	"cardAssignmentEnabled": "Kaarten kunnen aan studenten worden toegewezen.",
+	"classDescriptionSettingsDescription": "",
+	"classDescriptionSettingsEmptyHint": "",
+	"classDescriptionSettingsTitle": "",
+	"classDescriptionUpdateError": "",
 	"classes": "Klasse(n)",
 	"classesList": {
 		"className": "Klassenaam",

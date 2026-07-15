@@ -17,6 +17,7 @@ import StyledModal from "../../../styles/StyledModal";
 import { useRouter } from "next/router";
 
 import DesignSystemButton from "../../../DesignSystem/Button";
+import TipTapEditor from "../../../TipTap/Main";
 import CurriculumTypeSelector from "./CurriculumTypeSelector";
 import {
   DEFAULT_CURRICULUM_TYPE,
@@ -33,6 +34,11 @@ function displayProfileName(profile) {
   );
 }
 
+function stripHtml(html) {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, "").trim();
+}
+
 export default function Settings({ myclass, user }) {
   const { t } = useTranslation("classes");
   const [inputValue, setInputValue] = useState({});
@@ -41,6 +47,9 @@ export default function Settings({ myclass, user }) {
   const [adminNetwork, setAdminNetwork] = useState(null);
   const [adminEmail, setAdminEmail] = useState("");
   const [adminFeedback, setAdminFeedback] = useState(null);
+  const [classDescription, setClassDescription] = useState(
+    myclass?.description || ""
+  );
   const [assignableToStudents, setAssignableToStudents] = useState(
     myclass?.settings?.assignableToStudents ?? false
   );
@@ -71,6 +80,10 @@ export default function Settings({ myclass, user }) {
       normalizeCurriculumType(myclass?.settings?.curriculumType)
     );
   }, [myclass?.settings?.curriculumType]);
+
+  useEffect(() => {
+    setClassDescription(myclass?.description || "");
+  }, [myclass?.description]);
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
@@ -181,6 +194,25 @@ export default function Settings({ myclass, user }) {
         err?.message ||
           t("curriculumTypeUpdateError", {}, {
             default: "Failed to update curriculum type",
+          })
+      )
+    );
+  };
+
+  const updateClassDescription = () => {
+    if (!myclass?.id || classDescription === (myclass?.description || "")) {
+      return;
+    }
+
+    updateClassSettings({
+      variables: {
+        description: classDescription,
+      },
+    }).catch((err) =>
+      alert(
+        err?.message ||
+          t("classDescriptionUpdateError", {}, {
+            default: "Failed to update class description",
           })
       )
     );
@@ -427,6 +459,38 @@ export default function Settings({ myclass, user }) {
           </div>
         </section>
       )}
+
+      <section className="settingsSection">
+        <div className="settingsSectionHeader">
+          <h3>
+            {t("classDescriptionSettingsTitle", {}, {
+              default: "Class description",
+            })}
+          </h3>
+          <p>
+            {t("classDescriptionSettingsDescription", {}, {
+              default:
+                "Add the description students and mentors will see in the class header.",
+            })}
+          </p>
+        </div>
+        <TipTapEditor
+          content={classDescription}
+          onUpdate={(content) => setClassDescription(content || "")}
+          onBlur={updateClassDescription}
+          isEditable={!updatingSettings && Boolean(myclass?.id)}
+          toolbarVisible={true}
+          limitedToolbar={true}
+        />
+        {!stripHtml(classDescription) ? (
+          <p className="classDescriptionSettingsHint">
+            {t("classDescriptionSettingsEmptyHint", {}, {
+              default:
+                "Leave this blank to hide the description from the class header.",
+            })}
+          </p>
+        ) : null}
+      </section>
 
       <Modal
         open={!!selectedNetwork}
