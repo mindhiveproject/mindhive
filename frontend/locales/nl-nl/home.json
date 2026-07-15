@@ -51,6 +51,34 @@
 		"profile": "Profiel",
 		"settings": "Instellingen"
 	},
+	"sponsorOnboarding": {
+		"opportunity": {
+			"createButton": "",
+			"createTitle": "",
+			"description": "",
+			"done": "",
+			"locked": "",
+			"viewButton": "",
+			"viewTitle": ""
+		},
+		"organization": {
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"stepLabel": "",
+			"title": ""
+		},
+		"profile": {
+			"completeTitle": "",
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"editTitle": "",
+			"openButton": ""
+		},
+		"subtitle": "",
+		"title": ""
+	},
 	"surveys": "Enquêtes",
 	"tasks": "Taken",
 	"tasksAndSurveysDescriptions": "Beschrijvingen van taken en enquêtes",

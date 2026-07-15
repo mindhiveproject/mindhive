@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import styled from "styled-components";
-import { Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { SPONSOR_ONBOARDING_STATE } from "../../Queries/User";
 
@@ -38,6 +38,12 @@ const Steps = styled.div`
   gap: 12px;
 `;
 
+const StepGroup = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+`;
+
 const Step = styled.div`
   display: flex;
   align-items: flex-start;
@@ -63,7 +69,7 @@ const Step = styled.div`
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 14px;
+    font-size: ${({ $compactNumber }) => ($compactNumber ? "12px" : "14px")};
     background: ${({ $status }) =>
       $status === "done"
         ? "#1d6b3a"
@@ -105,8 +111,11 @@ const CTAButton = styled.a`
   gap: 6px;
   padding: 8px 18px;
   border-radius: 100px;
-  background: #336f8a;
-  color: #ffffff;
+  border: 1px solid
+    ${({ $variant }) => ($variant === "done" ? "#1d6b3a" : "#336f8a")};
+  background: ${({ $variant }) =>
+    $variant === "done" ? "#ffffff" : "#336f8a"};
+  color: ${({ $variant }) => ($variant === "done" ? "#1d6b3a" : "#ffffff")};
   font-family: "Nunito", sans-serif;
   font-weight: 600;
   font-size: 13px;
@@ -114,8 +123,9 @@ const CTAButton = styled.a`
   cursor: pointer;
 
   &:hover {
-    background: #244f63;
-    color: #ffffff;
+    background: ${({ $variant }) =>
+      $variant === "done" ? "#edf8f1" : "#244f63"};
+    color: ${({ $variant }) => ($variant === "done" ? "#1d6b3a" : "#ffffff")};
   }
 `;
 
@@ -129,7 +139,30 @@ const DoneBadge = styled.span`
   margin-top: 4px;
 `;
 
+function getFirstUniqueOrganization(...groups) {
+  const seen = new Set();
+  for (const group of groups) {
+    for (const org of group || []) {
+      if (!org?.id || seen.has(org.id)) continue;
+      seen.add(org.id);
+      return org;
+    }
+  }
+  return null;
+}
+
+function StepAction({ href, children, variant = "active" }) {
+  return (
+    <div className="action">
+      <Link href={href} passHref legacyBehavior>
+        <CTAButton $variant={variant}>{children}</CTAButton>
+      </Link>
+    </div>
+  );
+}
+
 export default function SponsorOnboarding() {
+  const { t } = useTranslation("home");
   const { data, loading } = useQuery(SPONSOR_ONBOARDING_STATE, {
     fetchPolicy: "cache-and-network",
   });
@@ -144,7 +177,15 @@ export default function SponsorOnboarding() {
   // Step 1 — "completed" if the user has gone through the profile-type chooser
   // and either created an Organization (Organization path) or filled in
   // first + last name (Individual path).
-  const orgRecord = (me?.organizations || [])[0];
+  const orgRecord = getFirstUniqueOrganization(
+    me?.organizations,
+    me?.adminOfOrganizations,
+    me?.organizationsCreated,
+  );
+  const adminOrganization = getFirstUniqueOrganization(
+    me?.adminOfOrganizations,
+    me?.organizationsCreated,
+  );
   const orgPathComplete =
     me?.profileType === "organization" &&
     !!(orgRecord?.name || me?.organization || "").trim();
@@ -157,98 +198,183 @@ export default function SponsorOnboarding() {
   // Step 2 — at least one opportunity created.
   const oppStepDone = (me?.opportunitiesCreated || []).length > 0;
 
-  // Hide the card once both steps are complete.
-  if (profileStepDone && oppStepDone) return null;
-
   const profileStatus = profileStepDone ? "done" : "active";
   const oppStatus = profileStepDone
     ? oppStepDone
       ? "done"
       : "active"
     : "pending";
+  const profileEditHref = profileStepDone
+    ? {
+        pathname: "/dashboard/profile/edit",
+        query: {
+          page: "about",
+          ...(me?.profileType ? { type: me.profileType } : {}),
+        },
+      }
+    : {
+        pathname: "/dashboard/profile/edit",
+        query: { page: "type" },
+      };
 
   return (
     <Card>
       <div>
-        <h2>Let&apos;s get you set up</h2>
+        <h2>
+          {t("sponsorOnboarding.title", {}, { default: "Let's get you set up" })}
+        </h2>
         <p className="subtitle">
-          Two quick steps and you&apos;re ready to host opportunities for
-          students through MindHive Connect.
+          {t("sponsorOnboarding.subtitle", {}, {
+            default:
+              "Two quick steps and you're ready to host opportunities for students through MindHive Connect.",
+          })}
         </p>
       </div>
 
       <Steps>
-        <Step $status={profileStatus}>
-          <span className="num">
-            {profileStatus === "done" ? <Icon name="check" style={{ margin: 0 }} /> : "1"}
-          </span>
-          <div className="body">
-            <span className="title">Complete your profile</span>
-            <span className="description">
-              Choose whether you represent an organization or an individual,
-              then fill in your name, mission, primary domain, and time
-              commitment. Students see this on every opportunity you publish.
-            </span>
-            {profileStatus === "active" ? (
-              <div className="action">
-                <Link
+        <StepGroup>
+          <Step $status={profileStatus}>
+            <span className="num">1</span>
+            <div className="body">
+              <span className="title">
+                {profileStepDone
+                  ? t("sponsorOnboarding.profile.editTitle", {}, {
+                      default: "Edit your profile",
+                    })
+                  : t("sponsorOnboarding.profile.completeTitle", {}, {
+                      default: "Complete your profile",
+                    })}
+              </span>
+              <span className="description">
+                {t("sponsorOnboarding.profile.description", {}, {
+                  default:
+                    "Choose whether you represent an organization or an individual, then fill in your name, mission, primary domain, and time commitment. Students see this on every opportunity you publish.",
+                })}
+              </span>
+              {profileStepDone && (
+                <DoneBadge>
+                  {t("sponsorOnboarding.profile.done", {}, {
+                    default: "Profile complete",
+                  })}
+                </DoneBadge>
+              )}
+              <StepAction
+                href={profileEditHref}
+                variant={profileStepDone ? "done" : "active"}
+              >
+                {profileStepDone
+                  ? t("sponsorOnboarding.profile.editButton", {}, {
+                      default: "Edit profile",
+                    })
+                  : t("sponsorOnboarding.profile.openButton", {}, {
+                      default: "Open profile editor",
+                    })}
+                {" ->"}
+              </StepAction>
+            </div>
+          </Step>
+          {/* {adminOrganization && (
+            <Step $status="done" $compactNumber>
+              <span className="num">
+                {t("sponsorOnboarding.organization.stepLabel", {}, {
+                  default: "Org",
+                })}
+              </span>
+              <div className="body">
+                <span className="title">
+                  {t("sponsorOnboarding.organization.title", {}, {
+                    default: "Edit your organization",
+                  })}
+                </span>
+                <span className="description">
+                  {t(
+                    "sponsorOnboarding.organization.description",
+                    { name: adminOrganization.name },
+                    {
+                      default:
+                        "Manage {{name}}'s mission, primary domain, logo, and team details.",
+                    },
+                  )}
+                </span>
+                <DoneBadge>
+                  {t("sponsorOnboarding.organization.done", {}, {
+                    default: "Organization admin",
+                  })}
+                </DoneBadge>
+                <StepAction
                   href={{
                     pathname: "/dashboard/profile/edit",
-                    query: { page: "type" },
+                    query: { page: "about", type: "organization" },
                   }}
-                  passHref
-                  legacyBehavior
+                  variant="done"
                 >
-                  <CTAButton>
-                    Open profile editor <Icon name="arrow right" style={{ margin: 0 }} />
-                  </CTAButton>
-                </Link>
+                  {t("sponsorOnboarding.organization.editButton", {}, {
+                    default: "Edit organization",
+                  })}
+                  {" ->"}
+                </StepAction>
               </div>
-            ) : (
-              <DoneBadge>
-                <Icon name="check circle" /> Profile complete
-              </DoneBadge>
-            )}
-          </div>
-        </Step>
+            </Step>
+          )} */}
+        </StepGroup>
 
         <Step $status={oppStatus}>
           <span className="num">
-            {oppStatus === "done" ? <Icon name="check" style={{ margin: 0 }} /> : "2"}
+            2
           </span>
           <div className="body">
-            <span className="title">Create your first opportunity</span>
+            <span className="title">
+              {oppStepDone
+                ? t("sponsorOnboarding.opportunity.viewTitle", {}, {
+                    default: "View your opportunities",
+                  })
+                : t("sponsorOnboarding.opportunity.createTitle", {}, {
+                    default: "Create your first opportunity",
+                  })}
+            </span>
             <span className="description">
-              Describe a project students can work on: title, video, time
-              window, what they&apos;ll do, what they&apos;ll learn. Save it as
-              a draft first if you&apos;re still putting it together — publish
-              when it&apos;s ready.
+              {t("sponsorOnboarding.opportunity.description", {}, {
+                default:
+                  "Describe a project students can work on: title, video, time window, what they'll do, what they'll learn. Save it as a draft first if you're still putting it together, and publish when it's ready.",
+              })}
             </span>
             {oppStatus === "active" ? (
-              <div className="action">
-                <Link
-                  href={{
-                    pathname: "/dashboard/connect/opportunities",
-                    query: { op: "new" },
-                  }}
-                  passHref
-                  legacyBehavior
-                >
-                  <CTAButton>
-                    Create opportunity <Icon name="arrow right" style={{ margin: 0 }} />
-                  </CTAButton>
-                </Link>
-              </div>
+              <StepAction
+                href={{
+                  pathname: "/dashboard/connect/opportunities",
+                  query: { op: "new" },
+                }}
+              >
+                {t("sponsorOnboarding.opportunity.createButton", {}, {
+                  default: "Create opportunity",
+                })}
+                {" ->"}
+              </StepAction>
             ) : oppStatus === "done" ? (
-              <DoneBadge>
-                <Icon name="check circle" /> Opportunity created
-              </DoneBadge>
+              <>
+                <DoneBadge>
+                  {t("sponsorOnboarding.opportunity.done", {}, {
+                    default: "Opportunity created",
+                  })}
+                </DoneBadge>
+                <StepAction
+                  href="/dashboard/connect/opportunities"
+                  variant="done"
+                >
+                  {t("sponsorOnboarding.opportunity.viewButton", {}, {
+                    default: "View my opportunities",
+                  })}
+                  {" ->"}
+                </StepAction>
+              </>
             ) : (
               <span
                 className="description"
                 style={{ marginTop: 6, fontStyle: "italic" }}
               >
-                Unlocks once your profile is complete.
+                {t("sponsorOnboarding.opportunity.locked", {}, {
+                  default: "Unlocks once your profile is complete.",
+                })}
               </span>
             )}
           </div>

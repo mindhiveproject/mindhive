@@ -51,6 +51,34 @@
 		"profile": "Профиль",
 		"settings": "Настройки"
 	},
+	"sponsorOnboarding": {
+		"opportunity": {
+			"createButton": "",
+			"createTitle": "",
+			"description": "",
+			"done": "",
+			"locked": "",
+			"viewButton": "",
+			"viewTitle": ""
+		},
+		"organization": {
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"stepLabel": "",
+			"title": ""
+		},
+		"profile": {
+			"completeTitle": "",
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"editTitle": "",
+			"openButton": ""
+		},
+		"subtitle": "",
+		"title": ""
+	},
 	"surveys": "Опросы",
 	"tasks": "Задачи",
 	"tasksAndSurveysDescriptions": "Описания задач и опросов",

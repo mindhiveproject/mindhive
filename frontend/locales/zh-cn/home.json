@@ -51,6 +51,34 @@
 		"profile": "轮廓",
 		"settings": "设置"
 	},
+	"sponsorOnboarding": {
+		"opportunity": {
+			"createButton": "",
+			"createTitle": "",
+			"description": "",
+			"done": "",
+			"locked": "",
+			"viewButton": "",
+			"viewTitle": ""
+		},
+		"organization": {
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"stepLabel": "",
+			"title": ""
+		},
+		"profile": {
+			"completeTitle": "",
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"editTitle": "",
+			"openButton": ""
+		},
+		"subtitle": "",
+		"title": ""
+	},
 	"surveys": "调查",
 	"tasks": "任务",
 	"tasksAndSurveysDescriptions": "任务和调查描述",
