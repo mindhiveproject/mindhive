@@ -52,12 +52,33 @@
 		"settings": "Configurações"
 	},
 	"sponsorOnboarding": {
+		"dismiss": "",
+		"manage": "",
+		"network": {
+			"allJoined": "",
+			"close": "",
+			"empty": "",
+			"joinButton": "",
+			"joinError": "",
+			"joining": "",
+			"joinSuccess": "",
+			"loadError": "",
+			"loading": "",
+			"modalDescription": "",
+			"modalTitle": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"untitled": ""
+		},
 		"opportunity": {
 			"createButton": "",
 			"createTitle": "",
 			"description": "",
 			"done": "",
 			"locked": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": "",
 			"viewButton": "",
 			"viewTitle": ""
 		},
@@ -65,6 +86,8 @@
 			"description": "",
 			"done": "",
 			"editButton": "",
+			"setupButton": "",
+			"setupTitle": "",
 			"stepLabel": "",
 			"title": ""
 		},
@@ -74,7 +97,14 @@
 			"done": "",
 			"editButton": "",
 			"editTitle": "",
-			"openButton": ""
+			"openButton": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": ""
+		},
+		"status": {
+			"needsSetup": "",
+			"ready": ""
 		},
 		"subtitle": "",
 		"title": ""

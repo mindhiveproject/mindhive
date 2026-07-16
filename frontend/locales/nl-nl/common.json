@@ -316,6 +316,12 @@
 		"languagePreferences": "Stel uw taalvoorkeuren in",
 		"languages": "Talen",
 		"quickLinks": "Snelle links",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Instellingen",
 		"username": "Gebruikersnaam"
 	},

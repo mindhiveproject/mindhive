@@ -316,6 +316,12 @@
 		"languagePreferences": "تعيين تفضيلات اللغة الخاصة بك",
 		"languages": "اللغات",
 		"quickLinks": "روابط سريعة",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "إعدادات",
 		"username": "اسم المستخدم"
 	},

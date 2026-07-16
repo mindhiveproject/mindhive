@@ -316,6 +316,12 @@
 		"languagePreferences": "Définissez vos préférences linguistiques",
 		"languages": "Langues",
 		"quickLinks": "Liens rapides",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Paramètres",
 		"username": "Nom d'utilisateur"
 	},

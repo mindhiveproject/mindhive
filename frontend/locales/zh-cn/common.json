@@ -316,6 +316,12 @@
 		"languagePreferences": "设置您的语言偏好",
 		"languages": "语言",
 		"quickLinks": "快速链接",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "设置",
 		"username": "用户名"
 	},

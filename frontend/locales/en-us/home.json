@@ -52,32 +52,43 @@
 		"settings": "Settings"
 	},
 	"sponsorOnboarding": {
+		"dismiss": "Dismiss",
+		"manage": "Manage",
+		"network": {
+			"allJoined": "You're already connected to every available feedback network.",
+			"close": "Close",
+			"empty": "No public feedback networks are available yet.",
+			"joinButton": "Join",
+			"joinError": "Failed to join this network.",
+			"joining": "Joining...",
+			"joinSuccess": "You've joined the network.",
+			"loadError": "Unable to load public networks.",
+			"loading": "Loading networks...",
+			"modalDescription": "Join a public feedback network so teachers and students in that network can discover your opportunities.",
+			"modalTitle": "Join a network",
+			"setupButton": "Join",
+			"setupTitle": "Choose where opportunities are shared",
+			"untitled": "Untitled network"
+		},
 		"opportunity": {
-			"createButton": "Create opportunity",
-			"createTitle": "Create your first opportunity",
-			"description": "Describe a project students can work on: title, video, time window, what they'll do, what they'll learn. Save it as a draft first if you're still putting it together, and publish when it's ready.",
-			"done": "Opportunity created",
-			"locked": "Unlocks once your profile is complete.",
-			"viewButton": "View my opportunities",
-			"viewTitle": "View your opportunities"
+			"readyTitle": "Your opportunities",
+			"setupButton": "Create",
+			"setupTitle": "Describe a student project"
 		},
 		"organization": {
-			"description": "Manage {{name}}'s mission, primary domain, logo, and team details.",
-			"done": "Organization admin",
-			"editButton": "Edit organization",
-			"stepLabel": "Org",
-			"title": "Edit your organization"
+			"setupButton": "Set up",
+			"setupTitle": "Connect your sponsor organization"
 		},
 		"profile": {
-			"completeTitle": "Complete your profile",
-			"description": "Choose whether you represent an organization or an individual, then fill in your name, mission, primary domain, and time commitment. Students see this on every opportunity you publish.",
-			"done": "Profile complete",
-			"editButton": "Edit profile",
-			"editTitle": "Edit your profile",
-			"openButton": "Open profile editor"
+			"readyTitle": "Your profile",
+			"setupButton": "Set up",
+			"setupTitle": "Introduce yourself to students"
 		},
-		"subtitle": "Two quick steps and you're ready to host opportunities for students through MindHive Connect.",
-		"title": "Let's get you set up"
+		"status": {
+			"needsSetup": "Needed",
+			"ready": "Done"
+		},
+		"title": "Sponsor setup"
 	},
 	"surveys": "Surveys",
 	"tasks": "Tasks",

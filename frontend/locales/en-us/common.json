@@ -316,6 +316,12 @@
 		"languagePreferences": "Set your language preferences",
 		"languages": "Languages",
 		"quickLinks": "Quick Links",
+		"sponsorSetup": {
+			"description": "Show the profile, organization, and opportunity setup tips on your Home page.",
+			"restoreButton": "Show setup tips on Home",
+			"title": "Sponsor setup tips",
+			"visibleNote": "Setup tips are currently visible on your Home page."
+		},
 		"title": "Settings",
 		"username": "Username"
 	},

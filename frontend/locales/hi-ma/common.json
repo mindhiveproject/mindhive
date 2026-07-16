@@ -316,6 +316,12 @@
 		"languagePreferences": "अपनी भाषा प्राथमिकताएँ निर्धारित करें",
 		"languages": "बोली",
 		"quickLinks": "त्वरित सम्पक",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "सेटिंग्स",
 		"username": "उपयोगकर्ता नाम"
 	},
