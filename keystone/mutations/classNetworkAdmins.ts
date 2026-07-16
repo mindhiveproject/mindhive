@@ -26,6 +26,9 @@ function displayProfile(profile: any): string {
   return profile?.email || profile?.username || profile?.id || "profile";
 }
 
+const MEMBER_NETWORK_QUERY =
+  "id memberProfiles { id username firstName lastName email } memberOrganizations { id name }";
+
 async function getNetwork(context: any, networkId: string) {
   const network = await context.sudo().query.ClassNetwork.findOne({
     where: { id: networkId },
@@ -34,6 +37,7 @@ async function getNetwork(context: any, networkId: string) {
       creator { id }
       admins { id }
       memberProfiles { id }
+      memberOrganizations { id }
     `,
   });
 
@@ -179,6 +183,43 @@ export async function addClassNetworkAdmin(
   });
 }
 
+export async function addClassNetworkMemberProfile(
+  _root: unknown,
+  args: NetworkAdminArgs,
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to manage class network members.");
+  }
+
+  const network = await getNetwork(context, args.networkId);
+  if (!hasNetworkAuthority(context.session, network)) {
+    throw new Error(
+      "You are not allowed to manage members for this class network."
+    );
+  }
+
+  const profile = await getTargetProfile(context, args);
+
+  const memberIds = new Set(
+    (network.memberProfiles || []).map((member: { id: string }) => member.id)
+  );
+  if (memberIds.has(profile.id)) {
+    return context.sudo().query.ClassNetwork.findOne({
+      where: { id: args.networkId },
+      query: MEMBER_NETWORK_QUERY,
+    });
+  }
+
+  return context.sudo().query.ClassNetwork.updateOne({
+    where: { id: args.networkId },
+    data: {
+      memberProfiles: { connect: [{ id: profile.id }] },
+    },
+    query: MEMBER_NETWORK_QUERY,
+  });
+}
+
 export async function associateClassWithPublicNetwork(
   _root: unknown,
   { classId, networkId }: AssociateClassArgs,
@@ -317,5 +358,80 @@ export async function removeClassNetworkAdmin(
       admins: { disconnect: [{ id: profileId }] },
     },
     query: "id admins { id username firstName lastName email } memberProfiles { id }",
+  });
+}
+
+export async function removeClassNetworkMemberProfile(
+  _root: unknown,
+  { networkId, profileId }: { networkId: string; profileId: string },
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to manage class network members.");
+  }
+
+  const network = await getNetwork(context, networkId);
+  if (!hasNetworkAuthority(context.session, network)) {
+    throw new Error(
+      "You are not allowed to manage members for this class network."
+    );
+  }
+
+  const memberIds = new Set(
+    (network.memberProfiles || []).map((member: { id: string }) => member.id)
+  );
+  if (!memberIds.has(profileId)) {
+    return context.sudo().query.ClassNetwork.findOne({
+      where: { id: networkId },
+      query: MEMBER_NETWORK_QUERY,
+    });
+  }
+
+  return context.sudo().query.ClassNetwork.updateOne({
+    where: { id: networkId },
+    data: {
+      memberProfiles: { disconnect: [{ id: profileId }] },
+    },
+    query: MEMBER_NETWORK_QUERY,
+  });
+}
+
+export async function removeClassNetworkMemberOrganization(
+  _root: unknown,
+  {
+    networkId,
+    organizationId,
+  }: { networkId: string; organizationId: string },
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to manage class network members.");
+  }
+
+  const network = await getNetwork(context, networkId);
+  if (!hasNetworkAuthority(context.session, network)) {
+    throw new Error(
+      "You are not allowed to manage members for this class network."
+    );
+  }
+
+  const organizationIds = new Set(
+    (network.memberOrganizations || []).map(
+      (organization: { id: string }) => organization.id
+    )
+  );
+  if (!organizationIds.has(organizationId)) {
+    return context.sudo().query.ClassNetwork.findOne({
+      where: { id: networkId },
+      query: MEMBER_NETWORK_QUERY,
+    });
+  }
+
+  return context.sudo().query.ClassNetwork.updateOne({
+    where: { id: networkId },
+    data: {
+      memberOrganizations: { disconnect: [{ id: organizationId }] },
+    },
+    query: MEMBER_NETWORK_QUERY,
   });
 }

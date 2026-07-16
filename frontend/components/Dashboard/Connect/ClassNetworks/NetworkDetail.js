@@ -11,10 +11,14 @@ import { AgGridReact } from "ag-grid-react";
 
 import DesignSystemButton from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
+import CopyButton from "../../../DesignSystem/CopyButton";
 import { GET_ALL_NETWORKS } from "../../../Queries/ClassNetwork";
 import {
   ADD_CLASS_NETWORK_ADMIN,
+  ADD_CLASS_NETWORK_MEMBER_PROFILE,
   REMOVE_CLASS_NETWORK_ADMIN,
+  REMOVE_CLASS_NETWORK_MEMBER_ORGANIZATION,
+  REMOVE_CLASS_NETWORK_MEMBER_PROFILE,
   UPDATE_CLASS_NETWORK_DETAILS,
 } from "../../../Mutations/ClassNetwork";
 import RoleGuard from "../RoleGuard";
@@ -146,8 +150,8 @@ const EmptyNote = styled.p`
 const AdminForm = styled.div`
   display: grid;
   gap: 12px;
-  padding-top: 8px;
-  border-top: 1px solid #eef1f2;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eef1f2;
 
   label {
     color: #171717;
@@ -184,6 +188,13 @@ const AdminFeedback = styled.p`
   font-family: "Inter", sans-serif;
   font-size: 13px;
   line-height: 20px;
+`;
+
+const InviteLinkRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 `;
 
 const DetailsForm = styled.div`
@@ -259,6 +270,8 @@ function NetworkDetailPage({ query, user }) {
   } = deriveRoles(user);
   const [adminEmail, setAdminEmail] = useState("");
   const [adminFeedback, setAdminFeedback] = useState(null);
+  const [memberEmail, setMemberEmail] = useState("");
+  const [memberFeedback, setMemberFeedback] = useState(null);
   const [networkTitle, setNetworkTitle] = useState("");
   const [networkDescription, setNetworkDescription] = useState("");
   const [detailsFeedback, setDetailsFeedback] = useState(null);
@@ -284,10 +297,23 @@ function NetworkDetailPage({ query, user }) {
     ADD_CLASS_NETWORK_ADMIN,
     { refetchQueries, awaitRefetchQueries: true }
   );
+  const [addMemberProfile, { loading: addingMemberProfile }] = useMutation(
+    ADD_CLASS_NETWORK_MEMBER_PROFILE,
+    { refetchQueries, awaitRefetchQueries: true }
+  );
   const [removeNetworkAdmin, { loading: removingNetworkAdmin }] = useMutation(
     REMOVE_CLASS_NETWORK_ADMIN,
     { refetchQueries, awaitRefetchQueries: true }
   );
+  const [removeMemberProfile, { loading: removingMemberProfile }] = useMutation(
+    REMOVE_CLASS_NETWORK_MEMBER_PROFILE,
+    { refetchQueries, awaitRefetchQueries: true }
+  );
+  const [removeMemberOrganization, { loading: removingMemberOrganization }] =
+    useMutation(REMOVE_CLASS_NETWORK_MEMBER_ORGANIZATION, {
+      refetchQueries,
+      awaitRefetchQueries: true,
+    });
   const [updateNetworkDetails, { loading: savingDetails }] = useMutation(
     UPDATE_CLASS_NETWORK_DETAILS,
     { refetchQueries, awaitRefetchQueries: true }
@@ -300,6 +326,10 @@ function NetworkDetailPage({ query, user }) {
   }, [network?.id, network?.title, network?.description]);
 
   const adminMutationLoading = addingNetworkAdmin || removingNetworkAdmin;
+  const memberMutationLoading =
+    addingMemberProfile ||
+    removingMemberProfile ||
+    removingMemberOrganization;
   const networkAdmins = network?.admins || [];
   const memberOrganizations = network?.memberOrganizations || [];
   const memberProfiles = network?.memberProfiles || [];
@@ -435,6 +465,143 @@ function NetworkDetailPage({ query, user }) {
     }
   };
 
+  const sponsorSignupAndInviteLink = network?.id
+    ? `${
+        typeof window !== "undefined" ? window.location.origin : ""
+      }/signup/sponsor?classNetwork=${network.id}`
+    : "";
+
+  const handleAddMemberProfile = async () => {
+    const email = memberEmail.trim().toLowerCase();
+    if (!network?.id || !email) {
+      setMemberFeedback({
+        kind: "error",
+        section: "profiles",
+        text: t("classNetworks.memberProfileEmailRequired", {}, {
+          default: "Enter an email address first.",
+        }),
+      });
+      return;
+    }
+
+    if (
+      memberProfiles.some(
+        (profile) => profile?.email?.toLowerCase() === email
+      )
+    ) {
+      setMemberFeedback({
+        kind: "error",
+        section: "profiles",
+        text: t("classNetworks.memberProfileAlreadyAdded", {}, {
+          default: "That person is already a member of this network.",
+        }),
+      });
+      return;
+    }
+
+    try {
+      await addMemberProfile({
+        variables: { networkId: network.id, email },
+      });
+      setMemberEmail("");
+      setMemberFeedback({
+        kind: "ok",
+        section: "profiles",
+        text: t("classNetworks.memberProfileAdded", {}, {
+          default: "Member profile added.",
+        }),
+      });
+    } catch (err) {
+      const message = err?.message || "";
+      const notFound = message.includes("No MindHive account found");
+      setMemberFeedback({
+        kind: "error",
+        section: "profiles",
+        showInviteLink: notFound,
+        text: notFound
+          ? t(
+              "classNetworks.memberProfileNotFound",
+              { email },
+              {
+                default:
+                  "No MindHive account found for {{email}}. Share the signup + invite link so they can join.",
+              }
+            )
+          : message ||
+            t("classNetworks.memberProfileAddError", {}, {
+              default: "Failed to add member profile.",
+            }),
+      });
+    }
+  };
+
+  const handleRemoveMemberProfile = async (profileId) => {
+    if (!network?.id || !profileId) return;
+    const confirmed = window.confirm(
+      t("classNetworks.memberProfileRemoveConfirm", {}, {
+        default:
+          "Remove this profile from the network? They will lose network membership but keep their account.",
+      })
+    );
+    if (!confirmed) return;
+
+    try {
+      await removeMemberProfile({
+        variables: { networkId: network.id, profileId },
+      });
+      setMemberFeedback({
+        kind: "ok",
+        section: "profiles",
+        text: t("classNetworks.memberProfileRemoved", {}, {
+          default: "Profile removed from the network.",
+        }),
+      });
+    } catch (err) {
+      setMemberFeedback({
+        kind: "error",
+        section: "profiles",
+        text:
+          err?.message ||
+          t("classNetworks.memberProfileRemoveError", {}, {
+            default: "Failed to remove profile from the network.",
+          }),
+      });
+    }
+  };
+
+  const handleRemoveMemberOrganization = async (organizationId) => {
+    if (!network?.id || !organizationId) return;
+    const confirmed = window.confirm(
+      t("classNetworks.memberOrganizationRemoveConfirm", {}, {
+        default: "Remove this organization from the network?",
+      })
+    );
+    if (!confirmed) return;
+
+    try {
+      await removeMemberOrganization({
+        variables: { networkId: network.id, organizationId },
+      });
+      setMemberFeedback({
+        kind: "ok",
+        section: "organizations",
+        text: t("classNetworks.memberOrganizationRemoved", {}, {
+          default: "Organization removed from the network.",
+        }),
+      });
+    } catch (err) {
+      setMemberFeedback({
+        kind: "error",
+        section: "organizations",
+        text:
+          err?.message ||
+          t("classNetworks.memberOrganizationRemoveError", {}, {
+            default: "Failed to remove organization from the network.",
+          }),
+      });
+    }
+  };
+
   const handleSaveNetworkDetails = async () => {
     const title = networkTitle.trim();
     if (!network?.id || !title) {
@@ -473,6 +640,40 @@ function NetworkDetailPage({ query, user }) {
     }
   };
 
+  const OrganizationActionsRenderer = useMemo(() => {
+    function Renderer(params) {
+      if (!canManage || !params?.data?.id) return null;
+      return (
+        <DesignSystemButton
+          variant="outline"
+          type="button"
+          disabled={memberMutationLoading}
+          onClick={() => handleRemoveMemberOrganization(params.data.id)}
+        >
+          {t("classNetworks.memberRemove", {}, { default: "Remove" })}
+        </DesignSystemButton>
+      );
+    }
+    return Renderer;
+  }, [canManage, memberMutationLoading, network?.id, t]);
+
+  const ProfileActionsRenderer = useMemo(() => {
+    function Renderer(params) {
+      if (!canManage || !params?.data?.id) return null;
+      return (
+        <DesignSystemButton
+          variant="outline"
+          type="button"
+          disabled={memberMutationLoading}
+          onClick={() => handleRemoveMemberProfile(params.data.id)}
+        >
+          {t("classNetworks.memberRemove", {}, { default: "Remove" })}
+        </DesignSystemButton>
+      );
+    }
+    return Renderer;
+  }, [canManage, memberMutationLoading, network?.id, t]);
+
   const organizationColumnDefs = useMemo(
     () => [
       {
@@ -482,8 +683,22 @@ function NetworkDetailPage({ query, user }) {
         minWidth: 200,
         filter: "agTextColumnFilter",
       },
+      {
+        field: "actions",
+        headerName: t("classNetworks.grid.actions", {}, { default: "Actions" }),
+        cellRenderer: OrganizationActionsRenderer,
+        sortable: false,
+        filter: false,
+        width: 140,
+        pinned: "right",
+        cellStyle: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      },
     ],
-    [t]
+    [OrganizationActionsRenderer, t]
   );
 
   const profileColumnDefs = useMemo(
@@ -521,8 +736,22 @@ function NetworkDetailPage({ query, user }) {
         minWidth: 160,
         filter: "agNumberColumnFilter",
       },
+      {
+        field: "actions",
+        headerName: t("classNetworks.grid.actions", {}, { default: "Actions" }),
+        cellRenderer: ProfileActionsRenderer,
+        sortable: false,
+        filter: false,
+        width: 140,
+        pinned: "right",
+        cellStyle: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      },
     ],
-    [t]
+    [ProfileActionsRenderer, t]
   );
 
   const RoundActionsRenderer = useMemo(() => {
@@ -1001,6 +1230,11 @@ function NetworkDetailPage({ query, user }) {
                   )}
                 />
               </GridTable>
+              {memberFeedback?.section === "organizations" ? (
+                <AdminFeedback $error={memberFeedback.kind === "error"}>
+                  {memberFeedback.text}
+                </AdminFeedback>
+              ) : null}
             </DetailSection>
 
             <DetailSection id="network-profiles">
@@ -1017,6 +1251,75 @@ function NetworkDetailPage({ query, user }) {
                   })}
                 </p>
               </SectionHeader>
+
+              {canManage ? (
+                <AdminForm>
+                  <label htmlFor="connectClassNetworkMemberEmail">
+                    {t("classNetworks.memberProfileEmailLabel", {}, {
+                      default: "Add member by email",
+                    })}
+                  </label>
+                  <AdminFormRow>
+                    <input
+                      id="connectClassNetworkMemberEmail"
+                      type="email"
+                      value={memberEmail}
+                      placeholder={t(
+                        "classNetworks.memberProfileEmailPlaceholder",
+                        {},
+                        { default: "mentor@example.com" }
+                      )}
+                      onChange={(event) => setMemberEmail(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
+                          handleAddMemberProfile();
+                        }
+                      }}
+                    />
+                    <DesignSystemButton
+                      variant="filled"
+                      type="button"
+                      disabled={memberMutationLoading}
+                      onClick={handleAddMemberProfile}
+                    >
+                      {addingMemberProfile
+                        ? t("classNetworks.memberProfileAdding", {}, {
+                            default: "Adding...",
+                          })
+                        : t("classNetworks.memberProfileAdd", {}, {
+                            default: "Add member",
+                          })}
+                    </DesignSystemButton>
+                  </AdminFormRow>
+                  {memberFeedback?.section === "profiles" ? (
+                    <>
+                      <AdminFeedback $error={memberFeedback.kind === "error"}>
+                        {memberFeedback.text}
+                      </AdminFeedback>
+                      {memberFeedback.showInviteLink &&
+                      sponsorSignupAndInviteLink ? (
+                        <InviteLinkRow>
+                          <CopyButton
+                            value={sponsorSignupAndInviteLink}
+                            style={{ fontWeight: 500 }}
+                            ariaLabel={t(
+                              "classNetworks.signupAndInviteLink",
+                              {},
+                              { default: "Signup + invite to network" }
+                            )}
+                          >
+                            {t("classNetworks.signupAndInviteLink", {}, {
+                              default: "Signup + invite to network",
+                            })}
+                          </CopyButton>
+                        </InviteLinkRow>
+                      ) : null}
+                    </>
+                  ) : null}
+                </AdminForm>
+              ) : null}
+
               {profileRows.length === 0 ? (
                 <EmptyNote>
                   {t("classNetworks.profilesEmpty", {}, {
@@ -1093,28 +1396,6 @@ function NetworkDetailPage({ query, user }) {
                   })}
                 </p>
               </SectionHeader>
-              {adminRows.length === 0 ? (
-                <EmptyNote>
-                  {t("classNetworks.adminsEmpty", {}, {
-                    default: "No admins have been assigned yet.",
-                  })}
-                </EmptyNote>
-              ) : null}
-              <GridTable className="ag-theme-quartz">
-                <AgGridReact
-                  rowData={adminRows}
-                  columnDefs={adminColumnDefs}
-                  defaultColDef={defaultColDef}
-                  getRowId={(params) => params.data?.id}
-                  pagination
-                  paginationPageSize={20}
-                  overlayNoRowsTemplate={t(
-                    "classNetworks.adminsEmpty",
-                    {},
-                    { default: "No admins have been assigned yet." }
-                  )}
-                />
-              </GridTable>
 
               {canManage ? (
                 <AdminForm>
@@ -1147,7 +1428,7 @@ function NetworkDetailPage({ query, user }) {
                       disabled={adminMutationLoading}
                       onClick={handleAddNetworkAdmin}
                     >
-                      {adminMutationLoading
+                      {addingNetworkAdmin
                         ? t("classNetworks.adminAdding", {}, {
                             default: "Adding...",
                           })
@@ -1163,6 +1444,29 @@ function NetworkDetailPage({ query, user }) {
                   ) : null}
                 </AdminForm>
               ) : null}
+
+              {adminRows.length === 0 ? (
+                <EmptyNote>
+                  {t("classNetworks.adminsEmpty", {}, {
+                    default: "No admins have been assigned yet.",
+                  })}
+                </EmptyNote>
+              ) : null}
+              <GridTable className="ag-theme-quartz">
+                <AgGridReact
+                  rowData={adminRows}
+                  columnDefs={adminColumnDefs}
+                  defaultColDef={defaultColDef}
+                  getRowId={(params) => params.data?.id}
+                  pagination
+                  paginationPageSize={20}
+                  overlayNoRowsTemplate={t(
+                    "classNetworks.adminsEmpty",
+                    {},
+                    { default: "No admins have been assigned yet." }
+                  )}
+                />
+              </GridTable>
             </DetailSection>
           </>
         )}
