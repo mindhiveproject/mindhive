@@ -29,6 +29,11 @@ export default function EditNetwork({ user, id }) {
     e.preventDefault();
     await updateNetwork({
       variables: {
+        id,
+        title: inputs.title,
+        description: inputs.description,
+        isPublic: !!inputs.isPublic,
+        settings: inputs.settings,
         classes: inputs.classes.map((cl) => ({
           id: cl?.id,
         })),

@@ -361,6 +361,10 @@ export const Profile = list({
       ref: "Organization.createdBy",
       many: true,
     }),
+    adminOfOrganizations: relationship({
+      ref: "Organization.admins",
+      many: true,
+    }),
     // Invites this profile has sent to other people.
     organizationInvitesSent: relationship({
       ref: "OrganizationInvite.invitedBy",

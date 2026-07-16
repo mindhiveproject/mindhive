@@ -295,6 +295,29 @@ const StyledClass = styled.div`
       //   background: #FDF2D0;
       // }
     }
+    .classHeaderDescriptionHtml {
+      width: 100%;
+      min-width: 0;
+      color: #3d3d3d;
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      line-height: 22px;
+      overflow-wrap: anywhere;
+
+      p {
+        margin: 0 0 8px;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      ul,
+      ol {
+        margin: 8px 0;
+        padding-left: 22px;
+      }
+    }
     .classHeaderMetaRow {
       display: flex;
       align-items: center;
@@ -1749,6 +1772,13 @@ const StyledClass = styled.div`
       color: #171717;
     }
 
+    .classDescriptionSettingsHint {
+      margin: 0;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
     .settingsChoiceGroup {
       display: grid;
       gap: 12px;
@@ -1793,10 +1823,72 @@ const StyledClass = styled.div`
       }
     }
 
+    .networkTypeSections {
+      display: grid;
+      gap: 18px;
+    }
+
+    .networkTypeSection {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid #ece9e6;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .networkTypeSectionHeader {
+      display: grid;
+      gap: 6px;
+
+      h4 {
+        margin: 0;
+        color: #171717;
+        font-family: "Inter", sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 24px;
+      }
+
+      p {
+        margin: 0;
+        color: #625b71;
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+
+    .networkTypeSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
     .networkCardGrid {
       display: grid;
       gap: 12px;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .networkSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .networkEmptyState {
+      margin: 0;
+      padding: 16px;
+      border: 1px dashed #d3dae0;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
     }
 
     .networkCard {

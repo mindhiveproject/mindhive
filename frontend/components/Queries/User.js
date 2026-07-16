@@ -20,6 +20,14 @@ export const SPONSOR_ONBOARDING_STATE = gql`
           id
           name
         }
+        adminOfOrganizations {
+          id
+          name
+        }
+        organizationsCreated {
+          id
+          name
+        }
         opportunitiesCreated {
           id
         }
@@ -1114,6 +1122,38 @@ export const GET_PROFILE = gql`
           }
           interests {
             id
+          }
+        }
+        adminOfOrganizations {
+          id
+          name
+          tagline
+          department
+          website
+          location
+          mission
+          primaryDomain
+          verified
+          logo {
+            url
+          }
+          interests {
+            id
+          }
+          members {
+            id
+            username
+            firstName
+            lastName
+            email
+            image {
+              keystoneImage {
+                url
+              }
+              image {
+                publicUrlTransformed
+              }
+            }
           }
         }
       }

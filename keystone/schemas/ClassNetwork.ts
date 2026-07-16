@@ -27,7 +27,12 @@ export const ClassNetwork = list({
   fields: {
     title: text({ isIndexed: "unique", validation: { isRequired: true } }),
     description: text(),
-    settings: json(),
+    isPublic: checkbox({ defaultValue: false, isFilterable: true }),
+    settings: json({
+      defaultValue: {
+        type: "feedback_network",
+      },
+    }),
     creator: relationship({
       ref: "Profile.classNetworksCreated",
       hooks: {
@@ -122,7 +127,16 @@ export const ClassNetwork = list({
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
-    updatedAt: timestamp(),
+    updatedAt: timestamp({
+      hooks: {
+        async resolveInput({ operation }) {
+          if (operation === "update") {
+            return new Date().toISOString();
+          }
+          return undefined;
+        },
+      },
+    }),
   },
   hooks: {
     validateInput: async ({ operation, context, addValidationError }) => {

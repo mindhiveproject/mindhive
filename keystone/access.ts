@@ -269,9 +269,13 @@ export const rules = {
   connectOrganizationMutate({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageUsers({ session })) return true;
-    const me = session.itemId;
+    const me = session!.itemId;
     return {
-      members: { some: { id: { equals: me } } },
+      OR: [
+        { admins: { some: { id: { equals: me } } } },
+        { createdBy: { id: { equals: me } } },
+        { members: { some: { id: { equals: me } } } },
+      ],
     };
   },
   // ClassNetwork: creators and explicitly assigned network admins manage

@@ -17,6 +17,8 @@ import backfillOpportunityMultiselectFields from "./backfillOpportunityMultisele
 import backfillClassNetworkAdmins from "./backfillClassNetworkAdmins";
 import {
   addClassNetworkAdmin,
+  associateClassWithPublicNetwork,
+  removeClassFromNetwork,
   removeClassNetworkAdmin,
 } from "./classNetworkAdmins";
 import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
@@ -98,6 +100,14 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           networkId: ID!
           profileId: ID!
         ): ClassNetwork
+        associateClassWithPublicNetwork(
+          classId: ID!
+          networkId: ID!
+        ): Class
+        removeClassFromNetwork(
+          classId: ID!
+          networkId: ID!
+        ): Class
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
         # One-off seeder for the global Opportunity FormDefinition.
@@ -154,6 +164,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityMultiselectFields,
         backfillClassNetworkAdmins,
         addClassNetworkAdmin,
+        associateClassWithPublicNetwork,
+        removeClassFromNetwork,
         removeClassNetworkAdmin,
         followUser,
         unfollowUser,

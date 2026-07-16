@@ -51,6 +51,34 @@
 		"profile": "Profile",
 		"settings": "Settings"
 	},
+	"sponsorOnboarding": {
+		"opportunity": {
+			"createButton": "Create opportunity",
+			"createTitle": "Create your first opportunity",
+			"description": "Describe a project students can work on: title, video, time window, what they'll do, what they'll learn. Save it as a draft first if you're still putting it together, and publish when it's ready.",
+			"done": "Opportunity created",
+			"locked": "Unlocks once your profile is complete.",
+			"viewButton": "View my opportunities",
+			"viewTitle": "View your opportunities"
+		},
+		"organization": {
+			"description": "Manage {{name}}'s mission, primary domain, logo, and team details.",
+			"done": "Organization admin",
+			"editButton": "Edit organization",
+			"stepLabel": "Org",
+			"title": "Edit your organization"
+		},
+		"profile": {
+			"completeTitle": "Complete your profile",
+			"description": "Choose whether you represent an organization or an individual, then fill in your name, mission, primary domain, and time commitment. Students see this on every opportunity you publish.",
+			"done": "Profile complete",
+			"editButton": "Edit profile",
+			"editTitle": "Edit your profile",
+			"openButton": "Open profile editor"
+		},
+		"subtitle": "Two quick steps and you're ready to host opportunities for students through MindHive Connect.",
+		"title": "Let's get you set up"
+	},
 	"surveys": "Surveys",
 	"tasks": "Tasks",
 	"tasksAndSurveysDescriptions": "Tasks and Surveys descriptions",
