@@ -23,6 +23,24 @@ export const CREATE_NETWORK = gql`
   }
 `;
 
+// update network title and description only
+export const UPDATE_CLASS_NETWORK_DETAILS = gql`
+  mutation UPDATE_CLASS_NETWORK_DETAILS(
+    $id: ID!
+    $title: String!
+    $description: String
+  ) {
+    updateClassNetwork(
+      where: { id: $id }
+      data: { title: $title, description: $description }
+    ) {
+      id
+      title
+      description
+    }
+  }
+`;
+
 // update a network
 export const UPDATE_NETWORK = gql`
   mutation UPDATE_NETWORK(

@@ -23,13 +23,41 @@ export const GET_ALL_NETWORKS = gql`
       classes {
         id
         title
+        code
+        creator {
+          id
+        }
+        mentors {
+          id
+        }
+        students {
+          id
+        }
       }
       memberOrganizations {
         id
         name
       }
+      memberProfiles {
+        id
+        username
+        firstName
+        lastName
+        email
+      }
+      connectRounds {
+        id
+        title
+        status
+        matches {
+          id
+        }
+      }
       opportunities {
         id
+        mentor {
+          id
+        }
       }
       createdAt
       updatedAt
