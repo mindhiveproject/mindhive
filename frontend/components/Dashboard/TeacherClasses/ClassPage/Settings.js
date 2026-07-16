@@ -422,10 +422,21 @@ export default function Settings({ myclass, user }) {
     emptyMessage,
     networkType,
     associateButtonLabel,
+    iconSrc,
+    sectionVariant,
   }) => (
-    <div className="networkTypeSection">
+    <div
+      className={`networkTypeSection networkTypeSection--${sectionVariant}`}
+    >
       <div className="networkTypeSectionHeader">
-        <h4>{sectionTitle}</h4>
+        <div className="networkTypeSectionTitleRow">
+          {iconSrc ? (
+            <span className="networkTypeSectionIcon" aria-hidden>
+              <img src={iconSrc} alt="" />
+            </span>
+          ) : null}
+          <h4>{sectionTitle}</h4>
+        </div>
         <p>{description}</p>
       </div>
       {networks.length > 0 ? (
@@ -556,6 +567,8 @@ export default function Settings({ myclass, user }) {
             associateButtonLabel: t("classNetworkAssociateSchoolButton", {}, {
               default: "Associate class network",
             }),
+            iconSrc: "/assets/connect/building.svg",
+            sectionVariant: "school",
           })}
           {renderNetworkSection({
             title: t("classNetworkFeedbackSectionTitle", {}, {
@@ -574,6 +587,8 @@ export default function Settings({ myclass, user }) {
             associateButtonLabel: t("classNetworkAssociateFeedbackButton", {}, {
               default: "Associate feedback network",
             }),
+            iconSrc: "/assets/connect/group.svg",
+            sectionVariant: "feedback",
           })}
         </div>
       </section>
