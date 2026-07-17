@@ -316,6 +316,12 @@
 		"languagePreferences": "Установите языковые настройки",
 		"languages": "Языки",
 		"quickLinks": "Быстрые ссылки",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Настройки",
 		"username": "Имя пользователя"
 	},

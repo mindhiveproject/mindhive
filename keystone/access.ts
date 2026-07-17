@@ -236,7 +236,7 @@ export const rules = {
     };
   },
   // ConnectMatch visible to: the matched student, the opportunity's mentor,
-  // the round creator, or admins.
+  // the round creator, class-network creators/admins, or platform admins.
   connectMatchVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageUsers({ session })) return true;
@@ -246,6 +246,8 @@ export const rules = {
         { student: { id: { equals: me } } },
         { round: { createdBy: { id: { equals: me } } } },
         { opportunity: { mentor: { id: { equals: me } } } },
+        { classNetwork: { creator: { id: { equals: me } } } },
+        { classNetwork: { admins: { some: { id: { equals: me } } } } },
       ],
     };
   },

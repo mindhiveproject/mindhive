@@ -1,21 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMemo } from "react";
+import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 import styled from "styled-components";
-import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import DesignSystemButton from "../../../DesignSystem/Button";
-import StyledModal from "../../../styles/StyledModal";
 import {
   GET_ALL_NETWORKS,
   GET_PUBLIC_CLASS_NETWORKS,
 } from "../../../Queries/ClassNetwork";
-import {
-  ADD_CLASS_NETWORK_ADMIN,
-  REMOVE_CLASS_NETWORK_ADMIN,
-} from "../../../Mutations/ClassNetwork";
 import RoleGuard from "../RoleGuard";
 import { deriveRoles } from "../useConnectRole";
+import NetworkDetailPage from "./NetworkDetail";
+import {
+  buildManageNetworksQueryVariables,
+  countUniqueStudents,
+  formatCount,
+} from "./utils";
 
 const Shell = styled.div`
   display: flex;
@@ -130,26 +131,18 @@ const Status = styled.div`
   line-height: 22px;
 `;
 
-function displayProfileName(profile) {
-  return (
-    `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() ||
-    profile?.username ||
-    profile?.email ||
-    ""
-  );
-}
-
-function formatCount(t, count, singleKey, pluralKey, singleDefault, pluralDefault) {
-  return count === 1
-    ? t(singleKey, { count }, { default: singleDefault })
-    : t(pluralKey, { count }, { default: pluralDefault });
-}
-
-function NetworkCard({ network, actions, showVisibility = false }) {
+function NetworkCard({
+  network,
+  actions,
+  showVisibility = false,
+  showRegistryMeta = false,
+}) {
   const { t } = useTranslation("connect");
   const classCount = network?.classes?.length || 0;
   const organizationCount = network?.memberOrganizations?.length || 0;
   const opportunityCount = network?.opportunities?.length || 0;
+  const profileCount = network?.memberProfiles?.length || 0;
+  const studentCount = showRegistryMeta ? countUniqueStudents(network) : 0;
 
   return (
     <Card>
@@ -188,6 +181,30 @@ function NetworkCard({ network, actions, showVisibility = false }) {
             "{{count}} organizations"
           )}
         </span>
+        {showRegistryMeta ? (
+          <span>
+            {formatCount(
+              t,
+              profileCount,
+              "classNetworks.profileCountSingle",
+              "classNetworks.profileCountPlural",
+              "{{count}} member profile",
+              "{{count}} member profiles"
+            )}
+          </span>
+        ) : null}
+        {showRegistryMeta ? (
+          <span>
+            {formatCount(
+              t,
+              studentCount,
+              "classNetworks.studentCountSingle",
+              "classNetworks.studentCountPlural",
+              "{{count}} student in linked classes",
+              "{{count}} students in linked classes"
+            )}
+          </span>
+        ) : null}
         <span>
           {formatCount(
             t,
@@ -256,20 +273,11 @@ function PublicNetworks() {
 
 function ManageNetworks({ user }) {
   const { t } = useTranslation("connect");
+  const router = useRouter();
   const { isAdmin, adminClassNetworkIds, canManageClassNetwork } =
     deriveRoles(user);
-  const [adminNetwork, setAdminNetwork] = useState(null);
-  const [adminEmail, setAdminEmail] = useState("");
-  const [adminFeedback, setAdminFeedback] = useState(null);
   const queryVariables = useMemo(
-    () =>
-      isAdmin
-        ? {}
-        : {
-            where: {
-              id: { in: adminClassNetworkIds },
-            },
-          },
+    () => buildManageNetworksQueryVariables(isAdmin, adminClassNetworkIds),
     [adminClassNetworkIds, isAdmin]
   );
   const { data, loading, error } = useQuery(GET_ALL_NETWORKS, {
@@ -277,128 +285,13 @@ function ManageNetworks({ user }) {
     skip: !isAdmin && adminClassNetworkIds.length === 0,
   });
   const networks = data?.classNetworks || [];
-  const refetchQueries = [{ query: GET_ALL_NETWORKS, variables: queryVariables }];
-  const [addNetworkAdmin, { loading: addingNetworkAdmin }] = useMutation(
-    ADD_CLASS_NETWORK_ADMIN,
-    { refetchQueries, awaitRefetchQueries: true }
-  );
-  const [removeNetworkAdmin, { loading: removingNetworkAdmin }] = useMutation(
-    REMOVE_CLASS_NETWORK_ADMIN,
-    { refetchQueries, awaitRefetchQueries: true }
-  );
 
-  useEffect(() => {
-    if (!adminNetwork?.id) return;
-    const freshNetwork = networks.find((network) => network.id === adminNetwork.id);
-    if (freshNetwork && freshNetwork !== adminNetwork) {
-      setAdminNetwork(freshNetwork);
-    }
-  }, [adminNetwork, networks]);
-
-  const adminMutationLoading = addingNetworkAdmin || removingNetworkAdmin;
-  const adminNetworkAdmins = adminNetwork?.admins || [];
-  const canManageAdminNetwork =
-    !!adminNetwork?.id && canManageClassNetwork(adminNetwork.id);
-
-  const handleOpenAdminModal = (network) => {
-    setAdminNetwork(network);
-    setAdminEmail("");
-    setAdminFeedback(null);
-  };
-
-  const handleCloseAdminModal = () => {
-    setAdminNetwork(null);
-    setAdminEmail("");
-    setAdminFeedback(null);
-  };
-
-  const handleAddNetworkAdmin = async () => {
-    const email = adminEmail.trim().toLowerCase();
-    if (!adminNetwork?.id || !email) {
-      setAdminFeedback({
-        kind: "error",
-        text: t("classNetworks.adminEmailRequired", {}, {
-          default: "Enter an email address first.",
-        }),
-      });
-      return;
-    }
-
-    if (
-      adminNetworkAdmins.some(
-        (admin) => admin?.email?.toLowerCase() === email
-      )
-    ) {
-      setAdminFeedback({
-        kind: "error",
-        text: t("classNetworks.adminAlreadyAdded", {}, {
-          default: "That person is already an admin for this network.",
-        }),
-      });
-      return;
-    }
-
-    try {
-      const result = await addNetworkAdmin({
-        variables: { networkId: adminNetwork.id, email },
-      });
-      const updatedNetwork = result?.data?.addClassNetworkAdmin;
-      if (updatedNetwork) {
-        setAdminNetwork((current) => ({ ...current, ...updatedNetwork }));
-      }
-      setAdminEmail("");
-      setAdminFeedback({
-        kind: "ok",
-        text: t("classNetworks.adminAdded", {}, {
-          default: "Class-network admin added.",
-        }),
-      });
-    } catch (err) {
-      setAdminFeedback({
-        kind: "error",
-        text:
-          err?.message ||
-          t("classNetworks.adminAddError", {}, {
-            default: "Failed to add class-network admin.",
-          }),
-      });
-    }
-  };
-
-  const handleRemoveNetworkAdmin = async (profileId) => {
-    if (!adminNetwork?.id || !profileId) return;
-    const confirmed = window.confirm(
-      t("classNetworks.adminRemoveConfirm", {}, {
-        default:
-          "Remove this class-network admin? They will lose network management access.",
-      })
-    );
-    if (!confirmed) return;
-
-    try {
-      const result = await removeNetworkAdmin({
-        variables: { networkId: adminNetwork.id, profileId },
-      });
-      const updatedNetwork = result?.data?.removeClassNetworkAdmin;
-      if (updatedNetwork) {
-        setAdminNetwork((current) => ({ ...current, ...updatedNetwork }));
-      }
-      setAdminFeedback({
-        kind: "ok",
-        text: t("classNetworks.adminRemoved", {}, {
-          default: "Class-network admin removed.",
-        }),
-      });
-    } catch (err) {
-      setAdminFeedback({
-        kind: "error",
-        text:
-          err?.message ||
-          t("classNetworks.adminRemoveError", {}, {
-            default: "Failed to remove class-network admin.",
-          }),
-      });
-    }
+  const handleOpenDetails = (network) => {
+    if (!network?.id) return;
+    router.push({
+      pathname: "/dashboard/connect/networks",
+      query: { mode: "manage", networkId: network.id },
+    });
   };
 
   return (
@@ -413,7 +306,7 @@ function ManageNetworks({ user }) {
           <p>
             {t("classNetworks.manageDescription", {}, {
               default:
-                "Manage class-network admins for networks you administer.",
+                "Review membership and matching for networks you administer, and manage network admins.",
             })}
           </p>
         </Header>
@@ -435,20 +328,21 @@ function ManageNetworks({ user }) {
                 key={network.id}
                 network={network}
                 showVisibility
+                showRegistryMeta
                 actions={
                   canManageClassNetwork(network.id) ? (
                     <DesignSystemButton
-                      variant="outline"
+                      variant="primary"
                       type="button"
-                      onClick={() => handleOpenAdminModal(network)}
+                      onClick={() => handleOpenDetails(network)}
                       aria-label={t(
-                        "classNetworks.manageAdminsAria",
+                        "classNetworks.viewDetailsAria",
                         { title: network?.title || "" },
-                        { default: "Manage admins for {{title}}" }
+                        { default: "View details for {{title}}" }
                       )}
                     >
-                      {t("classNetworks.manageAdmins", {}, {
-                        default: "Manage admins",
+                      {t("classNetworks.viewDetails", {}, {
+                        default: "View details",
                       })}
                     </DesignSystemButton>
                   ) : null
@@ -464,145 +358,15 @@ function ManageNetworks({ user }) {
           </Empty>
         )}
       </Shell>
-
-      <Modal
-        open={!!adminNetwork}
-        onClose={handleCloseAdminModal}
-        size="small"
-      >
-        <Modal.Header>
-          {t("classNetworks.adminsModalTitle", {}, {
-            default: "Manage network admins",
-          })}
-        </Modal.Header>
-        <Modal.Content scrolling>
-          <Modal.Description>
-            <StyledModal>
-              <div className="classNetworkDetail">
-                <h3 className="classNetworkDetailTitle">
-                  {adminNetwork?.title ||
-                    t("classNetworks.untitled", {}, {
-                      default: "Untitled network",
-                    })}
-                </h3>
-                <div className="classNetworkAdmins">
-                  <div className="classNetworkAdminsHeader">
-                    <h4>
-                      {t("classNetworks.adminsTitle", {}, {
-                        default: "Network admins",
-                      })}
-                    </h4>
-                    <p>
-                      {t("classNetworks.adminsDescription", {}, {
-                        default:
-                          "Admins can manage this class network and related Connect workflows.",
-                      })}
-                    </p>
-                  </div>
-
-                  {adminNetworkAdmins.length > 0 ? (
-                    <ul className="classNetworkAdminList">
-                      {adminNetworkAdmins.map((admin) => (
-                        <li key={admin.id} className="classNetworkAdminRow">
-                          <div>
-                            <strong>{displayProfileName(admin)}</strong>
-                            {admin.email ? <span>{admin.email}</span> : null}
-                          </div>
-                          {canManageAdminNetwork ? (
-                            <DesignSystemButton
-                              variant="outline"
-                              type="button"
-                              disabled={adminMutationLoading}
-                              onClick={() => handleRemoveNetworkAdmin(admin.id)}
-                            >
-                              {t("classNetworks.adminRemove", {}, {
-                                default: "Remove",
-                              })}
-                            </DesignSystemButton>
-                          ) : null}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="classNetworkAdminEmpty">
-                      {t("classNetworks.adminsEmpty", {}, {
-                        default: "No admins have been assigned yet.",
-                      })}
-                    </p>
-                  )}
-
-                  {canManageAdminNetwork ? (
-                    <div className="classNetworkAdminForm">
-                      <label htmlFor="connectClassNetworkAdminEmail">
-                        {t("classNetworks.adminEmailLabel", {}, {
-                          default: "Add admin by email",
-                        })}
-                      </label>
-                      <div className="classNetworkAdminFormRow">
-                        <input
-                          id="connectClassNetworkAdminEmail"
-                          type="email"
-                          value={adminEmail}
-                          placeholder={t(
-                            "classNetworks.adminEmailPlaceholder",
-                            {},
-                            { default: "teacher@example.com" }
-                          )}
-                          onChange={(event) =>
-                            setAdminEmail(event.target.value)
-                          }
-                          onKeyDown={(event) => {
-                            if (event.key === "Enter") {
-                              event.preventDefault();
-                              handleAddNetworkAdmin();
-                            }
-                          }}
-                        />
-                        <DesignSystemButton
-                          variant="filled"
-                          type="button"
-                          disabled={adminMutationLoading}
-                          onClick={handleAddNetworkAdmin}
-                        >
-                          {adminMutationLoading
-                            ? t("classNetworks.adminAdding", {}, {
-                                default: "Adding...",
-                              })
-                            : t("classNetworks.adminAdd", {}, {
-                                default: "Add admin",
-                              })}
-                        </DesignSystemButton>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {adminFeedback ? (
-                    <p
-                      className={
-                        adminFeedback.kind === "error"
-                          ? "classNetworkAdminFeedback error"
-                          : "classNetworkAdminFeedback"
-                      }
-                    >
-                      {adminFeedback.text}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-            </StyledModal>
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <DesignSystemButton variant="text" onClick={handleCloseAdminModal}>
-            {t("classNetworks.close", {}, { default: "Close" })}
-          </DesignSystemButton>
-        </Modal.Actions>
-      </Modal>
     </RoleGuard>
   );
 }
 
 export default function ClassNetworksMain({ query, user }) {
+  if (query?.mode === "manage" && query?.networkId) {
+    return <NetworkDetailPage query={query} user={user} />;
+  }
+
   return query?.mode === "manage" ? (
     <ManageNetworks user={user} />
   ) : (

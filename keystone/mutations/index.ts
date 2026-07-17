@@ -17,9 +17,12 @@ import backfillOpportunityMultiselectFields from "./backfillOpportunityMultisele
 import backfillClassNetworkAdmins from "./backfillClassNetworkAdmins";
 import {
   addClassNetworkAdmin,
+  addClassNetworkMemberProfile,
   associateClassWithPublicNetwork,
   removeClassFromNetwork,
   removeClassNetworkAdmin,
+  removeClassNetworkMemberOrganization,
+  removeClassNetworkMemberProfile,
 } from "./classNetworkAdmins";
 import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
@@ -96,9 +99,22 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           profileId: ID
           email: String
         ): ClassNetwork
+        addClassNetworkMemberProfile(
+          networkId: ID!
+          profileId: ID
+          email: String
+        ): ClassNetwork
         removeClassNetworkAdmin(
           networkId: ID!
           profileId: ID!
+        ): ClassNetwork
+        removeClassNetworkMemberProfile(
+          networkId: ID!
+          profileId: ID!
+        ): ClassNetwork
+        removeClassNetworkMemberOrganization(
+          networkId: ID!
+          organizationId: ID!
         ): ClassNetwork
         associateClassWithPublicNetwork(
           classId: ID!
@@ -164,9 +180,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityMultiselectFields,
         backfillClassNetworkAdmins,
         addClassNetworkAdmin,
+        addClassNetworkMemberProfile,
         associateClassWithPublicNetwork,
         removeClassFromNetwork,
         removeClassNetworkAdmin,
+        removeClassNetworkMemberProfile,
+        removeClassNetworkMemberOrganization,
         followUser,
         unfollowUser,
         seedOpportunityForm,

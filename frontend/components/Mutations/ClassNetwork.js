@@ -23,6 +23,24 @@ export const CREATE_NETWORK = gql`
   }
 `;
 
+// update network title and description only
+export const UPDATE_CLASS_NETWORK_DETAILS = gql`
+  mutation UPDATE_CLASS_NETWORK_DETAILS(
+    $id: ID!
+    $title: String!
+    $description: String
+  ) {
+    updateClassNetwork(
+      where: { id: $id }
+      data: { title: $title, description: $description }
+    ) {
+      id
+      title
+      description
+    }
+  }
+`;
+
 // update a network
 export const UPDATE_NETWORK = gql`
   mutation UPDATE_NETWORK(
@@ -104,6 +122,33 @@ export const ADD_CLASS_NETWORK_ADMIN = gql`
   }
 `;
 
+export const ADD_CLASS_NETWORK_MEMBER_PROFILE = gql`
+  mutation ADD_CLASS_NETWORK_MEMBER_PROFILE(
+    $networkId: ID!
+    $profileId: ID
+    $email: String
+  ) {
+    addClassNetworkMemberProfile(
+      networkId: $networkId
+      profileId: $profileId
+      email: $email
+    ) {
+      id
+      memberProfiles {
+        id
+        username
+        firstName
+        lastName
+        email
+      }
+      memberOrganizations {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const REMOVE_CLASS_NETWORK_ADMIN = gql`
   mutation REMOVE_CLASS_NETWORK_ADMIN($networkId: ID!, $profileId: ID!) {
     removeClassNetworkAdmin(networkId: $networkId, profileId: $profileId) {
@@ -114,6 +159,56 @@ export const REMOVE_CLASS_NETWORK_ADMIN = gql`
         firstName
         lastName
         email
+      }
+    }
+  }
+`;
+
+export const REMOVE_CLASS_NETWORK_MEMBER_PROFILE = gql`
+  mutation REMOVE_CLASS_NETWORK_MEMBER_PROFILE(
+    $networkId: ID!
+    $profileId: ID!
+  ) {
+    removeClassNetworkMemberProfile(
+      networkId: $networkId
+      profileId: $profileId
+    ) {
+      id
+      memberProfiles {
+        id
+        username
+        firstName
+        lastName
+        email
+      }
+      memberOrganizations {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const REMOVE_CLASS_NETWORK_MEMBER_ORGANIZATION = gql`
+  mutation REMOVE_CLASS_NETWORK_MEMBER_ORGANIZATION(
+    $networkId: ID!
+    $organizationId: ID!
+  ) {
+    removeClassNetworkMemberOrganization(
+      networkId: $networkId
+      organizationId: $organizationId
+    ) {
+      id
+      memberProfiles {
+        id
+        username
+        firstName
+        lastName
+        email
+      }
+      memberOrganizations {
+        id
+        name
       }
     }
   }
