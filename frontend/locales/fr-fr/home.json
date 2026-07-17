@@ -56,6 +56,9 @@
 		"manage": "",
 		"network": {
 			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
 			"close": "",
 			"empty": "",
 			"joinButton": "",
@@ -66,6 +69,7 @@
 			"loading": "",
 			"modalDescription": "",
 			"modalTitle": "",
+			"pendingRequest": "",
 			"requestSuccess": "",
 			"setupButton": "",
 			"setupTitle": "",

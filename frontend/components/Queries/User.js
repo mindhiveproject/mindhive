@@ -8,6 +8,7 @@ export const SPONSOR_ONBOARDING_STATE = gql`
     authenticatedItem {
       ... on Profile {
         id
+        email
         firstName
         lastName
         profileType

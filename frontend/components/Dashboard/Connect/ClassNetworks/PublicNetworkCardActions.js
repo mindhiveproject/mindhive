@@ -18,19 +18,13 @@ import {
 } from "../../../Queries/ClassNetwork";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { resolvePublicNetworkCardState } from "./utils";
+import Chip from "../../../DesignSystem/Chip";
 
 const ActionsRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-`;
-
-const StatusLabel = styled.span`
-  color: #5f6871;
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  line-height: 18px;
 `;
 
 const Feedback = styled.span`
@@ -111,9 +105,10 @@ export default function PublicNetworkCardActions({
   if (state === "member") {
     return (
       <ActionsRow>
-        <StatusLabel>
-          {t("classNetworks.invites.member", {}, { default: "Member" })}
-        </StatusLabel>
+        <Chip 
+          shape="square"
+          label={t("classNetworks.invites.member", {}, { default: "Member" })}>
+        </Chip>
         <DesignSystemButton
           variant="outline"
           type="button"
@@ -150,11 +145,10 @@ export default function PublicNetworkCardActions({
   if (state === "pendingRequest") {
     return (
       <ActionsRow>
-        <StatusLabel>
-          {t("classNetworks.invites.pendingRequest", {}, {
-            default: "Request pending",
-          })}
-        </StatusLabel>
+        <Chip 
+          shape="square"
+          label={t("classNetworks.invites.pendingRequest", {}, { default: "Request pending" })}>
+        </Chip>
         <DesignSystemButton
           variant="outline"
           type="button"
@@ -184,11 +178,10 @@ export default function PublicNetworkCardActions({
   if (state === "rejectedRequest") {
     return (
       <ActionsRow>
-        <StatusLabel>
-          {t("classNetworks.invites.rejected", {}, {
-            default: "Request declined",
-          })}
-        </StatusLabel>
+        <Chip
+          shape="square"
+          label={t("classNetworks.invites.rejected", {}, { default: "Request declined" })}>
+        </Chip>
         <DesignSystemButton
           variant="filled"
           type="button"
@@ -219,11 +212,10 @@ export default function PublicNetworkCardActions({
   if (state === "incomingInvite") {
     return (
       <ActionsRow>
-        <StatusLabel>
-          {t("classNetworks.invites.incomingInvite", {}, {
-            default: "You're invited",
-          })}
-        </StatusLabel>
+        <Chip
+          shape="square"
+          label={t("classNetworks.invites.incomingInvite", {}, { default: "You're invited" })}>
+        </Chip>
         <DesignSystemButton
           variant="filled"
           type="button"

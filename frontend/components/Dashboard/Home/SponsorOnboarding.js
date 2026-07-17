@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react";
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useEffect, useMemo, useState } from "react";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Modal } from "semantic-ui-react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import { SPONSOR_ONBOARDING_STATE } from "../../Queries/User";
-import { GET_PUBLIC_CLASS_NETWORKS } from "../../Queries/ClassNetwork";
+import {
+  GET_NETWORK_INVITES,
+  GET_PUBLIC_CLASS_NETWORKS,
+} from "../../Queries/ClassNetwork";
+import { CANCEL_NETWORK_INVITE } from "../../Mutations/ClassNetwork";
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
 import StyledModal from "../../styles/StyledModal";
@@ -16,6 +20,10 @@ import {
 } from "../../../lib/sponsorOnboardingDismiss";
 import { collectMemberClassNetworks } from "../../../lib/opportunityClassNetworks";
 import { joinClassNetwork } from "../../../lib/joinClassNetwork";
+import {
+  buildMyNetworkInvitesWhere,
+  resolvePublicNetworkCardState,
+} from "../Connect/ClassNetworks/utils";
 
 const FEEDBACK_NETWORK = "feedback_network";
 const SCHOOL_NETWORK = "school_network";
@@ -76,9 +84,10 @@ const Row = styled.div`
   width: 100%;
   padding: 8px 12px;
   border-radius: 10px;
-  background: #ffffff;
-  border: 1px solid #d3dae0;
+  background: ${({ $done }) => ($done ? "#f7f8f9" : "#ffffff")};
+  border: 1px solid ${({ $done }) => ($done ? "#e6eaee" : "#d3dae0")};
   box-sizing: border-box;
+  opacity: ${({ $done }) => ($done ? 0.72 : 1)};
 
   .action {
     flex: none;
@@ -96,18 +105,20 @@ const Row = styled.div`
 
   .title {
     font-family: "Lato", sans-serif;
-    font-weight: 600;
+    font-weight: ${({ $done }) => ($done ? 500 : 600)};
     font-size: 14px;
     line-height: 20px;
-    color: #171717;
+    color: ${({ $done }) => ($done ? "#5f6871" : "#171717")};
     max-width: 280px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
+  .titleChip,
   .status {
     flex: none;
+    opacity: ${({ $done }) => ($done ? 0.85 : 1)};
   }
 
   @media (max-width: 640px) {
@@ -177,6 +188,14 @@ const ModalBody = styled.div`
     line-height: 18px;
   }
 
+  .networkActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    flex: none;
+  }
+
   .empty,
   .feedback {
     margin: 0;
@@ -226,7 +245,7 @@ function SetupRow({
   const contentCount = (showTitle ? 1 : 0) + (showStatus ? 1 : 0);
 
   return (
-    <Row $contentCount={contentCount}>
+    <Row $contentCount={contentCount} $done={done}>
       <div className="action">
         <Button variant={actionVariant} onClick={onAction}>
           {actionLabel}
@@ -262,9 +281,25 @@ export default function SponsorOnboarding() {
   const [dismissed, setDismissed] = useState(false);
   const [networkModalOpen, setNetworkModalOpen] = useState(false);
   const [joiningNetworkId, setJoiningNetworkId] = useState(null);
+  const [cancellingInviteId, setCancellingInviteId] = useState(null);
   const [joinFeedback, setJoinFeedback] = useState(null);
 
   const me = data?.authenticatedItem;
+  const invitesWhere = useMemo(
+    () => (me?.id ? buildMyNetworkInvitesWhere(me) : null),
+    [me],
+  );
+
+  const {
+    data: invitesData,
+    refetch: refetchInvites,
+  } = useQuery(GET_NETWORK_INVITES, {
+    variables: { where: invitesWhere },
+    skip: !invitesWhere,
+    fetchPolicy: "cache-and-network",
+  });
+
+  const [cancelInvite] = useMutation(CANCEL_NETWORK_INVITE);
 
   const {
     data: publicNetworksData,
@@ -286,6 +321,7 @@ export default function SponsorOnboarding() {
   if (!isSponsor) return null;
   if (dismissed) return null;
 
+  const invites = invitesData?.networkInvites || [];
   const orgRecord = getFirstUniqueOrganization(
     me?.organizations,
     me?.adminOfOrganizations,
@@ -305,6 +341,18 @@ export default function SponsorOnboarding() {
   const networkStepDone = !!joinedNetwork;
   const oppStepDone = (me?.opportunitiesCreated || []).length > 0;
 
+  const pendingInvite = invites.find((invite) => {
+    if (!invite?.classNetwork?.id) return false;
+    const { state } = resolvePublicNetworkCardState({
+      user: me,
+      network: invite.classNetwork,
+      invites,
+    });
+    return state === "pendingRequest";
+  });
+  const pendingNetwork = pendingInvite?.classNetwork || null;
+  const networkHasPending = !!pendingNetwork && !networkStepDone;
+
   const feedbackPublicNetworks = (publicNetworksData?.classNetworks || []).filter(
     (network) => getClassNetworkType(network) === FEEDBACK_NETWORK,
   );
@@ -320,6 +368,14 @@ export default function SponsorOnboarding() {
     default: "Done",
   });
   const manageLabel = t("sponsorOnboarding.manage", {}, { default: "Manage" });
+  const pendingRequestLabel = t(
+    "sponsorOnboarding.network.pendingRequest",
+    {},
+    { default: "Request pending" },
+  );
+  const untitledNetworkLabel = t("sponsorOnboarding.network.untitled", {}, {
+    default: "Untitled network",
+  });
 
   const profileTitle = profileStepDone
     ? [me?.firstName, me?.lastName].filter(Boolean).join(" ") ||
@@ -361,6 +417,7 @@ export default function SponsorOnboarding() {
     setNetworkModalOpen(false);
     setJoinFeedback(null);
     setJoiningNetworkId(null);
+    setCancellingInviteId(null);
   };
 
   const handleJoinNetwork = async (networkId) => {
@@ -373,7 +430,7 @@ export default function SponsorOnboarding() {
         classNetworkId: networkId,
         user: me,
       });
-      await refetch();
+      await Promise.all([refetch(), refetchInvites()]);
       setJoinFeedback({
         kind: "ok",
         text: joinResult.requested
@@ -384,7 +441,9 @@ export default function SponsorOnboarding() {
               default: "You've joined the network.",
             }),
       });
-      setNetworkModalOpen(false);
+      if (!joinResult.requested) {
+        setNetworkModalOpen(false);
+      }
     } catch (err) {
       setJoinFeedback({
         kind: "error",
@@ -399,10 +458,44 @@ export default function SponsorOnboarding() {
     }
   };
 
+  const handleCancelRequest = async (inviteId) => {
+    if (!inviteId) return;
+    setCancellingInviteId(inviteId);
+    setJoinFeedback(null);
+    try {
+      await cancelInvite({ variables: { inviteId } });
+      await Promise.all([refetch(), refetchInvites()]);
+    } catch (err) {
+      setJoinFeedback({
+        kind: "error",
+        text:
+          err?.message ||
+          t("sponsorOnboarding.network.cancelError", {}, {
+            default: "Failed to cancel request.",
+          }),
+      });
+    } finally {
+      setCancellingInviteId(null);
+    }
+  };
+
   const profileEditHref = {
     pathname: "/dashboard/profile/edit",
     query: { page: "about", type: "organization" },
   };
+
+  const networkBusy = !!joiningNetworkId || !!cancellingInviteId;
+  const networkTitleChip =
+    networkStepDone || networkHasPending ? (
+      <Chip
+        label={
+          (networkStepDone ? joinedNetwork?.title : pendingNetwork?.title) ||
+          untitledNetworkLabel
+        }
+        leading={NETWORK_ICON}
+        shape="square"
+      />
+    ) : null;
 
   return (
     <>
@@ -441,27 +534,16 @@ export default function SponsorOnboarding() {
 
           <SetupRow
             done={networkStepDone}
-            needsLabel={needsLabel}
+            needsLabel={networkHasPending ? pendingRequestLabel : needsLabel}
             readyLabel={readyLabel}
             title={networkTitle}
-            titleChip={
-              networkStepDone ? (
-                <Chip
-                  label={
-                    joinedNetwork.title ||
-                    t("sponsorOnboarding.network.untitled", {}, {
-                      default: "Untitled network",
-                    })
-                  }
-                  leading={NETWORK_ICON}
-                  shape="square"
-                />
-              ) : null
-            }
+            titleChip={networkTitleChip}
             hideStatus={networkStepDone}
-            actionVariant={networkStepDone ? "outline" : "filled"}
+            actionVariant={
+              networkStepDone || networkHasPending ? "outline" : "filled"
+            }
             actionLabel={
-              networkStepDone
+              networkStepDone || networkHasPending
                 ? manageLabel
                 : t("sponsorOnboarding.network.setupButton", {}, {
                     default: "Join",
@@ -544,37 +626,76 @@ export default function SponsorOnboarding() {
                   </p>
                 ) : availableFeedbackNetworks.length > 0 ? (
                   <ul className="networkList">
-                    {availableFeedbackNetworks.map((network) => (
-                      <li key={network.id} className="networkRow">
-                        <div className="networkMeta">
-                          <p className="networkTitle">
-                            {network?.title ||
-                              t("sponsorOnboarding.network.untitled", {}, {
-                                default: "Untitled network",
-                              })}
-                          </p>
-                          {network?.description ? (
-                            <p className="networkDescription">
-                              {network.description}
+                    {availableFeedbackNetworks.map((network) => {
+                      const { state, invite } = resolvePublicNetworkCardState({
+                        user: me,
+                        network,
+                        invites,
+                      });
+                      const isPending = state === "pendingRequest";
+
+                      return (
+                        <li key={network.id} className="networkRow">
+                          <div className="networkMeta">
+                            <p className="networkTitle">
+                              {network?.title || untitledNetworkLabel}
                             </p>
-                          ) : null}
-                        </div>
-                        <Button
-                          variant="filled"
-                          type="button"
-                          disabled={!!joiningNetworkId}
-                          onClick={() => handleJoinNetwork(network.id)}
-                        >
-                          {joiningNetworkId === network.id
-                            ? t("sponsorOnboarding.network.joining", {}, {
-                                default: "Joining...",
-                              })
-                            : t("sponsorOnboarding.network.joinButton", {}, {
-                                default: "Join",
-                              })}
-                        </Button>
-                      </li>
-                    ))}
+                            {network?.description ? (
+                              <p className="networkDescription">
+                                {network.description}
+                              </p>
+                            ) : null}
+                          </div>
+                          <div className="networkActions">
+                            {isPending ? (
+                              <>
+                                <Chip
+                                  shape="square"
+                                  label={pendingRequestLabel}
+                                />
+                                <Button
+                                  variant="outline"
+                                  type="button"
+                                  disabled={networkBusy || !invite?.id}
+                                  onClick={() =>
+                                    handleCancelRequest(invite.id)
+                                  }
+                                >
+                                  {cancellingInviteId === invite?.id
+                                    ? t(
+                                        "sponsorOnboarding.network.cancelling",
+                                        {},
+                                        { default: "Cancelling..." },
+                                      )
+                                    : t(
+                                        "sponsorOnboarding.network.cancelRequest",
+                                        {},
+                                        { default: "Cancel request" },
+                                      )}
+                                </Button>
+                              </>
+                            ) : (
+                              <Button
+                                variant="filled"
+                                type="button"
+                                disabled={networkBusy}
+                                onClick={() => handleJoinNetwork(network.id)}
+                              >
+                                {joiningNetworkId === network.id
+                                  ? t("sponsorOnboarding.network.joining", {}, {
+                                      default: "Joining...",
+                                    })
+                                  : t(
+                                      "sponsorOnboarding.network.joinButton",
+                                      {},
+                                      { default: "Join" },
+                                    )}
+                              </Button>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
                   </ul>
                 ) : (
                   <p className="empty">
