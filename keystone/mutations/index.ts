@@ -17,8 +17,25 @@ import backfillOpportunityMultiselectFields from "./backfillOpportunityMultisele
 import backfillClassNetworkAdmins from "./backfillClassNetworkAdmins";
 import {
   addClassNetworkAdmin,
+  addClassNetworkMemberProfile,
+  associateClassWithPublicNetwork,
+  removeClassFromNetwork,
   removeClassNetworkAdmin,
+  removeClassNetworkMemberOrganization,
+  removeClassNetworkMemberProfile,
 } from "./classNetworkAdmins";
+import {
+  acceptNetworkInvite,
+  approveNetworkInvite,
+  cancelNetworkInvite,
+  declineNetworkInvite,
+  inviteProfileToClassNetwork,
+  joinOpenClassNetwork,
+  leaveClassNetwork,
+  networkInviteContext,
+  rejectNetworkInvite,
+  requestClassNetworkMembership,
+} from "./networkInvites";
 import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
@@ -107,10 +124,44 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           profileId: ID
           email: String
         ): ClassNetwork
+        addClassNetworkMemberProfile(
+          networkId: ID!
+          profileId: ID
+          email: String
+        ): ClassNetwork
         removeClassNetworkAdmin(
           networkId: ID!
           profileId: ID!
         ): ClassNetwork
+        removeClassNetworkMemberProfile(
+          networkId: ID!
+          profileId: ID!
+        ): ClassNetwork
+        removeClassNetworkMemberOrganization(
+          networkId: ID!
+          organizationId: ID!
+        ): ClassNetwork
+        associateClassWithPublicNetwork(
+          classId: ID!
+          networkId: ID!
+        ): Class
+        removeClassFromNetwork(
+          classId: ID!
+          networkId: ID!
+        ): Class
+        requestClassNetworkMembership(networkId: ID!): NetworkInvite
+        joinOpenClassNetwork(networkId: ID!): ClassNetwork
+        leaveClassNetwork(networkId: ID!): ClassNetwork
+        inviteProfileToClassNetwork(
+          networkId: ID!
+          profileId: ID
+          email: String
+        ): NetworkInvite
+        approveNetworkInvite(inviteId: ID!): NetworkInvite
+        rejectNetworkInvite(inviteId: ID!): NetworkInvite
+        acceptNetworkInvite(inviteId: ID, token: String): NetworkInvite
+        declineNetworkInvite(inviteId: ID, token: String): NetworkInvite
+        cancelNetworkInvite(inviteId: ID!): NetworkInvite
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
         # One-off seeder for the global Opportunity FormDefinition.
@@ -187,6 +238,19 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         isActive: Boolean
         position: Int
       }
+      type NetworkInviteContextNetwork {
+        id: ID!
+        title: String
+        description: String
+        isPublic: Boolean
+        settings: JSON
+      }
+      type NetworkInviteContext {
+        id: ID!
+        status: String!
+        email: String
+        classNetwork: NetworkInviteContextNetwork
+      }
       extend type Query {
         resolveMilestonesForBoard(boardId: ID!): [Milestone!]!
         # Resolve the most-specific published FormDefinition for the
@@ -200,6 +264,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           classNetworkId: ID
           proposalBoardId: ID
         ): FormDefinition
+        # Public-safe invite context for login/signup. Returns only
+        # non-sensitive display fields for a tokenized NetworkInvite.
+        networkInviteContext(token: String!): NetworkInviteContext
       }
     `,
     resolvers: {
@@ -207,6 +274,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       Query: {
         resolveFormDefinition,
         resolveMilestonesForBoard,
+        networkInviteContext,
       },
       Mutation: {
         sendEmail,
@@ -226,7 +294,21 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityMultiselectFields,
         backfillClassNetworkAdmins,
         addClassNetworkAdmin,
+        addClassNetworkMemberProfile,
+        associateClassWithPublicNetwork,
+        removeClassFromNetwork,
         removeClassNetworkAdmin,
+        removeClassNetworkMemberProfile,
+        removeClassNetworkMemberOrganization,
+        requestClassNetworkMembership,
+        joinOpenClassNetwork,
+        leaveClassNetwork,
+        inviteProfileToClassNetwork,
+        approveNetworkInvite,
+        rejectNetworkInvite,
+        acceptNetworkInvite,
+        declineNetworkInvite,
+        cancelNetworkInvite,
         followUser,
         unfollowUser,
         seedOpportunityForm,

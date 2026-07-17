@@ -295,6 +295,29 @@ const StyledClass = styled.div`
       //   background: #FDF2D0;
       // }
     }
+    .classHeaderDescriptionHtml {
+      width: 100%;
+      min-width: 0;
+      color: #3d3d3d;
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      line-height: 22px;
+      overflow-wrap: anywhere;
+
+      p {
+        margin: 0 0 8px;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      ul,
+      ol {
+        margin: 8px 0;
+        padding-left: 22px;
+      }
+    }
     .classHeaderMetaRow {
       display: flex;
       align-items: center;
@@ -1896,6 +1919,13 @@ const StyledClass = styled.div`
       color: #171717;
     }
 
+    .classDescriptionSettingsHint {
+      margin: 0;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
     .settingsChoiceGroup {
       display: grid;
       gap: 12px;
@@ -1940,16 +1970,151 @@ const StyledClass = styled.div`
       }
     }
 
+    .networkTypeSections {
+      display: grid;
+      gap: 18px;
+    }
+
+    .networkTypeSection {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid #ece9e6;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .networkTypeSection--school {
+      border-color: rgba(51, 111, 138, 0.28);
+      background: linear-gradient(
+        180deg,
+        rgba(51, 111, 138, 0.06) 0%,
+        rgba(255, 255, 255, 0.88) 48%
+      );
+
+      .networkTypeSectionIcon {
+        background: rgba(51, 111, 138, 0.12);
+      }
+
+      .networkTypeSectionIcon img {
+        filter: invert(36%) sepia(18%) saturate(1260%) hue-rotate(155deg)
+          brightness(92%) contrast(88%);
+      }
+    }
+
+    .networkTypeSection--feedback {
+      border-color: rgba(124, 102, 194, 0.28);
+      background: linear-gradient(
+        180deg,
+        rgba(124, 102, 194, 0.07) 0%,
+        rgba(255, 255, 255, 0.88) 48%
+      );
+
+      .networkTypeSectionIcon {
+        background: rgba(124, 102, 194, 0.12);
+      }
+
+      .networkTypeSectionIcon img {
+        filter: invert(42%) sepia(24%) saturate(1140%) hue-rotate(214deg)
+          brightness(92%) contrast(90%);
+      }
+
+      .networkCard:hover,
+      .networkCard:focus-within {
+        border-color: rgba(124, 102, 194, 0.45);
+        background: #f7f5fc;
+        box-shadow: 0 10px 24px rgba(124, 102, 194, 0.12);
+      }
+    }
+
+    .networkTypeSectionHeader {
+      display: grid;
+      gap: 6px;
+
+      h4 {
+        margin: 0;
+        color: #171717;
+        font-family: "Inter", sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 24px;
+      }
+
+      p {
+        margin: 0;
+        color: #625b71;
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+
+    .networkTypeSectionTitleRow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .networkTypeSectionIcon {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+
+      img {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+      }
+    }
+
+    .networkTypeSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
     .networkCardGrid {
       display: grid;
       gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      width: 100%;
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(min(100%, 280px), 280px)
+      );
+      align-items: stretch;
+      justify-content: start;
+    }
+
+    .networkSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .networkEmptyState {
+      margin: 0;
+      padding: 16px;
+      border: 1px dashed #d3dae0;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
     }
 
     .networkCard {
       display: grid;
       gap: 10px;
       width: 100%;
+      max-width: 100%;
       min-width: 0;
       box-sizing: border-box;
       padding: 14px;
@@ -2167,7 +2332,7 @@ const StyledClass = styled.div`
       }
 
       .networkCardGrid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
     }
   }

@@ -26,12 +26,20 @@
 			"invalidNetwork": "",
 			"joinFailed": "",
 			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
 		"email": "Электронная почта",
 		"forgotPassword": "Забыли пароль?",
 		"login": "Авторизоваться",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "Пароль",
 		"requestReset": "Запрос сброса",
 		"username": "Имя пользователя"
@@ -316,6 +324,12 @@
 		"languagePreferences": "Установите языковые настройки",
 		"languages": "Языки",
 		"quickLinks": "Быстрые ссылки",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Настройки",
 		"username": "Имя пользователя"
 	},

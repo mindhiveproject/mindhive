@@ -235,7 +235,7 @@ export default function OrganizationsList() {
   );
 
   const where = useMemo(() => {
-    const conditions = [];
+    const conditions = [{ verified: { equals: true } }];
     if (search.trim()) {
       const q = search.trim();
       conditions.push({
@@ -249,7 +249,7 @@ export default function OrganizationsList() {
     if (domainFilter) {
       conditions.push({ primaryDomain: { equals: domainFilter } });
     }
-    return conditions.length ? { AND: conditions } : {};
+    return { AND: conditions };
   }, [search, domainFilter]);
 
   useEffect(() => {

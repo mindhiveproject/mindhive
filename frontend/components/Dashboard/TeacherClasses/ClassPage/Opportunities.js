@@ -1,24 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import absoluteUrl from "next-absolute-url";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
+import DesignSystemButton from "../../../DesignSystem/Button";
 import CopyButton from "../../../DesignSystem/CopyButton";
 import Chip from "../../../DesignSystem/Chip";
 import ClassMatchingRoundSection from "./ClassMatchingRoundSection";
 import OpportunityPreviewModal from "./OpportunityPreviewModal";
 
-const GLOBE_ICON = (
+const NETWORK_ICON = (
   <img
-    src="/assets/connect/globe.svg"
+    src="/assets/connect/network.svg"
     alt=""
     aria-hidden
-    width={24}
-    height={24}
+    width={18}
+    height={18}
   />
 );
 
 export default function ClassOpportunities({ myclass }) {
   const { t } = useTranslation("classes");
+  const router = useRouter();
   const { origin } = absoluteUrl();
   const networks = myclass?.networks || [];
 
@@ -61,6 +64,14 @@ export default function ClassOpportunities({ myclass }) {
     ? `${origin}/login?classNetwork=${selectedNetworkId}`
     : "";
 
+  const handleOpenSettings = () => {
+    if (!myclass?.code) return;
+    router.push({
+      pathname: `/dashboard/myclasses/${myclass.code}`,
+      query: { page: "settings" },
+    });
+  };
+
   return (
     <div className="classTabPage opportunities">
       {networks.length === 0 ? (
@@ -71,6 +82,15 @@ export default function ClassOpportunities({ myclass }) {
                 "This class is not linked to any class networks yet. A network admin can add this class to a network.",
             })}
           </p>
+          <DesignSystemButton
+            variant="outline"
+            type="button"
+            onClick={handleOpenSettings}
+          >
+            {t("opportunities.openSettings", {}, {
+              default: "Open settings",
+            })}
+          </DesignSystemButton>
         </div>
       ) : (
         <>
@@ -104,7 +124,7 @@ export default function ClassOpportunities({ myclass }) {
                   shape="square"
                   selected={network.id === selectedNetworkId}
                   onClick={() => handleNetworkSelect(network.id)}
-                  leading={GLOBE_ICON}
+                  leading={NETWORK_ICON}
                   ariaLabel={network.title}
                 />
               ))}

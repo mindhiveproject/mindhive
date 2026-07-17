@@ -171,6 +171,25 @@ export const Profile = list({
     memberOfClassNetworks: relationship({
       ref: "ClassNetwork.memberProfiles",
       many: true,
+      // Block generated GraphQL updates; membership changes go through sudo
+      // custom mutations (network invites / open join / global admin override).
+      access: {
+        read: () => true,
+        create: () => false,
+        update: () => false,
+      },
+    }),
+    networkInvites: relationship({
+      ref: "NetworkInvite.profile",
+      many: true,
+    }),
+    networkInvitesRequested: relationship({
+      ref: "NetworkInvite.requestedBy",
+      many: true,
+    }),
+    networkInvitesReviewed: relationship({
+      ref: "NetworkInvite.reviewedBy",
+      many: true,
     }),
     journals: relationship({
       ref: "Journal.creator",
@@ -359,6 +378,10 @@ export const Profile = list({
     }),
     organizationsCreated: relationship({
       ref: "Organization.createdBy",
+      many: true,
+    }),
+    adminOfOrganizations: relationship({
+      ref: "Organization.admins",
       many: true,
     }),
     // Invites this profile has sent to other people.

@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Walkthrough Tutorial"
 	},
 	"info": "More information",
+	"networkPendingInvites": {
+		"count": "{{count}} pending",
+		"dismiss": "Dismiss",
+		"open": "Review",
+		"show": "Show",
+		"title": "Pending network invites",
+		"untitled": "Untitled network"
+	},
 	"participantID": "Participant ID",
 	"permissions": "Permissions",
 	"preview": "Preview",
@@ -50,6 +58,69 @@
 		"messages": "Messages",
 		"profile": "Profile",
 		"settings": "Settings"
+	},
+	"sponsorOnboarding": {
+		"dismiss": "Dismiss",
+		"manage": "Manage",
+		"network": {
+			"allJoined": "You're already connected to every available feedback network.",
+			"cancelError": "Failed to cancel request.",
+			"cancelling": "Cancelling...",
+			"cancelRequest": "Cancel request",
+			"close": "Close",
+			"empty": "No public feedback networks are available yet.",
+			"joinButton": "Join",
+			"joinError": "Failed to join this network.",
+			"joining": "Joining...",
+			"joinSuccess": "You've joined the network.",
+			"loadError": "Unable to load public networks.",
+			"loading": "Loading networks...",
+			"modalDescription": "Join a public feedback network so teachers and students in that network can discover your opportunities.",
+			"modalTitle": "Join a network",
+			"pendingRequest": "Request pending",
+			"requestSuccess": "Your membership request was sent.",
+			"setupButton": "Join",
+			"setupTitle": "Choose where opportunities are shared",
+			"untitled": "Untitled network"
+		},
+		"opportunity": {
+			"createButton": "",
+			"createTitle": "",
+			"description": "",
+			"done": "",
+			"locked": "",
+			"readyTitle": "Your opportunities",
+			"setupButton": "Create",
+			"setupTitle": "Describe a student project",
+			"viewButton": "",
+			"viewTitle": ""
+		},
+		"organization": {
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"setupButton": "Set up",
+			"setupTitle": "Connect your sponsor organization",
+			"stepLabel": "",
+			"title": ""
+		},
+		"profile": {
+			"completeTitle": "",
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"editTitle": "",
+			"openButton": "",
+			"readyTitle": "Your profile",
+			"setupButton": "Set up",
+			"setupTitle": "Introduce yourself to students"
+		},
+		"status": {
+			"needsSetup": "Needed",
+			"ready": "Done"
+		},
+		"subtitle": "",
+		"title": "Sponsor setup"
 	},
 	"surveys": "Surveys",
 	"tasks": "Tasks",

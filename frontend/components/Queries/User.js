@@ -1,13 +1,14 @@
 import gql from "graphql-tag";
 
 // Lightweight onboarding state for sponsor accounts. Used by the dashboard
-// home to show a two-step guidance card until the user has completed both
-// their profile and created their first opportunity.
+// home to show setup guidance until the user has completed profile, org,
+// network, and opportunity steps.
 export const SPONSOR_ONBOARDING_STATE = gql`
   query SPONSOR_ONBOARDING_STATE {
     authenticatedItem {
       ... on Profile {
         id
+        email
         firstName
         lastName
         profileType
@@ -19,6 +20,30 @@ export const SPONSOR_ONBOARDING_STATE = gql`
         organizations {
           id
           name
+          memberOfClassNetworks {
+            id
+            title
+          }
+        }
+        adminOfOrganizations {
+          id
+          name
+        }
+        organizationsCreated {
+          id
+          name
+        }
+        memberOfClassNetworks {
+          id
+          title
+        }
+        adminOfClassNetworks {
+          id
+          title
+        }
+        classNetworksCreated {
+          id
+          title
         }
         opportunitiesCreated {
           id
@@ -1125,6 +1150,38 @@ export const GET_PROFILE = gql`
           }
           interests {
             id
+          }
+        }
+        adminOfOrganizations {
+          id
+          name
+          tagline
+          department
+          website
+          location
+          mission
+          primaryDomain
+          verified
+          logo {
+            url
+          }
+          interests {
+            id
+          }
+          members {
+            id
+            username
+            firstName
+            lastName
+            email
+            image {
+              keystoneImage {
+                url
+              }
+              image {
+                publicUrlTransformed
+              }
+            }
           }
         }
       }
