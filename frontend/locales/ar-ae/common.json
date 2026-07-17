@@ -26,12 +26,20 @@
 			"invalidNetwork": "",
 			"joinFailed": "",
 			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
 		"email": "بريد إلكتروني",
 		"forgotPassword": "نسيت كلمة السر؟",
 		"login": "تسجيل الدخول",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "كلمة المرور",
 		"requestReset": "طلب إعادة الضبط",
 		"username": "اسم المستخدم"

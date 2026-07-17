@@ -129,3 +129,45 @@ export const GET_NETWORK = gql`
     }
   }
 `;
+
+const NETWORK_INVITE_FIELDS = `
+  id
+  direction
+  status
+  email
+  token
+  classNetwork {
+    id
+    title
+    isPublic
+    settings
+  }
+  profile {
+    id
+    username
+    firstName
+    lastName
+    email
+  }
+  requestedBy {
+    id
+    username
+    firstName
+    lastName
+    email
+  }
+  reviewedBy {
+    id
+  }
+  createdAt
+  resolvedAt
+`;
+
+// filtered reads for the current participant and network admins
+export const GET_NETWORK_INVITES = gql`
+  query GET_NETWORK_INVITES($where: NetworkInviteWhereInput!) {
+    networkInvites(where: $where, orderBy: { createdAt: desc }) {
+      ${NETWORK_INVITE_FIELDS}
+    }
+  }
+`;

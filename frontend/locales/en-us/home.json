@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Walkthrough Tutorial"
 	},
 	"info": "More information",
+	"networkPendingInvites": {
+		"count": "{{count}} pending",
+		"dismiss": "Dismiss",
+		"open": "Review",
+		"show": "Show",
+		"title": "Pending network invites",
+		"untitled": "Untitled network"
+	},
 	"participantID": "Participant ID",
 	"permissions": "Permissions",
 	"preview": "Preview",
@@ -56,6 +64,9 @@
 		"manage": "Manage",
 		"network": {
 			"allJoined": "You're already connected to every available feedback network.",
+			"cancelError": "Failed to cancel request.",
+			"cancelling": "Cancelling...",
+			"cancelRequest": "Cancel request",
 			"close": "Close",
 			"empty": "No public feedback networks are available yet.",
 			"joinButton": "Join",
@@ -66,6 +77,8 @@
 			"loading": "Loading networks...",
 			"modalDescription": "Join a public feedback network so teachers and students in that network can discover your opportunities.",
 			"modalTitle": "Join a network",
+			"pendingRequest": "Request pending",
+			"requestSuccess": "Your membership request was sent.",
 			"setupButton": "Join",
 			"setupTitle": "Choose where opportunities are shared",
 			"untitled": "Untitled network"

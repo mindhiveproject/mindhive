@@ -192,12 +192,15 @@ export async function addClassNetworkMemberProfile(
     throw new Error("You must be signed in to manage class network members.");
   }
 
-  const network = await getNetwork(context, args.networkId);
-  if (!hasNetworkAuthority(context.session, network)) {
+  // Global admin override only. Network creators/admins must use
+  // inviteProfileToClassNetwork (or open-join / request flows).
+  if (!permissions.canManageUsers({ session: context.session })) {
     throw new Error(
-      "You are not allowed to manage members for this class network."
+      "Only global admins can directly add members. Use inviteProfileToClassNetwork instead."
     );
   }
+
+  const network = await getNetwork(context, args.networkId);
 
   const profile = await getTargetProfile(context, args);
 

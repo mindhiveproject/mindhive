@@ -35,6 +35,14 @@
 		"walkthroughTutorial": ""
 	},
 	"info": "अधिक जानकारी",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "प्रतिभागी आईडी",
 	"permissions": "अनुमतियां",
 	"preview": "पूर्व दर्शन",
@@ -56,6 +64,9 @@
 		"manage": "",
 		"network": {
 			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
 			"close": "",
 			"empty": "",
 			"joinButton": "",
@@ -66,6 +77,8 @@
 			"loading": "",
 			"modalDescription": "",
 			"modalTitle": "",
+			"pendingRequest": "",
+			"requestSuccess": "",
 			"setupButton": "",
 			"setupTitle": "",
 			"untitled": ""

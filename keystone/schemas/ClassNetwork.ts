@@ -9,7 +9,7 @@ import {
   checkbox,
   json,
 } from "@keystone-6/core/fields";
-import { rules, isSignedIn } from "../access";
+import { rules, isSignedIn, canAdminManageNetworks } from "../access";
 
 export const ClassNetwork = list({
   access: {
@@ -31,6 +31,7 @@ export const ClassNetwork = list({
     settings: json({
       defaultValue: {
         type: "feedback_network",
+        membershipMode: "approval",
       },
     }),
     creator: relationship({
@@ -80,6 +81,14 @@ export const ClassNetwork = list({
     memberProfiles: relationship({
       ref: "Profile.memberOfClassNetworks",
       many: true,
+      // Public GraphQL updates stay locked; Admin UI operators and sudo
+      // custom mutations can change membership. Creator auto-connect still
+      // works via resolveInput.
+      access: {
+        read: () => true,
+        create: canAdminManageNetworks,
+        update: canAdminManageNetworks,
+      },
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation !== "create") {
@@ -107,6 +116,10 @@ export const ClassNetwork = list({
           };
         },
       },
+    }),
+    networkInvites: relationship({
+      ref: "NetworkInvite.classNetwork",
+      many: true,
     }),
     memberOrganizations: relationship({
       ref: "Organization.memberOfClassNetworks",

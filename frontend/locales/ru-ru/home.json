@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Пошаговое руководство"
 	},
 	"info": "Дополнительная информация",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "Идентификатор участника",
 	"permissions": "Разрешения",
 	"preview": "Предварительный просмотр",
@@ -56,6 +64,9 @@
 		"manage": "",
 		"network": {
 			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
 			"close": "",
 			"empty": "",
 			"joinButton": "",
@@ -66,6 +77,8 @@
 			"loading": "",
 			"modalDescription": "",
 			"modalTitle": "",
+			"pendingRequest": "",
+			"requestSuccess": "",
 			"setupButton": "",
 			"setupTitle": "",
 			"untitled": ""

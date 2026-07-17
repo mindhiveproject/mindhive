@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "دليل إرشادي"
 	},
 	"info": "مزيد من المعلومات",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "معرف المشارك",
 	"permissions": "الأذونات",
 	"preview": "معاينة",
@@ -56,6 +64,9 @@
 		"manage": "",
 		"network": {
 			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
 			"close": "",
 			"empty": "",
 			"joinButton": "",
@@ -66,6 +77,8 @@
 			"loading": "",
 			"modalDescription": "",
 			"modalTitle": "",
+			"pendingRequest": "",
+			"requestSuccess": "",
 			"setupButton": "",
 			"setupTitle": "",
 			"untitled": ""

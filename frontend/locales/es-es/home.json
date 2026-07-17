@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Tutorial paso a paso"
 	},
 	"info": "Más información",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "ID del participante",
 	"permissions": "Permisos",
 	"preview": "Avance",
@@ -56,6 +64,9 @@
 		"manage": "",
 		"network": {
 			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
 			"close": "",
 			"empty": "",
 			"joinButton": "",
@@ -66,6 +77,8 @@
 			"loading": "",
 			"modalDescription": "",
 			"modalTitle": "",
+			"pendingRequest": "",
+			"requestSuccess": "",
 			"setupButton": "",
 			"setupTitle": "",
 			"untitled": ""

@@ -27,6 +27,14 @@ export const permissions = {
   ...generatedPermissions,
 };
 
+/** Admin UI operators who may manage network memberships and invites. */
+export function canAdminManageNetworks({ session }: ListAccessArgs) {
+  return (
+    permissions.canManageUsers({ session }) ||
+    permissions.canAccessAdminUI({ session })
+  );
+}
+
 // Rule based functions
 // rules can return a boolean or a filter that limits which products they can CRUD
 export const rules = {
@@ -281,15 +289,30 @@ export const rules = {
     };
   },
   // ClassNetwork: creators and explicitly assigned network admins manage
-  // network metadata/membership. Global user managers keep full override.
+  // network metadata/membership. Admin UI operators keep full override.
   classNetworkMutate({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
-    if (permissions.canManageUsers({ session })) return true;
+    if (canAdminManageNetworks({ session })) return true;
     const me = session.itemId;
     return {
       OR: [
         { creator: { id: { equals: me } } },
         { admins: { some: { id: { equals: me } } } },
+      ],
+    };
+  },
+  // NetworkInvite: visible to the target profile, the initiator, network
+  // creator/admins, and Admin UI operators.
+  networkInviteVisible({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (canAdminManageNetworks({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { profile: { id: { equals: me } } },
+        { requestedBy: { id: { equals: me } } },
+        { classNetwork: { creator: { id: { equals: me } } } },
+        { classNetwork: { admins: { some: { id: { equals: me } } } } },
       ],
     };
   },

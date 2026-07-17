@@ -24,6 +24,18 @@ import {
   removeClassNetworkMemberOrganization,
   removeClassNetworkMemberProfile,
 } from "./classNetworkAdmins";
+import {
+  acceptNetworkInvite,
+  approveNetworkInvite,
+  cancelNetworkInvite,
+  declineNetworkInvite,
+  inviteProfileToClassNetwork,
+  joinOpenClassNetwork,
+  leaveClassNetwork,
+  networkInviteContext,
+  rejectNetworkInvite,
+  requestClassNetworkMembership,
+} from "./networkInvites";
 import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
@@ -124,6 +136,19 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           classId: ID!
           networkId: ID!
         ): Class
+        requestClassNetworkMembership(networkId: ID!): NetworkInvite
+        joinOpenClassNetwork(networkId: ID!): ClassNetwork
+        leaveClassNetwork(networkId: ID!): ClassNetwork
+        inviteProfileToClassNetwork(
+          networkId: ID!
+          profileId: ID
+          email: String
+        ): NetworkInvite
+        approveNetworkInvite(inviteId: ID!): NetworkInvite
+        rejectNetworkInvite(inviteId: ID!): NetworkInvite
+        acceptNetworkInvite(inviteId: ID, token: String): NetworkInvite
+        declineNetworkInvite(inviteId: ID, token: String): NetworkInvite
+        cancelNetworkInvite(inviteId: ID!): NetworkInvite
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
         # One-off seeder for the global Opportunity FormDefinition.
@@ -145,6 +170,19 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # changelog entry on the published row.
         publishFormDefinition(id: ID!, changelog: String): FormDefinition
       }
+      type NetworkInviteContextNetwork {
+        id: ID!
+        title: String
+        description: String
+        isPublic: Boolean
+        settings: JSON
+      }
+      type NetworkInviteContext {
+        id: ID!
+        status: String!
+        email: String
+        classNetwork: NetworkInviteContextNetwork
+      }
       extend type Query {
         # Resolve the most-specific published FormDefinition for the
         # current viewer's scope. Pass organizationId / classNetworkId
@@ -156,12 +194,16 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           organizationId: ID
           classNetworkId: ID
         ): FormDefinition
+        # Public-safe invite context for login/signup. Returns only
+        # non-sensitive display fields for a tokenized NetworkInvite.
+        networkInviteContext(token: String!): NetworkInviteContext
       }
     `,
     resolvers: {
       Opportunity: opportunityMultiselectResolvers,
       Query: {
         resolveFormDefinition,
+        networkInviteContext,
       },
       Mutation: {
         sendEmail,
@@ -186,6 +228,15 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         removeClassNetworkAdmin,
         removeClassNetworkMemberProfile,
         removeClassNetworkMemberOrganization,
+        requestClassNetworkMembership,
+        joinOpenClassNetwork,
+        leaveClassNetwork,
+        inviteProfileToClassNetwork,
+        approveNetworkInvite,
+        rejectNetworkInvite,
+        acceptNetworkInvite,
+        declineNetworkInvite,
+        cancelNetworkInvite,
         followUser,
         unfollowUser,
         seedOpportunityForm,
