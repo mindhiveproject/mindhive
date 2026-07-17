@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Walkthrough-zelfstudie"
 	},
 	"info": "Meer informatie",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "Deelnemers-ID",
 	"permissions": "Machtigingen",
 	"preview": "Voorvertoning",

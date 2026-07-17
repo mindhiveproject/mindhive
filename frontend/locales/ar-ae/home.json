@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "دليل إرشادي"
 	},
 	"info": "مزيد من المعلومات",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "معرف المشارك",
 	"permissions": "الأذونات",
 	"preview": "معاينة",

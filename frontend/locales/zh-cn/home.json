@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "演练教程"
 	},
 	"info": "更多信息",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "参与者 ID",
 	"permissions": "权限",
 	"preview": "预览",

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import moment from "moment";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
@@ -146,7 +147,7 @@ const SectionHeader = styled.div`
 const GridTable = styled.div`
   width: 100%;
   min-height: 280px;
-  height: 420px;
+  height: 460px;
 `;
 
 const EmptyNote = styled.p`
@@ -270,6 +271,10 @@ const defaultColDef = {
   resizable: true,
   sortable: true,
   filter: true,
+  floatingFilter: false,
+  filterParams: {
+    maxNumConditions: 1,
+  },
 };
 
 function EmailCellRenderer(params) {
@@ -460,6 +465,7 @@ function NetworkDetailPage({ query, user }) {
               : t("classNetworks.invites.directionRequest", {}, {
                   default: "Request",
                 }),
+          createdAt: invite.createdAt || null,
           manualLink:
             invite.direction === "invite" && invite.token && !invite.profile?.id
               ? buildNetworkInviteManualLink(invite.token)
@@ -1076,6 +1082,17 @@ function NetworkDetailPage({ query, user }) {
         flex: 0.7,
         minWidth: 120,
         filter: "agTextColumnFilter",
+      },
+      {
+        field: "createdAt",
+        headerName: t("classNetworks.grid.created", {}, { default: "Created" }),
+        valueGetter: (params) => params?.data?.createdAt || null,
+        valueFormatter: (params) =>
+          params.value ? moment(params.value).format("MMMM D, YYYY") : "",
+        filter: "agDateColumnFilter",
+        sortable: true,
+        flex: 0.8,
+        minWidth: 150,
       },
       {
         // Bind to direction so AG Grid refreshes this cell when request→invite

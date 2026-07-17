@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Tutorial passo a passo"
 	},
 	"info": "Mais informações",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "ID do participante",
 	"permissions": "Permissões",
 	"preview": "Visualização",

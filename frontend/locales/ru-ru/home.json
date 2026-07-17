@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Пошаговое руководство"
 	},
 	"info": "Дополнительная информация",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "Идентификатор участника",
 	"permissions": "Разрешения",
 	"preview": "Предварительный просмотр",

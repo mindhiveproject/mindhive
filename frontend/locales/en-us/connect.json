@@ -113,6 +113,7 @@
 		},
 		"grid": {
 			"actions": "Actions",
+			"created": "Created",
 			"email": "Email",
 			"matchCount": "Matches",
 			"name": "Name",

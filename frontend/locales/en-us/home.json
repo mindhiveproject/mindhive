@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Walkthrough Tutorial"
 	},
 	"info": "More information",
+	"networkPendingInvites": {
+		"count": "{{count}} pending",
+		"dismiss": "Dismiss",
+		"open": "Review",
+		"show": "Show",
+		"title": "Pending network invites",
+		"untitled": "Untitled network"
+	},
 	"participantID": "Participant ID",
 	"permissions": "Permissions",
 	"preview": "Preview",

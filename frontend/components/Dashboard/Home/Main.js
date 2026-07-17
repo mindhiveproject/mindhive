@@ -7,6 +7,7 @@ import Profile from "../Profile/Main";
 import FavoritePeople from "../Connect/Connections/FavoritePeople";
 import FavoriteTasks from "../../Tasks/Bank/FavoriteTasks";
 import SponsorOnboarding from "./SponsorOnboarding";
+import NetworkPendingInvites from "./NetworkPendingInvites";
 
 export default function Home({ query, user }) {
   const { publicId, publicReadableId } = user;
@@ -16,9 +17,10 @@ export default function Home({ query, user }) {
     <StyledHome>
       <Profile />
       <SponsorOnboarding />
-      <FavoritePeople user={user} />
-      <FavoriteTasks user={user} />
+      <NetworkPendingInvites user={user} />
+      {/* <FavoritePeople user={user} /> */}
       <MyUpdates user={user} />
+      <FavoriteTasks user={user} />
 
       <div className="header">
         <div className="idInfo">

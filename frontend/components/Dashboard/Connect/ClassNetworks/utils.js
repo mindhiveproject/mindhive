@@ -207,6 +207,15 @@ export function buildPendingNetworkInvitesWhere(networkId) {
   };
 }
 
+export function buildPendingNetworkInvitesWhereForNetworks(networkIds) {
+  const ids = (networkIds || []).filter(Boolean);
+  if (ids.length === 0) return null;
+  return {
+    classNetwork: { id: { in: ids } },
+    status: { equals: "pending" },
+  };
+}
+
 export function buildNetworkInviteManualLink(token) {
   if (!token) return "";
   const origin =

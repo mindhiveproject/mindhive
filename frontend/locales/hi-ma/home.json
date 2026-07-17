@@ -35,6 +35,14 @@
 		"walkthroughTutorial": ""
 	},
 	"info": "अधिक जानकारी",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "प्रतिभागी आईडी",
 	"permissions": "अनुमतियां",
 	"preview": "पूर्व दर्शन",
