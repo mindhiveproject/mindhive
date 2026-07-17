@@ -165,3 +165,122 @@ export function buildManageNetworksQueryVariables(
         },
       };
 }
+
+/** Effective mode: open only when explicitly set; otherwise approval. */
+export function getEffectiveMembershipMode(settings) {
+  return settings?.membershipMode === "open" ? "open" : "approval";
+}
+
+export function isUserNetworkMember(user, networkId) {
+  if (!user?.id || !networkId) return false;
+  return (user?.memberOfClassNetworks || []).some(
+    (network) => network?.id === networkId
+  );
+}
+
+export function buildMyNetworkInvitesWhere(user, networkIds) {
+  if (!user?.id) return null;
+  const participantOr = [
+    { requestedBy: { id: { equals: user.id } } },
+    { profile: { id: { equals: user.id } } },
+  ];
+  const email = user?.email?.trim()?.toLowerCase();
+  if (email) {
+    participantOr.push({ email: { equals: email } });
+  }
+
+  const and = [
+    { status: { in: ["pending", "rejected"] } },
+    { OR: participantOr },
+  ];
+  if (Array.isArray(networkIds) && networkIds.length > 0) {
+    and.unshift({ classNetwork: { id: { in: networkIds } } });
+  }
+  return { AND: and };
+}
+
+export function buildPendingNetworkInvitesWhere(networkId) {
+  if (!networkId) return null;
+  return {
+    classNetwork: { id: { equals: networkId } },
+    status: { equals: "pending" },
+  };
+}
+
+export function buildNetworkInviteManualLink(token) {
+  if (!token) return "";
+  const origin =
+    typeof window !== "undefined" ? window.location.origin : "";
+  return `${origin}/login?networkInvite=${encodeURIComponent(token)}`;
+}
+
+function inviteTimestamp(invite) {
+  const raw = invite?.resolvedAt || invite?.createdAt;
+  const time = raw ? Date.parse(raw) : 0;
+  return Number.isFinite(time) ? time : 0;
+}
+
+function isInviteTargetingUser(invite, user) {
+  if (!invite || !user?.id) return false;
+  if (invite.profile?.id === user.id) return true;
+  const inviteEmail = invite.email?.trim()?.toLowerCase();
+  const userEmail = user.email?.trim()?.toLowerCase();
+  return !!(inviteEmail && userEmail && inviteEmail === userEmail);
+}
+
+/**
+ * Resolve public-card membership/invite UI state for one network.
+ * Returns { state, invite } where state is one of:
+ * member | incomingInvite | pendingRequest | rejectedRequest | openJoin | canRequest
+ */
+export function resolvePublicNetworkCardState({ user, network, invites }) {
+  if (!network?.id || !user?.id) {
+    return { state: "canRequest", invite: null };
+  }
+
+  if (isUserNetworkMember(user, network.id)) {
+    return { state: "member", invite: null };
+  }
+
+  const forNetwork = (invites || []).filter(
+    (invite) => invite?.classNetwork?.id === network.id
+  );
+
+  const incomingInvite = forNetwork.find(
+    (invite) =>
+      invite.status === "pending" &&
+      invite.direction === "invite" &&
+      isInviteTargetingUser(invite, user)
+  );
+  if (incomingInvite) {
+    return { state: "incomingInvite", invite: incomingInvite };
+  }
+
+  const pendingRequest = forNetwork.find(
+    (invite) =>
+      invite.status === "pending" &&
+      invite.direction === "request" &&
+      invite.requestedBy?.id === user.id
+  );
+  if (pendingRequest) {
+    return { state: "pendingRequest", invite: pendingRequest };
+  }
+
+  const rejectedRequest = forNetwork
+    .filter(
+      (invite) =>
+        invite.status === "rejected" &&
+        invite.direction === "request" &&
+        invite.requestedBy?.id === user.id
+    )
+    .sort((a, b) => inviteTimestamp(b) - inviteTimestamp(a))[0];
+  if (rejectedRequest) {
+    return { state: "rejectedRequest", invite: rejectedRequest };
+  }
+
+  if (getEffectiveMembershipMode(network.settings) === "open") {
+    return { state: "openJoin", invite: null };
+  }
+
+  return { state: "canRequest", invite: null };
+}

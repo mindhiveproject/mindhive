@@ -13,6 +13,7 @@ import { ProfileImage } from "./schemas/ProfileImage";
 import { Permission } from "./schemas/Permission";
 import { Class } from "./schemas/Class";
 import { ClassNetwork } from "./schemas/ClassNetwork";
+import { NetworkInvite } from "./schemas/NetworkInvite";
 import { Report } from "./schemas/Report";
 import { Journal } from "./schemas/Journal";
 import { Post } from "./schemas/Post";
@@ -89,6 +90,7 @@ export const lists: Lists = {
   Permission,
   Class,
   ClassNetwork,
+  NetworkInvite,
   Report,
   Journal,
   Post,

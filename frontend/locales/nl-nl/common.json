@@ -26,12 +26,20 @@
 			"invalidNetwork": "",
 			"joinFailed": "",
 			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
 		"email": "E-mail",
 		"forgotPassword": "Wachtwoord vergeten?",
 		"login": "Login",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "Wachtwoord",
 		"requestReset": "Verzoek om reset",
 		"username": "Gebruikersnaam"

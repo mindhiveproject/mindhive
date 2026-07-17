@@ -66,6 +66,7 @@
 			"loading": "Loading networks...",
 			"modalDescription": "Join a public feedback network so teachers and students in that network can discover your opportunities.",
 			"modalTitle": "Join a network",
+			"requestSuccess": "Your membership request was sent.",
 			"setupButton": "Join",
 			"setupTitle": "Choose where opportunities are shared",
 			"untitled": "Untitled network"

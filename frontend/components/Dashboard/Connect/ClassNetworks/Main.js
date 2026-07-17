@@ -7,13 +7,16 @@ import useTranslation from "next-translate/useTranslation";
 import DesignSystemButton from "../../../DesignSystem/Button";
 import {
   GET_ALL_NETWORKS,
+  GET_NETWORK_INVITES,
   GET_PUBLIC_CLASS_NETWORKS,
 } from "../../../Queries/ClassNetwork";
 import RoleGuard from "../RoleGuard";
 import { deriveRoles } from "../useConnectRole";
 import NetworkDetailPage from "./NetworkDetail";
+import PublicNetworkCardActions from "./PublicNetworkCardActions";
 import {
   buildManageNetworksQueryVariables,
+  buildMyNetworkInvitesWhere,
   countUniqueStudents,
   formatCount,
 } from "./utils";
@@ -131,6 +134,21 @@ const Status = styled.div`
   line-height: 22px;
 `;
 
+const Section = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h2 {
+    margin: 0;
+    color: #171717;
+    font-family: "Lato", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
+  }
+`;
+
 function NetworkCard({
   network,
   actions,
@@ -221,13 +239,37 @@ function NetworkCard({
   );
 }
 
-function PublicNetworks() {
+function PublicNetworks({ user }) {
   const { t } = useTranslation("connect");
   const { data, loading, error } = useQuery(GET_PUBLIC_CLASS_NETWORKS);
   const networks = data?.classNetworks || [];
+  const networkIds = useMemo(
+    () => (data?.classNetworks || []).map((network) => network.id).filter(Boolean),
+    [data?.classNetworks]
+  );
+  const publicNetworkIdSet = useMemo(
+    () => new Set(networkIds),
+    [networkIds]
+  );
+  const joinedNetworks = useMemo(
+    () =>
+      (user?.memberOfClassNetworks || []).filter(
+        (network) => network?.id && !publicNetworkIdSet.has(network.id)
+      ),
+    [publicNetworkIdSet, user?.memberOfClassNetworks]
+  );
+  const invitesWhere = useMemo(
+    () => buildMyNetworkInvitesWhere(user, networkIds),
+    [networkIds, user]
+  );
+  const { data: invitesData } = useQuery(GET_NETWORK_INVITES, {
+    variables: { where: invitesWhere },
+    skip: !invitesWhere || networkIds.length === 0,
+  });
+  const invites = invitesData?.networkInvites || [];
 
   return (
-    <RoleGuard allow={["teacher", "mentor"]}>
+    <RoleGuard allow={["teacher", "mentor", "scientist"]}>
       <Shell>
         <Header>
           <h1>
@@ -243,6 +285,33 @@ function PublicNetworks() {
           </p>
         </Header>
 
+        {joinedNetworks.length > 0 ? (
+          <Section>
+            <h2>
+              {t("classNetworks.joinedTitle", {}, {
+                default: "Joined networks",
+              })}
+            </h2>
+            <Grid>
+              {joinedNetworks.map((network) => (
+                <NetworkCard
+                  key={network.id}
+                  network={network}
+                  showVisibility
+                  actions={
+                    <PublicNetworkCardActions
+                      network={network}
+                      user={user}
+                      invites={invites}
+                      invitesWhere={invitesWhere}
+                    />
+                  }
+                />
+              ))}
+            </Grid>
+          </Section>
+        ) : null}
+
         {loading ? (
           <Status>
             {t("classNetworks.loading", {}, { default: "Loading networks..." })}
@@ -256,7 +325,18 @@ function PublicNetworks() {
         ) : networks.length > 0 ? (
           <Grid>
             {networks.map((network) => (
-              <NetworkCard key={network.id} network={network} />
+              <NetworkCard
+                key={network.id}
+                network={network}
+                actions={
+                  <PublicNetworkCardActions
+                    network={network}
+                    user={user}
+                    invites={invites}
+                    invitesWhere={invitesWhere}
+                  />
+                }
+              />
             ))}
           </Grid>
         ) : (
@@ -332,7 +412,7 @@ function ManageNetworks({ user }) {
                 actions={
                   canManageClassNetwork(network.id) ? (
                     <DesignSystemButton
-                      variant="primary"
+                      variant="filled"
                       type="button"
                       onClick={() => handleOpenDetails(network)}
                       aria-label={t(
@@ -370,6 +450,6 @@ export default function ClassNetworksMain({ query, user }) {
   return query?.mode === "manage" ? (
     <ManageNetworks user={user} />
   ) : (
-    <PublicNetworks />
+    <PublicNetworks user={user} />
   );
 }

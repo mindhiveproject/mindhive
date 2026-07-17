@@ -368,18 +368,21 @@ export default function SponsorOnboarding() {
     setJoiningNetworkId(networkId);
     setJoinFeedback(null);
     try {
-      await joinClassNetwork({
+      const joinResult = await joinClassNetwork({
         apolloClient,
-        userId: me.id,
         classNetworkId: networkId,
         user: me,
       });
       await refetch();
       setJoinFeedback({
         kind: "ok",
-        text: t("sponsorOnboarding.network.joinSuccess", {}, {
-          default: "You've joined the network.",
-        }),
+        text: joinResult.requested
+          ? t("sponsorOnboarding.network.requestSuccess", {}, {
+              default: "Your membership request was sent.",
+            })
+          : t("sponsorOnboarding.network.joinSuccess", {}, {
+              default: "You've joined the network.",
+            }),
       });
       setNetworkModalOpen(false);
     } catch (err) {

@@ -26,12 +26,20 @@
 			"invalidNetwork": "",
 			"joinFailed": "",
 			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
 		"email": "ईमेल",
 		"forgotPassword": "अपना कूट शब्द भूल गए?",
 		"login": "लॉग इन करें",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "पासवर्ड",
 		"requestReset": "रीसेट का अनुरोध करें",
 		"username": "उपयोगकर्ता नाम"

@@ -14,7 +14,10 @@ export default function AddNetwork({}) {
   const { inputs, handleChange } = useForm({
     classes: [],
     isPublic: false,
-    settings: { type: "feedback_network" },
+    settings: {
+      type: "feedback_network",
+      membershipMode: "approval",
+    },
   });
 
   const [

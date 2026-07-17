@@ -26,12 +26,20 @@
 			"invalidNetwork": "",
 			"joinFailed": "",
 			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
 		"email": "Correo electrónico",
 		"forgotPassword": "¿Olvidaste tu contraseña?",
 		"login": "Acceso",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "Contraseña",
 		"requestReset": "Solicitar restablecimiento",
 		"username": "Nombre de usuario"

@@ -12,10 +12,18 @@ import { AgGridReact } from "ag-grid-react";
 import DesignSystemButton from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import CopyButton from "../../../DesignSystem/CopyButton";
-import { GET_ALL_NETWORKS } from "../../../Queries/ClassNetwork";
+import {
+  GET_ALL_NETWORKS,
+  GET_NETWORK_INVITES,
+} from "../../../Queries/ClassNetwork";
+import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import {
   ADD_CLASS_NETWORK_ADMIN,
   ADD_CLASS_NETWORK_MEMBER_PROFILE,
+  APPROVE_NETWORK_INVITE,
+  CANCEL_NETWORK_INVITE,
+  INVITE_PROFILE_TO_CLASS_NETWORK,
+  REJECT_NETWORK_INVITE,
   REMOVE_CLASS_NETWORK_ADMIN,
   REMOVE_CLASS_NETWORK_MEMBER_ORGANIZATION,
   REMOVE_CLASS_NETWORK_MEMBER_PROFILE,
@@ -26,12 +34,15 @@ import { deriveRoles } from "../useConnectRole";
 import {
   CopyableEmail,
   buildManageNetworksQueryVariables,
+  buildNetworkInviteManualLink,
+  buildPendingNetworkInvitesWhere,
   countProfileOwnedClasses,
   countProfileOwnedOpportunities,
   countUniqueStudents,
   displayProfileName,
   findUserClassInNetwork,
   formatCount,
+  getEffectiveMembershipMode,
   roundStatusLabel,
 } from "./utils";
 
@@ -107,7 +118,6 @@ const DetailSection = styled.section`
   border: 1px solid #ece9e6;
   border-radius: 16px;
   background: #ffffff;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
   scroll-margin-top: 96px;
 `;
 
@@ -212,6 +222,7 @@ const DetailsForm = styled.div`
   }
 
   input,
+  select,
   textarea {
     width: 100%;
     padding: 12px;
@@ -220,6 +231,7 @@ const DetailsForm = styled.div`
     font-family: "Inter", sans-serif;
     font-size: 14px;
     line-height: 22px;
+    background: #ffffff;
 
     &:focus {
       outline: 0;
@@ -227,9 +239,23 @@ const DetailsForm = styled.div`
     }
   }
 
+  select {
+    height: 46px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
   textarea {
     min-height: 120px;
     resize: vertical;
+  }
+
+  .fieldHint {
+    margin: 0;
+    color: #5f6871;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
   }
 `;
 
@@ -272,8 +298,11 @@ function NetworkDetailPage({ query, user }) {
   const [adminFeedback, setAdminFeedback] = useState(null);
   const [memberEmail, setMemberEmail] = useState("");
   const [memberFeedback, setMemberFeedback] = useState(null);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteFeedback, setInviteFeedback] = useState(null);
   const [networkTitle, setNetworkTitle] = useState("");
   const [networkDescription, setNetworkDescription] = useState("");
+  const [membershipMode, setMembershipMode] = useState("approval");
   const [detailsFeedback, setDetailsFeedback] = useState(null);
 
   const queryVariables = useMemo(
@@ -289,10 +318,37 @@ function NetworkDetailPage({ query, user }) {
   const networks = data?.classNetworks || [];
   const network = networks.find((item) => item.id === networkId) || null;
   const canManage = !!networkId && canManageClassNetwork(networkId);
+  const pendingInvitesWhere = useMemo(
+    () => buildPendingNetworkInvitesWhere(networkId),
+    [networkId]
+  );
+
+  const { data: pendingInvitesData, refetch: refetchPendingInvites } = useQuery(
+    GET_NETWORK_INVITES,
+    {
+      variables: { where: pendingInvitesWhere },
+      skip: !canManage || !pendingInvitesWhere,
+      fetchPolicy: "cache-and-network",
+    }
+  );
 
   const refetchQueries = [
     { query: GET_ALL_NETWORKS, variables: queryVariables },
   ];
+  const inviteRefetchQueries = pendingInvitesWhere
+    ? [
+        ...refetchQueries,
+        {
+          query: GET_NETWORK_INVITES,
+          variables: { where: pendingInvitesWhere },
+        },
+      ]
+    : refetchQueries;
+  const membershipRefetchQueries = [
+    ...inviteRefetchQueries,
+    { query: CURRENT_USER_QUERY },
+  ];
+
   const [addNetworkAdmin, { loading: addingNetworkAdmin }] = useMutation(
     ADD_CLASS_NETWORK_ADMIN,
     { refetchQueries, awaitRefetchQueries: true }
@@ -301,6 +357,23 @@ function NetworkDetailPage({ query, user }) {
     ADD_CLASS_NETWORK_MEMBER_PROFILE,
     { refetchQueries, awaitRefetchQueries: true }
   );
+  const [inviteMemberProfile, { loading: invitingMemberProfile }] = useMutation(
+    INVITE_PROFILE_TO_CLASS_NETWORK,
+    { refetchQueries: membershipRefetchQueries, awaitRefetchQueries: true }
+  );
+  const [approveInvite, { loading: approvingInvite }] = useMutation(
+    APPROVE_NETWORK_INVITE,
+    { refetchQueries: membershipRefetchQueries, awaitRefetchQueries: true }
+  );
+  const [rejectInvite, { loading: rejectingInvite }] = useMutation(
+    REJECT_NETWORK_INVITE,
+    { refetchQueries: inviteRefetchQueries, awaitRefetchQueries: true }
+  );
+  const [cancelOutboundInvite, { loading: cancellingOutboundInvite }] =
+    useMutation(CANCEL_NETWORK_INVITE, {
+      refetchQueries: inviteRefetchQueries,
+      awaitRefetchQueries: true,
+    });
   const [removeNetworkAdmin, { loading: removingNetworkAdmin }] = useMutation(
     REMOVE_CLASS_NETWORK_ADMIN,
     { refetchQueries, awaitRefetchQueries: true }
@@ -323,13 +396,17 @@ function NetworkDetailPage({ query, user }) {
     if (!network?.id) return;
     setNetworkTitle(network.title || "");
     setNetworkDescription(network.description || "");
-  }, [network?.id, network?.title, network?.description]);
+    setMembershipMode(getEffectiveMembershipMode(network.settings));
+  }, [network?.id, network?.title, network?.description, network?.settings]);
 
   const adminMutationLoading = addingNetworkAdmin || removingNetworkAdmin;
   const memberMutationLoading =
     addingMemberProfile ||
+    invitingMemberProfile ||
     removingMemberProfile ||
     removingMemberOrganization;
+  const inviteReviewLoading =
+    approvingInvite || rejectingInvite || cancellingOutboundInvite;
   const networkAdmins = network?.admins || [];
   const memberOrganizations = network?.memberOrganizations || [];
   const memberProfiles = network?.memberProfiles || [];
@@ -360,6 +437,36 @@ function NetworkDetailPage({ query, user }) {
         ),
       })),
     [memberProfiles, network]
+  );
+
+  const pendingInviteRows = useMemo(
+    () =>
+      (pendingInvitesData?.networkInvites || []).map((invite) => {
+        const person =
+          displayProfileName(invite.profile) ||
+          displayProfileName(invite.requestedBy) ||
+          invite.email ||
+          "";
+        return {
+          id: invite.id,
+          person,
+          email: invite.profile?.email || invite.email || "",
+          direction: invite.direction || "",
+          directionLabel:
+            invite.direction === "invite"
+              ? t("classNetworks.invites.directionInvite", {}, {
+                  default: "Invitation",
+                })
+              : t("classNetworks.invites.directionRequest", {}, {
+                  default: "Request",
+                }),
+          manualLink:
+            invite.direction === "invite" && invite.token && !invite.profile?.id
+              ? buildNetworkInviteManualLink(invite.token)
+              : "",
+        };
+      }),
+    [pendingInvitesData?.networkInvites, t]
   );
 
   const roundRows = useMemo(
@@ -471,6 +578,67 @@ function NetworkDetailPage({ query, user }) {
       }/signup/sponsor?classNetwork=${network.id}`
     : "";
 
+  const handleInviteMemberProfile = async () => {
+    const email = inviteEmail.trim().toLowerCase();
+    if (!network?.id || !email) {
+      setInviteFeedback({
+        kind: "error",
+        text: t("classNetworks.invites.emailRequired", {}, {
+          default: "Enter an email address first.",
+        }),
+      });
+      return;
+    }
+
+    if (
+      memberProfiles.some(
+        (profile) => profile?.email?.toLowerCase() === email
+      )
+    ) {
+      setInviteFeedback({
+        kind: "error",
+        text: t("classNetworks.invites.alreadyMember", {}, {
+          default: "That person is already a member of this network.",
+        }),
+      });
+      return;
+    }
+
+    try {
+      const result = await inviteMemberProfile({
+        variables: { networkId: network.id, email },
+      });
+      const created = result?.data?.inviteProfileToClassNetwork;
+      const requestApproved = created?.status === "approved";
+      setInviteEmail("");
+      setInviteFeedback({
+        kind: "ok",
+        text: requestApproved
+          ? t("classNetworks.invites.requestApprovedViaInvite", {}, {
+              default:
+                "Membership request approved. They've been added to the network.",
+            })
+          : t("classNetworks.invites.inviteSent", {}, {
+              default: "Invitation sent.",
+            }),
+        manualLink:
+          !requestApproved && created?.token && !created?.profile?.id
+            ? buildNetworkInviteManualLink(created.token)
+            : "",
+      });
+      await refetchPendingInvites();
+    } catch (err) {
+      setInviteFeedback({
+        kind: "error",
+        text:
+          err?.message ||
+          t("classNetworks.invites.inviteError", {}, {
+            default: "Failed to invite member.",
+          }),
+      });
+    }
+  };
+
   const handleAddMemberProfile = async () => {
     const email = memberEmail.trim().toLowerCase();
     if (!network?.id || !email) {
@@ -532,6 +700,63 @@ function NetworkDetailPage({ query, user }) {
               default: "Failed to add member profile.",
             }),
       });
+    }
+  };
+
+  const handleApproveInvite = async (inviteId) => {
+    if (!inviteId) return;
+    try {
+      await approveInvite({ variables: { inviteId } });
+      await refetchPendingInvites();
+    } catch (err) {
+      window.alert(
+        err?.message ||
+          t("classNetworks.invites.approveError", {}, {
+            default: "Failed to approve request.",
+          })
+      );
+    }
+  };
+
+  const handleRejectInvite = async (inviteId) => {
+    if (!inviteId) return;
+    const confirmed = window.confirm(
+      t("classNetworks.invites.rejectConfirm", {}, {
+        default: "Reject this membership request?",
+      })
+    );
+    if (!confirmed) return;
+    try {
+      await rejectInvite({ variables: { inviteId } });
+      await refetchPendingInvites();
+    } catch (err) {
+      window.alert(
+        err?.message ||
+          t("classNetworks.invites.rejectError", {}, {
+            default: "Failed to reject request.",
+          })
+      );
+    }
+  };
+
+  const handleCancelOutboundInvite = async (inviteId) => {
+    if (!inviteId) return;
+    const confirmed = window.confirm(
+      t("classNetworks.invites.cancelInviteConfirm", {}, {
+        default: "Cancel this invitation?",
+      })
+    );
+    if (!confirmed) return;
+    try {
+      await cancelOutboundInvite({ variables: { inviteId } });
+      await refetchPendingInvites();
+    } catch (err) {
+      window.alert(
+        err?.message ||
+          t("classNetworks.invites.cancelInviteError", {}, {
+            default: "Failed to cancel invitation.",
+          })
+      );
     }
   };
 
@@ -614,12 +839,23 @@ function NetworkDetailPage({ query, user }) {
       return;
     }
 
+    const currentSettings =
+      network.settings && typeof network.settings === "object"
+        ? network.settings
+        : {};
+    const nextMembershipMode =
+      membershipMode === "open" ? "open" : "approval";
+
     try {
       await updateNetworkDetails({
         variables: {
           id: network.id,
           title,
           description: networkDescription.trim() || "",
+          settings: {
+            ...currentSettings,
+            membershipMode: nextMembershipMode,
+          },
         },
       });
       setDetailsFeedback({
@@ -645,7 +881,8 @@ function NetworkDetailPage({ query, user }) {
       if (!canManage || !params?.data?.id) return null;
       return (
         <DesignSystemButton
-          variant="outline"
+          variant="text"
+          style={{ color: "#871b16" }}
           type="button"
           disabled={memberMutationLoading}
           onClick={() => handleRemoveMemberOrganization(params.data.id)}
@@ -662,8 +899,8 @@ function NetworkDetailPage({ query, user }) {
       if (!canManage || !params?.data?.id) return null;
       return (
         <DesignSystemButton
-          variant="outline"
-          type="button"
+          variant="text"
+          style={{ color: "#871b16" }}
           disabled={memberMutationLoading}
           onClick={() => handleRemoveMemberProfile(params.data.id)}
         >
@@ -673,6 +910,66 @@ function NetworkDetailPage({ query, user }) {
     }
     return Renderer;
   }, [canManage, memberMutationLoading, network?.id, t]);
+
+  const PendingInviteActionsRenderer = useMemo(() => {
+    function Renderer(params) {
+      if (!canManage || !params?.data?.id) return null;
+      const direction = params.data.direction;
+      if (direction === "request") {
+        return (
+          <InviteLinkRow>
+            <DesignSystemButton
+              variant="text"
+              style={{ color: "#1d6b3a" }}
+              type="button"
+              disabled={inviteReviewLoading}
+              onClick={() => handleApproveInvite(params.data.id)}
+            >
+              {t("classNetworks.invites.approve", {}, { default: "Approve" })}
+            </DesignSystemButton>
+            <DesignSystemButton
+              variant="text"
+              style={{ color: "#871b16" }}
+              type="button"
+              disabled={inviteReviewLoading}
+              onClick={() => handleRejectInvite(params.data.id)}
+            >
+              {t("classNetworks.invites.reject", {}, { default: "Reject" })}
+            </DesignSystemButton>
+          </InviteLinkRow>
+        );
+      }
+      return (
+        <InviteLinkRow>
+          {params.data.manualLink ? (
+            <CopyButton
+              value={params.data.manualLink}
+              style={{ fontWeight: 500 }}
+              ariaLabel={t("classNetworks.invites.copyInviteLinkAria", {}, {
+                default: "Copy invite signup or login link",
+              })}
+            >
+              {t("classNetworks.invites.copyInviteLink", {}, {
+                default: "Copy invite link",
+              })}
+            </CopyButton>
+          ) : null}
+          <DesignSystemButton
+            variant="text"
+            style={{ color: "#871b16" }}
+            type="button"
+            disabled={inviteReviewLoading}
+            onClick={() => handleCancelOutboundInvite(params.data.id)}
+          >
+            {t("classNetworks.invites.cancelInvite", {}, {
+              default: "Cancel invite",
+            })}
+          </DesignSystemButton>
+        </InviteLinkRow>
+      );
+    }
+    return Renderer;
+  }, [canManage, inviteReviewLoading, t]);
 
   const organizationColumnDefs = useMemo(
     () => [
@@ -754,6 +1051,52 @@ function NetworkDetailPage({ query, user }) {
     [ProfileActionsRenderer, t]
   );
 
+  const pendingInviteColumnDefs = useMemo(
+    () => [
+      {
+        field: "person",
+        headerName: t("classNetworks.grid.name", {}, { default: "Name" }),
+        flex: 1.2,
+        minWidth: 180,
+        filter: "agTextColumnFilter",
+      },
+      {
+        field: "email",
+        headerName: t("classNetworks.grid.email", {}, { default: "Email" }),
+        flex: 1.2,
+        minWidth: 200,
+        filter: "agTextColumnFilter",
+        cellRenderer: EmailCellRenderer,
+      },
+      {
+        field: "directionLabel",
+        headerName: t("classNetworks.invites.direction", {}, {
+          default: "Type",
+        }),
+        flex: 0.7,
+        minWidth: 120,
+        filter: "agTextColumnFilter",
+      },
+      {
+        // Bind to direction so AG Grid refreshes this cell when request→invite
+        // conversion updates the same row id (pinned action cells otherwise stay stale).
+        field: "direction",
+        headerName: t("classNetworks.grid.actions", {}, { default: "Actions" }),
+        cellRenderer: PendingInviteActionsRenderer,
+        sortable: false,
+        filter: false,
+        width: 280,
+        pinned: "right",
+        cellStyle: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      },
+    ],
+    [PendingInviteActionsRenderer, t]
+  );
+
   const RoundActionsRenderer = useMemo(() => {
     function Renderer() {
       if (!canOpenMatchingClass) return null;
@@ -818,7 +1161,8 @@ function NetworkDetailPage({ query, user }) {
       if (!canManage || !params?.data?.id) return null;
       return (
         <DesignSystemButton
-          variant="outline"
+          variant="text"
+          style={{ color: "#871b16" }}
           type="button"
           disabled={adminMutationLoading}
           onClick={() => handleRemoveNetworkAdmin(params.data.id)}
@@ -930,11 +1274,60 @@ function NetworkDetailPage({ query, user }) {
                   </h2>
                   <p>
                     {t("classNetworks.detailsSectionDescription", {}, {
-                      default: "Update the title and description shown for this network.",
+                      default:
+                        "Update membership mode, title, and description for this network.",
                     })}
                   </p>
                 </SectionHeader>
                 <DetailsForm>
+                  <label htmlFor="connectClassNetworkMembershipMode">
+                    {t("classNetworks.form.membershipModeLabel", {}, {
+                      default: "Membership",
+                    })}
+                    <select
+                      id="connectClassNetworkMembershipMode"
+                      value={membershipMode}
+                      onChange={(event) =>
+                        setMembershipMode(
+                          event.target.value === "open" ? "open" : "approval"
+                        )
+                      }
+                    >
+                      <option value="approval">
+                        {t(
+                          "classNetworks.form.membershipModeApprovalLabel",
+                          {},
+                          { default: "Approval required" }
+                        )}
+                      </option>
+                      <option value="open">
+                        {t(
+                          "classNetworks.form.membershipModeOpenLabel",
+                          {},
+                          { default: "Open" }
+                        )}
+                      </option>
+                    </select>
+                    <p className="fieldHint">
+                      {membershipMode === "open"
+                        ? t(
+                            "classNetworks.form.membershipModeOpenDescription",
+                            {},
+                            {
+                              default:
+                                "Eligible profiles can join this public network immediately.",
+                            }
+                          )
+                        : t(
+                            "classNetworks.form.membershipModeApprovalDescription",
+                            {},
+                            {
+                              default:
+                                "Eligible profiles must be approved by a network admin before joining.",
+                            }
+                          )}
+                    </p>
+                  </label>
                   <label htmlFor="connectClassNetworkTitle">
                     {t("classNetworks.titleLabel", {}, {
                       default: "Title",
@@ -1254,26 +1647,26 @@ function NetworkDetailPage({ query, user }) {
 
               {canManage ? (
                 <AdminForm>
-                  <label htmlFor="connectClassNetworkMemberEmail">
-                    {t("classNetworks.memberProfileEmailLabel", {}, {
-                      default: "Add member by email",
+                  <label htmlFor="connectClassNetworkInviteEmail">
+                    {t("classNetworks.invites.inviteEmailLabel", {}, {
+                      default: "Invite member by email",
                     })}
                   </label>
                   <AdminFormRow>
                     <input
-                      id="connectClassNetworkMemberEmail"
+                      id="connectClassNetworkInviteEmail"
                       type="email"
-                      value={memberEmail}
+                      value={inviteEmail}
                       placeholder={t(
-                        "classNetworks.memberProfileEmailPlaceholder",
+                        "classNetworks.invites.inviteEmailPlaceholder",
                         {},
                         { default: "mentor@example.com" }
                       )}
-                      onChange={(event) => setMemberEmail(event.target.value)}
+                      onChange={(event) => setInviteEmail(event.target.value)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
                           event.preventDefault();
-                          handleAddMemberProfile();
+                          handleInviteMemberProfile();
                         }
                       }}
                     />
@@ -1281,39 +1674,110 @@ function NetworkDetailPage({ query, user }) {
                       variant="filled"
                       type="button"
                       disabled={memberMutationLoading}
-                      onClick={handleAddMemberProfile}
+                      onClick={handleInviteMemberProfile}
                     >
-                      {addingMemberProfile
-                        ? t("classNetworks.memberProfileAdding", {}, {
-                            default: "Adding...",
+                      {invitingMemberProfile
+                        ? t("classNetworks.invites.inviting", {}, {
+                            default: "Inviting...",
                           })
-                        : t("classNetworks.memberProfileAdd", {}, {
-                            default: "Add member",
+                        : t("classNetworks.invites.invite", {}, {
+                            default: "Invite member",
                           })}
                     </DesignSystemButton>
                   </AdminFormRow>
-                  {memberFeedback?.section === "profiles" ? (
+                  {inviteFeedback ? (
                     <>
-                      <AdminFeedback $error={memberFeedback.kind === "error"}>
-                        {memberFeedback.text}
+                      <AdminFeedback $error={inviteFeedback.kind === "error"}>
+                        {inviteFeedback.text}
                       </AdminFeedback>
-                      {memberFeedback.showInviteLink &&
-                      sponsorSignupAndInviteLink ? (
+                      {inviteFeedback.manualLink ? (
                         <InviteLinkRow>
                           <CopyButton
-                            value={sponsorSignupAndInviteLink}
+                            value={inviteFeedback.manualLink}
                             style={{ fontWeight: 500 }}
                             ariaLabel={t(
-                              "classNetworks.signupAndInviteLink",
+                              "classNetworks.invites.copyInviteLinkAria",
                               {},
-                              { default: "Signup + invite to network" }
+                              { default: "Copy invite signup or login link" }
                             )}
                           >
-                            {t("classNetworks.signupAndInviteLink", {}, {
-                              default: "Signup + invite to network",
+                            {t("classNetworks.invites.copyInviteLink", {}, {
+                              default: "Copy invite link",
                             })}
                           </CopyButton>
                         </InviteLinkRow>
+                      ) : null}
+                    </>
+                  ) : null}
+
+                  {isAdmin ? (
+                    <>
+                      <label htmlFor="connectClassNetworkMemberEmail">
+                        {t("classNetworks.memberProfileEmailLabel", {}, {
+                          default: "Add member by email",
+                        })}
+                      </label>
+                      <AdminFormRow>
+                        <input
+                          id="connectClassNetworkMemberEmail"
+                          type="email"
+                          value={memberEmail}
+                          placeholder={t(
+                            "classNetworks.memberProfileEmailPlaceholder",
+                            {},
+                            { default: "mentor@example.com" }
+                          )}
+                          onChange={(event) =>
+                            setMemberEmail(event.target.value)
+                          }
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              handleAddMemberProfile();
+                            }
+                          }}
+                        />
+                        <DesignSystemButton
+                          variant="outline"
+                          type="button"
+                          disabled={memberMutationLoading}
+                          onClick={handleAddMemberProfile}
+                        >
+                          {addingMemberProfile
+                            ? t("classNetworks.memberProfileAdding", {}, {
+                                default: "Adding...",
+                              })
+                            : t("classNetworks.memberProfileAdd", {}, {
+                                default: "Add member",
+                              })}
+                        </DesignSystemButton>
+                      </AdminFormRow>
+                      {memberFeedback?.section === "profiles" ? (
+                        <>
+                          <AdminFeedback
+                            $error={memberFeedback.kind === "error"}
+                          >
+                            {memberFeedback.text}
+                          </AdminFeedback>
+                          {memberFeedback.showInviteLink &&
+                          sponsorSignupAndInviteLink ? (
+                            <InviteLinkRow>
+                              <CopyButton
+                                value={sponsorSignupAndInviteLink}
+                                style={{ fontWeight: 500 }}
+                                ariaLabel={t(
+                                  "classNetworks.signupAndInviteLink",
+                                  {},
+                                  { default: "Signup + invite to network" }
+                                )}
+                              >
+                                {t("classNetworks.signupAndInviteLink", {}, {
+                                  default: "Signup + invite to network",
+                                })}
+                              </CopyButton>
+                            </InviteLinkRow>
+                          ) : null}
+                        </>
                       ) : null}
                     </>
                   ) : null}
@@ -1343,6 +1807,46 @@ function NetworkDetailPage({ query, user }) {
                 />
               </GridTable>
             </DetailSection>
+
+            {canManage ? (
+              <DetailSection id="network-pending-invites">
+                <SectionHeader>
+                  <h2>
+                    {t("classNetworks.invites.pendingReviewTitle", {}, {
+                      default: "Pending membership",
+                    })}
+                  </h2>
+                  <p>
+                    {t("classNetworks.invites.pendingReviewDescription", {}, {
+                      default:
+                        "Review join requests and cancel outbound invitations that are still pending.",
+                    })}
+                  </p>
+                </SectionHeader>
+                {pendingInviteRows.length === 0 ? (
+                  <EmptyNote>
+                    {t("classNetworks.invites.pendingEmpty", {}, {
+                      default: "No pending requests or invitations.",
+                    })}
+                  </EmptyNote>
+                ) : null}
+                <GridTable className="ag-theme-quartz">
+                  <AgGridReact
+                    rowData={pendingInviteRows}
+                    columnDefs={pendingInviteColumnDefs}
+                    defaultColDef={defaultColDef}
+                    getRowId={(params) => params.data?.id}
+                    pagination
+                    paginationPageSize={20}
+                    overlayNoRowsTemplate={t(
+                      "classNetworks.invites.pendingEmpty",
+                      {},
+                      { default: "No pending requests or invitations." }
+                    )}
+                  />
+                </GridTable>
+              </DetailSection>
+            ) : null}
 
             <DetailSection id="network-rounds">
               <SectionHeader>

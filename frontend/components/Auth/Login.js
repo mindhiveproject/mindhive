@@ -11,7 +11,9 @@ import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
 import { GET_NETWORK } from "../Queries/ClassNetwork";
 import {
+  acceptNetworkInviteAfterAuth,
   completeClassNetworkInviteAfterAuth,
+  GET_NETWORK_INVITE_CONTEXT,
   GET_JOIN_CLASS_NETWORK_CONTEXT,
   isEligibleForClassNetworkInvite,
   joinClassNetwork,
@@ -33,11 +35,13 @@ export default function Login({
   redirectType,
   redirectTo,
   classNetwork: classNetworkId,
+  networkInvite: networkInviteToken,
 }) {
   const { t } = useTranslation("common");
   const router = useRouter();
   const apolloClient = useApolloClient();
   const autoJoinStartedRef = useRef(false);
+  const tokenAcceptStartedRef = useRef(false);
 
   const [error, setError] = useState(null);
   const [inviteError, setInviteError] = useState(null);
@@ -61,12 +65,33 @@ export default function Login({
   const isClassNetworkInvalid =
     !!classNetworkId && !networkLoading && !isClassNetworkValid;
 
+  const { data: tokenInviteData, loading: tokenInviteLoading } = useQuery(
+    GET_NETWORK_INVITE_CONTEXT,
+    {
+      variables: { token: networkInviteToken || "" },
+      skip: !networkInviteToken,
+      fetchPolicy: "cache-and-network",
+    }
+  );
+  const tokenInvite = tokenInviteData?.networkInviteContext;
+  const isTokenInviteValid =
+    tokenInvite?.id && tokenInvite?.status === "pending";
+  const isTokenInviteInvalid =
+    !!networkInviteToken && !tokenInviteLoading && !isTokenInviteValid;
+
   const [signin, { loading }] = useMutation(SIGNIN_MUTATION, {
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
 
   useEffect(() => {
-    if (!classNetworkId || userLoading || networkLoading) return;
+    if (
+      networkInviteToken ||
+      !classNetworkId ||
+      userLoading ||
+      networkLoading
+    ) {
+      return;
+    }
     if (!user?.id) return;
     if (isClassNetworkInvalid) return;
     if (!isClassNetworkValid) return;
@@ -79,10 +104,14 @@ export default function Login({
       if (!isEligibleForClassNetworkInvite(user)) {
         setInviteErrorKind("wrongRole");
         setInviteError(
-          t("auth.classNetworkInvite.wrongRole", {}, {
-            default:
-              "This invite is for sponsors. Sign up as a sponsor or use a sponsor account to join.",
-          }),
+          t(
+            "auth.classNetworkInvite.wrongRole",
+            {},
+            {
+              default:
+                "Class-network membership is available to teachers, mentors, sponsors, and scientists.",
+            }
+          )
         );
         setJoiningNetwork(false);
         return;
@@ -99,24 +128,29 @@ export default function Login({
           return;
         }
 
-        await joinClassNetwork({
+        const joinResult = await joinClassNetwork({
           apolloClient,
-          userId: joinUser.id,
           classNetworkId,
           user: joinUser,
         });
 
         router.push({
           pathname: "/dashboard/connect",
-          query: { joinedNetwork: classNetworkId },
+          query: joinResult.requested
+            ? { requestedNetwork: classNetworkId }
+            : { joinedNetwork: classNetworkId },
         });
       } catch (joinErr) {
         setInviteErrorKind("joinFailed");
         setInviteError(
-          t("auth.classNetworkInvite.joinFailed", {}, {
-            default:
-              "We could not add you to this class network. Please try again.",
-          }),
+          t(
+            "auth.classNetworkInvite.joinFailed",
+            {},
+            {
+              default:
+                "We could not add you to this class network. Please try again.",
+            }
+          )
         );
         setJoiningNetwork(false);
         autoJoinStartedRef.current = false;
@@ -130,8 +164,49 @@ export default function Login({
     isClassNetworkInvalid,
     isClassNetworkValid,
     networkLoading,
+    networkInviteToken,
     router,
     t,
+    user,
+    userLoading,
+  ]);
+
+  useEffect(() => {
+    if (!networkInviteToken || tokenInviteLoading || userLoading) return;
+    if (!user?.id || !isTokenInviteValid || tokenAcceptStartedRef.current) {
+      return;
+    }
+
+    tokenAcceptStartedRef.current = true;
+    setJoiningNetwork(true);
+    acceptNetworkInviteAfterAuth({
+      apolloClient,
+      token: networkInviteToken,
+      router,
+    }).then((result) => {
+      if (!result.ok) {
+        setInviteErrorKind("joinFailed");
+        setInviteError(
+          t(
+            "auth.networkInvite.acceptFailed",
+            {},
+            {
+              default:
+                "We could not accept this network invitation. Check that you are using the invited account.",
+            }
+          )
+        );
+        setJoiningNetwork(false);
+        tokenAcceptStartedRef.current = false;
+      }
+    });
+  }, [
+    apolloClient,
+    isTokenInviteValid,
+    networkInviteToken,
+    router,
+    t,
+    tokenInviteLoading,
     user,
     userLoading,
   ]);
@@ -171,6 +246,28 @@ export default function Login({
       const profileId = res?.data?.authenticateProfileWithPassword?.item?.id;
       if (!profileId) return;
 
+      if (networkInviteToken && isTokenInviteValid) {
+        const result = await acceptNetworkInviteAfterAuth({
+          apolloClient,
+          token: networkInviteToken,
+          router,
+        });
+        if (!result.ok) {
+          setInviteErrorKind("joinFailed");
+          setInviteError(
+            t(
+              "auth.networkInvite.acceptFailed",
+              {},
+              {
+                default:
+                  "We could not accept this network invitation. Check that you are using the invited account.",
+              }
+            )
+          );
+        }
+        return;
+      }
+
       if (classNetworkId && isClassNetworkValid) {
         const result = await completeClassNetworkInviteAfterAuth({
           apolloClient,
@@ -182,18 +279,26 @@ export default function Login({
         if (!result.ok && result.error === "wrongRole") {
           setInviteErrorKind("wrongRole");
           setInviteError(
-            t("auth.classNetworkInvite.wrongRole", {}, {
-              default:
-                "This invite is for sponsors. Sign up as a sponsor or use a sponsor account to join.",
-            }),
+            t(
+              "auth.classNetworkInvite.wrongRole",
+              {},
+              {
+                default:
+                  "Class-network membership is available to teachers, mentors, sponsors, and scientists.",
+              }
+            )
           );
         } else if (!result.ok) {
           setInviteErrorKind("joinFailed");
           setInviteError(
-            t("auth.classNetworkInvite.joinFailed", {}, {
-              default:
-                "We could not add you to this class network. Please try again.",
-            }),
+            t(
+              "auth.classNetworkInvite.joinFailed",
+              {},
+              {
+                default:
+                  "We could not add you to this class network. Please try again.",
+              }
+            )
           );
         }
         return;
@@ -214,9 +319,23 @@ export default function Login({
   }
 
   const invalidNetworkMessage = isClassNetworkInvalid
-    ? t("auth.classNetworkInvite.invalidNetwork", {}, {
-        default: "This class network invite link is invalid or has expired.",
-      })
+    ? t(
+        "auth.classNetworkInvite.invalidNetwork",
+        {},
+        {
+          default: "This class network invite link is invalid or has expired.",
+        }
+      )
+    : null;
+  const invalidTokenInviteMessage = isTokenInviteInvalid
+    ? t(
+        "auth.networkInvite.invalid",
+        {},
+        {
+          default:
+            "This network invitation is invalid or is no longer pending.",
+        }
+      )
     : null;
 
   const showLoginForm = !user?.id && !joiningNetwork;
@@ -226,8 +345,17 @@ export default function Login({
       {classNetworkId && isClassNetworkValid ? (
         <ClassNetworkInviteBanner network={classNetwork} />
       ) : null}
+      {networkInviteToken && isTokenInviteValid ? (
+        <ClassNetworkInviteBanner
+          network={tokenInvite.classNetwork}
+          invitation
+        />
+      ) : null}
       {invalidNetworkMessage ? (
         <ClassNetworkInviteErrorBanner message={invalidNetworkMessage} />
+      ) : null}
+      {invalidTokenInviteMessage ? (
+        <ClassNetworkInviteErrorBanner message={invalidTokenInviteMessage} />
       ) : null}
       {inviteError ? (
         <ClassNetworkInviteErrorBanner message={inviteError} />
@@ -235,17 +363,25 @@ export default function Login({
       {inviteErrorKind === "wrongRole" && classNetworkId ? (
         <p style={{ marginBottom: 16, fontSize: 14 }}>
           <Link href={`/signup/sponsor?classNetwork=${classNetworkId}`}>
-            {t("auth.classNetworkInvite.signUpAsSponsor", {}, {
-              default: "Sign up as a sponsor instead",
-            })}
+            {t(
+              "auth.classNetworkInvite.signUpAsSponsor",
+              {},
+              {
+                default: "Sign up as a sponsor instead",
+              }
+            )}
           </Link>
         </p>
       ) : null}
       {joiningNetwork ? (
         <p>
-          {t("auth.classNetworkInvite.joining", {}, {
-            default: "Joining class network…",
-          })}
+          {t(
+            "auth.classNetworkInvite.joining",
+            {},
+            {
+              default: "Joining class network…",
+            }
+          )}
         </p>
       ) : null}
       {showLoginForm ? (
@@ -272,24 +408,30 @@ export default function Login({
                 autoComplete="current-password"
                 value={inputs.password}
                 onChange={handleChange}
-                disabled={isClassNetworkInvalid}
+                disabled={isClassNetworkInvalid || isTokenInviteInvalid}
               />
             </label>
 
-            <button type="submit" disabled={loading || isClassNetworkInvalid}>
+            <button
+              type="submit"
+              disabled={
+                loading || isClassNetworkInvalid || isTokenInviteInvalid
+              }
+            >
               {t("auth.login")}
             </button>
           </fieldset>
 
           <LoginWithGoogle
             classNetwork={isClassNetworkValid ? classNetworkId : null}
+            networkInvite={isTokenInviteValid ? networkInviteToken : null}
             redirectType={redirectType}
             redirectTo={redirectTo}
             onInviteError={(message, kind = "joinFailed") => {
               setInviteErrorKind(kind);
               setInviteError(message);
             }}
-            disabled={isClassNetworkInvalid}
+            disabled={isClassNetworkInvalid || isTokenInviteInvalid}
           />
           <div className="forgotLink">
             <span>
