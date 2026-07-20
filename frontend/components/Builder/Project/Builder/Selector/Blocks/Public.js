@@ -104,6 +104,7 @@ export default function PublicBlocks({
             addFunctions={addFunctions}
             search={search}
             componentType={componentType}
+            isSurveyBuilder={isSurveyBuilder}
           />
         ))}
     </div>

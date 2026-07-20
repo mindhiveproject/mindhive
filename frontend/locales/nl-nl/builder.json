@@ -1327,6 +1327,7 @@
 	},
 	"menu": {
 		"addBlock": "Voeg een blok toe",
+		"settings": "",
 		"studyFlow": "Studiestroom",
 		"studySettings": "Studie-instellingen"
 	},
@@ -1872,6 +1873,8 @@
 		"sectionTitlePlaceholder": "Voer sectietitel in"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "Wil je aangepaste instructies aan je deelnemers geven of een link en/of video in je studieprocedure insluiten? Selecteer en bewerk een basisblok.",
 			"title": "Basisblokken"
@@ -1881,6 +1884,9 @@
 			"myFavorite": "Mijn favoriet",
 			"ownedByMe": "In mijn bezit"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 Zoeken",
 		"studyDesign": {
 			"betweenSubjects": "Tussen-onderwerpen-ontwerp",
@@ -1891,6 +1897,8 @@
 		},
 		"surveys": {
 			"buildOwn": "Vind je geen tool om een ​​van je studieobjecten te meten? Bouw er dan zelf een met de Survey Builder en hulp van je docent:",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "Wilt u de houding, ervaringen of meningen van deelnemers meten via zelfrapportage? Kies uit deze database met gevalideerde enquêtes.",
 			"title": "Enquêtes"
 		},
@@ -1900,7 +1908,9 @@
 		},
 		"templates": {
 			"description": "Wil je niet helemaal opnieuw beginnen? Selecteer en bewerk een vooraf gemaakt onderzoeksontwerp met behulp van een van de sjablonen in deze database.",
-			"title": "Sjablonen"
+			"openStudyAria": "",
+			"title": "Sjablonen",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "Selecteer hieronder welke {{taskType}} u wilt klonen.",
@@ -1982,6 +1992,16 @@
 	"study": "studie",
 	"studyBuilder": "Studiebouwer",
 	"studyDescription": "Een studie is een onderzoeksproject met een onderzoeksvraag. Het kan bestaan ​​uit meerdere taken en/of enquêtes.",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "Toewijzen aan bestaande studie",
 		"assignToStudy": "Toewijzen aan studie",

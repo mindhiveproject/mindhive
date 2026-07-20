@@ -340,17 +340,99 @@ export const StyledCanvasBuilder = styled.div`
   }
 
   .sidepanel {
-    display: grid;
-    align-content: baseline;
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
     height: 85vh;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     background: #ffffff;
-    padding: 10px;
-    .studyFlow {
-      margin: 0rem;
+    padding: 16px;
+    margin: 8px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    box-shadow: -4px 0px 7.5px rgba(0, 0, 0, 0.02);
+
+    &::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
     }
+
+    .sidepanelNavbar {
+      width: 100%;
+      min-width: 0;
+      padding: 0 0 8px;
+      box-sizing: border-box;
+
+      .navbar-container {
+        padding: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+      }
+    }
+
+    > .editPane,
+    > .studyFlow,
+    > .studySettings {
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .studyFlow {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+
+      .studyFlowEmpty {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        padding: 24px 8px;
+        box-sizing: border-box;
+        text-align: center;
+
+        h3 {
+          margin: 0;
+          font-family: Inter, sans-serif;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 24px;
+          color: #171717;
+        }
+
+        p {
+          margin: 0;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+          color: #6a6a6a;
+        }
+      }
+    }
+
     .studySettings {
-      margin: 1rem;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
       display: grid;
       grid-gap: 2rem;
       .studyVersion {
@@ -392,8 +474,9 @@ export const StyledCanvasBuilder = styled.div`
 
   .board {
     display: grid;
-    grid-template-columns: 5fr 3fr;
+    grid-template-columns: minmax(0, 5fr) minmax(280px, 3fr);
     height: 100%;
+    min-width: 0;
     position: relative;
     :active {
       .up-port:hover {
@@ -628,56 +711,297 @@ export const StyledCanvasBuilder = styled.div`
   }
 
   .editPane {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    align-content: baseline;
-    resize: horizontal;
-    .header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-gap: 10px;
-      padding: 0px 1px 20px 0px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    .addBlockFilters {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      min-width: 0;
+      padding: 0 0 16px;
+      box-sizing: border-box;
     }
-    .createdByDropdown {
-      display: grid !important;
-      align-items: center !important;
-      border: 1px solid #cccccc !important;
+
+    .addBlockSearch {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      min-width: 0;
+      height: 40px;
+      padding: 4px 16px 4px 8px;
+      border: 1px solid #a1a1a1;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #6a6a6a;
+      box-sizing: border-box;
+
+      input {
+        flex: 1;
+        min-width: 0;
+        height: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        padding: 0;
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        color: #171717;
+
+        &::placeholder {
+          color: #6a6a6a;
+        }
+      }
     }
+
+    .addBlockChips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-start;
+      width: 100%;
+      min-width: 0;
+    }
+
     .blocksMenu {
-      .blocksMenuTitle {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        padding: 20px 25px 15px 30px;
-        h3 {
-          font-family: "Inter";
-          font-style: normal;
-          font-weight: 500;
-          font-size: 16px;
-          line-height: 150%;
-          color: #1a1a1a;
-        }
-        p {
-          font-family: "Inter";
-          font-style: normal;
-          font-weight: 400;
-          font-size: 16px;
-          line-height: 150%;
-          color: #666666;
-        }
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      border-top: 1px solid #e6e6e6;
+      padding-bottom: 8px;
+      box-sizing: border-box;
+
+      .blocksMenuSection {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-width: 0;
+        border-bottom: 1px solid #e6e6e6;
       }
+
+      .blocksMenuTrigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        padding: 8px 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        text-align: left;
+        box-sizing: border-box;
+      }
+
+      .blocksMenuTriggerTitle {
+        flex: 1;
+        min-width: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        color: #171717;
+      }
+
+      .blocksMenuChevron {
+        display: inline-flex;
+        color: #171717;
+        transition: transform 0.2s ease;
+      }
+
+      .blocksMenuChevronOpen {
+        transform: rotate(180deg);
+      }
+
       .blocksMenuContent {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        min-width: 0;
+        padding: 0 0 16px;
         overflow-y: auto;
-        max-height: 40vh;
+        max-height: 50vh;
+        box-sizing: border-box;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+          width: 0;
+          height: 0;
+        }
       }
+
+      .blocksMenuDescription {
+        margin: 0;
+        width: 100%;
+        min-width: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        color: #5d5763;
+        overflow-wrap: anywhere;
+      }
+
       .blocksMenuSurveyBuilder {
-        padding: 10px 25px 0px 30px;
-        overflow-y: auto;
-        max-height: 40vh;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        padding: 12px 16px 16px;
+        border-radius: 16px;
+        background: #f3f3f3;
+        box-sizing: border-box;
+      }
+
+      .blocksMenuSurveyBuilderHint {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        color: #6a6a6a;
+      }
+
+      .blocksMenuSurveyBuilderHintStrong {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        color: #171717;
       }
     }
+
+    .blockCard {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      background: #ffffff;
+      border: 1px solid #e6e6e6;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      box-sizing: border-box;
+    }
+
+    .blockCardAccent {
+      width: 8px;
+      flex-shrink: 0;
+      background: var(--block-accent, #cf6d6a);
+    }
+
+    .blockCardBody {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    .blockCardTitle {
+      flex: 1;
+      min-width: 0;
+
+      .node-type-label {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        padding: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        max-height: 48px;
+        color: #171717;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        white-space: normal;
+      }
+
+      .subtitle {
+        display: none;
+      }
+    }
+
+    .blockCardActions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-shrink: 0;
+      max-width: 100%;
+    }
+
+    .templateCard {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      padding: 16px;
+      background: #ffffff;
+      border: 1px solid #e6e6e6;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      box-sizing: border-box;
+    }
+
+    .templateCardBody {
+      .node-type-label {
+        padding: 0 0 8px;
+        font-family: Inter, sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        color: #171717;
+      }
+    }
+
+    .templateCardDescription {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      color: #6a6a6a;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .templateCardActions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: 100%;
+      min-width: 0;
+    }
+
     label {
       display: block;
     }

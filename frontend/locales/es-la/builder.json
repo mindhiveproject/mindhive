@@ -1327,6 +1327,7 @@
 	},
 	"menu": {
 		"addBlock": "Agregar un bloque",
+		"settings": "",
 		"studyFlow": "Flujo de estudio",
 		"studySettings": "Entornos de estudio"
 	},
@@ -1872,6 +1873,8 @@
 		"sectionTitlePlaceholder": "Introduzca el título de la sección"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "¿Quieres incluir instrucciones personalizadas para tus participantes o insertar un enlace o video en el procedimiento de tu estudio? Selecciona y edita un bloque básico.",
 			"title": "Bloques básicos"
@@ -1881,6 +1884,9 @@
 			"myFavorite": "Mi favorito",
 			"ownedByMe": "De mi propiedad"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 Buscar",
 		"studyDesign": {
 			"betweenSubjects": "Diseño entre sujetos",
@@ -1891,6 +1897,8 @@
 		},
 		"surveys": {
 			"buildOwn": "¿No encuentras herramientas para medir tu constructo de estudio? Crea la tuya con el generador de encuestas y la ayuda del profesor.",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "¿Quieres medir las actitudes, experiencias u opiniones de los participantes mediante autoinformes? Elige entre este conjunto de encuestas validadas.",
 			"title": "Encuestas"
 		},
@@ -1900,7 +1908,9 @@
 		},
 		"templates": {
 			"description": "¿No quieres empezar desde cero? Selecciona y edita un diseño de estudio prediseñado con una de las plantillas de este banco.",
-			"title": "Plantillas"
+			"openStudyAria": "",
+			"title": "Plantillas",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "Seleccione a continuación el {{taskType}} que desea clonar.",
@@ -1982,6 +1992,16 @@
 	"study": "estudiar",
 	"studyBuilder": "Constructor de estudios",
 	"studyDescription": "Un estudio es un proyecto de investigación con una pregunta de investigación. Puede constar de múltiples tareas y/o encuestas.",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "Asignar a estudio existente",
 		"assignToStudy": "Asignar a estudiar",

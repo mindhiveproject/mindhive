@@ -1327,6 +1327,7 @@
 	},
 	"menu": {
 		"addBlock": "添加块",
+		"settings": "",
 		"studyFlow": "学习流程",
 		"studySettings": "研究环境"
 	},
@@ -1872,6 +1873,8 @@
 		"sectionTitlePlaceholder": "输入章节标题"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "想要为参与者添加自定义说明或在研究过程中嵌入链接和/或视频吗？请选择并编辑基本区块",
 			"title": "基本块"
@@ -1881,6 +1884,9 @@
 			"myFavorite": "我最喜欢的",
 			"ownedByMe": "属于我"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 搜索",
 		"studyDesign": {
 			"betweenSubjects": "受试者间设计",
@@ -1891,6 +1897,8 @@
 		},
 		"surveys": {
 			"buildOwn": "找不到工具来衡量你的学习内容？借助调查问卷构建器，在老师的帮助下，构建你自己的调查问卷：",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "想要通过自我报告来衡量参与者的态度、经历或观点吗？从这个经过验证的调查库中选择吧！",
 			"title": "调查"
 		},
@@ -1900,7 +1908,9 @@
 		},
 		"templates": {
 			"description": "不想从头开始？选择并编辑预制研究设计，使用本模板库中的模板之一",
-			"title": "模板"
+			"openStudyAria": "",
+			"title": "模板",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "选择您想要克隆的 {{taskType}}。",
@@ -1982,6 +1992,16 @@
 	"study": "学习",
 	"studyBuilder": "学习建设者",
 	"studyDescription": "研究是指具有研究问题的研究项目。它可以包含多个任务和/或调查。",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "分配至现有研究",
 		"assignToStudy": "分配到学习",

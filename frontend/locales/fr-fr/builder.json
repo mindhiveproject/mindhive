@@ -1327,6 +1327,7 @@
 	},
 	"menu": {
 		"addBlock": "Ajouter un bloc",
+		"settings": "",
 		"studyFlow": "Déroulement de l'étude",
 		"studySettings": "Paramètres d'étude"
 	},
@@ -1872,6 +1873,8 @@
 		"sectionTitlePlaceholder": "Entrez le titre de la section"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "Vous souhaitez inclure des instructions personnalisées à vos participants ou intégrer un lien et/ou une vidéo à la procédure de votre étude ? Sélectionnez et modifiez un bloc de base.",
 			"title": "Blocs de base"
@@ -1881,6 +1884,9 @@
 			"myFavorite": "Mon préféré",
 			"ownedByMe": "Appartenant à moi"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 Rechercher",
 		"studyDesign": {
 			"betweenSubjects": "Conception inter-sujets",
@@ -1891,6 +1897,8 @@
 		},
 		"surveys": {
 			"buildOwn": "Vous ne trouvez pas d'outil pour mesurer l'un de vos concepts d'étude ? Créez le vôtre grâce au générateur d'enquêtes et à l'aide de l'enseignant.",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "Vous souhaitez mesurer les attitudes, les expériences ou les opinions des participants grâce à l'auto-évaluation ? Choisissez parmi cette sélection d'enquêtes validées.",
 			"title": "Enquêtes"
 		},
@@ -1900,7 +1908,9 @@
 		},
 		"templates": {
 			"description": "Vous ne souhaitez pas partir de zéro ? Sélectionnez et modifiez un plan d'étude prédéfini à l'aide de l'un des modèles de cette banque.",
-			"title": "Modèles"
+			"openStudyAria": "",
+			"title": "Modèles",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "Sélectionnez ci-dessous le {{taskType}} que vous souhaitez cloner.",
@@ -1982,6 +1992,16 @@
 	"study": "étude",
 	"studyBuilder": "Constructeur d'études",
 	"studyDescription": "Une étude est un projet de recherche comportant une question de recherche. Elle peut comprendre plusieurs tâches et/ou enquêtes.",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "Affecter à une étude existante",
 		"assignToStudy": "Affecter à l'étude",

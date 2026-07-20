@@ -1327,6 +1327,7 @@
 	},
 	"menu": {
 		"addBlock": "أضف كتلة",
+		"settings": "",
 		"studyFlow": "تدفق الدراسة",
 		"studySettings": "إعدادات الدراسة"
 	},
@@ -1872,6 +1873,8 @@
 		"sectionTitlePlaceholder": "أدخل عنوان القسم"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "هل ترغب في إضافة تعليمات مخصصة للمشاركين أو تضمين رابط و/أو فيديو في إجراءات دراستك؟ حدد كتلة أساسية وحرّرها.",
 			"title": "الكتل الأساسية"
@@ -1881,6 +1884,9 @@
 			"myFavorite": "أُفضله",
 			"ownedByMe": "مملوكة لي"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 بحث",
 		"studyDesign": {
 			"betweenSubjects": "التصميم بين المواضيع",
@@ -1891,6 +1897,8 @@
 		},
 		"surveys": {
 			"buildOwn": "ألا تجد أداة لقياس أحد جوانب دراستك؟ أنشئها بنفسك باستخدام أداة إنشاء الاستبيانات وبمساعدة المعلم.",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "هل ترغب في قياس مواقف المشاركين أو تجاربهم أو آرائهم من خلال تقرير ذاتي؟ اختر من بين هذه المجموعة من الاستبيانات المُعتمدة.",
 			"title": "الاستطلاعات"
 		},
@@ -1900,7 +1908,9 @@
 		},
 		"templates": {
 			"description": "ألا ترغب في البدء من الصفر؟ اختر وعدّل تصميم دراسة جاهزًا باستخدام أحد القوالب المتوفرة في هذا البنك.",
-			"title": "القوالب"
+			"openStudyAria": "",
+			"title": "القوالب",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "حدد {{taskType}} الذي تريد استنساخه أدناه.",
@@ -1982,6 +1992,16 @@
 	"study": "يذاكر",
 	"studyBuilder": "منشئ الدراسة",
 	"studyDescription": "الدراسة مشروع بحثي يطرح سؤالاً بحثياً. ويمكن أن يتألف من عدة مهام و/أو استبيانات.",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "تعيين إلى دراسة موجودة",
 		"assignToStudy": "تعيين للدراسة",

@@ -1,18 +1,29 @@
 import { useEffect, useState } from "react";
-import TaskBlock from "./Blocks/TaskBlock";
+import useTranslation from "next-translate/useTranslation";
 import { Popup } from "semantic-ui-react";
 
+import TaskBlock from "./Blocks/TaskBlock";
 import { StyledTasksPreview } from "../../../../styles/StyledStudyPage";
 
-export default function StudyTasks({ study }) {
-  const flow = study?.flow || {};
+function hasInterpretableFlow(flow) {
+  return Array.isArray(flow) && flow.length > 0;
+}
 
-  const [paths, setPaths] = useState([]);
+function pathsHaveTasks(paths) {
+  return Object.values(paths).some(({ path }) =>
+    path?.some((block) => block?.type === "task")
+  );
+}
+
+export default function StudyTasks({ study }) {
+  const { t } = useTranslation("builder");
+  const flow = study?.flow;
+  const [paths, setPaths] = useState({});
 
   const getRandomInt = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (max - min) + min);
   };
 
   const selectCondition = ({ conditions }) => {
@@ -39,7 +50,6 @@ export default function StudyTasks({ study }) {
       return stages;
     }
 
-    // registration
     if (currentStage?.type === "my-anchor") {
       stages.push({
         ...currentStage,
@@ -52,7 +62,6 @@ export default function StudyTasks({ study }) {
       });
     }
 
-    // task
     if (currentStage?.type === "my-node") {
       stages.push({
         ...currentStage,
@@ -65,7 +74,6 @@ export default function StudyTasks({ study }) {
       });
     }
 
-    // between-subjects conditions block
     if (currentStage?.type === "design") {
       const { conditionName, conditionLabel } = selectCondition({
         conditions: currentStage?.conditions,
@@ -88,24 +96,26 @@ export default function StudyTasks({ study }) {
   };
 
   const findPath = () => {
-    const path = getNextStep({
+    return getNextStep({
       stages: [],
       currentFlow: flow,
       currentPosition: 0,
     });
-    return path;
   };
 
-  // get the study task
   useEffect(() => {
     function findPossiblePaths() {
-      let paths = {};
-      // simulate for 100 times
+      if (!hasInterpretableFlow(flow)) {
+        setPaths({});
+        return;
+      }
+
+      let nextPaths = {};
       for (let i = 0; i < 100; i++) {
         let path = findPath();
-        paths[path?.map((p) => p?.testId).join("-")] = {
-          frequency:
-            paths[path?.map((p) => p?.testId).join("-")]?.frequency + 1 || 1,
+        const key = path?.map((p) => p?.testId).join("-") || "";
+        nextPaths[key] = {
+          frequency: nextPaths[key]?.frequency + 1 || 1,
           path: path,
           label: path
             ?.filter((p) => p?.type === "branching")
@@ -113,29 +123,64 @@ export default function StudyTasks({ study }) {
             .join("-"),
         };
       }
-      setPaths(paths);
+      setPaths(nextPaths);
     }
-    if (study) {
-      findPossiblePaths();
-    }
+    findPossiblePaths();
   }, [study]);
 
-  if (Object.values(paths).length === 0) {
-    return <p>No tasks found</p>;
+  if (!hasInterpretableFlow(flow)) {
+    return (
+      <div className="studyFlowEmpty">
+        <h3>
+          {t("studyFlow.empty.title", {}, {
+            default: "No study flow yet",
+          })}
+        </h3>
+        <p>
+          {t("studyFlow.empty.description", {}, {
+            default:
+              "Add blocks to the canvas and connect them to see how participants move through your study.",
+          })}
+        </p>
+      </div>
+    );
+  }
+
+  if (!pathsHaveTasks(paths)) {
+    return (
+      <div className="studyFlowEmpty">
+        <h3>
+          {t("studyFlow.noTasks.title", {}, {
+            default: "No tasks in this flow",
+          })}
+        </h3>
+        <p>
+          {t("studyFlow.noTasks.description", {}, {
+            default:
+              "Connect tasks or surveys to your study flow to preview them here.",
+          })}
+        </p>
+      </div>
+    );
   }
 
   return (
     <StyledTasksPreview>
       <div className="studyTasksPreview">
-        {Object.values(paths).map(({ frequency, path, label }) => (
-          <div className="condition">
+        {Object.values(paths).map(({ frequency, path, label }, index) => (
+          <div className="condition" key={label || `path-${index}`}>
             {path?.filter((block) => block?.type === "task").length > 0 && (
               <div className="firstLine" id="firstLine">
                 <div>{label}</div>
                 <Popup
-                  content={
-                    "The probability that a participant is in this between-subjects condition (based on a simulated run of the study for 100 times)."
-                  }
+                  content={t(
+                    "selector.studyDesign.conditionProbabilityInfo",
+                    {},
+                    {
+                      default:
+                        "The probability that a participant is in this between-subjects condition (based on a simulated run of the study for 100 times).",
+                    }
+                  )}
                   trigger={<div>{frequency}%</div>}
                   size="huge"
                 />
@@ -143,10 +188,16 @@ export default function StudyTasks({ study }) {
             )}
 
             <div className="taskBlocks" id="taskBlocks">
-              {path?.map((block) => {
+              {path?.map((block, blockIndex) => {
                 if (block?.type === "task") {
-                  return <TaskBlock task={block} />;
+                  return (
+                    <TaskBlock
+                      key={block?.testId || `task-${blockIndex}`}
+                      task={block}
+                    />
+                  );
                 }
+                return null;
               })}
             </div>
           </div>

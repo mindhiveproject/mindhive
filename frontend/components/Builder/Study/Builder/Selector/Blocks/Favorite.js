@@ -1,5 +1,8 @@
 import { useQuery } from "@apollo/client";
-import { FAVORITE_TASKS } from "../../../../../Queries/Task";
+import {
+  FAVORITE_TASKS,
+  buildFavoriteTasksWhere,
+} from "../../../../../Queries/Task";
 import Card from "./Card";
 
 export default function FavoriteBlocks({
@@ -11,10 +14,14 @@ export default function FavoriteBlocks({
 }) {
   const { data, error, loading } = useQuery(FAVORITE_TASKS, {
     variables: {
-      taskType: componentType,
-      searchTerm: search,
-      userId: user?.id,
+      where: buildFavoriteTasksWhere({
+        userId: user?.id,
+        componentType,
+        search: search || "",
+      }),
     },
+    fetchPolicy: "cache-and-network",
+    skip: !user?.id || !componentType,
   });
   const tasks = data?.tasks || [];
 
