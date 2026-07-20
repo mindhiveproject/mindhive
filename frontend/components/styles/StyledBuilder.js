@@ -488,7 +488,7 @@ export const StyledCanvasBuilder = styled.div`
     position: relative;
     overflow: hidden;
 
-    > *:not(.sidepanel):not(.addCommentButton):not(.addAnchorButton) {
+    > *:not(.sidepanel):not(.boardTopActions) {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -505,58 +505,15 @@ export const StyledCanvasBuilder = styled.div`
     }
   }
 
-  .addCommentButton {
-    position: absolute;
-    z-index: 1;
-    left: 10px;
-    top: 10px;
-    background: #007c70;
-    border: 1px solid #007c70;
-    border-radius: 100px;
-    padding: 8px 20px;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    color: #ffffff;
-    cursor: pointer;
-    :hover {
-      transform: scale(1.1);
-      transition: transform 0.5s;
-    }
-    :disabled {
-      background: #cccccc;
-      border-color: #cccccc;
-      cursor: not-allowed;
-    }
-  }
-
-  .addAnchorButton {
+  .boardTopActions {
     position: absolute;
     z-index: 10;
-    left: 170px;
+    left: 10px;
     top: 10px;
-    background: #e9ecef;
-    border: 1px solid #e9ecef;
-    border-radius: 100px;
-    padding: 8px 20px;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    color: black;
-    cursor: pointer;
-    :hover {
-      transform: scale(1.1);
-      transition: transform 0.5s;
-    }
-    :disabled {
-      background: #cccccc;
-      border-color: #cccccc;
-      cursor: not-allowed;
-    }
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
   }
 
   .background {

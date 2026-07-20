@@ -87,7 +87,8 @@
 		"addComment": "添加评论",
 		"addStartingPoint": "添加起点",
 		"lockedMessage": "此研究已提交，无法编辑。如需更改，请告知您的老师取消提交此研究。",
-		"studyBuilderLocked": "学习构建器已锁定"
+		"studyBuilderLocked": "学习构建器已锁定",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -442,6 +443,7 @@
 				"classNetwork": "阶级网络",
 				"empty": {
 					"classNetwork": "本项目或研究没有来自您班级网络的数据集。",
+					"me": "",
 					"myClass": "您的课程还没有数据集。",
 					"public": "未找到公开数据集。",
 					"sharedWithMe": "没有与您共享任何数据集。",
@@ -449,11 +451,13 @@
 				},
 				"intro": {
 					"classNetwork": "本项目或研究中的数据集来自您班级网络中的班级。",
+					"me": "",
 					"myClass": "与课堂学习或项目相关的数据集。",
 					"public": "来自公共期刊模板的数据集。",
 					"sharedWithMe": "其他人与您作为合作者共享的数据集。",
 					"uploaded": "您上传的数据集。"
 				},
+				"me": "",
 				"myClass": "我的班级",
 				"public": "民众",
 				"sharedWithMe": "与我分享",

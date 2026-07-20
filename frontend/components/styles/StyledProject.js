@@ -40,7 +40,7 @@ const StyledProject = styled.div`
       align-items: center;
       grid-template-columns: auto 1fr auto;
       grid-gap: 20px;
-      padding: 8px 0px 8px 16px;
+      padding: 8px 8px 8px 16px;
       min-height: 55px;
     }
 

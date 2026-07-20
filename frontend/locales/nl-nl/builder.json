@@ -87,7 +87,8 @@
 		"addComment": "Voeg een opmerking toe",
 		"addStartingPoint": "Startpunt toevoegen",
 		"lockedMessage": "Deze studie is ingediend en kan niet worden bewerkt. Om wijzigingen aan te brengen, kunt u uw docent vragen de studie ongedaan te maken.",
-		"studyBuilderLocked": "Studiebouwer vergrendeld"
+		"studyBuilderLocked": "Studiebouwer vergrendeld",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -442,6 +443,7 @@
 				"classNetwork": "Klassennetwerk",
 				"empty": {
 					"classNetwork": "Voor dit project of onderzoek zijn geen datasets uit het netwerk van je klas toegestaan.",
+					"me": "",
 					"myClass": "Er zijn nog geen datasets van je lessen beschikbaar.",
 					"public": "Geen openbare datasets gevonden.",
 					"sharedWithMe": "Er zijn geen datasets met u gedeeld.",
@@ -449,11 +451,13 @@
 				},
 				"intro": {
 					"classNetwork": "Datasets voor dit project of onderzoek zijn afkomstig uit de lessen in uw klassennetwerk.",
+					"me": "",
 					"myClass": "Datasets die gekoppeld zijn aan studies of projecten in je lessen.",
 					"public": "Datasets afkomstig van openbare tijdschriftsjablonen.",
 					"sharedWithMe": "Datasets die anderen met je hebben gedeeld als samenwerkingspartner.",
 					"uploaded": "Datasets die u hebt geüpload."
 				},
+				"me": "",
 				"myClass": "Mijn klas",
 				"public": "Openbaar",
 				"sharedWithMe": "Gedeeld met mij",

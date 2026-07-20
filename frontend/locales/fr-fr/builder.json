@@ -87,7 +87,8 @@
 		"addComment": "Ajouter un commentaire",
 		"addStartingPoint": "Ajouter un point de départ",
 		"lockedMessage": "Cette étude a été soumise et ne peut pas être modifiée. Pour apporter des modifications, veuillez demander à votre enseignant d'annuler la soumission.",
-		"studyBuilderLocked": "Générateur d'études verrouillé"
+		"studyBuilderLocked": "Générateur d'études verrouillé",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -442,6 +443,7 @@
 				"classNetwork": "Réseau de classe",
 				"empty": {
 					"classNetwork": "Aucune donnée provenant de votre réseau de classe n'est disponible pour ce projet ou cette étude.",
+					"me": "",
 					"myClass": "Aucun jeu de données pour vos classes pour le moment.",
 					"public": "Aucun jeu de données public trouvé.",
 					"sharedWithMe": "Aucune donnée n'a été partagée avec vous.",
@@ -449,11 +451,13 @@
 				},
 				"intro": {
 					"classNetwork": "Ensembles de données relatifs à ce projet ou à cette étude, provenant de classes appartenant à vos réseaux de classes.",
+					"me": "",
 					"myClass": "Jeux de données liés aux études ou aux projets de vos cours.",
 					"public": "Ensembles de données issus de modèles de revues publiques.",
 					"sharedWithMe": "Jeux de données partagés avec vous par d'autres collaborateurs.",
 					"uploaded": "Jeux de données que vous avez téléchargés."
 				},
+				"me": "",
 				"myClass": "Ma classe",
 				"public": "Publique",
 				"sharedWithMe": "Partagé avec moi",

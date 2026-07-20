@@ -87,7 +87,8 @@
 		"addComment": "Add a comment",
 		"addStartingPoint": "Add starting point",
 		"lockedMessage": "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
-		"studyBuilderLocked": "Study Builder Locked"
+		"studyBuilderLocked": "Study Builder Locked",
+		"undo": "Undo"
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -1883,7 +1884,7 @@
 			"title": "Basic Blocks"
 		},
 		"filter": {
-			"createdByAnyone": "Created by anyone",
+			"createdByAnyone": "All blocks",
 			"myFavorite": "My favorite",
 			"ownedByMe": "Owned by me"
 		},

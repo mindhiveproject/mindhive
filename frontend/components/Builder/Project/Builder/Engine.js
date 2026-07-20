@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer, useRef, useCallback } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import uniqid from "uniqid";
@@ -43,56 +43,175 @@ export default function Engine({
   const isCanvasLocked = study?.dataCollectionStatus === "SUBMITTED";
 
   const [hasStudyChanged, setHasStudyChanged] = useState(false);
+  const [canUndo, setCanUndo] = useState(false);
   // force update canvas
   const forceUpdate = useReducer((bool) => !bool)[1];
   const [engine, setEngine] = useState(null);
 
+  const engineRef = useRef(null);
+  const undoSlotRef = useRef(null);
+  const baselineRef = useRef(null);
+  const skipHistoryRef = useRef(false);
+  const structuralChangePendingRef = useRef(false);
+  const isCanvasLockedRef = useRef(isCanvasLocked);
+  isCanvasLockedRef.current = isCanvasLocked;
+
+  const serializeModel = useCallback((model) => {
+    if (!model) return null;
+    try {
+      return JSON.stringify(model.serialize());
+    } catch (e) {
+      return null;
+    }
+  }, []);
+
+  const getActiveModel = useCallback(() => {
+    const eng = engineRef.current;
+    if (!eng) return null;
+    return eng.getModel?.() || eng.model || null;
+  }, []);
+
+  const captureBaseline = useCallback(
+    (model) => {
+      const m = model || getActiveModel();
+      baselineRef.current = serializeModel(m);
+    },
+    [getActiveModel, serializeModel]
+  );
+
+  const pushUndoFromCurrent = useCallback(() => {
+    if (isCanvasLockedRef.current) return;
+    const snapshot = serializeModel(getActiveModel());
+    if (!snapshot) return;
+    undoSlotRef.current = snapshot;
+    setCanUndo(true);
+  }, [getActiveModel, serializeModel]);
+
+  const markStructuralChange = useCallback(() => {
+    if (skipHistoryRef.current || isCanvasLockedRef.current) return;
+    // Coalesce link+node events from one gesture so undo stays the true pre-state
+    if (!structuralChangePendingRef.current) {
+      if (baselineRef.current) {
+        undoSlotRef.current = baselineRef.current;
+        setCanUndo(true);
+      }
+      structuralChangePendingRef.current = true;
+      queueMicrotask(() => {
+        captureBaseline();
+        setHasStudyChanged(true);
+        structuralChangePendingRef.current = false;
+      });
+    }
+  }, [captureBaseline]);
+
+  // Undo only for block structure changes (add/remove/connect), not pan or node drag.
+  const registerModelListeners = useCallback(
+    (model) => {
+      if (!model) return;
+      model.registerListener({
+        linksUpdated: () => {
+          markStructuralChange();
+        },
+        nodesUpdated: () => {
+          markStructuralChange();
+        },
+      });
+    },
+    [markStructuralChange]
+  );
+
+  const replaceModel = useCallback(
+    (model) => {
+      const eng = engineRef.current;
+      if (!eng || !model) return;
+      eng.setModel(model);
+      registerModelListeners(model);
+      captureBaseline(model);
+      forceUpdate();
+      eng.repaintCanvas?.();
+    },
+    [captureBaseline, registerModelListeners, forceUpdate]
+  );
+
+  const withHistorySnapshot = useCallback(
+    (fn) => {
+      if (isCanvasLockedRef.current) return;
+      pushUndoFromCurrent();
+      skipHistoryRef.current = true;
+      try {
+        fn();
+      } finally {
+        captureBaseline();
+        skipHistoryRef.current = false;
+        setHasStudyChanged(true);
+      }
+    },
+    [pushUndoFromCurrent, captureBaseline]
+  );
+
+  const undoCanvas = useCallback(() => {
+    if (!undoSlotRef.current || isCanvasLockedRef.current) return;
+    const eng = engineRef.current;
+    if (!eng) return;
+    skipHistoryRef.current = true;
+    try {
+      const model = new DiagramModel();
+      model.deserializeModel(JSON.parse(undoSlotRef.current), eng);
+      eng.setModel(model);
+      registerModelListeners(model);
+      undoSlotRef.current = null;
+      setCanUndo(false);
+      captureBaseline(model);
+      setHasStudyChanged(true);
+      forceUpdate();
+      eng.repaintCanvas?.();
+    } finally {
+      skipHistoryRef.current = false;
+    }
+  }, [captureBaseline, registerModelListeners, forceUpdate]);
+
+  const clearUndo = useCallback(() => {
+    undoSlotRef.current = null;
+    setCanUndo(false);
+    captureBaseline();
+  }, [captureBaseline]);
+
   useEffect(() => {
     function handleEngine() {
-      const engine = createEngine();
-      engine.setModel(new DiagramModel());
+      const nextEngine = createEngine();
+      nextEngine.setModel(new DiagramModel());
       // Create custom node
-      engine.getNodeFactories().registerFactory(new TasksFactory());
+      nextEngine.getNodeFactories().registerFactory(new TasksFactory());
       // Create custom comment
-      engine.getNodeFactories().registerFactory(new CommentsFactory());
+      nextEngine.getNodeFactories().registerFactory(new CommentsFactory());
       // Create custom anchor
-      engine.getNodeFactories().registerFactory(new AnchorFactory());
+      nextEngine.getNodeFactories().registerFactory(new AnchorFactory());
       // Create custom study design node
-      engine.getNodeFactories().registerFactory(new DesignFactory());
+      nextEngine.getNodeFactories().registerFactory(new DesignFactory());
       // Register ports
-      engine.getPortFactories().registerFactory(new InPortFactory());
-      engine.getPortFactories().registerFactory(new OutPortFactory());
+      nextEngine.getPortFactories().registerFactory(new InPortFactory());
+      nextEngine.getPortFactories().registerFactory(new OutPortFactory());
       // Register links
-      engine.getLinkFactories().registerFactory(new AdvancedLinkFactory());
+      nextEngine.getLinkFactories().registerFactory(new AdvancedLinkFactory());
 
       // disable creating new nodes when clicking on the link
-      engine.maxNumberPointsPerLink = 0;
+      nextEngine.maxNumberPointsPerLink = 0;
       // disable loose links
-      const state = engine.getStateMachine().getCurrentState();
+      const state = nextEngine.getStateMachine().getCurrentState();
       if (state instanceof DefaultDiagramState) {
         state.dragNewLink.config.allowLooseLinks = false;
       }
       // load the saved model
       if (study?.diagram) {
         const model = new DiagramModel();
-        model.deserializeModel(JSON.parse(study?.diagram), engine);
-        engine.setModel(model);
+        model.deserializeModel(JSON.parse(study?.diagram), nextEngine);
+        nextEngine.setModel(model);
       } else {
         const anchor = new AnchorModel({});
-        engine.getModel().addNode(anchor);
+        nextEngine.getModel().addNode(anchor);
       }
-      // register unsaved changes on link and node events
-      engine.model.registerListener({
-        linksUpdated: (e) => {
-          if (e?.isCreated) {
-            setHasStudyChanged(true);
-          }
-        },
-        nodesUpdated: (e) => {
-          setHasStudyChanged(true);
-        },
-      });
-      setEngine(engine);
+      engineRef.current = nextEngine;
+      setEngine(nextEngine);
     }
     handleEngine();
     // Specify how to clean up after this effect:
@@ -101,6 +220,14 @@ export default function Engine({
     };
   }, []);
   // study?.diagram - was removed from the previous line not to update every time when the study state is updated
+
+  // Attach undo listeners once the engine exists
+  useEffect(() => {
+    if (!engine) return;
+    const model = engine.getModel?.() || engine.model;
+    registerModelListeners(model);
+    captureBaseline(model);
+  }, [engine]); // eslint-disable-line react-hooks/exhaustive-deps -- register once when engine mounts
 
   useEffect(() => {
     if (engine && study?.diagram) {
@@ -145,98 +272,124 @@ export default function Engine({
   }) => {
     if (isCanvasLocked)
       return alert(t("engine.studyLocked", "The study has been locked"));
-    let newNode;
-    if (createCopy) {
-      newNode = new TaskModel({
-        color: "white",
-        name,
-        details: shorten(details),
-        componentID,
-        testId: uniqid.time(),
-        taskType,
-        subtitle: `${t("engine.copy", "COPY")} ${shorten(subtitle)}`,
-        createCopy: true,
-      });
-    } else {
-      newNode = new TaskModel({
-        color: "white",
-        name,
-        details: shorten(details),
-        componentID,
-        testId: uniqid.time(),
-        taskType,
-        subtitle: shorten(subtitle),
-      });
-    }
-    const event = {
-      clientX: getRandomIntInclusive(300, 500),
-      clientY: getRandomIntInclusive(300, 500),
-    };
-    const point = engine.getRelativeMousePoint(event);
-    newNode.setPosition(point);
-    engine.getModel().addNode(newNode);
-    forceUpdate();
+    withHistorySnapshot(() => {
+      let newNode;
+      if (createCopy) {
+        newNode = new TaskModel({
+          color: "white",
+          name,
+          details: shorten(details),
+          componentID,
+          testId: uniqid.time(),
+          taskType,
+          subtitle: `${t("engine.copy", "COPY")} ${shorten(subtitle)}`,
+          createCopy: true,
+        });
+      } else {
+        newNode = new TaskModel({
+          color: "white",
+          name,
+          details: shorten(details),
+          componentID,
+          testId: uniqid.time(),
+          taskType,
+          subtitle: shorten(subtitle),
+        });
+      }
+      const event = {
+        clientX: getRandomIntInclusive(300, 500),
+        clientY: getRandomIntInclusive(300, 500),
+      };
+      const point = engine.getRelativeMousePoint(event);
+      newNode.setPosition(point);
+      engine.getModel().addNode(newNode);
+      forceUpdate();
+    });
   };
 
-  const addStudyTemplateToCanvas = ({ study }) => {
+  const addStudyTemplateToCanvas = ({ study: templateStudy }) => {
     if (isCanvasLocked)
       return alert(t("engine.studyLocked", "The study has been locked"));
-    const { diagram } = study;
-    const model = new DiagramModel();
-    model.deserializeModel(JSON.parse(diagram), engine);
-    engine.setModel(model);
-    setHasStudyChanged(true);
+    withHistorySnapshot(() => {
+      const { diagram } = templateStudy;
+      const model = new DiagramModel();
+      model.deserializeModel(JSON.parse(diagram), engine);
+      replaceModel(model);
+    });
   };
 
   const addComment = () => {
     if (isCanvasLocked)
       return alert(t("engine.studyLocked", "The study has been locked"));
-    const note = new CommentModel({
-      author: user?.username,
-      time: Date.now(),
-      content: "",
+    withHistorySnapshot(() => {
+      const note = new CommentModel({
+        author: user?.username,
+        time: Date.now(),
+        content: "",
+      });
+      const event = {
+        clientX: getRandomIntInclusive(300, 500),
+        clientY: getRandomIntInclusive(300, 500),
+      };
+      const point = engine.getRelativeMousePoint(event);
+      note.setPosition(point);
+      engine.getModel().addNode(note);
+      forceUpdate();
     });
-    const event = {
-      clientX: getRandomIntInclusive(300, 500),
-      clientY: getRandomIntInclusive(300, 500),
-    };
-    const point = engine.getRelativeMousePoint(event);
-    note.setPosition(point);
-    engine.getModel().addNode(note);
-    forceUpdate();
-    setHasStudyChanged(true);
   };
 
   const addAnchor = () => {
     if (isCanvasLocked)
       return alert(t("engine.studyLocked", "The study has been locked"));
-    const anchor = new AnchorModel({});
-    const event = {
-      clientX: getRandomIntInclusive(300, 500),
-      clientY: getRandomIntInclusive(300, 500),
-    };
-    const point = engine.getRelativeMousePoint(event);
-    anchor.setPosition(point);
-    engine.getModel().addNode(anchor);
-    forceUpdate();
+    withHistorySnapshot(() => {
+      const anchor = new AnchorModel({});
+      const event = {
+        clientX: getRandomIntInclusive(300, 500),
+        clientY: getRandomIntInclusive(300, 500),
+      };
+      const point = engine.getRelativeMousePoint(event);
+      anchor.setPosition(point);
+      engine.getModel().addNode(anchor);
+      forceUpdate();
+    });
   };
 
   const addDesignToCanvas = ({ name, details, conditions }) => {
     if (isCanvasLocked)
       return alert(t("engine.studyLocked", "The study has been locked"));
-    const newNode = new DesignModel({
-      name,
-      details,
-      conditions,
+    withHistorySnapshot(() => {
+      const newNode = new DesignModel({
+        name,
+        details,
+        conditions,
+      });
+      const event = {
+        clientX: getRandomIntInclusive(300, 500),
+        clientY: getRandomIntInclusive(300, 500),
+      };
+      const point = engine.getRelativeMousePoint(event);
+      newNode.setPosition(point);
+      engine.getModel().addNode(newNode);
+      forceUpdate();
     });
-    const event = {
-      clientX: getRandomIntInclusive(300, 500),
-      clientY: getRandomIntInclusive(300, 500),
-    };
-    const point = engine.getRelativeMousePoint(event);
-    newNode.setPosition(point);
-    engine.getModel().addNode(newNode);
+  };
+
+  const onBeforeCanvasMutation = () => {
+    pushUndoFromCurrent();
+    skipHistoryRef.current = true;
+  };
+
+  const onAfterCanvasMutation = () => {
+    captureBaseline(getActiveModel());
+    skipHistoryRef.current = false;
+    setHasStudyChanged(true);
     forceUpdate();
+  };
+
+  const onModelReplaced = (model) => {
+    replaceModel(model);
+    skipHistoryRef.current = false;
+    setHasStudyChanged(true);
   };
 
   const addFunctions = {
@@ -343,9 +496,11 @@ export default function Engine({
         linksToRemove.push(link);
       }
     });
+    skipHistoryRef.current = true;
     linksToRemove.forEach((link) => {
       link.remove();
     });
+    skipHistoryRef.current = false;
 
     if (linksToRemove.length > 0) {
       // Detect Safari for conditional message
@@ -397,6 +552,7 @@ export default function Engine({
       versionHistory: updatedVersionHistory,
     });
     setHasStudyChanged(false);
+    clearUndo();
   };
 
   const handleStudyChange = (props) => {
@@ -434,6 +590,11 @@ export default function Engine({
         hasStudyChanged={hasStudyChanged}
         setHasStudyChanged={setHasStudyChanged}
         isCanvasLocked={isCanvasLocked}
+        canUndo={canUndo}
+        undoCanvas={undoCanvas}
+        onBeforeCanvasMutation={onBeforeCanvasMutation}
+        onAfterCanvasMutation={onAfterCanvasMutation}
+        onModelReplaced={onModelReplaced}
       />
     </>
   );

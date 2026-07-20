@@ -87,7 +87,8 @@
 		"addComment": "एक टिप्पणी जोड़ने",
 		"addStartingPoint": "प्रारंभिक बिंदु जोड़ें",
 		"lockedMessage": "यह अध्ययन सबमिट कर दिया गया है और इसे संपादित नहीं किया जा सकता। इसमें बदलाव करने के लिए, कृपया अपने शिक्षक से अध्ययन को सबमिट न करने का अनुरोध करें।",
-		"studyBuilderLocked": "अध्ययन बिल्डर लॉक"
+		"studyBuilderLocked": "अध्ययन बिल्डर लॉक",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -442,6 +443,7 @@
 				"classNetwork": "",
 				"empty": {
 					"classNetwork": "",
+					"me": "",
 					"myClass": "",
 					"public": "",
 					"sharedWithMe": "",
@@ -449,11 +451,13 @@
 				},
 				"intro": {
 					"classNetwork": "",
+					"me": "",
 					"myClass": "",
 					"public": "",
 					"sharedWithMe": "",
 					"uploaded": ""
 				},
+				"me": "",
 				"myClass": "",
 				"public": "",
 				"sharedWithMe": "",
