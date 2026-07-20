@@ -2240,7 +2240,9 @@
 		"addMore": "添加更多"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "您确定要删除 {{versionName}} 吗？",
+		"confirmLoadUnsaved": "",
 		"createdOn": "创建日期",
 		"createNewVersion": "创建新版本",
 		"currentVersion": "当前版本",
@@ -2248,7 +2250,9 @@
 		"description": "描述",
 		"enterVersionName": "请输入版本名称",
 		"headerNote": "保存左侧屏幕上显示的不同研究设计",
+		"invalidDiagram": "",
 		"load": "加载",
+		"missingDiagram": "",
 		"name": "姓名",
 		"noVersionSaved": "尚未保存任何学习版本。点击下方按钮，即可创建新版本。",
 		"placeholder": "学习版本",

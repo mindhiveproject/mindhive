@@ -437,46 +437,153 @@ export const StyledCanvasBuilder = styled.div`
 
     .studySettings {
       margin: 0;
-      padding: 0;
+      padding: 8px 8px 24px;
       width: 100%;
       min-width: 0;
       max-width: 100%;
       box-sizing: border-box;
       display: grid;
-      grid-gap: 2rem;
-      .studyVersion {
+      gap: 12px;
+
+      .settingsCard {
         display: grid;
-        grid-gap: 1rem;
-        .studyVersionHeader {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          grid-gap: 1rem;
-          align-items: center;
-          .studyVersionHeaderNote {
-            color: grey;
-          }
-        }
-        .studyVersionInfo {
-          display: grid;
-          grid-gap: 0.5rem;
-          background: white;
-          margin: 1rem 0rem;
-          padding: 1rem;
-          border-radius: 5px;
-          .studyVersionInfoDescription {
-            color: grey;
-          }
+        gap: 12px;
+        margin: 0;
+        padding: 16px;
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+        border-radius: 8px;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .settingsSection {
+        display: grid;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .settingsSectionHeader {
+        display: grid;
+        gap: 4px;
+
+        h2 {
+          margin: 0;
+          font-family: Inter, sans-serif;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 24px;
+          color: var(--MH-Theme-Neutrals-Black, #171717);
         }
       }
-      .switch {
+
+      .settingsSectionNote,
+      .settingsEmptyNote {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 18px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      }
+
+      .settingsField {
         display: grid;
-        grid-template-columns: 1fr auto auto;
-        grid-gap: 1rem;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .settingsFieldLabel {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 18px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+
+      .studyVersionInfo {
+        display: grid;
+        gap: 6px;
+        padding: 12px;
+        background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+        border-radius: 8px;
+      }
+
+      .studyVersionInfoMeta {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 4px 12px;
+        font-family: Inter, sans-serif;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      }
+
+      .studyVersionInfoName {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+
+      .studyVersionInfoDescription {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 18px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      }
+
+      .versionSwitch {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .versionSwitchActions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
         align-items: center;
-        .deleteBtn {
-          background: darkred;
-          border: 1px solid darkred;
-        }
+      }
+
+      .versionModalActions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      /* StudyTagger lives under settingsCard */
+      h2 {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+
+      p {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 18px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      }
+
+      #studyTags {
+        display: grid;
+        gap: 8px;
       }
     }
   }

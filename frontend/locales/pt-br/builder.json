@@ -2240,7 +2240,9 @@
 		"addMore": "Adicionar mais"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "Tem certeza de que deseja excluir o {{versionName}}?",
+		"confirmLoadUnsaved": "",
 		"createdOn": "Criado em",
 		"createNewVersion": "Criar nova versão",
 		"currentVersion": "Versão atual",
@@ -2248,7 +2250,9 @@
 		"description": "Descrição",
 		"enterVersionName": "Por favor, insira o nome da versão",
 		"headerNote": "Salvar diferentes modelos de estudo exibidos na tela à esquerda",
+		"invalidDiagram": "",
 		"load": "Carregar",
+		"missingDiagram": "",
 		"name": "Nome",
 		"noVersionSaved": "Nenhuma versão de estudo foi salva ainda. Crie uma nova versão clicando no botão abaixo.",
 		"placeholder": "Versões de estudo",

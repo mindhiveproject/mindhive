@@ -2240,7 +2240,9 @@
 		"addMore": "Voeg meer toe"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "Weet u zeker dat u {{versionName}} wilt verwijderen?",
+		"confirmLoadUnsaved": "",
 		"createdOn": "Gemaakt op",
 		"createNewVersion": "Nieuwe versie maken",
 		"currentVersion": "Huidige versie",
@@ -2248,7 +2250,9 @@
 		"description": "Beschrijving",
 		"enterVersionName": "Voer de versienaam in",
 		"headerNote": "Sla verschillende studieontwerpen op die op het scherm aan de linkerkant worden weergegeven",
+		"invalidDiagram": "",
 		"load": "Laden",
+		"missingDiagram": "",
 		"name": "Naam",
 		"noVersionSaved": "Er is nog geen studieversie opgeslagen. Maak een nieuwe versie door op onderstaande knop te klikken.",
 		"placeholder": "Studieversies",

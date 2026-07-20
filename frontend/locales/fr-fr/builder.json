@@ -2240,7 +2240,9 @@
 		"addMore": "Ajouter plus"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "Êtes-vous sûr de vouloir supprimer le {{versionName}} ?",
+		"confirmLoadUnsaved": "",
 		"createdOn": "Créé le",
 		"createNewVersion": "Créer une nouvelle version",
 		"currentVersion": "Version actuelle",
@@ -2248,7 +2250,9 @@
 		"description": "Description",
 		"enterVersionName": "Veuillez saisir le nom de la version",
 		"headerNote": "Enregistrer les différents plans d'étude affichés sur l'écran de gauche",
+		"invalidDiagram": "",
 		"load": "Charger",
+		"missingDiagram": "",
 		"name": "Nom",
 		"noVersionSaved": "Aucune version d'étude n'a encore été enregistrée. Créez-en une nouvelle en cliquant sur le bouton ci-dessous.",
 		"placeholder": "Versions d'étude",

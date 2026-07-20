@@ -2240,7 +2240,9 @@
 		"addMore": "Añadir más"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "¿Está seguro de que desea eliminar {{versionName}}?",
+		"confirmLoadUnsaved": "",
 		"createdOn": "Creado el",
 		"createNewVersion": "Crear nueva versión",
 		"currentVersion": "Versión actual",
@@ -2248,7 +2250,9 @@
 		"description": "Descripción",
 		"enterVersionName": "Por favor, introduzca el nombre de la versión",
 		"headerNote": "Guarda los diferentes diseños de estudio que se muestran en la pantalla de la izquierda.",
+		"invalidDiagram": "",
 		"load": "Carga",
+		"missingDiagram": "",
 		"name": "Nombre",
 		"noVersionSaved": "Aún no se ha guardado ninguna versión del estudio. Crea una nueva haciendo clic en el botón de abajo.",
 		"placeholder": "Versiones de estudio",

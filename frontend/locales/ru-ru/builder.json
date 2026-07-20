@@ -2240,7 +2240,9 @@
 		"addMore": "Добавить еще"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "Вы уверены, что хотите удалить {{versionName}}?",
+		"confirmLoadUnsaved": "",
 		"createdOn": "Создано",
 		"createNewVersion": "Создать новую версию",
 		"currentVersion": "Текущая версия",
@@ -2248,7 +2250,9 @@
 		"description": "Описание",
 		"enterVersionName": "Пожалуйста, введите название версии",
 		"headerNote": "Сохраните различные варианты дизайна исследования, отображаемые на экране слева.",
+		"invalidDiagram": "",
 		"load": "Нагрузка",
+		"missingDiagram": "",
 		"name": "Имя",
 		"noVersionSaved": "Ни одна версия исследования пока не сохранена. Создайте новую версию, нажав кнопку ниже.",
 		"placeholder": "Учебные версии",

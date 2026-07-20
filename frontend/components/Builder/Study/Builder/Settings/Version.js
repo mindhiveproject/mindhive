@@ -34,7 +34,14 @@ export default function StudyVersion({
 
   const createNewVersion = () => {
     if (!inputs?.name) return alert("Please enter the version name");
-    const { diagram } = study;
+
+    const canvasState = addFunctions?.getDiagramState?.() || {};
+    const diagram = canvasState.diagram || study?.diagram;
+    const flow = canvasState.flow ?? study?.flow;
+
+    if (!diagram) {
+      return alert("This version has no saved diagram to load.");
+    }
 
     const newVersion = {
       id: uniqid.time(),
@@ -54,20 +61,53 @@ export default function StudyVersion({
     handleMultipleUpdate({
       currentVersion: newVersion?.id,
       versionHistory: updatedVersionHistory,
+      diagram,
+      flow,
     });
 
     engine.getModel().setLocked(false);
   };
 
   const switchToVersion = () => {
-    handleChange({
-      target: {
-        name: "currentVersion",
-        value: version,
-      },
+    if (!version) return;
+
+    const entry = versionHistory?.find((v) => v?.id === version);
+    if (!entry?.diagram) {
+      return alert("This version has no saved diagram to load.");
+    }
+
+    if (hasStudyChanged) {
+      const shouldLoad = confirm(
+        "You have unsaved canvas changes. Load this version anyway? Your current canvas will be kept on the version you are leaving until you save."
+      );
+      if (!shouldLoad) return;
+    }
+
+    let nextHistory = versionHistory || [];
+    const leavingId = study?.currentVersion;
+    if (leavingId && typeof addFunctions?.getDiagramState === "function") {
+      const currentState = addFunctions.getDiagramState();
+      if (currentState?.diagram) {
+        nextHistory = nextHistory.map((v) =>
+          v?.id === leavingId ? { ...v, diagram: currentState.diagram } : v
+        );
+      }
+    }
+
+    const diagramToLoad =
+      nextHistory.find((v) => v?.id === version)?.diagram || entry.diagram;
+
+    const result = addFunctions.addStudyTemplateToCanvas({
+      study: { diagram: diagramToLoad },
     });
-    const diagram = versionHistory.filter((v) => v?.id === version)[0]?.diagram;
-    addFunctions.addStudyTemplateToCanvas({ study: { diagram } });
+    if (!result) return;
+
+    handleMultipleUpdate({
+      currentVersion: version,
+      versionHistory: nextHistory,
+      diagram: result.diagram,
+      flow: result.flow,
+    });
   };
 
   const deleteVersion = () => {

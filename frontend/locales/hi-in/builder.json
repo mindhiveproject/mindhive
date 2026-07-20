@@ -2240,7 +2240,9 @@
 		"addMore": "अधिक जोड़ें"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "क्या आप वाकई {{versionName}} को हटाना चाहते हैं?",
+		"confirmLoadUnsaved": "",
 		"createdOn": "पर बनाया",
 		"createNewVersion": "नया संस्करण बनाएँ",
 		"currentVersion": "वर्तमान संस्करण",
@@ -2248,7 +2250,9 @@
 		"description": "विवरण",
 		"enterVersionName": "कृपया संस्करण का नाम दर्ज करें",
 		"headerNote": "बाईं ओर स्क्रीन पर प्रदर्शित विभिन्न अध्ययन डिज़ाइनों को सहेजें",
+		"invalidDiagram": "",
 		"load": "भार",
+		"missingDiagram": "",
 		"name": "नाम",
 		"noVersionSaved": "अभी तक कोई अध्ययन संस्करण सहेजा नहीं गया है। नीचे दिए गए बटन पर क्लिक करके नया संस्करण बनाएँ।",
 		"placeholder": "अध्ययन संस्करण",

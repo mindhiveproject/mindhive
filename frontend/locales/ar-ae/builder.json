@@ -2240,7 +2240,9 @@
 		"addMore": "أضف المزيد"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "هل أنت متأكد أنك تريد حذف {{versionName}}؟",
+		"confirmLoadUnsaved": "",
 		"createdOn": "تم إنشاؤه في",
 		"createNewVersion": "إنشاء إصدار جديد",
 		"currentVersion": "الإصدار الحالي",
@@ -2248,7 +2250,9 @@
 		"description": "وصف",
 		"enterVersionName": "الرجاء إدخال اسم الإصدار",
 		"headerNote": "حفظ تصميمات الدراسة المختلفة المعروضة على الشاشة على اليسار",
+		"invalidDiagram": "",
 		"load": "حمولة",
+		"missingDiagram": "",
 		"name": "اسم",
 		"noVersionSaved": "لم يتم حفظ أي نسخة دراسية بعد. أنشئ نسخة جديدة بالنقر على الزر أدناه.",
 		"placeholder": "إصدارات الدراسة",

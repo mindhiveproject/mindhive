@@ -1975,7 +1975,7 @@
 		"collectingData": "Collecting data",
 		"dataCollectionCompleted": "Data collection is completed",
 		"inReview": "In review",
-		"placeholder": "Study versions",
+		"placeholder": "Select status",
 		"readyForReview": "Ready for review",
 		"reviewed": "Reviewed",
 		"submittedAsProposal": "Submitted as proposal",
@@ -2240,7 +2240,9 @@
 		"addMore": "Add more"
 	},
 	"version": {
+		"cancel": "Cancel",
 		"confirmDelete": "Are you sure you want to delete the {{versionName}}?",
+		"confirmLoadUnsaved": "You have unsaved canvas changes. Load this version anyway? Your current canvas will be kept on the version you are leaving until you save.",
 		"createdOn": "Created on",
 		"createNewVersion": "Create new version",
 		"currentVersion": "Current version",
@@ -2248,7 +2250,9 @@
 		"description": "Description",
 		"enterVersionName": "Please enter the version name",
 		"headerNote": "Save different study designs displayed on the screen on the left",
+		"invalidDiagram": "This version's diagram could not be loaded.",
 		"load": "Load",
+		"missingDiagram": "This version has no saved diagram to load.",
 		"name": "Name",
 		"noVersionSaved": "No study version has been saved yet. Create a new version by clicking on the button below.",
 		"placeholder": "Study versions",

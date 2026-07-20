@@ -308,14 +308,40 @@ export default function Engine({
   };
 
   const addStudyTemplateToCanvas = ({ study: templateStudy }) => {
-    if (isCanvasLocked)
-      return alert(t("engine.studyLocked", "The study has been locked"));
+    if (isCanvasLocked) {
+      alert(t("engine.studyLocked", {}, { default: "The study has been locked" }));
+      return null;
+    }
+
+    const { diagram } = templateStudy || {};
+    if (!diagram) {
+      alert(
+        t("version.missingDiagram", {}, {
+          default: "This version has no saved diagram to load.",
+        })
+      );
+      return null;
+    }
+
+    let parsed;
+    try {
+      parsed = typeof diagram === "string" ? JSON.parse(diagram) : diagram;
+    } catch (e) {
+      alert(
+        t("version.invalidDiagram", {}, {
+          default: "This version's diagram could not be loaded.",
+        })
+      );
+      return null;
+    }
+
     withHistorySnapshot(() => {
-      const { diagram } = templateStudy;
       const model = new DiagramModel();
-      model.deserializeModel(JSON.parse(diagram), engine);
+      model.deserializeModel(parsed, engine);
       replaceModel(model);
     });
+
+    return saveDiagramState();
   };
 
   const addComment = () => {
@@ -398,6 +424,7 @@ export default function Engine({
     addComment,
     addAnchor,
     addDesignToCanvas,
+    getDiagramState: saveDiagramState,
     shorten,
   };
 
