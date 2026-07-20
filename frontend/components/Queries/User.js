@@ -585,6 +585,15 @@ export const GET_CONNECT_USERS = gql`
       }
       location
       organization
+      occupation
+      tagline
+      organizations {
+        id
+        name
+        logo {
+          url
+        }
+      }
       interests {
         id
         title
@@ -870,6 +879,15 @@ export const MY_FAVORITE_PEOPLE = gql`
           }
           location
           organization
+          occupation
+          tagline
+          organizations {
+            id
+            name
+            logo {
+              url
+            }
+          }
           interests {
             id
             title
