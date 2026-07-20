@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { Popup } from "semantic-ui-react";
 
+import Chip from "../../../../DesignSystem/Chip";
+import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 import TaskBlock from "./Blocks/TaskBlock";
 import { StyledTasksPreview } from "../../../../styles/StyledStudyPage";
 
@@ -15,10 +16,38 @@ function pathsHaveTasks(paths) {
   );
 }
 
+function buildPathSequence(path) {
+  let taskStep = 0;
+  const sequence = [];
+
+  path?.forEach((block, blockIndex) => {
+    if (block?.type === "branching") {
+      sequence.push({
+        kind: "branch",
+        block,
+        key: `branch-${block?.conditionLabel || blockIndex}-${blockIndex}`,
+      });
+      return;
+    }
+    if (block?.type === "task") {
+      taskStep += 1;
+      sequence.push({
+        kind: "task",
+        block,
+        step: taskStep,
+        key: block?.testId || `task-${blockIndex}`,
+      });
+    }
+  });
+
+  return sequence;
+}
+
 export default function StudyTasks({ study }) {
   const { t } = useTranslation("builder");
   const flow = study?.flow;
   const [paths, setPaths] = useState({});
+  const [expandedKeys, setExpandedKeys] = useState(() => new Set());
 
   const getRandomInt = (min, max) => {
     min = Math.ceil(min);
@@ -107,6 +136,7 @@ export default function StudyTasks({ study }) {
     function findPossiblePaths() {
       if (!hasInterpretableFlow(flow)) {
         setPaths({});
+        setExpandedKeys(new Set());
         return;
       }
 
@@ -124,9 +154,26 @@ export default function StudyTasks({ study }) {
         };
       }
       setPaths(nextPaths);
+
+      const firstKey = Object.entries(nextPaths)
+        .filter(([, { path }]) => path?.some((block) => block?.type === "task"))
+        .sort(([, a], [, b]) => b.frequency - a.frequency)[0]?.[0];
+      setExpandedKeys(firstKey ? new Set([firstKey]) : new Set());
     }
     findPossiblePaths();
   }, [study]);
+
+  const togglePath = (pathKey) => {
+    setExpandedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(pathKey)) {
+        next.delete(pathKey);
+      } else {
+        next.add(pathKey);
+      }
+      return next;
+    });
+  };
 
   if (!hasInterpretableFlow(flow)) {
     return (
@@ -164,44 +211,169 @@ export default function StudyTasks({ study }) {
     );
   }
 
+  const sortedPaths = Object.entries(paths)
+    .filter(([, { path }]) => path?.some((block) => block?.type === "task"))
+    .sort(([, a], [, b]) => b.frequency - a.frequency)
+    .map(([pathKey, value]) => ({ pathKey, ...value }));
+
+  const probabilityInfo = t(
+    "selector.studyDesign.conditionProbabilityInfo",
+    {},
+    {
+      default:
+        "The probability that a participant is in this between-subjects condition (based on a simulated run of the study for 100 times).",
+    }
+  );
+
   return (
     <StyledTasksPreview>
+      <p className="studyFlowLegend">
+        {t("studyFlow.preview.legend", {}, {
+          default:
+            "Simulated over 100 participant runs. Paths are sorted by how often they occur.",
+        })}
+      </p>
       <div className="studyTasksPreview">
-        {Object.values(paths).map(({ frequency, path, label }, index) => (
-          <div className="condition" key={label || `path-${index}`}>
-            {path?.filter((block) => block?.type === "task").length > 0 && (
-              <div className="firstLine" id="firstLine">
-                <div>{label}</div>
-                <Popup
-                  content={t(
-                    "selector.studyDesign.conditionProbabilityInfo",
-                    {},
+        {sortedPaths.map(({ pathKey, frequency, path, label }, index) => {
+          const displayLabel =
+            label?.trim() ||
+            t("studyFlow.preview.defaultPath", {}, {
+              default: "Default path",
+            });
+          const isTourTarget = index === 0;
+          const isExpanded = expandedKeys.has(pathKey);
+          const sequence = buildPathSequence(path);
+          const taskCount = sequence.filter(
+            (item) => item.kind === "task"
+          ).length;
+
+          return (
+            <div
+              className={
+                isExpanded ? "condition conditionExpanded" : "condition"
+              }
+              key={pathKey || `path-${index}`}
+            >
+              <div
+                className="firstLine"
+                id={isTourTarget ? "firstLine" : undefined}
+              >
+                <button
+                  type="button"
+                  className="conditionToggle"
+                  aria-expanded={isExpanded}
+                  aria-label={t(
+                    isExpanded
+                      ? "studyFlow.preview.collapseAria"
+                      : "studyFlow.preview.expandAria",
+                    { name: displayLabel },
                     {
-                      default:
-                        "The probability that a participant is in this between-subjects condition (based on a simulated run of the study for 100 times).",
+                      default: isExpanded
+                        ? "Collapse path {{name}}"
+                        : "Expand path {{name}}",
                     }
                   )}
-                  trigger={<div>{frequency}%</div>}
-                  size="huge"
-                />
-              </div>
-            )}
-
-            <div className="taskBlocks" id="taskBlocks">
-              {path?.map((block, blockIndex) => {
-                if (block?.type === "task") {
-                  return (
-                    <TaskBlock
-                      key={block?.testId || `task-${blockIndex}`}
-                      task={block}
+                  onClick={() => togglePath(pathKey)}
+                >
+                  <span
+                    className={
+                      isExpanded
+                        ? "conditionChevron conditionChevronOpen"
+                        : "conditionChevron"
+                    }
+                    aria-hidden="true"
+                  >
+                    <img
+                      src="/assets/icons/builder/medium-chevron-down.svg"
+                      alt=""
+                      width={20}
+                      height={20}
                     />
-                  );
-                }
-                return null;
-              })}
+                  </span>
+                  <h3 className="conditionLabel">{displayLabel}</h3>
+                  {!isExpanded && (
+                    <span className="taskCount">
+                      {t(
+                        "studyFlow.preview.taskCount",
+                        { count: taskCount },
+                        { default: "{{count}} tasks" }
+                      )}
+                    </span>
+                  )}
+                </button>
+                <div className="probability">
+                  <Chip
+                    label={`${frequency}%`}
+                    shape="pill"
+                    style={{
+                      height: 28,
+                      fontSize: 12,
+                      lineHeight: "16px",
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                    }}
+                    ariaLabel={t(
+                      "studyFlow.preview.probabilityAria",
+                      { frequency },
+                      { default: "{{frequency}} percent of simulated runs" }
+                    )}
+                  />
+                  <InfoTooltip
+                    content={probabilityInfo}
+                    position="bottomRight"
+                    portal
+                    tooltipStyle={{ width: 280, fontSize: 14 }}
+                  />
+                </div>
+              </div>
+
+              {isExpanded && (
+                <div
+                  className="taskBlocks"
+                  id={isTourTarget ? "taskBlocks" : undefined}
+                >
+                  {sequence.map((item) => {
+                    if (item.kind === "branch") {
+                      return (
+                        <div className="branchStep" key={item.key}>
+                          <span className="stepSpacer" aria-hidden="true" />
+                          <Chip
+                            label={item.block?.conditionLabel || ""}
+                            leading={
+                              <img
+                                src="/assets/icons/builder/medium-branch.svg"
+                                alt=""
+                                width={20}
+                                height={20}
+                              />
+                            }
+                            shape="square"
+                            style={{
+                              height: 28,
+                              fontSize: 14,
+                              fontWeight: 500,
+                              lineHeight: "16px",
+                              width: "fit-content",
+                            }}
+                          />
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="taskStep" key={item.key}>
+                        <span className="stepNumber" aria-hidden="true">
+                          {item.step}
+                        </span>
+                        <TaskBlock task={item.block} />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </StyledTasksPreview>
   );

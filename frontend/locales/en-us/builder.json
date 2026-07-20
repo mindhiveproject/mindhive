@@ -2004,6 +2004,15 @@
 		"noTasks": {
 			"description": "Connect tasks or surveys to your study flow to preview them here.",
 			"title": "No tasks in this flow"
+		},
+		"preview": {
+			"branch": "Branch: {{name}}",
+			"collapseAria": "Collapse path {{name}}",
+			"defaultPath": "Default path",
+			"expandAria": "Expand path {{name}}",
+			"legend": "Simulated over 100 participant runs. Paths are sorted by how often they occur.",
+			"probabilityAria": "{{frequency}} percent of simulated runs",
+			"taskCount": "{{count}} tasks"
 		}
 	},
 	"studyManager": {
