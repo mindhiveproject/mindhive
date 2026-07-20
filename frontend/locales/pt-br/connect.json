@@ -54,6 +54,7 @@
 		"pronouns": "Pronomes",
 		"pronounsOptions": {
 			"he": "Ele/Dele",
+			"preferNotToSay": "",
 			"she": "Ela/Dela",
 			"they": "Eles/Elas"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "Slogan",
 		"title": "Informações básicas"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "As alterações não salvas serão perdidas. Clique em Cancelar para retornar e salvar suas alterações."
 	},
+	"editProfile": "",
 	"exploreConnect": "Explorar Conectar",
 	"exploreDetail": {
 		"backLink": ""
@@ -500,6 +503,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Conectar",
@@ -514,7 +518,8 @@
 		"opportunities": "Oportunidades",
 		"organizations": "Organizações",
 		"participate": "Participar",
-		"questionLibrary": "Biblioteca de perguntas"
+		"questionLibrary": "Biblioteca de perguntas",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "Próximo",
@@ -1048,6 +1053,7 @@
 	},
 	"savedConnections": "Conexões salvas",
 	"savedConnectionsSubtitle": "Procure em sua rede de contatos o colaborador, mentor ou cientista ideal para você.",
+	"saveProfile": "",
 	"searchPlaceholder": "Pesquise por nome, tópico ou área de interesse",
 	"skillsTab": "Habilidades e preferências",
 	"steps": {

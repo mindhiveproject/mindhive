@@ -1,8 +1,11 @@
 import { useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
+import Chip from "../../DesignSystem/Chip";
+import IconButton from "../../DesignSystem/IconButton";
 import ManageFavorite from "./ManageFavorite";
 import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 
@@ -32,103 +35,47 @@ const getGradientForProfile = (profileKey) => {
 
 const CardContainer = styled.article`
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 270px;
-  height: 342px;
-  border-radius: 12px;
-  border: 2px solid #e4dff6;
-  background: #ffffff;
-  box-shadow: 0px 7px 64px rgba(0, 0, 0, 0.07);
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0px 12px 64px rgba(0, 0, 0, 0.12);
-  }
-`;
-
-const CardHeader = styled.div`
-  display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
   gap: 16px;
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  box-sizing: border-box;
 `;
 
-const FavoriteWrapper = styled.div`
+const InfoCluster = styled(Link)`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: transparent;
-  flex-shrink: 0;
-`;
-
-const CardLink = styled(Link)`
-  display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
   flex: 1;
-  min-height: 0;
   text-decoration: none;
   color: inherit;
   cursor: pointer;
 
   &:focus-visible {
-    outline: 2px solid #336f8a;
-    outline-offset: -2px;
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+    outline-offset: 2px;
+    border-radius: 8px;
   }
 `;
 
-const NameBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  width: 100%;
-  padding: 0 16px 8px;
-
-  .name {
-    margin: 0;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 15px;
-    color: #1d1b20;
-    letter-spacing: 0.015em;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .subtitle {
-    margin: 4px 0 0;
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 13px;
-    color: #49454f;
-    letter-spacing: 0.02em;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-`;
-
-const Media = styled.div`
-  width: 100%;
-  height: 160px;
-  position: relative;
+const Avatar = styled.div`
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
   overflow: hidden;
-
+  flex-shrink: 0;
+  
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
 
   .fallback {
@@ -137,45 +84,105 @@ const Media = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
-    font-family: "Lato", sans-serif;
-    color: #1d1b20;
+    font-size: 32px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 `;
 
-const Description = styled.div`
-  padding: 16px;
+const TextColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+`;
 
-  p {
+const NameBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  .name {
     margin: 0;
     font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 20px;
-    color: #49454f;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+    word-break: break-word;
+  }
+
+  .occupation {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    word-break: break-word;
   }
 `;
+
+const ChipLeading = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+`;
+
+const Tagline = styled.p`
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+`;
+
+const ExternalLinkIcon = (
+  <img
+    src="/assets/icons/builder/medium-arrow-outward.svg"
+    alt=""
+    width={24}
+    height={24}
+    aria-hidden
+  />
+);
 
 export default function ConnectProfileCard({ user, profile }) {
   const { t } = useTranslation("connect");
+  const router = useRouter();
+
   const fullName =
     profile?.firstName || profile?.lastName
       ? `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim()
       : profile?.name ||
         t("profileCard.defaultName", {}, { default: "MindHive Member" });
 
-  const subtitle =
-    profile?.organization ||
-    profile?.permissions?.map((p) => p?.name).join(", ") ||
-    t("profileCard.defaultCommunity", {}, { default: "MindHive Community" });
+  const occupation = profile?.occupation?.trim() || null;
 
-  const summary =
-    profile?.bioInformal ||
-    profile?.bio ||
-    t("profileCard.defaultSummary", {}, { default: "Click to view profile" });
+  const linkedOrg = profile?.organizations?.[0] || null;
+  const orgLabel =
+    profile?.organization?.trim() || linkedOrg?.name?.trim() || null;
+  const orgLogoUrl = linkedOrg?.logo?.url || null;
+
+  const tagline = profile?.tagline?.trim() || null;
 
   const avatar = getProfileImageUrl(profile);
   const fallbackLetter = fullName.charAt(0).toUpperCase();
@@ -201,19 +208,8 @@ export default function ConnectProfileCard({ user, profile }) {
 
   return (
     <CardContainer>
-      <CardHeader>
-        <FavoriteWrapper>
-          <ManageFavorite user={user} profileId={profile?.id} />
-        </FavoriteWrapper>
-      </CardHeader>
-
-      <CardLink href={profileHref} aria-label={viewProfileLabel}>
-        <NameBlock>
-          <p className="name">{fullName}</p>
-          <p className="subtitle">{subtitle}</p>
-        </NameBlock>
-
-        <Media>
+      <InfoCluster href={profileHref} aria-label={viewProfileLabel}>
+        <Avatar>
           {avatar ? (
             <img src={avatar} alt="" />
           ) : (
@@ -225,12 +221,45 @@ export default function ConnectProfileCard({ user, profile }) {
               {fallbackLetter}
             </div>
           )}
-        </Media>
+        </Avatar>
 
-        <Description>
-          <p>{summary}</p>
-        </Description>
-      </CardLink>
+        <TextColumn>
+          <NameBlock>
+            <p className="name">{fullName}</p>
+            {occupation && <p className="occupation">{occupation}</p>}
+          </NameBlock>
+
+          {orgLabel && (
+            <Chip
+              label={orgLabel}
+              style={{ width: "fit-content" }}
+              leading={
+                <ChipLeading
+                  src={orgLogoUrl || "/assets/connect/building.svg"}
+                  alt=""
+                />
+              }
+            />
+          )}
+
+          {tagline && <Tagline>{tagline}</Tagline>}
+        </TextColumn>
+      </InfoCluster>
+
+      <Actions>
+        <ManageFavorite user={user} profileId={profile?.id} />
+        <IconButton
+          variant="outline"
+          style={{ borderColor: "#A1A1A1" }}
+          icon={ExternalLinkIcon}
+          ariaLabel={viewProfileLabel}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            router.push(profileHref);
+          }}
+        />
+      </Actions>
     </CardContainer>
   );
 }

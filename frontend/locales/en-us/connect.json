@@ -54,6 +54,7 @@
 		"pronouns": "Pronouns",
 		"pronounsOptions": {
 			"he": "He/Him",
+			"preferNotToSay": "Prefer not to say",
 			"she": "She/Her",
 			"they": "They/Them"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "Tagline",
 		"title": "Basic Information"
 	},
+	"cancelEdit": "Cancel",
 	"classNetworks": {
 		"adminAdd": "Add admin",
 		"adminAdded": "Class-network admin added.",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "Your unsaved changes will be lost. Click Cancel to return and save your changes."
 	},
+	"editProfile": "Edit profile",
 	"exploreConnect": "Explore Connect",
 	"exploreDetail": {
 		"backLink": "Back to all opportunities"
@@ -500,6 +503,7 @@
 		"teamOf": "Team of {{size}}",
 		"unknownSponsor": "Unknown"
 	},
+	"myProfile": "My profile",
 	"nav": {
 		"classNetworks": "Networks",
 		"connect": "Connect",
@@ -514,7 +518,8 @@
 		"opportunities": "Opportunities",
 		"organizations": "Organizations",
 		"participate": "Participate",
-		"questionLibrary": "Question library"
+		"questionLibrary": "Question library",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "Next",
@@ -1048,6 +1053,7 @@
 	},
 	"savedConnections": "Saved Connections",
 	"savedConnectionsSubtitle": "Search through your connections to find the perfect collaborator, mentor, or scientist for you.",
+	"saveProfile": "Save",
 	"searchPlaceholder": "Search by name, topic, or area of interest",
 	"skillsTab": "Skills and Preferences",
 	"steps": {

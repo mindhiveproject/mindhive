@@ -483,6 +483,7 @@ export default function SponsorOnboarding() {
     pathname: "/dashboard/profile/edit",
     query: { page: "about", type: "organization" },
   };
+  const myProfileHref = "/dashboard/connect/profile";
 
   const networkBusy = !!joiningNetworkId || !!cancellingInviteId;
   const networkTitleChip =
@@ -529,7 +530,7 @@ export default function SponsorOnboarding() {
                     default: "Set up",
                   })
             }
-            onAction={() => router.push(profileEditHref)}
+            onAction={() => router.push(myProfileHref)}
           />
 
           <SetupRow

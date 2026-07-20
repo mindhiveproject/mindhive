@@ -54,6 +54,7 @@
 		"pronouns": "الضمائر",
 		"pronounsOptions": {
 			"he": "هو/هو",
+			"preferNotToSay": "",
 			"she": "هي/هي",
 			"they": "هم/هم"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "الشعار",
 		"title": "معلومات اساسية"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "ستفقد التغييرات غير المحفوظة. انقر فوق \"إلغاء\" للعودة وحفظ التغييرات."
 	},
+	"editProfile": "",
 	"exploreConnect": "استكشف الاتصال",
 	"exploreDetail": {
 		"backLink": ""
@@ -500,6 +503,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "يتصل",
@@ -514,7 +518,8 @@
 		"opportunities": "فرص",
 		"organizations": "المنظمات",
 		"participate": "يشارك",
-		"questionLibrary": "مكتبة الأسئلة"
+		"questionLibrary": "مكتبة الأسئلة",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "التالي",
@@ -1048,6 +1053,7 @@
 	},
 	"savedConnections": "الاتصالات المحفوظة",
 	"savedConnectionsSubtitle": "ابحث من خلال اتصالاتك للعثور على المتعاون أو المرشد أو العالم المثالي لك.",
+	"saveProfile": "",
 	"searchPlaceholder": "البحث حسب الاسم أو الموضوع أو مجال الاهتمام",
 	"skillsTab": "المهارات والتفضيلات",
 	"steps": {

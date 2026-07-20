@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import { UserContext } from "../../Global/Authorized";
 import useConnectRole from "./useConnectRole";
 
 const NAV_DROPDOWN_TRIGGER_STYLE = {
@@ -101,19 +102,21 @@ function ConnectNavDropdown({
 
 export default function ConnectNavigationBar() {
   const { t } = useTranslation("connect");
+  const user = useContext(UserContext);
   const {
     isAdmin,
     isTeacher,
     isMentor,
     isStudent,
+    isScientist,
     isReviewer,
     isSponsor,
     isClassNetworkAdmin,
     adminClassNetworkIds,
   } = useConnectRole();
 
-  const connectOptions = useMemo(
-    () => [
+  const connectOptions = useMemo(() => {
+    const items = [
       {
         value: "exploreConnect",
         label: t("exploreConnect", {}, { default: "Explore Connect" }),
@@ -124,9 +127,31 @@ export default function ConnectNavigationBar() {
         label: t("savedConnections", {}, { default: "Saved Connections" }),
         href: "/dashboard/connect/my",
       },
-    ],
-    [t],
-  );
+    ];
+    const canAccessMyProfile =
+      !!user?.publicId &&
+      (isAdmin ||
+        isTeacher ||
+        isMentor ||
+        isScientist ||
+        isClassNetworkAdmin);
+    if (canAccessMyProfile) {
+      items.push({
+        value: "myProfile",
+        label: t("myProfile", {}, { default: "My profile" }),
+        href: "/dashboard/connect/profile",
+      });
+    }
+    return items;
+  }, [
+    t,
+    user?.publicId,
+    isAdmin,
+    isTeacher,
+    isMentor,
+    isScientist,
+    isClassNetworkAdmin,
+  ]);
 
   const organizationOptions = useMemo(
     () => [

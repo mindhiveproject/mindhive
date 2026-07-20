@@ -54,6 +54,7 @@
 		"pronouns": "代词",
 		"pronounsOptions": {
 			"he": "他/他",
+			"preferNotToSay": "",
 			"she": "她/她",
 			"they": "他们/她们"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "标语",
 		"title": "基本信息"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "您未保存的更改将会丢失。点击“取消”按钮返回并保存您的更改。"
 	},
+	"editProfile": "",
 	"exploreConnect": "探索连接",
 	"exploreDetail": {
 		"backLink": ""
@@ -500,6 +503,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "连接",
@@ -514,7 +518,8 @@
 		"opportunities": "机会",
 		"organizations": "组织",
 		"participate": "参加",
-		"questionLibrary": "问题库"
+		"questionLibrary": "问题库",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "下一个",
@@ -1048,6 +1053,7 @@
 	},
 	"savedConnections": "已保存的连接",
 	"savedConnectionsSubtitle": "利用你的人脉关系，找到最适合你的合作者、导师或科学家。",
+	"saveProfile": "",
 	"searchPlaceholder": "按名称、主题或感兴趣的领域搜索",
 	"skillsTab": "技能和偏好",
 	"steps": {
