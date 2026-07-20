@@ -6,15 +6,9 @@ import { NodesTypesContainer } from "../../Diagram/nodes-types-container/NodesTy
 import { NodeTypeLabel } from "../../Diagram/node-type-label/NodeTypeLabel";
 
 import IconButton from "../../../../../DesignSystem/IconButton";
+import { TASK_TYPE_COLORS } from "../../../../../../lib/taskTypeColors";
 import TaskModal from "../Task/Modal";
 import ManageFavorite from "../../../../../User/ManageFavorite";
-
-const TASK_TYPE_COLORS = {
-  BLOCK: "#CF6D6A",
-  TASK: "#3D85B0",
-  SURVEY: "#3D85B0",
-  DESIGN: "#007C70",
-};
 
 const SECONDARY_ICON_STYLE = {
   background: "#F3F3F3",

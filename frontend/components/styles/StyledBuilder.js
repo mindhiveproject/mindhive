@@ -1,5 +1,7 @@
 import styled, { keyframes } from "styled-components";
 
+import { getTaskTypeColor } from "../../lib/taskTypeColors";
+
 export const StyledBuilder = styled.div`
   display: grid;
 `;
@@ -343,8 +345,14 @@ export const StyledCanvasBuilder = styled.div`
     display: flex;
     flex-direction: column;
     align-content: stretch;
-    height: 85vh;
-    min-width: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    width: min(500px, 38%);
+    height: auto;
+    min-width: 280px;
     max-width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -354,6 +362,7 @@ export const StyledCanvasBuilder = styled.div`
     padding: 16px;
     margin: 8px;
     border-radius: 12px;
+    border: 1px solid #e6e6e6;
     box-sizing: border-box;
     box-shadow: -4px 0px 7.5px rgba(0, 0, 0, 0.02);
 
@@ -473,11 +482,20 @@ export const StyledCanvasBuilder = styled.div`
   }
 
   .board {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(280px, 3fr);
+    display: block;
     height: 100%;
     min-width: 0;
     position: relative;
+    overflow: hidden;
+
+    > *:not(.sidepanel):not(.addCommentButton):not(.addAnchorButton) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
     :active {
       .up-port:hover {
         border: 5px solid #ffc107;
@@ -489,7 +507,7 @@ export const StyledCanvasBuilder = styled.div`
 
   .addCommentButton {
     position: absolute;
-    z-index: 0;
+    z-index: 1;
     left: 10px;
     top: 10px;
     background: #007c70;
@@ -1088,15 +1106,7 @@ export const StyledCard = styled.div`
 
   border-top: 8px solid;
   border-top-color: ${(props) =>
-    props.taskType === "TASK"
-      ? "#64c9e2"
-      : props.taskType === "SURVEY"
-      ? "#28619e"
-      : props.taskType === "BLOCK"
-      ? "#ffc7c3"
-      : props.taskType === "DESIGN"
-      ? "#007c70"
-      : "#FFE29D"};
+    getTaskTypeColor(props.taskType, "#FFE29D")};
 
   .addBlock {
     margin: 0px 10px;

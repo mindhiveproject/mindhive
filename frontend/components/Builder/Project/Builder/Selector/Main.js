@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../../../DesignSystem/Chip";
 import IconButton from "../../../../DesignSystem/IconButton";
+import { TASK_TYPE_COLORS } from "../../../../../lib/taskTypeColors";
 import { NodesTypesContainer } from "../Diagram/nodes-types-container/NodesTypesContainer";
 import { NodeTypeLabel } from "../Diagram/node-type-label/NodeTypeLabel";
 
@@ -35,13 +36,6 @@ const ICON_MASK = (src) => ({
 function MediumIcon({ src }) {
   return <span aria-hidden style={ICON_MASK(src)} />;
 }
-
-const TASK_TYPE_COLORS = {
-  BLOCK: "#CF6D6A",
-  TASK: "#3D85B0",
-  SURVEY: "#3D85B0",
-  DESIGN: "#007C70",
-};
 
 export default function ComponentSelector({ engine, user, addFunctions }) {
   const { t } = useTranslation("builder");
