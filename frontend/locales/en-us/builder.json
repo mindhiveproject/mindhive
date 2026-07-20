@@ -442,6 +442,7 @@
 				"classNetwork": "Class network",
 				"empty": {
 					"classNetwork": "No datasets from your class network for this project or study.",
+					"me": "No datasets available to you yet.",
 					"myClass": "No datasets from your classes yet.",
 					"public": "No public datasets found.",
 					"sharedWithMe": "No datasets have been shared with you.",
@@ -449,11 +450,13 @@
 				},
 				"intro": {
 					"classNetwork": "Datasets on this project or study from classes in your class networks.",
+					"me": "All datasets you can see — uploaded, shared with you, from your class, class network, or public.",
 					"myClass": "Datasets linked to studies or projects in your classes.",
 					"public": "Datasets from public journal templates.",
 					"sharedWithMe": "Datasets others shared with you as a collaborator.",
 					"uploaded": "Datasets you uploaded."
 				},
+				"me": "Me",
 				"myClass": "My class",
 				"public": "Public",
 				"sharedWithMe": "Shared with me",
