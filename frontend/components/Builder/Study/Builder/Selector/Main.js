@@ -89,7 +89,7 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
           options={[
             {
               key: "anyone",
-              text: "Created by anyone",
+              text: "All blocks",
               value: "anyone",
             },
             {

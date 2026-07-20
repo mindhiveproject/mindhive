@@ -1,6 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { FAVORITE_TASKS } from "../../../../../Queries/Task";
+import {
+  FAVORITE_TASKS,
+  buildFavoriteTasksWhere,
+} from "../../../../../Queries/Task";
 import Card from "./Card";
 
 export default function FavoriteBlocks({
@@ -11,29 +14,18 @@ export default function FavoriteBlocks({
   isSurveyBuilder,
 }) {
   const router = useRouter();
-  const currentLocale = router.locale || 'en-us'; // fallback to en-us
+  const currentLocale = router.locale || "en-us"; // fallback to en-us
 
   const { data, error, loading } = useQuery(FAVORITE_TASKS, {
     variables: {
-      where:
-        process.env.NODE_ENV === "development"
-          ? {
-              favoriteBy: { some: { id: { equals: user?.id } } },
-              taskType: { equals: componentType },
-              OR: [
-                { title: { contains: search } },
-                { description: { contains: search } },
-              ],
-            }
-          : {
-              favoriteBy: { some: { id: { equals: user?.id } } },
-              taskType: { equals: componentType },
-              OR: [
-                { title: { contains: search, mode: "insensitive" } },
-                { description: { contains: search, mode: "insensitive" } },
-              ],
-            },
+      where: buildFavoriteTasksWhere({
+        userId: user?.id,
+        componentType,
+        search: search || "",
+      }),
     },
+    fetchPolicy: "cache-and-network",
+    skip: !user?.id || !componentType,
   });
 
   const getLocalizedField = (component, fieldName) => {
@@ -104,6 +96,7 @@ export default function FavoriteBlocks({
             addFunctions={addFunctions}
             search={search}
             componentType={componentType}
+            isSurveyBuilder={isSurveyBuilder}
           />
         ))}
     </div>

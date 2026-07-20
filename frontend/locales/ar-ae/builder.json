@@ -87,7 +87,8 @@
 		"addComment": "أضف تعليقًا",
 		"addStartingPoint": "إضافة نقطة البداية",
 		"lockedMessage": "تم تقديم هذه الدراسة ولا يمكن تعديلها. لإجراء أي تعديلات، يُرجى مطالبة مُعلّمك بإلغاء تقديم الدراسة.",
-		"studyBuilderLocked": "منشئ الدراسة مقفل"
+		"studyBuilderLocked": "منشئ الدراسة مقفل",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -442,6 +443,7 @@
 				"classNetwork": "شبكة الفصول الدراسية",
 				"empty": {
 					"classNetwork": "لا توجد مجموعات بيانات من شبكة صفك لهذا المشروع أو الدراسة.",
+					"me": "",
 					"myClass": "لا توجد مجموعات بيانات من فصولك الدراسية حتى الآن.",
 					"public": "لم يتم العثور على مجموعات بيانات عامة.",
 					"sharedWithMe": "لم تتم مشاركة أي مجموعات بيانات معك.",
@@ -449,11 +451,13 @@
 				},
 				"intro": {
 					"classNetwork": "مجموعات البيانات الخاصة بهذا المشروع أو الدراسة من الفصول الدراسية في شبكات فصولك الدراسية.",
+					"me": "",
 					"myClass": "مجموعات البيانات المرتبطة بالدراسات أو المشاريع في فصولك الدراسية.",
 					"public": "مجموعات البيانات من قوالب المجلات العامة.",
 					"sharedWithMe": "مجموعات البيانات التي شاركها معك الآخرون بصفتك متعاونًا.",
 					"uploaded": "مجموعات البيانات التي قمت بتحميلها."
 				},
+				"me": "",
 				"myClass": "صفي",
 				"public": "عام",
 				"sharedWithMe": "تمت مشاركته معي",
@@ -1327,6 +1331,7 @@
 	},
 	"menu": {
 		"addBlock": "أضف كتلة",
+		"settings": "",
 		"studyFlow": "تدفق الدراسة",
 		"studySettings": "إعدادات الدراسة"
 	},
@@ -1872,6 +1877,8 @@
 		"sectionTitlePlaceholder": "أدخل عنوان القسم"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "هل ترغب في إضافة تعليمات مخصصة للمشاركين أو تضمين رابط و/أو فيديو في إجراءات دراستك؟ حدد كتلة أساسية وحرّرها.",
 			"title": "الكتل الأساسية"
@@ -1881,6 +1888,9 @@
 			"myFavorite": "أُفضله",
 			"ownedByMe": "مملوكة لي"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 بحث",
 		"studyDesign": {
 			"betweenSubjects": "التصميم بين المواضيع",
@@ -1891,6 +1901,8 @@
 		},
 		"surveys": {
 			"buildOwn": "ألا تجد أداة لقياس أحد جوانب دراستك؟ أنشئها بنفسك باستخدام أداة إنشاء الاستبيانات وبمساعدة المعلم.",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "هل ترغب في قياس مواقف المشاركين أو تجاربهم أو آرائهم من خلال تقرير ذاتي؟ اختر من بين هذه المجموعة من الاستبيانات المُعتمدة.",
 			"title": "الاستطلاعات"
 		},
@@ -1900,7 +1912,9 @@
 		},
 		"templates": {
 			"description": "ألا ترغب في البدء من الصفر؟ اختر وعدّل تصميم دراسة جاهزًا باستخدام أحد القوالب المتوفرة في هذا البنك.",
-			"title": "القوالب"
+			"openStudyAria": "",
+			"title": "القوالب",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "حدد {{taskType}} الذي تريد استنساخه أدناه.",
@@ -1982,6 +1996,25 @@
 	"study": "يذاكر",
 	"studyBuilder": "منشئ الدراسة",
 	"studyDescription": "الدراسة مشروع بحثي يطرح سؤالاً بحثياً. ويمكن أن يتألف من عدة مهام و/أو استبيانات.",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		},
+		"preview": {
+			"branch": "",
+			"collapseAria": "",
+			"defaultPath": "",
+			"expandAria": "",
+			"legend": "",
+			"probabilityAria": "",
+			"taskCount": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "تعيين إلى دراسة موجودة",
 		"assignToStudy": "تعيين للدراسة",
@@ -2207,7 +2240,9 @@
 		"addMore": "أضف المزيد"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "هل أنت متأكد أنك تريد حذف {{versionName}}؟",
+		"confirmLoadUnsaved": "",
 		"createdOn": "تم إنشاؤه في",
 		"createNewVersion": "إنشاء إصدار جديد",
 		"currentVersion": "الإصدار الحالي",
@@ -2215,7 +2250,9 @@
 		"description": "وصف",
 		"enterVersionName": "الرجاء إدخال اسم الإصدار",
 		"headerNote": "حفظ تصميمات الدراسة المختلفة المعروضة على الشاشة على اليسار",
+		"invalidDiagram": "",
 		"load": "حمولة",
+		"missingDiagram": "",
 		"name": "اسم",
 		"noVersionSaved": "لم يتم حفظ أي نسخة دراسية بعد. أنشئ نسخة جديدة بالنقر على الزر أدناه.",
 		"placeholder": "إصدارات الدراسة",
