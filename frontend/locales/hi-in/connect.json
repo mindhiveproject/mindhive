@@ -54,6 +54,7 @@
 		"pronouns": "सर्वनाम",
 		"pronounsOptions": {
 			"he": "वह उसे",
+			"preferNotToSay": "",
 			"she": "वह/उसकी",
 			"they": "वे/उन्हें"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "TAGLINE",
 		"title": "मूल जानकारी"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "आपके द्वारा सहेजे न गए परिवर्तन नष्ट हो जाएंगे। अपने परिवर्तनों को सहेजने के लिए वापस लौटने हेतु रद्द करें पर क्लिक करें।"
 	},
+	"editProfile": "",
 	"exploreConnect": "कनेक्ट का अन्वेषण करें",
 	"exploreDetail": {
 		"backLink": ""
@@ -500,6 +503,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "जोड़ना",
@@ -514,7 +518,8 @@
 		"opportunities": "अवसर",
 		"organizations": "संगठनों",
 		"participate": "हिस्सा लेना",
-		"questionLibrary": "प्रश्न पुस्तकालय"
+		"questionLibrary": "प्रश्न पुस्तकालय",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "अगला",
@@ -1048,6 +1053,7 @@
 	},
 	"savedConnections": "सहेजे गए कनेक्शन",
 	"savedConnectionsSubtitle": "अपने संपर्कों के माध्यम से अपने लिए उपयुक्त सहयोगी, मार्गदर्शक या वैज्ञानिक खोजें।",
+	"saveProfile": "",
 	"searchPlaceholder": "नाम, विषय या रुचि के क्षेत्र के आधार पर खोजें",
 	"skillsTab": "कौशल और प्राथमिकताएँ",
 	"steps": {

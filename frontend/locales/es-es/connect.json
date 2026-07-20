@@ -54,6 +54,7 @@
 		"pronouns": "Pronombres",
 		"pronounsOptions": {
 			"he": "Él/Él",
+			"preferNotToSay": "",
 			"she": "Ella/Ella",
 			"they": "Ellos/Ellos"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "Lema",
 		"title": "Información básica"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "Los cambios no guardados se perderán. Haz clic en Cancelar para volver y guardar los cambios."
 	},
+	"editProfile": "",
 	"exploreConnect": "Explora Conectar",
 	"exploreDetail": {
 		"backLink": ""
@@ -500,6 +503,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Conectar",
@@ -514,7 +518,8 @@
 		"opportunities": "Oportunidades",
 		"organizations": "Organizaciones",
 		"participate": "Participar",
-		"questionLibrary": "Biblioteca de preguntas"
+		"questionLibrary": "Biblioteca de preguntas",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "Próximo",
@@ -1048,6 +1053,7 @@
 	},
 	"savedConnections": "Conexiones guardadas",
 	"savedConnectionsSubtitle": "Busca en tu red de contactos el colaborador, mentor o científico perfecto para ti.",
+	"saveProfile": "",
 	"searchPlaceholder": "Buscar por nombre, tema o área de interés",
 	"skillsTab": "Habilidades y preferencias",
 	"steps": {

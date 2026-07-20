@@ -468,6 +468,7 @@ export const Profile = list({
         { label: "she/her/hers", value: "she" },
         { label: "he/him/his", value: "he" },
         { label: "they/them/theirs", value: "they" },
+        { label: "Prefer not to say", value: "preferNotToSay" },
       ],
     }),
     location: text(),

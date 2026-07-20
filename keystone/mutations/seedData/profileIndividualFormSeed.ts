@@ -49,6 +49,7 @@ const PRONOUN_OPTIONS: Option[] = [
   { value: "she", label: "she / her / hers" },
   { value: "he", label: "he / him / his" },
   { value: "they", label: "they / them / theirs" },
+  { value: "preferNotToSay", label: "Prefer not to say" },
 ];
 
 const MENTOR_PREFER_GRADE: Option[] = [

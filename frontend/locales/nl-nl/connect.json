@@ -54,6 +54,7 @@
 		"pronouns": "Voornaamwoorden",
 		"pronounsOptions": {
 			"he": "Hij/Hem",
+			"preferNotToSay": "",
 			"she": "Zij/Haar",
 			"they": "Zij/Hen"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "Slogan",
 		"title": "Basisgegevens"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "Je niet-opgeslagen wijzigingen gaan verloren. Klik op Annuleren om terug te keren en je wijzigingen op te slaan."
 	},
+	"editProfile": "",
 	"exploreConnect": "Ontdekken Verbinden",
 	"exploreDetail": {
 		"backLink": ""
@@ -500,6 +503,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Aansluiten",
@@ -514,7 +518,8 @@
 		"opportunities": "Mogelijkheden",
 		"organizations": "Organisaties",
 		"participate": "Deelnemen",
-		"questionLibrary": "Vragenbibliotheek"
+		"questionLibrary": "Vragenbibliotheek",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "Volgende",
@@ -1048,6 +1053,7 @@
 	},
 	"savedConnections": "Opgeslagen verbindingen",
 	"savedConnectionsSubtitle": "Doorzoek uw connecties om de perfecte medewerker, mentor of wetenschapper voor u te vinden.",
+	"saveProfile": "",
 	"searchPlaceholder": "Zoeken op naam, onderwerp of interessegebied",
 	"skillsTab": "Vaardigheden en voorkeuren",
 	"steps": {

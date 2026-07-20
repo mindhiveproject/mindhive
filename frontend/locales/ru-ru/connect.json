@@ -54,6 +54,7 @@
 		"pronouns": "Местоимения",
 		"pronounsOptions": {
 			"he": "Он/Его",
+			"preferNotToSay": "",
 			"she": "Она/Её",
 			"they": "Они/Их"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "Слоган",
 		"title": "Основная информация"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "Несохраненные изменения будут потеряны. Нажмите «Отмена», чтобы вернуться и сохранить изменения."
 	},
+	"editProfile": "",
 	"exploreConnect": "Исследуйте Подключиться",
 	"exploreDetail": {
 		"backLink": ""
@@ -500,6 +503,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Соединять",
@@ -514,7 +518,8 @@
 		"opportunities": "Возможности",
 		"organizations": "Организации",
 		"participate": "Участвовать",
-		"questionLibrary": "Библиотека вопросов"
+		"questionLibrary": "Библиотека вопросов",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "Следующий",
@@ -1048,6 +1053,7 @@
 	},
 	"savedConnections": "Сохраненные подключения",
 	"savedConnectionsSubtitle": "Просмотрите свои связи, чтобы найти идеального для вас соратника, наставника или ученого.",
+	"saveProfile": "",
 	"searchPlaceholder": "Поиск по имени, теме или области интересов",
 	"skillsTab": "Навыки и предпочтения",
 	"steps": {
