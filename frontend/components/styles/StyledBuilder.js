@@ -604,10 +604,8 @@ export const StyledCanvasBuilder = styled.div`
     }
 
     :active {
-      .up-port:hover {
-        border: 5px solid #ffc107;
-        width: 378px;
-        height: 128px;
+      .my-in-port:hover {
+        background-color: #ffc107;
       }
     }
   }

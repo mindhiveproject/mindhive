@@ -3,17 +3,6 @@ import styled from "styled-components";
 import { getTaskTypeColor } from "../../../../../lib/taskTypeColors";
 
 export const StyledNode = styled.div`
-  :active {
-    border-bottom: 1px solid green;
-    border-left: 1px solid green;
-    border-right: 1px solid green;
-    .up-port {
-      border: 0px solid white;
-      width: 0px;
-      height: 0px;
-    }
-  }
-
   display: grid;
   width: 378px;
   height: 128px;
@@ -56,27 +45,26 @@ export const StyledNode = styled.div`
 
   .up-port {
     top: 0;
-    margin-left: 0px;
-    border-radius: 6px;
+    margin-left: 185px;
   }
 
   .my-in-port {
-    width: 380px;
+    width: 20px;
     height: 20px;
-    border-radius: 10px;
+    margin-top: -10px;
+    border-radius: 20px;
+    background-color: #007c70;
     cursor: pointer;
     position: relative;
-    cursor: pointer;
+    z-index: 1;
     text-align: center;
-    color: grey;
-    opacity: 1;
   }
 
   .bottom-port {
     margin-right: -7px;
     bottom: 0;
     margin-top: 80px;
-    margin-left: 170px;
+    margin-left: 185px;
   }
 
   .design-bottom-port {
