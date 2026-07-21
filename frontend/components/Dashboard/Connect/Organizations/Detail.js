@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -5,7 +6,11 @@ import styled from "styled-components";
 import { Icon, Label } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
+import DesignSystemButton from "../../../DesignSystem/Button";
 import { EXPLORE_ORGANIZATION_DETAIL } from "../../../Queries/Organization";
+import OrganizationAdminPanels from "./OrganizationAdminPanels";
+import OrganizationProfileEditor from "./OrganizationProfileEditor";
+import { formatDateLabel, isOrganizationAdmin } from "./utils";
 
 const Shell = styled.div`
   display: flex;
@@ -45,7 +50,7 @@ const BackLink = styled.button`
   background: none;
   border: none;
   border-radius: 8px;
-  color: #336f8a;
+  color: var(--MH-Theme-Primary-Dark, #336f8a);
   cursor: pointer;
 
   &:hover:not(:disabled) {
@@ -53,7 +58,7 @@ const BackLink = styled.button`
   }
 
   &:focus-visible {
-    outline: 2px solid #336f8a;
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
     outline-offset: 2px;
   }
 `;
@@ -113,29 +118,48 @@ const Hero = styled.div`
   }
 
   .tagline {
-    color: #336f8a;
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
     font-style: italic;
   }
 
   .meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    font-size: 13px;
+    align-items: center;
+    gap: 12px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 16px;
     color: #5f6871;
 
     span {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      line-height: 16px;
+    }
+
+    i.icon {
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: 1 !important;
+      font-size: 12px !important;
+      height: 12px !important;
+      width: 12px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0;
     }
 
     a {
-      color: #336f8a;
+      color: var(--MH-Theme-Primary-Dark, #336f8a);
       text-decoration: none;
+      line-height: 16px;
 
       &:focus-visible {
-        outline: 2px solid #336f8a;
+        outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
         outline-offset: 2px;
       }
     }
@@ -164,64 +188,22 @@ const Card = styled.div`
   }
 `;
 
-const Members = styled.div`
+const InterestChips = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
 
-  .member {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    width: 110px;
-    text-align: center;
-  }
-
-  .avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: #eef1f2;
+  .chip {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .placeholder {
-      color: #5f6871;
-      font-weight: 700;
-      font-size: 22px;
-    }
-  }
-
-  .name {
-    color: #171717;
-    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 100px;
+    background: #eef5f9;
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
+    font-family: "Inter", sans-serif;
     font-size: 13px;
-    line-height: 1.2;
-  }
-
-  .tag {
-    color: #5f6871;
-    font-size: 11px;
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
-
-    &:focus-visible {
-      outline: 2px solid #336f8a;
-      outline-offset: 2px;
-      border-radius: 8px;
-    }
+    font-weight: 500;
+    line-height: 18px;
   }
 `;
 
@@ -243,11 +225,11 @@ const OppCard = styled.a`
   cursor: pointer;
 
   &:hover {
-    border-color: #336f8a;
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
 
   &:focus-visible {
-    outline: 2px solid #336f8a;
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
     outline-offset: 2px;
   }
 
@@ -284,10 +266,14 @@ const OppCard = styled.a`
     margin-top: auto;
     padding-top: 6px;
     border-top: 1px solid #eef1f2;
-    color: #888;
-    font-size: 11px;
+    color: #5f6871;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 16px;
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 12px;
     flex-wrap: wrap;
   }
 `;
@@ -304,39 +290,22 @@ function DecorativeIcon({ name }) {
   return <Icon name={name} aria-hidden />;
 }
 
-function formatDate(value) {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return null;
-  }
-}
-
-export default function OrganizationDetail({ organizationId }) {
+export default function OrganizationDetail({ organizationId, user }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
+  const [editingProfile, setEditingProfile] = useState(false);
+
   const { data, loading } = useQuery(EXPLORE_ORGANIZATION_DETAIL, {
     variables: { id: organizationId },
     fetchPolicy: "cache-and-network",
   });
   const org = data?.organization;
+  const canManage = isOrganizationAdmin(user, org, organizationId);
 
   const domainLabel = (domain) => {
     const key = DOMAIN_KEYS[domain];
     if (!key) return domain;
     return t(`organizationsList.domains.${key}`, {}, { default: domain });
-  };
-
-  const displayName = (profile) => {
-    if (!profile) {
-      return t("organizationsDetail.unknownMember", {}, { default: "Unknown" });
-    }
-    return (
-      `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
-      profile.username ||
-      t("organizationsDetail.unknownMember", {}, { default: "Unknown" })
-    );
   };
 
   if (loading && !org) {
@@ -434,86 +403,72 @@ export default function OrganizationDetail({ organizationId }) {
         </div>
       </Hero>
 
-      {org.mission && (
-        <Card>
-          <h2>
-            {t("organizationsDetail.about", {}, { default: "About" })}
-          </h2>
-          <p
-            style={{
-              margin: 0,
-              color: "#5f6871",
-              fontSize: 14,
-              lineHeight: 1.6,
-              whiteSpace: "pre-wrap",
-            }}
+      {canManage && !editingProfile && (
+        <div>
+          <DesignSystemButton
+            variant="tonal"
+            type="button"
+            onClick={() => setEditingProfile(true)}
           >
-            {org.mission}
-          </p>
-        </Card>
+            {t("organizationsDetail.editOrganizationDetails", {}, {
+              default: "Edit organization details",
+            })}
+          </DesignSystemButton>
+        </div>
       )}
 
-      {org.members?.length > 0 && (
-        <Card>
-          <h2>
-            {t("organizationsDetail.members", {}, { default: "Members" })}
-          </h2>
-          <p className="helper">
-            {t("organizationsDetail.membersHelper", { name: org.name }, {
-              default:
-                "People at {{name}} who manage this organization on MindHive.",
-            })}
-          </p>
-          <Members>
-            {org.members.map((member) => {
-              const avatar =
-                member.image?.keystoneImage?.url ||
-                member.image?.image?.publicUrlTransformed ||
-                null;
-              const name = displayName(member);
-              const inner = (
-                <div className="member">
-                  <div className="avatar">
-                    {avatar ? (
-                      <img src={avatar} alt="" />
-                    ) : (
-                      <span className="placeholder" aria-hidden>
-                        {name.charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <span className="name">{name}</span>
-                  {member.tagline && (
-                    <span className="tag">{member.tagline}</span>
-                  )}
-                </div>
-              );
-              if (member.publicId) {
-                return (
-                  <Link
-                    key={member.id}
-                    href={{
-                      pathname: "/dashboard/connect/with",
-                      query: { id: member.publicId },
-                    }}
-                    passHref
-                    legacyBehavior
-                  >
-                    <a
-                      aria-label={t("profileCard.viewProfile", { name }, {
-                        default: "View profile of {{name}}",
-                      })}
-                    >
-                      {inner}
-                    </a>
-                  </Link>
-                );
-              }
-              return <div key={member.id}>{inner}</div>;
-            })}
-          </Members>
-        </Card>
+      {canManage && editingProfile ? (
+        <OrganizationProfileEditor
+          organization={org}
+          organizationId={org.id}
+          onCancel={() => setEditingProfile(false)}
+          onSaved={() => setEditingProfile(false)}
+        />
+      ) : (
+        <>
+          {org.mission ? (
+            <Card>
+              <h2>
+                {t("organizationsDetail.about", {}, { default: "About" })}
+              </h2>
+              <p
+                style={{
+                  margin: 0,
+                  color: "#5f6871",
+                  fontSize: 14,
+                  lineHeight: 1.6,
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {org.mission}
+              </p>
+            </Card>
+          ) : null}
+          {org.interests?.length > 0 ? (
+            <Card>
+              <h2>
+                {t("organizationsDetail.interests", {}, {
+                  default: "Interests",
+                })}
+              </h2>
+              <InterestChips>
+                {org.interests.map((tag) => (
+                  <span key={tag.id} className="chip">
+                    {tag.title}
+                  </span>
+                ))}
+              </InterestChips>
+            </Card>
+          ) : null}
+        </>
       )}
+
+      <OrganizationAdminPanels
+        organization={org}
+        organizationId={organizationId}
+        canManage={canManage}
+        user={user}
+      />
 
       <Card>
         <h2>
@@ -526,8 +481,8 @@ export default function OrganizationDetail({ organizationId }) {
             {org.opportunities.map((opp) => {
               const coverSrc =
                 opp.coverImage?.url || opp.coverImageUrl || null;
-              const from = formatDate(opp.availableFrom);
-              const to = formatDate(opp.availableTo);
+              const from = formatDateLabel(opp.availableFrom);
+              const to = formatDateLabel(opp.availableTo);
               return (
                 <Link
                   key={opp.id}
@@ -552,11 +507,11 @@ export default function OrganizationDetail({ organizationId }) {
                       <div className="meta">
                         {opp.teamSize > 1 ? (
                           <span>
-                            {t("organizationsDetail.teamOf", {
-                              size: opp.teamSize,
-                            }, {
-                              default: "Team of {{size}}",
-                            })}
+                            {t(
+                              "organizationsDetail.teamOf",
+                              { size: opp.teamSize },
+                              { default: "Team of {{size}}" }
+                            )}
                           </span>
                         ) : (
                           <span>

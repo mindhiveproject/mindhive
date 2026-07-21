@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../DesignSystem/Chip";
@@ -47,7 +47,7 @@ const CardContainer = styled.article`
   box-sizing: border-box;
 `;
 
-const InfoCluster = styled(Link)`
+const infoClusterStyles = css`
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -55,6 +55,10 @@ const InfoCluster = styled(Link)`
   flex: 1;
   text-decoration: none;
   color: inherit;
+`;
+
+const InfoClusterLink = styled(Link)`
+  ${infoClusterStyles}
   cursor: pointer;
 
   &:focus-visible {
@@ -62,6 +66,10 @@ const InfoCluster = styled(Link)`
     outline-offset: 2px;
     border-radius: 8px;
   }
+`;
+
+const InfoClusterStatic = styled.div`
+  ${infoClusterStyles}
 `;
 
 const Avatar = styled.div`
@@ -165,7 +173,11 @@ const ExternalLinkIcon = (
   />
 );
 
-export default function ConnectProfileCard({ user, profile }) {
+export default function ConnectProfileCard({
+  user,
+  profile,
+  actions = null,
+}) {
   const { t } = useTranslation("connect");
   const router = useRouter();
 
@@ -191,14 +203,16 @@ export default function ConnectProfileCard({ user, profile }) {
     return getGradientForProfile(key);
   }, [profile?.id, profile?.publicId, fullName]);
 
-  if (!profile?.publicId) {
+  if (!profile) {
     return null;
   }
 
-  const profileHref = {
-    pathname: "/dashboard/connect/with",
-    query: { id: profile.publicId },
-  };
+  const profileHref = profile.publicId
+    ? {
+        pathname: "/dashboard/connect/with",
+        query: { id: profile.publicId },
+      }
+    : null;
 
   const viewProfileLabel = t(
     "profileCard.viewProfile",
@@ -206,59 +220,72 @@ export default function ConnectProfileCard({ user, profile }) {
     { default: "View profile of {{name}}" }
   );
 
+  const infoContent = (
+    <>
+      <Avatar>
+        {avatar ? (
+          <img src={avatar} alt="" />
+        ) : (
+          <div
+            className="fallback"
+            style={{ background: fallbackGradient }}
+            aria-hidden
+          >
+            {fallbackLetter}
+          </div>
+        )}
+      </Avatar>
+
+      <TextColumn>
+        <NameBlock>
+          <p className="name">{fullName}</p>
+          {occupation && <p className="occupation">{occupation}</p>}
+        </NameBlock>
+
+        {orgLabel && (
+          <Chip
+            label={orgLabel}
+            style={{ width: "fit-content" }}
+            leading={
+              <ChipLeading
+                src={orgLogoUrl || "/assets/connect/building.svg"}
+                alt=""
+              />
+            }
+          />
+        )}
+
+        {tagline && <Tagline>{tagline}</Tagline>}
+      </TextColumn>
+    </>
+  );
+
   return (
     <CardContainer>
-      <InfoCluster href={profileHref} aria-label={viewProfileLabel}>
-        <Avatar>
-          {avatar ? (
-            <img src={avatar} alt="" />
-          ) : (
-            <div
-              className="fallback"
-              style={{ background: fallbackGradient }}
-              aria-hidden
-            >
-              {fallbackLetter}
-            </div>
-          )}
-        </Avatar>
-
-        <TextColumn>
-          <NameBlock>
-            <p className="name">{fullName}</p>
-            {occupation && <p className="occupation">{occupation}</p>}
-          </NameBlock>
-
-          {orgLabel && (
-            <Chip
-              label={orgLabel}
-              style={{ width: "fit-content" }}
-              leading={
-                <ChipLeading
-                  src={orgLogoUrl || "/assets/connect/building.svg"}
-                  alt=""
-                />
-              }
-            />
-          )}
-
-          {tagline && <Tagline>{tagline}</Tagline>}
-        </TextColumn>
-      </InfoCluster>
+      {profileHref ? (
+        <InfoClusterLink href={profileHref} aria-label={viewProfileLabel}>
+          {infoContent}
+        </InfoClusterLink>
+      ) : (
+        <InfoClusterStatic>{infoContent}</InfoClusterStatic>
+      )}
 
       <Actions>
+        {actions}
         <ManageFavorite user={user} profileId={profile?.id} />
-        <IconButton
-          variant="outline"
-          style={{ borderColor: "#A1A1A1" }}
-          icon={ExternalLinkIcon}
-          ariaLabel={viewProfileLabel}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            router.push(profileHref);
-          }}
-        />
+        {profileHref ? (
+          <IconButton
+            variant="outline"
+            style={{ borderColor: "#A1A1A1" }}
+            icon={ExternalLinkIcon}
+            ariaLabel={viewProfileLabel}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(profileHref);
+            }}
+          />
+        ) : null}
       </Actions>
     </CardContainer>
   );
