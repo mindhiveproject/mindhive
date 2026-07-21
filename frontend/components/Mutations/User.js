@@ -1,9 +1,29 @@
 import gql from "graphql-tag";
 
 // sign up
+// Goes through signupWithTurnstile rather than the generic createProfile
+// mutation: Profile.create is closed to anonymous callers, so this is the only
+// public way to register. The backend verifies the Turnstile token and screens
+// the address before creating anything.
 export const SIGNUP_MUTATION = gql`
-  mutation SIGNUP_MUTATION($input: ProfileCreateInput!) {
-    createProfile(data: $input) {
+  mutation SIGNUP_MUTATION(
+    $username: String!
+    $email: String!
+    $password: String!
+    $role: String
+    $classCode: String
+    $info: JSON
+    $turnstileToken: String
+  ) {
+    signupWithTurnstile(
+      username: $username
+      email: $email
+      password: $password
+      role: $role
+      classCode: $classCode
+      info: $info
+      turnstileToken: $turnstileToken
+    ) {
       id
       username
       email

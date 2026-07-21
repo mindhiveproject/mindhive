@@ -7,6 +7,16 @@ export default function Studies({ myclass, user }) {
   const router = useRouter();
 
   const studies = myclass?.studies || [];
+  const getCollaborators = (study) => {
+    const collaboratorMap = new Map();
+    [study?.author, ...(study?.collaborators || [])].forEach((profile) => {
+      const key = profile?.id || profile?.username;
+      if (key && profile?.username) {
+        collaboratorMap.set(key, profile.username);
+      }
+    });
+    return Array.from(collaboratorMap.values()).join(", ");
+  };
 
   if (studies.length === 0) {
     return (
@@ -35,10 +45,7 @@ export default function Studies({ myclass, user }) {
         <div></div>
       </div>
       {studies.map((study) => {
-        const authors = [
-          study?.author?.username,
-          study?.collaborators?.map((c) => c.username),
-        ].join(", ");
+        const authors = getCollaborators(study);
         return (
           <div key={study?.id} className="studiesRow">
             <div>{study?.title}</div>

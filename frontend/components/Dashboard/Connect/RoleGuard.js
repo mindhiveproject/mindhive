@@ -58,7 +58,7 @@ const Shell = styled.div`
     border: 1px solid #336f8a;
     background: #336f8a;
     color: #ffffff;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 14px;
     text-decoration: none;
@@ -73,15 +73,19 @@ const Shell = styled.div`
 const ROLE_KEYS = {
   student: "roleGuard.roles.student",
   mentor: "roleGuard.roles.mentor",
+  scientist: "roleGuard.roles.scientist",
   teacher: "roleGuard.roles.teacher",
   admin: "roleGuard.roles.admin",
+  classNetworkAdmin: "roleGuard.roles.classNetworkAdmin",
 };
 
 const ROLE_DEFAULTS = {
   student: "students",
   mentor: "mentors",
+  scientist: "scientists",
   teacher: "teachers",
   admin: "admins",
+  classNetworkAdmin: "class-network admins",
 };
 
 export default function RoleGuard({ allow, children }) {
@@ -91,7 +95,9 @@ export default function RoleGuard({ allow, children }) {
     if (r === "admin") return roles.isAdmin;
     if (r === "teacher") return roles.isTeacher;
     if (r === "mentor") return roles.isMentor;
+    if (r === "scientist") return roles.isScientist;
     if (r === "student") return roles.isStudent;
+    if (r === "classNetworkAdmin") return roles.isClassNetworkAdmin;
     return false;
   });
 
@@ -100,24 +106,30 @@ export default function RoleGuard({ allow, children }) {
   }
 
   const labels = (allow || [])
-    .map((r) =>
-      t(ROLE_KEYS[r] || r, {}, { default: ROLE_DEFAULTS[r] || r })
-    )
+    .map((r) => t(ROLE_KEYS[r] || r, {}, { default: ROLE_DEFAULTS[r] || r }))
     .join(", ");
 
   return (
     <Shell role="alert">
       <LockIcon />
       <h1>
-        {t("roleGuard.title", { roles: labels }, {
-          default: "This area is for {{roles}}",
-        })}
+        {t(
+          "roleGuard.title",
+          { roles: labels },
+          {
+            default: "This area is for {{roles}}",
+          }
+        )}
       </h1>
       <p>
-        {t("roleGuard.description", {}, {
-          default:
-            "Your account doesn't have access to this section yet. If you think this is a mistake, ask your teacher or an administrator.",
-        })}
+        {t(
+          "roleGuard.description",
+          {},
+          {
+            default:
+              "Your account doesn't have access to this section yet. If you think this is a mistake, ask your teacher or an administrator.",
+          }
+        )}
       </p>
       <Link href="/dashboard/connect">
         {t("roleGuard.backLink", {}, { default: "Back to Connect" })}

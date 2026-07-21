@@ -35,6 +35,14 @@
 		"walkthroughTutorial": ""
 	},
 	"info": "अधिक जानकारी",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "प्रतिभागी आईडी",
 	"permissions": "अनुमतियां",
 	"preview": "पूर्व दर्शन",
@@ -50,6 +58,69 @@
 		"messages": "संदेशों",
 		"profile": "प्रोफ़ाइल",
 		"settings": "सेटिंग्स"
+	},
+	"sponsorOnboarding": {
+		"dismiss": "",
+		"manage": "",
+		"network": {
+			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
+			"close": "",
+			"empty": "",
+			"joinButton": "",
+			"joinError": "",
+			"joining": "",
+			"joinSuccess": "",
+			"loadError": "",
+			"loading": "",
+			"modalDescription": "",
+			"modalTitle": "",
+			"pendingRequest": "",
+			"requestSuccess": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"untitled": ""
+		},
+		"opportunity": {
+			"createButton": "",
+			"createTitle": "",
+			"description": "",
+			"done": "",
+			"locked": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"viewButton": "",
+			"viewTitle": ""
+		},
+		"organization": {
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"stepLabel": "",
+			"title": ""
+		},
+		"profile": {
+			"completeTitle": "",
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"editTitle": "",
+			"openButton": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": ""
+		},
+		"status": {
+			"needsSetup": "",
+			"ready": ""
+		},
+		"subtitle": "",
+		"title": ""
 	},
 	"surveys": "सर्वेक्षण",
 	"tasks": "कार्य",

@@ -19,9 +19,27 @@
 	},
 	"auth": {
 		"checkYourMail": "Vérifiez votre courrier électronique",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "E-mail",
 		"forgotPassword": "Mot de passe oublié?",
 		"login": "Se connecter",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "Mot de passe",
 		"requestReset": "Demande de réinitialisation",
 		"username": "Nom d'utilisateur"
@@ -60,6 +78,7 @@
 		},
 		"title": "Données et consentement"
 	},
+	"copied": "Copié",
 	"created": {
 		"author": "Auteur",
 		"collaborator": "Collaborateur",
@@ -76,6 +95,17 @@
 		"no": "N'enregistrez pas du tout mes données (si vous êtes un étudiant MindHive : cela signifie que vos données ne seront pas incluses dans les démonstrations de cours !)",
 		"question": "Comment souhaitez-vous que nous utilisions vos données ?",
 		"science": "Vous pouvez utiliser mes données à des fins scientifiques et/ou éducatives"
+	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
 	},
 	"discoverDescription": "Parcourez notre collection d'études, de tâches et d'enquêtes créées par des lycéens du programme MindHive et des scientifiques partenaires. Participez aux études ou prévisualisez les tâches et les enquêtes.",
 	"discoverHeader": "Découvrez des études, des tâches et des enquêtes",
@@ -294,6 +324,12 @@
 		"languagePreferences": "Définissez vos préférences linguistiques",
 		"languages": "Langues",
 		"quickLinks": "Liens rapides",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Paramètres",
 		"username": "Nom d'utilisateur"
 	},
@@ -303,6 +339,7 @@
 		"participant": "Participant à l'étude",
 		"scientist": "Scientifique",
 		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "Étudiant",
 		"teacher": "Professeur",
 		"title": "Quel rôle vous décrit le mieux ?"

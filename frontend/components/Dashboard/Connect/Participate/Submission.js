@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Dropdown } from "semantic-ui-react";
 
@@ -18,45 +19,112 @@ import {
   CREATE_RATING,
   UPDATE_RATING,
 } from "../../../Mutations/ConnectRating";
+import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
+
+const BACK_CHEVRON = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
+      fill="currentColor"
+    />
+  </svg>
+);
 
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
+  scroll-padding-top: 126px;
 `;
 
-const TopBar = styled.div`
+const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
+  position: sticky;
+  top: 70px;
+  z-index: 5;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px 16px;
+  margin: -8px calc(-1 * clamp(16px, 6vw, 64px)) 8px;
+  padding: 10px clamp(16px, 6vw, 64px);
+  background: rgba(247, 249, 248, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(211, 218, 224, 0.85);
+`;
+
+const TopBarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 220px;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-width: 0;
+  flex: 1 1 auto;
 
   h1 {
     margin: 0;
+    min-width: 0;
+    max-width: 100%;
     font-family: "Lato", sans-serif;
-    font-size: clamp(24px, 3vw, 32px);
+    font-size: clamp(20px, 2.8vw, 26px);
     font-weight: 600;
     color: #171717;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
 const BackLink = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   background: none;
   border: none;
+  border-radius: 8px;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
-  padding: 0;
+
+  &:hover:not(:disabled) {
+    background: rgba(51, 111, 138, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
+  }
 `;
 
 const Card = styled.div`
@@ -163,29 +231,11 @@ const RankControls = styled.div`
 
 const Actions = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: flex-end;
-  flex-wrap: wrap;
-`;
-
-const Button = styled.button`
-  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: 1px solid ${({ $primary }) => ($primary ? "#336f8a" : "#d3dae0")};
-  background: ${({ $primary }) => ($primary ? "#336f8a" : "#ffffff")};
-  color: ${({ $primary }) => ($primary ? "#ffffff" : "#336f8a")};
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  flex-wrap: wrap;
+  flex: 0 0 auto;
 `;
 
 const StatusPill = styled.span`
@@ -441,6 +491,7 @@ function QuestionInput({ question, value, onChange }) {
 
 export default function ParticipateSubmission({ roundId, user }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const { data, loading, refetch } = useQuery(GET_PARTICIPATE_VIEW, {
     variables: { roundId },
     fetchPolicy: "cache-and-network",
@@ -793,6 +844,40 @@ export default function ParticipateSubmission({ roundId, user }) {
     );
   }
 
+  if (round.status === "draft") {
+    const draftTitle = round.title || "";
+    const backLabel = t("matchingRound.submission.backLink", {}, {
+      default: "Back to rounds",
+    });
+    return (
+      <Shell>
+        <TopBar>
+          <TopBarLeft>
+            <BackLink
+              type="button"
+              onClick={handleCancel}
+              aria-label={backLabel}
+              title={backLabel}
+            >
+              {BACK_CHEVRON}
+            </BackLink>
+            <TitleRow>
+              <h1 title={draftTitle}>{draftTitle}</h1>
+            </TitleRow>
+          </TopBarLeft>
+        </TopBar>
+        <Card>
+          <p className="helper">
+            {t("matchingRound.notAvailableYet", {}, {
+              default:
+                "This round is not available yet. Your teacher is still setting it up.",
+            })}
+          </p>
+        </Card>
+      </Shell>
+    );
+  }
+
   const now = Date.now();
   const openAtMs = round.openAt ? new Date(round.openAt).getTime() : null;
   const closeAtMs = round.closeAt ? new Date(round.closeAt).getTime() : null;
@@ -807,7 +892,12 @@ export default function ParticipateSubmission({ roundId, user }) {
     round.status === "preferences_open" && inTimeWindow && !submitted;
 
   let lockReason = null;
-  if (round.status !== "preferences_open") {
+  if (round.status === "draft") {
+    lockReason = t("matchingRound.notAvailableYet", {}, {
+      default:
+        "This round is not available yet. Your teacher is still setting it up.",
+    });
+  } else if (round.status !== "preferences_open") {
     lockReason = `Preferences are ${round.status.replace("_", " ")} for this round. You can review what you submitted, but changes are no longer accepted.`;
   } else if (beforeOpen) {
     const openDate = new Date(round.openAt).toLocaleDateString();
@@ -822,22 +912,72 @@ export default function ParticipateSubmission({ roundId, user }) {
     lockReason = `You submitted your preferences ${when}. Need to change something? Ask your teacher — they can reopen your submission.`;
   }
 
+  const pageTitle = round.title || "";
+  const backLabel = t("matchingRound.submission.backLink", {}, {
+    default: "Back to rounds",
+  });
+  const statusChipLabel = existingPreference
+    ? submitted
+      ? t("matchingRound.submission.statusSubmitted", {}, {
+          default: "Submitted",
+        })
+      : t("matchingRound.submission.statusDraft", {}, {
+          default: "Draft saved",
+        })
+    : null;
+
   return (
     <Shell>
       <TopBar>
-        <div>
-          <BackLink type="button" onClick={handleCancel}>
-            <Icon name="arrow left" /> Back to rounds
+        <TopBarLeft>
+          <BackLink
+            type="button"
+            onClick={handleCancel}
+            disabled={saving}
+            aria-label={backLabel}
+            title={backLabel}
+          >
+            {BACK_CHEVRON}
           </BackLink>
-          <h1>{round.title}</h1>
-          <div style={{ marginTop: 6 }}>
-            {existingPreference ? (
-              <StatusPill $submitted={submitted}>
-                {submitted ? "Submitted" : "Draft saved"}
-              </StatusPill>
-            ) : null}
-          </div>
-        </div>
+          <TitleRow>
+            <h1 title={pageTitle}>{pageTitle}</h1>
+            {statusChipLabel && (
+              <Chip shape="pill" label={statusChipLabel} selected={submitted} />
+            )}
+          </TitleRow>
+        </TopBarLeft>
+        {isOpen && (
+          <Actions>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleSave("draft")}
+              disabled={saving}
+            >
+              {saving
+                ? t("matchingRound.submission.saving", {}, {
+                    default: "Saving…",
+                  })
+                : t("matchingRound.submission.saveDraft", {}, {
+                    default: "Save draft",
+                  })}
+            </Button>
+            <Button
+              type="button"
+              variant="filled"
+              onClick={() => handleSave("submitted")}
+              disabled={saving}
+            >
+              {saving
+                ? t("matchingRound.submission.saving", {}, {
+                    default: "Saving…",
+                  })
+                : t("matchingRound.submission.submit", {}, {
+                    default: "Submit preferences",
+                  })}
+            </Button>
+          </Actions>
+        )}
       </TopBar>
 
       {!isOpen && lockReason && (
@@ -1124,12 +1264,14 @@ export default function ParticipateSubmission({ roundId, user }) {
                   <div>
                     <Button
                       type="button"
-                      $primary
+                      variant="filled"
                       onClick={() => handleSaveRating(match)}
                       disabled={savingRatingId === match.id}
                     >
                       {savingRatingId === match.id
-                        ? "Saving…"
+                        ? t("matchingRound.submission.saving", {}, {
+                            default: "Saving…",
+                          })
                         : myExistingRating
                         ? "Update rating"
                         : "Submit rating"}
@@ -1381,26 +1523,6 @@ export default function ParticipateSubmission({ roundId, user }) {
           />
         </Field>
       </Card>
-
-      {isOpen && (
-        <Actions>
-          <Button
-            type="button"
-            onClick={() => handleSave("draft")}
-            disabled={saving}
-          >
-            {saving ? "Saving…" : "Save draft"}
-          </Button>
-          <Button
-            type="button"
-            $primary
-            onClick={() => handleSave("submitted")}
-            disabled={saving}
-          >
-            {saving ? "Saving…" : "Submit preferences"}
-          </Button>
-        </Actions>
-      )}
     </Shell>
   );
 }

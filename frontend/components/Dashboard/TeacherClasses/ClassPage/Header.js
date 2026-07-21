@@ -7,12 +7,10 @@ import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../lib/useForm";
 
-import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import InfoTooltip from "../../../DesignSystem/InfoTooltip";
 import { EDIT_CLASS } from "../../../Mutations/Classes";
 import { GET_CLASS } from "../../../Queries/Classes";
-import TipTapEditor from "../../../TipTap/Main";
 
 /** Remove HTML tags only (preserve spaces — used for controlled title input). */
 function stripTags(html) {
@@ -32,7 +30,13 @@ const HEADER_TONAL_SURFACE_STYLE = {
   border: "1px solid #E6E6E6",
 };
 
-export default function Header({ user, myclass }) {
+const HEADER_META_CHIP_STYLE = {
+  ...HEADER_TONAL_SURFACE_STYLE,
+  width: "fit-content",
+  maxWidth: "100%",
+};
+
+export default function Header({ myclass }) {
   const { t } = useTranslation("classes");
 
   const { inputs, handleChange } = useForm({
@@ -40,47 +44,16 @@ export default function Header({ user, myclass }) {
   });
 
   const [isTitleEditing, setIsTitleEditing] = useState(false);
-  const [isAddingDescription, setIsAddingDescription] = useState(false);
 
   const titleRef = useRef("");
-  const descriptionRef = useRef("");
-  const descriptionEditorContainerRef = useRef(null);
 
   useEffect(() => {
     titleRef.current = inputs?.title ?? "";
-    descriptionRef.current = inputs?.description ?? "";
-  }, [inputs?.title, inputs?.description]);
+  }, [inputs?.title]);
 
   useEffect(() => {
     setIsTitleEditing(false);
-    setIsAddingDescription(false);
   }, [myclass?.id, myclass?.code]);
-
-  /** Focus TipTap ProseMirror after opening from the empty-state button (editor may mount async). */
-  useEffect(() => {
-    if (!isAddingDescription) return;
-    let cancelled = false;
-    let attempts = 0;
-    const maxAttempts = 40;
-    const tryFocus = () => {
-      if (cancelled) return;
-      const pm = descriptionEditorContainerRef.current?.querySelector(
-        ".ProseMirror[contenteditable='true']",
-      );
-      if (pm) {
-        pm.focus();
-        return;
-      }
-      attempts += 1;
-      if (attempts < maxAttempts) {
-        requestAnimationFrame(tryFocus);
-      }
-    };
-    requestAnimationFrame(tryFocus);
-    return () => {
-      cancelled = true;
-    };
-  }, [isAddingDescription]);
 
   const refetchClass =
     myclass?.code != null
@@ -96,53 +69,46 @@ export default function Header({ user, myclass }) {
   const persistIfDirty = useCallback(() => {
     if (!myclass?.id) return;
     const title = titleRef.current;
-    const description = descriptionRef.current;
     const serverTitle = myclass.title ?? "";
-    const serverDescription = myclass.description ?? "";
-    if (title === serverTitle && description === serverDescription) return;
+    if (title === serverTitle) return;
     updateClass({
       variables: {
         id: myclass.id,
         title,
-        description,
       },
     });
-  }, [myclass?.id, myclass?.title, myclass?.description, updateClass]);
+  }, [myclass?.id, myclass?.title, updateClass]);
 
   const finishTitleEdit = useCallback(() => {
     persistIfDirty();
     setIsTitleEditing(false);
   }, [persistIfDirty]);
 
-  const handleDescriptionUpdate = (content) => {
-    const value = content ?? "";
-    descriptionRef.current = value;
-    handleChange({
-      target: { name: "description", value },
-    });
-  };
-
-  const handleDescriptionBlur = useCallback(() => {
-    persistIfDirty();
-    const html = descriptionRef.current ?? "";
-    if (!stripHtml(html)) {
-      setIsAddingDescription(false);
-    }
-  }, [persistIfDirty]);
-
   const descriptionIsEmpty =
-    stripHtml(inputs?.description ?? "") === "";
-  const showDescriptionEditor =
-    !descriptionIsEmpty || isAddingDescription;
+    stripHtml(myclass?.description ?? "") === "";
 
   const titleInputValue = stripTags(inputs?.title ?? "");
   const titleDisplayTrimmed = stripHtml(inputs?.title ?? "");
   const titleDisplay =
     titleDisplayTrimmed ||
-    t("header.titleFallback", "Untitled class");
+    t("header.titleFallback", {}, { default: "Untitled class" });
   const creatorImageUrl = myclass?.creator?.image?.url;
+  const teacherId = myclass?.creator?.id;
   const teacherUsername = myclass?.creator?.username ?? "";
-  const mentors = (myclass?.mentors || []).filter((mentor) => mentor?.username);
+  const seenUsernames = new Set(
+    teacherUsername ? [teacherUsername.toLowerCase()] : [],
+  );
+  const mentors = (myclass?.mentors || []).filter((mentor) => {
+    if (!mentor?.username) return false;
+    if (teacherId && mentor.id === teacherId) return false;
+    const key = mentor.username.toLowerCase();
+    if (seenUsernames.has(key)) return false;
+    seenUsernames.add(key);
+    return true;
+  });
+  const mentorTooltip = t("header.mentorsPanelTooltip", {}, {
+    default: "Mentor accounts associated with this class.",
+  });
 
   return (
     <div className="editableClassHeader">
@@ -180,7 +146,7 @@ export default function Header({ user, myclass }) {
                 }
               }}
               autoFocus
-              aria-label={t("classForm.title", "Title")}
+              aria-label={t("classForm.title", {}, { default: "Title" })}
             />
           ) : (
             <h1
@@ -230,7 +196,8 @@ export default function Header({ user, myclass }) {
                   />
                 ) : null
               }
-              style={HEADER_TONAL_SURFACE_STYLE}
+              style={HEADER_META_CHIP_STYLE}
+              labelLines={2}
             />
           </InfoTooltip>
           {mentors.length > 0 && (
@@ -238,69 +205,48 @@ export default function Header({ user, myclass }) {
               <span className="classHeaderMetaBullet" aria-hidden>
                 •
               </span>
-              <InfoTooltip
-                content={t("header.mentorsPanelTooltip", {}, { default: "Mentor accounts associated with this class." })}
-                delayMs={500}
-                wrapperStyle={{ width: "fit-content", maxWidth: "100%" }}
-              >
-                <div className="classHeaderMentorsPanel" role="group" aria-label={t("header.mentors", {}, { default: "Mentors" })}>
-                  {mentors.map((mentor) => (
-                    <div className="classHeaderMentorItem" key={mentor?.id || mentor?.username}>
-                      <Chip
-                        label={mentor?.username ?? ""}
-                        leading={
-                          mentor?.image?.url ? (
-                            <img
-                              src={mentor.image.url}
-                              alt={mentor?.username ?? ""}
-                              style={{
-                                width: "24px",
-                                height: "24px",
-                                borderRadius: "50%",
-                                objectFit: "cover",
-                              }}
-                            />
-                          ) : null
-                        }
-                        style={HEADER_TONAL_SURFACE_STYLE}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </InfoTooltip>
+              {mentors.map((mentor) => (
+                <InfoTooltip
+                  key={mentor?.id || mentor?.username}
+                  content={mentorTooltip}
+                  delayMs={500}
+                >
+                  <Chip
+                    label={mentor?.username ?? ""}
+                    leading={
+                      mentor?.image?.url ? (
+                        <img
+                          src={mentor.image.url}
+                          alt={mentor?.username ?? ""}
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : null
+                    }
+                    style={HEADER_META_CHIP_STYLE}
+                    labelLines={2}
+                    ariaLabel={t(
+                      "header.mentorAccount",
+                      { username: mentor?.username ?? "" },
+                      { default: "Mentor account: {{username}}" }
+                    )}
+                  />
+                </InfoTooltip>
+              ))}
             </>
           )}
         </div>
 
-        <label>
+        {!descriptionIsEmpty ? (
           <div
-            ref={descriptionEditorContainerRef}
-            className="classHeaderDescriptionEditor classFormDescriptionEditor"
-          >
-            {showDescriptionEditor ? (
-              <TipTapEditor
-                content={inputs?.description ?? ""}
-                onUpdate={handleDescriptionUpdate}
-                onBlur={handleDescriptionBlur}
-                isEditable={!loading && Boolean(myclass?.id)}
-                toolbarVisible={false}
-                limitedToolbar={true}
-                // mediaLibraryId={user?.id ?? null}
-                // mediaLibrarySource={mediaLibrarySource}
-              />
-            ) : (
-              <Button
-                type="button"
-                variant="tonal"
-                disabled={!canEditTitle}
-                onClick={() => setIsAddingDescription(true)}
-                style={canEditTitle ? HEADER_TONAL_SURFACE_STYLE : undefined}
-              >
-                {t("header.addDescription", "Add a description to your class")}
-              </Button>
-            )}
-          </div>
-        </label>
+            className="classHeaderDescriptionHtml"
+            dangerouslySetInnerHTML={{ __html: myclass.description }}
+          />
+        ) : null}
       </div>
     </div>
   );

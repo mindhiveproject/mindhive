@@ -295,11 +295,34 @@ const StyledClass = styled.div`
       //   background: #FDF2D0;
       // }
     }
+    .classHeaderDescriptionHtml {
+      width: 100%;
+      min-width: 0;
+      color: #3d3d3d;
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      line-height: 22px;
+      overflow-wrap: anywhere;
+
+      p {
+        margin: 0 0 8px;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      ul,
+      ol {
+        margin: 8px 0;
+        padding-left: 22px;
+      }
+    }
     .classHeaderMetaRow {
       display: flex;
       align-items: center;
       gap: 8px;
-      width: fit-content;
+      width: 100%;
       max-width: 100%;
       margin: 0px 0 12px;
       border-radius: 8px;
@@ -918,6 +941,757 @@ const StyledClass = styled.div`
       }
     }
   }
+  .classTabPage {
+    display: grid;
+    gap: 28px;
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: 40px;
+    font-family: "Inter", sans-serif;
+
+    .classTabSection {
+      display: grid;
+      gap: 16px;
+      padding: 24px;
+      border: 1px solid #e6e6e6;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfbfa 100%);
+      box-shadow: 0 10px 30px rgba(23, 23, 23, 0.06);
+    }
+
+    .classTabSectionHeader {
+      display: grid;
+      gap: 6px;
+      max-width: 100%;
+
+      h3 {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 30px;
+        color: #171717;
+      }
+
+      p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 22px;
+        color: #625b71;
+      }
+    }
+
+    .classTabActionBar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .classTabInformationBlock {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      align-items: stretch;
+
+      .block {
+        display: grid;
+        align-content: start;
+        gap: 14px;
+        padding: 20px;
+        border: 1px solid #ece9e6;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 6px 18px rgba(23, 23, 23, 0.04);
+
+        p {
+          margin: 0;
+        }
+
+        &:only-child {
+          grid-column: 1 / -1;
+        }
+      }
+    }
+
+    .classTabCopyArea {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+
+      .classTabCodeValue,
+      .classTabInfoText {
+        flex: 1;
+        min-width: 120px;
+        margin: 0;
+      }
+    }
+
+    .classTabInviteBlock {
+      display: grid;
+      gap: 12px;
+
+      .classTabInviteLabel {
+        margin: 0;
+        font-size: 15px;
+        line-height: 22px;
+        color: #625b71;
+      }
+
+      .classTabInviteLink {
+        flex: 1;
+        min-width: 200px;
+        padding: 12px 16px;
+        border: 1px solid #d9d6d2;
+        border-radius: 12px;
+        background: #f9faf9;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        color: #171717;
+        word-break: break-all;
+      }
+    }
+
+    .classTabCodeValue {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 36px;
+      color: #171717;
+      letter-spacing: 0.04em;
+    }
+
+    .classTabInfoText {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625b71;
+    }
+
+    .classTabTable {
+      width: 100%;
+      min-height: 400px;
+      height: 600px;
+    }
+
+    .classTabEmpty {
+      display: grid;
+      gap: 16px;
+      justify-items: start;
+      padding: 8px 0;
+      color: #625b71;
+      font-size: 15px;
+      line-height: 22px;
+    }
+
+    .classTabNetworkChipRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .classTabNetworkInvite {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 16px;
+      padding-top: 16px;
+      margin-top: 4px;
+      border-top: 1px solid #ece9e6;
+
+      .networkInviteText {
+        display: grid;
+        gap: 2px;
+        min-width: 180px;
+        flex: 1;
+      }
+
+      .networkInviteTitle {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 22px;
+        color: #171717;
+      }
+
+      .networkInviteDescription {
+        margin: 0;
+        font-size: 13px;
+        line-height: 18px;
+        color: #625b71;
+      }
+
+      .networkInviteActions {
+        display: flex;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+
+    .classTabExpandableCard {
+      gap: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .classTabExpandableHeaderBar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: stretch;
+      gap: 0;
+      min-height: 72px;
+
+      .matchingRoundHeaderActions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-shrink: 0;
+        padding: 16px 24px 16px 12px;
+      }
+
+      .summaryStatus {
+        display: inline-flex;
+        align-items: flex-start;
+        flex-shrink: 0;
+        padding: 6px 12px;
+        border-radius: 12px;
+        background: #f0f4f6;
+        color: #5f6871;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 18px;
+
+        &.summaryStatusMuted {
+          background: #f5f0e8;
+          color: #8a6d3b;
+        }
+      }
+    }
+
+    .classTabExpandableHeaderToggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      min-width: 0;
+      min-height: 100%;
+      padding: 16px 12px 16px 24px;
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 0;
+
+      &:hover:not(:disabled) {
+        background: #DEF8FB;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #336f8a;
+        outline-offset: -2px;
+      }
+
+      &:disabled,
+      &.isDisabled {
+        cursor: default;
+      }
+
+      .expandableHeaderMain {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+        flex: 1;
+
+        h3 {
+          margin: 0;
+          font-family: "Inter", sans-serif;
+          font-size: 22px;
+          font-weight: 700;
+          line-height: 30px;
+          color: #171717;
+        }
+      }
+
+      .summaryRoundTitleMuted {
+        color: #625b71;
+      }
+
+      .expandableSummaryHint {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #625b71;
+      }
+
+      .expandableChevron {
+        flex-shrink: 0;
+        opacity: 0.7;
+        transition: transform 0.2s ease;
+
+        &.expanded {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .classTabExpandableBody {
+      display: grid;
+      gap: 16px;
+      padding: 12px 24px 24px;
+      border-top: 1px solid #ece9e6;
+
+      .expandableBodyDescription {
+        margin: 16px 0 0;
+        font-size: 15px;
+        line-height: 22px;
+        color: #625b71;
+      }
+    }
+
+    .classTabMatchingRoundForm {
+      display: grid;
+      gap: 18px;
+    }
+
+    .classTabMatchingRoundAlgoChipRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      border: 1.5px solid #ece9e6;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 12px;
+    }
+
+    .classTabMatchingRoundPanel {
+      display: grid;
+      gap: 18px;
+    }
+
+    .classTabMatchingRoundFooter {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px 16px;
+      padding-top: 8px;
+      margin-top: 4px;
+      border-top: 1px solid #ece9e6;
+
+      .matchingRoundUnsavedHint {
+        margin: 0;
+        margin-right: auto;
+        font-size: 13px;
+        line-height: 18px;
+        color: #8a6d3b;
+        font-weight: 500;
+      }
+    }
+
+    .classTabRoundSwitcher {
+      max-width: 420px;
+    }
+
+    .classTabFormGrid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .classTabFormGridTwo {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      @media (max-width: 700px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .classTabFormField {
+      display: grid;
+      align-content: start;
+      gap: 6px;
+      font-size: 14px;
+      color: #625b71;
+
+      .fieldLabel {
+        font-weight: 600;
+        color: #171717;
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .fieldHint,
+      .fieldAlgoHint {
+        margin: 0;
+        font-size: 12px;
+        line-height: 18px;
+        color: #888;
+      }
+
+      .fieldAlgoHint {
+        padding: 8px 12px;
+        border: 1px solid #ece9e6;
+        border-radius: 10px;
+        background: #f9faf9;
+        color: #625b71;
+      }
+
+      input[type="text"],
+      input[type="date"],
+      textarea,
+      select {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #d9d6d2;
+        border-radius: 12px;
+        background: #ffffff;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        color: #171717;
+        outline: none;
+        box-sizing: border-box;
+
+        &:focus-visible {
+          border-color: #336f8a;
+        }
+
+        &:disabled {
+          background: #f3f3f2;
+          color: #625b71;
+        }
+      }
+
+      textarea {
+        min-height: 72px;
+        resize: vertical;
+      }
+    }
+
+    .classTabFormSubsection {
+      display: grid;
+      gap: 10px;
+      padding-top: 4px;
+
+      h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 22px;
+        color: #171717;
+      }
+
+      .subsectionHint,
+      .classTabEmptyInline {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #625b71;
+      }
+    }
+
+    .classTabCheckboxList {
+      display: grid;
+      gap: 8px;
+    }
+
+    .classTabCheckboxRow {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid #ece9e6;
+      border-radius: 12px;
+      background: #ffffff;
+      cursor: pointer;
+
+      &.selected {
+        border-color: #c8d8df;
+        background: #eef5f9;
+      }
+
+      input {
+        margin-top: 3px;
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+
+      .checkboxBody {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+      }
+
+      .checkboxTitle {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        color: #171717;
+      }
+
+      .checkboxMeta {
+        margin: 0;
+        font-size: 12px;
+        line-height: 18px;
+        color: #625b71;
+
+        &.expired {
+          color: #b3261e;
+        }
+      }
+
+      .expiredBadge {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 8px;
+        padding: 2px 8px;
+        border-radius: 100px;
+        background: #f8e1e1;
+        color: #b3261e;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 16px;
+      }
+    }
+
+    .classTabFormActions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 4px;
+    }
+
+    .matchingRoundOpportunitiesGrid {
+      min-height: 200px;
+      width: 100%;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .ag-body-vertical-scroll-viewport,
+      .ag-body-horizontal-scroll-viewport,
+      .ag-center-cols-viewport,
+      .ag-body-viewport {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .ag-body-vertical-scroll-viewport::-webkit-scrollbar,
+      .ag-body-horizontal-scroll-viewport::-webkit-scrollbar,
+      .ag-center-cols-viewport::-webkit-scrollbar,
+      .ag-body-viewport::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+      }
+
+      .ag-root-wrapper {
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .matchingRoundOppRowReturned {
+        background-color: #f3f3f3 !important;
+        color: #8a8680;
+
+        &.ag-row-hover,
+        &.ag-row-selected {
+          background-color: #ebebeb !important;
+        }
+
+        .ag-cell {
+          color: #8a8680;
+        }
+      }
+    }
+
+    .matchingRoundOppInfoGridCell {
+      padding: 0 !important;
+      height: 100%;
+
+      .ag-cell-wrapper,
+      .ag-cell-value,
+      .ag-react-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        align-items: stretch;
+      }
+    }
+
+    .matchingRoundOppInfoCell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: #625b71;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+
+      &:hover {
+        background: #eef5f9;
+        color: #336f8a;
+      }
+
+      &.matchingRoundOppInfoCellReturned {
+        background: #E6E6E6;
+        color: #3f288f;
+
+        &:hover {
+          background: #E6E6E6;
+          color: #3f288f;
+        }
+      }
+    }
+
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCell {
+      background: #eef5f9;
+      color: #336f8a;
+    }
+
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturned {
+      background: #d6cef0;
+      color: #3f288f;
+    }
+
+    .matchingRoundOppInfoTooltip {
+      display: grid;
+      gap: 6px;
+      max-width: 320px;
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #171717;
+      }
+
+      .expired {
+        color: #b3261e;
+      }
+    }
+
+    .classTabSecondaryLink {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid #336f8a;
+      color: #336f8a;
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      text-decoration: none;
+
+      &:hover {
+        background: #eef5f9;
+      }
+    }
+
+    .classTabOpportunityList {
+      display: grid;
+      gap: 10px;
+    }
+
+    .classTabOpportunityRow {
+      display: grid;
+      gap: 6px;
+      width: 100%;
+      padding: 16px 18px;
+      border: 1px solid #ece9e6;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 4px 14px rgba(23, 23, 23, 0.04);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        transform 0.15s ease;
+
+      &:hover,
+      &:focus-visible {
+        border-color: #c8d8df;
+        box-shadow: 0 8px 22px rgba(23, 23, 23, 0.08);
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .rowTitle {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 22px;
+        color: #171717;
+      }
+
+      .rowStatus {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 8px;
+        border-radius: 100px;
+        background: #f0f4f6;
+        color: #5f6871;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 16px;
+        text-transform: capitalize;
+      }
+
+      .rowStatusPublished {
+        background: #e3f4ec;
+        color: #1d6b3a;
+      }
+
+      .rowDescription,
+      .rowMeta {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #625b71;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .classTabSection {
+        padding: 18px;
+        border-radius: 14px;
+      }
+
+      .classTabInformationBlock {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
   .settings {
     display: grid;
     gap: 28px;
@@ -938,7 +1712,7 @@ const StyledClass = styled.div`
     .settingsSectionHeader {
       display: grid;
       gap: 6px;
-      max-width: 720px;
+      max-width: 100%;
 
       h3 {
         margin: 0;
@@ -998,6 +1772,13 @@ const StyledClass = styled.div`
       color: #171717;
     }
 
+    .classDescriptionSettingsHint {
+      margin: 0;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
     .settingsChoiceGroup {
       display: grid;
       gap: 12px;
@@ -1042,28 +1823,227 @@ const StyledClass = styled.div`
       }
     }
 
+    .networkTypeSections {
+      display: grid;
+      gap: 18px;
+    }
+
+    .networkTypeSection {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid #ece9e6;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .networkTypeSection--school {
+      border-color: rgba(51, 111, 138, 0.28);
+      background: linear-gradient(
+        180deg,
+        rgba(51, 111, 138, 0.06) 0%,
+        rgba(255, 255, 255, 0.88) 48%
+      );
+
+      .networkTypeSectionIcon {
+        background: rgba(51, 111, 138, 0.12);
+      }
+
+      .networkTypeSectionIcon img {
+        filter: invert(36%) sepia(18%) saturate(1260%) hue-rotate(155deg)
+          brightness(92%) contrast(88%);
+      }
+    }
+
+    .networkTypeSection--feedback {
+      border-color: rgba(124, 102, 194, 0.28);
+      background: linear-gradient(
+        180deg,
+        rgba(124, 102, 194, 0.07) 0%,
+        rgba(255, 255, 255, 0.88) 48%
+      );
+
+      .networkTypeSectionIcon {
+        background: rgba(124, 102, 194, 0.12);
+      }
+
+      .networkTypeSectionIcon img {
+        filter: invert(42%) sepia(24%) saturate(1140%) hue-rotate(214deg)
+          brightness(92%) contrast(90%);
+      }
+
+      .networkCard:hover,
+      .networkCard:focus-within {
+        border-color: rgba(124, 102, 194, 0.45);
+        background: #f7f5fc;
+        box-shadow: 0 10px 24px rgba(124, 102, 194, 0.12);
+      }
+    }
+
+    .networkTypeSectionHeader {
+      display: grid;
+      gap: 6px;
+
+      h4 {
+        margin: 0;
+        color: #171717;
+        font-family: "Inter", sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 24px;
+      }
+
+      p {
+        margin: 0;
+        color: #625b71;
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+
+    .networkTypeSectionTitleRow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .networkTypeSectionIcon {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+
+      img {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+      }
+    }
+
+    .networkTypeSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .networkCardGrid {
+      display: grid;
+      gap: 12px;
+      width: 100%;
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(min(100%, 280px), 280px)
+      );
+      align-items: stretch;
+      justify-content: start;
+    }
+
+    .networkSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .networkEmptyState {
+      margin: 0;
+      padding: 16px;
+      border: 1px dashed #d3dae0;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
     .networkCard {
       display: grid;
-      gap: 8px;
-      padding: 20px;
+      gap: 10px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      padding: 14px;
       border: 1px solid #e6e6e6;
       border-radius: 16px;
       background: #ffffff;
+      color: inherit;
+      font-family: "Inter", sans-serif;
+      text-align: left;
+      box-shadow: 0 6px 18px rgba(23, 23, 23, 0.03);
+      transition: border-color 0.2s ease, background-color 0.2s ease,
+        box-shadow 0.2s ease, transform 0.2s ease;
+    }
 
-      h2,
-      p {
-        margin: 0;
-      }
+    .networkCard:hover,
+    .networkCard:focus-within {
+      border-color: rgba(51, 111, 138, 0.45);
+      background: #f6f9f8;
+      box-shadow: 0 10px 24px rgba(23, 23, 23, 0.08);
+      transform: translateY(-1px);
+    }
 
-      .classNetworkChip {
-        justify-self: start;
-      }
+    .networkCardHeader {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+    }
 
-      h2 {
-        font-size: 18px;
-        line-height: 24px;
-        color: #171717;
-      }
+    .networkCardTitle {
+      display: -webkit-box;
+      margin: 0;
+      overflow: hidden;
+      color: #171717;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 22px;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .networkCardDescription {
+      display: -webkit-box;
+      overflow: hidden;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .networkCardMeta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      color: #a1a1a1;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .networkCardAction {
+      justify-self: start;
+      color: var(--MH-Theme-Primary-Dark, #336f8a);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
+    }
+
+    .networkCardActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
     }
 
     .curriculumTypeSelector {
@@ -1202,6 +2182,10 @@ const StyledClass = styled.div`
 
       .informationBlock {
         grid-template-columns: 1fr;
+      }
+
+      .networkCardGrid {
+        grid-template-columns: minmax(0, 1fr);
       }
     }
   }

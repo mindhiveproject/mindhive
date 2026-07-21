@@ -1,8 +1,9 @@
 // components/DataJournal/Journal.js
 import { useQuery } from "@apollo/client";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 
 import { GET_DATA_JOURNAL } from "../../../Queries/DataJournal";
+import { sortDatasourcesByMostRecent } from "../../../../lib/dataJournalDatasources";
 import { StyledDataJournal } from "./styles/StyledDataJournal";
 
 import Workspace from "./Workspace/Workspace";
@@ -42,7 +43,10 @@ export default function Journal({
 
   const journal = journalData?.vizPart;
 
-  const datasources = journal?.datasources || [];
+  const datasources = useMemo(
+    () => sortDatasourcesByMostRecent(journal?.datasources),
+    [journal?.datasources],
+  );
   const workspaces = journal?.vizChapters || [];
   const datasourceIds = datasources.map((ds) => ds?.id).filter(Boolean);
   const datasourceIdsKey = datasourceIds.join(",");

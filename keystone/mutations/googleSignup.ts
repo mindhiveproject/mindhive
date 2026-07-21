@@ -25,7 +25,9 @@ async function googleSignup(
 
   const { name, email } = payload;
   // create a profile
-  const profile = await context.db.Profile.createOne(
+  // sudo: Profile.create is closed to anonymous callers (see Profile.ts).
+  // The verified Google ID token above is what earns this.
+  const profile = await context.sudo().db.Profile.createOne(
     {
       data: {
         username: name,

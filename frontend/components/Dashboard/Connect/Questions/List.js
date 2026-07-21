@@ -7,12 +7,14 @@ import { Icon, Label, Dropdown } from "semantic-ui-react";
 import { QUESTION_LIBRARY } from "../../../Queries/ConnectQuestion";
 import { DELETE_QUESTION } from "../../../Mutations/ConnectQuestion";
 import FilterBar from "../FilterBar";
+import Button from "../../../DesignSystem/Button";
 
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
@@ -38,25 +40,6 @@ const TopBar = styled.div`
     color: #5f6871;
     font-size: 14px;
     max-width: 640px;
-  }
-`;
-
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: none;
-  background: #336f8a;
-  color: #ffffff;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-
-  &:hover {
-    background: #244f63;
   }
 `;
 
@@ -116,7 +99,7 @@ const Actions = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 12px;
     cursor: pointer;
@@ -202,10 +185,9 @@ export default function QuestionsList() {
             query: { q: "new" },
           }}
         >
-          <PrimaryButton type="button">
-            <Icon name="plus" />
+          <Button type="button" variant="filled">
             New question
-          </PrimaryButton>
+          </Button>
         </Link>
       </TopBar>
 

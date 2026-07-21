@@ -101,8 +101,8 @@ const CardsGrid = styled.div`
   gap: 24px;
   padding-inline: clamp(16px, 6vw, 64px);
   justify-content: center;
-  justify-items: center;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  justify-items: stretch;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 481px), 1fr));
 `;
 
 const FooterControls = styled.div`

@@ -19,9 +19,27 @@
 	},
 	"auth": {
 		"checkYourMail": "Проверьте свою электронную почту",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "Электронная почта",
 		"forgotPassword": "Забыли пароль?",
 		"login": "Авторизоваться",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "Пароль",
 		"requestReset": "Запрос сброса",
 		"username": "Имя пользователя"
@@ -60,6 +78,7 @@
 		},
 		"title": "Данные и согласие"
 	},
+	"copied": "Скопировано",
 	"created": {
 		"author": "Автор",
 		"collaborator": "Соавтор",
@@ -76,6 +95,17 @@
 		"no": "Не записывайте мои данные вообще (если вы студент MindHive: это означает, что ваши данные не будут включены в демонстрационные материалы занятий!)",
 		"question": "Как бы вы хотели, чтобы мы использовали ваши данные?",
 		"science": "Вы можете использовать мои данные в научных и/или образовательных целях."
+	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
 	},
 	"discoverDescription": "Ознакомьтесь с нашей коллекцией исследований, заданий и опросов, созданных старшеклассниками в рамках программы MindHive и учёными-партнёрами. Примите участие в исследованиях или просмотрите задания и опросы.",
 	"discoverHeader": "Откройте для себя исследования, задачи и опросы",
@@ -294,6 +324,12 @@
 		"languagePreferences": "Установите языковые настройки",
 		"languages": "Языки",
 		"quickLinks": "Быстрые ссылки",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Настройки",
 		"username": "Имя пользователя"
 	},
@@ -303,6 +339,7 @@
 		"participant": "Участник исследования",
 		"scientist": "Ученый",
 		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "Студент",
 		"teacher": "Учитель",
 		"title": "Какая роль лучше всего вас описывает?"

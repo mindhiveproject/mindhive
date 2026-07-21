@@ -86,6 +86,30 @@ export const FAVORITE_TASKS = gql`
   }
 `;
 
+/** Build TaskWhereInput for favorite blocks list / refetch. */
+export function buildFavoriteTasksWhere({
+  userId,
+  componentType,
+  search = "",
+}) {
+  const titleDescriptionOr =
+    process.env.NODE_ENV === "development"
+      ? [
+          { title: { contains: search } },
+          { description: { contains: search } },
+        ]
+      : [
+          { title: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+        ];
+
+  return {
+    favoriteBy: { some: { id: { equals: userId } } },
+    taskType: { equals: componentType },
+    OR: titleDescriptionOr,
+  };
+}
+
 // get task to participate
 export const GET_TASK = gql`
   query GET_TASK($slug: String!) {

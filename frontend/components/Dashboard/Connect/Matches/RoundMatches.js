@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Dropdown, Label } from "semantic-ui-react";
 
@@ -15,45 +16,125 @@ import {
 import { UPDATE_CONNECT_ROUND } from "../../../Mutations/ConnectRound";
 import { runMatching } from "./matchingAlgorithm";
 import NetworkGraph from "./NetworkGraph";
+import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
+
+const BACK_CHEVRON = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
+      fill="currentColor"
+    />
+  </svg>
+);
 
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
+  scroll-padding-top: 126px;
 `;
 
-const TopBar = styled.div`
+const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
+  position: sticky;
+  top: 70px;
+  z-index: 5;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px 16px;
+  margin: -8px calc(-1 * clamp(16px, 6vw, 64px)) 8px;
+  padding: 10px clamp(16px, 6vw, 64px);
+  background: rgba(247, 249, 248, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(211, 218, 224, 0.85);
+`;
+
+const TopBarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 220px;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
 
   h1 {
     margin: 0;
+    min-width: 0;
+    max-width: 100%;
     font-family: "Lato", sans-serif;
-    font-size: clamp(24px, 3vw, 32px);
+    font-size: clamp(20px, 2.8vw, 26px);
     font-weight: 600;
     color: #171717;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .meta {
+    color: #5f6871;
+    font-size: 13px;
   }
 `;
 
 const BackLink = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   background: none;
   border: none;
+  border-radius: 8px;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
-  padding: 0;
+
+  &:hover:not(:disabled) {
+    background: rgba(51, 111, 138, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
+  }
+`;
+
+const Actions = styled.div`
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
 `;
 
 const Card = styled.div`
@@ -82,27 +163,6 @@ const ButtonRow = styled.div`
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-`;
-
-const Button = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: 1px solid ${({ $primary, $danger }) => ($primary ? "#336f8a" : $danger ? "#e8c4c4" : "#d3dae0")};
-  background: ${({ $primary }) => ($primary ? "#336f8a" : "#ffffff")};
-  color: ${({ $primary, $danger }) =>
-    $primary ? "#ffffff" : $danger ? "#b3261e" : "#336f8a"};
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 `;
 
 const OpportunityCard = styled.div`
@@ -169,6 +229,15 @@ const STATUS_OPTIONS = [
   { key: "cancelled", text: "Cancelled", value: "cancelled" },
 ];
 
+const ROUND_STATUS_LABELS = {
+  draft: "Draft",
+  preferences_open: "Preferences open",
+  preferences_closed: "Preferences closed",
+  matching: "Matching",
+  published: "Published",
+  archived: "Archived",
+};
+
 function displayName(profile) {
   if (!profile) return "Unknown";
   return (
@@ -179,6 +248,7 @@ function displayName(profile) {
 
 export default function RoundMatches({ roundId }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const { data, loading, refetch } = useQuery(ROUND_MATCH_VIEW, {
     variables: { roundId },
     fetchPolicy: "cache-and-network",
@@ -218,7 +288,40 @@ export default function RoundMatches({ roundId }) {
     }
   );
 
+  const [opening, setOpening] = useState(false);
   const [running, setRunning] = useState(false);
+
+  const isDraft = round?.status === "draft";
+  const canPublish =
+    round?.status === "matching" || round?.status === "preferences_closed";
+
+  const handleOpenPreferences = async () => {
+    if (
+      !window.confirm(
+        t("matchingRound.openConfirm", {}, {
+          default:
+            "Students in this network will see this round and can submit preferences. Continue?",
+        })
+      )
+    ) {
+      return;
+    }
+    setOpening(true);
+    try {
+      await updateRound({
+        variables: {
+          id: round.id,
+          input: {
+            status: "preferences_open",
+            updatedAt: new Date().toISOString(),
+          },
+        },
+      });
+      await refetch();
+    } finally {
+      setOpening(false);
+    }
+  };
 
   const handleRunMatching = async () => {
     if (
@@ -350,26 +453,78 @@ export default function RoundMatches({ roundId }) {
   }
 
   const proposedCount = matches.filter((m) => m.status === "proposed").length;
+  const roundStatusLabel =
+    ROUND_STATUS_LABELS[round.status] || round.status.replace(/_/g, " ");
+
+  const pageTitle = `Matches · ${round.title}`;
+  const backLabel = t("matchesRound.backLink", {}, {
+    default: "Back to matches",
+  });
+  const busy = opening || publishing || running || creating || bulkDeleting;
 
   return (
     <Shell>
       <TopBar>
-        <div>
-          <BackLink type="button" onClick={handleBack}>
-            <Icon name="arrow left" /> Back
+        <TopBarLeft>
+          <BackLink
+            type="button"
+            onClick={handleBack}
+            disabled={busy}
+            aria-label={backLabel}
+            title={backLabel}
+          >
+            {BACK_CHEVRON}
           </BackLink>
-          <h1>Matches · {round.title}</h1>
-          <div style={{ marginTop: 6, color: "#5f6871", fontSize: 13 }}>
-            Round status: {round.status.replace("_", " ")} ·{" "}
-            {matches.length} match{matches.length === 1 ? "" : "es"} ·{" "}
-            {preferences.filter((p) => p.status === "submitted").length} submitted
-            preference
-            {preferences.filter((p) => p.status === "submitted").length === 1
-              ? ""
-              : "s"}
-          </div>
-        </div>
+          <TitleRow>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+              <h1 title={pageTitle}>{pageTitle}</h1>
+              <Chip shape="pill" label={roundStatusLabel} />
+            </div>
+            <div className="meta">
+              {matches.length} match{matches.length === 1 ? "" : "es"} ·{" "}
+              {preferences.filter((p) => p.status === "submitted").length} submitted
+              preference
+              {preferences.filter((p) => p.status === "submitted").length === 1
+                ? ""
+                : "s"}
+            </div>
+          </TitleRow>
+        </TopBarLeft>
+        {isDraft && (
+          <Actions>
+            <Button
+              type="button"
+              variant="filled"
+              onClick={handleOpenPreferences}
+              disabled={opening || publishing}
+            >
+              {opening
+                ? t("matchingRound.openingPreferences", {}, {
+                    default: "Opening…",
+                  })
+                : t("matchingRound.openPreferences", {}, {
+                    default: "Open preferences",
+                  })}
+            </Button>
+          </Actions>
+        )}
       </TopBar>
+
+      {isDraft && (
+        <Card
+          style={{
+            border: "1px solid #d3dae0",
+            background: "#f7f9f8",
+          }}
+        >
+          <p className="helper" style={{ margin: 0 }}>
+            {t("matchingRound.draftBanner", {}, {
+              default:
+                "This round is in draft. Students cannot see it until you open preferences.",
+            })}
+          </p>
+        </Card>
+      )}
 
       <Card>
         <h2>Algorithm controls</h2>
@@ -379,10 +534,26 @@ export default function RoundMatches({ roundId }) {
           opportunity&apos;s capacity. Existing <em>proposed</em> matches will be
           replaced — manually-edited or active matches are preserved.
         </p>
+        {!canPublish && !isDraft && proposedCount > 0 && (
+          <p className="helper">
+            {t("matchingRound.publishRequiresMatching", {}, {
+              default:
+                "Set the round status to Matching before publishing final matches.",
+            })}
+          </p>
+        )}
+        {isDraft && proposedCount > 0 && (
+          <p className="helper">
+            {t("matchingRound.publishDisabledWhileDraft", {}, {
+              default:
+                "Open preferences and move the round to Matching before publishing matches.",
+            })}
+          </p>
+        )}
         <ButtonRow>
           <Button
             type="button"
-            $primary
+            variant="filled"
             onClick={handleRunMatching}
             disabled={running || creating || bulkDeleting}
           >
@@ -390,6 +561,7 @@ export default function RoundMatches({ roundId }) {
           </Button>
           <Button
             type="button"
+            variant="outline"
             onClick={handleClearProposed}
             disabled={running || bulkDeleting || proposedCount === 0}
           >
@@ -397,9 +569,9 @@ export default function RoundMatches({ roundId }) {
           </Button>
           <Button
             type="button"
-            $primary
+            variant="filled"
             onClick={handlePublish}
-            disabled={publishing || proposedCount === 0}
+            disabled={publishing || proposedCount === 0 || !canPublish}
           >
             {publishing ? "Publishing…" : "Publish matches"}
           </Button>
@@ -468,7 +640,7 @@ export default function RoundMatches({ roundId }) {
                             border: "1px solid #e8c4c4",
                             background: "#fff",
                             color: "#b3261e",
-                            fontFamily: "Nunito",
+                            fontFamily: "Inter",
                             fontWeight: 600,
                             fontSize: 12,
                             cursor: "pointer",

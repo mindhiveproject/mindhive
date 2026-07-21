@@ -19,9 +19,27 @@
 	},
 	"auth": {
 		"checkYourMail": "Controleer uw e-mail",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "E-mail",
 		"forgotPassword": "Wachtwoord vergeten?",
 		"login": "Login",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "Wachtwoord",
 		"requestReset": "Verzoek om reset",
 		"username": "Gebruikersnaam"
@@ -60,6 +78,7 @@
 		},
 		"title": "Gegevens en toestemming"
 	},
+	"copied": "Gekopieerd",
 	"created": {
 		"author": "Auteur",
 		"collaborator": "Medewerker",
@@ -76,6 +95,17 @@
 		"no": "Registreer mijn gegevens helemaal niet (als je een MindHive-student bent: dit betekent dat je gegevens niet worden opgenomen in de klasdemo's!)",
 		"question": "Hoe wilt u dat wij uw gegevens gebruiken?",
 		"science": "U mag mijn gegevens gebruiken voor wetenschappelijke en/of educatieve doeleinden"
+	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
 	},
 	"discoverDescription": "Blader door onze collectie studies, opdrachten en enquêtes, gemaakt door middelbare scholieren in het MindHive-programma en partnerwetenschappers. Neem deel aan studies of bekijk een voorbeeld van opdrachten en enquêtes.",
 	"discoverHeader": "Ontdek studies, opdrachten en enquêtes",
@@ -294,6 +324,12 @@
 		"languagePreferences": "Stel uw taalvoorkeuren in",
 		"languages": "Talen",
 		"quickLinks": "Snelle links",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Instellingen",
 		"username": "Gebruikersnaam"
 	},
@@ -303,6 +339,7 @@
 		"participant": "Deelnemer aan het onderzoek",
 		"scientist": "Wetenschapper",
 		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "Student",
 		"teacher": "Docent",
 		"title": "Welke rol beschrijft u het beste?"

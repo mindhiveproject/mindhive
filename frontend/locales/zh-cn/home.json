@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "演练教程"
 	},
 	"info": "更多信息",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "参与者 ID",
 	"permissions": "权限",
 	"preview": "预览",
@@ -50,6 +58,69 @@
 		"messages": "消息",
 		"profile": "轮廓",
 		"settings": "设置"
+	},
+	"sponsorOnboarding": {
+		"dismiss": "",
+		"manage": "",
+		"network": {
+			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
+			"close": "",
+			"empty": "",
+			"joinButton": "",
+			"joinError": "",
+			"joining": "",
+			"joinSuccess": "",
+			"loadError": "",
+			"loading": "",
+			"modalDescription": "",
+			"modalTitle": "",
+			"pendingRequest": "",
+			"requestSuccess": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"untitled": ""
+		},
+		"opportunity": {
+			"createButton": "",
+			"createTitle": "",
+			"description": "",
+			"done": "",
+			"locked": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"viewButton": "",
+			"viewTitle": ""
+		},
+		"organization": {
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"stepLabel": "",
+			"title": ""
+		},
+		"profile": {
+			"completeTitle": "",
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"editTitle": "",
+			"openButton": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": ""
+		},
+		"status": {
+			"needsSetup": "",
+			"ready": ""
+		},
+		"subtitle": "",
+		"title": ""
 	},
 	"surveys": "调查",
 	"tasks": "任务",

@@ -97,6 +97,10 @@ export const Visual = list({
     code: file({ storage: "p5_visuals" }),
     description: text(),
     author: relationship({ ref: "Profile.visuals", many: false }),
+    collaborators: relationship({
+      ref: "Profile.collaboratorInVisual",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

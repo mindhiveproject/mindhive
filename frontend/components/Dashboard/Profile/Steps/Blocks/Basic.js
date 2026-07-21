@@ -473,6 +473,13 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
                         text: t("basic.pronounsOptions.they"),
                         value: "they",
                       },
+                      {
+                        key: "preferNotToSay",
+                        text: t("basic.pronounsOptions.preferNotToSay", {}, {
+                          default: "Prefer not to say",
+                        }),
+                        value: "preferNotToSay",
+                      },
                     ]}
                     onChange={(event, data) => {
                       handleUpdate({

@@ -14,6 +14,7 @@ const Shell = styled.div`
   flex-direction: column;
   gap: 32px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
@@ -126,7 +127,7 @@ const Button = styled.button`
   border: 1px solid ${({ $primary }) => ($primary ? "#336f8a" : "#d3dae0")};
   background: ${({ $primary }) => ($primary ? "#336f8a" : "#ffffff")};
   color: ${({ $primary }) => ($primary ? "#ffffff" : "#336f8a")};
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 13px;
   cursor: pointer;

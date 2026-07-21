@@ -6,7 +6,7 @@ export default function RoundsMain({ query, user }) {
   const { round } = query;
 
   return (
-    <RoleGuard allow={["teacher"]}>
+    <RoleGuard allow={["teacher", "classNetworkAdmin"]}>
       {round ? (
         <RoundEditor query={query} user={user} roundId={round} />
       ) : (

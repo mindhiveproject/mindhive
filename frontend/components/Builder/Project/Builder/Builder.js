@@ -11,6 +11,8 @@ import StudyPreview from "../../../Studies/Preview/Main";
 
 import InDev from "../../../Global/InDev";
 import StudyConnector from "../../../Projects/StudyConnector/Main";
+import Button from "../../../DesignSystem/Button";
+import IconButton from "../../../DesignSystem/IconButton";
 
 export default function Builder({
   query,
@@ -24,6 +26,11 @@ export default function Builder({
   hasStudyChanged,
   setHasStudyChanged,
   isCanvasLocked,
+  canUndo,
+  undoCanvas,
+  onBeforeCanvasMutation,
+  onAfterCanvasMutation,
+  onModelReplaced,
 }) {
   const { t } = useTranslation("builder");
   const [node, setNode] = useState(null);
@@ -140,15 +147,25 @@ export default function Builder({
     );
   }
 
+  const needsStartingPoint =
+    engine?.model &&
+    !engine.model
+      .getNodes()
+      .filter((n) => n?.options?.type === "my-anchor").length;
+
   return (
     <StyledCanvasBuilder>
       {isCanvasLocked && (
         <div className="lockedMessageOverlay">
-          <h3>{t("builder.studyBuilderLocked", "Study Builder Locked")}</h3>
+          <h3>{t("builder.studyBuilderLocked", {}, { default: "Study Builder Locked" })}</h3>
           <p>
             {t(
               "builder.lockedMessage",
-              "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study."
+              {},
+              {
+                default:
+                  "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
+              }
             )}
           </p>
         </div>
@@ -164,6 +181,9 @@ export default function Builder({
           openModal={openModal}
           openStudyPreview={openStudyPreview}
           isCanvasLocked={isCanvasLocked}
+          onBeforeCanvasMutation={onBeforeCanvasMutation}
+          onAfterCanvasMutation={onAfterCanvasMutation}
+          onModelReplaced={onModelReplaced}
         />
         <div className="sidepanel" id="sidepanel">
           <Menu
@@ -177,26 +197,50 @@ export default function Builder({
             isCanvasLocked={isCanvasLocked}
           />
         </div>
-        <button
-          className="addCommentButton"
-          id="commentButton"
-          onClick={lockedAddFunctions.addComment}
-          disabled={isCanvasLocked}
-        >
-          {t("builder.addComment", "Add a comment")}
-        </button>
-        {engine?.model &&
-          !engine?.model
-            .getNodes()
-            .filter((node) => node?.options?.type === "my-anchor").length && (
-            <button
-              className="addAnchorButton"
+        <div className="boardTopActions">
+          <Button
+            id="commentButton"
+            type="button"
+            variant="primary"
+            style={{ backgroundColor: "#5D5763" }}
+            onClick={lockedAddFunctions.addComment}
+            disabled={isCanvasLocked}
+          >
+            {t("builder.addComment", {}, { default: "Add a comment" })}
+          </Button>
+          {needsStartingPoint && (
+            <Button
+              type="button"
+              variant="tonal"
               onClick={lockedAddFunctions.addAnchor}
               disabled={isCanvasLocked}
             >
-              {t("builder.addStartingPoint", "Add starting point")}
-            </button>
+              {t("builder.addStartingPoint", {}, {
+                default: "Add starting point",
+              })}
+            </Button>
           )}
+          {typeof undoCanvas === "function" &&
+            canUndo &&
+            !isCanvasLocked && (
+              <IconButton
+                id="undoButton"
+                type="button"
+                variant="text"
+                onClick={undoCanvas}
+                ariaLabel={t("builder.undo", {}, { default: "Undo" })}
+                title={t("builder.undo", {}, { default: "Undo" })}
+                icon={
+                  <img
+                    src="/assets/tiptapIcons/undo.svg"
+                    alt=""
+                    width="24"
+                    height="24"
+                  />
+                }
+              />
+            )}
+        </div>
       </div>
 
       {componentId && (

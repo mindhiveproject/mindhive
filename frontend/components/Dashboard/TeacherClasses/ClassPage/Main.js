@@ -9,6 +9,7 @@ import ClassStudies from "./Studies";
 import ClassProjects from "./Projects";
 import ClassAssignments from "./Assignments/Main";
 import ClassResources from "./Resources/Main";
+import ClassOpportunities from "./Opportunities";
 import ClassSettings from "./Settings";
 
 import { GET_CLASS } from "../../../Queries/Classes";
@@ -20,27 +21,28 @@ import StyledClass from "../../../styles/StyledClass";
 import ProjectBoard from "./ProjectBoard/Main";
 
 import Dashboard from "./Dashboard/Main";
+import { deriveRoles } from "../../Connect/useConnectRole";
 
 const CLASS_PAGE_NAV_ITEMS = [
-  {
-    value: "students",
-    labelKey: "main.students",
-    iconSrc: "/assets/icons/profile/people.svg",
-  },
   {
     value: "dashboard",
     labelKey: "main.dashboard",
     iconSrc: "/assets/icons/visualize/bar_chart.svg",
   },
   {
-    value: "projects",
-    labelKey: "main.projects",
-    iconSrc: "/assets/icons/project.svg",
+    value: "students",
+    labelKey: "main.students",
+    iconSrc: "/assets/icons/profile/people.svg",
   },
   {
     value: "mentors",
     labelKey: "main.mentors",
     iconSrc: "/assets/icons/user.svg",
+  },
+  {
+    value: "projects",
+    labelKey: "main.projects",
+    iconSrc: "/assets/icons/project.svg",
   },
   {
     value: "studies",
@@ -58,6 +60,11 @@ const CLASS_PAGE_NAV_ITEMS = [
     iconSrc: "/assets/icons/visualize/folder_open.svg",
   },
   {
+    value: "opportunities",
+    labelKey: "main.opportunities",
+    iconSrc: "/assets/icons/group.svg",
+  },
+  {
     value: "settings",
     labelKey: "main.settings",
     iconSrc: "/assets/icons/settings.svg",
@@ -67,6 +74,11 @@ const CLASS_PAGE_NAV_ITEMS = [
 export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const page = query?.page || "students";
+  const { isTeacher, isSponsor } = deriveRoles(user);
+  const showOpportunitiesTab = isTeacher && isSponsor;
+  const navItems = CLASS_PAGE_NAV_ITEMS.filter(
+    (item) => item.value !== "opportunities" || showOpportunitiesTab,
+  );
 
   const { data, loading, error } = useQuery(GET_CLASS, {
     variables: { code },
@@ -92,7 +104,7 @@ export default function ClassPage({ code, user, query }) {
           <nav className="classPageNav" aria-label={t("main.classSectionsNav")}>
             <div className="secondLine">
               <div className="menu">
-                {CLASS_PAGE_NAV_ITEMS.map((item) => (
+                {navItems.map((item) => (
                   <Link
                     key={item.value}
                     href={{
@@ -120,13 +132,13 @@ export default function ClassPage({ code, user, query }) {
           </nav>
 
           <div>
-            {page === "students" && (
-              <ClassStudents myclass={myclass} user={user} query={query} />
+            {page === "dashboard" && (
+              <Dashboard myclass={myclass} user={user} query={query} />
             )}
           </div>
           <div>
-            {page === "dashboard" && (
-              <Dashboard myclass={myclass} user={user} query={query} />
+            {page === "students" && (
+              <ClassStudents myclass={myclass} user={user} query={query} />
             )}
           </div>
           <div>
@@ -152,6 +164,11 @@ export default function ClassPage({ code, user, query }) {
           <div>
             {page === "resources" && (
               <ClassResources myclass={myclass} user={user} query={query} />
+            )}
+          </div>
+          <div>
+            {page === "opportunities" && showOpportunitiesTab && (
+              <ClassOpportunities myclass={myclass} user={user} />
             )}
           </div>
           <div>

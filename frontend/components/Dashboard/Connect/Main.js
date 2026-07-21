@@ -1,6 +1,7 @@
 import ConnectBank from "./Bank/Main";
 import Connections from "./Connections/Main";
 import ProfilePage from "./ProfilePage/Main";
+import MyProfile from "./MyProfile/Main";
 import OpportunitiesMain from "./Opportunities/Main";
 import RoundsMain from "./Rounds/Main";
 import QuestionsMain from "./Questions/Main";
@@ -9,7 +10,11 @@ import MatchesMain from "./Matches/Main";
 import MentorMatchesMain from "./MentorMatches/Main";
 import ExploreMain from "./Explore/Main";
 import OrganizationsMain from "./Organizations/Main";
+import ReviewQueueMain from "./ReviewQueue/Main";
+import ReviewOpportunityMain from "./ReviewOpportunity/Main";
+import ClassNetworksMain from "./ClassNetworks/Main";
 import ConnectNavigationBar from "./ConnectNavigationBar";
+import RoleGuard from "./RoleGuard";
 
 export default function ConnectMain({ query, user }) {
   const { selector } = query;
@@ -20,6 +25,12 @@ export default function ConnectMain({ query, user }) {
     content = <Connections query={query} user={user} />;
   } else if (selector === "with") {
     content = <ProfilePage query={query} user={user} />;
+  } else if (selector === "profile") {
+    content = (
+      <RoleGuard allow={["mentor", "teacher", "scientist", "admin", "classNetworkAdmin"]}  >
+        <MyProfile user={user} />
+      </RoleGuard>
+    );
   } else if (selector === "opportunities") {
     content = <OpportunitiesMain query={query} user={user} />;
   } else if (selector === "rounds") {
@@ -36,6 +47,12 @@ export default function ConnectMain({ query, user }) {
     content = <ExploreMain query={query} user={user} />;
   } else if (selector === "organizations") {
     content = <OrganizationsMain query={query} user={user} />;
+  } else if (selector === "networks") {
+    content = <ClassNetworksMain query={query} user={user} />;
+  } else if (selector === "review-queue") {
+    content = <ReviewQueueMain />;
+  } else if (selector === "review") {
+    content = <ReviewOpportunityMain query={query} />;
   } else {
     content = <ConnectBank query={query} user={user} />;
   }

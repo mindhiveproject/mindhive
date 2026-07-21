@@ -27,6 +27,14 @@ export const permissions = {
   ...generatedPermissions,
 };
 
+/** Admin UI operators who may manage network memberships and invites. */
+export function canAdminManageNetworks({ session }: ListAccessArgs) {
+  return (
+    permissions.canManageUsers({ session }) ||
+    permissions.canAccessAdminUI({ session })
+  );
+}
+
 // Rule based functions
 // rules can return a boolean or a filter that limits which products they can CRUD
 export const rules = {
@@ -236,7 +244,7 @@ export const rules = {
     };
   },
   // ConnectMatch visible to: the matched student, the opportunity's mentor,
-  // the round creator, or admins.
+  // the round creator, class-network creators/admins, or platform admins.
   connectMatchVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageUsers({ session })) return true;
@@ -246,6 +254,8 @@ export const rules = {
         { student: { id: { equals: me } } },
         { round: { createdBy: { id: { equals: me } } } },
         { opportunity: { mentor: { id: { equals: me } } } },
+        { classNetwork: { creator: { id: { equals: me } } } },
+        { classNetwork: { admins: { some: { id: { equals: me } } } } },
       ],
     };
   },
@@ -269,9 +279,41 @@ export const rules = {
   connectOrganizationMutate({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageUsers({ session })) return true;
+    const me = session!.itemId;
+    return {
+      OR: [
+        { admins: { some: { id: { equals: me } } } },
+        { createdBy: { id: { equals: me } } },
+        { members: { some: { id: { equals: me } } } },
+      ],
+    };
+  },
+  // ClassNetwork: creators and explicitly assigned network admins manage
+  // network metadata/membership. Admin UI operators keep full override.
+  classNetworkMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (canAdminManageNetworks({ session })) return true;
     const me = session.itemId;
     return {
-      members: { some: { id: { equals: me } } },
+      OR: [
+        { creator: { id: { equals: me } } },
+        { admins: { some: { id: { equals: me } } } },
+      ],
+    };
+  },
+  // NetworkInvite: visible to the target profile, the initiator, network
+  // creator/admins, and Admin UI operators.
+  networkInviteVisible({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (canAdminManageNetworks({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { profile: { id: { equals: me } } },
+        { requestedBy: { id: { equals: me } } },
+        { classNetwork: { creator: { id: { equals: me } } } },
+        { classNetwork: { admins: { some: { id: { equals: me } } } } },
+      ],
     };
   },
   // ConnectPreferenceItem inherits from its parent preference's submitter / round creator.
@@ -284,6 +326,86 @@ export const rules = {
         { preference: { submitter: { id: { equals: me } } } },
         { preference: { round: { createdBy: { id: { equals: me } } } } },
       ],
+    };
+  },
+  // OpportunityReviewNote query: visible to the author, any reviewer on
+  // the same round, the round creator, class-network admins/class teachers,
+  // the opportunity's mentor, or admins.
+  connectReviewNoteVisible({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { author: { id: { equals: me } } },
+        { round: { createdBy: { id: { equals: me } } } },
+        { round: { reviewers: { some: { id: { equals: me } } } } },
+        { round: { classNetwork: { creator: { id: { equals: me } } } } },
+        { round: { classNetwork: { admins: { some: { id: { equals: me } } } } } },
+        {
+          round: {
+            classNetwork: {
+              classes: { some: { creator: { id: { equals: me } } } },
+            },
+          },
+        },
+        { opportunity: { mentor: { id: { equals: me } } } },
+      ],
+    };
+  },
+  // OpportunityReviewNote mutate: only the author or an admin can edit
+  // or delete a note. Reviewers can leave their own notes (the create
+  // operation is gated separately via the round-reviewer check at the
+  // application layer; here we just stop users from editing other
+  // reviewers' notes).
+  connectReviewNoteMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      author: { id: { equals: me } },
+    };
+  },
+  // Connect customizable forms — FormDefinition mutate.
+  // Admins (canManageUsers) can manage any definition. Users with
+  // canManageForms can manage scope=organization definitions for orgs
+  // they are members of. Global and class_network scopes are admin-only.
+  formDefinitionMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    if (!permissions.canManageForms({ session })) return false;
+    const me = session.itemId;
+    return {
+      scope: { equals: "organization" },
+      organization: { members: { some: { id: { equals: me } } } },
+    };
+  },
+  // FormCard mutate inherits the same rule via the parent definition.
+  formCardMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    if (!permissions.canManageForms({ session })) return false;
+    const me = session.itemId;
+    return {
+      definition: {
+        scope: { equals: "organization" },
+        organization: { members: { some: { id: { equals: me } } } },
+      },
+    };
+  },
+  // FormField mutate inherits via card.definition.
+  formFieldMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    if (!permissions.canManageForms({ session })) return false;
+    const me = session.itemId;
+    return {
+      card: {
+        definition: {
+          scope: { equals: "organization" },
+          organization: { members: { some: { id: { equals: me } } } },
+        },
+      },
     };
   },
   // For mutate operations on the above lists: only the owner or admin.

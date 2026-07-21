@@ -63,6 +63,202 @@ const StyledModal = styled.div`
     display: grid;
     background: red;
   }
+  .classNetworkDetail {
+    display: grid;
+    gap: 28px;
+
+    p {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      letter-spacing: normal;
+    }
+  }
+  .classNetworkDetailTitle {
+    margin: 0;
+    color: #171717;
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 30px;
+    letter-spacing: normal;
+  }
+  .classNetworkDetailDescription {
+    color: #3d3d3d;
+    font-size: 15px;
+    line-height: 24px;
+  }
+  .classNetworkDetailSummary {
+    display: grid;
+    gap: 16px;
+  }
+  .classNetworkDetailRow {
+    display: grid;
+    gap: 10px;
+    padding: 18px 20px;
+    border: 1px solid #ece9e6;
+    border-radius: 14px;
+    background: #fbfbfa;
+  }
+  .classNetworkDetailLabel {
+    color: #625b71;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+  .classNetworkDetailValue {
+    color: #171717;
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 24px;
+  }
+
+  .classNetworkDetailNames {
+    display: grid;
+    gap: 12px;
+    margin: 4px 0 0;
+    padding-left: 20px;
+    color: #3d3d3d;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    line-height: 22px;
+  }
+  .classNetworkAdmins {
+    display: grid;
+    gap: 18px;
+    padding: 20px;
+    border: 1px solid #ece9e6;
+    border-radius: 14px;
+    background: #ffffff;
+  }
+  .classNetworkAdminsHeader {
+    display: grid;
+    gap: 8px;
+
+    h4 {
+      margin: 0;
+      color: #171717;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+    }
+
+    p {
+      color: #625b71;
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+  .classNetworkAdminList {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .classNetworkAdminRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 16px;
+    border: 1px solid #ece9e6;
+    border-radius: 12px;
+    background: #fbfbfa;
+
+    div {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    strong {
+      overflow: hidden;
+      color: #171717;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      line-height: 22px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    span {
+      overflow: hidden;
+      color: #625b71;
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      line-height: 18px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .classNetworkEmailButton {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    margin: 0;
+    padding: 2px 0;
+    border: none;
+    background: transparent;
+    color: #336f8a;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: left;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      color: #1f4f63;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #336f8a;
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+  .classNetworkAdminEmpty {
+    color: #625b71;
+    font-size: 14px;
+    line-height: 22px;
+  }
+  .classNetworkAdminForm {
+    display: grid;
+    gap: 12px;
+
+    label {
+      color: #171717;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 22px;
+    }
+  }
+  .classNetworkAdminFormRow {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    input {
+      height: 42px;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+    }
+  }
+  .classNetworkAdminFeedback {
+    color: #1d6b3a;
+    font-size: 13px;
+    line-height: 20px;
+
+    &.error {
+      color: #871b16;
+    }
+  }
   .modalTwoSideContent {
     display: grid;
     align-content: baseline;

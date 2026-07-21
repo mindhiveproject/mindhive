@@ -87,7 +87,8 @@
 		"addComment": "Ajouter un commentaire",
 		"addStartingPoint": "Ajouter un point de départ",
 		"lockedMessage": "Cette étude a été soumise et ne peut pas être modifiée. Pour apporter des modifications, veuillez demander à votre enseignant d'annuler la soumission.",
-		"studyBuilderLocked": "Générateur d'études verrouillé"
+		"studyBuilderLocked": "Générateur d'études verrouillé",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -442,6 +443,7 @@
 				"classNetwork": "Réseau de classe",
 				"empty": {
 					"classNetwork": "Aucune donnée provenant de votre réseau de classe n'est disponible pour ce projet ou cette étude.",
+					"me": "",
 					"myClass": "Aucun jeu de données pour vos classes pour le moment.",
 					"public": "Aucun jeu de données public trouvé.",
 					"sharedWithMe": "Aucune donnée n'a été partagée avec vous.",
@@ -449,11 +451,13 @@
 				},
 				"intro": {
 					"classNetwork": "Ensembles de données relatifs à ce projet ou à cette étude, provenant de classes appartenant à vos réseaux de classes.",
+					"me": "",
 					"myClass": "Jeux de données liés aux études ou aux projets de vos cours.",
 					"public": "Ensembles de données issus de modèles de revues publiques.",
 					"sharedWithMe": "Jeux de données partagés avec vous par d'autres collaborateurs.",
 					"uploaded": "Jeux de données que vous avez téléchargés."
 				},
+				"me": "",
 				"myClass": "Ma classe",
 				"public": "Publique",
 				"sharedWithMe": "Partagé avec moi",
@@ -1327,6 +1331,7 @@
 	},
 	"menu": {
 		"addBlock": "Ajouter un bloc",
+		"settings": "",
 		"studyFlow": "Déroulement de l'étude",
 		"studySettings": "Paramètres d'étude"
 	},
@@ -1872,6 +1877,8 @@
 		"sectionTitlePlaceholder": "Entrez le titre de la section"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "Vous souhaitez inclure des instructions personnalisées à vos participants ou intégrer un lien et/ou une vidéo à la procédure de votre étude ? Sélectionnez et modifiez un bloc de base.",
 			"title": "Blocs de base"
@@ -1881,6 +1888,9 @@
 			"myFavorite": "Mon préféré",
 			"ownedByMe": "Appartenant à moi"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 Rechercher",
 		"studyDesign": {
 			"betweenSubjects": "Conception inter-sujets",
@@ -1891,6 +1901,8 @@
 		},
 		"surveys": {
 			"buildOwn": "Vous ne trouvez pas d'outil pour mesurer l'un de vos concepts d'étude ? Créez le vôtre grâce au générateur d'enquêtes et à l'aide de l'enseignant.",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "Vous souhaitez mesurer les attitudes, les expériences ou les opinions des participants grâce à l'auto-évaluation ? Choisissez parmi cette sélection d'enquêtes validées.",
 			"title": "Enquêtes"
 		},
@@ -1900,7 +1912,9 @@
 		},
 		"templates": {
 			"description": "Vous ne souhaitez pas partir de zéro ? Sélectionnez et modifiez un plan d'étude prédéfini à l'aide de l'un des modèles de cette banque.",
-			"title": "Modèles"
+			"openStudyAria": "",
+			"title": "Modèles",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "Sélectionnez ci-dessous le {{taskType}} que vous souhaitez cloner.",
@@ -1982,6 +1996,25 @@
 	"study": "étude",
 	"studyBuilder": "Constructeur d'études",
 	"studyDescription": "Une étude est un projet de recherche comportant une question de recherche. Elle peut comprendre plusieurs tâches et/ou enquêtes.",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		},
+		"preview": {
+			"branch": "",
+			"collapseAria": "",
+			"defaultPath": "",
+			"expandAria": "",
+			"legend": "",
+			"probabilityAria": "",
+			"taskCount": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "Affecter à une étude existante",
 		"assignToStudy": "Affecter à l'étude",
@@ -2207,7 +2240,9 @@
 		"addMore": "Ajouter plus"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "Êtes-vous sûr de vouloir supprimer le {{versionName}} ?",
+		"confirmLoadUnsaved": "",
 		"createdOn": "Créé le",
 		"createNewVersion": "Créer une nouvelle version",
 		"currentVersion": "Version actuelle",
@@ -2215,7 +2250,9 @@
 		"description": "Description",
 		"enterVersionName": "Veuillez saisir le nom de la version",
 		"headerNote": "Enregistrer les différents plans d'étude affichés sur l'écran de gauche",
+		"invalidDiagram": "",
 		"load": "Charger",
+		"missingDiagram": "",
 		"name": "Nom",
 		"noVersionSaved": "Aucune version d'étude n'a encore été enregistrée. Créez-en une nouvelle en cliquant sur le bouton ci-dessous.",
 		"placeholder": "Versions d'étude",

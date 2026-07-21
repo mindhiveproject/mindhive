@@ -3,6 +3,7 @@ import DisplayError from "../../ErrorMessage";
 import useTranslation from "next-translate/useTranslation";
 import TermsConditions from "./TermsConditions";
 import GoogleSignup from "./GoogleSignup";
+import Turnstile from "../Turnstile";
 
 export default function Form({
   role,
@@ -13,6 +14,9 @@ export default function Form({
   loading,
   error,
   classCode,
+  submitDisabled = false,
+  turnstileRef,
+  onTurnstileVerify,
 }) {
   const { t } = useTranslation("common");
 
@@ -24,7 +28,7 @@ export default function Form({
       >
         <DisplayError error={error} />
 
-        <fieldset disabled={loading} aria-busy={loading}>
+        <fieldset disabled={loading || submitDisabled} aria-busy={loading}>
           <div className="infoPane">
             <label htmlFor="username">
               {t("auth.username")}
@@ -103,6 +107,8 @@ export default function Form({
                 </label>
               </>
             )}
+
+            <Turnstile ref={turnstileRef} onVerify={onTurnstileVerify} />
 
             <div className="submitButton">
               <button type="submit">{submitBtnName}</button>

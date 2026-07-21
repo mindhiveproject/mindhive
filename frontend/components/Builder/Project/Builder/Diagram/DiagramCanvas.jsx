@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 // Mesh grid
 export const StyledDiagramCanvas = styled.div`
-  width: 99%;
+  width: 100%;
   height: 100%;
   box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
   background-color: ${p => p.background};

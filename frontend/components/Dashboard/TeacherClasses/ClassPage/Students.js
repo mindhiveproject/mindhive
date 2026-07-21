@@ -1,15 +1,20 @@
-import { Dropdown } from "semantic-ui-react";
 import Link from "next/link";
 import { useQuery, useMutation } from "@apollo/client";
 import absoluteUrl from "next-absolute-url";
 import useTranslation from "next-translate/useTranslation";
-import { GET_CLASSES } from "../../../Queries/Classes";
+
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
+import { AgGridReact } from "ag-grid-react";
+
+import { GET_CLASSES, GET_CLASS } from "../../../Queries/Classes";
 import {
   ASSIGN_STUDENT_TO_CLASS,
   REMOVE_STUDENT_FROM_CLASS,
 } from "../../../Mutations/Classes";
-import { GET_CLASS } from "../../../Queries/Classes";
 import StudyCompletionOverview from "./Overview/StudyCompletion";
+import DropdownMenu from "../../../DesignSystem/DropdownMenu";
+import CopyButton from "../../../DesignSystem/CopyButton";
 
 export default function ClassStudents({ myclass, user, query }) {
   const { action } = query;
@@ -17,7 +22,7 @@ export default function ClassStudents({ myclass, user, query }) {
   const { t } = useTranslation("classes");
   const students = myclass?.students || [];
 
-  const { data, error, loading } = useQuery(GET_CLASSES, {
+  const { data } = useQuery(GET_CLASSES, {
     variables: {
       input: {
         OR: [
@@ -39,177 +44,252 @@ export default function ClassStudents({ myclass, user, query }) {
   const classes = data?.classes || [];
   const otherClasses = classes.filter((cl) => cl?.id !== myclass?.id);
 
-  const [removeFromClass, { loading: removeLoading }] = useMutation(
-    REMOVE_STUDENT_FROM_CLASS,
-    {
-      variables: {
-        classId: myclass?.id,
+  const [removeFromClass] = useMutation(REMOVE_STUDENT_FROM_CLASS, {
+    variables: {
+      classId: myclass?.id,
+    },
+    refetchQueries: [
+      {
+        query: GET_CLASSES,
+        variables: {
+          input: {
+            creator: { id: { equals: user?.id } },
+          },
+        },
       },
-      refetchQueries: [
-        {
-          query: GET_CLASSES,
-          variables: {
-            input: {
-              creator: { id: { equals: user?.id } },
-            },
+      { query: GET_CLASS, variables: { code: myclass?.code } },
+    ],
+  });
+
+  const [assignStudentToClass] = useMutation(ASSIGN_STUDENT_TO_CLASS, {
+    refetchQueries: [
+      {
+        query: GET_CLASSES,
+        variables: {
+          input: {
+            creator: { id: { equals: user?.id } },
           },
         },
-        { query: GET_CLASS, variables: { code: myclass?.code } },
-      ],
-    }
-  );
+      },
+    ],
+  });
 
-  const [assignStudentToClass, { loading: assignLoading }] = useMutation(
-    ASSIGN_STUDENT_TO_CLASS,
-    {
-      refetchQueries: [
-        {
-          query: GET_CLASSES,
-          variables: {
-            input: {
-              creator: { id: { equals: user?.id } },
-            },
-          },
+  const studentSignupLink = `${origin}/signup/student?code=${myclass.code}`;
+
+  const getStudentActionItems = (student) => {
+    const items = [
+      {
+        key: "remove",
+        label: t("studentsTab.removeFromClass"),
+        danger: true,
+        onClick: () => {
+          if (confirm(t("studentsTab.removeStudent"))) {
+            removeFromClass({
+              variables: { studentId: student?.id },
+            }).catch((err) => {
+              alert(err.message);
+            });
+          }
         },
-        // { query: GET_CLASS },
-      ],
-    }
-  );
+      },
+    ];
 
-  const copyLink = () => {
-    const copyLink = `${origin}/signup/student?code=${myclass.code}`;
-    const temp = document.createElement("input");
-    document.body.append(temp);
-    temp.value = copyLink;
-    temp.select();
-    document.execCommand("copy");
-    temp.remove();
-    alert(t("studentsTab.copiedLink"));
+    if (otherClasses.length > 0) {
+      items.push({
+        key: "add-header",
+        static: true,
+        label: t("studentsTab.addToClass"),
+      });
+      otherClasses.forEach((myClass) => {
+        items.push({
+          key: `add-${myClass.id}`,
+          label: myClass.title,
+          onClick: () => {
+            if (confirm(t("studentsTab.assignToClass"))) {
+              assignStudentToClass({
+                variables: {
+                  studentId: student?.id,
+                  classId: myClass?.id,
+                },
+              }).catch((err) => {
+                alert(err.message);
+              });
+            }
+          },
+        });
+      });
+    }
+
+    return items;
   };
+
+  const UsernameRenderer = (params) => {
+    const student = params?.data;
+    if (!student) return null;
+    return (
+      <Link
+        href={{ pathname: `/dashboard/students/${student?.publicId}` }}
+        style={{ color: "inherit", textDecoration: "none", fontWeight: 500 }}
+      >
+        {student.username}
+      </Link>
+    );
+  };
+
+  const ActionsRenderer = (params) => {
+    const student = params?.data;
+    if (!student) return null;
+    return (
+      <DropdownMenu
+        triggerLabel={t("assignment.more", {}, { default: "More" })}
+        items={getStudentActionItems(student)}
+      />
+    );
+  };
+
+  const columnDefs = [
+    {
+      field: "username",
+      headerName: t("studentsTab.student"),
+      cellRenderer: UsernameRenderer,
+      filter: "agTextColumnFilter",
+      sortable: true,
+      flex: 1,
+      minWidth: 160,
+    },
+    {
+      field: "email",
+      headerName: t("studentsTab.email"),
+      filter: "agTextColumnFilter",
+      sortable: true,
+      flex: 1,
+      minWidth: 200,
+    },
+    {
+      field: "actions",
+      headerName: t("assignment.actions", {}, { default: "Actions" }),
+      cellRenderer: ActionsRenderer,
+      suppressFilter: true,
+      sortable: false,
+      width: 150,
+      pinned: "right",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "visible",
+      },
+    },
+  ];
 
   if (action === "overview") {
     return <StudyCompletionOverview myclass={myclass} user={user} />;
   }
 
   return (
-    <div className="students">
-      <div className="topNavigation">
-        <div>
-          <p>
-            {t("studentsTab.shareMessage")}
-          </p>
-          <div className="copyArea">
-            <div className="link">
-              {origin}/signup/student/?code={myclass.code}
-            </div>
-            <div className="copyButton" onClick={() => copyLink()}>
-              {t("studentsTab.copy")}
-            </div>
-          </div>
+    <div className="classTabPage students">
+      <section className="classTabSection">
+        <div className="classTabSectionHeader">
+          <h3>{t("studentsTab.tab", {}, { default: "Students" })}</h3>
+          <p>{t("studentsTab.shareMessage")}</p>
         </div>
-        <div>
-          <p>{t("studentsTab.code")}</p>
-          <h2>{myclass.code}</h2>
-        </div>
-      </div>
-
-      <div className="buttons">
-        <Link
-          href={{
-            pathname: `/dashboard/myclasses/${myclass?.code}`,
-            query: {
-              page: "students",
-              action: "overview",
-            },
-          }}
-        >
-          <button className="secondary">{t("studentsTab.completionOverview")}</button>
-        </Link>
-
-        <Link
-          href={{
-            pathname: `/dashboard/resources`,
-            query: {
-              c: myclass?.id,
-            },
-          }}
-        >
-          <button className="secondary">{t("studentsTab.classResources")}</button>
-        </Link>
-      </div>
-
-      <div className="listHeader">
-        <div></div>
-        <div>{t("studentsTab.student")}</div>
-        <div>{t("studentsTab.email")}</div>
-      </div>
-      {students.map((student, i) => {
-        return (
-          <div key={i} className="listWrapper">
-            <Dropdown className="dropdownMenu" simple>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  className="dropdownItem"
-                  name="remove"
-                  onClick={() => {
-                    if (
-                      confirm(
-                        t("studentsTab.removeStudent")
-                      )
-                    ) {
-                      removeFromClass({
-                        variables: { studentId: student?.id },
-                      }).catch((err) => {
-                        alert(err.message);
-                      });
-                    }
-                  }}
-                >
-                  {t("studentsTab.removeFromClass")}
-                </Dropdown.Item>
-                <Dropdown
-                  item
-                  simple
-                  text={t("studentsTab.addToClass")}
-                  className="dropdownItem"
-                  options={otherClasses.map((myClass) => ({
-                    key: myClass.id,
-                    text: myClass.title,
-                    className: "dropdownItem",
-                    onClick: () => {
-                      if (
-                        confirm(
-                          t("studentsTab.assignToClass")
-                        )
-                      ) {
-                        assignStudentToClass({
-                          variables: {
-                            studentId: student?.id,
-                            classId: myClass?.id,
-                          },
-                        }).catch((err) => {
-                          alert(err.message);
-                        });
-                      }
-                    },
-                  }))}
-                />
-              </Dropdown.Menu>
-            </Dropdown>
-
-            <Link
-              href={{
-                pathname: `/dashboard/students/${student?.publicId}`,
-              }}
-            >
-              <div className="listRow" style={{ cursor: "pointer" }}>
-                <div>{student.username}</div>
-                <div>{student?.email}</div>
+        <div className="classTabInformationBlock">
+          <div className="block">
+            <div className="classTabInviteBlock">
+              <p className="classTabInviteLabel">
+                {t("studentsTab.shareMessage")}
+              </p>
+              <div className="classTabCopyArea">
+                <div className="classTabInviteLink">
+                  {origin}/signup/student/?code={myclass.code}
+                </div>
+                <CopyButton value={studentSignupLink} style={{ fontWeight: 500 }}>
+                  {t("studentsTab.copy")}
+                </CopyButton>
               </div>
-            </Link>
+            </div>
           </div>
-        );
-      })}
+          <div className="block">
+            <p className="classTabInviteLabel">{t("studentsTab.code")}</p>
+            <div className="classTabCopyArea">
+              <p className="classTabCodeValue">{myclass.code}</p>
+              <CopyButton value={myclass.code} style={{ fontWeight: 500 }}>
+                {t("studentsTab.copy")}
+              </CopyButton>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* <section className="classTabSection">
+        <div className="classTabSectionHeader">
+          <h3>
+            {t("studentsTab.quickActions", {}, { default: "Quick actions" })}
+          </h3>
+        </div>
+        <div className="classTabActionBar">
+          <Link
+            href={{
+              pathname: `/dashboard/myclasses/${myclass?.code}`,
+              query: { page: "students", action: "overview" },
+            }}
+            style={{ textDecoration: "none" }}
+          >
+            <Button variant="outline">
+              {t("studentsTab.completionOverview")}
+            </Button>
+          </Link>
+          <Link
+            href={{
+              pathname: `/dashboard/resources`,
+              query: { c: myclass?.id },
+            }}
+            style={{ textDecoration: "none" }}
+          >
+            <Button variant="outline">{t("studentsTab.classResources")}</Button>
+          </Link>
+        </div>
+      </section> */}
+
+      <section className="classTabSection">
+        <div className="classTabSectionHeader">
+          <h3>
+            {t("studentsTab.roster", {}, { default: "Class roster" })}
+          </h3>
+          <p>
+            {t(
+              "studentsTab.rosterDescription",
+              { count: students.length },
+              {
+                default: "{{count}} students enrolled in this class.",
+              }
+            )}
+          </p>
+        </div>
+        {students.length === 0 ? (
+          <div className="classTabEmpty">
+            <div>
+              {t("studentsTab.noStudentsYet", {}, {
+                default:
+                  "No students have joined this class yet. Share the invite link above.",
+              })}
+            </div>
+          </div>
+        ) : (
+          <div className="classTabTable ag-theme-quartz">
+            <AgGridReact
+              rowData={students}
+              columnDefs={columnDefs}
+              getRowId={(params) => params.data?.id}
+              pagination
+              paginationPageSize={20}
+              paginationPageSizeSelector={[10, 20, 50, 100]}
+              autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
+              defaultColDef={{ resizable: true, sortable: true, filter: true }}
+            />
+          </div>
+        )}
+      </section>
     </div>
   );
 }

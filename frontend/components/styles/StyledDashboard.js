@@ -41,6 +41,13 @@ export const StyledDashboardWrapper = styled.div`
   height: 101%;
   max-height: 100vh;
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   mask-image: linear-gradient(to top, transparent, black),
     linear-gradient(to left, transparent 17px, black 17px);
   mask-size: 100% 20000px;

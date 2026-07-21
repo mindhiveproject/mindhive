@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Tutorial paso a paso"
 	},
 	"info": "Más información",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "ID del participante",
 	"permissions": "Permisos",
 	"preview": "Avance",
@@ -50,6 +58,69 @@
 		"messages": "Mensajes",
 		"profile": "Perfil",
 		"settings": "Ajustes"
+	},
+	"sponsorOnboarding": {
+		"dismiss": "",
+		"manage": "",
+		"network": {
+			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
+			"close": "",
+			"empty": "",
+			"joinButton": "",
+			"joinError": "",
+			"joining": "",
+			"joinSuccess": "",
+			"loadError": "",
+			"loading": "",
+			"modalDescription": "",
+			"modalTitle": "",
+			"pendingRequest": "",
+			"requestSuccess": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"untitled": ""
+		},
+		"opportunity": {
+			"createButton": "",
+			"createTitle": "",
+			"description": "",
+			"done": "",
+			"locked": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"viewButton": "",
+			"viewTitle": ""
+		},
+		"organization": {
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"stepLabel": "",
+			"title": ""
+		},
+		"profile": {
+			"completeTitle": "",
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"editTitle": "",
+			"openButton": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": ""
+		},
+		"status": {
+			"needsSetup": "",
+			"ready": ""
+		},
+		"subtitle": "",
+		"title": ""
 	},
 	"surveys": "Encuestas",
 	"tasks": "Tareas",

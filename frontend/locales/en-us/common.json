@@ -19,9 +19,27 @@
 	},
 	"auth": {
 		"checkYourMail": "Check your email",
+		"classNetworkInvite": {
+			"alreadyMember": "You are already a member of this class network.",
+			"bannerDescription": "Log in to join this class network.",
+			"bannerTitle": "You're joining {{networkTitle}}",
+			"invalidNetwork": "This class network invite link is invalid or has expired.",
+			"joinFailed": "We could not add you to this class network. Please try again.",
+			"joining": "Processing class network membership…",
+			"requestBannerDescription": "Log in to send a membership request to this class network.",
+			"requestBannerTitle": "You're requesting to join {{networkTitle}}",
+			"signUpAsSponsor": "Sign up as a sponsor instead",
+			"wrongRole": "Class-network membership is available to teachers, mentors, sponsors, and scientists."
+		},
 		"email": "Email",
 		"forgotPassword": "Forgot your password?",
 		"login": "Login",
+		"networkInvite": {
+			"acceptFailed": "We could not accept this network invitation. Check that you are using the invited account.",
+			"bannerDescription": "Log in or sign up with the invited email address to accept.",
+			"bannerTitle": "You're invited to join {{networkTitle}}",
+			"invalid": "This network invitation is invalid or is no longer pending."
+		},
 		"password": "Password",
 		"requestReset": "Request reset",
 		"username": "Username"
@@ -60,6 +78,7 @@
 		},
 		"title": "Data and Consent"
 	},
+	"copied": "Copied",
 	"created": {
 		"author": "Author",
 		"collaborator": "Collaborator",
@@ -76,6 +95,17 @@
 		"no": "Don't record my data at all (if you’re a MindHive student: this means your data won't be included in class demos!)",
 		"question": "How would you like us to use your data?",
 		"science": "You can use my data for science and/or educational purposes"
+	},
+	"definitionForm": {
+		"fieldRequired": "This field is required.",
+		"fixMultipleFields": "Please fix the following fields: {{fields}}",
+		"fixSingleField": "Please fix {{field}} before saving.",
+		"invalidFormat": "Invalid format.",
+		"max": "Must be at most {{max}}.",
+		"maxLength": "Must be at most {{max}} characters.",
+		"min": "Must be at least {{min}}.",
+		"saveFailed": "Save failed. Please try again.",
+		"wordLimit": "Must be at most {{max}} words."
 	},
 	"discoverDescription": "Browse our collection of studies, tasks and surveys created by high school students in the MindHive program and partner scientists. Participate in studies or preview tasks and surveys.",
 	"discoverHeader": "Discover studies, tasks and surveys",
@@ -294,6 +324,12 @@
 		"languagePreferences": "Set your language preferences",
 		"languages": "Languages",
 		"quickLinks": "Quick Links",
+		"sponsorSetup": {
+			"description": "Show the profile, organization, and opportunity setup tips on your Home page.",
+			"restoreButton": "Show setup tips on Home",
+			"title": "Sponsor setup tips",
+			"visibleNote": "Setup tips are currently visible on your Home page."
+		},
 		"title": "Settings",
 		"username": "Username"
 	},
@@ -303,6 +339,7 @@
 		"participant": "Study participant",
 		"scientist": "Scientist",
 		"sponsor": "Sponsor",
+		"sponsorNyuCuspRecommendation": "Recommended option for NYU CUSP Capstone sponsors.",
 		"student": "Student",
 		"teacher": "Teacher",
 		"title": "Which role best describes you?"

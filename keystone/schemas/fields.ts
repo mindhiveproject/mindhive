@@ -9,6 +9,10 @@ export const permissionFields = {
     defaultValue: false,
     label: "User can access Admin UI",
   }),
+  canManageForms: checkbox({
+    defaultValue: false,
+    label: "User can manage Connect form definitions",
+  }),
 };
 
 export type Permission = keyof typeof permissionFields;

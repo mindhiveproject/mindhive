@@ -1,98 +1,140 @@
 import { useQuery } from "@apollo/client";
-import { useRouter } from "next/router";
 import moment from "moment";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
+import { AgGridReact } from "ag-grid-react";
+
 import { CLASS_PROJECTS_QUERY } from "../../../Queries/Proposal";
+import Button from "../../../DesignSystem/Button";
 
-export default function ClassProjects({ myclass, user }) {
+export default function ClassProjects({ myclass }) {
   const { t } = useTranslation("classes");
-  const router = useRouter();
 
-  const { data, loading, error } = useQuery(CLASS_PROJECTS_QUERY, {
+  const { data } = useQuery(CLASS_PROJECTS_QUERY, {
     variables: { classId: myclass?.id },
   });
 
   const projects = data?.proposalBoards || [];
 
-  // if (projects.length === 0) {
-  //   return (
-  //     <div className="empty">
-  //       <div>{t("projects.noProjectsYet")}</div>
-  //     </div>
-  //   );
-  // }
+  const getCollaborators = (project) => {
+    const collaboratorMap = new Map();
+    [project?.author, ...(project?.collaborators || [])].forEach((profile) => {
+      const key = profile?.id || profile?.username;
+      if (key && profile?.username) {
+        collaboratorMap.set(key, profile.username);
+      }
+    });
+    return Array.from(collaboratorMap.values()).join(", ");
+  };
+
+  const columnDefs = [
+    {
+      field: "title",
+      headerName: t("projects.projectTitle"),
+      filter: "agTextColumnFilter",
+      sortable: true,
+      flex: 2,
+      minWidth: 180,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: {
+        whiteSpace: "normal",
+        lineHeight: "1.5",
+        display: "flex",
+        alignItems: "center",
+        wordBreak: "break-word",
+      },
+    },
+    {
+      field: "collaborators",
+      headerName: t("projects.collaborators"),
+      valueGetter: (params) => getCollaborators(params?.data),
+      filter: "agTextColumnFilter",
+      sortable: true,
+      flex: 1,
+      minWidth: 160,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: {
+        whiteSpace: "normal",
+        lineHeight: "1.5",
+        display: "flex",
+        alignItems: "center",
+        wordBreak: "break-word",
+      },
+    },
+    {
+      field: "createdAt",
+      headerName: t("projects.dateCreated"),
+      valueGetter: (params) => params?.data?.createdAt || null,
+      valueFormatter: (params) =>
+        params.value ? moment(params.value).format("MMMM D, YYYY") : "",
+      filter: "agDateColumnFilter",
+      sortable: true,
+      flex: 1,
+      minWidth: 150,
+    },
+  ];
 
   return (
-    <>
-      <div>
-        <Link
-          href={{
-            pathname: `/dashboard/myclasses/${myclass?.code}`,
-            query: {
-              page: "board",
-            },
-          }}
-        >
-          <button>{t("projects.manageClassProjectBoard")}</button>
-        </Link>
-      </div>
+    <div className="classTabPage projects">
+      <section className="classTabSection">
+        <div className="classTabSectionHeader">
+          <h3>{t("navigation.projects", {}, { default: "Projects" })}</h3>
+          <p>
+            {t(
+              "projects.listDescription",
+              { count: projects.length },
+              {
+                default:
+                  "{{count}} student project boards in this class.",
+              }
+            )}
+          </p>
+        </div>
+        <div className="classTabActionBar">
+          <Link
+            href={{
+              pathname: `/dashboard/myclasses/${myclass?.code}`,
+              query: { page: "board" },
+            }}
+            style={{ textDecoration: "none" }}
+          >
+            <Button variant="filled">
+              {t("projects.manageClassProjectBoard")}
+            </Button>
+          </Link>
+        </div>
+      </section>
 
-      {projects?.length > 0 ? (
-        <div className="studies">
-          <div className="studiesHeader">
-            <div>
-              <span>{t("projects.projectTitle")} </span>
-              {/* <span
-                style={{ cursor: "pointer" }}
-                onClick={() => randomizeStudiesOrder(false)}
-              >
-                ↓
-              </span> */}
-            </div>
-            <div>{t("projects.collaborators")}</div>
-            <div>{t("projects.dateCreated")}</div>
-            {/* <div></div>
-        <div></div> */}
+      <section className="classTabSection">
+        <div className="classTabSectionHeader">
+          <h3>
+            {t("projects.studentBoards", {}, { default: "Student boards" })}
+          </h3>
+        </div>
+        {projects.length === 0 ? (
+          <div className="classTabEmpty">
+            <div>{t("projects.noProjectsYet")}</div>
           </div>
-          {projects.map((study) => {
-            const authors = [
-              study?.author?.username,
-              study?.collaborators?.map((c) => c.username),
-            ].join(", ");
-            return (
-              <div key={study?.id} className="studiesRow">
-                <div>{study?.title}</div>
-                <div>{authors}</div>
-                <div>{moment(study?.createdAt).format("MMMM D, YYYY")}</div>
-                {/* <div>
-              <a
-                target="_blank"
-                href={`/studies/${study.slug}`}
-                rel="noreferrer"
-              >
-                Study page
-              </a>
-            </div>
-            <div>
-              <a
-                target="_blank"
-                href={`/builder/studies/?selector=${study.id}`}
-                rel="noreferrer"
-              >
-                Study builder
-              </a>
-            </div> */}
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="empty">
-          <div>{t("projects.noProjectsYet")}</div>
-        </div>
-      )}
-    </>
+        ) : (
+          <div className="classTabTable ag-theme-quartz">
+            <AgGridReact
+              rowData={projects}
+              columnDefs={columnDefs}
+              getRowId={(params) => params.data?.id}
+              pagination
+              paginationPageSize={20}
+              paginationPageSizeSelector={[10, 20, 50, 100]}
+              autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
+              defaultColDef={{ resizable: true, sortable: true, filter: true }}
+            />
+          </div>
+        )}
+      </section>
+    </div>
   );
 }

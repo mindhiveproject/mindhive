@@ -94,6 +94,14 @@ export default function ManagementMain({ query, user }) {
                 </div>
               </Link>
             </div>
+
+            <div>
+              <Link href="/dashboard/admin-forms">
+                <div className="menuTitle">
+                  <p>Form Definitions</p>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

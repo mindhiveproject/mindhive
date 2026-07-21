@@ -19,9 +19,27 @@
 	},
 	"auth": {
 		"checkYourMail": "تحقق من بريدك الإلكتروني",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "بريد إلكتروني",
 		"forgotPassword": "نسيت كلمة السر؟",
 		"login": "تسجيل الدخول",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "كلمة المرور",
 		"requestReset": "طلب إعادة الضبط",
 		"username": "اسم المستخدم"
@@ -60,6 +78,7 @@
 		},
 		"title": "البيانات والموافقة"
 	},
+	"copied": "تم نسخها",
 	"created": {
 		"author": "مؤلف",
 		"collaborator": "متعاون",
@@ -76,6 +95,17 @@
 		"no": "لا تسجل بياناتي على الإطلاق (إذا كنت طالبًا في MindHive: فهذا يعني أن بياناتك لن يتم تضمينها في العروض التوضيحية للفصل الدراسي!)",
 		"question": "كيف تريدنا أن نستخدم بياناتك؟",
 		"science": "يمكنك استخدام بياناتي لأغراض علمية و/أو تعليمية"
+	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
 	},
 	"discoverDescription": "تصفح مجموعتنا من الدراسات والمهام والاستطلاعات التي أعدّها طلاب المرحلة الثانوية في برنامج MindHive وعلماء شركائنا. شارك في الدراسات أو استعرض المهام والاستطلاعات.",
 	"discoverHeader": "اكتشف الدراسات والمهام والاستطلاعات",
@@ -294,6 +324,12 @@
 		"languagePreferences": "تعيين تفضيلات اللغة الخاصة بك",
 		"languages": "اللغات",
 		"quickLinks": "روابط سريعة",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "إعدادات",
 		"username": "اسم المستخدم"
 	},
@@ -303,6 +339,7 @@
 		"participant": "مشارك في الدراسة",
 		"scientist": "عالم",
 		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "طالب",
 		"teacher": "مدرس",
 		"title": "ما هو الدور الذي يصفك بشكل أفضل؟"

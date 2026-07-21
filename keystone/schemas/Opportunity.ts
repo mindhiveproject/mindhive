@@ -12,6 +12,21 @@ import {
   file,
   virtual,
 } from "@keystone-6/core/fields";
+import { sendNotificationEmail } from "../lib/mail";
+
+const frontendUrl = () =>
+  (process.env.NODE_ENV === "development"
+    ? process.env.FRONTEND_URL_DEV
+    : process.env.FRONTEND_URL) || "https://mindhive.science";
+
+function reviewerDisplayName(p: any) {
+  if (!p) return "there";
+  return (
+    `${p.firstName || ""} ${p.lastName || ""}`.trim() ||
+    p.username ||
+    "there"
+  );
+}
 
 export const Opportunity = list({
   access: {
@@ -107,6 +122,14 @@ export const Opportunity = list({
       many: true,
     }),
 
+    // Notes left by round reviewers (see OpportunityReviewNote schema).
+    // Scoped per-(opportunity, round) so the same opp reviewed in two
+    // rounds keeps separate audit trails.
+    reviewNotes: relationship({
+      ref: "OpportunityReviewNote.opportunity",
+      many: true,
+    }),
+
     // Average of all public student ratings for this opportunity.
     // Null when no eligible ratings exist.
     publicRatingAverage: virtual({
@@ -182,6 +205,8 @@ export const Opportunity = list({
       options: [
         { label: "Draft", value: "draft" },
         { label: "Pending Review", value: "pending_review" },
+        // Teacher returned the proposal — sponsor revises and resubmits.
+        { label: "Returned", value: "returned" },
         // Teacher has pre-selected the proposal — sponsor completes follow-up
         // questionnaire before full acceptance.
         { label: "Pre-selected", value: "pre_selected" },
@@ -251,7 +276,17 @@ export const Opportunity = list({
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
-    updatedAt: timestamp(),
+    updatedAt: timestamp({
+      defaultValue: { kind: "now" },
+      hooks: {
+        async resolveInput({ operation }) {
+          if (operation === "update") {
+            return new Date().toISOString();
+          }
+          return undefined;
+        },
+      },
+    }),
   },
   hooks: {
     async resolveInput({ operation, inputData, resolvedData, item }) {
@@ -259,13 +294,10 @@ export const Opportunity = list({
       // fields (e.g. mentor from session) are not wiped by raw GraphQL input.
       const data = { ...resolvedData };
 
-      // GraphQL multiselect inputs arrive as arrays; SQLite stores JSON strings.
-      const multiselectFields = ["preferGradeLevels", "preferClassType"];
-      for (const key of multiselectFields) {
-        if (Array.isArray(data[key])) {
-          data[key] = JSON.stringify(data[key]);
-        }
-      }
+      // Multiselect serialization is handled by Keystone's multiselect field
+      // (jsonFieldTypePolyfilledForSQLite on dev SQLite). Do not JSON.stringify
+      // here — on PostgreSQL that stores a string scalar in a Json column and
+      // breaks GraphQL list resolution ("Expected Iterable") on read.
 
       if (operation !== "update" || !data.status) {
         return data;
@@ -288,7 +320,102 @@ export const Opportunity = list({
       ) {
         data.acceptedAt = new Date().toISOString();
       }
+      if (nextStatus === "returned" && prevStatus !== "returned") {
+        data.preSelectedAt = null;
+        data.acceptedAt = null;
+      }
       return data;
+    },
+    // Email reviewers when an opportunity transitions to "pending_review"
+    // (the sponsor submits it). Wrapped in try/catch so a flaky email
+    // service can't break the mutation. The mentor is skipped — they
+    // already know they just clicked submit.
+    async afterOperation({ operation, item, originalItem, context }) {
+      try {
+        if (operation !== "update" || !item) return;
+        const becamePending =
+          item.status === "pending_review" &&
+          originalItem?.status !== "pending_review";
+        const becameReturned =
+          item.status === "returned" &&
+          originalItem?.status !== "returned";
+
+        if (!becamePending && !becameReturned) return;
+
+        const fresh = await context.sudo().query.Opportunity.findOne({
+          where: { id: String(item.id) },
+          query: `
+            id
+            title
+            mentor { id email firstName lastName username }
+            rounds {
+              id
+              title
+              reviewers { id email firstName lastName username }
+            }
+          `,
+        });
+        if (!fresh) return;
+
+        const actorId = context.session?.itemId;
+        const mentorId = fresh.mentor?.id;
+        const mentorName = reviewerDisplayName(fresh.mentor);
+
+        if (becameReturned && fresh.mentor?.email && mentorId !== actorId) {
+          const link = `${frontendUrl()}/dashboard/connect/opportunities?op=${fresh.id}`;
+          try {
+            await sendNotificationEmail(
+              fresh.mentor.email,
+              `Your Capstone proposal was returned: "${fresh.title}"`,
+              `Hi ${mentorName},\n\n` +
+                `A teacher has returned your Capstone proposal "${fresh.title}" for revision. ` +
+                `Open the link below to read their notes, make changes, and resubmit for review.`,
+              link
+            );
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error(
+              `Mentor return notification failed for ${fresh.mentor.email}:`,
+              e
+            );
+          }
+          return;
+        }
+
+        if (!becamePending) return;
+
+        const seen = new Set<string>();
+
+        for (const round of fresh.rounds || []) {
+          for (const reviewer of round.reviewers || []) {
+            if (!reviewer?.email) continue;
+            if (reviewer.id === mentorId) continue; // skip self-spam
+            if (seen.has(reviewer.id)) continue;
+            seen.add(reviewer.id);
+
+            const link = `${frontendUrl()}/dashboard/connect/review?op=${fresh.id}&round=${round.id}`;
+            try {
+              await sendNotificationEmail(
+                reviewer.email,
+                `New opportunity to review: "${fresh.title}"`,
+                `Hi ${reviewerDisplayName(reviewer)},\n\n` +
+                  `${mentorName} just submitted "${fresh.title}" for review in the round "${round.title}". ` +
+                  `Open the link below to read the proposal, leave notes, and change its status.`,
+                link
+              );
+            } catch (e) {
+              // eslint-disable-next-line no-console
+              console.error(
+                `Reviewer notification failed for ${reviewer.email}:`,
+                e
+              );
+            }
+          }
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error("Opportunity afterOperation hook failed:", e);
+      }
     },
   },
 });

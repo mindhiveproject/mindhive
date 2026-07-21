@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
-import Link from "next/link";
 import styled from "styled-components";
-import { Icon, Dropdown } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { EXPLORE_ORGANIZATIONS_PAGED } from "../../../Queries/Organization";
 import FilterBar from "../FilterBar";
+import OrganizationConnectCard from "./OrganizationConnectCard";
 
 const PAGE_SIZE = 12;
 
@@ -15,6 +15,7 @@ const Shell = styled.div`
   flex-direction: column;
   gap: 32px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
@@ -38,105 +39,11 @@ const Header = styled.div`
 
 const Grid = styled.div`
   display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-`;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
-const Card = styled.a`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.1);
-  }
-
-  &:focus-visible {
-    outline: 2px solid #336f8a;
-    outline-offset: 2px;
-  }
-
-  .top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .logo {
-    width: 56px;
-    height: 56px;
-    border-radius: 12px;
-    background: #eef1f2;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    flex: none;
-  }
-
-  .logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .placeholder {
-    color: #5f6871;
-    font-weight: 700;
-    font-size: 22px;
-  }
-
-  h3 {
-    margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
-    color: #171717;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .where {
-    color: #5f6871;
-    font-size: 12px;
-  }
-
-  .mission {
-    color: #5f6871;
-    font-size: 13px;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin: 0;
-  }
-
-  .meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 12px;
-    color: #888;
-    margin-top: auto;
-    padding-top: 8px;
-    border-top: 1px solid #eef1f2;
-
-    span {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
+  @media (max-width: 759px) {
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -161,7 +68,7 @@ const Pagination = styled.nav`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;
@@ -191,30 +98,6 @@ const DOMAIN_KEYS = [
   "other",
 ];
 
-function VerifiedBadge({ t }) {
-  return (
-    <span
-      role="img"
-      aria-label={t("a11y.verified", {}, { default: "Verified" })}
-      style={{ display: "inline-flex", lineHeight: 0 }}
-    >
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="#1d6b3a"
-        aria-hidden
-      >
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-      </svg>
-    </span>
-  );
-}
-
-function DecorativeIcon({ name }) {
-  return <Icon name={name} aria-hidden />;
-}
-
 export default function OrganizationsList() {
   const { t } = useTranslation("connect");
   const [search, setSearch] = useState("");
@@ -234,7 +117,7 @@ export default function OrganizationsList() {
   );
 
   const where = useMemo(() => {
-    const conditions = [];
+    const conditions = [{ verified: { equals: true } }];
     if (search.trim()) {
       const q = search.trim();
       conditions.push({
@@ -248,7 +131,7 @@ export default function OrganizationsList() {
     if (domainFilter) {
       conditions.push({ primaryDomain: { equals: domainFilter } });
     }
-    return conditions.length ? { AND: conditions } : {};
+    return { AND: conditions };
   }, [search, domainFilter]);
 
   useEffect(() => {
@@ -326,76 +209,9 @@ export default function OrganizationsList() {
 
       {organizations.length > 0 && (
         <Grid>
-          {organizations.map((org) => {
-            const locationLabel =
-              org.department && org.location
-                ? `${org.department} · ${org.location}`
-                : org.department || org.location;
-            const oppCount = org.opportunitiesCount || 0;
-            return (
-              <Link
-                key={org.id}
-                href={{
-                  pathname: "/dashboard/connect/organizations",
-                  query: { org: org.id },
-                }}
-                passHref
-                legacyBehavior
-              >
-                <Card>
-                  <div className="top">
-                    <div className="logo">
-                      {org.logo?.url ? (
-                        <img src={org.logo.url} alt="" />
-                      ) : (
-                        <span className="placeholder" aria-hidden>
-                          {(org.name || "?").charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
-                    <div>
-                      <h3>
-                        {org.name}
-                        {org.verified && <VerifiedBadge t={t} />}
-                      </h3>
-                      {locationLabel && (
-                        <span className="where">{locationLabel}</span>
-                      )}
-                    </div>
-                  </div>
-                  {org.tagline && (
-                    <p
-                      style={{
-                        margin: 0,
-                        color: "#171717",
-                        fontSize: 13,
-                        fontStyle: "italic",
-                      }}
-                    >
-                      {org.tagline}
-                    </p>
-                  )}
-                  {org.mission && <p className="mission">{org.mission}</p>}
-                  <div className="meta">
-                    <span>
-                      <DecorativeIcon name="briefcase" />
-                      {oppCount === 1
-                        ? t(
-                            "organizationsList.opportunityCount.one",
-                            { count: oppCount },
-                            { default: "{{count}} opportunity" }
-                          )
-                        : t(
-                            "organizationsList.opportunityCount.many",
-                            { count: oppCount },
-                            { default: "{{count}} opportunities" }
-                          )}
-                    </span>
-                  </div>
-                </Card>
-              </Link>
-            );
-          })}
+          {organizations.map((org) => (
+            <OrganizationConnectCard key={org.id} org={org} />
+          ))}
         </Grid>
       )}
 

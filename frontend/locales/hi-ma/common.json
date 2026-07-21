@@ -19,9 +19,27 @@
 	},
 	"auth": {
 		"checkYourMail": "अपने ईमेल की जाँच करें",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "ईमेल",
 		"forgotPassword": "अपना कूट शब्द भूल गए?",
 		"login": "लॉग इन करें",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "पासवर्ड",
 		"requestReset": "रीसेट का अनुरोध करें",
 		"username": "उपयोगकर्ता नाम"
@@ -60,6 +78,7 @@
 		},
 		"title": "डेटा और सहमति"
 	},
+	"copied": "",
 	"created": {
 		"author": "लेखक",
 		"collaborator": "सहयोगी",
@@ -76,6 +95,17 @@
 		"no": "मेरा डेटा बिल्कुल भी रिकॉर्ड न करें (यदि आप माइंडहाइव छात्र हैं: इसका मतलब है कि आपका डेटा कक्षा डेमो में शामिल नहीं किया जाएगा!)",
 		"question": "आप चाहते हैं कि हम आपके डेटा का उपयोग किस प्रकार करें?",
 		"science": "आप मेरे डेटा का उपयोग विज्ञान और/या शैक्षिक उद्देश्यों के लिए कर सकते हैं"
+	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
 	},
 	"discoverDescription": "माइंडहाइव कार्यक्रम में हाई स्कूल के छात्रों और सहयोगी वैज्ञानिकों द्वारा तैयार किए गए अध्ययनों, कार्यों और सर्वेक्षणों के हमारे संग्रह को ब्राउज़ करें। अध्ययनों में भाग लें या कार्यों और सर्वेक्षणों का पूर्वावलोकन करें।",
 	"discoverHeader": "अध्ययन, कार्य और सर्वेक्षण खोजें",
@@ -294,6 +324,12 @@
 		"languagePreferences": "अपनी भाषा प्राथमिकताएँ निर्धारित करें",
 		"languages": "बोली",
 		"quickLinks": "त्वरित सम्पक",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "सेटिंग्स",
 		"username": "उपयोगकर्ता नाम"
 	},
@@ -303,6 +339,7 @@
 		"participant": "अध्ययन प्रतिभागी",
 		"scientist": "वैज्ञानिक",
 		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "विद्यार्थी",
 		"teacher": "अध्यापक",
 		"title": "कौन सी भूमिका आपको सबसे अच्छी तरह से वर्णित करती है?"

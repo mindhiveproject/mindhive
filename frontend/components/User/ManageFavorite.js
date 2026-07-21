@@ -1,40 +1,52 @@
+import { useMutation } from "@apollo/client";
 import { Icon } from "semantic-ui-react";
 
 import { MANAGE_FAVORITE_TASKS } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
-import { FAVORITE_TASKS } from "../Queries/Task";
+import { FAVORITE_TASKS, buildFavoriteTasksWhere } from "../Queries/Task";
 
-import { useMutation } from "@apollo/client";
+export default function ManageFavorite({
+  user,
+  search,
+  componentType,
+  id,
+  render,
+}) {
+  const isFavorite = user?.favoriteTasks?.map((t) => t?.id).includes(id);
 
-export default function ManageFavorite({ user, search, componentType, id }) {
-  const isFavorite = user?.favoriteTasks.map((t) => t?.id).includes(id);
+  const favoriteTasksVariables = {
+    where: buildFavoriteTasksWhere({
+      userId: user?.id,
+      componentType,
+      search: search || "",
+    }),
+  };
 
   const [manageFavorite] = useMutation(MANAGE_FAVORITE_TASKS, {
     refetchQueries: [
       { query: CURRENT_USER_QUERY },
-      {
-        query: FAVORITE_TASKS,
-        variables: {
-          taskType: componentType,
-          searchTerm: search,
-          userId: user?.id,
-        },
-      },
+      { query: FAVORITE_TASKS, variables: favoriteTasksVariables },
     ],
+    awaitRefetchQueries: true,
   });
 
+  const onToggle = async (e) => {
+    e?.preventDefault?.();
+    e?.stopPropagation?.();
+    await manageFavorite({
+      variables: {
+        id: user?.id,
+        taskAction: { [isFavorite ? "disconnect" : "connect"]: { id } },
+      },
+    });
+  };
+
+  if (typeof render === "function") {
+    return render({ isFavorite, onToggle });
+  }
+
   return (
-    <div
-      onClick={async (e) => {
-        e.preventDefault();
-        await manageFavorite({
-          variables: {
-            id: user?.id,
-            taskAction: { [isFavorite ? "disconnect" : "connect"]: { id } },
-          },
-        });
-      }}
-    >
+    <div onClick={onToggle}>
       {isFavorite ? (
         <Icon name="favorite" color="yellow" />
       ) : (

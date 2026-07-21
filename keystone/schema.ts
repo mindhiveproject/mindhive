@@ -13,6 +13,7 @@ import { ProfileImage } from "./schemas/ProfileImage";
 import { Permission } from "./schemas/Permission";
 import { Class } from "./schemas/Class";
 import { ClassNetwork } from "./schemas/ClassNetwork";
+import { NetworkInvite } from "./schemas/NetworkInvite";
 import { Report } from "./schemas/Report";
 import { Journal } from "./schemas/Journal";
 import { Post } from "./schemas/Post";
@@ -61,6 +62,10 @@ import { ConnectRating } from "./schemas/ConnectRating";
 import { Organization } from "./schemas/Organization";
 import { OrganizationInvite } from "./schemas/OrganizationInvite";
 import { AiThread } from "./schemas/AiThread";
+import { FormDefinition } from "./schemas/FormDefinition";
+import { FormCard } from "./schemas/FormCard";
+import { FormField } from "./schemas/FormField";
+import { OpportunityReviewNote } from "./schemas/OpportunityReviewNote";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -86,6 +91,7 @@ export const lists: Lists = {
   Permission,
   Class,
   ClassNetwork,
+  NetworkInvite,
   Report,
   Journal,
   Post,
@@ -134,4 +140,8 @@ export const lists: Lists = {
   Organization,
   OrganizationInvite,
   AiThread,
+  FormDefinition,
+  FormCard,
+  FormField,
+  OpportunityReviewNote,
 };

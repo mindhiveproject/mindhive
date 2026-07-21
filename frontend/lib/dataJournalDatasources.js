@@ -2,16 +2,43 @@
  * Data Journal datasource list filters and delete eligibility helpers.
  */
 
-/** @typedef {"uploaded" | "sharedWithMe" | "myClass" | "classNetwork" | "public"} DatasetScope */
+/** @typedef {"me" | "uploaded" | "sharedWithMe" | "myClass" | "classNetwork" | "public"} DatasetScope */
 
-/** @type {DatasetScope[]} */
-export const DATASET_SCOPES = [
+/** Atomic scopes that compose {@link DatasetScope} `"me"` (everything the user can see). */
+/** @type {Exclude<DatasetScope, "me">[]} */
+export const DATASET_ATOMIC_SCOPES = [
   "uploaded",
   "sharedWithMe",
   "myClass",
   "classNetwork",
   "public",
 ];
+
+/** @type {DatasetScope[]} */
+export const DATASET_SCOPES = ["me", ...DATASET_ATOMIC_SCOPES];
+
+/**
+ * Newest-first by `updatedAt`, falling back to `createdAt`.
+ * @template {{ updatedAt?: string | null, createdAt?: string | null }} T
+ * @param {T[] | null | undefined} datasources
+ * @returns {T[]}
+ */
+export function sortDatasourcesByMostRecent(datasources) {
+  return [...(datasources || [])].sort((a, b) => {
+    const aTime = new Date(a?.updatedAt || a?.createdAt || 0).getTime();
+    const bTime = new Date(b?.updatedAt || b?.createdAt || 0).getTime();
+    return bTime - aTime;
+  });
+}
+
+/**
+ * Sentinel where-clauses used when a scope has no matching class context.
+ * @param {Record<string, unknown> | null | undefined} where
+ */
+function isEmptyScopeSentinel(where) {
+  const idEquals = where?.id?.equals;
+  return typeof idEquals === "string" && idEquals.startsWith("__no_matching");
+}
 
 /**
  * @param {string[]} classIds
@@ -64,7 +91,25 @@ export function buildDatasourcesWhereForScope({
   directClassIds = [],
   networkClassIds = [],
 }) {
+  const scopeParams = {
+    projectId,
+    studyId,
+    userId,
+    directClassIds,
+    networkClassIds,
+  };
+
   switch (scope) {
+    case "me": {
+      // Union of every visibility path the user can see.
+      const or = DATASET_ATOMIC_SCOPES.map((atomicScope) =>
+        buildDatasourcesWhereForScope({ ...scopeParams, scope: atomicScope })
+      ).filter((where) => where && !isEmptyScopeSentinel(where));
+      if (or.length === 0) return null;
+      if (or.length === 1) return or[0];
+      return { OR: or };
+    }
+
     case "uploaded":
       if (!userId) return null;
       return {
@@ -112,6 +157,111 @@ export function buildDatasourcesWhereForScope({
     default:
       return buildDatasourcesWhere({ projectId, studyId, userId });
   }
+}
+
+/**
+ * Class ids linked to a datasource via its study / project (when those relations are loaded).
+ * @param {{
+ *   study?: { classes?: Array<{ id?: string | null }> | null } | null,
+ *   project?: {
+ *     usedInClass?: { id?: string | null } | null,
+ *     templateForClasses?: Array<{ id?: string | null }> | null,
+ *   } | null,
+ * }} datasource
+ * @returns {string[]}
+ */
+export function collectDatasourceLinkedClassIds(datasource) {
+  const ids = new Set();
+  (datasource?.study?.classes || []).forEach((c) => {
+    if (c?.id) ids.add(c.id);
+  });
+  if (datasource?.project?.usedInClass?.id) {
+    ids.add(datasource.project.usedInClass.id);
+  }
+  (datasource?.project?.templateForClasses || []).forEach((c) => {
+    if (c?.id) ids.add(c.id);
+  });
+  return [...ids];
+}
+
+/**
+ * Which atomic scopes explain why this datasource is visible to the current user
+ * (uploaded, shared with me, my class, class network, and/or public).
+ * Mirrors {@link buildDatasourcesWhereForScope} with `"me"` using list-query fields.
+ *
+ * @param {{
+ *   dataOrigin?: string | null,
+ *   author?: { id?: string | null } | null,
+ *   collaborators?: Array<{ id?: string | null }> | null,
+ *   project?: { id?: string | null, usedInClass?: { id?: string | null } | null, templateForClasses?: Array<{ id?: string | null }> | null } | null,
+ *   study?: { id?: string | null, classes?: Array<{ id?: string | null }> | null } | null,
+ *   journal?: Array<{ isPublic?: boolean | null, isTemplate?: boolean | null }> | null,
+ * }} datasource
+ * @param {{
+ *   userId?: string | null,
+ *   projectId?: string | null,
+ *   studyId?: string | null,
+ *   directClassIds?: string[],
+ *   networkClassIds?: string[],
+ * }} context
+ * @returns {Exclude<DatasetScope, "me">[]}
+ */
+export function getDatasourceVisibilityScopes(datasource, context) {
+  const {
+    userId,
+    projectId,
+    studyId,
+    directClassIds = [],
+    networkClassIds = [],
+  } = context || {};
+
+  /** @type {Exclude<DatasetScope, "me">[]} */
+  const matched = [];
+
+  if (
+    userId &&
+    datasource?.author?.id === userId &&
+    datasource?.dataOrigin === "UPLOADED"
+  ) {
+    matched.push("uploaded");
+  }
+
+  if (
+    userId &&
+    datasource?.author?.id !== userId &&
+    (datasource?.collaborators || []).some((c) => c?.id === userId)
+  ) {
+    matched.push("sharedWithMe");
+  }
+
+  const linkedClassIds = collectDatasourceLinkedClassIds(datasource);
+  if (
+    directClassIds.length > 0 &&
+    linkedClassIds.some((id) => directClassIds.includes(id))
+  ) {
+    matched.push("myClass");
+  }
+
+  const inCurrentContext =
+    (projectId != null &&
+      projectId !== "" &&
+      datasource?.project?.id === projectId) ||
+    (studyId != null && studyId !== "" && datasource?.study?.id === studyId);
+  if (
+    inCurrentContext &&
+    networkClassIds.length > 0 &&
+    linkedClassIds.some((id) => networkClassIds.includes(id))
+  ) {
+    matched.push("classNetwork");
+  }
+
+  if (
+    (datasource?.journal || []).some((j) => j?.isPublic && j?.isTemplate)
+  ) {
+    matched.push("public");
+  }
+
+  return matched;
 }
 
 /**

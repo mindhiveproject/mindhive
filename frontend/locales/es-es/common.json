@@ -19,9 +19,27 @@
 	},
 	"auth": {
 		"checkYourMail": "Revisa tu correo electrónico",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "Correo electrónico",
 		"forgotPassword": "¿Olvidaste tu contraseña?",
 		"login": "Acceso",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "Contraseña",
 		"requestReset": "Solicitar restablecimiento",
 		"username": "Nombre de usuario"
@@ -60,6 +78,7 @@
 		},
 		"title": "Datos y consentimiento"
 	},
+	"copied": "Copiado",
 	"created": {
 		"author": "Autor",
 		"collaborator": "Colaborador",
@@ -76,6 +95,17 @@
 		"no": "No registres mis datos en absoluto (si eres un estudiante de MindHive: ¡esto significa que tus datos no se incluirán en las demostraciones de clase!)",
 		"question": "¿Cómo desea que utilicemos sus datos?",
 		"science": "Puedes utilizar mis datos con fines científicos y/o educativos."
+	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
 	},
 	"discoverDescription": "Explora nuestra colección de estudios, tareas y encuestas creadas por estudiantes de secundaria del programa MindHive y científicos colaboradores. Participa en estudios o consulta las tareas y encuestas.",
 	"discoverHeader": "Descubra estudios, tareas y encuestas",
@@ -294,6 +324,12 @@
 		"languagePreferences": "Establezca sus preferencias de idioma",
 		"languages": "Idiomas",
 		"quickLinks": "Enlaces rápidos",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Ajustes",
 		"username": "Nombre de usuario"
 	},
@@ -303,6 +339,7 @@
 		"participant": "Participante del estudio",
 		"scientist": "Científico",
 		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "Alumno",
 		"teacher": "Maestro",
 		"title": "¿Qué rol te describe mejor?"

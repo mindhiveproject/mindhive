@@ -7,6 +7,7 @@ import { Icon, Label, Dropdown } from "semantic-ui-react";
 import { MY_CONNECT_ROUNDS } from "../../../Queries/ConnectRound";
 import { DELETE_CONNECT_ROUND } from "../../../Mutations/ConnectRound";
 import FilterBar from "../FilterBar";
+import Button from "../../../DesignSystem/Button";
 
 const Shell = styled.div`
   display: flex;
@@ -37,25 +38,6 @@ const TopBar = styled.div`
     margin: 4px 0 0;
     color: #5f6871;
     font-size: 14px;
-  }
-`;
-
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: none;
-  background: #336f8a;
-  color: #ffffff;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-
-  &:hover {
-    background: #244f63;
   }
 `;
 
@@ -118,7 +100,7 @@ const CardActions = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Nunito", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;
@@ -142,6 +124,7 @@ const Empty = styled.div`
 
 
 const STATUS_COLORS = {
+  draft: "grey",
   preferences_open: "green",
   preferences_closed: "yellow",
   matching: "blue",
@@ -150,6 +133,7 @@ const STATUS_COLORS = {
 };
 
 const STATUS_LABELS = {
+  draft: "Draft",
   preferences_open: "Preferences open",
   preferences_closed: "Preferences closed",
   matching: "Matching",
@@ -166,13 +150,31 @@ function formatDate(value) {
   }
 }
 
+function collectManagedRounds(profile) {
+  const seen = new Map();
+  (profile?.connectRoundsCreated || []).forEach((round) => {
+    if (round?.id) seen.set(round.id, round);
+  });
+  (profile?.adminOfClassNetworks || []).forEach((network) => {
+    (network?.connectRounds || []).forEach((round) => {
+      if (round?.id && !seen.has(round.id)) {
+        seen.set(round.id, round);
+      }
+    });
+  });
+  return Array.from(seen.values());
+}
+
 export default function RoundsList() {
   const { data, loading, refetch } = useQuery(MY_CONNECT_ROUNDS, {
     fetchPolicy: "cache-and-network",
   });
   const [deleteConnectRound] = useMutation(DELETE_CONNECT_ROUND);
 
-  const rounds = data?.authenticatedItem?.connectRoundsCreated || [];
+  const rounds = useMemo(
+    () => collectManagedRounds(data?.authenticatedItem),
+    [data],
+  );
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState(null);
@@ -228,10 +230,9 @@ export default function RoundsList() {
             query: { round: "new" },
           }}
         >
-          <PrimaryButton type="button">
-            <Icon name="plus" />
+          <Button type="button" variant="filled">
             New round
-          </PrimaryButton>
+          </Button>
         </Link>
       </TopBar>
 

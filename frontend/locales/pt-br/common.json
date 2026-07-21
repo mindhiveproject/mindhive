@@ -19,9 +19,27 @@
 	},
 	"auth": {
 		"checkYourMail": "Verifique seu e-mail",
+		"classNetworkInvite": {
+			"alreadyMember": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalidNetwork": "",
+			"joinFailed": "",
+			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
+			"signUpAsSponsor": "",
+			"wrongRole": ""
+		},
 		"email": "E-mail",
 		"forgotPassword": "Esqueceu sua senha?",
 		"login": "Conecte-se",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "Senha",
 		"requestReset": "Solicitar redefinição",
 		"username": "Nome de usuário"
@@ -60,6 +78,7 @@
 		},
 		"title": "Dados e Consentimento"
 	},
+	"copied": "Copiado",
 	"created": {
 		"author": "Autor",
 		"collaborator": "Colaborador",
@@ -76,6 +95,17 @@
 		"no": "Não registre meus dados de forma alguma (se você for um aluno do MindHive: isso significa que seus dados não serão incluídos nas demonstrações de aula!)",
 		"question": "Como você gostaria que usássemos seus dados?",
 		"science": "Você pode usar meus dados para fins científicos e/ou educacionais"
+	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
 	},
 	"discoverDescription": "Navegue pela nossa coleção de estudos, tarefas e pesquisas criadas por alunos do ensino médio do programa MindHive e cientistas parceiros. Participe de estudos ou visualize tarefas e pesquisas.",
 	"discoverHeader": "Descubra estudos, tarefas e pesquisas",
@@ -294,6 +324,12 @@
 		"languagePreferences": "Defina suas preferências de idioma",
 		"languages": "Idiomas",
 		"quickLinks": "Links rápidos",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Configurações",
 		"username": "Nome de usuário"
 	},
@@ -303,6 +339,7 @@
 		"participant": "Participante do estudo",
 		"scientist": "Cientista",
 		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "Estudante",
 		"teacher": "Professor",
 		"title": "Qual função melhor descreve você?"

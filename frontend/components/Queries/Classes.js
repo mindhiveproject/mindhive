@@ -66,9 +66,11 @@ export const GET_CLASS = gql`
         slug
         title
         author {
+          id
           username
         }
         collaborators {
+          id
           username
         }
         participants {
@@ -77,13 +79,32 @@ export const GET_CLASS = gql`
         createdAt
       }
       networks {
+        id
         title
         description
+        isPublic
+        settings
         creator {
+          id
           username
         }
+        admins {
+          id
+          username
+          firstName
+          lastName
+          email
+        }
         classes {
+          id
           title
+        }
+        memberOrganizations {
+          id
+          name
+        }
+        opportunities {
+          id
         }
         createdAt
       }

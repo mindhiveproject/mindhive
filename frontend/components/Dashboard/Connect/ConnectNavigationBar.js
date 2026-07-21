@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import { UserContext } from "../../Global/Authorized";
 import useConnectRole from "./useConnectRole";
 
 const NAV_DROPDOWN_TRIGGER_STYLE = {
@@ -22,6 +23,7 @@ const NAV_CONNECT_DROPDOWN_TRIGGER_STYLE = {
 
 const CONNECT_NAV_ICONS = {
   organizations: "/assets/connect/building.svg",
+  classNetworks: "/assets/connect/network.svg",
   opportunities: "/assets/connect/magnifier.svg",
   connect: "/assets/connect/globe.svg",
 };
@@ -100,10 +102,21 @@ function ConnectNavDropdown({
 
 export default function ConnectNavigationBar() {
   const { t } = useTranslation("connect");
-  const { isAdmin, isTeacher, isMentor, isStudent } = useConnectRole();
+  const user = useContext(UserContext);
+  const {
+    isAdmin,
+    isTeacher,
+    isMentor,
+    isStudent,
+    isScientist,
+    isReviewer,
+    isSponsor,
+    isClassNetworkAdmin,
+    adminClassNetworkIds,
+  } = useConnectRole();
 
-  const connectOptions = useMemo(
-    () => [
+  const connectOptions = useMemo(() => {
+    const items = [
       {
         value: "exploreConnect",
         label: t("exploreConnect", {}, { default: "Explore Connect" }),
@@ -114,9 +127,31 @@ export default function ConnectNavigationBar() {
         label: t("savedConnections", {}, { default: "Saved Connections" }),
         href: "/dashboard/connect/my",
       },
-    ],
-    [t],
-  );
+    ];
+    const canAccessMyProfile =
+      !!user?.publicId &&
+      (isAdmin ||
+        isTeacher ||
+        isMentor ||
+        isScientist ||
+        isClassNetworkAdmin);
+    if (canAccessMyProfile) {
+      items.push({
+        value: "myProfile",
+        label: t("myProfile", {}, { default: "My profile" }),
+        href: "/dashboard/connect/profile",
+      });
+    }
+    return items;
+  }, [
+    t,
+    user?.publicId,
+    isAdmin,
+    isTeacher,
+    isMentor,
+    isScientist,
+    isClassNetworkAdmin,
+  ]);
 
   const organizationOptions = useMemo(
     () => [
@@ -128,6 +163,40 @@ export default function ConnectNavigationBar() {
     ],
     [t],
   );
+
+  const classNetworkOptions = useMemo(() => {
+    const canExploreNetworks = isAdmin || isTeacher || isMentor || isSponsor;
+    const canManageNetworks =
+      isAdmin || isClassNetworkAdmin || adminClassNetworkIds.length > 0;
+    const items = [
+      {
+        value: "explorePublicNetworks",
+        label: t("nav.explorePublicNetwork", {}, {
+          default: "Explore public network",
+        }),
+        href: "/dashboard/connect/networks",
+        visible: canExploreNetworks,
+      },
+      {
+        value: "manageNetworks",
+        label: t("nav.manageNetwork", {}, { default: "Manage network" }),
+        href: "/dashboard/connect/networks?mode=manage",
+        visible: canManageNetworks,
+      },
+    ];
+
+    return items
+      .filter((item) => item.visible)
+      .map(({ value, label, href }) => ({ value, label, href }));
+  }, [
+    t,
+    isAdmin,
+    isTeacher,
+    isMentor,
+    isSponsor,
+    isClassNetworkAdmin,
+    adminClassNetworkIds,
+  ]);
 
   const opportunityOptions = useMemo(() => {
     const items = [
@@ -153,7 +222,7 @@ export default function ConnectNavigationBar() {
         value: "matchingRounds",
         label: t("nav.matchingRounds", {}, { default: "Matching rounds" }),
         href: "/dashboard/connect/rounds",
-        visible: isTeacher || isAdmin,
+        visible: isTeacher || isAdmin || isClassNetworkAdmin,
       },
       {
         value: "questionLibrary",
@@ -171,14 +240,28 @@ export default function ConnectNavigationBar() {
         value: "matches",
         label: t("nav.matches", {}, { default: "Matches" }),
         href: "/dashboard/connect/matches",
-        visible: isTeacher || isAdmin,
+        visible: isTeacher || isAdmin || isClassNetworkAdmin,
+      },
+      {
+        value: "reviewQueue",
+        label: t("nav.reviewQueue", {}, { default: "Review queue" }),
+        href: "/dashboard/connect/review-queue",
+        visible: isReviewer || isAdmin,
       },
     ];
 
     return items
       .filter((item) => item.visible)
       .map(({ value, label, href }) => ({ value, label, href }));
-  }, [t, isAdmin, isTeacher, isMentor, isStudent]);
+  }, [
+    t,
+    isAdmin,
+    isTeacher,
+    isMentor,
+    isStudent,
+    isReviewer,
+    isClassNetworkAdmin,
+  ]);
 
   return (
     <NavigationBar
@@ -191,6 +274,20 @@ export default function ConnectNavigationBar() {
         ariaLabelDefault="Organizations"
         options={organizationOptions}
         icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.organizations} width={22} height={16} />}
+      />
+      <ConnectNavDropdown
+        placeholderKey="nav.classNetworks"
+        placeholderDefault="Networks"
+        ariaLabelKey="nav.classNetworks"
+        ariaLabelDefault="Networks"
+        options={classNetworkOptions}
+        icon={
+          <NavDropdownIcon
+            src={CONNECT_NAV_ICONS.classNetworks}
+            width={16}
+            height={16}
+          />
+        }
       />
       <ConnectNavDropdown
         placeholderKey="nav.opportunities"

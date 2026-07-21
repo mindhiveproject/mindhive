@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { Icon, Dropdown } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 
 import useForm from "../../../../lib/useForm";
 import {
@@ -11,51 +11,138 @@ import {
   MY_CONNECT_ROUNDS,
   NETWORK_OPPORTUNITIES_FOR_ROUND,
 } from "../../../Queries/ConnectRound";
-import { MY_CLASS_NETWORKS_FOR_OPPORTUNITY } from "../../../Queries/Opportunity";
+import { OPPORTUNITY_EDITOR_CLASS_NETWORKS } from "../../../Queries/Opportunity";
 import { QUESTION_LIBRARY } from "../../../Queries/ConnectQuestion";
 import {
   CREATE_CONNECT_ROUND,
   UPDATE_CONNECT_ROUND,
 } from "../../../Mutations/ConnectRound";
+import ReviewersPanel from "./ReviewersPanel";
+import Button from "../../../DesignSystem/Button";
+import {
+  STATUS_OPTIONS,
+  ALGO_OPTIONS,
+  ALGO_DESCRIPTIONS,
+  EMPTY_FORM,
+  toDateInputValue,
+  toIsoOrNull,
+  formatDateShort,
+  isExpired,
+} from "./roundFormConfig";
+import { collectMemberClassNetworks } from "../../../../lib/opportunityClassNetworks";
+
+const BACK_CHEVRON = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
+      fill="currentColor"
+    />
+  </svg>
+);
 
 const Shell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
+  padding-top: 0px;
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
+  scroll-padding-top: 126px;
 `;
 
-const TopBar = styled.div`
+const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
+  position: sticky;
+  top: 70px;
+  z-index: 5;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px 16px;
+  margin: -8px calc(-1 * clamp(16px, 6vw, 64px)) 8px;
+  padding: 10px clamp(16px, 6vw, 64px);
+  background: rgba(247, 249, 248, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(211, 218, 224, 0.85);
+`;
+
+const TopBarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 220px;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-width: 0;
+  flex: 1 1 auto;
 
   h1 {
     margin: 0;
+    min-width: 0;
+    max-width: 100%;
     font-family: "Lato", sans-serif;
-    font-size: clamp(24px, 3vw, 32px);
+    font-size: clamp(20px, 2.8vw, 26px);
     font-weight: 600;
     color: #171717;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
 const BackLink = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   background: none;
   border: none;
+  border-radius: 8px;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
-  padding: 0;
+
+  &:hover:not(:disabled) {
+    background: rgba(51, 111, 138, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
+  }
+`;
+
+const Actions = styled.div`
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
 `;
 
 const Card = styled.div`
@@ -164,122 +251,9 @@ const OpportunityRow = styled.label`
   }
 `;
 
-const Actions = styled.div`
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-`;
-
-const Button = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: 1px solid ${({ $primary }) => ($primary ? "#336f8a" : "#d3dae0")};
-  background: ${({ $primary }) => ($primary ? "#336f8a" : "#ffffff")};
-  color: ${({ $primary }) => ($primary ? "#ffffff" : "#336f8a")};
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const STATUS_OPTIONS = [
-  { key: "preferences_open", text: "Preferences open", value: "preferences_open" },
-  { key: "preferences_closed", text: "Preferences closed", value: "preferences_closed" },
-  { key: "matching", text: "Matching", value: "matching" },
-  { key: "published", text: "Published", value: "published" },
-  { key: "archived", text: "Archived", value: "archived" },
-];
-
-const ALGO_OPTIONS = [
-  { key: "stable_matching", text: "Stable matching (Gale-Shapley)", value: "stable_matching" },
-  { key: "score_based", text: "Score-based", value: "score_based" },
-  { key: "teacher_curated", text: "Teacher-curated", value: "teacher_curated" },
-];
-
-const ALGO_DESCRIPTIONS = {
-  stable_matching: {
-    title: "Stable matching (Gale-Shapley)",
-    body:
-      "Produces an assignment where no student-Opportunity pair would both rather swap with another pair. " +
-      "Students propose to their top choice; Opportunities tentatively accept up to capacity and reject lower-scoring " +
-      "candidates as better ones arrive. Strong fairness guarantees — defensible to students who ask why they didn't get their first pick.",
-  },
-  score_based: {
-    title: "Score-based (greedy)",
-    body:
-      "Computes a score for every (student, Opportunity) pair from rank (1 = top, weighted ×10) plus stars (×2), " +
-      "then walks the sorted candidates and assigns greedily while respecting each Opportunity's capacity. " +
-      "Simple and transparent — a teacher can hand-verify any pair's score. May produce slightly less stable groupings than the stable algorithm.",
-  },
-  teacher_curated: {
-    title: "Teacher-curated",
-    body:
-      "The system proposes ranked candidates per Opportunity but does NOT assign anyone automatically. " +
-      "You manually drag students into Opportunities yourself. Best when the round is small or when you have important " +
-      "context the algorithm can't see (a student's prior relationship with a mentor, accessibility needs, etc.).",
-  },
-};
-
-const EMPTY_FORM = {
-  title: "",
-  description: "",
-  status: "preferences_open",
-  openAt: "",
-  closeAt: "",
-  matchingAlgorithm: "stable_matching",
-};
-
-function toDateInputValue(iso) {
-  if (!iso) return "";
-  try {
-    return new Date(iso).toISOString().slice(0, 10);
-  } catch {
-    return "";
-  }
-}
-
-function toIsoOrNull(dateStr) {
-  if (!dateStr) return null;
-  try {
-    return new Date(dateStr).toISOString();
-  } catch {
-    return null;
-  }
-}
-
-function formatDateShort(iso) {
-  if (!iso) return null;
-  try {
-    return new Date(iso).toLocaleDateString(undefined, {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  } catch {
-    return null;
-  }
-}
-
-function isExpired(iso) {
-  if (!iso) return false;
-  try {
-    return new Date(iso).getTime() < Date.now();
-  } catch {
-    return false;
-  }
-}
-
 export default function RoundEditor({ roundId }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const isNew = roundId === "new";
 
   const { data: existing, loading: loadingRound } = useQuery(
@@ -291,8 +265,8 @@ export default function RoundEditor({ roundId }) {
     }
   );
 
-  const { data: networksData } = useQuery(MY_CLASS_NETWORKS_FOR_OPPORTUNITY);
-  const allNetworks = networksData?.classNetworks || [];
+  const { data: networksData } = useQuery(OPPORTUNITY_EDITOR_CLASS_NETWORKS);
+  const allNetworks = collectMemberClassNetworks(networksData?.authenticatedItem);
 
   const round = existing?.connectRound;
 
@@ -307,7 +281,7 @@ export default function RoundEditor({ roundId }) {
     handleMultipleUpdate({
       title: round.title || "",
       description: round.description || "",
-      status: round.status || "preferences_open",
+      status: round.status || "draft",
       openAt: toDateInputValue(round.openAt),
       closeAt: toDateInputValue(round.closeAt),
       matchingAlgorithm: round.matchingAlgorithm || "stable_matching",
@@ -367,6 +341,19 @@ export default function RoundEditor({ roundId }) {
     );
   };
 
+  const handleStatusChange = (value) => {
+    if (
+      inputs.status === "draft" &&
+      value === "preferences_open" &&
+      !window.confirm(
+        "Students in this network will see this round and can submit preferences. Continue?"
+      )
+    ) {
+      return;
+    }
+    handleMultipleUpdate({ status: value });
+  };
+
   const handleSave = async () => {
     if (!inputs.title?.trim()) {
       alert("Title is required.");
@@ -387,7 +374,7 @@ export default function RoundEditor({ roundId }) {
             title: inputs.title,
             description: inputs.description || "",
             classNetwork: { connect: { id: selectedNetwork } },
-            status: inputs.status || "preferences_open",
+            status: inputs.status || "draft",
             openAt: toIsoOrNull(inputs.openAt),
             closeAt: toIsoOrNull(inputs.closeAt),
             matchingAlgorithm:
@@ -409,7 +396,7 @@ export default function RoundEditor({ roundId }) {
             title: inputs.title,
             description: inputs.description || "",
             classNetwork: { connect: { id: selectedNetwork } },
-            status: inputs.status || "preferences_open",
+            status: inputs.status || "draft",
             openAt: toIsoOrNull(inputs.openAt),
             closeAt: toIsoOrNull(inputs.closeAt),
             matchingAlgorithm:
@@ -440,38 +427,69 @@ export default function RoundEditor({ roundId }) {
     );
   }
 
+  const entityTitle = (inputs.title || "").trim();
+  const pageTitle = entityTitle
+    ? entityTitle
+    : isNew
+    ? t("matchingRound.editor.pageTitleNew", {}, {
+        default: "New matching round",
+      })
+    : t("matchingRound.editor.pageTitleEdit", {}, {
+        default: "Edit round",
+      });
+  const backLabel = t("matchingRound.editor.backLink", {}, {
+    default: "Back to rounds",
+  });
+  const primaryLabel = saving
+    ? t("matchingRound.editor.saving", {}, { default: "Saving…" })
+    : isNew
+    ? t("matchingRound.editor.create", {}, { default: "Create round" })
+    : t("matchingRound.editor.save", {}, { default: "Save changes" });
+  const manageMatchesLabel = t("matchingRound.editor.manageMatches", {}, {
+    default: "Manage matches",
+  });
+
   return (
     <Shell>
       <TopBar>
-        <div>
-          <BackLink type="button" onClick={handleCancel}>
-            <Icon name="arrow left" /> Back to rounds
-          </BackLink>
-          <h1>{isNew ? "New matching round" : "Edit round"}</h1>
-        </div>
-        {!isNew && (
-          <Link
-            href={{
-              pathname: "/dashboard/connect/matches",
-              query: { round: roundId },
-            }}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "8px 16px",
-              borderRadius: 100,
-              border: "1px solid #336f8a",
-              color: "#336f8a",
-              fontFamily: "Nunito",
-              fontWeight: 600,
-              fontSize: 13,
-              textDecoration: "none",
-            }}
+        <TopBarLeft>
+          <BackLink
+            type="button"
+            onClick={handleCancel}
+            disabled={saving}
+            aria-label={backLabel}
+            title={backLabel}
           >
-            <Icon name="random" /> Manage matches
-          </Link>
-        )}
+            {BACK_CHEVRON}
+          </BackLink>
+          <TitleRow>
+            <h1 title={pageTitle}>{pageTitle}</h1>
+          </TitleRow>
+        </TopBarLeft>
+        <Actions>
+          {!isNew && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() =>
+                router.push({
+                  pathname: "/dashboard/connect/matches",
+                  query: { round: roundId },
+                })
+              }
+            >
+              {manageMatchesLabel}
+            </Button>
+          )}
+          <Button
+            type="button"
+            variant="filled"
+            onClick={handleSave}
+            disabled={saving}
+          >
+            {primaryLabel}
+          </Button>
+        </Actions>
       </TopBar>
 
       <Card>
@@ -547,9 +565,7 @@ export default function RoundEditor({ roundId }) {
               selection
               options={STATUS_OPTIONS}
               value={inputs.status}
-              onChange={(_, { value }) =>
-                handleMultipleUpdate({ status: value })
-              }
+              onChange={(_, { value }) => handleStatusChange(value)}
             />
           </Field>
           <Field>
@@ -718,14 +734,7 @@ export default function RoundEditor({ roundId }) {
         )}
       </Card>
 
-      <Actions>
-        <Button type="button" onClick={handleCancel} disabled={saving}>
-          Cancel
-        </Button>
-        <Button type="button" $primary onClick={handleSave} disabled={saving}>
-          {saving ? "Saving…" : isNew ? "Create round" : "Save changes"}
-        </Button>
-      </Actions>
+      {!isNew && round ? <ReviewersPanel round={round} /> : null}
     </Shell>
   );
 }

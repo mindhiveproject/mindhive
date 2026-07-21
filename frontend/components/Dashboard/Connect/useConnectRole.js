@@ -33,14 +33,34 @@ function hasAnyPermission(user, names) {
   return !!user?.permissions?.some((p) => names.includes(p?.name));
 }
 
+function collectIds(items) {
+  return (items || []).map((item) => item?.id).filter(Boolean);
+}
+
 export function deriveRoles(user) {
+  const isAdmin = hasAnyPermission(user, ROLE_PERMISSION_NAMES.admin);
+  const adminClassNetworkIds = Array.from(
+    new Set([
+      ...collectIds(user?.adminOfClassNetworks),
+      ...collectIds(user?.classNetworksCreated),
+    ]),
+  );
+
   return {
-    isAdmin: hasAnyPermission(user, ROLE_PERMISSION_NAMES.admin),
+    isAdmin,
     isTeacher: hasAnyPermission(user, ROLE_PERMISSION_NAMES.teacher),
     isScientist: hasAnyPermission(user, ROLE_PERMISSION_NAMES.scientist),
     isMentor: hasAnyPermission(user, ROLE_PERMISSION_NAMES.mentor),
     isStudent: hasAnyPermission(user, ROLE_PERMISSION_NAMES.student),
     isSponsor: hasAnyPermission(user, ["SPONSOR"]),
+    isClassNetworkAdmin: adminClassNetworkIds.length > 0,
+    adminClassNetworkIds,
+    canManageClassNetwork: (networkId) =>
+      isAdmin || (!!networkId && adminClassNetworkIds.includes(networkId)),
+    // Reviewer status is determined by per-round assignment, not a
+    // global permission (decision A in the Reviewer plan). True when
+    // the round creator has added this profile to at least one round.
+    isReviewer: (user?.connectRoundsReviewing?.length || 0) > 0,
     hasExpandedOpportunityEditor: hasAnyPermission(
       user,
       EXPANDED_OPPORTUNITY_EDITOR_PERMISSIONS,

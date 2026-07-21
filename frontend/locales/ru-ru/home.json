@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Пошаговое руководство"
 	},
 	"info": "Дополнительная информация",
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "Идентификатор участника",
 	"permissions": "Разрешения",
 	"preview": "Предварительный просмотр",
@@ -50,6 +58,69 @@
 		"messages": "Сообщения",
 		"profile": "Профиль",
 		"settings": "Настройки"
+	},
+	"sponsorOnboarding": {
+		"dismiss": "",
+		"manage": "",
+		"network": {
+			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
+			"close": "",
+			"empty": "",
+			"joinButton": "",
+			"joinError": "",
+			"joining": "",
+			"joinSuccess": "",
+			"loadError": "",
+			"loading": "",
+			"modalDescription": "",
+			"modalTitle": "",
+			"pendingRequest": "",
+			"requestSuccess": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"untitled": ""
+		},
+		"opportunity": {
+			"createButton": "",
+			"createTitle": "",
+			"description": "",
+			"done": "",
+			"locked": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"viewButton": "",
+			"viewTitle": ""
+		},
+		"organization": {
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"stepLabel": "",
+			"title": ""
+		},
+		"profile": {
+			"completeTitle": "",
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"editTitle": "",
+			"openButton": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": ""
+		},
+		"status": {
+			"needsSetup": "",
+			"ready": ""
+		},
+		"subtitle": "",
+		"title": ""
 	},
 	"surveys": "Опросы",
 	"tasks": "Задачи",
