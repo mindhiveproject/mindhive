@@ -99,6 +99,10 @@ export const CURRENT_USER_QUERY = gql`
           id
           title
         }
+        adminOfOrganizations {
+          id
+          name
+        }
         memberOfClassNetworks {
           id
           title
@@ -533,16 +537,16 @@ export const GET_ALL_USERS = gql`
 // Shared search filter for Connect Bank list + pagination count queries.
 const CONNECT_USERS_SEARCH_OR = `
         OR: [
-          { username: { contains: $search } }
-          { publicReadableId: { contains: $search } }
-          { publicId: { contains: $search } }
-          { firstName: { contains: $search } }
-          { lastName: { contains: $search } }
-          { location: { contains: $search } }
-          { organization: { contains: $search } }
-          { bio: { contains: $search } }
-          { bioInformal: { contains: $search } }
-          { interests: { some: { title: { contains: $search } } } }
+          { username: { contains: $search, mode: insensitive } }
+          { publicReadableId: { contains: $search, mode: insensitive } }
+          { publicId: { contains: $search, mode: insensitive } }
+          { firstName: { contains: $search, mode: insensitive } }
+          { lastName: { contains: $search, mode: insensitive } }
+          { location: { contains: $search, mode: insensitive } }
+          { organization: { contains: $search, mode: insensitive } }
+          { bio: { contains: $search, mode: insensitive } }
+          { bioInformal: { contains: $search, mode: insensitive } }
+          { interests: { some: { title: { contains: $search, mode: insensitive } } } }
         ]`;
 
 // query to get public non-student users for Connect Bank
