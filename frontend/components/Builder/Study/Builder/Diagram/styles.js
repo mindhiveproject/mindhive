@@ -148,113 +148,61 @@ export const StyledComment = styled.div`
   .comment-header-container {
     display: grid;
     grid-template-columns: 1fr auto;
-    padding: 10px 20px 10px 20px;
+    padding: 8px 14px;
     align-items: center;
-    height: 100%;
-    background-color: #ffc107;
+    gap: 8px;
+    background: linear-gradient(180deg, #ffca28 0%, #ffc107 100%);
+    border-radius: 4px 4px 0 0;
   }
 
   .comment-header-text {
     color: #1a1a1a;
-    font-size: 16px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: 150%;
+    opacity: 0.85;
   }
 
   .comment-content {
     display: grid;
-    color: #666666;
+    color: #555555;
     font-size: 16px;
     font-weight: 400;
     line-height: 24px;
-    letter-spacing: 0em;
+    letter-spacing: 0;
     text-align: left;
     height: 100%;
 
     textarea {
-      padding: 10px 20px 10px 20px;
+      padding: 12px 14px;
       min-height: 100px;
-      font-size: 18px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333333;
       resize: none;
-      border: solid 0px #fff799;
+      border: none;
       outline: none;
-      background-color: #fff799;
+      background: transparent;
+      font-family: inherit;
     }
   }
 
   .post-it {
     font-size: 20px;
     position: absolute;
-    width: 300px;
-    margin: 20px;
-    -webkit-transform: rotate(1deg);
-    -moz-transform: rotate(1deg);
-    -ms-transform: rotate(1deg);
-    -o-transform: rotate(1deg);
-    transform: rotate(1deg);
-  }
-
-  .post-it:before,
-  .post-it:after {
-    content: " ";
-    position: absolute;
-    z-index: 100;
-  }
-
-  .post-it:before {
-    background: rgba(0, 0, 0, 0.3);
-    bottom: 2px;
-    left: 4px;
-    max-height: 60px;
-    max-width: 180px;
-    height: 70%;
-    width: 90%;
-
-    -webkit-box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.3);
-    -ms-box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.3);
-    -o-box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.3);
-
-    -webkit-transform: skew(-8deg, -2deg) rotate(-1deg) translate3d(0, 0, 0);
-    -moz-transform: skew(-8deg, -2deg) rotate(-1deg) translate3d(0, 0, 0);
-    -ms-transform: skew(-8deg, -2deg) rotate(-1deg) translate3d(0, 0, 0);
-    -o-transform: skew(-8deg, -2deg) rotate(-1deg) translate3d(0, 0, 0);
-    transform: skew(-8deg, -2deg) rotate(-1deg) translate3d(0, 0, 0);
-  }
-
-  .post-it:after {
-    background: rgba(0, 0, 0, 0.1);
-    height: 30%;
-    max-height: 30px;
-    max-width: 60px;
-    right: 1px;
-    top: 0px;
-    width: 30%;
-
-    -webkit-box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.2);
-    -ms-box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.2);
-    -o-box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.2);
-
-    -webkit-transform: skew(-10deg, -5deg) rotate(-1deg) translate3d(0, 0, 0);
-    -moz-transform: skew(-10deg, -5deg) rotate(-1deg) translate3d(0, 0, 0);
-    -ms-transform: skew(-10deg, -5deg) rotate(-1deg) translate3d(0, 0, 0);
-    -o-transform: skew(-10deg, -5deg) rotate(-1deg) translate3d(0, 0, 0);
-    transform: skew(-10deg, -5deg) rotate(-1deg) translate3d(0, 0, 0);
+    width: 280px;
+    margin: 16px;
+    transform: rotate(0.6deg);
   }
 
   .post-it .inner {
     min-height: 100px;
-    background: #fff799;
+    background: linear-gradient(180deg, #fff9c4 0%, #fff59d 100%);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
     z-index: 1000;
     position: relative;
-    -webkit-transform: rotate(-1deg);
-    -moz-transform: rotate(-1deg);
-    -ms-transform: rotate(-1deg);
-    -o-transform: rotate(-1deg);
-    transform: rotate(-1deg);
   }
 `;
