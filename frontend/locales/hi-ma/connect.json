@@ -54,6 +54,7 @@
 		"pronouns": "सर्वनाम",
 		"pronounsOptions": {
 			"he": "वह उसे",
+			"preferNotToSay": "",
 			"she": "वह/उसकी",
 			"they": "वे/उन्हें"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "TAGLINE",
 		"title": "मूल जानकारी"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": ""
 	},
+	"editProfile": "",
 	"exploreConnect": "कनेक्ट का अन्वेषण करें",
 	"exploreDetail": {
 		"backLink": ""
@@ -500,6 +503,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "",
@@ -514,7 +518,8 @@
 		"opportunities": "",
 		"organizations": "",
 		"participate": "",
-		"questionLibrary": ""
+		"questionLibrary": "",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "अगला",
@@ -906,13 +911,81 @@
 	},
 	"organizationsDetail": {
 		"about": "",
+		"admins": {
+			"add": "",
+			"added": "",
+			"addError": "",
+			"adding": "",
+			"alreadyAdmin": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"empty": "",
+			"helper": "",
+			"lastAdminBlocked": "",
+			"noAccount": "",
+			"remove": "",
+			"removeConfirm": "",
+			"removed": "",
+			"removeError": "",
+			"title": ""
+		},
 		"back": "",
+		"editOrganizationDetails": "",
+		"editProfile": {
+			"cancel": "",
+			"departmentLabel": "",
+			"domainLabel": "",
+			"domainPlaceholder": "",
+			"helper": "",
+			"interestsHint": "",
+			"interestsLabel": "",
+			"interestsPlaceholder": "",
+			"locationLabel": "",
+			"logoChoose": "",
+			"logoHint": "",
+			"logoLabel": "",
+			"logoTooLarge": "",
+			"missionLabel": "",
+			"nameLabel": "",
+			"nameRequired": "",
+			"save": "",
+			"saved": "",
+			"saveError": "",
+			"saving": "",
+			"taglineLabel": "",
+			"title": "",
+			"websiteLabel": ""
+		},
+		"interests": "",
+		"invites": {
+			"alreadyMember": "",
+			"alreadyPending": "",
+			"cancel": "",
+			"cancelConfirm": "",
+			"copyInviteLink": "",
+			"copyInviteLinkAria": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"invite": "",
+			"inviteError": "",
+			"inviteSent": "",
+			"inviting": "",
+			"memberAdded": "",
+			"pendingTitle": "",
+			"waitingSignup": ""
+		},
 		"loading": "",
 		"members": "",
 		"membersHelper": "",
 		"noOpportunities": "",
 		"notFound": "",
 		"opportunities": "",
+		"removeMember": "",
+		"removeMemberConfirm": "",
+		"removeMemberError": "",
+		"removeMemberSuccess": "",
 		"solo": "",
 		"teamOf": "",
 		"unknownMember": "",
@@ -941,7 +1014,8 @@
 		"paginationLabel": "",
 		"previous": "",
 		"searchLabel": "",
-		"searchPlaceholder": ""
+		"searchPlaceholder": "",
+		"viewOrganization": ""
 	},
 	"passionNow": "इस समय आप किस चीज़ के प्रति जुनूनी हैं?",
 	"preferences": {
@@ -1048,6 +1122,7 @@
 	},
 	"savedConnections": "",
 	"savedConnectionsSubtitle": "",
+	"saveProfile": "",
 	"searchPlaceholder": "नाम, विषय या रुचि के क्षेत्र के आधार पर खोजें",
 	"skillsTab": "",
 	"steps": {

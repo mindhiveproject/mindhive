@@ -25,6 +25,7 @@ export const PENDING_INVITES_FOR_ORG = gql`
     ) {
       id
       email
+      token
       createdAt
       invitedBy {
         id
@@ -198,8 +199,28 @@ export const EXPLORE_ORGANIZATION_DETAIL = gql`
         username
         firstName
         lastName
+        email
         publicId
         tagline
+        occupation
+        image {
+          keystoneImage {
+            url
+          }
+          image {
+            publicUrlTransformed
+          }
+        }
+      }
+      admins {
+        id
+        username
+        firstName
+        lastName
+        email
+        publicId
+        tagline
+        occupation
         image {
           keystoneImage {
             url

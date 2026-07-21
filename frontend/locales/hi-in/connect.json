@@ -54,6 +54,7 @@
 		"pronouns": "सर्वनाम",
 		"pronounsOptions": {
 			"he": "वह उसे",
+			"preferNotToSay": "",
 			"she": "वह/उसकी",
 			"they": "वे/उन्हें"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "TAGLINE",
 		"title": "मूल जानकारी"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "आपके द्वारा सहेजे न गए परिवर्तन नष्ट हो जाएंगे। अपने परिवर्तनों को सहेजने के लिए वापस लौटने हेतु रद्द करें पर क्लिक करें।"
 	},
+	"editProfile": "",
 	"exploreConnect": "कनेक्ट का अन्वेषण करें",
 	"exploreDetail": {
 		"backLink": ""
@@ -515,6 +518,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "जोड़ना",
@@ -530,7 +534,8 @@
 		"opportunities": "अवसर",
 		"organizations": "संगठनों",
 		"participate": "हिस्सा लेना",
-		"questionLibrary": "प्रश्न पुस्तकालय"
+		"questionLibrary": "प्रश्न पुस्तकालय",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "अगला",
@@ -921,18 +926,86 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "के बारे में",
-		"back": "पीछे",
-		"loading": "संगठन लोड हो रहा है…",
-		"members": "सदस्यों",
-		"membersHelper": " {{name}} पर वे लोग जो MindHive पर इस संगठन का प्रबंधन करते हैं।",
-		"noOpportunities": "{{name}} ने अभी तक कोई अवसर प्रकाशित नहीं किया है।",
-		"notFound": "संगठन नहीं मिला।",
-		"opportunities": "अवसर",
-		"solo": "एकल",
-		"teamOf": " {{size}}की टीम",
-		"unknownMember": "अज्ञात",
-		"website": "वेबसाइट"
+		"about": "",
+		"admins": {
+			"add": "",
+			"added": "",
+			"addError": "",
+			"adding": "",
+			"alreadyAdmin": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"empty": "",
+			"helper": "",
+			"lastAdminBlocked": "",
+			"noAccount": "",
+			"remove": "",
+			"removeConfirm": "",
+			"removed": "",
+			"removeError": "",
+			"title": ""
+		},
+		"back": "",
+		"editOrganizationDetails": "",
+		"editProfile": {
+			"cancel": "",
+			"departmentLabel": "",
+			"domainLabel": "",
+			"domainPlaceholder": "",
+			"helper": "",
+			"interestsHint": "",
+			"interestsLabel": "",
+			"interestsPlaceholder": "",
+			"locationLabel": "",
+			"logoChoose": "",
+			"logoHint": "",
+			"logoLabel": "",
+			"logoTooLarge": "",
+			"missionLabel": "",
+			"nameLabel": "",
+			"nameRequired": "",
+			"save": "",
+			"saved": "",
+			"saveError": "",
+			"saving": "",
+			"taglineLabel": "",
+			"title": "",
+			"websiteLabel": ""
+		},
+		"interests": "",
+		"invites": {
+			"alreadyMember": "",
+			"alreadyPending": "",
+			"cancel": "",
+			"cancelConfirm": "",
+			"copyInviteLink": "",
+			"copyInviteLinkAria": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"invite": "",
+			"inviteError": "",
+			"inviteSent": "",
+			"inviting": "",
+			"memberAdded": "",
+			"pendingTitle": "",
+			"waitingSignup": ""
+		},
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"removeMember": "",
+		"removeMemberConfirm": "",
+		"removeMemberError": "",
+		"removeMemberSuccess": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
 	},
 	"organizationsList": {
 		"description": "MindHive Connect पर अवसर प्रदान करने वाले प्रायोजकों को ब्राउज़ करें — उनका मिशन, उनके पीछे की टीम और उनके द्वारा प्रकाशित प्रत्येक परियोजना देखें।",
@@ -952,12 +1025,13 @@
 			"many": "{{count}} अवसर",
 			"one": "{{count}} अवसर"
 		},
-		"pageTitle": "संगठनों",
-		"paginationInfo": "पृष्ठ {{page}} का {{totalPages}} · कुल {{total}} ",
-		"paginationLabel": "संगठनों का पृष्ठीकरण",
-		"previous": "पहले का",
-		"searchLabel": "खोज संगठन",
-		"searchPlaceholder": "संगठनों की खोज करें…"
+		"pageTitle": "",
+		"paginationInfo": "",
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"viewOrganization": ""
 	},
 	"passionNow": "इस समय आप किस चीज़ के प्रति जुनूनी हैं?",
 	"preferences": {
@@ -1068,6 +1142,7 @@
 	},
 	"savedConnections": "सहेजे गए कनेक्शन",
 	"savedConnectionsSubtitle": "अपने संपर्कों के माध्यम से अपने लिए उपयुक्त सहयोगी, मार्गदर्शक या वैज्ञानिक खोजें।",
+	"saveProfile": "",
 	"searchPlaceholder": "नाम, विषय या रुचि के क्षेत्र के आधार पर खोजें",
 	"skillsTab": "कौशल और प्राथमिकताएँ",
 	"steps": {

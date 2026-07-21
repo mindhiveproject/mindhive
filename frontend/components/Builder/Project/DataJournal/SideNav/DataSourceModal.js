@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import {
   buildDatasourcesWhere,
   canAttachDatasourceToJournal,
+  sortDatasourcesByMostRecent,
 } from "../../../../../lib/dataJournalDatasources";
 import { getLastUpdatedDate } from "../../../../../lib/dataJournalTimestamps";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
@@ -76,7 +77,10 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
 
   const [updateVizPart, { loading: updateLoading }] = useMutation(UPDATE_VIZPART);
 
-  const datasources = data?.datasources || [];
+  const datasources = useMemo(
+    () => sortDatasourcesByMostRecent(data?.datasources),
+    [data?.datasources],
+  );
 
   const attachDisabledHint = t(
     "dataJournal.sideNav.dataSourceModal.attachDisabledNotOwner",

@@ -91,7 +91,8 @@
 		"addComment": "添加评论",
 		"addStartingPoint": "添加起点",
 		"lockedMessage": "此研究已提交，无法编辑。如需更改，请告知您的老师取消提交此研究。",
-		"studyBuilderLocked": "学习构建器已锁定"
+		"studyBuilderLocked": "学习构建器已锁定",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -446,6 +447,7 @@
 				"classNetwork": "阶级网络",
 				"empty": {
 					"classNetwork": "本项目或研究没有来自您班级网络的数据集。",
+					"me": "",
 					"myClass": "您的课程还没有数据集。",
 					"public": "未找到公开数据集。",
 					"sharedWithMe": "没有与您共享任何数据集。",
@@ -453,11 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "本项目或研究中的数据集来自您班级网络中的班级。",
+					"me": "",
 					"myClass": "与课堂学习或项目相关的数据集。",
 					"public": "来自公共期刊模板的数据集。",
 					"sharedWithMe": "其他人与您作为合作者共享的数据集。",
 					"uploaded": "您上传的数据集。"
 				},
+				"me": "",
 				"myClass": "我的班级",
 				"public": "民众",
 				"sharedWithMe": "与我分享",
@@ -1331,6 +1335,7 @@
 	},
 	"menu": {
 		"addBlock": "添加块",
+		"settings": "",
 		"studyFlow": "学习流程",
 		"studySettings": "研究环境"
 	},
@@ -1960,6 +1965,8 @@
 		"sectionTitlePlaceholder": "输入章节标题"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "想要为参与者添加自定义说明或在研究过程中嵌入链接和/或视频吗？请选择并编辑基本区块",
 			"title": "基本块"
@@ -1969,6 +1976,9 @@
 			"myFavorite": "我最喜欢的",
 			"ownedByMe": "属于我"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 搜索",
 		"studyDesign": {
 			"betweenSubjects": "受试者间设计",
@@ -1979,6 +1989,8 @@
 		},
 		"surveys": {
 			"buildOwn": "找不到工具来衡量你的学习内容？借助调查问卷构建器，在老师的帮助下，构建你自己的调查问卷：",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "想要通过自我报告来衡量参与者的态度、经历或观点吗？从这个经过验证的调查库中选择吧！",
 			"title": "调查"
 		},
@@ -1988,7 +2000,9 @@
 		},
 		"templates": {
 			"description": "不想从头开始？选择并编辑预制研究设计，使用本模板库中的模板之一",
-			"title": "模板"
+			"openStudyAria": "",
+			"title": "模板",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "选择您想要克隆的 {{taskType}}。",
@@ -2070,6 +2084,25 @@
 	"study": "学习",
 	"studyBuilder": "学习建设者",
 	"studyDescription": "研究是指具有研究问题的研究项目。它可以包含多个任务和/或调查。",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		},
+		"preview": {
+			"branch": "",
+			"collapseAria": "",
+			"defaultPath": "",
+			"expandAria": "",
+			"legend": "",
+			"probabilityAria": "",
+			"taskCount": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "分配至现有研究",
 		"assignToStudy": "分配到学习",
@@ -2307,7 +2340,9 @@
 		"addMore": "添加更多"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "您确定要删除 {{versionName}} 吗？",
+		"confirmLoadUnsaved": "",
 		"createdOn": "创建日期",
 		"createNewVersion": "创建新版本",
 		"currentVersion": "当前版本",
@@ -2315,7 +2350,9 @@
 		"description": "描述",
 		"enterVersionName": "请输入版本名称",
 		"headerNote": "保存左侧屏幕上显示的不同研究设计",
+		"invalidDiagram": "",
 		"load": "加载",
+		"missingDiagram": "",
 		"name": "姓名",
 		"noVersionSaved": "尚未保存任何学习版本。点击下方按钮，即可创建新版本。",
 		"placeholder": "学习版本",

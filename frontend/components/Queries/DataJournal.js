@@ -6,7 +6,7 @@ export const GET_DATA_JOURNAL = gql`
     vizPart(where: { id: $id }) {
       id
       title
-      datasources {
+      datasources(orderBy: [{ updatedAt: desc }]) {
         id
         title
         dataOrigin
@@ -15,6 +15,8 @@ export const GET_DATA_JOURNAL = gql`
         }
         content
         settings
+        createdAt
+        updatedAt
       }
       vizChapters {
         id

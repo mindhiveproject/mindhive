@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { getTaskTypeColor, TASK_TYPE_COLORS } from "../../lib/taskTypeColors";
+
 export const StyledStudyPage = styled.div`
   display: grid;
   grid-template-columns: 8fr 4fr;
@@ -184,79 +186,216 @@ export const StyledStudyPage = styled.div`
 `;
 
 export const StyledTasksPreview = styled.div`
-  margin: 2rem;
+  margin: 0;
+  padding: 8px 8px 24px;
+  width: 100%;
+  box-sizing: border-box;
+
+  .studyFlowLegend {
+    margin: 0 0 16px;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
+
   .studyTasksPreview {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    align-items: baseline;
-    grid-gap: 10px;
-    border-radius: 7px;
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 12px;
+
     .condition {
       display: grid;
-      grid-gap: 5px;
-      align-items: baseline;
-      margin: 0rem 0rem 1rem 0rem;
-      padding: 2rem;
-      background: white;
+      gap: 0;
+      margin: 0;
+      padding: 12px 16px;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 8px;
       width: 100%;
+      box-sizing: border-box;
+
+      &.conditionExpanded {
+        gap: 12px;
+        padding: 16px;
+      }
+
       .firstLine {
         display: grid;
         grid-template-columns: 1fr auto;
-        margin-bottom: 5px;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 0;
+      }
+
+      .conditionToggle {
+        display: grid;
+        grid-template-columns: 20px 1fr auto;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+        text-align: left;
+        cursor: pointer;
+        color: inherit;
+      }
+
+      .conditionChevron {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        transform: rotate(-90deg);
+        transition: transform 0.2s ease;
+
+        img {
+          display: block;
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .conditionChevronOpen {
+        transform: rotate(0deg);
+      }
+
+      .conditionLabel {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        overflow-wrap: anywhere;
+      }
+
+      .taskCount {
+        flex-shrink: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        white-space: nowrap;
+      }
+
+      .probability {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
       }
     }
+
     .taskBlocks {
       display: grid;
-      grid-gap: 10px;
+      gap: 8px;
+    }
+
+    .taskStep,
+    .branchStep {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .branchStep {
+      align-items: center;
+    }
+
+    .stepSpacer {
+      width: 24px;
+      height: 24px;
+    }
+
+    .taskStep {
+      .stepNumber {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        margin-top: 10px;
+        border-radius: 100px;
+        background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+        font-family: Inter, sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      }
+    }
+  }
+
+  @media (min-width: 720px) {
+    .studyTasksPreview {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
   }
 `;
 
 export const StyledTaskCardReview = styled.div`
   height: 100%;
+  min-width: 0;
   background: #ffffff;
-  border-radius: 4px;
-  border-top: 14px solid;
-  border-top-color: ${(props) =>
-    props.taskType === "TASK"
-      ? "#64c9e2"
-      : props.taskType === "SURVEY"
-      ? "#28619e"
-      : "#ffc7c3"};
-
-  box-shadow: 0px 2px 4px 0px #00000026;
-  transition: box-shadow 300ms ease-out;
+  border-radius: 8px;
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  border-left: 4px solid
+    ${(props) => getTaskTypeColor(props.taskType, TASK_TYPE_COLORS.BLOCK)};
+  box-shadow: none;
+  transition: border-color 200ms ease-out, background-color 200ms ease-out;
   cursor: pointer;
 
   :hover {
-    box-shadow: 0px 2px 24px 0px #0000001a;
+    background-color: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+    border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
   }
 
   .cardInfo {
-    padding: 5px 10px;
+    padding: 10px 12px;
+    display: grid;
+    gap: 2px;
   }
   a {
     letter-spacing: 0.04em;
     text-decoration-line: underline;
-    color: #007c70;
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
   h2 {
-    font-family: Roboto;
+    font-family: Inter, sans-serif;
     font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 30px;
-    color: #1a1a1a;
-    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+    margin: 0;
   }
-  p {
-    font-family: Roboto;
-    font-size: 16px;
+  span {
+    font-family: Inter, sans-serif;
+    font-size: 12px;
     font-style: normal;
     font-weight: 400;
     line-height: 16px;
-    letter-spacing: 0.04em;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     text-align: left;
+  }
+  p {
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    text-align: left;
+    margin: 0;
   }
 `;
 
@@ -266,11 +405,7 @@ export const StyledTaskCard = styled.div`
   border-radius: 4px;
   border-top: 14px solid;
   border-top-color: ${(props) =>
-    props.taskType === "TASK"
-      ? "#64c9e2"
-      : props.taskType === "SURVEY"
-      ? "#28619e"
-      : "#ffc7c3"};
+    getTaskTypeColor(props.taskType, TASK_TYPE_COLORS.BLOCK)};
 
   box-shadow: 0px 2px 4px 0px #00000026;
   transition: box-shadow 300ms ease-out;

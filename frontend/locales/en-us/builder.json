@@ -91,7 +91,8 @@
 		"addComment": "Add a comment",
 		"addStartingPoint": "Add starting point",
 		"lockedMessage": "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
-		"studyBuilderLocked": "Study Builder Locked"
+		"studyBuilderLocked": "Study Builder Locked",
+		"undo": "Undo"
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -446,6 +447,7 @@
 				"classNetwork": "Class network",
 				"empty": {
 					"classNetwork": "No datasets from your class network for this project or study.",
+					"me": "No datasets available to you yet.",
 					"myClass": "No datasets from your classes yet.",
 					"public": "No public datasets found.",
 					"sharedWithMe": "No datasets have been shared with you.",
@@ -453,11 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "Datasets on this project or study from classes in your class networks.",
+					"me": "All datasets you can see — uploaded, shared with you, from your class, class network, or public.",
 					"myClass": "Datasets linked to studies or projects in your classes.",
 					"public": "Datasets from public journal templates.",
 					"sharedWithMe": "Datasets others shared with you as a collaborator.",
 					"uploaded": "Datasets you uploaded."
 				},
+				"me": "Me",
 				"myClass": "My class",
 				"public": "Public",
 				"sharedWithMe": "Shared with me",
@@ -1331,7 +1335,8 @@
 	},
 	"menu": {
 		"addBlock": "Add a block",
-		"studyFlow": "Study flow",
+		"settings": "Settings",
+		"studyFlow": "Study Flow",
 		"studySettings": "Study settings"
 	},
 	"mobileCompatible": "{{taskType}} is mobile compatible",
@@ -1960,25 +1965,32 @@
 		"sectionTitlePlaceholder": "Enter section title"
 	},
 	"selector": {
+		"addBlockAria": "Add block",
+		"addFavoriteAria": "Add to favorites",
 		"basicBlocks": {
 			"description": "Want to include custom instructions to your participants or embed a link and/or video in your study's procedure? Select and edit a basic block",
 			"title": "Basic Blocks"
 		},
 		"filter": {
-			"createdByAnyone": "Created by anyone",
+			"createdByAnyone": "All blocks",
 			"myFavorite": "My favorite",
 			"ownedByMe": "Owned by me"
 		},
-		"searchPlaceholder": "🔍 Search",
+		"infoAria": "Block information",
+		"previewAria": "Preview block",
+		"removeFavoriteAria": "Remove from favorites",
+		"searchPlaceholder": "Search for blocks",
 		"studyDesign": {
 			"betweenSubjects": "Between-subjects design",
 			"conditionProbabilityInfo": "The probability that a participant is in this between-subjects condition (based on a simulated run of the study for 100 times).",
-			"description": "Create between-subjects design",
+			"description": "Add block to create a difference to the design in your study",
 			"noTasksFound": "No tasks found",
 			"title": "Study design"
 		},
 		"surveys": {
-			"buildOwn": "Cannot find a tools to measure one of you're study construct? Build your own with the Survey builder and teacher's help:",
+			"buildOwn": "Cannot find a tool to measure one of your study constructs? Build your own with the Survey builder and teacher's help",
+			"buildOwnLine1": "Cannot find a tool to measure one of your study constructs?",
+			"buildOwnLine2": "Build your own with the Survey builder and teacher's help",
 			"description": "Want to measure participants' attitudes, experiences, or opinions through self-report? Choose from this bank of validated surveys",
 			"title": "Surveys"
 		},
@@ -1987,8 +1999,10 @@
 			"title": "Tasks"
 		},
 		"templates": {
-			"description": "Don't want to start from scratch? Select and edit a pre-made study design using one of the templates in this bank",
-			"title": "Templates"
+			"description": "Use the flows from MindHive featured studies",
+			"openStudyAria": "Open study",
+			"title": "Templates",
+			"tryThisFlow": "Try this flow"
 		}
 	},
 	"selectWhichToClone": "Select which {{taskType}} you would like to clone below.",
@@ -2049,7 +2063,7 @@
 		"collectingData": "Collecting data",
 		"dataCollectionCompleted": "Data collection is completed",
 		"inReview": "In review",
-		"placeholder": "Study versions",
+		"placeholder": "Select status",
 		"readyForReview": "Ready for review",
 		"reviewed": "Reviewed",
 		"submittedAsProposal": "Submitted as proposal",
@@ -2070,6 +2084,25 @@
 	"study": "study",
 	"studyBuilder": "Study builder",
 	"studyDescription": "A study is a research project with a research question. It can consist of multiple tasks and/or surveys.",
+	"studyFlow": {
+		"empty": {
+			"description": "Add blocks to the canvas and connect them to see how participants move through your study.",
+			"title": "No study flow yet"
+		},
+		"noTasks": {
+			"description": "Connect tasks or surveys to your study flow to preview them here.",
+			"title": "No tasks in this flow"
+		},
+		"preview": {
+			"branch": "Branch: {{name}}",
+			"collapseAria": "Collapse path {{name}}",
+			"defaultPath": "Default path",
+			"expandAria": "Expand path {{name}}",
+			"legend": "Simulated over 100 participant runs. Paths are sorted by how often they occur.",
+			"probabilityAria": "{{frequency}} percent of simulated runs",
+			"taskCount": "{{count}} tasks"
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "Assign to Existing Study",
 		"assignToStudy": "Assign to Study",
@@ -2307,7 +2340,9 @@
 		"addMore": "Add more"
 	},
 	"version": {
+		"cancel": "Cancel",
 		"confirmDelete": "Are you sure you want to delete the {{versionName}}?",
+		"confirmLoadUnsaved": "You have unsaved canvas changes. Load this version anyway? Your current canvas will be kept on the version you are leaving until you save.",
 		"createdOn": "Created on",
 		"createNewVersion": "Create new version",
 		"currentVersion": "Current version",
@@ -2315,7 +2350,9 @@
 		"description": "Description",
 		"enterVersionName": "Please enter the version name",
 		"headerNote": "Save different study designs displayed on the screen on the left",
+		"invalidDiagram": "This version's diagram could not be loaded.",
 		"load": "Load",
+		"missingDiagram": "This version has no saved diagram to load.",
 		"name": "Name",
 		"noVersionSaved": "No study version has been saved yet. Create a new version by clicking on the button below.",
 		"placeholder": "Study versions",

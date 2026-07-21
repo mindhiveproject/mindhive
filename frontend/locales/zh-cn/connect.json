@@ -54,6 +54,7 @@
 		"pronouns": "代词",
 		"pronounsOptions": {
 			"he": "他/他",
+			"preferNotToSay": "",
 			"she": "她/她",
 			"they": "他们/她们"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "标语",
 		"title": "基本信息"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "您未保存的更改将会丢失。点击“取消”按钮返回并保存您的更改。"
 	},
+	"editProfile": "",
 	"exploreConnect": "探索连接",
 	"exploreDetail": {
 		"backLink": ""
@@ -515,6 +518,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "连接",
@@ -530,7 +534,8 @@
 		"opportunities": "机会",
 		"organizations": "组织",
 		"participate": "参加",
-		"questionLibrary": "问题库"
+		"questionLibrary": "问题库",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "下一个",
@@ -921,18 +926,86 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "关于",
-		"back": "后退",
-		"loading": "正在加载组织…",
-		"members": "成员",
-		"membersHelper": "在 MindHive 上管理此组织的 {{name}} 人员。",
-		"noOpportunities": "{{name}} 尚未发布任何职位空缺。",
-		"notFound": "未找到该组织。",
-		"opportunities": "机会",
-		"solo": "独奏",
-		"teamOf": "团队人数： {{size}}",
-		"unknownMember": "未知",
-		"website": "网站"
+		"about": "",
+		"admins": {
+			"add": "",
+			"added": "",
+			"addError": "",
+			"adding": "",
+			"alreadyAdmin": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"empty": "",
+			"helper": "",
+			"lastAdminBlocked": "",
+			"noAccount": "",
+			"remove": "",
+			"removeConfirm": "",
+			"removed": "",
+			"removeError": "",
+			"title": ""
+		},
+		"back": "",
+		"editOrganizationDetails": "",
+		"editProfile": {
+			"cancel": "",
+			"departmentLabel": "",
+			"domainLabel": "",
+			"domainPlaceholder": "",
+			"helper": "",
+			"interestsHint": "",
+			"interestsLabel": "",
+			"interestsPlaceholder": "",
+			"locationLabel": "",
+			"logoChoose": "",
+			"logoHint": "",
+			"logoLabel": "",
+			"logoTooLarge": "",
+			"missionLabel": "",
+			"nameLabel": "",
+			"nameRequired": "",
+			"save": "",
+			"saved": "",
+			"saveError": "",
+			"saving": "",
+			"taglineLabel": "",
+			"title": "",
+			"websiteLabel": ""
+		},
+		"interests": "",
+		"invites": {
+			"alreadyMember": "",
+			"alreadyPending": "",
+			"cancel": "",
+			"cancelConfirm": "",
+			"copyInviteLink": "",
+			"copyInviteLinkAria": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"invite": "",
+			"inviteError": "",
+			"inviteSent": "",
+			"inviting": "",
+			"memberAdded": "",
+			"pendingTitle": "",
+			"waitingSignup": ""
+		},
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"removeMember": "",
+		"removeMemberConfirm": "",
+		"removeMemberError": "",
+		"removeMemberSuccess": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
 	},
 	"organizationsList": {
 		"description": "浏览在 MindHive Connect 上提供机会的赞助商——了解他们的使命、背后的团队以及他们发布的每个项目。",
@@ -954,10 +1027,11 @@
 		},
 		"pageTitle": "组织",
 		"paginationInfo": "",
-		"paginationLabel": "组织分页",
-		"previous": "以前的",
-		"searchLabel": "搜索组织",
-		"searchPlaceholder": "搜索组织…"
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"viewOrganization": ""
 	},
 	"passionNow": "您现在对什么事情充满热情？",
 	"preferences": {
@@ -1068,6 +1142,7 @@
 	},
 	"savedConnections": "已保存的连接",
 	"savedConnectionsSubtitle": "利用你的人脉关系，找到最适合你的合作者、导师或科学家。",
+	"saveProfile": "",
 	"searchPlaceholder": "按名称、主题或感兴趣的领域搜索",
 	"skillsTab": "技能和偏好",
 	"steps": {

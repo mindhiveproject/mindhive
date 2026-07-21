@@ -54,6 +54,7 @@
 		"pronouns": "Местоимения",
 		"pronounsOptions": {
 			"he": "Он/Его",
+			"preferNotToSay": "",
 			"she": "Она/Её",
 			"they": "Они/Их"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "Слоган",
 		"title": "Основная информация"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "Несохраненные изменения будут потеряны. Нажмите «Отмена», чтобы вернуться и сохранить изменения."
 	},
+	"editProfile": "",
 	"exploreConnect": "Исследуйте Подключиться",
 	"exploreDetail": {
 		"backLink": ""
@@ -515,6 +518,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Соединять",
@@ -530,7 +534,8 @@
 		"opportunities": "Возможности",
 		"organizations": "Организации",
 		"participate": "Участвовать",
-		"questionLibrary": "Библиотека вопросов"
+		"questionLibrary": "Библиотека вопросов",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "Следующий",
@@ -921,18 +926,86 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "О",
-		"back": "Назад",
-		"loading": "Загрузка организации…",
-		"members": "Члены",
-		"membersHelper": "Люди из {{name}} , которые управляют этой организацией на MinHive.",
-		"noOpportunities": "Компания{{name}} пока не опубликовала ни одной вакансии.",
-		"notFound": "Организация не найдена.",
-		"opportunities": "Возможности",
-		"solo": "Соло",
-		"teamOf": "Команда из {{size}}",
-		"unknownMember": "Неизвестный",
-		"website": "Веб-сайт"
+		"about": "",
+		"admins": {
+			"add": "",
+			"added": "",
+			"addError": "",
+			"adding": "",
+			"alreadyAdmin": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"empty": "",
+			"helper": "",
+			"lastAdminBlocked": "",
+			"noAccount": "",
+			"remove": "",
+			"removeConfirm": "",
+			"removed": "",
+			"removeError": "",
+			"title": ""
+		},
+		"back": "",
+		"editOrganizationDetails": "",
+		"editProfile": {
+			"cancel": "",
+			"departmentLabel": "",
+			"domainLabel": "",
+			"domainPlaceholder": "",
+			"helper": "",
+			"interestsHint": "",
+			"interestsLabel": "",
+			"interestsPlaceholder": "",
+			"locationLabel": "",
+			"logoChoose": "",
+			"logoHint": "",
+			"logoLabel": "",
+			"logoTooLarge": "",
+			"missionLabel": "",
+			"nameLabel": "",
+			"nameRequired": "",
+			"save": "",
+			"saved": "",
+			"saveError": "",
+			"saving": "",
+			"taglineLabel": "",
+			"title": "",
+			"websiteLabel": ""
+		},
+		"interests": "",
+		"invites": {
+			"alreadyMember": "",
+			"alreadyPending": "",
+			"cancel": "",
+			"cancelConfirm": "",
+			"copyInviteLink": "",
+			"copyInviteLinkAria": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"invite": "",
+			"inviteError": "",
+			"inviteSent": "",
+			"inviting": "",
+			"memberAdded": "",
+			"pendingTitle": "",
+			"waitingSignup": ""
+		},
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"removeMember": "",
+		"removeMemberConfirm": "",
+		"removeMemberError": "",
+		"removeMemberSuccess": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
 	},
 	"organizationsList": {
 		"description": "Ознакомьтесь со спонсорами, предлагающими возможности для участия в проектах на платформе MindHive Connect — узнайте об их миссии, команде, стоящей за ними, и обо всех опубликованных ими проектах.",
@@ -952,12 +1025,13 @@
 			"many": "{{count}} возможностей",
 			"one": "{{count}} возможность"
 		},
-		"pageTitle": "Организации",
-		"paginationInfo": "Страница {{page}} из {{totalPages}} · {{total}} всего",
-		"paginationLabel": "Пагинация организаций",
-		"previous": "Предыдущий",
-		"searchLabel": "Поиск организаций",
-		"searchPlaceholder": "Поиск организаций..."
+		"pageTitle": "",
+		"paginationInfo": "",
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"viewOrganization": ""
 	},
 	"passionNow": "Чем вы увлечены прямо сейчас?",
 	"preferences": {
@@ -1068,6 +1142,7 @@
 	},
 	"savedConnections": "Сохраненные подключения",
 	"savedConnectionsSubtitle": "Просмотрите свои связи, чтобы найти идеального для вас соратника, наставника или ученого.",
+	"saveProfile": "",
 	"searchPlaceholder": "Поиск по имени, теме или области интересов",
 	"skillsTab": "Навыки и предпочтения",
 	"steps": {

@@ -2,7 +2,7 @@ import Form from "./Form";
 import useForm from "../../../lib/useForm";
 import { useRouter } from "next/dist/client/router";
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
@@ -131,6 +131,15 @@ export default function RoleSignup(query) {
 
   const [signup, { data, loading, error }] = useMutation(SIGNUP_MUTATION);
 
+  // Cloudflare Turnstile. The token is single-use, so we clear it and reset the
+  // widget whenever signup fails, otherwise a retry replays a spent token.
+  const turnstileRef = useRef(null);
+  const [turnstileToken, setTurnstileToken] = useState(null);
+  const [signupError, setSignupError] = useState(null);
+  const handleTurnstileVerify = useCallback((token) => {
+    setTurnstileToken(token);
+  }, []);
+
   const [signin, { data: signinData, loading: signinLoading }] = useMutation(
     SIGNIN_MUTATION,
     {
@@ -152,23 +161,26 @@ export default function RoleSignup(query) {
     // Individual on /dashboard/profile/edit?page=type. For Connect role
     // gating, useConnectRole maps SPONSOR to mentor capabilities so sponsors
     // can create opportunities, see "My matched students", etc.
-    await signup({
-      variables: {
-        input: {
-          ...inputs,
+    setSignupError(null);
+    try {
+      await signup({
+        variables: {
+          username: inputs.username,
           email: normalizedEmail,
-          permissions: { connect: { name: role?.toUpperCase() } },
-          studentIn:
-            role === "student" && classCode
-              ? { connect: { code: classCode } }
-              : null,
-          mentorIn:
-            role === "mentor" && classCode
-              ? { connect: { code: classCode } }
-              : null,
+          password: inputs.password,
+          role,
+          classCode: classCode || null,
+          info: inputs.info || {},
+          turnstileToken,
         },
-      },
-    });
+      });
+    } catch (err) {
+      // Turnstile tokens are single-use — reset so the visitor can retry.
+      setSignupError(err);
+      setTurnstileToken(null);
+      if (turnstileRef.current) turnstileRef.current.reset();
+      return;
+    }
     // log in user
     const login = await signin({
       variables: {
@@ -343,7 +355,9 @@ export default function RoleSignup(query) {
           handleSubmit={handleSubmit}
           submitBtnName={"Create account"}
           loading={loading}
-          error={error}
+          error={signupError || error}
+          turnstileRef={turnstileRef}
+          onTurnstileVerify={handleTurnstileVerify}
         />
       </StyledAuth>
     );
@@ -364,8 +378,10 @@ export default function RoleSignup(query) {
         handleSubmit={handleSubmit}
         submitBtnName={"Create account"}
         loading={loading}
-        error={error}
+        error={signupError || error}
         submitDisabled={isClassNetworkInvalid || isNetworkInviteInvalid}
+        turnstileRef={turnstileRef}
+        onTurnstileVerify={handleTurnstileVerify}
       />
     </StyledAuth>
   );

@@ -49,6 +49,7 @@ export const CreatorWidget = props => {
 
     // adding new component
     if (data.type === 'component') {
+      props.onBeforeCanvasMutation?.();
       const node = new TaskModel({
         color: 'white',
         name: data?.name,
@@ -63,19 +64,27 @@ export const CreatorWidget = props => {
       node.setPosition(point);
 
       diagramEngine.getModel().addNode(node);
+      props.onAfterCanvasMutation?.();
       forceUpdate();
     }
 
     // using a template
     if (data.type === 'study') {
+      props.onBeforeCanvasMutation?.();
       const { diagram } = data;
       const model = new DiagramModel();
       model.deserializeModel(JSON.parse(diagram), diagramEngine);
-      diagramEngine.setModel(model);
+      if (props.onModelReplaced) {
+        props.onModelReplaced(model);
+      } else {
+        diagramEngine.setModel(model);
+        props.onAfterCanvasMutation?.();
+      }
       forceUpdate();
     }
 
     if (data.type === 'design') {
+      props.onBeforeCanvasMutation?.();
       const node = new DesignModel({
         name: data?.name,
         details: data?.details,
@@ -84,6 +93,7 @@ export const CreatorWidget = props => {
       const point = diagramEngine.getRelativeMousePoint(event);
       node.setPosition(point);
       diagramEngine.getModel().addNode(node);
+      props.onAfterCanvasMutation?.();
       forceUpdate();
     }
   };

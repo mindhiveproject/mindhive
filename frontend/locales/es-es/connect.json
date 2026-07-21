@@ -54,6 +54,7 @@
 		"pronouns": "Pronombres",
 		"pronounsOptions": {
 			"he": "Él/Él",
+			"preferNotToSay": "",
 			"she": "Ella/Ella",
 			"they": "Ellos/Ellos"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "Lema",
 		"title": "Información básica"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "Los cambios no guardados se perderán. Haz clic en Cancelar para volver y guardar los cambios."
 	},
+	"editProfile": "",
 	"exploreConnect": "Explora Conectar",
 	"exploreDetail": {
 		"backLink": ""
@@ -489,6 +492,7 @@
 		"teamOf": "Equipo de {{size}}",
 		"unknownSponsor": "Desconocido"
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Conectar",
@@ -504,7 +508,8 @@
 		"opportunities": "Oportunidades",
 		"organizations": "Organizaciones",
 		"participate": "Participar",
-		"questionLibrary": "Biblioteca de preguntas"
+		"questionLibrary": "Biblioteca de preguntas",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "Próximo",
@@ -895,18 +900,86 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "Acerca de",
-		"back": "Atrás",
-		"loading": "Cargando organización…",
-		"members": "Miembros",
-		"membersHelper": "Personas en {{name}} que administran esta organización en MindHive.",
-		"noOpportunities": "{{name}} aún no ha publicado ninguna oportunidad.",
-		"notFound": "Organización no encontrada.",
-		"opportunities": "Oportunidades",
-		"solo": "Solo",
-		"teamOf": "Equipo de {{size}}",
-		"unknownMember": "Desconocido",
-		"website": "Sitio web"
+		"about": "",
+		"admins": {
+			"add": "",
+			"added": "",
+			"addError": "",
+			"adding": "",
+			"alreadyAdmin": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"empty": "",
+			"helper": "",
+			"lastAdminBlocked": "",
+			"noAccount": "",
+			"remove": "",
+			"removeConfirm": "",
+			"removed": "",
+			"removeError": "",
+			"title": ""
+		},
+		"back": "",
+		"editOrganizationDetails": "",
+		"editProfile": {
+			"cancel": "",
+			"departmentLabel": "",
+			"domainLabel": "",
+			"domainPlaceholder": "",
+			"helper": "",
+			"interestsHint": "",
+			"interestsLabel": "",
+			"interestsPlaceholder": "",
+			"locationLabel": "",
+			"logoChoose": "",
+			"logoHint": "",
+			"logoLabel": "",
+			"logoTooLarge": "",
+			"missionLabel": "",
+			"nameLabel": "",
+			"nameRequired": "",
+			"save": "",
+			"saved": "",
+			"saveError": "",
+			"saving": "",
+			"taglineLabel": "",
+			"title": "",
+			"websiteLabel": ""
+		},
+		"interests": "",
+		"invites": {
+			"alreadyMember": "",
+			"alreadyPending": "",
+			"cancel": "",
+			"cancelConfirm": "",
+			"copyInviteLink": "",
+			"copyInviteLinkAria": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"invite": "",
+			"inviteError": "",
+			"inviteSent": "",
+			"inviting": "",
+			"memberAdded": "",
+			"pendingTitle": "",
+			"waitingSignup": ""
+		},
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"removeMember": "",
+		"removeMemberConfirm": "",
+		"removeMemberError": "",
+		"removeMemberSuccess": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
 	},
 	"organizationsList": {
 		"description": "Explora los patrocinadores que ofrecen oportunidades en MindHive Connect: descubre su misión, el equipo que los respalda y todos los proyectos que han publicado.",
@@ -926,12 +999,13 @@
 			"many": "{{count}} oportunidades",
 			"one": "{{count}} oportunidad"
 		},
-		"pageTitle": "Organizaciones",
-		"paginationInfo": "Página {{page}} de {{totalPages}} · {{total}} en total",
-		"paginationLabel": "Paginación de organizaciones",
-		"previous": "Anterior",
-		"searchLabel": "Organizaciones de búsqueda",
-		"searchPlaceholder": "Buscar organizaciones..."
+		"pageTitle": "",
+		"paginationInfo": "",
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"viewOrganization": ""
 	},
 	"passionNow": "¿Qué te apasiona ahora mismo?",
 	"preferences": {
@@ -1042,6 +1116,7 @@
 	},
 	"savedConnections": "Conexiones guardadas",
 	"savedConnectionsSubtitle": "Busca en tu red de contactos el colaborador, mentor o científico perfecto para ti.",
+	"saveProfile": "",
 	"searchPlaceholder": "Buscar por nombre, tema o área de interés",
 	"skillsTab": "Habilidades y preferencias",
 	"steps": {

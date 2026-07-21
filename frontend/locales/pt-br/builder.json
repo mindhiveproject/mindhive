@@ -91,7 +91,8 @@
 		"addComment": "Adicionar um comentário",
 		"addStartingPoint": "Adicionar ponto de partida",
 		"lockedMessage": "Este estudo foi enviado e não pode ser editado. Para fazer alterações, peça ao seu professor para cancelar o envio do estudo.",
-		"studyBuilderLocked": "Construtor de estudos bloqueado"
+		"studyBuilderLocked": "Construtor de estudos bloqueado",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -446,6 +447,7 @@
 				"classNetwork": "Rede de classes",
 				"empty": {
 					"classNetwork": "Não há conjuntos de dados da sua rede de turma para este projeto ou estudo.",
+					"me": "",
 					"myClass": "Ainda não há conjuntos de dados das suas turmas.",
 					"public": "Nenhum conjunto de dados público encontrado.",
 					"sharedWithMe": "Nenhum conjunto de dados foi compartilhado com você.",
@@ -453,11 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "Conjuntos de dados sobre este projeto ou estudo de turmas em suas redes de classe.",
+					"me": "",
 					"myClass": "Conjuntos de dados relacionados a estudos ou projetos em suas aulas.",
 					"public": "Conjuntos de dados de modelos de periódicos públicos.",
 					"sharedWithMe": "Conjuntos de dados que outros compartilharam com você como colaborador.",
 					"uploaded": "Conjuntos de dados que você carregou."
 				},
+				"me": "",
 				"myClass": "Minha turma",
 				"public": "Público",
 				"sharedWithMe": "Compartilhou comigo",
@@ -1331,6 +1335,7 @@
 	},
 	"menu": {
 		"addBlock": "Adicionar um bloco",
+		"settings": "",
 		"studyFlow": "Fluxo de estudo",
 		"studySettings": "Configurações de estudo"
 	},
@@ -1960,6 +1965,8 @@
 		"sectionTitlePlaceholder": "Digite o título da seção"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "Deseja incluir instruções personalizadas para seus participantes ou incorporar um link e/ou vídeo no procedimento do seu estudo? Selecione e edite um bloco básico",
 			"title": "Blocos Básicos"
@@ -1969,6 +1976,9 @@
 			"myFavorite": "Meu favorito",
 			"ownedByMe": "De minha propriedade"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 Pesquisar",
 		"studyDesign": {
 			"betweenSubjects": "Design entre sujeitos",
@@ -1979,6 +1989,8 @@
 		},
 		"surveys": {
 			"buildOwn": "Não consegue encontrar uma ferramenta para medir um dos seus constructos de estudo? Crie a sua própria com o Construtor de Pesquisas e a ajuda do professor:",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "Quer mensurar as atitudes, experiências ou opiniões dos participantes por meio de autorrelato? Escolha entre este banco de pesquisas validadas.",
 			"title": "Pesquisas"
 		},
@@ -1988,7 +2000,9 @@
 		},
 		"templates": {
 			"description": "Não quer começar do zero? Selecione e edite um desenho de estudo pré-definido usando um dos modelos deste banco.",
-			"title": "Modelos"
+			"openStudyAria": "",
+			"title": "Modelos",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "Selecione abaixo qual {{taskType}} você gostaria de clonar.",
@@ -2070,6 +2084,25 @@
 	"study": "estudar",
 	"studyBuilder": "Construtor de estudos",
 	"studyDescription": "Um estudo é um projeto de pesquisa com uma questão de pesquisa. Pode consistir em múltiplas tarefas e/ou questionários.",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		},
+		"preview": {
+			"branch": "",
+			"collapseAria": "",
+			"defaultPath": "",
+			"expandAria": "",
+			"legend": "",
+			"probabilityAria": "",
+			"taskCount": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "Atribuir a um estudo existente",
 		"assignToStudy": "Atribuir para estudar",
@@ -2307,7 +2340,9 @@
 		"addMore": "Adicionar mais"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "Tem certeza de que deseja excluir o {{versionName}}?",
+		"confirmLoadUnsaved": "",
 		"createdOn": "Criado em",
 		"createNewVersion": "Criar nova versão",
 		"currentVersion": "Versão atual",
@@ -2315,7 +2350,9 @@
 		"description": "Descrição",
 		"enterVersionName": "Por favor, insira o nome da versão",
 		"headerNote": "Salvar diferentes modelos de estudo exibidos na tela à esquerda",
+		"invalidDiagram": "",
 		"load": "Carregar",
+		"missingDiagram": "",
 		"name": "Nome",
 		"noVersionSaved": "Nenhuma versão de estudo foi salva ainda. Crie uma nova versão clicando no botão abaixo.",
 		"placeholder": "Versões de estudo",

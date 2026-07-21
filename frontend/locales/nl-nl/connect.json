@@ -54,6 +54,7 @@
 		"pronouns": "Voornaamwoorden",
 		"pronounsOptions": {
 			"he": "Hij/Hem",
+			"preferNotToSay": "",
 			"she": "Zij/Haar",
 			"they": "Zij/Hen"
 		},
@@ -62,6 +63,7 @@
 		"tagline": "Slogan",
 		"title": "Basisgegevens"
 	},
+	"cancelEdit": "",
 	"classNetworks": {
 		"adminAdd": "",
 		"adminAdded": "",
@@ -384,6 +386,7 @@
 		},
 		"unsavedChangesWarning": "Je niet-opgeslagen wijzigingen gaan verloren. Klik op Annuleren om terug te keren en je wijzigingen op te slaan."
 	},
+	"editProfile": "",
 	"exploreConnect": "Ontdekken Verbinden",
 	"exploreDetail": {
 		"backLink": ""
@@ -515,6 +518,7 @@
 		"teamOf": "",
 		"unknownSponsor": ""
 	},
+	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Aansluiten",
@@ -530,7 +534,8 @@
 		"opportunities": "Mogelijkheden",
 		"organizations": "Organisaties",
 		"participate": "Deelnemen",
-		"questionLibrary": "Vragenbibliotheek"
+		"questionLibrary": "Vragenbibliotheek",
+		"reviewQueue": ""
 	},
 	"navigation": {
 		"next": "Volgende",
@@ -921,18 +926,86 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "Over",
-		"back": "Rug",
-		"loading": "Organisatie laden…",
-		"members": "Leden",
-		"membersHelper": "Mensen bij {{name}} die deze organisatie beheren op MindHive.",
-		"noOpportunities": "{{name}} heeft nog geen vacatures gepubliceerd.",
-		"notFound": "Organisatie niet gevonden.",
-		"opportunities": "Mogelijkheden",
-		"solo": "Solo",
-		"teamOf": "Team van {{size}}",
-		"unknownMember": "Onbekend",
-		"website": "Website"
+		"about": "",
+		"admins": {
+			"add": "",
+			"added": "",
+			"addError": "",
+			"adding": "",
+			"alreadyAdmin": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"empty": "",
+			"helper": "",
+			"lastAdminBlocked": "",
+			"noAccount": "",
+			"remove": "",
+			"removeConfirm": "",
+			"removed": "",
+			"removeError": "",
+			"title": ""
+		},
+		"back": "",
+		"editOrganizationDetails": "",
+		"editProfile": {
+			"cancel": "",
+			"departmentLabel": "",
+			"domainLabel": "",
+			"domainPlaceholder": "",
+			"helper": "",
+			"interestsHint": "",
+			"interestsLabel": "",
+			"interestsPlaceholder": "",
+			"locationLabel": "",
+			"logoChoose": "",
+			"logoHint": "",
+			"logoLabel": "",
+			"logoTooLarge": "",
+			"missionLabel": "",
+			"nameLabel": "",
+			"nameRequired": "",
+			"save": "",
+			"saved": "",
+			"saveError": "",
+			"saving": "",
+			"taglineLabel": "",
+			"title": "",
+			"websiteLabel": ""
+		},
+		"interests": "",
+		"invites": {
+			"alreadyMember": "",
+			"alreadyPending": "",
+			"cancel": "",
+			"cancelConfirm": "",
+			"copyInviteLink": "",
+			"copyInviteLinkAria": "",
+			"emailLabel": "",
+			"emailPlaceholder": "",
+			"emailRequired": "",
+			"invite": "",
+			"inviteError": "",
+			"inviteSent": "",
+			"inviting": "",
+			"memberAdded": "",
+			"pendingTitle": "",
+			"waitingSignup": ""
+		},
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"removeMember": "",
+		"removeMemberConfirm": "",
+		"removeMemberError": "",
+		"removeMemberSuccess": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
 	},
 	"organizationsList": {
 		"description": "Bekijk de sponsors die mogelijkheden bieden op MindHive Connect — ontdek hun missie, het team erachter en alle projecten die ze hebben gepubliceerd.",
@@ -952,12 +1025,13 @@
 			"many": "{{count}} mogelijkheden",
 			"one": "{{count}} kans"
 		},
-		"pageTitle": "Organisaties",
-		"paginationInfo": "Pagina {{page}} van {{totalPages}} · {{total}} totaal",
-		"paginationLabel": "Organisaties paginering",
-		"previous": "Vorig",
-		"searchLabel": "Zoekorganisaties",
-		"searchPlaceholder": "Zoek organisaties…"
+		"pageTitle": "",
+		"paginationInfo": "",
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"viewOrganization": ""
 	},
 	"passionNow": "Waar ben je momenteel gepassioneerd over?",
 	"preferences": {
@@ -1068,6 +1142,7 @@
 	},
 	"savedConnections": "Opgeslagen verbindingen",
 	"savedConnectionsSubtitle": "Doorzoek uw connecties om de perfecte medewerker, mentor of wetenschapper voor u te vinden.",
+	"saveProfile": "",
 	"searchPlaceholder": "Zoeken op naam, onderwerp of interessegebied",
 	"skillsTab": "Vaardigheden en voorkeuren",
 	"steps": {

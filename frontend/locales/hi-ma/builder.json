@@ -91,7 +91,8 @@
 		"addComment": "एक टिप्पणी जोड़ने",
 		"addStartingPoint": "प्रारंभिक बिंदु जोड़ें",
 		"lockedMessage": "यह अध्ययन सबमिट कर दिया गया है और इसे संपादित नहीं किया जा सकता। इसमें बदलाव करने के लिए, कृपया अपने शिक्षक से अध्ययन को सबमिट न करने का अनुरोध करें।",
-		"studyBuilderLocked": "अध्ययन बिल्डर लॉक"
+		"studyBuilderLocked": "अध्ययन बिल्डर लॉक",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -446,6 +447,7 @@
 				"classNetwork": "",
 				"empty": {
 					"classNetwork": "",
+					"me": "",
 					"myClass": "",
 					"public": "",
 					"sharedWithMe": "",
@@ -453,11 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "",
+					"me": "",
 					"myClass": "",
 					"public": "",
 					"sharedWithMe": "",
 					"uploaded": ""
 				},
+				"me": "",
 				"myClass": "",
 				"public": "",
 				"sharedWithMe": "",
@@ -1331,6 +1335,7 @@
 	},
 	"menu": {
 		"addBlock": "एक ब्लॉक जोड़ें",
+		"settings": "",
 		"studyFlow": "अध्ययन प्रवाह",
 		"studySettings": "अध्ययन सेटिंग्स"
 	},
@@ -1960,6 +1965,8 @@
 		"sectionTitlePlaceholder": "अनुभाग शीर्षक दर्ज करें"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "क्या आप अपने प्रतिभागियों के लिए कस्टम निर्देश शामिल करना चाहते हैं या अपने अध्ययन की प्रक्रिया में लिंक और/या वीडियो एम्बेड करना चाहते हैं? एक बुनियादी ब्लॉक चुनें और संपादित करें",
 			"title": "बुनियादी ब्लॉक"
@@ -1969,6 +1976,9 @@
 			"myFavorite": "मेरे पसंदीदा",
 			"ownedByMe": "मेरे स्वामित्व में"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 खोज",
 		"studyDesign": {
 			"betweenSubjects": "विषयों के बीच डिज़ाइन",
@@ -1979,6 +1989,8 @@
 		},
 		"surveys": {
 			"buildOwn": "क्या आपको अपने अध्ययन के किसी निर्माण को मापने के लिए कोई उपकरण नहीं मिल रहा है? सर्वेक्षण निर्माता और शिक्षक की मदद से अपना खुद का उपकरण बनाएँ:",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "क्या आप स्व-रिपोर्ट के ज़रिए प्रतिभागियों के नज़रिए, अनुभव या राय को मापना चाहते हैं? मान्य सर्वेक्षणों के इस बैंक में से चुनें",
 			"title": "सर्वेक्षण"
 		},
@@ -1988,7 +2000,9 @@
 		},
 		"templates": {
 			"description": "क्या आप बिल्कुल नए सिरे से शुरुआत नहीं करना चाहते? इस बैंक में दिए गए किसी एक टेम्पलेट का इस्तेमाल करके पहले से तैयार अध्ययन डिज़ाइन चुनें और उसे संपादित करें",
-			"title": "टेम्पलेट्स"
+			"openStudyAria": "",
+			"title": "टेम्पलेट्स",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "नीचे वह {{taskType}} चुनें जिसे आप क्लोन करना चाहते हैं।",
@@ -2070,6 +2084,25 @@
 	"study": "अध्ययन",
 	"studyBuilder": "अध्ययन निर्माता",
 	"studyDescription": "एक अध्ययन एक शोध परियोजना है जिसमें एक शोध प्रश्न होता है। इसमें कई कार्य और/या सर्वेक्षण शामिल हो सकते हैं।",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		},
+		"preview": {
+			"branch": "",
+			"collapseAria": "",
+			"defaultPath": "",
+			"expandAria": "",
+			"legend": "",
+			"probabilityAria": "",
+			"taskCount": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "मौजूदा अध्ययन को सौंपें",
 		"assignToStudy": "अध्ययन के लिए नियुक्त करें",
@@ -2307,7 +2340,9 @@
 		"addMore": "अधिक जोड़ें"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "क्या आप वाकई {{versionName}} को हटाना चाहते हैं?",
+		"confirmLoadUnsaved": "",
 		"createdOn": "पर बनाया",
 		"createNewVersion": "नया संस्करण बनाएँ",
 		"currentVersion": "वर्तमान संस्करण",
@@ -2315,7 +2350,9 @@
 		"description": "विवरण",
 		"enterVersionName": "कृपया संस्करण का नाम दर्ज करें",
 		"headerNote": "बाईं ओर स्क्रीन पर प्रदर्शित विभिन्न अध्ययन डिज़ाइनों को सहेजें",
+		"invalidDiagram": "",
 		"load": "भार",
+		"missingDiagram": "",
 		"name": "नाम",
 		"noVersionSaved": "अभी तक कोई अध्ययन संस्करण सहेजा नहीं गया है। नीचे दिए गए बटन पर क्लिक करके नया संस्करण बनाएँ।",
 		"placeholder": "अध्ययन संस्करण",

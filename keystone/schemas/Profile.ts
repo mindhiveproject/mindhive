@@ -49,7 +49,11 @@ export const Profile = list({
       query: () => true,
     },
     item: {
-      create: () => true,
+      // Closed to anonymous callers. Public signup goes through the
+      // signupWithTurnstile / googleSignup mutations, which verify the caller
+      // is human and then create with sudo. Leaving this open let bots POST
+      // straight to /api/graphql and skip the signup UI entirely.
+      create: ({ session }) => permissions.canManageUsers({ session }),
       update: () => true,
       delete: rules.canManageUsers,
     },
@@ -468,6 +472,7 @@ export const Profile = list({
         { label: "she/her/hers", value: "she" },
         { label: "he/him/his", value: "he" },
         { label: "they/them/theirs", value: "they" },
+        { label: "Prefer not to say", value: "preferNotToSay" },
       ],
     }),
     location: text(),
