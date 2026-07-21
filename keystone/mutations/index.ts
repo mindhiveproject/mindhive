@@ -6,6 +6,7 @@ import deleteProposal from "./deleteProposal";
 import archiveStudy from "./archiveStudy";
 import googleSignup from "./googleSignup";
 import googleLogin from "./googleLogin";
+import signupWithTurnstile from "./signupWithTurnstile";
 import linkAssignmentToTemplateCard from "./linkAssignmentToTemplateCard";
 import unlinkAssignmentFromTemplateCards from "./unlinkAssignmentFromTemplateCards";
 import setAssignmentTemplateCards from "./setAssignmentTemplateCards";
@@ -79,6 +80,18 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         archiveStudy(study: ID!, isArchived: Boolean!): Profile
         googleSignup(token: String!, role: String, classCode: String): Profile
         googleLogin(token: String!): Profile
+        # Public signup. Gated by Cloudflare Turnstile + bot heuristics;
+        # Profile.create is closed to anonymous callers so this is the only
+        # way in from the signup form.
+        signupWithTurnstile(
+          username: String!
+          email: String!
+          password: String!
+          role: String
+          classCode: String
+          info: JSON
+          turnstileToken: String
+        ): Profile
         linkAssignmentToTemplateCard(
           assignmentId: ID!
           templateCardId: ID!
@@ -212,6 +225,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         archiveStudy,
         googleSignup,
         googleLogin,
+        signupWithTurnstile,
         linkAssignmentToTemplateCard,
         unlinkAssignmentFromTemplateCards,
         setAssignmentTemplateCards,
