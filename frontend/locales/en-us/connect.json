@@ -946,7 +946,8 @@
 		"paginationLabel": "Organizations pagination",
 		"previous": "Previous",
 		"searchLabel": "Search organizations",
-		"searchPlaceholder": "Search organizations…"
+		"searchPlaceholder": "Search organizations…",
+		"viewOrganization": "View organization {{name}}"
 	},
 	"passionNow": "What are you passionate about right now?",
 	"preferences": {

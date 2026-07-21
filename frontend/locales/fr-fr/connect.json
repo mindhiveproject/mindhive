@@ -946,7 +946,8 @@
 		"paginationLabel": "",
 		"previous": "",
 		"searchLabel": "",
-		"searchPlaceholder": ""
+		"searchPlaceholder": "",
+		"viewOrganization": ""
 	},
 	"passionNow": "Qu'est-ce qui vous passionne en ce moment ?",
 	"preferences": {

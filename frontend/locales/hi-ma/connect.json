@@ -946,7 +946,8 @@
 		"paginationLabel": "",
 		"previous": "",
 		"searchLabel": "",
-		"searchPlaceholder": ""
+		"searchPlaceholder": "",
+		"viewOrganization": ""
 	},
 	"passionNow": "इस समय आप किस चीज़ के प्रति जुनूनी हैं?",
 	"preferences": {
