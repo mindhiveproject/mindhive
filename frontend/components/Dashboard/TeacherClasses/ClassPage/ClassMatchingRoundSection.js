@@ -175,7 +175,17 @@ export default function ClassMatchingRoundSection({
     { fetchPolicy: "cache-and-network" },
   );
 
-  const allRounds = roundsData?.authenticatedItem?.connectRoundsCreated || [];
+  const allRounds = useMemo(() => {
+    const profile = roundsData?.authenticatedItem;
+    const seen = new Map();
+    (profile?.connectRoundsCreated || []).forEach((round) => {
+      if (round?.id) seen.set(round.id, round);
+    });
+    (profile?.connectRoundsReviewing || []).forEach((round) => {
+      if (round?.id && !seen.has(round.id)) seen.set(round.id, round);
+    });
+    return Array.from(seen.values());
+  }, [roundsData?.authenticatedItem]);
 
   const roundsForNetwork = useMemo(() => {
     if (!selectedNetworkId) return [];

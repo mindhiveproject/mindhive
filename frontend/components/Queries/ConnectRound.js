@@ -29,6 +29,30 @@ export const MY_CONNECT_ROUNDS = gql`
           createdAt
           updatedAt
         }
+        connectRoundsReviewing(orderBy: { updatedAt: desc }) {
+          id
+          title
+          description
+          status
+          openAt
+          closeAt
+          publishedAt
+          matchingAlgorithm
+          classNetwork {
+            id
+            title
+            admins {
+              id
+            }
+          }
+          opportunities {
+            id
+            title
+            status
+          }
+          createdAt
+          updatedAt
+        }
         adminOfClassNetworks {
           id
           title
