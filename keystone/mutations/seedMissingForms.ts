@@ -1,5 +1,5 @@
 // Safe self-service seeder for the admin UI. Checks each baseline
-// FormDefinition key (opportunity, profile_individual, profile_organization)
+// FormDefinition key (opportunity, profile_*, and review_* forms)
 // and only inserts the seed when no row with that key exists at all
 // (any scope, any status). Never clobbers existing definitions, so it's
 // safe to call from a "Seed default forms" button without confirmation.
@@ -9,12 +9,14 @@
 import { OPPORTUNITY_FORM_SEED } from "./seedData/opportunityFormSeed";
 import { PROFILE_INDIVIDUAL_FORM_SEED } from "./seedData/profileIndividualFormSeed";
 import { PROFILE_ORGANIZATION_FORM_SEED } from "./seedData/profileOrganizationFormSeed";
+import { ALL_REVIEW_FORM_SEEDS } from "./seedData/reviewForms";
 import { insertSeed } from "./seedData/insertSeed";
 
 const BASELINE_SEEDS = [
   OPPORTUNITY_FORM_SEED,
   PROFILE_INDIVIDUAL_FORM_SEED,
   PROFILE_ORGANIZATION_FORM_SEED,
+  ...ALL_REVIEW_FORM_SEEDS,
 ];
 
 async function seedMissingForms(root: any, _args: {}, context: any) {
@@ -57,10 +59,7 @@ async function seedMissingForms(root: any, _args: {}, context: any) {
     return [];
   }
 
-  return context.query.FormDefinition.findMany({
-    where: { id: { in: inserted } },
-    query: "id key title scope status version",
-  });
+  return context.db.FormDefinition.findMany({ where: { id: { in: inserted } } });
 }
 
 export default seedMissingForms;

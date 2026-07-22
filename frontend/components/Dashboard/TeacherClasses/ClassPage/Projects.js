@@ -1,33 +1,107 @@
+import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import moment from "moment";
-import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
+import styled from "styled-components";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
-import { CLASS_PROJECTS_QUERY } from "../../../Queries/Proposal";
-import Button from "../../../DesignSystem/Button";
+const LinkButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  font-family: Lato, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.05em;
+  text-align: center;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  background: #ffffff;
+  color: #5d5763;
+  // border: 1.5px solid #5d5763;
 
-export default function ClassProjects({ myclass }) {
+  &:hover {
+    background: #FDF2D0;
+    border-color: #b3b3b3;
+    color: #171717;
+    font-weight: 600;
+  }
+
+  &:active {
+    background: #e0f2f1;
+    border-color: #4db6ac;
+    color: #4db6ac;
+  }
+`;
+
+import {
+  CLASS_PROJECTS_QUERY,
+} from "../../../Queries/Proposal";
+import ProjectsTemplatePanel from "./ProjectsTemplatePanel";
+import ProjectsBoardEditor from "./ProjectsBoardEditor";
+import CreateTemplateBoardModal from "./CreateTemplateBoardModal";
+
+export default function ClassProjects({ myclass, user, query }) {
   const { t } = useTranslation("classes");
+  const router = useRouter();
+  const { action, board, template } = query || {};
+  const isEditing = action === "edit" && !!board;
 
+  const closeCreateModal = () => {
+    router.replace({
+      pathname: `/dashboard/myclasses/${myclass?.code}`,
+      query: { page: "projects" },
+    });
+  };
+
+  // useQuery must run on every render (Rules of Hooks). Skip the network call
+  // when we're in edit mode so we don't fire an unused query, but keep the
+  // hook itself unconditional — otherwise toggling `action` between renders
+  // changes the hook count and React throws "Rendered more hooks than during
+  // the previous render.".
   const { data } = useQuery(CLASS_PROJECTS_QUERY, {
     variables: { classId: myclass?.id },
+    skip: isEditing,
   });
+
+  if (isEditing) {
+    return (
+      <ProjectsBoardEditor
+        myclass={myclass}
+        user={user}
+        boardId={board}
+      />
+    );
+  }
 
   const projects = data?.proposalBoards || [];
 
   const getCollaborators = (project) => {
-    const collaboratorMap = new Map();
-    [project?.author, ...(project?.collaborators || [])].forEach((profile) => {
-      const key = profile?.id || profile?.username;
-      if (key && profile?.username) {
-        collaboratorMap.set(key, profile.username);
-      }
-    });
-    return Array.from(collaboratorMap.values()).join(", ");
+    const names = [
+      project?.author?.username,
+      ...(project?.collaborators || []).map((c) => c?.username),
+    ].filter(Boolean);
+    return [...new Set(names)].join(", ");
+  };
+
+  const ProjectBoardRenderer = (params) => {
+    const project = params?.data;
+    if (!project?.id) return null;
+    return (
+      <LinkButton
+        href={`/builder/projects?selector=${project.id}`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {t("projects.viewBoard", {}, { default: "View board" })}
+      </LinkButton>
+    );
   };
 
   const columnDefs = [
@@ -77,37 +151,35 @@ export default function ClassProjects({ myclass }) {
       flex: 1,
       minWidth: 150,
     },
+    {
+      field: "viewBoard",
+      headerName: t("projects.viewBoard", {}, { default: "View board" }),
+      cellRenderer: ProjectBoardRenderer,
+      suppressFilter: true,
+      sortable: false,
+      flex: 0,
+      minWidth: 130,
+      maxWidth: 150,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+    },
   ];
 
   return (
     <div className="classTabPage projects">
+      <CreateTemplateBoardModal
+        open={action === "create"}
+        onClose={closeCreateModal}
+        myclass={myclass}
+        user={user}
+        initialTemplateId={template || null}
+      />
+
       <section className="classTabSection">
-        <div className="classTabSectionHeader">
-          <h3>{t("navigation.projects", {}, { default: "Projects" })}</h3>
-          <p>
-            {t(
-              "projects.listDescription",
-              { count: projects.length },
-              {
-                default:
-                  "{{count}} student project boards in this class.",
-              }
-            )}
-          </p>
-        </div>
-        <div className="classTabActionBar">
-          <Link
-            href={{
-              pathname: `/dashboard/myclasses/${myclass?.code}`,
-              query: { page: "board" },
-            }}
-            style={{ textDecoration: "none" }}
-          >
-            <Button variant="filled">
-              {t("projects.manageClassProjectBoard")}
-            </Button>
-          </Link>
-        </div>
+        <ProjectsTemplatePanel myclass={myclass} user={user} />
       </section>
 
       <section className="classTabSection">
@@ -115,6 +187,15 @@ export default function ClassProjects({ myclass }) {
           <h3>
             {t("projects.studentBoards", {}, { default: "Student boards" })}
           </h3>
+          <p>
+            {t(
+              "projects.listDescription",
+              { count: projects.length },
+              {
+                default: "{{count}} student project boards in this class.",
+              }
+            )}
+          </p>
         </div>
         {projects.length === 0 ? (
           <div className="classTabEmpty">

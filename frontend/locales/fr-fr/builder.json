@@ -1,6 +1,7 @@
 {
 	"actionCard": {
 		"clickToSubmit": "Cliquez pour soumettre pour {{title}}",
+		"customStep": "Étape de révision",
 		"dataCollection": "Collecte de données",
 		"deleteCardConfirmation": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible.",
 		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible.",
@@ -8,6 +9,7 @@
 		"projectReport": "Rapport de projet",
 		"proposalFeedback": "Retours sur la proposition",
 		"submitFor": "Soumettre pour {{title}}",
+		"submitForCustomMilestone": "Soumettre pour examen",
 		"submitForDataCollection": "Soumettre pour collecte de données",
 		"submitForPeerFeedback": "Soumettre pour revue par les pairs",
 		"submitForProjectReport": "Soumettre pour rapport de projet",
@@ -26,7 +28,7 @@
 	"assigned": {
 		"addUser": "Ajouter des personnes",
 		"assignCard": "Attribuez cette carte à un collaborateur de ce projet.",
-		"canAssignTooltip": "",
+		"canAssignTooltip": "Vous pouvez attribuer des profils à cette carte.",
 		"cancel": "Annuler",
 		"noCollaborators": "Aucun collaborateur disponible pour ce conseil.",
 		"noUsersFound": "Aucun profil trouvé",
@@ -56,6 +58,8 @@
 			"close": "Fermer",
 			"connect": "Connecter",
 			"content": "Contenu",
+			"customMilestone": "Étape de révision personnalisée",
+			"customMilestoneDescription": "Étape de révision personnalisée définie dans ce modèle.",
 			"disconnect": "Déconnexion",
 			"done": "Terminé",
 			"linkItems": "Liens",
@@ -514,19 +518,19 @@
 				"barPlot": {
 					"columnsToPlot": "Colonne(s) à tracer",
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
+						"chipLong": "Long",
+						"chipWide": "Large",
 						"googleSlidesAlt": "Google Slides",
 						"hintLong": "Pour comparer les colonnes, cliquez ici.",
 						"hintWide": "Si vous souhaitez comparer différents groupes pour une colonne (variable), cliquez ici.",
 						"longDescription": "Les données sont organisées de manière à ce que chaque observation (comme la note d'un élève à un test) figure sur une ligne distincte, souvent accompagnée d'une colonne indiquant les catégories (comme les matières). Ce format est utile pour une analyse détaillée par catégorie.",
 						"longTitle": "Format de données long",
-						"panelRegionAriaLabel": "",
+						"panelRegionAriaLabel": "Modifier la mise en page des données : diagramme et ressources pour le format sélectionné",
 						"sectionLabel": "Disposition des données",
 						"slidesLink": "Cliquez ici pour voir les diapositives du cours.",
 						"switchToLong": "Passer au format long",
 						"switchToWide": "Passez au format large",
-						"toggleAriaLabel": "",
+						"toggleAriaLabel": "Afficher ou masquer les options de mise en page des données",
 						"wideDescription": "Les données sont organisées de manière à ce que chaque catégorie (comme les matières) figure dans une colonne distincte, les lignes représentant souvent les observations (comme les étudiants). Ce format facilite les comparaisons rapides au sein des catégories.",
 						"wideTitle": "Format de données large"
 					},
@@ -708,12 +712,12 @@
 					"rankSectionTitle": "Classez vos conditions",
 					"resources": {
 						"experimentalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Référence à venir.",
+							"title": "Qu'est-ce qu'une hypothèse expérimentale ?"
 						},
 						"rankOrdering": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Référence à venir.",
+							"title": "Prédictions de classement"
 						}
 					},
 					"sectionHypothesisTitle": "Votre hypothèse expérimentale",
@@ -738,12 +742,12 @@
 				},
 				"common": {
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "Ressources et aide",
+						"resourcesIntro": "Utilisez les boutons ci-dessous pour ouvrir une référence dans un nouvel onglet lorsqu'un lien est disponible."
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": ""
+						"noLink": "Aucun lien externe",
+						"openLinkHint": "Cliquez ici pour accéder à la ressource"
 					}
 				},
 				"corr": {
@@ -766,12 +770,12 @@
 					"loadingBlocks": "Chargement des données du bloc...",
 					"resources": {
 						"correlationalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Référence à venir.",
+							"title": "Qu'est-ce qu'une hypothèse corrélationnelle ?"
 						},
 						"directionality": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Référence à venir.",
+							"title": "Choisir des termes de directionnalité"
 						}
 					},
 					"sectionTitle": "Votre hypothèse de corrélation",
@@ -779,20 +783,20 @@
 					"willBeRelatedTo": "sera lié à"
 				},
 				"default": {
-					"group": "",
+					"group": "Groupe",
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "Haches",
+						"title": "Haches"
 					},
-					"xAxis": "",
-					"yAxis": ""
+					"xAxis": "Axe X",
+					"yAxis": "Axe Y"
 				}
 			},
 			"editor": {
 				"codeTab": "Code",
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "Code",
+					"variables": "Variables"
 				},
 				"variablesTab": "Variables"
 			},
@@ -812,8 +816,8 @@
 			"widgetSettings": "Paramètres des widgets"
 		},
 		"sideNav": {
-			"addComponent": "",
-			"addComponentAria": "",
+			"addComponent": "Composant",
+			"addComponentAria": "Ajouter un composant à cet espace de travail",
 			"addJournal": "Journal",
 			"addJournalScratch": "Créer un journal à partir de zéro",
 			"addJournalTemplate": "Ajouter un modèle de journal",
@@ -970,103 +974,103 @@
 		"statTest": {
 			"axes": {
 				"anova": {
-					"columnsToAnova": "",
+					"columnsToAnova": "Colonnes à inclure dans l'ANOVA",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "Actuellement en représentation :",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "Dans l'exemple ci-dessus, nous sélectionnerions la colonne « attrib » comme colonne de regroupement. Ce regroupement est effectué sur la colonne « value » qui contient les valeurs des conditions c1, c2 et c3.",
+							"title": "Utilisez une colonne d'étiquettes pour trier les lignes d'une colonne de valeurs."
 						},
 						"summaryLong": {
-							"hint": "",
-							"main": ""
+							"hint": "(Cliquez ici si vous souhaitez comparer les valeurs de différentes colonnes)",
+							"main": "Analyse de variance à un facteur (ANOVA) sur une colonne contenant des valeurs, en utilisant une colonne de regroupement contenant les étiquettes des groupes sur chaque ligne."
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"hint": "",
-							"prefix": ""
+							"between": "entre",
+							"columns": "trois colonnes ou plus.",
+							"hint": "(Cliquez ici pour utiliser une colonne d'étiquettes afin de regrouper chaque ligne par étiquette unique)",
+							"prefix": "ANOVA à un facteur"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "Dans l'exemple ci-dessus, nous sélectionnerions les colonnes c1, c2 et c3 pour effectuer une ANOVA à un facteur sur celles-ci.",
+							"title": "Passez à une analyse de variance à un facteur (ANOVA) entre trois colonnes ou plus."
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "Colonne de regroupement",
+					"quantitativeColumn": "Colonne quantitative",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "Lien externe",
+						"scribbrLinkTitle": "Qu'est-ce qu'une ANOVA à un facteur ?"
 					}
 				},
 				"common": {
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
-						"panelRegionAriaLabel": "",
-						"sectionLabel": "",
-						"toggleAriaLabel": ""
+						"chipLong": "Long",
+						"chipWide": "Large",
+						"panelRegionAriaLabel": "Mise en page des données : diagramme pour le format sélectionné",
+						"sectionLabel": "Disposition des données",
+						"toggleAriaLabel": "Afficher ou masquer les options de mise en page des données"
 					},
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "Haches",
+						"title": "Haches"
 					},
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "Ressources et aide",
+						"resourcesIntro": "Pour en savoir plus sur ce composant, consultez les ressources ci-dessous."
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": "",
-						"sectionTitle": ""
+						"noLink": "Aucun lien externe",
+						"openLinkHint": "Cliquez ici pour accéder à la ressource",
+						"sectionTitle": "Ressources"
 					}
 				},
 				"default": {
-					"column1": "",
-					"column2": ""
+					"column1": "1ère colonne",
+					"column2": "2e colonne"
 				},
 				"pearson": {
-					"predictedColumn": "",
-					"predictorColumn": "",
+					"predictedColumn": "Colonne prédite",
+					"predictorColumn": "Colonne prédictive",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "Lien externe",
+						"scribbrLinkTitle": "Qu'est-ce que la corrélation de Pearson ?"
 					}
 				},
 				"tTest": {
-					"col1": "",
-					"col2": "",
+					"col1": "1ère colonne",
+					"col2": "2e colonne",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "Actuellement en représentation :",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "Dans l'exemple ci-dessus, nous sélectionnerions la colonne « attrib » comme colonne de regroupement. Ce regroupement est effectué sur la colonne « value » qui contient les valeurs des deux conditions.",
+							"title": "Utilisez une colonne d'étiquettes pour trier les lignes d'une colonne de valeurs."
 						},
 						"summaryLong": {
-							"main": ""
+							"main": "Test t sur une colonne contenant des valeurs en utilisant une colonne de regroupement contenant des étiquettes pour chaque ligne"
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"prefix": ""
+							"between": "entre",
+							"columns": "deux colonnes.",
+							"prefix": "Test T"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "Dans l'exemple ci-dessus, nous sélectionnerions les colonnes c1 et c2 pour effectuer un test t sur elles.",
+							"title": "Passez à l'exécution d'un test T entre deux colonnes"
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "Colonne de regroupement",
+					"quantitativeColumn": "Colonne quantitative",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "Lien externe",
+						"scribbrLinkTitle": "Test t pour échantillons indépendants"
 					}
 				}
 			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "Code",
+					"variables": "Variables"
 				}
 			},
 			"emptyState": {
@@ -1074,9 +1078,9 @@
 				"title": "Votre test statistique est prêt à être configuré."
 			},
 			"fields": {
-				"clearSelection": "",
-				"selectPlaceholder": "",
-				"selectVariablesPlaceholder": ""
+				"clearSelection": "Aucun",
+				"selectPlaceholder": "Sélectionnez {{field}}",
+				"selectVariablesPlaceholder": "Sélectionner la ou les variables"
 			}
 		},
 		"table": {
@@ -1228,7 +1232,7 @@
 		"allowMovingCards": "Autoriser le déplacement des cartes",
 		"allowMovingSections": "Autoriser le déplacement des sections",
 		"cancel": "Annuler",
-		"classTemplateReadOnly": "",
+		"classTemplateReadOnly": "Modèle de classe (utilisé par le conseil de classe)",
 		"collaborators": "Collaborateurs",
 		"copyLink": "Copier le lien de l'étude",
 		"createYourStudyProposal": "Créez votre proposition d'étude ici pour commencer votre parcours de recherche",
@@ -1380,13 +1384,18 @@
 		"noTemplatesSubtitle": "Pour démarrer un projet, vous avez besoin d'un modèle de tableau de projet. Votre enseignant n'a peut-être pas de modèle de tableau de projet associé à ce cours.",
 		"noTemplatesTitle": "Il n'y a pas de modèles de tableau de projet dans la classe",
 		"selectClass": "Sélectionnez la classe",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "Projet sans titre"
 	},
 	"notes": {
 		"noNotes": "Aucune note n'a encore été saisie. Faites un clic droit pour ajouter des notes."
 	},
 	"noVideoPlaceholder": "Aucune vidéo d'introduction disponible.",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "Les étudiants ne peuvent pas assigner d'autres personnes à leurs cartes eux-mêmes",
 	"overview": {
 		"actions": "Actes",
 		"copy": "Copie",
@@ -1520,7 +1529,7 @@
 		"boardTypeMentorNote": "Cela concerne les mentors qui donnent leur avis aux conseils d'étudiants. Pour toute question, veuillez contacter un membre de MindHive.",
 		"boardTypeMindHive": "",
 		"boardTypeYouQuantified": "",
-		"classTemplateLabel": "",
+		"classTemplateLabel": "Ce tableau est un modèle de classe",
 		"copy": "Copie",
 		"create": "Créer une nouvelle proposition",
 		"dateCreated": "Date de création",
@@ -1610,11 +1619,11 @@
 			"assignedTo": {
 				"disable": "Désactiver l'assignation des étudiants aux cartes",
 				"disableStudentsAssign": "Restreindre aux enseignants et mentors",
-				"empty": "",
+				"empty": "Aucune personne n'a encore été désignée sur ce conseil.",
 				"enable": "Activer l'assignation des étudiants aux cartes",
 				"enableStudentsAssign": "Permettre aux étudiants d'assigner des cartes"
 			},
-			"emptyState": "",
+			"emptyState": "Aucune carte ne correspond aux filtres sélectionnés. Veuillez modifier votre statut, l'étape de révision ou les filtres attribués pour afficher les cartes.",
 			"reviewSteps": "Étapes de révision",
 			"title": "Filtrer par"
 		}
@@ -1869,6 +1878,85 @@
 		"card": "carte",
 		"cards": "cartes",
 		"cardsCount": "{{count}} carte{{count == 1 ? '' : 's'}}",
+		"createCardModal": {
+			"alreadyAddedLabel": "{{label}} (déjà ajouté)",
+			"alreadyAddedTooltip": "Ce point de contrôle est déjà sur le tableau de bord",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
+			"cancel": "Annuler",
+			"categories": {
+				"action": "Carte Action",
+				"proposal": "Carte de proposition"
+			},
+			"create": "Créer",
+			"creating": "Créer...",
+			"custom": {
+				"canReview": "Qui peut examiner",
+				"cloneFrom": "Copier un formulaire existant",
+				"description": "Description",
+				"fromScratch": "Partir de zéro",
+				"label": "Étiquette d'action",
+				"labelPlaceholder": "Saisissez une étiquette d'action",
+				"selectSource": "Formulaire à copier",
+				"selectSourcePlaceholder": "Sélectionnez une étape de révision"
+			},
+			"customPreview": "Crée une étape de révision personnalisée avec sa propre étiquette d'étape clé.",
+			"editForm": "Modifier le formulaire",
+			"editFormHint": "L'édition de formulaires est disponible ailleurs",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
+			"formTemplate": {
+				"blank": "Formulaire vierge",
+				"defaultLabel": "{{label}}",
+				"label": "Modèle de formulaire"
+			},
+			"milestone": {
+				"actionLabel": "Étiquette d'action",
+				"configureFormNext": "Le formulaire d'évaluation est configuré à l'étape suivante.",
+				"description": "Description"
+			},
+			"newCheckpoint": "+ Nouvelle carte d'action",
+			"noPreview": "Aucun formulaire d'évaluation n'est associé à ce type de carte.",
+			"previewLabel": "Aperçu du formulaire d'avis",
+			"previewLoading": "Chargement de l'aperçu...",
+			"proposalPreview": "Ajoute une fiche de proposition standard avec des champs de contenu pour les étudiants.",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
+			"scratchPreview": "Crée un formulaire de révision brouillon avec une carte vide, lié à cette étape. Publiez le formulaire dans l'interface d'administration avant qu'il n'apparaisse dans la section révision.",
+			"statusDraft": "",
+			"statusPublished": "",
+			"steps": {
+				"cardType": "Type de carte",
+				"checkpoint": "Point de contrôle",
+				"milestone": "Jalon",
+				"permissions": "Modèle d'autorisations et de formulaire"
+			},
+			"templateSourceLabel": "{{title}} (personnalisé)",
+			"title": "Créer une nouvelle carte",
+			"titleLabel": "Titre de la carte",
+			"titlePlaceholder": "Saisissez un titre de carte",
+			"typeLabel": "Type de carte",
+			"typePlaceholder": "Sélectionnez un type de carte",
+			"types": {
+				"actionCollectingData": "Action par défaut : Démarrer la collecte de données",
+				"actionPeerFeedback": "Action par défaut : Soumettre pour évaluation par les pairs",
+				"actionProjectReport": "Action par défaut : Soumettre le rapport de projet",
+				"actionSubmit": "Action par défaut : Soumettre pour commentaires sur la proposition",
+				"custom": "Créez votre propre étape de révision",
+				"proposal": "Carte de proposition"
+			}
+		},
 		"deleteSectionConfirm": "Êtes-vous sûr de vouloir supprimer cette section de propositions ? Toutes les cartes de cette section seront également supprimées. Cette action est irréversible.",
 		"enterNewTitle": "Veuillez entrer un titre",
 		"newCard": "Nouvelle carte",
@@ -2170,18 +2258,30 @@
 		"uploadLabjs": "Veuillez d'abord télécharger un fichier json lab.js",
 		"vasBuilder": "Constructeur VAS"
 	},
+	"templateMilestones": {
+		"addStep": "Ajouter une étape de révision",
+		"cancel": "Annuler",
+		"canReview": "Qui peut examiner",
+		"create": "Créer une étape",
+		"deactivate": "Désactiver",
+		"description": "Ajoutez des étapes de révision personnalisées à ce modèle de cours. Chaque étape crée une fiche d'action que les élèves utilisent pour soumettre leur travail et obtenir des commentaires.",
+		"hasActionCard": "carte d'action liée",
+		"stepDescription": "Description",
+		"stepTitle": "Titre de l'étape",
+		"title": "Étapes de révision"
+	},
 	"templateTab": "Modèle",
 	"testAndCollect": "Tester et collecter",
 	"tiptap": {
 		"insertImageAria": "Insérer une image",
 		"insertImagePrompt": "Saisissez l'URL de l'image :",
 		"mediaCancelEdit": "Annuler",
-		"mediaCanvaExportThumb": "",
+		"mediaCanvaExportThumb": "Exportation PDF Canva",
 		"mediaDelete": "SUPPRIMER",
 		"mediaDeleteConfirm": "Supprimer ce média de votre bibliothèque ? Les images déjà intégrées au contenu peuvent apparaître comme brisées.",
 		"mediaDeleteFailed": "Impossible de supprimer ce fichier multimédia.",
 		"mediaDescriptionPlaceholder": "Ajoutez des notes si vous le souhaitez.",
-		"mediaDownloadPdf": "",
+		"mediaDownloadPdf": "Télécharger le PDF",
 		"mediaEdit": "Modifier",
 		"mediaEditFieldsRequired": "Le titre et le nom du fichier ne peuvent pas être vides.",
 		"mediaEditMeta": "Modifier les détails",

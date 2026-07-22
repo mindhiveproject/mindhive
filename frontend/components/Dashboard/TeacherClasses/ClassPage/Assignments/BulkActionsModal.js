@@ -10,6 +10,7 @@ import {
   UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS,
 } from "../../../../Mutations/Assignment";
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 import TemplateBoardCardPicker from "./TemplateBoardCardPicker";
 
 const Section = styled.div`
@@ -47,7 +48,7 @@ export default function BulkActionsModal({
   const [applying, setApplying] = useState(false);
 
   const classId = myclass?.id;
-  const templateBoardId = myclass?.templateProposal?.id;
+  const templateBoardId = getPrimaryTemplateBoardId(myclass);
 
   const [editAssignment] = useMutation(EDIT_ASSIGNMENT, {
     refetchQueries: [{ query: GET_CLASS_ASSIGNMENTS, variables: { classId } }],

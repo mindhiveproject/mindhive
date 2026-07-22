@@ -4,6 +4,8 @@ import useTranslation from "next-translate/useTranslation";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
+import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 import { v1 as uuidv1 } from "uuid";
 
@@ -33,12 +35,8 @@ const Board = ({
   });
   const proposal = data?.proposalBoard || undefined;
 
-  const submitStatuses = {
-    ACTION_SUBMIT: proposal?.submitProposalStatus,
-    ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
-    ACTION_COLLECTING_DATA: proposal?.study?.dataCollectionStatus,
-    ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
-  };
+  const { milestones: resolvedMilestones } = useBoardMilestones(proposalId);
+  const submitStatuses = buildSubmitStatuses(proposal, resolvedMilestones);
 
   const [sections, setSections] = useState([]);
   const [createSectionMut, createSectionState] = useMutation(CREATE_SECTION);
@@ -68,7 +66,7 @@ const Board = ({
       propagateToClones,
       hasClones,
       onTemplateChangedWithoutPropagation,
-    ]
+    ],
   );
 
   const deleteSection = useCallback(
@@ -91,7 +89,7 @@ const Board = ({
       propagateToClones,
       hasClones,
       onTemplateChangedWithoutPropagation,
-    ]
+    ],
   );
 
   const updateSection = useCallback(
@@ -114,7 +112,7 @@ const Board = ({
       propagateToClones,
       hasClones,
       onTemplateChangedWithoutPropagation,
-    ]
+    ],
   );
 
   const backfillPublicIdDoneRef = useRef(null);
@@ -165,7 +163,7 @@ const Board = ({
         // eslint-disable-next-line no-console
         console.error(
           "Failed to backfill card publicId in ProjectBoard Builder:",
-          e
+          e,
         );
       });
     });
@@ -177,19 +175,21 @@ const Board = ({
   if (error) return t("board.error", { message: error.message });
 
   return (
-    <Inner
-      board={proposal}
-      sections={sections}
-      onCreateSection={createSection}
-      onUpdateSection={updateSection}
-      onSetSections={setSections}
-      onDeleteSection={deleteSection}
-      openCard={openCard}
-      proposalBuildMode={proposalBuildMode}
-      adminMode={adminMode}
-      isPreview={isPreview}
-      submitStatuses={submitStatuses}
-    />
+    <>
+      <Inner
+        board={proposal}
+        sections={sections}
+        onCreateSection={createSection}
+        onUpdateSection={updateSection}
+        onSetSections={setSections}
+        onDeleteSection={deleteSection}
+        openCard={openCard}
+        proposalBuildMode={proposalBuildMode}
+        adminMode={adminMode}
+        isPreview={isPreview}
+        submitStatuses={submitStatuses}
+      />
+    </>
   );
 };
 

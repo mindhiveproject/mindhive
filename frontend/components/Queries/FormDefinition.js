@@ -1,19 +1,22 @@
 import { gql } from "@apollo/client";
 
 // Resolve the most-specific published FormDefinition for a given key.
-// The backend chooses class_network > organization > global, returning
-// the highest-version published row at the winning scope. Cards and
-// nested fields are ordered by their `order` column at the GraphQL layer.
+// The backend chooses project_board > class_network > organization >
+// global, returning the highest-version published row at the winning
+// scope. Cards and nested fields are ordered by their `order` column
+// at the GraphQL layer.
 export const RESOLVE_FORM_DEFINITION = gql`
   query RESOLVE_FORM_DEFINITION(
     $key: String!
     $organizationId: ID
     $classNetworkId: ID
+    $proposalBoardId: ID
   ) {
     resolveFormDefinition(
       key: $key
       organizationId: $organizationId
       classNetworkId: $classNetworkId
+      proposalBoardId: $proposalBoardId
     ) {
       id
       key
@@ -21,11 +24,15 @@ export const RESOLVE_FORM_DEFINITION = gql`
       description
       scope
       status
+      surface
       version
       organization {
         id
       }
       classNetwork {
+        id
+      }
+      proposalBoard {
         id
       }
       cards(orderBy: { order: asc }) {
@@ -75,12 +82,17 @@ export const ADMIN_FORM_DEFINITIONS = gql`
       title
       scope
       status
+      surface
       version
       organization {
         id
         name
       }
       classNetwork {
+        id
+        title
+      }
+      proposalBoard {
         id
         title
       }
@@ -115,6 +127,9 @@ export const SIBLING_FORM_DEFINITIONS = gql`
       classNetwork {
         id
       }
+      proposalBoard {
+        id
+      }
       publishedBy {
         id
         username
@@ -138,6 +153,7 @@ export const ADMIN_FORM_DEFINITION = gql`
       description
       scope
       status
+      surface
       version
       changelog
       publishedAt
@@ -146,6 +162,10 @@ export const ADMIN_FORM_DEFINITION = gql`
         name
       }
       classNetwork {
+        id
+        title
+      }
+      proposalBoard {
         id
         title
       }

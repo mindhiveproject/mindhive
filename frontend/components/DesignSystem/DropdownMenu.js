@@ -132,6 +132,8 @@ function renderLeadingIcon(item) {
  * @param {boolean} [dividerAfterHeader=true] - Show a divider between `panelHeader` and items when `panelHeader` is set.
  * @param {Array<{ key: string, label: React.ReactNode, icon?: React.ReactNode, onClick?: () => void, danger?: boolean, static?: boolean }>} items - Menu items. Optional `icon` renders as a leading icon before `label`. `static: true` or missing `onClick` on a non-danger row renders a non-interactive row (does not close menu). Action items call `onClick` then close. `danger: true` shows a trash icon when `icon` is omitted.
  * @param {React.CSSProperties} [triggerStyle] - Optional override for trigger button styles.
+ * @param {React.CSSProperties} [panelStyle] - Optional override for portaled panel styles.
+ * @param {(open: boolean) => void} [onOpenChange] - Called when the menu opens or closes.
  * @param {'auto'|'below'|'above'} [placement='auto'] - Vertical placement; `auto` flips when there is not enough space below.
  */
 export default function DropdownMenu({
@@ -142,6 +144,8 @@ export default function DropdownMenu({
   dividerAfterHeader = true,
   items = [],
   triggerStyle = {},
+  panelStyle = {},
+  onOpenChange = null,
   placement = "auto",
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -156,6 +160,10 @@ export default function DropdownMenu({
     ...(useCustomTrigger ? ICON_TRIGGER_STYLE : {}),
     ...triggerStyle,
   };
+
+  useEffect(() => {
+    onOpenChange?.(dropdownOpen);
+  }, [dropdownOpen, onOpenChange]);
 
   useLayoutEffect(() => {
     if (!dropdownOpen) {
@@ -257,6 +265,7 @@ export default function DropdownMenu({
               onMouseDown={(e) => e.stopPropagation()}
               style={{
                 ...PANEL_STYLE,
+                ...panelStyle,
                 position: "fixed",
                 top: fixed.top,
                 right: fixed.right,

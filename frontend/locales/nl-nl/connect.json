@@ -457,25 +457,40 @@
 		}
 	},
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "Capaciteit {{count}}",
+		"delete": "Verwijderen",
+		"deleteConfirm": "Deze kans verwijderen? Dit kan niet ongedaan gemaakt worden.",
+		"edit": "Bewerking",
+		"empty": "Je hebt nog geen mogelijkheden gecreëerd. Klik op Nieuwe mogelijkheid om je eerste project voor studenten te publiceren.",
+		"emptyFiltered": "Er zijn geen vacatures die aan de huidige filters voldoen.",
+		"loading": "Bezig met laden...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} netwerken",
+			"one": "{{count}} netwerk"
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "Filteren op netwerk",
+		"networkFilterPlaceholder": "Alle netwerken",
+		"newButton": "Nieuwe kans",
+		"pageTitle": "Mijn kansen",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} beoordelingen",
+			"one": "{{average}} · {{count}} beoordeling"
 		},
+		"searchLabel": "Zoek vacatures op functietitel",
+		"searchPlaceholder": "Zoeken op titel...",
+		"status": {
+			"accepted": "Geaccepteerd",
+			"archived": "Gearchiveerd",
+			"closed": "Gesloten",
+			"draft": "Voorlopige versie",
+			"pendingReview": "In afwachting van beoordeling",
+			"preSelected": "Vooraf geselecteerd",
+			"published": "Gepubliceerd"
+		},
+		"statusFilterLabel": "Filter op status",
+		"statusFilterPlaceholder": "Alle statussen",
+		"teamOf": "Team van {{size}}",
+		"unknownSponsor": "Onbekend"
 		"reviewCommentsEdit": "",
 		"reviewCommentsWaiting": "",
 		"rowMeta": {
@@ -508,6 +523,7 @@
 		"classNetworks": "",
 		"connect": "Aansluiten",
 		"exploreOpportunities": "Ontdek de mogelijkheden",
+		"mainNavAriaLabel": "Verbind secties",
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "",
 		"manageNetwork": "",
@@ -871,8 +887,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} woorden",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "Deze vacature is gearchiveerd.",
+				"closed": "Deze mogelijkheid is niet meer beschikbaar.",
 				"published": "Deze vacature is speciaal voor studenten gepubliceerd.",
 				"returnedRevise": "",
 				"sponsorFollowUp": "Vul de onderstaande vervolgvragenlijst in.",
@@ -992,22 +1008,22 @@
 		"website": ""
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "Bekijk de sponsors die mogelijkheden bieden op MindHive Connect — ontdek hun missie, het team erachter en alle projecten die ze hebben gepubliceerd.",
+		"domainFilterLabel": "Filteren op domein",
+		"domainFilterPlaceholder": "Alle domeinen",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "Academische instelling",
+			"government": "Overheidsinstantie",
+			"industry": "Industrie / Start-up",
+			"nonprofit": "Non-profit",
+			"other": "Ander"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "Er zijn geen organisaties die aan de huidige filters voldoen.",
+		"loading": "Bezig met laden...",
+		"next": "Volgende",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} mogelijkheden",
+			"one": "{{count}} kans"
 		},
 		"pageTitle": "",
 		"paginationInfo": "",
@@ -1066,10 +1082,10 @@
 		"title": "Uw betrokkenheid"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "MindHive-gemeenschap",
+		"defaultName": "MindHive-lid",
+		"defaultSummary": "Klik om het profiel te bekijken",
+		"viewProfile": "Bekijk het profiel van {{name}}"
 	},
 	"profileType": {
 		"chooseType": "Kies uw profieltype",
@@ -1108,9 +1124,13 @@
 		"returnToSponsor": ""
 	},
 	"roleGuard": {
-		"backLink": "",
-		"description": "",
+		"backLink": "Terug naar Verbinden",
+		"description": "Je account heeft nog geen toegang tot dit gedeelte. Als je denkt dat dit een fout is, neem dan contact op met je docent of een beheerder.",
 		"roles": {
+			"admin": "Beheerders",
+			"mentor": "Mentoren",
+			"student": "studenten",
+			"teacher": "leraren"
 			"admin": "",
 			"classNetworkAdmin": "",
 			"mentor": "",
@@ -1118,7 +1138,7 @@
 			"student": "",
 			"teacher": ""
 		},
-		"title": ""
+		"title": "Dit gebied is voor {{roles}}"
 	},
 	"savedConnections": "Opgeslagen verbindingen",
 	"savedConnectionsSubtitle": "Doorzoek uw connecties om de perfecte medewerker, mentor of wetenschapper voor u te vinden.",

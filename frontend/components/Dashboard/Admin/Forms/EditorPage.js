@@ -18,16 +18,20 @@ import {
   UPDATE_FORM_DEFINITION,
   PUBLISH_FORM_DEFINITION,
 } from "../../../Mutations/FormDefinition";
-import CardListPanel from "./CardListPanel";
-import CardEditor from "./CardEditor";
-import FieldEditor from "./FieldEditor";
-import PreviewPanel from "./PreviewPanel";
+import FormDefinitionEditor from "./FormDefinitionEditor";
 import PublishModal from "./PublishModal";
 import VersionHistoryPanel from "./VersionHistoryPanel";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "./EditorPanelStyles";
+
+const SURFACE_LABEL = {
+  profile_individual: "Individual profile",
+  profile_organization: "Organization profile",
+  opportunity: "Opportunity",
+  feedback: "Feedback",
+};
 
 const Shell = styled.div`
   display: flex;
@@ -83,30 +87,6 @@ const StatusBadge = styled.span`
   color: #ffffff;
 `;
 
-const ThreePane = styled.div`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: 280px 1fr 1fr;
-
-  @media (max-width: 1100px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const EmptySelection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 40px;
-  color: #5f6871;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-  font-size: 14px;
-  text-align: center;
-  min-height: 200px;
-`;
-
 const BackLink = styled.button`
   background: none;
   border: none;
@@ -120,7 +100,6 @@ const BackLink = styled.button`
 
 export default function EditorPage({ definitionId }) {
   const router = useRouter();
-  const [selected, setSelected] = useState(null);
   const [publishOpen, setPublishOpen] = useState(false);
 
   const { data, loading, error } = useQuery(ADMIN_FORM_DEFINITION, {
@@ -148,7 +127,9 @@ export default function EditorPage({ definitionId }) {
           (s.organization?.id || null) ===
             (definition.organization?.id || null) &&
           (s.classNetwork?.id || null) ===
-            (definition.classNetwork?.id || null)
+            (definition.classNetwork?.id || null) &&
+          (s.proposalBoard?.id || null) ===
+            (definition.proposalBoard?.id || null)
       ) || null
     );
   }, [siblingData, definition]);
@@ -182,19 +163,6 @@ export default function EditorPage({ definitionId }) {
     }
   );
 
-  const selectedItem = useMemo(() => {
-    if (!definition || !selected) return null;
-    if (selected.type === "card") {
-      return definition.cards.find((c) => c.id === selected.id) || null;
-    }
-    if (selected.type === "field") {
-      for (const card of definition.cards) {
-        const f = (card.fields || []).find((x) => x.id === selected.id);
-        if (f) return f;
-      }
-    }
-    return null;
-  }, [definition, selected]);
 
   const confirmPublish = async (changelog) => {
     try {
@@ -267,8 +235,24 @@ export default function EditorPage({ definitionId }) {
             </StatusBadge>
           </h1>
           <div className="meta">
-            <code>{definition.key}</code> · {definition.scope} · v
-            {definition.version}
+            {definition.surface ? (
+              <>
+                <strong>{SURFACE_LABEL[definition.surface] || definition.surface}</strong>{" "}
+                ·{" "}
+              </>
+            ) : null}
+            <code>{definition.key}</code> · {definition.scope}
+            {definition.scope === "project_board" &&
+            definition.proposalBoard?.title
+              ? ` (${definition.proposalBoard.title})`
+              : definition.scope === "organization" &&
+                  definition.organization?.name
+                ? ` (${definition.organization.name})`
+                : definition.scope === "class_network" &&
+                    definition.classNetwork?.title
+                  ? ` (${definition.classNetwork.title})`
+                  : ""}{" "}
+            · v{definition.version}
           </div>
         </div>
         <div className="actions">
@@ -304,31 +288,10 @@ export default function EditorPage({ definitionId }) {
 
       <VersionHistoryPanel definition={definition} />
 
-      <ThreePane>
-        <CardListPanel
-          definition={definition}
-          selected={selected}
-          onSelect={setSelected}
-        />
-        {selected?.type === "card" && selectedItem ? (
-          <CardEditor
-            card={selectedItem}
-            definitionId={definitionId}
-            onDeleted={() => setSelected(null)}
-          />
-        ) : selected?.type === "field" && selectedItem ? (
-          <FieldEditor
-            field={selectedItem}
-            definitionId={definitionId}
-            onDeleted={() => setSelected(null)}
-          />
-        ) : (
-          <EmptySelection>
-            Select a card or field on the left to edit it.
-          </EmptySelection>
-        )}
-        <PreviewPanel definition={definition} locale={router.locale} />
-      </ThreePane>
+      <FormDefinitionEditor
+        definitionId={definitionId}
+        locale={router.locale}
+      />
       {publishOpen ? (
         <PublishModal
           definition={definition}

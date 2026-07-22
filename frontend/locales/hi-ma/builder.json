@@ -1,6 +1,7 @@
 {
 	"actionCard": {
 		"clickToSubmit": "{{शीर्षक}} सबमिट करने के लिए क्लिक करें",
+		"customStep": "",
 		"dataCollection": "डेटा संग्रहण",
 		"deleteCardConfirmation": "क्या आप वाकई इस कार्ड को हटाना चाहते हैं? इस कार्रवाई को पूर्ववत नहीं किया जा सकता।",
 		"deleteConfirm": "क्या आप वाकई इस कार्ड को हटाना चाहते हैं? इस कार्रवाई को पूर्ववत नहीं किया जा सकता।",
@@ -8,6 +9,7 @@
 		"projectReport": "परियोजना रिपोर्ट",
 		"proposalFeedback": "प्रस्ताव प्रतिक्रिया",
 		"submitFor": "{{शीर्षक}} के लिए सबमिट करें",
+		"submitForCustomMilestone": "",
 		"submitForDataCollection": "डेटा संग्रह के लिए सबमिट करें",
 		"submitForPeerFeedback": "सहकर्मी प्रतिक्रिया के लिए सबमिट करें",
 		"submitForProjectReport": "परियोजना रिपोर्ट के लिए सबमिट करें",
@@ -56,6 +58,8 @@
 			"close": "",
 			"connect": "",
 			"content": "",
+			"customMilestone": "",
+			"customMilestoneDescription": "",
 			"disconnect": "",
 			"done": "",
 			"linkItems": "",
@@ -1380,6 +1384,11 @@
 		"noTemplatesSubtitle": "प्रोजेक्ट शुरू करने के लिए, आपको एक प्रोजेक्ट बोर्ड टेम्पलेट की आवश्यकता होगी। हो सकता है कि आपके शिक्षक के पास इस कक्षा से जुड़ा कोई प्रोजेक्ट बोर्ड टेम्पलेट न हो।",
 		"noTemplatesTitle": "कक्षा में कोई प्रोजेक्ट बोर्ड टेम्पलेट नहीं हैं",
 		"selectClass": "कक्षा का चयन करें",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "शीर्षकहीन परियोजना"
 	},
 	"notes": {
@@ -1869,6 +1878,85 @@
 		"card": "कार्ड",
 		"cards": "पत्ते",
 		"cardsCount": "{{count}} कार्ड{{count == 1 ? '' : 's'}}",
+		"createCardModal": {
+			"alreadyAddedLabel": "",
+			"alreadyAddedTooltip": "",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
+			"cancel": "",
+			"categories": {
+				"action": "",
+				"proposal": ""
+			},
+			"create": "",
+			"creating": "",
+			"custom": {
+				"canReview": "",
+				"cloneFrom": "",
+				"description": "",
+				"fromScratch": "",
+				"label": "",
+				"labelPlaceholder": "",
+				"selectSource": "",
+				"selectSourcePlaceholder": ""
+			},
+			"customPreview": "",
+			"editForm": "",
+			"editFormHint": "",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
+			"formTemplate": {
+				"blank": "",
+				"defaultLabel": "",
+				"label": ""
+			},
+			"milestone": {
+				"actionLabel": "",
+				"configureFormNext": "",
+				"description": ""
+			},
+			"newCheckpoint": "",
+			"noPreview": "",
+			"previewLabel": "",
+			"previewLoading": "",
+			"proposalPreview": "",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
+			"scratchPreview": "",
+			"statusDraft": "",
+			"statusPublished": "",
+			"steps": {
+				"cardType": "",
+				"checkpoint": "",
+				"milestone": "",
+				"permissions": ""
+			},
+			"templateSourceLabel": "",
+			"title": "",
+			"titleLabel": "",
+			"titlePlaceholder": "",
+			"typeLabel": "",
+			"typePlaceholder": "",
+			"types": {
+				"actionCollectingData": "",
+				"actionPeerFeedback": "",
+				"actionProjectReport": "",
+				"actionSubmit": "",
+				"custom": "",
+				"proposal": ""
+			}
+		},
 		"deleteSectionConfirm": "क्या आप वाकई इस प्रस्ताव अनुभाग को हटाना चाहते हैं? इस अनुभाग के सभी कार्ड भी हटा दिए जाएँगे। इस कार्रवाई को पूर्ववत नहीं किया जा सकता।",
 		"enterNewTitle": "कृपया शीर्षक दर्ज करें",
 		"newCard": "नया कार्ड",
@@ -2169,6 +2257,18 @@
 		"updatedOn": "अंतिम बार अद्यतन किया गया",
 		"uploadLabjs": "कृपया पहले lab.js json फ़ाइल अपलोड करें",
 		"vasBuilder": "वीएएस बिल्डर"
+	},
+	"templateMilestones": {
+		"addStep": "",
+		"cancel": "",
+		"canReview": "",
+		"create": "",
+		"deactivate": "",
+		"description": "",
+		"hasActionCard": "",
+		"stepDescription": "",
+		"stepTitle": "",
+		"title": ""
 	},
 	"templateTab": "खाका",
 	"testAndCollect": "परीक्षण और संग्रह",

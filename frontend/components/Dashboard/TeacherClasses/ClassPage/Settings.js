@@ -17,6 +17,7 @@ import StyledModal from "../../../styles/StyledModal";
 
 import { useRouter } from "next/router";
 
+import Chip from "../../../DesignSystem/Chip";
 import DesignSystemButton from "../../../DesignSystem/Button";
 import TipTapEditor from "../../../TipTap/Main";
 import CurriculumTypeSelector from "./CurriculumTypeSelector";

@@ -79,6 +79,14 @@ export const APPLY_TEMPLATE_BOARD_CHANGES = gql`
   }
 `;
 
+export const SYNC_CLASS_TEMPLATE_BOARDS = gql`
+  mutation SYNC_CLASS_TEMPLATE_BOARDS($classId: ID!) {
+    syncClassTemplateBoards(classId: $classId) {
+      id
+    }
+  }
+`;
+
 export const UPDATE_PROPOSAL_BOARD = gql`
   mutation UPDATE_PROPOSAL_BOARD(
     $id: ID!
@@ -189,6 +197,8 @@ export const CREATE_CARD = gql`
     $position: Float!
     $settings: JSON
     $publicId: String
+    $type: String
+    $milestone: MilestoneRelateToOneForCreateInput
   ) {
     createProposalCard(
       data: {
@@ -198,14 +208,20 @@ export const CREATE_CARD = gql`
         position: $position
         settings: $settings
         publicId: $publicId
+        type: $type
+        milestone: $milestone
       }
     ) {
       id
       title
       content
+      type
       position
       settings
       publicId
+      milestone {
+        id
+      }
       section {
         id
       }
@@ -323,6 +339,13 @@ export const UPDATE_PROJECT_BOARD = gql`
   mutation UPDATE_PROJECT_BOARD($id: ID!, $input: ProposalBoardUpdateInput!) {
     updateProposalBoard(where: { id: $id }, data: $input) {
       id
+      milestoneStatus
+      submitProposalStatus
+      submitProposalOpenForComments
+      peerFeedbackStatus
+      peerFeedbackOpenForComments
+      projectReportStatus
+      projectReportOpenForComments
     }
   }
 `;

@@ -46,11 +46,17 @@ async function applyTemplateBoardChanges(
   // associated with the class(es) whose templateProposal is this board.
   const { template } = await getTemplateAndClones(context, templateBoardId);
   if (template) {
-    const templateClasses = template.templateForClasses ?? [];
+    const templateClasses = [
+      ...(template.templateForClasses ?? []),
+      ...(template.templatesForClass ?? []),
+    ];
+    const uniqueTemplateClasses = Array.from(
+      new Map(templateClasses.map((c) => [c.id, c])).values()
+    );
 
-    if (templateClasses.length > 0) {
+    if (uniqueTemplateClasses.length > 0) {
       const classIds = Array.from(
-        new Set(templateClasses.map((c) => c.id).filter(Boolean))
+        new Set(uniqueTemplateClasses.map((c) => c.id).filter(Boolean))
       );
 
       if (classIds.length > 0) {

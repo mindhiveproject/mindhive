@@ -1,3 +1,5 @@
+import { normalizeReviewStepKey } from "../../lib/milestones";
+
 /**
  * Utility functions to determine card variants based on card settings and proposal status
  */
@@ -31,9 +33,11 @@ export function getRegularCardVariant(card, submitStatuses = {}) {
     };
   }
 
-  // Check status of each review step
+  // Check status of each review step (supports milestone keys and legacy ACTION_* values)
   const reviewStepStatuses = includeInReviewSteps.map((step) => {
-    const status = submitStatuses[step] || "NOT_STARTED";
+    const normalizedKey = normalizeReviewStepKey(step);
+    const status =
+      submitStatuses[step] || submitStatuses[normalizedKey] || "NOT_STARTED";
     return { step, status };
   });
 
@@ -79,8 +83,14 @@ export function getRegularCardVariant(card, submitStatuses = {}) {
  * @param {Object} submitStatuses - Object mapping action card types to their statuses
  * @returns {string} - "ACTION_NOT_SUBMITTED" or "ACTION_SUBMITTED"
  */
-export function getActionCardVariant(cardType, submitStatuses = {}) {
-  const status = submitStatuses[cardType] || "NOT_STARTED";
+export function getActionCardVariant(
+  cardType,
+  submitStatuses = {},
+  milestoneKey = null
+) {
+  const statusKey = milestoneKey || cardType;
+  const status =
+    submitStatuses[statusKey] || submitStatuses[cardType] || "NOT_STARTED";
   return status === "SUBMITTED"
     ? "ACTION_SUBMITTED"
     : "ACTION_NOT_SUBMITTED";

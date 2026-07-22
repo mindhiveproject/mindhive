@@ -143,6 +143,7 @@ class Sections extends Component {
           {sections.map((section) => (
             <Draggable key={section.id}>
               <Section
+                board={this.props.board}
                 boardId={this.props.boardId}
                 sections={sections}
                 section={section}
@@ -158,6 +159,10 @@ class Sections extends Component {
                 propagateToClones={this.props.propagateToClones}
                 onTemplateChangedWithoutPropagation={this.props.onTemplateChangedWithoutPropagation}
                 hasClones={this.props.hasClones}
+                autoOpenCreateCardAction={
+                  section.id === this.props.addMilestoneTargetSectionId
+                }
+                onAddMilestoneModalOpened={this.props.onAddMilestoneModalOpened}
               />
             </Draggable>
           ))}

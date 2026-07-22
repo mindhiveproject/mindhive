@@ -1,6 +1,7 @@
 {
 	"actionCard": {
 		"clickToSubmit": "Klik om in te dienen voor {{title}}",
+		"customStep": "Reviewstap",
 		"dataCollection": "Gegevensverzameling",
 		"deleteCardConfirmation": "Weet u zeker dat u deze kaart wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
 		"deleteConfirm": "Weet u zeker dat u deze kaart wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
@@ -8,6 +9,7 @@
 		"projectReport": "Projectrapport",
 		"proposalFeedback": "Feedback op voorstel",
 		"submitFor": "Verzenden voor {{title}}",
+		"submitForCustomMilestone": "Ter beoordeling indienen",
 		"submitForDataCollection": "Indienen voor gegevensverzameling",
 		"submitForPeerFeedback": "Inzenden voor peerfeedback",
 		"submitForProjectReport": "Inleveren voor projectrapport",
@@ -26,7 +28,7 @@
 	"assigned": {
 		"addUser": "Mensen toevoegen",
 		"assignCard": "Wijs deze kaart toe aan een medewerker van dit project.",
-		"canAssignTooltip": "",
+		"canAssignTooltip": "Je kunt profielen aan deze kaart toewijzen.",
 		"cancel": "Annuleren",
 		"noCollaborators": "Er zijn geen medewerkers beschikbaar voor dit bestuur.",
 		"noUsersFound": "Geen profiel gevonden",
@@ -56,6 +58,8 @@
 			"close": "Sluit",
 			"connect": "Maak verbinding met",
 			"content": "Inhoud",
+			"customMilestone": "Aangepaste beoordelingsstap",
+			"customMilestoneDescription": "Aangepaste beoordelingsstap gedefinieerd in deze sjabloon.",
 			"disconnect": "Ontkoppelen",
 			"done": "Gedaan",
 			"linkItems": "Link Items",
@@ -514,19 +518,19 @@
 				"barPlot": {
 					"columnsToPlot": "Kolom/kolommen om te plotten",
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
+						"chipLong": "Lang",
+						"chipWide": "Breed",
 						"googleSlidesAlt": "Google Slides",
 						"hintLong": "Als u kolommen wilt vergelijken, klik dan hier.",
 						"hintWide": "Als u verschillende groepen voor één kolom (variabele) wilt vergelijken, klik dan hier.",
 						"longDescription": "De gegevens zijn georganiseerd waarbij elke observatie (zoals een toetsresultaat van een leerling) op een eigen rij staat, vaak met een kolom die de categorieën (zoals vakken) aangeeft. Deze opmaak is handig voor gedetailleerde analyses over verschillende categorieën heen.",
 						"longTitle": "Lange gegevensindeling",
-						"panelRegionAriaLabel": "",
+						"panelRegionAriaLabel": "Wijzig de gegevensindeling: diagram en bronnen voor de geselecteerde indeling.",
 						"sectionLabel": "Gegevensindeling",
 						"slidesLink": "Klik hier om de presentatieslides te bekijken.",
 						"switchToLong": "Schakel over naar de lange weergave",
 						"switchToWide": "Schakel over naar breedbeeldformaat",
-						"toggleAriaLabel": "",
+						"toggleAriaLabel": "Opties voor gegevensindeling weergeven of verbergen",
 						"wideDescription": "De gegevens zijn georganiseerd waarbij elke categorie (zoals onderwerpen) een eigen kolom vormt, vaak met rijen die observaties (zoals studenten) weergeven. Deze opmaak is eenvoudiger voor snelle vergelijkingen binnen categorieën.",
 						"wideTitle": "Breed gegevensformaat"
 					},
@@ -708,12 +712,12 @@
 					"rankSectionTitle": "Rangschik uw voorwaarden",
 					"resources": {
 						"experimentalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Referentie volgt binnenkort.",
+							"title": "Wat is een experimentele hypothese?"
 						},
 						"rankOrdering": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Referentie volgt binnenkort.",
+							"title": "Voorspellingen rangschikken"
 						}
 					},
 					"sectionHypothesisTitle": "Uw experimentele hypothese",
@@ -738,12 +742,12 @@
 				},
 				"common": {
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "Bronnen en hulp",
+						"resourcesIntro": "Gebruik de onderstaande knoppen om een ​​artikel in een nieuw tabblad te openen wanneer er een link beschikbaar is."
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": ""
+						"noLink": "Geen externe link",
+						"openLinkHint": "Klik hier om de bron te raadplegen."
 					}
 				},
 				"corr": {
@@ -766,12 +770,12 @@
 					"loadingBlocks": "Blokgegevens laden...",
 					"resources": {
 						"correlationalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Referentie volgt binnenkort.",
+							"title": "Wat is een correlationele hypothese?"
 						},
 						"directionality": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Referentie volgt binnenkort.",
+							"title": "Het kiezen van richtingstermen"
 						}
 					},
 					"sectionTitle": "Uw correlatiehypothese",
@@ -779,20 +783,20 @@
 					"willBeRelatedTo": "zal verband houden met"
 				},
 				"default": {
-					"group": "",
+					"group": "Groep",
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "Assen",
+						"title": "Assen"
 					},
-					"xAxis": "",
-					"yAxis": ""
+					"xAxis": "X-as",
+					"yAxis": "Y-as"
 				}
 			},
 			"editor": {
 				"codeTab": "Code",
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "Code",
+					"variables": "Variabelen"
 				},
 				"variablesTab": "Variabelen"
 			},
@@ -812,8 +816,8 @@
 			"widgetSettings": "Widget-instellingen"
 		},
 		"sideNav": {
-			"addComponent": "",
-			"addComponentAria": "",
+			"addComponent": "Onderdeel",
+			"addComponentAria": "Voeg een component toe aan deze werkruimte.",
 			"addJournal": "Logboek",
 			"addJournalScratch": "Maak een dagboek helemaal zelf.",
 			"addJournalTemplate": "Voeg een dagboeksjabloon toe",
@@ -970,103 +974,103 @@
 		"statTest": {
 			"axes": {
 				"anova": {
-					"columnsToAnova": "",
+					"columnsToAnova": "Kolom(men) die in de ANOVA moeten worden opgenomen",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "Momenteel in uitvoering:",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "In het bovenstaande voorbeeld selecteren we de kolom 'attrib' als groeperingskolom. Deze groepering wordt uitgevoerd op de kolom 'value', die waarden bevat voor de voorwaarden c1, c2 en c3.",
+							"title": "Schakel over naar het sorteren van rijen in een waardekolom met behulp van een labelkolom."
 						},
 						"summaryLong": {
-							"hint": "",
-							"main": ""
+							"hint": "(Klik hier als u wilt overschakelen naar het vergelijken van waarden in verschillende kolommen)",
+							"main": "Eénweg-ANOVA op een kolom met waarden, waarbij gebruik wordt gemaakt van een groeperingskolom met de labels van de groep op elke rij."
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"hint": "",
-							"prefix": ""
+							"between": "Tussen",
+							"columns": "drie of meer kolommen.",
+							"hint": "(Klik hier om een ​​labelkolom te gebruiken om elke rij te groeperen op basis van een uniek label)",
+							"prefix": "Eénwegs ANOVA"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "In het bovenstaande voorbeeld zouden we de kolommen c1, c2 en c3 selecteren om daarop een eenweg-ANOVA uit te voeren.",
+							"title": "Schakel over naar het uitvoeren van een eenweg-ANOVA tussen drie of meer kolommen."
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "Groeperingskolom",
+					"quantitativeColumn": "Kwantitatieve kolom",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "Externe link",
+						"scribbrLinkTitle": "Wat is een eenweg-ANOVA?"
 					}
 				},
 				"common": {
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
-						"panelRegionAriaLabel": "",
-						"sectionLabel": "",
-						"toggleAriaLabel": ""
+						"chipLong": "Lang",
+						"chipWide": "Breed",
+						"panelRegionAriaLabel": "Gegevensindeling: diagram voor het geselecteerde formaat.",
+						"sectionLabel": "Gegevensindeling",
+						"toggleAriaLabel": "Opties voor gegevensindeling weergeven of verbergen"
 					},
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "Assen",
+						"title": "Assen"
 					},
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "Bronnen en hulp",
+						"resourcesIntro": "Leer meer over dit onderdeel met behulp van de onderstaande bronnen."
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": "",
-						"sectionTitle": ""
+						"noLink": "Geen externe link",
+						"openLinkHint": "Klik hier om de bron te raadplegen.",
+						"sectionTitle": "Bronnen"
 					}
 				},
 				"default": {
-					"column1": "",
-					"column2": ""
+					"column1": "1e kolom",
+					"column2": "2e kolom"
 				},
 				"pearson": {
-					"predictedColumn": "",
-					"predictorColumn": "",
+					"predictedColumn": "Voorspelde kolom",
+					"predictorColumn": "Voorspellingskolom",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "Externe link",
+						"scribbrLinkTitle": "Wat is een Pearson-correlatie?"
 					}
 				},
 				"tTest": {
-					"col1": "",
-					"col2": "",
+					"col1": "1e kolom",
+					"col2": "2e kolom",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "Momenteel in uitvoering:",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "In het bovenstaande voorbeeld selecteren we de kolom 'attrib' als groeperingskolom. Deze groepering wordt uitgevoerd op de kolom 'value', die waarden bevat voor beide voorwaarden.",
+							"title": "Schakel over naar het sorteren van rijen in een waardekolom met behulp van een labelkolom."
 						},
 						"summaryLong": {
-							"main": ""
+							"main": "T-toets op een kolom met waarden, waarbij gebruik wordt gemaakt van een groeperingskolom met labels voor elke rij."
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"prefix": ""
+							"between": "Tussen",
+							"columns": "twee kolommen.",
+							"prefix": "T-toets"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "In het bovenstaande voorbeeld zouden we de kolommen c1 en c2 selecteren om er een t-test op uit te voeren.",
+							"title": "Schakel over naar het uitvoeren van een T-toets tussen twee kolommen."
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "Groeperingskolom",
+					"quantitativeColumn": "Kwantitatieve kolom",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "Externe link",
+						"scribbrLinkTitle": "Onafhankelijke steekproeven t-test"
 					}
 				}
 			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "Code",
+					"variables": "Variabelen"
 				}
 			},
 			"emptyState": {
@@ -1074,9 +1078,9 @@
 				"title": "Uw statistische test is klaar om geconfigureerd te worden."
 			},
 			"fields": {
-				"clearSelection": "",
-				"selectPlaceholder": "",
-				"selectVariablesPlaceholder": ""
+				"clearSelection": "Geen",
+				"selectPlaceholder": "Selecteer {{field}}",
+				"selectVariablesPlaceholder": "Selecteer variabele(n)"
 			}
 		},
 		"table": {
@@ -1228,7 +1232,7 @@
 		"allowMovingCards": "Sta het verplaatsen van kaarten toe",
 		"allowMovingSections": "Verplaatsen van secties toestaan",
 		"cancel": "Annuleren",
-		"classTemplateReadOnly": "",
+		"classTemplateReadOnly": "Klassjabloon (gebruikt door het klassenbord)",
 		"collaborators": "Medewerkers",
 		"copyLink": "Kopieer studielink",
 		"createYourStudyProposal": "Maak hier uw studievoorstel om uw onderzoeksreis te beginnen",
@@ -1380,13 +1384,18 @@
 		"noTemplatesSubtitle": "Om een ​​project te starten, heb je een projectbordsjabloon nodig. Het is mogelijk dat je docent geen projectbordsjabloon aan deze les heeft gekoppeld.",
 		"noTemplatesTitle": "Er zijn geen projectbordsjablonen in de klas",
 		"selectClass": "Selecteer de klas",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "Ongetiteld project"
 	},
 	"notes": {
 		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
 	},
 	"noVideoPlaceholder": "Er is geen introductievideo beschikbaar.",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "Leerlingen kunnen zelf geen kaarten aan anderen toewijzen.",
 	"overview": {
 		"actions": "Acties",
 		"copy": "Kopiëren",
@@ -1520,7 +1529,7 @@
 		"boardTypeMentorNote": "Dit is relevant voor mentoren die feedback geven aan jullie leerlingenraden. Als je vragen hebt, neem dan contact op met een MindHive-medewerker.",
 		"boardTypeMindHive": "",
 		"boardTypeYouQuantified": "",
-		"classTemplateLabel": "",
+		"classTemplateLabel": "Dit bord is een sjabloon voor een les.",
 		"copy": "Kopiëren",
 		"create": "Een nieuw voorstel maken",
 		"dateCreated": "Datum aangemaakt",
@@ -1610,11 +1619,11 @@
 			"assignedTo": {
 				"disable": "Toewijzing van studenten aan kaarten uitschakelen",
 				"disableStudentsAssign": "Beperken tot leraren en mentoren",
-				"empty": "",
+				"empty": "Er zijn nog geen mensen toegewezen aan dit bestuur.",
 				"enable": "Toewijzing van studenten aan kaarten inschakelen",
 				"enableStudentsAssign": "Studenten toestaan kaarten toe te wijzen"
 			},
-			"emptyState": "",
+			"emptyState": "Er zijn geen kaarten die overeenkomen met de geselecteerde filters. Pas uw status, beoordelingsstap of toegewezen filters aan om de kaarten te bekijken.",
 			"reviewSteps": "Beoordelingsstappen",
 			"title": "Filteren op"
 		}
@@ -1869,6 +1878,85 @@
 		"card": "kaart",
 		"cards": "kaarten",
 		"cardsCount": "{{count}} kaart{{count == 1 ? '' : 's'}}",
+		"createCardModal": {
+			"alreadyAddedLabel": "{{label}} (reeds toegevoegd)",
+			"alreadyAddedTooltip": "Dit controlepunt staat al op het bord.",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
+			"cancel": "Annuleren",
+			"categories": {
+				"action": "Actiekaart",
+				"proposal": "Voorstelkaart"
+			},
+			"create": "Creëren",
+			"creating": "Aan het creëren...",
+			"custom": {
+				"canReview": "Wie mag beoordelen?",
+				"cloneFrom": "Een bestaand formulier kopiëren",
+				"description": "Beschrijving",
+				"fromScratch": "Begin helemaal opnieuw.",
+				"label": "Actielabel",
+				"labelPlaceholder": "Voer een actielabel in",
+				"selectSource": "Formulier om te kopiëren",
+				"selectSourcePlaceholder": "Selecteer een beoordelingsstap"
+			},
+			"customPreview": "Hiermee wordt een aangepaste beoordelingsstap met een eigen mijlpaallabel aangemaakt.",
+			"editForm": "Formulier bewerken",
+			"editFormHint": "Het bewerken van formulieren is elders mogelijk.",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
+			"formTemplate": {
+				"blank": "Leeg formulier",
+				"defaultLabel": "{{label}}",
+				"label": "Formuliersjabloon"
+			},
+			"milestone": {
+				"actionLabel": "Actielabel",
+				"configureFormNext": "Het beoordelingsformulier wordt in de volgende stap geconfigureerd.",
+				"description": "Beschrijving"
+			},
+			"newCheckpoint": "+ Nieuwe actiekaart",
+			"noPreview": "Er is geen beoordelingsformulier gekoppeld aan dit kaarttype.",
+			"previewLabel": "Voorbeeld van het beoordelingsformulier",
+			"previewLoading": "Voorbeeld laden...",
+			"proposalPreview": "Voegt een standaard voorstelkaart toe met inhoudsvelden voor studenten.",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
+			"scratchPreview": "Hiermee wordt een conceptbeoordelingsformulier aangemaakt met één lege kaart, gekoppeld aan deze stap. Publiceer het formulier in het beheerscherm voordat het ter beoordeling verschijnt.",
+			"statusDraft": "",
+			"statusPublished": "",
+			"steps": {
+				"cardType": "Kaarttype",
+				"checkpoint": "Controlepost",
+				"milestone": "Mijlpaal",
+				"permissions": "Toestemmingen & formuliersjabloon"
+			},
+			"templateSourceLabel": "{{title}} (aangepast)",
+			"title": "Maak een nieuwe kaart aan",
+			"titleLabel": "Kaarttitel",
+			"titlePlaceholder": "Voer een kaarttitel in",
+			"typeLabel": "Kaarttype",
+			"typePlaceholder": "Selecteer een kaarttype",
+			"types": {
+				"actionCollectingData": "Standaardactie: Gegevensverzameling starten",
+				"actionPeerFeedback": "Standaardactie: Indienen voor feedback van collega's",
+				"actionProjectReport": "Standaardactie: Projectrapport indienen",
+				"actionSubmit": "Standaardactie: Indienen voor feedback op het voorstel",
+				"custom": "Maak je eigen beoordelingsstap aan.",
+				"proposal": "Voorstelkaart"
+			}
+		},
 		"deleteSectionConfirm": "Weet u zeker dat u deze voorstelsectie wilt verwijderen? Alle kaarten in deze sectie worden ook verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
 		"enterNewTitle": "Voer een titel in",
 		"newCard": "Nieuwe kaart",
@@ -2170,18 +2258,30 @@
 		"uploadLabjs": "Upload eerst een lab.js json-bestand",
 		"vasBuilder": "VAS-bouwer"
 	},
+	"templateMilestones": {
+		"addStep": "Voeg een beoordelingsstap toe",
+		"cancel": "Annuleren",
+		"canReview": "Wie mag beoordelen?",
+		"create": "Stap aanmaken",
+		"deactivate": "Deactiveren",
+		"description": "Voeg aangepaste beoordelingsstappen toe aan deze lessjabloon. Elke stap creëert een actiekaart die leerlingen gebruiken om werk in te dienen voor feedback.",
+		"hasActionCard": "gekoppelde actiekaart",
+		"stepDescription": "Beschrijving",
+		"stepTitle": "Staptitel",
+		"title": "Beoordelingsstappen"
+	},
 	"templateTab": "Sjabloon",
 	"testAndCollect": "Testen en verzamelen",
 	"tiptap": {
 		"insertImageAria": "Afbeelding invoegen",
 		"insertImagePrompt": "Voer de URL van de afbeelding in:",
 		"mediaCancelEdit": "Annuleren",
-		"mediaCanvaExportThumb": "",
+		"mediaCanvaExportThumb": "Canva PDF-export",
 		"mediaDelete": "Verwijderen",
 		"mediaDeleteConfirm": "Wilt u dit medium uit uw bibliotheek verwijderen? Afbeeldingen die al in de inhoud zijn geplaatst, worden mogelijk niet correct weergegeven.",
 		"mediaDeleteFailed": "Dit medium kon niet worden verwijderd.",
 		"mediaDescriptionPlaceholder": "Voeg gerust notities toe.",
-		"mediaDownloadPdf": "",
+		"mediaDownloadPdf": "Download PDF",
 		"mediaEdit": "Bewerking",
 		"mediaEditFieldsRequired": "De titel en bestandsnaam mogen niet leeg zijn.",
 		"mediaEditMeta": "Details bewerken",

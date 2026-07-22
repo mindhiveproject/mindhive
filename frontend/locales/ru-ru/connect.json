@@ -457,25 +457,40 @@
 		}
 	},
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "Емкость {{count}}",
+		"delete": "Удалить",
+		"deleteConfirm": "Упустить эту возможность? Этого уже не вернуть.",
+		"edit": "Редактировать",
+		"empty": "Вы еще не создали ни одной возможности. Нажмите «Новая возможность», чтобы опубликовать свой первый проект для студентов.",
+		"emptyFiltered": "В настоящее время ни одна вакансия не соответствует имеющимся фильтрам.",
+		"loading": "Загрузка...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} сети",
+			"one": "{{count}} сеть"
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "Фильтр по сети",
+		"networkFilterPlaceholder": "Все сети",
+		"newButton": "Новая возможность",
+		"pageTitle": "Мои возможности",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} рейтингов",
+			"one": "{{average}} · {{count}} рейтинг"
 		},
+		"searchLabel": "Поиск вакансий по названию должности.",
+		"searchPlaceholder": "Поиск по названию...",
+		"status": {
+			"accepted": "Принял",
+			"archived": "В архиве",
+			"closed": "Закрыто",
+			"draft": "Черновик",
+			"pendingReview": "Ожидается рассмотрение",
+			"preSelected": "Предварительно отобранные",
+			"published": "Опубликовано"
+		},
+		"statusFilterLabel": "Фильтрация по статусу",
+		"statusFilterPlaceholder": "Все статусы",
+		"teamOf": "Команда из {{size}}",
+		"unknownSponsor": "Неизвестный"
 		"reviewCommentsEdit": "",
 		"reviewCommentsWaiting": "",
 		"rowMeta": {
@@ -508,6 +523,7 @@
 		"classNetworks": "",
 		"connect": "Соединять",
 		"exploreOpportunities": "Изучите возможности",
+		"mainNavAriaLabel": "Соединяйте разделы",
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "",
 		"manageNetwork": "",
@@ -871,8 +887,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} слов",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "Данная возможность заархивирована.",
+				"closed": "Данная возможность закрыта.",
 				"published": "Данная возможность доступна для студентов.",
 				"returnedRevise": "",
 				"sponsorFollowUp": "Заполните приведенную ниже анкету для последующего наблюдения.",
@@ -992,22 +1008,22 @@
 		"website": ""
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "Ознакомьтесь со спонсорами, предлагающими возможности для участия в проектах на платформе MindHive Connect — узнайте об их миссии, команде, стоящей за ними, и обо всех опубликованных ими проектах.",
+		"domainFilterLabel": "Фильтрация по домену",
+		"domainFilterPlaceholder": "Все домены",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "Академическое учреждение",
+			"government": "Правительственное агентство",
+			"industry": "Промышленность / Стартап",
+			"nonprofit": "Некоммерческая организация",
+			"other": "Другой"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "Ни одна организация не соответствует существующим фильтрам.",
+		"loading": "Загрузка...",
+		"next": "Следующий",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} возможностей",
+			"one": "{{count}} возможность"
 		},
 		"pageTitle": "",
 		"paginationInfo": "",
@@ -1066,10 +1082,10 @@
 		"title": "Ваше участие"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "Сообщество Minhive",
+		"defaultName": "Участник MinhHive",
+		"defaultSummary": "Нажмите, чтобы просмотреть профиль",
+		"viewProfile": "Просмотреть профиль {{name}}"
 	},
 	"profileType": {
 		"chooseType": "Выберите тип вашего профиля",
@@ -1108,9 +1124,13 @@
 		"returnToSponsor": ""
 	},
 	"roleGuard": {
-		"backLink": "",
-		"description": "",
+		"backLink": "Вернуться к подключению",
+		"description": "В вашем аккаунте пока нет доступа к этому разделу. Если вы считаете, что это ошибка, обратитесь к учителю или администратору.",
 		"roles": {
+			"admin": "Администраторы",
+			"mentor": "Наставники",
+			"student": "Студенты",
+			"teacher": "учителя"
 			"admin": "",
 			"classNetworkAdmin": "",
 			"mentor": "",
@@ -1118,7 +1138,7 @@
 			"student": "",
 			"teacher": ""
 		},
-		"title": ""
+		"title": "Эта область предназначена для {{roles}}"
 	},
 	"savedConnections": "Сохраненные подключения",
 	"savedConnectionsSubtitle": "Просмотрите свои связи, чтобы найти идеального для вас соратника, наставника или ученого.",

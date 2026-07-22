@@ -11,6 +11,7 @@ import { StudyManagerLink } from "./Renderers/StudyManagerLink";
 import { SubmissionStatusLink } from "./Renderers/SubmissionStatusLink";
 import { StudySubmissionStatusLink } from "./Renderers/StudySubmissionStatusLink";
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../Queries/Classes";
+import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 import useTranslation from "next-translate/useTranslation";
 
 import { SelectedStudentsModal } from "./Modals/SelectedStudents";
@@ -165,7 +166,7 @@ export default function Dashboard({ myclass, user, query }) {
         cellRenderer: ProjectManagerLink,
         cellRendererParams: {
           classId: myclass?.id,
-          classProposalBoardId: myclass?.templateProposal?.id,
+          classProposalBoardId: getPrimaryTemplateBoardId(myclass),
         },
       },
       {
@@ -180,7 +181,7 @@ export default function Dashboard({ myclass, user, query }) {
         cellRenderer: StudyManagerLink,
         cellRendererParams: {
           classId: myclass?.id,
-          classProposalBoardId: myclass?.templateProposal?.id,
+          classProposalBoardId: getPrimaryTemplateBoardId(myclass),
           classCode: myclass?.code,
         },
       },

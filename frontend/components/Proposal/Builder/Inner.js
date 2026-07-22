@@ -1,26 +1,22 @@
 import React, { useState } from "react";
 import { v1 as uuidv1 } from "uuid";
 import Sections from "./Sections";
+import AddSectionModal from "./AddSectionModal";
+import Button from "../../DesignSystem/Button";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import useTranslation from "next-translate/useTranslation";
 
 function Inner(props) {
-  const [title, setTitle] = useState("");
+  const [addSectionModalOpen, setAddSectionModalOpen] = useState(false);
   const { t } = useTranslation("builder");
 
-  const handleChange = (e) => {
-    const { name, type, value } = e.target;
-    const val = type === "number" ? parseFloat(value) : value;
-    setTitle(value);
-  };
-
-  const createSection = (id) => {
+  const createSection = (boardId, sectionTitle) => {
     const publicId = uuidv1();
     props.onCreateSection({
       variables: {
-        boardId: id,
-        title: title,
+        boardId,
+        title: sectionTitle,
         position:
           props.sections && props.sections.length > 0
             ? props.sections[props.sections.length - 1].position + 16384
@@ -30,12 +26,12 @@ function Inner(props) {
       update: (cache, { data: { createProposalSection } }) => {
         const data = cache.readQuery({
           query: PROPOSAL_QUERY,
-          variables: { id },
+          variables: { id: boardId },
         });
         if (data) {
           cache.writeQuery({
             query: PROPOSAL_QUERY,
-            variables: { id },
+            variables: { id: boardId },
             data: {
               proposalBoard: {
                 ...data?.proposalBoard,
@@ -53,8 +49,8 @@ function Inner(props) {
         createProposalSection: {
           __typename: "ProposalSection",
           id: uuidv1(),
-          boardId: id,
-          title: title,
+          boardId,
+          title: sectionTitle,
           description: null,
           position:
             props.sections && props.sections.length > 0
@@ -65,7 +61,7 @@ function Inner(props) {
         },
       },
     });
-    setTitle("");
+    setAddSectionModalOpen(false);
   };
 
   const deleteSection = (id) => {
@@ -87,47 +83,55 @@ function Inner(props) {
   };
 
   const { board, sections, proposalBuildMode } = props;
+  const canAddSections =
+    proposalBuildMode ||
+    (!props.isPreview && board?.settings?.allowAddingSections);
+
   return (
-    <div className="inner">
-      <div className="scrollable">
-        <Sections
-          boardId={board?.id}
-          sections={sections}
-          onSetSections={props.onSetSections}
-          deleteSection={deleteSection}
-          onUpdateSection={props.onUpdateSection}
-          openCard={props.openCard}
-          proposalBuildMode={proposalBuildMode}
-          adminMode={props.adminMode}
-          isPreview={props.isPreview}
-          settings={board?.settings}
-          autoUpdateStudentBoards={props.autoUpdateStudentBoards}
-          propagateToClones={props.propagateToClones}
-          onTemplateChangedWithoutPropagation={props.onTemplateChangedWithoutPropagation}
-          hasClones={props.hasClones}
-        />
-      </div>
-      {(proposalBuildMode ||
-        (!props.isPreview && board?.settings?.allowAddingSections)) && (
-        <div>
-          <div className="newInput">
-            <div>{t("proposal.newSection", "New section")}</div>
-            <input
-              type="text"
-              id="sectionTitle"
-              name="title"
-              placeholder={t("proposal.sectionTitlePlaceholder", "")}
-              value={title}
-              onChange={handleChange}
-              required
-            />
-            <div className="addBtn" onClick={() => createSection(board.id)}>
-              {t("proposal.addSection", "Add section")}
-            </div>
+    <>
+      <div className="boardInner">
+        {canAddSections && (
+          <div className="boardInnerToolbar">
+            <Button
+              variant="primary"
+              size="small"
+              onClick={() => setAddSectionModalOpen(true)}
+              leadingIcon={<img src="../../assets/icons/add_column.svg" alt="Add section" style={{filter: "invert(1)"}}/>}
+            >
+             {t("inner.addSection", {}, { default: "Add section" })}
+            </Button>
           </div>
+        )}
+        <div className="scrollable">
+          <Sections
+            board={board}
+            boardId={board?.id}
+            sections={sections}
+            onSetSections={props.onSetSections}
+            deleteSection={deleteSection}
+            onUpdateSection={props.onUpdateSection}
+            openCard={props.openCard}
+            proposalBuildMode={proposalBuildMode}
+            adminMode={props.adminMode}
+            isPreview={props.isPreview}
+            settings={board?.settings}
+            autoUpdateStudentBoards={props.autoUpdateStudentBoards}
+            propagateToClones={props.propagateToClones}
+            onTemplateChangedWithoutPropagation={
+              props.onTemplateChangedWithoutPropagation
+            }
+            hasClones={props.hasClones}
+            addMilestoneTargetSectionId={props.addMilestoneTargetSectionId}
+            onAddMilestoneModalOpened={props.onAddMilestoneModalOpened}
+          />
         </div>
-      )}
-    </div>
+      </div>
+      <AddSectionModal
+        open={addSectionModalOpen}
+        onClose={() => setAddSectionModalOpen(false)}
+        onSubmit={(sectionTitle) => createSection(board.id, sectionTitle)}
+      />
+    </>
   );
 }
 

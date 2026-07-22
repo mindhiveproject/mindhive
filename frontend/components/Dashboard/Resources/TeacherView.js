@@ -10,6 +10,7 @@ import { useRouter } from "next/dist/client/router";
 
 // import { GET_MY_PROJECT_BOARDS } from "../../Queries/Proposal";
 import { GET_USER_CLASSES } from "../../Queries/User";
+import { getPrimaryTemplateBoardId } from "../../../lib/classTemplateBoards";
 
 import CopyResource from "./CopyResource";
 import EditResource from "./EditResource";
@@ -33,7 +34,7 @@ export default function TeacherView({ query, user }) {
   if (classes && classes.length) {
     const projectIds = classes
       .filter((cl) => cl?.id === c)
-      .map((cl) => cl?.templateProposal?.id);
+      .map((cl) => getPrimaryTemplateBoardId(cl));
     if (projectIds && projectIds.length) {
       projectId = projectIds[0];
     }

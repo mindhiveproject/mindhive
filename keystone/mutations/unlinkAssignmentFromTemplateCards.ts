@@ -1,3 +1,8 @@
+import {
+  CLASS_TEMPLATE_QUERY,
+  getPrimaryTemplateBoardId,
+} from "./utils/classTemplateBoards";
+
 /**
  * Unlinks an assignment from all cards on the class template board
  * and all corresponding cloned student boards for that class.
@@ -23,15 +28,13 @@ async function unlinkAssignmentFromTemplateCards(
 
   const classData = await context.query.Class.findOne({
     where: { id: classId },
-    query:
-      "id templateProposal { id } studentProposals { id clonedFrom { id } }",
+    query: `${CLASS_TEMPLATE_QUERY} studentProposals { id clonedFrom { id } }`,
   });
 
-  if (!classData?.templateProposal?.id) {
+  const templateBoardId = getPrimaryTemplateBoardId(classData);
+  if (!templateBoardId) {
     throw new Error("Class has no template board.");
   }
-
-  const templateBoardId = classData.templateProposal.id;
 
   const studentBoards = (classData.studentProposals || []).filter(
     (b: any) => b?.clonedFrom?.id === templateBoardId
