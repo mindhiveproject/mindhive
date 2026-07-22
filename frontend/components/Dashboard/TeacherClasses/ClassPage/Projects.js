@@ -46,12 +46,19 @@ import {
 import ProjectsTemplatePanel from "./ProjectsTemplatePanel";
 import ProjectsBoardEditor from "./ProjectsBoardEditor";
 import CreateTemplateBoardModal from "./CreateTemplateBoardModal";
+import OwnedItemsShowcase from "./OwnedItemsShowcase";
+import { filterOwnedClassItems } from "./ownedClassItems";
 
-export default function ClassProjects({ myclass, user, query }) {
+export default function ClassProjects({
+  myclass,
+  user,
+  query,
+  readOnly = false,
+}) {
   const { t } = useTranslation("classes");
   const router = useRouter();
   const { action, board, template } = query || {};
-  const isEditing = action === "edit" && !!board;
+  const isEditing = !readOnly && action === "edit" && !!board;
 
   const closeCreateModal = () => {
     router.replace({
@@ -81,6 +88,10 @@ export default function ClassProjects({ myclass, user, query }) {
   }
 
   const projects = data?.proposalBoards || [];
+  const ownedProjects =
+    readOnly && user?.id
+      ? filterOwnedClassItems(projects, user.id)
+      : [];
 
   const getCollaborators = (project) => {
     const names = [
@@ -170,22 +181,28 @@ export default function ClassProjects({ myclass, user, query }) {
 
   return (
     <div className="classTabPage projects">
-      <CreateTemplateBoardModal
-        open={action === "create"}
-        onClose={closeCreateModal}
-        myclass={myclass}
-        user={user}
-        initialTemplateId={template || null}
-      />
+      {!readOnly && (
+        <CreateTemplateBoardModal
+          open={action === "create"}
+          onClose={closeCreateModal}
+          myclass={myclass}
+          user={user}
+          initialTemplateId={template || null}
+        />
+      )}
 
-      <section className="classTabSection">
-        <ProjectsTemplatePanel myclass={myclass} user={user} />
-      </section>
+      {!readOnly && (
+        <section className="classTabSection">
+          <ProjectsTemplatePanel myclass={myclass} user={user} />
+        </section>
+      )}
 
       <section className="classTabSection">
         <div className="classTabSectionHeader">
           <h3>
-            {t("projects.studentBoards", {}, { default: "Student boards" })}
+            {readOnly
+              ? t("main.projects", {}, { default: "Projects" })
+              : t("projects.studentBoards", {}, { default: "Student boards" })}
           </h3>
           <p>
             {t(
@@ -197,6 +214,23 @@ export default function ClassProjects({ myclass, user, query }) {
             )}
           </p>
         </div>
+        <OwnedItemsShowcase
+          items={ownedProjects}
+          userId={user?.id}
+          title={t("projects.yourProjects", {}, { default: "Your projects" })}
+          description={t(
+            "projects.yourProjectsDescription",
+            { count: ownedProjects.length },
+            {
+              default:
+                "{{count}} project boards in this class that you authored or collaborate on.",
+            }
+          )}
+          getHref={(project) =>
+            project?.id ? `/builder/projects?selector=${project.id}` : null
+          }
+          actionLabel={t("projects.viewBoard", {}, { default: "View board" })}
+        />
         {projects.length === 0 ? (
           <div className="classTabEmpty">
             <div>{t("projects.noProjectsYet")}</div>

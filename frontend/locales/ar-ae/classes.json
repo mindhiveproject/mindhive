@@ -936,6 +936,11 @@
 			"returned": ""
 		}
 	},
+	"ownedItems": {
+		"author": "",
+		"collaborator": "",
+		"untitled": ""
+	},
 	"participants": "مشاركون",
 	"pleaseTypeDelete": "الرجاء كتابة DELETE لحذف صفك",
 	"projectBoard": {
@@ -1044,7 +1049,9 @@
 		"templateUses": "",
 		"toggleVisibilityError": "",
 		"viewBoard": "",
-		"visibleToStudents": ""
+		"visibleToStudents": "",
+		"yourProjects": "",
+		"yourProjectsDescription": ""
 	},
 	"proposalCardsAssignableQuestion": "هل ينبغي أن تكون بطاقات الاقتراح قابلة للتخصيص للطلاب؟",
 	"resource": {
@@ -1177,10 +1184,13 @@
 		"dateCreated": "تاريخ الإنشاء",
 		"listDescription": "{{count}} دراسات أنشأها الطلاب في هذا الفصل.",
 		"noStudiesYet": "لم يقم الطلاب بإنشاء أية دراسات بعد.",
+		"openInBuilder": "",
 		"participants": "مشاركون",
 		"studyBuilder": "منشئ الدراسة",
 		"studyPage": "صفحة المشارك",
-		"studyTitle": "عنوان الدراسة"
+		"studyTitle": "عنوان الدراسة",
+		"yourStudies": "",
+		"yourStudiesDescription": ""
 	},
 	"studiesTab": "دراسات",
 	"studyPage": "صفحة الدراسة",

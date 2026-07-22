@@ -6,6 +6,9 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
+import OwnedItemsShowcase from "./OwnedItemsShowcase";
+import { filterOwnedClassItems } from "./ownedClassItems";
+
 const LinkButton = styled.a`
   display: inline-flex;
   align-items: center;
@@ -37,10 +40,14 @@ const LinkButton = styled.a`
   }
 `;
 
-export default function Studies({ myclass }) {
+export default function Studies({ myclass, user, readOnly = false }) {
   const { t } = useTranslation("classes");
 
   const studies = myclass?.studies || [];
+  const ownedStudies =
+    readOnly && user?.id
+      ? filterOwnedClassItems(studies, user.id)
+      : [];
 
   const getCollaborators = (study) => {
     const collaboratorMap = new Map();
@@ -142,7 +149,7 @@ export default function Studies({ myclass }) {
       field: "studyPage",
       headerName: t("studies.studyPage"),
       cellRenderer: StudyPageRenderer,
-      suppressFilter: true,
+      filter: false,
       sortable: false,
       flex: 0,
       minWidth: 130,
@@ -153,28 +160,32 @@ export default function Studies({ myclass }) {
         justifyContent: "center",
       },
     },
-    {
-      field: "studyBuilder",
-      headerName: t("studies.studyBuilder"),
-      cellRenderer: StudyBuilderRenderer,
-      suppressFilter: true,
-      sortable: false,
-      flex: 0,
-      minWidth: 140,
-      maxWidth: 160,
-      cellStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      },
-    },
+    ...(!readOnly
+      ? [
+          {
+            field: "studyBuilder",
+            headerName: t("studies.studyBuilder"),
+            cellRenderer: StudyBuilderRenderer,
+            filter: false,
+            sortable: false,
+            flex: 0,
+            minWidth: 140,
+            maxWidth: 160,
+            cellStyle: {
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          },
+        ]
+      : []),
   ];
 
   return (
     <div className="classTabPage studies">
       <section className="classTabSection">
         <div className="classTabSectionHeader">
-          <h3>{t("navigation.studies", {}, { default: "Studies" })}</h3>
+          <h3>{t("main.studies", {}, { default: "Studies" })}</h3>
           <p>
             {t(
               "studies.listDescription",
@@ -186,6 +197,25 @@ export default function Studies({ myclass }) {
             )}
           </p>
         </div>
+        <OwnedItemsShowcase
+          items={ownedStudies}
+          userId={user?.id}
+          title={t("studies.yourStudies", {}, { default: "Your studies" })}
+          description={t(
+            "studies.yourStudiesDescription",
+            { count: ownedStudies.length },
+            {
+              default:
+                "{{count}} studies in this class that you authored or collaborate on.",
+            }
+          )}
+          getHref={(study) =>
+            study?.id ? `/builder/studies/?selector=${study.id}` : null
+          }
+          actionLabel={t("studies.openInBuilder", {}, {
+            default: "Open in builder",
+          })}
+        />
         {studies.length === 0 ? (
           <div className="classTabEmpty">
             <div>{t("studies.noStudiesYet")}</div>

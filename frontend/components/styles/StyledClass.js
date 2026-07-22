@@ -1135,6 +1135,14 @@ const StyledClass = styled.div`
       border-top: 1px solid #ece9e6;
     }
 
+    .classTabOwnedShowcase {
+      display: grid;
+      gap: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ece9e6;
+      margin-bottom: 8px;
+    }
+
     .classTabTemplateList {
       display: grid;
       gap: 16px;

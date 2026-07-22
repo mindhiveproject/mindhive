@@ -4,16 +4,34 @@ import Link from "next/link";
 
 import Header from "./Header";
 import ClassAssignments from "./Assignments/Main";
-import ClassStudents from "./Students";
 import ClassStudies from "./Studies";
+import ClassProjects from "./Projects";
 
 import { GET_CLASS } from "../../../Queries/Classes";
+
+const CLASS_PAGE_NAV_ITEMS = [
+  {
+    value: "assignments",
+    labelKey: "main.assignments",
+    defaultLabel: "Assignments",
+  },
+  {
+    value: "studies",
+    labelKey: "main.studies",
+    defaultLabel: "Studies",
+  },
+  {
+    value: "projects",
+    labelKey: "main.projects",
+    defaultLabel: "Projects",
+  },
+];
 
 export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const page = query?.page || "assignments";
 
-  const { data, loading, error } = useQuery(GET_CLASS, {
+  const { data } = useQuery(GET_CLASS, {
     variables: { code },
   });
 
@@ -21,53 +39,44 @@ export default function ClassPage({ code, user, query }) {
 
   return (
     <div>
-      <Header user={user} myclass={myclass} />
-      <div>
-        <div className="menu">
-          <Link
-            href={{
-              pathname: `/dashboard/classes/${code}`,
-              query: {
-                page: "assignments",
-              },
-            }}
-            className={
-              page === "assignments"
-                ? "menuTitle selectedMenuTitle"
-                : "menuTitle"
-            }
-          >
-            <p>{t("assignmentsTab")}</p>
-          </Link>
-          {/* <Link
-            href={{
-              pathname: `/dashboard/classes/${code}`,
-              query: {
-                page: "students",
-              },
-            }}
-            className={
-              page === "students" ? "menuTitle selectedMenuTitle" : "menuTitle"
-            }
-          >
-            <p>{t("studentsTab.tab")}</p>
-          </Link> */}
-
-          <Link
-            href={{
-              pathname: `/dashboard/classes/${code}`,
-              query: {
-                page: "studies",
-              },
-            }}
-            className={
-              page === "studies" ? "menuTitle selectedMenuTitle" : "menuTitle"
-            }
-          >
-            <p>{t("studiesTab")}</p>
-          </Link>
+      <Header myclass={myclass} />
+      <nav
+        className="classPageNav"
+        aria-label={t("main.classSectionsNav", {}, {
+          default: "Class sections",
+        })}
+      >
+        <div className="secondLine">
+          <div className="menu">
+            {CLASS_PAGE_NAV_ITEMS.map((item) => (
+              <Link
+                key={item.value}
+                href={{
+                  pathname: `/dashboard/classes/${code}`,
+                  query: { page: item.value },
+                }}
+                aria-current={page === item.value ? "page" : undefined}
+              >
+                <div
+                  className={
+                    page === item.value
+                      ? "menuTitle selectedMenuTitle"
+                      : "menuTitle"
+                  }
+                >
+                  <div className="titleWithIcon">
+                    <p>
+                      {t(item.labelKey, {}, {
+                        default: item.defaultLabel,
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      </nav>
 
       <div>
         {page === "assignments" && (
@@ -75,15 +84,15 @@ export default function ClassPage({ code, user, query }) {
         )}
       </div>
 
-      {/* <div>
-        {page === "students" && (
-          <ClassStudents myclass={myclass} user={user} query={query} />
-        )}
-      </div> */}
-
       <div>
         {page === "studies" && (
           <ClassStudies myclass={myclass} user={user} query={query} />
+        )}
+      </div>
+
+      <div>
+        {page === "projects" && (
+          <ClassProjects myclass={myclass} user={user} query={query} />
         )}
       </div>
     </div>

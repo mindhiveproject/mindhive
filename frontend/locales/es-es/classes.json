@@ -936,6 +936,11 @@
 			"returned": ""
 		}
 	},
+	"ownedItems": {
+		"author": "",
+		"collaborator": "",
+		"untitled": ""
+	},
 	"participants": "Participantes",
 	"pleaseTypeDelete": "Por favor escribe SUPR para eliminar tu clase",
 	"projectBoard": {
@@ -1044,7 +1049,9 @@
 		"templateUses": "{{count}} usos",
 		"toggleVisibilityError": "No se pudo actualizar la configuración de copia de la plantilla.",
 		"viewBoard": "",
-		"visibleToStudents": "Los estudiantes pueden copiar esta plantilla"
+		"visibleToStudents": "Los estudiantes pueden copiar esta plantilla",
+		"yourProjects": "",
+		"yourProjectsDescription": ""
 	},
 	"proposalCardsAssignableQuestion": "¿Deberían poder asignarse tarjetas de propuestas a los estudiantes?",
 	"resource": {
@@ -1177,10 +1184,13 @@
 		"dateCreated": "Fecha de creación",
 		"listDescription": "{{count}} estudios creados por estudiantes de esta clase.",
 		"noStudiesYet": "Los estudiantes aún no han creado ningún estudio.",
+		"openInBuilder": "",
 		"participants": "Participantes",
 		"studyBuilder": "Constructor de estudios",
 		"studyPage": "Página del participante",
-		"studyTitle": "Título del estudio"
+		"studyTitle": "Título del estudio",
+		"yourStudies": "",
+		"yourStudiesDescription": ""
 	},
 	"studiesTab": "Estudios",
 	"studyPage": "Página de estudio",
