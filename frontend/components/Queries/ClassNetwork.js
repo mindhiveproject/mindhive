@@ -5,6 +5,7 @@ export const GET_ALL_NETWORKS = gql`
   query GET_ALL_NETWORKS($where: ClassNetworkWhereInput) {
     classNetworks(where: $where, orderBy: { title: asc }) {
       id
+      publicId
       title
       description
       isPublic
@@ -73,6 +74,7 @@ export const GET_PUBLIC_CLASS_NETWORKS = gql`
       orderBy: { title: asc }
     ) {
       id
+      publicId
       title
       description
       isPublic
@@ -93,11 +95,12 @@ export const GET_PUBLIC_CLASS_NETWORKS = gql`
   }
 `;
 
-// get network
+// get network by internal id (admin edit and similar)
 export const GET_NETWORK = gql`
   query GET_NETWORK($id: ID!) {
     classNetwork(where: { id: $id }) {
       id
+      publicId
       title
       description
       isPublic
@@ -130,6 +133,24 @@ export const GET_NETWORK = gql`
   }
 `;
 
+// Lookup by publicId (share/deep-link ref). Pair with GET_NETWORK for dual-read.
+export const GET_NETWORK_BY_PUBLIC_ID = gql`
+  query GET_NETWORK_BY_PUBLIC_ID($publicId: String!) {
+    classNetwork(where: { publicId: $publicId }) {
+      id
+      publicId
+      title
+      description
+      isPublic
+      settings
+      creator {
+        id
+        username
+      }
+    }
+  }
+`;
+
 const NETWORK_INVITE_FIELDS = `
   id
   direction
@@ -138,6 +159,7 @@ const NETWORK_INVITE_FIELDS = `
   token
   classNetwork {
     id
+    publicId
     title
     isPublic
     settings

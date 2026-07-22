@@ -35,14 +35,17 @@ export const SPONSOR_ONBOARDING_STATE = gql`
         }
         memberOfClassNetworks {
           id
+          publicId
           title
         }
         adminOfClassNetworks {
           id
+          publicId
           title
         }
         classNetworksCreated {
           id
+          publicId
           title
         }
         opportunitiesCreated {
@@ -93,10 +96,12 @@ export const CURRENT_USER_QUERY = gql`
         }
         classNetworksCreated {
           id
+          publicId
           title
         }
         adminOfClassNetworks {
           id
+          publicId
           title
         }
         adminOfOrganizations {
@@ -105,6 +110,7 @@ export const CURRENT_USER_QUERY = gql`
         }
         memberOfClassNetworks {
           id
+          publicId
           title
         }
         connectRoundsReviewing {

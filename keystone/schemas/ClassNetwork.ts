@@ -9,6 +9,7 @@ import {
   checkbox,
   json,
 } from "@keystone-6/core/fields";
+import uniqid from "uniqid";
 import { rules, isSignedIn, canAdminManageNetworks } from "../access";
 
 export const ClassNetwork = list({
@@ -26,6 +27,24 @@ export const ClassNetwork = list({
   },
   fields: {
     title: text({ isIndexed: "unique", validation: { isRequired: true } }),
+    // Stable share/deep-link identifier (Profile/Guest pattern). Prefer this
+    // over internal `id` in URLs. Generated on create; updates are locked.
+    publicId: text({
+      isIndexed: "unique",
+      isFilterable: true,
+      access: {
+        read: () => true,
+        create: () => true,
+        update: () => false,
+      },
+      hooks: {
+        async resolveInput({ operation }) {
+          if (operation === "create") {
+            return uniqid();
+          }
+        },
+      },
+    }),
     description: text(),
     isPublic: checkbox({ defaultValue: false, isFilterable: true }),
     settings: json({

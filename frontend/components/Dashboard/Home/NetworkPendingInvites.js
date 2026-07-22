@@ -7,6 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import { GET_NETWORK_INVITES } from "../../Queries/ClassNetwork";
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
+import { classNetworkUrlRef } from "../../../lib/classNetworkRef";
 
 function buildPendingInvitesWhere(networkIds) {
   const ids = (networkIds || []).filter(Boolean);
@@ -192,11 +193,15 @@ export default function NetworkPendingInvites({ user }) {
 
     return Array.from(counts.entries())
       .filter(([, count]) => count > 0)
-      .map(([id, count]) => ({
-        id,
-        title: titleById.get(id) || untitled,
-        count,
-      }))
+      .map(([id, count]) => {
+        const network = adminNetworks.find((item) => item.id === id);
+        return {
+          id,
+          publicId: network?.publicId || null,
+          title: titleById.get(id) || untitled,
+          count,
+        };
+      })
       .sort((a, b) => a.title.localeCompare(b.title));
   }, [adminNetworks, data?.networkInvites, invitesWhere, t]);
 
@@ -271,7 +276,7 @@ export default function NetworkPendingInvites({ user }) {
                 onClick={() =>
                   router.push(
                     `/dashboard/connect/networks?mode=manage&networkId=${encodeURIComponent(
-                      row.id
+                      classNetworkUrlRef(row) || row.id
                     )}#network-pending-invites`
                   )
                 }
