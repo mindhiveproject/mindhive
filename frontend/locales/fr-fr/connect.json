@@ -476,6 +476,13 @@
 			"many": "{{average}} · {{count}} évaluations",
 			"one": "{{average}} · {{count}} évaluation"
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Sponsor : {{name}}",
+			"submitted": "Soumis {{date}}"
+		},
 		"searchLabel": "Opportunités de recherche par titre",
 		"searchPlaceholder": "Recherche par titre...",
 		"status": {
@@ -485,47 +492,24 @@
 			"draft": "Brouillon",
 			"pendingReview": "En attente de révision",
 			"preSelected": "Présélectionné",
-			"published": "Publié"
-		},
-		"statusFilterLabel": "Filtrer par statut",
-		"statusFilterPlaceholder": "Tous les statuts",
-		"teamOf": "Équipe de {{size}}",
-		"unknownSponsor": "Inconnu"
-		"reviewCommentsEdit": "",
-		"reviewCommentsWaiting": "",
-		"rowMeta": {
-			"dates": "{{from}} → {{to}}",
-			"sponsor": "Sponsor : {{name}}",
-			"submitted": "Soumis {{date}}"
-		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
-		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"published": "Publié",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Filtrer par statut",
+		"statusFilterPlaceholder": "Tous les statuts",
+		"teamOf": "Équipe de {{size}}",
+		"unknownSponsor": "Inconnu"
 	},
 	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Connecter",
 		"exploreOpportunities": "Explorez les opportunités",
-		"mainNavAriaLabel": "Sections de connexion",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Sections de connexion",
 		"manageNetwork": "",
 		"matches": "Allumettes",
 		"matchingRounds": "Tours assortis",
@@ -1128,15 +1112,11 @@
 		"description": "Votre compte ne vous donne pas encore accès à cette section. Si vous pensez qu'il s'agit d'une erreur, veuillez contacter votre professeur ou un administrateur.",
 		"roles": {
 			"admin": "Administrateurs",
+			"classNetworkAdmin": "",
 			"mentor": "Mentors",
+			"scientist": "",
 			"student": "Étudiants",
 			"teacher": "Enseignants"
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
 		},
 		"title": "Cette zone est réservée à {{roles}}"
 	},

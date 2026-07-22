@@ -476,6 +476,13 @@
 			"many": "{{average}} · {{count}} calificaciones",
 			"one": "{{average}} · {{count}} calificación"
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Patrocinador: {{name}}",
+			"submitted": "Enviado {{date}}"
+		},
 		"searchLabel": "Buscar oportunidades por título",
 		"searchPlaceholder": "Buscar por título...",
 		"status": {
@@ -485,47 +492,24 @@
 			"draft": "Borrador",
 			"pendingReview": "Pendiente de revisión",
 			"preSelected": "Preseleccionado",
-			"published": "Publicado"
-		},
-		"statusFilterLabel": "Filtrar por estado",
-		"statusFilterPlaceholder": "Todos los estados",
-		"teamOf": "Equipo de {{size}}",
-		"unknownSponsor": "Desconocido"
-		"reviewCommentsEdit": "",
-		"reviewCommentsWaiting": "",
-		"rowMeta": {
-			"dates": "{{from}} → {{to}}",
-			"sponsor": "Patrocinador: {{name}}",
-			"submitted": "Enviado {{date}}"
-		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
-		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"published": "Publicado",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Filtrar por estado",
+		"statusFilterPlaceholder": "Todos los estados",
+		"teamOf": "Equipo de {{size}}",
+		"unknownSponsor": "Desconocido"
 	},
 	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Conectar",
 		"exploreOpportunities": "Explorar oportunidades",
-		"mainNavAriaLabel": "Conectar secciones",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Conectar secciones",
 		"manageNetwork": "",
 		"matches": "Partidos",
 		"matchingRounds": "Rondas coincidentes",
@@ -1128,15 +1112,11 @@
 		"description": "Tu cuenta aún no tiene acceso a esta sección. Si crees que se trata de un error, consulta con tu profesor o un administrador.",
 		"roles": {
 			"admin": "Administradores",
+			"classNetworkAdmin": "",
 			"mentor": "Mentores",
+			"scientist": "",
 			"student": "Estudiantes",
 			"teacher": "Profesores"
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
 		},
 		"title": "Esta área es para {{roles}}"
 	},

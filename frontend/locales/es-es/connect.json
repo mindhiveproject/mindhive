@@ -476,6 +476,13 @@
 			"many": "{{average}} · {{count}} calificaciones",
 			"one": "{{average}} · {{count}} calificación"
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "",
+			"submitted": ""
+		},
 		"searchLabel": "Buscar oportunidades por título",
 		"searchPlaceholder": "Buscar por título...",
 		"status": {
@@ -485,8 +492,12 @@
 			"draft": "Borrador",
 			"pendingReview": "Pendiente de revisión",
 			"preSelected": "Preseleccionado",
-			"published": "Publicado"
+			"published": "Publicado",
+			"resubmit": "",
+			"returned": ""
 		},
+		"statusChangeLabel": "",
+		"statusChangeUseEditor": "",
 		"statusFilterLabel": "Filtrar por estado",
 		"statusFilterPlaceholder": "Todos los estados",
 		"teamOf": "Equipo de {{size}}",
@@ -497,9 +508,8 @@
 		"classNetworks": "",
 		"connect": "Conectar",
 		"exploreOpportunities": "Explorar oportunidades",
-		"mainNavAriaLabel": "Conectar secciones",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Conectar secciones",
 		"manageNetwork": "",
 		"matches": "Partidos",
 		"matchingRounds": "Rondas coincidentes",
@@ -1102,15 +1112,11 @@
 		"description": "Tu cuenta aún no tiene acceso a esta sección. Si crees que se trata de un error, consulta con tu profesor o un administrador.",
 		"roles": {
 			"admin": "Administradores",
+			"classNetworkAdmin": "",
 			"mentor": "Mentores",
+			"scientist": "",
 			"student": "Estudiantes",
 			"teacher": "Profesores"
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
 		},
 		"title": "Esta área es para {{roles}}"
 	},

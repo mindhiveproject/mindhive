@@ -476,6 +476,13 @@
 			"many": "{{average}} · {{count}} рейтингов",
 			"one": "{{average}} · {{count}} рейтинг"
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Спонсор: {{name}}",
+			"submitted": "Отправлено {{date}}"
+		},
 		"searchLabel": "Поиск вакансий по названию должности.",
 		"searchPlaceholder": "Поиск по названию...",
 		"status": {
@@ -485,47 +492,24 @@
 			"draft": "Черновик",
 			"pendingReview": "Ожидается рассмотрение",
 			"preSelected": "Предварительно отобранные",
-			"published": "Опубликовано"
-		},
-		"statusFilterLabel": "Фильтрация по статусу",
-		"statusFilterPlaceholder": "Все статусы",
-		"teamOf": "Команда из {{size}}",
-		"unknownSponsor": "Неизвестный"
-		"reviewCommentsEdit": "",
-		"reviewCommentsWaiting": "",
-		"rowMeta": {
-			"dates": "{{from}} → {{to}}",
-			"sponsor": "Спонсор: {{name}}",
-			"submitted": "Отправлено {{date}}"
-		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
-		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"published": "Опубликовано",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Фильтрация по статусу",
+		"statusFilterPlaceholder": "Все статусы",
+		"teamOf": "Команда из {{size}}",
+		"unknownSponsor": "Неизвестный"
 	},
 	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Соединять",
 		"exploreOpportunities": "Изучите возможности",
-		"mainNavAriaLabel": "Соединяйте разделы",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Соединяйте разделы",
 		"manageNetwork": "",
 		"matches": "Матчи",
 		"matchingRounds": "Соответствующие раунды",
@@ -1128,15 +1112,11 @@
 		"description": "В вашем аккаунте пока нет доступа к этому разделу. Если вы считаете, что это ошибка, обратитесь к учителю или администратору.",
 		"roles": {
 			"admin": "Администраторы",
+			"classNetworkAdmin": "",
 			"mentor": "Наставники",
+			"scientist": "",
 			"student": "Студенты",
 			"teacher": "учителя"
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
 		},
 		"title": "Эта область предназначена для {{roles}}"
 	},

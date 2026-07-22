@@ -476,6 +476,13 @@
 			"many": "{{average}} · {{count}} beoordelingen",
 			"one": "{{average}} · {{count}} beoordeling"
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Sponsor: {{name}}",
+			"submitted": "Ingediend {{date}}"
+		},
 		"searchLabel": "Zoek vacatures op functietitel",
 		"searchPlaceholder": "Zoeken op titel...",
 		"status": {
@@ -485,47 +492,24 @@
 			"draft": "Voorlopige versie",
 			"pendingReview": "In afwachting van beoordeling",
 			"preSelected": "Vooraf geselecteerd",
-			"published": "Gepubliceerd"
-		},
-		"statusFilterLabel": "Filter op status",
-		"statusFilterPlaceholder": "Alle statussen",
-		"teamOf": "Team van {{size}}",
-		"unknownSponsor": "Onbekend"
-		"reviewCommentsEdit": "",
-		"reviewCommentsWaiting": "",
-		"rowMeta": {
-			"dates": "{{from}} → {{to}}",
-			"sponsor": "Sponsor: {{name}}",
-			"submitted": "Ingediend {{date}}"
-		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
-		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"published": "Gepubliceerd",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Filter op status",
+		"statusFilterPlaceholder": "Alle statussen",
+		"teamOf": "Team van {{size}}",
+		"unknownSponsor": "Onbekend"
 	},
 	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Aansluiten",
 		"exploreOpportunities": "Ontdek de mogelijkheden",
-		"mainNavAriaLabel": "Verbind secties",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Verbind secties",
 		"manageNetwork": "",
 		"matches": "Wedstrijden",
 		"matchingRounds": "Overeenkomende rondes",
@@ -1128,15 +1112,11 @@
 		"description": "Je account heeft nog geen toegang tot dit gedeelte. Als je denkt dat dit een fout is, neem dan contact op met je docent of een beheerder.",
 		"roles": {
 			"admin": "Beheerders",
+			"classNetworkAdmin": "",
 			"mentor": "Mentoren",
+			"scientist": "",
 			"student": "studenten",
 			"teacher": "leraren"
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
 		},
 		"title": "Dit gebied is voor {{roles}}"
 	},
