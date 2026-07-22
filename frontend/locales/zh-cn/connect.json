@@ -476,6 +476,13 @@
 			"many": "{{average}} · {{count}} 个评分",
 			"one": "{{average}} · {{count}} 评分"
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "赞助商： {{name}}",
+			"submitted": "已提交 {{date}}"
+		},
 		"searchLabel": "按职位搜索机会",
 		"searchPlaceholder": "按标题搜索...",
 		"status": {
@@ -485,47 +492,24 @@
 			"draft": "草稿",
 			"pendingReview": "待审核",
 			"preSelected": "预选",
-			"published": "发布"
-		},
-		"statusFilterLabel": "按状态过滤",
-		"statusFilterPlaceholder": "所有状态",
-		"teamOf": "团队人数： {{size}}",
-		"unknownSponsor": "未知"
-		"reviewCommentsEdit": "",
-		"reviewCommentsWaiting": "",
-		"rowMeta": {
-			"dates": "{{from}} → {{to}}",
-			"sponsor": "赞助商： {{name}}",
-			"submitted": "已提交 {{date}}"
-		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
-		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"published": "发布",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "按状态过滤",
+		"statusFilterPlaceholder": "所有状态",
+		"teamOf": "团队人数： {{size}}",
+		"unknownSponsor": "未知"
 	},
 	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "连接",
 		"exploreOpportunities": "探索机会",
-		"mainNavAriaLabel": "连接部分",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "连接部分",
 		"manageNetwork": "",
 		"matches": "火柴",
 		"matchingRounds": "匹配轮",
@@ -1128,15 +1112,11 @@
 		"description": "您的账户目前没有权限访问此部分内容。如果您认为这是一个错误，请咨询您的老师或管理员。",
 		"roles": {
 			"admin": "管理员",
+			"classNetworkAdmin": "",
 			"mentor": "导师",
+			"scientist": "",
 			"student": "学生",
 			"teacher": "教师"
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
 		},
 		"title": "此区域用于 {{roles}}"
 	},

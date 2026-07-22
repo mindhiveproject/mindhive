@@ -476,6 +476,13 @@
 			"many": "{{average}} · {{count}} avaliações",
 			"one": "{{average}} · {{count}} classificação"
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "Patrocinador: {{name}}",
+			"submitted": "Enviado {{date}}"
+		},
 		"searchLabel": "Buscar oportunidades por título",
 		"searchPlaceholder": "Pesquisar por título...",
 		"status": {
@@ -485,47 +492,24 @@
 			"draft": "Rascunho",
 			"pendingReview": "Aguardando revisão",
 			"preSelected": "Pré-selecionados",
-			"published": "Publicados"
-		},
-		"statusFilterLabel": "Filtrar por status",
-		"statusFilterPlaceholder": "Todos os status",
-		"teamOf": "Equipe de {{size}}",
-		"unknownSponsor": "Desconhecido"
-		"reviewCommentsEdit": "",
-		"reviewCommentsWaiting": "",
-		"rowMeta": {
-			"dates": "{{from}} → {{to}}",
-			"sponsor": "Patrocinador: {{name}}",
-			"submitted": "Enviado {{date}}"
-		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
-		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"published": "Publicados",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Filtrar por status",
+		"statusFilterPlaceholder": "Todos os status",
+		"teamOf": "Equipe de {{size}}",
+		"unknownSponsor": "Desconhecido"
 	},
 	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "Conectar",
 		"exploreOpportunities": "Explore as oportunidades",
-		"mainNavAriaLabel": "Conectar seções",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Conectar seções",
 		"manageNetwork": "",
 		"matches": "Partidas",
 		"matchingRounds": "Rodadas correspondentes",
@@ -1128,15 +1112,11 @@
 		"description": "Sua conta ainda não tem acesso a esta seção. Se você acha que isso é um engano, pergunte ao seu professor ou a um administrador.",
 		"roles": {
 			"admin": "Administradores",
+			"classNetworkAdmin": "",
 			"mentor": "Mentores",
+			"scientist": "",
 			"student": "Estudantes",
 			"teacher": "Professores"
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
 		},
 		"title": "Esta área é para {{roles}}"
 	},

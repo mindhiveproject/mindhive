@@ -476,6 +476,13 @@
 			"many": "{{average}} · {{count}} रेटिंग",
 			"one": "{{average}} · {{count}} रेटिंग"
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "प्रायोजक: {{name}}",
+			"submitted": "प्रस्तुत किया गया {{date}}"
+		},
 		"searchLabel": "पदनाम के आधार पर अवसरों की खोज करें",
 		"searchPlaceholder": "शीर्षक के आधार पर खोजें...",
 		"status": {
@@ -485,47 +492,24 @@
 			"draft": "मसौदा",
 			"pendingReview": "समीक्षा लंबित है",
 			"preSelected": "पूर्व-चयनित",
-			"published": "प्रकाशित"
-		},
-		"statusFilterLabel": "स्थिति के अनुसार फ़िल्टर करें",
-		"statusFilterPlaceholder": "सभी स्थितियाँ",
-		"teamOf": " {{size}}की टीम",
-		"unknownSponsor": "अज्ञात"
-		"reviewCommentsEdit": "",
-		"reviewCommentsWaiting": "",
-		"rowMeta": {
-			"dates": "{{from}} → {{to}}",
-			"sponsor": "प्रायोजक: {{name}}",
-			"submitted": "प्रस्तुत किया गया {{date}}"
-		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
-		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"published": "प्रकाशित",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "स्थिति के अनुसार फ़िल्टर करें",
+		"statusFilterPlaceholder": "सभी स्थितियाँ",
+		"teamOf": " {{size}}की टीम",
+		"unknownSponsor": "अज्ञात"
 	},
 	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "जोड़ना",
 		"exploreOpportunities": "अवसरों का पता लगाएं",
-		"mainNavAriaLabel": "अनुभागों को जोड़ें",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "अनुभागों को जोड़ें",
 		"manageNetwork": "",
 		"matches": "माचिस",
 		"matchingRounds": "मिलान दौर",
@@ -1128,15 +1112,11 @@
 		"description": "आपके खाते को अभी इस अनुभाग तक पहुंच नहीं है। यदि आपको लगता है कि यह कोई गलती है, तो अपने शिक्षक या प्रशासक से पूछें।",
 		"roles": {
 			"admin": "व्यवस्थापक",
+			"classNetworkAdmin": "",
 			"mentor": "मेंटर्स",
+			"scientist": "",
 			"student": "छात्र",
 			"teacher": "शिक्षकों"
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
 		},
 		"title": "यह क्षेत्र {{roles}}के लिए है"
 	},

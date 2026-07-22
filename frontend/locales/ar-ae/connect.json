@@ -476,6 +476,13 @@
 			"many": "{{average}} · {{count}} تقييمات",
 			"one": "{{average}} · {{count}} تقييم"
 		},
+		"reviewCommentsEdit": "",
+		"reviewCommentsWaiting": "",
+		"rowMeta": {
+			"dates": "{{from}} → {{to}}",
+			"sponsor": "الراعي: {{name}}",
+			"submitted": "تم الإرسال {{date}}"
+		},
 		"searchLabel": "ابحث عن الفرص حسب العنوان",
 		"searchPlaceholder": "البحث حسب العنوان...",
 		"status": {
@@ -485,47 +492,24 @@
 			"draft": "مسودة",
 			"pendingReview": "قيد المراجعة",
 			"preSelected": "مختارة مسبقاً",
-			"published": "نشرت"
-		},
-		"statusFilterLabel": "تصفية حسب الحالة",
-		"statusFilterPlaceholder": "جميع الحالات",
-		"teamOf": "فريق من {{size}}",
-		"unknownSponsor": "مجهول"
-		"reviewCommentsEdit": "",
-		"reviewCommentsWaiting": "",
-		"rowMeta": {
-			"dates": "{{from}} → {{to}}",
-			"sponsor": "الراعي: {{name}}",
-			"submitted": "تم الإرسال {{date}}"
-		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
-		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"published": "نشرت",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "تصفية حسب الحالة",
+		"statusFilterPlaceholder": "جميع الحالات",
+		"teamOf": "فريق من {{size}}",
+		"unknownSponsor": "مجهول"
 	},
 	"myProfile": "",
 	"nav": {
 		"classNetworks": "",
 		"connect": "يتصل",
 		"exploreOpportunities": "استكشف الفرص",
-		"mainNavAriaLabel": "ربط الأقسام",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "ربط الأقسام",
 		"manageNetwork": "",
 		"matches": "المباريات",
 		"matchingRounds": "جولات متطابقة",
@@ -1128,15 +1112,11 @@
 		"description": "لا يملك حسابك صلاحية الوصول إلى هذا القسم بعد. إذا كنت تعتقد أن هذا خطأ، فاسأل معلمك أو أحد المشرفين.",
 		"roles": {
 			"admin": "المسؤولون",
+			"classNetworkAdmin": "",
 			"mentor": "الموجهون",
+			"scientist": "",
 			"student": "طلاب",
 			"teacher": "مُعلّم"
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
 		},
 		"title": "هذه المنطقة مخصصة لـ {{roles}}"
 	},
