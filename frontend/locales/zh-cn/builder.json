@@ -1373,14 +1373,21 @@
 	"newProject": {
 		"addCollaborators": "添加合作者",
 		"alreadyAssociatedTitle": "您已经有一个与此类相关的项目",
+		"alreadyAssociatedTitleStudy": "",
 		"alreadyAssociatedWarning": "除非您知道自己在做什么，否则不要继续进行。",
+		"alreadyAssociatedWarningStudy": "",
 		"backToHome": "← 返回主页",
 		"createProject": "创建项目",
+		"createStudy": "",
 		"giveNameAlert": "给你的项目命名",
+		"giveNameAlertStudy": "",
 		"goBackHome": "回家",
 		"nameMessage": "给你的项目起个名字。这不是研究的标题，而是你想用来称呼你的工作空间的名称。",
+		"nameMessageStudy": "",
 		"namePlaceholder": "我的项目名称是",
+		"namePlaceholderStudy": "",
 		"nameYourProject": "命名您的项目",
+		"nameYourStudy": "",
 		"noTemplatesSubtitle": "要启动项目，你需要一个项目板模板。你的老师可能没有链接到此课程的项目板模板。",
 		"noTemplatesTitle": "课堂上没有项目板模板",
 		"selectClass": "选择班级",
@@ -1389,7 +1396,8 @@
 		"selectTemplateHelp": "",
 		"templateClassLabel": "",
 		"templateOptionLabel": "",
-		"untitledProject": "无标题项目"
+		"untitledProject": "无标题项目",
+		"untitledStudy": ""
 	},
 	"notes": {
 		"noNotes": "尚未输入任何注释。右键单击即可添加注释。"

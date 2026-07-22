@@ -1373,14 +1373,21 @@
 	"newProject": {
 		"addCollaborators": "Добавить соавторов",
 		"alreadyAssociatedTitle": "У вас уже есть проект, связанный с этим классом",
+		"alreadyAssociatedTitleStudy": "",
 		"alreadyAssociatedWarning": "Не продолжайте, если вы не знаете, что делаете.",
+		"alreadyAssociatedWarningStudy": "",
 		"backToHome": "← Вернуться на главную",
 		"createProject": "Создать проект",
+		"createStudy": "",
 		"giveNameAlert": "Дайте название вашему проекту",
+		"giveNameAlertStudy": "",
 		"goBackHome": "Возвращайся домой",
 		"nameMessage": "Дайте название своему проекту. Это не название исследования, а название вашего рабочего пространства.",
+		"nameMessageStudy": "",
 		"namePlaceholder": "Название моего проекта:",
+		"namePlaceholderStudy": "",
 		"nameYourProject": "Назовите свой проект",
+		"nameYourStudy": "",
 		"noTemplatesSubtitle": "Чтобы начать проект, вам понадобится шаблон доски проекта. У вашего преподавателя может не быть шаблона доски проекта, связанного с этим курсом.",
 		"noTemplatesTitle": "В классе нет шаблонов проектных досок.",
 		"selectClass": "Выберите класс",
@@ -1389,7 +1396,8 @@
 		"selectTemplateHelp": "",
 		"templateClassLabel": "",
 		"templateOptionLabel": "",
-		"untitledProject": "Проект без названия"
+		"untitledProject": "Проект без названия",
+		"untitledStudy": ""
 	},
 	"notes": {
 		"noNotes": "Заметки пока не добавлены. Щёлкните правой кнопкой мыши, чтобы добавить заметки."

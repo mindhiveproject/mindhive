@@ -1373,14 +1373,21 @@
 	"newProject": {
 		"addCollaborators": "Agregar colaboradores",
 		"alreadyAssociatedTitle": "Ya tienes un proyecto asociado a esta clase",
+		"alreadyAssociatedTitleStudy": "",
 		"alreadyAssociatedWarning": "No continúes a menos que sepas lo que estás haciendo.",
+		"alreadyAssociatedWarningStudy": "",
 		"backToHome": "← Volver a la página de inicio",
 		"createProject": "Crear proyecto",
+		"createStudy": "",
 		"giveNameAlert": "Dale un nombre a tu proyecto",
+		"giveNameAlertStudy": "",
 		"goBackHome": "Regresa a casa",
 		"nameMessage": "Dale un nombre a tu proyecto. No es el título del estudio, sino el nombre que quieres darle a tu espacio de trabajo.",
+		"nameMessageStudy": "",
 		"namePlaceholder": "El nombre de mi proyecto es",
+		"namePlaceholderStudy": "",
 		"nameYourProject": "Ponle nombre a tu proyecto",
+		"nameYourStudy": "",
 		"noTemplatesSubtitle": "Para empezar un proyecto, necesitas una plantilla de tablero de proyecto. Es posible que tu profesor no tenga una plantilla de tablero de proyecto vinculada a esta clase.",
 		"noTemplatesTitle": "No hay plantillas de tableros de proyectos en la clase.",
 		"selectClass": "Seleccione la clase",
@@ -1389,7 +1396,8 @@
 		"selectTemplateHelp": "",
 		"templateClassLabel": "",
 		"templateOptionLabel": "",
-		"untitledProject": "Proyecto sin título"
+		"untitledProject": "Proyecto sin título",
+		"untitledStudy": ""
 	},
 	"notes": {
 		"noNotes": "Aún no hay notas ingresadas. Haz clic derecho para agregar notas."

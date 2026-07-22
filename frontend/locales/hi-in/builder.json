@@ -1373,14 +1373,21 @@
 	"newProject": {
 		"addCollaborators": "सहयोगियों को जोड़ें",
 		"alreadyAssociatedTitle": "आपके पास पहले से ही इस वर्ग से संबद्ध एक प्रोजेक्ट है",
+		"alreadyAssociatedTitleStudy": "",
 		"alreadyAssociatedWarning": "जब तक आपको पता न हो कि आप क्या कर रहे हैं, तब तक आगे न बढ़ें।",
+		"alreadyAssociatedWarningStudy": "",
 		"backToHome": "← घर वापस",
 		"createProject": "प्रोजेक्ट बनाएं",
+		"createStudy": "",
 		"giveNameAlert": "अपने प्रोजेक्ट को एक नाम दें",
+		"giveNameAlertStudy": "",
 		"goBackHome": "घर वापस जाओ",
 		"nameMessage": "अपने प्रोजेक्ट को एक नाम दें: यह अध्ययन का शीर्षक नहीं है, बल्कि वह नाम है जिसे आप अपने कार्यस्थल का नाम देना चाहते हैं।",
+		"nameMessageStudy": "",
 		"namePlaceholder": "मेरे प्रोजेक्ट का नाम है",
+		"namePlaceholderStudy": "",
 		"nameYourProject": "अपने प्रोजेक्ट को नाम दें",
+		"nameYourStudy": "",
 		"noTemplatesSubtitle": "प्रोजेक्ट शुरू करने के लिए, आपको एक प्रोजेक्ट बोर्ड टेम्पलेट की आवश्यकता होगी। हो सकता है कि आपके शिक्षक के पास इस कक्षा से जुड़ा कोई प्रोजेक्ट बोर्ड टेम्पलेट न हो।",
 		"noTemplatesTitle": "कक्षा में कोई प्रोजेक्ट बोर्ड टेम्पलेट नहीं हैं",
 		"selectClass": "कक्षा का चयन करें",
@@ -1389,7 +1396,8 @@
 		"selectTemplateHelp": "",
 		"templateClassLabel": "",
 		"templateOptionLabel": "",
-		"untitledProject": "शीर्षकहीन परियोजना"
+		"untitledProject": "शीर्षकहीन परियोजना",
+		"untitledStudy": ""
 	},
 	"notes": {
 		"noNotes": "अभी तक कोई नोट दर्ज नहीं किया गया है। नोट जोड़ने के लिए राइट-क्लिक करें।"

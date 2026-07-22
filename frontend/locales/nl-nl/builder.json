@@ -1373,14 +1373,21 @@
 	"newProject": {
 		"addCollaborators": "Medewerkers toevoegen",
 		"alreadyAssociatedTitle": "Er is al een project aan deze klasse gekoppeld",
+		"alreadyAssociatedTitleStudy": "",
 		"alreadyAssociatedWarning": "Ga niet verder tenzij u weet wat u doet.",
+		"alreadyAssociatedWarningStudy": "",
 		"backToHome": "← Terug naar home",
 		"createProject": "Project maken",
+		"createStudy": "",
 		"giveNameAlert": "Geef uw project een naam",
+		"giveNameAlertStudy": "",
 		"goBackHome": "Ga terug naar huis",
 		"nameMessage": "Geef je project een naam. Dit is niet de titel van de studie, maar de naam die je aan je werkruimte wilt geven.",
+		"nameMessageStudy": "",
 		"namePlaceholder": "De naam van mijn project is",
+		"namePlaceholderStudy": "",
 		"nameYourProject": "Geef uw project een naam",
+		"nameYourStudy": "",
 		"noTemplatesSubtitle": "Om een ​​project te starten, heb je een projectbordsjabloon nodig. Het is mogelijk dat je docent geen projectbordsjabloon aan deze les heeft gekoppeld.",
 		"noTemplatesTitle": "Er zijn geen projectbordsjablonen in de klas",
 		"selectClass": "Selecteer de klas",
@@ -1389,7 +1396,8 @@
 		"selectTemplateHelp": "",
 		"templateClassLabel": "",
 		"templateOptionLabel": "",
-		"untitledProject": "Ongetiteld project"
+		"untitledProject": "Ongetiteld project",
+		"untitledStudy": ""
 	},
 	"notes": {
 		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."

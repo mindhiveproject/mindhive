@@ -1373,14 +1373,21 @@
 	"newProject": {
 		"addCollaborators": "إضافة المتعاونين",
 		"alreadyAssociatedTitle": "لديك بالفعل مشروع مرتبط بهذه الفئة",
+		"alreadyAssociatedTitleStudy": "",
 		"alreadyAssociatedWarning": "لا تستمر في المضي قدمًا إلا إذا كنت تعرف ما تفعله.",
+		"alreadyAssociatedWarningStudy": "",
 		"backToHome": "← العودة إلى الصفحة الرئيسية",
 		"createProject": "إنشاء مشروع",
+		"createStudy": "",
 		"giveNameAlert": "أعط مشروعك اسمًا",
+		"giveNameAlertStudy": "",
 		"goBackHome": "العودة إلى المنزل",
 		"nameMessage": "أعطِ مشروعك اسمًا. هذا ليس عنوان الدراسة، بل ما ترغب في تسميته مساحة عملك.",
+		"nameMessageStudy": "",
 		"namePlaceholder": "اسم مشروعي هو",
+		"namePlaceholderStudy": "",
 		"nameYourProject": "قم بتسمية مشروعك",
+		"nameYourStudy": "",
 		"noTemplatesSubtitle": "لبدء مشروع، ستحتاج إلى قالب لوحة مشروع. قد لا يتوفر لدى معلمك قالب لوحة مشروع مرتبط بهذه الحصة.",
 		"noTemplatesTitle": "لا توجد قوالب لوحة المشروع في الفصل",
 		"selectClass": "حدد الفصل",
@@ -1389,7 +1396,8 @@
 		"selectTemplateHelp": "",
 		"templateClassLabel": "",
 		"templateOptionLabel": "",
-		"untitledProject": "مشروع بلا عنوان"
+		"untitledProject": "مشروع بلا عنوان",
+		"untitledStudy": ""
 	},
 	"notes": {
 		"noNotes": "لم يتم إدخال أي ملاحظات بعد. انقر بزر الماوس الأيمن لإضافة ملاحظات."

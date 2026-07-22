@@ -5,12 +5,12 @@ import Link from "next/link";
 import useForm from "../../../../lib/useForm";
 
 import { StyledBuilderArea } from "../../../styles/StyledBuilder";
-import { StyledInput } from "../../../styles/StyledForm";
 import { MessageHeader, Message } from "semantic-ui-react";
 
-import LinkClass from "./LinkClass";
 import Collaborators from "../../../Global/Collaborators";
 import TemplateOptionCards from "./TemplateOptionCards";
+import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
 
 import { GET_USER_CLASSES } from "../../../Queries/User";
 import {
@@ -37,6 +37,8 @@ export default function StartProject({ query, user }) {
   ];
 
   const isStudent = user?.permissions.map((p) => p?.name).includes("STUDENT");
+  const isProjectFlow = isStudent;
+  const ownerId = user?.id;
 
   const { data: proposalData } = useQuery(DEFAULT_PROJECT_BOARDS);
   const defaultProposalBoardId =
@@ -44,9 +46,26 @@ export default function StartProject({ query, user }) {
 
   const { inputs, handleChange } = useForm({
     projectName: "",
-    collaborators: [{ id: user?.id }],
+    collaborators: [{ id: ownerId }],
     class: studentClasses?.length ? studentClasses[0] : undefined,
   });
+
+  const collaboratorIdsForUi = (inputs?.collaborators || [])
+    .map((c) => c?.id)
+    .filter((id) => id && id !== ownerId);
+
+  const handleCollaboratorsChange = (e) => {
+    const selected = e?.target?.value || [];
+    const withoutOwner = selected.filter((c) => c?.id !== ownerId);
+    handleChange({
+      target: {
+        name: "collaborators",
+        value: ownerId
+          ? [{ id: ownerId }, ...withoutOwner]
+          : withoutOwner,
+      },
+    });
+  };
 
   const {
     data: dataProjects,
@@ -59,6 +78,16 @@ export default function StartProject({ query, user }) {
     },
     skip: !inputs?.class?.id,
   });
+
+  const handleClassSelect = (cl) => {
+    handleChange({
+      target: {
+        name: "class",
+        value: cl,
+      },
+    });
+    refetch();
+  };
 
   const templateOptions = useMemo(
     () => getVisibleTemplateOptionsForClasses(studentClasses),
@@ -76,6 +105,16 @@ export default function StartProject({ query, user }) {
       ) ?? null,
     [templateOptions, selectedOptionKey]
   );
+
+  useEffect(() => {
+    if (inputs?.class?.id || !studentClasses?.length) return;
+    handleChange({
+      target: {
+        name: "class",
+        value: studentClasses[0],
+      },
+    });
+  }, [studentClasses]);
 
   useEffect(() => {
     if (templateOptions.length === 0) {
@@ -140,7 +179,13 @@ export default function StartProject({ query, user }) {
 
   const saveNewProject = async () => {
     if (!inputs?.projectName) {
-      return alert(t("newProject.giveNameAlert"));
+      return alert(
+        isProjectFlow
+          ? t("newProject.giveNameAlert")
+          : t("newProject.giveNameAlertStudy", {}, {
+              default: "Give your study a name",
+            })
+      );
     }
 
     const templateId = selectedOption?.board?.id;
@@ -173,6 +218,30 @@ export default function StartProject({ query, user }) {
     }
   };
 
+  const showClassChips =
+    studentClasses && studentClasses.length > 1 && !showTemplatePicker;
+
+  const classChipRow = showClassChips ? (
+    <div className="formSection">
+      <div className="title">{t("newProject.selectClass")}</div>
+      <div
+        className="classChipRow"
+        role="radiogroup"
+        aria-label={t("newProject.selectClass")}
+      >
+        {studentClasses.map((cl) => (
+          <Chip
+            key={cl.id}
+            shape="square"
+            label={cl.title}
+            selected={inputs?.class?.id === cl.id}
+            onClick={() => handleClassSelect(cl)}
+          />
+        ))}
+      </div>
+    </div>
+  ) : null;
+
   return (
     <StyledBuilderArea>
       <div className="navigation">
@@ -187,7 +256,12 @@ export default function StartProject({ query, user }) {
             </Link>
           </div>
           <div className="centralPanel">
-            {inputs?.projectName || t("newProject.untitledProject")}
+            {inputs?.projectName
+              || (isProjectFlow
+                ? t("newProject.untitledProject")
+                : t("newProject.untitledStudy", {}, {
+                    default: "Untitled Study",
+                  }))}
           </div>
         </div>
       </div>
@@ -203,14 +277,23 @@ export default function StartProject({ query, user }) {
               </div>
 
               {studentClasses && studentClasses.length > 1 && (
-                <div>
+                <div className="formSection">
                   <div className="title">{t("newProject.selectClass")}</div>
-                  <LinkClass
-                    classes={studentClasses}
-                    project={inputs}
-                    handleChange={handleChange}
-                    refetchUserProjectsInClass={refetch}
-                  />
+                  <div
+                    className="classChipRow"
+                    role="radiogroup"
+                    aria-label={t("newProject.selectClass")}
+                  >
+                    {studentClasses.map((cl) => (
+                      <Chip
+                        key={cl.id}
+                        shape="square"
+                        label={cl.title}
+                        selected={inputs?.class?.id === cl.id}
+                        onClick={() => handleClassSelect(cl)}
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
 
@@ -225,15 +308,15 @@ export default function StartProject({ query, user }) {
           </>
         ) : (
           <div className="modal">
-            <StyledInput>
+            <div className="formSections">
               {showTemplatePicker && (
-                <div>
+                <div className="formSection">
                   <div className="title">
                     {t("newProject.selectTemplate", {}, {
                       default: "Select template",
                     })}
                   </div>
-                  <div className="message">
+                  <div className="helpText">
                     {t("newProject.selectTemplateHelp", {}, {
                       default: "Choose a project board template your teacher has made available to copy.",
                     })}
@@ -247,58 +330,85 @@ export default function StartProject({ query, user }) {
                 </div>
               )}
 
-              <div className="title">{t("newProject.nameYourProject")}</div>
-              <div className="message">
-                {t("newProject.nameMessage")}
+              <div className="formSection">
+                <div className="title">
+                  {isProjectFlow
+                    ? t("newProject.nameYourProject")
+                    : t("newProject.nameYourStudy", {}, {
+                        default: "Name your study",
+                      })}
+                </div>
+                <div className="helpText">
+                  {isProjectFlow
+                    ? t("newProject.nameMessage")
+                    : t("newProject.nameMessageStudy", {}, {
+                        default:
+                          "Give your study a name. This is what you want to call your work space.",
+                      })}
+                </div>
+                <input
+                  type="text"
+                  name="projectName"
+                  placeholder={
+                    isProjectFlow
+                      ? t("newProject.namePlaceholder")
+                      : t("newProject.namePlaceholderStudy", {}, {
+                          default: "The name of my study is ",
+                        })
+                  }
+                  value={inputs.projectName}
+                  onChange={handleChange}
+                />
               </div>
 
-              <input
-                type="text"
-                name="projectName"
-                placeholder={t("newProject.namePlaceholder")}
-                value={inputs.projectName}
-                onChange={handleChange}
-              />
+              {classChipRow}
 
-              {studentClasses && studentClasses.length > 1 && !showTemplatePicker && (
-                <div>
-                  <div className="title">{t("newProject.selectClass")}</div>
-                  <LinkClass
-                    classes={studentClasses}
-                    project={inputs}
-                    handleChange={handleChange}
-                    refetchUserProjectsInClass={refetch}
-                  />
-                </div>
-              )}
-
-              <div>
+              <div className="formSection">
                 <div className="title">{t("newProject.addCollaborators")}</div>
                 <Collaborators
                   userClasses={userClasses}
-                  collaborators={
-                    (inputs && inputs?.collaborators?.map((c) => c?.id)) || []
-                  }
-                  handleChange={handleChange}
+                  collaborators={collaboratorIdsForUi}
+                  handleChange={handleCollaboratorsChange}
                   selectedClass={inputs?.class}
                   isStudent={isStudent}
+                  excludeUserId={ownerId}
                 />
               </div>
 
               {dataProjects && dataProjects?.proposalBoards.length > 1 && (
                 <Message warning>
                   <MessageHeader>
-                    {t("newProject.alreadyAssociatedTitle")}
+                    {isProjectFlow
+                      ? t("newProject.alreadyAssociatedTitle")
+                      : t("newProject.alreadyAssociatedTitleStudy", {}, {
+                          default:
+                            "You already have a study associated with this class",
+                        })}
                   </MessageHeader>
                   <p>
-                    {t("newProject.alreadyAssociatedWarning")}
+                    {isProjectFlow
+                      ? t("newProject.alreadyAssociatedWarning")
+                      : t("newProject.alreadyAssociatedWarningStudy", {}, {
+                          default:
+                            "Do not proceed further unless you know what you are doing.",
+                        })}
                   </p>
                 </Message>
               )}
-            </StyledInput>
-            <button onClick={saveNewProject} disabled={loading}>
-              {t("newProject.createProject")}
-            </button>
+            </div>
+            <div className="createAction">
+              <Button
+                variant="filled"
+                onClick={saveNewProject}
+                disabled={loading}
+              >
+                {isProjectFlow
+                  ? t("newProject.createProject")
+                  : t("newProject.createStudy", {}, {
+                      default: "Create Study",
+                    })}
+              </Button>
+            </div>
           </div>
         )}
       </div>

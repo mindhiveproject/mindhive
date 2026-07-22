@@ -134,6 +134,7 @@ export const GET_USER_CLASSES = gql`
           id
           title
           code
+          createdAt
           networks {
             classes {
               id
@@ -156,6 +157,7 @@ export const GET_USER_CLASSES = gql`
           id
           title
           code
+          createdAt
           networks {
             classes {
               id
@@ -175,6 +177,7 @@ export const GET_USER_CLASSES = gql`
           id
           title
           code
+          createdAt
           networks {
             classes {
               id
