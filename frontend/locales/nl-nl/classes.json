@@ -936,6 +936,11 @@
 			"returned": ""
 		}
 	},
+	"ownedItems": {
+		"author": "",
+		"collaborator": "",
+		"untitled": ""
+	},
 	"participants": "Deelnemers",
 	"pleaseTypeDelete": "Typ DELETE om uw klas te verwijderen",
 	"projectBoard": {
@@ -1044,7 +1049,9 @@
 		"templateUses": "{{count}} keer gebruikt",
 		"toggleVisibilityError": "Kon instelling voor kopiëren van sjabloon niet bijwerken.",
 		"viewBoard": "",
-		"visibleToStudents": "Studenten kunnen deze sjabloon kopiëren"
+		"visibleToStudents": "Studenten kunnen deze sjabloon kopiëren",
+		"yourProjects": "",
+		"yourProjectsDescription": ""
 	},
 	"proposalCardsAssignableQuestion": "Moeten voorstelkaarten aan studenten kunnen worden toegewezen?",
 	"resource": {
@@ -1177,10 +1184,13 @@
 		"dateCreated": "Datum aangemaakt",
 		"listDescription": "{{count}} studies gemaakt door studenten in deze klas.",
 		"noStudiesYet": "De studenten hebben nog geen studies aangemaakt.",
+		"openInBuilder": "",
 		"participants": "Deelnemers",
 		"studyBuilder": "Studiebouwer",
 		"studyPage": "Deelnemerspagina",
-		"studyTitle": "Studietitel"
+		"studyTitle": "Studietitel",
+		"yourStudies": "",
+		"yourStudiesDescription": ""
 	},
 	"studiesTab": "Onderzoeken",
 	"studyPage": "Studiepagina",

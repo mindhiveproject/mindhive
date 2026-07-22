@@ -10,6 +10,7 @@ export default function Collaborators({
   handleChange,
   selectedClass,
   isStudent,
+  excludeUserId,
 }) {
   const { t } = useTranslation('common');
   
@@ -43,11 +44,13 @@ export default function Collaborators({
   });
   const profiles = data?.profiles || [];
 
-  const usernames = profiles.map((user) => ({
-    key: user.username,
-    text: user.username,
-    value: user.id,
-  }));
+  const usernames = profiles
+    .filter((user) => !excludeUserId || user.id !== excludeUserId)
+    .map((user) => ({
+      key: user.username,
+      text: user.username,
+      value: user.id,
+    }));
 
   const onChange = (event, data) => {
     handleChange({

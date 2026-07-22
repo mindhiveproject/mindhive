@@ -936,6 +936,11 @@
 			"returned": ""
 		}
 	},
+	"ownedItems": {
+		"author": "",
+		"collaborator": "",
+		"untitled": ""
+	},
 	"participants": "Participantes",
 	"pleaseTypeDelete": "Por favor, digite DELETE para excluir sua classe",
 	"projectBoard": {
@@ -1044,7 +1049,9 @@
 		"templateUses": "{{count}} usos",
 		"toggleVisibilityError": "Falha ao atualizar a configuração de cópia do modelo.",
 		"viewBoard": "",
-		"visibleToStudents": "Os alunos podem copiar este modelo"
+		"visibleToStudents": "Os alunos podem copiar este modelo",
+		"yourProjects": "",
+		"yourProjectsDescription": ""
 	},
 	"proposalCardsAssignableQuestion": "Os cartões de proposta devem ser atribuíveis aos alunos?",
 	"resource": {
@@ -1177,10 +1184,13 @@
 		"dateCreated": "Data de criação",
 		"listDescription": "{{count}} estudos criados por alunos desta turma.",
 		"noStudiesYet": "Os alunos ainda não criaram nenhum estudo.",
+		"openInBuilder": "",
 		"participants": "Participantes",
 		"studyBuilder": "Construtor de estudos",
 		"studyPage": "Página do participante",
-		"studyTitle": "Título do estudo"
+		"studyTitle": "Título do estudo",
+		"yourStudies": "",
+		"yourStudiesDescription": ""
 	},
 	"studiesTab": "Estudos",
 	"studyPage": "Página de estudo",

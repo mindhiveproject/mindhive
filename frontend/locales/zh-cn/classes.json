@@ -936,6 +936,11 @@
 			"returned": ""
 		}
 	},
+	"ownedItems": {
+		"author": "",
+		"collaborator": "",
+		"untitled": ""
+	},
 	"participants": "参与者",
 	"pleaseTypeDelete": "请输入 DELETE 来删除您的班级",
 	"projectBoard": {
@@ -1044,7 +1049,9 @@
 		"templateUses": "{{count}} 次使用",
 		"toggleVisibilityError": "更新模板复制设置失败。",
 		"viewBoard": "",
-		"visibleToStudents": "学生可以复制此模板"
+		"visibleToStudents": "学生可以复制此模板",
+		"yourProjects": "",
+		"yourProjectsDescription": ""
 	},
 	"proposalCardsAssignableQuestion": "提案卡是否应该分配给学生？",
 	"resource": {
@@ -1177,10 +1184,13 @@
 		"dateCreated": "创建日期",
 		"listDescription": "本课程学生创作了{{count}} 项研究。",
 		"noStudiesYet": "学生尚未创建任何研究。",
+		"openInBuilder": "",
 		"participants": "参与者",
 		"studyBuilder": "学习建设者",
 		"studyPage": "参与者页面",
-		"studyTitle": "研究标题"
+		"studyTitle": "研究标题",
+		"yourStudies": "",
+		"yourStudiesDescription": ""
 	},
 	"studiesTab": "研究",
 	"studyPage": "学习页面",

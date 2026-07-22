@@ -1290,7 +1290,7 @@
 	"introductionVideo": "Introduction video",
 	"link": "Link",
 	"linkClass": {
-		"doNotConnectClass": "❌  Do not connect the class"
+		"doNotConnectClass": "Do not connect to class"
 	},
 	"main": {
 		"errorLoadingStudy": "Error loading study: {{errorMessage}}",
@@ -1373,14 +1373,21 @@
 	"newProject": {
 		"addCollaborators": "Add collaborators",
 		"alreadyAssociatedTitle": "You already have a project associated with this class",
+		"alreadyAssociatedTitleStudy": "You already have a study associated with this class",
 		"alreadyAssociatedWarning": "Do not proceed further unless you know what you are doing.",
+		"alreadyAssociatedWarningStudy": "Do not proceed further unless you know what you are doing.",
 		"backToHome": "← Back to home",
 		"createProject": "Create Project",
+		"createStudy": "Create Study",
 		"giveNameAlert": "Give your project a name",
+		"giveNameAlertStudy": "Give your study a name",
 		"goBackHome": "Go back home",
 		"nameMessage": "Give your project a name. This is not the study's title, but what you want to call your work space.",
+		"nameMessageStudy": "Give your study a name. This is what you want to call your work space.",
 		"namePlaceholder": "The name of my project is ",
+		"namePlaceholderStudy": "The name of my study is ",
 		"nameYourProject": "Name your project",
+		"nameYourStudy": "Name your study",
 		"noTemplatesSubtitle": "To start a project, you need a project board template. Your teacher may not have allowed any templates to be copied in your classes.",
 		"noTemplatesTitle": "There are no project board templates available",
 		"selectClass": "Select the class",
@@ -1389,7 +1396,8 @@
 		"selectTemplateHelp": "Choose a project board template your teacher has made available to copy.",
 		"templateClassLabel": "Class: {{className}}",
 		"templateOptionLabel": "{{templateName}} — {{className}}",
-		"untitledProject": "Untitled Project"
+		"untitledProject": "Untitled Project",
+		"untitledStudy": "Untitled Study"
 	},
 	"notes": {
 		"noNotes": "No notes entered yet. Right-click to add notes."

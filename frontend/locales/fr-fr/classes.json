@@ -936,6 +936,11 @@
 			"returned": ""
 		}
 	},
+	"ownedItems": {
+		"author": "",
+		"collaborator": "",
+		"untitled": ""
+	},
 	"participants": "Participants",
 	"pleaseTypeDelete": "Veuillez taper SUPPRIMER pour supprimer votre classe",
 	"projectBoard": {
@@ -1044,7 +1049,9 @@
 		"templateUses": "{{count}} utilisations",
 		"toggleVisibilityError": "Échec de la mise à jour du paramètre de copie du modèle.",
 		"viewBoard": "",
-		"visibleToStudents": "Les étudiants peuvent copier ce modèle"
+		"visibleToStudents": "Les étudiants peuvent copier ce modèle",
+		"yourProjects": "",
+		"yourProjectsDescription": ""
 	},
 	"proposalCardsAssignableQuestion": "Les fiches de proposition devraient-elles pouvoir être attribuées aux étudiants ?",
 	"resource": {
@@ -1177,10 +1184,13 @@
 		"dateCreated": "Date de création",
 		"listDescription": "{{count}} études créées par les étudiants de cette classe.",
 		"noStudiesYet": "Les étudiants n'ont pas encore créé d'études.",
+		"openInBuilder": "",
 		"participants": "Participants",
 		"studyBuilder": "Constructeur d'études",
 		"studyPage": "Page du participant",
-		"studyTitle": "Titre de l'étude"
+		"studyTitle": "Titre de l'étude",
+		"yourStudies": "",
+		"yourStudiesDescription": ""
 	},
 	"studiesTab": "Études",
 	"studyPage": "Page d'étude",

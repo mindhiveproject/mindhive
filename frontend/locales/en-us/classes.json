@@ -936,6 +936,11 @@
 			"returned": "Returned"
 		}
 	},
+	"ownedItems": {
+		"author": "Author",
+		"collaborator": "Collaborator",
+		"untitled": "Untitled"
+	},
 	"participants": "Participants",
 	"pleaseTypeDelete": "Please type DELETE to delete your class",
 	"projectBoard": {
@@ -1044,7 +1049,9 @@
 		"templateUses": "{{count}} uses",
 		"toggleVisibilityError": "Failed to update template copy setting.",
 		"viewBoard": "View board",
-		"visibleToStudents": "Students can copy this template"
+		"visibleToStudents": "Students can copy this template",
+		"yourProjects": "Your projects",
+		"yourProjectsDescription": "{{count}} project boards in this class that you authored or collaborate on."
 	},
 	"proposalCardsAssignableQuestion": "Should proposal cards be assignable to students?",
 	"resource": {
@@ -1177,10 +1184,13 @@
 		"dateCreated": "Date created",
 		"listDescription": "{{count}} studies created by students in this class.",
 		"noStudiesYet": "The students haven't created any studies yet.",
+		"openInBuilder": "Open in builder",
 		"participants": "Participants",
 		"studyBuilder": "Study builder",
 		"studyPage": "Participant page",
-		"studyTitle": "Study title"
+		"studyTitle": "Study title",
+		"yourStudies": "Your studies",
+		"yourStudiesDescription": "{{count}} studies in this class that you authored or collaborate on."
 	},
 	"studiesTab": "Studies",
 	"studyPage": "Study page",

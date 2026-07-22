@@ -936,6 +936,11 @@
 			"returned": ""
 		}
 	},
+	"ownedItems": {
+		"author": "",
+		"collaborator": "",
+		"untitled": ""
+	},
 	"participants": "Участники",
 	"pleaseTypeDelete": "Пожалуйста, введите DELETE, чтобы удалить свой класс.",
 	"projectBoard": {
@@ -1044,7 +1049,9 @@
 		"templateUses": "{{count}} использований",
 		"toggleVisibilityError": "Не удалось обновить настройку копирования шаблона.",
 		"viewBoard": "",
-		"visibleToStudents": "Студенты могут копировать этот шаблон"
+		"visibleToStudents": "Студенты могут копировать этот шаблон",
+		"yourProjects": "",
+		"yourProjectsDescription": ""
 	},
 	"proposalCardsAssignableQuestion": "Следует ли разрешить студентам передавать карточки с предложениями о поступлении?",
 	"resource": {
@@ -1177,10 +1184,13 @@
 		"dateCreated": "Дата создания",
 		"listDescription": "{{count}} исследований, созданных студентами этого класса.",
 		"noStudiesYet": "Студенты пока не создали ни одного исследования.",
+		"openInBuilder": "",
 		"participants": "Участники",
 		"studyBuilder": "Создатель исследований",
 		"studyPage": "Страница участника",
-		"studyTitle": "Название исследования"
+		"studyTitle": "Название исследования",
+		"yourStudies": "",
+		"yourStudiesDescription": ""
 	},
 	"studiesTab": "Исследования",
 	"studyPage": "Страница исследования",

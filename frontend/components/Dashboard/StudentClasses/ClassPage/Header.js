@@ -1,15 +1,11 @@
-import useTranslation from "next-translate/useTranslation";
+"use client";
 
-export default function Header({ user, myclass }) {
-  const { t } = useTranslation("classes");
+import ClassHeader from "../../TeacherClasses/ClassPage/Header";
 
-  return (
-    <div>
-      <div className="editableClassHeader">
-        <h1>{myclass?.title}</h1>
-        <h2>{myclass?.description}</h2>
-        <div className="teacher">{t("teacher")} {myclass?.creator?.username}</div>
-      </div>
-    </div>
-  );
+/**
+ * Student class header — same UI pattern as the teacher class header
+ * (title, description, teacher + mentors chips), but read-only.
+ */
+export default function Header({ myclass }) {
+  return <ClassHeader myclass={myclass} readOnly />;
 }
