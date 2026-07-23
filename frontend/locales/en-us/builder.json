@@ -46,6 +46,17 @@
 		"unsavedChanges": "(Unsaved changes)"
 	},
 	"availability": "Availability",
+	"aiFeedback": {
+		"description": "Generate a short coaching prompt to help shape this feedback.",
+		"errorTitle": "Could not generate help",
+		"generate": "Generate feedback help",
+		"generateAria": "Generate AI feedback help",
+		"loading": "Generating...",
+		"panelLabel": "AI feedback helper",
+		"resultTitle": "Suggested guidance",
+		"threadStatus": "Thread {{threadId}}: {{status}}",
+		"title": "AI feedback helper"
+	},
 	"background": "Background",
 	"backgroundHelp": "Use this field to provide some brief background on the topic of research. What is the problem under study and why is it important?",
 	"backgroundTab": "Background",

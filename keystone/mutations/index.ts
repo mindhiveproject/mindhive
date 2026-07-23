@@ -40,6 +40,7 @@ import {
 import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
+import generateAiFeedbackHelp from "./generateAiFeedbackHelp";
 import resolveFormDefinition from "./resolveFormDefinition";
 import seedOpportunityForm from "./seedOpportunityForm";
 import seedProfileForms from "./seedProfileForms";
@@ -71,6 +72,25 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         id: ID!
         updatedCloneCount: Int!
         errors: [String!]!
+      }
+      input AiFeedbackHelpInput {
+        proposalId: ID!
+        questionNumber: String!
+        questionName: String
+        currentTextContent: String
+      }
+      type AiFeedbackHelpButton {
+        text: String!
+        action: String
+      }
+      type AiFeedbackHelpResult {
+        textDisplay: String!
+        buttonsArray: [AiFeedbackHelpButton!]!
+      }
+      type AiFeedbackHelpPayload {
+        threadId: String!
+        status: String!
+        result: AiFeedbackHelpResult
       }
       type Mutation {
         sendEmail(
@@ -177,6 +197,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite(inviteId: ID!): NetworkInvite
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
+        generateAiFeedbackHelp(
+          input: AiFeedbackHelpInput!
+        ): AiFeedbackHelpPayload!
         # One-off seeder for the global Opportunity FormDefinition.
         # Idempotent unless force=true (which deletes and recreates).
         seedOpportunityForm(force: Boolean): FormDefinition
@@ -325,6 +348,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite,
         followUser,
         unfollowUser,
+        generateAiFeedbackHelp,
         seedOpportunityForm,
         seedProfileForms,
         seedReviewForms,

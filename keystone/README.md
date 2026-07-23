@@ -8,6 +8,13 @@ Run
 yarn dev
 ```
 
+## AI Feedback Helper
+
+The `generateAiFeedbackHelp` GraphQL mutation proxies admin-only requests to the local Pydantic service.
+
+- `AI_FEEDBACK_SERVICE_URL`: required for the mutation, for example `http://localhost:8001`.
+- `AI_FEEDBACK_SERVICE_TOKEN`: optional shared token. If set here, the Python service must use the same value.
+
 To view the config for your new app, look at [./keystone.ts](./keystone.ts)
 
 This project starter is designed to give you a sense of the power Keystone can offer you, and show off some of its main features. It's also a pretty simple setup if you want to build out from it.
