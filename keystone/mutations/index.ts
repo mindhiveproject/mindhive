@@ -16,6 +16,7 @@ import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
 import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
 import backfillOpportunityMultiselectFields from "./backfillOpportunityMultiselectFields";
 import backfillClassNetworkAdmins from "./backfillClassNetworkAdmins";
+import backfillClassNetworkPublicIds from "./backfillClassNetworkPublicIds";
 import {
   addClassNetworkAdmin,
   addClassNetworkMemberProfile,
@@ -225,6 +226,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # positional snapshot, before any post-fix reorder is possible.
         # Dry-run by default. Returns a list of change descriptions.
         backfillProposalBoardPublicIds(limit: Int, dryRun: Boolean): [String!]!
+        # One-shot: stamp publicId on ClassNetwork rows missing one so
+        # share/deep-link URLs can use the public identifier. Dry-run by
+        # default. Returns a list of change descriptions.
+        backfillClassNetworkPublicIds(limit: Int, dryRun: Boolean): [String!]!
         createTemplateMilestone(input: CreateTemplateMilestoneInput!): Milestone
         updateTemplateMilestone(input: UpdateTemplateMilestoneInput!): Milestone
       }
@@ -253,6 +258,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       }
       type NetworkInviteContextNetwork {
         id: ID!
+        publicId: String
         title: String
         description: String
         isPublic: Boolean
@@ -338,6 +344,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillLowercaseKeys,
         backfillProjectBoardFormScope,
         backfillProposalBoardPublicIds,
+        backfillClassNetworkPublicIds,
         createTemplateMilestone,
         updateTemplateMilestone,
       },

@@ -80,6 +80,7 @@ export const GET_CLASS = gql`
       }
       networks {
         id
+        publicId
         title
         description
         isPublic

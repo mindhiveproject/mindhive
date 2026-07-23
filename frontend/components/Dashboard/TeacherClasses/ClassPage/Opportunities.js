@@ -8,6 +8,7 @@ import CopyButton from "../../../DesignSystem/CopyButton";
 import Chip from "../../../DesignSystem/Chip";
 import ClassMatchingRoundSection from "./ClassMatchingRoundSection";
 import OpportunityPreviewModal from "./OpportunityPreviewModal";
+import { classNetworkUrlRef } from "../../../../lib/classNetworkRef";
 
 const NETWORK_ICON = (
   <img
@@ -56,12 +57,13 @@ export default function ClassOpportunities({ myclass }) {
   const selectedNetwork = networks.find(
     (network) => network.id === selectedNetworkId,
   );
+  const selectedNetworkShareRef = classNetworkUrlRef(selectedNetwork);
 
-  const sponsorSignupAndInviteLink = selectedNetworkId
-    ? `${origin}/signup/sponsor?classNetwork=${selectedNetworkId}`
+  const sponsorSignupAndInviteLink = selectedNetworkShareRef
+    ? `${origin}/signup/sponsor?classNetwork=${selectedNetworkShareRef}`
     : "";
-  const sponsorNetworkInviteLink = selectedNetworkId
-    ? `${origin}/login?classNetwork=${selectedNetworkId}`
+  const sponsorNetworkInviteLink = selectedNetworkShareRef
+    ? `${origin}/login?classNetwork=${selectedNetworkShareRef}`
     : "";
 
   const handleOpenSettings = () => {

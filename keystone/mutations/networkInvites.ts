@@ -20,6 +20,7 @@ const INVITE_QUERY = `
   pendingKey
   classNetwork {
     id
+    publicId
     title
     description
     isPublic
@@ -654,6 +655,7 @@ export async function networkInviteContext(
       email
       classNetwork {
         id
+        publicId
         title
         description
         isPublic
@@ -674,6 +676,7 @@ export async function networkInviteContext(
     classNetwork: invite.classNetwork
       ? {
           id: invite.classNetwork.id,
+          publicId: invite.classNetwork.publicId || null,
           title: invite.classNetwork.title,
           description: invite.classNetwork.description,
           isPublic: invite.classNetwork.isPublic,
