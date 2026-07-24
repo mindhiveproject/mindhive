@@ -54,31 +54,11 @@ export default function Settings({ myclass, user }) {
   const [classDescription, setClassDescription] = useState(
     myclass?.description || ""
   );
-  const [assignableToStudents, setAssignableToStudents] = useState(
-    myclass?.settings?.assignableToStudents ?? false
-  );
-  const [studentsCanAssignToCards, setStudentsCanAssignToCards] = useState(
-    myclass?.settings?.studentsCanAssignToCards ?? false
-  );
   const [curriculumType, setCurriculumType] = useState(
     normalizeCurriculumType(myclass?.settings?.curriculumType)
   );
 
   // Sync from server when myclass (e.g. after refetch) changes
-  useEffect(() => {
-    const value = myclass?.settings?.assignableToStudents;
-    setAssignableToStudents(
-      value === undefined || value === null ? false : !!value
-    );
-  }, [myclass?.settings?.assignableToStudents]);
-
-  useEffect(() => {
-    const value = myclass?.settings?.studentsCanAssignToCards;
-    setStudentsCanAssignToCards(
-      value === undefined || value === null ? false : !!value
-    );
-  }, [myclass?.settings?.studentsCanAssignToCards]);
-
   useEffect(() => {
     setCurriculumType(
       normalizeCurriculumType(myclass?.settings?.curriculumType)
@@ -154,52 +134,6 @@ export default function Settings({ myclass, user }) {
       }
     }
   }, [classNetworks, selectedNetwork]);
-
-  const updateAssignableToStudents = (value) => {
-    setAssignableToStudents(value);
-    const existingSettings =
-      myclass?.settings && typeof myclass.settings === "object"
-        ? myclass.settings
-        : {};
-    const newSettings = { ...existingSettings, assignableToStudents: value };
-    // When enabling, default to students cannot assign (only teachers/mentors can)
-    if (value) {
-      newSettings.studentsCanAssignToCards = false;
-      setStudentsCanAssignToCards(false);
-    }
-    updateClassSettings({
-      variables: {
-        settings: newSettings,
-      },
-    }).catch((err) =>
-      alert(
-        err?.message ||
-          t("failedToUpdateSettings", {}, {
-            default: "Failed to update settings",
-          })
-      )
-    );
-  };
-
-  const updateStudentsCanAssignToCards = (value) => {
-    setStudentsCanAssignToCards(value);
-    const existingSettings =
-      myclass?.settings && typeof myclass.settings === "object"
-        ? myclass.settings
-        : {};
-    updateClassSettings({
-      variables: {
-        settings: { ...existingSettings, studentsCanAssignToCards: value },
-      },
-    }).catch((err) =>
-      alert(
-        err?.message ||
-          t("failedToUpdateSettings", {}, {
-            default: "Failed to update settings",
-          })
-      )
-    );
-  };
 
   const updateCurriculumType = (value) => {
     const normalized = normalizeCurriculumType(value);
@@ -805,11 +739,12 @@ export default function Settings({ myclass, user }) {
 
       <section className="settingsSection">
         <div className="settingsSectionHeader">
-          <h3>{t("boardSettings", {}, { default: "Board settings" })}</h3>
+          <h3>
+            {t("classCurriculum", {}, { default: "Class Curriculum" })}
+          </h3>
           <p>
-            {t("boardSettingsDescription", {}, {
-              default:
-                "These settings will be applied to all project boards in this class.",
+            {t("classCurriculumDescription", {}, {
+              default: "Select which curriculum applies to this class.",
             })}
           </p>
         </div>
@@ -819,80 +754,10 @@ export default function Settings({ myclass, user }) {
               curriculumType={curriculumType || DEFAULT_CURRICULUM_TYPE}
               disabled={updatingSettings}
               onChange={updateCurriculumType}
+              questionKey="classCurriculumTypeQuestion"
+              questionDefault="Which curriculum type applies to this class?"
             />
           </div>
-          <div className="block">
-            <p className="settingsQuestion">
-              {t("proposalCardsAssignableQuestion", {}, {
-                default: "Should proposal cards be assignable to students?",
-              })}
-            </p>
-            <div className="settingsChoiceGroup">
-              <label className={assignableToStudents ? "active" : ""}>
-                <input
-                  type="radio"
-                  checked={assignableToStudents}
-                  disabled={updatingSettings}
-                  onChange={(event) =>
-                    updateAssignableToStudents(event.target.checked)
-                  }
-                />
-                {t("cardAssignmentEnabled", {}, {
-                  default: "Cards can be assigned to students",
-                })}
-              </label>
-              <label className={!assignableToStudents ? "active" : ""}>
-                <input
-                  type="radio"
-                  checked={!assignableToStudents}
-                  disabled={updatingSettings}
-                  onChange={(event) =>
-                    updateAssignableToStudents(!event.target.checked)
-                  }
-                />
-                {t("cardAssignmentDisabled", {}, {
-                  default: "Cards cannot be assigned to students",
-                })}
-              </label>
-            </div>
-          </div>
-          {assignableToStudents && (
-            <div className="block">
-              <p className="settingsQuestion">
-                {t("whoCanAssignCards", {}, {
-                  default: "Who can assign profiles to cards?",
-                })}
-              </p>
-              <div className="settingsChoiceGroup">
-                <label className={!studentsCanAssignToCards ? "active" : ""}>
-                  <input
-                    type="radio"
-                    checked={!studentsCanAssignToCards}
-                    disabled={updatingSettings}
-                    onChange={(event) =>
-                      updateStudentsCanAssignToCards(!event.target.checked)
-                    }
-                  />
-                  {t("onlyTeachersMentorsAssignCards", {}, {
-                    default: "Only teachers and mentors can assign cards",
-                  })}
-                </label>
-                <label className={studentsCanAssignToCards ? "active" : ""}>
-                  <input
-                    type="radio"
-                    checked={studentsCanAssignToCards}
-                    disabled={updatingSettings}
-                    onChange={(event) =>
-                      updateStudentsCanAssignToCards(event.target.checked)
-                    }
-                  />
-                  {t("studentsCanAssignCards", {}, {
-                    default: "Students can assign cards",
-                  })}
-                </label>
-              </div>
-            </div>
-          )}
         </div>
       </section>
 

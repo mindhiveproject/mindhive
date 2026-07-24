@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
+import clsx from "clsx";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -25,6 +26,10 @@ const OPPORTUNITY_STATUS_KEYS = {
 
 function isReturnedOpportunity(opportunity) {
   return opportunity?.status === "returned";
+}
+
+function isAppointmentRequested(opportunity) {
+  return Boolean(opportunity?.requestsAppointment);
 }
 
 function displayName(profile) {
@@ -114,6 +119,13 @@ function OpportunityInfoContent({ opportunity, t }) {
           )}
         </p>
       ) : null}
+      {isAppointmentRequested(opportunity) ? (
+        <p className="appointmentRequested">
+          {t("opportunities.preview.requestsAppointment", {}, {
+            default: "Appointment requested",
+          })}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -148,13 +160,23 @@ export default function MatchingRoundOpportunitiesGrid({
       if (!opportunity) return null;
 
       const returned = isReturnedOpportunity(opportunity);
-      const infoLabel = returned
-        ? t("opportunities.matchingRound.grid.columns.infoReturned", {}, {
-            default: "More information — returned",
-          })
-        : t("opportunities.matchingRound.grid.columns.info", {}, {
-            default: "More information",
-          });
+      const appointmentRequested = isAppointmentRequested(opportunity);
+
+      const infoLabelKey = returned
+        ? "infoReturned"
+        : appointmentRequested
+          ? "infoAppointment"
+          : "info";
+      const infoLabelDefaults = {
+        info: "More information",
+        infoReturned: "More information — returned",
+        infoAppointment: "More information — appointment requested",
+      };
+
+      const cellClass = clsx("matchingRoundOppInfoCell", {
+        matchingRoundOppInfoCellReturned: returned,
+        matchingRoundOppInfoCellAppointment: appointmentRequested,
+      });
 
       return (
         <InfoTooltip
@@ -165,19 +187,20 @@ export default function MatchingRoundOpportunitiesGrid({
           tooltipStyle={{ width: "320px", maxWidth: "min(320px, calc(100vw - 24px))" }}
           wrapperStyle={{
             display: "flex",
-            alignItems: "stretch",
-            justifyContent: "stretch",
+            alignItems: "center",
+            justifyContent: "center",
             width: "100%",
             height: "100%",
-            alignSelf: "stretch",
           }}
         >
           <button
             type="button"
-            className={`matchingRoundOppInfoCell${
-              returned ? " matchingRoundOppInfoCellReturned" : ""
-            }`}
-            aria-label={infoLabel}
+            className={cellClass}
+            aria-label={t(
+              `opportunities.matchingRound.grid.columns.${infoLabelKey}`,
+              {},
+              { default: infoLabelDefaults[infoLabelKey] },
+            )}
             aria-haspopup="dialog"
           >
             !
@@ -426,8 +449,8 @@ export default function MatchingRoundOpportunitiesGrid({
             }
           : {})}
         pagination
-        paginationPageSize={10}
-        paginationPageSizeSelector={[10, 20, 50]}
+        paginationPageSize={50}
+        paginationPageSizeSelector={[50, 100, 200]}
         autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
         defaultColDef={{ resizable: true }}
         initialState={{

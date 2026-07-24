@@ -31,6 +31,9 @@ export default function ClassOpportunities({ myclass }) {
   const [matchingRoundContext, setMatchingRoundContext] = useState(null);
   const navigationGuardRef = useRef(null);
 
+  const queryNetworkId =
+    typeof router.query?.networkId === "string" ? router.query.networkId : null;
+
   const handleNetworkSelect = useCallback((networkId) => {
     if (networkId === selectedNetworkId) return;
     const guard = navigationGuardRef.current;
@@ -48,11 +51,26 @@ export default function ClassOpportunities({ myclass }) {
       return;
     }
 
+    const fromQuery = queryNetworkId
+      ? networks.find(
+          (network) =>
+            network.id === queryNetworkId ||
+            network.publicId === queryNetworkId,
+        )
+      : null;
+
+    if (fromQuery) {
+      if (selectedNetworkId !== fromQuery.id) {
+        setSelectedNetworkId(fromQuery.id);
+      }
+      return;
+    }
+
     const stillValid = networks.some((network) => network.id === selectedNetworkId);
     if (!selectedNetworkId || !stillValid) {
       setSelectedNetworkId(networks[0].id);
     }
-  }, [networks, selectedNetworkId]);
+  }, [networks, queryNetworkId, selectedNetworkId]);
 
   const selectedNetwork = networks.find(
     (network) => network.id === selectedNetworkId,

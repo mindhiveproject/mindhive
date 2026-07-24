@@ -28,6 +28,14 @@ export const OPEN_UPDATE = gql`
   }
 `;
 
+export const ARCHIVE_UPDATE = gql`
+  mutation ARCHIVE_UPDATE($id: ID!) {
+    updateUpdate(where: { id: $id }, data: { isArchived: true }) {
+      id
+    }
+  }
+`;
+
 export const DELETE_UPDATE = gql`
   mutation DELETE_UPDATE($id: ID!) {
     deleteUpdate(where: { id: $id }) {

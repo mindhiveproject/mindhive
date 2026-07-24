@@ -21,7 +21,7 @@ export function useClassNetworkByRef(ref, options = {}) {
     fetchPolicy: options.fetchPolicy,
   });
 
-  const byPublicId = byPublicIdData?.classNetwork;
+  const byPublicId = byPublicIdData?.classNetworks?.[0];
   const tryInternalId = !skip && !loadingPublicId && !byPublicId;
 
   const {

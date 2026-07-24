@@ -411,6 +411,9 @@
 	"cancel": "يلغي",
 	"cardAssignmentDisabled": "لا يمكن تخصيص البطاقات للطلاب",
 	"cardAssignmentEnabled": "يمكن تخصيص البطاقات للطلاب",
+	"classCurriculum": "",
+	"classCurriculumDescription": "",
+	"classCurriculumTypeQuestion": "",
 	"classDescriptionSettingsDescription": "",
 	"classDescriptionSettingsEmptyHint": "",
 	"classDescriptionSettingsTitle": "",
@@ -516,7 +519,6 @@
 		"title": "اسم الفصل الجديد"
 	},
 	"createdByOn": "تم إنشاؤه بواسطة {{username}} في {{date}}",
-	"curriculumTypeMentorNote": "يُحدد هذا استبيان تقييم الموجهين المستخدم في مركز التقييم. إذا كانت لديك أي أسئلة، فتواصل مع أحد أعضاء فريق MindHive.",
 	"curriculumTypeMindHive": "مايندهيف",
 	"curriculumTypeNyuCusp": "برنامج NYU CUSP (المشروع النهائي)",
 	"curriculumTypeQuestion": "ما نوع المنهج الدراسي الذي ينطبق على لوحات المشاريع في هذه الدورة؟",
@@ -784,6 +786,7 @@
 			"grid": {
 				"columns": {
 					"info": "",
+					"infoAppointment": "",
 					"infoReturned": "",
 					"name": "",
 					"organization": "",

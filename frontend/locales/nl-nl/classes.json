@@ -411,6 +411,9 @@
 	"cancel": "Annuleren",
 	"cardAssignmentDisabled": "Kaarten kunnen niet aan studenten worden toegewezen.",
 	"cardAssignmentEnabled": "Kaarten kunnen aan studenten worden toegewezen.",
+	"classCurriculum": "",
+	"classCurriculumDescription": "",
+	"classCurriculumTypeQuestion": "",
 	"classDescriptionSettingsDescription": "",
 	"classDescriptionSettingsEmptyHint": "",
 	"classDescriptionSettingsTitle": "",
@@ -516,7 +519,6 @@
 		"title": "Nieuwe klassenaam"
 	},
 	"createdByOn": "Gemaakt door {{username}} op {{date}}",
-	"curriculumTypeMentorNote": "Dit bepaalt de vragenlijst voor mentorfeedback die in het feedbackcentrum wordt gebruikt. Neem bij vragen contact op met een medewerker van MindHive.",
 	"curriculumTypeMindHive": "MindHive",
 	"curriculumTypeNyuCusp": "NYU CUSP (Afstudeerproject)",
 	"curriculumTypeQuestion": "Welk type curriculum is van toepassing op projectborden in deze les?",
@@ -784,6 +786,7 @@
 			"grid": {
 				"columns": {
 					"info": "",
+					"infoAppointment": "",
 					"infoReturned": "",
 					"name": "",
 					"organization": "",

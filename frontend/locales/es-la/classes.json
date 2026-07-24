@@ -411,6 +411,9 @@
 	"cancel": "Cancelar",
 	"cardAssignmentDisabled": "Las tarjetas no se pueden asignar a estudiantes",
 	"cardAssignmentEnabled": "Las tarjetas se pueden asignar a los estudiantes.",
+	"classCurriculum": "",
+	"classCurriculumDescription": "",
+	"classCurriculumTypeQuestion": "",
 	"classDescriptionSettingsDescription": "",
 	"classDescriptionSettingsEmptyHint": "",
 	"classDescriptionSettingsTitle": "",
@@ -516,7 +519,6 @@
 		"title": "Nuevo nombre de clase"
 	},
 	"createdByOn": "Creado por {{username}} el {{date}}",
-	"curriculumTypeMentorNote": "Esto determina el cuestionario de retroalimentación para mentores que se utiliza en el centro de retroalimentación. Si tiene alguna pregunta, comuníquese con un miembro del equipo de MindHive.",
 	"curriculumTypeMindHive": "MindHive",
 	"curriculumTypeNyuCusp": "NYU CUSP (Proyecto final)",
 	"curriculumTypeQuestion": "¿Qué tipo de plan de estudios se aplica a los paneles de proyectos en esta clase?",
@@ -784,6 +786,7 @@
 			"grid": {
 				"columns": {
 					"info": "",
+					"infoAppointment": "",
 					"infoReturned": "",
 					"name": "",
 					"organization": "",

@@ -134,9 +134,11 @@ export const GET_NETWORK = gql`
 `;
 
 // Lookup by publicId (share/deep-link ref). Pair with GET_NETWORK for dual-read.
+// Uses findMany + equals (not WhereUniqueInput) so this works before
+// `publicId` has `isIndexed: "unique"` on ClassNetwork.
 export const GET_NETWORK_BY_PUBLIC_ID = gql`
   query GET_NETWORK_BY_PUBLIC_ID($publicId: String!) {
-    classNetwork(where: { publicId: $publicId }) {
+    classNetworks(where: { publicId: { equals: $publicId } }, take: 1) {
       id
       publicId
       title

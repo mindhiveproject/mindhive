@@ -540,3 +540,52 @@ export const PENDING_OPPORTUNITIES_FOR_REVIEW = gql`
     }
   }
 `;
+
+// Opportunities in the given networks that requested a MindHive appointment.
+export const NETWORK_APPOINTMENT_REQUESTS = gql`
+  query NETWORK_APPOINTMENT_REQUESTS($where: OpportunityWhereInput!) {
+    opportunities(where: $where, orderBy: { updatedAt: desc }) {
+      id
+      title
+      requestsAppointment
+      status
+      classNetworks {
+        id
+        publicId
+        title
+      }
+    }
+  }
+`;
+
+// Classes the current user teaches or mentors, with linked networks — used to
+// surface appointment requests on the home dashboard.
+export const MY_CLASSES_FOR_APPOINTMENT_REQUESTS = gql`
+  query MY_CLASSES_FOR_APPOINTMENT_REQUESTS {
+    authenticatedItem {
+      ... on Profile {
+        id
+        teacherIn {
+          id
+          title
+          code
+          networks {
+            id
+            publicId
+            title
+          }
+        }
+        mentorIn {
+          id
+          title
+          code
+          networks {
+            id
+            publicId
+            title
+          }
+        }
+      }
+    }
+  }
+`;

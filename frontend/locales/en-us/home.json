@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Walkthrough Tutorial"
 	},
 	"info": "More information",
+	"networkAppointmentRequests": {
+		"count": "{{count}} requested",
+		"dismiss": "Dismiss",
+		"open": "Review",
+		"show": "Show",
+		"title": "Appointment requests",
+		"untitled": "Untitled class"
+	},
 	"networkPendingInvites": {
 		"count": "{{count}} pending",
 		"dismiss": "Dismiss",
@@ -129,8 +137,16 @@
 	"termsCondition": "Terms & Conditions",
 	"updateProfileDescription": "You're already a part of the MindHive community! Update your profile by clicking here.",
 	"updates": {
+		"archive": "Archive",
+		"archiveAria": "Archive update",
+		"archiveEmpty": "No archived updates.",
+		"archiveModalTitle": "Archived updates",
+		"dismiss": "Dismiss",
 		"latestUpdates": "Latest updates",
-		"noUpdate": "There are no updates at the moment."
+		"noUpdate": "There are no updates at the moment.",
+		"open": "Open",
+		"show": "Show",
+		"unreadCount": "{{count}} unread"
 	},
 	"walkthroughs": {
 		"availableTours": "Available Tours:",

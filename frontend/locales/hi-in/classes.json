@@ -411,6 +411,9 @@
 	"cancel": "रद्द करना",
 	"cardAssignmentDisabled": "छात्रों को कार्ड आवंटित नहीं किए जा सकते।",
 	"cardAssignmentEnabled": "कार्ड छात्रों को आवंटित किए जा सकते हैं",
+	"classCurriculum": "",
+	"classCurriculumDescription": "",
+	"classCurriculumTypeQuestion": "",
 	"classDescriptionSettingsDescription": "",
 	"classDescriptionSettingsEmptyHint": "",
 	"classDescriptionSettingsTitle": "",
@@ -516,7 +519,6 @@
 		"title": "नया वर्ग नाम"
 	},
 	"createdByOn": "{{उपयोगकर्ता नाम}} द्वारा {{दिनांक}} को बनाया गया",
-	"curriculumTypeMentorNote": "इससे फीडबैक सेंटर में उपयोग किए जाने वाले मेंटर फीडबैक प्रश्नावली का निर्धारण होता है। यदि आपके कोई प्रश्न हैं, तो माइंडहाइव टीम के किसी सदस्य से संपर्क करें।",
 	"curriculumTypeMindHive": "माइंडहाइव",
 	"curriculumTypeNyuCusp": "एनवाईयू सीयूएसपी (कैपस्टोन)",
 	"curriculumTypeQuestion": "इस कक्षा में प्रोजेक्ट बोर्ड के लिए किस प्रकार का पाठ्यक्रम लागू होता है?",
@@ -784,6 +786,7 @@
 			"grid": {
 				"columns": {
 					"info": "",
+					"infoAppointment": "",
 					"infoReturned": "",
 					"name": "",
 					"organization": "",

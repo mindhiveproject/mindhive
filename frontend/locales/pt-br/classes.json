@@ -411,6 +411,9 @@
 	"cancel": "Cancelar",
 	"cardAssignmentDisabled": "Não é possível atribuir cartões a alunos.",
 	"cardAssignmentEnabled": "Os cartões podem ser atribuídos aos alunos.",
+	"classCurriculum": "",
+	"classCurriculumDescription": "",
+	"classCurriculumTypeQuestion": "",
 	"classDescriptionSettingsDescription": "",
 	"classDescriptionSettingsEmptyHint": "",
 	"classDescriptionSettingsTitle": "",
@@ -516,7 +519,6 @@
 		"title": "Novo nome de classe"
 	},
 	"createdByOn": "Criado por {{username}} em {{date}}",
-	"curriculumTypeMentorNote": "Isso determina o questionário de feedback do mentor usado na central de feedback. Em caso de dúvidas, entre em contato com um membro da equipe MindHive.",
 	"curriculumTypeMindHive": "MindHive",
 	"curriculumTypeNyuCusp": "NYU CUSP (Projeto Final)",
 	"curriculumTypeQuestion": "Qual tipo de currículo se aplica aos painéis de projeto nesta disciplina?",
@@ -784,6 +786,7 @@
 			"grid": {
 				"columns": {
 					"info": "",
+					"infoAppointment": "",
 					"infoReturned": "",
 					"name": "",
 					"organization": "",

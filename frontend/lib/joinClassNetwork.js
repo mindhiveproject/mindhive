@@ -102,13 +102,18 @@ export function isAlreadyInClassNetwork(user, classNetworkRef) {
 async function resolveClassNetworkByRef(apolloClient, classNetworkRef) {
   if (!classNetworkRef) return null;
 
-  const { data: byPublicIdData } = await apolloClient.query({
-    query: GET_NETWORK_BY_PUBLIC_ID,
-    variables: { publicId: classNetworkRef },
-    fetchPolicy: "network-only",
-  });
-  if (byPublicIdData?.classNetwork?.id) {
-    return byPublicIdData.classNetwork;
+  try {
+    const { data: byPublicIdData } = await apolloClient.query({
+      query: GET_NETWORK_BY_PUBLIC_ID,
+      variables: { publicId: classNetworkRef },
+      fetchPolicy: "network-only",
+    });
+    const byPublicId = byPublicIdData?.classNetworks?.[0];
+    if (byPublicId?.id) {
+      return byPublicId;
+    }
+  } catch {
+    // Schema may not expose publicId filter yet; fall through to id lookup.
   }
 
   try {

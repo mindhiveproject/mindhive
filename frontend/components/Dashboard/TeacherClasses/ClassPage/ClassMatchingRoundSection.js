@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../lib/useForm";
@@ -154,6 +155,13 @@ export default function ClassMatchingRoundSection({
   onMatchingRoundContextChange,
 }) {
   const { t } = useTranslation("classes");
+  const router = useRouter();
+  const queryMatchingPanel = useMemo(() => {
+    const raw = router.query?.matchingPanel;
+    return typeof raw === "string" && Object.values(PANELS).includes(raw)
+      ? raw
+      : null;
+  }, [router.query?.matchingPanel]);
   const [activeRoundId, setActiveRoundId] = useState(null);
   const [explicitNewRound, setExplicitNewRound] = useState(false);
   const [selectedOpportunities, setSelectedOpportunities] = useState([]);
@@ -262,9 +270,14 @@ export default function ClassMatchingRoundSection({
 
   useEffect(() => {
     setExplicitNewRound(false);
-    setExpanded(false);
-    setActivePanel(PANELS.settings);
-  }, [selectedNetworkId]);
+    if (queryMatchingPanel) {
+      setExpanded(true);
+      setActivePanel(queryMatchingPanel);
+    } else {
+      setExpanded(false);
+      setActivePanel(PANELS.settings);
+    }
+  }, [selectedNetworkId, queryMatchingPanel]);
 
   useEffect(() => {
     if (!selectedNetworkId) {
@@ -289,13 +302,16 @@ export default function ClassMatchingRoundSection({
     if (!activeRoundId || !stillValid) {
       setActiveRoundId(roundsForNetwork[0].id);
       setFormInitialized(false);
-      setActivePanel(PANELS.settings);
+      if (!queryMatchingPanel) {
+        setActivePanel(PANELS.settings);
+      }
     }
   }, [
     selectedNetworkId,
     roundsForNetwork,
     activeRoundId,
     explicitNewRound,
+    queryMatchingPanel,
   ]);
 
   useEffect(() => {

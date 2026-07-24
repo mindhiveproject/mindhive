@@ -411,6 +411,9 @@
 	"cancel": "Отмена",
 	"cardAssignmentDisabled": "Карты не могут быть выданы студентам.",
 	"cardAssignmentEnabled": "Карты могут быть выданы студентам.",
+	"classCurriculum": "",
+	"classCurriculumDescription": "",
+	"classCurriculumTypeQuestion": "",
 	"classDescriptionSettingsDescription": "",
 	"classDescriptionSettingsEmptyHint": "",
 	"classDescriptionSettingsTitle": "",
@@ -516,7 +519,6 @@
 		"title": "Новое имя класса"
 	},
 	"createdByOn": "Создано пользователем {{имя пользователя}} {{дата}}",
-	"curriculumTypeMentorNote": "Это определяет анкету для обратной связи от наставника, используемую в центре обратной связи. Если у вас есть вопросы, свяжитесь с членом команды MindHive.",
 	"curriculumTypeMindHive": "MindHive",
 	"curriculumTypeNyuCusp": "NYU CUSP (дипломная работа)",
 	"curriculumTypeQuestion": "Какой тип учебной программы применяется к проектным доскам в этом классе?",
@@ -784,6 +786,7 @@
 			"grid": {
 				"columns": {
 					"info": "",
+					"infoAppointment": "",
 					"infoReturned": "",
 					"name": "",
 					"organization": "",

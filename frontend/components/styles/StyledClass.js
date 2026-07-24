@@ -1685,13 +1685,13 @@ const StyledClass = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      min-height: 100%;
+      box-sizing: border-box;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
       padding: 0;
-      border: none;
-      border-radius: 0;
+      border: 2px solid transparent;
+      border-radius: 100px;
       background: transparent;
       color: #625b71;
       font-family: "Inter", sans-serif;
@@ -1705,12 +1705,24 @@ const StyledClass = styled.div`
         color: #336f8a;
       }
 
+      &.matchingRoundOppInfoCellAppointment {
+        border-color: #B9261A;
+        background: #FEECEB;
+        color: #B9261A;
+
+        &:hover {
+          background: #CF6D6A;
+          color: #B9261A;
+        }
+      }
+
       &.matchingRoundOppInfoCellReturned {
-        background: #E6E6E6;
+        border-color: #9e9e9e;
+        background: #cfcfcf;
         color: #3f288f;
 
         &:hover {
-          background: #E6E6E6;
+          background: #c4c4c4;
           color: #3f288f;
         }
       }
@@ -1722,8 +1734,13 @@ const StyledClass = styled.div`
     }
 
     [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturned {
-      background: #d6cef0;
+      background: #c4c4c4;
       color: #3f288f;
+    }
+
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellAppointment {
+      background: #ffd633;
+      color: #5c4a00;
     }
 
     .matchingRoundOppInfoTooltip {
@@ -1740,6 +1757,11 @@ const StyledClass = styled.div`
 
       .expired {
         color: #b3261e;
+      }
+
+      .appointmentRequested {
+        color: #b9261a;
+        font-weight: 600;
       }
     }
 
@@ -2205,6 +2227,8 @@ const StyledClass = styled.div`
       border: none;
       margin: 0;
       padding: 0;
+      display: grid;
+      gap: 12px;
     }
 
     .curriculumTypeLegend {

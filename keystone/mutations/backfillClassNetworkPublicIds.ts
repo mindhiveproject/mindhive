@@ -48,10 +48,11 @@ export default async function backfillClassNetworkPublicIds(
     log.push(msg);
   };
 
-  // Keystone filter: missing publicId (null or empty).
+  // publicId is non-nullable String @default("") in Prisma — never null.
+  // Prisma rejects `equals: null`; filter empty string only.
   const networks = (await context.sudo().query.ClassNetwork.findMany({
     where: {
-      OR: [{ publicId: { equals: null } }, { publicId: { equals: "" } }],
+      publicId: { equals: "" },
     },
     take: limit,
     query: "id title publicId",

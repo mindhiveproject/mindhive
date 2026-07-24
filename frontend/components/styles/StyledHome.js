@@ -62,16 +62,6 @@ const StyledHome = styled.div`
       background: #ebf9f7;
     }
   }
-
-  .updatesBoard {
-    display: grid;
-    margin-bottom: 56px;
-    .updates {
-      display: grid;
-      margin-top: 30px;
-      grid-row-gap: 32px;
-    }
-  }
 `;
 
 export default StyledHome;

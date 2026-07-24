@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Tutorial passo a passo"
 	},
 	"info": "Mais informações",
+	"networkAppointmentRequests": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"networkPendingInvites": {
 		"count": "",
 		"dismiss": "",
@@ -129,8 +137,16 @@
 	"termsCondition": "Termos e Condições",
 	"updateProfileDescription": "Você já faz parte da comunidade MindHive! Atualize seu perfil clicando aqui.",
 	"updates": {
+		"archive": "",
+		"archiveAria": "",
+		"archiveEmpty": "",
+		"archiveModalTitle": "",
+		"dismiss": "",
 		"latestUpdates": "Últimas atualizações",
-		"noUpdate": "Não há atualizações no momento."
+		"noUpdate": "Não há atualizações no momento.",
+		"open": "",
+		"show": "",
+		"unreadCount": ""
 	},
 	"walkthroughs": {
 		"availableTours": "Passeios disponíveis:",

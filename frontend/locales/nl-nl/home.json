@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Walkthrough-zelfstudie"
 	},
 	"info": "Meer informatie",
+	"networkAppointmentRequests": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"networkPendingInvites": {
 		"count": "",
 		"dismiss": "",
@@ -129,8 +137,16 @@
 	"termsCondition": "Algemene voorwaarden",
 	"updateProfileDescription": "Je bent al lid van de MindHive-community! Werk je profiel bij door hier te klikken.",
 	"updates": {
+		"archive": "",
+		"archiveAria": "",
+		"archiveEmpty": "",
+		"archiveModalTitle": "",
+		"dismiss": "",
 		"latestUpdates": "Laatste updates",
-		"noUpdate": "Er zijn op dit moment geen updates."
+		"noUpdate": "Er zijn op dit moment geen updates.",
+		"open": "",
+		"show": "",
+		"unreadCount": ""
 	},
 	"walkthroughs": {
 		"availableTours": "Beschikbare rondleidingen:",

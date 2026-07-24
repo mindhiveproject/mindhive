@@ -35,6 +35,14 @@
 		"walkthroughTutorial": ""
 	},
 	"info": "अधिक जानकारी",
+	"networkAppointmentRequests": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"networkPendingInvites": {
 		"count": "",
 		"dismiss": "",
@@ -129,8 +137,16 @@
 	"termsCondition": "नियम एवं शर्तें",
 	"updateProfileDescription": "आप पहले से ही माइंडहाइव समुदाय का हिस्सा हैं! यहाँ क्लिक करके अपनी प्रोफ़ाइल अपडेट करें।",
 	"updates": {
+		"archive": "",
+		"archiveAria": "",
+		"archiveEmpty": "",
+		"archiveModalTitle": "",
+		"dismiss": "",
 		"latestUpdates": "नवीनतम अपडेट",
-		"noUpdate": "फिलहाल कोई अपडेट नहीं है।"
+		"noUpdate": "फिलहाल कोई अपडेट नहीं है।",
+		"open": "",
+		"show": "",
+		"unreadCount": ""
 	},
 	"walkthroughs": {
 		"availableTours": "",

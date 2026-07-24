@@ -411,6 +411,9 @@
 	"cancel": "Cancel",
 	"cardAssignmentDisabled": "Cards cannot be assigned to students",
 	"cardAssignmentEnabled": "Cards can be assigned to students",
+	"classCurriculum": "Class Curriculum",
+	"classCurriculumDescription": "Select which curriculum applies to this class.",
+	"classCurriculumTypeQuestion": "Which curriculum type applies to this class?",
 	"classDescriptionSettingsDescription": "Add the description students and mentors will see in the class header.",
 	"classDescriptionSettingsEmptyHint": "Leave this blank to hide the description from the class header.",
 	"classDescriptionSettingsTitle": "Class description",
@@ -516,7 +519,6 @@
 		"title": "New class name"
 	},
 	"createdByOn": "Created by {{username}} on {{date}}",
-	"curriculumTypeMentorNote": "This determines the mentor feedback questionnaire used in the feedback center. If you have questions, contact a MindHive team member.",
 	"curriculumTypeMindHive": "MindHive",
 	"curriculumTypeNyuCusp": "NYU CUSP (Capstone)",
 	"curriculumTypeQuestion": "Which curriculum type applies to project boards in this class?",
@@ -784,6 +786,7 @@
 			"grid": {
 				"columns": {
 					"info": "More information",
+					"infoAppointment": "More information — appointment requested",
 					"infoReturned": "More information — returned",
 					"name": "Opportunity name",
 					"organization": "Organization",
