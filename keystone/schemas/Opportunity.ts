@@ -28,6 +28,121 @@ function reviewerDisplayName(p: any) {
   );
 }
 
+/**
+ * Deep link into a class matching "Review opportunities" panel for a
+ * network, matching NetworkAppointmentRequests on the frontend.
+ */
+function appointmentReviewLink(
+  recipientId: string,
+  rounds: any[]
+): string {
+  for (const round of rounds || []) {
+    const network = round?.classNetwork;
+    if (!network?.id) continue;
+    const networkRef = network.publicId || network.id;
+    for (const cls of network.classes || []) {
+      if (!cls?.code) continue;
+      const isCreator = cls.creator?.id === recipientId;
+      const isMentor = (cls.mentors || []).some(
+        (m: { id: string }) => m.id === recipientId
+      );
+      if (!isCreator && !isMentor) continue;
+      const params = new URLSearchParams({
+        page: "opportunities",
+        matchingPanel: "review",
+        networkId: networkRef,
+      });
+      return `/dashboard/myclasses/${encodeURIComponent(
+        cls.code
+      )}?${params.toString()}`;
+    }
+  }
+  return "/dashboard/home";
+}
+
+/**
+ * When a sponsor submits with requestsAppointment, notify reviewers
+ * (and creators) of non-archived matching rounds on the opportunity's
+ * class networks. Opportunity.rounds is usually empty at submit time.
+ */
+async function notifyAppointmentRequestUpdates(
+  context: any,
+  opportunity: any
+) {
+  try {
+    if (!opportunity?.requestsAppointment) return;
+
+    const networkIds = (opportunity.classNetworks || [])
+      .map((n: { id: string }) => n?.id)
+      .filter(Boolean);
+    if (networkIds.length === 0) return;
+
+    const rounds = await context.sudo().query.ConnectRound.findMany({
+      where: {
+        classNetwork: { id: { in: networkIds } },
+        status: { not: { equals: "archived" } },
+      },
+      query: `
+        id
+        createdBy { id }
+        reviewers { id }
+        classNetwork {
+          id
+          publicId
+          classes {
+            code
+            creator { id }
+            mentors { id }
+          }
+        }
+      `,
+    });
+
+    if (!rounds?.length) return;
+
+    const mentorId = opportunity.mentor?.id;
+    const recipientIds = new Set<string>();
+    for (const round of rounds) {
+      if (round?.createdBy?.id) recipientIds.add(round.createdBy.id);
+      for (const reviewer of round?.reviewers || []) {
+        if (reviewer?.id) recipientIds.add(reviewer.id);
+      }
+    }
+    if (mentorId) recipientIds.delete(mentorId);
+    if (recipientIds.size === 0) return;
+
+    const mentorName = reviewerDisplayName(opportunity.mentor);
+    const title = opportunity.title || "an opportunity";
+    const content = {
+      title: "Appointment requested",
+      message: `${mentorName} submitted "${title}" and requested an appointment`,
+      linkTitle: "Review",
+    };
+
+    for (const userId of recipientIds) {
+      try {
+        await context.sudo().db.Update.createOne({
+          data: {
+            user: { connect: { id: userId } },
+            updateArea: "CONNECT",
+            link: appointmentReviewLink(userId, rounds),
+            content,
+          },
+        });
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `Failed to create appointment-request Update for user ${userId}:`,
+          e
+        );
+      }
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error("notifyAppointmentRequestUpdates failed:", e);
+  }
+}
+
 export const Opportunity = list({
   access: {
     operation: {
@@ -347,7 +462,9 @@ export const Opportunity = list({
           query: `
             id
             title
+            requestsAppointment
             mentor { id email firstName lastName username }
+            classNetworks { id publicId }
             rounds {
               id
               title
@@ -383,6 +500,8 @@ export const Opportunity = list({
         }
 
         if (!becamePending) return;
+
+        await notifyAppointmentRequestUpdates(context, fresh);
 
         const seen = new Set<string>();
 
