@@ -18,14 +18,12 @@ import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import { UserContext } from "../../../Global/Authorized";
 import { REVIEW_OPPORTUNITY } from "../../../Queries/OpportunityReviewNote";
-import {
-  CREATE_REVIEW_NOTE,
-  DELETE_REVIEW_NOTE,
-} from "../../../Mutations/OpportunityReviewNote";
 import { UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import useConnectRole from "../useConnectRole";
 import ReturnOpportunityModal from "../ReturnOpportunityModal";
+import OpportunityReviewNotesThread from "../OpportunityReviewNotesThread";
 import { isReturnableOpportunityStatus } from "../returnOpportunityUtils";
+import { REVIEW_NOTE_KIND } from "../../../../lib/reviewThreadRound";
 
 const Shell = styled.div`
   display: flex;
@@ -216,92 +214,6 @@ const StatusBar = styled.div`
   }
 `;
 
-const NoteForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  textarea {
-    border: 1px solid #d3dae0;
-    border-radius: 8px;
-    padding: 10px 12px;
-    min-height: 80px;
-    font-family: "Lato", sans-serif;
-    font-size: 14px;
-    resize: vertical;
-  }
-
-  button {
-    align-self: flex-start;
-    padding: 8px 20px;
-    border-radius: 100px;
-    background: #336f8a;
-    color: #ffffff;
-    border: none;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  }
-`;
-
-const NoteList = styled.ul`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const NoteRow = styled.li`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 14px;
-  border: 1px solid #d3dae0;
-  border-radius: 12px;
-  background: #fafbfc;
-
-  .meta {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    font-size: 12px;
-    color: #5f6871;
-
-    .author {
-      font-weight: 600;
-      color: #171717;
-    }
-  }
-
-  .body {
-    color: #171717;
-    font-size: 14px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-  }
-
-  button.delete {
-    background: none;
-    border: 1px solid #f5c2bf;
-    color: #c0392b;
-    font-family: "Inter", sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    border-radius: 100px;
-    padding: 2px 10px;
-    cursor: pointer;
-    align-self: flex-end;
-  }
-`;
-
 const STATUS_OPTIONS = [
   "draft",
   "pending_review",
@@ -319,15 +231,6 @@ function displayName(p) {
     p.username ||
     "Unknown"
   );
-}
-
-function fmtDateTime(d) {
-  if (!d) return "";
-  try {
-    return new Date(d).toLocaleString();
-  } catch {
-    return "";
-  }
 }
 
 function fmtDate(d) {
@@ -365,7 +268,6 @@ export default function ReviewOpportunityMain({ query }) {
 
   const [status, setStatus] = useState(null);
   const [statusFlash, setStatusFlash] = useState(null);
-  const [noteBody, setNoteBody] = useState("");
   const [returnModalOpen, setReturnModalOpen] = useState(false);
 
   const reviewRefetchQueries = useMemo(
@@ -380,19 +282,6 @@ export default function ReviewOpportunityMain({ query }) {
       awaitRefetchQueries: true,
     }
   );
-
-  const [createNote, { loading: creatingNote }] = useMutation(
-    CREATE_REVIEW_NOTE,
-    {
-      refetchQueries: reviewRefetchQueries,
-      awaitRefetchQueries: true,
-    }
-  );
-
-  const [deleteNote] = useMutation(DELETE_REVIEW_NOTE, {
-    refetchQueries: reviewRefetchQueries,
-    awaitRefetchQueries: true,
-  });
 
   const currentStatus = status || opportunity?.status;
   const canReturnToSponsor =
@@ -483,27 +372,6 @@ export default function ReviewOpportunityMain({ query }) {
       },
     });
     setStatusFlash("Saved.");
-  };
-
-  const handleAddNote = async (e) => {
-    e.preventDefault();
-    const body = noteBody.trim();
-    if (!body) return;
-    await createNote({
-      variables: {
-        input: {
-          body,
-          opportunity: { connect: { id: opportunity.id } },
-          round: { connect: { id: round.id } },
-        },
-      },
-    });
-    setNoteBody("");
-  };
-
-  const handleDelete = async (noteId) => {
-    if (!window.confirm("Delete this note?")) return;
-    await deleteNote({ variables: { id: noteId } });
   };
 
   const pageTitle = opportunity.title || "";
@@ -679,46 +547,18 @@ export default function ReviewOpportunityMain({ query }) {
       </Card>
 
       <Card>
-        <h2>Review notes</h2>
-        <NoteForm onSubmit={handleAddNote}>
-          <textarea
-            value={noteBody}
-            onChange={(e) => setNoteBody(e.target.value)}
-            placeholder="Leave a note for the round creator + other reviewers…"
-          />
-          <button type="submit" disabled={creatingNote || !noteBody.trim()}>
-            {creatingNote ? "Posting…" : "Post note"}
-          </button>
-        </NoteForm>
-
-        {notes.length === 0 ? (
-          <p style={{ color: "#5f6871", fontSize: 13, margin: 0 }}>
-            No notes yet.
-          </p>
-        ) : (
-          <NoteList>
-            {notes.map((n) => (
-              <NoteRow key={n.id}>
-                <div className="meta">
-                  <span>
-                    <span className="author">{displayName(n.author)}</span>{" "}
-                    · {fmtDateTime(n.createdAt)}
-                  </span>
-                </div>
-                <div className="body">{n.body}</div>
-                {n.author?.id === me?.id || isAdmin ? (
-                  <button
-                    className="delete"
-                    type="button"
-                    onClick={() => handleDelete(n.id)}
-                  >
-                    Delete
-                  </button>
-                ) : null}
-              </NoteRow>
-            ))}
-          </NoteList>
-        )}
+        <OpportunityReviewNotesThread
+          opportunityId={opportunity.id}
+          roundId={round.id}
+          notes={notes}
+          viewerId={me?.id}
+          canCreate={isReviewerOnRound || isAdmin}
+          canDeleteAsAdmin={isAdmin}
+          messageKind={REVIEW_NOTE_KIND.REVIEWER_COMMENT}
+          mode="teacher"
+          refetchQueries={reviewRefetchQueries}
+          titleAs="h2"
+        />
       </Card>
       <ReturnOpportunityModal
         open={returnModalOpen}

@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { Icon, Dropdown } from "semantic-ui-react";
+import { Icon, Dropdown, Modal } from "semantic-ui-react";
 
 import useForm from "../../../../lib/useForm";
 import useEmail from "../../../../lib/useEmail";
@@ -28,10 +28,15 @@ import Chip from "../../../DesignSystem/Chip";
 import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
 import OpportunityProposalSection from "./OpportunityProposalSection";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
+import OpportunityReviewNotesThread from "../OpportunityReviewNotesThread";
 import {
   collectMemberClassNetworks,
   isNewOpportunityId,
 } from "../../../../lib/opportunityClassNetworks";
+import {
+  REVIEW_NOTE_KIND,
+  resolveActiveReviewRound,
+} from "../../../../lib/reviewThreadRound";
 import {
   PROPOSAL_EMPTY_FORM,
   PROPOSAL_WORD_LIMITS,
@@ -659,6 +664,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
     setVideoFileUpload(file);
   };
 
+  const [resubmitPromptOpen, setResubmitPromptOpen] = useState(false);
   const [questionDraft, setQuestionDraft] = useState({
     prompt: "",
     questionType: "short_text",
@@ -691,6 +697,74 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const scopeComplete = !!inputs.scopeDescription?.trim();
   const fieldDisabled = isFieldReadOnly;
   const reviewNotes = opportunity?.reviewNotes || [];
+  const opportunityRounds = useMemo(() => {
+    const byId = new Map();
+    for (const round of opportunity?.rounds || []) {
+      if (round?.id) byId.set(round.id, round);
+    }
+    for (const note of reviewNotes) {
+      if (note?.round?.id && !byId.has(note.round.id)) {
+        byId.set(note.round.id, note.round);
+      }
+    }
+    return [...byId.values()];
+  }, [opportunity?.rounds, reviewNotes]);
+  const explicitRoundId =
+    typeof router.query?.round === "string" ? router.query.round : null;
+
+  const roundResolution = useMemo(
+    () =>
+      resolveActiveReviewRound({
+        rounds: opportunityRounds,
+        explicitRoundId,
+      }),
+    [opportunityRounds, explicitRoundId]
+  );
+
+  const activeRoundId = roundResolution.roundId;
+  const needsRoundSelection = roundResolution.needsSelection;
+  const isMentorOfOpportunity =
+    !!(user?.id && opportunity?.mentor?.id === user.id);
+
+  const threadRefetchQueries = useMemo(
+    () =>
+      opportunityId
+        ? [{ query: GET_OPPORTUNITY, variables: { id: opportunityId } }]
+        : [],
+    [opportunityId]
+  );
+
+  const handleSelectReviewRound = (nextRoundId) => {
+    if (!opportunityId) return;
+    const nextQuery = { ...router.query, op: opportunityId };
+    if (nextRoundId) {
+      nextQuery.round = nextRoundId;
+    } else {
+      delete nextQuery.round;
+    }
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: nextQuery,
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
+  const handleReviewNotePosted = (_note, meta) => {
+    if (isReviewMode) return;
+    if (meta?.kind !== REVIEW_NOTE_KIND.SPONSOR_REPLY) return;
+    if (inputs.status !== "returned") return;
+    setResubmitPromptOpen(true);
+  };
+
+  const showReviewThread =
+    !isNew &&
+    (isReviewMode ||
+      reviewNotes.length > 0 ||
+      inputs.status === "returned" ||
+      opportunityRounds.length > 0);
 
   useEffect(() => {
     if (!opportunity) return;
@@ -1042,6 +1116,10 @@ export default function OpportunityEditor({ opportunityId, user }) {
     }
   };
 
+  const handleResubmitFromPrompt = async () => {
+    await handleSave({ submitForReview: true });
+  };
+
   const handleCancel = () => {
     if (isReviewMode) {
       router.replace({
@@ -1320,7 +1398,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
                 onClick={() => handleSave({ submitForReview: false })}
                 disabled={primaryBusy}
               >
-                {saveDraftLabel}
+                {editPrimaryLabel}
               </Button>
             ) : (
               <Button
@@ -1344,15 +1422,9 @@ export default function OpportunityEditor({ opportunityId, user }) {
         </StatusBanner>
       )}
 
-      {!isReviewMode &&
-        (reviewNotes.length > 0 || inputs.status === "returned") && (
+      {showReviewThread ? (
         <ReviewNotesCard>
-          <h2>
-            {t("opportunityEditor.reviewNotes.title", {}, {
-              default: "Review notes",
-            })}
-          </h2>
-          {inputs.status === "returned" ? (
+          {!isReviewMode && inputs.status === "returned" ? (
             <p
               style={{
                 margin: 0,
@@ -1368,78 +1440,34 @@ export default function OpportunityEditor({ opportunityId, user }) {
               })}
             </p>
           ) : null}
-          {reviewNotes.length > 0 ? (
-          <div style={{ display: "grid", gap: 12 }}>
-            {reviewNotes.map((note) => (
-              <div
-                key={note.id}
-                style={{
-                  padding: 14,
-                  borderRadius: 10,
-                  background: "#faf8ff",
-                  border: "1px solid rgba(160, 144, 224, 0.35)",
-                  boxShadow: "0 2px 10px rgba(111, 38, 206, 0.08)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 8,
-                    flexWrap: "wrap",
-                    marginBottom: 8,
-                    fontSize: 13,
-                    color: "#5f6871",
-                  }}
-                >
-                  <span style={{ fontWeight: 600, color: "#171717" }}>
-                    {[
-                      note.author?.firstName,
-                      note.author?.lastName,
-                    ]
-                      .filter(Boolean)
-                      .join(" ") ||
-                      note.author?.username ||
-                      t("opportunityEditor.reviewNotes.unknownAuthor", {}, {
-                        default: "Reviewer",
-                      })}
-                  </span>
-                  <span>
-                    {note.round?.title
-                      ? t("opportunityEditor.reviewNotes.roundLabel", {
-                          title: note.round.title,
-                        }, {
-                          default: "Round: {{title}}",
-                        })
-                      : null}
-                    {note.createdAt
-                      ? ` · ${new Date(note.createdAt).toLocaleString()}`
-                      : null}
-                  </span>
-                </div>
-                <p
-                  style={{
-                    margin: 0,
-                    whiteSpace: "pre-wrap",
-                    color: "#171717",
-                    fontSize: 14,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {note.body}
-                </p>
-              </div>
-            ))}
-          </div>
-          ) : (
-            <p style={{ margin: 0, color: "#5f6871", fontSize: 14 }}>
-              {t("opportunityEditor.reviewNotes.empty", {}, {
-                default: "No review notes were attached.",
-              })}
-            </p>
-          )}
+          <OpportunityReviewNotesThread
+            opportunityId={opportunity?.id || opportunityId}
+            roundId={activeRoundId}
+            notes={reviewNotes}
+            rounds={opportunityRounds}
+            viewerId={user?.id}
+            canCreate={
+              isReviewMode
+                ? isTeacher || isAdmin
+                : isMentorOfOpportunity
+            }
+            canDeleteAsAdmin={isAdmin}
+            messageKind={
+              isReviewMode
+                ? REVIEW_NOTE_KIND.REVIEWER_COMMENT
+                : REVIEW_NOTE_KIND.SPONSOR_REPLY
+            }
+            mode={isReviewMode ? "teacher" : "sponsor"}
+            needsRoundSelection={needsRoundSelection}
+            onSelectRound={
+              opportunityRounds.length > 1 ? handleSelectReviewRound : undefined
+            }
+            refetchQueries={threadRefetchQueries}
+            onPosted={handleReviewNotePosted}
+            titleAs="h2"
+          />
         </ReviewNotesCard>
-      )}
+      ) : null}
 
       {!isReviewMode && (
         <OpportunityClassNetworksField
@@ -1449,7 +1477,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
           readOnly={isFieldReadOnly}
         />
       )}
-      
+
       {!isReviewMode && (
       <Card>
         <h2>{t("opportunityEditor.status", {}, { default: "Status" })}</h2>
@@ -2195,6 +2223,60 @@ export default function OpportunityEditor({ opportunityId, user }) {
           />
         </Card>
       )}
+
+      <Modal
+        open={resubmitPromptOpen}
+        onClose={() => {
+          if (primaryBusy) return;
+          setResubmitPromptOpen(false);
+        }}
+        size="small"
+      >
+        <Modal.Header>
+          {t("reviewThread.resubmitPrompt.title", {}, {
+            default: "Resubmit your opportunity",
+          })}
+        </Modal.Header>
+        <Modal.Content>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: "#5f6871" }}>
+            {t("reviewThread.resubmitPrompt.message", {}, {
+              default:
+                "Your reply was posted. Resubmit your opportunity so reviewers can see your updates.",
+            })}
+          </p>
+        </Modal.Content>
+        <Modal.Actions
+          style={{
+            padding: "1rem 1.5rem",
+            display: "flex",
+            gap: 12,
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button
+            variant="outline"
+            onClick={() => setResubmitPromptOpen(false)}
+            disabled={primaryBusy}
+          >
+            {t("reviewThread.resubmitPrompt.dismiss", {}, {
+              default: "Not now",
+            })}
+          </Button>
+          <Button
+            variant="filled"
+            onClick={handleResubmitFromPrompt}
+            disabled={primaryBusy}
+          >
+            {primaryBusy
+              ? t("reviewThread.resubmitPrompt.resubmitting", {}, {
+                  default: "Resubmitting…",
+                })
+              : t("reviewThread.resubmitPrompt.resubmit", {}, {
+                  default: "Resubmit now",
+                })}
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </Shell>
   );
 }

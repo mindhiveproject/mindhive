@@ -33,6 +33,10 @@ export const MY_OPPORTUNITIES = gql`
           updatedAt
           reviewNotes {
             id
+            kind
+            round {
+              id
+            }
           }
         }
       }
@@ -121,10 +125,18 @@ export const GET_OPPORTUNITY = gql`
       specificSkills
       createdAt
       updatedAt
-      reviewNotes(orderBy: { createdAt: desc }) {
+      rounds {
         id
+        title
+        status
+      }
+      reviewNotes(orderBy: { createdAt: asc }) {
+        id
+        kind
         body
+        payload
         createdAt
+        updatedAt
         author {
           id
           username
@@ -320,9 +332,11 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       scopeDescription
       potentialActivities
       specificSkills
-      reviewNotes(orderBy: { createdAt: desc }) {
+      reviewNotes(orderBy: { createdAt: asc }) {
         id
+        kind
         body
+        payload
         createdAt
         updatedAt
         author {

@@ -1111,6 +1111,48 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
 	"roleGuard": {
 		"backLink": "Retour à la page de connexion",
 		"description": "Votre compte ne vous donne pas encore accès à cette section. Si vous pensez qu'il s'agit d'une erreur, veuillez contacter votre professeur ou un administrateur.",

@@ -1111,6 +1111,48 @@
 		"backLink": "Back to review queue",
 		"returnToSponsor": "Return with comments"
 	},
+	"reviewThread": {
+		"cancel": "Cancel",
+		"compose": {
+			"post": "Post note",
+			"posting": "Posting…",
+			"postReply": "Post reply",
+			"sponsorPlaceholder": "Write a reply for the reviewers…",
+			"teacherPlaceholder": "Leave a note for the sponsor…"
+		},
+		"delete": "Delete",
+		"deleteConfirm": "Delete this message?",
+		"edit": "Edit",
+		"editAria": "Edit message",
+		"empty": "No messages yet. Start the conversation below.",
+		"errors": {
+			"delete": "Could not delete this message. Please try again.",
+			"post": "Could not post this message. Please try again.",
+			"save": "Could not save this message. Please try again."
+		},
+		"kind": {
+			"reviewerComment": "Reviewer comment",
+			"sponsorReply": "Sponsor reply"
+		},
+		"noRound": "This opportunity is not linked to a matching round yet, so a conversation cannot be started.",
+		"resubmitPrompt": {
+			"dismiss": "Not now",
+			"message": "Your reply was posted. Resubmit your opportunity so reviewers can see your updates.",
+			"resubmit": "Resubmit now",
+			"resubmitting": "Resubmitting…",
+			"title": "Resubmit your opportunity"
+		},
+		"roundFallback": "Matching round",
+		"roundRequired": "Select a matching round to view and post messages in this conversation.",
+		"roundSelectLabel": "Matching round",
+		"roundSelectPlaceholder": "Select a matching round…",
+		"save": "Save",
+		"saving": "Saving…",
+		"sponsorHelper": "Messages shared with reviewers for this matching round.",
+		"title": "Review conversation",
+		"unknownAuthor": "Unknown",
+		"updatedAt": "Updated {{date}}"
+	},
 	"roleGuard": {
 		"backLink": "Back to Connect",
 		"description": "Your account doesn't have access to this section yet. If you think this is a mistake, ask your teacher or an administrator.",

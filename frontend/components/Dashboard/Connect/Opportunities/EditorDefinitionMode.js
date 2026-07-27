@@ -6,6 +6,10 @@
 // (media, rich text, custom application questions). EditorSwitch picks
 // which one renders based on the NEXT_PUBLIC_USE_CUSTOMIZABLE_FORMS
 // env flag.
+//
+// Deferred (v1 review thread): OpportunityReviewNotesThread lives only in
+// the legacy Editor.js path. Parity for this definition-mode editor is
+// intentionally out of scope until the customizable-forms cutover needs it.
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";

@@ -1111,6 +1111,48 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
 	"roleGuard": {
 		"backLink": "Вернуться к подключению",
 		"description": "В вашем аккаунте пока нет доступа к этому разделу. Если вы считаете, что это ошибка, обратитесь к учителю или администратору.",

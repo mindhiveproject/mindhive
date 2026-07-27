@@ -250,10 +250,12 @@ export default function OpportunitiesList({ user }) {
     refetch();
   };
 
-  const handleEdit = (id) => {
+  const handleEdit = (id, roundId) => {
+    const query = { op: id };
+    if (roundId) query.round = roundId;
     router.push({
       pathname: "/dashboard/connect/opportunities",
-      query: { op: id },
+      query,
     });
   };
 
@@ -439,6 +441,15 @@ export default function OpportunitiesList({ user }) {
         <OpportunityCompactGrid>
           {filtered.map((opportunity) => {
             const editable = isStatusEditable(opportunity, isAdmin);
+            const noteRounds = [
+              ...new Set(
+                (opportunity.reviewNotes || [])
+                  .map((note) => note?.round?.id)
+                  .filter(Boolean)
+              ),
+            ];
+            const deepLinkRoundId =
+              noteRounds.length === 1 ? noteRounds[0] : null;
             const hasReviewNotes = (opportunity.reviewNotes?.length ?? 0) > 0;
             const showReviewCommentsCta = hasReviewNotes && !isAdmin;
             return (
@@ -480,7 +491,7 @@ export default function OpportunitiesList({ user }) {
                 deleteLabel={t("myOpportunitiesList.delete", {}, {
                   default: "Delete",
                 })}
-                onEdit={() => handleEdit(opportunity.id)}
+                onEdit={() => handleEdit(opportunity.id, deepLinkRoundId)}
                 onDelete={() => handleDelete(opportunity.id)}
               />
             );

@@ -478,30 +478,81 @@ export const Opportunity = list({
         const mentorId = fresh.mentor?.id;
         const mentorName = reviewerDisplayName(fresh.mentor);
 
-        if (becameReturned && fresh.mentor?.email && mentorId !== actorId) {
-          const link = `${frontendUrl()}/dashboard/connect/opportunities?op=${fresh.id}`;
+        if (becameReturned && mentorId && mentorId !== actorId) {
+          // Prefer the round from the most recent review note (created just
+          // before status change in ReturnOpportunityModal). Fall back to a
+          // single linked round when unambiguous.
+          let roundId: string | null = null;
           try {
-            await sendNotificationEmail(
-              fresh.mentor.email,
-              `Your Capstone proposal was returned: "${fresh.title}"`,
-              `Hi ${mentorName},\n\n` +
-                `A teacher has returned your Capstone proposal "${fresh.title}" for revision. ` +
-                `Open the link below to read their notes, make changes, and resubmit for review.`,
-              link
-            );
+            const recentNotes = await context
+              .sudo()
+              .query.OpportunityReviewNote.findMany({
+                where: { opportunity: { id: { equals: String(item.id) } } },
+                orderBy: [{ createdAt: "desc" }],
+                take: 1,
+                query: `id round { id }`,
+              });
+            roundId = recentNotes?.[0]?.round?.id || null;
+          } catch (_) {
+            roundId = null;
+          }
+          if (!roundId && (fresh.rounds || []).length === 1) {
+            roundId = fresh.rounds[0]?.id || null;
+          }
+          const linkParams = new URLSearchParams({ op: String(fresh.id) });
+          if (roundId) linkParams.set("round", roundId);
+          const relativeLink = `/dashboard/connect/opportunities?${linkParams.toString()}`;
+          const absoluteLink = `${frontendUrl()}${relativeLink}`;
+
+          try {
+            await context.sudo().db.Update.createOne({
+              data: {
+                user: { connect: { id: mentorId } },
+                updateArea: "CONNECT",
+                link: relativeLink,
+                content: {
+                  title: "Opportunity returned with comments",
+                  message: `A teacher returned "${fresh.title || "your opportunity"}" with comments. Review the notes and resubmit for review.`,
+                  linkTitle: "Review & resubmit",
+                },
+              },
+            });
           } catch (e) {
             // eslint-disable-next-line no-console
             console.error(
-              `Mentor return notification failed for ${fresh.mentor.email}:`,
+              `Failed to create mentor return Update for user ${mentorId}:`,
               e
             );
+          }
+
+          if (fresh.mentor?.email) {
+            try {
+              await sendNotificationEmail(
+                fresh.mentor.email,
+                `Your Capstone proposal was returned: "${fresh.title}"`,
+                `Hi ${mentorName},\n\n` +
+                  `A teacher has returned your Capstone proposal "${fresh.title}" for revision. ` +
+                  `Open the link below to read their notes, make changes, and resubmit for review.`,
+                absoluteLink
+              );
+            } catch (e) {
+              // eslint-disable-next-line no-console
+              console.error(
+                `Mentor return notification failed for ${fresh.mentor.email}:`,
+                e
+              );
+            }
           }
           return;
         }
 
         if (!becamePending) return;
 
-        await notifyAppointmentRequestUpdates(context, fresh);
+        // Appointment-request Updates only on first submit into pending_review,
+        // not when resubmitting from returned.
+        if (originalItem?.status !== "returned") {
+          await notifyAppointmentRequestUpdates(context, fresh);
+        }
 
         const seen = new Set<string>();
 

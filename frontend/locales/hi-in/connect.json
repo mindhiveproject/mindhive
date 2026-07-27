@@ -1111,6 +1111,48 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
 	"roleGuard": {
 		"backLink": "कनेक्ट पर वापस जाएँ",
 		"description": "आपके खाते को अभी इस अनुभाग तक पहुंच नहीं है। यदि आपको लगता है कि यह कोई गलती है, तो अपने शिक्षक या प्रशासक से पूछें।",

@@ -1111,6 +1111,48 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
 	"roleGuard": {
 		"backLink": "Volver a conectar",
 		"description": "Tu cuenta aún no tiene acceso a esta sección. Si crees que se trata de un error, consulta con tu profesor o un administrador.",

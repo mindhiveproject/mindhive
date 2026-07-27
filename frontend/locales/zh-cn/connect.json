@@ -1111,6 +1111,48 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
 	"roleGuard": {
 		"backLink": "返回连接",
 		"description": "您的账户目前没有权限访问此部分内容。如果您认为这是一个错误，请咨询您的老师或管理员。",
