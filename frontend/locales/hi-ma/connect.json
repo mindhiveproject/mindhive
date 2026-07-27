@@ -796,6 +796,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "",
+		"saveDraft": "",
 		"saving": "",
 		"specialConsiderations": {
 			"anticipatedObstacles": "",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "",
 		"sponsorStatusReturnedHint": "",
 		"status": "",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "",
 			"archived": "",
@@ -829,6 +832,7 @@
 			"submitted": ""
 		},
 		"studentCapacity": "",
+		"submitForReview": "",
 		"teamPreferences": "",
 		"teamSize": "",
 		"teamSizeHint": "",

@@ -796,6 +796,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Wijzigingen opslaan",
+		"saveDraft": "",
 		"saving": "Besparing...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "Verwachte obstakels",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "— vergrendeld. Een docent of beheerder zal de status bijwerken.",
 		"sponsorStatusReturnedHint": "",
 		"status": "Toestand",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "Geaccepteerd (volledige eindopdracht)",
 			"archived": "Gearchiveerd",
@@ -829,6 +832,7 @@
 			"submitted": "Ingediend ter beoordeling"
 		},
 		"studentCapacity": "Studentencapaciteit",
+		"submitForReview": "",
 		"teamPreferences": "Geef studenten de mogelijkheid om hun voorkeursteamgenoten voor deze kans te nomineren.",
 		"teamSize": "Teamgrootte",
 		"teamSizeHint": "1 = solo plaatsing.",

@@ -796,6 +796,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Сохранить изменения",
+		"saveDraft": "",
 		"saving": "Сохранение...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "Ожидаемые препятствия",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "— Заблокировано. Преподаватель или администратор обновит статус.",
 		"sponsorStatusReturnedHint": "",
 		"status": "Положение дел",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "Принято (полностью завершен окончательный объем работ)",
 			"archived": "В архиве",
@@ -829,6 +832,7 @@
 			"submitted": "Представлено на рассмотрение"
 		},
 		"studentCapacity": "Вместимость для студентов",
+		"submitForReview": "",
 		"teamPreferences": "Предоставьте студентам возможность номинировать предпочтительных членов команды для участия в этой программе.",
 		"teamSize": "Размер команды",
 		"teamSizeHint": "1 = индивидуальное размещение.",

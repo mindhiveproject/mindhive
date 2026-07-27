@@ -796,6 +796,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "परिवर्तनों को सुरक्षित करें",
+		"saveDraft": "",
 		"saving": "सहेजा जा रहा है...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "संभावित बाधाएँ",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "— लॉक किया गया है। शिक्षक या व्यवस्थापक स्थिति को अपडेट करेंगे।",
 		"sponsorStatusReturnedHint": "",
 		"status": "स्थिति",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "स्वीकृत (अंतिम कार्यक्षेत्र पूर्ण)",
 			"archived": "संग्रहीत",
@@ -829,6 +832,7 @@
 			"submitted": "समीक्षा के लिए प्रस्तुत किया गया"
 		},
 		"studentCapacity": "छात्र क्षमता",
+		"submitForReview": "",
 		"teamPreferences": "छात्रों को इस अवसर के लिए अपने पसंदीदा टीम साथियों को नामित करने की अनुमति दें।",
 		"teamSize": "टीम का आकार",
 		"teamSizeHint": "1 = एकल प्रस्तुति।",
