@@ -1726,6 +1726,17 @@ const StyledClass = styled.div`
           color: #3f288f;
         }
       }
+
+      &.matchingRoundOppInfoCellReturnedQuiet {
+        border-color: #bdbdbd;
+        background: #d9d9d9;
+        color: #6a6a6a;
+
+        &:hover {
+          background: #cecece;
+          color: #5a5a5a;
+        }
+      }
     }
 
     [data-infotooltip-open="true"] .matchingRoundOppInfoCell {
@@ -1741,6 +1752,11 @@ const StyledClass = styled.div`
     [data-infotooltip-open="true"] .matchingRoundOppInfoCellAppointment {
       background: #ffd633;
       color: #5c4a00;
+    }
+
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturnedQuiet {
+      background: #cecece;
+      color: #5a5a5a;
     }
 
     .classTabSecondaryLink {

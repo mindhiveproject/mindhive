@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
 import styled from "styled-components";
@@ -13,6 +13,53 @@ import {
   formatDateShort,
   isExpired,
 } from "../../Connect/Rounds/roundFormConfig";
+
+const INFO_HIGHLIGHT_DISMISSED_KEY =
+  "mh.classMatchingRound.infoHighlightDismissed";
+
+function readDismissedHighlights() {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(INFO_HIGHLIGHT_DISMISSED_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeDismissedHighlights(next) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(
+      INFO_HIGHLIGHT_DISMISSED_KEY,
+      JSON.stringify(next),
+    );
+  } catch {
+    // Ignore quota / private-mode failures; in-memory state still updates.
+  }
+}
+
+function opportunityHighlightStamp(opportunity) {
+  return opportunity?.updatedAt || opportunity?.createdAt || "";
+}
+
+function isHighlightDismissed(map, opportunityId, kind, stamp) {
+  if (!opportunityId || !stamp) return false;
+  return map?.[opportunityId]?.[kind] === stamp;
+}
+
+function dismissHighlightInMap(map, opportunityId, kind, stamp) {
+  if (!opportunityId || !stamp) return map;
+  return {
+    ...map,
+    [opportunityId]: {
+      ...(map?.[opportunityId] || {}),
+      [kind]: stamp,
+    },
+  };
+}
 
 /** Self-contained so portaled InfoTooltip content keeps styles outside .classTabPage. */
 const OpportunityInfoTooltip = styled.div`
@@ -68,12 +115,21 @@ const OpportunityInfoTooltip = styled.div`
   }
 
   .matchingRoundOppInfoTooltipValue {
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
     font-size: 13px;
     font-weight: 600;
     line-height: 16px;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     text-align: right;
     overflow-wrap: anywhere;
+  }
+
+  .matchingRoundOppInfoTooltipValueText {
+    min-width: 0;
   }
 
   .matchingRoundOppInfoTooltipValue.expired {
@@ -86,6 +142,18 @@ const OpportunityInfoTooltip = styled.div`
 
   .matchingRoundOppInfoTooltipValue.returned {
     color: var(--MH-Theme-Secondary-Dark, #3f288f);
+  }
+
+  .matchingRoundOppInfoTooltipDismiss {
+    flex: 0 0 auto;
+    padding: 0;
+    min-width: 0;
+    width: fit-content;
+    height: fit-content;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
 `;
 
@@ -131,19 +199,48 @@ function formatDateTime(iso) {
   }
 }
 
-function TooltipMetaRow({ label, value, valueClassName }) {
+function TooltipMetaRow({ label, value, valueClassName, dismissLabel, onDismiss }) {
   if (value == null || value === "") return null;
   return (
     <div className="matchingRoundOppInfoTooltipRow">
       <span className="matchingRoundOppInfoTooltipLabel">{label}</span>
       <span className={clsx("matchingRoundOppInfoTooltipValue", valueClassName)}>
-        {value}
+        <span className="matchingRoundOppInfoTooltipValueText">{value}</span>
+        {onDismiss ? (
+          <Button
+            variant="text"
+            className="matchingRoundOppInfoTooltipDismiss"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDismiss();
+            }}
+            style={{
+              padding: 0,
+              minWidth: 0,
+              width: "fit-content",
+              height: "fit-content",
+              fontSize: "12px",
+              fontWeight: 600,
+              lineHeight: "16px",
+              color: "var(--MH-Theme-Primary-Dark, #336f8a)",
+            }}
+          >
+            {dismissLabel}
+          </Button>
+        ) : null}
       </span>
     </div>
   );
 }
 
-function OpportunityInfoContent({ opportunity, t }) {
+function OpportunityInfoContent({
+  opportunity,
+  t,
+  showAppointmentHighlight = false,
+  showReturnedHighlight = false,
+  onDismissAppointment,
+  onDismissReturned,
+}) {
   const from = formatDateShort(opportunity.availableFrom);
   const to = formatDateShort(opportunity.availableTo);
   const expired = isExpired(opportunity.availableTo);
@@ -175,6 +272,9 @@ function OpportunityInfoContent({ opportunity, t }) {
         )
       : t("opportunities.preview.teamSizeSolo", {}, { default: "Solo" });
 
+  const dismissLabel = t("opportunities.matchingRound.grid.dismissHighlight", {}, {
+    default: "Dismiss",
+  });
   const hasHeaderMeta = Boolean(opportunity.status || appointmentRequested);
 
   return (
@@ -192,6 +292,12 @@ function OpportunityInfoContent({ opportunity, t }) {
               })}
               value={statusLabel}
               valueClassName={returned ? "returned" : undefined}
+              dismissLabel={dismissLabel}
+              onDismiss={
+                showReturnedHighlight && onDismissReturned
+                  ? onDismissReturned
+                  : undefined
+              }
             />
           ) : null}
           {appointmentRequested ? (
@@ -203,6 +309,12 @@ function OpportunityInfoContent({ opportunity, t }) {
                 default: "Appointment requested",
               })}
               valueClassName="appointmentRequested"
+              dismissLabel={dismissLabel}
+              onDismiss={
+                showAppointmentHighlight && onDismissAppointment
+                  ? onDismissAppointment
+                  : undefined
+              }
             />
           ) : null}
         </div>
@@ -269,6 +381,17 @@ export default function MatchingRoundOpportunitiesGrid({
 }) {
   const { t } = useTranslation("classes");
   const gridRef = useRef(null);
+  const [dismissedHighlights, setDismissedHighlights] = useState(() =>
+    readDismissedHighlights(),
+  );
+
+  const handleDismissHighlight = useCallback((opportunityId, kind, stamp) => {
+    setDismissedHighlights((prev) => {
+      const next = dismissHighlightInMap(prev, opportunityId, kind, stamp);
+      writeDismissedHighlights(next);
+      return next;
+    });
+  }, []);
 
   const rowData = useMemo(
     () =>
@@ -287,10 +410,27 @@ export default function MatchingRoundOpportunitiesGrid({
 
       const returned = isReturnedOpportunity(opportunity);
       const appointmentRequested = isAppointmentRequested(opportunity);
+      const stamp = opportunityHighlightStamp(opportunity);
+      const showAppointmentHighlight =
+        appointmentRequested &&
+        !isHighlightDismissed(
+          dismissedHighlights,
+          opportunity.id,
+          "appointment",
+          stamp,
+        );
+      const showReturnedHighlight =
+        returned &&
+        !isHighlightDismissed(
+          dismissedHighlights,
+          opportunity.id,
+          "returned",
+          stamp,
+        );
 
-      const infoLabelKey = returned
+      const infoLabelKey = showReturnedHighlight
         ? "infoReturned"
-        : appointmentRequested
+        : showAppointmentHighlight
           ? "infoAppointment"
           : "info";
       const infoLabelDefaults = {
@@ -300,8 +440,10 @@ export default function MatchingRoundOpportunitiesGrid({
       };
 
       const cellClass = clsx("matchingRoundOppInfoCell", {
-        matchingRoundOppInfoCellReturned: returned,
-        matchingRoundOppInfoCellAppointment: appointmentRequested,
+        matchingRoundOppInfoCellAppointment: showAppointmentHighlight,
+        matchingRoundOppInfoCellReturned: showReturnedHighlight,
+        matchingRoundOppInfoCellReturnedQuiet:
+          returned && !showReturnedHighlight,
       });
 
       return (
@@ -309,7 +451,20 @@ export default function MatchingRoundOpportunitiesGrid({
           portal
           position="left"
           trigger="click"
-          content={<OpportunityInfoContent opportunity={opportunity} t={t} />}
+          content={
+            <OpportunityInfoContent
+              opportunity={opportunity}
+              t={t}
+              showAppointmentHighlight={showAppointmentHighlight}
+              showReturnedHighlight={showReturnedHighlight}
+              onDismissAppointment={() =>
+                handleDismissHighlight(opportunity.id, "appointment", stamp)
+              }
+              onDismissReturned={() =>
+                handleDismissHighlight(opportunity.id, "returned", stamp)
+              }
+            />
+          }
           tooltipStyle={{ width: "320px", maxWidth: "min(320px, calc(100vw - 24px))" }}
           wrapperStyle={{
             display: "flex",
@@ -334,7 +489,7 @@ export default function MatchingRoundOpportunitiesGrid({
         </InfoTooltip>
       );
     },
-    [t],
+    [dismissedHighlights, handleDismissHighlight, t],
   );
 
   const getRowClass = useCallback((params) => {
@@ -517,6 +672,12 @@ export default function MatchingRoundOpportunitiesGrid({
     onRemove,
     t,
   ]);
+
+  useEffect(() => {
+    const api = gridRef.current?.api;
+    if (!api) return;
+    api.refreshCells({ columns: ["info"], force: true });
+  }, [dismissedHighlights]);
 
   const handleSelectionChanged = useCallback(
     (event) => {
