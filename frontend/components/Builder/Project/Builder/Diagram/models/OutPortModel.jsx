@@ -1,5 +1,9 @@
 import { DefaultPortModel } from '@projectstorm/react-diagrams';
 import { AdvancedLinkModel } from '../factories/LinkFactory';
+import {
+  wouldCreateCycle,
+  warnCyclePrevented,
+} from '../../../../shared/diagramCycle';
 // this is a outcoming port
 // it should be allowed to create links from this port
 
@@ -27,14 +31,22 @@ export class OutCustomPort extends DefaultPortModel {
   }
 
   canLinkToPort(port) {
-    return (
+    const basicAllowed =
       this.isNewLinkAllowed() && // do not allow more than the number of maximum links
       port?.options?.type !== 'outCustomPort' && // do not allow links connecting to other out-ports
       this?.parent?.options?.id !== port?.parent?.options?.id && // do not allow link to connect to itself
       !Object.values(port?.links)
         .map(link => link?.sourcePort?.options?.id)
-        .includes(this?.options?.id) // do not allow a new link if there is already the link exists
-    );
+        .includes(this?.options?.id); // do not allow a new link if there is already the link exists
+
+    if (!basicAllowed) return false;
+
+    if (wouldCreateCycle(this.parent, port?.parent)) {
+      warnCyclePrevented();
+      return false;
+    }
+
+    return true;
   }
 
   createLinkModel() {

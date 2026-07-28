@@ -1204,6 +1204,8 @@
 	"durationHelp": "Сколько времени примерно потребуется человеку, чтобы выполнить {{taskType}}?",
 	"engine": {
 		"copy": "КОПИЯ",
+		"cycleLinkPrevented": "",
+		"cycleLinkPreventedTitle": "",
 		"save": "Сохранять",
 		"studyLocked": "Исследование было заблокировано."
 	},

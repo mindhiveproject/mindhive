@@ -1204,6 +1204,8 @@
 	"durationHelp": "किसी व्यक्ति को {{taskType}} पूरा करने में लगभग कितना समय लगेगा?",
 	"engine": {
 		"copy": "कॉपी",
+		"cycleLinkPrevented": "",
+		"cycleLinkPreventedTitle": "",
 		"save": "बचाना",
 		"studyLocked": "अध्ययन को बंद कर दिया गया है"
 	},

@@ -1204,6 +1204,8 @@
 	"durationHelp": "Approximately how long will it take for someone to complete the {{taskType}}?",
 	"engine": {
 		"copy": "COPY",
+		"cycleLinkPrevented": "This connection would create a circular flow with no valid end. Choose a different path so the study can finish.",
+		"cycleLinkPreventedTitle": "Circular flow not allowed",
 		"save": "Save",
 		"studyLocked": "The study has been locked"
 	},
