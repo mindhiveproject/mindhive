@@ -173,7 +173,16 @@ export const Study = list({
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
-    updatedAt: timestamp(),
+    updatedAt: timestamp({
+      hooks: {
+        async resolveInput({ operation }) {
+          if (operation === "update") {
+            return new Date().toISOString();
+          }
+          return undefined;
+        },
+      },
+    }),
     status: select({
       options: [
         { label: "Working", value: "WORKING" },
