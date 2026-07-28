@@ -796,6 +796,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Salvar alterações",
+		"saveDraft": "",
 		"saving": "Salvando...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "Obstáculos previstos",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "— bloqueado. Um professor ou administrador atualizará o status.",
 		"sponsorStatusReturnedHint": "",
 		"status": "Status",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "Aceito (escopo final completo)",
 			"archived": "Arquivado",
@@ -829,6 +832,7 @@
 			"submitted": "Submetido para revisão."
 		},
 		"studentCapacity": "Capacidade de alunos",
+		"submitForReview": "",
 		"teamPreferences": "Permita que os alunos indiquem seus colegas de equipe preferidos para esta oportunidade.",
 		"teamSize": "Tamanho da equipe",
 		"teamSizeHint": "1 = colocação individual.",
@@ -1106,6 +1110,48 @@
 	"reviewOpportunity": {
 		"backLink": "",
 		"returnToSponsor": ""
+	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
 	},
 	"roleGuard": {
 		"backLink": "Voltar ao Connect",

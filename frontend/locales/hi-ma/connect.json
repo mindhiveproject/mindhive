@@ -796,6 +796,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "",
+		"saveDraft": "",
 		"saving": "",
 		"specialConsiderations": {
 			"anticipatedObstacles": "",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "",
 		"sponsorStatusReturnedHint": "",
 		"status": "",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "",
 			"archived": "",
@@ -829,6 +832,7 @@
 			"submitted": ""
 		},
 		"studentCapacity": "",
+		"submitForReview": "",
 		"teamPreferences": "",
 		"teamSize": "",
 		"teamSizeHint": "",
@@ -1106,6 +1110,48 @@
 	"reviewOpportunity": {
 		"backLink": "",
 		"returnToSponsor": ""
+	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
 	},
 	"roleGuard": {
 		"backLink": "",

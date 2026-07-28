@@ -793,6 +793,7 @@
 					"review": "",
 					"sponsor": ""
 				},
+				"dismissHighlight": "",
 				"remove": "",
 				"review": ""
 			},
@@ -918,6 +919,7 @@
 			"byMentor": "",
 			"capacity": "",
 			"capacityLabel": "",
+			"flagLabel": "",
 			"lastUpdated": "",
 			"lastUpdatedLabel": "",
 			"sponsorLabel": "",

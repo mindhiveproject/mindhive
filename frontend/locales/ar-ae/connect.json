@@ -796,6 +796,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "حفظ التغييرات",
+		"saveDraft": "",
 		"saving": "إنقاذ...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "العقبات المتوقعة",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "— مغلق. سيقوم أحد المعلمين أو المشرفين بتحديث الحالة.",
 		"sponsorStatusReturnedHint": "",
 		"status": "حالة",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "مقبول (النطاق النهائي الكامل)",
 			"archived": "مؤرشف",
@@ -829,6 +832,7 @@
 			"submitted": "تم تقديمه للمراجعة"
 		},
 		"studentCapacity": "الطاقة الاستيعابية للطلاب",
+		"submitForReview": "",
 		"teamPreferences": "اسمح للطلاب بترشيح زملائهم المفضلين في الفريق لهذه الفرصة",
 		"teamSize": "حجم الفريق",
 		"teamSizeHint": "1 = وضع منفرد.",
@@ -1106,6 +1110,48 @@
 	"reviewOpportunity": {
 		"backLink": "",
 		"returnToSponsor": ""
+	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
 	},
 	"roleGuard": {
 		"backLink": "العودة إلى صفحة الاتصال",

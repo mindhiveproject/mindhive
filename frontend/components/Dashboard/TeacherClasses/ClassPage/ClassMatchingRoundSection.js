@@ -46,6 +46,13 @@ const OPPORTUNITY_STATUS_AT_OR_BEYOND_PRESELECTED = new Set([
   "archived",
 ]);
 
+/**
+ * Only roll back to pending_review when removing from a round if status is
+ * still at the matching-round pre-select step. Do not downgrade accepted /
+ * published / closed / archived / returned.
+ */
+const OPPORTUNITY_STATUS_REVERTABLE_ON_ROUND_REMOVE = new Set(["pre_selected"]);
+
 function getRoundStatusParts(status, t) {
   const key = ROUND_STATUS_KEYS[status];
   if (!key) return { short: status, hint: "" };
@@ -421,6 +428,37 @@ export default function ClassMatchingRoundSection({
     [networkOpportunities, updateOpportunity],
   );
 
+  const markOpportunitiesPendingReview = useCallback(
+    async (opportunityIds) => {
+      if (!opportunityIds?.length) return;
+
+      const byId = new Map(
+        networkOpportunities.map((opportunity) => [opportunity.id, opportunity]),
+      );
+      const idsToUpdate = opportunityIds.filter((id) => {
+        const opportunity = byId.get(id);
+        return (
+          opportunity &&
+          OPPORTUNITY_STATUS_REVERTABLE_ON_ROUND_REMOVE.has(opportunity.status)
+        );
+      });
+
+      if (!idsToUpdate.length) return;
+
+      await Promise.all(
+        idsToUpdate.map((id) =>
+          updateOpportunity({
+            variables: {
+              id,
+              input: { status: "pending_review" },
+            },
+          }),
+        ),
+      );
+    },
+    [networkOpportunities, updateOpportunity],
+  );
+
   const selectedNetworkOpportunities = useMemo(() => {
     const selectedSet = new Set(selectedOpportunities);
     return sortOpportunitiesByTitle(
@@ -431,17 +469,20 @@ export default function ClassMatchingRoundSection({
   const reviewNetworkOpportunities = useMemo(() => {
     const selectedSet = new Set(selectedOpportunities);
     return sortOpportunitiesByTitle(
-      networkOpportunities.filter((opportunity) => !selectedSet.has(opportunity.id)),
+      networkOpportunities.filter((opportunity) => {
+        if (selectedSet.has(opportunity.id)) return false;
+        // Primary review queue: pending_review.
+        // Safety net: orphaned pre_selected (status set without round link,
+        // or round link cleared before status was rolled back).
+        return (
+          opportunity.status === "pending_review" ||
+          opportunity.status === "pre_selected"
+        );
+      }),
     );
   }, [networkOpportunities, selectedOpportunities]);
 
-  const reviewOpportunitiesCount = useMemo(
-    () =>
-      reviewNetworkOpportunities.filter(
-        (opportunity) => opportunity.status !== "returned",
-      ).length,
-    [reviewNetworkOpportunities],
-  );
+  const reviewOpportunitiesCount = reviewNetworkOpportunities.length;
 
   const statusOptions = useMemo(
     () =>
@@ -534,7 +575,11 @@ export default function ClassMatchingRoundSection({
       }
 
       const previousSet = new Set(selectedOpportunities);
+      const nextSet = new Set(nextIds);
       const newlySelectedIds = nextIds.filter((id) => !previousSet.has(id));
+      const newlyRemovedIds = selectedOpportunities.filter(
+        (id) => !nextSet.has(id),
+      );
 
       if (isNew || !activeRoundId) {
         setSelectedOpportunities(nextIds);
@@ -555,6 +600,7 @@ export default function ClassMatchingRoundSection({
           },
         });
         await markOpportunitiesPreSelected(newlySelectedIds);
+        await markOpportunitiesPendingReview(newlyRemovedIds);
         setSelectedOpportunities(nextIds);
         captureSnapshot(inputs, nextIds, selectedQuestions);
       } catch (error) {
@@ -576,6 +622,7 @@ export default function ClassMatchingRoundSection({
       togglingOpportunityId,
       updateConnectRound,
       markOpportunitiesPreSelected,
+      markOpportunitiesPendingReview,
       inputs,
       selectedQuestions,
       captureSnapshot,
@@ -711,11 +758,15 @@ export default function ClassMatchingRoundSection({
     const previouslySavedOpportunityIds = new Set(
       savedSnapshotRef.current?.opportunities || [],
     );
+    const selectedSet = new Set(selectedOpportunities);
     const newlySelectedOpportunityIds = isNew
       ? selectedOpportunities
       : selectedOpportunities.filter(
           (id) => !previouslySavedOpportunityIds.has(id),
         );
+    const newlyRemovedOpportunityIds = isNew
+      ? []
+      : [...previouslySavedOpportunityIds].filter((id) => !selectedSet.has(id));
 
     try {
       if (isNew) {
@@ -769,6 +820,7 @@ export default function ClassMatchingRoundSection({
           },
         });
         await markOpportunitiesPreSelected(newlySelectedOpportunityIds);
+        await markOpportunitiesPendingReview(newlyRemovedOpportunityIds);
         captureSnapshot(inputs, selectedOpportunities, selectedQuestions);
       }
     } catch (error) {

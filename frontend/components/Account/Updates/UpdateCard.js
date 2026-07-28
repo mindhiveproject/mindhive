@@ -98,7 +98,13 @@ const Row = styled.div`
 `;
 
 const CLOSE_ICON = (
-  <img src="/assets/icons/close.svg" alt="" width={16} height={16} />
+  <img
+    src="/assets/icons/close.svg"
+    alt=""
+    width="12"
+    height="12"
+    style={{ width: 12, height: 12 }}
+  />
 );
 
 export default function UpdateCard({
@@ -183,7 +189,7 @@ export default function UpdateCard({
               default: "Archive update",
             })}
             onClick={() => archiveUpdate()}
-            style={{ width: 32, height: 32 }}
+            // style={{ width: 32, height: 32 }}
           />
         ) : null}
       </div>

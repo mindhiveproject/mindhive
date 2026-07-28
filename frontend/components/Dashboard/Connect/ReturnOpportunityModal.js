@@ -5,9 +5,9 @@ import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
 import StyledModal from "../../styles/StyledModal";
-import useEmail from "../../../lib/useEmail";
 import { UPDATE_OPPORTUNITY } from "../../Mutations/Opportunity";
 import { CREATE_REVIEW_NOTE } from "../../Mutations/OpportunityReviewNote";
+import { REVIEW_NOTE_KIND } from "../../../lib/reviewThreadRound";
 
 export default function ReturnOpportunityModal({
   open,
@@ -15,11 +15,10 @@ export default function ReturnOpportunityModal({
   onSuccess,
   opportunityId,
   roundId,
-  mentorId,
+  mentorId: _mentorId,
   refetchQueries = [],
 }) {
   const { t } = useTranslation("connect");
-  const { sendEmail } = useEmail();
   const [noteBody, setNoteBody] = useState("");
   const [error, setError] = useState(null);
 
@@ -57,6 +56,7 @@ export default function ReturnOpportunityModal({
           variables: {
             input: {
               body,
+              kind: REVIEW_NOTE_KIND.REVIEWER_COMMENT,
               opportunity: { connect: { id: opportunityId } },
               round: { connect: { id: roundId } },
             },
@@ -64,30 +64,14 @@ export default function ReturnOpportunityModal({
         });
       }
 
+      // Status change triggers the single mentor return notification in
+      // Opportunity.afterOperation (includes round deep-link when known).
       await updateOpportunity({
         variables: {
           id: opportunityId,
           input: { status: "returned" },
         },
       });
-
-      if (mentorId) {
-        try {
-          await sendEmail({
-            receiverId: mentorId,
-            title: t("returnModal.emailTitle", {}, {
-              default: "Your Capstone proposal was returned",
-            }),
-            message: t("returnModal.emailMessage", {}, {
-              default:
-                "A teacher has returned your Capstone proposal for revision. Open your opportunity to read their notes, make changes, and resubmit for review.",
-            }),
-            link: `/dashboard/connect/opportunities?op=${opportunityId}`,
-          });
-        } catch (emailError) {
-          console.error("Return opportunity notification failed:", emailError);
-        }
-      }
 
       setNoteBody("");
       onSuccess?.();

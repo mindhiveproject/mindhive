@@ -190,6 +190,7 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
     opportunities(
       where: {
         classNetworks: { some: { id: { equals: $classNetworkId } } }
+        status: { in: ["pending_review", "returned", "pre_selected", "accepted"] }
       }
     ) {
       id

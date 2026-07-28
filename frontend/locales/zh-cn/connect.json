@@ -796,6 +796,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "保存更改",
+		"saveDraft": "",
 		"saving": "保存...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "预期障碍",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "— 已锁定。教师或管理员将更新状态。",
 		"sponsorStatusReturnedHint": "",
 		"status": "地位",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "已接受（完整最终范围）",
 			"archived": "已归档",
@@ -829,6 +832,7 @@
 			"submitted": "已提交审核"
 		},
 		"studentCapacity": "学生容量",
+		"submitForReview": "",
 		"teamPreferences": "允许学生提名他们心仪的队友参与此次机会。",
 		"teamSize": "团队规模",
 		"teamSizeHint": "1 = 单人放置。",
@@ -1106,6 +1110,48 @@
 	"reviewOpportunity": {
 		"backLink": "",
 		"returnToSponsor": ""
+	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
 	},
 	"roleGuard": {
 		"backLink": "返回连接",

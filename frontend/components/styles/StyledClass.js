@@ -1726,6 +1726,17 @@ const StyledClass = styled.div`
           color: #3f288f;
         }
       }
+
+      &.matchingRoundOppInfoCellReturnedQuiet {
+        border-color: #bdbdbd;
+        background: #d9d9d9;
+        color: #6a6a6a;
+
+        &:hover {
+          background: #cecece;
+          color: #5a5a5a;
+        }
+      }
     }
 
     [data-infotooltip-open="true"] .matchingRoundOppInfoCell {
@@ -1743,26 +1754,9 @@ const StyledClass = styled.div`
       color: #5c4a00;
     }
 
-    .matchingRoundOppInfoTooltip {
-      display: grid;
-      gap: 6px;
-      max-width: 320px;
-
-      p {
-        margin: 0;
-        font-size: 14px;
-        line-height: 20px;
-        color: #171717;
-      }
-
-      .expired {
-        color: #b3261e;
-      }
-
-      .appointmentRequested {
-        color: #b9261a;
-        font-weight: 600;
-      }
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturnedQuiet {
+      background: #cecece;
+      color: #5a5a5a;
     }
 
     .classTabSecondaryLink {

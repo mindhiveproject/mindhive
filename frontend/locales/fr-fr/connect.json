@@ -796,6 +796,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Sauvegarder les modifications",
+		"saveDraft": "",
 		"saving": "Économie...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "Obstacles anticipés",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "— Verrouillé. Un enseignant ou un administrateur mettra à jour le statut.",
 		"sponsorStatusReturnedHint": "",
 		"status": "Statut",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "Accepté (portée finale complète)",
 			"archived": "Archive",
@@ -829,6 +832,7 @@
 			"submitted": "Soumis pour examen"
 		},
 		"studentCapacity": "Capacité étudiante",
+		"submitForReview": "",
 		"teamPreferences": "Autoriser les élèves à désigner leurs coéquipiers préférés pour cette opportunité",
 		"teamSize": "Taille de l'équipe",
 		"teamSizeHint": "1 = placement en solo.",
@@ -1106,6 +1110,48 @@
 	"reviewOpportunity": {
 		"backLink": "",
 		"returnToSponsor": ""
+	},
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
 	},
 	"roleGuard": {
 		"backLink": "Retour à la page de connexion",

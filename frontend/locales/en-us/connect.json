@@ -618,7 +618,7 @@
 		"guidelinesMutualExpectationsChip": "Mutual Expectations agreement",
 		"guidelinesRequestAppointment": "I request an appointment to discuss further.",
 		"guidelinesTitle": "Understanding of Proposal Guidelines",
-		"guidelinesWarning": "Tick the guidelines checkbox before publishing.",
+		"guidelinesWarning": "Tick the guidelines checkbox before submitting this opportunity.",
 		"introVideo": "Intro video",
 		"introVideoHint": "Upload a video file or paste an embed URL (YouTube, Vimeo). Uploaded files are stored on our cloud bucket.",
 		"introVideoUrlHint": "Or paste a video URL (the URL itself — not the full <iframe> embed code). Supports YouTube, Vimeo, Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload size: {{maxMb}} MB.",
@@ -796,6 +796,7 @@
 			"unknownAuthor": "Reviewer"
 		},
 		"save": "Save changes",
+		"saveDraft": "Save draft",
 		"saving": "Saving…",
 		"specialConsiderations": {
 			"anticipatedObstacles": "Anticipated obstacles",
@@ -818,6 +819,8 @@
 		"sponsorStatusLocked": "— locked. A teacher or admin will update the status.",
 		"sponsorStatusReturnedHint": "— use Resubmit above when your changes are ready.",
 		"status": "Status",
+		"statusAdmin": "Status (admin)",
+		"statusAdminHint": "Sponsors submit for review via the button at the top of the page. Use this control only for admin status overrides.",
 		"statusOptions": {
 			"accepted": "Accepted (complete final scope)",
 			"archived": "Archived",
@@ -829,6 +832,7 @@
 			"submitted": "Submitted for review"
 		},
 		"studentCapacity": "Student capacity",
+		"submitForReview": "Submit for review in class network",
 		"teamPreferences": "Allow students to nominate preferred teammates for this opportunity",
 		"teamSize": "Team size",
 		"teamSizeHint": "1 = solo placement.",
@@ -1106,6 +1110,48 @@
 	"reviewOpportunity": {
 		"backLink": "Back to review queue",
 		"returnToSponsor": "Return with comments"
+	},
+	"reviewThread": {
+		"cancel": "Cancel",
+		"compose": {
+			"post": "Post note",
+			"posting": "Posting…",
+			"postReply": "Post reply",
+			"sponsorPlaceholder": "Write a reply for the reviewers…",
+			"teacherPlaceholder": "Leave a note for the sponsor…"
+		},
+		"delete": "Delete",
+		"deleteConfirm": "Delete this message?",
+		"edit": "Edit",
+		"editAria": "Edit message",
+		"empty": "No messages yet. Start the conversation below.",
+		"errors": {
+			"delete": "Could not delete this message. Please try again.",
+			"post": "Could not post this message. Please try again.",
+			"save": "Could not save this message. Please try again."
+		},
+		"kind": {
+			"reviewerComment": "Reviewer comment",
+			"sponsorReply": "Sponsor reply"
+		},
+		"noRound": "This opportunity is not linked to a matching round yet, so a conversation cannot be started.",
+		"resubmitPrompt": {
+			"dismiss": "Not now",
+			"message": "Your reply was posted. Resubmit your opportunity so reviewers can see your updates.",
+			"resubmit": "Resubmit now",
+			"resubmitting": "Resubmitting…",
+			"title": "Resubmit your opportunity"
+		},
+		"roundFallback": "Matching round",
+		"roundRequired": "Select a matching round to view and post messages in this conversation.",
+		"roundSelectLabel": "Matching round",
+		"roundSelectPlaceholder": "Select a matching round…",
+		"save": "Save",
+		"saving": "Saving…",
+		"sponsorHelper": "Messages shared with reviewers for this matching round.",
+		"title": "Review conversation",
+		"unknownAuthor": "Unknown",
+		"updatedAt": "Updated {{date}}"
 	},
 	"roleGuard": {
 		"backLink": "Back to Connect",

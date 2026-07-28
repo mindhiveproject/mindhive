@@ -68,10 +68,12 @@ export const REVIEW_OPPORTUNITY = gql`
       }
       reviewNotes(
         where: { round: { id: { equals: $roundId } } }
-        orderBy: { createdAt: desc }
+        orderBy: { createdAt: asc }
       ) {
         id
+        kind
         body
+        payload
         createdAt
         updatedAt
         author {
@@ -79,6 +81,10 @@ export const REVIEW_OPPORTUNITY = gql`
           username
           firstName
           lastName
+        }
+        round {
+          id
+          title
         }
       }
     }
