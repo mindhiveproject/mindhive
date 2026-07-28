@@ -1743,28 +1743,6 @@ const StyledClass = styled.div`
       color: #5c4a00;
     }
 
-    .matchingRoundOppInfoTooltip {
-      display: grid;
-      gap: 6px;
-      max-width: 320px;
-
-      p {
-        margin: 0;
-        font-size: 14px;
-        line-height: 20px;
-        color: #171717;
-      }
-
-      .expired {
-        color: #b3261e;
-      }
-
-      .appointmentRequested {
-        color: #b9261a;
-        font-weight: 600;
-      }
-    }
-
     .classTabSecondaryLink {
       display: inline-flex;
       align-items: center;

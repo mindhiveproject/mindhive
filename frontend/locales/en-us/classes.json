@@ -918,6 +918,7 @@
 			"byMentor": "By {{name}}",
 			"capacity": "Capacity {{count}}",
 			"capacityLabel": "Capacity",
+			"flagLabel": "Flag",
 			"lastUpdated": "Last updated {{date}}",
 			"lastUpdatedLabel": "Last updated",
 			"sponsorLabel": "Sponsor",

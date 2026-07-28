@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
+import styled from "styled-components";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -12,6 +13,81 @@ import {
   formatDateShort,
   isExpired,
 } from "../../Connect/Rounds/roundFormConfig";
+
+/** Self-contained so portaled InfoTooltip content keeps styles outside .classTabPage. */
+const OpportunityInfoTooltip = styled.div`
+  display: grid;
+  gap: 10px;
+  max-width: 320px;
+  text-align: left;
+
+  .matchingRoundOppInfoTooltipTitle {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+
+  .matchingRoundOppInfoTooltipDescription {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .matchingRoundOppInfoTooltipDivider {
+    height: 1px;
+    width: 100%;
+    background: var(--MH-Theme-Neutrals-Light-Grey, #e6e6e6);
+  }
+
+  .matchingRoundOppInfoTooltipRows {
+    display: grid;
+    gap: 6px;
+  }
+
+  .matchingRoundOppInfoTooltipRow {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 12px;
+    align-items: start;
+  }
+
+  .matchingRoundOppInfoTooltipLabel {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--MH-Theme-Neutrals-Grey-3, #888);
+    white-space: nowrap;
+  }
+
+  .matchingRoundOppInfoTooltipValue {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 16px;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .matchingRoundOppInfoTooltipValue.expired {
+    color: var(--MH-Theme-Error, #b3261e);
+  }
+
+  .matchingRoundOppInfoTooltipValue.appointmentRequested {
+    color: var(--MH-Theme-Error-Dark, #b9261a);
+  }
+
+  .matchingRoundOppInfoTooltipValue.returned {
+    color: var(--MH-Theme-Secondary-Dark, #3f288f);
+  }
+`;
 
 const OPPORTUNITY_STATUS_KEYS = {
   draft: "draft",
@@ -55,8 +131,19 @@ function formatDateTime(iso) {
   }
 }
 
+function TooltipMetaRow({ label, value, valueClassName }) {
+  if (value == null || value === "") return null;
+  return (
+    <div className="matchingRoundOppInfoTooltipRow">
+      <span className="matchingRoundOppInfoTooltipLabel">{label}</span>
+      <span className={clsx("matchingRoundOppInfoTooltipValue", valueClassName)}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
 function OpportunityInfoContent({ opportunity, t }) {
-  const mentorName = displayName(opportunity.mentor);
   const from = formatDateShort(opportunity.availableFrom);
   const to = formatDateShort(opportunity.availableTo);
   const expired = isExpired(opportunity.availableTo);
@@ -67,66 +154,105 @@ function OpportunityInfoContent({ opportunity, t }) {
   const statusLabel = statusKey
     ? t(`opportunities.status.${statusKey}`, {}, { default: opportunity.status })
     : opportunity.status;
+  const returned = isReturnedOpportunity(opportunity);
+  const appointmentRequested = isAppointmentRequested(opportunity);
+  const hasAvailability = Boolean(from || to);
+  const availabilityValue = hasAvailability
+    ? `${from || "—"} → ${to || "—"}${
+        expired
+          ? ` · ${t("opportunities.matchingRound.expired", {}, {
+              default: "Expired",
+            })}`
+          : ""
+      }`
+    : null;
+  const teamSizeValue =
+    opportunity.teamSize > 1
+      ? t(
+          "opportunities.preview.teamSizeTeam",
+          { size: opportunity.teamSize },
+          { default: "Team of {{size}}" },
+        )
+      : t("opportunities.preview.teamSizeSolo", {}, { default: "Solo" });
+
+  const hasHeaderMeta = Boolean(opportunity.status || appointmentRequested);
 
   return (
-    <div className="matchingRoundOppInfoTooltip">
+    <OpportunityInfoTooltip>
+      {opportunity.title ? (
+        <p className="matchingRoundOppInfoTooltipTitle">{opportunity.title}</p>
+      ) : null}
+
+      {hasHeaderMeta ? (
+        <div className="matchingRoundOppInfoTooltipRows">
+          {opportunity.status ? (
+            <TooltipMetaRow
+              label={t("opportunities.rowMeta.statusLabel", {}, {
+                default: "Status",
+              })}
+              value={statusLabel}
+              valueClassName={returned ? "returned" : undefined}
+            />
+          ) : null}
+          {appointmentRequested ? (
+            <TooltipMetaRow
+              label={t("opportunities.rowMeta.flagLabel", {}, {
+                default: "Flag",
+              })}
+              value={t("opportunities.preview.requestsAppointment", {}, {
+                default: "Appointment requested",
+              })}
+              valueClassName="appointmentRequested"
+            />
+          ) : null}
+        </div>
+      ) : null}
+
       {opportunity.shortDescription ? (
-        <p>{opportunity.shortDescription}</p>
+        <>
+          <div className="matchingRoundOppInfoTooltipDivider" aria-hidden />
+          <p className="matchingRoundOppInfoTooltipDescription">
+            {opportunity.shortDescription}
+          </p>
+        </>
       ) : null}
-      {mentorName ? (
-        <p>
-          {t("opportunities.rowMeta.byMentor", { name: mentorName }, {
-            default: "By {{name}}",
+
+      <div className="matchingRoundOppInfoTooltipDivider" aria-hidden />
+
+      <div className="matchingRoundOppInfoTooltipRows">
+        <TooltipMetaRow
+          label={t("opportunities.rowMeta.availabilityLabel", {}, {
+            default: "Available",
           })}
-        </p>
-      ) : null}
-      <p>
-        {t(
-          "opportunities.rowMeta.capacity",
-          { count: opportunity.studentCapacity ?? 1 },
-          { default: "Capacity {{count}}" },
-        )}
-        {opportunity.teamSize > 1
-          ? ` · ${t(
-              "opportunities.rowMeta.teamOf",
-              { size: opportunity.teamSize },
-              { default: "Team of {{size}}" },
-            )}`
-          : ""}
-      </p>
-      {(from || to) && (
-        <p className={expired ? "expired" : undefined}>
-          {from || "—"} → {to || "—"}
-          {opportunity.timeCommitment ? ` · ${opportunity.timeCommitment}` : ""}
-        </p>
-      )}
-      {opportunity.status ? (
-        <p>
-          {statusLabel}
-          {expired
-            ? ` · ${t("opportunities.matchingRound.expired", {}, {
-                default: "Expired",
-              })}`
-            : ""}
-        </p>
-      ) : null}
-      {lastUpdated ? (
-        <p>
-          {t(
-            "opportunities.rowMeta.lastUpdated",
-            { date: lastUpdated },
-            { default: "Last updated {{date}}" },
-          )}
-        </p>
-      ) : null}
-      {isAppointmentRequested(opportunity) ? (
-        <p className="appointmentRequested">
-          {t("opportunities.preview.requestsAppointment", {}, {
-            default: "Appointment requested",
+          value={availabilityValue}
+          valueClassName={expired ? "expired" : undefined}
+        />
+        <TooltipMetaRow
+          label={t("opportunities.preview.timeCommitment", {}, {
+            default: "Time commitment",
           })}
-        </p>
-      ) : null}
-    </div>
+          value={opportunity.timeCommitment}
+        />
+        <TooltipMetaRow
+          label={t("opportunities.rowMeta.capacityLabel", {}, {
+            default: "Capacity",
+          })}
+          value={opportunity.studentCapacity ?? 1}
+        />
+        <TooltipMetaRow
+          label={t("opportunities.preview.teamSize", {}, {
+            default: "Team size",
+          })}
+          value={teamSizeValue}
+        />
+        <TooltipMetaRow
+          label={t("opportunities.rowMeta.lastUpdatedLabel", {}, {
+            default: "Last updated",
+          })}
+          value={lastUpdated}
+        />
+      </div>
+    </OpportunityInfoTooltip>
   );
 }
 
