@@ -243,6 +243,10 @@ export const Profile = list({
       ref: "Study.collaborators",
       many: true,
     }),
+    studyVersions: relationship({
+      ref: "StudyVersion.createdBy",
+      many: true,
+    }),
     consentCreatorIn: relationship({
       ref: "Consent.author",
       many: true,

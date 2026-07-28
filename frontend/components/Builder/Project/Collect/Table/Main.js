@@ -7,6 +7,7 @@ import Grid from "./Grid";
 import {
   studyStatusKeys,
   getTranslatedStudyStatuses,
+  getStudyVersionName,
 } from "../Participant/Results/Dataset";
 
 function getUnique(array) {
@@ -19,8 +20,6 @@ export default function ParticipantsTable({
   users,
   guests,
 }) {
-  const studyVersionHistory = study?.versionHistory || [];
-
   const { t } = useTranslation("builder");
   // participants
   const [participants, setParticipants] = useState([]);
@@ -96,9 +95,8 @@ export default function ParticipantsTable({
     const uniqueStudyVersions = getUnique(datasetVersions);
     const studyVersion = uniqueStudyVersions
       .filter((version) => version) // Filter out undefined/null statuses
-      .map((version) =>
-        studyVersionHistory.filter((v) => v?.id === version).map((v) => v?.name)
-      );
+      .map((version) => getStudyVersionName({ study, versionId: version }))
+      .filter((versionName) => versionName);
 
     return {
       publicId: participant?.publicId,

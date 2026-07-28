@@ -534,7 +534,7 @@ export default function Engine({
     return flow;
   };
 
-  const buildStudy = () => {
+  const buildStudy = async () => {
     const model = engine?.model;
 
     // CLEANUP: Remove any dangling/loose links before saving
@@ -572,22 +572,30 @@ export default function Engine({
     }
 
     const { flow, diagram } = saveDiagramState();
-    const updatedVersionHistory = study?.versionHistory?.map((v) => {
-      if (v?.id === study?.currentVersion) {
-        return { ...v, diagram };
-      } else {
-        return v;
-      }
-    });
-    saveStudy({
-      flow,
-      diagram,
-      descriptionInProposalCardId: study?.descriptionInProposalCardId,
-      tags: study?.tags,
-      status: study?.status,
-      currentVersion: study?.currentVersion,
-      versionHistory: updatedVersionHistory,
-    });
+    // saveStudy stores the design as a new study version when it differs from
+    // the most recent one, so the study is only marked as saved once both the
+    // version and the study itself have been written
+    try {
+      await saveStudy({
+        flow,
+        diagram,
+        descriptionInProposalCardId: study?.descriptionInProposalCardId,
+        tags: study?.tags,
+        status: study?.status,
+      });
+    } catch (error) {
+      alert(
+        t(
+          "engine.saveFailed",
+          { message: error?.message || "" },
+          {
+            default:
+              "The study could not be saved: {{message}}. Please check your connection and try again.",
+          }
+        )
+      );
+      return;
+    }
     setHasStudyChanged(false);
     clearUndo();
   };

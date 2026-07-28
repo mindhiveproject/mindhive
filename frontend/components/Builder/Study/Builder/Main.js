@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import generate from "project-name-generator";
 
 import useForm from "../../../../lib/useForm";
+import useStudyVersionSnapshot from "../../../../lib/useStudyVersionSnapshot";
 
 import { MY_STUDIES, MY_STUDY } from "../../../Queries/Study";
 import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
@@ -49,14 +50,14 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
     refetchQueries: [{ query: MY_STUDY, variables: { id: studyId } }],
   });
 
+  const snapshotStudy = useStudyVersionSnapshot({ user });
+
   const saveStudy = async ({
     flow,
     diagram,
     descriptionInProposalCardId,
     tags,
     status,
-    currentVersion,
-    versionHistory,
   }) => {
     if (studyId === "add" || area === "cloneofstudy") {
       const newStudy = await createStudy({
@@ -75,8 +76,6 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
               ],
             },
             status,
-            currentVersion,
-            versionHistory,
           },
         },
       });
@@ -87,7 +86,30 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
         },
       });
     } else {
-      updateStudy({
+      // Store the design as a new version. A problem here must never stop the
+      // study itself from being saved, so the failure is reported and the save
+      // continues: the next save compares the canvas with the same version
+      // again and stores it then.
+      let newVersionId = null;
+      try {
+        newVersionId = await snapshotStudy({
+          studyId: study?.id,
+          diagram,
+          flow,
+        });
+      } catch (error) {
+        console.error("The study version could not be stored", error);
+      }
+
+      // The data collection version is stamped on every collected dataset and
+      // keys the participant data-policy consent, so it only follows the
+      // versions while no data has been collected yet.
+      const shouldAdvanceCollectionVersion =
+        newVersionId &&
+        (!study?.currentVersion ||
+          study?.dataCollectionStatus === "NOT_STARTED");
+
+      await updateStudy({
         variables: {
           input: {
             flow,
@@ -97,8 +119,9 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
               : null,
             tags: tags?.length ? { set: tags } : { set: [] },
             status,
-            currentVersion,
-            versionHistory,
+            ...(shouldAdvanceCollectionVersion
+              ? { currentVersion: newVersionId }
+              : {}),
           },
         },
       });
@@ -107,6 +130,21 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
 
   if (!studyId) {
     return <div>No study found, please save your study first.</div>;
+  }
+
+  // The canvas is built once, when the engine mounts, so the study has to be
+  // loaded first: otherwise the builder starts on an empty canvas and saving
+  // would overwrite the study design with it.
+  if (loading) return <div>Loading study...</div>;
+  if (error) return <div>Error loading study: {error.message}</div>;
+
+  // The builder gets the form state, which useForm only fills in from the
+  // loaded study in an effect, one commit after the query resolves. The canvas
+  // is built once when the engine mounts, so mounting it in that first commit
+  // would build it from an empty study and leave it showing the starting point
+  // only. Wait until the form state has caught up with the loaded study.
+  if (study?.id && inputs?.id !== study?.id) {
+    return <div>Loading study...</div>;
   }
 
   return (
