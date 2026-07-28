@@ -504,7 +504,7 @@ export default function RoundEditor({ roundId }) {
     ? entityTitle
     : isNew
     ? t("matchingRound.editor.pageTitleNew", {}, {
-        default: "New matching round",
+        default: "Create new matching round",
       })
     : t("matchingRound.editor.pageTitleEdit", {}, {
         default: "Edit round",

@@ -956,6 +956,18 @@ const StyledClass = styled.div`
     padding-bottom: 40px;
     font-family: "Inter", sans-serif;
 
+    .matchingRoundsList {
+      display: grid;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .matchingRoundsListCreate {
+      display: flex;
+      justify-content: flex-start;
+      padding-top: 4px;
+    }
+
     .classTabSection {
       display: grid;
       gap: 16px;
@@ -1236,7 +1248,8 @@ const StyledClass = styled.div`
     .classTabNetworkChipRow {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      column-gap: 10px;
+      row-gap: 10px;
       align-items: center;
     }
 
@@ -1290,13 +1303,13 @@ const StyledClass = styled.div`
     .classTabExpandableHeaderBar {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      align-items: stretch;
+      align-items: start;
       gap: 0;
-      min-height: 72px;
+      min-height: 0;
 
       .matchingRoundHeaderActions {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: flex-end;
         flex-shrink: 0;
         padding: 16px 24px 16px 12px;
@@ -1323,7 +1336,7 @@ const StyledClass = styled.div`
 
     .classTabExpandableHeaderToggle {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
       width: 100%;
@@ -1352,7 +1365,7 @@ const StyledClass = styled.div`
 
       .expandableHeaderMain {
         display: grid;
-        gap: 8px;
+        gap: 4px;
         min-width: 0;
         flex: 1;
 
@@ -1379,6 +1392,7 @@ const StyledClass = styled.div`
 
       .expandableChevron {
         flex-shrink: 0;
+        margin-top: 7px;
         opacity: 0.7;
         transition: transform 0.2s ease;
 
@@ -1399,6 +1413,103 @@ const StyledClass = styled.div`
         font-size: 15px;
         line-height: 22px;
         color: #625b71;
+      }
+    }
+
+    .classTabMatchingRoundNetworkRow {
+      display: grid;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid #ece9e6;
+      border-radius: 12px;
+      background: var(--MH-Theme-Neutrals-Extra-Light, #f8fafb);
+
+      .matchingRoundNetworkConfirm {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .matchingRoundNetworkIdentity {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .matchingRoundNetworkIcon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--MH-Theme-Neutrals-Light, #E6E6E6);
+
+        img {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .matchingRoundNetworkIdentityText {
+        display: grid;
+        gap: 2px;
+        min-width: 0;
+      }
+
+      .matchingRoundNetworkLabel {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 16px;
+        color: #625b71;
+      }
+
+      .matchingRoundNetworkTitle {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 22px;
+        color: #171717;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .matchingRoundNetworkHint {
+        margin: 0;
+        font-size: 13px;
+        line-height: 18px;
+        color: #625b71;
+      }
+
+      .matchingRoundNetworkActions {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px 10px;
+        min-width: 0;
+        overflow-x: auto;
+      }
+
+      .matchingRoundNetworkInviteActions {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .matchingRoundNetworkActionsDivider {
+        display: inline-block;
+        width: 1px;
+        height: 28px;
+        margin: 0 2px;
+        background: #ece9e6;
+        flex-shrink: 0;
       }
     }
 

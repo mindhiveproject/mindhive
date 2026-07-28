@@ -766,8 +766,15 @@
 				"teacherCuratedHint": ""
 			},
 			"algorithmHint": "",
+			"associatedNetwork": "",
+			"changeNetwork": "",
+			"collapsedNetworkHint": "",
 			"collapseLabel": "",
+			"createFailed": "",
+			"createForAnotherNetwork": "",
+			"createNewRound": "",
 			"createRound": "",
+			"creating": "",
 			"expandLabel": "",
 			"fields": {
 				"algorithm": "",
@@ -799,7 +806,15 @@
 			},
 			"loading": "",
 			"manageMatches": "",
+			"networkModal": {
+				"cancel": "",
+				"continue": "",
+				"description": "",
+				"title": ""
+			},
+			"networkRequired": "",
 			"newRound": "",
+			"newRoundTitle": "",
 			"noLibraryQuestions": "",
 			"noOpportunitiesInNetwork": "",
 			"noRoundForNetwork": "",
@@ -813,6 +828,8 @@
 				"selectedOpportunitiesWithCount": "",
 				"settings": ""
 			},
+			"pickNetworkHint": "",
+			"pickNetworkLabel": "",
 			"revertToDraftConfirm": "",
 			"reviewOpportunitiesEmpty": "",
 			"roundSwitcherLabel": "",
