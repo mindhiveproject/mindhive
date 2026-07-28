@@ -1,5 +1,6 @@
 import { saveAs } from "file-saver";
 
+import { getPrimaryTemplateBoardId } from "../../../lib/classTemplateBoards";
 import { GRAPHQL_ENDPOINT, convertToCSV } from "./exportUtils";
 
 const NETWORKS_QUERY = `
@@ -44,6 +45,9 @@ const METRICS_QUERY = `
         id
       }
       templateProposal {
+        id
+      }
+      classTemplateBoards {
         id
       }
       studies {
@@ -239,7 +243,7 @@ const computeClassMetrics = (classData) => {
     mentors: classData?.mentors?.length || 0,
     assignments: classData?.assignments?.length || 0,
     resources: classData?.resources?.length || 0,
-    hasTemplateBoard: classData?.templateProposal?.id ? 1 : 0,
+    hasTemplateBoard: getPrimaryTemplateBoardId(classData) ? 1 : 0,
     dataJournals: journalIds.size,
     studies_total: studies.length,
     studies_participants_total: studies.reduce(

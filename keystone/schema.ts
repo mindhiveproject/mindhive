@@ -13,6 +13,7 @@ import { ProfileImage } from "./schemas/ProfileImage";
 import { Permission } from "./schemas/Permission";
 import { Class } from "./schemas/Class";
 import { ClassNetwork } from "./schemas/ClassNetwork";
+import { NetworkInvite } from "./schemas/NetworkInvite";
 import { Report } from "./schemas/Report";
 import { Journal } from "./schemas/Journal";
 import { Post } from "./schemas/Post";
@@ -64,6 +65,7 @@ import { FormDefinition } from "./schemas/FormDefinition";
 import { FormCard } from "./schemas/FormCard";
 import { FormField } from "./schemas/FormField";
 import { OpportunityReviewNote } from "./schemas/OpportunityReviewNote";
+import { Milestone } from "./schemas/Milestone";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -89,6 +91,7 @@ export const lists: Lists = {
   Permission,
   Class,
   ClassNetwork,
+  NetworkInvite,
   Report,
   Journal,
   Post,
@@ -140,4 +143,5 @@ export const lists: Lists = {
   FormCard,
   FormField,
   OpportunityReviewNote,
+  Milestone,
 };

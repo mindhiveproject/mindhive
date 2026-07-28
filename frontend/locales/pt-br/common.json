@@ -26,12 +26,20 @@
 			"invalidNetwork": "",
 			"joinFailed": "",
 			"joining": "",
+			"requestBannerDescription": "",
+			"requestBannerTitle": "",
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
 		"email": "E-mail",
 		"forgotPassword": "Esqueceu sua senha?",
 		"login": "Conecte-se",
+		"networkInvite": {
+			"acceptFailed": "",
+			"bannerDescription": "",
+			"bannerTitle": "",
+			"invalid": ""
+		},
 		"password": "Senha",
 		"requestReset": "Solicitar redefinição",
 		"username": "Nome de usuário"
@@ -316,6 +324,12 @@
 		"languagePreferences": "Defina suas preferências de idioma",
 		"languages": "Idiomas",
 		"quickLinks": "Links rápidos",
+		"sponsorSetup": {
+			"description": "",
+			"restoreButton": "",
+			"title": "",
+			"visibleNote": ""
+		},
 		"title": "Configurações",
 		"username": "Nome de usuário"
 	},

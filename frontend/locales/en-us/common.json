@@ -21,17 +21,25 @@
 		"checkYourMail": "Check your email",
 		"classNetworkInvite": {
 			"alreadyMember": "You are already a member of this class network.",
-			"bannerDescription": "Log in to join this class network and connect with teachers and students.",
+			"bannerDescription": "Log in to join this class network.",
 			"bannerTitle": "You're joining {{networkTitle}}",
 			"invalidNetwork": "This class network invite link is invalid or has expired.",
 			"joinFailed": "We could not add you to this class network. Please try again.",
-			"joining": "Joining class network…",
+			"joining": "Processing class network membership…",
+			"requestBannerDescription": "Log in to send a membership request to this class network.",
+			"requestBannerTitle": "You're requesting to join {{networkTitle}}",
 			"signUpAsSponsor": "Sign up as a sponsor instead",
-			"wrongRole": "This invite is for sponsors. Sign up as a sponsor or use a sponsor account to join."
+			"wrongRole": "Class-network membership is available to teachers, mentors, sponsors, and scientists."
 		},
 		"email": "Email",
 		"forgotPassword": "Forgot your password?",
 		"login": "Login",
+		"networkInvite": {
+			"acceptFailed": "We could not accept this network invitation. Check that you are using the invited account.",
+			"bannerDescription": "Log in or sign up with the invited email address to accept.",
+			"bannerTitle": "You're invited to join {{networkTitle}}",
+			"invalid": "This network invitation is invalid or is no longer pending."
+		},
 		"password": "Password",
 		"requestReset": "Request reset",
 		"username": "Username"
@@ -316,6 +324,12 @@
 		"languagePreferences": "Set your language preferences",
 		"languages": "Languages",
 		"quickLinks": "Quick Links",
+		"sponsorSetup": {
+			"description": "Show the profile, organization, and opportunity setup tips on your Home page.",
+			"restoreButton": "Show setup tips on Home",
+			"title": "Sponsor setup tips",
+			"visibleNote": "Setup tips are currently visible on your Home page."
+		},
 		"title": "Settings",
 		"username": "Username"
 	},

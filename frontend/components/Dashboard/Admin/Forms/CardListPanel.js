@@ -272,6 +272,17 @@ export default function CardListPanel({
     if (newId) onSelect({ type: "card", id: newId });
   };
 
+  // Which json bucket new fields default to depends on the target
+  // entity. Review has only `content`; Profile / Opportunity /
+  // Organization all have `extraDetails`. Picking the wrong default
+  // trips the pre-publish validator, so we branch on surface.
+  const defaultBucket = (() => {
+    if (definition?.surface === "feedback") return "content";
+    if (typeof definition?.key === "string" && definition.key.startsWith("review_"))
+      return "content";
+    return "extraDetails";
+  })();
+
   const addField = async (card) => {
     const fields = card.fields || [];
     const res = await createField({
@@ -284,7 +295,7 @@ export default function CardListPanel({
           isRequired: false,
           order: fields.length,
           storage: "json_bucket",
-          storageBucket: "extraDetails",
+          storageBucket: defaultBucket,
           storageEntity: "self",
         },
       },

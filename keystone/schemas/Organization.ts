@@ -51,10 +51,29 @@ export const Organization = list({
     extraDetails: json(),
 
     // Many-to-many: a Profile can belong to several Orgs, an Org has many
-    // members. Any member can edit the Org for now (no owner gating yet).
+    // members. Membership is distinct from administration.
     members: relationship({
       ref: "Profile.organizations",
       many: true,
+    }),
+
+    // Organization admins can manage the org profile. New organizations default
+    // to the creating profile as an admin.
+    admins: relationship({
+      ref: "Profile.adminOfOrganizations",
+      many: true,
+      hooks: {
+        async resolveInput({ context, operation, inputData }) {
+          if (
+            operation === "create" &&
+            !inputData.admins &&
+            context.session?.itemId
+          ) {
+            return { connect: [{ id: context.session.itemId }] };
+          }
+          return inputData.admins;
+        },
+      },
     }),
 
     // One-to-many: each Opportunity has a single sponsoring Organization;
@@ -106,26 +125,31 @@ export const Organization = list({
     // the creator profile (e.g. from /signup/sponsor?classNetwork=...).
     async afterOperation({ operation, item, context }) {
       if (operation !== "create" || !item?.id) return;
+      const orgId = String(item.id);
       try {
         const org = await context.sudo().query.Organization.findOne({
-          where: { id: item.id },
+          where: { id: orgId },
           query: `
             createdBy { id memberOfClassNetworks { id } }
             memberOfClassNetworks { id }
           `,
         });
         const creatorNetworks =
-          org?.createdBy?.memberOfClassNetworks?.map((n) => n.id) || [];
-        const existingIds = new Set(
-          (org?.memberOfClassNetworks || []).map((n) => n.id),
+          org?.createdBy?.memberOfClassNetworks?.map(
+            (n: { id: string }) => n.id,
+          ) || [];
+        const existingIds = new Set<string>(
+          (org?.memberOfClassNetworks || []).map((n: { id: string }) => n.id),
         );
-        const toConnect = creatorNetworks.filter((id) => !existingIds.has(id));
+        const toConnect = creatorNetworks.filter((id: string) =>
+          !existingIds.has(id),
+        );
         if (toConnect.length === 0) return;
         await context.sudo().query.Organization.updateOne({
-          where: { id: item.id },
+          where: { id: orgId },
           data: {
             memberOfClassNetworks: {
-              connect: toConnect.map((id) => ({ id })),
+              connect: toConnect.map((id: string) => ({ id })),
             },
           },
         });

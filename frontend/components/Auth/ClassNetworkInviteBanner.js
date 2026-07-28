@@ -53,28 +53,62 @@ const GLOBE_ICON = (
   />
 );
 
-export function ClassNetworkInviteBanner({ network }) {
+export function ClassNetworkInviteBanner({ network, invitation = false }) {
   const { t } = useTranslation("common");
 
   if (!network?.id) return null;
+  const isOpen = network?.settings?.membershipMode === "open";
 
   return (
     <Banner>
       {GLOBE_ICON}
       <div className="body">
         <strong>
-          {t(
-            "auth.classNetworkInvite.bannerTitle",
-            { networkTitle: network.title },
-            { default: "You're joining {{networkTitle}}" },
-          )}
+          {invitation
+            ? t(
+                "auth.networkInvite.bannerTitle",
+                { networkTitle: network.title },
+                { default: "You're invited to join {{networkTitle}}" }
+              )
+            : isOpen
+            ? t(
+                "auth.classNetworkInvite.bannerTitle",
+                { networkTitle: network.title },
+                { default: "You're joining {{networkTitle}}" }
+              )
+            : t(
+                "auth.classNetworkInvite.requestBannerTitle",
+                { networkTitle: network.title },
+                { default: "You're requesting to join {{networkTitle}}" }
+              )}
         </strong>
         <span>
           {network.description ||
-            t("auth.classNetworkInvite.bannerDescription", {}, {
-              default:
-                "Log in to join this class network and connect with teachers and students.",
-            })}
+            (invitation
+              ? t(
+                  "auth.networkInvite.bannerDescription",
+                  {},
+                  {
+                    default:
+                      "Log in or sign up with the invited email address to accept.",
+                  }
+                )
+              : isOpen
+              ? t(
+                  "auth.classNetworkInvite.bannerDescription",
+                  {},
+                  {
+                    default: "Log in to join this class network.",
+                  }
+                )
+              : t(
+                  "auth.classNetworkInvite.requestBannerDescription",
+                  {},
+                  {
+                    default:
+                      "Log in to send a membership request to this class network.",
+                  }
+                ))}
         </span>
       </div>
     </Banner>

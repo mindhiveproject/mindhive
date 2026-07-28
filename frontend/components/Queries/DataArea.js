@@ -9,9 +9,11 @@ export const GET_DATA_JOURNALS = gql`
         id
         title
         description
-        datasources {
+        datasources(orderBy: [{ updatedAt: desc }]) {
           id
           dataOrigin
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt

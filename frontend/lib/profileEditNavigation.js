@@ -6,6 +6,8 @@ export function resolveProfileType(query, user) {
 export function resolveLinkedOrganization(user) {
   const fromMembership = (user?.organizations || [])[0];
   if (fromMembership?.id) return fromMembership;
+  const fromAdmin = (user?.adminOfOrganizations || [])[0];
+  if (fromAdmin?.id) return fromAdmin;
   return (user?.organizationsCreated || [])[0] || null;
 }
 

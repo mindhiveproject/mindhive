@@ -33,14 +33,14 @@ export function normalizeCurriculumType(value) {
 }
 
 export function getCurriculumType(project) {
-  const fromClass = project?.usedInClass?.settings?.curriculumType;
-  if (fromClass && VALID_CURRICULUM_TYPES.has(fromClass)) {
-    return fromClass;
-  }
-
   const fromBoard = project?.settings?.curriculumType;
   if (fromBoard && VALID_CURRICULUM_TYPES.has(fromBoard)) {
     return fromBoard;
+  }
+
+  const fromClass = project?.usedInClass?.settings?.curriculumType;
+  if (fromClass && VALID_CURRICULUM_TYPES.has(fromClass)) {
+    return fromClass;
   }
 
   return DEFAULT_CURRICULUM_TYPE;

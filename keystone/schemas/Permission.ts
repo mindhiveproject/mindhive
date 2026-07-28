@@ -34,5 +34,9 @@ export const Permission = list({
         itemView: { fieldMode: "read" },
       },
     }),
+    reviewableMilestones: relationship({
+      ref: "Milestone.canReview",
+      many: true,
+    }),
   },
 });

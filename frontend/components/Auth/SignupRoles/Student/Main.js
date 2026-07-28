@@ -13,6 +13,8 @@ export default function StudentMain({
   submitBtnName,
   loading,
   error,
+  turnstileRef,
+  onTurnstileVerify,
 }) {
   const { code, i, action } = query;
 
@@ -35,6 +37,8 @@ export default function StudentMain({
             error={error}
             classCode={code}
             invitationCode={i}
+            turnstileRef={turnstileRef}
+            onTurnstileVerify={onTurnstileVerify}
           />
         </div>
       );

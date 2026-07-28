@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { Dropdown } from "semantic-ui-react";
 
+import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import ProposalCardSelector from "./ProposalSelector";
 
 export default function StudyDescription({
@@ -17,29 +17,42 @@ export default function StudyDescription({
   const proposals = study?.proposal || [];
 
   const proposalDropdownOptions = proposals.map((proposal) => ({
-    key: proposal.id,
-    text: proposal.title,
     value: proposal.id,
+    label: proposal.title,
   }));
 
   return (
-    <div className="studyDescription">
-      <h2>{t("descriptionBuilder.title", "Study description")}</h2>
-      <p>
-        {t(
-          "descriptionBuilder.internalUse",
-          "This is for internal use only. Participants won't see this description."
-        )}
-      </p>
-      <div className="selector">
-        <p>{t("descriptionBuilder.selectSource", "Select a source")}</p>
-        <Dropdown
-          placeholder={t("descriptionBuilder.linkToProposal", "Link to proposal")}
-          fluid
-          selection
+    <div className="settingsSection studyDescription">
+      <div className="settingsSectionHeader">
+        <h2>
+          {t("descriptionBuilder.title", {}, {
+            default: "Study description",
+          })}
+        </h2>
+        <p className="settingsSectionNote">
+          {t("descriptionBuilder.internalUse", {}, {
+            default:
+              "This is for internal use only. Participants won't see this description.",
+          })}
+        </p>
+      </div>
+
+      <div className="settingsField">
+        <label className="settingsFieldLabel">
+          {t("descriptionBuilder.selectSource", {}, {
+            default: "Select a source",
+          })}
+        </label>
+        <DropdownSelect
+          value={proposalId || ""}
+          onChange={setProposalId}
           options={proposalDropdownOptions}
-          onChange={(event, data) => setProposalId(data?.value)}
-          value={proposalId}
+          placeholder={t("descriptionBuilder.linkToProposal", {}, {
+            default: "Link to proposal",
+          })}
+          ariaLabel={t("descriptionBuilder.selectSource", {}, {
+            default: "Select a source",
+          })}
         />
       </div>
 

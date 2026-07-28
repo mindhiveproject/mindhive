@@ -2,18 +2,28 @@ import Form from "./Form";
 import useForm from "../../../lib/useForm";
 import { useRouter } from "next/dist/client/router";
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { SIGNUP_MUTATION, SIGNIN_MUTATION } from "../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { GET_INVITE_BY_TOKEN } from "../../Queries/Organization";
-import { GET_NETWORK } from "../../Queries/ClassNetwork";
 import {
   ACCEPT_ORG_INVITE,
   UPDATE_ORGANIZATION,
 } from "../../Mutations/Organization";
+import {
+  acceptNetworkInviteAfterAuth,
+  completeClassNetworkInviteAfterAuth,
+  GET_NETWORK_INVITE_CONTEXT,
+} from "../../../lib/joinClassNetwork";
+import { useClassNetworkByRef } from "../../../lib/useClassNetworkByRef";
+import {
+  ClassNetworkInviteBanner,
+  ClassNetworkInviteErrorBanner,
+} from "../ClassNetworkInviteBanner";
 
 import { UserContext } from "../../Global/Authorized";
 import StudentMain from "./Student/Main";
@@ -51,12 +61,14 @@ const InviteBanner = styled.div`
 `;
 
 export default function RoleSignup(query) {
+  const { t } = useTranslation("common");
   const {
     role,
     redirectType,
     redirectTo,
     invite: inviteToken,
     classNetwork: classNetworkId,
+    networkInvite: networkInviteToken,
   } = query;
 
   const user = useContext(UserContext);
@@ -80,26 +92,54 @@ export default function RoleSignup(query) {
   const invite = inviteData?.organizationInvites?.[0];
   const isInvitePending = invite?.status === "pending";
 
-  const { data: networkData, loading: networkLoading } = useQuery(GET_NETWORK, {
-    variables: { id: classNetworkId || "" },
+  const { data: networkInviteData, loading: networkInviteLoading } = useQuery(
+    GET_NETWORK_INVITE_CONTEXT,
+    {
+      variables: { token: networkInviteToken || "" },
+      skip: !networkInviteToken,
+      fetchPolicy: "cache-and-network",
+    }
+  );
+  const networkInvite = networkInviteData?.networkInviteContext;
+  const isNetworkInvitePending =
+    networkInvite?.id && networkInvite?.status === "pending";
+  const isNetworkInviteInvalid =
+    !!networkInviteToken && !networkInviteLoading && !isNetworkInvitePending;
+
+  const {
+    classNetwork,
+    loading: networkLoading,
+  } = useClassNetworkByRef(classNetworkId, {
     skip: !classNetworkId || role !== "sponsor",
     fetchPolicy: "cache-and-network",
   });
-  const classNetwork = networkData?.classNetwork;
   const isClassNetworkValid = !!classNetwork?.id;
   const isClassNetworkInvalid =
-    role === "sponsor" && classNetworkId && !networkLoading && !isClassNetworkValid;
+    role === "sponsor" &&
+    classNetworkId &&
+    !networkLoading &&
+    !isClassNetworkValid;
 
   // Pre-fill the email field once the invite resolves (only if user hasn't
   // started typing yet, so we never overwrite their input).
   useEffect(() => {
-    if (isInvitePending && invite?.email && !inputs?.email) {
-      handleMultipleUpdate({ email: invite.email });
+    const invitedEmail = isInvitePending ? invite?.email : networkInvite?.email;
+    if (invitedEmail && !inputs?.email) {
+      handleMultipleUpdate({ email: invitedEmail });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [invite?.id]);
+  }, [invite?.id, networkInvite?.id]);
 
   const [signup, { data, loading, error }] = useMutation(SIGNUP_MUTATION);
+
+  // Cloudflare Turnstile. The token is single-use, so we clear it and reset the
+  // widget whenever signup fails, otherwise a retry replays a spent token.
+  const turnstileRef = useRef(null);
+  const [turnstileToken, setTurnstileToken] = useState(null);
+  const [signupError, setSignupError] = useState(null);
+  const handleTurnstileVerify = useCallback((token) => {
+    setTurnstileToken(token);
+  }, []);
 
   const [signin, { data: signinData, loading: signinLoading }] = useMutation(
     SIGNIN_MUTATION,
@@ -114,7 +154,7 @@ export default function RoleSignup(query) {
 
   async function handleSubmit({ e, classCode }) {
     e.preventDefault();
-    if (isClassNetworkInvalid) return;
+    if (isClassNetworkInvalid || isNetworkInviteInvalid) return;
     // Normalize email to lowercase
     const normalizedEmail = inputs.email?.toLowerCase().trim();
     // Sponsor signup grants the SPONSOR permission. The user later picks
@@ -122,27 +162,26 @@ export default function RoleSignup(query) {
     // Individual on /dashboard/profile/edit?page=type. For Connect role
     // gating, useConnectRole maps SPONSOR to mentor capabilities so sponsors
     // can create opportunities, see "My matched students", etc.
-    await signup({
-      variables: {
-        input: {
-          ...inputs,
+    setSignupError(null);
+    try {
+      await signup({
+        variables: {
+          username: inputs.username,
           email: normalizedEmail,
-          permissions: { connect: { name: role?.toUpperCase() } },
-          studentIn:
-            role === "student" && classCode
-              ? { connect: { code: classCode } }
-              : null,
-          mentorIn:
-            role === "mentor" && classCode
-              ? { connect: { code: classCode } }
-              : null,
-          memberOfClassNetworks:
-            role === "sponsor" && isClassNetworkValid
-              ? { connect: [{ id: classNetworkId }] }
-              : null,
+          password: inputs.password,
+          role,
+          classCode: classCode || null,
+          info: inputs.info || {},
+          turnstileToken,
         },
-      },
-    });
+      });
+    } catch (err) {
+      // Turnstile tokens are single-use — reset so the visitor can retry.
+      setSignupError(err);
+      setTurnstileToken(null);
+      if (turnstileRef.current) turnstileRef.current.reset();
+      return;
+    }
     // log in user
     const login = await signin({
       variables: {
@@ -151,8 +190,7 @@ export default function RoleSignup(query) {
       },
     });
 
-    const newProfileId =
-      login?.data?.authenticateProfileWithPassword?.item?.id;
+    const newProfileId = login?.data?.authenticateProfileWithPassword?.item?.id;
 
     // Token-based invite acceptance: if the signup URL carried a valid,
     // still-pending invite token, connect the brand-new user to that org and
@@ -177,13 +215,6 @@ export default function RoleSignup(query) {
               id: pendingInvite.organization.id,
               input: {
                 members: { connect: [{ id: newProfileId }] },
-                ...(classNetworkId && role === "sponsor"
-                  ? {
-                      memberOfClassNetworks: {
-                        connect: [{ id: classNetworkId }],
-                      },
-                    }
-                  : {}),
               },
             },
           });
@@ -200,6 +231,26 @@ export default function RoleSignup(query) {
       }
     }
 
+    if (newProfileId && networkInviteToken && isNetworkInvitePending) {
+      await acceptNetworkInviteAfterAuth({
+        apolloClient,
+        token: networkInviteToken,
+        router,
+      });
+      return;
+    }
+
+    if (newProfileId && classNetworkId && isClassNetworkValid) {
+      await completeClassNetworkInviteAfterAuth({
+        apolloClient,
+        classNetworkId,
+        redirectType,
+        redirectTo,
+        router,
+      });
+      return;
+    }
+
     if (!redirectType && newProfileId) {
       router.push({
         pathname: "/dashboard",
@@ -214,32 +265,34 @@ export default function RoleSignup(query) {
   }
 
   // Banner shown above the form when the URL carries an invite token.
-  const inviteBanner = isInvitePending && invite ? (
-    <InviteBanner>
-      <Icon name="building" size="large" style={{ marginTop: 2 }} />
-      <div className="body">
-        <strong>
-          You&apos;ve been invited to join {invite.organization?.name || "an organization"}
-        </strong>
-        <span>
-          {invite.invitedBy?.firstName || invite.invitedBy?.username
-            ? `${invite.invitedBy?.firstName || invite.invitedBy?.username} sent you this invite. `
-            : ""}
-          Sign up below and you&apos;ll be added to{" "}
-          {invite.organization?.name || "the organization"} automatically.
-        </span>
-      </div>
-    </InviteBanner>
-  ) : null;
+  const inviteBanner =
+    isInvitePending && invite ? (
+      <InviteBanner>
+        <Icon name="building" size="large" style={{ marginTop: 2 }} />
+        <div className="body">
+          <strong>
+            You&apos;ve been invited to join{" "}
+            {invite.organization?.name || "an organization"}
+          </strong>
+          <span>
+            {invite.invitedBy?.firstName || invite.invitedBy?.username
+              ? `${
+                  invite.invitedBy?.firstName || invite.invitedBy?.username
+                } sent you this invite. `
+              : ""}
+            Sign up below and you&apos;ll be added to{" "}
+            {invite.organization?.name || "the organization"} automatically.
+          </span>
+        </div>
+      </InviteBanner>
+    ) : null;
 
   const classNetworkBanner =
     role === "sponsor" && isClassNetworkValid ? (
       <InviteBanner>
         <Icon name="sitemap" size="large" style={{ marginTop: 2 }} />
         <div className="body">
-          <strong>
-            You&apos;re signing up to join {classNetwork.title}
-          </strong>
+          <strong>You&apos;re signing up to join {classNetwork.title}</strong>
           <span>
             {classNetwork.description
               ? classNetwork.description
@@ -249,24 +302,51 @@ export default function RoleSignup(query) {
       </InviteBanner>
     ) : null;
 
-  const classNetworkError =
-    isClassNetworkInvalid ? (
-      <InviteBanner style={{ background: "#fef2f2", borderColor: "#fecaca", color: "#991b1b" }}>
-        <Icon name="warning sign" size="large" style={{ marginTop: 2, color: "#991b1b" }} />
-        <div className="body">
-          <strong style={{ color: "#991b1b" }}>Invalid class network link</strong>
-          <span style={{ color: "#991b1b" }}>
-            This signup link references a class network that could not be found.
-            Please ask your teacher for a new link.
-          </span>
-        </div>
-      </InviteBanner>
-    ) : null;
+  const classNetworkError = isClassNetworkInvalid ? (
+    <InviteBanner
+      style={{
+        background: "#fef2f2",
+        borderColor: "#fecaca",
+        color: "#991b1b",
+      }}
+    >
+      <Icon
+        name="warning sign"
+        size="large"
+        style={{ marginTop: 2, color: "#991b1b" }}
+      />
+      <div className="body">
+        <strong style={{ color: "#991b1b" }}>Invalid class network link</strong>
+        <span style={{ color: "#991b1b" }}>
+          This signup link references a class network that could not be found.
+          Please ask your teacher for a new link.
+        </span>
+      </div>
+    </InviteBanner>
+  ) : null;
+
+  const networkInviteBanner = isNetworkInvitePending ? (
+    <ClassNetworkInviteBanner network={networkInvite.classNetwork} invitation />
+  ) : null;
+  const networkInviteError = isNetworkInviteInvalid ? (
+    <ClassNetworkInviteErrorBanner
+      message={t(
+        "auth.networkInvite.invalid",
+        {},
+        {
+          default:
+            "This network invitation is invalid or is no longer pending.",
+        }
+      )}
+    />
+  ) : null;
 
   if (role === "student" || role === "mentor") {
     return (
       <StyledAuth>
         {inviteBanner}
+        {networkInviteBanner}
+        {networkInviteError}
         <StudentMain
           user={user}
           query={query}
@@ -276,7 +356,9 @@ export default function RoleSignup(query) {
           handleSubmit={handleSubmit}
           submitBtnName={"Create account"}
           loading={loading}
-          error={error}
+          error={signupError || error}
+          turnstileRef={turnstileRef}
+          onTurnstileVerify={handleTurnstileVerify}
         />
       </StyledAuth>
     );
@@ -287,6 +369,8 @@ export default function RoleSignup(query) {
       {inviteBanner}
       {classNetworkBanner}
       {classNetworkError}
+      {networkInviteBanner}
+      {networkInviteError}
       <h1>Sign up as a {role}</h1>
       <Form
         role={role}
@@ -295,8 +379,10 @@ export default function RoleSignup(query) {
         handleSubmit={handleSubmit}
         submitBtnName={"Create account"}
         loading={loading}
-        error={error}
-        submitDisabled={isClassNetworkInvalid}
+        error={signupError || error}
+        submitDisabled={isClassNetworkInvalid || isNetworkInviteInvalid}
+        turnstileRef={turnstileRef}
+        onTurnstileVerify={handleTurnstileVerify}
       />
     </StyledAuth>
   );

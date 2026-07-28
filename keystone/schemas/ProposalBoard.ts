@@ -128,6 +128,7 @@ export const ProposalBoard = list({
     isMain: checkbox({ isFilterable: true }),
     isHidden: checkbox({ isFilterable: true }),
     submitProposalStatus: select({
+      label: "Submit proposal status (legacy)",
       options: [
         { label: "Not started", value: "NOT_STARTED" },
         { label: "In progress", value: "IN_PROGRESS" },
@@ -136,8 +137,12 @@ export const ProposalBoard = list({
       ],
       defaultValue: "NOT_STARTED",
     }),
-    submitProposalOpenForComments: checkbox({ isFilterable: true }),
+    submitProposalOpenForComments: checkbox({
+      label: "Submit proposal open for comments (legacy)",
+      isFilterable: true,
+    }),
     peerFeedbackStatus: select({
+      label: "Peer feedback status (legacy)",
       options: [
         { label: "Not started", value: "NOT_STARTED" },
         { label: "In progress", value: "IN_PROGRESS" },
@@ -146,8 +151,12 @@ export const ProposalBoard = list({
       ],
       defaultValue: "NOT_STARTED",
     }),
-    peerFeedbackOpenForComments: checkbox({ isFilterable: true }),
+    peerFeedbackOpenForComments: checkbox({
+      label: "Peer feedback open for comments (legacy)",
+      isFilterable: true,
+    }),
     projectReportStatus: select({
+      label: "Project report status (legacy)",
       options: [
         { label: "Not started", value: "NOT_STARTED" },
         { label: "In progress", value: "IN_PROGRESS" },
@@ -156,7 +165,11 @@ export const ProposalBoard = list({
       ],
       defaultValue: "NOT_STARTED",
     }),
-    projectReportOpenForComments: checkbox({ isFilterable: true }),
+    projectReportOpenForComments: checkbox({
+      label: "Project report open for comments (legacy)",
+      isFilterable: true,
+    }),
+    milestoneStatus: json(),
     checklist: json(),
     settings: json(),
     creator: relationship({
@@ -179,12 +192,20 @@ export const ProposalBoard = list({
       ref: "ProposalSection.board",
       many: true,
     }),
+    templateMilestones: relationship({
+      ref: "Milestone.templateBoard",
+      many: true,
+    }),
     reviews: relationship({
       ref: "Review.proposal",
       many: true,
     }),
     templateForClasses: relationship({
       ref: "Class.templateProposal",
+      many: true,
+    }),
+    templatesForClass: relationship({
+      ref: "Class.classTemplateBoards",
       many: true,
     }),
     usedInClass: relationship({

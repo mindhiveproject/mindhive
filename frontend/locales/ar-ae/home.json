@@ -35,6 +35,22 @@
 		"walkthroughTutorial": "دليل إرشادي"
 	},
 	"info": "مزيد من المعلومات",
+	"networkAppointmentRequests": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
+	"networkPendingInvites": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"participantID": "معرف المشارك",
 	"permissions": "الأذونات",
 	"preview": "معاينة",
@@ -51,6 +67,69 @@
 		"profile": "حساب تعريفي",
 		"settings": "إعدادات"
 	},
+	"sponsorOnboarding": {
+		"dismiss": "",
+		"manage": "",
+		"network": {
+			"allJoined": "",
+			"cancelError": "",
+			"cancelling": "",
+			"cancelRequest": "",
+			"close": "",
+			"empty": "",
+			"joinButton": "",
+			"joinError": "",
+			"joining": "",
+			"joinSuccess": "",
+			"loadError": "",
+			"loading": "",
+			"modalDescription": "",
+			"modalTitle": "",
+			"pendingRequest": "",
+			"requestSuccess": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"untitled": ""
+		},
+		"opportunity": {
+			"createButton": "",
+			"createTitle": "",
+			"description": "",
+			"done": "",
+			"locked": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"viewButton": "",
+			"viewTitle": ""
+		},
+		"organization": {
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"setupButton": "",
+			"setupTitle": "",
+			"stepLabel": "",
+			"title": ""
+		},
+		"profile": {
+			"completeTitle": "",
+			"description": "",
+			"done": "",
+			"editButton": "",
+			"editTitle": "",
+			"openButton": "",
+			"readyTitle": "",
+			"setupButton": "",
+			"setupTitle": ""
+		},
+		"status": {
+			"needsSetup": "",
+			"ready": ""
+		},
+		"subtitle": "",
+		"title": ""
+	},
 	"surveys": "الاستطلاعات",
 	"tasks": "المهام",
 	"tasksAndSurveysDescriptions": "وصف المهام والاستطلاعات",
@@ -58,8 +137,16 @@
 	"termsCondition": "الشروط والأحكام",
 	"updateProfileDescription": "أنت الآن عضو في مجتمع MindHive! حدّث ملفك الشخصي بالنقر هنا.",
 	"updates": {
+		"archive": "",
+		"archiveAria": "",
+		"archiveEmpty": "",
+		"archiveModalTitle": "",
+		"dismiss": "",
 		"latestUpdates": "آخر التحديثات",
-		"noUpdate": "لا توجد تحديثات في الوقت الراهن."
+		"noUpdate": "لا توجد تحديثات في الوقت الراهن.",
+		"open": "",
+		"show": "",
+		"unreadCount": ""
 	},
 	"walkthroughs": {
 		"availableTours": "الجولات المتاحة:",

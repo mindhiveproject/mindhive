@@ -5,6 +5,9 @@ export default function Widget({
   openComponentModal,
   openModal,
   openStudyPreview,
+  onBeforeCanvasMutation,
+  onAfterCanvasMutation,
+  onModelReplaced,
 }) {
   if (engine) {
     return (
@@ -13,6 +16,9 @@ export default function Widget({
         openComponentModal={openComponentModal}
         openModal={openModal}
         openStudyPreview={openStudyPreview}
+        onBeforeCanvasMutation={onBeforeCanvasMutation}
+        onAfterCanvasMutation={onAfterCanvasMutation}
+        onModelReplaced={onModelReplaced}
       />
     );
   }

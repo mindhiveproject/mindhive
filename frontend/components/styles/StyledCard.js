@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { getTaskTypeColor } from "../../lib/taskTypeColors";
+
 export const StyledStudyCard = styled.div`
   display: grid;
   background: #ffffff;
@@ -197,14 +199,7 @@ export const StyledTaskCard = styled.div`
   }
 
   border-top: 8px solid;
-  border-top-color: ${(props) =>
-    props.taskType === "TASK"
-      ? "#64c9e2"
-      : props.taskType === "SURVEY"
-      ? "#28619e"
-      : props.taskType === "BLOCK"
-      ? "#ffc7c3"
-      : "#007c70"};
+  border-top-color: ${(props) => getTaskTypeColor(props.taskType)};
 
   .addBlock {
     margin: 0px 10px;

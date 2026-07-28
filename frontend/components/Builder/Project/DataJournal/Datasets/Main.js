@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { useState, useMemo, useEffect, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import { buildDatasourcesWhereForScope } from "../../../../../lib/dataJournalDatasources";
+import { buildDatasourcesWhereForScope, sortDatasourcesByMostRecent } from "../../../../../lib/dataJournalDatasources";
 import { useDataJournal } from "../Context/DataJournalContext";
 import { useUserDatasetClassContext } from "../Hooks/useUserDatasetClassContext";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
@@ -19,6 +19,7 @@ import {
 } from "../styles/StyledDataJournal";
 
 const SCOPE_INTRO_KEYS = {
+  me: "dataJournal.datasets.scopes.intro.me",
   uploaded: "dataJournal.datasets.scopes.intro.uploaded",
   sharedWithMe: "dataJournal.datasets.scopes.intro.sharedWithMe",
   myClass: "dataJournal.datasets.scopes.intro.myClass",
@@ -27,6 +28,7 @@ const SCOPE_INTRO_KEYS = {
 };
 
 const SCOPE_INTRO_DEFAULTS = {
+  me: "All datasets you can see — uploaded, shared with you, from your class, class network, or public.",
   uploaded: "Datasets you uploaded.",
   sharedWithMe: "Datasets others shared with you as a collaborator.",
   myClass: "Datasets linked to studies or projects in your classes.",
@@ -36,6 +38,7 @@ const SCOPE_INTRO_DEFAULTS = {
 };
 
 const SCOPE_EMPTY_KEYS = {
+  me: "dataJournal.datasets.scopes.empty.me",
   uploaded: "dataJournal.datasets.scopes.empty.uploaded",
   sharedWithMe: "dataJournal.datasets.scopes.empty.sharedWithMe",
   myClass: "dataJournal.datasets.scopes.empty.myClass",
@@ -44,6 +47,7 @@ const SCOPE_EMPTY_KEYS = {
 };
 
 const SCOPE_EMPTY_DEFAULTS = {
+  me: "No datasets available to you yet.",
   uploaded: "No uploaded datasets yet.",
   sharedWithMe: "No datasets have been shared with you.",
   myClass: "No datasets from your classes yet.",
@@ -88,10 +92,13 @@ export default function Datasets() {
 
   const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
     variables: { where: datasourcesWhere },
-    skip: classesLoading && (datasetScope === "myClass" || datasetScope === "classNetwork"),
+    skip: classesLoading && (datasetScope === "myClass" || datasetScope === "classNetwork" || datasetScope === "me"),
   });
 
-  const datasources = data?.datasources || [];
+  const datasources = useMemo(
+    () => sortDatasourcesByMostRecent(data?.datasources),
+    [data?.datasources],
+  );
   const [showAddDataset, setShowAddDataset] = useState(false);
   const [editingDataset, setEditingDataset] = useState(null);
   const [viewingDatasetId, setViewingDatasetId] = useState(null);
@@ -173,7 +180,7 @@ export default function Datasets() {
     if (newId) setViewingDatasetId(newId);
   };
 
-  const isListLoading = loading || (classesLoading && (datasetScope === "myClass" || datasetScope === "classNetwork"));
+  const isListLoading = loading || (classesLoading && (datasetScope === "myClass" || datasetScope === "classNetwork" || datasetScope === "me"));
 
   if (isListLoading) {
     return (

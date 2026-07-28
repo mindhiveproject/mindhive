@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
+import clsx from "clsx";
+import styled from "styled-components";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -11,6 +13,149 @@ import {
   formatDateShort,
   isExpired,
 } from "../../Connect/Rounds/roundFormConfig";
+
+const INFO_HIGHLIGHT_DISMISSED_KEY =
+  "mh.classMatchingRound.infoHighlightDismissed";
+
+function readDismissedHighlights() {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(INFO_HIGHLIGHT_DISMISSED_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeDismissedHighlights(next) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(
+      INFO_HIGHLIGHT_DISMISSED_KEY,
+      JSON.stringify(next),
+    );
+  } catch {
+    // Ignore quota / private-mode failures; in-memory state still updates.
+  }
+}
+
+function opportunityHighlightStamp(opportunity) {
+  return opportunity?.updatedAt || opportunity?.createdAt || "";
+}
+
+function isHighlightDismissed(map, opportunityId, kind, stamp) {
+  if (!opportunityId || !stamp) return false;
+  return map?.[opportunityId]?.[kind] === stamp;
+}
+
+function dismissHighlightInMap(map, opportunityId, kind, stamp) {
+  if (!opportunityId || !stamp) return map;
+  return {
+    ...map,
+    [opportunityId]: {
+      ...(map?.[opportunityId] || {}),
+      [kind]: stamp,
+    },
+  };
+}
+
+/** Self-contained so portaled InfoTooltip content keeps styles outside .classTabPage. */
+const OpportunityInfoTooltip = styled.div`
+  display: grid;
+  gap: 10px;
+  max-width: 320px;
+  text-align: left;
+
+  .matchingRoundOppInfoTooltipTitle {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+
+  .matchingRoundOppInfoTooltipDescription {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .matchingRoundOppInfoTooltipDivider {
+    height: 1px;
+    width: 100%;
+    background: var(--MH-Theme-Neutrals-Light-Grey, #e6e6e6);
+  }
+
+  .matchingRoundOppInfoTooltipRows {
+    display: grid;
+    gap: 6px;
+  }
+
+  .matchingRoundOppInfoTooltipRow {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 12px;
+    align-items: start;
+  }
+
+  .matchingRoundOppInfoTooltipLabel {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--MH-Theme-Neutrals-Grey-3, #888);
+    white-space: nowrap;
+  }
+
+  .matchingRoundOppInfoTooltipValue {
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 16px;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .matchingRoundOppInfoTooltipValueText {
+    min-width: 0;
+  }
+
+  .matchingRoundOppInfoTooltipValue.expired {
+    color: var(--MH-Theme-Error, #b3261e);
+  }
+
+  .matchingRoundOppInfoTooltipValue.appointmentRequested {
+    color: var(--MH-Theme-Error-Dark, #b9261a);
+  }
+
+  .matchingRoundOppInfoTooltipValue.returned {
+    color: var(--MH-Theme-Secondary-Dark, #3f288f);
+  }
+
+  .matchingRoundOppInfoTooltipDismiss {
+    flex: 0 0 auto;
+    padding: 0;
+    min-width: 0;
+    width: fit-content;
+    height: fit-content;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+`;
 
 const OPPORTUNITY_STATUS_KEYS = {
   draft: "draft",
@@ -25,6 +170,10 @@ const OPPORTUNITY_STATUS_KEYS = {
 
 function isReturnedOpportunity(opportunity) {
   return opportunity?.status === "returned";
+}
+
+function isAppointmentRequested(opportunity) {
+  return Boolean(opportunity?.requestsAppointment);
 }
 
 function displayName(profile) {
@@ -50,8 +199,48 @@ function formatDateTime(iso) {
   }
 }
 
-function OpportunityInfoContent({ opportunity, t }) {
-  const mentorName = displayName(opportunity.mentor);
+function TooltipMetaRow({ label, value, valueClassName, dismissLabel, onDismiss }) {
+  if (value == null || value === "") return null;
+  return (
+    <div className="matchingRoundOppInfoTooltipRow">
+      <span className="matchingRoundOppInfoTooltipLabel">{label}</span>
+      <span className={clsx("matchingRoundOppInfoTooltipValue", valueClassName)}>
+        <span className="matchingRoundOppInfoTooltipValueText">{value}</span>
+        {onDismiss ? (
+          <Button
+            variant="text"
+            className="matchingRoundOppInfoTooltipDismiss"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDismiss();
+            }}
+            style={{
+              padding: 0,
+              minWidth: 0,
+              width: "fit-content",
+              height: "fit-content",
+              fontSize: "12px",
+              fontWeight: 600,
+              lineHeight: "16px",
+              color: "var(--MH-Theme-Primary-Dark, #336f8a)",
+            }}
+          >
+            {dismissLabel}
+          </Button>
+        ) : null}
+      </span>
+    </div>
+  );
+}
+
+function OpportunityInfoContent({
+  opportunity,
+  t,
+  showAppointmentHighlight = false,
+  showReturnedHighlight = false,
+  onDismissAppointment,
+  onDismissReturned,
+}) {
   const from = formatDateShort(opportunity.availableFrom);
   const to = formatDateShort(opportunity.availableTo);
   const expired = isExpired(opportunity.availableTo);
@@ -62,59 +251,120 @@ function OpportunityInfoContent({ opportunity, t }) {
   const statusLabel = statusKey
     ? t(`opportunities.status.${statusKey}`, {}, { default: opportunity.status })
     : opportunity.status;
+  const returned = isReturnedOpportunity(opportunity);
+  const appointmentRequested = isAppointmentRequested(opportunity);
+  const hasAvailability = Boolean(from || to);
+  const availabilityValue = hasAvailability
+    ? `${from || "—"} → ${to || "—"}${
+        expired
+          ? ` · ${t("opportunities.matchingRound.expired", {}, {
+              default: "Expired",
+            })}`
+          : ""
+      }`
+    : null;
+  const teamSizeValue =
+    opportunity.teamSize > 1
+      ? t(
+          "opportunities.preview.teamSizeTeam",
+          { size: opportunity.teamSize },
+          { default: "Team of {{size}}" },
+        )
+      : t("opportunities.preview.teamSizeSolo", {}, { default: "Solo" });
+
+  const dismissLabel = t("opportunities.matchingRound.grid.dismissHighlight", {}, {
+    default: "Dismiss",
+  });
+  const hasHeaderMeta = Boolean(opportunity.status || appointmentRequested);
 
   return (
-    <div className="matchingRoundOppInfoTooltip">
+    <OpportunityInfoTooltip>
+      {opportunity.title ? (
+        <p className="matchingRoundOppInfoTooltipTitle">{opportunity.title}</p>
+      ) : null}
+
+      {hasHeaderMeta ? (
+        <div className="matchingRoundOppInfoTooltipRows">
+          {opportunity.status ? (
+            <TooltipMetaRow
+              label={t("opportunities.rowMeta.statusLabel", {}, {
+                default: "Status",
+              })}
+              value={statusLabel}
+              valueClassName={returned ? "returned" : undefined}
+              dismissLabel={dismissLabel}
+              onDismiss={
+                showReturnedHighlight && onDismissReturned
+                  ? onDismissReturned
+                  : undefined
+              }
+            />
+          ) : null}
+          {appointmentRequested ? (
+            <TooltipMetaRow
+              label={t("opportunities.rowMeta.flagLabel", {}, {
+                default: "Flag",
+              })}
+              value={t("opportunities.preview.requestsAppointment", {}, {
+                default: "Appointment requested",
+              })}
+              valueClassName="appointmentRequested"
+              dismissLabel={dismissLabel}
+              onDismiss={
+                showAppointmentHighlight && onDismissAppointment
+                  ? onDismissAppointment
+                  : undefined
+              }
+            />
+          ) : null}
+        </div>
+      ) : null}
+
       {opportunity.shortDescription ? (
-        <p>{opportunity.shortDescription}</p>
+        <>
+          <div className="matchingRoundOppInfoTooltipDivider" aria-hidden />
+          <p className="matchingRoundOppInfoTooltipDescription">
+            {opportunity.shortDescription}
+          </p>
+        </>
       ) : null}
-      {mentorName ? (
-        <p>
-          {t("opportunities.rowMeta.byMentor", { name: mentorName }, {
-            default: "By {{name}}",
+
+      <div className="matchingRoundOppInfoTooltipDivider" aria-hidden />
+
+      <div className="matchingRoundOppInfoTooltipRows">
+        <TooltipMetaRow
+          label={t("opportunities.rowMeta.availabilityLabel", {}, {
+            default: "Available",
           })}
-        </p>
-      ) : null}
-      <p>
-        {t(
-          "opportunities.rowMeta.capacity",
-          { count: opportunity.studentCapacity ?? 1 },
-          { default: "Capacity {{count}}" },
-        )}
-        {opportunity.teamSize > 1
-          ? ` · ${t(
-              "opportunities.rowMeta.teamOf",
-              { size: opportunity.teamSize },
-              { default: "Team of {{size}}" },
-            )}`
-          : ""}
-      </p>
-      {(from || to) && (
-        <p className={expired ? "expired" : undefined}>
-          {from || "—"} → {to || "—"}
-          {opportunity.timeCommitment ? ` · ${opportunity.timeCommitment}` : ""}
-        </p>
-      )}
-      {opportunity.status ? (
-        <p>
-          {statusLabel}
-          {expired
-            ? ` · ${t("opportunities.matchingRound.expired", {}, {
-                default: "Expired",
-              })}`
-            : ""}
-        </p>
-      ) : null}
-      {lastUpdated ? (
-        <p>
-          {t(
-            "opportunities.rowMeta.lastUpdated",
-            { date: lastUpdated },
-            { default: "Last updated {{date}}" },
-          )}
-        </p>
-      ) : null}
-    </div>
+          value={availabilityValue}
+          valueClassName={expired ? "expired" : undefined}
+        />
+        <TooltipMetaRow
+          label={t("opportunities.preview.timeCommitment", {}, {
+            default: "Time commitment",
+          })}
+          value={opportunity.timeCommitment}
+        />
+        <TooltipMetaRow
+          label={t("opportunities.rowMeta.capacityLabel", {}, {
+            default: "Capacity",
+          })}
+          value={opportunity.studentCapacity ?? 1}
+        />
+        <TooltipMetaRow
+          label={t("opportunities.preview.teamSize", {}, {
+            default: "Team size",
+          })}
+          value={teamSizeValue}
+        />
+        <TooltipMetaRow
+          label={t("opportunities.rowMeta.lastUpdatedLabel", {}, {
+            default: "Last updated",
+          })}
+          value={lastUpdated}
+        />
+      </div>
+    </OpportunityInfoTooltip>
   );
 }
 
@@ -131,6 +381,17 @@ export default function MatchingRoundOpportunitiesGrid({
 }) {
   const { t } = useTranslation("classes");
   const gridRef = useRef(null);
+  const [dismissedHighlights, setDismissedHighlights] = useState(() =>
+    readDismissedHighlights(),
+  );
+
+  const handleDismissHighlight = useCallback((opportunityId, kind, stamp) => {
+    setDismissedHighlights((prev) => {
+      const next = dismissHighlightInMap(prev, opportunityId, kind, stamp);
+      writeDismissedHighlights(next);
+      return next;
+    });
+  }, []);
 
   const rowData = useMemo(
     () =>
@@ -148,36 +409,79 @@ export default function MatchingRoundOpportunitiesGrid({
       if (!opportunity) return null;
 
       const returned = isReturnedOpportunity(opportunity);
-      const infoLabel = returned
-        ? t("opportunities.matchingRound.grid.columns.infoReturned", {}, {
-            default: "More information — returned",
-          })
-        : t("opportunities.matchingRound.grid.columns.info", {}, {
-            default: "More information",
-          });
+      const appointmentRequested = isAppointmentRequested(opportunity);
+      const stamp = opportunityHighlightStamp(opportunity);
+      const showAppointmentHighlight =
+        appointmentRequested &&
+        !isHighlightDismissed(
+          dismissedHighlights,
+          opportunity.id,
+          "appointment",
+          stamp,
+        );
+      const showReturnedHighlight =
+        returned &&
+        !isHighlightDismissed(
+          dismissedHighlights,
+          opportunity.id,
+          "returned",
+          stamp,
+        );
+
+      const infoLabelKey = showReturnedHighlight
+        ? "infoReturned"
+        : showAppointmentHighlight
+          ? "infoAppointment"
+          : "info";
+      const infoLabelDefaults = {
+        info: "More information",
+        infoReturned: "More information — returned",
+        infoAppointment: "More information — appointment requested",
+      };
+
+      const cellClass = clsx("matchingRoundOppInfoCell", {
+        matchingRoundOppInfoCellAppointment: showAppointmentHighlight,
+        matchingRoundOppInfoCellReturned: showReturnedHighlight,
+        matchingRoundOppInfoCellReturnedQuiet:
+          returned && !showReturnedHighlight,
+      });
 
       return (
         <InfoTooltip
           portal
           position="left"
           trigger="click"
-          content={<OpportunityInfoContent opportunity={opportunity} t={t} />}
+          content={
+            <OpportunityInfoContent
+              opportunity={opportunity}
+              t={t}
+              showAppointmentHighlight={showAppointmentHighlight}
+              showReturnedHighlight={showReturnedHighlight}
+              onDismissAppointment={() =>
+                handleDismissHighlight(opportunity.id, "appointment", stamp)
+              }
+              onDismissReturned={() =>
+                handleDismissHighlight(opportunity.id, "returned", stamp)
+              }
+            />
+          }
           tooltipStyle={{ width: "320px", maxWidth: "min(320px, calc(100vw - 24px))" }}
           wrapperStyle={{
             display: "flex",
-            alignItems: "stretch",
-            justifyContent: "stretch",
+            alignItems: "center",
+            justifyContent: "center",
             width: "100%",
             height: "100%",
-            alignSelf: "stretch",
           }}
         >
           <button
             type="button"
-            className={`matchingRoundOppInfoCell${
-              returned ? " matchingRoundOppInfoCellReturned" : ""
-            }`}
-            aria-label={infoLabel}
+            className={cellClass}
+            aria-label={t(
+              `opportunities.matchingRound.grid.columns.${infoLabelKey}`,
+              {},
+              { default: infoLabelDefaults[infoLabelKey] },
+            )}
             aria-haspopup="dialog"
           >
             !
@@ -185,7 +489,7 @@ export default function MatchingRoundOpportunitiesGrid({
         </InfoTooltip>
       );
     },
-    [t],
+    [dismissedHighlights, handleDismissHighlight, t],
   );
 
   const getRowClass = useCallback((params) => {
@@ -369,6 +673,12 @@ export default function MatchingRoundOpportunitiesGrid({
     t,
   ]);
 
+  useEffect(() => {
+    const api = gridRef.current?.api;
+    if (!api) return;
+    api.refreshCells({ columns: ["info"], force: true });
+  }, [dismissedHighlights]);
+
   const handleSelectionChanged = useCallback(
     (event) => {
       if (selectionDisabled) return;
@@ -426,8 +736,8 @@ export default function MatchingRoundOpportunitiesGrid({
             }
           : {})}
         pagination
-        paginationPageSize={10}
-        paginationPageSizeSelector={[10, 20, 50]}
+        paginationPageSize={50}
+        paginationPageSizeSelector={[50, 100, 200]}
         autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
         defaultColDef={{ resizable: true }}
         initialState={{

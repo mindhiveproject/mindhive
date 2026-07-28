@@ -16,6 +16,7 @@ import {
   DELETE_CARD,
 } from "../../../../../Mutations/Proposal";
 import ActionCard from "./Actions/ActionCard";
+import { isActionCard } from "../../../../../../lib/milestones";
 
 const Section = ({
   section,
@@ -34,17 +35,13 @@ const Section = ({
   const { t } = useTranslation("builder");
   const { cards } = section;
 
-  const actionCards = cards
-    ?.filter(
-      (card) =>
-        card?.type === "ACTION_SUBMIT" ||
-        card?.type === "ACTION_PEER_FEEDBACK" ||
-        card?.type === "ACTION_COLLECTING_DATA" ||
-        card?.type === "ACTION_PROJECT_REPORT"
-    )
-    .map((c) => c?.type);
-  const submissionStage = (actionCards?.length && actionCards[0]) || undefined;
-  const submissionStatus = submitStatuses[submissionStage];
+  const actionCards = cards?.filter((card) => isActionCard(card)) || [];
+  const firstActionCard = actionCards[0];
+  const submissionStage =
+    firstActionCard?.milestone?.key || firstActionCard?.type;
+  const submissionStatus =
+    submitStatuses[submissionStage] ||
+    (firstActionCard?.type && submitStatuses[firstActionCard.type]);
 
   const [cardName, setCardName] = useState("");
   const [createCard, createCardState] = useMutation(CREATE_CARD);
@@ -273,24 +270,36 @@ const Section = ({
         }
       },
       optimisticResponse: {
+        // PROPOSAL_QUERY selects many nested fields on each card. Enumerate
+        // them here (nulls for what we can't derive locally) so Apollo's
+        // cache write doesn't emit "Missing field" warnings and downstream
+        // Card / ActionCard render paths don't crash on `card.milestone.key`
+        // etc. during the optimistic window. The real values arrive when
+        // the mutation resolves.
         __typename: "Mutation",
         createProposalCard: {
           __typename: "ProposalCard",
           id: uuidv1(),
           boardId,
+          publicId,
           title,
           content: null,
+          revisedContent: null,
+          comment: null,
+          type: null,
           position:
             cards && cards.length > 0
               ? cards[cards.length - 1].position + 16384
               : 16384,
+          settings: { status: "Not started" },
           section: {
             __typename: "ProposalSection",
             id: sectionId,
+            title: null,
           },
+          milestone: null,
           assignedTo: [],
-          settings: { status: "Not started" },
-          publicId,
+          isEditedBy: null,
         },
       },
     });
@@ -372,12 +381,7 @@ const Section = ({
         >
           {cards && cards.length ? (
             cards.map((card) => {
-              if (
-                card?.type === "ACTION_SUBMIT" ||
-                card?.type === "ACTION_PEER_FEEDBACK" ||
-                card?.type === "ACTION_COLLECTING_DATA" ||
-                card?.type === "ACTION_PROJECT_REPORT"
-              ) {
+              if (isActionCard(card)) {
                 return (
                   <React.Fragment key={card.id}>
                     <hr style={{ margin: "16px 8px 16px 8px", border: "1px solid #EFEFEF" }} />

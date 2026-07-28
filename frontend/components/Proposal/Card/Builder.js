@@ -1,8 +1,11 @@
 import { useRef, useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Checkbox, Dropdown, Icon } from "semantic-ui-react";
 import { useRouter } from "next/router";
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
+import { useBoardMilestones } from "../../../lib/useBoardMilestones";
+import { getReviewStepOptions } from "../../../lib/milestones";
+import { getClassTemplateClasses } from "../../Utils/proposalBoard";
 
 import ReactHtmlParser from "react-html-parser";
 
@@ -19,45 +22,6 @@ import InfoTooltip from "../../DesignSystem/InfoTooltip";
 import Button from "../../DesignSystem/Button";
 import useTranslation from "next-translate/useTranslation";
 
-const peerReviewOptions = [
-  {
-    key: "actionSubmit",
-    text: "Proposal",
-    value: "ACTION_SUBMIT",
-    icon: "/assets/icons/user.svg",
-    titleKey: "board.expendedCard.proposalFeedback",
-    descriptionKey: "board.expendedCard.proposalFeedbackDescription",
-    descriptionFallback: "Card content is shown anonymously to mentors associated with class networks.",
-  },
-  {
-    key: "actionPeerFeedback",
-    text: "Peer Feedback",
-    value: "ACTION_PEER_FEEDBACK",
-    icon: "/assets/connect/group.svg",
-    titleKey: "board.expendedCard.peerFeedback",
-    descriptionKey: "board.expendedCard.peerFeedbackDescription",
-    descriptionFallback: "Content and participation links shown to both mentors and students in the networks.",
-  },
-  // {
-  //   key: "actionCollectingData",
-  //   text: "Collecting Data",
-  //   value: "ACTION_COLLECTING_DATA",
-  //   icon: "/assets/icons/project/collect.svg",
-  //   titleKey: "board.expendedCard.collectingData",
-  //   descriptionKey: "board.expendedCard.collectingDataDescription",
-  //   descriptionFallback: "Card marked as submitted while associated studies are locked for stable data collection.",
-  // },
-  {
-    key: "actionProjectReport",
-    text: "Project Report",
-    value: "ACTION_PROJECT_REPORT",
-    icon: "/assets/icons/document.svg",
-    titleKey: "board.expendedCard.projectReport",
-    descriptionKey: "board.expendedCard.projectReportDescription",
-    descriptionFallback: "A simple label to select cards that will be included in the exported PDF report.",
-  },
-];
-
 export default function BuilderProposalCard({
   user,
   proposal,
@@ -69,6 +33,9 @@ export default function BuilderProposalCard({
 }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
+  const { milestones } = useBoardMilestones(proposal?.id);
+  const peerReviewOptions = getReviewStepOptions(milestones, t);
+
   const { inputs, handleChange } = useForm({
     ...proposalCard,
   });
@@ -625,10 +592,12 @@ export default function BuilderProposalCard({
             />
           </div>
 
-          <div className="proposalCardComments">
-            <div className="cardHeader">{t("board.expendedCard.type")}</div>
-            <CardType type={inputs?.type} handleChange={handleChange} />
-          </div>
+          {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+            <div className="proposalCardComments">
+              <div className="cardHeader">{t("board.expendedCard.type")}</div>
+              <CardType type={inputs?.type} handleChange={handleChange} />
+            </div>
+          )}
           {/* Student Answer Box panel */}
           <div className="visibilityPanel">
             <div className="visibilityPanelHeader">
@@ -718,7 +687,7 @@ export default function BuilderProposalCard({
                         </svg>
                       }
                       onClick={() => {
-                        const classCode = proposal?.templateForClasses?.[0]?.code;
+                        const classCode = getClassTemplateClasses(proposal)[0]?.code;
                         if (classCode) {
                           const url = `/dashboard/myclasses/${classCode}?page=settings`;
                           window.open(url, "_blank", "noopener,noreferrer");
@@ -735,10 +704,18 @@ export default function BuilderProposalCard({
                 <div className="feedbackOptionCards">
                   {peerReviewOptions.map((option) => {
                     const current = inputs?.settings?.includeInReviewSteps || [];
-                    const selected = current.includes(option.value);
+                    const selected =
+                      current.includes(option.value) ||
+                      (option.actionCardType &&
+                        current.includes(option.actionCardType));
                     const toggleReviewStep = () => {
+                      const legacyKey = option.actionCardType;
                       const next = selected
-                        ? current.filter((v) => v !== option.value)
+                        ? current.filter(
+                            (v) =>
+                              v !== option.value &&
+                              (!legacyKey || v !== legacyKey)
+                          )
                         : [...current, option.value];
                       handleChange({
                         target: {
@@ -788,10 +765,14 @@ export default function BuilderProposalCard({
                         </div>
                         <div className="feedbackOptionCardContent">
                           <div className="feedbackOptionCardTitle">
-                            {t(option.titleKey, option.text)}
+                            {option.titleKey
+                              ? t(option.titleKey, option.text)
+                              : option.text}
                           </div>
                           <div className="feedbackOptionCardDescription">
-                            {t(option.descriptionKey, option.descriptionFallback)}
+                            {option.descriptionKey
+                              ? t(option.descriptionKey, option.descriptionFallback)
+                              : option.descriptionFallback}
                           </div>
                         </div>
                       </div>

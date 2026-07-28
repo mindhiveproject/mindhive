@@ -35,7 +35,8 @@ const securityHeaders = [
       // Scripts: self + Google OAuth + inline/eval needed by TipTap & Pyodide
       // cdn.plot.ly: Plotly charting library
       // cdn.jsdelivr.net: Pyodide WASM runtime
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://cdn.plot.ly https://cdn.jsdelivr.net",
+      // challenges.cloudflare.com: Turnstile bot protection (signup)
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://cdn.plot.ly https://cdn.jsdelivr.net https://challenges.cloudflare.com",
       // Styles: self + inline (Emotion/Styled-Components) + Google Fonts
       // cdnjs.cloudflare.com: Semantic UI CSS
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
@@ -53,9 +54,11 @@ const securityHeaders = [
       // ws://localhost:4444: dev collaborative-editing WebSocket (Hocuspocus);
       // production uses wss://*.mindhive.science (already covered above).
       // sheets.googleapis.com: Block Documentation admin tool reads Google Sheets metadata + values
-      "connect-src 'self' http://localhost:4444 ws://localhost:4444 ws://localhost:4445 https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net https://pypi.org https://files.pythonhosted.org https://api.cloudinary.com https://sheets.googleapis.com",
+      // challenges.cloudflare.com: Turnstile challenge API
+      "connect-src 'self' http://localhost:4444 ws://localhost:4444 ws://localhost:4445 https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net https://pypi.org https://files.pythonhosted.org https://api.cloudinary.com https://sheets.googleapis.com https://challenges.cloudflare.com",
       // iframes for Google OAuth popup + supported Connect Opportunity video embeds
-      "frame-src 'self' https://accounts.google.com https://docs.google.com https://drive.google.com https://calendar.google.com https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com https://www.loom.com",
+      // challenges.cloudflare.com: Turnstile challenge iframe
+      "frame-src 'self' https://accounts.google.com https://docs.google.com https://drive.google.com https://calendar.google.com https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com https://www.loom.com https://challenges.cloudflare.com",
       // Workers needed by Pyodide (blob: for inline workers, cdn.jsdelivr.net for Pyodide worker scripts)
       "worker-src 'self' blob: https://cdn.jsdelivr.net",
       "object-src 'none'",

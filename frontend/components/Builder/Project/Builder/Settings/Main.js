@@ -6,18 +6,18 @@ import StudyVersion from "./Version";
 export default function Settings(props) {
   return (
     <div className="studySettings">
-      <div className="card">
+      <section className="settingsCard">
         <StudyStatus {...props} />
-      </div>
-      <div className="card">
+      </section>
+      <section className="settingsCard">
         <StudyVersion {...props} />
-      </div>
-      <div className="card">
+      </section>
+      <section className="settingsCard">
         <StudyDescription {...props} />
-      </div>
-      <div className="card">
+      </section>
+      <section className="settingsCard">
         <StudyTagger {...props} />
-      </div>
+      </section>
     </div>
   );
 }

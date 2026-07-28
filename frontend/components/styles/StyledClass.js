@@ -295,6 +295,29 @@ const StyledClass = styled.div`
       //   background: #FDF2D0;
       // }
     }
+    .classHeaderDescriptionHtml {
+      width: 100%;
+      min-width: 0;
+      color: #3d3d3d;
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      line-height: 22px;
+      overflow-wrap: anywhere;
+
+      p {
+        margin: 0 0 8px;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      ul,
+      ol {
+        margin: 8px 0;
+        padding-left: 22px;
+      }
+    }
     .classHeaderMetaRow {
       display: flex;
       align-items: center;
@@ -918,6 +941,13 @@ const StyledClass = styled.div`
       }
     }
   }
+  .projectsBoardBackBar {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: transparent;
+  }
+
   .classTabPage {
     display: grid;
     gap: 28px;
@@ -1062,6 +1092,145 @@ const StyledClass = styled.div`
       color: #625b71;
       font-size: 15px;
       line-height: 22px;
+    }
+
+    .classTabSubsection {
+      display: grid;
+      gap: 12px;
+    }
+
+    .classTabSubsectionTitle {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 22px;
+      color: #171717;
+    }
+
+    .classTabSubsectionDescription {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625b71;
+    }
+
+    .classTabSubsectionHeaderRow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .classTabSubsectionHeaderGroup {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .classTabSubsectionDivider {
+      margin: 8px 0;
+      border-top: 1px solid #ece9e6;
+    }
+
+    .classTabOwnedShowcase {
+      display: grid;
+      gap: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ece9e6;
+      margin-bottom: 8px;
+    }
+
+    .classTabTemplateList {
+      display: grid;
+      gap: 16px;
+    }
+
+    .classTabTemplateCard {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid #e6e6e6;
+      border-radius: 14px;
+      background: #f3f3f3;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .classTabTemplateCardActive {
+      border: 2px solid #336f8a;
+      background: rgba(222, 248, 251, 0.3);
+    }
+
+    .classTabTemplateCardRow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 12px 16px;
+    }
+
+    .classTabTemplateCardTitle {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #171717;
+      word-break: break-word;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .classTabTemplateCardTitleLink {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+
+      &:hover .classTabTemplateCardTitle {
+        color: #336f8a;
+        text-decoration: underline;
+      }
+    }
+
+    .classTabTemplateCardTitleGroup {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .classTabTemplateCardDescription {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625b71;
+      word-break: break-word;
+    }
+
+    .classTabTemplateCardActions {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .classTabTemplateCardMeta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      color: #8a8a8a;
     }
 
     .classTabNetworkChipRow {
@@ -1516,13 +1685,13 @@ const StyledClass = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      min-height: 100%;
+      box-sizing: border-box;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
       padding: 0;
-      border: none;
-      border-radius: 0;
+      border: 2px solid transparent;
+      border-radius: 100px;
       background: transparent;
       color: #625b71;
       font-family: "Inter", sans-serif;
@@ -1536,13 +1705,36 @@ const StyledClass = styled.div`
         color: #336f8a;
       }
 
+      &.matchingRoundOppInfoCellAppointment {
+        border-color: #B9261A;
+        background: #FEECEB;
+        color: #B9261A;
+
+        &:hover {
+          background: #CF6D6A;
+          color: #B9261A;
+        }
+      }
+
       &.matchingRoundOppInfoCellReturned {
-        background: #E6E6E6;
+        border-color: #9e9e9e;
+        background: #cfcfcf;
         color: #3f288f;
 
         &:hover {
-          background: #E6E6E6;
+          background: #c4c4c4;
           color: #3f288f;
+        }
+      }
+
+      &.matchingRoundOppInfoCellReturnedQuiet {
+        border-color: #bdbdbd;
+        background: #d9d9d9;
+        color: #6a6a6a;
+
+        &:hover {
+          background: #cecece;
+          color: #5a5a5a;
         }
       }
     }
@@ -1553,25 +1745,18 @@ const StyledClass = styled.div`
     }
 
     [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturned {
-      background: #d6cef0;
+      background: #c4c4c4;
       color: #3f288f;
     }
 
-    .matchingRoundOppInfoTooltip {
-      display: grid;
-      gap: 6px;
-      max-width: 320px;
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellAppointment {
+      background: #ffd633;
+      color: #5c4a00;
+    }
 
-      p {
-        margin: 0;
-        font-size: 14px;
-        line-height: 20px;
-        color: #171717;
-      }
-
-      .expired {
-        color: #b3261e;
-      }
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturnedQuiet {
+      background: #cecece;
+      color: #5a5a5a;
     }
 
     .classTabSecondaryLink {
@@ -1666,6 +1851,15 @@ const StyledClass = styled.div`
       .classTabInformationBlock {
         grid-template-columns: 1fr;
       }
+
+      .classTabTemplateCardRow {
+        grid-template-columns: 1fr;
+      }
+
+      .classTabTemplateCardActions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
     }
   }
 
@@ -1749,6 +1943,13 @@ const StyledClass = styled.div`
       color: #171717;
     }
 
+    .classDescriptionSettingsHint {
+      margin: 0;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
     .settingsChoiceGroup {
       display: grid;
       gap: 12px;
@@ -1793,16 +1994,151 @@ const StyledClass = styled.div`
       }
     }
 
+    .networkTypeSections {
+      display: grid;
+      gap: 18px;
+    }
+
+    .networkTypeSection {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid #ece9e6;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .networkTypeSection--school {
+      border-color: rgba(51, 111, 138, 0.28);
+      background: linear-gradient(
+        180deg,
+        rgba(51, 111, 138, 0.06) 0%,
+        rgba(255, 255, 255, 0.88) 48%
+      );
+
+      .networkTypeSectionIcon {
+        background: rgba(51, 111, 138, 0.12);
+      }
+
+      .networkTypeSectionIcon img {
+        filter: invert(36%) sepia(18%) saturate(1260%) hue-rotate(155deg)
+          brightness(92%) contrast(88%);
+      }
+    }
+
+    .networkTypeSection--feedback {
+      border-color: rgba(124, 102, 194, 0.28);
+      background: linear-gradient(
+        180deg,
+        rgba(124, 102, 194, 0.07) 0%,
+        rgba(255, 255, 255, 0.88) 48%
+      );
+
+      .networkTypeSectionIcon {
+        background: rgba(124, 102, 194, 0.12);
+      }
+
+      .networkTypeSectionIcon img {
+        filter: invert(42%) sepia(24%) saturate(1140%) hue-rotate(214deg)
+          brightness(92%) contrast(90%);
+      }
+
+      .networkCard:hover,
+      .networkCard:focus-within {
+        border-color: rgba(124, 102, 194, 0.45);
+        background: #f7f5fc;
+        box-shadow: 0 10px 24px rgba(124, 102, 194, 0.12);
+      }
+    }
+
+    .networkTypeSectionHeader {
+      display: grid;
+      gap: 6px;
+
+      h4 {
+        margin: 0;
+        color: #171717;
+        font-family: "Inter", sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 24px;
+      }
+
+      p {
+        margin: 0;
+        color: #625b71;
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+
+    .networkTypeSectionTitleRow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .networkTypeSectionIcon {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+
+      img {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+      }
+    }
+
+    .networkTypeSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
     .networkCardGrid {
       display: grid;
       gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      width: 100%;
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(min(100%, 280px), 280px)
+      );
+      align-items: stretch;
+      justify-content: start;
+    }
+
+    .networkSectionActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .networkEmptyState {
+      margin: 0;
+      padding: 16px;
+      border: 1px dashed #d3dae0;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #625b71;
+      font-size: 14px;
+      line-height: 20px;
     }
 
     .networkCard {
       display: grid;
       gap: 10px;
       width: 100%;
+      max-width: 100%;
       min-width: 0;
       box-sizing: border-box;
       padding: 14px;
@@ -1885,6 +2221,8 @@ const StyledClass = styled.div`
       border: none;
       margin: 0;
       padding: 0;
+      display: grid;
+      gap: 12px;
     }
 
     .curriculumTypeLegend {
@@ -2020,7 +2358,7 @@ const StyledClass = styled.div`
       }
 
       .networkCardGrid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
     }
   }

@@ -2,6 +2,10 @@ import {
   getTemplateSectionAndCardIndices,
   getCloneCardAtIndices,
 } from "./utils/templateCloneMatch";
+import {
+  CLASS_TEMPLATE_QUERY,
+  getPrimaryTemplateBoardId,
+} from "./utils/classTemplateBoards";
 
 /**
  * Sets an assignment's linked template cards to the given list, and propagates
@@ -29,12 +33,12 @@ async function setAssignmentTemplateCards(
   const classData = await context.query.Class.findOne({
     where: { id: classId },
     query:
-      "id templateProposal { id } studentProposals { id clonedFrom { id } sections { id publicId position cards { id publicId position } } }",
+      `${CLASS_TEMPLATE_QUERY} studentProposals { id clonedFrom { id } sections { id publicId position cards { id publicId position } } }`,
   });
-  if (!classData?.templateProposal?.id) {
+  const templateBoardId = getPrimaryTemplateBoardId(classData);
+  if (!templateBoardId) {
     throw new Error("Class has no template board.");
   }
-  const templateBoardId = classData.templateProposal.id;
 
   const studentBoards = (classData.studentProposals || []).filter(
     (b: any) => b?.clonedFrom?.id === templateBoardId

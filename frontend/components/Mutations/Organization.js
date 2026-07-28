@@ -27,6 +27,7 @@ export const CREATE_ORG_INVITE = gql`
       id
       email
       status
+      token
     }
   }
 `;

@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { Icon, Dropdown } from "semantic-ui-react";
+import { Icon, Dropdown, Modal } from "semantic-ui-react";
 
 import useForm from "../../../../lib/useForm";
 import useEmail from "../../../../lib/useEmail";
@@ -28,10 +28,15 @@ import Chip from "../../../DesignSystem/Chip";
 import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
 import OpportunityProposalSection from "./OpportunityProposalSection";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
+import OpportunityReviewNotesThread from "../OpportunityReviewNotesThread";
 import {
   collectMemberClassNetworks,
   isNewOpportunityId,
 } from "../../../../lib/opportunityClassNetworks";
+import {
+  REVIEW_NOTE_KIND,
+  resolveActiveReviewRound,
+} from "../../../../lib/reviewThreadRound";
 import {
   PROPOSAL_EMPTY_FORM,
   PROPOSAL_WORD_LIMITS,
@@ -311,14 +316,6 @@ const WORD_LIMITS = {
   scopeDescription: 500,
 };
 
-const SPONSOR_LOCKED_STATUSES = new Set([
-  "pre_selected",
-  "accepted",
-  "published",
-  "closed",
-  "archived",
-]);
-
 const EMPTY_FORM = {
   ...PROPOSAL_EMPTY_FORM,
   shortDescription: "",
@@ -505,10 +502,9 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const isReviewRoute = router.query?.review === "1";
   const { hasExpandedOpportunityEditor, isAdmin, isTeacher } = deriveRoles(user);
 
-  // Sponsors decide between drafting and submitting for review. Everything
-  // beyond — accepting, publishing, closing — is reserved for admins so a
-  // sponsor can't unilaterally accept or publish their own opportunity.
-  const sponsorStatusOptions = [
+  // Status overrides in Publishing are admin-only. Sponsors submit for review
+  // via the header button (draft/returned → pending_review).
+  const adminStatusOptions = [
     {
       key: "draft",
       text: t("opportunityEditor.statusOptions.draft", {}, {
@@ -523,10 +519,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
       }),
       value: "pending_review",
     },
-  ];
-
-  const adminStatusOptions = [
-    ...sponsorStatusOptions,
     {
       key: "returned",
       text: t("opportunityEditor.statusOptions.returned", {}, {
@@ -570,8 +562,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
       value: "archived",
     },
   ];
-
-  const ADMIN_ONLY_STATUSES = SPONSOR_LOCKED_STATUSES;
 
   const { data: existing, loading: loadingOpportunity } = useQuery(
     GET_OPPORTUNITY,
@@ -674,6 +664,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
     setVideoFileUpload(file);
   };
 
+  const [resubmitPromptOpen, setResubmitPromptOpen] = useState(false);
   const [questionDraft, setQuestionDraft] = useState({
     prompt: "",
     questionType: "short_text",
@@ -706,23 +697,74 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const scopeComplete = !!inputs.scopeDescription?.trim();
   const fieldDisabled = isFieldReadOnly;
   const reviewNotes = opportunity?.reviewNotes || [];
-
-  const statusOptions = useMemo(() => {
-    if (isAdmin) return adminStatusOptions;
-    if (inputs.status === "returned") {
-      return [
-        {
-          key: "returned",
-          text: t("opportunityEditor.statusOptions.returned", {}, {
-            default: "Returned (revise and resubmit)",
-          }),
-          value: "returned",
-        },
-        sponsorStatusOptions.find((option) => option.value === "pending_review"),
-      ].filter(Boolean);
+  const opportunityRounds = useMemo(() => {
+    const byId = new Map();
+    for (const round of opportunity?.rounds || []) {
+      if (round?.id) byId.set(round.id, round);
     }
-    return sponsorStatusOptions;
-  }, [isAdmin, inputs.status, t]);
+    for (const note of reviewNotes) {
+      if (note?.round?.id && !byId.has(note.round.id)) {
+        byId.set(note.round.id, note.round);
+      }
+    }
+    return [...byId.values()];
+  }, [opportunity?.rounds, reviewNotes]);
+  const explicitRoundId =
+    typeof router.query?.round === "string" ? router.query.round : null;
+
+  const roundResolution = useMemo(
+    () =>
+      resolveActiveReviewRound({
+        rounds: opportunityRounds,
+        explicitRoundId,
+      }),
+    [opportunityRounds, explicitRoundId]
+  );
+
+  const activeRoundId = roundResolution.roundId;
+  const needsRoundSelection = roundResolution.needsSelection;
+  const isMentorOfOpportunity =
+    !!(user?.id && opportunity?.mentor?.id === user.id);
+
+  const threadRefetchQueries = useMemo(
+    () =>
+      opportunityId
+        ? [{ query: GET_OPPORTUNITY, variables: { id: opportunityId } }]
+        : [],
+    [opportunityId]
+  );
+
+  const handleSelectReviewRound = (nextRoundId) => {
+    if (!opportunityId) return;
+    const nextQuery = { ...router.query, op: opportunityId };
+    if (nextRoundId) {
+      nextQuery.round = nextRoundId;
+    } else {
+      delete nextQuery.round;
+    }
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: nextQuery,
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
+  const handleReviewNotePosted = (_note, meta) => {
+    if (isReviewMode) return;
+    if (meta?.kind !== REVIEW_NOTE_KIND.SPONSOR_REPLY) return;
+    if (inputs.status !== "returned") return;
+    setResubmitPromptOpen(true);
+  };
+
+  const showReviewThread =
+    !isNew &&
+    (isReviewMode ||
+      reviewNotes.length > 0 ||
+      inputs.status === "returned" ||
+      opportunityRounds.length > 0);
 
   useEffect(() => {
     if (!opportunity) return;
@@ -924,7 +966,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
     return validateWordLimits();
   };
 
-  const handleSave = async () => {
+  const handleSave = async ({ submitForReview = false } = {}) => {
     if (!inputs.title?.trim()) {
       alert(
         t("opportunityEditor.validation.title", {}, { default: "Title is required." }),
@@ -935,9 +977,10 @@ export default function OpportunityEditor({ opportunityId, user }) {
       return validateWordLimits();
     }
 
-    // Returned proposals: primary save action is Resubmit → pending_review.
-    const isResubmitting = !isAdmin && inputs.status === "returned";
-    const nextStatus = isResubmitting
+    // Sponsors submit via the header button (draft or returned → pending_review).
+    // Save draft keeps the current status. Admins can still change status via
+    // the Publishing dropdown before saving.
+    const nextStatus = submitForReview
       ? "pending_review"
       : inputs.status || "draft";
 
@@ -959,7 +1002,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
       alert(
         t("opportunityEditor.validation.guidelines", {}, {
           default:
-            "Please tick the guidelines acknowledgment in the Publishing card before changing the status away from Draft.",
+            "Please tick the guidelines acknowledgment in the Publishing card before submitting this opportunity.",
         }),
       );
       return;
@@ -1071,6 +1114,10 @@ export default function OpportunityEditor({ opportunityId, user }) {
         pathname: "/dashboard/connect/opportunities",
       });
     }
+  };
+
+  const handleResubmitFromPrompt = async () => {
+    await handleSave({ submitForReview: true });
   };
 
   const handleCancel = () => {
@@ -1269,15 +1316,26 @@ export default function OpportunityEditor({ opportunityId, user }) {
     : t("opportunityEditor.backLink", {}, {
         default: "Back to opportunities",
       });
+  const canSponsorSubmit =
+    !isAdmin &&
+    !isNew &&
+    (inputs.status === "draft" || inputs.status === "returned");
+  const showSponsorDraftOnlySave = !isAdmin && !isNew && !canSponsorSubmit;
   const editPrimaryLabel = saving
     ? t("opportunityEditor.saving", {}, { default: "Saving…" })
     : isNew
     ? t("opportunityEditor.create", {}, {
         default: "Create opportunity",
       })
-    : inputs.status === "returned"
-    ? t("opportunityEditor.resubmit", {}, { default: "Resubmit" })
     : t("opportunityEditor.save", {}, { default: "Save changes" });
+  const saveDraftLabel = saving
+    ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+    : t("opportunityEditor.saveDraft", {}, { default: "Save draft" });
+  const submitForReviewLabel = saving
+    ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+    : t("opportunityEditor.submitForReview", {}, {
+        default: "Submit for review in class network",
+      });
 
   return (
     <Shell>
@@ -1314,11 +1372,39 @@ export default function OpportunityEditor({ opportunityId, user }) {
                   ? t("opportunityEditor.saving", {}, { default: "Saving…" })
                   : reviewPrimaryAction.label}
               </Button>
+            ) : canSponsorSubmit ? (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => handleSave({ submitForReview: false })}
+                  disabled={primaryBusy}
+                >
+                  {saveDraftLabel}
+                </Button>
+                <Button
+                  type="button"
+                  variant="filled"
+                  onClick={() => handleSave({ submitForReview: true })}
+                  disabled={primaryBusy}
+                >
+                  {submitForReviewLabel}
+                </Button>
+              </>
+            ) : showSponsorDraftOnlySave ? (
+              <Button
+                type="button"
+                variant="filled"
+                onClick={() => handleSave({ submitForReview: false })}
+                disabled={primaryBusy}
+              >
+                {editPrimaryLabel}
+              </Button>
             ) : (
               <Button
                 type="button"
                 variant="filled"
-                onClick={handleSave}
+                onClick={() => handleSave()}
                 disabled={primaryBusy}
               >
                 {editPrimaryLabel}
@@ -1336,15 +1422,9 @@ export default function OpportunityEditor({ opportunityId, user }) {
         </StatusBanner>
       )}
 
-      {!isReviewMode &&
-        (reviewNotes.length > 0 || inputs.status === "returned") && (
+      {showReviewThread ? (
         <ReviewNotesCard>
-          <h2>
-            {t("opportunityEditor.reviewNotes.title", {}, {
-              default: "Review notes",
-            })}
-          </h2>
-          {inputs.status === "returned" ? (
+          {!isReviewMode && inputs.status === "returned" ? (
             <p
               style={{
                 margin: 0,
@@ -1360,77 +1440,195 @@ export default function OpportunityEditor({ opportunityId, user }) {
               })}
             </p>
           ) : null}
-          {reviewNotes.length > 0 ? (
-          <div style={{ display: "grid", gap: 12 }}>
-            {reviewNotes.map((note) => (
-              <div
-                key={note.id}
-                style={{
-                  padding: 14,
-                  borderRadius: 10,
-                  background: "#faf8ff",
-                  border: "1px solid rgba(160, 144, 224, 0.35)",
-                  boxShadow: "0 2px 10px rgba(111, 38, 206, 0.08)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 8,
-                    flexWrap: "wrap",
-                    marginBottom: 8,
-                    fontSize: 13,
-                    color: "#5f6871",
-                  }}
-                >
-                  <span style={{ fontWeight: 600, color: "#171717" }}>
-                    {[
-                      note.author?.firstName,
-                      note.author?.lastName,
-                    ]
-                      .filter(Boolean)
-                      .join(" ") ||
-                      note.author?.username ||
-                      t("opportunityEditor.reviewNotes.unknownAuthor", {}, {
-                        default: "Reviewer",
-                      })}
-                  </span>
-                  <span>
-                    {note.round?.title
-                      ? t("opportunityEditor.reviewNotes.roundLabel", {
-                          title: note.round.title,
-                        }, {
-                          default: "Round: {{title}}",
-                        })
-                      : null}
-                    {note.createdAt
-                      ? ` · ${new Date(note.createdAt).toLocaleString()}`
-                      : null}
-                  </span>
-                </div>
-                <p
-                  style={{
-                    margin: 0,
-                    whiteSpace: "pre-wrap",
-                    color: "#171717",
-                    fontSize: 14,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {note.body}
-                </p>
-              </div>
-            ))}
-          </div>
-          ) : (
-            <p style={{ margin: 0, color: "#5f6871", fontSize: 14 }}>
-              {t("opportunityEditor.reviewNotes.empty", {}, {
-                default: "No review notes were attached.",
-              })}
-            </p>
-          )}
+          <OpportunityReviewNotesThread
+            opportunityId={opportunity?.id || opportunityId}
+            roundId={activeRoundId}
+            notes={reviewNotes}
+            rounds={opportunityRounds}
+            viewerId={user?.id}
+            canCreate={
+              isReviewMode
+                ? isTeacher || isAdmin
+                : isMentorOfOpportunity
+            }
+            canDeleteAsAdmin={isAdmin}
+            messageKind={
+              isReviewMode
+                ? REVIEW_NOTE_KIND.REVIEWER_COMMENT
+                : REVIEW_NOTE_KIND.SPONSOR_REPLY
+            }
+            mode={isReviewMode ? "teacher" : "sponsor"}
+            needsRoundSelection={needsRoundSelection}
+            onSelectRound={
+              opportunityRounds.length > 1 ? handleSelectReviewRound : undefined
+            }
+            refetchQueries={threadRefetchQueries}
+            onPosted={handleReviewNotePosted}
+            titleAs="h2"
+          />
         </ReviewNotesCard>
+      ) : null}
+
+      {!isReviewMode && (
+        <OpportunityClassNetworksField
+          availableNetworks={availableNetworks}
+          selectedNetworks={selectedNetworks}
+          onChange={setSelectedNetworks}
+          readOnly={isFieldReadOnly}
+        />
+      )}
+
+      {!isReviewMode && (
+      <Card>
+        <h2>{t("opportunityEditor.status", {}, { default: "Status" })}</h2>
+        {!isNew && (
+          <OpportunityWorkflowStepper
+            status={inputs.status}
+            scopeComplete={scopeComplete}
+            viewerRole="sponsor"
+          />
+        )}
+        {isAdmin && (
+          <Field>
+            <span className="label-text">
+              {t("opportunityEditor.statusAdmin", {}, {
+                default: "Status (admin)",
+              })}
+            </span>
+            <Dropdown
+              selection
+              options={adminStatusOptions}
+              value={inputs.status}
+              onChange={(_, { value }) =>
+                handleMultipleUpdate({ status: value })
+              }
+            />
+            <span className="hint" style={{ marginTop: 4 }}>
+              {t("opportunityEditor.statusAdminHint", {}, {
+                default:
+                  "Sponsors submit for review via the button at the top of the page. Use this control only for admin status overrides.",
+              })}
+            </span>
+          </Field>
+        )}
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.guidelinesTitle", {}, {
+              default: "Understanding of Proposal Guidelines",
+            })}
+            <RequiredMark />
+          </span>
+          <span style={{ fontSize: 14, color: "#171717", lineHeight: 1.5 }}>
+            {t("opportunityEditor.guidelinesDescription", {}, {
+              default:
+                "I have read and understood the Capstone proposal guidelines in full, including all of the Capstone Sponsor FAQs and Mutual Expectations agreement and agree to abide by them.",
+            })}
+          </span>
+          <LinkChipRow>
+            {GUIDELINE_DOCUMENTS.map((doc) => (
+              <a
+                key={doc.value}
+                href={doc.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Chip
+                  shape="square"
+                  label={t(doc.labelKey, {}, { default: doc.defaultLabel })}
+                  leading={
+                    <img
+                      src="/assets/icons/document.svg"
+                      alt=""
+                      aria-hidden
+                      width={24}
+                      height={24}
+                    />
+                  }
+                />
+              </a>
+            ))}
+          </LinkChipRow>
+          <label
+            style={{
+              display: "inline-flex",
+              gap: 8,
+              alignItems: "flex-start",
+              cursor: "pointer",
+              fontSize: 14,
+              color: "#171717",
+            }}
+          >
+            <input
+              type="checkbox"
+              name="guidelinesAcknowledged"
+              checked={!!inputs.guidelinesAcknowledged}
+              onChange={toggleBoolean}
+              style={{ marginTop: 3 }}
+            />
+            <span>
+              <strong>
+                {t("opportunityEditor.guidelinesAgree", {}, {
+                  default: "I agree with this statement.",
+                })}
+              </strong>
+            </span>
+          </label>
+          {opportunity?.guidelinesAcknowledgedAt && (
+            <span className="hint" style={{ marginLeft: 26 }}>
+              {t("opportunityEditor.guidelinesAcknowledgedAt", {
+                date: new Date(
+                  opportunity.guidelinesAcknowledgedAt,
+                ).toLocaleString(),
+              }, {
+                default: "Acknowledged {{date}}",
+              })}
+            </span>
+          )}
+        </Field>
+        <Field>
+          <label
+            style={{
+              display: "inline-flex",
+              gap: 8,
+              alignItems: "flex-start",
+              cursor: "pointer",
+              fontSize: 14,
+              color: "#171717",
+            }}
+          >
+            <input
+              type="checkbox"
+              name="requestsAppointment"
+              checked={!!inputs.requestsAppointment}
+              onChange={toggleBoolean}
+              style={{ marginTop: 3 }}
+            />
+            <span>
+              {t("opportunityEditor.guidelinesRequestAppointment", {}, {
+                default: "I request an appointment to discuss further.",
+              })}
+            </span>
+          </label>
+        </Field>
+        {inputs.status !== "draft" && !inputs.guidelinesAcknowledged && (
+          <div
+            style={{
+              padding: "10px 14px",
+              borderRadius: 10,
+              background: "#fdf1f1",
+              border: "1px solid #f1c8c8",
+              color: "#b3261e",
+              fontSize: 13,
+            }}
+          >
+            <Icon name="warning circle" />{" "}
+            {t("opportunityEditor.guidelinesWarning", {}, {
+              default:
+                "Tick the guidelines checkbox before submitting this opportunity.",
+            })}
+          </div>
+        )}
+      </Card>
       )}
 
       <Card>
@@ -2026,203 +2224,59 @@ export default function OpportunityEditor({ opportunityId, user }) {
         </Card>
       )}
 
-      {!isReviewMode && (
-        <OpportunityClassNetworksField
-          availableNetworks={availableNetworks}
-          selectedNetworks={selectedNetworks}
-          onChange={setSelectedNetworks}
-          readOnly={isFieldReadOnly}
-        />
-      )}
-
-      {!isReviewMode && (
-      <Card>
-        <h2>{t("opportunityEditor.publishing", {}, { default: "Publishing" })}</h2>
-        {!isNew && (
-          <OpportunityWorkflowStepper
-            status={inputs.status}
-            scopeComplete={scopeComplete}
-            viewerRole="sponsor"
-          />
-        )}
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.status", {}, { default: "Status" })}
-          </span>
-          {!isAdmin &&
-          (ADMIN_ONLY_STATUSES.has(inputs.status) ||
-            inputs.status === "returned") ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "10px 14px",
-                borderRadius: 10,
-                background:
-                  inputs.status === "returned" ? "#faf8ff" : "#f7f9f8",
-                border:
-                  inputs.status === "returned"
-                    ? "1px solid rgba(160, 144, 224, 0.45)"
-                    : "1px solid #d3dae0",
-                color: "#171717",
-                fontSize: 14,
-              }}
-            >
-              <Icon name="lock" />
-              <strong style={{ textTransform: "capitalize" }}>
-                {inputs.status.replace("_", " ")}
-              </strong>
-              <span style={{ color: "#5f6871", fontSize: 13 }}>
-                {inputs.status === "returned"
-                  ? t("opportunityEditor.sponsorStatusReturnedHint", {}, {
-                      default:
-                        "— use Resubmit above when your changes are ready.",
-                    })
-                  : t("opportunityEditor.sponsorStatusLocked", {}, {
-                      default:
-                        "— locked. A teacher or admin will update the status.",
-                    })}
-              </span>
-            </div>
-          ) : (
-            <Dropdown
-              selection
-              options={statusOptions}
-              value={inputs.status}
-              onChange={(_, { value }) =>
-                handleMultipleUpdate({ status: value })
-              }
-            />
-          )}
-          {!isAdmin && !isTeacher && inputs.status !== "returned" && (
-            <span className="hint" style={{ marginTop: 4 }}>
-              {t("opportunityEditor.sponsorStatusHint", {}, {
-                default:
-                  "Set to Submitted for review when your proposal is ready — a teacher will review it.",
-              })}
-            </span>
-          )}
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.guidelinesTitle", {}, {
-              default: "Understanding of Proposal Guidelines",
-            })}
-            <RequiredMark />
-          </span>
-          <span style={{ fontSize: 14, color: "#171717", lineHeight: 1.5 }}>
-            {t("opportunityEditor.guidelinesDescription", {}, {
+      <Modal
+        open={resubmitPromptOpen}
+        onClose={() => {
+          if (primaryBusy) return;
+          setResubmitPromptOpen(false);
+        }}
+        size="small"
+      >
+        <Modal.Header>
+          {t("reviewThread.resubmitPrompt.title", {}, {
+            default: "Resubmit your opportunity",
+          })}
+        </Modal.Header>
+        <Modal.Content>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: "#5f6871" }}>
+            {t("reviewThread.resubmitPrompt.message", {}, {
               default:
-                "I have read and understood the Capstone proposal guidelines in full, including all of the Capstone Sponsor FAQs and Mutual Expectations agreement and agree to abide by them.",
+                "Your reply was posted. Resubmit your opportunity so reviewers can see your updates.",
             })}
-          </span>
-          <LinkChipRow>
-            {GUIDELINE_DOCUMENTS.map((doc) => (
-              <a
-                key={doc.value}
-                href={doc.url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Chip
-                  shape="square"
-                  label={t(doc.labelKey, {}, { default: doc.defaultLabel })}
-                  leading={
-                    <img
-                      src="/assets/icons/document.svg"
-                      alt=""
-                      aria-hidden
-                      width={24}
-                      height={24}
-                    />
-                  }
-                />
-              </a>
-            ))}
-          </LinkChipRow>
-          <label
-            style={{
-              display: "inline-flex",
-              gap: 8,
-              alignItems: "flex-start",
-              cursor: "pointer",
-              fontSize: 14,
-              color: "#171717",
-            }}
+          </p>
+        </Modal.Content>
+        <Modal.Actions
+          style={{
+            padding: "1rem 1.5rem",
+            display: "flex",
+            gap: 12,
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button
+            variant="outline"
+            onClick={() => setResubmitPromptOpen(false)}
+            disabled={primaryBusy}
           >
-            <input
-              type="checkbox"
-              name="guidelinesAcknowledged"
-              checked={!!inputs.guidelinesAcknowledged}
-              onChange={toggleBoolean}
-              style={{ marginTop: 3 }}
-            />
-            <span>
-              <strong>
-                {t("opportunityEditor.guidelinesAgree", {}, {
-                  default: "I agree with this statement.",
+            {t("reviewThread.resubmitPrompt.dismiss", {}, {
+              default: "Not now",
+            })}
+          </Button>
+          <Button
+            variant="filled"
+            onClick={handleResubmitFromPrompt}
+            disabled={primaryBusy}
+          >
+            {primaryBusy
+              ? t("reviewThread.resubmitPrompt.resubmitting", {}, {
+                  default: "Resubmitting…",
+                })
+              : t("reviewThread.resubmitPrompt.resubmit", {}, {
+                  default: "Resubmit now",
                 })}
-              </strong>
-            </span>
-          </label>
-          {opportunity?.guidelinesAcknowledgedAt && (
-            <span className="hint" style={{ marginLeft: 26 }}>
-              {t("opportunityEditor.guidelinesAcknowledgedAt", {
-                date: new Date(
-                  opportunity.guidelinesAcknowledgedAt,
-                ).toLocaleString(),
-              }, {
-                default: "Acknowledged {{date}}",
-              })}
-            </span>
-          )}
-        </Field>
-        <Field>
-          <label
-            style={{
-              display: "inline-flex",
-              gap: 8,
-              alignItems: "flex-start",
-              cursor: "pointer",
-              fontSize: 14,
-              color: "#171717",
-            }}
-          >
-            <input
-              type="checkbox"
-              name="requestsAppointment"
-              checked={!!inputs.requestsAppointment}
-              onChange={toggleBoolean}
-              style={{ marginTop: 3 }}
-            />
-            <span>
-              {t("opportunityEditor.guidelinesRequestAppointment", {}, {
-                default: "I request an appointment to discuss further.",
-              })}
-            </span>
-          </label>
-        </Field>
-        {inputs.status !== "draft" && !inputs.guidelinesAcknowledged && (
-          <div
-            style={{
-              padding: "10px 14px",
-              borderRadius: 10,
-              background: "#fdf1f1",
-              border: "1px solid #f1c8c8",
-              color: "#b3261e",
-              fontSize: 13,
-            }}
-          >
-            <Icon name="warning circle" />{" "}
-            {t("opportunityEditor.guidelinesWarning", {}, {
-              default:
-                "Tick the guidelines checkbox before moving the status away from Draft.",
-            })}
-          </div>
-        )}
-      </Card>
-      )}
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </Shell>
   );
 }

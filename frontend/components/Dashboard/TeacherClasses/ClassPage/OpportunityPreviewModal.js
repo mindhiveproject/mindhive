@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
@@ -8,11 +8,12 @@ import Chip from "../../../DesignSystem/Chip";
 import StyledModal from "../../../styles/StyledModal";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../Queries/Opportunity";
 import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../Queries/ConnectRound";
-import { UPDATE_REVIEW_NOTE } from "../../../Mutations/OpportunityReviewNote";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import { hydrateProposalInputs } from "../../Connect/Opportunities/OpportunityProposalConfig";
 import ReturnOpportunityModal from "../../Connect/ReturnOpportunityModal";
+import OpportunityReviewNotesThread from "../../Connect/OpportunityReviewNotesThread";
 import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
+import { REVIEW_NOTE_KIND } from "../../../../lib/reviewThreadRound";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
@@ -157,161 +158,6 @@ function formatDate(value) {
   }
 }
 
-function formatDateTime(value) {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleString(undefined, {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
-  } catch {
-    return null;
-  }
-}
-
-const REVIEW_NOTE_CARD_STYLE = {
-  display: "grid",
-  gap: 8,
-  padding: 14,
-  borderRadius: 10,
-  background: "#faf8ff",
-  border: "1px solid rgba(160, 144, 224, 0.35)",
-  boxShadow: "0 2px 10px rgba(111, 38, 206, 0.08)",
-};
-
-function ReviewNoteCard({ note, isOwn, t, onSave, saving }) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(note.body || "");
-
-  const authorLabel = displayName(note.author);
-  const updatedLabel = note.updatedAt
-    ? t(
-        "opportunities.preview.reviewNotes.updatedAt",
-        { date: formatDateTime(note.updatedAt) },
-        { default: "Updated {{date}}" },
-      )
-    : formatDateTime(note.createdAt);
-
-  const handleStartEdit = () => {
-    setDraft(note.body || "");
-    setEditing(true);
-  };
-
-  const handleCancel = () => {
-    setDraft(note.body || "");
-    setEditing(false);
-  };
-
-  const handleSave = async () => {
-    const body = draft.trim();
-    if (!body || body === (note.body || "").trim()) {
-      setEditing(false);
-      return;
-    }
-    try {
-      await onSave?.(note.id, body);
-      setEditing(false);
-    } catch {
-      // Keep edit mode open so the teacher can retry.
-    }
-  };
-
-  return (
-    <div style={REVIEW_NOTE_CARD_STYLE}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 8,
-          flexWrap: "wrap",
-          fontSize: 13,
-          color: "#5f6871",
-        }}
-      >
-        <span style={{ fontWeight: 600, color: "#171717" }}>
-          {authorLabel || "—"}
-        </span>
-        {updatedLabel ? <span>{updatedLabel}</span> : null}
-      </div>
-
-      {editing ? (
-        <>
-          <textarea
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            rows={4}
-            disabled={saving}
-            style={{
-              width: "100%",
-              resize: "vertical",
-              padding: "10px 12px",
-              borderRadius: 8,
-              border: "1px solid #d3dae0",
-              fontFamily: "inherit",
-              fontSize: 14,
-              lineHeight: 1.5,
-              color: "#171717",
-            }}
-          />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 8,
-              flexWrap: "wrap",
-            }}
-          >
-            <Button variant="outline" onClick={handleCancel} disabled={saving}>
-              {t("opportunities.preview.reviewNotes.cancel", {}, {
-                default: "Cancel",
-              })}
-            </Button>
-            <Button
-              variant="filled"
-              onClick={handleSave}
-              disabled={saving || !draft.trim()}
-            >
-              {saving
-                ? t("opportunities.preview.reviewNotes.saving", {}, {
-                    default: "Saving…",
-                  })
-                : t("opportunities.preview.reviewNotes.save", {}, {
-                    default: "Save",
-                  })}
-            </Button>
-          </div>
-        </>
-      ) : (
-        <>
-          <p style={{ ...BODY_TEXT_STYLE, margin: 0 }}>{note.body}</p>
-          {isOwn ? (
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                variant="text"
-                onClick={handleStartEdit}
-                style={{
-                  padding: 0,
-                  minWidth: 0,
-                  height: "fit-content",
-                  fontSize: 13,
-                  fontWeight: 600,
-                }}
-              >
-                {t("opportunities.preview.reviewNotes.edit", {}, {
-                  default: "Edit",
-                })}
-              </Button>
-            </div>
-          ) : null}
-        </>
-      )}
-    </div>
-  );
-}
-
 function MetaItem({ label, value, style }) {
   if (value == null || value === "") return null;
   return (
@@ -452,7 +298,6 @@ export default function OpportunityPreviewModal({
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
   const [returnModalOpen, setReturnModalOpen] = useState(false);
-  const [editingNoteId, setEditingNoteId] = useState(null);
 
   const isInMatchingRound =
     opportunityId &&
@@ -556,28 +401,6 @@ export default function OpportunityPreviewModal({
     }
     return queries;
   }, [opportunityId, activeRoundId, selectedNetworkId]);
-
-  const [updateReviewNote, { loading: savingNote }] = useMutation(
-    UPDATE_REVIEW_NOTE,
-    {
-      refetchQueries: returnRefetchQueries,
-      awaitRefetchQueries: true,
-    },
-  );
-
-  const handleSaveReviewNote = async (noteId, body) => {
-    setEditingNoteId(noteId);
-    try {
-      await updateReviewNote({
-        variables: {
-          id: noteId,
-          input: { body },
-        },
-      });
-    } finally {
-      setEditingNoteId(null);
-    }
-  };
 
   const handleReturnSuccess = () => {
     setReturnModalOpen(false);
@@ -743,24 +566,25 @@ export default function OpportunityPreviewModal({
                 </p>
               ) : null}
 
-              {canManage && activeRoundId && roundReviewNotes.length > 0 ? (
+              {canManage &&
+              activeRoundId &&
+              roundReviewNotes.length > 0 ? (
                 <PreviewSection
-                  title={t("opportunities.preview.reviewNotes.title", {}, {
-                    default: "Review notes",
+                  title={tConnect("reviewThread.title", {}, {
+                    default: "Review conversation",
                   })}
                 >
-                  <div style={{ display: "grid", gap: 10 }}>
-                    {roundReviewNotes.map((note) => (
-                      <ReviewNoteCard
-                        key={note.id}
-                        note={note}
-                        isOwn={Boolean(viewerId && note.author?.id === viewerId)}
-                        t={t}
-                        onSave={handleSaveReviewNote}
-                        saving={savingNote && editingNoteId === note.id}
-                      />
-                    ))}
-                  </div>
+                  <OpportunityReviewNotesThread
+                    opportunityId={opp.id}
+                    roundId={activeRoundId}
+                    notes={roundReviewNotes}
+                    viewerId={viewerId}
+                    canCreate
+                    messageKind={REVIEW_NOTE_KIND.REVIEWER_COMMENT}
+                    mode="teacher"
+                    refetchQueries={returnRefetchQueries}
+                    showTitle={false}
+                  />
                 </PreviewSection>
               ) : null}
 

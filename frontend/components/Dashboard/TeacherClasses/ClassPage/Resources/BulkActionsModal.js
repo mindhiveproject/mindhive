@@ -11,6 +11,7 @@ import {
   SET_RESOURCE_TEMPLATE_CARDS,
 } from "../../../../Mutations/Resource";
 import { GET_CLASS_RESOURCES } from "../../../../Queries/Resource";
+import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 import TemplateBoardCardPicker from "../Assignments/TemplateBoardCardPicker";
 
 const Section = styled.div`
@@ -48,7 +49,7 @@ export default function BulkActionsModal({
   const [applying, setApplying] = useState(false);
 
   const classId = myclass?.id;
-  const templateBoardId = myclass?.templateProposal?.id;
+  const templateBoardId = getPrimaryTemplateBoardId(myclass);
 
   const refetch = [{ query: GET_CLASS_RESOURCES, variables: { classId } }];
 

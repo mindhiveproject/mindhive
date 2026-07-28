@@ -336,6 +336,8 @@ export const STUDY_TEMPLATES = gql`
       id
       title
       slug
+      description
+      shortDescription
       public
       diagram
       author {

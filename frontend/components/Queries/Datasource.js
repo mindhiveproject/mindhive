@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 // query the data journals based on the study and project IDs
 export const GET_DATASOURCES = gql`
   query GET_DATASOURCES($where: DatasourceWhereInput) {
-    datasources(where: $where) {
+    datasources(where: $where, orderBy: [{ updatedAt: desc }]) {
       id
       title
       dataOrigin
@@ -19,9 +19,18 @@ export const GET_DATASOURCES = gql`
       }
       project {
         id
+        usedInClass {
+          id
+        }
+        templateForClasses {
+          id
+        }
       }
       study {
         id
+        classes {
+          id
+        }
       }
       journal {
         id

@@ -19,21 +19,26 @@ import {
 
 const AvatarEditor = dynamic(() => import("./Avatar"), { ssr: false });
 
-export default function UpdateAvatarModal({ user }) {
+export default function UpdateAvatarModal({ user, refetchQueries = [] }) {
   const { t } = useTranslation("connect");
   const [isOpen, setIsOpen] = useState(false);
+
+  const imageRefetchQueries = [
+    { query: CURRENT_USER_QUERY },
+    ...refetchQueries,
+  ];
 
   const [
     updateImageCreate,
     { data: imageData, loading: imageLoading, error: imageError },
   ] = useMutation(UPDATE_PROFILE_IMAGE, {
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    refetchQueries: imageRefetchQueries,
   });
 
   const [updateImageFile, { loading: imageFileLoading }] = useMutation(
     UPDATE_PROFILE_IMAGE_FILE,
     {
-      refetchQueries: [{ query: CURRENT_USER_QUERY }],
+      refetchQueries: imageRefetchQueries,
     }
   );
 

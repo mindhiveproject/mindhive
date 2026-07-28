@@ -1,6 +1,7 @@
 {
 	"actionCard": {
 		"clickToSubmit": "انقر لإرسال {{title}}",
+		"customStep": "خطوات المراجعة",
 		"dataCollection": "جمع البيانات",
 		"deleteCardConfirmation": "هل أنت متأكد أنك تريد حذف هذه البطاقة؟ لا يمكن التراجع عن هذا الإجراء.",
 		"deleteConfirm": "هل أنت متأكد أنك تريد حذف هذه البطاقة؟ لا يمكن التراجع عن هذا الإجراء.",
@@ -8,6 +9,7 @@
 		"projectReport": "تقرير المشروع",
 		"proposalFeedback": "ملاحظات على الاقتراح",
 		"submitFor": "إرسال لـ {{title}}",
+		"submitForCustomMilestone": "تقديم الطلب للمراجعة",
 		"submitForDataCollection": "إرسال لجمع البيانات",
 		"submitForPeerFeedback": "تقديم طلب للحصول على تعليقات الأقران",
 		"submitForProjectReport": "تقديم تقرير المشروع",
@@ -26,7 +28,7 @@
 	"assigned": {
 		"addUser": "إضافة أشخاص",
 		"assignCard": "قم بتعيين هذه البطاقة لأحد المتعاونين من هذا المشروع",
-		"canAssignTooltip": "",
+		"canAssignTooltip": "يمكنك تعيين ملفات تعريف لهذه البطاقة.",
 		"cancel": "يلغي",
 		"noCollaborators": "لا يوجد متعاونون متاحون لهذه اللوحة.",
 		"noUsersFound": "لم يتم العثور على ملف تعريف",
@@ -56,6 +58,8 @@
 			"close": "إغلاق",
 			"connect": "الاتصال",
 			"content": "المحتوى",
+			"customMilestone": "خطوة المراجعة المخصصة",
+			"customMilestoneDescription": "تم تحديد خطوة مراجعة مخصصة في هذا القالب.",
 			"disconnect": "قطع الاتصال",
 			"done": "تم",
 			"linkItems": "عناصر الارتباط",
@@ -87,7 +91,8 @@
 		"addComment": "أضف تعليقًا",
 		"addStartingPoint": "إضافة نقطة البداية",
 		"lockedMessage": "تم تقديم هذه الدراسة ولا يمكن تعديلها. لإجراء أي تعديلات، يُرجى مطالبة مُعلّمك بإلغاء تقديم الدراسة.",
-		"studyBuilderLocked": "منشئ الدراسة مقفل"
+		"studyBuilderLocked": "منشئ الدراسة مقفل",
+		"undo": ""
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -442,6 +447,7 @@
 				"classNetwork": "شبكة الفصول الدراسية",
 				"empty": {
 					"classNetwork": "لا توجد مجموعات بيانات من شبكة صفك لهذا المشروع أو الدراسة.",
+					"me": "",
 					"myClass": "لا توجد مجموعات بيانات من فصولك الدراسية حتى الآن.",
 					"public": "لم يتم العثور على مجموعات بيانات عامة.",
 					"sharedWithMe": "لم تتم مشاركة أي مجموعات بيانات معك.",
@@ -449,11 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "مجموعات البيانات الخاصة بهذا المشروع أو الدراسة من الفصول الدراسية في شبكات فصولك الدراسية.",
+					"me": "",
 					"myClass": "مجموعات البيانات المرتبطة بالدراسات أو المشاريع في فصولك الدراسية.",
 					"public": "مجموعات البيانات من قوالب المجلات العامة.",
 					"sharedWithMe": "مجموعات البيانات التي شاركها معك الآخرون بصفتك متعاونًا.",
 					"uploaded": "مجموعات البيانات التي قمت بتحميلها."
 				},
+				"me": "",
 				"myClass": "صفي",
 				"public": "عام",
 				"sharedWithMe": "تمت مشاركته معي",
@@ -510,19 +518,19 @@
 				"barPlot": {
 					"columnsToPlot": "العمود (الأعمدة) المراد رسمها",
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
+						"chipLong": "طويل",
+						"chipWide": "واسع",
 						"googleSlidesAlt": "عروض جوجل التقديمية",
 						"hintLong": "إذا كنت ترغب في مقارنة الأعمدة، فانقر هنا.",
 						"hintWide": "إذا كنت ترغب في مقارنة مجموعات مختلفة لعمود واحد (متغير)، فانقر هنا.",
 						"longDescription": "تُنظَّم البيانات بحيث تظهر كل ملاحظة (مثل درجة اختبار الطالب) في صف منفصل، وغالبًا ما يكون هناك عمود يشير إلى الفئات (مثل المواد الدراسية). يُعد هذا التنسيق مفيدًا لإجراء تحليل مفصل عبر الفئات.",
 						"longTitle": "تنسيق البيانات الطويلة",
-						"panelRegionAriaLabel": "",
+						"panelRegionAriaLabel": "تغيير تخطيط البيانات: مخطط وموارد للتنسيق المحدد",
 						"sectionLabel": "تخطيط البيانات",
 						"slidesLink": "انقر هنا للاطلاع على شرائح المحاضرة",
 						"switchToLong": "انتقل إلى التنسيق الطويل",
 						"switchToWide": "التبديل إلى التنسيق العريض",
-						"toggleAriaLabel": "",
+						"toggleAriaLabel": "إظهار أو إخفاء خيارات تخطيط البيانات",
 						"wideDescription": "تُنظَّم البيانات بحيث تظهر كل فئة (مثل المواد الدراسية) في عمود مستقل، وغالبًا ما تُمثِّل الصفوف عدد الملاحظات (مثل الطلاب). هذا التنسيق يُسهِّل إجراء مقارنات سريعة داخل الفئات.",
 						"wideTitle": "تنسيق البيانات العريض"
 					},
@@ -704,12 +712,12 @@
 					"rankSectionTitle": "رتب ظروفك",
 					"resources": {
 						"experimentalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "سيتم توفير المرجع قريباً.",
+							"title": "ما هي الفرضية التجريبية؟"
 						},
 						"rankOrdering": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "سيتم توفير المرجع قريباً.",
+							"title": "توقعات الترتيب"
 						}
 					},
 					"sectionHypothesisTitle": "فرضيتك التجريبية",
@@ -734,12 +742,12 @@
 				},
 				"common": {
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "الموارد والمساعدة",
+						"resourcesIntro": "استخدم الأزرار أدناه لفتح مرجع في علامة تبويب جديدة عندما يكون الرابط متاحًا."
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": ""
+						"noLink": "لا يوجد رابط خارجي",
+						"openLinkHint": "انقر هنا للوصول إلى المورد"
 					}
 				},
 				"corr": {
@@ -762,12 +770,12 @@
 					"loadingBlocks": "جارٍ تحميل بيانات الكتلة...",
 					"resources": {
 						"correlationalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "سيتم توفير المرجع قريباً.",
+							"title": "ما هي الفرضية الارتباطية؟"
 						},
 						"directionality": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "سيتم توفير المرجع قريباً.",
+							"title": "اختيار مصطلحات الاتجاه"
 						}
 					},
 					"sectionTitle": "فرضيتك الارتباطية",
@@ -775,20 +783,20 @@
 					"willBeRelatedTo": "سيكون مرتبطًا بـ"
 				},
 				"default": {
-					"group": "",
+					"group": "مجموعة",
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "محاور",
+						"title": "محاور"
 					},
-					"xAxis": "",
-					"yAxis": ""
+					"xAxis": "المحور السيني",
+					"yAxis": "المحور الصادي"
 				}
 			},
 			"editor": {
 				"codeTab": "شفرة",
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "شفرة",
+					"variables": "المتغيرات"
 				},
 				"variablesTab": "المتغيرات"
 			},
@@ -808,8 +816,8 @@
 			"widgetSettings": "إعدادات الأداة"
 		},
 		"sideNav": {
-			"addComponent": "",
-			"addComponentAria": "",
+			"addComponent": "عنصر",
+			"addComponentAria": "أضف مكونًا إلى مساحة العمل هذه",
 			"addJournal": "مجلة",
 			"addJournalScratch": "أنشئ دفتر يوميات من الصفر",
 			"addJournalTemplate": "أضف قالبًا للمجلة",
@@ -966,103 +974,103 @@
 		"statTest": {
 			"axes": {
 				"anova": {
-					"columnsToAnova": "",
+					"columnsToAnova": "العمود (الأعمدة) المطلوب تضمينها في تحليل التباين",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "العروض الحالية:",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "في المثال أعلاه، سنختار العمود \"attrib\" كعمود تجميع. يتم هذا التجميع على العمود \"value\" الذي يحتوي على قيم الشروط c1 و c2 و c3.",
+							"title": "قم بالتبديل إلى استخدام عمود التسمية لفرز صفوف عمود القيمة"
 						},
 						"summaryLong": {
-							"hint": "",
-							"main": ""
+							"hint": "(انقر هنا إذا كنت ترغب في التبديل إلى مقارنة القيم في أعمدة مختلفة)",
+							"main": "تحليل التباين أحادي الاتجاه على عمود يحتوي على قيم باستخدام عمود تجميع يحتوي على تسميات المجموعة في كل صف"
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"hint": "",
-							"prefix": ""
+							"between": "بين",
+							"columns": "ثلاثة أعمدة أو أكثر.",
+							"hint": "(انقر هنا لاستخدام عمود التصنيف لتجميع كل صف حسب تصنيف فريد)",
+							"prefix": "تحليل التباين أحادي الاتجاه"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "في المثال أعلاه، سنختار الأعمدة c1 و c2 و c3 لإجراء تحليل التباين أحادي الاتجاه عليها.",
+							"title": "انتقل إلى إجراء تحليل التباين أحادي الاتجاه بين ثلاثة أعمدة أو أكثر"
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "عمود التجميع",
+					"quantitativeColumn": "العمود الكمي",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "رابط خارجي",
+						"scribbrLinkTitle": "ما هو تحليل التباين أحادي الاتجاه (ANOVA)؟"
 					}
 				},
 				"common": {
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
-						"panelRegionAriaLabel": "",
-						"sectionLabel": "",
-						"toggleAriaLabel": ""
+						"chipLong": "طويل",
+						"chipWide": "واسع",
+						"panelRegionAriaLabel": "تخطيط البيانات: رسم تخطيطي للتنسيق المحدد",
+						"sectionLabel": "تخطيط البيانات",
+						"toggleAriaLabel": "إظهار أو إخفاء خيارات تخطيط البيانات"
 					},
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "محاور",
+						"title": "محاور"
 					},
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "الموارد والمساعدة",
+						"resourcesIntro": "تعرف على المزيد حول هذا المكون من خلال الموارد أدناه."
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": "",
-						"sectionTitle": ""
+						"noLink": "لا يوجد رابط خارجي",
+						"openLinkHint": "انقر هنا للوصول إلى المورد",
+						"sectionTitle": "موارد"
 					}
 				},
 				"default": {
-					"column1": "",
-					"column2": ""
+					"column1": "العمود الأول",
+					"column2": "العمود الثاني"
 				},
 				"pearson": {
-					"predictedColumn": "",
-					"predictorColumn": "",
+					"predictedColumn": "العمود المتوقع",
+					"predictorColumn": "عمود التنبؤ",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "رابط خارجي",
+						"scribbrLinkTitle": "ما هو معامل ارتباط بيرسون؟"
 					}
 				},
 				"tTest": {
-					"col1": "",
-					"col2": "",
+					"col1": "العمود الأول",
+					"col2": "العمود الثاني",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "العروض الحالية:",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "في المثال أعلاه، سنختار العمود \"attrib\" كعمود تجميع. يتم إجراء هذا التجميع على العمود \"value\" الذي يحتوي على قيم لكلا الشرطين.",
+							"title": "قم بالتبديل إلى استخدام عمود التسمية لفرز صفوف عمود القيمة"
 						},
 						"summaryLong": {
-							"main": ""
+							"main": "اختبار T على عمود يحتوي على قيم باستخدام عمود تجميع يحتوي على تسميات لكل صف"
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"prefix": ""
+							"between": "بين",
+							"columns": "عمودان.",
+							"prefix": "اختبار T"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "في المثال أعلاه، سنختار العمودين c1 و c2 لإجراء اختبار t عليهما.",
+							"title": "انتقل إلى إجراء اختبار T بين عمودين"
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "عمود التجميع",
+					"quantitativeColumn": "العمود الكمي",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "رابط خارجي",
+						"scribbrLinkTitle": "اختبار t للعينات المستقلة"
 					}
 				}
 			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "شفرة",
+					"variables": "المتغيرات"
 				}
 			},
 			"emptyState": {
@@ -1070,9 +1078,9 @@
 				"title": "اختبارك الإحصائي جاهز للتكوين"
 			},
 			"fields": {
-				"clearSelection": "",
-				"selectPlaceholder": "",
-				"selectVariablesPlaceholder": ""
+				"clearSelection": "لا أحد",
+				"selectPlaceholder": "حدد {{field}}",
+				"selectVariablesPlaceholder": "حدد المتغير (المتغيرات)"
 			}
 		},
 		"table": {
@@ -1224,7 +1232,7 @@
 		"allowMovingCards": "السماح بنقل البطاقات",
 		"allowMovingSections": "السماح بنقل الأقسام",
 		"cancel": "يلغي",
-		"classTemplateReadOnly": "",
+		"classTemplateReadOnly": "نموذج الفصل (يستخدمه مجلس الفصل)",
 		"collaborators": "المتعاونون",
 		"copyLink": "نسخ رابط الدراسة",
 		"createYourStudyProposal": "قم بإنشاء مقترح دراستك هنا لبدء رحلة البحث الخاصة بك",
@@ -1327,6 +1335,7 @@
 	},
 	"menu": {
 		"addBlock": "أضف كتلة",
+		"settings": "",
 		"studyFlow": "تدفق الدراسة",
 		"studySettings": "إعدادات الدراسة"
 	},
@@ -1364,24 +1373,37 @@
 	"newProject": {
 		"addCollaborators": "إضافة المتعاونين",
 		"alreadyAssociatedTitle": "لديك بالفعل مشروع مرتبط بهذه الفئة",
+		"alreadyAssociatedTitleStudy": "",
 		"alreadyAssociatedWarning": "لا تستمر في المضي قدمًا إلا إذا كنت تعرف ما تفعله.",
+		"alreadyAssociatedWarningStudy": "",
 		"backToHome": "← العودة إلى الصفحة الرئيسية",
 		"createProject": "إنشاء مشروع",
+		"createStudy": "",
 		"giveNameAlert": "أعط مشروعك اسمًا",
+		"giveNameAlertStudy": "",
 		"goBackHome": "العودة إلى المنزل",
 		"nameMessage": "أعطِ مشروعك اسمًا. هذا ليس عنوان الدراسة، بل ما ترغب في تسميته مساحة عملك.",
+		"nameMessageStudy": "",
 		"namePlaceholder": "اسم مشروعي هو",
+		"namePlaceholderStudy": "",
 		"nameYourProject": "قم بتسمية مشروعك",
+		"nameYourStudy": "",
 		"noTemplatesSubtitle": "لبدء مشروع، ستحتاج إلى قالب لوحة مشروع. قد لا يتوفر لدى معلمك قالب لوحة مشروع مرتبط بهذه الحصة.",
 		"noTemplatesTitle": "لا توجد قوالب لوحة المشروع في الفصل",
 		"selectClass": "حدد الفصل",
-		"untitledProject": "مشروع بلا عنوان"
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
+		"untitledProject": "مشروع بلا عنوان",
+		"untitledStudy": ""
 	},
 	"notes": {
 		"noNotes": "لم يتم إدخال أي ملاحظات بعد. انقر بزر الماوس الأيمن لإضافة ملاحظات."
 	},
 	"noVideoPlaceholder": "لا يوجد فيديو تعريفي متاح.",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "لا يستطيع الطلاب إسناد بطاقاتهم إلى الآخرين بأنفسهم",
 	"overview": {
 		"actions": "الإجراءات",
 		"copy": "ينسخ",
@@ -1515,7 +1537,7 @@
 		"boardTypeMentorNote": "هذا الأمر مهم للموجهين الذين يقدمون ملاحظاتهم لمجالس الطلاب. إذا كانت لديكم أي استفسارات، يُرجى التواصل مع أحد أعضاء MindHive.",
 		"boardTypeMindHive": "",
 		"boardTypeYouQuantified": "",
-		"classTemplateLabel": "",
+		"classTemplateLabel": "هذه اللوحة عبارة عن نموذج فصل دراسي",
 		"copy": "ينسخ",
 		"create": "إنشاء اقتراح جديد",
 		"dateCreated": "تاريخ الإنشاء",
@@ -1605,11 +1627,11 @@
 			"assignedTo": {
 				"disable": "تعطيل تعيين الطلاب للبطاقات",
 				"disableStudentsAssign": "تقييد للمعلمين والمرشدين فقط",
-				"empty": "",
+				"empty": "لم يتم تعيين أي أشخاص في هذه اللوحة حتى الآن.",
 				"enable": "تفعيل تعيين الطلاب للبطاقات",
 				"enableStudentsAssign": "السماح للطلاب بتعيين البطاقات"
 			},
-			"emptyState": "",
+			"emptyState": "لا توجد بطاقات مطابقة للفلاتر المحددة. يرجى تعديل حالتك أو خطوة المراجعة أو الفلاتر المخصصة لعرض البطاقات.",
 			"reviewSteps": "خطوات المراجعة",
 			"title": "مصنف بواسطة"
 		}
@@ -1864,6 +1886,85 @@
 		"card": "بطاقة",
 		"cards": "بطاقات",
 		"cardsCount": "{{count}} بطاقة{{count == 1 ? '' : 's'}}",
+		"createCardModal": {
+			"alreadyAddedLabel": "{{label}} (تمت إضافته بالفعل)",
+			"alreadyAddedTooltip": "هذه نقطة التفتيش موجودة بالفعل على اللوحة",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
+			"cancel": "يلغي",
+			"categories": {
+				"action": "بطاقة الحركة",
+				"proposal": "بطاقة اقتراح"
+			},
+			"create": "يخلق",
+			"creating": "جارٍ الإنشاء...",
+			"custom": {
+				"canReview": "من يمكنه مراجعة",
+				"cloneFrom": "نسخ نموذج موجود",
+				"description": "وصف",
+				"fromScratch": "ابدأ من الصفر",
+				"label": "علامة الإجراء",
+				"labelPlaceholder": "أدخل تسمية الإجراء",
+				"selectSource": "نموذج للنسخ",
+				"selectSourcePlaceholder": "اختر خطوة مراجعة"
+			},
+			"customPreview": "يُنشئ خطوة مراجعة مخصصة مع تسمية خاصة بها.",
+			"editForm": "نموذج التعديل",
+			"editFormHint": "تتوفر خاصية تعديل النماذج في مكان آخر",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
+			"formTemplate": {
+				"blank": "نموذج فارغ",
+				"defaultLabel": "{{label}}",
+				"label": "نموذج استمارات"
+			},
+			"milestone": {
+				"actionLabel": "علامة الإجراء",
+				"configureFormNext": "يتم إعداد نموذج المراجعة في الخطوة التالية.",
+				"description": "وصف"
+			},
+			"newCheckpoint": "+ بطاقة حركة جديدة",
+			"noPreview": "لا يوجد نموذج تقييم مرتبط بهذا النوع من البطاقات.",
+			"previewLabel": "معاينة نموذج المراجعة",
+			"previewLoading": "جاري تحميل المعاينة...",
+			"proposalPreview": "يضيف بطاقة اقتراح عادية مع حقول محتوى للطلاب.",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
+			"scratchPreview": "أنشئ نموذج مراجعة مبدئيًا يحتوي على بطاقة فارغة واحدة، واربطه بهذه الخطوة. انشر النموذج في لوحة التحكم قبل ظهوره في قسم المراجعة.",
+			"statusDraft": "",
+			"statusPublished": "",
+			"steps": {
+				"cardType": "نوع البطاقة",
+				"checkpoint": "نقطة تفتيش",
+				"milestone": "منعطف",
+				"permissions": "نموذج الأذونات والنموذج"
+			},
+			"templateSourceLabel": "{{title}} (مخصص)",
+			"title": "إنشاء بطاقة جديدة",
+			"titleLabel": "عنوان البطاقة",
+			"titlePlaceholder": "أدخل عنوان البطاقة",
+			"typeLabel": "نوع البطاقة",
+			"typePlaceholder": "اختر نوع البطاقة",
+			"types": {
+				"actionCollectingData": "الإجراء الافتراضي: بدء جمع البيانات",
+				"actionPeerFeedback": "الإجراء الافتراضي: إرسال للحصول على تعليقات من الزملاء",
+				"actionProjectReport": "الإجراء الافتراضي: إرسال تقرير المشروع",
+				"actionSubmit": "الإجراء الافتراضي: إرسال للحصول على ملاحظات حول المقترح",
+				"custom": "أنشئ خطوة المراجعة الخاصة بك",
+				"proposal": "بطاقة اقتراح"
+			}
+		},
 		"deleteSectionConfirm": "هل أنت متأكد من رغبتك في حذف قسم الاقتراحات هذا؟ سيتم حذف جميع البطاقات في هذا القسم أيضًا. لا يمكن التراجع عن هذا الإجراء.",
 		"enterNewTitle": "الرجاء إدخال عنوان",
 		"newCard": "بطاقة جديدة",
@@ -1872,6 +1973,8 @@
 		"sectionTitlePlaceholder": "أدخل عنوان القسم"
 	},
 	"selector": {
+		"addBlockAria": "",
+		"addFavoriteAria": "",
 		"basicBlocks": {
 			"description": "هل ترغب في إضافة تعليمات مخصصة للمشاركين أو تضمين رابط و/أو فيديو في إجراءات دراستك؟ حدد كتلة أساسية وحرّرها.",
 			"title": "الكتل الأساسية"
@@ -1881,6 +1984,9 @@
 			"myFavorite": "أُفضله",
 			"ownedByMe": "مملوكة لي"
 		},
+		"infoAria": "",
+		"previewAria": "",
+		"removeFavoriteAria": "",
 		"searchPlaceholder": "🔍 بحث",
 		"studyDesign": {
 			"betweenSubjects": "التصميم بين المواضيع",
@@ -1891,6 +1997,8 @@
 		},
 		"surveys": {
 			"buildOwn": "ألا تجد أداة لقياس أحد جوانب دراستك؟ أنشئها بنفسك باستخدام أداة إنشاء الاستبيانات وبمساعدة المعلم.",
+			"buildOwnLine1": "",
+			"buildOwnLine2": "",
 			"description": "هل ترغب في قياس مواقف المشاركين أو تجاربهم أو آرائهم من خلال تقرير ذاتي؟ اختر من بين هذه المجموعة من الاستبيانات المُعتمدة.",
 			"title": "الاستطلاعات"
 		},
@@ -1900,7 +2008,9 @@
 		},
 		"templates": {
 			"description": "ألا ترغب في البدء من الصفر؟ اختر وعدّل تصميم دراسة جاهزًا باستخدام أحد القوالب المتوفرة في هذا البنك.",
-			"title": "القوالب"
+			"openStudyAria": "",
+			"title": "القوالب",
+			"tryThisFlow": ""
 		}
 	},
 	"selectWhichToClone": "حدد {{taskType}} الذي تريد استنساخه أدناه.",
@@ -1982,6 +2092,25 @@
 	"study": "يذاكر",
 	"studyBuilder": "منشئ الدراسة",
 	"studyDescription": "الدراسة مشروع بحثي يطرح سؤالاً بحثياً. ويمكن أن يتألف من عدة مهام و/أو استبيانات.",
+	"studyFlow": {
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"noTasks": {
+			"description": "",
+			"title": ""
+		},
+		"preview": {
+			"branch": "",
+			"collapseAria": "",
+			"defaultPath": "",
+			"expandAria": "",
+			"legend": "",
+			"probabilityAria": "",
+			"taskCount": ""
+		}
+	},
 	"studyManager": {
 		"assignToExistingStudy": "تعيين إلى دراسة موجودة",
 		"assignToStudy": "تعيين للدراسة",
@@ -2137,18 +2266,30 @@
 		"uploadLabjs": "يرجى تحميل ملف lab.js json أولاً",
 		"vasBuilder": "منشئ خدمات القيمة المضافة"
 	},
+	"templateMilestones": {
+		"addStep": "أضف خطوات المراجعة",
+		"cancel": "يلغي",
+		"canReview": "من يمكنه مراجعة",
+		"create": "إنشاء خطوة",
+		"deactivate": "إلغاء التنشيط",
+		"description": "أضف خطوات مراجعة مخصصة إلى نموذج الفصل الدراسي هذا. كل خطوة تُنشئ بطاقة عمل يستخدمها الطلاب لتقديم أعمالهم للحصول على ملاحظات.",
+		"hasActionCard": "بطاقة الإجراء المرتبطة",
+		"stepDescription": "وصف",
+		"stepTitle": "عنوان الخطوة",
+		"title": "خطوات المراجعة"
+	},
 	"templateTab": "نموذج",
 	"testAndCollect": "اختبار وجمع",
 	"tiptap": {
 		"insertImageAria": "إدراج الصورة",
 		"insertImagePrompt": "أدخل عنوان URL للصورة:",
 		"mediaCancelEdit": "يلغي",
-		"mediaCanvaExportThumb": "",
+		"mediaCanvaExportThumb": "تصدير ملفات PDF من Canva",
 		"mediaDelete": "يمسح",
 		"mediaDeleteConfirm": "هل تريد حذف هذا الملف من مكتبتك؟ قد تظهر الصور الموجودة مسبقاً في المحتوى بشكل معطوب.",
 		"mediaDeleteFailed": "تعذر حذف هذا الملف.",
 		"mediaDescriptionPlaceholder": "أضف ملاحظاتك إن شئت.",
-		"mediaDownloadPdf": "",
+		"mediaDownloadPdf": "تحميل PDF",
 		"mediaEdit": "يحرر",
 		"mediaEditFieldsRequired": "لا يمكن أن يكون عنوان الملف واسمه فارغين.",
 		"mediaEditMeta": "عدل التفاصيل",
@@ -2207,7 +2348,9 @@
 		"addMore": "أضف المزيد"
 	},
 	"version": {
+		"cancel": "",
 		"confirmDelete": "هل أنت متأكد أنك تريد حذف {{versionName}}؟",
+		"confirmLoadUnsaved": "",
 		"createdOn": "تم إنشاؤه في",
 		"createNewVersion": "إنشاء إصدار جديد",
 		"currentVersion": "الإصدار الحالي",
@@ -2215,7 +2358,9 @@
 		"description": "وصف",
 		"enterVersionName": "الرجاء إدخال اسم الإصدار",
 		"headerNote": "حفظ تصميمات الدراسة المختلفة المعروضة على الشاشة على اليسار",
+		"invalidDiagram": "",
 		"load": "حمولة",
+		"missingDiagram": "",
 		"name": "اسم",
 		"noVersionSaved": "لم يتم حفظ أي نسخة دراسية بعد. أنشئ نسخة جديدة بالنقر على الزر أدناه.",
 		"placeholder": "إصدارات الدراسة",

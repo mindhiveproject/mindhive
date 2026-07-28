@@ -1,51 +1,72 @@
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import { Dropdown } from "semantic-ui-react";
+import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 
-export default function StudyStatus({ study, handleChange, addFunctions }) {
+export default function StudyStatus({ study, handleChange }) {
   const { t } = useTranslation("builder");
-  
+
   const statuses = [
-    { key: 1, text: t("status.workInProgress", "Work in progress"), value: "WORKING" },
-    { key: 2, text: t("status.submittedAsProposal", "Submitted as proposal"), value: "SUBMITTED_AS_PROPOSAL" },
-    { key: 3, text: t("status.readyForReview", "Ready for review"), value: "READY_FOR_REVIEW" },
-    { key: 4, text: t("status.inReview", "In review"), value: "IN_REVIEW" },
-    { key: 5, text: t("status.reviewed", "Reviewed"), value: "REVIEWED" },
-    { key: 6, text: t("status.collectingData", "Collecting data"), value: "COLLECTING_DATA" },
     {
-      key: 7,
-      text: t("status.dataCollectionCompleted", "Data collection is completed"),
+      value: "WORKING",
+      label: t("status.workInProgress", {}, { default: "Work in progress" }),
+    },
+    {
+      value: "SUBMITTED_AS_PROPOSAL",
+      label: t("status.submittedAsProposal", {}, {
+        default: "Submitted as proposal",
+      }),
+    },
+    {
+      value: "READY_FOR_REVIEW",
+      label: t("status.readyForReview", {}, { default: "Ready for review" }),
+    },
+    {
+      value: "IN_REVIEW",
+      label: t("status.inReview", {}, { default: "In review" }),
+    },
+    {
+      value: "REVIEWED",
+      label: t("status.reviewed", {}, { default: "Reviewed" }),
+    },
+    {
+      value: "COLLECTING_DATA",
+      label: t("status.collectingData", {}, { default: "Collecting data" }),
+    },
+    {
       value: "DATA_COLLECTION_IS_COMPLETED",
+      label: t("status.dataCollectionCompleted", {}, {
+        default: "Data collection is completed",
+      }),
     },
   ];
 
   const [status, setStatus] = useState(study?.status || "");
 
-  const changeStatus = (status) => {
-    setStatus(status);
+  const changeStatus = (nextStatus) => {
+    setStatus(nextStatus);
     handleChange({
       target: {
         name: "status",
-        value: status,
+        value: nextStatus,
       },
     });
   };
 
   return (
-    <div className="studyVersion">
-      <h2>{t("status.title", "Study status")}</h2>
-
-      <div>
-        <Dropdown
-          placeholder={t("status.placeholder", "Study versions")}
-          fluid
-          selection
-          options={statuses}
-          onChange={(event, data) => changeStatus(data?.value)}
-          value={status}
-        />
+    <div className="settingsSection" id="studyStatus">
+      <div className="settingsSectionHeader">
+        <h2>{t("status.title", {}, { default: "Study status" })}</h2>
       </div>
+      <DropdownSelect
+        value={status}
+        onChange={changeStatus}
+        options={statuses}
+        placeholder={t("status.placeholder", {}, {
+          default: "Select status",
+        })}
+        ariaLabel={t("status.title", {}, { default: "Study status" })}
+      />
     </div>
   );
 }

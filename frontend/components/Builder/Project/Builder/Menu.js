@@ -1,9 +1,29 @@
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
+import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import ComponentSelector from "./Selector/Main";
 import StudySettings from "./Settings/Main";
 import StudyTasks from "../../../Dashboard/Review/Board/StudyOverview/StudyTasks";
+
+const ICON_MASK = (src) => ({
+  display: "block",
+  width: 24,
+  height: 24,
+  backgroundColor: "currentColor",
+  WebkitMaskImage: `url(${src})`,
+  WebkitMaskSize: "contain",
+  WebkitMaskRepeat: "no-repeat",
+  WebkitMaskPosition: "center",
+  maskImage: `url(${src})`,
+  maskSize: "contain",
+  maskRepeat: "no-repeat",
+  maskPosition: "center",
+});
+
+function MediumIcon({ src }) {
+  return <span aria-hidden style={ICON_MASK(src)} />;
+}
 
 export default function Menu({
   engine,
@@ -18,37 +38,40 @@ export default function Menu({
   const [tab, setTab] = useState("addBlock");
 
   return (
-    <div className="sidepanel">
-      <div text stackable className="menu">
-        <div
-          onClick={() => setTab("addBlock")}
-          className={
-            tab === "addBlock" ? "menuTitle selectedMenuTitle" : "menuTitle"
-          }
-          id="addBlock"
-        >
-          <h2>{t("menu.addBlock", "Add a block")}</h2>
-        </div>
-
-        <div
-          onClick={() => setTab("flow")}
-          className={
-            tab === "flow" ? "menuTitle selectedMenuTitle" : "menuTitle"
-          }
-          id="flow"
-        >
-          <h2>{t("menu.studyFlow", "Study flow")}</h2>
-        </div>
-
-        <div
-          onClick={() => setTab("study")}
-          className={
-            tab === "study" ? "menuTitle selectedMenuTitle" : "menuTitle"
-          }
-          id="studySettings"
-        >
-          <h2>{t("menu.studySettings", "Study settings")}</h2>
-        </div>
+    <>
+      <div className="sidepanelNavbar">
+        <Navbar variant="tonal">
+          <NavbarItem
+            selected={tab === "addBlock"}
+            onClick={() => setTab("addBlock")}
+            leadingIcon={
+              <MediumIcon src="/assets/icons/builder/medium-add.svg" />
+            }
+            id="addBlock"
+          >
+            {t("menu.addBlock", {}, { default: "Add a block" })}
+          </NavbarItem>
+          <NavbarItem
+            selected={tab === "flow"}
+            onClick={() => setTab("flow")}
+            leadingIcon={
+              <MediumIcon src="/assets/icons/builder/medium-study-flow.svg" />
+            }
+            id="flow"
+          >
+            {t("menu.studyFlow", {}, { default: "Study Flow" })}
+          </NavbarItem>
+          <NavbarItem
+            selected={tab === "study"}
+            onClick={() => setTab("study")}
+            leadingIcon={
+              <MediumIcon src="/assets/icons/builder/medium-settings.svg" />
+            }
+            id="studySettings"
+          >
+            {t("menu.settings", {}, { default: "Settings" })}
+          </NavbarItem>
+        </Navbar>
       </div>
 
       {tab === "addBlock" && (
@@ -76,6 +99,6 @@ export default function Menu({
           hasStudyChanged={hasStudyChanged}
         />
       )}
-    </div>
+    </>
   );
 }

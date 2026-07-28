@@ -2,22 +2,23 @@ import { useQuery } from "@apollo/client";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../../Queries/Proposal";
 import useTranslation from "next-translate/useTranslation";
 
-import { Radio, Icon } from "semantic-ui-react";
-import { useState } from "react";
-
 import ProposalPDF from "../../../../Proposal/PDF/Main";
 import ProposalBuilder from "../../../../Proposal/Builder/Main";
 
 export default function ProposalPage({
   user,
   proposalId,
+  onBack,
   goToOverview,
+  showBackButton = true,
   proposalBuildMode,
   refetchQueries,
+  autoOpenAddMilestone = false,
 }) {
   const { t } = useTranslation("classes");
-  const [isPDF, setIsPDF] = useState(false);
-  const { data, error, loading } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
+  const handleBack = onBack || goToOverview;
+
+  const { data } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
     variables: {
       id: proposalId,
     },
@@ -27,20 +28,23 @@ export default function ProposalPage({
 
   return (
     <div className="proposalBoard">
-      <div className="previewToggle">
-        <button onClick={goToOverview} className="narrowButton">
-          <Icon name="angle left"/> {t("board.back", "Back")}
-        </button>
-      </div>
-      {isPDF || proposal?.isSubmitted ? (
+      {showBackButton && handleBack ? (
+        <div className="previewToggle">
+          <button type="button" onClick={handleBack} className="narrowButton">
+            ← {t("projectBoard.back", {}, { default: "← Back" })}
+          </button>
+        </div>
+      ) : null}
+      {proposal?.isSubmitted ? (
         <ProposalPDF proposalId={proposalId} />
       ) : (
         <ProposalBuilder
           user={user}
           proposal={proposal}
-          onClose={goToOverview}
+          onClose={handleBack}
           proposalBuildMode={proposalBuildMode}
           refetchQueries={refetchQueries}
+          autoOpenAddMilestone={autoOpenAddMilestone}
         />
       )}
     </div>

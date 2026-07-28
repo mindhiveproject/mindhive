@@ -37,7 +37,7 @@ async function insertSeed(seed: any, session: any, context: AnyContext) {
       scope: "global",
       status: "published",
       version: 1,
-      publishedAt: new Date().toISOString(),
+      publishedAt: new Date(),
       publishedBy: { connect: { id: session.itemId } },
       changelog: "Initial seed — Phase 5.",
     },
@@ -121,11 +121,7 @@ async function seedProfileForms(
     ids.push(id);
   }
 
-  return context.query.FormDefinition.findMany({
-    where: { id: { in: ids } },
-    query:
-      "id key title scope status version publishedAt cards { id title order fields { id name fieldType order } }",
-  });
+  return context.db.FormDefinition.findMany({ where: { id: { in: ids } } });
 }
 
 export default seedProfileForms;

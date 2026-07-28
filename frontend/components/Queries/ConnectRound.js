@@ -29,6 +29,30 @@ export const MY_CONNECT_ROUNDS = gql`
           createdAt
           updatedAt
         }
+        connectRoundsReviewing(orderBy: { updatedAt: desc }) {
+          id
+          title
+          description
+          status
+          openAt
+          closeAt
+          publishedAt
+          matchingAlgorithm
+          classNetwork {
+            id
+            title
+            admins {
+              id
+            }
+          }
+          opportunities {
+            id
+            title
+            status
+          }
+          createdAt
+          updatedAt
+        }
         adminOfClassNetworks {
           id
           title
@@ -166,6 +190,7 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
     opportunities(
       where: {
         classNetworks: { some: { id: { equals: $classNetworkId } } }
+        status: { in: ["pending_review", "returned", "pre_selected", "accepted"] }
       }
     ) {
       id
@@ -177,6 +202,7 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
       availableFrom
       availableTo
       timeCommitment
+      requestsAppointment
       coverImageUrl
       coverImage {
         url

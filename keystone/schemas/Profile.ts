@@ -50,7 +50,11 @@ export const Profile = list({
       query: () => true,
     },
     item: {
-      create: () => true,
+      // Closed to anonymous callers. Public signup goes through the
+      // signupWithTurnstile / googleSignup mutations, which verify the caller
+      // is human and then create with sudo. Leaving this open let bots POST
+      // straight to /api/graphql and skip the signup UI entirely.
+      create: ({ session }) => permissions.canManageUsers({ session }),
       update: () => true,
       delete: rules.canManageUsers,
     },
@@ -171,6 +175,25 @@ export const Profile = list({
     }),
     memberOfClassNetworks: relationship({
       ref: "ClassNetwork.memberProfiles",
+      many: true,
+      // Block generated GraphQL updates; membership changes go through sudo
+      // custom mutations (network invites / open join / global admin override).
+      access: {
+        read: () => true,
+        create: () => false,
+        update: () => false,
+      },
+    }),
+    networkInvites: relationship({
+      ref: "NetworkInvite.profile",
+      many: true,
+    }),
+    networkInvitesRequested: relationship({
+      ref: "NetworkInvite.requestedBy",
+      many: true,
+    }),
+    networkInvitesReviewed: relationship({
+      ref: "NetworkInvite.reviewedBy",
       many: true,
     }),
     journals: relationship({
@@ -362,6 +385,10 @@ export const Profile = list({
       ref: "Organization.createdBy",
       many: true,
     }),
+    adminOfOrganizations: relationship({
+      ref: "Organization.admins",
+      many: true,
+    }),
     // Invites this profile has sent to other people.
     organizationInvitesSent: relationship({
       ref: "OrganizationInvite.invitedBy",
@@ -446,6 +473,7 @@ export const Profile = list({
         { label: "she/her/hers", value: "she" },
         { label: "he/him/his", value: "he" },
         { label: "they/them/theirs", value: "they" },
+        { label: "Prefer not to say", value: "preferNotToSay" },
       ],
     }),
     location: text(),

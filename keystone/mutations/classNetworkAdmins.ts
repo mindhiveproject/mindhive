@@ -6,6 +6,11 @@ type NetworkAdminArgs = {
   email?: string | null;
 };
 
+type AssociateClassArgs = {
+  classId: string;
+  networkId: string;
+};
+
 const ADMIN_PERMISSION_NAMES = new Set(["ADMIN", "TEACHER"]);
 
 function hasNetworkAuthority(session: any, network: any): boolean {
@@ -21,6 +26,9 @@ function displayProfile(profile: any): string {
   return profile?.email || profile?.username || profile?.id || "profile";
 }
 
+const MEMBER_NETWORK_QUERY =
+  "id memberProfiles { id username firstName lastName email } memberOrganizations { id name }";
+
 async function getNetwork(context: any, networkId: string) {
   const network = await context.sudo().query.ClassNetwork.findOne({
     where: { id: networkId },
@@ -29,6 +37,7 @@ async function getNetwork(context: any, networkId: string) {
       creator { id }
       admins { id }
       memberProfiles { id }
+      memberOrganizations { id }
     `,
   });
 
@@ -36,6 +45,49 @@ async function getNetwork(context: any, networkId: string) {
     throw new Error("Class network not found.");
   }
   return network;
+}
+
+async function getPublicNetwork(context: any, networkId: string) {
+  const network = await context.sudo().query.ClassNetwork.findOne({
+    where: { id: networkId },
+    query: `
+      id
+      isPublic
+    `,
+  });
+
+  if (!network) {
+    throw new Error("Class network not found.");
+  }
+  if (!network.isPublic) {
+    throw new Error("Only public class networks can be joined from class settings.");
+  }
+  return network;
+}
+
+async function getEditableClass(context: any, classId: string) {
+  const classItem = await context.sudo().query.Class.findOne({
+    where: { id: classId },
+    query: `
+      id
+      creator { id }
+      networks { id }
+    `,
+  });
+
+  if (!classItem) {
+    throw new Error("Class not found.");
+  }
+  return classItem;
+}
+
+function assertCanManageClass(context: any, classItem: any) {
+  const canManageClass =
+    permissions.canManageUsers({ session: context.session }) ||
+    classItem.creator?.id === context.session.itemId;
+  if (!canManageClass) {
+    throw new Error("You are not allowed to update this class.");
+  }
 }
 
 async function getTargetProfile(context: any, args: NetworkAdminArgs) {
@@ -131,6 +183,145 @@ export async function addClassNetworkAdmin(
   });
 }
 
+export async function addClassNetworkMemberProfile(
+  _root: unknown,
+  args: NetworkAdminArgs,
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to manage class network members.");
+  }
+
+  // Global admin override only. Network creators/admins must use
+  // inviteProfileToClassNetwork (or open-join / request flows).
+  if (!permissions.canManageUsers({ session: context.session })) {
+    throw new Error(
+      "Only global admins can directly add members. Use inviteProfileToClassNetwork instead."
+    );
+  }
+
+  const network = await getNetwork(context, args.networkId);
+
+  const profile = await getTargetProfile(context, args);
+
+  const memberIds = new Set(
+    (network.memberProfiles || []).map((member: { id: string }) => member.id)
+  );
+  if (memberIds.has(profile.id)) {
+    return context.sudo().query.ClassNetwork.findOne({
+      where: { id: args.networkId },
+      query: MEMBER_NETWORK_QUERY,
+    });
+  }
+
+  return context.sudo().query.ClassNetwork.updateOne({
+    where: { id: args.networkId },
+    data: {
+      memberProfiles: { connect: [{ id: profile.id }] },
+    },
+    query: MEMBER_NETWORK_QUERY,
+  });
+}
+
+export async function associateClassWithPublicNetwork(
+  _root: unknown,
+  { classId, networkId }: AssociateClassArgs,
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to associate a class network.");
+  }
+
+  await getPublicNetwork(context, networkId);
+  const classItem = await getEditableClass(context, classId);
+  assertCanManageClass(context, classItem);
+
+  const alreadyLinked = (classItem.networks || []).some(
+    (network: { id: string }) => network.id === networkId
+  );
+  if (!alreadyLinked) {
+    return context.sudo().query.Class.updateOne({
+      where: { id: classId },
+      data: {
+        networks: { connect: [{ id: networkId }] },
+      },
+      query: `
+        id
+        networks {
+          id
+          title
+          description
+          isPublic
+          settings
+        }
+      `,
+    });
+  }
+
+  return context.sudo().query.Class.findOne({
+    where: { id: classId },
+    query: `
+      id
+      networks {
+        id
+        title
+        description
+        isPublic
+        settings
+      }
+    `,
+  });
+}
+
+export async function removeClassFromNetwork(
+  _root: unknown,
+  { classId, networkId }: AssociateClassArgs,
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to remove a class network.");
+  }
+
+  const classItem = await getEditableClass(context, classId);
+  assertCanManageClass(context, classItem);
+
+  const linked = (classItem.networks || []).some(
+    (network: { id: string }) => network.id === networkId
+  );
+  if (!linked) {
+    return context.sudo().query.Class.findOne({
+      where: { id: classId },
+      query: `
+        id
+        networks {
+          id
+          title
+          description
+          isPublic
+          settings
+        }
+      `,
+    });
+  }
+
+  return context.sudo().query.Class.updateOne({
+    where: { id: classId },
+    data: {
+      networks: { disconnect: [{ id: networkId }] },
+    },
+    query: `
+      id
+      networks {
+        id
+        title
+        description
+        isPublic
+        settings
+      }
+    `,
+  });
+}
+
 export async function removeClassNetworkAdmin(
   _root: unknown,
   { networkId, profileId }: { networkId: string; profileId: string },
@@ -170,5 +361,80 @@ export async function removeClassNetworkAdmin(
       admins: { disconnect: [{ id: profileId }] },
     },
     query: "id admins { id username firstName lastName email } memberProfiles { id }",
+  });
+}
+
+export async function removeClassNetworkMemberProfile(
+  _root: unknown,
+  { networkId, profileId }: { networkId: string; profileId: string },
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to manage class network members.");
+  }
+
+  const network = await getNetwork(context, networkId);
+  if (!hasNetworkAuthority(context.session, network)) {
+    throw new Error(
+      "You are not allowed to manage members for this class network."
+    );
+  }
+
+  const memberIds = new Set(
+    (network.memberProfiles || []).map((member: { id: string }) => member.id)
+  );
+  if (!memberIds.has(profileId)) {
+    return context.sudo().query.ClassNetwork.findOne({
+      where: { id: networkId },
+      query: MEMBER_NETWORK_QUERY,
+    });
+  }
+
+  return context.sudo().query.ClassNetwork.updateOne({
+    where: { id: networkId },
+    data: {
+      memberProfiles: { disconnect: [{ id: profileId }] },
+    },
+    query: MEMBER_NETWORK_QUERY,
+  });
+}
+
+export async function removeClassNetworkMemberOrganization(
+  _root: unknown,
+  {
+    networkId,
+    organizationId,
+  }: { networkId: string; organizationId: string },
+  context: any
+) {
+  if (!context.session?.itemId) {
+    throw new Error("You must be signed in to manage class network members.");
+  }
+
+  const network = await getNetwork(context, networkId);
+  if (!hasNetworkAuthority(context.session, network)) {
+    throw new Error(
+      "You are not allowed to manage members for this class network."
+    );
+  }
+
+  const organizationIds = new Set(
+    (network.memberOrganizations || []).map(
+      (organization: { id: string }) => organization.id
+    )
+  );
+  if (!organizationIds.has(organizationId)) {
+    return context.sudo().query.ClassNetwork.findOne({
+      where: { id: networkId },
+      query: MEMBER_NETWORK_QUERY,
+    });
+  }
+
+  return context.sudo().query.ClassNetwork.updateOne({
+    where: { id: networkId },
+    data: {
+      memberOrganizations: { disconnect: [{ id: organizationId }] },
+    },
+    query: MEMBER_NETWORK_QUERY,
   });
 }

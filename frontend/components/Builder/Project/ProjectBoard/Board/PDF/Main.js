@@ -1,7 +1,15 @@
 import absoluteUrl from "next-absolute-url";
 import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
-import { EDIT_CLASS } from "../../../../../Mutations/Classes";
+import { UPDATE_PROPOSAL_BOARD } from "../../../../../Mutations/Proposal";
+import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
+import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
+import { cardIncludedInReviewStep } from "../../../../../../lib/milestones";
+import {
+  getBoardAssignableToStudents,
+  getBoardStudentsCanAssignToCards,
+  mergeBoardSettings,
+} from "../../../../../../lib/proposalBoardSettings";
 import moment from "moment";
 import Head from "next/head";
 import Preview from "./Preview/Main";
@@ -24,6 +32,7 @@ export default function ProposalPDF({
   const { data, loading, error } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
   });
+  const { milestones } = useBoardMilestones(proposalId);
 
   const proposal = data?.proposalBoard || {};
   const title = proposal?.title || "";
@@ -38,13 +47,17 @@ export default function ProposalPDF({
     user?.id &&
     (usedInClass?.creator?.id === user?.id ||
       usedInClass?.mentors?.some((m) => m?.id === user?.id));
-  const assignableToStudents =
-    usedInClass?.settings?.assignableToStudents === true;
-  const studentsCanAssignToCards =
-    usedInClass?.settings?.studentsCanAssignToCards === true;
+  const assignableToStudents = getBoardAssignableToStudents(
+    proposal,
+    usedInClass
+  );
+  const studentsCanAssignToCards = getBoardStudentsCanAssignToCards(
+    proposal,
+    usedInClass
+  );
 
-  const [updateClassSettings, { loading: updatingAssignable }] = useMutation(
-    EDIT_CLASS,
+  const [updateProposalBoard, { loading: updatingAssignable }] = useMutation(
+    UPDATE_PROPOSAL_BOARD,
     {
       refetchQueries: [
         { query: PROPOSAL_QUERY, variables: { id: proposalId } },
@@ -53,23 +66,15 @@ export default function ProposalPDF({
   );
 
   const handleToggleAssignable = () => {
-    const existingSettings =
-      usedInClass?.settings && typeof usedInClass.settings === "object"
-        ? usedInClass.settings
-        : {};
     const newAssignableToStudents = !assignableToStudents;
-    const newSettings = {
-      ...existingSettings,
-      assignableToStudents: newAssignableToStudents,
-    };
-    // When enabling, default to students cannot assign (only teachers/mentors can)
+    const patch = { assignableToStudents: newAssignableToStudents };
     if (newAssignableToStudents) {
-      newSettings.studentsCanAssignToCards = false;
+      patch.studentsCanAssignToCards = false;
     }
-    updateClassSettings({
+    updateProposalBoard({
       variables: {
-        id: usedInClass.id,
-        settings: newSettings,
+        id: proposalId,
+        settings: mergeBoardSettings(proposal.settings, patch),
       },
     }).catch((err) =>
       alert(err?.message || "Failed to update settings")
@@ -77,17 +82,12 @@ export default function ProposalPDF({
   };
 
   const handleToggleStudentsCanAssign = () => {
-    const existingSettings =
-      usedInClass?.settings && typeof usedInClass.settings === "object"
-        ? usedInClass.settings
-        : {};
-    updateClassSettings({
+    updateProposalBoard({
       variables: {
-        id: usedInClass.id,
-        settings: {
-          ...existingSettings,
+        id: proposalId,
+        settings: mergeBoardSettings(proposal.settings, {
           studentsCanAssignToCards: !studentsCanAssignToCards,
-        },
+        }),
       },
     }).catch((err) =>
       alert(err?.message || "Failed to update settings")
@@ -176,12 +176,8 @@ export default function ProposalPDF({
     },
   ];
 
-  // Submit statuses from proposal
-  const submitStatuses = {
-    ACTION_SUBMIT: proposal?.submitProposalStatus,
-    ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
-    ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
-  };
+  // Submit statuses from proposal (milestone-aware, dual-keyed for legacy steps)
+  const submitStatuses = buildSubmitStatuses(proposal, milestones);
 
   // Order sections by position
   const orderedSections = [...sections].sort((a, b) => a.position - b.position);
@@ -223,7 +219,7 @@ export default function ProposalPDF({
           card?.settings?.includeInReport &&
           (effectiveSelectedReviewSteps.length === 0 ||
             effectiveSelectedReviewSteps.some((step) =>
-              card?.settings?.includeInReviewSteps?.includes(step)
+              cardIncludedInReviewStep(card, step, milestones)
             )) &&
           (effectiveSelectedAssignedUsers.length === 0 ||
             effectiveSelectedAssignedUsers.some((userId) =>
@@ -280,7 +276,7 @@ export default function ProposalPDF({
           card?.settings?.includeInReport &&
           (effectiveSelectedReviewSteps.length === 0 ||
             effectiveSelectedReviewSteps.some((step) =>
-              card?.settings?.includeInReviewSteps?.includes(step)
+              cardIncludedInReviewStep(card, step, milestones)
             )) &&
           (effectiveSelectedAssignedUsers.length === 0 ||
             effectiveSelectedAssignedUsers.some((userId) =>

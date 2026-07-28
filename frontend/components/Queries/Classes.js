@@ -80,8 +80,11 @@ export const GET_CLASS = gql`
       }
       networks {
         id
+        publicId
         title
         description
+        isPublic
+        settings
         creator {
           id
           username
@@ -108,6 +111,13 @@ export const GET_CLASS = gql`
       }
       templateProposal {
         id
+        title
+        settings
+      }
+      classTemplateBoards {
+        id
+        title
+        settings
       }
       settings
       createdAt

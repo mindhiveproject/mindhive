@@ -51,7 +51,7 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   // Other UI states (e.g., from Grid.js)
   const [area, setArea] = useState("journals"); // e.g., 'journals' or 'datasets'
   /** Active dataset library tab when area === "datasets". */
-  const [datasetScope, setDatasetScope] = useState("uploaded");
+  const [datasetScope, setDatasetScope] = useState("me");
   /** Incremented when the user chooses the Datasets top-nav tab; Datasets/Main resets list vs detail state. */
   const [datasetsListNavNonce, setDatasetsListNavNonce] = useState(0);
   /** Incremented when Add dataset is clicked in top nav; Datasets/Main opens the add panel. */

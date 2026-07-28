@@ -219,7 +219,7 @@ export default function Settings({ myclass, user, query }) {
           >
             <Button 
             variant="outline"
-            style={{ padding: '14px 24px', fontSize: '18px', lineHeight: '18px' }}
+            style={{ padding: '14px 24px', lineHeight: '18px' }}
             >
               {t("assignment.classAssignmentOverview")}
             </Button>

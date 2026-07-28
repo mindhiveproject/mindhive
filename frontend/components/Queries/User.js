@@ -1,13 +1,14 @@
 import gql from "graphql-tag";
 
 // Lightweight onboarding state for sponsor accounts. Used by the dashboard
-// home to show a two-step guidance card until the user has completed both
-// their profile and created their first opportunity.
+// home to show setup guidance until the user has completed profile, org,
+// network, and opportunity steps.
 export const SPONSOR_ONBOARDING_STATE = gql`
   query SPONSOR_ONBOARDING_STATE {
     authenticatedItem {
       ... on Profile {
         id
+        email
         firstName
         lastName
         profileType
@@ -19,6 +20,33 @@ export const SPONSOR_ONBOARDING_STATE = gql`
         organizations {
           id
           name
+          memberOfClassNetworks {
+            id
+            title
+          }
+        }
+        adminOfOrganizations {
+          id
+          name
+        }
+        organizationsCreated {
+          id
+          name
+        }
+        memberOfClassNetworks {
+          id
+          publicId
+          title
+        }
+        adminOfClassNetworks {
+          id
+          publicId
+          title
+        }
+        classNetworksCreated {
+          id
+          publicId
+          title
         }
         opportunitiesCreated {
           id
@@ -68,14 +96,21 @@ export const CURRENT_USER_QUERY = gql`
         }
         classNetworksCreated {
           id
+          publicId
           title
         }
         adminOfClassNetworks {
           id
+          publicId
           title
+        }
+        adminOfOrganizations {
+          id
+          name
         }
         memberOfClassNetworks {
           id
+          publicId
           title
         }
         connectRoundsReviewing {
@@ -105,6 +140,7 @@ export const GET_USER_CLASSES = gql`
           id
           title
           code
+          createdAt
           networks {
             classes {
               id
@@ -114,12 +150,20 @@ export const GET_USER_CLASSES = gql`
           }
           templateProposal {
             id
+            title
+            settings
+          }
+          classTemplateBoards {
+            id
+            title
+            settings
           }
         }
         teacherIn {
           id
           title
           code
+          createdAt
           networks {
             classes {
               id
@@ -130,11 +174,16 @@ export const GET_USER_CLASSES = gql`
           templateProposal {
             id
           }
+          classTemplateBoards {
+            id
+            title
+          }
         }
         mentorIn {
           id
           title
           code
+          createdAt
           networks {
             classes {
               id
@@ -512,16 +561,16 @@ export const GET_ALL_USERS = gql`
 // Shared search filter for Connect Bank list + pagination count queries.
 const CONNECT_USERS_SEARCH_OR = `
         OR: [
-          { username: { contains: $search } }
-          { publicReadableId: { contains: $search } }
-          { publicId: { contains: $search } }
-          { firstName: { contains: $search } }
-          { lastName: { contains: $search } }
-          { location: { contains: $search } }
-          { organization: { contains: $search } }
-          { bio: { contains: $search } }
-          { bioInformal: { contains: $search } }
-          { interests: { some: { title: { contains: $search } } } }
+          { username: { contains: $search, mode: insensitive } }
+          { publicReadableId: { contains: $search, mode: insensitive } }
+          { publicId: { contains: $search, mode: insensitive } }
+          { firstName: { contains: $search, mode: insensitive } }
+          { lastName: { contains: $search, mode: insensitive } }
+          { location: { contains: $search, mode: insensitive } }
+          { organization: { contains: $search, mode: insensitive } }
+          { bio: { contains: $search, mode: insensitive } }
+          { bioInformal: { contains: $search, mode: insensitive } }
+          { interests: { some: { title: { contains: $search, mode: insensitive } } } }
         ]`;
 
 // query to get public non-student users for Connect Bank
@@ -564,6 +613,15 @@ export const GET_CONNECT_USERS = gql`
       }
       location
       organization
+      occupation
+      tagline
+      organizations {
+        id
+        name
+        logo {
+          url
+        }
+      }
       interests {
         id
         title
@@ -849,6 +907,15 @@ export const MY_FAVORITE_PEOPLE = gql`
           }
           location
           organization
+          occupation
+          tagline
+          organizations {
+            id
+            name
+            logo {
+              url
+            }
+          }
           interests {
             id
             title
@@ -1122,6 +1189,38 @@ export const GET_PROFILE = gql`
           }
           interests {
             id
+          }
+        }
+        adminOfOrganizations {
+          id
+          name
+          tagline
+          department
+          website
+          location
+          mission
+          primaryDomain
+          verified
+          logo {
+            url
+          }
+          interests {
+            id
+          }
+          members {
+            id
+            username
+            firstName
+            lastName
+            email
+            image {
+              keystoneImage {
+                url
+              }
+              image {
+                publicUrlTransformed
+              }
+            }
           }
         }
       }

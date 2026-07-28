@@ -65,7 +65,7 @@ const StyledModal = styled.div`
   }
   .classNetworkDetail {
     display: grid;
-    gap: 18px;
+    gap: 28px;
 
     p {
       margin: 0;
@@ -85,16 +85,16 @@ const StyledModal = styled.div`
   .classNetworkDetailDescription {
     color: #3d3d3d;
     font-size: 15px;
-    line-height: 22px;
+    line-height: 24px;
   }
   .classNetworkDetailSummary {
     display: grid;
-    gap: 12px;
+    gap: 16px;
   }
   .classNetworkDetailRow {
     display: grid;
-    gap: 6px;
-    padding: 14px 16px;
+    gap: 10px;
+    padding: 18px 20px;
     border: 1px solid #ece9e6;
     border-radius: 14px;
     background: #fbfbfa;
@@ -104,37 +104,37 @@ const StyledModal = styled.div`
     font-family: "Inter", sans-serif;
     font-size: 13px;
     font-weight: 600;
-    line-height: 18px;
+    line-height: 20px;
   }
   .classNetworkDetailValue {
     color: #171717;
     font-family: "Inter", sans-serif;
     font-size: 15px;
     font-weight: 700;
-    line-height: 22px;
+    line-height: 24px;
   }
 
   .classNetworkDetailNames {
     display: grid;
-    gap: 8px;
-    margin: 2px 0 0;
+    gap: 12px;
+    margin: 4px 0 0;
     padding-left: 20px;
     color: #3d3d3d;
     font-family: "Inter", sans-serif;
     font-size: 14px;
-    line-height: 20px;
+    line-height: 22px;
   }
   .classNetworkAdmins {
     display: grid;
-    gap: 14px;
-    padding: 16px;
+    gap: 18px;
+    padding: 20px;
     border: 1px solid #ece9e6;
     border-radius: 14px;
     background: #ffffff;
   }
   .classNetworkAdminsHeader {
     display: grid;
-    gap: 4px;
+    gap: 8px;
 
     h4 {
       margin: 0;
@@ -142,18 +142,18 @@ const StyledModal = styled.div`
       font-family: "Inter", sans-serif;
       font-size: 16px;
       font-weight: 700;
-      line-height: 22px;
+      line-height: 24px;
     }
 
     p {
       color: #625b71;
       font-size: 14px;
-      line-height: 20px;
+      line-height: 22px;
     }
   }
   .classNetworkAdminList {
     display: grid;
-    gap: 8px;
+    gap: 12px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -162,15 +162,15 @@ const StyledModal = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    padding: 10px 12px;
+    gap: 16px;
+    padding: 14px 16px;
     border: 1px solid #ece9e6;
     border-radius: 12px;
     background: #fbfbfa;
 
     div {
       display: grid;
-      gap: 2px;
+      gap: 6px;
       min-width: 0;
     }
 
@@ -179,7 +179,7 @@ const StyledModal = styled.div`
       color: #171717;
       font-family: "Inter", sans-serif;
       font-size: 14px;
-      line-height: 20px;
+      line-height: 22px;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -189,31 +189,59 @@ const StyledModal = styled.div`
       color: #625b71;
       font-family: "Inter", sans-serif;
       font-size: 12px;
-      line-height: 16px;
+      line-height: 18px;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+  }
+  .classNetworkEmailButton {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    margin: 0;
+    padding: 2px 0;
+    border: none;
+    background: transparent;
+    color: #336f8a;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: left;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      color: #1f4f63;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #336f8a;
+      outline-offset: 2px;
+      border-radius: 2px;
     }
   }
   .classNetworkAdminEmpty {
     color: #625b71;
     font-size: 14px;
-    line-height: 20px;
+    line-height: 22px;
   }
   .classNetworkAdminForm {
     display: grid;
-    gap: 8px;
+    gap: 12px;
 
     label {
       color: #171717;
       font-family: "Inter", sans-serif;
       font-size: 14px;
       font-weight: 700;
-      line-height: 20px;
+      line-height: 22px;
     }
   }
   .classNetworkAdminFormRow {
     display: grid;
-    gap: 8px;
+    gap: 12px;
     grid-template-columns: minmax(0, 1fr) auto;
 
     input {
@@ -225,7 +253,7 @@ const StyledModal = styled.div`
   .classNetworkAdminFeedback {
     color: #1d6b3a;
     font-size: 13px;
-    line-height: 18px;
+    line-height: 20px;
 
     &.error {
       color: #871b16;

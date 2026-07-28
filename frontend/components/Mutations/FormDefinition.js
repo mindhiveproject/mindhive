@@ -62,6 +62,17 @@ export const DELETE_FORM_FIELD = gql`
   }
 `;
 
+// One-shot migration for legacy auto-provisioned FormDefinitions that
+// were created before the project_board scope existed. Relocates them
+// from scope=global to scope=project_board with the correct
+// proposalBoard set. Dry-run by default — returns a list of change
+// descriptions. Idempotent.
+export const BACKFILL_PROJECT_BOARD_FORM_SCOPE = gql`
+  mutation BACKFILL_PROJECT_BOARD_FORM_SCOPE($dryRun: Boolean) {
+    backfillProjectBoardFormScope(dryRun: $dryRun)
+  }
+`;
+
 // Self-service seeder. Inserts only baseline definitions that are
 // completely missing from the DB (any scope, any status). Safe to call
 // without confirmation — never clobbers admin-edited definitions.

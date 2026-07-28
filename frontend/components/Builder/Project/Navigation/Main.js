@@ -9,6 +9,7 @@ import ConnectStudy from "./ConnectStudy/Main";
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import StudyDropdown from "../../../Projects/StudyConnector/StudyDropdown";
 import InfoTooltip from "../../../DesignSystem/InfoTooltip";
+import Button from "../../../DesignSystem/Button";
 
 export default function Navigation({
   proposalId,
@@ -129,7 +130,10 @@ export default function Navigation({
           )}
 
           {cardId && (
-            <button
+            <Button
+              type="button"
+              variant="tonal"
+              disabled={!(hasStudyChanged || area === "cloneofstudy")}
               onClick={async () => {
                 await saveBtnFunction();
                 router.push({
@@ -139,23 +143,20 @@ export default function Navigation({
                   },
                 });
               }}
-              className={
-                hasStudyChanged || area === "cloneofstudy" ? "on" : "off"
-              }
             >
               {saveBtnName}
-            </button>
+            </Button>
           )}
 
           {saveBtnFunction && !isCanvasLocked && (
-            <button
+            <Button
+              type="button"
+              variant="tonal"
+              disabled={!(hasStudyChanged || area === "cloneofstudy")}
               onClick={() => saveBtnFunction()}
-              className={
-                hasStudyChanged || area === "cloneofstudy" ? "on" : "off"
-              }
             >
               {saveBtnName}
-            </button>
+            </Button>
           )}
         </div>
       </div>

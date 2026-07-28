@@ -9,10 +9,14 @@ const clientID =
 import { GOOGLE_LOGIN } from "../Mutations/Auth";
 import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
-import { completeClassNetworkInviteAfterAuth } from "../../lib/joinClassNetwork";
+import {
+  acceptNetworkInviteAfterAuth,
+  completeClassNetworkInviteAfterAuth,
+} from "../../lib/joinClassNetwork";
 
 export default function LoginWithGoogle({
   classNetwork,
+  networkInvite,
   redirectType,
   redirectTo,
   onInviteError,
@@ -44,6 +48,28 @@ export default function LoginWithGoogle({
 
     if (!login?.data?.authenticateProfileWithPassword?.item?.id) return;
 
+    if (networkInvite) {
+      const result = await acceptNetworkInviteAfterAuth({
+        apolloClient,
+        token: networkInvite,
+        router,
+      });
+      if (!result.ok) {
+        onInviteError?.(
+          t(
+            "auth.networkInvite.acceptFailed",
+            {},
+            {
+              default:
+                "We could not accept this network invitation. Check that you are using the invited account.",
+            }
+          ),
+          "joinFailed"
+        );
+      }
+      return;
+    }
+
     if (classNetwork) {
       const result = await completeClassNetworkInviteAfterAuth({
         apolloClient,
@@ -54,19 +80,27 @@ export default function LoginWithGoogle({
       });
       if (!result.ok && result.error === "wrongRole") {
         onInviteError?.(
-          t("auth.classNetworkInvite.wrongRole", {}, {
-            default:
-              "This invite is for sponsors. Sign up as a sponsor or use a sponsor account to join.",
-          }),
-          "wrongRole",
+          t(
+            "auth.classNetworkInvite.wrongRole",
+            {},
+            {
+              default:
+                "Class-network membership is available to teachers, mentors, sponsors, and scientists.",
+            }
+          ),
+          "wrongRole"
         );
       } else if (!result.ok) {
         onInviteError?.(
-          t("auth.classNetworkInvite.joinFailed", {}, {
-            default:
-              "We could not add you to this class network. Please try again.",
-          }),
-          "joinFailed",
+          t(
+            "auth.classNetworkInvite.joinFailed",
+            {},
+            {
+              default:
+                "We could not add you to this class network. Please try again.",
+            }
+          ),
+          "joinFailed"
         );
       }
       return;

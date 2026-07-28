@@ -23,13 +23,15 @@ export const VIZPART_TEMPLATES = gql`
           content
         }
       }
-      datasources {
+      datasources(orderBy: [{ updatedAt: desc }]) {
         id
         title
         description
         dataOrigin
         settings
         content
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt

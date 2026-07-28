@@ -87,8 +87,12 @@ export const ProposalCard = list({
         { label: "ActionPeerFeedback", value: "ACTION_PEER_FEEDBACK" },
         { label: "ActionCollectingData", value: "ACTION_COLLECTING_DATA" },
         { label: "ActionProjectReport", value: "ACTION_PROJECT_REPORT" },
+        { label: "Action", value: "ACTION" },
       ],
       defaultValue: "PROPOSAL",
+    }),
+    milestone: relationship({
+      ref: "Milestone.actionCards",
     }),
     shareType: select({
       options: [

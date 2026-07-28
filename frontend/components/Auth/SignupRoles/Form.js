@@ -3,6 +3,7 @@ import DisplayError from "../../ErrorMessage";
 import useTranslation from "next-translate/useTranslation";
 import TermsConditions from "./TermsConditions";
 import GoogleSignup from "./GoogleSignup";
+import Turnstile from "../Turnstile";
 
 export default function Form({
   role,
@@ -14,6 +15,8 @@ export default function Form({
   error,
   classCode,
   submitDisabled = false,
+  turnstileRef,
+  onTurnstileVerify,
 }) {
   const { t } = useTranslation("common");
 
@@ -104,6 +107,8 @@ export default function Form({
                 </label>
               </>
             )}
+
+            <Turnstile ref={turnstileRef} onVerify={onTurnstileVerify} />
 
             <div className="submitButton">
               <button type="submit">{submitBtnName}</button>

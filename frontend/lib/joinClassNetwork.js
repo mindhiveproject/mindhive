@@ -1,11 +1,18 @@
 import gql from "graphql-tag";
 
-import { UPDATE_PROFILE } from "../components/Mutations/User";
-import { UPDATE_ORGANIZATION } from "../components/Mutations/Organization";
 import { CURRENT_USER_QUERY } from "../components/Queries/User";
-import { collectMemberClassNetworks } from "./opportunityClassNetworks";
+import {
+  GET_NETWORK,
+  GET_NETWORK_BY_PUBLIC_ID,
+} from "../components/Queries/ClassNetwork";
+import { classNetworkUrlRef } from "./classNetworkRef";
 
-const ELIGIBLE_PERMISSIONS = new Set(["SPONSOR", "MENTOR"]);
+const ELIGIBLE_PERMISSIONS = new Set([
+  "TEACHER",
+  "MENTOR",
+  "SPONSOR",
+  "SCIENTIST",
+]);
 
 export const GET_JOIN_CLASS_NETWORK_CONTEXT = gql`
   query GET_JOIN_CLASS_NETWORK_CONTEXT {
@@ -17,13 +24,64 @@ export const GET_JOIN_CLASS_NETWORK_CONTEXT = gql`
         }
         memberOfClassNetworks {
           id
+          publicId
         }
         organizations {
           id
           memberOfClassNetworks {
             id
+            publicId
           }
         }
+      }
+    }
+  }
+`;
+
+const JOIN_OPEN_CLASS_NETWORK = gql`
+  mutation JOIN_OPEN_CLASS_NETWORK($networkId: ID!) {
+    joinOpenClassNetwork(networkId: $networkId) {
+      id
+      publicId
+    }
+  }
+`;
+
+const REQUEST_CLASS_NETWORK_MEMBERSHIP = gql`
+  mutation REQUEST_CLASS_NETWORK_MEMBERSHIP($networkId: ID!) {
+    requestClassNetworkMembership(networkId: $networkId) {
+      id
+      status
+    }
+  }
+`;
+
+export const GET_NETWORK_INVITE_CONTEXT = gql`
+  query GET_NETWORK_INVITE_CONTEXT($token: String!) {
+    networkInviteContext(token: $token) {
+      id
+      status
+      email
+      classNetwork {
+        id
+        publicId
+        title
+        description
+        isPublic
+        settings
+      }
+    }
+  }
+`;
+
+const ACCEPT_NETWORK_INVITE_BY_TOKEN = gql`
+  mutation ACCEPT_NETWORK_INVITE_BY_TOKEN($token: String!) {
+    acceptNetworkInvite(token: $token) {
+      id
+      status
+      classNetwork {
+        id
+        publicId
       }
     }
   }
@@ -33,58 +91,104 @@ export function isEligibleForClassNetworkInvite(user) {
   return !!user?.permissions?.some((p) => ELIGIBLE_PERMISSIONS.has(p?.name));
 }
 
-export function isAlreadyInClassNetwork(user, classNetworkId) {
-  if (!user || !classNetworkId) return false;
-  return collectMemberClassNetworks(user).some((n) => n.id === classNetworkId);
+export function isAlreadyInClassNetwork(user, classNetworkRef) {
+  if (!user || !classNetworkRef) return false;
+  return (user?.memberOfClassNetworks || []).some(
+    (network) =>
+      network?.id === classNetworkRef || network?.publicId === classNetworkRef
+  );
 }
 
-export async function joinClassNetwork({
-  apolloClient,
-  userId,
-  classNetworkId,
-  user,
-}) {
-  const alreadyMember = isAlreadyInClassNetwork(user, classNetworkId);
-  let joined = false;
+async function resolveClassNetworkByRef(apolloClient, classNetworkRef) {
+  if (!classNetworkRef) return null;
 
-  const profileHasNetwork = (user?.memberOfClassNetworks || []).some(
-    (network) => network.id === classNetworkId,
-  );
-
-  if (!profileHasNetwork) {
-    await apolloClient.mutate({
-      mutation: UPDATE_PROFILE,
-      variables: {
-        id: userId,
-        input: {
-          memberOfClassNetworks: { connect: [{ id: classNetworkId }] },
-        },
-      },
+  try {
+    const { data: byPublicIdData } = await apolloClient.query({
+      query: GET_NETWORK_BY_PUBLIC_ID,
+      variables: { publicId: classNetworkRef },
+      fetchPolicy: "network-only",
     });
-    joined = true;
+    const byPublicId = byPublicIdData?.classNetworks?.[0];
+    if (byPublicId?.id) {
+      return byPublicId;
+    }
+  } catch {
+    // Schema may not expose publicId filter yet; fall through to id lookup.
   }
 
-  for (const org of user?.organizations || []) {
-    const orgHasNetwork = (org.memberOfClassNetworks || []).some(
-      (network) => network.id === classNetworkId,
-    );
-    if (!orgHasNetwork) {
-      await apolloClient.mutate({
-        mutation: UPDATE_ORGANIZATION,
-        variables: {
-          id: org.id,
-          input: {
-            memberOfClassNetworks: { connect: [{ id: classNetworkId }] },
-          },
-        },
-      });
-      joined = true;
-    }
+  try {
+    const { data: byIdData } = await apolloClient.query({
+      query: GET_NETWORK,
+      variables: { id: classNetworkRef },
+      fetchPolicy: "network-only",
+    });
+    return byIdData?.classNetwork || null;
+  } catch {
+    // Invalid GraphQL ID shape (e.g. leftover publicId that was deleted).
+    return null;
   }
+}
+
+export async function joinClassNetwork({ apolloClient, classNetworkId, user }) {
+  const network = await resolveClassNetworkByRef(apolloClient, classNetworkId);
+  if (!network?.id || !network.isPublic) {
+    throw new Error("Class network is unavailable for membership.");
+  }
+
+  const alreadyMember = isAlreadyInClassNetwork(user, network.id);
+  if (alreadyMember) {
+    return {
+      joined: true,
+      requested: false,
+      alreadyMember: true,
+      id: network.id,
+      publicId: network.publicId,
+    };
+  }
+
+  const isOpen = network?.settings?.membershipMode === "open";
+  await apolloClient.mutate({
+    mutation: isOpen
+      ? JOIN_OPEN_CLASS_NETWORK
+      : REQUEST_CLASS_NETWORK_MEMBERSHIP,
+    variables: { networkId: network.id },
+  });
 
   await apolloClient.refetchQueries({ include: [CURRENT_USER_QUERY] });
 
-  return { joined: joined || alreadyMember, alreadyMember };
+  return {
+    joined: isOpen,
+    requested: !isOpen,
+    alreadyMember: false,
+    id: network.id,
+    publicId: network.publicId,
+  };
+}
+
+export async function acceptNetworkInviteAfterAuth({
+  apolloClient,
+  token,
+  router,
+}) {
+  if (!token) return { ok: false, error: "invalidInvite" };
+
+  try {
+    const { data } = await apolloClient.mutate({
+      mutation: ACCEPT_NETWORK_INVITE_BY_TOKEN,
+      variables: { token },
+    });
+    const invite = data?.acceptNetworkInvite;
+    if (!invite?.id) return { ok: false, error: "invalidInvite" };
+
+    await apolloClient.refetchQueries({ include: [CURRENT_USER_QUERY] });
+    router.push({
+      pathname: "/dashboard/connect",
+      query: { joinedNetwork: classNetworkUrlRef(invite.classNetwork) },
+    });
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: "acceptFailed" };
+  }
 }
 
 export async function completeClassNetworkInviteAfterAuth({
@@ -120,16 +224,18 @@ export async function completeClassNetworkInviteAfterAuth({
     return { ok: false, error: "wrongRole" };
   }
 
-  await joinClassNetwork({
+  const result = await joinClassNetwork({
     apolloClient,
-    userId: user.id,
     classNetworkId,
     user,
   });
 
+  const urlRef = classNetworkUrlRef(result) || classNetworkId;
   router.push({
     pathname: "/dashboard/connect",
-    query: { joinedNetwork: classNetworkId },
+    query: result.requested
+      ? { requestedNetwork: urlRef }
+      : { joinedNetwork: urlRef },
   });
   return { ok: true };
 }

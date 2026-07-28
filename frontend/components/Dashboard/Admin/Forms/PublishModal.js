@@ -3,6 +3,7 @@
 // auto-archived. The actual publish is atomic on the backend
 // (publishFormDefinition mutation).
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import { PrimaryButton, SecondaryButton } from "./EditorPanelStyles";
@@ -14,7 +15,7 @@ const Backdrop = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: ${({ $zIndex }) => $zIndex ?? 1000};
 `;
 
 const Card = styled.div`
@@ -93,29 +94,59 @@ export default function PublishModal({
   onConfirm,
   busy,
   error,
+  overlayZIndex,
 }) {
+  const { t } = useTranslation("builder");
   const [changelog, setChangelog] = useState("");
 
   return (
-    <Backdrop onClick={onCancel}>
+    <Backdrop $zIndex={overlayZIndex} onClick={onCancel}>
       <Card onClick={(e) => e.stopPropagation()}>
-        <h2>Publish "{definition.title}" v{definition.version}?</h2>
+        <h2>
+          {t(
+            "section.createCardModal.publishModal.title",
+            {
+              title: definition.title,
+              version: definition.version,
+            },
+            {
+              default: 'Publish "{{title}}" v{{version}}?',
+            }
+          )}
+        </h2>
         <p>
-          The renderer will start serving this version at scope{" "}
-          <code>{definition.scope}</code> immediately.
+          {t(
+            "section.createCardModal.publishModal.body",
+            { scope: definition.scope },
+            {
+              default:
+                "The renderer will start serving this version at scope {{scope}} immediately.",
+            }
+          )}
         </p>
 
         {liveSibling ? (
           <Warning>
-            Heads up — the currently-live version{" "}
-            <strong>v{liveSibling.version}</strong> will be auto-archived
-            so only one published version per scope stays active.
+            {t(
+              "section.createCardModal.publishModal.siblingWarning",
+              { version: liveSibling.version },
+              {
+                default:
+                  "Heads up — the currently-live version v{{version}} will be auto-archived so only one published version per scope stays active.",
+              }
+            )}
           </Warning>
         ) : null}
 
         {error ? (
           <ValidationErrors>
-            <strong>Couldn't publish:</strong>
+            <strong>
+              {t(
+                "section.createCardModal.publishModal.errorHeading",
+                {},
+                { default: "Couldn't publish:" }
+              )}
+            </strong>
             {error.message?.replace(/^Error: /, "") || String(error)}
           </ValidationErrors>
         ) : null}
@@ -124,25 +155,50 @@ export default function PublishModal({
           style={{ display: "flex", flexDirection: "column", gap: 6 }}
         >
           <span style={{ fontSize: 13, fontWeight: 600, color: "#171717" }}>
-            What changed? (optional)
+            {t(
+              "section.createCardModal.publishModal.changelogLabel",
+              {},
+              { default: "What changed? (optional)" }
+            )}
           </span>
           <textarea
             value={changelog}
             onChange={(e) => setChangelog(e.target.value)}
-            placeholder="e.g. Added IRB number field; reordered Project scope card."
+            placeholder={t(
+              "section.createCardModal.publishModal.changelogPlaceholder",
+              {},
+              {
+                default:
+                  "e.g. Added IRB number field; reordered Project scope card.",
+              }
+            )}
           />
         </label>
 
         <div className="actions">
           <SecondaryButton type="button" onClick={onCancel} disabled={busy}>
-            Cancel
+            {t(
+              "section.createCardModal.publishModal.cancel",
+              {},
+              { default: "Cancel" }
+            )}
           </SecondaryButton>
           <PrimaryButton
             type="button"
             onClick={() => onConfirm(changelog.trim() || null)}
             disabled={busy}
           >
-            {busy ? "Publishing…" : "Confirm publish"}
+            {busy
+              ? t(
+                  "section.createCardModal.publishModal.confirmBusy",
+                  {},
+                  { default: "Publishing…" }
+                )
+              : t(
+                  "section.createCardModal.publishModal.confirm",
+                  {},
+                  { default: "Confirm publish" }
+                )}
           </PrimaryButton>
         </div>
       </Card>

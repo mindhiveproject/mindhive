@@ -1,9 +1,10 @@
 // Resolve the most-specific published FormDefinition for a given key.
 //
 // Lookup precedence (most-specific first):
-//   1. scope=class_network + matching classNetworkId
-//   2. scope=organization  + matching organizationId
-//   3. scope=global        (fallback)
+//   1. scope=project_board  + matching proposalBoardId
+//   2. scope=class_network  + matching classNetworkId
+//   3. scope=organization   + matching organizationId
+//   4. scope=global         (fallback)
 //
 // When multiple versions of the same row exist, returns the highest
 // version. Returns null when nothing is published at any scope.
@@ -17,10 +18,12 @@ async function resolveFormDefinition(
     key,
     organizationId,
     classNetworkId,
+    proposalBoardId,
   }: {
     key: string;
     organizationId?: string | null;
     classNetworkId?: string | null;
+    proposalBoardId?: string | null;
   },
   context: any
 ) {
@@ -35,7 +38,33 @@ async function resolveFormDefinition(
 
   const orderBy = [{ version: "desc" as const }];
 
-  // 1. class_network — most specific
+  // 1. project_board — most specific. A form scoped to a template
+  // board should ALSO resolve for the students whose boards clone that
+  // template. We resolve by walking one level of `clonedFrom`: the
+  // student's board id gets extended with its template's id so the
+  // resolver finds the template-scoped form.
+  if (proposalBoardId) {
+    const candidateBoardIds: string[] = [String(proposalBoardId)];
+    const board = await context.db.ProposalBoard.findOne({
+      where: { id: String(proposalBoardId) },
+    });
+    if (board?.clonedFromId) {
+      candidateBoardIds.push(String(board.clonedFromId));
+    }
+
+    const [boardMatch] = await context.db.FormDefinition.findMany({
+      where: {
+        ...baseFilter,
+        scope: { equals: "project_board" },
+        proposalBoard: { id: { in: candidateBoardIds } },
+      },
+      orderBy,
+      take: 1,
+    });
+    if (boardMatch) return boardMatch;
+  }
+
+  // 2. class_network
   if (classNetworkId) {
     const [networkMatch] = await context.db.FormDefinition.findMany({
       where: {
@@ -49,7 +78,7 @@ async function resolveFormDefinition(
     if (networkMatch) return networkMatch;
   }
 
-  // 2. organization
+  // 3. organization
   if (organizationId) {
     const [orgMatch] = await context.db.FormDefinition.findMany({
       where: {
@@ -63,7 +92,7 @@ async function resolveFormDefinition(
     if (orgMatch) return orgMatch;
   }
 
-  // 3. global fallback
+  // 4. global fallback
   const [globalMatch] = await context.db.FormDefinition.findMany({
     where: {
       ...baseFilter,
