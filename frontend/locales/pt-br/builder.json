@@ -1204,6 +1204,8 @@
 	"durationHelp": "Aproximadamente quanto tempo levará para alguém concluir o {{taskType}}?",
 	"engine": {
 		"copy": "CÓPIA",
+		"cycleLinkPrevented": "",
+		"cycleLinkPreventedTitle": "",
 		"save": "Salvar",
 		"studyLocked": "O estudo foi bloqueado"
 	},

@@ -1204,6 +1204,8 @@
 	"durationHelp": "ما هو الوقت التقريبي الذي سيستغرقه شخص ما لإكمال {{taskType}}؟",
 	"engine": {
 		"copy": "ينسخ",
+		"cycleLinkPrevented": "",
+		"cycleLinkPreventedTitle": "",
 		"save": "يحفظ",
 		"studyLocked": "تم قفل الدراسة"
 	},

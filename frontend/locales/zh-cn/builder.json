@@ -1204,6 +1204,8 @@
 	"durationHelp": "大约需要多长时间才能完成 {{taskType}}？",
 	"engine": {
 		"copy": "复制",
+		"cycleLinkPrevented": "",
+		"cycleLinkPreventedTitle": "",
 		"save": "节省",
 		"studyLocked": "该研究已被锁定"
 	},
