@@ -8,10 +8,10 @@ import Header from "./Header";
 import ClassStudents from "./Students";
 import ClassMentors from "./Mentors";
 import ClassStudies from "./Studies";
-import ClassProjects from "./Projects";
+import ClassProjects from "./Projects/Main";
 import ClassAssignments from "./Assignments/Main";
 import ClassResources from "./Resources/Main";
-import ClassOpportunities from "./Opportunities";
+import ClassOpportunities from "./Opportunities/Main";
 import ClassSettings from "./Settings";
 
 import { GET_CLASS } from "../../../Queries/Classes";

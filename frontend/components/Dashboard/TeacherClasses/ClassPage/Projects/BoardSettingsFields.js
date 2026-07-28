@@ -1,8 +1,8 @@
 import useTranslation from "next-translate/useTranslation";
 
-import CurriculumTypeSelector from "./CurriculumTypeSelector";
-import StyledBoardSettings from "../../../styles/StyledBoardSettings";
-import { DEFAULT_CURRICULUM_TYPE } from "../../../../lib/curriculumTypes";
+import CurriculumTypeSelector from "../CurriculumTypeSelector";
+import StyledBoardSettings from "../../../../styles/StyledBoardSettings";
+import { DEFAULT_CURRICULUM_TYPE } from "../../../../../lib/curriculumTypes";
 
 function SettingsChoiceGroup({ options, disabled }) {
   return (

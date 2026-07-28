@@ -2109,7 +2109,7 @@ const StyledClass = styled.div`
       width: 100%;
       grid-template-columns: repeat(
         auto-fill,
-        minmax(min(100%, 280px), 280px)
+        minmax(min(100%, 360px), 360px)
       );
       align-items: stretch;
       justify-content: start;

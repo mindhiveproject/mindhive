@@ -4,28 +4,28 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
-import useForm from "../../../../lib/useForm";
-import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
-import DropdownSelect from "../../../DesignSystem/DropdownSelect";
-import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
+import useForm from "../../../../../lib/useForm";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
+import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import {
   GET_CONNECT_ROUND,
   MY_CONNECT_ROUNDS,
   NETWORK_OPPORTUNITIES_FOR_ROUND,
-} from "../../../Queries/ConnectRound";
-import { QUESTION_LIBRARY } from "../../../Queries/ConnectQuestion";
+} from "../../../../Queries/ConnectRound";
+import { QUESTION_LIBRARY } from "../../../../Queries/ConnectQuestion";
 import {
   CREATE_CONNECT_ROUND,
   UPDATE_CONNECT_ROUND,
-} from "../../../Mutations/ConnectRound";
-import { UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
+} from "../../../../Mutations/ConnectRound";
+import { UPDATE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
 import {
   EMPTY_FORM,
   buildSuggestedRoundDefaults,
   toDateInputValue,
   toIsoOrNull,
-} from "../../Connect/Rounds/roundFormConfig";
+} from "../../../Connect/Rounds/roundFormConfig";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
 
 const ROUND_STATUS_KEYS = {

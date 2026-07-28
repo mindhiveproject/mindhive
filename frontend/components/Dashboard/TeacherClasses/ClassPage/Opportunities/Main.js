@@ -3,12 +3,12 @@ import absoluteUrl from "next-absolute-url";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
-import DesignSystemButton from "../../../DesignSystem/Button";
-import CopyButton from "../../../DesignSystem/CopyButton";
-import Chip from "../../../DesignSystem/Chip";
+import DesignSystemButton from "../../../../DesignSystem/Button";
+import CopyButton from "../../../../DesignSystem/CopyButton";
+import Chip from "../../../../DesignSystem/Chip";
 import ClassMatchingRoundSection from "./ClassMatchingRoundSection";
-import OpportunityPreviewModal from "./OpportunityPreviewModal";
-import { classNetworkUrlRef } from "../../../../lib/classNetworkRef";
+import OpportunityPreviewModal from "../Modals/OpportunityPreviewModal";
+import { classNetworkUrlRef } from "../../../../../lib/classNetworkRef";
 
 const NETWORK_ICON = (
   <img

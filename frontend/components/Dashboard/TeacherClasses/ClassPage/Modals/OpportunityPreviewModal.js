@@ -3,17 +3,17 @@ import { useQuery } from "@apollo/client";
 import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
-import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
-import StyledModal from "../../../styles/StyledModal";
-import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../Queries/Opportunity";
-import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../Queries/ConnectRound";
-import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
-import { hydrateProposalInputs } from "../../Connect/Opportunities/OpportunityProposalConfig";
-import ReturnOpportunityModal from "../../Connect/ReturnOpportunityModal";
-import OpportunityReviewNotesThread from "../../Connect/OpportunityReviewNotesThread";
-import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
-import { REVIEW_NOTE_KIND } from "../../../../lib/reviewThreadRound";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
+import StyledModal from "../../../../styles/StyledModal";
+import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../../Queries/Opportunity";
+import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../../Queries/ConnectRound";
+import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap";
+import { hydrateProposalInputs } from "../../../Connect/Opportunities/OpportunityProposalConfig";
+import ReturnOpportunityModal from "../../../Connect/ReturnOpportunityModal";
+import OpportunityReviewNotesThread from "../../../Connect/OpportunityReviewNotesThread";
+import { isReturnableOpportunityStatus } from "../../../Connect/returnOpportunityUtils";
+import { REVIEW_NOTE_KIND } from "../../../../../lib/reviewThreadRound";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 

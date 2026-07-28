@@ -6,8 +6,8 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
-import OwnedItemsShowcase from "./OwnedItemsShowcase";
-import { filterOwnedClassItems } from "./ownedClassItems";
+import OwnedItemsShowcase from "./utils/OwnedItemsShowcase";
+import { filterOwnedClassItems } from "./utils/ownedClassItems";
 
 const LinkButton = styled.a`
   display: inline-flex;
