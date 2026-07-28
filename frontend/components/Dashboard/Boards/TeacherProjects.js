@@ -15,6 +15,7 @@ import {
   CREATE_NEW_PROPOSAL_AS_AUTHOR,
 } from "../../Mutations/Proposal"; // Updated import
 import { GET_TEACHER_CLASSES, GET_MENTOR_CLASSES } from "../../Queries/Classes";
+import { getClassTemplateClasses } from "../../Utils/proposalBoard";
 
 const TeacherProjects = ({ user, query }) => {
   const [isCreating, setIsCreating] = useState(false);
@@ -221,11 +222,13 @@ const TeacherProjects = ({ user, query }) => {
   );
 
   const authoredBoards = authoredData?.proposalBoards ?? [];
+  // Filter unions BOTH template relationships — a 2nd-and-later template
+  // copied into a class lives in templatesForClass, not templateForClasses.
   const filteredAuthoredBoards =
     selectedClassIds.length === 0
       ? authoredBoards
       : authoredBoards.filter((board) =>
-          board.templateForClasses?.some((c) =>
+          getClassTemplateClasses(board).some((c) =>
             selectedClassIds.includes(c.id)
           )
         );
@@ -233,7 +236,7 @@ const TeacherProjects = ({ user, query }) => {
     selectedClassIds.length === 0
       ? uniqueCollaboratedBoards ?? []
       : (uniqueCollaboratedBoards ?? []).filter((board) =>
-          board.templateForClasses?.some((c) =>
+          getClassTemplateClasses(board).some((c) =>
             selectedClassIds.includes(c.id)
           )
         );
@@ -337,11 +340,14 @@ const TeacherProjects = ({ user, query }) => {
               <div className="meta">
                 <p>
                   <strong>{t("boardManagement.usedInClasses")}</strong>{" "}
-                  {board.templateForClasses.length
-                    ? board.templateForClasses
-                        .map((c) => `${c.title} (${c.code || t("boardManagement.noCode")})`)
-                        .join(", ")
-                    : t("boardManagement.none")}
+                  {(() => {
+                    const classes = getClassTemplateClasses(board);
+                    return classes.length
+                      ? classes
+                          .map((c) => `${c.title} (${c.code || t("boardManagement.noCode")})`)
+                          .join(", ")
+                      : t("boardManagement.none");
+                  })()}
                 </p>
                 <p>
                   <strong>{t("boardManagement.created")}</strong>{" "}

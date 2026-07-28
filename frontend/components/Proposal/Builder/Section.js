@@ -333,28 +333,49 @@ const Section = ({
         }
       },
       optimisticResponse: {
+        // PROPOSAL_QUERY.sections.cards selects many fields on ProposalCard.
+        // We enumerate them here so Apollo's cache write doesn't emit
+        // "Missing field" warnings and downstream Card / ActionCard render
+        // paths don't crash on `card.milestone.key` etc. during the
+        // optimistic window. Nested Milestone fields are given null
+        // placeholders; the real values arrive via the mutation response
+        // (and via refetchQueries if configured).
         __typename: "Mutation",
         createProposalCard: {
           __typename: "ProposalCard",
           id: uuidv1(),
           boardId,
+          publicId,
           title,
           content: null,
+          revisedContent: null,
+          comment: null,
           type,
           position,
+          settings: { status: "Not started" },
           section: {
             __typename: "ProposalSection",
             id: sectionId,
+            title: null,
           },
           milestone: milestoneId
             ? {
                 __typename: "Milestone",
                 id: milestoneId,
+                key: null,
+                actionCardType: null,
+                reviewStage: null,
+                statusTarget: null,
+                legacyBoardStatusField: null,
+                legacyOpenForCommentsField: null,
+                logEventName: null,
+                formDefinitionKeyPattern: null,
+                title: null,
+                formDefinition: null,
               }
             : null,
           assignedTo: [],
-          settings: { status: "Not started" },
-          publicId,
+          isEditedBy: null,
         },
       },
     });

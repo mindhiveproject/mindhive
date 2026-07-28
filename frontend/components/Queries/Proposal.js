@@ -199,6 +199,14 @@ export const PROPOSAL_QUERY = gql`
         id
         code
       }
+      # Also select templatesForClass so isClassTemplateBoard() picks up
+      # 2nd-and-later class-template copies (copyProposalBoard connects only
+      # this new relation; templateForClasses is set solely for the first
+      # template in a class). See frontend/components/Utils/proposalBoard.js.
+      templatesForClass {
+        id
+        code
+      }
       author {
         username
       }
@@ -946,6 +954,14 @@ export const GET_MY_AUTHORED_PROJECT_BOARDS = gql`
         title
         code
       }
+      # See util isClassTemplateBoard / getClassTemplateClasses -- 2nd-and-
+      # later class-template copies land in templatesForClass, not
+      # templateForClasses. Select both so the callers can union them.
+      templatesForClass {
+        id
+        title
+        code
+      }
       createdAt
       updatedAt
     }
@@ -981,6 +997,11 @@ export const GET_MY_COLLABORATED_PROJECT_BOARDS = gql`
         slug
       }
       templateForClasses {
+        id
+        title
+        code
+      }
+      templatesForClass {
         id
         title
         code

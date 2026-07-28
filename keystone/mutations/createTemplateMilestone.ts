@@ -296,20 +296,39 @@ async function createTemplateMilestone(
     key = `${keyBase}_${suffix++}`;
   }
 
-  const permissionIds =
-    input.canReviewPermissionIds?.length
-      ? input.canReviewPermissionIds
-      : await resolvePermissionIds(
-          context,
-          input.canReviewPermissionNames || ["MENTOR", "TEACHER", "SCIENTIST"]
-        );
-
+  // Resolve reviewer permissions. Precedence:
+  //   1. Explicit input.canReviewPermissionIds  → use as-is
+  //   2. Explicit input.canReviewPermissionNames → resolve to ids
+  //   3. clonedFrom source milestone.canReview  → inherit from source
+  //   4. Heuristic default: if the key looks like a peer-review milestone
+  //      include STUDENT alongside MENTOR/TEACHER/SCIENTIST so students can
+  //      actually submit peer reviews. Otherwise mentors/teachers/scientists
+  //      only.
   const sourceMilestone = input.clonedFromMilestoneId
     ? await context.query.Milestone.findOne({
         where: { id: input.clonedFromMilestoneId },
-        query: "id formDefinition { id }",
+        query: "id formDefinition { id } canReview { id name }",
       })
     : null;
+  const looksLikePeerReview =
+    /peer.?review/i.test(input.title || "") ||
+    /peer.?review/i.test(key);
+  const defaultRoleNames = looksLikePeerReview
+    ? ["STUDENT", "MENTOR", "TEACHER", "SCIENTIST"]
+    : ["MENTOR", "TEACHER", "SCIENTIST"];
+  let permissionIds: string[];
+  if (input.canReviewPermissionIds?.length) {
+    permissionIds = input.canReviewPermissionIds;
+  } else if (input.canReviewPermissionNames?.length) {
+    permissionIds = await resolvePermissionIds(
+      context,
+      input.canReviewPermissionNames
+    );
+  } else if (sourceMilestone?.canReview?.length) {
+    permissionIds = sourceMilestone.canReview.map((p: any) => p.id);
+  } else {
+    permissionIds = await resolvePermissionIds(context, defaultRoleNames);
+  }
   if (input.clonedFromMilestoneId && !sourceMilestone) {
     throw new Error("Source milestone not found.");
   }

@@ -85,45 +85,63 @@ export default async function backfillMilestoneStatus(
   args: BackfillArgs,
   context: any
 ): Promise<number> {
-  const limit = Math.min(Math.max(args?.limit ?? 200, 1), 1000);
+  // Cap per-invocation work so a single call can't spin the DB. We paginate
+  // through EVERY board on the platform in fixed-size chunks and stop when
+  // `updated` reaches the ceiling. Without paging, a repeated invocation
+  // would keep hitting the same first N rows on a DB with more than the
+  // page size total (previously silent; the fix here bounds work by number
+  // updated, not by ProposalBoard count).
+  const ceiling = Math.min(Math.max(args?.limit ?? 200, 1), 5000);
   const dryRun = args?.dryRun ?? false;
-
-  const boards = (await context.sudo().query.ProposalBoard.findMany({
-    take: limit,
-    query: `
-      id
-      milestoneStatus
-      submitProposalStatus
-      submitProposalOpenForComments
-      peerFeedbackStatus
-      peerFeedbackOpenForComments
-      projectReportStatus
-      projectReportOpenForComments
-      study {
-        dataCollectionStatus
-        dataCollectionOpenForParticipation
-      }
-    `,
-  })) as BoardRow[];
+  const PAGE_SIZE = 200;
+  const orderBy = [{ createdAt: "asc" as const }, { id: "asc" as const }];
 
   let updated = 0;
+  let skip = 0;
+  while (updated < ceiling) {
+    const boards = (await context.sudo().query.ProposalBoard.findMany({
+      take: PAGE_SIZE,
+      skip,
+      orderBy,
+      query: `
+        id
+        milestoneStatus
+        submitProposalStatus
+        submitProposalOpenForComments
+        peerFeedbackStatus
+        peerFeedbackOpenForComments
+        projectReportStatus
+        projectReportOpenForComments
+        study {
+          dataCollectionStatus
+          dataCollectionOpenForParticipation
+        }
+      `,
+    })) as BoardRow[];
 
-  for (const board of boards || []) {
-    if (!board?.id) continue;
-    if (hasMilestoneStatus(board.milestoneStatus)) continue;
+    if (!boards || boards.length === 0) break;
+    skip += boards.length;
 
-    const milestoneStatus = buildMilestoneStatus(board);
-    if (!milestoneStatusChanged(board.milestoneStatus, milestoneStatus)) {
-      continue;
+    for (const board of boards) {
+      if (updated >= ceiling) break;
+      if (!board?.id) continue;
+      if (hasMilestoneStatus(board.milestoneStatus)) continue;
+
+      const milestoneStatus = buildMilestoneStatus(board);
+      if (!milestoneStatusChanged(board.milestoneStatus, milestoneStatus)) {
+        continue;
+      }
+
+      if (!dryRun) {
+        await context.db.ProposalBoard.updateOne({
+          where: { id: board.id },
+          data: { milestoneStatus },
+        });
+      }
+      updated += 1;
     }
 
-    if (!dryRun) {
-      await context.db.ProposalBoard.updateOne({
-        where: { id: board.id },
-        data: { milestoneStatus },
-      });
-    }
-    updated += 1;
+    if (boards.length < PAGE_SIZE) break;
   }
 
   return updated;

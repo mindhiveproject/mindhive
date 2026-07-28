@@ -270,24 +270,36 @@ const Section = ({
         }
       },
       optimisticResponse: {
+        // PROPOSAL_QUERY selects many nested fields on each card. Enumerate
+        // them here (nulls for what we can't derive locally) so Apollo's
+        // cache write doesn't emit "Missing field" warnings and downstream
+        // Card / ActionCard render paths don't crash on `card.milestone.key`
+        // etc. during the optimistic window. The real values arrive when
+        // the mutation resolves.
         __typename: "Mutation",
         createProposalCard: {
           __typename: "ProposalCard",
           id: uuidv1(),
           boardId,
+          publicId,
           title,
           content: null,
+          revisedContent: null,
+          comment: null,
+          type: null,
           position:
             cards && cards.length > 0
               ? cards[cards.length - 1].position + 16384
               : 16384,
+          settings: { status: "Not started" },
           section: {
             __typename: "ProposalSection",
             id: sectionId,
+            title: null,
           },
+          milestone: null,
           assignedTo: [],
-          settings: { status: "Not started" },
-          publicId,
+          isEditedBy: null,
         },
       },
     });

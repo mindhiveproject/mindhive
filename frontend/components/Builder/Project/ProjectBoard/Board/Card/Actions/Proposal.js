@@ -13,6 +13,7 @@ import {
   buildDualWriteUpdate,
   isMilestoneSubmitted,
   isOpenForComments,
+  readMilestoneStatus,
 } from "../../../../../../../lib/milestoneStatus";
 import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
 import {
@@ -150,10 +151,18 @@ export default function Proposal({
   };
 
   const switchFeedbackLock = async () => {
+    // Preserve the current milestone status — this toggle only changes the
+    // comment lock. Hardcoding "SUBMITTED" here would stomp a review-cycle
+    // state like REVISION_REQUESTED back to SUBMITTED on every lock/unlock.
+    const currentEntry = readMilestoneStatus(
+      proposal,
+      milestone?.key,
+      milestones
+    );
     const updateInput = buildDualWriteUpdate(
       milestone,
       {
-        status: "SUBMITTED",
+        status: currentEntry?.status || "SUBMITTED",
         openForComments: isFeedbackLocked,
       },
       proposal?.milestoneStatus

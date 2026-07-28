@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 import { useBoardMilestones } from "../../../lib/useBoardMilestones";
 import { getReviewStepOptions } from "../../../lib/milestones";
+import { getClassTemplateClasses } from "../../Utils/proposalBoard";
 
 import ReactHtmlParser from "react-html-parser";
 
@@ -686,7 +687,7 @@ export default function BuilderProposalCard({
                         </svg>
                       }
                       onClick={() => {
-                        const classCode = proposal?.templateForClasses?.[0]?.code;
+                        const classCode = getClassTemplateClasses(proposal)[0]?.code;
                         if (classCode) {
                           const url = `/dashboard/myclasses/${classCode}?page=settings`;
                           window.open(url, "_blank", "noopener,noreferrer");

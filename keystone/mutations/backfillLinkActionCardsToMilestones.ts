@@ -34,40 +34,60 @@ async function backfillLinkActionCardsToMilestones(
     globalMilestones.map((m: any) => [m.actionCardType, m])
   );
 
-  const boards = await context.query.ProposalBoard.findMany({
-    query: `
-      id
-      templateForClasses { id }
-      templatesForClass { id }
-      sections {
-        cards {
-          id
-          type
-          milestone { id }
-        }
-      }
-    `,
-    take,
-  });
+  // Paginate through every ProposalBoard on the platform in fixed-size
+  // chunks. Previously we ran a single findMany with `take` and no `skip`
+  // (or ordering), so on a DB with more than the page size total the
+  // action cards on later boards never got linked. The `take` arg here is
+  // now a CEILING on `updated`, not on rows scanned.
+  const PAGE_SIZE = 200;
+  const orderBy = [{ createdAt: "asc" as const }, { id: "asc" as const }];
 
   let updated = 0;
-  for (const board of boards) {
-    if (!isClassTemplateBoard(board)) continue;
-    for (const section of board.sections || []) {
-      for (const card of section.cards || []) {
-        if (!ACTION_TYPES.includes(card.type)) continue;
-        if (card.milestone?.id) continue;
-        const milestone = byActionType.get(card.type);
-        if (!milestone) continue;
-        if (!dryRun) {
-          await context.query.ProposalCard.updateOne({
-            where: { id: card.id },
-            data: { milestone: { connect: { id: milestone.id } } },
-          });
+  let skip = 0;
+  while (updated < take) {
+    const boards = await context.query.ProposalBoard.findMany({
+      query: `
+        id
+        templateForClasses { id }
+        templatesForClass { id }
+        sections {
+          cards {
+            id
+            type
+            milestone { id }
+          }
         }
-        updated += 1;
+      `,
+      take: PAGE_SIZE,
+      skip,
+      orderBy,
+    });
+
+    if (!boards || boards.length === 0) break;
+    skip += boards.length;
+
+    for (const board of boards) {
+      if (updated >= take) break;
+      if (!isClassTemplateBoard(board)) continue;
+      for (const section of board.sections || []) {
+        for (const card of section.cards || []) {
+          if (updated >= take) break;
+          if (!ACTION_TYPES.includes(card.type)) continue;
+          if (card.milestone?.id) continue;
+          const milestone = byActionType.get(card.type);
+          if (!milestone) continue;
+          if (!dryRun) {
+            await context.query.ProposalCard.updateOne({
+              where: { id: card.id },
+              data: { milestone: { connect: { id: milestone.id } } },
+            });
+          }
+          updated += 1;
+        }
       }
     }
+
+    if (boards.length < PAGE_SIZE) break;
   }
 
   return updated;
