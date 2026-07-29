@@ -1,12 +1,12 @@
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
-import ActionCardTypeBadge from "./ActionCardTypeBadge";
-import Button from "../../../DesignSystem/Button";
+import ActionCardTypeBadge from "../utils/ActionCardTypeBadge";
+import Button from "../../../../DesignSystem/Button";
 import {
   getActionCardLabel,
   resolveActionCardMilestone,
-} from "../../../../lib/templateBoardActionCards";
+} from "../../../../../lib/templateBoardActionCards";
 
 const overlayStyle = {
   position: "fixed",

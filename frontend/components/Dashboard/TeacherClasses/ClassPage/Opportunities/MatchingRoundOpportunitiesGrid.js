@@ -7,12 +7,12 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
-import Button from "../../../DesignSystem/Button";
-import InfoTooltip from "../../../DesignSystem/InfoTooltip";
+import Button from "../../../../DesignSystem/Button";
+import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 import {
   formatDateShort,
   isExpired,
-} from "../../Connect/Rounds/roundFormConfig";
+} from "../../../Connect/Rounds/roundFormConfig";
 
 const INFO_HIGHLIGHT_DISMISSED_KEY =
   "mh.classMatchingRound.infoHighlightDismissed";

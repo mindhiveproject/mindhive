@@ -2,21 +2,21 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
-import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../Queries/Proposal";
-import { UPDATE_PROPOSAL_BOARD } from "../../../Mutations/Proposal";
+import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../../Queries/Proposal";
+import { UPDATE_PROPOSAL_BOARD } from "../../../../Mutations/Proposal";
 import {
   classHasExplicitTemplateVisibility,
   getVisibleTemplateBoards,
   isTemplateVisibleToStudents,
   setTemplateVisibilityForClass,
-} from "../../../../lib/classTemplateBoards";
+} from "../../../../../lib/classTemplateBoards";
 import {
   getBoardAssignableToStudents,
   getBoardCurriculumType,
   getBoardStudentsCanAssignToCards,
   mergeBoardSettings,
-} from "../../../../lib/proposalBoardSettings";
-import { normalizeCurriculumType } from "../../../../lib/curriculumTypes";
+} from "../../../../../lib/proposalBoardSettings";
+import { normalizeCurriculumType } from "../../../../../lib/curriculumTypes";
 
 function readBoardSettings(board) {
   return board?.settings && typeof board.settings === "object"

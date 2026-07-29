@@ -1,4 +1,4 @@
-import TeacherClassProjects from "../../TeacherClasses/ClassPage/Projects";
+import TeacherClassProjects from "../../TeacherClasses/ClassPage/Projects/Main";
 
 /**
  * Student class projects — same AgGrid UI as the teacher projects tab,

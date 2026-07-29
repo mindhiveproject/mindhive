@@ -3,9 +3,9 @@ import useTranslation from "next-translate/useTranslation";
 
 import { Sidebar } from "semantic-ui-react";
 
-import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../Queries/Proposal";
-import Button from "../../../DesignSystem/Button";
-import { StyledProposal } from "../../../styles/StyledProposal";
+import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../../Queries/Proposal";
+import Button from "../../../../DesignSystem/Button";
+import { StyledProposal } from "../../../../styles/StyledProposal";
 import ProposalPage from "./ProjectBoard/ProposalPage";
 
 export default function ProjectsBoardEditor({ myclass, user, boardId }) {

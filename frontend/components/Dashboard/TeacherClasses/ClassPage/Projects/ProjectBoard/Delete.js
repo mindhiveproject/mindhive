@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 
-import { DELETE_COMPLETE_PROPOSAL } from "../../../../Mutations/Proposal";
+import { DELETE_COMPLETE_PROPOSAL } from "../../../../../Mutations/Proposal";
 import useTranslation from "next-translate/useTranslation";
 export default function DeleteProposal({
   children,

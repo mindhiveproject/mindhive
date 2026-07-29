@@ -3,18 +3,18 @@ import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
-import DropdownMenu from "../../../DesignSystem/DropdownMenu";
-import FormDefinitionPreviewModal from "../../../Forms/DefinitionForm/FormDefinitionPreviewModal";
-import TemplateBoardMilestonesManageModal from "./TemplateBoardMilestonesManageModal";
-import { DELETE_CARD } from "../../../Mutations/Proposal";
-import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../Queries/Proposal";
-import { useBoardMilestones } from "../../../../lib/useBoardMilestones";
-import ActionCardTypeBadge from "./ActionCardTypeBadge";
+import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import FormDefinitionPreviewModal from "../../../../Forms/DefinitionForm/FormDefinitionPreviewModal";
+import TemplateBoardMilestonesManageModal from "../Modals/TemplateBoardMilestonesManageModal";
+import { DELETE_CARD } from "../../../../Mutations/Proposal";
+import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../../Queries/Proposal";
+import { useBoardMilestones } from "../../../../../lib/useBoardMilestones";
+import ActionCardTypeBadge from "../utils/ActionCardTypeBadge";
 import {
   getActionCardsFromBoard,
   getActionCardLabel,
   resolveActionCardMilestone,
-} from "../../../../lib/templateBoardActionCards";
+} from "../../../../../lib/templateBoardActionCards";
 
 const MANAGE_MILESTONES_ICON = (
   <img
