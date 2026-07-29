@@ -15,7 +15,6 @@ const OVERLAY_STYLE = {
 };
 
 const DIALOG_STYLE = {
-  maxWidth: 420,
   width: "100%",
   background: "var(--MH-Theme-Neutrals-White, #ffffff)",
   borderRadius: 12,
@@ -56,8 +55,16 @@ const ACTIONS_STYLE = {
  * @param {React.ReactNode} [title] - Optional header content.
  * @param {React.ReactNode} children - Body content.
  * @param {React.ReactNode} [actions] - Optional footer slot (e.g. DesignSystem Buttons).
+ * @param {number} [maxWidth=420] - Dialog max-width in px.
  */
-export default function Modal({ open, onClose, title, children, actions }) {
+export default function Modal({
+  open,
+  onClose,
+  title,
+  children,
+  actions,
+  maxWidth = 420,
+}) {
   const titleId = useId();
 
   useEffect(() => {
@@ -90,7 +97,7 @@ export default function Modal({ open, onClose, title, children, actions }) {
         aria-labelledby={title != null ? titleId : undefined}
         className="DesignSystem-Modal"
         onClick={(e) => e.stopPropagation()}
-        style={DIALOG_STYLE}
+        style={{ ...DIALOG_STYLE, maxWidth }}
       >
         {title != null ? (
           <h2 id={titleId} className="DesignSystem-Modal-Title" style={TITLE_STYLE}>
