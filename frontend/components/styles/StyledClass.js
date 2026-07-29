@@ -1474,6 +1474,11 @@ const StyledClass = styled.div`
       gap: 18px;
     }
 
+    .matchingRoundExportActions {
+      display: flex;
+      justify-content: flex-start;
+    }
+
     .classTabMatchingRoundFooter {
       display: flex;
       flex-wrap: wrap;

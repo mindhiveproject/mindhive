@@ -603,3 +603,48 @@ export const MY_CLASSES_FOR_APPOINTMENT_REQUESTS = gql`
     }
   }
 `;
+
+/** Lean bulk payload for teacher matching-round CSV export. */
+export const OPPORTUNITIES_FOR_CSV_EXPORT = gql`
+  query OPPORTUNITIES_FOR_CSV_EXPORT($ids: [ID!]!) {
+    opportunities(where: { id: { in: $ids } }) {
+      id
+      description
+      projectCategory
+      projectCategoryOther
+      proposalData
+      guidelinesAcknowledged
+      guidelinesAcknowledgedAt
+      preSelectedAt
+      acceptedAt
+      reviewedBy {
+        id
+        firstName
+        lastName
+        username
+      }
+      scopeDescription
+      potentialActivities
+      specificSkills
+      issueRelevance
+      specialConsiderations
+      mentor {
+        id
+        email
+        firstName
+        lastName
+        username
+      }
+      organization {
+        id
+        name
+      }
+      reviewNotes {
+        id
+        round {
+          id
+        }
+      }
+    }
+  }
+`;

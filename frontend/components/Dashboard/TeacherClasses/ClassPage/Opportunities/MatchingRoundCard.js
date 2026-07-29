@@ -30,6 +30,7 @@ import {
   toIsoOrNull,
 } from "../../../Connect/Rounds/roundFormConfig";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
+import OpportunityExportModal from "./OpportunityExportModal";
 
 const NETWORK_ICON = (
   <img
@@ -312,6 +313,7 @@ function MatchingRoundEditor({
   );
   const [snapshotRevision, setSnapshotRevision] = useState(0);
   const [togglingOpportunityId, setTogglingOpportunityId] = useState(null);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
   const savedSnapshotRef = useRef(null);
 
   const selectedNetwork = useMemo(
@@ -1091,6 +1093,19 @@ function MatchingRoundEditor({
             "Select which published opportunities students can rank in this round.",
         })}
       </p>
+      {networkOpportunities.length > 0 ? (
+        <div className="matchingRoundExportActions">
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => setExportModalOpen(true)}
+          >
+            {t("opportunities.matchingRound.export.openButton", {}, {
+              default: "Export to CSV",
+            })}
+          </Button>
+        </div>
+      ) : null}
       {networkOpportunities.length === 0 ? (
         <p className="classTabEmptyInline">
           {t("opportunities.matchingRound.noOpportunitiesInNetwork", {}, {
@@ -1112,6 +1127,27 @@ function MatchingRoundEditor({
           })}
         />
       )}
+      <OpportunityExportModal
+        open={exportModalOpen}
+        onClose={() => setExportModalOpen(false)}
+        listOpportunities={networkOpportunities}
+        selectedOpportunityIds={selectedOpportunities}
+        roundId={roundId}
+        roundTitle={
+          inputs.title ||
+          round?.title ||
+          roundSummary?.title ||
+          t("opportunities.matchingRound.newRoundTitle", {}, {
+            default: "New matching round",
+          })
+        }
+        networkTitle={
+          selectedNetwork?.title ||
+          round?.classNetwork?.title ||
+          roundSummary?.classNetwork?.title ||
+          ""
+        }
+      />
     </div>
   );
 
