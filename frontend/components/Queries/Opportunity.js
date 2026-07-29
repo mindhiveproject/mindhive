@@ -142,10 +142,23 @@ export const GET_OPPORTUNITY = gql`
           username
           firstName
           lastName
+          image {
+            id
+            keystoneImage {
+              id
+              url
+            }
+            image {
+              publicUrlTransformed
+            }
+          }
         }
         round {
           id
           title
+        }
+        readBy {
+          id
         }
       }
     }
@@ -344,10 +357,23 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
           username
           firstName
           lastName
+          image {
+            id
+            keystoneImage {
+              id
+              url
+            }
+            image {
+              publicUrlTransformed
+            }
+          }
         }
         round {
           id
           title
+        }
+        readBy {
+          id
         }
       }
       ratings(

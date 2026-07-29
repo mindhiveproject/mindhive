@@ -590,11 +590,12 @@ export default function ClassMatchingRoundSection({
     return sortOpportunitiesByTitle(
       networkOpportunities.filter((opportunity) => {
         if (selectedSet.has(opportunity.id)) return false;
-        // Primary review queue: pending_review.
-        // Safety net: orphaned pre_selected (status set without round link,
-        // or round link cleared before status was rolled back).
+        // Available queue: pending_review, returned (greyed / last in grid),
+        // and orphaned pre_selected (status set without round link, or round
+        // link cleared before status was rolled back).
         return (
           opportunity.status === "pending_review" ||
+          opportunity.status === "returned" ||
           opportunity.status === "pre_selected"
         );
       }),
@@ -649,18 +650,18 @@ export default function ClassMatchingRoundSection({
         label:
           selectedOpportunities.length > 0
             ? t(
-                "opportunities.matchingRound.panels.selectedOpportunitiesWithCount",
+                "opportunities.matchingRound.panels.preSelectedWithCount",
                 { count: selectedOpportunities.length },
-                { default: "Selected opportunities ({{count}})" },
+                { default: "Pre-selected ({{count}})" },
               )
-            : t("opportunities.matchingRound.panels.selectedOpportunities", {}, {
-                default: "Selected opportunities",
+            : t("opportunities.matchingRound.panels.preSelected", {}, {
+                default: "Pre-selected",
               }),
       },
       {
         id: PANELS.questions,
         label: t("opportunities.matchingRound.panels.questions", {}, {
-          default: "Round questions",
+          default: "Student questions",
         }),
       },
     ],
@@ -1216,10 +1217,10 @@ export default function ClassMatchingRoundSection({
   const renderReviewPanel = () => (
     <div className="classTabMatchingRoundPanel">
       <p className="subsectionHint">
-        {t("opportunities.matchingRound.fields.opportunitiesHint", {}, {
+        {/* {t("opportunities.matchingRound.fields.opportunitiesHint", {}, {
           default:
             "Select which published opportunities students can rank in this round.",
-        })}
+        })} */}
       </p>
       {networkOpportunities.length === 0 ? (
         <p className="classTabEmptyInline">
@@ -1236,6 +1237,7 @@ export default function ClassMatchingRoundSection({
           onPreview={onPreviewOpportunity}
           selectionDisabled={Boolean(togglingOpportunityId)}
           togglingOpportunityId={togglingOpportunityId}
+          roundId={activeRoundId}
           emptyMessage={t("opportunities.matchingRound.reviewOpportunitiesEmpty", {}, {
             default:
               "All network opportunities are already in this round. Remove some from Selected opportunities to review more.",
@@ -1254,6 +1256,7 @@ export default function ClassMatchingRoundSection({
         onPreview={onPreviewOpportunity}
         onRemove={canManageOpportunities ? handleRemoveFromRound : undefined}
         togglingOpportunityId={togglingOpportunityId}
+        roundId={activeRoundId}
         emptyMessage={t("opportunities.matchingRound.selectedOpportunitiesEmpty", {}, {
           default:
             "No opportunities selected yet. Use Review opportunities to add some.",

@@ -874,7 +874,8 @@
 				},
 				"dismissHighlight": "Dismiss",
 				"remove": "Remove",
-				"review": "Review"
+				"review": "Review",
+				"reviewUnreadAria": "Review — unread sponsor message"
 			},
 			"loading": "Loading matching round…",
 			"manageMatches": "Manage matches",
@@ -893,7 +894,11 @@
 			"notSetUp": "Not set up",
 			"openConfirm": "Students in this network will see this round and can submit preferences. Continue?",
 			"panels": {
-				"questions": "Additional student questions",
+				"available": "",
+				"availableWithCount": "",
+				"preSelected": "",
+				"preSelectedWithCount": "",
+				"questions": "Student questions",
 				"reviewOpportunities": "Review opportunities",
 				"reviewOpportunitiesWithCount": "Review opportunities ({{count}})",
 				"selectedOpportunities": "Selected opportunities",

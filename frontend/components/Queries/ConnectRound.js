@@ -219,6 +219,17 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
       }
       createdAt
       updatedAt
+      reviewNotes {
+        id
+        kind
+        createdAt
+        round {
+          id
+        }
+        readBy {
+          id
+        }
+      }
     }
   }
 `;

@@ -424,6 +424,11 @@ export const Profile = list({
       ref: "OpportunityReviewNote.author",
       many: true,
     }),
+    // Notes this profile has marked as read (via markOpportunityReviewNotesRead).
+    opportunityReviewNotesRead: relationship({
+      ref: "OpportunityReviewNote.readBy",
+      many: true,
+    }),
     questionsProposed: relationship({
       ref: "ConnectQuestion.proposedBy",
       many: true,

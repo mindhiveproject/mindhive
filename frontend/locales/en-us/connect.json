@@ -1164,6 +1164,7 @@
 			"reviewerComment": "Reviewer comment",
 			"sponsorReply": "Sponsor reply"
 		},
+		"loadPreviousMessages": "Load previous messages",
 		"noRound": "This opportunity is not linked to a matching round yet, so a conversation cannot be started.",
 		"resubmitPrompt": {
 			"dismiss": "Not now",

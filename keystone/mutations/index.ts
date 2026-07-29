@@ -41,6 +41,7 @@ import {
 import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
+import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
 import resolveFormDefinition from "./resolveFormDefinition";
 import seedOpportunityForm from "./seedOpportunityForm";
 import seedProfileForms from "./seedProfileForms";
@@ -178,6 +179,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite(inviteId: ID!): NetworkInvite
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
+        # Connect the session user to OpportunityReviewNote.readBy for
+        # notes they can see. Needed because list update is author-only.
+        markOpportunityReviewNotesRead(noteIds: [ID!]!): [OpportunityReviewNote!]!
         # One-off seeder for the global Opportunity FormDefinition.
         # Idempotent unless force=true (which deletes and recreates).
         seedOpportunityForm(force: Boolean): FormDefinition
@@ -331,6 +335,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite,
         followUser,
         unfollowUser,
+        markOpportunityReviewNotesRead,
         seedOpportunityForm,
         seedProfileForms,
         seedReviewForms,
