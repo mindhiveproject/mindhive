@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
@@ -8,12 +8,16 @@ import Chip from "../../../../DesignSystem/Chip";
 import StyledModal from "../../../../styles/StyledModal";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../../Queries/Opportunity";
 import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../../Queries/ConnectRound";
+import { MARK_OPPORTUNITY_REVIEW_NOTES_READ } from "../../../../Mutations/OpportunityReviewNote";
 import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap";
 import { hydrateProposalInputs } from "../../../Connect/Opportunities/OpportunityProposalConfig";
 import ReturnOpportunityModal from "../../../Connect/ReturnOpportunityModal";
 import OpportunityReviewNotesThread from "../../../Connect/OpportunityReviewNotesThread";
 import { isReturnableOpportunityStatus } from "../../../Connect/returnOpportunityUtils";
-import { REVIEW_NOTE_KIND } from "../../../../../lib/reviewThreadRound";
+import {
+  getUnreadSponsorReplyNotes,
+  REVIEW_NOTE_KIND,
+} from "../../../../../lib/reviewThreadRound";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
@@ -298,6 +302,7 @@ export default function OpportunityPreviewModal({
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
   const [returnModalOpen, setReturnModalOpen] = useState(false);
+  const markedReadNoteIdsRef = useRef(new Set());
 
   const isInMatchingRound =
     opportunityId &&
@@ -401,6 +406,49 @@ export default function OpportunityPreviewModal({
     }
     return queries;
   }, [opportunityId, activeRoundId, selectedNetworkId]);
+
+  const [markNotesRead] = useMutation(MARK_OPPORTUNITY_REVIEW_NOTES_READ);
+
+  // Mark unread sponsor replies as read when the reviewer opens this preview
+  // for a matching round. Guard with a ref so we only fire once per note id.
+  useEffect(() => {
+    if (!open) {
+      markedReadNoteIdsRef.current = new Set();
+      return;
+    }
+    if (!opportunityId || !activeRoundId || !viewerId || !opp?.reviewNotes) {
+      return;
+    }
+
+    const unread = getUnreadSponsorReplyNotes({
+      notes: opp.reviewNotes,
+      roundId: activeRoundId,
+      viewerId,
+    });
+    const noteIds = unread
+      .map((note) => note?.id)
+      .filter((id) => id && !markedReadNoteIdsRef.current.has(id));
+    if (noteIds.length === 0) return;
+
+    noteIds.forEach((id) => markedReadNoteIdsRef.current.add(id));
+
+    markNotesRead({
+      variables: { noteIds },
+      refetchQueries: returnRefetchQueries,
+      awaitRefetchQueries: true,
+    }).catch((err) => {
+      noteIds.forEach((id) => markedReadNoteIdsRef.current.delete(id));
+      console.error("Failed to mark review notes as read", err);
+    });
+  }, [
+    open,
+    opportunityId,
+    activeRoundId,
+    viewerId,
+    opp?.reviewNotes,
+    markNotesRead,
+    returnRefetchQueries,
+  ]);
 
   const handleReturnSuccess = () => {
     setReturnModalOpen(false);

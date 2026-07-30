@@ -533,8 +533,12 @@ function MatchingRoundEditor({
     return sortOpportunitiesByTitle(
       networkOpportunities.filter((opportunity) => {
         if (selectedSet.has(opportunity.id)) return false;
+        // Available queue: pending_review, returned (greyed / last in grid),
+        // and orphaned pre_selected (status set without round link, or round
+        // link cleared before status was rolled back).
         return (
           opportunity.status === "pending_review" ||
+          opportunity.status === "returned" ||
           opportunity.status === "pre_selected"
         );
       }),
@@ -565,12 +569,12 @@ function MatchingRoundEditor({
         label:
           reviewOpportunitiesCount > 0
             ? t(
-                "opportunities.matchingRound.panels.reviewOpportunitiesWithCount",
+                "opportunities.matchingRound.panels.availableWithCount",
                 { count: reviewOpportunitiesCount },
-                { default: "Review opportunities ({{count}})" },
+                { default: "Available ({{count}})" },
               )
-            : t("opportunities.matchingRound.panels.reviewOpportunities", {}, {
-                default: "Review opportunities",
+            : t("opportunities.matchingRound.panels.available", {}, {
+                default: "Available",
               }),
       },
       {
@@ -578,18 +582,18 @@ function MatchingRoundEditor({
         label:
           selectedOpportunities.length > 0
             ? t(
-                "opportunities.matchingRound.panels.selectedOpportunitiesWithCount",
+                "opportunities.matchingRound.panels.preSelectedWithCount",
                 { count: selectedOpportunities.length },
-                { default: "Selected opportunities ({{count}})" },
+                { default: "Pre-selected ({{count}})" },
               )
-            : t("opportunities.matchingRound.panels.selectedOpportunities", {}, {
-                default: "Selected opportunities",
+            : t("opportunities.matchingRound.panels.preSelected", {}, {
+                default: "Pre-selected",
               }),
       },
       {
         id: PANELS.questions,
         label: t("opportunities.matchingRound.panels.questions", {}, {
-          default: "Round questions",
+          default: "Student questions",
         }),
       },
     ],
@@ -1026,6 +1030,8 @@ function MatchingRoundEditor({
 
   const renderSettingsPanel = () => (
     <div className="classTabMatchingRoundPanel">
+      {renderNetworkRow()}
+
       <label className="classTabFormField">
         <span className="fieldLabel">
           {t("opportunities.matchingRound.fields.title", {}, {
@@ -1087,18 +1093,32 @@ function MatchingRoundEditor({
 
   const renderReviewPanel = () => (
     <div className="classTabMatchingRoundPanel">
-      <p className="subsectionHint">
+      {/* <p className="subsectionHint">
         {t("opportunities.matchingRound.fields.opportunitiesHint", {}, {
           default:
             "Select which published opportunities students can rank in this round.",
         })}
-      </p>
+      </p> */}
       {networkOpportunities.length > 0 ? (
         <div className="matchingRoundExportActions">
           <Button
-            variant="outline"
+            variant="tonal"
+            style={{ 
+              border: "0 solid #D3E0E3",
+              background: "#D3E0E3",
+              fontWeight: 500,
+            }}
             type="button"
             onClick={() => setExportModalOpen(true)}
+            leadingIcon={
+              <img
+                src="/assets/icons/download.svg"
+                alt=""
+                aria-hidden
+                width={24}
+                height={24}
+              />
+            }
           >
             {t("opportunities.matchingRound.export.openButton", {}, {
               default: "Export to CSV",
@@ -1121,6 +1141,7 @@ function MatchingRoundEditor({
           onPreview={onPreviewOpportunity}
           selectionDisabled={Boolean(togglingOpportunityId)}
           togglingOpportunityId={togglingOpportunityId}
+          roundId={roundId}
           emptyMessage={t("opportunities.matchingRound.reviewOpportunitiesEmpty", {}, {
             default:
               "All network opportunities are already in this round. Remove some from Selected opportunities to review more.",
@@ -1160,6 +1181,7 @@ function MatchingRoundEditor({
         onPreview={onPreviewOpportunity}
         onRemove={canManageOpportunities ? handleRemoveFromRound : undefined}
         togglingOpportunityId={togglingOpportunityId}
+        roundId={roundId}
         emptyMessage={t("opportunities.matchingRound.selectedOpportunitiesEmpty", {}, {
           default:
             "No opportunities selected yet. Use Review opportunities to add some.",
@@ -1237,8 +1259,6 @@ function MatchingRoundEditor({
         </div>
       ) : (
         <div className="classTabExpandableBody">
-          {renderNetworkRow()}
-
           <Navbar style={{ paddingLeft: 0 }}>
             {panelOptions.map((panel) => (
               <NavbarItem

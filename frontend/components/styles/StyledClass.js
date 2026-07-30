@@ -1706,6 +1706,30 @@ const StyledClass = styled.div`
           color: #8a8680;
         }
       }
+
+      .matchingRoundOppReviewButtonUnread {
+        border: 1px solid var(--MH-Theme-Primary-Base, #337c84) !important;
+        background: var(--MH-Theme-Primary-Light, #def8fb) !important;
+        border-radius: 100px !important;
+
+        &:hover {
+          background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3) !important;
+        }
+
+        .DesignSystem-Button-LeadingIcon {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .matchingRoundOppReviewUnreadIcon {
+        display: block;
+        width: 16px;
+        height: 16px;
+        background-color: var(--MH-Theme-Primary-Base, #337c84);
+        mask: url("/assets/icons/message.svg") center / contain no-repeat;
+        -webkit-mask: url("/assets/icons/message.svg") center / contain no-repeat;
+      }
     }
 
     .matchingRoundOppInfoGridCell {

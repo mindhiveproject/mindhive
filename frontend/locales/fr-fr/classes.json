@@ -874,7 +874,8 @@
 				},
 				"dismissHighlight": "",
 				"remove": "",
-				"review": ""
+				"review": "",
+				"reviewUnreadAria": ""
 			},
 			"loading": "",
 			"manageMatches": "",
@@ -893,6 +894,10 @@
 			"notSetUp": "",
 			"openConfirm": "",
 			"panels": {
+				"available": "",
+				"availableWithCount": "",
+				"preSelected": "",
+				"preSelectedWithCount": "",
 				"questions": "",
 				"reviewOpportunities": "",
 				"reviewOpportunitiesWithCount": "",

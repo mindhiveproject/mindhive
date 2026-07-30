@@ -81,6 +81,16 @@ export const REVIEW_OPPORTUNITY = gql`
           username
           firstName
           lastName
+          image {
+            id
+            keystoneImage {
+              id
+              url
+            }
+            image {
+              publicUrlTransformed
+            }
+          }
         }
         round {
           id

@@ -13,10 +13,23 @@ const REVIEW_NOTE_FIELDS = `
     username
     firstName
     lastName
+    image {
+      id
+      keystoneImage {
+        id
+        url
+      }
+      image {
+        publicUrlTransformed
+      }
+    }
   }
   round {
     id
     title
+  }
+  readBy {
+    id
   }
 `;
 
@@ -42,6 +55,21 @@ export const DELETE_REVIEW_NOTE = gql`
   mutation DELETE_REVIEW_NOTE($id: ID!) {
     deleteOpportunityReviewNote(where: { id: $id }) {
       id
+    }
+  }
+`;
+
+export const MARK_OPPORTUNITY_REVIEW_NOTES_READ = gql`
+  mutation MARK_OPPORTUNITY_REVIEW_NOTES_READ($noteIds: [ID!]!) {
+    markOpportunityReviewNotesRead(noteIds: $noteIds) {
+      id
+      kind
+      round {
+        id
+      }
+      readBy {
+        id
+      }
     }
   }
 `;

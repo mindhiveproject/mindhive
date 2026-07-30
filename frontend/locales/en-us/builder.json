@@ -2360,6 +2360,7 @@
 		"confirmChangeCollectionVersion": "Data collection has already started. If you change the data collection version, the records collected from now on are labelled with this version. Continue?",
 		"confirmDelete": "Are you sure you want to delete {{versionName}}?",
 		"confirmLoadUnsaved": "You have unsaved changes on the canvas. They will be replaced by this version. Save the study first if you want to keep them. Load this version anyway?",
+		"createdOn": "",
 		"dataCollectionBadge": "Data collection",
 		"dataCollectionVersion": "Data collection version",
 		"delete": "Delete",

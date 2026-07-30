@@ -89,6 +89,7 @@ export default function ProcessMain({
   const gridOptions = {
     onFilterChanged: onFilterChanged,
     onGridReady: onGridReady,
+    suppressFieldDotNotation: true,
   };
 
   if (data && data?.length) {
