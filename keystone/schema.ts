@@ -22,6 +22,7 @@ import { Word } from "./schemas/Word";
 import { Template } from "./schemas/Template";
 import { Task } from "./schemas/Task";
 import { Study } from "./schemas/Study";
+import { StudyVersion } from "./schemas/StudyVersion";
 import { StudyImage } from "./schemas/StudyImage";
 import { Consent } from "./schemas/Consent";
 import { Update } from "./schemas/Update";
@@ -100,6 +101,7 @@ export const lists: Lists = {
   Template,
   Task,
   Study,
+  StudyVersion,
   StudyImage,
   Consent,
   Update,

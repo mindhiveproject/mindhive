@@ -1,10 +1,10 @@
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
-import Button from "../../../DesignSystem/Button";
-import JustOneSecondNotice from "../../../DesignSystem/JustOneSecondNotice";
-import ProposalBuilder from "../../../Proposal/Builder/Main";
-import { StyledProposal } from "../../../styles/StyledProposal";
+import Button from "../../../../DesignSystem/Button";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
+import ProposalBuilder from "../../../../Proposal/Builder/Main";
+import { StyledProposal } from "../../../../styles/StyledProposal";
 
 const overlayStyle = {
   position: "fixed",

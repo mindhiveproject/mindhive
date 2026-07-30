@@ -244,6 +244,10 @@ export const Profile = list({
       ref: "Study.collaborators",
       many: true,
     }),
+    studyVersions: relationship({
+      ref: "StudyVersion.createdBy",
+      many: true,
+    }),
     consentCreatorIn: relationship({
       ref: "Consent.author",
       many: true,
@@ -419,6 +423,11 @@ export const Profile = list({
     }),
     opportunityReviewNotes: relationship({
       ref: "OpportunityReviewNote.author",
+      many: true,
+    }),
+    // Notes this profile has marked as read (via markOpportunityReviewNotesRead).
+    opportunityReviewNotesRead: relationship({
+      ref: "OpportunityReviewNote.readBy",
       many: true,
     }),
     questionsProposed: relationship({

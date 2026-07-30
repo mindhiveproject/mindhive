@@ -1,7 +1,7 @@
 import useTranslation from "next-translate/useTranslation";
 
-import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
 import { getUserRoleOnClassItem } from "./ownedClassItems";
 
 /**

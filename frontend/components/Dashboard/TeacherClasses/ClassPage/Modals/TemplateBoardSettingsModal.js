@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
-import Button from "../../../DesignSystem/Button";
-import BoardSettingsFields from "./BoardSettingsFields";
-import useTemplateBoardSettings from "./useTemplateBoardSettings";
+import Button from "../../../../DesignSystem/Button";
+import BoardSettingsFields from "../Projects/BoardSettingsFields";
+import useTemplateBoardSettings from "../Projects/useTemplateBoardSettings";
 
 const modalActionsStyle = {
   display: "flex",

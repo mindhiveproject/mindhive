@@ -181,6 +181,13 @@ export const OpportunityReviewNote = list({
         },
       },
     }),
+    // Reviewers who have seen this note. Only written via the
+    // markOpportunityReviewNotesRead custom mutation — stripped from
+    // normal create/update input below.
+    readBy: relationship({
+      ref: "Profile.opportunityReviewNotesRead",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
@@ -190,23 +197,31 @@ export const OpportunityReviewNote = list({
     async resolveInput({ resolvedData, operation }) {
       if (operation === "update") {
         // Scope/ownership fields are immutable after create.
+        // readBy is only set via markOpportunityReviewNotesRead (sudo).
         const {
           author: _author,
           opportunity: _opportunity,
           round: _round,
           kind: _kind,
+          readBy: _readBy,
           ...rest
         } = resolvedData as Record<string, unknown>;
         return { ...rest, updatedAt: new Date() };
       }
       if (operation === "create") {
+        // Never accept client-supplied readBy on create.
+        const { readBy: _readBy, ...rest } = resolvedData as Record<
+          string,
+          unknown
+        >;
         // Ensure kind defaults even if client omits it.
-        if (!resolvedData.kind) {
+        if (!rest.kind) {
           return {
-            ...resolvedData,
+            ...rest,
             kind: REVIEW_NOTE_KIND.REVIEWER_COMMENT,
           };
         }
+        return rest;
       }
       return resolvedData;
     },

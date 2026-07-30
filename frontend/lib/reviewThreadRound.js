@@ -78,7 +78,68 @@ export function filterNotesByRound(notes = [], roundId) {
   return (notes || []).filter((note) => note?.round?.id === roundId);
 }
 
+/** Default number of latest notes shown when the thread is collapsed. */
+export const DEFAULT_VISIBLE_REVIEW_NOTES = 2;
+
+/**
+ * Collapse a chronologically ascending notes list to the latest `limit` items
+ * unless `expanded` is true.
+ *
+ * @param {Array} notes
+ * @param {{ expanded?: boolean, limit?: number }} [opts]
+ * @returns {{ visibleNotes: Array, hiddenCount: number, canLoadPrevious: boolean }}
+ */
+export function getCollapsedReviewNotes(
+  notes = [],
+  { expanded = false, limit = DEFAULT_VISIBLE_REVIEW_NOTES } = {}
+) {
+  const list = Array.isArray(notes) ? notes : [];
+  const safeLimit = Math.max(0, Number(limit) || 0);
+
+  if (expanded || list.length <= safeLimit) {
+    return {
+      visibleNotes: list,
+      hiddenCount: 0,
+      canLoadPrevious: false,
+    };
+  }
+
+  const hiddenCount = list.length - safeLimit;
+  return {
+    visibleNotes: list.slice(-safeLimit),
+    hiddenCount,
+    canLoadPrevious: hiddenCount > 0,
+  };
+}
+
 export const REVIEW_NOTE_KIND = {
   REVIEWER_COMMENT: "reviewer_comment",
   SPONSOR_REPLY: "sponsor_reply",
 };
+
+/**
+ * Sponsor replies in a round that the viewer has not marked as read.
+ * @param {{ notes?: Array, roundId?: string|null, viewerId?: string|null }} args
+ */
+export function getUnreadSponsorReplyNotes({
+  notes = [],
+  roundId = null,
+  viewerId = null,
+} = {}) {
+  if (!roundId || !viewerId) return [];
+  return filterNotesByRound(notes, roundId).filter((note) => {
+    if (note?.kind !== REVIEW_NOTE_KIND.SPONSOR_REPLY) return false;
+    const readers = note?.readBy || [];
+    return !readers.some((reader) => reader?.id === viewerId);
+  });
+}
+
+export function hasUnreadSponsorReply({
+  notes = [],
+  roundId = null,
+  viewerId = null,
+} = {}) {
+  return (
+    getUnreadSponsorReplyNotes({ notes, roundId, viewerId }).length > 0
+  );
+}

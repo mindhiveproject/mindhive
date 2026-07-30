@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "@apollo/client";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
@@ -10,15 +10,20 @@ import {
   UPDATE_REVIEW_NOTE,
   DELETE_REVIEW_NOTE,
 } from "../../Mutations/OpportunityReviewNote";
+import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 import {
   REVIEW_NOTE_KIND,
   filterNotesByRound,
+  getCollapsedReviewNotes,
   sortReviewNotesAscending,
 } from "../../../lib/reviewThreadRound";
 
 const Shell = styled.section`
   display: grid;
   gap: 12px;
+  box-sizing: border-box;
+  width: 80%;
+  margin-inline: 10%;
 `;
 
 const Header = styled.div`
@@ -45,38 +50,83 @@ const Header = styled.div`
 const RoundSelectWrap = styled.div`
   display: grid;
   gap: 6px;
-  max-width: 420px;
+  width: 100%;
 `;
 
 const MessageList = styled.div`
   display: grid;
-  gap: 12px;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+  border: 1px solid rgba(211, 218, 224, 0.9);
 `;
 
-const MessageCard = styled.div`
-  display: grid;
+const LoadPreviousWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 2px 0 4px;
+`;
+
+const MessageRow = styled.div`
+  display: flex;
+  align-items: flex-end;
   gap: 8px;
-  padding: 14px;
-  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  /* Pack toward main-start: left for row, right for row-reverse.
+     Do not pair row-reverse with flex-end — that flips content back left. */
+  justify-content: flex-start;
+  flex-direction: ${(p) => (p.$alignEnd ? "row-reverse" : "row")};
+`;
+
+const Avatar = styled.div`
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
   background: ${(p) =>
     p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
-      ? "var(--MH-Theme-Primary-Light, #def8fb)"
-      : "#faf8ff"};
-  border: 1px solid
-    ${(p) =>
-      p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
-        ? "rgba(51, 111, 138, 0.28)"
-        : "rgba(160, 144, 224, 0.35)"};
-  box-shadow: 0 2px 10px rgba(111, 38, 206, 0.06);
+      ? "var(--MH-Theme-Primary-Dark, #336f8a)"
+      : "var(--MH-Theme-Secondary-Dark, #6f26ce)"};
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(23, 23, 23, 0.12);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+`;
+
+const BubbleStack = styled.div`
+  display: grid;
+  gap: 4px;
+  /* Leave room for the avatar + gap inside the shelled content width */
+  max-width: calc(100% - 40px);
+  min-width: 0;
+  justify-items: ${(p) => (p.$alignEnd ? "end" : "start")};
 `;
 
 const MetaRow = styled.div`
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
+  align-items: baseline;
+  gap: 6px;
   flex-wrap: wrap;
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 1.3;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  padding: 0 4px;
+  justify-content: ${(p) => (p.$alignEnd ? "flex-end" : "flex-start")};
+  text-align: ${(p) => (p.$alignEnd ? "right" : "left")};
 
   .author {
     font-weight: 600;
@@ -86,6 +136,28 @@ const MetaRow = styled.div`
   .kind {
     font-weight: 500;
   }
+
+  .time {
+    opacity: 0.9;
+  }
+`;
+
+const MessageBubble = styled.div`
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: ${(p) =>
+    p.$alignEnd ? "14px 14px 4px 14px" : "14px 14px 14px 4px"};
+  background: ${(p) =>
+    p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
+      ? "var(--MH-Theme-Primary-Light, #def8fb)"
+      : "#faf8ff"};
+  border: 1px solid
+    ${(p) =>
+      p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
+        ? "rgba(51, 111, 138, 0.28)"
+        : "rgba(160, 144, 224, 0.35)"};
+  box-shadow: 0 1px 4px rgba(23, 23, 23, 0.05);
 `;
 
 const BodyText = styled.p`
@@ -93,7 +165,7 @@ const BodyText = styled.p`
   white-space: pre-wrap;
   color: var(--MH-Theme-Neutrals-Black, #171717);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.45;
 `;
 
 const Compose = styled.form`
@@ -104,9 +176,9 @@ const Compose = styled.form`
     width: 100%;
     box-sizing: border-box;
     resize: vertical;
-    min-height: 88px;
+    min-height: 72px;
     padding: 10px 12px;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid #d3dae0;
     font-family: inherit;
     font-size: 14px;
@@ -148,6 +220,17 @@ function displayName(profile, fallback) {
   );
 }
 
+function initialsFromProfile(profile) {
+  const first = (profile?.firstName || "").trim();
+  const last = (profile?.lastName || "").trim();
+  if (first || last) {
+    return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase() || "?";
+  }
+  const username = (profile?.username || "").trim();
+  if (username) return username.slice(0, 2).toUpperCase();
+  return "?";
+}
+
 function formatDateTime(value) {
   if (!value) return "";
   try {
@@ -185,12 +268,19 @@ function MessageItem({
   const canEdit = isOwn;
   const canDelete = isOwn || canDeleteAsAdmin;
   const kind = note.kind || REVIEW_NOTE_KIND.REVIEWER_COMMENT;
+  // Sponsor replies sit on the right; reviewer comments on the left.
+  const alignEnd = kind === REVIEW_NOTE_KIND.SPONSOR_REPLY;
   const kindLabel =
     kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
       ? t("reviewThread.kind.sponsorReply", {}, { default: "Sponsor reply" })
       : t("reviewThread.kind.reviewerComment", {}, {
           default: "Reviewer comment",
         });
+  const authorFallback = t("reviewThread.unknownAuthor", {}, {
+    default: "Unknown",
+  });
+  const authorName = displayName(note.author, authorFallback);
+  const avatarUrl = getProfileImageUrl(note.author);
 
   const timeLabel = wasEdited(note)
     ? t(
@@ -239,86 +329,109 @@ function MessageItem({
   };
 
   return (
-    <MessageCard $kind={kind}>
-      <MetaRow>
-        <span className="author">
-          {displayName(
-            note.author,
-            t("reviewThread.unknownAuthor", {}, { default: "Unknown" })
-          )}
-          <span className="kind"> · {kindLabel}</span>
-        </span>
-        {timeLabel ? <span>{timeLabel}</span> : null}
-      </MetaRow>
+    <MessageRow $alignEnd={alignEnd}>
+      <Avatar $kind={kind} aria-hidden={!avatarUrl}>
+        {avatarUrl ? (
+          <img src={avatarUrl} alt="" />
+        ) : (
+          <span aria-hidden="true">{initialsFromProfile(note.author)}</span>
+        )}
+      </Avatar>
 
-      {editing ? (
-        <>
-          <textarea
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            rows={4}
-            disabled={saving}
-            aria-label={t("reviewThread.editAria", {}, {
-              default: "Edit message",
-            })}
-          />
-          <ActionsRow>
-            <Button variant="outline" onClick={handleCancel} disabled={saving}>
-              {t("reviewThread.cancel", {}, { default: "Cancel" })}
-            </Button>
-            <Button
-              variant="filled"
-              onClick={handleSave}
-              disabled={saving || !draft.trim()}
-            >
-              {saving
-                ? t("reviewThread.saving", {}, { default: "Saving…" })
-                : t("reviewThread.save", {}, { default: "Save" })}
-            </Button>
-          </ActionsRow>
-        </>
-      ) : (
-        <>
-          <BodyText>{note.body}</BodyText>
-          {(canEdit || canDelete) && (
-            <ActionsRow>
-              {canEdit ? (
+      <BubbleStack $alignEnd={alignEnd}>
+        <MetaRow $alignEnd={alignEnd}>
+          <span className="author">{authorName}</span>
+          <span className="kind">· {kindLabel}</span>
+          {timeLabel ? <span className="time">· {timeLabel}</span> : null}
+        </MetaRow>
+
+        <MessageBubble $kind={kind} $alignEnd={alignEnd}>
+          {editing ? (
+            <>
+              <textarea
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                rows={4}
+                disabled={saving}
+                aria-label={t("reviewThread.editAria", {}, {
+                  default: "Edit message",
+                })}
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  resize: "vertical",
+                  minHeight: 72,
+                  padding: "8px 10px",
+                  borderRadius: 8,
+                  border: "1px solid #d3dae0",
+                  fontFamily: "inherit",
+                  fontSize: 14,
+                  lineHeight: 1.45,
+                }}
+              />
+              <ActionsRow>
                 <Button
-                  variant="text"
-                  onClick={handleStartEdit}
-                  style={{
-                    padding: 0,
-                    minWidth: 0,
-                    height: "fit-content",
-                    fontSize: 13,
-                    fontWeight: 600,
-                  }}
+                  variant="outline"
+                  onClick={handleCancel}
+                  disabled={saving}
                 >
-                  {t("reviewThread.edit", {}, { default: "Edit" })}
+                  {t("reviewThread.cancel", {}, { default: "Cancel" })}
                 </Button>
-              ) : null}
-              {canDelete ? (
                 <Button
-                  variant="text"
-                  onClick={handleDelete}
-                  disabled={deleting}
-                  style={{
-                    padding: 0,
-                    minWidth: 0,
-                    height: "fit-content",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "#c0392b",
-                  }}
+                  variant="filled"
+                  onClick={handleSave}
+                  disabled={saving || !draft.trim()}
                 >
-                  {t("reviewThread.delete", {}, { default: "Delete" })}
+                  {saving
+                    ? t("reviewThread.saving", {}, { default: "Saving…" })
+                    : t("reviewThread.save", {}, { default: "Save" })}
                 </Button>
-              ) : null}
-            </ActionsRow>
+              </ActionsRow>
+            </>
+          ) : (
+            <>
+              <BodyText>{note.body}</BodyText>
+              {(canEdit || canDelete) && (
+                <ActionsRow>
+                  {canEdit ? (
+                    <Button
+                      variant="text"
+                      onClick={handleStartEdit}
+                      style={{
+                        padding: 0,
+                        minWidth: 0,
+                        height: "fit-content",
+                        fontSize: 12,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {t("reviewThread.edit", {}, { default: "Edit" })}
+                    </Button>
+                  ) : null}
+                  {canDelete ? (
+                    <Button
+                      variant="text"
+                      onClick={handleDelete}
+                      disabled={deleting}
+                      style={{
+                        padding: 0,
+                        minWidth: 0,
+                        height: "fit-content",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: "#c0392b",
+                      }}
+                    >
+                      {t("reviewThread.delete", {}, { default: "Delete" })}
+                    </Button>
+                  ) : null}
+                </ActionsRow>
+              )}
+            </>
           )}
-        </>
-      )}
-    </MessageCard>
+        </MessageBubble>
+      </BubbleStack>
+    </MessageRow>
   );
 }
 
@@ -351,6 +464,7 @@ export default function OpportunityReviewNotesThread({
   const { t } = useTranslation("connect");
   const [draft, setDraft] = useState("");
   const [error, setError] = useState(null);
+  const [previousExpanded, setPreviousExpanded] = useState(false);
 
   const mutationOptions = {
     refetchQueries,
@@ -370,6 +484,10 @@ export default function OpportunityReviewNotesThread({
     mutationOptions
   );
 
+  useEffect(() => {
+    setPreviousExpanded(false);
+  }, [roundId]);
+
   const threadNotes = useMemo(() => {
     if (!roundId) return [];
     return sortReviewNotesAscending(filterNotesByRound(notes, roundId));
@@ -384,6 +502,14 @@ export default function OpportunityReviewNotesThread({
     }
     return threadNotes;
   }, [notes, roundId, threadNotes]);
+
+  const { visibleNotes, canLoadPrevious } = useMemo(
+    () =>
+      getCollapsedReviewNotes(displayNotes, {
+        expanded: previousExpanded,
+      }),
+    [displayNotes, previousExpanded]
+  );
 
   const roundOptions = useMemo(
     () =>
@@ -545,7 +671,20 @@ export default function OpportunityReviewNotesThread({
             </EmptyState>
           ) : (
             <MessageList>
-              {displayNotes.map((note) => (
+              {canLoadPrevious ? (
+                <LoadPreviousWrap>
+                  <Button
+                    type="button"
+                    variant="text"
+                    onClick={() => setPreviousExpanded(true)}
+                  >
+                    {t("reviewThread.loadPreviousMessages", {}, {
+                      default: "Load previous messages",
+                    })}
+                  </Button>
+                </LoadPreviousWrap>
+              ) : null}
+              {visibleNotes.map((note) => (
                 <MessageItem
                   key={note.id}
                   note={note}

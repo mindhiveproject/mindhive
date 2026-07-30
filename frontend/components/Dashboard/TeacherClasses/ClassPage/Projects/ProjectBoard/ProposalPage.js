@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
-import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../../Queries/Proposal";
+import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../../../Queries/Proposal";
 import useTranslation from "next-translate/useTranslation";
 
-import ProposalPDF from "../../../../Proposal/PDF/Main";
-import ProposalBuilder from "../../../../Proposal/Builder/Main";
+import ProposalPDF from "../../../../../Proposal/PDF/Main";
+import ProposalBuilder from "../../../../../Proposal/Builder/Main";
 
 export default function ProposalPage({
   user,

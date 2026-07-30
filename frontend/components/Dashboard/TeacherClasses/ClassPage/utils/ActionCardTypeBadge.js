@@ -3,7 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 import {
   getActionCardTypeBadgeStyle,
   getActionCardTypeLabel,
-} from "../../../../lib/templateBoardActionCards";
+} from "../../../../../lib/templateBoardActionCards";
 
 const BADGE_STYLE = {
   display: "inline-block",

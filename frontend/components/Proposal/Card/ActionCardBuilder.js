@@ -29,7 +29,7 @@ import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPreview";
 import FormDefinitionEditor from "../../Dashboard/Admin/Forms/FormDefinitionEditor";
 import PublishModal from "../../Dashboard/Admin/Forms/PublishModal";
-import ActionCardTypeBadge from "../../Dashboard/TeacherClasses/ClassPage/ActionCardTypeBadge";
+import ActionCardTypeBadge from "../../Dashboard/TeacherClasses/ClassPage/utils/ActionCardTypeBadge";
 import InfoTooltip from "../../DesignSystem/InfoTooltip";
 import Button from "../../DesignSystem/Button";
 

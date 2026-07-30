@@ -7,7 +7,7 @@ import {
 } from "../../Queries/Proposal"; // Adjust path to your Proposal.js file
 
 import { StyledProposal } from "../../styles/StyledProposal";
-import ProposalPage from "../TeacherClasses/ClassPage/ProjectBoard/ProposalPage";
+import ProposalPage from "../TeacherClasses/ClassPage/Projects/ProjectBoard/ProposalPage";
 
 export default function EditProposal({ user, boardId }) {
   const { t } = useTranslation("classes");

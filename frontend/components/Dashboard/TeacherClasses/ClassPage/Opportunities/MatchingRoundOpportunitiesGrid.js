@@ -7,12 +7,14 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
-import Button from "../../../DesignSystem/Button";
-import InfoTooltip from "../../../DesignSystem/InfoTooltip";
+import Button from "../../../../DesignSystem/Button";
+import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import { useUser } from "../../../../Utils/Access/User";
+import { hasUnreadSponsorReply } from "../../../../../lib/reviewThreadRound";
 import {
   formatDateShort,
   isExpired,
-} from "../../Connect/Rounds/roundFormConfig";
+} from "../../../Connect/Rounds/roundFormConfig";
 
 const INFO_HIGHLIGHT_DISMISSED_KEY =
   "mh.classMatchingRound.infoHighlightDismissed";
@@ -378,8 +380,11 @@ export default function MatchingRoundOpportunitiesGrid({
   selectionDisabled = false,
   togglingOpportunityId = null,
   emptyMessage,
+  roundId = null,
 }) {
   const { t } = useTranslation("classes");
+  const user = useUser();
+  const viewerId = user?.id || null;
   const gridRef = useRef(null);
   const [dismissedHighlights, setDismissedHighlights] = useState(() =>
     readDismissedHighlights(),
@@ -499,35 +504,92 @@ export default function MatchingRoundOpportunitiesGrid({
     return undefined;
   }, []);
 
-  const postSortRows = useCallback(({ nodes }) => {
-    if (!nodes?.length) return;
-    const active = [];
-    const returned = [];
-    for (const node of nodes) {
-      if (isReturnedOpportunity(node?.data)) returned.push(node);
-      else active.push(node);
-    }
-    nodes.length = 0;
-    nodes.push(...active, ...returned);
-  }, []);
+  const postSortRows = useCallback(
+    ({ nodes }) => {
+      if (!nodes?.length) return;
+      const appointment = [];
+      const unread = [];
+      const active = [];
+      const returned = [];
+      for (const node of nodes) {
+        const data = node?.data;
+        // Returned always stays at the bottom (greyed), even with appointment /
+        // unread signals — those still show on the row via info/review chrome.
+        if (isReturnedOpportunity(data)) {
+          returned.push(node);
+          continue;
+        }
+        const stamp = opportunityHighlightStamp(data);
+        const appointmentHighlightActive =
+          isAppointmentRequested(data) &&
+          !isHighlightDismissed(
+            dismissedHighlights,
+            data?.id,
+            "appointment",
+            stamp,
+          );
+        if (appointmentHighlightActive) {
+          appointment.push(node);
+        } else if (
+          hasUnreadSponsorReply({
+            notes: data?.reviewNotes,
+            roundId,
+            viewerId,
+          })
+        ) {
+          unread.push(node);
+        } else {
+          active.push(node);
+        }
+      }
+      nodes.length = 0;
+      nodes.push(...appointment, ...unread, ...active, ...returned);
+    },
+    [dismissedHighlights, roundId, viewerId],
+  );
 
   const ReviewButtonRenderer = useCallback(
     (params) => {
       const opportunity = params?.data;
       if (!opportunity?.id) return null;
 
+      const unread = hasUnreadSponsorReply({
+        notes: opportunity.reviewNotes,
+        roundId,
+        viewerId,
+      });
+
       return (
         <Button
           variant="text"
+          className={clsx("matchingRoundOppReviewButton", {
+            matchingRoundOppReviewButtonUnread: unread,
+          })}
           style={{
-            padding: 0,
+            padding: unread ? "4px 12px" : 0,
             minWidth: 0,
             width: "fit-content",
             height: "fit-content",
             fontSize: "14px",
             fontWeight: 500,
-            color: "#171717",
+            color: unread
+              ? "var(--MH-Theme-Primary-Dark, #336F8A)"
+              : "#171717",
           }}
+          leadingIcon={
+            unread ? (
+              <span className="matchingRoundOppReviewUnreadIcon" />
+            ) : null
+          }
+          aria-label={
+            unread
+              ? t(
+                  "opportunities.matchingRound.grid.reviewUnreadAria",
+                  {},
+                  { default: "Review — unread sponsor message" },
+                )
+              : undefined
+          }
           onClick={(e) => {
             e.stopPropagation();
             onPreview?.(opportunity.id);
@@ -539,7 +601,7 @@ export default function MatchingRoundOpportunitiesGrid({
         </Button>
       );
     },
-    [onPreview, t],
+    [onPreview, roundId, t, viewerId],
   );
 
   const RemoveButtonRenderer = useCallback(
@@ -676,8 +738,9 @@ export default function MatchingRoundOpportunitiesGrid({
   useEffect(() => {
     const api = gridRef.current?.api;
     if (!api) return;
-    api.refreshCells({ columns: ["info"], force: true });
-  }, [dismissedHighlights]);
+    api.refreshCells({ columns: ["info", "review"], force: true });
+    api.refreshClientSideRowModel("sort");
+  }, [dismissedHighlights, opportunities, roundId, viewerId]);
 
   const handleSelectionChanged = useCallback(
     (event) => {

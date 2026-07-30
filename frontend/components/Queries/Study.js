@@ -402,6 +402,11 @@ export const GET_STUDY_RESULTS = gql`
         id
         title
       }
+      versions {
+        id
+        name
+        legacyId
+      }
       versionHistory
     }
   }

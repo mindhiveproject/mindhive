@@ -692,17 +692,183 @@ export const StyledCanvasBuilder = styled.div`
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       }
 
-      .versionSwitch {
-        display: grid;
+      /* Foldable header of a settings section */
+      .settingsSectionToggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         gap: 8px;
+        width: 100%;
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+
+        h2 {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+      }
+
+      .versionCount {
+        padding: 0 6px;
+        border-radius: 100px;
+        background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+        font-family: Inter, sans-serif;
+        font-weight: 500;
+        font-size: 11px;
+        line-height: 18px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      }
+
+      .versionChevron {
+        flex: none;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        transform: rotate(-90deg);
+        transition: transform 0.15s ease;
+      }
+
+      .versionChevron.open {
+        transform: rotate(0deg);
+      }
+
+      .versionCollectionNote {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+
+        strong {
+          color: var(--MH-Theme-Neutrals-Black, #171717);
+          font-weight: 600;
+        }
+      }
+
+      .versionList {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        max-height: 216px;
+        overflow-y: auto;
+        min-width: 0;
+        border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+        border-radius: 8px;
+      }
+
+      .versionListItem {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px;
+        min-width: 0;
+
+        &:not(:last-child) {
+          border-bottom: 1px solid var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+        }
+
+        &:hover {
+          background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+        }
+      }
+
+      .versionLoadedNote {
+        margin: 0;
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: var(--MH-Theme-Primary-Light, #def8fb);
+        font-family: Inter, sans-serif;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--MH-Theme-Primary-Dark, #336f8a);
+      }
+
+      .versionFilterRow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .versionStarBtn {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border: none;
+        border-radius: 4px;
+        background: none;
+        cursor: pointer;
+        color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+
+        &:hover {
+          color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        }
+
+        &.isFavorite {
+          color: var(--MH-Theme-Primary-Dark, #336f8a);
+        }
+      }
+
+      .versionListItemText {
+        display: grid;
+        min-width: 0;
+        flex: 1;
+      }
+
+      .versionListItemNameRow {
+        display: flex;
+        align-items: center;
+        gap: 6px;
         min-width: 0;
       }
 
-      .versionSwitchActions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        align-items: center;
+      .versionListItemName {
+        font-family: Inter, sans-serif;
+        font-weight: 600;
+        font-size: 13px;
+        line-height: 18px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* chip marking the version used for data collection */
+      .versionListItemBadge {
+        flex: none;
+        padding: 0 6px;
+        border-radius: 100px;
+        background: var(--MH-Theme-Primary-Light, #def8fb);
+        font-family: Inter, sans-serif;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 16px;
+        white-space: nowrap;
+        color: var(--MH-Theme-Primary-Dark, #336f8a);
+      }
+
+      .versionListItemDate {
+        font-family: Inter, sans-serif;
+        font-weight: 400;
+        font-size: 11px;
+        line-height: 15px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .versionModalActions {

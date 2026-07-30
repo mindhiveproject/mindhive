@@ -4,26 +4,26 @@ import { useRouter } from "next/router";
 import { useMutation, useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
-import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
-import DropdownSelect from "../../../DesignSystem/DropdownSelect";
-import JustOneSecondNotice from "../../../DesignSystem/JustOneSecondNotice";
-import InDev from "../../../Global/InDev";
-import ProposalBuilder from "../../../Proposal/Builder/Main";
-import { StyledProposal } from "../../../styles/StyledProposal";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
+import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
+import InDev from "../../../../Global/InDev";
+import ProposalBuilder from "../../../../Proposal/Builder/Main";
+import { StyledProposal } from "../../../../styles/StyledProposal";
 import {
   PROPOSAL_TEMPLATES_QUERY,
   CLASS_TEMPLATE_PROJECTS_QUERY,
   OVERVIEW_PROPOSAL_BOARD_QUERY,
   GET_MY_AUTHORED_PROJECT_BOARDS,
-} from "../../../Queries/Proposal";
+} from "../../../../Queries/Proposal";
 import {
   COPY_PROPOSAL_MUTATION,
   CREATE_NEW_PROPOSAL_AS_AUTHOR,
   UPDATE_PROJECT_BOARD,
   SYNC_CLASS_TEMPLATE_BOARDS,
-} from "../../../Mutations/Proposal";
-import { EDIT_CLASS } from "../../../Mutations/Classes";
+} from "../../../../Mutations/Proposal";
+import { EDIT_CLASS } from "../../../../Mutations/Classes";
 
 const MODE_LIBRARY = "library";
 const MODE_BLANK = "blank";

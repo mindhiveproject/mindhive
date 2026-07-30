@@ -12,6 +12,9 @@ export const UPDATE_STUDY = gql`
   mutation UPDATE_STUDY($id: ID!, $input: StudyUpdateInput!) {
     updateStudy(where: { id: $id }, data: $input) {
       id
+      # returned so that changing the data collection version updates the
+      # cached study in every builder without a refetch
+      currentVersion
     }
   }
 `;

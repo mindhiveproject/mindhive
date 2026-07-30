@@ -42,12 +42,12 @@ const LinkButton = styled.a`
 
 import {
   CLASS_PROJECTS_QUERY,
-} from "../../../Queries/Proposal";
+} from "../../../../Queries/Proposal";
 import ProjectsTemplatePanel from "./ProjectsTemplatePanel";
 import ProjectsBoardEditor from "./ProjectsBoardEditor";
-import CreateTemplateBoardModal from "./CreateTemplateBoardModal";
-import OwnedItemsShowcase from "./OwnedItemsShowcase";
-import { filterOwnedClassItems } from "./ownedClassItems";
+import CreateTemplateBoardModal from "../Modals/CreateTemplateBoardModal";
+import OwnedItemsShowcase from "../utils/OwnedItemsShowcase";
+import { filterOwnedClassItems } from "../utils/ownedClassItems";
 
 export default function ClassProjects({
   myclass,

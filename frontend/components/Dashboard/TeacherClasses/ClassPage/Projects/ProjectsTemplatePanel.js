@@ -9,22 +9,22 @@ import {
   CLASS_TEMPLATE_PROJECTS_QUERY,
   GET_MY_AUTHORED_PROJECT_BOARDS,
   PROPOSAL_TEMPLATES_QUERY,
-} from "../../../Queries/Proposal";
+} from "../../../../Queries/Proposal";
 import {
   DELETE_COMPLETE_PROPOSAL,
   SYNC_CLASS_TEMPLATE_BOARDS,
-} from "../../../Mutations/Proposal";
-import { isTemplateVisibleToStudents } from "../../../../lib/classTemplateBoards";
+} from "../../../../Mutations/Proposal";
+import { isTemplateVisibleToStudents } from "../../../../../lib/classTemplateBoards";
 import {
   canDeleteProposalBoard,
   userIsProposalAdmin,
-} from "../../../Utils/proposalBoard";
-import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
-import DropdownMenu from "../../../DesignSystem/DropdownMenu";
+} from "../../../../Utils/proposalBoard";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
+import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import TemplateBoardMilestonesMenu from "./TemplateBoardMilestonesMenu";
-import TemplateBoardPreviewModal from "./TemplateBoardPreviewModal";
-import TemplateBoardSettingsModal from "./TemplateBoardSettingsModal";
+import TemplateBoardPreviewModal from "../Modals/TemplateBoardPreviewModal";
+import TemplateBoardSettingsModal from "../Modals/TemplateBoardSettingsModal";
 
 export default function ProjectsTemplatePanel({ myclass, user }) {
   const { t } = useTranslation("classes");
