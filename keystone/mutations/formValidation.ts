@@ -101,7 +101,7 @@ const ALLOWED_COLUMNS: Record<string, string[]> = {
     "facebook",
     "twitter",
     "instagram",
-    "introVideo",
+    "introVideoFile",
     "involvement",
     "availableStartDate",
     "availableEndDate",

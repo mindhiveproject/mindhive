@@ -19,7 +19,6 @@ export default function IntroductionVideo({ query, user, onDirtyChange }) {
 
   const { inputs, handleChange } = useForm(
     {
-      introVideo: user?.introVideo,
       passion: user?.passion,
     },
     { freezeInitialSync: changed },
@@ -57,11 +56,7 @@ export default function IntroductionVideo({ query, user, onDirtyChange }) {
     }
   };
 
-  // New uploads live in Keystone storage; older profiles still point at the
-  // legacy frontend-disk path (public/videos, served via /videos/<filename>).
-  const videoSrc =
-    user?.introVideoFile?.url ||
-    (inputs?.introVideo?.filename ? `/videos/${inputs.introVideo.filename}` : null);
+  const videoSrc = user?.introVideoFile?.url || null;
 
   async function saveChanges() {
     try {

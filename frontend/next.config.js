@@ -103,19 +103,8 @@ const nextConfig = {
   // `npm run dev` runs `node server` without NODE_ENV=development; rewrites must still apply.
   // Omit when NODE_ENV=production — client uses https://backend.mindhive.science via withData.js.
   async rewrites() {
-    // Next snapshots `public/` at server boot, so videos uploaded via
-    // /api/upload after the process started aren't in that snapshot and
-    // would 404 as static files. This afterFiles rewrite is only reached
-    // when the static lookup misses, so already-present videos are still
-    // served directly while newly uploaded ones fall through to the
-    // streaming route in pages/api/videos/[filename].ts.
-    const videoFallback = {
-      source: "/videos/:filename",
-      destination: "/api/videos/:filename",
-    };
-
     if (process.env.NODE_ENV === "production") {
-      return [videoFallback];
+      return [];
     }
     const keystoneOrigin =
       process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4444";
@@ -140,7 +129,6 @@ const nextConfig = {
         source: "/profile-videos/:path*",
         destination: `${keystoneOrigin}/profile-videos/:path*`,
       },
-      videoFallback,
     ];
   },
   async headers() {

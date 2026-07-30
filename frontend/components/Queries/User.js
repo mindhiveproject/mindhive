@@ -475,7 +475,6 @@ export const PUBLIC_USER_QUERY = gql`
       organization
       department
       tagline
-      introVideo
       introVideoFile {
         url
         filename
@@ -1120,7 +1119,6 @@ export const GET_PROFILE = gql`
         passion
         involvement
         languages
-        introVideo
         introVideoFile {
           url
           filename

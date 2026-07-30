@@ -494,7 +494,7 @@ export const Profile = list({
     occupation: text(),
     education: json(), // a list of institutions and degrees
     languages: json(), // a list of languages
-    introVideo: json(), // legacy: object pointing at the old frontend-disk video (public/videos); superseded by introVideoFile
+    introVideo: json(), // unused legacy field; superseded by introVideoFile (kept to avoid a migration)
     introVideoFile: file({ storage: "profile_videos" }),
     involvement: json(),
     mentorPreferGrade: select({

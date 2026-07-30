@@ -40,7 +40,7 @@ npm run start      # serves on port 3000
 Notes for the VM deploy:
 
 - **Deploy the backend first** when a release includes Keystone schema changes (run `npm run migrate` in `../keystone`); the frontend queries new fields on boot.
-- Run the frontend from this directory (relative paths for `data/`, `templates/`, and `public/videos/` depend on the working directory), single instance / pm2 fork mode (the in-memory rate limiter assumes one process):
+- Run the frontend from this directory (relative paths for `data/` and `templates/` depend on the working directory), single instance / pm2 fork mode (the in-memory rate limiter assumes one process):
   ```bash
   pm2 start npm --name mindhive-frontend -- start
   ```
@@ -62,7 +62,6 @@ Notes for the VM deploy:
   - `api/save` — participant experiment data → `data/YYYY/MM/DD/…` + SummaryResult mutation to Keystone
   - `api/templates/*` — task template files on disk (`templates/`)
   - `api/notion` — Notion database proxy (needs `NOTION_KEY`)
-  - `api/videos/[filename]` — streams **legacy** profile intro videos from `public/videos/` (new uploads go through Keystone's `profile_videos` storage)
   - `api/download/rawfiles`, `api/data/...` — study data retrieval
 - `components/` — React components (Builder, Dashboard, Connect, TipTap, …)
 - `lib/` — Apollo client (`withData.js`), shared API-route helpers (`lib/api/`)
