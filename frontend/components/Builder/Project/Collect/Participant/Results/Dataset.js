@@ -80,14 +80,14 @@ export default function Dataset({
     fetcher
   );
 
-  // Handle the error state
+  // Handle the error state (subtitle/metadata come from fetched results — unavailable here)
   if (error)
     return (
       <div className="resultItem">
         <div>{dataset?.study?.title}</div>
         <div>{dataset?.task?.title}</div>
-        <div>{subtitle}</div>
-        <div>{metadata?.testVersion}</div>
+        <div />
+        <div />
         <div>{moment(dataset?.createdAt).format("MMMM D, YY, h:mm:ss")}</div>
         <div>{moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}</div>
         {/* <div>{condition}</div> */}
