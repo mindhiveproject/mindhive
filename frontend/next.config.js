@@ -88,6 +88,17 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Replaces the deleted .babelrc (next/babel + babel-plugin-styled-components):
+  // SWC's styled-components transform provides the same ssr/displayName behavior.
+  compiler: {
+    styledComponents: true,
+  },
+  // The old "next/babel" entry in .eslintrc.json failed to load, so builds have
+  // never actually enforced lint; keep that behavior now that the config loads.
+  // Run `npm run lint` manually.
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Non-production: browser Apollo uses same-origin /api/graphql (see config.js). Proxy to Keystone.
   // `npm run dev` runs `node server` without NODE_ENV=development; rewrites must still apply.
   // Omit when NODE_ENV=production — client uses https://backend.mindhive.science via withData.js.
@@ -113,6 +124,10 @@ const nextConfig = {
       {
         source: "/opportunity-videos/:path*",
         destination: `${keystoneOrigin}/opportunity-videos/:path*`,
+      },
+      {
+        source: "/profile-videos/:path*",
+        destination: `${keystoneOrigin}/profile-videos/:path*`,
       },
     ];
   },

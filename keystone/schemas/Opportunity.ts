@@ -342,12 +342,11 @@ export const Opportunity = list({
     }),
 
     // Overview of Capstone Project Proposal — unified sponsor application form.
-    // Shape matches frontend OpportunityProposalConfig (title/description stay
-    // on top-level fields for listings and search).
-    // Migration: before deploying this schema change, backfill proposalData from
-    // the removed flat columns (relevance, expectedDeliverables, etc.) via a
-    // one-time script; records without proposalData will show empty proposal
-    // fields until re-saved or migrated.
+    // Persisted as [{ formDefinitionId, answer }] where `answer` holds the flat
+    // field map (relevance, expectedDeliverables, etc.). title/description stay
+    // on top-level Opportunity fields for listings and search.
+    // Readers should unwrap via getProposalAnswer (legacy flat objects are still
+    // accepted on read). Writers upsert via upsertProposalEntry.
     proposalData: json(),
 
     // Legacy CUSP fields (kept for existing records; no longer in the editor form)

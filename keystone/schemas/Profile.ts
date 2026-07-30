@@ -10,6 +10,7 @@ import {
   json,
   calendarDay,
   multiselect,
+  file,
 } from "@keystone-6/core/fields";
 import { permissions, rules } from "../access";
 
@@ -493,7 +494,8 @@ export const Profile = list({
     occupation: text(),
     education: json(), // a list of institutions and degrees
     languages: json(), // a list of languages
-    introVideo: json(), // an object with the link to the file system, timestampUploaded, timestampModified
+    introVideo: json(), // unused legacy field; superseded by introVideoFile (kept to avoid a migration)
+    introVideoFile: file({ storage: "profile_videos" }),
     involvement: json(),
     mentorPreferGrade: select({
       options: [

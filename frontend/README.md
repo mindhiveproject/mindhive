@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MindHive Frontend
+---
+Next.js 13 (Pages Router) app for [mindhive.science](https://mindhive.science). It talks to the KeystoneJS backend (`../keystone`, GraphQL on port 4444) and the realtime collaboration server (Hocuspocus, port 4445). There is **no custom server** — the app runs with the standard `next dev` / `next start`.
 
-## Getting Started
+## Prerequisites
+---
+- Node 26 (backend runs on Node 23 — see `../.vscode/tasks.json`)
+- The Keystone backend running on `http://localhost:4444` (see `../keystone`)
+- Optionally the collab server on `http://localhost:4445` (needed for proposal/board editing)
 
-First, run the development server:
-
+## Setup
+---
 ```bash
-npm run dev
-# or
-yarn dev
+npm install --legacy-peer-deps
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Environment variables are optional in dev — everything defaults to the local ports above. To customize, copy the template and edit:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+All endpoint configuration lives in [`config.js`](config.js), which resolves each value from environment variables with dev/prod defaults. Don't hardcode backend URLs anywhere else — import from `config.js`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Development
+---
+```bash
+npm run dev        # http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Hot reload covers pages, components, and the API routes in `pages/api/`. In dev, `/api/graphql` is proxied to Keystone via a rewrite in `next.config.js`, so the browser talks same-origin.
 
-## Learn More
+## Production
+---
+```bash
+npm run build      # compiles (SWC) + type-checks
+npm run start      # serves on port 3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+Notes for the VM deploy:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Deploy the backend first** when a release includes Keystone schema changes (run `npm run migrate` in `../keystone`); the frontend queries new fields on boot.
+- Run the frontend from this directory (relative paths for `data/` and `templates/` depend on the working directory), single instance / pm2 fork mode (the in-memory rate limiter assumes one process):
+  ```bash
+  pm2 start npm --name mindhive-frontend -- start
+  ```
+- nginx must forward `X-Forwarded-For` (rate limiting keys on it) and sits in front of port 3000.
+- `NEXT_PUBLIC_*` env values are baked in at **build** time — rebuild after changing them.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Scripts
+---
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Next dev server on port 3000 |
+| `npm run build` | Production build (4GB heap; copies Monaco assets first) |
+| `npm run start` | Production server on port 3000 |
+| `npm run lint` / `lint:fix` | ESLint |
 
-## Deploy on Vercel
+## Layout
+---
+- `pages/` — routes (Pages Router); `pages/api/` holds the server routes:
+  - `api/save` — participant experiment data → `data/YYYY/MM/DD/…` + SummaryResult mutation to Keystone
+  - `api/templates/*` — task template files on disk (`templates/`)
+  - `api/notion` — Notion database proxy (needs `NOTION_KEY`)
+  - `api/download/rawfiles`, `api/data/...` — study data retrieval
+- `components/` — React components (Builder, Dashboard, Connect, TipTap, …)
+- `lib/` — Apollo client (`withData.js`), shared API-route helpers (`lib/api/`)
+- `config.js` — endpoint resolution (env-driven, single source of truth)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+TypeScript is enabled incrementally (`tsconfig.json`, `allowJs`): new code can be `.ts`/`.tsx`, existing `.js` files migrate opportunistically. `next build` type-checks the TS files.

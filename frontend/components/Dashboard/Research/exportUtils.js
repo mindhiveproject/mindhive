@@ -1,7 +1,9 @@
+import { graphqlEndpoint } from "../../../config";
+
+// NEXT_PUBLIC_RESEARCH_EXPORT_ENDPOINT remains as an override for pointing
+// exports at a different backend; by default use the shared endpoint.
 const GRAPHQL_ENDPOINT =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4444/api/graphql"
-    : process.env.NEXT_PUBLIC_RESEARCH_EXPORT_ENDPOINT;
+  process.env.NEXT_PUBLIC_RESEARCH_EXPORT_ENDPOINT || graphqlEndpoint;
 
 const EXPORT_QUERY = `
   query ResearchExport($code: String!) {

@@ -25,12 +25,9 @@ import {
   ClassNetworkInviteBanner,
   ClassNetworkInviteErrorBanner,
 } from "./ClassNetworkInviteBanner";
-import { endpoint, prodEndpoint } from "../../config";
+import { backendOrigin } from "../../config";
 
-const backendBase =
-  process.env.NODE_ENV === "development"
-    ? endpoint.replace("/api/graphql", "")
-    : prodEndpoint.replace("/api/graphql", "");
+const backendBase = backendOrigin;
 
 export default function Login({
   redirectType,

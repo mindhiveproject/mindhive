@@ -2,9 +2,10 @@
 // optional scope context), hydrates initial values from the entity, and
 // hands a build-ready update input to the parent's onSubmit handler.
 //
-// The parent owns the actual mutation call — DefinitionForm stays
-// entity-agnostic so the same component drives Opportunity, Profile,
-// and Organization forms with no per-entity branches here.
+// The parent owns the actual mutation call — DefinitionForm stays mostly
+// entity-agnostic. Opportunity.proposalData is the exception: it is stored
+// as [{ formDefinitionId, answer }], so this file unwraps/re-wraps that
+// bucket around the flat storage helpers.
 //
 // Usage:
 //   <DefinitionForm
@@ -30,6 +31,10 @@ import { fieldLabel } from "./i18n";
 import { hydrate, buildUpdate } from "./storage";
 import { getVisibleFields } from "./visibility";
 import { validateValues, formatFieldError } from "./validation";
+import {
+  getProposalAnswer,
+  upsertProposalEntry,
+} from "../../../lib/opportunityProposalData";
 
 const Shell = styled.form`
   display: flex;
@@ -119,6 +124,25 @@ export default function DefinitionForm({
     return out;
   }, [definition]);
 
+  const usesProposalDataBucket = useMemo(
+    () =>
+      allFields.some(
+        (f) =>
+          f?.storage === "json_bucket" && f?.storageBucket === "proposalData"
+      ),
+    [allFields]
+  );
+
+  // storage.js assumes flat json buckets; Opportunity.proposalData is an
+  // array of { formDefinitionId, answer }. Unwrap for hydrate/merge.
+  const entityForStorage = useMemo(() => {
+    if (!entity || !usesProposalDataBucket) return entity;
+    return {
+      ...entity,
+      proposalData: getProposalAnswer(entity.proposalData, definition?.id),
+    };
+  }, [entity, usesProposalDataBucket, definition?.id]);
+
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState(null);
@@ -129,11 +153,11 @@ export default function DefinitionForm({
   // Hydrate values whenever the definition, entity, or related entities change.
   useEffect(() => {
     if (allFields.length === 0) return;
-    setValues(hydrate(entity, allFields, related));
+    setValues(hydrate(entityForStorage, allFields, related));
     setErrors({});
     setSubmitError(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allFields, entity, related?.organization?.id]);
+  }, [allFields, entityForStorage, related?.organization?.id]);
 
   const handleFieldChange = useCallback((name, value) => {
     setValues((prev) => ({ ...prev, [name]: value }));
@@ -190,7 +214,27 @@ export default function DefinitionForm({
     }
 
     setSubmitError(null);
-    const updateInput = buildUpdate(values, allFields, entity, related);
+    const updateInput = buildUpdate(
+      values,
+      allFields,
+      entityForStorage,
+      related
+    );
+
+    // Re-wrap flat proposalData answer into [{ formDefinitionId, answer }].
+    if (
+      usesProposalDataBucket &&
+      definition?.id &&
+      updateInput?.self?.proposalData &&
+      !Array.isArray(updateInput.self.proposalData)
+    ) {
+      updateInput.self.proposalData = upsertProposalEntry(
+        entity?.proposalData,
+        definition.id,
+        updateInput.self.proposalData
+      );
+    }
+
     setSubmitting(true);
     try {
       await onSubmit(updateInput);

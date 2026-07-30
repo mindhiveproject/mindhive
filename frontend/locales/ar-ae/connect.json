@@ -882,6 +882,7 @@
 			"expectedDeliverables": "يرجى اختيار منتج واحد على الأقل من المنتجات المتوقعة.",
 			"fieldResearchRequired": "يرجى توضيح ما إذا كان من المتوقع إجراء بحث ميداني أو سفر.",
 			"followUpIncomplete": "يرجى إكمال استبيان المتابعة قبل الحفظ.",
+			"formDefinitionMissing": "",
 			"guidelines": "يرجى وضع علامة صح على قسم الإقرار بالإرشادات في بطاقة النشر قبل تقديم هذه الفرصة.",
 			"issueRelevance": "",
 			"learningOutcomes": "",

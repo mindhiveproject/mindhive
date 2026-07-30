@@ -2203,6 +2203,8 @@
 		"type": "Type",
 		"variableName": "Nom de variable",
 		"variableNamePlaceholder": "ex. reponse_1 (utilisé pour stocker la réponse)",
+		"variableNameStoredAs": "",
+		"variableNameStoredAsFallback": "",
 		"vas": "Échelle visuelle"
 	},
 	"surveyDescription": "Dans une enquête, on pose aux participants des questions sur eux-mêmes, sur leur comportement ou sur ce qu’ils ressentent.",

@@ -2,11 +2,12 @@ import React, { useState, useRef } from "react";
 import { StyledVideoUploader } from "../../../../styles/StyledForm";
 import useTranslation from "next-translate/useTranslation";
 
+const MAX_VIDEO_BYTES = 500 * 1024 * 1024; // 500 MB, same cap as opportunity videos
+
 const VideoUploader = ({ publicReadableId, onFileUpload }) => {
   const { t } = useTranslation("connect");
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
 
   const handleDrag = (e) => {
@@ -39,47 +40,32 @@ const VideoUploader = ({ publicReadableId, onFileUpload }) => {
     if (!file) return;
 
     setUploading(true);
-    const formData = new FormData();
-    const fileExtension = file.name.split(".").pop();
-    const fileName = `${publicReadableId}-intro.${fileExtension}`;
-    formData.append("video", file, fileName);
-
     try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setUploadProgress(percentCompleted);
-        },
-      });
-
-      if (response.ok) {
-        const json = await response.json();
-        const { filename } = json;
-        onFileUpload({ filename, timestamp: Date.now() });
-      } else {
-        console.error("Upload failed");
-        alert(t("videoUploader.error"));
-      }
+      // The parent runs the GraphQL mutation (Keystone stores the file in the
+      // profile_videos bucket); rename so stored originals stay identifiable.
+      const fileExtension = file.name.split(".").pop();
+      const fileName = `${publicReadableId}-intro.${fileExtension}`;
+      const renamed = new File([file], fileName, { type: file.type });
+      await onFileUpload({ file: renamed });
     } catch (error) {
       console.error("Error:", error);
       alert(t("videoUploader.error"));
     } finally {
       setUploading(false);
-      setUploadProgress(0);
     }
   };
 
   const handleFiles = (files) => {
     const file = files[0];
-    if (file.type.startsWith("video/")) {
-      handleUpload({ file });
-    } else {
+    if (!file.type.startsWith("video/")) {
       alert(t("videoUploader.invalidFile"));
+      return;
     }
+    if (file.size > MAX_VIDEO_BYTES) {
+      alert(t("videoUploader.error"));
+      return;
+    }
+    handleUpload({ file });
   };
 
   const onButtonClick = () => {
@@ -108,7 +94,7 @@ const VideoUploader = ({ publicReadableId, onFileUpload }) => {
         <button onClick={onButtonClick}>{t("videoUploader.selectFile")}</button>
       </div>
 
-      {uploading && <p>{t("videoUploader.uploadProgress", { progress: uploadProgress })}</p>}
+      {uploading && <p>{t("videoUploader.uploading", {}, { default: "Uploading..." })}</p>}
     </StyledVideoUploader>
   );
 };

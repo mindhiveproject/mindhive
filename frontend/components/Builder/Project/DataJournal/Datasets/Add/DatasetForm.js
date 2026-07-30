@@ -171,7 +171,7 @@ export default function DatasetForm({
         day: parseInt(curDate.getDate()),
       };
 
-      await fetch(`/api/save/?y=${date.year}&m=${date.month}&d=${date.day}`, {
+      await fetch(`/api/save?y=${date.year}&m=${date.month}&d=${date.day}`, {
         method: "POST",
         body: JSON.stringify(dataFile),
         headers: {

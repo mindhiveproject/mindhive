@@ -1,5 +1,7 @@
 /** Column groups and CSV helpers for teacher matching-round opportunity export. */
 
+import { getProposalAnswer } from "../../../../../lib/opportunityProposalData";
+
 export const EXPORT_COLUMN_GROUPS = [
   {
     id: "basics",
@@ -342,9 +344,9 @@ function boolCell(value) {
 }
 
 function proposalField(opportunity, key) {
-  const data = opportunity?.proposalData;
+  const data = getProposalAnswer(opportunity?.proposalData);
   if (!data || typeof data !== "object") return "";
-  return data[key];
+  return data[key] ?? "";
 }
 
 function hasReviewNotesForRound(opportunity, roundId) {

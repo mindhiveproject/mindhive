@@ -882,6 +882,7 @@
 			"expectedDeliverables": "Veuillez sélectionner au moins un livrable attendu.",
 			"fieldResearchRequired": "Veuillez indiquer si des recherches sur le terrain ou des déplacements sont prévus.",
 			"followUpIncomplete": "Veuillez remplir le questionnaire de suivi avant d'enregistrer.",
+			"formDefinitionMissing": "",
 			"guidelines": "Veuillez cocher la case de confirmation des directives sur la fiche de publication avant de soumettre cette proposition.",
 			"issueRelevance": "",
 			"learningOutcomes": "",

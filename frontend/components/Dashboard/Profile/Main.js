@@ -24,7 +24,7 @@ export default function Profile() {
     occupation,
     education,
     languages,
-    introVideo,
+    introVideoFile,
     mentorPreferGrade,
     mentorPreferGroup,
     mentorPreferClass,
@@ -43,7 +43,7 @@ export default function Profile() {
     occupation &&
     education &&
     languages &&
-    introVideo &&
+    introVideoFile?.url &&
     mentorPreferGrade &&
     mentorPreferGroup &&
     mentorPreferClass &&

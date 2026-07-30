@@ -1,5 +1,10 @@
 /** Option values for the unified "Overview of Capstone Project Proposal" section (temp.md). */
 
+import {
+  getProposalAnswer,
+  upsertProposalEntry,
+} from "../../../../lib/opportunityProposalData";
+
 export const YES_NO_OPTIONS = [
   { value: "yes", labelKey: "yes" },
   { value: "no", labelKey: "no" },
@@ -85,7 +90,7 @@ export const PROPOSAL_WORD_LIMITS = {
   anticipatedObstacles: 100,
 };
 
-/** Fields stored in Opportunity.proposalData (title/description are top-level). */
+/** Fields stored in Opportunity.proposalData answer (title/description are top-level). */
 export const PROPOSAL_DATA_EMPTY = {
   relevance: "",
   requiresSpecialResources: "",
@@ -111,8 +116,8 @@ export const PROPOSAL_EMPTY_FORM = {
   ...PROPOSAL_DATA_EMPTY,
 };
 
-/** Build the JSON blob persisted on Opportunity.proposalData. */
-export function buildProposalData(inputs) {
+/** Flat answer object (field keys) before wrapping into proposalData entries. */
+export function buildProposalAnswer(inputs) {
   return {
     relevance: inputs.relevance || "",
     requiresSpecialResources: inputs.requiresSpecialResources || "",
@@ -133,14 +138,27 @@ export function buildProposalData(inputs) {
   };
 }
 
+/**
+ * Build the JSON blob persisted on Opportunity.proposalData:
+ * [{ formDefinitionId, answer }].
+ */
+export function buildProposalData(
+  inputs,
+  formDefinitionId,
+  existingProposalData
+) {
+  const answer = buildProposalAnswer(inputs);
+  if (!formDefinitionId) {
+    throw new Error("buildProposalData requires formDefinitionId");
+  }
+  return upsertProposalEntry(existingProposalData, formDefinitionId, answer);
+}
+
 /** Parse proposalData JSON (or legacy flat opportunity fields) into form inputs. */
-export function hydrateProposalInputs(opportunity) {
+export function hydrateProposalInputs(opportunity, formDefinitionId) {
   if (!opportunity) return { ...PROPOSAL_DATA_EMPTY };
 
-  const raw =
-    opportunity.proposalData && typeof opportunity.proposalData === "object"
-      ? opportunity.proposalData
-      : opportunity;
+  const raw = getProposalAnswer(opportunity.proposalData, formDefinitionId);
 
   return {
     relevance:

@@ -2203,6 +2203,8 @@
 		"type": "Tipo",
 		"variableName": "Nome da variável",
 		"variableNamePlaceholder": "ex. resposta_1 (usado para armazenar a resposta)",
+		"variableNameStoredAs": "",
+		"variableNameStoredAsFallback": "",
 		"vas": "Escala visual"
 	},
 	"surveyDescription": "Em uma pesquisa, os participantes respondem a perguntas sobre si mesmos, sobre como se comportam ou sobre como se sentem.",

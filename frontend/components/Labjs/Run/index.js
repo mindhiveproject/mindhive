@@ -65,7 +65,7 @@ export default function ExperimentWindow({
       ...labjsObject?.plugins,
       {
         type: "lab.plugins.Transmit",
-        url: `/api/save/?st=${study?.id}&te=${task?.template?.id}&ta=${task?.id}&us=${user?.id}&type=${userType}&y=${date.year}&m=${date.month}&d=${date.day}&v=${testVersion}&upid=${user?.publicId}`,
+        url: `/api/save?st=${study?.id}&te=${task?.template?.id}&ta=${task?.id}&us=${user?.id}&type=${userType}&y=${date.year}&m=${date.month}&d=${date.day}&v=${testVersion}&upid=${user?.publicId}`,
       },
       { type: "lab.plugins.Debug" },
     ];

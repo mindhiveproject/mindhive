@@ -475,7 +475,10 @@ export const PUBLIC_USER_QUERY = gql`
       organization
       department
       tagline
-      introVideo
+      introVideoFile {
+        url
+        filename
+      }
       passion
       involvement
       language
@@ -1116,7 +1119,10 @@ export const GET_PROFILE = gql`
         passion
         involvement
         languages
-        introVideo
+        introVideoFile {
+          url
+          filename
+        }
         occupation
         education
         mentorPreferGrade

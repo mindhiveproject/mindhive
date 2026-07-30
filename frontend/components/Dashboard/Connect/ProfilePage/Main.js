@@ -203,6 +203,28 @@ export default function ProfilePage({ query, user }) {
               )}
             </>
           )}
+
+          {/* <Tabs>
+            <Tab $active>{t("introductionVideo")}</Tab>
+            <Tab>{t("backgroundTab", { defaultValue: "Background" })}</Tab>
+            <Tab>{t("studiesTab", { defaultValue: "Studies" })}</Tab>
+            <Tab>{t("skillsTab", { defaultValue: "Skills and Preferences" })}</Tab>
+          </Tabs>
+
+          <VideoSection>
+            {profile?.introVideoFile?.url ? (
+              <VideoPlayer controls>
+                <source src={profile.introVideoFile.url} />
+                {t("videoNotSupported")}
+              </VideoPlayer>
+            ) : (
+              <VideoPlaceholder>
+                {t("noVideoPlaceholder", {
+                  defaultValue: "No introduction video available.",
+                })}
+              </VideoPlaceholder>
+            )}
+          </VideoSection> */}
         </ProfileCard>
       </ProfileShell>
     </ConnectShell>

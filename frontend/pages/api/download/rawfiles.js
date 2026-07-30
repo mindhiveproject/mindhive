@@ -1,5 +1,17 @@
 import path from "path";
+import { assertWithinBase } from "../../../lib/api/paths";
+
 const fs = require("fs");
+
+// The old Express server parsed every body with a 10mb limit before Next saw
+// the request; without this override Next's 1mb default would reject large
+// fileDirs lists from big studies.
+export const config = {
+  api: {
+    bodyParser: { sizeLimit: "10mb" },
+    responseLimit: false, // raw study data downloads routinely exceed Next's 4MB warning threshold
+  },
+};
 
 export default async function handler(req, res) {
   const { fileDirs } = req.body;
@@ -10,17 +22,20 @@ export default async function handler(req, res) {
   const promises = fileDirs.map(function (_path) {
     return new Promise(
       function (_path, resolve, reject) {
-        fs.readFile(
-          jsonDirectory + "/" + _path + "/full.json",
-          "utf8",
-          function (err, data) {
-            if (err || !data) {
-              resolve("");
-            } else {
-              resolve(data);
-            }
+        const filePath = path.resolve(jsonDirectory, _path, "full.json");
+        try {
+          assertWithinBase(filePath, jsonDirectory);
+        } catch (e) {
+          resolve("");
+          return;
+        }
+        fs.readFile(filePath, "utf8", function (err, data) {
+          if (err || !data) {
+            resolve("");
+          } else {
+            resolve(data);
           }
-        );
+        });
       }.bind(this, _path)
     );
   });
