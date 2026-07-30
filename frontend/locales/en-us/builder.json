@@ -2202,7 +2202,9 @@
 		"textPlaceholder": "Enter descriptive or instructional text shown to participants",
 		"type": "Type",
 		"variableName": "Variable name",
-		"variableNamePlaceholder": "e.g. response_1 (used to store the answer)",
+		"variableNamePlaceholder": "Short id for data export, e.g. belonging_welcome",
+		"variableNameStoredAs": "Stored as: {{keys}}",
+		"variableNameStoredAsFallback": "Stored as: auto-generated from the header if left blank",
 		"vas": "Visual scale"
 	},
 	"surveyDescription": "In a survey, participants are asked questions about themselves, about how they behave, or about how they feel.",
