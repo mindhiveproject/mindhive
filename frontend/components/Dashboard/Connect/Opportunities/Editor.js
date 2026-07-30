@@ -14,6 +14,7 @@ import {
 } from "../../../Queries/Opportunity";
 import { QUESTIONS_FOR_OPPORTUNITY } from "../../../Queries/ConnectQuestion";
 import { GET_MY_ORGANIZATION } from "../../../Queries/Organization";
+import { RESOLVE_FORM_DEFINITION } from "../../../Queries/FormDefinition";
 import {
   CREATE_OPPORTUNITY,
   UPDATE_OPPORTUNITY,
@@ -37,6 +38,9 @@ import {
   REVIEW_NOTE_KIND,
   resolveActiveReviewRound,
 } from "../../../../lib/reviewThreadRound";
+import {
+  getProposalFormDefinitionId,
+} from "../../../../lib/opportunityProposalData";
 import {
   PROPOSAL_EMPTY_FORM,
   PROPOSAL_WORD_LIMITS,
@@ -588,6 +592,17 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const myOrganizationId =
     myOrgData?.authenticatedItem?.organizations?.[0]?.id || null;
 
+  const { data: opportunityFormDefData } = useQuery(RESOLVE_FORM_DEFINITION, {
+    variables: {
+      key: "opportunity",
+      organizationId: myOrganizationId,
+      classNetworkId: null,
+    },
+    fetchPolicy: "cache-and-network",
+  });
+  const resolvedOpportunityFormDefinitionId =
+    opportunityFormDefData?.resolveFormDefinition?.id || null;
+
   const opportunity = existing?.opportunity;
 
   const isReviewMode =
@@ -768,7 +783,10 @@ export default function OpportunityEditor({ opportunityId, user }) {
 
   useEffect(() => {
     if (!opportunity) return;
-    const proposal = hydrateProposalInputs(opportunity);
+    const proposal = hydrateProposalInputs(
+      opportunity,
+      resolvedOpportunityFormDefinitionId,
+    );
     handleMultipleUpdate({
       title: opportunity.title || "",
       description: opportunity.description || "",
@@ -1010,6 +1028,19 @@ export default function OpportunityEditor({ opportunityId, user }) {
 
     const networkConnect = selectedNetworks.map((id) => ({ id }));
 
+    const formDefinitionId =
+      resolvedOpportunityFormDefinitionId ||
+      getProposalFormDefinitionId(opportunity?.proposalData);
+    if (!formDefinitionId) {
+      alert(
+        t("opportunityEditor.validation.formDefinitionMissing", {}, {
+          default:
+            "Could not resolve the opportunity form definition. Ask an admin to publish one, then try again.",
+        }),
+      );
+      return;
+    }
+
     const shortDescription =
       inputs.shortDescription?.trim() ||
       String(inputs.description || "")
@@ -1041,7 +1072,11 @@ export default function OpportunityEditor({ opportunityId, user }) {
       preferGroupFormat: inputs.preferGroupFormat || "either",
       preferClassType: selectedClassTypes,
       status: nextStatus,
-      proposalData: buildProposalData(inputs),
+      proposalData: buildProposalData(
+        inputs,
+        formDefinitionId,
+        opportunity?.proposalData,
+      ),
       sponsorIsMentor: !!inputs.sponsorIsMentor,
       mentorNotes: inputs.mentorNotes || "",
       guidelinesAcknowledged: !!inputs.guidelinesAcknowledged,

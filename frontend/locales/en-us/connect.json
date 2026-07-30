@@ -882,6 +882,7 @@
 			"expectedDeliverables": "Please select at least one expected deliverable.",
 			"fieldResearchRequired": "Please indicate whether field research or travel is expected.",
 			"followUpIncomplete": "",
+			"formDefinitionMissing": "Could not resolve the opportunity form definition. Ask an admin to publish one, then try again.",
 			"guidelines": "Please tick the guidelines acknowledgment in the Publishing card before submitting this opportunity.",
 			"issueRelevance": "",
 			"learningOutcomes": "",

@@ -2203,6 +2203,8 @@
 		"type": "Tipo",
 		"variableName": "Nombre de variable",
 		"variableNamePlaceholder": "ej. respuesta_1 (usado para almacenar la respuesta)",
+		"variableNameStoredAs": "",
+		"variableNameStoredAsFallback": "",
 		"vas": "Escala visual"
 	},
 	"surveyDescription": "En una encuesta, a los participantes se les hacen preguntas sobre sí mismos, sobre cómo se comportan o sobre cómo se sienten.",

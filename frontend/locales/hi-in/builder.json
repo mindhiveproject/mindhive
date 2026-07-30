@@ -2203,6 +2203,8 @@
 		"type": "प्रकार",
 		"variableName": "वेरिएबल नाम",
 		"variableNamePlaceholder": "जैसे. response_1 (उत्तर संग्रहीत करने के लिए उपयोग किया जाता है)",
+		"variableNameStoredAs": "",
+		"variableNameStoredAsFallback": "",
 		"vas": "दृश्य स्केल"
 	},
 	"surveyDescription": "सर्वेक्षण में प्रतिभागियों से उनके बारे में, उनके व्यवहार के बारे में, या उनकी भावनाओं के बारे में प्रश्न पूछे जाते हैं।",

@@ -1,4 +1,10 @@
 import { PrismaClient } from "@prisma/client";
+import {
+  getProposalAnswer,
+  isProposalDataEntries,
+  upsertProposalEntry,
+} from "../lib/opportunityProposalData";
+import resolveFormDefinition from "./resolveFormDefinition";
 
 type BackfillArgs = {
   limit?: number;
@@ -171,6 +177,15 @@ async function fetchLegacyColumns(
   return map;
 }
 
+function isLegacyFlatWithContent(data: unknown): data is Record<string, unknown> {
+  return (
+    !!data &&
+    typeof data === "object" &&
+    !Array.isArray(data) &&
+    hasProposalContent(data as Record<string, unknown>)
+  );
+}
+
 export default async function backfillOpportunityProposalData(
   _root: unknown,
   args: BackfillArgs,
@@ -179,6 +194,18 @@ export default async function backfillOpportunityProposalData(
   const limit = Math.min(Math.max(args?.limit ?? 200, 1), 1000);
   const dryRun = args?.dryRun ?? false;
   const prisma: PrismaClient = context.prisma;
+
+  const formDefinition = await resolveFormDefinition(
+    null,
+    { key: "opportunity" },
+    context
+  );
+  const formDefinitionId = formDefinition?.id;
+  if (!formDefinitionId) {
+    throw new Error(
+      "backfillOpportunityProposalData: no published FormDefinition for key=opportunity"
+    );
+  }
 
   const opportunities = await context.sudo().query.Opportunity.findMany({
     take: limit,
@@ -193,24 +220,45 @@ export default async function backfillOpportunityProposalData(
   const targets = (opportunities || []).filter((opp: any) => {
     if (!opp?.id) return false;
     const data = opp.proposalData;
-    if (!data || typeof data !== "object") return true;
-    return !hasProposalContent(data as Record<string, unknown>);
+    // Already in entry shape with content — skip.
+    if (isProposalDataEntries(data)) {
+      return !hasProposalContent(getProposalAnswer(data));
+    }
+    // Legacy flat with content → wrap; empty/missing → rebuild from columns.
+    return true;
   });
 
   if (!targets.length) return 0;
 
+  const needLegacyRebuild = targets.filter(
+    (opp: any) => !isLegacyFlatWithContent(opp.proposalData)
+  );
+
   const legacyById = await fetchLegacyColumns(
     prisma,
-    targets.map((opp: { id: string }) => opp.id)
+    needLegacyRebuild.map((opp: { id: string }) => opp.id)
   );
 
   let updated = 0;
 
   for (const opp of targets) {
-    const legacy = legacyById.get(opp.id) || { id: opp.id };
-    const proposalData = buildProposalDataFromLegacy(legacy, opp);
+    const data = opp.proposalData;
+    let answer: Record<string, unknown>;
 
-    if (!hasProposalContent(proposalData)) continue;
+    if (isLegacyFlatWithContent(data)) {
+      // Wrap existing flat proposalData as-is.
+      answer = data;
+    } else {
+      const legacy = legacyById.get(opp.id) || { id: opp.id };
+      answer = buildProposalDataFromLegacy(legacy, opp);
+      if (!hasProposalContent(answer)) continue;
+    }
+
+    const proposalData = upsertProposalEntry(
+      isProposalDataEntries(data) ? data : undefined,
+      formDefinitionId,
+      answer
+    );
 
     if (!dryRun) {
       await context.db.Opportunity.updateOne({

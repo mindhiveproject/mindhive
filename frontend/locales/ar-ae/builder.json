@@ -2203,6 +2203,8 @@
 		"type": "النوع",
 		"variableName": "اسم المتغير",
 		"variableNamePlaceholder": "مثلاً: response_1 (يُستخدم لتخزين الإجابة)",
+		"variableNameStoredAs": "",
+		"variableNameStoredAsFallback": "",
 		"vas": "مقياس بصري"
 	},
 	"surveyDescription": "في الاستطلاع، يتم طرح أسئلة على المشاركين حول أنفسهم، أو حول سلوكهم، أو حول مشاعرهم.",

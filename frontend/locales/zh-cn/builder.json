@@ -2203,6 +2203,8 @@
 		"type": "类型",
 		"variableName": "变量名",
 		"variableNamePlaceholder": "例如：response_1（用于存储答案）",
+		"variableNameStoredAs": "",
+		"variableNameStoredAsFallback": "",
 		"vas": "视觉量表"
 	},
 	"surveyDescription": "在调查中，参与者会被问及关于他们自己、他们的行为或感受的问题。",

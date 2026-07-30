@@ -882,6 +882,7 @@
 			"expectedDeliverables": "Seleccione al menos un entregable previsto.",
 			"fieldResearchRequired": "Por favor, indique si se prevé realizar trabajo de campo o viajar.",
 			"followUpIncomplete": "Por favor, complete el cuestionario de seguimiento antes de guardar.",
+			"formDefinitionMissing": "",
 			"guidelines": "Por favor, marque la casilla de aceptación de las directrices en la ficha de publicación antes de enviar esta oportunidad.",
 			"issueRelevance": "",
 			"learningOutcomes": "",

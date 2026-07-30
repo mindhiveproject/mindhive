@@ -2203,6 +2203,8 @@
 		"type": "Тип",
 		"variableName": "Имя переменной",
 		"variableNamePlaceholder": "напр. ответ_1 (используется для хранения ответа)",
+		"variableNameStoredAs": "",
+		"variableNameStoredAsFallback": "",
 		"vas": "Визуальная шкала"
 	},
 	"surveyDescription": "В ходе опроса участникам задают вопросы о них самих, об их поведении или о том, что они чувствуют.",

@@ -882,6 +882,7 @@
 			"expectedDeliverables": "请至少选择一项预期交付成果。",
 			"fieldResearchRequired": "请说明是否需要进行实地调研或出差。",
 			"followUpIncomplete": "请在保存前完成后续问卷。",
+			"formDefinitionMissing": "",
 			"guidelines": "提交此机会前，请在出版卡上勾选指南确认函。",
 			"issueRelevance": "",
 			"learningOutcomes": "",
