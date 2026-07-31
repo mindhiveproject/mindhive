@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import ProfileType from "./Steps/1-ProfileType";
@@ -9,6 +9,7 @@ import useTranslation from "next-translate/useTranslation";
 import { GET_PROFILE } from "../../Queries/User";
 import { StyledCreateProfileFlow } from "../../styles/StyledProfile";
 import {
+  MANAGE_ORGANIZATION_HREF,
   manageOrganizationHref,
   resolveLinkedOrganization,
   resolveProfileType,
@@ -25,39 +26,33 @@ export default function EditProfile({ query }) {
   const user = data?.authenticatedItem;
   const profileType = resolveProfileType(query, user);
 
-  // Capture whether an org already existed when the user first loaded this
-  // screen. If they create one mid-wizard (about → interests), we must not
-  // redirect away from the first-run flow.
-  const hadOrgOnLoadRef = useRef(null);
-  useEffect(() => {
-    if (!user?.id || hadOrgOnLoadRef.current !== null) return;
-    hadOrgOnLoadRef.current = !!resolveLinkedOrganization(user)?.id;
-  }, [user]);
-
+  // Organization setup/edit lives on Connect Manage — never the profile wizard.
   useEffect(() => {
     if (!user?.id) return;
     if (profileType !== "organization") return;
-    if (page !== "about" && page !== "type") return;
-    if (!hadOrgOnLoadRef.current) return;
+    if (page !== "about" && page !== "type" && page !== "interests") return;
     const linked = resolveLinkedOrganization(user);
-    router.replace(manageOrganizationHref(linked?.id));
+    router.replace(
+      linked?.id
+        ? manageOrganizationHref(linked.id)
+        : { pathname: MANAGE_ORGANIZATION_HREF, query: { create: "1" } },
+    );
   }, [user, profileType, page, router]);
 
-  const pageTitle = profileType
-    ? t(`createProfileFlow.title.${profileType}`, {}, { default: t("createProfile") })
-    : t("createProfile");
+  const pageTitle =
+    profileType && profileType !== "organization"
+      ? t(`createProfileFlow.title.${profileType}`, {}, {
+          default: t("createProfile"),
+        })
+      : t("createProfile");
 
   const progressSteps = [
     {
-      label: profileType
-        ? t(`createProfileFlow.steps.aboutMe.${profileType}`, {}, { default: t("steps.aboutMe") })
-        : t("steps.aboutMe"),
+      label: t("steps.aboutMe"),
       page: "about",
     },
     {
-      label: profileType
-        ? t(`createProfileFlow.steps.interests.${profileType}`, {}, { default: t("steps.interests") })
-        : t("steps.interests"),
+      label: t("steps.interests"),
       page: "interests",
     },
   ];
@@ -68,12 +63,7 @@ export default function EditProfile({ query }) {
       ? ((currentStepIndex + 1) / progressSteps.length) * 100
       : 0;
 
-  if (
-    user?.id &&
-    hadOrgOnLoadRef.current &&
-    profileType === "organization" &&
-    (page === "about" || page === "type")
-  ) {
+  if (user?.id && profileType === "organization") {
     return null;
   }
 

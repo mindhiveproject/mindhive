@@ -157,11 +157,10 @@ export default function RoleSignup(query) {
     if (isClassNetworkInvalid || isNetworkInviteInvalid) return;
     // Normalize email to lowercase
     const normalizedEmail = inputs.email?.toLowerCase().trim();
-    // Sponsor signup grants the SPONSOR permission. The user later picks
-    // whether they're representing an Organization or signing up as an
-    // Individual on /dashboard/profile/edit?page=type. For Connect role
-    // gating, useConnectRole maps SPONSOR to mentor capabilities so sponsors
-    // can create opportunities, see "My matched students", etc.
+    // Sponsor signup grants the SPONSOR permission. Organization setup happens
+    // later under Connect → Manage organization (inline create). For Connect
+    // role gating, useConnectRole maps SPONSOR to mentor capabilities so
+    // sponsors can create opportunities, see "My matched students", etc.
     setSignupError(null);
     try {
       await signup({

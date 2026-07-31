@@ -420,14 +420,37 @@
 	"introductionVideo": "Vídeo de introducción",
 	"locationFilter": "Ubicación",
 	"manageOrganization": {
+		"adminMode": "",
+		"backToList": "",
 		"browseCta": "",
+		"create": {
+			"cancel": "",
+			"createError": "",
+			"creating": "",
+			"helper": "",
+			"notSignedIn": "",
+			"submit": "",
+			"title": ""
+		},
 		"emptyDescription": "",
 		"emptyTitle": "",
+		"list": {
+			"description": "",
+			"emptyFiltered": "",
+			"loading": "",
+			"manageOrganization": "",
+			"pageTitle": "",
+			"searchLabel": "",
+			"searchPlaceholder": ""
+		},
 		"setupCta": "",
 		"tabs": {
 			"people": "",
 			"profile": ""
 		},
+		"tabsHint": "",
+		"unauthorizedDescription": "",
+		"unauthorizedTitle": "",
 		"viewPublic": ""
 	},
 	"matchesRound": {
@@ -1036,6 +1059,13 @@
 		"solo": "",
 		"teamOf": "",
 		"unknownMember": "",
+		"verification": {
+			"copyEmail": "",
+			"copyEmailAria": "",
+			"notVerified": "",
+			"notVerifiedTooltip": "",
+			"verified": ""
+		},
 		"website": ""
 	},
 	"organizationsList": {

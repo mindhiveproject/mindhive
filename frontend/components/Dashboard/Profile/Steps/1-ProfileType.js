@@ -11,7 +11,7 @@ export default function ProfileType({}) {
         <h2>{t("profileType.chooseType")}</h2>
 
         <div className="profileChoicesArea">
-          <div>
+          {/* <div>
             <Link
               href={{
                 pathname: `/dashboard/profile/edit`,
@@ -29,7 +29,7 @@ export default function ProfileType({}) {
               </div>
             </Link>
             <p>{t("profileType.organization.description")}</p>
-          </div>
+          </div> */}
 
           <div>
             <Link

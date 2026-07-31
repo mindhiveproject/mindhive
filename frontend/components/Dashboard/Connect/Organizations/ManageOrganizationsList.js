@@ -1,17 +1,16 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import DesignSystemButton from "../../../DesignSystem/Button";
+import Modal from "../../../DesignSystem/Modal";
 import { EXPLORE_ORGANIZATIONS_PAGED } from "../../../Queries/Organization";
-import {
-  manageOrganizationHref,
-  profileEditHref,
-} from "../../../../lib/profileEditNavigation";
+import { manageOrganizationHref } from "../../../../lib/profileEditNavigation";
 import FilterBar from "../FilterBar";
 import OrganizationConnectCard from "./OrganizationConnectCard";
+import CreateOrganizationForm from "./CreateOrganizationForm";
 
 const Shell = styled.div`
   display: flex;
@@ -59,6 +58,7 @@ const Empty = styled.div`
   text-align: center;
   background: #ffffff;
   border-radius: 16px;
+  border: 1px solid #E6E6E6;
   color: #5f6871;
 
   h2 {
@@ -87,6 +87,13 @@ export default function ManageOrganizationsList({ user }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
   const [search, setSearch] = useState("");
+  const [showCreate, setShowCreate] = useState(false);
+
+  useEffect(() => {
+    if (router.query?.create === "1") {
+      setShowCreate(true);
+    }
+  }, [router.query?.create]);
 
   const adminIds = useMemo(
     () =>
@@ -126,6 +133,33 @@ export default function ManageOrganizationsList({ user }) {
 
   const organizations = data?.organizations || [];
 
+  const closeCreate = () => {
+    setShowCreate(false);
+    if (router.query?.create === "1") {
+      router.replace("/dashboard/connect/manage-organization", undefined, {
+        shallow: true,
+      });
+    }
+  };
+
+  const createModal = (
+    <Modal
+      open={showCreate}
+      onClose={closeCreate}
+      size="large"
+      title={t("manageOrganization.create.title", {}, {
+        default: "Create organization",
+      })}
+    >
+      <CreateOrganizationForm
+        user={user}
+        onCancel={closeCreate}
+        showHeader={false}
+        embedded
+      />
+    </Modal>
+  );
+
   if (adminIds.length === 0) {
     return (
       <Shell>
@@ -152,11 +186,7 @@ export default function ManageOrganizationsList({ user }) {
             <DesignSystemButton
               variant="filled"
               type="button"
-              onClick={() =>
-                router.push(
-                  profileEditHref({ page: "about", type: "organization" }),
-                )
-              }
+              onClick={() => setShowCreate(true)}
             >
               {t("manageOrganization.setupCta", {}, {
                 default: "Set up organization",
@@ -173,6 +203,7 @@ export default function ManageOrganizationsList({ user }) {
             </DesignSystemButton>
           </ActionsRow>
         </Empty>
+        {createModal}
       </Shell>
     );
   }
@@ -192,6 +223,18 @@ export default function ManageOrganizationsList({ user }) {
           })}
         </p>
       </Header>
+
+      <ActionsRow style={{ justifyContent: "flex-start" }}>
+        <DesignSystemButton
+          variant="tonal"
+          type="button"
+          onClick={() => setShowCreate(true)}
+        >
+          {t("manageOrganization.setupCta", {}, {
+            default: "Set up organization",
+          })}
+        </DesignSystemButton>
+      </ActionsRow>
 
       <FilterBar>
         <input
@@ -244,6 +287,7 @@ export default function ManageOrganizationsList({ user }) {
           ))}
         </Grid>
       )}
+      {createModal}
     </Shell>
   );
 }

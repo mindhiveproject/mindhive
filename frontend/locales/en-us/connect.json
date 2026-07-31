@@ -423,6 +423,15 @@
 		"adminMode": "Admin mode",
 		"backToList": "Back to your organizations",
 		"browseCta": "Browse organizations",
+		"create": {
+			"cancel": "Cancel",
+			"createError": "Failed to create organization.",
+			"creating": "Creating…",
+			"helper": "Add the public details for your organization. You can invite teammates and refine this profile after creating.",
+			"notSignedIn": "You must be signed in to create an organization.",
+			"submit": "Create organization",
+			"title": "Create organization"
+		},
 		"emptyDescription": "Set up your sponsor organization first. After that, you can manage its public profile and people here.",
 		"emptyTitle": "No organization to manage",
 		"list": {
@@ -1050,6 +1059,13 @@
 		"solo": "Solo",
 		"teamOf": "Team of {{size}}",
 		"unknownMember": "Unknown",
+		"verification": {
+			"copyEmail": "Copy email address",
+			"copyEmailAria": "Copy info@mindhive.science to clipboard",
+			"notVerified": "Not verified",
+			"notVerifiedTooltip": "Contact info@mindhive.science to get your organization verified.",
+			"verified": "Verified"
+		},
 		"website": "Website"
 	},
 	"organizationsList": {

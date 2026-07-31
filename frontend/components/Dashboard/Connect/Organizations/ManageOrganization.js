@@ -11,6 +11,7 @@ import { EXPLORE_ORGANIZATION_DETAIL } from "../../../Queries/Organization";
 import { MANAGE_ORGANIZATION_HREF } from "../../../../lib/profileEditNavigation";
 import OrganizationAdminPanels from "./OrganizationAdminPanels";
 import OrganizationProfileEditor from "./OrganizationProfileEditor";
+import OrganizationVerificationStatus from "./OrganizationVerificationStatus";
 import {
   BACK_CHEVRON,
   BackLink,
@@ -196,6 +197,7 @@ export default function ManageOrganization({ organizationId, user }) {
             {BACK_CHEVRON}
           </BackLink>
           <h1>{org.name}</h1>
+          <OrganizationVerificationStatus verified={!!org.verified} />
         </div>
         <AdminToolbar>
           <div className="adminMeta">

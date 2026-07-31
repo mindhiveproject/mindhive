@@ -8,14 +8,8 @@ import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../Mutations/User";
-import { UPDATE_ORGANIZATION } from "../../../Mutations/Organization";
 import { GET_TAGS } from "../../../Queries/Tag";
-import {
-  profileEditHref,
-  resolveLinkedOrganization,
-  resolveProfileType,
-  manageOrganizationHref,
-} from "../../../../lib/profileEditNavigation";
+import { profileEditHref } from "../../../../lib/profileEditNavigation";
 import {
   confirmLeaveIfDirty,
   useUnsavedChangesGuard,
@@ -32,14 +26,7 @@ function interestIdsKey(interests = []) {
 export default function InterestSelector({ query, user }) {
   const { t } = useTranslation("connect");
   const router = useRouter();
-  const profileType = resolveProfileType(query, user);
-  const isOrganization = profileType === "organization";
-  // For org-type profiles, the interests live on the Organization rather than
-  // the Profile ("Where can your organization help?").
-  const existingOrg = resolveLinkedOrganization(user);
-  const sourceInterests = isOrganization
-    ? existingOrg?.interests || []
-    : user?.interests || [];
+  const sourceInterests = user?.interests || [];
 
   const initialInterestIds = useMemo(
     () => interestIdsKey(sourceInterests),
@@ -64,7 +51,7 @@ export default function InterestSelector({ query, user }) {
 
   useUnsavedChangesGuard(changed);
 
-  const { data, loading, error } = useQuery(GET_TAGS);
+  const { data } = useQuery(GET_TAGS);
   const tags = data?.tags || [];
   const tagValues = tags.map((tag) => ({
     key: tag.id,
@@ -73,9 +60,6 @@ export default function InterestSelector({ query, user }) {
   }));
 
   const [updateProfile] = useMutation(UPDATE_PROFILE, {
-    refetchQueries: [{ query: GET_PROFILE }],
-  });
-  const [updateOrganization] = useMutation(UPDATE_ORGANIZATION, {
     refetchQueries: [{ query: GET_PROFILE }],
   });
 
@@ -116,33 +100,18 @@ export default function InterestSelector({ query, user }) {
 
   const complete = async () => {
     try {
-      if (isOrganization && existingOrg?.id) {
-        // Use `set` so the org's interests are replaced with the current
-        // selection (handles both adds and removes).
-        await updateOrganization({
-          variables: {
-            id: existingOrg.id,
-            input: { interests: { set: inputs?.interests } },
+      await updateProfile({
+        variables: {
+          id: user?.id,
+          input: {
+            interests:
+              user?.interests && user?.interests.length
+                ? { set: inputs?.interests }
+                : { connect: inputs?.interests },
           },
-        });
-      } else if (!isOrganization) {
-        await updateProfile({
-          variables: {
-            id: user?.id,
-            input: {
-              interests:
-                user?.interests && user?.interests.length
-                  ? { set: inputs?.interests }
-                  : { connect: inputs?.interests },
-            },
-          },
-        });
-      }
-      if (isOrganization) {
-        router.push(manageOrganizationHref(existingOrg?.id));
-      } else {
-        router.push({ pathname: "/dashboard" });
-      }
+        },
+      });
+      router.push({ pathname: "/dashboard" });
     } catch {
       alert(
         t("createProfileFlow.saveError", {}, {
@@ -179,7 +148,7 @@ export default function InterestSelector({ query, user }) {
             {tags
               .filter(
                 (tag) =>
-                  !inputs?.interests.map((tag) => tag?.id).includes(tag?.id)
+                  !inputs?.interests.map((tag) => tag?.id).includes(tag?.id),
               )
               .sort((a, b) => {
                 const titleA = a.title.toLowerCase();
@@ -194,7 +163,7 @@ export default function InterestSelector({ query, user }) {
                 return 0;
               })
               .map((tag) => (
-                <div className="interest">
+                <div className="interest" key={tag.id}>
                   <div>{tag.title}</div>
                   <img
                     src="/assets/icons/add.svg"
@@ -211,12 +180,16 @@ export default function InterestSelector({ query, user }) {
 
       <div className="navButtons">
         <Link
-          href={profileEditHref({ page: "about", type: profileType })}
+          href={profileEditHref({ page: "about", type: "individual" })}
           onClick={tryToLeave}
         >
-          <button className="secondary">{t("interestSelector.navButtons.previous")}</button>
+          <button className="secondary">
+            {t("interestSelector.navButtons.previous")}
+          </button>
         </Link>
-        <button onClick={complete}>{t("interestSelector.navButtons.complete")}</button>
+        <button type="button" onClick={complete}>
+          {t("interestSelector.navButtons.complete")}
+        </button>
       </div>
     </div>
   );

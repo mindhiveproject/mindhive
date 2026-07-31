@@ -162,6 +162,8 @@ export default function ConnectNavigationBar() {
       },
     ];
     const canManageOrganization =
+      isSponsor ||
+      isAdmin ||
       (user?.adminOfOrganizations || []).length > 0;
     if (canManageOrganization) {
       items.push({
@@ -173,7 +175,7 @@ export default function ConnectNavigationBar() {
       });
     }
     return items;
-  }, [t, user?.adminOfOrganizations]);
+  }, [t, user?.adminOfOrganizations, isSponsor, isAdmin]);
 
   const classNetworkOptions = useMemo(() => {
     const canExploreNetworks = isAdmin || isTeacher || isMentor || isSponsor;

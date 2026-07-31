@@ -1,9 +1,10 @@
 import Link from "next/link";
 import styled from "styled-components";
-import { Icon, Label } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { formatDateLabel } from "./utils";
+import OrganizationVerificationStatus from "./OrganizationVerificationStatus";
 
 export const Shell = styled.div`
   display: flex;
@@ -310,12 +311,7 @@ export function OrganizationHero({ organization, actions = null }) {
       <div className="info">
         <h1>
           {org.name}
-          {org.verified && (
-            <Label color="green" size="tiny">
-              <DecorativeIcon name="check circle" />
-              {t("a11y.verified", {}, { default: "Verified" })}
-            </Label>
-          )}
+          <OrganizationVerificationStatus verified={!!org.verified} />
         </h1>
         {org.tagline && <span className="tagline">{org.tagline}</span>}
         <div className="meta">
