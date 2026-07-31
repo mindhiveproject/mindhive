@@ -1,10 +1,9 @@
-import Links from "./Links";
 import MyUpdates from "../../Account/Updates/Main";
 import useTranslation from "next-translate/useTranslation";
 
 import StyledHome from "../../styles/StyledHome";
 import Profile from "../Profile/Main";
-import FavoritePeople from "../Connect/Connections/FavoritePeople";
+// import FavoritePeople from "../Connect/Connections/FavoritePeople";
 import FavoriteTasks from "../../Tasks/Bank/FavoriteTasks";
 import SponsorOnboarding from "./SponsorOnboarding";
 import NetworkPendingInvites from "./NetworkPendingInvites";
@@ -52,10 +51,7 @@ export default function Home({ query, user }) {
             </div>
           ))}
         </div>
-        
       </div>
-
-      <Links />
     </StyledHome>
   );
 }

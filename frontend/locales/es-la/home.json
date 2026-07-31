@@ -12,7 +12,9 @@
 		"copyright": "© 2025",
 		"description": "MindHive es una plataforma de ciencia ciudadana basada en la web que apoya la investigación sobre el cerebro y el comportamiento en el mundo real.",
 		"email": "info@mindhive.science",
+		"navLabel": "",
 		"privacy": "política de privacidad",
+		"teachers": "",
 		"terms": "Términos y condiciones",
 		"title": "MindHive"
 	},
