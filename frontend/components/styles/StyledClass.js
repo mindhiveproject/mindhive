@@ -1499,6 +1499,51 @@ const StyledClass = styled.div`
       gap: 18px;
     }
 
+    .matchingRoundFormPicker {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 16px 24px;
+      width: 100%;
+      padding: 16px;
+      border: 1px solid #E6E6E6;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .matchingRoundFormPickerCopy {
+      flex: 1 1 240px;
+      min-width: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .matchingRoundFormPickerTitle {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 20px;
+      color: #171717;
+    }
+
+    .matchingRoundFormPickerHint,
+    .matchingRoundFormPickerNote {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #424242;
+    }
+
+    .matchingRoundFormPickerNote {
+      color: #6b6b6b;
+    }
+
+    .matchingRoundFormPickerControl {
+      flex: 0 1 320px;
+      min-width: min(100%, 220px);
+      max-width: 100%;
+    }
+
     .matchingRoundExportActions {
       display: flex;
       justify-content: flex-start;

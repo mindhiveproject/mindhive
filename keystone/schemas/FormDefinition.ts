@@ -115,6 +115,10 @@ export const FormDefinition = list({
       ref: "Milestone.formDefinition",
       many: true,
     }),
+    connectRounds: relationship({
+      ref: "ConnectRound.formDefinitions",
+      many: true,
+    }),
     createdBy: relationship({
       ref: "Profile.formDefinitionsCreated",
       hooks: {

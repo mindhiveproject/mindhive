@@ -864,6 +864,14 @@
 				"status": "",
 				"title": ""
 			},
+			"formPicker": {
+				"ariaLabel": "",
+				"emptyPlaceholder": "",
+				"hint": "",
+				"placeholder": "",
+				"reuseNote": "",
+				"title": ""
+			},
 			"grid": {
 				"columns": {
 					"info": "",

@@ -864,6 +864,14 @@
 				"status": "Status",
 				"title": "Title"
 			},
+			"formPicker": {
+				"ariaLabel": "Sponsor questionnaires for this round",
+				"emptyPlaceholder": "No published forms available",
+				"hint": "Select questionnaires to send to sponsors of the pre-selected opportunities below.",
+				"placeholder": "Select forms…",
+				"reuseNote": "If an opportunity already has answers for a selected form, those questions will not be asked again.",
+				"title": "2nd round of question for pre-selected applications"
+			},
 			"grid": {
 				"columns": {
 					"info": "More information",

@@ -18,6 +18,7 @@ import {
   NETWORK_OPPORTUNITIES_FOR_ROUND,
 } from "../../../../Queries/ConnectRound";
 import { QUESTION_LIBRARY } from "../../../../Queries/ConnectQuestion";
+import { ROUND_PICKABLE_FORM_DEFINITIONS } from "../../../../Queries/FormDefinition";
 import {
   CREATE_CONNECT_ROUND,
   UPDATE_CONNECT_ROUND,
@@ -121,7 +122,7 @@ function RoundStatusLabel({ status, t, variant = "chip" }) {
   );
 }
 
-function buildSnapshot(inputs, opportunityIds, questionIds) {
+function buildSnapshot(inputs, opportunityIds, questionIds, formDefinitionIds) {
   return {
     title: inputs.title || "",
     description: inputs.description || "",
@@ -130,6 +131,7 @@ function buildSnapshot(inputs, opportunityIds, questionIds) {
     closeAt: inputs.closeAt || "",
     opportunities: [...opportunityIds].sort(),
     questions: [...questionIds].sort(),
+    formDefinitions: [...(formDefinitionIds || [])].sort(),
   };
 }
 
@@ -142,7 +144,8 @@ function snapshotsEqual(a, b) {
     a.openAt === b.openAt &&
     a.closeAt === b.closeAt &&
     JSON.stringify(a.opportunities) === JSON.stringify(b.opportunities) &&
-    JSON.stringify(a.questions) === JSON.stringify(b.questions)
+    JSON.stringify(a.questions) === JSON.stringify(b.questions) &&
+    JSON.stringify(a.formDefinitions) === JSON.stringify(b.formDefinitions)
   );
 }
 
@@ -307,6 +310,9 @@ function MatchingRoundEditor({
   );
   const [selectedOpportunities, setSelectedOpportunities] = useState([]);
   const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [selectedFormDefinitionIds, setSelectedFormDefinitionIds] = useState(
+    [],
+  );
   const [formInitialized, setFormInitialized] = useState(false);
   const [activePanel, setActivePanel] = useState(
     queryMatchingPanel || PANELS.settings,
@@ -331,11 +337,12 @@ function MatchingRoundEditor({
   const { inputs, handleChange, handleMultipleUpdate } = useForm(EMPTY_FORM);
 
   const captureSnapshot = useCallback(
-    (nextInputs, nextOpportunities, nextQuestions) => {
+    (nextInputs, nextOpportunities, nextQuestions, nextFormDefinitions) => {
       savedSnapshotRef.current = buildSnapshot(
         nextInputs,
         nextOpportunities,
         nextQuestions,
+        nextFormDefinitions,
       );
       setSnapshotRevision((revision) => revision + 1);
     },
@@ -348,6 +355,7 @@ function MatchingRoundEditor({
       inputs,
       selectedOpportunities,
       selectedQuestions,
+      selectedFormDefinitionIds,
     );
     return !snapshotsEqual(current, savedSnapshotRef.current);
   }, [
@@ -355,6 +363,7 @@ function MatchingRoundEditor({
     inputs,
     selectedOpportunities,
     selectedQuestions,
+    selectedFormDefinitionIds,
     snapshotRevision,
   ]);
 
@@ -385,6 +394,7 @@ function MatchingRoundEditor({
     setFormInitialized(false);
     setSelectedOpportunities([]);
     setSelectedQuestions([]);
+    setSelectedFormDefinitionIds([]);
   }, [isCreate, initialNetworkId, selectedNetworkId]);
 
   useEffect(() => {
@@ -405,8 +415,9 @@ function MatchingRoundEditor({
       handleMultipleUpdate(defaults);
       setSelectedOpportunities([]);
       setSelectedQuestions([]);
+      setSelectedFormDefinitionIds([]);
       setFormInitialized(true);
-      captureSnapshot(defaults, [], []);
+      captureSnapshot(defaults, [], [], []);
       return;
     }
 
@@ -423,6 +434,7 @@ function MatchingRoundEditor({
     };
     const nextOpportunities = (round.opportunities || []).map((o) => o.id);
     const nextQuestions = (round.questions || []).map((q) => q.id);
+    const nextFormDefinitions = (round.formDefinitions || []).map((f) => f.id);
 
     if (round.classNetwork?.id && round.classNetwork.id !== selectedNetworkId) {
       setSelectedNetworkId(round.classNetwork.id);
@@ -431,8 +443,14 @@ function MatchingRoundEditor({
     handleMultipleUpdate(nextInputs);
     setSelectedOpportunities(nextOpportunities);
     setSelectedQuestions(nextQuestions);
+    setSelectedFormDefinitionIds(nextFormDefinitions);
     setFormInitialized(true);
-    captureSnapshot(nextInputs, nextOpportunities, nextQuestions);
+    captureSnapshot(
+      nextInputs,
+      nextOpportunities,
+      nextQuestions,
+      nextFormDefinitions,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isNew,
@@ -450,6 +468,37 @@ function MatchingRoundEditor({
   const libraryQuestions = (libraryData?.connectQuestions || []).filter(
     (q) => q.status === "approved",
   );
+
+  const { data: pickableFormsData } = useQuery(
+    ROUND_PICKABLE_FORM_DEFINITIONS,
+    {
+      variables: { classNetworkId: selectedNetworkId },
+      skip: !selectedNetworkId,
+      fetchPolicy: "cache-and-network",
+    },
+  );
+  const pickableFormDefinitions = pickableFormsData?.formDefinitions || [];
+
+  const formDefinitionOptions = useMemo(() => {
+    const byId = new Map();
+    for (const form of pickableFormDefinitions) {
+      byId.set(form.id, {
+        value: form.id,
+        label: `${form.title} (v${form.version})`,
+      });
+    }
+    for (const form of round?.formDefinitions || []) {
+      if (!byId.has(form.id)) {
+        byId.set(form.id, {
+          value: form.id,
+          label: form.title
+            ? `${form.title} (v${form.version || 1})`
+            : form.id,
+        });
+      }
+    }
+    return Array.from(byId.values());
+  }, [pickableFormDefinitions, round?.formDefinitions]);
 
   const { data: opportunitiesData } = useQuery(NETWORK_OPPORTUNITIES_FOR_ROUND, {
     variables: { classNetworkId: selectedNetworkId },
@@ -652,7 +701,7 @@ function MatchingRoundEditor({
         await markOpportunitiesPreSelected(newlySelectedIds);
         await markOpportunitiesPendingReview(newlyRemovedIds);
         setSelectedOpportunities(nextIds);
-        captureSnapshot(inputs, nextIds, selectedQuestions);
+        captureSnapshot(inputs, nextIds, selectedQuestions, selectedFormDefinitionIds);
       } catch (error) {
         console.error("Failed to update matching round opportunities", error);
         alert(
@@ -675,6 +724,7 @@ function MatchingRoundEditor({
       markOpportunitiesPendingReview,
       inputs,
       selectedQuestions,
+      selectedFormDefinitionIds,
       captureSnapshot,
       t,
     ],
@@ -766,7 +816,7 @@ function MatchingRoundEditor({
           },
         },
       });
-      captureSnapshot(nextInputs, selectedOpportunities, selectedQuestions);
+      captureSnapshot(nextInputs, selectedOpportunities, selectedQuestions, selectedFormDefinitionIds);
     } catch {
       handleMultipleUpdate({ status: previousStatus });
     }
@@ -792,6 +842,9 @@ function MatchingRoundEditor({
 
     const opportunitiesConnect = selectedOpportunities.map((id) => ({ id }));
     const questionsConnect = selectedQuestions.map((id) => ({ id }));
+    const formDefinitionsConnect = selectedFormDefinitionIds.map((id) => ({
+      id,
+    }));
     const previouslySavedOpportunityIds = new Set(
       savedSnapshotRef.current?.opportunities || [],
     );
@@ -823,13 +876,21 @@ function MatchingRoundEditor({
               questions: questionsConnect.length
                 ? { connect: questionsConnect }
                 : undefined,
+              formDefinitions: formDefinitionsConnect.length
+                ? { connect: formDefinitionsConnect }
+                : undefined,
             },
           },
         });
         const newId = result?.data?.createConnectRound?.id;
         if (newId) {
           await markOpportunitiesPreSelected(newlySelectedOpportunityIds);
-          captureSnapshot(inputs, selectedOpportunities, selectedQuestions);
+          captureSnapshot(
+            inputs,
+            selectedOpportunities,
+            selectedQuestions,
+            selectedFormDefinitionIds,
+          );
           if (onCreated) onCreated(newId);
         }
       } else {
@@ -844,6 +905,7 @@ function MatchingRoundEditor({
               closeAt: toIsoOrNull(inputs.closeAt),
               opportunities: { set: opportunitiesConnect },
               questions: { set: questionsConnect },
+              formDefinitions: { set: formDefinitionsConnect },
               updatedAt: new Date().toISOString(),
               publishedAt:
                 inputs.status === "published" && !round?.publishedAt
@@ -854,7 +916,12 @@ function MatchingRoundEditor({
         });
         await markOpportunitiesPreSelected(newlySelectedOpportunityIds);
         await markOpportunitiesPendingReview(newlyRemovedOpportunityIds);
-        captureSnapshot(inputs, selectedOpportunities, selectedQuestions);
+        captureSnapshot(
+          inputs,
+          selectedOpportunities,
+          selectedQuestions,
+          selectedFormDefinitionIds,
+        );
       }
     } catch (error) {
       console.error("Failed to save matching round", error);
@@ -1174,6 +1241,55 @@ function MatchingRoundEditor({
 
   const renderSelectedPanel = () => (
     <div className="classTabMatchingRoundPanel">
+      <div className="matchingRoundFormPicker">
+        <div className="matchingRoundFormPickerCopy">
+          <h4 className="matchingRoundFormPickerTitle">
+            {t("opportunities.matchingRound.formPicker.title", {}, {
+              default:
+                "2nd round of question for pre-selected applications",
+            })}
+          </h4>
+          <p className="matchingRoundFormPickerHint">
+            {t("opportunities.matchingRound.formPicker.hint", {}, {
+              default:
+                "Select questionnaires to send to sponsors of the pre-selected opportunities below.",
+            })}
+          </p>
+          <p className="matchingRoundFormPickerNote">
+            {t("opportunities.matchingRound.formPicker.reuseNote", {}, {
+              default:
+                "If an opportunity already has answers for a selected form, those questions will not be asked again.",
+            })}
+          </p>
+        </div>
+        <div className="matchingRoundFormPickerControl">
+          <DropdownSelect
+            multiple
+            value={selectedFormDefinitionIds}
+            onChange={setSelectedFormDefinitionIds}
+            options={formDefinitionOptions}
+            disabled={!canManageOpportunities || saving}
+            placeholder={
+              formDefinitionOptions.length === 0
+                ? t(
+                    "opportunities.matchingRound.formPicker.emptyPlaceholder",
+                    {},
+                    { default: "No published forms available" },
+                  )
+                : t(
+                    "opportunities.matchingRound.formPicker.placeholder",
+                    {},
+                    { default: "Select forms…" },
+                  )
+            }
+            ariaLabel={t(
+              "opportunities.matchingRound.formPicker.ariaLabel",
+              {},
+              { default: "Sponsor questionnaires for this round" },
+            )}
+          />
+        </div>
+      </div>
       <MatchingRoundOpportunitiesGrid
         opportunities={selectedNetworkOpportunities}
         selectedIds={selectedOpportunities}

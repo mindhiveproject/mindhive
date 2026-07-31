@@ -61,6 +61,14 @@ export const ConnectRound = list({
       many: true,
     }),
 
+    // Questionnaires associated with this round; sponsors of pre-selected
+    // opportunities may be asked to complete these (keyed by formDefinitionId
+    // on Opportunity.proposalData — shared across rounds if already answered).
+    formDefinitions: relationship({
+      ref: "FormDefinition.connectRounds",
+      many: true,
+    }),
+
     questionAnswers: relationship({
       ref: "QuestionAnswer.round",
       many: true,

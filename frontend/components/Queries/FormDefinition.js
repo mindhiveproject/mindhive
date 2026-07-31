@@ -210,3 +210,35 @@ export const ADMIN_FORM_DEFINITION = gql`
     }
   }
 `;
+
+// Published opportunity-surface forms available to attach to a matching
+// round: global scope, or class_network scoped to the given network.
+export const ROUND_PICKABLE_FORM_DEFINITIONS = gql`
+  query ROUND_PICKABLE_FORM_DEFINITIONS($classNetworkId: ID!) {
+    formDefinitions(
+      where: {
+        status: { equals: "published" }
+        surface: { equals: "opportunity" }
+        OR: [
+          { scope: { equals: "global" } }
+          {
+            AND: [
+              { scope: { equals: "class_network" } }
+              { classNetwork: { id: { equals: $classNetworkId } } }
+            ]
+          }
+        ]
+      }
+      orderBy: [{ title: asc }, { version: desc }]
+    ) {
+      id
+      title
+      key
+      scope
+      version
+      classNetwork {
+        id
+      }
+    }
+  }
+`;
