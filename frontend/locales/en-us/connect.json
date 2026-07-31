@@ -236,9 +236,16 @@
 		"signupAndInviteLink": "Signup + invite to network",
 		"studentCountPlural": "{{count}} students in linked classes",
 		"studentCountSingle": "{{count}} student in linked classes",
-		"summaryChipAria": "Jump to {{label}}",
-		"summaryDescription": "Key counts for this network. Click organizations, profiles, matching rounds, or admins to jump to that section.",
+		"summaryChipAria": "Open {{label}} tab",
+		"summaryDescription": "Key counts for this network. Click organizations, profiles, matching rounds, or admins to open that tab.",
 		"summaryTitle": "Summary",
+		"tabs": {
+			"admins": "Admins",
+			"matching": "Matching",
+			"organizations": "Organizations",
+			"overview": "Overview",
+			"profiles": "Profiles"
+		},
 		"titleLabel": "Title",
 		"titlePlaceholder": "Network title",
 		"titleRequired": "Enter a network title.",

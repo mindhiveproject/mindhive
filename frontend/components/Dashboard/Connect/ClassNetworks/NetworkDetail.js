@@ -13,6 +13,7 @@ import { AgGridReact } from "ag-grid-react";
 import DesignSystemButton from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import CopyButton from "../../../DesignSystem/CopyButton";
+import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import {
   GET_ALL_NETWORKS,
   GET_NETWORK_INVITES,
@@ -76,6 +77,13 @@ const Shell = styled.div`
   padding-top: 0;
   border-radius: 32px 0 0 32px;
   background-color: #f7f9f8;
+`;
+
+const ManageTabs = styled.div`
+  .navbar-item.selected,
+  .navbar-item:active {
+    background-color: #D3E0E3;
+  }
 `;
 
 const Header = styled.div`
@@ -160,6 +168,35 @@ const EmptyNote = styled.p`
   font-family: "Inter", sans-serif;
   font-size: 14px;
   line-height: 22px;
+`;
+
+const ThinEmptySection = styled.section`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: baseline;
+  padding: 12px 20px;
+  border: 1px solid #ece9e6;
+  border-radius: 16px;
+  background: #ffffff;
+  scroll-margin-top: 96px;
+
+  h2 {
+    margin: 0;
+    color: #171717;
+    font-family: "Lato", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  p {
+    margin: 0;
+    color: #5f6871;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+  }
 `;
 
 const AdminForm = styled.div`
@@ -281,15 +318,31 @@ const defaultColDef = {
   },
 };
 
-function EmailCellRenderer(params) {
-  return <CopyableEmail email={params?.value || params?.data?.email} />;
+const TABS = {
+  overview: "overview",
+  organizations: "organizations",
+  profiles: "profiles",
+  matching: "matching",
+  admins: "admins",
+};
+
+const VALID_TABS = new Set(Object.values(TABS));
+const PENDING_INVITES_HASH = "#network-pending-invites";
+
+function resolveTabFromQuery(query) {
+  const raw = Array.isArray(query?.tab) ? query.tab[0] : query?.tab;
+  if (raw && VALID_TABS.has(raw)) return raw;
+  return TABS.overview;
 }
 
-function scrollToSection(sectionId) {
-  if (!sectionId || typeof document === "undefined") return;
-  const el = document.getElementById(sectionId);
-  if (!el) return;
-  el.scrollIntoView({ behavior: "smooth", block: "start" });
+const TabBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+`;
+
+function EmailCellRenderer(params) {
+  return <CopyableEmail email={params?.value || params?.data?.email} />;
 }
 
 function NetworkDetailPage({ query, user }) {
@@ -303,6 +356,7 @@ function NetworkDetailPage({ query, user }) {
     isTeacher,
     isSponsor,
   } = deriveRoles(user);
+  const [tab, setTab] = useState(() => resolveTabFromQuery(query));
   const [adminEmail, setAdminEmail] = useState("");
   const [adminFeedback, setAdminFeedback] = useState(null);
   const [memberEmail, setMemberEmail] = useState("");
@@ -409,6 +463,34 @@ function NetworkDetailPage({ query, user }) {
     setMembershipMode(getEffectiveMembershipMode(network.settings));
   }, [network?.id, network?.title, network?.description, network?.settings]);
 
+  useEffect(() => {
+    let nextTab = resolveTabFromQuery(query);
+    if (
+      typeof window !== "undefined" &&
+      window.location.hash === PENDING_INVITES_HASH
+    ) {
+      nextTab = TABS.profiles;
+    }
+    setTab((current) => (current === nextTab ? current : nextTab));
+  }, [query?.tab, networkId]);
+
+  const selectTab = (nextTab) => {
+    if (!VALID_TABS.has(nextTab)) return;
+    setTab(nextTab);
+    const nextQuery = { ...router.query, mode: "manage" };
+    if (networkId) nextQuery.networkId = networkId;
+    if (nextTab === TABS.overview) {
+      delete nextQuery.tab;
+    } else {
+      nextQuery.tab = nextTab;
+    }
+    router.replace(
+      { pathname: router.pathname, query: nextQuery },
+      undefined,
+      { shallow: true }
+    );
+  };
+
   const adminMutationLoading = addingNetworkAdmin || removingNetworkAdmin;
   const memberMutationLoading =
     addingMemberProfile ||
@@ -479,6 +561,15 @@ function NetworkDetailPage({ query, user }) {
       }),
     [pendingInvitesData?.networkInvites, t]
   );
+
+  useEffect(() => {
+    if (tab !== TABS.profiles) return;
+    if (typeof window === "undefined") return;
+    if (window.location.hash !== PENDING_INVITES_HASH) return;
+    const el = document.getElementById("network-pending-invites");
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [tab, loading, network?.id, pendingInviteRows.length]);
 
   const roundRows = useMemo(
     () =>
@@ -1286,714 +1377,810 @@ function NetworkDetailPage({ query, user }) {
               </p>
             </Header>
 
-            {canManage ? (
-              <DetailSection id="network-details">
-                <SectionHeader>
-                  <h2>
-                    {t("classNetworks.detailsSectionTitle", {}, {
-                      default: "Network details",
-                    })}
-                  </h2>
-                  <p>
-                    {t("classNetworks.detailsSectionDescription", {}, {
-                      default:
-                        "Update membership mode, title, and description for this network.",
-                    })}
-                  </p>
-                </SectionHeader>
-                <DetailsForm>
-                  <label htmlFor="connectClassNetworkMembershipMode">
-                    {t("classNetworks.form.membershipModeLabel", {}, {
-                      default: "Membership",
-                    })}
-                    <select
-                      id="connectClassNetworkMembershipMode"
-                      value={membershipMode}
-                      onChange={(event) =>
-                        setMembershipMode(
-                          event.target.value === "open" ? "open" : "approval"
-                        )
-                      }
-                    >
-                      <option value="approval">
-                        {t(
-                          "classNetworks.form.membershipModeApprovalLabel",
-                          {},
-                          { default: "Approval required" }
-                        )}
-                      </option>
-                      <option value="open">
-                        {t(
-                          "classNetworks.form.membershipModeOpenLabel",
-                          {},
-                          { default: "Open" }
-                        )}
-                      </option>
-                    </select>
-                    <p className="fieldHint">
-                      {membershipMode === "open"
-                        ? t(
-                            "classNetworks.form.membershipModeOpenDescription",
-                            {},
-                            {
-                              default:
-                                "Eligible profiles can join this public network immediately.",
-                            }
-                          )
-                        : t(
-                            "classNetworks.form.membershipModeApprovalDescription",
-                            {},
-                            {
-                              default:
-                                "Eligible profiles must be approved by a network admin before joining.",
-                            }
-                          )}
-                    </p>
-                  </label>
-                  <label htmlFor="connectClassNetworkTitle">
-                    {t("classNetworks.titleLabel", {}, {
-                      default: "Title",
-                    })}
-                    <input
-                      id="connectClassNetworkTitle"
-                      type="text"
-                      value={networkTitle}
-                      onChange={(event) => setNetworkTitle(event.target.value)}
-                      placeholder={t(
-                        "classNetworks.titlePlaceholder",
-                        {},
-                        { default: "Network title" }
-                      )}
-                    />
-                  </label>
-                  <label htmlFor="connectClassNetworkDescription">
-                    {t("classNetworks.descriptionLabel", {}, {
-                      default: "Description",
-                    })}
-                    <textarea
-                      id="connectClassNetworkDescription"
-                      value={networkDescription}
-                      onChange={(event) =>
-                        setNetworkDescription(event.target.value)
-                      }
-                      placeholder={t(
-                        "classNetworks.descriptionPlaceholder",
-                        {},
-                        {
-                          default:
-                            "Describe what this network is for and who it connects.",
-                        }
-                      )}
-                    />
-                  </label>
-                  <DetailsFormActions>
-                    <DesignSystemButton
-                      variant="filled"
-                      type="button"
-                      disabled={savingDetails}
-                      onClick={handleSaveNetworkDetails}
-                    >
-                      {savingDetails
-                        ? t("classNetworks.savingDetails", {}, {
-                            default: "Saving...",
-                          })
-                        : t("classNetworks.saveDetails", {}, {
-                            default: "Save details",
-                          })}
-                    </DesignSystemButton>
-                    {detailsFeedback ? (
-                      <AdminFeedback $error={detailsFeedback.kind === "error"}>
-                        {detailsFeedback.text}
-                      </AdminFeedback>
-                    ) : null}
-                  </DetailsFormActions>
-                </DetailsForm>
-              </DetailSection>
-            ) : null}
-
-            <DetailSection id="network-overview">
-              <SectionHeader>
-                <h2>
-                  {t("classNetworks.summaryTitle", {}, {
-                    default: "Summary",
-                  })}
-                </h2>
-                <p>
-                  {t("classNetworks.summaryDescription", {}, {
-                    default:
-                      "Key counts for this network. Click organizations, profiles, matching rounds, or admins to jump to that section.",
-                  })}
-                </p>
-              </SectionHeader>
-              <SummaryChips>
-                <Chip
-                  shape="square"
-                  leading={
-                    <img
-                      src="/assets/icons/education.svg"
-                      alt=""
-                      width="20"
-                      height="20"
-                      aria-hidden
-                    />
-                  }
-                  label={formatCount(
-                    t,
-                    network?.classes?.length || 0,
-                    "classNetworks.classCountSingle",
-                    "classNetworks.classCountPlural",
-                    "{{count}} linked class",
-                    "{{count}} linked classes"
-                  )}
-                />
-                <Chip
-                  shape="square"
-                  leading={
-                    <img
-                      src="/assets/connect/building.svg"
-                      alt=""
-                      width="20"
-                      height="20"
-                      aria-hidden
-                    />
-                  }
-                  label={formatCount(
-                    t,
-                    memberOrganizations.length,
-                    "classNetworks.organizationCountSingle",
-                    "classNetworks.organizationCountPlural",
-                    "{{count}} organization",
-                    "{{count}} organizations"
-                  )}
-                  ariaLabel={t(
-                    "classNetworks.summaryChipAria",
-                    {
-                      label: t("classNetworks.organizationsTitle", {}, {
-                        default: "Organizations",
-                      }),
-                    },
-                    { default: "Jump to {{label}}" }
-                  )}
-                  onClick={() => scrollToSection("network-organizations")}
-                />
-                <Chip
-                  shape="square"
-                  leading={
-                    <img
-                      src="/assets/connect/user.svg"
-                      alt=""
-                      width="20"
-                      height="20"
-                      aria-hidden
-                    />
-                  }
-                  label={formatCount(
-                    t,
-                    memberProfiles.length,
-                    "classNetworks.profileCountSingle",
-                    "classNetworks.profileCountPlural",
-                    "{{count}} member profile",
-                    "{{count}} member profiles"
-                  )}
-                  ariaLabel={t(
-                    "classNetworks.summaryChipAria",
-                    {
-                      label: t("classNetworks.profilesTitle", {}, {
-                        default: "Member profiles",
-                      }),
-                    },
-                    { default: "Jump to {{label}}" }
-                  )}
-                  onClick={() => scrollToSection("network-profiles")}
-                />
-                <Chip
-                  shape="square"
-                  leading={
-                    <img
-                      src="/assets/connect/group.svg"
-                      alt=""
-                      width="20"
-                      height="20"
-                      aria-hidden
-                    />
-                  }
-                  label={formatCount(
-                    t,
-                    countUniqueStudents(network),
-                    "classNetworks.studentCountSingle",
-                    "classNetworks.studentCountPlural",
-                    "{{count}} student in linked classes",
-                    "{{count}} students in linked classes"
-                  )}
-                />
-                <Chip
-                  shape="square"
-                  leading={
-                    <img
-                      src="/assets/icons/project/proposal.svg"
-                      alt=""
-                      width="20"
-                      height="20"
-                      aria-hidden
-                    />
-                  }
-                  label={formatCount(
-                    t,
-                    network?.opportunities?.length || 0,
-                    "classNetworks.opportunityCountSingle",
-                    "classNetworks.opportunityCountPlural",
-                    "{{count}} opportunity",
-                    "{{count}} opportunities"
-                  )}
-                />
-                <Chip
-                  shape="square"
-                  leading={
-                    <img
-                      src="/assets/icons/profile/documents.svg"
-                      alt=""
-                      width="20"
-                      height="20"
-                      aria-hidden
-                    />
-                  }
-                  label={formatCount(
-                    t,
-                    connectRounds.length,
-                    "classNetworks.roundCountSingle",
-                    "classNetworks.roundCountPlural",
-                    "{{count}} matching round",
-                    "{{count}} matching rounds"
-                  )}
-                  ariaLabel={t(
-                    "classNetworks.summaryChipAria",
-                    {
-                      label: t("classNetworks.roundsTitle", {}, {
-                        default: "Matching rounds",
-                      }),
-                    },
-                    { default: "Jump to {{label}}" }
-                  )}
-                  onClick={() => scrollToSection("network-rounds")}
-                />
-                <Chip
-                  shape="square"
-                  leading={
-                    <img
-                      src="/assets/icons/profile/consent.svg"
-                      alt=""
-                      width="20"
-                      height="20"
-                      aria-hidden
-                    />
-                  }
-                  label={formatCount(
-                    t,
-                    networkAdmins.length,
-                    "classNetworks.adminCountSingle",
-                    "classNetworks.adminCountPlural",
-                    "{{count}} admin",
-                    "{{count}} admins"
-                  )}
-                  ariaLabel={t(
-                    "classNetworks.summaryChipAria",
-                    {
-                      label: t("classNetworks.adminsTitle", {}, {
-                        default: "Network admins",
-                      }),
-                    },
-                    { default: "Jump to {{label}}" }
-                  )}
-                  onClick={() => scrollToSection("network-admins")}
-                />
-              </SummaryChips>
-            </DetailSection>
-
-            <DetailSection id="network-organizations">
-              <SectionHeader>
-                <h2>
-                  {t("classNetworks.organizationsTitle", {}, {
+            <ManageTabs>
+              <Navbar>
+                <NavbarItem
+                  selected={tab === TABS.overview}
+                  onClick={() => selectTab(TABS.overview)}
+                >
+                  {t("classNetworks.tabs.overview", {}, { default: "Overview" })}
+                </NavbarItem>
+                <NavbarItem
+                  selected={tab === TABS.organizations}
+                  onClick={() => selectTab(TABS.organizations)}
+                >
+                  {t("classNetworks.tabs.organizations", {}, {
                     default: "Organizations",
                   })}
-                </h2>
-                <p>
-                  {t("classNetworks.organizationsDescription", {}, {
-                    default:
-                      "Organizations explicitly connected to this network.",
-                  })}
-                </p>
-              </SectionHeader>
-              {organizationRows.length === 0 ? (
-                <EmptyNote>
-                  {t("classNetworks.organizationsEmpty", {}, {
-                    default: "No organizations are connected yet.",
-                  })}
-                </EmptyNote>
-              ) : null}
-              <GridTable className="ag-theme-quartz">
-                <AgGridReact
-                  rowData={organizationRows}
-                  columnDefs={organizationColumnDefs}
-                  defaultColDef={defaultColDef}
-                  getRowId={(params) => params.data?.id}
-                  pagination
-                  paginationPageSize={20}
-                  overlayNoRowsTemplate={t(
-                    "classNetworks.organizationsEmpty",
-                    {},
-                    { default: "No organizations are connected yet." }
-                  )}
-                />
-              </GridTable>
-              {memberFeedback?.section === "organizations" ? (
-                <AdminFeedback $error={memberFeedback.kind === "error"}>
-                  {memberFeedback.text}
-                </AdminFeedback>
-              ) : null}
-            </DetailSection>
+                </NavbarItem>
+                <NavbarItem
+                  selected={tab === TABS.profiles}
+                  onClick={() => selectTab(TABS.profiles)}
+                >
+                  {t("classNetworks.tabs.profiles", {}, { default: "Profiles" })}
+                </NavbarItem>
+                <NavbarItem
+                  selected={tab === TABS.matching}
+                  onClick={() => selectTab(TABS.matching)}
+                >
+                  {t("classNetworks.tabs.matching", {}, { default: "Matching" })}
+                </NavbarItem>
+                <NavbarItem
+                  selected={tab === TABS.admins}
+                  onClick={() => selectTab(TABS.admins)}
+                >
+                  {t("classNetworks.tabs.admins", {}, { default: "Admins" })}
+                </NavbarItem>
+              </Navbar>
+            </ManageTabs>
 
-            <DetailSection id="network-profiles">
-              <SectionHeader>
-                <h2>
-                  {t("classNetworks.profilesTitle", {}, {
-                    default: "Member profiles",
-                  })}
-                </h2>
-                <p>
-                  {t("classNetworks.profilesDescription", {}, {
-                    default:
-                      "Profiles explicitly connected to this network.",
-                  })}
-                </p>
-              </SectionHeader>
-
-              {canManage ? (
-                <AdminForm>
-                  <label htmlFor="connectClassNetworkInviteEmail">
-                    {t("classNetworks.invites.inviteEmailLabel", {}, {
-                      default: "Invite member by email",
-                    })}
-                  </label>
-                  <AdminFormRow>
-                    <input
-                      id="connectClassNetworkInviteEmail"
-                      type="email"
-                      value={inviteEmail}
-                      placeholder={t(
-                        "classNetworks.invites.inviteEmailPlaceholder",
-                        {},
-                        { default: "mentor@example.com" }
+            {tab === TABS.overview ? (
+              <TabBody>
+                <DetailSection>
+                  <SectionHeader>
+                    <h2>
+                      {t("classNetworks.summaryTitle", {}, {
+                        default: "Summary",
+                      })}
+                    </h2>
+                    <p>
+                      {t("classNetworks.summaryDescription", {}, {
+                        default:
+                          "Key counts for this network. Click organizations, profiles, matching rounds, or admins to open that tab.",
+                      })}
+                    </p>
+                  </SectionHeader>
+                  <SummaryChips>
+                    <Chip
+                      shape="square"
+                      leading={
+                        <img
+                          src="/assets/icons/education.svg"
+                          alt=""
+                          width="20"
+                          height="20"
+                          aria-hidden
+                        />
+                      }
+                      label={formatCount(
+                        t,
+                        network?.classes?.length || 0,
+                        "classNetworks.classCountSingle",
+                        "classNetworks.classCountPlural",
+                        "{{count}} linked class",
+                        "{{count}} linked classes"
                       )}
-                      onChange={(event) => setInviteEmail(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          event.preventDefault();
-                          handleInviteMemberProfile();
-                        }
-                      }}
                     />
-                    <DesignSystemButton
-                      variant="filled"
-                      type="button"
-                      disabled={memberMutationLoading}
-                      onClick={handleInviteMemberProfile}
-                    >
-                      {invitingMemberProfile
-                        ? t("classNetworks.invites.inviting", {}, {
-                            default: "Inviting...",
-                          })
-                        : t("classNetworks.invites.invite", {}, {
-                            default: "Invite member",
-                          })}
-                    </DesignSystemButton>
-                  </AdminFormRow>
-                  {inviteFeedback ? (
-                    <>
-                      <AdminFeedback $error={inviteFeedback.kind === "error"}>
-                        {inviteFeedback.text}
-                      </AdminFeedback>
-                      {inviteFeedback.manualLink ? (
-                        <InviteLinkRow>
-                          <CopyButton
-                            value={inviteFeedback.manualLink}
-                            style={{ fontWeight: 500 }}
-                            ariaLabel={t(
-                              "classNetworks.invites.copyInviteLinkAria",
-                              {},
-                              { default: "Copy invite signup or login link" }
-                            )}
-                          >
-                            {t("classNetworks.invites.copyInviteLink", {}, {
-                              default: "Copy invite link",
-                            })}
-                          </CopyButton>
-                        </InviteLinkRow>
-                      ) : null}
-                    </>
-                  ) : null}
+                    <Chip
+                      shape="square"
+                      leading={
+                        <img
+                          src="/assets/connect/building.svg"
+                          alt=""
+                          width="20"
+                          height="20"
+                          aria-hidden
+                        />
+                      }
+                      label={formatCount(
+                        t,
+                        memberOrganizations.length,
+                        "classNetworks.organizationCountSingle",
+                        "classNetworks.organizationCountPlural",
+                        "{{count}} organization",
+                        "{{count}} organizations"
+                      )}
+                      ariaLabel={t(
+                        "classNetworks.summaryChipAria",
+                        {
+                          label: t("classNetworks.organizationsTitle", {}, {
+                            default: "Organizations",
+                          }),
+                        },
+                        { default: "Open {{label}} tab" }
+                      )}
+                      onClick={() => selectTab(TABS.organizations)}
+                    />
+                    <Chip
+                      shape="square"
+                      leading={
+                        <img
+                          src="/assets/connect/user.svg"
+                          alt=""
+                          width="20"
+                          height="20"
+                          aria-hidden
+                        />
+                      }
+                      label={formatCount(
+                        t,
+                        memberProfiles.length,
+                        "classNetworks.profileCountSingle",
+                        "classNetworks.profileCountPlural",
+                        "{{count}} member profile",
+                        "{{count}} member profiles"
+                      )}
+                      ariaLabel={t(
+                        "classNetworks.summaryChipAria",
+                        {
+                          label: t("classNetworks.profilesTitle", {}, {
+                            default: "Member profiles",
+                          }),
+                        },
+                        { default: "Open {{label}} tab" }
+                      )}
+                      onClick={() => selectTab(TABS.profiles)}
+                    />
+                    <Chip
+                      shape="square"
+                      leading={
+                        <img
+                          src="/assets/connect/group.svg"
+                          alt=""
+                          width="20"
+                          height="20"
+                          aria-hidden
+                        />
+                      }
+                      label={formatCount(
+                        t,
+                        countUniqueStudents(network),
+                        "classNetworks.studentCountSingle",
+                        "classNetworks.studentCountPlural",
+                        "{{count}} student in linked classes",
+                        "{{count}} students in linked classes"
+                      )}
+                    />
+                    <Chip
+                      shape="square"
+                      leading={
+                        <img
+                          src="/assets/icons/project/proposal.svg"
+                          alt=""
+                          width="20"
+                          height="20"
+                          aria-hidden
+                        />
+                      }
+                      label={formatCount(
+                        t,
+                        network?.opportunities?.length || 0,
+                        "classNetworks.opportunityCountSingle",
+                        "classNetworks.opportunityCountPlural",
+                        "{{count}} opportunity",
+                        "{{count}} opportunities"
+                      )}
+                    />
+                    <Chip
+                      shape="square"
+                      leading={
+                        <img
+                          src="/assets/icons/profile/documents.svg"
+                          alt=""
+                          width="20"
+                          height="20"
+                          aria-hidden
+                        />
+                      }
+                      label={formatCount(
+                        t,
+                        connectRounds.length,
+                        "classNetworks.roundCountSingle",
+                        "classNetworks.roundCountPlural",
+                        "{{count}} matching round",
+                        "{{count}} matching rounds"
+                      )}
+                      ariaLabel={t(
+                        "classNetworks.summaryChipAria",
+                        {
+                          label: t("classNetworks.roundsTitle", {}, {
+                            default: "Matching rounds",
+                          }),
+                        },
+                        { default: "Open {{label}} tab" }
+                      )}
+                      onClick={() => selectTab(TABS.matching)}
+                    />
+                    <Chip
+                      shape="square"
+                      leading={
+                        <img
+                          src="/assets/icons/profile/consent.svg"
+                          alt=""
+                          width="20"
+                          height="20"
+                          aria-hidden
+                        />
+                      }
+                      label={formatCount(
+                        t,
+                        networkAdmins.length,
+                        "classNetworks.adminCountSingle",
+                        "classNetworks.adminCountPlural",
+                        "{{count}} admin",
+                        "{{count}} admins"
+                      )}
+                      ariaLabel={t(
+                        "classNetworks.summaryChipAria",
+                        {
+                          label: t("classNetworks.adminsTitle", {}, {
+                            default: "Network admins",
+                          }),
+                        },
+                        { default: "Open {{label}} tab" }
+                      )}
+                      onClick={() => selectTab(TABS.admins)}
+                    />
+                  </SummaryChips>
+                </DetailSection>
 
-                  {isAdmin ? (
-                    <>
-                      <label htmlFor="connectClassNetworkMemberEmail">
-                        {t("classNetworks.memberProfileEmailLabel", {}, {
-                          default: "Add member by email",
+                {canManage ? (
+                  <DetailSection>
+                    <SectionHeader>
+                      <h2>
+                        {t("classNetworks.detailsSectionTitle", {}, {
+                          default: "Network details",
+                        })}
+                      </h2>
+                      <p>
+                        {t("classNetworks.detailsSectionDescription", {}, {
+                          default:
+                            "Update membership mode, title, and description for this network.",
+                        })}
+                      </p>
+                    </SectionHeader>
+                    <DetailsForm>
+                      <label htmlFor="connectClassNetworkMembershipMode">
+                        {t("classNetworks.form.membershipModeLabel", {}, {
+                          default: "Membership",
+                        })}
+                        <select
+                          id="connectClassNetworkMembershipMode"
+                          value={membershipMode}
+                          onChange={(event) =>
+                            setMembershipMode(
+                              event.target.value === "open"
+                                ? "open"
+                                : "approval"
+                            )
+                          }
+                        >
+                          <option value="approval">
+                            {t(
+                              "classNetworks.form.membershipModeApprovalLabel",
+                              {},
+                              { default: "Approval required" }
+                            )}
+                          </option>
+                          <option value="open">
+                            {t(
+                              "classNetworks.form.membershipModeOpenLabel",
+                              {},
+                              { default: "Open" }
+                            )}
+                          </option>
+                        </select>
+                        <p className="fieldHint">
+                          {membershipMode === "open"
+                            ? t(
+                                "classNetworks.form.membershipModeOpenDescription",
+                                {},
+                                {
+                                  default:
+                                    "Eligible profiles can join this public network immediately.",
+                                }
+                              )
+                            : t(
+                                "classNetworks.form.membershipModeApprovalDescription",
+                                {},
+                                {
+                                  default:
+                                    "Eligible profiles must be approved by a network admin before joining.",
+                                }
+                              )}
+                        </p>
+                      </label>
+                      <label htmlFor="connectClassNetworkTitle">
+                        {t("classNetworks.titleLabel", {}, {
+                          default: "Title",
+                        })}
+                        <input
+                          id="connectClassNetworkTitle"
+                          type="text"
+                          value={networkTitle}
+                          onChange={(event) =>
+                            setNetworkTitle(event.target.value)
+                          }
+                          placeholder={t(
+                            "classNetworks.titlePlaceholder",
+                            {},
+                            { default: "Network title" }
+                          )}
+                        />
+                      </label>
+                      <label htmlFor="connectClassNetworkDescription">
+                        {t("classNetworks.descriptionLabel", {}, {
+                          default: "Description",
+                        })}
+                        <textarea
+                          id="connectClassNetworkDescription"
+                          value={networkDescription}
+                          onChange={(event) =>
+                            setNetworkDescription(event.target.value)
+                          }
+                          placeholder={t(
+                            "classNetworks.descriptionPlaceholder",
+                            {},
+                            {
+                              default:
+                                "Describe what this network is for and who it connects.",
+                            }
+                          )}
+                        />
+                      </label>
+                      <DetailsFormActions>
+                        <DesignSystemButton
+                          variant="filled"
+                          type="button"
+                          disabled={savingDetails}
+                          onClick={handleSaveNetworkDetails}
+                        >
+                          {savingDetails
+                            ? t("classNetworks.savingDetails", {}, {
+                                default: "Saving...",
+                              })
+                            : t("classNetworks.saveDetails", {}, {
+                                default: "Save details",
+                              })}
+                        </DesignSystemButton>
+                        {detailsFeedback ? (
+                          <AdminFeedback
+                            $error={detailsFeedback.kind === "error"}
+                          >
+                            {detailsFeedback.text}
+                          </AdminFeedback>
+                        ) : null}
+                      </DetailsFormActions>
+                    </DetailsForm>
+                  </DetailSection>
+                ) : null}
+              </TabBody>
+            ) : null}
+
+            {tab === TABS.organizations ? (
+              <TabBody>
+                <DetailSection>
+                  <SectionHeader>
+                    <h2>
+                      {t("classNetworks.organizationsTitle", {}, {
+                        default: "Organizations",
+                      })}
+                    </h2>
+                    <p>
+                      {t("classNetworks.organizationsDescription", {}, {
+                        default:
+                          "Organizations explicitly connected to this network.",
+                      })}
+                    </p>
+                  </SectionHeader>
+                  {organizationRows.length === 0 ? (
+                    <EmptyNote>
+                      {t("classNetworks.organizationsEmpty", {}, {
+                        default: "No organizations are connected yet.",
+                      })}
+                    </EmptyNote>
+                  ) : null}
+                  <GridTable className="ag-theme-quartz">
+                    <AgGridReact
+                      rowData={organizationRows}
+                      columnDefs={organizationColumnDefs}
+                      defaultColDef={defaultColDef}
+                      getRowId={(params) => params.data?.id}
+                      pagination
+                      paginationPageSize={20}
+                      overlayNoRowsTemplate={t(
+                        "classNetworks.organizationsEmpty",
+                        {},
+                        { default: "No organizations are connected yet." }
+                      )}
+                    />
+                  </GridTable>
+                  {memberFeedback?.section === "organizations" ? (
+                    <AdminFeedback $error={memberFeedback.kind === "error"}>
+                      {memberFeedback.text}
+                    </AdminFeedback>
+                  ) : null}
+                </DetailSection>
+              </TabBody>
+            ) : null}
+
+            {tab === TABS.profiles ? (
+              <TabBody>
+                {canManage ? (
+                  pendingInviteRows.length > 0 ? (
+                    <DetailSection id="network-pending-invites">
+                      <SectionHeader>
+                        <h2>
+                          {t("classNetworks.invites.pendingReviewTitle", {}, {
+                            default: "Pending membership",
+                          })}
+                        </h2>
+                        <p>
+                          {t(
+                            "classNetworks.invites.pendingReviewDescription",
+                            {},
+                            {
+                              default:
+                                "Review join requests and cancel outbound invitations that are still pending.",
+                            }
+                          )}
+                        </p>
+                      </SectionHeader>
+                      <GridTable className="ag-theme-quartz">
+                        <AgGridReact
+                          rowData={pendingInviteRows}
+                          columnDefs={pendingInviteColumnDefs}
+                          defaultColDef={defaultColDef}
+                          getRowId={(params) => params.data?.id}
+                          pagination
+                          paginationPageSize={20}
+                          overlayNoRowsTemplate={t(
+                            "classNetworks.invites.pendingEmpty",
+                            {},
+                            {
+                              default: "No pending requests or invitations.",
+                            }
+                          )}
+                        />
+                      </GridTable>
+                    </DetailSection>
+                  ) : (
+                    <ThinEmptySection id="network-pending-invites">
+                      <h2>
+                        {t("classNetworks.invites.pendingReviewTitle", {}, {
+                          default: "Pending membership",
+                        })}
+                      </h2>
+                      <p>
+                        {t("classNetworks.invites.pendingEmpty", {}, {
+                          default: "No pending requests or invitations.",
+                        })}
+                      </p>
+                    </ThinEmptySection>
+                  )
+                ) : null}
+
+                <DetailSection>
+                  <SectionHeader>
+                    <h2>
+                      {t("classNetworks.profilesTitle", {}, {
+                        default: "Member profiles",
+                      })}
+                    </h2>
+                    <p>
+                      {t("classNetworks.profilesDescription", {}, {
+                        default:
+                          "Profiles explicitly connected to this network.",
+                      })}
+                    </p>
+                  </SectionHeader>
+
+                  {canManage ? (
+                    <AdminForm>
+                      <label htmlFor="connectClassNetworkInviteEmail">
+                        {t("classNetworks.invites.inviteEmailLabel", {}, {
+                          default: "Invite member by email",
                         })}
                       </label>
                       <AdminFormRow>
                         <input
-                          id="connectClassNetworkMemberEmail"
+                          id="connectClassNetworkInviteEmail"
                           type="email"
-                          value={memberEmail}
+                          value={inviteEmail}
                           placeholder={t(
-                            "classNetworks.memberProfileEmailPlaceholder",
+                            "classNetworks.invites.inviteEmailPlaceholder",
                             {},
                             { default: "mentor@example.com" }
                           )}
                           onChange={(event) =>
-                            setMemberEmail(event.target.value)
+                            setInviteEmail(event.target.value)
                           }
                           onKeyDown={(event) => {
                             if (event.key === "Enter") {
                               event.preventDefault();
-                              handleAddMemberProfile();
+                              handleInviteMemberProfile();
                             }
                           }}
                         />
                         <DesignSystemButton
-                          variant="outline"
+                          variant="filled"
                           type="button"
                           disabled={memberMutationLoading}
-                          onClick={handleAddMemberProfile}
+                          onClick={handleInviteMemberProfile}
                         >
-                          {addingMemberProfile
-                            ? t("classNetworks.memberProfileAdding", {}, {
-                                default: "Adding...",
+                          {invitingMemberProfile
+                            ? t("classNetworks.invites.inviting", {}, {
+                                default: "Inviting...",
                               })
-                            : t("classNetworks.memberProfileAdd", {}, {
-                                default: "Add member",
+                            : t("classNetworks.invites.invite", {}, {
+                                default: "Invite member",
                               })}
                         </DesignSystemButton>
                       </AdminFormRow>
-                      {memberFeedback?.section === "profiles" ? (
+                      {inviteFeedback ? (
                         <>
                           <AdminFeedback
-                            $error={memberFeedback.kind === "error"}
+                            $error={inviteFeedback.kind === "error"}
                           >
-                            {memberFeedback.text}
+                            {inviteFeedback.text}
                           </AdminFeedback>
-                          {memberFeedback.showInviteLink &&
-                          sponsorSignupAndInviteLink ? (
+                          {inviteFeedback.manualLink ? (
                             <InviteLinkRow>
                               <CopyButton
-                                value={sponsorSignupAndInviteLink}
+                                value={inviteFeedback.manualLink}
                                 style={{ fontWeight: 500 }}
                                 ariaLabel={t(
-                                  "classNetworks.signupAndInviteLink",
+                                  "classNetworks.invites.copyInviteLinkAria",
                                   {},
-                                  { default: "Signup + invite to network" }
+                                  {
+                                    default:
+                                      "Copy invite signup or login link",
+                                  }
                                 )}
                               >
-                                {t("classNetworks.signupAndInviteLink", {}, {
-                                  default: "Signup + invite to network",
-                                })}
+                                {t(
+                                  "classNetworks.invites.copyInviteLink",
+                                  {},
+                                  { default: "Copy invite link" }
+                                )}
                               </CopyButton>
                             </InviteLinkRow>
                           ) : null}
                         </>
                       ) : null}
-                    </>
+
+                      {isAdmin ? (
+                        <>
+                          <label htmlFor="connectClassNetworkMemberEmail">
+                            {t("classNetworks.memberProfileEmailLabel", {}, {
+                              default: "Add member by email",
+                            })}
+                          </label>
+                          <AdminFormRow>
+                            <input
+                              id="connectClassNetworkMemberEmail"
+                              type="email"
+                              value={memberEmail}
+                              placeholder={t(
+                                "classNetworks.memberProfileEmailPlaceholder",
+                                {},
+                                { default: "mentor@example.com" }
+                              )}
+                              onChange={(event) =>
+                                setMemberEmail(event.target.value)
+                              }
+                              onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                  event.preventDefault();
+                                  handleAddMemberProfile();
+                                }
+                              }}
+                            />
+                            <DesignSystemButton
+                              variant="outline"
+                              type="button"
+                              disabled={memberMutationLoading}
+                              onClick={handleAddMemberProfile}
+                            >
+                              {addingMemberProfile
+                                ? t("classNetworks.memberProfileAdding", {}, {
+                                    default: "Adding...",
+                                  })
+                                : t("classNetworks.memberProfileAdd", {}, {
+                                    default: "Add member",
+                                  })}
+                            </DesignSystemButton>
+                          </AdminFormRow>
+                          {memberFeedback?.section === "profiles" ? (
+                            <>
+                              <AdminFeedback
+                                $error={memberFeedback.kind === "error"}
+                              >
+                                {memberFeedback.text}
+                              </AdminFeedback>
+                              {memberFeedback.showInviteLink &&
+                              sponsorSignupAndInviteLink ? (
+                                <InviteLinkRow>
+                                  <CopyButton
+                                    value={sponsorSignupAndInviteLink}
+                                    style={{ fontWeight: 500 }}
+                                    ariaLabel={t(
+                                      "classNetworks.signupAndInviteLink",
+                                      {},
+                                      {
+                                        default: "Signup + invite to network",
+                                      }
+                                    )}
+                                  >
+                                    {t(
+                                      "classNetworks.signupAndInviteLink",
+                                      {},
+                                      {
+                                        default: "Signup + invite to network",
+                                      }
+                                    )}
+                                  </CopyButton>
+                                </InviteLinkRow>
+                              ) : null}
+                            </>
+                          ) : null}
+                        </>
+                      ) : null}
+                    </AdminForm>
                   ) : null}
-                </AdminForm>
-              ) : null}
 
-              {profileRows.length === 0 ? (
-                <EmptyNote>
-                  {t("classNetworks.profilesEmpty", {}, {
-                    default: "No member profiles are connected yet.",
-                  })}
-                </EmptyNote>
-              ) : null}
-              <GridTable className="ag-theme-quartz">
-                <AgGridReact
-                  rowData={profileRows}
-                  columnDefs={profileColumnDefs}
-                  defaultColDef={defaultColDef}
-                  getRowId={(params) => params.data?.id}
-                  pagination
-                  paginationPageSize={20}
-                  overlayNoRowsTemplate={t(
-                    "classNetworks.profilesEmpty",
-                    {},
-                    { default: "No member profiles are connected yet." }
-                  )}
-                />
-              </GridTable>
-            </DetailSection>
-
-            {canManage ? (
-              <DetailSection id="network-pending-invites">
-                <SectionHeader>
-                  <h2>
-                    {t("classNetworks.invites.pendingReviewTitle", {}, {
-                      default: "Pending membership",
-                    })}
-                  </h2>
-                  <p>
-                    {t("classNetworks.invites.pendingReviewDescription", {}, {
-                      default:
-                        "Review join requests and cancel outbound invitations that are still pending.",
-                    })}
-                  </p>
-                </SectionHeader>
-                {pendingInviteRows.length === 0 ? (
-                  <EmptyNote>
-                    {t("classNetworks.invites.pendingEmpty", {}, {
-                      default: "No pending requests or invitations.",
-                    })}
-                  </EmptyNote>
-                ) : null}
-                <GridTable className="ag-theme-quartz">
-                  <AgGridReact
-                    rowData={pendingInviteRows}
-                    columnDefs={pendingInviteColumnDefs}
-                    defaultColDef={defaultColDef}
-                    getRowId={(params) => params.data?.id}
-                    pagination
-                    paginationPageSize={20}
-                    overlayNoRowsTemplate={t(
-                      "classNetworks.invites.pendingEmpty",
-                      {},
-                      { default: "No pending requests or invitations." }
-                    )}
-                  />
-                </GridTable>
-              </DetailSection>
+                  {profileRows.length === 0 ? (
+                    <EmptyNote>
+                      {t("classNetworks.profilesEmpty", {}, {
+                        default: "No member profiles are connected yet.",
+                      })}
+                    </EmptyNote>
+                  ) : null}
+                  <GridTable className="ag-theme-quartz">
+                    <AgGridReact
+                      rowData={profileRows}
+                      columnDefs={profileColumnDefs}
+                      defaultColDef={defaultColDef}
+                      getRowId={(params) => params.data?.id}
+                      pagination
+                      paginationPageSize={20}
+                      overlayNoRowsTemplate={t(
+                        "classNetworks.profilesEmpty",
+                        {},
+                        { default: "No member profiles are connected yet." }
+                      )}
+                    />
+                  </GridTable>
+                </DetailSection>
+              </TabBody>
             ) : null}
 
-            <DetailSection id="network-rounds">
-              <SectionHeader>
-                <h2>
-                  {t("classNetworks.roundsTitle", {}, {
-                    default: "Matching rounds",
-                  })}
-                </h2>
-                <p>
-                  {t("classNetworks.roundsDescription", {}, {
-                    default:
-                      "Matching rounds for this network. Match counts only — no student details.",
-                  })}
-                </p>
-              </SectionHeader>
-              {roundRows.length === 0 ? (
-                <EmptyNote>
-                  {t("classNetworks.roundsEmpty", {}, {
-                    default: "No matching rounds for this network yet.",
-                  })}
-                </EmptyNote>
-              ) : null}
-              <GridTable className="ag-theme-quartz">
-                <AgGridReact
-                  rowData={roundRows}
-                  columnDefs={roundColumnDefs}
-                  defaultColDef={defaultColDef}
-                  getRowId={(params) => params.data?.id}
-                  pagination
-                  paginationPageSize={20}
-                  overlayNoRowsTemplate={t(
-                    "classNetworks.roundsEmpty",
-                    {},
-                    { default: "No matching rounds for this network yet." }
-                  )}
-                />
-              </GridTable>
-            </DetailSection>
-
-            <DetailSection id="network-admins">
-              <SectionHeader>
-                <h2>
-                  {t("classNetworks.adminsTitle", {}, {
-                    default: "Network admins",
-                  })}
-                </h2>
-                <p>
-                  {t("classNetworks.adminsDescription", {}, {
-                    default:
-                      "Admins can manage this class network and related Connect workflows.",
-                  })}
-                </p>
-              </SectionHeader>
-
-              {canManage ? (
-                <AdminForm>
-                  <label htmlFor="connectClassNetworkAdminEmail">
-                    {t("classNetworks.adminEmailLabel", {}, {
-                      default: "Add admin by email",
-                    })}
-                  </label>
-                  <AdminFormRow>
-                    <input
-                      id="connectClassNetworkAdminEmail"
-                      type="email"
-                      value={adminEmail}
-                      placeholder={t(
-                        "classNetworks.adminEmailPlaceholder",
-                        {},
-                        { default: "teacher@example.com" }
-                      )}
-                      onChange={(event) => setAdminEmail(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          event.preventDefault();
-                          handleAddNetworkAdmin();
-                        }
-                      }}
-                    />
-                    <DesignSystemButton
-                      variant="filled"
-                      type="button"
-                      disabled={adminMutationLoading}
-                      onClick={handleAddNetworkAdmin}
-                    >
-                      {addingNetworkAdmin
-                        ? t("classNetworks.adminAdding", {}, {
-                            default: "Adding...",
-                          })
-                        : t("classNetworks.adminAdd", {}, {
-                            default: "Add admin",
-                          })}
-                    </DesignSystemButton>
-                  </AdminFormRow>
-                  {adminFeedback ? (
-                    <AdminFeedback $error={adminFeedback.kind === "error"}>
-                      {adminFeedback.text}
-                    </AdminFeedback>
+            {tab === TABS.matching ? (
+              <TabBody>
+                <DetailSection>
+                  <SectionHeader>
+                    <h2>
+                      {t("classNetworks.roundsTitle", {}, {
+                        default: "Matching rounds",
+                      })}
+                    </h2>
+                    <p>
+                      {t("classNetworks.roundsDescription", {}, {
+                        default:
+                          "Matching rounds for this network. Match counts only — no student details.",
+                      })}
+                    </p>
+                  </SectionHeader>
+                  {roundRows.length === 0 ? (
+                    <EmptyNote>
+                      {t("classNetworks.roundsEmpty", {}, {
+                        default: "No matching rounds for this network yet.",
+                      })}
+                    </EmptyNote>
                   ) : null}
-                </AdminForm>
-              ) : null}
+                  <GridTable className="ag-theme-quartz">
+                    <AgGridReact
+                      rowData={roundRows}
+                      columnDefs={roundColumnDefs}
+                      defaultColDef={defaultColDef}
+                      getRowId={(params) => params.data?.id}
+                      pagination
+                      paginationPageSize={20}
+                      overlayNoRowsTemplate={t(
+                        "classNetworks.roundsEmpty",
+                        {},
+                        {
+                          default: "No matching rounds for this network yet.",
+                        }
+                      )}
+                    />
+                  </GridTable>
+                </DetailSection>
+              </TabBody>
+            ) : null}
 
-              {adminRows.length === 0 ? (
-                <EmptyNote>
-                  {t("classNetworks.adminsEmpty", {}, {
-                    default: "No admins have been assigned yet.",
-                  })}
-                </EmptyNote>
-              ) : null}
-              <GridTable className="ag-theme-quartz">
-                <AgGridReact
-                  rowData={adminRows}
-                  columnDefs={adminColumnDefs}
-                  defaultColDef={defaultColDef}
-                  getRowId={(params) => params.data?.id}
-                  pagination
-                  paginationPageSize={20}
-                  overlayNoRowsTemplate={t(
-                    "classNetworks.adminsEmpty",
-                    {},
-                    { default: "No admins have been assigned yet." }
-                  )}
-                />
-              </GridTable>
-            </DetailSection>
+            {tab === TABS.admins ? (
+              <TabBody>
+                <DetailSection>
+                  <SectionHeader>
+                    <h2>
+                      {t("classNetworks.adminsTitle", {}, {
+                        default: "Network admins",
+                      })}
+                    </h2>
+                    <p>
+                      {t("classNetworks.adminsDescription", {}, {
+                        default:
+                          "Admins can manage this class network and related Connect workflows.",
+                      })}
+                    </p>
+                  </SectionHeader>
+
+                  {canManage ? (
+                    <AdminForm>
+                      <label htmlFor="connectClassNetworkAdminEmail">
+                        {t("classNetworks.adminEmailLabel", {}, {
+                          default: "Add admin by email",
+                        })}
+                      </label>
+                      <AdminFormRow>
+                        <input
+                          id="connectClassNetworkAdminEmail"
+                          type="email"
+                          value={adminEmail}
+                          placeholder={t(
+                            "classNetworks.adminEmailPlaceholder",
+                            {},
+                            { default: "teacher@example.com" }
+                          )}
+                          onChange={(event) =>
+                            setAdminEmail(event.target.value)
+                          }
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              handleAddNetworkAdmin();
+                            }
+                          }}
+                        />
+                        <DesignSystemButton
+                          variant="filled"
+                          type="button"
+                          disabled={adminMutationLoading}
+                          onClick={handleAddNetworkAdmin}
+                        >
+                          {addingNetworkAdmin
+                            ? t("classNetworks.adminAdding", {}, {
+                                default: "Adding...",
+                              })
+                            : t("classNetworks.adminAdd", {}, {
+                                default: "Add admin",
+                              })}
+                        </DesignSystemButton>
+                      </AdminFormRow>
+                      {adminFeedback ? (
+                        <AdminFeedback $error={adminFeedback.kind === "error"}>
+                          {adminFeedback.text}
+                        </AdminFeedback>
+                      ) : null}
+                    </AdminForm>
+                  ) : null}
+
+                  {adminRows.length === 0 ? (
+                    <EmptyNote>
+                      {t("classNetworks.adminsEmpty", {}, {
+                        default: "No admins have been assigned yet.",
+                      })}
+                    </EmptyNote>
+                  ) : null}
+                  <GridTable className="ag-theme-quartz">
+                    <AgGridReact
+                      rowData={adminRows}
+                      columnDefs={adminColumnDefs}
+                      defaultColDef={defaultColDef}
+                      getRowId={(params) => params.data?.id}
+                      pagination
+                      paginationPageSize={20}
+                      overlayNoRowsTemplate={t(
+                        "classNetworks.adminsEmpty",
+                        {},
+                        { default: "No admins have been assigned yet." }
+                      )}
+                    />
+                  </GridTable>
+                </DetailSection>
+              </TabBody>
+            ) : null}
           </>
         )}
       </Shell>

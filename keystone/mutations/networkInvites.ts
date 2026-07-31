@@ -204,7 +204,7 @@ async function notifyNetworkAdminsOfMembershipRequest(
     const networkRef = network.publicId || network.id;
     const link = `/dashboard/connect/networks?mode=manage&networkId=${encodeURIComponent(
       networkRef
-    )}#network-pending-invites`;
+    )}&tab=profiles#network-pending-invites`;
     const requesterName = profileDisplayName(requester);
     const networkTitle = network.title || "a class network";
     const content = {
