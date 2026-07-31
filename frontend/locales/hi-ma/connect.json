@@ -419,6 +419,17 @@
 	},
 	"introductionVideo": "परिचय वीडियो",
 	"locationFilter": "",
+	"manageOrganization": {
+		"browseCta": "",
+		"emptyDescription": "",
+		"emptyTitle": "",
+		"setupCta": "",
+		"tabs": {
+			"people": "",
+			"profile": ""
+		},
+		"viewPublic": ""
+	},
 	"matchesRound": {
 		"backLink": ""
 	},
@@ -541,6 +552,7 @@
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "",
 		"manageNetwork": "",
+		"manageOrganization": "",
 		"matches": "",
 		"matchingRounds": "",
 		"myMatchedStudents": "",
@@ -1193,6 +1205,7 @@
 			"classNetworkAdmin": "",
 			"mentor": "",
 			"scientist": "",
+			"sponsor": "",
 			"student": "",
 			"teacher": ""
 		},

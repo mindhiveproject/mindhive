@@ -10,6 +10,7 @@ import MatchesMain from "./Matches/Main";
 import MentorMatchesMain from "./MentorMatches/Main";
 import ExploreMain from "./Explore/Main";
 import OrganizationsMain from "./Organizations/Main";
+import ManageMain from "./Organizations/ManageMain";
 import ReviewQueueMain from "./ReviewQueue/Main";
 import ReviewOpportunityMain from "./ReviewOpportunity/Main";
 import ClassNetworksMain from "./ClassNetworks/Main";
@@ -47,6 +48,14 @@ export default function ConnectMain({ query, user }) {
     content = <ExploreMain query={query} user={user} />;
   } else if (selector === "organizations") {
     content = <OrganizationsMain query={query} user={user} />;
+  } else if (selector === "manage-organization") {
+    content = (
+      <RoleGuard
+        allow={["mentor", "teacher", "scientist", "sponsor", "admin"]}
+      >
+        <ManageMain query={query} user={user} />
+      </RoleGuard>
+    );
   } else if (selector === "networks") {
     content = <ClassNetworksMain query={query} user={user} />;
   } else if (selector === "review-queue") {

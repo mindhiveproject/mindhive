@@ -419,6 +419,17 @@
 	},
 	"introductionVideo": "Introductievideo",
 	"locationFilter": "Plaats",
+	"manageOrganization": {
+		"browseCta": "",
+		"emptyDescription": "",
+		"emptyTitle": "",
+		"setupCta": "",
+		"tabs": {
+			"people": "",
+			"profile": ""
+		},
+		"viewPublic": ""
+	},
 	"matchesRound": {
 		"backLink": ""
 	},
@@ -541,6 +552,7 @@
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "Verbind secties",
 		"manageNetwork": "",
+		"manageOrganization": "",
 		"matches": "Wedstrijden",
 		"matchingRounds": "Overeenkomende rondes",
 		"myMatchedStudents": "Mijn gekoppelde studenten",
@@ -1193,6 +1205,7 @@
 			"classNetworkAdmin": "",
 			"mentor": "Mentoren",
 			"scientist": "",
+			"sponsor": "",
 			"student": "studenten",
 			"teacher": "leraren"
 		},

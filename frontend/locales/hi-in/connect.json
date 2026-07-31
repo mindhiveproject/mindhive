@@ -419,6 +419,17 @@
 	},
 	"introductionVideo": "परिचय वीडियो",
 	"locationFilter": "जगह",
+	"manageOrganization": {
+		"browseCta": "",
+		"emptyDescription": "",
+		"emptyTitle": "",
+		"setupCta": "",
+		"tabs": {
+			"people": "",
+			"profile": ""
+		},
+		"viewPublic": ""
+	},
 	"matchesRound": {
 		"backLink": ""
 	},
@@ -541,6 +552,7 @@
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "अनुभागों को जोड़ें",
 		"manageNetwork": "",
+		"manageOrganization": "",
 		"matches": "माचिस",
 		"matchingRounds": "मिलान दौर",
 		"myMatchedStudents": "मेरे चयनित छात्र",
@@ -1193,6 +1205,7 @@
 			"classNetworkAdmin": "",
 			"mentor": "मेंटर्स",
 			"scientist": "",
+			"sponsor": "",
 			"student": "छात्र",
 			"teacher": "शिक्षकों"
 		},

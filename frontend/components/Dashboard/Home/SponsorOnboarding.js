@@ -24,6 +24,7 @@ import {
   buildMyNetworkInvitesWhere,
   resolvePublicNetworkCardState,
 } from "../Connect/ClassNetworks/utils";
+import { manageOrganizationHref } from "../../../lib/profileEditNavigation";
 
 const FEEDBACK_NETWORK = "feedback_network";
 const SCHOOL_NETWORK = "school_network";
@@ -484,6 +485,7 @@ export default function SponsorOnboarding() {
     query: { page: "about", type: "organization" },
   };
   const myProfileHref = "/dashboard/connect/profile";
+  const manageOrganizationHrefTarget = manageOrganizationHref(orgRecord?.id);
 
   const networkBusy = !!joiningNetworkId || !!cancellingInviteId;
   const networkTitleChip =
@@ -566,7 +568,11 @@ export default function SponsorOnboarding() {
                     default: "Set up",
                   })
             }
-            onAction={() => router.push(profileEditHref)}
+            onAction={() =>
+              router.push(
+                orgStepDone ? manageOrganizationHrefTarget : profileEditHref,
+              )
+            }
           />
 
           <SetupRow

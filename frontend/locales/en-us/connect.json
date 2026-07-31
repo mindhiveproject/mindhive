@@ -419,6 +419,31 @@
 	},
 	"introductionVideo": "Introduction Video",
 	"locationFilter": "Location",
+	"manageOrganization": {
+		"adminMode": "Admin mode",
+		"backToList": "Back to your organizations",
+		"browseCta": "Browse organizations",
+		"emptyDescription": "Set up your sponsor organization first. After that, you can manage its public profile and people here.",
+		"emptyTitle": "No organization to manage",
+		"list": {
+			"description": "Choose an organization you administer to edit its public profile and manage people.",
+			"emptyFiltered": "No organizations match your search.",
+			"loading": "Loading…",
+			"manageOrganization": "Manage {{name}}",
+			"pageTitle": "Manage organizations",
+			"searchLabel": "Search your organizations",
+			"searchPlaceholder": "Search your organizations…"
+		},
+		"setupCta": "Set up organization",
+		"tabs": {
+			"people": "Manage People",
+			"profile": "Public Profile"
+		},
+		"tabsHint": "Use Public Profile to edit what visitors see, and Manage People to control who can administer this organization.",
+		"unauthorizedDescription": "You don’t have admin access to this organization. Choose one you administer from the list.",
+		"unauthorizedTitle": "You can’t manage this organization",
+		"viewPublic": "View public page"
+	},
 	"matchesRound": {
 		"backLink": "Back to matches"
 	},
@@ -541,6 +566,7 @@
 		"explorePublicNetwork": "Explore public network",
 		"mainNavAriaLabel": "Connect sections",
 		"manageNetwork": "Manage network",
+		"manageOrganization": "Manage organization",
 		"matches": "Matches",
 		"matchingRounds": "Matching rounds",
 		"myMatchedStudents": "My matched students",
@@ -1193,6 +1219,7 @@
 			"classNetworkAdmin": "class-network admins",
 			"mentor": "mentors",
 			"scientist": "scientists",
+			"sponsor": "sponsors",
 			"student": "students",
 			"teacher": "teachers"
 		},

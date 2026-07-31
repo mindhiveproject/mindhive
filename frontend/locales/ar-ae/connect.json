@@ -419,6 +419,17 @@
 	},
 	"introductionVideo": "فيديو المقدمة",
 	"locationFilter": "موقع",
+	"manageOrganization": {
+		"browseCta": "",
+		"emptyDescription": "",
+		"emptyTitle": "",
+		"setupCta": "",
+		"tabs": {
+			"people": "",
+			"profile": ""
+		},
+		"viewPublic": ""
+	},
 	"matchesRound": {
 		"backLink": ""
 	},
@@ -541,6 +552,7 @@
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "ربط الأقسام",
 		"manageNetwork": "",
+		"manageOrganization": "",
 		"matches": "المباريات",
 		"matchingRounds": "جولات متطابقة",
 		"myMatchedStudents": "طلابي المتطابقون",
@@ -1193,6 +1205,7 @@
 			"classNetworkAdmin": "",
 			"mentor": "الموجهون",
 			"scientist": "",
+			"sponsor": "",
 			"student": "طلاب",
 			"teacher": "مُعلّم"
 		},

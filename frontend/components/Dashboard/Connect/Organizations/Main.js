@@ -6,7 +6,9 @@ export default function OrganizationsMain({ query, user }) {
   const { org } = query;
 
   return (
-    <RoleGuard allow={["student", "mentor", "teacher"]}>
+    <RoleGuard
+      allow={["student", "mentor", "teacher", "scientist", "sponsor"]}
+    >
       {org ? (
         <OrganizationDetail query={query} user={user} organizationId={org} />
       ) : (

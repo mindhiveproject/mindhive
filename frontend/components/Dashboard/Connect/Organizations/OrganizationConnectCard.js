@@ -177,7 +177,11 @@ function VerifiedBadge({ t }) {
   );
 }
 
-export default function OrganizationConnectCard({ org }) {
+export default function OrganizationConnectCard({
+  org,
+  href,
+  linkLabel,
+}) {
   const { t } = useTranslation("connect");
   const router = useRouter();
 
@@ -192,16 +196,19 @@ export default function OrganizationConnectCard({ org }) {
   const oppCount = org.opportunitiesCount || 0;
   const fallbackLetter = (name || "?").charAt(0).toUpperCase();
 
-  const orgHref = {
-    pathname: "/dashboard/connect/organizations",
-    query: { org: org.id },
-  };
+  const orgHref =
+    href || {
+      pathname: "/dashboard/connect/organizations",
+      query: { org: org.id },
+    };
 
-  const viewOrgLabel = t(
-    "organizationsList.viewOrganization",
-    { name },
-    { default: "View organization {{name}}" }
-  );
+  const viewOrgLabel =
+    linkLabel ||
+    t(
+      "organizationsList.viewOrganization",
+      { name },
+      { default: "View organization {{name}}" }
+    );
 
   const opportunityLabel =
     oppCount === 1

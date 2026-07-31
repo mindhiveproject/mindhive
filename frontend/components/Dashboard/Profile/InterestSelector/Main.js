@@ -14,6 +14,7 @@ import {
   profileEditHref,
   resolveLinkedOrganization,
   resolveProfileType,
+  manageOrganizationHref,
 } from "../../../../lib/profileEditNavigation";
 import {
   confirmLeaveIfDirty,
@@ -137,9 +138,11 @@ export default function InterestSelector({ query, user }) {
           },
         });
       }
-      router.push({
-        pathname: "/dashboard",
-      });
+      if (isOrganization) {
+        router.push(manageOrganizationHref(existingOrg?.id));
+      } else {
+        router.push({ pathname: "/dashboard" });
+      }
     } catch {
       alert(
         t("createProfileFlow.saveError", {}, {

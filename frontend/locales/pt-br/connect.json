@@ -419,6 +419,17 @@
 	},
 	"introductionVideo": "Vídeo de introdução",
 	"locationFilter": "Localização",
+	"manageOrganization": {
+		"browseCta": "",
+		"emptyDescription": "",
+		"emptyTitle": "",
+		"setupCta": "",
+		"tabs": {
+			"people": "",
+			"profile": ""
+		},
+		"viewPublic": ""
+	},
 	"matchesRound": {
 		"backLink": ""
 	},
@@ -541,6 +552,7 @@
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "Conectar seções",
 		"manageNetwork": "",
+		"manageOrganization": "",
 		"matches": "Partidas",
 		"matchingRounds": "Rodadas correspondentes",
 		"myMatchedStudents": "Meus alunos correspondentes",
@@ -1193,6 +1205,7 @@
 			"classNetworkAdmin": "",
 			"mentor": "Mentores",
 			"scientist": "",
+			"sponsor": "",
 			"student": "Estudantes",
 			"teacher": "Professores"
 		},
