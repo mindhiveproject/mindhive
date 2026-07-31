@@ -867,10 +867,13 @@
 			"formPicker": {
 				"ariaLabel": "",
 				"emptyPlaceholder": "",
+				"hideFromSponsors": "",
 				"hint": "",
 				"placeholder": "",
 				"reuseNote": "",
-				"title": ""
+				"showToSponsors": "",
+				"title": "",
+				"visibilityToggleFailed": ""
 			},
 			"grid": {
 				"columns": {

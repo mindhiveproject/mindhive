@@ -867,10 +867,13 @@
 			"formPicker": {
 				"ariaLabel": "Sponsor questionnaires for this round",
 				"emptyPlaceholder": "No published forms available",
+				"hideFromSponsors": "Hide from sponsors",
 				"hint": "Select questionnaires to send to sponsors of the pre-selected opportunities below.",
 				"placeholder": "Select forms…",
 				"reuseNote": "If an opportunity already has answers for a selected form, those questions will not be asked again.",
-				"title": "2nd round of question for pre-selected applications"
+				"showToSponsors": "Show to sponsors",
+				"title": "2nd round of question for pre-selected applications",
+				"visibilityToggleFailed": "Could not update form visibility for sponsors. Please try again."
 			},
 			"grid": {
 				"columns": {

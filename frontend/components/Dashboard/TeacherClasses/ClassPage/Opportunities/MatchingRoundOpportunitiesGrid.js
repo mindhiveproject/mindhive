@@ -254,7 +254,6 @@ function OpportunityInfoContent({
     ? t(`opportunities.status.${statusKey}`, {}, { default: opportunity.status })
     : opportunity.status;
   const returned = isReturnedOpportunity(opportunity);
-  const appointmentRequested = isAppointmentRequested(opportunity);
   const hasAvailability = Boolean(from || to);
   const availabilityValue = hasAvailability
     ? `${from || "—"} → ${to || "—"}${
@@ -277,7 +276,7 @@ function OpportunityInfoContent({
   const dismissLabel = t("opportunities.matchingRound.grid.dismissHighlight", {}, {
     default: "Dismiss",
   });
-  const hasHeaderMeta = Boolean(opportunity.status || appointmentRequested);
+  const hasHeaderMeta = Boolean(opportunity.status || showAppointmentHighlight);
 
   return (
     <OpportunityInfoTooltip>
@@ -302,7 +301,7 @@ function OpportunityInfoContent({
               }
             />
           ) : null}
-          {appointmentRequested ? (
+          {showAppointmentHighlight ? (
             <TooltipMetaRow
               label={t("opportunities.rowMeta.flagLabel", {}, {
                 default: "Flag",
@@ -312,11 +311,7 @@ function OpportunityInfoContent({
               })}
               valueClassName="appointmentRequested"
               dismissLabel={dismissLabel}
-              onDismiss={
-                showAppointmentHighlight && onDismissAppointment
-                  ? onDismissAppointment
-                  : undefined
-              }
+              onDismiss={onDismissAppointment}
             />
           ) : null}
         </div>

@@ -122,7 +122,13 @@ function RoundStatusLabel({ status, t, variant = "chip" }) {
   );
 }
 
-function buildSnapshot(inputs, opportunityIds, questionIds, formDefinitionIds) {
+function buildSnapshot(
+  inputs,
+  opportunityIds,
+  questionIds,
+  formDefinitionIds,
+  sponsorFormsVisible,
+) {
   return {
     title: inputs.title || "",
     description: inputs.description || "",
@@ -132,6 +138,7 @@ function buildSnapshot(inputs, opportunityIds, questionIds, formDefinitionIds) {
     opportunities: [...opportunityIds].sort(),
     questions: [...questionIds].sort(),
     formDefinitions: [...(formDefinitionIds || [])].sort(),
+    sponsorFormsVisible: Boolean(sponsorFormsVisible),
   };
 }
 
@@ -145,8 +152,27 @@ function snapshotsEqual(a, b) {
     a.closeAt === b.closeAt &&
     JSON.stringify(a.opportunities) === JSON.stringify(b.opportunities) &&
     JSON.stringify(a.questions) === JSON.stringify(b.questions) &&
-    JSON.stringify(a.formDefinitions) === JSON.stringify(b.formDefinitions)
+    JSON.stringify(a.formDefinitions) === JSON.stringify(b.formDefinitions) &&
+    a.sponsorFormsVisible === b.sponsorFormsVisible
   );
+}
+
+function readSponsorFormsVisible(settings) {
+  if (!settings || typeof settings !== "object" || Array.isArray(settings)) {
+    return false;
+  }
+  return Boolean(settings.sponsorFormsVisible);
+}
+
+function mergeRoundSettings(existing, sponsorFormsVisible) {
+  const base =
+    existing && typeof existing === "object" && !Array.isArray(existing)
+      ? existing
+      : {};
+  return {
+    ...base,
+    sponsorFormsVisible: Boolean(sponsorFormsVisible),
+  };
 }
 
 function sortOpportunitiesByTitle(opportunities) {
@@ -313,6 +339,9 @@ function MatchingRoundEditor({
   const [selectedFormDefinitionIds, setSelectedFormDefinitionIds] = useState(
     [],
   );
+  const [sponsorFormsVisible, setSponsorFormsVisible] = useState(false);
+  const [togglingSponsorFormsVisible, setTogglingSponsorFormsVisible] =
+    useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
   const [activePanel, setActivePanel] = useState(
     queryMatchingPanel || PANELS.settings,
@@ -337,12 +366,19 @@ function MatchingRoundEditor({
   const { inputs, handleChange, handleMultipleUpdate } = useForm(EMPTY_FORM);
 
   const captureSnapshot = useCallback(
-    (nextInputs, nextOpportunities, nextQuestions, nextFormDefinitions) => {
+    (
+      nextInputs,
+      nextOpportunities,
+      nextQuestions,
+      nextFormDefinitions,
+      nextSponsorFormsVisible,
+    ) => {
       savedSnapshotRef.current = buildSnapshot(
         nextInputs,
         nextOpportunities,
         nextQuestions,
         nextFormDefinitions,
+        nextSponsorFormsVisible,
       );
       setSnapshotRevision((revision) => revision + 1);
     },
@@ -356,6 +392,7 @@ function MatchingRoundEditor({
       selectedOpportunities,
       selectedQuestions,
       selectedFormDefinitionIds,
+      sponsorFormsVisible,
     );
     return !snapshotsEqual(current, savedSnapshotRef.current);
   }, [
@@ -364,6 +401,7 @@ function MatchingRoundEditor({
     selectedOpportunities,
     selectedQuestions,
     selectedFormDefinitionIds,
+    sponsorFormsVisible,
     snapshotRevision,
   ]);
 
@@ -395,6 +433,7 @@ function MatchingRoundEditor({
     setSelectedOpportunities([]);
     setSelectedQuestions([]);
     setSelectedFormDefinitionIds([]);
+    setSponsorFormsVisible(false);
   }, [isCreate, initialNetworkId, selectedNetworkId]);
 
   useEffect(() => {
@@ -416,8 +455,9 @@ function MatchingRoundEditor({
       setSelectedOpportunities([]);
       setSelectedQuestions([]);
       setSelectedFormDefinitionIds([]);
+      setSponsorFormsVisible(false);
       setFormInitialized(true);
-      captureSnapshot(defaults, [], [], []);
+      captureSnapshot(defaults, [], [], [], false);
       return;
     }
 
@@ -435,6 +475,7 @@ function MatchingRoundEditor({
     const nextOpportunities = (round.opportunities || []).map((o) => o.id);
     const nextQuestions = (round.questions || []).map((q) => q.id);
     const nextFormDefinitions = (round.formDefinitions || []).map((f) => f.id);
+    const nextSponsorFormsVisible = readSponsorFormsVisible(round.settings);
 
     if (round.classNetwork?.id && round.classNetwork.id !== selectedNetworkId) {
       setSelectedNetworkId(round.classNetwork.id);
@@ -444,12 +485,14 @@ function MatchingRoundEditor({
     setSelectedOpportunities(nextOpportunities);
     setSelectedQuestions(nextQuestions);
     setSelectedFormDefinitionIds(nextFormDefinitions);
+    setSponsorFormsVisible(nextSponsorFormsVisible);
     setFormInitialized(true);
     captureSnapshot(
       nextInputs,
       nextOpportunities,
       nextQuestions,
       nextFormDefinitions,
+      nextSponsorFormsVisible,
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -701,7 +744,13 @@ function MatchingRoundEditor({
         await markOpportunitiesPreSelected(newlySelectedIds);
         await markOpportunitiesPendingReview(newlyRemovedIds);
         setSelectedOpportunities(nextIds);
-        captureSnapshot(inputs, nextIds, selectedQuestions, selectedFormDefinitionIds);
+        captureSnapshot(
+          inputs,
+          nextIds,
+          selectedQuestions,
+          selectedFormDefinitionIds,
+          sponsorFormsVisible,
+        );
       } catch (error) {
         console.error("Failed to update matching round opportunities", error);
         alert(
@@ -725,6 +774,7 @@ function MatchingRoundEditor({
       inputs,
       selectedQuestions,
       selectedFormDefinitionIds,
+      sponsorFormsVisible,
       captureSnapshot,
       t,
     ],
@@ -816,9 +866,59 @@ function MatchingRoundEditor({
           },
         },
       });
-      captureSnapshot(nextInputs, selectedOpportunities, selectedQuestions, selectedFormDefinitionIds);
+      captureSnapshot(
+        nextInputs,
+        selectedOpportunities,
+        selectedQuestions,
+        selectedFormDefinitionIds,
+        sponsorFormsVisible,
+      );
     } catch {
       handleMultipleUpdate({ status: previousStatus });
+    }
+  };
+
+  const handleToggleSponsorFormsVisible = async () => {
+    if (!canManageOpportunities || togglingSponsorFormsVisible) return;
+    if (selectedFormDefinitionIds.length === 0) return;
+
+    const nextVisible = !sponsorFormsVisible;
+    const previousVisible = sponsorFormsVisible;
+    setSponsorFormsVisible(nextVisible);
+
+    if (isNew || !roundId) {
+      return;
+    }
+
+    setTogglingSponsorFormsVisible(true);
+    try {
+      await updateConnectRound({
+        variables: {
+          id: roundId,
+          input: {
+            settings: mergeRoundSettings(round?.settings, nextVisible),
+            updatedAt: new Date().toISOString(),
+          },
+        },
+      });
+      captureSnapshot(
+        inputs,
+        selectedOpportunities,
+        selectedQuestions,
+        selectedFormDefinitionIds,
+        nextVisible,
+      );
+    } catch (error) {
+      console.error("Failed to update sponsor form visibility", error);
+      setSponsorFormsVisible(previousVisible);
+      alert(
+        t("opportunities.matchingRound.formPicker.visibilityToggleFailed", {}, {
+          default:
+            "Could not update form visibility for sponsors. Please try again.",
+        }),
+      );
+    } finally {
+      setTogglingSponsorFormsVisible(false);
     }
   };
 
@@ -879,6 +979,7 @@ function MatchingRoundEditor({
               formDefinitions: formDefinitionsConnect.length
                 ? { connect: formDefinitionsConnect }
                 : undefined,
+              settings: mergeRoundSettings(null, sponsorFormsVisible),
             },
           },
         });
@@ -890,6 +991,7 @@ function MatchingRoundEditor({
             selectedOpportunities,
             selectedQuestions,
             selectedFormDefinitionIds,
+            sponsorFormsVisible,
           );
           if (onCreated) onCreated(newId);
         }
@@ -906,6 +1008,7 @@ function MatchingRoundEditor({
               opportunities: { set: opportunitiesConnect },
               questions: { set: questionsConnect },
               formDefinitions: { set: formDefinitionsConnect },
+              settings: mergeRoundSettings(round?.settings, sponsorFormsVisible),
               updatedAt: new Date().toISOString(),
               publishedAt:
                 inputs.status === "published" && !round?.publishedAt
@@ -921,6 +1024,7 @@ function MatchingRoundEditor({
           selectedOpportunities,
           selectedQuestions,
           selectedFormDefinitionIds,
+          sponsorFormsVisible,
         );
       }
     } catch (error) {
@@ -1288,6 +1392,30 @@ function MatchingRoundEditor({
               { default: "Sponsor questionnaires for this round" },
             )}
           />
+          <Button
+            type="button"
+            variant={sponsorFormsVisible ? "outline" : "filled"}
+            className="matchingRoundFormPickerVisibilityButton"
+            disabled={
+              !canManageOpportunities ||
+              saving ||
+              togglingSponsorFormsVisible ||
+              selectedFormDefinitionIds.length === 0
+            }
+            onClick={handleToggleSponsorFormsVisible}
+          >
+            {sponsorFormsVisible
+              ? t(
+                  "opportunities.matchingRound.formPicker.hideFromSponsors",
+                  {},
+                  { default: "Hide from sponsors" },
+                )
+              : t(
+                  "opportunities.matchingRound.formPicker.showToSponsors",
+                  {},
+                  { default: "Show to sponsors" },
+                )}
+          </Button>
         </div>
       </div>
       <MatchingRoundOpportunitiesGrid

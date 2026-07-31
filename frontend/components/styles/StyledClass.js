@@ -1542,6 +1542,13 @@ const StyledClass = styled.div`
       flex: 0 1 320px;
       min-width: min(100%, 220px);
       max-width: 100%;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .matchingRoundFormPickerVisibilityButton {
+      width: 100%;
     }
 
     .matchingRoundExportActions {
