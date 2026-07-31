@@ -22,6 +22,7 @@ import { Word } from "./schemas/Word";
 import { Template } from "./schemas/Template";
 import { Task } from "./schemas/Task";
 import { Study } from "./schemas/Study";
+import { StudyVersion } from "./schemas/StudyVersion";
 import { StudyImage } from "./schemas/StudyImage";
 import { Consent } from "./schemas/Consent";
 import { Update } from "./schemas/Update";
@@ -66,6 +67,7 @@ import { FormDefinition } from "./schemas/FormDefinition";
 import { FormCard } from "./schemas/FormCard";
 import { FormField } from "./schemas/FormField";
 import { OpportunityReviewNote } from "./schemas/OpportunityReviewNote";
+import { Milestone } from "./schemas/Milestone";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -100,6 +102,7 @@ export const lists: Lists = {
   Template,
   Task,
   Study,
+  StudyVersion,
   StudyImage,
   Consent,
   Update,
@@ -144,4 +147,5 @@ export const lists: Lists = {
   FormCard,
   FormField,
   OpportunityReviewNote,
+  Milestone,
 };

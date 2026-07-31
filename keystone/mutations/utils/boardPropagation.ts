@@ -3,25 +3,17 @@
  * Used by applyTemplateBoardChanges mutation.
  */
 
-const uniqid = require("uniqid") as () => string;
+import { isClassTemplateBoard } from "./classTemplateBoards";
 
-/**
- * Returns true when the board is used as a class template (has at least one
- * class in templateForClasses). Use this instead of isTemplate for class-template
- * logic; isTemplate is reserved for platform-wide templates (admin-only).
- */
-export function isClassTemplateBoard(board: {
-  templateForClasses?: Array<{ id: string }> | null;
-} | null): boolean {
-  return Boolean(
-    board?.templateForClasses && board.templateForClasses.length > 0
-  );
-}
+export { isClassTemplateBoard };
+
+const uniqid = require("uniqid") as () => string;
 
 const TEMPLATE_QUERY = `
   id
   publicId
   templateForClasses { id }
+  templatesForClass { id }
   clonedFrom { id }
   sections {
     id
@@ -39,6 +31,7 @@ const TEMPLATE_QUERY = `
       position
       content
       settings
+      milestone { id }
       resources { id }
       assignments { id }
       studies { id }
@@ -73,6 +66,7 @@ export type TemplateBoard = {
   id: string;
   publicId?: string | null;
   templateForClasses?: Array<{ id: string }>;
+  templatesForClass?: Array<{ id: string }>;
   clonedFrom?: { id: string } | null;
   sections: Array<{
     id: string;
@@ -198,27 +192,66 @@ export async function getTemplateAndClones(
 }
 
 /**
- * Find clone section matching template section by position index.
- * Uses index only (publicId is often undefined); template and clone are ordered by position.
+ * Match a template section to its clone by publicId. Positional matching is
+ * unsafe: reordering or deleting a middle section causes every subsequent
+ * clone section to be overwritten with the wrong template's title/description
+ * and the trailing clone section (which may hold real student work) to be
+ * deleted.
+ *
+ * Falls back to positional match ONLY when both sides lack a publicId AND the
+ * two lists have identical length (no structural change possible). Otherwise
+ * returns null, forcing the caller to create a new section rather than
+ * blindly overwrite one that might belong to a different template section.
  */
 function findCloneSection(
-  _templateSection: TemplateBoard["sections"][0],
+  templateSection: TemplateBoard["sections"][0],
   cloneSections: CloneBoard["sections"],
-  templateIndex: number
+  templateIndex: number,
+  templateSectionCount: number
 ): CloneBoard["sections"][0] | null {
-  return cloneSections[templateIndex] ?? null;
+  if (templateSection.publicId) {
+    const byPublicId = cloneSections.find(
+      (s) => s.publicId && s.publicId === templateSection.publicId
+    );
+    if (byPublicId) return byPublicId;
+    // Template has a publicId but no clone matches — genuinely new section.
+    return null;
+  }
+  // Legacy rows without publicIds: only trust position when neither side has
+  // any publicIds AND lengths match (no reorder/delete possible).
+  const anyCloneHasPublicId = cloneSections.some((s) => !!s.publicId);
+  if (
+    !anyCloneHasPublicId &&
+    cloneSections.length === templateSectionCount
+  ) {
+    return cloneSections[templateIndex] ?? null;
+  }
+  return null;
 }
 
 /**
- * Find clone card matching template card by position index within the section.
- * Uses index only (publicId is often undefined); sections are ordered by position.
+ * Match a template card to its clone by publicId. Same safety rules as
+ * findCloneSection: positional fallback only when both sides are publicId-less
+ * AND lengths match exactly.
  */
 function findCloneCard(
-  _templateCard: TemplateBoard["sections"][0]["cards"][0],
+  templateCard: TemplateBoard["sections"][0]["cards"][0],
   cloneCards: CloneBoard["sections"][0]["cards"],
-  templateIndex: number
+  templateIndex: number,
+  templateCardCount: number
 ): CloneBoard["sections"][0]["cards"][0] | null {
-  return cloneCards[templateIndex] ?? null;
+  if (templateCard.publicId) {
+    const byPublicId = cloneCards.find(
+      (c) => c.publicId && c.publicId === templateCard.publicId
+    );
+    if (byPublicId) return byPublicId;
+    return null;
+  }
+  const anyCloneHasPublicId = cloneCards.some((c) => !!c.publicId);
+  if (!anyCloneHasPublicId && cloneCards.length === templateCardCount) {
+    return cloneCards[templateIndex] ?? null;
+  }
+  return null;
 }
 
 /**
@@ -235,7 +268,12 @@ export async function syncSectionsToClone(
 
   for (let i = 0; i < templateSections.length; i++) {
     const ts = templateSections[i];
-    const existing = findCloneSection(ts, cloneSections, i);
+    const existing = findCloneSection(
+      ts,
+      cloneSections,
+      i,
+      templateSections.length
+    );
     let cloneSectionId: string;
     if (existing) {
       cloneSectionId = existing.id;
@@ -264,12 +302,22 @@ export async function syncSectionsToClone(
     templateSectionIdsToCloneSectionIds.set(ts.id, cloneSectionId);
   }
 
+  // Only delete clone sections whose publicId proves they descend from a
+  // template section that is no longer present. A clone section with NO
+  // publicId is of unknown provenance — leave it alone rather than risk
+  // destroying student work. This trades some cleanup slack for safety.
   const keptCloneSectionIds = new Set(
     templateSectionIdsToCloneSectionIds.values()
   );
-  const cloneSectionsToDelete = cloneSections.filter(
-    (s) => !keptCloneSectionIds.has(s.id)
+  const templatePublicIds = new Set(
+    templateSections.map((s) => s.publicId).filter(Boolean) as string[]
   );
+  const cloneSectionsToDelete = cloneSections.filter((s) => {
+    if (keptCloneSectionIds.has(s.id)) return false;
+    // Kept by ID match — safe to delete only if the clone has a publicId AND
+    // that publicId is not in the current template (i.e., template removed it).
+    return !!s.publicId && !templatePublicIds.has(s.publicId);
+  });
 
   for (const section of cloneSectionsToDelete) {
     const cardIds = (section as any).cards?.map((c: any) => c.id) ?? [];
@@ -323,9 +371,11 @@ export async function syncCardsToClone(
       ? (cloneSection as any).cards ?? []
       : [];
 
+    const matchedCloneCardIds = new Set<string>();
     for (let ci = 0; ci < templateCards.length; ci++) {
       const tc = templateCards[ci];
-      const existing = findCloneCard(tc, cloneCards, ci);
+      const existing = findCloneCard(tc, cloneCards, ci, templateCards.length);
+      if (existing) matchedCloneCardIds.add(existing.id);
       const position = tc.position ?? ci * 16384;
       const settings =
         tc.settings && typeof tc.settings === "object"
@@ -361,6 +411,9 @@ export async function syncCardsToClone(
             assignments: { set: (tc.assignments ?? []).map((a) => ({ id: a.id })) },
             studies: { set: (tc.studies ?? []).map((s) => ({ id: s.id })) },
             tasks: { set: (tc.tasks ?? []).map((t) => ({ id: t.id })) },
+            ...((tc as any).milestone?.id
+              ? { milestone: { connect: { id: (tc as any).milestone.id } } }
+              : {}),
           },
         });
       } else {
@@ -375,6 +428,9 @@ export async function syncCardsToClone(
             position,
             content: tc.content ?? undefined,
             settings,
+            ...((tc as any).milestone?.id
+              ? { milestone: { connect: { id: (tc as any).milestone.id } } }
+              : {}),
             resources: {
               connect: (tc.resources ?? []).map((r) => ({ id: r.id })),
             },
@@ -393,10 +449,19 @@ export async function syncCardsToClone(
       }
     }
 
-    const templateCardCount = templateCards.length;
-    const cloneCardsToDelete = cloneCards.filter(
-      (_: any, idx: number) => idx >= templateCardCount
+    // Only delete clone cards whose publicId proves they descend from a
+    // template card that has since been removed. Cards matched by findCloneCard
+    // are always kept (matchedCloneCardIds). Cards with no publicId are of
+    // unknown provenance — leave them alone. Previously this filter deleted
+    // by index-tail, which silently destroyed real student work whenever a
+    // teacher reordered or removed a middle template card.
+    const templatePublicIds = new Set(
+      templateCards.map((c) => c.publicId).filter(Boolean) as string[]
     );
+    const cloneCardsToDelete = cloneCards.filter((c: any) => {
+      if (matchedCloneCardIds.has(c.id)) return false;
+      return !!c.publicId && !templatePublicIds.has(c.publicId);
+    });
     for (const c of cloneCardsToDelete) {
       await context.db.ProposalCard.deleteOne({ where: { id: c.id } });
     }

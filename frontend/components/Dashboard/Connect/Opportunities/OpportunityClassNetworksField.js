@@ -1,6 +1,7 @@
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { Dropdown } from "semantic-ui-react";
+
+import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 
 const Card = styled.div`
   display: flex;
@@ -72,22 +73,22 @@ export default function OpportunityClassNetworksField({
             })}
           </WarningCallout>
         ) : (
-          <Dropdown
+          <DropdownSelect
+            multiple
+            searchableMultiple
+            disabled={readOnly}
+            value={selectedNetworks}
+            options={availableNetworks.map((network) => ({
+              value: network.id,
+              label: network.title,
+            }))}
+            onChange={(next) => onChange?.(next)}
             placeholder={t("opportunityEditor.offeredInNetworks", {}, {
               default: "Offered in class networks",
             })}
-            fluid
-            multiple
-            selection
-            search
-            disabled={readOnly}
-            options={availableNetworks.map((network) => ({
-              key: network.id,
-              text: network.title,
-              value: network.id,
-            }))}
-            value={selectedNetworks}
-            onChange={(_, { value }) => onChange?.(value)}
+            ariaLabel={t("opportunityEditor.classNetworksTitle", {}, {
+              default: "Class networks",
+            })}
           />
         )}
         {!readOnly &&

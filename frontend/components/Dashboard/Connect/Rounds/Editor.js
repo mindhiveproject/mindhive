@@ -17,6 +17,7 @@ import {
   CREATE_CONNECT_ROUND,
   UPDATE_CONNECT_ROUND,
 } from "../../../Mutations/ConnectRound";
+import { UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import ReviewersPanel from "./ReviewersPanel";
 import Button from "../../../DesignSystem/Button";
 import {
@@ -30,6 +31,18 @@ import {
   isExpired,
 } from "./roundFormConfig";
 import { collectMemberClassNetworks } from "../../../../lib/opportunityClassNetworks";
+
+/** Statuses that should not be overwritten when adding to a matching round. */
+const OPPORTUNITY_STATUS_AT_OR_BEYOND_PRESELECTED = new Set([
+  "pre_selected",
+  "accepted",
+  "published",
+  "closed",
+  "archived",
+]);
+
+/** Only roll back pre_selected → pending_review when removed from a round. */
+const OPPORTUNITY_STATUS_REVERTABLE_ON_ROUND_REMOVE = new Set(["pre_selected"]);
 
 const BACK_CHEVRON = (
   <svg
@@ -327,7 +340,58 @@ export default function RoundEditor({ roundId }) {
       awaitRefetchQueries: true,
     }
   );
+  const [updateOpportunity] = useMutation(UPDATE_OPPORTUNITY, {
+    refetchQueries: selectedNetwork
+      ? [
+          {
+            query: NETWORK_OPPORTUNITIES_FOR_ROUND,
+            variables: { classNetworkId: selectedNetwork },
+          },
+        ]
+      : [],
+  });
   const saving = creating || updating;
+
+  const syncOpportunityStatusesForSelection = async (
+    previousIds,
+    nextIds,
+  ) => {
+    const previousSet = new Set(previousIds);
+    const nextSet = new Set(nextIds);
+    const newlySelectedIds = nextIds.filter((id) => !previousSet.has(id));
+    const newlyRemovedIds = previousIds.filter((id) => !nextSet.has(id));
+    const byId = new Map(
+      networkOpportunities.map((opportunity) => [opportunity.id, opportunity]),
+    );
+
+    const idsToPreSelect = newlySelectedIds.filter((id) => {
+      const opportunity = byId.get(id);
+      return (
+        opportunity &&
+        !OPPORTUNITY_STATUS_AT_OR_BEYOND_PRESELECTED.has(opportunity.status)
+      );
+    });
+    const idsToPendingReview = newlyRemovedIds.filter((id) => {
+      const opportunity = byId.get(id);
+      return (
+        opportunity &&
+        OPPORTUNITY_STATUS_REVERTABLE_ON_ROUND_REMOVE.has(opportunity.status)
+      );
+    });
+
+    await Promise.all([
+      ...idsToPreSelect.map((id) =>
+        updateOpportunity({
+          variables: { id, input: { status: "pre_selected" } },
+        }),
+      ),
+      ...idsToPendingReview.map((id) =>
+        updateOpportunity({
+          variables: { id, input: { status: "pending_review" } },
+        }),
+      ),
+    ]);
+  };
 
   const toggleOpportunity = (id) => {
     setSelectedOpportunities((prev) =>
@@ -366,6 +430,9 @@ export default function RoundEditor({ roundId }) {
 
     const opportunitiesConnect = selectedOpportunities.map((id) => ({ id }));
     const questionsConnect = selectedQuestions.map((id) => ({ id }));
+    const previousOpportunityIds = isNew
+      ? []
+      : (round?.opportunities || []).map((o) => o.id);
 
     if (isNew) {
       await createConnectRound({
@@ -388,6 +455,7 @@ export default function RoundEditor({ roundId }) {
           },
         },
       });
+      await syncOpportunityStatusesForSelection([], selectedOpportunities);
     } else {
       await updateConnectRound({
         variables: {
@@ -411,6 +479,10 @@ export default function RoundEditor({ roundId }) {
           },
         },
       });
+      await syncOpportunityStatusesForSelection(
+        previousOpportunityIds,
+        selectedOpportunities,
+      );
     }
     router.replace({ pathname: "/dashboard/connect/rounds" });
   };
@@ -432,7 +504,7 @@ export default function RoundEditor({ roundId }) {
     ? entityTitle
     : isNew
     ? t("matchingRound.editor.pageTitleNew", {}, {
-        default: "New matching round",
+        default: "Create new matching round",
       })
     : t("matchingRound.editor.pageTitleEdit", {}, {
         default: "Edit round",

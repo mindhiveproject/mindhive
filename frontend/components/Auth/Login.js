@@ -9,7 +9,6 @@ import useForm from "../../lib/useForm";
 import DisplayError from "../ErrorMessage";
 import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
-import { GET_NETWORK } from "../Queries/ClassNetwork";
 import {
   acceptNetworkInviteAfterAuth,
   completeClassNetworkInviteAfterAuth,
@@ -18,18 +17,17 @@ import {
   isEligibleForClassNetworkInvite,
   joinClassNetwork,
 } from "../../lib/joinClassNetwork";
+import { classNetworkUrlRef } from "../../lib/classNetworkRef";
+import { useClassNetworkByRef } from "../../lib/useClassNetworkByRef";
 import LoginWithGoogle from "./GoogleLogin";
 import StyledAuth from "../styles/StyledAuth";
 import {
   ClassNetworkInviteBanner,
   ClassNetworkInviteErrorBanner,
 } from "./ClassNetworkInviteBanner";
-import { endpoint, prodEndpoint } from "../../config";
+import { backendOrigin } from "../../config";
 
-const backendBase =
-  process.env.NODE_ENV === "development"
-    ? endpoint.replace("/api/graphql", "")
-    : prodEndpoint.replace("/api/graphql", "");
+const backendBase = backendOrigin;
 
 export default function Login({
   redirectType,
@@ -56,14 +54,14 @@ export default function Login({
   const { data: userData, loading: userLoading } = useQuery(CURRENT_USER_QUERY);
   const user = userData?.authenticatedItem;
 
-  const { data: networkData, loading: networkLoading } = useQuery(GET_NETWORK, {
-    variables: { id: classNetworkId || "" },
-    skip: !classNetworkId,
-  });
-  const classNetwork = networkData?.classNetwork;
+  const {
+    classNetwork,
+    loading: networkLoading,
+  } = useClassNetworkByRef(classNetworkId);
   const isClassNetworkValid = !!classNetwork?.id;
   const isClassNetworkInvalid =
     !!classNetworkId && !networkLoading && !isClassNetworkValid;
+  const classNetworkShareRef = classNetworkUrlRef(classNetwork) || classNetworkId;
 
   const { data: tokenInviteData, loading: tokenInviteLoading } = useQuery(
     GET_NETWORK_INVITE_CONTEXT,
@@ -134,11 +132,15 @@ export default function Login({
           user: joinUser,
         });
 
+        const urlRef =
+          classNetworkUrlRef(joinResult) ||
+          classNetworkShareRef ||
+          classNetworkId;
         router.push({
           pathname: "/dashboard/connect",
           query: joinResult.requested
-            ? { requestedNetwork: classNetworkId }
-            : { joinedNetwork: classNetworkId },
+            ? { requestedNetwork: urlRef }
+            : { joinedNetwork: urlRef },
         });
       } catch (joinErr) {
         setInviteErrorKind("joinFailed");
@@ -161,6 +163,7 @@ export default function Login({
   }, [
     apolloClient,
     classNetworkId,
+    classNetworkShareRef,
     isClassNetworkInvalid,
     isClassNetworkValid,
     networkLoading,
@@ -362,7 +365,7 @@ export default function Login({
       ) : null}
       {inviteErrorKind === "wrongRole" && classNetworkId ? (
         <p style={{ marginBottom: 16, fontSize: 14 }}>
-          <Link href={`/signup/sponsor?classNetwork=${classNetworkId}`}>
+          <Link href={`/signup/sponsor?classNetwork=${classNetworkShareRef}`}>
             {t(
               "auth.classNetworkInvite.signUpAsSponsor",
               {},
@@ -423,7 +426,7 @@ export default function Login({
           </fieldset>
 
           <LoginWithGoogle
-            classNetwork={isClassNetworkValid ? classNetworkId : null}
+            classNetwork={isClassNetworkValid ? classNetworkShareRef : null}
             networkInvite={isTokenInviteValid ? networkInviteToken : null}
             redirectType={redirectType}
             redirectTo={redirectTo}

@@ -201,6 +201,14 @@ export default withAuth(
         storagePath: "opportunity-videos",
         transformName: makeDatePartitionedName("opportunity-videos", true),
       },
+      profile_videos: {
+        kind: "local",
+        type: "file",
+        generateUrl: (path) => `${assetBaseUrl}/profile-videos${path}`,
+        serverRoute: { path: "/profile-videos" },
+        storagePath: "profile-videos",
+        transformName: makeDatePartitionedName("profile-videos", true),
+      },
     },
   }),
   // ui: {

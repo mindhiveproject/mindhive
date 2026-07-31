@@ -24,7 +24,7 @@ async function postDataFile({ year, month, day, content }) {
     data: content.data,
   };
 
-  const res = await fetch(`/api/save/?y=${year}&m=${month}&d=${day}`, {
+  const res = await fetch(`/api/save?y=${year}&m=${month}&d=${day}`, {
     method: "POST",
     body: JSON.stringify(dataFile),
     headers: {

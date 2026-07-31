@@ -369,43 +369,47 @@ export const rules = {
   // Connect customizable forms — FormDefinition mutate.
   // Admins (canManageUsers) can manage any definition. Users with
   // canManageForms can manage scope=organization definitions for orgs
-  // they are members of. Global and class_network scopes are admin-only.
+  // they are members of. Class creators can manage scope=project_board
+  // definitions on their template boards (inline milestone form builder).
   formDefinitionMutate({ session }: ListAccessArgs) {
-    if (!isSignedIn({ session })) return false;
-    if (permissions.canManageUsers({ session })) return true;
-    if (!permissions.canManageForms({ session })) return false;
-    const me = session.itemId;
-    return {
-      scope: { equals: "organization" },
-      organization: { members: { some: { id: { equals: me } } } },
-    };
+    return formDefinitionMutateFilter(session);
   },
   // FormCard mutate inherits the same rule via the parent definition.
   formCardMutate({ session }: ListAccessArgs) {
-    if (!isSignedIn({ session })) return false;
-    if (permissions.canManageUsers({ session })) return true;
-    if (!permissions.canManageForms({ session })) return false;
-    const me = session.itemId;
+    const filter = formDefinitionMutateFilter(session);
+    if (filter === true || filter === false) return filter;
     return {
-      definition: {
-        scope: { equals: "organization" },
-        organization: { members: { some: { id: { equals: me } } } },
-      },
+      OR: filter.OR.map((clause: Record<string, unknown>) => ({
+        definition: clause,
+      })),
     };
   },
   // FormField mutate inherits via card.definition.
   formFieldMutate({ session }: ListAccessArgs) {
+    const filter = formDefinitionMutateFilter(session);
+    if (filter === true || filter === false) return filter;
+    return {
+      OR: filter.OR.map((clause: Record<string, unknown>) => ({
+        card: { definition: clause },
+      })),
+    };
+  },
+  async formCardCreate({ session, context, inputData }: ListAccessArgs) {
+    return canCreateFormCard({ session, context, inputData });
+  },
+  async formFieldCreate({ session, context, inputData }: ListAccessArgs) {
+    return canCreateFormField({ session, context, inputData });
+  },
+  // Template-scoped milestones: admins, canManageForms, or class creators
+  // whose class uses the linked template board.
+  milestoneMutate({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageUsers({ session })) return true;
-    if (!permissions.canManageForms({ session })) return false;
+    if (permissions.canManageForms({ session })) return true;
     const me = session.itemId;
     return {
-      card: {
-        definition: {
-          scope: { equals: "organization" },
-          organization: { members: { some: { id: { equals: me } } } },
-        },
-      },
+      scope: { equals: "template" },
+      templateBoard: templateBoardCreatorFilter(me),
     };
   },
   // For mutate operations on the above lists: only the owner or admin.
@@ -420,3 +424,125 @@ export const rules = {
     };
   },
 };
+
+const FORM_DEFINITION_ACCESS_QUERY = `
+  id
+  scope
+  organization { members { id } }
+  proposalBoard {
+    templateForClasses { creator { id } }
+    templatesForClass { creator { id } }
+  }
+`;
+
+function templateBoardCreatorFilter(me: string) {
+  return {
+    OR: [
+      {
+        templateForClasses: {
+          some: { creator: { id: { equals: me } } },
+        },
+      },
+      {
+        templatesForClass: {
+          some: { creator: { id: { equals: me } } },
+        },
+      },
+    ],
+  };
+}
+
+function projectBoardFormScopeFilter(me: string) {
+  return {
+    scope: { equals: "project_board" },
+    proposalBoard: templateBoardCreatorFilter(me),
+  };
+}
+
+function organizationFormScopeFilter(me: string) {
+  return {
+    scope: { equals: "organization" },
+    organization: { members: { some: { id: { equals: me } } } },
+  };
+}
+
+function formDefinitionMutateFilter(session?: ListAccessArgs["session"]) {
+  if (!isSignedIn({ session })) return false;
+  if (permissions.canManageUsers({ session })) return true;
+  const me = session!.itemId;
+  const orFilters: Record<string, unknown>[] = [
+    projectBoardFormScopeFilter(me),
+  ];
+  if (permissions.canManageForms({ session })) {
+    orFilters.unshift(organizationFormScopeFilter(me));
+  }
+  return { OR: orFilters };
+}
+
+export function canMutateFormDefinition(
+  session: ListAccessArgs["session"],
+  definition: {
+    scope?: string | null;
+    organization?: { members?: { id?: string | null }[] | null } | null;
+    proposalBoard?: {
+      templateForClasses?: { creator?: { id?: string | null } | null }[] | null;
+      templatesForClass?: { creator?: { id?: string | null } | null }[] | null;
+    } | null;
+  } | null
+) {
+  if (!session?.itemId || !definition) return false;
+  if (permissions.canManageUsers({ session })) return true;
+  const me = session.itemId;
+  if (
+    definition.scope === "organization" &&
+    permissions.canManageForms({ session })
+  ) {
+    return (definition.organization?.members || []).some(
+      (member) => member?.id === me
+    );
+  }
+  if (definition.scope === "project_board") {
+    const classes = [
+      ...(definition.proposalBoard?.templateForClasses || []),
+      ...(definition.proposalBoard?.templatesForClass || []),
+    ];
+    return classes.some((klass) => klass?.creator?.id === me);
+  }
+  return false;
+}
+
+async function canCreateFormCard({
+  session,
+  context,
+  inputData,
+}: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (permissions.canManageUsers({ session })) return true;
+  const definitionId = inputData?.definition?.connect?.id;
+  if (!definitionId || !context) {
+    return !!permissions.canManageForms({ session });
+  }
+  const definition = await context.query.FormDefinition.findOne({
+    where: { id: definitionId },
+    query: FORM_DEFINITION_ACCESS_QUERY,
+  });
+  return canMutateFormDefinition(session, definition);
+}
+
+async function canCreateFormField({
+  session,
+  context,
+  inputData,
+}: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (permissions.canManageUsers({ session })) return true;
+  const cardId = inputData?.card?.connect?.id;
+  if (!cardId || !context) {
+    return !!permissions.canManageForms({ session });
+  }
+  const card = await context.query.FormCard.findOne({
+    where: { id: cardId },
+    query: `definition { ${FORM_DEFINITION_ACCESS_QUERY} }`,
+  });
+  return canMutateFormDefinition(session, card?.definition);
+}

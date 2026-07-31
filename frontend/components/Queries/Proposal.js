@@ -18,12 +18,30 @@ export const PROPOSAL_BOARD_SHARING = gql`
 `;
 
 // get proposal templates
+// Template proposal boards — boards flagged with isTemplate=true.
+// Used by the admin form scope picker to attach a project_board-scoped
+// FormDefinition to a specific template. Student clones of these boards
+// inherit the form automatically via the resolver's clonedFrom walk.
+export const TEMPLATE_PROPOSAL_BOARDS_LITE = gql`
+  query TEMPLATE_PROPOSAL_BOARDS_LITE {
+    proposalBoards(
+      where: { isTemplate: { equals: true } }
+      orderBy: { title: asc }
+    ) {
+      id
+      title
+    }
+  }
+`;
+
 export const PROPOSAL_TEMPLATES_QUERY = gql`
   query PROPOSAL_TEMPLATES_QUERY {
     proposalBoards(where: { isTemplate: { equals: true } }) {
       id
       title
       description
+      createdAt
+      updatedAt
       sections {
         id
         title
@@ -150,7 +168,11 @@ export const PROPOSAL_QUERY = gql`
       peerFeedbackOpenForComments
       projectReportStatus
       projectReportOpenForComments
+      milestoneStatus
       isTemplate
+      clonedFrom {
+        id
+      }
       prototypeFor {
         id
       }
@@ -168,8 +190,20 @@ export const PROPOSAL_QUERY = gql`
         templateProposal {
           id
         }
+        classTemplateBoards {
+          id
+          title
+        }
       }
       templateForClasses {
+        id
+        code
+      }
+      # Also select templatesForClass so isClassTemplateBoard() picks up
+      # 2nd-and-later class-template copies (copyProposalBoard connects only
+      # this new relation; templateForClasses is set solely for the first
+      # template in a class). See frontend/components/Utils/proposalBoard.js.
+      templatesForClass {
         id
         code
       }
@@ -212,6 +246,22 @@ export const PROPOSAL_QUERY = gql`
           publicId
           type
           title
+          milestone {
+            id
+            key
+            actionCardType
+            reviewStage
+            statusTarget
+            legacyBoardStatusField
+            legacyOpenForCommentsField
+            logEventName
+            formDefinitionKeyPattern
+            title
+            formDefinition {
+              id
+              key
+            }
+          }
           content
           revisedContent
           comment
@@ -250,6 +300,22 @@ export const GET_CARD_CONTENT = gql`
       id
       type
       title
+      milestone {
+        id
+        key
+        actionCardType
+        reviewStage
+        statusTarget
+        legacyBoardStatusField
+        legacyOpenForCommentsField
+        logEventName
+        formDefinitionKeyPattern
+        title
+        formDefinition {
+          id
+          key
+        }
+      }
       publicId
       description
       internalContent
@@ -311,6 +377,7 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
       peerFeedbackOpenForComments
       projectReportStatus
       projectReportOpenForComments
+      milestoneStatus
       checklist
       settings
       author {
@@ -598,7 +665,12 @@ export const TEACHER_PROJECT_BOARDS = gql`
 export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
   query CLASS_TEMPLATE_PROJECTS_QUERY($classId: ID!) {
     proposalBoards(
-      where: { templateForClasses: { some: { id: { equals: $classId } } } }
+      where: {
+        OR: [
+          { templatesForClass: { some: { id: { equals: $classId } } } }
+          { templateForClasses: { some: { id: { equals: $classId } } } }
+        ]
+      }
     ) {
       id
       title
@@ -607,7 +679,11 @@ export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
       isSubmitted
       isTemplate
       settings
+      creator {
+        id
+      }
       author {
+        id
         username
       }
       collaborators {
@@ -615,6 +691,28 @@ export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
       }
       createdAt
       updatedAt
+      sections(orderBy: [{ position: asc }]) {
+        id
+        title
+        position
+        cards(orderBy: [{ position: asc }]) {
+          id
+          type
+          title
+          position
+          milestone {
+            id
+            key
+            actionCardType
+            title
+            formDefinitionKeyPattern
+            formDefinition {
+              id
+              key
+            }
+          }
+        }
+      }
     }
   }
 `;
@@ -732,7 +830,6 @@ export const GET_PROJECT_STUDY = gql`
         }
         status
         currentVersion
-        versionHistory
         dataCollectionStatus
       }
     }
@@ -766,6 +863,7 @@ export const PROJECTS_QUERY = gql`
       peerFeedbackOpenForComments
       projectReportStatus
       projectReportOpenForComments
+      milestoneStatus
       settings
       study {
         featured
@@ -836,6 +934,7 @@ export const GET_MY_AUTHORED_PROJECT_BOARDS = gql`
       slug
       description
       isSubmitted
+      isTemplate
       settings
       author {
         username
@@ -850,6 +949,14 @@ export const GET_MY_AUTHORED_PROJECT_BOARDS = gql`
         slug
       }
       templateForClasses {
+        id
+        title
+        code
+      }
+      # See util isClassTemplateBoard / getClassTemplateClasses -- 2nd-and-
+      # later class-template copies land in templatesForClass, not
+      # templateForClasses. Select both so the callers can union them.
+      templatesForClass {
         id
         title
         code
@@ -889,6 +996,11 @@ export const GET_MY_COLLABORATED_PROJECT_BOARDS = gql`
         slug
       }
       templateForClasses {
+        id
+        title
+        code
+      }
+      templatesForClass {
         id
         title
         code

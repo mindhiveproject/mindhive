@@ -173,7 +173,16 @@ export const Study = list({
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
-    updatedAt: timestamp(),
+    updatedAt: timestamp({
+      hooks: {
+        async resolveInput({ operation }) {
+          if (operation === "update") {
+            return new Date().toISOString();
+          }
+          return undefined;
+        },
+      },
+    }),
     status: select({
       options: [
         { label: "Working", value: "WORKING" },
@@ -189,7 +198,16 @@ export const Study = list({
       ],
       defaultValue: "WORKING",
     }),
+    // id of the StudyVersion used for data collection: it is stamped on every
+    // Dataset and keys the participant data-policy consent, so it deliberately
+    // does NOT move on every save (see StudyVersion for the save history)
     currentVersion: text(),
+    versions: relationship({
+      ref: "StudyVersion.study",
+      many: true,
+    }),
+    // legacy: superseded by the StudyVersion list, kept for old studies that
+    // have not been migrated and is no longer written to by the builder
     versionHistory: json(),
     projectName: text(),
     dataCollectionStatus: select({

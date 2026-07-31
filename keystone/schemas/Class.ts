@@ -64,6 +64,10 @@ export const Class = list({
     templateProposal: relationship({
       ref: "ProposalBoard.templateForClasses",
     }),
+    classTemplateBoards: relationship({
+      ref: "ProposalBoard.templatesForClass",
+      many: true,
+    }),
     studentProposals: relationship({
       ref: "ProposalBoard.usedInClass",
       many: true,

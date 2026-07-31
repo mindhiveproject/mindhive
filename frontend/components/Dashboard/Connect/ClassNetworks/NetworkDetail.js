@@ -46,6 +46,10 @@ import {
   getEffectiveMembershipMode,
   roundStatusLabel,
 } from "./utils";
+import {
+  classNetworkUrlRef,
+  matchesClassNetworkRef,
+} from "../../../../lib/classNetworkRef";
 
 const BACK_CHEVRON = (
   <svg
@@ -321,11 +325,12 @@ function NetworkDetailPage({ query, user }) {
   });
 
   const networks = data?.classNetworks || [];
-  const network = networks.find((item) => item.id === networkId) || null;
-  const canManage = !!networkId && canManageClassNetwork(networkId);
+  const network =
+    networks.find((item) => matchesClassNetworkRef(item, networkId)) || null;
+  const canManage = !!network?.id && canManageClassNetwork(network.id);
   const pendingInvitesWhere = useMemo(
-    () => buildPendingNetworkInvitesWhere(networkId),
-    [networkId]
+    () => buildPendingNetworkInvitesWhere(network?.id),
+    [network?.id]
   );
 
   const { data: pendingInvitesData, refetch: refetchPendingInvites } = useQuery(
@@ -578,10 +583,10 @@ function NetworkDetailPage({ query, user }) {
     }
   };
 
-  const sponsorSignupAndInviteLink = network?.id
+  const sponsorSignupAndInviteLink = classNetworkUrlRef(network)
     ? `${
         typeof window !== "undefined" ? window.location.origin : ""
-      }/signup/sponsor?classNetwork=${network.id}`
+      }/signup/sponsor?classNetwork=${classNetworkUrlRef(network)}`
     : "";
 
   const handleInviteMemberProfile = async () => {

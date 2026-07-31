@@ -27,6 +27,8 @@ import Navigation from "../Navigation/Main";
 
 // Shared Project Builder (includes Undo UI when undo props are passed)
 import Builder from "../../Project/Builder/Builder";
+import { setCycleWarningHandler } from "../../shared/diagramCycle";
+import CycleLinkPreventedModal from "../../shared/CycleLinkPreventedModal";
 
 export default function Engine({
   query,
@@ -45,6 +47,7 @@ export default function Engine({
 
   const [hasStudyChanged, setHasStudyChanged] = useState(false);
   const [canUndo, setCanUndo] = useState(false);
+  const [cycleWarningOpen, setCycleWarningOpen] = useState(false);
   // force update canvas
   const forceUpdate = useReducer((bool) => !bool)[1];
   const [engine, setEngine] = useState(null);
@@ -221,6 +224,13 @@ export default function Engine({
     };
   }, []);
   // study?.diagram - was removed from the previous line not to update every time when the study state is updated
+
+  useEffect(() => {
+    setCycleWarningHandler(() => {
+      setCycleWarningOpen(true);
+    });
+    return () => setCycleWarningHandler(null);
+  }, []);
 
   // Attach undo listeners once the engine exists
   useEffect(() => {
@@ -452,7 +462,14 @@ export default function Engine({
     return children;
   };
 
-  const findNodes = ({ currentNode, flow, position }) => {
+  const findNodes = ({ currentNode, flow, position, path }) => {
+    if (!currentNode) return;
+    const nodeId = currentNode?.options?.id;
+    // Stop if this node is already on the current path (cycle); allow diamonds.
+    if (nodeId && path?.has(nodeId)) return;
+    const nextPath = new Set(path);
+    if (nodeId) nextPath.add(nodeId);
+
     // redefine what is the flow based on the type of the current node
     let currentFlow;
     if (currentNode?.options?.type === "design") {
@@ -479,6 +496,7 @@ export default function Engine({
           currentNode: child,
           flow: currentFlow,
           position: position + 1,
+          path: nextPath,
         });
       });
     } else {
@@ -493,6 +511,7 @@ export default function Engine({
           currentNode: child,
           flow: currentFlow,
           position: position + 1,
+          path: nextPath,
         });
       });
     }
@@ -506,11 +525,16 @@ export default function Engine({
     )[0];
     const flow = [];
     // find all nodes and append them to the flow
-    findNodes({ currentNode: startingNode, flow, position: 0 });
+    findNodes({
+      currentNode: startingNode,
+      flow,
+      position: 0,
+      path: new Set(),
+    });
     return flow;
   };
 
-  const buildStudy = () => {
+  const buildStudy = async () => {
     const model = engine?.model;
 
     // CLEANUP: Remove any dangling/loose links before saving
@@ -548,22 +572,30 @@ export default function Engine({
     }
 
     const { flow, diagram } = saveDiagramState();
-    const updatedVersionHistory = study?.versionHistory?.map((v) => {
-      if (v?.id === study?.currentVersion) {
-        return { ...v, diagram };
-      } else {
-        return v;
-      }
-    });
-    saveStudy({
-      flow,
-      diagram,
-      descriptionInProposalCardId: study?.descriptionInProposalCardId,
-      tags: study?.tags,
-      status: study?.status,
-      currentVersion: study?.currentVersion,
-      versionHistory: updatedVersionHistory,
-    });
+    // saveStudy stores the design as a new study version when it differs from
+    // the most recent one, so the study is only marked as saved once both the
+    // version and the study itself have been written
+    try {
+      await saveStudy({
+        flow,
+        diagram,
+        descriptionInProposalCardId: study?.descriptionInProposalCardId,
+        tags: study?.tags,
+        status: study?.status,
+      });
+    } catch (error) {
+      alert(
+        t(
+          "engine.saveFailed",
+          { message: error?.message || "" },
+          {
+            default:
+              "The study could not be saved: {{message}}. Please check your connection and try again.",
+          }
+        )
+      );
+      return;
+    }
     setHasStudyChanged(false);
     clearUndo();
   };
@@ -606,6 +638,10 @@ export default function Engine({
         onBeforeCanvasMutation={onBeforeCanvasMutation}
         onAfterCanvasMutation={onAfterCanvasMutation}
         onModelReplaced={onModelReplaced}
+      />
+      <CycleLinkPreventedModal
+        open={cycleWarningOpen}
+        onClose={() => setCycleWarningOpen(false)}
       />
     </>
   );

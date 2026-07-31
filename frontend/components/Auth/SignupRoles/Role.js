@@ -10,7 +10,6 @@ import useTranslation from "next-translate/useTranslation";
 import { SIGNUP_MUTATION, SIGNIN_MUTATION } from "../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { GET_INVITE_BY_TOKEN } from "../../Queries/Organization";
-import { GET_NETWORK } from "../../Queries/ClassNetwork";
 import {
   ACCEPT_ORG_INVITE,
   UPDATE_ORGANIZATION,
@@ -20,6 +19,7 @@ import {
   completeClassNetworkInviteAfterAuth,
   GET_NETWORK_INVITE_CONTEXT,
 } from "../../../lib/joinClassNetwork";
+import { useClassNetworkByRef } from "../../../lib/useClassNetworkByRef";
 import {
   ClassNetworkInviteBanner,
   ClassNetworkInviteErrorBanner,
@@ -106,12 +106,13 @@ export default function RoleSignup(query) {
   const isNetworkInviteInvalid =
     !!networkInviteToken && !networkInviteLoading && !isNetworkInvitePending;
 
-  const { data: networkData, loading: networkLoading } = useQuery(GET_NETWORK, {
-    variables: { id: classNetworkId || "" },
+  const {
+    classNetwork,
+    loading: networkLoading,
+  } = useClassNetworkByRef(classNetworkId, {
     skip: !classNetworkId || role !== "sponsor",
     fetchPolicy: "cache-and-network",
   });
-  const classNetwork = networkData?.classNetwork;
   const isClassNetworkValid = !!classNetwork?.id;
   const isClassNetworkInvalid =
     role === "sponsor" &&

@@ -1,11 +1,14 @@
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
+import { isOpenForComments } from "../../../../../lib/milestoneStatus";
+
 export default function Card({
   stage,
   project,
   status,
   isOpenForCommentsQuery,
+  milestones = [],
   onClick,
   className = "",
   style,
@@ -14,7 +17,9 @@ export default function Card({
   const { t } = useTranslation("builder");
   const imageURL = null;
 
-  const isOpenForComments = project[isOpenForCommentsQuery];
+  const isOpenForCommentsValue =
+    isOpenForComments(project, status, milestones) ||
+    (isOpenForCommentsQuery ? !!project[isOpenForCommentsQuery] : false);
 
   const shortenTitle = (title) => {
     if (title?.length <= 48) {
@@ -80,7 +85,7 @@ export default function Card({
           )}
         </div>
         <div className="options">
-          {isOpenForComments ? (
+          {isOpenForCommentsValue ? (
             <div className="option">
               <img src="/assets/icons/review/comment.svg" />
               <div>{t("review.commentBtn")}</div>

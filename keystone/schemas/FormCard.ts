@@ -7,7 +7,8 @@ import {
   integer,
   json,
 } from "@keystone-6/core/fields";
-import { permissions, rules, isSignedIn } from "../access";
+import { rules, isSignedIn } from "../access";
+import { CARD_TYPE_OPTIONS } from "./FormField";
 
 // A visual section ("card") within a FormDefinition. Cards group related
 // fields and provide the unit at which an admin can hide/show, reorder,
@@ -21,12 +22,12 @@ export const FormCard = list({
   access: {
     operation: {
       query: () => true,
-      create: ({ session }) =>
-        !!session &&
-        (permissions.canManageUsers({ session }) ||
-          permissions.canManageForms({ session })),
+      create: isSignedIn,
       update: isSignedIn,
       delete: isSignedIn,
+    },
+    item: {
+      create: rules.formCardCreate,
     },
     filter: {
       update: rules.formCardMutate,
@@ -38,11 +39,7 @@ export const FormCard = list({
       ref: "FormDefinition.cards",
     }),
     cardType: select({
-      options: [
-        { label: "Fields", value: "fields" },
-        { label: "Members Panel", value: "members_panel" },
-        { label: "Interest Selector", value: "interest_selector" },
-      ],
+      options: CARD_TYPE_OPTIONS.map((o) => ({ ...o })),
       defaultValue: "fields",
     }),
     // Plain-text fallback label (used when no i18n entry matches the

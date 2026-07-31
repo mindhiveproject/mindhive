@@ -102,6 +102,14 @@ export default function ManagementMain({ query, user }) {
                 </div>
               </Link>
             </div>
+
+            <div>
+              <Link href="/dashboard/admin-milestones">
+                <div className="menuTitle">
+                  <p>Milestones</p>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

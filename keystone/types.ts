@@ -39,6 +39,7 @@ export type ListAccessArgs = {
   itemId?: string;
   session?: Session;
   item?: any;
+  inputData?: any;
   listKey?: string;
   context?: any;
 };

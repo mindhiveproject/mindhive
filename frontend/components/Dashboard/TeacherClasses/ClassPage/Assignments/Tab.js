@@ -7,7 +7,7 @@ import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
-import Button from "../../../../DesignSystem/Button";
+import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -21,6 +21,7 @@ import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import ConnectAssignmentToCardModal from "./ConnectAssignmentToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import Button from "../../../../DesignSystem/Button";
 
 const SecondaryButton = styled.button`
   display: inline-flex;
@@ -251,7 +252,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     return html.replace(/<[^>]*>/g, '').trim();
   };
 
-  const templateBoardId = myclass?.templateProposal?.id;
+  const templateBoardId = getPrimaryTemplateBoardId(myclass);
 
   // Filter assignments by published state, then by linked card (section/card) if set
   const filteredAssignments = (() => {
@@ -361,7 +362,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   // Linked to card renderer: [Section] > [Card] (section and card each in its own button; clicking filters by that section/card)
   const LinkedToCardRenderer = (params) => {
     const assignment = params?.data;
-    const boardId = params?.context?.templateBoardId ?? myclass?.templateProposal?.id;
+    const boardId = params?.context?.templateBoardId ?? getPrimaryTemplateBoardId(myclass);
     const templateCards = !boardId
       ? []
       : (assignment?.proposalCards || []).filter(
@@ -481,7 +482,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   // Change link: opens connect-to-card modal for this row (only shown when Linked to card column is visible)
   const ChangeLinkRenderer = (params) => {
     const assignment = params?.data;
-    const templateBoardId = params?.context?.templateBoardId ?? myclass?.templateProposal?.id;
+    const templateBoardId = params?.context?.templateBoardId ?? getPrimaryTemplateBoardId(myclass);
     const handleClick = () => {
       if (!templateBoardId) {
         router.push({
@@ -920,7 +921,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
               if (e.api) setSelectedAssignments(e.api.getSelectedRows());
             }}
             context={{
-              templateBoardId: myclass?.templateProposal?.id,
+              templateBoardId: getPrimaryTemplateBoardId(myclass),
               onTogglePublishStatus: handleOpenPublishConfirm,
               updatingStatusAssignmentId,
               onLinkedCardFilterClick: (type, value) => setLinkedCardFilter({ type, value }),

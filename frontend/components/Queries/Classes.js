@@ -80,6 +80,7 @@ export const GET_CLASS = gql`
       }
       networks {
         id
+        publicId
         title
         description
         isPublic
@@ -110,6 +111,13 @@ export const GET_CLASS = gql`
       }
       templateProposal {
         id
+        title
+        settings
+      }
+      classTemplateBoards {
+        id
+        title
+        settings
       }
       settings
       createdAt

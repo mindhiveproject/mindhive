@@ -24,6 +24,10 @@ import { GET_AN_ASSIGNMENT } from "../../../../../Queries/Assignment"; // Adjust
 import { GET_RESOURCE } from "../../../../../Queries/Resource";
 
 import useForm from "../../../../../../lib/useForm";
+import {
+  getBoardAssignableToStudents,
+  getBoardStudentsCanAssignToCards,
+} from "../../../../../../lib/proposalBoardSettings";
 
 import Navigation from "./Navigation/Main";
 import Assigned from "./Forms/Assigned";
@@ -172,8 +176,14 @@ export default function ProposalCard({
     });
     return map;
   }, [cardHomeworks]);
-  const studentsCanAssignToCards =
-    proposal?.usedInClass?.settings?.studentsCanAssignToCards === true;
+  const studentsCanAssignToCards = getBoardStudentsCanAssignToCards(
+    proposal,
+    proposal?.usedInClass
+  );
+  const assignableToStudents = getBoardAssignableToStudents(
+    proposal,
+    proposal?.usedInClass
+  );
   const canAddAssignment = isTeacherOrMentor || studentsCanAssignToCards;
 
   // Get collaborators
@@ -1422,7 +1432,7 @@ export default function ProposalCard({
                   {ReactHtmlParser(inputs?.description)}
                 </div>
               </ReadOnlyTipTap>
-              {proposal?.usedInClass?.settings?.assignableToStudents === true &&
+              {assignableToStudents &&
                 (assignedCount > 0 || canAddAssignment) && (
                   <div>
                     <div className="cardSubheaderAssign" style={{ display: "flex", alignItems: "center", gap: "8px"}}>

@@ -1,6 +1,9 @@
 import { useQuery } from "@apollo/client";
 
 import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
+import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
+import { resolveMilestoneFromCard, isActionCard } from "../../../../../../lib/milestones";
+import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 
 import ProposalCard from "./Main";
 import IndividualCard from "./Individual/Main";
@@ -33,27 +36,20 @@ export default function CardWrapper({
 
   const proposalCard = data?.proposalCard || {};
 
-  const submitStatuses = {
-    ACTION_SUBMIT: proposal?.submitProposalStatus,
-    ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
-    ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
-  };
+  const { milestones } = useBoardMilestones(proposalId);
+  const submitStatuses = buildSubmitStatuses(proposal, milestones);
 
   const sectionsWithCard = proposal?.sections?.filter((section) =>
     section?.cards?.map((c) => c?.id).includes(cardId)
   );
   const section = sectionsWithCard?.length && sectionsWithCard[0];
-  const actionCards = section?.cards
-    ?.filter(
-      (card) =>
-        card?.type === "ACTION_SUBMIT" ||
-        card?.type === "ACTION_PEER_FEEDBACK" ||
-        card?.type === "ACTION_COLLECTING_DATA" ||
-        card?.type === "ACTION_PROJECT_REPORT"
-    )
-    .map((c) => c?.type);
-  const submissionStage = (actionCards?.length && actionCards[0]) || undefined;
-  const submissionStatus = submitStatuses[submissionStage];
+  const actionCards = section?.cards?.filter((card) => isActionCard(card)) || [];
+  const firstAction = actionCards[0];
+  const submissionStage =
+    firstAction?.milestone?.key || firstAction?.type;
+  const submissionStatus =
+    submitStatuses[submissionStage] ||
+    (firstAction?.type && submitStatuses[firstAction.type]);
   const isCardSubmitted = proposalCard?.settings?.includeInReviewSteps?.some(
     (step) => submitStatuses[step] === "SUBMITTED"
   );
@@ -65,11 +61,16 @@ export default function CardWrapper({
     user?.permissions.map((p) => p?.name).includes("MENTOR");
 
   if (proposalCard && Object.values(proposalCard).length) {
+    const cardMilestone = resolveMilestoneFromCard(proposalCard, milestones);
+    const isCollectingData =
+      proposalCard?.type === "ACTION_COLLECTING_DATA" ||
+      cardMilestone?.actionCardType === "ACTION_COLLECTING_DATA" ||
+      cardMilestone?.key === "DATA_COLLECTION";
+
     if (
       !proposalBuildMode &&
-      (proposalCard?.type === "ACTION_SUBMIT" ||
-        proposalCard?.type === "ACTION_PEER_FEEDBACK" ||
-        proposalCard?.type === "ACTION_PROJECT_REPORT")
+      isActionCard(proposalCard) &&
+      !isCollectingData
     ) {
       return (
         <SubmitAction
@@ -84,7 +85,7 @@ export default function CardWrapper({
       );
     }
 
-    if (!proposalBuildMode && proposalCard?.type === "ACTION_COLLECTING_DATA") {
+    if (!proposalBuildMode && isCollectingData) {
       return (
         <SubmitStudy
           query={query}

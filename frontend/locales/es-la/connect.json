@@ -423,7 +423,23 @@
 		"backLink": ""
 	},
 	"matchingRound": {
+		"algorithmControlsHeading": "",
+		"algorithmControlsHelper": "",
+		"algorithmInfoAria": "",
+		"algorithmInfoTitle": "",
+		"algorithmInfoTooltip": "",
+		"allFull": "",
+		"allStudentsAssigned": "",
+		"assignedPaneHeader": "",
+		"assignStudent": "",
+		"assignToOpportunity": "",
+		"capacityFull": "",
+		"capacityFullShort": "",
+		"curatedControlsHeading": "",
+		"curatedControlsHelper": "",
 		"draftBanner": "",
+		"dragHint": "",
+		"dropHere": "",
 		"editor": {
 			"backLink": "",
 			"create": "",
@@ -433,12 +449,18 @@
 			"save": "",
 			"saving": ""
 		},
+		"matchingAlgorithmLabel": "",
+		"noRankedCandidates": "",
 		"notAvailableYet": "",
+		"noUnmatched": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
+		"proposeTopCandidates": "",
+		"proposeTopConfirm": "",
 		"publishDisabledWhileDraft": "",
 		"publishRequiresMatching": "",
+		"studentsPaneHeader": "",
 		"submission": {
 			"backLink": "",
 			"saveDraft": "",
@@ -446,7 +468,15 @@
 			"statusDraft": "",
 			"statusSubmitted": "",
 			"submit": ""
-		}
+		},
+		"switchToAlgorithmConfirm": "",
+		"switchToCuratedConfirm": "",
+		"unassign": "",
+		"unknownOpportunity": "",
+		"unmatchedHelper": "",
+		"unmatchedHelperCurated": "",
+		"workspaceHeading": "",
+		"workspaceHelper": ""
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -457,24 +487,24 @@
 		}
 	},
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "Capacidad {{count}}",
+		"delete": "BORRAR",
+		"deleteConfirm": "¿Eliminar esta oportunidad? Esto no se puede deshacer.",
+		"edit": "Editar",
+		"empty": "Aún no has creado ninguna oportunidad. Haz clic en Nueva oportunidad para publicar tu primer proyecto para estudiantes.",
+		"emptyFiltered": "No hay oportunidades que coincidan con los filtros actuales.",
+		"loading": "Cargando...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} redes",
+			"one": "Red{{count}} "
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "Filtrar por red",
+		"networkFilterPlaceholder": "Todas las redes",
+		"newButton": "Nueva oportunidad",
+		"pageTitle": "Mis oportunidades",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} calificaciones",
+			"one": "{{average}} · {{count}} calificación"
 		},
 		"reviewCommentsEdit": "",
 		"reviewCommentsWaiting": "",
@@ -483,25 +513,25 @@
 			"sponsor": "Patrocinador: {{name}}",
 			"submitted": "Enviado {{date}}"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "Buscar oportunidades por título",
+		"searchPlaceholder": "Buscar por título...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"accepted": "Aceptado",
+			"archived": "Archivado",
+			"closed": "Cerrado",
+			"draft": "Borrador",
+			"pendingReview": "Pendiente de revisión",
+			"preSelected": "Preseleccionado",
+			"published": "Publicado",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Filtrar por estado",
+		"statusFilterPlaceholder": "Todos los estados",
+		"teamOf": "Equipo de {{size}}",
+		"unknownSponsor": "Desconocido"
 	},
 	"myProfile": "",
 	"nav": {
@@ -509,7 +539,7 @@
 		"connect": "Conectar",
 		"exploreOpportunities": "Explorar oportunidades",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Conectar secciones",
 		"manageNetwork": "",
 		"matches": "Partidos",
 		"matchingRounds": "Rondas coincidentes",
@@ -796,6 +826,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Guardar cambios",
+		"saveDraft": "",
 		"saving": "Ahorro...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "Obstáculos previstos",
@@ -818,6 +849,8 @@
 		"sponsorStatusLocked": "— Bloqueado. Un profesor o administrador actualizará el estado.",
 		"sponsorStatusReturnedHint": "",
 		"status": "Estado",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "Aceptado (alcance final completo)",
 			"archived": "Archivado",
@@ -829,6 +862,7 @@
 			"submitted": "Presentado para revisión"
 		},
 		"studentCapacity": "Capacidad de estudiantes",
+		"submitForReview": "",
 		"teamPreferences": "Permitir que los estudiantes nombren a sus compañeros de equipo preferidos para esta oportunidad.",
 		"teamSize": "Tamaño del equipo",
 		"teamSizeHint": "1 = colocación individual.",
@@ -848,6 +882,7 @@
 			"expectedDeliverables": "Seleccione al menos un entregable previsto.",
 			"fieldResearchRequired": "Por favor, indique si se prevé realizar trabajo de campo o viajar.",
 			"followUpIncomplete": "Por favor, complete el cuestionario de seguimiento antes de guardar.",
+			"formDefinitionMissing": "",
 			"guidelines": "Por favor, marque la casilla de aceptación de las directrices en la ficha de publicación antes de enviar esta oportunidad.",
 			"issueRelevance": "",
 			"learningOutcomes": "",
@@ -871,8 +906,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} palabras",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "Esta oportunidad está archivada.",
+				"closed": "Esta oportunidad ya no está disponible.",
 				"published": "Esta oportunidad ha sido publicada para estudiantes.",
 				"returnedRevise": "",
 				"sponsorFollowUp": "Complete el cuestionario de seguimiento a continuación.",
@@ -992,22 +1027,22 @@
 		"website": ""
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "Explora los patrocinadores que ofrecen oportunidades en MindHive Connect: descubre su misión, el equipo que los respalda y todos los proyectos que han publicado.",
+		"domainFilterLabel": "Filtrar por dominio",
+		"domainFilterPlaceholder": "Todos los dominios",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "Institución académica",
+			"government": "Agencia gubernamental",
+			"industry": "Industria / Empresa emergente",
+			"nonprofit": "No lucrativo",
+			"other": "Otro"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "Ninguna organización coincide con los filtros actuales.",
+		"loading": "Cargando...",
+		"next": "Próximo",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} oportunidades",
+			"one": "{{count}} oportunidad"
 		},
 		"pageTitle": "",
 		"paginationInfo": "",
@@ -1066,10 +1101,10 @@
 		"title": "Su participación"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "Comunidad MindHive",
+		"defaultName": "Miembro de MindHive",
+		"defaultSummary": "Haz clic para ver el perfil.",
+		"viewProfile": "Ver perfil de {{name}}"
 	},
 	"profileType": {
 		"chooseType": "Elige tu tipo de perfil",
@@ -1107,18 +1142,61 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
-	"roleGuard": {
-		"backLink": "",
-		"description": "",
-		"roles": {
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
 		},
-		"title": ""
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"loadPreviousMessages": "",
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
+	"roleGuard": {
+		"backLink": "Volver a conectar",
+		"description": "Tu cuenta aún no tiene acceso a esta sección. Si crees que se trata de un error, consulta con tu profesor o un administrador.",
+		"roles": {
+			"admin": "Administradores",
+			"classNetworkAdmin": "",
+			"mentor": "Mentores",
+			"scientist": "",
+			"student": "Estudiantes",
+			"teacher": "Profesores"
+		},
+		"title": "Esta área es para {{roles}}"
 	},
 	"savedConnections": "Conexiones guardadas",
 	"savedConnectionsSubtitle": "Busca en tu red de contactos el colaborador, mentor o científico perfecto para ti.",

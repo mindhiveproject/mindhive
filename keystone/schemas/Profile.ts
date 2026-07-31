@@ -10,6 +10,7 @@ import {
   json,
   calendarDay,
   multiselect,
+  file,
 } from "@keystone-6/core/fields";
 import { permissions, rules } from "../access";
 
@@ -243,6 +244,10 @@ export const Profile = list({
       ref: "Study.collaborators",
       many: true,
     }),
+    studyVersions: relationship({
+      ref: "StudyVersion.createdBy",
+      many: true,
+    }),
     consentCreatorIn: relationship({
       ref: "Consent.author",
       many: true,
@@ -420,6 +425,11 @@ export const Profile = list({
       ref: "OpportunityReviewNote.author",
       many: true,
     }),
+    // Notes this profile has marked as read (via markOpportunityReviewNotesRead).
+    opportunityReviewNotesRead: relationship({
+      ref: "OpportunityReviewNote.readBy",
+      many: true,
+    }),
     questionsProposed: relationship({
       ref: "ConnectQuestion.proposedBy",
       many: true,
@@ -484,7 +494,8 @@ export const Profile = list({
     occupation: text(),
     education: json(), // a list of institutions and degrees
     languages: json(), // a list of languages
-    introVideo: json(), // an object with the link to the file system, timestampUploaded, timestampModified
+    introVideo: json(), // unused legacy field; superseded by introVideoFile (kept to avoid a migration)
+    introVideoFile: file({ storage: "profile_videos" }),
     involvement: json(),
     mentorPreferGrade: select({
       options: [

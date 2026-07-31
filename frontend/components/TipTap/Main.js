@@ -16,7 +16,7 @@ import { Button, Dropdown } from "semantic-ui-react";
 import { useApolloClient } from "@apollo/client";
 
 import CollaborationCursorExtension from "./CollaborationCursorExtension";
-import { collabEndpoint, endpoint, prodEndpoint } from "../../config";
+import { collabWsUrl } from "../../config";
 
 import DesignSystemButton from "../DesignSystem/Button";
 import { StyledTipTap } from "./StyledTipTap";
@@ -78,27 +78,12 @@ const CustomLink = Link.extend({
   
 // ── Collaborative editing helpers ─────────────────────────────────────────────
 
-// Derive the collaboration WebSocket URL from the SAME backend Apollo talks to
-// (config.js endpoint/prodEndpoint). Deriving it independently risks pointing
-// collaboration at a different server/database than where the card content (and
-// its yjsState) actually lives. Strip the `/api/graphql` path, swap http→ws, and
-// append `/collaboration`.
+// The collaboration WebSocket URL is resolved centrally in config.js so it
+// always tracks the same backend origin Apollo talks to — pointing them at
+// different servers would edit a different database than the one the card
+// content (yjsState) lives in.
 function getCollaborationUrl() {
-  // Mirror Apollo's exact endpoint selection (lib/withData.js): use the dev
-  // endpoint ONLY when NODE_ENV is explicitly "development", otherwise the prod
-  // endpoint. The client bundle's NODE_ENV can be undefined in production, so an
-  // inverted `=== "production"` check would wrongly fall back to localhost.
-  const gql =
-    process.env.NODE_ENV === "development" ? collabEndpoint : prodEndpoint;
-
-  // We should replace this with a more proper "collabEndpoint" and "prodCollabEndpoint"
-  // Where the local collab endpoint is ws://localhost:4445/collaboration
-  // And the production is the same as the backend endpoint but with wss and the /collaboration extension
-  const base = (gql || "http://localhost:4445/api/graphql").replace(
-    /\/api\/graphql\/?$/,
-    "",
-  );
-  return `${base.replace(/^http/, "ws")}/collaboration`;
+  return collabWsUrl;
 }
 
 // Mirrors the server-side cursor colour assignment (keystone/lib/hocuspocus.ts).

@@ -423,7 +423,23 @@
 		"backLink": "Back to matches"
 	},
 	"matchingRound": {
+		"algorithmControlsHeading": "Algorithm controls",
+		"algorithmControlsHelper": "The matcher considers submitted preferences only. Higher rank + higher star rating wins, subject to each opportunity's capacity. Existing proposed matches will be replaced — manually-edited or active matches are preserved.",
+		"algorithmInfoAria": "How the matching algorithms work",
+		"algorithmInfoTitle": "How the matching algorithms work",
+		"algorithmInfoTooltip": "How the matching algorithms work",
+		"allFull": "All opportunities full",
+		"allStudentsAssigned": "All students with preferences are assigned.",
+		"assignedPaneHeader": "Assigned ({{count}})",
+		"assignStudent": "+ Assign student",
+		"assignToOpportunity": "Assign to opportunity…",
+		"capacityFull": "This opportunity is already at capacity. Remove an existing match first.",
+		"capacityFullShort": "Capacity full",
+		"curatedControlsHeading": "Teacher-curated matching",
+		"curatedControlsHelper": "This round is teacher-curated — assign students to opportunities by hand in the sections below, then Publish to make matches active.",
 		"draftBanner": "This round is in draft. Students cannot see it until you open preferences.",
+		"dragHint": "Drag onto an opportunity to assign",
+		"dropHere": "Drop a student here to assign",
 		"editor": {
 			"backLink": "Back to rounds",
 			"create": "Create round",
@@ -433,12 +449,18 @@
 			"save": "Save changes",
 			"saving": "Saving…"
 		},
+		"matchingAlgorithmLabel": "Matching algorithm",
+		"noRankedCandidates": "No unmatched students ranked this opportunity. Assign one manually instead.",
 		"notAvailableYet": "This round is not available yet. Your teacher is still setting it up.",
+		"noUnmatched": "No unmatched students",
 		"openConfirm": "Students in this network will see this round and can submit preferences. Continue?",
 		"openingPreferences": "Opening…",
 		"openPreferences": "Open preferences",
+		"proposeTopCandidates": "Propose top candidates",
+		"proposeTopConfirm": "Propose the top {{count}} candidate(s) for \"{{title}}\"?",
 		"publishDisabledWhileDraft": "Open preferences and move the round to Matching before publishing matches.",
 		"publishRequiresMatching": "Set the round status to Matching before publishing final matches.",
+		"studentsPaneHeader": "Unmatched ({{count}})",
 		"submission": {
 			"backLink": "Back to rounds",
 			"saveDraft": "Save draft",
@@ -446,7 +468,15 @@
 			"statusDraft": "Draft saved",
 			"statusSubmitted": "Submitted",
 			"submit": "Submit preferences"
-		}
+		},
+		"switchToAlgorithmConfirm": "Switch to an automatic matching algorithm? Existing proposed matches stay in place; use 'Run matching' to replace them.",
+		"switchToCuratedConfirm": "Switch to teacher-curated matching? Existing proposed matches stay; you can adjust them by hand from now on. Auto-matching is disabled until you switch back.",
+		"unassign": "Unassign",
+		"unknownOpportunity": "(opportunity)",
+		"unmatchedHelper": "These students submitted preferences but no match was assigned (capacity full, low ranks, or no eligible opportunities).",
+		"unmatchedHelperCurated": "These students submitted preferences but haven't been assigned yet. Pick an opportunity to place them.",
+		"workspaceHeading": "Assignment workspace",
+		"workspaceHelper": "Drag a student from the left onto an opportunity, or use the per-row controls. Assigned students appear underneath the unmatched list."
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -618,7 +648,7 @@
 		"guidelinesMutualExpectationsChip": "Mutual Expectations agreement",
 		"guidelinesRequestAppointment": "I request an appointment to discuss further.",
 		"guidelinesTitle": "Understanding of Proposal Guidelines",
-		"guidelinesWarning": "Tick the guidelines checkbox before publishing.",
+		"guidelinesWarning": "Tick the guidelines checkbox before submitting this opportunity.",
 		"introVideo": "Intro video",
 		"introVideoHint": "Upload a video file or paste an embed URL (YouTube, Vimeo). Uploaded files are stored on our cloud bucket.",
 		"introVideoUrlHint": "Or paste a video URL (the URL itself — not the full <iframe> embed code). Supports YouTube, Vimeo, Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload size: {{maxMb}} MB.",
@@ -796,6 +826,7 @@
 			"unknownAuthor": "Reviewer"
 		},
 		"save": "Save changes",
+		"saveDraft": "Save draft",
 		"saving": "Saving…",
 		"specialConsiderations": {
 			"anticipatedObstacles": "Anticipated obstacles",
@@ -818,6 +849,8 @@
 		"sponsorStatusLocked": "— locked. A teacher or admin will update the status.",
 		"sponsorStatusReturnedHint": "— use Resubmit above when your changes are ready.",
 		"status": "Status",
+		"statusAdmin": "Status (admin)",
+		"statusAdminHint": "Sponsors submit for review via the button at the top of the page. Use this control only for admin status overrides.",
 		"statusOptions": {
 			"accepted": "Accepted (complete final scope)",
 			"archived": "Archived",
@@ -829,6 +862,7 @@
 			"submitted": "Submitted for review"
 		},
 		"studentCapacity": "Student capacity",
+		"submitForReview": "Submit for review in class network",
 		"teamPreferences": "Allow students to nominate preferred teammates for this opportunity",
 		"teamSize": "Team size",
 		"teamSizeHint": "1 = solo placement.",
@@ -848,6 +882,7 @@
 			"expectedDeliverables": "Please select at least one expected deliverable.",
 			"fieldResearchRequired": "Please indicate whether field research or travel is expected.",
 			"followUpIncomplete": "",
+			"formDefinitionMissing": "Could not resolve the opportunity form definition. Ask an admin to publish one, then try again.",
 			"guidelines": "Please tick the guidelines acknowledgment in the Publishing card before submitting this opportunity.",
 			"issueRelevance": "",
 			"learningOutcomes": "",
@@ -1106,6 +1141,49 @@
 	"reviewOpportunity": {
 		"backLink": "Back to review queue",
 		"returnToSponsor": "Return with comments"
+	},
+	"reviewThread": {
+		"cancel": "Cancel",
+		"compose": {
+			"post": "Post note",
+			"posting": "Posting…",
+			"postReply": "Post reply",
+			"sponsorPlaceholder": "Write a reply for the reviewers…",
+			"teacherPlaceholder": "Leave a note for the sponsor…"
+		},
+		"delete": "Delete",
+		"deleteConfirm": "Delete this message?",
+		"edit": "Edit",
+		"editAria": "Edit message",
+		"empty": "No messages yet. Start the conversation below.",
+		"errors": {
+			"delete": "Could not delete this message. Please try again.",
+			"post": "Could not post this message. Please try again.",
+			"save": "Could not save this message. Please try again."
+		},
+		"kind": {
+			"reviewerComment": "Reviewer comment",
+			"sponsorReply": "Sponsor reply"
+		},
+		"loadPreviousMessages": "Load previous messages",
+		"noRound": "This opportunity is not linked to a matching round yet, so a conversation cannot be started.",
+		"resubmitPrompt": {
+			"dismiss": "Not now",
+			"message": "Your reply was posted. Resubmit your opportunity so reviewers can see your updates.",
+			"resubmit": "Resubmit now",
+			"resubmitting": "Resubmitting…",
+			"title": "Resubmit your opportunity"
+		},
+		"roundFallback": "Matching round",
+		"roundRequired": "Select a matching round to view and post messages in this conversation.",
+		"roundSelectLabel": "Matching round",
+		"roundSelectPlaceholder": "Select a matching round…",
+		"save": "Save",
+		"saving": "Saving…",
+		"sponsorHelper": "Messages shared with reviewers for this matching round.",
+		"title": "Review conversation",
+		"unknownAuthor": "Unknown",
+		"updatedAt": "Updated {{date}}"
 	},
 	"roleGuard": {
 		"backLink": "Back to Connect",

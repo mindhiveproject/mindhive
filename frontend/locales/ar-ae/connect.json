@@ -423,7 +423,23 @@
 		"backLink": ""
 	},
 	"matchingRound": {
+		"algorithmControlsHeading": "",
+		"algorithmControlsHelper": "",
+		"algorithmInfoAria": "",
+		"algorithmInfoTitle": "",
+		"algorithmInfoTooltip": "",
+		"allFull": "",
+		"allStudentsAssigned": "",
+		"assignedPaneHeader": "",
+		"assignStudent": "",
+		"assignToOpportunity": "",
+		"capacityFull": "",
+		"capacityFullShort": "",
+		"curatedControlsHeading": "",
+		"curatedControlsHelper": "",
 		"draftBanner": "",
+		"dragHint": "",
+		"dropHere": "",
 		"editor": {
 			"backLink": "",
 			"create": "",
@@ -433,12 +449,18 @@
 			"save": "",
 			"saving": ""
 		},
+		"matchingAlgorithmLabel": "",
+		"noRankedCandidates": "",
 		"notAvailableYet": "",
+		"noUnmatched": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
+		"proposeTopCandidates": "",
+		"proposeTopConfirm": "",
 		"publishDisabledWhileDraft": "",
 		"publishRequiresMatching": "",
+		"studentsPaneHeader": "",
 		"submission": {
 			"backLink": "",
 			"saveDraft": "",
@@ -446,7 +468,15 @@
 			"statusDraft": "",
 			"statusSubmitted": "",
 			"submit": ""
-		}
+		},
+		"switchToAlgorithmConfirm": "",
+		"switchToCuratedConfirm": "",
+		"unassign": "",
+		"unknownOpportunity": "",
+		"unmatchedHelper": "",
+		"unmatchedHelperCurated": "",
+		"workspaceHeading": "",
+		"workspaceHelper": ""
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -457,24 +487,24 @@
 		}
 	},
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "السعة {{count}}",
+		"delete": "يمسح",
+		"deleteConfirm": "هل يمكن حذف هذه الفرصة؟ لا يمكن التراجع عن هذا القرار.",
+		"edit": "يحرر",
+		"empty": "لم تُنشئ أي فرص بعد. انقر على \"فرصة جديدة\" لنشر مشروعك الأول للطلاب.",
+		"emptyFiltered": "لا توجد فرص تتطابق مع المعايير الحالية.",
+		"loading": "تحميل...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} شبكات",
+			"one": "{{count}} الشبكة"
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "تصفية حسب الشبكة",
+		"networkFilterPlaceholder": "جميع الشبكات",
+		"newButton": "فرصة جديدة",
+		"pageTitle": "فرصي",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} تقييمات",
+			"one": "{{average}} · {{count}} تقييم"
 		},
 		"reviewCommentsEdit": "",
 		"reviewCommentsWaiting": "",
@@ -483,25 +513,25 @@
 			"sponsor": "الراعي: {{name}}",
 			"submitted": "تم الإرسال {{date}}"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "ابحث عن الفرص حسب العنوان",
+		"searchPlaceholder": "البحث حسب العنوان...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"accepted": "قبلت",
+			"archived": "مؤرشف",
+			"closed": "مغلق",
+			"draft": "مسودة",
+			"pendingReview": "قيد المراجعة",
+			"preSelected": "مختارة مسبقاً",
+			"published": "نشرت",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "تصفية حسب الحالة",
+		"statusFilterPlaceholder": "جميع الحالات",
+		"teamOf": "فريق من {{size}}",
+		"unknownSponsor": "مجهول"
 	},
 	"myProfile": "",
 	"nav": {
@@ -509,7 +539,7 @@
 		"connect": "يتصل",
 		"exploreOpportunities": "استكشف الفرص",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "ربط الأقسام",
 		"manageNetwork": "",
 		"matches": "المباريات",
 		"matchingRounds": "جولات متطابقة",
@@ -796,6 +826,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "حفظ التغييرات",
+		"saveDraft": "",
 		"saving": "إنقاذ...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "العقبات المتوقعة",
@@ -818,6 +849,8 @@
 		"sponsorStatusLocked": "— مغلق. سيقوم أحد المعلمين أو المشرفين بتحديث الحالة.",
 		"sponsorStatusReturnedHint": "",
 		"status": "حالة",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "مقبول (النطاق النهائي الكامل)",
 			"archived": "مؤرشف",
@@ -829,6 +862,7 @@
 			"submitted": "تم تقديمه للمراجعة"
 		},
 		"studentCapacity": "الطاقة الاستيعابية للطلاب",
+		"submitForReview": "",
 		"teamPreferences": "اسمح للطلاب بترشيح زملائهم المفضلين في الفريق لهذه الفرصة",
 		"teamSize": "حجم الفريق",
 		"teamSizeHint": "1 = وضع منفرد.",
@@ -848,6 +882,7 @@
 			"expectedDeliverables": "يرجى اختيار منتج واحد على الأقل من المنتجات المتوقعة.",
 			"fieldResearchRequired": "يرجى توضيح ما إذا كان من المتوقع إجراء بحث ميداني أو سفر.",
 			"followUpIncomplete": "يرجى إكمال استبيان المتابعة قبل الحفظ.",
+			"formDefinitionMissing": "",
 			"guidelines": "يرجى وضع علامة صح على قسم الإقرار بالإرشادات في بطاقة النشر قبل تقديم هذه الفرصة.",
 			"issueRelevance": "",
 			"learningOutcomes": "",
@@ -871,8 +906,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} كلمة",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "هذه الفرصة مؤرشفة.",
+				"closed": "انتهت هذه الفرصة.",
 				"published": "تم نشر هذه الفرصة للطلاب.",
 				"returnedRevise": "",
 				"sponsorFollowUp": "أكمل استبيان المتابعة أدناه.",
@@ -992,22 +1027,22 @@
 		"website": ""
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "تصفح الرعاة الذين يستضيفون فرصًا على منصة MindHive Connect - اطلع على مهمتهم، والفريق الذي يقف وراءهم، وكل مشروع قاموا بنشره.",
+		"domainFilterLabel": "تصفية حسب النطاق",
+		"domainFilterPlaceholder": "جميع النطاقات",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "مؤسسة أكاديمية",
+			"government": "وكالة حكومية",
+			"industry": "الصناعة / الشركات الناشئة",
+			"nonprofit": "منظمة غير ربحية",
+			"other": "آخر"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "لا توجد منظمات تتطابق مع المعايير الحالية.",
+		"loading": "تحميل...",
+		"next": "التالي",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} فرص",
+			"one": "{{count}} فرصة"
 		},
 		"pageTitle": "",
 		"paginationInfo": "",
@@ -1066,10 +1101,10 @@
 		"title": "مشاركتك"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "مجتمع مايندهيف",
+		"defaultName": "عضو في MindHive",
+		"defaultSummary": "انقر لعرض الملف الشخصي",
+		"viewProfile": "عرض ملف تعريف {{name}}"
 	},
 	"profileType": {
 		"chooseType": "اختر نوع ملفك الشخصي",
@@ -1107,18 +1142,61 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
-	"roleGuard": {
-		"backLink": "",
-		"description": "",
-		"roles": {
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
 		},
-		"title": ""
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"loadPreviousMessages": "",
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
+	"roleGuard": {
+		"backLink": "العودة إلى صفحة الاتصال",
+		"description": "لا يملك حسابك صلاحية الوصول إلى هذا القسم بعد. إذا كنت تعتقد أن هذا خطأ، فاسأل معلمك أو أحد المشرفين.",
+		"roles": {
+			"admin": "المسؤولون",
+			"classNetworkAdmin": "",
+			"mentor": "الموجهون",
+			"scientist": "",
+			"student": "طلاب",
+			"teacher": "مُعلّم"
+		},
+		"title": "هذه المنطقة مخصصة لـ {{roles}}"
 	},
 	"savedConnections": "الاتصالات المحفوظة",
 	"savedConnectionsSubtitle": "ابحث من خلال اتصالاتك للعثور على المتعاون أو المرشد أو العالم المثالي لك.",

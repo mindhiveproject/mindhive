@@ -35,14 +35,17 @@ export const SPONSOR_ONBOARDING_STATE = gql`
         }
         memberOfClassNetworks {
           id
+          publicId
           title
         }
         adminOfClassNetworks {
           id
+          publicId
           title
         }
         classNetworksCreated {
           id
+          publicId
           title
         }
         opportunitiesCreated {
@@ -93,10 +96,12 @@ export const CURRENT_USER_QUERY = gql`
         }
         classNetworksCreated {
           id
+          publicId
           title
         }
         adminOfClassNetworks {
           id
+          publicId
           title
         }
         adminOfOrganizations {
@@ -105,6 +110,7 @@ export const CURRENT_USER_QUERY = gql`
         }
         memberOfClassNetworks {
           id
+          publicId
           title
         }
         connectRoundsReviewing {
@@ -134,6 +140,7 @@ export const GET_USER_CLASSES = gql`
           id
           title
           code
+          createdAt
           networks {
             classes {
               id
@@ -143,12 +150,20 @@ export const GET_USER_CLASSES = gql`
           }
           templateProposal {
             id
+            title
+            settings
+          }
+          classTemplateBoards {
+            id
+            title
+            settings
           }
         }
         teacherIn {
           id
           title
           code
+          createdAt
           networks {
             classes {
               id
@@ -159,11 +174,16 @@ export const GET_USER_CLASSES = gql`
           templateProposal {
             id
           }
+          classTemplateBoards {
+            id
+            title
+          }
         }
         mentorIn {
           id
           title
           code
+          createdAt
           networks {
             classes {
               id
@@ -455,7 +475,10 @@ export const PUBLIC_USER_QUERY = gql`
       organization
       department
       tagline
-      introVideo
+      introVideoFile {
+        url
+        filename
+      }
       passion
       involvement
       language
@@ -1096,7 +1119,10 @@ export const GET_PROFILE = gql`
         passion
         involvement
         languages
-        introVideo
+        introVideoFile {
+          url
+          filename
+        }
         occupation
         education
         mentorPreferGrade

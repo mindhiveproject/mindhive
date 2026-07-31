@@ -20,6 +20,7 @@ const INVITE_QUERY = `
   pendingKey
   classNetwork {
     id
+    publicId
     title
     description
     isPublic
@@ -50,6 +51,7 @@ const INVITE_QUERY = `
 
 const NETWORK_QUERY = `
   id
+  publicId
   title
   description
   isPublic
@@ -155,7 +157,7 @@ async function getEligibleSessionProfile(context: any) {
   assertSignedIn(context);
   const profile = await context.sudo().query.Profile.findOne({
     where: { id: context.session.itemId },
-    query: "id username email permissions { name }",
+    query: "id username firstName lastName email permissions { name }",
   });
   if (!profile) {
     throw new Error("Profile not found.");
@@ -166,6 +168,73 @@ async function getEligibleSessionProfile(context: any) {
     );
   }
   return profile;
+}
+
+function profileDisplayName(profile: any): string {
+  if (!profile) return "Someone";
+  const fullName = `${profile.firstName || ""} ${profile.lastName || ""}`.trim();
+  return fullName || profile.username || "Someone";
+}
+
+/**
+ * Create in-app Updates for network creator + admins when a profile
+ * submits a new membership request. Failures are logged and do not
+ * block invite creation.
+ */
+async function notifyNetworkAdminsOfMembershipRequest(
+  context: any,
+  {
+    network,
+    requester,
+  }: {
+    network: any;
+    requester: any;
+  }
+) {
+  try {
+    const recipientIds = new Set<string>();
+    if (network?.creator?.id) recipientIds.add(network.creator.id);
+    for (const admin of network?.admins || []) {
+      if (admin?.id) recipientIds.add(admin.id);
+    }
+    recipientIds.delete(requester?.id);
+
+    if (recipientIds.size === 0) return;
+
+    const networkRef = network.publicId || network.id;
+    const link = `/dashboard/connect/networks?mode=manage&networkId=${encodeURIComponent(
+      networkRef
+    )}#network-pending-invites`;
+    const requesterName = profileDisplayName(requester);
+    const networkTitle = network.title || "a class network";
+    const content = {
+      title: "New membership request",
+      message: `${requesterName} wants to join "${networkTitle}"`,
+      linkTitle: "Review request",
+    };
+
+    for (const userId of recipientIds) {
+      try {
+        await context.sudo().db.Update.createOne({
+          data: {
+            user: { connect: { id: userId } },
+            updateArea: "CONNECT",
+            link,
+            content,
+          },
+        });
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `Failed to create membership-request Update for user ${userId}:`,
+          e
+        );
+      }
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error("notifyNetworkAdminsOfMembershipRequest failed:", e);
+  }
 }
 
 async function getNetwork(context: any, networkId: string) {
@@ -347,6 +416,12 @@ export async function requestClassNetworkMembership(
       email: normalizeEmail(me.email) || undefined,
     },
   });
+
+  await notifyNetworkAdminsOfMembershipRequest(context, {
+    network,
+    requester: me,
+  });
+
   return created;
 }
 
@@ -654,6 +729,7 @@ export async function networkInviteContext(
       email
       classNetwork {
         id
+        publicId
         title
         description
         isPublic
@@ -674,6 +750,7 @@ export async function networkInviteContext(
     classNetwork: invite.classNetwork
       ? {
           id: invite.classNetwork.id,
+          publicId: invite.classNetwork.publicId || null,
           title: invite.classNetwork.title,
           description: invite.classNetwork.description,
           isPublic: invite.classNetwork.isPublic,

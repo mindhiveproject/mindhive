@@ -25,6 +25,7 @@ export const Update = list({
     link: text(),
     content: json(),
     hasOpen: checkbox({ isFilterable: true }),
+    isArchived: checkbox({ defaultValue: false, isFilterable: true }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

@@ -423,7 +423,23 @@
 		"backLink": ""
 	},
 	"matchingRound": {
+		"algorithmControlsHeading": "",
+		"algorithmControlsHelper": "",
+		"algorithmInfoAria": "",
+		"algorithmInfoTitle": "",
+		"algorithmInfoTooltip": "",
+		"allFull": "",
+		"allStudentsAssigned": "",
+		"assignedPaneHeader": "",
+		"assignStudent": "",
+		"assignToOpportunity": "",
+		"capacityFull": "",
+		"capacityFullShort": "",
+		"curatedControlsHeading": "",
+		"curatedControlsHelper": "",
 		"draftBanner": "",
+		"dragHint": "",
+		"dropHere": "",
 		"editor": {
 			"backLink": "",
 			"create": "",
@@ -433,12 +449,18 @@
 			"save": "",
 			"saving": ""
 		},
+		"matchingAlgorithmLabel": "",
+		"noRankedCandidates": "",
 		"notAvailableYet": "",
+		"noUnmatched": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
+		"proposeTopCandidates": "",
+		"proposeTopConfirm": "",
 		"publishDisabledWhileDraft": "",
 		"publishRequiresMatching": "",
+		"studentsPaneHeader": "",
 		"submission": {
 			"backLink": "",
 			"saveDraft": "",
@@ -446,7 +468,15 @@
 			"statusDraft": "",
 			"statusSubmitted": "",
 			"submit": ""
-		}
+		},
+		"switchToAlgorithmConfirm": "",
+		"switchToCuratedConfirm": "",
+		"unassign": "",
+		"unknownOpportunity": "",
+		"unmatchedHelper": "",
+		"unmatchedHelperCurated": "",
+		"workspaceHeading": "",
+		"workspaceHelper": ""
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -457,24 +487,24 @@
 		}
 	},
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "क्षमता {{count}}",
+		"delete": "मिटाना",
+		"deleteConfirm": "क्या इस अवसर को मिटाना संभव है? इसे बदला नहीं जा सकता।",
+		"edit": "संपादन करना",
+		"empty": "आपने अभी तक कोई अवसर नहीं बनाया है। छात्रों के लिए अपना पहला प्रोजेक्ट प्रकाशित करने के लिए 'नया अवसर' पर क्लिक करें।",
+		"emptyFiltered": "वर्तमान फ़िल्टरों से मेल खाने वाले कोई अवसर नहीं हैं।",
+		"loading": "लोड हो रहा है...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} नेटवर्क",
+			"one": "{{count}} नेटवर्क"
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "नेटवर्क के आधार पर फ़िल्टर करें",
+		"networkFilterPlaceholder": "सभी नेटवर्क",
+		"newButton": "नया मौका",
+		"pageTitle": "मेरे अवसर",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} रेटिंग",
+			"one": "{{average}} · {{count}} रेटिंग"
 		},
 		"reviewCommentsEdit": "",
 		"reviewCommentsWaiting": "",
@@ -483,25 +513,25 @@
 			"sponsor": "प्रायोजक: {{name}}",
 			"submitted": "प्रस्तुत किया गया {{date}}"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "पदनाम के आधार पर अवसरों की खोज करें",
+		"searchPlaceholder": "शीर्षक के आधार पर खोजें...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"accepted": "स्वीकृत",
+			"archived": "संग्रहीत",
+			"closed": "बंद किया हुआ",
+			"draft": "मसौदा",
+			"pendingReview": "समीक्षा लंबित है",
+			"preSelected": "पूर्व-चयनित",
+			"published": "प्रकाशित",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "स्थिति के अनुसार फ़िल्टर करें",
+		"statusFilterPlaceholder": "सभी स्थितियाँ",
+		"teamOf": " {{size}}की टीम",
+		"unknownSponsor": "अज्ञात"
 	},
 	"myProfile": "",
 	"nav": {
@@ -509,7 +539,7 @@
 		"connect": "जोड़ना",
 		"exploreOpportunities": "अवसरों का पता लगाएं",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "अनुभागों को जोड़ें",
 		"manageNetwork": "",
 		"matches": "माचिस",
 		"matchingRounds": "मिलान दौर",
@@ -796,6 +826,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "परिवर्तनों को सुरक्षित करें",
+		"saveDraft": "",
 		"saving": "सहेजा जा रहा है...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "संभावित बाधाएँ",
@@ -818,6 +849,8 @@
 		"sponsorStatusLocked": "— लॉक किया गया है। शिक्षक या व्यवस्थापक स्थिति को अपडेट करेंगे।",
 		"sponsorStatusReturnedHint": "",
 		"status": "स्थिति",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "स्वीकृत (अंतिम कार्यक्षेत्र पूर्ण)",
 			"archived": "संग्रहीत",
@@ -829,6 +862,7 @@
 			"submitted": "समीक्षा के लिए प्रस्तुत किया गया"
 		},
 		"studentCapacity": "छात्र क्षमता",
+		"submitForReview": "",
 		"teamPreferences": "छात्रों को इस अवसर के लिए अपने पसंदीदा टीम साथियों को नामित करने की अनुमति दें।",
 		"teamSize": "टीम का आकार",
 		"teamSizeHint": "1 = एकल प्रस्तुति।",
@@ -848,6 +882,7 @@
 			"expectedDeliverables": "कृपया कम से कम एक अपेक्षित परिणाम चुनें।",
 			"fieldResearchRequired": "कृपया बताएं कि क्या क्षेत्र अनुसंधान या यात्रा की अपेक्षा है।",
 			"followUpIncomplete": "कृपया सहेजने से पहले अनुवर्ती प्रश्नावली को पूरा करें।",
+			"formDefinitionMissing": "",
 			"guidelines": "इस अवसर को प्रस्तुत करने से पहले कृपया प्रकाशन कार्ड में दिशा-निर्देशों की स्वीकृति पर निशान लगा दें।",
 			"issueRelevance": "",
 			"learningOutcomes": "",
@@ -871,8 +906,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} शब्द",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "यह अवसर संग्रहीत कर दिया गया है।",
+				"closed": "यह अवसर अब उपलब्ध नहीं है।",
 				"published": "यह अवसर छात्रों के लिए प्रकाशित किया गया है।",
 				"returnedRevise": "",
 				"sponsorFollowUp": "नीचे दिए गए अनुवर्ती प्रश्नावली को पूरा करें।",
@@ -992,22 +1027,22 @@
 		"website": ""
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "MindHive Connect पर अवसर प्रदान करने वाले प्रायोजकों को ब्राउज़ करें — उनका मिशन, उनके पीछे की टीम और उनके द्वारा प्रकाशित प्रत्येक परियोजना देखें।",
+		"domainFilterLabel": "डोमेन के आधार पर फ़िल्टर करें",
+		"domainFilterPlaceholder": "सभी डोमेन",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "शैक्षिक संस्था",
+			"government": "सरकारी एजेंसी",
+			"industry": "उद्योग / स्टार्टअप",
+			"nonprofit": "ग़ैर-लाभकारी",
+			"other": "अन्य"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "वर्तमान फ़िल्टरों से कोई संगठन मेल नहीं खाता।",
+		"loading": "लोड हो रहा है...",
+		"next": "अगला",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} अवसर",
+			"one": "{{count}} अवसर"
 		},
 		"pageTitle": "",
 		"paginationInfo": "",
@@ -1066,10 +1101,10 @@
 		"title": "आपकी भागीदारी"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "माइंडहाइव समुदाय",
+		"defaultName": "माइंडहाइव सदस्य",
+		"defaultSummary": "प्रोफ़ाइल देखने के लिए क्लिक करें",
+		"viewProfile": " {{name}}की प्रोफ़ाइल देखें"
 	},
 	"profileType": {
 		"chooseType": "अपना प्रोफ़ाइल प्रकार चुनें",
@@ -1107,18 +1142,61 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
-	"roleGuard": {
-		"backLink": "",
-		"description": "",
-		"roles": {
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
 		},
-		"title": ""
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"loadPreviousMessages": "",
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
+	"roleGuard": {
+		"backLink": "कनेक्ट पर वापस जाएँ",
+		"description": "आपके खाते को अभी इस अनुभाग तक पहुंच नहीं है। यदि आपको लगता है कि यह कोई गलती है, तो अपने शिक्षक या प्रशासक से पूछें।",
+		"roles": {
+			"admin": "व्यवस्थापक",
+			"classNetworkAdmin": "",
+			"mentor": "मेंटर्स",
+			"scientist": "",
+			"student": "छात्र",
+			"teacher": "शिक्षकों"
+		},
+		"title": "यह क्षेत्र {{roles}}के लिए है"
 	},
 	"savedConnections": "सहेजे गए कनेक्शन",
 	"savedConnectionsSubtitle": "अपने संपर्कों के माध्यम से अपने लिए उपयुक्त सहयोगी, मार्गदर्शक या वैज्ञानिक खोजें।",

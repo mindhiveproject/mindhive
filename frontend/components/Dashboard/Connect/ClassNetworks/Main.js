@@ -20,6 +20,7 @@ import {
   countUniqueStudents,
   formatCount,
 } from "./utils";
+import { classNetworkUrlRef } from "../../../../lib/classNetworkRef";
 
 const Shell = styled.div`
   display: flex;
@@ -367,10 +368,11 @@ function ManageNetworks({ user }) {
   const networks = data?.classNetworks || [];
 
   const handleOpenDetails = (network) => {
-    if (!network?.id) return;
+    const ref = classNetworkUrlRef(network);
+    if (!ref) return;
     router.push({
       pathname: "/dashboard/connect/networks",
-      query: { mode: "manage", networkId: network.id },
+      query: { mode: "manage", networkId: ref },
     });
   };
 

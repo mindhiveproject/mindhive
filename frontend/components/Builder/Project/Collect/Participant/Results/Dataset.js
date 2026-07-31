@@ -37,6 +37,21 @@ export const getTranslatedStudyStatuses = (t) => {
   };
 };
 
+// Resolve the study version stamped on a collected record to the name shown in
+// the results. Records collected before the study versions were moved into
+// their own list refer to the entries of the legacy versionHistory.
+export const getStudyVersionName = ({ study, versionId }) => {
+  if (!versionId) return "";
+  const version = (study?.versions || []).find(
+    (v) => v?.id === versionId || v?.legacyId === versionId
+  );
+  if (version?.name) return version?.name;
+  const legacyVersion = (study?.versionHistory || []).find(
+    (v) => v?.id === versionId
+  );
+  return legacyVersion?.name || "";
+};
+
 export default function Dataset({
   study,
   studyId,
@@ -50,7 +65,10 @@ export default function Dataset({
   // Get translated status strings for use in this component
   const studyStatuses = getTranslatedStudyStatuses(t);
 
-  const studyVersionHistory = study?.versionHistory || [];
+  const studyVersionName = getStudyVersionName({
+    study,
+    versionId: dataset?.studyVersion,
+  });
 
   // Set up SWR to run the fetcher function when calling "/api/staticdata"
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
@@ -62,14 +80,14 @@ export default function Dataset({
     fetcher
   );
 
-  // Handle the error state
+  // Handle the error state (subtitle/metadata come from fetched results — unavailable here)
   if (error)
     return (
       <div className="resultItem">
         <div>{dataset?.study?.title}</div>
         <div>{dataset?.task?.title}</div>
-        <div>{subtitle}</div>
-        <div>{metadata?.testVersion}</div>
+        <div />
+        <div />
         <div>{moment(dataset?.createdAt).format("MMMM D, YY, h:mm:ss")}</div>
         <div>{moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}</div>
         {/* <div>{condition}</div> */}
@@ -80,13 +98,7 @@ export default function Dataset({
         </div>
         <div>{dataset?.dataPolicy}</div>
         <div>{dataset?.studyStatus && studyStatuses[dataset?.studyStatus]}</div>
-        <div>
-          {dataset?.studyVersion
-            ? studyVersionHistory
-                .filter((v) => v?.id === dataset?.studyVersion)
-                .map((v) => v?.name)
-            : " "}
-        </div>
+        <div>{studyVersionName || " "}</div>
         <div>{t("dataset.noData", "No data")}</div>
         <DeleteRecord
           studyId={studyId}
@@ -176,13 +188,7 @@ export default function Dataset({
       </div>
       <div>{dataset?.dataPolicy}</div>
       <div>{dataset?.studyStatus && studyStatuses[dataset?.studyStatus]}</div>
-      <div>
-        {dataset?.studyVersion
-          ? studyVersionHistory
-              .filter((v) => v?.id === dataset?.studyVersion)
-              .map((v) => v?.name)
-          : " "}
-      </div>
+      <div>{studyVersionName || " "}</div>
       <ChangeDatasetStatus
         studyId={studyId}
         participantId={participantId}

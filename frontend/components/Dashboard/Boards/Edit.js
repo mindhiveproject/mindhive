@@ -7,7 +7,7 @@ import {
 } from "../../Queries/Proposal"; // Adjust path to your Proposal.js file
 
 import { StyledProposal } from "../../styles/StyledProposal";
-import ProposalPage from "../TeacherClasses/ClassPage/ProjectBoard/ProposalPage";
+import ProposalPage from "../TeacherClasses/ClassPage/Projects/ProjectBoard/ProposalPage";
 
 export default function EditProposal({ user, boardId }) {
   const { t } = useTranslation("classes");
@@ -18,8 +18,8 @@ export default function EditProposal({ user, boardId }) {
     skip: !boardId,
   });
 
-  const goToOverview = () => {
-    router.push("/dashboard/boards"); // Adjust to your teacher projects overview route
+  const onBack = () => {
+    router.push("/dashboard/boards");
   };
 
   if (!user)
@@ -45,7 +45,7 @@ export default function EditProposal({ user, boardId }) {
       <ProposalPage
         user={user}
         proposalId={boardId}
-        goToOverview={goToOverview}
+        onBack={onBack}
         proposalBuildMode={true}
         refetchQueries={[
           {

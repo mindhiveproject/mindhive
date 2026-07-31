@@ -68,7 +68,8 @@ export const Dataset = list({
       ],
       defaultValue: "WORKING",
     }),
-    studyVersion: text(),
+    // id of the StudyVersion the study was collecting data with
+    studyVersion: text({ isFilterable: true }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

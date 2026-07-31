@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import sortBy from "lodash/sortBy";
 
 import { useQuery, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 import { v1 as uuidv1 } from "uuid";
@@ -17,6 +18,7 @@ import {
   DELETE_SECTION,
 } from "../../Mutations/Proposal";
 import { isClassTemplateBoard } from "../../Utils/proposalBoard";
+import TemplateMilestoneManager from "../../Builder/Project/ProjectBoard/Board/Builder/TemplateMilestoneManager";
 
 const Board = ({
   proposalId,
@@ -27,8 +29,13 @@ const Board = ({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
+  autoOpenAddMilestone = false,
 }) => {
   const { t } = useTranslation("builder");
+  const router = useRouter();
+  const [addMilestoneTargetSectionId, setAddMilestoneTargetSectionId] =
+    useState(null);
+  const addMilestoneHandledRef = useRef(false);
   const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
     pollInterval: 20000, // get new data every 20 seconds
@@ -112,6 +119,32 @@ const Board = ({
   }, [proposal]);
 
   useEffect(() => {
+    if (
+      !autoOpenAddMilestone ||
+      !sections.length ||
+      addMilestoneHandledRef.current
+    ) {
+      return;
+    }
+
+    addMilestoneHandledRef.current = true;
+    setAddMilestoneTargetSectionId(sections[sections.length - 1].id);
+
+    const { addMilestone, ...restQuery } = router.query;
+    if (addMilestone) {
+      router.replace(
+        { pathname: router.pathname, query: restQuery },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [autoOpenAddMilestone, sections, router]);
+
+  const handleAddMilestoneModalOpened = useCallback(() => {
+    setAddMilestoneTargetSectionId(null);
+  }, []);
+
+  useEffect(() => {
     if (!proposal?.id || !isClassTemplateBoard(proposal)) return;
     if (!Array.isArray(proposal.sections)) return;
     if (backfillPublicIdDoneRef.current === proposal.id) return;
@@ -192,6 +225,13 @@ const Board = ({
       `Error! ${error.message}`
     );
 
+  // Same gate as the newer Builder/Project/ProjectBoard tree: only
+  // template boards being actively edited (not previewed) get the
+  // Review-steps panel. Kept consistent so an admin editing the same
+  // board from either tree sees the same affordances.
+  const showTemplateMilestoneManager =
+    !isPreview && proposalBuildMode && isClassTemplateBoard(proposal);
+
   return (
     <>
       {proposalBuildMode && errors.length > 0 && (
@@ -203,6 +243,9 @@ const Board = ({
             ))}
           </Message.List>
         </Message>
+      )}
+      {showTemplateMilestoneManager && (
+        <TemplateMilestoneManager templateBoardId={proposal.id} />
       )}
       <Inner
         board={proposal}
@@ -219,6 +262,8 @@ const Board = ({
         propagateToClones={propagateToClones}
         onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
         hasClones={hasClones}
+        addMilestoneTargetSectionId={addMilestoneTargetSectionId}
+        onAddMilestoneModalOpened={handleAddMilestoneModalOpened}
       />
     </>
   );

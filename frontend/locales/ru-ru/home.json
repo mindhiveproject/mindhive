@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "Пошаговое руководство"
 	},
 	"info": "Дополнительная информация",
+	"networkAppointmentRequests": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"networkPendingInvites": {
 		"count": "",
 		"dismiss": "",
@@ -129,8 +137,16 @@
 	"termsCondition": "Условия и положения",
 	"updateProfileDescription": "Вы уже являетесь участником сообщества MindHive! Обновите свой профиль, нажав здесь.",
 	"updates": {
+		"archive": "",
+		"archiveAria": "",
+		"archiveEmpty": "",
+		"archiveModalTitle": "",
+		"dismiss": "",
 		"latestUpdates": "Последние обновления",
-		"noUpdate": "На данный момент обновлений нет."
+		"noUpdate": "На данный момент обновлений нет.",
+		"open": "",
+		"show": "",
+		"unreadCount": ""
 	},
 	"walkthroughs": {
 		"availableTours": "Доступные туры:",

@@ -29,6 +29,40 @@ export const ConnectMatch = list({
     },
   },
   hooks: {
+    // Enforce uniqueness on (round, student, opportunity). Prisma doesn't
+    // express compound-unique across relation FKs through Keystone field
+    // decorators, so we guard at the resolver layer instead. Client already
+    // dedupes, but a browser double-click or a network retry can still
+    // race two createConnectMatch requests through; this hook catches them
+    // before both rows land.
+    async validateInput({ operation, resolvedData, item, addValidationError, context }) {
+      if (operation !== "create" && operation !== "update") return;
+      const nextRoundId =
+        resolvedData?.round?.connect?.id ?? item?.roundId ?? null;
+      const nextStudentId =
+        resolvedData?.student?.connect?.id ?? item?.studentId ?? null;
+      const nextOpportunityId =
+        resolvedData?.opportunity?.connect?.id ?? item?.opportunityId ?? null;
+      // Skip when we don't have all three legs yet (partial update, or a
+      // create that omits one of them will fail elsewhere anyway).
+      if (!nextRoundId || !nextStudentId || !nextOpportunityId) return;
+      const existing = await context.sudo().query.ConnectMatch.findMany({
+        where: {
+          round: { id: { equals: nextRoundId } },
+          student: { id: { equals: nextStudentId } },
+          opportunity: { id: { equals: nextOpportunityId } },
+          ...(operation === "update" && item?.id
+            ? { id: { not: { equals: item.id } } }
+            : {}),
+        },
+        query: "id",
+      });
+      if (existing.length > 0) {
+        addValidationError(
+          "This student is already matched to that opportunity in this round.",
+        );
+      }
+    },
     // Notify the student when their match becomes active (e.g. when a teacher
     // publishes a round). Best-effort — swallows errors so a flaky email
     // service can't break the mutation.

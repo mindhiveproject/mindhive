@@ -28,6 +28,121 @@ function reviewerDisplayName(p: any) {
   );
 }
 
+/**
+ * Deep link into a class matching "Review opportunities" panel for a
+ * network, matching NetworkAppointmentRequests on the frontend.
+ */
+function appointmentReviewLink(
+  recipientId: string,
+  rounds: any[]
+): string {
+  for (const round of rounds || []) {
+    const network = round?.classNetwork;
+    if (!network?.id) continue;
+    const networkRef = network.publicId || network.id;
+    for (const cls of network.classes || []) {
+      if (!cls?.code) continue;
+      const isCreator = cls.creator?.id === recipientId;
+      const isMentor = (cls.mentors || []).some(
+        (m: { id: string }) => m.id === recipientId
+      );
+      if (!isCreator && !isMentor) continue;
+      const params = new URLSearchParams({
+        page: "opportunities",
+        matchingPanel: "review",
+        networkId: networkRef,
+      });
+      return `/dashboard/myclasses/${encodeURIComponent(
+        cls.code
+      )}?${params.toString()}`;
+    }
+  }
+  return "/dashboard/home";
+}
+
+/**
+ * When a sponsor submits with requestsAppointment, notify reviewers
+ * (and creators) of non-archived matching rounds on the opportunity's
+ * class networks. Opportunity.rounds is usually empty at submit time.
+ */
+async function notifyAppointmentRequestUpdates(
+  context: any,
+  opportunity: any
+) {
+  try {
+    if (!opportunity?.requestsAppointment) return;
+
+    const networkIds = (opportunity.classNetworks || [])
+      .map((n: { id: string }) => n?.id)
+      .filter(Boolean);
+    if (networkIds.length === 0) return;
+
+    const rounds = await context.sudo().query.ConnectRound.findMany({
+      where: {
+        classNetwork: { id: { in: networkIds } },
+        status: { not: { equals: "archived" } },
+      },
+      query: `
+        id
+        createdBy { id }
+        reviewers { id }
+        classNetwork {
+          id
+          publicId
+          classes {
+            code
+            creator { id }
+            mentors { id }
+          }
+        }
+      `,
+    });
+
+    if (!rounds?.length) return;
+
+    const mentorId = opportunity.mentor?.id;
+    const recipientIds = new Set<string>();
+    for (const round of rounds) {
+      if (round?.createdBy?.id) recipientIds.add(round.createdBy.id);
+      for (const reviewer of round?.reviewers || []) {
+        if (reviewer?.id) recipientIds.add(reviewer.id);
+      }
+    }
+    if (mentorId) recipientIds.delete(mentorId);
+    if (recipientIds.size === 0) return;
+
+    const mentorName = reviewerDisplayName(opportunity.mentor);
+    const title = opportunity.title || "an opportunity";
+    const content = {
+      title: "Appointment requested",
+      message: `${mentorName} submitted "${title}" and requested an appointment`,
+      linkTitle: "Review",
+    };
+
+    for (const userId of recipientIds) {
+      try {
+        await context.sudo().db.Update.createOne({
+          data: {
+            user: { connect: { id: userId } },
+            updateArea: "CONNECT",
+            link: appointmentReviewLink(userId, rounds),
+            content,
+          },
+        });
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `Failed to create appointment-request Update for user ${userId}:`,
+          e
+        );
+      }
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error("notifyAppointmentRequestUpdates failed:", e);
+  }
+}
+
 export const Opportunity = list({
   access: {
     operation: {
@@ -227,12 +342,11 @@ export const Opportunity = list({
     }),
 
     // Overview of Capstone Project Proposal — unified sponsor application form.
-    // Shape matches frontend OpportunityProposalConfig (title/description stay
-    // on top-level fields for listings and search).
-    // Migration: before deploying this schema change, backfill proposalData from
-    // the removed flat columns (relevance, expectedDeliverables, etc.) via a
-    // one-time script; records without proposalData will show empty proposal
-    // fields until re-saved or migrated.
+    // Persisted as [{ formDefinitionId, answer }] where `answer` holds the flat
+    // field map (relevance, expectedDeliverables, etc.). title/description stay
+    // on top-level Opportunity fields for listings and search.
+    // Readers should unwrap via getProposalAnswer (legacy flat objects are still
+    // accepted on read). Writers upsert via upsertProposalEntry.
     proposalData: json(),
 
     // Legacy CUSP fields (kept for existing records; no longer in the editor form)
@@ -347,7 +461,9 @@ export const Opportunity = list({
           query: `
             id
             title
+            requestsAppointment
             mentor { id email firstName lastName username }
+            classNetworks { id publicId }
             rounds {
               id
               title
@@ -361,28 +477,81 @@ export const Opportunity = list({
         const mentorId = fresh.mentor?.id;
         const mentorName = reviewerDisplayName(fresh.mentor);
 
-        if (becameReturned && fresh.mentor?.email && mentorId !== actorId) {
-          const link = `${frontendUrl()}/dashboard/connect/opportunities?op=${fresh.id}`;
+        if (becameReturned && mentorId && mentorId !== actorId) {
+          // Prefer the round from the most recent review note (created just
+          // before status change in ReturnOpportunityModal). Fall back to a
+          // single linked round when unambiguous.
+          let roundId: string | null = null;
           try {
-            await sendNotificationEmail(
-              fresh.mentor.email,
-              `Your Capstone proposal was returned: "${fresh.title}"`,
-              `Hi ${mentorName},\n\n` +
-                `A teacher has returned your Capstone proposal "${fresh.title}" for revision. ` +
-                `Open the link below to read their notes, make changes, and resubmit for review.`,
-              link
-            );
+            const recentNotes = await context
+              .sudo()
+              .query.OpportunityReviewNote.findMany({
+                where: { opportunity: { id: { equals: String(item.id) } } },
+                orderBy: [{ createdAt: "desc" }],
+                take: 1,
+                query: `id round { id }`,
+              });
+            roundId = recentNotes?.[0]?.round?.id || null;
+          } catch (_) {
+            roundId = null;
+          }
+          if (!roundId && (fresh.rounds || []).length === 1) {
+            roundId = fresh.rounds[0]?.id || null;
+          }
+          const linkParams = new URLSearchParams({ op: String(fresh.id) });
+          if (roundId) linkParams.set("round", roundId);
+          const relativeLink = `/dashboard/connect/opportunities?${linkParams.toString()}`;
+          const absoluteLink = `${frontendUrl()}${relativeLink}`;
+
+          try {
+            await context.sudo().db.Update.createOne({
+              data: {
+                user: { connect: { id: mentorId } },
+                updateArea: "CONNECT",
+                link: relativeLink,
+                content: {
+                  title: "Opportunity returned with comments",
+                  message: `A teacher returned "${fresh.title || "your opportunity"}" with comments. Review the notes and resubmit for review.`,
+                  linkTitle: "Review & resubmit",
+                },
+              },
+            });
           } catch (e) {
             // eslint-disable-next-line no-console
             console.error(
-              `Mentor return notification failed for ${fresh.mentor.email}:`,
+              `Failed to create mentor return Update for user ${mentorId}:`,
               e
             );
+          }
+
+          if (fresh.mentor?.email) {
+            try {
+              await sendNotificationEmail(
+                fresh.mentor.email,
+                `Your Capstone proposal was returned: "${fresh.title}"`,
+                `Hi ${mentorName},\n\n` +
+                  `A teacher has returned your Capstone proposal "${fresh.title}" for revision. ` +
+                  `Open the link below to read their notes, make changes, and resubmit for review.`,
+                absoluteLink
+              );
+            } catch (e) {
+              // eslint-disable-next-line no-console
+              console.error(
+                `Mentor return notification failed for ${fresh.mentor.email}:`,
+                e
+              );
+            }
           }
           return;
         }
 
         if (!becamePending) return;
+
+        // Appointment-request Updates only on first submit into pending_review,
+        // not when resubmitting from returned.
+        if (originalItem?.status !== "returned") {
+          await notifyAppointmentRequestUpdates(context, fresh);
+        }
 
         const seen = new Set<string>();
 

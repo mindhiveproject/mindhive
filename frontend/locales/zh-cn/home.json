@@ -35,6 +35,14 @@
 		"walkthroughTutorial": "演练教程"
 	},
 	"info": "更多信息",
+	"networkAppointmentRequests": {
+		"count": "",
+		"dismiss": "",
+		"open": "",
+		"show": "",
+		"title": "",
+		"untitled": ""
+	},
 	"networkPendingInvites": {
 		"count": "",
 		"dismiss": "",
@@ -129,8 +137,16 @@
 	"termsCondition": "条款和条件",
 	"updateProfileDescription": "您已经是 MindHive 社区的一员了！点击此处更新您的个人资料。",
 	"updates": {
+		"archive": "",
+		"archiveAria": "",
+		"archiveEmpty": "",
+		"archiveModalTitle": "",
+		"dismiss": "",
 		"latestUpdates": "最新更新",
-		"noUpdate": "目前没有更新。"
+		"noUpdate": "目前没有更新。",
+		"open": "",
+		"show": "",
+		"unreadCount": ""
 	},
 	"walkthroughs": {
 		"availableTours": "可选旅游行程：",

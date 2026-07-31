@@ -1,7 +1,7 @@
 {
 	"dataJournal": {
 		"components": {
-			"closePanel": "",
+			"closePanel": "关闭组件面板",
 			"descriptions": {
 				"barChart": "使用分组条形图可视化定性变量和定量变量之间的关系。",
 				"codeFromScratch": "编写自定义代码以构建完全定制的分析或可视化效果。",

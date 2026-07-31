@@ -941,6 +941,13 @@ const StyledClass = styled.div`
       }
     }
   }
+  .projectsBoardBackBar {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: transparent;
+  }
+
   .classTabPage {
     display: grid;
     gap: 28px;
@@ -948,6 +955,18 @@ const StyledClass = styled.div`
     max-width: 100%;
     padding-bottom: 40px;
     font-family: "Inter", sans-serif;
+
+    .matchingRoundsList {
+      display: grid;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .matchingRoundsListCreate {
+      display: flex;
+      justify-content: flex-start;
+      padding-top: 4px;
+    }
 
     .classTabSection {
       display: grid;
@@ -1087,52 +1106,143 @@ const StyledClass = styled.div`
       line-height: 22px;
     }
 
-    .classTabNetworkChipRow {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+    .classTabSubsection {
+      display: grid;
+      gap: 12px;
     }
 
-    .classTabNetworkInvite {
+    .classTabSubsectionTitle {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 22px;
+      color: #171717;
+    }
+
+    .classTabSubsectionDescription {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625b71;
+    }
+
+    .classTabSubsectionHeaderRow {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 12px 16px;
-      padding-top: 16px;
-      margin-top: 4px;
+      gap: 12px;
+    }
+
+    .classTabSubsectionHeaderGroup {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .classTabSubsectionDivider {
+      margin: 8px 0;
       border-top: 1px solid #ece9e6;
+    }
 
-      .networkInviteText {
-        display: grid;
-        gap: 2px;
-        min-width: 180px;
-        flex: 1;
-      }
+    .classTabOwnedShowcase {
+      display: grid;
+      gap: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ece9e6;
+      margin-bottom: 8px;
+    }
 
-      .networkInviteTitle {
-        margin: 0;
-        font-size: 15px;
-        font-weight: 700;
-        line-height: 22px;
-        color: #171717;
-      }
+    .classTabTemplateList {
+      display: grid;
+      gap: 16px;
+    }
 
-      .networkInviteDescription {
-        margin: 0;
-        font-size: 13px;
-        line-height: 18px;
-        color: #625b71;
-      }
+    .classTabTemplateCard {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid #e6e6e6;
+      border-radius: 14px;
+      background: #f3f3f3;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
 
-      .networkInviteActions {
-        display: flex;
-        flex-wrap: wrap;
-        flex-shrink: 0;
-        align-items: center;
-        gap: 10px;
+    .classTabTemplateCardActive {
+      border: 2px solid #336f8a;
+      background: rgba(222, 248, 251, 0.3);
+    }
+
+    .classTabTemplateCardRow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 12px 16px;
+    }
+
+    .classTabTemplateCardTitle {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #171717;
+      word-break: break-word;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .classTabTemplateCardTitleLink {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+
+      &:hover .classTabTemplateCardTitle {
+        color: #336f8a;
+        text-decoration: underline;
       }
+    }
+
+    .classTabTemplateCardTitleGroup {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .classTabTemplateCardDescription {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625b71;
+      word-break: break-word;
+    }
+
+    .classTabTemplateCardActions {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .classTabTemplateCardMeta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      color: #8a8a8a;
     }
 
     .classTabExpandableCard {
@@ -1144,13 +1254,13 @@ const StyledClass = styled.div`
     .classTabExpandableHeaderBar {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      align-items: stretch;
+      align-items: start;
       gap: 0;
-      min-height: 72px;
+      min-height: 0;
 
       .matchingRoundHeaderActions {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: flex-end;
         flex-shrink: 0;
         padding: 16px 24px 16px 12px;
@@ -1177,7 +1287,7 @@ const StyledClass = styled.div`
 
     .classTabExpandableHeaderToggle {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
       width: 100%;
@@ -1206,7 +1316,7 @@ const StyledClass = styled.div`
 
       .expandableHeaderMain {
         display: grid;
-        gap: 8px;
+        gap: 4px;
         min-width: 0;
         flex: 1;
 
@@ -1233,6 +1343,7 @@ const StyledClass = styled.div`
 
       .expandableChevron {
         flex-shrink: 0;
+        margin-top: 7px;
         opacity: 0.7;
         transition: transform 0.2s ease;
 
@@ -1256,26 +1367,116 @@ const StyledClass = styled.div`
       }
     }
 
+    .classTabMatchingRoundNetworkRow {
+      display: grid;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid #ece9e6;
+      border-radius: 12px;
+      background: var(--MH-Theme-Neutrals-Extra-Light, #f8fafb);
+
+      .matchingRoundNetworkConfirm {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .matchingRoundNetworkIdentity {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .matchingRoundNetworkIcon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--MH-Theme-Neutrals-Light, #E6E6E6);
+
+        img {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .matchingRoundNetworkIdentityText {
+        display: grid;
+        gap: 2px;
+        min-width: 0;
+      }
+
+      .matchingRoundNetworkLabel {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 16px;
+        color: #625b71;
+      }
+
+      .matchingRoundNetworkTitle {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 22px;
+        color: #171717;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .matchingRoundNetworkHint {
+        margin: 0;
+        font-size: 13px;
+        line-height: 18px;
+        color: #625b71;
+      }
+
+      .matchingRoundNetworkActions {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px 10px;
+        min-width: 0;
+        overflow-x: auto;
+      }
+
+      .matchingRoundNetworkInviteActions {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .matchingRoundNetworkActionsDivider {
+        display: inline-block;
+        width: 1px;
+        height: 28px;
+        margin: 0 2px;
+        background: #ece9e6;
+        flex-shrink: 0;
+      }
+    }
+
     .classTabMatchingRoundForm {
       display: grid;
       gap: 18px;
     }
 
-    .classTabMatchingRoundAlgoChipRow {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      border: 1.5px solid #ece9e6;
-      border-radius: 12px;
-      background: #ffffff;
-      padding: 12px;
-    }
-
     .classTabMatchingRoundPanel {
       display: grid;
       gap: 18px;
+    }
+
+    .matchingRoundExportActions {
+      display: flex;
+      justify-content: flex-start;
     }
 
     .classTabMatchingRoundFooter {
@@ -1296,10 +1497,6 @@ const StyledClass = styled.div`
         color: #8a6d3b;
         font-weight: 500;
       }
-    }
-
-    .classTabRoundSwitcher {
-      max-width: 420px;
     }
 
     .classTabFormGrid {
@@ -1329,20 +1526,11 @@ const StyledClass = styled.div`
         line-height: 20px;
       }
 
-      .fieldHint,
-      .fieldAlgoHint {
+      .fieldHint {
         margin: 0;
         font-size: 12px;
         line-height: 18px;
         color: #888;
-      }
-
-      .fieldAlgoHint {
-        padding: 8px 12px;
-        border: 1px solid #ece9e6;
-        border-radius: 10px;
-        background: #f9faf9;
-        color: #625b71;
       }
 
       input[type="text"],
@@ -1518,6 +1706,30 @@ const StyledClass = styled.div`
           color: #8a8680;
         }
       }
+
+      .matchingRoundOppReviewButtonUnread {
+        border: 1px solid var(--MH-Theme-Primary-Base, #337c84) !important;
+        background: var(--MH-Theme-Primary-Light, #def8fb) !important;
+        border-radius: 100px !important;
+
+        &:hover {
+          background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3) !important;
+        }
+
+        .DesignSystem-Button-LeadingIcon {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .matchingRoundOppReviewUnreadIcon {
+        display: block;
+        width: 16px;
+        height: 16px;
+        background-color: var(--MH-Theme-Primary-Base, #337c84);
+        mask: url("/assets/icons/message.svg") center / contain no-repeat;
+        -webkit-mask: url("/assets/icons/message.svg") center / contain no-repeat;
+      }
     }
 
     .matchingRoundOppInfoGridCell {
@@ -1539,13 +1751,13 @@ const StyledClass = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      min-height: 100%;
+      box-sizing: border-box;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
       padding: 0;
-      border: none;
-      border-radius: 0;
+      border: 2px solid transparent;
+      border-radius: 100px;
       background: transparent;
       color: #625b71;
       font-family: "Inter", sans-serif;
@@ -1559,13 +1771,36 @@ const StyledClass = styled.div`
         color: #336f8a;
       }
 
+      &.matchingRoundOppInfoCellAppointment {
+        border-color: #B9261A;
+        background: #FEECEB;
+        color: #B9261A;
+
+        &:hover {
+          background: #CF6D6A;
+          color: #B9261A;
+        }
+      }
+
       &.matchingRoundOppInfoCellReturned {
-        background: #E6E6E6;
+        border-color: #9e9e9e;
+        background: #cfcfcf;
         color: #3f288f;
 
         &:hover {
-          background: #E6E6E6;
+          background: #c4c4c4;
           color: #3f288f;
+        }
+      }
+
+      &.matchingRoundOppInfoCellReturnedQuiet {
+        border-color: #bdbdbd;
+        background: #d9d9d9;
+        color: #6a6a6a;
+
+        &:hover {
+          background: #cecece;
+          color: #5a5a5a;
         }
       }
     }
@@ -1576,25 +1811,18 @@ const StyledClass = styled.div`
     }
 
     [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturned {
-      background: #d6cef0;
+      background: #c4c4c4;
       color: #3f288f;
     }
 
-    .matchingRoundOppInfoTooltip {
-      display: grid;
-      gap: 6px;
-      max-width: 320px;
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellAppointment {
+      background: #ffd633;
+      color: #5c4a00;
+    }
 
-      p {
-        margin: 0;
-        font-size: 14px;
-        line-height: 20px;
-        color: #171717;
-      }
-
-      .expired {
-        color: #b3261e;
-      }
+    [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturnedQuiet {
+      background: #cecece;
+      color: #5a5a5a;
     }
 
     .classTabSecondaryLink {
@@ -1615,71 +1843,6 @@ const StyledClass = styled.div`
       }
     }
 
-    .classTabOpportunityList {
-      display: grid;
-      gap: 10px;
-    }
-
-    .classTabOpportunityRow {
-      display: grid;
-      gap: 6px;
-      width: 100%;
-      padding: 16px 18px;
-      border: 1px solid #ece9e6;
-      border-radius: 14px;
-      background: #ffffff;
-      box-shadow: 0 4px 14px rgba(23, 23, 23, 0.04);
-      text-align: left;
-      cursor: pointer;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease,
-        transform 0.15s ease;
-
-      &:hover,
-      &:focus-visible {
-        border-color: #c8d8df;
-        box-shadow: 0 8px 22px rgba(23, 23, 23, 0.08);
-        transform: translateY(-1px);
-        outline: none;
-      }
-
-      .rowTitle {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px;
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 22px;
-        color: #171717;
-      }
-
-      .rowStatus {
-        display: inline-flex;
-        align-items: center;
-        padding: 2px 8px;
-        border-radius: 100px;
-        background: #f0f4f6;
-        color: #5f6871;
-        font-size: 11px;
-        font-weight: 600;
-        line-height: 16px;
-        text-transform: capitalize;
-      }
-
-      .rowStatusPublished {
-        background: #e3f4ec;
-        color: #1d6b3a;
-      }
-
-      .rowDescription,
-      .rowMeta {
-        margin: 0;
-        font-size: 14px;
-        line-height: 20px;
-        color: #625b71;
-      }
-    }
-
     @media (max-width: 760px) {
       .classTabSection {
         padding: 18px;
@@ -1688,6 +1851,15 @@ const StyledClass = styled.div`
 
       .classTabInformationBlock {
         grid-template-columns: 1fr;
+      }
+
+      .classTabTemplateCardRow {
+        grid-template-columns: 1fr;
+      }
+
+      .classTabTemplateCardActions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
       }
     }
   }
@@ -1938,7 +2110,7 @@ const StyledClass = styled.div`
       width: 100%;
       grid-template-columns: repeat(
         auto-fill,
-        minmax(min(100%, 280px), 280px)
+        minmax(min(100%, 360px), 360px)
       );
       align-items: stretch;
       justify-content: start;
@@ -2050,6 +2222,8 @@ const StyledClass = styled.div`
       border: none;
       margin: 0;
       padding: 0;
+      display: grid;
+      gap: 12px;
     }
 
     .curriculumTypeLegend {

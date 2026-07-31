@@ -36,7 +36,7 @@ const HEADER_META_CHIP_STYLE = {
   maxWidth: "100%",
 };
 
-export default function Header({ myclass }) {
+export default function Header({ myclass, readOnly = false }) {
   const { t } = useTranslation("classes");
 
   const { inputs, handleChange } = useForm({
@@ -64,7 +64,7 @@ export default function Header({ myclass }) {
     refetchQueries: refetchClass,
   });
 
-  const canEditTitle = !loading && Boolean(myclass?.id);
+  const canEditTitle = !readOnly && !loading && Boolean(myclass?.id);
 
   const persistIfDirty = useCallback(() => {
     if (!myclass?.id) return;

@@ -10,6 +10,9 @@ export default function CurriculumTypeSelector({
   curriculumType,
   disabled,
   onChange,
+  questionKey = "curriculumTypeQuestion",
+  questionDefault =
+    "Which curriculum type applies to project boards in this class?",
 }) {
   const { t } = useTranslation("classes");
   const [selection, setSelection] = useState(
@@ -28,16 +31,10 @@ export default function CurriculumTypeSelector({
   return (
     <fieldset className="curriculumTypeSelector">
       <legend className="curriculumTypeLegend">
-        {t("curriculumTypeQuestion", {}, {
-          default:
-            "Which curriculum type applies to project boards in this class?",
-        })}
+        {t(questionKey, {}, { default: questionDefault })}
       </legend>
       <p id="curriculumTypeHelp" className="curriculumTypeHelp">
-        {t("curriculumTypeMentorNote", {}, {
-          default:
-            "This determines the mentor feedback questionnaire used in the feedback center. If you have questions, contact a MindHive team member.",
-        })}
+        {/* TODO: Add help text */}
       </p>
       <div
         className="curriculumTypeOptions"

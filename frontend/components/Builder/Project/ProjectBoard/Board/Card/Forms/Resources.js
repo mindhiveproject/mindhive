@@ -3,12 +3,13 @@ import ReactHtmlParser from "react-html-parser";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_PUBLIC_AND_PROJECT_RESOURCES } from "../../../../../../Queries/Resource";
+import { getPrimaryTemplateBoardId } from "../../../../../../lib/classTemplateBoards";
 
 import { Dropdown, Icon } from "semantic-ui-react";
 
 export default function Resources({ proposal, selectedResources }) {
   const { t } = useTranslation("builder");
-  const projectId = proposal?.usedInClass?.templateProposal?.id;
+  const projectId = getPrimaryTemplateBoardId(proposal?.usedInClass);
 
   const { data, error, loading } = useQuery(GET_PUBLIC_AND_PROJECT_RESOURCES, {
     variables: { projectId },

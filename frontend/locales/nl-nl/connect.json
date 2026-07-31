@@ -423,7 +423,23 @@
 		"backLink": ""
 	},
 	"matchingRound": {
+		"algorithmControlsHeading": "",
+		"algorithmControlsHelper": "",
+		"algorithmInfoAria": "",
+		"algorithmInfoTitle": "",
+		"algorithmInfoTooltip": "",
+		"allFull": "",
+		"allStudentsAssigned": "",
+		"assignedPaneHeader": "",
+		"assignStudent": "",
+		"assignToOpportunity": "",
+		"capacityFull": "",
+		"capacityFullShort": "",
+		"curatedControlsHeading": "",
+		"curatedControlsHelper": "",
 		"draftBanner": "",
+		"dragHint": "",
+		"dropHere": "",
 		"editor": {
 			"backLink": "",
 			"create": "",
@@ -433,12 +449,18 @@
 			"save": "",
 			"saving": ""
 		},
+		"matchingAlgorithmLabel": "",
+		"noRankedCandidates": "",
 		"notAvailableYet": "",
+		"noUnmatched": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
+		"proposeTopCandidates": "",
+		"proposeTopConfirm": "",
 		"publishDisabledWhileDraft": "",
 		"publishRequiresMatching": "",
+		"studentsPaneHeader": "",
 		"submission": {
 			"backLink": "",
 			"saveDraft": "",
@@ -446,7 +468,15 @@
 			"statusDraft": "",
 			"statusSubmitted": "",
 			"submit": ""
-		}
+		},
+		"switchToAlgorithmConfirm": "",
+		"switchToCuratedConfirm": "",
+		"unassign": "",
+		"unknownOpportunity": "",
+		"unmatchedHelper": "",
+		"unmatchedHelperCurated": "",
+		"workspaceHeading": "",
+		"workspaceHelper": ""
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -457,24 +487,24 @@
 		}
 	},
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "Capaciteit {{count}}",
+		"delete": "Verwijderen",
+		"deleteConfirm": "Deze kans verwijderen? Dit kan niet ongedaan gemaakt worden.",
+		"edit": "Bewerking",
+		"empty": "Je hebt nog geen mogelijkheden gecreëerd. Klik op Nieuwe mogelijkheid om je eerste project voor studenten te publiceren.",
+		"emptyFiltered": "Er zijn geen vacatures die aan de huidige filters voldoen.",
+		"loading": "Bezig met laden...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} netwerken",
+			"one": "{{count}} netwerk"
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "Filteren op netwerk",
+		"networkFilterPlaceholder": "Alle netwerken",
+		"newButton": "Nieuwe kans",
+		"pageTitle": "Mijn kansen",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} beoordelingen",
+			"one": "{{average}} · {{count}} beoordeling"
 		},
 		"reviewCommentsEdit": "",
 		"reviewCommentsWaiting": "",
@@ -483,25 +513,25 @@
 			"sponsor": "Sponsor: {{name}}",
 			"submitted": "Ingediend {{date}}"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "Zoek vacatures op functietitel",
+		"searchPlaceholder": "Zoeken op titel...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"accepted": "Geaccepteerd",
+			"archived": "Gearchiveerd",
+			"closed": "Gesloten",
+			"draft": "Voorlopige versie",
+			"pendingReview": "In afwachting van beoordeling",
+			"preSelected": "Vooraf geselecteerd",
+			"published": "Gepubliceerd",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Filter op status",
+		"statusFilterPlaceholder": "Alle statussen",
+		"teamOf": "Team van {{size}}",
+		"unknownSponsor": "Onbekend"
 	},
 	"myProfile": "",
 	"nav": {
@@ -509,7 +539,7 @@
 		"connect": "Aansluiten",
 		"exploreOpportunities": "Ontdek de mogelijkheden",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Verbind secties",
 		"manageNetwork": "",
 		"matches": "Wedstrijden",
 		"matchingRounds": "Overeenkomende rondes",
@@ -796,6 +826,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Wijzigingen opslaan",
+		"saveDraft": "",
 		"saving": "Besparing...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "Verwachte obstakels",
@@ -818,6 +849,8 @@
 		"sponsorStatusLocked": "— vergrendeld. Een docent of beheerder zal de status bijwerken.",
 		"sponsorStatusReturnedHint": "",
 		"status": "Toestand",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "Geaccepteerd (volledige eindopdracht)",
 			"archived": "Gearchiveerd",
@@ -829,6 +862,7 @@
 			"submitted": "Ingediend ter beoordeling"
 		},
 		"studentCapacity": "Studentencapaciteit",
+		"submitForReview": "",
 		"teamPreferences": "Geef studenten de mogelijkheid om hun voorkeursteamgenoten voor deze kans te nomineren.",
 		"teamSize": "Teamgrootte",
 		"teamSizeHint": "1 = solo plaatsing.",
@@ -848,6 +882,7 @@
 			"expectedDeliverables": "Selecteer ten minste één gewenst resultaat.",
 			"fieldResearchRequired": "Geef aan of veldonderzoek of reizen verwacht wordt.",
 			"followUpIncomplete": "Vul de vervolgvragenlijst in voordat u opslaat.",
+			"formDefinitionMissing": "",
 			"guidelines": "Vink het vakje 'Bevestiging van naleving van de richtlijnen' aan op de publicatiekaart voordat u deze inzending indient.",
 			"issueRelevance": "",
 			"learningOutcomes": "",
@@ -871,8 +906,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} woorden",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "Deze vacature is gearchiveerd.",
+				"closed": "Deze mogelijkheid is niet meer beschikbaar.",
 				"published": "Deze vacature is speciaal voor studenten gepubliceerd.",
 				"returnedRevise": "",
 				"sponsorFollowUp": "Vul de onderstaande vervolgvragenlijst in.",
@@ -992,22 +1027,22 @@
 		"website": ""
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "Bekijk de sponsors die mogelijkheden bieden op MindHive Connect — ontdek hun missie, het team erachter en alle projecten die ze hebben gepubliceerd.",
+		"domainFilterLabel": "Filteren op domein",
+		"domainFilterPlaceholder": "Alle domeinen",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "Academische instelling",
+			"government": "Overheidsinstantie",
+			"industry": "Industrie / Start-up",
+			"nonprofit": "Non-profit",
+			"other": "Ander"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "Er zijn geen organisaties die aan de huidige filters voldoen.",
+		"loading": "Bezig met laden...",
+		"next": "Volgende",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} mogelijkheden",
+			"one": "{{count}} kans"
 		},
 		"pageTitle": "",
 		"paginationInfo": "",
@@ -1066,10 +1101,10 @@
 		"title": "Uw betrokkenheid"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "MindHive-gemeenschap",
+		"defaultName": "MindHive-lid",
+		"defaultSummary": "Klik om het profiel te bekijken",
+		"viewProfile": "Bekijk het profiel van {{name}}"
 	},
 	"profileType": {
 		"chooseType": "Kies uw profieltype",
@@ -1107,18 +1142,61 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
-	"roleGuard": {
-		"backLink": "",
-		"description": "",
-		"roles": {
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
 		},
-		"title": ""
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"loadPreviousMessages": "",
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
+	"roleGuard": {
+		"backLink": "Terug naar Verbinden",
+		"description": "Je account heeft nog geen toegang tot dit gedeelte. Als je denkt dat dit een fout is, neem dan contact op met je docent of een beheerder.",
+		"roles": {
+			"admin": "Beheerders",
+			"classNetworkAdmin": "",
+			"mentor": "Mentoren",
+			"scientist": "",
+			"student": "studenten",
+			"teacher": "leraren"
+		},
+		"title": "Dit gebied is voor {{roles}}"
 	},
 	"savedConnections": "Opgeslagen verbindingen",
 	"savedConnectionsSubtitle": "Doorzoek uw connecties om de perfecte medewerker, mentor of wetenschapper voor u te vinden.",

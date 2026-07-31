@@ -423,7 +423,23 @@
 		"backLink": ""
 	},
 	"matchingRound": {
+		"algorithmControlsHeading": "",
+		"algorithmControlsHelper": "",
+		"algorithmInfoAria": "",
+		"algorithmInfoTitle": "",
+		"algorithmInfoTooltip": "",
+		"allFull": "",
+		"allStudentsAssigned": "",
+		"assignedPaneHeader": "",
+		"assignStudent": "",
+		"assignToOpportunity": "",
+		"capacityFull": "",
+		"capacityFullShort": "",
+		"curatedControlsHeading": "",
+		"curatedControlsHelper": "",
 		"draftBanner": "",
+		"dragHint": "",
+		"dropHere": "",
 		"editor": {
 			"backLink": "",
 			"create": "",
@@ -433,12 +449,18 @@
 			"save": "",
 			"saving": ""
 		},
+		"matchingAlgorithmLabel": "",
+		"noRankedCandidates": "",
 		"notAvailableYet": "",
+		"noUnmatched": "",
 		"openConfirm": "",
 		"openingPreferences": "",
 		"openPreferences": "",
+		"proposeTopCandidates": "",
+		"proposeTopConfirm": "",
 		"publishDisabledWhileDraft": "",
 		"publishRequiresMatching": "",
+		"studentsPaneHeader": "",
 		"submission": {
 			"backLink": "",
 			"saveDraft": "",
@@ -446,7 +468,15 @@
 			"statusDraft": "",
 			"statusSubmitted": "",
 			"submit": ""
-		}
+		},
+		"switchToAlgorithmConfirm": "",
+		"switchToCuratedConfirm": "",
+		"unassign": "",
+		"unknownOpportunity": "",
+		"unmatchedHelper": "",
+		"unmatchedHelperCurated": "",
+		"workspaceHeading": "",
+		"workspaceHelper": ""
 	},
 	"mentorPreferences": {
 		"classType": {
@@ -457,24 +487,24 @@
 		}
 	},
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "容量 {{count}}",
+		"delete": "删除",
+		"deleteConfirm": "错失良机？无法挽回。",
+		"edit": "编辑",
+		"empty": "您尚未创建任何机会。点击“新建机会”发布您的第一个学生项目。",
+		"emptyFiltered": "没有符合当前筛选条件的职位。",
+		"loading": "加载中...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} 网络",
+			"one": "{{count}} 网络"
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "按网络筛选",
+		"networkFilterPlaceholder": "所有网络",
+		"newButton": "新机遇",
+		"pageTitle": "我的机会",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} 个评分",
+			"one": "{{average}} · {{count}} 评分"
 		},
 		"reviewCommentsEdit": "",
 		"reviewCommentsWaiting": "",
@@ -483,25 +513,25 @@
 			"sponsor": "赞助商： {{name}}",
 			"submitted": "已提交 {{date}}"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "按职位搜索机会",
+		"searchPlaceholder": "按标题搜索...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": "",
+			"accepted": "公认",
+			"archived": "已归档",
+			"closed": "关闭",
+			"draft": "草稿",
+			"pendingReview": "待审核",
+			"preSelected": "预选",
+			"published": "发布",
 			"resubmit": "",
 			"returned": ""
 		},
 		"statusChangeLabel": "",
 		"statusChangeUseEditor": "",
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "按状态过滤",
+		"statusFilterPlaceholder": "所有状态",
+		"teamOf": "团队人数： {{size}}",
+		"unknownSponsor": "未知"
 	},
 	"myProfile": "",
 	"nav": {
@@ -509,7 +539,7 @@
 		"connect": "连接",
 		"exploreOpportunities": "探索机会",
 		"explorePublicNetwork": "",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "连接部分",
 		"manageNetwork": "",
 		"matches": "火柴",
 		"matchingRounds": "匹配轮",
@@ -796,6 +826,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "保存更改",
+		"saveDraft": "",
 		"saving": "保存...",
 		"specialConsiderations": {
 			"anticipatedObstacles": "预期障碍",
@@ -818,6 +849,8 @@
 		"sponsorStatusLocked": "— 已锁定。教师或管理员将更新状态。",
 		"sponsorStatusReturnedHint": "",
 		"status": "地位",
+		"statusAdmin": "",
+		"statusAdminHint": "",
 		"statusOptions": {
 			"accepted": "已接受（完整最终范围）",
 			"archived": "已归档",
@@ -829,6 +862,7 @@
 			"submitted": "已提交审核"
 		},
 		"studentCapacity": "学生容量",
+		"submitForReview": "",
 		"teamPreferences": "允许学生提名他们心仪的队友参与此次机会。",
 		"teamSize": "团队规模",
 		"teamSizeHint": "1 = 单人放置。",
@@ -848,6 +882,7 @@
 			"expectedDeliverables": "请至少选择一项预期交付成果。",
 			"fieldResearchRequired": "请说明是否需要进行实地调研或出差。",
 			"followUpIncomplete": "请在保存前完成后续问卷。",
+			"formDefinitionMissing": "",
 			"guidelines": "提交此机会前，请在出版卡上勾选指南确认函。",
 			"issueRelevance": "",
 			"learningOutcomes": "",
@@ -871,8 +906,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} 个字",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "此机会已存档。",
+				"closed": "此机会已关闭。",
 				"published": "这项机会已向学生公布。",
 				"returnedRevise": "",
 				"sponsorFollowUp": "请完成以下后续问卷。",
@@ -992,24 +1027,24 @@
 		"website": ""
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "浏览在 MindHive Connect 上提供机会的赞助商——了解他们的使命、背后的团队以及他们发布的每个项目。",
+		"domainFilterLabel": "按域名筛选",
+		"domainFilterPlaceholder": "所有域名",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "学术机构",
+			"government": "政府机构",
+			"industry": "行业/初创企业",
+			"nonprofit": "非营利组织",
+			"other": "其他"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "没有组织符合当前筛选条件。",
+		"loading": "加载中...",
+		"next": "下一个",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} 个机会",
+			"one": "{{count}} 机会"
 		},
-		"pageTitle": "",
+		"pageTitle": "组织",
 		"paginationInfo": "",
 		"paginationLabel": "",
 		"previous": "",
@@ -1066,10 +1101,10 @@
 		"title": "您的参与"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "MindHive社区",
+		"defaultName": "MindHive 会员",
+		"defaultSummary": "点击查看个人资料",
+		"viewProfile": "查看 {{name}}的个人资料"
 	},
 	"profileType": {
 		"chooseType": "选择您的个人资料类型",
@@ -1107,18 +1142,61 @@
 		"backLink": "",
 		"returnToSponsor": ""
 	},
-	"roleGuard": {
-		"backLink": "",
-		"description": "",
-		"roles": {
-			"admin": "",
-			"classNetworkAdmin": "",
-			"mentor": "",
-			"scientist": "",
-			"student": "",
-			"teacher": ""
+	"reviewThread": {
+		"cancel": "",
+		"compose": {
+			"post": "",
+			"posting": "",
+			"postReply": "",
+			"sponsorPlaceholder": "",
+			"teacherPlaceholder": ""
 		},
-		"title": ""
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"editAria": "",
+		"empty": "",
+		"errors": {
+			"delete": "",
+			"post": "",
+			"save": ""
+		},
+		"kind": {
+			"reviewerComment": "",
+			"sponsorReply": ""
+		},
+		"loadPreviousMessages": "",
+		"noRound": "",
+		"resubmitPrompt": {
+			"dismiss": "",
+			"message": "",
+			"resubmit": "",
+			"resubmitting": "",
+			"title": ""
+		},
+		"roundFallback": "",
+		"roundRequired": "",
+		"roundSelectLabel": "",
+		"roundSelectPlaceholder": "",
+		"save": "",
+		"saving": "",
+		"sponsorHelper": "",
+		"title": "",
+		"unknownAuthor": "",
+		"updatedAt": ""
+	},
+	"roleGuard": {
+		"backLink": "返回连接",
+		"description": "您的账户目前没有权限访问此部分内容。如果您认为这是一个错误，请咨询您的老师或管理员。",
+		"roles": {
+			"admin": "管理员",
+			"classNetworkAdmin": "",
+			"mentor": "导师",
+			"scientist": "",
+			"student": "学生",
+			"teacher": "教师"
+		},
+		"title": "此区域用于 {{roles}}"
 	},
 	"savedConnections": "已保存的连接",
 	"savedConnectionsSubtitle": "利用你的人脉关系，找到最适合你的合作者、导师或科学家。",

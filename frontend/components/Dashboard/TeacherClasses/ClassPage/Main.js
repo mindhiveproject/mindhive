@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import Link from "next/link";
@@ -6,19 +8,16 @@ import Header from "./Header";
 import ClassStudents from "./Students";
 import ClassMentors from "./Mentors";
 import ClassStudies from "./Studies";
-import ClassProjects from "./Projects";
+import ClassProjects from "./Projects/Main";
 import ClassAssignments from "./Assignments/Main";
 import ClassResources from "./Resources/Main";
-import ClassOpportunities from "./Opportunities";
+import ClassOpportunities from "./Opportunities/Main";
 import ClassSettings from "./Settings";
 
 import { GET_CLASS } from "../../../Queries/Classes";
 import RestrictedAccess from "../../../Global/Restricted";
 
 import StyledClass from "../../../styles/StyledClass";
-
-// creating and customizing project boards for a class
-import ProjectBoard from "./ProjectBoard/Main";
 
 import Dashboard from "./Dashboard/Main";
 import { deriveRoles } from "../../Connect/useConnectRole";
@@ -73,21 +72,43 @@ const CLASS_PAGE_NAV_ITEMS = [
 
 export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
+  const router = useRouter();
   const page = query?.page || "students";
   const { isTeacher, isSponsor } = deriveRoles(user);
   const showOpportunitiesTab = isTeacher && isSponsor;
   const navItems = CLASS_PAGE_NAV_ITEMS.filter(
     (item) => item.value !== "opportunities" || showOpportunitiesTab,
   );
+  const { action, board } = query || {};
 
-  const { data, loading, error } = useQuery(GET_CLASS, {
+  const { data } = useQuery(GET_CLASS, {
     variables: { code },
   });
 
   const myclass = data?.class || { title: "", description: "" };
 
+  useEffect(() => {
+    if (page === "board") {
+      router.replace({
+        pathname: `/dashboard/myclasses/${code}`,
+        query: { page: "projects" },
+      });
+    }
+  }, [page, code, router]);
+
+  const isProjectsFullscreen =
+    page === "projects" && action === "edit" && board;
+
   if (page === "board") {
-    return <ProjectBoard myclass={myclass} user={user} query={query} />;
+    return null;
+  }
+
+  if (isProjectsFullscreen) {
+    return (
+      <StyledClass>
+        <ClassProjects myclass={myclass} user={user} query={query} />
+      </StyledClass>
+    );
   }
 
   return (
@@ -121,7 +142,6 @@ export default function ClassPage({ code, user, query }) {
                       }
                     >
                       <div className="titleWithIcon">
-                        {/* <img src={item.iconSrc} alt="" /> */}
                         <p>{t(item.labelKey)}</p>
                       </div>
                     </div>

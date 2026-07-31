@@ -98,7 +98,7 @@ export default function CreatePart({
     };
     // save the file in the system
     const res = await fetch(
-      `/api/save/?y=${date.year}&m=${date.month}&d=${date.day}`,
+      `/api/save?y=${date.year}&m=${date.month}&d=${date.day}`,
       {
         method: "POST",
         body: JSON.stringify(dataFile),

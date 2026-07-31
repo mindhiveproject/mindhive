@@ -50,7 +50,7 @@ export default function UpdatePartContent({ part, content }) {
       data: content?.modified?.data,
     };
 
-    const res = await fetch(`/api/save/?y=${year}&m=${month}&d=${day}`, {
+    const res = await fetch(`/api/save?y=${year}&m=${month}&d=${day}`, {
       method: "POST",
       body: JSON.stringify(dataFile),
       headers: {

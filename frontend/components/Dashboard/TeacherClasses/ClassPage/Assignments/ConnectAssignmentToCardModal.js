@@ -8,6 +8,7 @@ import {
   UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS,
 } from "../../../../Mutations/Assignment";
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 import TemplateBoardCardPicker from "./TemplateBoardCardPicker";
 
 function getTemplateCardIds(assignment, templateBoardId) {
@@ -26,7 +27,7 @@ export default function ConnectAssignmentToCardModal({
   onSuccess,
 }) {
   const { t } = useTranslation("classes");
-  const templateBoardId = myclass?.templateProposal?.id;
+  const templateBoardId = getPrimaryTemplateBoardId(myclass);
   const [selectedCardIds, setSelectedCardIds] = useState([]);
 
   useEffect(() => {
