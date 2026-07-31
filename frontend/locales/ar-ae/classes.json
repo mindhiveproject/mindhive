@@ -666,7 +666,9 @@
 		"save": "يحفظ",
 		"teacher": "مدرس",
 		"teacherAccountTooltip": "معلم الصف.",
-		"titleFallback": "فئة بدون عنوان"
+		"titleFallback": "فئة بدون عنوان",
+		"viewLess": "",
+		"viewMore": ""
 	},
 	"homework": {
 		"allEntries": "جميع المشاركات",

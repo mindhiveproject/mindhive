@@ -295,14 +295,29 @@ const StyledClass = styled.div`
       //   background: #FDF2D0;
       // }
     }
+    .classHeaderDescription {
+      display: grid;
+      gap: 4px;
+      width: 100%;
+      min-width: 0;
+    }
     .classHeaderDescriptionHtml {
       width: 100%;
       min-width: 0;
-      color: #3d3d3d;
       font-family: Inter, sans-serif;
       font-size: 15px;
       line-height: 22px;
       overflow-wrap: anywhere;
+      padding: 8px;
+      border: 1px solid #F3F3F3;
+      border-radius: 8px;
+      background: #F3F3F3;
+      color: #3d3d3d;
+
+      &.isCollapsed {
+        max-height: 70px;
+        overflow: hidden;
+      }
 
       p {
         margin: 0 0 8px;
@@ -317,6 +332,16 @@ const StyledClass = styled.div`
         margin: 8px 0;
         padding-left: 22px;
       }
+    }
+    .classHeaderDescriptionToggle {
+      justify-self: start;
+      width: fit-content;
+      max-width: none;
+      min-height: auto;
+      padding: 0;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
     }
     .classHeaderMetaRow {
       display: flex;
@@ -402,7 +427,7 @@ const StyledClass = styled.div`
         border-color: mintcream;
       }
     }
-    button {
+    button:not(.DesignSystem-Button) {
       background: #007c70;
       color: white;
       max-width: 256px;

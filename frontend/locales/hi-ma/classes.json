@@ -666,7 +666,9 @@
 		"save": "बचाना",
 		"teacher": "अध्यापक",
 		"teacherAccountTooltip": "",
-		"titleFallback": ""
+		"titleFallback": "",
+		"viewLess": "",
+		"viewMore": ""
 	},
 	"homework": {
 		"allEntries": "",

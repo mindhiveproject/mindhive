@@ -666,7 +666,9 @@
 		"save": "Ahorrar",
 		"teacher": "Maestro",
 		"teacherAccountTooltip": "Profesor de la clase.",
-		"titleFallback": "Clase sin título"
+		"titleFallback": "Clase sin título",
+		"viewLess": "",
+		"viewMore": ""
 	},
 	"homework": {
 		"allEntries": "Todas las entradas",

@@ -666,7 +666,9 @@
 		"save": "बचाना",
 		"teacher": "अध्यापक",
 		"teacherAccountTooltip": "क्लास - टीचर।",
-		"titleFallback": "शीर्षकहीन वर्ग"
+		"titleFallback": "शीर्षकहीन वर्ग",
+		"viewLess": "",
+		"viewMore": ""
 	},
 	"homework": {
 		"allEntries": "सभी प्रविष्टियों",

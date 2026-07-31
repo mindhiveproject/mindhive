@@ -666,7 +666,9 @@
 		"save": "节省",
 		"teacher": "老师",
 		"teacherAccountTooltip": "班主任。",
-		"titleFallback": "无标题类"
+		"titleFallback": "无标题类",
+		"viewLess": "",
+		"viewMore": ""
 	},
 	"homework": {
 		"allEntries": "所有条目",

@@ -666,7 +666,9 @@
 		"save": "Redden",
 		"teacher": "Docent",
 		"teacherAccountTooltip": "Klasleraar.",
-		"titleFallback": "Naamloze klasse"
+		"titleFallback": "Naamloze klasse",
+		"viewLess": "",
+		"viewMore": ""
 	},
 	"homework": {
 		"allEntries": "Alle inzendingen",

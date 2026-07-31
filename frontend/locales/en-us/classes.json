@@ -666,7 +666,9 @@
 		"save": "",
 		"teacher": "Teacher",
 		"teacherAccountTooltip": "Class teacher.",
-		"titleFallback": "Untitled class"
+		"titleFallback": "Untitled class",
+		"viewLess": "View less",
+		"viewMore": "View more"
 	},
 	"homework": {
 		"allEntries": "All entries",

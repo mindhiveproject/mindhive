@@ -666,7 +666,9 @@
 		"save": "Сохранять",
 		"teacher": "Учитель",
 		"teacherAccountTooltip": "Классный руководитель.",
-		"titleFallback": "Безымянный класс"
+		"titleFallback": "Безымянный класс",
+		"viewLess": "",
+		"viewMore": ""
 	},
 	"homework": {
 		"allEntries": "Все записи",

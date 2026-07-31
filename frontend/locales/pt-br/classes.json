@@ -666,7 +666,9 @@
 		"save": "Salvar",
 		"teacher": "Professor",
 		"teacherAccountTooltip": "Professor(a) da turma.",
-		"titleFallback": "Classe sem título"
+		"titleFallback": "Classe sem título",
+		"viewLess": "",
+		"viewMore": ""
 	},
 	"homework": {
 		"allEntries": "Todas as inscrições",
