@@ -21,6 +21,9 @@ const DIALOG_STYLE = {
   boxShadow: "0 8px 32px rgba(0, 0, 0, 0.18)",
   padding: "24px 24px 20px",
   boxSizing: "border-box",
+  display: "flex",
+  flexDirection: "column",
+  minHeight: 0,
 };
 
 const TITLE_STYLE = {
@@ -30,6 +33,7 @@ const TITLE_STYLE = {
   fontWeight: 600,
   lineHeight: 1.3,
   color: "var(--MH-Theme-Neutrals-Black, #1a1a1a)",
+  flexShrink: 0,
 };
 
 const BODY_STYLE = {
@@ -38,6 +42,8 @@ const BODY_STYLE = {
   fontSize: 14,
   lineHeight: 1.5,
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  minHeight: 0,
+  overflowY: "auto",
 };
 
 const ACTIONS_STYLE = {
@@ -45,6 +51,7 @@ const ACTIONS_STYLE = {
   justifyContent: "flex-end",
   gap: 8,
   marginTop: 20,
+  flexShrink: 0,
 };
 
 /**
@@ -56,6 +63,8 @@ const ACTIONS_STYLE = {
  * @param {React.ReactNode} children - Body content.
  * @param {React.ReactNode} [actions] - Optional footer slot (e.g. DesignSystem Buttons).
  * @param {number} [maxWidth=420] - Dialog max-width in px.
+ * @param {number|string} [maxHeight] - Dialog max-height (px number or CSS string, e.g. "90vh").
+ * @param {"default"|"large"} [size="default"] - Preset: large → 800px wide, 90vh tall.
  */
 export default function Modal({
   open,
@@ -64,8 +73,18 @@ export default function Modal({
   children,
   actions,
   maxWidth = 420,
+  maxHeight,
+  size = "default",
 }) {
   const titleId = useId();
+
+  const resolvedMaxWidth = size === "large" ? Math.max(maxWidth, 800) : maxWidth;
+  const resolvedMaxHeight =
+    maxHeight != null
+      ? maxHeight
+      : size === "large"
+        ? "90vh"
+        : undefined;
 
   useEffect(() => {
     if (!open || typeof onClose !== "function") return undefined;
@@ -79,6 +98,17 @@ export default function Modal({
 
   if (!open) return null;
   if (typeof document === "undefined") return null;
+
+  const dialogStyle = {
+    ...DIALOG_STYLE,
+    maxWidth: resolvedMaxWidth,
+  };
+  if (resolvedMaxHeight != null) {
+    dialogStyle.maxHeight =
+      typeof resolvedMaxHeight === "number"
+        ? `${resolvedMaxHeight}px`
+        : resolvedMaxHeight;
+  }
 
   return createPortal(
     <div
@@ -97,7 +127,7 @@ export default function Modal({
         aria-labelledby={title != null ? titleId : undefined}
         className="DesignSystem-Modal"
         onClick={(e) => e.stopPropagation()}
-        style={{ ...DIALOG_STYLE, maxWidth }}
+        style={dialogStyle}
       >
         {title != null ? (
           <h2 id={titleId} className="DesignSystem-Modal-Title" style={TITLE_STYLE}>
