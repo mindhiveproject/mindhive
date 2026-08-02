@@ -30,6 +30,7 @@ import {
   toDateInputValue,
   toIsoOrNull,
 } from "../../../Connect/Rounds/roundFormConfig";
+import { useUser } from "../../../../Utils/Access/User";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
@@ -119,6 +120,75 @@ function RoundStatusLabel({ status, t, variant = "chip" }) {
           {hint}
         </span>
       ) : null}
+    </span>
+  );
+}
+
+/** Ownership chip kind for a pickable FormDefinition row. */
+function getFormOwnershipKind(form, currentUserId) {
+  if (currentUserId && form?.createdBy?.id === currentUserId) {
+    return "ownedByMe";
+  }
+  if (form?.scope === "global") {
+    return "public";
+  }
+  return "network";
+}
+
+function FormOwnershipOptionLabel({ title, ownershipKind, t }) {
+  const chipLabel =
+    ownershipKind === "ownedByMe"
+      ? t("opportunities.matchingRound.formPicker.chipOwnedByMe", {}, {
+          default: "Owned by me",
+        })
+      : ownershipKind === "public"
+        ? t("opportunities.matchingRound.formPicker.chipPublic", {}, {
+            default: "Public",
+          })
+        : t("opportunities.matchingRound.formPicker.chipNetwork", {}, {
+            default: "Network",
+          });
+
+  return (
+    <span
+      className="matchingRoundFormOwnershipOption"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 10,
+        width: "100%",
+        minWidth: 0,
+      }}
+    >
+      <span
+        className="matchingRoundFormOwnershipOptionTitle"
+        style={{
+          flex: "1 1 auto",
+          minWidth: 0,
+          overflowWrap: "anywhere",
+          wordBreak: "break-word",
+        }}
+      >
+        {title}
+      </span>
+      <Chip
+        label={chipLabel}
+        shape="pill"
+        className="matchingRoundFormOwnershipChip"
+        ariaLabel={chipLabel}
+        style={{
+          height: 22,
+          paddingLeft: 8,
+          paddingRight: 8,
+          paddingTop: 2,
+          paddingBottom: 2,
+          fontSize: 11,
+          fontWeight: 500,
+          lineHeight: "16px",
+          flexShrink: 0,
+        }}
+      />
     </span>
   );
 }
@@ -319,6 +389,7 @@ function MatchingRoundEditor({
   const { t } = useTranslation("classes");
   const router = useRouter();
   const { origin } = absoluteUrl();
+  const user = useUser();
 
   const roundId = isCreate ? null : roundSummary?.id || null;
   const isNew = !roundId;
@@ -526,27 +597,39 @@ function MatchingRoundEditor({
 
   const formDefinitionOptions = useMemo(() => {
     const byId = new Map();
-    for (const form of pickableFormDefinitions) {
-      byId.set(form.id, {
+    const currentUserId = user?.id;
+
+    const toOption = (form) => {
+      const title = form.title || form.id;
+      const ownershipKind = getFormOwnershipKind(form, currentUserId);
+      return {
         value: form.id,
-        label: form.title || form.id,
-      });
+        labelText: title,
+        label: (
+          <FormOwnershipOptionLabel
+            title={title}
+            ownershipKind={ownershipKind}
+            t={t}
+          />
+        ),
+      };
+    };
+
+    for (const form of pickableFormDefinitions) {
+      byId.set(form.id, toOption(form));
     }
     for (const form of round?.formDefinitions || []) {
       if (!byId.has(form.id)) {
-        byId.set(form.id, {
-          value: form.id,
-          label: form.title || form.id,
-        });
+        byId.set(form.id, toOption(form));
       }
     }
     return Array.from(byId.values());
-  }, [pickableFormDefinitions, round?.formDefinitions]);
+  }, [pickableFormDefinitions, round?.formDefinitions, user?.id, t]);
 
   const formLabelsById = useMemo(() => {
     const map = {};
     for (const option of formDefinitionOptions) {
-      map[option.value] = option.label;
+      map[option.value] = option.labelText || option.label;
     }
     return map;
   }, [formDefinitionOptions]);

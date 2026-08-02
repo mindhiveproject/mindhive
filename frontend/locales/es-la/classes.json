@@ -866,6 +866,9 @@
 			},
 			"formPicker": {
 				"ariaLabel": "",
+				"chipNetwork": "",
+				"chipOwnedByMe": "",
+				"chipPublic": "",
 				"emptyPlaceholder": "",
 				"hideFromSponsors": "",
 				"hint": "",

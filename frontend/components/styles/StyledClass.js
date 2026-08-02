@@ -1559,6 +1559,32 @@ const StyledClass = styled.div`
       width: 100%;
     }
 
+    /* Form picker ownership chips (also used inside DropdownSelect portal via inline styles) */
+    .matchingRoundFormOwnershipOption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .matchingRoundFormOwnershipOptionTitle {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .matchingRoundFormOwnershipChip {
+      flex-shrink: 0;
+      height: 22px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 16px;
+    }
+
     .matchingRoundExportActions {
       display: flex;
       justify-content: flex-start;

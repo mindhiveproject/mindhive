@@ -127,6 +127,9 @@ export const GET_CONNECT_ROUND = gql`
         key
         scope
         version
+        createdBy {
+          id
+        }
       }
       createdBy {
         id

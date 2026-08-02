@@ -866,6 +866,9 @@
 			},
 			"formPicker": {
 				"ariaLabel": "Sponsor questionnaires for this round",
+				"chipNetwork": "Network",
+				"chipOwnedByMe": "Owned by me",
+				"chipPublic": "Public",
 				"emptyPlaceholder": "No published forms available",
 				"hideFromSponsors": "Hide from sponsors",
 				"hint": "Select questionnaires to send to sponsors of the pre-selected opportunities below.",

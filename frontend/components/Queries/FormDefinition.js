@@ -298,6 +298,9 @@ export const ROUND_PICKABLE_FORM_DEFINITIONS = gql`
       classNetwork {
         id
       }
+      createdBy {
+        id
+      }
     }
   }
 `;
