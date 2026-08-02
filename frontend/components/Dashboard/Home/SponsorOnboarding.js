@@ -591,9 +591,9 @@ export default function SponsorOnboarding() {
             onAction={() =>
               router.push(
                 oppStepDone
-                  ? "/dashboard/connect/opportunities"
+                  ? "/dashboard/sponsor-connect/opportunities"
                   : {
-                      pathname: "/dashboard/connect/opportunities",
+                      pathname: "/dashboard/sponsor-connect/opportunities",
                       query: { op: "new" },
                     },
               )

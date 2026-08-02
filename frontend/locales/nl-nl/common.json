@@ -239,6 +239,22 @@
 		"tasks": "Taken en enquêtes",
 		"teachers": "Leraren"
 	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
+	},
 	"pagination": {
 		"next": "Volgende",
 		"of": "van {{pageCount}}",

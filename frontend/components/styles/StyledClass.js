@@ -1516,6 +1516,7 @@ const StyledClass = styled.div`
       min-width: 0;
       display: grid;
       gap: 6px;
+      align-content: start;
     }
 
     .matchingRoundFormPickerTitle {
@@ -1548,6 +1549,13 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerVisibilityButton {
+      margin-top: 6px;
+      justify-self: start;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .matchingRoundFormPickerPreviewButton {
       width: 100%;
     }
 

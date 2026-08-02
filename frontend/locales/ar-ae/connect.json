@@ -239,6 +239,13 @@
 		"summaryChipAria": "",
 		"summaryDescription": "",
 		"summaryTitle": "",
+		"tabs": {
+			"admins": "",
+			"matching": "",
+			"organizations": "",
+			"overview": "",
+			"profiles": ""
+		},
 		"titleLabel": "",
 		"titlePlaceholder": "",
 		"titleRequired": "",
@@ -522,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "السعة {{count}}",
+		"columns": {
+			"visibility": ""
+		},
 		"delete": "يمسح",
 		"deleteConfirm": "هل يمكن حذف هذه الفرصة؟ لا يمكن التراجع عن هذا القرار.",
 		"edit": "يحرر",
 		"empty": "لم تُنشئ أي فرص بعد. انقر على \"فرصة جديدة\" لنشر مشروعك الأول للطلاب.",
 		"emptyFiltered": "لا توجد فرص تتطابق مع المعايير الحالية.",
+		"held": {
+			"continueForm": "",
+			"followUp": "",
+			"formComplete": "",
+			"formCompleteSaved": "",
+			"formIncomplete": "",
+			"formIncompleteSaved": "",
+			"noFurtherQuestions": "",
+			"openForm": "",
+			"preSelected": "",
+			"title": "",
+			"unknownNetwork": "",
+			"unknownRound": ""
+		},
 		"loading": "تحميل...",
 		"networkCount": {
 			"many": "{{count}} شبكات",
@@ -535,6 +559,7 @@
 		"networkFilterLabel": "تصفية حسب الشبكة",
 		"networkFilterPlaceholder": "جميع الشبكات",
 		"newButton": "فرصة جديدة",
+		"openChat": "",
 		"pageTitle": "فرصي",
 		"rating": {
 			"many": "{{average}} · {{count}} تقييمات",
@@ -565,7 +590,15 @@
 		"statusFilterLabel": "تصفية حسب الحالة",
 		"statusFilterPlaceholder": "جميع الحالات",
 		"teamOf": "فريق من {{size}}",
-		"unknownSponsor": "مجهول"
+		"unknownSponsor": "مجهول",
+		"visibility": {
+			"emptyHint": "",
+			"many": "",
+			"modalEmpty": "",
+			"modalTitle": "",
+			"none": "",
+			"one": ""
+		}
 	},
 	"myProfile": "",
 	"nav": {
@@ -615,6 +648,7 @@
 			"urbanInfrastructure": "البنية التحتية الحضرية"
 		},
 		"categorizationOther": "فئة أخرى",
+		"chatSaveFirst": "",
 		"classNetworksEmptyWarning": "",
 		"classNetworksHint": "",
 		"classNetworksNoMembership": "",
@@ -664,6 +698,8 @@
 			"scopeDescriptionHint": "صف نطاق المشروع الذي ترغب في أن يركز عليه فريق مشروع التخرج. (أفضل مقترحات مشاريع التخرج هي تلك المهمة ولكن غير العاجلة؛ والتي يمكن إنجازها ضمن الإطار الزمني الأكاديمي وبالموارد المتاحة؛ والتي تقدم تعريفًا واضحًا للمشكلة أو القضية المراد معالجتها؛ والتي تتميز بنطاق واقعي؛ والتي تحدد مخرجات ملموسة يجب على فريق مشروع التخرج تقديمها). حوالي 500 كلمة.",
 			"title": "نطاق المشروع"
 		},
+		"followUpIntro": "",
+		"followUpLastSaved": "",
 		"followUpQuestionnaire": {
 			"banner": "تم اختيارك مبدئياً — يرجى إكمال أسئلة المتابعة أدناه.",
 			"potentialActivities": "الأنشطة المحتملة",
@@ -673,6 +709,7 @@
 			"tbd": "ستتم إضافة أسئلة المتابعة هنا.",
 			"title": "استبيان المتابعة"
 		},
+		"followUpSaveMissing": "",
 		"groupFormat": "تنسيق المجموعة",
 		"guidelinesAcknowledgedAt": "تمت الموافقة {{date}}",
 		"guidelinesAgree": "أوافق على هذا الكلام.",
@@ -861,6 +898,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "حفظ التغييرات",
+		"savedFlash": "",
 		"saveDraft": "",
 		"saving": "إنقاذ...",
 		"specialConsiderations": {
@@ -886,6 +924,7 @@
 		"status": "حالة",
 		"statusAdmin": "",
 		"statusAdminHint": "",
+		"statusNewHint": "",
 		"statusOptions": {
 			"accepted": "مقبول (النطاق النهائي الكامل)",
 			"archived": "مؤرشف",
@@ -898,6 +937,13 @@
 		},
 		"studentCapacity": "الطاقة الاستيعابية للطلاب",
 		"submitForReview": "",
+		"tabs": {
+			"chat": "",
+			"followUpCompleteAria": "",
+			"followUpFallback": "",
+			"proposal": "",
+			"status": ""
+		},
 		"teamPreferences": "اسمح للطلاب بترشيح زملائهم المفضلين في الفريق لهذه الفرصة",
 		"teamSize": "حجم الفريق",
 		"teamSizeHint": "1 = وضع منفرد.",

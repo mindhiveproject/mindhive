@@ -239,6 +239,13 @@
 		"summaryChipAria": "",
 		"summaryDescription": "",
 		"summaryTitle": "",
+		"tabs": {
+			"admins": "",
+			"matching": "",
+			"organizations": "",
+			"overview": "",
+			"profiles": ""
+		},
 		"titleLabel": "",
 		"titlePlaceholder": "",
 		"titleRequired": "",
@@ -522,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "Capacidade {{count}}",
+		"columns": {
+			"visibility": ""
+		},
 		"delete": "Excluir",
 		"deleteConfirm": "Excluir esta oportunidade? Esta ação não pode ser desfeita.",
 		"edit": "Editar",
 		"empty": "Você ainda não criou nenhuma oportunidade. Clique em Nova oportunidade para publicar seu primeiro projeto para estudantes.",
 		"emptyFiltered": "Nenhuma oportunidade corresponde aos filtros atuais.",
+		"held": {
+			"continueForm": "",
+			"followUp": "",
+			"formComplete": "",
+			"formCompleteSaved": "",
+			"formIncomplete": "",
+			"formIncompleteSaved": "",
+			"noFurtherQuestions": "",
+			"openForm": "",
+			"preSelected": "",
+			"title": "",
+			"unknownNetwork": "",
+			"unknownRound": ""
+		},
 		"loading": "Carregando...",
 		"networkCount": {
 			"many": "Redes{{count}} ",
@@ -535,6 +559,7 @@
 		"networkFilterLabel": "Filtrar por rede",
 		"networkFilterPlaceholder": "Todas as redes",
 		"newButton": "Nova oportunidade",
+		"openChat": "",
 		"pageTitle": "Minhas oportunidades",
 		"rating": {
 			"many": "{{average}} · {{count}} avaliações",
@@ -565,7 +590,15 @@
 		"statusFilterLabel": "Filtrar por status",
 		"statusFilterPlaceholder": "Todos os status",
 		"teamOf": "Equipe de {{size}}",
-		"unknownSponsor": "Desconhecido"
+		"unknownSponsor": "Desconhecido",
+		"visibility": {
+			"emptyHint": "",
+			"many": "",
+			"modalEmpty": "",
+			"modalTitle": "",
+			"none": "",
+			"one": ""
+		}
 	},
 	"myProfile": "",
 	"nav": {
@@ -615,6 +648,7 @@
 			"urbanInfrastructure": "Infraestrutura urbana"
 		},
 		"categorizationOther": "Outra categoria",
+		"chatSaveFirst": "",
 		"classNetworksEmptyWarning": "",
 		"classNetworksHint": "",
 		"classNetworksNoMembership": "",
@@ -664,6 +698,8 @@
 			"scopeDescriptionHint": "Descreva o escopo do projeto para o qual você gostaria que a Equipe do Projeto Final se concentrasse. (As melhores propostas de Projeto Final são importantes, mas não urgentes; viáveis ​​dentro do prazo acadêmico e com os recursos disponíveis; fornecem uma definição clara do problema ou questão a ser abordada; têm um escopo realista; e especificam entregas tangíveis para a equipe do Projeto Final fornecer.) Aproximadamente 500 palavras.",
 			"title": "Escopo do projeto"
 		},
+		"followUpIntro": "",
+		"followUpLastSaved": "",
 		"followUpQuestionnaire": {
 			"banner": "Você foi pré-selecionado — por favor, responda às perguntas de acompanhamento abaixo.",
 			"potentialActivities": "Atividades potenciais",
@@ -673,6 +709,7 @@
 			"tbd": "Perguntas adicionais serão incluídas aqui.",
 			"title": "Questionário de acompanhamento"
 		},
+		"followUpSaveMissing": "",
 		"groupFormat": "Formato de grupo",
 		"guidelinesAcknowledgedAt": "Reconhecido {{date}}",
 		"guidelinesAgree": "Concordo com essa afirmação.",
@@ -861,6 +898,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Salvar alterações",
+		"savedFlash": "",
 		"saveDraft": "",
 		"saving": "Salvando...",
 		"specialConsiderations": {
@@ -886,6 +924,7 @@
 		"status": "Status",
 		"statusAdmin": "",
 		"statusAdminHint": "",
+		"statusNewHint": "",
 		"statusOptions": {
 			"accepted": "Aceito (escopo final completo)",
 			"archived": "Arquivado",
@@ -898,6 +937,13 @@
 		},
 		"studentCapacity": "Capacidade de alunos",
 		"submitForReview": "",
+		"tabs": {
+			"chat": "",
+			"followUpCompleteAria": "",
+			"followUpFallback": "",
+			"proposal": "",
+			"status": ""
+		},
 		"teamPreferences": "Permita que os alunos indiquem seus colegas de equipe preferidos para esta oportunidade.",
 		"teamSize": "Tamanho da equipe",
 		"teamSizeHint": "1 = colocação individual.",

@@ -1,8 +1,9 @@
 /**
  * Opportunity.proposalData persisted shape:
- *   [{ formDefinitionId, answer }]
+ *   [{ formDefinitionId, answer, savedAt? }]
  *
  * Legacy flat objects (field keys at the top level) are still accepted on read.
+ * Entries without `savedAt` remain valid (backward compatible).
  */
 
 export type OpportunityProposalAnswer = {
@@ -28,6 +29,8 @@ export type OpportunityProposalAnswer = {
 export type OpportunityProposalDataEntry = {
   formDefinitionId: string;
   answer: OpportunityProposalAnswer;
+  /** ISO timestamp of the last upsert; optional for legacy entries. */
+  savedAt?: string;
 };
 
 export type OpportunityProposalData = OpportunityProposalDataEntry[];
@@ -92,7 +95,46 @@ export function getProposalFormDefinitionId(
 }
 
 /**
+ * ISO `savedAt` for a proposalData entry, or null when missing / legacy.
+ */
+export function getProposalEntrySavedAt(
+  proposalData: unknown,
+  formDefinitionId?: string | null
+): string | null {
+  if (!formDefinitionId || !isProposalDataEntries(proposalData)) return null;
+  const match = proposalData.find(
+    (entry) => entry.formDefinitionId === formDefinitionId
+  );
+  const savedAt = match?.savedAt;
+  return typeof savedAt === "string" && savedAt.trim() ? savedAt : null;
+}
+
+/**
+ * True when proposalData has a non-empty answer object for formDefinitionId.
+ * Empty `{}` (or missing entry) counts as incomplete.
+ */
+export function isProposalFormAnswerComplete(
+  proposalData: unknown,
+  formDefinitionId?: string | null
+): boolean {
+  if (!formDefinitionId || !isProposalDataEntries(proposalData)) return false;
+  const match = proposalData.find(
+    (entry) => entry.formDefinitionId === formDefinitionId
+  );
+  if (!match?.answer || !isPlainObject(match.answer)) return false;
+  return Object.keys(match.answer).some((key) => {
+    const value = match.answer[key];
+    if (value == null) return false;
+    if (typeof value === "string") return value.trim().length > 0;
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === "object") return Object.keys(value).length > 0;
+    return true;
+  });
+}
+
+/**
  * Upsert an answer entry by formDefinitionId; preserves other entries.
+ * Always stamps `savedAt` with the current time (ISO string).
  * Falls back to a single-entry array when existing is legacy/empty.
  */
 export function upsertProposalEntry(
@@ -107,6 +149,7 @@ export function upsertProposalEntry(
   const entry: OpportunityProposalDataEntry = {
     formDefinitionId,
     answer: { ...answer },
+    savedAt: new Date().toISOString(),
   };
 
   if (isProposalDataEntries(existing)) {

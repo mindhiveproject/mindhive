@@ -20,12 +20,30 @@
 //     specialCardComponents={{ members_panel: MembersPanel,
 //                              interest_selector: InterestSelector }}
 //   />
-import { useMemo, useState, useEffect, useCallback } from "react";
+//
+// Follow-up questionnaires (e.g. matching-round forms) should pass
+// `proposalEntryFormDefinitionId` so Save always writes
+// Opportunity.proposalData as [{ formDefinitionId, answer }], regardless of
+// each field's storage/column configuration.
+//
+// Imperative API (via ref): `save()` runs the same path as the submit button
+// so parents can drive Save from a top bar while `hideSaveButton` is set.
+import {
+  forwardRef,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  useImperativeHandle,
+} from "react";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
-import { RESOLVE_FORM_DEFINITION } from "../../Queries/FormDefinition";
+import {
+  FORM_DEFINITION_BY_ID,
+  RESOLVE_FORM_DEFINITION,
+} from "../../Queries/FormDefinition";
 import CardRenderer from "./CardRenderer";
 import { fieldLabel } from "./i18n";
 import { hydrate, buildUpdate } from "./storage";
@@ -35,6 +53,18 @@ import {
   getProposalAnswer,
   upsertProposalEntry,
 } from "../../../lib/opportunityProposalData";
+
+/** Flat answer map from current form values, keyed by field.name. */
+function buildAnswerFromValues(values, fields) {
+  const answer = {};
+  for (const field of fields || []) {
+    if (!field?.name) continue;
+    if (values[field.name] !== undefined) {
+      answer[field.name] = values[field.name];
+    }
+  }
+  return answer;
+}
 
 const Shell = styled.form`
   display: flex;
@@ -88,29 +118,51 @@ function scrollToFirstFieldError() {
   });
 }
 
-export default function DefinitionForm({
-  definitionKey,
-  entity,
-  related = {},
-  scopeContext = {},
-  viewerRoles = [],
-  locale = "en",
-  onSubmit,
-  saveLabel = "Save",
-  readOnly = false,
-  specialCardComponents = {},
-}) {
+const DefinitionForm = forwardRef(function DefinitionForm(
+  {
+    definitionKey,
+    definitionId = null,
+    /** When set, Save upserts answers into Opportunity.proposalData under this id. */
+    proposalEntryFormDefinitionId = null,
+    entity,
+    related = {},
+    scopeContext = {},
+    viewerRoles = [],
+    locale = "en",
+    onSubmit,
+    saveLabel = "Save",
+    readOnly = false,
+    specialCardComponents = {},
+    hideSaveButton = false,
+  },
+  ref,
+) {
   const { t } = useTranslation("common");
-  const { data, loading, error } = useQuery(RESOLVE_FORM_DEFINITION, {
+  const loadById = Boolean(definitionId);
+
+  const resolveQuery = useQuery(RESOLVE_FORM_DEFINITION, {
     variables: {
       key: definitionKey,
       organizationId: scopeContext.organizationId || null,
       classNetworkId: scopeContext.classNetworkId || null,
     },
     fetchPolicy: "cache-and-network",
+    skip: loadById || !definitionKey,
   });
 
-  const definition = data?.resolveFormDefinition;
+  const byIdQuery = useQuery(FORM_DEFINITION_BY_ID, {
+    variables: { id: definitionId },
+    fetchPolicy: "cache-and-network",
+    skip: !loadById,
+  });
+
+  const data = loadById ? byIdQuery.data : resolveQuery.data;
+  const loading = loadById ? byIdQuery.loading : resolveQuery.loading;
+  const error = loadById ? byIdQuery.error : resolveQuery.error;
+
+  const definition = loadById
+    ? data?.formDefinition
+    : data?.resolveFormDefinition;
 
   // Flatten all fields across all cards for hydration and update-building.
   // Validation uses getVisibleFields() so hidden cards are not checked.
@@ -124,6 +176,8 @@ export default function DefinitionForm({
     return out;
   }, [definition]);
 
+  // Prefer explicit prop from follow-up panels; also treat fields stored in
+  // proposalData the same way for hydrate / wrap.
   const usesProposalDataBucket = useMemo(
     () =>
       allFields.some(
@@ -133,15 +187,32 @@ export default function DefinitionForm({
     [allFields]
   );
 
+  const effectiveProposalEntryId =
+    proposalEntryFormDefinitionId || definition?.id || null;
+  const forceProposalEntry = Boolean(proposalEntryFormDefinitionId);
+
   // storage.js assumes flat json buckets; Opportunity.proposalData is an
   // array of { formDefinitionId, answer }. Unwrap for hydrate/merge.
+  // When forcing a proposal entry, also spread the flat answer onto the
+  // entity so column-storage fields can hydrate from the saved answers.
   const entityForStorage = useMemo(() => {
-    if (!entity || !usesProposalDataBucket) return entity;
+    if (!entity) return entity;
+    if (!forceProposalEntry && !usesProposalDataBucket) return entity;
+    const flatAnswer = getProposalAnswer(
+      entity.proposalData,
+      effectiveProposalEntryId
+    );
     return {
       ...entity,
-      proposalData: getProposalAnswer(entity.proposalData, definition?.id),
+      ...(forceProposalEntry ? flatAnswer : null),
+      proposalData: flatAnswer,
     };
-  }, [entity, usesProposalDataBucket, definition?.id]);
+  }, [
+    entity,
+    forceProposalEntry,
+    usesProposalDataBucket,
+    effectiveProposalEntryId,
+  ]);
 
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
@@ -168,9 +239,9 @@ export default function DefinitionForm({
     });
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (readOnly || submitting) return;
+  const save = useCallback(async () => {
+    if (readOnly || submitting) return false;
+    if (!definition) return false;
 
     const visibleFields = getVisibleFields(definition, {
       viewerRoles,
@@ -210,34 +281,54 @@ export default function DefinitionForm({
 
       setSubmitError(banner);
       scrollToFirstFieldError();
-      return;
+      return false;
     }
 
     setSubmitError(null);
-    const updateInput = buildUpdate(
-      values,
-      allFields,
-      entityForStorage,
-      related
-    );
 
-    // Re-wrap flat proposalData answer into [{ formDefinitionId, answer }].
-    if (
-      usesProposalDataBucket &&
-      definition?.id &&
-      updateInput?.self?.proposalData &&
-      !Array.isArray(updateInput.self.proposalData)
-    ) {
-      updateInput.self.proposalData = upsertProposalEntry(
-        entity?.proposalData,
-        definition.id,
-        updateInput.self.proposalData
+    let updateInput;
+
+    if (forceProposalEntry && effectiveProposalEntryId) {
+      // Follow-up / forced entry: always persist under Opportunity.proposalData
+      // keyed by this form definition id — ignore per-field storage targets so
+      // we never write accidental top-level columns on the opportunity.
+      const answer = buildAnswerFromValues(values, allFields);
+      updateInput = {
+        self: {
+          proposalData: upsertProposalEntry(
+            entity?.proposalData,
+            effectiveProposalEntryId,
+            answer
+          ),
+        },
+      };
+    } else {
+      updateInput = buildUpdate(
+        values,
+        allFields,
+        entityForStorage,
+        related
       );
+
+      // Re-wrap flat proposalData answer into [{ formDefinitionId, answer }].
+      if (
+        usesProposalDataBucket &&
+        definition?.id &&
+        updateInput?.self?.proposalData &&
+        !Array.isArray(updateInput.self.proposalData)
+      ) {
+        updateInput.self.proposalData = upsertProposalEntry(
+          entity?.proposalData,
+          definition.id,
+          updateInput.self.proposalData
+        );
+      }
     }
 
     setSubmitting(true);
     try {
       await onSubmit(updateInput);
+      return true;
     } catch (err) {
       setSubmitError(
         err?.message ||
@@ -245,9 +336,34 @@ export default function DefinitionForm({
             default: "Save failed. Please try again.",
           })
       );
+      return false;
     } finally {
       setSubmitting(false);
     }
+  }, [
+    readOnly,
+    submitting,
+    definition,
+    viewerRoles,
+    entityStatus,
+    values,
+    t,
+    locale,
+    forceProposalEntry,
+    effectiveProposalEntryId,
+    allFields,
+    entity,
+    entityForStorage,
+    related,
+    usesProposalDataBucket,
+    onSubmit,
+  ]);
+
+  useImperativeHandle(ref, () => ({ save }), [save]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await save();
   };
 
   if (loading && !definition) {
@@ -263,8 +379,17 @@ export default function DefinitionForm({
   if (!definition) {
     return (
       <ErrorBox>
-        No published form for <code>{definitionKey}</code> at the current
-        scope. Ask an admin to publish one.
+        {loadById ? (
+          <>
+            Couldn&apos;t find form definition{" "}
+            <code>{definitionId}</code>.
+          </>
+        ) : (
+          <>
+            No published form for <code>{definitionKey}</code> at the current
+            scope. Ask an admin to publish one.
+          </>
+        )}
       </ErrorBox>
     );
   }
@@ -286,7 +411,7 @@ export default function DefinitionForm({
           specialCardComponents={specialCardComponents}
         />
       ))}
-      {!readOnly && (
+      {!readOnly && !hideSaveButton && (
         <Actions>
           <SaveButton type="submit" disabled={submitting}>
             {submitting ? "Saving…" : saveLabel}
@@ -295,4 +420,6 @@ export default function DefinitionForm({
       )}
     </Shell>
   );
-}
+});
+
+export default DefinitionForm;

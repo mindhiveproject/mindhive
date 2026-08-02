@@ -239,6 +239,22 @@
 		"tasks": "Задачи и опросы",
 		"teachers": "Учителя"
 	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
+	},
 	"pagination": {
 		"next": "Следующий",
 		"of": "из {{pageCount}}",

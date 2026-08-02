@@ -21,7 +21,7 @@ import Footer from "./Footer";
  * Platform-browsing dashboard areas that show the site footer.
  * Focused workspaces (builder, develop, review, classes, etc.) are excluded.
  */
-const DASHBOARD_FOOTER_AREAS = new Set(["discover", "connect", "review", "settings", "application"]);
+const DASHBOARD_FOOTER_AREAS = new Set(["discover", "connect", "review", "settings", "sponsor-connect"]);
 
 function shouldShowDashboardFooter(area) {
   // Home is `/dashboard` with no area param

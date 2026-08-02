@@ -239,6 +239,13 @@
 		"summaryChipAria": "",
 		"summaryDescription": "",
 		"summaryTitle": "",
+		"tabs": {
+			"admins": "",
+			"matching": "",
+			"organizations": "",
+			"overview": "",
+			"profiles": ""
+		},
 		"titleLabel": "",
 		"titlePlaceholder": "",
 		"titleRequired": "",
@@ -522,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "Capacité {{count}}",
+		"columns": {
+			"visibility": ""
+		},
 		"delete": "SUPPRIMER",
 		"deleteConfirm": "Supprimer cette opportunité ? C'est irréversible.",
 		"edit": "Modifier",
 		"empty": "Vous n'avez pas encore créé d'opportunités. Cliquez sur « Nouvelle opportunité » pour publier votre premier projet destiné aux étudiants.",
 		"emptyFiltered": "Aucune opportunité ne correspond aux filtres actuels.",
+		"held": {
+			"continueForm": "",
+			"followUp": "",
+			"formComplete": "",
+			"formCompleteSaved": "",
+			"formIncomplete": "",
+			"formIncompleteSaved": "",
+			"noFurtherQuestions": "",
+			"openForm": "",
+			"preSelected": "",
+			"title": "",
+			"unknownNetwork": "",
+			"unknownRound": ""
+		},
 		"loading": "Chargement...",
 		"networkCount": {
 			"many": "réseaux{{count}} ",
@@ -535,6 +559,7 @@
 		"networkFilterLabel": "Filtrer par réseau",
 		"networkFilterPlaceholder": "Tous les réseaux",
 		"newButton": "Nouvelle opportunité",
+		"openChat": "",
 		"pageTitle": "Mes opportunités",
 		"rating": {
 			"many": "{{average}} · {{count}} évaluations",
@@ -565,7 +590,15 @@
 		"statusFilterLabel": "Filtrer par statut",
 		"statusFilterPlaceholder": "Tous les statuts",
 		"teamOf": "Équipe de {{size}}",
-		"unknownSponsor": "Inconnu"
+		"unknownSponsor": "Inconnu",
+		"visibility": {
+			"emptyHint": "",
+			"many": "",
+			"modalEmpty": "",
+			"modalTitle": "",
+			"none": "",
+			"one": ""
+		}
 	},
 	"myProfile": "",
 	"nav": {
@@ -615,6 +648,7 @@
 			"urbanInfrastructure": "Infrastructures urbaines"
 		},
 		"categorizationOther": "Autre catégorie",
+		"chatSaveFirst": "",
 		"classNetworksEmptyWarning": "",
 		"classNetworksHint": "",
 		"classNetworksNoMembership": "",
@@ -664,6 +698,8 @@
 			"scopeDescriptionHint": "Décrivez le périmètre du projet sur lequel vous souhaiteriez qu'une équipe de projet de fin d'études se concentre. (Les meilleures propositions de projet de fin d'études sont importantes mais non urgentes ; réalisables dans les délais impartis et avec les ressources disponibles ; définissent clairement le problème ou la question à traiter ; ont un périmètre réaliste ; et précisent les livrables concrets que l'équipe devra fournir.) Environ 500 mots.",
 			"title": "Étendue du projet"
 		},
+		"followUpIntro": "",
+		"followUpLastSaved": "",
 		"followUpQuestionnaire": {
 			"banner": "Vous avez été présélectionné(e) — veuillez répondre aux questions complémentaires ci-dessous.",
 			"potentialActivities": "Activités potentielles",
@@ -673,6 +709,7 @@
 			"tbd": "Des questions complémentaires seront ajoutées ici.",
 			"title": "Questionnaire de suivi"
 		},
+		"followUpSaveMissing": "",
 		"groupFormat": "Format de groupe",
 		"guidelinesAcknowledgedAt": "Reconnu {{date}}",
 		"guidelinesAgree": "Je suis d'accord avec cette affirmation.",
@@ -861,6 +898,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Sauvegarder les modifications",
+		"savedFlash": "",
 		"saveDraft": "",
 		"saving": "Économie...",
 		"specialConsiderations": {
@@ -886,6 +924,7 @@
 		"status": "Statut",
 		"statusAdmin": "",
 		"statusAdminHint": "",
+		"statusNewHint": "",
 		"statusOptions": {
 			"accepted": "Accepté (portée finale complète)",
 			"archived": "Archive",
@@ -898,6 +937,13 @@
 		},
 		"studentCapacity": "Capacité étudiante",
 		"submitForReview": "",
+		"tabs": {
+			"chat": "",
+			"followUpCompleteAria": "",
+			"followUpFallback": "",
+			"proposal": "",
+			"status": ""
+		},
 		"teamPreferences": "Autoriser les élèves à désigner leurs coéquipiers préférés pour cette opportunité",
 		"teamSize": "Taille de l'équipe",
 		"teamSizeHint": "1 = placement en solo.",

@@ -22,6 +22,7 @@ import UserPage from "./UserPage/Main";
 import Assignments from "./Assignment/Main";
 import Boards from "./Boards/Main";
 import ResearchMain from "./Research/Main";
+import SponsorConnectMain from "./SponsorConnect/Main";
 
 // admin area
 import ManagementMain from "./Management/Main";
@@ -39,6 +40,11 @@ export default function DashboardRouter({ query }) {
 
   if (area === "connect") {
     return <ConnectMain query={query} user={user} />;
+  }
+
+  // Sponsor Connect/Opportunities UI; path /dashboard/sponsor-connect/* avoids colliding with /dashboard/connect
+  if (area === "sponsor-connect") {
+    return <SponsorConnectMain query={query} user={user} />;
   }
 
   if (area === "develop") {

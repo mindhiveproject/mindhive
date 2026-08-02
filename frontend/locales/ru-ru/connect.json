@@ -239,6 +239,13 @@
 		"summaryChipAria": "",
 		"summaryDescription": "",
 		"summaryTitle": "",
+		"tabs": {
+			"admins": "",
+			"matching": "",
+			"organizations": "",
+			"overview": "",
+			"profiles": ""
+		},
 		"titleLabel": "",
 		"titlePlaceholder": "",
 		"titleRequired": "",
@@ -522,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "Емкость {{count}}",
+		"columns": {
+			"visibility": ""
+		},
 		"delete": "Удалить",
 		"deleteConfirm": "Упустить эту возможность? Этого уже не вернуть.",
 		"edit": "Редактировать",
 		"empty": "Вы еще не создали ни одной возможности. Нажмите «Новая возможность», чтобы опубликовать свой первый проект для студентов.",
 		"emptyFiltered": "В настоящее время ни одна вакансия не соответствует имеющимся фильтрам.",
+		"held": {
+			"continueForm": "",
+			"followUp": "",
+			"formComplete": "",
+			"formCompleteSaved": "",
+			"formIncomplete": "",
+			"formIncompleteSaved": "",
+			"noFurtherQuestions": "",
+			"openForm": "",
+			"preSelected": "",
+			"title": "",
+			"unknownNetwork": "",
+			"unknownRound": ""
+		},
 		"loading": "Загрузка...",
 		"networkCount": {
 			"many": "{{count}} сети",
@@ -535,6 +559,7 @@
 		"networkFilterLabel": "Фильтр по сети",
 		"networkFilterPlaceholder": "Все сети",
 		"newButton": "Новая возможность",
+		"openChat": "",
 		"pageTitle": "Мои возможности",
 		"rating": {
 			"many": "{{average}} · {{count}} рейтингов",
@@ -565,7 +590,15 @@
 		"statusFilterLabel": "Фильтрация по статусу",
 		"statusFilterPlaceholder": "Все статусы",
 		"teamOf": "Команда из {{size}}",
-		"unknownSponsor": "Неизвестный"
+		"unknownSponsor": "Неизвестный",
+		"visibility": {
+			"emptyHint": "",
+			"many": "",
+			"modalEmpty": "",
+			"modalTitle": "",
+			"none": "",
+			"one": ""
+		}
 	},
 	"myProfile": "",
 	"nav": {
@@ -615,6 +648,7 @@
 			"urbanInfrastructure": "Городская инфраструктура"
 		},
 		"categorizationOther": "Другая категория",
+		"chatSaveFirst": "",
 		"classNetworksEmptyWarning": "",
 		"classNetworksHint": "",
 		"classNetworksNoMembership": "",
@@ -664,6 +698,8 @@
 			"scopeDescriptionHint": "Опишите масштаб проекта, на котором, по вашему мнению, должна сосредоточиться команда, работающая над выпускным проектом. (Лучшие предложения по выпускным проектам должны быть важными, но не срочными; выполнимыми в рамках академических сроков и с учетом имеющихся ресурсов; содержать четкое определение проблемы или вопроса, который необходимо решить; иметь реалистичный масштаб; и указывать конкретные результаты, которые должна предоставить команда.) Примерно 500 слов.",
 			"title": "Объем проекта"
 		},
+		"followUpIntro": "",
+		"followUpLastSaved": "",
 		"followUpQuestionnaire": {
 			"banner": "Вы прошли предварительный отбор — пожалуйста, ответьте на следующие вопросы ниже.",
 			"potentialActivities": "Возможные виды деятельности",
@@ -673,6 +709,7 @@
 			"tbd": "Дополнительные вопросы будут добавлены здесь.",
 			"title": "Анкета для последующего наблюдения"
 		},
+		"followUpSaveMissing": "",
 		"groupFormat": "Групповой формат",
 		"guidelinesAcknowledgedAt": "Подтверждено {{date}}",
 		"guidelinesAgree": "Я согласен с этим утверждением.",
@@ -861,6 +898,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Сохранить изменения",
+		"savedFlash": "",
 		"saveDraft": "",
 		"saving": "Сохранение...",
 		"specialConsiderations": {
@@ -886,6 +924,7 @@
 		"status": "Положение дел",
 		"statusAdmin": "",
 		"statusAdminHint": "",
+		"statusNewHint": "",
 		"statusOptions": {
 			"accepted": "Принято (полностью завершен окончательный объем работ)",
 			"archived": "В архиве",
@@ -898,6 +937,13 @@
 		},
 		"studentCapacity": "Вместимость для студентов",
 		"submitForReview": "",
+		"tabs": {
+			"chat": "",
+			"followUpCompleteAria": "",
+			"followUpFallback": "",
+			"proposal": "",
+			"status": ""
+		},
 		"teamPreferences": "Предоставьте студентам возможность номинировать предпочтительных членов команды для участия в этой программе.",
 		"teamSize": "Размер команды",
 		"teamSizeHint": "1 = индивидуальное размещение.",

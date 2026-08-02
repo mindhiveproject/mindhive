@@ -239,6 +239,22 @@
 		"tasks": "Tâches et enquêtes",
 		"teachers": "Enseignants"
 	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
+	},
 	"pagination": {
 		"next": "Suivant",
 		"of": "de {{pageCount}}",

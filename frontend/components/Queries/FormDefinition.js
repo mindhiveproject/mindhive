@@ -73,6 +73,65 @@ export const RESOLVE_FORM_DEFINITION = gql`
   }
 `;
 
+// Load a specific FormDefinition by id (e.g. round-attached follow-up forms).
+export const FORM_DEFINITION_BY_ID = gql`
+  query FORM_DEFINITION_BY_ID($id: ID!) {
+    formDefinition(where: { id: $id }) {
+      id
+      key
+      title
+      description
+      scope
+      status
+      surface
+      version
+      organization {
+        id
+      }
+      classNetwork {
+        id
+      }
+      proposalBoard {
+        id
+      }
+      cards(orderBy: { order: asc }) {
+        id
+        cardType
+        title
+        titleI18n
+        description
+        descriptionI18n
+        visibleWhenStatus
+        roleVisibility
+        order
+        fields(orderBy: { order: asc }) {
+          id
+          name
+          fieldType
+          label
+          labelI18n
+          helperText
+          helperTextI18n
+          placeholder
+          placeholderI18n
+          isRequired
+          order
+          storage
+          storageColumn
+          storageBucket
+          storageEntity
+          options
+          validation
+          defaultValue
+          showWhen
+          jsonArraySchema
+          visibilityRoles
+        }
+      }
+    }
+  }
+`;
+
 // Admin list — used by the admin UI (phase 6).
 export const ADMIN_FORM_DEFINITIONS = gql`
   query ADMIN_FORM_DEFINITIONS {

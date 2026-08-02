@@ -239,6 +239,22 @@
 		"tasks": "任务和调查",
 		"teachers": "教师"
 	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
+	},
 	"pagination": {
 		"next": "下一个",
 		"of": "共 {{pageCount}} 页",

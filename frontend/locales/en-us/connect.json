@@ -529,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "Capacity {{count}}",
+		"columns": {
+			"visibility": "Visibility"
+		},
 		"delete": "Delete",
 		"deleteConfirm": "Delete this opportunity? This cannot be undone.",
 		"edit": "Edit",
 		"empty": "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
 		"emptyFiltered": "No opportunities match the current filters.",
+		"held": {
+			"continueForm": "Continue form",
+			"followUp": "Follow-up: {{title}}",
+			"formComplete": "Complete",
+			"formCompleteSaved": "Complete · {{date}}",
+			"formIncomplete": "Incomplete",
+			"formIncompleteSaved": "Incomplete · saved {{date}}",
+			"noFurtherQuestions": "The teacher has not asked any further questions so far.",
+			"openForm": "Open form",
+			"preSelected": "Pre-selected for this matching round",
+			"title": "Held · {{network}} · {{round}}",
+			"unknownNetwork": "Class network",
+			"unknownRound": "Matching round"
+		},
 		"loading": "Loading…",
 		"networkCount": {
 			"many": "{{count}} networks",
@@ -542,6 +559,7 @@
 		"networkFilterLabel": "Filter by network",
 		"networkFilterPlaceholder": "All networks",
 		"newButton": "New opportunity",
+		"openChat": "Open messages",
 		"pageTitle": "My Opportunities",
 		"rating": {
 			"many": "{{average}} · {{count}} ratings",
@@ -572,7 +590,15 @@
 		"statusFilterLabel": "Filter by status",
 		"statusFilterPlaceholder": "All statuses",
 		"teamOf": "Team of {{size}}",
-		"unknownSponsor": "Unknown"
+		"unknownSponsor": "Unknown",
+		"visibility": {
+			"emptyHint": "Add a class network so teachers can see this opportunity.",
+			"many": "Visible in {{count}} class networks",
+			"modalEmpty": "This opportunity is not associated with any class network yet.",
+			"modalTitle": "Visible in class networks",
+			"none": "Not visible in any class network",
+			"one": "Visible in 1 class network"
+		}
 	},
 	"myProfile": "My profile",
 	"nav": {
@@ -622,6 +648,7 @@
 			"urbanInfrastructure": "Urban Infrastructure"
 		},
 		"categorizationOther": "Other category",
+		"chatSaveFirst": "Save the opportunity first to start a conversation with reviewers.",
 		"classNetworksEmptyWarning": "Teachers will not see this opportunity in their review queue until you select at least one class network.",
 		"classNetworksHint": "Select one or more class networks you belong to. Teachers in those networks can review this opportunity.",
 		"classNetworksNoMembership": "You are not a member of any class networks yet.",
@@ -671,6 +698,8 @@
 			"scopeDescriptionHint": "Describe the scope of the project for which you would like a Capstone Project Team to focus. (The best Capstone proposals are important but not urgent; achievable within the academic timeframe and with the resources available; provide a clear definition of the problem or issue to be addressed; have a realistic scope; and specify tangible deliverables for the Capstone team to provide.) Approximately 500 words.",
 			"title": "Project scope"
 		},
+		"followUpIntro": "Additional questions from {{context}}. Your answers are saved on this opportunity.",
+		"followUpLastSaved": "Last saved {{date}}",
 		"followUpQuestionnaire": {
 			"banner": "You've been pre-selected — please complete the follow-up questions below.",
 			"potentialActivities": "Potential activities",
@@ -680,6 +709,7 @@
 			"tbd": "Follow-up questions will be added here.",
 			"title": "Follow-up questionnaire"
 		},
+		"followUpSaveMissing": "Could not build proposal data for this form. Please try again.",
 		"groupFormat": "Group format",
 		"guidelinesAcknowledgedAt": "Acknowledged {{date}}",
 		"guidelinesAgree": "I agree with this statement.",
@@ -868,6 +898,7 @@
 			"unknownAuthor": "Reviewer"
 		},
 		"save": "Save changes",
+		"savedFlash": "Saved.",
 		"saveDraft": "Save draft",
 		"saving": "Saving…",
 		"specialConsiderations": {
@@ -893,6 +924,7 @@
 		"status": "Status",
 		"statusAdmin": "Status (admin)",
 		"statusAdminHint": "Sponsors submit for review via the button at the top of the page. Use this control only for admin status overrides.",
+		"statusNewHint": "Status tracking is available after you create the opportunity.",
 		"statusOptions": {
 			"accepted": "Accepted (complete final scope)",
 			"archived": "Archived",
@@ -905,6 +937,13 @@
 		},
 		"studentCapacity": "Student capacity",
 		"submitForReview": "Submit for review in class network",
+		"tabs": {
+			"chat": "Chat",
+			"followUpCompleteAria": "{{title}} (completed)",
+			"followUpFallback": "Follow-up form",
+			"proposal": "Opportunity form",
+			"status": "Status"
+		},
 		"teamPreferences": "Allow students to nominate preferred teammates for this opportunity",
 		"teamSize": "Team size",
 		"teamSizeHint": "1 = solo placement.",

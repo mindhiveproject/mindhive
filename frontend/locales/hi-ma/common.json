@@ -239,6 +239,22 @@
 		"tasks": "कार्य और सर्वेक्षण",
 		"teachers": "शिक्षकों"
 	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
+	},
 	"pagination": {
 		"next": "अगला",
 		"of": "{{पृष्ठगणना}} का",

@@ -239,6 +239,22 @@
 		"tasks": "Tasks & Surveys",
 		"teachers": "Teachers"
 	},
+	"opportunities": {
+		"close": "Close",
+		"columns": {
+			"actions": "Actions",
+			"name": "Name",
+			"status": "Status",
+			"visibility": "Visibility"
+		},
+		"delete": "Delete",
+		"deleteConfirm": "Delete this opportunity? This cannot be undone.",
+		"edit": "Edit",
+		"empty": "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
+		"loading": "Loading…",
+		"newButton": "New opportunity",
+		"title": "My opportunities"
+	},
 	"pagination": {
 		"next": "Next",
 		"of": "of {{pageCount}}",

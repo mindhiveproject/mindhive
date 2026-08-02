@@ -18,6 +18,16 @@ export default function DashboardNavigation() {
 
   // read permissions
   const permissions = user?.permissions.map((permission) => permission?.name);
+  const isSponsor = permissions?.includes("SPONSOR");
+  const showDevelop =
+    permissions?.includes("ADMIN") ||
+    permissions?.includes("SCIENTIST") ||
+    permissions?.includes("TEACHER") ||
+    permissions?.includes("STUDENT") ||
+    permissions?.includes("MENTOR");
+  // Feedback Center + Journal sit under Workspace for non-sponsors; Develop is role-gated.
+  // Hide the empty Workspace label for sponsor-only accounts.
+  const showWorkspaceHeader = showDevelop || !isSponsor;
 
   const { query } = router;
   const { area } = query;
@@ -56,7 +66,8 @@ export default function DashboardNavigation() {
           </StyledNavigationLink>
         </Link>
 
-        <Link href="/dashboard/discover">
+        {!isSponsor && (
+          <Link href="/dashboard/discover">
           <StyledNavigationLink selected={area === "discover"}>
             <div className="icon">
               <svg
@@ -74,7 +85,8 @@ export default function DashboardNavigation() {
             </div>
             <div>{t("discover")}</div>
           </StyledNavigationLink>
-        </Link>
+          </Link>
+        )}
 
         <Link href="/dashboard/connect">
           <StyledNavigationLink selected={area === "connect"}>
@@ -115,13 +127,11 @@ export default function DashboardNavigation() {
           </StyledNavigationLink>
         </Link>
 
-        <div className="workspaceHeader">{t("workspace")}</div>
+        {showWorkspaceHeader && (
+          <div className="workspaceHeader">{t("workspace")}</div>
+        )}
 
-        {(permissions?.includes("ADMIN") ||
-          permissions?.includes("SCIENTIST") ||
-          permissions?.includes("TEACHER") ||
-          permissions?.includes("STUDENT") ||
-          permissions?.includes("MENTOR")) && (
+        {showDevelop && (
           <Link href="/dashboard/develop">
             <StyledNavigationLink selected={area === "develop"}>
               <div className="icon">
@@ -143,7 +153,8 @@ export default function DashboardNavigation() {
           </Link>
         )}
 
-        <Link href="/dashboard/review">
+        {!isSponsor && (
+          <Link href="/dashboard/review">
           <StyledNavigationLink selected={area === "review"}>
             <div className="icon">
               <svg
@@ -173,9 +184,11 @@ export default function DashboardNavigation() {
             </div>
             <div>{t("feedbackCenter")}</div>
           </StyledNavigationLink>
-        </Link>
+          </Link>
+        )}
 
-        <Link href="/dashboard/journals">
+        {!isSponsor && (
+          <Link href="/dashboard/journals">
           <StyledNavigationLink selected={area === "journals"}>
             <div className="icon">
               <svg
@@ -193,7 +206,8 @@ export default function DashboardNavigation() {
             </div>
             <div>{t("journal")}</div>
           </StyledNavigationLink>
-        </Link>
+          </Link>
+        )}
 
         {/* <Link href="/dashboard/chats">
           <StyledNavigationLink selected={area === "chats"}>
@@ -252,6 +266,51 @@ export default function DashboardNavigation() {
             </Link>
           </>
         )}
+        {isSponsor && (
+          <>
+            {/* Sponsor section; route /dashboard/sponsor-connect avoids colliding with /dashboard/connect */}
+            <div className="workspaceHeader">
+              {t("sponsors", {}, { default: "Sponsors" })}
+            </div>
+
+            <Link href="/dashboard/sponsor-connect/opportunities">
+              <StyledNavigationLink selected={area === "sponsor-connect"}>
+                <div className="icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4 2H12L16 6V18C16 18.5523 15.5523 19 15 19H4C3.44772 19 3 18.5523 3 18V3C3 2.44772 3.44772 2 4 2Z"
+                      stroke={area === "sponsor-connect" ? "#FFC107" : "#666666"}
+                      strokeWidth="1.5"
+                      fill="none"
+                    />
+                    <path
+                      d="M12 2V6H16"
+                      stroke={area === "sponsor-connect" ? "#FFC107" : "#666666"}
+                      strokeWidth="1.5"
+                      fill="none"
+                    />
+                    <path
+                      d="M6 10H13M6 13H13M6 16H10"
+                      stroke={area === "sponsor-connect" ? "#FFC107" : "#666666"}
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  {t("myOpportunities", {}, { default: "My opportunities" })}
+                </div>
+              </StyledNavigationLink>
+            </Link>
+          </>
+        )}
+
         {permissions?.includes("ADMIN") && (
           <>
             <div className="workspaceHeader">{t("admin")}</div>
@@ -407,7 +466,8 @@ export default function DashboardNavigation() {
           </>
         )}
 
-        <Link href="/dashboard/irb">
+        {!isSponsor && (
+          <Link href="/dashboard/irb">
           <StyledNavigationLink selected={area === "irb"}>
             <div>
               <svg
@@ -425,7 +485,8 @@ export default function DashboardNavigation() {
             </div>
             <div>{t("consentProtocol")}</div>
           </StyledNavigationLink>
-        </Link>
+          </Link>
+        )}
 
         {(permissions?.includes("ADMIN") ||
           permissions?.includes("TEACHER") ||

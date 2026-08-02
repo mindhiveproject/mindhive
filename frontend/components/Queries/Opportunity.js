@@ -27,10 +27,29 @@ export const MY_OPPORTUNITIES = gql`
             id
             title
           }
+          proposalData
+          preSelectedAt
           publicRatingAverage
           publicRatingCount
           createdAt
           updatedAt
+          rounds {
+            id
+            title
+            status
+            settings
+            classNetwork {
+              id
+              title
+            }
+            formDefinitions {
+              id
+              title
+              key
+              version
+              status
+            }
+          }
           reviewNotes {
             id
             kind
@@ -129,6 +148,18 @@ export const GET_OPPORTUNITY = gql`
         id
         title
         status
+        settings
+        classNetwork {
+          id
+          title
+        }
+        formDefinitions {
+          id
+          title
+          key
+          version
+          status
+        }
       }
       reviewNotes(orderBy: { createdAt: asc }) {
         id

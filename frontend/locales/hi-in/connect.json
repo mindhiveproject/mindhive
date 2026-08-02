@@ -239,6 +239,13 @@
 		"summaryChipAria": "",
 		"summaryDescription": "",
 		"summaryTitle": "",
+		"tabs": {
+			"admins": "",
+			"matching": "",
+			"organizations": "",
+			"overview": "",
+			"profiles": ""
+		},
 		"titleLabel": "",
 		"titlePlaceholder": "",
 		"titleRequired": "",
@@ -522,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "क्षमता {{count}}",
+		"columns": {
+			"visibility": ""
+		},
 		"delete": "मिटाना",
 		"deleteConfirm": "क्या इस अवसर को मिटाना संभव है? इसे बदला नहीं जा सकता।",
 		"edit": "संपादन करना",
 		"empty": "आपने अभी तक कोई अवसर नहीं बनाया है। छात्रों के लिए अपना पहला प्रोजेक्ट प्रकाशित करने के लिए 'नया अवसर' पर क्लिक करें।",
 		"emptyFiltered": "वर्तमान फ़िल्टरों से मेल खाने वाले कोई अवसर नहीं हैं।",
+		"held": {
+			"continueForm": "",
+			"followUp": "",
+			"formComplete": "",
+			"formCompleteSaved": "",
+			"formIncomplete": "",
+			"formIncompleteSaved": "",
+			"noFurtherQuestions": "",
+			"openForm": "",
+			"preSelected": "",
+			"title": "",
+			"unknownNetwork": "",
+			"unknownRound": ""
+		},
 		"loading": "लोड हो रहा है...",
 		"networkCount": {
 			"many": "{{count}} नेटवर्क",
@@ -535,6 +559,7 @@
 		"networkFilterLabel": "नेटवर्क के आधार पर फ़िल्टर करें",
 		"networkFilterPlaceholder": "सभी नेटवर्क",
 		"newButton": "नया मौका",
+		"openChat": "",
 		"pageTitle": "मेरे अवसर",
 		"rating": {
 			"many": "{{average}} · {{count}} रेटिंग",
@@ -565,7 +590,15 @@
 		"statusFilterLabel": "स्थिति के अनुसार फ़िल्टर करें",
 		"statusFilterPlaceholder": "सभी स्थितियाँ",
 		"teamOf": " {{size}}की टीम",
-		"unknownSponsor": "अज्ञात"
+		"unknownSponsor": "अज्ञात",
+		"visibility": {
+			"emptyHint": "",
+			"many": "",
+			"modalEmpty": "",
+			"modalTitle": "",
+			"none": "",
+			"one": ""
+		}
 	},
 	"myProfile": "",
 	"nav": {
@@ -615,6 +648,7 @@
 			"urbanInfrastructure": "शहरी अवसंरचना"
 		},
 		"categorizationOther": "अन्य श्रेणी",
+		"chatSaveFirst": "",
 		"classNetworksEmptyWarning": "",
 		"classNetworksHint": "",
 		"classNetworksNoMembership": "",
@@ -664,6 +698,8 @@
 			"scopeDescriptionHint": "उस परियोजना के दायरे का वर्णन करें जिस पर आप कैपस्टोन प्रोजेक्ट टीम को ध्यान केंद्रित करने के लिए आमंत्रित करते हैं। (सर्वोत्तम कैपस्टोन प्रस्ताव महत्वपूर्ण होते हैं लेकिन अत्यावश्यक नहीं; शैक्षणिक समयसीमा और उपलब्ध संसाधनों के भीतर प्राप्त करने योग्य होते हैं; संबोधित की जाने वाली समस्या या मुद्दे की स्पष्ट परिभाषा प्रदान करते हैं; एक यथार्थवादी दायरा रखते हैं; और कैपस्टोन टीम द्वारा प्रदान किए जाने वाले मूर्त परिणामों को निर्दिष्ट करते हैं।) लगभग 500 शब्द।",
 			"title": "परियोजना गुंजाइश"
 		},
+		"followUpIntro": "",
+		"followUpLastSaved": "",
 		"followUpQuestionnaire": {
 			"banner": "आपका चयन पूर्व-निर्धारित हो चुका है — कृपया नीचे दिए गए अनुवर्ती प्रश्नों को पूरा करें।",
 			"potentialActivities": "संभावित गतिविधियाँ",
@@ -673,6 +709,7 @@
 			"tbd": "आगे के प्रश्न यहां जोड़े जाएंगे।",
 			"title": "अनुवर्ती प्रश्नावली"
 		},
+		"followUpSaveMissing": "",
 		"groupFormat": "समूह प्रारूप",
 		"guidelinesAcknowledgedAt": "स्वीकृत {{date}}",
 		"guidelinesAgree": "मैं इस कथन से सहमत हूं।",
@@ -861,6 +898,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "परिवर्तनों को सुरक्षित करें",
+		"savedFlash": "",
 		"saveDraft": "",
 		"saving": "सहेजा जा रहा है...",
 		"specialConsiderations": {
@@ -886,6 +924,7 @@
 		"status": "स्थिति",
 		"statusAdmin": "",
 		"statusAdminHint": "",
+		"statusNewHint": "",
 		"statusOptions": {
 			"accepted": "स्वीकृत (अंतिम कार्यक्षेत्र पूर्ण)",
 			"archived": "संग्रहीत",
@@ -898,6 +937,13 @@
 		},
 		"studentCapacity": "छात्र क्षमता",
 		"submitForReview": "",
+		"tabs": {
+			"chat": "",
+			"followUpCompleteAria": "",
+			"followUpFallback": "",
+			"proposal": "",
+			"status": ""
+		},
 		"teamPreferences": "छात्रों को इस अवसर के लिए अपने पसंदीदा टीम साथियों को नामित करने की अनुमति दें।",
 		"teamSize": "टीम का आकार",
 		"teamSizeHint": "1 = एकल प्रस्तुति।",

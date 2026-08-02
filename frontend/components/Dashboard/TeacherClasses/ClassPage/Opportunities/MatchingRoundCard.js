@@ -31,6 +31,7 @@ import {
   toIsoOrNull,
 } from "../../../Connect/Rounds/roundFormConfig";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
+import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
 
 const NETWORK_ICON = (
@@ -349,6 +350,7 @@ function MatchingRoundEditor({
   const [snapshotRevision, setSnapshotRevision] = useState(0);
   const [togglingOpportunityId, setTogglingOpportunityId] = useState(null);
   const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [formPreviewOpen, setFormPreviewOpen] = useState(false);
   const savedSnapshotRef = useRef(null);
 
   const selectedNetwork = useMemo(
@@ -527,21 +529,27 @@ function MatchingRoundEditor({
     for (const form of pickableFormDefinitions) {
       byId.set(form.id, {
         value: form.id,
-        label: `${form.title} (v${form.version})`,
+        label: form.title || form.id,
       });
     }
     for (const form of round?.formDefinitions || []) {
       if (!byId.has(form.id)) {
         byId.set(form.id, {
           value: form.id,
-          label: form.title
-            ? `${form.title} (v${form.version || 1})`
-            : form.id,
+          label: form.title || form.id,
         });
       }
     }
     return Array.from(byId.values());
   }, [pickableFormDefinitions, round?.formDefinitions]);
+
+  const formLabelsById = useMemo(() => {
+    const map = {};
+    for (const option of formDefinitionOptions) {
+      map[option.value] = option.label;
+    }
+    return map;
+  }, [formDefinitionOptions]);
 
   const { data: opportunitiesData } = useQuery(NETWORK_OPPORTUNITIES_FOR_ROUND, {
     variables: { classNetworkId: selectedNetworkId },
@@ -812,6 +820,62 @@ function MatchingRoundEditor({
     [selectedOpportunities, persistOpportunitySelection],
   );
 
+  const persistFormDefinitionSelection = useCallback(
+    async (nextIds) => {
+      const sortedCurrent = [...selectedFormDefinitionIds].sort();
+      const sortedNext = [...(nextIds || [])].sort();
+      if (JSON.stringify(sortedCurrent) === JSON.stringify(sortedNext)) return;
+
+      setSelectedFormDefinitionIds(nextIds);
+
+      if (isNew || !roundId) {
+        return;
+      }
+
+      try {
+        await updateConnectRound({
+          variables: {
+            id: roundId,
+            input: {
+              formDefinitions: {
+                set: (nextIds || []).map((id) => ({ id })),
+              },
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        });
+        captureSnapshot(
+          inputs,
+          selectedOpportunities,
+          selectedQuestions,
+          nextIds,
+          sponsorFormsVisible,
+        );
+      } catch (error) {
+        console.error("Failed to update matching round form definitions", error);
+        setSelectedFormDefinitionIds(selectedFormDefinitionIds);
+        alert(
+          t("opportunities.matchingRound.formPicker.saveFailed", {}, {
+            default:
+              "Could not save questionnaires for this matching round. Please try again.",
+          }),
+        );
+      }
+    },
+    [
+      selectedFormDefinitionIds,
+      isNew,
+      roundId,
+      updateConnectRound,
+      inputs,
+      selectedOpportunities,
+      selectedQuestions,
+      sponsorFormsVisible,
+      captureSnapshot,
+      t,
+    ],
+  );
+
   const toggleQuestion = (id) => {
     setSelectedQuestions((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
@@ -890,12 +954,20 @@ function MatchingRoundEditor({
       return;
     }
 
+    // Persist both visibility and the selected FormDefinition ↔ ConnectRound
+    // links. Visibility alone used to update settings without connecting
+    // forms, so sponsors never saw the follow-up questionnaires.
+    const formDefinitionsConnect = selectedFormDefinitionIds.map((id) => ({
+      id,
+    }));
+
     setTogglingSponsorFormsVisible(true);
     try {
       await updateConnectRound({
         variables: {
           id: roundId,
           input: {
+            formDefinitions: { set: formDefinitionsConnect },
             settings: mergeRoundSettings(round?.settings, nextVisible),
             updatedAt: new Date().toISOString(),
           },
@@ -1365,33 +1437,6 @@ function MatchingRoundEditor({
                 "If an opportunity already has answers for a selected form, those questions will not be asked again.",
             })}
           </p>
-        </div>
-        <div className="matchingRoundFormPickerControl">
-          <DropdownSelect
-            multiple
-            value={selectedFormDefinitionIds}
-            onChange={setSelectedFormDefinitionIds}
-            options={formDefinitionOptions}
-            disabled={!canManageOpportunities || saving}
-            placeholder={
-              formDefinitionOptions.length === 0
-                ? t(
-                    "opportunities.matchingRound.formPicker.emptyPlaceholder",
-                    {},
-                    { default: "No published forms available" },
-                  )
-                : t(
-                    "opportunities.matchingRound.formPicker.placeholder",
-                    {},
-                    { default: "Select forms…" },
-                  )
-            }
-            ariaLabel={t(
-              "opportunities.matchingRound.formPicker.ariaLabel",
-              {},
-              { default: "Sponsor questionnaires for this round" },
-            )}
-          />
           <Button
             type="button"
             variant={sponsorFormsVisible ? "outline" : "filled"}
@@ -1417,7 +1462,53 @@ function MatchingRoundEditor({
                 )}
           </Button>
         </div>
+        <div className="matchingRoundFormPickerControl">
+          <DropdownSelect
+            multiple
+            value={selectedFormDefinitionIds}
+            onChange={persistFormDefinitionSelection}
+            options={formDefinitionOptions}
+            disabled={!canManageOpportunities || saving}
+            placeholder={
+              formDefinitionOptions.length === 0
+                ? t(
+                    "opportunities.matchingRound.formPicker.emptyPlaceholder",
+                    {},
+                    { default: "No published forms available" },
+                  )
+                : t(
+                    "opportunities.matchingRound.formPicker.placeholder",
+                    {},
+                    { default: "Select forms…" },
+                  )
+            }
+            ariaLabel={t(
+              "opportunities.matchingRound.formPicker.ariaLabel",
+              {},
+              { default: "Sponsor questionnaires for this round" },
+            )}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            className="matchingRoundFormPickerPreviewButton"
+            disabled={selectedFormDefinitionIds.length === 0}
+            onClick={() => setFormPreviewOpen(true)}
+          >
+            {t(
+              "opportunities.matchingRound.formPicker.previewButton",
+              {},
+              { default: "Preview form" },
+            )}
+          </Button>
+        </div>
       </div>
+      <MatchingRoundFormPreviewModal
+        open={formPreviewOpen}
+        onClose={() => setFormPreviewOpen(false)}
+        formDefinitionIds={selectedFormDefinitionIds}
+        formLabelsById={formLabelsById}
+      />
       <MatchingRoundOpportunitiesGrid
         opportunities={selectedNetworkOpportunities}
         selectedIds={selectedOpportunities}

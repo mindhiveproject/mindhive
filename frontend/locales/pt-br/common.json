@@ -239,6 +239,22 @@
 		"tasks": "Tarefas e Pesquisas",
 		"teachers": "Professores"
 	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
+	},
 	"pagination": {
 		"next": "Próximo",
 		"of": "de {{pageCount}}",

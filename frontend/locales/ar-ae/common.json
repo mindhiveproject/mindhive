@@ -239,6 +239,22 @@
 		"tasks": "المهام والاستطلاعات",
 		"teachers": "المعلمون"
 	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
+	},
 	"pagination": {
 		"next": "التالي",
 		"of": "من {{pageCount}}",

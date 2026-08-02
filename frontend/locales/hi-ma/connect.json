@@ -239,6 +239,13 @@
 		"summaryChipAria": "",
 		"summaryDescription": "",
 		"summaryTitle": "",
+		"tabs": {
+			"admins": "",
+			"matching": "",
+			"organizations": "",
+			"overview": "",
+			"profiles": ""
+		},
 		"titleLabel": "",
 		"titlePlaceholder": "",
 		"titleRequired": "",
@@ -522,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "",
+		"columns": {
+			"visibility": ""
+		},
 		"delete": "",
 		"deleteConfirm": "",
 		"edit": "",
 		"empty": "",
 		"emptyFiltered": "",
+		"held": {
+			"continueForm": "",
+			"followUp": "",
+			"formComplete": "",
+			"formCompleteSaved": "",
+			"formIncomplete": "",
+			"formIncompleteSaved": "",
+			"noFurtherQuestions": "",
+			"openForm": "",
+			"preSelected": "",
+			"title": "",
+			"unknownNetwork": "",
+			"unknownRound": ""
+		},
 		"loading": "",
 		"networkCount": {
 			"many": "",
@@ -535,6 +559,7 @@
 		"networkFilterLabel": "",
 		"networkFilterPlaceholder": "",
 		"newButton": "",
+		"openChat": "",
 		"pageTitle": "",
 		"rating": {
 			"many": "",
@@ -565,7 +590,15 @@
 		"statusFilterLabel": "",
 		"statusFilterPlaceholder": "",
 		"teamOf": "",
-		"unknownSponsor": ""
+		"unknownSponsor": "",
+		"visibility": {
+			"emptyHint": "",
+			"many": "",
+			"modalEmpty": "",
+			"modalTitle": "",
+			"none": "",
+			"one": ""
+		}
 	},
 	"myProfile": "",
 	"nav": {
@@ -615,6 +648,7 @@
 			"urbanInfrastructure": ""
 		},
 		"categorizationOther": "",
+		"chatSaveFirst": "",
 		"classNetworksEmptyWarning": "",
 		"classNetworksHint": "",
 		"classNetworksNoMembership": "",
@@ -664,6 +698,8 @@
 			"scopeDescriptionHint": "",
 			"title": ""
 		},
+		"followUpIntro": "",
+		"followUpLastSaved": "",
 		"followUpQuestionnaire": {
 			"banner": "",
 			"potentialActivities": "",
@@ -673,6 +709,7 @@
 			"tbd": "",
 			"title": ""
 		},
+		"followUpSaveMissing": "",
 		"groupFormat": "",
 		"guidelinesAcknowledgedAt": "",
 		"guidelinesAgree": "",
@@ -861,6 +898,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "",
+		"savedFlash": "",
 		"saveDraft": "",
 		"saving": "",
 		"specialConsiderations": {
@@ -886,6 +924,7 @@
 		"status": "",
 		"statusAdmin": "",
 		"statusAdminHint": "",
+		"statusNewHint": "",
 		"statusOptions": {
 			"accepted": "",
 			"archived": "",
@@ -898,6 +937,13 @@
 		},
 		"studentCapacity": "",
 		"submitForReview": "",
+		"tabs": {
+			"chat": "",
+			"followUpCompleteAria": "",
+			"followUpFallback": "",
+			"proposal": "",
+			"status": ""
+		},
 		"teamPreferences": "",
 		"teamSize": "",
 		"teamSizeHint": "",

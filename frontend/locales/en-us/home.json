@@ -2,6 +2,8 @@
 	"about": "About",
 	"all": "All",
 	"blocks": "Blocks",
+	"copyParticipantIdAria": "Copy participant ID to clipboard",
+	"copyPublicIdAria": "Copy public readable ID to clipboard",
 	"createYourProfile": "Create your MindHive profile",
 	"editYourProfile": "Edit your MindHive profile",
 	"favoritePeople": "Favorite people",
@@ -53,8 +55,6 @@
 		"title": "Pending network invites",
 		"untitled": "Untitled network"
 	},
-	"copyParticipantIdAria": "Copy participant ID to clipboard",
-	"copyPublicIdAria": "Copy public readable ID to clipboard",
 	"participantID": "Participant ID",
 	"permissions": "Permissions",
 	"preview": "Preview",
