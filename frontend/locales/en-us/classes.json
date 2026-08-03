@@ -1088,6 +1088,7 @@
 			"notFound": "Opportunity not found, or no longer available.",
 			"opportunityDetails": "Opportunity details",
 			"organization": "Organization",
+			"peopleEmpty": "No organization or mentor details are available yet.",
 			"preferences": "Student preferences",
 			"projectCategory": "Project category",
 			"publicRating": "Public rating",
@@ -1114,6 +1115,11 @@
 			},
 			"sponsorIsMentor": "Sponsor is mentor",
 			"status": "Status",
+			"tabs": {
+				"chat": "Chat",
+				"detail": "Opportunity form",
+				"people": "People"
+			},
 			"teamSize": "Team size",
 			"teamSizeSolo": "Solo",
 			"teamSizeTeam": "Team of {{size}}",

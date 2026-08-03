@@ -134,6 +134,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     readOnly = false,
     specialCardComponents = {},
     hideSaveButton = false,
+    /** Read-only review: hide blank / unanswered fields and special cards. */
+    hideUnansweredFields = false,
   },
   ref,
 ) {
@@ -409,6 +411,7 @@ const DefinitionForm = forwardRef(function DefinitionForm(
           onFieldChange={handleFieldChange}
           disabled={readOnly || submitting}
           specialCardComponents={specialCardComponents}
+          hideUnansweredFields={hideUnansweredFields}
         />
       ))}
       {!readOnly && !hideSaveButton && (

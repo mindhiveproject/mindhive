@@ -6,9 +6,62 @@
 // so this module stays small.
 import { useMemo } from "react";
 import { Dropdown } from "semantic-ui-react";
+import clsx from "clsx";
 
 import { fieldLabel, fieldHelper, fieldPlaceholder, optionLabel } from "../i18n";
 import { FieldShell, ReadOnlyBanner, fieldShellErrorProps } from "../styles";
+
+function useSelectOptions(field, locale) {
+  return useMemo(() => {
+    const raw = Array.isArray(field?.options) ? field.options : [];
+    return raw
+      .slice()
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+      .map((o) => ({
+        key: o.value,
+        value: o.value,
+        text: optionLabel(o, locale),
+      }));
+  }, [field?.options, locale]);
+}
+
+/** Visible option list for read-only / preview (disabled Dropdowns hide choices). */
+function SelectOptionsPreview({ options, value, multiple }) {
+  const selected = useMemo(() => {
+    if (multiple) {
+      return new Set(Array.isArray(value) ? value : []);
+    }
+    if (value == null || value === "") return new Set();
+    return new Set([value]);
+  }, [value, multiple]);
+
+  if (!options.length) {
+    return <div className="select-options-preview" />;
+  }
+
+  return (
+    <ul className="select-options-preview" role="list">
+      {options.map((o) => {
+        const isSelected = selected.has(o.value);
+        return (
+          <li
+            key={o.key}
+            className={clsx("select-option-preview", isSelected && "is-selected")}
+          >
+            <span
+              className={clsx(
+                "select-option-marker",
+                multiple ? "multi" : "single",
+              )}
+              aria-hidden
+            />
+            <span>{o.text}</span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 function LabelHeader({ field, locale }) {
   const label = fieldLabel(field, locale);
@@ -133,29 +186,22 @@ export function CheckboxInput({ field, value, onChange, error, locale, disabled 
 }
 
 export function SelectInput({ field, value, onChange, error, locale, disabled }) {
-  const options = useMemo(() => {
-    const raw = Array.isArray(field?.options) ? field.options : [];
-    return raw
-      .slice()
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-      .map((o) => ({
-        key: o.value,
-        value: o.value,
-        text: optionLabel(o, locale),
-      }));
-  }, [field?.options, locale]);
+  const options = useSelectOptions(field, locale);
   return (
     <FieldShell as="div" {...fieldShellErrorProps(error)}>
       <LabelHeader field={field} locale={locale} />
-      <Dropdown
-        selection
-        clearable={!field.isRequired}
-        placeholder={fieldPlaceholder(field, locale)}
-        options={options}
-        value={value ?? ""}
-        onChange={(_, { value: v }) => onChange(v || null)}
-        disabled={disabled}
-      />
+      {disabled ? (
+        <SelectOptionsPreview options={options} value={value} multiple={false} />
+      ) : (
+        <Dropdown
+          selection
+          clearable={!field.isRequired}
+          placeholder={fieldPlaceholder(field, locale)}
+          options={options}
+          value={value ?? ""}
+          onChange={(_, { value: v }) => onChange(v || null)}
+        />
+      )}
       <ErrorRow error={error} />
     </FieldShell>
   );
@@ -169,30 +215,23 @@ export function MultiselectInput({
   locale,
   disabled,
 }) {
-  const options = useMemo(() => {
-    const raw = Array.isArray(field?.options) ? field.options : [];
-    return raw
-      .slice()
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-      .map((o) => ({
-        key: o.value,
-        value: o.value,
-        text: optionLabel(o, locale),
-      }));
-  }, [field?.options, locale]);
+  const options = useSelectOptions(field, locale);
   return (
     <FieldShell as="div" {...fieldShellErrorProps(error)}>
       <LabelHeader field={field} locale={locale} />
-      <Dropdown
-        selection
-        multiple
-        clearable
-        placeholder={fieldPlaceholder(field, locale)}
-        options={options}
-        value={Array.isArray(value) ? value : []}
-        onChange={(_, { value: v }) => onChange(v)}
-        disabled={disabled}
-      />
+      {disabled ? (
+        <SelectOptionsPreview options={options} value={value} multiple />
+      ) : (
+        <Dropdown
+          selection
+          multiple
+          clearable
+          placeholder={fieldPlaceholder(field, locale)}
+          options={options}
+          value={Array.isArray(value) ? value : []}
+          onChange={(_, { value: v }) => onChange(v)}
+        />
+      )}
       <ErrorRow error={error} />
     </FieldShell>
   );

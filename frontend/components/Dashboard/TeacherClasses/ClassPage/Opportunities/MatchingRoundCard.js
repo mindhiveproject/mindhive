@@ -442,6 +442,7 @@ function MatchingRoundEditor({
   const [togglingOpportunityId, setTogglingOpportunityId] = useState(null);
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [formPreviewOpen, setFormPreviewOpen] = useState(false);
+  const [formPreviewIds, setFormPreviewIds] = useState([]);
   const [formWizardOpen, setFormWizardOpen] = useState(false);
   const [formWizardDefinitionId, setFormWizardDefinitionId] = useState(null);
   const [librarySelectedId, setLibrarySelectedId] = useState(null);
@@ -1384,6 +1385,13 @@ function MatchingRoundEditor({
       noRoundForNetwork: false,
       togglingOpportunityId,
       toggleOpportunity: toggleOpportunityInRound,
+      formDefinitions: (round?.formDefinitions || []).map((fd) => ({
+        id: fd.id,
+        title: fd.title,
+        key: fd.key,
+        version: fd.version,
+        status: fd.status,
+      })),
     });
     return () => onMatchingRoundContextChange(null);
   }, [
@@ -1395,6 +1403,7 @@ function MatchingRoundEditor({
     canManageOpportunities,
     togglingOpportunityId,
     toggleOpportunityInRound,
+    round?.formDefinitions,
   ]);
 
   const cardHeaderTitle = isNew
@@ -1664,6 +1673,12 @@ function MatchingRoundEditor({
     const openPreview = (formId) => {
       if (!formId) return;
       setLibrarySelectedId(formId);
+      setFormPreviewIds([formId]);
+      setFormPreviewOpen(true);
+    };
+    const openRoundFormsPreview = () => {
+      if (selectedFormDefinitionIds.length === 0) return;
+      setFormPreviewIds([...selectedFormDefinitionIds]);
       setFormPreviewOpen(true);
     };
     const addFormToRound = (formId) => {
@@ -1801,6 +1816,19 @@ function MatchingRoundEditor({
                   { default: "Sponsor questionnaires for this round" },
                 )}
               />
+              <Button
+                type="button"
+                variant="outline"
+                className="matchingRoundFormPickerPreviewButton"
+                disabled={selectedFormDefinitionIds.length === 0}
+                onClick={openRoundFormsPreview}
+              >
+                {t(
+                  "opportunities.matchingRound.formPicker.previewButton",
+                  {},
+                  { default: "Preview" },
+                )}
+              </Button>
             </section>
 
             <section
@@ -2089,10 +2117,11 @@ function MatchingRoundEditor({
 
         <MatchingRoundFormPreviewModal
           open={formPreviewOpen}
-          onClose={() => setFormPreviewOpen(false)}
-          formDefinitionIds={
-            librarySelectedId ? [librarySelectedId] : []
-          }
+          onClose={() => {
+            setFormPreviewOpen(false);
+            setFormPreviewIds([]);
+          }}
+          formDefinitionIds={formPreviewIds}
           formLabelsById={formLabelsById}
         />
         <TeacherFormWizard

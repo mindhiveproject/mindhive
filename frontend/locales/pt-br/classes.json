@@ -1088,6 +1088,7 @@
 			"notFound": "",
 			"opportunityDetails": "",
 			"organization": "",
+			"peopleEmpty": "",
 			"preferences": "",
 			"projectCategory": "",
 			"publicRating": "",
@@ -1114,6 +1115,11 @@
 			},
 			"sponsorIsMentor": "",
 			"status": "",
+			"tabs": {
+				"chat": "",
+				"detail": "",
+				"people": ""
+			},
 			"teamSize": "",
 			"teamSizeSolo": "",
 			"teamSizeTeam": "",

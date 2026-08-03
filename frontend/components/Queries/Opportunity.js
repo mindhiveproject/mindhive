@@ -376,6 +376,22 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       scopeDescription
       potentialActivities
       specificSkills
+      rounds {
+        id
+        title
+        settings
+        classNetwork {
+          id
+          title
+        }
+        formDefinitions {
+          id
+          title
+          key
+          version
+          status
+        }
+      }
       reviewNotes(orderBy: { createdAt: asc }) {
         id
         kind

@@ -103,6 +103,60 @@ export const FieldShell = styled.label`
     color: #171717;
     cursor: pointer;
   }
+
+  /* Read-only / preview: list select & multiselect options instead of an
+     empty disabled Semantic Dropdown. */
+  .select-options-preview {
+    list-style: none;
+    margin: 0;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid #d3dae0;
+    border-radius: 8px;
+    background: #f7f9f8;
+  }
+
+  .select-option-preview {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 6px 4px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #5f6871;
+  }
+
+  .select-option-preview.is-selected {
+    color: #171717;
+    font-weight: 600;
+  }
+
+  .select-option-marker {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    box-sizing: border-box;
+    border: 1.5px solid #a1a1a1;
+    background: #ffffff;
+  }
+
+  .select-option-marker.single {
+    border-radius: 50%;
+  }
+
+  .select-option-marker.multi {
+    border-radius: 4px;
+  }
+
+  .select-option-preview.is-selected .select-option-marker {
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    background: var(--MH-Theme-Primary-Dark, #336f8a);
+    box-shadow: inset 0 0 0 2px #ffffff;
+  }
 `;
 
 export const ReadOnlyBanner = styled.div`

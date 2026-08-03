@@ -1699,7 +1699,8 @@ const StyledClass = styled.div`
       color: #8a6d3b;
     }
 
-    .matchingRoundFormPickerVisibilityButton {
+    .matchingRoundFormPickerVisibilityButton,
+    .matchingRoundFormPickerPreviewButton {
       flex-shrink: 0;
       width: fit-content;
       max-width: 100%;

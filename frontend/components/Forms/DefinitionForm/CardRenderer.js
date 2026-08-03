@@ -6,7 +6,11 @@
 import { Card } from "./styles";
 import { cardTitle, cardDescription } from "./i18n";
 import { getFieldComponent } from "./fields";
-import { isCardVisible, rolesIntersect } from "./visibility";
+import {
+  hasRenderableFieldValue,
+  isCardVisible,
+  rolesIntersect,
+} from "./visibility";
 
 export default function CardRenderer({
   card,
@@ -18,10 +22,13 @@ export default function CardRenderer({
   onFieldChange,
   disabled,
   specialCardComponents,
+  hideUnansweredFields = false,
 }) {
   if (!isCardVisible(card, { viewerRoles, entityStatus })) return null;
 
   if (card.cardType !== "fields") {
+    // Review mode: skip editor-only special chrome (members panels, etc.).
+    if (hideUnansweredFields) return null;
     const SpecialComponent = specialCardComponents?.[card.cardType];
     if (!SpecialComponent) {
       // Unknown special type: render nothing rather than crash.
@@ -43,7 +50,12 @@ export default function CardRenderer({
   const fields = (card.fields || [])
     .slice()
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-    .filter((f) => rolesIntersect(f.visibilityRoles, viewerRoles));
+    .filter((f) => rolesIntersect(f.visibilityRoles, viewerRoles))
+    .filter((f) => {
+      if (!hideUnansweredFields) return true;
+      if (f.fieldType === "read_only_html") return false;
+      return hasRenderableFieldValue(values?.[f.name], f.fieldType);
+    });
 
   if (fields.length === 0) return null;
 

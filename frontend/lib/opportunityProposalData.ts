@@ -95,6 +95,26 @@ export function getProposalFormDefinitionId(
 }
 
 /**
+ * Original opportunity intake form id from proposalData, excluding follow-up
+ * questionnaire form ids (matching-round forms live on separate preview tabs).
+ * Returns null for legacy flat proposalData (no per-form entries).
+ */
+export function getIntakeProposalFormDefinitionId(
+  proposalData: unknown,
+  excludeFormDefinitionIds: Iterable<string> = []
+): string | null {
+  if (!isProposalDataEntries(proposalData)) return null;
+  const exclude = new Set(
+    Array.from(excludeFormDefinitionIds || []).filter(Boolean)
+  );
+  const match = proposalData.find(
+    (entry) =>
+      entry?.formDefinitionId && !exclude.has(entry.formDefinitionId)
+  );
+  return match?.formDefinitionId || null;
+}
+
+/**
  * ISO `savedAt` for a proposalData entry, or null when missing / legacy.
  */
 export function getProposalEntrySavedAt(
