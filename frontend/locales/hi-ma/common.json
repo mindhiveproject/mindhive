@@ -226,6 +226,14 @@
 		"title": "भाषा सेटिंग्स",
 		"updatePreferences": "प्राथमिकताएं अपडेट करें"
 	},
+	"loading": "",
+	"mediaLibrary": {
+		"choose": "",
+		"empty": "",
+		"title": "",
+		"upload": "",
+		"uploading": ""
+	},
 	"members": {
 		"typeUsername": "उपयोगकर्ता नाम टाइप करें"
 	},
@@ -312,6 +320,7 @@
 		"proceedNextTask": "अगले कार्य पर आगे बढ़ें",
 		"thankYou": "इस कार्य में भाग लेने के लिए धन्यवाद!"
 	},
+	"remove": "",
 	"reviewed": {
 		"menuTitle": "समीक्षित"
 	},

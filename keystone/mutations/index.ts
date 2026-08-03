@@ -49,6 +49,8 @@ import seedReviewForms from "./seedReviewForms";
 import seedMissingForms from "./seedMissingForms";
 import duplicateFormDefinition from "./duplicateFormDefinition";
 import publishFormDefinition from "./publishFormDefinition";
+import saveClassFormDefinition from "./saveClassFormDefinition";
+import cloneFormDefinitionForClass from "./cloneFormDefinitionForClass";
 import seedMilestones from "./seedMilestones";
 import seedMissingMilestones from "./seedMissingMilestones";
 import backfillMilestoneStatus from "./backfillMilestoneStatus";
@@ -199,6 +201,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedMissingForms: [FormDefinition!]!
         # Clone a FormDefinition + its cards + fields as a new draft.
         duplicateFormDefinition(id: ID!): FormDefinition
+        # Teacher wizard: create/update a class-scoped opportunity form
+        # with baked-in defaults. Optionally publish in the same call.
+        saveClassFormDefinition(input: SaveClassFormDefinitionInput!): FormDefinition
+        # Teacher wizard: clone a published global opportunity form into
+        # a class-scoped draft owned by the class creator.
+        cloneFormDefinitionForClass(sourceId: ID!, classId: ID!): FormDefinition
         # Atomic publish — promotes this row to status=published and
         # archives any other published row sharing the same (key, scope,
         # organization, classNetwork) tuple. Optionally records a
@@ -279,17 +287,36 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Resolve the most-specific published FormDefinition for the
         # current viewer's scope. Pass any subset of the scope IDs the
         # caller knows about; the resolver picks the winner as
-        # project_board > class_network > organization > global.
+        # project_board > class > class_network > organization > global.
         # Returns null when nothing is published at any scope.
         resolveFormDefinition(
           key: String!
           organizationId: ID
           classNetworkId: ID
           proposalBoardId: ID
+          classId: ID
         ): FormDefinition
         # Public-safe invite context for login/signup. Returns only
         # non-sensitive display fields for a tokenized NetworkInvite.
         networkInviteContext(token: String!): NetworkInviteContext
+      }
+      input ClassFormFieldInput {
+        name: String
+        fieldType: String!
+        label: String!
+        helperText: String
+        placeholder: String
+        isRequired: Boolean
+        options: JSON
+        order: Int
+      }
+      input SaveClassFormDefinitionInput {
+        classId: ID!
+        definitionId: ID
+        title: String!
+        description: String
+        fields: [ClassFormFieldInput!]!
+        publish: Boolean
       }
     `,
     resolvers: {
@@ -341,6 +368,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedReviewForms,
         seedMissingForms,
         duplicateFormDefinition,
+        saveClassFormDefinition,
+        cloneFormDefinitionForClass,
         publishFormDefinition,
         seedMilestones,
         seedMissingMilestones,

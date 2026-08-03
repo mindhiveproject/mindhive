@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import absoluteUrl from "next-absolute-url";
-import Link from "next/link";
+import clsx from "clsx";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
@@ -10,7 +10,9 @@ import { classNetworkUrlRef } from "../../../../../lib/classNetworkRef";
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import CopyButton from "../../../../DesignSystem/CopyButton";
+import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import Modal from "../../../../DesignSystem/Modal";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import {
   GET_CONNECT_ROUND,
@@ -18,11 +20,15 @@ import {
   NETWORK_OPPORTUNITIES_FOR_ROUND,
 } from "../../../../Queries/ConnectRound";
 import { QUESTION_LIBRARY } from "../../../../Queries/ConnectQuestion";
-import { ROUND_PICKABLE_FORM_DEFINITIONS } from "../../../../Queries/FormDefinition";
+import { ROUND_PICKABLE_FORM_DEFINITIONS, CLASS_OWNED_FORM_DEFINITIONS } from "../../../../Queries/FormDefinition";
 import {
   CREATE_CONNECT_ROUND,
   UPDATE_CONNECT_ROUND,
 } from "../../../../Mutations/ConnectRound";
+import {
+  CLONE_FORM_DEFINITION_FOR_CLASS,
+  DELETE_FORM_DEFINITION,
+} from "../../../../Mutations/FormDefinition";
 import { UPDATE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
 import {
   EMPTY_FORM,
@@ -34,6 +40,8 @@ import { useUser } from "../../../../Utils/Access/User";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
+import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
+import ClonePublicFormPicker from "../../../../Forms/TeacherFormWizard/ClonePublicFormPicker";
 
 const NETWORK_ICON = (
   <img
@@ -68,7 +76,9 @@ const PANELS = {
   settings: "settings",
   review: "review",
   selected: "selected",
+  forms: "forms",
   questions: "questions",
+  matches: "matches",
 };
 
 function getRoundStatusParts(status, t) {
@@ -132,6 +142,9 @@ function getFormOwnershipKind(form, currentUserId) {
   if (form?.scope === "global") {
     return "public";
   }
+  if (form?.scope === "class") {
+    return "class";
+  }
   return "network";
 }
 
@@ -145,9 +158,13 @@ function FormOwnershipOptionLabel({ title, ownershipKind, t }) {
         ? t("opportunities.matchingRound.formPicker.chipPublic", {}, {
             default: "Public",
           })
-        : t("opportunities.matchingRound.formPicker.chipNetwork", {}, {
-            default: "Network",
-          });
+        : ownershipKind === "class"
+          ? t("opportunities.matchingRound.formPicker.chipClass", {}, {
+              default: "Class",
+            })
+          : t("opportunities.matchingRound.formPicker.chipNetwork", {}, {
+              default: "Network",
+            });
 
   return (
     <span
@@ -396,9 +413,12 @@ function MatchingRoundEditor({
 
   const queryMatchingPanel = useMemo(() => {
     const raw = router.query?.matchingPanel;
-    return typeof raw === "string" && Object.values(PANELS).includes(raw)
-      ? raw
-      : null;
+    if (typeof raw !== "string" || !Object.values(PANELS).includes(raw)) {
+      return null;
+    }
+    // Matches tab is present but disabled for now — ignore deep links.
+    if (raw === PANELS.matches) return null;
+    return raw;
   }, [router.query?.matchingPanel]);
 
   const [selectedNetworkId, setSelectedNetworkId] = useState(
@@ -422,6 +442,12 @@ function MatchingRoundEditor({
   const [togglingOpportunityId, setTogglingOpportunityId] = useState(null);
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [formPreviewOpen, setFormPreviewOpen] = useState(false);
+  const [formWizardOpen, setFormWizardOpen] = useState(false);
+  const [formWizardDefinitionId, setFormWizardDefinitionId] = useState(null);
+  const [librarySelectedId, setLibrarySelectedId] = useState(null);
+  const [clonePublicOpen, setClonePublicOpen] = useState(false);
+  const [deletingFormId, setDeletingFormId] = useState(null);
+  const [cloningPublic, setCloningPublic] = useState(false);
   const savedSnapshotRef = useRef(null);
 
   const selectedNetwork = useMemo(
@@ -585,16 +611,42 @@ function MatchingRoundEditor({
     (q) => q.status === "approved",
   );
 
-  const { data: pickableFormsData } = useQuery(
+  const { data: pickableFormsData, refetch: refetchPickableForms } = useQuery(
     ROUND_PICKABLE_FORM_DEFINITIONS,
     {
-      variables: { classNetworkId: selectedNetworkId },
-      skip: !selectedNetworkId,
+      variables: {
+        classNetworkId: selectedNetworkId,
+        classId: myclass?.id,
+      },
+      skip: !selectedNetworkId || !myclass?.id,
       fetchPolicy: "cache-and-network",
     },
   );
   const pickableFormDefinitions = pickableFormsData?.formDefinitions || [];
 
+  const { data: ownedFormsData, refetch: refetchOwnedForms } = useQuery(
+    CLASS_OWNED_FORM_DEFINITIONS,
+    {
+      variables: {
+        classId: myclass?.id,
+        userId: user?.id,
+      },
+      skip: !myclass?.id || !user?.id,
+      fetchPolicy: "cache-and-network",
+    },
+  );
+  const ownedFormDefinitions = ownedFormsData?.formDefinitions || [];
+
+  // Drop library selection if the form disappears after refetch/delete.
+  useEffect(() => {
+    if (!librarySelectedId) return;
+    if (
+      ownedFormDefinitions.length > 0 &&
+      !ownedFormDefinitions.some((form) => form.id === librarySelectedId)
+    ) {
+      setLibrarySelectedId(null);
+    }
+  }, [ownedFormDefinitions, librarySelectedId]);
   const formDefinitionOptions = useMemo(() => {
     const byId = new Map();
     const currentUserId = user?.id;
@@ -631,8 +683,13 @@ function MatchingRoundEditor({
     for (const option of formDefinitionOptions) {
       map[option.value] = option.labelText || option.label;
     }
+    for (const form of ownedFormDefinitions) {
+      if (!map[form.id]) {
+        map[form.id] = form.title || form.id;
+      }
+    }
     return map;
-  }, [formDefinitionOptions]);
+  }, [formDefinitionOptions, ownedFormDefinitions]);
 
   const { data: opportunitiesData } = useQuery(NETWORK_OPPORTUNITIES_FOR_ROUND, {
     variables: { classNetworkId: selectedNetworkId },
@@ -774,11 +831,24 @@ function MatchingRoundEditor({
               }),
       },
       {
-        id: PANELS.questions,
-        label: t("opportunities.matchingRound.panels.questions", {}, {
-          default: "Student questions",
+        id: PANELS.forms,
+        label: t("opportunities.matchingRound.panels.followUp", {}, {
+          default: "Follow-up",
         }),
       },
+      // {
+      //   id: PANELS.questions,
+      //   label: t("opportunities.matchingRound.panels.questions", {}, {
+      //     default: "Student questions",
+      //   }),
+      // },
+        // {
+        //   id: PANELS.matches,
+        //   label: t("opportunities.matchingRound.panels.manageMatches", {}, {
+        //     default: "Manage matches",
+        //   }),
+        //   disabled: true,
+        // },
     ],
     [reviewOpportunitiesCount, selectedOpportunities.length, t],
   );
@@ -799,6 +869,8 @@ function MatchingRoundEditor({
       awaitRefetchQueries: true,
     },
   );
+  const [deleteFormDefinition] = useMutation(DELETE_FORM_DEFINITION);
+  const [cloneFormForClass] = useMutation(CLONE_FORM_DEFINITION_FOR_CLASS);
   const saving = creating || updating;
 
   const persistOpportunitySelection = useCallback(
@@ -1074,6 +1146,84 @@ function MatchingRoundEditor({
       );
     } finally {
       setTogglingSponsorFormsVisible(false);
+    }
+  };
+
+  const handleDeleteOwnedForm = async (form) => {
+    if (!form?.id || !canManageOpportunities || deletingFormId) return;
+    const title = form.title || form.id;
+    if (
+      !window.confirm(
+        t(
+          "opportunities.matchingRound.formPicker.deleteConfirm",
+          { title },
+          {
+            default:
+              "Delete “{{title}}”? This cannot be undone. It will also be removed from this round if attached.",
+          },
+        ),
+      )
+    ) {
+      return;
+    }
+
+    setDeletingFormId(form.id);
+    try {
+      if (selectedFormDefinitionIds.includes(form.id)) {
+        await persistFormDefinitionSelection(
+          selectedFormDefinitionIds.filter((id) => id !== form.id),
+        );
+      }
+      await deleteFormDefinition({ variables: { id: form.id } });
+      if (librarySelectedId === form.id) {
+        setLibrarySelectedId(null);
+      }
+      try {
+        await Promise.all([refetchPickableForms?.(), refetchOwnedForms?.()]);
+      } catch {
+        // Lists may refresh on next load.
+      }
+    } catch (error) {
+      console.error("Failed to delete form definition", error);
+      alert(
+        t("opportunities.matchingRound.formPicker.deleteFailed", {}, {
+          default: "Could not delete that form. Please try again.",
+        }),
+      );
+    } finally {
+      setDeletingFormId(null);
+    }
+  };
+
+  const handleClonePublicForm = async (publicForm) => {
+    if (!publicForm?.id || !myclass?.id || !canManageOpportunities || cloningPublic) {
+      return;
+    }
+    setCloningPublic(true);
+    try {
+      const result = await cloneFormForClass({
+        variables: { sourceId: publicForm.id, classId: myclass.id },
+      });
+      const cloned = result?.data?.cloneFormDefinitionForClass;
+      if (!cloned?.id) throw new Error("Clone failed");
+      try {
+        await Promise.all([refetchPickableForms?.(), refetchOwnedForms?.()]);
+      } catch {
+        // Selection still proceeds.
+      }
+      setLibrarySelectedId(cloned.id);
+      setClonePublicOpen(false);
+      setFormWizardDefinitionId(cloned.id);
+      setFormWizardOpen(true);
+    } catch (error) {
+      console.error("Failed to clone public form", error);
+      alert(
+        t("opportunities.matchingRound.formPicker.cloneFailed", {}, {
+          default: "Could not copy that form. Please try again.",
+        }),
+      );
+    } finally {
+      setCloningPublic(false);
     }
   };
 
@@ -1498,115 +1648,558 @@ function MatchingRoundEditor({
     </div>
   );
 
-  const renderSelectedPanel = () => (
-    <div className="classTabMatchingRoundPanel">
-      <div className="matchingRoundFormPicker">
-        <div className="matchingRoundFormPickerCopy">
-          <h4 className="matchingRoundFormPickerTitle">
-            {t("opportunities.matchingRound.formPicker.title", {}, {
-              default:
-                "2nd round of question for pre-selected applications",
-            })}
-          </h4>
-          <p className="matchingRoundFormPickerHint">
-            {t("opportunities.matchingRound.formPicker.hint", {}, {
-              default:
-                "Select questionnaires to send to sponsors of the pre-selected opportunities below.",
-            })}
-          </p>
-          <p className="matchingRoundFormPickerNote">
+  const renderFormsPanel = () => {
+    const libraryBusy = saving || cloningPublic || Boolean(deletingFormId);
+
+    const openCreateWizard = () => {
+      setFormWizardDefinitionId(null);
+      setFormWizardOpen(true);
+    };
+    const openEditWizard = (formId) => {
+      if (!formId) return;
+      setLibrarySelectedId(formId);
+      setFormWizardDefinitionId(formId);
+      setFormWizardOpen(true);
+    };
+    const openPreview = (formId) => {
+      if (!formId) return;
+      setLibrarySelectedId(formId);
+      setFormPreviewOpen(true);
+    };
+    const addFormToRound = (formId) => {
+      if (!formId || !canManageOpportunities || saving) return;
+      if (selectedFormDefinitionIds.includes(formId)) return;
+      persistFormDefinitionSelection([
+        ...selectedFormDefinitionIds,
+        formId,
+      ]);
+    };
+
+    const buildLibraryMenuItems = (form) => {
+      const inRound = selectedFormDefinitionIds.includes(form.id);
+      const isPublished = form.status === "published";
+      const items = [
+        {
+          key: "edit",
+          label: t(
+            "opportunities.matchingRound.formPicker.editButton",
+            {},
+            { default: "Edit form" },
+          ),
+          onClick: () => openEditWizard(form.id),
+        },
+        {
+          key: "preview",
+          label: t(
+            "opportunities.matchingRound.formPicker.previewButton",
+            {},
+            { default: "Preview" },
+          ),
+          onClick: () => openPreview(form.id),
+        },
+      ];
+      if (isPublished && !inRound) {
+        items.push({
+          key: "add",
+          label: t(
+            "opportunities.matchingRound.formPicker.addToRound",
+            {},
+            { default: "Add to this round" },
+          ),
+          onClick: () => addFormToRound(form.id),
+        });
+      } else if (inRound) {
+        items.push({
+          key: "inRound",
+          label: t(
+            "opportunities.matchingRound.formPicker.addToRoundAlreadyIn",
+            {},
+            { default: "Already in this round" },
+          ),
+          static: true,
+        });
+      } else {
+        items.push({
+          key: "draftBlocked",
+          label: t(
+            "opportunities.matchingRound.formPicker.addToRoundDisabledDraft",
+            {},
+            {
+              default: "Publish the form before adding it to this round.",
+            },
+          ),
+          static: true,
+        });
+      }
+      items.push({
+        key: "delete",
+        label: t(
+          "opportunities.matchingRound.formPicker.deleteButton",
+          {},
+          { default: "Delete form" },
+        ),
+        danger: true,
+        onClick: () => handleDeleteOwnedForm(form),
+      });
+      return items;
+    };
+
+    return (
+      <div className="classTabMatchingRoundPanel">
+        <div className="matchingRoundFormPicker">
+          <div className="matchingRoundFormPickerHeader">
+            <h4 className="matchingRoundFormPickerTitle">
+              {t("opportunities.matchingRound.formPicker.title", {}, {
+                default: "Sponsor follow-up questionnaires",
+              })}
+            </h4>
+            <p className="matchingRoundFormPickerHint">
+              {t("opportunities.matchingRound.formPicker.hint", {}, {
+                default:
+                  "Combine public forms and forms you own for this round. Manage your own forms in the library, then choose when sponsors can respond.",
+              })}
+            </p>
+          </div>
+
+          <div className="matchingRoundFormPickerTopRow">
+            <section className="matchingRoundFormPickerSection matchingRoundFormPickerTopCard">
+              <div className="matchingRoundFormPickerSectionHeader">
+                <h5 className="matchingRoundFormPickerSectionTitle">
+                  {t("opportunities.matchingRound.formPicker.roundSetTitle", {}, {
+                    default: "Forms in this round",
+                  })}
+                </h5>
+                <p className="matchingRoundFormPickerSectionHint">
+                  {t("opportunities.matchingRound.formPicker.roundSetHint", {}, {
+                    default:
+                      "Which questionnaires are attached to this matching round. Mix public forms and forms you own.",
+                  })}
+                </p>
+              </div>
+              <DropdownSelect
+                multiple
+                value={selectedFormDefinitionIds}
+                onChange={persistFormDefinitionSelection}
+                options={formDefinitionOptions}
+                disabled={!canManageOpportunities || saving}
+                placeholder={
+                  formDefinitionOptions.length === 0
+                    ? t(
+                        "opportunities.matchingRound.formPicker.emptyPlaceholder",
+                        {},
+                        { default: "No published forms available" },
+                      )
+                    : t(
+                        "opportunities.matchingRound.formPicker.placeholder",
+                        {},
+                        { default: "Select forms…" },
+                      )
+                }
+                ariaLabel={t(
+                  "opportunities.matchingRound.formPicker.ariaLabel",
+                  {},
+                  { default: "Sponsor questionnaires for this round" },
+                )}
+              />
+            </section>
+
+            <section
+              className={clsx(
+                "matchingRoundFormPickerVisibility",
+                "matchingRoundFormPickerTopCard",
+                sponsorFormsVisible && "isVisible",
+              )}
+            >
+              <div className="matchingRoundFormPickerVisibilityHeader">
+                <h5 className="matchingRoundFormPickerSectionTitle">
+                  {t(
+                    "opportunities.matchingRound.formPicker.visibilityTitle",
+                    {},
+                    { default: "Sponsor visibility" },
+                  )}
+                </h5>
+                <p className="matchingRoundFormPickerSectionHint">
+                  {t(
+                    "opportunities.matchingRound.formPicker.visibilityHint",
+                    {},
+                    {
+                      default:
+                        "Applies to the forms selected for this round.",
+                    },
+                  )}
+                </p>
+              </div>
+              <div className="matchingRoundFormPickerVisibilityFooter">
+                <span
+                  className={clsx(
+                    "matchingRoundFormPickerVisibilityStatus",
+                    sponsorFormsVisible ? "isVisible" : "isHidden",
+                  )}
+                >
+                  {sponsorFormsVisible
+                    ? t(
+                        "opportunities.matchingRound.formPicker.visibilityVisible",
+                        {},
+                        { default: "Visible to sponsors" },
+                      )
+                    : t(
+                        "opportunities.matchingRound.formPicker.visibilityHidden",
+                        {},
+                        { default: "Hidden from sponsors" },
+                      )}
+                </span>
+                <Button
+                  type="button"
+                  variant={sponsorFormsVisible ? "outline" : "filled"}
+                  className="matchingRoundFormPickerVisibilityButton"
+                  disabled={
+                    !canManageOpportunities ||
+                    saving ||
+                    togglingSponsorFormsVisible ||
+                    selectedFormDefinitionIds.length === 0
+                  }
+                  onClick={handleToggleSponsorFormsVisible}
+                >
+                  {sponsorFormsVisible
+                    ? t(
+                        "opportunities.matchingRound.formPicker.hideFromSponsors",
+                        {},
+                        { default: "Hide from sponsors" },
+                      )
+                    : t(
+                        "opportunities.matchingRound.formPicker.showToSponsors",
+                        {},
+                        { default: "Show to sponsors" },
+                      )}
+                </Button>
+              </div>
+            </section>
+          </div>
+
+          <section className="matchingRoundFormPickerSection">
+            <div className="matchingRoundFormPickerSectionHeader matchingRoundFormPickerLibraryHeader">
+              <div className="matchingRoundFormPickerSectionCopy">
+                <h5 className="matchingRoundFormPickerSectionTitle">
+                  {t(
+                    "opportunities.matchingRound.formPicker.libraryTitle",
+                    {},
+                    { default: "Your form library" },
+                  )}
+                </h5>
+                <p className="matchingRoundFormPickerSectionHint">
+                  {t(
+                    "opportunities.matchingRound.formPicker.libraryHint",
+                    {},
+                    {
+                      default:
+                        "Forms you’ve created for this class. Edit, preview, add to the round, or delete from the menu. Copy a public form to start from a template.",
+                    },
+                  )}
+                </p>
+              </div>
+              <div className="matchingRoundFormPickerLibraryActions">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={
+                    !canManageOpportunities || libraryBusy || !myclass?.id
+                  }
+                  onClick={() => setClonePublicOpen(true)}
+                >
+                  {t(
+                    "opportunities.matchingRound.formPicker.copyPublicButton",
+                    {},
+                    { default: "Copy public form" },
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="filled"
+                  className="matchingRoundFormPickerCreateButton"
+                  disabled={
+                    !canManageOpportunities || libraryBusy || !myclass?.id
+                  }
+                  onClick={openCreateWizard}
+                >
+                  {t(
+                    "opportunities.matchingRound.formPicker.createButton",
+                    {},
+                    { default: "Create form" },
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {ownedFormDefinitions.length === 0 ? (
+              <p className="matchingRoundFormPickerLibraryEmpty">
+                {t(
+                  "opportunities.matchingRound.formPicker.libraryEmpty",
+                  {},
+                  {
+                    default:
+                      "You haven’t created any forms for this class yet. Create one or copy a public form to get started.",
+                  },
+                )}
+              </p>
+            ) : (
+              <ul className="matchingRoundFormPickerLibraryList">
+                {ownedFormDefinitions.map((form) => {
+                  const selected = librarySelectedId === form.id;
+                  const inRound = selectedFormDefinitionIds.includes(form.id);
+                  const statusLabel =
+                    form.status === "published"
+                      ? t(
+                          "opportunities.matchingRound.formPicker.statusPublished",
+                          {},
+                          { default: "Published" },
+                        )
+                      : t(
+                          "opportunities.matchingRound.formPicker.statusDraft",
+                          {},
+                          { default: "Draft" },
+                        );
+                  return (
+                    <li
+                      key={form.id}
+                      className={clsx(
+                        "matchingRoundFormPickerLibraryRow",
+                        selected && "selected",
+                        deletingFormId === form.id && "busy",
+                      )}
+                    >
+                      <button
+                        type="button"
+                        className="matchingRoundFormPickerLibraryRowSelect"
+                        onClick={() =>
+                          setLibrarySelectedId((prev) =>
+                            prev === form.id ? null : form.id,
+                          )
+                        }
+                        aria-pressed={selected}
+                        disabled={libraryBusy}
+                      >
+                        <span className="matchingRoundFormPickerLibraryRowMain">
+                          <span className="matchingRoundFormPickerLibraryRowTitle">
+                            {form.title || form.id}
+                          </span>
+                          <span className="matchingRoundFormPickerLibraryRowMeta">
+                            {statusLabel}
+                          </span>
+                        </span>
+                        {inRound ? (
+                          <Chip
+                            label={t(
+                              "opportunities.matchingRound.formPicker.inThisRound",
+                              {},
+                              { default: "In this round" },
+                            )}
+                            shape="pill"
+                            className="matchingRoundFormOwnershipChip"
+                            ariaLabel={t(
+                              "opportunities.matchingRound.formPicker.inThisRound",
+                              {},
+                              { default: "In this round" },
+                            )}
+                            style={{
+                              height: 22,
+                              paddingLeft: 8,
+                              paddingRight: 8,
+                              paddingTop: 2,
+                              paddingBottom: 2,
+                              fontSize: 11,
+                              fontWeight: 500,
+                              lineHeight: "16px",
+                              flexShrink: 0,
+                            }}
+                          />
+                        ) : null}
+                      </button>
+                      <div
+                        className="matchingRoundFormPickerLibraryRowMenu"
+                        onClick={(event) => event.stopPropagation()}
+                        onKeyDown={(event) => event.stopPropagation()}
+                      >
+                        <DropdownMenu
+                          ariaLabel={t(
+                            "opportunities.matchingRound.formPicker.libraryRowMenuAria",
+                            { title: form.title || form.id },
+                            { default: "Actions for {{title}}" },
+                          )}
+                          items={buildLibraryMenuItems(form)}
+                          triggerStyle={{
+                            opacity: libraryBusy ? 0.5 : 1,
+                            pointerEvents: libraryBusy ? "none" : "auto",
+                          }}
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </section>
+
+          <p className="matchingRoundFormPickerNote matchingRoundFormPickerReuseNote">
             {t("opportunities.matchingRound.formPicker.reuseNote", {}, {
               default:
                 "If an opportunity already has answers for a selected form, those questions will not be asked again.",
             })}
           </p>
-          <Button
-            type="button"
-            variant={sponsorFormsVisible ? "outline" : "filled"}
-            className="matchingRoundFormPickerVisibilityButton"
-            disabled={
-              !canManageOpportunities ||
-              saving ||
-              togglingSponsorFormsVisible ||
-              selectedFormDefinitionIds.length === 0
+        </div>
+
+        <Modal
+          open={clonePublicOpen}
+          onClose={cloningPublic ? undefined : () => setClonePublicOpen(false)}
+          title={t(
+            "opportunities.matchingRound.formPicker.copyPublicTitle",
+            {},
+            { default: "Copy a public form" },
+          )}
+          maxWidth={640}
+          actions={
+            <Button
+              type="button"
+              variant="outline"
+              disabled={cloningPublic}
+              onClick={() => setClonePublicOpen(false)}
+            >
+              {t(
+                "opportunities.matchingRound.formPicker.copyPublicCancel",
+                {},
+                { default: "Cancel" },
+              )}
+            </Button>
+          }
+        >
+          <p className="matchingRoundFormPickerSectionHint">
+            {t(
+              "opportunities.matchingRound.formPicker.copyPublicHint",
+              {},
+              {
+                default:
+                  "Copy a published public questionnaire into your class library, then edit it.",
+              },
+            )}
+          </p>
+          <ClonePublicFormPicker
+            onPick={handleClonePublicForm}
+            disabled={cloningPublic || !canManageOpportunities}
+          />
+        </Modal>
+
+        <MatchingRoundFormPreviewModal
+          open={formPreviewOpen}
+          onClose={() => setFormPreviewOpen(false)}
+          formDefinitionIds={
+            librarySelectedId ? [librarySelectedId] : []
+          }
+          formLabelsById={formLabelsById}
+        />
+        <TeacherFormWizard
+          open={formWizardOpen}
+          onClose={() => {
+            setFormWizardOpen(false);
+            setFormWizardDefinitionId(null);
+          }}
+          classId={myclass?.id}
+          definitionId={formWizardDefinitionId}
+          onSaved={async (saved) => {
+            if (!saved?.id) return;
+            try {
+              await Promise.all([
+                refetchPickableForms?.(),
+                refetchOwnedForms?.(),
+              ]);
+            } catch {
+              // Selection still proceeds; lists may refresh on next load.
             }
-            onClick={handleToggleSponsorFormsVisible}
-          >
-            {sponsorFormsVisible
+            setLibrarySelectedId(saved.id);
+            if (saved.status === "published") {
+              const nextIds = selectedFormDefinitionIds.includes(saved.id)
+                ? selectedFormDefinitionIds
+                : [...selectedFormDefinitionIds, saved.id];
+              await persistFormDefinitionSelection(nextIds);
+            }
+          }}
+        />
+      </div>
+    );
+  };
+
+  const renderSelectedPanel = () => {
+    const formCount = selectedFormDefinitionIds.length;
+    const summaryStatus =
+      formCount === 0
+        ? t("opportunities.matchingRound.formPicker.summaryNone", {}, {
+            default: "No questionnaires attached yet",
+          })
+        : [
+            formCount === 1
               ? t(
-                  "opportunities.matchingRound.formPicker.hideFromSponsors",
+                  "opportunities.matchingRound.formPicker.summaryCountOne",
                   {},
-                  { default: "Hide from sponsors" },
+                  { default: "1 form" },
                 )
               : t(
-                  "opportunities.matchingRound.formPicker.showToSponsors",
+                  "opportunities.matchingRound.formPicker.summaryCount",
+                  { count: formCount },
+                  { default: "{{count}} forms" },
+                ),
+            sponsorFormsVisible
+              ? t(
+                  "opportunities.matchingRound.formPicker.visibilityVisible",
                   {},
-                  { default: "Show to sponsors" },
-                )}
-          </Button>
-        </div>
-        <div className="matchingRoundFormPickerControl">
-          <DropdownSelect
-            multiple
-            value={selectedFormDefinitionIds}
-            onChange={persistFormDefinitionSelection}
-            options={formDefinitionOptions}
-            disabled={!canManageOpportunities || saving}
-            placeholder={
-              formDefinitionOptions.length === 0
-                ? t(
-                    "opportunities.matchingRound.formPicker.emptyPlaceholder",
-                    {},
-                    { default: "No published forms available" },
-                  )
-                : t(
-                    "opportunities.matchingRound.formPicker.placeholder",
-                    {},
-                    { default: "Select forms…" },
-                  )
-            }
-            ariaLabel={t(
-              "opportunities.matchingRound.formPicker.ariaLabel",
-              {},
-              { default: "Sponsor questionnaires for this round" },
-            )}
-          />
+                  { default: "Visible to sponsors" },
+                )
+              : t(
+                  "opportunities.matchingRound.formPicker.visibilityHidden",
+                  {},
+                  { default: "Hidden from sponsors" },
+                ),
+          ].join(" · ");
+
+    return (
+      <div className="classTabMatchingRoundPanel">
+        <div className="matchingRoundFormSummary">
+          <div className="matchingRoundFormSummaryCopy">
+            <h4 className="matchingRoundFormSummaryTitle">
+              {t(
+                "opportunities.matchingRound.formPicker.summaryTitle",
+                {},
+                { default: "Sponsor questionnaires" },
+              )}
+            </h4>
+            <p className="matchingRoundFormSummaryStatus">{summaryStatus}</p>
+          </div>
           <Button
             type="button"
             variant="outline"
-            className="matchingRoundFormPickerPreviewButton"
-            disabled={selectedFormDefinitionIds.length === 0}
-            onClick={() => setFormPreviewOpen(true)}
+            className="matchingRoundFormSummaryManage"
+            onClick={() => setActivePanel(PANELS.forms)}
           >
             {t(
-              "opportunities.matchingRound.formPicker.previewButton",
+              "opportunities.matchingRound.formPicker.summaryManage",
               {},
-              { default: "Preview form" },
+              { default: "Manage forms" },
             )}
           </Button>
         </div>
+        <MatchingRoundOpportunitiesGrid
+          opportunities={selectedNetworkOpportunities}
+          selectedIds={selectedOpportunities}
+          selectionMode="readOnly"
+          onPreview={onPreviewOpportunity}
+          onRemove={canManageOpportunities ? handleRemoveFromRound : undefined}
+          togglingOpportunityId={togglingOpportunityId}
+          roundId={roundId}
+          emptyMessage={t("opportunities.matchingRound.selectedOpportunitiesEmpty", {}, {
+            default:
+              "No opportunities selected yet. Use Review opportunities to add some.",
+          })}
+        />
       </div>
-      <MatchingRoundFormPreviewModal
-        open={formPreviewOpen}
-        onClose={() => setFormPreviewOpen(false)}
-        formDefinitionIds={selectedFormDefinitionIds}
-        formLabelsById={formLabelsById}
-      />
-      <MatchingRoundOpportunitiesGrid
-        opportunities={selectedNetworkOpportunities}
-        selectedIds={selectedOpportunities}
-        selectionMode="readOnly"
-        onPreview={onPreviewOpportunity}
-        onRemove={canManageOpportunities ? handleRemoveFromRound : undefined}
-        togglingOpportunityId={togglingOpportunityId}
-        roundId={roundId}
-        emptyMessage={t("opportunities.matchingRound.selectedOpportunitiesEmpty", {}, {
-          default:
-            "No opportunities selected yet. Use Review opportunities to add some.",
-        })}
-      />
-    </div>
-  );
+    );
+  };
 
   const renderQuestionsPanel = () => (
     <div className="classTabMatchingRoundPanel">
@@ -1682,11 +2275,19 @@ function MatchingRoundEditor({
               <NavbarItem
                 key={panel.id}
                 selected={activePanel === panel.id}
-                onClick={() => setActivePanel(panel.id)}
+                disabled={panel.disabled}
+                onClick={
+                  panel.disabled
+                    ? undefined
+                    : () => setActivePanel(panel.id)
+                }
                 style={{
                   backgroundColor:
                     activePanel === panel.id ? "#DEF8FB" : "transparent",
+                  opacity: panel.disabled ? 0.45 : undefined,
+                  cursor: panel.disabled ? "not-allowed" : undefined,
                 }}
+                aria-disabled={panel.disabled || undefined}
               >
                 {panel.label}
               </NavbarItem>
@@ -1697,6 +2298,7 @@ function MatchingRoundEditor({
             {activePanel === PANELS.settings && renderSettingsPanel()}
             {activePanel === PANELS.review && renderReviewPanel()}
             {activePanel === PANELS.selected && renderSelectedPanel()}
+            {activePanel === PANELS.forms && renderFormsPanel()}
             {activePanel === PANELS.questions && renderQuestionsPanel()}
 
             <div className="classTabMatchingRoundFooter">
@@ -1706,19 +2308,6 @@ function MatchingRoundEditor({
                     default: "Unsaved changes",
                   })}
                 </p>
-              ) : null}
-              {!isNew ? (
-                <Link
-                  href={{
-                    pathname: "/dashboard/connect/matches",
-                    query: { round: roundId },
-                  }}
-                  className="classTabSecondaryLink"
-                >
-                  {t("opportunities.matchingRound.manageMatches", {}, {
-                    default: "Manage matches",
-                  })}
-                </Link>
               ) : null}
               {isDirty || isNew ? (
                 <Button

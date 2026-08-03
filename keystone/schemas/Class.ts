@@ -80,5 +80,9 @@ export const Class = list({
       ref: "Log.class",
       many: true,
     }),
+    formDefinitions: relationship({
+      ref: "FormDefinition.class",
+      many: true,
+    }),
   },
 });

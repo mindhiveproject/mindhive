@@ -41,8 +41,8 @@ export function inferSurfaceFromKey(
 //
 // One row per (key, scope, version). Multiple versions can coexist; the
 // renderer always picks the most-specific *published* row at lookup
-// time (project_board > class_network > organization > global). Old
-// published versions remain readable as `archived` so historical
+// time (project_board > class > class_network > organization > global).
+// Old published versions remain readable as `archived` so historical
 // submissions can still be matched against the form they were filled
 // on if needed.
 export const FormDefinition = list({
@@ -79,6 +79,7 @@ export const FormDefinition = list({
         { label: "Global", value: "global" },
         { label: "Organization", value: "organization" },
         { label: "Class Network", value: "class_network" },
+        { label: "Class", value: "class" },
         { label: "Project Board", value: "project_board" },
       ],
       defaultValue: "global",
@@ -86,6 +87,9 @@ export const FormDefinition = list({
     }),
     organization: relationship({ ref: "Organization" }),
     classNetwork: relationship({ ref: "ClassNetwork" }),
+    // Set when scope=class. Teacher-authored matching-round questionnaires
+    // scoped to a single class.
+    class: relationship({ ref: "Class.formDefinitions" }),
     // Set when scope=project_board. Used by templates + student boards
     // to have per-board custom review forms without polluting global.
     proposalBoard: relationship({ ref: "ProposalBoard" }),

@@ -226,6 +226,14 @@
 		"title": "Настройки языка",
 		"updatePreferences": "Обновить настройки"
 	},
+	"loading": "",
+	"mediaLibrary": {
+		"choose": "",
+		"empty": "",
+		"title": "",
+		"upload": "",
+		"uploading": ""
+	},
 	"members": {
 		"typeUsername": "Введите имя пользователя"
 	},
@@ -312,6 +320,7 @@
 		"proceedNextTask": "Перейти к следующему заданию",
 		"thankYou": "Спасибо за участие в этом задании!"
 	},
+	"remove": "",
 	"reviewed": {
 		"menuTitle": "Обзор"
 	},

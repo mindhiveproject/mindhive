@@ -370,7 +370,8 @@ export const rules = {
   // Admins (canManageUsers) can manage any definition. Users with
   // canManageForms can manage scope=organization definitions for orgs
   // they are members of. Class creators can manage scope=project_board
-  // definitions on their template boards (inline milestone form builder).
+  // definitions on their template boards and scope=class definitions
+  // for their class (teacher form wizard).
   formDefinitionMutate({ session }: ListAccessArgs) {
     return formDefinitionMutateFilter(session);
   },
@@ -429,6 +430,7 @@ const FORM_DEFINITION_ACCESS_QUERY = `
   id
   scope
   organization { members { id } }
+  class { creator { id } }
   proposalBoard {
     templateForClasses { creator { id } }
     templatesForClass { creator { id } }
@@ -459,6 +461,13 @@ function projectBoardFormScopeFilter(me: string) {
   };
 }
 
+function classFormScopeFilter(me: string) {
+  return {
+    scope: { equals: "class" },
+    class: { creator: { id: { equals: me } } },
+  };
+}
+
 function organizationFormScopeFilter(me: string) {
   return {
     scope: { equals: "organization" },
@@ -472,6 +481,7 @@ function formDefinitionMutateFilter(session?: ListAccessArgs["session"]) {
   const me = session!.itemId;
   const orFilters: Record<string, unknown>[] = [
     projectBoardFormScopeFilter(me),
+    classFormScopeFilter(me),
   ];
   if (permissions.canManageForms({ session })) {
     orFilters.unshift(organizationFormScopeFilter(me));
@@ -484,6 +494,7 @@ export function canMutateFormDefinition(
   definition: {
     scope?: string | null;
     organization?: { members?: { id?: string | null }[] | null } | null;
+    class?: { creator?: { id?: string | null } | null } | null;
     proposalBoard?: {
       templateForClasses?: { creator?: { id?: string | null } | null }[] | null;
       templatesForClass?: { creator?: { id?: string | null } | null }[] | null;
@@ -500,6 +511,9 @@ export function canMutateFormDefinition(
     return (definition.organization?.members || []).some(
       (member) => member?.id === me
     );
+  }
+  if (definition.scope === "class") {
+    return definition.class?.creator?.id === me;
   }
   if (definition.scope === "project_board") {
     const classes = [

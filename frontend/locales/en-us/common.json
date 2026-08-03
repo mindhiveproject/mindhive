@@ -226,6 +226,14 @@
 		"title": "Language Settings",
 		"updatePreferences": "Update Preferences"
 	},
+	"loading": "Loading…",
+	"mediaLibrary": {
+		"choose": "Choose from media library",
+		"empty": "No media yet. Upload an image to get started.",
+		"title": "Media library",
+		"upload": "Upload image",
+		"uploading": "Uploading…"
+	},
 	"members": {
 		"typeUsername": "Type username"
 	},
@@ -312,6 +320,7 @@
 		"proceedNextTask": "Proceed to the next task",
 		"thankYou": "Thank you for participating in this task!"
 	},
+	"remove": "Remove",
 	"reviewed": {
 		"menuTitle": "Reviewed"
 	},

@@ -11,12 +11,14 @@ export const RESOLVE_FORM_DEFINITION = gql`
     $organizationId: ID
     $classNetworkId: ID
     $proposalBoardId: ID
+    $classId: ID
   ) {
     resolveFormDefinition(
       key: $key
       organizationId: $organizationId
       classNetworkId: $classNetworkId
       proposalBoardId: $proposalBoardId
+      classId: $classId
     ) {
       id
       key
@@ -30,6 +32,9 @@ export const RESOLVE_FORM_DEFINITION = gql`
         id
       }
       classNetwork {
+        id
+      }
+      class {
         id
       }
       proposalBoard {
@@ -89,6 +94,9 @@ export const FORM_DEFINITION_BY_ID = gql`
         id
       }
       classNetwork {
+        id
+      }
+      class {
         id
       }
       proposalBoard {
@@ -271,9 +279,13 @@ export const ADMIN_FORM_DEFINITION = gql`
 `;
 
 // Published opportunity-surface forms available to attach to a matching
-// round: global scope, or class_network scoped to the given network.
+// round: global scope, class_network scoped to the given network, or
+// class scoped to the teacher's class.
 export const ROUND_PICKABLE_FORM_DEFINITIONS = gql`
-  query ROUND_PICKABLE_FORM_DEFINITIONS($classNetworkId: ID!) {
+  query ROUND_PICKABLE_FORM_DEFINITIONS(
+    $classNetworkId: ID!
+    $classId: ID!
+  ) {
     formDefinitions(
       where: {
         status: { equals: "published" }
@@ -284,6 +296,12 @@ export const ROUND_PICKABLE_FORM_DEFINITIONS = gql`
             AND: [
               { scope: { equals: "class_network" } }
               { classNetwork: { id: { equals: $classNetworkId } } }
+            ]
+          }
+          {
+            AND: [
+              { scope: { equals: "class" } }
+              { class: { id: { equals: $classId } } }
             ]
           }
         ]
@@ -298,9 +316,63 @@ export const ROUND_PICKABLE_FORM_DEFINITIONS = gql`
       classNetwork {
         id
       }
+      class {
+        id
+      }
       createdBy {
         id
       }
+    }
+  }
+`;
+
+// Class-scoped opportunity forms created by the current teacher for a class
+// (draft + published). Used by the matching-round "Your form library" panel.
+export const CLASS_OWNED_FORM_DEFINITIONS = gql`
+  query CLASS_OWNED_FORM_DEFINITIONS($classId: ID!, $userId: ID!) {
+    formDefinitions(
+      where: {
+        surface: { equals: "opportunity" }
+        scope: { equals: "class" }
+        status: { in: ["draft", "published"] }
+        class: { id: { equals: $classId } }
+        createdBy: { id: { equals: $userId } }
+      }
+      orderBy: [{ title: asc }, { updatedAt: desc }]
+    ) {
+      id
+      title
+      key
+      scope
+      status
+      version
+      updatedAt
+      class {
+        id
+      }
+      createdBy {
+        id
+      }
+    }
+  }
+`;
+
+// Published global opportunity forms teachers can clone into their class.
+export const PUBLIC_OPPORTUNITY_FORM_DEFINITIONS = gql`
+  query PUBLIC_OPPORTUNITY_FORM_DEFINITIONS {
+    formDefinitions(
+      where: {
+        status: { equals: "published" }
+        surface: { equals: "opportunity" }
+        scope: { equals: "global" }
+      }
+      orderBy: [{ title: asc }, { version: desc }]
+    ) {
+      id
+      title
+      key
+      description
+      version
     }
   }
 `;

@@ -1501,9 +1501,8 @@ const StyledClass = styled.div`
 
     .matchingRoundFormPicker {
       display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      gap: 16px 24px;
+      flex-direction: column;
+      gap: 16px;
       width: 100%;
       padding: 16px;
       border: 1px solid #E6E6E6;
@@ -1511,12 +1510,48 @@ const StyledClass = styled.div`
       background: #ffffff;
     }
 
-    .matchingRoundFormPickerCopy {
-      flex: 1 1 240px;
+    .matchingRoundFormSummary {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 16px;
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #E6E6E6;
+      border-radius: 12px;
+      background: #f5f8f9;
+    }
+
+    .matchingRoundFormSummaryCopy {
+      flex: 1 1 200px;
       min-width: 0;
       display: grid;
+      gap: 2px;
+    }
+
+    .matchingRoundFormSummaryTitle {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
+      color: #171717;
+    }
+
+    .matchingRoundFormSummaryStatus {
+      margin: 0;
+      font-size: 13px;
+      line-height: 18px;
+      color: #5f6871;
+    }
+
+    .matchingRoundFormSummaryManage {
+      flex-shrink: 0;
+    }
+
+    .matchingRoundFormPickerHeader {
+      display: grid;
       gap: 6px;
-      align-content: start;
     }
 
     .matchingRoundFormPickerTitle {
@@ -1528,7 +1563,8 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerHint,
-    .matchingRoundFormPickerNote {
+    .matchingRoundFormPickerNote,
+    .matchingRoundFormPickerSectionHint {
       margin: 0;
       font-size: 14px;
       line-height: 20px;
@@ -1539,24 +1575,220 @@ const StyledClass = styled.div`
       color: #6b6b6b;
     }
 
-    .matchingRoundFormPickerControl {
-      flex: 0 1 320px;
-      min-width: min(100%, 220px);
-      max-width: 100%;
+    .matchingRoundFormPickerReuseNote {
+      margin-top: 0;
+    }
+
+    .matchingRoundFormPickerSection {
       display: grid;
       gap: 10px;
-      align-content: start;
+      padding: 12px;
+      border: 1px solid #E6E6E6;
+      border-radius: 10px;
+      background: #fafbfb;
+    }
+
+    .matchingRoundFormPickerSectionHeader {
+      display: grid;
+      gap: 4px;
+    }
+
+    .matchingRoundFormPickerLibraryHeader {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px 16px;
+    }
+
+    .matchingRoundFormPickerSectionCopy {
+      flex: 1 1 200px;
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .matchingRoundFormPickerSectionTitle {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 18px;
+      color: #171717;
+    }
+
+    .matchingRoundFormPickerLibraryEmpty {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #6b6b6b;
+    }
+
+    .matchingRoundFormPickerLibraryList {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .matchingRoundFormPickerTopRow {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(240px, 0.9fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .matchingRoundFormPickerTopRow {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .matchingRoundFormPickerTopCard {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+      margin: 0;
+      padding: 14px;
+      border: 1px solid #E6E6E6;
+      border-radius: 10px;
+      background: #fafbfb;
+      box-sizing: border-box;
+    }
+
+    .matchingRoundFormPickerTopCard > .matchingRoundFormPickerSectionHeader,
+    .matchingRoundFormPickerVisibilityHeader {
+      display: grid;
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+
+    .matchingRoundFormPickerVisibility {
+      /* surface comes from .matchingRoundFormPickerTopCard */
+      justify-content: space-between;
+    }
+
+    .matchingRoundFormPickerVisibility.isVisible {
+      background: #e8f7ec;
+      border-color: #b7d9c4;
+    }
+
+    .matchingRoundFormPickerVisibilityFooter {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 12px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+
+    .matchingRoundFormPickerVisibilityStatus {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 18px;
+      color: #5f6871;
+    }
+
+    .matchingRoundFormPickerVisibilityStatus.isVisible {
+      color: #1c8f36;
+    }
+
+    .matchingRoundFormPickerVisibilityStatus.isHidden {
+      color: #8a6d3b;
     }
 
     .matchingRoundFormPickerVisibilityButton {
-      margin-top: 6px;
-      justify-self: start;
+      flex-shrink: 0;
       width: fit-content;
       max-width: 100%;
     }
 
-    .matchingRoundFormPickerPreviewButton {
+    .matchingRoundFormPickerLibraryActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .matchingRoundFormPickerLibraryRow {
       width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0;
+      border: 1px solid #E6E6E6;
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .matchingRoundFormPickerLibraryRow.selected {
+      border-color: var(--MH-Theme-Primary-Dark, #336F8A);
+      background: #f0f7f9;
+    }
+
+    .matchingRoundFormPickerLibraryRow.busy {
+      opacity: 0.65;
+    }
+
+    .matchingRoundFormPickerLibraryRowSelect {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+    }
+
+    .matchingRoundFormPickerLibraryRowSelect:hover {
+      background: rgba(51, 111, 138, 0.04);
+    }
+
+    .matchingRoundFormPickerLibraryRowSelect:disabled {
+      cursor: not-allowed;
+    }
+
+    .matchingRoundFormPickerLibraryRowMenu {
+      flex-shrink: 0;
+      padding: 6px 8px 6px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .matchingRoundFormPickerLibraryRowMain {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .matchingRoundFormPickerLibraryRowTitle {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
+      color: #171717;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .matchingRoundFormPickerLibraryRowMeta {
+      font-size: 12px;
+      line-height: 16px;
+      color: #6b6b6b;
+    }
+
+    .matchingRoundFormPickerCreateButton {
+      flex-shrink: 0;
     }
 
     /* Form picker ownership chips (also used inside DropdownSelect portal via inline styles) */

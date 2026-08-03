@@ -226,6 +226,14 @@
 		"title": "Paramètres de langue",
 		"updatePreferences": "Mettre à jour les préférences"
 	},
+	"loading": "",
+	"mediaLibrary": {
+		"choose": "",
+		"empty": "",
+		"title": "",
+		"upload": "",
+		"uploading": ""
+	},
 	"members": {
 		"typeUsername": "Tapez le nom d'utilisateur"
 	},
@@ -312,6 +320,7 @@
 		"proceedNextTask": "Passer à la tâche suivante",
 		"thankYou": "Merci d'avoir participé à cette tâche !"
 	},
+	"remove": "",
 	"reviewed": {
 		"menuTitle": "Révisé"
 	},
