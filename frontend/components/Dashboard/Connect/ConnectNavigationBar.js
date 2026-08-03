@@ -222,7 +222,7 @@ export default function ConnectNavigationBar() {
       {
         value: "myOpportunities",
         label: t("nav.myOpportunities", {}, { default: "My opportunities" }),
-        href: "/dashboard/connect/opportunities",
+        href: "/dashboard/sponsor-connect/opportunities",
         visible: isMentor || isAdmin,
       },
       {
