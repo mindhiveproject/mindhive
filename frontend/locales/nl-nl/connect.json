@@ -552,6 +552,15 @@
 			"unknownRound": ""
 		},
 		"loading": "Bezig met laden...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "{{count}} netwerken",
 			"one": "{{count}} netwerk"
@@ -560,6 +569,7 @@
 		"networkFilterPlaceholder": "Alle netwerken",
 		"newButton": "Nieuwe kans",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "Mijn kansen",
 		"rating": {
 			"many": "{{average}} · {{count}} beoordelingen",
@@ -712,12 +722,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "Groepsindeling",
 		"guidelinesAcknowledgedAt": "Bevestigd {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "Ik ben het met deze stelling eens.",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "Ik heb de richtlijnen voor het Capstone-voorstel volledig gelezen en begrepen, inclusief alle veelgestelde vragen van de Capstone-sponsor en de overeenkomst over wederzijdse verwachtingen, en ik ga ermee akkoord deze na te leven.",
 		"guidelinesDocsAriaLabel": "Richtlijnen voor het afstudeerprojectvoorstel",
 		"guidelinesDocsPlaceholder": "Selecteer richtlijnen om te openen",
 		"guidelinesFaqsChip": "Veelgestelde vragen over Capstone-sponsors",
 		"guidelinesMutualExpectationsChip": "Overeenkomst inzake wederzijdse verwachtingen",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "Ik verzoek om een ​​afspraak om dit verder te bespreken.",
 		"guidelinesTitle": "Inzicht in de richtlijnen voor het indienen van voorstellen",
 		"guidelinesWarning": "Vink het vakje 'richtlijnen' aan voordat u publiceert.",

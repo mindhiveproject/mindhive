@@ -552,6 +552,15 @@
 			"unknownRound": ""
 		},
 		"loading": "Загрузка...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "{{count}} сети",
 			"one": "{{count}} сеть"
@@ -560,6 +569,7 @@
 		"networkFilterPlaceholder": "Все сети",
 		"newButton": "Новая возможность",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "Мои возможности",
 		"rating": {
 			"many": "{{average}} · {{count}} рейтингов",
@@ -712,12 +722,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "Групповой формат",
 		"guidelinesAcknowledgedAt": "Подтверждено {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "Я согласен с этим утверждением.",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "Я полностью ознакомился и понял руководящие принципы подготовки дипломной работы, включая все часто задаваемые вопросы для спонсоров дипломной работы и соглашение о взаимных ожиданиях, и согласен соблюдать их.",
 		"guidelinesDocsAriaLabel": "Руководящие документы для подготовки дипломной работы",
 		"guidelinesDocsPlaceholder": "Выберите правила, чтобы открыть",
 		"guidelinesFaqsChip": "Часто задаваемые вопросы спонсорам дипломных проектов",
 		"guidelinesMutualExpectationsChip": "Соглашение о взаимных ожиданиях",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "Я прошу о встрече для дальнейшего обсуждения.",
 		"guidelinesTitle": "Понимание руководящих принципов подачи заявок",
 		"guidelinesWarning": "Перед публикацией поставьте галочку в поле «Правила».",

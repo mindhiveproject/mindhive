@@ -552,6 +552,15 @@
 			"unknownRound": ""
 		},
 		"loading": "Cargando...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "{{count}} redes",
 			"one": "Red{{count}} "
@@ -560,6 +569,7 @@
 		"networkFilterPlaceholder": "Todas las redes",
 		"newButton": "Nueva oportunidad",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "Mis oportunidades",
 		"rating": {
 			"many": "{{average}} · {{count}} calificaciones",
@@ -712,12 +722,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "Formato de grupo",
 		"guidelinesAcknowledgedAt": "Reconocido {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "Estoy de acuerdo con esta afirmación.",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "He leído y comprendido íntegramente las directrices para la propuesta del proyecto final, incluidas todas las preguntas frecuentes del patrocinador del proyecto final y el acuerdo de expectativas mutuas, y me comprometo a cumplirlas.",
 		"guidelinesDocsAriaLabel": "Documentos de orientación para la propuesta del proyecto final",
 		"guidelinesDocsPlaceholder": "Seleccione las directrices para abrir",
 		"guidelinesFaqsChip": "Preguntas frecuentes para patrocinadores de Capstone",
 		"guidelinesMutualExpectationsChip": "Acuerdo de expectativas mutuas",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "Solicito una cita para hablar del tema con más detalle.",
 		"guidelinesTitle": "Comprensión de las directrices para la presentación de propuestas",
 		"guidelinesWarning": "Marque la casilla de las directrices antes de publicar.",

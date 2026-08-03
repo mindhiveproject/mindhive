@@ -552,6 +552,15 @@
 			"unknownRound": ""
 		},
 		"loading": "",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "",
 			"one": ""
@@ -560,6 +569,7 @@
 		"networkFilterPlaceholder": "",
 		"newButton": "",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "",
 		"rating": {
 			"many": "",
@@ -712,12 +722,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "",
 		"guidelinesAcknowledgedAt": "",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "",
 		"guidelinesDocsAriaLabel": "",
 		"guidelinesDocsPlaceholder": "",
 		"guidelinesFaqsChip": "",
 		"guidelinesMutualExpectationsChip": "",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "",
 		"guidelinesTitle": "",
 		"guidelinesWarning": "",

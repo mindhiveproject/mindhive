@@ -552,6 +552,15 @@
 			"unknownRound": "Matching round"
 		},
 		"loading": "Loading…",
+		"modals": {
+			"chatTitle": "Messages",
+			"chatTitleNamed": "Messages · {{title}}",
+			"close": "Close",
+			"formTitleNamed": "{{form}} · {{title}}",
+			"loadError": "Could not load this opportunity. Please try again.",
+			"statusTitle": "Status",
+			"statusTitleNamed": "Status · {{title}}"
+		},
 		"networkCount": {
 			"many": "{{count}} networks",
 			"one": "{{count}} network"
@@ -560,6 +569,7 @@
 		"networkFilterPlaceholder": "All networks",
 		"newButton": "New opportunity",
 		"openChat": "Open messages",
+		"openStatus": "Open status",
 		"pageTitle": "My Opportunities",
 		"rating": {
 			"many": "{{average}} · {{count}} ratings",
@@ -712,12 +722,16 @@
 		"followUpSaveMissing": "Could not build proposal data for this form. Please try again.",
 		"groupFormat": "Group format",
 		"guidelinesAcknowledgedAt": "Acknowledged {{date}}",
+		"guidelinesAcknowledgedNoDate": "Acknowledged",
 		"guidelinesAgree": "I agree with this statement.",
+		"guidelinesAppointmentNo": "No appointment requested",
+		"guidelinesAppointmentYes": "Appointment requested",
 		"guidelinesDescription": "I have read and understood the Capstone proposal guidelines in full, including all of the Capstone Sponsor FAQs and Mutual Expectations agreement and agree to abide by them.",
 		"guidelinesDocsAriaLabel": "",
 		"guidelinesDocsPlaceholder": "",
 		"guidelinesFaqsChip": "Capstone Sponsor FAQs",
 		"guidelinesMutualExpectationsChip": "Mutual Expectations agreement",
+		"guidelinesNotAcknowledged": "Not acknowledged at creation",
 		"guidelinesRequestAppointment": "I request an appointment to discuss further.",
 		"guidelinesTitle": "Understanding of Proposal Guidelines",
 		"guidelinesWarning": "Tick the guidelines checkbox before submitting this opportunity.",
@@ -945,7 +959,7 @@
 			"followUpCompleteAria": "{{title}} (completed)",
 			"followUpFallback": "Follow-up form",
 			"incomplete": "Incomplete",
-			"originalIntake": "Original intake",
+			"originalIntake": "",
 			"proposal": "Opportunity form",
 			"status": "Status"
 		},
@@ -969,7 +983,7 @@
 			"fieldResearchRequired": "Please indicate whether field research or travel is expected.",
 			"followUpIncomplete": "",
 			"formDefinitionMissing": "Could not resolve the opportunity form definition. Ask an admin to publish one, then try again.",
-			"guidelines": "Please tick the guidelines acknowledgment in the Publishing card before submitting this opportunity.",
+			"guidelines": "Please tick the guidelines acknowledgment in Status (from My opportunities) before submitting this opportunity.",
 			"issueRelevance": "",
 			"learningOutcomes": "",
 			"potentialActivities": "",

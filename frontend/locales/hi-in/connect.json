@@ -552,6 +552,15 @@
 			"unknownRound": ""
 		},
 		"loading": "लोड हो रहा है...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "{{count}} नेटवर्क",
 			"one": "{{count}} नेटवर्क"
@@ -560,6 +569,7 @@
 		"networkFilterPlaceholder": "सभी नेटवर्क",
 		"newButton": "नया मौका",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "मेरे अवसर",
 		"rating": {
 			"many": "{{average}} · {{count}} रेटिंग",
@@ -712,12 +722,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "समूह प्रारूप",
 		"guidelinesAcknowledgedAt": "स्वीकृत {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "मैं इस कथन से सहमत हूं।",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "मैंने कैपस्टोन प्रस्ताव संबंधी सभी दिशानिर्देशों को पूरी तरह से पढ़ और समझ लिया है, जिसमें कैपस्टोन प्रायोजक से संबंधित सभी अक्सर पूछे जाने वाले प्रश्न और पारस्परिक अपेक्षा समझौते शामिल हैं, और मैं इनका पालन करने के लिए सहमत हूं।",
 		"guidelinesDocsAriaLabel": "कैपस्टोन प्रस्ताव दिशानिर्देश दस्तावेज़",
 		"guidelinesDocsPlaceholder": "खोलने के लिए दिशा-निर्देश चुनें",
 		"guidelinesFaqsChip": "कैपस्टोन प्रायोजक से संबंधित अक्सर पूछे जाने वाले प्रश्न",
 		"guidelinesMutualExpectationsChip": "पारस्परिक अपेक्षाओं का समझौता",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "मैं आगे की चर्चा के लिए एक अपॉइंटमेंट का अनुरोध करता/करती हूं।",
 		"guidelinesTitle": "प्रस्ताव संबंधी दिशा-निर्देशों की समझ",
 		"guidelinesWarning": "प्रकाशित करने से पहले दिशा-निर्देशों वाले चेकबॉक्स पर सही का निशान लगाएँ।",

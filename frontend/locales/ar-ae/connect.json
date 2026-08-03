@@ -552,6 +552,15 @@
 			"unknownRound": ""
 		},
 		"loading": "تحميل...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "{{count}} شبكات",
 			"one": "{{count}} الشبكة"
@@ -560,6 +569,7 @@
 		"networkFilterPlaceholder": "جميع الشبكات",
 		"newButton": "فرصة جديدة",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "فرصي",
 		"rating": {
 			"many": "{{average}} · {{count}} تقييمات",
@@ -712,12 +722,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "تنسيق المجموعة",
 		"guidelinesAcknowledgedAt": "تمت الموافقة {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "أوافق على هذا الكلام.",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "لقد قرأت وفهمت إرشادات مقترح مشروع التخرج بالكامل، بما في ذلك جميع الأسئلة الشائعة الخاصة براعي مشروع التخرج واتفاقية التوقعات المتبادلة، وأوافق على الالتزام بها.",
 		"guidelinesDocsAriaLabel": "وثائق إرشادية لمقترح مشروع التخرج",
 		"guidelinesDocsPlaceholder": "اختر الإرشادات لفتحها",
 		"guidelinesFaqsChip": "الأسئلة الشائعة حول راعي مشروع التخرج",
 		"guidelinesMutualExpectationsChip": "اتفاقية التوقعات المتبادلة",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "أطلب تحديد موعد لمناقشة الأمر بمزيد من التفصيل.",
 		"guidelinesTitle": "فهم إرشادات المقترحات",
 		"guidelinesWarning": "ضع علامة في مربع الإرشادات قبل النشر.",

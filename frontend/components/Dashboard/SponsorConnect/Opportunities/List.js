@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -14,15 +15,24 @@ import {
   isProposalFormAnswerComplete,
   getProposalEntrySavedAt,
 } from "../../../../lib/opportunityProposalData";
-import {
-  formTabKey,
-  isRoundSponsorFormsVisible,
-  OPPORTUNITY_EDITOR_TABS,
-} from "../../../../lib/opportunityEditorTabs";
+import { isRoundSponsorFormsVisible } from "../../../../lib/opportunityEditorTabs";
+import OpportunityChatModal from "./OpportunityChatModal";
+import OpportunityStatusModal from "./OpportunityStatusModal";
+import OpportunityFollowUpFormModal from "./OpportunityFollowUpFormModal";
 
 const MESSAGE_ICON = (
   <img
     src="/assets/icons/message.svg"
+    alt=""
+    width={24}
+    height={24}
+    aria-hidden
+  />
+);
+
+const STATUS_ICON = (
+  <img
+    src="/assets/icons/status/inProgress.svg"
     alt=""
     width={24}
     height={24}
@@ -302,7 +312,7 @@ function visibilityTooltipContent(networks, tConnect) {
   );
 }
 
-export default function OpportunitiesList({ user: _user }) {
+export default function OpportunitiesList({ user }) {
   const router = useRouter();
   const { t } = useTranslation("common");
   const { t: tConnect } = useTranslation("connect");
@@ -310,6 +320,10 @@ export default function OpportunitiesList({ user: _user }) {
     fetchPolicy: "cache-and-network",
   });
   const [deleteOpportunity] = useMutation(DELETE_OPPORTUNITY);
+  const [chatModal, setChatModal] = useState(null);
+  const [statusModalOpportunityId, setStatusModalOpportunityId] =
+    useState(null);
+  const [formModal, setFormModal] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
 
@@ -334,13 +348,19 @@ export default function OpportunitiesList({ user: _user }) {
     });
   };
 
-  const handleOpenForm = (opportunityId, formDefinitionId, roundId) => {
-    router.push({
-      pathname: "/dashboard/sponsor-connect/opportunities",
-      query: {
-        op: opportunityId,
-        tab: formTabKey(formDefinitionId),
-        ...(roundId ? { round: roundId } : {}),
+  const handleOpenForm = (opportunity, form, round) => {
+    setFormModal({
+      opportunity,
+      formMeta: {
+        id: form.id,
+        title: form.title || form.key || form.id,
+        key: form.key,
+        version: form.version,
+        status: form.status,
+        roundId: round?.id || null,
+        roundTitle: round?.title || null,
+        networkId: round?.classNetwork?.id || null,
+        networkTitle: round?.classNetwork?.title || null,
       },
     });
   };
@@ -350,14 +370,14 @@ export default function OpportunitiesList({ user: _user }) {
       opportunity.status === "pre_selected"
         ? (opportunity.rounds || [])[0]
         : null;
-    router.push({
-      pathname: "/dashboard/sponsor-connect/opportunities",
-      query: {
-        op: opportunity.id,
-        tab: OPPORTUNITY_EDITOR_TABS.chat,
-        ...(heldRound?.id ? { round: heldRound.id } : {}),
-      },
+    setChatModal({
+      opportunityId: opportunity.id,
+      initialRoundId: heldRound?.id || null,
     });
+  };
+
+  const handleOpenStatus = (opportunity) => {
+    setStatusModalOpportunityId(opportunity.id);
   };
 
   return (
@@ -469,6 +489,21 @@ export default function OpportunitiesList({ user: _user }) {
                           { default: "Open messages" },
                         )}
                         onClick={() => handleOpenChat(opportunity)}
+                      />
+                      <IconButton
+                        variant="text"
+                        icon={STATUS_ICON}
+                        ariaLabel={tConnect(
+                          "myOpportunitiesList.openStatus",
+                          {},
+                          { default: "Open status" },
+                        )}
+                        title={tConnect(
+                          "myOpportunitiesList.openStatus",
+                          {},
+                          { default: "Open status" },
+                        )}
+                        onClick={() => handleOpenStatus(opportunity)}
                       />
                       <Chip
                         label={t("opportunities.edit", {}, { default: "Edit" })}
@@ -619,9 +654,9 @@ export default function OpportunitiesList({ user: _user }) {
                                       }
                                       onClick={() =>
                                         handleOpenForm(
-                                          opportunity.id,
-                                          form.id,
-                                          round.id,
+                                          opportunity,
+                                          form,
+                                          round,
                                         )
                                       }
                                     />
@@ -640,6 +675,25 @@ export default function OpportunitiesList({ user: _user }) {
           )}
         </Table>
       )}
+
+      <OpportunityChatModal
+        open={Boolean(chatModal?.opportunityId)}
+        onClose={() => setChatModal(null)}
+        opportunityId={chatModal?.opportunityId}
+        initialRoundId={chatModal?.initialRoundId}
+        user={user}
+      />
+      <OpportunityStatusModal
+        open={Boolean(statusModalOpportunityId)}
+        onClose={() => setStatusModalOpportunityId(null)}
+        opportunityId={statusModalOpportunityId}
+      />
+      <OpportunityFollowUpFormModal
+        open={Boolean(formModal?.formMeta?.id)}
+        onClose={() => setFormModal(null)}
+        opportunity={formModal?.opportunity}
+        formMeta={formModal?.formMeta}
+      />
     </Shell>
   );
 }

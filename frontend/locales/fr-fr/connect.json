@@ -552,6 +552,15 @@
 			"unknownRound": ""
 		},
 		"loading": "Chargement...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "réseaux{{count}} ",
 			"one": "réseau{{count}} "
@@ -560,6 +569,7 @@
 		"networkFilterPlaceholder": "Tous les réseaux",
 		"newButton": "Nouvelle opportunité",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "Mes opportunités",
 		"rating": {
 			"many": "{{average}} · {{count}} évaluations",
@@ -712,12 +722,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "Format de groupe",
 		"guidelinesAcknowledgedAt": "Reconnu {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "Je suis d'accord avec cette affirmation.",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "J'ai lu et compris l'intégralité des directives relatives à la proposition de projet de fin d'études, y compris toutes les FAQ du commanditaire du projet et l'accord sur les attentes mutuelles, et j'accepte de les respecter.",
 		"guidelinesDocsAriaLabel": "Documents de référence pour la proposition de projet de fin d'études",
 		"guidelinesDocsPlaceholder": "Sélectionnez les directives à ouvrir",
 		"guidelinesFaqsChip": "FAQ sur les commanditaires du projet de fin d'études",
 		"guidelinesMutualExpectationsChip": "Accord sur les attentes mutuelles",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "Je souhaite prendre rendez-vous pour en discuter plus en détail.",
 		"guidelinesTitle": "Compréhension des lignes directrices relatives aux propositions",
 		"guidelinesWarning": "Cochez la case « Consignes » avant de publier.",
