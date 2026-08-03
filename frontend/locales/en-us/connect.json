@@ -540,6 +540,11 @@
 		"held": {
 			"continueForm": "Continue form",
 			"followUp": "Follow-up: {{title}}",
+			"formColumns": {
+				"action": "Action",
+				"form": "Follow-up form",
+				"status": "Status"
+			},
 			"formComplete": "Complete",
 			"formCompleteSaved": "Complete · {{date}}",
 			"formIncomplete": "Incomplete",
@@ -547,6 +552,7 @@
 			"noFurtherQuestions": "The teacher has not asked any further questions so far.",
 			"openForm": "Open form",
 			"preSelected": "Pre-selected for this matching round",
+			"roundFormsTitle": "Matching round · {{network}} · {{round}}",
 			"title": "Held · {{network}} · {{round}}",
 			"unknownNetwork": "Class network",
 			"unknownRound": "Matching round"
@@ -599,6 +605,21 @@
 		"statusChangeUseEditor": "Complete required fields in the editor before submitting for review.",
 		"statusFilterLabel": "Filter by status",
 		"statusFilterPlaceholder": "All statuses",
+		"stepper": {
+			"ariaLabel": "Opportunity progress",
+			"awaitingMatching": "Awaiting matching",
+			"draft": "Draft",
+			"formFilled": "Form filled",
+			"formsProgress": "Forms {{done}}/{{total}}",
+			"matched": "Matched",
+			"matching": "Matching",
+			"preSelected": "Pre-selected",
+			"visible": "Visible in class network",
+			"visibleMany": "Visible in {{count}} class networks",
+			"visibleNone": "Not visible in any class network",
+			"visibleOne": "Visible in 1 class network",
+			"waitingForms": "Waiting for form to be filled"
+		},
 		"teamOf": "Team of {{size}}",
 		"unknownSponsor": "Unknown",
 		"visibility": {

@@ -540,6 +540,11 @@
 		"held": {
 			"continueForm": "",
 			"followUp": "",
+			"formColumns": {
+				"action": "",
+				"form": "",
+				"status": ""
+			},
 			"formComplete": "",
 			"formCompleteSaved": "",
 			"formIncomplete": "",
@@ -547,6 +552,7 @@
 			"noFurtherQuestions": "",
 			"openForm": "",
 			"preSelected": "",
+			"roundFormsTitle": "",
 			"title": "",
 			"unknownNetwork": "",
 			"unknownRound": ""
@@ -599,6 +605,21 @@
 		"statusChangeUseEditor": "",
 		"statusFilterLabel": "按状态过滤",
 		"statusFilterPlaceholder": "所有状态",
+		"stepper": {
+			"ariaLabel": "",
+			"awaitingMatching": "",
+			"draft": "",
+			"formFilled": "",
+			"formsProgress": "",
+			"matched": "",
+			"matching": "",
+			"preSelected": "",
+			"visible": "",
+			"visibleMany": "",
+			"visibleNone": "",
+			"visibleOne": "",
+			"waitingForms": ""
+		},
 		"teamOf": "团队人数： {{size}}",
 		"unknownSponsor": "未知",
 		"visibility": {

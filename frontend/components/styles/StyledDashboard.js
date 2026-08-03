@@ -76,8 +76,11 @@ export const StyledDashboardContent = styled.div`
   .dashboardMain {
     flex: 1 0 auto;
     display: grid;
+    /* Prevent content-sized tracks from blowing past the scrollport */
+    grid-template-columns: minmax(0, 1fr);
     grid-gap: 20px;
     align-content: start;
+    min-width: 0;
     /* Top margin (50px) + content gap (20px) → footer starts at/below viewport */
     min-height: ${(props) =>
       props.$withFooter ? "calc(100vh - 70px)" : "unset"};
