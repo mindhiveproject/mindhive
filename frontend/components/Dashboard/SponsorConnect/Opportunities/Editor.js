@@ -28,6 +28,7 @@ import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
 import OpportunityProposalSection from "./OpportunityProposalSection";
+import OpportunityGuidelinesSection from "./OpportunityGuidelinesSection";
 import {
   OpportunityPageShell as Shell,
   OPPORTUNITY_PAGE_GUTTER,
@@ -411,34 +412,6 @@ function WordHint({ value, max }) {
     </span>
   );
 }
-
-const GUIDELINE_DOCUMENTS = [
-  {
-    value: "faqs",
-    url: "https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects",
-    labelKey: "opportunityEditor.guidelinesFaqsChip",
-    defaultLabel: "Capstone Sponsor FAQs",
-  },
-  {
-    value: "mutual-expectations",
-    url: "https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects/cusp-capstone-mutual-expectations",
-    labelKey: "opportunityEditor.guidelinesMutualExpectationsChip",
-    defaultLabel: "Mutual Expectations agreement",
-  },
-];
-
-const LinkChipRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
-
-  a {
-    display: inline-flex;
-    text-decoration: none;
-    color: inherit;
-  }
-`;
 
 const ScaleRow = styled.div`
   display: flex;
@@ -1011,7 +984,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const handleSave = async ({ submitForReview = false } = {}) => {
     // Follow-up form tabs own their answers; top-bar Save drafts them here
     // instead of running the main opportunity mutation.
-    if (activeFollowUpForm && !submitForReview) {
+    if (isReviewMode && activeFollowUpForm && !submitForReview) {
       if (isFieldReadOnly) return;
       setFollowUpSaving(true);
       try {
@@ -1050,18 +1023,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
       return;
     }
     if (!validateWordLimits()) return;
-    // Acknowledgment is required for any progression past Draft — both when a
-    // sponsor submits for review AND when an admin publishes. Keeps the
-    // mutual-expectations check at the gate of the first non-draft state.
-    if (nextStatus !== "draft" && !inputs.guidelinesAcknowledged) {
-      alert(
-        t("opportunityEditor.validation.guidelines", {}, {
-          default:
-            "Please tick the guidelines acknowledgment in the Publishing card before submitting this opportunity.",
-        }),
-      );
-      return;
-    }
+    // Guidelines acknowledgment is optional and locked after create.
 
     const networkConnect = selectedNetworks.map((id) => ({ id }));
 
@@ -1116,13 +1078,19 @@ export default function OpportunityEditor({ opportunityId, user }) {
       ),
       sponsorIsMentor: !!inputs.sponsorIsMentor,
       mentorNotes: inputs.mentorNotes || "",
-      guidelinesAcknowledged: !!inputs.guidelinesAcknowledged,
+      guidelinesAcknowledged: isNew
+        ? !!inputs.guidelinesAcknowledged
+        : !!opportunity?.guidelinesAcknowledged,
       guidelinesAcknowledgedAt:
-        inputs.guidelinesAcknowledged &&
+        (isNew
+          ? inputs.guidelinesAcknowledged
+          : opportunity?.guidelinesAcknowledged) &&
         !opportunity?.guidelinesAcknowledgedAt
           ? new Date().toISOString()
           : opportunity?.guidelinesAcknowledgedAt || null,
-      requestsAppointment: !!inputs.requestsAppointment,
+      requestsAppointment: isNew
+        ? !!inputs.requestsAppointment
+        : !!opportunity?.requestsAppointment,
       scopeDescription: inputs.scopeDescription || "",
       potentialActivities: inputs.potentialActivities || "",
       specificSkills: inputs.specificSkills || "",
@@ -1395,7 +1363,8 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const showSponsorDraftOnlySave = !isAdmin && !isNew && !canSponsorSubmit;
   // Follow-up panels hide their own Save; top bar must own it whenever the
   // form is editable (including admins in review mode).
-  const canSaveFollowUp = Boolean(activeFollowUpForm) && !isFieldReadOnly;
+  const canSaveFollowUp =
+    isReviewMode && Boolean(activeFollowUpForm) && !isFieldReadOnly;
   const showTopBarActions =
     !isReviewMode || Boolean(reviewPrimaryAction) || canSaveFollowUp;
   const editPrimaryLabel = primaryBusy
@@ -1515,14 +1484,16 @@ export default function OpportunityEditor({ opportunityId, user }) {
         </StatusBanner>
       )}
 
-      <OpportunityEditorTabNav
-        activeTab={activeTab}
-        followUpForms={followUpForms}
-        proposalData={opportunity?.proposalData}
-        onSelectTab={handleSelectEditorTab}
-      />
+      {isReviewMode ? (
+        <OpportunityEditorTabNav
+          activeTab={activeTab}
+          followUpForms={followUpForms}
+          proposalData={opportunity?.proposalData}
+          onSelectTab={handleSelectEditorTab}
+        />
+      ) : null}
 
-      {activeTab === OPPORTUNITY_EDITOR_TABS.chat && (
+      {isReviewMode && activeTab === OPPORTUNITY_EDITOR_TABS.chat && (
         <ReviewNotesCard>
           {!isReviewMode && inputs.status === "returned" ? (
             <p
@@ -1580,159 +1551,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
         </ReviewNotesCard>
       )}
 
-      {activeTab === OPPORTUNITY_EDITOR_TABS.status && !isReviewMode && (
-      <Card>
-        <h2>{t("opportunityEditor.status", {}, { default: "Status" })}</h2>
-        {!isNew && (
-          <OpportunityWorkflowStepper
-            status={inputs.status}
-            scopeComplete={scopeComplete}
-            viewerRole="sponsor"
-          />
-        )}
-        {isAdmin && (
-          <Field>
-            <span className="label-text">
-              {t("opportunityEditor.statusAdmin", {}, {
-                default: "Status (admin)",
-              })}
-            </span>
-            <Dropdown
-              selection
-              options={adminStatusOptions}
-              value={inputs.status}
-              onChange={(_, { value }) =>
-                handleMultipleUpdate({ status: value })
-              }
-            />
-            <span className="hint" style={{ marginTop: 4 }}>
-              {t("opportunityEditor.statusAdminHint", {}, {
-                default:
-                  "Sponsors submit for review via the button at the top of the page. Use this control only for admin status overrides.",
-              })}
-            </span>
-          </Field>
-        )}
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.guidelinesTitle", {}, {
-              default: "Understanding of Proposal Guidelines",
-            })}
-            <RequiredMark />
-          </span>
-          <span style={{ fontSize: 14, color: "#171717", lineHeight: 1.5 }}>
-            {t("opportunityEditor.guidelinesDescription", {}, {
-              default:
-                "I have read and understood the Capstone proposal guidelines in full, including all of the Capstone Sponsor FAQs and Mutual Expectations agreement and agree to abide by them.",
-            })}
-          </span>
-          <LinkChipRow>
-            {GUIDELINE_DOCUMENTS.map((doc) => (
-              <a
-                key={doc.value}
-                href={doc.url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Chip
-                  shape="square"
-                  label={t(doc.labelKey, {}, { default: doc.defaultLabel })}
-                  leading={
-                    <img
-                      src="/assets/icons/document.svg"
-                      alt=""
-                      aria-hidden
-                      width={24}
-                      height={24}
-                    />
-                  }
-                />
-              </a>
-            ))}
-          </LinkChipRow>
-          <label
-            style={{
-              display: "inline-flex",
-              gap: 8,
-              alignItems: "flex-start",
-              cursor: "pointer",
-              fontSize: 14,
-              color: "#171717",
-            }}
-          >
-            <input
-              type="checkbox"
-              name="guidelinesAcknowledged"
-              checked={!!inputs.guidelinesAcknowledged}
-              onChange={toggleBoolean}
-              style={{ marginTop: 3 }}
-            />
-            <span>
-              <strong>
-                {t("opportunityEditor.guidelinesAgree", {}, {
-                  default: "I agree with this statement.",
-                })}
-              </strong>
-            </span>
-          </label>
-          {opportunity?.guidelinesAcknowledgedAt && (
-            <span className="hint" style={{ marginLeft: 26 }}>
-              {t("opportunityEditor.guidelinesAcknowledgedAt", {
-                date: new Date(
-                  opportunity.guidelinesAcknowledgedAt,
-                ).toLocaleString(),
-              }, {
-                default: "Acknowledged {{date}}",
-              })}
-            </span>
-          )}
-        </Field>
-        <Field>
-          <label
-            style={{
-              display: "inline-flex",
-              gap: 8,
-              alignItems: "flex-start",
-              cursor: "pointer",
-              fontSize: 14,
-              color: "#171717",
-            }}
-          >
-            <input
-              type="checkbox"
-              name="requestsAppointment"
-              checked={!!inputs.requestsAppointment}
-              onChange={toggleBoolean}
-              style={{ marginTop: 3 }}
-            />
-            <span>
-              {t("opportunityEditor.guidelinesRequestAppointment", {}, {
-                default: "I request an appointment to discuss further.",
-              })}
-            </span>
-          </label>
-        </Field>
-        {inputs.status !== "draft" && !inputs.guidelinesAcknowledged && (
-          <div
-            style={{
-              padding: "10px 14px",
-              borderRadius: 10,
-              background: "#fdf1f1",
-              border: "1px solid #f1c8c8",
-              color: "#b3261e",
-              fontSize: 13,
-            }}
-          >
-            <Icon name="warning circle" />{" "}
-            {t("opportunityEditor.guidelinesWarning", {}, {
-              default:
-                "Tick the guidelines checkbox before submitting this opportunity.",
-            })}
-          </div>
-        )}
-      </Card>
-      )}
-
       {activeTab === OPPORTUNITY_EDITOR_TABS.status && isReviewMode && (
         <Card>
           <h2>
@@ -1748,7 +1566,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
         </Card>
       )}
 
-      {activeTab === OPPORTUNITY_EDITOR_TABS.proposal && (
+      {(!isReviewMode || activeTab === OPPORTUNITY_EDITOR_TABS.proposal) && (
         <>
       {!isReviewMode && (
         <OpportunityClassNetworksField
@@ -1772,6 +1590,34 @@ export default function OpportunityEditor({ opportunityId, user }) {
           disabled={fieldDisabled}
         />
       </Card>
+
+      {!isReviewMode && (
+        <Card>
+          <OpportunityGuidelinesSection
+            editable={isNew}
+            guidelinesAcknowledged={
+              isNew
+                ? !!inputs.guidelinesAcknowledged
+                : !!opportunity?.guidelinesAcknowledged
+            }
+            requestsAppointment={
+              isNew
+                ? !!inputs.requestsAppointment
+                : !!opportunity?.requestsAppointment
+            }
+            guidelinesAcknowledgedAt={
+              opportunity?.guidelinesAcknowledgedAt || null
+            }
+            onGuidelinesAcknowledgedChange={(checked) =>
+              handleMultipleUpdate({ guidelinesAcknowledged: checked })
+            }
+            onRequestsAppointmentChange={(checked) =>
+              handleMultipleUpdate({ requestsAppointment: checked })
+            }
+            titleAs="h2"
+          />
+        </Card>
+      )}
 
       {showFinalScope && (
         <Card>
@@ -2340,7 +2186,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
         </>
       )}
 
-      {activeFollowUpForm && (
+      {isReviewMode && activeFollowUpForm && (
         <OpportunityFollowUpFormPanel
           ref={followUpFormRef}
           opportunity={opportunity}

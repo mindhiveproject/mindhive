@@ -2,6 +2,9 @@
 // hardcoded Editor.js. Loads the opportunity, renders <DefinitionForm>,
 // and routes the form's update input straight to CREATE/UPDATE mutations.
 //
+// Chat, Status, and follow-up forms are opened as modals from the
+// opportunities List. This surface is proposal editing only.
+//
 // The legacy Editor.js stays in place for now and handles complex types
 // (media, rich text, custom application questions). EditorSwitch picks
 // which one renders based on the NEXT_PUBLIC_USE_CUSTOMIZABLE_FORMS
@@ -16,10 +19,7 @@ import { UserContext } from "../../../Global/Authorized";
 import DefinitionForm from "../../../Forms/DefinitionForm";
 import Button from "../../../DesignSystem/Button";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
-import OpportunityEditorTabNav from "./OpportunityEditorTabNav";
-import OpportunityFollowUpFormPanel from "./OpportunityFollowUpFormPanel";
-import OpportunityReviewNotesThread from "../../Connect/OpportunityReviewNotesThread";
-import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
+import OpportunityGuidelinesSection from "./OpportunityGuidelinesSection";
 import {
   GET_OPPORTUNITY,
   MY_OPPORTUNITIES,
@@ -36,16 +36,6 @@ import {
   collectMemberClassNetworks,
   isNewOpportunityId,
 } from "../../../../lib/opportunityClassNetworks";
-import {
-  REVIEW_NOTE_KIND,
-  resolveActiveReviewRound,
-} from "../../../../lib/reviewThreadRound";
-import {
-  OPPORTUNITY_EDITOR_TABS,
-  collectFollowUpForms,
-  parseFormTabKey,
-  resolveOpportunityEditorTab,
-} from "../../../../lib/opportunityEditorTabs";
 import {
   OpportunityPageShell as Shell,
   OPPORTUNITY_PAGE_GUTTER,
@@ -148,17 +138,6 @@ const Card = styled.div`
   border-radius: 16px;
   background: #ffffff;
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-
-  h2 {
-    margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
-    color: #171717;
-  }
-`;
-
-const ReviewNotesCard = styled(Card)`
-  gap: 16px;
 `;
 
 function rolesForViewer(connectRole) {
@@ -223,80 +202,9 @@ export default function EditorDefinitionMode({ opportunityId }) {
 
   const [flash, setFlash] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [guidelinesAcknowledged, setGuidelinesAcknowledged] = useState(false);
+  const [requestsAppointment, setRequestsAppointment] = useState(false);
   const proposalFormRef = useRef(null);
-  const followUpFormRef = useRef(null);
-
-  const reviewNotes = opportunity?.reviewNotes || [];
-  const opportunityRounds = useMemo(() => {
-    const byId = new Map();
-    for (const round of opportunity?.rounds || []) {
-      if (round?.id) byId.set(round.id, round);
-    }
-    for (const note of reviewNotes) {
-      if (note?.round?.id && !byId.has(note.round.id)) {
-        byId.set(note.round.id, note.round);
-      }
-    }
-    return [...byId.values()];
-  }, [opportunity?.rounds, reviewNotes]);
-
-  const explicitRoundId =
-    typeof router.query?.round === "string" ? router.query.round : null;
-
-  const roundResolution = useMemo(
-    () =>
-      resolveActiveReviewRound({
-        rounds: opportunityRounds,
-        explicitRoundId,
-      }),
-    [opportunityRounds, explicitRoundId],
-  );
-
-  const activeRoundId = roundResolution.roundId;
-  const needsRoundSelection = roundResolution.needsSelection;
-
-  const followUpForms = useMemo(
-    () => collectFollowUpForms(opportunity?.rounds || []),
-    [opportunity?.rounds],
-  );
-
-  const activeTab = useMemo(
-    () =>
-      resolveOpportunityEditorTab(router.query?.tab, { followUpForms }),
-    [router.query?.tab, followUpForms],
-  );
-
-  const activeFollowUpForm = useMemo(() => {
-    const formId = parseFormTabKey(activeTab);
-    if (!formId) return null;
-    return followUpForms.find((form) => form.id === formId) || null;
-  }, [activeTab, followUpForms]);
-
-  const handleSelectEditorTab = (tab) => {
-    const nextQuery = { ...router.query, tab };
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: nextQuery,
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
-
-  const handleSelectReviewRound = (roundId) => {
-    const nextQuery = { ...router.query };
-    if (roundId) nextQuery.round = roundId;
-    else delete nextQuery.round;
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: nextQuery,
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
 
   const handleSubmit = async (result) => {
     const baseInput = result?.self || {};
@@ -313,6 +221,11 @@ export default function EditorDefinitionMode({ opportunityId }) {
     if (isNew) {
       const createInput = {
         ...input,
+        guidelinesAcknowledged: !!guidelinesAcknowledged,
+        guidelinesAcknowledgedAt: guidelinesAcknowledged
+          ? new Date().toISOString()
+          : null,
+        requestsAppointment: !!requestsAppointment,
         ...(user?.id ? { mentor: { connect: { id: user.id } } } : {}),
         ...(myOrgId ? { organization: { connect: { id: myOrgId } } } : {}),
       };
@@ -338,24 +251,11 @@ export default function EditorDefinitionMode({ opportunityId }) {
     }
   };
 
-  const showTopBarSave =
-    activeTab === OPPORTUNITY_EDITOR_TABS.proposal || Boolean(activeFollowUpForm);
-
   const handleTopBarSave = async () => {
-    if (!showTopBarSave) return;
     setSaving(true);
     setFlash(null);
     try {
-      if (activeFollowUpForm) {
-        const ok = await followUpFormRef.current?.save?.();
-        if (ok) {
-          setFlash(
-            t("opportunityEditor.savedFlash", {}, { default: "Saved." }),
-          );
-        }
-      } else {
-        await proposalFormRef.current?.save?.();
-      }
+      await proposalFormRef.current?.save?.();
     } finally {
       setSaving(false);
     }
@@ -387,12 +287,10 @@ export default function EditorDefinitionMode({ opportunityId }) {
   const saveLabel = saving
     ? t("opportunityEditor.saving", {}, { default: "Saving…" })
     : isNew
-    ? t("opportunityEditor.create", {}, { default: "Create opportunity" })
+    ? t("opportunityEditor.create", {}, {
+        default: "Create opportunity",
+      })
     : t("opportunityEditor.save", {}, { default: "Save changes" });
-
-  const scopeComplete = Boolean(
-    (opportunity?.scopeDescription || "").trim(),
-  );
 
   return (
     <Shell>
@@ -412,119 +310,60 @@ export default function EditorDefinitionMode({ opportunityId }) {
             <h1 title={pageTitle}>{pageTitle}</h1>
           </TitleRow>
         </TopBarLeft>
-        {showTopBarSave ? (
-          <Button
-            type="button"
-            variant="filled"
-            onClick={handleTopBarSave}
-            disabled={saving}
-          >
-            {saveLabel}
-          </Button>
-        ) : null}
+        <Button
+          type="button"
+          variant="filled"
+          onClick={handleTopBarSave}
+          disabled={saving}
+        >
+          {saveLabel}
+        </Button>
       </TopBar>
       {flash ? (
         <div style={{ color: "#1d6b3a", fontSize: 14 }}>{flash}</div>
       ) : null}
 
-      <OpportunityEditorTabNav
-        activeTab={activeTab}
-        followUpForms={followUpForms}
-        proposalData={opportunity?.proposalData}
-        onSelectTab={handleSelectEditorTab}
+      <OpportunityClassNetworksField
+        availableNetworks={availableNetworks}
+        selectedNetworks={selectedNetworks}
+        onChange={setSelectedNetworks}
       />
-
-      {activeTab === OPPORTUNITY_EDITOR_TABS.chat && (
-        <ReviewNotesCard>
-          {isNew ? (
-            <p style={{ margin: 0, color: "#5f6871", fontSize: 14 }}>
-              {t("opportunityEditor.chatSaveFirst", {}, {
-                default:
-                  "Save the opportunity first to start a conversation with reviewers.",
-              })}
-            </p>
-          ) : (
-            <OpportunityReviewNotesThread
-              opportunityId={opportunity?.id || opportunityId}
-              roundId={activeRoundId}
-              notes={reviewNotes}
-              rounds={opportunityRounds}
-              viewerId={user?.id}
-              canCreate={Boolean(user?.id)}
-              canDeleteAsAdmin={connectRole.isAdmin}
-              messageKind={REVIEW_NOTE_KIND.SPONSOR_REPLY}
-              mode="sponsor"
-              needsRoundSelection={needsRoundSelection}
-              onSelectRound={
-                opportunityRounds.length > 1
-                  ? handleSelectReviewRound
-                  : undefined
-              }
-              refetchQueries={[
-                { query: GET_OPPORTUNITY, variables: { id: opportunityId } },
-                { query: MY_OPPORTUNITIES },
-              ]}
-              titleAs="h2"
-            />
-          )}
-        </ReviewNotesCard>
-      )}
-
-      {activeTab === OPPORTUNITY_EDITOR_TABS.status && (
-        <Card>
-          <h2>{t("opportunityEditor.status", {}, { default: "Status" })}</h2>
-          {!isNew && (
-            <OpportunityWorkflowStepper
-              status={opportunity?.status || "draft"}
-              scopeComplete={scopeComplete}
-              viewerRole="sponsor"
-            />
-          )}
-          {isNew && (
-            <p style={{ margin: 0, color: "#5f6871", fontSize: 14 }}>
-              {t("opportunityEditor.statusNewHint", {}, {
-                default:
-                  "Status tracking is available after you create the opportunity.",
-              })}
-            </p>
-          )}
-        </Card>
-      )}
-
-      {activeTab === OPPORTUNITY_EDITOR_TABS.proposal && (
-        <>
-          <OpportunityClassNetworksField
-            availableNetworks={availableNetworks}
-            selectedNetworks={selectedNetworks}
-            onChange={setSelectedNetworks}
-          />
-          <DefinitionForm
-            ref={proposalFormRef}
-            definitionKey="opportunity"
-            entity={opportunity || null}
-            scopeContext={{ organizationId: myOrgId }}
-            viewerRoles={viewerRoles}
-            locale={router.locale}
-            onSubmit={handleSubmit}
-            hideSaveButton
-            saveLabel={
-              isNew
-                ? t("opportunityEditor.create", {}, {
-                    default: "Create opportunity",
-                  })
-                : t("opportunityEditor.save", {}, { default: "Save changes" })
-            }
-          />
-        </>
-      )}
-
-      {activeFollowUpForm && (
-        <OpportunityFollowUpFormPanel
-          ref={followUpFormRef}
-          opportunity={opportunity}
-          formMeta={activeFollowUpForm}
+      <DefinitionForm
+        ref={proposalFormRef}
+        definitionKey="opportunity"
+        entity={opportunity || null}
+        scopeContext={{ organizationId: myOrgId }}
+        viewerRoles={viewerRoles}
+        locale={router.locale}
+        onSubmit={handleSubmit}
+        hideSaveButton
+        saveLabel={
+          isNew
+            ? t("opportunityEditor.create", {}, {
+                default: "Create opportunity",
+              })
+            : t("opportunityEditor.save", {}, { default: "Save changes" })
+        }
+      />
+      <Card>
+        <OpportunityGuidelinesSection
+          editable={isNew}
+          guidelinesAcknowledged={
+            isNew
+              ? guidelinesAcknowledged
+              : !!opportunity?.guidelinesAcknowledged
+          }
+          requestsAppointment={
+            isNew ? requestsAppointment : !!opportunity?.requestsAppointment
+          }
+          guidelinesAcknowledgedAt={
+            opportunity?.guidelinesAcknowledgedAt || null
+          }
+          onGuidelinesAcknowledgedChange={setGuidelinesAcknowledged}
+          onRequestsAppointmentChange={setRequestsAppointment}
+          titleAs="h2"
         />
-      )}
+      </Card>
     </Shell>
   );
 }

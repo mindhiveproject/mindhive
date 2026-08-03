@@ -540,6 +540,11 @@
 		"held": {
 			"continueForm": "",
 			"followUp": "",
+			"formColumns": {
+				"action": "",
+				"form": "",
+				"status": ""
+			},
 			"formComplete": "",
 			"formCompleteSaved": "",
 			"formIncomplete": "",
@@ -547,11 +552,21 @@
 			"noFurtherQuestions": "",
 			"openForm": "",
 			"preSelected": "",
+			"roundFormsTitle": "",
 			"title": "",
 			"unknownNetwork": "",
 			"unknownRound": ""
 		},
 		"loading": "加载中...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "{{count}} 网络",
 			"one": "{{count}} 网络"
@@ -560,6 +575,7 @@
 		"networkFilterPlaceholder": "所有网络",
 		"newButton": "新机遇",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "我的机会",
 		"rating": {
 			"many": "{{average}} · {{count}} 个评分",
@@ -589,6 +605,21 @@
 		"statusChangeUseEditor": "",
 		"statusFilterLabel": "按状态过滤",
 		"statusFilterPlaceholder": "所有状态",
+		"stepper": {
+			"ariaLabel": "",
+			"awaitingMatching": "",
+			"draft": "",
+			"formFilled": "",
+			"formsProgress": "",
+			"matched": "",
+			"matching": "",
+			"preSelected": "",
+			"visible": "",
+			"visibleMany": "",
+			"visibleNone": "",
+			"visibleOne": "",
+			"waitingForms": ""
+		},
 		"teamOf": "团队人数： {{size}}",
 		"unknownSponsor": "未知",
 		"visibility": {
@@ -712,12 +743,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "小组形式",
 		"guidelinesAcknowledgedAt": "已确认 {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "我同意这种说法。",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "我已完整阅读并理解了毕业设计提案指南，包括所有毕业设计赞助商常见问题解答和相互期望协议，并同意遵守这些指南。",
 		"guidelinesDocsAriaLabel": "毕业设计提案指南文件",
 		"guidelinesDocsPlaceholder": "选择指南以打开",
 		"guidelinesFaqsChip": "项目赞助商常见问题解答",
 		"guidelinesMutualExpectationsChip": "相互期望协议",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "我请求预约时间进一步讨论。",
 		"guidelinesTitle": "了解提案指南",
 		"guidelinesWarning": "发布前请勾选指南复选框。",
@@ -938,9 +973,14 @@
 		"studentCapacity": "学生容量",
 		"submitForReview": "",
 		"tabs": {
+			"additionalForms": "",
+			"additionalFormsAria": "",
 			"chat": "",
+			"complete": "",
 			"followUpCompleteAria": "",
 			"followUpFallback": "",
+			"incomplete": "",
+			"originalIntake": "",
 			"proposal": "",
 			"status": ""
 		},

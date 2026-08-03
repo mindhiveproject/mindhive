@@ -540,6 +540,11 @@
 		"held": {
 			"continueForm": "",
 			"followUp": "",
+			"formColumns": {
+				"action": "",
+				"form": "",
+				"status": ""
+			},
 			"formComplete": "",
 			"formCompleteSaved": "",
 			"formIncomplete": "",
@@ -547,11 +552,21 @@
 			"noFurtherQuestions": "",
 			"openForm": "",
 			"preSelected": "",
+			"roundFormsTitle": "",
 			"title": "",
 			"unknownNetwork": "",
 			"unknownRound": ""
 		},
 		"loading": "Загрузка...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "{{count}} сети",
 			"one": "{{count}} сеть"
@@ -560,6 +575,7 @@
 		"networkFilterPlaceholder": "Все сети",
 		"newButton": "Новая возможность",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "Мои возможности",
 		"rating": {
 			"many": "{{average}} · {{count}} рейтингов",
@@ -589,6 +605,21 @@
 		"statusChangeUseEditor": "",
 		"statusFilterLabel": "Фильтрация по статусу",
 		"statusFilterPlaceholder": "Все статусы",
+		"stepper": {
+			"ariaLabel": "",
+			"awaitingMatching": "",
+			"draft": "",
+			"formFilled": "",
+			"formsProgress": "",
+			"matched": "",
+			"matching": "",
+			"preSelected": "",
+			"visible": "",
+			"visibleMany": "",
+			"visibleNone": "",
+			"visibleOne": "",
+			"waitingForms": ""
+		},
 		"teamOf": "Команда из {{size}}",
 		"unknownSponsor": "Неизвестный",
 		"visibility": {
@@ -712,12 +743,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "Групповой формат",
 		"guidelinesAcknowledgedAt": "Подтверждено {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "Я согласен с этим утверждением.",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "Я полностью ознакомился и понял руководящие принципы подготовки дипломной работы, включая все часто задаваемые вопросы для спонсоров дипломной работы и соглашение о взаимных ожиданиях, и согласен соблюдать их.",
 		"guidelinesDocsAriaLabel": "Руководящие документы для подготовки дипломной работы",
 		"guidelinesDocsPlaceholder": "Выберите правила, чтобы открыть",
 		"guidelinesFaqsChip": "Часто задаваемые вопросы спонсорам дипломных проектов",
 		"guidelinesMutualExpectationsChip": "Соглашение о взаимных ожиданиях",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "Я прошу о встрече для дальнейшего обсуждения.",
 		"guidelinesTitle": "Понимание руководящих принципов подачи заявок",
 		"guidelinesWarning": "Перед публикацией поставьте галочку в поле «Правила».",
@@ -938,9 +973,14 @@
 		"studentCapacity": "Вместимость для студентов",
 		"submitForReview": "",
 		"tabs": {
+			"additionalForms": "",
+			"additionalFormsAria": "",
 			"chat": "",
+			"complete": "",
 			"followUpCompleteAria": "",
 			"followUpFallback": "",
+			"incomplete": "",
+			"originalIntake": "",
 			"proposal": "",
 			"status": ""
 		},

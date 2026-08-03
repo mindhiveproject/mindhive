@@ -1676,11 +1676,6 @@ function MatchingRoundEditor({
       setFormPreviewIds([formId]);
       setFormPreviewOpen(true);
     };
-    const openRoundFormsPreview = () => {
-      if (selectedFormDefinitionIds.length === 0) return;
-      setFormPreviewIds([...selectedFormDefinitionIds]);
-      setFormPreviewOpen(true);
-    };
     const addFormToRound = (formId) => {
       if (!formId || !canManageOpportunities || saving) return;
       if (selectedFormDefinitionIds.includes(formId)) return;
@@ -1689,12 +1684,53 @@ function MatchingRoundEditor({
         formId,
       ]);
     };
+    const removeFormFromRound = (formId) => {
+      if (!formId || !canManageOpportunities || saving) return;
+      if (!selectedFormDefinitionIds.includes(formId)) return;
+      persistFormDefinitionSelection(
+        selectedFormDefinitionIds.filter((id) => id !== formId),
+      );
+    };
+
+    const pickableById = new Map(
+      pickableFormDefinitions.map((form) => [form.id, form]),
+    );
+    const ownedById = new Map(
+      ownedFormDefinitions.map((form) => [form.id, form]),
+    );
+    const libraryForms = [];
+    const seenLibraryIds = new Set();
+    for (const form of ownedFormDefinitions) {
+      libraryForms.push({ ...form, isOwned: true });
+      seenLibraryIds.add(form.id);
+    }
+    const attachedSources = [
+      ...(round?.formDefinitions || []),
+      ...selectedFormDefinitionIds
+        .filter((id) => !ownedById.has(id) && !seenLibraryIds.has(id))
+        .map((id) => pickableById.get(id) || { id }),
+    ];
+    for (const form of attachedSources) {
+      if (!form?.id || seenLibraryIds.has(form.id) || ownedById.has(form.id)) {
+        continue;
+      }
+      const enriched = pickableById.get(form.id) || form;
+      libraryForms.push({
+        ...enriched,
+        status: enriched.status || "published",
+        isOwned: false,
+      });
+      seenLibraryIds.add(form.id);
+    }
 
     const buildLibraryMenuItems = (form) => {
       const inRound = selectedFormDefinitionIds.includes(form.id);
       const isPublished = form.status === "published";
-      const items = [
-        {
+      const isOwned = form.isOwned !== false;
+      const items = [];
+
+      if (isOwned) {
+        items.push({
           key: "edit",
           label: t(
             "opportunities.matchingRound.formPicker.editButton",
@@ -1702,18 +1738,30 @@ function MatchingRoundEditor({
             { default: "Edit form" },
           ),
           onClick: () => openEditWizard(form.id),
-        },
-        {
-          key: "preview",
+        });
+      }
+
+      items.push({
+        key: "preview",
+        label: t(
+          "opportunities.matchingRound.formPicker.previewButton",
+          {},
+          { default: "Preview" },
+        ),
+        onClick: () => openPreview(form.id),
+      });
+
+      if (inRound) {
+        items.push({
+          key: "remove",
           label: t(
-            "opportunities.matchingRound.formPicker.previewButton",
+            "opportunities.matchingRound.formPicker.removeFromRound",
             {},
-            { default: "Preview" },
+            { default: "Remove from this round" },
           ),
-          onClick: () => openPreview(form.id),
-        },
-      ];
-      if (isPublished && !inRound) {
+          onClick: () => removeFormFromRound(form.id),
+        });
+      } else if (isPublished) {
         items.push({
           key: "add",
           label: t(
@@ -1722,16 +1770,6 @@ function MatchingRoundEditor({
             { default: "Add to this round" },
           ),
           onClick: () => addFormToRound(form.id),
-        });
-      } else if (inRound) {
-        items.push({
-          key: "inRound",
-          label: t(
-            "opportunities.matchingRound.formPicker.addToRoundAlreadyIn",
-            {},
-            { default: "Already in this round" },
-          ),
-          static: true,
         });
       } else {
         items.push({
@@ -1746,16 +1784,19 @@ function MatchingRoundEditor({
           static: true,
         });
       }
-      items.push({
-        key: "delete",
-        label: t(
-          "opportunities.matchingRound.formPicker.deleteButton",
-          {},
-          { default: "Delete form" },
-        ),
-        danger: true,
-        onClick: () => handleDeleteOwnedForm(form),
-      });
+
+      if (isOwned) {
+        items.push({
+          key: "delete",
+          label: t(
+            "opportunities.matchingRound.formPicker.deleteButton",
+            {},
+            { default: "Delete form" },
+          ),
+          danger: true,
+          onClick: () => handleDeleteOwnedForm(form),
+        });
+      }
       return items;
     };
 
@@ -1771,137 +1812,9 @@ function MatchingRoundEditor({
             <p className="matchingRoundFormPickerHint">
               {t("opportunities.matchingRound.formPicker.hint", {}, {
                 default:
-                  "Combine public forms and forms you own for this round. Manage your own forms in the library, then choose when sponsors can respond.",
+                  "Manage your class form library here. Add forms to this round from the menu, then choose when sponsors can respond.",
               })}
             </p>
-          </div>
-
-          <div className="matchingRoundFormPickerTopRow">
-            <section className="matchingRoundFormPickerSection matchingRoundFormPickerTopCard">
-              <div className="matchingRoundFormPickerSectionHeader">
-                <h5 className="matchingRoundFormPickerSectionTitle">
-                  {t("opportunities.matchingRound.formPicker.roundSetTitle", {}, {
-                    default: "Forms in this round",
-                  })}
-                </h5>
-                <p className="matchingRoundFormPickerSectionHint">
-                  {t("opportunities.matchingRound.formPicker.roundSetHint", {}, {
-                    default:
-                      "Which questionnaires are attached to this matching round. Mix public forms and forms you own.",
-                  })}
-                </p>
-              </div>
-              <DropdownSelect
-                multiple
-                value={selectedFormDefinitionIds}
-                onChange={persistFormDefinitionSelection}
-                options={formDefinitionOptions}
-                disabled={!canManageOpportunities || saving}
-                placeholder={
-                  formDefinitionOptions.length === 0
-                    ? t(
-                        "opportunities.matchingRound.formPicker.emptyPlaceholder",
-                        {},
-                        { default: "No published forms available" },
-                      )
-                    : t(
-                        "opportunities.matchingRound.formPicker.placeholder",
-                        {},
-                        { default: "Select forms…" },
-                      )
-                }
-                ariaLabel={t(
-                  "opportunities.matchingRound.formPicker.ariaLabel",
-                  {},
-                  { default: "Sponsor questionnaires for this round" },
-                )}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                className="matchingRoundFormPickerPreviewButton"
-                disabled={selectedFormDefinitionIds.length === 0}
-                onClick={openRoundFormsPreview}
-              >
-                {t(
-                  "opportunities.matchingRound.formPicker.previewButton",
-                  {},
-                  { default: "Preview" },
-                )}
-              </Button>
-            </section>
-
-            <section
-              className={clsx(
-                "matchingRoundFormPickerVisibility",
-                "matchingRoundFormPickerTopCard",
-                sponsorFormsVisible && "isVisible",
-              )}
-            >
-              <div className="matchingRoundFormPickerVisibilityHeader">
-                <h5 className="matchingRoundFormPickerSectionTitle">
-                  {t(
-                    "opportunities.matchingRound.formPicker.visibilityTitle",
-                    {},
-                    { default: "Sponsor visibility" },
-                  )}
-                </h5>
-                <p className="matchingRoundFormPickerSectionHint">
-                  {t(
-                    "opportunities.matchingRound.formPicker.visibilityHint",
-                    {},
-                    {
-                      default:
-                        "Applies to the forms selected for this round.",
-                    },
-                  )}
-                </p>
-              </div>
-              <div className="matchingRoundFormPickerVisibilityFooter">
-                <span
-                  className={clsx(
-                    "matchingRoundFormPickerVisibilityStatus",
-                    sponsorFormsVisible ? "isVisible" : "isHidden",
-                  )}
-                >
-                  {sponsorFormsVisible
-                    ? t(
-                        "opportunities.matchingRound.formPicker.visibilityVisible",
-                        {},
-                        { default: "Visible to sponsors" },
-                      )
-                    : t(
-                        "opportunities.matchingRound.formPicker.visibilityHidden",
-                        {},
-                        { default: "Hidden from sponsors" },
-                      )}
-                </span>
-                <Button
-                  type="button"
-                  variant={sponsorFormsVisible ? "outline" : "filled"}
-                  className="matchingRoundFormPickerVisibilityButton"
-                  disabled={
-                    !canManageOpportunities ||
-                    saving ||
-                    togglingSponsorFormsVisible ||
-                    selectedFormDefinitionIds.length === 0
-                  }
-                  onClick={handleToggleSponsorFormsVisible}
-                >
-                  {sponsorFormsVisible
-                    ? t(
-                        "opportunities.matchingRound.formPicker.hideFromSponsors",
-                        {},
-                        { default: "Hide from sponsors" },
-                      )
-                    : t(
-                        "opportunities.matchingRound.formPicker.showToSponsors",
-                        {},
-                        { default: "Show to sponsors" },
-                      )}
-                </Button>
-              </div>
-            </section>
           </div>
 
           <section className="matchingRoundFormPickerSection">
@@ -1920,45 +1833,96 @@ function MatchingRoundEditor({
                     {},
                     {
                       default:
-                        "Forms you’ve created for this class. Edit, preview, add to the round, or delete from the menu. Copy a public form to start from a template.",
+                        "Forms you’ve created for this class. Forms marked “In this round” are attached. Use the menu to add, remove, preview, or edit. Copy a public form to start from a template.",
                     },
                   )}
                 </p>
               </div>
-              <div className="matchingRoundFormPickerLibraryActions">
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={
-                    !canManageOpportunities || libraryBusy || !myclass?.id
-                  }
-                  onClick={() => setClonePublicOpen(true)}
-                >
-                  {t(
-                    "opportunities.matchingRound.formPicker.copyPublicButton",
-                    {},
-                    { default: "Copy public form" },
+              <div className="matchingRoundFormPickerLibraryToolbar">
+                <div
+                  className={clsx(
+                    "matchingRoundFormPickerLibraryVisibility",
+                    sponsorFormsVisible && "isVisible",
                   )}
-                </Button>
-                <Button
-                  type="button"
-                  variant="filled"
-                  className="matchingRoundFormPickerCreateButton"
-                  disabled={
-                    !canManageOpportunities || libraryBusy || !myclass?.id
-                  }
-                  onClick={openCreateWizard}
                 >
-                  {t(
-                    "opportunities.matchingRound.formPicker.createButton",
-                    {},
-                    { default: "Create form" },
-                  )}
-                </Button>
+                  <span
+                    className={clsx(
+                      "matchingRoundFormPickerVisibilityStatus",
+                      sponsorFormsVisible ? "isVisible" : "isHidden",
+                    )}
+                  >
+                    {sponsorFormsVisible
+                      ? t(
+                          "opportunities.matchingRound.formPicker.visibilityVisible",
+                          {},
+                          { default: "Visible to sponsors" },
+                        )
+                      : t(
+                          "opportunities.matchingRound.formPicker.visibilityHidden",
+                          {},
+                          { default: "Hidden from sponsors" },
+                        )}
+                  </span>
+                  <Button
+                    type="button"
+                    variant={sponsorFormsVisible ? "outline" : "filled"}
+                    className="matchingRoundFormPickerVisibilityButton"
+                    disabled={
+                      !canManageOpportunities ||
+                      saving ||
+                      togglingSponsorFormsVisible ||
+                      selectedFormDefinitionIds.length === 0
+                    }
+                    onClick={handleToggleSponsorFormsVisible}
+                  >
+                    {sponsorFormsVisible
+                      ? t(
+                          "opportunities.matchingRound.formPicker.hideFromSponsors",
+                          {},
+                          { default: "Hide from sponsors" },
+                        )
+                      : t(
+                          "opportunities.matchingRound.formPicker.showToSponsors",
+                          {},
+                          { default: "Show to sponsors" },
+                        )}
+                  </Button>
+                </div>
+                <div className="matchingRoundFormPickerLibraryActions">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={
+                      !canManageOpportunities || libraryBusy || !myclass?.id
+                    }
+                    onClick={() => setClonePublicOpen(true)}
+                  >
+                    {t(
+                      "opportunities.matchingRound.formPicker.copyPublicButton",
+                      {},
+                      { default: "Copy public form" },
+                    )}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="filled"
+                    className="matchingRoundFormPickerCreateButton"
+                    disabled={
+                      !canManageOpportunities || libraryBusy || !myclass?.id
+                    }
+                    onClick={openCreateWizard}
+                  >
+                    {t(
+                      "opportunities.matchingRound.formPicker.createButton",
+                      {},
+                      { default: "Create form" },
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
 
-            {ownedFormDefinitions.length === 0 ? (
+            {libraryForms.length === 0 ? (
               <p className="matchingRoundFormPickerLibraryEmpty">
                 {t(
                   "opportunities.matchingRound.formPicker.libraryEmpty",
@@ -1971,7 +1935,7 @@ function MatchingRoundEditor({
               </p>
             ) : (
               <ul className="matchingRoundFormPickerLibraryList">
-                {ownedFormDefinitions.map((form) => {
+                {libraryForms.map((form) => {
                   const selected = librarySelectedId === form.id;
                   const inRound = selectedFormDefinitionIds.includes(form.id);
                   const statusLabel =

@@ -1631,57 +1631,30 @@ const StyledClass = styled.div`
       gap: 8px;
     }
 
-    .matchingRoundFormPickerTopRow {
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(240px, 0.9fr);
-      gap: 12px;
-      align-items: stretch;
-    }
-
-    @media (max-width: 900px) {
-      .matchingRoundFormPickerTopRow {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .matchingRoundFormPickerTopCard {
+    .matchingRoundFormPickerLibraryToolbar {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-      min-height: 0;
-      margin: 0;
-      padding: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px 12px;
+      flex-shrink: 0;
+    }
+
+    .matchingRoundFormPickerLibraryVisibility {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      padding: 8px 10px;
       border: 1px solid #E6E6E6;
-      border-radius: 10px;
+      border-radius: 8px;
       background: #fafbfb;
       box-sizing: border-box;
     }
 
-    .matchingRoundFormPickerTopCard > .matchingRoundFormPickerSectionHeader,
-    .matchingRoundFormPickerVisibilityHeader {
-      display: grid;
-      gap: 4px;
-      flex: 0 0 auto;
-    }
-
-    .matchingRoundFormPickerVisibility {
-      /* surface comes from .matchingRoundFormPickerTopCard */
-      justify-content: space-between;
-    }
-
-    .matchingRoundFormPickerVisibility.isVisible {
+    .matchingRoundFormPickerLibraryVisibility.isVisible {
       background: #e8f7ec;
       border-color: #b7d9c4;
-    }
-
-    .matchingRoundFormPickerVisibilityFooter {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px 12px;
-      margin-top: auto;
-      padding-top: 4px;
     }
 
     .matchingRoundFormPickerVisibilityStatus {
@@ -1699,8 +1672,7 @@ const StyledClass = styled.div`
       color: #8a6d3b;
     }
 
-    .matchingRoundFormPickerVisibilityButton,
-    .matchingRoundFormPickerPreviewButton {
+    .matchingRoundFormPickerVisibilityButton {
       flex-shrink: 0;
       width: fit-content;
       max-width: 100%;

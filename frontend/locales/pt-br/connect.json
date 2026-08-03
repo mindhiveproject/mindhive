@@ -540,6 +540,11 @@
 		"held": {
 			"continueForm": "",
 			"followUp": "",
+			"formColumns": {
+				"action": "",
+				"form": "",
+				"status": ""
+			},
 			"formComplete": "",
 			"formCompleteSaved": "",
 			"formIncomplete": "",
@@ -547,11 +552,21 @@
 			"noFurtherQuestions": "",
 			"openForm": "",
 			"preSelected": "",
+			"roundFormsTitle": "",
 			"title": "",
 			"unknownNetwork": "",
 			"unknownRound": ""
 		},
 		"loading": "Carregando...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "Redes{{count}} ",
 			"one": "Rede{{count}} "
@@ -560,6 +575,7 @@
 		"networkFilterPlaceholder": "Todas as redes",
 		"newButton": "Nova oportunidade",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "Minhas oportunidades",
 		"rating": {
 			"many": "{{average}} · {{count}} avaliações",
@@ -589,6 +605,21 @@
 		"statusChangeUseEditor": "",
 		"statusFilterLabel": "Filtrar por status",
 		"statusFilterPlaceholder": "Todos os status",
+		"stepper": {
+			"ariaLabel": "",
+			"awaitingMatching": "",
+			"draft": "",
+			"formFilled": "",
+			"formsProgress": "",
+			"matched": "",
+			"matching": "",
+			"preSelected": "",
+			"visible": "",
+			"visibleMany": "",
+			"visibleNone": "",
+			"visibleOne": "",
+			"waitingForms": ""
+		},
 		"teamOf": "Equipe de {{size}}",
 		"unknownSponsor": "Desconhecido",
 		"visibility": {
@@ -712,12 +743,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "Formato de grupo",
 		"guidelinesAcknowledgedAt": "Reconhecido {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "Concordo com essa afirmação.",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "Li e compreendi integralmente as diretrizes da proposta do Projeto Final, incluindo todas as Perguntas Frequentes do Patrocinador do Projeto Final e o Acordo de Expectativas Mútuas, e concordo em cumpri-las.",
 		"guidelinesDocsAriaLabel": "Documentos de orientação para propostas de projeto final",
 		"guidelinesDocsPlaceholder": "Selecione as diretrizes para abrir",
 		"guidelinesFaqsChip": "Perguntas frequentes sobre o patrocínio do Capstone",
 		"guidelinesMutualExpectationsChip": "Acordo de Expectativas Mútuas",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "Solicito uma reunião para discutirmos mais detalhes.",
 		"guidelinesTitle": "Compreensão das diretrizes da proposta",
 		"guidelinesWarning": "Marque a caixa de seleção das diretrizes antes de publicar.",
@@ -938,9 +973,14 @@
 		"studentCapacity": "Capacidade de alunos",
 		"submitForReview": "",
 		"tabs": {
+			"additionalForms": "",
+			"additionalFormsAria": "",
 			"chat": "",
+			"complete": "",
 			"followUpCompleteAria": "",
 			"followUpFallback": "",
+			"incomplete": "",
+			"originalIntake": "",
 			"proposal": "",
 			"status": ""
 		},
