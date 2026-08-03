@@ -938,9 +938,14 @@
 		"studentCapacity": "Student capacity",
 		"submitForReview": "Submit for review in class network",
 		"tabs": {
+			"additionalForms": "Forms",
+			"additionalFormsAria": "Select a form",
 			"chat": "Chat",
+			"complete": "Complete",
 			"followUpCompleteAria": "{{title}} (completed)",
 			"followUpFallback": "Follow-up form",
+			"incomplete": "Incomplete",
+			"originalIntake": "Original intake",
 			"proposal": "Opportunity form",
 			"status": "Status"
 		},

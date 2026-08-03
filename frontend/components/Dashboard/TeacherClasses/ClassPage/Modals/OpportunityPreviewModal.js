@@ -17,6 +17,7 @@ import { hydrateProposalInputs } from "../../../Connect/Opportunities/Opportunit
 import ReturnOpportunityModal from "../../../Connect/ReturnOpportunityModal";
 import OpportunityReviewNotesThread from "../../../Connect/OpportunityReviewNotesThread";
 import OpportunityFollowUpFormPanel from "../../../SponsorConnect/Opportunities/OpportunityFollowUpFormPanel";
+import FollowUpFormsNavSelect from "../../../SponsorConnect/Opportunities/FollowUpFormsNavSelect";
 import DefinitionForm from "../../../../Forms/DefinitionForm";
 import { isReturnableOpportunityStatus } from "../../../Connect/returnOpportunityUtils";
 import {
@@ -25,15 +26,11 @@ import {
 } from "../../../../../lib/reviewThreadRound";
 import {
   OPPORTUNITY_PREVIEW_TABS,
-  formTabKey,
   parseFormTabKey,
   resolveOpportunityPreviewTab,
   resolvePreviewFollowUpForms,
 } from "../../../../../lib/opportunityPreviewTabs";
-import {
-  getIntakeProposalFormDefinitionId,
-  isProposalFormAnswerComplete,
-} from "../../../../../lib/opportunityProposalData";
+import { getIntakeProposalFormDefinitionId } from "../../../../../lib/opportunityProposalData";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
@@ -84,22 +81,6 @@ const NavWrap = styled.div`
     background: var(--MH-Theme-Tertiary-Medium, #d3e0e3);
   }
 `;
-
-const CHECK_ICON = (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden
-  >
-    <path
-      d="M9.55 18.2L3.8 12.45l1.4-1.4 4.35 4.35 9.25-9.25 1.4 1.4L9.55 18.2z"
-      fill="currentColor"
-    />
-  </svg>
-);
 
 const META_ITEM_STYLE = {
   display: "flex",
@@ -809,51 +790,19 @@ export default function OpportunityPreviewModal({
                       {t("opportunities.preview.tabs.chat", {}, { default: "Chat" })}
                     </NavbarItem>
                   ) : null}
-                  <NavbarItem
-                    selected={resolvedTab === OPPORTUNITY_PREVIEW_TABS.detail}
-                    onClick={() => setActiveTab(OPPORTUNITY_PREVIEW_TABS.detail)}
-                  >
-                    {t("opportunities.preview.tabs.detail", {}, {
-                      default: "Opportunity form",
-                    })}
-                  </NavbarItem>
+                  <FollowUpFormsNavSelect
+                    primaryTab={OPPORTUNITY_PREVIEW_TABS.detail}
+                    followUpForms={followUpForms}
+                    activeTab={resolvedTab}
+                    onSelectTab={setActiveTab}
+                    proposalData={opp.proposalData}
+                  />
                   <NavbarItem
                     selected={resolvedTab === OPPORTUNITY_PREVIEW_TABS.people}
                     onClick={() => setActiveTab(OPPORTUNITY_PREVIEW_TABS.people)}
                   >
                     {t("opportunities.preview.tabs.people", {}, { default: "People" })}
                   </NavbarItem>
-                  {followUpForms.map((form) => {
-                    const key = formTabKey(form.id);
-                    const complete = isProposalFormAnswerComplete(
-                      opp.proposalData,
-                      form.id,
-                    );
-                    const label =
-                      form.title ||
-                      tConnect("opportunityEditor.tabs.followUpFallback", {}, {
-                        default: "Follow-up form",
-                      });
-                    return (
-                      <NavbarItem
-                        key={form.id}
-                        selected={resolvedTab === key}
-                        onClick={() => setActiveTab(key)}
-                        leadingIcon={complete ? CHECK_ICON : null}
-                        aria-label={
-                          complete
-                            ? tConnect(
-                                "opportunityEditor.tabs.followUpCompleteAria",
-                                { title: label },
-                                { default: "{{title}} (completed)" },
-                              )
-                            : undefined
-                        }
-                      >
-                        {label}
-                      </NavbarItem>
-                    );
-                  })}
                 </Navbar>
               </NavWrap>
 

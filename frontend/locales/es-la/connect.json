@@ -938,9 +938,14 @@
 		"studentCapacity": "Capacidad de estudiantes",
 		"submitForReview": "",
 		"tabs": {
+			"additionalForms": "",
+			"additionalFormsAria": "",
 			"chat": "",
+			"complete": "",
 			"followUpCompleteAria": "",
 			"followUpFallback": "",
+			"incomplete": "",
+			"originalIntake": "",
 			"proposal": "",
 			"status": ""
 		},
