@@ -5,15 +5,10 @@ import useTranslation from "next-translate/useTranslation";
 
 import { UserContext } from "../Global/Authorized";
 
-import UpdatesCount from "../Account/Updates/UpdatesCount";
 import Navbar, { NavbarItem, NavbarSection } from "../DesignSystem/Navbar";
-import {
-  MenuIcon,
-  MenuOpenIcon,
-  NotificationsIcon,
-  SearchIcon,
-} from "../DesignSystem/Icons";
+import { MenuIcon, MenuOpenIcon, SearchIcon } from "../DesignSystem/Icons";
 import MenuProfile from "./MenuProfile";
+import NotificationsMenu from "./NotificationsMenu";
 import {
   getNavPermissions,
   resolveSectionLabel,
@@ -91,17 +86,7 @@ export default function DashboardNavigation() {
             {collapsed ? <MenuIcon /> : <MenuOpenIcon />}
           </StyledMenuIconButton>
 
-          {/*
-          Notifications icon not yet rendered until we develop the popup.
-          <StyledMenuIconButton
-            as={Link}
-            href="/dashboard/updates"
-            aria-label={t("updates")}
-            title={t("updates")}
-          >
-            <NotificationsIcon />
-            <UpdatesCount user={user} />
-          </StyledMenuIconButton>*/}
+          <NotificationsMenu user={user} />
         </div>
         <span className="menuBarActionsRule" aria-hidden />
       </div>
@@ -144,7 +129,7 @@ export default function DashboardNavigation() {
                 key={section.id}
                 label={
                   label
-                    ? t(label.key, {}, { default: label.fallback })
+                    ? t(label.key,{ default: label.fallback })
                     : undefined
                 }
               >
@@ -156,7 +141,7 @@ export default function DashboardNavigation() {
                     selected={(item.area ?? null) === (area ?? null)}
                     leadingIcon={<item.Icon />}
                   >
-                    {t(item.labelKey, {}, { default: item.fallback })}
+                    {t(item.labelKey, { default: item.fallback })}
                   </NavbarItem>
                 ))}
               </NavbarSection>

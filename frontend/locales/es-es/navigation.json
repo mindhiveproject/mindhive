@@ -10,7 +10,7 @@
 	"discover": "Descubrir",
 	"expandMenu": "Expandir menú",
 	"feedbackCenter": "Centro de comentarios",
-	"home": "Hogar",
+	"home": "Menú principal",
 	"IRBprotocols": "Protocolos del IRB",
 	"journal": "Diario",
 	"lessons": "Lecciones",
@@ -29,9 +29,9 @@
 	"search": "Buscar",
 	"settings": "Ajustes",
 	"sponsors": "Patrocinadores",
-	"student": "Estudiante",
+	"student": "Estudiantes",
 	"tags": "Etiquetas",
-	"teacher": "Docente",
+	"teacher": "Docentes",
 	"updates": "Actualizaciones",
 	"workspace": "Espacio de trabajo"
 }
