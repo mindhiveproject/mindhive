@@ -1,11 +1,22 @@
 import styled from "styled-components";
 
 export const StyledDashboard = styled.div`
+  /*
+   * Breathing room around the floating menu card — the single knob for the
+   * space between the menu, the page content and the viewport edge. Everything
+   * downstream reads this variable, including the footer height maths in
+   * StyledDashboardContent, so this is the only value to change.
+   */
+  --dashboard-inset: 16px;
+
   display: grid;
-  grid-template-columns: 225px auto;
-  grid-gap: 10px;
+  /* The menu bar sizes its own column so it can change width when collapsed. */
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-gap: var(--dashboard-inset);
+  box-sizing: border-box;
   width: 100%;
   height: 100vh;
+  padding: var(--dashboard-inset);
   background: #f6f9f8;
   color: ${(props) => props.theme.grey};
   font-family: "Lato";
@@ -14,7 +25,6 @@ export const StyledDashboard = styled.div`
   font-size: 1.5rem;
   line-height: 1.6;
   margin: 0;
-  grid-gap: 10px;
   button:hover {
     opacity: 0.6;
   }
@@ -25,21 +35,17 @@ export const StyledDashboard = styled.div`
 
 export const StyledDashboardNavigation = styled.div`
   display: grid;
-  background: white;
-  height: 101%;
-  max-height: 100vh;
-  overflow-y: hidden;
-
-  :hover {
-    overflow-y: auto;
-  }
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
 `;
 
 export const StyledDashboardWrapper = styled.div`
   max-width: ${(props) => props.theme.maxWidth};
-  /* padding: 17px 2rem 2rem 17px; */
-  height: 101%;
-  max-height: 100vh;
+  /* Fills its grid track; the track is already inset by the dashboard padding. */
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -69,18 +75,25 @@ export const StyledDashboardContent = styled.div`
   gap: 20px;
   margin: 50px;
   max-width: ${(props) => props.theme.maxWidth};
-  /* Fill the scrollport so short pages still push the footer below the fold */
+  /* Fill the scrollport so short pages still push the footer below the fold.
+     The scrollport is the viewport less the dashboard inset top and bottom,
+     then less this element's own 50px top and bottom margins. */
   min-height: ${(props) =>
-    props.$withFooter ? "calc(100vh - 100px)" : "100%"};
+    props.$withFooter
+      ? "calc(100vh - (var(--dashboard-inset, 24px) * 2) - 100px)"
+      : "100%"};
 
   .dashboardMain {
     flex: 1 0 auto;
     display: grid;
     grid-gap: 20px;
     align-content: start;
-    /* Top margin (50px) + content gap (20px) → footer starts at/below viewport */
+    /* Dashboard inset (x2) + top margin (50px) + content gap (20px)
+       → footer starts at or below the fold */
     min-height: ${(props) =>
-      props.$withFooter ? "calc(100vh - 70px)" : "unset"};
+      props.$withFooter
+        ? "calc(100vh - (var(--dashboard-inset, 24px) * 2) - 70px)"
+        : "unset"};
   }
 
   .header {
@@ -117,77 +130,3 @@ export const StyledDashboardFooterSlot = styled.div`
   align-self: stretch;
 `;
 
-export const StyledSideBar = styled.div`
-  display: grid;
-  margin-top: 33px;
-  grid-template-columns: 1fr;
-  grid-gap: 40px;
-  justify-items: left;
-  align-content: start;
-  padding: 17px 0 40px 17px;
-
-  .navLinks {
-    display: grid;
-    align-items: center;
-    grid-row-gap: 40px;
-    padding-bottom: 40px;
-    border-bottom: 1px solid #e6e6e6;
-  }
-
-  .navBottomLinks {
-    display: grid;
-    align-items: center;
-    grid-row-gap: 31px;
-  }
-
-  .workspaceHeader {
-    font-family: Lato;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 14px;
-    letter-spacing: 0em;
-    text-align: left;
-    color: #b3b3b3;
-    margin-top: 7px;
-  }
-
-  .headerWithUpdateCounter {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    .updateCounter {
-      display: grid;
-      align-items: center;
-      background: red;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      padding: 0px 12px;
-      border: 0;
-      border-radius: 20px;
-    }
-  }
-`;
-
-export const StyledNavigationLink = styled.div`
-  display: grid;
-  grid-template-columns: 30px auto;
-  grid-column-gap: 10px;
-  cursor: pointer;
-  font-family: Lato;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  letter-spacing: 0em;
-  text-align: left;
-  padding-right: 1rem;
-  ${(props) => props.selected && `border-right: 3px solid #ffc107`};
-  :hover {
-    opacity: 0.6;
-  }
-  .icon {
-    display: grid;
-    justify-content: center;
-  }
-`;
