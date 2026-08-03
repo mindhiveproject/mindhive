@@ -540,6 +540,11 @@
 		"held": {
 			"continueForm": "",
 			"followUp": "",
+			"formColumns": {
+				"action": "",
+				"form": "",
+				"status": ""
+			},
 			"formComplete": "",
 			"formCompleteSaved": "",
 			"formIncomplete": "",
@@ -547,11 +552,21 @@
 			"noFurtherQuestions": "",
 			"openForm": "",
 			"preSelected": "",
+			"roundFormsTitle": "",
 			"title": "",
 			"unknownNetwork": "",
 			"unknownRound": ""
 		},
 		"loading": "Bezig met laden...",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "{{count}} netwerken",
 			"one": "{{count}} netwerk"
@@ -560,6 +575,7 @@
 		"networkFilterPlaceholder": "Alle netwerken",
 		"newButton": "Nieuwe kans",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "Mijn kansen",
 		"rating": {
 			"many": "{{average}} · {{count}} beoordelingen",
@@ -589,6 +605,21 @@
 		"statusChangeUseEditor": "",
 		"statusFilterLabel": "Filter op status",
 		"statusFilterPlaceholder": "Alle statussen",
+		"stepper": {
+			"ariaLabel": "",
+			"awaitingMatching": "",
+			"draft": "",
+			"formFilled": "",
+			"formsProgress": "",
+			"matched": "",
+			"matching": "",
+			"preSelected": "",
+			"visible": "",
+			"visibleMany": "",
+			"visibleNone": "",
+			"visibleOne": "",
+			"waitingForms": ""
+		},
 		"teamOf": "Team van {{size}}",
 		"unknownSponsor": "Onbekend",
 		"visibility": {
@@ -712,12 +743,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "Groepsindeling",
 		"guidelinesAcknowledgedAt": "Bevestigd {{date}}",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "Ik ben het met deze stelling eens.",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "Ik heb de richtlijnen voor het Capstone-voorstel volledig gelezen en begrepen, inclusief alle veelgestelde vragen van de Capstone-sponsor en de overeenkomst over wederzijdse verwachtingen, en ik ga ermee akkoord deze na te leven.",
 		"guidelinesDocsAriaLabel": "Richtlijnen voor het afstudeerprojectvoorstel",
 		"guidelinesDocsPlaceholder": "Selecteer richtlijnen om te openen",
 		"guidelinesFaqsChip": "Veelgestelde vragen over Capstone-sponsors",
 		"guidelinesMutualExpectationsChip": "Overeenkomst inzake wederzijdse verwachtingen",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "Ik verzoek om een ​​afspraak om dit verder te bespreken.",
 		"guidelinesTitle": "Inzicht in de richtlijnen voor het indienen van voorstellen",
 		"guidelinesWarning": "Vink het vakje 'richtlijnen' aan voordat u publiceert.",
@@ -938,9 +973,14 @@
 		"studentCapacity": "Studentencapaciteit",
 		"submitForReview": "",
 		"tabs": {
+			"additionalForms": "",
+			"additionalFormsAria": "",
 			"chat": "",
+			"complete": "",
 			"followUpCompleteAria": "",
 			"followUpFallback": "",
+			"incomplete": "",
+			"originalIntake": "",
 			"proposal": "",
 			"status": ""
 		},

@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import clsx from "clsx";
 import useTranslation from "next-translate/useTranslation";
 
 import { MY_OPPORTUNITIES } from "../../../Queries/Opportunity";
@@ -8,17 +10,15 @@ import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
-import InfoTooltip from "../../../DesignSystem/InfoTooltip";
 import { OpportunityPageShell as Shell } from "./OpportunityPageLayout";
 import {
   isProposalFormAnswerComplete,
   getProposalEntrySavedAt,
 } from "../../../../lib/opportunityProposalData";
-import {
-  formTabKey,
-  isRoundSponsorFormsVisible,
-  OPPORTUNITY_EDITOR_TABS,
-} from "../../../../lib/opportunityEditorTabs";
+import { isRoundSponsorFormsVisible } from "../../../../lib/opportunityEditorTabs";
+import OpportunityChatModal from "./OpportunityChatModal";
+import OpportunityFollowUpFormModal from "./OpportunityFollowUpFormModal";
+import OpportunityListStepper from "./OpportunityListStepper";
 
 const MESSAGE_ICON = (
   <img
@@ -50,86 +50,54 @@ const Empty = styled.div`
   padding: 48px 24px;
   text-align: center;
   background: #ffffff;
+  border: 1px solid #e6e6e6;
   border-radius: 16px;
   color: #5f6871;
   font-family: "Inter", sans-serif;
 `;
 
-const EmptyRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-`;
-
-const EmptyCell = styled.div`
-  padding: 48px 24px;
-  text-align: center;
-  color: #5f6871;
-  font-size: 14px;
-  grid-column: 1 / -1;
-`;
-
-const Table = styled.div`
+const ListStack = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 16px;
+  font-family: "Inter", sans-serif;
+`;
+
+const OpportunityCard = styled.article`
   background: #ffffff;
   border: 1px solid #e6e6e6;
   border-radius: 16px;
   overflow: hidden;
-  font-family: "Inter", sans-serif;
 `;
 
-const TableHeader = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(160px, 220px) minmax(220px, auto);
+const CardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 16px;
-  padding: 12px 20px;
-  background: #f0f4f6;
-  border-bottom: 1px solid #e6e6e6;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: #5f6871;
+  padding: 16px 20px;
 
   @media (max-width: 720px) {
-    display: none;
+    flex-direction: column;
+    align-items: stretch;
   }
 `;
 
-const OpportunityBlock = styled.div`
-  border-bottom: 1px solid #ececec;
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(160px, 220px) minmax(220px, auto);
-  gap: 16px;
-  align-items: start;
-  padding: 14px 20px;
-
-  @media (max-width: 720px) {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-`;
-
-const TitleCell = styled.div`
+const Identity = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 0;
+  flex: 1;
 `;
 
-const Title = styled.div`
+const Title = styled.h2`
+  margin: 0;
   font-size: 15px;
   font-weight: 600;
   color: #171717;
   word-break: break-word;
+  font-family: "Inter", sans-serif;
 `;
 
 const Hint = styled.div`
@@ -142,29 +110,16 @@ const Hint = styled.div`
   padding: 8px 12px;
 `;
 
-const VisibilityText = styled.span`
-  display: inline-block;
-  max-width: 100%;
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.4;
-  color: #336f8a;
-  cursor: default;
-  border-bottom: 1px dotted rgba(51, 111, 138, 0.45);
-
-  &.isEmpty {
-    color: #5f6871;
-    border-bottom-color: rgba(95, 104, 113, 0.4);
-  }
-`;
-
-const TooltipNetworkList = styled.ul`
-  margin: 0;
-  padding-left: 18px;
+const HeaderAside = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+
+  @media (max-width: 720px) {
+    align-items: stretch;
+  }
 `;
 
 const Actions = styled.div`
@@ -173,58 +128,89 @@ const Actions = styled.div`
   gap: 8px;
   align-items: center;
   justify-content: flex-end;
-`;
 
-const SubRows = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding: 0 20px 14px 36px;
-  background: #fafbfc;
-  border-top: 1px dashed #e6e6e6;
-`;
-
-const SubRow = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 0;
-  border-bottom: 1px solid #ececec;
-
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+  @media (max-width: 720px) {
+    justify-content: flex-start;
   }
 `;
 
-const SubRowHeader = styled.div`
-  font-size: 13px;
-  font-weight: 600;
-  color: #171717;
-  line-height: 1.4;
+const FormsPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 20px 16px;
+  background: #fafbfc;
+  border-top: 1px solid #e6e6e6;
 `;
 
-const SubRowMeta = styled.div`
+const RoundMeta = styled.div`
   font-size: 12px;
   color: #5f6871;
 `;
 
-const FormLine = styled.div`
+const FormGrid = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  overflow: hidden;
+`;
+
+const FormGridHeader = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #f0f4f6;
+  border-bottom: 1px solid #e6e6e6;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #5f6871;
+
+  @media (max-width: 720px) {
+    display: none;
+  }
+`;
+
+const FormGridRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 12px;
   align-items: center;
-  gap: 8px 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #ececec;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+`;
+
+const FormName = styled.div`
   font-size: 13px;
+  font-weight: 500;
   color: #171717;
+  min-width: 0;
+  word-break: break-word;
 `;
 
 const FormStatus = styled.span`
   display: inline-flex;
   align-items: center;
+  justify-self: end;
   padding: 2px 8px;
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
 
   &.complete {
     background: #e3f4ec;
@@ -236,6 +222,18 @@ const FormStatus = styled.span`
     background: #fdf6e8;
     color: #8a6d3b;
     border: 1px solid #e8d4a8;
+  }
+
+  @media (max-width: 720px) {
+    justify-self: start;
+  }
+`;
+
+const FormAction = styled.div`
+  justify-self: end;
+
+  @media (max-width: 720px) {
+    justify-self: start;
   }
 `;
 
@@ -260,49 +258,30 @@ const DELETE_CHIP_STYLE = {
   background: "#ffffff",
 };
 
-function visibilityLabel(count, tConnect) {
-  if (count === 0) {
-    return tConnect("myOpportunitiesList.visibility.none", {}, {
-      default: "Not visible in any class network",
-    });
+function formStatusLabel(complete, savedAtLabel, tConnect) {
+  if (complete) {
+    return savedAtLabel
+      ? tConnect(
+          "myOpportunitiesList.held.formCompleteSaved",
+          { date: savedAtLabel },
+          { default: "Complete · {{date}}" },
+        )
+      : tConnect("myOpportunitiesList.held.formComplete", {}, {
+          default: "Complete",
+        });
   }
-  if (count === 1) {
-    return tConnect("myOpportunitiesList.visibility.one", {}, {
-      default: "Visible in 1 class network",
-    });
-  }
-  return tConnect(
-    "myOpportunitiesList.visibility.many",
-    { count },
-    { default: "Visible in {{count}} class networks" },
-  );
+  return savedAtLabel
+    ? tConnect(
+        "myOpportunitiesList.held.formIncompleteSaved",
+        { date: savedAtLabel },
+        { default: "Incomplete · saved {{date}}" },
+      )
+    : tConnect("myOpportunitiesList.held.formIncomplete", {}, {
+        default: "Incomplete",
+      });
 }
 
-function visibilityTooltipContent(networks, tConnect) {
-  if (!networks.length) {
-    return tConnect("myOpportunitiesList.visibility.modalEmpty", {}, {
-      default:
-        "This opportunity is not associated with any class network yet.",
-    });
-  }
-
-  return (
-    <div>
-      <div style={{ fontWeight: 600, marginBottom: 8 }}>
-        {tConnect("myOpportunitiesList.visibility.modalTitle", {}, {
-          default: "Visible in class networks",
-        })}
-      </div>
-      <TooltipNetworkList>
-        {networks.map((network) => (
-          <li key={network.id}>{network.title}</li>
-        ))}
-      </TooltipNetworkList>
-    </div>
-  );
-}
-
-export default function OpportunitiesList({ user: _user }) {
+export default function OpportunitiesList({ user }) {
   const router = useRouter();
   const { t } = useTranslation("common");
   const { t: tConnect } = useTranslation("connect");
@@ -310,6 +289,8 @@ export default function OpportunitiesList({ user: _user }) {
     fetchPolicy: "cache-and-network",
   });
   const [deleteOpportunity] = useMutation(DELETE_OPPORTUNITY);
+  const [chatModal, setChatModal] = useState(null);
+  const [formModal, setFormModal] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
 
@@ -334,13 +315,19 @@ export default function OpportunitiesList({ user: _user }) {
     });
   };
 
-  const handleOpenForm = (opportunityId, formDefinitionId, roundId) => {
-    router.push({
-      pathname: "/dashboard/sponsor-connect/opportunities",
-      query: {
-        op: opportunityId,
-        tab: formTabKey(formDefinitionId),
-        ...(roundId ? { round: roundId } : {}),
+  const handleOpenForm = (opportunity, form, round) => {
+    setFormModal({
+      opportunity,
+      formMeta: {
+        id: form.id,
+        title: form.title || form.key || form.id,
+        key: form.key,
+        version: form.version,
+        status: form.status,
+        roundId: round?.id || null,
+        roundTitle: round?.title || null,
+        networkId: round?.classNetwork?.id || null,
+        networkTitle: round?.classNetwork?.title || null,
       },
     });
   };
@@ -350,13 +337,9 @@ export default function OpportunitiesList({ user: _user }) {
       opportunity.status === "pre_selected"
         ? (opportunity.rounds || [])[0]
         : null;
-    router.push({
-      pathname: "/dashboard/sponsor-connect/opportunities",
-      query: {
-        op: opportunity.id,
-        tab: OPPORTUNITY_EDITOR_TABS.chat,
-        ...(heldRound?.id ? { round: heldRound.id } : {}),
-      },
+    setChatModal({
+      opportunityId: opportunity.id,
+      initialRoundId: heldRound?.id || null,
     });
   };
 
@@ -385,76 +368,56 @@ export default function OpportunitiesList({ user: _user }) {
         </Empty>
       )}
 
-      {!loading && (
-        <Table
-          role="table"
-          aria-label={t("opportunities.title", {}, { default: "My opportunities" })}
-        >
-          <TableHeader role="row">
-            <div role="columnheader">
-              {t("opportunities.columns.name", {}, { default: "Name" })}
-            </div>
-            <div role="columnheader">
-              {tConnect("myOpportunitiesList.columns.visibility", {}, {
-                default: "Visibility",
-              })}
-            </div>
-            <div role="columnheader">
-              {t("opportunities.columns.actions", {}, { default: "Actions" })}
-            </div>
-          </TableHeader>
-          {opportunities.length === 0 ? (
-            <EmptyRow role="row">
-              <EmptyCell role="cell">
-                {t("opportunities.empty", {}, {
-                  default:
-                    "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
-                })}
-              </EmptyCell>
-            </EmptyRow>
-          ) : (
-            opportunities.map((opportunity) => {
-              const networks = opportunity.classNetworks || [];
-              const networkCount = networks.length;
-              const heldRounds =
-                opportunity.status === "pre_selected"
-                  ? opportunity.rounds || []
-                  : [];
+      {!loading && opportunities.length === 0 && (
+        <Empty>
+          {t("opportunities.empty", {}, {
+            default:
+              "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
+          })}
+        </Empty>
+      )}
 
-              return (
-                <OpportunityBlock key={opportunity.id}>
-                  <TableRow role="row">
-                    <TitleCell role="cell">
-                      <Title>{opportunity.title}</Title>
-                      {networkCount === 0 && (
-                        <Hint>
-                          {tConnect(
-                            "myOpportunitiesList.visibility.emptyHint",
-                            {},
-                            {
-                              default:
-                                "Add a class network so teachers can see this opportunity.",
-                            },
-                          )}
-                        </Hint>
-                      )}
-                    </TitleCell>
-                    <div role="cell">
-                      <InfoTooltip
-                        content={visibilityTooltipContent(networks, tConnect)}
-                        position="bottomLeft"
-                        portal
-                        wrapperStyle={{ maxWidth: "100%" }}
-                        tooltipStyle={{ maxWidth: "min(320px, 90vw)" }}
-                      >
-                        <VisibilityText
-                          className={networkCount === 0 ? "isEmpty" : undefined}
-                        >
-                          {visibilityLabel(networkCount, tConnect)}
-                        </VisibilityText>
-                      </InfoTooltip>
-                    </div>
-                    <Actions role="cell">
+      {!loading && opportunities.length > 0 && (
+        <ListStack
+          aria-label={t("opportunities.title", {}, {
+            default: "My opportunities",
+          })}
+        >
+          {opportunities.map((opportunity) => {
+            const networks = opportunity.classNetworks || [];
+            const networkCount = networks.length;
+            const isPreSelected = opportunity.status === "pre_selected";
+            const heldRounds = isPreSelected ? opportunity.rounds || [] : [];
+
+            return (
+              <OpportunityCard key={opportunity.id}>
+                <CardHeader>
+                  <Identity>
+                    <Title>{opportunity.title}</Title>
+                    <OpportunityListStepper
+                      status={opportunity.status}
+                      proposalData={opportunity.proposalData}
+                      rounds={opportunity.rounds}
+                      networks={networks}
+                    />
+                    {networkCount === 0 &&
+                      (opportunity.status === "draft" ||
+                        opportunity.status === "returned") && (
+                      <Hint>
+                        {tConnect(
+                          "myOpportunitiesList.visibility.emptyHint",
+                          {},
+                          {
+                            default:
+                              "Add a class network so teachers can see this opportunity.",
+                          },
+                        )}
+                      </Hint>
+                    )}
+                  </Identity>
+
+                  <HeaderAside>
+                    <Actions>
                       <IconButton
                         variant="text"
                         icon={MESSAGE_ICON}
@@ -471,7 +434,9 @@ export default function OpportunitiesList({ user: _user }) {
                         onClick={() => handleOpenChat(opportunity)}
                       />
                       <Chip
-                        label={t("opportunities.edit", {}, { default: "Edit" })}
+                        label={t("opportunities.edit", {}, {
+                          default: "Edit",
+                        })}
                         onClick={() => handleEdit(opportunity.id)}
                       />
                       <Chip
@@ -482,164 +447,119 @@ export default function OpportunitiesList({ user: _user }) {
                         style={DELETE_CHIP_STYLE}
                       />
                     </Actions>
-                  </TableRow>
+                  </HeaderAside>
+                </CardHeader>
 
-                  {heldRounds.length > 0 && (
-                    <SubRows>
-                      {heldRounds.map((round) => {
-                        const forms = isRoundSponsorFormsVisible(round)
-                          ? round.formDefinitions || []
-                          : [];
-                        const networkTitle =
-                          round.classNetwork?.title ||
-                          tConnect(
-                            "myOpportunitiesList.held.unknownNetwork",
-                            {},
-                            { default: "Class network" },
-                          );
-                        const roundTitle =
-                          round.title ||
-                          tConnect(
-                            "myOpportunitiesList.held.unknownRound",
-                            {},
-                            { default: "Matching round" },
-                          );
+                {heldRounds.map((round) => {
+                  const forms = isRoundSponsorFormsVisible(round)
+                    ? round.formDefinitions || []
+                    : [];
 
-                        return (
-                          <SubRow key={round.id}>
-                            <SubRowHeader>
+                  return (
+                    <FormsPanel key={round.id}>
+                      {forms.length === 0 ? (
+                        <RoundMeta>
+                          {tConnect(
+                            "myOpportunitiesList.held.noFurtherQuestions",
+                            {},
+                            {
+                              default:
+                                "The teacher has not asked any further questions so far.",
+                            },
+                          )}
+                        </RoundMeta>
+                      ) : (
+                        <FormGrid role="table">
+                          <FormGridHeader role="row">
+                            <div role="columnheader">
                               {tConnect(
-                                "myOpportunitiesList.held.title",
-                                {
-                                  network: networkTitle,
-                                  round: roundTitle,
-                                },
-                                {
-                                  default:
-                                    "Held · {{network}} · {{round}}",
-                                },
-                              )}
-                            </SubRowHeader>
-                            <SubRowMeta>
-                              {tConnect(
-                                "myOpportunitiesList.held.preSelected",
+                                "myOpportunitiesList.held.formColumns.form",
                                 {},
-                                {
-                                  default:
-                                    "Pre-selected for this matching round",
-                                },
+                                { default: "Follow-up form" },
                               )}
-                            </SubRowMeta>
-                            {forms.length === 0 ? (
-                              <SubRowMeta>
-                                {tConnect(
-                                  "myOpportunitiesList.held.noFurtherQuestions",
-                                  {},
-                                  {
-                                    default:
-                                      "The teacher has not asked any further questions so far.",
-                                  },
-                                )}
-                              </SubRowMeta>
-                            ) : (
-                              forms.map((form) => {
-                                const complete = isProposalFormAnswerComplete(
-                                  opportunity.proposalData,
-                                  form.id,
-                                );
-                                const savedAtLabel = formatSavedAt(
-                                  getProposalEntrySavedAt(
-                                    opportunity.proposalData,
-                                    form.id,
-                                  ),
-                                );
-                                const statusLabel = complete
-                                  ? savedAtLabel
-                                    ? tConnect(
-                                        "myOpportunitiesList.held.formCompleteSaved",
-                                        { date: savedAtLabel },
-                                        {
-                                          default: "Complete · {{date}}",
-                                        },
+                            </div>
+                            <div role="columnheader" aria-hidden />
+                            <div role="columnheader" aria-hidden />
+                          </FormGridHeader>
+                          {forms.map((form) => {
+                            const complete = isProposalFormAnswerComplete(
+                              opportunity.proposalData,
+                              form.id,
+                            );
+                            const savedAtLabel = formatSavedAt(
+                              getProposalEntrySavedAt(
+                                opportunity.proposalData,
+                                form.id,
+                              ),
+                            );
+                            return (
+                              <FormGridRow key={form.id} role="row">
+                                <FormName role="cell">
+                                  {form.title || form.key || form.id}
+                                </FormName>
+                                <FormStatus
+                                  role="cell"
+                                  className={clsx(
+                                    complete ? "complete" : "incomplete",
+                                  )}
+                                >
+                                  {formStatusLabel(
+                                    complete,
+                                    savedAtLabel,
+                                    tConnect,
+                                  )}
+                                </FormStatus>
+                                <FormAction role="cell">
+                                  <Chip
+                                    label={
+                                      complete
+                                        ? tConnect(
+                                            "myOpportunitiesList.held.openForm",
+                                            {},
+                                            { default: "Open form" },
+                                          )
+                                        : tConnect(
+                                            "myOpportunitiesList.held.continueForm",
+                                            {},
+                                            { default: "Continue form" },
+                                          )
+                                    }
+                                    onClick={() =>
+                                      handleOpenForm(
+                                        opportunity,
+                                        form,
+                                        round,
                                       )
-                                    : tConnect(
-                                        "myOpportunitiesList.held.formComplete",
-                                        {},
-                                        { default: "Complete" },
-                                      )
-                                  : savedAtLabel
-                                  ? tConnect(
-                                      "myOpportunitiesList.held.formIncompleteSaved",
-                                      { date: savedAtLabel },
-                                      {
-                                        default: "Incomplete · saved {{date}}",
-                                      },
-                                    )
-                                  : tConnect(
-                                      "myOpportunitiesList.held.formIncomplete",
-                                      {},
-                                      { default: "Incomplete" },
-                                    );
-                                return (
-                                  <FormLine key={form.id}>
-                                    <span>
-                                      {tConnect(
-                                        "myOpportunitiesList.held.followUp",
-                                        {
-                                          title:
-                                            form.title ||
-                                            form.key ||
-                                            form.id,
-                                        },
-                                        {
-                                          default: "Follow-up: {{title}}",
-                                        },
-                                      )}
-                                    </span>
-                                    <FormStatus
-                                      className={
-                                        complete ? "complete" : "incomplete"
-                                      }
-                                    >
-                                      {statusLabel}
-                                    </FormStatus>
-                                    <Chip
-                                      label={
-                                        complete
-                                          ? tConnect(
-                                              "myOpportunitiesList.held.openForm",
-                                              {},
-                                              { default: "Open form" },
-                                            )
-                                          : tConnect(
-                                              "myOpportunitiesList.held.continueForm",
-                                              {},
-                                              { default: "Continue form" },
-                                            )
-                                      }
-                                      onClick={() =>
-                                        handleOpenForm(
-                                          opportunity.id,
-                                          form.id,
-                                          round.id,
-                                        )
-                                      }
-                                    />
-                                  </FormLine>
-                                );
-                              })
-                            )}
-                          </SubRow>
-                        );
-                      })}
-                    </SubRows>
-                  )}
-                </OpportunityBlock>
-              );
-            })
-          )}
-        </Table>
+                                    }
+                                  />
+                                </FormAction>
+                              </FormGridRow>
+                            );
+                          })}
+                        </FormGrid>
+                      )}
+                    </FormsPanel>
+                  );
+                })}
+              </OpportunityCard>
+            );
+          })}
+        </ListStack>
       )}
+
+      <OpportunityChatModal
+        open={Boolean(chatModal?.opportunityId)}
+        onClose={() => setChatModal(null)}
+        opportunityId={chatModal?.opportunityId}
+        initialRoundId={chatModal?.initialRoundId}
+        user={user}
+      />
+      <OpportunityFollowUpFormModal
+        open={Boolean(formModal?.formMeta?.id)}
+        onClose={() => setFormModal(null)}
+        opportunity={formModal?.opportunity}
+        formMeta={formModal?.formMeta}
+      />
     </Shell>
   );
 }

@@ -176,7 +176,15 @@ export default function DropdownSelect({
     }
     const selected = options.find((o) => o.value === value);
     if (selected) {
-      return selected.label ?? "";
+      // Prefer labelText when label is a ReactNode (menu can stay rich; trigger stays plain text).
+      if (
+        typeof selected.label === "string" ||
+        typeof selected.label === "number"
+      ) {
+        return selected.label;
+      }
+      const fromLabelText = getOptionLabelString(selected);
+      return fromLabelText || placeholder;
     }
     return placeholder;
   }, [multiple, selectedIds, options, value, placeholder]);

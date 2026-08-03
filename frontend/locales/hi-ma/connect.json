@@ -540,6 +540,11 @@
 		"held": {
 			"continueForm": "",
 			"followUp": "",
+			"formColumns": {
+				"action": "",
+				"form": "",
+				"status": ""
+			},
 			"formComplete": "",
 			"formCompleteSaved": "",
 			"formIncomplete": "",
@@ -547,11 +552,21 @@
 			"noFurtherQuestions": "",
 			"openForm": "",
 			"preSelected": "",
+			"roundFormsTitle": "",
 			"title": "",
 			"unknownNetwork": "",
 			"unknownRound": ""
 		},
 		"loading": "",
+		"modals": {
+			"chatTitle": "",
+			"chatTitleNamed": "",
+			"close": "",
+			"formTitleNamed": "",
+			"loadError": "",
+			"statusTitle": "",
+			"statusTitleNamed": ""
+		},
 		"networkCount": {
 			"many": "",
 			"one": ""
@@ -560,6 +575,7 @@
 		"networkFilterPlaceholder": "",
 		"newButton": "",
 		"openChat": "",
+		"openStatus": "",
 		"pageTitle": "",
 		"rating": {
 			"many": "",
@@ -589,6 +605,21 @@
 		"statusChangeUseEditor": "",
 		"statusFilterLabel": "",
 		"statusFilterPlaceholder": "",
+		"stepper": {
+			"ariaLabel": "",
+			"awaitingMatching": "",
+			"draft": "",
+			"formFilled": "",
+			"formsProgress": "",
+			"matched": "",
+			"matching": "",
+			"preSelected": "",
+			"visible": "",
+			"visibleMany": "",
+			"visibleNone": "",
+			"visibleOne": "",
+			"waitingForms": ""
+		},
 		"teamOf": "",
 		"unknownSponsor": "",
 		"visibility": {
@@ -712,12 +743,16 @@
 		"followUpSaveMissing": "",
 		"groupFormat": "",
 		"guidelinesAcknowledgedAt": "",
+		"guidelinesAcknowledgedNoDate": "",
 		"guidelinesAgree": "",
+		"guidelinesAppointmentNo": "",
+		"guidelinesAppointmentYes": "",
 		"guidelinesDescription": "",
 		"guidelinesDocsAriaLabel": "",
 		"guidelinesDocsPlaceholder": "",
 		"guidelinesFaqsChip": "",
 		"guidelinesMutualExpectationsChip": "",
+		"guidelinesNotAcknowledged": "",
 		"guidelinesRequestAppointment": "",
 		"guidelinesTitle": "",
 		"guidelinesWarning": "",
@@ -938,9 +973,14 @@
 		"studentCapacity": "",
 		"submitForReview": "",
 		"tabs": {
+			"additionalForms": "",
+			"additionalFormsAria": "",
 			"chat": "",
+			"complete": "",
 			"followUpCompleteAria": "",
 			"followUpFallback": "",
+			"incomplete": "",
+			"originalIntake": "",
 			"proposal": "",
 			"status": ""
 		},
