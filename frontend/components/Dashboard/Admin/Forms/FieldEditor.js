@@ -40,6 +40,8 @@ const FIELD_TYPES = [
   "tag_multiselect",
   "json_array",
   "read_only_html",
+  "task_selector",
+  "media_asset",
 ];
 
 const ROLE_OPTIONS = [

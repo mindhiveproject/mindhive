@@ -22,6 +22,7 @@ import TagMultiselect from "./TagMultiselect";
 import SelectOneIcon from "./SelectOneIcon";
 import TaskSelectorField from "./TaskSelectorField";
 import DualTextarea from "./DualTextarea";
+import MediaAssetField from "./MediaAssetField";
 import { FieldShell } from "../styles";
 import { fieldLabel } from "../i18n";
 
@@ -55,6 +56,7 @@ const REGISTRY = {
   select_one_icon: SelectOneIcon,
   task_selector: TaskSelectorField,
   dual_textarea: DualTextarea,
+  media_asset: MediaAssetField,
 };
 
 export function getFieldComponent(fieldType) {

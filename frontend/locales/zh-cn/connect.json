@@ -239,6 +239,13 @@
 		"summaryChipAria": "",
 		"summaryDescription": "",
 		"summaryTitle": "",
+		"tabs": {
+			"admins": "",
+			"matching": "",
+			"organizations": "",
+			"overview": "",
+			"profiles": ""
+		},
 		"titleLabel": "",
 		"titlePlaceholder": "",
 		"titleRequired": "",
@@ -419,6 +426,40 @@
 	},
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
+	"manageOrganization": {
+		"adminMode": "",
+		"backToList": "",
+		"browseCta": "",
+		"create": {
+			"cancel": "",
+			"createError": "",
+			"creating": "",
+			"helper": "",
+			"notSignedIn": "",
+			"submit": "",
+			"title": ""
+		},
+		"emptyDescription": "",
+		"emptyTitle": "",
+		"list": {
+			"description": "",
+			"emptyFiltered": "",
+			"loading": "",
+			"manageOrganization": "",
+			"pageTitle": "",
+			"searchLabel": "",
+			"searchPlaceholder": ""
+		},
+		"setupCta": "",
+		"tabs": {
+			"people": "",
+			"profile": ""
+		},
+		"tabsHint": "",
+		"unauthorizedDescription": "",
+		"unauthorizedTitle": "",
+		"viewPublic": ""
+	},
 	"matchesRound": {
 		"backLink": ""
 	},
@@ -488,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "容量 {{count}}",
+		"columns": {
+			"visibility": ""
+		},
 		"delete": "删除",
 		"deleteConfirm": "错失良机？无法挽回。",
 		"edit": "编辑",
 		"empty": "您尚未创建任何机会。点击“新建机会”发布您的第一个学生项目。",
 		"emptyFiltered": "没有符合当前筛选条件的职位。",
+		"held": {
+			"continueForm": "",
+			"followUp": "",
+			"formComplete": "",
+			"formCompleteSaved": "",
+			"formIncomplete": "",
+			"formIncompleteSaved": "",
+			"noFurtherQuestions": "",
+			"openForm": "",
+			"preSelected": "",
+			"title": "",
+			"unknownNetwork": "",
+			"unknownRound": ""
+		},
 		"loading": "加载中...",
 		"networkCount": {
 			"many": "{{count}} 网络",
@@ -501,6 +559,7 @@
 		"networkFilterLabel": "按网络筛选",
 		"networkFilterPlaceholder": "所有网络",
 		"newButton": "新机遇",
+		"openChat": "",
 		"pageTitle": "我的机会",
 		"rating": {
 			"many": "{{average}} · {{count}} 个评分",
@@ -531,7 +590,15 @@
 		"statusFilterLabel": "按状态过滤",
 		"statusFilterPlaceholder": "所有状态",
 		"teamOf": "团队人数： {{size}}",
-		"unknownSponsor": "未知"
+		"unknownSponsor": "未知",
+		"visibility": {
+			"emptyHint": "",
+			"many": "",
+			"modalEmpty": "",
+			"modalTitle": "",
+			"none": "",
+			"one": ""
+		}
 	},
 	"myProfile": "",
 	"nav": {
@@ -541,6 +608,7 @@
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "连接部分",
 		"manageNetwork": "",
+		"manageOrganization": "",
 		"matches": "火柴",
 		"matchingRounds": "匹配轮",
 		"myMatchedStudents": "我匹配的学生",
@@ -580,6 +648,7 @@
 			"urbanInfrastructure": "城市基础设施"
 		},
 		"categorizationOther": "其他类别",
+		"chatSaveFirst": "",
 		"classNetworksEmptyWarning": "",
 		"classNetworksHint": "",
 		"classNetworksNoMembership": "",
@@ -629,6 +698,8 @@
 			"scopeDescriptionHint": "请描述您希望毕业设计项目团队重点关注的项目范围。（优秀的毕业设计提案应做到：重要但不紧急；可在学年期限内利用现有资源完成；清晰定义待解决的问题或议题；范围切合实际；并明确毕业设计团队需要交付的具体成果。）字数约500字。",
 			"title": "项目范围"
 		},
+		"followUpIntro": "",
+		"followUpLastSaved": "",
 		"followUpQuestionnaire": {
 			"banner": "您已被初步选中——请完成以下后续问题。",
 			"potentialActivities": "潜在活动",
@@ -638,6 +709,7 @@
 			"tbd": "后续问题将在此处添加。",
 			"title": "后续问卷"
 		},
+		"followUpSaveMissing": "",
 		"groupFormat": "小组形式",
 		"guidelinesAcknowledgedAt": "已确认 {{date}}",
 		"guidelinesAgree": "我同意这种说法。",
@@ -826,6 +898,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "保存更改",
+		"savedFlash": "",
 		"saveDraft": "",
 		"saving": "保存...",
 		"specialConsiderations": {
@@ -851,6 +924,7 @@
 		"status": "地位",
 		"statusAdmin": "",
 		"statusAdminHint": "",
+		"statusNewHint": "",
 		"statusOptions": {
 			"accepted": "已接受（完整最终范围）",
 			"archived": "已归档",
@@ -863,6 +937,13 @@
 		},
 		"studentCapacity": "学生容量",
 		"submitForReview": "",
+		"tabs": {
+			"chat": "",
+			"followUpCompleteAria": "",
+			"followUpFallback": "",
+			"proposal": "",
+			"status": ""
+		},
 		"teamPreferences": "允许学生提名他们心仪的队友参与此次机会。",
 		"teamSize": "团队规模",
 		"teamSizeHint": "1 = 单人放置。",
@@ -1024,6 +1105,13 @@
 		"solo": "",
 		"teamOf": "",
 		"unknownMember": "",
+		"verification": {
+			"copyEmail": "",
+			"copyEmailAria": "",
+			"notVerified": "",
+			"notVerifiedTooltip": "",
+			"verified": ""
+		},
 		"website": ""
 	},
 	"organizationsList": {
@@ -1193,6 +1281,7 @@
 			"classNetworkAdmin": "",
 			"mentor": "导师",
 			"scientist": "",
+			"sponsor": "",
 			"student": "学生",
 			"teacher": "教师"
 		},

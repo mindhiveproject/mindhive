@@ -2,6 +2,8 @@
 	"about": "عن",
 	"all": "الجميع",
 	"blocks": "كتل",
+	"copyParticipantIdAria": "",
+	"copyPublicIdAria": "",
 	"createYourProfile": "أنشئ ملفك الشخصي على MindHive",
 	"editYourProfile": "قم بتعديل ملفك الشخصي في MindHive",
 	"favoritePeople": "الأشخاص المفضلين",
@@ -12,7 +14,9 @@
 		"copyright": "© 2025",
 		"description": "MindHive عبارة عن منصة علمية للمواطنين على شبكة الإنترنت تدعم أبحاث الدماغ والسلوك في العالم الحقيقي.",
 		"email": "info@mindhive.science",
+		"navLabel": "",
 		"privacy": "سياسة الخصوصية",
+		"teachers": "",
 		"terms": "الشروط والأحكام",
 		"title": "مايند هايف"
 	},

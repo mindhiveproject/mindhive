@@ -125,6 +125,76 @@ export const PUBLISH_FORM_DEFINITION = gql`
   }
 `;
 
+export const SAVE_CLASS_FORM_DEFINITION = gql`
+  mutation SAVE_CLASS_FORM_DEFINITION($input: SaveClassFormDefinitionInput!) {
+    saveClassFormDefinition(input: $input) {
+      id
+      key
+      title
+      description
+      scope
+      status
+      surface
+      version
+      class {
+        id
+      }
+      cards(orderBy: { order: asc }) {
+        id
+        title
+        cardType
+        order
+        fields(orderBy: { order: asc }) {
+          id
+          name
+          fieldType
+          label
+          helperText
+          placeholder
+          isRequired
+          order
+          options
+        }
+      }
+    }
+  }
+`;
+
+export const CLONE_FORM_DEFINITION_FOR_CLASS = gql`
+  mutation CLONE_FORM_DEFINITION_FOR_CLASS($sourceId: ID!, $classId: ID!) {
+    cloneFormDefinitionForClass(sourceId: $sourceId, classId: $classId) {
+      id
+      key
+      title
+      description
+      scope
+      status
+      surface
+      version
+      class {
+        id
+      }
+      cards(orderBy: { order: asc }) {
+        id
+        title
+        cardType
+        order
+        fields(orderBy: { order: asc }) {
+          id
+          name
+          fieldType
+          label
+          helperText
+          placeholder
+          isRequired
+          order
+          options
+        }
+      }
+    }
+  }
+`;
+
 export const UPDATE_FORM_DEFINITION = gql`
   mutation UPDATE_FORM_DEFINITION($id: ID!, $input: FormDefinitionUpdateInput!) {
     updateFormDefinition(where: { id: $id }, data: $input) {

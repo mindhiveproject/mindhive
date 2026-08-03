@@ -226,6 +226,14 @@
 		"title": "Language Settings",
 		"updatePreferences": "Update Preferences"
 	},
+	"loading": "Loading…",
+	"mediaLibrary": {
+		"choose": "Choose from media library",
+		"empty": "No media yet. Upload an image to get started.",
+		"title": "Media library",
+		"upload": "Upload image",
+		"uploading": "Uploading…"
+	},
 	"members": {
 		"typeUsername": "Type username"
 	},
@@ -238,6 +246,22 @@
 		"studies": "Studies",
 		"tasks": "Tasks & Surveys",
 		"teachers": "Teachers"
+	},
+	"opportunities": {
+		"close": "Close",
+		"columns": {
+			"actions": "Actions",
+			"name": "Name",
+			"status": "Status",
+			"visibility": "Visibility"
+		},
+		"delete": "Delete",
+		"deleteConfirm": "Delete this opportunity? This cannot be undone.",
+		"edit": "Edit",
+		"empty": "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
+		"loading": "Loading…",
+		"newButton": "New opportunity",
+		"title": "My opportunities"
 	},
 	"pagination": {
 		"next": "Next",
@@ -296,6 +320,7 @@
 		"proceedNextTask": "Proceed to the next task",
 		"thankYou": "Thank you for participating in this task!"
 	},
+	"remove": "Remove",
 	"reviewed": {
 		"menuTitle": "Reviewed"
 	},

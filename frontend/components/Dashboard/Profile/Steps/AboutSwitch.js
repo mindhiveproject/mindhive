@@ -1,10 +1,8 @@
-// Dual-render gate for the Profile "About" step. The legacy
-// 2-AboutMe.js stays in place as the fallback; the new path renders
-// the `profile_individual` or `profile_organization` FormDefinition
-// when NEXT_PUBLIC_USE_CUSTOMIZABLE_FORMS includes the matching key.
+// Dual-render gate for the Profile "About" step. Organization setup is owned
+// by Connect Manage (inline create). This switch only serves individual
+// profiles — org query/type redirects to Manage from EditProfile.
 import About from "./2-AboutMe";
 import AboutDefinitionMode from "./AboutDefinitionMode";
-import OrgAboutDefinitionMode from "./OrgAboutDefinitionMode";
 import { resolveProfileType } from "../../../../lib/profileEditNavigation";
 
 function isEnabledFor(key) {
@@ -20,10 +18,12 @@ export default function AboutSwitch({ query, user }) {
   const profileType = resolveProfileType(query, user);
   const isOrganization = profileType === "organization";
 
-  if (isOrganization && isEnabledFor("profile_organization")) {
-    return <OrgAboutDefinitionMode user={user} />;
+  // Org-as-profile About is retired; EditProfile should redirect before this
+  // mounts. Fall through to individual about if we ever land here.
+  if (isOrganization) {
+    return <About query={{ ...query, type: "individual" }} user={user} />;
   }
-  if (!isOrganization && isEnabledFor("profile_individual")) {
+  if (isEnabledFor("profile_individual")) {
     return <AboutDefinitionMode user={user} />;
   }
   return <About query={query} user={user} />;

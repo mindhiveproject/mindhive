@@ -50,6 +50,7 @@ async function publishFormDefinition(
         members { id }
       }
       classNetwork { id }
+      class { id creator { id } }
       proposalBoard {
         id
         templateForClasses { creator { id } }
@@ -127,20 +128,23 @@ async function publishFormDefinition(
       status: { equals: "published" },
       id: { not: { equals: id } },
     },
-    query: "id organization { id } classNetwork { id } proposalBoard { id }",
+    query: "id organization { id } classNetwork { id } class { id } proposalBoard { id }",
   });
 
   const targetOrgId = target.organization?.id || null;
   const targetNetId = target.classNetwork?.id || null;
+  const targetClassId = target.class?.id || null;
   const targetBoardId = target.proposalBoard?.id || null;
 
   const toArchive = candidates.filter((c: any) => {
     const orgId = c.organization?.id || null;
     const netId = c.classNetwork?.id || null;
+    const klassId = c.class?.id || null;
     const boardId = c.proposalBoard?.id || null;
     return (
       orgId === targetOrgId &&
       netId === targetNetId &&
+      klassId === targetClassId &&
       boardId === targetBoardId
     );
   });

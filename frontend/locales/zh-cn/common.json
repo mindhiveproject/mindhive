@@ -226,6 +226,14 @@
 		"title": "语言设置",
 		"updatePreferences": "更新偏好设置"
 	},
+	"loading": "",
+	"mediaLibrary": {
+		"choose": "",
+		"empty": "",
+		"title": "",
+		"upload": "",
+		"uploading": ""
+	},
 	"members": {
 		"typeUsername": "输入用户名"
 	},
@@ -238,6 +246,22 @@
 		"studies": "研究",
 		"tasks": "任务和调查",
 		"teachers": "教师"
+	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
 	},
 	"pagination": {
 		"next": "下一个",
@@ -296,6 +320,7 @@
 		"proceedNextTask": "继续下一个任务",
 		"thankYou": "感谢您参与本次任务！"
 	},
+	"remove": "",
 	"reviewed": {
 		"menuTitle": "已审核"
 	},

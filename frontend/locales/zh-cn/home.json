@@ -2,6 +2,8 @@
 	"about": "关于",
 	"all": "全部",
 	"blocks": "区块",
+	"copyParticipantIdAria": "",
+	"copyPublicIdAria": "",
 	"createYourProfile": "创建您的 MindHive 个人资料",
 	"editYourProfile": "编辑您的 MindHive 个人资料",
 	"favoritePeople": "最喜欢的人",
@@ -12,7 +14,9 @@
 		"copyright": "© 2025",
 		"description": "MindHive 是一个基于网络的公民科学平台，支持现实世界的大脑和行为研究。",
 		"email": "info@mindhive.science",
+		"navLabel": "",
 		"privacy": "隐私政策",
+		"teachers": "",
 		"terms": "条款和条件",
 		"title": "MindHive"
 	},

@@ -226,6 +226,14 @@
 		"title": "Taalinstellingen",
 		"updatePreferences": "Voorkeuren bijwerken"
 	},
+	"loading": "",
+	"mediaLibrary": {
+		"choose": "",
+		"empty": "",
+		"title": "",
+		"upload": "",
+		"uploading": ""
+	},
 	"members": {
 		"typeUsername": "Typ gebruikersnaam"
 	},
@@ -238,6 +246,22 @@
 		"studies": "Onderzoeken",
 		"tasks": "Taken en enquêtes",
 		"teachers": "Leraren"
+	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
 	},
 	"pagination": {
 		"next": "Volgende",
@@ -296,6 +320,7 @@
 		"proceedNextTask": "Ga door naar de volgende taak",
 		"thankYou": "Bedankt voor uw deelname aan deze taak!"
 	},
+	"remove": "",
 	"reviewed": {
 		"menuTitle": "Beoordeeld"
 	},

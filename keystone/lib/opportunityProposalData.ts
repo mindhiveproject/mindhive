@@ -1,8 +1,9 @@
 /**
  * Opportunity.proposalData persisted shape:
- *   [{ formDefinitionId, answer }]
+ *   [{ formDefinitionId, answer, savedAt? }]
  *
  * Legacy flat objects (field keys at the top level) are still accepted on read.
+ * Entries without `savedAt` remain valid (backward compatible).
  * Duplicated from frontend/lib/opportunityProposalData.ts — keep in sync.
  */
 
@@ -11,6 +12,8 @@ export type OpportunityProposalAnswer = Record<string, unknown>;
 export type OpportunityProposalDataEntry = {
   formDefinitionId: string;
   answer: OpportunityProposalAnswer;
+  /** ISO timestamp of the last upsert; optional for legacy entries. */
+  savedAt?: string;
 };
 
 export type OpportunityProposalData = OpportunityProposalDataEntry[];
@@ -76,6 +79,7 @@ export function getProposalFormDefinitionId(
 
 /**
  * Upsert an answer entry by formDefinitionId; preserves other entries.
+ * Always stamps `savedAt` with the current time (ISO string).
  * Falls back to a single-entry array when existing is legacy/empty.
  */
 export function upsertProposalEntry(
@@ -90,6 +94,7 @@ export function upsertProposalEntry(
   const entry: OpportunityProposalDataEntry = {
     formDefinitionId,
     answer: { ...answer },
+    savedAt: new Date().toISOString(),
   };
 
   if (isProposalDataEntries(existing)) {

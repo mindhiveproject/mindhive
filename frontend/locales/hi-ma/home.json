@@ -2,6 +2,8 @@
 	"about": "के बारे में",
 	"all": "सभी",
 	"blocks": "ब्लाकों",
+	"copyParticipantIdAria": "",
+	"copyPublicIdAria": "",
 	"createYourProfile": "अपना माइंडहाइव प्रोफ़ाइल बनाएँ",
 	"editYourProfile": "अपनी माइंडहाइव प्रोफ़ाइल संपादित करें",
 	"favoritePeople": "पसंदीदा लोग",
@@ -12,7 +14,9 @@
 		"copyright": "© 2025",
 		"description": "माइंडहाइव एक वेब-आधारित नागरिक विज्ञान मंच है जो वास्तविक दुनिया के मस्तिष्क और व्यवहार अनुसंधान का समर्थन करता है।",
 		"email": "info@mindhive.science",
+		"navLabel": "",
 		"privacy": "गोपनीयता नीति",
+		"teachers": "",
 		"terms": "नियम एवं शर्तें",
 		"title": "माइंडहाइव"
 	},

@@ -277,7 +277,7 @@ export default function NetworkPendingInvites({ user }) {
                   router.push(
                     `/dashboard/connect/networks?mode=manage&networkId=${encodeURIComponent(
                       classNetworkUrlRef(row) || row.id
-                    )}#network-pending-invites`
+                    )}&tab=profiles#network-pending-invites`
                   )
                 }
               >

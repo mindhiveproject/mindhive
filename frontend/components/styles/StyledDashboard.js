@@ -64,12 +64,24 @@ export const StyledDashboardWrapper = styled.div`
 `;
 
 export const StyledDashboardContent = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   margin: 50px;
   max-width: ${(props) => props.theme.maxWidth};
-  height: 100%;
-  grid-gap: 20px;
-  align-content: start;
+  /* Fill the scrollport so short pages still push the footer below the fold */
+  min-height: ${(props) =>
+    props.$withFooter ? "calc(100vh - 100px)" : "100%"};
+
+  .dashboardMain {
+    flex: 1 0 auto;
+    display: grid;
+    grid-gap: 20px;
+    align-content: start;
+    /* Top margin (50px) + content gap (20px) → footer starts at/below viewport */
+    min-height: ${(props) =>
+      props.$withFooter ? "calc(100vh - 70px)" : "unset"};
+  }
 
   .header {
     display: grid;
@@ -94,6 +106,15 @@ export const StyledDashboardContent = styled.div`
       font-size: 16px;
     }
   }
+`;
+
+/** Full-bleed footer slot inside dashboard content (counters content margin). */
+export const StyledDashboardFooterSlot = styled.div`
+  flex: 0 0 auto;
+  margin: 0 -50px -50px;
+  width: calc(100% + 100px);
+  max-width: none;
+  align-self: stretch;
 `;
 
 export const StyledSideBar = styled.div`

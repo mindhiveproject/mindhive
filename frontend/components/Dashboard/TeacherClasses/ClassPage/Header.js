@@ -2,15 +2,20 @@
 
 import { useMutation } from "@apollo/client";
 import { useEffect, useRef, useCallback, useState } from "react";
+import clsx from "clsx";
 import DisplayError from "../../../ErrorMessage";
 import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../lib/useForm";
 
+import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import InfoTooltip from "../../../DesignSystem/InfoTooltip";
 import { EDIT_CLASS } from "../../../Mutations/Classes";
 import { GET_CLASS } from "../../../Queries/Classes";
+
+/** ~4 lines at 22px line-height — collapsed class description preview. */
+const DESCRIPTION_COLLAPSED_MAX_HEIGHT_PX = 70;
 
 /** Remove HTML tags only (preserve spaces — used for controlled title input). */
 function stripTags(html) {
@@ -21,6 +26,22 @@ function stripTags(html) {
 /** Tags removed + trim (used for H1 display / empty check). */
 function stripHtml(html) {
   return stripTags(html).trim();
+}
+
+/**
+ * TipTap / stored HTML should render as markup. If content was double-escaped
+ * (e.g. `&lt;p&gt;...`), decode once so tags are interpreted.
+ */
+function normalizeDescriptionHtml(html) {
+  if (!html) return "";
+  const trimmed = html.trim();
+  if (!trimmed.includes("&lt;") || /<[a-z][\s\S]*>/i.test(trimmed)) {
+    return html;
+  }
+  if (typeof document === "undefined") return html;
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = trimmed;
+  return textarea.value;
 }
 
 
@@ -44,8 +65,12 @@ export default function Header({ myclass, readOnly = false }) {
   });
 
   const [isTitleEditing, setIsTitleEditing] = useState(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  /** null = not measured yet; prefer collapsed until we know it fits. */
+  const [descriptionOverflows, setDescriptionOverflows] = useState(null);
 
   const titleRef = useRef("");
+  const descriptionRef = useRef(null);
 
   useEffect(() => {
     titleRef.current = inputs?.title ?? "";
@@ -53,7 +78,9 @@ export default function Header({ myclass, readOnly = false }) {
 
   useEffect(() => {
     setIsTitleEditing(false);
-  }, [myclass?.id, myclass?.code]);
+    setDescriptionExpanded(false);
+    setDescriptionOverflows(null);
+  }, [myclass?.id, myclass?.code, myclass?.description]);
 
   const refetchClass =
     myclass?.code != null
@@ -84,8 +111,33 @@ export default function Header({ myclass, readOnly = false }) {
     setIsTitleEditing(false);
   }, [persistIfDirty]);
 
-  const descriptionIsEmpty =
-    stripHtml(myclass?.description ?? "") === "";
+  const descriptionHtml = normalizeDescriptionHtml(myclass?.description ?? "");
+  const descriptionIsEmpty = stripHtml(descriptionHtml) === "";
+  const descriptionIsCollapsed =
+    !descriptionExpanded && descriptionOverflows !== false;
+
+  useEffect(() => {
+    if (descriptionIsEmpty) {
+      setDescriptionOverflows(false);
+      return;
+    }
+    const el = descriptionRef.current;
+    if (!el) return;
+
+    const measure = () => {
+      const overflows =
+        el.scrollHeight > DESCRIPTION_COLLAPSED_MAX_HEIGHT_PX + 1;
+      setDescriptionOverflows(overflows);
+    };
+
+    measure();
+    const ro =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(measure)
+        : null;
+    ro?.observe(el);
+    return () => ro?.disconnect();
+  }, [descriptionHtml, descriptionIsEmpty, descriptionExpanded]);
 
   const titleInputValue = stripTags(inputs?.title ?? "");
   const titleDisplayTrimmed = stripHtml(inputs?.title ?? "");
@@ -242,10 +294,34 @@ export default function Header({ myclass, readOnly = false }) {
         </div>
 
         {!descriptionIsEmpty ? (
-          <div
-            className="classHeaderDescriptionHtml"
-            dangerouslySetInnerHTML={{ __html: myclass.description }}
-          />
+          <div className="classHeaderDescription">
+            <div
+              ref={descriptionRef}
+              className={clsx(
+                "classHeaderDescriptionHtml",
+                descriptionIsCollapsed && "isCollapsed",
+              )}
+              dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+            />
+            {descriptionOverflows ? (
+              <Button
+                type="button"
+                variant="tonal"
+                style={{
+                  background: "#F3F3F3",
+                  border: "none",
+                  boxShadow: "none",
+                }}
+                className="classHeaderDescriptionToggle"
+                onClick={() => setDescriptionExpanded((prev) => !prev)}
+                aria-expanded={descriptionExpanded}
+              >
+                {descriptionExpanded
+                  ? t("header.viewLess", {}, { default: "View less" })
+                  : t("header.viewMore", {}, { default: "View more" })}
+              </Button>
+            ) : null}
+          </div>
         ) : null}
       </div>
     </div>

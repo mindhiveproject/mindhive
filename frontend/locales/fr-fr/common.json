@@ -226,6 +226,14 @@
 		"title": "Paramètres de langue",
 		"updatePreferences": "Mettre à jour les préférences"
 	},
+	"loading": "",
+	"mediaLibrary": {
+		"choose": "",
+		"empty": "",
+		"title": "",
+		"upload": "",
+		"uploading": ""
+	},
 	"members": {
 		"typeUsername": "Tapez le nom d'utilisateur"
 	},
@@ -238,6 +246,22 @@
 		"studies": "Études",
 		"tasks": "Tâches et enquêtes",
 		"teachers": "Enseignants"
+	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
 	},
 	"pagination": {
 		"next": "Suivant",
@@ -296,6 +320,7 @@
 		"proceedNextTask": "Passer à la tâche suivante",
 		"thankYou": "Merci d'avoir participé à cette tâche !"
 	},
+	"remove": "",
 	"reviewed": {
 		"menuTitle": "Révisé"
 	},

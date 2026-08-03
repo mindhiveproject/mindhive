@@ -2,9 +2,10 @@
 //
 // Lookup precedence (most-specific first):
 //   1. scope=project_board  + matching proposalBoardId
-//   2. scope=class_network  + matching classNetworkId
-//   3. scope=organization   + matching organizationId
-//   4. scope=global         (fallback)
+//   2. scope=class          + matching classId
+//   3. scope=class_network  + matching classNetworkId
+//   4. scope=organization   + matching organizationId
+//   5. scope=global         (fallback)
 //
 // When multiple versions of the same row exist, returns the highest
 // version. Returns null when nothing is published at any scope.
@@ -19,11 +20,13 @@ async function resolveFormDefinition(
     organizationId,
     classNetworkId,
     proposalBoardId,
+    classId,
   }: {
     key: string;
     organizationId?: string | null;
     classNetworkId?: string | null;
     proposalBoardId?: string | null;
+    classId?: string | null;
   },
   context: any
 ) {
@@ -64,7 +67,21 @@ async function resolveFormDefinition(
     if (boardMatch) return boardMatch;
   }
 
-  // 2. class_network
+  // 2. class
+  if (classId) {
+    const [classMatch] = await context.db.FormDefinition.findMany({
+      where: {
+        ...baseFilter,
+        scope: { equals: "class" },
+        class: { id: { equals: classId } },
+      },
+      orderBy,
+      take: 1,
+    });
+    if (classMatch) return classMatch;
+  }
+
+  // 3. class_network
   if (classNetworkId) {
     const [networkMatch] = await context.db.FormDefinition.findMany({
       where: {
@@ -78,7 +95,7 @@ async function resolveFormDefinition(
     if (networkMatch) return networkMatch;
   }
 
-  // 3. organization
+  // 4. organization
   if (organizationId) {
     const [orgMatch] = await context.db.FormDefinition.findMany({
       where: {
@@ -92,7 +109,7 @@ async function resolveFormDefinition(
     if (orgMatch) return orgMatch;
   }
 
-  // 4. global fallback
+  // 5. global fallback
   const [globalMatch] = await context.db.FormDefinition.findMany({
     where: {
       ...baseFilter,

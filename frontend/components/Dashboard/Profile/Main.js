@@ -2,6 +2,8 @@ import { useQuery } from "@apollo/client";
 import IdentIcon from "../../Account/IdentIcon";
 import useTranslation from "next-translate/useTranslation";
 
+import Chip from "../../DesignSystem/Chip";
+import CopyButton from "../../DesignSystem/CopyButton";
 import { GET_PROFILE } from "../../Queries/User";
 import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 
@@ -29,6 +31,9 @@ export default function Profile() {
     mentorPreferGroup,
     mentorPreferClass,
     interests,
+    publicId,
+    publicReadableId,
+    permissions,
   } = user;
 
   const isProfileComplete =
@@ -49,17 +54,21 @@ export default function Profile() {
     mentorPreferClass &&
     interests;
 
+  const permissionNames =
+    permissions?.map((permission) => permission?.name).filter(Boolean) || [];
+
   return (
     <>
       <div className="titleIcon">
         <div>
           <div className="h36">
-            {t("welcome")}{isProfileComplete && ` back`}
+            {t("welcome")}
+            {isProfileComplete && ` back`}
             {user.username ? `, ${user.username}` : `, MindHive User`}
           </div>
         </div>
 
-        <div>
+        <div className="profileMetaStack">
           {profileImageUrl ? (
             <div
               style={{
@@ -90,6 +99,51 @@ export default function Profile() {
           ) : (
             <div>
               <IdentIcon size="120" value={user?.username} />
+            </div>
+          )}
+
+          {permissionNames.length > 0 && (
+            <div className="profileMetaChips">
+              {permissionNames.map((name) => (
+                <Chip key={name} label={name} shape="pill" />
+              ))}
+            </div>
+          )}
+
+          {(publicId || publicReadableId) && (
+            <div className="profileMetaIds">
+              {publicId && (
+                <CopyButton
+                  value={publicId}
+                  ariaLabel={t("copyParticipantIdAria", {}, {
+                    default: "Copy participant ID to clipboard",
+                  })}
+                  title={publicId}
+                  style={{
+                    border: "none",
+                    background: "#E6E6E6",
+                    backgroundColor: "#E6E6E6",
+                  }}
+                >
+                  {t("participantID", {}, { default: "Participant ID" })}
+                </CopyButton>
+              )}
+              {publicReadableId && (
+                <CopyButton
+                  value={publicReadableId}
+                  ariaLabel={t("copyPublicIdAria", {}, {
+                    default: "Copy public readable ID to clipboard",
+                  })}
+                  title={publicReadableId}
+                  style={{
+                    border: "none",
+                    background: "#E6E6E6",
+                    backgroundColor: "#E6E6E6",
+                  }}
+                >
+                  {t("publicReadableID", {}, { default: "Public readable ID" })}
+                </CopyButton>
+              )}
             </div>
           )}
         </div>

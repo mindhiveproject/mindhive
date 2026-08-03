@@ -153,16 +153,29 @@ export default function ConnectNavigationBar() {
     isClassNetworkAdmin,
   ]);
 
-  const organizationOptions = useMemo(
-    () => [
+  const organizationOptions = useMemo(() => {
+    const items = [
       {
         value: "organizations",
         label: t("nav.organizations", {}, { default: "Organizations" }),
         href: "/dashboard/connect/organizations",
       },
-    ],
-    [t],
-  );
+    ];
+    const canManageOrganization =
+      isSponsor ||
+      isAdmin ||
+      (user?.adminOfOrganizations || []).length > 0;
+    if (canManageOrganization) {
+      items.push({
+        value: "manageOrganization",
+        label: t("nav.manageOrganization", {}, {
+          default: "Manage organization",
+        }),
+        href: "/dashboard/connect/manage-organization",
+      });
+    }
+    return items;
+  }, [t, user?.adminOfOrganizations, isSponsor, isAdmin]);
 
   const classNetworkOptions = useMemo(() => {
     const canExploreNetworks = isAdmin || isTeacher || isMentor || isSponsor;

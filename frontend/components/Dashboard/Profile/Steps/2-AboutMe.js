@@ -6,12 +6,7 @@ import Background from "./Blocks/Background";
 import BasicInformation from "./Blocks/Basic";
 import IntroductionVideo from "./Blocks/Introduction";
 import Preferences from "./Blocks/Preferences";
-import Members from "./Blocks/Members";
-import {
-  profileEditHref,
-  resolveLinkedOrganization,
-  resolveProfileType,
-} from "../../../../lib/profileEditNavigation";
+import { profileEditHref } from "../../../../lib/profileEditNavigation";
 import {
   confirmLeaveIfDirty,
   useUnsavedChangesGuard,
@@ -19,9 +14,6 @@ import {
 
 export default function About({ query, user }) {
   const { t } = useTranslation("connect");
-  const profileType = resolveProfileType(query, user);
-  const isOrganization = profileType === "organization";
-  const organization = resolveLinkedOrganization(user);
 
   const [dirtySections, setDirtySections] = useState({});
   const hasUnsavedChanges = Object.values(dirtySections).some(Boolean);
@@ -79,31 +71,20 @@ export default function About({ query, user }) {
           user={user}
           onDirtyChange={setBackgroundDirty}
         />
-        {isOrganization && (
-          <Members user={user} organization={organization} />
-        )}
-        {!isOrganization && (
-          <>
-            <IntroductionVideo
-              query={query}
-              user={user}
-              onDirtyChange={setIntroductionDirty}
-            />
-            <Preferences
-              query={query}
-              user={user}
-              onDirtyChange={setPreferencesDirty}
-            />
-          </>
-        )}
+        <IntroductionVideo
+          query={query}
+          user={user}
+          onDirtyChange={setIntroductionDirty}
+        />
+        <Preferences
+          query={query}
+          user={user}
+          onDirtyChange={setPreferencesDirty}
+        />
 
         <div className="navButtons">
-          <Link href={profileEditHref({ page: "type" })} onClick={tryToLeave}>
-            <button className="secondary">{t("navigation.previous")}</button>
-          </Link>
-
           <Link
-            href={profileEditHref({ page: "interests", type: profileType })}
+            href={profileEditHref({ page: "interests", type: "individual" })}
             onClick={tryToLeave}
           >
             <button className="primary">{t("navigation.next")}</button>

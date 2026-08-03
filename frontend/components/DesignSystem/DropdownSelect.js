@@ -102,6 +102,9 @@ const TRIGGER_TOOLTIP_DELAY_MS = 1500;
 
 function getOptionLabelString(opt) {
   if (!opt) return "";
+  if (typeof opt.labelText === "string" || typeof opt.labelText === "number") {
+    return String(opt.labelText);
+  }
   const { label } = opt;
   if (typeof label === "string" || typeof label === "number") {
     return String(label);
@@ -115,7 +118,7 @@ function getOptionLabelString(opt) {
  *
  * @param {string|string[]} value - Selected value(s). When `multiple`, use `string[]`.
  * @param {(next: string) => void | (next: string[]) => void} onChange - Called with the new value or array when user picks option(s).
- * @param {Array<{ value: string, label: React.ReactNode, disabled?: boolean }>} options - Selectable options.
+ * @param {Array<{ value: string, label: React.ReactNode, labelText?: string, disabled?: boolean }>} options - Selectable options. When `label` is a ReactNode, pass `labelText` for search/trigger stringification.
  * @param {string} [ariaLabel] - Accessible name for the trigger (required for a11y if no visible label).
  * @param {React.CSSProperties} [triggerStyle] - Optional override for trigger button styles.
  * @param {boolean} [fitContent=false] - When true, the control sizes to its label (no full-width stretch).

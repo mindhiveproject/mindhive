@@ -121,6 +121,16 @@ export const GET_CONNECT_ROUND = gql`
         isRequired
         weight
       }
+      formDefinitions {
+        id
+        title
+        key
+        scope
+        version
+        createdBy {
+          id
+        }
+      }
       createdBy {
         id
         username

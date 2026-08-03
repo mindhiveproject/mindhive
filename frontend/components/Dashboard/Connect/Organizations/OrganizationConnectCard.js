@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
+import OrganizationVerificationStatus from "./OrganizationVerificationStatus";
 
 const CardContainer = styled.article`
   display: flex;
@@ -157,27 +158,11 @@ const ArrowOutwardIcon = (
   />
 );
 
-function VerifiedBadge({ t }) {
-  return (
-    <span
-      role="img"
-      aria-label={t("a11y.verified", {}, { default: "Verified" })}
-      style={{ display: "inline-flex", lineHeight: 0, flexShrink: 0 }}
-    >
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="#1d6b3a"
-        aria-hidden
-      >
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-      </svg>
-    </span>
-  );
-}
-
-export default function OrganizationConnectCard({ org }) {
+export default function OrganizationConnectCard({
+  org,
+  href,
+  linkLabel,
+}) {
   const { t } = useTranslation("connect");
   const router = useRouter();
 
@@ -189,32 +174,21 @@ export default function OrganizationConnectCard({ org }) {
   const location = org.location?.trim() || null;
   const tagline = org.tagline?.trim() || null;
   const mission = org.mission?.trim() || null;
-  const oppCount = org.opportunitiesCount || 0;
   const fallbackLetter = (name || "?").charAt(0).toUpperCase();
 
-  const orgHref = {
-    pathname: "/dashboard/connect/organizations",
-    query: { org: org.id },
-  };
+  const orgHref =
+    href || {
+      pathname: "/dashboard/connect/organizations",
+      query: { org: org.id },
+    };
 
-  const viewOrgLabel = t(
-    "organizationsList.viewOrganization",
-    { name },
-    { default: "View organization {{name}}" }
-  );
-
-  const opportunityLabel =
-    oppCount === 1
-      ? t(
-          "organizationsList.opportunityCount.one",
-          { count: oppCount },
-          { default: "{{count}} opportunity" }
-        )
-      : t(
-          "organizationsList.opportunityCount.many",
-          { count: oppCount },
-          { default: "{{count}} opportunities" }
-        );
+  const viewOrgLabel =
+    linkLabel ||
+    t(
+      "organizationsList.viewOrganization",
+      { name },
+      { default: "View organization {{name}}" }
+    );
 
   return (
     <CardContainer>
@@ -232,24 +206,14 @@ export default function OrganizationConnectCard({ org }) {
         <TextColumn>
           <NameBlock>
             <p className="name">
-              {name}
-              {org.verified && <VerifiedBadge t={t} />}
+              <span>{name}</span>
+              <OrganizationVerificationStatus
+                verified={!!org.verified}
+                size="compact"
+              />
             </p>
             {location && <p className="location">{location}</p>}
           </NameBlock>
-
-          {/* <Chip
-            label={opportunityLabel}
-            shape="square"
-            style={{ width: "fit-content" }}
-            leading={
-              <ChipLeading
-                src="/assets/connect/briefcase.svg"
-                alt=""
-                aria-hidden
-              />
-            }
-          /> */}
 
           {tagline && <Tagline>{tagline}</Tagline>}
           {mission && <Mission>{mission}</Mission>}

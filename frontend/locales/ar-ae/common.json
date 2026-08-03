@@ -226,6 +226,14 @@
 		"title": "إعدادات اللغة",
 		"updatePreferences": "تحديث التفضيلات"
 	},
+	"loading": "",
+	"mediaLibrary": {
+		"choose": "",
+		"empty": "",
+		"title": "",
+		"upload": "",
+		"uploading": ""
+	},
 	"members": {
 		"typeUsername": "اكتب اسم المستخدم"
 	},
@@ -238,6 +246,22 @@
 		"studies": "دراسات",
 		"tasks": "المهام والاستطلاعات",
 		"teachers": "المعلمون"
+	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
 	},
 	"pagination": {
 		"next": "التالي",
@@ -296,6 +320,7 @@
 		"proceedNextTask": "انتقل إلى المهمة التالية",
 		"thankYou": "شكرا لك على المشاركة في هذه المهمة!"
 	},
+	"remove": "",
 	"reviewed": {
 		"menuTitle": "تمت المراجعة"
 	},

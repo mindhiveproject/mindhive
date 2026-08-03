@@ -2,6 +2,8 @@
 	"about": "About",
 	"all": "All",
 	"blocks": "Blocks",
+	"copyParticipantIdAria": "Copy participant ID to clipboard",
+	"copyPublicIdAria": "Copy public readable ID to clipboard",
 	"createYourProfile": "Create your MindHive profile",
 	"editYourProfile": "Edit your MindHive profile",
 	"favoritePeople": "Favorite people",
@@ -9,10 +11,12 @@
 	"footer": {
 		"about": "About",
 		"audience": "MindHive was designed for students & teachers who seek authentic STEM research experience, and for neuroscientists & cognitive/social psychologists who seek to address their research questions outside of the lab.",
-		"copyright": "© 2025",
+		"copyright": "© 2026",
 		"description": "MindHive is a web-based citizen science platform that supports real-world brain and behavior research.",
 		"email": "info@mindhive.science",
+		"navLabel": "Footer",
 		"privacy": "Privacy Policy",
+		"teachers": "Teachers",
 		"terms": "Terms & Conditions",
 		"title": "MindHive"
 	},

@@ -239,6 +239,13 @@
 		"summaryChipAria": "",
 		"summaryDescription": "",
 		"summaryTitle": "",
+		"tabs": {
+			"admins": "",
+			"matching": "",
+			"organizations": "",
+			"overview": "",
+			"profiles": ""
+		},
 		"titleLabel": "",
 		"titlePlaceholder": "",
 		"titleRequired": "",
@@ -419,6 +426,40 @@
 	},
 	"introductionVideo": "Introductievideo",
 	"locationFilter": "Plaats",
+	"manageOrganization": {
+		"adminMode": "",
+		"backToList": "",
+		"browseCta": "",
+		"create": {
+			"cancel": "",
+			"createError": "",
+			"creating": "",
+			"helper": "",
+			"notSignedIn": "",
+			"submit": "",
+			"title": ""
+		},
+		"emptyDescription": "",
+		"emptyTitle": "",
+		"list": {
+			"description": "",
+			"emptyFiltered": "",
+			"loading": "",
+			"manageOrganization": "",
+			"pageTitle": "",
+			"searchLabel": "",
+			"searchPlaceholder": ""
+		},
+		"setupCta": "",
+		"tabs": {
+			"people": "",
+			"profile": ""
+		},
+		"tabsHint": "",
+		"unauthorizedDescription": "",
+		"unauthorizedTitle": "",
+		"viewPublic": ""
+	},
 	"matchesRound": {
 		"backLink": ""
 	},
@@ -488,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "Capaciteit {{count}}",
+		"columns": {
+			"visibility": ""
+		},
 		"delete": "Verwijderen",
 		"deleteConfirm": "Deze kans verwijderen? Dit kan niet ongedaan gemaakt worden.",
 		"edit": "Bewerking",
 		"empty": "Je hebt nog geen mogelijkheden gecreëerd. Klik op Nieuwe mogelijkheid om je eerste project voor studenten te publiceren.",
 		"emptyFiltered": "Er zijn geen vacatures die aan de huidige filters voldoen.",
+		"held": {
+			"continueForm": "",
+			"followUp": "",
+			"formComplete": "",
+			"formCompleteSaved": "",
+			"formIncomplete": "",
+			"formIncompleteSaved": "",
+			"noFurtherQuestions": "",
+			"openForm": "",
+			"preSelected": "",
+			"title": "",
+			"unknownNetwork": "",
+			"unknownRound": ""
+		},
 		"loading": "Bezig met laden...",
 		"networkCount": {
 			"many": "{{count}} netwerken",
@@ -501,6 +559,7 @@
 		"networkFilterLabel": "Filteren op netwerk",
 		"networkFilterPlaceholder": "Alle netwerken",
 		"newButton": "Nieuwe kans",
+		"openChat": "",
 		"pageTitle": "Mijn kansen",
 		"rating": {
 			"many": "{{average}} · {{count}} beoordelingen",
@@ -531,7 +590,15 @@
 		"statusFilterLabel": "Filter op status",
 		"statusFilterPlaceholder": "Alle statussen",
 		"teamOf": "Team van {{size}}",
-		"unknownSponsor": "Onbekend"
+		"unknownSponsor": "Onbekend",
+		"visibility": {
+			"emptyHint": "",
+			"many": "",
+			"modalEmpty": "",
+			"modalTitle": "",
+			"none": "",
+			"one": ""
+		}
 	},
 	"myProfile": "",
 	"nav": {
@@ -541,6 +608,7 @@
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "Verbind secties",
 		"manageNetwork": "",
+		"manageOrganization": "",
 		"matches": "Wedstrijden",
 		"matchingRounds": "Overeenkomende rondes",
 		"myMatchedStudents": "Mijn gekoppelde studenten",
@@ -580,6 +648,7 @@
 			"urbanInfrastructure": "Stedelijke infrastructuur"
 		},
 		"categorizationOther": "Overige categorie",
+		"chatSaveFirst": "",
 		"classNetworksEmptyWarning": "",
 		"classNetworksHint": "",
 		"classNetworksNoMembership": "",
@@ -629,6 +698,8 @@
 			"scopeDescriptionHint": "Beschrijf de reikwijdte van het project waarop u een afstudeerprojectteam wilt laten focussen. (De beste afstudeerprojectvoorstellen zijn belangrijk maar niet urgent; haalbaar binnen de academische termijn en met de beschikbare middelen; geven een duidelijke definitie van het probleem of de kwestie die moet worden aangepakt; hebben een realistische reikwijdte; en specificeren concrete resultaten die het afstudeerprojectteam moet leveren.) Ongeveer 500 woorden.",
 			"title": "Projectomvang"
 		},
+		"followUpIntro": "",
+		"followUpLastSaved": "",
 		"followUpQuestionnaire": {
 			"banner": "Je bent in de voorselectie opgenomen. Beantwoord de onderstaande vragen.",
 			"potentialActivities": "Mogelijke activiteiten",
@@ -638,6 +709,7 @@
 			"tbd": "Vervolgvragen worden hier toegevoegd.",
 			"title": "Vervolgvragenlijst"
 		},
+		"followUpSaveMissing": "",
 		"groupFormat": "Groepsindeling",
 		"guidelinesAcknowledgedAt": "Bevestigd {{date}}",
 		"guidelinesAgree": "Ik ben het met deze stelling eens.",
@@ -826,6 +898,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Wijzigingen opslaan",
+		"savedFlash": "",
 		"saveDraft": "",
 		"saving": "Besparing...",
 		"specialConsiderations": {
@@ -851,6 +924,7 @@
 		"status": "Toestand",
 		"statusAdmin": "",
 		"statusAdminHint": "",
+		"statusNewHint": "",
 		"statusOptions": {
 			"accepted": "Geaccepteerd (volledige eindopdracht)",
 			"archived": "Gearchiveerd",
@@ -863,6 +937,13 @@
 		},
 		"studentCapacity": "Studentencapaciteit",
 		"submitForReview": "",
+		"tabs": {
+			"chat": "",
+			"followUpCompleteAria": "",
+			"followUpFallback": "",
+			"proposal": "",
+			"status": ""
+		},
 		"teamPreferences": "Geef studenten de mogelijkheid om hun voorkeursteamgenoten voor deze kans te nomineren.",
 		"teamSize": "Teamgrootte",
 		"teamSizeHint": "1 = solo plaatsing.",
@@ -1024,6 +1105,13 @@
 		"solo": "",
 		"teamOf": "",
 		"unknownMember": "",
+		"verification": {
+			"copyEmail": "",
+			"copyEmailAria": "",
+			"notVerified": "",
+			"notVerifiedTooltip": "",
+			"verified": ""
+		},
 		"website": ""
 	},
 	"organizationsList": {
@@ -1193,6 +1281,7 @@
 			"classNetworkAdmin": "",
 			"mentor": "Mentoren",
 			"scientist": "",
+			"sponsor": "",
 			"student": "studenten",
 			"teacher": "leraren"
 		},

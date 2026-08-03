@@ -500,7 +500,7 @@ export const Opportunity = list({
           }
           const linkParams = new URLSearchParams({ op: String(fresh.id) });
           if (roundId) linkParams.set("round", roundId);
-          const relativeLink = `/dashboard/connect/opportunities?${linkParams.toString()}`;
+          const relativeLink = `/dashboard/sponsor-connect/opportunities?${linkParams.toString()}`;
           const absoluteLink = `${frontendUrl()}${relativeLink}`;
 
           try {

@@ -226,6 +226,14 @@
 		"title": "Configuración de idioma",
 		"updatePreferences": "Actualizar preferencias"
 	},
+	"loading": "",
+	"mediaLibrary": {
+		"choose": "",
+		"empty": "",
+		"title": "",
+		"upload": "",
+		"uploading": ""
+	},
 	"members": {
 		"typeUsername": "Escriba el nombre de usuario"
 	},
@@ -238,6 +246,22 @@
 		"studies": "Estudios",
 		"tasks": "Tareas y encuestas",
 		"teachers": "Profesores"
+	},
+	"opportunities": {
+		"close": "",
+		"columns": {
+			"actions": "",
+			"name": "",
+			"status": "",
+			"visibility": ""
+		},
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"loading": "",
+		"newButton": "",
+		"title": ""
 	},
 	"pagination": {
 		"next": "Próximo",
@@ -296,6 +320,7 @@
 		"proceedNextTask": "Proceder a la siguiente tarea",
 		"thankYou": "¡Gracias por participar en esta tarea!"
 	},
+	"remove": "",
 	"reviewed": {
 		"menuTitle": "Revisado"
 	},

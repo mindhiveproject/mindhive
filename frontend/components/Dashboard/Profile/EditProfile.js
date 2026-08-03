@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 import ProfileType from "./Steps/1-ProfileType";
 import About from "./Steps/AboutSwitch";
 import Interests from "./Steps/3-Interests";
@@ -6,33 +8,51 @@ import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../Queries/User";
 import { StyledCreateProfileFlow } from "../../styles/StyledProfile";
-import { resolveProfileType } from "../../../lib/profileEditNavigation";
+import {
+  MANAGE_ORGANIZATION_HREF,
+  manageOrganizationHref,
+  resolveLinkedOrganization,
+  resolveProfileType,
+} from "../../../lib/profileEditNavigation";
 
 import { Progress } from "semantic-ui-react";
 
 export default function EditProfile({ query }) {
   const { t } = useTranslation("connect");
+  const router = useRouter();
   const { page } = query;
 
   const { data } = useQuery(GET_PROFILE);
   const user = data?.authenticatedItem;
   const profileType = resolveProfileType(query, user);
 
-  const pageTitle = profileType
-    ? t(`createProfileFlow.title.${profileType}`, {}, { default: t("createProfile") })
-    : t("createProfile");
+  // Organization setup/edit lives on Connect Manage — never the profile wizard.
+  useEffect(() => {
+    if (!user?.id) return;
+    if (profileType !== "organization") return;
+    if (page !== "about" && page !== "type" && page !== "interests") return;
+    const linked = resolveLinkedOrganization(user);
+    router.replace(
+      linked?.id
+        ? manageOrganizationHref(linked.id)
+        : { pathname: MANAGE_ORGANIZATION_HREF, query: { create: "1" } },
+    );
+  }, [user, profileType, page, router]);
+
+  const pageTitle =
+    profileType && profileType !== "organization"
+      ? t(`createProfileFlow.title.${profileType}`, {}, {
+          default: t("createProfile"),
+        })
+      : t("createProfile");
 
   const progressSteps = [
     {
-      label: profileType
-        ? t(`createProfileFlow.steps.aboutMe.${profileType}`, {}, { default: t("steps.aboutMe") })
-        : t("steps.aboutMe"),
+      label: t("steps.aboutMe"),
       page: "about",
     },
     {
-      label: profileType
-        ? t(`createProfileFlow.steps.interests.${profileType}`, {}, { default: t("steps.interests") })
-        : t("steps.interests"),
+      label: t("steps.interests"),
       page: "interests",
     },
   ];
@@ -42,6 +62,10 @@ export default function EditProfile({ query }) {
     currentStepIndex >= 0
       ? ((currentStepIndex + 1) / progressSteps.length) * 100
       : 0;
+
+  if (user?.id && profileType === "organization") {
+    return null;
+  }
 
   return (
     <StyledCreateProfileFlow>

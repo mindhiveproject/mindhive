@@ -169,12 +169,7 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
           setSavedOrgId(createData?.createOrganization?.id || null);
         }
         setLogoUpload(null);
-        await updateProfile({
-          variables: {
-            id: user?.id,
-            input: { profileType: "organization" },
-          },
-        });
+        // Do not stamp profileType=organization — Profiles manage Organizations.
       } else {
         await updateProfile({
           variables: { id: user?.id, input: { ...inputs } },

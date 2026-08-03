@@ -5,6 +5,7 @@ import {
   StyledDashboardNavigation,
   StyledDashboardWrapper,
   StyledDashboardContent,
+  StyledDashboardFooterSlot,
 } from "../styles/StyledDashboard";
 import DashboardNavigation from "../Dashboard/Navigation";
 import { UserContext } from "./Authorized";
@@ -14,9 +15,34 @@ import { Sidebar } from "semantic-ui-react";
 import Page from "../../components/Global/Page";
 import Form from "../../components/Global/Form";
 import Login from "../Auth/Login";
+import Footer from "./Footer";
+
+/**
+ * Platform-browsing dashboard areas that show the site footer.
+ * Focused workspaces (builder, develop, review, classes, etc.) are excluded.
+ */
+const DASHBOARD_FOOTER_AREAS = new Set(["discover", "connect", "review", "settings", "sponsor-connect"]);
+
+function shouldShowDashboardFooter(area) {
+  // Home is `/dashboard` with no area param
+  if (!area) return true;
+  return DASHBOARD_FOOTER_AREAS.has(area);
+}
 
 export default function Dashboard({ children, area, selector }) {
   const user = useContext(UserContext);
+  const showFooter = shouldShowDashboardFooter(area);
+
+  const content = (
+    <StyledDashboardContent $withFooter={showFooter}>
+      <div className="dashboardMain">{children}</div>
+      {showFooter ? (
+        <StyledDashboardFooterSlot>
+          <Footer />
+        </StyledDashboardFooterSlot>
+      ) : null}
+    </StyledDashboardContent>
+  );
 
   if (!user) {
     return (
@@ -54,9 +80,7 @@ export default function Dashboard({ children, area, selector }) {
         <StyledDashboardNavigation>
           <DashboardNavigation />
         </StyledDashboardNavigation>
-        <StyledDashboardWrapper>
-          <StyledDashboardContent>{children}</StyledDashboardContent>
-        </StyledDashboardWrapper>
+        <StyledDashboardWrapper>{content}</StyledDashboardWrapper>
       </StyledDashboard>
     </Sidebar.Pushable>
   );

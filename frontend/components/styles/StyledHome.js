@@ -3,6 +3,27 @@ import styled from "styled-components";
 const StyledHome = styled.div`
   display: grid;
   grid-gap: 1rem;
+
+  .titleIcon {
+    align-items: start;
+  }
+
+  .profileMetaStack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .profileMetaChips,
+  .profileMetaIds {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    max-width: 280px;
+  }
+
   .h36 {
     font-family: Lato;
     font-size: 36px;

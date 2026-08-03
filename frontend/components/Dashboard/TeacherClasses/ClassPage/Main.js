@@ -21,6 +21,9 @@ import StyledClass from "../../../styles/StyledClass";
 
 import Dashboard from "./Dashboard/Main";
 import { deriveRoles } from "../../Connect/useConnectRole";
+import { normalizeCurriculumType } from "../../../../lib/curriculumTypes";
+
+const NYU_CUSP_HIDDEN_TABS = new Set(["dashboard", "studies"]);
 
 const CLASS_PAGE_NAV_ITEMS = [
   {
@@ -73,12 +76,8 @@ const CLASS_PAGE_NAV_ITEMS = [
 export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
-  const page = query?.page || "students";
   const { isTeacher, isSponsor } = deriveRoles(user);
   const showOpportunitiesTab = isTeacher && isSponsor;
-  const navItems = CLASS_PAGE_NAV_ITEMS.filter(
-    (item) => item.value !== "opportunities" || showOpportunitiesTab,
-  );
   const { action, board } = query || {};
 
   const { data } = useQuery(GET_CLASS, {
@@ -86,6 +85,25 @@ export default function ClassPage({ code, user, query }) {
   });
 
   const myclass = data?.class || { title: "", description: "" };
+  const curriculumType = normalizeCurriculumType(
+    myclass?.settings?.curriculumType
+  );
+  const isNyuCusp = curriculumType === "nyu_cusp";
+  const defaultPage =
+    isNyuCusp && showOpportunitiesTab ? "opportunities" : "students";
+  const page = query?.page || defaultPage;
+  const filteredNavItems = CLASS_PAGE_NAV_ITEMS.filter((item) => {
+    if (item.value === "opportunities" && !showOpportunitiesTab) return false;
+    if (isNyuCusp && NYU_CUSP_HIDDEN_TABS.has(item.value)) return false;
+    return true;
+  });
+  const navItems =
+    isNyuCusp && showOpportunitiesTab
+      ? [
+          ...filteredNavItems.filter((item) => item.value === "opportunities"),
+          ...filteredNavItems.filter((item) => item.value !== "opportunities"),
+        ]
+      : filteredNavItems;
 
   useEffect(() => {
     if (page === "board") {
@@ -93,13 +111,27 @@ export default function ClassPage({ code, user, query }) {
         pathname: `/dashboard/myclasses/${code}`,
         query: { page: "projects" },
       });
+      return;
     }
-  }, [page, code, router]);
+    if (isNyuCusp && NYU_CUSP_HIDDEN_TABS.has(page)) {
+      router.replace({
+        pathname: `/dashboard/myclasses/${code}`,
+        query: { page: defaultPage },
+      });
+      return;
+    }
+    if (isNyuCusp && showOpportunitiesTab && !query?.page) {
+      router.replace({
+        pathname: `/dashboard/myclasses/${code}`,
+        query: { page: "opportunities" },
+      });
+    }
+  }, [page, code, router, isNyuCusp, defaultPage, showOpportunitiesTab, query?.page]);
 
   const isProjectsFullscreen =
     page === "projects" && action === "edit" && board;
 
-  if (page === "board") {
+  if (page === "board" || (isNyuCusp && NYU_CUSP_HIDDEN_TABS.has(page))) {
     return null;
   }
 
@@ -152,7 +184,7 @@ export default function ClassPage({ code, user, query }) {
           </nav>
 
           <div>
-            {page === "dashboard" && (
+            {page === "dashboard" && !isNyuCusp && (
               <Dashboard myclass={myclass} user={user} query={query} />
             )}
           </div>
@@ -172,7 +204,7 @@ export default function ClassPage({ code, user, query }) {
             )}
           </div>
           <div>
-            {page === "studies" && (
+            {page === "studies" && !isNyuCusp && (
               <ClassStudies myclass={myclass} user={user} query={query} />
             )}
           </div>

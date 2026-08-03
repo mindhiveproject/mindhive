@@ -24,6 +24,7 @@ import {
   buildMyNetworkInvitesWhere,
   resolvePublicNetworkCardState,
 } from "../Connect/ClassNetworks/utils";
+import { manageOrganizationHref } from "../../../lib/profileEditNavigation";
 
 const FEEDBACK_NETWORK = "feedback_network";
 const SCHOOL_NETWORK = "school_network";
@@ -327,14 +328,12 @@ export default function SponsorOnboarding() {
     me?.adminOfOrganizations,
     me?.organizationsCreated,
   );
-  const orgPathComplete =
+  const hasPersonName =
+    !!(me?.firstName || "").trim() && !!(me?.lastName || "").trim();
+  const legacyOrgProfileComplete =
     me?.profileType === "organization" &&
     !!(orgRecord?.name || me?.organization || "").trim();
-  const individualPathComplete =
-    me?.profileType === "individual" &&
-    !!(me?.firstName || "").trim() &&
-    !!(me?.lastName || "").trim();
-  const profileStepDone = orgPathComplete || individualPathComplete;
+  const profileStepDone = hasPersonName || legacyOrgProfileComplete;
   const orgStepDone = !!orgRecord;
   const memberNetworks = collectMemberClassNetworks(me);
   const joinedNetwork = memberNetworks[0] || null;
@@ -479,11 +478,12 @@ export default function SponsorOnboarding() {
     }
   };
 
-  const profileEditHref = {
-    pathname: "/dashboard/profile/edit",
-    query: { page: "about", type: "organization" },
-  };
   const myProfileHref = "/dashboard/connect/profile";
+  const manageOrganizationHrefTarget = manageOrganizationHref(orgRecord?.id);
+  const manageOrganizationSetupHref = {
+    pathname: "/dashboard/connect/manage-organization",
+    query: { create: "1" },
+  };
 
   const networkBusy = !!joiningNetworkId || !!cancellingInviteId;
   const networkTitleChip =
@@ -566,7 +566,13 @@ export default function SponsorOnboarding() {
                     default: "Set up",
                   })
             }
-            onAction={() => router.push(profileEditHref)}
+            onAction={() =>
+              router.push(
+                orgStepDone
+                  ? manageOrganizationHrefTarget
+                  : manageOrganizationSetupHref,
+              )
+            }
           />
 
           <SetupRow
@@ -585,9 +591,9 @@ export default function SponsorOnboarding() {
             onAction={() =>
               router.push(
                 oppStepDone
-                  ? "/dashboard/connect/opportunities"
+                  ? "/dashboard/sponsor-connect/opportunities"
                   : {
-                      pathname: "/dashboard/connect/opportunities",
+                      pathname: "/dashboard/sponsor-connect/opportunities",
                       query: { op: "new" },
                     },
               )

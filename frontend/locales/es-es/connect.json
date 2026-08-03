@@ -239,6 +239,13 @@
 		"summaryChipAria": "",
 		"summaryDescription": "",
 		"summaryTitle": "",
+		"tabs": {
+			"admins": "",
+			"matching": "",
+			"organizations": "",
+			"overview": "",
+			"profiles": ""
+		},
 		"titleLabel": "",
 		"titlePlaceholder": "",
 		"titleRequired": "",
@@ -419,6 +426,40 @@
 	},
 	"introductionVideo": "Vídeo de introducción",
 	"locationFilter": "Ubicación",
+	"manageOrganization": {
+		"adminMode": "",
+		"backToList": "",
+		"browseCta": "",
+		"create": {
+			"cancel": "",
+			"createError": "",
+			"creating": "",
+			"helper": "",
+			"notSignedIn": "",
+			"submit": "",
+			"title": ""
+		},
+		"emptyDescription": "",
+		"emptyTitle": "",
+		"list": {
+			"description": "",
+			"emptyFiltered": "",
+			"loading": "",
+			"manageOrganization": "",
+			"pageTitle": "",
+			"searchLabel": "",
+			"searchPlaceholder": ""
+		},
+		"setupCta": "",
+		"tabs": {
+			"people": "",
+			"profile": ""
+		},
+		"tabsHint": "",
+		"unauthorizedDescription": "",
+		"unauthorizedTitle": "",
+		"viewPublic": ""
+	},
 	"matchesRound": {
 		"backLink": ""
 	},
@@ -488,11 +529,28 @@
 	},
 	"myOpportunitiesList": {
 		"capacity": "Capacidad {{count}}",
+		"columns": {
+			"visibility": ""
+		},
 		"delete": "BORRAR",
 		"deleteConfirm": "¿Eliminar esta oportunidad? Esto no se puede deshacer.",
 		"edit": "Editar",
 		"empty": "Aún no has creado ninguna oportunidad. Haz clic en Nueva oportunidad para publicar tu primer proyecto para estudiantes.",
 		"emptyFiltered": "No hay oportunidades que coincidan con los filtros actuales.",
+		"held": {
+			"continueForm": "",
+			"followUp": "",
+			"formComplete": "",
+			"formCompleteSaved": "",
+			"formIncomplete": "",
+			"formIncompleteSaved": "",
+			"noFurtherQuestions": "",
+			"openForm": "",
+			"preSelected": "",
+			"title": "",
+			"unknownNetwork": "",
+			"unknownRound": ""
+		},
 		"loading": "Cargando...",
 		"networkCount": {
 			"many": "{{count}} redes",
@@ -501,6 +559,7 @@
 		"networkFilterLabel": "Filtrar por red",
 		"networkFilterPlaceholder": "Todas las redes",
 		"newButton": "Nueva oportunidad",
+		"openChat": "",
 		"pageTitle": "Mis oportunidades",
 		"rating": {
 			"many": "{{average}} · {{count}} calificaciones",
@@ -531,7 +590,15 @@
 		"statusFilterLabel": "Filtrar por estado",
 		"statusFilterPlaceholder": "Todos los estados",
 		"teamOf": "Equipo de {{size}}",
-		"unknownSponsor": "Desconocido"
+		"unknownSponsor": "Desconocido",
+		"visibility": {
+			"emptyHint": "",
+			"many": "",
+			"modalEmpty": "",
+			"modalTitle": "",
+			"none": "",
+			"one": ""
+		}
 	},
 	"myProfile": "",
 	"nav": {
@@ -541,6 +608,7 @@
 		"explorePublicNetwork": "",
 		"mainNavAriaLabel": "Conectar secciones",
 		"manageNetwork": "",
+		"manageOrganization": "",
 		"matches": "Partidos",
 		"matchingRounds": "Rondas coincidentes",
 		"myMatchedStudents": "Mis alumnos emparejados",
@@ -580,6 +648,7 @@
 			"urbanInfrastructure": "Infraestructura urbana"
 		},
 		"categorizationOther": "Otra categoría",
+		"chatSaveFirst": "",
 		"classNetworksEmptyWarning": "",
 		"classNetworksHint": "",
 		"classNetworksNoMembership": "",
@@ -629,6 +698,8 @@
 			"scopeDescriptionHint": "Describa el alcance del proyecto en el que le gustaría que se centrara el equipo del Proyecto Final. (Las mejores propuestas de Proyecto Final son importantes pero no urgentes; factibles dentro del plazo académico y con los recursos disponibles; ofrecen una definición clara del problema o cuestión a abordar; tienen un alcance realista; y especifican entregables tangibles que el equipo deberá proporcionar). Aproximadamente 500 palabras.",
 			"title": "Alcance del proyecto"
 		},
+		"followUpIntro": "",
+		"followUpLastSaved": "",
 		"followUpQuestionnaire": {
 			"banner": "Has sido preseleccionado/a; por favor, responde a las siguientes preguntas.",
 			"potentialActivities": "Actividades potenciales",
@@ -638,6 +709,7 @@
 			"tbd": "Aquí se añadirán las preguntas de seguimiento.",
 			"title": "Cuestionario de seguimiento"
 		},
+		"followUpSaveMissing": "",
 		"groupFormat": "Formato de grupo",
 		"guidelinesAcknowledgedAt": "Reconocido {{date}}",
 		"guidelinesAgree": "Estoy de acuerdo con esta afirmación.",
@@ -826,6 +898,7 @@
 			"unknownAuthor": ""
 		},
 		"save": "Guardar cambios",
+		"savedFlash": "",
 		"saveDraft": "",
 		"saving": "Ahorro...",
 		"specialConsiderations": {
@@ -851,6 +924,7 @@
 		"status": "Estado",
 		"statusAdmin": "",
 		"statusAdminHint": "",
+		"statusNewHint": "",
 		"statusOptions": {
 			"accepted": "Aceptado (alcance final completo)",
 			"archived": "Archivado",
@@ -863,6 +937,13 @@
 		},
 		"studentCapacity": "Capacidad de estudiantes",
 		"submitForReview": "",
+		"tabs": {
+			"chat": "",
+			"followUpCompleteAria": "",
+			"followUpFallback": "",
+			"proposal": "",
+			"status": ""
+		},
 		"teamPreferences": "Permitir que los estudiantes nombren a sus compañeros de equipo preferidos para esta oportunidad.",
 		"teamSize": "Tamaño del equipo",
 		"teamSizeHint": "1 = colocación individual.",
@@ -1024,6 +1105,13 @@
 		"solo": "",
 		"teamOf": "",
 		"unknownMember": "",
+		"verification": {
+			"copyEmail": "",
+			"copyEmailAria": "",
+			"notVerified": "",
+			"notVerifiedTooltip": "",
+			"verified": ""
+		},
 		"website": ""
 	},
 	"organizationsList": {
@@ -1193,6 +1281,7 @@
 			"classNetworkAdmin": "",
 			"mentor": "Mentores",
 			"scientist": "",
+			"sponsor": "",
 			"student": "Estudiantes",
 			"teacher": "Profesores"
 		},
