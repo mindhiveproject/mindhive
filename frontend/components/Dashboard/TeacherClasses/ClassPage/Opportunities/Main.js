@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
@@ -12,7 +12,18 @@ export default function ClassOpportunities({ myclass }) {
   const networks = myclass?.networks || [];
 
   const [previewOpportunityId, setPreviewOpportunityId] = useState(null);
+  const [previewInitialTab, setPreviewInitialTab] = useState(null);
   const [matchingRoundContext, setMatchingRoundContext] = useState(null);
+
+  const handlePreviewOpportunity = useCallback((id, options) => {
+    setPreviewOpportunityId(id || null);
+    setPreviewInitialTab(options?.initialTab || null);
+  }, []);
+
+  const handleClosePreview = useCallback(() => {
+    setPreviewOpportunityId(null);
+    setPreviewInitialTab(null);
+  }, []);
 
   const handleOpenSettings = () => {
     if (!myclass?.code) return;
@@ -45,7 +56,7 @@ export default function ClassOpportunities({ myclass }) {
       ) : (
         <MatchingRoundsList
           myclass={myclass}
-          onPreviewOpportunity={setPreviewOpportunityId}
+          onPreviewOpportunity={handlePreviewOpportunity}
           onMatchingRoundContextChange={setMatchingRoundContext}
         />
       )}
@@ -53,7 +64,8 @@ export default function ClassOpportunities({ myclass }) {
       <OpportunityPreviewModal
         open={!!previewOpportunityId}
         opportunityId={previewOpportunityId}
-        onClose={() => setPreviewOpportunityId(null)}
+        initialTab={previewInitialTab}
+        onClose={handleClosePreview}
         matchingRoundContext={matchingRoundContext}
       />
     </div>

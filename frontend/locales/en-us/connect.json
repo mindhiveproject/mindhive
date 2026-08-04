@@ -772,6 +772,7 @@
 			"review": "Review queue"
 		},
 		"loading": "Loading opportunity…",
+		"notFound": "Opportunity not found.",
 		"mentorNotes": "Mentor notes",
 		"mentorNotesDescription": "Name, title, contact, and availability of the day-to-day mentor. If no mentor is available, describe the gaps and CUSP can help identify support.",
 		"offeredInNetworks": "Offered in class networks",
@@ -922,12 +923,14 @@
 			"preSelect": "Pre-select sponsor",
 			"preSelectConfirm": "Pre-select this sponsor? They will be notified of your decision.",
 			"preSelectSuccess": "Sponsor pre-selected and notified.",
+			"proposalHeading": "Proposal",
 			"publish": "Publish opportunity",
 			"publishConfirm": "Publish this opportunity so students can see it?",
 			"publishSuccess": "Opportunity published.",
 			"reviewButton": "Review",
 			"scopeIncomplete": "The sponsor must complete the project scope before you can publish.",
 			"sponsorLabel": "Sponsor",
+			"statusHeading": "Status",
 			"submittedLabel": "Submitted"
 		},
 		"reviewNotes": {
@@ -938,6 +941,7 @@
 		},
 		"save": "Save changes",
 		"savedFlash": "Saved.",
+		"submittedFlash": "Submitted for review.",
 		"saveDraft": "Save draft",
 		"saving": "Saving…",
 		"specialConsiderations": {

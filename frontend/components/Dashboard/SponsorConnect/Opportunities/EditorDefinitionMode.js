@@ -1,14 +1,7 @@
-// Definition-driven Opportunity editor — the cutover sibling to the
-// hardcoded Editor.js. Loads the opportunity, renders <DefinitionForm>,
-// and routes the form's update input straight to CREATE/UPDATE mutations.
-//
-// Chat, Status, and follow-up forms are opened as modals from the
-// opportunities List. This surface is proposal editing only.
-//
-// The legacy Editor.js stays in place for now and handles complex types
-// (media, rich text, custom application questions). EditorSwitch picks
-// which one renders based on the NEXT_PUBLIC_USE_CUSTOMIZABLE_FORMS
-// env flag.
+// Definition-driven Opportunity editor — DefinitionForm is the only intake UI.
+// Chat, Status, and follow-up forms open as modals from the opportunities List.
+// Custom ConnectQuestion CRUD lived on the legacy Editor and is not ported;
+// structured intake + round follow-up FormDefinitions replace that path.
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -131,6 +124,15 @@ const BackLink = styled.button`
   }
 `;
 
+const Actions = styled.div`
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
+`;
+
 const Card = styled.div`
   display: flex;
   flex-direction: column;
@@ -152,12 +154,15 @@ function rolesForViewer(connectRole) {
   return roles;
 }
 
+const LIST_PATH = "/dashboard/sponsor-connect/opportunities";
+
 export default function EditorDefinitionMode({ opportunityId }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
   const user = useContext(UserContext);
   const isNew = isNewOpportunityId(opportunityId);
   const connectRole = useConnectRole();
+  const { isAdmin } = connectRole;
   const viewerRoles = rolesForViewer(connectRole);
 
   const { data: oppData, loading: oppLoading } = useQuery(GET_OPPORTUNITY, {
@@ -206,22 +211,53 @@ export default function EditorDefinitionMode({ opportunityId }) {
   const [guidelinesAcknowledged, setGuidelinesAcknowledged] = useState(false);
   const [requestsAppointment, setRequestsAppointment] = useState(false);
   const proposalFormRef = useRef(null);
+  const saveIntentRef = useRef({ submitForReview: false });
+
+  const currentStatus = opportunity?.status || "draft";
+  const canSponsorSubmit =
+    !isAdmin &&
+    !isNew &&
+    (currentStatus === "draft" || currentStatus === "returned");
+  const showSponsorDraftOnlySave = !isAdmin && !isNew && !canSponsorSubmit;
 
   const handleSubmit = async (result) => {
+    const submitForReview = !!saveIntentRef.current.submitForReview;
+    saveIntentRef.current.submitForReview = false;
+
     const baseInput = result?.self || {};
     const classNetworks = buildClassNetworksMutationInput(
       selectedNetworks,
       isNew,
     );
+
+    // Top-bar Save draft / Submit owns status for sponsors. Admins may use
+    // the Publishing card status field from DefinitionForm.
+    let nextStatus = baseInput.status || currentStatus || "draft";
+    if (submitForReview) {
+      nextStatus = "pending_review";
+    } else if (!isAdmin && !isNew) {
+      nextStatus = currentStatus;
+    }
+
     const input = {
       ...baseInput,
+      status: nextStatus,
       ...(classNetworks ? { classNetworks } : {}),
+      acceptedAt:
+        nextStatus === "accepted" && !opportunity?.acceptedAt
+          ? new Date().toISOString()
+          : opportunity?.acceptedAt || null,
+      preSelectedAt:
+        nextStatus === "pre_selected" && !opportunity?.preSelectedAt
+          ? new Date().toISOString()
+          : opportunity?.preSelectedAt || null,
     };
 
     setFlash(null);
     if (isNew) {
       const createInput = {
         ...input,
+        status: input.status || "draft",
         guidelinesAcknowledged: !!guidelinesAcknowledged,
         guidelinesAcknowledgedAt: guidelinesAcknowledged
           ? new Date().toISOString()
@@ -235,7 +271,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
       if (newId) {
         router.replace(
           {
-            pathname: "/dashboard/sponsor-connect/opportunities",
+            pathname: LIST_PATH,
             query: { op: newId, tab: "proposal" },
           },
           undefined,
@@ -247,20 +283,35 @@ export default function EditorDefinitionMode({ opportunityId }) {
         variables: { id: opportunityId, input },
       });
       setFlash(
-        t("opportunityEditor.savedFlash", {}, { default: "Saved." }),
+        submitForReview
+          ? t("opportunityEditor.submittedFlash", {}, {
+              default: "Submitted for review.",
+            })
+          : t("opportunityEditor.savedFlash", {}, { default: "Saved." }),
       );
     }
   };
 
-  const handleTopBarSave = async () => {
+  const runSave = async ({ submitForReview = false } = {}) => {
     setSaving(true);
     setFlash(null);
+    saveIntentRef.current.submitForReview = submitForReview;
     try {
       await proposalFormRef.current?.save?.();
     } finally {
       setSaving(false);
     }
   };
+
+  // Must stay above the loading early-return — Rules of Hooks.
+  const statusStepperNetworks = useMemo(() => {
+    if (opportunity?.classNetworks?.length) {
+      return opportunity.classNetworks;
+    }
+    return selectedNetworks
+      .map((id) => availableNetworks.find((network) => network.id === id))
+      .filter(Boolean);
+  }, [opportunity?.classNetworks, selectedNetworks, availableNetworks]);
 
   if (!isNew && oppLoading && !opportunity) {
     return (
@@ -271,15 +322,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
       </Shell>
     );
   }
-
-  const statusStepperNetworks = useMemo(() => {
-    if (opportunity?.classNetworks?.length) {
-      return opportunity.classNetworks;
-    }
-    return selectedNetworks
-      .map((id) => availableNetworks.find((network) => network.id === id))
-      .filter(Boolean);
-  }, [opportunity?.classNetworks, selectedNetworks, availableNetworks]);
 
   const entityTitle = (opportunity?.title || "").trim();
   const pageTitle = entityTitle
@@ -294,13 +336,21 @@ export default function EditorDefinitionMode({ opportunityId }) {
   const backLabel = t("opportunityEditor.backLink", {}, {
     default: "Back to opportunities",
   });
-  const saveLabel = saving
+  const editPrimaryLabel = saving
     ? t("opportunityEditor.saving", {}, { default: "Saving…" })
     : isNew
     ? t("opportunityEditor.create", {}, {
         default: "Create opportunity",
       })
     : t("opportunityEditor.save", {}, { default: "Save changes" });
+  const saveDraftLabel = saving
+    ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+    : t("opportunityEditor.saveDraft", {}, { default: "Save draft" });
+  const submitForReviewLabel = saving
+    ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+    : t("opportunityEditor.submitForReview", {}, {
+        default: "Submit for review in class network",
+      });
 
   return (
     <Shell>
@@ -308,19 +358,18 @@ export default function EditorDefinitionMode({ opportunityId }) {
         <TopBarLeft>
           <BackLink
             type="button"
-            onClick={() =>
-              router.push({ pathname: "/dashboard/sponsor-connect/opportunities" })
-            }
+            onClick={() => router.push({ pathname: LIST_PATH })}
             aria-label={backLabel}
             title={backLabel}
+            disabled={saving}
           >
             {BACK_CHEVRON}
           </BackLink>
           <TitleRow>
-            <h1 title={pageTitle}>{pageTitle}</h1>asd
+            <h1 title={pageTitle}>{pageTitle}</h1>
             {!isNew && (
               <OpportunityListStepper
-                status={opportunity?.status || "draft"}
+                status={currentStatus}
                 proposalData={opportunity?.proposalData}
                 rounds={opportunity?.rounds}
                 networks={statusStepperNetworks}
@@ -328,14 +377,37 @@ export default function EditorDefinitionMode({ opportunityId }) {
             )}
           </TitleRow>
         </TopBarLeft>
-        <Button
-          type="button"
-          variant="filled"
-          onClick={handleTopBarSave}
-          disabled={saving}
-        >
-          {saveLabel}
-        </Button>
+        <Actions>
+          {canSponsorSubmit ? (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => runSave({ submitForReview: false })}
+                disabled={saving}
+              >
+                {saveDraftLabel}
+              </Button>
+              <Button
+                type="button"
+                variant="filled"
+                onClick={() => runSave({ submitForReview: true })}
+                disabled={saving}
+              >
+                {submitForReviewLabel}
+              </Button>
+            </>
+          ) : showSponsorDraftOnlySave || isNew || isAdmin ? (
+            <Button
+              type="button"
+              variant="filled"
+              onClick={() => runSave({ submitForReview: false })}
+              disabled={saving}
+            >
+              {editPrimaryLabel}
+            </Button>
+          ) : null}
+        </Actions>
       </TopBar>
       {flash ? (
         <div style={{ color: "#1d6b3a", fontSize: 14 }}>{flash}</div>
@@ -355,13 +427,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
         locale={router.locale}
         onSubmit={handleSubmit}
         hideSaveButton
-        saveLabel={
-          isNew
-            ? t("opportunityEditor.create", {}, {
-                default: "Create opportunity",
-              })
-            : t("opportunityEditor.save", {}, { default: "Save changes" })
-        }
+        saveLabel={editPrimaryLabel}
       />
       <Card>
         <OpportunityGuidelinesSection

@@ -1,7 +1,4 @@
-// Shared styled-components for the customizable-forms renderer. Visual
-// tokens mirror the existing Connect editor (Card, Row, Field, etc.) so
-// definition-driven forms look identical to the hardcoded ones during
-// the dual-render cutover.
+// Shared styled-components for the customizable-forms renderer.
 import styled from "styled-components";
 
 export const Card = styled.section`

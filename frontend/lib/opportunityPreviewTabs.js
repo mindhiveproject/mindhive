@@ -83,8 +83,14 @@ export function resolveOpportunityPreviewTab(
     return OPPORTUNITY_PREVIEW_TABS.detail;
   }
   const formId = parseFormTabKey(value);
-  if (formId && followUpForms.some((f) => f.id === formId)) {
-    return formTabKey(formId);
+  if (formId) {
+    // Keep a deep-linked form tab while follow-up forms are still hydrating.
+    if (
+      followUpForms.length === 0 ||
+      followUpForms.some((f) => f.id === formId)
+    ) {
+      return formTabKey(formId);
+    }
   }
   return OPPORTUNITY_PREVIEW_TABS.detail;
 }

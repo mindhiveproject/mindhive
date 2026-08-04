@@ -44,6 +44,7 @@ import {
 } from "../../../Connect/Rounds/roundFormConfig";
 import { useUser } from "../../../../Utils/Access/User";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
+import MatchingRoundFollowUpCompletionGrid from "./MatchingRoundFollowUpCompletionGrid";
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
 import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
@@ -606,6 +607,8 @@ function MatchingRoundEditor({
   const [publicFormsExpanded, setPublicFormsExpanded] = useState(false);
   const [deletingFormId, setDeletingFormId] = useState(null);
   const [cloningPublic, setCloningPublic] = useState(false);
+  const [formsManagerOpen, setFormsManagerOpen] = useState(true);
+  const formsManagerInitializedRef = useRef(false);
   const savedSnapshotRef = useRef(null);
 
   const selectedNetwork = useMemo(
@@ -766,6 +769,23 @@ function MatchingRoundEditor({
     myclass?.title,
     selectedNetwork?.title,
   ]);
+
+  useEffect(() => {
+    formsManagerInitializedRef.current = false;
+    setFormsManagerOpen(true);
+  }, [roundId, isNew]);
+
+  useEffect(() => {
+    if (!formInitialized) return;
+    if (!formsManagerInitializedRef.current) {
+      formsManagerInitializedRef.current = true;
+      setFormsManagerOpen(selectedFormDefinitionIds.length === 0);
+      return;
+    }
+    if (selectedFormDefinitionIds.length === 0) {
+      setFormsManagerOpen(true);
+    }
+  }, [formInitialized, selectedFormDefinitionIds.length]);
 
   const { data: libraryData } = useQuery(QUESTION_LIBRARY, {
     fetchPolicy: "cache-and-network",
@@ -1589,13 +1609,18 @@ function MatchingRoundEditor({
       noRoundForNetwork: false,
       togglingOpportunityId,
       toggleOpportunity: toggleOpportunityInRound,
-      formDefinitions: (round?.formDefinitions || []).map((fd) => ({
-        id: fd.id,
-        title: fd.title,
-        key: fd.key,
-        version: fd.version,
-        status: fd.status,
-      })),
+      formDefinitions: selectedFormDefinitionIds.map((id) => {
+        const fromRound = (round?.formDefinitions || []).find(
+          (fd) => fd.id === id,
+        );
+        return {
+          id,
+          title: formLabelsById[id] || fromRound?.title || id,
+          key: fromRound?.key,
+          version: fromRound?.version,
+          status: fromRound?.status || "published",
+        };
+      }),
     });
     return () => onMatchingRoundContextChange(null);
   }, [
@@ -1607,6 +1632,8 @@ function MatchingRoundEditor({
     canManageOpportunities,
     togglingOpportunityId,
     toggleOpportunityInRound,
+    selectedFormDefinitionIds,
+    formLabelsById,
     round?.formDefinitions,
   ]);
 
@@ -2151,19 +2178,36 @@ function MatchingRoundEditor({
 
     return (
       <div className="classTabMatchingRoundPanel">
+        {formsManagerOpen ? (
         <div className="matchingRoundFormPicker">
-          <div className="matchingRoundFormPickerHeader">
-            <h4 className="matchingRoundFormPickerTitle">
-              {t("opportunities.matchingRound.formPicker.title", {}, {
-                default: "Sponsor follow-up questionnaires",
-              })}
-            </h4>
-            <p className="matchingRoundFormPickerHint">
-              {t("opportunities.matchingRound.formPicker.hint", {}, {
-                default:
-                  "Attach questionnaires from the shared class library to this round, then choose when sponsors can respond.",
-              })}
-            </p>
+          <div className="matchingRoundFormPickerHeader matchingRoundFormPickerHeaderWithToggle">
+            <div className="matchingRoundFormPickerHeaderCopy">
+              <h4 className="matchingRoundFormPickerTitle">
+                {t("opportunities.matchingRound.formPicker.title", {}, {
+                  default: "Sponsor follow-up questionnaires",
+                })}
+              </h4>
+              <p className="matchingRoundFormPickerHint">
+                {t("opportunities.matchingRound.formPicker.hint", {}, {
+                  default:
+                    "Attach questionnaires from the shared class library to this round, then choose when sponsors can respond.",
+                })}
+              </p>
+            </div>
+            {selectedFormDefinitionIds.length > 0 ? (
+              <Button
+                type="button"
+                variant="text"
+                className="matchingRoundFormPickerCollapse"
+                onClick={() => setFormsManagerOpen(false)}
+              >
+                {t(
+                  "opportunities.matchingRound.followUpCompletion.hideFormsManager",
+                  {},
+                  { default: "Hide questionnaires" },
+                )}
+              </Button>
+            ) : null}
           </div>
 
           <section className="matchingRoundFormPickerSection matchingRoundFormPickerSectionInRound">
@@ -2429,6 +2473,68 @@ function MatchingRoundEditor({
             })}
           </p>
         </div>
+        ) : (
+          <div className="matchingRoundFormSummary">
+            <div className="matchingRoundFormSummaryCopy">
+              <h4 className="matchingRoundFormSummaryTitle">
+                {t(
+                  "opportunities.matchingRound.formPicker.summaryTitle",
+                  {},
+                  { default: "Sponsor questionnaires" },
+                )}
+              </h4>
+              <p className="matchingRoundFormSummaryStatus">
+                {[
+                  selectedFormDefinitionIds.length === 1
+                    ? t(
+                        "opportunities.matchingRound.formPicker.summaryCountOne",
+                        {},
+                        { default: "1 form" },
+                      )
+                    : t(
+                        "opportunities.matchingRound.formPicker.summaryCount",
+                        { count: selectedFormDefinitionIds.length },
+                        { default: "{{count}} forms" },
+                      ),
+                  sponsorFormsVisible
+                    ? t(
+                        "opportunities.matchingRound.formPicker.visibilityVisible",
+                        {},
+                        { default: "Visible to sponsors" },
+                      )
+                    : t(
+                        "opportunities.matchingRound.formPicker.visibilityHidden",
+                        {},
+                        { default: "Hidden from sponsors" },
+                      ),
+                ].join(" · ")}
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="matchingRoundFormSummaryManage"
+              onClick={() => setFormsManagerOpen(true)}
+            >
+              {t(
+                "opportunities.matchingRound.followUpCompletion.manageForms",
+                {},
+                { default: "Manage questionnaires" },
+              )}
+            </Button>
+          </div>
+        )}
+
+        <MatchingRoundFollowUpCompletionGrid
+          opportunities={selectedNetworkOpportunities}
+          forms={selectedFormDefinitionIds.map((id) => ({
+            id,
+            title: formLabelsById[id] || id,
+          }))}
+          sponsorFormsVisible={sponsorFormsVisible}
+          onPreview={onPreviewOpportunity}
+          onManageForms={() => setFormsManagerOpen(true)}
+        />
 
         <MatchingRoundFormPreviewModal
           open={formPreviewOpen}
@@ -2516,7 +2622,10 @@ function MatchingRoundEditor({
             type="button"
             variant="outline"
             className="matchingRoundFormSummaryManage"
-            onClick={() => setActivePanel(PANELS.forms)}
+            onClick={() => {
+              setFormsManagerOpen(true);
+              setActivePanel(PANELS.forms);
+            }}
           >
             {t(
               "opportunities.matchingRound.formPicker.summaryManage",
