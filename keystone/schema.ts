@@ -62,6 +62,7 @@ import { ConnectMatch } from "./schemas/ConnectMatch";
 import { ConnectRating } from "./schemas/ConnectRating";
 import { Organization } from "./schemas/Organization";
 import { OrganizationInvite } from "./schemas/OrganizationInvite";
+import { AiThread } from "./schemas/AiThread";
 import { FormDefinition } from "./schemas/FormDefinition";
 import { FormCard } from "./schemas/FormCard";
 import { FormField } from "./schemas/FormField";
@@ -141,6 +142,7 @@ export const lists: Lists = {
   ConnectRating,
   Organization,
   OrganizationInvite,
+  AiThread,
   FormDefinition,
   FormCard,
   FormField,
