@@ -1,5 +1,5 @@
 import OpportunitiesList from "./List";
-import OpportunityEditor from "./EditorSwitch";
+import EditorDefinitionMode from "./EditorDefinitionMode";
 import RoleGuard from "../../Connect/RoleGuard";
 
 export default function OpportunitiesMain({ query, user }) {
@@ -8,7 +8,7 @@ export default function OpportunitiesMain({ query, user }) {
   return (
     <RoleGuard allow={["sponsor"]}>
       {op ? (
-        <OpportunityEditor query={query} user={user} opportunityId={op} />
+        <EditorDefinitionMode opportunityId={op} />
       ) : (
         <OpportunitiesList query={query} user={user} />
       )}

@@ -1,16 +1,7 @@
-// Definition-driven Opportunity editor — the cutover sibling to the
-// hardcoded Editor.js. Loads the opportunity, renders <DefinitionForm>,
-// and routes the form's update input straight to CREATE/UPDATE mutations.
-//
-// The legacy Editor.js stays in place for now and handles complex types
-// (media, rich text, custom application questions). EditorSwitch picks
-// which one renders based on the NEXT_PUBLIC_USE_CUSTOMIZABLE_FORMS
-// env flag.
-//
-// Deferred (v1 review thread): OpportunityReviewNotesThread lives only in
-// the legacy Editor.js path. Parity for this definition-mode editor is
-// intentionally out of scope until the customizable-forms cutover needs it.
-import { useContext, useEffect, useMemo, useState } from "react";
+// Definition-driven Opportunity editor — DefinitionForm is the only intake UI.
+// Teacher network review uses NetworkReview (?review=1). Round-assigned review
+// uses /dashboard/connect/review. Custom ConnectQuestion CRUD is not ported.
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -18,7 +9,10 @@ import styled from "styled-components";
 
 import { UserContext } from "../../../Global/Authorized";
 import DefinitionForm from "../../../Forms/DefinitionForm";
+import Button from "../../../DesignSystem/Button";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
+import OpportunityGuidelinesSection from "../../SponsorConnect/Opportunities/OpportunityGuidelinesSection";
+import OpportunityListStepper from "../../SponsorConnect/Opportunities/OpportunityListStepper";
 import {
   GET_OPPORTUNITY,
   MY_OPPORTUNITIES,
@@ -136,6 +130,25 @@ const BackLink = styled.button`
   }
 `;
 
+const Actions = styled.div`
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
+`;
+
+const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
+`;
+
 function rolesForViewer(connectRole) {
   const roles = [];
   if (connectRole.isAdmin) roles.push("admin");
@@ -147,12 +160,15 @@ function rolesForViewer(connectRole) {
   return roles;
 }
 
+const LIST_PATH = "/dashboard/connect/opportunities";
+
 export default function EditorDefinitionMode({ opportunityId }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
   const user = useContext(UserContext);
   const isNew = isNewOpportunityId(opportunityId);
   const connectRole = useConnectRole();
+  const { isAdmin } = connectRole;
   const viewerRoles = rolesForViewer(connectRole);
 
   const { data: oppData, loading: oppLoading } = useQuery(GET_OPPORTUNITY, {
@@ -197,22 +213,59 @@ export default function EditorDefinitionMode({ opportunityId }) {
   });
 
   const [flash, setFlash] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [guidelinesAcknowledged, setGuidelinesAcknowledged] = useState(false);
+  const [requestsAppointment, setRequestsAppointment] = useState(false);
+  const proposalFormRef = useRef(null);
+  const saveIntentRef = useRef({ submitForReview: false });
+
+  const currentStatus = opportunity?.status || "draft";
+  const canSponsorSubmit =
+    !isAdmin &&
+    !isNew &&
+    (currentStatus === "draft" || currentStatus === "returned");
 
   const handleSubmit = async (result) => {
+    const submitForReview = !!saveIntentRef.current.submitForReview;
+    saveIntentRef.current.submitForReview = false;
+
     const baseInput = result?.self || {};
     const classNetworks = buildClassNetworksMutationInput(
       selectedNetworks,
       isNew,
     );
+
+    let nextStatus = baseInput.status || currentStatus || "draft";
+    if (submitForReview) {
+      nextStatus = "pending_review";
+    } else if (!isAdmin && !isNew) {
+      nextStatus = currentStatus;
+    }
+
     const input = {
       ...baseInput,
+      status: nextStatus,
       ...(classNetworks ? { classNetworks } : {}),
+      acceptedAt:
+        nextStatus === "accepted" && !opportunity?.acceptedAt
+          ? new Date().toISOString()
+          : opportunity?.acceptedAt || null,
+      preSelectedAt:
+        nextStatus === "pre_selected" && !opportunity?.preSelectedAt
+          ? new Date().toISOString()
+          : opportunity?.preSelectedAt || null,
     };
 
     setFlash(null);
     if (isNew) {
       const createInput = {
         ...input,
+        status: input.status || "draft",
+        guidelinesAcknowledged: !!guidelinesAcknowledged,
+        guidelinesAcknowledgedAt: guidelinesAcknowledged
+          ? new Date().toISOString()
+          : null,
+        requestsAppointment: !!requestsAppointment,
         ...(user?.id ? { mentor: { connect: { id: user.id } } } : {}),
         ...(myOrgId ? { organization: { connect: { id: myOrgId } } } : {}),
       };
@@ -220,18 +273,45 @@ export default function EditorDefinitionMode({ opportunityId }) {
       const newId = res?.data?.createOpportunity?.id;
       if (newId) {
         router.replace(
-          { pathname: "/dashboard/connect/opportunities", query: { op: newId } },
+          { pathname: LIST_PATH, query: { op: newId } },
           undefined,
-          { shallow: false }
+          { shallow: false },
         );
       }
     } else {
       await updateOpportunity({
         variables: { id: opportunityId, input },
       });
-      setFlash("Saved.");
+      setFlash(
+        submitForReview
+          ? t("opportunityEditor.submittedFlash", {}, {
+              default: "Submitted for review.",
+            })
+          : t("opportunityEditor.savedFlash", {}, { default: "Saved." }),
+      );
     }
   };
+
+  const runSave = async ({ submitForReview = false } = {}) => {
+    setSaving(true);
+    setFlash(null);
+    saveIntentRef.current.submitForReview = submitForReview;
+    try {
+      await proposalFormRef.current?.save?.();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Must stay above the loading early-return — Rules of Hooks.
+  const statusStepperNetworks = useMemo(() => {
+    if (opportunity?.classNetworks?.length) {
+      return opportunity.classNetworks;
+    }
+    return selectedNetworks
+      .map((id) => availableNetworks.find((network) => network.id === id))
+      .filter(Boolean);
+  }, [opportunity?.classNetworks, selectedNetworks, availableNetworks]);
 
   if (!isNew && oppLoading && !opportunity) {
     return (
@@ -256,6 +336,21 @@ export default function EditorDefinitionMode({ opportunityId }) {
   const backLabel = t("opportunityEditor.backLink", {}, {
     default: "Back to opportunities",
   });
+  const editPrimaryLabel = saving
+    ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+    : isNew
+    ? t("opportunityEditor.create", {}, {
+        default: "Create opportunity",
+      })
+    : t("opportunityEditor.save", {}, { default: "Save changes" });
+  const saveDraftLabel = saving
+    ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+    : t("opportunityEditor.saveDraft", {}, { default: "Save draft" });
+  const submitForReviewLabel = saving
+    ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+    : t("opportunityEditor.submitForReview", {}, {
+        default: "Submit for review in class network",
+      });
 
   return (
     <Shell>
@@ -263,18 +358,56 @@ export default function EditorDefinitionMode({ opportunityId }) {
         <TopBarLeft>
           <BackLink
             type="button"
-            onClick={() =>
-              router.push({ pathname: "/dashboard/connect/opportunities" })
-            }
+            onClick={() => router.push({ pathname: LIST_PATH })}
             aria-label={backLabel}
             title={backLabel}
+            disabled={saving}
           >
             {BACK_CHEVRON}
           </BackLink>
           <TitleRow>
             <h1 title={pageTitle}>{pageTitle}</h1>
+            {!isNew && (
+              <OpportunityListStepper
+                status={currentStatus}
+                proposalData={opportunity?.proposalData}
+                rounds={opportunity?.rounds}
+                networks={statusStepperNetworks}
+              />
+            )}
           </TitleRow>
         </TopBarLeft>
+        <Actions>
+          {canSponsorSubmit ? (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => runSave({ submitForReview: false })}
+                disabled={saving}
+              >
+                {saveDraftLabel}
+              </Button>
+              <Button
+                type="button"
+                variant="filled"
+                onClick={() => runSave({ submitForReview: true })}
+                disabled={saving}
+              >
+                {submitForReviewLabel}
+              </Button>
+            </>
+          ) : (
+            <Button
+              type="button"
+              variant="filled"
+              onClick={() => runSave({ submitForReview: false })}
+              disabled={saving}
+            >
+              {editPrimaryLabel}
+            </Button>
+          )}
+        </Actions>
       </TopBar>
       {flash ? (
         <div style={{ color: "#1d6b3a", fontSize: 14 }}>{flash}</div>
@@ -285,20 +418,35 @@ export default function EditorDefinitionMode({ opportunityId }) {
         onChange={setSelectedNetworks}
       />
       <DefinitionForm
+        ref={proposalFormRef}
         definitionKey="opportunity"
         entity={opportunity || null}
         scopeContext={{ organizationId: myOrgId }}
         viewerRoles={viewerRoles}
         locale={router.locale}
         onSubmit={handleSubmit}
-        saveLabel={
-          isNew
-            ? t("opportunityEditor.create", {}, {
-                default: "Create opportunity",
-              })
-            : t("opportunityEditor.save", {}, { default: "Save changes" })
-        }
+        hideSaveButton
+        saveLabel={editPrimaryLabel}
       />
+      <Card>
+        <OpportunityGuidelinesSection
+          editable={isNew}
+          guidelinesAcknowledged={
+            isNew
+              ? guidelinesAcknowledged
+              : !!opportunity?.guidelinesAcknowledged
+          }
+          requestsAppointment={
+            isNew ? requestsAppointment : !!opportunity?.requestsAppointment
+          }
+          guidelinesAcknowledgedAt={
+            opportunity?.guidelinesAcknowledgedAt || null
+          }
+          onGuidelinesAcknowledgedChange={setGuidelinesAcknowledged}
+          onRequestsAppointmentChange={setRequestsAppointment}
+          titleAs="h2"
+        />
+      </Card>
     </Shell>
   );
 }

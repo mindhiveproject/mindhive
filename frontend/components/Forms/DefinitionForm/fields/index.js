@@ -1,7 +1,5 @@
 // Field-type registry. Maps FormField.fieldType → React component.
-// Phase 3 covers the 8 simple types directly. Complex types
-// (rich_text, image, file, video_url, tag_multiselect, json_array)
-// fall back to a graceful "not yet supported" placeholder so a
+// Unknown types fall back to a graceful "not yet supported" placeholder so a
 // definition that includes them still renders without crashing.
 import {
   TextInput,
@@ -32,7 +30,7 @@ function NotYetSupported({ field, locale }) {
       <span className="label-text">{fieldLabel(field, locale)}</span>
       <span className="hint">
         Field type <code>{field.fieldType}</code> is not yet supported by
-        this renderer. Edit it in the legacy form for now.
+        this renderer.
       </span>
     </FieldShell>
   );
