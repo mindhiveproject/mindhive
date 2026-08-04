@@ -99,7 +99,7 @@ export const StyledMenuBar = styled.div`
 
     img {
       display: block;
-      height: ${(props) => (props.$collapsed ? "24px" : "56px")};
+      height: ${(props) => (props.$collapsed ? "24px" : "40px")};
       width: auto;
     }
   }
