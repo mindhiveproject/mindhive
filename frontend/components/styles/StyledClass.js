@@ -1392,6 +1392,29 @@ const StyledClass = styled.div`
       }
     }
 
+    .classTabMatchingRoundNavRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      min-width: 0;
+
+      .navbar-container {
+        flex: 1 1 auto;
+        min-width: 0;
+        flex-wrap: wrap;
+      }
+
+      .classTabMatchingRoundNavActions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+    }
+
     .classTabMatchingRoundNetworkRow {
       display: grid;
       gap: 12px;
@@ -1788,11 +1811,6 @@ const StyledClass = styled.div`
       font-size: 11px;
       font-weight: 500;
       line-height: 16px;
-    }
-
-    .matchingRoundExportActions {
-      display: flex;
-      justify-content: flex-start;
     }
 
     .classTabMatchingRoundFooter {

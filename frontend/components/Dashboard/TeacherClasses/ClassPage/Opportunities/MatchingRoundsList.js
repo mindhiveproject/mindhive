@@ -231,13 +231,6 @@ export default function MatchingRoundsList({
     if (newRoundId) setExpandedKey(newRoundId);
   }, []);
 
-  const handleChangeCreateNetwork = useCallback(() => {
-    const guard = dirtyGuardRef.current;
-    if (guard && !guard()) return;
-    setModalNetworkId(createNetworkId || defaultNetworkId || networks[0]?.id);
-    setNetworkModalOpen(true);
-  }, [createNetworkId, defaultNetworkId, networks]);
-
   const isCreating = expandedKey === CREATE_KEY && !!createNetworkId;
 
   if (loadingRounds && !hasAppliedInitialExpand) {
@@ -287,7 +280,6 @@ export default function MatchingRoundsList({
           onPreviewOpportunity={onPreviewOpportunity}
           onMatchingRoundContextChange={onMatchingRoundContextChange}
           onCreated={handleCreated}
-          onRequestChangeNetwork={handleChangeCreateNetwork}
         />
       ) : (
         <div className="matchingRoundsListCreate">

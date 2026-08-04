@@ -4,6 +4,7 @@ import absoluteUrl from "next-absolute-url";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
+import styled from "styled-components";
 
 import useForm from "../../../../../lib/useForm";
 import { classNetworkUrlRef } from "../../../../../lib/classNetworkRef";
@@ -12,6 +13,7 @@ import Chip from "../../../../DesignSystem/Chip";
 import CopyButton from "../../../../DesignSystem/CopyButton";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import IconButton from "../../../../DesignSystem/IconButton";
 import Modal from "../../../../DesignSystem/Modal";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import {
@@ -80,6 +82,142 @@ const PANELS = {
   questions: "questions",
   matches: "matches",
 };
+
+/** Portal-safe styles: DesignSystem Modal mounts outside `.classTabPage`. */
+const SettingsModalContent = styled.div`
+  .classTabMatchingRoundPanel {
+    display: grid;
+    gap: 18px;
+  }
+
+  .classTabMatchingRoundNetworkRow {
+    display: grid;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid #ece9e6;
+    border-radius: 12px;
+    background: var(--MH-Theme-Neutrals-Extra-Light, #f8fafb);
+
+    .matchingRoundNetworkConfirm {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .matchingRoundNetworkIdentity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .matchingRoundNetworkIcon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .matchingRoundNetworkIdentityText {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .matchingRoundNetworkTitle {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 22px;
+      color: #171717;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .matchingRoundNetworkActions {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px 10px;
+      min-width: 0;
+      overflow-x: auto;
+    }
+
+    .matchingRoundNetworkInviteActions {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+  }
+
+  .classTabFormGrid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .classTabFormGridTwo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .classTabFormField {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    font-size: 14px;
+    color: #625b71;
+
+    .fieldLabel {
+      font-weight: 600;
+      color: #171717;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d9d6d2;
+      border-radius: 12px;
+      background: #ffffff;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      color: #171717;
+      outline: none;
+      box-sizing: border-box;
+
+      &:focus-visible {
+        border-color: #336f8a;
+      }
+    }
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+  }
+`;
 
 function getRoundStatusParts(status, t) {
   const key = ROUND_STATUS_KEYS[status];
@@ -401,7 +539,6 @@ function MatchingRoundEditor({
   onPreviewOpportunity,
   onMatchingRoundContextChange,
   onCreated,
-  onRequestChangeNetwork,
 }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
@@ -421,6 +558,11 @@ function MatchingRoundEditor({
     return raw;
   }, [router.query?.matchingPanel]);
 
+  const initialPanel =
+    queryMatchingPanel && queryMatchingPanel !== PANELS.settings
+      ? queryMatchingPanel
+      : PANELS.review;
+
   const [selectedNetworkId, setSelectedNetworkId] = useState(
     isCreate
       ? initialNetworkId || networks[0]?.id || null
@@ -435,8 +577,9 @@ function MatchingRoundEditor({
   const [togglingSponsorFormsVisible, setTogglingSponsorFormsVisible] =
     useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
-  const [activePanel, setActivePanel] = useState(
-    queryMatchingPanel || PANELS.settings,
+  const [activePanel, setActivePanel] = useState(initialPanel);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(
+    () => isNew || queryMatchingPanel === PANELS.settings,
   );
   const [snapshotRevision, setSnapshotRevision] = useState(0);
   const [togglingOpportunityId, setTogglingOpportunityId] = useState(null);
@@ -521,7 +664,12 @@ function MatchingRoundEditor({
   }, [confirmIfDirty, onRegisterDirtyGuard]);
 
   useEffect(() => {
-    if (queryMatchingPanel) setActivePanel(queryMatchingPanel);
+    if (!queryMatchingPanel) return;
+    if (queryMatchingPanel === PANELS.settings) {
+      setSettingsModalOpen(true);
+      return;
+    }
+    setActivePanel(queryMatchingPanel);
   }, [queryMatchingPanel]);
 
   // Sync network when parent confirms a different network for a draft create card.
@@ -797,14 +945,15 @@ function MatchingRoundEditor({
     [t],
   );
 
+  const settingsLabel = t("opportunities.matchingRound.panels.settings", {}, {
+    default: "Settings",
+  });
+  const exportLabel = t("opportunities.matchingRound.export.openButton", {}, {
+    default: "Export to CSV",
+  });
+
   const panelOptions = useMemo(
     () => [
-      {
-        id: PANELS.settings,
-        label: t("opportunities.matchingRound.panels.settings", {}, {
-          default: "Settings",
-        }),
-      },
       {
         id: PANELS.review,
         label:
@@ -1468,18 +1617,6 @@ function MatchingRoundEditor({
     <div className="classTabMatchingRoundNetworkRow">
       <div className="matchingRoundNetworkConfirm">
         <NetworkIdentity network={selectedNetwork} t={t} />
-        {isNew && typeof onRequestChangeNetwork === "function" ? (
-          <Button
-            variant="outline"
-            type="button"
-            onClick={onRequestChangeNetwork}
-            style={{ color: "#171717", borderColor: "#171717" }}
-          >
-            {t("opportunities.matchingRound.changeNetwork", {}, {
-              default: "Change network",
-            })}
-          </Button>
-        ) : null}
       </div>
 
       {selectedNetworkShareRef && !isNew ? (
@@ -1584,33 +1721,6 @@ function MatchingRoundEditor({
             "Select which published opportunities students can rank in this round.",
         })}
       </p> */}
-      {networkOpportunities.length > 0 ? (
-        <div className="matchingRoundExportActions">
-          <Button
-            variant="tonal"
-            style={{ 
-              border: "0 solid #D3E0E3",
-              background: "#D3E0E3",
-              fontWeight: 500,
-            }}
-            type="button"
-            onClick={() => setExportModalOpen(true)}
-            leadingIcon={
-              <img
-                src="/assets/icons/download.svg"
-                alt=""
-                aria-hidden
-                width={24}
-                height={24}
-              />
-            }
-          >
-            {t("opportunities.matchingRound.export.openButton", {}, {
-              default: "Export to CSV",
-            })}
-          </Button>
-        </div>
-      ) : null}
       {networkOpportunities.length === 0 ? (
         <p className="classTabEmptyInline">
           {t("opportunities.matchingRound.noOpportunitiesInNetwork", {}, {
@@ -1633,27 +1743,6 @@ function MatchingRoundEditor({
           })}
         />
       )}
-      <OpportunityExportModal
-        open={exportModalOpen}
-        onClose={() => setExportModalOpen(false)}
-        listOpportunities={networkOpportunities}
-        selectedOpportunityIds={selectedOpportunities}
-        roundId={roundId}
-        roundTitle={
-          inputs.title ||
-          round?.title ||
-          roundSummary?.title ||
-          t("opportunities.matchingRound.newRoundTitle", {}, {
-            default: "New matching round",
-          })
-        }
-        networkTitle={
-          selectedNetwork?.title ||
-          round?.classNetwork?.title ||
-          roundSummary?.classNetwork?.title ||
-          ""
-        }
-      />
     </div>
   );
 
@@ -2263,32 +2352,114 @@ function MatchingRoundEditor({
         </div>
       ) : (
         <div className="classTabExpandableBody">
-          <Navbar style={{ paddingLeft: 0 }}>
-            {panelOptions.map((panel) => (
-              <NavbarItem
-                key={panel.id}
-                selected={activePanel === panel.id}
-                disabled={panel.disabled}
-                onClick={
-                  panel.disabled
-                    ? undefined
-                    : () => setActivePanel(panel.id)
+          <div className="classTabMatchingRoundNavRow">
+            <Navbar style={{ paddingLeft: 0, paddingRight: 0 }}>
+              {panelOptions.map((panel) => (
+                <NavbarItem
+                  key={panel.id}
+                  selected={activePanel === panel.id}
+                  disabled={panel.disabled}
+                  onClick={
+                    panel.disabled
+                      ? undefined
+                      : () => setActivePanel(panel.id)
+                  }
+                  style={{
+                    backgroundColor:
+                      activePanel === panel.id ? "#DEF8FB" : "transparent",
+                    opacity: panel.disabled ? 0.45 : undefined,
+                    cursor: panel.disabled ? "not-allowed" : undefined,
+                  }}
+                  aria-disabled={panel.disabled || undefined}
+                >
+                  {panel.label}
+                </NavbarItem>
+              ))}
+            </Navbar>
+            <div className="classTabMatchingRoundNavActions">
+              <IconButton
+                className="classTabMatchingRoundExportButton"
+                variant="text"
+                style={{ background: "#f3f3f3" }}
+                elevated={false}
+                ariaLabel={exportLabel}
+                title={exportLabel}
+                disabled={networkOpportunities.length === 0}
+                onClick={() => setExportModalOpen(true)}
+                icon={
+                  <img
+                    src="/assets/icons/download.svg"
+                    alt=""
+                    aria-hidden
+                    width={24}
+                    height={24}
+                  />
                 }
-                style={{
-                  backgroundColor:
-                    activePanel === panel.id ? "#DEF8FB" : "transparent",
-                  opacity: panel.disabled ? 0.45 : undefined,
-                  cursor: panel.disabled ? "not-allowed" : undefined,
-                }}
-                aria-disabled={panel.disabled || undefined}
+              />
+              <IconButton
+                className="classTabMatchingRoundSettingsButton"
+                style={{ background: "#f3f3f3" }}
+                variant="text"
+                elevated={false}
+                ariaLabel={settingsLabel}
+                title={settingsLabel}
+                onClick={() => setSettingsModalOpen(true)}
+                icon={
+                  <img
+                    src="/assets/icons/settings.svg"
+                    alt=""
+                    aria-hidden
+                    width={24}
+                    height={24}
+                  />
+                }
+              />
+            </div>
+          </div>
+
+          <OpportunityExportModal
+            open={exportModalOpen}
+            onClose={() => setExportModalOpen(false)}
+            listOpportunities={networkOpportunities}
+            selectedOpportunityIds={selectedOpportunities}
+            roundId={roundId}
+            roundTitle={
+              inputs.title ||
+              round?.title ||
+              roundSummary?.title ||
+              t("opportunities.matchingRound.newRoundTitle", {}, {
+                default: "New matching round",
+              })
+            }
+            networkTitle={
+              selectedNetwork?.title ||
+              round?.classNetwork?.title ||
+              roundSummary?.classNetwork?.title ||
+              ""
+            }
+          />
+
+          <Modal
+            open={settingsModalOpen}
+            onClose={() => setSettingsModalOpen(false)}
+            title={settingsLabel}
+            maxWidth={560}
+            actions={
+              <Button
+                variant="text"
+                type="button"
+                onClick={() => setSettingsModalOpen(false)}
               >
-                {panel.label}
-              </NavbarItem>
-            ))}
-          </Navbar>
+                {t("close", {}, { default: "Close" })}
+              </Button>
+            }
+          >
+            <SettingsModalContent>
+              {renderSettingsPanel()}
+            </SettingsModalContent>
+          </Modal>
 
           <div className="classTabMatchingRoundForm">
-            {activePanel === PANELS.settings && renderSettingsPanel()}
             {activePanel === PANELS.review && renderReviewPanel()}
             {activePanel === PANELS.selected && renderSelectedPanel()}
             {activePanel === PANELS.forms && renderFormsPanel()}
@@ -2345,7 +2516,6 @@ export default function MatchingRoundCard({
   onPreviewOpportunity,
   onMatchingRoundContextChange,
   onCreated,
-  onRequestChangeNetwork,
 }) {
   const { t } = useTranslation("classes");
 
@@ -2372,7 +2542,6 @@ export default function MatchingRoundCard({
       onPreviewOpportunity={onPreviewOpportunity}
       onMatchingRoundContextChange={onMatchingRoundContextChange}
       onCreated={onCreated}
-      onRequestChangeNetwork={onRequestChangeNetwork}
     />
   );
 }
