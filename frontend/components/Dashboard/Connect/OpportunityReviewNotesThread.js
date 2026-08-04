@@ -610,15 +610,15 @@ export default function OpportunityReviewNotesThread({
     <Shell className={className}>
       {showTitle ? (
         <Header>
-          <TitleTag>
+          {/* <TitleTag>
             {t("reviewThread.title", {}, { default: "Review conversation" })}
-          </TitleTag>
+          </TitleTag> */}
           {mode === "sponsor" ? (
             <p>
-              {t("reviewThread.sponsorHelper", {}, {
+              {/* {t("reviewThread.sponsorHelper", {}, {
                 default:
                   "Messages shared with reviewers for this matching round.",
-              })}
+              })} */}
             </p>
           ) : null}
         </Header>
@@ -675,7 +675,7 @@ export default function OpportunityReviewNotesThread({
                 <LoadPreviousWrap>
                   <Button
                     type="button"
-                    variant="text"
+                    variant="outline"
                     onClick={() => setPreviousExpanded(true)}
                   >
                     {t("reviewThread.loadPreviousMessages", {}, {

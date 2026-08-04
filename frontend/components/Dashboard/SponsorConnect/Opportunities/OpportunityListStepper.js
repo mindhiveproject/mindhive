@@ -4,6 +4,10 @@ import styled from "styled-components";
 import Chip from "../../../DesignSystem/Chip";
 import InfoTooltip from "../../../DesignSystem/InfoTooltip";
 import { resolveOpportunityListStepper } from "../../../../lib/opportunityListStepper";
+import {
+  OPPORTUNITY_LIST_OPENABLE_STEP_KEYS,
+  opportunityToneChipStyle,
+} from "../../../../lib/opportunityStatusTones";
 
 const Track = styled.ol`
   display: flex;
@@ -64,170 +68,17 @@ const TooltipNetworkList = styled.ul`
 
 const LABEL_DEFAULTS = {
   draft: "Draft",
-  visible: "Visible in class network",
-  visibleNone: "Not visible in any class network",
-  visibleOne: "Visible in 1 class network",
-  visibleMany: "Visible in {{count}} class networks",
+  returnedWithComments: "Returned with comments",
+  submitted: "Submitted",
   preSelected: "Pre-selected",
-  matching: "Matching",
-  awaitingMatching: "Awaiting matching",
-  waitingForms: "Waiting for form to be filled",
+  accepted: "Accepted",
   formsProgress: "Forms {{done}}/{{total}}",
-  formFilled: "Form filled",
+  matching: "Matching",
   matched: "Matched",
 };
 
-const CHIP_SIZE = {
-  fontSize: "12px",
-  height: "28px",
-  paddingTop: "4px",
-  paddingBottom: "4px",
-  paddingLeft: "10px",
-  paddingRight: "10px",
-};
-
-/**
- * Tone per step identity (wired by step.key / labelKey).
- * Visual state (active / done / pending) layers on top in resolveStepChipStyle.
- */
-const STEP_CHIP_STYLE = {
-  draft: {
-    ...CHIP_SIZE,
-    background: "#f3f3f3",
-    backgroundColor: "#f3f3f3",
-    border: "1px solid #a1a1a1",
-    color: "#5f6871",
-  },
-  visible: {
-    ...CHIP_SIZE,
-    background: "#def8fb",
-    backgroundColor: "#def8fb",
-    border: "1px solid #b5e4ea",
-    color: "var(--MH-Theme-Primary-Dark, #336f8a)",
-  },
-  visibleNone: {
-    ...CHIP_SIZE,
-    background: "#f0f4f6",
-    backgroundColor: "#f0f4f6",
-    border: "1px solid #d7dee3",
-    color: "var(--MH-Theme-Neutrals-Dark, #5f6871)",
-  },
-  visibleOne: {
-    ...CHIP_SIZE,
-    background: "#def8fb",
-    backgroundColor: "#def8fb",
-    border: "1px solid #b5e4ea",
-    color: "var(--MH-Theme-Primary-Dark, #336f8a)",
-  },
-  visibleMany: {
-    ...CHIP_SIZE,
-    background: "#def8fb",
-    backgroundColor: "#def8fb",
-    border: "1px solid #b5e4ea",
-    color: "var(--MH-Theme-Primary-Dark, #336f8a)",
-  },
-  preSelected: {
-    ...CHIP_SIZE,
-    background: "#eef5f9",
-    backgroundColor: "#eef5f9",
-    border: "1px solid #b8d4e3",
-    color: "var(--MH-Theme-Primary-Dark, #336f8a)",
-  },
-  formsMatching: {
-    ...CHIP_SIZE,
-    background: "#fdf6e8",
-    backgroundColor: "#fdf6e8",
-    border: "1px solid #e8d4a8",
-    color: "#8a6d3b",
-  },
-  formsProgress: {
-    ...CHIP_SIZE,
-    background: "#fdf6e8",
-    backgroundColor: "#fdf6e8",
-    border: "1px solid #e8d4a8",
-    color: "#8a6d3b",
-  },
-  waitingForms: {
-    ...CHIP_SIZE,
-    background: "#fdf6e8",
-    backgroundColor: "#fdf6e8",
-    border: "1px solid #e8d4a8",
-    color: "#8a6d3b",
-  },
-  awaitingMatching: {
-    ...CHIP_SIZE,
-    background: "#def8fb",
-    backgroundColor: "#def8fb",
-    border: "1px solid #b5e4ea",
-    color: "var(--MH-Theme-Primary-Dark, #336f8a)",
-  },
-  matching: {
-    ...CHIP_SIZE,
-    background: "#f3f3f3",
-    backgroundColor: "#f3f3f3",
-    border: "1px solid #e6e6e6",
-    color: "#a1a1a1",
-  },
-  formFilled: {
-    ...CHIP_SIZE,
-    background: "#e3f4ec",
-    backgroundColor: "#e3f4ec",
-    border: "1px solid #b8dcc8",
-    color: "#1d6b3a",
-  },
-  matched: {
-    ...CHIP_SIZE,
-    background: "#e3f4ec",
-    backgroundColor: "#e3f4ec",
-    border: "1px solid #b8dcc8",
-    color: "#1d6b3a",
-  },
-  // Visual-state fallbacks
-  active: {
-    ...CHIP_SIZE,
-    background: "#def8fb",
-    backgroundColor: "#def8fb",
-    border: "1px solid #b5e4ea",
-    color: "var(--MH-Theme-Primary-Dark, #336f8a)",
-  },
-  done: {
-    ...CHIP_SIZE,
-    background: "#e3f4ec",
-    backgroundColor: "#e3f4ec",
-    border: "1px solid #b8dcc8",
-    color: "#1d6b3a",
-  },
-  pending: {
-    ...CHIP_SIZE,
-    background: "#f3f3f3",
-    backgroundColor: "#f3f3f3",
-    border: "1px solid #e6e6e6",
-    color: "#a1a1a1",
-  },
-};
-
-function stepStyleKey(step) {
-  if (step.labelKey && STEP_CHIP_STYLE[step.labelKey]) {
-    return step.labelKey;
-  }
-  if (step.key && STEP_CHIP_STYLE[step.key]) {
-    return step.key;
-  }
-  return step.visual || "pending";
-}
-
 function resolveStepChipStyle(step) {
-  const visual = step.visual || "pending";
-
-  if (visual === "pending") {
-    return STEP_CHIP_STYLE.pending;
-  }
-  if (visual === "done") {
-    return STEP_CHIP_STYLE.done;
-  }
-
-  // Active (or sole current) step: use the step's own tone.
-  return STEP_CHIP_STYLE[stepStyleKey(step)] || STEP_CHIP_STYLE.active;
+  return opportunityToneChipStyle(step.visual || "pending");
 }
 
 function stepDisplayLabel(step, t) {
@@ -262,36 +113,47 @@ function visibilityTooltipContent(networks, t) {
   );
 }
 
-function StepChip({ step, label }) {
+function StepChip({ step, label, onClick, openLabel }) {
   const visual = step.visual || "pending";
   const style = resolveStepChipStyle(step);
+  const clickable = typeof onClick === "function";
 
   return (
     <Chip
       label={label}
-      selected={visual === "active"}
-      disabled={visual === "pending"}
+      selected={visual === "action" || visual === "waiting"}
+      disabled={visual === "pending" && !clickable}
+      onClick={clickable ? onClick : undefined}
+      ariaLabel={clickable && openLabel ? openLabel : undefined}
+      title={clickable ? openLabel : undefined}
       style={style}
     />
   );
 }
 
 /**
- * Compact inline stepper under an opportunity title on the sponsor list.
+ * Compact inline stepper under an opportunity title (list + editor).
+ *
+ * @param {object} props
+ * @param {(step: object) => void} [props.onStepClick] — when set, draft /
+ *   returned chips call this to open the opportunity editor.
  */
 export default function OpportunityListStepper({
   status,
   proposalData,
   rounds,
   networks = [],
+  onStepClick,
 }) {
   const { t } = useTranslation("connect");
-  const networkCount = networks.length;
   const { steps } = resolveOpportunityListStepper({
     status,
     proposalData,
     rounds,
-    networkCount,
+  });
+
+  const openLabel = t("myOpportunitiesList.stepper.openOpportunity", {}, {
+    default: "Open opportunity",
   });
 
   return (
@@ -302,18 +164,27 @@ export default function OpportunityListStepper({
     >
       {steps.map((step, index) => {
         const label = stepDisplayLabel(step, t);
-        const chip = <StepChip step={step} label={label} />;
+        const canOpen =
+          typeof onStepClick === "function" &&
+          OPPORTUNITY_LIST_OPENABLE_STEP_KEYS.has(step.key);
+        const chip = (
+          <StepChip
+            step={step}
+            label={label}
+            openLabel={openLabel}
+            onClick={canOpen ? () => onStepClick(step) : undefined}
+          />
+        );
+        const prevVisual = index > 0 ? steps[index - 1].visual : null;
+        const connectorDone =
+          prevVisual === "done" ||
+          prevVisual === "action" ||
+          prevVisual === "waiting";
 
         return (
           <StepItem key={step.key}>
             {index > 0 && (
-              <Connector
-                $done={
-                  steps[index - 1].visual === "done" ||
-                  steps[index - 1].visual === "active"
-                }
-                aria-hidden
-              >
+              <Connector $done={connectorDone} aria-hidden>
                 {CONNECTOR_CHEVRON}
               </Connector>
             )}

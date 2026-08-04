@@ -3,8 +3,11 @@ import styled from "styled-components";
 export const WizardBody = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  min-height: 360px;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
 `;
 
 export const StepMeta = styled.p`
@@ -46,17 +49,31 @@ export const Split = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 16px;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: stretch;
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
+    overflow: auto;
   }
+`;
+
+export const EditorColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 `;
 
 export const QuestionList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: min(62vh, 640px);
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
   padding-right: 4px;
 `;
@@ -141,39 +158,157 @@ export const QuestionSummary = styled.div`
   }
 `;
 
-export const TypeGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+export const TypePicker = styled.div`
+  display: ${({ $compact }) => ($compact ? "inline-flex" : "grid")};
+  ${({ $compact }) =>
+    $compact
+      ? `
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  `
+      : `
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+
+    @media (max-width: 720px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  `}
 `;
 
 export const TypeTile = styled.button`
-  text-align: left;
-  border-radius: 10px;
+  text-align: ${({ $compact }) => ($compact ? "center" : "left")};
+  border-radius: ${({ $compact }) => ($compact ? "10px" : "12px")};
   border: 2px solid
     ${({ $active }) =>
       $active
         ? "var(--MH-Theme-Primary-Dark, #336f8a)"
         : "var(--MH-Theme-Neutrals-Light, #d3dae0)"};
-  background: ${({ $active }) => ($active ? "#eef5f9" : "#fff")};
-  padding: 10px 12px;
+  background: ${({ $active }) =>
+    $active ? "var(--MH-Theme-Primary-Light, #def8fb)" : "#fff"};
+  color: ${({ $active }) =>
+    $active
+      ? "var(--MH-Theme-Primary-Dark, #336f8a)"
+      : "var(--MH-Theme-Neutrals-Dark, #5f6871)"};
+  padding: ${({ $compact }) => ($compact ? "6px" : "10px 10px 8px")};
+  width: ${({ $compact }) => ($compact ? "36px" : "auto")};
+  height: ${({ $compact }) => ($compact ? "36px" : "auto")};
+  min-width: ${({ $compact }) => ($compact ? "36px" : "0")};
+  display: ${({ $compact }) => ($compact ? "inline-flex" : "flex")};
+  flex-direction: ${({ $compact }) => ($compact ? "row" : "column")};
+  align-items: ${({ $compact }) => ($compact ? "center" : "flex-start")};
+  justify-content: ${({ $compact }) => ($compact ? "center" : "flex-start")};
+  gap: ${({ $compact }) => ($compact ? "0" : "6px")};
   cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+
+  .type-icon {
+    flex-shrink: 0;
+    display: block;
+  }
 
   .type-label {
     display: block;
     font-family: Lato, sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    color: #171717;
+    line-height: 1.25;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .type-hint {
     display: block;
-    margin-top: 2px;
     font-family: Inter, sans-serif;
     font-size: 11px;
-    color: #5f6871;
+    line-height: 1.3;
+    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
+
+  &.active .type-label {
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+`;
+
+export const MetaHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+`;
+
+export const InlineTitle = styled.input`
+  width: 100%;
+  margin: 0;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  font-family: Lato, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--MH-Theme-Neutrals-Black, #171717);
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    font-weight: 500;
+  }
+
+  &:hover {
+    border-color: var(--MH-Theme-Neutrals-Light, #d3dae0);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    background: var(--MH-Theme-Neutrals-White, #fff);
+  }
+`;
+
+export const InlineDescription = styled.textarea`
+  width: 100%;
+  margin: 0;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  resize: none;
+  min-height: 36px;
+  max-height: 72px;
+  overflow-y: auto;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+  }
+
+  &:hover {
+    border-color: var(--MH-Theme-Neutrals-Light, #d3dae0);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    background: var(--MH-Theme-Neutrals-White, #fff);
+  }
+`;
+
+export const MetaActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
 `;
 
 export const PreviewPane = styled.div`
@@ -185,7 +320,8 @@ export const PreviewPane = styled.div`
   flex-direction: column;
   gap: 10px;
   pointer-events: none;
-  max-height: min(62vh, 640px);
+  min-height: 0;
+  height: 100%;
   overflow: auto;
 `;
 

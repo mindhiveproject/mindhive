@@ -20,16 +20,18 @@ import {
   questionsToMutationFields,
 } from "./questionUtils";
 import {
+  EditorColumn,
   ErrorText,
-  FieldStack,
+  InlineDescription,
+  InlineTitle,
+  MetaActions,
+  MetaHeader,
   PreviewPane,
   QuestionList,
   Split,
   StepMeta,
   WizardBody,
 } from "./styles";
-
-const STEPS = ["name", "questions", "preview"];
 
 export default function TeacherFormWizard({
   open,
@@ -42,7 +44,6 @@ export default function TeacherFormWizard({
   const router = useRouter();
   const locale = router?.locale || "en-us";
 
-  const [step, setStep] = useState(0);
   const [definitionId, setDefinitionId] = useState(initialDefinitionId);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -66,7 +67,6 @@ export default function TeacherFormWizard({
 
   const resetBlank = useCallback(() => {
     const first = createBlankQuestion();
-    setStep(0);
     setDefinitionId(null);
     setTitle("");
     setDescription("");
@@ -96,22 +96,19 @@ export default function TeacherFormWizard({
     setDescription(definition.description || "");
     setQuestions(nextQuestions);
     setExpandedQuestionId(nextQuestions[0]?.localId || null);
-    setStep(0);
     setShowClone(false);
     setError(null);
   }, [open, initialDefinitionId, existingData?.formDefinition]);
 
   const previewDefinition = useMemo(
-    () => buildPreviewDefinition({ title, description, questions }),
+    () =>
+      buildPreviewDefinition({
+        title,
+        description,
+        questions: questions.filter((q) => q.typeChosen),
+      }),
     [title, description, questions]
   );
-
-  const stepLabel = t("opportunities.matchingRound.formWizard.stepOf", {
-    current: step + 1,
-    total: STEPS.length,
-  }, {
-    default: "Step {{current}} of {{total}}",
-  });
 
   const validateName = () => {
     if (!title.trim()) {
@@ -127,7 +124,8 @@ export default function TeacherFormWizard({
   };
 
   const validateQuestions = () => {
-    if (!questions.length) {
+    const chosen = questions.filter((q) => q.typeChosen);
+    if (!chosen.length) {
       setError(
         t("opportunities.matchingRound.formWizard.errors.needQuestion", {}, {
           default: "Add at least one question.",
@@ -135,12 +133,13 @@ export default function TeacherFormWizard({
       );
       return false;
     }
-    for (let i = 0; i < questions.length; i += 1) {
-      const q = questions[i];
+    for (let i = 0; i < chosen.length; i += 1) {
+      const q = chosen[i];
+      const number = questions.indexOf(q) + 1;
       if (!String(q.label || "").trim()) {
         setError(
           t("opportunities.matchingRound.formWizard.errors.promptRequired", {
-            number: i + 1,
+            number,
           }, {
             default: "Question {{number}} needs a prompt.",
           })
@@ -153,7 +152,7 @@ export default function TeacherFormWizard({
       ) {
         setError(
           t("opportunities.matchingRound.formWizard.errors.choicesRequired", {
-            number: i + 1,
+            number,
           }, {
             default: "Question {{number}} needs at least one choice.",
           })
@@ -165,25 +164,9 @@ export default function TeacherFormWizard({
     return true;
   };
 
-  const handleNext = () => {
-    if (step === 0 && !validateName()) return;
-    if (step === 1 && !validateQuestions()) return;
-    setStep((s) => {
-      const next = Math.min(s + 1, STEPS.length - 1);
-      if (next === 1 && !expandedQuestionId && questions[0]?.localId) {
-        setExpandedQuestionId(questions[0].localId);
-      }
-      return next;
-    });
-  };
-
-  const handleBack = () => {
+  const handleBackFromClone = () => {
     setError(null);
-    if (showClone) {
-      setShowClone(false);
-      return;
-    }
-    setStep((s) => Math.max(s - 1, 0));
+    setShowClone(false);
   };
 
   const persist = async ({ publish }) => {
@@ -207,7 +190,9 @@ export default function TeacherFormWizard({
             definitionId: definitionId || undefined,
             title: title.trim(),
             description: description.trim(),
-            fields: questionsToMutationFields(questions),
+            fields: questionsToMutationFields(
+              questions.filter((q) => q.typeChosen)
+            ),
             publish: !!publish,
           },
         },
@@ -249,7 +234,6 @@ export default function TeacherFormWizard({
       setQuestions(clonedQuestions);
       setExpandedQuestionId(clonedQuestions[0]?.localId || null);
       setShowClone(false);
-      setStep(1);
     } catch (err) {
       setError(
         err?.message ||
@@ -272,50 +256,45 @@ export default function TeacherFormWizard({
 
   const actions = showClone ? (
     <>
-      <Button type="button" variant="outline" onClick={handleBack} disabled={saving}>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={handleBackFromClone}
+        disabled={saving}
+      >
         {t("opportunities.matchingRound.formWizard.back", {}, { default: "Back" })}
       </Button>
     </>
   ) : (
     <>
-      {step > 0 ? (
-        <Button type="button" variant="outline" onClick={handleBack} disabled={saving}>
-          {t("opportunities.matchingRound.formWizard.back", {}, { default: "Back" })}
-        </Button>
-      ) : (
-        <Button type="button" variant="outline" onClick={onClose} disabled={saving}>
-          {t("opportunities.matchingRound.formWizard.cancel", {}, { default: "Cancel" })}
-        </Button>
-      )}
-      {step < STEPS.length - 1 ? (
-        <Button type="button" variant="filled" onClick={handleNext} disabled={saving}>
-          {t("opportunities.matchingRound.formWizard.next", {}, { default: "Next" })}
-        </Button>
-      ) : (
-        <>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => persist({ publish: false })}
-            disabled={saving}
-          >
-            {t("opportunities.matchingRound.formWizard.saveDraft", {}, {
-              default: "Save as draft",
-            })}
-          </Button>
-          <Button
-            type="button"
-            variant="filled"
-            onClick={() => persist({ publish: true })}
-            disabled={saving}
-          >
-            {t("opportunities.matchingRound.formWizard.publish", {}, {
-              default: "Publish form",
-            })}
-          </Button>
-        </>
-      )}
+      <Button type="button" variant="outline" onClick={onClose} disabled={saving}>
+        {t("opportunities.matchingRound.formWizard.cancel", {}, { default: "Cancel" })}
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => persist({ publish: false })}
+        disabled={saving}
+      >
+        {t("opportunities.matchingRound.formWizard.saveDraft", {}, {
+          default: "Save as draft",
+        })}
+      </Button>
+      <Button
+        type="button"
+        variant="filled"
+        onClick={() => persist({ publish: true })}
+        disabled={saving}
+      >
+        {t("opportunities.matchingRound.formWizard.publish", {}, {
+          default: "Publish form",
+        })}
+      </Button>
     </>
+  );
+
+  const hasPreviewCards = (previewDefinition.cards || []).some(
+    (card) => (card.fields || []).length > 0
   );
 
   return (
@@ -325,11 +304,17 @@ export default function TeacherFormWizard({
       title={titleText}
       maxWidth={1120}
       maxHeight="92vh"
+      height="92vh"
       size="large"
       actions={actions}
+      bodyStyle={{
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        flex: "1 1 auto",
+      }}
     >
       <WizardBody>
-        {!showClone ? <StepMeta>{stepLabel}</StepMeta> : null}
         {loadingExisting && initialDefinitionId ? (
           <StepMeta>
             {t("opportunities.matchingRound.formWizard.loading", {}, {
@@ -348,149 +333,140 @@ export default function TeacherFormWizard({
             </StepMeta>
             <ClonePublicFormPicker onPick={handleClone} disabled={saving} />
           </>
-        ) : null}
-
-        {!showClone && step === 0 ? (
+        ) : (
           <>
-            <FieldStack>
-              <label>
-                {t("opportunities.matchingRound.formWizard.nameLabel", {}, {
-                  default: "What’s this form for?",
-                })}
-              </label>
-              <input
+            <MetaHeader>
+              <InlineTitle
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder={t("opportunities.matchingRound.formWizard.namePlaceholder", {}, {
-                  default: "e.g. Sponsor visit follow-up",
-                })}
+                aria-label={t(
+                  "opportunities.matchingRound.formWizard.nameLabel",
+                  {},
+                  { default: "What’s this form for?" },
+                )}
+                placeholder={t(
+                  "opportunities.matchingRound.formWizard.namePlaceholder",
+                  {},
+                  { default: "e.g. Sponsor visit follow-up" },
+                )}
               />
-            </FieldStack>
-            <FieldStack>
-              <label>
-                {t("opportunities.matchingRound.formWizard.descriptionLabel", {}, {
-                  default: "Optional note for sponsors",
-                })}
-              </label>
-              <textarea
+              <InlineDescription
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                rows={2}
+                aria-label={t(
+                  "opportunities.matchingRound.formWizard.descriptionLabel",
+                  {},
+                  { default: "Optional note for sponsors" },
+                )}
                 placeholder={t(
                   "opportunities.matchingRound.formWizard.descriptionPlaceholder",
                   {},
                   {
-                    default:
-                      "Shown at the top of the form. Keep it short.",
+                    default: "Shown at the top of the form. Keep it short.",
                   },
                 )}
               />
-            </FieldStack>
-            {!initialDefinitionId ? (
-              <Button
-                type="button"
-                variant="text"
-                onClick={() => {
-                  setError(null);
-                  setShowClone(true);
-                }}
-                disabled={saving}
-              >
-                {t("opportunities.matchingRound.formWizard.startFromPublic", {}, {
-                  default: "Start from a public form",
-                })}
-              </Button>
-            ) : null}
-          </>
-        ) : null}
-
-        {!showClone && step === 1 ? (
-          <Split>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
-              <QuestionList>
-                {questions.map((q, index) => (
-                  <QuestionEditor
-                    key={q.localId}
-                    question={q}
-                    index={index}
-                    canRemove={questions.length > 1}
-                    expanded={expandedQuestionId === q.localId}
-                    onExpand={() => setExpandedQuestionId(q.localId)}
-                    onCollapse={() => setExpandedQuestionId(null)}
-                    onChange={(next) =>
-                      setQuestions((list) =>
-                        list.map((item) =>
-                          item.localId === q.localId ? next : item
-                        )
-                      )
-                    }
-                    onRemove={() => {
-                      setQuestions((list) => {
-                        const next = list.filter(
-                          (item) => item.localId !== q.localId
-                        );
-                        if (expandedQuestionId === q.localId) {
-                          setExpandedQuestionId(next[0]?.localId || null);
-                        }
-                        return next;
-                      });
+              {!initialDefinitionId ? (
+                <MetaActions>
+                  <Button
+                    type="button"
+                    variant="text"
+                    onClick={() => {
+                      setError(null);
+                      setShowClone(true);
                     }}
-                  />
-                ))}
-              </QuestionList>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  const next = createBlankQuestion();
-                  setQuestions((list) => [...list, next]);
-                  setExpandedQuestionId(next.localId);
-                }}
-              >
-                {t("opportunities.matchingRound.formWizard.addQuestion", {}, {
-                  default: "Add question",
-                })}
-              </Button>
-            </div>
-            <PreviewPane>
-              {(previewDefinition.cards || []).map((card) => (
-                <CardRenderer
-                  key={card.id}
-                  card={card}
-                  values={{}}
-                  errors={{}}
-                  onFieldChange={() => {}}
-                  locale={locale}
-                  disabled
-                />
-              ))}
-            </PreviewPane>
-          </Split>
-        ) : null}
+                    disabled={saving}
+                  >
+                    {t(
+                      "opportunities.matchingRound.formWizard.startFromPublic",
+                      {},
+                      {
+                        default: "Start from a public form",
+                      },
+                    )}
+                  </Button>
+                </MetaActions>
+              ) : null}
+            </MetaHeader>
 
-        {!showClone && step === 2 ? (
-          <>
-            <StepMeta>
-              {t("opportunities.matchingRound.formWizard.previewHint", {}, {
-                default:
-                  "This is how the form will look. Publish to make it available for this matching round.",
-              })}
-            </StepMeta>
-            <PreviewPane>
-              {(previewDefinition.cards || []).map((card) => (
-                <CardRenderer
-                  key={card.id}
-                  card={card}
-                  values={{}}
-                  errors={{}}
-                  onFieldChange={() => {}}
-                  locale={locale}
-                  disabled
-                />
-              ))}
-            </PreviewPane>
+            <Split>
+              <EditorColumn>
+                <QuestionList>
+                  {questions.map((q, index) => (
+                    <QuestionEditor
+                      key={q.localId}
+                      question={q}
+                      index={index}
+                      canRemove={questions.length > 1}
+                      expanded={expandedQuestionId === q.localId}
+                      onExpand={() => setExpandedQuestionId(q.localId)}
+                      onCollapse={() => setExpandedQuestionId(null)}
+                      onChange={(next) =>
+                        setQuestions((list) =>
+                          list.map((item) =>
+                            item.localId === q.localId ? next : item
+                          )
+                        )
+                      }
+                      onRemove={() => {
+                        setQuestions((list) => {
+                          const next = list.filter(
+                            (item) => item.localId !== q.localId
+                          );
+                          if (expandedQuestionId === q.localId) {
+                            setExpandedQuestionId(next[0]?.localId || null);
+                          }
+                          return next;
+                        });
+                      }}
+                    />
+                  ))}
+                </QuestionList>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    const next = createBlankQuestion();
+                    setQuestions((list) => [...list, next]);
+                    setExpandedQuestionId(next.localId);
+                  }}
+                >
+                  {t("opportunities.matchingRound.formWizard.addQuestion", {}, {
+                    default: "Add question",
+                  })}
+                </Button>
+              </EditorColumn>
+              <PreviewPane>
+                {hasPreviewCards ? (
+                  (previewDefinition.cards || []).map((card) => (
+                    <CardRenderer
+                      key={card.id}
+                      card={card}
+                      values={{}}
+                      errors={{}}
+                      onFieldChange={() => {}}
+                      locale={locale}
+                      disabled
+                    />
+                  ))
+                ) : (
+                  <StepMeta>
+                    {t(
+                      "opportunities.matchingRound.formWizard.previewEmpty",
+                      {},
+                      {
+                        default:
+                          "Pick a question type and add a prompt to see a live preview.",
+                      },
+                    )}
+                  </StepMeta>
+                )}
+              </PreviewPane>
+            </Split>
           </>
-        ) : null}
+        )}
 
         {error ? <ErrorText>{error}</ErrorText> : null}
       </WizardBody>

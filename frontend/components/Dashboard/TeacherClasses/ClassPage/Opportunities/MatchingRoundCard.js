@@ -4,6 +4,7 @@ import absoluteUrl from "next-absolute-url";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
+import styled from "styled-components";
 
 import useForm from "../../../../../lib/useForm";
 import { classNetworkUrlRef } from "../../../../../lib/classNetworkRef";
@@ -12,6 +13,7 @@ import Chip from "../../../../DesignSystem/Chip";
 import CopyButton from "../../../../DesignSystem/CopyButton";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import IconButton from "../../../../DesignSystem/IconButton";
 import Modal from "../../../../DesignSystem/Modal";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import {
@@ -20,7 +22,11 @@ import {
   NETWORK_OPPORTUNITIES_FOR_ROUND,
 } from "../../../../Queries/ConnectRound";
 import { QUESTION_LIBRARY } from "../../../../Queries/ConnectQuestion";
-import { ROUND_PICKABLE_FORM_DEFINITIONS, CLASS_OWNED_FORM_DEFINITIONS } from "../../../../Queries/FormDefinition";
+import {
+  ROUND_PICKABLE_FORM_DEFINITIONS,
+  CLASS_LIBRARY_FORM_DEFINITIONS,
+  PUBLIC_OPPORTUNITY_FORM_DEFINITIONS,
+} from "../../../../Queries/FormDefinition";
 import {
   CREATE_CONNECT_ROUND,
   UPDATE_CONNECT_ROUND,
@@ -41,7 +47,6 @@ import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
 import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
-import ClonePublicFormPicker from "../../../../Forms/TeacherFormWizard/ClonePublicFormPicker";
 
 const NETWORK_ICON = (
   <img
@@ -80,6 +85,142 @@ const PANELS = {
   questions: "questions",
   matches: "matches",
 };
+
+/** Portal-safe styles: DesignSystem Modal mounts outside `.classTabPage`. */
+const SettingsModalContent = styled.div`
+  .classTabMatchingRoundPanel {
+    display: grid;
+    gap: 18px;
+  }
+
+  .classTabMatchingRoundNetworkRow {
+    display: grid;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid #ece9e6;
+    border-radius: 12px;
+    background: var(--MH-Theme-Neutrals-Extra-Light, #f8fafb);
+
+    .matchingRoundNetworkConfirm {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .matchingRoundNetworkIdentity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .matchingRoundNetworkIcon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .matchingRoundNetworkIdentityText {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .matchingRoundNetworkTitle {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 22px;
+      color: #171717;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .matchingRoundNetworkActions {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px 10px;
+      min-width: 0;
+      overflow-x: auto;
+    }
+
+    .matchingRoundNetworkInviteActions {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+  }
+
+  .classTabFormGrid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .classTabFormGridTwo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .classTabFormField {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    font-size: 14px;
+    color: #625b71;
+
+    .fieldLabel {
+      font-weight: 600;
+      color: #171717;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d9d6d2;
+      border-radius: 12px;
+      background: #ffffff;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      color: #171717;
+      outline: none;
+      box-sizing: border-box;
+
+      &:focus-visible {
+        border-color: #336f8a;
+      }
+    }
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+  }
+`;
 
 function getRoundStatusParts(status, t) {
   const key = ROUND_STATUS_KEYS[status];
@@ -134,7 +275,18 @@ function RoundStatusLabel({ status, t, variant = "chip" }) {
   );
 }
 
-/** Ownership chip kind for a pickable FormDefinition row. */
+/** Origin chip kind for library rows: public template vs class custom vs yours. */
+function getFormOriginKind(form, currentUserId) {
+  if (form?.section === "public" || form?.scope === "global") {
+    return "public";
+  }
+  if (currentUserId && form?.createdBy?.id === currentUserId) {
+    return "owned";
+  }
+  return "custom";
+}
+
+/** Ownership chip kind for a pickable FormDefinition row (legacy option labels). */
 function getFormOwnershipKind(form, currentUserId) {
   if (currentUserId && form?.createdBy?.id === currentUserId) {
     return "ownedByMe";
@@ -401,7 +553,6 @@ function MatchingRoundEditor({
   onPreviewOpportunity,
   onMatchingRoundContextChange,
   onCreated,
-  onRequestChangeNetwork,
 }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
@@ -421,6 +572,11 @@ function MatchingRoundEditor({
     return raw;
   }, [router.query?.matchingPanel]);
 
+  const initialPanel =
+    queryMatchingPanel && queryMatchingPanel !== PANELS.settings
+      ? queryMatchingPanel
+      : PANELS.review;
+
   const [selectedNetworkId, setSelectedNetworkId] = useState(
     isCreate
       ? initialNetworkId || networks[0]?.id || null
@@ -435,8 +591,9 @@ function MatchingRoundEditor({
   const [togglingSponsorFormsVisible, setTogglingSponsorFormsVisible] =
     useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
-  const [activePanel, setActivePanel] = useState(
-    queryMatchingPanel || PANELS.settings,
+  const [activePanel, setActivePanel] = useState(initialPanel);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(
+    () => isNew || queryMatchingPanel === PANELS.settings,
   );
   const [snapshotRevision, setSnapshotRevision] = useState(0);
   const [togglingOpportunityId, setTogglingOpportunityId] = useState(null);
@@ -446,7 +603,7 @@ function MatchingRoundEditor({
   const [formWizardOpen, setFormWizardOpen] = useState(false);
   const [formWizardDefinitionId, setFormWizardDefinitionId] = useState(null);
   const [librarySelectedId, setLibrarySelectedId] = useState(null);
-  const [clonePublicOpen, setClonePublicOpen] = useState(false);
+  const [publicFormsExpanded, setPublicFormsExpanded] = useState(false);
   const [deletingFormId, setDeletingFormId] = useState(null);
   const [cloningPublic, setCloningPublic] = useState(false);
   const savedSnapshotRef = useRef(null);
@@ -521,7 +678,12 @@ function MatchingRoundEditor({
   }, [confirmIfDirty, onRegisterDirtyGuard]);
 
   useEffect(() => {
-    if (queryMatchingPanel) setActivePanel(queryMatchingPanel);
+    if (!queryMatchingPanel) return;
+    if (queryMatchingPanel === PANELS.settings) {
+      setSettingsModalOpen(true);
+      return;
+    }
+    setActivePanel(queryMatchingPanel);
   }, [queryMatchingPanel]);
 
   // Sync network when parent confirms a different network for a draft create card.
@@ -625,29 +787,48 @@ function MatchingRoundEditor({
   );
   const pickableFormDefinitions = pickableFormsData?.formDefinitions || [];
 
-  const { data: ownedFormsData, refetch: refetchOwnedForms } = useQuery(
-    CLASS_OWNED_FORM_DEFINITIONS,
-    {
+  const { data: classLibraryFormsData, refetch: refetchClassLibraryForms } =
+    useQuery(CLASS_LIBRARY_FORM_DEFINITIONS, {
       variables: {
         classId: myclass?.id,
-        userId: user?.id,
       },
-      skip: !myclass?.id || !user?.id,
+      skip: !myclass?.id,
+      fetchPolicy: "cache-and-network",
+    });
+  const classLibraryFormDefinitions =
+    classLibraryFormsData?.formDefinitions || [];
+
+  const { data: publicFormsData, refetch: refetchPublicForms } = useQuery(
+    PUBLIC_OPPORTUNITY_FORM_DEFINITIONS,
+    {
+      skip: !publicFormsExpanded,
       fetchPolicy: "cache-and-network",
     },
   );
-  const ownedFormDefinitions = ownedFormsData?.formDefinitions || [];
+  const publicFormDefinitions = publicFormsData?.formDefinitions || [];
 
   // Drop library selection if the form disappears after refetch/delete.
   useEffect(() => {
     if (!librarySelectedId) return;
-    if (
-      ownedFormDefinitions.length > 0 &&
-      !ownedFormDefinitions.some((form) => form.id === librarySelectedId)
-    ) {
+    if (!classLibraryFormsData) return;
+    const stillPresent =
+      classLibraryFormDefinitions.some((form) => form.id === librarySelectedId) ||
+      selectedFormDefinitionIds.includes(librarySelectedId) ||
+      publicFormDefinitions.some((form) => form.id === librarySelectedId) ||
+      (round?.formDefinitions || []).some(
+        (form) => form.id === librarySelectedId,
+      );
+    if (!stillPresent) {
       setLibrarySelectedId(null);
     }
-  }, [ownedFormDefinitions, librarySelectedId]);
+  }, [
+    classLibraryFormsData,
+    classLibraryFormDefinitions,
+    selectedFormDefinitionIds,
+    publicFormDefinitions,
+    round?.formDefinitions,
+    librarySelectedId,
+  ]);
   const formDefinitionOptions = useMemo(() => {
     const byId = new Map();
     const currentUserId = user?.id;
@@ -684,13 +865,35 @@ function MatchingRoundEditor({
     for (const option of formDefinitionOptions) {
       map[option.value] = option.labelText || option.label;
     }
-    for (const form of ownedFormDefinitions) {
+    for (const form of classLibraryFormDefinitions) {
+      if (!map[form.id]) {
+        map[form.id] = form.title || form.id;
+      }
+    }
+    for (const form of publicFormDefinitions) {
       if (!map[form.id]) {
         map[form.id] = form.title || form.id;
       }
     }
     return map;
-  }, [formDefinitionOptions, ownedFormDefinitions]);
+  }, [
+    formDefinitionOptions,
+    classLibraryFormDefinitions,
+    publicFormDefinitions,
+  ]);
+
+  const refetchFormLists = useCallback(async () => {
+    await Promise.all([
+      refetchPickableForms?.(),
+      refetchClassLibraryForms?.(),
+      publicFormsExpanded ? refetchPublicForms?.() : Promise.resolve(),
+    ]);
+  }, [
+    refetchPickableForms,
+    refetchClassLibraryForms,
+    refetchPublicForms,
+    publicFormsExpanded,
+  ]);
 
   const { data: opportunitiesData } = useQuery(NETWORK_OPPORTUNITIES_FOR_ROUND, {
     variables: { classNetworkId: selectedNetworkId },
@@ -797,14 +1000,15 @@ function MatchingRoundEditor({
     [t],
   );
 
+  const settingsLabel = t("opportunities.matchingRound.panels.settings", {}, {
+    default: "Settings",
+  });
+  const exportLabel = t("opportunities.matchingRound.export.openButton", {}, {
+    default: "Export to CSV",
+  });
+
   const panelOptions = useMemo(
     () => [
-      {
-        id: PANELS.settings,
-        label: t("opportunities.matchingRound.panels.settings", {}, {
-          default: "Settings",
-        }),
-      },
       {
         id: PANELS.review,
         label:
@@ -1150,8 +1354,9 @@ function MatchingRoundEditor({
     }
   };
 
-  const handleDeleteOwnedForm = async (form) => {
+  const handleDeleteClassForm = async (form) => {
     if (!form?.id || !canManageOpportunities || deletingFormId) return;
+    if (form.createdBy?.id !== user?.id) return;
     const title = form.title || form.id;
     if (
       !window.confirm(
@@ -1180,7 +1385,7 @@ function MatchingRoundEditor({
         setLibrarySelectedId(null);
       }
       try {
-        await Promise.all([refetchPickableForms?.(), refetchOwnedForms?.()]);
+        await refetchFormLists();
       } catch {
         // Lists may refresh on next load.
       }
@@ -1208,12 +1413,11 @@ function MatchingRoundEditor({
       const cloned = result?.data?.cloneFormDefinitionForClass;
       if (!cloned?.id) throw new Error("Clone failed");
       try {
-        await Promise.all([refetchPickableForms?.(), refetchOwnedForms?.()]);
+        await refetchFormLists();
       } catch {
         // Selection still proceeds.
       }
       setLibrarySelectedId(cloned.id);
-      setClonePublicOpen(false);
       setFormWizardDefinitionId(cloned.id);
       setFormWizardOpen(true);
     } catch (error) {
@@ -1468,18 +1672,6 @@ function MatchingRoundEditor({
     <div className="classTabMatchingRoundNetworkRow">
       <div className="matchingRoundNetworkConfirm">
         <NetworkIdentity network={selectedNetwork} t={t} />
-        {isNew && typeof onRequestChangeNetwork === "function" ? (
-          <Button
-            variant="outline"
-            type="button"
-            onClick={onRequestChangeNetwork}
-            style={{ color: "#171717", borderColor: "#171717" }}
-          >
-            {t("opportunities.matchingRound.changeNetwork", {}, {
-              default: "Change network",
-            })}
-          </Button>
-        ) : null}
       </div>
 
       {selectedNetworkShareRef && !isNew ? (
@@ -1584,33 +1776,6 @@ function MatchingRoundEditor({
             "Select which published opportunities students can rank in this round.",
         })}
       </p> */}
-      {networkOpportunities.length > 0 ? (
-        <div className="matchingRoundExportActions">
-          <Button
-            variant="tonal"
-            style={{ 
-              border: "0 solid #D3E0E3",
-              background: "#D3E0E3",
-              fontWeight: 500,
-            }}
-            type="button"
-            onClick={() => setExportModalOpen(true)}
-            leadingIcon={
-              <img
-                src="/assets/icons/download.svg"
-                alt=""
-                aria-hidden
-                width={24}
-                height={24}
-              />
-            }
-          >
-            {t("opportunities.matchingRound.export.openButton", {}, {
-              default: "Export to CSV",
-            })}
-          </Button>
-        </div>
-      ) : null}
       {networkOpportunities.length === 0 ? (
         <p className="classTabEmptyInline">
           {t("opportunities.matchingRound.noOpportunitiesInNetwork", {}, {
@@ -1633,27 +1798,6 @@ function MatchingRoundEditor({
           })}
         />
       )}
-      <OpportunityExportModal
-        open={exportModalOpen}
-        onClose={() => setExportModalOpen(false)}
-        listOpportunities={networkOpportunities}
-        selectedOpportunityIds={selectedOpportunities}
-        roundId={roundId}
-        roundTitle={
-          inputs.title ||
-          round?.title ||
-          roundSummary?.title ||
-          t("opportunities.matchingRound.newRoundTitle", {}, {
-            default: "New matching round",
-          })
-        }
-        networkTitle={
-          selectedNetwork?.title ||
-          round?.classNetwork?.title ||
-          roundSummary?.classNetwork?.title ||
-          ""
-        }
-      />
     </div>
   );
 
@@ -1692,44 +1836,89 @@ function MatchingRoundEditor({
       );
     };
 
-    const pickableById = new Map(
-      pickableFormDefinitions.map((form) => [form.id, form]),
-    );
-    const ownedById = new Map(
-      ownedFormDefinitions.map((form) => [form.id, form]),
-    );
-    const libraryForms = [];
-    const seenLibraryIds = new Set();
-    for (const form of ownedFormDefinitions) {
-      libraryForms.push({ ...form, isOwned: true });
-      seenLibraryIds.add(form.id);
+    const formsById = new Map();
+    for (const form of pickableFormDefinitions) {
+      formsById.set(form.id, form);
     }
-    const attachedSources = [
-      ...(round?.formDefinitions || []),
-      ...selectedFormDefinitionIds
-        .filter((id) => !ownedById.has(id) && !seenLibraryIds.has(id))
-        .map((id) => pickableById.get(id) || { id }),
-    ];
-    for (const form of attachedSources) {
-      if (!form?.id || seenLibraryIds.has(form.id) || ownedById.has(form.id)) {
-        continue;
-      }
-      const enriched = pickableById.get(form.id) || form;
-      libraryForms.push({
-        ...enriched,
-        status: enriched.status || "published",
-        isOwned: false,
+    for (const form of classLibraryFormDefinitions) {
+      formsById.set(form.id, form);
+    }
+    for (const form of publicFormDefinitions) {
+      formsById.set(form.id, {
+        ...form,
+        scope: form.scope || "global",
+        status: form.status || "published",
       });
-      seenLibraryIds.add(form.id);
+    }
+    for (const form of round?.formDefinitions || []) {
+      if (!formsById.has(form.id)) {
+        formsById.set(form.id, form);
+      }
     }
 
-    const buildLibraryMenuItems = (form) => {
-      const inRound = selectedFormDefinitionIds.includes(form.id);
+    const inRoundForms = selectedFormDefinitionIds
+      .map((id) => {
+        const form = formsById.get(id);
+        if (!form) {
+          return {
+            id,
+            title: formLabelsById[id] || id,
+            status: "published",
+            scope: "global",
+          };
+        }
+        return {
+          ...form,
+          status: form.status || "published",
+        };
+      })
+      .filter(Boolean);
+
+    const selectedFormIdSet = new Set(selectedFormDefinitionIds);
+
+    const classLibraryForms = classLibraryFormDefinitions
+      .filter((form) => !selectedFormIdSet.has(form.id))
+      .map((form) => ({
+        ...form,
+        section: "class",
+      }));
+
+    const publicForms = publicFormDefinitions
+      .filter((form) => !selectedFormIdSet.has(form.id))
+      .map((form) => ({
+        ...form,
+        scope: "global",
+        status: "published",
+        section: "public",
+      }));
+
+    const buildInRoundMenuItems = (form) => [
+      {
+        key: "preview",
+        label: t(
+          "opportunities.matchingRound.formPicker.previewButton",
+          {},
+          { default: "Preview" },
+        ),
+        onClick: () => openPreview(form.id),
+      },
+      {
+        key: "remove",
+        label: t(
+          "opportunities.matchingRound.formPicker.removeFromRound",
+          {},
+          { default: "Remove from this round" },
+        ),
+        onClick: () => removeFormFromRound(form.id),
+      },
+    ];
+
+    const buildClassLibraryMenuItems = (form) => {
       const isPublished = form.status === "published";
-      const isOwned = form.isOwned !== false;
+      const isCreatedByMe = form.createdBy?.id === user?.id;
       const items = [];
 
-      if (isOwned) {
+      if (canManageOpportunities) {
         items.push({
           key: "edit",
           label: t(
@@ -1751,17 +1940,7 @@ function MatchingRoundEditor({
         onClick: () => openPreview(form.id),
       });
 
-      if (inRound) {
-        items.push({
-          key: "remove",
-          label: t(
-            "opportunities.matchingRound.formPicker.removeFromRound",
-            {},
-            { default: "Remove from this round" },
-          ),
-          onClick: () => removeFormFromRound(form.id),
-        });
-      } else if (isPublished) {
+      if (isPublished) {
         items.push({
           key: "add",
           label: t(
@@ -1785,7 +1964,7 @@ function MatchingRoundEditor({
         });
       }
 
-      if (isOwned) {
+      if (isCreatedByMe) {
         items.push({
           key: "delete",
           label: t(
@@ -1794,10 +1973,180 @@ function MatchingRoundEditor({
             { default: "Delete form" },
           ),
           danger: true,
-          onClick: () => handleDeleteOwnedForm(form),
+          onClick: () => handleDeleteClassForm(form),
         });
       }
       return items;
+    };
+
+    const buildPublicMenuItems = (form) => [
+      {
+        key: "preview",
+        label: t(
+          "opportunities.matchingRound.formPicker.previewButton",
+          {},
+          { default: "Preview" },
+        ),
+        onClick: () => openPreview(form.id),
+      },
+      {
+        key: "add",
+        label: t(
+          "opportunities.matchingRound.formPicker.addToRound",
+          {},
+          { default: "Add to this round" },
+        ),
+        onClick: () => addFormToRound(form.id),
+      },
+      {
+        key: "copy",
+        label: t(
+          "opportunities.matchingRound.formPicker.copyIntoClassLibrary",
+          {},
+          { default: "Copy into class library" },
+        ),
+        onClick: () => handleClonePublicForm(form),
+      },
+    ];
+
+    const chipStyle = {
+      height: 22,
+      paddingLeft: 8,
+      paddingRight: 8,
+      paddingTop: 2,
+      paddingBottom: 2,
+      fontSize: 11,
+      fontWeight: 500,
+      lineHeight: "16px",
+      flexShrink: 0,
+    };
+
+    const getOriginChip = (form) => {
+      const originKind = getFormOriginKind(form, user?.id);
+      if (originKind === "public") {
+        const label = t(
+          "opportunities.matchingRound.formPicker.originPublic",
+          {},
+          { default: "Public" },
+        );
+        return (
+          <Chip
+            label={label}
+            shape="pill"
+            className={clsx(
+              "matchingRoundFormOwnershipChip",
+              "matchingRoundFormOriginChip--public",
+            )}
+            ariaLabel={label}
+            style={chipStyle}
+          />
+        );
+      }
+      if (originKind === "owned") {
+        const label = t(
+          "opportunities.matchingRound.formPicker.originOwnedByMe",
+          {},
+          { default: "Yours" },
+        );
+        return (
+          <Chip
+            label={label}
+            shape="pill"
+            className={clsx(
+              "matchingRoundFormOwnershipChip",
+              "matchingRoundFormOriginChip--owned",
+            )}
+            ariaLabel={label}
+            style={chipStyle}
+          />
+        );
+      }
+      const label = t(
+        "opportunities.matchingRound.formPicker.originCustom",
+        {},
+        { default: "Custom" },
+      );
+      return (
+        <Chip
+          label={label}
+          shape="pill"
+          className={clsx(
+            "matchingRoundFormOwnershipChip",
+            "matchingRoundFormOriginChip--custom",
+          )}
+          ariaLabel={label}
+          style={chipStyle}
+        />
+      );
+    };
+
+    const renderFormRow = (form, { menuItems }) => {
+      const selected = librarySelectedId === form.id;
+      const statusLabel =
+        form.status === "draft"
+          ? t(
+              "opportunities.matchingRound.formPicker.statusDraft",
+              {},
+              { default: "Draft" },
+            )
+          : t(
+              "opportunities.matchingRound.formPicker.statusPublished",
+              {},
+              { default: "Published" },
+            );
+
+      return (
+        <li
+          key={form.id}
+          className={clsx(
+            "matchingRoundFormPickerLibraryRow",
+            selected && "selected",
+            deletingFormId === form.id && "busy",
+          )}
+        >
+          <button
+            type="button"
+            className="matchingRoundFormPickerLibraryRowSelect"
+            onClick={() =>
+              setLibrarySelectedId((prev) =>
+                prev === form.id ? null : form.id,
+              )
+            }
+            aria-pressed={selected}
+            disabled={libraryBusy}
+          >
+            <span className="matchingRoundFormPickerLibraryRowMain">
+              <span className="matchingRoundFormPickerLibraryRowTitle">
+                {form.title || form.id}
+              </span>
+              <span className="matchingRoundFormPickerLibraryRowMeta">
+                {statusLabel}
+              </span>
+            </span>
+            <span className="matchingRoundFormPickerRowChips">
+              {getOriginChip(form)}
+            </span>
+          </button>
+          <div
+            className="matchingRoundFormPickerLibraryRowMenu"
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+          >
+            <DropdownMenu
+              ariaLabel={t(
+                "opportunities.matchingRound.formPicker.libraryRowMenuAria",
+                { title: form.title || form.id },
+                { default: "Actions for {{title}}" },
+              )}
+              items={menuItems}
+              triggerStyle={{
+                opacity: libraryBusy ? 0.5 : 1,
+                pointerEvents: libraryBusy ? "none" : "auto",
+              }}
+            />
+          </div>
+        </li>
+      );
     };
 
     return (
@@ -1812,28 +2161,28 @@ function MatchingRoundEditor({
             <p className="matchingRoundFormPickerHint">
               {t("opportunities.matchingRound.formPicker.hint", {}, {
                 default:
-                  "Manage your class form library here. Add forms to this round from the menu, then choose when sponsors can respond.",
+                  "Attach questionnaires from the shared class library to this round, then choose when sponsors can respond.",
               })}
             </p>
           </div>
 
-          <section className="matchingRoundFormPickerSection">
+          <section className="matchingRoundFormPickerSection matchingRoundFormPickerSectionInRound">
             <div className="matchingRoundFormPickerSectionHeader matchingRoundFormPickerLibraryHeader">
               <div className="matchingRoundFormPickerSectionCopy">
                 <h5 className="matchingRoundFormPickerSectionTitle">
                   {t(
-                    "opportunities.matchingRound.formPicker.libraryTitle",
+                    "opportunities.matchingRound.formPicker.roundSetTitle",
                     {},
-                    { default: "Your form library" },
+                    { default: "Forms in this round" },
                   )}
                 </h5>
                 <p className="matchingRoundFormPickerSectionHint">
                   {t(
-                    "opportunities.matchingRound.formPicker.libraryHint",
+                    "opportunities.matchingRound.formPicker.roundSetHint",
                     {},
                     {
                       default:
-                        "Forms you’ve created for this class. Forms marked “In this round” are attached. Use the menu to add, remove, preview, or edit. Copy a public form to start from a template.",
+                        "Questionnaires attached for sponsors in this matching round.",
                     },
                   )}
                 </p>
@@ -1888,21 +2237,54 @@ function MatchingRoundEditor({
                         )}
                   </Button>
                 </div>
+              </div>
+            </div>
+
+            {inRoundForms.length === 0 ? (
+              <p className="matchingRoundFormPickerLibraryEmpty">
+                {t(
+                  "opportunities.matchingRound.formPicker.roundSetEmpty",
+                  {},
+                  {
+                    default:
+                      "No questionnaires attached yet. Add forms from the class library below.",
+                  },
+                )}
+              </p>
+            ) : (
+              <ul className="matchingRoundFormPickerLibraryList">
+                {inRoundForms.map((form) =>
+                  renderFormRow(form, {
+                    menuItems: buildInRoundMenuItems(form),
+                  }),
+                )}
+              </ul>
+            )}
+          </section>
+
+          <section className="matchingRoundFormPickerSection">
+            <div className="matchingRoundFormPickerSectionHeader matchingRoundFormPickerLibraryHeader">
+              <div className="matchingRoundFormPickerSectionCopy">
+                <h5 className="matchingRoundFormPickerSectionTitle">
+                  {t(
+                    "opportunities.matchingRound.formPicker.libraryTitle",
+                    {},
+                    { default: "Class form library" },
+                  )}
+                </h5>
+                <p className="matchingRoundFormPickerSectionHint">
+                  {t(
+                    "opportunities.matchingRound.formPicker.libraryHint",
+                    {},
+                    {
+                      default:
+                        "Shared forms for this class. Add them to this round from the menu. Only the creator can delete a form.",
+                    },
+                  )}
+                </p>
+              </div>
+              <div className="matchingRoundFormPickerLibraryToolbar">
                 <div className="matchingRoundFormPickerLibraryActions">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={
-                      !canManageOpportunities || libraryBusy || !myclass?.id
-                    }
-                    onClick={() => setClonePublicOpen(true)}
-                  >
-                    {t(
-                      "opportunities.matchingRound.formPicker.copyPublicButton",
-                      {},
-                      { default: "Copy public form" },
-                    )}
-                  </Button>
                   <Button
                     type="button"
                     variant="filled"
@@ -1922,113 +2304,122 @@ function MatchingRoundEditor({
               </div>
             </div>
 
-            {libraryForms.length === 0 ? (
+            {classLibraryForms.length === 0 ? (
               <p className="matchingRoundFormPickerLibraryEmpty">
-                {t(
-                  "opportunities.matchingRound.formPicker.libraryEmpty",
-                  {},
-                  {
-                    default:
-                      "You haven’t created any forms for this class yet. Create one or copy a public form to get started.",
-                  },
-                )}
+                {classLibraryFormDefinitions.length > 0
+                  ? t(
+                      "opportunities.matchingRound.formPicker.libraryAllSelected",
+                      {},
+                      {
+                        default:
+                          "All class forms are already selected for this round.",
+                      },
+                    )
+                  : t(
+                      "opportunities.matchingRound.formPicker.libraryEmpty",
+                      {},
+                      {
+                        default:
+                          "No class forms yet. Create one or copy a public form below.",
+                      },
+                    )}
               </p>
             ) : (
               <ul className="matchingRoundFormPickerLibraryList">
-                {libraryForms.map((form) => {
-                  const selected = librarySelectedId === form.id;
-                  const inRound = selectedFormDefinitionIds.includes(form.id);
-                  const statusLabel =
-                    form.status === "published"
-                      ? t(
-                          "opportunities.matchingRound.formPicker.statusPublished",
-                          {},
-                          { default: "Published" },
-                        )
-                      : t(
-                          "opportunities.matchingRound.formPicker.statusDraft",
-                          {},
-                          { default: "Draft" },
-                        );
-                  return (
-                    <li
-                      key={form.id}
-                      className={clsx(
-                        "matchingRoundFormPickerLibraryRow",
-                        selected && "selected",
-                        deletingFormId === form.id && "busy",
-                      )}
-                    >
-                      <button
-                        type="button"
-                        className="matchingRoundFormPickerLibraryRowSelect"
-                        onClick={() =>
-                          setLibrarySelectedId((prev) =>
-                            prev === form.id ? null : form.id,
-                          )
-                        }
-                        aria-pressed={selected}
-                        disabled={libraryBusy}
-                      >
-                        <span className="matchingRoundFormPickerLibraryRowMain">
-                          <span className="matchingRoundFormPickerLibraryRowTitle">
-                            {form.title || form.id}
-                          </span>
-                          <span className="matchingRoundFormPickerLibraryRowMeta">
-                            {statusLabel}
-                          </span>
-                        </span>
-                        {inRound ? (
-                          <Chip
-                            label={t(
-                              "opportunities.matchingRound.formPicker.inThisRound",
-                              {},
-                              { default: "In this round" },
-                            )}
-                            shape="pill"
-                            className="matchingRoundFormOwnershipChip"
-                            ariaLabel={t(
-                              "opportunities.matchingRound.formPicker.inThisRound",
-                              {},
-                              { default: "In this round" },
-                            )}
-                            style={{
-                              height: 22,
-                              paddingLeft: 8,
-                              paddingRight: 8,
-                              paddingTop: 2,
-                              paddingBottom: 2,
-                              fontSize: 11,
-                              fontWeight: 500,
-                              lineHeight: "16px",
-                              flexShrink: 0,
-                            }}
-                          />
-                        ) : null}
-                      </button>
-                      <div
-                        className="matchingRoundFormPickerLibraryRowMenu"
-                        onClick={(event) => event.stopPropagation()}
-                        onKeyDown={(event) => event.stopPropagation()}
-                      >
-                        <DropdownMenu
-                          ariaLabel={t(
-                            "opportunities.matchingRound.formPicker.libraryRowMenuAria",
-                            { title: form.title || form.id },
-                            { default: "Actions for {{title}}" },
-                          )}
-                          items={buildLibraryMenuItems(form)}
-                          triggerStyle={{
-                            opacity: libraryBusy ? 0.5 : 1,
-                            pointerEvents: libraryBusy ? "none" : "auto",
-                          }}
-                        />
-                      </div>
-                    </li>
-                  );
-                })}
+                {classLibraryForms.map((form) =>
+                  renderFormRow(form, {
+                    menuItems: buildClassLibraryMenuItems(form),
+                  }),
+                )}
               </ul>
             )}
+          </section>
+
+          <section
+            className={clsx(
+              "matchingRoundFormPickerSection",
+              "matchingRoundFormPickerSectionPublic",
+              publicFormsExpanded && "isExpanded",
+            )}
+          >
+            <div className="matchingRoundFormPickerSectionHeader matchingRoundFormPickerLibraryHeader">
+              <div className="matchingRoundFormPickerSectionCopy">
+                <h5 className="matchingRoundFormPickerSectionTitle">
+                  {t(
+                    "opportunities.matchingRound.formPicker.publicTitle",
+                    {},
+                    { default: "Public forms" },
+                  )}
+                </h5>
+                <p className="matchingRoundFormPickerSectionHint">
+                  {t(
+                    "opportunities.matchingRound.formPicker.publicHint",
+                    {},
+                    {
+                      default:
+                        "MindHive templates you can attach as-is or copy into the class library to customize.",
+                    },
+                  )}
+                </p>
+              </div>
+              <div className="matchingRoundFormPickerLibraryToolbar">
+                <div className="matchingRoundFormPickerLibraryActions">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="matchingRoundFormPickerPublicToggle"
+                    disabled={libraryBusy}
+                    onClick={() =>
+                      setPublicFormsExpanded((prev) => !prev)
+                    }
+                    aria-expanded={publicFormsExpanded}
+                  >
+                    {publicFormsExpanded
+                      ? t(
+                          "opportunities.matchingRound.formPicker.hidePublicForms",
+                          {},
+                          { default: "Hide public forms" },
+                        )
+                      : t(
+                          "opportunities.matchingRound.formPicker.showPublicForms",
+                          {},
+                          { default: "Show public forms" },
+                        )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {publicFormsExpanded ? (
+              publicForms.length === 0 ? (
+                <p className="matchingRoundFormPickerLibraryEmpty">
+                  {publicFormDefinitions.length > 0
+                    ? t(
+                        "opportunities.matchingRound.formPicker.publicAllSelected",
+                        {},
+                        {
+                          default:
+                            "All listed public forms are already selected for this round.",
+                        },
+                      )
+                    : t(
+                        "opportunities.matchingRound.formPicker.publicEmpty",
+                        {},
+                        {
+                          default: "No public forms are available yet.",
+                        },
+                      )}
+                </p>
+              ) : (
+                <ul className="matchingRoundFormPickerLibraryList">
+                  {publicForms.map((form) =>
+                    renderFormRow(form, {
+                      menuItems: buildPublicMenuItems(form),
+                    }),
+                  )}
+                </ul>
+              )
+            ) : null}
           </section>
 
           <p className="matchingRoundFormPickerNote matchingRoundFormPickerReuseNote">
@@ -2038,46 +2429,6 @@ function MatchingRoundEditor({
             })}
           </p>
         </div>
-
-        <Modal
-          open={clonePublicOpen}
-          onClose={cloningPublic ? undefined : () => setClonePublicOpen(false)}
-          title={t(
-            "opportunities.matchingRound.formPicker.copyPublicTitle",
-            {},
-            { default: "Copy a public form" },
-          )}
-          maxWidth={640}
-          actions={
-            <Button
-              type="button"
-              variant="outline"
-              disabled={cloningPublic}
-              onClick={() => setClonePublicOpen(false)}
-            >
-              {t(
-                "opportunities.matchingRound.formPicker.copyPublicCancel",
-                {},
-                { default: "Cancel" },
-              )}
-            </Button>
-          }
-        >
-          <p className="matchingRoundFormPickerSectionHint">
-            {t(
-              "opportunities.matchingRound.formPicker.copyPublicHint",
-              {},
-              {
-                default:
-                  "Copy a published public questionnaire into your class library, then edit it.",
-              },
-            )}
-          </p>
-          <ClonePublicFormPicker
-            onPick={handleClonePublicForm}
-            disabled={cloningPublic || !canManageOpportunities}
-          />
-        </Modal>
 
         <MatchingRoundFormPreviewModal
           open={formPreviewOpen}
@@ -2099,10 +2450,7 @@ function MatchingRoundEditor({
           onSaved={async (saved) => {
             if (!saved?.id) return;
             try {
-              await Promise.all([
-                refetchPickableForms?.(),
-                refetchOwnedForms?.(),
-              ]);
+              await refetchFormLists();
             } catch {
               // Selection still proceeds; lists may refresh on next load.
             }
@@ -2263,32 +2611,114 @@ function MatchingRoundEditor({
         </div>
       ) : (
         <div className="classTabExpandableBody">
-          <Navbar style={{ paddingLeft: 0 }}>
-            {panelOptions.map((panel) => (
-              <NavbarItem
-                key={panel.id}
-                selected={activePanel === panel.id}
-                disabled={panel.disabled}
-                onClick={
-                  panel.disabled
-                    ? undefined
-                    : () => setActivePanel(panel.id)
+          <div className="classTabMatchingRoundNavRow">
+            <Navbar style={{ paddingLeft: 0, paddingRight: 0 }}>
+              {panelOptions.map((panel) => (
+                <NavbarItem
+                  key={panel.id}
+                  selected={activePanel === panel.id}
+                  disabled={panel.disabled}
+                  onClick={
+                    panel.disabled
+                      ? undefined
+                      : () => setActivePanel(panel.id)
+                  }
+                  style={{
+                    backgroundColor:
+                      activePanel === panel.id ? "#DEF8FB" : "transparent",
+                    opacity: panel.disabled ? 0.45 : undefined,
+                    cursor: panel.disabled ? "not-allowed" : undefined,
+                  }}
+                  aria-disabled={panel.disabled || undefined}
+                >
+                  {panel.label}
+                </NavbarItem>
+              ))}
+            </Navbar>
+            <div className="classTabMatchingRoundNavActions">
+              <IconButton
+                className="classTabMatchingRoundExportButton"
+                variant="text"
+                style={{ background: "#f3f3f3" }}
+                elevated={false}
+                ariaLabel={exportLabel}
+                title={exportLabel}
+                disabled={networkOpportunities.length === 0}
+                onClick={() => setExportModalOpen(true)}
+                icon={
+                  <img
+                    src="/assets/icons/download.svg"
+                    alt=""
+                    aria-hidden
+                    width={24}
+                    height={24}
+                  />
                 }
-                style={{
-                  backgroundColor:
-                    activePanel === panel.id ? "#DEF8FB" : "transparent",
-                  opacity: panel.disabled ? 0.45 : undefined,
-                  cursor: panel.disabled ? "not-allowed" : undefined,
-                }}
-                aria-disabled={panel.disabled || undefined}
+              />
+              <IconButton
+                className="classTabMatchingRoundSettingsButton"
+                style={{ background: "#f3f3f3" }}
+                variant="text"
+                elevated={false}
+                ariaLabel={settingsLabel}
+                title={settingsLabel}
+                onClick={() => setSettingsModalOpen(true)}
+                icon={
+                  <img
+                    src="/assets/icons/settings.svg"
+                    alt=""
+                    aria-hidden
+                    width={24}
+                    height={24}
+                  />
+                }
+              />
+            </div>
+          </div>
+
+          <OpportunityExportModal
+            open={exportModalOpen}
+            onClose={() => setExportModalOpen(false)}
+            listOpportunities={networkOpportunities}
+            selectedOpportunityIds={selectedOpportunities}
+            roundId={roundId}
+            roundTitle={
+              inputs.title ||
+              round?.title ||
+              roundSummary?.title ||
+              t("opportunities.matchingRound.newRoundTitle", {}, {
+                default: "New matching round",
+              })
+            }
+            networkTitle={
+              selectedNetwork?.title ||
+              round?.classNetwork?.title ||
+              roundSummary?.classNetwork?.title ||
+              ""
+            }
+          />
+
+          <Modal
+            open={settingsModalOpen}
+            onClose={() => setSettingsModalOpen(false)}
+            title={settingsLabel}
+            maxWidth={560}
+            actions={
+              <Button
+                variant="text"
+                type="button"
+                onClick={() => setSettingsModalOpen(false)}
               >
-                {panel.label}
-              </NavbarItem>
-            ))}
-          </Navbar>
+                {t("close", {}, { default: "Close" })}
+              </Button>
+            }
+          >
+            <SettingsModalContent>
+              {renderSettingsPanel()}
+            </SettingsModalContent>
+          </Modal>
 
           <div className="classTabMatchingRoundForm">
-            {activePanel === PANELS.settings && renderSettingsPanel()}
             {activePanel === PANELS.review && renderReviewPanel()}
             {activePanel === PANELS.selected && renderSelectedPanel()}
             {activePanel === PANELS.forms && renderFormsPanel()}
@@ -2345,7 +2775,6 @@ export default function MatchingRoundCard({
   onPreviewOpportunity,
   onMatchingRoundContextChange,
   onCreated,
-  onRequestChangeNetwork,
 }) {
   const { t } = useTranslation("classes");
 
@@ -2372,7 +2801,6 @@ export default function MatchingRoundCard({
       onPreviewOpportunity={onPreviewOpportunity}
       onMatchingRoundContextChange={onMatchingRoundContextChange}
       onCreated={onCreated}
-      onRequestChangeNetwork={onRequestChangeNetwork}
     />
   );
 }

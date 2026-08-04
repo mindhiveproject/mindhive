@@ -326,17 +326,17 @@ export const ROUND_PICKABLE_FORM_DEFINITIONS = gql`
   }
 `;
 
-// Class-scoped opportunity forms created by the current teacher for a class
-// (draft + published). Used by the matching-round "Your form library" panel.
-export const CLASS_OWNED_FORM_DEFINITIONS = gql`
-  query CLASS_OWNED_FORM_DEFINITIONS($classId: ID!, $userId: ID!) {
+// Class-scoped opportunity forms for a class (draft + published), shared
+// across co-teachers. Used by the matching-round class form library panel.
+// `createdBy` is selected so the UI can gate delete on ownership.
+export const CLASS_LIBRARY_FORM_DEFINITIONS = gql`
+  query CLASS_LIBRARY_FORM_DEFINITIONS($classId: ID!) {
     formDefinitions(
       where: {
         surface: { equals: "opportunity" }
         scope: { equals: "class" }
         status: { in: ["draft", "published"] }
         class: { id: { equals: $classId } }
-        createdBy: { id: { equals: $userId } }
       }
       orderBy: [{ title: asc }, { updatedAt: desc }]
     ) {

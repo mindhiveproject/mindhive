@@ -26,6 +26,7 @@ import {
 import { deriveRoles } from "../useConnectRole";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
+import OpportunityListStepper from "../../SponsorConnect/Opportunities/OpportunityListStepper";
 import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
 import OpportunityProposalSection from "./OpportunityProposalSection";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
@@ -64,27 +65,6 @@ const BACK_CHEVRON = (
   </svg>
 );
 
-const STATUS_CHIP_KEY_BY_VALUE = {
-  draft: "draft",
-  pending_review: "pendingReview",
-  returned: "returned",
-  pre_selected: "preSelected",
-  accepted: "accepted",
-  published: "published",
-  archived: "archived",
-  closed: "closed",
-};
-
-const STATUS_CHIP_DEFAULTS = {
-  draft: "Draft",
-  pending_review: "Submitted",
-  returned: "Returned",
-  pre_selected: "Pre-selected",
-  accepted: "Accepted",
-  published: "Published",
-  archived: "Archived",
-  closed: "Closed",
-};
 
 const Shell = styled.div`
   display: flex;
@@ -1283,6 +1263,16 @@ export default function OpportunityEditor({ opportunityId, user }) {
     handleMultipleUpdate({ status: nextStatus });
   };
 
+  // Must stay above the loading early-return — Rules of Hooks.
+  const statusStepperNetworks = useMemo(() => {
+    if (opportunity?.classNetworks?.length) {
+      return opportunity.classNetworks;
+    }
+    return selectedNetworks
+      .map((id) => availableNetworks.find((network) => network.id === id))
+      .filter(Boolean);
+  }, [opportunity?.classNetworks, selectedNetworks, availableNetworks]);
+
   if (!isNew && loadingOpportunity && !opportunity) {
     return (
       <Shell>
@@ -1305,14 +1295,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
     : t("opportunityEditor.pageTitleEdit", {}, {
         default: "Edit opportunity",
       });
-
-  const statusChipKey = STATUS_CHIP_KEY_BY_VALUE[inputs.status];
-  const statusChipLabel =
-    !isNew && statusChipKey
-      ? t(`myOpportunitiesList.status.${statusChipKey}`, {}, {
-          default: STATUS_CHIP_DEFAULTS[inputs.status] || statusChipKey,
-        })
-      : null;
 
   const reviewPrimaryAction = (() => {
     if (!isReviewMode) return null;
@@ -1387,8 +1369,13 @@ export default function OpportunityEditor({ opportunityId, user }) {
           </BackLink>
           <TitleRow>
             <h1 title={pageTitle}>{pageTitle}</h1>
-            {statusChipLabel && (
-              <Chip shape="pill" label={statusChipLabel} />
+            {!isNew && (
+              <OpportunityListStepper
+                status={inputs.status}
+                proposalData={opportunity?.proposalData}
+                rounds={opportunity?.rounds}
+                networks={statusStepperNetworks}
+              />
             )}
           </TitleRow>
         </TopBarLeft>

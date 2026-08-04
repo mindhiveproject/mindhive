@@ -20,6 +20,7 @@ import DefinitionForm from "../../../Forms/DefinitionForm";
 import Button from "../../../DesignSystem/Button";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
 import OpportunityGuidelinesSection from "./OpportunityGuidelinesSection";
+import OpportunityListStepper from "./OpportunityListStepper";
 import {
   GET_OPPORTUNITY,
   MY_OPPORTUNITIES,
@@ -271,6 +272,15 @@ export default function EditorDefinitionMode({ opportunityId }) {
     );
   }
 
+  const statusStepperNetworks = useMemo(() => {
+    if (opportunity?.classNetworks?.length) {
+      return opportunity.classNetworks;
+    }
+    return selectedNetworks
+      .map((id) => availableNetworks.find((network) => network.id === id))
+      .filter(Boolean);
+  }, [opportunity?.classNetworks, selectedNetworks, availableNetworks]);
+
   const entityTitle = (opportunity?.title || "").trim();
   const pageTitle = entityTitle
     ? entityTitle
@@ -307,7 +317,15 @@ export default function EditorDefinitionMode({ opportunityId }) {
             {BACK_CHEVRON}
           </BackLink>
           <TitleRow>
-            <h1 title={pageTitle}>{pageTitle}</h1>
+            <h1 title={pageTitle}>{pageTitle}</h1>asd
+            {!isNew && (
+              <OpportunityListStepper
+                status={opportunity?.status || "draft"}
+                proposalData={opportunity?.proposalData}
+                rounds={opportunity?.rounds}
+                networks={statusStepperNetworks}
+              />
+            )}
           </TitleRow>
         </TopBarLeft>
         <Button

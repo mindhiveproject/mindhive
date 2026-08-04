@@ -538,7 +538,7 @@
 		"empty": "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
 		"emptyFiltered": "No opportunities match the current filters.",
 		"held": {
-			"continueForm": "Continue form",
+			"continueForm": "Respond to form",
 			"followUp": "Follow-up: {{title}}",
 			"formColumns": {
 				"action": "Action",
@@ -550,7 +550,7 @@
 			"formIncomplete": "Incomplete",
 			"formIncompleteSaved": "Incomplete · saved {{date}}",
 			"noFurtherQuestions": "The teacher has not asked any further questions so far.",
-			"openForm": "Open form",
+			"openForm": "Edit response",
 			"preSelected": "Pre-selected for this matching round",
 			"roundFormsTitle": "Matching round · {{network}} · {{round}}",
 			"title": "Held · {{network}} · {{round}}",
@@ -606,6 +606,7 @@
 		"statusFilterLabel": "Filter by status",
 		"statusFilterPlaceholder": "All statuses",
 		"stepper": {
+			"accepted": "Accepted",
 			"ariaLabel": "Opportunity progress",
 			"awaitingMatching": "Awaiting matching",
 			"draft": "Draft",
@@ -613,7 +614,10 @@
 			"formsProgress": "Forms {{done}}/{{total}}",
 			"matched": "Matched",
 			"matching": "Matching",
+			"openOpportunity": "Open opportunity",
 			"preSelected": "Pre-selected",
+			"returnedWithComments": "Returned with comments",
+			"submitted": "Submitted",
 			"visible": "Visible in class network",
 			"visibleMany": "Visible in {{count}} class networks",
 			"visibleNone": "Not visible in any class network",

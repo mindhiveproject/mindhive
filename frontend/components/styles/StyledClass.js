@@ -1392,6 +1392,29 @@ const StyledClass = styled.div`
       }
     }
 
+    .classTabMatchingRoundNavRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      min-width: 0;
+
+      .navbar-container {
+        flex: 1 1 auto;
+        min-width: 0;
+        flex-wrap: wrap;
+      }
+
+      .classTabMatchingRoundNavActions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+    }
+
     .classTabMatchingRoundNetworkRow {
       display: grid;
       gap: 12px;
@@ -1518,9 +1541,9 @@ const StyledClass = styled.div`
       gap: 12px 16px;
       width: 100%;
       padding: 12px 16px;
-      border: 1px solid #E6E6E6;
+      border: 1px solid #c5dde0;
       border-radius: 12px;
-      background: #f5f8f9;
+      background: var(--MH-Theme-Primary-Light, #def8fb);
     }
 
     .matchingRoundFormSummaryCopy {
@@ -1588,6 +1611,15 @@ const StyledClass = styled.div`
       background: #fafbfb;
     }
 
+    .matchingRoundFormPickerSectionInRound {
+      background: #f3f3f3;
+      border-color: #e6e6e6;
+    }
+
+    .matchingRoundFormPickerSectionPublic:not(.isExpanded) {
+      background: #f8f8f8;
+    }
+
     .matchingRoundFormPickerSectionHeader {
       display: grid;
       gap: 4px;
@@ -1638,6 +1670,10 @@ const StyledClass = styled.div`
       justify-content: flex-end;
       gap: 10px 12px;
       flex-shrink: 0;
+    }
+
+    .matchingRoundFormPickerPublicToggle {
+      white-space: nowrap;
     }
 
     .matchingRoundFormPickerLibraryVisibility {
@@ -1699,8 +1735,18 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerLibraryRow.selected {
-      border-color: var(--MH-Theme-Primary-Dark, #336F8A);
+      border-color: var(--MH-Theme-Primary-Base, #337c84);
       background: #f0f7f9;
+    }
+
+    .matchingRoundFormPickerRowChips {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+      max-width: 55%;
     }
 
     .matchingRoundFormPickerLibraryRow.busy {
@@ -1724,7 +1770,7 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerLibraryRowSelect:hover {
-      background: rgba(51, 111, 138, 0.04);
+      background: rgba(51, 124, 132, 0.06);
     }
 
     .matchingRoundFormPickerLibraryRowSelect:disabled {
@@ -1790,9 +1836,26 @@ const StyledClass = styled.div`
       line-height: 16px;
     }
 
-    .matchingRoundExportActions {
-      display: flex;
-      justify-content: flex-start;
+    .matchingRoundFormOriginChip--public {
+      background: #ffffff !important;
+      background-color: #ffffff !important;
+      border-color: #a1a1a1 !important;
+      color: #5f6871 !important;
+    }
+
+    .matchingRoundFormOriginChip--custom {
+      background: var(--MH-Theme-Primary-Light, #def8fb) !important;
+      background-color: var(--MH-Theme-Primary-Light, #def8fb) !important;
+      border: none !important;
+      color: var(--MH-Theme-Primary-Dark, #336f8a) !important;
+    }
+
+    .matchingRoundFormOriginChip--owned {
+      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3) !important;
+      background-color: var(--MH-Theme-Neutrals-Lighter, #f3f3f3) !important;
+      border: none !important;
+      color: var(--MH-Theme-Neutrals-Dark, #171717) !important;
+      font-weight: 600 !important;
     }
 
     .classTabMatchingRoundFooter {
