@@ -326,6 +326,7 @@ export default function OpportunityPreviewModal({
   opportunityId,
   onClose,
   matchingRoundContext,
+  initialTab = null,
 }) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
@@ -461,8 +462,8 @@ export default function OpportunityPreviewModal({
 
   useEffect(() => {
     if (!open) return;
-    setActiveTab(OPPORTUNITY_PREVIEW_TABS.detail);
-  }, [open, opportunityId]);
+    setActiveTab(initialTab || OPPORTUNITY_PREVIEW_TABS.detail);
+  }, [open, opportunityId, initialTab]);
 
   useEffect(() => {
     if (activeTab !== resolvedTab) {

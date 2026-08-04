@@ -932,6 +932,32 @@
 				"visibilityToggleFailed": "Could not update form visibility for sponsors. Please try again.",
 				"visibilityVisible": "Visible to sponsors"
 			},
+			"followUpCompletion": {
+				"columns": {
+					"opportunity": "Opportunity",
+					"organization": "Organization",
+					"progress": "Progress",
+					"sponsor": "Sponsor"
+				},
+				"complete": "Complete",
+				"completeSaved": "Complete · {{date}}",
+				"emptyFilterHint": "No incomplete responses match this filter. Switch to All to see every opportunity.",
+				"emptyFilterTitle": "Everyone is complete",
+				"emptyNoFormsHint": "Add follow-up questionnaires above, then track who has responded here.",
+				"emptyNoFormsTitle": "No questionnaires attached yet",
+				"emptyNoOppsHint": "Pre-select opportunities in this round first. Sponsors for those opportunities can then complete the questionnaires.",
+				"emptyNoOppsTitle": "No pre-selected opportunities yet",
+				"filterAll": "All",
+				"filterIncomplete": "Incomplete only",
+				"hiddenBanner": "Questionnaires are currently hidden from sponsors. They cannot respond until you show forms to sponsors.",
+				"hideFormsManager": "Hide questionnaires",
+				"incomplete": "Incomplete",
+				"manageForms": "Manage questionnaires",
+				"openFormAria": "{{status}} — open {{form}} for {{opportunity}}",
+				"progressCell": "{{done}}/{{total}}",
+				"summary": "{{completeOpps}}/{{totalOpps}} opportunities complete · {{doneResponses}}/{{totalResponses}} form responses",
+				"title": "Response status"
+			},
 			"formWizard": {
 				"addQuestion": "Add question",
 				"back": "Back",
