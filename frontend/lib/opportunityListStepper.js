@@ -3,9 +3,12 @@ import { isRoundSponsorFormsVisible } from "./opportunityEditorTabs";
 
 export const OPPORTUNITY_LIST_STEP_KEYS = [
   "draft",
-  "visible",
+  "returnedWithComments",
+  "submitted",
   "preSelected",
-  "formsMatching",
+  "accepted",
+  "formsProgress",
+  "matching",
   "matched",
 ];
 
@@ -52,49 +55,32 @@ function isRoundMatched(rounds) {
   );
 }
 
-function visibleLabelForCount(networkCount) {
-  if (!networkCount) {
-    return { labelKey: "visibleNone", labelQuery: undefined };
-  }
-  if (networkCount === 1) {
-    return { labelKey: "visibleOne", labelQuery: undefined };
-  }
-  return {
-    labelKey: "visibleMany",
-    labelQuery: { count: networkCount },
-  };
-}
-
 /**
  * Resolve the minimal list stepper for a sponsor opportunity.
  *
- * Progressive disclosure:
- * - Draft: only Draft
- * - Pending review: only Visible-in-networks (same copy as former visibility line)
- * - Pre-selected+: Pre-selected + forms/matching (or Matched)
+ * Composite chips: [status]-[exception?]-[matching?]
+ * Visual tones: action | waiting | done | pending
  *
  * @param {{
  *   status?: string,
  *   proposalData?: unknown,
  *   rounds?: Array,
- *   networkCount?: number,
  * }} input
  * @returns {{
  *   steps: Array<{
  *     key: string,
- *     visual: 'done' | 'active' | 'pending',
+ *     visual: 'action' | 'waiting' | 'done' | 'pending',
  *     labelKey: string,
  *     labelQuery?: { done?: number, total?: number, count?: number },
  *     isVisibility?: boolean,
  *   }>,
- *   phase: 'draft' | 'visible' | 'held' | 'matched',
+ *   phase: 'draft' | 'returned' | 'submitted' | 'held' | 'matched',
  * }}
  */
 export function resolveOpportunityListStepper({
   status: rawStatus,
   proposalData,
   rounds,
-  networkCount = 0,
 } = {}) {
   const status = rawStatus || "draft";
   const heldRounds = POST_PRESELECT_STATUSES.has(status) ? rounds || [] : [];
@@ -102,31 +88,42 @@ export function resolveOpportunityListStepper({
   const { done, total } = formCompletionCounts(proposalData, forms);
   const formsIncomplete = total > 0 && done < total;
   const matched = isRoundMatched(heldRounds);
-  const visibleLabel = visibleLabelForCount(networkCount);
 
-  if (status === "draft" || status === "returned") {
+  if (status === "draft") {
     return {
       phase: "draft",
       steps: [
         {
           key: "draft",
-          visual: "active",
+          visual: "action",
           labelKey: "draft",
         },
       ],
     };
   }
 
-  if (!POST_PRESELECT_STATUSES.has(status)) {
-    // pending_review and any other pre-hold status: single visibility step
+  if (status === "returned") {
     return {
-      phase: "visible",
+      phase: "returned",
       steps: [
         {
-          key: "visible",
-          visual: "active",
-          labelKey: visibleLabel.labelKey,
-          labelQuery: visibleLabel.labelQuery,
+          key: "returnedWithComments",
+          visual: "action",
+          labelKey: "returnedWithComments",
+        },
+      ],
+    };
+  }
+
+  if (!POST_PRESELECT_STATUSES.has(status)) {
+    // pending_review and any other pre-hold status
+    return {
+      phase: "submitted",
+      steps: [
+        {
+          key: "submitted",
+          visual: "waiting",
+          labelKey: "submitted",
           isVisibility: true,
         },
       ],
@@ -138,54 +135,42 @@ export function resolveOpportunityListStepper({
       phase: "matched",
       steps: [
         {
-          key: "preSelected",
-          visual: "done",
-          labelKey: "preSelected",
-        },
-        {
           key: "matched",
-          visual: "active",
+          visual: "done",
           labelKey: "matched",
         },
       ],
     };
   }
 
-  let formsMatchingLabelKey = "awaitingMatching";
-  let formsMatchingQuery;
-  if (formsIncomplete) {
-    formsMatchingLabelKey = "formsProgress";
-    formsMatchingQuery = { done, total };
-  }
-
+  const holdKey = status === "accepted" ? "accepted" : "preSelected";
   const steps = [
     {
-      key: "preSelected",
+      key: holdKey,
       visual: "done",
-      labelKey: "preSelected",
-    },
-    {
-      key: "formsMatching",
-      visual: "active",
-      labelKey: formsMatchingLabelKey,
-      labelQuery: formsMatchingQuery,
+      labelKey: holdKey,
     },
   ];
 
-  // Ahead-of-current steps after the matching/forms stage — disabled chips.
   if (formsIncomplete) {
+    steps.push({
+      key: "formsProgress",
+      visual: "action",
+      labelKey: "formsProgress",
+      labelQuery: { done, total },
+    });
     steps.push({
       key: "matching",
       visual: "pending",
       labelKey: "matching",
     });
+  } else {
+    steps.push({
+      key: "matching",
+      visual: "waiting",
+      labelKey: "matching",
+    });
   }
-
-  steps.push({
-    key: "matched",
-    visual: "pending",
-    labelKey: "matched",
-  });
 
   return {
     phase: "held",

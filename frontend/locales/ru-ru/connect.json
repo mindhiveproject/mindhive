@@ -606,6 +606,7 @@
 		"statusFilterLabel": "Фильтрация по статусу",
 		"statusFilterPlaceholder": "Все статусы",
 		"stepper": {
+			"accepted": "",
 			"ariaLabel": "",
 			"awaitingMatching": "",
 			"draft": "",
@@ -613,7 +614,10 @@
 			"formsProgress": "",
 			"matched": "",
 			"matching": "",
+			"openOpportunity": "",
 			"preSelected": "",
+			"returnedWithComments": "",
+			"submitted": "",
 			"visible": "",
 			"visibleMany": "",
 			"visibleNone": "",

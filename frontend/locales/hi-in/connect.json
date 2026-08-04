@@ -606,6 +606,7 @@
 		"statusFilterLabel": "स्थिति के अनुसार फ़िल्टर करें",
 		"statusFilterPlaceholder": "सभी स्थितियाँ",
 		"stepper": {
+			"accepted": "",
 			"ariaLabel": "",
 			"awaitingMatching": "",
 			"draft": "",
@@ -613,7 +614,10 @@
 			"formsProgress": "",
 			"matched": "",
 			"matching": "",
+			"openOpportunity": "",
 			"preSelected": "",
+			"returnedWithComments": "",
+			"submitted": "",
 			"visible": "",
 			"visibleMany": "",
 			"visibleNone": "",

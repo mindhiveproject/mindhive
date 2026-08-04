@@ -197,6 +197,9 @@ const DefinitionForm = forwardRef(function DefinitionForm(
   // array of { formDefinitionId, answer }. Unwrap for hydrate/merge.
   // When forcing a proposal entry, also spread the flat answer onto the
   // entity so column-storage fields can hydrate from the saved answers.
+  // Follow-up form fields often use json_bucket + a non-proposalData bucket
+  // (e.g. extraDetails); mirror the flat answer into those buckets too so
+  // hydrate can find values.
   const entityForStorage = useMemo(() => {
     if (!entity) return entity;
     if (!forceProposalEntry && !usesProposalDataBucket) return entity;
@@ -204,16 +207,35 @@ const DefinitionForm = forwardRef(function DefinitionForm(
       entity.proposalData,
       effectiveProposalEntryId
     );
+    const bucketMirrors = {};
+    if (forceProposalEntry && flatAnswer) {
+      for (const field of allFields) {
+        if (field?.storage !== "json_bucket") continue;
+        const bucket = field.storageBucket;
+        if (!bucket || bucketMirrors[bucket]) continue;
+        const existing =
+          entity[bucket] &&
+          typeof entity[bucket] === "object" &&
+          !Array.isArray(entity[bucket])
+            ? entity[bucket]
+            : {};
+        bucketMirrors[bucket] = { ...existing, ...flatAnswer };
+      }
+    }
     return {
       ...entity,
       ...(forceProposalEntry ? flatAnswer : null),
+      ...bucketMirrors,
       proposalData: flatAnswer,
     };
   }, [
     entity,
+    entity?.id,
+    entity?.proposalData,
     forceProposalEntry,
     usesProposalDataBucket,
     effectiveProposalEntryId,
+    allFields,
   ]);
 
   const [values, setValues] = useState({});

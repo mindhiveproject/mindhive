@@ -399,6 +399,7 @@ export default function OpportunitiesList({ user }) {
                       proposalData={opportunity.proposalData}
                       rounds={opportunity.rounds}
                       networks={networks}
+                      onStepClick={() => handleEdit(opportunity.id)}
                     />
                     {networkCount === 0 &&
                       (opportunity.status === "draft" ||
@@ -510,28 +511,44 @@ export default function OpportunitiesList({ user }) {
                                   )}
                                 </FormStatus>
                                 <FormAction role="cell">
-                                  <Chip
-                                    label={
-                                      complete
-                                        ? tConnect(
-                                            "myOpportunitiesList.held.openForm",
-                                            {},
-                                            { default: "Open form" },
-                                          )
-                                        : tConnect(
-                                            "myOpportunitiesList.held.continueForm",
-                                            {},
-                                            { default: "Continue form" },
-                                          )
-                                    }
-                                    onClick={() =>
-                                      handleOpenForm(
-                                        opportunity,
-                                        form,
-                                        round,
-                                      )
-                                    }
-                                  />
+                                  {complete ? (
+                                    <Button
+                                      type="button"
+                                      variant="text"
+                                      style={{
+                                        color:
+                                          "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+                                      }}
+                                      onClick={() =>
+                                        handleOpenForm(
+                                          opportunity,
+                                          form,
+                                          round,
+                                        )
+                                      }
+                                    >
+                                      {tConnect(
+                                        "myOpportunitiesList.held.openForm",
+                                        {},
+                                        { default: "Edit response" },
+                                      )}
+                                    </Button>
+                                  ) : (
+                                    <Chip
+                                      label={tConnect(
+                                        "myOpportunitiesList.held.continueForm",
+                                        {},
+                                        { default: "Respond to form" },
+                                      )}
+                                      onClick={() =>
+                                        handleOpenForm(
+                                          opportunity,
+                                          form,
+                                          round,
+                                        )
+                                      }
+                                    />
+                                  )}
                                 </FormAction>
                               </FormGridRow>
                             );

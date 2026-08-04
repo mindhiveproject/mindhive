@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
@@ -11,25 +11,14 @@ import {
 } from "../../../Queries/Opportunity";
 import { UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import useConnectRole from "../../Connect/useConnectRole";
-import {
-  getProposalEntrySavedAt,
-  upsertProposalEntry,
-} from "../../../../lib/opportunityProposalData";
+import { upsertProposalEntry } from "../../../../lib/opportunityProposalData";
 
-const Intro = styled.p`
-  margin: 0 0 8px;
+const StatusText = styled.p`
+  margin: 0;
   font-family: "Inter", sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #5f6871;
-`;
-
-const SavedAt = styled.p`
-  margin: 0 0 16px;
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
+  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
 function rolesForViewer(connectRole) {
@@ -43,21 +32,6 @@ function rolesForViewer(connectRole) {
   return roles;
 }
 
-function formatSavedAt(iso) {
-  if (!iso) return null;
-  try {
-    return new Date(iso).toLocaleString(undefined, {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
-  } catch {
-    return null;
-  }
-}
-
 const OpportunityFollowUpFormPanel = forwardRef(
   function OpportunityFollowUpFormPanel(
     { opportunity, formMeta, readOnly = false, hideSaveButton = true },
@@ -67,18 +41,29 @@ const OpportunityFollowUpFormPanel = forwardRef(
     const { t } = useTranslation("connect");
     const connectRole = useConnectRole();
     const viewerRoles = rolesForViewer(connectRole);
+    const opportunityId = opportunity?.id;
+
+    // Always load the latest opportunity so follow-up forms hydrate from the
+    // sponsor's current proposalData, not a stale list/preview snapshot.
+    const { data: liveData, loading: liveLoading } = useQuery(GET_OPPORTUNITY, {
+      variables: { id: opportunityId },
+      skip: !opportunityId,
+      fetchPolicy: "network-only",
+    });
+
+    const liveOpportunity = liveData?.opportunity || opportunity;
 
     const [updateOpportunity] = useMutation(UPDATE_OPPORTUNITY, {
       refetchQueries: [
         { query: MY_OPPORTUNITIES },
-        ...(opportunity?.id
-          ? [{ query: GET_OPPORTUNITY, variables: { id: opportunity.id } }]
+        ...(opportunityId
+          ? [{ query: GET_OPPORTUNITY, variables: { id: opportunityId } }]
           : []),
       ],
       awaitRefetchQueries: true,
     });
 
-    if (!formMeta?.id || !opportunity?.id) {
+    if (!formMeta?.id || !opportunityId) {
       return null;
     }
 
@@ -93,7 +78,7 @@ const OpportunityFollowUpFormPanel = forwardRef(
         typeof proposalData === "object"
       ) {
         proposalData = upsertProposalEntry(
-          opportunity.proposalData,
+          liveOpportunity.proposalData,
           formMeta.id,
           proposalData,
         );
@@ -109,66 +94,41 @@ const OpportunityFollowUpFormPanel = forwardRef(
 
       await updateOpportunity({
         variables: {
-          id: opportunity.id,
+          id: opportunityId,
           input: { proposalData },
         },
       });
     };
 
-    const contextBits = [
-      formMeta.networkTitle,
-      formMeta.roundTitle,
-    ].filter(Boolean);
-
-    const savedAtRaw = getProposalEntrySavedAt(
-      opportunity.proposalData,
-      formMeta.id,
-    );
-    const savedAtLabel = formatSavedAt(savedAtRaw);
+    if (liveLoading && !liveData?.opportunity) {
+      return (
+        <StatusText>
+          {t("opportunityEditor.loading", {}, {
+            default: "Loading opportunity…",
+          })}
+        </StatusText>
+      );
+    }
 
     return (
-      <div>
-        {contextBits.length > 0 && (
-          <Intro>
-            {t(
-              "opportunityEditor.followUpIntro",
-              {
-                context: contextBits.join(" · "),
-              },
-              {
-                default:
-                  "Additional questions from {{context}}. Your answers are saved on this opportunity.",
-              },
-            )}
-          </Intro>
-        )}
-        {savedAtLabel ? (
-          <SavedAt>
-            {t(
-              "opportunityEditor.followUpLastSaved",
-              { date: savedAtLabel },
-              { default: "Last saved {{date}}" },
-            )}
-          </SavedAt>
-        ) : null}
-        <DefinitionForm
-          ref={ref}
-          definitionId={formMeta.id}
-          proposalEntryFormDefinitionId={formMeta.id}
-          entity={opportunity}
-          scopeContext={{
-            classNetworkId: formMeta.networkId || null,
-          }}
-          viewerRoles={viewerRoles.length ? viewerRoles : ["sponsor"]}
-          locale={router.locale}
-          onSubmit={handleSubmit}
-          readOnly={readOnly}
-          hideSaveButton={hideSaveButton}
-          saveLabel={t("opportunityEditor.save", {}, {
-            default: "Save changes",
-          })}
-        />
-      </div>
+      <DefinitionForm
+        key={formMeta.id}
+        ref={ref}
+        definitionId={formMeta.id}
+        proposalEntryFormDefinitionId={formMeta.id}
+        entity={liveOpportunity}
+        scopeContext={{
+          classNetworkId: formMeta.networkId || null,
+        }}
+        viewerRoles={viewerRoles.length ? viewerRoles : ["sponsor"]}
+        locale={router.locale}
+        onSubmit={handleSubmit}
+        readOnly={readOnly}
+        hideSaveButton={hideSaveButton}
+        saveLabel={t("opportunityEditor.save", {}, {
+          default: "Save changes",
+        })}
+      />
     );
   },
 );

@@ -1,6 +1,8 @@
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
+import { OPPORTUNITY_STATUS_TONE_SOLID } from "../../../../lib/opportunityStatusTones";
+
 const Shell = styled.section`
   display: flex;
   flex-direction: column;
@@ -62,6 +64,13 @@ const StepItem = styled.li`
   }
 `;
 
+function toneFromWorkflowVisual(visual) {
+  if (visual === "active") return "action";
+  if (visual === "waiting") return "waiting";
+  if (visual === "done") return "done";
+  return "pending";
+}
+
 const Circle = styled.span`
   flex: none;
   width: 36px;
@@ -76,28 +85,13 @@ const Circle = styled.span`
   line-height: 1;
   z-index: 1;
   background: ${({ $visual }) =>
-    $visual === "done"
-      ? "#1d6b3a"
-      : $visual === "active"
-        ? "#336f8a"
-        : $visual === "waiting"
-          ? "#eef5f9"
-          : "#e6eaee"};
+    OPPORTUNITY_STATUS_TONE_SOLID[toneFromWorkflowVisual($visual)].background};
   color: ${({ $visual }) =>
-    $visual === "pending"
-      ? "#5f6871"
-      : $visual === "waiting"
-        ? "#336f8a"
-        : "#ffffff"};
-  border: 2px solid
-    ${({ $visual }) =>
-      $visual === "waiting"
-        ? "#336f8a"
-        : $visual === "active"
-          ? "#336f8a"
-          : "transparent"};
+    OPPORTUNITY_STATUS_TONE_SOLID[toneFromWorkflowVisual($visual)].color};
+  border: ${({ $visual }) =>
+    OPPORTUNITY_STATUS_TONE_SOLID[toneFromWorkflowVisual($visual)].border};
   box-shadow: ${({ $visual }) =>
-    $visual === "active" ? "0 0 0 4px rgba(51, 111, 138, 0.16)" : "none"};
+    OPPORTUNITY_STATUS_TONE_SOLID[toneFromWorkflowVisual($visual)].ring};
 `;
 
 const StepLabel = styled.span`
@@ -118,31 +112,45 @@ const RoleChip = styled.span`
   font-size: 12px;
   font-weight: 600;
   line-height: 1.2;
-  background: ${({ $visual }) =>
-    $visual === "active" || $visual === "waiting" ? "#eef5f9" : "#ffffff"};
-  color: ${({ $visual }) =>
-    $visual === "active" || $visual === "waiting" ? "#336f8a" : "#5f6871"};
+  background: ${({ $visual }) => {
+    const tone = toneFromWorkflowVisual($visual);
+    if (tone === "action") return "#fdf6e8";
+    if (tone === "waiting") return "#def8fb";
+    if (tone === "done") return "#e3f4ec";
+    return "#ffffff";
+  }};
+  color: ${({ $visual }) => {
+    const tone = toneFromWorkflowVisual($visual);
+    if (tone === "action") return "#8a6d3b";
+    if (tone === "waiting") return "var(--MH-Theme-Primary-Dark, #336f8a)";
+    if (tone === "done") return "#1d6b3a";
+    return "#5f6871";
+  }};
   border: 1px solid
-    ${({ $visual }) =>
-      $visual === "active" || $visual === "waiting" ? "#b8d4e3" : "#d3dae0"};
+    ${({ $visual }) => {
+      const tone = toneFromWorkflowVisual($visual);
+      if (tone === "action") return "#e8d4a8";
+      if (tone === "waiting") return "#b5e4ea";
+      if (tone === "done") return "#b8dcc8";
+      return "#d3dae0";
+    }};
 `;
 
 const ContextLine = styled.p`
   margin: 0;
   padding: 12px 14px;
   border-radius: 10px;
-  background: ${({ $emphasis }) => ($emphasis ? "#faf8ff" : "#ffffff")};
+  background: ${({ $emphasis }) => ($emphasis ? "#fdf6e8" : "#ffffff")};
   border: 1px solid
-    ${({ $emphasis }) =>
-      $emphasis ? "rgba(160, 144, 224, 0.45)" : "#d3dae0"};
-  box-shadow: ${({ $emphasis }) =>
-    $emphasis ? "0 2px 10px rgba(111, 38, 206, 0.08)" : "none"};
+    ${({ $emphasis }) => ($emphasis ? "#e8d4a8" : "#d3dae0")};
+  box-shadow: none;
   font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: ${({ $emphasis }) => ($emphasis ? 600 : 500)};
   line-height: 1.5;
-  color: ${({ $emphasis }) => ($emphasis ? "#3f288f" : "#5f6871")};
+  color: ${({ $emphasis }) => ($emphasis ? "#8a6d3b" : "#5f6871")};
 `;
+
 
 const STEPS = [
   { key: "submit", role: "sponsor" },
