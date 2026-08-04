@@ -961,6 +961,8 @@
 				"nameLabel": "",
 				"namePlaceholder": "",
 				"next": "",
+				"pickType": "",
+				"previewEmpty": "",
 				"previewHint": "",
 				"previewUntitled": "",
 				"promptEmpty": "",
@@ -974,6 +976,7 @@
 				"startFromPublic": "",
 				"stepOf": "",
 				"title": "",
+				"typePickerLabel": "",
 				"types": {
 					"media": "",
 					"mediaHint": "",

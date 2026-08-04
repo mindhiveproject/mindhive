@@ -38,6 +38,8 @@ export function createBlankQuestion(overrides = {}) {
     placeholder: "",
     isRequired: false,
     optionsText: "",
+    // UI-only: expanded type picker until the teacher picks a type.
+    typeChosen: false,
     ...overrides,
   };
 }
@@ -55,6 +57,7 @@ export function questionsFromDefinition(definition) {
       placeholder: f.placeholder || "",
       isRequired: !!f.isRequired,
       optionsText: optionsToLines(f.options),
+      typeChosen: true,
     })
   );
 }

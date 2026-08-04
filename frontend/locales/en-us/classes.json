@@ -961,6 +961,8 @@
 				"nameLabel": "What’s this form for?",
 				"namePlaceholder": "e.g. Sponsor visit follow-up",
 				"next": "Next",
+				"pickType": "Choose a question type",
+				"previewEmpty": "Pick a question type and add a prompt to see a live preview.",
 				"previewHint": "This is how the form will look. Publish to make it available for this matching round.",
 				"previewUntitled": "Preview",
 				"promptEmpty": "No prompt yet",
@@ -974,6 +976,7 @@
 				"startFromPublic": "Start from a public form",
 				"stepOf": "Step {{current}} of {{total}}",
 				"title": "Create a questionnaire",
+				"typePickerLabel": "Question type",
 				"types": {
 					"media": "Media library item",
 					"mediaHint": "Sponsors share an image from their library",
