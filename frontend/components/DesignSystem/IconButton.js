@@ -86,6 +86,25 @@ const TONAL_DISABLED = {
   boxShadow: "none",
 };
 
+// --- Subtle (Primary Lighter behind a black glyph — the quiet light chip used
+// for close and dismiss actions, and by the menu bar's own icon buttons)
+const SUBTLE_BASE = {
+  ...BASE_STYLE,
+  background: "var(--MH-Theme-Primary-Lighter, #F4F8F7)",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+};
+const SUBTLE_HOVER = {
+  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+};
+const SUBTLE_PRESSED = {
+  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+};
+const SUBTLE_DISABLED = {
+  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  cursor: "default",
+};
+
 // --- Text
 const TEXT_BASE = {
   ...BASE_STYLE,
@@ -119,6 +138,13 @@ function getVariantStyles(variant) {
         hover: TONAL_HOVER,
         pressed: TONAL_PRESSED,
         disabled: TONAL_DISABLED,
+      };
+    case "subtle":
+      return {
+        base: SUBTLE_BASE,
+        hover: SUBTLE_HOVER,
+        pressed: SUBTLE_PRESSED,
+        disabled: SUBTLE_DISABLED,
       };
     case "text":
       return {
@@ -166,10 +192,15 @@ const ICON_WRAPPER_STYLE = {
 
 /**
  * Design System Icon Button. Circular 40px control for icon-only actions.
- * Four variants: filled, outline, tonal, text. Matches Figma (node 1049-4895).
+ * Matches Figma (node 1049-4895).
  *
- * @param {"filled"|"outline"|"tonal"|"text"} [variant="filled"] - Visual style.
+ * Variants: filled, outline, tonal, text, and subtle — a quiet light chip
+ * (Primary Lighter behind a black glyph) for close and dismiss actions.
+ *
+ * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
  * @param {React.ReactNode} icon - 24px icon (required).
+ * @param {boolean} [elevated=true] - Hover elevation. Set false to drop the
+ *   hover drop shadow on the filled and tonal variants.
  * @param {boolean} [disabled=false] - Disabled state.
  * @param {"button"|"submit"|"reset"} [type="button"] - Native button type.
  * @param {function} [onClick] - Click handler.
@@ -182,6 +213,7 @@ const ICON_WRAPPER_STYLE = {
 export default function IconButton({
   variant = "filled",
   icon = null,
+  elevated = true,
   disabled = false,
   type = "button",
   onClick,
@@ -205,6 +237,11 @@ export default function IconButton({
     buttonStyle = { ...buttonStyle, ...styles.hover };
   }
 
+  if (!elevated) {
+    buttonStyle = { ...buttonStyle, boxShadow: "none" };
+  }
+
+  // Caller overrides win over both state and elevation.
   buttonStyle = { ...buttonStyle, ...style };
 
   const buttonClassName = className

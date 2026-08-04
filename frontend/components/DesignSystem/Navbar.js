@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import clsx from "clsx";
+import { createContext, useContext, useMemo } from "react";
 
 export const StyledNavbar = styled.div`
   .navbar-container {
@@ -35,8 +36,8 @@ export const StyledNavbar = styled.div`
     font-style: normal;
     line-height: 24px;
     font-size: 14px;
-    
-    
+
+
     &:hover {
       background-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
       opacity: 1;
@@ -84,42 +85,177 @@ export const StyledNavbar = styled.div`
       background: none;
     }
   }
+
+  /* Vertical orientation — sidebars and menu rails. */
+  .navbar-container.vertical {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0px;
+    gap: 8px;
+
+    li {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar-item {
+      width: 100%;
+      justify-content: flex-start;
+      /* MH-Theme/title/base */
+      font-size: 16px;
+      line-height: 24px;
+      padding-left: 16px;
+      padding-right: 24px;
+    }
+
+    /* Items sit 8px apart via the container gap; a section heading opens a
+       wider 32px channel above itself to separate it from the group before. */
+    li:not(:first-child) > .navbar-section-label,
+    li:not(:first-child) > .navbar-section-rule {
+      margin-top: 24px;
+    }
+  }
+
+  /* Collapsed rail — icons only. Labels are dropped by NavbarItem itself and
+     re-attached as accessible names, rather than being hidden with CSS. */
+  .navbar-container.vertical.collapsed {
+    align-items: center;
+
+    .navbar-item {
+      width: auto;
+      justify-content: center;
+      padding: 8px;
+    }
+  }
+
+  .navbar-item-trailing {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  .navbar-section-label {
+    /* MH-Theme/label/base */
+    font-family: "Inter";
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar-section-rule {
+    height: 1px;
+    width: 100%;
+    background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border: 0;
+    margin: 0;
+  }
 `;
 
 /**
+ * Set once by Navbar so items know whether they are rendering as a collapsed
+ * rail. Only state lives here — visual styling still cascades through CSS.
+ */
+const NavbarContext = createContext({ collapsed: false });
+
+/**
  * Design System Navbar. Renders a <nav> landmark wrapping a <ul> of NavbarItem.
- * Two variants: tonal (pill background) and underline (bottom border).
  *
- * The variant is set once here and cascades to every item via CSS, so items
- * themselves take no variant prop.
+ * Two visual variants: tonal (pill background) and underline (bottom border).
+ * Two orientations: horizontal (default, for tab bars) and vertical (for
+ * sidebars and menu rails).
+ *
+ * Variant and orientation are set once here and cascade to every item via CSS,
+ * so items themselves take no variant or orientation prop.
  *
  * @param {"tonal"|"underline"} [variant="tonal"] - Visual style for all items.
- * @param {React.ReactNode} children - NavbarItem elements.
+ * @param {"horizontal"|"vertical"} [orientation="horizontal"] - Layout direction.
+ * @param {boolean} [collapsed=false] - Vertical only. Renders an icon-only rail;
+ *   item labels become accessible names instead of visible text.
+ * @param {React.ReactNode} children - NavbarItem and NavbarSection elements.
  *
  * @example
  * <Navbar variant="underline">
  *   <NavbarItem href="/studies" selected>Studies</NavbarItem>
  *   <NavbarItem href="/people">People</NavbarItem>
  * </Navbar>
+ *
+ * @example
+ * <Navbar orientation="vertical" collapsed={collapsed}>
+ *   <NavbarSection label="Projects">
+ *     <NavbarItem as={Link} href="/develop" leadingIcon={<BuilderIcon />}>
+ *       Develop
+ *     </NavbarItem>
+ *   </NavbarSection>
+ * </Navbar>
  */
-export default function Navbar({ variant = "tonal", children }) {
+export default function Navbar({
+  variant = "tonal",
+  orientation = "horizontal",
+  collapsed = false,
+  children,
+  className,
+  ...props
+}) {
+  const isVertical = orientation == "vertical";
+  const context = useMemo(
+    () => ({ collapsed: isVertical && collapsed }),
+    [isVertical, collapsed],
+  );
+
   return (
-    <StyledNavbar as="nav">
-      <ul
-        className={clsx(
-          "navbar-container",
-          variant == "underline" && "underline-variant",
-        )}
-      >
-        {children}
-      </ul>
-    </StyledNavbar>
+    <NavbarContext.Provider value={context}>
+      <StyledNavbar as="nav" className={className} {...props}>
+        <ul
+          className={clsx(
+            "navbar-container",
+            variant == "underline" && "underline-variant",
+            isVertical && "vertical",
+            isVertical && collapsed && "collapsed",
+          )}
+        >
+          {children}
+        </ul>
+      </StyledNavbar>
+    </NavbarContext.Provider>
+  );
+}
+
+/**
+ * A labelled group of NavbarItems. Renders the label as a presentational <li>
+ * so the surrounding <ul> stays valid, followed by the items themselves.
+ *
+ * When the parent Navbar is collapsed the label would have no room, so it is
+ * replaced by a horizontal rule that keeps the visual grouping intact.
+ *
+ * @param {string} [label] - Section heading, e.g. "Projects".
+ * @param {React.ReactNode} children - NavbarItem elements.
+ */
+export function NavbarSection({ label, children }) {
+  const { collapsed } = useContext(NavbarContext);
+
+  return (
+    <>
+      {label && (
+        <li aria-hidden={collapsed ? "true" : undefined}>
+          {collapsed ? (
+            <span className="navbar-section-rule" />
+          ) : (
+            <span className="navbar-section-label">{label}</span>
+          )}
+        </li>
+      )}
+      {children}
+    </>
   );
 }
 
 /**
  * A single Navbar entry. Must be rendered inside a Navbar, which supplies the
- * variant styling; the item inherits it and needs no variant prop of its own.
+ * variant and orientation styling; the item inherits them and needs no props of
+ * its own for either.
  *
  * The underlying element is chosen for you: `href` renders an <a>, otherwise a
  * <button> (typed "button", so it won't submit a surrounding form). Pass `as`
@@ -129,6 +265,7 @@ export default function Navbar({ variant = "tonal", children }) {
  * @param {string} [href] - Destination. Its presence selects <a> over <button>.
  * @param {React.ElementType} [as] - Override the rendered element, e.g. Next's Link.
  * @param {React.ReactNode} [leadingIcon] - Optional 24px icon left of the label; inherits text color.
+ * @param {React.ReactNode} [trailingContent] - Optional slot pinned to the far end, e.g. a count badge.
  * @param {React.ReactNode} children - Item label.
  * @param {string} [className] - Additional classes on the interactive element.
  * @param {object} [props] - Remaining props (onClick, aria-*, …) forwarded to that element.
@@ -145,11 +282,18 @@ export function NavbarItem({
   href,
   as,
   leadingIcon = null,
+  trailingContent = null,
   children,
   className,
   ...props
 }) {
   const Component = as ?? (href ? "a" : "button");
+  const { collapsed } = useContext(NavbarContext);
+
+  // Collapsed rails drop the visible label, so it has to survive as the
+  // element's accessible name instead of disappearing from the tree entirely.
+  const collapsedLabel =
+    collapsed && typeof children == "string" ? children : undefined;
 
   return (
     <li>
@@ -163,6 +307,8 @@ export function NavbarItem({
           className,
         )}
         aria-current={selected ? "page" : undefined}
+        aria-label={collapsedLabel}
+        title={collapsedLabel}
         {...props}
       >
         {leadingIcon && (
@@ -170,7 +316,10 @@ export function NavbarItem({
             {leadingIcon}
           </span>
         )}
-        {children}
+        {!collapsed && children}
+        {!collapsed && trailingContent && (
+          <span className="navbar-item-trailing">{trailingContent}</span>
+        )}
       </Component>
     </li>
   );

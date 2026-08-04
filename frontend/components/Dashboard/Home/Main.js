@@ -1,5 +1,3 @@
-import MyUpdates from "../../Account/Updates/Main";
-
 import StyledHome from "../../styles/StyledHome";
 import Profile from "../Profile/Main";
 // import FavoritePeople from "../Connect/Connections/FavoritePeople";
@@ -16,7 +14,7 @@ export default function Home({ query, user }) {
       <NetworkPendingInvites user={user} />
       <NetworkAppointmentRequests />
       {/* <FavoritePeople user={user} /> */}
-      <MyUpdates user={user} />
+      {/* Updates now live in the menu bar's notifications flyout. */}
       <FavoriteTasks user={user} />
     </StyledHome>
   );

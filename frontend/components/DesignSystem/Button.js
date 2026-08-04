@@ -78,6 +78,23 @@ const TONAL_DISABLED = {
   boxShadow: "none",
 };
 
+// --- Subtle (Primary Lighter behind black text, matching IconButton's subtle
+// variant so a label and an icon button can sit side by side in one group)
+const SUBTLE_BASE = {
+  ...BASE_STYLE,
+  background: "var(--MH-Theme-Primary-Lighter, #F4F8F7)",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+};
+const SUBTLE_HOVER = { background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)" };
+const SUBTLE_PRESSED = {
+  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+};
+const SUBTLE_DISABLED = {
+  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  cursor: "default",
+};
+
 // --- Text
 const TEXT_BASE = {
   ...BASE_STYLE,
@@ -98,6 +115,8 @@ function getVariantStyles(variant) {
       return { base: OUTLINE_BASE, hover: OUTLINE_HOVER, pressed: OUTLINE_PRESSED, disabled: OUTLINE_DISABLED };
     case "tonal":
       return { base: TONAL_BASE, hover: TONAL_HOVER, pressed: TONAL_PRESSED, disabled: TONAL_DISABLED };
+    case "subtle":
+      return { base: SUBTLE_BASE, hover: SUBTLE_HOVER, pressed: SUBTLE_PRESSED, disabled: SUBTLE_DISABLED };
     case "text":
       return { base: TEXT_BASE, hover: TEXT_HOVER, pressed: TEXT_PRESSED, disabled: TEXT_DISABLED };
     case "filled":
@@ -127,11 +146,13 @@ const LEADING_ICON_WRAPPER_STYLE = {
 };
 
 /**
- * Design System Button. Four variants: filled, outline, tonal, text.
- * Optional leading icon (24px). States: enabled, hover, pressed, disabled.
- * Matches Figma Design System (node 1049-3662).
+ * Design System Button. Optional leading icon (24px). States: enabled, hover,
+ * pressed, disabled. Matches Figma Design System (node 1049-3662).
  *
- * @param {"filled"|"outline"|"tonal"|"text"} [variant="filled"] - Visual style.
+ * Variants: filled, outline, tonal, text, and subtle — a quiet light chip that
+ * pairs with IconButton's subtle variant.
+ *
+ * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
  * @param {React.ReactNode} children - Button label (required).
  * @param {React.ReactNode} [leadingIcon] - Optional 24px icon left of label.
  * @param {boolean} [disabled=false] - Disabled state.
