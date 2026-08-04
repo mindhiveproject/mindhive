@@ -262,6 +262,16 @@ export default function EditorDefinitionMode({ opportunityId }) {
     }
   };
 
+  // Must stay above the loading early-return — Rules of Hooks.
+  const statusStepperNetworks = useMemo(() => {
+    if (opportunity?.classNetworks?.length) {
+      return opportunity.classNetworks;
+    }
+    return selectedNetworks
+      .map((id) => availableNetworks.find((network) => network.id === id))
+      .filter(Boolean);
+  }, [opportunity?.classNetworks, selectedNetworks, availableNetworks]);
+
   if (!isNew && oppLoading && !opportunity) {
     return (
       <Shell>
@@ -271,15 +281,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
       </Shell>
     );
   }
-
-  const statusStepperNetworks = useMemo(() => {
-    if (opportunity?.classNetworks?.length) {
-      return opportunity.classNetworks;
-    }
-    return selectedNetworks
-      .map((id) => availableNetworks.find((network) => network.id === id))
-      .filter(Boolean);
-  }, [opportunity?.classNetworks, selectedNetworks, availableNetworks]);
 
   const entityTitle = (opportunity?.title || "").trim();
   const pageTitle = entityTitle
@@ -317,7 +318,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
             {BACK_CHEVRON}
           </BackLink>
           <TitleRow>
-            <h1 title={pageTitle}>{pageTitle}</h1>asd
+            <h1 title={pageTitle}>{pageTitle}</h1>
             {!isNew && (
               <OpportunityListStepper
                 status={opportunity?.status || "draft"}
