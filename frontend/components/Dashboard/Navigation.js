@@ -95,7 +95,7 @@ export default function DashboardNavigation() {
         <div className="menuBarLogo">
           <Link href="/" aria-label="mindHIVE">
             <img
-              src={collapsed ? "/favicon.png" : "/logo.png"}
+              src={collapsed ? "/favicon.png" : "/mh_logo_color.svg"}
               alt="mindHIVE"
             />
           </Link>
@@ -121,6 +121,7 @@ export default function DashboardNavigation() {
           orientation="vertical"
           collapsed={collapsed}
           aria-label={t("workspace")}
+          variant="soft"
         >
           {sections.map((section) => {
             const label = resolveSectionLabel(section, permissions);

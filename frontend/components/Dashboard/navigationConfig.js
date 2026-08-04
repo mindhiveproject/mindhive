@@ -7,13 +7,14 @@ import {
   JournalIcon,
   SchoolIcon,
   ConsentFormIcon,
-  EditDocumentIcon,
   LessonsIcon,
   DatasetIcon,
   FolderIcon,
   TagsIcon,
   NotificationsIcon,
   FileCopyIcon,
+  BriefcaseIcon,
+  AssignmentIcon,
 } from "../DesignSystem/Icons";
 
 /**
@@ -162,7 +163,7 @@ export const NAV_SECTIONS = [
         area: "boards",
         labelKey: "boards",
         fallback: "Project Boards",
-        Icon: EditDocumentIcon,
+        Icon: AssignmentIcon,
         canView: (p) => p.managesClasses,
       },
       {
@@ -171,7 +172,7 @@ export const NAV_SECTIONS = [
         area: "resources",
         labelKey: "resources",
         fallback: "Resources",
-        Icon: EditDocumentIcon,
+        Icon: TagsIcon,
         canView: (p) => p.managesClasses,
       },
       {
@@ -212,7 +213,7 @@ export const NAV_SECTIONS = [
         area: "sponsor-connect",
         labelKey: "myOpportunities",
         fallback: "My opportunities",
-        Icon: EditDocumentIcon,
+        Icon: BriefcaseIcon,
         canView: (p) => p.isSponsor,
       },
     ],

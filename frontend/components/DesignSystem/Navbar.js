@@ -70,7 +70,7 @@ export const StyledNavbar = styled.div`
       }
     }
   }
-  .navbar-container.underline-variant .navbar-item {
+  .navbar-container.underline .navbar-item {
     border-radius: 0px;
     border-bottom: 2px solid transparent;
     background: none;
@@ -113,6 +113,13 @@ export const StyledNavbar = styled.div`
     li:not(:first-child) > .navbar-section-label,
     li:not(:first-child) > .navbar-section-rule {
       margin-top: 24px;
+    }
+  }
+  .navbar-container.soft .navbar-item {
+    &.selected,
+    &:active {
+      background-color: var(--MH-Theme-Tertiary-Medium, #D3E0E3);
+      color: #0D3944;
     }
   }
 
@@ -211,7 +218,7 @@ export default function Navbar({
         <ul
           className={clsx(
             "navbar-container",
-            variant == "underline" && "underline-variant",
+            variant,
             isVertical && "vertical",
             isVertical && collapsed && "collapsed",
           )}
