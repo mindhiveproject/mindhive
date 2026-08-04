@@ -64,7 +64,9 @@ const ACTIONS_STYLE = {
  * @param {React.ReactNode} [actions] - Optional footer slot (e.g. DesignSystem Buttons).
  * @param {number} [maxWidth=420] - Dialog max-width in px.
  * @param {number|string} [maxHeight] - Dialog max-height (px number or CSS string, e.g. "90vh").
+ * @param {number|string} [height] - Dialog height (px number or CSS string). Use with maxHeight for fixed-size flex layouts.
  * @param {"default"|"large"} [size="default"] - Preset: large → 800px wide, 90vh tall.
+ * @param {React.CSSProperties} [bodyStyle] - Optional style merge for the scrollable body.
  */
 export default function Modal({
   open,
@@ -74,7 +76,9 @@ export default function Modal({
   actions,
   maxWidth = 420,
   maxHeight,
+  height,
   size = "default",
+  bodyStyle,
 }) {
   const titleId = useId();
 
@@ -99,15 +103,18 @@ export default function Modal({
   if (!open) return null;
   if (typeof document === "undefined") return null;
 
+  const toCssSize = (value) =>
+    typeof value === "number" ? `${value}px` : value;
+
   const dialogStyle = {
     ...DIALOG_STYLE,
     maxWidth: resolvedMaxWidth,
   };
   if (resolvedMaxHeight != null) {
-    dialogStyle.maxHeight =
-      typeof resolvedMaxHeight === "number"
-        ? `${resolvedMaxHeight}px`
-        : resolvedMaxHeight;
+    dialogStyle.maxHeight = toCssSize(resolvedMaxHeight);
+  }
+  if (height != null) {
+    dialogStyle.height = toCssSize(height);
   }
 
   return createPortal(
@@ -134,7 +141,10 @@ export default function Modal({
             {title}
           </h2>
         ) : null}
-        <div className="DesignSystem-Modal-Body" style={BODY_STYLE}>
+        <div
+          className="DesignSystem-Modal-Body"
+          style={{ ...BODY_STYLE, ...bodyStyle }}
+        >
           {children}
         </div>
         {actions != null ? (
