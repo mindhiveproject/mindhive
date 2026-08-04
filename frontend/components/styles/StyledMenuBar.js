@@ -2,9 +2,8 @@ import styled from "styled-components";
 
 /**
  * Width of the floating menu card in each state, shared with the dashboard grid.
- * Expanded matches the Figma frame: 276px of content plus the 16px side padding.
  */
-export const MENU_BAR_WIDTH = 272;
+export const MENU_BAR_WIDTH = 248;
 export const MENU_BAR_COLLAPSED_WIDTH = 72;
 
 /**
@@ -99,7 +98,7 @@ export const StyledMenuBar = styled.div`
 
     img {
       display: block;
-      height: ${(props) => (props.$collapsed ? "24px" : "40px")};
+      height: ${(props) => (props.$collapsed ? "24px" : "44px")};
       width: auto;
     }
   }
@@ -112,6 +111,22 @@ export const StyledMenuBar = styled.div`
     gap: 32px;
     width: 100%;
     align-items: ${(props) => (props.$collapsed ? "center" : "stretch")};
+
+    /* Match the Design System Button's label size (MH-Theme/label/base) rather
+       than the vertical Navbar default (title/base), so the nav items read at
+       the same scale as the buttons elsewhere in the app. Scoped to this menu
+       bar's nav only — other vertical Navbar usages are untouched. The extra
+       .navbar-container.vertical qualifier matches Navbar.js's own selector
+       specificity so this override reliably wins regardless of CSS order.
+       No explicit height: Figma's own Button derives its 40px from 8px
+       top/bottom padding plus the 24px leading icon (the tallest flex child),
+       not a hardcoded height — that's what keeps single-line items at 40px
+       here too, without clipping a label that wraps to two lines in a longer
+       translation. */
+    .navbar-container.vertical .navbar-item {
+      font-size: 14px;
+      line-height: 20px;
+    }
   }
 `;
 
@@ -246,11 +261,11 @@ export const StyledMenuProfile = styled.div`
     white-space: nowrap;
   }
 
-  /* MH-Theme/title/base */
+  /* MH-Theme/label/base — matches the nav item and Button label size. */
   .profileName {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
-    line-height: 24px;
+    line-height: 20px;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -274,7 +289,7 @@ export const StyledMenuProfile = styled.div`
    */
   .profilePanel {
     display: flex;
-    gap: ${(props) => (props.$collapsed ? "8px" : "16px")};
+    gap: ${(props) => (props.$collapsed ? "8px" : "6px")};
     align-items: ${(props) => (props.$collapsed ? "center" : "stretch")};
     flex-direction: ${(props) => (props.$collapsed ? "column" : "row")};
     padding-left: ${(props) => (props.$collapsed ? "0" : "8px")};
@@ -294,6 +309,14 @@ export const StyledMenuProfile = styled.div`
     flex: 1 0 0;
     min-width: 0;
     align-items: ${(props) => (props.$collapsed ? "center" : "stretch")};
+
+    /* Settings renders through the shared Navbar component; match it to the
+       Log off button's label/base size below. No explicit height here either
+       — see the .menuBarNav override for why. */
+    .navbar-container.vertical .navbar-item {
+      font-size: 14px;
+      line-height: 20px;
+    }
   }
 
   .signoutButton {
@@ -303,7 +326,6 @@ export const StyledMenuProfile = styled.div`
       props.$collapsed ? "center" : "flex-start"};
     gap: 8px;
 
-    height: 40px;
     padding: ${(props) => (props.$collapsed ? "8px" : "8px 24px 8px 16px")};
     width: ${(props) => (props.$collapsed ? "40px" : "auto")};
     border: 0;
@@ -311,12 +333,11 @@ export const StyledMenuProfile = styled.div`
     background: none;
     cursor: pointer;
 
-    /* MH-Theme/title/base, matching the nav items rather than the smaller
-       label/base the Figma button component ships with. */
+    /* MH-Theme/label/base — matches the nav items and Settings above it. */
     font-family: "Inter";
     font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 14px;
+    line-height: 20px;
     color: var(--MH-Theme-Warning-Base, #b9261a);
 
     &:hover {

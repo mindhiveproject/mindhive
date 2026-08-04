@@ -54,7 +54,7 @@ export default function MenuProfile({ user, collapsed = false, area }) {
   const [open, setOpen] = useState(false);
   const signOut = useSignout();
 
-  const name = user?.email || user?.username || "";
+  const name = user?.username || user?.email || "";
   const roles = roleLabel(user);
 
   return (
@@ -67,7 +67,7 @@ export default function MenuProfile({ user, collapsed = false, area }) {
         aria-label={collapsed ? name : undefined}
         title={collapsed ? name : undefined}
       >
-        <GroupIcon />
+        {collapsed && <GroupIcon />}
         {!collapsed && (
           <>
             <span className="profileIdentity">
@@ -95,6 +95,7 @@ export default function MenuProfile({ user, collapsed = false, area }) {
             <Navbar
               orientation="vertical"
               collapsed={collapsed}
+              variant="soft"
               aria-label={t("account", {}, { default: "Account" })}
             >
               <NavbarItem
