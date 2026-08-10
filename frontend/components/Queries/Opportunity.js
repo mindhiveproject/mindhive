@@ -339,6 +339,7 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         bio
         email
         tagline
+        occupation
         organization
         department
         primaryDomain

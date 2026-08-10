@@ -19,17 +19,26 @@ import {
 } from "../../../lib/reviewThreadRound";
 
 const Shell = styled.section`
-  display: grid;
+  display: ${(p) => (p.$panel ? "flex" : "grid")};
+  flex-direction: ${(p) => (p.$panel ? "column" : undefined)};
   gap: 12px;
   box-sizing: border-box;
-  width: 80%;
-  margin-inline: 10%;
+  width: ${(p) => (p.$panel ? "100%" : "80%")};
+  margin-inline: ${(p) => (p.$panel ? "0" : "10%")};
+  min-height: 0;
+  ${(p) =>
+    p.$panel
+      ? `
+    height: 100%;
+  `
+      : ""}
 `;
 
 const Header = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-shrink: 0;
 
   h2,
   h3 {
@@ -51,6 +60,7 @@ const RoundSelectWrap = styled.div`
   display: grid;
   gap: 6px;
   width: 100%;
+  flex-shrink: 0;
 `;
 
 const MessageList = styled.div`
@@ -58,8 +68,23 @@ const MessageList = styled.div`
   gap: 10px;
   padding: 12px;
   border-radius: 12px;
-  background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
-  border: 1px solid rgba(211, 218, 224, 0.9);
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  border: 1px solid var(--MH-Theme-Primary-Medium, #a3d6db);
+  min-height: 0;
+  ${(p) =>
+    p.$panel
+      ? `
+    flex: 1 1 0;
+    overflow-y: auto;
+    align-self: stretch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  `
+      : ""}
 `;
 
 const LoadPreviousWrap = styled.div`
@@ -171,12 +196,14 @@ const BodyText = styled.p`
 const Compose = styled.form`
   display: grid;
   gap: 8px;
+  flex-shrink: 0;
 
   textarea {
     width: 100%;
     box-sizing: border-box;
     resize: vertical;
     min-height: 72px;
+    max-height: 160px;
     padding: 10px 12px;
     border-radius: 10px;
     border: 1px solid #d3dae0;
@@ -203,6 +230,20 @@ const EmptyState = styled.p`
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   font-size: 14px;
   line-height: 1.5;
+  ${(p) =>
+    p.$panel
+      ? `
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  `
+      : ""}
 `;
 
 const ErrorText = styled.p`
@@ -440,6 +481,7 @@ function MessageItem({
  *
  * @param {"teacher"|"sponsor"} mode - Controls compose kind labels/copy.
  * @param {string} messageKind - Keystone kind to post (`reviewer_comment` or `sponsor_reply`).
+ * @param {"default"|"panel"} [layout="default"] - `panel` fills a split-pane column (full width).
  * @param {(note: object|null, meta: { kind: string, body: string }) => void} [onPosted]
  *   Called after a successful create (compose). Parent owns follow-up UX.
  */
@@ -459,8 +501,10 @@ export default function OpportunityReviewNotesThread({
   onPosted,
   titleAs = "h2",
   showTitle = true,
+  layout = "default",
   className,
 }) {
+  const isPanel = layout === "panel";
   const { t } = useTranslation("connect");
   const [draft, setDraft] = useState("");
   const [error, setError] = useState(null);
@@ -607,7 +651,7 @@ export default function OpportunityReviewNotesThread({
   };
 
   return (
-    <Shell className={className}>
+    <Shell className={className} $panel={isPanel}>
       {showTitle ? (
         <Header>
           {/* <TitleTag>
@@ -664,13 +708,13 @@ export default function OpportunityReviewNotesThread({
       {!needsRoundSelection && roundId ? (
         <>
           {displayNotes.length === 0 ? (
-            <EmptyState>
+            <EmptyState $panel={isPanel}>
               {t("reviewThread.empty", {}, {
                 default: "No messages yet. Start the conversation below.",
               })}
             </EmptyState>
           ) : (
-            <MessageList>
+            <MessageList $panel={isPanel}>
               {canLoadPrevious ? (
                 <LoadPreviousWrap>
                   <Button

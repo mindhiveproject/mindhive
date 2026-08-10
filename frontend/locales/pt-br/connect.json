@@ -774,6 +774,7 @@
 		"loading": "Oportunidade de carregamento…",
 		"mentorNotes": "Notas do mentor",
 		"mentorNotesDescription": "Nome, cargo, contato e disponibilidade do mentor do dia a dia. Caso não haja um mentor disponível, descreva as lacunas e a CUSP poderá ajudar a identificar apoio.",
+		"notFound": "",
 		"offeredInNetworks": "Oferecido em redes de sala de aula",
 		"offeredInNetworksHint": "Selecione quais redes podem visualizar essa oportunidade.",
 		"overview": {
@@ -922,12 +923,14 @@
 			"preSelect": "Pré-selecione o patrocinador",
 			"preSelectConfirm": "Você pré-selecionou este patrocinador? Ele será notificado para preencher o questionário de acompanhamento.",
 			"preSelectSuccess": "Patrocinador pré-selecionado e notificado.",
+			"proposalHeading": "",
 			"publish": "Oportunidade de publicação",
 			"publishConfirm": "Divulgue esta oportunidade para que os alunos possam vê-la?",
 			"publishSuccess": "Oportunidade publicada.",
 			"reviewButton": "Análise",
 			"scopeIncomplete": "O patrocinador deve concluir o escopo do projeto antes que você possa publicar.",
 			"sponsorLabel": "Patrocinador",
+			"statusHeading": "",
 			"submittedLabel": "Enviado"
 		},
 		"reviewNotes": {
@@ -976,6 +979,7 @@
 		},
 		"studentCapacity": "Capacidade de alunos",
 		"submitForReview": "",
+		"submittedFlash": "",
 		"tabs": {
 			"additionalForms": "",
 			"additionalFormsAria": "",

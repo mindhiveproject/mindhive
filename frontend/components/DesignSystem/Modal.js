@@ -34,6 +34,10 @@ const TITLE_STYLE = {
   lineHeight: 1.3,
   color: "var(--MH-Theme-Neutrals-Black, #1a1a1a)",
   flexShrink: 0,
+  display: "flex",
+  alignItems: "center",
+  width: "100%",
+  boxSizing: "border-box",
 };
 
 const BODY_STYLE = {

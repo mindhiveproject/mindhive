@@ -864,6 +864,32 @@
 				"status": "Status",
 				"title": "Title"
 			},
+			"followUpCompletion": {
+				"columns": {
+					"opportunity": "Opportunity",
+					"organization": "Organization",
+					"progress": "Progress",
+					"sponsor": "Sponsor"
+				},
+				"complete": "Complete",
+				"completeSaved": "Complete · {{date}}",
+				"emptyFilterHint": "No incomplete responses match this filter. Switch to All to see every opportunity.",
+				"emptyFilterTitle": "Everyone is complete",
+				"emptyNoFormsHint": "Add follow-up questionnaires above, then track who has responded here.",
+				"emptyNoFormsTitle": "No questionnaires attached yet",
+				"emptyNoOppsHint": "Pre-select opportunities in this round first. Sponsors for those opportunities can then complete the questionnaires.",
+				"emptyNoOppsTitle": "No pre-selected opportunities yet",
+				"filterAll": "All",
+				"filterIncomplete": "Incomplete only",
+				"hiddenBanner": "Questionnaires are currently hidden from sponsors. They cannot respond until you show forms to sponsors.",
+				"hideFormsManager": "Hide questionnaires",
+				"incomplete": "Incomplete",
+				"manageForms": "Manage questionnaires",
+				"openFormAria": "{{status}} — open {{form}} for {{opportunity}}",
+				"progressCell": "{{done}}/{{total}}",
+				"summary": "{{completeOpps}}/{{totalOpps}} opportunities complete · {{doneResponses}}/{{totalResponses}} form responses",
+				"title": "Response status"
+			},
 			"formPicker": {
 				"addToRound": "Add to this round",
 				"addToRoundAlreadyIn": "Already in this round",
@@ -931,32 +957,6 @@
 				"visibilityTitle": "Sponsor visibility",
 				"visibilityToggleFailed": "Could not update form visibility for sponsors. Please try again.",
 				"visibilityVisible": "Visible to sponsors"
-			},
-			"followUpCompletion": {
-				"columns": {
-					"opportunity": "Opportunity",
-					"organization": "Organization",
-					"progress": "Progress",
-					"sponsor": "Sponsor"
-				},
-				"complete": "Complete",
-				"completeSaved": "Complete · {{date}}",
-				"emptyFilterHint": "No incomplete responses match this filter. Switch to All to see every opportunity.",
-				"emptyFilterTitle": "Everyone is complete",
-				"emptyNoFormsHint": "Add follow-up questionnaires above, then track who has responded here.",
-				"emptyNoFormsTitle": "No questionnaires attached yet",
-				"emptyNoOppsHint": "Pre-select opportunities in this round first. Sponsors for those opportunities can then complete the questionnaires.",
-				"emptyNoOppsTitle": "No pre-selected opportunities yet",
-				"filterAll": "All",
-				"filterIncomplete": "Incomplete only",
-				"hiddenBanner": "Questionnaires are currently hidden from sponsors. They cannot respond until you show forms to sponsors.",
-				"hideFormsManager": "Hide questionnaires",
-				"incomplete": "Incomplete",
-				"manageForms": "Manage questionnaires",
-				"openFormAria": "{{status}} — open {{form}} for {{opportunity}}",
-				"progressCell": "{{done}}/{{total}}",
-				"summary": "{{completeOpps}}/{{totalOpps}} opportunities complete · {{doneResponses}}/{{totalResponses}} form responses",
-				"title": "Response status"
 			},
 			"formWizard": {
 				"addQuestion": "Add question",
@@ -1109,6 +1109,7 @@
 			"available": "Available",
 			"capacity": "Capacity",
 			"close": "Close",
+			"closeMessages": "Hide messages",
 			"groupFormatOptions": {
 				"either": "Either",
 				"individual": "Individual",
@@ -1127,6 +1128,8 @@
 			"mentor": "Mentor",
 			"mentorContact": "Your contact",
 			"mentorNotes": "Mentor notes",
+			"messages": "Messages",
+			"messagesUnreadAria": "Messages, {{count}} unread",
 			"no": "No",
 			"notFound": "Opportunity not found, or no longer available.",
 			"opportunityDetails": "Opportunity details",
@@ -1134,9 +1137,11 @@
 			"peopleEmpty": "No organization or mentor details are available yet.",
 			"preferences": "Student preferences",
 			"projectCategory": "Project category",
+			"proposalSectionTitle": "Proposal",
 			"publicRating": "Public rating",
 			"ratingsTitle": "What past participants said",
 			"requestsAppointment": "Appointment requested",
+			"returnHelper": "Formally returns this opportunity for revision. Use Messages for ongoing conversation.",
 			"returnModal": {
 				"cancel": "Cancel",
 				"confirm": "Return with comments",
@@ -1158,6 +1163,7 @@
 			},
 			"sponsorIsMentor": "Sponsor is mentor",
 			"status": "Status",
+			"summaryTitle": "Summary",
 			"tabs": {
 				"chat": "Chat",
 				"detail": "Opportunity form",

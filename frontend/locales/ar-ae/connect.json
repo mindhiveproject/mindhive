@@ -774,6 +774,7 @@
 		"loading": "فرصة تحميل...",
 		"mentorNotes": "ملاحظات المرشد",
 		"mentorNotesDescription": "اسم المرشد اليومي، ولقبه، ومعلومات الاتصال به، ومدى توافره. في حال عدم توفر مرشد، يرجى وصف الثغرات، ويمكن لبرنامج CUSP المساعدة في تحديد الدعم المناسب.",
+		"notFound": "",
 		"offeredInNetworks": "يتم تقديمها في شبكات الفصول الدراسية",
 		"offeredInNetworksHint": "اختر الشبكات التي يمكنها رؤية هذه الفرصة.",
 		"overview": {
@@ -922,12 +923,14 @@
 			"preSelect": "اختيار الراعي مسبقًا",
 			"preSelectConfirm": "هل اخترت هذا الراعي مسبقًا؟ سيتم إخطارهم لإكمال استبيان المتابعة.",
 			"preSelectSuccess": "تم اختيار الراعي مسبقاً وإخطاره.",
+			"proposalHeading": "",
 			"publish": "فرصة للنشر",
 			"publishConfirm": "هل يجب نشر هذه الفرصة حتى يتمكن الطلاب من رؤيتها؟",
 			"publishSuccess": "تم نشر الفرصة.",
 			"reviewButton": "مراجعة",
 			"scopeIncomplete": "يجب على الجهة الراعية إكمال نطاق المشروع قبل أن تتمكن من النشر.",
 			"sponsorLabel": "راعي",
+			"statusHeading": "",
 			"submittedLabel": "مُقَدَّم"
 		},
 		"reviewNotes": {
@@ -976,6 +979,7 @@
 		},
 		"studentCapacity": "الطاقة الاستيعابية للطلاب",
 		"submitForReview": "",
+		"submittedFlash": "",
 		"tabs": {
 			"additionalForms": "",
 			"additionalFormsAria": "",

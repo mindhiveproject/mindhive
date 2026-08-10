@@ -772,9 +772,9 @@
 			"review": "Review queue"
 		},
 		"loading": "Loading opportunity…",
-		"notFound": "Opportunity not found.",
 		"mentorNotes": "Mentor notes",
 		"mentorNotesDescription": "Name, title, contact, and availability of the day-to-day mentor. If no mentor is available, describe the gaps and CUSP can help identify support.",
+		"notFound": "Opportunity not found.",
 		"offeredInNetworks": "Offered in class networks",
 		"offeredInNetworksHint": "Pick which networks can see this opportunity.",
 		"overview": {
@@ -941,7 +941,6 @@
 		},
 		"save": "Save changes",
 		"savedFlash": "Saved.",
-		"submittedFlash": "Submitted for review.",
 		"saveDraft": "Save draft",
 		"saving": "Saving…",
 		"specialConsiderations": {
@@ -980,6 +979,7 @@
 		},
 		"studentCapacity": "Student capacity",
 		"submitForReview": "Submit for review in class network",
+		"submittedFlash": "Submitted for review.",
 		"tabs": {
 			"additionalForms": "Forms",
 			"additionalFormsAria": "Select a form",
@@ -988,7 +988,7 @@
 			"followUpCompleteAria": "{{title}} (completed)",
 			"followUpFallback": "Follow-up form",
 			"incomplete": "Incomplete",
-			"originalIntake": "",
+			"originalIntake": "Original intake",
 			"proposal": "Opportunity form",
 			"status": "Status"
 		},
