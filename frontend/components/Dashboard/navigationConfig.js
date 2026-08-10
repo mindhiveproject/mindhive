@@ -81,7 +81,6 @@ export const NAV_SECTIONS = [
         labelKey: "discover",
         fallback: "Discover",
         Icon: DiscoverIcon,
-        canView: (p) => !p.isSponsor,
       },
       {
         id: "connect",
