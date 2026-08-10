@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import styled, { css } from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
@@ -173,13 +172,26 @@ const ExternalLinkIcon = (
   />
 );
 
+function hrefToPath(href) {
+  if (!href) return null;
+  if (typeof href === "string") return href;
+  const pathname = href.pathname || "";
+  const query = href.query || {};
+  const params = new URLSearchParams();
+  Object.entries(query).forEach(([key, value]) => {
+    if (value == null) return;
+    params.set(key, String(value));
+  });
+  const search = params.toString();
+  return search ? `${pathname}?${search}` : pathname;
+}
+
 export default function ConnectProfileCard({
   user,
   profile,
   actions = null,
 }) {
   const { t } = useTranslation("connect");
-  const router = useRouter();
 
   const fullName =
     profile?.firstName || profile?.lastName
@@ -213,6 +225,7 @@ export default function ConnectProfileCard({
         query: { id: profile.publicId },
       }
     : null;
+  const profileUrl = hrefToPath(profileHref);
 
   const viewProfileLabel = t(
     "profileCard.viewProfile",
@@ -282,7 +295,9 @@ export default function ConnectProfileCard({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              router.push(profileHref);
+              if (profileUrl) {
+                window.open(profileUrl, "_blank", "noopener,noreferrer");
+              }
             }}
           />
         ) : null}

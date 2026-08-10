@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
@@ -158,13 +157,26 @@ const ArrowOutwardIcon = (
   />
 );
 
+function hrefToPath(href) {
+  if (!href) return null;
+  if (typeof href === "string") return href;
+  const pathname = href.pathname || "";
+  const query = href.query || {};
+  const params = new URLSearchParams();
+  Object.entries(query).forEach(([key, value]) => {
+    if (value == null) return;
+    params.set(key, String(value));
+  });
+  const search = params.toString();
+  return search ? `${pathname}?${search}` : pathname;
+}
+
 export default function OrganizationConnectCard({
   org,
   href,
   linkLabel,
 }) {
   const { t } = useTranslation("connect");
-  const router = useRouter();
 
   if (!org?.id) {
     return null;
@@ -181,6 +193,7 @@ export default function OrganizationConnectCard({
       pathname: "/dashboard/connect/organizations",
       query: { org: org.id },
     };
+  const orgUrl = hrefToPath(orgHref);
 
   const viewOrgLabel =
     linkLabel ||
@@ -232,7 +245,9 @@ export default function OrganizationConnectCard({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            router.push(orgHref);
+            if (orgUrl) {
+              window.open(orgUrl, "_blank", "noopener,noreferrer");
+            }
           }}
         />
       </Actions>
