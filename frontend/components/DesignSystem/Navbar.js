@@ -53,6 +53,11 @@ export const StyledNavbar = styled.div`
       }
     }
 
+    /* Mirror of has-icon: an icon at the end pulls that side in to 16px too. */
+    &.has-trailing {
+      padding-right: 16px;
+    }
+
     &.selected,
     &:active {
       background-color: var(--MH-Theme-Accent-Medium, #f9d978);
@@ -101,9 +106,9 @@ export const StyledNavbar = styled.div`
     .navbar-item {
       width: 100%;
       justify-content: flex-start;
-      /* MH-Theme/title/base */
-      font-size: 16px;
-      line-height: 24px;
+      /* MH-Theme/label/base — same size as buttons carry. */
+      font-size: 14px;
+      line-height: 20px;
       padding-left: 16px;
       padding-right: 24px;
     }
@@ -311,6 +316,7 @@ export function NavbarItem({
           "navbar-item",
           selected && "selected",
           leadingIcon && "has-icon",
+          trailingContent && "has-trailing",
           className,
         )}
         aria-current={selected ? "page" : undefined}

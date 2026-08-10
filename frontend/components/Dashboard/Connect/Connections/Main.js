@@ -1,140 +1,34 @@
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import debounce from "lodash.debounce";
-import styled from "styled-components";
-import { Dropdown, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { MY_FAVORITE_PEOPLE } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
+import { SearchIcon } from "../../../DesignSystem/Icons";
+import {
+  BrowseCardsGrid,
+  BrowseContainer,
+  BrowseEmptyState,
+  BrowseHeader,
+  BrowseSearchField,
+  BrowseShell,
+} from "../ConnectBrowseLayout";
 import PaginationUsers from "../Bank/Pagination";
 
-const ConnectShell = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-  margin: 0px;
-  background-color: #f7f9f8;
-  min-height: 100vh;
-  border-radius: 32px 0 0 32px;
+/** Card shape used by the browse grid — switch to "vertical" to preview the stacked card. */
+const CARD_LAYOUT = "horizontal";
 
-  @media (max-width: 1024px) {
-    padding: 32px 24px 48px;
-  }
-`;
-
-const Header = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  text-align: center;
-
-  h1 {
-    margin: 0;
-    color: #171717;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(36px, 5vw, 60px);
-    font-weight: 600;
-    line-height: 1.1;
-  }
-
-  p {
-    margin: 0;
-    max-width: 640px;
-    color: #666666;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(18px, 2vw, 24px);
-    line-height: 32px;
-  }
-`;
-
-const FiltersRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-`;
-
-const SearchField = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: min(100%, 425px);
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0px 7px 64px rgba(0, 0, 0, 0.07);
-  padding: 0 48px 0 24px;
-  height: 48px;
-
-  input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 15px;
-    font-family: "Inter", sans-serif;
-    color: #171717;
-
-    &::placeholder {
-      color: #979797;
-    }
-  }
-
-  .search-icon {
-    position: absolute;
-    right: 16px;
-    height: 24px;
-    width: 24px;
-    color: #434343;
-  }
-`;
-
-const CardsGrid = styled.div`
-  display: grid;
-  gap: 24px;
-  padding-inline: clamp(16px, 6vw, 64px);
-  justify-content: center;
-  justify-items: stretch;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 481px), 1fr));
-`;
-
-const FooterControls = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
-  color: #5f6871;
-  font-family: "Lato", sans-serif;
-
-  span {
-    font-size: 14px;
-  }
-
-  .per-page-dropdown {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .ui.selection.dropdown {
-      min-width: 120px;
-      border-radius: 16px;
-      border: 1px solid #d3dae0;
-      padding: 8px 12px;
-    }
-  }
-`;
+const PER_PAGE = 12;
 
 export default function Connections({ query, user }) {
   const { t } = useTranslation("connect");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(30);
 
   const { data, loading } = useQuery(MY_FAVORITE_PEOPLE);
-  
+
   const allFavorites = data?.authenticatedItem?.favoritePeople || [];
 
   // Client-side search filtering
@@ -153,14 +47,14 @@ export default function Connections({ query, user }) {
     ]
       .filter(Boolean)
       .map((field) => field.toLowerCase());
-    
+
     return searchFields.some((field) => field.includes(searchLower));
   });
 
   // Client-side pagination
   const totalCount = filteredProfiles.length;
-  const startIndex = (page - 1) * perPage;
-  const endIndex = startIndex + perPage;
+  const startIndex = (page - 1) * PER_PAGE;
+  const endIndex = startIndex + PER_PAGE;
   const profiles = filteredProfiles.slice(startIndex, endIndex);
 
   const debounceSearch = debounce((value) => {
@@ -174,65 +68,58 @@ export default function Connections({ query, user }) {
   };
 
   const goToPage = (nextPage) => {
-    const maxPage = Math.ceil(totalCount / perPage);
+    const maxPage = Math.ceil(totalCount / PER_PAGE);
     if (nextPage > 0 && nextPage <= maxPage) {
       setPage(nextPage);
     }
   };
 
   return (
-    <ConnectShell>
-      <Header>
+    <BrowseShell>
+      <BrowseHeader>
         <h1>{t("savedConnections")}</h1>
         <p>{t("savedConnectionsSubtitle")}</p>
-      </Header>
+      </BrowseHeader>
 
-      <FiltersRow>
-        <SearchField>
-          <Icon className="search-icon" name="search" />
+      <BrowseContainer>
+        <BrowseSearchField>
+          <SearchIcon className="search-icon" width={20} height={20} />
           <input
             placeholder={t("searchPlaceholder")}
-            type="text"
+            aria-label={t("searchPlaceholder")}
+            type="search"
             name="keyword"
             value={keyword}
             onChange={({ target }) => updateSearch(target.value)}
           />
-        </SearchField>
-      </FiltersRow>
+        </BrowseSearchField>
 
-      <CardsGrid>
-        {profiles.map((profile) => (
-          <ProfileCard key={profile?.id} user={user} profile={profile} />
-        ))}
+        <BrowseCardsGrid $layout={CARD_LAYOUT}>
+          {profiles.map((profile) => (
+            <ProfileCard
+              key={profile?.id}
+              user={user}
+              profile={profile}
+              layout={CARD_LAYOUT}
+            />
+          ))}
+        </BrowseCardsGrid>
+
         {!loading && profiles.length === 0 && (
-          <p>{t("noResults", { defaultValue: "No results found." })}</p>
+          <BrowseEmptyState>
+            {t("noResults", {}, { default: "No results found." })}
+          </BrowseEmptyState>
         )}
-      </CardsGrid>
 
-      <PaginationUsers
-        page={page}
-        setPage={setPage}
-        perPage={perPage}
-        search={search}
-        goToPage={goToPage}
-        totalCount={totalCount}
-      />
-
-      <FooterControls>
-        <span>{t("usersPerPage")}</span>
-        <div className="per-page-dropdown">
-          <Dropdown
-            selection
-            options={[9, 27, 54, 108].map((n) => ({
-              key: n,
-              text: n,
-              value: n,
-            }))}
-            value={perPage}
-            onChange={(event, data) => setPerPage(data.value)}
-          />
-        </div>
-      </FooterControls>
-    </ConnectShell>
+        <PaginationUsers
+          page={page}
+          setPage={setPage}
+          perPage={PER_PAGE}
+          search={search}
+          goToPage={goToPage}
+          totalCount={totalCount}
+        />
+      </BrowseContainer>
+    </BrowseShell>
   );
 }

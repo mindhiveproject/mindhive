@@ -1,170 +1,37 @@
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import debounce from "lodash.debounce";
-import styled from "styled-components";
-import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_CONNECT_USERS } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
-import DropdownSelect from "../../../DesignSystem/DropdownSelect";
+import { SearchIcon } from "../../../DesignSystem/Icons";
+import {
+  BrowseCardsGrid,
+  BrowseContainer,
+  BrowseEmptyState,
+  BrowseHeader,
+  BrowseSearchField,
+  BrowseShell,
+} from "../ConnectBrowseLayout";
 
 import PaginationUsers from "./Pagination";
 
-const ConnectShell = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-  margin: 0px; 
-  background-color: #f7f9f8;
-  min-height: 100vh;
-  border-radius: 32px 0 0 32px;
+/** Card shape used by the browse grid — switch to "vertical" to preview the stacked card. */
+const CARD_LAYOUT = "horizontal";
 
-  @media (max-width: 1024px) {
-    padding: 32px 24px 48px;
-  }
-`;
-
-const Header = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  text-align: center;
-
-  h1 {
-    margin: 0;
-    color: #171717;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(36px, 5vw, 60px);
-    font-weight: 600;
-    line-height: 1.1;
-  }
-
-  p {
-    margin: 0;
-    max-width: 640px;
-    color: #666666;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(18px, 2vw, 24px);
-    line-height: 32px;
-  }
-`;
-
-const FiltersRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-`;
-
-const SearchField = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: min(100%, 425px);
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0px 7px 64px rgba(0, 0, 0, 0.07);
-  padding: 0 48px 0 24px;
-  height: 48px;
-
-  input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 15px;
-    font-family: "Inter", sans-serif;
-    color: #171717;
-
-    &::placeholder {
-      color: #979797;
-    }
-  }
-
-  .search-icon {
-    position: absolute;
-    right: 16px;
-    height: 24px;
-    width: 24px;
-    margin-bottom: 6px;
-    color: #434343;
-  }
-`;
-
-const FilterPill = styled.button`
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  padding: 0 24px;
-  width: ${({ $size }) => $size || "205px"};
-  height: 48px;
-  background: #ffffff;
-  border: none;
-  border-radius: 20px;
-  box-shadow: 0px 7px 64px rgba(0, 0, 0, 0.07);
-  font-family: "Inter", sans-serif;
-  font-size: 15px;
-  color: #979797;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-
-  .filter-icon {
-    color: #336f8a;
-  }
-
-  .chevron {
-    margin-left: auto;
-    color: #979797;
-  }
-`;
-
-const CardsGrid = styled.div`
-  display: grid;
-  gap: 24px;
-  padding-inline: clamp(16px, 6vw, 64px);
-  justify-content: center;
-  justify-items: stretch;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 481px), 1fr));
-`;
-
-const FooterControls = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-
-  .per-page-dropdown {
-    display: flex;
-    align-items: center;
-    min-width: 88px;
-  }
-`;
+const PER_PAGE = 12;
 
 export default function ConnectBankNew({ query, user }) {
   const { t } = useTranslation("connect");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(27);
 
   const { data, loading } = useQuery(GET_CONNECT_USERS, {
     variables: {
-      skip: page * perPage - perPage,
-      take: perPage,
+      skip: page * PER_PAGE - PER_PAGE,
+      take: PER_PAGE,
       search: search,
     },
   });
@@ -188,76 +55,50 @@ export default function ConnectBankNew({ query, user }) {
   };
 
   return (
-    <ConnectShell>
-      <Header>
+    <BrowseShell>
+      <BrowseHeader>
         <h1>{t("connectWithPeople")}</h1>
         <p>{t("connectSubtitle")}</p>
-      </Header>
+      </BrowseHeader>
 
-      <FiltersRow>
-        <SearchField>
-          <Icon className="search-icon" name="search" />
+      <BrowseContainer>
+        <BrowseSearchField>
+          <SearchIcon className="search-icon" width={20} height={20} />
           <input
             placeholder={t("searchPlaceholder")}
-            type="text"
+            aria-label={t("searchPlaceholder")}
+            type="search"
             name="keyword"
             value={keyword}
             onChange={({ target }) => updateSearch(target.value)}
           />
-        </SearchField>
+        </BrowseSearchField>
 
-        {/* <FilterPill type="button">
-          <Icon className="filter-icon" name="map marker alternate" />
-          {t("locationFilter", { defaultValue: "Location" })}
-        </FilterPill>
+        <BrowseCardsGrid $layout={CARD_LAYOUT}>
+          {profiles.map((profile) => (
+            <ProfileCard
+              key={profile?.id}
+              user={user}
+              profile={profile}
+              layout={CARD_LAYOUT}
+            />
+          ))}
+        </BrowseCardsGrid>
 
-        <FilterPill type="button">
-          <Icon className="filter-icon" name="calendar outline" />
-          {t("availabilityFilter", { defaultValue: "Availability" })}
-        </FilterPill>
-
-        <FilterPill type="button" $size="140px">
-          {t("userTypeFilter", { defaultValue: "User Type" })}
-          <Icon className="chevron" name="chevron down" />
-        </FilterPill> */}
-      </FiltersRow>
-
-      <CardsGrid>
-        {profiles.map((profile) => (
-          <ProfileCard key={profile?.id} user={user} profile={profile} />
-        ))}
         {!loading && profiles.length === 0 && (
-          <p>{t("noResults", { defaultValue: "No results found." })}</p>
+          <BrowseEmptyState>
+            {t("noResults", {}, { default: "No results found." })}
+          </BrowseEmptyState>
         )}
-      </CardsGrid>
 
-      <PaginationUsers
-        page={page}
-        setPage={setPage}
-        perPage={perPage}
-        search={search}
-        goToPage={goToPage}
-      />
-
-      <FooterControls>
-        <span>{t("usersPerPage")}</span>
-        <div className="per-page-dropdown">
-          <DropdownSelect
-            fitContent
-            ariaLabel={t("usersPerPage")}
-            value={String(perPage)}
-            options={[9, 27, 54, 108].map((n) => ({
-              value: String(n),
-              label: String(n),
-            }))}
-            onChange={(next) => {
-              setPerPage(Number(next));
-              setPage(1);
-            }}
-          />
-        </div>
-      </FooterControls>
-    </ConnectShell>
+        <PaginationUsers
+          page={page}
+          setPage={setPage}
+          perPage={PER_PAGE}
+          search={search}
+          goToPage={goToPage}
+        />
+      </BrowseContainer>
+    </BrowseShell>
   );
 }
-

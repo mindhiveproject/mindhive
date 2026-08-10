@@ -57,7 +57,6 @@ const ITEM_STYLE = {
   fontWeight: 500,
   fontSize: "14px",
   lineHeight: "20px",
-  letterSpacing: "0.15px",
   cursor: "pointer",
   transition: "background-color 0.2s",
   border: "none",

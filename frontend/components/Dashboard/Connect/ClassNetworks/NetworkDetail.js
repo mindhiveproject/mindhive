@@ -93,7 +93,7 @@ const Header = styled.div`
   h1 {
     margin: 0;
     color: #171717;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: clamp(28px, 4vw, 40px);
     font-weight: 600;
   }
@@ -141,7 +141,7 @@ const SectionHeader = styled.div`
   h2 {
     margin: 0;
     color: #171717;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 20px;
     font-weight: 600;
     line-height: 28px;
@@ -184,7 +184,7 @@ const ThinEmptySection = styled.section`
   h2 {
     margin: 0;
     color: #171717;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     font-weight: 600;
     line-height: 24px;

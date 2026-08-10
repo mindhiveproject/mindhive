@@ -137,7 +137,7 @@ export const Avatar = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-family: "Lato", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 40px;
   color: #1d1b20;
   position: relative;
@@ -155,7 +155,7 @@ export const Avatar = styled.div`
     align-items: center;
     justify-content: center;
     font-size: 40px;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     color: #1d1b20;
   }
 `;
@@ -265,7 +265,7 @@ export const Section = styled.div`
 export const SectionTitle = styled.h3`
   margin: 0;
   justify-content: flex-end;
-  font-family: "Lato", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 16px;
   color: #171717;
@@ -273,7 +273,7 @@ export const SectionTitle = styled.h3`
 
 export const BodyCopy = styled.p`
   margin: 0;
-  font-family: "Lato", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   line-height: 24px;
   color: #2a343d;

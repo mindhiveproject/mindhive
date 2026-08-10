@@ -36,7 +36,7 @@ const Shell = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 28px;
     font-weight: 600;
     color: #171717;
