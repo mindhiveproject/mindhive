@@ -663,6 +663,13 @@
 	"noUnofficialBio": "لا يوجد سيرة ذاتية غير رسمية",
 	"noVideoPlaceholder": "لا يوجد عنصر نائب للفيديو",
 	"officialBio": "السيرة الذاتية الرسمية",
+	"opportunities": {
+		"preview": {
+			"tabs": {
+				"peopleAndOrganization": ""
+			}
+		}
+	},
 	"opportunityEditor": {
 		"additionalNotes": "هل هناك أي معلومات إضافية تود تسليط الضوء عليها؟",
 		"audiencePreferences": "تفضيلات الجمهور",

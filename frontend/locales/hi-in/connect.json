@@ -663,6 +663,13 @@
 	"noUnofficialBio": "कोई अनौपचारिक बायो नहीं",
 	"noVideoPlaceholder": "कोई वीडियो प्लेसहोल्डर नहीं",
 	"officialBio": "आधिकारिक बायो",
+	"opportunities": {
+		"preview": {
+			"tabs": {
+				"peopleAndOrganization": ""
+			}
+		}
+	},
 	"opportunityEditor": {
 		"additionalNotes": "क्या आप कोई अतिरिक्त जानकारी उजागर करना चाहेंगे?",
 		"audiencePreferences": "दर्शकों की प्राथमिकताएँ",

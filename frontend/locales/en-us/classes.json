@@ -1110,6 +1110,7 @@
 			"capacity": "Capacity",
 			"close": "Close",
 			"closeMessages": "Hide messages",
+			"formStatusLabel": "Status: {{status}}",
 			"groupFormatOptions": {
 				"either": "Either",
 				"individual": "Individual",
@@ -1141,7 +1142,7 @@
 			"publicRating": "Public rating",
 			"ratingsTitle": "What past participants said",
 			"requestsAppointment": "Appointment requested",
-			"returnHelper": "Formally returns this opportunity for revision. Use Messages for ongoing conversation.",
+			"returnHelper": "",
 			"returnModal": {
 				"cancel": "Cancel",
 				"confirm": "Return with comments",
@@ -1167,8 +1168,10 @@
 			"tabs": {
 				"chat": "Chat",
 				"detail": "Opportunity form",
-				"people": "People"
+				"people": "People",
+				"peopleAndOrganization": "People & Organization"
 			},
+			"tabsAria": "Opportunity sections",
 			"teamSize": "Team size",
 			"teamSizeSolo": "Solo",
 			"teamSizeTeam": "Team of {{size}}",
