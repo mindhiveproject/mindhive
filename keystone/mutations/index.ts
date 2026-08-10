@@ -62,6 +62,10 @@ import backfillLowercaseKeys from "./backfillLowercaseKeys";
 import backfillProjectBoardFormScope from "./backfillProjectBoardFormScope";
 import backfillProposalBoardPublicIds from "./backfillProposalBoardPublicIds";
 import syncClassTemplateBoards from "./syncClassTemplateBoards";
+import {
+  searchConnectUsers,
+  searchConnectUsersCount,
+} from "./searchConnectUsers";
 import { GraphQLSchema } from "graphql";
 
 // make a fake gql tagged template literal
@@ -299,6 +303,14 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Public-safe invite context for login/signup. Returns only
         # non-sensitive display fields for a tokenized NetworkInvite.
         networkInviteContext(token: String!): NetworkInviteContext
+        # Connect Bank people search. Case-insensitive on Postgres via
+        # Prisma mode; plain contains on local SQLite (ASCII CI).
+        searchConnectUsers(
+          skip: Int
+          take: Int
+          search: String
+        ): [Profile!]!
+        searchConnectUsersCount(search: String): Int!
       }
       input ClassFormFieldInput {
         name: String
@@ -325,6 +337,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         resolveFormDefinition,
         resolveMilestonesForBoard,
         networkInviteContext,
+        searchConnectUsers,
+        searchConnectUsersCount,
       },
       Mutation: {
         sendEmail,
