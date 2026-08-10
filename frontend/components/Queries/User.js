@@ -557,41 +557,10 @@ export const GET_ALL_USERS = gql`
   }
 `;
 
-// Shared search filter for Connect Bank list + pagination count queries.
-const CONNECT_USERS_SEARCH_OR = `
-        OR: [
-          { username: { contains: $search, mode: insensitive } }
-          { publicReadableId: { contains: $search, mode: insensitive } }
-          { publicId: { contains: $search, mode: insensitive } }
-          { firstName: { contains: $search, mode: insensitive } }
-          { lastName: { contains: $search, mode: insensitive } }
-          { location: { contains: $search, mode: insensitive } }
-          { organization: { contains: $search, mode: insensitive } }
-          { bio: { contains: $search, mode: insensitive } }
-          { bioInformal: { contains: $search, mode: insensitive } }
-          { interests: { some: { title: { contains: $search, mode: insensitive } } } }
-        ]`;
-
-// query to get public non-student users for Connect Bank
+// query to get public Connect Bank users (case-insensitive search via backend)
 export const GET_CONNECT_USERS = gql`
   query GET_CONNECT_USERS($skip: Int, $take: Int, $search: String) {
-    profiles(
-      skip: $skip
-      take: $take
-      where: {
-        AND: [
-          { isPublic: { equals: true } }
-          {
-            permissions: {
-              some: {
-                name: { in: ["ADMIN", "TEACHER", "SCIENTIST", "MENTOR"] }
-              }
-            }
-          }
-        ]
-        ${CONNECT_USERS_SEARCH_OR}
-      }
-    ) {
+    searchConnectUsers(skip: $skip, take: $take, search: $search) {
       id
       username
       email
@@ -632,18 +601,10 @@ export const GET_CONNECT_USERS = gql`
   }
 `;
 
-// count public non-student users for Connect Bank pagination
+// count public Connect Bank users for pagination
 export const PAGINATION_CONNECT_USERS_QUERY = gql`
   query PAGINATION_CONNECT_USERS_QUERY($search: String) {
-    profilesCount(
-      where: {
-        AND: [
-          { isPublic: { equals: true } }
-          { NOT: { permissions: { some: { name: { equals: "STUDENT" } } } } }
-        ]
-        ${CONNECT_USERS_SEARCH_OR}
-      }
-    )
+    searchConnectUsersCount(search: $search)
   }
 `;
 

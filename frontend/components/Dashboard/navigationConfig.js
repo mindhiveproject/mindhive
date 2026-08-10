@@ -52,16 +52,6 @@ export function getNavPermissions(user) {
   };
 }
 
-/**
- * The class-scoped section is labelled for whichever role the viewer holds —
- * the design shows it as "Teacher" and "Student" in the respective variants.
- */
-function classSectionLabel(p) {
-  if (p.managesClasses) return { key: "teacher", fallback: "Teacher" };
-  if (p.isStudent) return { key: "student", fallback: "Student" };
-  return { key: "workspace", fallback: "Workspace" };
-}
-
 export const NAV_SECTIONS = [
   {
     id: "main",
@@ -81,7 +71,6 @@ export const NAV_SECTIONS = [
         labelKey: "discover",
         fallback: "Discover",
         Icon: DiscoverIcon,
-        canView: (p) => !p.isSponsor,
       },
       {
         id: "connect",
@@ -113,7 +102,7 @@ export const NAV_SECTIONS = [
         labelKey: "feedbackCenter",
         fallback: "Feedback Center",
         Icon: FeedbackIcon,
-        canView: (p) => !p.isSponsor,
+        canView: (p) => p.canDevelop,
       },
       {
         id: "journals",
@@ -122,23 +111,17 @@ export const NAV_SECTIONS = [
         labelKey: "journal",
         fallback: "Journal",
         Icon: JournalIcon,
-        canView: (p) => !p.isSponsor,
+        canView: (p) => p.isAdmin,
       },
     ],
   },
+  // Teacher and student workflows are separate sections so dual-role users
+  // see both (e.g. teacher My Classes and student My Classes) instead of one
+  // section whose label flips based on permissions.
   {
-    id: "classes",
-    label: classSectionLabel,
+    id: "teacher",
+    label: { key: "teacher", fallback: "Teacher" },
     items: [
-      {
-        id: "classes",
-        href: "/dashboard/classes",
-        area: "classes",
-        labelKey: "myClasses",
-        fallback: "My Classes",
-        Icon: SchoolIcon,
-        canView: (p) => p.isStudent,
-      },
       {
         id: "myclasses",
         href: "/dashboard/myclasses",
@@ -149,13 +132,15 @@ export const NAV_SECTIONS = [
         canView: (p) => p.managesClasses,
       },
       {
-        id: "irb",
+        id: "irb-teacher",
         href: "/dashboard/irb",
         area: "irb",
         labelKey: "consentProtocol",
         fallback: "Consent Protocol",
         Icon: ConsentFormIcon,
-        canView: (p) => !p.isSponsor,
+        // Prefer the teacher section when the user also manages classes or
+        // sees lessons, so dual-role users do not get a duplicate link.
+        canView: (p) => p.managesClasses || p.canSeeLessons,
       },
       {
         id: "boards",
@@ -164,7 +149,7 @@ export const NAV_SECTIONS = [
         labelKey: "boards",
         fallback: "Project Boards",
         Icon: AssignmentIcon,
-        canView: (p) => p.managesClasses,
+        canView: (p) => p.isAdmin,
       },
       {
         id: "resources",
@@ -183,6 +168,30 @@ export const NAV_SECTIONS = [
         fallback: "Lessons",
         Icon: LessonsIcon,
         canView: (p) => p.canSeeLessons,
+      },
+    ],
+  },
+  {
+    id: "student",
+    label: { key: "student", fallback: "Student" },
+    items: [
+      {
+        id: "classes",
+        href: "/dashboard/classes",
+        area: "classes",
+        labelKey: "myClasses",
+        fallback: "My Classes",
+        Icon: SchoolIcon,
+        canView: (p) => p.isStudent,
+      },
+      {
+        id: "irb-student",
+        href: "/dashboard/irb",
+        area: "irb",
+        labelKey: "consentProtocol",
+        fallback: "Consent Protocol",
+        Icon: ConsentFormIcon,
+        canView: (p) => p.isStudent,
       },
     ],
   },

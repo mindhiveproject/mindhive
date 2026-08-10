@@ -1110,6 +1110,7 @@
 			"capacity": "",
 			"close": "",
 			"closeMessages": "",
+			"formStatusLabel": "",
 			"groupFormatOptions": {
 				"either": "",
 				"individual": "",
@@ -1167,8 +1168,10 @@
 			"tabs": {
 				"chat": "",
 				"detail": "",
-				"people": ""
+				"people": "",
+				"peopleAndOrganization": ""
 			},
+			"tabsAria": "",
 			"teamSize": "",
 			"teamSizeSolo": "",
 			"teamSizeTeam": "",

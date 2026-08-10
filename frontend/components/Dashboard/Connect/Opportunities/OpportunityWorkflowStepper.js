@@ -79,7 +79,7 @@ const Circle = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: "Lato", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 700;
   font-size: 15px;
   line-height: 1;

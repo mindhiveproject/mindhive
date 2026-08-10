@@ -88,7 +88,7 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: clamp(20px, 2.8vw, 26px);
     font-weight: 600;
     color: #171717;
@@ -153,7 +153,7 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     color: #171717;
   }
@@ -226,7 +226,7 @@ const StickyPane = styled(PaneColumn)`
 
 const PaneHeader = styled.h3`
   margin: 0;
-  font-family: "Lato", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: #171717;

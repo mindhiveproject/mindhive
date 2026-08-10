@@ -264,6 +264,8 @@
 		"title": ""
 	},
 	"pagination": {
+		"goToPage": "",
+		"navLabel": "",
 		"next": "下一个",
 		"of": "共 {{pageCount}} 页",
 		"page": "页",

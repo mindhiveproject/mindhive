@@ -44,7 +44,7 @@ const Card = styled.section`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }

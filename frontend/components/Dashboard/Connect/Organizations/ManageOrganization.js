@@ -52,7 +52,7 @@ const AdminHeader = styled.header`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: clamp(24px, 3vw, 32px);
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
@@ -119,7 +119,7 @@ export default function ManageOrganization({ organizationId, user }) {
   if (!organizationId || !canManage) {
     return (
       <Shell>
-        <h1 style={{ margin: 0, fontFamily: "Lato, sans-serif", fontSize: 28 }}>
+        <h1 style={{ margin: 0, fontFamily: "Inter, sans-serif", fontSize: 28 }}>
           {t("manageOrganization.unauthorizedTitle", {}, {
             default: "You can’t manage this organization",
           })}

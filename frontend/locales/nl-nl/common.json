@@ -264,6 +264,8 @@
 		"title": ""
 	},
 	"pagination": {
+		"goToPage": "",
+		"navLabel": "",
 		"next": "Volgende",
 		"of": "van {{pageCount}}",
 		"page": "Pagina",

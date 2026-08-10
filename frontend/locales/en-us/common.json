@@ -264,11 +264,13 @@
 		"title": "My opportunities"
 	},
 	"pagination": {
+		"goToPage": "Go to page {{page}}",
+		"navLabel": "Pagination",
 		"next": "Next",
 		"of": "of {{pageCount}}",
 		"page": "Page",
 		"pageOf": "Page {{page}} of {{pageCount}}",
-		"prev": "Prev",
+		"prev": "Previous",
 		"totalParticipants": "{{count}} participants total",
 		"totalUsers": "{{count}} users total"
 	},

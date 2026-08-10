@@ -26,7 +26,7 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: clamp(28px, 4vw, 40px);
     font-weight: 600;
     color: #171717;
@@ -42,6 +42,7 @@ const Header = styled.div`
 const Grid = styled.div`
   display: grid;
   gap: 16px;
+  justify-items: center;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
   @media (max-width: 759px) {
@@ -63,7 +64,7 @@ const Empty = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 22px;
     color: #171717;
   }

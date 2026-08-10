@@ -663,6 +663,13 @@
 	"noUnofficialBio": "没有非官方传记",
 	"noVideoPlaceholder": "无视频占位符",
 	"officialBio": "官方简介",
+	"opportunities": {
+		"preview": {
+			"tabs": {
+				"peopleAndOrganization": ""
+			}
+		}
+	},
 	"opportunityEditor": {
 		"additionalNotes": "您还有其他需要强调的信息吗？",
 		"audiencePreferences": "受众偏好",

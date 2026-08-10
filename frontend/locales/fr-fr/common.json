@@ -264,6 +264,8 @@
 		"title": ""
 	},
 	"pagination": {
+		"goToPage": "",
+		"navLabel": "",
 		"next": "Suivant",
 		"of": "de {{pageCount}}",
 		"page": "Page",

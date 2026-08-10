@@ -33,7 +33,7 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     color: #171717;
   }
@@ -597,7 +597,7 @@ export default function OrganizationAdminPanels({
               <h3
                 style={{
                   margin: "0 0 8px",
-                  fontFamily: "Lato, sans-serif",
+                  fontFamily: "Inter, sans-serif",
                   fontSize: 14,
                   color: "#171717",
                 }}
