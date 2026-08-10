@@ -264,6 +264,8 @@
 		"title": ""
 	},
 	"pagination": {
+		"goToPage": "",
+		"navLabel": "",
 		"next": "अगला",
 		"of": "{{पृष्ठगणना}} का",
 		"page": "पृष्ठ",

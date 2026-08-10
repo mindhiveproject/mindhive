@@ -9,18 +9,12 @@ import { MY_FAVORITE_PEOPLE } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
 import PaginationUsers from "../Bank/Pagination";
 
-const imgBackground = "/assets/connect/background.svg";
 const ConnectShell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 48px;
   margin: 0px;
   background-color: #f7f9f8;
-  background-image: url(${imgBackground});
-  background-repeat: repeat;
-  background-position: center top;
-  background-attachment: fixed;
-  background-size: auto;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 

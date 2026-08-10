@@ -2,27 +2,21 @@ import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import debounce from "lodash.debounce";
 import styled from "styled-components";
-import { Dropdown, Icon } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_CONNECT_USERS } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
+import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 
 import PaginationUsers from "./Pagination";
 
-const imgBackground =
-  "/assets/connect/background.svg";
 const ConnectShell = styled.div`
   display: flex;
   flex-direction: column;
   gap: 48px;
   margin: 0px; 
   background-color: #f7f9f8;
-  background-image: url(${imgBackground});
-  background-repeat: repeat;
-  background-position: center top;
-  background-attachment: fixed;
-  background-size: auto;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 
@@ -144,27 +138,19 @@ const CardsGrid = styled.div`
 const FooterControls = styled.div`
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
   flex-wrap: wrap;
-  color: #5f6871;
-  font-family: "Lato", sans-serif;
-
-  span {
-    font-size: 14px;
-  }
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
 
   .per-page-dropdown {
     display: flex;
     align-items: center;
-    gap: 12px;
-
-    .ui.selection.dropdown {
-      min-width: 120px;
-      border-radius: 16px;
-      border: 1px solid #d3dae0;
-      padding: 8px 12px;
-    }
+    min-width: 88px;
   }
 `;
 
@@ -173,7 +159,7 @@ export default function ConnectBankNew({ query, user }) {
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(30);
+  const [perPage, setPerPage] = useState(27);
 
   const { data, loading } = useQuery(GET_CONNECT_USERS, {
     variables: {
@@ -183,7 +169,7 @@ export default function ConnectBankNew({ query, user }) {
     },
   });
 
-  const profiles = data?.profiles || [];
+  const profiles = data?.searchConnectUsers || [];
 
   const debounceSearch = debounce((value) => {
     setSearch(value);
@@ -256,15 +242,18 @@ export default function ConnectBankNew({ query, user }) {
       <FooterControls>
         <span>{t("usersPerPage")}</span>
         <div className="per-page-dropdown">
-          <Dropdown
-            selection
+          <DropdownSelect
+            fitContent
+            ariaLabel={t("usersPerPage")}
+            value={String(perPage)}
             options={[9, 27, 54, 108].map((n) => ({
-              key: n,
-              text: n,
-              value: n,
+              value: String(n),
+              label: String(n),
             }))}
-            value={perPage}
-            onChange={(event, data) => setPerPage(data.value)}
+            onChange={(next) => {
+              setPerPage(Number(next));
+              setPage(1);
+            }}
           />
         </div>
       </FooterControls>
