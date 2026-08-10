@@ -22,7 +22,7 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     color: #171717;
   }
@@ -47,7 +47,7 @@ const Row = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 100px;
     padding: 10px 16px;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
   }
 

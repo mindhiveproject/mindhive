@@ -54,7 +54,6 @@ const ITEM_STYLE = {
   fontWeight: 500,
   fontSize: "14px",
   lineHeight: "20px",
-  letterSpacing: "0.15px",
   cursor: "pointer",
   transition: "background-color 0.2s",
   border: "none",
@@ -121,12 +120,15 @@ function getOptionLabelString(opt) {
  * @param {Array<{ value: string, label: React.ReactNode, labelText?: string, disabled?: boolean }>} options - Selectable options. When `label` is a ReactNode, pass `labelText` for search/trigger stringification.
  * @param {string} [ariaLabel] - Accessible name for the trigger (required for a11y if no visible label).
  * @param {React.CSSProperties} [triggerStyle] - Optional override for trigger button styles.
+ * @param {string} [triggerClassName] - Class for the trigger button. When set, the default
+ *   inline trigger styling is dropped so the class fully owns the look (e.g. a Navbar item).
  * @param {boolean} [fitContent=false] - When true, the control sizes to its label (no full-width stretch).
  * @param {boolean} [multiple=false] - When true, value is `string[]`, options toggle on click, menu stays open until outside/Escape.
  * @param {string} [placeholder] - Shown in the trigger when nothing is selected: single-select (no matching `value`) or multi-select (empty array).
  * @param {boolean} [searchableMultiple=true] - When `multiple`, show a type-to-filter field above the options (default true).
  * @param {boolean} [searchableSingle=false] - When not `multiple`, show a type-to-filter field above the options (default false).
  * @param {React.ReactNode} [icon] - Replaces the default chevron after the label. Omit for built-in chevron; pass `null` to show no trailing icon.
+ * @param {React.ReactNode} [leadingIcon] - Optional icon before the label; leaves the trailing chevron in place.
  * @param {'auto'|'below'|'above'} [placement='auto'] - Vertical placement; `auto` flips when there is not enough space below.
  * @param {boolean} [disabled=false] - Disables trigger interactions and closes the menu when true.
  */
@@ -136,12 +138,14 @@ export default function DropdownSelect({
   options = [],
   ariaLabel,
   triggerStyle = {},
+  triggerClassName,
   fitContent = false,
   multiple = false,
   placeholder = "",
   searchableMultiple = true,
   searchableSingle = false,
   icon,
+  leadingIcon,
   placement = "auto",
   disabled = false,
 }) {
@@ -349,7 +353,9 @@ export default function DropdownSelect({
     : { position: "relative", zIndex: open ? 1001 : "auto", width: "100%" };
 
   const triggerMerged = {
-    ...DEFAULT_TRIGGER_STYLE,
+    // A caller-supplied class owns the trigger's look, so the default inline
+    // styles are skipped rather than fought with specificity.
+    ...(triggerClassName ? {} : DEFAULT_TRIGGER_STYLE),
     ...(fitContent
       ? {
           width: "auto",
@@ -376,7 +382,7 @@ export default function DropdownSelect({
         whiteSpace: "normal",
         overflowWrap: "anywhere",
         wordBreak: "break-word",
-        color: "#5D5763",
+        color: "inherit",
         overflow: "hidden",
         display: "-webkit-box",
         WebkitBoxOrient: "vertical",
@@ -388,7 +394,7 @@ export default function DropdownSelect({
         flex: "1 1 0%",
         minWidth: 0,
         textAlign: "left",
-        color: "#5D5763",
+        color: "inherit",
         overflow: "hidden",
         display: "-webkit-box",
         WebkitBoxOrient: "vertical",
@@ -417,6 +423,7 @@ export default function DropdownSelect({
   const buttonNode = (
     <button
       type="button"
+      className={triggerClassName}
       disabled={disabled}
       aria-disabled={disabled}
       aria-haspopup="listbox"
@@ -428,7 +435,21 @@ export default function DropdownSelect({
       }}
       style={triggerMerged}
     >
-      <span ref={labelRef} style={resolvedLabelSpanStyle}>
+      {leadingIcon != null ? (
+        <span
+          style={{
+            flexShrink: 0,
+            display: "inline-flex",
+            alignItems: "center",
+            lineHeight: 0,
+          }}
+        >
+          {leadingIcon}
+        </span>
+      ) : null}
+      {/* data-dropdown-label lets a caller's stylesheet reach the label, e.g.
+          to hide it at narrow widths and leave an icon-only trigger. */}
+      <span ref={labelRef} data-dropdown-label style={resolvedLabelSpanStyle}>
         {displayLabel}
       </span>
       {triggerIcon != null ? (

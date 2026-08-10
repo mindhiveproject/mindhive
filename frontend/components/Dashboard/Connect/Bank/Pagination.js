@@ -5,6 +5,9 @@ import useTranslation from "next-translate/useTranslation";
 import { PAGINATION_CONNECT_USERS_QUERY } from "../../../Queries/User";
 import Button from "../../../DesignSystem/Button";
 
+
+const PREVIEW_PAGE_COUNT = 5;
+
 /** Build page list with ellipses: 1 … 4 5 6 … 20 */
 function getPageItems(current, total) {
   if (total <= 0) return [];
@@ -42,25 +45,38 @@ function getPageItems(current, total) {
   return items;
 }
 
+/* Previous and Next sit on the container's edges; the equal side columns keep
+   the page numbers centred even though the two labels differ in width. */
 const Nav = styled.nav`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
   gap: 8px;
+  width: 100%;
   padding: 8px 0;
   font-family: Inter, sans-serif;
   font-size: 14px;
   line-height: 20px;
   font-weight: 600;
+
+  > *:first-child {
+    justify-self: start;
+  }
+
+  > *:last-child {
+    justify-self: end;
+  }
 `;
 
 const PageList = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 4px;
 `;
 
+/* Same states as a Navbar item: neutral hover, accent for where you are. */
 const PageButton = styled.button`
   display: inline-flex;
   align-items: center;
@@ -71,7 +87,7 @@ const PageButton = styled.button`
   border: none;
   border-radius: 100px;
   background: transparent;
-  color: var(--MH-Theme-Primary-Dark, #336f8a);
+  color: var(--MH-Theme-Neutrals-Black, #171717);
   font-family: Inter, sans-serif;
   font-size: 14px;
   line-height: 20px;
@@ -81,12 +97,13 @@ const PageButton = styled.button`
   transition: background-color 0.2s, color 0.2s;
 
   &:hover:not(:disabled):not([aria-current="page"]) {
-    background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+    background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    opacity: 1;
   }
 
   &[aria-current="page"] {
-    background: var(--MH-Theme-Primary-Dark, #336f8a);
-    color: var(--MH-Theme-Neutrals-White, #ffffff);
+    background: var(--MH-Theme-Accent-Medium, #f9d978);
+    color: var(--MH-Theme-Neutrals-Black, #171717);
     cursor: default;
   }
 
@@ -102,7 +119,7 @@ const Ellipsis = styled.span`
   justify-content: center;
   min-width: 32px;
   height: 40px;
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  color: var(--MH-Theme-Neutrals-Black, #171717);
   font-family: Inter, sans-serif;
   font-size: 14px;
   line-height: 20px;
@@ -139,17 +156,24 @@ export default function PaginationUsers({
     return null;
   }
 
+  const displayPageCount =
+    pageCount <= 1 ? PREVIEW_PAGE_COUNT : pageCount;
+
   const handleGoToPage = (nextPage) => {
     if (typeof goToPage === "function") {
       goToPage(nextPage);
       return;
     }
-    if (typeof setPage === "function" && nextPage > 0 && nextPage <= pageCount) {
+    if (
+      typeof setPage === "function" &&
+      nextPage > 0 &&
+      nextPage <= displayPageCount
+    ) {
       setPage(nextPage);
     }
   };
 
-  const pageItems = getPageItems(Number(page), pageCount);
+  const pageItems = getPageItems(Number(page), displayPageCount);
 
   return (
     <Nav
@@ -188,8 +212,8 @@ export default function PaginationUsers({
       </PageList>
 
       <Button
-        variant="filled"
-        disabled={page >= pageCount}
+        variant="outline"
+        disabled={page >= displayPageCount}
         onClick={() => handleGoToPage(Number(page) + 1)}
       >
         {t("pagination.next", {}, { default: "Next" })}
