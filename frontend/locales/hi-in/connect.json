@@ -774,6 +774,7 @@
 		"loading": "अवसर लोड हो रहा है…",
 		"mentorNotes": "मेंटर के नोट्स",
 		"mentorNotesDescription": "दैनिक मार्गदर्शक का नाम, पदनाम, संपर्क विवरण और उपलब्धता। यदि कोई मार्गदर्शक उपलब्ध नहीं है, तो कमियों का वर्णन करें ताकि CUSP सहायता प्रदान करने में आपकी मदद कर सके।",
+		"notFound": "",
 		"offeredInNetworks": "क्लास नेटवर्क में उपलब्ध",
 		"offeredInNetworksHint": "यह तय करें कि किन नेटवर्कों को यह अवसर दिखाई देगा।",
 		"overview": {
@@ -922,12 +923,14 @@
 			"preSelect": "प्रायोजक का पूर्व-चयन करें",
 			"preSelectConfirm": "क्या आपने इस प्रायोजक को पहले से चुन लिया है? उन्हें अनुवर्ती प्रश्नावली पूरी करने के लिए सूचित किया जाएगा।",
 			"preSelectSuccess": "प्रायोजक का चयन पहले ही कर लिया गया है और उन्हें सूचित कर दिया गया है।",
+			"proposalHeading": "",
 			"publish": "प्रकाशन का अवसर",
 			"publishConfirm": "क्या इस अवसर को प्रकाशित किया जाए ताकि छात्र इसे देख सकें?",
 			"publishSuccess": "अवसर प्रकाशित हो चुका है।",
 			"reviewButton": "समीक्षा",
 			"scopeIncomplete": "प्रकाशन से पहले प्रायोजक को परियोजना के दायरे को पूरा करना होगा।",
 			"sponsorLabel": "प्रायोजक",
+			"statusHeading": "",
 			"submittedLabel": "प्रस्तुत"
 		},
 		"reviewNotes": {
@@ -976,6 +979,7 @@
 		},
 		"studentCapacity": "छात्र क्षमता",
 		"submitForReview": "",
+		"submittedFlash": "",
 		"tabs": {
 			"additionalForms": "",
 			"additionalFormsAria": "",

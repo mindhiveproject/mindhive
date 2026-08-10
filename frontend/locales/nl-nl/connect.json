@@ -774,6 +774,7 @@
 		"loading": "Laadmogelijkheid…",
 		"mentorNotes": "Mentornotities",
 		"mentorNotesDescription": "Naam, functie, contactgegevens en beschikbaarheid van de dagelijkse mentor. Als er geen mentor beschikbaar is, beschrijf dan de hiaten, zodat CUSP kan helpen bij het vinden van ondersteuning.",
+		"notFound": "",
 		"offeredInNetworks": "Aangeboden in klassennetwerken",
 		"offeredInNetworksHint": "Kies welke netwerken deze kans zien.",
 		"overview": {
@@ -922,12 +923,14 @@
 			"preSelect": "Vooraf selecteren van een sponsor",
 			"preSelectConfirm": "Heeft u deze sponsor al geselecteerd? Dan ontvangt hij of zij een melding om de vervolgvragenlijst in te vullen.",
 			"preSelectSuccess": "De sponsor is vooraf geselecteerd en op de hoogte gesteld.",
+			"proposalHeading": "",
 			"publish": "Publicatiemogelijkheid",
 			"publishConfirm": "Zou u deze mogelijkheid moeten publiceren zodat studenten deze kunnen zien?",
 			"publishSuccess": "Vacature gepubliceerd.",
 			"reviewButton": "Beoordeling",
 			"scopeIncomplete": "De opdrachtgever moet de projectomvang volledig hebben vastgesteld voordat u kunt publiceren.",
 			"sponsorLabel": "Sponsor",
+			"statusHeading": "",
 			"submittedLabel": "Ingediend"
 		},
 		"reviewNotes": {
@@ -976,6 +979,7 @@
 		},
 		"studentCapacity": "Studentencapaciteit",
 		"submitForReview": "",
+		"submittedFlash": "",
 		"tabs": {
 			"additionalForms": "",
 			"additionalFormsAria": "",

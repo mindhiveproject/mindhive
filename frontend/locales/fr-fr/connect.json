@@ -774,6 +774,7 @@
 		"loading": "Possibilité de chargement…",
 		"mentorNotes": "Notes du mentor",
 		"mentorNotesDescription": "Nom, titre, coordonnées et disponibilités du mentor au quotidien. Si aucun mentor n'est disponible, veuillez décrire les besoins ; le programme CUSP pourra vous aider à trouver un soutien.",
+		"notFound": "",
 		"offeredInNetworks": "Offert dans les réseaux de classe",
 		"offeredInNetworksHint": "Identifiez les réseaux capables de saisir cette opportunité.",
 		"overview": {
@@ -922,12 +923,14 @@
 			"preSelect": "Sponsor présélectionné",
 			"preSelectConfirm": "Avez-vous présélectionné ce sponsor ? Il sera invité à remplir le questionnaire de suivi.",
 			"preSelectSuccess": "Sponsor présélectionné et informé.",
+			"proposalHeading": "",
 			"publish": "Opportunité de publication",
 			"publishConfirm": "Publier cette offre pour que les étudiants puissent la voir ?",
 			"publishSuccess": "Opportunité publiée.",
 			"reviewButton": "Revoir",
 			"scopeIncomplete": "Le commanditaire doit finaliser le périmètre du projet avant toute publication.",
 			"sponsorLabel": "Parrainer",
+			"statusHeading": "",
 			"submittedLabel": "Soumis"
 		},
 		"reviewNotes": {
@@ -976,6 +979,7 @@
 		},
 		"studentCapacity": "Capacité étudiante",
 		"submitForReview": "",
+		"submittedFlash": "",
 		"tabs": {
 			"additionalForms": "",
 			"additionalFormsAria": "",

@@ -864,6 +864,32 @@
 				"status": "",
 				"title": ""
 			},
+			"followUpCompletion": {
+				"columns": {
+					"opportunity": "",
+					"organization": "",
+					"progress": "",
+					"sponsor": ""
+				},
+				"complete": "",
+				"completeSaved": "",
+				"emptyFilterHint": "",
+				"emptyFilterTitle": "",
+				"emptyNoFormsHint": "",
+				"emptyNoFormsTitle": "",
+				"emptyNoOppsHint": "",
+				"emptyNoOppsTitle": "",
+				"filterAll": "",
+				"filterIncomplete": "",
+				"hiddenBanner": "",
+				"hideFormsManager": "",
+				"incomplete": "",
+				"manageForms": "",
+				"openFormAria": "",
+				"progressCell": "",
+				"summary": "",
+				"title": ""
+			},
 			"formPicker": {
 				"addToRound": "",
 				"addToRoundAlreadyIn": "",
@@ -1083,6 +1109,7 @@
 			"available": "",
 			"capacity": "",
 			"close": "",
+			"closeMessages": "",
 			"groupFormatOptions": {
 				"either": "",
 				"individual": "",
@@ -1101,6 +1128,8 @@
 			"mentor": "",
 			"mentorContact": "",
 			"mentorNotes": "",
+			"messages": "",
+			"messagesUnreadAria": "",
 			"no": "",
 			"notFound": "",
 			"opportunityDetails": "",
@@ -1108,9 +1137,11 @@
 			"peopleEmpty": "",
 			"preferences": "",
 			"projectCategory": "",
+			"proposalSectionTitle": "",
 			"publicRating": "",
 			"ratingsTitle": "",
 			"requestsAppointment": "",
+			"returnHelper": "",
 			"returnModal": {
 				"cancel": "",
 				"confirm": "",
@@ -1132,6 +1163,7 @@
 			},
 			"sponsorIsMentor": "",
 			"status": "",
+			"summaryTitle": "",
 			"tabs": {
 				"chat": "",
 				"detail": "",

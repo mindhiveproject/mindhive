@@ -774,6 +774,7 @@
 		"loading": "加载中……",
 		"mentorNotes": "导师笔记",
 		"mentorNotesDescription": "请提供日常导师的姓名、职称、联系方式和可联系时间。如果没有导师，请描述目前的情况，CUSP 可以协助您寻找合适的导师。",
+		"notFound": "",
 		"offeredInNetworks": "课堂网络提供",
 		"offeredInNetworksHint": "选择哪些电视台能够看到这个机会。",
 		"overview": {
@@ -922,12 +923,14 @@
 			"preSelect": "预选赞助商",
 			"preSelectConfirm": "预先选择此赞助商？我们将通知他们填写后续问卷。",
 			"preSelectSuccess": "赞助商已预先选定并收到通知。",
+			"proposalHeading": "",
 			"publish": "发布机会",
 			"publishConfirm": "把这个机会公布出来，让学生们都能看到？",
 			"publishSuccess": "机会已发布。",
 			"reviewButton": "审查",
 			"scopeIncomplete": "项目发起人必须先完成项目范围界定，你才能发布。",
 			"sponsorLabel": "赞助",
+			"statusHeading": "",
 			"submittedLabel": "已提交"
 		},
 		"reviewNotes": {
@@ -976,6 +979,7 @@
 		},
 		"studentCapacity": "学生容量",
 		"submitForReview": "",
+		"submittedFlash": "",
 		"tabs": {
 			"additionalForms": "",
 			"additionalFormsAria": "",

@@ -774,6 +774,7 @@
 		"loading": "",
 		"mentorNotes": "",
 		"mentorNotesDescription": "",
+		"notFound": "",
 		"offeredInNetworks": "",
 		"offeredInNetworksHint": "",
 		"overview": {
@@ -922,12 +923,14 @@
 			"preSelect": "",
 			"preSelectConfirm": "",
 			"preSelectSuccess": "",
+			"proposalHeading": "",
 			"publish": "",
 			"publishConfirm": "",
 			"publishSuccess": "",
 			"reviewButton": "",
 			"scopeIncomplete": "",
 			"sponsorLabel": "",
+			"statusHeading": "",
 			"submittedLabel": ""
 		},
 		"reviewNotes": {
@@ -976,6 +979,7 @@
 		},
 		"studentCapacity": "",
 		"submitForReview": "",
+		"submittedFlash": "",
 		"tabs": {
 			"additionalForms": "",
 			"additionalFormsAria": "",
