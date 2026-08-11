@@ -981,12 +981,15 @@
 				"errors": {
 					"choicesRequired": "",
 					"cloneFailed": "",
+					"introVideoOnce": "",
 					"missingClass": "",
 					"needQuestion": "",
 					"promptRequired": "",
 					"saveFailed": "",
 					"titleRequired": ""
 				},
+				"introVideoHelper": "",
+				"introVideoPromptPlaceholder": "",
 				"loading": "",
 				"longAnswer": "",
 				"nameLabel": "",
@@ -1009,6 +1012,9 @@
 				"title": "",
 				"typePickerLabel": "",
 				"types": {
+					"introVideo": "",
+					"introVideoHint": "",
+					"introVideoTaken": "",
 					"media": "",
 					"mediaHint": "",
 					"open": "",

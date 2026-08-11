@@ -32,6 +32,7 @@ export default function CardRenderer({
   errors,
   onFieldChange,
   disabled,
+  readOnly = false,
   specialCardComponents,
   hideUnansweredFields = false,
   readOnlyLayout = null,
@@ -91,6 +92,7 @@ export default function CardRenderer({
             error={errors[field.name]}
             locale={locale}
             disabled={disabled}
+            readOnly={readOnly}
             readOnlyInline={readOnlyInline}
           />
         );

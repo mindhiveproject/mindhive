@@ -548,6 +548,7 @@ const DefinitionForm = forwardRef(function DefinitionForm(
           errors={errors}
           onFieldChange={handleFieldChange}
           disabled={readOnly || submitting}
+          readOnly={readOnly}
           specialCardComponents={specialCardComponents}
           hideUnansweredFields={hideUnansweredFields}
           readOnlyLayout={readOnly ? readOnlyLayout : null}

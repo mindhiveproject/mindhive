@@ -101,6 +101,8 @@
 		"file": {
 			"current": "Current:",
 			"download": "Download file",
+			"downloadVideo": "Download video",
+			"previewVideo": "Preview video",
 			"readyToUpload": "Ready to upload: {{name}} ({{size}})",
 			"remove": "Remove file",
 			"replaceConfirm": "Replace the current file? The existing upload will be overwritten when you save."
