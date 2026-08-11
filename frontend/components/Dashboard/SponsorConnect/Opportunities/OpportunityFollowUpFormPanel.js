@@ -34,7 +34,14 @@ function rolesForViewer(connectRole) {
 
 const OpportunityFollowUpFormPanel = forwardRef(
   function OpportunityFollowUpFormPanel(
-    { opportunity, formMeta, readOnly = false, hideSaveButton = true },
+    {
+      opportunity,
+      formMeta,
+      readOnly = false,
+      hideSaveButton = true,
+      readOnlyLayout = null,
+      hideUnansweredFields = false,
+    },
     ref,
   ) {
     const router = useRouter();
@@ -124,7 +131,9 @@ const OpportunityFollowUpFormPanel = forwardRef(
         locale={router.locale}
         onSubmit={handleSubmit}
         readOnly={readOnly}
+        readOnlyLayout={readOnly ? readOnlyLayout : null}
         hideSaveButton={hideSaveButton}
+        hideUnansweredFields={hideUnansweredFields}
         saveLabel={t("opportunityEditor.save", {}, {
           default: "Save changes",
         })}

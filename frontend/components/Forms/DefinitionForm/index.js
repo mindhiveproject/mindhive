@@ -132,6 +132,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     onSubmit,
     saveLabel = "Save",
     readOnly = false,
+    /** When readOnly: "inline" = 1/3 prompt + 2/3 answer for simple fields. */
+    readOnlyLayout = null,
     specialCardComponents = {},
     hideSaveButton = false,
     /** Read-only review: hide blank / unanswered fields and special cards. */
@@ -434,6 +436,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
           disabled={readOnly || submitting}
           specialCardComponents={specialCardComponents}
           hideUnansweredFields={hideUnansweredFields}
+          readOnlyLayout={readOnly ? readOnlyLayout : null}
+          quiet={readOnly}
         />
       ))}
       {!readOnly && !hideSaveButton && (
