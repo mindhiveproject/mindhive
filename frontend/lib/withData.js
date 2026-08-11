@@ -1,12 +1,15 @@
 import { ApolloClient, ApolloLink, InMemoryCache } from "@apollo/client";
 import { onError } from "@apollo/link-error";
-import { getDataFromTree } from "@apollo/client/react/ssr";
 import { createUploadLink } from "apollo-upload-client";
 import withApollo from "next-with-apollo";
 import { graphqlEndpoint } from "../config";
 
-function createClient({ headers, initialState }) {
+function createClient({ initialState }) {
   return new ApolloClient({
+    // Without this, hooks rendered during SSR fire network requests nobody
+    // awaits. ssrMode makes them report loading instead, which is the state
+    // the server is meant to render now that getDataFromTree is gone.
+    ssrMode: typeof window === "undefined",
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors)
@@ -23,11 +26,12 @@ function createClient({ headers, initialState }) {
       // this uses apollo-link-http under the hood, so all the options here come from that package
       createUploadLink({
         uri: graphqlEndpoint,
+        // Keystone's session cookie rides along via credentials; the backend is
+        // cross-origin in both dev and prod.
         fetchOptions: {
           credentials: "include",
         },
         headers: {
-          cookies: headers?.cookies,
           "Apollo-Require-Preflight": "true",
         },
       }),
@@ -64,4 +68,9 @@ function createClient({ headers, initialState }) {
   });
 }
 
-export default withApollo(createClient, { getDataFromTree });
+// No getDataFromTree on purpose. Server-side rendering the queries meant the
+// browser session cookie never reached Keystone, so every SSR pass resolved
+// authenticatedItem to null, shipped the login page as HTML, and seeded that
+// null into the client cache. Pages now render their loading states on the
+// server and resolve in the browser, where the cookie actually exists.
+export default withApollo(createClient);

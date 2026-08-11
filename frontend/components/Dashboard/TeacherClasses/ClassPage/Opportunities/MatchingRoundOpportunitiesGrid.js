@@ -378,7 +378,7 @@ export default function MatchingRoundOpportunitiesGrid({
   roundId = null,
 }) {
   const { t } = useTranslation("classes");
-  const user = useUser();
+  const { user } = useUser();
   const viewerId = user?.id || null;
   const gridRef = useRef(null);
   const [dismissedHighlights, setDismissedHighlights] = useState(() =>

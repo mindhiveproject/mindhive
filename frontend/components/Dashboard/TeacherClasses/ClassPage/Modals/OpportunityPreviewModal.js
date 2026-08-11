@@ -509,7 +509,7 @@ export default function OpportunityPreviewModal({
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
   const router = useRouter();
-  const user = useUser();
+  const { user } = useUser();
   const [returnModalOpen, setReturnModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(OPPORTUNITY_PREVIEW_TABS.detail);
   const [chatOpen, setChatOpen] = useState(false);

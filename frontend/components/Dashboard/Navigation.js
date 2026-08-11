@@ -58,7 +58,7 @@ function useCollapsedMenu() {
 
 export default function DashboardNavigation() {
   const router = useRouter();
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { t } = useTranslation("navigation");
   const [collapsed, toggleCollapsed] = useCollapsedMenu();
 

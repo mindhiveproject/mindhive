@@ -13,7 +13,7 @@ import { languageOptions } from "./LanguageSelector";
 import { getProfileImageUrl } from "../../lib/profileStudyImageUrls";
 
 export default function PublicUserPage({ id }) {
-  const me = useContext(UserContext);
+  const { user: me } = useContext(UserContext);
 
   const { t } = useTranslation("account");
 

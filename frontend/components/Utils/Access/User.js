@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@apollo/client";
 import {
   // LIGHT_USER_QUERY,
@@ -7,18 +8,23 @@ import {
 import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 // import { MY_NOTIFICATIONS } from './Queries/Notification';
 
+// Returns { user, loading }. `loading` distinguishes "not known yet" from
+// "logged out" — collapsing both into a null user is what made gated pages
+// render the login form before the query resolved.
 export function useUser() {
-  const { data } = useQuery(CURRENT_USER_QUERY, {
+  const { data, loading } = useQuery(CURRENT_USER_QUERY, {
     fetchPolicy: "cache-and-network",
   });
-  if (data?.authenticatedItem) {
-    const item = data.authenticatedItem;
-    return {
-      ...item,
-      avatar: getProfileImageUrl(item),
-    };
-  }
-  return null;
+  const item = data?.authenticatedItem;
+
+  const user = useMemo(
+    () => (item ? { ...item, avatar: getProfileImageUrl(item) } : null),
+    [item]
+  );
+
+  // cache-and-network reports loading on every background refetch; only the
+  // first pass, when there is no answer yet, should hide the page.
+  return { user, loading: loading && !item };
 }
 
 // export function useLightUser() {

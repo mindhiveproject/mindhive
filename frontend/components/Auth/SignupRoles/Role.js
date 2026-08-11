@@ -71,7 +71,7 @@ export default function RoleSignup(query) {
     networkInvite: networkInviteToken,
   } = query;
 
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const router = useRouter();
 
   // save and edit the user information

@@ -1,11 +1,9 @@
 import NProgress from "nprogress";
 import Router from "next/router";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import Cookies from "js-cookie";
-import { useQuery } from "@apollo/client";
-import { CURRENT_USER_QUERY } from "../components/Queries/User";
 
 import "../components/styles/nprogress.css";
 
@@ -16,19 +14,37 @@ import "../components/styles/global.css";
 // Data Journal / Plotly map traces — MapLibre (vendored from maplibre-gl; see next.config.js alias)
 import "../components/styles/maplibre-gl-vendor.css";
 import Site from "../components/Global/Site";
-import Authorized from "../components/Global/Authorized";
+import Authorized, { UserContext } from "../components/Global/Authorized";
 import HelpCenter from "../components/Global/HelpCenter";
 import { localeToBcp47 } from "../lib/localeToBcp47";
 
-Router.events.on("routeChangeStart", () => NProgress.start());
-Router.events.on("routeChangeComplete", () => NProgress.done());
-Router.events.on("routeChangeError", () => NProgress.done());
+// The bar is the only route-change signal; the corner spinner duplicated it.
+NProgress.configure({ showSpinner: false, minimum: 0.15, trickleSpeed: 120 });
+
+// Hold the bar back until a navigation has actually taken a moment. Most
+// dashboard area switches resolve well inside this, and a bar that flickers
+// on every instant navigation reads as clutter rather than feedback.
+const BAR_DELAY_MS = 150;
+let barTimer;
+
+Router.events.on("routeChangeStart", () => {
+  barTimer = setTimeout(() => NProgress.start(), BAR_DELAY_MS);
+});
+
+const finishBar = () => {
+  clearTimeout(barTimer);
+  NProgress.done();
+};
+
+Router.events.on("routeChangeComplete", finishBar);
+Router.events.on("routeChangeError", finishBar);
 
 function useSyncUserLanguage() {
   const router = useRouter();
   const { lang } = useTranslation();
-  const { data } = useQuery(CURRENT_USER_QUERY);
-  const user = data?.authenticatedItem;
+  // Reads the user Authorized already fetched rather than firing
+  // CURRENT_USER_QUERY a second time.
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (user?.language && user.language.toLowerCase() !== lang) {

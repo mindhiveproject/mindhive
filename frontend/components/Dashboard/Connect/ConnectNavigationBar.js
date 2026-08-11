@@ -102,7 +102,7 @@ function ConnectNavDropdown({
 
 export default function ConnectNavigationBar() {
   const { t } = useTranslation("connect");
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const {
     isAdmin,
     isTeacher,

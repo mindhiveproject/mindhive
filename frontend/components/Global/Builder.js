@@ -4,10 +4,17 @@ import useTranslation from 'next-translate/useTranslation';
 
 import { StyledBuilder } from "../styles/StyledBuilder";
 import { UserContext } from "./Authorized";
+import FullScreenLoading from "../DesignSystem/FullScreenLoading";
 
 export default function Dashboard({ children }) {
-  const user = useContext(UserContext);
+  const { user, loading: authLoading } = useContext(UserContext);
   const { t } = useTranslation('builder');
+
+  // Must come before the !user branch: until the user query answers, a null
+  // user means "not known yet", not "logged out".
+  if (authLoading) {
+    return <FullScreenLoading />;
+  }
 
   if (!user) {
     return <div>{t('pleaseLogin', 'Please first log in!')}</div>;
