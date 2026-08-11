@@ -99,10 +99,17 @@ const OpportunityFollowUpFormPanel = forwardRef(
         );
       }
 
+      // Managed intro-video field writes Opportunity.videoFile alongside
+      // questionnaire answers (multipart upload when a File is present).
+      const input = { proposalData };
+      if (Object.prototype.hasOwnProperty.call(self, "videoFile")) {
+        input.videoFile = self.videoFile;
+      }
+
       await updateOpportunity({
         variables: {
           id: opportunityId,
-          input: { proposalData },
+          input,
         },
       });
     };

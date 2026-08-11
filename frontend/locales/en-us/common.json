@@ -98,6 +98,13 @@
 	},
 	"definitionForm": {
 		"fieldRequired": "This field is required.",
+		"file": {
+			"current": "Current:",
+			"download": "Download file",
+			"readyToUpload": "Ready to upload: {{name}} ({{size}})",
+			"remove": "Remove file",
+			"replaceConfirm": "Replace the current file? The existing upload will be overwritten when you save."
+		},
 		"fixMultipleFields": "Please fix the following fields: {{fields}}",
 		"fixSingleField": "Please fix {{field}} before saving.",
 		"invalidFormat": "Invalid format.",

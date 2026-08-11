@@ -29,6 +29,13 @@ export const FieldStack = styled.div`
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
+  .field-hint {
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  }
+
   input,
   textarea {
     font-family: Inter, sans-serif;
@@ -168,8 +175,12 @@ export const TypePicker = styled.div`
     gap: 6px;
   `
       : `
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 8px;
+
+    @media (max-width: 900px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 
     @media (max-width: 720px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -203,9 +214,14 @@ export const TypeTile = styled.button`
   cursor: pointer;
   transition: border-color 0.15s, background-color 0.15s, color 0.15s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: var(--MH-Theme-Primary-Dark, #336f8a);
     color: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
   }
 
   .type-icon {

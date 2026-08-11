@@ -372,6 +372,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
                 status={currentStatus}
                 proposalData={opportunity?.proposalData}
                 rounds={opportunity?.rounds}
+                videoFile={opportunity?.videoFile}
                 networks={statusStepperNetworks}
               />
             )}

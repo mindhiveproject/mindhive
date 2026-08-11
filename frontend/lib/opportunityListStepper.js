@@ -39,10 +39,10 @@ export function getVisibleFollowUpForms(rounds) {
   return [...byId.values()];
 }
 
-function formCompletionCounts(proposalData, forms) {
+function formCompletionCounts(proposalData, forms, videoFile) {
   let done = 0;
   for (const form of forms) {
-    if (isProposalFormAnswerComplete(proposalData, form.id)) {
+    if (isProposalFormAnswerComplete(proposalData, form.id, videoFile)) {
       done += 1;
     }
   }
@@ -81,11 +81,12 @@ export function resolveOpportunityListStepper({
   status: rawStatus,
   proposalData,
   rounds,
+  videoFile,
 } = {}) {
   const status = rawStatus || "draft";
   const heldRounds = POST_PRESELECT_STATUSES.has(status) ? rounds || [] : [];
   const forms = getVisibleFollowUpForms(heldRounds);
-  const { done, total } = formCompletionCounts(proposalData, forms);
+  const { done, total } = formCompletionCounts(proposalData, forms, videoFile);
   const formsIncomplete = total > 0 && done < total;
   const matched = isRoundMatched(heldRounds);
 

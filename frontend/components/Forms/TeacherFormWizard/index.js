@@ -16,6 +16,7 @@ import QuestionEditor from "./QuestionEditor";
 import {
   buildPreviewDefinition,
   createBlankQuestion,
+  isIntroVideoQuestion,
   questionsFromDefinition,
   questionsToMutationFields,
 } from "./questionUtils";
@@ -110,6 +111,11 @@ export default function TeacherFormWizard({
     [title, description, questions]
   );
 
+  const introVideoTaken = useMemo(
+    () => questions.some((q) => q.typeChosen && isIntroVideoQuestion(q)),
+    [questions]
+  );
+
   const validateName = () => {
     if (!title.trim()) {
       setError(
@@ -159,6 +165,20 @@ export default function TeacherFormWizard({
         );
         return false;
       }
+    }
+    const introVideoCount = chosen.filter((q) => isIntroVideoQuestion(q)).length;
+    if (introVideoCount > 1) {
+      setError(
+        t(
+          "opportunities.matchingRound.formWizard.errors.introVideoOnce",
+          {},
+          {
+            default:
+              "Only one intro video upload question is allowed per form.",
+          },
+        ),
+      );
+      return false;
     }
     setError(null);
     return true;
@@ -401,6 +421,7 @@ export default function TeacherFormWizard({
                       index={index}
                       canRemove={questions.length > 1}
                       expanded={expandedQuestionId === q.localId}
+                      introVideoTaken={introVideoTaken}
                       onExpand={() => setExpandedQuestionId(q.localId)}
                       onCollapse={() => setExpandedQuestionId(null)}
                       onChange={(next) =>

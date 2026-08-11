@@ -101,6 +101,7 @@ export default function FollowUpFormsNavSelect({
   activeTab,
   onSelectTab,
   proposalData = null,
+  videoFile = null,
 }) {
   const { t } = useTranslation("connect");
 
@@ -119,7 +120,11 @@ export default function FollowUpFormsNavSelect({
       </NavbarItem>
       {followUpForms.map((form) => {
         const key = formTabKey(form.id);
-        const complete = isProposalFormAnswerComplete(proposalData, form.id);
+        const complete = isProposalFormAnswerComplete(
+          proposalData,
+          form.id,
+          videoFile,
+        );
         const title =
           form.title ||
           t("opportunityEditor.tabs.followUpFallback", {}, {

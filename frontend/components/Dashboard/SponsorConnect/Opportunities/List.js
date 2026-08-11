@@ -398,6 +398,7 @@ export default function OpportunitiesList({ user }) {
                       status={opportunity.status}
                       proposalData={opportunity.proposalData}
                       rounds={opportunity.rounds}
+                      videoFile={opportunity.videoFile}
                       networks={networks}
                       onStepClick={() => handleEdit(opportunity.id)}
                     />
@@ -486,6 +487,7 @@ export default function OpportunitiesList({ user }) {
                             const complete = isProposalFormAnswerComplete(
                               opportunity.proposalData,
                               form.id,
+                              opportunity.videoFile,
                             );
                             const savedAtLabel = formatSavedAt(
                               getProposalEntrySavedAt(

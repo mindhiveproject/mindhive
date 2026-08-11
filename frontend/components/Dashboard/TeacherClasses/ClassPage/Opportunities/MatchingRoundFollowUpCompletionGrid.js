@@ -108,6 +108,7 @@ export default function MatchingRoundFollowUpCompletionGrid({
         const complete = isProposalFormAnswerComplete(
           opportunity.proposalData,
           form.id,
+          opportunity.videoFile,
         );
         const savedAt = getProposalEntrySavedAt(
           opportunity.proposalData,
@@ -141,7 +142,11 @@ export default function MatchingRoundFollowUpCompletionGrid({
       let doneForOpp = 0;
       for (const form of formList) {
         if (
-          isProposalFormAnswerComplete(opportunity.proposalData, form.id)
+          isProposalFormAnswerComplete(
+            opportunity.proposalData,
+            form.id,
+            opportunity.videoFile,
+          )
         ) {
           doneForOpp += 1;
           doneResponses += 1;

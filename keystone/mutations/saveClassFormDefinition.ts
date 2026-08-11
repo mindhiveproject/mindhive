@@ -9,6 +9,13 @@ const ALLOWED_FIELD_TYPES = new Set<string>(
   FIELD_TYPE_OPTIONS.map((o) => o.value)
 );
 
+/** Opportunity.videoFile — fixed mapping for the teacher intro-video question. */
+export const INTRO_VIDEO_FIELD_NAME = "videoFile";
+export const INTRO_VIDEO_VALIDATION = {
+  maxFileSize: 500 * 1024 * 1024,
+  allowedMimes: "video/mp4,video/webm",
+};
+
 type ClassFormFieldInput = {
   name?: string | null;
   fieldType: string;
@@ -29,6 +36,22 @@ type SaveClassFormDefinitionInput = {
   publish?: boolean | null;
 };
 
+type NormalizedClassField = {
+  name: string;
+  fieldType: string;
+  label: string;
+  helperText: string;
+  placeholder: string;
+  isRequired: boolean;
+  order: number;
+  options: any;
+  storage: string;
+  storageBucket: string;
+  storageColumn: string;
+  storageEntity: string;
+  validation: typeof INTRO_VIDEO_VALIDATION | null;
+};
+
 function slugify(raw: string, fallback: string) {
   const slug = String(raw || "")
     .toLowerCase()
@@ -47,6 +70,56 @@ function uniqueFieldName(label: string, used: Set<string>, index: number) {
   }
   used.add(name);
   return name;
+}
+
+export function isIntroVideoFieldInput(field: {
+  fieldType?: string | null;
+  name?: string | null;
+  storageColumn?: string | null;
+}) {
+  return (
+    field?.fieldType === "file" ||
+    field?.name === INTRO_VIDEO_FIELD_NAME ||
+    field?.storageColumn === INTRO_VIDEO_FIELD_NAME
+  );
+}
+
+/**
+ * Source fields that already target Opportunity.videoFile (e.g. seeded
+ * global form). Used when cloning so unrelated file uploads stay in JSON.
+ */
+export function isManagedIntroVideoSourceField(field: {
+  name?: string | null;
+  storageColumn?: string | null;
+}) {
+  return (
+    field?.name === INTRO_VIDEO_FIELD_NAME ||
+    field?.storageColumn === INTRO_VIDEO_FIELD_NAME
+  );
+}
+
+/** Server-owned Opportunity.videoFile wiring — never taken from the client. */
+export function introVideoFieldOverrides(): Pick<
+  NormalizedClassField,
+  | "name"
+  | "fieldType"
+  | "storage"
+  | "storageBucket"
+  | "storageColumn"
+  | "storageEntity"
+  | "validation"
+  | "options"
+> {
+  return {
+    name: INTRO_VIDEO_FIELD_NAME,
+    fieldType: "file",
+    storage: "column",
+    storageBucket: "",
+    storageColumn: INTRO_VIDEO_FIELD_NAME,
+    storageEntity: "self",
+    validation: INTRO_VIDEO_VALIDATION,
+    options: null,
+  };
 }
 
 async function assertClassCreator(context: any, classId: string) {
@@ -74,11 +147,12 @@ async function assertClassCreator(context: any, classId: string) {
   return klass;
 }
 
-function normalizeFields(fields: ClassFormFieldInput[]) {
+function normalizeFields(fields: ClassFormFieldInput[]): NormalizedClassField[] {
   if (!Array.isArray(fields) || fields.length === 0) {
     throw new Error("Add at least one question before saving.");
   }
   const used = new Set<string>();
+  let introVideoCount = 0;
   return fields.map((f, index) => {
     const fieldType = String(f.fieldType || "").trim();
     if (!ALLOWED_FIELD_TYPES.has(fieldType)) {
@@ -94,6 +168,30 @@ function normalizeFields(fields: ClassFormFieldInput[]) {
     ) {
       throw new Error(`"${label}" needs at least one choice.`);
     }
+
+    if (isIntroVideoFieldInput({ ...f, fieldType })) {
+      introVideoCount += 1;
+      if (introVideoCount > 1) {
+        throw new Error(
+          "Only one intro video upload question is allowed per form."
+        );
+      }
+      if (used.has(INTRO_VIDEO_FIELD_NAME)) {
+        throw new Error(
+          "Only one intro video upload question is allowed per form."
+        );
+      }
+      used.add(INTRO_VIDEO_FIELD_NAME);
+      return {
+        label,
+        helperText: f.helperText || "",
+        placeholder: f.placeholder || "",
+        isRequired: !!f.isRequired,
+        order: f.order ?? index,
+        ...introVideoFieldOverrides(),
+      };
+    }
+
     const name =
       (f.name && slugify(f.name, "")) ||
       uniqueFieldName(label, used, index);
@@ -114,6 +212,7 @@ function normalizeFields(fields: ClassFormFieldInput[]) {
       storageBucket: "content",
       storageColumn: "",
       storageEntity: "self",
+      validation: null,
     };
   });
 }
@@ -121,7 +220,7 @@ function normalizeFields(fields: ClassFormFieldInput[]) {
 async function replaceCardFields(
   sudo: any,
   cardId: string,
-  fields: ReturnType<typeof normalizeFields>
+  fields: NormalizedClassField[]
 ) {
   const existing = await sudo.query.FormField.findMany({
     where: { card: { id: { equals: cardId } } },
@@ -146,6 +245,7 @@ async function replaceCardFields(
         storageBucket: f.storageBucket,
         storageColumn: f.storageColumn,
         storageEntity: f.storageEntity,
+        validation: f.validation,
       },
       query: "id",
     });

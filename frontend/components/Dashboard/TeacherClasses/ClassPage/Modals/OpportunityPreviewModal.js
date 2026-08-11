@@ -102,6 +102,7 @@ const ChipSelectorRow = styled.div`
   gap: 8px;
   min-width: 0;
   flex: 1 1 auto;
+  padding: 16px 0px;
 `;
 
 const FieldsGrid = styled.div`
@@ -961,6 +962,7 @@ export default function OpportunityPreviewModal({
       const complete = isProposalFormAnswerComplete(
         opp?.proposalData,
         activeFollowUpForm.id,
+        opp?.videoFile,
       );
       return resolveFormStatusLabel(complete ? "complete" : "incomplete");
     }
@@ -1165,6 +1167,9 @@ export default function OpportunityPreviewModal({
                         key={chip.key}
                         label={chip.label}
                         shape="square"
+                        style={{
+                          padding: "16px",
+                        }}
                         selected={isSelected}
                         pressed={isSelected}
                         leading={chip.leading}
@@ -1393,7 +1398,6 @@ export default function OpportunityPreviewModal({
                           onSubmit={async () => {}}
                           readOnly
                           hideSaveButton
-                          hideUnansweredFields
                         />
                       ) : null}
 
@@ -1712,7 +1716,6 @@ export default function OpportunityPreviewModal({
                     formMeta={activeFollowUpForm}
                     readOnly
                     hideSaveButton
-                    hideUnansweredFields
                   />
                 </div>
               ) : null}

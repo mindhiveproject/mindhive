@@ -981,12 +981,15 @@
 				"errors": {
 					"choicesRequired": "Question {{number}} needs at least one choice.",
 					"cloneFailed": "Could not copy that form. Please try again.",
+					"introVideoOnce": "Only one intro video upload question is allowed per form.",
 					"missingClass": "Missing class context.",
 					"needQuestion": "Add at least one question.",
 					"promptRequired": "Question {{number}} needs a prompt.",
 					"saveFailed": "Could not save the form. Please try again.",
 					"titleRequired": "Give your form a title."
 				},
+				"introVideoHelper": "Sponsors upload an MP4 or WebM (max 500MB). This updates the opportunity’s intro video — no storage settings to configure.",
+				"introVideoPromptPlaceholder": "e.g. Upload a short intro video for students",
 				"loading": "Loading form…",
 				"longAnswer": "Long answer",
 				"nameLabel": "What’s this form for?",
@@ -1009,6 +1012,9 @@
 				"title": "Create a questionnaire",
 				"typePickerLabel": "Question type",
 				"types": {
+					"introVideo": "Intro video upload",
+					"introVideoHint": "Sponsors upload an MP4 / WebM intro video",
+					"introVideoTaken": "This form already has an intro video upload question.",
 					"media": "Media library item",
 					"mediaHint": "Sponsors share an image from their library",
 					"open": "Open answer",
