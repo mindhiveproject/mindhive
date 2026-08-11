@@ -127,13 +127,20 @@ const SplitShell = styled.div`
   height: 100%;
 `;
 
+/** Clearance under DesignSystem Modal frostedChrome overlays. */
+const FROSTED_CHROME_PAD_TOP = 88;
+const FROSTED_CHROME_PAD_BOTTOM = 96;
+
 const ContentPane = styled.div`
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
+  padding-top: ${FROSTED_CHROME_PAD_TOP}px;
+  padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
   padding-right: ${(p) => (p.$chatOpen ? "16px" : "0")};
   scrollbar-width: none;
   -ms-overflow-style: none;
+  box-sizing: border-box;
 
   &::-webkit-scrollbar {
     display: none;
@@ -147,8 +154,11 @@ const ChatPane = styled.aside`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding-top: ${FROSTED_CHROME_PAD_TOP}px;
+  padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
   padding-left: 16px;
   border-left: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+  box-sizing: border-box;
   // background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
 `;
 
@@ -1005,6 +1015,7 @@ export default function OpportunityPreviewModal({
         height="90vh"
         title={modalTitleNode}
         actions={modalActions}
+        frostedChrome
         bodyStyle={{
           overflow: "hidden",
           display: "flex",
@@ -1014,13 +1025,25 @@ export default function OpportunityPreviewModal({
         }}
       >
           {loading && !opp ? (
-            <p style={MUTED_TEXT_STYLE}>
+            <p
+              style={{
+                ...MUTED_TEXT_STYLE,
+                paddingTop: FROSTED_CHROME_PAD_TOP,
+                paddingBottom: FROSTED_CHROME_PAD_BOTTOM,
+              }}
+            >
               {t("opportunities.preview.loading", {}, { default: "Loading opportunity…" })}
             </p>
           ) : null}
 
           {!loading && !opp ? (
-            <p style={MUTED_TEXT_STYLE}>
+            <p
+              style={{
+                ...MUTED_TEXT_STYLE,
+                paddingTop: FROSTED_CHROME_PAD_TOP,
+                paddingBottom: FROSTED_CHROME_PAD_BOTTOM,
+              }}
+            >
               {t("opportunities.preview.notFound", {}, {
                 default: "Opportunity not found, or no longer available.",
               })}

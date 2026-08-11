@@ -58,6 +58,12 @@ const ACTIONS_STYLE = {
   flexShrink: 0,
 };
 
+const FROSTED_SURFACE = {
+  background: "rgba(255, 255, 255, 0.72)",
+  backdropFilter: "blur(12px) saturate(1.2)",
+  WebkitBackdropFilter: "blur(12px) saturate(1.2)",
+};
+
 /**
  * Design System Modal (basic). Portal overlay with title, body, and optional actions.
  *
@@ -71,6 +77,7 @@ const ACTIONS_STYLE = {
  * @param {number|string} [height] - Dialog height (px number or CSS string). Use with maxHeight for fixed-size flex layouts.
  * @param {"default"|"large"} [size="default"] - Preset: large → 800px wide, 90vh tall.
  * @param {React.CSSProperties} [bodyStyle] - Optional style merge for the scrollable body.
+ * @param {boolean} [frostedChrome=false] - Overlay title/actions as frosted glass so body content soft-blurs underneath.
  */
 export default function Modal({
   open,
@@ -83,6 +90,7 @@ export default function Modal({
   height,
   size = "default",
   bodyStyle,
+  frostedChrome = false,
 }) {
   const titleId = useId();
 
@@ -113,6 +121,13 @@ export default function Modal({
   const dialogStyle = {
     ...DIALOG_STYLE,
     maxWidth: resolvedMaxWidth,
+    ...(frostedChrome
+      ? {
+          position: "relative",
+          overflow: "hidden",
+          padding: 0,
+        }
+      : null),
   };
   if (resolvedMaxHeight != null) {
     dialogStyle.maxHeight = toCssSize(resolvedMaxHeight);
@@ -120,6 +135,56 @@ export default function Modal({
   if (height != null) {
     dialogStyle.height = toCssSize(height);
   }
+
+  const titleStyle = frostedChrome
+    ? {
+        ...TITLE_STYLE,
+        ...FROSTED_SURFACE,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 2,
+        margin: 0,
+        padding: "24px 24px 12px",
+        borderBottom: "1px solid rgba(211, 218, 224, 0.45)",
+      }
+    : TITLE_STYLE;
+
+  const actionsStyle = frostedChrome
+    ? {
+        ...ACTIONS_STYLE,
+        ...FROSTED_SURFACE,
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 2,
+        margin: 0,
+        padding: "12px 24px 20px",
+        borderTop: "1px solid rgba(211, 218, 224, 0.45)",
+      }
+    : ACTIONS_STYLE;
+
+  // Full-bleed body so nested scrollers can pass under frosted overlays.
+  // Consumers should pad their scroll content (top/bottom) for chrome clearance.
+  // Frosted layout keys are applied last so they win over bodyStyle.
+  const resolvedBodyStyle = {
+    ...BODY_STYLE,
+    ...bodyStyle,
+    ...(frostedChrome
+      ? {
+          position: "absolute",
+          inset: 0,
+          flex: "none",
+          width: "auto",
+          height: "auto",
+          minHeight: 0,
+          padding: "0 24px",
+          boxSizing: "border-box",
+        }
+      : null),
+  };
 
   return createPortal(
     <div
@@ -141,18 +206,15 @@ export default function Modal({
         style={dialogStyle}
       >
         {title != null ? (
-          <h2 id={titleId} className="DesignSystem-Modal-Title" style={TITLE_STYLE}>
+          <h2 id={titleId} className="DesignSystem-Modal-Title" style={titleStyle}>
             {title}
           </h2>
         ) : null}
-        <div
-          className="DesignSystem-Modal-Body"
-          style={{ ...BODY_STYLE, ...bodyStyle }}
-        >
+        <div className="DesignSystem-Modal-Body" style={resolvedBodyStyle}>
           {children}
         </div>
         {actions != null ? (
-          <div className="DesignSystem-Modal-Actions" style={ACTIONS_STYLE}>
+          <div className="DesignSystem-Modal-Actions" style={actionsStyle}>
             {actions}
           </div>
         ) : null}
