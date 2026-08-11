@@ -47,9 +47,10 @@ const CHIP_BASE_STYLE = {
 
 const CHIP_SELECTED_STYLE = {
   ...CHIP_BASE_STYLE,
-  background: "#def8fb",
-  backgroundColor: "#def8fb",
-  border: "none",
+  background: "var(--MH-Theme-Primary-Light, #def8fb)",
+  backgroundColor: "var(--MH-Theme-Primary-Light, #def8fb)",
+  border: "2px solid var(--MH-Theme-Primary-Dark, #336f8a)",
+  fontWeight: 700,
 };
 
 const CHIP_DISABLED_STYLE = {
@@ -84,12 +85,24 @@ const CLOSE_BUTTON_STYLE = {
   flexShrink: 0,
 };
 
+const CHIP_FOCUS_STYLE = `
+.DesignSystem-Chip:focus-visible {
+  outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+  outline-offset: 2px;
+}
+.DesignSystem-Chip [data-chip-close]:focus-visible {
+  outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+  outline-offset: 2px;
+}
+`;
+
 /**
  * Reusable input chip (pill) for tags, filters, and removable tokens.
  * Matches Figma Basic Chips: label-only, label + icon/avatar, optional close and trailing actions.
  *
  * @param {React.ReactNode} label - Main text (required).
  * @param {boolean} [selected=false] - Visual selected state (primary light background when true).
+ * @param {boolean} [pressed] - Optional toggle pressed state; when provided, sets aria-pressed.
  * @param {boolean} [disabled=false] - Disabled state (greyed, not clickable).
  * @param {() => void} [onClick] - Fired when the chip body is clicked; not fired when close or trailing is clicked.
  * @param {() => void} [onClose] - If provided, a close (X) icon is shown and this is called when it is clicked.
@@ -117,6 +130,7 @@ const CLOSE_BUTTON_STYLE = {
 export default function Chip({
   label,
   selected = false,
+  pressed,
   disabled = false,
   onClick,
   onClose,
@@ -134,11 +148,12 @@ export default function Chip({
   const hasLeading = leading != null;
   const hasClose = typeof onClose === "function";
   const borderRadius = BORDER_RADIUS[shape] ?? BORDER_RADIUS.pill;
+  const isPressed = typeof pressed === "boolean" ? pressed : selected;
 
   let rootStyle = { ...CHIP_BASE_STYLE };
   if (disabled) {
     rootStyle = { ...CHIP_DISABLED_STYLE };
-  } else if (selected) {
+  } else if (selected || isPressed) {
     rootStyle = { ...CHIP_SELECTED_STYLE };
     if (hovered) {
       rootStyle = { ...rootStyle, backgroundColor: "#e6e6e6" };
@@ -202,47 +217,53 @@ export default function Chip({
   };
 
   return (
-    <div
-      role={isClickable ? "button" : undefined}
-      tabIndex={isClickable ? 0 : undefined}
-      aria-label={ariaLabel}
-      title={title}
-      className={className}
-      style={{
-        ...rootStyle,
-        cursor: disabled ? "default" : isClickable ? "pointer" : "default",
-      }}
-      onClick={handleRootClick}
-      onKeyDown={handleKeyDown}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {leading && <span style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>{leading}</span>}
-      <span style={labelStyle}>{label}</span>
-      {trailing != null && (
-        <span
-          data-chip-trailing
-          style={{ flexShrink: 0, display: "inline-flex", alignItems: "center" }}
-          onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-        >
-          {trailing}
-        </span>
-      )}
-      {hasClose && (
-        <button
-          type="button"
-          data-chip-close
-          style={CLOSE_BUTTON_STYLE}
-          onClick={(e) => {
-            e.stopPropagation();
-            onClose();
-          }}
-          onKeyDown={(e) => e.stopPropagation()}
-        >
-          {CLOSE_ICON}
-        </button>
-      )}
-    </div>
+    <>
+      <style dangerouslySetInnerHTML={{ __html: CHIP_FOCUS_STYLE }} />
+      <div
+        role={isClickable ? "button" : undefined}
+        tabIndex={isClickable ? 0 : undefined}
+        aria-label={ariaLabel}
+        aria-pressed={isClickable && typeof pressed === "boolean" ? pressed : undefined}
+        title={title}
+        className={
+          className ? `DesignSystem-Chip ${className}` : "DesignSystem-Chip"
+        }
+        style={{
+          ...rootStyle,
+          cursor: disabled ? "default" : isClickable ? "pointer" : "default",
+        }}
+        onClick={handleRootClick}
+        onKeyDown={handleKeyDown}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {leading && <span style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>{leading}</span>}
+        <span style={labelStyle}>{label}</span>
+        {trailing != null && (
+          <span
+            data-chip-trailing
+            style={{ flexShrink: 0, display: "inline-flex", alignItems: "center" }}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            {trailing}
+          </span>
+        )}
+        {hasClose && (
+          <button
+            type="button"
+            data-chip-close
+            style={CLOSE_BUTTON_STYLE}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            {CLOSE_ICON}
+          </button>
+        )}
+      </div>
+    </>
   );
 }
