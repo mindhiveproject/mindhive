@@ -125,6 +125,11 @@ const SplitShell = styled.div`
   min-height: 0;
   flex: 1;
   height: 100%;
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: ${(p) => (p.$chatOpen ? "minmax(0, 1fr) minmax(240px, 40%)" : "minmax(0, 1fr)")};
+  }
 `;
 
 /** Clearance under DesignSystem Modal frostedChrome overlays. */
@@ -153,20 +158,30 @@ const ChatPane = styled.aside`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   padding-top: ${FROSTED_CHROME_PAD_TOP}px;
   padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
   padding-left: 16px;
   border-left: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+  background: transparent;
   box-sizing: border-box;
-  // background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+
+  @media (max-width: 900px) {
+    border-left: none;
+    border-top: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+    padding-left: 0;
+    padding-top: 16px;
+    padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
+  }
 `;
 
-const ChatPaneTitle = styled.h4`
+const ChatPaneTitle = styled.h3`
   margin: 0;
   flex-shrink: 0;
-  font-size: 16px;
-  font-weight: 700;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
 
