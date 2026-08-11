@@ -2475,7 +2475,15 @@ function MatchingRoundEditor({
           </p>
         </div>
         ) : (
-          <div className="matchingRoundFormSummary">
+          <div
+            className={clsx("matchingRoundFormSummary", {
+              isNeutral: selectedFormDefinitionIds.length === 0,
+              isInformation:
+                selectedFormDefinitionIds.length > 0 && !sponsorFormsVisible,
+              isSuccess:
+                selectedFormDefinitionIds.length > 0 && sponsorFormsVisible,
+            })}
+          >
             <div className="matchingRoundFormSummaryCopy">
               <h4 className="matchingRoundFormSummaryTitle">
                 {t(
@@ -2515,6 +2523,7 @@ function MatchingRoundEditor({
               type="button"
               variant="outline"
               className="matchingRoundFormSummaryManage"
+              style={{ color: "inherit", borderColor: "currentColor" }}
               onClick={() => setFormsManagerOpen(true)}
             >
               {t(

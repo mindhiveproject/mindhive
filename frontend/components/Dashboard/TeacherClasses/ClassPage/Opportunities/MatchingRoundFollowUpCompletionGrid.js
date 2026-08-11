@@ -217,6 +217,7 @@ export default function MatchingRoundFollowUpCompletionGrid({
       return (
         <StatusButton
           type="button"
+          data-follow-up-form-status
           className={clsx(complete ? "complete" : "incomplete")}
           title={label}
           aria-label={t(
@@ -549,6 +550,11 @@ export default function MatchingRoundFollowUpCompletionGrid({
             suppressCellFocus
             tooltipShowDelay={400}
             onRowClicked={(event) => {
+              if (
+                event?.event?.target?.closest?.('[data-follow-up-form-status]')
+              ) {
+                return;
+              }
               if (event?.data?.id) {
                 handlePreviewForm(event.data.id);
               }

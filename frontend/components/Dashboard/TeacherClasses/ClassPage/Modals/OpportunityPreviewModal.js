@@ -87,22 +87,23 @@ function toOptionKey(value) {
   return String(value || "").replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 }
 
-const ToolbarRow = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-`;
-
 const ChipSelectorRow = styled.div`
+  position: sticky;
+  top: -4px;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  width: calc(100% + ${(p) => (p.$chatOpen ? "40px" : "24px")});
   min-width: 0;
-  flex: 1 1 auto;
-  padding: 16px 0px;
+  margin-left: -24px;
+  padding: 8px ${(p) => (p.$chatOpen ? "16px" : "0")} 8px 24px;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(211, 218, 224, 0.45);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
 `;
 
 const FieldsGrid = styled.div`
@@ -1004,7 +1005,7 @@ export default function OpportunityPreviewModal({
         : t("opportunities.preview.no", {}, { default: "No" });
 
   const opportunityFormLabel = t("opportunities.preview.tabs.detail", {}, {
-    default: "Opportunity form",
+    default: "Original intake form",
   });
   const peopleTabLabel = t("opportunities.preview.tabs.peopleAndOrganization", {}, {
     default: "People & Organization",
@@ -1182,7 +1183,7 @@ export default function OpportunityPreviewModal({
             <div
               style={{
                 display: "grid",
-                gap: 24,
+                gap: 8,
                 color: "var(--MH-Theme-Neutrals-Black, #171717)",
               }}
             >
@@ -1262,33 +1263,32 @@ export default function OpportunityPreviewModal({
                 />
               ) : null}
 
-              <ToolbarRow>
-                <ChipSelectorRow
-                  role="group"
-                  aria-label={t("opportunities.preview.tabsAria", {}, {
-                    default: "Opportunity sections",
-                  })}
-                >
-                  {selectorChips.map((chip) => {
-                    const isSelected = resolvedTab === chip.key;
-                    return (
-                      <Chip
-                        key={chip.key}
-                        label={chip.label}
-                        shape="square"
-                        style={{
-                          padding: "16px",
-                        }}
-                        selected={isSelected}
-                        pressed={isSelected}
-                        leading={chip.leading}
-                        onClick={() => selectPreviewTab(chip.key)}
-                        ariaLabel={chip.label}
-                      />
-                    );
-                  })}
-                </ChipSelectorRow>
-              </ToolbarRow>
+              <ChipSelectorRow
+                $chatOpen={showChatPane}
+                role="group"
+                aria-label={t("opportunities.preview.tabsAria", {}, {
+                  default: "Opportunity sections",
+                })}
+              >
+                {selectorChips.map((chip) => {
+                  const isSelected = resolvedTab === chip.key;
+                  return (
+                    <Chip
+                      key={chip.key}
+                      label={chip.label}
+                      shape="square"
+                      style={{
+                        padding: "16px",
+                      }}
+                      selected={isSelected}
+                      pressed={isSelected}
+                      leading={chip.leading}
+                      onClick={() => selectPreviewTab(chip.key)}
+                      ariaLabel={chip.label}
+                    />
+                  );
+                })}
+              </ChipSelectorRow>
 
               {resolvedTab === OPPORTUNITY_PREVIEW_TABS.detail ? (
                 <div style={{ display: "grid", gap: 24 }}>

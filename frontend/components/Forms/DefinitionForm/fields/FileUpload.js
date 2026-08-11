@@ -220,7 +220,7 @@ export default function FileUpload({
           ) : null}
         </div>
       ) : null}
-      {readOnly && existing?.url && isVideo ? (
+      {existing?.url && isVideo ? (
         <div style={{ display: "grid", gap: 6, marginTop: 8 }}>
           <span className="hint">
             {t("definitionForm.file.previewVideo", {}, {

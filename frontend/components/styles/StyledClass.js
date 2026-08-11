@@ -1546,9 +1546,20 @@ const StyledClass = styled.div`
       gap: 12px 16px;
       width: 100%;
       padding: 12px 16px;
-      border: 1px solid #c5dde0;
-      border-radius: 12px;
-      background: var(--MH-Theme-Primary-Light, #def8fb);
+      border: none;
+      border-radius: 8px;
+      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    }
+
+    .matchingRoundFormSummary.isInformation {
+      background: var(--MH-Theme-Additional-Accent-Light, #f5f2ff);
+      color: var(--MH-Theme-Additional-Accent-Dark, #3f288f);
+    }
+
+    .matchingRoundFormSummary.isSuccess {
+      background: var(--MH-Theme-Neutrals-Light-Green, #f6f9f8);
+      color: var(--MH-Theme-Success-Dark, #1d6b3a);
     }
 
     .matchingRoundFormSummaryCopy {
@@ -1563,14 +1574,14 @@ const StyledClass = styled.div`
       font-size: 14px;
       font-weight: 600;
       line-height: 18px;
-      color: #171717;
+      color: inherit;
     }
 
     .matchingRoundFormSummaryStatus {
       margin: 0;
       font-size: 13px;
       line-height: 18px;
-      color: #5f6871;
+      color: inherit;
     }
 
     .matchingRoundFormSummaryManage {
