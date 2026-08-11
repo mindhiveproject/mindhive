@@ -2,6 +2,8 @@
 
 import useTranslation from "next-translate/useTranslation";
 
+// import BeehiveLoading from "./BeehiveLoading";
+
 /**
  * Full-screen loading state for when the page cannot be drawn yet — currently
  * only "we don't know who you are yet" on a gated route.
@@ -14,6 +16,15 @@ import useTranslation from "next-translate/useTranslation";
  * For slow work happening *inside* an already-drawn page (Pyodide booting,
  * code running), use JustOneSecondNotice instead.
  */
+
+/**
+ * Which animation to show. Flip this to compare the two:
+ *
+ *   "beehive" — full-bleed honeycomb blooming out of a green hexagon, no
+ *               wordmark. The Figma design.
+ *   "dots"    — the wordmark with three pulsing dots underneath.
+ */
+const ANIMATION = "dots";
 
 const OVERLAY_STYLE = {
   position: "fixed",
@@ -81,18 +92,17 @@ export default function FullScreenLoading({ label }) {
 
   return (
     <div style={OVERLAY_STYLE} role="status" aria-live="polite">
-      <div style={CONTENT_STYLE}>
-        <img src="/mh_logo_color.svg" alt="mindHIVE" style={LOGO_STYLE} />
+      {/* Replace for behive animation here*/}
+        <div style={CONTENT_STYLE}>
+          <img src="/mh_logo_color.svg" alt="mindHIVE" style={LOGO_STYLE} />
 
-        {/* ANIMATION SLOT — replace the three dots below with the looping
-            animation. Keep it inside SLOT_STYLE's 96x96 box. */}
-        <div style={SLOT_STYLE}>
-          <span style={DOT_STYLE} />
-          <span style={{ ...DOT_STYLE, animationDelay: "160ms" }} />
-          <span style={{ ...DOT_STYLE, animationDelay: "320ms" }} />
+          <div style={SLOT_STYLE}>
+            <span style={DOT_STYLE} />
+            <span style={{ ...DOT_STYLE, animationDelay: "160ms" }} />
+            <span style={{ ...DOT_STYLE, animationDelay: "320ms" }} />
+          </div>
         </div>
-      </div>
-
+      
       <span style={SR_ONLY_STYLE}>{label || t("loading", "Loading…")}</span>
 
       {/* Global rather than scoped: styled-jsx rewrites scoped keyframe names,
