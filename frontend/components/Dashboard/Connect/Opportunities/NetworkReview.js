@@ -178,7 +178,7 @@ function rolesForViewer(connectRole) {
 export default function NetworkReview({ opportunityId, query, user }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
-  const me = useContext(UserContext);
+  const { user: me } = useContext(UserContext);
   const viewer = user || me;
   const { sendEmail } = useEmail();
   const connectRole = useConnectRole();

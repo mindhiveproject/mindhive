@@ -245,7 +245,7 @@ function fmtDate(d) {
 export default function ReviewOpportunityMain({ query }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
-  const me = useContext(UserContext);
+  const { user: me } = useContext(UserContext);
   const { isAdmin } = useConnectRole();
   const oppId = query?.op;
   const roundId = query?.round;

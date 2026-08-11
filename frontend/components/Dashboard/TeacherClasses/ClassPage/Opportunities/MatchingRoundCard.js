@@ -559,7 +559,7 @@ function MatchingRoundEditor({
   const { t } = useTranslation("classes");
   const router = useRouter();
   const { origin } = absoluteUrl();
-  const user = useUser();
+  const { user } = useUser();
 
   const roundId = isCreate ? null : roundSummary?.id || null;
   const isNew = !roundId;

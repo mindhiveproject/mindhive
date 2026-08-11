@@ -9,7 +9,7 @@ import { useContext } from "react";
 import { UserContext } from "../Global/Authorized";
 
 export default function FrontMain(props) {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   return (
     <>
       <Header user={user} />

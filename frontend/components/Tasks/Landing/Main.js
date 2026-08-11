@@ -11,7 +11,7 @@ import TaskPage from "./TaskPage";
 import ManageFavorite from "../../User/ManageFavorite";
 
 export default function TaskLandingMain({ slug }) {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { t } = useTranslation("home");
   const { data, error, loading } = useQuery(GET_TASK, {
     variables: { slug },

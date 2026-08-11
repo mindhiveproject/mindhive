@@ -12,7 +12,7 @@ import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
 
 import { GET_PROJECT_STUDY } from "../../../Queries/Proposal";
 
-import Router from "./Router";
+import Router, { BuilderLoading } from "./Router";
 import { builderTours } from "./tours";
 
 export default function Builder({ query, user, tab, toggleSidebar }) {
@@ -235,7 +235,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
     return <div>{t("main.noProjectFound", "No project found, please save your project first.")}</div>;
   }
 
-  if (loading) return <div>{t("main.loadingStudy", "Loading study...")}</div>;
+  if (loading) return <BuilderLoading />;
   if (error) return <div>{t("main.errorLoadingStudy", "Error loading study: {{errorMessage}}", { errorMessage: error.message })}</div>;
 
   // The builder gets the form state, which useForm only fills in from the
@@ -244,7 +244,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
   // would build it from an empty study and leave it showing the starting point
   // only. Wait until the form state has caught up with the loaded study.
   if (study?.id && inputs?.id !== study?.id) {
-    return <div>{t("main.loadingStudy", "Loading study...")}</div>;
+    return <BuilderLoading />;
   }
 
   return (
