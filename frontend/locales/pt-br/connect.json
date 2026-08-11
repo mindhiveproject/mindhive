@@ -663,6 +663,13 @@
 	"noUnofficialBio": "Sem biografia não oficial",
 	"noVideoPlaceholder": "Sem espaço reservado para vídeo",
 	"officialBio": "Biografia oficial",
+	"opportunities": {
+		"preview": {
+			"tabs": {
+				"peopleAndOrganization": ""
+			}
+		}
+	},
 	"opportunityEditor": {
 		"additionalNotes": "Há alguma informação adicional que você gostaria de destacar?",
 		"audiencePreferences": "Preferências do público",

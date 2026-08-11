@@ -663,6 +663,13 @@
 	"noUnofficialBio": "",
 	"noVideoPlaceholder": "",
 	"officialBio": "आधिकारिक बायो",
+	"opportunities": {
+		"preview": {
+			"tabs": {
+				"peopleAndOrganization": ""
+			}
+		}
+	},
 	"opportunityEditor": {
 		"additionalNotes": "",
 		"audiencePreferences": "",

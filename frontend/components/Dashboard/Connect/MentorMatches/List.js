@@ -23,7 +23,7 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: clamp(28px, 4vw, 40px);
     font-weight: 600;
     color: #171717;
@@ -47,7 +47,7 @@ const OpportunityCard = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     color: #171717;
   }
@@ -91,7 +91,7 @@ const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: "Lato", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   color: #5f6871;
 

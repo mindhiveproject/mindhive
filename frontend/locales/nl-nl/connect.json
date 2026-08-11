@@ -663,6 +663,13 @@
 	"noUnofficialBio": "Geen onofficiële biografie",
 	"noVideoPlaceholder": "Geen video-plaatsaanduiding",
 	"officialBio": "Officiële biografie",
+	"opportunities": {
+		"preview": {
+			"tabs": {
+				"peopleAndOrganization": ""
+			}
+		}
+	},
 	"opportunityEditor": {
 		"additionalNotes": "Is er nog aanvullende informatie die u wilt benadrukken?",
 		"audiencePreferences": "Voorkeuren van het publiek",

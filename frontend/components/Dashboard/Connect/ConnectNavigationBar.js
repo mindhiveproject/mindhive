@@ -1,25 +1,13 @@
 import { useContext, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import clsx from "clsx";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import Navbar from "../../DesignSystem/Navbar";
 import { UserContext } from "../../Global/Authorized";
 import useConnectRole from "./useConnectRole";
-
-const NAV_DROPDOWN_TRIGGER_STYLE = {
-  backgroundColor: "#F6F9F8",
-  border: "2px solid #E6E6E6",
-  fontWeight: 600,
-  fontSize: "16px",
-  color: "#5D5763",
-};
-
-const NAV_CONNECT_DROPDOWN_TRIGGER_STYLE = {
-  ...NAV_DROPDOWN_TRIGGER_STYLE,
-  color: "#171717",
-  border: "2px solid #A1A1A1",
-};
 
 const CONNECT_NAV_ICONS = {
   organizations: "/assets/connect/building.svg",
@@ -27,6 +15,38 @@ const CONNECT_NAV_ICONS = {
   opportunities: "/assets/connect/magnifier.svg",
   connect: "/assets/connect/globe.svg",
 };
+
+/** Paths owned by the Opportunities group, used to highlight the active section. */
+const OPPORTUNITY_PATHS = [
+  "/dashboard/connect/explore",
+  "/dashboard/connect/my-matches",
+  "/dashboard/connect/rounds",
+  "/dashboard/connect/questions",
+  "/dashboard/connect/participate",
+  "/dashboard/connect/matches",
+  "/dashboard/connect/review-queue",
+  "/dashboard/connect/review",
+  "/dashboard/sponsor-connect",
+];
+
+function getActiveSection(path) {
+  if (
+    path.startsWith("/dashboard/connect/organizations") ||
+    path.startsWith("/dashboard/connect/manage-organization")
+  ) {
+    return "organizations";
+  }
+  if (path.startsWith("/dashboard/connect/networks")) {
+    return "classNetworks";
+  }
+  if (OPPORTUNITY_PATHS.some((p) => path.startsWith(p))) {
+    return "opportunities";
+  }
+  if (path.startsWith("/dashboard/connect")) {
+    return "connect";
+  }
+  return null;
+}
 
 function NavDropdownIcon({ src, width = 24, height = 24 }) {
   return (
@@ -41,23 +61,50 @@ function NavDropdownIcon({ src, width = 24, height = 24 }) {
   );
 }
 
-const NavigationBar = styled.nav`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
+/**
+ * The design system Navbar, pinned to the top of every Connect page. Each entry
+ * opens a menu rather than navigating directly, so the trigger is a
+ * DropdownSelect wearing the Navbar item's own classes.
+ */
+const NavigationBar = styled(Navbar)`
   position: sticky;
   top: 0;
+  z-index: 10;
   background: rgba(247, 249, 248, 0.8);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(12px);
-  z-index: 10;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  padding-inline: clamp(16px, 6vw, 64px);
+  padding: 8px clamp(16px, 6vw, 64px);
 
-  a {
-    text-decoration: none;
+  .navbar-container {
+    justify-content: flex-end;
+    padding: 0;
+  }
+
+  /* Labels keep their natural width — a nav bar squeezing its own text to fit
+     is worse than one that runs out of room. */
+  .navbar-item {
+    flex-shrink: 0;
+  }
+
+  /* !important: DropdownSelect sets these inline for its full-width case, where
+     the label is expected to clamp and shrink. A nav trigger is the opposite. */
+  .navbar-item [data-dropdown-label] {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+  }
+
+  /* Out of room: drop the labels and leave icon-only triggers. The menus still
+     open, and each trigger keeps its aria-label as its accessible name. */
+  @media (max-width: 1100px) {
+    .navbar-item [data-dropdown-label] {
+      display: none !important;
+    }
+
+    .navbar-item.has-icon {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
   }
 `;
 
@@ -67,7 +114,7 @@ function ConnectNavDropdown({
   options,
   ariaLabelKey,
   ariaLabelDefault,
-  triggerStyle = NAV_DROPDOWN_TRIGGER_STYLE,
+  active = false,
   icon,
 }) {
   const { t } = useTranslation("connect");
@@ -87,22 +134,37 @@ function ConnectNavDropdown({
   }
 
   return (
-    <DropdownSelect
-      value={value}
-      options={options}
-      onChange={handleChange}
-      fitContent
-      placeholder={t(placeholderKey, {}, { default: placeholderDefault })}
-      ariaLabel={t(ariaLabelKey, {}, { default: ariaLabelDefault })}
-      triggerStyle={triggerStyle}
-      icon={icon}
-    />
+    <li>
+      <DropdownSelect
+        value={value}
+        options={options}
+        onChange={handleChange}
+        fitContent
+        placeholder={t(placeholderKey, {}, { default: placeholderDefault })}
+        ariaLabel={t(ariaLabelKey, {}, { default: ariaLabelDefault })}
+        triggerClassName={clsx(
+          "navbar-item",
+          icon && "has-icon",
+          "has-trailing",
+          active && "selected"
+        )}
+        leadingIcon={
+          icon ? (
+            <span className="navbar-item-icon" aria-hidden>
+              {icon}
+            </span>
+          ) : null
+        }
+      />
+    </li>
   );
 }
 
 export default function ConnectNavigationBar() {
   const { t } = useTranslation("connect");
-  const { user } = useContext(UserContext);
+  const router = useRouter();
+  const user = useContext(UserContext);
+  const activeSection = getActiveSection((router.asPath || "").split("?")[0]);
   const {
     isAdmin,
     isTeacher,
@@ -286,6 +348,7 @@ export default function ConnectNavigationBar() {
         ariaLabelKey="nav.organizations"
         ariaLabelDefault="Organizations"
         options={organizationOptions}
+        active={activeSection === "organizations"}
         icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.organizations} width={22} height={16} />}
       />
       <ConnectNavDropdown
@@ -294,6 +357,7 @@ export default function ConnectNavigationBar() {
         ariaLabelKey="nav.classNetworks"
         ariaLabelDefault="Networks"
         options={classNetworkOptions}
+        active={activeSection === "classNetworks"}
         icon={
           <NavDropdownIcon
             src={CONNECT_NAV_ICONS.classNetworks}
@@ -308,6 +372,7 @@ export default function ConnectNavigationBar() {
         ariaLabelKey="nav.opportunities"
         ariaLabelDefault="Opportunities"
         options={opportunityOptions}
+        active={activeSection === "opportunities"}
         icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.opportunities} width={22} height={16} />}
       />
       <ConnectNavDropdown
@@ -316,7 +381,7 @@ export default function ConnectNavigationBar() {
         ariaLabelKey="nav.connect"
         ariaLabelDefault="Connect"
         options={connectOptions}
-        triggerStyle={NAV_CONNECT_DROPDOWN_TRIGGER_STYLE}
+        active={activeSection === "connect"}
         icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.connect} width={22} height={16} />}
       />
     </NavigationBar>

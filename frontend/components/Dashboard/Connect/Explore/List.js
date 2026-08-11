@@ -26,7 +26,7 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: clamp(28px, 4vw, 40px);
     font-weight: 600;
     color: #171717;
@@ -131,7 +131,7 @@ const Body = styled.div`
 
   h3 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     font-weight: 600;
     color: #171717;

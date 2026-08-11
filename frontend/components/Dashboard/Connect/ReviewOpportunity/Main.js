@@ -89,7 +89,7 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: clamp(20px, 2.8vw, 26px);
     font-weight: 600;
     color: #171717;
@@ -149,7 +149,7 @@ const Card = styled.section`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     color: #171717;
   }
@@ -202,7 +202,7 @@ const StatusBar = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 100px;
     padding: 8px 16px;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     color: #171717;
     background: #ffffff;

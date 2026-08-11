@@ -102,7 +102,7 @@ const Hero = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: clamp(28px, 4vw, 38px);
     color: #171717;
     display: inline-flex;
@@ -171,7 +171,7 @@ export const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     color: #171717;
   }

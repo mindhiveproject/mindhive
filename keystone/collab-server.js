@@ -11,8 +11,11 @@
 // node_modules, the generated Prisma client, and the dev sqlite file.
 //
 // Architecture mirrors the in-process version it replaces: one Yjs document per
-// ProposalCard (`proposalCard:<id>`), persisted as a base64 `yjsState` blob. No
-// HTML conversion happens here (that needs a DOM) — the browser owns HTML.
+// item (`<prismaModel>:<id>`, e.g. `proposalCard:<id>`), persisted as a base64
+// `yjsState` blob. No HTML conversion happens here (that needs a DOM) — the
+// browser owns HTML.
+//
+// Who may open or edit a given document is decided in collab/access.js.
 //
 // Required env (from keystone/.env, loaded below):
 //   SESSION_SECRET   – same secret Keystone uses to seal the session cookie
@@ -29,6 +32,7 @@ const { WebSocketServer } = require("ws");
 const Y = require("yjs");
 const Iron = require("@hapi/iron");
 const { PrismaClient } = require("@prisma/client");
+const { documentAccess } = require("./collab/access");
 
 const PORT = Number(process.env.COLLAB_PORT || 4445);
 
@@ -71,10 +75,6 @@ function getUserColor(userId) {
   return CURSOR_COLORS[Math.abs(hash) % CURSOR_COLORS.length];
 }
 
-function cardIdFromName(documentName) {
-  return documentName.replace("proposalCard:", "");
-}
-
 /**
  * Splits the document into name and ID. Has to be sent with ":" in-between
  * @param {string} documentName 
@@ -98,34 +98,57 @@ const hocuspocus = new Hocuspocus({
   debounce: 2000,
   maxDebounce: 30000,
 
-  async onAuthenticate({ requestHeaders, documentName, context }) {
-    const cookieHeader = requestHeaders.cookie || "";
-    const cookies = parseCookies(cookieHeader);
-    const sessionCookie = cookies["keystonejs-session"];
+  async onAuthenticate({
+    requestHeaders,
+    documentName,
+    context,
+    connectionConfig,
+  }) {
+    const itemInfo = itemIdFromName(documentName);
 
-    if (!sessionCookie) {
-      throw new Error("Unauthorized: no session cookie");
-    }
-    if (!process.env.SESSION_SECRET) {
+    const sessionCookie =
+      parseCookies(requestHeaders.cookie || "")["keystonejs-session"];
+
+    if (sessionCookie && !process.env.SESSION_SECRET) {
       console.error(
         "[collab] SESSION_SECRET is not set — cannot unseal the session cookie.",
       );
     }
 
-    // Keystone statelessSessions seals the cookie with @hapi/iron (not JWT).
-    let payload;
-    try {
-      payload = await Iron.unseal(
-        sessionCookie,
-        process.env.SESSION_SECRET,
-        Iron.defaults,
-      );
-    } catch {
-      throw new Error("Unauthorized: invalid session");
+    let profileId = null;
+    if (sessionCookie && process.env.SESSION_SECRET) {
+      // Keystone statelessSessions seals the cookie with @hapi/iron (not JWT).
+      let payload;
+      try {
+        payload = await Iron.unseal(
+          sessionCookie,
+          process.env.SESSION_SECRET,
+          Iron.defaults,
+        );
+      } catch {
+        throw new Error("Unauthorized: invalid session");
+      }
+
+      profileId = (payload && payload.itemId) || null;
+      if (!profileId) throw new Error("Unauthorized: missing profile id");
     }
 
-    const profileId = payload && payload.itemId;
-    if (!profileId) throw new Error("Unauthorized: missing profile id");
+    // Per-document rules live in collab/access.js — the list access in
+    // schemas/ does not cover this socket.
+    const access = await documentAccess(
+      prisma,
+      itemInfo.name,
+      itemInfo.id,
+      profileId,
+    );
+    if (access === "none") throw new Error("Access denied");
+
+    connectionConfig.readOnly = access !== "write";
+
+    if (!profileId) {
+      context.user = null;
+      return;
+    }
 
     const profile = await prisma.profile.findUnique({
       where: { id: profileId },
@@ -138,17 +161,6 @@ const hocuspocus = new Hocuspocus({
       name: displayName(profile),
       color: getUserColor(profileId),
     };
-
-    const itemInfo = itemIdFromName(documentName);
-
-    const item = await prisma[itemInfo.name].findUnique({
-      where: { id: itemInfo.id },
-      select: { id: true },
-    });
-
-    if (!item) throw new Error("Access denied: item not found");
-    
-
   },
 
   async onLoadDocument({ documentName, document }) {
@@ -211,8 +223,7 @@ server.on("upgrade", (request, socket, head) => {
   }
 });
 
-server.listen(PORT, () => {
-});
+server.listen(PORT);
 
 // A stray bad message/connection must never take the whole collab server down.
 process.on("unhandledRejection", (reason) => {
@@ -222,7 +233,7 @@ process.on("unhandledRejection", (reason) => {
   );
 });
 
-async function shutdown(signal) {
+async function shutdown() {
   try {
     await prisma.$disconnect();
   } catch {

@@ -14,7 +14,7 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     color: #171717;
   }
@@ -24,7 +24,7 @@ const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: "Lato", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   color: #5f6871;
 

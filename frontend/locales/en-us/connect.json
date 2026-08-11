@@ -663,6 +663,13 @@
 	"noUnofficialBio": "No unofficial bio",
 	"noVideoPlaceholder": "No Video Placeholder",
 	"officialBio": "Official Bio",
+	"opportunities": {
+		"preview": {
+			"tabs": {
+				"peopleAndOrganization": "People & Organization"
+			}
+		}
+	},
 	"opportunityEditor": {
 		"additionalNotes": "Is there any additional information you would like to highlight?",
 		"audiencePreferences": "Audience preferences",

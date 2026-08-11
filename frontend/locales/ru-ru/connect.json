@@ -663,6 +663,13 @@
 	"noUnofficialBio": "Нет неофициальной биографии",
 	"noVideoPlaceholder": "Нет видео-заполнителя",
 	"officialBio": "Официальная биография",
+	"opportunities": {
+		"preview": {
+			"tabs": {
+				"peopleAndOrganization": ""
+			}
+		}
+	},
 	"opportunityEditor": {
 		"additionalNotes": "Есть ли какая-либо дополнительная информация, которую вы хотели бы подчеркнуть?",
 		"audiencePreferences": "Предпочтения аудитории",
