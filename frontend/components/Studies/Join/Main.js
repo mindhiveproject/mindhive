@@ -8,7 +8,7 @@ import FlowWrapper from "./FlowWrapper";
 
 export default function JoinStudyMain(query) {
   const { id, step } = query;
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const { data, error, loading } = useQuery(STUDY_TO_JOIN, {
     variables: { id: id },

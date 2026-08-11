@@ -165,7 +165,7 @@ const LIST_PATH = "/dashboard/connect/opportunities";
 export default function EditorDefinitionMode({ opportunityId }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const isNew = isNewOpportunityId(opportunityId);
   const connectRole = useConnectRole();
   const { isAdmin } = connectRole;

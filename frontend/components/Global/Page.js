@@ -16,7 +16,7 @@ const StyledPage = styled.div`
 `;
 
 export default function Page({ children, fullScreen }) {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   return (
     <>
       <Header user={user} />

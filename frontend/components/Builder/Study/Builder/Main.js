@@ -8,7 +8,7 @@ import useStudyVersionSnapshot from "../../../../lib/useStudyVersionSnapshot";
 import { MY_STUDIES, MY_STUDY } from "../../../Queries/Study";
 import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
 
-import Router from "./Router";
+import Router, { BuilderLoading } from "./Router";
 
 export default function Builder({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
@@ -135,7 +135,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
   // The canvas is built once, when the engine mounts, so the study has to be
   // loaded first: otherwise the builder starts on an empty canvas and saving
   // would overwrite the study design with it.
-  if (loading) return <div>Loading study...</div>;
+  if (loading) return <BuilderLoading />;
   if (error) return <div>Error loading study: {error.message}</div>;
 
   // The builder gets the form state, which useForm only fills in from the
@@ -144,7 +144,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
   // would build it from an empty study and leave it showing the starting point
   // only. Wait until the form state has caught up with the loaded study.
   if (study?.id && inputs?.id !== study?.id) {
-    return <div>Loading study...</div>;
+    return <BuilderLoading />;
   }
 
   return (

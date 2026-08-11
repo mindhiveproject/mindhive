@@ -18,13 +18,12 @@ export default function StudyLandingMain({ query, isDashboard, isRun }) {
 
   const study = data?.study || {};
 
-  let user;
-  // use user or guest depending on the query
-  if (guestPublicId) {
-    user = useContext(GuestContext);
-  } else {
-    user = useContext(UserContext);
-  }
+  // use user or guest depending on the query. Both contexts are read
+  // unconditionally — calling useContext inside a branch changes the hook
+  // order between renders.
+  const { user: authUser } = useContext(UserContext);
+  const guestUser = useContext(GuestContext);
+  const user = guestPublicId ? guestUser : authUser;
 
   if (isRun && user && study) {
     return <RunStudy user={user} study={study} task={task} version={version} />;

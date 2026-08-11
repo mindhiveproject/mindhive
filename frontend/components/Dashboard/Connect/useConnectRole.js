@@ -69,6 +69,6 @@ export function deriveRoles(user) {
 }
 
 export default function useConnectRole() {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   return useMemo(() => deriveRoles(user), [user]);
 }

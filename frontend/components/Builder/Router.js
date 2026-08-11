@@ -15,7 +15,7 @@ import ProjectBuilder from "./Project/Main";
 export default function BuilderRouter({ query }) {
   const router = useRouter();
 
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { area, selector } = query;
 
   const redirect = ({ area }) => {

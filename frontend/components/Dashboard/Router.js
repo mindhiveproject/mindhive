@@ -31,7 +31,7 @@ import AdminMilestonesMain from "./Admin/Milestones/Main";
 import Profile from "./Profile/Router";
 
 export default function DashboardRouter({ query }) {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { area } = query;
 
   if (area === "discover") {

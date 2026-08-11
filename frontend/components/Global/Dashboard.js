@@ -16,6 +16,7 @@ import Page from "../../components/Global/Page";
 import Form from "../../components/Global/Form";
 import Login from "../Auth/Login";
 import Footer from "./Footer";
+import FullScreenLoading from "../DesignSystem/FullScreenLoading";
 
 /**
  * Platform-browsing dashboard areas that show the site footer.
@@ -30,7 +31,7 @@ function shouldShowDashboardFooter(area) {
 }
 
 export default function Dashboard({ children, area, selector }) {
-  const user = useContext(UserContext);
+  const { user, loading: authLoading } = useContext(UserContext);
   const showFooter = shouldShowDashboardFooter(area);
 
   const content = (
@@ -43,6 +44,12 @@ export default function Dashboard({ children, area, selector }) {
       ) : null}
     </StyledDashboardContent>
   );
+
+  // Must come before the !user branch: until the user query answers, a null
+  // user means "not known yet", not "logged out".
+  if (authLoading) {
+    return <FullScreenLoading />;
+  }
 
   if (!user) {
     return (
