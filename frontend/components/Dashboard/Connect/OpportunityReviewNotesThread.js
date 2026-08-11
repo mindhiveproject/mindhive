@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { useMutation } from "@apollo/client";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
+import moment from "moment";
 
 import Button from "../../DesignSystem/Button";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
@@ -21,7 +22,7 @@ import {
 const Shell = styled.section`
   display: ${(p) => (p.$panel ? "flex" : "grid")};
   flex-direction: ${(p) => (p.$panel ? "column" : undefined)};
-  gap: 12px;
+  gap: ${(p) => (p.$panel ? "0" : "12px")};
   box-sizing: border-box;
   width: ${(p) => (p.$panel ? "100%" : "80%")};
   margin-inline: ${(p) => (p.$panel ? "0" : "10%")};
@@ -65,11 +66,13 @@ const RoundSelectWrap = styled.div`
 
 const MessageList = styled.div`
   display: grid;
-  gap: 10px;
-  padding: 12px;
-  border-radius: 12px;
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
-  border: 1px solid var(--MH-Theme-Primary-Medium, #a3d6db);
+  gap: ${(p) => (p.$panel ? "16px" : "10px")};
+  padding: ${(p) => (p.$panel ? "0 0 12px" : "12px")};
+  border-radius: ${(p) => (p.$panel ? "0" : "12px")};
+  background: ${(p) =>
+    p.$panel ? "transparent" : "var(--MH-Theme-Neutrals-White, #ffffff)"};
+  border: ${(p) =>
+    p.$panel ? "none" : "1px solid var(--MH-Theme-Primary-Medium, #a3d6db)"};
   min-height: 0;
   ${(p) =>
     p.$panel
@@ -107,8 +110,8 @@ const MessageRow = styled.div`
 
 const Avatar = styled.div`
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: ${(p) => (p.$panel ? "28px" : "32px")};
+  height: ${(p) => (p.$panel ? "28px" : "32px")};
   border-radius: 50%;
   overflow: hidden;
   background: ${(p) =>
@@ -121,8 +124,9 @@ const Avatar = styled.div`
   letter-spacing: 0.02em;
   display: grid;
   place-items: center;
-  border: 1.5px solid #ffffff;
-  box-shadow: 0 1px 3px rgba(23, 23, 23, 0.12);
+  border: ${(p) => (p.$panel ? "none" : "1.5px solid #ffffff")};
+  box-shadow: ${(p) =>
+    p.$panel ? "none" : "0 1px 3px rgba(23, 23, 23, 0.12)"};
 
   img {
     width: 100%;
@@ -146,6 +150,7 @@ const MetaRow = styled.div`
   align-items: baseline;
   gap: 6px;
   flex-wrap: wrap;
+  font-family: Inter, sans-serif;
   font-size: 12px;
   line-height: 1.3;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
@@ -154,8 +159,11 @@ const MetaRow = styled.div`
   text-align: ${(p) => (p.$alignEnd ? "right" : "left")};
 
   .author {
-    font-weight: 600;
-    color: var(--MH-Theme-Neutrals-Black, #171717);
+    font-weight: ${(p) => (p.$panel ? 500 : 600)};
+    color: ${(p) =>
+      p.$panel
+        ? "var(--MH-Theme-Neutrals-Dark, #5f6871)"
+        : "var(--MH-Theme-Neutrals-Black, #171717)"};
   }
 
   .kind {
@@ -163,7 +171,8 @@ const MetaRow = styled.div`
   }
 
   .time {
-    opacity: 0.9;
+    opacity: ${(p) => (p.$panel ? 1 : 0.9)};
+    font-weight: 400;
   }
 `;
 
@@ -176,42 +185,66 @@ const MessageBubble = styled.div`
   background: ${(p) =>
     p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
       ? "var(--MH-Theme-Primary-Light, #def8fb)"
-      : "#faf8ff"};
+      : p.$panel
+        ? "var(--MH-Theme-Neutrals-White, #ffffff)"
+        : "#faf8ff"};
   border: 1px solid
     ${(p) =>
-      p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
-        ? "rgba(51, 111, 138, 0.28)"
-        : "rgba(160, 144, 224, 0.35)"};
-  box-shadow: 0 1px 4px rgba(23, 23, 23, 0.05);
+      p.$panel
+        ? p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
+          ? "var(--MH-Theme-Primary-Medium, #a3d6db)"
+          : "var(--MH-Theme-Neutrals-Light, #d3dae0)"
+        : p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
+          ? "rgba(51, 111, 138, 0.28)"
+          : "rgba(160, 144, 224, 0.35)"};
+  box-shadow: ${(p) =>
+    p.$panel ? "none" : "0 1px 4px rgba(23, 23, 23, 0.05)"};
 `;
 
 const BodyText = styled.p`
   margin: 0;
   white-space: pre-wrap;
   color: var(--MH-Theme-Neutrals-Black, #171717);
+  font-family: Inter, sans-serif;
   font-size: 14px;
-  line-height: 1.45;
+  line-height: 1.5;
 `;
 
 const Compose = styled.form`
   display: grid;
   gap: 8px;
   flex-shrink: 0;
+  padding-top: ${(p) => (p.$panel ? "12px" : "0")};
+
+  label {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
 
   textarea {
     width: 100%;
     box-sizing: border-box;
     resize: vertical;
-    min-height: 72px;
+    min-height: ${(p) => (p.$panel ? "56px" : "72px")};
     max-height: 160px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid #d3dae0;
-    font-family: inherit;
+    padding: 9px 11px;
+    border-radius: ${(p) => (p.$panel ? "8px" : "10px")};
+    /* 2px border in both states — focus only changes color (no outer ring to clip). */
+    border: 2px solid transparent;
+    font-family: Inter, sans-serif;
     font-size: 14px;
     line-height: 1.5;
     color: var(--MH-Theme-Neutrals-Black, #171717);
-    background: #ffffff;
+    background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+  }
+
+  textarea:focus,
+  textarea:focus-visible {
+    outline: none;
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
 `;
 
@@ -226,8 +259,12 @@ const EmptyState = styled.p`
   margin: 0;
   padding: 12px 14px;
   border-radius: 10px;
-  background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+  background: ${(p) =>
+    p.$panel
+      ? "var(--MH-Theme-Neutrals-White, #ffffff)"
+      : "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)"};
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  font-family: Inter, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   ${(p) =>
@@ -238,6 +275,7 @@ const EmptyState = styled.p`
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
 
     &::-webkit-scrollbar {
       display: none;
@@ -251,6 +289,26 @@ const ErrorText = styled.p`
   color: #871b16;
   font-size: 13px;
 `;
+
+const VisuallyHidden = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+`;
+
+const PANEL_ACTION_STYLE = {
+  padding: 0,
+  minWidth: 0,
+  height: "fit-content",
+  fontSize: 12,
+  fontWeight: 500,
+};
 
 function displayName(profile, fallback) {
   if (!profile) return fallback;
@@ -281,6 +339,15 @@ function formatDateTime(value) {
   }
 }
 
+function formatRelativeTime(value) {
+  if (!value) return "";
+  try {
+    return moment(value).fromNow();
+  } catch {
+    return "";
+  }
+}
+
 function wasEdited(note) {
   if (!note?.createdAt || !note?.updatedAt) return false;
   try {
@@ -302,6 +369,7 @@ function MessageItem({
   onDelete,
   saving,
   deleting,
+  panel = false,
 }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(note.body || "");
@@ -322,14 +390,27 @@ function MessageItem({
   });
   const authorName = displayName(note.author, authorFallback);
   const avatarUrl = getProfileImageUrl(note.author);
-
-  const timeLabel = wasEdited(note)
-    ? t(
-        "reviewThread.updatedAt",
-        { date: formatDateTime(note.updatedAt) },
-        { default: "Updated {{date}}" }
-      )
+  const exactTime = wasEdited(note)
+    ? formatDateTime(note.updatedAt)
     : formatDateTime(note.createdAt);
+  const relativeTime = wasEdited(note)
+    ? formatRelativeTime(note.updatedAt)
+    : formatRelativeTime(note.createdAt);
+  const timeLabel = panel
+    ? wasEdited(note)
+      ? t(
+          "reviewThread.updatedAt",
+          { date: relativeTime },
+          { default: "Updated {{date}}" }
+        )
+      : relativeTime
+    : wasEdited(note)
+      ? t(
+          "reviewThread.updatedAt",
+          { date: exactTime },
+          { default: "Updated {{date}}" }
+        )
+      : exactTime;
 
   const handleStartEdit = () => {
     setDraft(note.body || "");
@@ -371,7 +452,7 @@ function MessageItem({
 
   return (
     <MessageRow $alignEnd={alignEnd}>
-      <Avatar $kind={kind} aria-hidden={!avatarUrl}>
+      <Avatar $kind={kind} $panel={panel} aria-hidden={!avatarUrl}>
         {avatarUrl ? (
           <img src={avatarUrl} alt="" />
         ) : (
@@ -380,13 +461,25 @@ function MessageItem({
       </Avatar>
 
       <BubbleStack $alignEnd={alignEnd}>
-        <MetaRow $alignEnd={alignEnd}>
+        <MetaRow $alignEnd={alignEnd} $panel={panel}>
           <span className="author">{authorName}</span>
-          <span className="kind">· {kindLabel}</span>
-          {timeLabel ? <span className="time">· {timeLabel}</span> : null}
+          {panel ? (
+            <VisuallyHidden>{kindLabel}</VisuallyHidden>
+          ) : (
+            <span className="kind">· {kindLabel}</span>
+          )}
+          {timeLabel ? (
+            <span className="time" title={exactTime || undefined}>
+              · {timeLabel}
+            </span>
+          ) : null}
         </MetaRow>
 
-        <MessageBubble $kind={kind} $alignEnd={alignEnd}>
+        <MessageBubble
+          $kind={kind}
+          $alignEnd={alignEnd}
+          $panel={panel}
+        >
           {editing ? (
             <>
               <textarea
@@ -401,11 +494,11 @@ function MessageItem({
                   width: "100%",
                   boxSizing: "border-box",
                   resize: "vertical",
-                  minHeight: 72,
+                  minHeight: panel ? 56 : 72,
                   padding: "8px 10px",
                   borderRadius: 8,
-                  border: "1px solid #d3dae0",
-                  fontFamily: "inherit",
+                  border: "1px solid var(--MH-Theme-Neutrals-Light, #d3dae0)",
+                  fontFamily: "Inter, sans-serif",
                   fontSize: 14,
                   lineHeight: 1.45,
                 }}
@@ -438,13 +531,20 @@ function MessageItem({
                     <Button
                       variant="text"
                       onClick={handleStartEdit}
-                      style={{
-                        padding: 0,
-                        minWidth: 0,
-                        height: "fit-content",
-                        fontSize: 12,
-                        fontWeight: 600,
-                      }}
+                      style={
+                        panel
+                          ? {
+                              ...PANEL_ACTION_STYLE,
+                            color: "var(--MH-Theme-Neutrals-Dark, #5F6871)",
+                          }
+                          : {
+                              padding: 0,
+                              minWidth: 0,
+                              height: "fit-content",
+                              fontSize: 12,
+                              fontWeight: 600,
+                            }
+                      }
                     >
                       {t("reviewThread.edit", {}, { default: "Edit" })}
                     </Button>
@@ -454,14 +554,21 @@ function MessageItem({
                       variant="text"
                       onClick={handleDelete}
                       disabled={deleting}
-                      style={{
-                        padding: 0,
-                        minWidth: 0,
-                        height: "fit-content",
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: "#c0392b",
-                      }}
+                      style={
+                        panel
+                          ? {
+                              ...PANEL_ACTION_STYLE,
+                              color: "#c0392b",
+                            }
+                          : {
+                              padding: 0,
+                              minWidth: 0,
+                              height: "fit-content",
+                              fontSize: 12,
+                              fontWeight: 600,
+                              color: "#c0392b",
+                            }
+                      }
                     >
                       {t("reviewThread.delete", {}, { default: "Delete" })}
                     </Button>
@@ -506,6 +613,7 @@ export default function OpportunityReviewNotesThread({
 }) {
   const isPanel = layout === "panel";
   const { t } = useTranslation("connect");
+  const composeFieldId = useId();
   const [draft, setDraft] = useState("");
   const [error, setError] = useState(null);
   const [previousExpanded, setPreviousExpanded] = useState(false);
@@ -568,7 +676,6 @@ export default function OpportunityReviewNotesThread({
     [rounds, t]
   );
 
-  const TitleTag = titleAs === "h3" ? "h3" : "h2";
   const composeEnabled = canCreate && !!roundId && !needsRoundSelection;
   const composePlaceholder =
     mode === "sponsor"
@@ -577,6 +684,14 @@ export default function OpportunityReviewNotesThread({
         })
       : t("reviewThread.compose.teacherPlaceholder", {}, {
           default: "Leave a note for the sponsor…",
+        });
+  const composeLabel =
+    mode === "sponsor"
+      ? t("reviewThread.compose.sponsorLabel", {}, {
+          default: "Your reply",
+        })
+      : t("reviewThread.compose.teacherLabel", {}, {
+          default: "Your note",
         });
   const postLabel =
     mode === "sponsor"
@@ -719,7 +834,7 @@ export default function OpportunityReviewNotesThread({
                 <LoadPreviousWrap>
                   <Button
                     type="button"
-                    variant="outline"
+                    variant={isPanel ? "text" : "outline"}
                     onClick={() => setPreviousExpanded(true)}
                   >
                     {t("reviewThread.loadPreviousMessages", {}, {
@@ -739,20 +854,25 @@ export default function OpportunityReviewNotesThread({
                   onDelete={handleDelete}
                   saving={updating}
                   deleting={deleting}
+                  panel={isPanel}
                 />
               ))}
             </MessageList>
           )}
 
           {composeEnabled ? (
-            <Compose onSubmit={handlePost}>
+            <Compose $panel={isPanel} onSubmit={handlePost}>
+              {/* {isPanel ? (
+                <label htmlFor={composeFieldId}>{composeLabel}</label>
+              ) : null} */}
               <textarea
+                id={isPanel ? composeFieldId : undefined}
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder={composePlaceholder}
-                rows={4}
+                rows={isPanel ? 3 : 4}
                 disabled={creating}
-                aria-label={composePlaceholder}
+                aria-label={isPanel ? undefined : composePlaceholder}
               />
               <ActionsRow>
                 <Button

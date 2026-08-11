@@ -132,17 +132,23 @@ export function getProposalEntrySavedAt(
 /**
  * True when proposalData has a non-empty answer object for formDefinitionId.
  * Empty `{}` (or missing entry) counts as incomplete.
+ *
+ * `videoFile` is optional back-compat for video-only follow-up saves that wrote
+ * Opportunity.videoFile but left an empty proposalData answer (before the
+ * JSON completion marker existed). When the entry has `savedAt`, an empty
+ * answer, and a video url on the opportunity, treat as complete.
  */
 export function isProposalFormAnswerComplete(
   proposalData: unknown,
-  formDefinitionId?: string | null
+  formDefinitionId?: string | null,
+  videoFile?: { url?: string | null } | null
 ): boolean {
   if (!formDefinitionId || !isProposalDataEntries(proposalData)) return false;
   const match = proposalData.find(
     (entry) => entry.formDefinitionId === formDefinitionId
   );
   if (!match?.answer || !isPlainObject(match.answer)) return false;
-  return Object.keys(match.answer).some((key) => {
+  const hasAnswerContent = Object.keys(match.answer).some((key) => {
     const value = match.answer[key];
     if (value == null) return false;
     if (typeof value === "string") return value.trim().length > 0;
@@ -150,6 +156,19 @@ export function isProposalFormAnswerComplete(
     if (typeof value === "object") return Object.keys(value).length > 0;
     return true;
   });
+  if (hasAnswerContent) return true;
+
+  const videoUrl =
+    videoFile && typeof videoFile.url === "string" ? videoFile.url.trim() : "";
+  if (
+    videoUrl &&
+    typeof match.savedAt === "string" &&
+    match.savedAt.trim() &&
+    Object.keys(match.answer).length === 0
+  ) {
+    return true;
+  }
+  return false;
 }
 
 /**

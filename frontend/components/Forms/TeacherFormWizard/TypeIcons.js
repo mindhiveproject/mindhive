@@ -90,9 +90,30 @@ export function TasksIcon(props) {
   );
 }
 
+export function IntroVideoIcon(props) {
+  return (
+    <IconBox {...props}>
+      <rect
+        x="2.75"
+        y="4.5"
+        width="14.5"
+        height="11"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.4"
+      />
+      <path
+        d="M8.25 7.75v4.5L12.75 10 8.25 7.75Z"
+        fill="currentColor"
+      />
+    </IconBox>
+  );
+}
+
 export const TYPE_ICONS = {
   text: OpenAnswerIcon,
   select: PickOneIcon,
   multiselect: PickManyIcon,
   task_selector: TasksIcon,
+  file: IntroVideoIcon,
 };

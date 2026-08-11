@@ -23,6 +23,12 @@ export const MY_OPPORTUNITIES = gql`
             width
             height
           }
+          videoUrl
+          videoFile {
+            url
+            filename
+            filesize
+          }
           classNetworks {
             id
             title

@@ -230,6 +230,11 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
       createdAt
       updatedAt
       proposalData
+      videoFile {
+        url
+        filename
+        filesize
+      }
       reviewNotes {
         id
         kind

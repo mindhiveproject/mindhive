@@ -4,21 +4,26 @@ import styled from "styled-components";
 export const Card = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 28px;
+  gap: ${(p) => (p.$quiet ? "16px" : "20px")};
+  padding: ${(p) => (p.$quiet ? "20px" : "28px")};
   border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  box-shadow: ${(p) =>
+    p.$quiet ? "none" : "0px 4px 24px rgba(0, 0, 0, 0.05)"};
+  border: ${(p) =>
+    p.$quiet
+      ? "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)"
+      : "1px solid transparent"};
 
   h2 {
     margin: 0;
     font-family: "Lato", sans-serif;
     font-size: 18px;
-    color: #171717;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .card-description {
-    color: #5f6871;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     font-size: 14px;
     margin: 0;
   }
@@ -40,15 +45,22 @@ export const FieldShell = styled.label`
   gap: 6px;
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  color: #5f6871;
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+
+  .field-label-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
 
   span.label-text {
     font-weight: 600;
-    color: #171717;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   span.hint {
-    color: #888;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     font-size: 12px;
   }
 
@@ -67,23 +79,29 @@ export const FieldShell = styled.label`
   input[type="date"],
   input[type="url"],
   textarea {
-    border: 1px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "#d3dae0")};
+    border: 2px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "var(--MH-Theme-Neutrals-Medium, #a1a1a1)")};
     border-radius: 8px;
-    padding: 10px 12px;
+    padding: 9px 11px;
     font-family: "Lato", sans-serif;
     font-size: 14px;
-    color: #171717;
-    background: #ffffff;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
 
+    /* Color-only focus — outer outlines/shadows clip under overflow:hidden modals. */
     &:focus {
-      outline: 2px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "#336f8a")};
-      outline-offset: -1px;
-      border-color: ${({ $hasError }) => ($hasError ? "#c0392b" : "#336f8a")};
+      outline: none;
+      border-color: ${({ $hasError }) => ($hasError ? "#c0392b" : "var(--MH-Theme-Primary-Dark, #336f8a)")};
     }
 
     &:disabled {
-      background: #f7f9f8;
-      color: #888;
+      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+      border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+      opacity: 1;
+      cursor: default;
     }
   }
 
@@ -97,7 +115,7 @@ export const FieldShell = styled.label`
     align-items: center;
     gap: 8px;
     font-weight: 600;
-    color: #171717;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
     cursor: pointer;
   }
 
@@ -110,9 +128,10 @@ export const FieldShell = styled.label`
     display: flex;
     flex-direction: column;
     gap: 6px;
-    border: 1px solid #d3dae0;
+    border: 1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1);
     border-radius: 8px;
-    background: #f7f9f8;
+    background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+    min-width: 0;
   }
 
   .select-option-preview {
@@ -123,11 +142,11 @@ export const FieldShell = styled.label`
     padding: 6px 4px;
     font-size: 14px;
     line-height: 1.4;
-    color: #5f6871;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
   .select-option-preview.is-selected {
-    color: #171717;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
     font-weight: 600;
   }
 
@@ -137,8 +156,8 @@ export const FieldShell = styled.label`
     height: 16px;
     margin-top: 2px;
     box-sizing: border-box;
-    border: 1.5px solid #a1a1a1;
-    background: #ffffff;
+    border: 1.5px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
   }
 
   .select-option-marker.single {
@@ -150,18 +169,56 @@ export const FieldShell = styled.label`
   }
 
   .select-option-preview.is-selected .select-option-marker {
-    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
-    background: var(--MH-Theme-Primary-Dark, #336f8a);
-    box-shadow: inset 0 0 0 2px #ffffff;
+    border-color: var(--MH-Theme-Neutrals-Black, #171717);
+    background: var(--MH-Theme-Neutrals-Black, #171717);
+    box-shadow: inset 0 0 0 2px var(--MH-Theme-Neutrals-White, #ffffff);
   }
+
+  ${(p) =>
+    p.$readOnlyInline
+      ? `
+    display: grid;
+    grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr);
+    gap: 12px 16px;
+    align-items: start;
+
+    .field-label-block {
+      grid-column: 1;
+    }
+
+    .field-control-block,
+    .select-options-preview,
+    input,
+    textarea {
+      grid-column: 2;
+    }
+
+    span.error {
+      grid-column: 2;
+    }
+
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
+
+      .field-label-block,
+      .field-control-block,
+      .select-options-preview,
+      input,
+      textarea,
+      span.error {
+        grid-column: 1;
+      }
+    }
+  `
+      : ""}
 `;
 
 export const ReadOnlyBanner = styled.div`
   padding: 16px;
   border-radius: 12px;
-  background: #eef5f9;
-  border: 1px solid #cfdfe7;
-  color: #171717;
+  background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+  border: 1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+  color: var(--MH-Theme-Neutrals-Black, #171717);
   font-size: 14px;
   line-height: 1.5;
 `;
@@ -170,5 +227,12 @@ export function fieldShellErrorProps(error) {
   return {
     $hasError: Boolean(error),
     "data-field-error": error ? "true" : undefined,
+  };
+}
+
+export function fieldShellLayoutProps({ error, readOnlyInline = false } = {}) {
+  return {
+    ...fieldShellErrorProps(error),
+    $readOnlyInline: Boolean(readOnlyInline),
   };
 }

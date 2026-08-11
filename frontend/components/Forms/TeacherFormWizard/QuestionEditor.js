@@ -3,6 +3,7 @@ import clsx from "clsx";
 
 import Button from "../../DesignSystem/Button";
 import { TYPE_ICONS } from "./TypeIcons";
+import { INTRO_VIDEO_FIELD_NAME } from "./questionUtils";
 import {
   CheckboxRow,
   FieldStack,
@@ -42,6 +43,13 @@ export const TYPE_KEYS = [
     hintKey: "opportunities.matchingRound.formWizard.types.tasksHint",
     hintDefault: "Sponsors pick from the public library",
   },
+  {
+    value: "file",
+    labelKey: "opportunities.matchingRound.formWizard.types.introVideo",
+    labelDefault: "Intro video upload",
+    hintKey: "opportunities.matchingRound.formWizard.types.introVideoHint",
+    hintDefault: "Sponsors upload an MP4 / WebM intro video",
+  },
 ];
 
 export function effectiveTypeKey(fieldType) {
@@ -65,10 +73,12 @@ export default function QuestionEditor({
   expanded,
   onExpand,
   onCollapse,
+  introVideoTaken = false,
 }) {
   const { t } = useTranslation("classes");
   const typeKey = effectiveTypeKey(question.fieldType);
   const isOpen = typeKey === "text";
+  const isIntroVideo = question.fieldType === "file";
   const needsOptions =
     question.fieldType === "select" || question.fieldType === "multiselect";
   const typeLabel = typeLabelFor(question.fieldType, t);
@@ -80,15 +90,25 @@ export default function QuestionEditor({
     });
 
   const setType = (next) => {
+    if (next === "file" && introVideoTaken && !isIntroVideo) {
+      return;
+    }
     if (next === "text") {
       onChange({
         ...question,
         fieldType: question.fieldType === "textarea" ? "textarea" : "text",
+        name: null,
         typeChosen: true,
       });
       return;
     }
-    onChange({ ...question, fieldType: next, typeChosen: true });
+    onChange({
+      ...question,
+      fieldType: next,
+      // Fixed machine name for the managed Opportunity.videoFile column.
+      name: next === "file" ? INTRO_VIDEO_FIELD_NAME : null,
+      typeChosen: true,
+    });
   };
 
   if (!expanded) {
@@ -175,6 +195,18 @@ export default function QuestionEditor({
           const active = typeChosen && typeKey === type.value;
           const label = t(type.labelKey, {}, { default: type.labelDefault });
           const hint = t(type.hintKey, {}, { default: type.hintDefault });
+          const disabled =
+            type.value === "file" && introVideoTaken && !isIntroVideo;
+          const disabledHint = disabled
+            ? t(
+                "opportunities.matchingRound.formWizard.types.introVideoTaken",
+                {},
+                {
+                  default:
+                    "This form already has an intro video upload question.",
+                },
+              )
+            : hint;
           return (
             <TypeTile
               key={type.value}
@@ -183,15 +215,17 @@ export default function QuestionEditor({
               $active={active}
               className={clsx(active && "active")}
               onClick={() => setType(type.value)}
-              title={typeChosen ? `${label} — ${hint}` : hint}
+              disabled={disabled}
+              title={typeChosen ? `${label} — ${disabledHint}` : disabledHint}
               aria-pressed={active}
               aria-label={label}
+              aria-disabled={disabled}
             >
               {Icon ? <Icon className="type-icon" /> : null}
               {!typeChosen ? (
                 <>
                   <span className="type-label">{label}</span>
-                  <span className="type-hint">{hint}</span>
+                  <span className="type-hint">{disabledHint}</span>
                 </>
               ) : null}
             </TypeTile>
@@ -211,11 +245,39 @@ export default function QuestionEditor({
               type="text"
               value={question.label}
               onChange={(e) => onChange({ ...question, label: e.target.value })}
-              placeholder={t("opportunities.matchingRound.formWizard.promptPlaceholder", {}, {
-                default: "What do you want to ask?",
-              })}
+              placeholder={
+                isIntroVideo
+                  ? t(
+                      "opportunities.matchingRound.formWizard.introVideoPromptPlaceholder",
+                      {},
+                      {
+                        default: "e.g. Upload a short intro video for students",
+                      },
+                    )
+                  : t(
+                      "opportunities.matchingRound.formWizard.promptPlaceholder",
+                      {},
+                      {
+                        default: "What do you want to ask?",
+                      },
+                    )
+              }
             />
           </FieldStack>
+          {isIntroVideo ? (
+            <FieldStack>
+              <span className="field-hint">
+                {t(
+                  "opportunities.matchingRound.formWizard.introVideoHelper",
+                  {},
+                  {
+                    default:
+                      "Sponsors upload an MP4 or WebM (max 500MB). This updates the opportunity’s intro video — no storage settings to configure.",
+                  },
+                )}
+              </span>
+            </FieldStack>
+          ) : null}
 
           {isOpen ? (
             <CheckboxRow>

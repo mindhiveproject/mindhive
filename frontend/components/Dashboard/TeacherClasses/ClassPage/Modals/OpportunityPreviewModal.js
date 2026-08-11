@@ -18,6 +18,8 @@ import ReturnOpportunityModal from "../../../Connect/ReturnOpportunityModal";
 import OpportunityReviewNotesThread from "../../../Connect/OpportunityReviewNotesThread";
 import OpportunityFollowUpFormPanel from "../../../SponsorConnect/Opportunities/OpportunityFollowUpFormPanel";
 import DefinitionForm from "../../../../Forms/DefinitionForm";
+import ReviewCard from "../../../../Forms/DefinitionForm/ReviewCard";
+import ReviewField from "../../../../Forms/DefinitionForm/ReviewField";
 import { isReturnableOpportunityStatus } from "../../../Connect/returnOpportunityUtils";
 import ConnectProfileCard from "../../../Connect/ConnectProfileCard";
 import OrganizationConnectCard from "../../../Connect/Organizations/OrganizationConnectCard";
@@ -85,21 +87,23 @@ function toOptionKey(value) {
   return String(value || "").replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 }
 
-const ToolbarRow = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-`;
-
 const ChipSelectorRow = styled.div`
+  position: sticky;
+  top: -4px;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  width: calc(100% + ${(p) => (p.$chatOpen ? "40px" : "24px")});
   min-width: 0;
-  flex: 1 1 auto;
+  margin-left: -24px;
+  padding: 8px ${(p) => (p.$chatOpen ? "16px" : "0")} 8px 24px;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(211, 218, 224, 0.45);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
 `;
 
 const FieldsGrid = styled.div`
@@ -107,13 +111,18 @@ const FieldsGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 12px 16px;
   width: 100%;
+  min-width: 0;
+
+  > * {
+    min-width: 0;
+  }
 `;
 
 const FormStatusText = styled.p`
   margin: 0;
   font-size: 13px;
   line-height: 1.4;
-  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
 const SplitShell = styled.div`
@@ -123,15 +132,27 @@ const SplitShell = styled.div`
   min-height: 0;
   flex: 1;
   height: 100%;
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: ${(p) => (p.$chatOpen ? "minmax(0, 1fr) minmax(240px, 40%)" : "minmax(0, 1fr)")};
+  }
 `;
+
+/** Clearance under DesignSystem Modal frostedChrome overlays. */
+const FROSTED_CHROME_PAD_TOP = 88;
+const FROSTED_CHROME_PAD_BOTTOM = 96;
 
 const ContentPane = styled.div`
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
+  padding-top: ${FROSTED_CHROME_PAD_TOP}px;
+  padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
   padding-right: ${(p) => (p.$chatOpen ? "16px" : "0")};
   scrollbar-width: none;
   -ms-overflow-style: none;
+  box-sizing: border-box;
 
   &::-webkit-scrollbar {
     display: none;
@@ -144,17 +165,32 @@ const ChatPane = styled.aside`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  padding-top: ${FROSTED_CHROME_PAD_TOP}px;
+  padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
   padding-left: 16px;
+  padding-right: 16px;
   border-left: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
-  // background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+  background: transparent;
+  box-sizing: border-box;
+
+  @media (max-width: 900px) {
+    border-left: none;
+    border-top: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 16px;
+    padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
+  }
 `;
 
-const ChatPaneTitle = styled.h4`
+const ChatPaneTitle = styled.h3`
   margin: 0;
   flex-shrink: 0;
-  font-size: 16px;
-  font-weight: 700;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
 
@@ -174,6 +210,26 @@ const PeopleGrid = styled.div`
 
   @media (max-width: 900px) {
     grid-template-columns: minmax(0, 1fr);
+  }
+`;
+
+/** Shared shell for mentor profile + opportunity meta (matches ConnectCard fill). */
+const PeopleProfileColumn = styled.div`
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  align-content: start;
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+  box-sizing: border-box;
+
+  /* Nested ConnectCard already sits in this shell — drop its own fill/padding. */
+  > article {
+    background: transparent;
+    padding: 0;
+    max-width: none;
   }
 `;
 
@@ -233,6 +289,7 @@ const META_ITEM_STYLE = {
   alignItems: "flex-start",
   gap: 6,
   minWidth: 0,
+  width: "100%",
 };
 
 const META_LABEL_STYLE = {
@@ -246,20 +303,24 @@ const META_VALUE_STYLE = {
   boxSizing: "border-box",
   padding: "10px 12px",
   borderRadius: 8,
-  border: "1px solid var(--MH-Theme-Neutrals-Light, #d3dae0)",
-  background: "var(--MH-Theme-Neutrals-Lighter, #f7f9f8)",
+  border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
   fontSize: 14,
   fontWeight: 400,
   lineHeight: 1.4,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
+  minWidth: 0,
+  overflowWrap: "anywhere",
+  whiteSpace: "pre-wrap",
 };
 
-const FIELD_ITEM_STYLE = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 6,
-  minWidth: 0,
-};
+const FieldItemShell = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  width: 100%;
+`;
 
 const FIELD_LABEL_STYLE = {
   fontSize: 14,
@@ -272,18 +333,19 @@ const FIELD_VALUE_STYLE = {
   boxSizing: "border-box",
   padding: "10px 12px",
   borderRadius: 8,
-  border: "1px solid var(--MH-Theme-Neutrals-Light, #d3dae0)",
-  background: "var(--MH-Theme-Neutrals-Lighter, #f7f9f8)",
+  border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
   fontSize: 14,
   fontWeight: 400,
   lineHeight: 1.4,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
+/** Highlight keeps a border weight cue plus text; color is not the only signal. */
 const FIELD_VALUE_HIGHLIGHT_STYLE = {
-  ...FIELD_VALUE_STYLE,
-  background: "var(--MH-Theme-Primary-Light, #def8fb)",
-  border: "1px solid var(--MH-Theme-Primary-Medium, #a3d6db)",
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  border: "2px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+  fontWeight: 600,
 };
 
 /** Messages: tonal variant with tertiary fill. */
@@ -307,10 +369,15 @@ const SECTION_TITLE_STYLE = {
 
 const BODY_TEXT_STYLE = {
   margin: 0,
-  color: "var(--MH-Theme-Neutrals-Dark, #5f6871)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   fontSize: 14,
   lineHeight: 1.6,
   whiteSpace: "pre-wrap",
+};
+
+const MUTED_TEXT_STYLE = {
+  margin: 0,
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
 };
 
 function extractUrl(raw) {
@@ -400,17 +467,95 @@ function MetaItem({ label, value, style, valueStyle }) {
   );
 }
 
+/**
+ * Guidelines / mentor-role fields for the sponsor profile on this opportunity.
+ * Attribution stays on the given profile so it remains clear when other people
+ * cards appear in the same People grid.
+ */
+function SponsorProfileOpportunityMeta({ opportunity, profile, t }) {
+  if (!opportunity) return null;
+
+  const profileName = displayName(profile);
+  const showGuidelines = !!opportunity.guidelinesAcknowledged;
+  const showSponsorIsMentor = opportunity.sponsorIsMentor != null;
+  const showMentorNotes =
+    !opportunity.sponsorIsMentor && !!opportunity.mentorNotes;
+
+  if (!showGuidelines && !showSponsorIsMentor && !showMentorNotes) {
+    return null;
+  }
+
+  const acknowledgedAt = formatDate(opportunity.guidelinesAcknowledgedAt);
+  let guidelinesValue = t("opportunities.preview.yes", {}, { default: "Yes" });
+  if (profileName && acknowledgedAt) {
+    guidelinesValue = t(
+      "opportunities.preview.guidelinesAcknowledgedByAt",
+      { name: profileName, date: acknowledgedAt },
+      { default: "{{name}} · {{date}}" },
+    );
+  } else if (profileName) {
+    guidelinesValue = t(
+      "opportunities.preview.guidelinesAcknowledgedBy",
+      { name: profileName },
+      { default: "{{name}}" },
+    );
+  } else if (acknowledgedAt) {
+    guidelinesValue = acknowledgedAt;
+  }
+
+  return (
+    <FieldsGrid>
+      {showGuidelines ? (
+        <MetaItem
+          style={{ gridColumn: "1 / -1" }}
+          label={t("opportunities.preview.guidelinesAcknowledged", {}, {
+            default: "Guidelines acknowledged",
+          })}
+          value={guidelinesValue}
+          valueStyle={{
+            background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+            border: "2px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+            fontWeight: 600,
+          }}
+        />
+      ) : null}
+      {showSponsorIsMentor ? (
+        <MetaItem
+          label={t("opportunities.preview.sponsorIsMentor", {}, {
+            default: "Sponsor is mentor",
+          })}
+          value={
+            opportunity.sponsorIsMentor
+              ? t("opportunities.preview.yes", {}, { default: "Yes" })
+              : t("opportunities.preview.no", {}, { default: "No" })
+          }
+        />
+      ) : null}
+      {showMentorNotes ? (
+        <div style={{ gridColumn: "1 / -1", minWidth: 0 }}>
+          <ReviewField
+            label={t("opportunities.preview.mentorNotes", {}, {
+              default: "Mentor notes",
+            })}
+            value={opportunity.mentorNotes}
+          />
+        </div>
+      ) : null}
+    </FieldsGrid>
+  );
+}
+
 function FieldItem({ label, value, highlight, className }) {
   if (value == null || value === "") return null;
+  const valueStyle = {
+    ...FIELD_VALUE_STYLE,
+    ...(highlight ? FIELD_VALUE_HIGHLIGHT_STYLE : null),
+  };
   return (
-    <div className={clsx(className)} style={FIELD_ITEM_STYLE}>
+    <FieldItemShell className={clsx(className)}>
       <span style={FIELD_LABEL_STYLE}>{label}</span>
-      <span
-        style={highlight ? FIELD_VALUE_HIGHLIGHT_STYLE : FIELD_VALUE_STYLE}
-      >
-        {value}
-      </span>
-    </div>
+      <span style={valueStyle}>{value}</span>
+    </FieldItemShell>
   );
 }
 
@@ -424,31 +569,6 @@ function PreviewSection({ title, children }) {
   );
 }
 
-const ANSWER_BOX_STYLE = {
-  padding: "12px 14px",
-  borderRadius: 10,
-  background: "var(--MH-Theme-Tertiary-Lighter, #f4f8f7)",
-  border: "1px solid var(--MH-Theme-Primary-Medium, #a3d6db)",
-};
-
-function TextBlock({ label, value, html = false }) {
-  if (!value) return null;
-  return (
-    <div style={{ display: "grid", gap: 8 }}>
-      {label ? (
-        <strong style={{ fontSize: 14, color: "#171717" }}>{label}</strong>
-      ) : null}
-      <div style={ANSWER_BOX_STYLE}>
-        {html ? (
-          <ReadOnlyTipTap dangerouslySetInnerHTML={{ __html: value }} />
-        ) : (
-          <p style={BODY_TEXT_STYLE}>{value}</p>
-        )}
-      </div>
-    </div>
-  );
-}
-
 function Stars({ value }) {
   const v = Math.round(value || 0);
   return (
@@ -456,7 +576,13 @@ function Stars({ value }) {
       {[1, 2, 3, 4, 5].map((n) => (
         <span
           key={n}
-          style={{ color: n <= v ? "#f5b800" : "#d3dae0", fontSize: 14 }}
+          style={{
+            color:
+              n <= v
+                ? "var(--MH-Theme-Neutrals-Black, #171717)"
+                : "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+            fontSize: 14,
+          }}
         >
           {n <= v ? "★" : "☆"}
         </span>
@@ -879,7 +1005,7 @@ export default function OpportunityPreviewModal({
         : t("opportunities.preview.no", {}, { default: "No" });
 
   const opportunityFormLabel = t("opportunities.preview.tabs.detail", {}, {
-    default: "Opportunity form",
+    default: "Original intake form",
   });
   const peopleTabLabel = t("opportunities.preview.tabs.peopleAndOrganization", {}, {
     default: "People & Organization",
@@ -946,6 +1072,7 @@ export default function OpportunityPreviewModal({
       const complete = isProposalFormAnswerComplete(
         opp?.proposalData,
         activeFollowUpForm.id,
+        opp?.videoFile,
       );
       return resolveFormStatusLabel(complete ? "complete" : "incomplete");
     }
@@ -984,7 +1111,7 @@ export default function OpportunityPreviewModal({
         ) : null}
         {showMatchingRoundSection ? (
           showNoRoundHint ? (
-            <span style={{ fontSize: 13, color: "#5f6871" }}>
+            <span style={{ fontSize: 13, ...MUTED_TEXT_STYLE }}>
               {t("opportunities.preview.matchingRound.noRoundHint", {}, {
                 default:
                   "Create a matching round above to include this opportunity.",
@@ -1015,6 +1142,7 @@ export default function OpportunityPreviewModal({
         height="90vh"
         title={modalTitleNode}
         actions={modalActions}
+        frostedChrome
         bodyStyle={{
           overflow: "hidden",
           display: "flex",
@@ -1024,13 +1152,25 @@ export default function OpportunityPreviewModal({
         }}
       >
           {loading && !opp ? (
-            <p style={{ margin: 0, color: "#5f6871" }}>
+            <p
+              style={{
+                ...MUTED_TEXT_STYLE,
+                paddingTop: FROSTED_CHROME_PAD_TOP,
+                paddingBottom: FROSTED_CHROME_PAD_BOTTOM,
+              }}
+            >
               {t("opportunities.preview.loading", {}, { default: "Loading opportunity…" })}
             </p>
           ) : null}
 
           {!loading && !opp ? (
-            <p style={{ margin: 0, color: "#5f6871" }}>
+            <p
+              style={{
+                ...MUTED_TEXT_STYLE,
+                paddingTop: FROSTED_CHROME_PAD_TOP,
+                paddingBottom: FROSTED_CHROME_PAD_BOTTOM,
+              }}
+            >
               {t("opportunities.preview.notFound", {}, {
                 default: "Opportunity not found, or no longer available.",
               })}
@@ -1040,7 +1180,13 @@ export default function OpportunityPreviewModal({
           {opp ? (
             <SplitShell $chatOpen={showChatPane}>
               <ContentPane $chatOpen={showChatPane}>
-            <div style={{ display: "grid", gap: 24, color: "#171717" }}>
+            <div
+              style={{
+                display: "grid",
+                gap: 8,
+                color: "var(--MH-Theme-Neutrals-Black, #171717)",
+              }}
+            >
               {/* {(mentorName || orgName) ? (
                 <div
                   style={{
@@ -1117,37 +1263,44 @@ export default function OpportunityPreviewModal({
                 />
               ) : null}
 
-              <ToolbarRow>
-                <ChipSelectorRow
-                  role="tablist"
-                  aria-label={t("opportunities.preview.tabsAria", {}, {
-                    default: "Opportunity sections",
-                  })}
-                >
-                  {selectorChips.map((chip) => {
-                    const isSelected = resolvedTab === chip.key;
-                    return (
-                      <Chip
-                        key={chip.key}
-                        label={chip.label}
-                        shape="square"
-                        selected={isSelected}
-                        leading={chip.leading}
-                        onClick={() => selectPreviewTab(chip.key)}
-                        // onClose={
-                        //   isSelected ? () => deselectPreviewTab() : undefined
-                        // }
-                        ariaLabel={chip.label}
-                      />
-                    );
-                  })}
-                </ChipSelectorRow>
-              </ToolbarRow>
+              <ChipSelectorRow
+                $chatOpen={showChatPane}
+                role="group"
+                aria-label={t("opportunities.preview.tabsAria", {}, {
+                  default: "Opportunity sections",
+                })}
+              >
+                {selectorChips.map((chip) => {
+                  const isSelected = resolvedTab === chip.key;
+                  return (
+                    <Chip
+                      key={chip.key}
+                      label={chip.label}
+                      shape="square"
+                      style={{
+                        padding: "16px",
+                      }}
+                      selected={isSelected}
+                      pressed={isSelected}
+                      leading={chip.leading}
+                      onClick={() => selectPreviewTab(chip.key)}
+                      ariaLabel={chip.label}
+                    />
+                  );
+                })}
+              </ChipSelectorRow>
 
               {resolvedTab === OPPORTUNITY_PREVIEW_TABS.detail ? (
                 <div style={{ display: "grid", gap: 24 }}>
                   {opp.shortDescription ? (
-                    <p style={{ margin: 0, color: "#625b71", fontSize: 15, lineHeight: 1.5 }}>
+                    <p
+                      style={{
+                        margin: 0,
+                        color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+                        fontSize: 15,
+                        lineHeight: 1.5,
+                      }}
+                    >
                       {opp.shortDescription}
                     </p>
                   ) : null}
@@ -1221,38 +1374,36 @@ export default function OpportunityPreviewModal({
                     classTypesLabel ||
                     groupFormatLabel ||
                     allowsTeamPreferencesLabel) && (
-                    <PreviewSection
+                    <ReviewCard
                       title={t("opportunities.preview.preferences", {}, {
                         default: "Student preferences",
                       })}
                     >
-                      <FieldsGrid>
-                        <FieldItem
-                          label={tConnect("mentorPreferences.gradeLevel.title", {}, {
-                            default: "Grade level",
-                          })}
-                          value={gradeLevelsLabel}
-                        />
-                        <FieldItem
-                          label={tConnect("mentorPreferences.classType.title", {}, {
-                            default: "Class type",
-                          })}
-                          value={classTypesLabel}
-                        />
-                        <FieldItem
-                          label={tConnect("opportunityEditor.groupFormat", {}, {
-                            default: "Group format",
-                          })}
-                          value={groupFormatLabel}
-                        />
-                        <FieldItem
-                          label={t("opportunities.preview.allowsTeamPreferences", {}, {
-                            default: "Team preferences allowed",
-                          })}
-                          value={allowsTeamPreferencesLabel}
-                        />
-                      </FieldsGrid>
-                    </PreviewSection>
+                      <ReviewField
+                        label={tConnect("mentorPreferences.gradeLevel.title", {}, {
+                          default: "Grade level",
+                        })}
+                        value={gradeLevelsLabel}
+                      />
+                      <ReviewField
+                        label={tConnect("mentorPreferences.classType.title", {}, {
+                          default: "Class type",
+                        })}
+                        value={classTypesLabel}
+                      />
+                      <ReviewField
+                        label={tConnect("opportunityEditor.groupFormat", {}, {
+                          default: "Group format",
+                        })}
+                        value={groupFormatLabel}
+                      />
+                      <ReviewField
+                        label={t("opportunities.preview.allowsTeamPreferences", {}, {
+                          default: "Team preferences allowed",
+                        })}
+                        value={allowsTeamPreferencesLabel}
+                      />
+                    </ReviewCard>
                   )}
 
                   {opp.classNetworks?.length > 0 ? (
@@ -1325,21 +1476,21 @@ export default function OpportunityPreviewModal({
                       </h4>
 
                       {opp.description ? (
-                        <PreviewSection
+                        <ReviewCard
                           title={t("opportunities.preview.aboutTitle", {}, {
                             default: "About this opportunity",
                           })}
                         >
-                          <div style={ANSWER_BOX_STYLE}>
+                          <ReviewField>
                             <ReadOnlyTipTap
                               dangerouslySetInnerHTML={{ __html: opp.description }}
                             />
-                          </div>
-                        </PreviewSection>
+                          </ReviewField>
+                        </ReviewCard>
                       ) : null}
 
                       {intakeFormLoading && intakeFormDefinitionId ? (
-                        <p style={{ margin: 0, color: "#5f6871" }}>
+                        <p style={MUTED_TEXT_STYLE}>
                           {t("opportunities.preview.loading", {}, {
                             default: "Loading opportunity…",
                           })}
@@ -1356,151 +1507,148 @@ export default function OpportunityPreviewModal({
                           onSubmit={async () => {}}
                           readOnly
                           hideSaveButton
-                          hideUnansweredFields
                         />
                       ) : null}
 
                       {showLegacyProposalBlocks ? (
-                        <PreviewSection
+                        <ReviewCard
                           title={overviewLabel(
                             "title",
                             "Overview of Capstone Project Proposal",
                           )}
                         >
-                          <div style={{ display: "grid", gap: 16 }}>
-                            <TextBlock
-                              label={overviewLabel("relevance", "Relevance to CUSP")}
-                              value={proposal.relevance}
-                            />
-                            <TextBlock
+                          <ReviewField
+                            label={overviewLabel("relevance", "Relevance to CUSP")}
+                            value={proposal.relevance}
+                          />
+                          <ReviewField
+                            label={overviewLabel(
+                              "requiresSpecialResources",
+                              "Special resources required",
+                            )}
+                            value={yesNoLabel(proposal.requiresSpecialResources)}
+                          />
+                          <ReviewField
+                            label={overviewLabel(
+                              "specialResourcesNotes",
+                              "Special resources notes",
+                            )}
+                            value={proposal.specialResourcesNotes}
+                          />
+                          <ReviewField
+                            label={overviewLabel(
+                              "datasetProvision",
+                              "Dataset provision",
+                            )}
+                            value={formatMultiOptions(
+                              proposal.datasetProvision,
+                              "datasetProvisionOptions",
+                            )}
+                          />
+                          {proposal.datasetProvisionOther ? (
+                            <ReviewField
                               label={overviewLabel(
-                                "requiresSpecialResources",
-                                "Special resources required",
+                                "datasetProvisionOther",
+                                "Other datasets",
                               )}
-                              value={yesNoLabel(proposal.requiresSpecialResources)}
+                              value={proposal.datasetProvisionOther}
                             />
-                            <TextBlock
+                          ) : null}
+                          <ReviewField
+                            label={overviewLabel(
+                              "expectedDeliverables",
+                              "Expected deliverables",
+                            )}
+                            value={[
+                              formatMultiOptions(
+                                proposal.expectedDeliverables,
+                                "deliverableOptions",
+                              ),
+                              proposal.expectedDeliverablesOther,
+                            ]
+                              .filter(Boolean)
+                              .join(" — ")}
+                          />
+                          <ReviewField
+                            label={overviewLabel(
+                              "anticipatedObstacles",
+                              "Anticipated obstacles",
+                            )}
+                            value={proposal.anticipatedObstacles}
+                          />
+                          <ReviewField
+                            label={overviewLabel(
+                              "fieldResearchRequired",
+                              "Field research required",
+                            )}
+                            value={overviewOptionLabel(
+                              "fieldResearchOptions",
+                              proposal.fieldResearchRequired,
+                            )}
+                          />
+                          <ReviewField
+                            label={overviewLabel(
+                              "fieldResearchTravelDetails",
+                              "Field research details",
+                            )}
+                            value={proposal.fieldResearchTravelDetails}
+                          />
+                          <ReviewField
+                            label={overviewLabel(
+                              "requiredSoftware",
+                              "Required software",
+                            )}
+                            value={formatMultiOptions(
+                              proposal.requiredSoftware,
+                              "softwareOptions",
+                            )}
+                          />
+                          {proposal.requiredSoftwareOther ? (
+                            <ReviewField
                               label={overviewLabel(
-                                "specialResourcesNotes",
-                                "Special resources notes",
+                                "requiredSoftwareOther",
+                                "Other software",
                               )}
-                              value={proposal.specialResourcesNotes}
+                              value={proposal.requiredSoftwareOther}
                             />
-                            <TextBlock
+                          ) : null}
+                          <ReviewField
+                            label={overviewLabel(
+                              "requiredHardware",
+                              "Required hardware",
+                            )}
+                            value={formatMultiOptions(
+                              proposal.requiredHardware,
+                              "hardwareOptions",
+                            )}
+                          />
+                          {proposal.requiredHardwareOther ? (
+                            <ReviewField
                               label={overviewLabel(
-                                "datasetProvision",
-                                "Dataset provision",
+                                "requiredHardwareOther",
+                                "Other hardware",
                               )}
-                              value={formatMultiOptions(
-                                proposal.datasetProvision,
-                                "datasetProvisionOptions",
-                              )}
+                              value={proposal.requiredHardwareOther}
                             />
-                            {proposal.datasetProvisionOther ? (
-                              <TextBlock
-                                label={overviewLabel(
-                                  "datasetProvisionOther",
-                                  "Other datasets",
-                                )}
-                                value={proposal.datasetProvisionOther}
-                              />
-                            ) : null}
-                            <TextBlock
-                              label={overviewLabel(
-                                "expectedDeliverables",
-                                "Expected deliverables",
-                              )}
-                              value={[
-                                formatMultiOptions(
-                                  proposal.expectedDeliverables,
-                                  "deliverableOptions",
-                                ),
-                                proposal.expectedDeliverablesOther,
-                              ]
-                                .filter(Boolean)
-                                .join(" — ")}
-                            />
-                            <TextBlock
-                              label={overviewLabel(
-                                "anticipatedObstacles",
-                                "Anticipated obstacles",
-                              )}
-                              value={proposal.anticipatedObstacles}
-                            />
-                            <TextBlock
-                              label={overviewLabel(
-                                "fieldResearchRequired",
-                                "Field research required",
-                              )}
-                              value={overviewOptionLabel(
-                                "fieldResearchOptions",
-                                proposal.fieldResearchRequired,
-                              )}
-                            />
-                            <TextBlock
-                              label={overviewLabel(
-                                "fieldResearchTravelDetails",
-                                "Field research details",
-                              )}
-                              value={proposal.fieldResearchTravelDetails}
-                            />
-                            <TextBlock
-                              label={overviewLabel(
-                                "requiredSoftware",
-                                "Required software",
-                              )}
-                              value={formatMultiOptions(
-                                proposal.requiredSoftware,
-                                "softwareOptions",
-                              )}
-                            />
-                            {proposal.requiredSoftwareOther ? (
-                              <TextBlock
-                                label={overviewLabel(
-                                  "requiredSoftwareOther",
-                                  "Other software",
-                                )}
-                                value={proposal.requiredSoftwareOther}
-                              />
-                            ) : null}
-                            <TextBlock
-                              label={overviewLabel(
-                                "requiredHardware",
-                                "Required hardware",
-                              )}
-                              value={formatMultiOptions(
-                                proposal.requiredHardware,
-                                "hardwareOptions",
-                              )}
-                            />
-                            {proposal.requiredHardwareOther ? (
-                              <TextBlock
-                                label={overviewLabel(
-                                  "requiredHardwareOther",
-                                  "Other hardware",
-                                )}
-                                value={proposal.requiredHardwareOther}
-                              />
-                            ) : null}
-                            <TextBlock
-                              label={overviewLabel(
-                                "additionalNotes",
-                                "Additional notes",
-                              )}
-                              value={proposal.additionalNotes}
-                            />
-                            <TextBlock
-                              label={overviewLabel(
-                                "internshipInterest",
-                                "Internship interest",
-                              )}
-                              value={overviewOptionLabel(
-                                "internshipInterestOptions",
-                                proposal.internshipInterest,
-                              )}
-                            />
-                          </div>
-                        </PreviewSection>
+                          ) : null}
+                          <ReviewField
+                            label={overviewLabel(
+                              "additionalNotes",
+                              "Additional notes",
+                            )}
+                            value={proposal.additionalNotes}
+                          />
+                          <ReviewField
+                            label={overviewLabel(
+                              "internshipInterest",
+                              "Internship interest",
+                            )}
+                            value={overviewOptionLabel(
+                              "internshipInterestOptions",
+                              proposal.internshipInterest,
+                            )}
+                          />
+                        </ReviewCard>
                       ) : null}
                     </div>
                   ) : null}
@@ -1508,42 +1656,40 @@ export default function OpportunityPreviewModal({
                   {(opp.scopeDescription ||
                     opp.potentialActivities ||
                     opp.specificSkills) && (
-                    <PreviewSection
+                    <ReviewCard
                       title={tConnect(
                         "opportunityEditor.followUpQuestionnaire.title",
                         {},
                         { default: "Follow-up questionnaire" },
                       )}
                     >
-                      <div style={{ display: "grid", gap: 16 }}>
-                        <TextBlock
-                          label={tConnect(
-                            "opportunityEditor.finalScope.scopeDescription",
-                            {},
-                            { default: "Scope of the project" },
-                          )}
-                          value={opp.scopeDescription}
-                        />
-                        <TextBlock
-                          label={tConnect(
-                            "opportunityEditor.followUpQuestionnaire.potentialActivities",
-                            {},
-                            { default: "Potential activities" },
-                          )}
-                          value={opp.potentialActivities}
-                        />
-                        <TextBlock
-                          label={tConnect(
-                            "opportunityEditor.followUpQuestionnaire.specificSkills",
-                            {},
-                            {
-                              default: "Specific skills or qualifications",
-                            },
-                          )}
-                          value={opp.specificSkills}
-                        />
-                      </div>
-                    </PreviewSection>
+                      <ReviewField
+                        label={tConnect(
+                          "opportunityEditor.finalScope.scopeDescription",
+                          {},
+                          { default: "Scope of the project" },
+                        )}
+                        value={opp.scopeDescription}
+                      />
+                      <ReviewField
+                        label={tConnect(
+                          "opportunityEditor.followUpQuestionnaire.potentialActivities",
+                          {},
+                          { default: "Potential activities" },
+                        )}
+                        value={opp.potentialActivities}
+                      />
+                      <ReviewField
+                        label={tConnect(
+                          "opportunityEditor.followUpQuestionnaire.specificSkills",
+                          {},
+                          {
+                            default: "Specific skills or qualifications",
+                          },
+                        )}
+                        value={opp.specificSkills}
+                      />
+                    </ReviewCard>
                   )}
 
                   {opp.ratings?.length > 0 ? (
@@ -1561,8 +1707,8 @@ export default function OpportunityPreviewModal({
                               gap: 6,
                               padding: 14,
                               borderRadius: 10,
-                              background: "var(--MH-Theme-Tertiary-Lighter, #f4f8f7)",
-                              border: "1px solid var(--MH-Theme-Primary-Medium, #a3d6db)",
+                              background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+                              border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
                             }}
                           >
                             <div
@@ -1578,7 +1724,7 @@ export default function OpportunityPreviewModal({
                               </span>
                               <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                                 <Stars value={rating.opportunityRating} />
-                                <span style={{ color: "var(--MH-Theme-Neutrals-Dark, #5f6871)", fontSize: 12 }}>
+                                <span style={{ color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)", fontSize: 12 }}>
                                   {formatDate(rating.createdAt)}
                                 </span>
                               </div>
@@ -1602,60 +1748,37 @@ export default function OpportunityPreviewModal({
                         <OrganizationConnectCard org={opp.organization} />
                       ) : null}
                       {opp.mentor ? (
-                        <ConnectProfileCard user={user} profile={opp.mentor} />
+                        <PeopleProfileColumn>
+                          <ConnectProfileCard user={user} profile={opp.mentor} />
+                          <SponsorProfileOpportunityMeta
+                            opportunity={opp}
+                            profile={opp.mentor}
+                            t={t}
+                          />
+                        </PeopleProfileColumn>
                       ) : null}
                     </PeopleGrid>
-                  ) : (
+                  ) : null}
+
+                  {/* Meta without a mentor card (rare) — still show audit fields. */}
+                  {!opp.mentor ? (
+                    <SponsorProfileOpportunityMeta
+                      opportunity={opp}
+                      profile={null}
+                      t={t}
+                    />
+                  ) : null}
+
+                  {!opp.organization &&
+                  !opp.mentor &&
+                  !opp.guidelinesAcknowledged &&
+                  opp.sponsorIsMentor == null &&
+                  !opp.mentorNotes ? (
                     <p style={BODY_TEXT_STYLE}>
                       {t("opportunities.preview.peopleEmpty", {}, {
                         default: "No organization or mentor details are available yet.",
                       })}
                     </p>
-                  )}
-
-                  {(opp.guidelinesAcknowledged ||
-                    opp.sponsorIsMentor != null ||
-                    (!opp.sponsorIsMentor && opp.mentorNotes)) ? (
-                    <FieldsGrid>
-                      {opp.guidelinesAcknowledged ? (
-                        <MetaItem
-                          label={t("opportunities.preview.guidelinesAcknowledged", {}, {
-                            default: "Guidelines acknowledged",
-                          })}
-                          value={
-                            opp.guidelinesAcknowledgedAt
-                              ? formatDate(opp.guidelinesAcknowledgedAt)
-                              : t("opportunities.preview.yes", {}, { default: "Yes" })
-                          }
-                          valueStyle={{
-                            background: "var(--MH-Theme-Primary-Light, #def8fb)",
-                            border: "1px solid var(--MH-Theme-Primary-Medium, #a3d6db)",
-                          }}
-                        />
-                      ) : null}
-                      {opp.sponsorIsMentor != null ? (
-                        <MetaItem
-                          label={t("opportunities.preview.sponsorIsMentor", {}, {
-                            default: "Sponsor is mentor",
-                          })}
-                          value={
-                            opp.sponsorIsMentor
-                              ? t("opportunities.preview.yes", {}, { default: "Yes" })
-                              : t("opportunities.preview.no", {}, { default: "No" })
-                          }
-                        />
-                      ) : null}
-                      {!opp.sponsorIsMentor && opp.mentorNotes ? (
-                        <div style={{ gridColumn: "1 / -1", minWidth: 0 }}>
-                          <TextBlock
-                            label={t("opportunities.preview.mentorNotes", {}, {
-                              default: "Mentor notes",
-                            })}
-                            value={opp.mentorNotes}
-                          />
-                        </div>
-                      ) : null}
-                    </FieldsGrid>
                   ) : null}
                 </div>
               ) : null}

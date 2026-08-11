@@ -29,14 +29,28 @@ export const FieldStack = styled.div`
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
+  .field-hint {
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  }
+
   input,
   textarea {
     font-family: Inter, sans-serif;
     font-size: 14px;
-    border: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+    border: 2px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
     border-radius: 8px;
-    padding: 10px 12px;
+    padding: 9px 11px;
     color: var(--MH-Theme-Neutrals-Black, #171717);
+    box-sizing: border-box;
+
+    /* Color-only focus — no outer ring for overflow:hidden wizard/modal bodies. */
+    &:focus {
+      outline: none;
+      border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    }
   }
 
   textarea {
@@ -168,8 +182,12 @@ export const TypePicker = styled.div`
     gap: 6px;
   `
       : `
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 8px;
+
+    @media (max-width: 900px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 
     @media (max-width: 720px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -203,9 +221,14 @@ export const TypeTile = styled.button`
   cursor: pointer;
   transition: border-color 0.15s, background-color 0.15s, color 0.15s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: var(--MH-Theme-Primary-Dark, #336f8a);
     color: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
   }
 
   .type-icon {
@@ -238,77 +261,14 @@ export const TypeTile = styled.button`
 export const MetaHeader = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 16px;
   flex-shrink: 0;
-`;
-
-export const InlineTitle = styled.input`
-  width: 100%;
-  margin: 0;
-  padding: 4px 6px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  font-family: Lato, sans-serif;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--MH-Theme-Neutrals-Black, #171717);
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
-    font-weight: 500;
-  }
-
-  &:hover {
-    border-color: var(--MH-Theme-Neutrals-Light, #d3dae0);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
-    background: var(--MH-Theme-Neutrals-White, #fff);
-  }
-`;
-
-export const InlineDescription = styled.textarea`
-  width: 100%;
-  margin: 0;
-  padding: 4px 6px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  font-family: Inter, sans-serif;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-  resize: none;
-  min-height: 36px;
-  max-height: 72px;
-  overflow-y: auto;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
-  }
-
-  &:hover {
-    border-color: var(--MH-Theme-Neutrals-Light, #d3dae0);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
-    background: var(--MH-Theme-Neutrals-White, #fff);
-  }
 `;
 
 export const MetaActions = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 2px;
 `;
 
 export const PreviewPane = styled.div`

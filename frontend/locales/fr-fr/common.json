@@ -98,6 +98,15 @@
 	},
 	"definitionForm": {
 		"fieldRequired": "",
+		"file": {
+			"current": "",
+			"download": "",
+			"downloadVideo": "",
+			"previewVideo": "",
+			"readyToUpload": "",
+			"remove": "",
+			"replaceConfirm": ""
+		},
 		"fixMultipleFields": "",
 		"fixSingleField": "",
 		"invalidFormat": "",

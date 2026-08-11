@@ -24,7 +24,8 @@
 // Follow-up questionnaires (e.g. matching-round forms) should pass
 // `proposalEntryFormDefinitionId` so Save always writes
 // Opportunity.proposalData as [{ formDefinitionId, answer }], regardless of
-// each field's storage/column configuration.
+// each field's storage/column configuration. The only allowlisted exception
+// is the managed intro-video field (storage=column → Opportunity.videoFile).
 //
 // Imperative API (via ref): `save()` runs the same path as the submit button
 // so parents can drive Save from a top bar while `hideSaveButton` is set.
@@ -54,16 +55,103 @@ import {
   upsertProposalEntry,
 } from "../../../lib/opportunityProposalData";
 
+/** Managed Opportunity.videoFile column — never serialized into proposalData. */
+const INTRO_VIDEO_COLUMN = "videoFile";
+
+function isFileValue(v) {
+  return typeof File !== "undefined" && v instanceof File;
+}
+
+function isUnchangedMediaPayload(v) {
+  return (
+    v != null &&
+    typeof v === "object" &&
+    !isFileValue(v) &&
+    !Array.isArray(v) &&
+    typeof v.url === "string"
+  );
+}
+
+/**
+ * Exact managed intro-video field: column storage targeting Opportunity.videoFile.
+ * Only this allowlisted field may escape the proposalData isolation layer.
+ */
+export function isManagedIntroVideoField(field) {
+  if (!field || field.fieldType !== "file") return false;
+  if (field.storage !== "column") return false;
+  const col = field.storageColumn || field.name;
+  return col === INTRO_VIDEO_COLUMN;
+}
+
 /** Flat answer map from current form values, keyed by field.name. */
-function buildAnswerFromValues(values, fields) {
+function buildAnswerFromValues(values, fields, { omitManagedIntroVideo = false } = {}) {
   const answer = {};
   for (const field of fields || []) {
     if (!field?.name) continue;
+    if (omitManagedIntroVideo && isManagedIntroVideoField(field)) continue;
     if (values[field.name] !== undefined) {
       answer[field.name] = values[field.name];
     }
   }
   return answer;
+}
+
+/**
+ * Build a Keystone file upload/clear for Opportunity.videoFile, or null when
+ * the field is absent / unchanged.
+ */
+function buildManagedIntroVideoUpdate(values, fields) {
+  const field = (fields || []).find(isManagedIntroVideoField);
+  if (!field) return null;
+  const v = values[field.name];
+  if (isFileValue(v)) {
+    return { [INTRO_VIDEO_COLUMN]: { upload: v } };
+  }
+  if (v === null) {
+    return { [INTRO_VIDEO_COLUMN]: null };
+  }
+  if (isUnchangedMediaPayload(v) || v === undefined) {
+    return null;
+  }
+  return null;
+}
+
+/**
+ * JSON-safe proposalData stub so follow-up completion (which only inspects
+ * proposalData answers) counts a managed intro-video response. The real file
+ * still lives on Opportunity.videoFile — this is not the upload payload.
+ */
+function buildManagedIntroVideoAnswerMarker(values, fields) {
+  const field = (fields || []).find(isManagedIntroVideoField);
+  if (!field) return null;
+  const v = values[field.name];
+  if (isFileValue(v)) {
+    return {
+      [field.name]: {
+        present: true,
+        filename: v.name || null,
+        filesize: typeof v.size === "number" ? v.size : null,
+      },
+    };
+  }
+  if (isUnchangedMediaPayload(v)) {
+    return {
+      [field.name]: {
+        present: true,
+        filename: v.filename || v.name || null,
+        filesize:
+          typeof v.filesize === "number"
+            ? v.filesize
+            : typeof v.size === "number"
+              ? v.size
+              : null,
+        // url is intentionally omitted from proposalData; hydrate uses the
+        // Opportunity.videoFile column instead.
+      },
+    };
+  }
+  // Explicit remove → no marker (form can become incomplete again).
+  return null;
 }
 
 const Shell = styled.form`
@@ -132,6 +220,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     onSubmit,
     saveLabel = "Save",
     readOnly = false,
+    /** When readOnly: "inline" = 1/3 prompt + 2/3 answer for simple fields. */
+    readOnlyLayout = null,
     specialCardComponents = {},
     hideSaveButton = false,
     /** Read-only review: hide blank / unanswered fields and special cards. */
@@ -208,7 +298,21 @@ const DefinitionForm = forwardRef(function DefinitionForm(
       effectiveProposalEntryId
     );
     const bucketMirrors = {};
-    if (forceProposalEntry && flatAnswer) {
+    // Strip managed intro-video stubs from the flat answer before spreading
+    // onto the entity — the live Opportunity.videoFile column is the source
+    // of truth for hydrate / FileUpload display.
+    const flatForEntity =
+      forceProposalEntry && flatAnswer
+        ? { ...flatAnswer }
+        : flatAnswer;
+    if (forceProposalEntry && flatForEntity) {
+      for (const field of allFields) {
+        if (isManagedIntroVideoField(field) && field?.name) {
+          delete flatForEntity[field.name];
+        }
+      }
+    }
+    if (forceProposalEntry && flatForEntity) {
       for (const field of allFields) {
         if (field?.storage !== "json_bucket") continue;
         const bucket = field.storageBucket;
@@ -219,12 +323,12 @@ const DefinitionForm = forwardRef(function DefinitionForm(
           !Array.isArray(entity[bucket])
             ? entity[bucket]
             : {};
-        bucketMirrors[bucket] = { ...existing, ...flatAnswer };
+        bucketMirrors[bucket] = { ...existing, ...flatForEntity };
       }
     }
     return {
       ...entity,
-      ...(forceProposalEntry ? flatAnswer : null),
+      ...(forceProposalEntry ? flatForEntity : null),
       ...bucketMirrors,
       proposalData: flatAnswer,
     };
@@ -314,9 +418,20 @@ const DefinitionForm = forwardRef(function DefinitionForm(
 
     if (forceProposalEntry && effectiveProposalEntryId) {
       // Follow-up / forced entry: always persist under Opportunity.proposalData
-      // keyed by this form definition id — ignore per-field storage targets so
-      // we never write accidental top-level columns on the opportunity.
-      const answer = buildAnswerFromValues(values, allFields);
+      // keyed by this form definition id. The only allowlisted exception is the
+      // managed intro-video field (storage=column, storageColumn=videoFile),
+      // which writes Opportunity.videoFile via multipart upload.
+      const answer = buildAnswerFromValues(values, allFields, {
+        omitManagedIntroVideo: true,
+      });
+      const videoMarker = buildManagedIntroVideoAnswerMarker(
+        values,
+        allFields
+      );
+      if (videoMarker) {
+        Object.assign(answer, videoMarker);
+      }
+      const videoUpdate = buildManagedIntroVideoUpdate(values, allFields);
       updateInput = {
         self: {
           proposalData: upsertProposalEntry(
@@ -324,6 +439,7 @@ const DefinitionForm = forwardRef(function DefinitionForm(
             effectiveProposalEntryId,
             answer
           ),
+          ...(videoUpdate || {}),
         },
       };
     } else {
@@ -432,8 +548,11 @@ const DefinitionForm = forwardRef(function DefinitionForm(
           errors={errors}
           onFieldChange={handleFieldChange}
           disabled={readOnly || submitting}
+          readOnly={readOnly}
           specialCardComponents={specialCardComponents}
           hideUnansweredFields={hideUnansweredFields}
+          readOnlyLayout={readOnly ? readOnlyLayout : null}
+          quiet={readOnly}
         />
       ))}
       {!readOnly && !hideSaveButton && (

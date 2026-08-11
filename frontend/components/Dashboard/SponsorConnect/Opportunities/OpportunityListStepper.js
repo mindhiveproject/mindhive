@@ -143,6 +143,7 @@ export default function OpportunityListStepper({
   proposalData,
   rounds,
   networks = [],
+  videoFile = null,
   onStepClick,
 }) {
   const { t } = useTranslation("connect");
@@ -150,6 +151,7 @@ export default function OpportunityListStepper({
     status,
     proposalData,
     rounds,
+    videoFile,
   });
 
   const openLabel = t("myOpportunitiesList.stepper.openOpportunity", {}, {

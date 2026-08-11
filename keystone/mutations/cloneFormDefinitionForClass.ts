@@ -2,6 +2,11 @@
 // class-scoped draft the teacher can edit. Permission: class creator
 // (or canManageUsers). Does not require canManageForms.
 import uniqid from "uniqid";
+import {
+  INTRO_VIDEO_FIELD_NAME,
+  introVideoFieldOverrides,
+  isManagedIntroVideoSourceField,
+} from "./saveClassFormDefinition";
 
 async function assertClassCreator(context: any, classId: string) {
   const session = context.session;
@@ -142,6 +147,7 @@ async function cloneFormDefinitionForClass(
     query: "id",
   });
 
+  let introVideoCloned = false;
   for (const card of source.cards || []) {
     const newCard = await sudo.query.FormCard.createOne({
       data: {
@@ -159,6 +165,36 @@ async function cloneFormDefinitionForClass(
     });
 
     for (const f of card.fields || []) {
+      // Preserve the managed Opportunity.videoFile mapping when cloning
+      // the seeded intro-video field. Skip duplicates so class forms keep
+      // a single videoFile question.
+      if (isManagedIntroVideoSourceField(f)) {
+        if (introVideoCloned) continue;
+        introVideoCloned = true;
+        const videoOverrides = introVideoFieldOverrides();
+        await sudo.query.FormField.createOne({
+          data: {
+            card: { connect: { id: newCard.id } },
+            label: f.label || "",
+            labelI18n: f.labelI18n || null,
+            helperText: f.helperText || "",
+            helperTextI18n: f.helperTextI18n || null,
+            placeholder: f.placeholder || "",
+            placeholderI18n: f.placeholderI18n || null,
+            isRequired: !!f.isRequired,
+            order: f.order ?? 0,
+            defaultValue: f.defaultValue ?? null,
+            showWhen: f.showWhen || null,
+            jsonArraySchema: f.jsonArraySchema || null,
+            visibilityRoles: f.visibilityRoles || null,
+            ...videoOverrides,
+            name: INTRO_VIDEO_FIELD_NAME,
+          },
+          query: "id",
+        });
+        continue;
+      }
+
       await sudo.query.FormField.createOne({
         data: {
           card: { connect: { id: newCard.id } },

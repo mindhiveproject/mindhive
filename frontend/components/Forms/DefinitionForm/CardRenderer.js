@@ -12,6 +12,17 @@ import {
   rolesIntersect,
 } from "./visibility";
 
+/** Simple field types that support 1/3–2/3 inline review layout. */
+const INLINE_REVIEW_FIELD_TYPES = new Set([
+  "text",
+  "textarea",
+  "number",
+  "date",
+  "checkbox",
+  "select",
+  "multiselect",
+]);
+
 export default function CardRenderer({
   card,
   locale,
@@ -21,8 +32,11 @@ export default function CardRenderer({
   errors,
   onFieldChange,
   disabled,
+  readOnly = false,
   specialCardComponents,
   hideUnansweredFields = false,
+  readOnlyLayout = null,
+  quiet = false,
 }) {
   if (!isCardVisible(card, { viewerRoles, entityStatus })) return null;
 
@@ -35,7 +49,7 @@ export default function CardRenderer({
       return null;
     }
     return (
-      <Card>
+      <Card $quiet={quiet}>
         {cardTitle(card, locale) ? <h2>{cardTitle(card, locale)}</h2> : null}
         {cardDescription(card, locale) ? (
           <p className="card-description">{cardDescription(card, locale)}</p>
@@ -60,11 +74,15 @@ export default function CardRenderer({
   if (fields.length === 0) return null;
 
   return (
-    <Card>
+    <Card $quiet={quiet}>
       {title ? <h2>{title}</h2> : null}
       {desc ? <p className="card-description">{desc}</p> : null}
       {fields.map((field) => {
         const Component = getFieldComponent(field.fieldType);
+        const readOnlyInline =
+          Boolean(disabled) &&
+          readOnlyLayout === "inline" &&
+          INLINE_REVIEW_FIELD_TYPES.has(field.fieldType);
         return (
           <Component
             key={field.id}
@@ -74,6 +92,8 @@ export default function CardRenderer({
             error={errors[field.name]}
             locale={locale}
             disabled={disabled}
+            readOnly={readOnly}
+            readOnlyInline={readOnlyInline}
           />
         );
       })}

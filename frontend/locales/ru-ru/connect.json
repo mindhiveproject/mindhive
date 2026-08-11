@@ -1291,7 +1291,9 @@
 			"post": "",
 			"posting": "",
 			"postReply": "",
+			"sponsorLabel": "",
 			"sponsorPlaceholder": "",
+			"teacherLabel": "",
 			"teacherPlaceholder": ""
 		},
 		"delete": "",

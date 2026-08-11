@@ -14,6 +14,7 @@ import CopyButton from "../../../../DesignSystem/CopyButton";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import IconButton from "../../../../DesignSystem/IconButton";
+import MessageCard from "../../../../DesignSystem/MessageCard";
 import Modal from "../../../../DesignSystem/Modal";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import {
@@ -1941,7 +1942,6 @@ function MatchingRoundEditor({
     ];
 
     const buildClassLibraryMenuItems = (form) => {
-      const isPublished = form.status === "published";
       const isCreatedByMe = form.createdBy?.id === user?.id;
       const items = [];
 
@@ -1966,30 +1966,6 @@ function MatchingRoundEditor({
         ),
         onClick: () => openPreview(form.id),
       });
-
-      if (isPublished) {
-        items.push({
-          key: "add",
-          label: t(
-            "opportunities.matchingRound.formPicker.addToRound",
-            {},
-            { default: "Add to this round" },
-          ),
-          onClick: () => addFormToRound(form.id),
-        });
-      } else {
-        items.push({
-          key: "draftBlocked",
-          label: t(
-            "opportunities.matchingRound.formPicker.addToRoundDisabledDraft",
-            {},
-            {
-              default: "Publish the form before adding it to this round.",
-            },
-          ),
-          static: true,
-        });
-      }
 
       if (isCreatedByMe) {
         items.push({
@@ -2107,8 +2083,18 @@ function MatchingRoundEditor({
       );
     };
 
-    const renderFormRow = (form, { menuItems }) => {
+    const renderFormRow = (form, { menuItems, showAddToRound = false }) => {
       const selected = librarySelectedId === form.id;
+      const canAddToRound =
+        showAddToRound &&
+        form.status === "published" &&
+        canManageOpportunities &&
+        !libraryBusy;
+      const addToRoundLabel = t(
+        "opportunities.matchingRound.formPicker.addToRound",
+        {},
+        { default: "Add to this round" },
+      );
       const statusLabel =
         form.status === "draft"
           ? t(
@@ -2155,10 +2141,33 @@ function MatchingRoundEditor({
             </span>
           </button>
           <div
-            className="matchingRoundFormPickerLibraryRowMenu"
+            className="matchingRoundFormPickerLibraryRowActions"
             onClick={(event) => event.stopPropagation()}
             onKeyDown={(event) => event.stopPropagation()}
           >
+            {showAddToRound ? (
+              <Button
+                type="button"
+                variant="subtle"
+                className="matchingRoundFormPickerAddButton"
+                disabled={!canAddToRound}
+                title={
+                  form.status === "draft"
+                    ? t(
+                        "opportunities.matchingRound.formPicker.addToRoundDisabledDraft",
+                        {},
+                        {
+                          default:
+                            "Publish the form before adding it to this round.",
+                        },
+                      )
+                    : undefined
+                }
+                onClick={() => addFormToRound(form.id)}
+              >
+                {addToRoundLabel}
+              </Button>
+            ) : null}
             <DropdownMenu
               ariaLabel={t(
                 "opportunities.matchingRound.formPicker.libraryRowMenuAria",
@@ -2169,6 +2178,9 @@ function MatchingRoundEditor({
               triggerStyle={{
                 opacity: libraryBusy ? 0.5 : 1,
                 pointerEvents: libraryBusy ? "none" : "auto",
+                border: "none",
+                background:
+                  "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
               }}
             />
           </div>
@@ -2322,7 +2334,7 @@ function MatchingRoundEditor({
                     {},
                     {
                       default:
-                        "Shared forms for this class. Add them to this round from the menu. Only the creator can delete a form.",
+                        "Shared forms for this class. Use Add to this round to attach one. Only the creator can delete a form.",
                     },
                   )}
                 </p>
@@ -2373,6 +2385,7 @@ function MatchingRoundEditor({
                 {classLibraryForms.map((form) =>
                   renderFormRow(form, {
                     menuItems: buildClassLibraryMenuItems(form),
+                    showAddToRound: true,
                   }),
                 )}
               </ul>
@@ -2474,7 +2487,15 @@ function MatchingRoundEditor({
           </p>
         </div>
         ) : (
-          <div className="matchingRoundFormSummary">
+          <div
+            className={clsx("matchingRoundFormSummary", {
+              isNeutral: selectedFormDefinitionIds.length === 0,
+              isInformation:
+                selectedFormDefinitionIds.length > 0 && !sponsorFormsVisible,
+              isSuccess:
+                selectedFormDefinitionIds.length > 0 && sponsorFormsVisible,
+            })}
+          >
             <div className="matchingRoundFormSummaryCopy">
               <h4 className="matchingRoundFormSummaryTitle">
                 {t(
@@ -2514,6 +2535,7 @@ function MatchingRoundEditor({
               type="button"
               variant="outline"
               className="matchingRoundFormSummaryManage"
+              style={{ color: "inherit", borderColor: "currentColor" }}
               onClick={() => setFormsManagerOpen(true)}
             >
               {t(
@@ -2575,65 +2597,70 @@ function MatchingRoundEditor({
 
   const renderSelectedPanel = () => {
     const formCount = selectedFormDefinitionIds.length;
-    const summaryStatus =
-      formCount === 0
-        ? t("opportunities.matchingRound.formPicker.summaryNone", {}, {
-            default: "No questionnaires attached yet",
-          })
-        : [
-            formCount === 1
-              ? t(
-                  "opportunities.matchingRound.formPicker.summaryCountOne",
-                  {},
-                  { default: "1 form" },
-                )
-              : t(
-                  "opportunities.matchingRound.formPicker.summaryCount",
-                  { count: formCount },
-                  { default: "{{count}} forms" },
-                ),
-            sponsorFormsVisible
-              ? t(
-                  "opportunities.matchingRound.formPicker.visibilityVisible",
-                  {},
-                  { default: "Visible to sponsors" },
-                )
-              : t(
-                  "opportunities.matchingRound.formPicker.visibilityHidden",
-                  {},
-                  { default: "Hidden from sponsors" },
-                ),
-          ].join(" · ");
+    const openFollowUpForms = () => {
+      setFormsManagerOpen(true);
+      setActivePanel(PANELS.forms);
+    };
+
+    let formsMessageVariant = "neutral";
+    let formsMessage;
+    if (formCount === 0) {
+      formsMessageVariant = "neutral";
+      formsMessage = t(
+        "opportunities.matchingRound.formPicker.selectedTabNone",
+        {},
+        {
+          default:
+            "Add sponsor questionnaires in Follow-up when you’re ready.",
+        },
+      );
+    } else if (!sponsorFormsVisible) {
+      formsMessageVariant = "information";
+      formsMessage =
+        formCount === 1
+          ? t(
+              "opportunities.matchingRound.formPicker.selectedTabHiddenOne",
+              {},
+              {
+                default:
+                  "1 questionnaire selected — still hidden from sponsors. Open Follow-up to show it.",
+              },
+            )
+          : t(
+              "opportunities.matchingRound.formPicker.selectedTabHidden",
+              { count: formCount },
+              {
+                default:
+                  "{{count}} questionnaires selected — still hidden from sponsors. Open Follow-up to show them.",
+              },
+            );
+    } else {
+      formsMessageVariant = "success";
+      formsMessage =
+        formCount === 1
+          ? t(
+              "opportunities.matchingRound.formPicker.selectedTabVisibleOne",
+              {},
+              { default: "1 questionnaire is visible to sponsors." },
+            )
+          : t(
+              "opportunities.matchingRound.formPicker.selectedTabVisible",
+              { count: formCount },
+              {
+                default: "{{count}} questionnaires are visible to sponsors.",
+              },
+            );
+    }
 
     return (
       <div className="classTabMatchingRoundPanel">
-        <div className="matchingRoundFormSummary">
-          <div className="matchingRoundFormSummaryCopy">
-            <h4 className="matchingRoundFormSummaryTitle">
-              {t(
-                "opportunities.matchingRound.formPicker.summaryTitle",
-                {},
-                { default: "Sponsor questionnaires" },
-              )}
-            </h4>
-            <p className="matchingRoundFormSummaryStatus">{summaryStatus}</p>
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            className="matchingRoundFormSummaryManage"
-            onClick={() => {
-              setFormsManagerOpen(true);
-              setActivePanel(PANELS.forms);
-            }}
-          >
-            {t(
-              "opportunities.matchingRound.formPicker.summaryManage",
-              {},
-              { default: "Manage forms" },
-            )}
-          </Button>
-        </div>
+        <MessageCard
+          className="matchingRoundSelectedFormsMessage"
+          variant={formsMessageVariant}
+          message={formsMessage}
+          onClick={openFollowUpForms}
+          ariaLabel={formsMessage}
+        />
         <MatchingRoundOpportunitiesGrid
           opportunities={selectedNetworkOpportunities}
           selectedIds={selectedOpportunities}

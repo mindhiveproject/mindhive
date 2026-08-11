@@ -34,7 +34,14 @@ function rolesForViewer(connectRole) {
 
 const OpportunityFollowUpFormPanel = forwardRef(
   function OpportunityFollowUpFormPanel(
-    { opportunity, formMeta, readOnly = false, hideSaveButton = true },
+    {
+      opportunity,
+      formMeta,
+      readOnly = false,
+      hideSaveButton = true,
+      readOnlyLayout = null,
+      hideUnansweredFields = false,
+    },
     ref,
   ) {
     const router = useRouter();
@@ -92,10 +99,17 @@ const OpportunityFollowUpFormPanel = forwardRef(
         );
       }
 
+      // Managed intro-video field writes Opportunity.videoFile alongside
+      // questionnaire answers (multipart upload when a File is present).
+      const input = { proposalData };
+      if (Object.prototype.hasOwnProperty.call(self, "videoFile")) {
+        input.videoFile = self.videoFile;
+      }
+
       await updateOpportunity({
         variables: {
           id: opportunityId,
-          input: { proposalData },
+          input,
         },
       });
     };
@@ -124,7 +138,9 @@ const OpportunityFollowUpFormPanel = forwardRef(
         locale={router.locale}
         onSubmit={handleSubmit}
         readOnly={readOnly}
+        readOnlyLayout={readOnly ? readOnlyLayout : null}
         hideSaveButton={hideSaveButton}
+        hideUnansweredFields={hideUnansweredFields}
         saveLabel={t("opportunityEditor.save", {}, {
           default: "Save changes",
         })}

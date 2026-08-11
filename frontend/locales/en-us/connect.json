@@ -1291,7 +1291,9 @@
 			"post": "Post note",
 			"posting": "Posting…",
 			"postReply": "Post reply",
+			"sponsorLabel": "Your reply",
 			"sponsorPlaceholder": "Write a reply for the reviewers…",
+			"teacherLabel": "Your note",
 			"teacherPlaceholder": "Leave a note for the sponsor…"
 		},
 		"delete": "Delete",

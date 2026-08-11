@@ -108,6 +108,7 @@ export default function MatchingRoundFollowUpCompletionGrid({
         const complete = isProposalFormAnswerComplete(
           opportunity.proposalData,
           form.id,
+          opportunity.videoFile,
         );
         const savedAt = getProposalEntrySavedAt(
           opportunity.proposalData,
@@ -141,7 +142,11 @@ export default function MatchingRoundFollowUpCompletionGrid({
       let doneForOpp = 0;
       for (const form of formList) {
         if (
-          isProposalFormAnswerComplete(opportunity.proposalData, form.id)
+          isProposalFormAnswerComplete(
+            opportunity.proposalData,
+            form.id,
+            opportunity.videoFile,
+          )
         ) {
           doneForOpp += 1;
           doneResponses += 1;
@@ -212,6 +217,7 @@ export default function MatchingRoundFollowUpCompletionGrid({
       return (
         <StatusButton
           type="button"
+          data-follow-up-form-status
           className={clsx(complete ? "complete" : "incomplete")}
           title={label}
           aria-label={t(
@@ -544,6 +550,11 @@ export default function MatchingRoundFollowUpCompletionGrid({
             suppressCellFocus
             tooltipShowDelay={400}
             onRowClicked={(event) => {
+              if (
+                event?.event?.target?.closest?.('[data-follow-up-form-status]')
+              ) {
+                return;
+              }
               if (event?.data?.id) {
                 handlePreviewForm(event.data.id);
               }
