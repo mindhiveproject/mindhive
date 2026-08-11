@@ -1942,7 +1942,6 @@ function MatchingRoundEditor({
     ];
 
     const buildClassLibraryMenuItems = (form) => {
-      const isPublished = form.status === "published";
       const isCreatedByMe = form.createdBy?.id === user?.id;
       const items = [];
 
@@ -1967,30 +1966,6 @@ function MatchingRoundEditor({
         ),
         onClick: () => openPreview(form.id),
       });
-
-      if (isPublished) {
-        items.push({
-          key: "add",
-          label: t(
-            "opportunities.matchingRound.formPicker.addToRound",
-            {},
-            { default: "Add to this round" },
-          ),
-          onClick: () => addFormToRound(form.id),
-        });
-      } else {
-        items.push({
-          key: "draftBlocked",
-          label: t(
-            "opportunities.matchingRound.formPicker.addToRoundDisabledDraft",
-            {},
-            {
-              default: "Publish the form before adding it to this round.",
-            },
-          ),
-          static: true,
-        });
-      }
 
       if (isCreatedByMe) {
         items.push({
@@ -2108,8 +2083,18 @@ function MatchingRoundEditor({
       );
     };
 
-    const renderFormRow = (form, { menuItems }) => {
+    const renderFormRow = (form, { menuItems, showAddToRound = false }) => {
       const selected = librarySelectedId === form.id;
+      const canAddToRound =
+        showAddToRound &&
+        form.status === "published" &&
+        canManageOpportunities &&
+        !libraryBusy;
+      const addToRoundLabel = t(
+        "opportunities.matchingRound.formPicker.addToRound",
+        {},
+        { default: "Add to this round" },
+      );
       const statusLabel =
         form.status === "draft"
           ? t(
@@ -2156,10 +2141,33 @@ function MatchingRoundEditor({
             </span>
           </button>
           <div
-            className="matchingRoundFormPickerLibraryRowMenu"
+            className="matchingRoundFormPickerLibraryRowActions"
             onClick={(event) => event.stopPropagation()}
             onKeyDown={(event) => event.stopPropagation()}
           >
+            {showAddToRound ? (
+              <Button
+                type="button"
+                variant="subtle"
+                className="matchingRoundFormPickerAddButton"
+                disabled={!canAddToRound}
+                title={
+                  form.status === "draft"
+                    ? t(
+                        "opportunities.matchingRound.formPicker.addToRoundDisabledDraft",
+                        {},
+                        {
+                          default:
+                            "Publish the form before adding it to this round.",
+                        },
+                      )
+                    : undefined
+                }
+                onClick={() => addFormToRound(form.id)}
+              >
+                {addToRoundLabel}
+              </Button>
+            ) : null}
             <DropdownMenu
               ariaLabel={t(
                 "opportunities.matchingRound.formPicker.libraryRowMenuAria",
@@ -2170,6 +2178,9 @@ function MatchingRoundEditor({
               triggerStyle={{
                 opacity: libraryBusy ? 0.5 : 1,
                 pointerEvents: libraryBusy ? "none" : "auto",
+                border: "none",
+                background:
+                  "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
               }}
             />
           </div>
@@ -2323,7 +2334,7 @@ function MatchingRoundEditor({
                     {},
                     {
                       default:
-                        "Shared forms for this class. Add them to this round from the menu. Only the creator can delete a form.",
+                        "Shared forms for this class. Use Add to this round to attach one. Only the creator can delete a form.",
                     },
                   )}
                 </p>
@@ -2374,6 +2385,7 @@ function MatchingRoundEditor({
                 {classLibraryForms.map((form) =>
                   renderFormRow(form, {
                     menuItems: buildClassLibraryMenuItems(form),
+                    showAddToRound: true,
                   }),
                 )}
               </ul>

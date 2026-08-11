@@ -918,7 +918,7 @@
 				"inThisRound": "Selected in this round",
 				"libraryAllSelected": "All class forms are already selected for this round.",
 				"libraryEmpty": "No class forms yet. Create one or copy a public form below.",
-				"libraryHint": "Shared forms for this class. Add them to this round from the menu. Only the creator can delete a form.",
+				"libraryHint": "Shared forms for this class. Use Add to this round to attach one. Only the creator can delete a form.",
 				"libraryRowMenuAria": "Actions for {{title}}",
 				"libraryTitle": "Class form library",
 				"originCustom": "Custom",

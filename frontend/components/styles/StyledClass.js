@@ -1948,11 +1948,20 @@ const StyledClass = styled.div`
       cursor: not-allowed;
     }
 
-    .matchingRoundFormPickerLibraryRowMenu {
+    .matchingRoundFormPickerLibraryRowActions {
       flex-shrink: 0;
       padding: 6px 8px 6px 0;
       display: flex;
       align-items: center;
+      gap: 6px;
+    }
+
+    .matchingRoundFormPickerAddButton {
+      height: 30px !important;
+      padding: 4px 12px !important;
+      font-size: 12px !important;
+      line-height: 16px !important;
+      white-space: nowrap;
     }
 
     .matchingRoundFormPickerLibraryRowMain {
