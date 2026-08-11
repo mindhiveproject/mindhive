@@ -79,9 +79,9 @@ export const FieldShell = styled.label`
   input[type="date"],
   input[type="url"],
   textarea {
-    border: 1px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "var(--MH-Theme-Neutrals-Medium, #a1a1a1)")};
+    border: 2px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "var(--MH-Theme-Neutrals-Medium, #a1a1a1)")};
     border-radius: 8px;
-    padding: 10px 12px;
+    padding: 9px 11px;
     font-family: "Lato", sans-serif;
     font-size: 14px;
     color: var(--MH-Theme-Neutrals-Black, #171717);
@@ -90,9 +90,9 @@ export const FieldShell = styled.label`
     box-sizing: border-box;
     min-width: 0;
 
+    /* Color-only focus — outer outlines/shadows clip under overflow:hidden modals. */
     &:focus {
-      outline: 2px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "var(--MH-Theme-Primary-Dark, #336f8a)")};
-      outline-offset: -1px;
+      outline: none;
       border-color: ${({ $hasError }) => ($hasError ? "#c0392b" : "var(--MH-Theme-Primary-Dark, #336f8a)")};
     }
 

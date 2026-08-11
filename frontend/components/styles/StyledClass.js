@@ -311,7 +311,7 @@ const StyledClass = styled.div`
       padding: 8px;
       border: 1px solid #F3F3F3;
       border-radius: 8px;
-      background: #F3F3F3;
+      background: var(--MH-Theme-Neutrals-White, #FFFFFF);
       color: #3d3d3d;
 
       &.isCollapsed {

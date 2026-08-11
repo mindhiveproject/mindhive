@@ -214,12 +214,7 @@ const Compose = styled.form`
   display: grid;
   gap: 8px;
   flex-shrink: 0;
-  ${(p) =>
-    p.$panel
-      ? `
-    padding-top: 12px;
-  `
-      : ""}
+  padding-top: ${(p) => (p.$panel ? "12px" : "0")};
 
   label {
     margin: 0;
@@ -235,19 +230,21 @@ const Compose = styled.form`
     resize: vertical;
     min-height: ${(p) => (p.$panel ? "56px" : "72px")};
     max-height: 160px;
-    padding: 10px 12px;
+    padding: 9px 11px;
     border-radius: ${(p) => (p.$panel ? "8px" : "10px")};
-    border: none;
+    /* 2px border in both states — focus only changes color (no outer ring to clip). */
+    border: 2px solid transparent;
     font-family: Inter, sans-serif;
     font-size: 14px;
     line-height: 1.5;
     color: var(--MH-Theme-Neutrals-Black, #171717);
-    background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
+    background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
   }
 
+  textarea:focus,
   textarea:focus-visible {
-    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
-    outline-offset: 2px;
+    outline: none;
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
 `;
 

@@ -110,6 +110,11 @@ const FieldsGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 12px 16px;
   width: 100%;
+  min-width: 0;
+
+  > * {
+    min-width: 0;
+  }
 `;
 
 const FormStatusText = styled.p`
@@ -163,6 +168,7 @@ const ChatPane = styled.aside`
   padding-top: ${FROSTED_CHROME_PAD_TOP}px;
   padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
   padding-left: 16px;
+  padding-right: 16px;
   border-left: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
   background: transparent;
   box-sizing: border-box;
@@ -171,6 +177,7 @@ const ChatPane = styled.aside`
     border-left: none;
     border-top: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
     padding-left: 0;
+    padding-right: 0;
     padding-top: 16px;
     padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
   }
@@ -202,6 +209,26 @@ const PeopleGrid = styled.div`
 
   @media (max-width: 900px) {
     grid-template-columns: minmax(0, 1fr);
+  }
+`;
+
+/** Shared shell for mentor profile + opportunity meta (matches ConnectCard fill). */
+const PeopleProfileColumn = styled.div`
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  align-content: start;
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+  box-sizing: border-box;
+
+  /* Nested ConnectCard already sits in this shell — drop its own fill/padding. */
+  > article {
+    background: transparent;
+    padding: 0;
+    max-width: none;
   }
 `;
 
@@ -261,6 +288,7 @@ const META_ITEM_STYLE = {
   alignItems: "flex-start",
   gap: 6,
   minWidth: 0,
+  width: "100%",
 };
 
 const META_LABEL_STYLE = {
@@ -280,6 +308,9 @@ const META_VALUE_STYLE = {
   fontWeight: 400,
   lineHeight: 1.4,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
+  minWidth: 0,
+  overflowWrap: "anywhere",
+  whiteSpace: "pre-wrap",
 };
 
 const FieldItemShell = styled.div`
@@ -432,6 +463,84 @@ function MetaItem({ label, value, style, valueStyle }) {
         {value}
       </div>
     </div>
+  );
+}
+
+/**
+ * Guidelines / mentor-role fields for the sponsor profile on this opportunity.
+ * Attribution stays on the given profile so it remains clear when other people
+ * cards appear in the same People grid.
+ */
+function SponsorProfileOpportunityMeta({ opportunity, profile, t }) {
+  if (!opportunity) return null;
+
+  const profileName = displayName(profile);
+  const showGuidelines = !!opportunity.guidelinesAcknowledged;
+  const showSponsorIsMentor = opportunity.sponsorIsMentor != null;
+  const showMentorNotes =
+    !opportunity.sponsorIsMentor && !!opportunity.mentorNotes;
+
+  if (!showGuidelines && !showSponsorIsMentor && !showMentorNotes) {
+    return null;
+  }
+
+  const acknowledgedAt = formatDate(opportunity.guidelinesAcknowledgedAt);
+  let guidelinesValue = t("opportunities.preview.yes", {}, { default: "Yes" });
+  if (profileName && acknowledgedAt) {
+    guidelinesValue = t(
+      "opportunities.preview.guidelinesAcknowledgedByAt",
+      { name: profileName, date: acknowledgedAt },
+      { default: "{{name}} · {{date}}" },
+    );
+  } else if (profileName) {
+    guidelinesValue = t(
+      "opportunities.preview.guidelinesAcknowledgedBy",
+      { name: profileName },
+      { default: "{{name}}" },
+    );
+  } else if (acknowledgedAt) {
+    guidelinesValue = acknowledgedAt;
+  }
+
+  return (
+    <FieldsGrid>
+      {showGuidelines ? (
+        <MetaItem
+          style={{ gridColumn: "1 / -1" }}
+          label={t("opportunities.preview.guidelinesAcknowledged", {}, {
+            default: "Guidelines acknowledged",
+          })}
+          value={guidelinesValue}
+          valueStyle={{
+            background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+            border: "2px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+            fontWeight: 600,
+          }}
+        />
+      ) : null}
+      {showSponsorIsMentor ? (
+        <MetaItem
+          label={t("opportunities.preview.sponsorIsMentor", {}, {
+            default: "Sponsor is mentor",
+          })}
+          value={
+            opportunity.sponsorIsMentor
+              ? t("opportunities.preview.yes", {}, { default: "Yes" })
+              : t("opportunities.preview.no", {}, { default: "No" })
+          }
+        />
+      ) : null}
+      {showMentorNotes ? (
+        <div style={{ gridColumn: "1 / -1", minWidth: 0 }}>
+          <ReviewField
+            label={t("opportunities.preview.mentorNotes", {}, {
+              default: "Mentor notes",
+            })}
+            value={opportunity.mentorNotes}
+          />
+        </div>
+      ) : null}
+    </FieldsGrid>
   );
 }
 
@@ -1639,63 +1748,37 @@ export default function OpportunityPreviewModal({
                         <OrganizationConnectCard org={opp.organization} />
                       ) : null}
                       {opp.mentor ? (
-                        <ConnectProfileCard user={user} profile={opp.mentor} />
+                        <PeopleProfileColumn>
+                          <ConnectProfileCard user={user} profile={opp.mentor} />
+                          <SponsorProfileOpportunityMeta
+                            opportunity={opp}
+                            profile={opp.mentor}
+                            t={t}
+                          />
+                        </PeopleProfileColumn>
                       ) : null}
                     </PeopleGrid>
-                  ) : (
+                  ) : null}
+
+                  {/* Meta without a mentor card (rare) — still show audit fields. */}
+                  {!opp.mentor ? (
+                    <SponsorProfileOpportunityMeta
+                      opportunity={opp}
+                      profile={null}
+                      t={t}
+                    />
+                  ) : null}
+
+                  {!opp.organization &&
+                  !opp.mentor &&
+                  !opp.guidelinesAcknowledged &&
+                  opp.sponsorIsMentor == null &&
+                  !opp.mentorNotes ? (
                     <p style={BODY_TEXT_STYLE}>
                       {t("opportunities.preview.peopleEmpty", {}, {
                         default: "No organization or mentor details are available yet.",
                       })}
                     </p>
-                  )}
-
-                  {(opp.guidelinesAcknowledged ||
-                    opp.sponsorIsMentor != null ||
-                    (!opp.sponsorIsMentor && opp.mentorNotes)) ? (
-                    <FieldsGrid>
-                      {opp.guidelinesAcknowledged ? (
-                        <MetaItem
-                          label={t("opportunities.preview.guidelinesAcknowledged", {}, {
-                            default: "Guidelines acknowledged",
-                          })}
-                          value={
-                            opp.guidelinesAcknowledgedAt
-                              ? formatDate(opp.guidelinesAcknowledgedAt)
-                              : t("opportunities.preview.yes", {}, { default: "Yes" })
-                          }
-                          valueStyle={{
-                            background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
-                            border: "2px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-                            fontWeight: 600,
-                          }}
-                        />
-                      ) : null}
-                      {opp.sponsorIsMentor != null ? (
-                        <MetaItem
-                          label={t("opportunities.preview.sponsorIsMentor", {}, {
-                            default: "Sponsor is mentor",
-                          })}
-                          value={
-                            opp.sponsorIsMentor
-                              ? t("opportunities.preview.yes", {}, { default: "Yes" })
-                              : t("opportunities.preview.no", {}, { default: "No" })
-                          }
-                        />
-                      ) : null}
-                      {!opp.sponsorIsMentor && opp.mentorNotes ? (
-                        <div style={{ gridColumn: "1 / -1", minWidth: 0 }}>
-                          <ReviewCard>
-                            <ReviewField
-                              label={t("opportunities.preview.mentorNotes", {}, {
-                                default: "Mentor notes",
-                              })}
-                              value={opp.mentorNotes}
-                            />
-                          </ReviewCard>
-                        </div>
-                      ) : null}
-                    </FieldsGrid>
                   ) : null}
                 </div>
               ) : null}

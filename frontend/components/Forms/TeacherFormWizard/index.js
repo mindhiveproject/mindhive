@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import Button from "../../DesignSystem/Button";
 import Modal from "../../DesignSystem/Modal";
 import CardRenderer from "../DefinitionForm/CardRenderer";
+import { FieldShell } from "../DefinitionForm/styles";
 import {
   CLONE_FORM_DEFINITION_FOR_CLASS,
   SAVE_CLASS_FORM_DEFINITION,
@@ -23,8 +24,6 @@ import {
 import {
   EditorColumn,
   ErrorText,
-  InlineDescription,
-  InlineTitle,
   MetaActions,
   MetaHeader,
   PreviewPane,
@@ -356,38 +355,55 @@ export default function TeacherFormWizard({
         ) : (
           <>
             <MetaHeader>
-              <InlineTitle
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                aria-label={t(
-                  "opportunities.matchingRound.formWizard.nameLabel",
-                  {},
-                  { default: "What’s this form for?" },
-                )}
-                placeholder={t(
-                  "opportunities.matchingRound.formWizard.namePlaceholder",
-                  {},
-                  { default: "e.g. Sponsor visit follow-up" },
-                )}
-              />
-              <InlineDescription
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={2}
-                aria-label={t(
-                  "opportunities.matchingRound.formWizard.descriptionLabel",
-                  {},
-                  { default: "Optional note for sponsors" },
-                )}
-                placeholder={t(
-                  "opportunities.matchingRound.formWizard.descriptionPlaceholder",
-                  {},
-                  {
-                    default: "Shown at the top of the form. Keep it short.",
-                  },
-                )}
-              />
+              <FieldShell>
+                <div className="field-label-block">
+                  <span className="label-text">
+                    {t(
+                      "opportunities.matchingRound.formWizard.nameLabel",
+                      {},
+                      { default: "What’s this form for?" },
+                    )}
+                    <span className="required">*</span>
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  className="field-control-block"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder={t(
+                    "opportunities.matchingRound.formWizard.namePlaceholder",
+                    {},
+                    { default: "e.g. Sponsor visit follow-up" },
+                  )}
+                  disabled={saving}
+                />
+              </FieldShell>
+              <FieldShell>
+                <div className="field-label-block">
+                  <span className="label-text">
+                    {t(
+                      "opportunities.matchingRound.formWizard.descriptionLabel",
+                      {},
+                      { default: "Optional note for sponsors" },
+                    )}
+                  </span>
+                </div>
+                <textarea
+                  className="field-control-block"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={2}
+                  placeholder={t(
+                    "opportunities.matchingRound.formWizard.descriptionPlaceholder",
+                    {},
+                    {
+                      default: "Shown at the top of the form. Keep it short.",
+                    },
+                  )}
+                  disabled={saving}
+                />
+              </FieldShell>
               {!initialDefinitionId ? (
                 <MetaActions>
                   <Button
