@@ -14,6 +14,7 @@ import CopyButton from "../../../../DesignSystem/CopyButton";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import IconButton from "../../../../DesignSystem/IconButton";
+import MessageCard from "../../../../DesignSystem/MessageCard";
 import Modal from "../../../../DesignSystem/Modal";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import {
@@ -2575,65 +2576,70 @@ function MatchingRoundEditor({
 
   const renderSelectedPanel = () => {
     const formCount = selectedFormDefinitionIds.length;
-    const summaryStatus =
-      formCount === 0
-        ? t("opportunities.matchingRound.formPicker.summaryNone", {}, {
-            default: "No questionnaires attached yet",
-          })
-        : [
-            formCount === 1
-              ? t(
-                  "opportunities.matchingRound.formPicker.summaryCountOne",
-                  {},
-                  { default: "1 form" },
-                )
-              : t(
-                  "opportunities.matchingRound.formPicker.summaryCount",
-                  { count: formCount },
-                  { default: "{{count}} forms" },
-                ),
-            sponsorFormsVisible
-              ? t(
-                  "opportunities.matchingRound.formPicker.visibilityVisible",
-                  {},
-                  { default: "Visible to sponsors" },
-                )
-              : t(
-                  "opportunities.matchingRound.formPicker.visibilityHidden",
-                  {},
-                  { default: "Hidden from sponsors" },
-                ),
-          ].join(" · ");
+    const openFollowUpForms = () => {
+      setFormsManagerOpen(true);
+      setActivePanel(PANELS.forms);
+    };
+
+    let formsMessageVariant = "neutral";
+    let formsMessage;
+    if (formCount === 0) {
+      formsMessageVariant = "neutral";
+      formsMessage = t(
+        "opportunities.matchingRound.formPicker.selectedTabNone",
+        {},
+        {
+          default:
+            "Add sponsor questionnaires in Follow-up when you’re ready.",
+        },
+      );
+    } else if (!sponsorFormsVisible) {
+      formsMessageVariant = "information";
+      formsMessage =
+        formCount === 1
+          ? t(
+              "opportunities.matchingRound.formPicker.selectedTabHiddenOne",
+              {},
+              {
+                default:
+                  "1 questionnaire selected — still hidden from sponsors. Open Follow-up to show it.",
+              },
+            )
+          : t(
+              "opportunities.matchingRound.formPicker.selectedTabHidden",
+              { count: formCount },
+              {
+                default:
+                  "{{count}} questionnaires selected — still hidden from sponsors. Open Follow-up to show them.",
+              },
+            );
+    } else {
+      formsMessageVariant = "success";
+      formsMessage =
+        formCount === 1
+          ? t(
+              "opportunities.matchingRound.formPicker.selectedTabVisibleOne",
+              {},
+              { default: "1 questionnaire is visible to sponsors." },
+            )
+          : t(
+              "opportunities.matchingRound.formPicker.selectedTabVisible",
+              { count: formCount },
+              {
+                default: "{{count}} questionnaires are visible to sponsors.",
+              },
+            );
+    }
 
     return (
       <div className="classTabMatchingRoundPanel">
-        <div className="matchingRoundFormSummary">
-          <div className="matchingRoundFormSummaryCopy">
-            <h4 className="matchingRoundFormSummaryTitle">
-              {t(
-                "opportunities.matchingRound.formPicker.summaryTitle",
-                {},
-                { default: "Sponsor questionnaires" },
-              )}
-            </h4>
-            <p className="matchingRoundFormSummaryStatus">{summaryStatus}</p>
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            className="matchingRoundFormSummaryManage"
-            onClick={() => {
-              setFormsManagerOpen(true);
-              setActivePanel(PANELS.forms);
-            }}
-          >
-            {t(
-              "opportunities.matchingRound.formPicker.summaryManage",
-              {},
-              { default: "Manage forms" },
-            )}
-          </Button>
-        </div>
+        <MessageCard
+          className="matchingRoundSelectedFormsMessage"
+          variant={formsMessageVariant}
+          message={formsMessage}
+          onClick={openFollowUpForms}
+          ariaLabel={formsMessage}
+        />
         <MatchingRoundOpportunitiesGrid
           opportunities={selectedNetworkOpportunities}
           selectedIds={selectedOpportunities}

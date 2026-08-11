@@ -1533,6 +1533,11 @@ const StyledClass = styled.div`
       background: #ffffff;
     }
 
+    .matchingRoundSelectedFormsMessage {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
     .matchingRoundFormSummary {
       display: flex;
       flex-wrap: wrap;
@@ -1824,36 +1829,49 @@ const StyledClass = styled.div`
       align-items: center;
       gap: 8px 10px;
       padding: 8px 10px;
-      border: 1px solid #E6E6E6;
+      border: 1px solid var(--MH-Theme-Additional-Accent-Medium, #d8d3e7);
       border-radius: 8px;
-      background: #fafbfb;
+      background: var(--MH-Theme-Additional-Accent-Light, #f5f2ff);
       box-sizing: border-box;
     }
 
     .matchingRoundFormPickerLibraryVisibility.isVisible {
-      background: #e8f7ec;
-      border-color: #b7d9c4;
+      background: var(--MH-Theme-Neutrals-Light-Green, #f6f9f8);
+      border-color: #b8dcc8;
     }
 
     .matchingRoundFormPickerVisibilityStatus {
       font-size: 13px;
       font-weight: 600;
       line-height: 18px;
-      color: #5f6871;
+      color: var(--MH-Theme-Additional-Accent-Dark, #3f288f);
     }
 
     .matchingRoundFormPickerVisibilityStatus.isVisible {
-      color: #1c8f36;
+      color: var(--MH-Theme-Success-Dark, #1d6b3a);
     }
 
     .matchingRoundFormPickerVisibilityStatus.isHidden {
-      color: #8a6d3b;
+      color: var(--MH-Theme-Additional-Accent-Dark, #3f288f);
     }
 
     .matchingRoundFormPickerVisibilityButton {
       flex-shrink: 0;
       width: fit-content;
       max-width: 100%;
+    }
+
+    .matchingRoundFormPickerLibraryVisibility:not(.isVisible)
+      .matchingRoundFormPickerVisibilityButton:not(:disabled) {
+      background: var(--MH-Theme-Additional-Accent-Dark, #3f288f) !important;
+      color: var(--MH-Theme-Neutrals-White, #ffffff) !important;
+    }
+
+    .matchingRoundFormPickerLibraryVisibility.isVisible
+      .matchingRoundFormPickerVisibilityButton:not(:disabled) {
+      background: #F3F3F3 !important;
+      color: var(--MH-Theme-Neutrals-Dark, #6A6A6A) !important;
+      border: 1px solid var(--MH-Theme-Neutrals-Dark, #6A6A6A) !important;
     }
 
     .matchingRoundFormPickerLibraryActions {
