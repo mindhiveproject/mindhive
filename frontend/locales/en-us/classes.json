@@ -893,7 +893,7 @@
 			"formPicker": {
 				"addToRound": "Add to this round",
 				"addToRoundAlreadyIn": "Already in this round",
-				"addToRoundDisabledDraft": "Publish the form before adding it to this round.",
+				"addToRoundDisabledDraft": "",
 				"ariaLabel": "Sponsor questionnaires for this round",
 				"chipClass": "Class",
 				"chipCustom": "Custom",
@@ -918,7 +918,7 @@
 				"inThisRound": "Selected in this round",
 				"libraryAllSelected": "All class forms are already selected for this round.",
 				"libraryEmpty": "No class forms yet. Create one or copy a public form below.",
-				"libraryHint": "Shared forms for this class. Use Add to this round to attach one. Only the creator can delete a form.",
+				"libraryHint": "Shared forms for this class. Use Add to this round to attach one. Class teachers and mentors can manage these forms.",
 				"libraryRowMenuAria": "Actions for {{title}}",
 				"libraryTitle": "Class form library",
 				"originCustom": "Custom",
@@ -936,6 +936,13 @@
 				"publicEmpty": "No public forms are available yet.",
 				"publicHint": "MindHive templates you can attach as-is or copy into the class library to customize.",
 				"publicTitle": "Public forms",
+				"publishAddModal": {
+					"body": "“{{title}}” is still a draft. Publish it and add it to this matching round?",
+					"cancel": "Cancel",
+					"confirm": "Publish and add",
+					"failed": "Could not publish that form. Please try again.",
+					"title": "Publish this form?"
+				},
 				"removeFromRound": "Remove from this round",
 				"reuseNote": "If an opportunity already has answers for a selected form, those questions will not be asked again.",
 				"roundSetEmpty": "No questionnaires attached yet. Add forms from the class library below.",

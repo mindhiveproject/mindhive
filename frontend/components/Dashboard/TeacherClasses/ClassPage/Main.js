@@ -20,10 +20,14 @@ import RestrictedAccess from "../../../Global/Restricted";
 import StyledClass from "../../../styles/StyledClass";
 
 import Dashboard from "./Dashboard/Main";
-import { deriveRoles } from "../../Connect/useConnectRole";
 import { normalizeCurriculumType } from "../../../../lib/curriculumTypes";
 
-const NYU_CUSP_HIDDEN_TABS = new Set(["dashboard", "studies"]);
+const NYU_CUSP_HIDDEN_TABS = new Set([
+  "dashboard",
+  "studies",
+  "assignments",
+  "resources",
+]);
 
 const CLASS_PAGE_NAV_ITEMS = [
   {
@@ -76,8 +80,6 @@ const CLASS_PAGE_NAV_ITEMS = [
 export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
-  const { isTeacher, isSponsor } = deriveRoles(user);
-  const showOpportunitiesTab = isTeacher && isSponsor;
   const { action, board } = query || {};
 
   const { data } = useQuery(GET_CLASS, {
@@ -89,8 +91,8 @@ export default function ClassPage({ code, user, query }) {
     myclass?.settings?.curriculumType
   );
   const isNyuCusp = curriculumType === "nyu_cusp";
-  const defaultPage =
-    isNyuCusp && showOpportunitiesTab ? "opportunities" : "students";
+  const showOpportunitiesTab = isNyuCusp;
+  const defaultPage = isNyuCusp ? "opportunities" : "students";
   const page = query?.page || defaultPage;
   const filteredNavItems = CLASS_PAGE_NAV_ITEMS.filter((item) => {
     if (item.value === "opportunities" && !showOpportunitiesTab) return false;
@@ -98,7 +100,7 @@ export default function ClassPage({ code, user, query }) {
     return true;
   });
   const navItems =
-    isNyuCusp && showOpportunitiesTab
+    isNyuCusp
       ? [
           ...filteredNavItems.filter((item) => item.value === "opportunities"),
           ...filteredNavItems.filter((item) => item.value !== "opportunities"),

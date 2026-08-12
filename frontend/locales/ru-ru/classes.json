@@ -936,6 +936,13 @@
 				"publicEmpty": "",
 				"publicHint": "",
 				"publicTitle": "",
+				"publishAddModal": {
+					"body": "",
+					"cancel": "Отмена",
+					"confirm": "",
+					"failed": "",
+					"title": ""
+				},
 				"removeFromRound": "",
 				"reuseNote": "",
 				"roundSetEmpty": "",

@@ -936,6 +936,13 @@
 				"publicEmpty": "",
 				"publicHint": "",
 				"publicTitle": "",
+				"publishAddModal": {
+					"body": "",
+					"cancel": "",
+					"confirm": "",
+					"failed": "",
+					"title": ""
+				},
 				"removeFromRound": "",
 				"reuseNote": "",
 				"roundSetEmpty": "",

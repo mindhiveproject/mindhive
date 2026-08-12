@@ -430,7 +430,7 @@ const FORM_DEFINITION_ACCESS_QUERY = `
   id
   scope
   organization { members { id } }
-  class { creator { id } }
+  class { creator { id } mentors { id } }
   proposalBoard {
     templateForClasses { creator { id } }
     templatesForClass { creator { id } }
@@ -464,7 +464,12 @@ function projectBoardFormScopeFilter(me: string) {
 function classFormScopeFilter(me: string) {
   return {
     scope: { equals: "class" },
-    class: { creator: { id: { equals: me } } },
+    class: {
+      OR: [
+        { creator: { id: { equals: me } } },
+        { mentors: { some: { id: { equals: me } } } },
+      ],
+    },
   };
 }
 
@@ -494,7 +499,10 @@ export function canMutateFormDefinition(
   definition: {
     scope?: string | null;
     organization?: { members?: { id?: string | null }[] | null } | null;
-    class?: { creator?: { id?: string | null } | null } | null;
+    class?: {
+      creator?: { id?: string | null } | null;
+      mentors?: { id?: string | null }[] | null;
+    } | null;
     proposalBoard?: {
       templateForClasses?: { creator?: { id?: string | null } | null }[] | null;
       templatesForClass?: { creator?: { id?: string | null } | null }[] | null;
@@ -513,7 +521,10 @@ export function canMutateFormDefinition(
     );
   }
   if (definition.scope === "class") {
-    return definition.class?.creator?.id === me;
+    if (definition.class?.creator?.id === me) return true;
+    return (definition.class?.mentors || []).some(
+      (mentor) => mentor?.id === me
+    );
   }
   if (definition.scope === "project_board") {
     const classes = [

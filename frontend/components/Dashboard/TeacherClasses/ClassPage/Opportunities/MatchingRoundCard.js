@@ -1376,8 +1376,14 @@ function MatchingRoundEditor({
   };
 
   const handleDeleteClassForm = async (form) => {
-    if (!form?.id || !canManageOpportunities || deletingFormId) return;
-    if (form.createdBy?.id !== user?.id) return;
+    if (
+      !form?.id ||
+      !canManageOpportunities ||
+      !canManageClassForms ||
+      deletingFormId
+    ) {
+      return;
+    }
     const title = form.title || form.id;
     if (
       !window.confirm(
@@ -1581,6 +1587,12 @@ function MatchingRoundEditor({
       !loading &&
       roundId &&
       !isNew,
+  );
+
+  const canManageClassForms = Boolean(
+    user?.id &&
+      (myclass?.creator?.id === user.id ||
+        (myclass?.mentors || []).some((m) => m?.id === user.id)),
   );
 
   const toggleOpportunityInRound = useCallback(
@@ -1942,10 +1954,9 @@ function MatchingRoundEditor({
     ];
 
     const buildClassLibraryMenuItems = (form) => {
-      const isCreatedByMe = form.createdBy?.id === user?.id;
       const items = [];
 
-      if (canManageOpportunities) {
+      if (canManageOpportunities && canManageClassForms) {
         items.push({
           key: "edit",
           label: t(
@@ -1967,7 +1978,7 @@ function MatchingRoundEditor({
         onClick: () => openPreview(form.id),
       });
 
-      if (isCreatedByMe) {
+      if (canManageOpportunities && canManageClassForms) {
         items.push({
           key: "delete",
           label: t(
@@ -2325,7 +2336,7 @@ function MatchingRoundEditor({
                     {},
                     {
                       default:
-                        "Shared forms for this class. Use Add to this round to attach one. Only the creator can delete a form.",
+                        "Shared forms for this class. Use Add to this round to attach one. Class teachers and mentors can manage these forms.",
                     },
                   )}
                 </p>

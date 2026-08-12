@@ -936,6 +936,13 @@
 				"publicEmpty": "",
 				"publicHint": "",
 				"publicTitle": "",
+				"publishAddModal": {
+					"body": "",
+					"cancel": "取消",
+					"confirm": "",
+					"failed": "",
+					"title": ""
+				},
 				"removeFromRound": "",
 				"reuseNote": "",
 				"roundSetEmpty": "",
@@ -1085,7 +1092,7 @@
 			"selectedOpportunitiesEmpty": "",
 			"selectNetworkFirst": "",
 			"status": {
-				"archived": "",
+				"archived": "已归档",
 				"archivedHint": "",
 				"draft": "草稿",
 				"draftHint": "",
@@ -1209,7 +1216,7 @@
 		"sponsorSignupTitle": "",
 		"status": {
 			"accepted": "已接受",
-			"archived": "",
+			"archived": "已归档",
 			"closed": "",
 			"draft": "草稿",
 			"pendingReview": "",

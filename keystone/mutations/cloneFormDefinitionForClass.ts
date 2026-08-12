@@ -1,6 +1,6 @@
 // Clone a published global opportunity FormDefinition into a
-// class-scoped draft the teacher can edit. Permission: class creator
-// (or canManageUsers). Does not require canManageForms.
+// class-scoped draft the teacher or mentor can edit. Permission: class
+// creator or mentor (or canManageUsers). Does not require canManageForms.
 import uniqid from "uniqid";
 import {
   INTRO_VIDEO_FIELD_NAME,
@@ -8,14 +8,14 @@ import {
   isManagedIntroVideoSourceField,
 } from "./saveClassFormDefinition";
 
-async function assertClassCreator(context: any, classId: string) {
+async function assertClassTeacherOrMentor(context: any, classId: string) {
   const session = context.session;
   if (!session?.itemId) {
     throw new Error("You must be signed in to do this.");
   }
   const klass = await context.query.Class.findOne({
     where: { id: classId },
-    query: "id creator { id }",
+    query: "id creator { id } mentors { id }",
   });
   if (!klass) {
     throw new Error("Class not found.");
@@ -27,10 +27,16 @@ async function assertClassCreator(context: any, classId: string) {
   const isAdmin = (profile?.permissions || []).some(
     (p: any) => p.canManageUsers
   );
-  if (!isAdmin && klass.creator?.id !== session.itemId) {
-    throw new Error(
-      "Forbidden: only the class creator can clone forms for this class."
-    );
+  if (!isAdmin) {
+    const authorizedIds = [
+      klass.creator?.id,
+      ...(klass.mentors || []).map((m: any) => m?.id),
+    ].filter(Boolean);
+    if (!authorizedIds.includes(session.itemId)) {
+      throw new Error(
+        "Forbidden: only class creators or mentors can clone forms for this class."
+      );
+    }
   }
   return klass;
 }
@@ -52,7 +58,7 @@ async function cloneFormDefinitionForClass(
   if (!sourceId || !classId) {
     throw new Error("sourceId and classId are required.");
   }
-  await assertClassCreator(context, classId);
+  await assertClassTeacherOrMentor(context, classId);
   const sudo = context.sudo();
 
   const source = await context.query.FormDefinition.findOne({

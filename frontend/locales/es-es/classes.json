@@ -936,6 +936,13 @@
 				"publicEmpty": "",
 				"publicHint": "",
 				"publicTitle": "",
+				"publishAddModal": {
+					"body": "",
+					"cancel": "Cancelar",
+					"confirm": "",
+					"failed": "",
+					"title": ""
+				},
 				"removeFromRound": "",
 				"reuseNote": "",
 				"roundSetEmpty": "",
@@ -954,7 +961,7 @@
 				"summaryCount": "",
 				"summaryCountOne": "",
 				"summaryManage": "",
-				"summaryNone": "",
+				"summaryNone": "Aún no hay cuestionarios adjuntos",
 				"summaryTitle": "",
 				"title": "",
 				"visibilityHidden": "",
@@ -1035,7 +1042,7 @@
 					"name": "",
 					"organization": "Organización",
 					"review": "Revisar",
-					"sponsor": ""
+					"sponsor": "Patrocinador"
 				},
 				"dismissHighlight": "Descartar",
 				"remove": "Eliminar",
@@ -1107,9 +1114,9 @@
 		"networkOpportunitiesTitle": "",
 		"networkSection": {
 			"description": "",
-			"title": ""
+			"title": "Red de clase"
 		},
-		"networkSelectorLabel": "",
+		"networkSelectorLabel": "Red de clase",
 		"networkSelectorPlaceholder": "",
 		"noNetworks": "",
 		"noOpportunities": "",
@@ -1127,7 +1134,7 @@
 				"individual": "Individual",
 				"team": "Equipo"
 			},
-			"guidelinesAcknowledged": "",
+			"guidelinesAcknowledged": "Directrices reconocidas",
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
@@ -1148,8 +1155,8 @@
 			"organization": "Organización",
 			"peopleEmpty": "",
 			"preferences": "",
-			"projectCategory": "",
-			"proposalSectionTitle": "",
+			"projectCategory": "Categoría del Proyecto",
+			"proposalSectionTitle": "Propuesta",
 			"publicRating": "",
 			"ratingsTitle": "",
 			"requestsAppointment": "",
@@ -1183,10 +1190,10 @@
 				"peopleAndOrganization": ""
 			},
 			"tabsAria": "",
-			"teamSize": "",
+			"teamSize": "Tamaño del equipo",
 			"teamSizeSolo": "Solo",
 			"teamSizeTeam": "",
-			"timeCommitment": "",
+			"timeCommitment": "Compromiso de tiempo",
 			"verifiedOrganization": "",
 			"viewOrganization": "",
 			"yes": "Sí"
@@ -1199,7 +1206,7 @@
 			"flagLabel": "Bandera",
 			"lastUpdated": "",
 			"lastUpdatedLabel": "Última actualización",
-			"sponsorLabel": "",
+			"sponsorLabel": "Patrocinador",
 			"statusLabel": "Estado",
 			"teamOf": ""
 		},
