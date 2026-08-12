@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Icon, Popup } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { GET_PUBLIC_RESOURCES } from "../../Queries/Resource";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 export default function PublicResourcesList({
   query,
@@ -20,7 +21,7 @@ export default function PublicResourcesList({
   if (searchTerm) {
     resources = resources.filter(
       (r) =>
-        r.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stripHtml(r.title).toLowerCase().includes(searchTerm.toLowerCase()) ||
         r.description?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
@@ -37,7 +38,7 @@ export default function PublicResourcesList({
     <div className="board">
       {resources.map((resource) => (
         <div key={resource.id} className="card">
-          <h3 className="card-title">{resource.title}</h3>
+          <h3 className="card-title">{stripHtml(resource.title)}</h3>
           <p className="card-meta">{t("boardManagement.author")}: {resource.author?.username}</p>
           <p className="card-meta">
           {t("boardManagement.created")} {moment(resource.createdAt).format("MMMM D, YYYY")}

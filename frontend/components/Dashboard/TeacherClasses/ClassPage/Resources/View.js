@@ -7,6 +7,7 @@ import ReactHtmlParser from "react-html-parser";
 
 import { GET_RESOURCE } from "../../../../Queries/Resource";
 import StyledResource from "../../../../styles/StyledResource";
+import { stripHtml } from "../../../../Proposal/Card/Forms/utils";
 
 const SecondaryButton = styled.button`
   display: inline-flex;
@@ -101,7 +102,7 @@ export default function ViewResource({ resourceId, myclass, user, query }) {
           </PrimaryButton>
         </Link>
       </TopSection>
-      <h1>{resource?.title}</h1>
+      <h1>{stripHtml(resource?.title)}</h1>
       {resource?.description && <p>{resource.description}</p>}
       {resource?.content?.main && (
         <div>{ReactHtmlParser(resource.content.main)}</div>

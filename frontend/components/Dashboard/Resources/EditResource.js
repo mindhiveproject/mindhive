@@ -10,6 +10,7 @@ import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 import StyledResource from "../../styles/StyledResource";
 import Button from "../../DesignSystem/Button";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 export default function EditResource({
   selector,
@@ -38,7 +39,7 @@ export default function EditResource({
   const [updateResource] = useMutation(UPDATE_RESOURCE, {
     variables: {
       id,
-      title: inputs?.title,
+      title: stripHtml(inputs?.title),
       description: inputs?.description,
       content: inputs?.content,
       settings: inputs?.settings,

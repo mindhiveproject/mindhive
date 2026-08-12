@@ -17,6 +17,7 @@ import Status from "./Forms/Status";
 
 import CardType from "./Forms/Type";
 import Resources from "./Forms/Resources";
+import { stripHtml } from "./Forms/utils";
 
 function truncateHtml(html, wordLimit = 10) {
   const div = document.createElement("div");
@@ -283,7 +284,9 @@ export default function ProposalCard({
           {proposalCard?.resources && proposalCard?.resources.length ? (
             <div className="resourcePreview">
               {proposalCard?.resources.map((resource) => (
-                <div className="resourceBlockPreview">{resource?.title}</div>
+                <div className="resourceBlockPreview">
+                  {stripHtml(resource?.title)}
+                </div>
               ))}
             </div>
           ) : (
@@ -432,7 +435,7 @@ export default function ProposalCard({
                   <div className="resourcePreview">
                     {proposalCard?.resources.map((resource) => (
                       <div className="resourceBlockPreview">
-                        <h2>{resource?.title}</h2>
+                        <h2>{stripHtml(resource?.title)}</h2>
                         <div>{ReactHtmlParser(resource?.content?.main)}</div>
                       </div>
                     ))}
@@ -529,7 +532,7 @@ export default function ProposalCard({
                             <div className="resourceBlockPreview">
                               <div className="titleIcons">
                                 <div>
-                                  <h2>{resource?.title}</h2>
+                                  <h2>{stripHtml(resource?.title)}</h2>
                                 </div>
                                 <div>
                                   <a

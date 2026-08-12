@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import moment from "moment";
 
 import { GET_PUBLIC_AND_PROJECT_RESOURCES } from "../../Queries/Resource";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 import Link from "next/link";
 import DeleteResource from "./DeleteResource";
@@ -64,7 +65,7 @@ export default function ProjectResourcesList({ query, user, projectId }) {
             key={i}
           >
             <div key={i} className="item">
-              <p>{resource?.title}</p>
+              <p>{stripHtml(resource?.title)}</p>
               <p>{moment(resource?.createdAt).format("MMMM D, YYYY")}</p>
               <p>
                 {resource?.updatedAt &&
