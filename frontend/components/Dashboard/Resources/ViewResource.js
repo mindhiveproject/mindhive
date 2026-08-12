@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 import { GET_RESOURCE } from "../../Queries/Resource";
 import StyledResource from "../../styles/StyledResource";
 import Button from "../../DesignSystem/Button";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 export default function ViewResource({ query, user, goBack }) {
   const { id } = query;
@@ -25,8 +26,8 @@ export default function ViewResource({ query, user, goBack }) {
       >
         {t("boardManagement.goBackToResourceArea")}
       </Button>
-      <h1>{resource?.title}</h1>
-      <p>{resource?.description}</p>
+      <h1>{stripHtml(resource?.title)}</h1>
+      {resource?.description ? <p>{resource.description}</p> : null}
       <div>{ReactHtmlParser(resource?.content?.main)}</div>
     </StyledResource>
   );

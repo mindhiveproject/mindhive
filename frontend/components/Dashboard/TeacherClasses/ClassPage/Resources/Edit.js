@@ -9,6 +9,7 @@ import { UPDATE_RESOURCE, mergeResourceSettings } from "../../../../Mutations/Re
 import ResourceForm from "../../../Resources/ResourceForm";
 import StyledResource from "../../../../styles/StyledResource";
 import useForm from "../../../../../lib/useForm";
+import { stripHtml } from "../../../../Proposal/Card/Forms/utils";
 
 const SecondaryButton = styled.button`
   display: inline-flex;
@@ -100,7 +101,7 @@ export default function EditResource({ resourceId, myclass, user }) {
       await updateResource({
         variables: {
           id: resourceId,
-          title: inputs?.title,
+          title: stripHtml(inputs?.title),
           description: inputs?.description,
           content: inputs?.content,
           settings: inputs?.settings,

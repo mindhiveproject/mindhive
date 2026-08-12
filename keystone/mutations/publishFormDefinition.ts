@@ -50,7 +50,7 @@ async function publishFormDefinition(
         members { id }
       }
       classNetwork { id }
-      class { id creator { id } }
+      class { id creator { id } mentors { id } }
       proposalBoard {
         id
         templateForClasses { creator { id } }

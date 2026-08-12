@@ -893,7 +893,7 @@
 			"formPicker": {
 				"addToRound": "Add to this round",
 				"addToRoundAlreadyIn": "Already in this round",
-				"addToRoundDisabledDraft": "Publish the form before adding it to this round.",
+				"addToRoundDisabledDraft": "",
 				"ariaLabel": "Sponsor questionnaires for this round",
 				"chipClass": "Class",
 				"chipCustom": "Custom",
@@ -918,7 +918,7 @@
 				"inThisRound": "Selected in this round",
 				"libraryAllSelected": "All class forms are already selected for this round.",
 				"libraryEmpty": "No class forms yet. Create one or copy a public form below.",
-				"libraryHint": "Shared forms for this class. Use Add to this round to attach one. Only the creator can delete a form.",
+				"libraryHint": "Shared forms for this class. Use Add to this round to attach one. Class teachers and mentors can manage these forms.",
 				"libraryRowMenuAria": "Actions for {{title}}",
 				"libraryTitle": "Class form library",
 				"originCustom": "Custom",
@@ -936,6 +936,13 @@
 				"publicEmpty": "No public forms are available yet.",
 				"publicHint": "MindHive templates you can attach as-is or copy into the class library to customize.",
 				"publicTitle": "Public forms",
+				"publishAddModal": {
+					"body": "“{{title}}” is still a draft. Publish it and add it to this matching round?",
+					"cancel": "Cancel",
+					"confirm": "Publish and add",
+					"failed": "Could not publish that form. Please try again.",
+					"title": "Publish this form?"
+				},
 				"removeFromRound": "Remove from this round",
 				"reuseNote": "If an opportunity already has answers for a selected form, those questions will not be asked again.",
 				"roundSetEmpty": "No questionnaires attached yet. Add forms from the class library below.",
@@ -988,6 +995,10 @@
 					"saveFailed": "Could not save the form. Please try again.",
 					"titleRequired": "Give your form a title."
 				},
+				"helperTextAdd": "Add helper text",
+				"helperTextLabel": "Helper text",
+				"helperTextPlaceholder": "Extra guidance shown under the question",
+				"helperTextRemove": "Remove helper text",
 				"introVideoHelper": "Sponsors upload an MP4 or WebM (max 500MB). This updates the opportunity’s intro video — no storage settings to configure.",
 				"introVideoPromptPlaceholder": "e.g. Upload a short intro video for students",
 				"loading": "Loading form…",
@@ -1015,8 +1026,12 @@
 					"introVideo": "Intro video upload",
 					"introVideoHint": "Sponsors upload an MP4 / WebM intro video",
 					"introVideoTaken": "This form already has an intro video upload question.",
+					"links": "Links",
+					"linksHint": "Sponsors add multiple external links",
 					"media": "Media library item",
 					"mediaHint": "Sponsors share an image from their library",
+					"mediaList": "Media",
+					"mediaListHint": "Sponsors upload or pick multiple images/PDFs",
 					"open": "Open answer",
 					"openHint": "Short or long text",
 					"pickMany": "Pick many",
@@ -1216,6 +1231,18 @@
 			"preSelected": "Pre-selected",
 			"published": "Published",
 			"returned": "Returned"
+		},
+		"studentView": {
+			"emptyHint": "Your teacher hasn’t selected any opportunities for this round yet. Check back soon.",
+			"emptyTitle": "No opportunities yet",
+			"loading": "Loading opportunities…",
+			"meta": {
+				"dates": "{{from}} → {{to}}",
+				"sponsor": "Sponsor: {{name}}"
+			},
+			"notAvailableHint": "When your teacher opens the matching round, selected opportunities will appear here.",
+			"notAvailableTitle": "Opportunities aren’t available yet",
+			"openAria": "View opportunity: {{title}}"
 		}
 	},
 	"ownedItems": {

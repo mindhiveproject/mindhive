@@ -20,25 +20,25 @@
 	"auth": {
 		"checkYourMail": "Revisa tu correo electrónico",
 		"classNetworkInvite": {
-			"alreadyMember": "",
-			"bannerDescription": "",
-			"bannerTitle": "",
-			"invalidNetwork": "",
-			"joinFailed": "",
-			"joining": "",
-			"requestBannerDescription": "",
-			"requestBannerTitle": "",
-			"signUpAsSponsor": "",
-			"wrongRole": ""
+			"alreadyMember": "Ya eres miembro de esta red de clase.",
+			"bannerDescription": "Inicia sesión para unirte a esta red de clase.",
+			"bannerTitle": "Te estás uniendo a {{networkTitle}}",
+			"invalidNetwork": "El enlace de invitación a esta red de clase no es válido o ha expirado.",
+			"joinFailed": "No pudimos agregarte a esta red de clase. Por favor, inténtalo de nuevo.",
+			"joining": "Procesando la membresía de la red de clase\u0002",
+			"requestBannerDescription": "Inicia sesión para enviar una solicitud de membresía a esta red de clase.",
+			"requestBannerTitle": "Estás solicitando unirte a {{networkTitle}}",
+			"signUpAsSponsor": "Regístrate como patrocinador en su lugar",
+			"wrongRole": "La membresía de la red de clase está disponible para profesores, mentores, patrocinadores y científicos."
 		},
 		"email": "Correo electrónico",
 		"forgotPassword": "¿Olvidaste tu contraseña?",
 		"login": "Acceso",
 		"networkInvite": {
-			"acceptFailed": "",
-			"bannerDescription": "",
-			"bannerTitle": "",
-			"invalid": ""
+			"acceptFailed": "No pudimos aceptar esta invitación a la red. Verifica que estés usando la cuenta invitada.",
+			"bannerDescription": "Inicia sesión o regístrate con la dirección de correo electrónico invitada para aceptar.",
+			"bannerTitle": "Estás invitado a unirte a {{networkTitle}}",
+			"invalid": "Esta invitación a la red no es válida o ya no está pendiente."
 		},
 		"password": "Contraseña",
 		"requestReset": "Solicitar restablecimiento",
@@ -97,24 +97,56 @@
 		"science": "Puedes utilizar mis datos con fines científicos y/o educativos."
 	},
 	"definitionForm": {
-		"fieldRequired": "",
+		"fieldRequired": "Este campo es obligatorio.",
 		"file": {
-			"current": "",
-			"download": "",
-			"downloadVideo": "",
-			"previewVideo": "",
-			"readyToUpload": "",
-			"remove": "",
-			"replaceConfirm": ""
+			"current": "Actual:",
+			"download": "Descargar archivo",
+			"downloadVideo": "Descargar vídeo",
+			"previewVideo": "Vista previa del video",
+			"readyToUpload": "Listo para subir: {{name}} ({{size}})",
+			"remove": "Eliminar archivo",
+			"replaceConfirm": "¿Reemplazar el archivo actual? La carga existente se sobrescribirá cuando guardes."
 		},
-		"fixMultipleFields": "",
-		"fixSingleField": "",
-		"invalidFormat": "",
-		"max": "",
-		"maxLength": "",
-		"min": "",
-		"saveFailed": "",
-		"wordLimit": ""
+		"fixMultipleFields": "Por favor, corrige los siguientes campos: {{fields}}",
+		"fixSingleField": "Por favor, corrige {{field}} antes de guardar.",
+		"invalidFormat": "Formato inválido.",
+		"linkList": {
+			"add": "",
+			"comment": "",
+			"commentPlaceholder": "",
+			"empty": "",
+			"emptyReadonly": "",
+			"remove": "",
+			"title": "",
+			"titlePlaceholder": "",
+			"url": ""
+		},
+		"max": "Debe ser como máximo {{max}}.",
+		"maxLength": "Debe tener como máximo {{max}} caracteres.",
+		"mediaAssetList": {
+			"add": "",
+			"addFromLibrary": "",
+			"alreadyAdded": "",
+			"changeFromLibrary": "",
+			"comment": "",
+			"commentPlaceholder": "",
+			"empty": "",
+			"emptyReadonly": "",
+			"media": "",
+			"remove": "",
+			"replaceUpload": "",
+			"title": "",
+			"titlePlaceholder": "",
+			"upload": ""
+		},
+		"min": "Debe ser al menos {{min}}.",
+		"resourcePreview": {
+			"download": "",
+			"noDescription": "",
+			"openLink": ""
+		},
+		"saveFailed": "Error al guardar. Por favor, inténtelo de nuevo.",
+		"wordLimit": "Debe tener como máximo {{max}} palabras."
 	},
 	"discoverDescription": "Explora nuestra colección de estudios, tareas y encuestas creadas por estudiantes de secundaria del programa MindHive y científicos colaboradores. Participa en estudios o consulta las tareas y encuestas.",
 	"discoverHeader": "Descubra estudios, tareas y encuestas",
@@ -235,13 +267,13 @@
 		"title": "Configuración de idioma",
 		"updatePreferences": "Actualizar preferencias"
 	},
-	"loading": "",
+	"loading": "Cargando...",
 	"mediaLibrary": {
-		"choose": "",
-		"empty": "",
-		"title": "",
-		"upload": "",
-		"uploading": ""
+		"choose": "Elegir de la biblioteca de medios",
+		"empty": "Aún no hay medios. Sube una imagen para comenzar.",
+		"title": "Biblioteca de Medios",
+		"upload": "Subir imagen",
+		"uploading": "Subiendo..."
 	},
 	"members": {
 		"typeUsername": "Escriba el nombre de usuario"
@@ -257,24 +289,24 @@
 		"teachers": "Profesores"
 	},
 	"opportunities": {
-		"close": "",
+		"close": "Cerrar",
 		"columns": {
-			"actions": "",
-			"name": "",
-			"status": "",
-			"visibility": ""
+			"actions": "Acciones",
+			"name": "Nombre",
+			"status": "Estado",
+			"visibility": "Visibilidad"
 		},
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"loading": "",
-		"newButton": "",
-		"title": ""
+		"delete": "Eliminar",
+		"deleteConfirm": "¿Eliminar esta oportunidad? Esto no se puede deshacer.",
+		"edit": "Editar",
+		"empty": "Aún no has creado ninguna oportunidad. Haz clic en Nueva oportunidad para publicar tu primer proyecto para estudiantes.",
+		"loading": "Cargando...",
+		"newButton": "Nueva oportunidad",
+		"title": "Mis oportunidades"
 	},
 	"pagination": {
-		"goToPage": "",
-		"navLabel": "",
+		"goToPage": "Ir a la página {{page}}",
+		"navLabel": "Paginación",
 		"next": "Próximo",
 		"of": "de {{pageCount}}",
 		"page": "Página",
@@ -331,7 +363,7 @@
 		"proceedNextTask": "Proceder a la siguiente tarea",
 		"thankYou": "¡Gracias por participar en esta tarea!"
 	},
-	"remove": "",
+	"remove": "Eliminar",
 	"reviewed": {
 		"menuTitle": "Revisado"
 	},
@@ -361,10 +393,10 @@
 		"languages": "Idiomas",
 		"quickLinks": "Enlaces rápidos",
 		"sponsorSetup": {
-			"description": "",
-			"restoreButton": "",
-			"title": "",
-			"visibleNote": ""
+			"description": "Mostrar el perfil, la organización y los consejos de configuración de oportunidades en tu página de inicio.",
+			"restoreButton": "Mostrar consejos de configuración en Inicio",
+			"title": "Consejos de configuración para patrocinadores",
+			"visibleNote": "Los consejos de configuración están visibles actualmente en tu página de inicio."
 		},
 		"title": "Ajustes",
 		"username": "Nombre de usuario"
@@ -374,8 +406,8 @@
 		"loginHere": "Inicie sesión aquí",
 		"participant": "Participante del estudio",
 		"scientist": "Científico",
-		"sponsor": "",
-		"sponsorNyuCuspRecommendation": "",
+		"sponsor": "Patrocinador",
+		"sponsorNyuCuspRecommendation": "Opción recomendada para patrocinadores de NYU CUSP Capstone.",
 		"student": "Alumno",
 		"teacher": "Maestro",
 		"title": "¿Qué rol te describe mejor?"

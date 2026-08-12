@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { GET_PUBLIC_AND_PROJECT_RESOURCES } from "../../../../../../Queries/Resource";
 import { getPrimaryTemplateBoardId } from "../../../../../../lib/classTemplateBoards";
+import { stripHtml } from "../../../../../../Proposal/Card/Forms/utils";
 
 import { Dropdown, Icon } from "semantic-ui-react";
 
@@ -46,7 +47,7 @@ export default function Resources({ proposal, selectedResources }) {
               <div className="resourceBlockPreview">
                 <div className="titleIcons">
                   <div>
-                    <h2>{resource?.title}</h2>
+                    <h2>{stripHtml(resource?.title)}</h2>
                   </div>
                   <div>
                     <a

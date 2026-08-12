@@ -3,6 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 import moment from "moment";
 
 import { GET_PUBLIC_AND_CLASS_RESOURCES } from "../../Queries/Resource";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 import Link from "next/link";
 import DeleteResource from "./DeleteResource";
@@ -87,7 +88,7 @@ export default function ClassResourcesList({
             key={i}
           >
             <div key={i} className="item">
-              <p>{resource?.title}</p>
+              <p>{stripHtml(resource?.title)}</p>
               <p>{moment(resource?.createdAt).format("MMMM D, YYYY")}</p>
               <p>
                 {resource?.updatedAt &&

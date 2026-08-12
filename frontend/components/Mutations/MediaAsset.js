@@ -56,6 +56,7 @@ export const CREATE_MEDIA_ASSET = gql`
       }
       fileName
       title
+      description
     }
   }
 `;

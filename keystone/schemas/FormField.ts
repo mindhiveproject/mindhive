@@ -35,6 +35,8 @@ export const FIELD_TYPE_OPTIONS = [
   { label: "Task Selector", value: "task_selector" },
   { label: "Dual Textarea", value: "dual_textarea" },
   { label: "Media Library", value: "media_asset" },
+  { label: "Link List", value: "link_list" },
+  { label: "Media List", value: "media_asset_list" },
 ] as const;
 
 // Same idea for the card-type select — used by FormCard and the

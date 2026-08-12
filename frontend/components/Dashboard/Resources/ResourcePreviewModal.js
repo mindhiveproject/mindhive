@@ -6,6 +6,7 @@ import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { GET_RESOURCE } from "../../Queries/Resource";
 import StyledResource from "../../styles/StyledResource";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 export default function ResourcePreviewModal({ id, onClose }) {
   const { data, loading, error } = useQuery(GET_RESOURCE, {
@@ -56,7 +57,7 @@ export default function ResourcePreviewModal({ id, onClose }) {
           <button className="closeBtn" onClick={onClose}>
             <Icon name="close" />
           </button>
-          <h2>{resource.title}</h2>
+          <h2>{stripHtml(resource.title)}</h2>
           <p>
             <strong>{t("boardManagement.description")}:</strong>{" "}
             {resource.description || t("boardManagement.notAvailable")}

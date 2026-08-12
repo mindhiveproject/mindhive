@@ -92,7 +92,7 @@
 		"addStartingPoint": "Startpunt toevoegen",
 		"lockedMessage": "Deze studie is ingediend en kan niet worden bewerkt. Om wijzigingen aan te brengen, kunt u uw docent vragen de studie ongedaan te maken.",
 		"studyBuilderLocked": "Studiebouwer vergrendeld",
-		"undo": ""
+		"undo": "Ongedaan maken"
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -447,7 +447,7 @@
 				"classNetwork": "Klassennetwerk",
 				"empty": {
 					"classNetwork": "Voor dit project of onderzoek zijn geen datasets uit het netwerk van je klas toegestaan.",
-					"me": "",
+					"me": "Er zijn nog geen datasets voor u beschikbaar.",
 					"myClass": "Er zijn nog geen datasets van je lessen beschikbaar.",
 					"public": "Geen openbare datasets gevonden.",
 					"sharedWithMe": "Er zijn geen datasets met u gedeeld.",
@@ -455,13 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "Datasets voor dit project of onderzoek zijn afkomstig uit de lessen in uw klassennetwerk.",
-					"me": "",
+					"me": "Alle datasets die je kunt zien: geüpload, met je gedeeld, afkomstig van je klas, het klasnetwerk of openbaar.",
 					"myClass": "Datasets die gekoppeld zijn aan studies of projecten in je lessen.",
 					"public": "Datasets afkomstig van openbare tijdschriftsjablonen.",
 					"sharedWithMe": "Datasets die anderen met je hebben gedeeld als samenwerkingspartner.",
 					"uploaded": "Datasets die u hebt geüpload."
 				},
-				"me": "",
+				"me": "Mij",
 				"myClass": "Mijn klas",
 				"public": "Openbaar",
 				"sharedWithMe": "Gedeeld met mij",
@@ -1204,10 +1204,10 @@
 	"durationHelp": "Hoelang duurt het ongeveer voordat iemand {{taskType}} heeft voltooid?",
 	"engine": {
 		"copy": "KOPIËREN",
-		"cycleLinkPrevented": "",
-		"cycleLinkPreventedTitle": "",
+		"cycleLinkPrevented": "Deze verbinding zou een cirkelredenering zonder geldig einde creëren. Kies een andere route zodat het onderzoek kan worden afgerond.",
+		"cycleLinkPreventedTitle": "Circulatie niet toegestaan",
 		"save": "Redden",
-		"saveFailed": "",
+		"saveFailed": "De studie kon niet worden opgeslagen: {{message}}. Controleer uw verbinding en probeer het opnieuw.",
 		"studyLocked": "De studie is afgesloten"
 	},
 	"externalDataWarning": "De gegevens worden niet opgeslagen in de MH-database",
@@ -1338,7 +1338,7 @@
 	},
 	"menu": {
 		"addBlock": "Voeg een blok toe",
-		"settings": "",
+		"settings": "Instellingen",
 		"studyFlow": "Studiestroom",
 		"studySettings": "Studie-instellingen"
 	},
@@ -1376,31 +1376,31 @@
 	"newProject": {
 		"addCollaborators": "Medewerkers toevoegen",
 		"alreadyAssociatedTitle": "Er is al een project aan deze klasse gekoppeld",
-		"alreadyAssociatedTitleStudy": "",
+		"alreadyAssociatedTitleStudy": "Je hebt al een studie die bij deze cursus hoort.",
 		"alreadyAssociatedWarning": "Ga niet verder tenzij u weet wat u doet.",
-		"alreadyAssociatedWarningStudy": "",
+		"alreadyAssociatedWarningStudy": "Ga niet verder tenzij u weet wat u doet.",
 		"backToHome": "← Terug naar home",
 		"createProject": "Project maken",
-		"createStudy": "",
+		"createStudy": "Maak een studie aan",
 		"giveNameAlert": "Geef uw project een naam",
-		"giveNameAlertStudy": "",
+		"giveNameAlertStudy": "Geef je onderzoek een naam",
 		"goBackHome": "Ga terug naar huis",
 		"nameMessage": "Geef je project een naam. Dit is niet de titel van de studie, maar de naam die je aan je werkruimte wilt geven.",
-		"nameMessageStudy": "",
+		"nameMessageStudy": "Geef je studiekamer een naam. Zo wil je je werkplek noemen.",
 		"namePlaceholder": "De naam van mijn project is",
-		"namePlaceholderStudy": "",
+		"namePlaceholderStudy": "De naam van mijn onderzoek is",
 		"nameYourProject": "Geef uw project een naam",
-		"nameYourStudy": "",
+		"nameYourStudy": "Geef je onderzoek een naam.",
 		"noTemplatesSubtitle": "Om een ​​project te starten, heb je een projectbordsjabloon nodig. Het is mogelijk dat je docent geen projectbordsjabloon aan deze les heeft gekoppeld.",
 		"noTemplatesTitle": "Er zijn geen projectbordsjablonen in de klas",
 		"selectClass": "Selecteer de klas",
-		"selectTemplate": "",
-		"selectTemplateAlert": "",
-		"selectTemplateHelp": "",
-		"templateClassLabel": "",
-		"templateOptionLabel": "",
+		"selectTemplate": "Selecteer Sjabloon",
+		"selectTemplateAlert": "Kies het voorstelsjabloon.",
+		"selectTemplateHelp": "Kies een sjabloon voor een projectbord dat je docent beschikbaar heeft gesteld om te kopiëren.",
+		"templateClassLabel": "Klasse: {{className}}",
+		"templateOptionLabel": "{{templateName}} — {{className}}",
 		"untitledProject": "Ongetiteld project",
-		"untitledStudy": ""
+		"untitledStudy": "Naamloze studie"
 	},
 	"notes": {
 		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
@@ -1892,8 +1892,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (reeds toegevoegd)",
 			"alreadyAddedTooltip": "Dit controlepunt staat al op het bord.",
-			"buildFormSubtitle": "",
-			"buildFormTitle": "",
+			"buildFormSubtitle": "Dit is van toepassing op dit sjabloonbord. Voeg hieronder kaarten en velden toe en publiceer. Studentenklonen zullen de inhoud overnemen die je publiceert.",
+			"buildFormTitle": "Bouw het beoordelingsformulier: \"{{title}}\"",
 			"cancel": "Annuleren",
 			"categories": {
 				"action": "Actiekaart",
@@ -1914,8 +1914,8 @@
 			"customPreview": "Hiermee wordt een aangepaste beoordelingsstap met een eigen mijlpaallabel aangemaakt.",
 			"editForm": "Formulier bewerken",
 			"editFormHint": "Het bewerken van formulieren is elders mogelijk.",
-			"finishBuilding": "",
-			"finishDraftConfirm": "",
+			"finishBuilding": "Finish",
+			"finishDraftConfirm": "Dit beoordelingsformulier is nog een concept. Studenten zullen het tijdens de beoordeling niet zien totdat u het publiceert. Toch afmaken?",
 			"formTemplate": {
 				"blank": "Leeg formulier",
 				"defaultLabel": "{{label}}",
@@ -1931,22 +1931,22 @@
 			"previewLabel": "Voorbeeld van het beoordelingsformulier",
 			"previewLoading": "Voorbeeld laden...",
 			"proposalPreview": "Voegt een standaard voorstelkaart toe met inhoudsvelden voor studenten.",
-			"publish": "",
-			"publishing": "",
+			"publish": "Publiceren…",
+			"publishing": "Uitgeverij…",
 			"publishModal": {
-				"body": "",
-				"cancel": "",
-				"changelogLabel": "",
-				"changelogPlaceholder": "",
-				"confirm": "",
-				"confirmBusy": "",
-				"errorHeading": "",
-				"siblingWarning": "",
-				"title": ""
+				"body": "De renderer zal deze versie onmiddellijk op scope {{scope}} gaan serveren.",
+				"cancel": "Annuleren",
+				"changelogLabel": "Wat is er veranderd? (optioneel)",
+				"changelogPlaceholder": "bijv. Veld voor IRB-nummer toegevoegd; projectomschrijvingkaart opnieuw geordend.",
+				"confirm": "Bevestig publicatie",
+				"confirmBusy": "Uitgeverij…",
+				"errorHeading": "Publicatie mislukt:",
+				"siblingWarning": "Let op: de momenteel actieve versie v{{version}} wordt automatisch gearchiveerd, zodat er per scope slechts één gepubliceerde versie actief blijft.",
+				"title": "Publiceren \"{{title}}\" v{{version}}?"
 			},
 			"scratchPreview": "Hiermee wordt een conceptbeoordelingsformulier aangemaakt met één lege kaart, gekoppeld aan deze stap. Publiceer het formulier in het beheerscherm voordat het ter beoordeling verschijnt.",
-			"statusDraft": "",
-			"statusPublished": "",
+			"statusDraft": "Voorlopige versie",
+			"statusPublished": "Gepubliceerd",
 			"steps": {
 				"cardType": "Kaarttype",
 				"checkpoint": "Controlepost",
@@ -1976,8 +1976,8 @@
 		"sectionTitlePlaceholder": "Voer sectietitel in"
 	},
 	"selector": {
-		"addBlockAria": "",
-		"addFavoriteAria": "",
+		"addBlockAria": "Blok toevoegen",
+		"addFavoriteAria": "Toevoegen aan favorieten",
 		"basicBlocks": {
 			"description": "Wil je aangepaste instructies aan je deelnemers geven of een link en/of video in je studieprocedure insluiten? Selecteer en bewerk een basisblok.",
 			"title": "Basisblokken"
@@ -1987,9 +1987,9 @@
 			"myFavorite": "Mijn favoriet",
 			"ownedByMe": "In mijn bezit"
 		},
-		"infoAria": "",
-		"previewAria": "",
-		"removeFavoriteAria": "",
+		"infoAria": "Blokinformatie",
+		"previewAria": "Voorbeeldblok",
+		"removeFavoriteAria": "Verwijderen uit favorieten",
 		"searchPlaceholder": "🔍 Zoeken",
 		"studyDesign": {
 			"betweenSubjects": "Tussen-onderwerpen-ontwerp",
@@ -2000,8 +2000,8 @@
 		},
 		"surveys": {
 			"buildOwn": "Vind je geen tool om een ​​van je studieobjecten te meten? Bouw er dan zelf een met de Survey Builder en hulp van je docent:",
-			"buildOwnLine1": "",
-			"buildOwnLine2": "",
+			"buildOwnLine1": "Kunt u geen instrument vinden om een ​​van uw onderzoeksconstructen te meten?",
+			"buildOwnLine2": "Maak je eigen enquête met behulp van de enquêtebouwer en de hulp van de docent.",
 			"description": "Wilt u de houding, ervaringen of meningen van deelnemers meten via zelfrapportage? Kies uit deze database met gevalideerde enquêtes.",
 			"title": "Enquêtes"
 		},
@@ -2011,9 +2011,9 @@
 		},
 		"templates": {
 			"description": "Wil je niet helemaal opnieuw beginnen? Selecteer en bewerk een vooraf gemaakt onderzoeksontwerp met behulp van een van de sjablonen in deze database.",
-			"openStudyAria": "",
+			"openStudyAria": "Open studie",
 			"title": "Sjablonen",
-			"tryThisFlow": ""
+			"tryThisFlow": "Probeer deze workflow."
 		}
 	},
 	"selectWhichToClone": "Selecteer hieronder welke {{taskType}} u wilt klonen.",
@@ -2097,21 +2097,21 @@
 	"studyDescription": "Een studie is een onderzoeksproject met een onderzoeksvraag. Het kan bestaan ​​uit meerdere taken en/of enquêtes.",
 	"studyFlow": {
 		"empty": {
-			"description": "",
-			"title": ""
+			"description": "Voeg blokken toe aan het canvas en verbind ze met elkaar om te zien hoe deelnemers zich door je onderzoek bewegen.",
+			"title": "Er is nog geen studiestroom beschikbaar."
 		},
 		"noTasks": {
-			"description": "",
-			"title": ""
+			"description": "Koppel taken of enquêtes aan je studiestroom om ze hier te bekijken.",
+			"title": "Geen taken in deze workflow"
 		},
 		"preview": {
-			"branch": "",
-			"collapseAria": "",
-			"defaultPath": "",
-			"expandAria": "",
-			"legend": "",
-			"probabilityAria": "",
-			"taskCount": ""
+			"branch": "Vestiging: {{name}}",
+			"collapseAria": "Inklappad {{name}}",
+			"defaultPath": "Standaardpad",
+			"expandAria": "Pad uitbreiden {{name}}",
+			"legend": "Gesimuleerd met meer dan 100 deelnemersruns. De routes zijn gesorteerd op basis van hoe vaak ze voorkomen.",
+			"probabilityAria": "{{frequency}} procent van de gesimuleerde runs",
+			"taskCount": "{{count}} taken"
 		}
 	},
 	"studyManager": {
@@ -2203,8 +2203,8 @@
 		"type": "Type",
 		"variableName": "Variabelenaam",
 		"variableNamePlaceholder": "bijv. antwoord_1 (gebruikt om het antwoord op te slaan)",
-		"variableNameStoredAs": "",
-		"variableNameStoredAsFallback": "",
+		"variableNameStoredAs": "Opgeslagen als: {{keys}}",
+		"variableNameStoredAsFallback": "Opgeslagen als: automatisch gegenereerd vanuit de header indien leeg gelaten.",
 		"vas": "Visuele schaal"
 	},
 	"surveyDescription": "In een enquête worden deelnemers vragen gesteld over zichzelf, over hoe ze zich gedragen en hoe ze zich voelen.",
@@ -2353,38 +2353,38 @@
 		"addMore": "Voeg meer toe"
 	},
 	"version": {
-		"actionsFor": "",
-		"autoName": "",
-		"cancel": "",
-		"cannotDeleteCollectionVersion": "",
-		"cannotDeleteFavorite": "",
-		"cannotDeleteWithData": "",
-		"confirmChangeCollectionVersion": "",
+		"actionsFor": "Acties voor {{versionName}}",
+		"autoName": "Versie {{number}}",
+		"cancel": "Annuleren",
+		"cannotDeleteCollectionVersion": "Deze versie wordt gebruikt voor gegevensverzameling en kan niet worden verwijderd. Kies eerst een andere versie voor gegevensverzameling.",
+		"cannotDeleteFavorite": "Deze versie is gemarkeerd als belangrijk en kan niet worden verwijderd. Verwijder eerst het sterretje.",
+		"cannotDeleteWithData": "Deze versie kan niet worden verwijderd omdat er {{count}} verzamelde records naar verwijzen.",
+		"confirmChangeCollectionVersion": "De gegevensverzameling is al gestart. Als u de versie van de gegevensverzameling wijzigt, worden de vanaf nu verzamelde records met deze versie gelabeld. Doorgaan?",
 		"confirmDelete": "Weet u zeker dat u {{versionName}} wilt verwijderen?",
-		"confirmLoadUnsaved": "",
+		"confirmLoadUnsaved": "Je hebt niet-opgeslagen wijzigingen op het canvas. Deze worden vervangen door deze versie. Sla de studie eerst op als je de wijzigingen wilt behouden. Deze versie toch laden?",
 		"createdOn": "Gemaakt op",
-		"dataCollectionBadge": "",
-		"dataCollectionVersion": "",
+		"dataCollectionBadge": "Gegevensverzameling",
+		"dataCollectionVersion": "Gegevensverzamelingsversie",
 		"delete": "Verwijderen",
 		"description": "Beschrijving",
 		"enterVersionName": "Voer de versienaam in",
-		"headerNote": "",
-		"invalidDiagram": "",
+		"headerNote": "Elke keer dat u een gewijzigd onderzoeksontwerp opslaat, wordt dit hier als een versie bewaard.",
+		"invalidDiagram": "Het diagram van deze versie kon niet worden geladen.",
 		"load": "Laden",
-		"loadedNote": "",
-		"loading": "",
-		"markAsImportant": "",
-		"missingDiagram": "",
+		"loadedNote": "{{versionName}} staat op het canvas, maar is nog niet opgeslagen. Sla de studie op om deze te behouden.",
+		"loading": "Versies laden...",
+		"markAsImportant": "Markeer als belangrijk",
+		"missingDiagram": "Deze versie heeft geen opgeslagen diagram om te laden.",
 		"name": "Naam",
-		"noVersionSaved": "",
-		"onlyImportant": "",
-		"removeFromImportant": "",
-		"rename": "",
-		"renameVersion": "",
-		"save": "",
+		"noVersionSaved": "Er is nog geen versie opgeslagen. Sla de studie op om de eerste versie van uw ontwerp te bewaren.",
+		"onlyImportant": "Alleen belangrijk ({{count}})",
+		"removeFromImportant": "Verwijderen uit belangrijke versies",
+		"rename": "Hernoemen",
+		"renameVersion": "Hernoem versie",
+		"save": "Redden",
 		"title": "Studieversie",
-		"unknownVersion": "",
-		"useForDataCollection": ""
+		"unknownVersion": "Een versie die niet langer beschikbaar is.",
+		"useForDataCollection": "Gebruik voor gegevensverzameling"
 	},
 	"videoNotSupported": "Video wordt niet ondersteund",
 	"viewer": {

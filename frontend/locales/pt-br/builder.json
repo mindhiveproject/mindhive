@@ -92,7 +92,7 @@
 		"addStartingPoint": "Adicionar ponto de partida",
 		"lockedMessage": "Este estudo foi enviado e não pode ser editado. Para fazer alterações, peça ao seu professor para cancelar o envio do estudo.",
 		"studyBuilderLocked": "Construtor de estudos bloqueado",
-		"undo": ""
+		"undo": "Desfazer"
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -447,7 +447,7 @@
 				"classNetwork": "Rede de classes",
 				"empty": {
 					"classNetwork": "Não há conjuntos de dados da sua rede de turma para este projeto ou estudo.",
-					"me": "",
+					"me": "Ainda não há conjuntos de dados disponíveis para você.",
 					"myClass": "Ainda não há conjuntos de dados das suas turmas.",
 					"public": "Nenhum conjunto de dados público encontrado.",
 					"sharedWithMe": "Nenhum conjunto de dados foi compartilhado com você.",
@@ -455,13 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "Conjuntos de dados sobre este projeto ou estudo de turmas em suas redes de classe.",
-					"me": "",
+					"me": "Todos os conjuntos de dados que você pode visualizar — enviados, compartilhados com você, da sua turma, da rede da turma ou públicos.",
 					"myClass": "Conjuntos de dados relacionados a estudos ou projetos em suas aulas.",
 					"public": "Conjuntos de dados de modelos de periódicos públicos.",
 					"sharedWithMe": "Conjuntos de dados que outros compartilharam com você como colaborador.",
 					"uploaded": "Conjuntos de dados que você carregou."
 				},
-				"me": "",
+				"me": "Meu",
 				"myClass": "Minha turma",
 				"public": "Público",
 				"sharedWithMe": "Compartilhou comigo",
@@ -1204,10 +1204,10 @@
 	"durationHelp": "Aproximadamente quanto tempo levará para alguém concluir o {{taskType}}?",
 	"engine": {
 		"copy": "CÓPIA",
-		"cycleLinkPrevented": "",
-		"cycleLinkPreventedTitle": "",
+		"cycleLinkPrevented": "Essa conexão criaria um fluxo circular sem um fim válido. Escolha um caminho diferente para que o estudo possa ser concluído.",
+		"cycleLinkPreventedTitle": "Fluxo circular não permitido",
 		"save": "Salvar",
-		"saveFailed": "",
+		"saveFailed": "O estudo não pôde ser salvo: {{message}}. Verifique sua conexão e tente novamente.",
 		"studyLocked": "O estudo foi bloqueado"
 	},
 	"externalDataWarning": "Os dados não serão salvos no banco de dados MH",
@@ -1338,7 +1338,7 @@
 	},
 	"menu": {
 		"addBlock": "Adicionar um bloco",
-		"settings": "",
+		"settings": "Configurações",
 		"studyFlow": "Fluxo de estudo",
 		"studySettings": "Configurações de estudo"
 	},
@@ -1376,31 +1376,31 @@
 	"newProject": {
 		"addCollaborators": "Adicionar colaboradores",
 		"alreadyAssociatedTitle": "Você já tem um projeto associado a esta aula",
-		"alreadyAssociatedTitleStudy": "",
+		"alreadyAssociatedTitleStudy": "Você já possui um estudo associado a esta disciplina.",
 		"alreadyAssociatedWarning": "Não prossiga sem saber o que está fazendo.",
-		"alreadyAssociatedWarningStudy": "",
+		"alreadyAssociatedWarningStudy": "Não prossiga a menos que saiba o que está fazendo.",
 		"backToHome": "← Voltar para casa",
 		"createProject": "Criar Projeto",
-		"createStudy": "",
+		"createStudy": "Criar estudo",
 		"giveNameAlert": "Dê um nome ao seu projeto",
-		"giveNameAlertStudy": "",
+		"giveNameAlertStudy": "Dê um nome ao seu estudo.",
 		"goBackHome": "Voltar para casa",
 		"nameMessage": "Dê um nome ao seu projeto. Este não é o título do estudo, mas sim o nome que você deseja dar ao seu espaço de trabalho.",
-		"nameMessageStudy": "",
+		"nameMessageStudy": "Dê um nome ao seu espaço de estudo. É assim que você vai chamar seu local de trabalho.",
 		"namePlaceholder": "O nome do meu projeto é",
-		"namePlaceholderStudy": "",
+		"namePlaceholderStudy": "O nome do meu estudo é",
 		"nameYourProject": "Dê um nome ao seu projeto",
-		"nameYourStudy": "",
+		"nameYourStudy": "Dê um nome ao seu estudo.",
 		"noTemplatesSubtitle": "Para iniciar um projeto, você precisa de um modelo de quadro de projeto. Seu professor pode não ter um modelo de quadro de projeto vinculado a esta turma.",
 		"noTemplatesTitle": "Não há modelos de quadro de projeto na classe",
 		"selectClass": "Selecione a classe",
-		"selectTemplate": "",
-		"selectTemplateAlert": "",
-		"selectTemplateHelp": "",
-		"templateClassLabel": "",
-		"templateOptionLabel": "",
+		"selectTemplate": "Selecione o modelo",
+		"selectTemplateAlert": "Por favor, selecione o modelo de proposta.",
+		"selectTemplateHelp": "Escolha um modelo de quadro de projeto que seu professor disponibilizou para você copiar.",
+		"templateClassLabel": "Classe: {{className}}",
+		"templateOptionLabel": "{{templateName}} — {{className}}",
 		"untitledProject": "Projeto sem título",
-		"untitledStudy": ""
+		"untitledStudy": "Estudo sem título"
 	},
 	"notes": {
 		"noNotes": "Nenhuma nota inserida ainda. Clique com o botão direito para adicionar notas."
@@ -1892,8 +1892,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (já adicionado)",
 			"alreadyAddedTooltip": "Este ponto de controle já está no quadro.",
-			"buildFormSubtitle": "",
-			"buildFormTitle": "",
+			"buildFormSubtitle": "Este quadro está configurado para este modelo. Adicione cartões e campos abaixo e publique. Os clones dos alunos herdarão tudo o que você publicar.",
+			"buildFormTitle": "Construa o formulário de avaliação: \"{{title}}\"",
 			"cancel": "Cancelar",
 			"categories": {
 				"action": "Cartão de ação",
@@ -1914,8 +1914,8 @@
 			"customPreview": "Cria uma etapa de revisão personalizada com seu próprio rótulo de marco.",
 			"editForm": "Editar formulário",
 			"editFormHint": "A edição de formulários está disponível em outro local.",
-			"finishBuilding": "",
-			"finishDraftConfirm": "",
+			"finishBuilding": "Terminar",
+			"finishDraftConfirm": "Este formulário de avaliação ainda é um rascunho. Os alunos não o verão durante a revisão até que você o publique. Deseja finalizá-lo mesmo assim?",
 			"formTemplate": {
 				"blank": "Formulário em branco",
 				"defaultLabel": "{{label}}",
@@ -1931,22 +1931,22 @@
 			"previewLabel": "Pré-visualização do formulário de revisão",
 			"previewLoading": "Carregando visualização...",
 			"proposalPreview": "Adiciona um cartão de proposta padrão com campos de conteúdo para os alunos.",
-			"publish": "",
-			"publishing": "",
+			"publish": "Publicar…",
+			"publishing": "Publicando…",
 			"publishModal": {
-				"body": "",
-				"cancel": "",
-				"changelogLabel": "",
-				"changelogPlaceholder": "",
-				"confirm": "",
-				"confirmBusy": "",
-				"errorHeading": "",
-				"siblingWarning": "",
-				"title": ""
+				"body": "O renderizador começará a servir esta versão no escopo {{scope}} imediatamente.",
+				"cancel": "Cancelar",
+				"changelogLabel": "O que mudou? (opcional)",
+				"changelogPlaceholder": "Exemplo: Adicionado o campo para o número do IRB; reordenado o cartão de escopo do projeto.",
+				"confirm": "Confirmar publicação",
+				"confirmBusy": "Publicando…",
+				"errorHeading": "Não foi possível publicar:",
+				"siblingWarning": "Atenção — a versão atualmente ativa v{{version}} será arquivada automaticamente, portanto, apenas uma versão publicada por escopo permanecerá ativa.",
+				"title": "Publicar \"{{title}}\" v{{version}}?"
 			},
 			"scratchPreview": "Cria um formulário de revisão em rascunho com um cartão vazio, vinculado a esta etapa. Publica o formulário no painel de administração antes que ele apareça na revisão.",
-			"statusDraft": "",
-			"statusPublished": "",
+			"statusDraft": "Rascunho",
+			"statusPublished": "Publicados",
 			"steps": {
 				"cardType": "Tipo de cartão",
 				"checkpoint": "Ponto de verificação",
@@ -1976,8 +1976,8 @@
 		"sectionTitlePlaceholder": "Digite o título da seção"
 	},
 	"selector": {
-		"addBlockAria": "",
-		"addFavoriteAria": "",
+		"addBlockAria": "Adicionar bloco",
+		"addFavoriteAria": "Adicionar aos favoritos",
 		"basicBlocks": {
 			"description": "Deseja incluir instruções personalizadas para seus participantes ou incorporar um link e/ou vídeo no procedimento do seu estudo? Selecione e edite um bloco básico",
 			"title": "Blocos Básicos"
@@ -1987,9 +1987,9 @@
 			"myFavorite": "Meu favorito",
 			"ownedByMe": "De minha propriedade"
 		},
-		"infoAria": "",
-		"previewAria": "",
-		"removeFavoriteAria": "",
+		"infoAria": "Informações do bloco",
+		"previewAria": "Bloco de pré-visualização",
+		"removeFavoriteAria": "Remover dos favoritos",
 		"searchPlaceholder": "🔍 Pesquisar",
 		"studyDesign": {
 			"betweenSubjects": "Design entre sujeitos",
@@ -2000,8 +2000,8 @@
 		},
 		"surveys": {
 			"buildOwn": "Não consegue encontrar uma ferramenta para medir um dos seus constructos de estudo? Crie a sua própria com o Construtor de Pesquisas e a ajuda do professor:",
-			"buildOwnLine1": "",
-			"buildOwnLine2": "",
+			"buildOwnLine1": "Não consegue encontrar uma ferramenta para medir um dos construtos do seu estudo?",
+			"buildOwnLine2": "Crie o seu próprio questionário com o criador de questionários e a ajuda do professor.",
 			"description": "Quer mensurar as atitudes, experiências ou opiniões dos participantes por meio de autorrelato? Escolha entre este banco de pesquisas validadas.",
 			"title": "Pesquisas"
 		},
@@ -2011,9 +2011,9 @@
 		},
 		"templates": {
 			"description": "Não quer começar do zero? Selecione e edite um desenho de estudo pré-definido usando um dos modelos deste banco.",
-			"openStudyAria": "",
+			"openStudyAria": "Estudo aberto",
 			"title": "Modelos",
-			"tryThisFlow": ""
+			"tryThisFlow": "Experimente este fluxo"
 		}
 	},
 	"selectWhichToClone": "Selecione abaixo qual {{taskType}} você gostaria de clonar.",
@@ -2097,21 +2097,21 @@
 	"studyDescription": "Um estudo é um projeto de pesquisa com uma questão de pesquisa. Pode consistir em múltiplas tarefas e/ou questionários.",
 	"studyFlow": {
 		"empty": {
-			"description": "",
-			"title": ""
+			"description": "Adicione blocos à tela e conecte-os para ver como os participantes progridem em seu estudo.",
+			"title": "Ainda não há fluxo de estudo definido."
 		},
 		"noTasks": {
-			"description": "",
-			"title": ""
+			"description": "Conecte tarefas ou pesquisas ao seu fluxo de estudo para visualizá-las aqui.",
+			"title": "Nenhuma tarefa neste fluxo"
 		},
 		"preview": {
-			"branch": "",
-			"collapseAria": "",
-			"defaultPath": "",
-			"expandAria": "",
-			"legend": "",
-			"probabilityAria": "",
-			"taskCount": ""
+			"branch": "Ramo: {{name}}",
+			"collapseAria": "Colapso do caminho {{name}}",
+			"defaultPath": "Caminho padrão",
+			"expandAria": "Expandir caminho {{name}}",
+			"legend": "Simulação de mais de 100 percursos de participantes. Os percursos estão ordenados pela frequência com que ocorrem.",
+			"probabilityAria": "{{frequency}} por cento das execuções simuladas",
+			"taskCount": "{{count}} tarefas"
 		}
 	},
 	"studyManager": {
@@ -2203,8 +2203,8 @@
 		"type": "Tipo",
 		"variableName": "Nome da variável",
 		"variableNamePlaceholder": "ex. resposta_1 (usado para armazenar a resposta)",
-		"variableNameStoredAs": "",
-		"variableNameStoredAsFallback": "",
+		"variableNameStoredAs": "Armazenado como: {{keys}}",
+		"variableNameStoredAsFallback": "Armazenado como: gerado automaticamente a partir do cabeçalho se deixado em branco.",
 		"vas": "Escala visual"
 	},
 	"surveyDescription": "Em uma pesquisa, os participantes respondem a perguntas sobre si mesmos, sobre como se comportam ou sobre como se sentem.",
@@ -2353,38 +2353,38 @@
 		"addMore": "Adicionar mais"
 	},
 	"version": {
-		"actionsFor": "",
-		"autoName": "",
-		"cancel": "",
-		"cannotDeleteCollectionVersion": "",
-		"cannotDeleteFavorite": "",
-		"cannotDeleteWithData": "",
-		"confirmChangeCollectionVersion": "",
+		"actionsFor": "Ações para {{versionName}}",
+		"autoName": "Versão {{number}}",
+		"cancel": "Cancelar",
+		"cannotDeleteCollectionVersion": "Esta versão é utilizada para coleta de dados e não pode ser excluída. Escolha outra versão para coleta de dados.",
+		"cannotDeleteFavorite": "Esta versão está marcada como importante e não pode ser excluída. Remova o asterisco primeiro.",
+		"cannotDeleteWithData": "Esta versão não pode ser excluída porque {{count}} registros coletados fazem referência a ela.",
+		"confirmChangeCollectionVersion": "A coleta de dados já foi iniciada. Se você alterar a versão da coleta de dados, os registros coletados a partir de agora serão identificados com essa versão. Continuar?",
 		"confirmDelete": "Tem certeza de que deseja excluir o {{versionName}}?",
-		"confirmLoadUnsaved": "",
+		"confirmLoadUnsaved": "Você tem alterações não salvas na tela. Elas serão substituídas por esta versão. Salve o estudo primeiro se quiser mantê-las. Carregar esta versão mesmo assim?",
 		"createdOn": "Criado em",
-		"dataCollectionBadge": "",
-		"dataCollectionVersion": "",
+		"dataCollectionBadge": "Coleta de dados",
+		"dataCollectionVersion": "Versão de coleta de dados",
 		"delete": "Excluir",
 		"description": "Descrição",
 		"enterVersionName": "Por favor, insira o nome da versão",
-		"headerNote": "",
-		"invalidDiagram": "",
+		"headerNote": "Sempre que você salva uma alteração no desenho do estudo, ela é armazenada aqui como uma versão.",
+		"invalidDiagram": "Não foi possível carregar o diagrama desta versão.",
 		"load": "Carregar",
-		"loadedNote": "",
-		"loading": "",
-		"markAsImportant": "",
-		"missingDiagram": "",
+		"loadedNote": "{{versionName}} está na tela, mas ainda não foi salvo. Salve o estudo para mantê-lo.",
+		"loading": "Carregando versões...",
+		"markAsImportant": "Marcar como importante",
+		"missingDiagram": "Esta versão não possui nenhum diagrama salvo para carregar.",
 		"name": "Nome",
-		"noVersionSaved": "",
-		"onlyImportant": "",
-		"removeFromImportant": "",
-		"rename": "",
-		"renameVersion": "",
-		"save": "",
+		"noVersionSaved": "Nenhuma versão foi salva ainda. Salve o estudo para armazenar a primeira versão do seu projeto.",
+		"onlyImportant": "Somente importante ({{count}})",
+		"removeFromImportant": "Remover das versões importantes",
+		"rename": "Renomear",
+		"renameVersion": "Renomear versão",
+		"save": "Salvar",
 		"title": "Versão de estudo",
-		"unknownVersion": "",
-		"useForDataCollection": ""
+		"unknownVersion": "Uma versão que não está mais disponível",
+		"useForDataCollection": "Utilizado para coleta de dados"
 	},
 	"videoNotSupported": "Vídeo não suportado",
 	"viewer": {

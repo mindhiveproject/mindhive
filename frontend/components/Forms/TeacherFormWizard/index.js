@@ -221,7 +221,10 @@ export default function TeacherFormWizard({
         throw new Error("Save failed");
       }
       setDefinitionId(saved.id);
-      onSaved?.(saved);
+      // Pass explicit publish intent — do not infer from saved.status.
+      // Editing a published form and choosing Save as draft must not
+      // trigger round auto-attach (status alone is not a safe signal).
+      onSaved?.(saved, { didPublish: !!publish });
       onClose?.();
       resetBlank();
     } catch (err) {

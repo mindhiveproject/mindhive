@@ -12,6 +12,7 @@ import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 import StyledResource from "../../styles/StyledResource";
 import Button from "../../DesignSystem/Button";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 export default function CopyResource({ query, user, goBack }) {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function CopyResource({ query, user, goBack }) {
   const [createResource] = useMutation(CREATE_RESOURCE, {
     variables: {
       input: {
-        title: inputs?.title,
+        title: stripHtml(inputs?.title),
         description: inputs?.description,
         content: inputs?.content,
         parent: { connect: { id: resource?.id } },

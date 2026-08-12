@@ -9,6 +9,7 @@ import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 import StyledResource from "../../styles/StyledResource";
 import Button from "../../DesignSystem/Button";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 export default function DuplicateResource({ query, user, goBack }) {
   const router = useRouter();
@@ -21,13 +22,13 @@ export default function DuplicateResource({ query, user, goBack }) {
 
   const { inputs, handleChange } = useForm({
     ...resource,
-    title: `${resource.title} (Copy)`,
+    title: `${stripHtml(resource.title)} (Copy)`,
   });
 
   const [createResource] = useMutation(CREATE_RESOURCE, {
     variables: {
       input: {
-        title: inputs?.title,
+        title: stripHtml(inputs?.title),
         description: inputs?.description,
         content: inputs?.content,
         settings: mergeResourceSettings(inputs?.settings),

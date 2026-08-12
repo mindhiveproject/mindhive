@@ -1,7 +1,8 @@
 // Create or update a class-scoped opportunity FormDefinition for the
 // teacher form wizard. Teachers never touch storage / key / surface /
 // scope — those are baked in here. Updates edit the same row in place
-// (including after publish).
+// (including after publish). Save as draft (publish=false) sets
+// status="draft"; publish=true runs publishFormDefinition afterward.
 import { canMutateFormDefinition } from "../access";
 import { FIELD_TYPE_OPTIONS } from "../schemas/FormField";
 
@@ -122,14 +123,14 @@ export function introVideoFieldOverrides(): Pick<
   };
 }
 
-async function assertClassCreator(context: any, classId: string) {
+async function assertClassTeacherOrMentor(context: any, classId: string) {
   const session = context.session;
   if (!session?.itemId) {
     throw new Error("You must be signed in to do this.");
   }
   const klass = await context.query.Class.findOne({
     where: { id: classId },
-    query: "id creator { id }",
+    query: "id creator { id } mentors { id }",
   });
   if (!klass) {
     throw new Error("Class not found.");
@@ -141,8 +142,16 @@ async function assertClassCreator(context: any, classId: string) {
   const isAdmin = (profile?.permissions || []).some(
     (p: any) => p.canManageUsers
   );
-  if (!isAdmin && klass.creator?.id !== session.itemId) {
-    throw new Error("Forbidden: only the class creator can manage class forms.");
+  if (!isAdmin) {
+    const authorizedIds = [
+      klass.creator?.id,
+      ...(klass.mentors || []).map((m: any) => m?.id),
+    ].filter(Boolean);
+    if (!authorizedIds.includes(session.itemId)) {
+      throw new Error(
+        "Forbidden: only class creators or mentors can manage class forms."
+      );
+    }
   }
   return klass;
 }
@@ -261,7 +270,7 @@ async function saveClassFormDefinition(
   if (!classId) throw new Error("classId is required.");
   if (!String(title || "").trim()) throw new Error("Title is required.");
 
-  await assertClassCreator(context, classId);
+  await assertClassTeacherOrMentor(context, classId);
   const normalizedFields = normalizeFields(fields || []);
   const sudo = context.sudo();
   const trimmedTitle = String(title).trim();
@@ -276,7 +285,7 @@ async function saveClassFormDefinition(
         id
         scope
         status
-        class { id creator { id } }
+        class { id creator { id } mentors { id } }
         cards(orderBy: { order: asc }) { id }
       `,
     });
@@ -294,6 +303,9 @@ async function saveClassFormDefinition(
       data: {
         title: trimmedTitle,
         description: trimmedDescription,
+        // Honor Save as draft: demote published (or other) rows unless
+        // this save continues into publishFormDefinition below.
+        ...(!publish ? { status: "draft" } : {}),
       },
     });
 

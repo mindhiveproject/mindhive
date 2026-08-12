@@ -98,6 +98,7 @@ const ChipSelectorRow = styled.div`
   width: calc(100% + ${(p) => (p.$chatOpen ? "40px" : "24px")});
   min-width: 0;
   margin-left: -24px;
+  /* Breathing room under frosted header; keep bottom pad for chip row */
   padding: 8px ${(p) => (p.$chatOpen ? "16px" : "0")} 8px 24px;
   box-sizing: border-box;
   border-bottom: 1px solid rgba(211, 218, 224, 0.45);
@@ -139,16 +140,20 @@ const SplitShell = styled.div`
   }
 `;
 
-/** Clearance under DesignSystem Modal frostedChrome overlays. */
-const FROSTED_CHROME_PAD_TOP = 88;
-const FROSTED_CHROME_PAD_BOTTOM = 96;
+/**
+ * Clearance under DesignSystem Modal frostedChrome overlays.
+ * Modal measures title/actions and sets --ds-modal-frosted-pad-top/bottom
+ * so multi-line titles do not cover sticky chip rows.
+ */
+const FROSTED_CHROME_PAD_TOP = "var(--ds-modal-frosted-pad-top, 64px)";
+const FROSTED_CHROME_PAD_BOTTOM = "var(--ds-modal-frosted-pad-bottom, 96px)";
 
 const ContentPane = styled.div`
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  padding-top: ${FROSTED_CHROME_PAD_TOP}px;
-  padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
+  padding-top: ${FROSTED_CHROME_PAD_TOP};
+  padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM};
   padding-right: ${(p) => (p.$chatOpen ? "16px" : "0")};
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -166,8 +171,8 @@ const ChatPane = styled.aside`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-top: ${FROSTED_CHROME_PAD_TOP}px;
-  padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
+  padding-top: ${FROSTED_CHROME_PAD_TOP};
+  padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM};
   padding-left: 16px;
   padding-right: 16px;
   border-left: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
@@ -180,7 +185,7 @@ const ChatPane = styled.aside`
     padding-left: 0;
     padding-right: 0;
     padding-top: 16px;
-    padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM}px;
+    padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM};
   }
 `;
 
@@ -610,6 +615,8 @@ export default function OpportunityPreviewModal({
   onClose,
   matchingRoundContext,
   initialTab = null,
+  /** Hide workflow status chip (e.g. student read-only class view). */
+  hideStatus = false,
 }) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
@@ -980,7 +987,7 @@ export default function OpportunityPreviewModal({
     <TitleRow>
       <TitleText>{modalTitle}</TitleText>
       <HeaderActions>
-        {statusLabel ? (
+        {statusLabel && !hideStatus ? (
           <Chip label={statusLabel} shape="square" />
         ) : null}
         {messagesToggleButton}

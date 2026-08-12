@@ -141,6 +141,7 @@ const OpportunityFollowUpFormPanel = forwardRef(
         readOnlyLayout={readOnly ? readOnlyLayout : null}
         hideSaveButton={hideSaveButton}
         hideUnansweredFields={hideUnansweredFields}
+        quiet
         saveLabel={t("opportunityEditor.save", {}, {
           default: "Save changes",
         })}
