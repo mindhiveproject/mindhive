@@ -47,6 +47,7 @@ const BODY_STYLE = {
   lineHeight: 1.5,
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
   minHeight: 0,
+  flex: 1,
   overflowY: "auto",
 };
 
