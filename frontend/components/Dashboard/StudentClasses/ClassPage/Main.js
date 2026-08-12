@@ -6,6 +6,7 @@ import Header from "./Header";
 import ClassAssignments from "./Assignments/Main";
 import ClassStudies from "./Studies";
 import ClassProjects from "./Projects";
+import ClassOpportunities from "./Opportunities/Main";
 
 import { GET_CLASS } from "../../../Queries/Classes";
 
@@ -24,6 +25,11 @@ const CLASS_PAGE_NAV_ITEMS = [
     value: "projects",
     labelKey: "main.projects",
     defaultLabel: "Projects",
+  },
+  {
+    value: "opportunities",
+    labelKey: "main.opportunities",
+    defaultLabel: "Opportunities",
   },
 ];
 
@@ -93,6 +99,12 @@ export default function ClassPage({ code, user, query }) {
       <div>
         {page === "projects" && (
           <ClassProjects myclass={myclass} user={user} query={query} />
+        )}
+      </div>
+
+      <div>
+        {page === "opportunities" && (
+          <ClassOpportunities myclass={myclass} user={user} query={query} />
         )}
       </div>
     </div>

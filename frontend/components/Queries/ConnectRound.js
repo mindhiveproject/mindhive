@@ -249,3 +249,47 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
     }
   }
 `;
+
+/** Student class Opportunities tab: rounds + selected opportunities for class networks. */
+export const CLASS_STUDENT_OPPORTUNITIES = gql`
+  query CLASS_STUDENT_OPPORTUNITIES($code: String!) {
+    class(where: { code: $code }) {
+      id
+      networks {
+        id
+        title
+        connectRounds(orderBy: { createdAt: desc }) {
+          id
+          title
+          status
+          openAt
+          closeAt
+          opportunities {
+            id
+            title
+            shortDescription
+            timeCommitment
+            availableFrom
+            availableTo
+            studentCapacity
+            coverImageUrl
+            coverImage {
+              id
+              url
+            }
+            mentor {
+              id
+              username
+              firstName
+              lastName
+            }
+            organization {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`;
