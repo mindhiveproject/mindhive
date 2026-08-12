@@ -1993,15 +1993,6 @@ function MatchingRoundEditor({
         onClick: () => openPreview(form.id),
       },
       {
-        key: "add",
-        label: t(
-          "opportunities.matchingRound.formPicker.addToRound",
-          {},
-          { default: "Add to this round" },
-        ),
-        onClick: () => addFormToRound(form.id),
-      },
-      {
         key: "copy",
         label: t(
           "opportunities.matchingRound.formPicker.copyIntoClassLibrary",
@@ -2472,6 +2463,7 @@ function MatchingRoundEditor({
                   {publicForms.map((form) =>
                     renderFormRow(form, {
                       menuItems: buildPublicMenuItems(form),
+                      showAddToRound: true,
                     }),
                   )}
                 </ul>
