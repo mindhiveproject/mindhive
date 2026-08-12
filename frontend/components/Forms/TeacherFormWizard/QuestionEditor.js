@@ -56,6 +56,20 @@ export const TYPE_KEYS = [
     hintKey: "opportunities.matchingRound.formWizard.types.introVideoHint",
     hintDefault: "Sponsors upload an MP4 / WebM intro video",
   },
+  {
+    value: "link_list",
+    labelKey: "opportunities.matchingRound.formWizard.types.links",
+    labelDefault: "Links",
+    hintKey: "opportunities.matchingRound.formWizard.types.linksHint",
+    hintDefault: "Sponsors add multiple external links",
+  },
+  {
+    value: "media_asset_list",
+    labelKey: "opportunities.matchingRound.formWizard.types.mediaList",
+    labelDefault: "Media",
+    hintKey: "opportunities.matchingRound.formWizard.types.mediaListHint",
+    hintDefault: "Sponsors upload or pick multiple images/PDFs",
+  },
 ];
 
 export function effectiveTypeKey(fieldType) {

@@ -110,9 +110,41 @@
 		"fixMultipleFields": "Por favor, corrige los siguientes campos: {{fields}}",
 		"fixSingleField": "Por favor, corrige {{field}} antes de guardar.",
 		"invalidFormat": "Formato inválido.",
+		"linkList": {
+			"add": "",
+			"comment": "",
+			"commentPlaceholder": "",
+			"empty": "",
+			"emptyReadonly": "",
+			"remove": "",
+			"title": "",
+			"titlePlaceholder": "",
+			"url": ""
+		},
 		"max": "Debe ser como máximo {{max}}.",
 		"maxLength": "Debe tener como máximo {{max}} caracteres.",
+		"mediaAssetList": {
+			"add": "",
+			"addFromLibrary": "",
+			"alreadyAdded": "",
+			"changeFromLibrary": "",
+			"comment": "",
+			"commentPlaceholder": "",
+			"empty": "",
+			"emptyReadonly": "",
+			"media": "",
+			"remove": "",
+			"replaceUpload": "",
+			"title": "",
+			"titlePlaceholder": "",
+			"upload": ""
+		},
 		"min": "Debe ser al menos {{min}}.",
+		"resourcePreview": {
+			"download": "",
+			"noDescription": "",
+			"openLink": ""
+		},
 		"saveFailed": "Error al guardar. Por favor, inténtelo de nuevo.",
 		"wordLimit": "Debe tener como máximo {{max}} palabras."
 	},

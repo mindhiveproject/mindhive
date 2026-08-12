@@ -110,9 +110,41 @@
 		"fixMultipleFields": "",
 		"fixSingleField": "",
 		"invalidFormat": "",
+		"linkList": {
+			"add": "",
+			"comment": "",
+			"commentPlaceholder": "",
+			"empty": "",
+			"emptyReadonly": "",
+			"remove": "",
+			"title": "",
+			"titlePlaceholder": "",
+			"url": ""
+		},
 		"max": "",
 		"maxLength": "",
+		"mediaAssetList": {
+			"add": "",
+			"addFromLibrary": "",
+			"alreadyAdded": "",
+			"changeFromLibrary": "",
+			"comment": "",
+			"commentPlaceholder": "",
+			"empty": "",
+			"emptyReadonly": "",
+			"media": "",
+			"remove": "",
+			"replaceUpload": "",
+			"title": "",
+			"titlePlaceholder": "",
+			"upload": ""
+		},
 		"min": "",
+		"resourcePreview": {
+			"download": "",
+			"noDescription": "",
+			"openLink": ""
+		},
 		"saveFailed": "",
 		"wordLimit": ""
 	},
