@@ -4,7 +4,7 @@ const Meta = () => (
   <Head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charSet="utf-8" />
-    <link rel="shortcut icon" href="/favicon.png" />
+    <link rel="shortcut icon" href="/favicon.svg" />
     <title>MindHive</title>
     <script
       src="https://cdn.plot.ly/plotly-2.30.0.min.js"
