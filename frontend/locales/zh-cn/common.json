@@ -97,7 +97,7 @@
 		"science": "您可以将我的数据用于科学和/或教育目的"
 	},
 	"definitionForm": {
-		"fieldRequired": "",
+		"fieldRequired": "此字段为必填项。",
 		"file": {
 			"current": "",
 			"download": "",
@@ -235,7 +235,7 @@
 		"title": "语言设置",
 		"updatePreferences": "更新偏好设置"
 	},
-	"loading": "",
+	"loading": "加载中...",
 	"mediaLibrary": {
 		"choose": "",
 		"empty": "",
@@ -257,18 +257,18 @@
 		"teachers": "教师"
 	},
 	"opportunities": {
-		"close": "",
+		"close": "关闭",
 		"columns": {
-			"actions": "",
-			"name": "",
-			"status": "",
+			"actions": "操作",
+			"name": "名称",
+			"status": "状态",
 			"visibility": ""
 		},
-		"delete": "",
+		"delete": "删除",
 		"deleteConfirm": "",
-		"edit": "",
+		"edit": "编辑",
 		"empty": "",
-		"loading": "",
+		"loading": "加载中...",
 		"newButton": "",
 		"title": ""
 	},
@@ -331,7 +331,7 @@
 		"proceedNextTask": "继续下一个任务",
 		"thankYou": "感谢您参与本次任务！"
 	},
-	"remove": "",
+	"remove": "移除",
 	"reviewed": {
 		"menuTitle": "已审核"
 	},

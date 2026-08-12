@@ -97,11 +97,11 @@
 		"science": "Vous pouvez utiliser mes données à des fins scientifiques et/ou éducatives"
 	},
 	"definitionForm": {
-		"fieldRequired": "",
+		"fieldRequired": "Ce champ est requis.",
 		"file": {
-			"current": "",
+			"current": "Actuel :",
 			"download": "",
-			"downloadVideo": "",
+			"downloadVideo": "Télécharger la vidéo",
 			"previewVideo": "",
 			"readyToUpload": "",
 			"remove": "",
@@ -235,13 +235,13 @@
 		"title": "Paramètres de langue",
 		"updatePreferences": "Mettre à jour les préférences"
 	},
-	"loading": "",
+	"loading": "Chargement...",
 	"mediaLibrary": {
 		"choose": "",
 		"empty": "",
 		"title": "",
-		"upload": "",
-		"uploading": ""
+		"upload": "Télécharger l'image",
+		"uploading": "Téléchargement en cours..."
 	},
 	"members": {
 		"typeUsername": "Tapez le nom d'utilisateur"
@@ -257,18 +257,18 @@
 		"teachers": "Enseignants"
 	},
 	"opportunities": {
-		"close": "",
+		"close": "Fermer",
 		"columns": {
-			"actions": "",
-			"name": "",
-			"status": "",
-			"visibility": ""
+			"actions": "Actions",
+			"name": "Nom",
+			"status": "Statut",
+			"visibility": "Visibilité"
 		},
-		"delete": "",
+		"delete": "SUPPRIMER",
 		"deleteConfirm": "",
-		"edit": "",
+		"edit": "Modifier",
 		"empty": "",
-		"loading": "",
+		"loading": "Chargement...",
 		"newButton": "",
 		"title": ""
 	},
@@ -331,7 +331,7 @@
 		"proceedNextTask": "Passer à la tâche suivante",
 		"thankYou": "Merci d'avoir participé à cette tâche !"
 	},
-	"remove": "",
+	"remove": "SUPPRIMER",
 	"reviewed": {
 		"menuTitle": "Révisé"
 	},
@@ -374,7 +374,7 @@
 		"loginHere": "Connectez-vous ici",
 		"participant": "Participant à l'étude",
 		"scientist": "Scientifique",
-		"sponsor": "",
+		"sponsor": "Sponsor",
 		"sponsorNyuCuspRecommendation": "",
 		"student": "Étudiant",
 		"teacher": "Professeur",

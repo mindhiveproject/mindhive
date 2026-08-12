@@ -97,11 +97,11 @@
 		"science": "U mag mijn gegevens gebruiken voor wetenschappelijke en/of educatieve doeleinden"
 	},
 	"definitionForm": {
-		"fieldRequired": "",
+		"fieldRequired": "Dit veld is verplicht.",
 		"file": {
 			"current": "",
 			"download": "",
-			"downloadVideo": "",
+			"downloadVideo": "Video downloaden",
 			"previewVideo": "",
 			"readyToUpload": "",
 			"remove": "",
@@ -235,13 +235,13 @@
 		"title": "Taalinstellingen",
 		"updatePreferences": "Voorkeuren bijwerken"
 	},
-	"loading": "",
+	"loading": "Laden...",
 	"mediaLibrary": {
 		"choose": "",
 		"empty": "",
 		"title": "",
-		"upload": "",
-		"uploading": ""
+		"upload": "Afbeelding uploaden",
+		"uploading": "Bezig met uploaden..."
 	},
 	"members": {
 		"typeUsername": "Typ gebruikersnaam"
@@ -257,24 +257,24 @@
 		"teachers": "Leraren"
 	},
 	"opportunities": {
-		"close": "",
+		"close": "Sluiten",
 		"columns": {
-			"actions": "",
-			"name": "",
-			"status": "",
-			"visibility": ""
+			"actions": "Acties",
+			"name": "Naam",
+			"status": "Status",
+			"visibility": "Zichtbaarheid"
 		},
-		"delete": "",
+		"delete": "Verwijderen",
 		"deleteConfirm": "",
-		"edit": "",
+		"edit": "Bewerken",
 		"empty": "",
-		"loading": "",
+		"loading": "Laden...",
 		"newButton": "",
 		"title": ""
 	},
 	"pagination": {
 		"goToPage": "",
-		"navLabel": "",
+		"navLabel": "Paginering",
 		"next": "Volgende",
 		"of": "van {{pageCount}}",
 		"page": "Pagina",
@@ -331,7 +331,7 @@
 		"proceedNextTask": "Ga door naar de volgende taak",
 		"thankYou": "Bedankt voor uw deelname aan deze taak!"
 	},
-	"remove": "",
+	"remove": "Verwijderen",
 	"reviewed": {
 		"menuTitle": "Beoordeeld"
 	},

@@ -92,7 +92,7 @@
 		"addStartingPoint": "إضافة نقطة البداية",
 		"lockedMessage": "تم تقديم هذه الدراسة ولا يمكن تعديلها. لإجراء أي تعديلات، يُرجى مطالبة مُعلّمك بإلغاء تقديم الدراسة.",
 		"studyBuilderLocked": "منشئ الدراسة مقفل",
-		"undo": ""
+		"undo": "الغاء التحميل"
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -447,7 +447,7 @@
 				"classNetwork": "شبكة الفصول الدراسية",
 				"empty": {
 					"classNetwork": "لا توجد مجموعات بيانات من شبكة صفك لهذا المشروع أو الدراسة.",
-					"me": "",
+					"me": "لا توجد مجموعات بيانات متاحة لك حتى الآن.",
 					"myClass": "لا توجد مجموعات بيانات من فصولك الدراسية حتى الآن.",
 					"public": "لم يتم العثور على مجموعات بيانات عامة.",
 					"sharedWithMe": "لم تتم مشاركة أي مجموعات بيانات معك.",
@@ -455,13 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "مجموعات البيانات الخاصة بهذا المشروع أو الدراسة من الفصول الدراسية في شبكات فصولك الدراسية.",
-					"me": "",
+					"me": "جميع مجموعات البيانات التي يمكنك رؤيتها - تم تحميلها، أو مشاركتها معك، أو من فصلك الدراسي، أو شبكة الفصل الدراسي، أو البيانات العامة.",
 					"myClass": "مجموعات البيانات المرتبطة بالدراسات أو المشاريع في فصولك الدراسية.",
 					"public": "مجموعات البيانات من قوالب المجلات العامة.",
 					"sharedWithMe": "مجموعات البيانات التي شاركها معك الآخرون بصفتك متعاونًا.",
 					"uploaded": "مجموعات البيانات التي قمت بتحميلها."
 				},
-				"me": "",
+				"me": "أنا",
 				"myClass": "صفي",
 				"public": "عام",
 				"sharedWithMe": "تمت مشاركته معي",
@@ -1204,10 +1204,10 @@
 	"durationHelp": "ما هو الوقت التقريبي الذي سيستغرقه شخص ما لإكمال {{taskType}}؟",
 	"engine": {
 		"copy": "ينسخ",
-		"cycleLinkPrevented": "",
-		"cycleLinkPreventedTitle": "",
+		"cycleLinkPrevented": "سيؤدي هذا الربط إلى تدفق دائري بلا نهاية صحيحة. اختر مسارًا مختلفًا حتى تتمكن الدراسة من الانتهاء.",
+		"cycleLinkPreventedTitle": "ممنوع التدفق الدائري",
 		"save": "يحفظ",
-		"saveFailed": "",
+		"saveFailed": "تعذر حفظ الدراسة: {{message}}. يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
 		"studyLocked": "تم قفل الدراسة"
 	},
 	"externalDataWarning": "لن يتم حفظ البيانات في قاعدة بيانات MH",
@@ -1338,7 +1338,7 @@
 	},
 	"menu": {
 		"addBlock": "أضف كتلة",
-		"settings": "",
+		"settings": "إعدادات",
 		"studyFlow": "تدفق الدراسة",
 		"studySettings": "إعدادات الدراسة"
 	},
@@ -1376,31 +1376,31 @@
 	"newProject": {
 		"addCollaborators": "إضافة المتعاونين",
 		"alreadyAssociatedTitle": "لديك بالفعل مشروع مرتبط بهذه الفئة",
-		"alreadyAssociatedTitleStudy": "",
+		"alreadyAssociatedTitleStudy": "لديك بالفعل دراسة مرتبطة بهذا الفصل",
 		"alreadyAssociatedWarning": "لا تستمر في المضي قدمًا إلا إذا كنت تعرف ما تفعله.",
-		"alreadyAssociatedWarningStudy": "",
+		"alreadyAssociatedWarningStudy": "لا تتابع ما لم تكن تعرف ما تفعله.",
 		"backToHome": "← العودة إلى الصفحة الرئيسية",
 		"createProject": "إنشاء مشروع",
-		"createStudy": "",
+		"createStudy": "إنشاء دراسة",
 		"giveNameAlert": "أعط مشروعك اسمًا",
-		"giveNameAlertStudy": "",
+		"giveNameAlertStudy": "أعطِ دراستك اسماً",
 		"goBackHome": "العودة إلى المنزل",
 		"nameMessage": "أعطِ مشروعك اسمًا. هذا ليس عنوان الدراسة، بل ما ترغب في تسميته مساحة عملك.",
-		"nameMessageStudy": "",
+		"nameMessageStudy": "أعطِ مكتبك اسماً. هذا هو الاسم الذي تريد أن تطلقه على مساحة عملك.",
 		"namePlaceholder": "اسم مشروعي هو",
-		"namePlaceholderStudy": "",
+		"namePlaceholderStudy": "اسم دراستي هو",
 		"nameYourProject": "قم بتسمية مشروعك",
-		"nameYourStudy": "",
+		"nameYourStudy": "سمِّ دراستك",
 		"noTemplatesSubtitle": "لبدء مشروع، ستحتاج إلى قالب لوحة مشروع. قد لا يتوفر لدى معلمك قالب لوحة مشروع مرتبط بهذه الحصة.",
 		"noTemplatesTitle": "لا توجد قوالب لوحة المشروع في الفصل",
 		"selectClass": "حدد الفصل",
-		"selectTemplate": "",
-		"selectTemplateAlert": "",
-		"selectTemplateHelp": "",
-		"templateClassLabel": "",
-		"templateOptionLabel": "",
+		"selectTemplate": "حدد قالب",
+		"selectTemplateAlert": "يرجى اختيار نموذج الاقتراح",
+		"selectTemplateHelp": "اختر نموذج لوحة المشروع الذي أتاحه لك معلمك لنسخه.",
+		"templateClassLabel": "الفئة: {{className}}",
+		"templateOptionLabel": "{{templateName}} — {{className}}",
 		"untitledProject": "مشروع بلا عنوان",
-		"untitledStudy": ""
+		"untitledStudy": "دراسة بدون عنوان"
 	},
 	"notes": {
 		"noNotes": "لم يتم إدخال أي ملاحظات بعد. انقر بزر الماوس الأيمن لإضافة ملاحظات."
@@ -1892,8 +1892,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (تمت إضافته بالفعل)",
 			"alreadyAddedTooltip": "هذه نقطة التفتيش موجودة بالفعل على اللوحة",
-			"buildFormSubtitle": "",
-			"buildFormTitle": "",
+			"buildFormSubtitle": "يقتصر هذا على لوحة القوالب هذه. أضف البطاقات والحقول أدناه، ثم انشرها. سترث نسخ الطلاب كل ما تنشره.",
+			"buildFormTitle": "أنشئ نموذج التقييم: \"{{title}}\"",
 			"cancel": "يلغي",
 			"categories": {
 				"action": "بطاقة الحركة",
@@ -1914,8 +1914,8 @@
 			"customPreview": "يُنشئ خطوة مراجعة مخصصة مع تسمية خاصة بها.",
 			"editForm": "نموذج التعديل",
 			"editFormHint": "تتوفر خاصية تعديل النماذج في مكان آخر",
-			"finishBuilding": "",
-			"finishDraftConfirm": "",
+			"finishBuilding": "ينهي",
+			"finishDraftConfirm": "نموذج التقييم هذا لا يزال مسودة. لن يراه الطلاب أثناء المراجعة حتى تنشره. هل تُكمله على أي حال؟",
 			"formTemplate": {
 				"blank": "نموذج فارغ",
 				"defaultLabel": "{{label}}",
@@ -1931,22 +1931,22 @@
 			"previewLabel": "معاينة نموذج المراجعة",
 			"previewLoading": "جاري تحميل المعاينة...",
 			"proposalPreview": "يضيف بطاقة اقتراح عادية مع حقول محتوى للطلاب.",
-			"publish": "",
-			"publishing": "",
+			"publish": "انشر…",
+			"publishing": "نشر...",
 			"publishModal": {
-				"body": "",
-				"cancel": "",
-				"changelogLabel": "",
-				"changelogPlaceholder": "",
-				"confirm": "",
-				"confirmBusy": "",
-				"errorHeading": "",
-				"siblingWarning": "",
-				"title": ""
+				"body": "سيبدأ برنامج العرض في تقديم هذا الإصدار في النطاق {{scope}} على الفور.",
+				"cancel": "يلغي",
+				"changelogLabel": "ما الذي تغير؟ (اختياري)",
+				"changelogPlaceholder": "مثال: تمت إضافة حقل رقم IRB؛ تمت إعادة ترتيب بطاقة نطاق المشروع.",
+				"confirm": "تأكيد النشر",
+				"confirmBusy": "نشر...",
+				"errorHeading": "تعذر النشر:",
+				"siblingWarning": "تنبيه - سيتم أرشفة الإصدار الحالي v{{version}} تلقائيًا بحيث يبقى إصدار واحد فقط منشور لكل نطاق نشطًا.",
+				"title": "نشر \"{{title}}\" v{{version}}؟"
 			},
 			"scratchPreview": "أنشئ نموذج مراجعة مبدئيًا يحتوي على بطاقة فارغة واحدة، واربطه بهذه الخطوة. انشر النموذج في لوحة التحكم قبل ظهوره في قسم المراجعة.",
-			"statusDraft": "",
-			"statusPublished": "",
+			"statusDraft": "مسودة",
+			"statusPublished": "نشرت",
 			"steps": {
 				"cardType": "نوع البطاقة",
 				"checkpoint": "نقطة تفتيش",
@@ -1976,8 +1976,8 @@
 		"sectionTitlePlaceholder": "أدخل عنوان القسم"
 	},
 	"selector": {
-		"addBlockAria": "",
-		"addFavoriteAria": "",
+		"addBlockAria": "أضف بلوك",
+		"addFavoriteAria": "أضف إلى المفضلة",
 		"basicBlocks": {
 			"description": "هل ترغب في إضافة تعليمات مخصصة للمشاركين أو تضمين رابط و/أو فيديو في إجراءات دراستك؟ حدد كتلة أساسية وحرّرها.",
 			"title": "الكتل الأساسية"
@@ -1987,9 +1987,9 @@
 			"myFavorite": "أُفضله",
 			"ownedByMe": "مملوكة لي"
 		},
-		"infoAria": "",
-		"previewAria": "",
-		"removeFavoriteAria": "",
+		"infoAria": "معلومات الحظر",
+		"previewAria": "معاينة الكتلة",
+		"removeFavoriteAria": "إزالة من المفضلة",
 		"searchPlaceholder": "🔍 بحث",
 		"studyDesign": {
 			"betweenSubjects": "التصميم بين المواضيع",
@@ -2000,8 +2000,8 @@
 		},
 		"surveys": {
 			"buildOwn": "ألا تجد أداة لقياس أحد جوانب دراستك؟ أنشئها بنفسك باستخدام أداة إنشاء الاستبيانات وبمساعدة المعلم.",
-			"buildOwnLine1": "",
-			"buildOwnLine2": "",
+			"buildOwnLine1": "ألا تجد أداة لقياس أحد عناصر دراستك؟",
+			"buildOwnLine2": "أنشئ استبيانك الخاص باستخدام أداة إنشاء الاستبيانات ومساعدة المعلم.",
 			"description": "هل ترغب في قياس مواقف المشاركين أو تجاربهم أو آرائهم من خلال تقرير ذاتي؟ اختر من بين هذه المجموعة من الاستبيانات المُعتمدة.",
 			"title": "الاستطلاعات"
 		},
@@ -2011,9 +2011,9 @@
 		},
 		"templates": {
 			"description": "ألا ترغب في البدء من الصفر؟ اختر وعدّل تصميم دراسة جاهزًا باستخدام أحد القوالب المتوفرة في هذا البنك.",
-			"openStudyAria": "",
+			"openStudyAria": "دراسة مفتوحة",
 			"title": "القوالب",
-			"tryThisFlow": ""
+			"tryThisFlow": "جرب هذه الطريقة"
 		}
 	},
 	"selectWhichToClone": "حدد {{taskType}} الذي تريد استنساخه أدناه.",
@@ -2097,21 +2097,21 @@
 	"studyDescription": "الدراسة مشروع بحثي يطرح سؤالاً بحثياً. ويمكن أن يتألف من عدة مهام و/أو استبيانات.",
 	"studyFlow": {
 		"empty": {
-			"description": "",
-			"title": ""
+			"description": "أضف مربعات إلى اللوحة وقم بتوصيلها لمعرفة كيفية انتقال المشاركين خلال دراستك.",
+			"title": "لا يوجد مسار دراسي حتى الآن"
 		},
 		"noTasks": {
-			"description": "",
-			"title": ""
+			"description": "قم بربط المهام أو الاستبيانات بسير دراستك لمعاينتها هنا.",
+			"title": "لا توجد مهام في هذا المسار"
 		},
 		"preview": {
-			"branch": "",
-			"collapseAria": "",
-			"defaultPath": "",
-			"expandAria": "",
-			"legend": "",
-			"probabilityAria": "",
-			"taskCount": ""
+			"branch": "الفرع: {{name}}",
+			"collapseAria": "مسار الانهيار {{name}}",
+			"defaultPath": "المسار الافتراضي",
+			"expandAria": "توسيع المسار {{name}}",
+			"legend": "تمت محاكاة أكثر من 100 جولة مشاركة. يتم ترتيب المسارات حسب عدد مرات حدوثها.",
+			"probabilityAria": "{{frequency}} بالمئة من عمليات التشغيل المحاكاة",
+			"taskCount": "{{count}} مهمة"
 		}
 	},
 	"studyManager": {
@@ -2203,8 +2203,8 @@
 		"type": "النوع",
 		"variableName": "اسم المتغير",
 		"variableNamePlaceholder": "مثلاً: response_1 (يُستخدم لتخزين الإجابة)",
-		"variableNameStoredAs": "",
-		"variableNameStoredAsFallback": "",
+		"variableNameStoredAs": "مخزنة كـ: {{keys}}",
+		"variableNameStoredAsFallback": "يتم تخزينها على النحو التالي: يتم إنشاؤها تلقائيًا من رأس الصفحة إذا تُركت فارغة",
 		"vas": "مقياس بصري"
 	},
 	"surveyDescription": "في الاستطلاع، يتم طرح أسئلة على المشاركين حول أنفسهم، أو حول سلوكهم، أو حول مشاعرهم.",
@@ -2353,38 +2353,38 @@
 		"addMore": "أضف المزيد"
 	},
 	"version": {
-		"actionsFor": "",
-		"autoName": "",
-		"cancel": "",
-		"cannotDeleteCollectionVersion": "",
-		"cannotDeleteFavorite": "",
-		"cannotDeleteWithData": "",
-		"confirmChangeCollectionVersion": "",
+		"actionsFor": "الإجراءات الخاصة بـ {{versionName}}",
+		"autoName": "الإصدار {{number}}",
+		"cancel": "يلغي",
+		"cannotDeleteCollectionVersion": "تُستخدم هذه النسخة لجمع البيانات ولا يمكن حذفها. اختر نسخة أخرى لجمع البيانات أولاً.",
+		"cannotDeleteFavorite": "هذه النسخة مُصنّفة على أنها مهمة ولا يمكن حذفها. قم بإزالة النجمة أولاً.",
+		"cannotDeleteWithData": "لا يمكن حذف هذه النسخة لأن {{count}} سجلاً مجمعاً تشير إليها.",
+		"confirmChangeCollectionVersion": "بدأ جمع البيانات بالفعل. إذا قمت بتغيير إصدار جمع البيانات، فسيتم تصنيف السجلات التي يتم جمعها من الآن فصاعدًا بهذا الإصدار. هل تريد المتابعة؟",
 		"confirmDelete": "هل أنت متأكد أنك تريد حذف {{versionName}}؟",
-		"confirmLoadUnsaved": "",
+		"confirmLoadUnsaved": "توجد تغييرات غير محفوظة على اللوحة. سيتم استبدالها بهذه النسخة. احفظ الدراسة أولاً إذا كنت ترغب في الاحتفاظ بها. هل تريد تحميل هذه النسخة على أي حال؟",
 		"createdOn": "تم إنشاؤه في",
-		"dataCollectionBadge": "",
-		"dataCollectionVersion": "",
+		"dataCollectionBadge": "جمع البيانات",
+		"dataCollectionVersion": "إصدار جمع البيانات",
 		"delete": "يمسح",
 		"description": "وصف",
 		"enterVersionName": "الرجاء إدخال اسم الإصدار",
-		"headerNote": "",
-		"invalidDiagram": "",
+		"headerNote": "في كل مرة تقوم فيها بحفظ تصميم دراسة معدل، يتم تخزينه هنا كإصدار.",
+		"invalidDiagram": "تعذر تحميل مخطط هذه النسخة.",
 		"load": "حمولة",
-		"loadedNote": "",
-		"loading": "",
-		"markAsImportant": "",
-		"missingDiagram": "",
+		"loadedNote": "{{versionName}} موجود على اللوحة ولكن لم يتم حفظه بعد. احفظ الدراسة للاحتفاظ بها.",
+		"loading": "جارٍ تحميل الإصدارات...",
+		"markAsImportant": "ضع علامة على هذا المهم",
+		"missingDiagram": "لا تحتوي هذه النسخة على مخطط محفوظ لتحميله.",
 		"name": "اسم",
-		"noVersionSaved": "",
-		"onlyImportant": "",
-		"removeFromImportant": "",
-		"rename": "",
-		"renameVersion": "",
-		"save": "",
+		"noVersionSaved": "لم يتم حفظ أي نسخة بعد. احفظ الدراسة لتخزين النسخة الأولى من تصميمك.",
+		"onlyImportant": "المهم فقط ({{count}})",
+		"removeFromImportant": "قم بإزالة من الإصدارات المهمة",
+		"rename": "إعادة تسمية",
+		"renameVersion": "إعادة تسمية الإصدار",
+		"save": "يحفظ",
 		"title": "نسخة الدراسة",
-		"unknownVersion": "",
-		"useForDataCollection": ""
+		"unknownVersion": "إصدار لم يعد متوفراً",
+		"useForDataCollection": "يُستخدم لجمع البيانات"
 	},
 	"videoNotSupported": "الفيديو غير مدعوم",
 	"viewer": {

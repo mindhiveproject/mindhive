@@ -101,7 +101,7 @@
 		"file": {
 			"current": "",
 			"download": "",
-			"downloadVideo": "",
+			"downloadVideo": "Baixar Vídeo",
 			"previewVideo": "",
 			"readyToUpload": "",
 			"remove": "",
@@ -235,13 +235,13 @@
 		"title": "Configurações de idioma",
 		"updatePreferences": "Atualizar preferências"
 	},
-	"loading": "",
+	"loading": "Carregando...",
 	"mediaLibrary": {
 		"choose": "",
 		"empty": "",
 		"title": "",
-		"upload": "",
-		"uploading": ""
+		"upload": "Enviar imagem",
+		"uploading": "Carregando..."
 	},
 	"members": {
 		"typeUsername": "Digite o nome de usuário"
@@ -257,18 +257,18 @@
 		"teachers": "Professores"
 	},
 	"opportunities": {
-		"close": "",
+		"close": "Fechar",
 		"columns": {
-			"actions": "",
-			"name": "",
-			"status": "",
+			"actions": "Ações",
+			"name": "Nome",
+			"status": "Status",
 			"visibility": ""
 		},
-		"delete": "",
+		"delete": "Excluir",
 		"deleteConfirm": "",
-		"edit": "",
+		"edit": "Editar",
 		"empty": "",
-		"loading": "",
+		"loading": "Carregando...",
 		"newButton": "",
 		"title": ""
 	},
@@ -331,7 +331,7 @@
 		"proceedNextTask": "Prossiga para a próxima tarefa",
 		"thankYou": "Obrigado por participar desta tarefa!"
 	},
-	"remove": "",
+	"remove": "Remover",
 	"reviewed": {
 		"menuTitle": "Revisado"
 	},

@@ -1216,6 +1216,18 @@
 			"preSelected": "Pre-selected",
 			"published": "Published",
 			"returned": "Returned"
+		},
+		"studentView": {
+			"emptyHint": "Your teacher hasn’t selected any opportunities for this round yet. Check back soon.",
+			"emptyTitle": "No opportunities yet",
+			"loading": "Loading opportunities…",
+			"meta": {
+				"dates": "{{from}} → {{to}}",
+				"sponsor": "Sponsor: {{name}}"
+			},
+			"notAvailableHint": "When your teacher opens the matching round, selected opportunities will appear here.",
+			"notAvailableTitle": "Opportunities aren’t available yet",
+			"openAria": "View opportunity: {{title}}"
 		}
 	},
 	"ownedItems": {

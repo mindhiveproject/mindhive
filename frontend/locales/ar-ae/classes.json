@@ -1216,6 +1216,18 @@
 			"preSelected": "",
 			"published": "",
 			"returned": ""
+		},
+		"studentView": {
+			"emptyHint": "",
+			"emptyTitle": "",
+			"loading": "",
+			"meta": {
+				"dates": "",
+				"sponsor": ""
+			},
+			"notAvailableHint": "",
+			"notAvailableTitle": "",
+			"openAria": ""
 		}
 	},
 	"ownedItems": {
