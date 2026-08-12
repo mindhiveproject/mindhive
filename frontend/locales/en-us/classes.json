@@ -995,6 +995,10 @@
 					"saveFailed": "Could not save the form. Please try again.",
 					"titleRequired": "Give your form a title."
 				},
+				"helperTextAdd": "Add helper text",
+				"helperTextLabel": "Helper text",
+				"helperTextPlaceholder": "Extra guidance shown under the question",
+				"helperTextRemove": "Remove helper text",
 				"introVideoHelper": "Sponsors upload an MP4 or WebM (max 500MB). This updates the opportunity’s intro video — no storage settings to configure.",
 				"introVideoPromptPlaceholder": "e.g. Upload a short intro video for students",
 				"loading": "Loading form…",

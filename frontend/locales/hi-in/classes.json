@@ -995,6 +995,10 @@
 					"saveFailed": "",
 					"titleRequired": ""
 				},
+				"helperTextAdd": "",
+				"helperTextLabel": "",
+				"helperTextPlaceholder": "",
+				"helperTextRemove": "",
 				"introVideoHelper": "",
 				"introVideoPromptPlaceholder": "",
 				"loading": "",

@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
 
 import Button from "../../DesignSystem/Button";
+import Chip from "../../DesignSystem/Chip";
 import { TYPE_ICONS } from "./TypeIcons";
 import { INTRO_VIDEO_FIELD_NAME } from "./questionUtils";
 import {
@@ -13,6 +15,10 @@ import {
   TypePicker,
   TypeTile,
 } from "./styles";
+
+function hasNonEmptyHelperText(helperText) {
+  return Boolean(String(helperText || "").trim());
+}
 
 export const TYPE_KEYS = [
   {
@@ -88,6 +94,13 @@ export default function QuestionEditor({
     t("opportunities.matchingRound.formWizard.promptEmpty", {}, {
       default: "No prompt yet",
     });
+  // Opt-in: helper textarea stays hidden until Add, or when existing text is loaded.
+  const [helperEditorOpen, setHelperEditorOpen] = useState(() =>
+    hasNonEmptyHelperText(question.helperText),
+  );
+  useEffect(() => {
+    setHelperEditorOpen(hasNonEmptyHelperText(question.helperText));
+  }, [question.localId]);
 
   const setType = (next) => {
     if (next === "file" && introVideoTaken && !isIntroVideo) {
@@ -264,6 +277,65 @@ export default function QuestionEditor({
               }
             />
           </FieldStack>
+          {helperEditorOpen ? (
+            <FieldStack>
+              <label>
+                {t(
+                  "opportunities.matchingRound.formWizard.helperTextLabel",
+                  {},
+                  { default: "Helper text" },
+                )}
+              </label>
+              <textarea
+                value={question.helperText || ""}
+                onChange={(e) =>
+                  onChange({ ...question, helperText: e.target.value })
+                }
+                placeholder={t(
+                  "opportunities.matchingRound.formWizard.helperTextPlaceholder",
+                  {},
+                  {
+                    default: "Extra guidance shown under the question",
+                  },
+                )}
+              />
+              <div>
+                <Chip
+                  type="button"
+                  shape="square"
+                  style={{fontWeight:"400", fontSize:"12px", border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
+                  leading={<p>–</p>}
+                  onClick={() => {
+                    onChange({ ...question, helperText: "" });
+                    setHelperEditorOpen(false);
+                  }}
+                  label=
+                    {t(
+                      "opportunities.matchingRound.formWizard.helperTextRemove",
+                      {},
+                      { default: "Remove helper text" },
+                    )}
+                >
+                </Chip>
+              </div>
+            </FieldStack>
+          ) : (
+            <div>
+              <Chip
+                type="button"
+                shape="square"
+                style={{fontWeight:"400", fontSize:"12px", border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
+                leading={<p>+</p>}
+                onClick={() => setHelperEditorOpen(true)}
+                label={t(
+                  "opportunities.matchingRound.formWizard.helperTextAdd",
+                  {},
+                  { default: "Add helper text" },
+                )}
+              >
+              </Chip>
+            </div>
+          )}
           {isIntroVideo ? (
             <FieldStack>
               <span className="field-hint">

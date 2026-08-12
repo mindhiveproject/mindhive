@@ -995,6 +995,10 @@
 					"saveFailed": "Impossible d'enregistrer le formulaire. Veuillez réessayer.",
 					"titleRequired": "Donnez un titre à votre formulaire."
 				},
+				"helperTextAdd": "",
+				"helperTextLabel": "",
+				"helperTextPlaceholder": "",
+				"helperTextRemove": "",
 				"introVideoHelper": "Les sponsors téléchargent un MP4 ou WebM (max 500 Mo). Cela met à jour la vidéo d'introduction de l'opportunité — aucun paramètre de stockage à configurer.",
 				"introVideoPromptPlaceholder": "Par ex. Téléchargez une courte vidéo d'introduction pour les étudiants",
 				"loading": "Chargement du formulaire...",
