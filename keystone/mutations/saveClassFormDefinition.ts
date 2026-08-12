@@ -1,7 +1,8 @@
 // Create or update a class-scoped opportunity FormDefinition for the
 // teacher form wizard. Teachers never touch storage / key / surface /
 // scope — those are baked in here. Updates edit the same row in place
-// (including after publish).
+// (including after publish). Save as draft (publish=false) sets
+// status="draft"; publish=true runs publishFormDefinition afterward.
 import { canMutateFormDefinition } from "../access";
 import { FIELD_TYPE_OPTIONS } from "../schemas/FormField";
 
@@ -302,6 +303,9 @@ async function saveClassFormDefinition(
       data: {
         title: trimmedTitle,
         description: trimmedDescription,
+        // Honor Save as draft: demote published (or other) rows unless
+        // this save continues into publishFormDefinition below.
+        ...(!publish ? { status: "draft" } : {}),
       },
     });
 
