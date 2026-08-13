@@ -7,17 +7,14 @@ import { MY_FAVORITE_PEOPLE } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
 import { SearchIcon } from "../../../DesignSystem/Icons";
 import {
+  BrowseBody,
   BrowseCardsGrid,
-  BrowseContainer,
   BrowseEmptyState,
   BrowseHeader,
   BrowseSearchField,
   BrowseShell,
 } from "../ConnectBrowseLayout";
 import PaginationUsers from "../Bank/Pagination";
-
-/** Card shape used by the browse grid — switch to "vertical" to preview the stacked card. */
-const CARD_LAYOUT = "horizontal";
 
 const PER_PAGE = 12;
 
@@ -81,7 +78,7 @@ export default function Connections({ query, user }) {
         <p>{t("savedConnectionsSubtitle")}</p>
       </BrowseHeader>
 
-      <BrowseContainer>
+      <BrowseBody>
         <BrowseSearchField>
           <SearchIcon className="search-icon" width={20} height={20} />
           <input
@@ -94,14 +91,9 @@ export default function Connections({ query, user }) {
           />
         </BrowseSearchField>
 
-        <BrowseCardsGrid $layout={CARD_LAYOUT}>
+        <BrowseCardsGrid>
           {profiles.map((profile) => (
-            <ProfileCard
-              key={profile?.id}
-              user={user}
-              profile={profile}
-              layout={CARD_LAYOUT}
-            />
+            <ProfileCard key={profile?.id} user={user} profile={profile} />
           ))}
         </BrowseCardsGrid>
 
@@ -119,7 +111,7 @@ export default function Connections({ query, user }) {
           goToPage={goToPage}
           totalCount={totalCount}
         />
-      </BrowseContainer>
+      </BrowseBody>
     </BrowseShell>
   );
 }

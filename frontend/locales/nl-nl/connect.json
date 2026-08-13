@@ -1187,6 +1187,7 @@
 			"many": "{{count}} mogelijkheden",
 			"one": "{{count}} kans"
 		},
+		"organizationButton": "Organisatie",
 		"pageTitle": "",
 		"paginationInfo": "",
 		"paginationLabel": "",
@@ -1247,6 +1248,7 @@
 		"defaultCommunity": "MindHive-gemeenschap",
 		"defaultName": "MindHive-lid",
 		"defaultSummary": "Klik om het profiel te bekijken",
+		"profileButton": "Profiel",
 		"viewProfile": "Bekijk het profiel van {{name}}"
 	},
 	"profileType": {

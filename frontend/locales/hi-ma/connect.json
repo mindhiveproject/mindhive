@@ -1187,6 +1187,7 @@
 			"many": "",
 			"one": ""
 		},
+		"organizationButton": "संगठन",
 		"pageTitle": "",
 		"paginationInfo": "",
 		"paginationLabel": "",
@@ -1247,6 +1248,7 @@
 		"defaultCommunity": "",
 		"defaultName": "",
 		"defaultSummary": "",
+		"profileButton": "प्रोफ़ाइल",
 		"viewProfile": ""
 	},
 	"profileType": {

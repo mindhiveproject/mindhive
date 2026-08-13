@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+const imgBackground = "/assets/connect/background.svg";
+
 export const FALLBACK_COLORS = [
   "#DEF8FB",
   "#FDF2D0",
@@ -36,6 +38,11 @@ export const ConnectShell = styled.div`
   gap: 48px;
   margin: 0px;
   background-color: #f7f9f8;
+  background-image: url(${imgBackground});
+  background-repeat: repeat;
+  background-position: center top;
+  background-attachment: fixed;
+  background-size: auto;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 

@@ -810,7 +810,14 @@ function MatchingRoundEditor({
       fetchPolicy: "cache-and-network",
     },
   );
-  const pickableFormDefinitions = pickableFormsData?.formDefinitions || [];
+  // Memoised because these lists feed formLabelsById, which the round-context
+  // effect below depends on. A skipped query leaves data undefined, so a bare
+  // `|| []` would hand out a new array every render and republish the context
+  // forever.
+  const pickableFormDefinitions = useMemo(
+    () => pickableFormsData?.formDefinitions || [],
+    [pickableFormsData?.formDefinitions],
+  );
 
   const { data: classLibraryFormsData, refetch: refetchClassLibraryForms } =
     useQuery(CLASS_LIBRARY_FORM_DEFINITIONS, {
@@ -820,8 +827,10 @@ function MatchingRoundEditor({
       skip: !myclass?.id,
       fetchPolicy: "cache-and-network",
     });
-  const classLibraryFormDefinitions =
-    classLibraryFormsData?.formDefinitions || [];
+  const classLibraryFormDefinitions = useMemo(
+    () => classLibraryFormsData?.formDefinitions || [],
+    [classLibraryFormsData?.formDefinitions],
+  );
 
   const { data: publicFormsData, refetch: refetchPublicForms } = useQuery(
     PUBLIC_OPPORTUNITY_FORM_DEFINITIONS,
@@ -830,7 +839,10 @@ function MatchingRoundEditor({
       fetchPolicy: "cache-and-network",
     },
   );
-  const publicFormDefinitions = publicFormsData?.formDefinitions || [];
+  const publicFormDefinitions = useMemo(
+    () => publicFormsData?.formDefinitions || [],
+    [publicFormsData?.formDefinitions],
+  );
 
   // Drop library selection if the form disappears after refetch/delete.
   useEffect(() => {
@@ -925,7 +937,11 @@ function MatchingRoundEditor({
     skip: !selectedNetworkId,
     fetchPolicy: "cache-and-network",
   });
-  const networkOpportunities = opportunitiesData?.opportunities || [];
+
+  const networkOpportunities = useMemo(
+    () => opportunitiesData?.opportunities || [],
+    [opportunitiesData?.opportunities],
+  );
 
   const [updateOpportunity] = useMutation(UPDATE_OPPORTUNITY, {
     refetchQueries: selectedNetworkId
@@ -1002,9 +1018,6 @@ function MatchingRoundEditor({
     return sortOpportunitiesByTitle(
       networkOpportunities.filter((opportunity) => {
         if (selectedSet.has(opportunity.id)) return false;
-        // Available queue: pending_review, returned (greyed / last in grid),
-        // and orphaned pre_selected (status set without round link, or round
-        // link cleared before status was rolled back).
         return (
           opportunity.status === "pending_review" ||
           opportunity.status === "returned" ||

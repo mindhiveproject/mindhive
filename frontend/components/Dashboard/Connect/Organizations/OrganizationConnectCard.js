@@ -1,7 +1,7 @@
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
-import IconButton from "../../../DesignSystem/IconButton";
 import { ArrowOutwardIcon, BriefcaseIcon } from "../../../DesignSystem/Icons";
 import ConnectCard from "../ConnectCard";
 import OrganizationVerificationStatus from "./OrganizationVerificationStatus";
@@ -20,20 +20,17 @@ function hrefToPath(href) {
   return search ? `${pathname}?${search}` : pathname;
 }
 
-export default function OrganizationConnectCard({
-  org,
-  href,
-  linkLabel,
-  layout = "horizontal",
-}) {
+export default function OrganizationConnectCard({ org, href, linkLabel }) {
   const { t } = useTranslation("connect");
 
   if (!org?.id) {
     return null;
   }
 
+
   const name = org.name || "";
   const location = org.location?.trim() || null;
+  const description = org.tagline?.trim() || org.mission?.trim() || null;
   const opportunityCount = org.opportunitiesCount || 0;
 
   const orgHref =
@@ -51,9 +48,15 @@ export default function OrganizationConnectCard({
       { default: "View organization {{name}}" }
     );
 
+  const organizationTypeLabel = t(
+    "organizationsList.organizationButton",
+    {},
+    { default: "Organization" }
+  );
+
   return (
     <ConnectCard
-      layout={layout}
+      typeLabel={organizationTypeLabel}
       href={orgHref}
       ariaLabel={viewOrgLabel}
       avatar={{
@@ -61,17 +64,18 @@ export default function OrganizationConnectCard({
         fallbackLabel: (name || "?").charAt(0).toUpperCase(),
       }}
       title={name}
-      titleAdornment={
+      subtitle={location}
+      status={
         <OrganizationVerificationStatus
           verified={!!org.verified}
           size="compact"
         />
       }
-      subtitle={location}
-      chip={
+      chips={
         opportunityCount > 0 ? (
           <Chip
             shape="square"
+            leading={<BriefcaseIcon width={18} height={18} />}
             label={t(
               opportunityCount === 1
                 ? "organizationsList.opportunityCount.one"
@@ -84,20 +88,21 @@ export default function OrganizationConnectCard({
                     : "{{count}} opportunities",
               }
             )}
-            style={{ width: "fit-content", paddingLeft: "8px" }}
-            leading={<BriefcaseIcon width={18} height={18} />}
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+              minHeight: 32,
+              paddingLeft: 8,
+            }}
           />
         ) : null
       }
+      description={description}
       actions={
-        <IconButton
+        <Button
           variant="outline"
-          style={{
-            borderColor: "var(--MH-Theme-Primary-Dark, #336F8A)",
-            color: "var(--MH-Theme-Primary-Dark, #336F8A)",
-          }}
-          icon={<ArrowOutwardIcon />}
-          ariaLabel={viewOrgLabel}
+          leadingIcon={<ArrowOutwardIcon />}
+          aria-label={viewOrgLabel}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -105,7 +110,9 @@ export default function OrganizationConnectCard({
               window.open(orgUrl, "_blank", "noopener,noreferrer");
             }
           }}
-        />
+        >
+          {organizationTypeLabel}
+        </Button>
       }
     />
   );

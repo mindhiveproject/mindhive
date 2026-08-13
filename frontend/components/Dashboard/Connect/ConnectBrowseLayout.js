@@ -2,14 +2,23 @@ import styled from "styled-components";
 
 /**
  * Page chrome shared by the Connect browse pages (Explore Connect, Saved
- * Connections): a page header followed by one white container holding the
- * search field, the card grid and the pagination controls.
+ * Connections): a page header, then the search field, the card grid and the
+ * pagination controls sitting straight on the honeycomb background.
  */
 
-const CARD_MIN_WIDTH = {
-  horizontal: "484px",
-  vertical: "320px",
-};
+const imgBackground = "/assets/connect/background.svg";
+
+/**
+ * A ConnectCard rests at 296px and only stretches toward its 368px max in the
+ * single-column layout (Figma 506:1306). 920px is exactly three resting cards
+ * plus their two gaps, so the header and the grid share one flush edge.
+ */
+export const CARD_WIDTH = "296px";
+const CARD_MAX_WIDTH = "368px";
+const CONTENT_MAX_WIDTH = "920px";
+
+/** Below this the page is one column, so the card may take its full max width. */
+const SINGLE_COLUMN = "690px";
 
 export const BrowseShell = styled.div`
   display: flex;
@@ -18,6 +27,11 @@ export const BrowseShell = styled.div`
   gap: 32px;
   padding: 0 clamp(16px, 6vw, 64px) 48px;
   background-color: #f7f9f8;
+  background-image: url(${imgBackground});
+  background-repeat: repeat;
+  background-position: center top;
+  background-attachment: fixed;
+  background-size: auto;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 
@@ -33,7 +47,7 @@ export const BrowseHeader = styled.div`
   flex-direction: column;
   gap: 4px;
   width: 100%;
-  max-width: 1024px;
+  max-width: ${CONTENT_MAX_WIDTH};
 
   h1 {
     margin: 0;
@@ -54,17 +68,12 @@ export const BrowseHeader = styled.div`
   }
 `;
 
-export const BrowseContainer = styled.section`
+export const BrowseBody = styled.section`
   display: flex;
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  max-width: 1024px;
-  padding: 24px;
-  box-sizing: border-box;
-  border-radius: 12px;
-  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  max-width: ${CONTENT_MAX_WIDTH};
 `;
 
 export const BrowseSearchField = styled.label`
@@ -108,11 +117,18 @@ export const BrowseSearchField = styled.label`
 export const BrowseCardsGrid = styled.div`
   display: grid;
   gap: 16px;
-  justify-items: center;
+  justify-content: start;
+  align-items: stretch;
+  /* Fixed tracks: spare room becomes gutter on the trailing edge rather than
+     padding every card out to a width its content cannot fill. */
   grid-template-columns: repeat(
     auto-fill,
-    minmax(min(100%, ${({ $layout }) => CARD_MIN_WIDTH[$layout]}), 1fr)
+    minmax(min(100%, ${CARD_WIDTH}), ${CARD_WIDTH})
   );
+
+  @media (max-width: ${SINGLE_COLUMN}) {
+    grid-template-columns: minmax(0, ${CARD_MAX_WIDTH});
+  }
 `;
 
 export const BrowseEmptyState = styled.p`
@@ -124,4 +140,3 @@ export const BrowseEmptyState = styled.p`
   line-height: 24px;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
-

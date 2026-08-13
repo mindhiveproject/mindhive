@@ -1187,6 +1187,7 @@
 			"many": "{{count}} अवसर",
 			"one": "{{count}} अवसर"
 		},
+		"organizationButton": "संगठन",
 		"pageTitle": "",
 		"paginationInfo": "",
 		"paginationLabel": "",
@@ -1247,6 +1248,7 @@
 		"defaultCommunity": "माइंडहाइव समुदाय",
 		"defaultName": "माइंडहाइव सदस्य",
 		"defaultSummary": "प्रोफ़ाइल देखने के लिए क्लिक करें",
+		"profileButton": "प्रोफ़ाइल",
 		"viewProfile": " {{name}}की प्रोफ़ाइल देखें"
 	},
 	"profileType": {

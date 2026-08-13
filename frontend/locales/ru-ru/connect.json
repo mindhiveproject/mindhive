@@ -1187,6 +1187,7 @@
 			"many": "{{count}} возможностей",
 			"one": "{{count}} возможность"
 		},
+		"organizationButton": "Организация",
 		"pageTitle": "",
 		"paginationInfo": "",
 		"paginationLabel": "",
@@ -1247,6 +1248,7 @@
 		"defaultCommunity": "Сообщество Minhive",
 		"defaultName": "Участник MinhHive",
 		"defaultSummary": "Нажмите, чтобы просмотреть профиль",
+		"profileButton": "Профиль",
 		"viewProfile": "Просмотреть профиль {{name}}"
 	},
 	"profileType": {

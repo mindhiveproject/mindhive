@@ -163,7 +163,7 @@ function ConnectNavDropdown({
 export default function ConnectNavigationBar() {
   const { t } = useTranslation("connect");
   const router = useRouter();
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const activeSection = getActiveSection((router.asPath || "").split("?")[0]);
   const {
     isAdmin,
@@ -341,6 +341,8 @@ export default function ConnectNavigationBar() {
   return (
     <NavigationBar
       aria-label={t("nav.mainNavAriaLabel", {}, { default: "Connect sections" })}
+      variant="underline"
+      showRule
     >
       <ConnectNavDropdown
         placeholderKey="nav.organizations"

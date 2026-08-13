@@ -1187,6 +1187,7 @@
 			"many": "{{count}} opportunities",
 			"one": "{{count}} opportunity"
 		},
+		"organizationButton": "Organization",
 		"pageTitle": "Organizations",
 		"paginationInfo": "Page {{page}} of {{totalPages}} · {{total}} total",
 		"paginationLabel": "Organizations pagination",
@@ -1247,6 +1248,7 @@
 		"defaultCommunity": "MindHive Community",
 		"defaultName": "MindHive Member",
 		"defaultSummary": "Click to view profile",
+		"profileButton": "Profile",
 		"viewProfile": "View profile of {{name}}"
 	},
 	"profileType": {

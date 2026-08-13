@@ -18,7 +18,7 @@ import useTranslation from "next-translate/useTranslation";
  */
 
 /**
- * Which animation to show. Flip this to compare the two:
+ * Which animation to show. Flip this to compare the two:1
  *
  *   "beehive" — full-bleed honeycomb blooming out of a green hexagon, no
  *               wordmark. The Figma design.

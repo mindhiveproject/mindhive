@@ -5,10 +5,13 @@ import { Dropdown } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { EXPLORE_ORGANIZATIONS_PAGED } from "../../../Queries/Organization";
+import { BrowseCardsGrid } from "../ConnectBrowseLayout";
 import FilterBar from "../FilterBar";
 import OrganizationConnectCard from "./OrganizationConnectCard";
 
 const PAGE_SIZE = 12;
+
+const imgBackground = "/assets/connect/background.svg";
 
 const Shell = styled.div`
   display: flex;
@@ -17,6 +20,11 @@ const Shell = styled.div`
   padding: 32px clamp(16px, 6vw, 64px);
   padding-top: 0px;
   background-color: #f7f9f8;
+  background-image: url(${imgBackground});
+  background-repeat: repeat;
+  background-position: center top;
+  background-attachment: fixed;
+  background-size: auto;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 `;
@@ -34,17 +42,6 @@ const Header = styled.div`
     color: #5f6871;
     font-size: 14px;
     max-width: 640px;
-  }
-`;
-
-const Grid = styled.div`
-  display: grid;
-  gap: 16px;
-  justify-items: center;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  @media (max-width: 759px) {
-    grid-template-columns: 1fr;
   }
 `;
 
@@ -209,11 +206,11 @@ export default function OrganizationsList() {
       )}
 
       {organizations.length > 0 && (
-        <Grid>
+        <BrowseCardsGrid>
           {organizations.map((org) => (
             <OrganizationConnectCard key={org.id} org={org} />
           ))}
-        </Grid>
+        </BrowseCardsGrid>
       )}
 
       {totalPages > 1 && (

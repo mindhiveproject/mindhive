@@ -343,9 +343,19 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         firstName
         lastName
         bio
+        bioInformal
         email
         tagline
         occupation
+        # Linked organizations drive the card's chips; the free-text
+        # organization field below is only the fallback when there are none.
+        organizations {
+          id
+          name
+          logo {
+            url
+          }
+        }
         organization
         department
         primaryDomain
@@ -551,6 +561,7 @@ export const MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY = gql`
   query MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY {
     authenticatedItem {
       ... on Profile {
+        id
         classNetworksCreated {
           id
           title
@@ -578,6 +589,7 @@ export const OPPORTUNITY_EDITOR_CLASS_NETWORKS = gql`
   query OPPORTUNITY_EDITOR_CLASS_NETWORKS {
     authenticatedItem {
       ... on Profile {
+        id
         classNetworksCreated {
           id
           title

@@ -1163,6 +1163,7 @@
 			"organization": "Organisation",
 			"peopleEmpty": "",
 			"preferences": "",
+			"primaryContact": "Contact principal",
 			"projectCategory": "Catégorie de projet",
 			"proposalSectionTitle": "Proposition",
 			"publicRating": "",

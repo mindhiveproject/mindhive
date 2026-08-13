@@ -1187,6 +1187,7 @@
 			"many": "{{count}} فرص",
 			"one": "{{count}} فرصة"
 		},
+		"organizationButton": "المؤسسة",
 		"pageTitle": "",
 		"paginationInfo": "",
 		"paginationLabel": "",
@@ -1247,6 +1248,7 @@
 		"defaultCommunity": "مجتمع مايندهيف",
 		"defaultName": "عضو في MindHive",
 		"defaultSummary": "انقر لعرض الملف الشخصي",
+		"profileButton": "الملف الشخصي",
 		"viewProfile": "عرض ملف تعريف {{name}}"
 	},
 	"profileType": {
