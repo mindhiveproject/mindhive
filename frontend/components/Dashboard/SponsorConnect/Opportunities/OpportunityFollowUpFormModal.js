@@ -43,6 +43,7 @@ export default function OpportunityFollowUpFormModal({
       open={open}
       onClose={onClose}
       size="large"
+      maxWidth={880}
       title={title}
       actions={
         <>

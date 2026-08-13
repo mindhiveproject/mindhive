@@ -92,7 +92,7 @@
 		"addStartingPoint": "Ajouter un point de départ",
 		"lockedMessage": "Cette étude a été soumise et ne peut pas être modifiée. Pour apporter des modifications, veuillez demander à votre enseignant d'annuler la soumission.",
 		"studyBuilderLocked": "Générateur d'études verrouillé",
-		"undo": ""
+		"undo": "Annuler"
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -447,7 +447,7 @@
 				"classNetwork": "Réseau de classe",
 				"empty": {
 					"classNetwork": "Aucune donnée provenant de votre réseau de classe n'est disponible pour ce projet ou cette étude.",
-					"me": "",
+					"me": "Aucune donnée n'est encore disponible.",
 					"myClass": "Aucun jeu de données pour vos classes pour le moment.",
 					"public": "Aucun jeu de données public trouvé.",
 					"sharedWithMe": "Aucune donnée n'a été partagée avec vous.",
@@ -455,13 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "Ensembles de données relatifs à ce projet ou à cette étude, provenant de classes appartenant à vos réseaux de classes.",
-					"me": "",
+					"me": "Tous les jeux de données que vous pouvez consulter — téléchargés, partagés avec vous, provenant de votre classe, du réseau de votre classe ou publics.",
 					"myClass": "Jeux de données liés aux études ou aux projets de vos cours.",
 					"public": "Ensembles de données issus de modèles de revues publiques.",
 					"sharedWithMe": "Jeux de données partagés avec vous par d'autres collaborateurs.",
 					"uploaded": "Jeux de données que vous avez téléchargés."
 				},
-				"me": "",
+				"me": "Moi",
 				"myClass": "Ma classe",
 				"public": "Publique",
 				"sharedWithMe": "Partagé avec moi",
@@ -1204,10 +1204,10 @@
 	"durationHelp": "Combien de temps faudra-t-il environ à quelqu'un pour terminer la tâche {{taskType}} ?",
 	"engine": {
 		"copy": "COPIE",
-		"cycleLinkPrevented": "",
-		"cycleLinkPreventedTitle": "",
+		"cycleLinkPrevented": "Cette connexion créerait un cercle vicieux sans issue. Choisissez une autre voie pour que l'étude puisse se terminer.",
+		"cycleLinkPreventedTitle": "Flux circulaire non autorisé",
 		"save": "Sauvegarder",
-		"saveFailed": "",
+		"saveFailed": "L'étude n'a pas pu être enregistrée : {{message}}. Veuillez vérifier votre connexion et réessayer.",
 		"studyLocked": "L'étude a été verrouillée"
 	},
 	"externalDataWarning": "Les données ne seront pas enregistrées dans la base de données MH",
@@ -1338,7 +1338,7 @@
 	},
 	"menu": {
 		"addBlock": "Ajouter un bloc",
-		"settings": "",
+		"settings": "Paramètres",
 		"studyFlow": "Déroulement de l'étude",
 		"studySettings": "Paramètres d'étude"
 	},
@@ -1376,31 +1376,31 @@
 	"newProject": {
 		"addCollaborators": "Ajouter des collaborateurs",
 		"alreadyAssociatedTitle": "Vous avez déjà un projet associé à cette classe",
-		"alreadyAssociatedTitleStudy": "",
+		"alreadyAssociatedTitleStudy": "Vous avez déjà une étude associée à ce cours.",
 		"alreadyAssociatedWarning": "N'allez pas plus loin à moins de savoir ce que vous faites.",
-		"alreadyAssociatedWarningStudy": "",
+		"alreadyAssociatedWarningStudy": "N'allez pas plus loin à moins de savoir ce que vous faites.",
 		"backToHome": "← Retour à l'accueil",
 		"createProject": "Créer un projet",
-		"createStudy": "",
+		"createStudy": "Créer une étude",
 		"giveNameAlert": "Donnez un nom à votre projet",
-		"giveNameAlertStudy": "",
+		"giveNameAlertStudy": "Donnez un nom à votre étude",
 		"goBackHome": "Retourner à l'accueil'",
 		"nameMessage": "Donnez un nom à votre projet. Il ne s'agit pas du titre de l'étude, mais du nom que vous souhaitez donner à votre espace de travail.",
-		"nameMessageStudy": "",
+		"nameMessageStudy": "Donnez un nom à votre espace de travail. C'est ainsi que vous l'appellerez.",
 		"namePlaceholder": "Le nom de mon projet est",
-		"namePlaceholderStudy": "",
+		"namePlaceholderStudy": "Le nom de mon étude est",
 		"nameYourProject": "Nommez votre projet",
-		"nameYourStudy": "",
+		"nameYourStudy": "Nommez votre étude",
 		"noTemplatesSubtitle": "Pour démarrer un projet, vous avez besoin d'un modèle de tableau de projet. Votre enseignant n'a peut-être pas de modèle de tableau de projet associé à ce cours.",
 		"noTemplatesTitle": "Il n'y a pas de modèles de tableau de projet dans la classe",
 		"selectClass": "Sélectionnez la classe",
-		"selectTemplate": "",
-		"selectTemplateAlert": "",
-		"selectTemplateHelp": "",
-		"templateClassLabel": "",
-		"templateOptionLabel": "",
+		"selectTemplate": "Sélectionnez le modèle",
+		"selectTemplateAlert": "Veuillez choisir le modèle de proposition",
+		"selectTemplateHelp": "Choisissez un modèle de tableau de projet que votre enseignant a mis à votre disposition.",
+		"templateClassLabel": "Classe : {{className}}",
+		"templateOptionLabel": "{{templateName}} — {{className}}",
 		"untitledProject": "Projet sans titre",
-		"untitledStudy": ""
+		"untitledStudy": "Étude sans titre"
 	},
 	"notes": {
 		"noNotes": "Aucune note n'a encore été saisie. Faites un clic droit pour ajouter des notes."
@@ -1892,8 +1892,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (déjà ajouté)",
 			"alreadyAddedTooltip": "Ce point de contrôle est déjà sur le tableau de bord",
-			"buildFormSubtitle": "",
-			"buildFormTitle": "",
+			"buildFormSubtitle": "Ce modèle de tableau est limité. Ajoutez des cartes et des champs ci-dessous, puis publiez. Les clones étudiants hériteront de ce que vous publiez.",
+			"buildFormTitle": "Créez le formulaire d'évaluation : « {{title}} »",
 			"cancel": "Annuler",
 			"categories": {
 				"action": "Carte Action",
@@ -1914,8 +1914,8 @@
 			"customPreview": "Crée une étape de révision personnalisée avec sa propre étiquette d'étape clé.",
 			"editForm": "Modifier le formulaire",
 			"editFormHint": "L'édition de formulaires est disponible ailleurs",
-			"finishBuilding": "",
-			"finishDraftConfirm": "",
+			"finishBuilding": "Finition",
+			"finishDraftConfirm": "Ce formulaire d'évaluation est encore une ébauche. Les étudiants ne le verront pas lors de la révision tant que vous ne l'aurez pas publié. Voulez-vous le terminer quand même ?",
 			"formTemplate": {
 				"blank": "Formulaire vierge",
 				"defaultLabel": "{{label}}",
@@ -1931,22 +1931,22 @@
 			"previewLabel": "Aperçu du formulaire d'avis",
 			"previewLoading": "Chargement de l'aperçu...",
 			"proposalPreview": "Ajoute une fiche de proposition standard avec des champs de contenu pour les étudiants.",
-			"publish": "",
-			"publishing": "",
+			"publish": "Publier…",
+			"publishing": "Édition…",
 			"publishModal": {
-				"body": "",
-				"cancel": "",
-				"changelogLabel": "",
-				"changelogPlaceholder": "",
-				"confirm": "",
-				"confirmBusy": "",
-				"errorHeading": "",
-				"siblingWarning": "",
-				"title": ""
+				"body": "Le moteur de rendu commencera immédiatement à servir cette version à la portée {{scope}} .",
+				"cancel": "Annuler",
+				"changelogLabel": "Qu'est-ce qui a changé ? (facultatif)",
+				"changelogPlaceholder": "Ex. : Ajout du champ « Numéro IRB » ; réorganisation de la fiche de portée du projet.",
+				"confirm": "Confirmer la publication",
+				"confirmBusy": "Édition…",
+				"errorHeading": "Impossible de publier :",
+				"siblingWarning": "Attention — la version actuellement en ligne v{{version}} sera automatiquement archivée afin qu’une seule version publiée par portée reste active.",
+				"title": "Publier \"{{title}}\" v{{version}}?"
 			},
 			"scratchPreview": "Crée un formulaire de révision brouillon avec une carte vide, lié à cette étape. Publiez le formulaire dans l'interface d'administration avant qu'il n'apparaisse dans la section révision.",
-			"statusDraft": "",
-			"statusPublished": "",
+			"statusDraft": "Brouillon",
+			"statusPublished": "Publié",
 			"steps": {
 				"cardType": "Type de carte",
 				"checkpoint": "Point de contrôle",
@@ -1976,8 +1976,8 @@
 		"sectionTitlePlaceholder": "Entrez le titre de la section"
 	},
 	"selector": {
-		"addBlockAria": "",
-		"addFavoriteAria": "",
+		"addBlockAria": "Ajouter un bloc",
+		"addFavoriteAria": "Ajouter aux Favoris",
 		"basicBlocks": {
 			"description": "Vous souhaitez inclure des instructions personnalisées à vos participants ou intégrer un lien et/ou une vidéo à la procédure de votre étude ? Sélectionnez et modifiez un bloc de base.",
 			"title": "Blocs de base"
@@ -1987,9 +1987,9 @@
 			"myFavorite": "Mon préféré",
 			"ownedByMe": "Appartenant à moi"
 		},
-		"infoAria": "",
-		"previewAria": "",
-		"removeFavoriteAria": "",
+		"infoAria": "Informations sur le bloc",
+		"previewAria": "Bloc d'aperçu",
+		"removeFavoriteAria": "Retirer des favoris",
 		"searchPlaceholder": "🔍 Rechercher",
 		"studyDesign": {
 			"betweenSubjects": "Conception inter-sujets",
@@ -2000,8 +2000,8 @@
 		},
 		"surveys": {
 			"buildOwn": "Vous ne trouvez pas d'outil pour mesurer l'un de vos concepts d'étude ? Créez le vôtre grâce au générateur d'enquêtes et à l'aide de l'enseignant.",
-			"buildOwnLine1": "",
-			"buildOwnLine2": "",
+			"buildOwnLine1": "Vous ne trouvez pas d'outil pour mesurer l'un des concepts de votre étude ?",
+			"buildOwnLine2": "Créez le vôtre grâce à l'outil de création de sondages et à l'aide de l'enseignant.",
 			"description": "Vous souhaitez mesurer les attitudes, les expériences ou les opinions des participants grâce à l'auto-évaluation ? Choisissez parmi cette sélection d'enquêtes validées.",
 			"title": "Enquêtes"
 		},
@@ -2011,9 +2011,9 @@
 		},
 		"templates": {
 			"description": "Vous ne souhaitez pas partir de zéro ? Sélectionnez et modifiez un plan d'étude prédéfini à l'aide de l'un des modèles de cette banque.",
-			"openStudyAria": "",
+			"openStudyAria": "Étude ouverte",
 			"title": "Modèles",
-			"tryThisFlow": ""
+			"tryThisFlow": "Essayez ce flux"
 		}
 	},
 	"selectWhichToClone": "Sélectionnez ci-dessous le {{taskType}} que vous souhaitez cloner.",
@@ -2097,21 +2097,21 @@
 	"studyDescription": "Une étude est un projet de recherche comportant une question de recherche. Elle peut comprendre plusieurs tâches et/ou enquêtes.",
 	"studyFlow": {
 		"empty": {
-			"description": "",
-			"title": ""
+			"description": "Ajoutez des blocs au canevas et reliez-les pour observer comment les participants progressent dans votre étude.",
+			"title": "Aucun flux d'études pour le moment"
 		},
 		"noTasks": {
-			"description": "",
-			"title": ""
+			"description": "Intégrez des tâches ou des enquêtes à votre flux d'étude pour les prévisualiser ici.",
+			"title": "Aucune tâche dans ce flux"
 		},
 		"preview": {
-			"branch": "",
-			"collapseAria": "",
-			"defaultPath": "",
-			"expandAria": "",
-			"legend": "",
-			"probabilityAria": "",
-			"taskCount": ""
+			"branch": "Branche : {{name}}",
+			"collapseAria": "Effondrement du chemin {{name}}",
+			"defaultPath": "Chemin par défaut",
+			"expandAria": "Développer le chemin {{name}}",
+			"legend": "Plus de 100 simulations de parcours ont été effectuées. Les trajectoires sont classées par ordre de fréquence d'apparition.",
+			"probabilityAria": "{{frequency}} pour cent des simulations",
+			"taskCount": "{{count}} tâches"
 		}
 	},
 	"studyManager": {
@@ -2203,8 +2203,8 @@
 		"type": "Type",
 		"variableName": "Nom de variable",
 		"variableNamePlaceholder": "ex. reponse_1 (utilisé pour stocker la réponse)",
-		"variableNameStoredAs": "",
-		"variableNameStoredAsFallback": "",
+		"variableNameStoredAs": "Stocké sous : {{keys}}",
+		"variableNameStoredAsFallback": "Enregistré sous forme de : généré automatiquement à partir de l’en-tête si laissé vide",
 		"vas": "Échelle visuelle"
 	},
 	"surveyDescription": "Dans une enquête, on pose aux participants des questions sur eux-mêmes, sur leur comportement ou sur ce qu’ils ressentent.",
@@ -2353,38 +2353,38 @@
 		"addMore": "Ajouter plus"
 	},
 	"version": {
-		"actionsFor": "",
-		"autoName": "",
-		"cancel": "",
-		"cannotDeleteCollectionVersion": "",
-		"cannotDeleteFavorite": "",
-		"cannotDeleteWithData": "",
-		"confirmChangeCollectionVersion": "",
+		"actionsFor": "Actions pour {{versionName}}",
+		"autoName": "Version {{number}}",
+		"cancel": "Annuler",
+		"cannotDeleteCollectionVersion": "Cette version est utilisée pour la collecte de données et ne peut pas être supprimée. Veuillez choisir une autre version pour la collecte de données.",
+		"cannotDeleteFavorite": "Cette version est importante et ne peut pas être supprimée. Veuillez d'abord retirer l'étoile.",
+		"cannotDeleteWithData": "Cette version ne peut pas être supprimée car {{count}} enregistrements collectés y font référence.",
+		"confirmChangeCollectionVersion": "La collecte de données a déjà commencé. Si vous modifiez la version de la collecte de données, les enregistrements collectés à partir de maintenant seront étiquetés avec cette version. Continuer ?",
 		"confirmDelete": "Êtes-vous sûr de vouloir supprimer le {{versionName}} ?",
-		"confirmLoadUnsaved": "",
+		"confirmLoadUnsaved": "Des modifications non enregistrées sont présentes sur le canevas. Elles seront remplacées par cette version. Enregistrez d'abord votre étude si vous souhaitez les conserver. Charger cette version quand même ?",
 		"createdOn": "Créé le",
-		"dataCollectionBadge": "",
-		"dataCollectionVersion": "",
+		"dataCollectionBadge": "Collecte de données",
+		"dataCollectionVersion": "Version de collecte de données",
 		"delete": "Supprimer",
 		"description": "Description",
 		"enterVersionName": "Veuillez saisir le nom de la version",
-		"headerNote": "",
-		"invalidDiagram": "",
+		"headerNote": "Chaque fois que vous enregistrez une modification du plan d'étude, celle-ci est stockée ici en tant que version.",
+		"invalidDiagram": "Le diagramme de cette version n'a pas pu être chargé.",
 		"load": "Charger",
-		"loadedNote": "",
-		"loading": "",
-		"markAsImportant": "",
-		"missingDiagram": "",
+		"loadedNote": "{{versionName}} est affiché sur le canevas mais n'a pas encore été enregistré. Enregistrez l'étude pour la conserver.",
+		"loading": "Chargement des versions...",
+		"markAsImportant": "Marquer comme important",
+		"missingDiagram": "Cette version ne contient aucun diagramme enregistré à charger.",
 		"name": "Nom",
-		"noVersionSaved": "",
-		"onlyImportant": "",
-		"removeFromImportant": "",
-		"rename": "",
-		"renameVersion": "",
-		"save": "",
+		"noVersionSaved": "Aucune version n'a encore été enregistrée. Enregistrez l'étude pour sauvegarder la première version de votre conception.",
+		"onlyImportant": "Seuls les éléments importants ({{count}})",
+		"removeFromImportant": "Supprimer des versions importantes",
+		"rename": "Renommer",
+		"renameVersion": "Renommer la version",
+		"save": "Sauvegarder",
 		"title": "Version d'étude",
-		"unknownVersion": "",
-		"useForDataCollection": ""
+		"unknownVersion": "Une version qui n'est plus disponible",
+		"useForDataCollection": "Utilisation pour la collecte de données"
 	},
 	"videoNotSupported": "Vidéo non prise en charge",
 	"viewer": {

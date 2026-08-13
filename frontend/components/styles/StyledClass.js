@@ -2016,26 +2016,14 @@ const StyledClass = styled.div`
       line-height: 16px;
     }
 
-    .matchingRoundFormOriginChip--public {
+    .matchingRoundFormOriginChip--public,
+    .matchingRoundFormOriginChip--custom,
+    .matchingRoundFormOriginChip--owned {
       background: #ffffff !important;
       background-color: #ffffff !important;
       border-color: #a1a1a1 !important;
       color: #5f6871 !important;
-    }
-
-    .matchingRoundFormOriginChip--custom {
-      background: var(--MH-Theme-Primary-Light, #def8fb) !important;
-      background-color: var(--MH-Theme-Primary-Light, #def8fb) !important;
-      border: none !important;
-      color: var(--MH-Theme-Primary-Dark, #336f8a) !important;
-    }
-
-    .matchingRoundFormOriginChip--owned {
-      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3) !important;
-      background-color: var(--MH-Theme-Neutrals-Lighter, #f3f3f3) !important;
-      border: none !important;
-      color: var(--MH-Theme-Neutrals-Dark, #171717) !important;
-      font-weight: 600 !important;
+      font-weight: 500 !important;
     }
 
     .classTabMatchingRoundFooter {

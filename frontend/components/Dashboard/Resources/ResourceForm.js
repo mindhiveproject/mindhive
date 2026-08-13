@@ -2,6 +2,7 @@ import { StyledInput } from "../../styles/StyledForm";
 import { Radio } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import TipTapEditor from "../../TipTap/Main";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 export default function ResourceForm({ user, inputs, handleChange }) {
   const { t } = useTranslation("classes");
@@ -34,8 +35,15 @@ export default function ResourceForm({ user, inputs, handleChange }) {
             <input
               type="title"
               name="title"
-              value={inputs?.title}
-              onChange={handleChange}
+              value={stripHtml(inputs?.title)}
+              onChange={(e) =>
+                handleChange({
+                  target: {
+                    name: "title",
+                    value: e.target.value,
+                  },
+                })
+              }
               required
             />
           </label>

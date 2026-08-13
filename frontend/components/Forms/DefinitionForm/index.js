@@ -226,6 +226,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     hideSaveButton = false,
     /** Read-only review: hide blank / unanswered fields and special cards. */
     hideUnansweredFields = false,
+    /** Flatter card chrome (e.g. inside a DesignSystem Modal). */
+    quiet = false,
   },
   ref,
 ) {
@@ -552,7 +554,7 @@ const DefinitionForm = forwardRef(function DefinitionForm(
           specialCardComponents={specialCardComponents}
           hideUnansweredFields={hideUnansweredFields}
           readOnlyLayout={readOnly ? readOnlyLayout : null}
-          quiet={readOnly}
+          quiet={quiet || readOnly}
         />
       ))}
       {!readOnly && !hideSaveButton && (

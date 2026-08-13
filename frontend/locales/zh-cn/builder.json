@@ -92,7 +92,7 @@
 		"addStartingPoint": "添加起点",
 		"lockedMessage": "此研究已提交，无法编辑。如需更改，请告知您的老师取消提交此研究。",
 		"studyBuilderLocked": "学习构建器已锁定",
-		"undo": ""
+		"undo": "撤消"
 	},
 	"builderSection": {
 		"cloneDialog": {
@@ -447,7 +447,7 @@
 				"classNetwork": "阶级网络",
 				"empty": {
 					"classNetwork": "本项目或研究没有来自您班级网络的数据集。",
-					"me": "",
+					"me": "目前还没有可供您使用的数据集。",
 					"myClass": "您的课程还没有数据集。",
 					"public": "未找到公开数据集。",
 					"sharedWithMe": "没有与您共享任何数据集。",
@@ -455,13 +455,13 @@
 				},
 				"intro": {
 					"classNetwork": "本项目或研究中的数据集来自您班级网络中的班级。",
-					"me": "",
+					"me": "您可以查看所有数据集——上传的、与您共享的、来自您的班级、班级网络或公共的。",
 					"myClass": "与课堂学习或项目相关的数据集。",
 					"public": "来自公共期刊模板的数据集。",
 					"sharedWithMe": "其他人与您作为合作者共享的数据集。",
 					"uploaded": "您上传的数据集。"
 				},
-				"me": "",
+				"me": "我",
 				"myClass": "我的班级",
 				"public": "民众",
 				"sharedWithMe": "与我分享",
@@ -1204,10 +1204,10 @@
 	"durationHelp": "大约需要多长时间才能完成 {{taskType}}？",
 	"engine": {
 		"copy": "复制",
-		"cycleLinkPrevented": "",
-		"cycleLinkPreventedTitle": "",
+		"cycleLinkPrevented": "这种连接方式会形成一个没有有效终点的循环。请选择其他路径，以便研究能够顺利完成。",
+		"cycleLinkPreventedTitle": "不允许循环流动",
 		"save": "节省",
-		"saveFailed": "",
+		"saveFailed": "研究无法保存： {{message}}。请检查您的网络连接并重试。",
 		"studyLocked": "该研究已被锁定"
 	},
 	"externalDataWarning": "数据不会保存到 MH 数据库",
@@ -1338,7 +1338,7 @@
 	},
 	"menu": {
 		"addBlock": "添加块",
-		"settings": "",
+		"settings": "设置",
 		"studyFlow": "学习流程",
 		"studySettings": "研究环境"
 	},
@@ -1376,31 +1376,31 @@
 	"newProject": {
 		"addCollaborators": "添加合作者",
 		"alreadyAssociatedTitle": "您已经有一个与此类相关的项目",
-		"alreadyAssociatedTitleStudy": "",
+		"alreadyAssociatedTitleStudy": "你已经有一项与本课程相关的学习任务了",
 		"alreadyAssociatedWarning": "除非您知道自己在做什么，否则不要继续进行。",
-		"alreadyAssociatedWarningStudy": "",
+		"alreadyAssociatedWarningStudy": "除非您清楚自己在做什么，否则请勿继续操作。",
 		"backToHome": "← 返回主页",
 		"createProject": "创建项目",
-		"createStudy": "",
+		"createStudy": "创建研究",
 		"giveNameAlert": "给你的项目命名",
-		"giveNameAlertStudy": "",
+		"giveNameAlertStudy": "给你的研究起个名字",
 		"goBackHome": "回家",
 		"nameMessage": "给你的项目起个名字。这不是研究的标题，而是你想用来称呼你的工作空间的名称。",
-		"nameMessageStudy": "",
+		"nameMessageStudy": "给你的书房起个名字。这就是你想对你的工作空间称呼的名字。",
 		"namePlaceholder": "我的项目名称是",
-		"namePlaceholderStudy": "",
+		"namePlaceholderStudy": "我的研究名称是",
 		"nameYourProject": "命名您的项目",
-		"nameYourStudy": "",
+		"nameYourStudy": "给你的研究命名",
 		"noTemplatesSubtitle": "要启动项目，你需要一个项目板模板。你的老师可能没有链接到此课程的项目板模板。",
 		"noTemplatesTitle": "课堂上没有项目板模板",
 		"selectClass": "选择班级",
-		"selectTemplate": "",
-		"selectTemplateAlert": "",
-		"selectTemplateHelp": "",
-		"templateClassLabel": "",
-		"templateOptionLabel": "",
+		"selectTemplate": "选择模板",
+		"selectTemplateAlert": "请选择提案模板",
+		"selectTemplateHelp": "选择老师提供的可供复制的项目看板模板。",
+		"templateClassLabel": "类别： {{className}}",
+		"templateOptionLabel": "{{templateName}} — {{className}}",
 		"untitledProject": "无标题项目",
-		"untitledStudy": ""
+		"untitledStudy": "无标题研究"
 	},
 	"notes": {
 		"noNotes": "尚未输入任何注释。右键单击即可添加注释。"
@@ -1892,8 +1892,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} （已添加）",
 			"alreadyAddedTooltip": "这个检查点已经标记在棋盘上了。",
-			"buildFormSubtitle": "",
-			"buildFormTitle": "",
+			"buildFormSubtitle": "此模板适用于此看板。请在下方添加卡片和字段，然后发布。学生克隆体将继承您发布的内容。",
+			"buildFormTitle": "构建评论表单：“{{title}}”",
 			"cancel": "取消",
 			"categories": {
 				"action": "行动卡",
@@ -1914,8 +1914,8 @@
 			"customPreview": "创建带有自定义里程碑标签的自定义审核步骤。",
 			"editForm": "编辑表单",
 			"editFormHint": "表单编辑功能可在其他地方使用。",
-			"finishBuilding": "",
-			"finishDraftConfirm": "",
+			"finishBuilding": "结束",
+			"finishDraftConfirm": "这份评审表目前还是草稿。在您发布之前，学生在评审过程中是看不到的。无论如何，您还是要完成它吗？",
 			"formTemplate": {
 				"blank": "空白表格",
 				"defaultLabel": "{{label}}",
@@ -1931,22 +1931,22 @@
 			"previewLabel": "审核表单预览",
 			"previewLoading": "正在加载预览...",
 			"proposalPreview": "为学生添加带有内容字段的常规提案卡。",
-			"publish": "",
-			"publishing": "",
+			"publish": "发布…",
+			"publishing": "出版…",
 			"publishModal": {
-				"body": "",
-				"cancel": "",
-				"changelogLabel": "",
-				"changelogPlaceholder": "",
-				"confirm": "",
-				"confirmBusy": "",
-				"errorHeading": "",
-				"siblingWarning": "",
-				"title": ""
+				"body": "渲染器将​​立即开始在作用域 {{scope}} 上提供此版本。",
+				"cancel": "取消",
+				"changelogLabel": "发生了什么变化？（可选）",
+				"changelogPlaceholder": "例如：添加了 IRB 编号字段；重新排列了项目范围卡。",
+				"confirm": "确认发布",
+				"confirmBusy": "出版…",
+				"errorHeading": "发布失败：",
+				"siblingWarning": "请注意——当前版本 v{{version}} 将被自动存档，因此每个范围只有一个已发布的版本保持活跃。",
+				"title": "发布“{{title}}”v{{version}}？"
 			},
 			"scratchPreview": "创建一个包含一张空白卡片的草稿审核表单，并将其链接到此步骤。在表单出现在审核流程之前，请先在管理后台发布该表单。",
-			"statusDraft": "",
-			"statusPublished": "",
+			"statusDraft": "草稿",
+			"statusPublished": "发布",
 			"steps": {
 				"cardType": "卡类型",
 				"checkpoint": "检查点",
@@ -1976,8 +1976,8 @@
 		"sectionTitlePlaceholder": "输入章节标题"
 	},
 	"selector": {
-		"addBlockAria": "",
-		"addFavoriteAria": "",
+		"addBlockAria": "添加块",
+		"addFavoriteAria": "添加到收藏夹",
 		"basicBlocks": {
 			"description": "想要为参与者添加自定义说明或在研究过程中嵌入链接和/或视频吗？请选择并编辑基本区块",
 			"title": "基本块"
@@ -1987,9 +1987,9 @@
 			"myFavorite": "我最喜欢的",
 			"ownedByMe": "属于我"
 		},
-		"infoAria": "",
-		"previewAria": "",
-		"removeFavoriteAria": "",
+		"infoAria": "块信息",
+		"previewAria": "预览块",
+		"removeFavoriteAria": "从收藏夹中删除",
 		"searchPlaceholder": "🔍 搜索",
 		"studyDesign": {
 			"betweenSubjects": "受试者间设计",
@@ -2000,8 +2000,8 @@
 		},
 		"surveys": {
 			"buildOwn": "找不到工具来衡量你的学习内容？借助调查问卷构建器，在老师的帮助下，构建你自己的调查问卷：",
-			"buildOwnLine1": "",
-			"buildOwnLine2": "",
+			"buildOwnLine1": "找不到测量研究中某个构念的工具？",
+			"buildOwnLine2": "借助调查问卷生成器和老师的帮助，创建您自己的调查问卷。",
 			"description": "想要通过自我报告来衡量参与者的态度、经历或观点吗？从这个经过验证的调查库中选择吧！",
 			"title": "调查"
 		},
@@ -2011,9 +2011,9 @@
 		},
 		"templates": {
 			"description": "不想从头开始？选择并编辑预制研究设计，使用本模板库中的模板之一",
-			"openStudyAria": "",
+			"openStudyAria": "开放式学习",
 			"title": "模板",
-			"tryThisFlow": ""
+			"tryThisFlow": "试试这个流程"
 		}
 	},
 	"selectWhichToClone": "选择您想要克隆的 {{taskType}}。",
@@ -2097,21 +2097,21 @@
 	"studyDescription": "研究是指具有研究问题的研究项目。它可以包含多个任务和/或调查。",
 	"studyFlow": {
 		"empty": {
-			"description": "",
-			"title": ""
+			"description": "在画布上添加模块并将它们连接起来，看看参与者如何在你的研究中进行操作。",
+			"title": "暂无学习流程"
 		},
 		"noTasks": {
-			"description": "",
-			"title": ""
+			"description": "将任务或调查问卷关联到您的学习流程中，即可在此处预览。",
+			"title": "此流程中没有任务"
 		},
 		"preview": {
-			"branch": "",
-			"collapseAria": "",
-			"defaultPath": "",
-			"expandAria": "",
-			"legend": "",
+			"branch": "分支： {{name}}",
+			"collapseAria": "折叠路径 {{name}}",
+			"defaultPath": "默认路径",
+			"expandAria": "展开路径 {{name}}",
+			"legend": "模拟了超过 100 次参与者运行。路径按出现频率排序。",
 			"probabilityAria": "",
-			"taskCount": ""
+			"taskCount": "{{count}} 个任务"
 		}
 	},
 	"studyManager": {
@@ -2203,8 +2203,8 @@
 		"type": "类型",
 		"variableName": "变量名",
 		"variableNamePlaceholder": "例如：response_1（用于存储答案）",
-		"variableNameStoredAs": "",
-		"variableNameStoredAsFallback": "",
+		"variableNameStoredAs": "存储为： {{keys}}",
+		"variableNameStoredAsFallback": "存储方式：如果留空，则根据标头自动生成",
 		"vas": "视觉量表"
 	},
 	"surveyDescription": "在调查中，参与者会被问及关于他们自己、他们的行为或感受的问题。",
@@ -2353,38 +2353,38 @@
 		"addMore": "添加更多"
 	},
 	"version": {
-		"actionsFor": "",
-		"autoName": "",
-		"cancel": "",
-		"cannotDeleteCollectionVersion": "",
-		"cannotDeleteFavorite": "",
-		"cannotDeleteWithData": "",
-		"confirmChangeCollectionVersion": "",
+		"actionsFor": " {{versionName}}的操作",
+		"autoName": "版本 {{number}}",
+		"cancel": "取消",
+		"cannotDeleteCollectionVersion": "此版本仅用于数据收集，无法删除。请先选择其他版本进行数据收集。",
+		"cannotDeleteFavorite": "此版本被标记为重要版本，无法删除。请先移除星标。",
+		"cannotDeleteWithData": "由于 {{count}} 条已收集的记录引用了此版本，因此无法删除此版本。",
+		"confirmChangeCollectionVersion": "数据采集​​已经开始。如果您更改数据采集版本，则之后采集的记录将以该版本进行标记。是否继续？",
 		"confirmDelete": "您确定要删除 {{versionName}} 吗？",
-		"confirmLoadUnsaved": "",
+		"confirmLoadUnsaved": "画布上还有未保存的更改。这些更改将被此版本覆盖。如果您想保留这些更改，请先保存练习。仍然加载此版本吗？",
 		"createdOn": "创建日期",
-		"dataCollectionBadge": "",
-		"dataCollectionVersion": "",
+		"dataCollectionBadge": "数据收集",
+		"dataCollectionVersion": "数据收集版本",
 		"delete": "删除",
 		"description": "描述",
 		"enterVersionName": "请输入版本名称",
-		"headerNote": "",
-		"invalidDiagram": "",
+		"headerNote": "每次保存更改后的研究设计时，它都会作为版本存储在这里。",
+		"invalidDiagram": "此版本的图表无法加载。",
 		"load": "加载",
-		"loadedNote": "",
-		"loading": "",
-		"markAsImportant": "",
-		"missingDiagram": "",
+		"loadedNote": "{{versionName}} 已显示在画布上，但尚未保存。请保存此研究以保留它。",
+		"loading": "正在加载版本信息……",
+		"markAsImportant": "标记为重要",
+		"missingDiagram": "此版本没有已保存的图表可供加载。",
 		"name": "姓名",
-		"noVersionSaved": "",
-		"onlyImportant": "",
-		"removeFromImportant": "",
-		"rename": "",
-		"renameVersion": "",
-		"save": "",
+		"noVersionSaved": "尚未保存任何版本。保存此研究以存储您设计的第一个版本。",
+		"onlyImportant": "仅重要（{{count}}）",
+		"removeFromImportant": "从重要版本中移除",
+		"rename": "改名",
+		"renameVersion": "重命名版本",
+		"save": "节省",
 		"title": "学习版",
-		"unknownVersion": "",
-		"useForDataCollection": ""
+		"unknownVersion": "已下架的版本",
+		"useForDataCollection": "用于数据收集"
 	},
 	"videoNotSupported": "视频不支持",
 	"viewer": {

@@ -42,6 +42,8 @@ const FIELD_TYPES = [
   "read_only_html",
   "task_selector",
   "media_asset",
+  "link_list",
+  "media_asset_list",
 ];
 
 const ROLE_OPTIONS = [

@@ -82,6 +82,8 @@ function defaultForType(t) {
     case "multiselect":
     case "tag_multiselect":
     case "json_array":
+    case "link_list":
+    case "media_asset_list":
       return [];
     case "image":
     case "file":

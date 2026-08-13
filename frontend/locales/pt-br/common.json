@@ -101,7 +101,7 @@
 		"file": {
 			"current": "",
 			"download": "",
-			"downloadVideo": "",
+			"downloadVideo": "Baixar Vídeo",
 			"previewVideo": "",
 			"readyToUpload": "",
 			"remove": "",
@@ -110,9 +110,41 @@
 		"fixMultipleFields": "",
 		"fixSingleField": "",
 		"invalidFormat": "",
+		"linkList": {
+			"add": "",
+			"comment": "",
+			"commentPlaceholder": "",
+			"empty": "",
+			"emptyReadonly": "",
+			"remove": "",
+			"title": "",
+			"titlePlaceholder": "",
+			"url": ""
+		},
 		"max": "",
 		"maxLength": "",
+		"mediaAssetList": {
+			"add": "",
+			"addFromLibrary": "",
+			"alreadyAdded": "",
+			"changeFromLibrary": "",
+			"comment": "",
+			"commentPlaceholder": "",
+			"empty": "",
+			"emptyReadonly": "",
+			"media": "",
+			"remove": "",
+			"replaceUpload": "",
+			"title": "",
+			"titlePlaceholder": "",
+			"upload": ""
+		},
 		"min": "",
+		"resourcePreview": {
+			"download": "",
+			"noDescription": "",
+			"openLink": ""
+		},
 		"saveFailed": "",
 		"wordLimit": ""
 	},
@@ -235,13 +267,13 @@
 		"title": "Configurações de idioma",
 		"updatePreferences": "Atualizar preferências"
 	},
-	"loading": "",
+	"loading": "Carregando...",
 	"mediaLibrary": {
 		"choose": "",
 		"empty": "",
 		"title": "",
-		"upload": "",
-		"uploading": ""
+		"upload": "Enviar imagem",
+		"uploading": "Carregando..."
 	},
 	"members": {
 		"typeUsername": "Digite o nome de usuário"
@@ -257,18 +289,18 @@
 		"teachers": "Professores"
 	},
 	"opportunities": {
-		"close": "",
+		"close": "Fechar",
 		"columns": {
-			"actions": "",
-			"name": "",
-			"status": "",
+			"actions": "Ações",
+			"name": "Nome",
+			"status": "Status",
 			"visibility": ""
 		},
-		"delete": "",
+		"delete": "Excluir",
 		"deleteConfirm": "",
-		"edit": "",
+		"edit": "Editar",
 		"empty": "",
-		"loading": "",
+		"loading": "Carregando...",
 		"newButton": "",
 		"title": ""
 	},
@@ -331,7 +363,7 @@
 		"proceedNextTask": "Prossiga para a próxima tarefa",
 		"thankYou": "Obrigado por participar desta tarefa!"
 	},
-	"remove": "",
+	"remove": "Remover",
 	"reviewed": {
 		"menuTitle": "Revisado"
 	},

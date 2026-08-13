@@ -936,6 +936,13 @@
 				"publicEmpty": "",
 				"publicHint": "",
 				"publicTitle": "",
+				"publishAddModal": {
+					"body": "",
+					"cancel": "",
+					"confirm": "",
+					"failed": "",
+					"title": ""
+				},
 				"removeFromRound": "",
 				"reuseNote": "",
 				"roundSetEmpty": "",
@@ -988,6 +995,10 @@
 					"saveFailed": "",
 					"titleRequired": ""
 				},
+				"helperTextAdd": "",
+				"helperTextLabel": "",
+				"helperTextPlaceholder": "",
+				"helperTextRemove": "",
 				"introVideoHelper": "",
 				"introVideoPromptPlaceholder": "",
 				"loading": "",
@@ -1015,8 +1026,12 @@
 					"introVideo": "",
 					"introVideoHint": "",
 					"introVideoTaken": "",
+					"links": "",
+					"linksHint": "",
 					"media": "",
 					"mediaHint": "",
+					"mediaList": "",
+					"mediaListHint": "",
 					"open": "",
 					"openHint": "",
 					"pickMany": "",
@@ -1216,6 +1231,18 @@
 			"preSelected": "",
 			"published": "",
 			"returned": ""
+		},
+		"studentView": {
+			"emptyHint": "",
+			"emptyTitle": "",
+			"loading": "",
+			"meta": {
+				"dates": "",
+				"sponsor": ""
+			},
+			"notAvailableHint": "",
+			"notAvailableTitle": "",
+			"openAria": ""
 		}
 	},
 	"ownedItems": {

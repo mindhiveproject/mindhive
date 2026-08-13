@@ -5,9 +5,9 @@
 // embed preview, tag multiselect, json array) live in their own files
 // so this module stays small.
 import { useMemo } from "react";
-import { Dropdown } from "semantic-ui-react";
 import clsx from "clsx";
 
+import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import { fieldLabel, fieldHelper, fieldPlaceholder, optionLabel } from "../i18n";
 import {
   FieldShell,
@@ -21,15 +21,39 @@ function useSelectOptions(field, locale) {
     return raw
       .slice()
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-      .map((o) => ({
-        key: o.value,
-        value: o.value,
-        text: optionLabel(o, locale),
-      }));
+      .map((o) => {
+        const label = optionLabel(o, locale);
+        return {
+          value: o.value,
+          label,
+          labelText: label,
+        };
+      });
   }, [field?.options, locale]);
 }
 
-/** Visible option list for read-only / preview (disabled Dropdowns hide choices). */
+function selectTriggerStyle(hasError) {
+  return {
+    border: `2px solid ${
+      hasError
+        ? "#c0392b"
+        : "var(--MH-Theme-Neutrals-Medium, #a1a1a1)"
+    }`,
+    borderRadius: 8,
+    padding: "9px 11px",
+    fontFamily: "Lato, sans-serif",
+    fontSize: 14,
+    lineHeight: "20px",
+    fontWeight: 400,
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    background: "var(--MH-Theme-Neutrals-White, #ffffff)",
+    width: "100%",
+    minWidth: 0,
+    boxSizing: "border-box",
+  };
+}
+
+/** Visible option list for read-only / preview (disabled dropdowns hide choices). */
 function SelectOptionsPreview({ options, value, multiple }) {
   const selected = useMemo(() => {
     if (multiple) {
@@ -49,7 +73,7 @@ function SelectOptionsPreview({ options, value, multiple }) {
         const isSelected = selected.has(o.value);
         return (
           <li
-            key={o.key}
+            key={String(o.value)}
             className={clsx("select-option-preview", isSelected && "is-selected")}
           >
             <span
@@ -59,7 +83,7 @@ function SelectOptionsPreview({ options, value, multiple }) {
               )}
               aria-hidden
             />
-            <span>{o.text}</span>
+            <span>{o.label}</span>
           </li>
         );
       })}
@@ -252,6 +276,8 @@ export function SelectInput({
   readOnlyInline = false,
 }) {
   const options = useSelectOptions(field, locale);
+  const label = fieldLabel(field, locale);
+  const placeholder = fieldPlaceholder(field, locale);
   return (
     <FieldShell
       as="div"
@@ -262,13 +288,14 @@ export function SelectInput({
         <SelectOptionsPreview options={options} value={value} multiple={false} />
       ) : (
         <div className="field-control-block">
-          <Dropdown
-            selection
-            clearable={!field.isRequired}
-            placeholder={fieldPlaceholder(field, locale)}
+          <DropdownSelect
+            ariaLabel={label}
+            placeholder={placeholder}
             options={options}
             value={value ?? ""}
-            onChange={(_, { value: v }) => onChange(v || null)}
+            onChange={(v) => onChange(v || null)}
+            triggerStyle={selectTriggerStyle(Boolean(error))}
+            searchableSingle={options.length > 8}
           />
         </div>
       )}
@@ -287,6 +314,8 @@ export function MultiselectInput({
   readOnlyInline = false,
 }) {
   const options = useSelectOptions(field, locale);
+  const label = fieldLabel(field, locale);
+  const placeholder = fieldPlaceholder(field, locale);
   return (
     <FieldShell
       as="div"
@@ -297,14 +326,14 @@ export function MultiselectInput({
         <SelectOptionsPreview options={options} value={value} multiple />
       ) : (
         <div className="field-control-block">
-          <Dropdown
-            selection
+          <DropdownSelect
             multiple
-            clearable
-            placeholder={fieldPlaceholder(field, locale)}
+            ariaLabel={label}
+            placeholder={placeholder}
             options={options}
-            value={Array.isArray(value) ? value : []}
-            onChange={(_, { value: v }) => onChange(v)}
+            value={Array.isArray(value) ? value.map(String) : []}
+            onChange={(v) => onChange(v)}
+            triggerStyle={selectTriggerStyle(Boolean(error))}
           />
         </div>
       )}

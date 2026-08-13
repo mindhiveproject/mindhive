@@ -12,11 +12,31 @@ export function validateValues(values, fields) {
     if (!f?.name) continue;
     if (f.fieldType === "read_only_html") continue;
     const v = values[f.name];
-    const isEmpty =
+    let isEmpty =
       v === null ||
       v === undefined ||
       v === "" ||
       (Array.isArray(v) && v.length === 0);
+
+    if (f.fieldType === "link_list" && Array.isArray(v)) {
+      isEmpty = !v.some(
+        (row) =>
+          row &&
+          typeof row === "object" &&
+          typeof row.url === "string" &&
+          row.url.trim().length > 0
+      );
+    }
+
+    if (f.fieldType === "media_asset_list" && Array.isArray(v)) {
+      isEmpty = !v.some(
+        (row) =>
+          row &&
+          (typeof row === "string"
+            ? row.trim().length > 0
+            : typeof row === "object" && row.id)
+      );
+    }
 
     if (f.isRequired && isEmpty) {
       errors[f.name] = { code: "required" };

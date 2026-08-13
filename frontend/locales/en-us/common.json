@@ -110,9 +110,41 @@
 		"fixMultipleFields": "Please fix the following fields: {{fields}}",
 		"fixSingleField": "Please fix {{field}} before saving.",
 		"invalidFormat": "Invalid format.",
+		"linkList": {
+			"add": "Add link",
+			"comment": "Comment (optional)",
+			"commentPlaceholder": "Short note for viewers",
+			"empty": "No links yet — add one below.",
+			"emptyReadonly": "No links shared",
+			"remove": "Remove",
+			"title": "Title",
+			"titlePlaceholder": "Resource name",
+			"url": "URL"
+		},
 		"max": "Must be at most {{max}}.",
 		"maxLength": "Must be at most {{max}} characters.",
+		"mediaAssetList": {
+			"add": "Add media",
+			"addFromLibrary": "Choose from media library",
+			"alreadyAdded": "Already added",
+			"changeFromLibrary": "Choose different file",
+			"comment": "Comment (optional)",
+			"commentPlaceholder": "Short note for viewers",
+			"empty": "No media yet — add one below.",
+			"emptyReadonly": "No media shared",
+			"media": "Media",
+			"remove": "Remove",
+			"replaceUpload": "Upload replacement",
+			"title": "Title",
+			"titlePlaceholder": "Resource name",
+			"upload": "Upload image or PDF"
+		},
 		"min": "Must be at least {{min}}.",
+		"resourcePreview": {
+			"download": "Download",
+			"noDescription": "No description provided.",
+			"openLink": "Open link"
+		},
 		"saveFailed": "Save failed. Please try again.",
 		"wordLimit": "Must be at most {{max}} words."
 	},
@@ -238,7 +270,7 @@
 	"loading": "Loading…",
 	"mediaLibrary": {
 		"choose": "Choose from media library",
-		"empty": "No media yet. Upload an image to get started.",
+		"empty": "No media yet. Upload an image or PDF to get started.",
 		"title": "Media library",
 		"upload": "Upload image",
 		"uploading": "Uploading…"

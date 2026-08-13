@@ -21,6 +21,8 @@ import SelectOneIcon from "./SelectOneIcon";
 import TaskSelectorField from "./TaskSelectorField";
 import DualTextarea from "./DualTextarea";
 import MediaAssetField from "./MediaAssetField";
+import LinkListField from "./LinkListField";
+import MediaAssetListField from "./MediaAssetListField";
 import { FieldShell } from "../styles";
 import { fieldLabel } from "../i18n";
 
@@ -55,6 +57,8 @@ const REGISTRY = {
   task_selector: TaskSelectorField,
   dual_textarea: DualTextarea,
   media_asset: MediaAssetField,
+  link_list: LinkListField,
+  media_asset_list: MediaAssetListField,
 };
 
 export function getFieldComponent(fieldType) {

@@ -5,6 +5,7 @@ import { Icon, Popup } from "semantic-ui-react";
 
 import { GET_MY_RESOURCES, GET_PUBLIC_RESOURCES } from "../../Queries/Resource";
 import DeleteResource from "./DeleteResource";
+import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 import useTranslation from "next-translate/useTranslation";
 
@@ -28,7 +29,7 @@ export default function MyResourcesList({
   if (searchTerm) {
     resources = resources.filter(
       (r) =>
-        r.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stripHtml(r.title).toLowerCase().includes(searchTerm.toLowerCase()) ||
         r.description?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
@@ -62,7 +63,7 @@ export default function MyResourcesList({
     <div className="board">
       {resources.map((resource) => (
         <div key={resource.id} className="card">
-          <h3 className="card-title">{resource.title}</h3>
+          <h3 className="card-title">{stripHtml(resource.title)}</h3>
           <p className="card-meta">
             {t("boardManagement.author")}: {resource.author?.username}
           </p>

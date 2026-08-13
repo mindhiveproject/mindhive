@@ -5,15 +5,13 @@ export const Card = styled.section`
   display: flex;
   flex-direction: column;
   gap: ${(p) => (p.$quiet ? "16px" : "20px")};
-  padding: ${(p) => (p.$quiet ? "20px" : "28px")};
-  border-radius: 16px;
+  padding: ${(p) => (p.$quiet ? "0" : "28px")};
+  border-radius: ${(p) => (p.$quiet ? "0" : "16px")};
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   box-shadow: ${(p) =>
     p.$quiet ? "none" : "0px 4px 24px rgba(0, 0, 0, 0.05)"};
   border: ${(p) =>
-    p.$quiet
-      ? "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)"
-      : "1px solid transparent"};
+    p.$quiet ? "none" : "1px solid transparent"};
 
   h2 {
     margin: 0;
