@@ -1183,6 +1183,13 @@
 	"developA": "Develop a {{develop}}",
 	"developHeaderDescription": "Create, edit, and manage your studies, tasks, and surveys here.",
 	"developNew": "Develop new",
+	"developNewMenu": {
+		"block": "Block",
+		"study": "Study",
+		"survey": "Survey",
+		"task": "Task",
+		"visual": "Visual"
+	},
 	"developProjects": {
 		"activeProjects": "Active projects",
 		"allProjects": "All projects",
@@ -1192,6 +1199,7 @@
 		"filterByStatus": "Filter by status",
 		"unnamedClass": "Class"
 	},
+	"developSections": "Develop sections",
 	"developStudies": {
 		"classFilterPlaceholder": "Select classes",
 		"filterByClass": "Filter by class",
@@ -1360,6 +1368,7 @@
 	"myStudies": "My studies",
 	"mySurveys": "My surveys",
 	"myTasks": "My tasks",
+	"myVisuals": "Visuals",
 	"navigation": {
 		"back": "back",
 		"cloneSavePrompt": "Change the study name and click the Save button",
@@ -2414,5 +2423,6 @@
 		"visualAnalogueScale": "Visual analogue scale"
 	},
 	"visualize": "Visualize",
+	"visualsComingSoon": "Visuals are not available yet.",
 	"whatWouldYouLikeToDevelop": "What would you like to develop?"
 }
