@@ -4,7 +4,6 @@ import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import { ArrowOutwardIcon, BriefcaseIcon } from "../../../DesignSystem/Icons";
 import ConnectCard from "../ConnectCard";
-import ConnectEntityBand from "../ConnectEntityBand";
 import OrganizationVerificationStatus from "./OrganizationVerificationStatus";
 
 function hrefToPath(href) {
@@ -21,26 +20,16 @@ function hrefToPath(href) {
   return search ? `${pathname}?${search}` : pathname;
 }
 
-/**
- * @param {"card"|"band"} [layout="card"] - "card" is the vertical browse card;
- *   "band" is the compact detail-panel form, where the organization is
- *   supporting context beside a primary contact rather than a peer.
- */
-export default function OrganizationConnectCard({
-  org,
-  href,
-  linkLabel,
-  layout = "card",
-}) {
+export default function OrganizationConnectCard({ org, href, linkLabel }) {
   const { t } = useTranslation("connect");
 
   if (!org?.id) {
     return null;
   }
 
+
   const name = org.name || "";
   const location = org.location?.trim() || null;
-  const department = org.department?.trim() || null;
   const description = org.tagline?.trim() || org.mission?.trim() || null;
   const opportunityCount = org.opportunitiesCount || 0;
 
@@ -59,12 +48,15 @@ export default function OrganizationConnectCard({
       { default: "View organization {{name}}" }
     );
 
-  const Shell = layout === "band" ? ConnectEntityBand : ConnectCard;
-  const shellProps = layout === "band" ? { density: "compact" } : {};
+  const organizationTypeLabel = t(
+    "organizationsList.organizationButton",
+    {},
+    { default: "Organization" }
+  );
 
   return (
-    <Shell
-      {...shellProps}
+    <ConnectCard
+      typeLabel={organizationTypeLabel}
       href={orgHref}
       ariaLabel={viewOrgLabel}
       avatar={{
@@ -80,43 +72,29 @@ export default function OrganizationConnectCard({
         />
       }
       chips={
-        department || opportunityCount > 0 ? (
-          <>
-            {department ? (
-              <Chip
-                shape="square"
-                label={department}
-                title={department}
-                style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}
-              />
-            ) : null}
-            {opportunityCount > 0 ? (
-              <Chip
-                shape="square"
-                leading={<BriefcaseIcon width={18} height={18} />}
-                label={t(
+        opportunityCount > 0 ? (
+          <Chip
+            shape="square"
+            leading={<BriefcaseIcon width={18} height={18} />}
+            label={t(
+              opportunityCount === 1
+                ? "organizationsList.opportunityCount.one"
+                : "organizationsList.opportunityCount.many",
+              { count: opportunityCount },
+              {
+                default:
                   opportunityCount === 1
-                    ? "organizationsList.opportunityCount.one"
-                    : "organizationsList.opportunityCount.many",
-                  { count: opportunityCount },
-                  {
-                    default:
-                      opportunityCount === 1
-                        ? "{{count}} opportunity"
-                        : "{{count}} opportunities",
-                  }
-                )}
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  minHeight: 32,
-                  // An 18px glyph needs more breathing room than the 4px Chip
-                  // reserves for a flush 24px avatar.
-                  paddingLeft: 10,
-                }}
-              />
-            ) : null}
-          </>
+                    ? "{{count}} opportunity"
+                    : "{{count}} opportunities",
+              }
+            )}
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+              minHeight: 32,
+              paddingLeft: 8,
+            }}
+          />
         ) : null
       }
       description={description}
@@ -133,11 +111,7 @@ export default function OrganizationConnectCard({
             }
           }}
         >
-          {t(
-            "organizationsList.organizationButton",
-            {},
-            { default: "Organization" }
-          )}
+          {organizationTypeLabel}
         </Button>
       }
     />

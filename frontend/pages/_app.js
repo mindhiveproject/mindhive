@@ -27,7 +27,15 @@ NProgress.configure({ showSpinner: false, minimum: 0.15, trickleSpeed: 120 });
 const BAR_DELAY_MS = 150;
 let barTimer;
 
+// Navigations overlap: a redirect fired from an effect starts before the route
+// change that mounted it reports complete. Clearing on start keeps one timer
+// alive at a time — otherwise the second start orphans the first, which then
+// fires after the last done() and strands the bar. Finishing is deliberately
+// unconditional: Next drops a navigation that another one supersedes without
+// emitting either completion event, so anything that tries to pair starts with
+// finishes will eventually get stuck holding the bar open.
 Router.events.on("routeChangeStart", () => {
+  clearTimeout(barTimer);
   barTimer = setTimeout(() => NProgress.start(), BAR_DELAY_MS);
 });
 

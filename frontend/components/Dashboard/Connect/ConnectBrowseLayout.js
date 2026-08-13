@@ -13,7 +13,7 @@ const imgBackground = "/assets/connect/background.svg";
  * single-column layout (Figma 506:1306). 920px is exactly three resting cards
  * plus their two gaps, so the header and the grid share one flush edge.
  */
-const CARD_WIDTH = "296px";
+export const CARD_WIDTH = "296px";
 const CARD_MAX_WIDTH = "368px";
 const CONTENT_MAX_WIDTH = "920px";
 

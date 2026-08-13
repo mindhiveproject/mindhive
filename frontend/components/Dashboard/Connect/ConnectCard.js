@@ -19,18 +19,24 @@ const CardContainer = styled.article`
   border-radius: 12px;
   border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   background: var(--MH-Theme-Neutrals-White, #ffffff);
-  transition: border-color 0.2s;
 
-  &:hover {
-    border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
-  }
-
-  /* The dashboard fades every link and button on hover; the card states below
-     and the design system buttons say it properly, so opt out of that here. */
+  /* The card is a static surface: the buttons in it are the affordances, so it
+     has no hover state of its own. The dashboard fades every link and button on
+     hover, which would undo that, so opt out of it here. */
   a:hover,
   button:hover {
     opacity: 1;
   }
+`;
+
+const TypeLabel = styled.p`
+  margin: 0;
+  align-self: flex-start;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
 const infoClusterStyles = css`
@@ -48,10 +54,8 @@ const InfoClusterLink = styled(Link)`
   ${infoClusterStyles}
   cursor: pointer;
 
-  &:hover .name span {
-    text-decoration: underline;
-  }
-
+  /* No hover styling by design — see CardContainer. The pointer cursor still
+     signals the shortcut, and focus-visible stays for keyboard users. */
   &:focus-visible {
     outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
     outline-offset: 2px;
@@ -189,6 +193,9 @@ const Actions = styled.div`
 `;
 
 /**
+ * @param {React.ReactNode} [typeLabel] - Quiet eyebrow in the top-left naming
+ *   what kind of entity this is ("Profile", "Organization"), so a card is
+ *   legible on its own outside the browse page that grouped it.
  * @param {{ src?: string, fallbackLabel?: string, fallbackBackground?: string }} [avatar]
  * @param {React.ReactNode} title - Primary line (name).
  * @param {React.ReactNode} [subtitle] - Secondary line (occupation, location).
@@ -201,6 +208,7 @@ const Actions = styled.div`
  * @param {string} [ariaLabel] - Accessible name for that link.
  */
 export default function ConnectCard({
+  typeLabel = null,
   avatar,
   title,
   subtitle = null,
@@ -215,6 +223,7 @@ export default function ConnectCard({
 
   return (
     <CardContainer>
+      {typeLabel && <TypeLabel>{typeLabel}</TypeLabel>}
       <InfoCluster {...(href ? { href, "aria-label": ariaLabel } : {})}>
         <Avatar>
           {avatar?.src ? (

@@ -85,10 +85,16 @@ export const StyledNavbar = styled.div`
       border-color: var(--MH-Theme-Accent-Medium, #f9d978);
       background: none;
     }
-    &:hover {
-      border-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    &:hover:not(.selected) {
+      border-bottom-width: 2px;
+      border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
       background: none;
     }
+  }
+
+  .navbar-container.underline.show-rule .navbar-item:not(.selected):not(:hover) {
+    border-bottom-width: 1px;
+    border-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
   }
 
   /* Vertical orientation — sidebars and menu rails. */
@@ -186,6 +192,8 @@ const NavbarContext = createContext({ collapsed: false });
  * @param {"horizontal"|"vertical"} [orientation="horizontal"] - Layout direction.
  * @param {boolean} [collapsed=false] - Vertical only. Renders an icon-only rail;
  *   item labels become accessible names instead of visible text.
+ * @param {boolean} [showRule=false] - Underline variant only. Gives unselected
+ *   items a resting 1px divider line instead of a transparent one.
  * @param {React.ReactNode} children - NavbarItem and NavbarSection elements.
  *
  * @example
@@ -207,6 +215,7 @@ export default function Navbar({
   variant = "tonal",
   orientation = "horizontal",
   collapsed = false,
+  showRule = false,
   children,
   className,
   ...props
@@ -226,6 +235,7 @@ export default function Navbar({
             variant,
             isVertical && "vertical",
             isVertical && collapsed && "collapsed",
+            showRule && "show-rule",
           )}
         >
           {children}
