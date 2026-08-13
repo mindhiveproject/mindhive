@@ -207,34 +207,23 @@ const ChatThreadWrap = styled.div`
   flex-direction: column;
 `;
 
-const PeopleGrid = styled.div`
+/**
+ * The People tab holds two entities, not a grid of many, so each gets a
+ * full-width band (see ConnectEntityBand) under a small label rather than a
+ * browse card marooned in half a 900px panel.
+ */
+const PeopleSection = styled.section`
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
-
-  @media (max-width: 900px) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-`;
-
-/** Shared shell for mentor profile + opportunity meta (matches ConnectCard fill). */
-const PeopleProfileColumn = styled.div`
-  display: grid;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
-  align-content: start;
-  width: 100%;
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
-  box-sizing: border-box;
 
-  /* Nested ConnectCard already sits in this shell — drop its own fill/padding. */
-  > article {
-    background: transparent;
-    padding: 0;
-    max-width: none;
+  h4 {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 `;
 
@@ -1749,32 +1738,41 @@ export default function OpportunityPreviewModal({
 
               {resolvedTab === OPPORTUNITY_PREVIEW_TABS.people ? (
                 <div style={{ display: "grid", gap: 16 }}>
-                  {opp.organization || opp.mentor ? (
-                    <PeopleGrid>
-                      {opp.organization ? (
-                        <OrganizationConnectCard org={opp.organization} />
-                      ) : null}
-                      {opp.mentor ? (
-                        <PeopleProfileColumn>
-                          <ConnectProfileCard user={user} profile={opp.mentor} />
-                          <SponsorProfileOpportunityMeta
-                            opportunity={opp}
-                            profile={opp.mentor}
-                            t={t}
-                          />
-                        </PeopleProfileColumn>
-                      ) : null}
-                    </PeopleGrid>
+                  {opp.mentor ? (
+                    <PeopleSection>
+                      <h4>
+                        {t("opportunities.preview.primaryContact", {}, {
+                          default: "Primary contact",
+                        })}
+                      </h4>
+                      <ConnectProfileCard
+                        user={user}
+                        profile={opp.mentor}
+                        layout="band"
+                      />
+                    </PeopleSection>
                   ) : null}
 
-                  {/* Meta without a mentor card (rare) — still show audit fields. */}
-                  {!opp.mentor ? (
-                    <SponsorProfileOpportunityMeta
-                      opportunity={opp}
-                      profile={null}
-                      t={t}
-                    />
+                  {opp.organization ? (
+                    <PeopleSection>
+                      <h4>
+                        {t("opportunities.preview.organization", {}, {
+                          default: "Organization",
+                        })}
+                      </h4>
+                      <OrganizationConnectCard
+                        org={opp.organization}
+                        layout="band"
+                      />
+                    </PeopleSection>
                   ) : null}
+
+                  {/* Audit fields run full width under both bands. */}
+                  <SponsorProfileOpportunityMeta
+                    opportunity={opp}
+                    profile={opp.mentor || null}
+                    t={t}
+                  />
 
                   {!opp.organization &&
                   !opp.mentor &&

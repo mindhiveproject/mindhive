@@ -1187,6 +1187,7 @@
 			"many": "{{count}} 个机会",
 			"one": "{{count}} 机会"
 		},
+		"organizationButton": "组织",
 		"pageTitle": "组织",
 		"paginationInfo": "",
 		"paginationLabel": "",
@@ -1247,6 +1248,7 @@
 		"defaultCommunity": "MindHive社区",
 		"defaultName": "MindHive 会员",
 		"defaultSummary": "点击查看个人资料",
+		"profileButton": "个人主页",
 		"viewProfile": "查看 {{name}}的个人资料"
 	},
 	"profileType": {

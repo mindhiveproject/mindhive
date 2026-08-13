@@ -71,6 +71,14 @@ const TONAL_BASE = {
   background: "var(--MH-Theme-Primary-Light, #DEF8FB)",
   color: "var(--MH-Theme-Primary-Dark, #336F8A)",
 };
+// KNOWN ISSUE: this hover repeats the base fill, so a drop shadow is the only
+// feedback — and `elevated={false}` removes that, leaving no hover state at
+// all. Material deepens the fill instead (a state layer of the content colour
+// over the container). Connect's ManageFavorite tries that as a local override
+// — Primary Light → Primary Medium, no shadow. If it holds up, fold it in here
+// as `{ background: "var(--MH-Theme-Primary-Medium, #A3D6DB)" }` and drop the
+// override. Contrast checked: #336F8A on #A3D6DB is 3.45:1, over the 3:1 bar
+// for icons. Do not go on to Primary Base #69BBC4 — that falls to 2.47:1.
 const TONAL_HOVER = {
   background: "var(--MH-Theme-Primary-Light, #DEF8FB)",
   boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0,0,0,0.1))",

@@ -1187,6 +1187,7 @@
 			"many": "{{count}} oportunidades",
 			"one": "{{count}} oportunidade"
 		},
+		"organizationButton": "Organização",
 		"pageTitle": "",
 		"paginationInfo": "",
 		"paginationLabel": "",
@@ -1247,6 +1248,7 @@
 		"defaultCommunity": "Comunidade MindHive",
 		"defaultName": "Membro do MindHive",
 		"defaultSummary": "Clique para ver o perfil.",
+		"profileButton": "Perfil",
 		"viewProfile": "Ver perfil de {{name}}"
 	},
 	"profileType": {

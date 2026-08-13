@@ -7,8 +7,8 @@ import { GET_CONNECT_USERS } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
 import { SearchIcon } from "../../../DesignSystem/Icons";
 import {
+  BrowseBody,
   BrowseCardsGrid,
-  BrowseContainer,
   BrowseEmptyState,
   BrowseHeader,
   BrowseSearchField,
@@ -16,9 +16,6 @@ import {
 } from "../ConnectBrowseLayout";
 
 import PaginationUsers from "./Pagination";
-
-/** Card shape used by the browse grid — switch to "vertical" to preview the stacked card. */
-const CARD_LAYOUT = "horizontal";
 
 const PER_PAGE = 12;
 
@@ -61,7 +58,7 @@ export default function ConnectBankNew({ query, user }) {
         <p>{t("connectSubtitle")}</p>
       </BrowseHeader>
 
-      <BrowseContainer>
+      <BrowseBody>
         <BrowseSearchField>
           <SearchIcon className="search-icon" width={20} height={20} />
           <input
@@ -74,14 +71,9 @@ export default function ConnectBankNew({ query, user }) {
           />
         </BrowseSearchField>
 
-        <BrowseCardsGrid $layout={CARD_LAYOUT}>
+        <BrowseCardsGrid>
           {profiles.map((profile) => (
-            <ProfileCard
-              key={profile?.id}
-              user={user}
-              profile={profile}
-              layout={CARD_LAYOUT}
-            />
+            <ProfileCard key={profile?.id} user={user} profile={profile} />
           ))}
         </BrowseCardsGrid>
 
@@ -98,7 +90,7 @@ export default function ConnectBankNew({ query, user }) {
           search={search}
           goToPage={goToPage}
         />
-      </BrowseContainer>
+      </BrowseBody>
     </BrowseShell>
   );
 }

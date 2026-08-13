@@ -8,6 +8,7 @@ import DesignSystemButton from "../../../DesignSystem/Button";
 import Modal from "../../../DesignSystem/Modal";
 import { EXPLORE_ORGANIZATIONS_PAGED } from "../../../Queries/Organization";
 import { manageOrganizationHref } from "../../../../lib/profileEditNavigation";
+import { BrowseCardsGrid } from "../ConnectBrowseLayout";
 import FilterBar from "../FilterBar";
 import OrganizationConnectCard from "./OrganizationConnectCard";
 import CreateOrganizationForm from "./CreateOrganizationForm";
@@ -36,17 +37,6 @@ const Header = styled.div`
     color: #5f6871;
     font-size: 14px;
     max-width: 640px;
-  }
-`;
-
-const Grid = styled.div`
-  display: grid;
-  gap: 16px;
-  justify-items: center;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  @media (max-width: 759px) {
-    grid-template-columns: 1fr;
   }
 `;
 
@@ -273,7 +263,7 @@ export default function ManageOrganizationsList({ user }) {
       )}
 
       {organizations.length > 0 && (
-        <Grid>
+        <BrowseCardsGrid>
           {organizations.map((org) => (
             <OrganizationConnectCard
               key={org.id}
@@ -286,7 +276,7 @@ export default function ManageOrganizationsList({ user }) {
               )}
             />
           ))}
-        </Grid>
+        </BrowseCardsGrid>
       )}
       {createModal}
     </Shell>

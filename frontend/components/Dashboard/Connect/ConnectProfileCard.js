@@ -2,10 +2,11 @@ import { useMemo } from "react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
-import IconButton from "../../DesignSystem/IconButton";
 import { ArrowOutwardIcon } from "../../DesignSystem/Icons";
 import ConnectCard from "./ConnectCard";
+import ConnectEntityBand from "./ConnectEntityBand";
 import ManageFavorite from "./ManageFavorite";
 import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 
@@ -56,11 +57,16 @@ function hrefToPath(href) {
   return search ? `${pathname}?${search}` : pathname;
 }
 
+/**
+ * @param {"card"|"band"} [layout="card"] - "card" is the vertical browse card;
+ *   "band" is the wide detail-panel form. Only the shell changes — everything
+ *   below stays the single source for how a profile maps onto one.
+ */
 export default function ConnectProfileCard({
   user,
   profile,
   actions = null,
-  layout = "horizontal",
+  layout = "card",
 }) {
   const { t } = useTranslation("connect");
 
@@ -81,11 +87,29 @@ export default function ConnectProfileCard({
   }
 
   const occupation = profile?.occupation?.trim() || null;
+  const description =
+    profile?.tagline?.trim() || profile?.bioInformal?.trim() || null;
 
-  const linkedOrg = profile?.organizations?.[0] || null;
-  const orgLabel =
-    profile?.organization?.trim() || linkedOrg?.name?.trim() || null;
-  const orgLogoUrl = linkedOrg?.logo?.url || null;
+  // Every linked organization gets its own chip; the free-text `organization`
+  // field is the fallback for profiles that never linked one.
+  const linkedOrgs = (profile?.organizations || []).filter((org) =>
+    org?.name?.trim()
+  );
+  const orgTags = linkedOrgs.length
+    ? linkedOrgs.map((org) => ({
+        key: org.id,
+        label: org.name.trim(),
+        logoUrl: org.logo?.url || null,
+      }))
+    : profile?.organization?.trim()
+      ? [
+          {
+            key: "organization",
+            label: profile.organization.trim(),
+            logoUrl: null,
+          },
+        ]
+      : [];
 
   const profileHref = profile.publicId
     ? {
@@ -101,9 +125,10 @@ export default function ConnectProfileCard({
     { default: "View profile of {{name}}" }
   );
 
+  const Shell = layout === "band" ? ConnectEntityBand : ConnectCard;
+
   return (
-    <ConnectCard
-      layout={layout}
+    <Shell
       href={profileHref}
       ariaLabel={viewProfileLabel}
       avatar={{
@@ -113,33 +138,35 @@ export default function ConnectProfileCard({
       }}
       title={fullName}
       subtitle={occupation}
-      chip={
-        orgLabel ? (
-          <Chip
-            label={orgLabel}
-            style={{ width: "fit-content" }}
-            leading={
-              <ChipLeading
-                src={orgLogoUrl || "/assets/connect/building.svg"}
-                alt=""
+      chips={
+        orgTags.length
+          ? orgTags.map((tag) => (
+              <Chip
+                key={tag.key}
+                shape="pill"
+                label={tag.label}
+                title={tag.label}
+                style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}
+                leading={
+                  <ChipLeading
+                    src={tag.logoUrl || "/assets/connect/building.svg"}
+                    alt=""
+                  />
+                }
               />
-            }
-          />
-        ) : null
+            ))
+          : null
       }
+      description={description}
       actions={
         <>
           {actions}
           <ManageFavorite user={user} profileId={profile?.id} />
           {profileHref ? (
-            <IconButton
+            <Button
               variant="outline"
-              style={{
-                borderColor: "var(--MH-Theme-Primary-Dark, #336F8A)",
-                color: "var(--MH-Theme-Primary-Dark, #336F8A)",
-              }}
-              icon={<ArrowOutwardIcon />}
-              ariaLabel={viewProfileLabel}
+              leadingIcon={<ArrowOutwardIcon />}
+              aria-label={viewProfileLabel}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -147,7 +174,9 @@ export default function ConnectProfileCard({
                   window.open(profileUrl, "_blank", "noopener,noreferrer");
                 }
               }}
-            />
+            >
+              {t("profileCard.profileButton", {}, { default: "Profile" })}
+            </Button>
           ) : null}
         </>
       }
