@@ -41,6 +41,7 @@ import {
 import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
+import generateAiFeedbackHelp from "./generateAiFeedbackHelp";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
 import resolveFormDefinition from "./resolveFormDefinition";
 import seedOpportunityForm from "./seedOpportunityForm";
@@ -79,6 +80,25 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         id: ID!
         updatedCloneCount: Int!
         errors: [String!]!
+      }
+      input AiFeedbackHelpInput {
+        proposalId: ID!
+        questionNumber: String!
+        questionName: String
+        currentTextContent: String
+      }
+      type AiFeedbackHelpButton {
+        text: String!
+        action: String
+      }
+      type AiFeedbackHelpResult {
+        textDisplay: String!
+        buttonsArray: [AiFeedbackHelpButton!]!
+      }
+      type AiFeedbackHelpPayload {
+        threadId: String!
+        status: String!
+        result: AiFeedbackHelpResult
       }
       type Mutation {
         sendEmail(
@@ -185,6 +205,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite(inviteId: ID!): NetworkInvite
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
+        generateAiFeedbackHelp(
+          input: AiFeedbackHelpInput!
+        ): AiFeedbackHelpPayload!
         # Connect the session user to OpportunityReviewNote.readBy for
         # notes they can see. Needed because list update is author-only.
         markOpportunityReviewNotesRead(noteIds: [ID!]!): [OpportunityReviewNote!]!
@@ -376,6 +399,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite,
         followUser,
         unfollowUser,
+        generateAiFeedbackHelp,
         markOpportunityReviewNotesRead,
         seedOpportunityForm,
         seedProfileForms,

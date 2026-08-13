@@ -1,18 +1,22 @@
-import {
-  DropdownMenu,
-  DropdownItem,
-  DropdownDivider,
-  Dropdown,
-  Icon,
-} from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 
 import ReactStars from "react-rating-stars-component"; // https://www.npmjs.com/package/react-rating-stars-component
 import TaskSelector from "./TaskSelector";
 import useTranslation from "next-translate/useTranslation";
+import AiFeedbackPanel from "../../../../TipTap/AiFeedbackPanel";
 
-export default function Question({ stage, item, handleItemChange, answer }) {
+export default function Question({
+  projectId,
+  user,
+  stage,
+  item,
+  handleItemChange,
+  answer,
+}) {
   const { t } = useTranslation("builder");
   const { responseType } = item;
+  const isAdmin = user?.permissions?.map((p) => p?.name).includes("ADMIN");
+  const questionNumber = item?.name ? `Q${item.name}` : "";
 
   if (responseType === "selectOne") {
     const options = item?.responseOptions.map((r) => ({
@@ -161,6 +165,15 @@ export default function Question({ stage, item, handleItemChange, answer }) {
           })
         }
       />
+
+      {isAdmin && projectId && questionNumber && (
+        <AiFeedbackPanel
+          proposalId={projectId}
+          questionNumber={questionNumber}
+          questionName={item?.name}
+          currentTextContent={answer}
+        />
+      )}
     </div>
   );
 }

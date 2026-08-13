@@ -13,6 +13,14 @@ the values:
 cp .env.example .env
 ```
 
+## AI Feedback Helper
+
+The `generateAiFeedbackHelp` GraphQL mutation proxies admin-only requests to the local Pydantic service.
+
+- `AI_FEEDBACK_SERVICE_URL`: required for the mutation, for example `http://localhost:8001`.
+- `AI_FEEDBACK_SERVICE_TOKEN`: optional shared token. If set here, the Python service must use the same value.
+
+To view the config for your new app, look at [./keystone.ts](./keystone.ts)
 `.env` is gitignored because it holds secrets (mail token, Cloudinary
 credentials, session secret). The `.env.example` file documents every variable
 the backend reads and provides safe defaults for local development.
