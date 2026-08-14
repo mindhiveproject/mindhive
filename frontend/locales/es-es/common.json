@@ -146,6 +146,7 @@
 			"openLink": ""
 		},
 		"saveFailed": "Error al guardar. Por favor, inténtelo de nuevo.",
+		"selectRequired": "",
 		"wordLimit": "Debe tener como máximo {{max}} palabras."
 	},
 	"discoverDescription": "Explora nuestra colección de estudios, tareas y encuestas creadas por estudiantes de secundaria del programa MindHive y científicos colaboradores. Participa en estudios o consulta las tareas y encuestas.",

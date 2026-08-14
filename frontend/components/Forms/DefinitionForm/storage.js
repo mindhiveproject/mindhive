@@ -79,6 +79,9 @@ function defaultForType(t) {
       return false;
     case "number":
       return null;
+    case "select":
+    case "select_one_icon":
+      return null;
     case "multiselect":
     case "tag_multiselect":
     case "json_array":
@@ -160,6 +163,15 @@ export function buildUpdate(values, fields, entity, related) {
 
       if (f.fieldType === "date") {
         target.columns[col] = v ? toIsoOrNull(v) : null;
+        continue;
+      }
+
+      // Select enums reject "" — send null when cleared / untouched.
+      if (
+        (f.fieldType === "select" || f.fieldType === "select_one_icon") &&
+        (v === "" || v === undefined)
+      ) {
+        target.columns[col] = null;
         continue;
       }
 
