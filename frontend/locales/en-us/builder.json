@@ -1912,7 +1912,7 @@
 			"buildFormTitle": "Build the review form: \"{{title}}\"",
 			"cancel": "Cancel",
 			"categories": {
-				"action": "Action card",
+				"action": "Milestone",
 				"proposal": "Proposal card"
 			},
 			"create": "Create",
@@ -1922,8 +1922,8 @@
 				"cloneFrom": "Copy an existing form",
 				"description": "Description",
 				"fromScratch": "Start from scratch",
-				"label": "Action label",
-				"labelPlaceholder": "Enter an action label",
+				"label": "Milestone label",
+				"labelPlaceholder": "Enter a milestone label",
 				"selectSource": "Form to copy",
 				"selectSourcePlaceholder": "Select a review step"
 			},
@@ -1938,11 +1938,11 @@
 				"label": "Form template"
 			},
 			"milestone": {
-				"actionLabel": "Action label",
+				"actionLabel": "Milestone label",
 				"configureFormNext": "The review form is configured in the next step.",
 				"description": "Description"
 			},
-			"newCheckpoint": "+ New Action Card",
+			"newCheckpoint": "+ New Milestone",
 			"noPreview": "No review form is linked to this card type.",
 			"previewLabel": "Review form preview",
 			"previewLoading": "Loading preview...",
@@ -1967,7 +1967,7 @@
 				"cardType": "Card type",
 				"checkpoint": "Checkpoint",
 				"milestone": "Milestone",
-				"permissions": "Permissions & form template"
+				"permissions": "Form template"
 			},
 			"templateSourceLabel": "{{title}} (custom)",
 			"title": "Create a new card",
@@ -1976,10 +1976,10 @@
 			"typeLabel": "Card type",
 			"typePlaceholder": "Select a card type",
 			"types": {
-				"actionCollectingData": "Default action: Start Collecting Data",
-				"actionPeerFeedback": "Default action: Submit for Peer Feedback",
-				"actionProjectReport": "Default action: Submit Project Report",
-				"actionSubmit": "Default action: Submit for Proposal Feedback",
+				"actionCollectingData": "Default milestone: Start Collecting Data",
+				"actionPeerFeedback": "Default milestone: Submit for Peer Feedback",
+				"actionProjectReport": "Default milestone: Submit Project Report",
+				"actionSubmit": "Default milestone: Submit for Proposal Feedback",
 				"custom": "Create your own review step",
 				"proposal": "Proposal card"
 			}

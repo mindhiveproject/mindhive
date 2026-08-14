@@ -30,7 +30,6 @@ import {
   PROPOSAL_CARD_TYPE,
 } from "./cardTypeOptions";
 
-const PERMISSION_OPTIONS = ["MENTOR", "TEACHER", "SCIENTIST", "STUDENT"];
 const DEFAULT_PERMISSIONS = ["MENTOR", "TEACHER", "SCIENTIST"];
 
 const overlayStyle = {
@@ -175,7 +174,7 @@ function CardTypeStep({ cardCategory, onSelect, t }) {
           label={t(
             "section.createCardModal.categories.action",
             {},
-            { default: "Action" }
+            { default: "Milestone" }
           )}
           selected={cardCategory === CARD_CATEGORY_ACTION}
           onClick={() => onSelect(CARD_CATEGORY_ACTION)}
@@ -228,7 +227,7 @@ function CheckpointStep({
             label={t(
               "section.createCardModal.newCheckpoint",
               {},
-              { default: "+ New Action Card" }
+              { default: "+ New Milestone" }
             )}
             selected={checkpointChoice === NEW_CHECKPOINT_VALUE}
             onClick={() => onSelect(NEW_CHECKPOINT_VALUE)}
@@ -267,7 +266,7 @@ function MilestonePreviewStep({
             {t(
               "section.createCardModal.milestone.actionLabel",
               {},
-              { default: "Action label" }
+              { default: "Milestone label" }
             )}
             <input
               autoFocus
@@ -277,7 +276,7 @@ function MilestonePreviewStep({
               placeholder={t(
                 "section.createCardModal.custom.labelPlaceholder",
                 {},
-                { default: "Enter an action label" }
+                { default: "Enter a milestone label" }
               )}
               style={inputStyle}
             />
@@ -321,7 +320,7 @@ function MilestonePreviewStep({
           {t(
             "section.createCardModal.milestone.actionLabel",
             {},
-            { default: "Action label" }
+            { default: "Milestone label" }
           )}
           <input
             type="text"
@@ -376,10 +375,8 @@ function PermissionsAndTemplateStep({
   formTemplateOptions,
   isNewCheckpoint,
   milestone,
-  selectedPermissions,
   selectedTemplateKey,
   onTemplateSelect,
-  onTogglePermission,
   previewMilestone,
   t,
 }) {
@@ -406,50 +403,15 @@ function PermissionsAndTemplateStep({
 
   if (!checkpointChoice) return null;
 
-  const permissionsDisabled = !isNewCheckpoint;
-  const permissionNames = isNewCheckpoint
-    ? selectedPermissions
-    : (milestone?.canReview || []).map((p) => p?.name).filter(Boolean);
-
   return (
     <StepSection
       label={t(
         "section.createCardModal.steps.permissions",
         {},
-        { default: "Permissions & form template" }
+        { default: "Form template" }
       )}
     >
       <div style={{ display: "grid", gap: 14 }}>
-        <div style={labelStyle}>
-          {t(
-            "section.createCardModal.custom.canReview",
-            {},
-            { default: "Who can review" }
-          )}
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            {PERMISSION_OPTIONS.map((permission) => (
-              <label
-                key={permission}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontWeight: 500,
-                  opacity: permissionsDisabled ? 0.7 : 1,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={permissionNames.includes(permission)}
-                  disabled={permissionsDisabled}
-                  onChange={() => onTogglePermission(permission)}
-                />
-                {permission}
-              </label>
-            ))}
-          </div>
-        </div>
-
         <div style={labelStyle}>
           {t(
             "section.createCardModal.formTemplate.label",
@@ -710,15 +672,6 @@ export default function CreateCardModal({
       setSelectedPermissions(DEFAULT_PERMISSIONS);
       setSelectedTemplateKey(BLANK_TEMPLATE_VALUE);
     }
-  };
-
-  const togglePermission = (name) => {
-    if (!isNewCheckpoint) return;
-    setSelectedPermissions((prev) =>
-      prev.includes(name)
-        ? prev.filter((permission) => permission !== name)
-        : [...prev, name]
-    );
   };
 
   const handleSubmit = async (e) => {
@@ -997,10 +950,8 @@ export default function CreateCardModal({
               formTemplateOptions={formTemplateOptions}
               isNewCheckpoint={isNewCheckpoint}
               milestone={selectedMilestone}
-              selectedPermissions={selectedPermissions}
               selectedTemplateKey={selectedTemplateKey}
               onTemplateSelect={setSelectedTemplateKey}
-              onTogglePermission={togglePermission}
               previewMilestone={templatePreviewMilestone}
               t={t}
             />
