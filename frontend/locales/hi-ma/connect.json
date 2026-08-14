@@ -537,6 +537,10 @@
 		"edit": "",
 		"empty": "",
 		"emptyFiltered": "",
+		"flash": {
+			"dismiss": "",
+			"formSaved": ""
+		},
 		"held": {
 			"continueForm": "",
 			"followUp": "",
@@ -701,6 +705,7 @@
 		"coverImageHint": "",
 		"coverImageUrlHint": "",
 		"create": "",
+		"createdFlash": "",
 		"customQuestions": {
 			"add": "",
 			"addPrompt": "",
@@ -740,6 +745,7 @@
 			"scopeDescriptionHint": "",
 			"title": ""
 		},
+		"flashDismiss": "",
 		"followUpIntro": "",
 		"followUpLastSaved": "",
 		"followUpQuestionnaire": {

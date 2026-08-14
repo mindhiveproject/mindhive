@@ -1003,6 +1003,7 @@
 			"formWizard": {
 				"addQuestion": "",
 				"back": "Terug",
+				"bannerDismiss": "",
 				"cancel": "Annuleren",
 				"choicesLabel": "",
 				"choicesPlaceholder": "",
@@ -1044,9 +1045,11 @@
 				"promptLabel": "",
 				"promptPlaceholder": "",
 				"publish": "",
+				"publishedAndAdded": "",
 				"questionNumber": "",
 				"removeQuestion": "Verwijderen",
 				"required": "Verplicht",
+				"savedAsDraft": "",
 				"saveDraft": "Opslaan als concept",
 				"startFromPublic": "",
 				"stepOf": "",
@@ -1166,6 +1169,7 @@
 			"capacity": "Capaciteit",
 			"close": "Sluiten",
 			"closeMessages": "",
+			"flashDismiss": "",
 			"formStatusLabel": "",
 			"groupFormatOptions": {
 				"either": "",
@@ -1176,8 +1180,10 @@
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
+				"addedToRound": "",
 				"addToRound": "",
 				"noRoundHint": "",
+				"removedFromRound": "",
 				"removeFromRound": "",
 				"saving": "Opslaan...",
 				"toggleFailed": ""

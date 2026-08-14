@@ -537,6 +537,10 @@
 		"edit": "Edit",
 		"empty": "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
 		"emptyFiltered": "No opportunities match the current filters.",
+		"flash": {
+			"dismiss": "Dismiss",
+			"formSaved": "Follow-up form saved."
+		},
 		"held": {
 			"continueForm": "Respond to form",
 			"followUp": "Follow-up: {{title}}",
@@ -701,6 +705,7 @@
 		"coverImageHint": "Upload a file (stored on our cloud bucket) or paste a direct image URL below. Uploaded files take priority if both are set.",
 		"coverImageUrlHint": "Or paste a URL (max {{maxMb}} MB for uploads):",
 		"create": "Create opportunity",
+		"createdFlash": "Opportunity created.",
 		"customQuestions": {
 			"add": "Add question",
 			"addPrompt": "Add a question",
@@ -740,6 +745,7 @@
 			"scopeDescriptionHint": "Describe the scope of the project for which you would like a Capstone Project Team to focus. (The best Capstone proposals are important but not urgent; achievable within the academic timeframe and with the resources available; provide a clear definition of the problem or issue to be addressed; have a realistic scope; and specify tangible deliverables for the Capstone team to provide.) Approximately 500 words.",
 			"title": "Project scope"
 		},
+		"flashDismiss": "Dismiss",
 		"followUpIntro": "Additional questions from {{context}}. Your answers are saved on this opportunity.",
 		"followUpLastSaved": "Last saved {{date}}",
 		"followUpQuestionnaire": {

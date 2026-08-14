@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { UserContext } from "../../../Global/Authorized";
 import DefinitionForm from "../../../Forms/DefinitionForm";
 import Button from "../../../DesignSystem/Button";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
 import OpportunityGuidelinesSection from "./OpportunityGuidelinesSection";
 import OpportunityListStepper from "./OpportunityListStepper";
@@ -30,6 +31,10 @@ import {
   collectMemberClassNetworks,
   isNewOpportunityId,
 } from "../../../../lib/opportunityClassNetworks";
+import {
+  OPPORTUNITY_FLASH,
+  useOpportunityFlashQuery,
+} from "../../../../lib/opportunityFlash";
 import {
   OpportunityPageShell as Shell,
   OPPORTUNITY_PAGE_GUTTER,
@@ -206,7 +211,14 @@ export default function EditorDefinitionMode({ opportunityId }) {
     awaitRefetchQueries: true,
   });
 
-  const [flash, setFlash] = useState(null);
+  const [localFlash, setLocalFlash] = useState(null);
+  const { flashMessage: queryFlash, clearFlash: clearQueryFlash } =
+    useOpportunityFlashQuery(t);
+  const flashMessage = localFlash || queryFlash;
+  const clearFlash = () => {
+    setLocalFlash(null);
+    clearQueryFlash();
+  };
   const [saving, setSaving] = useState(false);
   const [guidelinesAcknowledged, setGuidelinesAcknowledged] = useState(false);
   const [requestsAppointment, setRequestsAppointment] = useState(false);
@@ -253,7 +265,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
           : opportunity?.preSelectedAt || null,
     };
 
-    setFlash(null);
+    setLocalFlash(null);
     if (isNew) {
       const createInput = {
         ...input,
@@ -272,7 +284,11 @@ export default function EditorDefinitionMode({ opportunityId }) {
         router.replace(
           {
             pathname: LIST_PATH,
-            query: { op: newId, tab: "proposal" },
+            query: {
+              op: newId,
+              tab: "proposal",
+              flash: OPPORTUNITY_FLASH.CREATED,
+            },
           },
           undefined,
           { shallow: false },
@@ -282,19 +298,26 @@ export default function EditorDefinitionMode({ opportunityId }) {
       await updateOpportunity({
         variables: { id: opportunityId, input },
       });
-      setFlash(
-        submitForReview
-          ? t("opportunityEditor.submittedFlash", {}, {
-              default: "Submitted for review.",
-            })
-          : t("opportunityEditor.savedFlash", {}, { default: "Saved." }),
+      if (submitForReview) {
+        router.push({
+          pathname: LIST_PATH,
+          query: {
+            flash: OPPORTUNITY_FLASH.SUBMITTED,
+            flashOp: opportunityId,
+          },
+        });
+        return;
+      }
+      setLocalFlash(
+        t("opportunityEditor.savedFlash", {}, { default: "Saved." }),
       );
     }
   };
 
   const runSave = async ({ submitForReview = false } = {}) => {
     setSaving(true);
-    setFlash(null);
+    setLocalFlash(null);
+    clearQueryFlash();
     saveIntentRef.current.submitForReview = submitForReview;
     try {
       await proposalFormRef.current?.save?.();
@@ -410,8 +433,15 @@ export default function EditorDefinitionMode({ opportunityId }) {
           ) : null}
         </Actions>
       </TopBar>
-      {flash ? (
-        <div style={{ color: "#1d6b3a", fontSize: 14 }}>{flash}</div>
+      {flashMessage ? (
+        <MessageCard
+          variant="success"
+          message={flashMessage}
+          onClose={clearFlash}
+          closeAriaLabel={t("opportunityEditor.flashDismiss", {}, {
+            default: "Dismiss",
+          })}
+        />
       ) : null}
 
       <OpportunityClassNetworksField

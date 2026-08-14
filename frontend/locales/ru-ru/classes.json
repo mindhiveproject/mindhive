@@ -1003,6 +1003,7 @@
 			"formWizard": {
 				"addQuestion": "",
 				"back": "Назад",
+				"bannerDismiss": "",
 				"cancel": "Отмена",
 				"choicesLabel": "",
 				"choicesPlaceholder": "",
@@ -1044,9 +1045,11 @@
 				"promptLabel": "",
 				"promptPlaceholder": "",
 				"publish": "",
+				"publishedAndAdded": "",
 				"questionNumber": "",
 				"removeQuestion": "Удалить",
 				"required": "Обязательно",
+				"savedAsDraft": "",
 				"saveDraft": "",
 				"startFromPublic": "",
 				"stepOf": "",
@@ -1166,6 +1169,7 @@
 			"capacity": "Вместимость",
 			"close": "Закрыть",
 			"closeMessages": "",
+			"flashDismiss": "",
 			"formStatusLabel": "Статус: {{status}}",
 			"groupFormatOptions": {
 				"either": "",
@@ -1176,8 +1180,10 @@
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
+				"addedToRound": "",
 				"addToRound": "",
 				"noRoundHint": "",
+				"removedFromRound": "",
 				"removeFromRound": "",
 				"saving": "Сохранение...",
 				"toggleFailed": ""

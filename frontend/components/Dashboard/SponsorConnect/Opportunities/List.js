@@ -10,12 +10,16 @@ import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import { OpportunityPageShell as Shell } from "./OpportunityPageLayout";
 import {
   isProposalFormAnswerComplete,
   getProposalEntrySavedAt,
 } from "../../../../lib/opportunityProposalData";
 import { isRoundSponsorFormsVisible } from "../../../../lib/opportunityEditorTabs";
+import {
+  useOpportunityFlashQuery,
+} from "../../../../lib/opportunityFlash";
 import OpportunityChatModal from "./OpportunityChatModal";
 import OpportunityFollowUpFormModal from "./OpportunityFollowUpFormModal";
 import OpportunityListStepper from "./OpportunityListStepper";
@@ -142,6 +146,17 @@ const FormsPanel = styled.div`
   background: #fafbfc;
   border-top: 1px solid #e6e6e6;
 `;
+
+/** In-row success banner — sits on the white card so it doesn’t blend with the page shell. */
+const RowFlashWrap = styled.div`
+  padding: 0 20px 16px;
+`;
+
+const ROW_FLASH_STYLE = {
+  background: "#e3f4ec",
+  backgroundColor: "#e3f4ec",
+  border: "1px solid #b8dcc8",
+};
 
 const RoundMeta = styled.div`
   font-size: 12px;
@@ -285,6 +300,22 @@ export default function OpportunitiesList({ user }) {
   const router = useRouter();
   const { t } = useTranslation("common");
   const { t: tConnect } = useTranslation("connect");
+  const {
+    flashMessage,
+    flashOpportunityId,
+    clearFlash,
+  } = useOpportunityFlashQuery(tConnect);
+  /** @type {[{ message: string, opportunityId: string }|null, Function]} */
+  const [rowFlash, setRowFlash] = useState(null);
+  const activeFlash =
+    rowFlash ||
+    (flashMessage
+      ? { message: flashMessage, opportunityId: flashOpportunityId }
+      : null);
+  const dismissFlash = () => {
+    setRowFlash(null);
+    clearFlash();
+  };
   const { data, loading, refetch } = useQuery(MY_OPPORTUNITIES, {
     fetchPolicy: "cache-and-network",
   });
@@ -330,6 +361,20 @@ export default function OpportunitiesList({ user }) {
         networkTitle: round?.classNetwork?.title || null,
       },
     });
+  };
+
+  const handleFormSaved = () => {
+    const opportunityId = formModal?.opportunity?.id || null;
+    setFormModal(null);
+    if (opportunityId) {
+      setRowFlash({
+        opportunityId,
+        message: tConnect("myOpportunitiesList.flash.formSaved", {}, {
+          default: "Follow-up form saved.",
+        }),
+      });
+    }
+    refetch();
   };
 
   const handleOpenChat = (opportunity) => {
@@ -388,6 +433,9 @@ export default function OpportunitiesList({ user }) {
             const networkCount = networks.length;
             const isPreSelected = opportunity.status === "pre_selected";
             const heldRounds = isPreSelected ? opportunity.rounds || [] : [];
+            const showRowFlash =
+              activeFlash?.opportunityId &&
+              activeFlash.opportunityId === opportunity.id;
 
             return (
               <OpportunityCard key={opportunity.id}>
@@ -451,6 +499,22 @@ export default function OpportunitiesList({ user }) {
                     </Actions>
                   </HeaderAside>
                 </CardHeader>
+
+                {showRowFlash ? (
+                  <RowFlashWrap>
+                    <MessageCard
+                      variant="success"
+                      message={activeFlash.message}
+                      onClose={dismissFlash}
+                      closeAriaLabel={tConnect(
+                        "myOpportunitiesList.flash.dismiss",
+                        {},
+                        { default: "Dismiss" },
+                      )}
+                      style={ROW_FLASH_STYLE}
+                    />
+                  </RowFlashWrap>
+                ) : null}
 
                 {heldRounds.map((round) => {
                   const forms = isRoundSponsorFormsVisible(round)
@@ -576,6 +640,7 @@ export default function OpportunitiesList({ user }) {
       <OpportunityFollowUpFormModal
         open={Boolean(formModal?.formMeta?.id)}
         onClose={() => setFormModal(null)}
+        onSaved={handleFormSaved}
         opportunity={formModal?.opportunity}
         formMeta={formModal?.formMeta}
       />

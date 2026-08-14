@@ -1003,6 +1003,7 @@
 			"formWizard": {
 				"addQuestion": "Add question",
 				"back": "Back",
+				"bannerDismiss": "Dismiss",
 				"cancel": "Cancel",
 				"choicesLabel": "Choices (one per line)",
 				"choicesPlaceholder": "Yes\nMaybe\nNo",
@@ -1044,9 +1045,11 @@
 				"promptLabel": "Question prompt",
 				"promptPlaceholder": "What do you want to ask?",
 				"publish": "Publish form",
+				"publishedAndAdded": "Published and added to this round.",
 				"questionNumber": "Question {{number}}",
 				"removeQuestion": "Remove",
 				"required": "Required",
+				"savedAsDraft": "Saved as draft (not visible to sponsors yet).",
 				"saveDraft": "Save as draft",
 				"startFromPublic": "Start from a public form",
 				"stepOf": "Step {{current}} of {{total}}",
@@ -1166,6 +1169,7 @@
 			"capacity": "Capacity",
 			"close": "Close",
 			"closeMessages": "Hide messages",
+			"flashDismiss": "Dismiss",
 			"formStatusLabel": "Status: {{status}}",
 			"groupFormatOptions": {
 				"either": "Either",
@@ -1176,8 +1180,10 @@
 			"hostedBy": "Hosted by",
 			"loading": "Loading opportunity…",
 			"matchingRound": {
+				"addedToRound": "Added to {{title}}.",
 				"addToRound": "Select for {{title}}",
 				"noRoundHint": "Create a matching round above to include this opportunity.",
+				"removedFromRound": "Removed from {{title}}.",
 				"removeFromRound": "Remove from {{title}}",
 				"saving": "Saving…",
 				"toggleFailed": "Could not update this matching round. Please try again."

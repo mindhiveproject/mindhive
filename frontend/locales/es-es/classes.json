@@ -1003,6 +1003,7 @@
 			"formWizard": {
 				"addQuestion": "",
 				"back": "Atrás",
+				"bannerDismiss": "",
 				"cancel": "Cancelar",
 				"choicesLabel": "",
 				"choicesPlaceholder": "",
@@ -1044,9 +1045,11 @@
 				"promptLabel": "",
 				"promptPlaceholder": "",
 				"publish": "",
+				"publishedAndAdded": "",
 				"questionNumber": "",
 				"removeQuestion": "Eliminar",
 				"required": "Obligatorio",
+				"savedAsDraft": "",
 				"saveDraft": "Guardar como borrador",
 				"startFromPublic": "",
 				"stepOf": "",
@@ -1166,6 +1169,7 @@
 			"capacity": "Capacidad",
 			"close": "Cerrar",
 			"closeMessages": "",
+			"flashDismiss": "",
 			"formStatusLabel": "",
 			"groupFormatOptions": {
 				"either": "",
@@ -1176,8 +1180,10 @@
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
+				"addedToRound": "",
 				"addToRound": "",
 				"noRoundHint": "",
+				"removedFromRound": "",
 				"removeFromRound": "",
 				"saving": "Guardando...",
 				"toggleFailed": ""

@@ -537,6 +537,10 @@
 		"edit": "Editar",
 		"empty": "Aún no has creado ninguna oportunidad. Haz clic en Nueva oportunidad para publicar tu primer proyecto para estudiantes.",
 		"emptyFiltered": "No hay oportunidades que coincidan con los filtros actuales.",
+		"flash": {
+			"dismiss": "",
+			"formSaved": ""
+		},
 		"held": {
 			"continueForm": "",
 			"followUp": "",
@@ -701,6 +705,7 @@
 		"coverImageHint": "Sube un archivo (almacenado en nuestro bucket en la nube) o pega la URL de la imagen directamente a continuación. Si se especifican ambas opciones, los archivos subidos tendrán prioridad.",
 		"coverImageUrlHint": "O bien, pegue una URL (máximo {{maxMb}} MB para cargas):",
 		"create": "Crear oportunidad",
+		"createdFlash": "",
 		"customQuestions": {
 			"add": "Agregar pregunta",
 			"addPrompt": "Añade una pregunta",
@@ -740,6 +745,7 @@
 			"scopeDescriptionHint": "Describa el alcance del proyecto en el que le gustaría que se centrara el equipo del Proyecto Final. (Las mejores propuestas de Proyecto Final son importantes pero no urgentes; factibles dentro del plazo académico y con los recursos disponibles; ofrecen una definición clara del problema o cuestión a abordar; tienen un alcance realista; y especifican entregables tangibles que el equipo deberá proporcionar). Aproximadamente 500 palabras.",
 			"title": "Alcance del proyecto"
 		},
+		"flashDismiss": "",
 		"followUpIntro": "",
 		"followUpLastSaved": "",
 		"followUpQuestionnaire": {

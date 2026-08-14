@@ -1003,6 +1003,7 @@
 			"formWizard": {
 				"addQuestion": "Ajouter une question",
 				"back": "Retour",
+				"bannerDismiss": "",
 				"cancel": "Annuler",
 				"choicesLabel": "Choix (un par ligne)",
 				"choicesPlaceholder": "Oui\nPeut-être\nNon",
@@ -1044,9 +1045,11 @@
 				"promptLabel": "Invite de la question",
 				"promptPlaceholder": "Que voulez-vous demander ?",
 				"publish": "Publier le formulaire",
+				"publishedAndAdded": "",
 				"questionNumber": "Question {{number}}",
 				"removeQuestion": "SUPPRIMER",
 				"required": "Obligatoire",
+				"savedAsDraft": "",
 				"saveDraft": "Enregistrer comme brouillon",
 				"startFromPublic": "Commencer à partir d'un formulaire public",
 				"stepOf": "Étape {{current}} sur {{total}}",
@@ -1166,6 +1169,7 @@
 			"capacity": "Capacité",
 			"close": "Fermer",
 			"closeMessages": "",
+			"flashDismiss": "",
 			"formStatusLabel": "",
 			"groupFormatOptions": {
 				"either": "",
@@ -1176,8 +1180,10 @@
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
+				"addedToRound": "",
 				"addToRound": "",
 				"noRoundHint": "",
+				"removedFromRound": "",
 				"removeFromRound": "",
 				"saving": "Enregistrement...",
 				"toggleFailed": ""

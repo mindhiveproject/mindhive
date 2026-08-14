@@ -613,6 +613,7 @@ function MatchingRoundEditor({
   const [publishingAdd, setPublishingAdd] = useState(false);
   const [publishAddError, setPublishAddError] = useState(null);
   const [formsManagerOpen, setFormsManagerOpen] = useState(true);
+  const [formWizardBanner, setFormWizardBanner] = useState(null);
   const formsManagerInitializedRef = useRef(false);
   const savedSnapshotRef = useRef(null);
 
@@ -1615,15 +1616,17 @@ function MatchingRoundEditor({
 
   const toggleOpportunityInRound = useCallback(
     async (opportunityId) => {
-      if (togglingOpportunityId) return;
+      if (togglingOpportunityId) return false;
       const isCurrentlySelected = selectedOpportunities.includes(opportunityId);
       const nextIds = isCurrentlySelected
         ? selectedOpportunities.filter((id) => id !== opportunityId)
         : [...selectedOpportunities, opportunityId];
       try {
         await persistOpportunitySelection(nextIds, opportunityId);
+        return true;
       } catch {
-        // Keep previous selection.
+        // Keep previous selection. persistOpportunitySelection already alerts.
+        return false;
       }
     },
     [selectedOpportunities, togglingOpportunityId, persistOpportunitySelection],
@@ -2245,6 +2248,19 @@ function MatchingRoundEditor({
 
     return (
       <div className="classTabMatchingRoundPanel">
+        {formWizardBanner ? (
+          <MessageCard
+            variant="success"
+            message={formWizardBanner}
+            onClose={() => setFormWizardBanner(null)}
+            closeAriaLabel={t(
+              "opportunities.matchingRound.formWizard.bannerDismiss",
+              {},
+              { default: "Dismiss" },
+            )}
+            style={{ marginBottom: 12 }}
+          />
+        ) : null}
         {formsManagerOpen ? (
         <div className="matchingRoundFormPicker">
           <div className="matchingRoundFormPickerHeader matchingRoundFormPickerHeaderWithToggle">
@@ -2647,6 +2663,13 @@ function MatchingRoundEditor({
                 ? selectedFormDefinitionIds
                 : [...selectedFormDefinitionIds, saved.id];
               await persistFormDefinitionSelection(nextIds);
+              setFormWizardBanner(
+                t(
+                  "opportunities.matchingRound.formWizard.publishedAndAdded",
+                  {},
+                  { default: "Published and added to this round." },
+                ),
+              );
               return;
             }
             // If a form already in this round was demoted to draft, detach it.
@@ -2658,6 +2681,16 @@ function MatchingRoundEditor({
                 selectedFormDefinitionIds.filter((id) => id !== saved.id),
               );
             }
+            setFormWizardBanner(
+              t(
+                "opportunities.matchingRound.formWizard.savedAsDraft",
+                {},
+                {
+                  default:
+                    "Saved as draft (not visible to sponsors yet).",
+                },
+              ),
+            );
           }}
         />
         <Modal
@@ -2786,6 +2819,19 @@ function MatchingRoundEditor({
 
     return (
       <div className="classTabMatchingRoundPanel">
+        {formWizardBanner ? (
+          <MessageCard
+            variant="success"
+            message={formWizardBanner}
+            onClose={() => setFormWizardBanner(null)}
+            closeAriaLabel={t(
+              "opportunities.matchingRound.formWizard.bannerDismiss",
+              {},
+              { default: "Dismiss" },
+            )}
+            style={{ marginBottom: 12 }}
+          />
+        ) : null}
         <MessageCard
           className="matchingRoundSelectedFormsMessage"
           variant={formsMessageVariant}

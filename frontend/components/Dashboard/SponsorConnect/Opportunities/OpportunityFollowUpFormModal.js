@@ -8,6 +8,7 @@ import OpportunityFollowUpFormPanel from "./OpportunityFollowUpFormPanel";
 export default function OpportunityFollowUpFormModal({
   open,
   onClose,
+  onSaved,
   opportunity,
   formMeta,
 }) {
@@ -32,7 +33,10 @@ export default function OpportunityFollowUpFormModal({
   const handleSave = async () => {
     setSaving(true);
     try {
-      await formRef.current?.save?.();
+      const ok = await formRef.current?.save?.();
+      if (ok) {
+        onSaved?.();
+      }
     } finally {
       setSaving(false);
     }
@@ -41,13 +45,18 @@ export default function OpportunityFollowUpFormModal({
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={saving ? undefined : onClose}
       size="large"
       maxWidth={880}
       title={title}
       actions={
         <>
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={saving}
+          >
             {t("myOpportunitiesList.modals.close", {}, { default: "Close" })}
           </Button>
           <Button
