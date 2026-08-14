@@ -1,22 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { useRouter } from "next/router";
-import { useMutation, useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
 import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPreview";
-import FormDefinitionEditor from "../../Dashboard/Admin/Forms/FormDefinitionEditor";
-import PublishModal from "../../Dashboard/Admin/Forms/PublishModal";
-import { PUBLISH_FORM_DEFINITION } from "../../Mutations/FormDefinition";
-import {
-  ADMIN_FORM_DEFINITION,
-  SIBLING_FORM_DEFINITIONS,
-} from "../../Queries/FormDefinition";
+import TeacherFormWizard from "../../Forms/TeacherFormWizard";
 import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 import { useBoardMilestones } from "../../../lib/useBoardMilestones";
-import { resolveReviewFormKey } from "../../../lib/milestones";
+import { milestoneHasReviewQuestionnaire, resolveReviewFormKey } from "../../../lib/milestones";
 import { getCurriculumType } from "../../../lib/curriculumTypes";
 import {
   BLANK_TEMPLATE_VALUE,
@@ -30,7 +22,6 @@ import {
   PROPOSAL_CARD_TYPE,
 } from "./cardTypeOptions";
 
-const PERMISSION_OPTIONS = ["MENTOR", "TEACHER", "SCIENTIST", "STUDENT"];
 const DEFAULT_PERMISSIONS = ["MENTOR", "TEACHER", "SCIENTIST"];
 
 const overlayStyle = {
@@ -116,31 +107,6 @@ const helperTextStyle = {
   fontWeight: 400,
 };
 
-const statusBadgeStyle = (status) => ({
-  display: "inline-block",
-  marginLeft: 8,
-  padding: "2px 10px",
-  borderRadius: 100,
-  fontSize: 11,
-  fontWeight: 700,
-  textTransform: "uppercase",
-  letterSpacing: "0.04em",
-  color: "#fff",
-  background:
-    status === "published"
-      ? "#1d6b3a"
-      : status === "draft"
-        ? "#8a6d3b"
-        : "#5f6871",
-});
-
-const buildFormActionsStyle = {
-  display: "flex",
-  gap: 10,
-  alignItems: "center",
-  flexWrap: "wrap",
-};
-
 function StepSection({ label, children }) {
   return (
     <div style={{ display: "grid", gap: 10 }}>
@@ -175,7 +141,7 @@ function CardTypeStep({ cardCategory, onSelect, t }) {
           label={t(
             "section.createCardModal.categories.action",
             {},
-            { default: "Action" }
+            { default: "Milestone" }
           )}
           selected={cardCategory === CARD_CATEGORY_ACTION}
           onClick={() => onSelect(CARD_CATEGORY_ACTION)}
@@ -228,7 +194,7 @@ function CheckpointStep({
             label={t(
               "section.createCardModal.newCheckpoint",
               {},
-              { default: "+ New Action Card" }
+              { default: "+ New Milestone" }
             )}
             selected={checkpointChoice === NEW_CHECKPOINT_VALUE}
             onClick={() => onSelect(NEW_CHECKPOINT_VALUE)}
@@ -267,7 +233,7 @@ function MilestonePreviewStep({
             {t(
               "section.createCardModal.milestone.actionLabel",
               {},
-              { default: "Action label" }
+              { default: "Milestone label" }
             )}
             <input
               autoFocus
@@ -277,7 +243,7 @@ function MilestonePreviewStep({
               placeholder={t(
                 "section.createCardModal.custom.labelPlaceholder",
                 {},
-                { default: "Enter an action label" }
+                { default: "Enter a milestone label" }
               )}
               style={inputStyle}
             />
@@ -321,7 +287,7 @@ function MilestonePreviewStep({
           {t(
             "section.createCardModal.milestone.actionLabel",
             {},
-            { default: "Action label" }
+            { default: "Milestone label" }
           )}
           <input
             type="text"
@@ -353,18 +319,18 @@ function MilestonePreviewStep({
           </label>
         ) : null}
         <FormDefinitionPreview board={board} milestone={milestone} />
-        <Button
-          type="button"
-          variant="outline"
-          disabled
-          title={t(
-            "section.createCardModal.editFormHint",
-            {},
-            { default: "Form editing is available elsewhere" }
-          )}
-        >
-          {t("section.createCardModal.editForm", {}, { default: "Edit form" })}
-        </Button>
+        {milestoneHasReviewQuestionnaire(milestone) ? (
+          <p style={helperTextStyle}>
+            {t(
+              "section.createCardModal.defaultFormReadOnly",
+              {},
+              {
+                default:
+                  "This is a MindHive default. To customize the form, add a New milestone and copy this review form as a template.",
+              }
+            )}
+          </p>
+        ) : null}
       </div>
     </StepSection>
   );
@@ -376,10 +342,8 @@ function PermissionsAndTemplateStep({
   formTemplateOptions,
   isNewCheckpoint,
   milestone,
-  selectedPermissions,
   selectedTemplateKey,
   onTemplateSelect,
-  onTogglePermission,
   previewMilestone,
   t,
 }) {
@@ -406,50 +370,15 @@ function PermissionsAndTemplateStep({
 
   if (!checkpointChoice) return null;
 
-  const permissionsDisabled = !isNewCheckpoint;
-  const permissionNames = isNewCheckpoint
-    ? selectedPermissions
-    : (milestone?.canReview || []).map((p) => p?.name).filter(Boolean);
-
   return (
     <StepSection
       label={t(
         "section.createCardModal.steps.permissions",
         {},
-        { default: "Permissions & form template" }
+        { default: "Form template" }
       )}
     >
       <div style={{ display: "grid", gap: 14 }}>
-        <div style={labelStyle}>
-          {t(
-            "section.createCardModal.custom.canReview",
-            {},
-            { default: "Who can review" }
-          )}
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            {PERMISSION_OPTIONS.map((permission) => (
-              <label
-                key={permission}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontWeight: 500,
-                  opacity: permissionsDisabled ? 0.7 : 1,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={permissionNames.includes(permission)}
-                  disabled={permissionsDisabled}
-                  onChange={() => onTogglePermission(permission)}
-                />
-                {permission}
-              </label>
-            ))}
-          </div>
-        </div>
-
         <div style={labelStyle}>
           {t(
             "section.createCardModal.formTemplate.label",
@@ -530,74 +459,16 @@ export default function CreateCardModal({
   initialCardCategory = "",
 }) {
   const { t } = useTranslation("builder");
-  const router = useRouter();
   const [cardCategory, setCardCategory] = useState("");
   const [checkpointChoice, setCheckpointChoice] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedPermissions, setSelectedPermissions] = useState(DEFAULT_PERMISSIONS);
   const [selectedTemplateKey, setSelectedTemplateKey] = useState("");
-  // When the "new checkpoint" flow succeeds, we hold onto the created
-  // milestone (with its formDefinition) and pivot the modal into an
-  // embedded form-builder step. The user builds cards/fields, publishes,
-  // then clicks Finish which fires onFinishCustomMilestoneEdit.
   const [createdMilestone, setCreatedMilestone] = useState(null);
-  const [formDefinition, setFormDefinition] = useState(null);
-  const [publishOpen, setPublishOpen] = useState(false);
-
-  const formDefinitionId = createdMilestone?.formDefinition?.id || null;
-
-  const { data: siblingData } = useQuery(SIBLING_FORM_DEFINITIONS, {
-    variables: { key: formDefinition?.key },
-    skip: !formDefinition?.key,
-    fetchPolicy: "cache-and-network",
-  });
-
-  const liveSibling = useMemo(() => {
-    if (!formDefinition) return null;
-    const siblings = siblingData?.formDefinitions || [];
-    return (
-      siblings.find(
-        (s) =>
-          s.id !== formDefinition.id &&
-          s.status === "published" &&
-          s.scope === formDefinition.scope &&
-          (s.organization?.id || null) ===
-            (formDefinition.organization?.id || null) &&
-          (s.classNetwork?.id || null) ===
-            (formDefinition.classNetwork?.id || null) &&
-          (s.proposalBoard?.id || null) ===
-            (formDefinition.proposalBoard?.id || null)
-      ) || null
-    );
-  }, [formDefinition, siblingData]);
-
-  const refetchFormDefinitionQueries = useMemo(
-    () =>
-      formDefinitionId
-        ? [
-            {
-              query: ADMIN_FORM_DEFINITION,
-              variables: { id: formDefinitionId },
-            },
-            ...(formDefinition?.key
-              ? [
-                  {
-                    query: SIBLING_FORM_DEFINITIONS,
-                    variables: { key: formDefinition.key },
-                  },
-                ]
-              : []),
-          ]
-        : [],
-    [formDefinition?.key, formDefinitionId]
-  );
-
-  const [publishFormDefinition, { loading: publishing, error: publishError }] =
-    useMutation(PUBLISH_FORM_DEFINITION, {
-      refetchQueries: refetchFormDefinitionQueries,
-      awaitRefetchQueries: true,
-    });
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardDefinitionId, setWizardDefinitionId] = useState(null);
+  const [wizardSource, setWizardSource] = useState(null);
 
   const { milestones, loading: milestonesLoading } = useBoardMilestones(
     board?.id,
@@ -651,8 +522,9 @@ export default function CreateCardModal({
       setSelectedPermissions(DEFAULT_PERMISSIONS);
       setSelectedTemplateKey("");
       setCreatedMilestone(null);
-      setFormDefinition(null);
-      setPublishOpen(false);
+      setWizardOpen(false);
+      setWizardDefinitionId(null);
+      setWizardSource(null);
       return;
     }
     if (initialCardCategory) {
@@ -712,15 +584,6 @@ export default function CreateCardModal({
     }
   };
 
-  const togglePermission = (name) => {
-    if (!isNewCheckpoint) return;
-    setSelectedPermissions((prev) =>
-      prev.includes(name)
-        ? prev.filter((permission) => permission !== name)
-        : [...prev, name]
-    );
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (createDisabled) return;
@@ -756,6 +619,9 @@ export default function CreateCardModal({
       // no formDefinition came back — nothing to edit inline anyway.
       if (created?.formDefinition?.id) {
         setCreatedMilestone(created);
+        setWizardDefinitionId(created.formDefinition.id);
+        setWizardSource("created");
+        setWizardOpen(true);
       }
       return;
     }
@@ -768,40 +634,26 @@ export default function CreateCardModal({
     });
   };
 
-  const confirmPublish = async (changelog) => {
-    if (!formDefinitionId) return;
-    try {
-      await publishFormDefinition({
-        variables: { id: formDefinitionId, changelog: changelog || null },
-      });
-      setPublishOpen(false);
-    } catch {
-      // publishError surfaces in PublishModal
+  const closeWizard = () => {
+    const source = wizardSource;
+    const milestone = createdMilestone;
+    setWizardOpen(false);
+    setWizardDefinitionId(null);
+    setWizardSource(null);
+    if (source === "created") {
+      setCreatedMilestone(null);
+      onFinishCustomMilestoneEdit?.(milestone);
     }
   };
 
-  const handleFinishCustomMilestone = () => {
-    if (formDefinition?.status === "draft") {
-      const proceed = window.confirm(
-        t(
-          "section.createCardModal.finishDraftConfirm",
-          {},
-          {
-            default:
-              "This review form is still a draft. Students won't see it during review until you publish. Finish anyway?",
-          }
-        )
-      );
-      if (!proceed) return;
-    }
-    onFinishCustomMilestoneEdit?.(createdMilestone);
-  };
-
-  return createPortal(
+  return (
+    <>
+      {!createdMilestone
+        ? createPortal(
     <div
       style={overlayStyle}
       onClick={(e) => {
-        if (e.target === e.currentTarget && !creating) onClose();
+        if (e.target === e.currentTarget && !creating && !wizardOpen) onClose();
       }}
     >
       <style>{`
@@ -809,116 +661,6 @@ export default function CreateCardModal({
           display: none;
         }
       `}</style>
-      {createdMilestone ? (
-        <div
-          className="createCardModalForm"
-          style={{ ...modalStyle, display: "flex", flexDirection: "column", gap: 16 }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 16,
-              flexWrap: "wrap",
-            }}
-          >
-            <div>
-              <h2
-                style={{
-                  margin: 0,
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 24,
-                  fontWeight: 800,
-                  color: "#000",
-                }}
-              >
-                {t(
-                  "section.createCardModal.buildFormTitle",
-                  { title: createdMilestone.title || createdMilestone.key },
-                  { default: 'Build the review form: "{{title}}"' }
-                )}
-                {formDefinition?.status ? (
-                  <span style={statusBadgeStyle(formDefinition.status)}>
-                    {formDefinition.status === "published"
-                      ? t(
-                          "section.createCardModal.statusPublished",
-                          {},
-                          { default: "Published" }
-                        )
-                      : t(
-                          "section.createCardModal.statusDraft",
-                          {},
-                          { default: "Draft" }
-                        )}
-                  </span>
-                ) : null}
-              </h2>
-              <div style={{ marginTop: 4, color: "#5f6871", fontSize: 13 }}>
-                {t(
-                  "section.createCardModal.buildFormSubtitle",
-                  {},
-                  {
-                    default:
-                      "Scoped to this template board. Add cards + fields below, then publish. Student clones will inherit whatever you publish.",
-                  }
-                )}
-              </div>
-            </div>
-            <div style={buildFormActionsStyle}>
-              {formDefinition?.status === "draft" ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={publishing}
-                  onClick={() => setPublishOpen(true)}
-                >
-                  {publishing
-                    ? t(
-                        "section.createCardModal.publishing",
-                        {},
-                        { default: "Publishing…" }
-                      )
-                    : t(
-                        "section.createCardModal.publish",
-                        {},
-                        { default: "Publish…" }
-                      )}
-                </Button>
-              ) : null}
-              <Button
-                type="button"
-                variant="primary"
-                onClick={handleFinishCustomMilestone}
-              >
-                {t(
-                  "section.createCardModal.finishBuilding",
-                  {},
-                  { default: "Finish" }
-                )}
-              </Button>
-            </div>
-          </div>
-
-          <FormDefinitionEditor
-            definitionId={createdMilestone.formDefinition?.id}
-            locale={router?.locale || "en-us"}
-            onDefinitionLoaded={setFormDefinition}
-          />
-
-          {publishOpen && formDefinition ? (
-            <PublishModal
-              definition={formDefinition}
-              liveSibling={liveSibling}
-              onCancel={() => setPublishOpen(false)}
-              onConfirm={confirmPublish}
-              busy={publishing}
-              error={publishError}
-              overlayZIndex={20100}
-            />
-          ) : null}
-        </div>
-      ) : (
       <form
         className="createCardModalForm"
         style={modalStyle}
@@ -938,11 +680,13 @@ export default function CreateCardModal({
         </h2>
 
         <div style={{ display: "grid", gap: 20 }}>
-          <CardTypeStep
-            cardCategory={cardCategory}
-            onSelect={handleCardCategorySelect}
-            t={t}
-          />
+          {!initialCardCategory ? (
+            <CardTypeStep
+              cardCategory={cardCategory}
+              onSelect={handleCardCategorySelect}
+              t={t}
+            />
+          ) : null}
 
           {cardCategory === CARD_CATEGORY_PROPOSAL ? (
             <label style={labelStyle}>
@@ -997,10 +741,8 @@ export default function CreateCardModal({
               formTemplateOptions={formTemplateOptions}
               isNewCheckpoint={isNewCheckpoint}
               milestone={selectedMilestone}
-              selectedPermissions={selectedPermissions}
               selectedTemplateKey={selectedTemplateKey}
               onTemplateSelect={setSelectedTemplateKey}
-              onTogglePermission={togglePermission}
               previewMilestone={templatePreviewMilestone}
               t={t}
             />
@@ -1034,8 +776,22 @@ export default function CreateCardModal({
           </Button>
         </div>
       </form>
-      )}
     </div>,
-    document.body
+            document.body
+          )
+        : null}
+      <TeacherFormWizard
+        open={wizardOpen}
+        onClose={closeWizard}
+        mode="review"
+        proposalBoardId={board?.id}
+        definitionId={wizardDefinitionId}
+        milestoneKey={
+          wizardSource === "created"
+            ? createdMilestone?.key
+            : selectedMilestone?.key
+        }
+      />
+    </>
   );
 }

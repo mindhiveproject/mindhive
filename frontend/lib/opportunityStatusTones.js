@@ -83,5 +83,6 @@ export function opportunityToneChipStyle(tone, size = DEFAULT_CHIP_SIZE) {
 /** Steps on the list stepper that open the opportunity editor when clicked. */
 export const OPPORTUNITY_LIST_OPENABLE_STEP_KEYS = new Set([
   "draft",
+  "inRevision",
   "returnedWithComments",
 ]);

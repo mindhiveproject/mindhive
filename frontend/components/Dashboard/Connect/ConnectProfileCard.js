@@ -8,6 +8,7 @@ import { ArrowOutwardIcon } from "../../DesignSystem/Icons";
 import ConnectCard from "./ConnectCard";
 import ManageFavorite from "./ManageFavorite";
 import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
+import { normalizeOrganizationNames } from "../../../lib/organizationLabels";
 
 const FALLBACK_COLORS = [
   "#DEF8FB",
@@ -87,12 +88,14 @@ export default function ConnectProfileCard({ user, profile, actions = null }) {
       label: org.name.trim(),
       logoUrl: org.logo?.url || null,
     }));
-    
+
   const orgTags = linkedOrgTags.length
     ? linkedOrgTags
-    : profile?.organization?.trim()
-      ? [{ key: "organization", label: profile.organization.trim(), logoUrl: null }]
-      : [];
+    : normalizeOrganizationNames(profile?.organization).map((label, i) => ({
+        key: `organization-${i}`,
+        label,
+        logoUrl: null,
+      }));
 
   const profileHref = profile.publicId
     ? {

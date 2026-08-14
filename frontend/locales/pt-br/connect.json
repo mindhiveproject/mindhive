@@ -537,6 +537,10 @@
 		"edit": "Editar",
 		"empty": "Você ainda não criou nenhuma oportunidade. Clique em Nova oportunidade para publicar seu primeiro projeto para estudantes.",
 		"emptyFiltered": "Nenhuma oportunidade corresponde aos filtros atuais.",
+		"flash": {
+			"dismiss": "",
+			"formSaved": ""
+		},
 		"held": {
 			"continueForm": "",
 			"followUp": "",
@@ -575,6 +579,7 @@
 		"networkFilterPlaceholder": "Todas as redes",
 		"newButton": "Nova oportunidade",
 		"openChat": "",
+		"openChatUnread": "",
 		"openStatus": "",
 		"pageTitle": "Minhas oportunidades",
 		"rating": {
@@ -612,6 +617,7 @@
 			"draft": "",
 			"formFilled": "",
 			"formsProgress": "",
+			"inRevision": "",
 			"matched": "",
 			"matching": "",
 			"openOpportunity": "",
@@ -626,6 +632,18 @@
 		},
 		"teamOf": "Equipe de {{size}}",
 		"unknownSponsor": "Desconhecido",
+		"unsubmit": {
+			"button": "",
+			"cancel": "",
+			"error": "",
+			"helper": "",
+			"successDraft": "",
+			"successRevision": "",
+			"title": "",
+			"toDraft": "",
+			"toRevision": "",
+			"working": ""
+		},
 		"visibility": {
 			"emptyHint": "",
 			"many": "",
@@ -701,6 +719,7 @@
 		"coverImageHint": "Faça o upload de um arquivo (armazenado em nosso bucket na nuvem) ou cole o URL direto da imagem abaixo. Os arquivos enviados têm prioridade se ambas as opções estiverem selecionadas.",
 		"coverImageUrlHint": "Ou cole um URL (máximo de {{maxMb}} MB para uploads):",
 		"create": "Crie Oportunidade",
+		"createdFlash": "",
 		"customQuestions": {
 			"add": "Adicionar pergunta",
 			"addPrompt": "Adicione uma pergunta",
@@ -740,6 +759,7 @@
 			"scopeDescriptionHint": "Descreva o escopo do projeto para o qual você gostaria que a Equipe do Projeto Final se concentrasse. (As melhores propostas de Projeto Final são importantes, mas não urgentes; viáveis ​​dentro do prazo acadêmico e com os recursos disponíveis; fornecem uma definição clara do problema ou questão a ser abordada; têm um escopo realista; e especificam entregas tangíveis para a equipe do Projeto Final fornecer.) Aproximadamente 500 palavras.",
 			"title": "Escopo do projeto"
 		},
+		"flashDismiss": "",
 		"followUpIntro": "",
 		"followUpLastSaved": "",
 		"followUpQuestionnaire": {

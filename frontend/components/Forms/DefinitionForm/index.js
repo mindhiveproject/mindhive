@@ -49,7 +49,7 @@ import CardRenderer from "./CardRenderer";
 import { fieldLabel } from "./i18n";
 import { hydrate, buildUpdate } from "./storage";
 import { getVisibleFields } from "./visibility";
-import { validateValues, formatFieldError } from "./validation";
+import { validateValues, formatFieldError, parseInvalidSelectFieldNamesFromError } from "./validation";
 import {
   getProposalAnswer,
   upsertProposalEntry,
@@ -204,6 +204,23 @@ function scrollToFirstFieldError() {
       .querySelector('[data-field-error="true"]')
       ?.scrollIntoView({ behavior: "smooth", block: "center" });
   });
+}
+
+function buildSelectValidationBanner(failingLabels, t) {
+  if (failingLabels.length === 1) {
+    return t(
+      "definitionForm.selectRequired",
+      { field: failingLabels[0] },
+      { default: "{{field}} must be chosen." },
+    );
+  }
+  return t(
+    "definitionForm.fixMultipleFields",
+    { fields: failingLabels.join(", ") },
+    {
+      default: "Please fix the following fields: {{fields}}",
+    },
+  );
 }
 
 const DefinitionForm = forwardRef(function DefinitionForm(
@@ -385,7 +402,7 @@ const DefinitionForm = forwardRef(function DefinitionForm(
 
       for (const [name, detail] of Object.entries(rawErrors)) {
         const field = visibleFields.find((f) => f.name === name);
-        formattedErrors[name] = formatFieldError(field, detail, t);
+        formattedErrors[name] = formatFieldError(field, detail, t, locale);
         if (field) {
           failingLabels.push(fieldLabel(field, locale));
         }
@@ -393,8 +410,12 @@ const DefinitionForm = forwardRef(function DefinitionForm(
 
       setErrors(formattedErrors);
 
-      const banner =
-        failingLabels.length === 1
+      const allSelectRequired = Object.values(rawErrors).every(
+        (d) => d?.code === "selectRequired",
+      );
+      const banner = allSelectRequired
+        ? buildSelectValidationBanner(failingLabels, t)
+        : failingLabels.length === 1
           ? t(
               "definitionForm.fixSingleField",
               { field: failingLabels[0] },
@@ -472,6 +493,31 @@ const DefinitionForm = forwardRef(function DefinitionForm(
       await onSubmit(updateInput);
       return true;
     } catch (err) {
+      const invalidSelectNames = parseInvalidSelectFieldNamesFromError(err);
+      if (invalidSelectNames.length > 0) {
+        const formattedErrors = {};
+        const failingLabels = [];
+        for (const name of invalidSelectNames) {
+          const field =
+            visibleFields.find((f) => f.name === name) ||
+            allFields.find((f) => f.name === name);
+          formattedErrors[name] = formatFieldError(
+            field,
+            { code: "selectRequired" },
+            t,
+            locale,
+          );
+          if (field) {
+            failingLabels.push(fieldLabel(field, locale));
+          } else {
+            failingLabels.push(name);
+          }
+        }
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
+        setSubmitError(buildSelectValidationBanner(failingLabels, t));
+        scrollToFirstFieldError();
+        return false;
+      }
       setSubmitError(
         err?.message ||
           t("definitionForm.saveFailed", {}, {

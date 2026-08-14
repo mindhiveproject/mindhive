@@ -6,6 +6,38 @@
 // Conditional-logic validation (showWhen) is Tier-G — skipped in v1.
 // Visibility scoping happens in the parent via getVisibleFields().
 
+import { fieldLabel } from "./i18n";
+
+function isSelectLike(fieldType) {
+  return fieldType === "select" || fieldType === "select_one_icon";
+}
+
+/**
+ * Keystone select enums reject empty string. Parse GraphQL messages like:
+ * "Opportunity.preferGroupFormat: is not a possible value for Prefer Group Format"
+ * → ["preferGroupFormat"]
+ */
+export function parseInvalidSelectFieldNames(message) {
+  if (!message || typeof message !== "string") return [];
+  const names = [];
+  const re = /\.(\w+):\s*is not a possible value/gi;
+  let match;
+  while ((match = re.exec(message)) !== null) {
+    names.push(match[1]);
+  }
+  return [...new Set(names)];
+}
+
+/** Collect field names from an Apollo / GraphQL error payload. */
+export function parseInvalidSelectFieldNamesFromError(err) {
+  const chunks = [];
+  if (err?.message) chunks.push(err.message);
+  for (const g of err?.graphQLErrors || []) {
+    if (g?.message) chunks.push(g.message);
+  }
+  return parseInvalidSelectFieldNames(chunks.join(" "));
+}
+
 export function validateValues(values, fields) {
   const errors = {};
   for (const f of fields) {
@@ -36,6 +68,20 @@ export function validateValues(values, fields) {
             ? row.trim().length > 0
             : typeof row === "object" && row.id)
       );
+    }
+
+    // Select enums: empty / unknown values fail on the server with a cryptic
+    // GraphQL message — require a real option before save.
+    if (isSelectLike(f.fieldType)) {
+      const optionValues = (f.options || []).map((o) => o?.value);
+      const invalidOption =
+        !isEmpty &&
+        optionValues.length > 0 &&
+        !optionValues.includes(v);
+      if (isEmpty || invalidOption) {
+        errors[f.name] = { code: "selectRequired" };
+        continue;
+      }
     }
 
     if (f.isRequired && isEmpty) {
@@ -87,13 +133,21 @@ export function validateValues(values, fields) {
   return errors;
 }
 
-export function formatFieldError(field, detail, t) {
+export function formatFieldError(field, detail, t, locale = "en") {
   if (!detail?.code) return "";
   switch (detail.code) {
     case "required":
       return t("definitionForm.fieldRequired", {}, {
         default: "This field is required.",
       });
+    case "selectRequired": {
+      const label = fieldLabel(field, locale) || field?.name || "This field";
+      return t(
+        "definitionForm.selectRequired",
+        { field: label },
+        { default: "{{field}} must be chosen." },
+      );
+    }
     case "maxLength":
       return t("definitionForm.maxLength", { max: detail.max }, {
         default: "Must be at most {{max}} characters.",

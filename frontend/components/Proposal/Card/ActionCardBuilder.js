@@ -1,15 +1,14 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useApolloClient } from "@apollo/client";
-import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
-import { PUBLISH_FORM_DEFINITION } from "../../Mutations/FormDefinition";
-import { UPDATE_TEMPLATE_MILESTONE } from "../../Queries/Milestone";
+import { FORK_REVIEW_FORM_FOR_BOARD } from "../../Mutations/FormDefinition";
 import {
-  ADMIN_FORM_DEFINITION,
-  SIBLING_FORM_DEFINITIONS,
-} from "../../Queries/FormDefinition";
+  CREATE_TEMPLATE_MILESTONE,
+  RESOLVE_MILESTONES_FOR_BOARD,
+  UPDATE_TEMPLATE_MILESTONE,
+} from "../../Queries/Milestone";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
 import useForm from "../../../lib/useForm";
@@ -19,37 +18,22 @@ import {
   cardIncludedInReviewStep,
   isActionCard,
   parseCardSettings,
+  isStudyStatusMilestone,
+  milestoneHasReviewQuestionnaire,
+  resolveReviewFormKey,
 } from "../../../lib/milestones";
 import {
   getActionCardLabel,
   isDefaultActionCard,
 } from "../../../lib/templateBoardActionCards";
+import { getCurriculumType } from "../../../lib/curriculumTypes";
 import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 
 import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPreview";
-import FormDefinitionEditor from "../../Dashboard/Admin/Forms/FormDefinitionEditor";
-import PublishModal from "../../Dashboard/Admin/Forms/PublishModal";
+import TeacherFormWizard from "../../Forms/TeacherFormWizard";
 import ActionCardTypeBadge from "../../Dashboard/TeacherClasses/ClassPage/utils/ActionCardTypeBadge";
 import InfoTooltip from "../../DesignSystem/InfoTooltip";
 import Button from "../../DesignSystem/Button";
-
-const statusBadgeStyle = (status) => ({
-  display: "inline-block",
-  marginLeft: 8,
-  padding: "2px 10px",
-  borderRadius: 100,
-  fontSize: 11,
-  fontWeight: 700,
-  textTransform: "uppercase",
-  letterSpacing: "0.04em",
-  color: "#fff",
-  background:
-    status === "published"
-      ? "#1d6b3a"
-      : status === "draft"
-        ? "#8a6d3b"
-        : "#5f6871",
-});
 
 const inputStyle = {
   width: "100%",
@@ -80,7 +64,6 @@ export default function ActionCardBuilder({
 }) {
   const { t } = useTranslation("classes");
   const { t: tBuilder } = useTranslation("builder");
-  const router = useRouter();
   const client = useApolloClient();
   const { milestones } = useBoardMilestones(proposal?.id);
 
@@ -116,9 +99,17 @@ export default function ActionCardBuilder({
 
   const isDefault = isDefaultActionCard(proposalCard);
   const isCustom = isClassTemplateBoard(proposal) && !isDefault;
-  const formDefinitionId = proposalCard?.milestone?.formDefinition?.id || null;
-  const canEditFormCandidate =
-    isClassTemplateBoard(proposal) && !isDefault && !!formDefinitionId;
+  const hasQuestionnaire = milestoneHasReviewQuestionnaire(milestone);
+  const canEditForm =
+    isClassTemplateBoard(proposal) &&
+    milestone?.scope === "template" &&
+    hasQuestionnaire &&
+    !!milestone?.id;
+  const canCopyForm =
+    isClassTemplateBoard(proposal) &&
+    milestone?.scope !== "template" &&
+    hasQuestionnaire &&
+    !!milestone?.id;
 
   const actionLabel = getActionCardLabel(proposalCard, tBuilder);
 
@@ -152,91 +143,122 @@ export default function ActionCardBuilder({
     milestoneDescription: initialDescription,
   });
 
-  const [formDefinition, setFormDefinition] = useState(null);
-  const [publishOpen, setPublishOpen] = useState(false);
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardDefinitionId, setWizardDefinitionId] = useState(null);
+  const [wizardMilestoneKey, setWizardMilestoneKey] = useState(null);
+  const [editBusy, setEditBusy] = useState(false);
 
-  const { data: scopeCheckData, loading: scopeCheckLoading } = useQuery(
-    ADMIN_FORM_DEFINITION,
-    {
-      variables: { id: formDefinitionId },
-      skip: !canEditFormCandidate,
-      fetchPolicy: "cache-and-network",
+  const sectionId = useMemo(() => {
+    for (const section of boardWithSections?.sections || []) {
+      if ((section.cards || []).some((card) => card.id === proposalCard?.id)) {
+        return section.id;
+      }
     }
-  );
-
-  const scopedDefinition = scopeCheckData?.formDefinition;
-  const isScopedForm =
-    scopedDefinition?.scope === "project_board" &&
-    scopedDefinition?.proposalBoard?.id === proposal?.id;
-
-  const showFormEditor =
-    canEditFormCandidate && isScopedForm && !scopeCheckLoading;
-
-  useEffect(() => {
-    if (scopedDefinition) {
-      setFormDefinition(scopedDefinition);
-    }
-  }, [scopedDefinition]);
-
-  const { data: siblingData } = useQuery(SIBLING_FORM_DEFINITIONS, {
-    variables: { key: formDefinition?.key },
-    skip: !formDefinition?.key,
-    fetchPolicy: "cache-and-network",
-  });
-
-  const liveSibling = useMemo(() => {
-    if (!formDefinition) return null;
-    const siblings = siblingData?.formDefinitions || [];
-    return (
-      siblings.find(
-        (s) =>
-          s.id !== formDefinition.id &&
-          s.status === "published" &&
-          s.scope === formDefinition.scope &&
-          (s.organization?.id || null) ===
-            (formDefinition.organization?.id || null) &&
-          (s.classNetwork?.id || null) ===
-            (formDefinition.classNetwork?.id || null) &&
-          (s.proposalBoard?.id || null) ===
-            (formDefinition.proposalBoard?.id || null)
-      ) || null
-    );
-  }, [formDefinition, siblingData]);
-
-  const refetchFormDefinitionQueries = useMemo(
-    () =>
-      formDefinitionId
-        ? [
-            {
-              query: ADMIN_FORM_DEFINITION,
-              variables: { id: formDefinitionId },
-            },
-            ...(formDefinition?.key
-              ? [
-                  {
-                    query: SIBLING_FORM_DEFINITIONS,
-                    variables: { key: formDefinition.key },
-                  },
-                ]
-              : []),
-          ]
-        : [],
-    [formDefinition?.key, formDefinitionId]
-  );
+    return null;
+  }, [boardWithSections?.sections, proposalCard?.id]);
 
   const [updateCard, { loading: updateLoading }] =
     useMutation(UPDATE_CARD_CONTENT);
   const [updateMilestone, { loading: milestoneLoading }] = useMutation(
     UPDATE_TEMPLATE_MILESTONE
   );
-  const [publishFormDefinition, { loading: publishing, error: publishError }] =
-    useMutation(PUBLISH_FORM_DEFINITION, {
-      refetchQueries: refetchFormDefinitionQueries,
-      awaitRefetchQueries: true,
-    });
+  const [forkReviewForm] = useMutation(FORK_REVIEW_FORM_FOR_BOARD);
+  const [createTemplateMilestone] = useMutation(CREATE_TEMPLATE_MILESTONE);
 
-  const handleDefinitionLoaded = (definition) => {
-    setFormDefinition(definition);
+  const boardRefetchQueries = proposal?.id
+    ? [
+        {
+          query: RESOLVE_MILESTONES_FOR_BOARD,
+          variables: { boardId: proposal.id },
+        },
+        { query: PROPOSAL_QUERY, variables: { id: proposal.id } },
+      ]
+    : [];
+
+  const openEditForm = async () => {
+    if (!canEditForm || !proposal?.id || !milestone?.id || editBusy) return;
+    setEditBusy(true);
+    try {
+      if (milestone.formDefinition?.scope === "project_board") {
+        setWizardDefinitionId(milestone.formDefinition.id);
+        setWizardMilestoneKey(milestone.key || null);
+        setWizardOpen(true);
+        return;
+      }
+      const result = await forkReviewForm({
+        variables: {
+          templateBoardId: proposal.id,
+          milestoneId: milestone.id,
+        },
+        refetchQueries: boardRefetchQueries,
+      });
+      const forked = result?.data?.forkReviewFormForBoard;
+      if (!forked?.id) {
+        throw new Error("Could not open the review form for editing.");
+      }
+      setWizardDefinitionId(forked.id);
+      setWizardMilestoneKey(milestone.key || null);
+      setWizardOpen(true);
+    } catch (err) {
+      alert(err?.message);
+    } finally {
+      setEditBusy(false);
+    }
+  };
+
+  const copyMilestoneToCustomize = async () => {
+    if (!canCopyForm || !proposal?.id || !milestone?.id || editBusy) return;
+    if (!sectionId) {
+      alert(
+        t(
+          "board.expendedCard.actionCard.copyNeedsColumn",
+          {},
+          { default: "This milestone needs a column before it can be copied." }
+        )
+      );
+      return;
+    }
+    setEditBusy(true);
+    try {
+      const sourceTitle = milestone.title || actionLabel || "";
+      const result = await createTemplateMilestone({
+        variables: {
+          input: {
+            templateBoardId: proposal.id,
+            title: t(
+              "board.expendedCard.actionCard.copyTitle",
+              { title: sourceTitle },
+              { default: "{{title}} (copy)" }
+            ),
+            description: milestone.description || "",
+            sectionId,
+            clonedFromMilestoneId: milestone.id,
+            sourceFormDefinitionKey: resolveReviewFormKey(
+              milestone,
+              getCurriculumType(boardWithSections || proposal)
+            ),
+            canReviewPermissionNames: (milestone.canReview || [])
+              .map((permission) => permission?.name)
+              .filter(Boolean),
+            showInFeedbackCenter: true,
+            statusTarget: "board",
+          },
+        },
+        refetchQueries: boardRefetchQueries,
+        awaitRefetchQueries: true,
+      });
+      const created = result?.data?.createTemplateMilestone;
+      if (!created?.formDefinition?.id) {
+        throw new Error("Could not copy this milestone.");
+      }
+      setWizardDefinitionId(created.formDefinition.id);
+      setWizardMilestoneKey(created.key || null);
+      setWizardOpen(true);
+    } catch (err) {
+      alert(err?.message);
+    } finally {
+      setEditBusy(false);
+    }
   };
 
   const hasChanges = () => {
@@ -316,18 +338,6 @@ export default function ActionCardBuilder({
     }
 
     closeCard({ cardId: proposalCard?.id, lockedByUser: false });
-  };
-
-  const confirmPublish = async (changelog) => {
-    if (!formDefinitionId) return;
-    try {
-      await publishFormDefinition({
-        variables: { id: formDefinitionId, changelog: changelog || null },
-      });
-      setPublishOpen(false);
-    } catch {
-      // publishError surfaces in PublishModal
-    }
   };
 
   const saving = updateLoading || milestoneLoading;
@@ -444,139 +454,88 @@ export default function ActionCardBuilder({
           ) : null}
 
           <div className="cardHeader" style={{ marginTop: 20 }}>
-            {t(
-              "board.expendedCard.actionCard.reviewFormPreview",
-              {},
-              { default: "Review form preview" }
-            )}
+            {isStudyStatusMilestone(milestone)
+              ? t(
+                  "board.expendedCard.actionCard.studyLinkTitle",
+                  {},
+                  { default: "Study link" }
+                )
+              : t(
+                  "board.expendedCard.actionCard.reviewFormPreview",
+                  {},
+                  { default: "Review form preview" }
+                )}
           </div>
           <FormDefinitionPreview
             board={boardWithSections}
             milestone={milestone}
             proposalBoardId={proposal?.id}
-            maxHeight={showFormEditor ? 200 : 360}
+            maxHeight={360}
           />
 
-          {isDefault ? (
-            <p style={helperTextStyle}>
-              {t(
-                "board.expendedCard.actionCard.defaultFormReadOnly",
-                {},
-                {
-                  default:
-                    "This is a MindHive default review form. It cannot be edited from this card.",
-                }
-              )}
-            </p>
-          ) : null}
-
-          {canEditFormCandidate &&
-          !scopeCheckLoading &&
-          scopedDefinition &&
-          !isScopedForm ? (
-            <p style={helperTextStyle}>
-              {t(
-                "board.expendedCard.actionCard.scopedFormOnly",
-                {},
-                {
-                  default:
-                    "This review form is not scoped to your template board and cannot be edited here.",
-                }
-              )}
-            </p>
-          ) : null}
-
-          {showFormEditor ? (
-            <div style={{ marginTop: 24, display: "grid", gap: 16 }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  gap: 16,
-                  flexWrap: "wrap",
-                }}
+          {canCopyForm ? (
+            <div style={{ marginTop: 12 }}>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={editBusy}
+                onClick={copyMilestoneToCustomize}
               >
-                <div>
-                  <h3
-                    style={{
-                      margin: 0,
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: 18,
-                      fontWeight: 700,
-                      color: "#171717",
-                    }}
-                  >
-                    {t(
+                {editBusy
+                  ? t(
+                      "board.expendedCard.actionCard.copyingMilestone",
+                      {},
+                      { default: "Copying…" }
+                    )
+                  : t(
+                      "board.expendedCard.actionCard.copyToCustomize",
+                      {},
+                      { default: "Copy milestone to customize" }
+                    )}
+              </Button>
+              <p style={helperTextStyle}>
+                {t(
+                  "board.expendedCard.actionCard.copyToCustomizeHint",
+                  {},
+                  {
+                    default:
+                      "Default forms cannot be edited. Copy this milestone to create a custom review step you can change.",
+                  }
+                )}
+              </p>
+            </div>
+          ) : null}
+
+          {canEditForm ? (
+            <div style={{ marginTop: 12 }}>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={editBusy}
+                onClick={openEditForm}
+              >
+                {editBusy
+                  ? t(
+                      "board.expendedCard.actionCard.openingEditor",
+                      {},
+                      { default: "Opening editor…" }
+                    )
+                  : t(
                       "board.expendedCard.actionCard.editReviewForm",
                       {},
                       { default: "Edit review form" }
                     )}
-                    {formDefinition?.status ? (
-                      <span style={statusBadgeStyle(formDefinition.status)}>
-                        {formDefinition.status === "published"
-                          ? t(
-                              "board.expendedCard.actionCard.statusPublished",
-                              {},
-                              { default: "Published" }
-                            )
-                          : t(
-                              "board.expendedCard.actionCard.statusDraft",
-                              {},
-                              { default: "Draft" }
-                            )}
-                      </span>
-                    ) : null}
-                  </h3>
-                  <p style={{ ...helperTextStyle, marginTop: 4 }}>
-                    {t(
-                      "board.expendedCard.actionCard.editReviewFormHint",
-                      {},
-                      {
-                        default:
-                          "Scoped to this template board. Student clones inherit whatever you publish.",
-                      }
-                    )}
-                  </p>
-                </div>
-                {formDefinition?.status === "draft" ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={publishing}
-                    onClick={() => setPublishOpen(true)}
-                  >
-                    {publishing
-                      ? tBuilder(
-                          "section.createCardModal.publishing",
-                          {},
-                          { default: "Publishing…" }
-                        )
-                      : t(
-                          "board.expendedCard.actionCard.publish",
-                          {},
-                          { default: "Publish…" }
-                        )}
-                  </Button>
-                ) : null}
-              </div>
-
-              <FormDefinitionEditor
-                definitionId={formDefinitionId}
-                locale={router?.locale || "en-us"}
-                onDefinitionLoaded={handleDefinitionLoaded}
-              />
-
-              {publishOpen && formDefinition ? (
-                <PublishModal
-                  definition={formDefinition}
-                  liveSibling={liveSibling}
-                  onCancel={() => setPublishOpen(false)}
-                  onConfirm={confirmPublish}
-                  busy={publishing}
-                  error={publishError}
-                />
-              ) : null}
+              </Button>
+              <p style={helperTextStyle}>
+                {t(
+                  "board.expendedCard.actionCard.editReviewFormHint",
+                  {},
+                  {
+                    default:
+                      "Scoped to this template board. Student clones inherit whatever you publish.",
+                  }
+                )}
+              </p>
             </div>
           ) : null}
         </div>
@@ -638,6 +597,18 @@ export default function ActionCardBuilder({
           )}
         </div>
       </div>
+      <TeacherFormWizard
+        open={wizardOpen}
+        onClose={() => {
+          setWizardOpen(false);
+          setWizardDefinitionId(null);
+          setWizardMilestoneKey(null);
+        }}
+        mode="review"
+        proposalBoardId={proposal?.id}
+        definitionId={wizardDefinitionId}
+        milestoneKey={wizardMilestoneKey}
+      />
     </div>
   );
 }

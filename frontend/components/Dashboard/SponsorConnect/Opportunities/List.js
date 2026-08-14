@@ -10,15 +10,23 @@ import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import { OpportunityPageShell as Shell } from "./OpportunityPageLayout";
 import {
   isProposalFormAnswerComplete,
   getProposalEntrySavedAt,
 } from "../../../../lib/opportunityProposalData";
 import { isRoundSponsorFormsVisible } from "../../../../lib/opportunityEditorTabs";
+import {
+  OPPORTUNITY_FLASH,
+  resolveOpportunityFlashMessage,
+  useOpportunityFlashQuery,
+} from "../../../../lib/opportunityFlash";
+import { getUnreadReviewerCommentNotes } from "../../../../lib/reviewThreadRound";
 import OpportunityChatModal from "./OpportunityChatModal";
 import OpportunityFollowUpFormModal from "./OpportunityFollowUpFormModal";
 import OpportunityListStepper from "./OpportunityListStepper";
+import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
 
 const MESSAGE_ICON = (
   <img
@@ -134,6 +142,33 @@ const Actions = styled.div`
   }
 `;
 
+const MessageButtonWrap = styled.div`
+  position: relative;
+  flex-shrink: 0;
+`;
+
+const UNREAD_MESSAGE_BUTTON_STYLE = {
+  background: "var(--MH-Theme-Additional-Accent-Light, #f5f2ff)",
+};
+
+const UnreadBadge = styled.span`
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 100px;
+  background: var(--MH-Theme-Secondary-Dark, #6f26ce);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  box-sizing: border-box;
+  pointer-events: none;
+`;
+
 const FormsPanel = styled.div`
   display: flex;
   flex-direction: column;
@@ -142,6 +177,17 @@ const FormsPanel = styled.div`
   background: #fafbfc;
   border-top: 1px solid #e6e6e6;
 `;
+
+/** In-row success banner — sits on the white card so it doesn’t blend with the page shell. */
+const RowFlashWrap = styled.div`
+  padding: 0 20px 16px;
+`;
+
+const ROW_FLASH_STYLE = {
+  background: "#e3f4ec",
+  backgroundColor: "#e3f4ec",
+  border: "1px solid #b8dcc8",
+};
 
 const RoundMeta = styled.div`
   font-size: 12px;
@@ -285,12 +331,29 @@ export default function OpportunitiesList({ user }) {
   const router = useRouter();
   const { t } = useTranslation("common");
   const { t: tConnect } = useTranslation("connect");
+  const {
+    flashMessage,
+    flashOpportunityId,
+    clearFlash,
+  } = useOpportunityFlashQuery(tConnect);
+  /** @type {[{ message: string, opportunityId: string }|null, Function]} */
+  const [rowFlash, setRowFlash] = useState(null);
+  const activeFlash =
+    rowFlash ||
+    (flashMessage
+      ? { message: flashMessage, opportunityId: flashOpportunityId }
+      : null);
+  const dismissFlash = () => {
+    setRowFlash(null);
+    clearFlash();
+  };
   const { data, loading, refetch } = useQuery(MY_OPPORTUNITIES, {
     fetchPolicy: "cache-and-network",
   });
   const [deleteOpportunity] = useMutation(DELETE_OPPORTUNITY);
   const [chatModal, setChatModal] = useState(null);
   const [formModal, setFormModal] = useState(null);
+  const [unsubmitOpportunityId, setUnsubmitOpportunityId] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
 
@@ -332,14 +395,51 @@ export default function OpportunitiesList({ user }) {
     });
   };
 
+  const handleFormSaved = () => {
+    const opportunityId = formModal?.opportunity?.id || null;
+    setFormModal(null);
+    if (opportunityId) {
+      setRowFlash({
+        opportunityId,
+        message: tConnect("myOpportunitiesList.flash.formSaved", {}, {
+          default: "Follow-up form saved.",
+        }),
+      });
+    }
+    refetch();
+  };
+
+  const handleUnsubmitSuccess = (nextStatus) => {
+    const opportunityId = unsubmitOpportunityId;
+    setUnsubmitOpportunityId(null);
+    const flashKey =
+      nextStatus === "returned"
+        ? OPPORTUNITY_FLASH.UNSUBMITTED_REVISION
+        : OPPORTUNITY_FLASH.UNSUBMITTED_DRAFT;
+    const message = resolveOpportunityFlashMessage(flashKey, tConnect);
+    if (opportunityId && message) {
+      setRowFlash({ opportunityId, message });
+    }
+    refetch();
+  };
+
   const handleOpenChat = (opportunity) => {
+    const unreadNotes = getUnreadReviewerCommentNotes({
+      notes: opportunity.reviewNotes,
+      viewerId: user?.id,
+    });
+    const latestUnread = [...unreadNotes].sort((a, b) => {
+      const aTime = a?.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const bTime = b?.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return bTime - aTime;
+    })[0];
     const heldRound =
       opportunity.status === "pre_selected"
         ? (opportunity.rounds || [])[0]
         : null;
     setChatModal({
       opportunityId: opportunity.id,
-      initialRoundId: heldRound?.id || null,
+      initialRoundId: latestUnread?.round?.id || heldRound?.id || null,
     });
   };
 
@@ -387,7 +487,26 @@ export default function OpportunitiesList({ user }) {
             const networks = opportunity.classNetworks || [];
             const networkCount = networks.length;
             const isPreSelected = opportunity.status === "pre_selected";
+            const canUnsubmit = opportunity.status === "pending_review";
             const heldRounds = isPreSelected ? opportunity.rounds || [] : [];
+            const unreadNotes = getUnreadReviewerCommentNotes({
+              notes: opportunity.reviewNotes,
+              viewerId: user?.id,
+            });
+            const unreadCount = unreadNotes.length;
+            const chatAriaLabel =
+              unreadCount > 0
+                ? tConnect(
+                    "myOpportunitiesList.openChatUnread",
+                    { count: unreadCount },
+                    { default: "Open messages, {{count}} unread" },
+                  )
+                : tConnect("myOpportunitiesList.openChat", {}, {
+                    default: "Open messages",
+                  });
+            const showRowFlash =
+              activeFlash?.opportunityId &&
+              activeFlash.opportunityId === opportunity.id;
 
             return (
               <OpportunityCard key={opportunity.id}>
@@ -398,6 +517,7 @@ export default function OpportunitiesList({ user }) {
                       status={opportunity.status}
                       proposalData={opportunity.proposalData}
                       rounds={opportunity.rounds}
+                      reviewNotes={opportunity.reviewNotes}
                       videoFile={opportunity.videoFile}
                       networks={networks}
                       onStepClick={() => handleEdit(opportunity.id)}
@@ -420,27 +540,43 @@ export default function OpportunitiesList({ user }) {
 
                   <HeaderAside>
                     <Actions>
-                      <IconButton
-                        variant="text"
-                        icon={MESSAGE_ICON}
-                        ariaLabel={tConnect(
-                          "myOpportunitiesList.openChat",
-                          {},
-                          { default: "Open messages" },
-                        )}
-                        title={tConnect(
-                          "myOpportunitiesList.openChat",
-                          {},
-                          { default: "Open messages" },
-                        )}
-                        onClick={() => handleOpenChat(opportunity)}
-                      />
+                      <MessageButtonWrap>
+                        <IconButton
+                          variant="text"
+                          icon={MESSAGE_ICON}
+                          ariaLabel={chatAriaLabel}
+                          title={chatAriaLabel}
+                          style={
+                            unreadCount > 0
+                              ? UNREAD_MESSAGE_BUTTON_STYLE
+                              : undefined
+                          }
+                          onClick={() => handleOpenChat(opportunity)}
+                        />
+                        {unreadCount > 0 ? (
+                          <UnreadBadge aria-hidden>
+                            {unreadCount > 9 ? "9+" : unreadCount}
+                          </UnreadBadge>
+                        ) : null}
+                      </MessageButtonWrap>
                       <Chip
                         label={t("opportunities.edit", {}, {
                           default: "Edit",
                         })}
                         onClick={() => handleEdit(opportunity.id)}
                       />
+                      {canUnsubmit ? (
+                        <Chip
+                          label={tConnect(
+                            "myOpportunitiesList.unsubmit.button",
+                            {},
+                            { default: "Unsubmit" },
+                          )}
+                          onClick={() =>
+                            setUnsubmitOpportunityId(opportunity.id)
+                          }
+                        />
+                      ) : null}
                       <Chip
                         label={t("opportunities.delete", {}, {
                           default: "Delete",
@@ -451,6 +587,22 @@ export default function OpportunitiesList({ user }) {
                     </Actions>
                   </HeaderAside>
                 </CardHeader>
+
+                {showRowFlash ? (
+                  <RowFlashWrap>
+                    <MessageCard
+                      variant="success"
+                      message={activeFlash.message}
+                      onClose={dismissFlash}
+                      closeAriaLabel={tConnect(
+                        "myOpportunitiesList.flash.dismiss",
+                        {},
+                        { default: "Dismiss" },
+                      )}
+                      style={ROW_FLASH_STYLE}
+                    />
+                  </RowFlashWrap>
+                ) : null}
 
                 {heldRounds.map((round) => {
                   const forms = isRoundSponsorFormsVisible(round)
@@ -576,8 +728,15 @@ export default function OpportunitiesList({ user }) {
       <OpportunityFollowUpFormModal
         open={Boolean(formModal?.formMeta?.id)}
         onClose={() => setFormModal(null)}
+        onSaved={handleFormSaved}
         opportunity={formModal?.opportunity}
         formMeta={formModal?.formMeta}
+      />
+      <UnsubmitOpportunityModal
+        open={Boolean(unsubmitOpportunityId)}
+        onClose={() => setUnsubmitOpportunityId(null)}
+        opportunityId={unsubmitOpportunityId}
+        onSuccess={handleUnsubmitSuccess}
       />
     </Shell>
   );

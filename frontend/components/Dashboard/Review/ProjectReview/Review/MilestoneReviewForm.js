@@ -15,6 +15,7 @@ import { fieldLabel, optionLabel } from "../../../../Forms/DefinitionForm/i18n";
 
 const FIELD_TYPE_TO_RESPONSE = {
   select_one_icon: "selectOne",
+  select: "selectOne",
   task_selector: "taskSelector",
   dual_textarea: "dualTextarea",
   textarea: "textarea",
@@ -49,14 +50,14 @@ function fieldToReviewItem(field, locale) {
     answer: "",
   };
 
-  if (field.fieldType === "select_one_icon") {
+  if (field.fieldType === "select_one_icon" || field.fieldType === "select") {
     const raw = Array.isArray(field.options) ? field.options : [];
     item.responseOptions = raw
       .slice()
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
       .map((option) => ({
         value: option.value,
-        title: optionLabel(option, locale),
+        title: optionLabel(option, locale) || option.label || option.value,
         subtitle: option.subtitle || "",
         icon: option.icon || "",
       }));

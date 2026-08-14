@@ -537,6 +537,10 @@
 		"edit": "Bewerking",
 		"empty": "Je hebt nog geen mogelijkheden gecreëerd. Klik op Nieuwe mogelijkheid om je eerste project voor studenten te publiceren.",
 		"emptyFiltered": "Er zijn geen vacatures die aan de huidige filters voldoen.",
+		"flash": {
+			"dismiss": "",
+			"formSaved": ""
+		},
 		"held": {
 			"continueForm": "",
 			"followUp": "",
@@ -575,6 +579,7 @@
 		"networkFilterPlaceholder": "Alle netwerken",
 		"newButton": "Nieuwe kans",
 		"openChat": "",
+		"openChatUnread": "",
 		"openStatus": "",
 		"pageTitle": "Mijn kansen",
 		"rating": {
@@ -612,6 +617,7 @@
 			"draft": "",
 			"formFilled": "",
 			"formsProgress": "",
+			"inRevision": "",
 			"matched": "",
 			"matching": "",
 			"openOpportunity": "",
@@ -626,6 +632,18 @@
 		},
 		"teamOf": "Team van {{size}}",
 		"unknownSponsor": "Onbekend",
+		"unsubmit": {
+			"button": "",
+			"cancel": "",
+			"error": "",
+			"helper": "",
+			"successDraft": "",
+			"successRevision": "",
+			"title": "",
+			"toDraft": "",
+			"toRevision": "",
+			"working": ""
+		},
 		"visibility": {
 			"emptyHint": "",
 			"many": "",
@@ -701,6 +719,7 @@
 		"coverImageHint": "Upload een bestand (opgeslagen in onze cloudopslag) of plak hieronder een directe afbeeldings-URL. Geüploade bestanden krijgen voorrang als beide opties zijn ingesteld.",
 		"coverImageUrlHint": "Of plak een URL (max. {{maxMb}} MB voor uploads):",
 		"create": "Creëer kansen",
+		"createdFlash": "",
 		"customQuestions": {
 			"add": "Vraag toevoegen",
 			"addPrompt": "Voeg een vraag toe",
@@ -740,6 +759,7 @@
 			"scopeDescriptionHint": "Beschrijf de reikwijdte van het project waarop u een afstudeerprojectteam wilt laten focussen. (De beste afstudeerprojectvoorstellen zijn belangrijk maar niet urgent; haalbaar binnen de academische termijn en met de beschikbare middelen; geven een duidelijke definitie van het probleem of de kwestie die moet worden aangepakt; hebben een realistische reikwijdte; en specificeren concrete resultaten die het afstudeerprojectteam moet leveren.) Ongeveer 500 woorden.",
 			"title": "Projectomvang"
 		},
+		"flashDismiss": "",
 		"followUpIntro": "",
 		"followUpLastSaved": "",
 		"followUpQuestionnaire": {

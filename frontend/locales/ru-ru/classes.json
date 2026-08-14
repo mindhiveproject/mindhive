@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "",
 				"editReviewForm": "",
 				"editReviewFormHint": "",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "",
 				"includedCardsTitle": "",
 				"milestoneDescription": "Описание",
+				"openingEditor": "",
 				"publish": "",
 				"reviewFormPreview": "",
 				"scopedFormOnly": "",
 				"statusDraft": "Черновик",
-				"statusPublished": "Опубликовано"
+				"statusPublished": "Опубликовано",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "Добавить существующие ресурсы (см. Ресурсы на панели навигации)",
 			"addLinkedItems": "Добавляйте существующие задания, задачи, исследования или ресурсы.",
@@ -996,6 +1003,7 @@
 			"formWizard": {
 				"addQuestion": "",
 				"back": "Назад",
+				"bannerDismiss": "",
 				"cancel": "Отмена",
 				"choicesLabel": "",
 				"choicesPlaceholder": "",
@@ -1037,9 +1045,11 @@
 				"promptLabel": "",
 				"promptPlaceholder": "",
 				"publish": "",
+				"publishedAndAdded": "",
 				"questionNumber": "",
 				"removeQuestion": "Удалить",
 				"required": "Обязательно",
+				"savedAsDraft": "",
 				"saveDraft": "",
 				"startFromPublic": "",
 				"stepOf": "",
@@ -1159,6 +1169,7 @@
 			"capacity": "Вместимость",
 			"close": "Закрыть",
 			"closeMessages": "",
+			"flashDismiss": "",
 			"formStatusLabel": "Статус: {{status}}",
 			"groupFormatOptions": {
 				"either": "",
@@ -1169,8 +1180,10 @@
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
+				"addedToRound": "",
 				"addToRound": "",
 				"noRoundHint": "",
+				"removedFromRound": "",
 				"removeFromRound": "",
 				"saving": "Сохранение...",
 				"toggleFailed": ""
@@ -1331,6 +1344,15 @@
 		"dateCreated": "Дата создания",
 		"dateUpdated": "Обновлено",
 		"editTemplate": "Редактировать шаблон",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "Запретить студентам копировать этот шаблон",
 		"listDescription": "{{count}} студенческих проектных досок в этом классе.",
 		"manageClassProjectBoard": "Управлять доской классного проекта",
@@ -1340,17 +1362,25 @@
 			"clickHint": "Нажмите на этап, чтобы просмотреть соответствующую форму оценки.",
 			"columnLabel": "Столбец: {{section}}",
 			"confirmDeleteMilestone": "Удалить {{action}} из этого шаблона? Карточка этапа проверки будет удалена с доски. Само определение контрольной точки не будет удалено.",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "Этап пользовательской проверки",
 			"defaultAction": "MindHive по умолчанию",
 			"deleteMilestone": "Удалить из шаблона",
 			"deletingMilestone": "Удаление...",
+			"editForm": "",
 			"empty": "Для этого шаблона пока нет этапов проверки.",
 			"manageMilestones": "Управление этапами проекта",
 			"manageModalTitle": "Управление этапами проекта",
+			"openingEditor": "",
 			"previewForm": "Предварительный просмотр формы отзыва",
 			"previewModalTitle": "Форма отзыва — {{action}}",
+			"previewModalTitleNoForm": "",
 			"trigger": "{{count}} этапов",
-			"unnamedColumn": "Колонка без названия"
+			"unnamedColumn": "Колонка без названия",
+			"viewDetails": ""
 		},
 		"newTemplate": "Создать новый шаблон класса",
 		"noClassTemplatesDescription": "Создайте доску шаблона, чтобы студенты этого класса могли использовать её в качестве отправной точки.",

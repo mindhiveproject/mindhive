@@ -1928,6 +1928,7 @@
 				"selectSourcePlaceholder": "समीक्षा चरण का चयन करें"
 			},
 			"customPreview": "यह अपने स्वयं के माइलस्टोन लेबल के साथ एक कस्टम समीक्षा चरण बनाता है।",
+			"defaultFormReadOnly": "",
 			"editForm": "फ़ॉर्म संपादित करें",
 			"editFormHint": "फॉर्म संपादन की सुविधा अन्यत्र उपलब्ध है।",
 			"finishBuilding": "खत्म करना",
@@ -1944,6 +1945,8 @@
 			},
 			"newCheckpoint": "+ नया एक्शन कार्ड",
 			"noPreview": "इस कार्ड प्रकार से कोई समीक्षा प्रपत्र संबद्ध नहीं है।",
+			"noStudyQuestionnaire": "",
+			"openingEditor": "",
 			"previewLabel": "समीक्षा प्रपत्र का पूर्वावलोकन",
 			"previewLoading": "पूर्वावलोकन लोड हो रहा है...",
 			"proposalPreview": "छात्रों के लिए सामग्री फ़ील्ड के साथ एक नियमित प्रस्ताव कार्ड जोड़ता है।",

@@ -2265,12 +2265,13 @@ const StyledClass = styled.div`
       }
 
       .matchingRoundOppReviewButtonUnread {
-        border: 1px solid var(--MH-Theme-Primary-Base, #337c84) !important;
-        background: var(--MH-Theme-Primary-Light, #def8fb) !important;
+        border: 1px solid var(--MH-Theme-Additional-Accent-Dark, #3f288f) !important;
+        background: var(--MH-Theme-Additional-Accent-Light, #f5f2ff) !important;
         border-radius: 100px !important;
 
         &:hover {
-          background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3) !important;
+          background: var(--MH-Theme-Additional-Accent-Light, #f5f2ff) !important;
+          filter: brightness(0.96);
         }
 
         .DesignSystem-Button-LeadingIcon {
@@ -2283,7 +2284,7 @@ const StyledClass = styled.div`
         display: block;
         width: 16px;
         height: 16px;
-        background-color: var(--MH-Theme-Primary-Base, #337c84);
+        background-color: var(--MH-Theme-Additional-Accent-Dark, #3f288f);
         mask: url("/assets/icons/message.svg") center / contain no-repeat;
         -webkit-mask: url("/assets/icons/message.svg") center / contain no-repeat;
       }

@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import MessageCard from "../../../../DesignSystem/MessageCard";
 import Modal from "../../../../DesignSystem/Modal";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../../Queries/Opportunity";
 import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../../Queries/ConnectRound";
@@ -629,6 +630,7 @@ export default function OpportunityPreviewModal({
   const [returnModalOpen, setReturnModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(OPPORTUNITY_PREVIEW_TABS.detail);
   const [chatOpen, setChatOpen] = useState(false);
+  const [toggleFlash, setToggleFlash] = useState(null);
   const markedReadNoteIdsRef = useRef(new Set());
 
   const isInMatchingRound =
@@ -640,14 +642,29 @@ export default function OpportunityPreviewModal({
   const showNoRoundHint = matchingRoundContext?.noRoundForNetwork;
   const showMatchingRoundSection = Boolean(matchingRoundContext);
 
-  const handleToggleMatchingRound = () => {
-    if (!opportunityId || !canManage || isToggling) return;
-    matchingRoundContext?.toggleOpportunity?.(opportunityId);
-  };
-
   const matchingRoundTitle =
     matchingRoundContext?.roundTitle ||
     t("opportunities.matchingRound.title", {}, { default: "Matching round" });
+
+  const handleToggleMatchingRound = async () => {
+    if (!opportunityId || !canManage || isToggling) return;
+    const wasInRound = Boolean(isInMatchingRound);
+    const ok = await matchingRoundContext?.toggleOpportunity?.(opportunityId);
+    if (!ok) return;
+    setToggleFlash(
+      wasInRound
+        ? t(
+            "opportunities.preview.matchingRound.removedFromRound",
+            { title: matchingRoundTitle },
+            { default: "Removed from {{title}}." },
+          )
+        : t(
+            "opportunities.preview.matchingRound.addedToRound",
+            { title: matchingRoundTitle },
+            { default: "Added to {{title}}." },
+          ),
+    );
+  };
 
   const matchingRoundButtonLabel = isToggling
     ? t("opportunities.preview.matchingRound.saving", {}, { default: "Saving…" })
@@ -760,6 +777,7 @@ export default function OpportunityPreviewModal({
   useEffect(() => {
     if (!open) {
       setChatOpen(false);
+      setToggleFlash(null);
       return;
     }
     const nextTab =
@@ -768,6 +786,7 @@ export default function OpportunityPreviewModal({
         : initialTab || OPPORTUNITY_PREVIEW_TABS.detail;
     setActiveTab(nextTab);
     setChatOpen(false);
+    setToggleFlash(null);
   }, [open, opportunityId, initialTab]);
 
   useEffect(() => {
@@ -1095,11 +1114,21 @@ export default function OpportunityPreviewModal({
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-end",
-        gap: 6,
+        alignItems: "stretch",
+        gap: 12,
         width: "100%",
       }}
     >
+      {toggleFlash ? (
+        <MessageCard
+          variant="success"
+          message={toggleFlash}
+          onClose={() => setToggleFlash(null)}
+          closeAriaLabel={t("opportunities.preview.flashDismiss", {}, {
+            default: "Dismiss",
+          })}
+        />
+      ) : null}
       <div
         style={{
           display: "flex",

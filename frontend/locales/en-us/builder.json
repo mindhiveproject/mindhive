@@ -1912,7 +1912,7 @@
 			"buildFormTitle": "Build the review form: \"{{title}}\"",
 			"cancel": "Cancel",
 			"categories": {
-				"action": "Action card",
+				"action": "Milestone",
 				"proposal": "Proposal card"
 			},
 			"create": "Create",
@@ -1922,12 +1922,13 @@
 				"cloneFrom": "Copy an existing form",
 				"description": "Description",
 				"fromScratch": "Start from scratch",
-				"label": "Action label",
-				"labelPlaceholder": "Enter an action label",
+				"label": "Milestone label",
+				"labelPlaceholder": "Enter a milestone label",
 				"selectSource": "Form to copy",
 				"selectSourcePlaceholder": "Select a review step"
 			},
 			"customPreview": "Creates a custom review step with its own milestone label.",
+			"defaultFormReadOnly": "This is a MindHive default. To customize the form, add a New milestone and copy this review form as a template.",
 			"editForm": "Edit form",
 			"editFormHint": "Form editing is available elsewhere",
 			"finishBuilding": "Finish",
@@ -1938,12 +1939,14 @@
 				"label": "Form template"
 			},
 			"milestone": {
-				"actionLabel": "Action label",
+				"actionLabel": "Milestone label",
 				"configureFormNext": "The review form is configured in the next step.",
 				"description": "Description"
 			},
-			"newCheckpoint": "+ New Action Card",
-			"noPreview": "No review form is linked to this card type.",
+			"newCheckpoint": "+ New Milestone",
+			"noPreview": "No review form is linked to milestone.",
+			"noStudyQuestionnaire": "Data Collection is linked to the study. It has no review questionnaire.",
+			"openingEditor": "Opening editor…",
 			"previewLabel": "Review form preview",
 			"previewLoading": "Loading preview...",
 			"proposalPreview": "Adds a regular proposal card with content fields for students.",
@@ -1960,14 +1963,14 @@
 				"siblingWarning": "Heads up — the currently-live version v{{version}} will be auto-archived so only one published version per scope stays active.",
 				"title": "Publish \"{{title}}\" v{{version}}?"
 			},
-			"scratchPreview": "Creates an empty draft review form linked to this step. Once you click Create you'll build the form's cards and fields right here in the modal, then Publish. Student clones inherit whatever you publish.",
+			"scratchPreview": "Creates an empty draft review form linked to this step. Once you click Create you'll build the form in the editor, then publish. Student clones inherit whatever you publish.",
 			"statusDraft": "Draft",
 			"statusPublished": "Published",
 			"steps": {
 				"cardType": "Card type",
 				"checkpoint": "Checkpoint",
 				"milestone": "Milestone",
-				"permissions": "Permissions & form template"
+				"permissions": "Form template"
 			},
 			"templateSourceLabel": "{{title}} (custom)",
 			"title": "Create a new card",
@@ -1976,10 +1979,10 @@
 			"typeLabel": "Card type",
 			"typePlaceholder": "Select a card type",
 			"types": {
-				"actionCollectingData": "Default action: Start Collecting Data",
-				"actionPeerFeedback": "Default action: Submit for Peer Feedback",
-				"actionProjectReport": "Default action: Submit Project Report",
-				"actionSubmit": "Default action: Submit for Proposal Feedback",
+				"actionCollectingData": "Default milestone: Start Collecting Data",
+				"actionPeerFeedback": "Default milestone: Submit for Peer Feedback",
+				"actionProjectReport": "Default milestone: Submit Project Report",
+				"actionSubmit": "Default milestone: Submit for Proposal Feedback",
 				"custom": "Create your own review step",
 				"proposal": "Proposal card"
 			}

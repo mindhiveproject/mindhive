@@ -36,7 +36,7 @@ async function resolveFormDefinitionIdFromKey(
   return definitions[0]?.id || null;
 }
 
-async function uniqueCopiedFormKey(context: any, milestoneKey: string) {
+export async function uniqueCopiedFormKey(context: any, milestoneKey: string) {
   const base = `review_${milestoneKey}`;
   let key = base;
   let suffix = 1;
@@ -51,7 +51,7 @@ async function uniqueCopiedFormKey(context: any, milestoneKey: string) {
   }
 }
 
-const FORM_DEFINITION_NESTED_QUERY = `
+export const FORM_DEFINITION_NESTED_QUERY = `
   id
   key
   title
@@ -92,7 +92,7 @@ const FORM_DEFINITION_NESTED_QUERY = `
   }
 `;
 
-async function copyFormCardsAndFields(
+export async function copyFormCardsAndFields(
   sudo: any,
   source: { cards?: any[] },
   definitionId: string
@@ -180,6 +180,7 @@ export async function provisionFormDefinitionForMilestone(
   const boardScopeData = {
     scope: "project_board" as const,
     proposalBoard: { connect: { id: proposalBoardId } },
+    surface: "feedback" as const,
   };
 
   if (sourceFormDefinitionId) {

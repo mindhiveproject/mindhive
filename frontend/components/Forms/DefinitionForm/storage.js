@@ -11,6 +11,8 @@
 //   File objects are wrapped as { upload }. tag_multiselect values are
 //   serialized as { set: [{id}, ...] } for Keystone relationship inputs.
 
+import { normalizeOrganizationNames } from "../../../lib/organizationLabels";
+
 function isEmpty(v) {
   return v === undefined || v === null;
 }
@@ -73,11 +75,25 @@ function toIsoOrNull(dateStr) {
   }
 }
 
+/**
+ * Profile.organization is a Keystone text column. Persist 0/1/many names as
+ * "", a single string, or JSON.stringify([...]) so GraphQL String accepts it.
+ */
+function serializeOrganizationColumn(value) {
+  const names = normalizeOrganizationNames(value);
+  if (names.length === 0) return "";
+  if (names.length === 1) return names[0];
+  return JSON.stringify(names);
+}
+
 function defaultForType(t) {
   switch (t) {
     case "checkbox":
       return false;
     case "number":
+      return null;
+    case "select":
+    case "select_one_icon":
       return null;
     case "multiselect":
     case "tag_multiselect":
@@ -110,6 +126,29 @@ export function hydrate(entity, fields, related) {
       values[f.name] = isEmpty(raw)
         ? f.defaultValue ?? ""
         : toDateInputValue(raw);
+      continue;
+    }
+
+    // Profile.organization may be a plain string or a JSON-stringified
+    // string[]. Array-shaped field types need the parsed names; text
+    // fields get a comma-joined label so the raw JSON never appears.
+    const col = f.storageColumn || f.name;
+    if (
+      f.storage === "column" &&
+      col === "organization" &&
+      f.storageEntity !== "organization" &&
+      !isEmpty(raw)
+    ) {
+      const names = normalizeOrganizationNames(raw);
+      if (
+        f.fieldType === "multiselect" ||
+        f.fieldType === "json_array" ||
+        f.fieldType === "link_list"
+      ) {
+        values[f.name] = names;
+      } else {
+        values[f.name] = names.join(", ");
+      }
       continue;
     }
 
@@ -163,6 +202,15 @@ export function buildUpdate(values, fields, entity, related) {
         continue;
       }
 
+      // Select enums reject "" — send null when cleared / untouched.
+      if (
+        (f.fieldType === "select" || f.fieldType === "select_one_icon") &&
+        (v === "" || v === undefined)
+      ) {
+        target.columns[col] = null;
+        continue;
+      }
+
       // Tag multiselect → Keystone relationship `set` input.
       if (f.fieldType === "tag_multiselect") {
         const ids = Array.isArray(v) ? v.filter(Boolean) : [];
@@ -175,6 +223,14 @@ export function buildUpdate(values, fields, entity, related) {
         target.columns[col] = isCreate
           ? { connect: ids.map((id) => ({ id })) }
           : { set: ids.map((id) => ({ id })) };
+        continue;
+      }
+
+      // Profile.organization text column may receive a string[] from the form.
+      if (col === "organization" && f.storageEntity !== "organization") {
+        if (v !== undefined) {
+          target.columns[col] = serializeOrganizationColumn(v);
+        }
         continue;
       }
 

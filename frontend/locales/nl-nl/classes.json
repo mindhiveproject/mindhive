@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "",
 				"editReviewForm": "",
 				"editReviewFormHint": "",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "",
 				"includedCardsTitle": "",
 				"milestoneDescription": "Beschrijving",
+				"openingEditor": "",
 				"publish": "",
 				"reviewFormPreview": "",
 				"scopedFormOnly": "",
 				"statusDraft": "Concept",
-				"statusPublished": "Gepubliceerd"
+				"statusPublished": "Gepubliceerd",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "Bestaande bronnen toevoegen (zie Bronnen in navigatievenster)",
 			"addLinkedItems": "Bestaande opdrachten, taken, studies of bronnen toevoegen",
@@ -996,6 +1003,7 @@
 			"formWizard": {
 				"addQuestion": "",
 				"back": "Terug",
+				"bannerDismiss": "",
 				"cancel": "Annuleren",
 				"choicesLabel": "",
 				"choicesPlaceholder": "",
@@ -1037,9 +1045,11 @@
 				"promptLabel": "",
 				"promptPlaceholder": "",
 				"publish": "",
+				"publishedAndAdded": "",
 				"questionNumber": "",
 				"removeQuestion": "Verwijderen",
 				"required": "Verplicht",
+				"savedAsDraft": "",
 				"saveDraft": "Opslaan als concept",
 				"startFromPublic": "",
 				"stepOf": "",
@@ -1159,6 +1169,7 @@
 			"capacity": "Capaciteit",
 			"close": "Sluiten",
 			"closeMessages": "",
+			"flashDismiss": "",
 			"formStatusLabel": "",
 			"groupFormatOptions": {
 				"either": "",
@@ -1169,8 +1180,10 @@
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
+				"addedToRound": "",
 				"addToRound": "",
 				"noRoundHint": "",
+				"removedFromRound": "",
 				"removeFromRound": "",
 				"saving": "Opslaan...",
 				"toggleFailed": ""
@@ -1331,6 +1344,15 @@
 		"dateCreated": "Datum aangemaakt",
 		"dateUpdated": "Bijgewerkt",
 		"editTemplate": "Bewerk sjabloon",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "Voorkom dat studenten deze sjabloon kopiëren",
 		"listDescription": "{{count}} projectborden van studenten in deze klas.",
 		"manageClassProjectBoard": "Beheer het projectbord van de klas",
@@ -1340,17 +1362,25 @@
 			"clickHint": "Klik op een mijlpaal om het bijbehorende beoordelingsformulier te bekijken.",
 			"columnLabel": "Kolom: {{section}}",
 			"confirmDeleteMilestone": "Verwijder {{action}} uit deze sjabloon? De kaart met de beoordelingsstap wordt van het bord verwijderd. De mijlpaaldefinitie zelf wordt niet verwijderd.",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "Aangepaste beoordelingsstap",
 			"defaultAction": "MindHive-standaard",
 			"deleteMilestone": "Verwijderen uit sjabloon",
 			"deletingMilestone": "Verwijderen...",
+			"editForm": "",
 			"empty": "Er zijn nog geen beoordelingsstappen voor deze sjabloon.",
 			"manageMilestones": "Mijlpalen beheren",
 			"manageModalTitle": "Mijlpalen beheren",
+			"openingEditor": "",
 			"previewForm": "Voorbeeld beoordelingsformulier",
 			"previewModalTitle": "Beoordelingsformulier — {{action}}",
+			"previewModalTitleNoForm": "",
 			"trigger": "{{count}} mijlpalen",
-			"unnamedColumn": "Kolom zonder titel"
+			"unnamedColumn": "Kolom zonder titel",
+			"viewDetails": ""
 		},
 		"newTemplate": "Maak nieuwe klassjabloon aan",
 		"noClassTemplatesDescription": "Maak een sjabloonbord voor studenten in deze klas om als startpunt te gebruiken.",

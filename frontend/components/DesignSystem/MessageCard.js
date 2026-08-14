@@ -62,7 +62,6 @@ const VARIANT_STYLES = {
     backgroundColor: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
     color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   },
-  /** Positive / complete state (e.g. visible to sponsors) */
   success: {
     background: "var(--MH-Theme-Neutrals-Light-Green, #f6f9f8)",
     backgroundColor: "var(--MH-Theme-Neutrals-Light-Green, #f6f9f8)",
@@ -102,7 +101,7 @@ const MESSAGE_CARD_FOCUS_STYLE = `
  * @param {"warning"|"information"|"neutral"|"success"} [variant="information"] - Color tone.
  * @param {React.ReactNode} message - Short status text (required).
  * @param {() => void} [onClick] - Makes the card keyboard-activatable and clickable.
- * @param {() => void} [onClose] - Optional dismiss control (trailing X before info icon).
+ * @param {() => void} [onClose] - Optional dismiss control. When set, trailing icon is X only (no info icon).
  * @param {string} [closeAriaLabel] - Accessible name for the dismiss control (pass via t()).
  * @param {string} [className] - Optional class for the root.
  * @param {string} [ariaLabel] - Accessible name when clickable or when message is not plain text.
@@ -199,8 +198,9 @@ export default function MessageCard({
             >
               {CLOSE_ICON}
             </button>
-          ) : null}
-          {INFO_ICON}
+          ) : (
+            INFO_ICON
+          )}
         </span>
       </div>
     </>

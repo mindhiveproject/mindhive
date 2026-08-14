@@ -7,6 +7,7 @@ import { PUBLIC_USER_QUERY } from "../../../Queries/User";
 import useTranslation from "next-translate/useTranslation";
 import ManageFavorite from "../ManageFavorite";
 import { getProfileImageUrl } from "../../../../lib/profileStudyImageUrls";
+import { formatOrganizationLabel } from "../../../../lib/organizationLabels";
 import {
   PRONOUNS_LABELS,
   getGradientForProfile,
@@ -53,7 +54,14 @@ export default function ProfilePage({ query, user }) {
   const hasBioContent = officialBio.trim() || unofficialBio.trim();
 
   const linkedOrg = profile?.organizations?.[0] || null;
-  const orgLabel = profile?.organization || linkedOrg?.name || null;
+  const linkedOrgNames = (profile?.organizations || [])
+    .map((org) => org?.name?.trim())
+    .filter(Boolean);
+  const freeTextOrgLabel = formatOrganizationLabel(profile?.organization);
+  const orgLabel =
+    linkedOrgNames.length > 0
+      ? linkedOrgNames.join(", ")
+      : freeTextOrgLabel || null;
   const orgDepartment = profile?.department || null;
   const hasOrgMeta = orgLabel || orgDepartment;
 

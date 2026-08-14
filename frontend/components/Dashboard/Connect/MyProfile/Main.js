@@ -10,6 +10,7 @@ import { GET_TAGS } from "../../../Queries/Tag";
 import { UPDATE_PROFILE } from "../../../Mutations/User";
 import useForm from "../../../../lib/useForm";
 import { getProfileImageUrl } from "../../../../lib/profileStudyImageUrls";
+import { formatOrganizationLabel } from "../../../../lib/organizationLabels";
 import {
   PRONOUNS_LABELS,
   getGradientForProfile,
@@ -47,7 +48,7 @@ function buildFormState(profile) {
     pronouns: profile?.pronouns || "",
     tagline: profile?.tagline || "",
     email: profile?.email || "",
-    organization: profile?.organization || "",
+    organization: formatOrganizationLabel(profile?.organization),
     department: profile?.department || "",
     location: profile?.location || "",
     bio: profile?.bio || "",
@@ -99,7 +100,7 @@ export default function MyProfile({ user }) {
   const hasBioContent = officialBio.trim() || unofficialBio.trim();
   const hasInterestChips = interestChips.length > 0;
 
-  const orgLabel = profile?.organization || null;
+  const orgLabel = formatOrganizationLabel(profile?.organization) || null;
   const orgDepartment = profile?.department || null;
   const hasOrgMeta = orgLabel || orgDepartment;
   const locationText = profile?.location || null;

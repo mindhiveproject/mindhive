@@ -27,25 +27,25 @@ export const CARD_TYPE_DEFINITIONS = [
   {
     value: "ACTION_SUBMIT",
     labelKey: "section.createCardModal.types.actionSubmit",
-    defaultLabel: "Default action: Submit for Proposal Feedback",
+    defaultLabel: "Default milestone: Submit for Proposal Feedback",
     isDefaultAction: true,
   },
   {
     value: "ACTION_PEER_FEEDBACK",
     labelKey: "section.createCardModal.types.actionPeerFeedback",
-    defaultLabel: "Default action: Submit for Peer Feedback",
+    defaultLabel: "Default milestone: Submit for Peer Feedback",
     isDefaultAction: true,
   },
   {
     value: "ACTION_COLLECTING_DATA",
     labelKey: "section.createCardModal.types.actionCollectingData",
-    defaultLabel: "Default action: Start Collecting Data",
+    defaultLabel: "Default milestone: Start Collecting Data",
     isDefaultAction: true,
   },
   {
     value: "ACTION_PROJECT_REPORT",
     labelKey: "section.createCardModal.types.actionProjectReport",
-    defaultLabel: "Default action: Submit Project Report",
+    defaultLabel: "Default milestone: Submit Project Report",
     isDefaultAction: true,
   },
   {
@@ -119,10 +119,12 @@ export function getDefaultCheckpointOptions({ t, sections }) {
 }
 
 export function getDefaultFormTemplateOptions({ t }) {
-  return CARD_TYPE_DEFINITIONS.filter((definition) => definition.isDefaultAction).map(
-    (definition) => ({
-      value: definition.value,
-      label: t(definition.labelKey, {}, { default: definition.defaultLabel }),
-    })
-  );
+  return CARD_TYPE_DEFINITIONS.filter(
+    (definition) =>
+      definition.isDefaultAction &&
+      definition.value !== "ACTION_COLLECTING_DATA"
+  ).map((definition) => ({
+    value: definition.value,
+    label: t(definition.labelKey, {}, { default: definition.defaultLabel }),
+  }));
 }

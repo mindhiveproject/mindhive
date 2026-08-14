@@ -1928,6 +1928,7 @@
 				"selectSourcePlaceholder": "Selecteer een beoordelingsstap"
 			},
 			"customPreview": "Hiermee wordt een aangepaste beoordelingsstap met een eigen mijlpaallabel aangemaakt.",
+			"defaultFormReadOnly": "",
 			"editForm": "Formulier bewerken",
 			"editFormHint": "Het bewerken van formulieren is elders mogelijk.",
 			"finishBuilding": "Finish",
@@ -1944,6 +1945,8 @@
 			},
 			"newCheckpoint": "+ Nieuwe actiekaart",
 			"noPreview": "Er is geen beoordelingsformulier gekoppeld aan dit kaarttype.",
+			"noStudyQuestionnaire": "",
+			"openingEditor": "",
 			"previewLabel": "Voorbeeld van het beoordelingsformulier",
 			"previewLoading": "Voorbeeld laden...",
 			"proposalPreview": "Voegt een standaard voorstelkaart toe met inhoudsvelden voor studenten.",

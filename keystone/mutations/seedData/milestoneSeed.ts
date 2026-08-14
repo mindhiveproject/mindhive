@@ -14,6 +14,7 @@ export type MilestoneSeed = {
   canReviewPermissionNames: string[];
   formDefinitionKeyPattern?: string;
   isActive?: boolean;
+  showInFeedbackCenter?: boolean;
 };
 
 export const MILESTONE_SEEDS: MilestoneSeed[] = [
@@ -48,6 +49,7 @@ export const MILESTONE_SEEDS: MilestoneSeed[] = [
     actionCardType: "ACTION_COLLECTING_DATA",
     reviewStage: "data_collection",
     statusTarget: "study",
+    showInFeedbackCenter: false,
     logEventName: "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
     canReviewPermissionNames: [],
   },

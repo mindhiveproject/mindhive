@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "",
 				"editReviewForm": "",
 				"editReviewFormHint": "",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "",
 				"includedCardsTitle": "",
 				"milestoneDescription": "Description",
+				"openingEditor": "",
 				"publish": "",
 				"reviewFormPreview": "",
 				"scopedFormOnly": "",
 				"statusDraft": "Brouillon",
-				"statusPublished": "Publié"
+				"statusPublished": "Publié",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "Ajouter des ressources existantes (voir Ressources dans le volet de navigation)",
 			"addLinkedItems": "Ajouter des missions, des tâches, des études ou des ressources existantes",
@@ -996,6 +1003,7 @@
 			"formWizard": {
 				"addQuestion": "Ajouter une question",
 				"back": "Retour",
+				"bannerDismiss": "",
 				"cancel": "Annuler",
 				"choicesLabel": "Choix (un par ligne)",
 				"choicesPlaceholder": "Oui\nPeut-être\nNon",
@@ -1037,9 +1045,11 @@
 				"promptLabel": "Invite de la question",
 				"promptPlaceholder": "Que voulez-vous demander ?",
 				"publish": "Publier le formulaire",
+				"publishedAndAdded": "",
 				"questionNumber": "Question {{number}}",
 				"removeQuestion": "SUPPRIMER",
 				"required": "Obligatoire",
+				"savedAsDraft": "",
 				"saveDraft": "Enregistrer comme brouillon",
 				"startFromPublic": "Commencer à partir d'un formulaire public",
 				"stepOf": "Étape {{current}} sur {{total}}",
@@ -1159,6 +1169,7 @@
 			"capacity": "Capacité",
 			"close": "Fermer",
 			"closeMessages": "",
+			"flashDismiss": "",
 			"formStatusLabel": "",
 			"groupFormatOptions": {
 				"either": "",
@@ -1169,8 +1180,10 @@
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
+				"addedToRound": "",
 				"addToRound": "",
 				"noRoundHint": "",
+				"removedFromRound": "",
 				"removeFromRound": "",
 				"saving": "Enregistrement...",
 				"toggleFailed": ""
@@ -1331,6 +1344,15 @@
 		"dateCreated": "Date de création",
 		"dateUpdated": "Mis à jour",
 		"editTemplate": "Modifier le modèle",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "Empêcher les étudiants de copier ce modèle",
 		"listDescription": "{{count}} tableaux de projets étudiants dans cette classe.",
 		"manageClassProjectBoard": "Gérer le tableau des projets de classe",
@@ -1340,17 +1362,25 @@
 			"clickHint": "Cliquez sur une étape importante pour afficher son formulaire d'évaluation associé.",
 			"columnLabel": "Colonne : {{section}}",
 			"confirmDeleteMilestone": "Supprimer {{action}} de ce modèle ? La carte de l’étape de révision sera supprimée du tableau. La définition de l’étape elle-même ne sera pas supprimée.",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "Étape de révision personnalisée",
 			"defaultAction": "Par défaut de MindHive",
 			"deleteMilestone": "Supprimer du modèle",
 			"deletingMilestone": "Suppression...",
+			"editForm": "",
 			"empty": "Aucune étape de révision n'a encore été effectuée sur ce modèle.",
 			"manageMilestones": "Gérer les étapes clés",
 			"manageModalTitle": "Gérer les étapes clés",
+			"openingEditor": "",
 			"previewForm": "Formulaire d'évaluation préliminaire",
 			"previewModalTitle": "Formulaire d'évaluation — {{action}}",
+			"previewModalTitleNoForm": "",
 			"trigger": "{{count}} étapes clés",
-			"unnamedColumn": "Colonne sans titre"
+			"unnamedColumn": "Colonne sans titre",
+			"viewDetails": ""
 		},
 		"newTemplate": "Créer un nouveau modèle de classe",
 		"noClassTemplatesDescription": "Créer un tableau de modèle que les étudiants de cette classe pourront utiliser comme point de départ.",

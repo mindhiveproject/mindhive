@@ -113,6 +113,18 @@ export function resolveReviewFormKey(milestone, curriculumType) {
     .replace(/\{\{curriculumType\}\}/g, normalizedType);
 }
 
+export function isStudyStatusMilestone(milestone) {
+  if (!milestone) return false;
+  return (
+    milestone.statusTarget === "study" ||
+    milestone.actionCardType === "ACTION_COLLECTING_DATA"
+  );
+}
+
+export function milestoneHasReviewQuestionnaire(milestone) {
+  return !!milestone && !isStudyStatusMilestone(milestone);
+}
+
 export function canUserReviewMilestone(
   userPermissions = [],
   milestone,

@@ -146,6 +146,7 @@
 			"openLink": "Open link"
 		},
 		"saveFailed": "Save failed. Please try again.",
+		"selectRequired": "{{field}} must be chosen.",
 		"wordLimit": "Must be at most {{max}} words."
 	},
 	"discoverDescription": "Browse our collection of studies, tasks and surveys created by high school students in the MindHive program and partner scientists. Participate in studies or preview tasks and surveys.",

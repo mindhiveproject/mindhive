@@ -1928,6 +1928,7 @@
 				"selectSourcePlaceholder": "Sélectionnez une étape de révision"
 			},
 			"customPreview": "Crée une étape de révision personnalisée avec sa propre étiquette d'étape clé.",
+			"defaultFormReadOnly": "",
 			"editForm": "Modifier le formulaire",
 			"editFormHint": "L'édition de formulaires est disponible ailleurs",
 			"finishBuilding": "Finition",
@@ -1944,6 +1945,8 @@
 			},
 			"newCheckpoint": "+ Nouvelle carte d'action",
 			"noPreview": "Aucun formulaire d'évaluation n'est associé à ce type de carte.",
+			"noStudyQuestionnaire": "",
+			"openingEditor": "",
 			"previewLabel": "Aperçu du formulaire d'avis",
 			"previewLoading": "Chargement de l'aperçu...",
 			"proposalPreview": "Ajoute une fiche de proposition standard avec des champs de contenu pour les étudiants.",

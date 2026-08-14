@@ -568,7 +568,7 @@ export default function MatchingRoundOpportunitiesGrid({
             fontSize: "14px",
             fontWeight: 500,
             color: unread
-              ? "var(--MH-Theme-Primary-Dark, #336F8A)"
+              ? "var(--MH-Theme-Additional-Accent-Dark, #3f288f)"
               : "#171717",
           }}
           leadingIcon={

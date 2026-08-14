@@ -21,6 +21,7 @@ import {
   resolveLinkedOrganization,
   resolveProfileType,
 } from "../../../../../lib/profileEditNavigation";
+import { formatOrganizationLabel } from "../../../../../lib/organizationLabels";
 
 const PRIMARY_DOMAIN_KEYS = [
   "academic",
@@ -54,7 +55,8 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
   const { inputs, handleChange } = useForm(
     isOrganization
       ? {
-          organization: existingOrg?.name || user?.organization,
+          organization:
+            existingOrg?.name || formatOrganizationLabel(user?.organization),
           department: existingOrg?.department || user?.department,
           website: existingOrg?.website || user?.website,
           location: existingOrg?.location || user?.location,
@@ -69,7 +71,7 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
           email: user?.email,
           pronouns: user?.pronouns,
           location: user?.location,
-          organization: user?.organization,
+          organization: formatOrganizationLabel(user?.organization),
           tagline: user?.tagline,
           profileType,
         },

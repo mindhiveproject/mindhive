@@ -1,8 +1,10 @@
 import { isProposalFormAnswerComplete } from "./opportunityProposalData";
 import { isRoundSponsorFormsVisible } from "./opportunityEditorTabs";
+import { REVIEW_NOTE_KIND } from "./reviewThreadRound";
 
 export const OPPORTUNITY_LIST_STEP_KEYS = [
   "draft",
+  "inRevision",
   "returnedWithComments",
   "submitted",
   "preSelected",
@@ -11,6 +13,18 @@ export const OPPORTUNITY_LIST_STEP_KEYS = [
   "matching",
   "matched",
 ];
+
+/**
+ * Teacher return notes (not sponsor replies). Used to choose the returned chip label.
+ */
+export function hasReviewerReturnComments(reviewNotes) {
+  return (reviewNotes || []).some((note) => {
+    if (!note) return false;
+    if (note.kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) return false;
+    // reviewer_comment, or legacy notes without kind
+    return true;
+  });
+}
 
 const MATCHED_ROUND_STATUSES = new Set(["published", "archived"]);
 
@@ -65,6 +79,7 @@ function isRoundMatched(rounds) {
  *   status?: string,
  *   proposalData?: unknown,
  *   rounds?: Array,
+ *   reviewNotes?: Array,
  * }} input
  * @returns {{
  *   steps: Array<{
@@ -82,6 +97,7 @@ export function resolveOpportunityListStepper({
   proposalData,
   rounds,
   videoFile,
+  reviewNotes,
 } = {}) {
   const status = rawStatus || "draft";
   const heldRounds = POST_PRESELECT_STATUSES.has(status) ? rounds || [] : [];
@@ -104,13 +120,17 @@ export function resolveOpportunityListStepper({
   }
 
   if (status === "returned") {
+    const withComments = hasReviewerReturnComments(reviewNotes);
+    const returnedKey = withComments
+      ? "returnedWithComments"
+      : "inRevision";
     return {
       phase: "returned",
       steps: [
         {
-          key: "returnedWithComments",
+          key: returnedKey,
           visual: "action",
-          labelKey: "returnedWithComments",
+          labelKey: returnedKey,
         },
       ],
     };

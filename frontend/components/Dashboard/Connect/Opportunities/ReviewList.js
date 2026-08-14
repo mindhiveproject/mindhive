@@ -8,12 +8,14 @@ import {
   EXPLORE_CONTEXT,
   PENDING_OPPORTUNITIES_FOR_REVIEW,
 } from "../../../Queries/Opportunity";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import { deriveRoles } from "../useConnectRole";
 import OpportunityCompactCard, {
   buildReviewOpportunityMetaLine,
   OpportunityCompactGrid,
   OpportunityListSection,
 } from "./OpportunityCompactCard";
+import { useOpportunityFlashQuery } from "../../../../lib/opportunityFlash";
 
 const Shell = styled.div`
   display: flex;
@@ -115,6 +117,7 @@ function collectReviewerNetworkIds(me) {
 
 export default function ReviewList({ user }) {
   const { t } = useTranslation("connect");
+  const { flashMessage, clearFlash } = useOpportunityFlashQuery(t);
   const { isAdmin } = deriveRoles(user);
   const { data, loading } = useQuery(PENDING_OPPORTUNITIES_FOR_REVIEW, {
     fetchPolicy: "cache-and-network",
@@ -179,6 +182,17 @@ export default function ReviewList({ user }) {
           </Link>
         </TabRow>
       </TopBar>
+
+      {flashMessage ? (
+        <MessageCard
+          variant="success"
+          message={flashMessage}
+          onClose={clearFlash}
+          closeAriaLabel={t("opportunityEditor.flashDismiss", {}, {
+            default: "Dismiss",
+          })}
+        />
+      ) : null}
 
       <OpportunityListSection>
         {loading && opportunities.length === 0 && (

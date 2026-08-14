@@ -537,6 +537,10 @@
 		"edit": "Edit",
 		"empty": "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
 		"emptyFiltered": "No opportunities match the current filters.",
+		"flash": {
+			"dismiss": "Dismiss",
+			"formSaved": "Follow-up form saved."
+		},
 		"held": {
 			"continueForm": "Respond to form",
 			"followUp": "Follow-up: {{title}}",
@@ -575,6 +579,7 @@
 		"networkFilterPlaceholder": "All networks",
 		"newButton": "New opportunity",
 		"openChat": "Open messages",
+		"openChatUnread": "Open messages, {{count}} unread",
 		"openStatus": "Open status",
 		"pageTitle": "My Opportunities",
 		"rating": {
@@ -612,6 +617,7 @@
 			"draft": "Draft",
 			"formFilled": "Form filled",
 			"formsProgress": "Forms {{done}}/{{total}}",
+			"inRevision": "In revision",
 			"matched": "Matched",
 			"matching": "Matching",
 			"openOpportunity": "Open opportunity",
@@ -626,6 +632,18 @@
 		},
 		"teamOf": "Team of {{size}}",
 		"unknownSponsor": "Unknown",
+		"unsubmit": {
+			"button": "Unsubmit",
+			"cancel": "Cancel",
+			"error": "Could not unsubmit this opportunity. Please try again.",
+			"helper": "Choose how to pull this opportunity out of review. Draft hides it from teachers until you submit again. In revision keeps it visible as returned so you can revise and resubmit.",
+			"successDraft": "Unsubmitted — back to draft.",
+			"successRevision": "Unsubmitted — marked as in revision.",
+			"title": "Unsubmit opportunity?",
+			"toDraft": "Turn back to draft",
+			"toRevision": "Mark as in revision",
+			"working": "Updating…"
+		},
 		"visibility": {
 			"emptyHint": "Add a class network so teachers can see this opportunity.",
 			"many": "Visible in {{count}} class networks",
@@ -701,6 +719,7 @@
 		"coverImageHint": "Upload a file (stored on our cloud bucket) or paste a direct image URL below. Uploaded files take priority if both are set.",
 		"coverImageUrlHint": "Or paste a URL (max {{maxMb}} MB for uploads):",
 		"create": "Create opportunity",
+		"createdFlash": "Opportunity created.",
 		"customQuestions": {
 			"add": "Add question",
 			"addPrompt": "Add a question",
@@ -740,6 +759,7 @@
 			"scopeDescriptionHint": "Describe the scope of the project for which you would like a Capstone Project Team to focus. (The best Capstone proposals are important but not urgent; achievable within the academic timeframe and with the resources available; provide a clear definition of the problem or issue to be addressed; have a realistic scope; and specify tangible deliverables for the Capstone team to provide.) Approximately 500 words.",
 			"title": "Project scope"
 		},
+		"flashDismiss": "Dismiss",
 		"followUpIntro": "Additional questions from {{context}}. Your answers are saved on this opportunity.",
 		"followUpLastSaved": "Last saved {{date}}",
 		"followUpQuestionnaire": {

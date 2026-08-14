@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "",
 				"editReviewForm": "",
 				"editReviewFormHint": "",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "",
 				"includedCardsTitle": "",
 				"milestoneDescription": "Descripción",
+				"openingEditor": "",
 				"publish": "",
 				"reviewFormPreview": "",
 				"scopedFormOnly": "",
 				"statusDraft": "Borrador",
-				"statusPublished": "Publicado"
+				"statusPublished": "Publicado",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "Agregar recursos existentes (Ver Recursos en el panel de navegación)",
 			"addLinkedItems": "Añadir asignaciones, tareas, estudios o recursos existentes",
@@ -996,6 +1003,7 @@
 			"formWizard": {
 				"addQuestion": "",
 				"back": "Atrás",
+				"bannerDismiss": "",
 				"cancel": "Cancelar",
 				"choicesLabel": "",
 				"choicesPlaceholder": "",
@@ -1037,9 +1045,11 @@
 				"promptLabel": "",
 				"promptPlaceholder": "",
 				"publish": "",
+				"publishedAndAdded": "",
 				"questionNumber": "",
 				"removeQuestion": "Eliminar",
 				"required": "Obligatorio",
+				"savedAsDraft": "",
 				"saveDraft": "Guardar como borrador",
 				"startFromPublic": "",
 				"stepOf": "",
@@ -1159,6 +1169,7 @@
 			"capacity": "Capacidad",
 			"close": "Cerrar",
 			"closeMessages": "",
+			"flashDismiss": "",
 			"formStatusLabel": "",
 			"groupFormatOptions": {
 				"either": "",
@@ -1169,8 +1180,10 @@
 			"hostedBy": "",
 			"loading": "",
 			"matchingRound": {
+				"addedToRound": "",
 				"addToRound": "",
 				"noRoundHint": "",
+				"removedFromRound": "",
 				"removeFromRound": "",
 				"saving": "Guardando...",
 				"toggleFailed": ""
@@ -1331,6 +1344,15 @@
 		"dateCreated": "Fecha de creación",
 		"dateUpdated": "Actualizado",
 		"editTemplate": "Editar plantilla",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "Impedir que los estudiantes copien esta plantilla",
 		"listDescription": "{{count}} tableros de proyectos estudiantiles en esta clase.",
 		"manageClassProjectBoard": "Administrar el tablero de proyectos de la clase",
@@ -1340,17 +1362,25 @@
 			"clickHint": "Haz clic en un hito para ver el formulario de revisión correspondiente.",
 			"columnLabel": "Columna: {{section}}",
 			"confirmDeleteMilestone": "¿Eliminar {{action}} de esta plantilla? La tarjeta del paso de revisión se eliminará del tablero. La definición del hito en sí no se eliminará.",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "Paso de revisión personalizada",
 			"defaultAction": "Configuración predeterminada de MindHive",
 			"deleteMilestone": "Eliminar de la plantilla",
 			"deletingMilestone": "Eliminando...",
+			"editForm": "",
 			"empty": "Aún no hay pasos de revisión en esta plantilla.",
 			"manageMilestones": "Gestionar hitos",
 			"manageModalTitle": "Gestionar hitos",
+			"openingEditor": "",
 			"previewForm": "Formulario de revisión previa",
 			"previewModalTitle": "Formulario de revisión — {{action}}",
+			"previewModalTitleNoForm": "",
 			"trigger": "{{count}} hitos",
-			"unnamedColumn": "Columna sin título"
+			"unnamedColumn": "Columna sin título",
+			"viewDetails": ""
 		},
 		"newTemplate": "Crear nueva plantilla de clase",
 		"noClassTemplatesDescription": "Crear un tablero de plantilla para que los estudiantes de esta clase lo usen como punto de partida.",

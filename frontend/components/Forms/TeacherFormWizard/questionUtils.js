@@ -63,8 +63,8 @@ export function createBlankQuestion(overrides = {}) {
 }
 
 export function questionsFromDefinition(definition) {
-  const card = definition?.cards?.[0];
-  const fields = card?.fields || [];
+  const cards = definition?.cards || [];
+  const fields = cards.flatMap((card) => card.fields || []);
   if (!fields.length) return [createBlankQuestion()];
   return fields.map((f) => {
     const introVideo = isIntroVideoQuestion(f);
@@ -76,6 +76,7 @@ export function questionsFromDefinition(definition) {
       placeholder: f.placeholder || "",
       isRequired: !!f.isRequired,
       optionsText: optionsToLines(f.options),
+      originalOptions: Array.isArray(f.options) ? f.options : null,
       typeChosen: true,
     });
   });
@@ -98,6 +99,8 @@ export function questionsToMutationFields(questions) {
     };
     if (fieldType === "select" || fieldType === "multiselect") {
       payload.options = parseOptionLines(q.optionsText);
+    } else if (Array.isArray(q.originalOptions) && q.originalOptions.length) {
+      payload.options = q.originalOptions;
     }
     return payload;
   });

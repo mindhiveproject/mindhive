@@ -50,6 +50,8 @@ import seedMissingForms from "./seedMissingForms";
 import duplicateFormDefinition from "./duplicateFormDefinition";
 import publishFormDefinition from "./publishFormDefinition";
 import saveClassFormDefinition from "./saveClassFormDefinition";
+import saveBoardReviewFormDefinition from "./saveBoardReviewFormDefinition";
+import forkReviewFormForBoard from "./forkReviewFormForBoard";
 import cloneFormDefinitionForClass from "./cloneFormDefinitionForClass";
 import seedMilestones from "./seedMilestones";
 import seedMissingMilestones from "./seedMissingMilestones";
@@ -208,6 +210,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Teacher wizard: create/update a class-scoped opportunity form
         # with baked-in defaults. Optionally publish in the same call.
         saveClassFormDefinition(input: SaveClassFormDefinitionInput!): FormDefinition
+        # Teacher wizard: create/update a project_board-scoped review form
+        # (feedback surface, json_bucket fields). Optionally publish.
+        saveBoardReviewFormDefinition(input: SaveBoardReviewFormDefinitionInput!): FormDefinition
+        # Copy a milestone's review form onto this template board so the
+        # teacher can edit it without mutating the global definition.
+        forkReviewFormForBoard(templateBoardId: ID!, milestoneId: ID!): FormDefinition
         # Teacher wizard: clone a published global opportunity form into
         # a class-scoped draft owned by the class creator.
         cloneFormDefinitionForClass(sourceId: ID!, classId: ID!): FormDefinition
@@ -330,6 +338,15 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         fields: [ClassFormFieldInput!]!
         publish: Boolean
       }
+      input SaveBoardReviewFormDefinitionInput {
+        proposalBoardId: ID!
+        definitionId: ID
+        title: String!
+        description: String
+        fields: [ClassFormFieldInput!]!
+        publish: Boolean
+        milestoneKey: String
+      }
     `,
     resolvers: {
       Opportunity: opportunityMultiselectResolvers,
@@ -383,6 +400,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedMissingForms,
         duplicateFormDefinition,
         saveClassFormDefinition,
+        saveBoardReviewFormDefinition,
+        forkReviewFormForBoard,
         cloneFormDefinitionForClass,
         publishFormDefinition,
         seedMilestones,

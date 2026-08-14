@@ -1928,6 +1928,7 @@
 				"selectSourcePlaceholder": "Seleccione un paso de revisión"
 			},
 			"customPreview": "Crea un paso de revisión personalizado con su propia etiqueta de hito.",
+			"defaultFormReadOnly": "",
 			"editForm": "Editar formulario",
 			"editFormHint": "La edición de formularios está disponible en otro lugar.",
 			"finishBuilding": "Finalizar",
@@ -1944,6 +1945,8 @@
 			},
 			"newCheckpoint": "+ Nueva tarjeta de acción",
 			"noPreview": "Este tipo de tarjeta no tiene ningún formulario de reseña vinculado.",
+			"noStudyQuestionnaire": "",
+			"openingEditor": "",
 			"previewLabel": "Vista previa del formulario de revisión",
 			"previewLoading": "Cargando vista previa...",
 			"proposalPreview": "Agrega una tarjeta de propuesta estándar con campos de contenido para los estudiantes.",

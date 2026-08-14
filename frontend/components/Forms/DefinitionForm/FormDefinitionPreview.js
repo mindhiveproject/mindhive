@@ -6,7 +6,10 @@ import useTranslation from "next-translate/useTranslation";
 import CardRenderer from "./CardRenderer";
 import { RESOLVE_FORM_DEFINITION } from "../../Queries/FormDefinition";
 import { getCurriculumType } from "../../../lib/curriculumTypes";
-import { resolveReviewFormKey } from "../../../lib/milestones";
+import {
+  milestoneHasReviewQuestionnaire,
+  resolveReviewFormKey,
+} from "../../../lib/milestones";
 
 const previewShellStyle = {
   border: "1px solid #E6E6E6",
@@ -30,11 +33,13 @@ export default function FormDefinitionPreview({
   const router = useRouter();
   const curriculumType = getCurriculumType(board);
 
+  const hasQuestionnaire = milestoneHasReviewQuestionnaire(milestone);
+
   const formKey = useMemo(() => {
-    if (!milestone) return null;
+    if (!milestone || !hasQuestionnaire) return null;
     if (milestone.formDefinition?.key) return milestone.formDefinition.key;
     return resolveReviewFormKey(milestone, curriculumType);
-  }, [curriculumType, milestone]);
+  }, [curriculumType, hasQuestionnaire, milestone]);
 
   const { data, loading } = useQuery(RESOLVE_FORM_DEFINITION, {
     variables: {
@@ -44,19 +49,23 @@ export default function FormDefinitionPreview({
       proposalBoardId: proposalBoardId || board?.id || null,
     },
     skip: !formKey,
+    fetchPolicy: "cache-and-network",
   });
 
   if (!milestone) return null;
 
   const shellStyle = { ...previewShellStyle, maxHeight };
 
-  if (!formKey) {
+  if (!hasQuestionnaire) {
     return (
       <div style={shellStyle}>
         {t(
-          "section.createCardModal.noPreview",
+          "section.createCardModal.noStudyQuestionnaire",
           {},
-          { default: "No review form is linked to this card type." }
+          {
+            default:
+              "Data Collection is linked to the study. It has no review questionnaire.",
+          }
         )}
       </div>
     );
@@ -81,7 +90,7 @@ export default function FormDefinitionPreview({
         {t(
           "section.createCardModal.noPreview",
           {},
-          { default: "No review form is linked to this card type." }
+          { default: "No review form is linked to milestone." }
         )}
       </div>
     );

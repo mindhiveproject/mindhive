@@ -537,6 +537,10 @@
 		"edit": "Modifier",
 		"empty": "Vous n'avez pas encore créé d'opportunités. Cliquez sur « Nouvelle opportunité » pour publier votre premier projet destiné aux étudiants.",
 		"emptyFiltered": "Aucune opportunité ne correspond aux filtres actuels.",
+		"flash": {
+			"dismiss": "",
+			"formSaved": ""
+		},
 		"held": {
 			"continueForm": "",
 			"followUp": "",
@@ -575,6 +579,7 @@
 		"networkFilterPlaceholder": "Tous les réseaux",
 		"newButton": "Nouvelle opportunité",
 		"openChat": "",
+		"openChatUnread": "",
 		"openStatus": "",
 		"pageTitle": "Mes opportunités",
 		"rating": {
@@ -612,6 +617,7 @@
 			"draft": "",
 			"formFilled": "",
 			"formsProgress": "",
+			"inRevision": "",
 			"matched": "",
 			"matching": "",
 			"openOpportunity": "",
@@ -626,6 +632,18 @@
 		},
 		"teamOf": "Équipe de {{size}}",
 		"unknownSponsor": "Inconnu",
+		"unsubmit": {
+			"button": "",
+			"cancel": "",
+			"error": "",
+			"helper": "",
+			"successDraft": "",
+			"successRevision": "",
+			"title": "",
+			"toDraft": "",
+			"toRevision": "",
+			"working": ""
+		},
 		"visibility": {
 			"emptyHint": "",
 			"many": "",
@@ -701,6 +719,7 @@
 		"coverImageHint": "Téléversez un fichier (stocké sur notre espace cloud) ou collez l'URL directe d'une image ci-dessous. Les fichiers téléversés seront prioritaires si les deux options sont sélectionnées.",
 		"coverImageUrlHint": "Ou collez une URL (taille maximale pour les chargements : {{maxMb}} Mo) :",
 		"create": "Créer des opportunités",
+		"createdFlash": "",
 		"customQuestions": {
 			"add": "Ajouter une question",
 			"addPrompt": "Ajouter une question",
@@ -740,6 +759,7 @@
 			"scopeDescriptionHint": "Décrivez le périmètre du projet sur lequel vous souhaiteriez qu'une équipe de projet de fin d'études se concentre. (Les meilleures propositions de projet de fin d'études sont importantes mais non urgentes ; réalisables dans les délais impartis et avec les ressources disponibles ; définissent clairement le problème ou la question à traiter ; ont un périmètre réaliste ; et précisent les livrables concrets que l'équipe devra fournir.) Environ 500 mots.",
 			"title": "Étendue du projet"
 		},
+		"flashDismiss": "",
 		"followUpIntro": "",
 		"followUpLastSaved": "",
 		"followUpQuestionnaire": {

@@ -15,8 +15,8 @@ import {
   confirmReviewStatusTransition,
   getReviewPrimaryAction,
   reviewEmailCopy,
-  reviewSuccessMessage,
 } from "../../../../lib/opportunityReviewActions";
+import { OPPORTUNITY_FLASH } from "../../../../lib/opportunityFlash";
 import {
   resolveActiveReviewRound,
   REVIEW_NOTE_KIND,
@@ -290,8 +290,23 @@ export default function NetworkReview({ opportunityId, query, user }) {
         },
       });
       await notifySponsor(nextStatus);
-      const success = reviewSuccessMessage(nextStatus, t);
-      if (success) window.alert(success);
+
+      const flashKey =
+        nextStatus === "pre_selected"
+          ? OPPORTUNITY_FLASH.PRE_SELECTED
+          : nextStatus === "accepted"
+            ? OPPORTUNITY_FLASH.ACCEPTED
+            : nextStatus === "published"
+              ? OPPORTUNITY_FLASH.PUBLISHED
+              : null;
+
+      router.push({
+        pathname: "/dashboard/connect/opportunities",
+        query: {
+          tab: "review",
+          ...(flashKey ? { flash: flashKey } : {}),
+        },
+      });
     } finally {
       setBusy(false);
     }

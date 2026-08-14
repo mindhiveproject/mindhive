@@ -3,6 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import { ArrowOutwardIcon, BriefcaseIcon } from "../../../DesignSystem/Icons";
+import { stripHtml } from "../../../Proposal/Card/Forms/utils";
 import ConnectCard from "../ConnectCard";
 import OrganizationVerificationStatus from "./OrganizationVerificationStatus";
 
@@ -30,7 +31,8 @@ export default function OrganizationConnectCard({ org, href, linkLabel }) {
 
   const name = org.name || "";
   const location = org.location?.trim() || null;
-  const description = org.tagline?.trim() || org.mission?.trim() || null;
+  const description =
+    org.tagline?.trim() || stripHtml(org.mission) || null;
   const opportunityCount = org.opportunitiesCount || 0;
 
   const orgHref =

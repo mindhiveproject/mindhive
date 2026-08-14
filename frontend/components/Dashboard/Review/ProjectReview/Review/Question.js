@@ -15,21 +15,25 @@ export default function Question({ stage, item, handleItemChange, answer }) {
   const { responseType } = item;
 
   if (responseType === "selectOne") {
-    const options = item?.responseOptions.map((r) => ({
+    const options = (item?.responseOptions || []).map((r) => ({
       key: r.value,
       value: r.value,
       content: (
         <div className="dropdownOption">
-          <img src={`/assets/icons/status/${r?.icon}.svg`} />
+          {r?.icon ? (
+            <img src={`/assets/icons/status/${r.icon}.svg`} alt="" />
+          ) : null}
           <div>
             <div className="title">{r?.title}</div>
-            <div className="subtitle">{r?.subtitle}</div>
+            {r?.subtitle ? <div className="subtitle">{r.subtitle}</div> : null}
           </div>
         </div>
       ),
       text: (
         <div className="dropdownSelectedOption">
-          <img src={`/assets/icons/status/${r?.icon}.svg`} />
+          {r?.icon ? (
+            <img src={`/assets/icons/status/${r.icon}.svg`} alt="" />
+          ) : null}
           <div>
             <div className="title">{r?.title}</div>
           </div>

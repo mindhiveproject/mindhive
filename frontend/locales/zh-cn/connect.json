@@ -537,6 +537,10 @@
 		"edit": "编辑",
 		"empty": "您尚未创建任何机会。点击“新建机会”发布您的第一个学生项目。",
 		"emptyFiltered": "没有符合当前筛选条件的职位。",
+		"flash": {
+			"dismiss": "",
+			"formSaved": ""
+		},
 		"held": {
 			"continueForm": "",
 			"followUp": "",
@@ -575,6 +579,7 @@
 		"networkFilterPlaceholder": "所有网络",
 		"newButton": "新机遇",
 		"openChat": "",
+		"openChatUnread": "",
 		"openStatus": "",
 		"pageTitle": "我的机会",
 		"rating": {
@@ -612,6 +617,7 @@
 			"draft": "",
 			"formFilled": "",
 			"formsProgress": "",
+			"inRevision": "",
 			"matched": "",
 			"matching": "",
 			"openOpportunity": "",
@@ -626,6 +632,18 @@
 		},
 		"teamOf": "团队人数： {{size}}",
 		"unknownSponsor": "未知",
+		"unsubmit": {
+			"button": "",
+			"cancel": "",
+			"error": "",
+			"helper": "",
+			"successDraft": "",
+			"successRevision": "",
+			"title": "",
+			"toDraft": "",
+			"toRevision": "",
+			"working": ""
+		},
 		"visibility": {
 			"emptyHint": "",
 			"many": "",
@@ -701,6 +719,7 @@
 		"coverImageHint": "您可以上传文件（存储在我们的云端存储桶中），也可以在下方粘贴图片链接。如果两者都设置了，则上传的文件优先。",
 		"coverImageUrlHint": "或者粘贴网址（上传文件大小上限为 {{maxMb}} MB）：",
 		"create": "创造机会",
+		"createdFlash": "",
 		"customQuestions": {
 			"add": "添加问题",
 			"addPrompt": "添加问题",
@@ -740,6 +759,7 @@
 			"scopeDescriptionHint": "请描述您希望毕业设计项目团队重点关注的项目范围。（优秀的毕业设计提案应做到：重要但不紧急；可在学年期限内利用现有资源完成；清晰定义待解决的问题或议题；范围切合实际；并明确毕业设计团队需要交付的具体成果。）字数约500字。",
 			"title": "项目范围"
 		},
+		"flashDismiss": "",
 		"followUpIntro": "",
 		"followUpLastSaved": "",
 		"followUpQuestionnaire": {

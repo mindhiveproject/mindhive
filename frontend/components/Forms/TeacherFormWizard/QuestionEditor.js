@@ -72,6 +72,12 @@ export const TYPE_KEYS = [
   },
 ];
 
+export const REVIEW_HIDDEN_TYPE_KEYS = [
+  "file",
+  "link_list",
+  "media_asset_list",
+];
+
 export function effectiveTypeKey(fieldType) {
   if (fieldType === "textarea") return "text";
   return fieldType;
@@ -94,6 +100,7 @@ export default function QuestionEditor({
   onExpand,
   onCollapse,
   introVideoTaken = false,
+  hiddenTypeKeys = [],
 }) {
   const { t } = useTranslation("classes");
   const typeKey = effectiveTypeKey(question.fieldType);
@@ -103,6 +110,9 @@ export default function QuestionEditor({
     question.fieldType === "select" || question.fieldType === "multiselect";
   const typeLabel = typeLabelFor(question.fieldType, t);
   const typeChosen = !!question.typeChosen;
+  const visibleTypeKeys = TYPE_KEYS.filter(
+    (type) => !hiddenTypeKeys.includes(type.value)
+  );
   const promptSummary =
     String(question.label || "").trim() ||
     t("opportunities.matchingRound.formWizard.promptEmpty", {}, {
@@ -217,7 +227,7 @@ export default function QuestionEditor({
           default: "Question type",
         })}
       >
-        {TYPE_KEYS.map((type) => {
+        {visibleTypeKeys.map((type) => {
           const Icon = TYPE_ICONS[type.value];
           const active = typeChosen && typeKey === type.value;
           const label = t(type.labelKey, {}, { default: type.labelDefault });
