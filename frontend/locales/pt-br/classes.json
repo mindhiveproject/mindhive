@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "",
 				"editReviewForm": "",
 				"editReviewFormHint": "",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "",
 				"includedCardsTitle": "",
 				"milestoneDescription": "Descrição",
+				"openingEditor": "",
 				"publish": "",
 				"reviewFormPreview": "",
 				"scopedFormOnly": "",
 				"statusDraft": "Rascunho",
-				"statusPublished": "Publicado"
+				"statusPublished": "Publicado",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "Adicionar recursos existentes (consulte Recursos no Painel de Navegação)",
 			"addLinkedItems": "Adicionar atribuições, tarefas, estudos ou recursos existentes",
@@ -1331,6 +1338,15 @@
 		"dateCreated": "Data de criação",
 		"dateUpdated": "Atualizado",
 		"editTemplate": "Editar modelo",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "Impedir que os alunos copiem este modelo",
 		"listDescription": "{{count}} painéis de projetos de alunos nesta turma.",
 		"manageClassProjectBoard": "Gerenciar o quadro de projetos da turma",
@@ -1340,17 +1356,25 @@
 			"clickHint": "Clique em um marco para ver o formulário de revisão associado.",
 			"columnLabel": "Coluna: {{section}}",
 			"confirmDeleteMilestone": "Remover {{action}} deste modelo? O cartão da etapa de revisão será excluído do quadro. A definição do marco em si não será excluída.",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "Etapa de revisão personalizada",
 			"defaultAction": "Padrão do MindHive",
 			"deleteMilestone": "Remover do modelo",
 			"deletingMilestone": "Removendo...",
+			"editForm": "",
 			"empty": "Ainda não há etapas de revisão para este modelo.",
 			"manageMilestones": "Gerenciar marcos",
 			"manageModalTitle": "Gerenciar marcos",
+			"openingEditor": "",
 			"previewForm": "Formulário de pré-visualização de revisão",
 			"previewModalTitle": "Formulário de revisão — {{action}}",
+			"previewModalTitleNoForm": "",
 			"trigger": "{{count}} marcos",
-			"unnamedColumn": "Coluna sem título"
+			"unnamedColumn": "Coluna sem título",
+			"viewDetails": ""
 		},
 		"newTemplate": "Criar novo modelo de turma",
 		"noClassTemplatesDescription": "Crie um quadro modelo para os alunos desta turma usarem como ponto de partida.",

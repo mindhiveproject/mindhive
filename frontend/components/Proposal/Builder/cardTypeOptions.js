@@ -119,10 +119,12 @@ export function getDefaultCheckpointOptions({ t, sections }) {
 }
 
 export function getDefaultFormTemplateOptions({ t }) {
-  return CARD_TYPE_DEFINITIONS.filter((definition) => definition.isDefaultAction).map(
-    (definition) => ({
-      value: definition.value,
-      label: t(definition.labelKey, {}, { default: definition.defaultLabel }),
-    })
-  );
+  return CARD_TYPE_DEFINITIONS.filter(
+    (definition) =>
+      definition.isDefaultAction &&
+      definition.value !== "ACTION_COLLECTING_DATA"
+  ).map((definition) => ({
+    value: definition.value,
+    label: t(definition.labelKey, {}, { default: definition.defaultLabel }),
+  }));
 }

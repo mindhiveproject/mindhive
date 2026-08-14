@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "",
 				"editReviewForm": "",
 				"editReviewFormHint": "",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "",
 				"includedCardsTitle": "",
 				"milestoneDescription": "",
+				"openingEditor": "",
 				"publish": "",
 				"reviewFormPreview": "",
 				"scopedFormOnly": "",
 				"statusDraft": "",
-				"statusPublished": ""
+				"statusPublished": "",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "मौजूदा संसाधन जोड़ें (नेविगेशन पैन में संसाधन देखें)",
 			"addLinkedItems": "मौजूदा असाइनमेंट, कार्य, अध्ययन या संसाधन जोड़ें",
@@ -1331,6 +1338,15 @@
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "",
 		"editTemplate": "",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "",
 		"listDescription": "इस कक्षा में{{count}} छात्र परियोजना बोर्ड हैं।",
 		"manageClassProjectBoard": "कक्षा परियोजना बोर्ड का प्रबंधन करें",
@@ -1340,17 +1356,25 @@
 			"clickHint": "किसी उपलब्धि पर क्लिक करके उससे संबंधित समीक्षा प्रपत्र देखें।",
 			"columnLabel": "स्तंभ: {{section}}",
 			"confirmDeleteMilestone": "इस टेम्पलेट से {{action}} हटा दें? समीक्षा चरण कार्ड बोर्ड से हटा दिया जाएगा। माइलस्टोन परिभाषा स्वयं नहीं हटाई जाएगी।",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "कस्टम समीक्षा चरण",
 			"defaultAction": "MindHive डिफ़ॉल्ट",
 			"deleteMilestone": "टेम्पलेट से हटाएँ",
 			"deletingMilestone": "हटाना…",
+			"editForm": "",
 			"empty": "इस टेम्पलेट पर अभी तक कोई समीक्षा चरण नहीं हैं।",
 			"manageMilestones": "महत्वपूर्ण पड़ावों का प्रबंधन करें",
 			"manageModalTitle": "महत्वपूर्ण पड़ावों का प्रबंधन करें",
+			"openingEditor": "",
 			"previewForm": "समीक्षा प्रपत्र का पूर्वावलोकन करें",
 			"previewModalTitle": "समीक्षा प्रपत्र — {{action}}",
+			"previewModalTitleNoForm": "",
 			"trigger": "{{count}} मील के पत्थर",
-			"unnamedColumn": "शीर्षकहीन स्तंभ"
+			"unnamedColumn": "शीर्षकहीन स्तंभ",
+			"viewDetails": ""
 		},
 		"newTemplate": "",
 		"noClassTemplatesDescription": "",

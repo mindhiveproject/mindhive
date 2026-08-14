@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "",
 				"editReviewForm": "",
 				"editReviewFormHint": "",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "",
 				"includedCardsTitle": "",
 				"milestoneDescription": "",
+				"openingEditor": "",
 				"publish": "",
 				"reviewFormPreview": "",
 				"scopedFormOnly": "",
 				"statusDraft": "",
-				"statusPublished": ""
+				"statusPublished": "",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "إضافة الموارد الموجودة (انظر الموارد في جزء التنقل)",
 			"addLinkedItems": "إضافة الواجبات أو المهام أو الدراسات أو الموارد الحالية",
@@ -1331,6 +1338,15 @@
 		"dateCreated": "تاريخ الإنشاء",
 		"dateUpdated": "",
 		"editTemplate": "",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "",
 		"listDescription": "{{count}} لوحات مشاريع الطلاب في هذا الفصل.",
 		"manageClassProjectBoard": "إدارة لوحة مشروع الفصل",
@@ -1340,17 +1356,25 @@
 			"clickHint": "انقر على أي مرحلة لعرض نموذج التقييم المرتبط بها.",
 			"columnLabel": "العمود: {{section}}",
 			"confirmDeleteMilestone": "هل تريد إزالة {{action}} من هذا القالب؟ سيتم حذف بطاقة خطوة المراجعة من اللوحة. أما تعريف المعلم نفسه فلن يُحذف.",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "خطوة المراجعة المخصصة",
 			"defaultAction": "الوضع الافتراضي لـ MindHive",
 			"deleteMilestone": "إزالة من القالب",
 			"deletingMilestone": "جارٍ الإزالة...",
+			"editForm": "",
 			"empty": "لا توجد خطوات مراجعة على هذا النموذج حتى الآن.",
 			"manageMilestones": "إدارة المراحل الرئيسية",
 			"manageModalTitle": "إدارة المراحل الرئيسية",
+			"openingEditor": "",
 			"previewForm": "نموذج مراجعة المعاينة",
 			"previewModalTitle": "نموذج التقييم — {{action}}",
+			"previewModalTitleNoForm": "",
 			"trigger": "{{count}} معالم",
-			"unnamedColumn": "عمود بدون عنوان"
+			"unnamedColumn": "عمود بدون عنوان",
+			"viewDetails": ""
 		},
 		"newTemplate": "",
 		"noClassTemplatesDescription": "",

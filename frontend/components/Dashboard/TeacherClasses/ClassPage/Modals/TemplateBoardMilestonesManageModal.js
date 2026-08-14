@@ -7,6 +7,7 @@ import {
   getActionCardLabel,
   resolveActionCardMilestone,
 } from "../../../../../lib/templateBoardActionCards";
+import { milestoneHasReviewQuestionnaire } from "../../../../../lib/milestones";
 
 const overlayStyle = {
   position: "fixed",
@@ -141,9 +142,13 @@ export default function TemplateBoardMilestonesManageModal({
   actionCards = [],
   milestones = [],
   onPreview,
+  onEdit,
+  onCopy,
   onAddMilestone,
   onDeleteCard,
   deletingCardId = null,
+  editingMilestoneId = null,
+  copyingMilestoneId = null,
 }) {
   const { t } = useTranslation("classes");
   const { t: tBuilder } = useTranslation("builder");
@@ -200,6 +205,10 @@ export default function TemplateBoardMilestonesManageModal({
                 const actionLabel = getActionCardLabel(card, tBuilder);
                 const sectionLabel = getSectionLabel(section, t);
                 const milestone = resolveActionCardMilestone(card, milestones);
+                const hasQuestionnaire =
+                  milestoneHasReviewQuestionnaire(milestone);
+                const isCustomMilestone = milestone?.scope === "template";
+                const busyId = milestone?.id;
 
                 return (
                   <div key={card.id} style={cardStyle}>
@@ -225,10 +234,56 @@ export default function TemplateBoardMilestonesManageModal({
                           onPreview({ card, milestone, actionLabel })
                         }
                       >
-                        {t("projects.milestonesMenu.previewForm", {}, {
-                          default: "Preview review form",
-                        })}
+                        {hasQuestionnaire
+                          ? t("projects.milestonesMenu.previewForm", {}, {
+                              default: "Preview review form",
+                            })
+                          : t("projects.milestonesMenu.viewDetails", {}, {
+                              default: "View details",
+                            })}
                       </Button>
+                      {onCopy &&
+                      !isCustomMilestone &&
+                      hasQuestionnaire &&
+                      milestone?.id ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={copyingMilestoneId === busyId}
+                          onClick={() =>
+                            onCopy({ card, milestone, actionLabel, section })
+                          }
+                        >
+                          {copyingMilestoneId === busyId
+                            ? t("projects.milestonesMenu.copyingMilestone", {}, {
+                                default: "Copying…",
+                              })
+                            : t("projects.milestonesMenu.copyToCustomize", {}, {
+                                default: "Copy milestone to customize",
+                              })}
+                        </Button>
+                      ) : null}
+                      {onEdit &&
+                      isCustomMilestone &&
+                      hasQuestionnaire &&
+                      milestone?.id ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={editingMilestoneId === busyId}
+                          onClick={() =>
+                            onEdit({ card, milestone, actionLabel })
+                          }
+                        >
+                          {editingMilestoneId === busyId
+                            ? t("projects.milestonesMenu.openingEditor", {}, {
+                                default: "Opening editor…",
+                              })
+                            : t("projects.milestonesMenu.editForm", {}, {
+                                default: "Edit form",
+                              })}
+                        </Button>
+                      ) : null}
                       <Button
                         type="button"
                         variant="text"

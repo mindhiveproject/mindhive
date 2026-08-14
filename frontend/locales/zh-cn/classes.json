@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "",
 				"editReviewForm": "",
 				"editReviewFormHint": "",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "",
 				"includedCardsTitle": "",
 				"milestoneDescription": "描述",
+				"openingEditor": "",
 				"publish": "",
 				"reviewFormPreview": "",
 				"scopedFormOnly": "",
 				"statusDraft": "草稿",
-				"statusPublished": "已发布"
+				"statusPublished": "已发布",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "添加现有资源（参见导航窗格中的资源）",
 			"addLinkedItems": "添加现有作业、任务、研究或资源",
@@ -1331,6 +1338,15 @@
 		"dateCreated": "创建日期",
 		"dateUpdated": "已更新",
 		"editTemplate": "编辑模板",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "阻止学生复制此模板",
 		"listDescription": "本课程共有{{count}} 个学生项目板。",
 		"manageClassProjectBoard": "管理班级项目板",
@@ -1340,17 +1356,25 @@
 			"clickHint": "点击里程碑即可查看其相关的审核表。",
 			"columnLabel": "列： {{section}}",
 			"confirmDeleteMilestone": "从该模板中移除 {{action}} 后，审核步骤卡将从看板中删除。里程碑定义本身不会被删除。",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "自定义审核步骤",
 			"defaultAction": "MindHive 默认",
 			"deleteMilestone": "从模板中移除",
 			"deletingMilestone": "正在删除...",
+			"editForm": "",
 			"empty": "此模板暂无审核步骤。",
 			"manageMilestones": "管理里程碑",
 			"manageModalTitle": "管理里程碑",
+			"openingEditor": "",
 			"previewForm": "预览审核表",
 			"previewModalTitle": "审核表 — {{action}}",
+			"previewModalTitleNoForm": "",
 			"trigger": "{{count}} 个里程碑",
-			"unnamedColumn": "无标题专栏"
+			"unnamedColumn": "无标题专栏",
+			"viewDetails": ""
 		},
 		"newTemplate": "创建新的班级模板",
 		"noClassTemplatesDescription": "为本班学生创建一个模板看板，作为起点使用。",

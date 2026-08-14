@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "Review step",
+				"copyingMilestone": "Copying…",
+				"copyNeedsColumn": "This milestone needs a column before it can be copied.",
+				"copyTitle": "{{title}} (copy)",
+				"copyToCustomize": "Copy milestone to customize",
+				"copyToCustomizeHint": "Default forms cannot be edited. Copy this milestone to create a custom review step you can change.",
 				"defaultFormReadOnly": "This is a MindHive default review form. It cannot be edited from this card.",
 				"editReviewForm": "Edit review form",
 				"editReviewFormHint": "Scoped to this template board. Student clones inherit whatever you publish.",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "Students submit content from these proposal cards when they reach this action card. Configure inclusion on each proposal card's Student Answer Box settings.",
 				"includedCardsTitle": "Included in this review step",
 				"milestoneDescription": "Description",
+				"openingEditor": "Opening editor…",
 				"publish": "Publish…",
 				"reviewFormPreview": "Review form preview",
 				"scopedFormOnly": "This review form is not scoped to your template board and cannot be edited here.",
 				"statusDraft": "Draft",
-				"statusPublished": "Published"
+				"statusPublished": "Published",
+				"studyLinkTitle": "Study link"
 			},
 			"addExistingResources": "Add existing resources (See Resources in Navigation Pane)",
 			"addLinkedItems": "Add existing assignments, tasks, studies, or resources",
@@ -1331,6 +1338,15 @@
 		"dateCreated": "Date created",
 		"dateUpdated": "Updated",
 		"editTemplate": "Edit template",
+		"formWizard": {
+			"descriptionLabel": "Optional note for reviewers",
+			"errors": {
+				"missingBoard": "Missing template board context."
+			},
+			"nameLabel": "Form title",
+			"namePlaceholder": "e.g. Proposal feedback",
+			"title": "Edit review form"
+		},
 		"hideFromStudents": "Prevent students from copying this template",
 		"listDescription": "{{count}} student project boards in this class.",
 		"manageClassProjectBoard": "Manage the class project board",
@@ -1340,17 +1356,25 @@
 			"clickHint": "Click a milestone to see its associated review form.",
 			"columnLabel": "Column: {{section}}",
 			"confirmDeleteMilestone": "Remove {{action}} from this template? The review step card will be deleted from the board. The milestone definition itself will not be deleted.",
+			"copyingMilestone": "Copying…",
+			"copyNeedsColumn": "This milestone needs a column before it can be copied.",
+			"copyTitle": "{{title}} (copy)",
+			"copyToCustomize": "Copy milestone to customize",
 			"customAction": "Custom review step",
 			"defaultAction": "MindHive default",
 			"deleteMilestone": "Remove from template board",
 			"deletingMilestone": "Removing…",
+			"editForm": "Edit form",
 			"empty": "No review steps on this template yet.",
 			"manageMilestones": "Manage milestones",
 			"manageModalTitle": "Manage milestones",
+			"openingEditor": "Opening editor…",
 			"previewForm": "Preview review form",
 			"previewModalTitle": "Review form — {{action}}",
+			"previewModalTitleNoForm": "{{action}}",
 			"trigger": "{{count}} milestones",
-			"unnamedColumn": "Untitled column"
+			"unnamedColumn": "Untitled column",
+			"viewDetails": "View details"
 		},
 		"newTemplate": "Create new class template",
 		"noClassTemplatesDescription": "Create a template board for students in this class to use as a starting point.",

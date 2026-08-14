@@ -53,7 +53,7 @@ type NormalizedClassField = {
   validation: typeof INTRO_VIDEO_VALIDATION | null;
 };
 
-function slugify(raw: string, fallback: string) {
+export function slugify(raw: string, fallback: string) {
   const slug = String(raw || "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "_")
@@ -156,7 +156,10 @@ async function assertClassTeacherOrMentor(context: any, classId: string) {
   return klass;
 }
 
-function normalizeFields(fields: ClassFormFieldInput[]): NormalizedClassField[] {
+export function normalizeFields(
+  fields: ClassFormFieldInput[],
+  { allowIntroVideo = true }: { allowIntroVideo?: boolean } = {}
+): NormalizedClassField[] {
   if (!Array.isArray(fields) || fields.length === 0) {
     throw new Error("Add at least one question before saving.");
   }
@@ -178,7 +181,7 @@ function normalizeFields(fields: ClassFormFieldInput[]): NormalizedClassField[] 
       throw new Error(`"${label}" needs at least one choice.`);
     }
 
-    if (isIntroVideoFieldInput({ ...f, fieldType })) {
+    if (allowIntroVideo && isIntroVideoFieldInput({ ...f, fieldType })) {
       introVideoCount += 1;
       if (introVideoCount > 1) {
         throw new Error(
@@ -213,10 +216,7 @@ function normalizeFields(fields: ClassFormFieldInput[]): NormalizedClassField[] 
       placeholder: f.placeholder || "",
       isRequired: !!f.isRequired,
       order: f.order ?? index,
-      options:
-        fieldType === "select" || fieldType === "multiselect"
-          ? f.options
-          : null,
+      options: Array.isArray(f.options) ? f.options : null,
       storage: "json_bucket",
       storageBucket: "content",
       storageColumn: "",
@@ -226,7 +226,7 @@ function normalizeFields(fields: ClassFormFieldInput[]): NormalizedClassField[] 
   });
 }
 
-async function replaceCardFields(
+export async function replaceCardFields(
   sudo: any,
   cardId: string,
   fields: NormalizedClassField[]

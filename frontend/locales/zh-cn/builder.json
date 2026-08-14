@@ -1928,6 +1928,7 @@
 				"selectSourcePlaceholder": "选择复习步骤"
 			},
 			"customPreview": "创建带有自定义里程碑标签的自定义审核步骤。",
+			"defaultFormReadOnly": "",
 			"editForm": "编辑表单",
 			"editFormHint": "表单编辑功能可在其他地方使用。",
 			"finishBuilding": "结束",
@@ -1944,6 +1945,8 @@
 			},
 			"newCheckpoint": "+ 新行动卡",
 			"noPreview": "此卡片类型未关联任何评价表单。",
+			"noStudyQuestionnaire": "",
+			"openingEditor": "",
 			"previewLabel": "审核表单预览",
 			"previewLoading": "正在加载预览...",
 			"proposalPreview": "为学生添加带有内容字段的常规提案卡。",

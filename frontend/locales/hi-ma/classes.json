@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "",
 				"editReviewForm": "",
 				"editReviewFormHint": "",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "",
 				"includedCardsTitle": "",
 				"milestoneDescription": "",
+				"openingEditor": "",
 				"publish": "",
 				"reviewFormPreview": "",
 				"scopedFormOnly": "",
 				"statusDraft": "",
-				"statusPublished": ""
+				"statusPublished": "",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "मौजूदा संसाधन जोड़ें (नेविगेशन पैन में संसाधन देखें)",
 			"addLinkedItems": "",
@@ -1331,6 +1338,15 @@
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "",
 		"editTemplate": "",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "",
 		"listDescription": "",
 		"manageClassProjectBoard": "कक्षा परियोजना बोर्ड का प्रबंधन करें",
@@ -1340,17 +1356,25 @@
 			"clickHint": "",
 			"columnLabel": "",
 			"confirmDeleteMilestone": "",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "",
 			"defaultAction": "",
 			"deleteMilestone": "",
 			"deletingMilestone": "",
+			"editForm": "",
 			"empty": "",
 			"manageMilestones": "",
 			"manageModalTitle": "",
+			"openingEditor": "",
 			"previewForm": "",
 			"previewModalTitle": "",
+			"previewModalTitleNoForm": "",
 			"trigger": "",
-			"unnamedColumn": ""
+			"unnamedColumn": "",
+			"viewDetails": ""
 		},
 		"newTemplate": "",
 		"noClassTemplatesDescription": "",

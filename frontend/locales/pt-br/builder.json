@@ -1928,6 +1928,7 @@
 				"selectSourcePlaceholder": "Selecione uma etapa de revisão"
 			},
 			"customPreview": "Cria uma etapa de revisão personalizada com seu próprio rótulo de marco.",
+			"defaultFormReadOnly": "",
 			"editForm": "Editar formulário",
 			"editFormHint": "A edição de formulários está disponível em outro local.",
 			"finishBuilding": "Terminar",
@@ -1944,6 +1945,8 @@
 			},
 			"newCheckpoint": "+ Novo Cartão de Ação",
 			"noPreview": "Não há formulário de avaliação vinculado a este tipo de cartão.",
+			"noStudyQuestionnaire": "",
+			"openingEditor": "",
 			"previewLabel": "Pré-visualização do formulário de revisão",
 			"previewLoading": "Carregando visualização...",
 			"proposalPreview": "Adiciona um cartão de proposta padrão com campos de conteúdo para os alunos.",

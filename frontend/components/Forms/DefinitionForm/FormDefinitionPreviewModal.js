@@ -1,7 +1,9 @@
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../DesignSystem/Button";
 import FormDefinitionPreview from "./FormDefinitionPreview";
+import { milestoneHasReviewQuestionnaire } from "../../../lib/milestones";
 
 const overlayStyle = {
   position: "fixed",
@@ -64,10 +66,44 @@ export default function FormDefinitionPreviewModal({
   board,
   milestone,
   actionLabel,
+  onEdit,
+  editBusy = false,
+  onCopy,
+  copyBusy = false,
 }) {
   const { t } = useTranslation("classes");
+  const hasQuestionnaire = milestoneHasReviewQuestionnaire(milestone);
 
   if (!open || typeof document === "undefined") return null;
+
+  const title = hasQuestionnaire
+    ? t(
+        "projects.milestonesMenu.previewModalTitle",
+        { action: actionLabel || "" },
+        { default: "Review form — {{action}}" }
+      )
+    : t(
+        "projects.milestonesMenu.previewModalTitleNoForm",
+        { action: actionLabel || "" },
+        { default: "{{action}}" }
+      );
+
+  const footerAction = onCopy || onEdit;
+  const footerBusy = onCopy ? copyBusy : editBusy;
+  const footerBusyLabel = onCopy
+    ? t("projects.milestonesMenu.copyingMilestone", {}, {
+        default: "Copying…",
+      })
+    : t("projects.milestonesMenu.openingEditor", {}, {
+        default: "Opening editor…",
+      });
+  const footerLabel = onCopy
+    ? t("projects.milestonesMenu.copyToCustomize", {}, {
+        default: "Copy milestone to customize",
+      })
+    : t("projects.milestonesMenu.editForm", {}, {
+        default: "Edit form",
+      });
 
   return createPortal(
     <div
@@ -87,11 +123,7 @@ export default function FormDefinitionPreviewModal({
       >
         <div style={headerStyle}>
           <h2 id="form-definition-preview-title" style={titleStyle}>
-            {t(
-              "projects.milestonesMenu.previewModalTitle",
-              { action: actionLabel || "" },
-              { default: "Review form — {{action}}" }
-            )}
+            {title}
           </h2>
           <button
             type="button"
@@ -108,6 +140,26 @@ export default function FormDefinitionPreviewModal({
           proposalBoardId={board?.id}
           maxHeight="none"
         />
+        {footerAction ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 20,
+              paddingTop: 16,
+              borderTop: "1px solid #E6E6E6",
+            }}
+          >
+            <Button
+              type="button"
+              variant="filled"
+              disabled={footerBusy || !milestone?.id}
+              onClick={footerAction}
+            >
+              {footerBusy ? footerBusyLabel : footerLabel}
+            </Button>
+          </div>
+        ) : null}
       </div>
     </div>,
     document.body

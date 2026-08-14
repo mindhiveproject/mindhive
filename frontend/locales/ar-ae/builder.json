@@ -1928,6 +1928,7 @@
 				"selectSourcePlaceholder": "اختر خطوة مراجعة"
 			},
 			"customPreview": "يُنشئ خطوة مراجعة مخصصة مع تسمية خاصة بها.",
+			"defaultFormReadOnly": "",
 			"editForm": "نموذج التعديل",
 			"editFormHint": "تتوفر خاصية تعديل النماذج في مكان آخر",
 			"finishBuilding": "ينهي",
@@ -1944,6 +1945,8 @@
 			},
 			"newCheckpoint": "+ بطاقة حركة جديدة",
 			"noPreview": "لا يوجد نموذج تقييم مرتبط بهذا النوع من البطاقات.",
+			"noStudyQuestionnaire": "",
+			"openingEditor": "",
 			"previewLabel": "معاينة نموذج المراجعة",
 			"previewLoading": "جاري تحميل المعاينة...",
 			"proposalPreview": "يضيف بطاقة اقتراح عادية مع حقول محتوى للطلاب.",

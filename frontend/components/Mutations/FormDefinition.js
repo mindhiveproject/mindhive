@@ -160,6 +160,84 @@ export const SAVE_CLASS_FORM_DEFINITION = gql`
   }
 `;
 
+export const SAVE_BOARD_REVIEW_FORM_DEFINITION = gql`
+  mutation SAVE_BOARD_REVIEW_FORM_DEFINITION(
+    $input: SaveBoardReviewFormDefinitionInput!
+  ) {
+    saveBoardReviewFormDefinition(input: $input) {
+      id
+      key
+      title
+      description
+      scope
+      status
+      surface
+      version
+      proposalBoard {
+        id
+      }
+      cards(orderBy: { order: asc }) {
+        id
+        title
+        cardType
+        order
+        fields(orderBy: { order: asc }) {
+          id
+          name
+          fieldType
+          label
+          helperText
+          placeholder
+          isRequired
+          order
+          options
+        }
+      }
+    }
+  }
+`;
+
+export const FORK_REVIEW_FORM_FOR_BOARD = gql`
+  mutation FORK_REVIEW_FORM_FOR_BOARD(
+    $templateBoardId: ID!
+    $milestoneId: ID!
+  ) {
+    forkReviewFormForBoard(
+      templateBoardId: $templateBoardId
+      milestoneId: $milestoneId
+    ) {
+      id
+      key
+      title
+      description
+      scope
+      status
+      surface
+      version
+      proposalBoard {
+        id
+      }
+      cards(orderBy: { order: asc }) {
+        id
+        title
+        cardType
+        order
+        fields(orderBy: { order: asc }) {
+          id
+          name
+          fieldType
+          label
+          helperText
+          placeholder
+          isRequired
+          order
+          options
+        }
+      }
+    }
+  }
+`;
+
 export const CLONE_FORM_DEFINITION_FOR_CLASS = gql`
   mutation CLONE_FORM_DEFINITION_FOR_CLASS($sourceId: ID!, $classId: ID!) {
     cloneFormDefinitionForClass(sourceId: $sourceId, classId: $classId) {

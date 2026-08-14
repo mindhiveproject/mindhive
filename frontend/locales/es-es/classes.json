@@ -161,6 +161,11 @@
 		"expendedCard": {
 			"actionCard": {
 				"actionCardLabel": "Paso de revisión",
+				"copyingMilestone": "",
+				"copyNeedsColumn": "",
+				"copyTitle": "",
+				"copyToCustomize": "",
+				"copyToCustomizeHint": "",
 				"defaultFormReadOnly": "Este es un formulario de revisión predeterminado de MindHive. No se puede editar desde esta tarjeta.",
 				"editReviewForm": "Editar formulario de revisión",
 				"editReviewFormHint": "Limitado a este tablero de plantilla. Los clones de estudiantes heredan lo que publiques.",
@@ -168,11 +173,13 @@
 				"includedCardsHelper": "Los estudiantes envían contenido desde estas tarjetas de propuesta cuando llegan a esta tarjeta de acción. Configura la inclusión en la configuración del Cuadro de Respuesta del Estudiante de cada tarjeta de propuesta.",
 				"includedCardsTitle": "Incluido en este paso de revisión",
 				"milestoneDescription": "Descripción",
+				"openingEditor": "",
 				"publish": "Publicar…",
 				"reviewFormPreview": "Vista previa del formulario de revisión",
 				"scopedFormOnly": "Este formulario de revisión no está limitado a tu tablero de plantilla y no se puede editar aquí.",
 				"statusDraft": "Borrador",
-				"statusPublished": "Publicado"
+				"statusPublished": "Publicado",
+				"studyLinkTitle": ""
 			},
 			"addExistingResources": "Agregar recursos existentes (Ver Recursos en el panel de navegación)",
 			"addLinkedItems": "Añadir asignaciones, tareas, estudios o recursos existentes",
@@ -1331,6 +1338,15 @@
 		"dateCreated": "Fecha de creación",
 		"dateUpdated": "Actualizado",
 		"editTemplate": "Editar plantilla",
+		"formWizard": {
+			"descriptionLabel": "",
+			"errors": {
+				"missingBoard": ""
+			},
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"title": ""
+		},
 		"hideFromStudents": "Impedir que los estudiantes copien esta plantilla",
 		"listDescription": "{{count}} tableros de proyectos estudiantiles en esta clase.",
 		"manageClassProjectBoard": "Administrar el tablero de proyectos de la clase",
@@ -1340,17 +1356,25 @@
 			"clickHint": "Haz clic en un hito para ver el formulario de revisión correspondiente.",
 			"columnLabel": "Columna: {{section}}",
 			"confirmDeleteMilestone": "¿Eliminar {{action}} de esta plantilla? La tarjeta del paso de revisión se eliminará del tablero. La definición del hito en sí no se eliminará.",
+			"copyingMilestone": "",
+			"copyNeedsColumn": "",
+			"copyTitle": "",
+			"copyToCustomize": "",
 			"customAction": "Paso de revisión personalizada",
 			"defaultAction": "Configuración predeterminada de MindHive",
 			"deleteMilestone": "Eliminar de la plantilla",
 			"deletingMilestone": "Eliminando...",
+			"editForm": "",
 			"empty": "Aún no hay pasos de revisión en esta plantilla.",
 			"manageMilestones": "Gestionar hitos",
 			"manageModalTitle": "Gestionar hitos",
+			"openingEditor": "",
 			"previewForm": "Formulario de revisión previa",
 			"previewModalTitle": "Formulario de revisión — {{action}}",
+			"previewModalTitleNoForm": "",
 			"trigger": "{{count}} hitos",
-			"unnamedColumn": "Columna sin título"
+			"unnamedColumn": "Columna sin título",
+			"viewDetails": ""
 		},
 		"newTemplate": "Crear nueva plantilla de clase",
 		"noClassTemplatesDescription": "Crear un tablero de plantilla para que los estudiantes de esta clase lo usen como punto de partida.",

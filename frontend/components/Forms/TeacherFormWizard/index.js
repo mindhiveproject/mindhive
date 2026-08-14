@@ -9,11 +9,12 @@ import CardRenderer from "../DefinitionForm/CardRenderer";
 import { FieldShell } from "../DefinitionForm/styles";
 import {
   CLONE_FORM_DEFINITION_FOR_CLASS,
+  SAVE_BOARD_REVIEW_FORM_DEFINITION,
   SAVE_CLASS_FORM_DEFINITION,
 } from "../../Mutations/FormDefinition";
 import { FORM_DEFINITION_BY_ID } from "../../Queries/FormDefinition";
 import ClonePublicFormPicker from "./ClonePublicFormPicker";
-import QuestionEditor from "./QuestionEditor";
+import QuestionEditor, { REVIEW_HIDDEN_TYPE_KEYS } from "./QuestionEditor";
 import {
   buildPreviewDefinition,
   createBlankQuestion,
@@ -37,9 +38,13 @@ export default function TeacherFormWizard({
   open,
   onClose,
   classId,
+  proposalBoardId = null,
+  milestoneKey = null,
+  mode = "opportunity",
   definitionId: initialDefinitionId = null,
   onSaved,
 }) {
+  const isReview = mode === "review";
   const { t } = useTranslation("classes");
   const router = useRouter();
   const locale = router?.locale || "en-us";
@@ -63,7 +68,9 @@ export default function TeacherFormWizard({
   );
 
   const [saveClassForm] = useMutation(SAVE_CLASS_FORM_DEFINITION);
+  const [saveBoardReviewForm] = useMutation(SAVE_BOARD_REVIEW_FORM_DEFINITION);
   const [cloneForClass] = useMutation(CLONE_FORM_DEFINITION_FOR_CLASS);
+  const hiddenTypeKeys = isReview ? REVIEW_HIDDEN_TYPE_KEYS : [];
 
   const resetBlank = useCallback(() => {
     const first = createBlankQuestion();
@@ -166,7 +173,7 @@ export default function TeacherFormWizard({
       }
     }
     const introVideoCount = chosen.filter((q) => isIntroVideoQuestion(q)).length;
-    if (introVideoCount > 1) {
+    if (!isReview && introVideoCount > 1) {
       setError(
         t(
           "opportunities.matchingRound.formWizard.errors.introVideoOnce",
@@ -189,7 +196,16 @@ export default function TeacherFormWizard({
   };
 
   const persist = async ({ publish }) => {
-    if (!classId) {
+    if (isReview) {
+      if (!proposalBoardId) {
+        setError(
+          t("projects.formWizard.errors.missingBoard", {}, {
+            default: "Missing template board context.",
+          })
+        );
+        return;
+      }
+    } else if (!classId) {
       setError(
         t("opportunities.matchingRound.formWizard.errors.missingClass", {}, {
           default: "Missing class context.",
@@ -202,21 +218,40 @@ export default function TeacherFormWizard({
     setSaving(true);
     setError(null);
     try {
-      const result = await saveClassForm({
-        variables: {
-          input: {
-            classId,
-            definitionId: definitionId || undefined,
-            title: title.trim(),
-            description: description.trim(),
-            fields: questionsToMutationFields(
-              questions.filter((q) => q.typeChosen)
-            ),
-            publish: !!publish,
+      const fields = questionsToMutationFields(
+        questions.filter((q) => q.typeChosen)
+      );
+      let saved;
+      if (isReview) {
+        const result = await saveBoardReviewForm({
+          variables: {
+            input: {
+              proposalBoardId,
+              definitionId: definitionId || undefined,
+              title: title.trim(),
+              description: description.trim(),
+              fields,
+              publish: !!publish,
+              milestoneKey: milestoneKey || undefined,
+            },
           },
-        },
-      });
-      const saved = result?.data?.saveClassFormDefinition;
+        });
+        saved = result?.data?.saveBoardReviewFormDefinition;
+      } else {
+        const result = await saveClassForm({
+          variables: {
+            input: {
+              classId,
+              definitionId: definitionId || undefined,
+              title: title.trim(),
+              description: description.trim(),
+              fields,
+              publish: !!publish,
+            },
+          },
+        });
+        saved = result?.data?.saveClassFormDefinition;
+      }
       if (!saved?.id) {
         throw new Error("Save failed");
       }
@@ -272,9 +307,13 @@ export default function TeacherFormWizard({
     ? t("opportunities.matchingRound.formWizard.cloneTitle", {}, {
         default: "Start from a public form",
       })
-    : t("opportunities.matchingRound.formWizard.title", {}, {
-        default: "Create a questionnaire",
-      });
+    : isReview
+      ? t("projects.formWizard.title", {}, {
+          default: "Edit review form",
+        })
+      : t("opportunities.matchingRound.formWizard.title", {}, {
+          default: "Create a questionnaire",
+        });
 
   const actions = showClone ? (
     <>
@@ -362,9 +401,15 @@ export default function TeacherFormWizard({
                 <div className="field-label-block">
                   <span className="label-text">
                     {t(
-                      "opportunities.matchingRound.formWizard.nameLabel",
+                      isReview
+                        ? "projects.formWizard.nameLabel"
+                        : "opportunities.matchingRound.formWizard.nameLabel",
                       {},
-                      { default: "What’s this form for?" },
+                      {
+                        default: isReview
+                          ? "Form title"
+                          : "What’s this form for?",
+                      },
                     )}
                     <span className="required">*</span>
                   </span>
@@ -375,9 +420,15 @@ export default function TeacherFormWizard({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder={t(
-                    "opportunities.matchingRound.formWizard.namePlaceholder",
+                    isReview
+                      ? "projects.formWizard.namePlaceholder"
+                      : "opportunities.matchingRound.formWizard.namePlaceholder",
                     {},
-                    { default: "e.g. Sponsor visit follow-up" },
+                    {
+                      default: isReview
+                        ? "e.g. Proposal feedback"
+                        : "e.g. Sponsor visit follow-up",
+                    },
                   )}
                   disabled={saving}
                 />
@@ -386,9 +437,15 @@ export default function TeacherFormWizard({
                 <div className="field-label-block">
                   <span className="label-text">
                     {t(
-                      "opportunities.matchingRound.formWizard.descriptionLabel",
+                      isReview
+                        ? "projects.formWizard.descriptionLabel"
+                        : "opportunities.matchingRound.formWizard.descriptionLabel",
                       {},
-                      { default: "Optional note for sponsors" },
+                      {
+                        default: isReview
+                          ? "Optional note for reviewers"
+                          : "Optional note for sponsors",
+                      },
                     )}
                   </span>
                 </div>
@@ -407,7 +464,7 @@ export default function TeacherFormWizard({
                   disabled={saving}
                 />
               </FieldShell>
-              {!initialDefinitionId ? (
+              {!isReview && !initialDefinitionId ? (
                 <MetaActions>
                   <Button
                     type="button"
@@ -441,6 +498,7 @@ export default function TeacherFormWizard({
                       canRemove={questions.length > 1}
                       expanded={expandedQuestionId === q.localId}
                       introVideoTaken={introVideoTaken}
+                      hiddenTypeKeys={hiddenTypeKeys}
                       onExpand={() => setExpandedQuestionId(q.localId)}
                       onCollapse={() => setExpandedQuestionId(null)}
                       onChange={(next) =>

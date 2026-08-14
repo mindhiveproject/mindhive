@@ -1928,6 +1928,7 @@
 				"selectSourcePlaceholder": ""
 			},
 			"customPreview": "",
+			"defaultFormReadOnly": "",
 			"editForm": "",
 			"editFormHint": "",
 			"finishBuilding": "",
@@ -1944,6 +1945,8 @@
 			},
 			"newCheckpoint": "",
 			"noPreview": "",
+			"noStudyQuestionnaire": "",
+			"openingEditor": "",
 			"previewLabel": "",
 			"previewLoading": "",
 			"proposalPreview": "",

@@ -50,6 +50,7 @@ export async function createMilestoneFromSeed(context: any, seed: MilestoneSeed)
       formDefinitionKeyPattern:
         seed.formDefinitionKeyPattern || "review_{{key}}_{{curriculumType}}",
       isActive: seed.isActive ?? true,
+      showInFeedbackCenter: seed.showInFeedbackCenter ?? true,
       canReview: permissionIds.length
         ? { connect: permissionIds.map((id) => ({ id })) }
         : undefined,
