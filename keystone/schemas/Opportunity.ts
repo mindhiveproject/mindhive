@@ -413,6 +413,13 @@ export const Opportunity = list({
       // here — on PostgreSQL that stores a string scalar in a Json column and
       // breaks GraphQL list resolution ("Expected Iterable") on read.
 
+      // First acknowledgment stamp (form checkbox → column). Keep existing
+      // time on later saves / uncheck; only set when flipping to true with
+      // no prior stamp (create or update).
+      if (data.guidelinesAcknowledged === true && !item?.guidelinesAcknowledgedAt) {
+        data.guidelinesAcknowledgedAt = new Date().toISOString();
+      }
+
       if (operation !== "update" || !data.status) {
         return data;
       }

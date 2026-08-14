@@ -160,10 +160,9 @@ const STATUS_OPTIONS_SPONSOR: Option[] = [
 
 // HTML for the "Understanding of Proposal Guidelines" read-only field on
 // the Publishing card. Renders the agreement statement + clickable link
-// chips to the FAQ and Mutual Expectations documents. Mirrors the
-// legacy GUIDELINE_DOCUMENTS array in
-// frontend/components/Dashboard/Connect/Opportunities/Editor.js. Admins
-// can edit this HTML in the form-definition editor to update URLs.
+// chips to the FAQ and Mutual Expectations documents. Admins can edit
+// this HTML in the form-definition editor to update URLs (and clone the
+// form for org-specific documents).
 const CHIP_STYLE =
   "display:inline-flex;align-items:center;gap:6px;padding:8px 14px;" +
   "border:1px solid #d3dae0;border-radius:100px;background:#ffffff;" +

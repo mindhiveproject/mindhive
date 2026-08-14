@@ -12,7 +12,6 @@ import DefinitionForm from "../../../Forms/DefinitionForm";
 import Button from "../../../DesignSystem/Button";
 import MessageCard from "../../../DesignSystem/MessageCard";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
-import OpportunityGuidelinesSection from "../../SponsorConnect/Opportunities/OpportunityGuidelinesSection";
 import OpportunityListStepper from "../../SponsorConnect/Opportunities/OpportunityListStepper";
 import {
   GET_OPPORTUNITY,
@@ -144,16 +143,6 @@ const Actions = styled.div`
   flex: 0 0 auto;
 `;
 
-const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 28px;
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-`;
-
 function rolesForViewer(connectRole) {
   const roles = [];
   if (connectRole.isAdmin) roles.push("admin");
@@ -226,8 +215,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
     clearQueryFlash();
   };
   const [saving, setSaving] = useState(false);
-  const [guidelinesAcknowledged, setGuidelinesAcknowledged] = useState(false);
-  const [requestsAppointment, setRequestsAppointment] = useState(false);
   const proposalFormRef = useRef(null);
   const saveIntentRef = useRef({ submitForReview: false });
 
@@ -273,11 +260,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
       const createInput = {
         ...input,
         status: input.status || "draft",
-        guidelinesAcknowledged: !!guidelinesAcknowledged,
-        guidelinesAcknowledgedAt: guidelinesAcknowledged
-          ? new Date().toISOString()
-          : null,
-        requestsAppointment: !!requestsAppointment,
         ...(user?.id ? { mentor: { connect: { id: user.id } } } : {}),
         ...(myOrgId ? { organization: { connect: { id: myOrgId } } } : {}),
       };
@@ -456,25 +438,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
         hideSaveButton
         saveLabel={editPrimaryLabel}
       />
-      <Card>
-        <OpportunityGuidelinesSection
-          editable={isNew}
-          guidelinesAcknowledged={
-            isNew
-              ? guidelinesAcknowledged
-              : !!opportunity?.guidelinesAcknowledged
-          }
-          requestsAppointment={
-            isNew ? requestsAppointment : !!opportunity?.requestsAppointment
-          }
-          guidelinesAcknowledgedAt={
-            opportunity?.guidelinesAcknowledgedAt || null
-          }
-          onGuidelinesAcknowledgedChange={setGuidelinesAcknowledged}
-          onRequestsAppointmentChange={setRequestsAppointment}
-          titleAs="h2"
-        />
-      </Card>
     </Shell>
   );
 }
