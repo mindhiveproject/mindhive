@@ -10,6 +10,7 @@ import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../Queries/Opportunity";
 import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import { hydrateProposalInputs } from "../Opportunities/OpportunityProposalConfig";
+import { formatOrganizationLabel } from "../../../../lib/organizationLabels";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
@@ -420,6 +421,7 @@ export default function ExploreDetail({ opportunityId }) {
     opp.mentor?.image?.image?.publicUrlTransformed ||
     null;
   const mentorName = displayName(opp.mentor);
+  const mentorOrgLabel = formatOrganizationLabel(opp.mentor?.organization);
 
   const from = formatDate(opp.availableFrom);
   const to = formatDate(opp.availableTo);
@@ -839,9 +841,9 @@ export default function ExploreDetail({ opportunityId }) {
             {opp.mentor?.tagline && (
               <span className="tagline">{opp.mentor.tagline}</span>
             )}
-            {opp.mentor?.organization && (
+            {mentorOrgLabel && (
               <span className="org">
-                {opp.mentor.organization}
+                {mentorOrgLabel}
                 {opp.mentor.department ? ` · ${opp.mentor.department}` : ""}
               </span>
             )}

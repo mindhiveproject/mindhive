@@ -25,6 +25,7 @@ import {
   resolvePublicNetworkCardState,
 } from "../Connect/ClassNetworks/utils";
 import { manageOrganizationHref } from "../../../lib/profileEditNavigation";
+import { normalizeOrganizationNames } from "../../../lib/organizationLabels";
 
 const FEEDBACK_NETWORK = "feedback_network";
 const SCHOOL_NETWORK = "school_network";
@@ -332,7 +333,10 @@ export default function SponsorOnboarding() {
     !!(me?.firstName || "").trim() && !!(me?.lastName || "").trim();
   const legacyOrgProfileComplete =
     me?.profileType === "organization" &&
-    !!(orgRecord?.name || me?.organization || "").trim();
+    !!(
+      orgRecord?.name ||
+      normalizeOrganizationNames(me?.organization).length > 0
+    );
   const profileStepDone = hasPersonName || legacyOrgProfileComplete;
   const orgStepDone = !!orgRecord;
   const memberNetworks = collectMemberClassNetworks(me);

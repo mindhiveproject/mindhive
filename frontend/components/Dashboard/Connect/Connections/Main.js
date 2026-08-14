@@ -15,6 +15,7 @@ import {
   BrowseShell,
 } from "../ConnectBrowseLayout";
 import PaginationUsers from "../Bank/Pagination";
+import { organizationSearchText } from "../../../../lib/organizationLabels";
 
 const PER_PAGE = 12;
 
@@ -39,7 +40,7 @@ export default function Connections({ query, user }) {
       profile?.publicId,
       profile?.publicReadableId,
       profile?.email,
-      profile?.organization,
+      organizationSearchText(profile?.organization),
       profile?.location,
     ]
       .filter(Boolean)
