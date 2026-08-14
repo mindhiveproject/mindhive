@@ -18,11 +18,14 @@ import {
 } from "../../../../lib/opportunityProposalData";
 import { isRoundSponsorFormsVisible } from "../../../../lib/opportunityEditorTabs";
 import {
+  OPPORTUNITY_FLASH,
+  resolveOpportunityFlashMessage,
   useOpportunityFlashQuery,
 } from "../../../../lib/opportunityFlash";
 import OpportunityChatModal from "./OpportunityChatModal";
 import OpportunityFollowUpFormModal from "./OpportunityFollowUpFormModal";
 import OpportunityListStepper from "./OpportunityListStepper";
+import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
 
 const MESSAGE_ICON = (
   <img
@@ -322,6 +325,7 @@ export default function OpportunitiesList({ user }) {
   const [deleteOpportunity] = useMutation(DELETE_OPPORTUNITY);
   const [chatModal, setChatModal] = useState(null);
   const [formModal, setFormModal] = useState(null);
+  const [unsubmitOpportunityId, setUnsubmitOpportunityId] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
 
@@ -373,6 +377,20 @@ export default function OpportunitiesList({ user }) {
           default: "Follow-up form saved.",
         }),
       });
+    }
+    refetch();
+  };
+
+  const handleUnsubmitSuccess = (nextStatus) => {
+    const opportunityId = unsubmitOpportunityId;
+    setUnsubmitOpportunityId(null);
+    const flashKey =
+      nextStatus === "returned"
+        ? OPPORTUNITY_FLASH.UNSUBMITTED_REVISION
+        : OPPORTUNITY_FLASH.UNSUBMITTED_DRAFT;
+    const message = resolveOpportunityFlashMessage(flashKey, tConnect);
+    if (opportunityId && message) {
+      setRowFlash({ opportunityId, message });
     }
     refetch();
   };
@@ -432,6 +450,7 @@ export default function OpportunitiesList({ user }) {
             const networks = opportunity.classNetworks || [];
             const networkCount = networks.length;
             const isPreSelected = opportunity.status === "pre_selected";
+            const canUnsubmit = opportunity.status === "pending_review";
             const heldRounds = isPreSelected ? opportunity.rounds || [] : [];
             const showRowFlash =
               activeFlash?.opportunityId &&
@@ -446,6 +465,7 @@ export default function OpportunitiesList({ user }) {
                       status={opportunity.status}
                       proposalData={opportunity.proposalData}
                       rounds={opportunity.rounds}
+                      reviewNotes={opportunity.reviewNotes}
                       videoFile={opportunity.videoFile}
                       networks={networks}
                       onStepClick={() => handleEdit(opportunity.id)}
@@ -489,6 +509,18 @@ export default function OpportunitiesList({ user }) {
                         })}
                         onClick={() => handleEdit(opportunity.id)}
                       />
+                      {canUnsubmit ? (
+                        <Chip
+                          label={tConnect(
+                            "myOpportunitiesList.unsubmit.button",
+                            {},
+                            { default: "Unsubmit" },
+                          )}
+                          onClick={() =>
+                            setUnsubmitOpportunityId(opportunity.id)
+                          }
+                        />
+                      ) : null}
                       <Chip
                         label={t("opportunities.delete", {}, {
                           default: "Delete",
@@ -643,6 +675,12 @@ export default function OpportunitiesList({ user }) {
         onSaved={handleFormSaved}
         opportunity={formModal?.opportunity}
         formMeta={formModal?.formMeta}
+      />
+      <UnsubmitOpportunityModal
+        open={Boolean(unsubmitOpportunityId)}
+        onClose={() => setUnsubmitOpportunityId(null)}
+        opportunityId={unsubmitOpportunityId}
+        onSuccess={handleUnsubmitSuccess}
       />
     </Shell>
   );

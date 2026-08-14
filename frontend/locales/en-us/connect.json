@@ -616,6 +616,7 @@
 			"draft": "Draft",
 			"formFilled": "Form filled",
 			"formsProgress": "Forms {{done}}/{{total}}",
+			"inRevision": "In revision",
 			"matched": "Matched",
 			"matching": "Matching",
 			"openOpportunity": "Open opportunity",
@@ -630,6 +631,18 @@
 		},
 		"teamOf": "Team of {{size}}",
 		"unknownSponsor": "Unknown",
+		"unsubmit": {
+			"button": "Unsubmit",
+			"cancel": "Cancel",
+			"error": "Could not unsubmit this opportunity. Please try again.",
+			"helper": "Choose how to pull this opportunity out of review. Draft hides it from teachers until you submit again. In revision keeps it visible as returned so you can revise and resubmit.",
+			"successDraft": "Unsubmitted — back to draft.",
+			"successRevision": "Unsubmitted — marked as in revision.",
+			"title": "Unsubmit opportunity?",
+			"toDraft": "Turn back to draft",
+			"toRevision": "Mark as in revision",
+			"working": "Updating…"
+		},
 		"visibility": {
 			"emptyHint": "Add a class network so teachers can see this opportunity.",
 			"many": "Visible in {{count}} class networks",

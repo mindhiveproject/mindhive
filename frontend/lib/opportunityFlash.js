@@ -7,6 +7,8 @@ export const OPPORTUNITY_FLASH = {
   CREATED: "created",
   SAVED: "saved",
   FORM_SAVED: "formSaved",
+  UNSUBMITTED_DRAFT: "unsubmittedDraft",
+  UNSUBMITTED_REVISION: "unsubmittedRevision",
   PRE_SELECTED: "preSelected",
   ACCEPTED: "accepted",
   PUBLISHED: "published",
@@ -36,6 +38,14 @@ export function resolveOpportunityFlashMessage(flashKey, t) {
       return t("myOpportunitiesList.flash.formSaved", {}, {
         default: "Follow-up form saved.",
       });
+    case OPPORTUNITY_FLASH.UNSUBMITTED_DRAFT:
+      return t("myOpportunitiesList.unsubmit.successDraft", {}, {
+        default: "Unsubmitted — back to draft.",
+      });
+    case OPPORTUNITY_FLASH.UNSUBMITTED_REVISION:
+      return t("myOpportunitiesList.unsubmit.successRevision", {}, {
+        default: "Unsubmitted — marked as in revision.",
+      });
     case OPPORTUNITY_FLASH.PRE_SELECTED:
       return t("opportunityEditor.review.preSelectSuccess", {}, {
         default: "Sponsor pre-selected and notified.",
@@ -51,6 +61,16 @@ export function resolveOpportunityFlashMessage(flashKey, t) {
     default:
       return null;
   }
+}
+
+/**
+ * Build list URL query for a post-save flash on a specific opportunity.
+ * Omits `op` / `tab` so Main mounts the list, not the editor.
+ */
+export function listFlashQuery(flashKey, opportunityId) {
+  const query = { flash: flashKey };
+  if (opportunityId) query.flashOp = opportunityId;
+  return query;
 }
 
 /**

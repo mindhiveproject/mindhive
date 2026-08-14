@@ -11,10 +11,10 @@ import styled from "styled-components";
 import { UserContext } from "../../../Global/Authorized";
 import DefinitionForm from "../../../Forms/DefinitionForm";
 import Button from "../../../DesignSystem/Button";
-import MessageCard from "../../../DesignSystem/MessageCard";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
 import OpportunityGuidelinesSection from "./OpportunityGuidelinesSection";
 import OpportunityListStepper from "./OpportunityListStepper";
+import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
 import {
   GET_OPPORTUNITY,
   MY_OPPORTUNITIES,
@@ -33,7 +33,7 @@ import {
 } from "../../../../lib/opportunityClassNetworks";
 import {
   OPPORTUNITY_FLASH,
-  useOpportunityFlashQuery,
+  listFlashQuery,
 } from "../../../../lib/opportunityFlash";
 import {
   OpportunityPageShell as Shell,
@@ -161,6 +161,13 @@ function rolesForViewer(connectRole) {
 
 const LIST_PATH = "/dashboard/sponsor-connect/opportunities";
 
+function goToListWithFlash(router, flashKey, opportunityId) {
+  router.push({
+    pathname: LIST_PATH,
+    query: listFlashQuery(flashKey, opportunityId),
+  });
+}
+
 export default function EditorDefinitionMode({ opportunityId }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
@@ -211,15 +218,8 @@ export default function EditorDefinitionMode({ opportunityId }) {
     awaitRefetchQueries: true,
   });
 
-  const [localFlash, setLocalFlash] = useState(null);
-  const { flashMessage: queryFlash, clearFlash: clearQueryFlash } =
-    useOpportunityFlashQuery(t);
-  const flashMessage = localFlash || queryFlash;
-  const clearFlash = () => {
-    setLocalFlash(null);
-    clearQueryFlash();
-  };
   const [saving, setSaving] = useState(false);
+  const [unsubmitOpen, setUnsubmitOpen] = useState(false);
   const [guidelinesAcknowledged, setGuidelinesAcknowledged] = useState(false);
   const [requestsAppointment, setRequestsAppointment] = useState(false);
   const proposalFormRef = useRef(null);
@@ -230,6 +230,8 @@ export default function EditorDefinitionMode({ opportunityId }) {
     !isAdmin &&
     !isNew &&
     (currentStatus === "draft" || currentStatus === "returned");
+  const canSponsorUnsubmit =
+    !isAdmin && !isNew && currentStatus === "pending_review";
   const showSponsorDraftOnlySave = !isAdmin && !isNew && !canSponsorSubmit;
 
   const handleSubmit = async (result) => {
@@ -265,7 +267,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
           : opportunity?.preSelectedAt || null,
     };
 
-    setLocalFlash(null);
     if (isNew) {
       const createInput = {
         ...input,
@@ -281,49 +282,42 @@ export default function EditorDefinitionMode({ opportunityId }) {
       const res = await createOpportunity({ variables: { input: createInput } });
       const newId = res?.data?.createOpportunity?.id;
       if (newId) {
-        router.replace(
-          {
-            pathname: LIST_PATH,
-            query: {
-              op: newId,
-              tab: "proposal",
-              flash: OPPORTUNITY_FLASH.CREATED,
-            },
-          },
-          undefined,
-          { shallow: false },
-        );
+        goToListWithFlash(router, OPPORTUNITY_FLASH.CREATED, newId);
       }
-    } else {
-      await updateOpportunity({
-        variables: { id: opportunityId, input },
-      });
-      if (submitForReview) {
-        router.push({
-          pathname: LIST_PATH,
-          query: {
-            flash: OPPORTUNITY_FLASH.SUBMITTED,
-            flashOp: opportunityId,
-          },
-        });
-        return;
-      }
-      setLocalFlash(
-        t("opportunityEditor.savedFlash", {}, { default: "Saved." }),
-      );
+      return;
     }
+
+    await updateOpportunity({
+      variables: { id: opportunityId, input },
+    });
+    goToListWithFlash(
+      router,
+      submitForReview
+        ? OPPORTUNITY_FLASH.SUBMITTED
+        : OPPORTUNITY_FLASH.SAVED,
+      opportunityId,
+    );
   };
 
   const runSave = async ({ submitForReview = false } = {}) => {
     setSaving(true);
-    setLocalFlash(null);
-    clearQueryFlash();
     saveIntentRef.current.submitForReview = submitForReview;
     try {
       await proposalFormRef.current?.save?.();
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleUnsubmitSuccess = (nextStatus) => {
+    setUnsubmitOpen(false);
+    goToListWithFlash(
+      router,
+      nextStatus === "returned"
+        ? OPPORTUNITY_FLASH.UNSUBMITTED_REVISION
+        : OPPORTUNITY_FLASH.UNSUBMITTED_DRAFT,
+      opportunityId,
+    );
   };
 
   // Must stay above the loading early-return — Rules of Hooks.
@@ -374,6 +368,9 @@ export default function EditorDefinitionMode({ opportunityId }) {
     : t("opportunityEditor.submitForReview", {}, {
         default: "Submit for review in class network",
       });
+  const unsubmitLabel = t("myOpportunitiesList.unsubmit.button", {}, {
+    default: "Unsubmit",
+  });
 
   return (
     <Shell>
@@ -395,6 +392,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
                 status={currentStatus}
                 proposalData={opportunity?.proposalData}
                 rounds={opportunity?.rounds}
+                reviewNotes={opportunity?.reviewNotes}
                 videoFile={opportunity?.videoFile}
                 networks={statusStepperNetworks}
               />
@@ -402,6 +400,16 @@ export default function EditorDefinitionMode({ opportunityId }) {
           </TitleRow>
         </TopBarLeft>
         <Actions>
+          {canSponsorUnsubmit ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setUnsubmitOpen(true)}
+              disabled={saving}
+            >
+              {unsubmitLabel}
+            </Button>
+          ) : null}
           {canSponsorSubmit ? (
             <>
               <Button
@@ -433,16 +441,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
           ) : null}
         </Actions>
       </TopBar>
-      {flashMessage ? (
-        <MessageCard
-          variant="success"
-          message={flashMessage}
-          onClose={clearFlash}
-          closeAriaLabel={t("opportunityEditor.flashDismiss", {}, {
-            default: "Dismiss",
-          })}
-        />
-      ) : null}
 
       <OpportunityClassNetworksField
         availableNetworks={availableNetworks}
@@ -479,6 +477,13 @@ export default function EditorDefinitionMode({ opportunityId }) {
           titleAs="h2"
         />
       </Card>
+
+      <UnsubmitOpportunityModal
+        open={unsubmitOpen}
+        onClose={() => setUnsubmitOpen(false)}
+        opportunityId={opportunityId}
+        onSuccess={handleUnsubmitSuccess}
+      />
     </Shell>
   );
 }

@@ -616,6 +616,7 @@
 			"draft": "",
 			"formFilled": "",
 			"formsProgress": "",
+			"inRevision": "",
 			"matched": "",
 			"matching": "",
 			"openOpportunity": "",
@@ -630,6 +631,18 @@
 		},
 		"teamOf": "فريق من {{size}}",
 		"unknownSponsor": "مجهول",
+		"unsubmit": {
+			"button": "",
+			"cancel": "",
+			"error": "",
+			"helper": "",
+			"successDraft": "",
+			"successRevision": "",
+			"title": "",
+			"toDraft": "",
+			"toRevision": "",
+			"working": ""
+		},
 		"visibility": {
 			"emptyHint": "",
 			"many": "",

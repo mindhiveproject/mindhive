@@ -616,6 +616,7 @@
 			"draft": "",
 			"formFilled": "",
 			"formsProgress": "",
+			"inRevision": "",
 			"matched": "",
 			"matching": "",
 			"openOpportunity": "",
@@ -630,6 +631,18 @@
 		},
 		"teamOf": "Team van {{size}}",
 		"unknownSponsor": "Onbekend",
+		"unsubmit": {
+			"button": "",
+			"cancel": "",
+			"error": "",
+			"helper": "",
+			"successDraft": "",
+			"successRevision": "",
+			"title": "",
+			"toDraft": "",
+			"toRevision": "",
+			"working": ""
+		},
 		"visibility": {
 			"emptyHint": "",
 			"many": "",
