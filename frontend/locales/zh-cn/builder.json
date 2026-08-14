@@ -1183,20 +1183,35 @@
 	"developA": "开发一个 {{develop}}",
 	"developHeaderDescription": "在此创建、编辑和管理您的研究、任务和调查。",
 	"developNew": "开发新的",
+	"developNewMenu": {
+		"block": "",
+		"study": "",
+		"survey": "",
+		"task": "",
+		"visual": ""
+	},
 	"developProjects": {
 		"activeProjects": "活跃项目",
 		"allProjects": "所有项目",
 		"archivedProjects": "已存档项目",
 		"classFilterPlaceholder": "选择课程",
+		"empty": "",
 		"filterByClass": "按类别筛选",
 		"filterByStatus": "按状态过滤",
 		"unnamedClass": "班级"
 	},
+	"developSections": "",
 	"developStudies": {
 		"classFilterPlaceholder": "选择课程",
+		"empty": "",
 		"filterByClass": "按类别筛选",
 		"filterByStatus": "按状态过滤",
 		"unnamedClass": "班级"
+	},
+	"developTasks": {
+		"emptyBlock": "",
+		"emptySurvey": "",
+		"emptyTask": ""
 	},
 	"duplicateEditBlock": "复制并编辑预先存在的 MindHive 块及其参数。",
 	"duplicateEditSurvey": "复制并编辑现有的 MindHive 调查及其参数。",
@@ -1360,6 +1375,7 @@
 	"myStudies": "我的学业",
 	"mySurveys": "我的调查",
 	"myTasks": "我的任务",
+	"myVisuals": "",
 	"navigation": {
 		"back": "后退",
 		"cloneSavePrompt": "更改研究名称，然后单击“保存”按钮",
@@ -2279,6 +2295,7 @@
 		"deactivate": "停用",
 		"description": "向此课程模板添加自定义复习步骤。每个步骤都会生成一张行动卡，学生可以使用该卡片提交作业以获得反馈。",
 		"hasActionCard": "链接的行动卡",
+		"platformDefault": "",
 		"stepDescription": "描述",
 		"stepTitle": "步骤标题",
 		"title": "复习步骤"
@@ -2414,5 +2431,6 @@
 		"visualAnalogueScale": "视觉模拟评分法"
 	},
 	"visualize": "可视化",
+	"visualsComingSoon": "",
 	"whatWouldYouLikeToDevelop": "您想开发什么？"
 }

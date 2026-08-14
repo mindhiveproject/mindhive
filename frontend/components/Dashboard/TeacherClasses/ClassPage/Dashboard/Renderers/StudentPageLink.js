@@ -1,3 +1,5 @@
+import Button from "../../../../../DesignSystem/Button";
+
 export const StudentPageLink = (props) => {
   const openInNewTab = () => {
     window.open(
@@ -7,8 +9,20 @@ export const StudentPageLink = (props) => {
   };
 
   return (
-    <button onClick={openInNewTab} className="ag-cell-button">
+    <Button
+      variant="text"
+      onClick={openInNewTab}
+      style={{
+        height: 32,
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingLeft: 8,
+        paddingRight: 8,
+        fontWeight: 500,
+        color: "var(--color-text-primary)",
+      }}
+    >
       {props.value}
-    </button>
+    </Button>
   );
 };

@@ -7,6 +7,7 @@ import { GET_USER_CLASSES, GET_USER_STUDIES } from "../../Queries/User";
 
 import ProjectCard from "./ProjectCard";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import MessageCard from "../../DesignSystem/MessageCard";
 
 function containsAny(arr1, arr2) {
   if (!arr1?.length || !arr2?.length) return false;
@@ -172,19 +173,31 @@ export default function DevelopProjectBank({ user }) {
           )}
         </div>
       </div>
-      <div className="cardBoard">
-        {sortedProjects.map((project) => (
-          <ProjectCard
-            key={project?.id}
-            user={user}
-            project={project}
-            url="/builder/projects/"
-            id="id"
-            name="selector"
-            projectsInfo={null}
-          />
-        ))}
-      </div>
+      {sortedProjects.length === 0 ? (
+        <MessageCard
+          variant="neutral"
+          message={t(
+            "developProjects.empty",
+            {},
+            { default: "No projects to show." }
+          )}
+          style={{ marginTop: "24px" }}
+        />
+      ) : (
+        <div className="cardBoard">
+          {sortedProjects.map((project) => (
+            <ProjectCard
+              key={project?.id}
+              user={user}
+              project={project}
+              url="/builder/projects/"
+              id="id"
+              name="selector"
+              projectsInfo={null}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }

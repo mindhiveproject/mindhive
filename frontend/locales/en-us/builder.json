@@ -1195,6 +1195,7 @@
 		"allProjects": "All projects",
 		"archivedProjects": "Archived projects",
 		"classFilterPlaceholder": "Select classes",
+		"empty": "No projects to show.",
 		"filterByClass": "Filter by class",
 		"filterByStatus": "Filter by status",
 		"unnamedClass": "Class"
@@ -1202,9 +1203,15 @@
 	"developSections": "Develop sections",
 	"developStudies": {
 		"classFilterPlaceholder": "Select classes",
+		"empty": "No studies to show.",
 		"filterByClass": "Filter by class",
 		"filterByStatus": "Filter by status",
 		"unnamedClass": "Class"
+	},
+	"developTasks": {
+		"emptyBlock": "No blocks to show.",
+		"emptySurvey": "No surveys to show.",
+		"emptyTask": "No tasks to show."
 	},
 	"duplicateEditBlock": "Duplicate and edit a pre-existing MindHive block and its parameters.",
 	"duplicateEditSurvey": "Duplicate and edit a pre-existing MindHive survey and its parameters.",
@@ -2288,6 +2295,7 @@
 		"deactivate": "Deactivate",
 		"description": "Add custom review steps to this class template. Each step creates an action card students use to submit work for feedback.",
 		"hasActionCard": "action card linked",
+		"platformDefault": "MindHive default",
 		"stepDescription": "Description",
 		"stepTitle": "Step title",
 		"title": "Review steps"

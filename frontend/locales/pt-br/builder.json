@@ -1183,20 +1183,35 @@
 	"developA": "Desenvolver um {{desenvolver}}",
 	"developHeaderDescription": "Crie, edite e gerencie seus estudos, tarefas e pesquisas aqui.",
 	"developNew": "Desenvolver novos",
+	"developNewMenu": {
+		"block": "",
+		"study": "",
+		"survey": "",
+		"task": "",
+		"visual": ""
+	},
 	"developProjects": {
 		"activeProjects": "Projetos Ativos",
 		"allProjects": "Todos os projetos",
 		"archivedProjects": "Projetos arquivados",
 		"classFilterPlaceholder": "Selecione classes",
+		"empty": "",
 		"filterByClass": "Filtrar por classe",
 		"filterByStatus": "Filtrar por status",
 		"unnamedClass": "Aula"
 	},
+	"developSections": "",
 	"developStudies": {
 		"classFilterPlaceholder": "Selecione classes",
+		"empty": "",
 		"filterByClass": "Filtrar por classe",
 		"filterByStatus": "Filtrar por status",
 		"unnamedClass": "Aula"
+	},
+	"developTasks": {
+		"emptyBlock": "",
+		"emptySurvey": "",
+		"emptyTask": ""
 	},
 	"duplicateEditBlock": "Duplique e edite um bloco MindHive pré-existente e seus parâmetros.",
 	"duplicateEditSurvey": "Duplique e edite uma pesquisa MindHive pré-existente e seus parâmetros.",
@@ -1360,6 +1375,7 @@
 	"myStudies": "Meus estudos",
 	"mySurveys": "Minhas pesquisas",
 	"myTasks": "Minhas tarefas",
+	"myVisuals": "",
 	"navigation": {
 		"back": "voltar",
 		"cloneSavePrompt": "Altere o nome do estudo e clique no botão Salvar.",
@@ -2279,6 +2295,7 @@
 		"deactivate": "Desativar",
 		"description": "Adicione etapas de revisão personalizadas a este modelo de aula. Cada etapa cria um cartão de ação que os alunos usam para enviar o trabalho para receber feedback.",
 		"hasActionCard": "cartão de ação vinculado",
+		"platformDefault": "",
 		"stepDescription": "Descrição",
 		"stepTitle": "Título da etapa",
 		"title": "Etapas de revisão"
@@ -2414,5 +2431,6 @@
 		"visualAnalogueScale": "Escala visual analógica"
 	},
 	"visualize": "Visualizar",
+	"visualsComingSoon": "",
 	"whatWouldYouLikeToDevelop": "O que você gostaria de desenvolver?"
 }

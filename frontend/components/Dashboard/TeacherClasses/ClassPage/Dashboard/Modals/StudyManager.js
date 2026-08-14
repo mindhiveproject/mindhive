@@ -1,9 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Modal, Icon, Dropdown, Button } from "semantic-ui-react";
+import { Modal, Dropdown, Button } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
+
+import DesignSystemButton from "../../../../../DesignSystem/Button";
+import DashboardAssetIcon from "../DashboardAssetIcon";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import { GET_CLASS } from "../../../../../Queries/Classes";
@@ -14,11 +17,21 @@ import StyledClass from "../../../../../styles/StyledClass";
 
 export default function studyManager(props) {
   const { t } = useTranslation("classes");
-  const [isOpen, setIsOpen] = useState(false);
+  const isControlled = typeof props.open === "boolean";
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = isControlled ? props.open : internalOpen;
   const [studyId, setStudyId] = useState(null);
   const [studyName, setStudyName] = useState("");
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedStudyForProject, setSelectedStudyForProject] = useState(null);
+
+  const closeModal = () => {
+    if (isControlled) {
+      props.onClose?.();
+    } else {
+      setInternalOpen(false);
+    }
+  };
 
   const projectId = props?.data?.projectId;
   const hasProject = !!projectId;
@@ -91,7 +104,7 @@ export default function studyManager(props) {
         },
       });
       setStudyId(null);
-      setIsOpen(false);
+      closeModal();
     }
   };
 
@@ -117,7 +130,7 @@ export default function studyManager(props) {
       setIsConfirmModalOpen(false);
       setSelectedStudyForProject(null);
       setStudyId(null);
-      setIsOpen(false);
+      closeModal();
     } catch (error) {
       console.error("Error connecting study to project:", error);
       alert(t("dashboard.studyManager.failedToConnectStudy"));
@@ -203,7 +216,7 @@ export default function studyManager(props) {
       });
     }
     setStudyName("");
-    setIsOpen(false);
+    closeModal();
   };
 
   const disconnectFromStudy = async (studyId) => {
@@ -241,14 +254,22 @@ export default function studyManager(props) {
 
   return (
     <Modal
-      onClose={() => setIsOpen(false)}
-      onOpen={() => setIsOpen(true)}
+      onClose={closeModal}
+      onOpen={() => {
+        if (!isControlled) setInternalOpen(true);
+      }}
       open={isOpen}
       trigger={
-        <StyledTriggerButton>
-          <Icon name="book" />
-          {t("dashboard.studyManager.manageStudies", { count: collaboratorStudies.length })}
-        </StyledTriggerButton>
+        isControlled ? undefined : (
+          <DesignSystemButton
+            variant="outline"
+            leadingIcon={<DashboardAssetIcon src="/assets/icons/education.svg" />}
+          >
+            {t("dashboard.studyManager.manageStudies", { count: collaboratorStudies.length }, {
+              default: "Manage Studies ({{count}})",
+            })}
+          </DesignSystemButton>
+        )
       }
       dimmer="blurring"
       size="large"
@@ -459,7 +480,7 @@ export default function studyManager(props) {
             </div>
           </StyledClass>
           <div className="footer">
-            <button className="cancel-button" onClick={() => setIsOpen(false)}>
+            <button className="cancel-button" onClick={closeModal}>
               {t("dashboard.studyManager.cancel")}
             </button>
             {hasProject && (
@@ -513,30 +534,6 @@ export default function studyManager(props) {
     </Modal>
   );
 }
-
-const StyledTriggerButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #3d85b0;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-family: Nunito, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #326d94;
-  }
-
-  .icon {
-    margin: 0 !important;
-  }
-`;
 
 const StyledModal = styled.div`
   font-family: Nunito, sans-serif !important;

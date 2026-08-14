@@ -51,10 +51,33 @@ const mhFrontendURL =
     ? process.env.FRONTEND_URL_DEV
     : process.env.FRONTEND_URL;
 
+// Local storage in Keystone 6 uses fs.writeFile / createWriteStream and does
+// NOT create parent directories. Ensure every storagePath exists at boot so the
+// first upload (e.g. MediaAsset.exportDocument → media-library-exports) does
+// not fail with ENOENT on a fresh deploy.
+const LOCAL_STORAGE_PATHS = [
+  "yq-visuals/yq-images",
+  "yq-visuals/yq-code",
+  "media-library",
+  "media-library-exports",
+  "profile-images",
+  "study-images",
+  "opportunity-covers",
+  "opportunity-videos",
+  "profile-videos",
+];
+
+for (const storagePath of LOCAL_STORAGE_PATHS) {
+  try {
+    mkdirSync(path.join(process.cwd(), storagePath), { recursive: true });
+  } catch {
+    // ignore — Keystone will surface a clearer error if write still fails
+  }
+}
+
 // Date-partitioned name generator for local file/image storage.
 //
-// Local storage in Keystone 6 uses fs.writeFile directly and does NOT create
-// parent directories, so we mkdirSync(recursive) before returning the path.
+// mkdirSync(recursive) for year/month subdirs before returning the path.
 //
 // Image fields append the detected file extension to whatever the transform
 // returns (so it must NOT include the extension), while File fields use the

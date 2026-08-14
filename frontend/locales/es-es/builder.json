@@ -1183,20 +1183,35 @@
 	"developA": "Desarrollar un {{desarrollar}}",
 	"developHeaderDescription": "Crea, edita y administra tus estudios, tareas y encuestas aquí.",
 	"developNew": "Desarrollar nuevos",
+	"developNewMenu": {
+		"block": "",
+		"study": "",
+		"survey": "",
+		"task": "",
+		"visual": ""
+	},
 	"developProjects": {
 		"activeProjects": "Proyectos activos",
 		"allProjects": "Todos los proyectos",
 		"archivedProjects": "Proyectos archivados",
 		"classFilterPlaceholder": "Seleccionar clases",
+		"empty": "",
 		"filterByClass": "Filtrar por clase",
 		"filterByStatus": "Filtrar por estado",
 		"unnamedClass": "Clase"
 	},
+	"developSections": "",
 	"developStudies": {
 		"classFilterPlaceholder": "Seleccionar clases",
+		"empty": "",
 		"filterByClass": "Filtrar por clase",
 		"filterByStatus": "Filtrar por estado",
 		"unnamedClass": "Clase"
+	},
+	"developTasks": {
+		"emptyBlock": "",
+		"emptySurvey": "",
+		"emptyTask": ""
 	},
 	"duplicateEditBlock": "Duplicar y editar un bloque MindHive preexistente y sus parámetros.",
 	"duplicateEditSurvey": "Duplicar y editar una encuesta MindHive preexistente y sus parámetros.",
@@ -1360,6 +1375,7 @@
 	"myStudies": "Mis estudios",
 	"mySurveys": "Mis encuestas",
 	"myTasks": "Mis tareas",
+	"myVisuals": "",
 	"navigation": {
 		"back": "atrás",
 		"cloneSavePrompt": "Cambia el nombre del estudio y haz clic en el botón Guardar.",
@@ -2279,6 +2295,7 @@
 		"deactivate": "Desactivar",
 		"description": "Añade pasos de revisión personalizados a esta plantilla de clase. Cada paso crea una tarjeta de acción que los estudiantes utilizan para enviar sus trabajos y recibir comentarios.",
 		"hasActionCard": "Tarjeta de acción vinculada",
+		"platformDefault": "",
 		"stepDescription": "Descripción",
 		"stepTitle": "Título del paso",
 		"title": "Pasos de revisión"
@@ -2414,5 +2431,6 @@
 		"visualAnalogueScale": "Escala analógica visual"
 	},
 	"visualize": "Visualizar",
+	"visualsComingSoon": "",
 	"whatWouldYouLikeToDevelop": "¿Qué te gustaría desarrollar?"
 }

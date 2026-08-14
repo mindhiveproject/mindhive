@@ -3,21 +3,58 @@ import Link from "next/link";
 // get all proposals of the featured studies, and all proposals of the studies in the class network
 import { useQuery } from "@apollo/client";
 import { GET_USER_CLASSES } from "../../../Queries/User";
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import ProjectsBoard from "./Projects/Main";
 import StudiesBoard from "./Studies/Main";
 import useTranslation from "next-translate/useTranslation";
 import { reviewOverviewTours } from "./tours";
-import { FEEDBACK_CENTER_TABS, buildFeedbackCenterTabs } from "../../../../lib/feedbackCenterTabs";
+import { buildFeedbackCenterTabs } from "../../../../lib/feedbackCenterTabs";
 import { GET_MILESTONES } from "../../../Queries/Milestone";
+import { CLASS_TEMPLATE_PROJECTS_FOR_CLASSES_QUERY } from "../../../Queries/Proposal";
+import { getFeedbackCenterMilestones } from "../../../../lib/milestones";
+import { unionMilestonesFromTemplateBoards } from "../../../../lib/templateBoardActionCards";
 
 export default function Overview({ query, user }) {
   const { t } = useTranslation("builder");
   const { data: milestonesData } = useQuery(GET_MILESTONES);
   const globalMilestones = milestonesData?.milestones || [];
-  const feedbackTabs = buildFeedbackCenterTabs(globalMilestones, t);
-  const legacySelectors = FEEDBACK_CENTER_TABS.map((tab) => tab.selector);
+
+  // get all classes of a particular user (including classes from the class network)
+  const { data: classesData } = useQuery(GET_USER_CLASSES);
+  const us = classesData?.authenticatedItem || {
+    studentIn: [],
+    teacherIn: [],
+    mentorIn: [],
+  };
+  const teacherMentorClassIds = useMemo(() => {
+    const profile = classesData?.authenticatedItem;
+    const ids = [...(profile?.teacherIn || []), ...(profile?.mentorIn || [])]
+      .map((theclass) => theclass?.id)
+      .filter(Boolean);
+    return [...new Set(ids)];
+  }, [classesData]);
+
+  const { data: templateBoardsData, loading: templateBoardsLoading } = useQuery(
+    CLASS_TEMPLATE_PROJECTS_FOR_CLASSES_QUERY,
+    {
+      variables: { classIds: teacherMentorClassIds },
+      skip: teacherMentorClassIds.length === 0,
+    }
+  );
+  const accessibleTemplateBoards = templateBoardsData?.proposalBoards || [];
+
+  const classTemplateSteps = useMemo(
+    () =>
+      getFeedbackCenterMilestones(
+        unionMilestonesFromTemplateBoards(
+          accessibleTemplateBoards,
+          globalMilestones
+        )
+      ),
+    [accessibleTemplateBoards, globalMilestones]
+  );
+  const feedbackTabs = buildFeedbackCenterTabs(classTemplateSteps, t);
 
   useEffect(() => {
     let currentTour = null;
@@ -98,15 +135,15 @@ export default function Overview({ query, user }) {
     };
   }, []);
 
-  const selector = query?.selector || "proposals";
+  const selector = query?.selector;
+  const isCollectingData = selector === "collectingdata";
+  const matchedTab = feedbackTabs.find(
+    (tab) => tab.selector === selector || tab.milestoneKey === selector
+  );
+  const activeSelector = isCollectingData
+    ? "collectingdata"
+    : matchedTab?.selector || (!selector ? feedbackTabs[0]?.selector : selector);
 
-  // get all classes of a particular user (including classes from the class network)
-  const { data: classesData } = useQuery(GET_USER_CLASSES);
-  const us = classesData?.authenticatedItem || {
-    studentIn: [],
-    teacherIn: [],
-    mentorIn: [],
-  };
   const myClasses = [...us?.studentIn, ...us?.teacherIn, ...us?.mentorIn] || [];
 
   const networkClasses =
@@ -134,24 +171,28 @@ export default function Overview({ query, user }) {
       <div className="h24">{t("review.overviewIntro")}</div>
 
       <div id="options" className="menu">
-        {feedbackTabs.map((tab) => (
-          <Link
-            key={tab.selector}
-            href={`/dashboard/review/${tab.selector}`}
-            id={tab.selector === "proposals" ? "proposal" : tab.selector}
-          >
-            <div
-              className={
-                selector === tab.selector ||
-                (!selector && tab.selector === "proposals")
-                  ? "menuTitle selectedMenuTitle"
-                  : "menuTitle"
-              }
+        {!templateBoardsLoading &&
+          feedbackTabs.map((tab) => (
+            <Link
+              key={tab.selector}
+              href={`/dashboard/review/${tab.selector}`}
+              id={tab.selector === "proposals" ? "proposal" : tab.selector}
             >
-              <p>{tab.label || t(tab.labelKey, {}, { default: tab.milestoneKey })}</p>
-            </div>
-          </Link>
-        ))}
+              <div
+                className={
+                  activeSelector === tab.selector ||
+                  (!selector && tab.selector === feedbackTabs[0]?.selector)
+                    ? "menuTitle selectedMenuTitle"
+                    : "menuTitle"
+                }
+              >
+                <p>
+                  {tab.label ||
+                    t(tab.labelKey, {}, { default: tab.milestoneKey })}
+                </p>
+              </div>
+            </Link>
+          ))}
 
         <Link href="/dashboard/review/collectingdata" id="collectData">
           <div
@@ -168,17 +209,17 @@ export default function Overview({ query, user }) {
         {/* collectingdata tab is study-based, not milestone-driven */}
       </div>
 
-      {(!selector ||
-        legacySelectors.includes(selector) ||
-        feedbackTabs.some((tab) => tab.selector === selector)) && (
+      {!isCollectingData && activeSelector ? (
         <ProjectsBoard
-          selector={selector}
+          selector={activeSelector}
           allUniqueClassIds={allUniqueClassIds}
           myClassesIds={myClasses.map((cl) => cl?.id)}
           allUniqueClasses={allUniqueClasses}
-          milestones={globalMilestones}
+          milestones={
+            classTemplateSteps.length ? classTemplateSteps : globalMilestones
+          }
         />
-      )}
+      ) : null}
 
       {selector === "collectingdata" && (
         <StudiesBoard

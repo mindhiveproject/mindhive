@@ -24,8 +24,12 @@ export function getTabBySelector(selector) {
 }
 
 export function getTabByMilestoneKey(milestoneKey) {
+  const needle =
+    milestoneKey != null ? String(milestoneKey).toLowerCase() : "";
   const legacy = FEEDBACK_CENTER_TABS.find(
-    (tab) => tab.milestoneKey === milestoneKey
+    (tab) =>
+      tab.milestoneKey === milestoneKey ||
+      String(tab.milestoneKey).toLowerCase() === needle
   );
   if (legacy) return legacy;
   return {
@@ -43,33 +47,49 @@ export function getMilestoneKeyFromStage(stage) {
   return tab?.milestoneKey ?? stage ?? "SUBMITTED_AS_PROPOSAL";
 }
 
+export function isFeedbackCenterMilestone(milestone) {
+  return (
+    !!milestone &&
+    milestone.isActive !== false &&
+    milestone.statusTarget === "board" &&
+    milestone.showInFeedbackCenter !== false
+  );
+}
+
+function legacyTabForMilestone(milestone) {
+  if (!milestone?.key) return null;
+  const needle = String(milestone.key).toLowerCase();
+  return (
+    FEEDBACK_CENTER_TABS.find(
+      (tab) =>
+        tab.milestoneKey === milestone.key ||
+        String(tab.milestoneKey).toLowerCase() === needle
+    ) || null
+  );
+}
+
 export function buildFeedbackCenterTabs(milestones = [], t) {
-  // Base tabs are ALWAYS included — a single template-scope milestone
-  // shouldn't hide the standard Proposals / In Review / Project Report tabs
-  // for every user on the platform. Template tabs extend the base set.
-  const baseTabs = FEEDBACK_CENTER_TABS.map((tab) => ({
-    ...tab,
-    label: t(tab.labelKey, {}, { default: tab.milestoneKey }),
-    isCustom: false,
-  }));
-
-  const templateTabs = milestones
-    .filter(
-      (m) =>
-        m.scope === "template" &&
-        m.statusTarget === "board" &&
-        m.showInFeedbackCenter !== false
-    )
-    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-    .map((m) => ({
-      selector: m.key,
-      milestoneKey: m.key,
-      labelKey: null,
-      label: m.title || m.key,
-      isCustom: true,
-    }));
-
-  return [...baseTabs, ...templateTabs];
+  return (milestones || [])
+    .filter(isFeedbackCenterMilestone)
+    .map((milestone) => {
+      const legacy = legacyTabForMilestone(milestone);
+      if (legacy) {
+        return {
+          ...legacy,
+          label: t(legacy.labelKey, {}, {
+            default: milestone.title || milestone.key,
+          }),
+          isCustom: false,
+        };
+      }
+      return {
+        selector: milestone.key,
+        milestoneKey: milestone.key,
+        labelKey: null,
+        label: milestone.title || milestone.key,
+        isCustom: true,
+      };
+    });
 }
 
 export function resolveStageFromQuery(stage, milestones = []) {
@@ -78,7 +98,12 @@ export function resolveStageFromQuery(stage, milestones = []) {
   const legacy = getTabBySelector(stage);
   if (legacy) return legacy.milestoneKey;
 
-  const byKey = milestones.find((m) => m.key === stage);
+  const needle = String(stage).toLowerCase();
+  const byKey = milestones.find(
+    (m) =>
+      m?.key === stage ||
+      (typeof m?.key === "string" && m.key.toLowerCase() === needle)
+  );
   if (byKey) return byKey.key;
 
   return stage;

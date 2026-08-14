@@ -1183,20 +1183,35 @@
 	"developA": "تطوير {{تطوير}}",
 	"developHeaderDescription": "قم بإنشاء وتحرير وإدارة دراساتك ومهامك واستطلاعاتك هنا.",
 	"developNew": "تطوير جديد",
+	"developNewMenu": {
+		"block": "",
+		"study": "",
+		"survey": "",
+		"task": "",
+		"visual": ""
+	},
 	"developProjects": {
 		"activeProjects": "المشاريع النشطة",
 		"allProjects": "جميع المشاريع",
 		"archivedProjects": "المشاريع المؤرشفة",
 		"classFilterPlaceholder": "حدد الطبقات",
+		"empty": "",
 		"filterByClass": "تصفية حسب الفئة",
 		"filterByStatus": "تصفية حسب الحالة",
 		"unnamedClass": "فصل"
 	},
+	"developSections": "",
 	"developStudies": {
 		"classFilterPlaceholder": "حدد الطبقات",
+		"empty": "",
 		"filterByClass": "تصفية حسب الفئة",
 		"filterByStatus": "تصفية حسب الحالة",
 		"unnamedClass": "فصل"
+	},
+	"developTasks": {
+		"emptyBlock": "",
+		"emptySurvey": "",
+		"emptyTask": ""
 	},
 	"duplicateEditBlock": "قم بتكرار وتحرير كتلة MindHive الموجودة مسبقًا ومعلماتها.",
 	"duplicateEditSurvey": "قم بتكرار وتحرير استطلاع MindHive الموجود مسبقًا ومعامِلاته.",
@@ -1360,6 +1375,7 @@
 	"myStudies": "دراستي",
 	"mySurveys": "استطلاعاتي",
 	"myTasks": "مهامي",
+	"myVisuals": "",
 	"navigation": {
 		"back": "خلف",
 		"cloneSavePrompt": "غيّر اسم الدراسة وانقر على زر الحفظ",
@@ -2279,6 +2295,7 @@
 		"deactivate": "إلغاء التنشيط",
 		"description": "أضف خطوات مراجعة مخصصة إلى نموذج الفصل الدراسي هذا. كل خطوة تُنشئ بطاقة عمل يستخدمها الطلاب لتقديم أعمالهم للحصول على ملاحظات.",
 		"hasActionCard": "بطاقة الإجراء المرتبطة",
+		"platformDefault": "",
 		"stepDescription": "وصف",
 		"stepTitle": "عنوان الخطوة",
 		"title": "خطوات المراجعة"
@@ -2414,5 +2431,6 @@
 		"visualAnalogueScale": "مقياس تناظري بصري"
 	},
 	"visualize": "تصور",
+	"visualsComingSoon": "",
 	"whatWouldYouLikeToDevelop": "ماذا تريد أن تطور؟"
 }

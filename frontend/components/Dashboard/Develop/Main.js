@@ -47,6 +47,7 @@ export default function DevelopMain({ query, user }) {
   );
 
   const developNewItems = [
+    { key: "study", label: t("developNewMenu.project", {}, { default: "Project" }) },
     { key: "study", label: t("developNewMenu.study", {}, { default: "Study" }) },
     { key: "task", label: t("developNewMenu.task", {}, { default: "Task" }) },
     {

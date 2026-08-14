@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@apollo/client";
 import { RESOLVE_MILESTONES_FOR_BOARD } from "../components/Queries/Milestone";
 import { resolveMilestonesFromQuery } from "./milestones";
@@ -12,7 +13,10 @@ export function useBoardMilestones(boardId, options = {}) {
     }
   );
 
-  const milestones = resolveMilestonesFromQuery(data);
+  const milestones = useMemo(
+    () => resolveMilestonesFromQuery(data),
+    [data]
+  );
 
   return { milestones, loading, error, refetch };
 }

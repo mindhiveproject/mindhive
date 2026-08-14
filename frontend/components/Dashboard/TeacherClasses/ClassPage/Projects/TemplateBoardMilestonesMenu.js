@@ -13,6 +13,7 @@ import ActionCardTypeBadge from "../utils/ActionCardTypeBadge";
 import {
   getActionCardsFromBoard,
   getActionCardLabel,
+  getMilestonesForTemplateBoard,
   resolveActionCardMilestone,
 } from "../../../../../lib/templateBoardActionCards";
 
@@ -43,18 +44,20 @@ export default function TemplateBoardMilestonesMenu({ board, classCode, classId 
   const { t } = useTranslation("classes");
   const { t: tBuilder } = useTranslation("builder");
   const router = useRouter();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
   const [previewTarget, setPreviewTarget] = useState(null);
   const [deletingCardId, setDeletingCardId] = useState(null);
 
   const actionCards = useMemo(() => getActionCardsFromBoard(board), [board]);
-  const count = actionCards.length;
 
-  const needsMilestones = menuOpen || manageOpen || !!previewTarget;
   const { milestones } = useBoardMilestones(board?.id, {
-    skip: !board?.id || !needsMilestones,
+    skip: !board?.id,
   });
+  const boardMilestones = useMemo(
+    () => getMilestonesForTemplateBoard(board, milestones),
+    [board, milestones]
+  );
+  const count = boardMilestones.length;
 
   const [deleteCard] = useMutation(DELETE_CARD, {
     refetchQueries: classId
@@ -115,21 +118,38 @@ export default function TemplateBoardMilestonesMenu({ board, classCode, classId 
         }),
       });
     } else {
-      actionCards.forEach(({ card }) => {
-        const actionLabel = getActionCardLabel(card, tBuilder);
+      boardMilestones.forEach((milestone) => {
+        const card = actionCards.find(({ card: actionCard }) => {
+          const resolved = resolveActionCardMilestone(actionCard, milestones);
+          if (!resolved) return false;
+          if (milestone.id && resolved.id === milestone.id) return true;
+          return (
+            milestone.key &&
+            resolved.key &&
+            String(resolved.key).toLowerCase() ===
+              String(milestone.key).toLowerCase()
+          );
+        })?.card;
+        const actionLabel = card
+          ? getActionCardLabel(card, tBuilder)
+          : milestone.title || milestone.key;
         items.push({
-          key: `milestone-${card.id}`,
+          key: `milestone-${milestone.id || milestone.key}`,
           label: (
             <>
               {actionLabel}
-              {" · "}
-              <ActionCardTypeBadge card={card} />
+              {card ? (
+                <>
+                  {" · "}
+                  <ActionCardTypeBadge card={card} />
+                </>
+              ) : null}
             </>
           ),
           onClick: () => {
             openPreview({
               card,
-              milestone: resolveActionCardMilestone(card, milestones),
+              milestone,
               actionLabel,
             });
           },
@@ -175,7 +195,6 @@ export default function TemplateBoardMilestonesMenu({ board, classCode, classId 
           padding: "6px 10px",
           minWidth: "auto",
         }}
-        onOpenChange={setMenuOpen}
         trigger={
           <span
             style={{

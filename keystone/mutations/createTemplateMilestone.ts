@@ -154,7 +154,7 @@ async function copyFormCardsAndFields(
   }
 }
 
-async function provisionFormDefinitionForMilestone(
+export async function provisionFormDefinitionForMilestone(
   context: any,
   sudo: any,
   {

@@ -2,6 +2,16 @@ import styled from "styled-components";
 
 const StyledClass = styled.div`
   display: grid;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+
+  > * {
+    min-width: 0;
+    max-width: 100%;
+  }
 
   .teacherClassesHeader {
     display: flex;
@@ -2911,6 +2921,12 @@ const StyledClass = styled.div`
     }
   }
   .dashboard {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+    box-sizing: border-box;
+
     .ag-cell-button {
       color: black;
       width: 100%;

@@ -189,7 +189,7 @@ export function buildSubmitStatuses(board, milestones = []) {
  * client-side (milestoneStatus JSON first, legacy columns as fallback).
  */
 export function getProjectsQueryFilterForTab(selector) {
-  const tab = getTabBySelector(selector) || getTabBySelector("proposals");
+  const tab = getTabBySelector(selector);
   const milestoneKey = tab?.milestoneKey || selector || "SUBMITTED_AS_PROPOSAL";
   const legacy = LEGACY_STATUS_FIELDS[milestoneKey];
 
