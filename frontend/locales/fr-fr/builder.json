@@ -1183,20 +1183,35 @@
 	"developA": "Développer un {{développer}}",
 	"developHeaderDescription": "Créez, modifiez et gérez vos études, tâches et enquêtes ici.",
 	"developNew": "Développer quelque chose de nouveau",
+	"developNewMenu": {
+		"block": "",
+		"study": "",
+		"survey": "",
+		"task": "",
+		"visual": ""
+	},
 	"developProjects": {
 		"activeProjects": "Projets actifs",
 		"allProjects": "Tous les projets",
 		"archivedProjects": "Projets archivés",
 		"classFilterPlaceholder": "Sélectionnez les cours",
+		"empty": "",
 		"filterByClass": "Filtrer par classe",
 		"filterByStatus": "Filtrer par statut",
 		"unnamedClass": "Classe"
 	},
+	"developSections": "",
 	"developStudies": {
 		"classFilterPlaceholder": "Sélectionnez les cours",
+		"empty": "",
 		"filterByClass": "Filtrer par classe",
 		"filterByStatus": "Filtrer par statut",
 		"unnamedClass": "Classe"
+	},
+	"developTasks": {
+		"emptyBlock": "",
+		"emptySurvey": "",
+		"emptyTask": ""
 	},
 	"duplicateEditBlock": "Dupliquez et modifiez un bloc MindHive préexistant et ses paramètres.",
 	"duplicateEditSurvey": "Dupliquez et modifiez une enquête MindHive préexistante et ses paramètres.",
@@ -1360,6 +1375,7 @@
 	"myStudies": "Mes études",
 	"mySurveys": "Mes enquêtes",
 	"myTasks": "Mes tâches",
+	"myVisuals": "",
 	"navigation": {
 		"back": "dos",
 		"cloneSavePrompt": "Modifiez le nom de l'étude et cliquez sur le bouton Enregistrer",
@@ -2279,6 +2295,7 @@
 		"deactivate": "Désactiver",
 		"description": "Ajoutez des étapes de révision personnalisées à ce modèle de cours. Chaque étape crée une fiche d'action que les élèves utilisent pour soumettre leur travail et obtenir des commentaires.",
 		"hasActionCard": "carte d'action liée",
+		"platformDefault": "",
 		"stepDescription": "Description",
 		"stepTitle": "Titre de l'étape",
 		"title": "Étapes de révision"
@@ -2414,5 +2431,6 @@
 		"visualAnalogueScale": "Échelle visuelle analogique"
 	},
 	"visualize": "Visualiser",
+	"visualsComingSoon": "",
 	"whatWouldYouLikeToDevelop": "Que souhaiteriez-vous développer ?"
 }

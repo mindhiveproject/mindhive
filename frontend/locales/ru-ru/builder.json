@@ -1183,20 +1183,35 @@
 	"developA": "Разработать {{develop}}",
 	"developHeaderDescription": "Создавайте, редактируйте и управляйте своими исследованиями, задачами и опросами здесь.",
 	"developNew": "Разрабатывать новые",
+	"developNewMenu": {
+		"block": "",
+		"study": "",
+		"survey": "",
+		"task": "",
+		"visual": ""
+	},
 	"developProjects": {
 		"activeProjects": "Активные проекты",
 		"allProjects": "Все проекты",
 		"archivedProjects": "Архивные проекты",
 		"classFilterPlaceholder": "Выберите классы",
+		"empty": "",
 		"filterByClass": "Фильтр по классу",
 		"filterByStatus": "Фильтрация по статусу",
 		"unnamedClass": "Сорт"
 	},
+	"developSections": "",
 	"developStudies": {
 		"classFilterPlaceholder": "Выберите классы",
+		"empty": "",
 		"filterByClass": "Фильтр по классу",
 		"filterByStatus": "Фильтрация по статусу",
 		"unnamedClass": "Сорт"
+	},
+	"developTasks": {
+		"emptyBlock": "",
+		"emptySurvey": "",
+		"emptyTask": ""
 	},
 	"duplicateEditBlock": "Дублируйте и редактируйте существующий блок MindHive и его параметры.",
 	"duplicateEditSurvey": "Дублируйте и редактируйте существующий опрос MindHive и его параметры.",
@@ -1360,6 +1375,7 @@
 	"myStudies": "Моя учеба",
 	"mySurveys": "Мои опросы",
 	"myTasks": "Мои задачи",
+	"myVisuals": "",
 	"navigation": {
 		"back": "назад",
 		"cloneSavePrompt": "Измените название исследования и нажмите кнопку «Сохранить».",
@@ -2279,6 +2295,7 @@
 		"deactivate": "Деактивировать",
 		"description": "Добавьте в этот шаблон класса пользовательские этапы проверки. На каждом этапе создается карточка действия, которую учащиеся используют для отправки работы на проверку.",
 		"hasActionCard": "карточка действия связана",
+		"platformDefault": "",
 		"stepDescription": "Описание",
 		"stepTitle": "Название шага",
 		"title": "Этапы проверки"
@@ -2414,5 +2431,6 @@
 		"visualAnalogueScale": "Визуальная аналоговая шкала"
 	},
 	"visualize": "Визуализируйте",
+	"visualsComingSoon": "",
 	"whatWouldYouLikeToDevelop": "Что бы вы хотели развить?"
 }

@@ -1183,20 +1183,35 @@
 	"developA": "एक {{विकसित}} विकसित करें",
 	"developHeaderDescription": "यहां अपने अध्ययन, कार्य और सर्वेक्षण बनाएं, संपादित करें और प्रबंधित करें।",
 	"developNew": "नया विकास करें",
+	"developNewMenu": {
+		"block": "",
+		"study": "",
+		"survey": "",
+		"task": "",
+		"visual": ""
+	},
 	"developProjects": {
 		"activeProjects": "",
 		"allProjects": "",
 		"archivedProjects": "",
 		"classFilterPlaceholder": "",
+		"empty": "",
 		"filterByClass": "",
 		"filterByStatus": "",
 		"unnamedClass": ""
 	},
+	"developSections": "",
 	"developStudies": {
 		"classFilterPlaceholder": "",
+		"empty": "",
 		"filterByClass": "",
 		"filterByStatus": "",
 		"unnamedClass": ""
+	},
+	"developTasks": {
+		"emptyBlock": "",
+		"emptySurvey": "",
+		"emptyTask": ""
 	},
 	"duplicateEditBlock": "पहले से मौजूद माइंडहाइव ब्लॉक और उसके पैरामीटर्स की प्रतिलिपि बनाएँ और उन्हें संपादित करें।",
 	"duplicateEditSurvey": "पहले से मौजूद माइंडहाइव सर्वेक्षण और उसके मापदंडों की प्रतिलिपि बनाना और उन्हें संपादित करना।",
@@ -1360,6 +1375,7 @@
 	"myStudies": "मेरी पढ़ाई",
 	"mySurveys": "मेरे सर्वेक्षण",
 	"myTasks": "मेरे कार्य",
+	"myVisuals": "",
 	"navigation": {
 		"back": "पीछे",
 		"cloneSavePrompt": "",
@@ -2279,6 +2295,7 @@
 		"deactivate": "",
 		"description": "",
 		"hasActionCard": "",
+		"platformDefault": "",
 		"stepDescription": "",
 		"stepTitle": "",
 		"title": ""
@@ -2414,5 +2431,6 @@
 		"visualAnalogueScale": "दृश्य एनालॉग का पैमाना"
 	},
 	"visualize": "कल्पना",
+	"visualsComingSoon": "",
 	"whatWouldYouLikeToDevelop": "आप क्या विकसित करना चाहेंगे?"
 }

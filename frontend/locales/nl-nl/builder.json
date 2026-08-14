@@ -1183,20 +1183,35 @@
 	"developA": "Ontwikkel een {{develop}}",
 	"developHeaderDescription": "Hier kunt u uw onderzoeken, taken en enquêtes maken, bewerken en beheren.",
 	"developNew": "Ontwikkel nieuwe",
+	"developNewMenu": {
+		"block": "",
+		"study": "",
+		"survey": "",
+		"task": "",
+		"visual": ""
+	},
 	"developProjects": {
 		"activeProjects": "Actieve projecten",
 		"allProjects": "Alle projecten",
 		"archivedProjects": "Gearchiveerde projecten",
 		"classFilterPlaceholder": "Selecteer klassen",
+		"empty": "",
 		"filterByClass": "Filteren op klasse",
 		"filterByStatus": "Filter op status",
 		"unnamedClass": "Klas"
 	},
+	"developSections": "",
 	"developStudies": {
 		"classFilterPlaceholder": "Selecteer klassen",
+		"empty": "",
 		"filterByClass": "Filteren op klasse",
 		"filterByStatus": "Filter op status",
 		"unnamedClass": "Klas"
+	},
+	"developTasks": {
+		"emptyBlock": "",
+		"emptySurvey": "",
+		"emptyTask": ""
 	},
 	"duplicateEditBlock": "Dupliceer en bewerk een bestaand MindHive-blok en de bijbehorende parameters.",
 	"duplicateEditSurvey": "Dupliceer en bewerk een bestaande MindHive-enquête en de bijbehorende parameters.",
@@ -1360,6 +1375,7 @@
 	"myStudies": "Mijn studies",
 	"mySurveys": "Mijn enquêtes",
 	"myTasks": "Mijn taken",
+	"myVisuals": "",
 	"navigation": {
 		"back": "rug",
 		"cloneSavePrompt": "Wijzig de naam van de studie en klik op de knop 'Opslaan'.",
@@ -2279,6 +2295,7 @@
 		"deactivate": "Deactiveren",
 		"description": "Voeg aangepaste beoordelingsstappen toe aan deze lessjabloon. Elke stap creëert een actiekaart die leerlingen gebruiken om werk in te dienen voor feedback.",
 		"hasActionCard": "gekoppelde actiekaart",
+		"platformDefault": "",
 		"stepDescription": "Beschrijving",
 		"stepTitle": "Staptitel",
 		"title": "Beoordelingsstappen"
@@ -2414,5 +2431,6 @@
 		"visualAnalogueScale": "Visuele analoge schaal"
 	},
 	"visualize": "Visualiseren",
+	"visualsComingSoon": "",
 	"whatWouldYouLikeToDevelop": "Wat wil je ontwikkelen?"
 }
