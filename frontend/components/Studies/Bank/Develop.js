@@ -7,6 +7,7 @@ import { GET_USER_STUDIES, GET_USER_CLASSES } from "../../Queries/User";
 
 import StudyCard from "./StudyCard";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import MessageCard from "../../DesignSystem/MessageCard";
 
 function containsAny(arr1, arr2) {
   if (!arr1?.length || !arr2?.length) return false;
@@ -166,19 +167,31 @@ export default function DevelopStudyBank({ user }) {
           )}
         </div>
       </div>
-      <div className="cardBoard">
-        {sortedStudies.map((study) => (
-          <StudyCard
-            key={study?.id}
-            user={user}
-            study={study}
-            url="/builder/studies/"
-            id="id"
-            name="selector"
-            studiesInfo={studiesInfo}
-          />
-        ))}
-      </div>
+      {sortedStudies.length === 0 ? (
+        <MessageCard
+          variant="neutral"
+          message={t(
+            "developStudies.empty",
+            {},
+            { default: "No studies to show." }
+          )}
+          style={{ marginTop: "24px" }}
+        />
+      ) : (
+        <div className="cardBoard">
+          {sortedStudies.map((study) => (
+            <StudyCard
+              key={study?.id}
+              user={user}
+              study={study}
+              url="/builder/studies/"
+              id="id"
+              name="selector"
+              studiesInfo={studiesInfo}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }
