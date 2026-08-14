@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
 
 import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 import { GET_MILESTONES } from "../../../Queries/Milestone";
-import {
-  buildFeedbackCenterTabs,
-  resolveStageFromQuery,
-} from "../../../../lib/feedbackCenterTabs";
+import { resolveStageFromQuery } from "../../../../lib/feedbackCenterTabs";
 import {
   canUserReviewMilestone,
+  getFeedbackCenterMilestones,
   getMilestoneByKey,
 } from "../../../../lib/milestones";
+import { getMilestonesForTemplateBoard } from "../../../../lib/templateBoardActionCards";
 import { useBoardMilestones } from "../../../../lib/useBoardMilestones";
 import { isOpenForComments } from "../../../../lib/milestoneStatus";
 
@@ -19,7 +18,7 @@ import UserReview from "./UserReview";
 // getting the state of the study to review
 export default function ReviewBoard({ query, user, reviewType }) {
   const { id } = query;
-  const stage = query?.stage || "proposals";
+  const stage = query?.stage;
 
   const [tab, setTab] = useState(query?.tab || "proposal");
 
@@ -32,7 +31,7 @@ export default function ReviewBoard({ query, user, reviewType }) {
     }
   }, [query]);
 
-  const { data, loading, error } = useQuery(PROPOSAL_REVIEWS_QUERY, {
+  const { data } = useQuery(PROPOSAL_REVIEWS_QUERY, {
     variables: {
       id: id,
     },
@@ -41,17 +40,35 @@ export default function ReviewBoard({ query, user, reviewType }) {
   const { milestones: boardMilestones } = useBoardMilestones(id);
   const { data: globalMilestonesData } = useQuery(GET_MILESTONES);
   const globalMilestones = globalMilestonesData?.milestones || [];
-  const milestones = boardMilestones.length ? boardMilestones : globalMilestones;
+  const resolvedMilestones = boardMilestones.length
+    ? boardMilestones
+    : globalMilestones;
 
   const project = data?.proposalBoard || { sections: [] };
   const permissions = user?.permissions?.map((p) => p?.name) || [];
 
-  const status = resolveStageFromQuery(stage, milestones);
-  const milestone = getMilestoneByKey(status, milestones);
+  const reviewSteps = useMemo(() => {
+    const templateBoard = project?.clonedFrom || project;
+    return getFeedbackCenterMilestones(
+      getMilestonesForTemplateBoard(templateBoard, resolvedMilestones)
+    );
+  }, [project, resolvedMilestones]);
+
+  const status = stage
+    ? resolveStageFromQuery(stage, reviewSteps)
+    : reviewSteps[0]?.key || resolveStageFromQuery("proposals", reviewSteps);
+  const milestone = getMilestoneByKey(
+    status,
+    reviewSteps.length ? reviewSteps : resolvedMilestones
+  );
   const actionCardType =
     milestone?.actionCardType ||
     (milestone?.scope === "template" ? "ACTION" : "ACTION_SUBMIT");
-  const commentsOpen = isOpenForComments(project, milestone, milestones);
+  const commentsOpen = isOpenForComments(
+    project,
+    milestone,
+    reviewSteps.length ? reviewSteps : resolvedMilestones
+  );
 
   const canReview = canUserReviewMilestone(
     permissions,
