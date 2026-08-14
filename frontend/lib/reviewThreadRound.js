@@ -143,3 +143,44 @@ export function hasUnreadSponsorReply({
     getUnreadSponsorReplyNotes({ notes, roundId, viewerId }).length > 0
   );
 }
+
+function isReviewerCommentNote(note, viewerId) {
+  if (!note) return false;
+  if (note.kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) return false;
+  if (note.author?.id && note.author.id === viewerId) return false;
+  // reviewer_comment, or legacy notes without kind
+  return !note.kind || note.kind === REVIEW_NOTE_KIND.REVIEWER_COMMENT;
+}
+
+/**
+ * Teacher / reviewer comments the viewer has not marked as read.
+ * Omit `roundId` to count across all rounds (opportunity-level list).
+ * @param {{ notes?: Array, roundId?: string|null, viewerId?: string|null }} args
+ */
+export function getUnreadReviewerCommentNotes({
+  notes = [],
+  roundId = null,
+  viewerId = null,
+} = {}) {
+  if (!viewerId) return [];
+  const scoped = roundId
+    ? filterNotesByRound(notes, roundId)
+    : Array.isArray(notes)
+      ? notes
+      : [];
+  return scoped.filter((note) => {
+    if (!isReviewerCommentNote(note, viewerId)) return false;
+    const readers = note?.readBy || [];
+    return !readers.some((reader) => reader?.id === viewerId);
+  });
+}
+
+export function hasUnreadReviewerComment({
+  notes = [],
+  roundId = null,
+  viewerId = null,
+} = {}) {
+  return (
+    getUnreadReviewerCommentNotes({ notes, roundId, viewerId }).length > 0
+  );
+}

@@ -16,6 +16,8 @@ import {
   REVIEW_NOTE_KIND,
   filterNotesByRound,
   getCollapsedReviewNotes,
+  getUnreadReviewerCommentNotes,
+  getUnreadSponsorReplyNotes,
   sortReviewNotesAscending,
 } from "../../../lib/reviewThreadRound";
 
@@ -655,6 +657,40 @@ export default function OpportunityReviewNotesThread({
     return threadNotes;
   }, [notes, roundId, threadNotes]);
 
+  const unreadOtherPartyNotes = useMemo(() => {
+    if (!viewerId || !roundId) return [];
+    if (mode === "sponsor") {
+      return getUnreadReviewerCommentNotes({
+        notes: displayNotes,
+        roundId,
+        viewerId,
+      });
+    }
+    return getUnreadSponsorReplyNotes({
+      notes: displayNotes,
+      roundId,
+      viewerId,
+    });
+  }, [mode, displayNotes, roundId, viewerId]);
+
+  // Expand when unread other-party notes would be hidden behind "Load previous".
+  useEffect(() => {
+    if (previousExpanded) return;
+    const collapsed = getCollapsedReviewNotes(displayNotes, {
+      expanded: false,
+    });
+    if (!collapsed.canLoadPrevious) return;
+    const visibleIds = new Set(
+      collapsed.visibleNotes.map((note) => note?.id).filter(Boolean),
+    );
+    const hasHiddenUnread = unreadOtherPartyNotes.some(
+      (note) => note?.id && !visibleIds.has(note.id),
+    );
+    if (hasHiddenUnread) {
+      setPreviousExpanded(true);
+    }
+  }, [displayNotes, previousExpanded, unreadOtherPartyNotes]);
+
   const { visibleNotes, canLoadPrevious } = useMemo(
     () =>
       getCollapsedReviewNotes(displayNotes, {
@@ -866,7 +902,7 @@ export default function OpportunityReviewNotesThread({
                 <label htmlFor={composeFieldId}>{composeLabel}</label>
               ) : null} */}
               <textarea
-                id={isPanel ? composeFieldId : undefined}
+                id={composeFieldId}
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder={composePlaceholder}

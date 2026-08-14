@@ -1,14 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import Button from "../../../DesignSystem/Button";
 import Modal from "../../../DesignSystem/Modal";
-import { GET_OPPORTUNITY } from "../../../Queries/Opportunity";
+import {
+  GET_OPPORTUNITY,
+  MY_OPPORTUNITIES,
+} from "../../../Queries/Opportunity";
+import { MARK_OPPORTUNITY_REVIEW_NOTES_READ } from "../../../Mutations/OpportunityReviewNote";
 import OpportunityReviewNotesThread from "../../Connect/OpportunityReviewNotesThread";
 import {
   REVIEW_NOTE_KIND,
+  getUnreadReviewerCommentNotes,
   resolveActiveReviewRound,
 } from "../../../../lib/reviewThreadRound";
 
@@ -36,6 +41,8 @@ export default function OpportunityChatModal({
 }) {
   const { t } = useTranslation("connect");
   const [roundId, setRoundId] = useState(initialRoundId);
+  const markedReadNoteIdsRef = useRef(new Set());
+  const viewerId = user?.id || null;
 
   useEffect(() => {
     if (open) {
@@ -77,9 +84,61 @@ export default function OpportunityChatModal({
   const activeRoundId = roundResolution.roundId;
   const needsRoundSelection = roundResolution.needsSelection;
   const isMentorOfOpportunity = !!(
-    user?.id &&
-    opportunity?.mentor?.id === user.id
+    viewerId && opportunity?.mentor?.id === viewerId
   );
+
+  const unreadReviewerComments = useMemo(
+    () =>
+      getUnreadReviewerCommentNotes({
+        notes: reviewNotes,
+        roundId: activeRoundId,
+        viewerId,
+      }),
+    [reviewNotes, activeRoundId, viewerId],
+  );
+
+  const markReadRefetchQueries = useMemo(
+    () => [
+      { query: GET_OPPORTUNITY, variables: { id: opportunityId } },
+      { query: MY_OPPORTUNITIES },
+    ],
+    [opportunityId],
+  );
+
+  const [markNotesRead] = useMutation(MARK_OPPORTUNITY_REVIEW_NOTES_READ);
+
+  // Mark teacher comments read when the sponsor opens Messages.
+  useEffect(() => {
+    if (!open) {
+      markedReadNoteIdsRef.current = new Set();
+      return;
+    }
+    if (!opportunityId || !activeRoundId || !viewerId) return;
+
+    const noteIds = unreadReviewerComments
+      .map((note) => note.id)
+      .filter((id) => id && !markedReadNoteIdsRef.current.has(id));
+    if (noteIds.length === 0) return;
+
+    noteIds.forEach((id) => markedReadNoteIdsRef.current.add(id));
+
+    markNotesRead({
+      variables: { noteIds },
+      refetchQueries: markReadRefetchQueries,
+      awaitRefetchQueries: true,
+    }).catch((err) => {
+      noteIds.forEach((id) => markedReadNoteIdsRef.current.delete(id));
+      console.error("Failed to mark review notes as read", err);
+    });
+  }, [
+    open,
+    opportunityId,
+    activeRoundId,
+    viewerId,
+    unreadReviewerComments,
+    markNotesRead,
+    markReadRefetchQueries,
+  ]);
 
   const title = opportunity?.title
     ? t(
@@ -138,7 +197,7 @@ export default function OpportunityChatModal({
             roundId={activeRoundId}
             notes={reviewNotes}
             rounds={opportunityRounds}
-            viewerId={user?.id}
+            viewerId={viewerId}
             canCreate={isMentorOfOpportunity}
             canDeleteAsAdmin={false}
             messageKind={REVIEW_NOTE_KIND.SPONSOR_REPLY}
@@ -147,9 +206,7 @@ export default function OpportunityChatModal({
             onSelectRound={
               opportunityRounds.length > 1 ? setRoundId : undefined
             }
-            refetchQueries={[
-              { query: GET_OPPORTUNITY, variables: { id: opportunityId } },
-            ]}
+            refetchQueries={markReadRefetchQueries}
             titleAs="h3"
           />
         </ThreadWrap>

@@ -1034,7 +1034,7 @@
 				"introVideoPromptPlaceholder": "e.g. Upload a short intro video for students",
 				"loading": "Loading form…",
 				"longAnswer": "Long answer",
-				"nameLabel": "What’s this form for?",
+				"nameLabel": "Title of Form",
 				"namePlaceholder": "e.g. Sponsor visit follow-up",
 				"next": "Next",
 				"pickType": "Choose a question type",

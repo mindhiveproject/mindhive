@@ -408,7 +408,7 @@ export default function TeacherFormWizard({
                       {
                         default: isReview
                           ? "Form title"
-                          : "What’s this form for?",
+                          : "Title of Form",
                       },
                     )}
                     <span className="required">*</span>

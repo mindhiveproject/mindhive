@@ -56,10 +56,17 @@ export const MY_OPPORTUNITIES = gql`
               status
             }
           }
-          reviewNotes {
+          reviewNotes(orderBy: { createdAt: asc }) {
             id
             kind
+            createdAt
+            author {
+              id
+            }
             round {
+              id
+            }
+            readBy {
               id
             }
           }
