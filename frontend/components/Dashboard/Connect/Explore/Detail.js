@@ -815,16 +815,11 @@ export default function ExploreDetail({ opportunityId }) {
             </div>
           </MentorPanel>
           {opp.organization.mission && (
-            <div
-              style={{
-                color: "#5f6871",
-                fontSize: 14,
-                lineHeight: 1.5,
-                whiteSpace: "pre-wrap",
+            <ReadOnlyTipTap
+              dangerouslySetInnerHTML={{
+                __html: opp.organization.mission,
               }}
-            >
-              {opp.organization.mission}
-            </div>
+            />
           )}
         </Card>
       )}
