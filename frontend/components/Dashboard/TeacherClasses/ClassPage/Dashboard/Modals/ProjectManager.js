@@ -1,9 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Modal, Icon, Dropdown, Button, Message } from "semantic-ui-react";
-import { useState } from "react";
+import { Modal, Dropdown, Button, Message } from "semantic-ui-react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
+
+import DesignSystemButton from "../../../../../DesignSystem/Button";
+import DashboardAssetIcon from "../DashboardAssetIcon";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import { CLASS_PROJECTS_QUERY } from "../../../../../Queries/Proposal";
@@ -16,12 +19,26 @@ import StyledClass from "../../../../../styles/StyledClass";
 
 export default function ProjectManager(props) {
   const { t } = useTranslation("classes");
-  const [isOpen, setIsOpen] = useState(false);
+  const isControlled = typeof props.open === "boolean";
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = isControlled ? props.open : internalOpen;
   const [projectId, setProjectId] = useState(null);
   const [projectName, setProjectName] = useState("");
   const [localProjects, setLocalProjects] = useState(
     props?.data?.projects || []
   );
+
+  const closeModal = () => {
+    if (isControlled) {
+      props.onClose?.();
+    } else {
+      setInternalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    setLocalProjects(props?.data?.projects || []);
+  }, [props?.data?.id, props?.data?.projects]);
 
   const hasProjects = localProjects.length > 0;
 
@@ -169,7 +186,7 @@ export default function ProjectManager(props) {
       },
     });
     setProjectName("");
-    setIsOpen(false);
+    closeModal();
   };
 
   const toggleProjectAsMain = async ({ projectId, isMain }) => {
@@ -206,14 +223,22 @@ export default function ProjectManager(props) {
 
   return (
     <Modal
-      onClose={() => setIsOpen(false)}
-      onOpen={() => setIsOpen(true)}
+      onClose={closeModal}
+      onOpen={() => {
+        if (!isControlled) setInternalOpen(true);
+      }}
       open={isOpen}
       trigger={
-        <StyledTriggerButton>
-          <Icon name="book" />
-          {t("dashboard.manageProjects", { count: localProjects.length })}
-        </StyledTriggerButton>
+        isControlled ? undefined : (
+          <DesignSystemButton
+            variant="outline"
+            leadingIcon={<DashboardAssetIcon src="/assets/icons/project.svg" />}
+          >
+            {t("dashboard.manageProjects", { count: localProjects.length }, {
+              default: "Manage Projects ({{count}})",
+            })}
+          </DesignSystemButton>
+        )
       }
       dimmer="blurring"
       size="large"
@@ -360,7 +385,7 @@ export default function ProjectManager(props) {
             </div>
           </StyledClass>
           <div className="footer">
-            <button className="cancel-button" onClick={() => setIsOpen(false)}>
+            <button className="cancel-button" onClick={closeModal}>
               {t("dashboard.cancel")}
             </button>
             <button
@@ -383,30 +408,6 @@ export default function ProjectManager(props) {
     </Modal>
   );
 }
-
-const StyledTriggerButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #3d85b0;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-family: Nunito, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #326d94;
-  }
-
-  .icon {
-    margin: 0 !important;
-  }
-`;
 
 const StyledModal = styled.div`
   font-family: Nunito, sans-serif !important;

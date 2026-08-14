@@ -245,7 +245,10 @@ const Board = ({
         </Message>
       )}
       {showTemplateMilestoneManager && (
-        <TemplateMilestoneManager templateBoardId={proposal.id} />
+        <TemplateMilestoneManager
+          templateBoardId={proposal.id}
+          board={proposal}
+        />
       )}
       <Inner
         board={proposal}

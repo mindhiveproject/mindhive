@@ -41,6 +41,81 @@ export function resolveActionCardMilestone(card, milestones = []) {
   return null;
 }
 
+function milestoneDedupeKey(milestone) {
+  if (milestone?.id) return `id:${milestone.id}`;
+  if (milestone?.key) return `key:${String(milestone.key).toLowerCase()}`;
+  return null;
+}
+
+/**
+ * Teacher-facing steps defined for a class template board: action cards on
+ * that board, resolved to Milestone (global FK or template-owned row).
+ * `scope` is ownership, not visibility — inherited platform defaults and
+ * teacher-authored customs both appear, in section/card position order.
+ */
+export function getMilestonesForTemplateBoard(board, resolvedMilestones = []) {
+  const seen = new Set();
+  const result = [];
+
+  for (const { card } of getActionCardsFromBoard(board)) {
+    const resolved = resolveActionCardMilestone(card, resolvedMilestones);
+    if (!resolved) continue;
+
+    const merged = {
+      ...(card?.milestone && typeof card.milestone === "object"
+        ? card.milestone
+        : {}),
+      ...resolved,
+    };
+
+    if (merged.isActive === false) continue;
+
+    const dedupeKey = milestoneDedupeKey(merged);
+    if (dedupeKey && seen.has(dedupeKey)) continue;
+    if (merged.id && merged.key) {
+      const keyAlias = `key:${String(merged.key).toLowerCase()}`;
+      if (seen.has(keyAlias)) continue;
+      seen.add(`id:${merged.id}`);
+      seen.add(keyAlias);
+    } else if (dedupeKey) {
+      seen.add(dedupeKey);
+    }
+
+    result.push(merged);
+  }
+
+  return result;
+}
+
+export function unionMilestonesFromTemplateBoards(
+  boards = [],
+  resolvedMilestones = []
+) {
+  const seen = new Set();
+  const result = [];
+
+  for (const board of boards) {
+    for (const milestone of getMilestonesForTemplateBoard(
+      board,
+      resolvedMilestones
+    )) {
+      const dedupeKey = milestoneDedupeKey(milestone);
+      if (!dedupeKey || seen.has(dedupeKey)) continue;
+      if (milestone.id && milestone.key) {
+        const keyAlias = `key:${String(milestone.key).toLowerCase()}`;
+        if (seen.has(keyAlias)) continue;
+        seen.add(`id:${milestone.id}`);
+        seen.add(keyAlias);
+      } else {
+        seen.add(dedupeKey);
+      }
+      result.push(milestone);
+    }
+  }
+
+  return result;
+}
+
 export function isDefaultActionCard(card) {
   return isDefaultActionCardType(card?.type);
 }

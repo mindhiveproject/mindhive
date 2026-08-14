@@ -187,6 +187,7 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
             settings
           }
         }
+        milestoneStatus
         submitProposalStatus
         submitProposalOpenForComments
         peerFeedbackStatus
@@ -220,6 +221,9 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
         reviews {
           stage
           content
+          milestone {
+            key
+          }
         }
       }
     }

@@ -1,5 +1,72 @@
 import uniqid from "uniqid";
+import { provisionFormDefinitionForMilestone } from "./createTemplateMilestone";
 import { syncClassTemplateBoards } from "./utils/classTemplateBoards";
+
+const TEMPLATE_MILESTONES_QUERY =
+  "templateMilestones { id key title description scope actionCardType reviewStage statusTarget logEventName position showInFeedbackCenter isActive formDefinition { id } canReview { id } }";
+
+async function cloneTemplateMilestonesOntoBoard(
+  context: any,
+  sourceMilestones: any[] | null | undefined,
+  newBoardId: string
+): Promise<Map<string, string>> {
+  const milestoneIdMap = new Map<string, string>();
+  const owned = (sourceMilestones || []).filter(
+    (m) => m?.id && (!m.scope || m.scope === "template")
+  );
+  if (!owned.length) return milestoneIdMap;
+
+  const sudo = context.sudo();
+  for (const source of owned) {
+    const formDefinition = await provisionFormDefinitionForMilestone(
+      context,
+      sudo,
+      {
+        sourceFormDefinitionId: source.formDefinition?.id || null,
+        milestoneKey: source.key,
+        milestoneTitle: source.title || source.key,
+        proposalBoardId: newBoardId,
+      }
+    );
+
+    const permissionIds = (source.canReview || [])
+      .map((p: { id?: string }) => p?.id)
+      .filter(Boolean);
+
+    const created = await sudo.db.Milestone.createOne(
+      {
+        data: {
+          key: source.key,
+          title: source.title,
+          description: source.description || "",
+          scope: "template",
+          templateBoard: { connect: { id: newBoardId } },
+          ...(source.actionCardType
+            ? { actionCardType: source.actionCardType }
+            : {}),
+          reviewStage: source.reviewStage || source.key,
+          statusTarget: source.statusTarget || "board",
+          logEventName:
+            source.logEventName ||
+            `MILESTONE_SUBMITTED_${String(source.key || "").toUpperCase()}`,
+          position: source.position ?? 0,
+          showInFeedbackCenter: source.showInFeedbackCenter ?? true,
+          isActive: source.isActive !== false,
+          formDefinitionKeyPattern: formDefinition.key,
+          formDefinition: { connect: { id: formDefinition.id } },
+          clonedFrom: { connect: { id: source.id } },
+          canReview: permissionIds.length
+            ? { connect: permissionIds.map((id: string) => ({ id })) }
+            : undefined,
+        },
+      },
+      "id"
+    );
+    milestoneIdMap.set(source.id, String(created.id));
+  }
+
+  return milestoneIdMap;
+}
 
 async function copyProposalBoard(
   root: any,
@@ -55,7 +122,7 @@ async function copyProposalBoard(
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id publicId slug title description isTemplate settings resources { id } templateForClasses { id } templatesForClass { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } milestone { id } } }",
+      `id publicId slug title description isTemplate settings resources { id } templateForClasses { id } templatesForClass { id } ${TEMPLATE_MILESTONES_QUERY} sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } milestone { id } } }`,
   });
 
   let boardSettings = template.settings;
@@ -172,6 +239,19 @@ async function copyProposalBoard(
     await syncClassTemplateBoards(context, classIdTemplate);
   }
 
+  // Independent copies (class-template copy, or a generic teacher copy with
+  // no classIdUsed) get their own template-scope Milestone rows + forms.
+  // Student/working boards (classIdUsed without classIdTemplate) keep sharing
+  // the source template's milestone ids and resolve via clonedFrom.
+  const isIndependentCopy = !!classIdTemplate || !classIdUsed;
+  const milestoneIdMap = isIndependentCopy
+    ? await cloneTemplateMilestonesOntoBoard(
+        context,
+        template.templateMilestones,
+        board.id
+      )
+    : new Map<string, string>();
+
   // create new sections
   await Promise.all(
     template.sections.map(async (section: any, i: number) => {
@@ -190,11 +270,17 @@ async function copyProposalBoard(
         "id"
       );
       // create cards of this section
-      // Milestone FK rules: global milestones are reused by id; template-scoped
-      // milestones stay on the template board (student boards resolve via clonedFrom).
+      // Milestone FK rules:
+      // - Global milestones are always reused by id.
+      // - Independent copies remap template-scope ids to the clones created above.
+      // - Student boards keep the source template's milestone ids (resolve via clonedFrom).
       await Promise.all(
         templateSection.cards.map(async (card: any, i: number) => {
           const templateCard = section.cards[i];
+          const sourceMilestoneId = templateCard.milestone?.id;
+          const connectMilestoneId =
+            (sourceMilestoneId && milestoneIdMap.get(sourceMilestoneId)) ||
+            sourceMilestoneId;
           // Create the new card first (without assignments)
           const newCard = await context.db.ProposalCard.createOne(
             {
@@ -212,10 +298,10 @@ async function copyProposalBoard(
                 content: templateCard.content,
                 comment: templateCard.comment,
                 position: templateCard.position,
-                ...(templateCard.milestone?.id
+                ...(connectMilestoneId
                   ? {
                       milestone: {
-                        connect: { id: templateCard.milestone.id },
+                        connect: { id: connectMilestoneId },
                       },
                     }
                   : {}),

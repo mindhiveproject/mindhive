@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
@@ -21,6 +21,10 @@ import StyledClass from "../../../styles/StyledClass";
 
 import Dashboard from "./Dashboard/Main";
 import { normalizeCurriculumType } from "../../../../lib/curriculumTypes";
+import {
+  readClassPrefs,
+  writeClassPagePref,
+} from "./classPagePrefs";
 
 const NYU_CUSP_HIDDEN_TABS = new Set([
   "dashboard",
@@ -92,20 +96,49 @@ export default function ClassPage({ code, user, query }) {
   );
   const isNyuCusp = curriculumType === "nyu_cusp";
   const showOpportunitiesTab = isNyuCusp;
-  const defaultPage = isNyuCusp ? "opportunities" : "students";
-  const page = query?.page || defaultPage;
-  const filteredNavItems = CLASS_PAGE_NAV_ITEMS.filter((item) => {
-    if (item.value === "opportunities" && !showOpportunitiesTab) return false;
-    if (isNyuCusp && NYU_CUSP_HIDDEN_TABS.has(item.value)) return false;
-    return true;
-  });
-  const navItems =
-    isNyuCusp
-      ? [
-          ...filteredNavItems.filter((item) => item.value === "opportunities"),
-          ...filteredNavItems.filter((item) => item.value !== "opportunities"),
-        ]
-      : filteredNavItems;
+  const defaultPage = isNyuCusp ? "opportunities" : "dashboard";
+  const pageFromQuery = query?.page;
+  const page = pageFromQuery || defaultPage;
+  const navItems = useMemo(() => {
+    const filtered = CLASS_PAGE_NAV_ITEMS.filter((item) => {
+      if (item.value === "opportunities" && !showOpportunitiesTab) return false;
+      if (isNyuCusp && NYU_CUSP_HIDDEN_TABS.has(item.value)) return false;
+      return true;
+    });
+    if (!isNyuCusp) return filtered;
+    return [
+      ...filtered.filter((item) => item.value === "opportunities"),
+      ...filtered.filter((item) => item.value !== "opportunities"),
+    ];
+  }, [isNyuCusp, showOpportunitiesTab]);
+  const allowedPageValues = useMemo(
+    () => navItems.map((item) => item.value),
+    [navItems]
+  );
+
+  useEffect(() => {
+    if (!router.isReady || !myclass?.id) return;
+
+    if (!pageFromQuery) {
+      const savedPage = readClassPrefs(myclass.id)?.page;
+      if (savedPage && allowedPageValues.includes(savedPage)) {
+        router.replace({
+          pathname: `/dashboard/myclasses/${code}`,
+          query: { page: savedPage },
+        });
+        return;
+      }
+    } else if (allowedPageValues.includes(pageFromQuery)) {
+      writeClassPagePref(myclass.id, pageFromQuery);
+    }
+  }, [
+    router.isReady,
+    myclass?.id,
+    pageFromQuery,
+    code,
+    router,
+    allowedPageValues,
+  ]);
 
   useEffect(() => {
     if (page === "board") {
@@ -123,12 +156,28 @@ export default function ClassPage({ code, user, query }) {
       return;
     }
     if (isNyuCusp && showOpportunitiesTab && !query?.page) {
+      const savedPage = myclass?.id
+        ? readClassPrefs(myclass.id)?.page
+        : null;
+      if (savedPage && allowedPageValues.includes(savedPage)) {
+        return;
+      }
       router.replace({
         pathname: `/dashboard/myclasses/${code}`,
         query: { page: "opportunities" },
       });
     }
-  }, [page, code, router, isNyuCusp, defaultPage, showOpportunitiesTab, query?.page]);
+  }, [
+    page,
+    code,
+    router,
+    isNyuCusp,
+    defaultPage,
+    showOpportunitiesTab,
+    query?.page,
+    myclass?.id,
+    allowedPageValues,
+  ]);
 
   const isProjectsFullscreen =
     page === "projects" && action === "edit" && board;

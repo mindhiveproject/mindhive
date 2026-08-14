@@ -1,29 +1,32 @@
 import { useMutation } from "@apollo/client";
-import { Modal, Dropdown, Button } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
+
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import {
   UPDATE_PROJECT_BOARD,
   UPDATE_PROPOSAL_CARD,
 } from "../../../../../Mutations/Proposal";
-import { UPDATE_STUDY } from "../../../../../Mutations/Study";
+import { buildDualWriteUpdate } from "../../../../../../lib/milestoneStatus";
+import Button from "../../../../../DesignSystem/Button";
+import DropdownSelect from "../../../../../DesignSystem/DropdownSelect";
+import Modal from "../../../../../DesignSystem/Modal";
 
-// Component for the selected students modal
 export const SelectedStudentsModal = ({
   isOpen,
   onClose,
   selectedStudents,
   classId,
+  milestone,
 }) => {
   const { t } = useTranslation("classes");
-  const [projectStatus, setProjectStatus] = useState("");
-  const [statusType, setStatusType] = useState("");
-  const [commentsAllowed, setCommentsAllowed] = useState(null);
-  const [studyStatus, setStudyStatus] = useState("");
-  const [participationAllowed, setParticipationAllowed] = useState(null);
+  const [status, setStatus] = useState("");
+  const [openSetting, setOpenSetting] = useState("");
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const isStudy = milestone?.statusTarget === "study";
+  const stageLabel = milestone?.title || milestone?.key || "";
 
   const [updateProject, { loading: boardLoading, error: boardError }] =
     useMutation(UPDATE_PROJECT_BOARD, {
@@ -47,56 +50,43 @@ export const SelectedStudentsModal = ({
     }
   );
 
-  const [updateStudy, { loading: studyLoading, error: studyError }] =
-    useMutation(UPDATE_STUDY, {
-      refetchQueries: [
-        {
-          query: GET_STUDENTS_DASHBOARD_DATA,
-          variables: { classId },
-        },
-      ],
-    });
-
-  const handleUpdateProjectStatus = () => {
-    // Trigger confirmation modal only for peerFeedbackStatus set to FINISHED
-    if (statusType === "peerFeedbackStatus" && projectStatus === "FINISHED") {
-      setConfirmModalOpen(true);
-    } else {
-      updateProjectStatus(false);
-    }
+  const resetAndClose = () => {
+    setStatus("");
+    setOpenSetting("");
+    setConfirmModalOpen(false);
+    onClose();
   };
 
-  const updateProjectStatus = async (updateCardsToNeedsRevision = false) => {
+  const applyUpdate = async (updateCardsToNeedsRevision = false) => {
     try {
-      // Filter out students without a projectId to avoid invalid mutations
       const validStudents = selectedStudents.filter(
         (student) => student.projectId
       );
+      const openValue = openSetting === "true";
 
-      // Map status type to corresponding comment field
-      const commentFieldMap = {
-        submitProposalStatus: "submitProposalOpenForComments",
-        peerFeedbackStatus: "peerFeedbackOpenForComments",
-        projectReportStatus: "projectReportOpenForComments",
-      };
-      const commentField = commentFieldMap[statusType];
-
-      // Update the selected status type and comments for all valid selected students
       await Promise.all(
         validStudents.map((student) =>
           updateProject({
             variables: {
               id: student.projectId,
-              input: {
-                [statusType]: projectStatus,
-                [commentField]: commentsAllowed,
-              },
+              input: buildDualWriteUpdate(
+                milestone,
+                isStudy
+                  ? {
+                      status,
+                      openForParticipation: openValue,
+                    }
+                  : {
+                      status,
+                      openForComments: openValue,
+                    },
+                student.project?.milestoneStatus || {}
+              ),
             },
           })
         )
       );
 
-      // If updating cards to "Needs revision" for FINISHED peerFeedbackStatus
       if (updateCardsToNeedsRevision) {
         for (const student of validStudents) {
           const sections = student.project?.sections || [];
@@ -104,7 +94,6 @@ export const SelectedStudentsModal = ({
             .flatMap((section) => section.cards || [])
             .filter((card) => card.settings?.includeInReport);
 
-          // Update each card individually
           await Promise.all(
             cardsToUpdate.map((card) =>
               updateCard({
@@ -123,474 +112,339 @@ export const SelectedStudentsModal = ({
         }
       }
 
-      setProjectStatus("");
-      setStatusType("");
-      setCommentsAllowed(null);
-      setConfirmModalOpen(false);
-      onClose();
+      resetAndClose();
     } catch (error) {
-      console.error("Error updating project status:", error);
-      alert(t("dashboard.failedToUpdateProjectStatus"));
+      console.error("Error updating milestone status:", error);
+      alert(
+        t("dashboard.failedToUpdateProjectStatus", {}, {
+          default: "Failed to update project status. Please try again.",
+        })
+      );
     }
   };
 
-  const handleUpdateStudyStatus = () => {
-    updateStudyStatus();
+  const handleUpdate = () => {
+    if (
+      !isStudy &&
+      milestone?.actionCardType === "ACTION_PEER_FEEDBACK" &&
+      status === "FINISHED"
+    ) {
+      setConfirmModalOpen(true);
+    } else {
+      applyUpdate(false);
+    }
   };
 
-  const updateStudyStatus = async () => {
-    try {
-      // Filter out students without a studyId to avoid invalid mutations
-      const validStudents = selectedStudents.filter(
-        (student) => student.studyId
-      );
-
-      // Update study status for all valid selected students
-      await Promise.all(
-        validStudents.map((student) =>
-          updateStudy({
-            variables: {
-              id: student.studyId,
-              input: {
-                dataCollectionStatus: studyStatus,
-                dataCollectionOpenForParticipation: participationAllowed,
-              },
-            },
+  const statusOptions = [
+    {
+      value: "NOT_STARTED",
+      label: t("dashboard.notStarted", {}, { default: "Not started" }),
+    },
+    {
+      value: "IN_PROGRESS",
+      label: t("dashboard.inProgress", {}, { default: "In progress" }),
+    },
+    {
+      value: "SUBMITTED",
+      label: t("dashboard.submitted", {}, { default: "Submitted" }),
+    },
+    {
+      value: "FINISHED",
+      label: isStudy
+        ? t("dashboard.dataCollectionFinished", {}, {
+            default: "Data collection is finished",
           })
-        )
-      );
+        : t("dashboard.reviewFinished", {}, { default: "Review is finished" }),
+    },
+  ];
 
-      setStudyStatus("");
-      setParticipationAllowed(null);
-      onClose();
-    } catch (error) {
-      console.error("Error updating study status:", error);
-      alert(t("dashboard.failedToUpdateStudyStatus"));
-    }
-  };
+  const openOptions = [
+    {
+      value: "false",
+      label: t("dashboard.notAllowed", {}, { default: "Not allowed" }),
+    },
+    {
+      value: "true",
+      label: t("dashboard.allowed", {}, { default: "Allowed" }),
+    },
+  ];
 
-  const projectStatusOptions = [
-    { label: t("dashboard.notStarted"), value: "NOT_STARTED" },
-    { label: t("dashboard.inProgress"), value: "IN_PROGRESS" },
-    { label: t("dashboard.submitted"), value: "SUBMITTED" },
-    { label: t("dashboard.reviewFinished"), value: "FINISHED" },
-  ].map((status) => ({
-    key: status.value,
-    text: status.label,
-    value: status.value,
-  }));
-
-  const statusTypeOptions = [
-    { label: t("dashboard.proposalStatus"), value: "submitProposalStatus" },
-    { label: t("dashboard.peerFeedbackStatus"), value: "peerFeedbackStatus" },
-    { label: t("dashboard.projectReportStatus"), value: "projectReportStatus" },
-  ].map((type) => ({
-    key: type.value,
-    text: type.label,
-    value: type.value,
-  }));
-
-  const commentsOptions = [
-    { label: t("dashboard.notAllowed"), value: false },
-    { label: t("dashboard.allowed"), value: true },
-  ].map((status) => ({
-    key: status.value,
-    text: status.label,
-    value: status.value,
-  }));
-
-  const studyStatusOptions = [
-    { label: t("dashboard.notStarted"), value: "NOT_STARTED" },
-    { label: t("dashboard.inProgress"), value: "IN_PROGRESS" },
-    { label: t("dashboard.submitted"), value: "SUBMITTED" },
-    { label: t("dashboard.dataCollectionFinished"), value: "FINISHED" },
-  ].map((status) => ({
-    key: status.value,
-    text: status.label,
-    value: status.value,
-  }));
-
-  const participationOptions = [
-    { label: t("dashboard.notAllowed"), value: false },
-    { label: t("dashboard.allowed"), value: true },
-  ].map((status) => ({
-    key: status.value,
-    text: status.label,
-    value: status.value,
-  }));
+  const loading = boardLoading || cardLoading;
+  const canSubmit =
+    Boolean(status) &&
+    (openSetting === "true" || openSetting === "false") &&
+    selectedStudents.length > 0 &&
+    Boolean(milestone?.key) &&
+    !loading;
 
   return (
     <>
-      <Modal open={isOpen} onClose={onClose} size="large" closeIcon>
-        <StyledModal>
-          <Modal.Content>
-            <div className="modalHeader">
-              <h1>{t("dashboard.selectedStudents")}</h1>
-              <p>{t("dashboard.manageSelectedStudentsInfo", { count: selectedStudents.length })}</p>
+      <Modal
+        open={isOpen}
+        onClose={onClose}
+        size="large"
+        title={t("dashboard.selectedStudents", {}, {
+          default: "Selected Students",
+        })}
+        actions={
+          <>
+            <Button variant="outline" onClick={onClose}>
+              {t("dashboard.close", {}, { default: "Close" })}
+            </Button>
+            <Button
+              variant="filled"
+              onClick={handleUpdate}
+              disabled={!canSubmit}
+            >
+              {loading
+                ? t("dashboard.updating", {}, { default: "Updating..." })
+                : t("dashboard.updateMilestoneStatus", {}, {
+                    default: "Update status",
+                  })}
+            </Button>
+          </>
+        }
+      >
+        <StyledBulkBody>
+          <p>
+            {t(
+              "dashboard.manageSelectedStudentsInfo",
+              { count: selectedStudents.length },
+              { default: "Manage {{count}} selected student(s)" }
+            )}
+          </p>
+          {(boardError || cardError) && (
+            <div className="error-message">
+              {t("dashboard.failedToUpdateStatus", {}, {
+                default: "Error: Failed to update status. Please try again.",
+              })}
             </div>
-            {(boardError || cardError || studyError) && (
-              <div className="error-message">
-                {t("dashboard.failedToUpdateStatus")}
+          )}
+
+          <div className="section">
+            <h3>
+              {t("dashboard.selectedStudents", {}, {
+                default: "Selected Students",
+              })}
+            </h3>
+            {selectedStudents.length === 0 ? (
+              <p>
+                {t("dashboard.noStudentsSelected", {}, {
+                  default: "No students selected.",
+                })}
+              </p>
+            ) : (
+              <div className="student-list">
+                {selectedStudents.map((student, index) => (
+                  <div
+                    key={student.id || student.publicId || student.username}
+                    className="student-item"
+                  >
+                    <span>
+                      <strong>
+                        {index + 1}. {student.username}
+                      </strong>
+                    </span>
+                    <span>
+                      {t(
+                        "dashboard.projectLabel",
+                        {
+                          project:
+                            student.projectTitle ||
+                            t("dashboard.none", {}, { default: "None" }),
+                        },
+                        { default: "Project: {{project}}" }
+                      )}
+                    </span>
+                    <span>
+                      {t(
+                        "dashboard.studyLabel",
+                        {
+                          study:
+                            student.studyTitle ||
+                            t("dashboard.none", {}, { default: "None" }),
+                        },
+                        { default: "Study: {{study}}" }
+                      )}
+                    </span>
+                  </div>
+                ))}
               </div>
             )}
-            <div className="section">
-              <h2>{t("dashboard.selectedStudents")}</h2>
-              {selectedStudents.length === 0 ? (
-                <p>{t("dashboard.noStudentsSelected")}</p>
-              ) : (
-                <div className="student-list">
-                  {selectedStudents.map((student, index) => (
-                    <div
-                      key={student.id || student.publicId || student.username}
-                      className="student-item"
-                    >
-                      <span>
-                        <strong>
-                          {index + 1}. {student.username}
-                        </strong>
-                      </span>
-                      <span>{t("dashboard.projectLabel", { project: student.projectTitle || t("dashboard.none") })}</span>
-                      <span>{t("dashboard.studyLabel", { study: student.studyTitle || t("dashboard.none") })}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="section">
-              <h2>{t("dashboard.bulkUpdateProjectStatus")}</h2>
-              <Dropdown
-                selection
-                options={statusTypeOptions}
-                value={statusType}
-                onChange={(e, { value }) => setStatusType(value)}
-                fluid
-                placeholder={t("dashboard.selectStatusType")}
-                className="status-type-dropdown"
-              />
-              <Dropdown
-                selection
-                options={projectStatusOptions}
-                value={projectStatus}
-                onChange={(e, { value }) => setProjectStatus(value)}
-                fluid
-                placeholder={t("dashboard.selectProjectStatus")}
-                className="status-dropdown"
-                disabled={!statusType}
-              />
-              <Dropdown
-                selection
-                options={commentsOptions}
-                value={commentsAllowed}
-                onChange={(e, { value }) => setCommentsAllowed(value)}
-                fluid
-                placeholder={t("dashboard.selectCommentsSetting")}
-                className="comments-dropdown"
-                disabled={!statusType}
-              />
-              <button
-                className="update-button"
-                onClick={handleUpdateProjectStatus}
-                disabled={
-                  !projectStatus ||
-                  !statusType ||
-                  commentsAllowed === null ||
-                  selectedStudents.length === 0 ||
-                  boardLoading ||
-                  cardLoading
-                }
-              >
-                {boardLoading || cardLoading
-                  ? t("dashboard.updating")
-                  : t("dashboard.updateProjectStatus")}
-              </button>
-            </div>
-            <div className="section">
-              <h2>{t("dashboard.bulkUpdateStudyStatus")}</h2>
-              <Dropdown
-                selection
-                options={studyStatusOptions}
-                value={studyStatus}
-                onChange={(e, { value }) => setStudyStatus(value)}
-                fluid
-                placeholder={t("dashboard.selectStudyStatus")}
-                className="status-dropdown"
-              />
-              <Dropdown
-                selection
-                options={participationOptions}
-                value={participationAllowed}
-                onChange={(e, { value }) => setParticipationAllowed(value)}
-                fluid
-                placeholder={t("dashboard.selectParticipationSetting")}
-                className="participation-dropdown"
-              />
-              <button
-                className="update-button"
-                onClick={handleUpdateStudyStatus}
-                disabled={
-                  !studyStatus ||
-                  participationAllowed === null ||
-                  selectedStudents.length === 0 ||
-                  studyLoading
-                }
-              >
-                {studyLoading ? t("dashboard.updating") : t("dashboard.updateStudyStatus")}
-              </button>
-            </div>
-            <div className="footer">
-              <button className="cancel-button" onClick={onClose}>
-                {t("dashboard.close")}
-              </button>
-            </div>
-          </Modal.Content>
-        </StyledModal>
+          </div>
+
+          <div className="section">
+            {milestone?.key ? (
+              <>
+                <h3>
+                  {t(
+                    "dashboard.bulkUpdateMilestone",
+                    { stage: stageLabel },
+                    { default: "Update {{stage}} for selected students" }
+                  )}
+                </h3>
+                <label className="fieldLabel">
+                  {t("dashboard.status", {}, { default: "Status" })}
+                </label>
+                <DropdownSelect
+                  value={status}
+                  onChange={setStatus}
+                  options={statusOptions}
+                  placeholder={t("dashboard.selectProjectStatus", {}, {
+                    default: "Select a project status",
+                  })}
+                  ariaLabel={t("dashboard.status", {}, { default: "Status" })}
+                />
+                <label className="fieldLabel">
+                  {isStudy
+                    ? t("dashboard.participationSetting", {}, {
+                        default: "Open for participation",
+                      })
+                    : t("dashboard.openSetting", {}, {
+                        default: "Open for comments",
+                      })}
+                </label>
+                <DropdownSelect
+                  value={openSetting}
+                  onChange={setOpenSetting}
+                  options={openOptions}
+                  placeholder={
+                    isStudy
+                      ? t("dashboard.selectParticipationSetting", {}, {
+                          default: "Select participation setting",
+                        })
+                      : t("dashboard.selectCommentsSetting", {}, {
+                          default: "Select comments setting",
+                        })
+                  }
+                  ariaLabel={
+                    isStudy
+                      ? t("dashboard.participation", {}, {
+                          default: "Participation",
+                        })
+                      : t("dashboard.comments", {}, { default: "Comments" })
+                  }
+                />
+              </>
+            ) : (
+              <p>
+                {t("dashboard.bulkRequiresMilestone", {}, {
+                  default:
+                    "Select a milestone to update status for the selected students.",
+                })}
+              </p>
+            )}
+          </div>
+        </StyledBulkBody>
       </Modal>
-      <StyledConfirmModal
+
+      <Modal
         open={confirmModalOpen}
         onClose={() => setConfirmModalOpen(false)}
-        size="tiny"
+        title={t("dashboard.confirmCardStatusUpdate", {}, {
+          default: "Confirm Card Status Update",
+        })}
+        actions={
+          <>
+            <Button
+              variant="outline"
+              onClick={() => {
+                applyUpdate(false);
+                setConfirmModalOpen(false);
+              }}
+            >
+              {t("dashboard.noKeepCardStatuses", {}, {
+                default: "No, Keep Card Statuses",
+              })}
+            </Button>
+            <Button
+              variant="filled"
+              onClick={() => applyUpdate(true)}
+              disabled={loading}
+            >
+              {t("dashboard.yesUpdateCards", {}, {
+                default: "Yes, Update Cards",
+              })}
+            </Button>
+          </>
+        }
       >
-        <Modal.Header>{t("dashboard.confirmCardStatusUpdate")}</Modal.Header>
-        <Modal.Content>
-          <Modal.Description>
-            {t("dashboard.confirmCardStatusUpdateDesc")}
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            onClick={() => {
-              updateProjectStatus(false);
-              setConfirmModalOpen(false);
-            }}
-            className="cancel-button"
-          >
-            {t("dashboard.noKeepCardStatuses")}
-          </Button>
-          <Button
-            onClick={() => updateProjectStatus(true)}
-            className="confirm-button"
-            primary
-            disabled={boardLoading || cardLoading}
-          >
-            {t("dashboard.yesUpdateCards")}
-          </Button>
-        </Modal.Actions>
-      </StyledConfirmModal>
+        {t("dashboard.confirmCardStatusUpdateDesc", {}, {
+          default:
+            "Setting the status to 'Review is finished' can update all submitted cards in these projects to 'Needs revision'. Would you like to proceed with this change?",
+        })}
+      </Modal>
     </>
   );
 };
 
-const StyledModal = styled.div`
-  font-family: Nunito, sans-serif !important;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 24px;
-  margin: 0 auto;
+const StyledBulkBody = styled.div`
+  font-family: Inter, sans-serif;
+  color: var(--MH-Theme-Neutrals-Black, #171717);
 
-  .modalHeader {
-    text-align: center;
-    margin-bottom: 24px;
-
-    h1 {
-      font-size: 24px;
-      font-weight: 700;
-      color: #333333;
-      margin: 0 0 8px;
-    }
-
-    p {
-      font-size: 16px;
-      color: #666666;
-      margin: 0;
-    }
+  p {
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
   .error-message {
-    background: #ffe6e6;
-    color: #d32f2f;
+    background: var(--MH-Theme-Warning-Light, #edcecd);
+    color: var(--MH-Theme-Warning-Dark, #8f1f14);
     padding: 12px;
-    border-radius: 6px;
+    border-radius: 8px;
     margin-bottom: 16px;
     font-size: 14px;
-    text-align: center;
   }
 
   .section {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     padding: 16px;
     border-radius: 8px;
-    background: #f9f9f9;
+    background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
 
-    h2 {
-      font-size: 18px;
+    h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
       font-weight: 600;
-      color: #333333;
-      margin-bottom: 12px;
-    }
-
-    .student-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .student-item {
-      display: flex;
-      gap: 16px;
-      padding: 8px;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      background: #ffffff;
-      font-size: 14px;
-      color: #666666;
-
-      span {
-        flex: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        strong {
-          color: #3d85b0;
-        }
-      }
-    }
-
-    .status-type-dropdown,
-    .status-dropdown,
-    .comments-dropdown,
-    .participation-dropdown {
-      margin-bottom: 12px;
-
-      &.ui.dropdown {
-        border: 1px solid #d0d0d0;
-        border-radius: 6px;
-        background: #ffffff;
-        font-size: 16px;
-        color: #333333;
-        padding: 10px;
-
-        .dropdown.icon {
-          color: #666666;
-          top: 50%;
-          transform: translateY(-50%);
-          right: 10px;
-        }
-
-        .menu {
-          .item {
-            font-size: 16px;
-          }
-        }
-
-        &:hover {
-          border-color: #3d85b0;
-
-          .dropdown.icon {
-            color: #3d85b0;
-          }
-        }
-
-        &.disabled {
-          background: #f0f0f0;
-          cursor: not-allowed;
-        }
-      }
-    }
-
-    .update-button {
-      background: #3d85b0;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #ffffff;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #326d94;
-      }
-
-      &:disabled {
-        background: #b0b0b0;
-        cursor: not-allowed;
-      }
+      line-height: 22px;
     }
   }
 
-  .footer {
+  .student-list {
     display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid #e0e0e0;
-
-    .cancel-button {
-      background: #ffffff;
-      border: 1px solid #d0d0d0;
-      border-radius: 6px;
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #666666;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #f5f5f5;
-        color: #333333;
-      }
-    }
-  }
-`;
-
-const StyledConfirmModal = styled(Modal)`
-  font-family: Nunito, sans-serif !important;
-
-  .header {
-    font-size: 18px !important;
-    font-weight: 600 !important;
-    color: #333333 !important;
-    border-bottom: 1px solid #e0e0e0 !important;
-    padding-bottom: 12px !important;
-  }
-
-  .content {
-    padding: 20px !important;
-    color: #666666 !important;
-    font-size: 14px !important;
-    line-height: 1.5 !important;
-  }
-
-  .actions {
-    display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     gap: 8px;
-    padding: 12px !important;
-    border-top: 1px solid #e0e0e0 !important;
+  }
 
-    .cancel-button {
-      background: #ffffff !important;
-      color: #666666 !important;
-      border: 1px solid #e0e0e0 !important;
-      font-family: Nunito, sans-serif !important;
+  .student-item {
+    display: flex;
+    gap: 16px;
+    padding: 8px;
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border-radius: 6px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    font-size: 14px;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 
-      &:hover {
-        background: #f5f5f5 !important;
-        color: #333333 !important;
+    span {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      strong {
+        color: var(--MH-Theme-Primary-Dark, #336f8a);
       }
     }
+  }
 
-    .confirm-button {
-      font-family: Nunito, sans-serif !important;
-      background: #3d85b0 !important;
-
-      &:hover {
-        background: #326d94 !important;
-      }
-    }
+  .fieldLabel {
+    display: block;
+    margin: 12px 0 6px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
   }
 `;

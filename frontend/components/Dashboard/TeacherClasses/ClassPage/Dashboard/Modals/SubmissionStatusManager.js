@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { Modal, Dropdown, Button } from "semantic-ui-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
@@ -9,15 +9,43 @@ import {
   UPDATE_PROJECT_BOARD,
   UPDATE_PROPOSAL_CARD,
 } from "../../../../../Mutations/Proposal";
+import { buildDualWriteUpdate } from "../../../../../../lib/milestoneStatus";
 
 export default function SubmissionStatusManager(props) {
   const { t } = useTranslation("classes");
-  const [isOpen, setIsOpen] = useState(false);
+  const isControlled = typeof props.open === "boolean";
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = isControlled ? props.open : internalOpen;
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [status, setStatus] = useState(props?.value);
   const [commentsAllowed, setCommentsAllowed] = useState(
-    props?.data?.project && props?.data?.project[props?.commentField]
+    props?.openForComments ??
+      (props?.data?.project && props?.data?.project[props?.commentField])
   );
+
+  const closeModal = () => {
+    if (isControlled) {
+      props.onClose?.();
+    } else {
+      setInternalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setStatus(props?.value);
+    setCommentsAllowed(
+      props?.openForComments ??
+        (props?.data?.project && props?.data?.project[props?.commentField])
+    );
+  }, [
+    isOpen,
+    props?.value,
+    props?.openForComments,
+    props?.data?.id,
+    props?.commentField,
+    props?.data?.project,
+  ]);
 
   const [updateStatus, { loading: boardLoading, error: boardError }] =
     useMutation(UPDATE_PROJECT_BOARD, {
@@ -45,7 +73,10 @@ export default function SubmissionStatusManager(props) {
   );
 
   const handleUpdateStatus = () => {
-    if (status === "FINISHED") {
+    const confirmOnFinished =
+      props?.milestone?.actionCardType === "ACTION_PEER_FEEDBACK" ||
+      (!props?.milestone && status === "FINISHED");
+    if (status === "FINISHED" && confirmOnFinished) {
       setConfirmModalOpen(true);
     } else {
       updateProjectStatus();
@@ -54,12 +85,23 @@ export default function SubmissionStatusManager(props) {
 
   const updateProjectStatus = async (updateCardsToNeedsRevision = false) => {
     try {
-      await updateStatus({
-        variables: {
-          input: {
+      const input = props?.milestone
+        ? buildDualWriteUpdate(
+            props.milestone,
+            {
+              status,
+              openForComments: commentsAllowed,
+            },
+            props?.data?.project?.milestoneStatus || {}
+          )
+        : {
             [props?.type]: status,
             [props?.commentField]: commentsAllowed,
-          },
+          };
+
+      await updateStatus({
+        variables: {
+          input,
         },
       });
 
@@ -86,7 +128,7 @@ export default function SubmissionStatusManager(props) {
         }
       }
 
-      setIsOpen(false);
+      closeModal();
       setConfirmModalOpen(false);
     } catch (error) {
       console.error("Error updating status:", error);
@@ -119,10 +161,12 @@ export default function SubmissionStatusManager(props) {
   return (
     <>
       <Modal
-        onClose={() => setIsOpen(false)}
-        onOpen={() => setIsOpen(true)}
+        onClose={closeModal}
+        onOpen={() => {
+          if (!isControlled) setInternalOpen(true);
+        }}
         open={isOpen}
-        trigger={<div>{props.value}</div>}
+        trigger={isControlled ? undefined : <div>{props.value}</div>}
         dimmer="blurring"
         size="large"
         closeIcon
@@ -174,7 +218,7 @@ export default function SubmissionStatusManager(props) {
             <div className="footer">
               <button
                 className="cancel-button"
-                onClick={() => setIsOpen(false)}
+                onClick={closeModal}
               >
                 {t("dashboard.cancel")}
               </button>

@@ -1,42 +1,99 @@
 import { useMutation } from "@apollo/client";
 import { Modal, Dropdown } from "semantic-ui-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
+import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import { UPDATE_STUDY } from "../../../../../Mutations/Study";
+import { buildDualWriteUpdate } from "../../../../../../lib/milestoneStatus";
 
 export default function StudySubmissionStatusManager(props) {
   const { t } = useTranslation("classes");
-  const [isOpen, setIsOpen] = useState(false);
+  const isControlled = typeof props.open === "boolean";
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = isControlled ? props.open : internalOpen;
   const [status, setStatus] = useState(props?.value);
   const [participationAllowed, setParticipationAllowed] = useState(
-    props?.data?.project?.study?.dataCollectionOpenForParticipation
+    props?.openForParticipation ??
+      props?.data?.project?.study?.dataCollectionOpenForParticipation
   );
 
-  const [updateStatus, { loading, error }] = useMutation(UPDATE_STUDY, {
-    variables: {
-      id: props?.data?.project?.study?.id,
-    },
-    refetchQueries: [
-      {
-        query: GET_STUDENTS_DASHBOARD_DATA,
-        variables: { classId: props?.classId },
-      },
-    ],
-  });
+  const closeModal = () => {
+    if (isControlled) {
+      props.onClose?.();
+    } else {
+      setInternalOpen(false);
+    }
+  };
 
-  const updateStudyStatus = () => {
-    updateStatus({
-      variables: {
-        input: {
-          dataCollectionStatus: status,
-          dataCollectionOpenForParticipation: participationAllowed,
-        },
-      },
+  useEffect(() => {
+    if (!isOpen) return;
+    setStatus(props?.value);
+    setParticipationAllowed(
+      props?.openForParticipation ??
+        props?.data?.project?.study?.dataCollectionOpenForParticipation
+    );
+  }, [
+    isOpen,
+    props?.value,
+    props?.openForParticipation,
+    props?.data?.id,
+    props?.data?.project?.study?.dataCollectionOpenForParticipation,
+  ]);
+
+  const refetchDashboard = [
+    {
+      query: GET_STUDENTS_DASHBOARD_DATA,
+      variables: { classId: props?.classId },
+    },
+  ];
+
+  const [updateBoard, { loading: boardLoading, error: boardError }] =
+    useMutation(UPDATE_PROJECT_BOARD, {
+      refetchQueries: refetchDashboard,
     });
-    setIsOpen(false);
+
+  const [updateStudy, { loading: studyLoading, error: studyError }] =
+    useMutation(UPDATE_STUDY, {
+      refetchQueries: refetchDashboard,
+    });
+
+  const loading = boardLoading || studyLoading;
+  const error = boardError || studyError;
+
+  const updateStudyStatus = async () => {
+    try {
+      if (props?.milestone && props?.data?.projectId) {
+        await updateBoard({
+          variables: {
+            id: props.data.projectId,
+            input: buildDualWriteUpdate(
+              props.milestone,
+              {
+                status,
+                openForParticipation: participationAllowed,
+              },
+              props?.data?.project?.milestoneStatus || {}
+            ),
+          },
+        });
+      } else {
+        await updateStudy({
+          variables: {
+            id: props?.data?.project?.study?.id,
+            input: {
+              dataCollectionStatus: status,
+              dataCollectionOpenForParticipation: participationAllowed,
+            },
+          },
+        });
+      }
+      closeModal();
+    } catch (err) {
+      console.error("Error updating study status:", err);
+    }
   };
 
   const statusOptions =
@@ -63,10 +120,12 @@ export default function StudySubmissionStatusManager(props) {
 
   return (
     <Modal
-      onClose={() => setIsOpen(false)}
-      onOpen={() => setIsOpen(true)}
+      onClose={closeModal}
+      onOpen={() => {
+        if (!isControlled) setInternalOpen(true);
+      }}
       open={isOpen}
-      trigger={<div>{props.value}</div>}
+      trigger={isControlled ? undefined : <div>{props.value}</div>}
       dimmer="blurring"
       size="large"
       closeIcon
@@ -111,7 +170,7 @@ export default function StudySubmissionStatusManager(props) {
             </div>
           </div>
           <div className="footer">
-            <button className="cancel-button" onClick={() => setIsOpen(false)}>
+            <button className="cancel-button" onClick={closeModal}>
               {t("dashboard.cancel")}
             </button>
             <button

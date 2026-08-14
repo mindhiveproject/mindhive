@@ -396,6 +396,39 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
         id
         settings
       }
+      clonedFrom {
+        id
+        title
+        sections(orderBy: [{ position: asc }]) {
+          id
+          title
+          position
+          cards(orderBy: [{ position: asc }]) {
+            id
+            type
+            title
+            position
+            milestone {
+              id
+              key
+              actionCardType
+              title
+              formDefinitionKeyPattern
+              formDefinition {
+                id
+                key
+              }
+              scope
+              statusTarget
+              isActive
+              position
+              legacyBoardStatusField
+              legacyOpenForCommentsField
+              showInFeedbackCenter
+            }
+          }
+        }
+      }
       sections {
         id
         title
@@ -661,7 +694,57 @@ export const TEACHER_PROJECT_BOARDS = gql`
   }
 `;
 
-// get class proposals
+const CLASS_TEMPLATE_BOARD_FIELDS = `
+  id
+  title
+  slug
+  description
+  isSubmitted
+  isTemplate
+  settings
+  creator {
+    id
+  }
+  author {
+    id
+    username
+  }
+  collaborators {
+    username
+  }
+  createdAt
+  updatedAt
+  sections(orderBy: [{ position: asc }]) {
+    id
+    title
+    position
+    cards(orderBy: [{ position: asc }]) {
+      id
+      type
+      title
+      position
+      milestone {
+        id
+        key
+        actionCardType
+        title
+        formDefinitionKeyPattern
+        formDefinition {
+          id
+          key
+        }
+        scope
+        statusTarget
+        isActive
+        position
+        legacyBoardStatusField
+        legacyOpenForCommentsField
+        showInFeedbackCenter
+      }
+    }
+  }
+`;
+
 export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
   query CLASS_TEMPLATE_PROJECTS_QUERY($classId: ID!) {
     proposalBoards(
@@ -672,47 +755,22 @@ export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
         ]
       }
     ) {
-      id
-      title
-      slug
-      description
-      isSubmitted
-      isTemplate
-      settings
-      creator {
-        id
+      ${CLASS_TEMPLATE_BOARD_FIELDS}
+    }
+  }
+`;
+
+export const CLASS_TEMPLATE_PROJECTS_FOR_CLASSES_QUERY = gql`
+  query CLASS_TEMPLATE_PROJECTS_FOR_CLASSES_QUERY($classIds: [ID!]!) {
+    proposalBoards(
+      where: {
+        OR: [
+          { templatesForClass: { some: { id: { in: $classIds } } } }
+          { templateForClasses: { some: { id: { in: $classIds } } } }
+        ]
       }
-      author {
-        id
-        username
-      }
-      collaborators {
-        username
-      }
-      createdAt
-      updatedAt
-      sections(orderBy: [{ position: asc }]) {
-        id
-        title
-        position
-        cards(orderBy: [{ position: asc }]) {
-          id
-          type
-          title
-          position
-          milestone {
-            id
-            key
-            actionCardType
-            title
-            formDefinitionKeyPattern
-            formDefinition {
-              id
-              key
-            }
-          }
-        }
-      }
+    ) {
+      ${CLASS_TEMPLATE_BOARD_FIELDS}
     }
   }
 `;

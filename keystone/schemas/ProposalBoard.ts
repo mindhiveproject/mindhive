@@ -127,6 +127,70 @@ export const ProposalBoard = list({
     isSubmitted: checkbox({ isFilterable: true }),
     isMain: checkbox({ isFilterable: true }),
     isHidden: checkbox({ isFilterable: true }),
+    milestoneStatus: json(),
+    checklist: json(),
+    settings: json(),
+    creator: relationship({
+      ref: "Profile.creatorOfProposal",
+    }),
+    author: relationship({
+      ref: "Profile.authorOfProposal",
+    }),
+    collaborators: relationship({
+      ref: "Profile.collaboratorInProposal",
+      many: true,
+    }),
+    study: relationship({
+      ref: "Study.proposal",
+    }),
+    studyMain: relationship({
+      ref: "Study.proposalMain",
+    }),
+    sections: relationship({
+      ref: "ProposalSection.board",
+      many: true,
+    }),
+    templateMilestones: relationship({
+      ref: "Milestone.templateBoard",
+      many: true,
+    }),
+    reviews: relationship({
+      ref: "Review.proposal",
+      many: true,
+    }),
+    templatesForClass: relationship({
+      ref: "Class.classTemplateBoards",
+      many: true,
+    }),
+    usedInClass: relationship({
+      ref: "Class.studentProposals",
+    }),
+    clonedFrom: relationship({ ref: "ProposalBoard.prototypeFor" }),
+    prototypeFor: relationship({ ref: "ProposalBoard.clonedFrom", many: true }),
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInBoards",
+      many: true,
+    }),
+    resources: relationship({
+      ref: "Resource.proposalBoard",
+      many: true,
+    }),
+    logs: relationship({
+      ref: "Log.proposal",
+      many: true,
+    }),
+    vizJournals: relationship({
+      ref: "VizJournal.project",
+      many: true,
+    }),
+    datasources: relationship({
+      ref: "Datasource.project",
+      many: true,
+    }),
+    createdAt: timestamp({
+      defaultValue: { kind: "now" },
+    }),
+    updatedAt: timestamp(),
     submitProposalStatus: select({
       label: "Submit proposal status (legacy)",
       options: [
@@ -169,73 +233,10 @@ export const ProposalBoard = list({
       label: "Project report open for comments (legacy)",
       isFilterable: true,
     }),
-    milestoneStatus: json(),
-    checklist: json(),
-    settings: json(),
-    creator: relationship({
-      ref: "Profile.creatorOfProposal",
-    }),
-    author: relationship({
-      ref: "Profile.authorOfProposal",
-    }),
-    collaborators: relationship({
-      ref: "Profile.collaboratorInProposal",
-      many: true,
-    }),
-    study: relationship({
-      ref: "Study.proposal",
-    }),
-    studyMain: relationship({
-      ref: "Study.proposalMain",
-    }),
-    sections: relationship({
-      ref: "ProposalSection.board",
-      many: true,
-    }),
-    templateMilestones: relationship({
-      ref: "Milestone.templateBoard",
-      many: true,
-    }),
-    reviews: relationship({
-      ref: "Review.proposal",
-      many: true,
-    }),
     templateForClasses: relationship({
+      label: "Template For Classes (legacy, still writing, but not used)",
       ref: "Class.templateProposal",
       many: true,
     }),
-    templatesForClass: relationship({
-      ref: "Class.classTemplateBoards",
-      many: true,
-    }),
-    usedInClass: relationship({
-      ref: "Class.studentProposals",
-    }),
-    clonedFrom: relationship({ ref: "ProposalBoard.prototypeFor" }),
-    prototypeFor: relationship({ ref: "ProposalBoard.clonedFrom", many: true }),
-    mediaAssetsUsed: relationship({
-      ref: "MediaAsset.usedInBoards",
-      many: true,
-    }),
-    resources: relationship({
-      ref: "Resource.proposalBoard",
-      many: true,
-    }),
-    logs: relationship({
-      ref: "Log.proposal",
-      many: true,
-    }),
-    vizJournals: relationship({
-      ref: "VizJournal.project",
-      many: true,
-    }),
-    datasources: relationship({
-      ref: "Datasource.project",
-      many: true,
-    }),
-    createdAt: timestamp({
-      defaultValue: { kind: "now" },
-    }),
-    updatedAt: timestamp(),
   },
 });
