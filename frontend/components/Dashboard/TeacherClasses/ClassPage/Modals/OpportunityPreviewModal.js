@@ -14,7 +14,7 @@ import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../../
 import { FORM_DEFINITION_BY_ID } from "../../../../Queries/FormDefinition";
 import { MARK_OPPORTUNITY_REVIEW_NOTES_READ } from "../../../../Mutations/OpportunityReviewNote";
 import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap";
-import { hydrateProposalInputs } from "../../../Connect/Opportunities/OpportunityProposalConfig";
+import { hydrateProposalInputs } from "../../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import ReturnOpportunityModal from "../../../Connect/ReturnOpportunityModal";
 import OpportunityReviewNotesThread from "../../../Connect/OpportunityReviewNotesThread";
 import OpportunityFollowUpFormPanel from "../../../SponsorConnect/Opportunities/OpportunityFollowUpFormPanel";
