@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 
 /** Distance from the anchor, and the breathing room kept against the viewport. */
 const GAP = 8;
+const VIEWPORT_PAD = 16;
 const MAX_HEIGHT = 560;
 
 const SURFACE_STYLE = {
@@ -24,18 +25,51 @@ const SURFACE_STYLE = {
   outline: "none",
 };
 
+function placeRight(anchor, maxHeight) {
+  return {
+    left: anchor.right + GAP,
+    top: anchor.top,
+    maxHeight: Math.min(
+      maxHeight,
+      window.innerHeight - anchor.top - GAP * 2,
+    ),
+  };
+}
+
+function placeBottom(anchor, width, maxHeight) {
+  const surfaceWidth = Math.min(
+    width,
+    window.innerWidth - VIEWPORT_PAD * 2,
+  );
+  const maxLeft = window.innerWidth - surfaceWidth - VIEWPORT_PAD;
+  // End-align under the anchor so a right-side toolbar button hangs the
+  // panel underneath instead of overflowing the viewport.
+  const left = Math.max(
+    VIEWPORT_PAD,
+    Math.min(anchor.right - surfaceWidth, maxLeft),
+  );
+  const top = anchor.bottom + GAP;
+  return {
+    left,
+    top,
+    maxHeight: Math.min(maxHeight, window.innerHeight - top - GAP),
+  };
+}
+
 /**
- * Design System Popover. Floating surface opening to the right of its anchor,
- * portaled to the body so an `overflow` ancestor cannot clip it. Closes on
- * outside pointer, outside focus, or Escape.
- *
- * Only right-side placement is implemented, which is what the menu bar needs.
+ * Design System Popover. Floating surface portaled to the body so an
+ * `overflow` ancestor cannot clip it. Closes on outside pointer, outside
+ * focus, or Escape.
  *
  * @param {boolean} open - Whether the surface is shown.
  * @param {React.RefObject} anchorRef - Element the surface is positioned against.
  * @param {() => void} onClose - Called on outside interaction or Escape. Should
  *   be referentially stable, e.g. wrapped in `useCallback`.
  * @param {number} [width=456] - Surface width in px, capped to the viewport.
+ * @param {number} [maxHeight=560] - Surface max height in px, capped to the
+ *   remaining viewport.
+ * @param {"right"|"bottom"} [placement="right"] - `right` opens beside the
+ *   anchor (menu bar). `bottom` opens underneath, end-aligned, then clamped.
  * @param {string} [ariaLabel] - Accessible name for the dialog.
  * @param {React.ReactNode} children - Surface content, typically a PanelHeader
  *   plus a scrolling body.
@@ -45,6 +79,8 @@ export default function Popover({
   anchorRef,
   onClose,
   width = 456,
+  maxHeight = MAX_HEIGHT,
+  placement = "right",
   ariaLabel,
   children,
 }) {
@@ -57,14 +93,11 @@ export default function Popover({
     const place = () => {
       const anchor = anchorRef.current?.getBoundingClientRect();
       if (!anchor) return;
-      setPosition({
-        left: anchor.right + GAP,
-        top: anchor.top,
-        maxHeight: Math.min(
-          MAX_HEIGHT,
-          window.innerHeight - anchor.top - GAP * 2,
-        ),
-      });
+      setPosition(
+        placement === "bottom"
+          ? placeBottom(anchor, width, maxHeight)
+          : placeRight(anchor, maxHeight),
+      );
     };
 
     place();
@@ -74,18 +107,27 @@ export default function Popover({
       window.removeEventListener("resize", place);
       window.removeEventListener("scroll", place, true);
     };
-  }, [open, anchorRef]);
+  }, [open, anchorRef, placement, width, maxHeight]);
 
   useEffect(() => {
     if (!open) return undefined;
 
     const closeIfOutside = ({ target }) => {
       if (
-        !anchorRef.current?.contains(target) &&
-        !surfaceRef.current?.contains(target)
+        anchorRef.current?.contains(target) ||
+        surfaceRef.current?.contains(target)
       ) {
-        onClose();
+        return;
       }
+      // Nested portaled overlays (e.g. DropdownSelect) are not DOM children
+      // of the surface; dismissing on those clicks would close this popover.
+      if (
+        target instanceof Element &&
+        target.closest(".DesignSystem-DropdownSelect-Panel")
+      ) {
+        return;
+      }
+      onClose();
     };
     const closeOnEscape = ({ key }) => {
       if (key === "Escape") onClose();
