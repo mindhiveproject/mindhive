@@ -20,9 +20,11 @@ import { UserContext } from "../../../Global/Authorized";
 import { REVIEW_OPPORTUNITY } from "../../../Queries/OpportunityReviewNote";
 import { UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import useConnectRole from "../useConnectRole";
-import ReturnOpportunityModal from "../ReturnOpportunityModal";
 import OpportunityReviewNotesThread from "../OpportunityReviewNotesThread";
-import { isReturnableOpportunityStatus } from "../returnOpportunityUtils";
+import {
+  isReturnableOpportunityStatus,
+  returnOpportunityToSponsor,
+} from "../returnOpportunityUtils";
 import { REVIEW_NOTE_KIND } from "../../../../lib/reviewThreadRound";
 
 const Shell = styled.div`
@@ -268,7 +270,8 @@ export default function ReviewOpportunityMain({ query }) {
 
   const [status, setStatus] = useState(null);
   const [statusFlash, setStatusFlash] = useState(null);
-  const [returnModalOpen, setReturnModalOpen] = useState(false);
+  const [showReturnInvite, setShowReturnInvite] = useState(false);
+  const [returnError, setReturnError] = useState(null);
 
   const reviewRefetchQueries = useMemo(
     () => [{ query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } }],
@@ -286,12 +289,27 @@ export default function ReviewOpportunityMain({ query }) {
   const currentStatus = status || opportunity?.status;
   const canReturnToSponsor =
     (isReviewerOnRound || isAdmin) &&
-    opportunity?.status &&
-    isReturnableOpportunityStatus(opportunity.status);
+    currentStatus &&
+    isReturnableOpportunityStatus(currentStatus);
 
-  const handleReturnSuccess = () => {
-    setReturnModalOpen(false);
-    router.push("/dashboard/connect/review-queue");
+  const handleReturnAndWriteMessage = async () => {
+    if (!opportunity?.id || updatingStatus) return;
+    setReturnError(null);
+    try {
+      await returnOpportunityToSponsor({
+        updateOpportunity,
+        opportunityId: opportunity.id,
+      });
+      setStatus("returned");
+      setShowReturnInvite(true);
+    } catch (e) {
+      setReturnError(
+        e?.message ||
+          t("returnModal.error", {}, {
+            default: "Could not return this opportunity. Please try again.",
+          }),
+      );
+    }
   };
 
   if (!oppId || !roundId) {
@@ -379,7 +397,7 @@ export default function ReviewOpportunityMain({ query }) {
     default: "Back to review queue",
   });
   const returnLabel = t("reviewOpportunity.returnToSponsor", {}, {
-    default: "Return with comments",
+    default: "Return and write message",
   });
 
   return (
@@ -406,13 +424,22 @@ export default function ReviewOpportunityMain({ query }) {
           <Actions>
             <Button
               variant="filled"
-              onClick={() => setReturnModalOpen(true)}
+              onClick={handleReturnAndWriteMessage}
+              disabled={updatingStatus}
             >
-              {returnLabel}
+              {updatingStatus
+                ? t("returnModal.submitting", {}, { default: "Returning…" })
+                : returnLabel}
             </Button>
           </Actions>
         ) : null}
       </TopBar>
+
+      {returnError ? (
+        <p style={{ margin: 0, color: "#871b16", fontSize: 13 }}>
+          {returnError}
+        </p>
+      ) : null}
 
       {isMentorOfOpp ? (
         <ConflictBanner>
@@ -558,17 +585,11 @@ export default function ReviewOpportunityMain({ query }) {
           mode="teacher"
           refetchQueries={reviewRefetchQueries}
           titleAs="h2"
+          autoFocusCompose={showReturnInvite}
+          showReturnInvite={showReturnInvite}
+          onPosted={() => setShowReturnInvite(false)}
         />
       </Card>
-      <ReturnOpportunityModal
-        open={returnModalOpen}
-        onClose={() => setReturnModalOpen(false)}
-        onSuccess={handleReturnSuccess}
-        opportunityId={opportunity.id}
-        roundId={round.id}
-        mentorId={opportunity.mentor?.id}
-        refetchQueries={reviewRefetchQueries}
-      />
     </Shell>
   );
 }

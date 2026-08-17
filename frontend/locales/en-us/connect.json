@@ -1305,7 +1305,7 @@
 	},
 	"reviewOpportunity": {
 		"backLink": "Back to review queue",
-		"returnToSponsor": "Return with comments"
+		"returnToSponsor": "Return and write message"
 	},
 	"reviewThread": {
 		"cancel": "Cancel",
@@ -1313,10 +1313,11 @@
 			"post": "Post note",
 			"posting": "Posting…",
 			"postReply": "Post reply",
+			"returnInvite": "Write a message explaining what the sponsor should change.",
 			"sponsorLabel": "Your reply",
 			"sponsorPlaceholder": "Write a reply for the reviewers…",
 			"teacherLabel": "Your note",
-			"teacherPlaceholder": "Leave a note for the sponsor…"
+			"teacherPlaceholder": "Write a message for the sponsor…"
 		},
 		"delete": "Delete",
 		"deleteConfirm": "Delete this message?",

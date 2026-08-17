@@ -485,9 +485,9 @@ export const Opportunity = list({
         const mentorName = reviewerDisplayName(fresh.mentor);
 
         if (becameReturned && mentorId && mentorId !== actorId) {
-          // Prefer the round from the most recent review note (created just
-          // before status change in ReturnOpportunityModal). Fall back to a
-          // single linked round when unambiguous.
+          // Prefer the round from the most recent review note. Teachers now
+          // write the return message after status change, so this may miss
+          // until a note exists. Fall back to a single linked round.
           let roundId: string | null = null;
           try {
             const recentNotes = await context
