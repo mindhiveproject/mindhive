@@ -4,17 +4,16 @@ import { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../../DesignSystem/Button";
-import Card, { CardSection } from "../../../DesignSystem/Card";
 import Checkbox from "../../../DesignSystem/Checkbox";
 import IconButton from "../../../DesignSystem/IconButton";
 import Input from "../../../DesignSystem/Input";
-import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import {
+  ArrowDropDownIcon,
+  CableIcon,
   CloseIcon,
   CodeIcon,
   DeleteIcon,
   SettingsIcon,
-  WaveformIcon,
 } from "../../../DesignSystem/Icons";
 
 import { useVisualBuilder } from "../../Context/VisualBuilderContext";
@@ -38,10 +37,10 @@ const HEADER_STYLE = {
   alignItems: "center",
   gap: 8,
   flexShrink: 0,
-  padding: "16px 16px 16px",
-  borderBottom: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  padding: "20px 16px 16px",
 };
 
+// MH-Theme/title/large
 const HEADER_TITLE_STYLE = {
   margin: 0,
   flex: "1 1 auto",
@@ -56,17 +55,31 @@ const HEADER_TITLE_STYLE = {
   whiteSpace: "nowrap",
 };
 
-const SUBNAV_STYLE = {
+const DIVIDER_STYLE = {
+  height: 1,
+  width: "100%",
+  border: 0,
+  margin: 0,
   flexShrink: 0,
-  padding: "8px 8px",
-  borderBottom: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+};
+
+// The two views are buttons rather than a Navbar: they are pills the width of
+// their own labels, which is what the underline and tonal navbar variants both
+// stop being once there are only two of them.
+const TABS_STYLE = {
+  display: "flex",
+  alignItems: "center",
+  gap: 4,
+  flexShrink: 0,
+  padding: "8px 16px",
 };
 
 const BODY_STYLE = {
   flex: "1 1 0%",
   minHeight: 0,
   overflowY: "auto",
-  padding: 16,
+  padding: "8px 16px 16px",
   display: "flex",
   flexDirection: "column",
   gap: 16,
@@ -78,10 +91,10 @@ const FOOTER_STYLE = {
   justifyContent: "space-between",
   gap: 8,
   flexShrink: 0,
-  padding: 16,
-  borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  padding: "16px 16px 20px",
 };
 
+// MH-Theme/title/base — a section heading inside the panel body.
 const SECTION_TITLE_STYLE = {
   margin: 0,
   fontFamily: "Inter, sans-serif",
@@ -91,19 +104,39 @@ const SECTION_TITLE_STYLE = {
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
-const TOGGLE_ROW_STYLE = {
+const SECTION_HEADER_STYLE = {
+  ...SECTION_TITLE_STYLE,
   display: "flex",
-  alignItems: "flex-start",
-  gap: 12,
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 8,
+  width: "100%",
+  padding: 0,
+  border: "none",
+  background: "transparent",
+  cursor: "pointer",
 };
 
-const TOGGLE_TEXT_STYLE = {
-  flex: "1 1 auto",
-  minWidth: 0,
+// MH-Theme/body/base. Field labels and the name of a toggle share it — the
+// weight difference between a heading and a row label is the only thing
+// separating the sections from what is in them.
+const LABEL_STYLE = {
   fontFamily: "Inter, sans-serif",
+  fontWeight: 400,
   fontSize: 16,
   lineHeight: "24px",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+};
+
+const HELP_STYLE = {
+  ...LABEL_STYLE,
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+};
+
+const TOGGLE_ROW_STYLE = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
 };
 
 const FROM_CODE_STYLE = {
@@ -117,12 +150,44 @@ const FROM_CODE_STYLE = {
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
-const EMPTY_STYLE = {
-  fontFamily: "Inter, sans-serif",
-  fontSize: 16,
-  lineHeight: "24px",
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+const FIELD_STYLE = { display: "flex", flexDirection: "column", gap: 4 };
+
+// The surface a stream group sits on in the mockups; the empty state borrows it
+// so the panel doesn't change shape once data sources land.
+const STREAMS_BOX_STYLE = {
+  padding: "8px 16px 12px",
+  borderRadius: 12,
+  background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
+  ...HELP_STYLE,
 };
+
+/** A collapsible heading with the body it controls. */
+function Section({ title, children, defaultOpen = true }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <>
+      <button
+        type="button"
+        style={SECTION_HEADER_STYLE}
+        onClick={() => setOpen((on) => !on)}
+        aria-expanded={open}
+      >
+        <span>{title}</span>
+        <span
+          style={{
+            display: "flex",
+            transform: open ? "none" : "rotate(-90deg)",
+            transition: "transform 0.2s",
+          }}
+          aria-hidden
+        >
+          <ArrowDropDownIcon />
+        </span>
+      </button>
+      {open ? children : null}
+    </>
+  );
+}
 
 /**
  * The per-parameter side panel — another entry in the work area rather than a
@@ -204,6 +269,7 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
         <h2 style={HEADER_TITLE_STYLE}>{labelFor(paramKey, declaration)}</h2>
         <IconButton
           variant="text"
+          tone="accent"
           elevated={false}
           icon={<CloseIcon />}
           ariaLabel={t("close", "Close")}
@@ -211,149 +277,179 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
         />
       </header>
 
-      <Navbar style={SUBNAV_STYLE}>
-        <NavbarItem
+      <hr style={DIVIDER_STYLE} />
+
+      <div style={TABS_STYLE} role="tablist">
+        <Button
+          variant={tab === "settings" ? "filled" : "text"}
+          tone="accent"
+          role="tab"
+          aria-selected={tab === "settings"}
           leadingIcon={<SettingsIcon />}
-          selected={tab === "settings"}
           onClick={() => setTab("settings")}
         >
           {t("settings", "Settings")}
-        </NavbarItem>
-        <NavbarItem
-          leadingIcon={<WaveformIcon />}
-          selected={tab === "mapping"}
+        </Button>
+        <Button
+          variant={tab === "mapping" ? "filled" : "text"}
+          tone="accent"
+          role="tab"
+          aria-selected={tab === "mapping"}
+          leadingIcon={<CableIcon />}
           onClick={() => setTab("mapping")}
         >
           {t("mapping", "Mapping")}
-        </NavbarItem>
-      </Navbar>
+        </Button>
+      </div>
+
+      <hr style={DIVIDER_STYLE} />
 
       {tab === "settings" ? (
         <>
           <div style={BODY_STYLE}>
-            <h3 style={SECTION_TITLE_STYLE}>{t("properties", "Properties")}</h3>
-
-            <Input
-              label={t("name", "Name")}
-              value={labelFor(paramKey, declaration)}
-              disabled
-              onChange={() => {}}
-            />
-            <Input
-              label={t("dataType", "Data Type")}
-              value={typeLabel(declaration.type)}
-              disabled
-              onChange={() => {}}
-            />
-            <Input
-              label={t("defaultValue", "Default Value")}
-              value={
-                declaration.default === undefined
-                  ? ""
-                  : String(declaration.default)
-              }
-              disabled
-              onChange={() => {}}
-            />
-
-            <div style={FROM_CODE_STYLE}>
-              <span>
-                {t("definedInCode", "Defined in parameters.js")}
-              </span>
-              {parametersFile ? (
-                <Button
-                  variant="text"
-                  leadingIcon={<CodeIcon />}
-                  onClick={() => revealFile(parametersFile.id)}
-                >
-                  {t("editInCode", "Edit in code")}
-                </Button>
-              ) : null}
-            </div>
-
-            <div style={TOGGLE_ROW_STYLE}>
-              <div style={{ flex: "1 1 auto", minWidth: 0 }}>
-                <p style={{ ...SECTION_TITLE_STYLE, marginBottom: 2 }}>
-                  {t("normalize", "Normalize")}
-                </p>
-                <p style={{ ...TOGGLE_TEXT_STYLE, margin: 0 }}>
-                  {t(
-                    "normalizeHelp",
-                    "This will remap the values coming in from their default range to 0 to 1."
-                  )}
-                </p>
-              </div>
-              <Checkbox
-                checked={draft.normalize}
-                disabled={!canEdit}
-                ariaLabel={t("normalize", "Normalize")}
-                onChange={(next) =>
-                  setDraft((current) => ({ ...current, normalize: next }))
-                }
-              />
-            </div>
-
-            <div>
-              <p style={{ ...SECTION_TITLE_STYLE, marginBottom: 4 }}>
-                {t("range", "Range")}
-              </p>
-              <div style={{ display: "flex", gap: 12 }}>
+            <Section title={t("properties", "Properties")}>
+              <div style={FIELD_STYLE}>
+                <span style={LABEL_STYLE}>{t("name", "Name")}</span>
                 <Input
-                  type="number"
-                  placeholder={t("min", "Min")}
-                  value={draft.min}
-                  disabled={!canEdit}
-                  onChange={(next) =>
-                    setDraft((current) => ({ ...current, min: next }))
-                  }
+                  aria-label={t("name", "Name")}
+                  value={labelFor(paramKey, declaration)}
+                  disabled
+                  onChange={() => {}}
                 />
+              </div>
+              <div style={FIELD_STYLE}>
+                <span style={LABEL_STYLE}>{t("dataType", "Data Type")}</span>
                 <Input
-                  type="number"
-                  placeholder={t("max", "Max")}
-                  value={draft.max}
+                  aria-label={t("dataType", "Data Type")}
+                  value={typeLabel(declaration.type)}
+                  disabled
+                  onChange={() => {}}
+                />
+              </div>
+              <div style={FIELD_STYLE}>
+                <span style={LABEL_STYLE}>
+                  {t("defaultValue", "Default Value")}
+                </span>
+                <Input
+                  aria-label={t("defaultValue", "Default Value")}
+                  value={
+                    declaration.default === undefined
+                      ? ""
+                      : String(declaration.default)
+                  }
+                  disabled
+                  onChange={() => {}}
+                />
+              </div>
+
+              <div style={FROM_CODE_STYLE}>
+                <span>{t("definedInCode", "Defined in parameters.js")}</span>
+                {parametersFile ? (
+                  <Button
+                    variant="text"
+                    tone="accent"
+                    leadingIcon={<CodeIcon />}
+                    onClick={() => revealFile(parametersFile.id)}
+                  >
+                    {t("editInCode", "Edit in code")}
+                  </Button>
+                ) : null}
+              </div>
+
+              <div style={TOGGLE_ROW_STYLE}>
+                <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+                  <p style={{ ...LABEL_STYLE, margin: 0 }}>
+                    {t("normalize", "Normalize")}
+                  </p>
+                  <p style={{ ...HELP_STYLE, margin: 0 }}>
+                    {t(
+                      "normalizeHelp",
+                      "This will remap the values coming in from their default range to 0 to 1."
+                    )}
+                  </p>
+                </div>
+                <Checkbox
+                  tone="accent"
+                  checked={draft.normalize}
                   disabled={!canEdit}
+                  ariaLabel={t("normalize", "Normalize")}
                   onChange={(next) =>
-                    setDraft((current) => ({ ...current, max: next }))
+                    setDraft((current) => ({ ...current, normalize: next }))
                   }
                 />
               </div>
-            </div>
 
-            <h3 style={SECTION_TITLE_STYLE}>{t("mapping", "Mapping")}</h3>
-            <div style={TOGGLE_ROW_STYLE}>
-              <div style={{ flex: "1 1 auto", minWidth: 0 }}>
-                <p style={{ ...SECTION_TITLE_STYLE, marginBottom: 2 }}>
-                  {t("allowMapping", "Allow Mapping")}
-                </p>
-                <p style={{ ...TOGGLE_TEXT_STYLE, margin: 0 }}>
-                  {t(
-                    "allowMappingHelp",
-                    "Lets the parameter be mapped to a device. Otherwise, it will be limited to manual controls."
-                  )}
-                </p>
+              <div style={FIELD_STYLE}>
+                <span style={LABEL_STYLE}>{t("range", "Range")}</span>
+                <div style={{ display: "flex", gap: 12 }}>
+                  <Input
+                    type="number"
+                    placeholder={t("min", "Min")}
+                    aria-label={t("min", "Min")}
+                    value={draft.min}
+                    disabled={!canEdit}
+                    onChange={(next) =>
+                      setDraft((current) => ({ ...current, min: next }))
+                    }
+                  />
+                  <Input
+                    type="number"
+                    placeholder={t("max", "Max")}
+                    aria-label={t("max", "Max")}
+                    value={draft.max}
+                    disabled={!canEdit}
+                    onChange={(next) =>
+                      setDraft((current) => ({ ...current, max: next }))
+                    }
+                  />
+                </div>
               </div>
-              <Checkbox
-                checked={draft.allowMapping}
-                disabled={!canEdit}
-                ariaLabel={t("allowMapping", "Allow Mapping")}
-                onChange={(next) =>
-                  setDraft((current) => ({ ...current, allowMapping: next }))
-                }
-              />
-            </div>
+            </Section>
+
+            <Section title={t("mapping", "Mapping")}>
+              <div style={TOGGLE_ROW_STYLE}>
+                <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+                  <p style={{ ...LABEL_STYLE, margin: 0 }}>
+                    {t("allowMapping", "Allow Mapping")}
+                  </p>
+                  <p style={{ ...HELP_STYLE, margin: 0 }}>
+                    {t(
+                      "allowMappingHelp",
+                      "Lets the parameter be mapped to a device. Otherwise, it will be limited to manual controls."
+                    )}
+                  </p>
+                </div>
+                <Checkbox
+                  tone="accent"
+                  checked={draft.allowMapping}
+                  disabled={!canEdit}
+                  ariaLabel={t("allowMapping", "Allow Mapping")}
+                  onChange={(next) =>
+                    setDraft((current) => ({ ...current, allowMapping: next }))
+                  }
+                />
+              </div>
+            </Section>
           </div>
+
+          <hr style={DIVIDER_STYLE} />
 
           <footer style={FOOTER_STYLE}>
             <Button
               variant="text"
+              tone="accent"
               leadingIcon={<DeleteIcon />}
               disabled={!canEdit || !parametersFile}
               onClick={onDelete}
-              style={{ color: "var(--MH-Theme-Warning-Base, #b9261a)" }}
             >
               {t("deleteParameter", "Delete Parameter")}
             </Button>
-            <Button variant="filled" disabled={!canEdit} onClick={onSave}>
+            <Button
+              variant="filled"
+              tone="accent"
+              disabled={!canEdit}
+              onClick={onSave}
+            >
               {t("save", "Save")}
             </Button>
           </footer>
@@ -363,16 +459,12 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
           <h3 style={SECTION_TITLE_STYLE}>
             {t("availableStreams", "Available Streams")}
           </h3>
-          <Card variant="subtle">
-            <CardSection>
-              <p style={EMPTY_STYLE}>
-                {t(
-                  "noStreamsYet",
-                  "No data sources are connected to this visual yet. Once data sources land you'll pick an output here; until then, set a value by hand from the parameter's controls."
-                )}
-              </p>
-            </CardSection>
-          </Card>
+          <div style={STREAMS_BOX_STYLE}>
+            {t(
+              "noStreamsYet",
+              "No data sources are connected to this visual yet. Once data sources land you'll pick an output here; until then, set a value by hand from the parameter's controls."
+            )}
+          </div>
         </div>
       )}
     </section>

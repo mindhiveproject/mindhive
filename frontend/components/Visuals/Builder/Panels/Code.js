@@ -32,6 +32,11 @@ const STRIP_STYLE = {
 const EDITOR_WRAP_STYLE = {
   flex: "1 1 0%",
   minHeight: 0,
+  // Monaco lays out to whatever box it is given and will happily report a
+  // content width wider than the panel. Without this the pane inherits that as
+  // its minimum and stops being able to shrink.
+  minWidth: 0,
+  overflow: "hidden",
   borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
 };
 

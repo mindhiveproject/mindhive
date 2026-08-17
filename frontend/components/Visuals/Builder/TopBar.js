@@ -5,16 +5,17 @@ import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
-import { ChevronLeftIcon, ShareIcon } from "../../DesignSystem/Icons";
+import { ChevronLeftIcon } from "../../DesignSystem/Icons";
 
 const ROOT_STYLE = {
   display: "flex",
   alignItems: "center",
-  gap: 16,
+  gap: 8,
   flexShrink: 0,
-  padding: "8px 16px",
+  padding: "8px 10px 8px 8px",
   minHeight: 68,
   boxSizing: "border-box",
+  background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
 };
 
 const NAME_BLOCK_STYLE = {
@@ -68,7 +69,7 @@ export default function TopBar({ title, onShare }) {
         <p style={EYEBROW_STYLE}>{t("visualBlock", "Visual Block")}</p>
         <h1 style={NAME_STYLE}>{title}</h1>
       </div>
-      <Button variant="filled" leadingIcon={<ShareIcon />} onClick={onShare}>
+      <Button variant="filled" onClick={onShare}>
         {t("share", "Share")}
       </Button>
     </div>

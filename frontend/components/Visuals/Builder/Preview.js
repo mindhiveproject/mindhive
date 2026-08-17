@@ -6,11 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import Button from "../../DesignSystem/Button";
 import Panel from "./Panel";
 import P5Frame from "../Runtime/P5Frame";
-import {
-  FullscreenIcon,
-  FullscreenExitIcon,
-  SidePanelIcon,
-} from "../../DesignSystem/Icons";
+import { ChevronRightIcon } from "../../DesignSystem/Icons";
 
 const STAGE_STYLE = {
   flex: "1 1 0%",
@@ -46,10 +42,16 @@ const CONSOLE_STYLE = {
   lineHeight: "18px",
 };
 
+/**
+ * @param {boolean} [paused=false] - Set while the panel is collapsed. The frame
+ *   stays mounted so the sketch survives being shut away, but there is nothing
+ *   to look at, so it stops drawing.
+ */
 export default function Preview({
   files,
   values,
   logs = [],
+  paused = false,
   onDeclare,
   onLog,
   onHide,
@@ -71,7 +73,6 @@ export default function Preview({
         <>
           <Button
             variant="outline"
-            leadingIcon={fullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
             onClick={() => setFullscreen((on) => !on)}
           >
             {fullscreen
@@ -81,7 +82,7 @@ export default function Preview({
           {onHide && !fullscreen ? (
             <Button
               variant="text"
-              leadingIcon={<SidePanelIcon />}
+              leadingIcon={<ChevronRightIcon />}
               onClick={onHide}
             >
               {t("hide", "Hide")}
@@ -94,6 +95,7 @@ export default function Preview({
         <P5Frame
           files={files}
           values={values}
+          paused={paused}
           onDeclare={onDeclare}
           onLog={onLog}
         />

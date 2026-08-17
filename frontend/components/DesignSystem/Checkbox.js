@@ -17,6 +17,18 @@ const TARGET_STYLE = {
   cursor: "pointer",
 };
 
+// The colour families the box can be painted in, matching Button's `tone`.
+const TONES = {
+  primary: {
+    main: "var(--MH-Theme-Primary-Dark, #336F8A)",
+    hover: "var(--MH-Theme-Primary-Base, #337C84)",
+  },
+  accent: {
+    main: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+    hover: "var(--MH-Theme-Additional-Accent-Dark, #3F288F)",
+  },
+};
+
 const BOX_STYLE = {
   display: "flex",
   alignItems: "center",
@@ -25,20 +37,9 @@ const BOX_STYLE = {
   width: 20,
   height: 20,
   borderRadius: 4,
-  border: "2px solid var(--MH-Theme-Primary-Dark, #336F8A)",
   background: "transparent",
   color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
   transition: "background-color 0.2s, border-color 0.2s",
-};
-
-// Checked is a fill, not a fill plus a heavier outline — the border colour is
-// already the fill colour, so the box simply solidifies.
-const BOX_CHECKED_STYLE = {
-  background: "var(--MH-Theme-Primary-Dark, #336F8A)",
-};
-
-const BOX_HOVER_STYLE = {
-  borderColor: "var(--MH-Theme-Primary-Base, #337C84)",
 };
 
 const BOX_DISABLED_STYLE = {
@@ -91,6 +92,7 @@ const FOCUS_VISIBLE_STYLE = `
  *
  * @param {boolean} checked - Current state (controlled).
  * @param {(next: boolean) => void} onChange - Called with the toggled value.
+ * @param {"primary"|"accent"} [tone="primary"] - Colour family for the box.
  * @param {boolean} [indeterminate=false] - Draws a dash instead of a tick.
  * @param {boolean} [disabled=false] - Disabled state.
  * @param {string} [ariaLabel] - Accessible name when no visible label is tied to it.
@@ -103,6 +105,7 @@ const FOCUS_VISIBLE_STYLE = `
 export default function Checkbox({
   checked = false,
   onChange,
+  tone = "primary",
   indeterminate = false,
   disabled = false,
   ariaLabel,
@@ -110,10 +113,13 @@ export default function Checkbox({
   style = {},
 }) {
   const [hovered, setHovered] = useState(false);
+  const palette = TONES[tone] || TONES.primary;
 
-  let boxStyle = { ...BOX_STYLE };
-  if (checked || indeterminate) boxStyle = { ...boxStyle, ...BOX_CHECKED_STYLE };
-  if (!disabled && hovered) boxStyle = { ...boxStyle, ...BOX_HOVER_STYLE };
+  // Checked is a fill, not a fill plus a heavier outline — the border colour is
+  // already the fill colour, so the box simply solidifies.
+  let boxStyle = { ...BOX_STYLE, border: `2px solid ${palette.main}` };
+  if (checked || indeterminate) boxStyle = { ...boxStyle, background: palette.main };
+  if (!disabled && hovered) boxStyle = { ...boxStyle, borderColor: palette.hover };
   if (disabled) {
     boxStyle = {
       ...boxStyle,

@@ -1,27 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../../DesignSystem/Button";
 import Card, { CardSection } from "../../../DesignSystem/Card";
 import Checkbox from "../../../DesignSystem/Checkbox";
-import DropdownSelect from "../../../DesignSystem/DropdownSelect";
-import DropdownMenu from "../../../DesignSystem/DropdownMenu";
 import Input from "../../../DesignSystem/Input";
 import Radio from "../../../DesignSystem/Radio";
-import {
-  ArrowDropDownIcon,
-  DeleteIcon,
-  MoreVertIcon,
-} from "../../../DesignSystem/Icons";
+import { ArrowDropDownIcon, DeleteIcon } from "../../../DesignSystem/Icons";
 
-import { SEARCH_PROFILES } from "../../../Queries/YQVisual";
 import { DELETE_VISUAL, UPDATE_VISUAL } from "../../../Mutations/YQVisual";
 
 import Panel from "../Panel";
+import {
+  BlockSharingFields,
+  EditingFields,
+  sharingDraft,
+  sharingUpdate,
+} from "../SharingFields";
 import { useVisualBuilder } from "../../Context/VisualBuilderContext";
 
 const SECTION_HEADER_STYLE = {
@@ -66,21 +65,19 @@ const HELP_STYLE = {
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
-const COLLABORATOR_ROW_STYLE = {
+const OPTION_ROW_STYLE = {
   display: "flex",
   alignItems: "center",
   gap: 8,
-  padding: "4px 4px 4px 12px",
+  padding: 12,
 };
 
-const OPTION_ROW_STYLE = {
-  display: "flex",
-  alignItems: "flex-start",
-  gap: 12,
-  padding: 16,
+// The two participation modes are one choice, so both sit on a fill and the
+// chosen one is the lighter of the two rather than the only one with an
+// outline — an outline here would read as a second, separate object.
+const OPTION_CHOSEN_STYLE = {
+  background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
 };
-
-const RIGHT_ALIGN_STYLE = { display: "flex", justifyContent: "flex-end" };
 
 const FOOTER_STYLE = {
   display: "flex",
@@ -89,13 +86,6 @@ const FOOTER_STYLE = {
   gap: 8,
   paddingTop: 8,
 };
-
-const PRIVACY_OPTIONS = [
-  { value: "private", label: "Only me" },
-  { value: "friends", label: "People I follow" },
-  { value: "unlisted", label: "Anyone with the link" },
-  { value: "public", label: "Everyone" },
-];
 
 /** A collapsible titled block. The three sections are separate on purpose — see below. */
 function Section({ title, children, defaultOpen = true }) {
@@ -141,6 +131,9 @@ function Section({ title, children, defaultOpen = true }) {
  *   Block Sharing — who can reach it at all.
  *
  * Folding participation into sharing would lose that distinction.
+ *
+ * Editing and Block Sharing render the same fields the Share modal does, so the
+ * two places an author can change them stay one control.
  */
 export default function SettingsPanel({ user }) {
   const { t } = useTranslation("visuals");
@@ -151,46 +144,11 @@ export default function SettingsPanel({ user }) {
   const [deleteVisual] = useMutation(DELETE_VISUAL);
 
   const [draft, setDraft] = useState(() => fromVisual(visual));
-  const [search, setSearch] = useState("");
 
   useEffect(() => setDraft(fromVisual(visual)), [visual]);
 
-  const { data: searchData } = useQuery(SEARCH_PROFILES, {
-    variables: { search },
-    skip: search.trim().length < 2,
-  });
-
   const isOwner = visual?.author?.id === user?.id;
   const dirty = JSON.stringify(draft) !== JSON.stringify(fromVisual(visual));
-
-  // Editors and Viewers are two relationships rather than one list with a role
-  // column, so the UI merges them back into the single list the design shows.
-  const people = [
-    ...draft.collaborators.map((p) => ({ ...p, role: "editor" })),
-    ...draft.viewers.map((p) => ({ ...p, role: "viewer" })),
-  ];
-
-  function setRole(profile, role) {
-    setDraft((current) => ({
-      ...current,
-      collaborators:
-        role === "editor"
-          ? [...current.collaborators.filter((p) => p.id !== profile.id), profile]
-          : current.collaborators.filter((p) => p.id !== profile.id),
-      viewers:
-        role === "viewer"
-          ? [...current.viewers.filter((p) => p.id !== profile.id), profile]
-          : current.viewers.filter((p) => p.id !== profile.id),
-    }));
-  }
-
-  function removePerson(profile) {
-    setDraft((current) => ({
-      ...current,
-      collaborators: current.collaborators.filter((p) => p.id !== profile.id),
-      viewers: current.viewers.filter((p) => p.id !== profile.id),
-    }));
-  }
 
   async function onSave() {
     await updateVisual({
@@ -199,11 +157,9 @@ export default function SettingsPanel({ user }) {
         data: {
           title: draft.title,
           description: draft.description,
-          privacy: draft.privacy,
           participationMode: draft.participationMode,
           docsVisible: draft.docsVisible,
-          collaborators: { set: draft.collaborators.map((p) => ({ id: p.id })) },
-          viewers: { set: draft.viewers.map((p) => ({ id: p.id })) },
+          ...sharingUpdate(draft),
         },
       },
     });
@@ -214,10 +170,6 @@ export default function SettingsPanel({ user }) {
       return;
     await deleteVisual({ variables: { id: visual.id } });
     router.push("/dashboard/develop/visuals");
-  }
-
-  function copy(path) {
-    navigator.clipboard?.writeText(`${window.location.origin}${path}`);
   }
 
   return (
@@ -245,81 +197,22 @@ export default function SettingsPanel({ user }) {
       </Section>
 
       <Section title={t("editing", "Editing")}>
-        <Input
-          label={t("collaborators", "Collaborators")}
-          placeholder={t("searchForUser", "Search for a user")}
-          value={search}
-          disabled={!isOwner}
-          onChange={setSearch}
+        <EditingFields
+          visual={visual}
+          draft={draft}
+          setDraft={setDraft}
+          isOwner={isOwner}
         />
-        {searchData?.profiles
-          ?.filter((p) => p.id !== visual.author?.id)
-          .filter((p) => !people.some((existing) => existing.id === p.id))
-          .map((profile) => (
-            <Card key={profile.id} variant="subtle">
-              <div style={COLLABORATOR_ROW_STYLE}>
-                <span style={{ flex: "1 1 auto", ...FIELD_LABEL_STYLE }}>
-                  {profile.username}
-                </span>
-                <Button variant="text" onClick={() => setRole(profile, "editor")}>
-                  {t("addAsEditor", "Add as Editor")}
-                </Button>
-              </div>
-            </Card>
-          ))}
-
-        {people.map((profile) => (
-          <Card key={profile.id} variant="subtle">
-            <div style={COLLABORATOR_ROW_STYLE}>
-              <div style={{ flex: "1 1 auto", minWidth: 0 }}>
-                <p style={{ ...FIELD_LABEL_STYLE, margin: 0, fontWeight: 600 }}>
-                  {profile.username}
-                </p>
-                <p style={{ ...HELP_STYLE }}>
-                  {profile.role === "editor"
-                    ? t("editor", "Editor")
-                    : t("viewer", "Viewer")}
-                </p>
-              </div>
-              <DropdownMenu
-                trigger={<MoreVertIcon />}
-                ariaLabel={t("changeRole", "Change role")}
-                items={[
-                  {
-                    key: "editor",
-                    label: t("makeEditor", "Make Editor"),
-                    onClick: () => setRole(profile, "editor"),
-                  },
-                  {
-                    key: "viewer",
-                    label: t("makeViewer", "Make Viewer"),
-                    onClick: () => setRole(profile, "viewer"),
-                  },
-                  {
-                    key: "remove",
-                    label: t("remove", "Remove"),
-                    danger: true,
-                    onClick: () => removePerson(profile),
-                  },
-                ]}
-              />
-            </div>
-          </Card>
-        ))}
-
-        <div style={RIGHT_ALIGN_STYLE}>
-          <Button
-            variant="outline"
-            onClick={() => copy(`/builder/visuals/${visual.id}`)}
-          >
-            {t("copyEditingLink", "Copy editing link")}
-          </Button>
-        </div>
       </Section>
 
       <Section title={t("participation", "Participation")}>
         <div role="radiogroup" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <Card variant={draft.participationMode === "sandbox" ? "subtle" : "default"}>
+          <Card
+            variant="subtle"
+            style={
+              draft.participationMode === "sandbox" ? OPTION_CHOSEN_STYLE : null
+            }
+          >
             <div style={OPTION_ROW_STYLE}>
               <div style={{ flex: "1 1 auto", minWidth: 0 }}>
                 <p style={{ ...FIELD_LABEL_STYLE, margin: 0, fontWeight: 600 }}>
@@ -342,8 +235,8 @@ export default function SettingsPanel({ user }) {
               />
             </div>
             {draft.participationMode === "sandbox" ? (
-              <CardSection divided style={{ padding: "12px 16px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <CardSection style={{ padding: "0 12px 12px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ flex: "1 1 auto", ...FIELD_LABEL_STYLE }}>
                     {t("showDocumentation", "Show documentation")}
                   </span>
@@ -360,7 +253,12 @@ export default function SettingsPanel({ user }) {
             ) : null}
           </Card>
 
-          <Card variant={draft.participationMode === "authored" ? "subtle" : "default"}>
+          <Card
+            variant="subtle"
+            style={
+              draft.participationMode === "authored" ? OPTION_CHOSEN_STYLE : null
+            }
+          >
             <div style={OPTION_ROW_STYLE}>
               <div style={{ flex: "1 1 auto", minWidth: 0 }}>
                 <p style={{ ...FIELD_LABEL_STYLE, margin: 0, fontWeight: 600 }}>
@@ -387,29 +285,12 @@ export default function SettingsPanel({ user }) {
       </Section>
 
       <Section title={t("blockSharing", "Block Sharing")}>
-        <div>
-          <span style={FIELD_LABEL_STYLE}>{t("whoCanView", "Who can view")}</span>
-          <div style={{ marginTop: 4 }}>
-            <DropdownSelect
-              value={draft.privacy}
-              disabled={!isOwner}
-              ariaLabel={t("whoCanView", "Who can view")}
-              options={PRIVACY_OPTIONS.map((option) => ({
-                value: option.value,
-                label: t(option.value, option.label),
-              }))}
-              onChange={(next) => setDraft((c) => ({ ...c, privacy: next }))}
-            />
-          </div>
-        </div>
-        <div style={RIGHT_ALIGN_STYLE}>
-          <Button
-            variant="outline"
-            onClick={() => copy(`/preview/visual/${visual.id}`)}
-          >
-            {t("copyPublishedLink", "Copy published link")}
-          </Button>
-        </div>
+        <BlockSharingFields
+          visual={visual}
+          draft={draft}
+          setDraft={setDraft}
+          isOwner={isOwner}
+        />
       </Section>
 
       <hr style={RULE_STYLE} />
@@ -448,16 +329,8 @@ function fromVisual(visual) {
   return {
     title: visual?.title || "",
     description: visual?.description || "",
-    privacy: visual?.privacy || "private",
     participationMode: visual?.participationMode || "sandbox",
     docsVisible: !!visual?.docsVisible,
-    collaborators: (visual?.collaborators || []).map((p) => ({
-      id: p.id,
-      username: p.username,
-    })),
-    viewers: (visual?.viewers || []).map((p) => ({
-      id: p.id,
-      username: p.username,
-    })),
+    ...sharingDraft(visual),
   };
 }

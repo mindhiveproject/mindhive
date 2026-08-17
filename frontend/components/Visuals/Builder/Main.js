@@ -2,16 +2,16 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
+import { AnimatePresence, motion } from "motion/react";
 import useTranslation from "next-translate/useTranslation";
 
 import Navbar, { NavbarItem } from "../../DesignSystem/Navbar";
-import Button from "../../DesignSystem/Button";
-import SplitPane from "../../DesignSystem/SplitPane";
+import SplitPane, { COLLAPSE_TRANSITION } from "../../DesignSystem/SplitPane";
 import {
+  ChevronLeftIcon,
   CodeIcon,
   DescriptionIcon,
   SettingsIcon,
-  SidePanelIcon,
   TuneIcon,
   WaveformIcon,
 } from "../../DesignSystem/Icons";
@@ -33,6 +33,7 @@ import {
 
 import TopBar from "./TopBar";
 import Preview from "./Preview";
+import ShareModal from "./ShareModal";
 import DocumentationPanel from "./Panels/Documentation";
 import DataSourcesPanel from "./Panels/DataSources";
 import ParametersPanel from "./Panels/Parameters";
@@ -59,21 +60,95 @@ const SHELL_STYLE = {
   background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
 };
 
-const NAVBAR_STYLE = { flexShrink: 0, padding: "4px 8px" };
+const NAVBAR_STYLE = { flexShrink: 0, padding: 8 };
 
+// No padding above: the navbar already opens the channel between itself and the
+// panels, and adding one here would double it. A row, because the rail the
+// preview collapses into sits beside the split rather than over it.
 const BODY_STYLE = {
+  display: "flex",
   flex: "1 1 0%",
+  minWidth: 0,
   minHeight: 0,
-  padding: 16,
+  padding: "0 16px 16px",
   boxSizing: "border-box",
 };
 
+// Wide enough for the 24px chevron with the panel's own 12px of breathing room
+// either side. No gap of its own: the split's divider stays where it was when
+// the preview shut, and that gutter is the separation.
+const RAIL_WIDTH = 48;
+
+// What the preview leaves behind when it is shut: a strip of the same panel
+// surface, still at the edge the preview will come back from. A floating button
+// somewhere else on screen says a control appeared; this says the panel is
+// still there, pushed aside.
+const RAIL_STYLE = {
+  boxSizing: "border-box",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexShrink: 0,
+  overflow: "hidden",
+  padding: 0,
+  borderRadius: 12,
+  background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+  cursor: "pointer",
+  transition: "background-color 0.2s",
+};
+
+// Fixed width, so the contents hold their shape while the rail itself is the
+// thing whose width is animating.
+const RAIL_CONTENT_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 8,
+  flexShrink: 0,
+  width: RAIL_WIDTH,
+};
+
+// MH-Theme/label/large, turned on its side.
+const RAIL_LABEL_STYLE = {
+  writingMode: "vertical-rl",
+  fontFamily: "Inter, sans-serif",
+  fontWeight: 500,
+  fontSize: 14,
+  lineHeight: "20px",
+  whiteSpace: "nowrap",
+  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+};
+
+// The rail carries a border, so its hover is a fill rather than a second edge.
+const RAIL_HOVER_STYLE =
+  ".Visuals-Builder-PreviewRail:hover {" +
+  "background: var(--MH-Theme-Primary-Lighter, #F4F8F7);" +
+  "}" +
+  ".Visuals-Builder-PreviewRail:focus-visible {" +
+  "outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);" +
+  "outline-offset: 2px;" +
+  "}";
+
+// The work panel and the parameter detail beside it are one object split in
+// two, so they sit closer together than either does to the preview. The 4px
+// rides on the detail itself, so it opens along with it.
 const WORK_AREA_STYLE = {
   display: "flex",
-  gap: 12,
   minWidth: 0,
   minHeight: 0,
   height: "100%",
+};
+
+// The detail opens by growing its *share* of the row rather than by taking a
+// width. Both are animating at once — the row is widening as the preview shuts
+// beside it — and a share stays honest against a moving container, where a
+// width measured when the row was half as wide would not.
+const DETAIL_STYLE = {
+  flexBasis: 0,
+  minWidth: 0,
+  overflow: "hidden",
 };
 
 // How long typing has to settle before the sketch is rebuilt. Rebuilding per
@@ -119,6 +194,7 @@ export default function VisualBuilder({ query, user }) {
   const [detailPanel, setDetailPanel] = useState(null);
   const [focusFileId, setFocusFileId] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(true);
+  const [shareOpen, setShareOpen] = useState(false);
 
   // Local drafts of the code files. The server copy is the source of truth on
   // load; from then on this is, until the debounced save catches up.
@@ -344,6 +420,56 @@ export default function VisualBuilder({ query, user }) {
   const openPanel = useCallback((panel) => setDetailPanel(panel), []);
   const closePanel = useCallback(() => setDetailPanel(null), []);
 
+  // ── Preview drawer ─────────────────────────────────────────────────────────
+
+  // Whether it was this component that shut the preview, and so whether it has
+  // any business reopening it later.
+  const autoShutRef = useRef(false);
+  const detailOpen = !!detailPanel;
+
+  /**
+   * Show or hide the preview *because the author said so* — the rail, the Hide
+   * button, a drag past the minimum. Distinct from the automatic open and close
+   * below, which must never overwrite a choice the author has made.
+   */
+  const showPreview = useCallback((next) => {
+    autoShutRef.current = false;
+    setPreviewVisible(next);
+  }, []);
+
+  // Three panels across leaves none of them a workable width, so opening the
+  // parameter detail shuts the preview and closing it brings the preview back.
+  // The author can still pull the preview out over all three; doing so goes
+  // through `showPreview`, which is what stops the close undoing it.
+  useEffect(() => {
+    if (detailOpen) {
+      autoShutRef.current = previewVisible;
+      setPreviewVisible(false);
+    } else if (autoShutRef.current) {
+      autoShutRef.current = false;
+      setPreviewVisible(true);
+    }
+    // Deliberately only on the open/close edge: `previewVisible` is read for
+    // what it was at that moment, not subscribed to.
+  }, [detailOpen]);
+
+  // The sketch stops drawing once the pane is shut rather than the moment it
+  // starts closing — a canvas that has stopped repainting while it is still
+  // being squeezed shows the stage black behind it.
+  const [previewPaused, setPreviewPaused] = useState(false);
+
+  useEffect(() => {
+    if (previewVisible) {
+      setPreviewPaused(false);
+      return;
+    }
+    const timer = setTimeout(
+      () => setPreviewPaused(true),
+      COLLAPSE_TRANSITION.duration * 1000
+    );
+    return () => clearTimeout(timer);
+  }, [previewVisible]);
+
   // Adding or deleting a parameter is a text edit on a file, so the panels that
   // do it need a way to show the author where the edit landed.
   const revealFile = useCallback((fileId) => {
@@ -368,6 +494,9 @@ export default function VisualBuilder({ query, user }) {
       values,
       openPanel,
       closePanel,
+      // Which parameter the detail panel is pointed at, so the row it came from
+      // can show itself as the selected one.
+      detailKey: detailPanel?.paramKey ?? null,
       revealFile,
       focusFileId,
       logs,
@@ -389,6 +518,7 @@ export default function VisualBuilder({ query, user }) {
       values,
       openPanel,
       closePanel,
+      detailPanel,
       revealFile,
       focusFileId,
       logs,
@@ -421,9 +551,9 @@ export default function VisualBuilder({ query, user }) {
   return (
     <VisualBuilderContext.Provider value={contextValue}>
       <div className="Visuals-Builder" style={SHELL_STYLE}>
-        <TopBar title={visual.title} onShare={() => setTab("settings")} />
+        <TopBar title={visual.title} onShare={() => setShareOpen(true)} />
 
-        <Navbar variant="underline" style={NAVBAR_STYLE} showRule>
+        <Navbar style={NAVBAR_STYLE}>
           {TABS.map((entry) => (
             <NavbarItem
               key={entry.id}
@@ -437,22 +567,34 @@ export default function VisualBuilder({ query, user }) {
         </Navbar>
 
         <div style={BODY_STYLE}>
+          <style dangerouslySetInnerHTML={{ __html: RAIL_HOVER_STYLE }} />
           <SplitPane
+            style={{ flex: "1 1 0%", minWidth: 0 }}
             collapsed={!previewVisible}
+            onCollapsedChange={(shut) => showPreview(!shut)}
+            expandLabel={t("showPreview", "Show Preview")}
             defaultFraction={0.5}
             minStart={360}
             minEnd={320}
             start={
               <div style={WORK_AREA_STYLE}>
                 <div style={{ flex: "1 1 0%", minWidth: 0 }}>{workPanel}</div>
-                {detailPanel ? (
-                  <div style={{ flex: "1 1 0%", minWidth: 0 }}>
-                    <ParameterDetailPanel
-                      paramKey={detailPanel.paramKey}
-                      initialTab={detailPanel.initialTab}
-                    />
-                  </div>
-                ) : null}
+                <AnimatePresence initial={false}>
+                  {detailPanel ? (
+                    <motion.div
+                      style={DETAIL_STYLE}
+                      initial={{ flexGrow: 0, marginLeft: 0 }}
+                      animate={{ flexGrow: 1, marginLeft: 4 }}
+                      exit={{ flexGrow: 0, marginLeft: 0 }}
+                      transition={COLLAPSE_TRANSITION}
+                    >
+                      <ParameterDetailPanel
+                        paramKey={detailPanel.paramKey}
+                        initialTab={detailPanel.initialTab}
+                      />
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
               </div>
             }
             end={
@@ -460,24 +602,40 @@ export default function VisualBuilder({ query, user }) {
                 files={runFiles}
                 values={values}
                 logs={logs}
+                paused={previewPaused}
                 onDeclare={onDeclare}
                 onLog={pushLog}
-                onHide={() => setPreviewVisible(false)}
+                onHide={() => showPreview(false)}
               />
             }
           />
-          {previewVisible ? null : (
-            <div style={{ position: "fixed", right: 24, bottom: 24 }}>
-              <Button
-                variant="filled"
-                leadingIcon={<SidePanelIcon />}
-                onClick={() => setPreviewVisible(true)}
+
+          {/* The whole strip is the target — at 48px wide, asking the author to
+              find a button inside it would be the floating button again. */}
+          <AnimatePresence initial={false}>
+            {previewVisible ? null : (
+              <motion.button
+                type="button"
+                className="Visuals-Builder-PreviewRail"
+                style={RAIL_STYLE}
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: RAIL_WIDTH, opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={COLLAPSE_TRANSITION}
+                onClick={() => showPreview(true)}
+                aria-label={t("showPreview", "Show Preview")}
+                title={t("showPreview", "Show Preview")}
               >
-                {t("showPreview", "Show Preview")}
-              </Button>
-            </div>
-          )}
+                <span style={RAIL_CONTENT_STYLE} aria-hidden>
+                  <ChevronLeftIcon />
+                  <span style={RAIL_LABEL_STYLE}>{t("preview", "Preview")}</span>
+                </span>
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
+
+        <ShareModal open={shareOpen} onClose={() => setShareOpen(false)} />
       </div>
     </VisualBuilderContext.Provider>
   );

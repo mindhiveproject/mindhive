@@ -18,12 +18,21 @@ const BASE_STYLE = {
     "background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, opacity 0.2s",
 };
 
-// --- Filled (Figma Icon Button 1049:4895)
-const FILLED_BASE = {
-  ...BASE_STYLE,
-  background: "var(--MH-Theme-Primary-Dark, #336F8A)",
-  color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+// The colour families an icon button can be painted in — the same two Button
+// carries, so a label and an icon button in one row stay in step. Only filled
+// and text take a brand colour; the rest are neutral surfaces.
+const TONES = {
+  primary: {
+    fill: "var(--MH-Theme-Primary-Dark, #336F8A)",
+    label: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  },
+  accent: {
+    fill: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+    label: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+  },
 };
+
+// --- Filled (Figma Icon Button 1049:4895)
 const FILLED_HOVER = {
   background: "var(--MH-Theme-Accent-Medium, #F9D978)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
@@ -114,11 +123,6 @@ const SUBTLE_DISABLED = {
 };
 
 // --- Text
-const TEXT_BASE = {
-  ...BASE_STYLE,
-  background: "transparent",
-  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
-};
 const TEXT_HOVER = {
   background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
 };
@@ -131,7 +135,8 @@ const TEXT_DISABLED = {
   cursor: "default",
 };
 
-function getVariantStyles(variant) {
+function getVariantStyles(variant, tone) {
+  const palette = TONES[tone] || TONES.primary;
   switch (variant) {
     case "outline":
       return {
@@ -156,7 +161,7 @@ function getVariantStyles(variant) {
       };
     case "text":
       return {
-        base: TEXT_BASE,
+        base: { ...BASE_STYLE, background: "transparent", color: palette.label },
         hover: TEXT_HOVER,
         pressed: TEXT_PRESSED,
         disabled: TEXT_DISABLED,
@@ -164,7 +169,11 @@ function getVariantStyles(variant) {
     case "filled":
     default:
       return {
-        base: FILLED_BASE,
+        base: {
+          ...BASE_STYLE,
+          background: palette.fill,
+          color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+        },
         hover: FILLED_HOVER,
         pressed: FILLED_PRESSED,
         disabled: FILLED_DISABLED,
@@ -206,6 +215,8 @@ const ICON_WRAPPER_STYLE = {
  * (Primary Lighter behind a black glyph) for close and dismiss actions.
  *
  * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
+ * @param {"primary"|"accent"} [tone="primary"] - Colour family for the filled
+ *   and text variants; the neutral variants ignore it.
  * @param {React.ReactNode} icon - 24px icon (required).
  * @param {boolean} [elevated=true] - Hover elevation. Set false to drop the
  *   hover drop shadow on the filled and tonal variants.
@@ -220,6 +231,7 @@ const ICON_WRAPPER_STYLE = {
  */
 export default function IconButton({
   variant = "filled",
+  tone = "primary",
   icon = null,
   elevated = true,
   disabled = false,
@@ -234,7 +246,7 @@ export default function IconButton({
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
 
-  const styles = getVariantStyles(variant);
+  const styles = getVariantStyles(variant, tone);
   let buttonStyle = { ...styles.base };
 
   if (disabled) {
