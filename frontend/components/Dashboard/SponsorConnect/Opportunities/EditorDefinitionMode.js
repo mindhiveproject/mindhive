@@ -1,5 +1,6 @@
-// Definition-driven Opportunity editor — DefinitionForm is the only intake UI.
-// Chat, Status, and follow-up forms open as modals from the opportunities List.
+// Definition-driven Opportunity editor — DefinitionForm is the intake UI.
+// Messages open from the top bar (OpportunityMessagesMenu). Follow-up forms
+// attached to held matching rounds appear as chips under the top bar.
 // Custom ConnectQuestion CRUD lived on the legacy Editor and is not ported;
 // structured intake + round follow-up FormDefinitions replace that path.
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
@@ -11,8 +12,11 @@ import styled from "styled-components";
 import { UserContext } from "../../../Global/Authorized";
 import DefinitionForm from "../../../Forms/DefinitionForm";
 import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
+import OpportunityFollowUpFormPanel from "./OpportunityFollowUpFormPanel";
 import OpportunityListStepper from "./OpportunityListStepper";
+import OpportunityMessagesMenu from "./OpportunityMessagesMenu";
 import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
 import {
   GET_OPPORTUNITY,
@@ -25,6 +29,7 @@ import {
   UPDATE_OPPORTUNITY,
 } from "../../../Mutations/Opportunity";
 import useConnectRole from "../../Connect/useConnectRole";
+import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
 import {
   buildClassNetworksMutationInput,
   collectMemberClassNetworks,
@@ -38,6 +43,13 @@ import {
   OpportunityPageShell as Shell,
   OPPORTUNITY_PAGE_GUTTER,
 } from "./OpportunityPageLayout";
+import {
+  OPPORTUNITY_EDITOR_TABS,
+  collectFollowUpForms,
+  formTabKey,
+  parseFormTabKey,
+  resolveOpportunityEditorTab,
+} from "../../../../lib/opportunityEditorTabs";
 
 const BACK_CHEVRON = (
   <svg
@@ -55,22 +67,40 @@ const BACK_CHEVRON = (
   </svg>
 );
 
-const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
+const StickyHeader = styled.div`
   position: sticky;
   /* Sponsor Connect has no ConnectNavigationBar — stick to the top of the scrollport */
   top: 0;
   z-index: 5;
+  margin: 0 calc(-1 * ${OPPORTUNITY_PAGE_GUTTER}) 8px;
+  background: rgba(247, 249, 248, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+`;
+
+const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 16px;
-  margin: 0 calc(-1 * ${OPPORTUNITY_PAGE_GUTTER}) 8px;
   padding: 10px ${OPPORTUNITY_PAGE_GUTTER};
-  background: rgba(247, 249, 248, 0.92);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(211, 218, 224, 0.85);
+`;
+
+const ChipSelectorRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px ${OPPORTUNITY_PAGE_GUTTER} 10px;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(211, 218, 224, 0.45);
+`;
+
+const IntakePane = styled.div`
+  display: ${(p) => (p.$hidden ? "none" : "contents")};
 `;
 
 const TopBarLeft = styled.div`
@@ -210,15 +240,33 @@ export default function EditorDefinitionMode({ opportunityId }) {
   const [saving, setSaving] = useState(false);
   const [unsubmitOpen, setUnsubmitOpen] = useState(false);
   const proposalFormRef = useRef(null);
+  const followUpFormRef = useRef(null);
   const saveIntentRef = useRef({ submitForReview: false });
 
   const currentStatus = opportunity?.status || "draft";
+  const followUpForms = useMemo(
+    () =>
+      collectFollowUpForms(opportunity?.rounds || [], {
+        opportunityStatus: currentStatus,
+      }),
+    [opportunity?.rounds, currentStatus],
+  );
+  const resolvedTab = resolveOpportunityEditorTab(router.query?.tab, {
+    followUpForms,
+  });
+  const activeFollowUpForm = useMemo(() => {
+    const formId = parseFormTabKey(resolvedTab);
+    if (!formId) return null;
+    return followUpForms.find((form) => form.id === formId) || null;
+  }, [resolvedTab, followUpForms]);
+  const isProposalTab = resolvedTab === OPPORTUNITY_EDITOR_TABS.proposal;
+  const showFollowUpChips = !isNew && followUpForms.length > 0;
   const canSponsorSubmit =
     !isAdmin &&
     !isNew &&
     (currentStatus === "draft" || currentStatus === "returned");
   const canSponsorUnsubmit =
-    !isAdmin && !isNew && currentStatus === "pending_review";
+    !isAdmin && !isNew && isReturnableOpportunityStatus(currentStatus);
   const showSponsorDraftOnlySave = !isAdmin && !isNew && !canSponsorSubmit;
 
   const handleSubmit = async (result) => {
@@ -285,10 +333,25 @@ export default function EditorDefinitionMode({ opportunityId }) {
     setSaving(true);
     saveIntentRef.current.submitForReview = submitForReview;
     try {
+      if (activeFollowUpForm) {
+        await followUpFormRef.current?.save?.();
+        return;
+      }
       await proposalFormRef.current?.save?.();
     } finally {
       setSaving(false);
     }
+  };
+
+  const selectEditorTab = (tabKey) => {
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, tab: tabKey },
+      },
+      undefined,
+      { shallow: true },
+    );
   };
 
   const handleUnsubmitSuccess = (nextStatus) => {
@@ -353,98 +416,155 @@ export default function EditorDefinitionMode({ opportunityId }) {
   const unsubmitLabel = t("myOpportunitiesList.unsubmit.button", {}, {
     default: "Unsubmit",
   });
+  const opportunityFormLabel = t("opportunityEditor.tabs.proposal", {}, {
+    default: "Opportunity form",
+  });
+  const followUpFallbackLabel = t(
+    "opportunityEditor.tabs.followUpFallback",
+    {},
+    { default: "Follow-up form" },
+  );
+  const formsAriaLabel = t("opportunityEditor.tabs.additionalFormsAria", {}, {
+    default: "Select a form",
+  });
+  const selectorChips = showFollowUpChips
+    ? [
+        { key: OPPORTUNITY_EDITOR_TABS.proposal, label: opportunityFormLabel },
+        ...followUpForms.map((form) => ({
+          key: formTabKey(form.id),
+          label: form.title || followUpFallbackLabel,
+        })),
+      ]
+    : [];
 
   return (
     <Shell>
-      <TopBar>
-        <TopBarLeft>
-          <BackLink
-            type="button"
-            onClick={() => router.push({ pathname: LIST_PATH })}
-            aria-label={backLabel}
-            title={backLabel}
-            disabled={saving}
-          >
-            {BACK_CHEVRON}
-          </BackLink>
-          <TitleRow>
-            <h1 title={pageTitle}>{pageTitle}</h1>
-            {!isNew && (
-              <OpportunityListStepper
-                status={currentStatus}
-                proposalData={opportunity?.proposalData}
-                rounds={opportunity?.rounds}
-                reviewNotes={opportunity?.reviewNotes}
-                videoFile={opportunity?.videoFile}
-                networks={statusStepperNetworks}
-              />
-            )}
-          </TitleRow>
-        </TopBarLeft>
-        <Actions>
-          {canSponsorUnsubmit ? (
-            <Button
+      <StickyHeader>
+        <TopBar>
+          <TopBarLeft>
+            <BackLink
               type="button"
-              variant="outline"
-              onClick={() => setUnsubmitOpen(true)}
+              onClick={() => router.push({ pathname: LIST_PATH })}
+              aria-label={backLabel}
+              title={backLabel}
               disabled={saving}
             >
-              {unsubmitLabel}
-            </Button>
-          ) : null}
-          {canSponsorSubmit ? (
-            <>
+              {BACK_CHEVRON}
+            </BackLink>
+            <TitleRow>
+              <h1 title={pageTitle}>{pageTitle}</h1>
+              {!isNew && (
+                <OpportunityListStepper
+                  status={currentStatus}
+                  proposalData={opportunity?.proposalData}
+                  rounds={opportunity?.rounds}
+                  reviewNotes={opportunity?.reviewNotes}
+                  videoFile={opportunity?.videoFile}
+                  networks={statusStepperNetworks}
+                />
+              )}
+            </TitleRow>
+          </TopBarLeft>
+          <Actions>
+            {!isNew ? (
+              <OpportunityMessagesMenu opportunity={opportunity} user={user} />
+            ) : null}
+            {canSponsorUnsubmit ? (
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => runSave({ submitForReview: false })}
+                onClick={() => setUnsubmitOpen(true)}
                 disabled={saving}
               >
-                {saveDraftLabel}
+                {unsubmitLabel}
               </Button>
+            ) : null}
+            {canSponsorSubmit ? (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => runSave({ submitForReview: false })}
+                  disabled={saving}
+                >
+                  {saveDraftLabel}
+                </Button>
+                <Button
+                  type="button"
+                  variant="filled"
+                  onClick={() => runSave({ submitForReview: true })}
+                  disabled={saving}
+                >
+                  {submitForReviewLabel}
+                </Button>
+              </>
+            ) : showSponsorDraftOnlySave || isNew || isAdmin ? (
               <Button
                 type="button"
                 variant="filled"
-                onClick={() => runSave({ submitForReview: true })}
+                onClick={() => runSave({ submitForReview: false })}
                 disabled={saving}
               >
-                {submitForReviewLabel}
+                {editPrimaryLabel}
               </Button>
-            </>
-          ) : showSponsorDraftOnlySave || isNew || isAdmin ? (
-            <Button
-              type="button"
-              variant="filled"
-              onClick={() => runSave({ submitForReview: false })}
-              disabled={saving}
-            >
-              {editPrimaryLabel}
-            </Button>
-          ) : null}
-        </Actions>
-      </TopBar>
+            ) : null}
+          </Actions>
+        </TopBar>
+        {showFollowUpChips ? (
+          <ChipSelectorRow role="group" aria-label={formsAriaLabel}>
+            {selectorChips.map((chip) => {
+              const isSelected = resolvedTab === chip.key;
+              return (
+                <Chip
+                  key={chip.key}
+                  label={chip.label}
+                  shape="square"
+                  style={{ padding: "16px" }}
+                  selected={isSelected}
+                  pressed={isSelected}
+                  onClick={() => selectEditorTab(chip.key)}
+                  ariaLabel={chip.label}
+                />
+              );
+            })}
+          </ChipSelectorRow>
+        ) : null}
+      </StickyHeader>
 
-      <OpportunityClassNetworksField
-        availableNetworks={availableNetworks}
-        selectedNetworks={selectedNetworks}
-        onChange={setSelectedNetworks}
-      />
-      <DefinitionForm
-        ref={proposalFormRef}
-        definitionKey="opportunity"
-        entity={opportunity || null}
-        scopeContext={{ organizationId: myOrgId }}
-        viewerRoles={viewerRoles}
-        locale={router.locale}
-        onSubmit={handleSubmit}
-        hideSaveButton
-        saveLabel={editPrimaryLabel}
-      />
+      <IntakePane $hidden={!isProposalTab}>
+        <OpportunityClassNetworksField
+          availableNetworks={availableNetworks}
+          selectedNetworks={selectedNetworks}
+          onChange={setSelectedNetworks}
+          quiet
+        />
+        <DefinitionForm
+          ref={proposalFormRef}
+          definitionKey="opportunity"
+          entity={opportunity || null}
+          scopeContext={{ organizationId: myOrgId }}
+          viewerRoles={viewerRoles}
+          locale={router.locale}
+          onSubmit={handleSubmit}
+          hideSaveButton
+          quiet
+          saveLabel={editPrimaryLabel}
+        />
+      </IntakePane>
+      {activeFollowUpForm ? (
+        <OpportunityFollowUpFormPanel
+          ref={followUpFormRef}
+          opportunity={opportunity}
+          formMeta={activeFollowUpForm}
+          hideSaveButton
+        />
+      ) : null}
 
       <UnsubmitOpportunityModal
         open={unsubmitOpen}
         onClose={() => setUnsubmitOpen(false)}
         opportunityId={opportunityId}
+        status={currentStatus}
         onSuccess={handleUnsubmitSuccess}
       />
     </Shell>

@@ -14,14 +14,17 @@ import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../../
 import { FORM_DEFINITION_BY_ID } from "../../../../Queries/FormDefinition";
 import { MARK_OPPORTUNITY_REVIEW_NOTES_READ } from "../../../../Mutations/OpportunityReviewNote";
 import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap";
-import { hydrateProposalInputs } from "../../../Connect/Opportunities/OpportunityProposalConfig";
-import ReturnOpportunityModal from "../../../Connect/ReturnOpportunityModal";
+import { hydrateProposalInputs } from "../../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import OpportunityReviewNotesThread from "../../../Connect/OpportunityReviewNotesThread";
+import { UPDATE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
 import OpportunityFollowUpFormPanel from "../../../SponsorConnect/Opportunities/OpportunityFollowUpFormPanel";
 import DefinitionForm from "../../../../Forms/DefinitionForm";
 import ReviewCard from "../../../../Forms/DefinitionForm/ReviewCard";
 import ReviewField from "../../../../Forms/DefinitionForm/ReviewField";
-import { isReturnableOpportunityStatus } from "../../../Connect/returnOpportunityUtils";
+import {
+  isReturnableOpportunityStatus,
+  returnOpportunityToSponsor,
+} from "../../../Connect/returnOpportunityUtils";
 import ConnectProfileCard from "../../../Connect/ConnectProfileCard";
 import { CARD_WIDTH } from "../../../Connect/ConnectBrowseLayout";
 import OrganizationConnectCard from "../../../Connect/Organizations/OrganizationConnectCard";
@@ -627,9 +630,10 @@ export default function OpportunityPreviewModal({
   const { t: tConnect } = useTranslation("connect");
   const router = useRouter();
   const { user } = useUser();
-  const [returnModalOpen, setReturnModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(OPPORTUNITY_PREVIEW_TABS.detail);
   const [chatOpen, setChatOpen] = useState(false);
+  const [showReturnInvite, setShowReturnInvite] = useState(false);
+  const [returnError, setReturnError] = useState(null);
   const [toggleFlash, setToggleFlash] = useState(null);
   const markedReadNoteIdsRef = useRef(new Set());
 
@@ -777,6 +781,8 @@ export default function OpportunityPreviewModal({
   useEffect(() => {
     if (!open) {
       setChatOpen(false);
+      setShowReturnInvite(false);
+      setReturnError(null);
       setToggleFlash(null);
       return;
     }
@@ -786,6 +792,8 @@ export default function OpportunityPreviewModal({
         : initialTab || OPPORTUNITY_PREVIEW_TABS.detail;
     setActiveTab(nextTab);
     setChatOpen(false);
+    setShowReturnInvite(false);
+    setReturnError(null);
     setToggleFlash(null);
   }, [open, opportunityId, initialTab]);
 
@@ -835,6 +843,13 @@ export default function OpportunityPreviewModal({
   }, [opportunityId, activeRoundId, selectedNetworkId]);
 
   const [markNotesRead] = useMutation(MARK_OPPORTUNITY_REVIEW_NOTES_READ);
+  const [updateOpportunity, { loading: returning }] = useMutation(
+    UPDATE_OPPORTUNITY,
+    {
+      refetchQueries: returnRefetchQueries,
+      awaitRefetchQueries: true,
+    },
+  );
 
   // Mark sponsor replies read only once the teacher opens Messages (not on modal open).
   useEffect(() => {
@@ -870,9 +885,24 @@ export default function OpportunityPreviewModal({
     returnRefetchQueries,
   ]);
 
-  const handleReturnSuccess = () => {
-    setReturnModalOpen(false);
-    onClose?.();
+  const handleReturnAndWriteMessage = async () => {
+    if (!opportunityId || returning) return;
+    setReturnError(null);
+    try {
+      await returnOpportunityToSponsor({
+        updateOpportunity,
+        opportunityId,
+      });
+      setChatOpen(true);
+      setShowReturnInvite(true);
+    } catch (e) {
+      setReturnError(
+        e?.message ||
+          t("opportunities.preview.returnModal.error", {}, {
+            default: "Could not return this opportunity. Please try again.",
+          }),
+      );
+    }
   };
 
   const categoryKey = CATEGORY_LABELS[opp?.projectCategory];
@@ -1129,6 +1159,16 @@ export default function OpportunityPreviewModal({
           })}
         />
       ) : null}
+      {returnError ? (
+        <MessageCard
+          variant="warning"
+          message={returnError}
+          onClose={() => setReturnError(null)}
+          closeAriaLabel={t("opportunities.preview.flashDismiss", {}, {
+            default: "Dismiss",
+          })}
+        />
+      ) : null}
       <div
         style={{
           display: "flex",
@@ -1143,10 +1183,18 @@ export default function OpportunityPreviewModal({
           {t("opportunities.preview.close", {}, { default: "Close" })}
         </Button>
         {canReturnToSponsor ? (
-          <Button variant="outline" onClick={() => setReturnModalOpen(true)}>
-            {t("opportunities.preview.returnToSponsor", {}, {
-              default: "Return with comments",
-            })}
+          <Button
+            variant="outline"
+            onClick={handleReturnAndWriteMessage}
+            disabled={returning}
+          >
+            {returning
+              ? t("opportunities.preview.returnModal.submitting", {}, {
+                  default: "Returning…",
+                })
+              : t("opportunities.preview.returnToSponsor", {}, {
+                  default: "Return and write message",
+                })}
           </Button>
         ) : null}
         {showMatchingRoundSection ? (
@@ -1874,6 +1922,9 @@ export default function OpportunityPreviewModal({
                       refetchQueries={returnRefetchQueries}
                       showTitle={false}
                       layout="panel"
+                      autoFocusCompose={showReturnInvite}
+                      showReturnInvite={showReturnInvite}
+                      onPosted={() => setShowReturnInvite(false)}
                     />
                   </ChatThreadWrap>
                 </ChatPane>
@@ -1881,15 +1932,6 @@ export default function OpportunityPreviewModal({
             </SplitShell>
           ) : null}
       </Modal>
-      <ReturnOpportunityModal
-        open={returnModalOpen}
-        onClose={() => setReturnModalOpen(false)}
-        onSuccess={handleReturnSuccess}
-        opportunityId={opportunityId}
-        roundId={activeRoundId}
-        mentorId={opp?.mentor?.id}
-        refetchQueries={returnRefetchQueries}
-      />
     </>
   );
 }

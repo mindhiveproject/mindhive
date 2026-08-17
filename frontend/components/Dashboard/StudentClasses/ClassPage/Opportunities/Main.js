@@ -7,7 +7,7 @@ import MessageCard from "../../../../DesignSystem/MessageCard";
 import { CLASS_STUDENT_OPPORTUNITIES } from "../../../../Queries/ConnectRound";
 import OpportunityCompactCard, {
   OpportunityCompactGrid,
-} from "../../../Connect/Opportunities/OpportunityCompactCard";
+} from "../../../Connect/OpportunityCompactCard";
 import OpportunityPreviewModal from "../../../TeacherClasses/ClassPage/Modals/OpportunityPreviewModal";
 
 /**

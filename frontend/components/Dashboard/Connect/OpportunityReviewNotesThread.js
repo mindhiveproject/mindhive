@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useMutation } from "@apollo/client";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
@@ -33,6 +33,8 @@ const Shell = styled.section`
     p.$panel
       ? `
     height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
   `
       : ""}
 `;
@@ -290,6 +292,14 @@ const ErrorText = styled.p`
   margin: 0;
   color: #871b16;
   font-size: 13px;
+`;
+
+const InviteText = styled.p`
+  margin: 0;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
 const VisuallyHidden = styled.span`
@@ -593,6 +603,8 @@ function MessageItem({
  * @param {"default"|"panel"} [layout="default"] - `panel` fills a split-pane column (full width).
  * @param {(note: object|null, meta: { kind: string, body: string }) => void} [onPosted]
  *   Called after a successful create (compose). Parent owns follow-up UX.
+ * @param {boolean} [autoFocusCompose] - Focus and scroll to the compose field.
+ * @param {boolean} [showReturnInvite] - Show copy inviting the teacher to write a return message.
  */
 export default function OpportunityReviewNotesThread({
   opportunityId,
@@ -612,10 +624,13 @@ export default function OpportunityReviewNotesThread({
   showTitle = true,
   layout = "default",
   className,
+  autoFocusCompose = false,
+  showReturnInvite = false,
 }) {
   const isPanel = layout === "panel";
   const { t } = useTranslation("connect");
   const composeFieldId = useId();
+  const composeRef = useRef(null);
   const [draft, setDraft] = useState("");
   const [error, setError] = useState(null);
   const [previousExpanded, setPreviousExpanded] = useState(false);
@@ -713,13 +728,22 @@ export default function OpportunityReviewNotesThread({
   );
 
   const composeEnabled = canCreate && !!roundId && !needsRoundSelection;
+
+  useEffect(() => {
+    if (!autoFocusCompose || !composeEnabled) return;
+    const el = composeRef.current;
+    if (!el) return;
+    el.focus();
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [autoFocusCompose, composeEnabled]);
+
   const composePlaceholder =
     mode === "sponsor"
       ? t("reviewThread.compose.sponsorPlaceholder", {}, {
           default: "Write a reply for the reviewers…",
         })
       : t("reviewThread.compose.teacherPlaceholder", {}, {
-          default: "Leave a note for the sponsor…",
+          default: "Write a message for the sponsor…",
         });
   const composeLabel =
     mode === "sponsor"
@@ -901,7 +925,16 @@ export default function OpportunityReviewNotesThread({
               {/* {isPanel ? (
                 <label htmlFor={composeFieldId}>{composeLabel}</label>
               ) : null} */}
+              {showReturnInvite ? (
+                <InviteText>
+                  {t("reviewThread.compose.returnInvite", {}, {
+                    default:
+                      "Write a message explaining what the sponsor should change.",
+                  })}
+                </InviteText>
+              ) : null}
               <textarea
+                ref={composeRef}
                 id={composeFieldId}
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}

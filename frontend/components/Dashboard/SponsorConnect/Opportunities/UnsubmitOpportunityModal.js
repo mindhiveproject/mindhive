@@ -22,13 +22,16 @@ const CancelRow = styled.div`
   margin-top: 4px;
 `;
 
+const HELD_UNSUBMIT_STATUSES = new Set(["pre_selected", "accepted"]);
+
 /**
- * Sponsor chooses how to leave pending_review: draft or returned (in revision).
+ * Sponsor chooses how to leave review: draft or returned (in revision).
  */
 export default function UnsubmitOpportunityModal({
   open,
   onClose,
   opportunityId,
+  status,
   onSuccess,
 }) {
   const { t } = useTranslation("connect");
@@ -41,6 +44,7 @@ export default function UnsubmitOpportunityModal({
   });
 
   const busy = Boolean(busyTarget);
+  const showHeldWarning = HELD_UNSUBMIT_STATUSES.has(status);
 
   const handleClose = () => {
     if (busy) return;
@@ -134,6 +138,14 @@ export default function UnsubmitOpportunityModal({
             "Choose how to pull this opportunity out of review. Draft hides it from teachers until you submit again. In revision keeps it visible as returned so you can revise and resubmit.",
         })}
       </p>
+      {showHeldWarning ? (
+        <p style={{ margin: "12px 0 0" }}>
+          {t("myOpportunitiesList.unsubmit.helperHeld", {}, {
+            default:
+              "This opportunity is already selected for a matching round. Unsubmitting does not remove it — students may still see it until a teacher removes it. Ask the teacher if you want it hidden. If they remove it, they will need to re-select it later for students to see it again.",
+          })}
+        </p>
+      ) : null}
       {error ? (
         <p
           role="alert"
