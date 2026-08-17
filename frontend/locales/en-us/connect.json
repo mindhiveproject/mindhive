@@ -637,6 +637,7 @@
 			"cancel": "Cancel",
 			"error": "Could not unsubmit this opportunity. Please try again.",
 			"helper": "Choose how to pull this opportunity out of review. Draft hides it from teachers until you submit again. In revision keeps it visible as returned so you can revise and resubmit.",
+			"helperHeld": "This opportunity is already selected for a matching round. Unsubmitting does not remove it — students may still see it until a teacher removes it. Ask the teacher if you want it hidden. If they remove it, they will need to re-select it later for students to see it again.",
 			"successDraft": "Unsubmitted — back to draft.",
 			"successRevision": "Unsubmitted — marked as in revision.",
 			"title": "Unsubmit opportunity?",

@@ -27,6 +27,7 @@ import OpportunityChatModal from "./OpportunityChatModal";
 import OpportunityFollowUpFormModal from "./OpportunityFollowUpFormModal";
 import OpportunityListStepper from "./OpportunityListStepper";
 import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
+import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
 
 const MESSAGE_ICON = (
   <img
@@ -356,6 +357,9 @@ export default function OpportunitiesList({ user }) {
   const [unsubmitOpportunityId, setUnsubmitOpportunityId] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
+  const unsubmitStatus = opportunities.find(
+    (opportunity) => opportunity.id === unsubmitOpportunityId,
+  )?.status;
 
   const handleDelete = async (id) => {
     if (
@@ -487,7 +491,7 @@ export default function OpportunitiesList({ user }) {
             const networks = opportunity.classNetworks || [];
             const networkCount = networks.length;
             const isPreSelected = opportunity.status === "pre_selected";
-            const canUnsubmit = opportunity.status === "pending_review";
+            const canUnsubmit = isReturnableOpportunityStatus(opportunity.status);
             const heldRounds = isPreSelected ? opportunity.rounds || [] : [];
             const unreadNotes = getUnreadReviewerCommentNotes({
               notes: opportunity.reviewNotes,
@@ -736,6 +740,7 @@ export default function OpportunitiesList({ user }) {
         open={Boolean(unsubmitOpportunityId)}
         onClose={() => setUnsubmitOpportunityId(null)}
         opportunityId={unsubmitOpportunityId}
+        status={unsubmitStatus}
         onSuccess={handleUnsubmitSuccess}
       />
     </Shell>

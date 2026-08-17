@@ -441,7 +441,10 @@ export const Opportunity = list({
       ) {
         data.acceptedAt = new Date().toISOString();
       }
-      if (nextStatus === "returned" && prevStatus !== "returned") {
+      if (
+        (nextStatus === "returned" && prevStatus !== "returned") ||
+        (nextStatus === "draft" && prevStatus !== "draft")
+      ) {
         data.preSelectedAt = null;
         data.acceptedAt = null;
       }
