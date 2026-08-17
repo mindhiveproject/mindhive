@@ -16,7 +16,10 @@ import {
   isProposalFormAnswerComplete,
   getProposalEntrySavedAt,
 } from "../../../../lib/opportunityProposalData";
-import { isRoundSponsorFormsVisible } from "../../../../lib/opportunityEditorTabs";
+import {
+  formTabKey,
+  isRoundSponsorFormsVisible,
+} from "../../../../lib/opportunityEditorTabs";
 import {
   OPPORTUNITY_FLASH,
   resolveOpportunityFlashMessage,
@@ -24,7 +27,6 @@ import {
 } from "../../../../lib/opportunityFlash";
 import { getUnreadReviewerCommentNotes } from "../../../../lib/reviewThreadRound";
 import OpportunityChatModal from "./OpportunityChatModal";
-import OpportunityFollowUpFormModal from "./OpportunityFollowUpFormModal";
 import OpportunityListStepper from "./OpportunityListStepper";
 import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
 import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
@@ -353,7 +355,6 @@ export default function OpportunitiesList({ user }) {
   });
   const [deleteOpportunity] = useMutation(DELETE_OPPORTUNITY);
   const [chatModal, setChatModal] = useState(null);
-  const [formModal, setFormModal] = useState(null);
   const [unsubmitOpportunityId, setUnsubmitOpportunityId] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
@@ -382,35 +383,11 @@ export default function OpportunitiesList({ user }) {
     });
   };
 
-  const handleOpenForm = (opportunity, form, round) => {
-    setFormModal({
-      opportunity,
-      formMeta: {
-        id: form.id,
-        title: form.title || form.key || form.id,
-        key: form.key,
-        version: form.version,
-        status: form.status,
-        roundId: round?.id || null,
-        roundTitle: round?.title || null,
-        networkId: round?.classNetwork?.id || null,
-        networkTitle: round?.classNetwork?.title || null,
-      },
+  const handleOpenForm = (opportunity, form) => {
+    router.push({
+      pathname: "/dashboard/sponsor-connect/opportunities",
+      query: { op: opportunity.id, tab: formTabKey(form.id) },
     });
-  };
-
-  const handleFormSaved = () => {
-    const opportunityId = formModal?.opportunity?.id || null;
-    setFormModal(null);
-    if (opportunityId) {
-      setRowFlash({
-        opportunityId,
-        message: tConnect("myOpportunitiesList.flash.formSaved", {}, {
-          default: "Follow-up form saved.",
-        }),
-      });
-    }
-    refetch();
   };
 
   const handleUnsubmitSuccess = (nextStatus) => {
@@ -678,11 +655,7 @@ export default function OpportunitiesList({ user }) {
                                           "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
                                       }}
                                       onClick={() =>
-                                        handleOpenForm(
-                                          opportunity,
-                                          form,
-                                          round,
-                                        )
+                                        handleOpenForm(opportunity, form)
                                       }
                                     >
                                       {tConnect(
@@ -699,11 +672,7 @@ export default function OpportunitiesList({ user }) {
                                         { default: "Respond to form" },
                                       )}
                                       onClick={() =>
-                                        handleOpenForm(
-                                          opportunity,
-                                          form,
-                                          round,
-                                        )
+                                        handleOpenForm(opportunity, form)
                                       }
                                     />
                                   )}
@@ -728,13 +697,6 @@ export default function OpportunitiesList({ user }) {
         opportunityId={chatModal?.opportunityId}
         initialRoundId={chatModal?.initialRoundId}
         user={user}
-      />
-      <OpportunityFollowUpFormModal
-        open={Boolean(formModal?.formMeta?.id)}
-        onClose={() => setFormModal(null)}
-        onSaved={handleFormSaved}
-        opportunity={formModal?.opportunity}
-        formMeta={formModal?.formMeta}
       />
       <UnsubmitOpportunityModal
         open={Boolean(unsubmitOpportunityId)}

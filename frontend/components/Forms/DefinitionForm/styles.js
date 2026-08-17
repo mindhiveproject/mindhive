@@ -7,7 +7,8 @@ export const Card = styled.section`
   gap: ${(p) => (p.$quiet ? "16px" : "20px")};
   padding: ${(p) => (p.$quiet ? "0" : "28px")};
   border-radius: ${(p) => (p.$quiet ? "0" : "16px")};
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  background: ${(p) =>
+    p.$quiet ? "transparent" : "var(--MH-Theme-Neutrals-White, #ffffff)"};
   box-shadow: ${(p) =>
     p.$quiet ? "none" : "0px 4px 24px rgba(0, 0, 0, 0.05)"};
   border: ${(p) =>

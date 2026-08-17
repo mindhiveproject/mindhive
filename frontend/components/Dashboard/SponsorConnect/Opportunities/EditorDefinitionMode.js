@@ -536,6 +536,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
           availableNetworks={availableNetworks}
           selectedNetworks={selectedNetworks}
           onChange={setSelectedNetworks}
+          quiet
         />
         <DefinitionForm
           ref={proposalFormRef}
@@ -546,6 +547,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
           locale={router.locale}
           onSubmit={handleSubmit}
           hideSaveButton
+          quiet
           saveLabel={editPrimaryLabel}
         />
       </IntakePane>
