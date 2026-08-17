@@ -191,11 +191,7 @@ export default function ClassProjects({
         />
       )}
 
-      {!readOnly && (
-        <section className="classTabSection">
-          <ProjectsTemplatePanel myclass={myclass} user={user} />
-        </section>
-      )}
+      {!readOnly && <ProjectsTemplatePanel myclass={myclass} user={user} />}
 
       <section className="classTabSection">
         <div className="classTabSectionHeader">
