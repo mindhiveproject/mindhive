@@ -1382,6 +1382,7 @@
 			"unnamedColumn": "Colonne sans titre",
 			"viewDetails": ""
 		},
+		"more": "",
 		"newTemplate": "Créer un nouveau modèle de classe",
 		"noClassTemplatesDescription": "Créer un tableau de modèle que les étudiants de cette classe pourront utiliser comme point de départ.",
 		"noClassTemplatesYet": "Vous n'avez pas encore créé de tableaux de modèles de classe.",

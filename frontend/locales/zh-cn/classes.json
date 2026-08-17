@@ -1382,6 +1382,7 @@
 			"unnamedColumn": "无标题专栏",
 			"viewDetails": ""
 		},
+		"more": "",
 		"newTemplate": "创建新的班级模板",
 		"noClassTemplatesDescription": "为本班学生创建一个模板看板，作为起点使用。",
 		"noClassTemplatesYet": "您还没有创建任何班级模板看板。",

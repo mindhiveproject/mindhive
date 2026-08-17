@@ -569,7 +569,7 @@
 		"manageProject": "Manage project",
 		"manageProjects": "Manage Projects ({{count}})",
 		"manageProjectsFor": "Manage Projects for {{username}}",
-		"manageSelectedStudents": "Manage Selected Students ({{count}})",
+		"manageSelectedStudents": "Manage selected students ({{count}})",
 		"manageSelectedStudentsInfo": "Manage {{count}} selected student(s)",
 		"manageStageStatus": "Manage {{stage}} Status",
 		"manageStudy": "Manage study",

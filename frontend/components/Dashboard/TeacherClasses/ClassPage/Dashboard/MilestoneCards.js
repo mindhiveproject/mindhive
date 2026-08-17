@@ -13,16 +13,27 @@ import {
 const PROJECTS_CARD_ICON = "/assets/icons/document.svg";
 const ARROW_ICON = "/assets/icons/profile/arrow.svg";
 const SCROLL_AMOUNT = 240;
+const SCROLL_EDGE_WIDTH = 56;
+const SCROLL_ARROW_SIZE = 12;
+const SCROLL_ARROW_BUTTON_STYLE = {
+  width: "36px",
+  height: "36px",
+  padding: "6px",
+  background: "var(--MH-Theme-Neutrals-White, #ffffff)",
+  border: "1.5px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  color: "var(--MH-Theme-Accent-Dark, #5D5763)",
+};
 
 function ScrollArrowIcon({ direction }) {
   return (
     <span
+      className="milestoneScrollArrowIcon"
       style={{
         display: "inline-flex",
         transform: direction === "left" ? "scaleX(-1)" : undefined,
       }}
     >
-      <DashboardAssetIcon src={ARROW_ICON} size={16} />
+      <DashboardAssetIcon src={ARROW_ICON} size={SCROLL_ARROW_SIZE} />
     </span>
   );
 }
@@ -89,7 +100,7 @@ export default function MilestoneCards({
 
       const scrollerRect = scroller.getBoundingClientRect();
       const targetRect = target.getBoundingClientRect();
-      const edgePad = 48;
+      const edgePad = SCROLL_EDGE_WIDTH;
       const fullyVisible =
         targetRect.left >= scrollerRect.left + edgePad &&
         targetRect.right <= scrollerRect.right - edgePad;
@@ -127,7 +138,7 @@ export default function MilestoneCards({
         )}
       >
         <IconButton
-          variant="tonal"
+          variant="outline"
           elevated={false}
           disabled={!canScrollLeft}
           ariaLabel={t("dashboard.scrollMilestonesLeft", {}, {
@@ -136,6 +147,7 @@ export default function MilestoneCards({
           onClick={() => scrollByDirection("left")}
           icon={<ScrollArrowIcon direction="left" />}
           className="milestoneScrollArrow"
+          style={SCROLL_ARROW_BUTTON_STYLE}
         />
       </div>
 
@@ -211,7 +223,7 @@ export default function MilestoneCards({
         )}
       >
         <IconButton
-          variant="tonal"
+          variant="outline"
           elevated={false}
           disabled={!canScrollRight}
           ariaLabel={t("dashboard.scrollMilestonesRight", {}, {
@@ -220,6 +232,7 @@ export default function MilestoneCards({
           onClick={() => scrollByDirection("right")}
           icon={<ScrollArrowIcon direction="right" />}
           className="milestoneScrollArrow"
+          style={SCROLL_ARROW_BUTTON_STYLE}
         />
       </div>
     </StyledMilestoneCardsWrap>
@@ -238,33 +251,58 @@ const StyledMilestoneCardsWrap = styled.div`
   .milestoneScrollEdge {
     position: absolute;
     top: 0;
-    bottom: 4px;
+    bottom: 0;
     z-index: 2;
     display: flex;
     align-items: center;
-    width: 48px;
+    width: ${SCROLL_EDGE_WIDTH}px;
     margin: 0;
     padding: 0;
-    background: transparent;
     pointer-events: none;
   }
 
   .milestoneScrollEdgeLeft {
     left: 0;
     justify-content: flex-start;
+    padding-left: 2px;
+    background: linear-gradient(
+      to right,
+      var(--MH-Theme-Neutrals-Light-Green, #f6f9f8) 0%,
+      var(--MH-Theme-Neutrals-Light-Green, #f6f9f8) 42%,
+      rgba(246, 249, 248, 0) 100%
+    );
   }
 
   .milestoneScrollEdgeRight {
     right: 0;
     justify-content: flex-end;
+    padding-right: 2px;
+    background: linear-gradient(
+      to left,
+      var(--MH-Theme-Neutrals-Light-Green, #f6f9f8) 0%,
+      var(--MH-Theme-Neutrals-Light-Green, #f6f9f8) 42%,
+      rgba(246, 249, 248, 0) 100%
+    );
   }
 
   .milestoneScrollEdge.isHidden {
     opacity: 0;
+    visibility: hidden;
   }
 
   .milestoneScrollArrow {
     pointer-events: auto;
+  }
+
+  .milestoneScrollArrow .DesignSystem-IconButton-Icon {
+    width: ${SCROLL_ARROW_SIZE}px !important;
+    height: ${SCROLL_ARROW_SIZE}px !important;
+  }
+
+  .milestoneScrollArrow .DesignSystem-IconButton-Icon img {
+    width: ${SCROLL_ARROW_SIZE}px;
+    height: ${SCROLL_ARROW_SIZE}px;
+    opacity: 0.55;
   }
 `;
 
@@ -277,12 +315,16 @@ const StyledMilestoneCards = styled.div`
   min-width: 0;
   max-width: 100%;
   overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0;
-  padding-bottom: 4px;
+  overflow-y: visible;
+  padding: 2px 4px;
   scroll-behavior: smooth;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   overscroll-behavior-x: contain;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .milestoneCard {
     display: flex;
