@@ -33,6 +33,8 @@ const Shell = styled.section`
     p.$panel
       ? `
     height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
   `
       : ""}
 `;

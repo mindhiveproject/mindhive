@@ -1,5 +1,6 @@
 // Definition-driven Opportunity editor — DefinitionForm is the only intake UI.
-// Chat, Status, and follow-up forms open as modals from the opportunities List.
+// Messages open from the top bar (OpportunityMessagesMenu). Status and
+// follow-up forms open as modals from the opportunities List.
 // Custom ConnectQuestion CRUD lived on the legacy Editor and is not ported;
 // structured intake + round follow-up FormDefinitions replace that path.
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
@@ -13,6 +14,7 @@ import DefinitionForm from "../../../Forms/DefinitionForm";
 import Button from "../../../DesignSystem/Button";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
 import OpportunityListStepper from "./OpportunityListStepper";
+import OpportunityMessagesMenu from "./OpportunityMessagesMenu";
 import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
 import {
   GET_OPPORTUNITY,
@@ -382,6 +384,9 @@ export default function EditorDefinitionMode({ opportunityId }) {
           </TitleRow>
         </TopBarLeft>
         <Actions>
+          {!isNew ? (
+            <OpportunityMessagesMenu opportunity={opportunity} user={user} />
+          ) : null}
           {canSponsorUnsubmit ? (
             <Button
               type="button"
