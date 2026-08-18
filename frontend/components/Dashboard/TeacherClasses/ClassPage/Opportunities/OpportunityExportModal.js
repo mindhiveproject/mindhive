@@ -1,17 +1,21 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { saveAs } from "file-saver";
+import JSZip from "jszip";
 import useTranslation from "next-translate/useTranslation";
 import { jsonToCSV } from "react-papaparse";
 
 import Button from "../../../../DesignSystem/Button";
 import Modal from "../../../../DesignSystem/Modal";
 import { OPPORTUNITIES_FOR_CSV_EXPORT } from "../../../../Queries/Opportunity";
+import { MEDIA_ASSETS_BY_IDS } from "../../../../Mutations/MediaAsset";
 import {
   EXPORT_COLUMN_GROUPS,
   ALL_EXPORT_COLUMN_IDS,
   buildExportRows,
   buildOpportunityExportFilename,
+  collectMediaAssetIdsFromOpportunities,
+  collectOpportunityMediaDownloads,
   getDefaultSelectedColumnIds,
 } from "./opportunityExportUtils";
 
@@ -63,8 +67,19 @@ const ERROR_STYLE = {
   fontSize: 13,
 };
 
+async function fetchMediaBuffer(url) {
+  const response = await fetch(url, {
+    mode: "cors",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+  return response.arrayBuffer();
+}
+
 /**
- * Column-picker modal + CSV download for matching-round network opportunities.
+ * Column-picker modal + ZIP download (CSV + per-opportunity media folders).
  */
 export default function OpportunityExportModal({
   open,
@@ -80,15 +95,22 @@ export default function OpportunityExportModal({
     getDefaultSelectedColumnIds,
   );
   const [exportError, setExportError] = useState(null);
+  const [exportProgress, setExportProgress] = useState(null);
 
   const [fetchDetails, { loading }] = useLazyQuery(OPPORTUNITIES_FOR_CSV_EXPORT, {
     fetchPolicy: "network-only",
   });
+  const [fetchMediaAssets] = useLazyQuery(MEDIA_ASSETS_BY_IDS, {
+    fetchPolicy: "network-only",
+  });
+
+  const exporting = Boolean(exportProgress) || loading;
 
   useEffect(() => {
     if (open) {
       setSelectedColumnIds(getDefaultSelectedColumnIds());
       setExportError(null);
+      setExportProgress(null);
     }
   }, [open]);
 
@@ -99,7 +121,7 @@ export default function OpportunityExportModal({
 
   const opportunityCount = listOpportunities?.length || 0;
   const canExport =
-    opportunityCount > 0 && selectedColumnIds.length > 0 && !loading;
+    opportunityCount > 0 && selectedColumnIds.length > 0 && !exporting;
 
   const toggleColumn = useCallback((columnId) => {
     setSelectedColumnIds((prev) => {
@@ -137,6 +159,7 @@ export default function OpportunityExportModal({
   const handleExport = useCallback(async () => {
     if (!canExport) return;
     setExportError(null);
+    setExportProgress({ type: "loading" });
     try {
       const ids = (listOpportunities || []).map((opportunity) => opportunity.id);
       const { data, error } = await fetchDetails({ variables: { ids } });
@@ -149,6 +172,21 @@ export default function OpportunityExportModal({
         ]),
       );
 
+      const assetIds = collectMediaAssetIdsFromOpportunities(
+        listOpportunities,
+        detailById,
+      );
+      let assetById = new Map();
+      if (assetIds.length > 0) {
+        const { data: assetData, error: assetError } = await fetchMediaAssets({
+          variables: { ids: assetIds },
+        });
+        if (assetError) throw assetError;
+        assetById = new Map(
+          (assetData?.mediaAssets || []).map((asset) => [asset.id, asset]),
+        );
+      }
+
       const rows = buildExportRows({
         listOpportunities,
         detailById,
@@ -156,6 +194,7 @@ export default function OpportunityExportModal({
         roundId,
         selectedColumnIds,
         t,
+        assetById,
       });
 
       if (!rows.length) {
@@ -168,23 +207,62 @@ export default function OpportunityExportModal({
       }
 
       const csv = jsonToCSV(rows);
-      const filename = buildOpportunityExportFilename({
+      const csvFilename = buildOpportunityExportFilename({
         networkTitle,
         roundTitle,
+        extension: "csv",
       });
-      saveAs(new Blob([csv], { type: "text/csv;charset=utf-8" }), filename);
+      const zipFilename = buildOpportunityExportFilename({
+        networkTitle,
+        roundTitle,
+        extension: "zip",
+      });
+
+      const zip = new JSZip();
+      zip.file(csvFilename, csv);
+
+      const mediaDownloads = collectOpportunityMediaDownloads(
+        listOpportunities,
+        detailById,
+        assetById,
+      );
+      const total = mediaDownloads.length;
+      for (let index = 0; index < total; index += 1) {
+        const item = mediaDownloads[index];
+        setExportProgress({
+          type: "media",
+          current: index + 1,
+          total,
+        });
+        try {
+          const buffer = await fetchMediaBuffer(item.url);
+          zip.file(item.zipPath, buffer);
+        } catch (mediaErr) {
+          console.error(
+            `Failed to include ${item.zipPath} in opportunity export`,
+            mediaErr,
+          );
+        }
+      }
+
+      setExportProgress({ type: "zip" });
+      const blob = await zip.generateAsync({ type: "blob" });
+      saveAs(blob, zipFilename);
       onClose?.();
     } catch (err) {
-      console.error("Failed to export opportunities CSV", err);
+      console.error("Failed to export opportunities ZIP", err);
       setExportError(
         t("opportunities.matchingRound.export.failed", {}, {
           default: "Could not export opportunities. Please try again.",
         }),
       );
+    } finally {
+      setExportProgress(null);
     }
   }, [
     canExport,
     fetchDetails,
+    fetchMediaAssets,
     listOpportunities,
     networkTitle,
     onClose,
@@ -198,7 +276,7 @@ export default function OpportunityExportModal({
   return (
     <Modal
       open={open}
-      onClose={loading ? undefined : onClose}
+      onClose={exporting ? undefined : onClose}
       maxWidth={560}
       title={t("opportunities.matchingRound.export.title", {}, {
         default: "Export opportunities",
@@ -209,7 +287,7 @@ export default function OpportunityExportModal({
             variant="text"
             type="button"
             onClick={onClose}
-            disabled={loading}
+            disabled={exporting}
           >
             {t("opportunities.matchingRound.export.cancel", {}, {
               default: "Cancel",
@@ -221,13 +299,26 @@ export default function OpportunityExportModal({
             onClick={handleExport}
             disabled={!canExport}
           >
-            {loading
-              ? t("opportunities.matchingRound.export.exporting", {}, {
-                  default: "Exporting…",
-                })
-              : t("opportunities.matchingRound.export.download", {}, {
-                  default: "Download CSV",
-                })}
+            {exportProgress?.type === "media"
+              ? t(
+                  "opportunities.matchingRound.export.downloadingMedia",
+                  {
+                    current: exportProgress.current,
+                    total: exportProgress.total,
+                  },
+                  { default: "Downloading media {{current}} of {{total}}…" },
+                )
+              : exportProgress?.type === "zip"
+                ? t("opportunities.matchingRound.export.buildingZip", {}, {
+                    default: "Building zip…",
+                  })
+                : exporting
+                  ? t("opportunities.matchingRound.export.exporting", {}, {
+                      default: "Exporting…",
+                    })
+                  : t("opportunities.matchingRound.export.download", {}, {
+                      default: "Download ZIP",
+                    })}
           </Button>
         </>
       }
@@ -235,16 +326,16 @@ export default function OpportunityExportModal({
       <p style={HINT_STYLE}>
         {t("opportunities.matchingRound.export.hint", { count: opportunityCount }, {
           default:
-            "Choose which columns to include. {{count}} opportunities from this network will be exported.",
+            "Choose which columns to include. {{count}} opportunities from this network will be exported as a ZIP with the CSV and a folder per opportunity (intro video, cover illustration, and follow-up images/PDFs).",
         })}
       </p>
       <div style={TOOLBAR_STYLE}>
-        <Button variant="text" type="button" onClick={selectAll} disabled={loading}>
+        <Button variant="text" type="button" onClick={selectAll} disabled={exporting}>
           {t("opportunities.matchingRound.export.selectAll", {}, {
             default: "Select all",
           })}
         </Button>
-        <Button variant="text" type="button" onClick={clearAll} disabled={loading}>
+        <Button variant="text" type="button" onClick={clearAll} disabled={exporting}>
           {t("opportunities.matchingRound.export.clearAll", {}, {
             default: "Clear all",
           })}
@@ -267,7 +358,7 @@ export default function OpportunityExportModal({
                       if (el) el.indeterminate = someChecked;
                     }}
                     onChange={() => toggleGroup(group)}
-                    disabled={loading}
+                    disabled={exporting}
                   />
                   <span>
                     {t(group.labelKey, {}, { default: group.labelDefault })}
@@ -281,7 +372,7 @@ export default function OpportunityExportModal({
                       type="checkbox"
                       checked={selectedSet.has(column.id)}
                       onChange={() => toggleColumn(column.id)}
-                      disabled={loading}
+                      disabled={exporting}
                     />
                     <span>
                       {t(column.headerKey, {}, {

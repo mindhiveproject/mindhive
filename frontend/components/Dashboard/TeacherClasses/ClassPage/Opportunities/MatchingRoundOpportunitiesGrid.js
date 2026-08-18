@@ -25,6 +25,11 @@ import {
   GET_CONNECT_ROUND,
   NETWORK_OPPORTUNITIES_FOR_ROUND,
 } from "../../../../Queries/ConnectRound";
+import {
+  getOpportunityIntroVideoFilename,
+  getOpportunityIntroVideoKind,
+  hasOpportunityIntroVideo,
+} from "../../../../../lib/opportunityIntroVideo";
 
 const INFO_HIGHLIGHT_DISMISSED_KEY =
   "mh.classMatchingRound.infoHighlightDismissed";
@@ -211,6 +216,26 @@ function formatDateTime(iso) {
   }
 }
 
+function introVideoStatusValue(opportunity, t) {
+  const kind = getOpportunityIntroVideoKind(opportunity);
+  if (kind === "file") {
+    return (
+      getOpportunityIntroVideoFilename(opportunity) ||
+      t("opportunities.rowMeta.introVideoUploaded", {}, {
+        default: "Uploaded file",
+      })
+    );
+  }
+  if (kind === "url") {
+    return t("opportunities.rowMeta.introVideoExternal", {}, {
+      default: "External link",
+    });
+  }
+  return t("opportunities.rowMeta.introVideoNotProvided", {}, {
+    default: "Not provided",
+  });
+}
+
 function TooltipMetaRow({
   label,
   value,
@@ -378,6 +403,12 @@ function OpportunityInfoContent({
             default: "Team size",
           })}
           value={teamSizeValue}
+        />
+        <TooltipMetaRow
+          label={t("opportunities.rowMeta.introVideoLabel", {}, {
+            default: "Intro video",
+          })}
+          value={introVideoStatusValue(opportunity, t)}
         />
         <TooltipMetaRow
           label={t("opportunities.rowMeta.lastUpdatedLabel", {}, {
@@ -579,6 +610,40 @@ export default function MatchingRoundOpportunitiesGrid({
       );
     },
     [dismissedHighlights, handleDismissHighlight, handleMarkScheduled, markingScheduled, t],
+  );
+
+  const VideoStatusRenderer = useCallback(
+    (params) => {
+      const opportunity = params?.data;
+      if (!opportunity) return null;
+
+      const hasVideo = hasOpportunityIntroVideo(opportunity);
+      const videoAria = hasVideo
+        ? t("opportunities.matchingRound.grid.columns.videoProvided", {}, {
+            default: "Intro video provided",
+          })
+        : t("opportunities.matchingRound.grid.columns.videoMissing", {}, {
+            default: "No intro video",
+          });
+
+      return (
+        <span className="matchingRoundOppVideoCell">
+          <img
+            className="matchingRoundOppVideoIcon"
+            src={
+              hasVideo
+                ? "/assets/icons/movie_person.svg"
+                : "/assets/icons/no_movie.svg"
+            }
+            alt={videoAria}
+            title={videoAria}
+            width={20}
+            height={20}
+          />
+        </span>
+      );
+    },
+    [t],
   );
 
   const getRowClass = useCallback((params) => {
@@ -788,6 +853,27 @@ export default function MatchingRoundOpportunitiesGrid({
     }
 
     cols.push({
+      field: "video",
+      headerName: "",
+      headerTooltip: t("opportunities.matchingRound.grid.columns.video", {}, {
+        default: "Intro video",
+      }),
+      cellRenderer: VideoStatusRenderer,
+      sortable: false,
+      filter: false,
+      width: 52,
+      maxWidth: 52,
+      pinned: "right",
+      cellClass: "matchingRoundOppVideoGridCell",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 0,
+      },
+    });
+
+    cols.push({
       field: "info",
       headerName: "",
       cellRenderer: InfoButtonRenderer,
@@ -807,6 +893,7 @@ export default function MatchingRoundOpportunitiesGrid({
     InfoButtonRenderer,
     RemoveButtonRenderer,
     ReviewButtonRenderer,
+    VideoStatusRenderer,
     onPreview,
     onRemove,
     t,
@@ -815,7 +902,7 @@ export default function MatchingRoundOpportunitiesGrid({
   useEffect(() => {
     const api = gridRef.current?.api;
     if (!api) return;
-    api.refreshCells({ columns: ["info", "review"], force: true });
+    api.refreshCells({ columns: ["info", "review", "video"], force: true });
     api.refreshClientSideRowModel("sort");
   }, [dismissedHighlights, opportunities, roundId, viewerId]);
 
