@@ -19,7 +19,7 @@ const DEVELOP_NEW_TRIGGER_STYLE = {
   height: "40px",
   padding: "8px 16px 8px 24px",
   borderRadius: "100px",
-  background: " #337C84",
+  background: " var(--MH-Theme-Primary-Dark, #336F8A)",
   border: "none",
   color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
   fontWeight: 600,

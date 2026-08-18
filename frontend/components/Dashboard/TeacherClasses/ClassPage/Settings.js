@@ -22,8 +22,8 @@ import DesignSystemButton from "../../../DesignSystem/Button";
 import TipTapEditor from "../../../TipTap/Main";
 import CurriculumTypeSelector from "./CurriculumTypeSelector";
 import {
-  DEFAULT_CURRICULUM_TYPE,
-  normalizeCurriculumType,
+  getClassCurriculumFallback,
+  getClassCurriculumTypes,
 } from "../../../../lib/curriculumTypes";
 import { deriveRoles } from "../../Connect/useConnectRole";
 
@@ -54,16 +54,14 @@ export default function Settings({ myclass, user }) {
   const [classDescription, setClassDescription] = useState(
     myclass?.description || ""
   );
-  const [curriculumType, setCurriculumType] = useState(
-    normalizeCurriculumType(myclass?.settings?.curriculumType)
+  const [curriculumTypes, setCurriculumTypes] = useState(() =>
+    getClassCurriculumTypes(myclass?.settings)
   );
 
   // Sync from server when myclass (e.g. after refetch) changes
   useEffect(() => {
-    setCurriculumType(
-      normalizeCurriculumType(myclass?.settings?.curriculumType)
-    );
-  }, [myclass?.settings?.curriculumType]);
+    setCurriculumTypes(getClassCurriculumTypes(myclass?.settings));
+  }, [myclass?.settings?.curriculumType, myclass?.settings?.curriculumTypes]);
 
   useEffect(() => {
     setClassDescription(myclass?.description || "");
@@ -135,16 +133,20 @@ export default function Settings({ myclass, user }) {
     }
   }, [classNetworks, selectedNetwork]);
 
-  const updateCurriculumType = (value) => {
-    const normalized = normalizeCurriculumType(value);
-    setCurriculumType(normalized);
+  const updateCurriculumTypes = (values) => {
+    const normalized = getClassCurriculumTypes({ curriculumTypes: values });
+    setCurriculumTypes(normalized);
     const existingSettings =
       myclass?.settings && typeof myclass.settings === "object"
         ? myclass.settings
         : {};
     updateClassSettings({
       variables: {
-        settings: { ...existingSettings, curriculumType: normalized },
+        settings: {
+          ...existingSettings,
+          curriculumTypes: normalized,
+          curriculumType: getClassCurriculumFallback(normalized),
+        },
       },
     }).catch((err) =>
       alert(
@@ -744,18 +746,19 @@ export default function Settings({ myclass, user }) {
           </h3>
           <p>
             {t("classCurriculumDescription", {}, {
-              default: "Select which curriculum applies to this class.",
+              default: "Select which curricula apply to this class.",
             })}
           </p>
         </div>
         <div className="informationBlock">
           <div className="block curriculumTypeBlock">
             <CurriculumTypeSelector
-              curriculumType={curriculumType || DEFAULT_CURRICULUM_TYPE}
+              multiple
+              curriculumType={curriculumTypes}
               disabled={updatingSettings}
-              onChange={updateCurriculumType}
+              onChange={updateCurriculumTypes}
               questionKey="classCurriculumTypeQuestion"
-              questionDefault="Which curriculum type applies to this class?"
+              questionDefault="Which curriculum types apply to this class?"
             />
           </div>
         </div>
