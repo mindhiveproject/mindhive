@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
 import styled from "styled-components";
@@ -10,11 +11,20 @@ import { AgGridReact } from "ag-grid-react";
 import Button from "../../../../DesignSystem/Button";
 import InfoPopover from "../../../../DesignSystem/InfoPopover";
 import { useUser } from "../../../../Utils/Access/User";
-import { hasUnreadSponsorReply } from "../../../../../lib/reviewThreadRound";
+import {
+  hasUnreadSponsorReply,
+  REVIEW_NOTE_KIND,
+} from "../../../../../lib/reviewThreadRound";
 import {
   formatDateShort,
   isExpired,
 } from "../../../Connect/Rounds/roundFormConfig";
+import { CREATE_REVIEW_NOTE } from "../../../../Mutations/OpportunityReviewNote";
+import { UPDATE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
+import {
+  GET_CONNECT_ROUND,
+  NETWORK_OPPORTUNITIES_FOR_ROUND,
+} from "../../../../Queries/ConnectRound";
 
 const INFO_HIGHLIGHT_DISMISSED_KEY =
   "mh.classMatchingRound.infoHighlightDismissed";
@@ -201,7 +211,14 @@ function formatDateTime(iso) {
   }
 }
 
-function TooltipMetaRow({ label, value, valueClassName, dismissLabel, onDismiss }) {
+function TooltipMetaRow({
+  label,
+  value,
+  valueClassName,
+  dismissLabel,
+  onDismiss,
+  dismissDisabled = false,
+}) {
   if (value == null || value === "") return null;
   return (
     <div className="matchingRoundOppInfoTooltipRow">
@@ -212,6 +229,7 @@ function TooltipMetaRow({ label, value, valueClassName, dismissLabel, onDismiss 
           <Button
             variant="text"
             className="matchingRoundOppInfoTooltipDismiss"
+            disabled={dismissDisabled}
             onClick={(e) => {
               e.stopPropagation();
               onDismiss();
@@ -240,8 +258,9 @@ function OpportunityInfoContent({
   t,
   showAppointmentHighlight = false,
   showReturnedHighlight = false,
-  onDismissAppointment,
+  onMarkScheduled,
   onDismissReturned,
+  markingScheduled = false,
 }) {
   const from = formatDateShort(opportunity.availableFrom);
   const to = formatDateShort(opportunity.availableTo);
@@ -276,6 +295,11 @@ function OpportunityInfoContent({
   const dismissLabel = t("opportunities.matchingRound.grid.dismissHighlight", {}, {
     default: "Dismiss",
   });
+  const markScheduledLabel = t(
+    "opportunities.matchingRound.grid.markScheduled",
+    {},
+    { default: "Mark as scheduled" },
+  );
   const hasHeaderMeta = Boolean(opportunity.status || showAppointmentHighlight);
 
   return (
@@ -303,15 +327,16 @@ function OpportunityInfoContent({
           ) : null}
           {showAppointmentHighlight ? (
             <TooltipMetaRow
-              label={t("opportunities.rowMeta.flagLabel", {}, {
-                default: "Flag",
+              label={t("opportunities.rowMeta.meetingRequestLabel", {}, {
+                default: "Meeting request",
               })}
-              value={t("opportunities.preview.requestsAppointment", {}, {
-                default: "Appointment requested",
+              value={t("opportunities.preview.sponsorRequestedMeeting", {}, {
+                default: "Sponsor asked to meet",
               })}
               valueClassName="appointmentRequested"
-              dismissLabel={dismissLabel}
-              onDismiss={onDismissAppointment}
+              dismissLabel={markScheduledLabel}
+              onDismiss={onMarkScheduled}
+              dismissDisabled={markingScheduled}
             />
           ) : null}
         </div>
@@ -376,6 +401,8 @@ export default function MatchingRoundOpportunitiesGrid({
   togglingOpportunityId = null,
   emptyMessage,
   roundId = null,
+  classNetworkId = null,
+  inRoundOpportunityIds = [],
 }) {
   const { t } = useTranslation("classes");
   const { user } = useUser();
@@ -392,6 +419,89 @@ export default function MatchingRoundOpportunitiesGrid({
       return next;
     });
   }, []);
+
+  const appointmentRefetchQueries = useMemo(() => {
+    const queries = [
+      "NETWORK_APPOINTMENT_REQUESTS",
+      "COUNT_NEW_UPDATES",
+      "GET_MY_UPDATES",
+    ];
+    if (classNetworkId) {
+      queries.push({
+        query: NETWORK_OPPORTUNITIES_FOR_ROUND,
+        variables: { classNetworkId },
+      });
+    }
+    if (roundId) {
+      queries.push({
+        query: GET_CONNECT_ROUND,
+        variables: { id: roundId },
+      });
+    }
+    return queries;
+  }, [classNetworkId, roundId]);
+
+  const [createAppointmentNote, { loading: creatingScheduledNote }] =
+    useMutation(CREATE_REVIEW_NOTE, {
+      refetchQueries: appointmentRefetchQueries,
+      awaitRefetchQueries: true,
+    });
+  const [updateOpportunity, { loading: updatingAppointmentFlag }] = useMutation(
+    UPDATE_OPPORTUNITY,
+    {
+      refetchQueries: appointmentRefetchQueries,
+      awaitRefetchQueries: true,
+    },
+  );
+  const markingScheduled = creatingScheduledNote || updatingAppointmentFlag;
+  const inRoundIdSet = useMemo(
+    () => new Set((inRoundOpportunityIds || []).filter(Boolean)),
+    [inRoundOpportunityIds],
+  );
+
+  const handleMarkScheduled = useCallback(
+    async (opportunityId) => {
+      if (!opportunityId || markingScheduled) return;
+      try {
+        if (roundId && inRoundIdSet.has(opportunityId)) {
+          await createAppointmentNote({
+            variables: {
+              input: {
+                body: t(
+                  "opportunities.matchingRound.grid.scheduledNoteBody",
+                  {},
+                  {
+                    default:
+                      "The sponsor’s meeting request was marked as scheduled.",
+                  },
+                ),
+                kind: REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED,
+                opportunity: { connect: { id: opportunityId } },
+                round: { connect: { id: roundId } },
+              },
+            },
+          });
+          return;
+        }
+        await updateOpportunity({
+          variables: {
+            id: opportunityId,
+            input: { requestsAppointment: false },
+          },
+        });
+      } catch {
+        // Leave the highlight in place so the teacher can retry.
+      }
+    },
+    [
+      createAppointmentNote,
+      inRoundIdSet,
+      markingScheduled,
+      roundId,
+      t,
+      updateOpportunity,
+    ],
+  );
 
   const rowData = useMemo(
     () =>
@@ -411,14 +521,7 @@ export default function MatchingRoundOpportunitiesGrid({
       const returned = isReturnedOpportunity(opportunity);
       const appointmentRequested = isAppointmentRequested(opportunity);
       const stamp = opportunityHighlightStamp(opportunity);
-      const showAppointmentHighlight =
-        appointmentRequested &&
-        !isHighlightDismissed(
-          dismissedHighlights,
-          opportunity.id,
-          "appointment",
-          stamp,
-        );
+      const showAppointmentHighlight = appointmentRequested;
       const showReturnedHighlight =
         returned &&
         !isHighlightDismissed(
@@ -428,10 +531,10 @@ export default function MatchingRoundOpportunitiesGrid({
           stamp,
         );
 
-      const infoLabelKey = showReturnedHighlight
-        ? "infoReturned"
-        : showAppointmentHighlight
-          ? "infoAppointment"
+      const infoLabelKey = showAppointmentHighlight
+        ? "infoAppointment"
+        : showReturnedHighlight
+          ? "infoReturned"
           : "info";
       const infoLabelDefaults = {
         info: "More information",
@@ -441,9 +544,10 @@ export default function MatchingRoundOpportunitiesGrid({
 
       const cellClass = clsx("matchingRoundOppInfoCell", {
         matchingRoundOppInfoCellAppointment: showAppointmentHighlight,
-        matchingRoundOppInfoCellReturned: showReturnedHighlight,
+        matchingRoundOppInfoCellReturned:
+          showReturnedHighlight && !showAppointmentHighlight,
         matchingRoundOppInfoCellReturnedQuiet:
-          returned && !showReturnedHighlight,
+          returned && !showReturnedHighlight && !showAppointmentHighlight,
       });
 
       return (
@@ -456,9 +560,8 @@ export default function MatchingRoundOpportunitiesGrid({
               t={t}
               showAppointmentHighlight={showAppointmentHighlight}
               showReturnedHighlight={showReturnedHighlight}
-              onDismissAppointment={() =>
-                handleDismissHighlight(opportunity.id, "appointment", stamp)
-              }
+              markingScheduled={markingScheduled}
+              onMarkScheduled={() => handleMarkScheduled(opportunity.id)}
               onDismissReturned={() =>
                 handleDismissHighlight(opportunity.id, "returned", stamp)
               }
@@ -475,11 +578,13 @@ export default function MatchingRoundOpportunitiesGrid({
         </InfoPopover>
       );
     },
-    [dismissedHighlights, handleDismissHighlight, t],
+    [dismissedHighlights, handleDismissHighlight, handleMarkScheduled, markingScheduled, t],
   );
 
   const getRowClass = useCallback((params) => {
-    if (isReturnedOpportunity(params?.data)) {
+    const data = params?.data;
+    if (isAppointmentRequested(data)) return undefined;
+    if (isReturnedOpportunity(data)) {
       return "matchingRoundOppRowReturned";
     }
     return undefined;
@@ -494,24 +599,15 @@ export default function MatchingRoundOpportunitiesGrid({
       const returned = [];
       for (const node of nodes) {
         const data = node?.data;
-        // Returned always stays at the bottom (greyed), even with appointment /
-        // unread signals — those still show on the row via info/review chrome.
+        if (isAppointmentRequested(data)) {
+          appointment.push(node);
+          continue;
+        }
         if (isReturnedOpportunity(data)) {
           returned.push(node);
           continue;
         }
-        const stamp = opportunityHighlightStamp(data);
-        const appointmentHighlightActive =
-          isAppointmentRequested(data) &&
-          !isHighlightDismissed(
-            dismissedHighlights,
-            data?.id,
-            "appointment",
-            stamp,
-          );
-        if (appointmentHighlightActive) {
-          appointment.push(node);
-        } else if (
+        if (
           hasUnreadSponsorReply({
             notes: data?.reviewNotes,
             roundId,
@@ -526,7 +622,7 @@ export default function MatchingRoundOpportunitiesGrid({
       nodes.length = 0;
       nodes.push(...appointment, ...unread, ...active, ...returned);
     },
-    [dismissedHighlights, roundId, viewerId],
+    [roundId, viewerId],
   );
 
   const ReviewButtonRenderer = useCallback(
@@ -737,8 +833,13 @@ export default function MatchingRoundOpportunitiesGrid({
   );
 
   const isRowSelectable = useCallback(
-    () => !selectionDisabled,
-    [selectionDisabled],
+    (rowNode) => {
+      if (selectionDisabled) return false;
+      const opportunityId = rowNode?.data?.id;
+      if (opportunityId && inRoundIdSet.has(opportunityId)) return false;
+      return true;
+    },
+    [inRoundIdSet, selectionDisabled],
   );
 
   useEffect(() => {

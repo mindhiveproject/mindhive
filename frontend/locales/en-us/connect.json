@@ -1309,6 +1309,14 @@
 		"returnToSponsor": "Return and write message"
 	},
 	"reviewThread": {
+		"appointment": {
+			"markScheduled": "Mark meeting as scheduled",
+			"request": "Request a meeting",
+			"requestDefaultBody": "I request a meeting to discuss this proposal further.",
+			"requestExplanation": "Ask to meet about this proposal. This is separate from sending a message.",
+			"scheduledDefaultBody": "This meeting request was marked as scheduled.",
+			"scheduledExplanation": "Mark this meeting as scheduled when you have agreed a time."
+		},
 		"cancel": "Cancel",
 		"compose": {
 			"post": "Post note",
@@ -1326,11 +1334,15 @@
 		"editAria": "Edit message",
 		"empty": "No messages yet. Start the conversation below.",
 		"errors": {
+			"appointmentRequest": "Could not request a meeting. Please try again.",
+			"appointmentScheduled": "Could not mark this meeting request as scheduled. Please try again.",
 			"delete": "Could not delete this message. Please try again.",
 			"post": "Could not post this message. Please try again.",
 			"save": "Could not save this message. Please try again."
 		},
 		"kind": {
+			"appointmentRequest": "Appointment request",
+			"appointmentScheduled": "Appointment scheduled",
 			"reviewerComment": "Reviewer comment",
 			"sponsorReply": "Sponsor reply"
 		},

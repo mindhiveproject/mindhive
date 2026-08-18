@@ -208,6 +208,7 @@ export default function OpportunityChatModal({
             }
             refetchQueries={markReadRefetchQueries}
             titleAs="h3"
+            requestsAppointment={Boolean(opportunity.requestsAppointment)}
           />
         </ThreadWrap>
       ) : null}

@@ -1096,9 +1096,11 @@
 					"sponsor": "Patrocinador"
 				},
 				"dismissHighlight": "Descartar",
+				"markScheduled": "",
 				"remove": "Eliminar",
 				"review": "Revisar",
-				"reviewUnreadAria": ""
+				"reviewUnreadAria": "",
+				"scheduledNoteBody": ""
 			},
 			"loading": "",
 			"manageMatches": "",
@@ -1198,6 +1200,7 @@
 				"saving": "Guardando...",
 				"toggleFailed": ""
 			},
+			"meetingRequestLabel": "",
 			"mentor": "Mentor",
 			"mentorContact": "",
 			"mentorNotes": "",
@@ -1236,6 +1239,7 @@
 				"updatedAt": ""
 			},
 			"sponsorIsMentor": "",
+			"sponsorRequestedMeeting": "",
 			"status": "Estado",
 			"summaryTitle": "Resumen",
 			"tabs": {
@@ -1261,6 +1265,7 @@
 			"flagLabel": "Bandera",
 			"lastUpdated": "",
 			"lastUpdatedLabel": "Última actualización",
+			"meetingRequestLabel": "",
 			"sponsorLabel": "Patrocinador",
 			"statusLabel": "Estado",
 			"teamOf": ""

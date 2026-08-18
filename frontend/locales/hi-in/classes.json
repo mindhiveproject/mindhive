@@ -1096,9 +1096,11 @@
 					"sponsor": ""
 				},
 				"dismissHighlight": "",
+				"markScheduled": "",
 				"remove": "",
 				"review": "",
-				"reviewUnreadAria": ""
+				"reviewUnreadAria": "",
+				"scheduledNoteBody": ""
 			},
 			"loading": "",
 			"manageMatches": "",
@@ -1198,6 +1200,7 @@
 				"saving": "",
 				"toggleFailed": ""
 			},
+			"meetingRequestLabel": "",
 			"mentor": "",
 			"mentorContact": "",
 			"mentorNotes": "",
@@ -1236,6 +1239,7 @@
 				"updatedAt": ""
 			},
 			"sponsorIsMentor": "",
+			"sponsorRequestedMeeting": "",
 			"status": "",
 			"summaryTitle": "",
 			"tabs": {
@@ -1261,6 +1265,7 @@
 			"flagLabel": "",
 			"lastUpdated": "",
 			"lastUpdatedLabel": "",
+			"meetingRequestLabel": "",
 			"sponsorLabel": "",
 			"statusLabel": "",
 			"teamOf": ""

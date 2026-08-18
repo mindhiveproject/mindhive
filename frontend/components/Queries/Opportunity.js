@@ -39,6 +39,7 @@ export const MY_OPPORTUNITIES = gql`
           publicRatingCount
           createdAt
           updatedAt
+          requestsAppointment
           rounds {
             id
             title

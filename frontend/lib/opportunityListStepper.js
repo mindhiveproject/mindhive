@@ -24,6 +24,12 @@ export function hasReviewerReturnComments(reviewNotes) {
   return (reviewNotes || []).some((note) => {
     if (!note) return false;
     if (note.kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) return false;
+    if (
+      note.kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST ||
+      note.kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
+    ) {
+      return false;
+    }
     // reviewer_comment, or legacy notes without kind
     return true;
   });
