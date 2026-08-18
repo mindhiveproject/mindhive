@@ -1018,7 +1018,11 @@ function MatchingRoundEditor({
     const selectedSet = new Set(selectedOpportunities);
     return sortOpportunitiesByTitle(
       networkOpportunities.filter((opportunity) => {
-        if (selectedSet.has(opportunity.id)) return false;
+        const inRound = selectedSet.has(opportunity.id);
+        // Appointment doorbells land on Available. Keep an open meeting
+        // request visible here even if the opportunity is already in the round
+        // (typical after a teacher return).
+        if (inRound && !opportunity.requestsAppointment) return false;
         return (
           opportunity.status === "pending_review" ||
           opportunity.status === "returned" ||
@@ -1190,9 +1194,19 @@ function MatchingRoundEditor({
 
   const handleReviewSelectionChange = useCallback(
     async (checkedReviewIds) => {
-      const reviewIds = new Set(reviewNetworkOpportunities.map((o) => o.id));
-      const unchanged = selectedOpportunities.filter((id) => !reviewIds.has(id));
-      const nextIds = [...unchanged, ...checkedReviewIds];
+      const alreadyInRound = new Set(selectedOpportunities);
+      const reviewSelectableIds = new Set(
+        reviewNetworkOpportunities
+          .map((opportunity) => opportunity.id)
+          .filter((id) => id && !alreadyInRound.has(id)),
+      );
+      const unchanged = selectedOpportunities.filter(
+        (id) => !reviewSelectableIds.has(id),
+      );
+      const nextChecked = (checkedReviewIds || []).filter((id) =>
+        reviewSelectableIds.has(id),
+      );
+      const nextIds = [...unchanged, ...nextChecked];
       const prevSet = new Set(selectedOpportunities);
       const nextSet = new Set(nextIds);
       const togglingId =
@@ -1853,6 +1867,8 @@ function MatchingRoundEditor({
           selectionDisabled={Boolean(togglingOpportunityId)}
           togglingOpportunityId={togglingOpportunityId}
           roundId={roundId}
+          classNetworkId={selectedNetworkId}
+          inRoundOpportunityIds={selectedOpportunities}
           emptyMessage={t("opportunities.matchingRound.reviewOpportunitiesEmpty", {}, {
             default:
               "All network opportunities are already in this round. Remove some from Selected opportunities to review more.",
@@ -2847,6 +2863,8 @@ function MatchingRoundEditor({
           onRemove={canManageOpportunities ? handleRemoveFromRound : undefined}
           togglingOpportunityId={togglingOpportunityId}
           roundId={roundId}
+          classNetworkId={selectedNetworkId}
+          inRoundOpportunityIds={selectedOpportunities}
           emptyMessage={t("opportunities.matchingRound.selectedOpportunitiesEmpty", {}, {
             default:
               "No opportunities selected yet. Use Review opportunities to add some.",

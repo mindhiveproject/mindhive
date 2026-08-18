@@ -41,6 +41,24 @@ export const MEDIA_ASSETS = gql`
   }
 `;
 
+export const MEDIA_ASSETS_BY_IDS = gql`
+  query MEDIA_ASSETS_BY_IDS($ids: [ID!]!) {
+    mediaAssets(where: { id: { in: $ids } }) {
+      id
+      fileName
+      title
+      url
+      image {
+        url
+      }
+      exportDocument {
+        url
+        filename
+      }
+    }
+  }
+`;
+
 export const CREATE_MEDIA_ASSET = gql`
   mutation CREATE_MEDIA_ASSET($data: MediaAssetCreateInput!) {
     createMediaAsset(data: $data) {

@@ -1,6 +1,13 @@
 /** Column groups and CSV helpers for teacher matching-round opportunity export. */
 
 import { getProposalAnswer } from "../../../../../lib/opportunityProposalData";
+import {
+  collectMediaAssetIdsFromOpportunities,
+  collectOpportunityMediaDownloads,
+  getOpportunityMediaCsvFields,
+  mergeOpportunityMedia,
+  slugifyForFilename,
+} from "../../../../../lib/opportunityExportMedia";
 
 export const EXPORT_COLUMN_GROUPS = [
   {
@@ -70,6 +77,64 @@ export const EXPORT_COLUMN_GROUPS = [
         headerKey:
           "opportunities.matchingRound.export.columns.requestsAppointment",
         headerDefault: "Requests appointment",
+      },
+    ],
+  },
+  {
+    id: "media",
+    labelKey: "opportunities.matchingRound.export.groups.media",
+    labelDefault: "Media",
+    columns: [
+      {
+        id: "hasIntroVideo",
+        headerKey: "opportunities.matchingRound.export.columns.hasIntroVideo",
+        headerDefault: "Has intro video",
+      },
+      {
+        id: "introVideoFilename",
+        headerKey:
+          "opportunities.matchingRound.export.columns.introVideoFilename",
+        headerDefault: "Intro video filename",
+      },
+      {
+        id: "introVideoUrl",
+        headerKey: "opportunities.matchingRound.export.columns.introVideoUrl",
+        headerDefault: "Intro video URL",
+      },
+      {
+        id: "introVideoZipPath",
+        headerKey:
+          "opportunities.matchingRound.export.columns.introVideoZipPath",
+        headerDefault: "Intro video zip path",
+      },
+      {
+        id: "hasCoverImage",
+        headerKey: "opportunities.matchingRound.export.columns.hasCoverImage",
+        headerDefault: "Has illustration",
+      },
+      {
+        id: "coverImageFilename",
+        headerKey:
+          "opportunities.matchingRound.export.columns.coverImageFilename",
+        headerDefault: "Illustration filename",
+      },
+      {
+        id: "coverImageZipPath",
+        headerKey:
+          "opportunities.matchingRound.export.columns.coverImageZipPath",
+        headerDefault: "Illustration zip path",
+      },
+      {
+        id: "followUpAssetCount",
+        headerKey:
+          "opportunities.matchingRound.export.columns.followUpAssetCount",
+        headerDefault: "Follow-up asset count",
+      },
+      {
+        id: "followUpAssetZipPaths",
+        headerKey:
+          "opportunities.matchingRound.export.columns.followUpAssetZipPaths",
+        headerDefault: "Follow-up asset zip paths",
       },
     ],
   },
@@ -364,12 +429,15 @@ export function buildOpportunityExportValues({
   detailOpportunity,
   selectedOpportunityIds,
   roundId,
+  assetById,
 }) {
   const list = listOpportunity || {};
   const detail = detailOpportunity || {};
   const mentor = detail.mentor || list.mentor || {};
   const organization = detail.organization || list.organization || {};
   const selectedSet = new Set(selectedOpportunityIds || []);
+  const media = mergeOpportunityMedia(list, detail);
+  const mediaFields = getOpportunityMediaCsvFields(media, assetById);
 
   return {
     id: list.id || detail.id || "",
@@ -385,6 +453,15 @@ export function buildOpportunityExportValues({
     requestsAppointment: boolCell(
       list.requestsAppointment ?? detail.requestsAppointment,
     ),
+    hasIntroVideo: boolCell(mediaFields.hasIntroVideo),
+    introVideoFilename: mediaFields.introVideoFilename,
+    introVideoUrl: mediaFields.introVideoUrl,
+    introVideoZipPath: mediaFields.introVideoZipPath,
+    hasCoverImage: boolCell(mediaFields.hasCoverImage),
+    coverImageFilename: mediaFields.coverImageFilename,
+    coverImageZipPath: mediaFields.coverImageZipPath,
+    followUpAssetCount: mediaFields.followUpAssetCount ?? 0,
+    followUpAssetZipPaths: mediaFields.followUpAssetZipPaths || "",
     mentorId: mentor.id || "",
     mentorFirstName: mentor.firstName || "",
     mentorLastName: mentor.lastName || "",
@@ -443,6 +520,7 @@ export function buildExportRows({
   roundId,
   selectedColumnIds,
   t,
+  assetById,
 }) {
   const columnById = new Map(
     EXPORT_COLUMN_GROUPS.flatMap((group) =>
@@ -464,6 +542,7 @@ export function buildExportRows({
       detailOpportunity: detail,
       selectedOpportunityIds,
       roundId,
+      assetById,
     });
     return Object.fromEntries(
       orderedColumns.map((column, index) => [
@@ -476,25 +555,23 @@ export function buildExportRows({
   return rows;
 }
 
-export function slugifyForFilename(text) {
-  const slug = String(text || "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 60);
-  return slug || "untitled";
-}
+export {
+  collectMediaAssetIdsFromOpportunities,
+  collectOpportunityMediaDownloads,
+  slugifyForFilename,
+};
 
 export function buildOpportunityExportFilename({
   networkTitle,
   roundTitle,
   date = new Date(),
+  extension = "csv",
 }) {
   const network = slugifyForFilename(networkTitle);
   const round = slugifyForFilename(roundTitle);
   const yyyy = date.getFullYear();
   const mm = String(date.getMonth() + 1).padStart(2, "0");
   const dd = String(date.getDate()).padStart(2, "0");
-  return `opportunities-${network}-${round}-${yyyy}-${mm}-${dd}.csv`;
+  const ext = String(extension || "csv").replace(/^\./, "");
+  return `opportunities-${network}-${round}-${yyyy}-${mm}-${dd}.${ext}`;
 }

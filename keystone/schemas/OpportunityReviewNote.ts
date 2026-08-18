@@ -8,6 +8,11 @@ import {
 } from "@keystone-6/core/fields";
 import { rules, isSignedIn, permissions } from "../access";
 import { sendNotificationEmail } from "../lib/mail";
+import {
+  archiveAppointmentRequestUpdates,
+  notifyAppointmentRequestUpdates,
+  notifyAppointmentScheduledUpdates,
+} from "../lib/appointmentRequestNotifications";
 
 const frontendUrl = () =>
   (process.env.NODE_ENV === "development"
@@ -26,6 +31,8 @@ function displayName(p: { firstName?: string; lastName?: string; username?: stri
 export const REVIEW_NOTE_KIND = {
   REVIEWER_COMMENT: "reviewer_comment",
   SPONSOR_REPLY: "sponsor_reply",
+  APPOINTMENT_REQUEST: "appointment_request",
+  APPOINTMENT_SCHEDULED: "appointment_scheduled",
 } as const;
 
 export type ReviewNoteKind =
@@ -62,7 +69,7 @@ async function getPairActors(
         id
         creator { id }
         admins { id }
-        classes { id creator { id } }
+        classes { id creator { id } mentors { id } }
       }
     `,
   });
@@ -83,7 +90,9 @@ async function getPairActors(
       (admin: { id: string }) => admin.id === userId
     ) ||
     (round.classNetwork?.classes || []).some(
-      (c: { creator?: { id: string } }) => c.creator?.id === userId
+      (c: { creator?: { id: string }; mentors?: { id: string }[] }) =>
+        c.creator?.id === userId ||
+        (c.mentors || []).some((m) => m.id === userId)
     );
 
   return { isMentor, isReviewerSide };
@@ -107,6 +116,12 @@ async function canCreateReviewNoteForPair(
   if (kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) {
     return actors.isMentor;
   }
+  if (
+    kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED ||
+    kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST
+  ) {
+    return actors.isMentor || actors.isReviewerSide;
+  }
   // reviewer_comment (default): teachers/reviewers/admins — not the mentor alone
   return actors.isReviewerSide;
 }
@@ -116,9 +131,11 @@ async function canCreateReviewNoteForPair(
 // reviewing the same opportunity in a different round produces a separate
 // conversation.
 //
-// Kinds (v1):
+// Kinds:
 // - reviewer_comment: teacher/reviewer feedback (default; existing notes)
 // - sponsor_reply: mentor response in the same thread
+// - appointment_request: either side requested a meeting (form seed or messages)
+// - appointment_scheduled: either side marked the meeting request as scheduled
 //
 // Visibility: the author, any reviewer on the same round, the round
 // creator, class-network/class teachers, the opportunity's mentor, and
@@ -153,6 +170,14 @@ export const OpportunityReviewNote = list({
         {
           label: "Sponsor reply",
           value: REVIEW_NOTE_KIND.SPONSOR_REPLY,
+        },
+        {
+          label: "Appointment request",
+          value: REVIEW_NOTE_KIND.APPOINTMENT_REQUEST,
+        },
+        {
+          label: "Appointment scheduled",
+          value: REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED,
         },
       ],
       defaultValue: REVIEW_NOTE_KIND.REVIEWER_COMMENT,
@@ -267,7 +292,9 @@ export const OpportunityReviewNote = list({
       }
       if (
         kind !== REVIEW_NOTE_KIND.REVIEWER_COMMENT &&
-        kind !== REVIEW_NOTE_KIND.SPONSOR_REPLY
+        kind !== REVIEW_NOTE_KIND.SPONSOR_REPLY &&
+        kind !== REVIEW_NOTE_KIND.APPOINTMENT_REQUEST &&
+        kind !== REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
       ) {
         addValidationError("Invalid review note kind.");
         return;
@@ -285,6 +312,14 @@ export const OpportunityReviewNote = list({
           addValidationError(
             "Only the opportunity sponsor can post a reply in this thread."
           );
+        } else if (kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED) {
+          addValidationError(
+            "Only the sponsor or reviewers for this matching round can mark an appointment as scheduled."
+          );
+        } else if (kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST) {
+          addValidationError(
+            "Only the sponsor or reviewers for this matching round can request a meeting."
+          );
         } else {
           addValidationError(
             "You are not allowed to leave a review note on this opportunity for this round."
@@ -297,6 +332,83 @@ export const OpportunityReviewNote = list({
     },
     async afterOperation({ operation, item, context }) {
       if (operation !== "create" || !item) return;
+
+      const isAppointmentRequest =
+        item.kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST;
+      const isAppointmentScheduled =
+        item.kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED;
+
+      if (isAppointmentRequest || isAppointmentScheduled) {
+        try {
+          const note = await context.sudo().query.OpportunityReviewNote.findOne({
+            where: { id: String(item.id) },
+            query: `
+              id
+              payload
+              author { id firstName lastName username }
+              opportunity {
+                id
+                title
+                requestsAppointment
+                mentor { id email firstName lastName username }
+                classNetworks { id publicId }
+                rounds {
+                  id
+                  classNetwork { id publicId }
+                }
+              }
+            `,
+          });
+          const opportunity = note?.opportunity;
+          const opportunityId = opportunity?.id;
+          if (!opportunityId) return;
+
+          const wantRequested = isAppointmentRequest;
+          const currentlyRequested = Boolean(opportunity.requestsAppointment);
+          if (currentlyRequested !== wantRequested) {
+            await context.sudo().db.Opportunity.updateOne({
+              where: { id: String(opportunityId) },
+              data: { requestsAppointment: wantRequested },
+            });
+          }
+
+          const payload =
+            note.payload && typeof note.payload === "object"
+              ? note.payload
+              : item.payload && typeof item.payload === "object"
+                ? item.payload
+                : null;
+          const seededFromForm = payload?.source === "form";
+
+          if (isAppointmentRequest && !seededFromForm) {
+            await notifyAppointmentRequestUpdates(
+              context,
+              {
+                ...opportunity,
+                requestsAppointment: true,
+              },
+              { author: note.author }
+            );
+          }
+          if (isAppointmentScheduled) {
+            await archiveAppointmentRequestUpdates(
+              context,
+              String(opportunityId)
+            );
+            await notifyAppointmentScheduledUpdates(context, opportunity, {
+              author: note.author,
+            });
+          }
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(
+            "OpportunityReviewNote appointment flag update failed:",
+            e
+          );
+        }
+        return;
+      }
+
       if (item.kind !== REVIEW_NOTE_KIND.SPONSOR_REPLY) return;
 
       try {

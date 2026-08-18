@@ -1309,6 +1309,14 @@
 		"returnToSponsor": ""
 	},
 	"reviewThread": {
+		"appointment": {
+			"markScheduled": "",
+			"request": "",
+			"requestDefaultBody": "",
+			"requestExplanation": "",
+			"scheduledDefaultBody": "",
+			"scheduledExplanation": ""
+		},
 		"cancel": "",
 		"compose": {
 			"post": "",
@@ -1326,11 +1334,15 @@
 		"editAria": "",
 		"empty": "",
 		"errors": {
+			"appointmentRequest": "",
+			"appointmentScheduled": "",
 			"delete": "",
 			"post": "",
 			"save": ""
 		},
 		"kind": {
+			"appointmentRequest": "",
+			"appointmentScheduled": "",
 			"reviewerComment": "",
 			"sponsorReply": ""
 		},

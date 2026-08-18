@@ -13,6 +13,10 @@ import {
   virtual,
 } from "@keystone-6/core/fields";
 import { sendNotificationEmail } from "../lib/mail";
+import {
+  archiveAppointmentRequestUpdates,
+  notifyAppointmentRequestUpdates,
+} from "../lib/appointmentRequestNotifications";
 
 const frontendUrl = () =>
   (process.env.NODE_ENV === "development"
@@ -28,118 +32,35 @@ function reviewerDisplayName(p: any) {
   );
 }
 
+const FORM_APPOINTMENT_REQUEST_BODY =
+  "Sponsor requested a meeting to discuss this proposal further. Thank you for your response.";
+
 /**
- * Deep link into a class matching "Review opportunities" panel for a
- * network, matching NetworkAppointmentRequests on the frontend.
+ * Seed an appointment_request note only for rounds already linked on the
+ * opportunity. Skipped when Opportunity.rounds is empty (typical first submit).
  */
-function appointmentReviewLink(
-  recipientId: string,
-  rounds: any[]
-): string {
-  for (const round of rounds || []) {
-    const network = round?.classNetwork;
-    if (!network?.id) continue;
-    const networkRef = network.publicId || network.id;
-    for (const cls of network.classes || []) {
-      if (!cls?.code) continue;
-      const isCreator = cls.creator?.id === recipientId;
-      const isMentor = (cls.mentors || []).some(
-        (m: { id: string }) => m.id === recipientId
-      );
-      if (!isCreator && !isMentor) continue;
-      const params = new URLSearchParams({
-        page: "opportunities",
-        matchingPanel: "review",
-        networkId: networkRef,
+async function seedAppointmentRequestNotes(context: any, opportunity: any) {
+  const rounds = (opportunity?.rounds || []).filter((r: { id?: string }) => r?.id);
+  if (!rounds.length || !opportunity?.id) return;
+
+  for (const round of rounds) {
+    try {
+      await context.sudo().db.OpportunityReviewNote.createOne({
+        data: {
+          body: FORM_APPOINTMENT_REQUEST_BODY,
+          kind: "appointment_request",
+          payload: { source: "form" },
+          opportunity: { connect: { id: String(opportunity.id) } },
+          round: { connect: { id: String(round.id) } },
+        },
       });
-      return `/dashboard/myclasses/${encodeURIComponent(
-        cls.code
-      )}?${params.toString()}`;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `Failed to seed appointment-request note for round ${round.id}:`,
+        e
+      );
     }
-  }
-  return "/dashboard/home";
-}
-
-/**
- * When a sponsor submits with requestsAppointment, notify reviewers
- * (and creators) of non-archived matching rounds on the opportunity's
- * class networks. Opportunity.rounds is usually empty at submit time.
- */
-async function notifyAppointmentRequestUpdates(
-  context: any,
-  opportunity: any
-) {
-  try {
-    if (!opportunity?.requestsAppointment) return;
-
-    const networkIds = (opportunity.classNetworks || [])
-      .map((n: { id: string }) => n?.id)
-      .filter(Boolean);
-    if (networkIds.length === 0) return;
-
-    const rounds = await context.sudo().query.ConnectRound.findMany({
-      where: {
-        classNetwork: { id: { in: networkIds } },
-        status: { not: { equals: "archived" } },
-      },
-      query: `
-        id
-        createdBy { id }
-        reviewers { id }
-        classNetwork {
-          id
-          publicId
-          classes {
-            code
-            creator { id }
-            mentors { id }
-          }
-        }
-      `,
-    });
-
-    if (!rounds?.length) return;
-
-    const mentorId = opportunity.mentor?.id;
-    const recipientIds = new Set<string>();
-    for (const round of rounds) {
-      if (round?.createdBy?.id) recipientIds.add(round.createdBy.id);
-      for (const reviewer of round?.reviewers || []) {
-        if (reviewer?.id) recipientIds.add(reviewer.id);
-      }
-    }
-    if (mentorId) recipientIds.delete(mentorId);
-    if (recipientIds.size === 0) return;
-
-    const mentorName = reviewerDisplayName(opportunity.mentor);
-    const title = opportunity.title || "an opportunity";
-    const content = {
-      title: "Appointment requested",
-      message: `${mentorName} submitted "${title}" and requested an appointment`,
-      linkTitle: "Review",
-    };
-
-    for (const userId of recipientIds) {
-      try {
-        await context.sudo().db.Update.createOne({
-          data: {
-            user: { connect: { id: userId } },
-            updateArea: "CONNECT",
-            link: appointmentReviewLink(userId, rounds),
-            content,
-          },
-        });
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(
-          `Failed to create appointment-request Update for user ${userId}:`,
-          e
-        );
-      }
-    }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error("notifyAppointmentRequestUpdates failed:", e);
   }
 }
 
@@ -463,8 +384,17 @@ export const Opportunity = list({
         const becameReturned =
           item.status === "returned" &&
           originalItem?.status !== "returned";
+        const appointmentTurnedOff =
+          !Boolean(item.requestsAppointment) &&
+          Boolean(originalItem?.requestsAppointment);
 
-        if (!becamePending && !becameReturned) return;
+        if (appointmentTurnedOff) {
+          await archiveAppointmentRequestUpdates(context, String(item.id));
+        }
+
+        if (!becamePending && !becameReturned) {
+          return;
+        }
 
         const fresh = await context.sudo().query.Opportunity.findOne({
           where: { id: String(item.id) },
@@ -555,13 +485,18 @@ export const Opportunity = list({
           return;
         }
 
-        if (!becamePending) return;
+        const shouldRingAppointmentDoorbell =
+          Boolean(fresh.requestsAppointment) && becamePending;
 
-        // Appointment-request Updates only on first submit into pending_review,
-        // not when resubmitting from returned.
-        if (originalItem?.status !== "returned") {
+        if (shouldRingAppointmentDoorbell) {
           await notifyAppointmentRequestUpdates(context, fresh);
         }
+
+        if (becamePending && Boolean(fresh.requestsAppointment)) {
+          await seedAppointmentRequestNotes(context, fresh);
+        }
+
+        if (!becamePending) return;
 
         const seen = new Set<string>();
 

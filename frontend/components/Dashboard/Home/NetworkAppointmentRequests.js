@@ -16,7 +16,9 @@ function buildAppointmentRequestsWhere(networkIds) {
   if (ids.length === 0) return null;
   return {
     requestsAppointment: { equals: true },
-    status: { equals: "pending_review" },
+    status: {
+      in: ["pending_review", "returned", "pre_selected", "accepted"],
+    },
     classNetworks: { some: { id: { in: ids } } },
   };
 }

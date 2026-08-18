@@ -587,6 +587,7 @@ export default function ReviewOpportunityMain({ query }) {
           titleAs="h2"
           autoFocusCompose={showReturnInvite}
           showReturnInvite={showReturnInvite}
+          requestsAppointment={Boolean(opportunity.requestsAppointment)}
           onPosted={() => setShowReturnInvite(false)}
         />
       </Card>

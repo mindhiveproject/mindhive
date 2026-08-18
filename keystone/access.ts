@@ -349,6 +349,13 @@ export const rules = {
             },
           },
         },
+        {
+          round: {
+            classNetwork: {
+              classes: { some: { mentors: { some: { id: { equals: me } } } } },
+            },
+          },
+        },
         { opportunity: { mentor: { id: { equals: me } } } },
       ],
     };

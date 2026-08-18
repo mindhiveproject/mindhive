@@ -39,6 +39,7 @@ export const MY_OPPORTUNITIES = gql`
           publicRatingCount
           createdAt
           updatedAt
+          requestsAppointment
           rounds {
             id
             title
@@ -712,6 +713,17 @@ export const OPPORTUNITIES_FOR_CSV_EXPORT = gql`
       projectCategory
       projectCategoryOther
       proposalData
+      videoUrl
+      videoFile {
+        url
+        filename
+        filesize
+      }
+      coverImageUrl
+      coverImage {
+        url
+        extension
+      }
       guidelinesAcknowledged
       guidelinesAcknowledgedAt
       preSelectedAt

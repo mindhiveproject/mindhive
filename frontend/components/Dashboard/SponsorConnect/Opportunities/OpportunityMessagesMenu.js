@@ -301,6 +301,7 @@ export default function OpportunityMessagesMenu({ opportunity, user }) {
               layout="panel"
               showTitle={false}
               titleAs="h3"
+              requestsAppointment={Boolean(opportunity?.requestsAppointment)}
             />
           </ThreadWrap>
         </div>
