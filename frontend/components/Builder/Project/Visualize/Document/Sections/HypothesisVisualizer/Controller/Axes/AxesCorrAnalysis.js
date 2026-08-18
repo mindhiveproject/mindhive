@@ -1,5 +1,6 @@
+import InfoPopover from "../../../../../../../../DesignSystem/InfoPopover";
 import React, { useState, useEffect } from "react";
-import { Popup } from "semantic-ui-react";
+
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { GET_STUDY_FLOW, GET_BLOCK_AGGVAR } from "../../../../../../../../Queries/Study";
@@ -35,12 +36,6 @@ parameters = dict(json.loads('dashboardJSON'))
 print("Py code parameters", parameters)
 `;
 
-  const popupStyle = {
-    borderRadius: 8,
-    opacity: 0.9,
-    padding: '2em',
-    fontSize: '15px',
-  }
 
   // const selectors = variables.map((variable) => ({
   //   key: variable?.field,
@@ -191,7 +186,7 @@ print("Py code parameters", parameters)
         <div className="parameter-panel">
           <div className="header">
             <div className="header-title">Your correlational hypothesis</div>
-            <Popup
+            <InfoPopover
               content={
                 <div>
                   <>Fill in the blanks to create your correlational hypothesis!</><br />
@@ -202,9 +197,8 @@ print("Py code parameters", parameters)
                   <i>Note that the options suggested under the variable fields are pulled from the public blocks in your study builder</i><br />
                 </div>
               }
-              trigger={<img src={`/assets/icons/visualize/question_mark.svg`} />}
-              inverted
-              style={popupStyle}
+              iconSrc="/assets/icons/visualize/question_mark.svg"
+              width={360}
             />
           </div>
           <div className="fill-in-the-blanks">

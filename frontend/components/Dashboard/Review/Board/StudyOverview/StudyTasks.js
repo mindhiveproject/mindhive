@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../../../DesignSystem/Chip";
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../../DesignSystem/InfoPopover";
 import TaskBlock from "./Blocks/TaskBlock";
 import { StyledTasksPreview } from "../../../../styles/StyledStudyPage";
 
@@ -318,11 +318,15 @@ export default function StudyTasks({ study }) {
                       { default: "{{frequency}} percent of simulated runs" }
                     )}
                   />
-                  <InfoTooltip
+                  <InfoPopover
                     content={probabilityInfo}
-                    position="bottomRight"
-                    portal
-                    tooltipStyle={{ width: 280, fontSize: 14 }}
+                    align="end"
+                    width={280}
+                    ariaLabel={t(
+                      "studyFlow.preview.probabilityAria",
+                      { frequency },
+                      { default: "{{frequency}} percent of simulated runs" }
+                    )}
                   />
                 </div>
               </div>

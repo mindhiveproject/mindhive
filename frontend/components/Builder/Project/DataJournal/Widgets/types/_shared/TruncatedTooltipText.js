@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../../../../DesignSystem/Tooltip";
 
 const DEFAULT_TOOLTIP_DELAY_MS = 1500;
 const DEFAULT_LINE_CLAMP = 3;
@@ -11,7 +11,7 @@ export default function TruncatedTooltipText({
   text,
   className,
   as: Tag = "div",
-  position = "right",
+  side = "right",
   delayMs = DEFAULT_TOOLTIP_DELAY_MS,
   lineClamp = DEFAULT_LINE_CLAMP,
   style,
@@ -70,14 +70,12 @@ export default function TruncatedTooltipText({
   if (!plainText || !isTruncated) return textNode;
 
   return (
-    <InfoTooltip
+    <Tooltip
       content={plainText}
-      position={position}
-      portal
+      side={side}
       delayMs={delayMs}
-      wrapperStyle={{ minWidth: 0, maxWidth: "100%", display: "block" }}
     >
       {textNode}
-    </InfoTooltip>
+    </Tooltip>
   );
 }

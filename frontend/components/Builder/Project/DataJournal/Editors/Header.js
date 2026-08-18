@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import CompactActionButton from "../../../../DesignSystem/CompactActionButton";
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import getVizComponentIconSrc from "../Helpers/getVizComponentIconSrc";
 
@@ -98,18 +98,14 @@ export default function EditorHeader({
 
   return (
     <div className="editor-header">
-      <InfoTooltip
-        content={componentTypeLabel}
-        tooltipStyle={{ width: "fit-content", whiteSpace: "nowrap", fontSize: "14px", backgroundColor: "#FFFFFF", color: "var(--MH-Theme-Neutrals-Black, #171717)", border: "1px solid #A1A1A1" }}
-        position="right"
-      >
+      <Tooltip content={componentTypeLabel} side="right">
         <CompactActionButton
           kind="asset"
           mode="label"
           icon={<img src={headerIconSrc} alt="" aria-hidden width={20} height={20} />}
           aria-hidden
         />
-      </InfoTooltip>
+      </Tooltip>
       {isEditing ? (
         <div className="editor-component-name-input">
           <input

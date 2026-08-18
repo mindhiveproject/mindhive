@@ -11,7 +11,7 @@ import { UPDATE_CARD_EDIT, UPDATE_CARD_CONTENT } from "../../../../../../Mutatio
 import { GET_CARD_CONTENT, PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { getRegularCardVariant } from "../../../../../../Utils/cardVariants";
 import StatusChip from "./StatusChip";
-import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../../../../DesignSystem/InfoPopover";
 
 export default function Card({ card, cardId, user, submitStatuses = {}, proposalId, onUnsavedChange }) {
   const { t } = useTranslation("builder");
@@ -404,8 +404,9 @@ useEffect(() => {
             <>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
                 <h2 style={{ margin: 0 }}>{t("mainCard.originalSubmission", "Original Submission")}</h2>
-                <InfoTooltip
+                <InfoPopover
                   content={t("mainCard.originalSubmissionTooltip", "This is the content you originaly submitted to the Feedback Center. We copied it bellow for you to make edits and conserved a 'Revised content'.")}
+                  ariaLabel={t("mainCard.originalSubmission", "Original Submission")}
                 />
               </div>
               <Accordion styled={card.isLocked ? false : true} fluid style={{ border: "none" }}>

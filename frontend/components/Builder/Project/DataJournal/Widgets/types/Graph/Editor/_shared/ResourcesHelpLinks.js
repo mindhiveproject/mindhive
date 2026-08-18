@@ -38,7 +38,7 @@ function itemKey(item, index) {
 }
 
 /**
- * One DesignSystem button per resource row for InfoTooltip `action`.
+ * One DesignSystem button per resource row, for a SectionHeader `helpAction` panel.
  * Linked items open in a new tab; items without a URL render as disabled buttons.
  */
 export default function ResourcesTooltipResourceButtons({

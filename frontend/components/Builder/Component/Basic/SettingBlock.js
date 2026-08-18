@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Popup, Icon } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
+import InfoPopover from "../../../DesignSystem/InfoPopover";
 import useTranslation from "next-translate/useTranslation";
 
 import ArrayBuilder from "./ArrayBuilder";
@@ -91,13 +92,9 @@ export default function SettingBlock({ name, value, handleChange, task }) {
       <StyledParameterBlock key={name} htmlFor={name}>
         <div className="input">
           <label>{t("duration")}</label>
-          <Popup
-            content={
-              <p>
-                {t("durationHelp", { taskType })}
-              </p>
-            }
-            trigger={<Icon name="question circle outline" />}
+          <InfoPopover
+            content={<p> {t("durationHelp", { taskType })} </p>}
+            iconSrc="/assets/icons/question_mark.svg"
           />
           <input
             type="text"
@@ -146,27 +143,27 @@ export default function SettingBlock({ name, value, handleChange, task }) {
       {name === "descriptionBefore" && (
         <>
           <p>{t("descriptionBefore", { taskType })}</p>
-          <Popup
+          <InfoPopover
             content={<p>{t("descriptionBeforeHelp", { taskType })}</p>}
-            trigger={<Icon name="question circle outline" />}
+            iconSrc="/assets/icons/question_mark.svg"
           />
         </>
       )}
       {name === "descriptionAfter" && (
         <>
           <p>{t("descriptionAfter", { taskType })}</p>
-          <Popup
+          <InfoPopover
             content={<p>{t("descriptionAfterHelp", { taskType })}</p>}
-            trigger={<Icon name="question circle outline" />}
+            iconSrc="/assets/icons/question_mark.svg"
           />
         </>
       )}
       {name === "background" && (
         <>
           <p>{t("background")}</p>
-          <Popup
+          <InfoPopover
             content={t("backgroundHelp")}
-            trigger={<Icon name="question circle outline" />}
+            iconSrc="/assets/icons/question_mark.svg"
           />
         </>
       )}
@@ -174,9 +171,9 @@ export default function SettingBlock({ name, value, handleChange, task }) {
       {name === "format" && (
         <>
           <p>{t("formatSurvey")}</p>
-          <Popup
+          <InfoPopover
             content={<p>{t("formatSurveyHelp")}</p>}
-            trigger={<Icon name="question circle outline" />}
+            iconSrc="/assets/icons/question_mark.svg"
           />
         </>
       )}

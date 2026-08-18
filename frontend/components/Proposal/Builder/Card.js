@@ -1,7 +1,7 @@
 import ReactHtmlParser from "react-html-parser";
 import { Draggable } from "react-smooth-dnd";
 
-import { Popup } from "semantic-ui-react";
+import Tooltip from "../../DesignSystem/Tooltip";
 import { StyledProposalCard } from "../../styles/StyledProposal";
 import { getRegularCardVariant } from "../../Utils/cardVariants";
 import useTranslation from "next-translate/useTranslation";
@@ -84,20 +84,16 @@ export default function Card({
               </div>
             </div>
             {cardVariant.variant !== "NO_FEEDBACK" && (
-              <Popup
-                content={cardVariant.tooltipText || null}
-                trigger={
-                  <div className={`card-feedback-tag ${
-                    cardVariant.variant === "FEEDBACK_SUBMITTED"
-                      ? "feedback-submitted"
-                      : "feedback-non-submitted"
-                  }`}>
-                    <img src={getFeedbackIcon()} alt="feedback status" />
-                  </div>
-                }
-                disabled={!cardVariant.tooltipText}
-                size="small"
-              />
+              <Tooltip content={cardVariant.tooltipText || null}
+                disabled={!cardVariant.tooltipText}>
+                <div className={`card-feedback-tag ${
+                  cardVariant.variant === "FEEDBACK_SUBMITTED"
+                    ? "feedback-submitted"
+                    : "feedback-non-submitted"
+                }`}>
+                  <img src={getFeedbackIcon()} alt="feedback status" />
+                </div>
+              </Tooltip>
             )}
           </div>
         </div>

@@ -4,7 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../../../DesignSystem/Chip";
 import CompactActionButton from "../../../../DesignSystem/CompactActionButton";
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import { DELETE_DATASOURCE } from "../../../../Mutations/Datasource";
 import {
@@ -210,7 +210,7 @@ export default function DatasetCard({
           </h4>
           <div className="dataset-actions" onClick={(e) => e.stopPropagation()}>
             {renameDisabled ? (
-              <InfoTooltip content={renameTooltip} position="topLeft" portal>
+              <Tooltip content={renameTooltip} side="top">
                 <span
                   style={{ display: "inline-flex", cursor: "not-allowed" }}
                   onClick={(e) => e.stopPropagation()}
@@ -231,7 +231,7 @@ export default function DatasetCard({
                     style={{ pointerEvents: "none" }}
                   />
                 </span>
-              </InfoTooltip>
+              </Tooltip>
             ) : (
               <CompactActionButton
                 icon={
@@ -252,7 +252,7 @@ export default function DatasetCard({
               />
             )}
             {deleteDisabled ? (
-              <InfoTooltip content={deleteTooltip} position="topLeft" portal>
+              <Tooltip content={deleteTooltip} side="top">
                 <span
                   style={{ display: "inline-flex", cursor: "not-allowed" }}
                   onClick={(e) => e.stopPropagation()}
@@ -265,7 +265,7 @@ export default function DatasetCard({
                     style={{ pointerEvents: "none" }}
                   />
                 </span>
-              </InfoTooltip>
+              </Tooltip>
             ) : (
               deleteButton
             )}
@@ -274,12 +274,11 @@ export default function DatasetCard({
 
         <div className="dataset-meta">
           <div className="dataset-badges">
-            <InfoTooltip
+            <Tooltip
               content={t("dataJournal.datasets.originTooltip", {}, {
                 default: "How this dataset was created.",
               })}
-              position="topLeft"
-              portal
+              side="top"
             >
               <span style={{ display: "inline-flex" }}>
                 <Chip
@@ -298,8 +297,8 @@ export default function DatasetCard({
                   style={{ color: "#5D5763" }}
                 />
               </span>
-            </InfoTooltip>
-            <InfoTooltip content={inclusionTooltip} position="topLeft" portal>
+            </Tooltip>
+            <Tooltip content={inclusionTooltip} side="top">
               <span style={{ display: "inline-flex" }}>
                 <Chip
                   label={inclusionLabel}
@@ -316,7 +315,7 @@ export default function DatasetCard({
                   style={{ opacity: 0.8 }}
                 />
               </span>
-            </InfoTooltip>
+            </Tooltip>
           </div>
           <div className="dataset-info">
             <span className="author">{authorLine}</span>
