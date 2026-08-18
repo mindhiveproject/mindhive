@@ -1,20 +1,12 @@
 "use client";
 
-import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../../../../DesignSystem/InfoPopover";
 import useTranslation from "next-translate/useTranslation";
 
-const TOOLTIP_STYLE = {
-  maxWidth: "min(calc(100vw - 32px), 360px)",
-  width: "max-content",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "14px",
-  lineHeight: "20px",
-};
-
-
 /**
- * Data journal widget editor section title row with optional resources/help tooltip (narrow sidebar friendly).
- * When `helpAction` is set, it is passed to InfoTooltip as `action` (interactive tooltip; portal disabled per design system).
+ * Data journal widget editor section title row with an optional resources/help
+ * panel (narrow sidebar friendly). `helpAction` holds the resource links, which
+ * is why the panel is a click-to-open InfoPopover rather than a hover Tooltip.
  */
 export default function SectionHeader({
   title,
@@ -28,7 +20,6 @@ export default function SectionHeader({
 
   const hasIcon = Boolean(iconSrc);
   const hasHelp = helpContent != null || helpAction != null;
-  const useInteractiveHelp = helpAction != null;
 
 
   const gridCols =
@@ -58,28 +49,22 @@ export default function SectionHeader({
       ) : null} */}
       <div style={{ minWidth: 0, overflowWrap: "break-word" }}>{title}</div>
       {hasHelp ? (
-        <InfoTooltip
-          content={helpContent ?? (helpAction != null ? <></> : null)}
-          action={helpAction}
-          position="bottomRight"
-          portal={!useInteractiveHelp}
-          tooltipStyle={TOOLTIP_STYLE}
-          wrapperStyle={{
-            position: "relative",
-            display: "inline-flex",
-            flexShrink: 0,
-            alignItems: "center",
-            zIndex: 2,
-          }}
-        >
-          <span style={{ display: "inline-flex", flexShrink: 0 }}>
-            <img
-              src="/assets/icons/visualize/question_mark.svg"
-              alt={helpAriaLabel || ""}
-              style={{ width: 20, height: 20, cursor: "pointer", display: "block" }}
-            />
-          </span>
-        </InfoTooltip>
+        <InfoPopover
+          content={
+            <>
+              {helpContent}
+              {helpAction != null ? (
+                <div style={{ marginTop: helpContent != null ? 12 : 0 }}>
+                  {helpAction}
+                </div>
+              ) : null}
+            </>
+          }
+          align="end"
+          width={360}
+          ariaLabel={helpAriaLabel}
+          iconSrc="/assets/icons/visualize/question_mark.svg"
+        />
       ) : null}
     </div>
   );

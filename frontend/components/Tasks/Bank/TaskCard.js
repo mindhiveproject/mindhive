@@ -36,13 +36,6 @@ export default function TaskCard({ user, task, url, id, name, domain }) {
                 )}
               </ManageFavorites>
             )} */}
-              {/* {task?.descriptionForParticipants && (
-              <Popup
-                content={ReactHtmlParser(task?.descriptionForParticipants)}
-                size="huge"
-                trigger={<Icon name="info circle" size="large" />}
-              />
-            )} */}
             </div>
           </div>
           {domain === "discover" && (

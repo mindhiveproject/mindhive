@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { Icon, Popup, Modal, Button } from "semantic-ui-react";
+import { Icon, Modal, Button } from "semantic-ui-react";
+import Tooltip from "../../../../../DesignSystem/Tooltip";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_USERNAMES_WHERE } from "../../../../../Queries/User";
@@ -312,38 +313,23 @@ export default function AddCollaboratorModal({
                         <span style={{ color: "#274E5B" }}>
                           {u.username}
                         </span>
-                        <Popup
-                          content={t("header.addCollaborator", "Add Collaborator")}
-                          trigger={
-                            <button
-                              onClick={() => handleAdd(u.id)}
-                              style={{
-                                background: "none",
-                                border: "none",
-                                fontSize: "14px",
-                                cursor: "pointer",
-                                color: "#274E5B",
-                                padding: "2px 4px",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Icon name="plus" />
-                            </button>
-                          }
-                          popperModifiers={[
-                            {
-                              name: "zIndex",
-                              enabled: true,
-                              phase: "write",
-                              fn: ({ state }) => {
-                                if (state.elements?.popper) {
-                                  state.elements.popper.style.zIndex = "3000";
-                                }
-                              },
-                            },
-                          ]}
-                        />
+                        <Tooltip content={t("header.addCollaborator", "Add Collaborator")}>
+                          <button
+                            onClick={() => handleAdd(u.id)}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              fontSize: "14px",
+                              cursor: "pointer",
+                              color: "#274E5B",
+                              padding: "2px 4px",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Icon name="plus" />
+                          </button>
+                        </Tooltip>
                       </div>
                     ))}
                   </div>
@@ -389,38 +375,23 @@ export default function AddCollaboratorModal({
                           <span style={{ color: "#495057" }}>
                             {userObj?.username || s}
                           </span>
-                          <Popup
-                            content={t("header.removeCollaborator", "Remove Collaborator")}
-                            trigger={
-                              <button
-                                onClick={() => handleRemove(s)}
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  fontSize: "14px",
-                                  cursor: "pointer",
-                                  color: "#625B71",
-                                  padding: "2px 4px",
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <Icon name="minus" />
-                              </button>
-                            }
-                            popperModifiers={[
-                              {
-                                name: "zIndex",
-                                enabled: true,
-                                phase: "write",
-                                fn: ({ state }) => {
-                                  if (state.elements?.popper) {
-                                    state.elements.popper.style.zIndex = "3000";
-                                  }
-                                },
-                              },
-                            ]}
-                          />
+                          <Tooltip content={t("header.removeCollaborator", "Remove Collaborator")}>
+                            <button
+                              onClick={() => handleRemove(s)}
+                              style={{
+                                background: "none",
+                                border: "none",
+                                fontSize: "14px",
+                                cursor: "pointer",
+                                color: "#625B71",
+                                padding: "2px 4px",
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Icon name="minus" />
+                            </button>
+                          </Tooltip>
                         </div>
                       );
                     })}

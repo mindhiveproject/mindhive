@@ -4,7 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Connect from "./Connect/Main";
 import StudyOptions from "../../../Studies/Bank/StudyOptions";
-import InfoTooltip from "../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../DesignSystem/Tooltip";
 
 import { MY_STUDY } from "../../../Queries/Study";
 
@@ -103,18 +103,14 @@ export default function Navigation({
           </div>
         </div>
         <div className="middle">
-          <InfoTooltip
+          <Tooltip
             content={study?.title || t("myStudies", "My Studies")}
+            side="bottom"
             delayMs={650}
-            wrapperStyle={{ width: "100%", minWidth: 0 }}
-            tooltipStyle={{
-              maxWidth: "100%",
-              width: "fit-content",
-              background: "#F7F9F8",
-            }}
+            maxWidth={400}
           >
             <span className="studyTitle">{study?.title ?? ""}</span>
-          </InfoTooltip>
+          </Tooltip>
         </div>
         <div className="right">
           {area === "cloneofstudy" && studyId && (

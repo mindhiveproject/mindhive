@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, use
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
-import InfoTooltip from "./InfoTooltip";
+import Tooltip from "./Tooltip";
 import {
   clampDropdownPanelLeft,
   computeDropdownVerticalPlacement,
@@ -470,15 +470,14 @@ export default function DropdownSelect({
   return (
     <div ref={triggerRef} style={rootStyle}>
       {tooltipContent && isTriggerLabelTruncated ? (
-        <InfoTooltip
+        <Tooltip
           content={tooltipContent}
-          position="right"
-          portal
+          side="right"
           delayMs={TRIGGER_TOOLTIP_DELAY_MS}
-          wrapperStyle={{ minWidth: 0, maxWidth: "100%", display: "block" }}
+          className="DesignSystem-Tooltip-trigger--fill"
         >
           {buttonNode}
-        </InfoTooltip>
+        </Tooltip>
       ) : (
         buttonNode
       )}

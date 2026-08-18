@@ -8,7 +8,7 @@ import { Checkbox } from "semantic-ui-react";
 import { useState } from "react";
 import useTranslation from 'next-translate/useTranslation';
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../Queries/Proposal";
-import InfoTooltip from "../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../DesignSystem/InfoPopover";
 import Chip from "../../DesignSystem/Chip";
 import Button from "../../DesignSystem/Button";
 import { isClassTemplateBoard } from "../../Utils/proposalBoard";
@@ -265,9 +265,11 @@ export default function ProposalHeader({
                         onChange={(_, { checked }) => onAutoUpdateChange?.(!!checked)}
                         label={t("proposal.templateAutoUpdate", "Auto-update student boards")}
                       />
-                      <InfoTooltip
-                        position="topRight"
+                      <InfoPopover
+                        side="top"
+                        align="end"
                         content={t("proposal.templateAutoUpdateHelp", "When on, structural changes, template-controlled card settings (except progress status), and optionally content are pushed to student boards after each save. Students' own answers and their progress status on each card are preserved. When off, use the button below to update when ready.")}
+                        ariaLabel={t("proposal.templateAutoUpdate", "Auto-update student boards")}
                       />
                     </div>
                     {!autoUpdateStudentBoards && (

@@ -18,7 +18,8 @@ import LinkedItems from "./Forms/LinkedItems";
 import { PreviewSection } from "./Forms/PreviewSection";
 import AssignmentViewModal from "../../TipTap/AssignmentViewModal";
 import ResourceViewModal from "../../TipTap/ResourceViewModal";
-import InfoTooltip from "../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../DesignSystem/InfoPopover";
+import Tooltip from "../../DesignSystem/Tooltip";
 import Button from "../../DesignSystem/Button";
 import useTranslation from "next-translate/useTranslation";
 
@@ -224,15 +225,15 @@ export default function BuilderProposalCard({
             </div>
           </div>
         </div>
-        <InfoTooltip
+        <Tooltip
           content={proposal?.title || ""}
-          wrapperStyle={{ minWidth: 0, width: "100%" }}
-          tooltipStyle={{ maxWidth: "min(400px, 90vw)" }}
+          side="bottom"
+          maxWidth={400}
         >
           <div className="middle">
             <span className="studyTitle">{proposal?.title}</span>
           </div>
-        </InfoTooltip>
+        </Tooltip>
         <div className={`right${previewMode ? " rightPreviewMode" : ""}`}>
           {previewMode ? (
             <button
@@ -356,12 +357,12 @@ export default function BuilderProposalCard({
           <label htmlFor="title">
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.title")}
-              <InfoTooltip
+              <InfoPopover
                 content={t(
                   "board.expendedCard.titleText",
                   "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the box titled 'Include text input for Feedback Center' is checked."
                 )}
-                iconStyle={{opacity: 0.4}}
+                ariaLabel={t("board.expendedCard.title")}
               />
             </div>
             <p></p>
@@ -376,12 +377,12 @@ export default function BuilderProposalCard({
           <label htmlFor="description">
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.instructions")}
-              <InfoTooltip
+              <InfoPopover
                 content={t(
                   "board.expendedCard.instructionsText",
                   "Add or edit instructions for students telling them how to complete the card."
                 )}
-                iconStyle={{opacity: 0.4}}
+                ariaLabel={t("board.expendedCard.instructions")}
               />
             </div>
             <TipTapEditor
@@ -409,12 +410,12 @@ export default function BuilderProposalCard({
               <label htmlFor="description">
                 <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   {t("board.expendedCard.studentResponseBoxNetwork")}
-                  <InfoTooltip
+                  <InfoPopover
                     content={t(
                       "board.expendedCard.studentResponseBoxNetworkText",
                       "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
                     )}
-                    iconStyle={{opacity: 0.4}}
+                    ariaLabel={t("board.expendedCard.studentResponseBoxNetwork")}
                   />
                 </div>
               </label>
@@ -527,17 +528,13 @@ export default function BuilderProposalCard({
           <>
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.linkedItems", "Linked Items")}
-              <InfoTooltip
+              <InfoPopover
                 content={t(
                   "board.expendedCard.addLinkedItems",
                   "Add existing assignments, tasks, studies, or resources"
                 )}
-                iconStyle={{
-                  opacity: 0.4,
-                }}
-                tooltipStyle={{
-                  width: "200px",
-                }}
+                ariaLabel={t("board.expendedCard.linkedItems", "Linked Items")}
+                width={240}
               />
             </div>
             <LinkedItems
@@ -562,10 +559,11 @@ export default function BuilderProposalCard({
           <div className="proposalCardComments">
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.comments")}
-              <InfoTooltip
+              <InfoPopover
                 content={t("board.expendedCard.commentsText")}
-                iconStyle={{opacity: 0.4}}
-                position="topRight"
+                ariaLabel={t("board.expendedCard.comments")}
+                side="top"
+                align="end"
               />
             </div>
             <TipTapEditor
@@ -606,13 +604,14 @@ export default function BuilderProposalCard({
                   <span className="cardHeader">
                     {t("board.expendedCard.studentAnswerBox", "Student Answer Box")}
                   </span>
-                  <InfoTooltip
+                  <InfoPopover
                     content={t(
                       "board.expendedCard.studentAnswerBoxTooltip",
                       "When enabled, students can type a response in a dedicated field on this card."
                     )}
-                    iconStyle={{ opacity: 0.4 }}
-                    position="topRight"
+                    ariaLabel={t("board.expendedCard.studentAnswerBox", "Student Answer Box")}
+                    side="top"
+                    align="end"
                   />
                 </div>
                 <div className="cardDescription" style={{ marginTop: "4px" }}>

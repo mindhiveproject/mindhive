@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import Chip from "../../../DesignSystem/Chip";
 import CopyButton from "../../../DesignSystem/CopyButton";
-import InfoTooltip from "../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../DesignSystem/InfoPopover";
 
 const VERIFICATION_EMAIL = "info@mindhive.science";
 
@@ -92,25 +92,30 @@ export default function OrganizationVerificationStatus({
         e.stopPropagation();
       }}
     >
-      <InfoTooltip
-        content={tooltip}
-        position="bottomLeft"
-        delayMs={200}
-        action={
-          <CopyButton
-            value={VERIFICATION_EMAIL}
-            style={{ fontWeight: 500 }}
-            ariaLabel={t(
-              "organizationsDetail.verification.copyEmailAria",
-              {},
-              { default: "Copy info@mindhive.science to clipboard" },
-            )}
-          >
-            {t("organizationsDetail.verification.copyEmail", {}, {
-              default: "Copy email address",
-            })}
-          </CopyButton>
+      <InfoPopover
+        content={
+          <>
+            {tooltip}
+            <div style={{ marginTop: 8 }}>
+              <CopyButton
+                value={VERIFICATION_EMAIL}
+                style={{ fontWeight: 500 }}
+                ariaLabel={t(
+                  "organizationsDetail.verification.copyEmailAria",
+                  {},
+                  { default: "Copy info@mindhive.science to clipboard" },
+                )}
+              >
+                {t("organizationsDetail.verification.copyEmail", {}, {
+                  default: "Copy email address",
+                })}
+              </CopyButton>
+            </div>
+          </>
         }
+        ariaLabel={t("organizationsDetail.verification.notVerified", {}, {
+          default: "Not verified",
+        })}
       >
         <Chip
           label={t("organizationsDetail.verification.notVerified", {}, {
@@ -122,10 +127,10 @@ export default function OrganizationVerificationStatus({
             ...(compact
               ? { height: 28, paddingLeft: 10, paddingRight: 10, fontSize: 12 }
               : null),
-            cursor: "help",
+            cursor: "pointer",
           }}
         />
-      </InfoTooltip>
+      </InfoPopover>
     </Wrap>
   );
 }

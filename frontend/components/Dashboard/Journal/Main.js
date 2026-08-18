@@ -3,7 +3,7 @@ import AddJournal from "./AddJournal";
 import JournalPage from "./JournalPage";
 import JournalsList from "./JournalsList";
 import StyledJournal from "../../styles/StyledJournal";
-import { Icon, PopupContent, Popup } from "semantic-ui-react";
+import InfoPopover from "../../DesignSystem/InfoPopover";
 import useTranslation from "next-translate/useTranslation";
 
 export default function JournalMain({ query, user }) {
@@ -18,17 +18,18 @@ export default function JournalMain({ query, user }) {
           <Link href="/dashboard/journals/add">
             <button>{t("journal.createNewJournal")}</button>
           </Link>
-          <Popup trigger={<Icon name="info" size="large" />}>
-            <PopupContent>
-              <div>
+          <InfoPopover
+            ariaLabel={t("journal.menuTitle")}
+            content={
+              <>
                 <p>{t("journal.info.intro")}</p>
                 <p>{t("journal.info.ideas")}</p>
                 <p>{t("journal.info.read")}</p>
                 <p>{t("journal.info.shower")}</p>
                 <p>{t("journal.info.class")}</p>
-              </div>
-            </PopupContent>
-          </Popup>
+              </>
+            }
+          />
         </div>
         <JournalsList query={query} user={user} />
       </StyledJournal>

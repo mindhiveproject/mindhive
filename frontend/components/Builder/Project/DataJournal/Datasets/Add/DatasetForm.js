@@ -4,7 +4,7 @@ import { customAlphabet } from "nanoid";
 import { useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../../../DesignSystem/InfoPopover";
 import {
   collectSharingProfileIdsFromStudyAndProject,
   getSharingRecipientEntries,
@@ -546,39 +546,17 @@ export default function DatasetForm({
                   })}
             </span>
             {sharingIds.length > 0 && sharingRecipientsTooltip ? (
-              <InfoTooltip
+              <InfoPopover
                 content={sharingRecipientsTooltip}
-                position="topLeft"
-                portal
-              >
-                <button
-                  type="button"
-                  aria-label={t(
-                    "dataJournal.datasets.sharing.whoTooltipAria",
-                    {},
-                    { default: "Who will receive access" },
-                  )}
-                  style={{
-                    flex: "0 0 auto",
-                    margin: 0,
-                    padding: 2,
-                    border: "none",
-                    background: "transparent",
-                    cursor: "help",
-                    lineHeight: 0,
-                  }}
-                >
-                  <img
-                    src="/assets/icons/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    style={{ display: "block", opacity: 0.65 }}
-                  />
-                </button>
-              </InfoTooltip>
+                ariaLabel={t(
+                  "dataJournal.datasets.sharing.whoTooltipAria",
+                  {},
+                  { default: "Who will receive access" },
+                )}
+                side="top"
+              />
             ) : sharingIds.length === 0 && selectedVizPartId ? (
-              <InfoTooltip
+              <InfoPopover
                 content={t(
                   "dataJournal.datasets.sharing.journalOnlyTooltip",
                   {},
@@ -587,35 +565,13 @@ export default function DatasetForm({
                       "Collaborators from this journal’s study or project will be connected when you create the dataset.",
                   },
                 )}
-                position="topLeft"
-                portal
-              >
-                <button
-                  type="button"
-                  aria-label={t(
-                    "dataJournal.datasets.sharing.whoTooltipAria",
-                    {},
-                    { default: "Who will receive access" },
-                  )}
-                  style={{
-                    flex: "0 0 auto",
-                    margin: 0,
-                    padding: 2,
-                    border: "none",
-                    background: "transparent",
-                    cursor: "help",
-                    lineHeight: 0,
-                  }}
-                >
-                  <img
-                    src="/assets/icons/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    style={{ display: "block", opacity: 0.65 }}
-                  />
-                </button>
-              </InfoTooltip>
+                ariaLabel={t(
+                  "dataJournal.datasets.sharing.whoTooltipAria",
+                  {},
+                  { default: "Who will receive access" },
+                )}
+                side="top"
+              />
             ) : null}
           </p>
           <label

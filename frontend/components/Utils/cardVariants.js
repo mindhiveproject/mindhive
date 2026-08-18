@@ -46,7 +46,7 @@ export function getRegularCardVariant(card, submitStatuses = {}) {
     (rs) => rs.status === "SUBMITTED"
   );
 
-  // If multiple review steps, create tooltip text
+  // If multiple review steps, create tooltip text: one review step per line.
   let tooltipText = null;
   if (reviewStepStatuses.length > 1) {
     const stepNames = {
@@ -65,7 +65,7 @@ export function getRegularCardVariant(card, submitStatuses = {}) {
             : "Not Submitted";
         return `${stepName}: ${statusText}`;
       })
-      .join(", ");
+      .join("\n");
   }
 
   return {

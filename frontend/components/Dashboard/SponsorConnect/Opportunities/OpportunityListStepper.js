@@ -2,7 +2,7 @@ import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import Chip from "../../../DesignSystem/Chip";
-import InfoTooltip from "../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../DesignSystem/InfoPopover";
 import { resolveOpportunityListStepper } from "../../../../lib/opportunityListStepper";
 import {
   OPPORTUNITY_LIST_OPENABLE_STEP_KEYS,
@@ -194,15 +194,14 @@ export default function OpportunityListStepper({
               </Connector>
             )}
             {step.isVisibility ? (
-              <InfoTooltip
+              <InfoPopover
                 content={visibilityTooltipContent(networks, t)}
-                position="bottomLeft"
-                portal
-                wrapperStyle={{ maxWidth: "100%" }}
-                tooltipStyle={{ maxWidth: "min(320px, 90vw)" }}
+                ariaLabel={t("myOpportunitiesList.visibility.modalTitle", {}, {
+                  default: "Visible in class networks",
+                })}
               >
                 {chip}
-              </InfoTooltip>
+              </InfoPopover>
             ) : (
               chip
             )}

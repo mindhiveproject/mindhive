@@ -47,7 +47,7 @@ import {
  * - Review with unread should open this modal and open the Messages panel
  *   (e.g. initialChatOpen), without marking notes read until Messages opens.
  * - Revisit dual selection paths (grid checkbox vs modal Select/Remove).
- * - Clarify or replace the opaque `!` InfoTooltip vs Review.
+ * - Clarify or replace the opaque `!` InfoPopover vs Review.
  */
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;

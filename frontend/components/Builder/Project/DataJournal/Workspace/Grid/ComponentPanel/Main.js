@@ -1,7 +1,7 @@
 // components/DataJournal/Workspace/Grid/ComponentPanel/Main.js
 import { StyledComponentPanel } from "../../../styles/StyledDataJournal"; // Adjust path
 import useTranslation from "next-translate/useTranslation";
-import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../../../../DesignSystem/Tooltip";
 import CompactActionButton from "../../../../../../DesignSystem/CompactActionButton";
 
 import { templates } from "../../../Widgets/types/Graph/Editor/TemplateSelector"; // Adjust path to Templates
@@ -221,17 +221,10 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
   ];
 
   const renderCard = (card) => (
-    <InfoTooltip
+    <Tooltip
       key={card.id}
       content={t(card.descriptionKey, card.descriptionFallback)}
-      tooltipStyle={{
-        width: "100%",
-        fontSize: "13px",
-        lineHeight: "18px",
-        color: "var(--MH-Theme-Neutrals-Black, #171717)",
-        border: "1px solid #A1A1A1",
-      }}
-      wrapperStyle={{ width: "100%", display: "block" }}
+      className="DesignSystem-Tooltip-trigger--fill"
     >
       <div
         className="card"
@@ -244,7 +237,7 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           <div className="cardTitle">{t(card.titleKey, card.titleFallback)}</div>
         </div>
       </div>
-    </InfoTooltip>
+    </Tooltip>
   );
 
   return (

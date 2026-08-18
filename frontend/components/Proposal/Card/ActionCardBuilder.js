@@ -32,7 +32,7 @@ import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPreview";
 import TeacherFormWizard from "../../Forms/TeacherFormWizard";
 import ActionCardTypeBadge from "../../Dashboard/TeacherClasses/ClassPage/utils/ActionCardTypeBadge";
-import InfoTooltip from "../../DesignSystem/InfoTooltip";
+import Tooltip from "../../DesignSystem/Tooltip";
 import Button from "../../DesignSystem/Button";
 
 const inputStyle = {
@@ -359,15 +359,15 @@ export default function ActionCardBuilder({
             </div>
           </div>
         </div>
-        <InfoTooltip
+        <Tooltip
           content={proposal?.title || ""}
-          wrapperStyle={{ minWidth: 0, width: "100%" }}
-          tooltipStyle={{ maxWidth: "min(400px, 90vw)" }}
+          side="bottom"
+          maxWidth={400}
         >
           <div className="middle">
             <span className="studyTitle">{proposal?.title}</span>
           </div>
-        </InfoTooltip>
+        </Tooltip>
         <div className="right">
           <div className="editModeMessage">
             {t("board.editMode", {}, { default: "You are in Edit Mode" })}

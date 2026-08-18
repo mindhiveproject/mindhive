@@ -7,7 +7,8 @@ import ConnectModal from "./Modal";
 import { MY_STUDY } from "../../../../Queries/Study";
 import { UPDATE_STUDY } from "../../../../Mutations/Study";
 
-import { Image, Popup } from "semantic-ui-react";
+import { Image } from "semantic-ui-react";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 
 export default function Connect({ study, user }) {
   // save and edit the study information
@@ -40,21 +41,16 @@ export default function Connect({ study, user }) {
     <div className="connectArea">
       <div className="icons">
         {collaborators.map((collaborator, num) => (
-          <Popup
-            content={collaborator?.username}
-            key={num}
-            trigger={
-              collaborator?.image?.image?.publicUrlTransformed ? (
-                <Image
-                  src={collaborator?.image?.image?.publicUrlTransformed}
-                  avatar
-                />
-              ) : (
-                <Image src="/assets/icons/builder/page.svg" avatar />
-              )
-            }
-            size="huge"
-          />
+          <Tooltip content={collaborator?.username} key={num}>
+            {collaborator?.image?.image?.publicUrlTransformed ? (
+              <Image
+                src={collaborator?.image?.image?.publicUrlTransformed}
+                avatar
+              />
+            ) : (
+              <Image src="/assets/icons/builder/page.svg" avatar />
+            )}
+          </Tooltip>
         ))}
       </div>
 

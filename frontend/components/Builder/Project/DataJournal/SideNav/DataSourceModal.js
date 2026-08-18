@@ -16,7 +16,7 @@ import { GET_DATA_JOURNAL } from "../../../../Queries/DataJournal";
 
 import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
 
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 import {
   StyledModalOverlay,
   StyledModalContent,
@@ -288,14 +288,13 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
                 );
                 if (!attachOk && !isSelected) {
                   return (
-                    <InfoTooltip
+                    <Tooltip
                       key={datasource.id}
                       content={attachDisabledHint}
-                      position="topLeft"
-                      portal
+                      side="top"
                     >
                       <span style={{ display: "block" }}>{row}</span>
-                    </InfoTooltip>
+                    </Tooltip>
                   );
                 }
                 return row;
