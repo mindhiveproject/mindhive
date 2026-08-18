@@ -819,6 +819,7 @@
 			"creating": "Criando\u000266",
 			"expandLabel": "",
 			"export": {
+				"buildingZip": "",
 				"cancel": "Cancelar",
 				"clearAll": "Limpar tudo",
 				"columns": {
@@ -827,6 +828,8 @@
 					"anticipatedObstacles": "",
 					"availableFrom": "Disponível a partir de",
 					"availableTo": "",
+					"coverImageFilename": "",
+					"coverImageZipPath": "",
 					"createdAt": "Criado em",
 					"datasetProvision": "",
 					"datasetProvisionOther": "",
@@ -835,11 +838,18 @@
 					"expectedDeliverablesOther": "",
 					"fieldResearchRequired": "",
 					"fieldResearchTravelDetails": "",
+					"followUpAssetCount": "",
+					"followUpAssetZipPaths": "",
 					"guidelinesAcknowledged": "",
 					"guidelinesAcknowledgedAt": "",
+					"hasCoverImage": "",
+					"hasIntroVideo": "",
 					"hasReviewNotes": "",
 					"id": "",
 					"internshipInterest": "",
+					"introVideoFilename": "",
+					"introVideoUrl": "",
+					"introVideoZipPath": "",
 					"issueRelevance": "",
 					"mentorEmail": "",
 					"mentorFirstName": "",
@@ -874,12 +884,14 @@
 					"updatedAt": ""
 				},
 				"download": "",
+				"downloadingMedia": "",
 				"empty": "",
 				"exporting": "Exportando...",
 				"failed": "",
 				"groups": {
 					"basics": "",
 					"capacity": "",
+					"media": "",
 					"people": "",
 					"postAcceptance": "",
 					"proposal": "",
@@ -1093,12 +1105,17 @@
 					"name": "",
 					"organization": "",
 					"review": "Revisar",
-					"sponsor": ""
+					"sponsor": "",
+					"video": "",
+					"videoMissing": "",
+					"videoProvided": ""
 				},
 				"dismissHighlight": "Dispensar",
+				"markScheduled": "",
 				"remove": "Remover",
 				"review": "Revisar",
-				"reviewUnreadAria": ""
+				"reviewUnreadAria": "",
+				"scheduledNoteBody": ""
 			},
 			"loading": "",
 			"manageMatches": "",
@@ -1198,6 +1215,7 @@
 				"saving": "",
 				"toggleFailed": ""
 			},
+			"meetingRequestLabel": "",
 			"mentor": "",
 			"mentorContact": "",
 			"mentorNotes": "",
@@ -1236,6 +1254,7 @@
 				"updatedAt": ""
 			},
 			"sponsorIsMentor": "",
+			"sponsorRequestedMeeting": "",
 			"status": "Status",
 			"summaryTitle": "Resumo",
 			"tabs": {
@@ -1259,8 +1278,13 @@
 			"capacity": "",
 			"capacityLabel": "",
 			"flagLabel": "",
+			"introVideoExternal": "",
+			"introVideoLabel": "",
+			"introVideoNotProvided": "",
+			"introVideoUploaded": "",
 			"lastUpdated": "",
 			"lastUpdatedLabel": "",
+			"meetingRequestLabel": "",
 			"sponsorLabel": "",
 			"statusLabel": "Status",
 			"teamOf": ""

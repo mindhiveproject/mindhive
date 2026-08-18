@@ -819,6 +819,7 @@
 			"creating": "Création...",
 			"expandLabel": "Développer les paramètres du tour de mise en correspondance",
 			"export": {
+				"buildingZip": "",
 				"cancel": "Annuler",
 				"clearAll": "Tout effacer",
 				"columns": {
@@ -827,6 +828,8 @@
 					"anticipatedObstacles": "Obstacles anticipés",
 					"availableFrom": "Disponible à partir de",
 					"availableTo": "Disponible jusqu'à ",
+					"coverImageFilename": "",
+					"coverImageZipPath": "",
 					"createdAt": "Créé à",
 					"datasetProvision": "Fourniture de jeu de données",
 					"datasetProvisionOther": "Fourniture de jeu de données (autre)",
@@ -835,11 +838,18 @@
 					"expectedDeliverablesOther": "Livrables attendus (autre)",
 					"fieldResearchRequired": "Recherche sur le terrain requise",
 					"fieldResearchTravelDetails": "Détails du voyage pour la recherche sur le terrain",
+					"followUpAssetCount": "",
+					"followUpAssetZipPaths": "",
 					"guidelinesAcknowledged": "Directives reconnues",
 					"guidelinesAcknowledgedAt": "Directives reconnues à",
+					"hasCoverImage": "",
+					"hasIntroVideo": "",
 					"hasReviewNotes": "A des notes de révision",
 					"id": "ID d'opportunité",
 					"internshipInterest": "Intérêt pour le stage",
+					"introVideoFilename": "",
+					"introVideoUrl": "",
+					"introVideoZipPath": "",
 					"issueRelevance": "Pertinence du problème",
 					"mentorEmail": "Email du mentor",
 					"mentorFirstName": "Prénom du mentor",
@@ -874,12 +884,14 @@
 					"updatedAt": "Mis à jour à"
 				},
 				"download": "Télécharger CSV",
+				"downloadingMedia": "",
 				"empty": "Aucune opportunité à exporter.",
 				"exporting": "Exportation en cours...",
 				"failed": "Impossible d'exporter les opportunités. Veuillez réessayer.",
 				"groups": {
 					"basics": "Notions de base",
 					"capacity": "Capacité et disponibilité",
+					"media": "",
 					"people": "Personnes et organisation",
 					"postAcceptance": "Après acceptation",
 					"proposal": "Proposition",
@@ -1093,12 +1105,17 @@
 					"name": "Nom de l'opportunité",
 					"organization": "Organisation",
 					"review": "Revue",
-					"sponsor": "Sponsor"
+					"sponsor": "Sponsor",
+					"video": "",
+					"videoMissing": "",
+					"videoProvided": ""
 				},
 				"dismissHighlight": "Rejeter",
+				"markScheduled": "",
 				"remove": "SUPPRIMER",
 				"review": "Revue",
-				"reviewUnreadAria": "Revue — message sponsor non lu"
+				"reviewUnreadAria": "Revue — message sponsor non lu",
+				"scheduledNoteBody": ""
 			},
 			"loading": "Chargement du tour de correspondance...",
 			"manageMatches": "Gérer les correspondances",
@@ -1198,6 +1215,7 @@
 				"saving": "Enregistrement...",
 				"toggleFailed": ""
 			},
+			"meetingRequestLabel": "",
 			"mentor": "Mentor",
 			"mentorContact": "",
 			"mentorNotes": "",
@@ -1236,6 +1254,7 @@
 				"updatedAt": ""
 			},
 			"sponsorIsMentor": "",
+			"sponsorRequestedMeeting": "",
 			"status": "Statut",
 			"summaryTitle": "Résumé",
 			"tabs": {
@@ -1259,8 +1278,13 @@
 			"capacity": "",
 			"capacityLabel": "Capacité",
 			"flagLabel": "Drapeau",
+			"introVideoExternal": "",
+			"introVideoLabel": "",
+			"introVideoNotProvided": "",
+			"introVideoUploaded": "",
 			"lastUpdated": "",
 			"lastUpdatedLabel": "Dernière mise à jour",
+			"meetingRequestLabel": "",
 			"sponsorLabel": "Sponsor",
 			"statusLabel": "Statut",
 			"teamOf": ""

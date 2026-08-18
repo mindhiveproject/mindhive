@@ -36,6 +36,7 @@ export const REVIEW_OPPORTUNITY = gql`
       specificSkills
       proposalData
       extraDetails
+      requestsAppointment
       mentor {
         id
         firstName

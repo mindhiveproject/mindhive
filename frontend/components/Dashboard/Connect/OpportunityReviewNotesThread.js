@@ -121,7 +121,11 @@ const Avatar = styled.div`
   background: ${(p) =>
     p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
       ? "var(--MH-Theme-Primary-Dark, #336f8a)"
-      : "var(--MH-Theme-Secondary-Dark, #6f26ce)"};
+      : p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST
+        ? "var(--MH-Theme-Error-Dark, #b9261a)"
+        : p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
+          ? "var(--MH-Theme-Primary-Dark, #336f8a)"
+          : "var(--MH-Theme-Secondary-Dark, #6f26ce)"};
   color: #ffffff;
   font-size: 12px;
   font-weight: 700;
@@ -186,21 +190,37 @@ const MessageBubble = styled.div`
   padding: 10px 12px;
   border-radius: ${(p) =>
     p.$alignEnd ? "14px 14px 4px 14px" : "14px 14px 14px 4px"};
-  background: ${(p) =>
-    p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
-      ? "var(--MH-Theme-Primary-Light, #def8fb)"
-      : p.$panel
-        ? "var(--MH-Theme-Neutrals-White, #ffffff)"
-        : "#faf8ff"};
+  background: ${(p) => {
+    if (p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) {
+      return "var(--MH-Theme-Primary-Light, #def8fb)";
+    }
+    if (p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST) {
+      return "#fce8e6";
+    }
+    if (p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED) {
+      return "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)";
+    }
+    return p.$panel
+      ? "var(--MH-Theme-Neutrals-White, #ffffff)"
+      : "#faf8ff";
+  }};
   border: 1px solid
-    ${(p) =>
-      p.$panel
-        ? p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
+    ${(p) => {
+      if (p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) {
+        return p.$panel
           ? "var(--MH-Theme-Primary-Medium, #a3d6db)"
-          : "var(--MH-Theme-Neutrals-Light, #d3dae0)"
-        : p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
-          ? "rgba(51, 111, 138, 0.28)"
-          : "rgba(160, 144, 224, 0.35)"};
+          : "rgba(51, 111, 138, 0.28)";
+      }
+      if (p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST) {
+        return "rgba(185, 38, 26, 0.28)";
+      }
+      if (p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED) {
+        return "var(--MH-Theme-Neutrals-Light, #d3dae0)";
+      }
+      return p.$panel
+        ? "var(--MH-Theme-Neutrals-Light, #d3dae0)"
+        : "rgba(160, 144, 224, 0.35)";
+    }};
   box-shadow: ${(p) =>
     p.$panel ? "none" : "0 1px 4px rgba(23, 23, 23, 0.05)"};
 `;
@@ -390,13 +410,23 @@ function MessageItem({
   const canDelete = isOwn || canDeleteAsAdmin;
   const kind = note.kind || REVIEW_NOTE_KIND.REVIEWER_COMMENT;
   // Sponsor replies sit on the right; reviewer comments on the left.
-  const alignEnd = kind === REVIEW_NOTE_KIND.SPONSOR_REPLY;
+  const alignEnd =
+    kind === REVIEW_NOTE_KIND.SPONSOR_REPLY ||
+    note?.payload?.source === "form";
   const kindLabel =
     kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
       ? t("reviewThread.kind.sponsorReply", {}, { default: "Sponsor reply" })
-      : t("reviewThread.kind.reviewerComment", {}, {
-          default: "Reviewer comment",
-        });
+      : kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST
+        ? t("reviewThread.kind.appointmentRequest", {}, {
+            default: "Appointment request",
+          })
+        : kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
+          ? t("reviewThread.kind.appointmentScheduled", {}, {
+              default: "Appointment scheduled",
+            })
+          : t("reviewThread.kind.reviewerComment", {}, {
+              default: "Reviewer comment",
+            });
   const authorFallback = t("reviewThread.unknownAuthor", {}, {
     default: "Unknown",
   });
@@ -601,6 +631,8 @@ function MessageItem({
  * @param {"teacher"|"sponsor"} mode - Controls compose kind labels/copy.
  * @param {string} messageKind - Keystone kind to post (`reviewer_comment` or `sponsor_reply`).
  * @param {"default"|"panel"} [layout="default"] - `panel` fills a split-pane column (full width).
+ * @param {boolean} [requestsAppointment] - Live opportunity flag. Either side
+ *   can request a meeting when false, or mark it scheduled when true.
  * @param {(note: object|null, meta: { kind: string, body: string }) => void} [onPosted]
  *   Called after a successful create (compose). Parent owns follow-up UX.
  * @param {boolean} [autoFocusCompose] - Focus and scroll to the compose field.
@@ -626,6 +658,7 @@ export default function OpportunityReviewNotesThread({
   className,
   autoFocusCompose = false,
   showReturnInvite = false,
+  requestsAppointment = false,
 }) {
   const isPanel = layout === "panel";
   const { t } = useTranslation("connect");
@@ -636,7 +669,13 @@ export default function OpportunityReviewNotesThread({
   const [previousExpanded, setPreviousExpanded] = useState(false);
 
   const mutationOptions = {
-    refetchQueries,
+    refetchQueries: [
+      ...refetchQueries,
+      "NETWORK_APPOINTMENT_REQUESTS",
+      "COUNT_NEW_UPDATES",
+      "GET_MY_UPDATES",
+      "MY_OPPORTUNITIES",
+    ],
     awaitRefetchQueries: true,
   };
 
@@ -757,6 +796,28 @@ export default function OpportunityReviewNotesThread({
     mode === "sponsor"
       ? t("reviewThread.compose.postReply", {}, { default: "Post reply" })
       : t("reviewThread.compose.post", {}, { default: "Post note" });
+  const markScheduledLabel = t("reviewThread.appointment.markScheduled", {}, {
+    default: "Mark meeting as scheduled",
+  });
+  const markScheduledExplanation = t(
+    "reviewThread.appointment.scheduledExplanation",
+    {},
+    {
+      default:
+        "Mark this meeting as scheduled when you have agreed a time.",
+    }
+  );
+  const requestMeetingLabel = t("reviewThread.appointment.request", {}, {
+    default: "Request a meeting",
+  });
+  const requestMeetingExplanation = t(
+    "reviewThread.appointment.requestExplanation",
+    {},
+    {
+      default:
+        "Ask to meet about this proposal. This is separate from sending a message.",
+    }
+  );
 
   const handlePost = async (event) => {
     event?.preventDefault?.();
@@ -789,6 +850,52 @@ export default function OpportunityReviewNotesThread({
       );
     }
   };
+
+  const postAppointmentNote = async (kind, defaultBody, errorDefault) => {
+    if (!composeEnabled || !opportunityId || !roundId) return;
+    setError(null);
+    try {
+      const result = await createNote({
+        variables: {
+          input: {
+            body: defaultBody,
+            kind,
+            opportunity: { connect: { id: opportunityId } },
+            round: { connect: { id: roundId } },
+          },
+        },
+      });
+      onPosted?.(result?.data?.createOpportunityReviewNote || null, {
+        kind,
+        body: defaultBody,
+      });
+    } catch (e) {
+      setError(e?.message || errorDefault);
+    }
+  };
+
+  const handleMarkScheduled = () =>
+    postAppointmentNote(
+      REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED,
+      t("reviewThread.appointment.scheduledDefaultBody", {}, {
+        default: "This meeting request was marked as scheduled.",
+      }),
+      t("reviewThread.errors.appointmentScheduled", {}, {
+        default:
+          "Could not mark this meeting request as scheduled. Please try again.",
+      })
+    );
+
+  const handleRequestMeeting = () =>
+    postAppointmentNote(
+      REVIEW_NOTE_KIND.APPOINTMENT_REQUEST,
+      t("reviewThread.appointment.requestDefaultBody", {}, {
+        default: "I request a meeting to discuss this proposal further.",
+      }),
+      t("reviewThread.errors.appointmentRequest", {}, {
+        default: "Could not request a meeting. Please try again.",
+      })
+    );
 
   const handleSave = async (noteId, body) => {
     setError(null);
@@ -895,6 +1002,9 @@ export default function OpportunityReviewNotesThread({
                   <Button
                     type="button"
                     variant={isPanel ? "text" : "outline"}
+                    style={{
+                      color: "var(--MH-Theme-Neutrals-Black, #171717)",
+                      }}
                     onClick={() => setPreviousExpanded(true)}
                   >
                     {t("reviewThread.loadPreviousMessages", {}, {
@@ -944,6 +1054,29 @@ export default function OpportunityReviewNotesThread({
                 aria-label={isPanel ? undefined : composePlaceholder}
               />
               <ActionsRow>
+                {requestsAppointment ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleMarkScheduled}
+                    disabled={creating}
+                    title={markScheduledExplanation}
+                    aria-label={`${markScheduledLabel}. ${markScheduledExplanation}`}
+                  >
+                    {markScheduledLabel}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleRequestMeeting}
+                    disabled={creating}
+                    title={requestMeetingExplanation}
+                    aria-label={`${requestMeetingLabel}. ${requestMeetingExplanation}`}
+                  >
+                    {requestMeetingLabel}
+                  </Button>
+                )}
                 <Button
                   type="submit"
                   variant="filled"

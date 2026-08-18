@@ -2215,6 +2215,41 @@ const StyledClass = styled.div`
       }
     }
 
+    .matchingRoundOppVideoGridCell {
+      padding: 0 !important;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .ag-cell-wrapper,
+      .ag-cell-value,
+      .ag-react-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+      }
+    }
+
+    .matchingRoundOppVideoCell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .matchingRoundOppVideoIcon {
+      display: block;
+      width: 20px;
+      height: 20px;
+      flex: 0 0 auto;
+      object-fit: contain;
+    }
+
     .matchingRoundOppInfoCellTrigger {
       display: flex;
       align-items: center;

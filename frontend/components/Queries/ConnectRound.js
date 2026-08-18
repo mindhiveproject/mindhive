@@ -216,6 +216,7 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
       coverImageUrl
       coverImage {
         url
+        extension
       }
       mentor {
         id
@@ -230,6 +231,7 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
       createdAt
       updatedAt
       proposalData
+      videoUrl
       videoFile {
         url
         filename

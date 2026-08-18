@@ -1401,10 +1401,12 @@ export default function OpportunityPreviewModal({
                     <FieldsGrid>
                       {opp.requestsAppointment ? (
                         <FieldItem
-                          label={t("opportunities.preview.requestsAppointment", {}, {
-                            default: "Appointment requested",
+                          label={t("opportunities.preview.meetingRequestLabel", {}, {
+                            default: "Meeting request",
                           })}
-                          value={t("opportunities.preview.yes", {}, { default: "Yes" })}
+                          value={t("opportunities.preview.sponsorRequestedMeeting", {}, {
+                            default: "Sponsor asked to meet",
+                          })}
                           highlight
                         />
                       ) : null}
@@ -1924,6 +1926,7 @@ export default function OpportunityPreviewModal({
                       layout="panel"
                       autoFocusCompose={showReturnInvite}
                       showReturnInvite={showReturnInvite}
+                      requestsAppointment={Boolean(opp.requestsAppointment)}
                       onPosted={() => setShowReturnInvite(false)}
                     />
                   </ChatThreadWrap>
