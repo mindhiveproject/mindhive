@@ -385,23 +385,23 @@ export default function ProjectManager(props) {
             </div>
           </StyledClass>
           <div className="footer">
-            <button className="cancel-button" onClick={closeModal}>
+            <DesignSystemButton variant="outline" onClick={closeModal}>
               {t("dashboard.cancel")}
-            </button>
-            <button
-              className="action-button"
+            </DesignSystemButton>
+            <DesignSystemButton
+              variant="filled"
               onClick={assignToProject}
               disabled={!projectId}
             >
               {t("dashboard.assignToProject")}
-            </button>
-            <button
-              className="action-button"
+            </DesignSystemButton>
+            <DesignSystemButton
+              variant="filled"
               onClick={createNewProject}
               disabled={!projectName}
             >
               {t("dashboard.createProject")}
-            </button>
+            </DesignSystemButton>
           </div>
         </Modal.Content>
       </StyledModal>
@@ -676,43 +676,5 @@ const StyledModal = styled.div`
     gap: 12px;
     padding-top: 16px;
     border-top: 1px solid #e0e0e0;
-
-    .cancel-button {
-      background: #ffffff;
-      border: 1px solid #d0d0d0;
-      border-radius: 6px;
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #666666;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #f5f5f5;
-        color: #333333;
-      }
-    }
-
-    .action-button {
-      background: #3d85b0;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #ffffff;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #326d94;
-      }
-
-      &:disabled {
-        background: #b0b0b0;
-        cursor: not-allowed;
-      }
-    }
   }
 `;

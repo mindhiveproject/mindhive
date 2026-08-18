@@ -1,6 +1,8 @@
 import { Modal, Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledForm } from "../../../../../styles/StyledForm";
+import Button from "../../../../../DesignSystem/Button";
 
 export default function Reverse({
   title,
@@ -13,6 +15,7 @@ export default function Reverse({
   setIsOpen,
   resetForm,
 }) {
+  const { t } = useTranslation("builder");
   const reverse = ({ column, maxValue }) => {
     const columnValue = parseFloat(column);
     if (isNaN(columnValue)) {
@@ -89,9 +92,11 @@ export default function Reverse({
 
       <Modal.Actions>
         <div className="modalButtons">
-          <button className="secondaryBtn" onClick={() => reverseColumn()}>
-            Reverse
-          </button>
+          <Button variant="filled" onClick={() => reverseColumn()}>
+            {t("dataJournal.datasetMenu.operations.reverse", {}, {
+              default: "Reverse",
+            })}
+          </Button>
         </div>
       </Modal.Actions>
     </>

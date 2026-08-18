@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../../../DesignSystem/Button";
 import Tooltip from "../../../../DesignSystem/Tooltip";
 import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import {
@@ -224,79 +225,49 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
         }}
       >
         <div style={{ display: "flex", gap: "8px" }}>
-          <button
+          <Button
+            variant="filled"
             onClick={handleUpdate}
             disabled={saveDisabled}
             type="button"
-            style={{
-              padding: "8px 16px",
-              borderRadius: "6px",
-              border: "none",
-              background: saveDisabled ? "#cbd5e0" : "#3182ce",
-              color: "#fff",
-              fontWeight: 500,
-              fontSize: "0.9rem",
-              cursor: saveDisabled ? "not-allowed" : "pointer",
-            }}
           >
-            {loading ? "Saving…" : "Save changes"}
-          </button>
-          <button
-            onClick={onCancel}
-            type="button"
-            style={{
-              padding: "8px 14px",
-              borderRadius: "6px",
-              border: "1px solid #e2e8f0",
-              background: "#fff",
-              color: "#4a5568",
-              fontSize: "0.9rem",
-              cursor: "pointer",
-            }}
-          >
-            Cancel
-          </button>
+            {loading
+              ? t("dataJournal.datasets.saving", {}, { default: "Saving…" })
+              : t("dataJournal.datasets.saveChanges", {}, {
+                  default: "Save changes",
+                })}
+          </Button>
+          <Button variant="outline" onClick={onCancel} type="button">
+            {t("dataJournal.datasets.cancel", {}, { default: "Cancel" })}
+          </Button>
         </div>
 
         {deleteDisabled ? (
           <Tooltip content={deleteTooltip} side="top">
             <span style={{ display: "inline-flex", cursor: "not-allowed" }}>
-              <button
+              <Button
+                variant="outline"
                 type="button"
                 disabled
                 style={{
-                  padding: "8px 14px",
-                  borderRadius: "6px",
-                  border: "none",
-                  background: "#feb2b2",
-                  color: "#fff",
-                  fontSize: "0.85rem",
-                  fontWeight: 500,
-                  cursor: "not-allowed",
+                  color: "#c0392b",
+                  borderColor: "#f5c2bf",
                   pointerEvents: "none",
                 }}
               >
                 {t("dataJournal.datasets.deleteLabel", {}, {
                   default: "Delete",
                 })}
-              </button>
+              </Button>
             </span>
           </Tooltip>
         ) : (
-          <button
+          <Button
+            variant="outline"
             onClick={() => setDeleteConfirmOpen(true)}
             disabled={loading}
             type="button"
-            style={{
-              padding: "8px 14px",
-              borderRadius: "6px",
-              border: "none",
-              background: loading ? "#feb2b2" : "#e53e3e",
-              color: "#fff",
-              fontSize: "0.85rem",
-              fontWeight: 500,
-              cursor: loading ? "not-allowed" : "pointer",
-            }}
+            style={{ color: "#c0392b", borderColor: "#f5c2bf" }}
           >
             {loading
               ? t("dataJournal.datasets.deleting", {}, {
@@ -305,7 +276,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
               : t("dataJournal.datasets.deleteDataset", {}, {
                   default: "Delete dataset",
                 })}
-          </button>
+          </Button>
         )}
       </div>
       <DeleteConfirmModal

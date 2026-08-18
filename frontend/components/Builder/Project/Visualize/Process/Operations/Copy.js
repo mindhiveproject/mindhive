@@ -1,7 +1,9 @@
 import { Modal, Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledForm } from "../../../../../styles/StyledForm";
 import { normalizeVariableName } from "../../../../../../lib/normalizeVariableName";
+import Button from "../../../../../DesignSystem/Button";
 
 export default function Copy({
   title,
@@ -14,6 +16,7 @@ export default function Copy({
   setIsOpen,
   resetForm,
 }) {
+  const { t } = useTranslation("builder");
   const copy = () => {
     const name = normalizeVariableName(inputs?.name);
     if (!name) return;
@@ -74,9 +77,11 @@ export default function Copy({
 
       <Modal.Actions>
         <div className="modalButtons">
-          <button className="secondaryBtn" onClick={() => copy()}>
-            Copy
-          </button>
+          <Button variant="filled" onClick={() => copy()}>
+            {t("dataJournal.datasetMenu.operations.copy", {}, {
+              default: "Copy",
+            })}
+          </Button>
         </div>
       </Modal.Actions>
     </>

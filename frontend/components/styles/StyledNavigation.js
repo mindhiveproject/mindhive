@@ -86,54 +86,7 @@ export const NavRightContainer = styled.div`
   .menuLinks {
     display: grid;
     grid-template-columns: auto auto;
-  }
-`;
-
-export const NavButton = styled.button`
-  margin: 6px;
-  height: 56px;
-  font-size: 18px;
-  line-height: 100%;
-  letter-spacing: 0.05em;
-  color: #007c70;
-  border: 2px solid #007c70;
-  cursor: pointer;
-  border-radius: 4px;
-  padding: 14px 24px 14px 24px;
-  background: none;
-  align-items: center;
-`;
-
-export const NavButtonSecondary = styled.button`
-  margin: 6px;
-  height: 56px;
-  font-size: 18px;
-  line-height: 100%;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  border: 2px solid #007c70;
-  cursor: pointer;
-  border-radius: 4px;
-  padding: 1rem 3rem;
-  background: #007c70;
-  align-items: center;
-`;
-
-export const SignoutButton = styled.button`
-  width: 150px;
-  font-size: 18px;
-  line-height: 100%;
-  letter-spacing: 0.05em;
-  color: #007c70;
-  border: 2px solid #007c70;
-  cursor: pointer;
-  border-radius: 4px;
-  padding: 14px 24px 14px 24px;
-  background: none;
-  align-items: center;
-  margin-top: 8px;
-  :hover {
-    opacity: 0.6;
+    grid-column-gap: 12px;
   }
 `;
 

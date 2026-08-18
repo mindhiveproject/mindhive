@@ -21,10 +21,7 @@ import {
 import FormDefinitionEditor from "./FormDefinitionEditor";
 import PublishModal from "./PublishModal";
 import VersionHistoryPanel from "./VersionHistoryPanel";
-import {
-  PrimaryButton,
-  SecondaryButton,
-} from "./EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const SURFACE_LABEL = {
   profile_individual: "Individual profile",
@@ -257,31 +254,34 @@ export default function EditorPage({ definitionId }) {
         </div>
         <div className="actions">
           {definition.status === "draft" ? (
-            <PrimaryButton
+            <Button
+              variant="filled"
               type="button"
               onClick={() => setPublishOpen(true)}
               disabled={savingDef || publishing}
             >
               Publish…
-            </PrimaryButton>
+            </Button>
           ) : null}
           {definition.status === "published" ? (
-            <SecondaryButton
+            <Button
+              variant="outline"
               type="button"
               onClick={revertToDraft}
               disabled={savingDef}
             >
               Revert to draft
-            </SecondaryButton>
+            </Button>
           ) : null}
           {definition.status !== "archived" ? (
-            <SecondaryButton
+            <Button
+              variant="outline"
               type="button"
               onClick={archive}
               disabled={savingDef}
             >
               Archive
-            </SecondaryButton>
+            </Button>
           ) : null}
         </div>
       </TopBar>

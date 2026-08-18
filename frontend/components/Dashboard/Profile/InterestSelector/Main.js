@@ -10,6 +10,7 @@ import { GET_PROFILE } from "../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../Mutations/User";
 import { GET_TAGS } from "../../../Queries/Tag";
 import { profileEditHref } from "../../../../lib/profileEditNavigation";
+import Button from "../../../DesignSystem/Button";
 import {
   confirmLeaveIfDirty,
   useUnsavedChangesGuard,
@@ -183,13 +184,13 @@ export default function InterestSelector({ query, user }) {
           href={profileEditHref({ page: "about", type: "individual" })}
           onClick={tryToLeave}
         >
-          <button className="secondary">
+          <Button variant="outline" type="button">
             {t("interestSelector.navButtons.previous")}
-          </button>
+          </Button>
         </Link>
-        <button type="button" onClick={complete}>
+        <Button variant="filled" type="button" onClick={complete}>
           {t("interestSelector.navButtons.complete")}
-        </button>
+        </Button>
       </div>
     </div>
   );

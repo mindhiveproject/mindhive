@@ -1,6 +1,7 @@
 import { StyledSelector } from "../../styles/StyledJoinStudyFlow";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../DesignSystem/Button";
 
 export default function Selector({ user, study, query }) {
   const { t } = useTranslation('common');
@@ -22,7 +23,9 @@ export default function Selector({ user, study, query }) {
                 query: { ...query, guest: true },
               }}
             >
-              <button>{t('join.selector.guestButton')}</button>
+              <Button variant="outline">
+                {t("join.selector.guestButton", {}, { default: "Continue as guest" })}
+              </Button>
             </Link>
           </div>
         )}
@@ -37,7 +40,9 @@ export default function Selector({ user, study, query }) {
                 query: { ...query },
               }}
             >
-              <button>{t('join.selector.returningButton')}</button>
+              <Button variant="outline">
+                {t("join.selector.returningButton", {}, { default: "Log in" })}
+              </Button>
             </Link>
           </div>
         )}
@@ -52,7 +57,9 @@ export default function Selector({ user, study, query }) {
                 query: { ...query },
               }}
             >
-              <button>{t('join.selector.newButton')}</button>
+              <Button variant="outline">
+                {t("join.selector.newButton", {}, { default: "Sign up" })}
+              </Button>
             </Link>
           </div>
         )}
@@ -67,7 +74,9 @@ export default function Selector({ user, study, query }) {
                 query: { ...query, guest: false },
               }}
             >
-              <button>{t('join.selector.memberButton')}</button>
+              <Button variant="outline">
+                {t("join.selector.memberButton", {}, { default: "Continue as a member" })}
+              </Button>
             </Link>
           </div>
         )}

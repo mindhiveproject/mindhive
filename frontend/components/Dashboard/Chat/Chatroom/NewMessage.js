@@ -6,6 +6,7 @@ import { GET_CHAT } from "../../../Queries/Chat";
 
 import Form from "./Form";
 import { CREATE_UPDATE } from "../../../Mutations/Update";
+import Button from "../../../DesignSystem/Button";
 
 export default function NewMessage({
   chat,
@@ -60,7 +61,7 @@ export default function NewMessage({
       setMessage={setMessage}
       submit={sendMessage}
     >
-      <button>{btnName}</button>
+      <Button variant="filled">{btnName}</Button>
     </Form>
   );
 }

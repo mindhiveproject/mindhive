@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "Créez un nouveau devoir à partir de zéro ou sélectionnez-en un dans la liste ci-dessous",
 		"createFromTemplate": "Créer un nouveau devoir à partir d'un modèle",
 		"createNew": "Créer un nouveau devoir",
+		"creating": "",
 		"creator": "Créateur",
 		"dateCreated": "Date de création",
 		"dateUpdated": "Date de mise à jour",
@@ -134,6 +135,7 @@
 		"unpublish": "Annuler la publication",
 		"unpublished": "Inédit",
 		"unsavedChanges": "Changements non sauvegardés !",
+		"view": "",
 		"visibleForStudents": "Le devoir est visible pour les étudiants"
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "Ajoutez ou modifiez le titre de la carte. Ce titre apparaîtra comme titre de section si les données saisies par l'élève sont visibles.",
 		"cardWillBeReleased": "La carte sera publiée",
 		"close": "Fermer",
+		"closeWithoutSaving": "",
 		"collective": "Collectif",
 		"commentPlaceholder": "Saisissez un commentaire...",
 		"commentsComment": "Cela préremplira la zone de commentaires des élèves. Vous pourrez supprimer les commentaires ultérieurement.",
@@ -728,6 +731,13 @@
 		"yourEntry": "Votre entrée"
 	},
 	"joinClass": "Rejoindre la classe",
+	"joinClassFlow": {
+		"goBack": "",
+		"noClassFound": "",
+		"noGoBack": "",
+		"wantToJoin": "",
+		"yesContinue": ""
+	},
 	"joinClassInfo": "Une fois que vous avez rejoint une classe, elle apparaîtra ici.",
 	"journal": {
 		"dateCreated": "Date de création",

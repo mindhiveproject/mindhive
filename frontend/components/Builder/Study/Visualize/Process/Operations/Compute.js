@@ -1,7 +1,9 @@
 import { Modal, Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledForm } from "../../../../../styles/StyledForm";
 import { normalizeVariableName } from "../../../../../../lib/normalizeVariableName";
+import Button from "../../../../../DesignSystem/Button";
 
 const operations = [
   { value: "zeroState", text: "" },
@@ -65,6 +67,7 @@ export default function Compute({
   setIsOpen,
   resetForm,
 }) {
+  const { t } = useTranslation("builder");
   const operationOptions = operations.map((operation) => ({
     key: operation?.value,
     value: operation?.value,
@@ -194,9 +197,11 @@ export default function Compute({
 
       <Modal.Actions>
         <div className="modalButtons">
-          <button className="secondaryBtn" onClick={() => calculate()}>
-            Compute
-          </button>
+          <Button variant="filled" onClick={() => calculate()}>
+            {t("dataJournal.datasetMenu.operations.compute", {}, {
+              default: "Compute",
+            })}
+          </Button>
         </div>
       </Modal.Actions>
     </>

@@ -7,9 +7,12 @@ import { GET_ALL_NETWORKS } from "../../../Queries/ClassNetwork";
 import { CREATE_NETWORK } from "../../../Mutations/ClassNetwork";
 
 import useForm from "../../../../lib/useForm";
+import Button from "../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function AddNetwork({}) {
   const router = useRouter();
+  const { t } = useTranslation("dashboard");
 
   const { inputs, handleChange } = useForm({
     classes: [],
@@ -50,7 +53,9 @@ export default function AddNetwork({}) {
     <div>
       <h3>Add a class network</h3>
       <NetworkForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save</button>
+      <Button variant="filled" type="button" onClick={handleSave}>
+        {t("management.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

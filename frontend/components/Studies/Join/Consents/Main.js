@@ -7,6 +7,7 @@ import useForm from "../../../../lib/useForm";
 import JoinStudy from "../JoinStudy";
 import ConsentForm from "./Form";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../../DesignSystem/Button";
 
 export default function Consents({ query, user, study }) {
   const router = useRouter();
@@ -60,7 +61,9 @@ export default function Consents({ query, user, study }) {
             },
           }}
         >
-          <button>{t('consent.form.iAgreeNext')}</button>
+          <Button variant="filled" style={{ width: "100%" }}>
+            {t("consent.form.iAgreeNext", {}, { default: "I agree, next" })}
+          </Button>
         </Link>
       )}
 
@@ -73,7 +76,9 @@ export default function Consents({ query, user, study }) {
             },
           }}
         >
-          <button>{t('consent.form.skip')}</button>
+          <Button variant="outline" style={{ width: "100%" }}>
+            {t("consent.form.skip", {}, { default: "Skip consent" })}
+          </Button>
         </Link>
       )}
 
@@ -85,7 +90,8 @@ export default function Consents({ query, user, study }) {
             ...inputs,
             [`consent-${consentId}`]: `agree`,
           }}
-          btnName={t('consent.form.iAgreeJoin')}
+          btnName={t("consent.form.iAgreeJoin", {}, { default: "I agree, join the study" })}
+          variant="filled"
         />
       )}
 
@@ -98,7 +104,9 @@ export default function Consents({ query, user, study }) {
             },
           }}
         >
-          <button>{t('consent.form.skip')}</button>
+          <Button variant="outline" style={{ width: "100%" }}>
+            {t("consent.form.skip", {}, { default: "Skip consent" })}
+          </Button>
         </Link>
       )}
     </div>

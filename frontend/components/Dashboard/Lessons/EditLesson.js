@@ -7,9 +7,12 @@ import { UPDATE_LESSON } from "../../Mutations/Lesson";
 
 import useForm from "../../../lib/useForm";
 import LessonForm from "./LessonForm";
+import Button from "../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function EditLesson({ selector, query, user }) {
   const router = useRouter();
+  const { t } = useTranslation("dashboard");
   const [content, setContent] = useState("");
 
   const { id } = query;
@@ -42,7 +45,9 @@ export default function EditLesson({ selector, query, user }) {
   return (
     <div>
       <LessonForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save</button>
+      <Button variant="filled" type="button" onClick={handleSave}>
+        {t("lessons.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

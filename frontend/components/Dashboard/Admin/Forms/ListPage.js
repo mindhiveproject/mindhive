@@ -14,7 +14,7 @@ import {
   BACKFILL_PROJECT_BOARD_FORM_SCOPE,
 } from "../../../Mutations/FormDefinition";
 import NewDefinitionForm from "./NewDefinitionForm";
-import { PrimaryButton, SecondaryButton } from "./EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const SURFACE_LABEL = {
   profile_individual: "Individual profile",
@@ -362,9 +362,9 @@ export default function ListPage() {
     <Shell>
       <TopRow>
         <h1>Form definitions</h1>
-        <PrimaryButton type="button" onClick={() => setNewOpen((v) => !v)}>
+        <Button variant="filled" type="button" onClick={() => setNewOpen((v) => !v)}>
           {newOpen ? "Close form" : "+ New definition"}
-        </PrimaryButton>
+        </Button>
       </TopRow>
       <NewDefinitionForm open={newOpen} onClose={() => setNewOpen(false)} />
 
@@ -384,13 +384,13 @@ export default function ListPage() {
             ))}
           </ul>
           <div className="actions">
-            <PrimaryButton
+            <Button variant="filled"
               type="button"
               onClick={handleSeedMissing}
               disabled={seeding}
             >
               {seeding ? "Seeding…" : `Seed ${missingBaselines.length} missing form${missingBaselines.length === 1 ? "" : "s"}`}
-            </PrimaryButton>
+            </Button>
             {seedError ? (
               <span className="error">
                 {seedError.message?.replace(/^Error: /, "") ||
@@ -409,9 +409,9 @@ export default function ListPage() {
             {seedData.seedMissingForms.map((d) => d.key).join(", ")}.
           </p>
           <div className="actions">
-            <SecondaryButton type="button" onClick={() => resetSeed()}>
+            <Button variant="outline" type="button" onClick={() => resetSeed()}>
               Dismiss
-            </SecondaryButton>
+            </Button>
           </div>
         </SeedPanel>
       ) : null}
@@ -441,7 +441,7 @@ export default function ListPage() {
               Idempotent + reversible via Keystone admin.
             </p>
           </div>
-          <SecondaryButton
+          <Button variant="outline"
             type="button"
             onClick={() => {
               setBackfillPanelOpen((v) => !v);
@@ -452,13 +452,13 @@ export default function ListPage() {
             }}
           >
             {backfillPanelOpen ? "Close" : "Show tool"}
-          </SecondaryButton>
+          </Button>
         </div>
 
         {backfillPanelOpen ? (
           <>
             <div className="actions">
-              <PrimaryButton
+              <Button variant="filled"
                 type="button"
                 onClick={handleBackfillPreview}
                 disabled={backfilling}
@@ -466,8 +466,8 @@ export default function ListPage() {
                 {backfilling && backfillMode !== "applied"
                   ? "Previewing…"
                   : "Preview changes (dry-run)"}
-              </PrimaryButton>
-              <PrimaryButton
+              </Button>
+              <Button variant="filled"
                 type="button"
                 onClick={handleBackfillApply}
                 disabled={
@@ -479,7 +479,7 @@ export default function ListPage() {
                 {backfilling && backfillMode === "applied"
                   ? "Applying…"
                   : "Apply"}
-              </PrimaryButton>
+              </Button>
               {backfillError ? (
                 <span className="error">
                   {backfillError.message?.replace(/^Error: /, "") ||
@@ -568,7 +568,7 @@ export default function ListPage() {
           </select>
         </label>
         {(keyFilter || scopeFilter || statusFilter || surfaceFilter) && (
-          <SecondaryButton
+          <Button variant="outline"
             type="button"
             onClick={() => {
               setKeyFilter("");
@@ -578,7 +578,7 @@ export default function ListPage() {
             }}
           >
             Clear filters
-          </SecondaryButton>
+          </Button>
         )}
       </FilterBar>
       {loading && rows.length === 0 ? <p>Loading…</p> : null}

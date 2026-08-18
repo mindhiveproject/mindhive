@@ -11,6 +11,7 @@ import moment from "moment";
 import { jsonToCSV } from "react-papaparse";
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../../../../DesignSystem/Button";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
 import Chips from "../../../../../DesignSystem/Chip";
 import AddColumnModal from "./Menu/AddColumnModal";
@@ -475,19 +476,21 @@ export default function Menu({
           {datasetTitle}
         </h3>
         {writeMode !== "readOnly" ? (
-          <button
+          <Button
+            variant="filled"
             type="button"
-            className="primaryAction saveAction"
             onClick={handleSaveClick}
             disabled={saving}
+            leadingIcon={
+              <img
+                src="/assets/icons/visualize/save.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            }
           >
-            <img
-              src="/assets/icons/visualize/save.svg"
-              alt=""
-              aria-hidden="true"
-            />
-            <span>{saving ? savingLabel : saveLabel}</span>
-          </button>
+            {saving ? savingLabel : saveLabel}
+          </Button>
         ) : null}
         <div className="metaStrip">
           <span>{dataOriginLabel}</span>

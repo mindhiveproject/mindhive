@@ -20,7 +20,8 @@ import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 
-const SecondaryButton = styled.button`
+// Toggle/filter chrome — not a CTA. Keep as local styled button.
+const LinkedCardsToggleButton = styled.button`
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -46,9 +47,6 @@ const SecondaryButton = styled.button`
     border-color: #4db6ac;
     color: #4db6ac;
   }
-`;
-
-const LinkedCardsToggleButton = styled(SecondaryButton)`
   ${(props) =>
     props.$active &&
     `

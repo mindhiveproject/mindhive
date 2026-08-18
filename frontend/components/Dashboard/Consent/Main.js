@@ -5,9 +5,12 @@ import ConsentPage from "./ConsentPage";
 import ConsentsList from "./ConsentsList";
 import PublicConsentsList from "./PublicConsentsList";
 import StyledConsent from "../../styles/StyledConsent";
+import Button from "../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ConsentMain({ query, user }) {
   const { selector } = query;
+  const { t } = useTranslation("dashboard");
   return (
     <StyledConsent>
       <h1>Consent protocols</h1>
@@ -37,7 +40,11 @@ export default function ConsentMain({ query, user }) {
         </div>
         {!selector && (
           <Link href="/dashboard/irb/add">
-            <button>Add consent form</button>
+            <Button variant="filled" type="button">
+              {t("consentAdmin.addConsentForm", {}, {
+                default: "Add consent form",
+              })}
+            </Button>
           </Link>
         )}
       </div>

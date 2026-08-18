@@ -7,6 +7,8 @@ import {
   ModalActions,
 } from "semantic-ui-react";
 import JoditEditor from "../../../Jodit/Editor";
+import Button from "../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Form({
   btnName,
@@ -15,6 +17,7 @@ export default function Form({
   submit,
   children,
 }) {
+  const { t } = useTranslation("dashboard");
   const [open, setOpen] = useState(false);
   return (
     <Modal
@@ -25,7 +28,7 @@ export default function Form({
       trigger={children}
     >
       <ModalHeader>
-        <h2>Add posting</h2>
+        <h2>{t("chat.addPosting", {}, { default: "Add posting" })}</h2>
       </ModalHeader>
       <ModalContent>
         <div className="modalWrapper">
@@ -33,7 +36,8 @@ export default function Form({
         </div>
       </ModalContent>
       <ModalActions>
-        <button
+        <Button
+          variant="filled"
           onClick={() => {
             submit();
             setMessage("");
@@ -41,7 +45,7 @@ export default function Form({
           }}
         >
           {btnName}
-        </button>
+        </Button>
       </ModalActions>
     </Modal>
   );

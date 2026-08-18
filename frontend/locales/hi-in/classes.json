@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "एक नया असाइनमेंट शुरू से बनाएँ या नीचे दी गई सूची में से एक चुनें",
 		"createFromTemplate": "टेम्पलेट से नया असाइनमेंट बनाएँ",
 		"createNew": "एक नया असाइनमेंट बनाएँ",
+		"creating": "",
 		"creator": "निर्माता",
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "तारीख अपडेट की गई",
@@ -134,6 +135,7 @@
 		"unpublish": "अप्रकाशित करें",
 		"unpublished": "अप्रकाशित",
 		"unsavedChanges": "सहेजे नहीं गए परिवर्तन!",
+		"view": "",
 		"visibleForStudents": "असाइनमेंट छात्रों के लिए दृश्यमान है"
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "कार्ड का शीर्षक जोड़ें या संपादित करें। यदि छात्र इनपुट दृश्यमान हो, तो यह शीर्षक अनुभाग शीर्षक के रूप में दिखाई देगा।",
 		"cardWillBeReleased": "कार्ड जारी किया जाएगा",
 		"close": "बंद करना",
+		"closeWithoutSaving": "",
 		"collective": "सामूहिक",
 		"commentPlaceholder": "टिप्पणी दर्ज करें...",
 		"commentsComment": "इससे छात्रों के लिए टिप्पणी बॉक्स पहले से भर जाएगा। आप बाद में टिप्पणियाँ हटा सकते हैं।",
@@ -728,6 +731,13 @@
 		"yourEntry": "आपकी प्रविष्टि"
 	},
 	"joinClass": "कक्षा में शामिल हों",
+	"joinClassFlow": {
+		"goBack": "",
+		"noClassFound": "",
+		"noGoBack": "",
+		"wantToJoin": "",
+		"yesContinue": ""
+	},
 	"joinClassInfo": "जब आप किसी कक्षा में शामिल होंगे तो वह यहां दिखाई देगी।",
 	"journal": {
 		"dateCreated": "बनाया गया दिनांक",

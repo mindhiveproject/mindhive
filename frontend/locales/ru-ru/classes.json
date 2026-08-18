@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "Создайте новое задание с нуля или выберите одно из списка ниже.",
 		"createFromTemplate": "Создать новое задание из шаблона",
 		"createNew": "Создать новое задание",
+		"creating": "",
 		"creator": "Создатель",
 		"dateCreated": "Дата создания",
 		"dateUpdated": "Дата обновления",
@@ -134,6 +135,7 @@
 		"unpublish": "Отменить публикацию",
 		"unpublished": "Неопубликовано",
 		"unsavedChanges": "Несохраненные изменения!",
+		"view": "",
 		"visibleForStudents": "Задание видно студентам"
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "Добавьте или отредактируйте название карточки. Это название будет отображаться как название раздела, если информация, введенная учащимся, будет видна.",
 		"cardWillBeReleased": "Карта будет выпущена",
 		"close": "Закрывать",
+		"closeWithoutSaving": "",
 		"collective": "Коллектив",
 		"commentPlaceholder": "Введите комментарий...",
 		"commentsComment": "Это автоматически заполнит поле для комментариев для учащихся. Вы сможете удалить комментарии позже.",
@@ -728,6 +731,13 @@
 		"yourEntry": "Ваша заявка"
 	},
 	"joinClass": "Присоединиться к классу",
+	"joinClassFlow": {
+		"goBack": "",
+		"noClassFound": "",
+		"noGoBack": "",
+		"wantToJoin": "",
+		"yesContinue": ""
+	},
 	"joinClassInfo": "Как только вы присоединитесь к классу, он появится здесь.",
 	"journal": {
 		"dateCreated": "Дата создания",

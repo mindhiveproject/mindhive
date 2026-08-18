@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import MonacoPythonEditor from "../../../../Helpers/MonacoPythonEditor";
+import Button from "../../../../../../../DesignSystem/Button";
 
 export default function ScriptEditor({ sectionId, code, onChange }) {
   const { t } = useTranslation("builder");
@@ -29,9 +30,9 @@ export default function ScriptEditor({ sectionId, code, onChange }) {
   return (
     <>
       <div className="runCodeButton">
-        <button type="button" onClick={onRunCode}>
+        <Button variant="filled" type="button" onClick={onRunCode}>
           {t("dataJournal.graph.codeEditor.runCode", {}, { default: "Run the code" })}
-        </button>
+        </Button>
       </div>
       <div className="editor-wrapper">
         <MonacoPythonEditor value={localCode} onChange={onCodeChange} />

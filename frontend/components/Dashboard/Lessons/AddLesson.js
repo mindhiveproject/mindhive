@@ -9,13 +9,14 @@ import useForm from "../../../lib/useForm";
 import DisplayError from "../../ErrorMessage";
 
 import LessonForm from "./LessonForm";
+import Button from "../../DesignSystem/Button";
 
 import { CREATE_LESSON } from "../../Mutations/Lesson";
 import { GET_MY_LESSONS } from "../../Queries/Lesson";
 
 export default function AddLesson({ user }) {
   const router = useRouter();
-  const { t } = useTranslation("classes");
+  const { t } = useTranslation("dashboard");
   const { inputs, handleChange, clearForm } = useForm({
     title: "",
     description: "",
@@ -42,7 +43,9 @@ export default function AddLesson({ user }) {
   return (
     <div>
       <LessonForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save</button>
+      <Button variant="filled" type="button" onClick={handleSave}>
+        {t("lessons.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

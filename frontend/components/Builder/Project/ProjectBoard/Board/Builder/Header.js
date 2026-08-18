@@ -11,6 +11,7 @@ import { Icon, Radio } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import exportPDF from "../PDF/exportPDF";
+import Button from "../../../../../DesignSystem/Button";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
 
 import { useRef, useState } from "react";
@@ -562,14 +563,16 @@ export default function ProposalHeader({
           inputs.settings !== proposal?.settings ||
           inputs.isSubmitted !== proposal?.isSubmitted) && (
           <div>
-            <button
-              className="secondaryBtn"
+            <Button
+              variant="filled"
               onClick={async () => {
                 const res = await updateProposal();
               }}
             >
-              {loading ? t("header.saving", "Saving") : t("header.save", "Save")}
-            </button>
+              {loading
+                ? t("header.saving", {}, { default: "Saving" })
+                : t("header.save", {}, { default: "Save" })}
+            </Button>
           </div>
         )}
       </div>

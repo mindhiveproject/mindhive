@@ -51,21 +51,6 @@ export const StyledStudyPage = styled.div`
   @media (max-width: 375px) {
     padding: 1rem;
   }
-  button {
-    height: 56px;
-    width: 266px;
-    background: ${(props) => props.theme.darkgreen};
-    border: 2px solid ${(props) => props.theme.darkgreen};
-    box-sizing: border-box;
-    border-radius: 4px;
-    color: ${(props) => props.theme.white};
-    font-family: "Lato";
-    font-size: 18px;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
   a {
     text-decoration-line: underline;
     cursor: pointer;
@@ -173,15 +158,6 @@ export const StyledStudyPage = styled.div`
     grid-gap: 5px;
     margin-bottom: 34px;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    button {
-      width: auto;
-      margin: 0;
-    }
-    .secondaryBtn {
-      border: 2px solid #007c70;
-      color: #007c70;
-      background: #f7f9f8;
-    }
   }
 `;
 
@@ -466,11 +442,6 @@ export const StyledTaskCard = styled.div`
   }
   .actionLinks {
     margin-top: 24px;
-    button {
-      background: #ffffff;
-      color: #007c70;
-      max-width: 200px;
-    }
     p {
       font-family: Lato;
       font-size: 18px;
@@ -544,23 +515,6 @@ export const StyledStudyRun = styled.div`
         outline: 0;
         border-color: ${(props) => props.theme.red};
       }
-    }
-    button {
-      max-width: 500px;
-      font-family: Lato;
-      margin-top: 3rem;
-      margin-bottom: 3rem;
-      width: 100%;
-      background: #007c70;
-      color: white;
-      padding: 1.5rem 0.5rem;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 100%;
-      border: 2px solid #007c70;
-      border-radius: 4px;
-      cursor: pointer;
     }
     .checkboxField {
       font-family: Lato;

@@ -279,23 +279,6 @@ export const StyledBuilderArea = styled.div`
         align-items: center;
         gap: 8px;
         padding-right: 16px;
-
-        .submitButton button {
-          cursor: pointer;
-          padding: 8px 20px;
-          border-radius: 50px;
-          border: 2px solid #007c70;
-          background: #007c70;
-          color: #ffffff;
-          font-family: Lato;
-          font-size: 14px;
-          font-weight: 600;
-          white-space: nowrap;
-          &:hover {
-            background: #005a52;
-            border-color: #005a52;
-          }
-        }
       }
     }
     .middle {
@@ -426,29 +409,6 @@ export const StyledBuilderArea = styled.div`
       grid-template-columns: 1fr auto;
       justify-items: end;
       grid-gap: 10px;
-      button {
-        cursor: pointer;
-        border-radius: 4px;
-        align-items: center;
-        padding: 14px 24px;
-        font-family: Lato;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 18px;
-        letter-spacing: 0.05em;
-        text-align: center;
-      }
-      .primary {
-        background: #007c70;
-        color: #ffffff;
-        border: 2px solid #007c70;
-      }
-      .secondary {
-        background: #ffffff;
-        color: #666666;
-        border: 2px solid #b3b3b3;
-      }
     }
   }
   .pyodideLoadingMessage {
@@ -1663,22 +1623,6 @@ export const StyledParticipantPage = styled.div`
         margin-bottom: 10px;
       }
 
-      .btn {
-        color: white;
-        background-color: white;
-        padding: 14px 18px;
-        border-radius: 4px;
-        font-size: 18px;
-        background: #b3b3b3;
-        border: 2px solid #b3b3b3;
-        font-family: Lato;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 18px;
-        letter-spacing: 0.05em;
-        text-align: center;
-      }
-
       .upload-btn-wrapper input[type="file"] {
         font-size: 100px;
         position: absolute;
@@ -1827,17 +1771,7 @@ export const StyledCollectPage = styled.div`
         grid-gap: 5px;
         grid-template-columns: auto auto;
         justify-content: start;
-      }
-      button {
-        font-size: 18px;
-        line-height: 100%;
-        letter-spacing: 0.05em;
-        color: #007c70;
-        border: 2px solid #007c70;
-        cursor: pointer;
-        border-radius: 4px;
-        padding: 1rem 3rem;
-        background: none;
+        align-items: center;
       }
     }
 
@@ -1965,23 +1899,9 @@ export const StyledVisualizePage = styled.div`
     display: grid;
     align-content: center;
     justify-content: center;
+    justify-items: center;
     width: 100%;
-    label {
-      font-family: "Lato";
-      background: var(--green);
-      border: 2px solid var(--green);
-      border-radius: 4px;
-      color: white;
-      font-style: normal;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 100%;
-      padding: 10px 15px;
-      cursor: pointer;
-    }
-    button {
-      margin: 20px 0px;
-    }
+    gap: 16px;
   }
   .dataTable {
     width: 100vw;
@@ -2235,23 +2155,5 @@ export const StyledChatGPTPage = styled.div`
   }
   table {
       border-spacing: 0px;
-  }
-  .btn {
-      border-radius: 1.8125rem;
-      background: #007C70;
-      text-align: center;
-      color: white;
-      padding: 5 px;
-      margin-bottom: 10px;
-      border: 2px solid #007C70;
-      line-height: 3rem;
-  }
-  .btn:hover {
-      background: #FFFFFF;
-      color: #007C70;
-  }
-  .btn:active {
-      background: #1A1A1A
-      color: white;
   }
 `;

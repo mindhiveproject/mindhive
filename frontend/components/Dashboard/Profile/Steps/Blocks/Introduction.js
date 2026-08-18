@@ -9,8 +9,8 @@ import { UPDATE_PROFILE } from "../../../../Mutations/User";
 
 import VideoUploader from "./VideoUploader";
 
-import { StyledSaveButton } from "../../../../styles/StyledProfile";
 import { StyledInput } from "../../../../styles/StyledForm";
+import Button from "../../../../DesignSystem/Button";
 
 export default function IntroductionVideo({ query, user, onDirtyChange }) {
   const { t } = useTranslation("connect");
@@ -115,11 +115,14 @@ export default function IntroductionVideo({ query, user, onDirtyChange }) {
         </div>
       </StyledInput>
 
-      <StyledSaveButton changed={changed}>
-        <button onClick={saveChanges} disabled={!changed}>
-          {t("introduction.saveChanges")}
-        </button>
-      </StyledSaveButton>
+      <Button
+        variant="filled"
+        type="button"
+        onClick={saveChanges}
+        disabled={!changed}
+      >
+        {t("introduction.saveChanges")}
+      </Button>
     </div>
   );
 }

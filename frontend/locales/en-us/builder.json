@@ -365,9 +365,13 @@
 				"sharedWithCount": "Shared: {{count}}"
 			},
 			"operations": {
+				"compute": "Compute",
 				"computeNew": "Compute new variable",
+				"copy": "Copy",
 				"copyExisting": "Copy existing variable",
+				"recode": "Recode",
 				"recodeVariable": "Recode a variable",
+				"reverse": "Reverse",
 				"reverseScore": "Reverse score"
 			},
 			"readOnlyToolbarHint": "Open this journal from a workspace to edit or copy this dataset.",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "Add dataset",
+			"cancel": "Cancel",
 			"copyConfirm": {
 				"confirm": "Save copy",
 				"message": "A new dataset you own will be created with your changes and linked to this journal. You can choose whether collaborators may edit the copy."
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "How this dataset was created.",
 			"renameDisabledNotOwner": "Only the creator of this dataset can rename it.",
+			"saveChanges": "Save changes",
+			"saving": "Saving…",
 			"scopes": {
 				"classNetwork": "Class network",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "Component",
 			"addComponentAria": "Add a component to this workspace",
 			"addJournal": "Journal",
+			"addJournalAria": "Add a new journal",
 			"addJournalScratch": "Create a journal from scratch",
 			"addJournalTemplate": "Add a journal template",
 			"addWorkspace": "Add workspace",
+			"addWorkspaceAria": "Add a workspace to this journal",
 			"addWorkspaceDropdown": "Workspace",
 			"addWorkspaceError": "Error adding workspace",
 			"addWorkspaceLoading": "Adding…",
@@ -1136,6 +1145,10 @@
 			"submittedAsProposal": "Submitted as Proposal",
 			"working": "Work in progress"
 		}
+	},
+	"dataUpload": {
+		"chooseDataFile": "Choose the data file",
+		"useStudyData": "Use study data"
 	},
 	"dataUsage": {
 		"and": "and",
@@ -1508,6 +1521,10 @@
 	},
 	"participate": "Participate",
 	"participateAsGuest": "Participate as a guest",
+	"partSettings": {
+		"closeWithoutSaving": "Close without saving",
+		"saveAndClose": "Save & Close"
+	},
 	"pleaseLogin": "Please first log in!",
 	"preview": {
 		"description": "Description",
@@ -1659,6 +1676,10 @@
 		"linkToProposal": "Link to proposal",
 		"selectCard": "Select card"
 	},
+	"proposalTemplates": {
+		"create": "Create proposal template",
+		"myTemplates": "My proposal templates"
+	},
 	"resource": "Resource",
 	"resources": "Resources",
 	"resourcesCards": {
@@ -1750,7 +1771,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "Feedback",
-		"instruction": "Once you submit your proposal or study, your reviews will appear here."
+		"instruction": "Once you submit your proposal or study, your reviews will appear here.",
+		"needChecklist": "Before you submit your study for feedback make sure you check that you have completed the checklist",
+		"needProjectBoard": "Before you submit your study for feedback make sure you created your project board and selected it as the main one",
+		"step1": "Step 1: Submit proposal",
+		"step2": "Step 2: Submit study for feedback",
+		"submitProposal": "Submit Proposal",
+		"submitProposalConfirm": "Are you sure you want to submit this proposal? You will not be able to undo it later.",
+		"submitStudyConfirm": "Are you sure you want to submit this study for feedback? You will not be able to undo it later.",
+		"submitStudyForFeedback": "Submit Study for Feedback",
+		"viewSubmission": "View submission"
 	},
 	"reviewTabs": {
 		"howTab": "How",

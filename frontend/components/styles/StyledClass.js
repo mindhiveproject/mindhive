@@ -437,13 +437,6 @@ const StyledClass = styled.div`
         border-color: mintcream;
       }
     }
-    button:not(.DesignSystem-Button) {
-      background: #007c70;
-      color: white;
-      max-width: 256px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
     .title {
       font-family: Inter;
       font-size: 32px;
@@ -527,14 +520,6 @@ const StyledClass = styled.div`
         border: 1px solid #cccccc;
         border-radius: 4px;
       }
-      .copyButton {
-        padding: 12px 25px 12px 25px;
-        cursor: pointer;
-        color: #007c70;
-        border: 2px solid #007c70;
-        border-radius: 4px;
-        height: fit-content;
-      }
     }
     .buttons {
       display: grid;
@@ -562,16 +547,6 @@ const StyledClass = styled.div`
         padding: 12px 16px 12px 17px;
         border: 1px solid #cccccc;
         border-radius: 4px;
-      }
-      .copyButton {
-        padding: 12px 25px 12px 25px;
-        cursor: pointer;
-        color: #007c70;
-        border: 2px solid #007c70;
-        border-radius: 4px;
-        background: white;
-        width: 200px;
-        text-align: center;
       }
       .infoText {
         margin: 1rem 0rem;
@@ -643,18 +618,6 @@ const StyledClass = styled.div`
             align-items: baseline;
           }
         }
-        button {
-          min-height: 56px;
-          padding: 10px 24px 10px 24px;
-          background: #007c70;
-          border: 2px solid #007c70;
-          box-sizing: border-box;
-          border-radius: 4px;
-          color: white;
-          cursor: pointer;
-          font-family: "Lato";
-          max-width: 300px;
-        }
         .closeBtn {
           line-height: 3rem;
           text-align: center;
@@ -668,10 +631,6 @@ const StyledClass = styled.div`
             transition: transform 0.5s;
             color: red;
           }
-        }
-        .secondary {
-          background: white;
-          color: #007c70;
         }
       }
       .headerInfo {
@@ -807,22 +766,6 @@ const StyledClass = styled.div`
               border-color: ${(props) => props.theme.red};
             }
           }
-          button,
-          input[type="submit"] {
-            margin-top: 3rem;
-            margin-bottom: 1rem;
-            width: 100%;
-            background: #007c70;
-            color: white;
-            padding: 1.5rem 0.5rem;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 18px;
-            line-height: 100%;
-            border: 2px solid #007c70;
-            border-radius: 4px;
-            cursor: pointer;
-          }
           fieldset {
             display: grid;
             justify-self: center;
@@ -878,39 +821,6 @@ const StyledClass = styled.div`
           }
           .proposalCardComments {
             display: grid;
-          }
-
-          .saveButtons {
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            justify-items: end;
-            grid-gap: 10px;
-
-            .saveButton {
-              cursor: pointer;
-              border-radius: 4px;
-              align-items: center;
-              padding: 14px 24px;
-              font-family: Lato;
-              font-size: 18px;
-              font-style: normal;
-              font-weight: 400;
-              line-height: 18px;
-              letter-spacing: 0.05em;
-              text-align: center;
-            }
-
-            .primary {
-              background: #007c70;
-              color: #ffffff;
-              border: 2px solid #007c70;
-            }
-            .secondary {
-              background: #ffffff;
-              color: #666666;
-              border: 2px solid #b3b3b3;
-            }
           }
 
           .status {

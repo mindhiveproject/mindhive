@@ -17,6 +17,7 @@ import { EDIT_HOMEWORK } from "../../../../../Mutations/Homework";
 import useForm from "../../../../../../lib/useForm";
 
 import Status from "./Status";
+import Button from "../../../../../DesignSystem/Button";
 
 // Styled components
 const Container = styled.div`
@@ -36,74 +37,6 @@ const ButtonContainer = styled.div`
   display: flex;
   gap: 16px;
   align-items: center;
-`;
-
-const SecondaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
-  
-  &:hover {
-    background: #f5f5f5;
-    border-color: #b3b3b3;
-    color: #666666;
-  }
-  
-  &:active {
-    background: #e0f2f1;
-    border-color: #4db6ac;
-    color: #4db6ac;
-  }
-`;
-
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #336F8A;
-  color: #ffffff;
-  
-  &:hover {
-    background: #ffc107;
-    color: #1a1a1a;
-  }
-  
-  &:active {
-    background: #4db6ac;
-    color: #1a1a1a;
-  }
-  
-  &:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-  }
 `;
 
 const UsernameChip = styled.div`
@@ -317,7 +250,7 @@ export default function ReviewHomework({
             }}
             style={{ textDecoration: 'none' }}
           >
-            <SecondaryButton>← {t("assignment.goBack") || "Go back"}</SecondaryButton>
+            <Button variant="outline">{t("assignment.goBack", {}, { default: "Go back" })}</Button>
           </Link>
         </ButtonContainer>
       </TopSection>
@@ -426,14 +359,15 @@ export default function ReviewHomework({
           }}
           style={{ textDecoration: 'none' }}
         >
-          <SecondaryButton>{t("teacherClass.closeWithoutSaving") || "Close without saving"}</SecondaryButton>
+          <Button variant="outline">{t("teacherClass.closeWithoutSaving", {}, { default: "Close without saving" })}</Button>
         </Link>
-        <PrimaryButton
+        <Button
+          variant="filled"
           onClick={handleSave}
           disabled={editLoading || homeworkLoading}
         >
-          {editLoading ? (t("teacherClass.saving") || "Saving...") : (t("teacherClass.saveAndClose") || "Save and close")}
-        </PrimaryButton>
+          {editLoading ? t("teacherClass.saving", {}, { default: "Saving..." }) : t("teacherClass.saveAndClose", {}, { default: "Save and close" })}
+        </Button>
       </ActionButtons>
     </Container>
   );

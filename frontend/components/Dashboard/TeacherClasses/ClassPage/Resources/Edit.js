@@ -10,58 +10,7 @@ import ResourceForm from "../../../Resources/ResourceForm";
 import StyledResource from "../../../../styles/StyledResource";
 import useForm from "../../../../../lib/useForm";
 import { stripHtml } from "../../../../Proposal/Card/Forms/utils";
-
-const SecondaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
-  &:hover {
-    background: #f5f5f5;
-    border-color: #b3b3b3;
-    color: #666666;
-  }
-`;
-
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: #336f8a;
-  color: #ffffff;
-  &:hover {
-    background: #ffc107;
-    color: #1a1a1a;
-  }
-  &:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-  }
-`;
+import Button from "../../../../DesignSystem/Button";
 
 const TopSection = styled.div`
   display: flex;
@@ -131,20 +80,20 @@ export default function EditResource({ resourceId, myclass, user }) {
   return (
     <StyledResource>
       <TopSection>
-        <SecondaryButton type="button" onClick={goBack}>
-          ← {t("resource.goBackToResources", "Back to resources")}
-        </SecondaryButton>
+        <Button variant="outline" type="button" onClick={goBack}>
+          {t("resource.goBackToResources", {}, { default: "Back to class resources" })}
+        </Button>
       </TopSection>
-      <h1>{t("resource.editResource", "Edit resource")}</h1>
+      <h1>{t("resource.editResource", {}, { default: "Edit resource" })}</h1>
       <ResourceForm
         user={user}
         inputs={inputs}
         handleChange={handleChange}
         isAdmin={user?.permissions?.map((p) => p.name).includes("ADMIN")}
       />
-      <PrimaryButton onClick={handleSave} disabled={loading}>
-        {t("resource.saveChanges", "Save changes")}
-      </PrimaryButton>
+      <Button variant="filled" onClick={handleSave} disabled={loading}>
+        {t("resource.saveChanges", {}, { default: "Save changes" })}
+      </Button>
     </StyledResource>
   );
 }

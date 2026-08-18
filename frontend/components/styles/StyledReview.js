@@ -397,33 +397,6 @@ export const StyledReviewCard = styled.div`
       text-align: left;
       color: var(--neutral_grey2, #3b3b3b);
     }
-    .submitBtn {
-      display: grid;
-      grid-gap: 8px;
-      grid-template-columns: auto 1fr;
-      width: fit-content;
-      border-radius: 5px;
-      padding: 10px 30px;
-      font-family: Lato;
-      font-size: 17px;
-      line-height: 22px;
-    }
-    .active {
-      border: 2px solid #007c70;
-      background: #007c70;
-      color: white;
-      cursor: pointer;
-    }
-    .locked {
-      border: 2px solid #e5e5e5;
-      background: #e5e5e5;
-      color: #8a888d;
-    }
-    .view {
-      border: 2px solid var(--PRIMARY_GREEN3, #007c70);
-      background: white;
-      color: var(--PRIMARY_GREEN3, #007c70);
-    }
   }
 `;
 

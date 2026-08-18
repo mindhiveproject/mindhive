@@ -3,6 +3,8 @@ import useForm from "../../../../../lib/useForm";
 import { UPDATE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
 import { GET_VIZJOURNALS } from "../../../../Queries/VizJournal";
 import { StyledInput } from "../../../../styles/StyledForm";
+import Button from "../../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 import { Checkbox } from "semantic-ui-react";
 import RestrictedAccess, {
   OnlyAdminAccess,
@@ -15,6 +17,7 @@ export default function ChapterHeader({
   part,
   chapter,
 }) {
+  const { t } = useTranslation("builder");
   const { inputs, handleChange } = useForm({
     ...chapter,
   });
@@ -104,9 +107,13 @@ export default function ChapterHeader({
             inputs?.description !== chapter.description ||
             inputs?.isTemplate !== chapter.isTemplate) && (
             <div className="submitButton">
-              <button onClick={() => updateChapter()} type="submit">
-                Save
-              </button>
+              <Button
+                variant="filled"
+                onClick={() => updateChapter()}
+                type="submit"
+              >
+                {t("header.save", {}, { default: "Save" })}
+              </Button>
             </div>
           )}
         </fieldset>

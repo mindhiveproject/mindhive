@@ -4,6 +4,7 @@ import { saveAs } from "file-saver";
 import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../DesignSystem/Chip";
+import Button from "../../DesignSystem/Button";
 import InfoPopover from "../../DesignSystem/InfoPopover";
 import {
   GRAPHQL_ENDPOINT,
@@ -557,19 +558,19 @@ export default function BoardExport() {
         </div>
 
         <div className="actions">
-          <button
+          <Button
+            variant="outline"
             type="button"
-            className="secondary"
             onClick={resetFilters}
             disabled={isLoading}
           >
             {t("resetFilters", {
               defaultValue: "Reset Filters",
             })}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="filled"
             type="button"
-            className="primary"
             onClick={handleDownload}
             disabled={
               isLoading ||
@@ -584,7 +585,7 @@ export default function BoardExport() {
               : t("runExport", {
                   defaultValue: "Run Export",
                 })}
-          </button>
+          </Button>
         </div>
       </div>
 

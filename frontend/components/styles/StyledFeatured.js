@@ -87,17 +87,6 @@ export const StyledFeaturedStudies = styled.div`
       .studyLink {
         display: grid;
         width: fit-content;
-        button {
-          min-height: 56px;
-          padding: 10px 24px 10px 24px;
-          background: white;
-          border: 2px solid #007c70;
-          box-sizing: border-box;
-          border-radius: 4px;
-          color: #007c70;
-          cursor: pointer;
-          font-family: "Lato";
-        }
       }
     }
 

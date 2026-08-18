@@ -8,11 +8,14 @@ import { OnlyAdminAccess } from "../../../../../Global/Restricted";
 import StyledModal from "../../../../../styles/StyledModal";
 import { StyledModalButtons } from "../../../../../styles/StyledModal";
 import { StyledInput } from "../../../../../styles/StyledForm";
+import Button from "../../../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 import { UPDATE_VIZPART } from "../../../../../Mutations/VizPart";
 import { STUDY_VIZJOURNAL } from "../../../../../Queries/VizJournal";
 
 export default function PartSettings({ user, studyId, part }) {
+  const { t } = useTranslation("builder");
   const [isOpen, setIsOpen] = useState(false);
 
   const { inputs, handleChange } = useForm({
@@ -106,8 +109,18 @@ export default function PartSettings({ user, studyId, part }) {
           </StyledInput>
         </Modal.Content>
         <Modal.Actions>
-          <button onClick={() => setIsOpen(false)}>Close without saving</button>
-          <button onClick={() => update()}>Save & Close</button>
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => setIsOpen(false)}
+          >
+            {t("partSettings.closeWithoutSaving", {}, {
+              default: "Close without saving",
+            })}
+          </Button>
+          <Button variant="filled" type="button" onClick={() => update()}>
+            {t("partSettings.saveAndClose", {}, { default: "Save & Close" })}
+          </Button>
         </Modal.Actions>
       </StyledModal>
     </Modal>

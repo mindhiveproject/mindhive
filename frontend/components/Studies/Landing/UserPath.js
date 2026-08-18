@@ -3,6 +3,7 @@ import Link from "next/link";
 import TaskCard from "./TaskCard";
 import { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../DesignSystem/Button";
 
 export default function UserPath({ query, user, study, isDashboard, path }) {
   const { t } = useTranslation('common');
@@ -107,7 +108,9 @@ export default function UserPath({ query, user, study, isDashboard, path }) {
           }}
         >
           <div className="controlBtns">
-            <button>{t('userPath.startNextTask')}</button>
+            <Button variant="filled">
+              {t("userPath.startNextTask", {}, { default: "Start the next task" })}
+            </Button>
           </div>
         </Link>
       )}

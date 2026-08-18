@@ -6,7 +6,7 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
-import { PrimaryButton, SecondaryButton } from "./EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -176,14 +176,15 @@ export default function PublishModal({
         </label>
 
         <div className="actions">
-          <SecondaryButton type="button" onClick={onCancel} disabled={busy}>
+          <Button variant="outline" type="button" onClick={onCancel} disabled={busy}>
             {t(
               "section.createCardModal.publishModal.cancel",
               {},
               { default: "Cancel" }
             )}
-          </SecondaryButton>
-          <PrimaryButton
+          </Button>
+          <Button
+            variant="filled"
             type="button"
             onClick={() => onConfirm(changelog.trim() || null)}
             disabled={busy}
@@ -199,7 +200,7 @@ export default function PublishModal({
                   {},
                   { default: "Confirm publish" }
                 )}
-          </PrimaryButton>
+          </Button>
         </div>
       </Card>
     </Backdrop>

@@ -9,9 +9,11 @@ import { GET_CONSENT } from "../../Queries/Consent";
 import { EDIT_CONSENT } from "../../Mutations/Consent";
 import useForm from "../../../lib/useForm";
 import ConsentForm from "./ConsentForm";
+import Button from "../../DesignSystem/Button";
 
 export default function ConsentPage({ code, user, query }) {
   const router = useRouter();
+  const { t } = useTranslation("dashboard");
   const { action } = query;
 
   const { data, loading, error } = useQuery(GET_CONSENT, {
@@ -77,7 +79,9 @@ export default function ConsentPage({ code, user, query }) {
                 query: { action: "edit" },
               }}
             >
-              <button>Edit</button>
+              <Button variant="filled" type="button">
+                {t("consentAdmin.edit", {}, { default: "Edit" })}
+              </Button>
             </Link>
           )}
         </div>

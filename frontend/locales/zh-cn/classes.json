@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "从头开始创建新作业或从以下列表中选择一个",
 		"createFromTemplate": "从模板创建新作业",
 		"createNew": "创建新作业",
+		"creating": "",
 		"creator": "创造者",
 		"dateCreated": "创建日期",
 		"dateUpdated": "更新日期",
@@ -134,6 +135,7 @@
 		"unpublish": "取消发布",
 		"unpublished": "未发表",
 		"unsavedChanges": "未保存的更改！",
+		"view": "",
 		"visibleForStudents": "学生可以看到作业"
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "添加或编辑卡片标题。如果学生输入可见，此标题将显示为章节标题",
 		"cardWillBeReleased": "该卡将发布",
 		"close": "关闭",
+		"closeWithoutSaving": "",
 		"collective": "集体",
 		"commentPlaceholder": "请输入评论……",
 		"commentsComment": "这将预先填充学生的评论框。您可以稍后删除评论。",
@@ -728,6 +731,13 @@
 		"yourEntry": "您的参赛作品"
 	},
 	"joinClass": "加入班级",
+	"joinClassFlow": {
+		"goBack": "",
+		"noClassFound": "",
+		"noGoBack": "",
+		"wantToJoin": "",
+		"yesContinue": ""
+	},
 	"joinClassInfo": "一旦您加入某个课程，它就会出现在这里。",
 	"journal": {
 		"dateCreated": "创建日期",

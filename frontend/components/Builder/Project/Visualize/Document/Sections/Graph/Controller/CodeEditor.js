@@ -11,8 +11,11 @@ import { useState, useCallback } from "react";
 
 import { python } from "@codemirror/lang-python";
 import CodeMirror from "@uiw/react-codemirror";
+import Button from "../../../../../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function CodeEditor({ code, handleContentChange, runCode }) {
+  const { t } = useTranslation("builder");
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const handleClick = (e, titleProps) => {
@@ -32,7 +35,9 @@ export default function CodeEditor({ code, handleContentChange, runCode }) {
   return (
     <>
       <div>
-        <button onClick={() => runCode({ code })}>Run the code</button>
+        <Button variant="filled" type="button" onClick={() => runCode({ code })}>
+          {t("dataJournal.graph.codeEditor.runCode", {}, { default: "Run the code" })}
+        </Button>
       </div>
       <Accordion>
         <AccordionTitle

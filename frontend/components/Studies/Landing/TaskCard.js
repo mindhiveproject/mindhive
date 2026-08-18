@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { TASK_TO_PARTICIPATE } from "../../Queries/Task";
 
 import { StyledTaskCard } from "../../styles/StyledStudyPage";
+import Button from "../../DesignSystem/Button";
 
 export default function TaskCard({ user, study, step }) {
   const { t } = useTranslation('common');
@@ -56,7 +57,9 @@ export default function TaskCard({ user, study, step }) {
               }}
             >
               <div className="controlBtns">
-                <button>{t('taskCard.retake', { type: task?.taskType?.toLowerCase() })}</button>
+                <Button variant="outline">
+                  {t("taskCard.retake", { type: task?.taskType?.toLowerCase() }, { default: "Retake {{type}}" })}
+                </Button>
               </div>
             </Link>
           </div>

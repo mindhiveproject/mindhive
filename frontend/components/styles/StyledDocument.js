@@ -196,26 +196,6 @@ export const StyledTeachersInfo = styled.div`
   .centered {
     text-align: center;
   }
-  button {
-    font-family: Lato;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 18px;
-    letter-spacing: 0.05em;
-    text-align: center;
-    background: white;
-    color: #007c70;
-    padding: 19px 24px 19px 24px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .primary {
-    border: 2px solid #007c70;
-  }
-  .secondary {
-    border: 0px solid white;
-  }
   .stretchedBlockForTwo {
     display: grid;
     grid-template-rows: 1fr auto;

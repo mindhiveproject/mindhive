@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { JOIN_STUDY_MUTATION } from "../../Mutations/User";
 import { GET_USER_STUDIES } from "../../Queries/User";
 import { CREATE_GUEST } from "../../Mutations/Guest";
+import Button from "../../DesignSystem/Button";
 
 // to check whether a participant is under 18 based on age
 const isUnder18 = (age) => {
@@ -15,7 +16,13 @@ const isUnder18 = (age) => {
   };
 
 // function to join the study from any place
-export default function JoinStudy({ user, study, userInfo, btnName }) {
+export default function JoinStudy({
+  user,
+  study,
+  userInfo,
+  btnName,
+  variant = "outline",
+}) {
     const { t } = useTranslation('common');
     const router = useRouter();
     const { settings } = study;
@@ -101,9 +108,14 @@ export default function JoinStudy({ user, study, userInfo, btnName }) {
 
     return (
         <div>
-            <button onClick={handleJoin}>
+            <Button
+              variant={variant}
+              style={{ width: "100%" }}
+              onClick={handleJoin}
+              disabled={loading || guestLoading}
+            >
               {btnName}
-            </button>
+            </Button>
         </div>
     )
 }
