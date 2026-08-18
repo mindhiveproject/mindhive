@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../../../../lib/useForm";
 import { StyledAddColumnModal } from "../../../styles/StyledAddColumnModal";
+import Button from "../../../../../../DesignSystem/Button";
 
 import Copy from "./Operations/Copy";
 import Compute from "./Operations/Compute";
@@ -155,24 +156,16 @@ export default function AddColumnModal({
       <Modal.Actions>
         <StyledAddColumnModal>
           <div className="addColumnModalFooter">
-            <button
-              type="button"
-              className="addColumnModalCancelBtn"
-              onClick={handleClose}
-            >
+            <Button variant="outline" type="button" onClick={handleClose}>
               {t("dataJournal.datasetMenu.addColumnModal.cancel", {}, {
                 default: "Cancel",
               })}
-            </button>
-            <button
-              type="button"
-              className="secondaryBtn"
-              onClick={handleSubmit}
-            >
+            </Button>
+            <Button variant="filled" type="button" onClick={handleSubmit}>
               {t("dataJournal.datasetMenu.addColumnModal.submit", {}, {
                 default: "Add column",
               })}
-            </button>
+            </Button>
           </div>
         </StyledAddColumnModal>
       </Modal.Actions>

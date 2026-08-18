@@ -26,6 +26,7 @@ import {
   ClassNetworkInviteErrorBanner,
 } from "./ClassNetworkInviteBanner";
 import { backendOrigin } from "../../config";
+import Button from "../DesignSystem/Button";
 
 const backendBase = backendOrigin;
 
@@ -415,14 +416,16 @@ export default function Login({
               />
             </label>
 
-            <button
+            <Button
               type="submit"
+              variant="filled"
+              style={{ width: "100%" }}
               disabled={
                 loading || isClassNetworkInvalid || isTokenInviteInvalid
               }
             >
-              {t("auth.login")}
-            </button>
+              {t("auth.login", {}, { default: "Login" })}
+            </Button>
           </fieldset>
 
           <LoginWithGoogle

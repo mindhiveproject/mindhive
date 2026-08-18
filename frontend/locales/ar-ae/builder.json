@@ -365,9 +365,13 @@
 				"sharedWithCount": "تمت المشاركة: {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "احسب متغيرًا جديدًا",
+				"copy": "",
 				"copyExisting": "نسخ المتغير الموجود",
+				"recode": "",
 				"recodeVariable": "إعادة ترميز متغير",
+				"reverse": "",
 				"reverseScore": "النتيجة المعكوسة"
 			},
 			"readOnlyToolbarHint": "افتح هذه المدونة من مساحة العمل لتحرير أو نسخ مجموعة البيانات هذه.",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "إضافة مجموعة بيانات",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "حفظ نسخة",
 				"message": "سيتم إنشاء مجموعة بيانات جديدة خاصة بك تتضمن التغييرات التي أجريتها، وسيتم ربطها بهذه المدونة. يمكنك تحديد ما إذا كان بإمكان المتعاونين تعديل النسخة."
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "كيف تم إنشاء مجموعة البيانات هذه.",
 			"renameDisabledNotOwner": "لا يمكن إعادة تسمية هذه المجموعة من البيانات إلا منشئها.",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "شبكة الفصول الدراسية",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "عنصر",
 			"addComponentAria": "أضف مكونًا إلى مساحة العمل هذه",
 			"addJournal": "مجلة",
+			"addJournalAria": "",
 			"addJournalScratch": "أنشئ دفتر يوميات من الصفر",
 			"addJournalTemplate": "أضف قالبًا للمجلة",
 			"addWorkspace": "إضافة مساحة عمل",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "مساحة العمل",
 			"addWorkspaceError": "خطأ في إضافة مساحة العمل",
 			"addWorkspaceLoading": "إضافة...",
@@ -1136,6 +1145,10 @@
 			"submittedAsProposal": "تم تقديمه كمقترح",
 			"working": "العمل قيد التقدم"
 		}
+	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
 	},
 	"dataUsage": {
 		"and": "و",
@@ -1508,6 +1521,10 @@
 	},
 	"participate": "يشارك",
 	"participateAsGuest": "المشاركة كضيف",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "الرجاء تسجيل الدخول أولاً!",
 	"preview": {
 		"description": "وصف",
@@ -1659,6 +1676,10 @@
 		"linkToProposal": "رابط إلى الاقتراح",
 		"selectCard": "اختر البطاقة"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "الموارد",
 	"resources": "موارد",
 	"resourcesCards": {
@@ -1750,7 +1771,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "تعليق",
-		"instruction": "بمجرد تقديم مقترحك أو دراستك، ستظهر مراجعاتك هنا."
+		"instruction": "بمجرد تقديم مقترحك أو دراستك، ستظهر مراجعاتك هنا.",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "كيف",

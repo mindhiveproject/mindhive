@@ -365,9 +365,13 @@
 				"sharedWithCount": "साझा: {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "नए चर की गणना करें",
+				"copy": "",
 				"copyExisting": "मौजूदा वेरिएबल की प्रतिलिपि बनाएँ",
+				"recode": "",
 				"recodeVariable": "एक वेरिएबल को रिकोड करें",
+				"reverse": "",
 				"reverseScore": "रिवर्स स्कोर"
 			},
 			"readOnlyToolbarHint": "इस डेटासेट को संपादित करने या कॉपी करने के लिए, इस जर्नल को किसी कार्यक्षेत्र से खोलें।",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "डेटासेट जोड़ें",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "कॉपी सहेजें",
 				"message": "आपके द्वारा किए गए परिवर्तनों के साथ एक नया डेटासेट बनाया जाएगा, जिसका स्वामित्व आपके पास होगा और उसे इस जर्नल से लिंक किया जाएगा। आप यह चुन सकते हैं कि सहयोगी इस सामग्री को संपादित कर सकते हैं या नहीं।"
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "यह डेटासेट कैसे बनाया गया।",
 			"renameDisabledNotOwner": "इस डेटासेट का नाम केवल इसका निर्माता ही बदल सकता है।",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "क्लास नेटवर्क",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "अवयव",
 			"addComponentAria": "इस वर्कस्पेस में एक कंपोनेंट जोड़ें",
 			"addJournal": "पत्रिका",
+			"addJournalAria": "",
 			"addJournalScratch": "बिल्कुल शुरुआत से एक डायरी बनाएं",
 			"addJournalTemplate": "जर्नल टेम्पलेट जोड़ें",
 			"addWorkspace": "कार्यक्षेत्र जोड़ें",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "कार्यस्थान",
 			"addWorkspaceError": "कार्यक्षेत्र जोड़ने में त्रुटि",
 			"addWorkspaceLoading": "जोड़ रहे हैं…",
@@ -1136,6 +1145,10 @@
 			"submittedAsProposal": "प्रस्ताव के रूप में प्रस्तुत",
 			"working": "कार्य प्रगति पर है"
 		}
+	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
 	},
 	"dataUsage": {
 		"and": "और",
@@ -1508,6 +1521,10 @@
 	},
 	"participate": "हिस्सा लेना",
 	"participateAsGuest": "अतिथि के रूप में भाग लें",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "कृपया पहले लॉग इन करें!",
 	"preview": {
 		"description": "विवरण",
@@ -1659,6 +1676,10 @@
 		"linkToProposal": "प्रस्ताव का लिंक",
 		"selectCard": "कार्ड चुनें"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "संसाधन",
 	"resources": "संसाधन",
 	"resourcesCards": {
@@ -1750,7 +1771,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "प्रतिक्रिया",
-		"instruction": "एक बार जब आप अपना प्रस्ताव या अध्ययन प्रस्तुत कर देंगे, तो आपकी समीक्षाएं यहां दिखाई देंगी।"
+		"instruction": "एक बार जब आप अपना प्रस्ताव या अध्ययन प्रस्तुत कर देंगे, तो आपकी समीक्षाएं यहां दिखाई देंगी।",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "कैसे",

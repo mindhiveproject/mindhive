@@ -3,6 +3,7 @@ import DisplayError from "../../ErrorMessage";
 import useTranslation from "next-translate/useTranslation";
 import ConsentContent from "./Content";
 import Collaborators from "../../Global/Collaborators";
+import Button from "../../DesignSystem/Button";
 
 export default function ConsentForm({
   inputs,
@@ -22,7 +23,9 @@ export default function ConsentForm({
       <div className="consentHeader">
         <h1>{headerName}</h1>
         <div className="submitButton">
-          <button onClick={handleSave}>{submitBtnName}</button>
+          <Button variant="filled" type="button" onClick={handleSave}>
+            {submitBtnName}
+          </Button>
         </div>
       </div>
       <StyledInput>

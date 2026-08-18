@@ -365,9 +365,13 @@
 				"sharedWithCount": "Общее: {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "Вычислите новую переменную",
+				"copy": "",
 				"copyExisting": "Скопировать существующую переменную",
+				"recode": "",
 				"recodeVariable": "Перекодировать переменную",
+				"reverse": "",
 				"reverseScore": "Обратный счет"
 			},
 			"readOnlyToolbarHint": "Откройте этот журнал из рабочей области, чтобы отредактировать или скопировать этот набор данных.",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "Добавить набор данных",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "Сохранить копию",
 				"message": "В результате ваших изменений будет создан новый набор данных, принадлежащий вам, и он будет связан с этим журналом. Вы можете выбрать, разрешат ли соавторы редактировать эту копию."
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "Как был создан этот набор данных.",
 			"renameDisabledNotOwner": "Переименовать этот набор данных может только его создатель.",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "Сеть классов",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "Компонент",
 			"addComponentAria": "Добавьте компонент в это рабочее пространство",
 			"addJournal": "ЖУРНАЛ",
+			"addJournalAria": "",
 			"addJournalScratch": "Создайте дневник с нуля",
 			"addJournalTemplate": "Добавить шаблон журнала",
 			"addWorkspace": "Добавить рабочее пространство",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "Рабочее пространство",
 			"addWorkspaceError": "Ошибка при добавлении рабочей области.",
 			"addWorkspaceLoading": "Добавляем…",
@@ -1136,6 +1145,10 @@
 			"submittedAsProposal": "Представлено как предложение",
 			"working": "Работа в процессе"
 		}
+	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
 	},
 	"dataUsage": {
 		"and": "и",
@@ -1508,6 +1521,10 @@
 	},
 	"participate": "Участвовать",
 	"participateAsGuest": "Принять участие в качестве гостя",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "Пожалуйста, сначала войдите в систему!",
 	"preview": {
 		"description": "Описание",
@@ -1659,6 +1676,10 @@
 		"linkToProposal": "Ссылка на предложение",
 		"selectCard": "Выбрать карту"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "Ресурс",
 	"resources": "Ресурсы",
 	"resourcesCards": {
@@ -1750,7 +1771,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "Обратная связь",
-		"instruction": "После того, как вы отправите свое предложение или исследование, ваши отзывы появятся здесь."
+		"instruction": "После того, как вы отправите свое предложение или исследование, ваши отзывы появятся здесь.",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "Как",

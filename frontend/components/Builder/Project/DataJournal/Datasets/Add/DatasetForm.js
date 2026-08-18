@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
+import Button from "../../../../../DesignSystem/Button";
 import {
   collectSharingProfileIdsFromStudyAndProject,
   getSharingRecipientEntries,
@@ -649,40 +650,19 @@ export default function DatasetForm({
           gap: "8px",
         }}
       >
-        <button
-          onClick={onCancel}
-          type="button"
-          style={{
-            padding: "8px 14px",
-            borderRadius: "6px",
-            border: "1px solid #e2e8f0",
-            background: "#fff",
-            color: "#4a5568",
-            fontSize: "0.9rem",
-            cursor: "pointer",
-          }}
-        >
+        <Button variant="outline" onClick={onCancel} type="button">
           {t("dataJournal.datasetForm.actions.cancel", {}, { default: "Cancel" })}
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="filled"
           onClick={handleCreateDataset}
           disabled={createDisabled}
           type="button"
-          style={{
-            padding: "8px 16px",
-            borderRadius: "6px",
-            border: "none",
-            background: createDisabled ? "#cbd5e0" : "#3182ce",
-            color: "#fff",
-            fontWeight: 500,
-            fontSize: "0.9rem",
-            cursor: createDisabled ? "not-allowed" : "pointer",
-          }}
         >
           {t("dataJournal.datasetForm.actions.create", {}, {
             default: "Create dataset",
           })}
-        </button>
+        </Button>
       </div>
     </div>
   );

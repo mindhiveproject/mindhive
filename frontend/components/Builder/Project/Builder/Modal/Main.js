@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import uniqid from "uniqid";
 import generate from "project-name-generator";
+import Button from "../../../../DesignSystem/Button";
 
 export default function Modal({
   user,
@@ -109,7 +110,9 @@ export default function Modal({
               <p>{node?.options?.details}</p>
             </div>
             <div>
-              <button onClick={update}>{t("modal.update", "Update")}</button>
+              <Button variant="filled" onClick={update}>
+                {t("modal.update", {}, { default: "Update" })}
+              </Button>
             </div>
           </div>
           <div>
@@ -170,18 +173,18 @@ export default function Modal({
                 <div>{components[port?.label]}</div>
 
                 <div>
-                  <button onClick={() => removePort({ name: port?.name })}>
-                    {t("modal.removeCondition", "Remove condition")}
-                  </button>
+                  <Button variant="text" onClick={() => removePort({ name: port?.name })}>
+                    {t("modal.removeCondition", {}, { default: "Remove condition" })}
+                  </Button>
                 </div>
               </div>
             ))}
 
             <div className="footer">
               <div>
-                <button onClick={() => addPort()}>
-                  {t("modal.addCondition", "Add condition")}
-                </button>
+                <Button variant="outline" onClick={() => addPort()}>
+                  {t("modal.addCondition", {}, { default: "Add condition" })}
+                </Button>
               </div>
             </div>
           </div>

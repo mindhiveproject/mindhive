@@ -1,4 +1,6 @@
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
+import Button from "../../DesignSystem/Button";
 
 import { useQuery } from "@apollo/client";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../Queries/Proposal";
@@ -11,13 +13,22 @@ import { StyledProposal } from "../../styles/StyledProposal";
 
 export default function ProposalsMain({ query, user }) {
   const { selector } = query;
+  const { t } = useTranslation("builder");
 
   if (!selector) {
     return (
       <>
-        <h1>My proposal templates</h1>
+        <h1>
+          {t("proposalTemplates.myTemplates", {}, {
+            default: "My proposal templates",
+          })}
+        </h1>
         <Link href="/dashboard/proposals/add">
-          <button>Create proposal template</button>
+          <Button variant="filled">
+            {t("proposalTemplates.create", {}, {
+              default: "Create proposal template",
+            })}
+          </Button>
         </Link>
         <ProposalsList query={query} user={user} />
       </>

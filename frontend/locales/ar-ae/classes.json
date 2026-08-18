@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "إنشاء مهمة جديدة من البداية أو تحديد واحدة من القائمة أدناه",
 		"createFromTemplate": "إنشاء مهمة جديدة من قالب",
 		"createNew": "إنشاء مهمة جديدة",
+		"creating": "",
 		"creator": "الخالق",
 		"dateCreated": "تاريخ الإنشاء",
 		"dateUpdated": "تاريخ التحديث",
@@ -134,6 +135,7 @@
 		"unpublish": "إلغاء النشر",
 		"unpublished": "غير منشور",
 		"unsavedChanges": "تغييرات غير محفوظة",
+		"view": "",
 		"visibleForStudents": "المهمة مرئية للطلاب"
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "أضف أو عدّل عنوان البطاقة. سيظهر هذا العنوان كعنوان قسم إذا كانت مدخلات الطالب مرئية.",
 		"cardWillBeReleased": "سيتم إصدار البطاقة",
 		"close": "يغلق",
+		"closeWithoutSaving": "",
 		"collective": "جماعي",
 		"commentPlaceholder": "أدخل تعليقًا...",
 		"commentsComment": "سيؤدي هذا إلى ملء مربع التعليقات مسبقًا للطلاب. يمكنك حذف التعليقات لاحقًا.",
@@ -728,6 +731,13 @@
 		"yourEntry": "مشاركتك"
 	},
 	"joinClass": "انضم إلى الفصل",
+	"joinClassFlow": {
+		"goBack": "",
+		"noClassFound": "",
+		"noGoBack": "",
+		"wantToJoin": "",
+		"yesContinue": ""
+	},
 	"joinClassInfo": "بمجرد انضمامك إلى الفصل الدراسي، فسوف يظهر هنا.",
 	"journal": {
 		"dateCreated": "تاريخ الإنشاء",

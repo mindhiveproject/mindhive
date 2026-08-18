@@ -10,12 +10,8 @@ import {
   UPDATE_MILESTONE,
   DELETE_MILESTONE,
 } from "../../../Mutations/Milestone";
-import {
-  EditorPanelShell,
-  FieldRow,
-  PrimaryButton,
-  SecondaryButton,
-} from "../Forms/EditorPanelStyles";
+import { EditorPanelShell, FieldRow } from "../Forms/EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const Shell = styled.div`
   display: flex;
@@ -221,13 +217,15 @@ export default function EditorPage({ milestoneId }) {
               {t("adminMilestones.saved", {}, { default: "Changes saved." })}
             </span>
           ) : null}
-          <SecondaryButton
+          <Button
+            variant="outline"
             type="button"
             onClick={() => router.push("/dashboard/admin-milestones")}
           >
             {t("adminMilestones.backToList", {}, { default: "← Back to list" })}
-          </SecondaryButton>
-          <SecondaryButton
+          </Button>
+          <Button
+            variant="outline"
             type="button"
             onClick={handleDelete}
             disabled={deleting || saving}
@@ -236,12 +234,12 @@ export default function EditorPage({ milestoneId }) {
             {deleting
               ? t("adminMilestones.deleting", {}, { default: "Deleting…" })
               : t("adminMilestones.delete", {}, { default: "Delete milestone" })}
-          </SecondaryButton>
-          <PrimaryButton type="submit" form="milestone-editor" disabled={saving}>
+          </Button>
+          <Button variant="filled" type="submit" form="milestone-editor" disabled={saving}>
             {saving
               ? t("adminMilestones.saving", {}, { default: "Saving…" })
               : t("adminMilestones.save", {}, { default: "Save changes" })}
-          </PrimaryButton>
+          </Button>
         </div>
       </TopBar>
 

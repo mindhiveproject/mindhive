@@ -14,7 +14,7 @@ import {
 import { FIND_ORG_FOR_PROFILE_SAVE } from "../../../../Queries/Organization";
 
 import { StyledInput } from "../../../../styles/StyledForm";
-import { StyledSaveButton } from "../../../../styles/StyledProfile";
+import Button from "../../../../DesignSystem/Button";
 import { useState, useEffect } from "react";
 import { getProfileImageUrl } from "../../../../../lib/profileStudyImageUrls";
 import {
@@ -524,11 +524,14 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
           </>
         )}
 
-        <StyledSaveButton changed={changed}>
-          <button onClick={handleSubmit} disabled={!changed}>
-            {t("basic.saveChanges")}
-          </button>
-        </StyledSaveButton>
+        <Button
+          variant="filled"
+          type="button"
+          onClick={handleSubmit}
+          disabled={!changed}
+        >
+          {t("basic.saveChanges")}
+        </Button>
       </StyledInput>
     </div>
   );

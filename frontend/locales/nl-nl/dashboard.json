@@ -61,12 +61,32 @@
 		"seedSuccess_plural": "Gestarte {{count}} mijlpalen: {{keys}}.",
 		"yes": "Ja"
 	},
+	"chat": {
+		"addGroupChat": "",
+		"addPosting": "",
+		"myGroupChats": "",
+		"reply": "",
+		"save": "",
+		"saving": "",
+		"update": ""
+	},
+	"consentAdmin": {
+		"addConsentForm": "",
+		"customize": "",
+		"edit": ""
+	},
 	"develop": {
 		"headerDescription": "Alle onderzoeken, opdrachten of enquêtes die u <0>hebt ontwikkeld of waaraan u meewerkt</0>.",
 		"headerTitle": "Ontwikkelen"
 	},
+	"lessons": {
+		"addLesson": "",
+		"save": ""
+	},
 	"management": {
-		"milestonesTab": "Mijlpalen"
+		"addClassNetwork": "",
+		"milestonesTab": "Mijlpalen",
+		"save": ""
 	},
 	"update": "Update"
 }

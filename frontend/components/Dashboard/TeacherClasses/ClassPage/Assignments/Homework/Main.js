@@ -7,43 +7,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import ReviewHomework from "./Review";
-
-// Styled button matching Figma design (Primary Action - Teal)
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #336F8A;
-  color: #ffffff;
-  
-  &:hover {
-    background: #ffc107;
-    color: #1a1a1a;
-  }
-  
-  &:active {
-    background: #4db6ac;
-    color: #1a1a1a;
-  }
-  
-  &:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-  }
-`;
+import Button from "../../../../../DesignSystem/Button";
 
 // Status chip matching the design from HomeworkCompletion
 const StatusChip = styled.span`
@@ -165,9 +129,9 @@ export default function HomeworkMain({
         }}
         style={{ textDecoration: 'none' }}
       >
-        <PrimaryButton style={{ padding: '6px 12px', fontSize: '12px' }}>
-          View
-        </PrimaryButton>
+        <Button variant="filled">
+          {t("assignment.view", {}, { default: "View" })}
+        </Button>
       </Link>
     );
   };

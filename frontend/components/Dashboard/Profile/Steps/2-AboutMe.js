@@ -7,6 +7,7 @@ import BasicInformation from "./Blocks/Basic";
 import IntroductionVideo from "./Blocks/Introduction";
 import Preferences from "./Blocks/Preferences";
 import { profileEditHref } from "../../../../lib/profileEditNavigation";
+import Button from "../../../DesignSystem/Button";
 import {
   confirmLeaveIfDirty,
   useUnsavedChangesGuard,
@@ -87,7 +88,9 @@ export default function About({ query, user }) {
             href={profileEditHref({ page: "interests", type: "individual" })}
             onClick={tryToLeave}
           >
-            <button className="primary">{t("navigation.next")}</button>
+            <Button variant="filled" type="button">
+              {t("navigation.next")}
+            </Button>
           </Link>
         </div>
       </div>

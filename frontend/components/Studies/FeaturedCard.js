@@ -2,6 +2,7 @@ import ReactHtmlParser from "react-html-parser";
 import Link from "next/link";
 import { getStudyImageUrl } from "../../lib/profileStudyImageUrls";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../DesignSystem/Button";
 
 export default function StudyCard({ user, study, isDashboard }) {
   const { t } = useTranslation("common");
@@ -38,7 +39,9 @@ export default function StudyCard({ user, study, isDashboard }) {
                 query: { name: study?.slug },
               }}
             >
-              <button>{t("goToStudy")}</button>
+              <Button variant="outline">
+                {t("goToStudy", {}, { default: "Go to study" })}
+              </Button>
             </Link>
           ) : (
             <Link
@@ -46,7 +49,9 @@ export default function StudyCard({ user, study, isDashboard }) {
                 pathname: `/studies/${study?.slug}`,
               }}
             >
-              <button>{t("goToStudy")}</button>
+              <Button variant="outline">
+                {t("goToStudy", {}, { default: "Go to study" })}
+              </Button>
             </Link>
           )}
         </div>

@@ -480,25 +480,27 @@ export default function studyManager(props) {
             </div>
           </StyledClass>
           <div className="footer">
-            <button className="cancel-button" onClick={closeModal}>
+            <DesignSystemButton variant="outline" onClick={closeModal}>
               {t("dashboard.studyManager.cancel")}
-            </button>
+            </DesignSystemButton>
             {hasProject && (
-              <button
-                className="action-button"
+              <DesignSystemButton
+                variant="filled"
                 onClick={assignToStudy}
                 disabled={!studyId}
               >
-                {mainProjectStudy ? t("dashboard.studyManager.reassignStudy") : t("dashboard.studyManager.assignToStudy")}
-              </button>
+                {mainProjectStudy
+                  ? t("dashboard.studyManager.reassignStudy")
+                  : t("dashboard.studyManager.assignToStudy")}
+              </DesignSystemButton>
             )}
-            <button
-              className="action-button"
+            <DesignSystemButton
+              variant="filled"
               onClick={createNewStudy}
               disabled={!studyName}
             >
               {t("dashboard.studyManager.createStudy")}
-            </button>
+            </DesignSystemButton>
           </div>
         </Modal.Content>
       </StyledModal>

@@ -1,13 +1,14 @@
-import { useState } from "react";
-
 import { useRouter } from "next/dist/client/router";
 import DisplayError from "../ErrorMessage";
 import { StyledForm } from "../styles/StyledForm";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { RESET_MUTATION } from "../Mutations/User";
 import useForm from "../../lib/useForm";
+import useTranslation from "next-translate/useTranslation";
+import Button from "../DesignSystem/Button";
 
 export default function Reset({ query }) {
+  const { t } = useTranslation("common");
   const token = query?.t;
 
   const router = useRouter();
@@ -57,11 +58,11 @@ export default function Reset({ query }) {
 
   return (
     <StyledForm method="POST" onSubmit={handleSubmit}>
-      <h1>Reset password</h1>
+      <h1>{t("auth.resetTitle", {}, { default: "Reset password" })}</h1>
       <DisplayError error={error || successfulError} />
       <fieldset>
         <label htmlFor="email">
-          Email
+          {t("auth.email", {}, { default: "Email" })}
           <input
             type="email"
             name="email"
@@ -72,7 +73,7 @@ export default function Reset({ query }) {
           />
         </label>
         <label htmlFor="password">
-          Password
+          {t("auth.password", {}, { default: "Password" })}
           <input
             type="password"
             name="password"
@@ -83,7 +84,7 @@ export default function Reset({ query }) {
           />
         </label>
         <label htmlFor="confirmPassword">
-          Confirm Password
+          {t("auth.confirmPassword", {}, { default: "Confirm Password" })}
           <input
             type="password"
             name="confirmPassword"
@@ -94,7 +95,14 @@ export default function Reset({ query }) {
           />
         </label>
 
-        <button type="submit">Reset</button>
+        <Button
+          type="submit"
+          variant="filled"
+          style={{ width: "100%" }}
+          disabled={loading}
+        >
+          {t("auth.reset", {}, { default: "Reset" })}
+        </Button>
       </fieldset>
     </StyledForm>
   );

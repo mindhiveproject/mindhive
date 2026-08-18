@@ -4,6 +4,7 @@ import { StyledForm } from "../styles/StyledForm";
 import useForm from "../../lib/useForm";
 import DisplayError from "../ErrorMessage";
 import { REQUEST_RESET_MUTATION } from "../Mutations/User";
+import Button from "../DesignSystem/Button";
 
 export default function RequestReset() {
   const { t } = useTranslation("common");
@@ -49,7 +50,14 @@ export default function RequestReset() {
           />
         </label>
 
-        <button type="submit">{t("auth.requestReset")}</button>
+        <Button
+          type="submit"
+          variant="filled"
+          style={{ width: "100%" }}
+          disabled={loading}
+        >
+          {t("auth.requestReset", {}, { default: "Request reset" })}
+        </Button>
       </fieldset>
     </StyledForm>
   );

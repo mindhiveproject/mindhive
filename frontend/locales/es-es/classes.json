@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "Crea una nueva tarea desde cero o selecciona una de la lista a continuación",
 		"createFromTemplate": "Crear una nueva tarea a partir de una plantilla",
 		"createNew": "Crear una nueva tarea",
+		"creating": "",
 		"creator": "Creador",
 		"dateCreated": "Fecha de creación",
 		"dateUpdated": "Fecha de actualización",
@@ -134,6 +135,7 @@
 		"unpublish": "Anular publicación",
 		"unpublished": "Inédito",
 		"unsavedChanges": "¡Cambios no guardados!",
+		"view": "",
 		"visibleForStudents": "La tarea es visible para los estudiantes."
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "Añade o edita el título de la tarjeta. Este título aparecerá como título de sección si la entrada del estudiante es visible.",
 		"cardWillBeReleased": "La tarjeta será lanzada",
 		"close": "Cerca",
+		"closeWithoutSaving": "",
 		"collective": "Colectivo",
 		"commentPlaceholder": "Escribe un comentario...",
 		"commentsComment": "Esto rellenará automáticamente el cuadro de comentarios para los estudiantes. Puedes eliminar los comentarios más tarde.",
@@ -728,6 +731,13 @@
 		"yourEntry": "Tu entrada"
 	},
 	"joinClass": "Unirse a la clase",
+	"joinClassFlow": {
+		"goBack": "",
+		"noClassFound": "",
+		"noGoBack": "",
+		"wantToJoin": "",
+		"yesContinue": ""
+	},
 	"joinClassInfo": "Una vez que te unas a una clase, aparecerá aquí.",
 	"journal": {
 		"dateCreated": "Fecha de creación",

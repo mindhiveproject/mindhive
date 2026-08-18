@@ -15,10 +15,7 @@ import {
   BACKFILL_LINK_ACTION_CARDS_TO_MILESTONES,
   BACKFILL_MILESTONE_STATUS,
 } from "../../../Mutations/Milestone";
-import {
-  PrimaryButton,
-  SecondaryButton,
-} from "../Forms/EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 // Lowercase to match the unified naming convention (see
 // keystone/mutations/seedData/milestoneSeed.ts).
@@ -373,9 +370,9 @@ export default function ListPage() {
         }}
       >
         <h1>{t("adminMilestones.pageTitle", {}, { default: "Milestones" })}</h1>
-        <PrimaryButton type="button" onClick={() => setNewOpen((v) => !v)}>
+        <Button variant="filled" type="button" onClick={() => setNewOpen((v) => !v)}>
           {newOpen ? "Close form" : "+ New milestone"}
-        </PrimaryButton>
+        </Button>
       </div>
 
       <NewMilestoneForm open={newOpen} onClose={() => setNewOpen(false)} />
@@ -412,7 +409,7 @@ export default function ListPage() {
             ))}
           </ul>
           <div className="actions">
-            <PrimaryButton
+            <Button variant="filled"
               type="button"
               onClick={handleSeedMissing}
               disabled={seeding}
@@ -431,7 +428,7 @@ export default function ListPage() {
                           : "Seed {{count}} missing milestones",
                     }
                   )}
-            </PrimaryButton>
+            </Button>
             {seedError ? (
               <span className="error">
                 {seedError.message?.replace(/^Error: /, "") || String(seedError)}
@@ -458,9 +455,9 @@ export default function ListPage() {
             )}
           </p>
           <div className="actions">
-            <SecondaryButton type="button" onClick={() => resetSeed()}>
+            <Button variant="outline" type="button" onClick={() => resetSeed()}>
               {t("adminMilestones.dismiss", {}, { default: "Dismiss" })}
-            </SecondaryButton>
+            </Button>
           </div>
         </SeedPanel>
       ) : null}
@@ -480,7 +477,7 @@ export default function ListPage() {
           )}
         </p>
         <div className="actions">
-          <SecondaryButton
+          <Button variant="outline"
             type="button"
             onClick={handleBackfillLinks}
             disabled={backfillingLinks || backfillingStatus}
@@ -488,8 +485,8 @@ export default function ListPage() {
             {backfillingLinks
               ? t("adminMilestones.backfilling", {}, { default: "Running…" })
               : t("adminMilestones.backfillLinksButton", {}, { default: "Link action cards" })}
-          </SecondaryButton>
-          <SecondaryButton
+          </Button>
+          <Button variant="outline"
             type="button"
             onClick={handleBackfillStatus}
             disabled={backfillingLinks || backfillingStatus}
@@ -497,7 +494,7 @@ export default function ListPage() {
             {backfillingStatus
               ? t("adminMilestones.backfilling", {}, { default: "Running…" })
               : t("adminMilestones.backfillStatusButton", {}, { default: "Backfill milestone status" })}
-          </SecondaryButton>
+          </Button>
         </div>
         {backfillLinksCount != null ? (
           <p className="feedback">
@@ -561,9 +558,9 @@ export default function ListPage() {
           </select>
         </label>
         {scopeFilter && (
-          <SecondaryButton type="button" onClick={() => setScopeFilter("")}>
+          <Button variant="outline" type="button" onClick={() => setScopeFilter("")}>
             {t("adminMilestones.clearFilters", {}, { default: "Clear filters" })}
-          </SecondaryButton>
+          </Button>
         )}
       </FilterBar>
 

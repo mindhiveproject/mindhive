@@ -6,6 +6,7 @@ import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
 import { StyledInput } from "../../../../styles/StyledForm";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../../../DesignSystem/Button";
 
 export default function ConnectModal({
   project,
@@ -64,24 +65,19 @@ export default function ConnectModal({
 
       <Modal.Actions>
         <div className="modalButtons">
-          <button
-            className="secondaryBtn"
-            onClick={() => setOpen(false)}
-            disabled={false}
-          >
-            {t('builder:connectModal.close')}
-          </button>
+          <Button variant="text" onClick={() => setOpen(false)}>
+            {t("builder:connectModal.close")}
+          </Button>
 
-          <button
-            className="primaryBtn"
+          <Button
+            variant="filled"
             onClick={() => {
               updateProject();
               setOpen(false);
             }}
-            disabled={false}
           >
-            {t('builder:connectModal.saveAndClose')}
-          </button>
+            {t("builder:connectModal.saveAndClose")}
+          </Button>
         </div>
       </Modal.Actions>
     </Modal>

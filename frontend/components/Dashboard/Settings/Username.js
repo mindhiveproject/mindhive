@@ -8,7 +8,7 @@ import useTranslation from "next-translate/useTranslation";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { UPDATE_USER } from "../../Mutations/User";
 import { StyledInput } from "../../styles/StyledForm";
-import { StyledSimpleSaveButton } from "../../styles/StyledProfile";
+import Button from "../../DesignSystem/Button";
 
 export default function Username({ query, user }) {
   const { t } = useTranslation("common");
@@ -62,16 +62,24 @@ export default function Username({ query, user }) {
         </div>
 
         <div className="buttons">
-          <StyledSimpleSaveButton changed={changed}>
-            <button onClick={handleSave}>{t("username.updatePreferences")}</button>
-          </StyledSimpleSaveButton>
+          <Button
+            variant="filled"
+            type="button"
+            onClick={handleSave}
+            disabled={!changed}
+            style={{ width: "100%" }}
+          >
+            {t("username.updatePreferences")}
+          </Button>
 
           <Link
             href={{
               pathname: `/dashboard/settings`,
             }}
           >
-            <button className="back">{t("consent.backToSettings")}</button>
+            <Button variant="text" type="button" style={{ width: "100%" }}>
+              {t("consent.backToSettings")}
+            </Button>
           </Link>
         </div>
       </div>

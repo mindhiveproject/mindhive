@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 
 import Chip from "../../../../DesignSystem/Chip";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import IconButton from "../../../../DesignSystem/IconButton";
 import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 
 import { useDataJournal } from "../Context/DataJournalContext";
@@ -131,7 +132,7 @@ export default function JournalNavigation({
       label: (
         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <img src="/assets/icons/visualize/edit.svg" alt="" width={18} height={18} />
-          {t("dataJournal.sideNav.editJournal", "Edit")}
+          {t("dataJournal.sideNav.editJournal", {}, { default: "Edit" })}
         </span>
       ),
       onClick: () => setEditOpen(true),
@@ -141,14 +142,14 @@ export default function JournalNavigation({
       label: (
         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <img src="/assets/icons/visualize/database.svg" alt="" width={18} height={18} />
-          {t("dataJournal.sideNav.manageDatasets", "Manage datasets")}
+          {t("dataJournal.sideNav.manageDatasets", {}, { default: "Manage datasets" })}
         </span>
       ),
       onClick: () => handleOpenModal(),
     },
     {
       key: "delete",
-      label: t("dataJournal.sideNav.deleteJournal", "Delete"),
+      label: t("dataJournal.sideNav.deleteJournal", {}, { default: "Delete" }),
       danger: true,
       onClick: () => {
         setDeleteError(null);
@@ -217,20 +218,24 @@ export default function JournalNavigation({
           {titleWithTooltip}
           <div onClick={(e) => e.stopPropagation()}>
             <DropdownMenu
-              ariaLabel={t("dataJournal.sideNav.journalMore", "Journal options")}
-              trigger={
-                <img
-                  src="/assets/dataviz/three-dots.svg"
-                  alt=""
-                  width={18}
-                  height={18}
+              ariaLabel={t(
+                "dataJournal.sideNav.journalMore",
+                {},
+                { default: "Journal options" },
+              )}
+              renderTrigger={({ onClick, open, ariaLabel }) => (
+                <IconButton
+                  variant="subtle"
+                  icon={<img src="/assets/dataviz/three-dots.svg" alt="" />}
+                  ariaLabel={ariaLabel}
+                  aria-expanded={open}
+                  aria-haspopup="menu"
+                  onClick={onClick}
                   style={{
                     opacity: isJournalSelected ? 1 : 0.3,
-                    transition: "opacity 0.2s"
                   }}
                 />
-              }
-
+              )}
               panelHeader={panelHeader}
               items={menuItems}
             />

@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "Create a new assignment from scratch or select one from the list below",
 		"createFromTemplate": "Create a new assignment from a template",
 		"createNew": "Create a new assignment",
+		"creating": "Creating...",
 		"creator": "Creator",
 		"dateCreated": "Date created",
 		"dateUpdated": "Date updated",
@@ -134,6 +135,7 @@
 		"unpublish": "Unpublish",
 		"unpublished": "Unpublished",
 		"unsavedChanges": "Unsaved changes!",
+		"view": "View",
 		"visibleForStudents": "The assignment is visible for students"
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "Add or edit the card title. This title will appear as a section title if student input is made visible",
 		"cardWillBeReleased": "The card will be released",
 		"close": "Close",
+		"closeWithoutSaving": "Close without saving",
 		"collective": "Collective",
 		"commentPlaceholder": "Enter a comment...",
 		"commentsComment": "This will pre-populate the Comment Box for students. You can delete comments later.",
@@ -728,6 +731,13 @@
 		"yourEntry": "Your entry"
 	},
 	"joinClass": "Join class",
+	"joinClassFlow": {
+		"goBack": "Go back",
+		"noClassFound": "No class found for the code {{code}}",
+		"noGoBack": "No, go back",
+		"wantToJoin": "Do you want to join the following class as a {{role}}?",
+		"yesContinue": "Yes, continue"
+	},
 	"joinClassInfo": "Once you join a class, it will appear here.",
 	"journal": {
 		"dateCreated": "Date created",

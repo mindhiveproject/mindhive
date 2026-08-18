@@ -96,25 +96,4 @@ export const StyledAddColumnModal = styled.div`
     gap: 10px;
     width: 100%;
   }
-
-  .addColumnModalCancelBtn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    background: #ffffff;
-    color: #1e293b;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-
-    &:hover {
-      background: #f8fafc;
-      border-color: #cbd5e1;
-    }
-  }
 `;

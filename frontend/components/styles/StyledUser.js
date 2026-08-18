@@ -92,28 +92,6 @@ export const StyledUserPage = styled.div`
         @media only screen and (max-width: 500px) {
           grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         }
-
-        button {
-          min-width: 150px;
-          width: 100%;
-          border-radius: 12px;
-          height: auto;
-          font-size: 1.8rem;
-          padding: 1rem;
-          background: white;
-          color: var(--green);
-          border: 2px solid var(--green);
-        }
-        button: hover {
-          transition: background-color 0.5s ease;
-          background: var(--green);
-          color: white;
-        }
-        .followed: hover {
-          transition: background-color 0.5s ease;
-          background: var(--pink);
-          color: white;
-        }
       }
     }
     .bioContainer {

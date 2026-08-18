@@ -272,23 +272,6 @@ const StyledTaskBuilder = styled.div`
     }
   }
 
-  .surveyPreviewBtn {
-    height: 36px;
-    padding: 0 14px;
-    border-radius: 18px;
-    border: 2px solid #007c70;
-    background: #007c70;
-    color: white;
-    font-size: 1.4rem;
-    cursor: pointer;
-    font-family: Lato;
-    transition: all 0.15s;
-    &:hover {
-      background: #005a52;
-      border-color: #005a52;
-    }
-  }
-
   .deletePageButton {
     margin-left: auto;
     height: 32px;

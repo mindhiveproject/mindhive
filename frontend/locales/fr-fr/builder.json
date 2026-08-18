@@ -365,9 +365,13 @@
 				"sharedWithCount": "Partagé : {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "Calculer une nouvelle variable",
+				"copy": "",
 				"copyExisting": "Copier la variable existante",
+				"recode": "",
 				"recodeVariable": "Recoder une variable",
+				"reverse": "",
 				"reverseScore": "Score inversé"
 			},
 			"readOnlyToolbarHint": "Ouvrez ce journal depuis un espace de travail pour modifier ou copier cet ensemble de données.",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "Ajouter un jeu de données",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "Enregistrer une copie",
 				"message": "Un nouveau jeu de données vous appartenant sera créé avec vos modifications et lié à cette revue. Vous pouvez choisir si vos collaborateurs peuvent modifier cette copie."
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "Comment ce jeu de données a été créé.",
 			"renameDisabledNotOwner": "Seul le créateur de cet ensemble de données peut le renommer.",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "Réseau de classe",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "Composant",
 			"addComponentAria": "Ajouter un composant à cet espace de travail",
 			"addJournal": "Journal",
+			"addJournalAria": "",
 			"addJournalScratch": "Créer un journal à partir de zéro",
 			"addJournalTemplate": "Ajouter un modèle de journal",
 			"addWorkspace": "Ajouter un espace de travail",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "Espace de travail",
 			"addWorkspaceError": "Erreur lors de l'ajout de l'espace de travail",
 			"addWorkspaceLoading": "Ajout...",
@@ -1136,6 +1145,10 @@
 			"submittedAsProposal": "Soumis comme proposition",
 			"working": "Travaux en cours"
 		}
+	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
 	},
 	"dataUsage": {
 		"and": "et",
@@ -1508,6 +1521,10 @@
 	},
 	"participate": "Participer",
 	"participateAsGuest": "Participer en tant qu'invité",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "Veuillez d'abord vous connecter !",
 	"preview": {
 		"description": "Description",
@@ -1659,6 +1676,10 @@
 		"linkToProposal": "Lien vers la proposition",
 		"selectCard": "Sélectionnez la carte"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "Ressource",
 	"resources": "Ressources",
 	"resourcesCards": {
@@ -1750,7 +1771,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "Retour",
-		"instruction": "Une fois que vous aurez soumis votre proposition ou votre étude, vos avis apparaîtront ici."
+		"instruction": "Une fois que vous aurez soumis votre proposition ou votre étude, vos avis apparaîtront ici.",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "Comment",

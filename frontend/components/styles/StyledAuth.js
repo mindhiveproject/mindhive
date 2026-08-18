@@ -40,23 +40,6 @@ export const StyledAuth = styled.div`
       border-color: ${(props) => props.theme.red};
     }
   }
-  button,
-  input[type="submit"] {
-    font-family: Lato;
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-    width: 100%;
-    background: #007c70;
-    color: white;
-    padding: 1.5rem 0.5rem;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 100%;
-    border: 2px solid #007c70;
-    border-radius: 4px;
-    cursor: pointer;
-  }
   span {
     font-size: 18px;
     line-height: 18px;
@@ -121,16 +104,9 @@ export const StyledAuth = styled.div`
     display: grid;
     grid-template-columns: 220px 220px;
     grid-gap: 15px;
-  }
-  .primaryBtn {
-    background: #007c70;
-    color: #ffffff;
-    max-width: 220px;
-  }
-  .secondaryBtn {
-    background: #ffffff;
-    color: #007c70;
-    max-width: 220px;
+    justify-content: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
   }
   .signupOptions {
     margin-top: 35px;

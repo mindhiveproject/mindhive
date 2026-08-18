@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import Router from "next/router";
 import { CURRENT_USER_QUERY } from "../Queries/User";
 import { SIGN_OUT_MUTATION } from "../Mutations/User";
+import Button from "../DesignSystem/Button";
 
 /**
  * Signs the user out and returns them to the landing page.
@@ -26,8 +27,8 @@ export function useSignout() {
 export default function SignOut({ children }) {
   const signMeOut = useSignout();
   return (
-    <button type="button" onClick={signMeOut}>
+    <Button type="button" variant="outline" onClick={signMeOut}>
       {children}
-    </button>
+    </Button>
   );
 }

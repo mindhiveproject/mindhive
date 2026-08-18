@@ -365,9 +365,13 @@
 				"sharedWithCount": "Compartilhado: {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "Calcular nova variável",
+				"copy": "",
 				"copyExisting": "Copiar variável existente",
+				"recode": "",
 				"recodeVariable": "Recodificar uma variável",
+				"reverse": "",
 				"reverseScore": "Inverter pontuação"
 			},
 			"readOnlyToolbarHint": "Abra este diário a partir de um espaço de trabalho para editar ou copiar este conjunto de dados.",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "Adicionar conjunto de dados",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "Salvar cópia",
 				"message": "Um novo conjunto de dados de sua propriedade será criado com suas alterações e vinculado a este periódico. Você poderá escolher se os colaboradores poderão editar a cópia."
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "Como este conjunto de dados foi criado.",
 			"renameDisabledNotOwner": "Somente o criador deste conjunto de dados pode renomeá-lo.",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "Rede de classes",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "Componente",
 			"addComponentAria": "Adicione um componente a este espaço de trabalho.",
 			"addJournal": "Diário",
+			"addJournalAria": "",
 			"addJournalScratch": "Crie um diário do zero.",
 			"addJournalTemplate": "Adicionar um modelo de diário",
 			"addWorkspace": "Adicionar espaço de trabalho",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "Espaço de trabalho",
 			"addWorkspaceError": "Erro ao adicionar espaço de trabalho",
 			"addWorkspaceLoading": "Adicionando...",
@@ -1136,6 +1145,10 @@
 			"submittedAsProposal": "Enviado como Proposta",
 			"working": "Trabalho em andamento"
 		}
+	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
 	},
 	"dataUsage": {
 		"and": "e",
@@ -1508,6 +1521,10 @@
 	},
 	"participate": "Participar",
 	"participateAsGuest": "Participe como convidado",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "Por favor, faça login primeiro!",
 	"preview": {
 		"description": "Descrição",
@@ -1659,6 +1676,10 @@
 		"linkToProposal": "Link para proposta",
 		"selectCard": "Selecione o cartão"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "Recurso",
 	"resources": "Recursos",
 	"resourcesCards": {
@@ -1750,7 +1771,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "Opinião",
-		"instruction": "Depois de enviar sua proposta ou estudo, suas avaliações aparecerão aqui."
+		"instruction": "Depois de enviar sua proposta ou estudo, suas avaliações aparecerão aqui.",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "Como",

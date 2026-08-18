@@ -124,7 +124,7 @@ export const StyledForm = styled.form`
   textarea {
     height: 100%;
   }
-  button,
+  button:not(.DesignSystem-Button),
   input[type="submit"] {
     font-family: Lato;
     margin-top: 1rem;
@@ -274,7 +274,7 @@ export const StyledForm = styled.form`
     margin-top: 0;
   }
 
-  .infoPane .submitButton button {
+  .infoPane .submitButton button:not(.DesignSystem-Button) {
     margin-top: 16px;
     margin-bottom: 0;
   }
@@ -433,7 +433,7 @@ export const StyledVideoUploader = styled.div`
     line-height: 32px;
     text-align: left;
   }
-  button {
+  button:not(.DesignSystem-Button) {
     background: white;
     color: #007c70;
     border: 1.5px solid var(--PRIMARY_GREEN3, #007c70);
@@ -461,7 +461,7 @@ export const StyledVideoUploader = styled.div`
     margin-bottom: 20px;
   }
 
-  .upload-area button {
+  .upload-area button:not(.DesignSystem-Button) {
     padding: 10px 20px;
     background-color: #007bff;
     color: white;

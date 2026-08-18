@@ -271,16 +271,15 @@ const GlobalStyles = createGlobalStyle`
     text-decoration: underline;
   }
   button {
-    font-family: 'Lato';
-    background: var(--green);
-    border: 2px solid var(--green);
-    border-radius: 4px;
-    color: white;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 100%;
-    padding: 10px 15px;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    color: inherit;
+    padding: 0;
     cursor: pointer;
   }
   input {
@@ -352,16 +351,10 @@ const GlobalStyles = createGlobalStyle`
   }
   .modalButtons {
     margin: 10px;
-  }
-  .primaryBtn {
-    background: var(--green);
-    margin-left: 10px;
-  }
-  .secondaryBtn {
-    background: var(--lightGrey);
-    color: var(--grey);
-    font-weight: normal;
-    margin-left: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
   }
   .iconTitle {
     display: grid;

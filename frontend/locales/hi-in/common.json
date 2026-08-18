@@ -31,6 +31,7 @@
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
+		"confirmPassword": "",
 		"email": "ईमेल",
 		"forgotPassword": "अपना कूट शब्द भूल गए?",
 		"login": "लॉग इन करें",
@@ -40,8 +41,11 @@
 			"bannerTitle": "",
 			"invalid": ""
 		},
+		"next": "",
 		"password": "पासवर्ड",
 		"requestReset": "रीसेट का अनुरोध करें",
+		"reset": "",
+		"resetTitle": "",
 		"username": "उपयोगकर्ता नाम"
 	},
 	"cancel": "रद्द करना",
@@ -455,6 +459,7 @@
 		"level": "स्तर",
 		"myTags": "मेरे टैग",
 		"noParentTag": "कोई मूल टैग नहीं",
+		"save": "",
 		"searchPlaceholder": "टैग खोजें",
 		"secondLevel": "द्वितीय-स्तर",
 		"selectParentTag": "मूल टैग चुनें",

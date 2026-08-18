@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 import TermsConditions from "./TermsConditions";
 import GoogleSignup from "./GoogleSignup";
 import Turnstile from "../Turnstile";
+import Button from "../../DesignSystem/Button";
 
 export default function Form({
   role,
@@ -111,7 +112,14 @@ export default function Form({
             <Turnstile ref={turnstileRef} onVerify={onTurnstileVerify} />
 
             <div className="submitButton">
-              <button type="submit">{submitBtnName}</button>
+              <Button
+                type="submit"
+                variant="filled"
+                style={{ width: "100%" }}
+                disabled={loading || submitDisabled}
+              >
+                {submitBtnName}
+              </Button>
             </div>
           </div>
         </fieldset>

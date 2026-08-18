@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "Maak een nieuwe opdracht vanaf nul of selecteer er een uit de onderstaande lijst",
 		"createFromTemplate": "Een nieuwe opdracht maken vanuit een sjabloon",
 		"createNew": "Een nieuwe opdracht maken",
+		"creating": "",
 		"creator": "Schepper",
 		"dateCreated": "Datum aangemaakt",
 		"dateUpdated": "Datum bijgewerkt",
@@ -134,6 +135,7 @@
 		"unpublish": "Niet publiceren",
 		"unpublished": "Niet gepubliceerd",
 		"unsavedChanges": "Niet-opgeslagen wijzigingen!",
+		"view": "",
 		"visibleForStudents": "De opdracht is zichtbaar voor studenten"
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "Voeg de kaarttitel toe of bewerk deze. Deze titel wordt weergegeven als sectietitel als de invoer van de student zichtbaar is.",
 		"cardWillBeReleased": "De kaart wordt vrijgegeven",
 		"close": "Dichtbij",
+		"closeWithoutSaving": "",
 		"collective": "Collectief",
 		"commentPlaceholder": "Voer een opmerking in...",
 		"commentsComment": "Hiermee wordt het opmerkingenveld voor studenten automatisch ingevuld. Je kunt reacties later verwijderen.",
@@ -728,6 +731,13 @@
 		"yourEntry": "Uw inzending"
 	},
 	"joinClass": "Doe mee met de les",
+	"joinClassFlow": {
+		"goBack": "",
+		"noClassFound": "",
+		"noGoBack": "",
+		"wantToJoin": "",
+		"yesContinue": ""
+	},
 	"joinClassInfo": "Zodra u zich bij een klas aansluit, wordt deze hier weergegeven.",
 	"journal": {
 		"dateCreated": "Datum aangemaakt",

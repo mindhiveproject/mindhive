@@ -15,7 +15,7 @@ import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
 
 import { StyledInput } from "../../../../styles/StyledForm";
-import { StyledSaveButton } from "../../../../styles/StyledProfile";
+import Button from "../../../../DesignSystem/Button";
 
 const optionsMentorPreferGrade = [
   { label: "middle", value: "middle" },
@@ -278,11 +278,14 @@ export default function Preferences({ query, user, onDirtyChange }) {
             </FormGroup>
           </Form>
         </div> */}
-        <StyledSaveButton changed={changed}>
-          <button onClick={handleSubmit} disabled={!changed}>
-            {t("preferences.saveChanges")}
-          </button>
-        </StyledSaveButton>
+        <Button
+          variant="filled"
+          type="button"
+          onClick={handleSubmit}
+          disabled={!changed}
+        >
+          {t("preferences.saveChanges")}
+        </Button>
       </StyledInput>
     </div>
   );

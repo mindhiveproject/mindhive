@@ -1,8 +1,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { SignupForm } from "../../../styles/StyledForm";
+import useTranslation from "next-translate/useTranslation";
+import Button from "../../../DesignSystem/Button";
 
 export default function EnterCode({ role }) {
+  const { t } = useTranslation("common");
   const [classCode, setClassCode] = useState("");
   const [invitationCode, setInvitationCode] = useState("");
 
@@ -55,7 +58,9 @@ export default function EnterCode({ role }) {
             query: query,
           }}
         >
-          <button>Next</button>
+          <Button variant="filled" style={{ width: "100%" }}>
+            {t("auth.next", {}, { default: "Next" })}
+          </Button>
         </Link>
       </div>
     </SignupForm>

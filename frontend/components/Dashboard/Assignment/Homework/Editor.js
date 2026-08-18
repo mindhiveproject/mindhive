@@ -3,10 +3,12 @@ import { useRouter } from "next/dist/client/router";
 import JoditEditor from "../../../Jodit/Editor";
 import moment from "moment";
 import { useRef } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledInput } from "../../../styles/StyledForm";
 import TipTapEditor from "../../../TipTap/Main";
 import { StyledTipTap } from "../../../TipTap/StyledTipTap";
+import Button from "../../../DesignSystem/Button";
 
 
 import Status from "../../TeacherClasses/ClassPage/Assignments/Homework/Status";
@@ -21,6 +23,7 @@ export default function Editor({
   handleChange,
   editHomework,
 }) {
+  const { t } = useTranslation("classes");
   const router = useRouter();
 
   const content = useRef(initialContent);
@@ -102,7 +105,9 @@ export default function Editor({
               </div>
             </div>
 
-            <button
+            <Button
+              variant="filled"
+              style={{ width: "100%" }}
               onClick={() => {
                 editHomework({
                   variables: {
@@ -115,8 +120,8 @@ export default function Editor({
                 });
               }}
             >
-              {btnName}
-            </button>
+              {btnName || t("board.save", {}, { default: "Save" })}
+            </Button>
           </div>
         </div>
       </div>

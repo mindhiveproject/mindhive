@@ -13,12 +13,8 @@ import styled from "styled-components";
 
 import { CREATE_MILESTONE } from "../../../Mutations/Milestone";
 import { ADMIN_MILESTONES } from "../../../Queries/Milestone";
-import {
-  FieldRow,
-  PrimaryButton,
-  SecondaryButton,
-  PillCheckbox,
-} from "../Forms/EditorPanelStyles";
+import { FieldRow, PillCheckbox } from "../Forms/EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const Shell = styled.div`
   display: ${({ $open }) => ($open ? "flex" : "none")};
@@ -207,9 +203,9 @@ export default function NewMilestoneForm({ open, onClose }) {
     <Shell $open={open}>
       <Header>
         <h2>New milestone</h2>
-        <SecondaryButton type="button" onClick={onClose}>
+        <Button variant="outline" type="button" onClick={onClose}>
           Cancel
-        </SecondaryButton>
+        </Button>
       </Header>
 
       <Grid>
@@ -366,13 +362,14 @@ export default function NewMilestoneForm({ open, onClose }) {
       ) : null}
 
       <div>
-        <PrimaryButton
+        <Button
+          variant="filled"
           type="button"
           onClick={handleCreate}
           disabled={loading || !title.trim()}
         >
           {loading ? "Creating…" : "Create milestone"}
-        </PrimaryButton>
+        </Button>
       </div>
     </Shell>
   );

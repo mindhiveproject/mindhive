@@ -31,6 +31,7 @@
 			"signUpAsSponsor": "Regístrate como patrocinador en su lugar",
 			"wrongRole": "La membresía de la red de clase está disponible para profesores, mentores, patrocinadores y científicos."
 		},
+		"confirmPassword": "",
 		"email": "Correo electrónico",
 		"forgotPassword": "¿Olvidaste tu contraseña?",
 		"login": "Acceso",
@@ -40,8 +41,11 @@
 			"bannerTitle": "Estás invitado a unirte a {{networkTitle}}",
 			"invalid": "Esta invitación a la red no es válida o ya no está pendiente."
 		},
+		"next": "",
 		"password": "Contraseña",
 		"requestReset": "Solicitar restablecimiento",
+		"reset": "",
+		"resetTitle": "",
 		"username": "Nombre de usuario"
 	},
 	"cancel": "Cancelar",
@@ -455,6 +459,7 @@
 		"level": "Nivel",
 		"myTags": "Mis etiquetas",
 		"noParentTag": "Sin etiqueta principal",
+		"save": "",
 		"searchPlaceholder": "Buscar etiquetas",
 		"secondLevel": "Segundo nivel",
 		"selectParentTag": "Seleccionar etiqueta principal",

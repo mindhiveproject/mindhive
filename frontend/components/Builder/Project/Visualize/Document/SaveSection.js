@@ -1,8 +1,11 @@
 import { useMutation } from "@apollo/client";
 import { UPDATE_VIZSECTION } from "../../../../Mutations/VizSection";
 import { GET_VIZJOURNALS } from "../../../../Queries/VizJournal";
+import Button from "../../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function SaveSection({ projectId, studyId, sectionId, inputs }) {
+  const { t } = useTranslation("builder");
   const [updateSection, { data, loading, error }] = useMutation(
     UPDATE_VIZSECTION,
     {
@@ -38,7 +41,9 @@ export default function SaveSection({ projectId, studyId, sectionId, inputs }) {
 
   return (
     <div>
-      <button onClick={updateSection}>Save</button>
+      <Button variant="filled" type="button" onClick={updateSection}>
+        {t("header.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

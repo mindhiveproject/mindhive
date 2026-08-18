@@ -31,6 +31,7 @@
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
+		"confirmPassword": "",
 		"email": "بريد إلكتروني",
 		"forgotPassword": "نسيت كلمة السر؟",
 		"login": "تسجيل الدخول",
@@ -40,8 +41,11 @@
 			"bannerTitle": "",
 			"invalid": ""
 		},
+		"next": "",
 		"password": "كلمة المرور",
 		"requestReset": "طلب إعادة الضبط",
+		"reset": "",
+		"resetTitle": "",
 		"username": "اسم المستخدم"
 	},
 	"cancel": "يلغي",
@@ -455,6 +459,7 @@
 		"level": "مستوى",
 		"myTags": "علاماتي",
 		"noParentTag": "لا يوجد علامة رئيسية",
+		"save": "",
 		"searchPlaceholder": "البحث عن العلامات",
 		"secondLevel": "المستوى الثاني",
 		"selectParentTag": "حدد العلامة الأصلية",

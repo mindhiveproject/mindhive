@@ -16,11 +16,8 @@ import { ADMIN_FORM_DEFINITIONS } from "../../../Queries/FormDefinition";
 import { ALL_ORGANIZATIONS_LITE } from "../../../Queries/Organization";
 import { GET_ALL_NETWORKS } from "../../../Queries/ClassNetwork";
 import { TEMPLATE_PROPOSAL_BOARDS_LITE } from "../../../Queries/Proposal";
-import {
-  FieldRow,
-  PrimaryButton,
-  SecondaryButton,
-} from "./EditorPanelStyles";
+import { FieldRow } from "./EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const Shell = styled.div`
   display: ${({ $open }) => ($open ? "flex" : "none")};
@@ -346,9 +343,9 @@ export default function NewDefinitionForm({ open, onClose }) {
     <Shell $open={open}>
       <Header>
         <h2>New form definition</h2>
-        <SecondaryButton type="button" onClick={onClose}>
+        <Button variant="outline" type="button" onClick={onClose}>
           Cancel
-        </SecondaryButton>
+        </Button>
       </Header>
 
       <div>
@@ -528,13 +525,14 @@ export default function NewDefinitionForm({ open, onClose }) {
       ) : null}
 
       <div>
-        <PrimaryButton
+        <Button
+          variant="filled"
           type="button"
           onClick={handleCreate}
           disabled={loading || !surface || !key}
         >
           {loading ? "Creating…" : "Create draft"}
-        </PrimaryButton>
+        </Button>
       </div>
     </Shell>
   );

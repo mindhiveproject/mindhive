@@ -1,7 +1,9 @@
 import { Modal, Dropdown, Table } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 import { StyledForm } from "../../../../../styles/StyledForm";
 import { normalizeVariableName } from "../../../../../../lib/normalizeVariableName";
 import { useState, useEffect } from "react";
+import Button from "../../../../../DesignSystem/Button";
 
 export default function Recode({
   title,
@@ -14,6 +16,7 @@ export default function Recode({
   setIsOpen,
   resetForm,
 }) {
+  const { t } = useTranslation("builder");
   const [uniqueValues, setUniqueValues] = useState([]);
   const [replacementValues, setReplacementValues] = useState({});
 
@@ -122,9 +125,11 @@ export default function Recode({
 
       <Modal.Actions>
         <div className="modalButtons">
-          <button className="secondaryBtn" onClick={() => recode()}>
-            Recode
-          </button>
+          <Button variant="filled" onClick={() => recode()}>
+            {t("dataJournal.datasetMenu.operations.recode", {}, {
+              default: "Recode",
+            })}
+          </Button>
         </div>
       </Modal.Actions>
     </>

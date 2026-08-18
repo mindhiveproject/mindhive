@@ -3,6 +3,8 @@ import { OutCustomPort } from "../Diagram/models/OutPortModel";
 
 import uniqid from "uniqid";
 import generate from "project-name-generator";
+import useTranslation from "next-translate/useTranslation";
+import Button from "../../../../DesignSystem/Button";
 
 export default function Modal({
   user,
@@ -12,6 +14,7 @@ export default function Modal({
   setHasStudyChanged,
   study,
 }) {
+  const { t } = useTranslation("builder");
   const components = study?.components || {};
 
   const [ports, setPorts] = useState(
@@ -107,7 +110,9 @@ export default function Modal({
               <p>{node?.options?.details}</p>
             </div>
             <div>
-              <button onClick={update}>Update</button>
+              <Button variant="filled" onClick={update}>
+                {t("modal.update", {}, { default: "Update" })}
+              </Button>
             </div>
           </div>
           <div>
@@ -168,16 +173,18 @@ export default function Modal({
                 <div>{components[port?.label]}</div>
 
                 <div>
-                  <button onClick={() => removePort({ name: port?.name })}>
-                    Remove condition
-                  </button>
+                  <Button variant="text" onClick={() => removePort({ name: port?.name })}>
+                    {t("modal.removeCondition", {}, { default: "Remove condition" })}
+                  </Button>
                 </div>
               </div>
             ))}
 
             <div className="footer">
               <div>
-                <button onClick={() => addPort()}>Add condition</button>
+                <Button variant="outline" onClick={() => addPort()}>
+                  {t("modal.addCondition", {}, { default: "Add condition" })}
+                </Button>
               </div>
             </div>
           </div>

@@ -3,6 +3,7 @@ import moment from "moment";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
+import Button from "../../../../DesignSystem/Button";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -15,43 +16,6 @@ import {
   GET_CLASS_ASSIGNMENTS,
   GET_TEMPLATE_ASSIGNMENTS,
 } from "../../../../Queries/Assignment";
-
-// Styled button matching Figma design (Primary Action - Teal)
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #336F8A;
-  color: #ffffff;
-  
-  &:hover {
-    background: #ffc107;
-    color: #1a1a1a;
-  }
-  
-  &:active {
-    background: #4db6ac;
-    color: #1a1a1a;
-  }
-  
-  &:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-  }
-`;
 
 const SectionContainer = styled.div`
   margin-bottom: 48px;
@@ -88,38 +52,6 @@ const ButtonWrapper = styled.div`
   margin-top: 16px;
 `;
 
-const SecondaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
-  
-  &:hover {
-    background: #f5f5f5;
-    border-color: #b3b3b3;
-    color: #666666;
-  }
-  
-  &:active {
-    background: #e0f2f1;
-    border-color: #4db6ac;
-    color: #4db6ac;
-  }
-`;
-
 export default function AddAssignment({ myclass, user, query }) {
   const { t } = useTranslation("classes");
 
@@ -151,9 +83,9 @@ export default function AddAssignment({ myclass, user, query }) {
         }}
         style={{ textDecoration: 'none' }}
       >
-        <PrimaryButton style={{ padding: '8px 16px', fontSize: '14px' }}>
-          {t("assignment.linkACopy")}
-        </PrimaryButton>
+        <Button variant="filled">
+          {t("assignment.linkACopy", {}, { default: "Link a copy" })}
+        </Button>
       </Link>
     );
   };
@@ -319,7 +251,7 @@ export default function AddAssignment({ myclass, user, query }) {
           }}
           style={{ textDecoration: 'none' }}
         >
-          <SecondaryButton>← {t("assignment.goBack")}</SecondaryButton>
+          <Button variant="outline">{t("assignment.goBack", {}, { default: "Go back" })}</Button>
         </Link>
       </TopSection>
 
@@ -340,7 +272,7 @@ export default function AddAssignment({ myclass, user, query }) {
             }}
             style={{ textDecoration: 'none' }}
           >
-            <PrimaryButton>{t("assignment.createFromScratch")}</PrimaryButton>
+            <Button variant="filled">{t("assignment.createFromScratch", {}, { default: "Create from scratch" })}</Button>
           </Link>
         </ButtonWrapper>
       </SectionContainer>

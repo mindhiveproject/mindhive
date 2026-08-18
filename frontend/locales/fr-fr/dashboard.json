@@ -61,12 +61,32 @@
 		"seedSuccess_plural": "Étapes clés semées {{count}} : {{keys}}.",
 		"yes": "Oui"
 	},
+	"chat": {
+		"addGroupChat": "",
+		"addPosting": "",
+		"myGroupChats": "",
+		"reply": "",
+		"save": "",
+		"saving": "",
+		"update": ""
+	},
+	"consentAdmin": {
+		"addConsentForm": "",
+		"customize": "",
+		"edit": ""
+	},
 	"develop": {
 		"headerDescription": "Toutes les études, tâches ou enquêtes que vous avez <0>développées ou sur lesquelles vous collaborez</0>.",
 		"headerTitle": "Développer"
 	},
+	"lessons": {
+		"addLesson": "",
+		"save": ""
+	},
 	"management": {
-		"milestonesTab": "Jalons"
+		"addClassNetwork": "",
+		"milestonesTab": "Jalons",
+		"save": ""
 	},
 	"update": "Mise à jour"
 }

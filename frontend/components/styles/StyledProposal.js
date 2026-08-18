@@ -39,7 +39,7 @@ export const StyledProposal = styled.div`
     }
   }
 
-  button {
+  button:not(.DesignSystem-Button) {
     display: grid;
     align-content: center;
     max-width: 300px;
@@ -773,13 +773,6 @@ export const StyledProposal = styled.div`
         border-color: mintcream;
       }
     }
-    button {
-      background: #007c70;
-      color: white;
-      max-width: 256px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
     .title {
       letter-spacing: 0em;
       text-align: left;
@@ -1110,30 +1103,6 @@ export const StyledProposal = styled.div`
       grid-template-columns: 1fr auto;
       justify-items: end;
       grid-gap: 10px;
-
-      .button {
-        cursor: pointer;
-        border-radius: 4px;
-        align-items: center;
-        padding: 14px 24px;
-        font-family: Inter;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 18px;
-        letter-spacing: 0.05em;
-        text-align: center;
-      }
-      .primary {
-        background: #007c70;
-        color: #ffffff;
-        border: 2px solid #007c70;
-      }
-      .secondary {
-        background: #ffffff;
-        color: #666666;
-        border: 2px solid #b3b3b3;
-      }
     }
   }
 
@@ -1270,16 +1239,6 @@ export const StyledProposal = styled.div`
       grid-gap: 10px;
       grid-template-columns: 200px 200px;
       justify-content: end;
-      .primary {
-        background: #007c70;
-        color: #ffffff;
-        border: 2px solid #007c70;
-      }
-      .secondary {
-        background: #ffffff;
-        color: #666666;
-        border: 2px solid #b3b3b3;
-      }
     }
 
     .proposalCardBoard {
@@ -1312,21 +1271,6 @@ export const StyledProposal = styled.div`
         outline: 0;
         border-color: ${(props) => props.theme.red};
       }
-    }
-    input[type="submit"] {
-      margin-top: 3rem;
-      margin-bottom: 1rem;
-      width: 100%;
-      background: #007c70;
-      color: white;
-      padding: 1.5rem 0.5rem;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 100%;
-      border: 2px solid #007c70;
-      border-radius: 4px;
-      cursor: pointer;
     }
     fieldset {
       display: grid;

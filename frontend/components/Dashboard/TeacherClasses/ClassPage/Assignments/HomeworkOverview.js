@@ -10,76 +10,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ASSIGNMENT } from "../../../../Queries/Assignment";
 import { GET_STUDENTS_DATA } from "../../../../Queries/Classes";
 import ReviewHomework from "./Homework/Review";
-
-// Styled button matching Figma design (Primary Action - Teal)
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #336F8A;
-  color: #ffffff;
-  
-  &:hover {
-    background: #ffc107;
-    color: #1a1a1a;
-  }
-  
-  &:active {
-    background: #4db6ac;
-    color: #1a1a1a;
-  }
-  
-  &:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-  }
-`;
-
-// Styled secondary button (Outline style from Figma)
-const SecondaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
-  
-  &:hover {
-    background: #f5f5f5;
-    border-color: #b3b3b3;
-    color: #666666;
-  }
-  
-  &:active {
-    background: #e0f2f1;
-    border-color: #4db6ac;
-    color: #4db6ac;
-  }
-`;
+import Button from "../../../../DesignSystem/Button";
 
 const Container = styled.div`
   max-width: 1400px;
@@ -314,9 +245,9 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
         }}
         style={{ textDecoration: 'none' }}
       >
-        <PrimaryButton style={{ padding: '6px 12px', fontSize: '12px' }}>
-          {t("assignment.open") || "Open"}
-        </PrimaryButton>
+        <Button variant="filled">
+          {t("assignment.open", {}, { default: "Open" })}
+        </Button>
       </Link>
     );
   }, [code, myclass, t]);
@@ -444,7 +375,7 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
             }}
             style={{ textDecoration: 'none' }}
           >
-            <SecondaryButton>← {t("assignment.goBack") || "Go back"}</SecondaryButton>
+            <Button variant="outline">{t("assignment.goBack", {}, { default: "Go back" })}</Button>
           </Link>
         </ButtonContainer>
         <HeaderTitle>{assignmentTitle}</HeaderTitle>

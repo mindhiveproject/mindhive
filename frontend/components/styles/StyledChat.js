@@ -22,13 +22,6 @@ export const StyledChat = styled.div`
         border-color: mintcream;
       }
     }
-    button {
-      background: #007c70;
-      color: white;
-      max-width: 256px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
     .title {
       font-family: Lato;
       font-size: 36px;
@@ -111,16 +104,6 @@ export const StyledChat = styled.div`
       grid-template-columns: auto 1fr;
       grid-column-gap: 1rem;
       align-items: center;
-      button {
-        padding: 10px 24px 10px 24px;
-        background: #007c70;
-        border: 2px solid #007c70;
-        box-sizing: border-box;
-        border-radius: 4px;
-        color: white;
-        cursor: pointer;
-        font-family: "Lato";
-      }
     }
     .members {
       display: grid;
@@ -159,17 +142,6 @@ export const StyledChat = styled.div`
         position: absolute;
         display: grid;
         margin-bottom: 5px;
-        button {
-          padding: 3px 10px 3px 10px;
-          background: #007c70;
-          border: 1px solid #007c70;
-          box-sizing: border-box;
-          border-radius: 4px;
-          color: white;
-          cursor: pointer;
-          font-size: 14px;
-          font-family: "Lato";
-        }
       }
     }
     .header {

@@ -303,25 +303,7 @@ export const StyledSidebar = styled.div`
     }
   }
   
-  .createJournalBtn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-
-    > div > button {
-      transition: background-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    &:hover > div > button {
-      background-color: #e8eeec !important;
-      box-shadow: var(
-        --MH-Theme-Elevation-Medium,
-        0 1px 4px rgba(0, 0, 0, 0.08)
-      );
-    }
-  }
-
+  .createJournalBtn,
   .addWorkspaceBtn,
   .addComponentBtn {
     display: flex;

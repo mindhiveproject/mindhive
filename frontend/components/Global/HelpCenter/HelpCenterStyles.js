@@ -155,9 +155,6 @@ export const ModalFooter = styled.div`
   padding: 20px;
   border-top: 1px solid ${props => props.theme.accentGreen};
   background: ${props => props.theme.offWhite};
-  .primaryBtn {
-    margin-left: 10px;
-  }
 `;
 
 export const CloseButton = styled.button`
@@ -198,9 +195,6 @@ export const DocSection = styled.div`
 `;
 
 export const Support = styled.div`
-  .primaryBtn {
-    margin-left: 10px;
-  }
   .report-item {
     display: flex;
     align-items: center;

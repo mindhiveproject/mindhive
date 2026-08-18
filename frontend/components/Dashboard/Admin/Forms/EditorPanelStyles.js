@@ -85,40 +85,6 @@ export const FieldRow = styled.label`
   }
 `;
 
-export const PrimaryButton = styled.button`
-  padding: 8px 20px;
-  border-radius: 100px;
-  background: #336f8a;
-  color: #ffffff;
-  border: none;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-export const SecondaryButton = styled.button`
-  padding: 8px 16px;
-  border-radius: 100px;
-  background: #ffffff;
-  border: 1px solid #d3dae0;
-  color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
 export const PillCheckbox = styled.button`
   padding: 4px 12px;
   border-radius: 100px;

@@ -9,8 +9,10 @@ import Delete from "./Delete";
 import NewMessage from "./NewMessage";
 import { useQuery } from "@apollo/client";
 import { GET_MESSAGE } from "../../../Queries/Chat";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Comment({ user, message, chat, membersIds }) {
+  const { t } = useTranslation("dashboard");
   const { data, loading, error } = useQuery(GET_MESSAGE, {
     variables: { id: message?.id },
   });
@@ -46,7 +48,11 @@ export default function Comment({ user, message, chat, membersIds }) {
           </div>
           <div className="editLinks">
             {isMessageAuthor && (
-              <Update chatId={chat?.id} btnName="Update" oldMessage={comment} />
+              <Update
+                chatId={chat?.id}
+                btnName={t("chat.update", {}, { default: "Update" })}
+                oldMessage={comment}
+              />
             )}
 
             {(isMessageAuthor ||
@@ -93,7 +99,7 @@ export default function Comment({ user, message, chat, membersIds }) {
           <NewMessage
             chat={chat}
             parentMessageId={comment?.id}
-            btnName="Reply"
+            btnName={t("chat.reply", {}, { default: "Reply" })}
             membersIds={membersIds}
           />
         </div>

@@ -10,6 +10,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { CURRENT_USER_QUERY } from '../Queries/User';
 import { UPDATE_USER } from '../Mutations/User';
 import useTranslation from "next-translate/useTranslation";
+import Button from "../DesignSystem/Button";
 import {
   HelpButton,
   ActionsList,
@@ -184,9 +185,9 @@ export default function HelpCenter() {
               <div className="report-details">
                 <div>
                     <a href="https://mindhive.notion.site/153d80abf4c48093b13cc8d50807c7b8?pvs=105" target="_blank">
-                    <button className="primaryBtn" style={{ border: `1px solid ${modalColor}`, background: modalColor }}>
+                    <Button variant="filled">
                         {t("helpCenter.fillSupportTicket")}
-                    </button>
+                    </Button>
                     </a>
                 </div>
               </div>
@@ -197,9 +198,9 @@ export default function HelpCenter() {
                 <div className="report-details">
                 <div>
                     <a href="https://mindhive.notion.site/18bd80abf4c480749952e3c0498fab29?pvs=105" target="_blank">
-                    <button className="primaryBtn" style={{ border: `1px solid ${modalColor}`, background: modalColor }}>
+                    <Button variant="filled">
                         {t("helpCenter.fillRequestForm")}
-                    </button>
+                    </Button>
                     </a>
                 </div>
                 </div>
@@ -286,9 +287,9 @@ export default function HelpCenter() {
               {getContent(modalType)}
             </ModalBody>
             <ModalFooter>
-              <button className="primaryBtn" style={{ border: `1px solid ${modalColor}`, background: modalColor }} onClick={() => setModalOpen(false)}>
-                {t('helpCenter.close')}
-              </button>
+              <Button variant="filled" onClick={() => setModalOpen(false)}>
+                {t("helpCenter.close")}
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>

@@ -31,6 +31,7 @@
 			"signUpAsSponsor": "Sign up as a sponsor instead",
 			"wrongRole": "Class-network membership is available to teachers, mentors, sponsors, and scientists."
 		},
+		"confirmPassword": "Confirm Password",
 		"email": "Email",
 		"forgotPassword": "Forgot your password?",
 		"login": "Login",
@@ -40,8 +41,11 @@
 			"bannerTitle": "You're invited to join {{networkTitle}}",
 			"invalid": "This network invitation is invalid or is no longer pending."
 		},
+		"next": "Next",
 		"password": "Password",
 		"requestReset": "Request reset",
+		"reset": "Reset",
+		"resetTitle": "Reset password",
 		"username": "Username"
 	},
 	"cancel": "Cancel",
@@ -455,6 +459,7 @@
 		"level": "Level",
 		"myTags": "My tags",
 		"noParentTag": "No parent tag",
+		"save": "Save",
 		"searchPlaceholder": "Search for tags",
 		"secondLevel": "Second-level",
 		"selectParentTag": "Select parent tag",

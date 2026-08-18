@@ -365,9 +365,13 @@
 				"sharedWithCount": ""
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "",
+				"copy": "",
 				"copyExisting": "",
+				"recode": "",
 				"recodeVariable": "",
+				"reverse": "",
 				"reverseScore": ""
 			},
 			"readOnlyToolbarHint": "",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "",
 				"message": ""
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "",
 			"renameDisabledNotOwner": "",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "",
 			"addComponentAria": "",
 			"addJournal": "",
+			"addJournalAria": "",
 			"addJournalScratch": "",
 			"addJournalTemplate": "",
 			"addWorkspace": "",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "",
 			"addWorkspaceError": "",
 			"addWorkspaceLoading": "",
@@ -1136,6 +1145,10 @@
 			"submittedAsProposal": "प्रस्ताव के रूप में प्रस्तुत",
 			"working": "कार्य प्रगति पर है"
 		}
+	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
 	},
 	"dataUsage": {
 		"and": "और",
@@ -1508,6 +1521,10 @@
 	},
 	"participate": "हिस्सा लेना",
 	"participateAsGuest": "अतिथि के रूप में भाग लें",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "कृपया पहले लॉग इन करें!",
 	"preview": {
 		"description": "विवरण",
@@ -1659,6 +1676,10 @@
 		"linkToProposal": "प्रस्ताव का लिंक",
 		"selectCard": "कार्ड चुनें"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "संसाधन",
 	"resources": "संसाधन",
 	"resourcesCards": {
@@ -1750,7 +1771,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "प्रतिक्रिया",
-		"instruction": "एक बार जब आप अपना प्रस्ताव या अध्ययन प्रस्तुत कर देंगे, तो आपकी समीक्षाएं यहां दिखाई देंगी।"
+		"instruction": "एक बार जब आप अपना प्रस्ताव या अध्ययन प्रस्तुत कर देंगे, तो आपकी समीक्षाएं यहां दिखाई देंगी।",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "कैसे",

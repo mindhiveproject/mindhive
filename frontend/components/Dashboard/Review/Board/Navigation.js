@@ -5,6 +5,8 @@ import { useMutation } from "@apollo/client";
 import { GET_REVIEW } from "../../../Queries/Review";
 import { CREATE_REVIEW, UPDATE_REVIEW } from "../../../Mutations/Review";
 import { STUDY_TO_REVIEW } from "../../../Queries/Study";
+import useTranslation from "next-translate/useTranslation";
+import Button from "../../../DesignSystem/Button";
 
 export default function Navigation({
   study,
@@ -13,6 +15,7 @@ export default function Navigation({
   handleChange,
   resetForm,
 }) {
+  const { t } = useTranslation("builder");
   const [
     createReview,
     { data: createData, loading: createLoading, error: createError },
@@ -75,7 +78,9 @@ export default function Navigation({
         <div className="backBtn">
           <img src="/assets/icons/review/expand_left.svg" />
 
-          <div className="text">Back to Feedback Center</div>
+          <div className="text">
+            {t("reviewDetail.backToFeedbackCenter", {}, { default: "Back to Feedback Center" })}
+          </div>
         </div>
       </Link>
 
@@ -84,30 +89,48 @@ export default function Navigation({
       {canReview && (
         <div className="saveBtn">
           {inputs?.id ? (
-            <button
+            <Button
+              variant="filled"
               type="button"
               disabled={updateLoading}
               onClick={async () => {
                 if (
                   confirm(
-                    "Are you sure you want to resubmit? Your feedback will be updated."
+                    t(
+                      "reviewDetail.resubmitConfirm",
+                      {},
+                      {
+                        default:
+                          "Are you sure you want to resubmit? Your feedback will be updated.",
+                      }
+                    )
                   )
                 ) {
                   updateReview();
-                  alert("The review has been updated");
+                  alert(
+                    t("reviewDetail.updated", {}, { default: "The review has been updated" })
+                  );
                 }
               }}
             >
-              Submit Feedback
-            </button>
+              {t("reviewDetail.submitFeedback", {}, { default: "Submit Feedback" })}
+            </Button>
           ) : (
-            <button
+            <Button
+              variant="filled"
               type="button"
               disabled={createLoading}
               onClick={async () => {
                 if (
                   confirm(
-                    "Are you sure you want to submit? Your feedback will be visible for others. You can edit your feedback after submission."
+                    t(
+                      "reviewDetail.submitConfirm",
+                      {},
+                      {
+                        default:
+                          "Are you sure you want to submit? Your feedback will be visible for others. You can edit your feedback after submission.",
+                      }
+                    )
                   )
                 ) {
                   const res = await createReview();
@@ -118,12 +141,18 @@ export default function Navigation({
                       value: id,
                     },
                   });
-                  alert("The review has been submitted");
+                  alert(
+                    t(
+                      "reviewDetail.submitted",
+                      {},
+                      { default: "The review has been submitted" }
+                    )
+                  );
                 }
               }}
             >
-              Submit Feedback
-            </button>
+              {t("reviewDetail.submitFeedback", {}, { default: "Submit Feedback" })}
+            </Button>
           )}
         </div>
       )}

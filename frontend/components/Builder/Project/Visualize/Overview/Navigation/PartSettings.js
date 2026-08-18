@@ -8,11 +8,14 @@ import { OnlyAdminAccess } from "../../../../../Global/Restricted";
 import StyledModal from "../../../../../styles/StyledModal";
 import { StyledModalButtons } from "../../../../../styles/StyledModal";
 import { StyledInput } from "../../../../../styles/StyledForm";
+import Button from "../../../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 import { UPDATE_VIZPART } from "../../../../../Mutations/VizPart";
 import { GET_VIZJOURNALS } from "../../../../../Queries/VizJournal";
 
 export default function PartSettings({ user, projectId, studyId, part }) {
+  const { t } = useTranslation("builder");
   const [isOpen, setIsOpen] = useState(false);
 
   const { inputs, handleChange } = useForm({
@@ -126,40 +129,18 @@ export default function PartSettings({ user, projectId, studyId, part }) {
           </StyledInput>
         </Modal.Content>
         <Modal.Actions style={{ display: "flex", gap: "16px" }}>
-          <button
-            style={{
-              display: "inline-flex",
-              height: "40px",
-              padding: "8px 24px",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "8px",
-              flexShrink: 0,
-              borderRadius: "100px",
-              color: "var(--MH-Theme-Primary-Dark, #336F8A)",
-              border: "1px solid var(--MH-Theme-Primary-Dark, #336F8A)",
-              background: "white",
-            }}
+          <Button
+            variant="outline"
+            type="button"
             onClick={() => setIsOpen(false)}
           >
-            Close without saving
-          </button>
-          <button
-            style={{
-              display: "inline-flex",
-              height: "40px",
-              padding: "8px 24px",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "8px",
-              flexShrink: 0,
-              borderRadius: "100px",
-              background: "var(--MH-Theme-Primary-Dark, #336F8A)",
-            }}
-            onClick={() => update()}
-          >
-            Save & Close
-          </button>
+            {t("partSettings.closeWithoutSaving", {}, {
+              default: "Close without saving",
+            })}
+          </Button>
+          <Button variant="filled" type="button" onClick={() => update()}>
+            {t("partSettings.saveAndClose", {}, { default: "Save & Close" })}
+          </Button>
         </Modal.Actions>
       </StyledModal>
     </Modal>

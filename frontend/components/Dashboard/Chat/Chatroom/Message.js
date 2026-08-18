@@ -8,8 +8,10 @@ import Update from "./Update";
 import Delete from "./Delete";
 import NewMessage from "./NewMessage";
 import Comment from "./Comment";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Message({ user, message, chat, membersIds }) {
+  const { t } = useTranslation("dashboard");
   const isMessageAuthor = message?.author?.id === user?.id;
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -40,7 +42,11 @@ export default function Message({ user, message, chat, membersIds }) {
           </div>
           <div className="editLinks">
             {isMessageAuthor && (
-              <Update chatId={chat?.id} btnName="Update" oldMessage={message} />
+              <Update
+                chatId={chat?.id}
+                btnName={t("chat.update", {}, { default: "Update" })}
+                oldMessage={message}
+              />
             )}
 
             {(isMessageAuthor ||
@@ -88,7 +94,7 @@ export default function Message({ user, message, chat, membersIds }) {
           <NewMessage
             chat={chat}
             parentMessageId={message?.id}
-            btnName="Reply"
+            btnName={t("chat.reply", {}, { default: "Reply" })}
             membersIds={membersIds}
           />
         </div>

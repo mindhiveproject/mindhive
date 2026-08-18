@@ -1,5 +1,7 @@
 import Tabs from "./Tabs";
 import { getStudyImageUrl } from "../../../../../lib/profileStudyImageUrls";
+import Button from "../../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Preview({
   user,
@@ -8,6 +10,7 @@ export default function Preview({
   handleMultipleUpdate,
   captureFile,
 }) {
+  const { t } = useTranslation("builder");
   const infoBlocks =
     study?.info?.reduce((acc, el) => {
       acc[el.name] = el.text || "";
@@ -51,11 +54,15 @@ export default function Preview({
                 : "upload-btn-wrapper"
             }
           >
-            <button className="btn">
+            <Button variant="filled" type="button">
               {studyImageUrl
-                ? "Update study image"
-                : "Upload study image"}
-            </button>
+                ? t("preview.updateStudyImage", {}, {
+                    default: "Update study image",
+                  })
+                : t("preview.uploadStudyImage", {}, {
+                    default: "Upload study image",
+                  })}
+            </Button>
             <input
               type="file"
               id="file"

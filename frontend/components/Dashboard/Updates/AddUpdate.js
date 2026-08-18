@@ -9,6 +9,7 @@ import { CREATE_UPDATE } from "../../Mutations/Update";
 import { GET_UPDATES } from "../../Queries/Update";
 
 import useEmail from "../../../lib/useEmail";
+import Button from "../../DesignSystem/Button";
 
 export default function AddUpdate({ user }) {
   const { t } = useTranslation("common");
@@ -62,7 +63,9 @@ export default function AddUpdate({ user }) {
   return (
     <div>
       <UpdateForm inputs={inputs} handleChange={handleChange} creationMode />
-      <button onClick={handleSave}>{t("update.save")}</button>
+      <Button variant="filled" onClick={handleSave}>
+        {t("update.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

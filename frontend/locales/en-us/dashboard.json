@@ -61,12 +61,32 @@
 		"seedSuccess_plural": "Seeded {{count}} milestones: {{keys}}.",
 		"yes": "Yes"
 	},
+	"chat": {
+		"addGroupChat": "Add group chat",
+		"addPosting": "Add posting",
+		"myGroupChats": "My group chats",
+		"reply": "Reply",
+		"save": "Save",
+		"saving": "Saving",
+		"update": "Update"
+	},
+	"consentAdmin": {
+		"addConsentForm": "Add consent form",
+		"customize": "Customize",
+		"edit": "Edit"
+	},
 	"develop": {
 		"headerDescription": "All studies, tasks or surveys you have <0>developed or are collaborating on</0>.",
 		"headerTitle": "Develop"
 	},
+	"lessons": {
+		"addLesson": "Add lesson",
+		"save": "Save"
+	},
 	"management": {
-		"milestonesTab": "Milestones"
+		"addClassNetwork": "Add class network",
+		"milestonesTab": "Milestones",
+		"save": "Save"
 	},
 	"update": "Update"
 }

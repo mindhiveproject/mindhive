@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import IconButton from "../../../../DesignSystem/IconButton";
 
 import { useDataJournal } from "../Context/DataJournalContext";
 import { useDeleteWorkspace } from "../Helpers/DeleteWorkspace";
@@ -122,9 +123,16 @@ export default function WorkspaceNavigation({
               ariaLabel={t("dataJournal.sideNav.workspaceMore", {}, {
                 default: "Workspace options",
               })}
-              trigger={
-                <img src="/assets/dataviz/three-dots.svg" alt="" width={18} height={18} />
-              }
+              renderTrigger={({ onClick, open, ariaLabel }) => (
+                <IconButton
+                  variant="text"
+                  icon={<img src="/assets/dataviz/three-dots.svg" />}
+                  ariaLabel={ariaLabel}
+                  aria-expanded={open}
+                  aria-haspopup="menu"
+                  onClick={onClick}
+                />
+              )}
               items={menuItems}
             />
           </div>

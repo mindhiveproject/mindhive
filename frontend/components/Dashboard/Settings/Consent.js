@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import Permissions from "./Consent/Permissions";
 import Documents from "./Consent/Documents";
 import Activity from "./Consent/Activity";
+import Button from "../../DesignSystem/Button";
 
 export default function Consent({ query, user }) {
   const { t } = useTranslation("common");
@@ -123,7 +124,9 @@ export default function Consent({ query, user }) {
               pathname: `/dashboard/settings`,
             }}
           >
-            <button className="back">{t("consent.backToSettings")}</button>
+            <Button variant="text" type="button">
+              {t("consent.backToSettings")}
+            </Button>
           </Link>
         </div>
       </div>

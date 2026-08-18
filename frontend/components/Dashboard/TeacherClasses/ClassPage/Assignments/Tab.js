@@ -23,7 +23,8 @@ import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import Button from "../../../../DesignSystem/Button";
 
-const SecondaryButton = styled.button`
+// Toggle/filter chrome — not a CTA. Keep as local styled button.
+const LinkedCardsToggleButton = styled.button`
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -52,10 +53,7 @@ const SecondaryButton = styled.button`
     border-color: #4db6ac;
     color: #4db6ac;
   }
-`;
 
-// Toggle button matching Design System (Figma node 1049-3662) with optional active/pressed state
-const LinkedCardsToggleButton = styled(SecondaryButton)`
   ${(props) =>
     props.$active &&
     `

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useTheme } from "styled-components";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../DesignSystem/Button";
 import "intro.js/introjs.css";
 
 /**
@@ -244,16 +245,9 @@ export default function Walkthrough({ onStartWalkthrough }) {
   return (
     <div>
       {hasTour && !tours && (
-        <button
-          className="primaryBtn"
-          style={{
-            border: `1px solid ${theme.secondaryBlue}`,
-            background: theme.secondaryBlue,
-          }}
-          onClick={() => handleStart()}
-        >
+        <Button variant="filled" onClick={() => handleStart()}>
           {t("walkthroughs.startTour")}
-        </button>
+        </Button>
       )}
       {hasTour && tours && (
         <div>
@@ -267,26 +261,13 @@ export default function Walkthrough({ onStartWalkthrough }) {
                 marginBottom: "1em",
               }}
             >
-              <button
-                className="primaryBtn"
-                style={{
-                  border: `1px solid ${theme.secondaryBlue}`,
-                  background: theme.secondaryBlue,
-                  marginRight: "1em",
-                  whiteSpace: "nowrap",
-                }}
+              <Button
+                variant="filled"
+                style={{ marginRight: "1em" }}
                 onClick={() => handleStart(tourId)}
               >
-                <span
-                  style={{
-                    color: theme.neutral5,
-                    margin: 0,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {t("walkthroughs.startTourButton")}
-                </span>
-              </button>
+                {t("walkthroughs.startTourButton")}
+              </Button>
               <div>
                 <p
                   style={{

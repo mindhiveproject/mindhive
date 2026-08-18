@@ -56,20 +56,6 @@ export const StyledWrapper = styled.div`
     font-size: 18px;
     line-height: 20px;
   }
-  button {
-    font-family: Lato;
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-    width: 100%;
-    background: white;
-    color: #007c70;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    border: 2px solid #007c70;
-    border-radius: 4px;
-    cursor: pointer;
-  }
   input {
     max-width: 500px;
     font-family: Lato;
@@ -141,10 +127,6 @@ export const StyledSelector = styled.div`
     .borderRight {
       border-right: 2px solid #f2f2f2;
     }
-    button {
-      width: 211px;
-      height: 56px;
-    }
   }
 `;
 
@@ -152,10 +134,6 @@ export const StyledDetails = styled.div`
   display: grid;
   max-width: 800px;
   margin: 0 auto;
-  button {
-    max-width: 323px;
-    padding: 1.5rem 0.5rem;
-  }
   .translation {
     margin-bottom: 2rem;
   }

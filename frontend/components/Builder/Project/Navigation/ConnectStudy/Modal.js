@@ -8,6 +8,7 @@ import Collaborators from "../../../../Global/Collaborators";
 
 import { StyledLinkedProjects } from "../../../../styles/StyledProject";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../../../DesignSystem/Button";
 
 export default function ConnectModal({
   study,
@@ -83,24 +84,19 @@ export default function ConnectModal({
 
       <Modal.Actions>
         <div className="modalButtons">
-          <button
-            className="secondaryBtn"
-            onClick={() => setOpen(false)}
-            disabled={false}
-          >
-            {t('builder:connectStudyModal.close')}
-          </button>
+          <Button variant="text" onClick={() => setOpen(false)}>
+            {t("builder:connectStudyModal.close")}
+          </Button>
 
-          <button
-            className="primaryBtn"
+          <Button
+            variant="filled"
             onClick={() => {
               updateStudy();
               setOpen(false);
             }}
-            disabled={false}
           >
-            {t('builder:connectStudyModal.saveAndClose')}
-          </button>
+            {t("builder:connectStudyModal.saveAndClose")}
+          </Button>
         </div>
       </Modal.Actions>
     </Modal>

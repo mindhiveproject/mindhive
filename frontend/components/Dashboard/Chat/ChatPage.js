@@ -9,6 +9,7 @@ import Message from "./Chatroom/Message";
 import { Image, Popup } from "semantic-ui-react";
 
 export default function ClassPage({ code, user, query, studyid }) {
+  const { t } = useTranslation("dashboard");
   const { data, loading, error } = useQuery(GET_CHAT, {
     variables: { id: code },
   });
@@ -69,7 +70,7 @@ export default function ClassPage({ code, user, query, studyid }) {
       <div className="chatRoom">
         <NewMessage
           chat={chat}
-          btnName="Add posting"
+          btnName={t("chat.addPosting", {}, { default: "Add posting" })}
           membersIds={membersIds}
           isMain
           studyid={studyid}

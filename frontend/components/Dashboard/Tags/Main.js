@@ -5,6 +5,7 @@ import EditTag from "./EditTag";
 import TagsList from "./TagsList";
 
 import { StyledTag } from "../../styles/StyledTag";
+import Button from "../../DesignSystem/Button";
 import useTranslation from "next-translate/useTranslation";
 
 export default function TagsMain({ query, user }) {
@@ -16,7 +17,9 @@ export default function TagsMain({ query, user }) {
       <StyledTag>
         <h1>{t("tag.myTags")}</h1>
         <Link href="/dashboard/tags/add">
-          <button>{t("tag.createTag")}</button>
+          <Button variant="filled" type="button">
+            {t("tag.createTag")}
+          </Button>
         </Link>
         <TagsList query={query} user={user} />
       </StyledTag>

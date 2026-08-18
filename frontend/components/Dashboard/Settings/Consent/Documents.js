@@ -8,7 +8,7 @@ import useTranslation from "next-translate/useTranslation";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { UPDATE_USER } from "../../../Mutations/User";
 import { StyledInput } from "../../../styles/StyledForm";
-import { StyledSimpleSaveButton } from "../../../styles/StyledProfile";
+import Button from "../../../DesignSystem/Button";
 
 export default function Documents({ query, user }) {
   const { t } = useTranslation("common");
@@ -45,7 +45,9 @@ export default function Documents({ query, user }) {
               pathname: `/dashboard/settings/consent`,
             }}
           >
-            <button className="back">{t("activity.backToConsent")}</button>
+            <Button variant="text" type="button" style={{ width: "100%" }}>
+              {t("activity.backToConsent")}
+            </Button>
           </Link>
         </div>
       </div>

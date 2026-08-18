@@ -72,21 +72,6 @@ export const StyledTaskPage = styled.div`
     line-height: 32px;
     color: #666666;
   }
-  button {
-    height: 56px;
-    width: 266px;
-    background: ${(props) => props.theme.darkgreen};
-    border: 2px solid ${(props) => props.theme.darkgreen};
-    box-sizing: border-box;
-    border-radius: 4px;
-    color: ${(props) => props.theme.white};
-    font-family: "Lato";
-    font-size: 18px;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
   a {
     text-decoration-line: underline;
     cursor: pointer;
@@ -101,15 +86,6 @@ export const StyledTaskPage = styled.div`
     grid-gap: 5px;
     margin-bottom: 34px;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    button {
-      width: auto;
-      margin: 0;
-    }
-    .secondaryBtn {
-      border: 2px solid #007c70;
-      color: #007c70;
-      background: #f7f9f8;
-    }
   }
 `;
 
