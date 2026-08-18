@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import Chip from "../../../../DesignSystem/Chip";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import IconButton from "../../../../DesignSystem/IconButton";
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 
 import { useDataJournal } from "../Context/DataJournalContext";
 import { getLastUpdatedDate } from "../../../../../lib/dataJournalTimestamps";
@@ -197,15 +197,14 @@ export default function JournalNavigation({
   };
 
   const titleWithTooltip = (
-    <InfoTooltip
+    <Tooltip
       content={titleText}
-      position="right"
-      portal
-      wrapperStyle={{ minWidth: 0, maxWidth: "100%", display: "block" }}
-      delay={900}
+      side="right"
+      delayMs={900}
+      className="DesignSystem-Tooltip-trigger--fill"
     >
       {titleButton}
-    </InfoTooltip>
+    </Tooltip>
   );
 
   return (

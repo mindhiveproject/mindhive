@@ -8,7 +8,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 import Button from "../../../../DesignSystem/Button";
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../../DesignSystem/InfoPopover";
 import { useUser } from "../../../../Utils/Access/User";
 import { hasUnreadSponsorReply } from "../../../../../lib/reviewThreadRound";
 import {
@@ -63,7 +63,7 @@ function dismissHighlightInMap(map, opportunityId, kind, stamp) {
   };
 }
 
-/** Self-contained so portaled InfoTooltip content keeps styles outside .classTabPage. */
+/** Self-contained so portaled popover content keeps styles outside .classTabPage. */
 const OpportunityInfoTooltip = styled.div`
   display: grid;
   gap: 10px;
@@ -447,10 +447,9 @@ export default function MatchingRoundOpportunitiesGrid({
       });
 
       return (
-        <InfoTooltip
-          portal
-          position="left"
-          trigger="click"
+        <InfoPopover
+          side="left"
+          width={320}
           content={
             <OpportunityInfoContent
               opportunity={opportunity}
@@ -465,28 +464,15 @@ export default function MatchingRoundOpportunitiesGrid({
               }
             />
           }
-          tooltipStyle={{ width: "320px", maxWidth: "min(320px, calc(100vw - 24px))" }}
-          wrapperStyle={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            height: "100%",
-          }}
+          ariaLabel={t(
+            `opportunities.matchingRound.grid.columns.${infoLabelKey}`,
+            {},
+            { default: infoLabelDefaults[infoLabelKey] },
+          )}
+          className="matchingRoundOppInfoCellTrigger"
         >
-          <button
-            type="button"
-            className={cellClass}
-            aria-label={t(
-              `opportunities.matchingRound.grid.columns.${infoLabelKey}`,
-              {},
-              { default: infoLabelDefaults[infoLabelKey] },
-            )}
-            aria-haspopup="dialog"
-          >
-            !
-          </button>
-        </InfoTooltip>
+          <span className={cellClass}>!</span>
+        </InfoPopover>
       );
     },
     [dismissedHighlights, handleDismissHighlight, t],

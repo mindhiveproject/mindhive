@@ -39,7 +39,7 @@ import { Modal, Button, Icon, Dropdown } from "semantic-ui-react";
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 import { mergeCardSettings } from "../../../../../Utils/mergeCardSettings";
-import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../../../DesignSystem/Tooltip";
 
 export default function ProposalCard({
   proposalCard,
@@ -1438,7 +1438,7 @@ export default function ProposalCard({
                     <div className="cardSubheaderAssign" style={{ display: "flex", alignItems: "center", gap: "8px"}}>
                       {t("mainCard.assignedTo", "Assigned to")}
                       {!canAddAssignment ? (
-                        <InfoTooltip
+                        <Tooltip
                           content={t(
                             "assigned.onlyTeachersMentorsCanAdd",
                             "Only teachers and mentors can add assignments"
@@ -1447,7 +1447,7 @@ export default function ProposalCard({
                           <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
                             <img style={{ opacity: 0.5 }} src="/assets/icons/question_mark.svg" alt="Lock" />
                           </div>
-                        </InfoTooltip>
+                        </Tooltip>
                       ) : (
                         <></>
                       )}

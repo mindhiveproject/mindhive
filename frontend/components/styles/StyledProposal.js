@@ -1774,6 +1774,11 @@ export const StyledProposalCard = styled.div`
         align-content: end;
       }
     }
+    /* The tag hangs in a Tooltip trigger, which shrink-wraps by default; it has
+       to stretch so the tag can still span the card's full height. */
+    .DesignSystem-Tooltip-trigger {
+      align-self: stretch;
+    }
     .card-feedback-tag {
       display: flex;
       flex-direction: column;

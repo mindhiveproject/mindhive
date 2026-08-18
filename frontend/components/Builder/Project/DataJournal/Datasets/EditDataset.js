@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 import Button from "../../../../DesignSystem/Button";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import {
   UPDATE_DATASOURCE,
@@ -243,7 +243,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
         </div>
 
         {deleteDisabled ? (
-          <InfoTooltip content={deleteTooltip} position="topRight" portal>
+          <Tooltip content={deleteTooltip} side="top">
             <span style={{ display: "inline-flex", cursor: "not-allowed" }}>
               <Button
                 variant="outline"
@@ -260,7 +260,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
                 })}
               </Button>
             </span>
-          </InfoTooltip>
+          </Tooltip>
         ) : (
           <Button
             variant="outline"

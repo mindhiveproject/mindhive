@@ -2215,6 +2215,14 @@ const StyledClass = styled.div`
       }
     }
 
+    .matchingRoundOppInfoCellTrigger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
     .matchingRoundOppInfoCell {
       display: flex;
       align-items: center;
@@ -2273,22 +2281,22 @@ const StyledClass = styled.div`
       }
     }
 
-    [data-infotooltip-open="true"] .matchingRoundOppInfoCell {
+    [aria-expanded="true"] .matchingRoundOppInfoCell {
       background: #eef5f9;
       color: #336f8a;
     }
 
-    [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturned {
+    [aria-expanded="true"] .matchingRoundOppInfoCellReturned {
       background: #c4c4c4;
       color: #3f288f;
     }
 
-    [data-infotooltip-open="true"] .matchingRoundOppInfoCellAppointment {
+    [aria-expanded="true"] .matchingRoundOppInfoCellAppointment {
       background: #ffd633;
       color: #5c4a00;
     }
 
-    [data-infotooltip-open="true"] .matchingRoundOppInfoCellReturnedQuiet {
+    [aria-expanded="true"] .matchingRoundOppInfoCellReturnedQuiet {
       background: #cecece;
       color: #5a5a5a;
     }

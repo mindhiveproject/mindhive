@@ -1,4 +1,5 @@
 import { Icon, Accordion } from "semantic-ui-react";
+import InfoPopover from "../../../../DesignSystem/InfoPopover";
 import ReactHtmlParser from "react-html-parser";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
@@ -255,21 +256,9 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                     >
                       {ReactHtmlParser(variable.varName || "")}{" "}
                       {variable.varDesc && (
-                        <Popup
+                        <InfoPopover
                           content={ReactHtmlParser(variable.varDesc)}
-                          trigger={
-                            <img
-                              src="/assets/icons/info.svg" // Next.js serves public/ as root
-                              alt="info"
-                              style={{
-                                width: "16px",
-                                height: "16px",
-                                marginLeft: "4px",
-                                cursor: "pointer",
-                                verticalAlign: "middle",
-                              }}
-                            />
-                          }
+                          ariaLabel={variable.varName}
                         />
                       )}
                     </li>

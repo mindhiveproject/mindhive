@@ -10,7 +10,7 @@ import useForm from "../../../../lib/useForm";
 
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
-import InfoTooltip from "../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../DesignSystem/Tooltip";
 import { EDIT_CLASS } from "../../../Mutations/Classes";
 import { GET_CLASS } from "../../../Queries/Classes";
 
@@ -228,8 +228,9 @@ export default function Header({ myclass, readOnly = false }) {
         </div>
 
         <div className="classHeaderMetaRow">
-          <InfoTooltip
+          <Tooltip
             content={t("header.teacherAccountTooltip", {}, { default: "Class teacher." })}
+            side="bottom"
             delayMs={300}
           >
             <Chip
@@ -251,16 +252,17 @@ export default function Header({ myclass, readOnly = false }) {
               style={HEADER_META_CHIP_STYLE}
               labelLines={2}
             />
-          </InfoTooltip>
+          </Tooltip>
           {mentors.length > 0 && (
             <>
               <span className="classHeaderMetaBullet" aria-hidden>
                 •
               </span>
               {mentors.map((mentor) => (
-                <InfoTooltip
+                <Tooltip
                   key={mentor?.id || mentor?.username}
                   content={mentorTooltip}
+                  side="bottom"
                   delayMs={500}
                 >
                   <Chip
@@ -287,7 +289,7 @@ export default function Header({ myclass, readOnly = false }) {
                       { default: "Mentor account: {{username}}" }
                     )}
                   />
-                </InfoTooltip>
+                </Tooltip>
               ))}
             </>
           )}

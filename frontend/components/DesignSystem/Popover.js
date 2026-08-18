@@ -3,15 +3,26 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-/** Distance from the anchor, and the breathing room kept against the viewport. */
+/** Distance from the anchor. */
 const GAP = 8;
-const VIEWPORT_PAD = 16;
+
+/** Breathing room kept against the viewport edges. */
+const VIEWPORT_MARGIN = 16;
+
 const MAX_HEIGHT = 560;
+
+const OPPOSITE_SIDE = {
+  top: "bottom",
+  bottom: "top",
+  left: "right",
+  right: "left",
+};
 
 const SURFACE_STYLE = {
   position: "fixed",
-  // Under Semantic UI's dimmer (1000) and modal (1001), above page content.
-  zIndex: 999,
+  // Above Semantic UI's modal (1001) and DesignSystem Modal (20050), so a
+  // popover opened from inside a modal is not hidden behind it.
+  zIndex: 20060,
   boxSizing: "border-box",
   display: "flex",
   flexDirection: "column",
@@ -25,51 +36,77 @@ const SURFACE_STYLE = {
   outline: "none",
 };
 
-function placeRight(anchor, maxHeight) {
-  return {
-    left: anchor.right + GAP,
-    top: anchor.top,
-    maxHeight: Math.min(
-      maxHeight,
-      window.innerHeight - anchor.top - GAP * 2,
-    ),
-  };
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
 }
 
-function placeBottom(anchor, width, maxHeight) {
-  const surfaceWidth = Math.min(
-    width,
-    window.innerWidth - VIEWPORT_PAD * 2,
-  );
-  const maxLeft = window.innerWidth - surfaceWidth - VIEWPORT_PAD;
-  // End-align under the anchor so a right-side toolbar button hangs the
-  // panel underneath instead of overflowing the viewport.
-  const left = Math.max(
-    VIEWPORT_PAD,
-    Math.min(anchor.right - surfaceWidth, maxLeft),
-  );
-  const top = anchor.bottom + GAP;
+/**
+ * Places the surface on `side` of the anchor, flipping to the opposite side when
+ * that one has no room, then clamps it back inside the viewport. `align` picks
+ * which pair of edges line up along the cross axis.
+ *
+ * @param {"top"|"bottom"|"left"|"right"} preferredSide
+ * @param {"start"|"end"} align
+ * @param {DOMRect} anchor
+ * @param {{ width: number, height: number }} surface
+ * @returns {{ left: number, top: number }}
+ */
+function place(preferredSide, align, anchor, surface) {
+  const { innerWidth: vw, innerHeight: vh } = window;
+  const wantsVertical = preferredSide === "top" || preferredSide === "bottom";
+  const needed = (wantsVertical ? surface.height : surface.width) + GAP;
+
+  const spaceBefore =
+    (wantsVertical ? anchor.top : anchor.left) - VIEWPORT_MARGIN;
+  const spaceAfter =
+    (wantsVertical ? vh - anchor.bottom : vw - anchor.right) - VIEWPORT_MARGIN;
+  const wantsBefore = preferredSide === "top" || preferredSide === "left";
+  const room = wantsBefore ? spaceBefore : spaceAfter;
+  const roomFlipped = wantsBefore ? spaceAfter : spaceBefore;
+  const side =
+    room < needed && roomFlipped >= needed
+      ? OPPOSITE_SIDE[preferredSide]
+      : preferredSide;
+
+  const vertical = side === "top" || side === "bottom";
+  let left;
+  let top;
+  if (vertical) {
+    left = align === "end" ? anchor.right - surface.width : anchor.left;
+    top =
+      side === "top" ? anchor.top - GAP - surface.height : anchor.bottom + GAP;
+  } else {
+    left =
+      side === "left" ? anchor.left - GAP - surface.width : anchor.right + GAP;
+    top = align === "end" ? anchor.bottom - surface.height : anchor.top;
+  }
+
+  const maxLeft = Math.max(VIEWPORT_MARGIN, vw - surface.width - VIEWPORT_MARGIN);
+  const maxTop = Math.max(VIEWPORT_MARGIN, vh - surface.height - VIEWPORT_MARGIN);
   return {
-    left,
-    top,
-    maxHeight: Math.min(maxHeight, window.innerHeight - top - GAP),
+    left: clamp(left, VIEWPORT_MARGIN, maxLeft),
+    top: clamp(top, VIEWPORT_MARGIN, maxTop),
   };
 }
 
 /**
- * Design System Popover. Floating surface portaled to the body so an
- * `overflow` ancestor cannot clip it. Closes on outside pointer, outside
- * focus, or Escape.
+ * Design System Popover. Floating surface anchored to a trigger, portaled to the
+ * body so an `overflow` ancestor cannot clip it, flipped to the opposite side
+ * when the preferred one has no room. Closes on outside pointer, outside focus,
+ * or Escape.
+ *
+ * Unlike Tooltip this surface is interactive, so it is the right home for help
+ * content with links, lists, or controls in it.
  *
  * @param {boolean} open - Whether the surface is shown.
  * @param {React.RefObject} anchorRef - Element the surface is positioned against.
  * @param {() => void} onClose - Called on outside interaction or Escape. Should
  *   be referentially stable, e.g. wrapped in `useCallback`.
+ * @param {"top"|"bottom"|"left"|"right"} [side="right"] - Preferred placement.
+ * @param {"start"|"end"} [align="start"] - Which edges line up across `side`.
  * @param {number} [width=456] - Surface width in px, capped to the viewport.
  * @param {number} [maxHeight=560] - Surface max height in px, capped to the
  *   remaining viewport.
- * @param {"right"|"bottom"} [placement="right"] - `right` opens beside the
- *   anchor (menu bar). `bottom` opens underneath, end-aligned, then clamped.
  * @param {string} [ariaLabel] - Accessible name for the dialog.
  * @param {React.ReactNode} children - Surface content, typically a PanelHeader
  *   plus a scrolling body.
@@ -78,36 +115,38 @@ export default function Popover({
   open,
   anchorRef,
   onClose,
+  side = "right",
+  align = "start",
   width = 456,
   maxHeight = MAX_HEIGHT,
-  placement = "right",
   ariaLabel,
   children,
 }) {
   const surfaceRef = useRef(null);
   const [position, setPosition] = useState(null);
 
+  // Measure the surface once it is in the DOM, then place it against the anchor.
   useLayoutEffect(() => {
-    if (!open) return undefined;
+    if (!open) {
+      setPosition(null);
+      return undefined;
+    }
 
-    const place = () => {
+    const reposition = () => {
       const anchor = anchorRef.current?.getBoundingClientRect();
-      if (!anchor) return;
-      setPosition(
-        placement === "bottom"
-          ? placeBottom(anchor, width, maxHeight)
-          : placeRight(anchor, maxHeight),
-      );
+      const surface = surfaceRef.current?.getBoundingClientRect();
+      if (!anchor || !surface) return;
+      setPosition(place(side, align, anchor, surface));
     };
 
-    place();
-    window.addEventListener("resize", place);
-    window.addEventListener("scroll", place, true);
+    reposition();
+    window.addEventListener("resize", reposition);
+    window.addEventListener("scroll", reposition, true);
     return () => {
-      window.removeEventListener("resize", place);
-      window.removeEventListener("scroll", place, true);
+      window.removeEventListener("resize", reposition);
+      window.removeEventListener("scroll", reposition, true);
     };
-  }, [open, anchorRef, placement, width, maxHeight]);
+  }, [open, anchorRef, side, align, width, maxHeight]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -148,7 +187,7 @@ export default function Popover({
     if (open && position) surfaceRef.current?.focus();
   }, [open, position]);
 
-  if (!open || position == null) return null;
+  if (!open) return null;
   if (typeof document === "undefined") return null;
 
   return createPortal(
@@ -160,8 +199,12 @@ export default function Popover({
       className="DesignSystem-Popover"
       style={{
         ...SURFACE_STYLE,
-        ...position,
-        width: `min(${width}px, calc(100vw - 32px))`,
+        width: `min(${width}px, calc(100vw - ${VIEWPORT_MARGIN * 2}px))`,
+        maxHeight: `min(${maxHeight}px, calc(100vh - ${VIEWPORT_MARGIN * 2}px))`,
+        // First paint measures the surface; it is placed on the next one.
+        left: position?.left ?? 0,
+        top: position?.top ?? 0,
+        visibility: position ? "visible" : "hidden",
       }}
     >
       {children}

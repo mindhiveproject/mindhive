@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Popup, Rating } from "semantic-ui-react";
+import { Rating } from "semantic-ui-react";
+import InfoPopover from "../../../../../../../../DesignSystem/InfoPopover";
 
 import AggregateVarSelector from "../Fields/AggregateVarSelector";
 // import reformulateHypothesis from "./ReformulateHypothesis";
@@ -52,13 +53,6 @@ html_output = js.document.getElementById('figure-${sectionId}')
 parameters = dict(json.loads('dashboardJSON'))
 print("Py code parameters", parameters)
 `;
-
-  const popupStyle = {
-    borderRadius: 8,
-    opacity: 0.9,
-    padding: "2em",
-    fontSize: "15px",
-  };
 
   const updateCode = async ({ code, newJsonObject }) => {
     const updatedConnectSelectorsCode = connectSelectorsCode.replace(
@@ -181,7 +175,7 @@ print("Py code parameters", parameters)
       <div className="parameter-panel">
         <div className="header">
           <div className="header-title">Your experimental hypothesis</div>
-          <Popup
+          <InfoPopover
             content={
               <div>
                 <>
@@ -196,9 +190,8 @@ print("Py code parameters", parameters)
                 </ol>
               </div>
             }
-            trigger={<img src={`/assets/icons/visualize/question_mark.svg`} />}
-            inverted
-            style={popupStyle}
+            iconSrc="/assets/icons/visualize/question_mark.svg"
+            width={360}
           />
         </div>
         <div className="text-input">
@@ -264,7 +257,7 @@ print("Py code parameters", parameters)
       <div className="parameter-panel">
         <div className="header">
           <div className="header-title">Rank your conditions</div>
-          <Popup
+          <InfoPopover
             content={
               <div>
                 <>
@@ -283,9 +276,8 @@ print("Py code parameters", parameters)
                 </ol>
               </div>
             }
-            trigger={<img src={`/assets/icons/visualize/question_mark.svg`} />}
-            inverted
-            style={popupStyle}
+            iconSrc="/assets/icons/visualize/question_mark.svg"
+            width={360}
           />
         </div>
         <div className="ranks-grid-l1">

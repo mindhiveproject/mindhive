@@ -267,7 +267,8 @@ export default function OpportunityMessagesMenu({ opportunity, user }) {
         open={open}
         anchorRef={anchorRef}
         onClose={close}
-        placement="bottom"
+        side="bottom"
+        align="end"
         maxHeight={840}
         ariaLabel={title}
       >

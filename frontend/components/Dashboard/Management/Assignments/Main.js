@@ -2,7 +2,8 @@ import { useQuery } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
 import styled from "styled-components";
-import { Icon, Popup } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
+import InfoPopover from "../../../DesignSystem/InfoPopover";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -151,16 +152,15 @@ export default function TemplateAssignments({ query, user }) {
     );
 
     return (
-      <Popup
+      <InfoPopover
         content={tooltipContent}
-        trigger={
-          <span style={{ cursor: 'pointer', color: '#336F8A', textDecoration: 'underline' }}>
-            {classesFromCopies.length} {classesFromCopies.length === 1 ? 'class' : 'classes'}
-          </span>
-        }
-        position="top center"
-        size="small"
-      />
+        side="top"
+        ariaLabel={`Classes using this template (${classesFromCopies.length})`}
+      >
+        <span style={{ cursor: 'pointer', color: '#336F8A', textDecoration: 'underline' }}>
+          {classesFromCopies.length} {classesFromCopies.length === 1 ? 'class' : 'classes'}
+        </span>
+      </InfoPopover>
     );
   };
 

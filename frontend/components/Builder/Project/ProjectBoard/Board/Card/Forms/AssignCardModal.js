@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
-import { Icon, Popup, Modal, Button } from "semantic-ui-react";
+import { Icon, Modal, Button } from "semantic-ui-react";
+import Tooltip from "../../../../../../DesignSystem/Tooltip";
 import useTranslation from "next-translate/useTranslation";
 import { UPDATE_CARD_CONTENT } from "../../../../../../Mutations/Proposal";
 import { GET_CARD_CONTENT } from "../../../../../../Queries/Proposal";
@@ -208,38 +209,23 @@ export default function AssignCardModal({
                         }}
                       >
                         <span style={{ color: "#274E5B" }}>{c.username}</span>
-                        <Popup
-                          content={t("assigned.addUser", "Add User")}
-                          trigger={
-                            <button
-                              onClick={() => handleAdd(c.id)}
-                              style={{
-                                background: "none",
-                                border: "none",
-                                fontSize: "14px",
-                                cursor: "pointer",
-                                color: "#274E5B",
-                                padding: "2px 4px",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Icon name="plus" />
-                            </button>
-                          }
-                          popperModifiers={[
-                            {
-                              name: "zIndex",
-                              enabled: true,
-                              phase: "write",
-                              fn: ({ state }) => {
-                                if (state.elements?.popper) {
-                                  state.elements.popper.style.zIndex = "3000";
-                                }
-                              },
-                            },
-                          ]}
-                        />
+                        <Tooltip content={t("assigned.addUser", "Add User")}>
+                          <button
+                            onClick={() => handleAdd(c.id)}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              fontSize: "14px",
+                              cursor: "pointer",
+                              color: "#274E5B",
+                              padding: "2px 4px",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Icon name="plus" />
+                          </button>
+                        </Tooltip>
                       </div>
                     ))}
                   </div>
@@ -274,38 +260,23 @@ export default function AssignCardModal({
                         <span style={{ color: "#495057" }}>
                           {collaborator?.username || s}
                         </span>
-                        <Popup
-                          content={t("assigned.removeUser", "Remove User")}
-                          trigger={
-                            <button
-                              onClick={() => handleRemove(s)}
-                              style={{
-                                background: "none",
-                                border: "none",
-                                fontSize: "14px",
-                                cursor: "pointer",
-                                color: "#625B71",
-                                padding: "2px 4px",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Icon name="minus" />
-                            </button>
-                          }
-                          popperModifiers={[
-                            {
-                              name: "zIndex",
-                              enabled: true,
-                              phase: "write",
-                              fn: ({ state }) => {
-                                if (state.elements?.popper) {
-                                  state.elements.popper.style.zIndex = "3000";
-                                }
-                              },
-                            },
-                          ]}
-                        />
+                        <Tooltip content={t("assigned.removeUser", "Remove User")}>
+                          <button
+                            onClick={() => handleRemove(s)}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              fontSize: "14px",
+                              cursor: "pointer",
+                              color: "#625B71",
+                              padding: "2px 4px",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Icon name="minus" />
+                          </button>
+                        </Tooltip>
                       </div>
                     );
                   })}

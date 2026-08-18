@@ -11,8 +11,8 @@ import moment from "moment";
 import { jsonToCSV } from "react-papaparse";
 import useTranslation from "next-translate/useTranslation";
 
-import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
 import Button from "../../../../../DesignSystem/Button";
+import Tooltip from "../../../../../DesignSystem/Tooltip";
 import Chips from "../../../../../DesignSystem/Chip";
 import AddColumnModal from "./Menu/AddColumnModal";
 import Variable from "./Menu/Variable";
@@ -499,7 +499,7 @@ export default function Menu({
           {collabCount > 0 ? (
             <>
               <span aria-hidden="true">·</span>
-              <InfoTooltip content={sharedWithTooltip} position="topLeft" portal>
+              <Tooltip content={sharedWithTooltip} side="top">
                 <span style={{ cursor: "default" }}>
                   {t(
                     "dataJournal.datasetMenu.meta.sharedWithCount",
@@ -507,7 +507,7 @@ export default function Menu({
                     { default: "Shared: {{count}}" },
                   )}
                 </span>
-              </InfoTooltip>
+              </Tooltip>
             </>
           ) : null}
         </div>
@@ -532,7 +532,7 @@ export default function Menu({
             </span>
           </button>
         ) : (
-          <InfoTooltip content={readOnlyToolbarHint} position="topLeft" portal>
+          <Tooltip content={readOnlyToolbarHint} side="top">
             <span style={{ display: "inline-flex" }}>
               <button
                 type="button"
@@ -552,7 +552,7 @@ export default function Menu({
                 </span>
               </button>
             </span>
-          </InfoTooltip>
+          </Tooltip>
         )}
         <AddColumnModal
           open={isAddColumnOpen}

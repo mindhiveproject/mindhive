@@ -11,7 +11,7 @@ import { AgGridReact } from "ag-grid-react";
 
 import Button from "../DesignSystem/Button";
 import Chip from "../DesignSystem/Chip";
-import InfoTooltip from "../DesignSystem/InfoTooltip";
+import InfoPopover from "../DesignSystem/InfoPopover";
 import JustOneSecondNotice from "../DesignSystem/JustOneSecondNotice";
 import {
   MEDIA_ASSETS,
@@ -991,7 +991,10 @@ export default function MediaLibraryModal({
             <h2 id="media-library-modal-title" style={TITLE_STYLE}>
               {t("tiptap.mediaLibraryTitle", "Media library")}
             </h2>
-            <InfoTooltip content={helpText} position="bottomLeft" />
+            <InfoPopover
+              content={helpText}
+              ariaLabel={t("tiptap.mediaLibraryTitle", "Media library")}
+            />
           </div>
         </header>
 

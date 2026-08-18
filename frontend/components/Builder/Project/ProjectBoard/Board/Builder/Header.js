@@ -11,8 +11,8 @@ import { Icon, Radio } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import exportPDF from "../PDF/exportPDF";
-import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
 import Button from "../../../../../DesignSystem/Button";
+import Tooltip from "../../../../../DesignSystem/Tooltip";
 
 import { useRef, useState } from "react";
 
@@ -202,19 +202,16 @@ export default function ProposalHeader({
                   />
                 ) : (
                   <div className="headerTitleWrapper">
-                    <InfoTooltip
+                    <Tooltip
                       content={inputs.title || proposal?.title || t("header.myProjectBoard", "My Project Board")}
+                      side="bottom"
                       delayMs={650}
-                      wrapperStyle={{ width: "100%", minWidth: 0 }}
-                      tooltipStyle={{
-                        width: "400px",
-                        background: "#F7F9F8",
-                      }}
+                      maxWidth={400}
                     >
                       <h1 className="headerTitle">
                         {inputs.title || proposal?.title || t("header.myProjectBoard", "My Project Board")}
                       </h1>
-                    </InfoTooltip>
+                    </Tooltip>
                   </div>
                 )}
               </div>
@@ -290,14 +287,9 @@ export default function ProposalHeader({
                   </button>
                 </div>
                 {isPDF ? (
-                  <InfoTooltip
+                  <Tooltip
                     content={t("proposalPage.downloadTooltip", "Download content is based on the status and review step filters selected below.")}
-                    tooltipStyle={{
-                      // width: "250px",
-                      // background: "#FDF2D0",
-                      // borderRadius: "8px",
-                      // border: "none",
-                    }}
+                    side="bottom"
                   >
                     <div
                       onClick={handleDownload}
@@ -316,7 +308,7 @@ export default function ProposalHeader({
                         {t("proposalPage.download", "Download")}
                       </span>
                     </div>
-                  </InfoTooltip>
+                  </Tooltip>
                 ) : (
                   <div
                     className="downloadButton"
