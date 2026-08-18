@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import Button from "../../../../DesignSystem/Button";
 import FormDefinitionPreviewModal from "../../../../Forms/DefinitionForm/FormDefinitionPreviewModal";
 import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
 import TemplateBoardMilestonesManageModal from "../Modals/TemplateBoardMilestonesManageModal";
@@ -325,26 +326,22 @@ export default function TemplateBoardMilestonesMenu({ board, classCode, classId 
         })}
         panelStyle={{ minWidth: 280 }}
         panelHeader={panelHeader}
-        triggerStyle={{
-          gap: "2px",
-          padding: "6px 10px",
-          minWidth: "auto",
-        }}
-        trigger={
-          <span
-            style={{
-              fontSize: "14px",
-              lineHeight: "16px",
-              fontWeight: 500,
-            }}
+        renderTrigger={({ onClick, open, ariaLabel }) => (
+          <Button
+            variant="tonal"
+            style={{ background: "transparent" }}
+            aria-label={ariaLabel}
+            aria-expanded={open}
+            aria-haspopup="menu"
+            onClick={onClick}
           >
             {t(
               "projects.milestonesMenu.trigger",
               { count },
               { default: "{{count}} milestones" }
             )}
-          </span>
-        }
+          </Button>
+        )}
         items={buildMenuItems()}
       />
 

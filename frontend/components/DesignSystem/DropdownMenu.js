@@ -126,6 +126,7 @@ function renderLeadingIcon(item) {
  *
  * @param {string} [triggerLabel] - Label when using default trigger (with ellipsis). Omit when `trigger` is set.
  * @param {React.ReactNode} [trigger] - Custom trigger content inside the button (e.g. icon). When set, `triggerLabel` and default ellipsis are not shown; provide `ariaLabel` for a11y.
+ * @param {(args: { onClick: () => void, open: boolean, ariaLabel?: string }) => React.ReactNode} [renderTrigger] - Render a custom trigger control (e.g. Button or IconButton). When set, the default trigger button is not used.
  * @param {string} [ariaLabel] - Accessible name for the trigger button (required when `trigger` is used without visible text).
  * @param {React.ReactNode} [panelHeader] - Read-only block above menu items (e.g. metadata).
  * @param {boolean} [dividerAfterHeader=true] - Show a divider between `panelHeader` and items when `panelHeader` is set.
@@ -138,6 +139,7 @@ function renderLeadingIcon(item) {
 export default function DropdownMenu({
   triggerLabel,
   trigger = null,
+  renderTrigger = null,
   ariaLabel,
   panelHeader = null,
   dividerAfterHeader = true,
@@ -153,6 +155,7 @@ export default function DropdownMenu({
   const dropdownRef = useRef(null);
   const dropdownPanelRef = useRef(null);
 
+  const useRenderTrigger = typeof renderTrigger === "function";
   const useCustomTrigger = trigger != null;
   const mergedTriggerStyle = {
     ...DEFAULT_TRIGGER_STYLE,
@@ -232,19 +235,27 @@ export default function DropdownMenu({
 
   return (
     <div ref={dropdownRef} style={{ position: "relative", zIndex: dropdownOpen ? 1001 : "auto" }}>
-      <button
-        type="button"
-        aria-label={ariaLabel}
-        onClick={() => setDropdownOpen((prev) => !prev)}
-        style={mergedTriggerStyle}
-      >
-        {useCustomTrigger ? trigger : (
-          <>
-            {triggerLabel}
-            {ELLIPSIS_ICON}
-          </>
-        )}
-      </button>
+      {useRenderTrigger ? (
+        renderTrigger({
+          onClick: () => setDropdownOpen((prev) => !prev),
+          open: dropdownOpen,
+          ariaLabel,
+        })
+      ) : (
+        <button
+          type="button"
+          aria-label={ariaLabel}
+          onClick={() => setDropdownOpen((prev) => !prev)}
+          style={mergedTriggerStyle}
+        >
+          {useCustomTrigger ? trigger : (
+            <>
+              {triggerLabel}
+              {ELLIPSIS_ICON}
+            </>
+          )}
+        </button>
+      )}
       {dropdownOpen &&
         (() => {
           const tr = dropdownRef.current?.getBoundingClientRect();

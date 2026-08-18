@@ -105,6 +105,10 @@ function place(preferredSide, align, anchor, surface) {
  * @param {"top"|"bottom"|"left"|"right"} [side="right"] - Preferred placement.
  * @param {"start"|"end"} [align="start"] - Which edges line up across `side`.
  * @param {number} [width=456] - Surface width in px, capped to the viewport.
+ * @param {number} [maxHeight=560] - Surface max height in px, capped to the
+ *   remaining viewport.
+ * @param {"right"|"bottom"} [placement="right"] - `right` opens beside the
+ *   anchor (menu bar). `bottom` opens underneath, end-aligned, then clamped.
  * @param {string} [ariaLabel] - Accessible name for the dialog.
  * @param {React.ReactNode} children - Surface content, typically a PanelHeader
  *   plus a scrolling body.
@@ -116,6 +120,8 @@ export default function Popover({
   side = "right",
   align = "start",
   width = 456,
+  maxHeight = MAX_HEIGHT,
+  placement = "right",
   ariaLabel,
   children,
 }) {
@@ -150,11 +156,20 @@ export default function Popover({
 
     const closeIfOutside = ({ target }) => {
       if (
-        !anchorRef.current?.contains(target) &&
-        !surfaceRef.current?.contains(target)
+        anchorRef.current?.contains(target) ||
+        surfaceRef.current?.contains(target)
       ) {
-        onClose();
+        return;
       }
+      // Nested portaled overlays (e.g. DropdownSelect) are not DOM children
+      // of the surface; dismissing on those clicks would close this popover.
+      if (
+        target instanceof Element &&
+        target.closest(".DesignSystem-DropdownSelect-Panel")
+      ) {
+        return;
+      }
+      onClose();
     };
     const closeOnEscape = ({ key }) => {
       if (key === "Escape") onClose();

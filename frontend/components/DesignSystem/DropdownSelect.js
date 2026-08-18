@@ -498,6 +498,7 @@ export default function DropdownSelect({
           return createPortal(
           <div
             ref={panelRef}
+            className="DesignSystem-DropdownSelect-Panel"
             style={{
               ...PANEL_STYLE,
               position: "fixed",

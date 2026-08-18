@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
-import Chip from "../../../DesignSystem/Chip";
-import DropdownSelect from "../../../DesignSystem/DropdownSelect";
+import Chip from "../../DesignSystem/Chip";
+import DropdownSelect from "../../DesignSystem/DropdownSelect";
 
 export const OpportunityCompactGrid = styled.div`
   display: grid;

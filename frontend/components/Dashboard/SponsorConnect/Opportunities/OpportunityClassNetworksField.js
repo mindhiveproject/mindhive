@@ -9,8 +9,9 @@ const Card = styled.div`
   gap: 20px;
   padding: 28px;
   border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
+  background: ${(p) => (p.$quiet ? "transparent" : "#ffffff")};
+  box-shadow: ${(p) =>
+    p.$quiet ? "none" : "0px 4px 24px rgba(0, 0, 0, 0.05)"};
 
   h2 {
     margin: 0;
@@ -49,11 +50,12 @@ export default function OpportunityClassNetworksField({
   selectedNetworks = [],
   onChange,
   readOnly = false,
+  quiet = false,
 }) {
   const { t } = useTranslation("connect");
 
   return (
-    <Card>
+    <Card $quiet={quiet}>
       <h2>
         {t("opportunityEditor.classNetworksTitle", {}, {
           default: "Class networks",

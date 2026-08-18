@@ -646,7 +646,7 @@ export default function Dashboard({ myclass }) {
             {t("dashboard.manageSelectedStudents", {
               count: selectedStudents.length,
             }, {
-              default: "Manage Selected Students ({{count}})",
+              default: "Manage selected students ({{count}})",
             })}
           </Button>
         </div>

@@ -2,7 +2,6 @@ import ConnectBank from "./Bank/Main";
 import Connections from "./Connections/Main";
 import ProfilePage from "./ProfilePage/Main";
 import MyProfile from "./MyProfile/Main";
-import OpportunitiesMain from "./Opportunities/Main";
 import RoundsMain from "./Rounds/Main";
 import QuestionsMain from "./Questions/Main";
 import ParticipateMain from "./Participate/Main";
@@ -32,8 +31,6 @@ export default function ConnectMain({ query, user }) {
         <MyProfile user={user} />
       </RoleGuard>
     );
-  } else if (selector === "opportunities") {
-    content = <OpportunitiesMain query={query} user={user} />;
   } else if (selector === "rounds") {
     content = <RoundsMain query={query} user={user} />;
   } else if (selector === "questions") {

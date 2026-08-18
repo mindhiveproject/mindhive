@@ -9,7 +9,7 @@ import { Icon, Label } from "semantic-ui-react";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../Queries/Opportunity";
 import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
-import { hydrateProposalInputs } from "../Opportunities/OpportunityProposalConfig";
+import { hydrateProposalInputs } from "../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import { formatOrganizationLabel } from "../../../../lib/organizationLabels";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;

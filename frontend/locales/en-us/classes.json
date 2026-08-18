@@ -569,7 +569,7 @@
 		"manageProject": "Manage project",
 		"manageProjects": "Manage Projects ({{count}})",
 		"manageProjectsFor": "Manage Projects for {{username}}",
-		"manageSelectedStudents": "Manage Selected Students ({{count}})",
+		"manageSelectedStudents": "Manage selected students ({{count}})",
 		"manageSelectedStudentsInfo": "Manage {{count}} selected student(s)",
 		"manageStageStatus": "Manage {{stage}} Status",
 		"manageStudy": "Manage study",
@@ -1215,7 +1215,7 @@
 				"submitting": "Returning…",
 				"title": "Return with comments"
 			},
-			"returnToSponsor": "Return with comments",
+			"returnToSponsor": "Return and write message",
 			"reviewNotes": {
 				"cancel": "Cancel",
 				"edit": "Edit",
@@ -1324,7 +1324,7 @@
 		"boardSettingsModalDescription": "These settings apply to projects students start from \"{{title}}\".",
 		"boardSettingsSectionDescription": "Configure curriculum and card assignment for projects created from this template.",
 		"cannotDeleteTemplate": "Only the creator can remove this template from the class.",
-		"classTemplates": "Class templates",
+		"classTemplates": "Available class templates",
 		"classTemplatesDescription": "Choose which templates students can copy when starting a new project.",
 		"collaborators": "Collaborator(s)",
 		"confirmHideLastTemplate": "This is the only template students can copy. Prevent copy anyway? Students will not be able to start new projects until you allow copy for at least one template.",
@@ -1382,6 +1382,7 @@
 			"unnamedColumn": "Untitled column",
 			"viewDetails": "View details"
 		},
+		"more": "More",
 		"newTemplate": "Create new class template",
 		"noClassTemplatesDescription": "Create a template board for students in this class to use as a starting point.",
 		"noClassTemplatesYet": "You haven't created any class template boards yet.",
@@ -1404,7 +1405,7 @@
 		},
 		"templateLibraryCount": "{{count}} available",
 		"templateLibraryNoMine": "You don't have any class templates in your other classes yet.",
-		"templateManagement": "Template management",
+		"templateManagement": "Project board",
 		"templateOptions": "Template options",
 		"templatePreviewModal": {
 			"title": "Preview — {{title}}"

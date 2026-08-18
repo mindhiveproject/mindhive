@@ -22,6 +22,7 @@ import {
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import IconButton from "../../../../DesignSystem/IconButton";
 import TemplateBoardMilestonesMenu from "./TemplateBoardMilestonesMenu";
 import TemplateBoardPreviewModal from "../Modals/TemplateBoardPreviewModal";
 import TemplateBoardSettingsModal from "../Modals/TemplateBoardSettingsModal";
@@ -35,7 +36,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   const isAdmin = userIsProposalAdmin(user);
   const [settingsModalBoardId, setSettingsModalBoardId] = useState(null);
   const [previewTemplate, setPreviewTemplate] = useState(null);
-  const [libraryCategory, setLibraryCategory] = useState("public");
+  const [libraryCategory, setLibraryCategory] = useState(null);
 
   const { data: classTemplatesData } = useQuery(CLASS_TEMPLATE_PROJECTS_QUERY, {
     variables: { classId },
@@ -92,7 +93,15 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   }, [authoredData, classTemplateIds]);
 
   const displayedTemplates =
-    libraryCategory === "mine" ? mineTemplates : publicTemplates;
+    libraryCategory === "mine"
+      ? mineTemplates
+      : libraryCategory === "public"
+        ? publicTemplates
+        : [];
+
+  const toggleLibraryCategory = (next) => {
+    setLibraryCategory((current) => (current === next ? null : next));
+  };
 
   const createHref = {
     pathname: `/dashboard/myclasses/${code}`,
@@ -149,21 +158,6 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
         onClick: () => setPreviewTemplate(board),
       },
       {
-        key: "edit",
-        icon: (
-          <img
-            src="/assets/icons/pencil.svg"
-            alt=""
-            width={18}
-            height={18}
-            aria-hidden
-            style={{ display: "block" }}
-          />
-        ),
-        label: t("projects.editTemplate", {}, { default: "Edit template" }),
-        onClick: () => router.push(editHref(board.id)),
-      },
-      {
         key: "boardSettings",
         icon: (
           <img
@@ -210,26 +204,27 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
         board={previewTemplate}
       />
 
-      <div className="classTabSectionHeader">
-        <h3>
-          {t("projects.templateManagement", {}, { default: "Template management" })}
-        </h3>
-      </div>
+      <section className="classTabSection">
+        <div className="classTabSectionHeader">
+          <h3>
+            {t("projects.templateManagement", {}, { default: "Project board" })}
+          </h3>
+        </div>
 
-      <div className="classTabSubsection">
-        <h4 className="classTabSubsectionTitle">
-          {t("projects.classTemplates", {}, { default: "Class templates" })}
-        </h4>
-        <p className="classTabSubsectionDescription">
-          {t(
-            "projects.classTemplatesDescription",
-            {},
-            {
-              default:
-                "Choose which templates students can copy when starting a new project.",
-            }
-          )}
-        </p>
+        <div className="classTabSubsection">
+          <h4 className="classTabSubsectionTitle">
+            {t("projects.classTemplates", {}, { default: "Available class templates" })}
+          </h4>
+          <p className="classTabSubsectionDescription">
+            {t(
+              "projects.classTemplatesDescription",
+              {},
+              {
+                default:
+                  "Choose which templates students can copy when starting a new project.",
+              }
+            )}
+          </p>
 
         {classTemplates.length === 0 ? (
           <div className="classTabEmpty">
@@ -288,6 +283,25 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                       />
                     </div>
                     <div className="classTabTemplateCardActions">
+                      <Button
+                        variant="tonal"
+                        style={{ background: "transparent" }}
+                        leadingIcon={
+                          <img
+                            src="/assets/icons/pencil.svg"
+                            alt=""
+                            width={18}
+                            height={18}
+                            aria-hidden
+                            style={{ display: "block" }}
+                          />
+                        }
+                        onClick={() => router.push(editHref(board.id))}
+                      >
+                        {t("projects.editTemplate", {}, {
+                          default: "Edit template",
+                        })}
+                      </Button>
                       <TemplateBoardMilestonesMenu
                         board={board}
                         classCode={code}
@@ -297,30 +311,24 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                         ariaLabel={t("projects.templateOptions", {}, {
                           default: "Template options",
                         })}
-                        triggerStyle={{
-                          gap: "2px",
-                          padding: "6px 10px",
-                          minWidth: "auto",
-                        }}
-                        trigger={
-                          <>
-                            <span
-                              style={{
-                                fontSize: "14px",
-                                lineHeight: "16px",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {t("main.settings", {}, { default: "Settings" })}
-                            </span>
-                            <img
-                              src="/assets/dataviz/three-dots.svg"
-                              alt=""
-                              width={18}
-                              height={18}
-                            />
-                          </>
-                        }
+                        renderTrigger={({ onClick, open, ariaLabel }) => (
+                          <IconButton
+                            variant="tonal"
+                            style={{ background: "transparent" }}
+                            ariaLabel={ariaLabel}
+                            aria-expanded={open}
+                            aria-haspopup="menu"
+                            onClick={onClick}
+                            icon={
+                              <img
+                                src="/assets/dataviz/three-dots.svg"
+                                alt=""
+                                width={24}
+                                height={24}
+                              />
+                            }
+                          />
+                        )}
                         items={buildTemplateMenuItems(board, canDelete)}
                       />
                     </div>
@@ -344,55 +352,15 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             })}
           </div>
         )}
-      </div>
+        </div>
+      </section>
 
-      <div className="classTabSubsectionDivider" aria-hidden />
-
-      <div className="classTabSubsection">
+      <section className="classTabSection">
         <div className="classTabSubsectionHeaderRow">
-          <div className="classTabSubsectionHeaderGroup">
-            <h4 className="classTabSubsectionTitle">
+          <div className="classTabSectionHeader">
+            <h3>
               {t("projects.templateLibrary", {}, { default: "Template library" })}
-            </h4>
-            <div
-              style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
-              role="tablist"
-            >
-              <Chip
-                shape="square"
-                selected={libraryCategory === "public"}
-                onClick={() => setLibraryCategory("public")}
-                label={t(
-                  "projects.templateLibraryCategory.public",
-                  { count: publicTemplates.length },
-                  { default: "Public ({{count}})" }
-                )}
-              />
-              <Chip
-                shape="square"
-                selected={libraryCategory === "mine"}
-                onClick={() => setLibraryCategory("mine")}
-                label={t(
-                  "projects.templateLibraryCategory.myBoards",
-                  { count: mineTemplates.length },
-                  { default: "My boards ({{count}})" }
-                )}
-              />
-              <Chip
-                shape="square"
-                disabled
-                label={t(
-                  "projects.templateLibraryCategory.network",
-                  { count: 0 },
-                  { default: "Network ({{count}})" }
-                )}
-                title={t(
-                  "projects.templateLibraryCategory.networkDisabledHint",
-                  {},
-                  { default: "Network templates coming soon" }
-                )}
-              />
-            </div>
+            </h3>
           </div>
           <Link href={createHref} style={{ textDecoration: "none" }}>
             <Button variant="primary">
@@ -402,70 +370,113 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             </Button>
           </Link>
         </div>
+        <div
+          style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
+          role="group"
+        >
+          <Chip
+            shape="square"
+            selected={libraryCategory === "public"}
+            pressed={libraryCategory === "public"}
+            onClick={() => toggleLibraryCategory("public")}
+            label={t(
+              "projects.templateLibraryCategory.public",
+              { count: publicTemplates.length },
+              { default: "Public ({{count}})" }
+            )}
+          />
+          <Chip
+            shape="square"
+            selected={libraryCategory === "mine"}
+            pressed={libraryCategory === "mine"}
+            onClick={() => toggleLibraryCategory("mine")}
+            label={t(
+              "projects.templateLibraryCategory.myBoards",
+              { count: mineTemplates.length },
+              { default: "My boards ({{count}})" }
+            )}
+          />
+          <Chip
+            shape="square"
+            disabled
+            label={t(
+              "projects.templateLibraryCategory.network",
+              { count: 0 },
+              { default: "Network ({{count}})" }
+            )}
+            title={t(
+              "projects.templateLibraryCategory.networkDisabledHint",
+              {},
+              { default: "Network templates coming soon" }
+            )}
+          />
+        </div>
 
-        {displayedTemplates.length === 0 ? (
-          <div className="classTabEmpty">
-            <div>
-              {libraryCategory === "mine"
-                ? t("projects.templateLibraryNoMine", {}, {
-                    default:
-                      "You don't have any class templates in your other classes yet.",
-                  })
-                : t("projectBoard.noTemplatesHeader")}
+        {libraryCategory ? (
+          displayedTemplates.length === 0 ? (
+            <div className="classTabEmpty">
+              <div>
+                {libraryCategory === "mine"
+                  ? t("projects.templateLibraryNoMine", {}, {
+                      default:
+                        "You don't have any class templates in your other classes yet.",
+                    })
+                  : t("projectBoard.noTemplatesHeader")}
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="classTabTemplateList">
-            {displayedTemplates.map((template) => (
-              <div key={template.id} className="classTabTemplateCard">
-                <div className="classTabTemplateCardRow">
-                  <div className="classTabTemplateCardTitleGroup">
-                    <h5 className="classTabTemplateCardTitle">{template.title}</h5>
-                    {template.description ? (
-                      <p className="classTabTemplateCardDescription">
-                        {template.description}
-                      </p>
+          ) : (
+            <div className="classTabTemplateList">
+              {displayedTemplates.map((template) => (
+                <div key={template.id} className="classTabTemplateCard">
+                  <div className="classTabTemplateCardRow">
+                    <div className="classTabTemplateCardTitleGroup">
+                      <h5 className="classTabTemplateCardTitle">{template.title}</h5>
+                      {template.description ? (
+                        <p className="classTabTemplateCardDescription">
+                          {template.description}
+                        </p>
+                      ) : null}
+                    </div>
+                    <div className="classTabTemplateCardActions">
+                      <Button
+                        type="button"
+                        variant="text"
+                        onClick={() => setPreviewTemplate(template)}
+                      >
+                        {t("projectBoard.preview", {}, { default: "Preview" })}
+                      </Button>
+                      <Link
+                        href={addTemplateHref(template.id)}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Button variant="outline">
+                          {t("projects.addTemplateToClass", {}, {
+                            default: "Copy template to class",
+                          })}
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="classTabTemplateCardMeta">
+                    {template.updatedAt ? (
+                      <span>
+                        {t("projects.dateUpdated", {}, { default: "Updated" })}{" "}
+                        {formatDate(template.updatedAt)}
+                      </span>
+                    ) : null}
+                    {template.createdAt ? (
+                      <span>
+                        {t("projects.dateCreated", {}, { default: "Date created" })}{" "}
+                        {formatDate(template.createdAt)}
+                      </span>
                     ) : null}
                   </div>
-                  <div className="classTabTemplateCardActions">
-                    <Button
-                      type="button"
-                      variant="text"
-                      onClick={() => setPreviewTemplate(template)}
-                    >
-                      {t("projectBoard.preview", {}, { default: "Preview" })}
-                    </Button>
-                    <Link
-                      href={addTemplateHref(template.id)}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Button variant="outline">
-                        {t("projects.addTemplateToClass", {}, {
-                          default: "Copy template to class",
-                        })}
-                      </Button>
-                    </Link>
-                  </div>
                 </div>
-                <div className="classTabTemplateCardMeta">
-                  {template.updatedAt ? (
-                    <span>
-                      {t("projects.dateUpdated", {}, { default: "Updated" })}{" "}
-                      {formatDate(template.updatedAt)}
-                    </span>
-                  ) : null}
-                  {template.createdAt ? (
-                    <span>
-                      {t("projects.dateCreated", {}, { default: "Date created" })}{" "}
-                      {formatDate(template.createdAt)}
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+              ))}
+            </div>
+          )
+        ) : null}
+      </section>
     </>
   );
 }

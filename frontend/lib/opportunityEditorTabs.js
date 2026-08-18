@@ -5,6 +5,19 @@ export const OPPORTUNITY_EDITOR_TABS = {
   proposal: "proposal",
 };
 
+/**
+ * Opportunity statuses at/after matching-round selection.
+ * Follow-up forms are sponsor-visible only while status is in this set.
+ * Shared with the list stepper so editor chips and forms-progress cannot drift.
+ */
+export const POST_PRESELECT_STATUSES = new Set([
+  "pre_selected",
+  "accepted",
+  "published",
+  "closed",
+  "archived",
+]);
+
 export function formTabKey(formDefinitionId) {
   return `form:${formDefinitionId}`;
 }
@@ -47,8 +60,16 @@ export function isRoundSponsorFormsVisible(round) {
  * Distinct follow-up form definitions attached via linked matching rounds
  * that teachers have released to sponsors (`settings.sponsorFormsVisible`).
  * First round that references a form wins for round/network context.
+ * When `opportunityStatus` is passed, returns [] unless the opportunity is
+ * currently Selected or later (see POST_PRESELECT_STATUSES).
  */
-export function collectFollowUpForms(rounds = []) {
+export function collectFollowUpForms(rounds = [], { opportunityStatus } = {}) {
+  if (
+    opportunityStatus != null &&
+    !POST_PRESELECT_STATUSES.has(opportunityStatus)
+  ) {
+    return [];
+  }
   const byId = new Map();
   for (const round of rounds) {
     if (!isRoundSponsorFormsVisible(round)) continue;
