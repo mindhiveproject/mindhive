@@ -33,7 +33,6 @@ export default function WorkspaceNavigation({
     setSelectedWorkspace,
     activeComponent,
     setActiveComponent,
-    setIsAddComponentPanelOpen,
     setSidebarVisible,
     setPendingCanvasFocusComponentId,
   } = useDataJournal();
@@ -160,7 +159,6 @@ export default function WorkspaceNavigation({
                     onClick={(e) => {
                       e.stopPropagation();
                       if (!component?.id) return;
-                      setIsAddComponentPanelOpen(false);
                       setActiveComponent(component);
                       setSidebarVisible(true);
                       setPendingCanvasFocusComponentId(component.id);

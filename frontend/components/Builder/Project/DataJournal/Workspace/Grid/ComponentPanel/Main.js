@@ -1,17 +1,29 @@
-// components/DataJournal/Workspace/Grid/ComponentPanel/Main.js
-import { StyledComponentPanel } from "../../../styles/StyledDataJournal"; // Adjust path
 import useTranslation from "next-translate/useTranslation";
-import Tooltip from "../../../../../../DesignSystem/Tooltip";
-import CompactActionButton from "../../../../../../DesignSystem/CompactActionButton";
 
-import { templates } from "../../../Widgets/types/Graph/Editor/TemplateSelector"; // Adjust path to Templates
+import { StyledComponentPanel } from "../../../styles/StyledDataJournal";
+import Tooltip from "../../../../../../DesignSystem/Tooltip";
+import PanelHeader from "../../../../../../DesignSystem/PanelHeader";
+
+import { templates } from "../../../Widgets/types/Graph/Editor/TemplateSelector";
 import { testTemplates } from "../../../Widgets/types/StatisticalTests/Editor/TempateSelector";
 import { summaryTemplates } from "../../../Widgets/types/Statistics/Editor/TempateSelector";
 import { codeTemplates } from "../../../Widgets/types/Code/Editor/TempateSelector";
 import { hypvisTemplates } from "../../../Widgets/types/HypVis/Editor/TemplateSelector";
 
+const BODY_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 8,
+  flex: 1,
+  minHeight: 0,
+  padding: "0 16px 16px",
+  overflowY: "auto",
+};
+
 export default function ComponentPanel({ handleAddComponent, onClose }) {
   const { t } = useTranslation("dataviz");
+  const tt = (key, fallback) => t(key, {}, { default: fallback });
+
   const componentSections = [
     {
       sectionTitleKey: "dataJournal.components.sections.graphs",
@@ -23,9 +35,10 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           titleKey: "dataJournal.components.items.barChart",
           titleFallback: "Bar Chart",
           descriptionKey: "dataJournal.components.descriptions.barChart",
-          descriptionFallback: "Compare values across categories with grouped bars.",
+          descriptionFallback:
+            "Compare values across categories with grouped bars.",
           createPayload: () => ({
-            title: t("dataJournal.components.items.barGraph", "Bar Graph"),
+            title: tt("dataJournal.components.items.barGraph", "Bar Graph"),
             type: "GRAPH",
             content: { type: "barGraph", code: templates?.barGraph },
           }),
@@ -39,7 +52,10 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Visualize relationships and patterns between two variables.",
           createPayload: () => ({
-            title: t("dataJournal.components.items.scatterPlot", "Scatter Plot"),
+            title: tt(
+              "dataJournal.components.items.scatterPlot",
+              "Scatter Plot",
+            ),
             type: "GRAPH",
             content: { type: "scatterPlot", code: templates?.scatterPlot },
           }),
@@ -53,7 +69,7 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Show the distribution of values across numeric buckets.",
           createPayload: () => ({
-            title: t("dataJournal.components.items.histogram", "Histogram"),
+            title: tt("dataJournal.components.items.histogram", "Histogram"),
             type: "GRAPH",
             content: { type: "histogram", code: templates?.histogram },
           }),
@@ -67,9 +83,9 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Write custom code to build fully tailored analyses or visuals.",
           createPayload: () => ({
-            title: t(
+            title: tt(
               "dataJournal.components.items.codeFromScratch",
-              "Code from scratch"
+              "Code from scratch",
             ),
             type: "CODE",
             content: { type: "code", code: codeTemplates?.plainCode },
@@ -84,7 +100,7 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Add notes, interpretation, and context to your journal.",
           createPayload: () => ({
-            title: t("dataJournal.components.items.textBlock", "Text Block"),
+            title: tt("dataJournal.components.items.textBlock", "Text Block"),
             type: "PARAGRAPH",
             content: { text: "" },
           }),
@@ -105,9 +121,9 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Plan controlled A/B style experiments and compare outcomes.",
           createPayload: () => ({
-            title: t(
+            title: tt(
               "dataJournal.components.items.experimentalHypothesis",
-              "Experimental Hypothesis"
+              "Experimental Hypothesis",
             ),
             type: "HYPVIS",
             content: { type: "abDesign", code: hypvisTemplates?.abDesign },
@@ -123,9 +139,9 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Investigate how variables move together without intervention.",
           createPayload: () => ({
-            title: t(
+            title: tt(
               "dataJournal.components.items.correlationalHypothesis",
-              "Correlational Hypothesis"
+              "Correlational Hypothesis",
             ),
             type: "HYPVIS",
             content: { type: "corStudy", code: hypvisTemplates?.corStudy },
@@ -142,13 +158,14 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           imageSrc: "/assets/dataviz/componentPanel/pearsonCorr.svg",
           titleKey: "dataJournal.components.items.pearsonCorrelation",
           titleFallback: "Pearson Correlation",
-          descriptionKey: "dataJournal.components.descriptions.pearsonCorrelation",
+          descriptionKey:
+            "dataJournal.components.descriptions.pearsonCorrelation",
           descriptionFallback:
             "Measure linear association strength between two variables.",
           createPayload: () => ({
-            title: t(
+            title: tt(
               "dataJournal.components.items.pearsonCorrelation",
-              "Pearson Correlation"
+              "Pearson Correlation",
             ),
             type: "STATTEST",
             content: { type: "pearsonCorr", code: testTemplates?.pearsonCorr },
@@ -163,7 +180,7 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Compare means between two groups and test significance.",
           createPayload: () => ({
-            title: t("dataJournal.components.items.tTest", "T-Test"),
+            title: tt("dataJournal.components.items.tTest", "T-Test"),
             type: "STATTEST",
             content: { type: "tTest", code: testTemplates?.tTest },
           }),
@@ -177,7 +194,10 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Compare means across three or more groups in one test.",
           createPayload: () => ({
-            title: t("dataJournal.components.items.oneWayAnova", "One Way Anova"),
+            title: tt(
+              "dataJournal.components.items.oneWayAnova",
+              "One Way Anova",
+            ),
             type: "STATTEST",
             content: { type: "oneWayAnova", code: testTemplates?.oneWayAnova },
           }),
@@ -197,7 +217,7 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Insert a structured table to inspect and organize raw values.",
           createPayload: () => ({
-            title: t("dataJournal.components.items.table", "Table"),
+            title: tt("dataJournal.components.items.table", "Table"),
             type: "TABLE",
             content: {},
           }),
@@ -211,7 +231,7 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
           descriptionFallback:
             "Generate key descriptive statistics for selected data.",
           createPayload: () => ({
-            title: t("dataJournal.components.items.summary", "Summary"),
+            title: tt("dataJournal.components.items.summary", "Summary"),
             type: "STATISTICS",
             content: { type: "summary", code: summaryTemplates?.summary },
           }),
@@ -223,7 +243,7 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
   const renderCard = (card) => (
     <Tooltip
       key={card.id}
-      content={t(card.descriptionKey, card.descriptionFallback)}
+      content={tt(card.descriptionKey, card.descriptionFallback)}
       className="DesignSystem-Tooltip-trigger--fill"
     >
       <div
@@ -231,47 +251,42 @@ export default function ComponentPanel({ handleAddComponent, onClose }) {
         onClick={async () => await handleAddComponent(card.createPayload())}
       >
         <div className="cardImage">
-          <img src={card.imageSrc} alt={t(card.titleKey, card.titleFallback)} />
+          <img
+            src={card.imageSrc}
+            alt={tt(card.titleKey, card.titleFallback)}
+          />
         </div>
         <div className="cardContent">
-          <div className="cardTitle">{t(card.titleKey, card.titleFallback)}</div>
+          <div className="cardTitle">
+            {tt(card.titleKey, card.titleFallback)}
+          </div>
         </div>
       </div>
     </Tooltip>
   );
 
   return (
-    <StyledComponentPanel>
-      <div className="panelHeader">
-        <div className="title">
-          {t("dataJournal.components.title", "Component Panel")}
-        </div>
-        {typeof onClose === "function" && (
-          <CompactActionButton
-            kind="close"
-            type="button"
-            onClick={onClose}
-            ariaLabel={t(
-              "dataJournal.components.closePanel",
-              "Close component panel"
-            )}
-            title={t(
-              "dataJournal.components.closePanel",
-              "Close component panel"
-            )}
-          />
+    <>
+      <PanelHeader
+        title={tt("dataJournal.components.title", "Component Panel")}
+        onClose={typeof onClose === "function" ? onClose : undefined}
+        closeLabel={tt(
+          "dataJournal.components.closePanel",
+          "Close component panel",
         )}
-      </div>
-      <div>
-        {componentSections.map((section) => (
-          <div key={section.sectionTitleKey}>
-            <div className="subtitle">
-              {t(section.sectionTitleKey, section.sectionTitleFallback)}
+      />
+      <div style={BODY_STYLE}>
+        <StyledComponentPanel>
+          {componentSections.map((section) => (
+            <div key={section.sectionTitleKey}>
+              <div className="subtitle">
+                {tt(section.sectionTitleKey, section.sectionTitleFallback)}
+              </div>
+              <div className="cards">{section.cards.map(renderCard)}</div>
             </div>
-            <div className="cards">{section.cards.map(renderCard)}</div>
-          </div>
-        ))}
+          ))}
+        </StyledComponentPanel>
       </div>
-    </StyledComponentPanel>
+    </>
   );
 }

@@ -84,10 +84,6 @@ export default function TopNavigation() {
     workspace,
     projectId,
     studyId,
-    setActiveComponent,
-    setIsAddComponentPanelOpen,
-    setLeftPanelMode,
-    setSidebarVisible,
   } = useDataJournal();
 
   const [editingTarget, setEditingTarget] = useState(null);
@@ -188,13 +184,6 @@ export default function TopNavigation() {
       e.preventDefault();
       handleSubmit();
     }
-  };
-
-  const openAddComponentPanel = () => {
-    setActiveComponent(null);
-    setLeftPanelMode("addComponent");
-    setIsAddComponentPanelOpen(true);
-    setSidebarVisible(true);
   };
 
   return (
@@ -341,7 +330,8 @@ export default function TopNavigation() {
             <AddWorkspace journalId={journal?.id} />
             <AddComponentButton
               disabled={!workspace?.id}
-              onClick={openAddComponentPanel}
+              side="bottom"
+              align="end"
             />
           </div>
         )}
