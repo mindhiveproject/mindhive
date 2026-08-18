@@ -107,8 +107,6 @@ function place(preferredSide, align, anchor, surface) {
  * @param {number} [width=456] - Surface width in px, capped to the viewport.
  * @param {number} [maxHeight=560] - Surface max height in px, capped to the
  *   remaining viewport.
- * @param {"right"|"bottom"} [placement="right"] - `right` opens beside the
- *   anchor (menu bar). `bottom` opens underneath, end-aligned, then clamped.
  * @param {string} [ariaLabel] - Accessible name for the dialog.
  * @param {React.ReactNode} children - Surface content, typically a PanelHeader
  *   plus a scrolling body.
@@ -121,7 +119,6 @@ export default function Popover({
   align = "start",
   width = 456,
   maxHeight = MAX_HEIGHT,
-  placement = "right",
   ariaLabel,
   children,
 }) {
@@ -149,7 +146,7 @@ export default function Popover({
       window.removeEventListener("resize", reposition);
       window.removeEventListener("scroll", reposition, true);
     };
-  }, [open, anchorRef, side, align, width]);
+  }, [open, anchorRef, side, align, width, maxHeight]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -203,7 +200,7 @@ export default function Popover({
       style={{
         ...SURFACE_STYLE,
         width: `min(${width}px, calc(100vw - ${VIEWPORT_MARGIN * 2}px))`,
-        maxHeight: `min(${MAX_HEIGHT}px, calc(100vh - ${VIEWPORT_MARGIN * 2}px))`,
+        maxHeight: `min(${maxHeight}px, calc(100vh - ${VIEWPORT_MARGIN * 2}px))`,
         // First paint measures the surface; it is placed on the next one.
         left: position?.left ?? 0,
         top: position?.top ?? 0,
