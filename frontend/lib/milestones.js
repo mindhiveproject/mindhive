@@ -291,6 +291,71 @@ export function cardIncludedInReviewStep(card, actionCardOrMilestone, milestones
   });
 }
 
+export function actionCardMatchesReviewStep(card, milestoneKey, milestones = []) {
+  if (!isActionCard(card) || !milestoneKey) return false;
+  const resolved = getMilestoneFromCard(card, milestones);
+  const aliases = expandReviewStepAliases(milestoneKey, milestones);
+  if (resolved) {
+    return (
+      aliases.has(resolved.key) ||
+      aliases.has(resolved.id) ||
+      aliases.has(resolved.actionCardType)
+    );
+  }
+  return cardTypeMatchesMilestone(card.type, milestoneKey, milestones);
+}
+
+/**
+ * Add or remove a review step on a card's settings, keeping includeInReport
+ * in sync: on when any step remains, off when the last step is removed.
+ */
+export function setCardReviewStepMembership(
+  settings,
+  step,
+  included,
+  milestones = []
+) {
+  const current =
+    settings && typeof settings === "object" && !Array.isArray(settings)
+      ? settings
+      : parseCardSettings({ settings });
+  const steps = Array.isArray(current.includeInReviewSteps)
+    ? [...current.includeInReviewSteps]
+    : [];
+
+  const stepKey =
+    typeof step === "string" ? step : step?.value || step?.key || "";
+  const actionCardType =
+    typeof step === "string" ? undefined : step?.actionCardType;
+
+  const aliases = expandReviewStepAliases(stepKey, milestones);
+  if (actionCardType) {
+    expandReviewStepAliases(actionCardType, milestones).forEach((alias) =>
+      aliases.add(alias)
+    );
+  }
+
+  const withoutStep = steps.filter((s) => !aliases.has(s));
+  const nextSteps = included
+    ? withoutStep.includes(stepKey)
+      ? withoutStep
+      : [...withoutStep, stepKey]
+    : withoutStep;
+
+  const next = {
+    ...current,
+    includeInReviewSteps: nextSteps,
+  };
+
+  if (included) {
+    next.includeInReport = true;
+  } else if (nextSteps.length === 0) {
+    next.includeInReport = false;
+  }
+
+  return next;
+}
+
 export function getReviewStepOptions(milestones = [], t) {
   const boardMilestones = milestones.filter(
     (m) =>

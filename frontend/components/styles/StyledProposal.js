@@ -348,6 +348,10 @@ export const StyledProposal = styled.div`
       justify-content: flex-start;
       gap: 8px;
       padding: 0 15px 8px;
+      .boardInnerToolbarSelect {
+        min-width: 220px;
+        max-width: 280px;
+      }
     }
     .scrollable {
       flex: 1;
@@ -1996,12 +2000,21 @@ export const StyledProposalCard = styled.div`
     outline-offset: 0;
   }
 
+  &.cardSelectAssociate {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
+    outline-offset: 0;
+  }
+
   .cardSelectCheckbox {
     width: 20px;
     height: 20px;
     margin: 0;
     cursor: pointer;
     accent-color: var(--MH-Theme-Danger-Dark, #8F1F14);
+  }
+
+  &.cardSelectAssociate .cardSelectCheckbox {
+    accent-color: var(--MH-Theme-Primary-Dark, #336F8A);
   }
 
   .card-drag-handle {
@@ -2146,6 +2159,11 @@ export const StyledActionCard = styled.div`
 
   &.cardSelectSelected {
     outline: 2px solid var(--MH-Theme-Danger-Dark, #8F1F14);
+    outline-offset: 0;
+  }
+
+  &.actionCardAssociateActive {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
     outline-offset: 0;
   }
 

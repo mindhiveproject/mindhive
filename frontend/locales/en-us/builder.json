@@ -1314,6 +1314,10 @@
 	},
 	"inner": {
 		"addSection": "Add section",
+		"associateCardsFailed": "Failed to update review step cards.",
+		"associateCardsPlaceholder": "Choose a review step",
+		"associateCardsSaving": "Saving…",
+		"associateCardsUnsavedSwitch": "You have unsaved card changes for this review step. Switch anyway and discard them?",
 		"cancel": "Cancel",
 		"deleteItems": "Delete items",
 		"deleteItemsConfirmBody": "Permanently delete {{count}} <0>board item(s)</0>? This cannot be undone.",
@@ -1328,7 +1332,9 @@
 		"deleteItemsConfirmTitle": "Delete items?",
 		"deleteItemsDeleting": "Deleting…",
 		"deleteItemsFailed": "Failed to delete items.",
+		"linkMilestoneToCards": "Link a milestone to cards",
 		"newSection": "New section",
+		"save": "Save",
 		"sectionTitlePlaceholder": "Enter section title",
 		"selectItem": "Select item",
 		"selectSection": "Select section"

@@ -8,25 +8,38 @@ import AddSectionModal from "./AddSectionModal";
 import BoardColumnScroller from "./BoardColumnScroller";
 import DeleteCardsConfirmModal from "./DeleteCardsConfirmModal";
 import Button from "../../DesignSystem/Button";
-import { TrashIcon } from "../../DesignSystem/Icons";
+import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import { MilestoneIcon, TrashIcon } from "../../DesignSystem/Icons";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
-import { DELETE_CARD } from "../../Mutations/Proposal";
+import { DELETE_CARD, UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 import { DELETE_TEMPLATE_MILESTONE } from "../../Mutations/Milestone";
 import { RESOLVE_MILESTONES_FOR_BOARD } from "../../Queries/Milestone";
-import { isActionCard } from "../../../lib/milestones";
+import {
+  actionCardMatchesReviewStep,
+  cardIncludedInReviewStep,
+  getReviewStepOptions,
+  isActionCard,
+  parseCardSettings,
+  setCardReviewStepMembership,
+} from "../../../lib/milestones";
+import { useBoardMilestones } from "../../../lib/useBoardMilestones";
+import { mergeCardSettings } from "../../Utils/mergeCardSettings";
 
 function Inner(props) {
   const [addSectionModalOpen, setAddSectionModalOpen] = useState(false);
-  const [cardSelectMode, setCardSelectMode] = useState(false);
+  const [boardSelectMode, setBoardSelectMode] = useState("idle");
   const [selectedCardIds, setSelectedCardIds] = useState([]);
   const [selectedSectionIds, setSelectedSectionIds] = useState([]);
+  const [associateMilestoneKey, setAssociateMilestoneKey] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [savingAssociate, setSavingAssociate] = useState(false);
   const { t } = useTranslation("builder");
 
   const [deleteCardMut] = useMutation(DELETE_CARD);
   const [deleteTemplateMilestoneMut] = useMutation(DELETE_TEMPLATE_MILESTONE);
+  const [updateCardEdit] = useMutation(UPDATE_CARD_EDIT);
 
   const createSection = (boardId, sectionTitle) => {
     const publicId = uuidv1();
@@ -103,14 +116,23 @@ function Inner(props) {
   };
 
   const { board, sections, proposalBuildMode } = props;
+  const { milestones } = useBoardMilestones(board?.id, { skip: !board?.id });
+  const reviewStepOptions = useMemo(
+    () => getReviewStepOptions(milestones, t),
+    [milestones, t]
+  );
   const canAddSections =
     proposalBuildMode ||
     (!props.isPreview && board?.settings?.allowAddingSections);
   const canDeleteCards =
     proposalBuildMode ||
     (!props.isPreview && board?.settings?.allowAddingCards);
+  const canAssociateCards = proposalBuildMode && !props.isPreview;
   const showToolbar =
-    !props.isPreview && (canAddSections || canDeleteCards);
+    !props.isPreview &&
+    (canAddSections || canDeleteCards || canAssociateCards);
+  const cardSelectMode = boardSelectMode !== "idle";
+  const selectKind = boardSelectMode === "idle" ? null : boardSelectMode;
 
   const allCards = useMemo(
     () =>
@@ -157,12 +179,77 @@ function Inner(props) {
   const hasSelection =
     selectedCardIds.length > 0 || selectedSectionIds.length > 0;
 
+  const memberCardIdsForStep = useCallback(
+    (milestoneKey) => {
+      if (!milestoneKey) return [];
+      return allCards
+        .filter(
+          ({ card }) =>
+            !isActionCard(card) &&
+            cardIncludedInReviewStep(card, milestoneKey, milestones)
+        )
+        .map(({ card }) => card.id);
+    },
+    [allCards, milestones]
+  );
+
+  const associateActiveActionCardId = useMemo(() => {
+    if (boardSelectMode !== "associate" || !associateMilestoneKey) return null;
+    const match = allCards.find(({ card }) =>
+      actionCardMatchesReviewStep(card, associateMilestoneKey, milestones)
+    );
+    return match?.card?.id ?? null;
+  }, [allCards, associateMilestoneKey, boardSelectMode, milestones]);
+
+  const isAssociateDirty = useMemo(() => {
+    if (boardSelectMode !== "associate" || !associateMilestoneKey) return false;
+    const baseline = [...memberCardIdsForStep(associateMilestoneKey)].sort();
+    const current = [...selectedCardIds].sort();
+    if (baseline.length !== current.length) return true;
+    return baseline.some((id, index) => id !== current[index]);
+  }, [
+    associateMilestoneKey,
+    boardSelectMode,
+    memberCardIdsForStep,
+    selectedCardIds,
+  ]);
+
   const exitCardSelectMode = useCallback(() => {
-    setCardSelectMode(false);
+    setBoardSelectMode("idle");
     setSelectedCardIds([]);
     setSelectedSectionIds([]);
+    setAssociateMilestoneKey("");
     setConfirmOpen(false);
   }, []);
+
+  const applyAssociateMilestone = useCallback(
+    (nextKey) => {
+      setAssociateMilestoneKey(nextKey);
+      setSelectedCardIds(memberCardIdsForStep(nextKey));
+    },
+    [memberCardIdsForStep]
+  );
+
+  const handleAssociateMilestoneChange = useCallback(
+    (nextKey) => {
+      if (nextKey === associateMilestoneKey) return;
+      if (isAssociateDirty) {
+        const confirmed = window.confirm(
+          t(
+            "inner.associateCardsUnsavedSwitch",
+            {},
+            {
+              default:
+                "You have unsaved card changes for this review step. Switch anyway and discard them?",
+            }
+          )
+        );
+        if (!confirmed) return;
+      }
+      applyAssociateMilestone(nextKey);
+    },
+    [applyAssociateMilestone, associateMilestoneKey, isAssociateDirty, t]
+  );
 
   useEffect(() => {
     if (!cardSelectMode || confirmOpen) return undefined;
@@ -176,8 +263,26 @@ function Inner(props) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [cardSelectMode, confirmOpen, exitCardSelectMode]);
 
+  useEffect(() => {
+    if (boardSelectMode !== "associate" || !associateActiveActionCardId) {
+      return undefined;
+    }
+    const frame = window.requestAnimationFrame(() => {
+      const node = document.querySelector(
+        '[data-associate-active-step="true"]'
+      );
+      node?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [associateActiveActionCardId, boardSelectMode]);
+
   const toggleSectionSelection = useCallback(
     (sectionId) => {
+      if (boardSelectMode !== "delete") return;
       const cardIds = getSectionCardIds(sectionId);
       setSelectedSectionIds((prev) => {
         const isSelected = prev.includes(sectionId);
@@ -193,21 +298,27 @@ function Inner(props) {
         return [...prev, sectionId];
       });
     },
-    [getSectionCardIds]
+    [boardSelectMode, getSectionCardIds]
   );
 
-  const toggleCardSelection = useCallback((cardId, sectionId) => {
-    setSelectedCardIds((prev) => {
-      const isSelected = prev.includes(cardId);
-      if (isSelected) {
-        setSelectedSectionIds((sectionIds) =>
-          sectionIds.filter((id) => id !== sectionId)
-        );
-        return prev.filter((id) => id !== cardId);
-      }
-      return [...prev, cardId];
-    });
-  }, []);
+  const toggleCardSelection = useCallback(
+    (cardId, sectionId) => {
+      if (boardSelectMode === "associate" && !associateMilestoneKey) return;
+      setSelectedCardIds((prev) => {
+        const isSelected = prev.includes(cardId);
+        if (isSelected) {
+          if (boardSelectMode === "delete") {
+            setSelectedSectionIds((sectionIds) =>
+              sectionIds.filter((id) => id !== sectionId)
+            );
+          }
+          return prev.filter((id) => id !== cardId);
+        }
+        return [...prev, cardId];
+      });
+    },
+    [associateMilestoneKey, boardSelectMode]
+  );
 
   const handleConfirmDelete = async () => {
     if (!hasSelection) return;
@@ -314,14 +425,102 @@ function Inner(props) {
     }
   };
 
+  const handleSaveAssociate = async () => {
+    if (!associateMilestoneKey || boardSelectMode !== "associate") return;
+
+    const option =
+      reviewStepOptions.find((item) => item.value === associateMilestoneKey) ||
+      { value: associateMilestoneKey, key: associateMilestoneKey };
+    const selectedSet = new Set(selectedCardIds);
+    const changes = [];
+
+    for (const { card } of allCards) {
+      if (isActionCard(card)) continue;
+      const wasMember = cardIncludedInReviewStep(
+        card,
+        associateMilestoneKey,
+        milestones
+      );
+      const isMember = selectedSet.has(card.id);
+      if (wasMember === isMember) continue;
+      const nextSettings = setCardReviewStepMembership(
+        parseCardSettings(card),
+        option,
+        isMember,
+        milestones
+      );
+      changes.push({
+        card,
+        nextSettings: mergeCardSettings(parseCardSettings(card), nextSettings),
+      });
+    }
+
+    setSavingAssociate(true);
+    try {
+      for (const { card, nextSettings } of changes) {
+        await updateCardEdit({
+          variables: {
+            id: card.id,
+            input: { settings: nextSettings },
+          },
+        });
+      }
+
+      if (changes.length) {
+        const changeMap = new Map(
+          changes.map(({ card, nextSettings }) => [card.id, nextSettings])
+        );
+        props.onSetSections(
+          sections.map((section) => ({
+            ...section,
+            cards: (section.cards || []).map((card) =>
+              changeMap.has(card.id)
+                ? { ...card, settings: changeMap.get(card.id) }
+                : card
+            ),
+          }))
+        );
+      }
+
+      if (props.autoUpdateStudentBoards && props.propagateToClones) {
+        try {
+          await props.propagateToClones();
+        } catch (e) {
+          console.error("Auto-propagate after link a milestone to cards failed:", e);
+        }
+      } else if (props.hasClones && props.onTemplateChangedWithoutPropagation) {
+        props.onTemplateChangedWithoutPropagation();
+      }
+
+      exitCardSelectMode();
+    } catch (err) {
+      alert(
+        err?.message ||
+          t(
+            "inner.associateCardsFailed",
+            {},
+            { default: "Failed to update review step cards." }
+          )
+      );
+    } finally {
+      setSavingAssociate(false);
+    }
+  };
+
   const trashIcon = <TrashIcon />;
+  const milestoneIcon = <MilestoneIcon />;
+  const associateDropdownOptions = reviewStepOptions.map((option) => ({
+    value: option.value,
+    label: option.text,
+    labelText: option.text,
+  }));
 
   return (
     <>
       <div className="boardInner">
         {showToolbar && (
           <div className="boardInnerToolbar">
-            {cardSelectMode ? (
+            {boardSelectMode === "delete" ? (
               <>
                 <Button variant="subtle" onClick={exitCardSelectMode}>
                   {t("inner.cancel", {}, { default: "Cancel" })}
@@ -341,6 +540,39 @@ function Inner(props) {
                   }
                 >
                   {t("inner.deleteItems", {}, { default: "Delete items" })}
+                </Button>
+              </>
+            ) : boardSelectMode === "associate" ? (
+              <>
+                <Button variant="subtle" onClick={exitCardSelectMode}>
+                  {t("inner.cancel", {}, { default: "Cancel" })}
+                </Button>
+                <div className="boardInnerToolbarSelect">
+                  <DropdownSelect
+                    value={associateMilestoneKey}
+                    onChange={handleAssociateMilestoneChange}
+                    options={associateDropdownOptions}
+                    placeholder={t(
+                      "inner.associateCardsPlaceholder",
+                      {},
+                      { default: "Choose a milestone" }
+                    )}
+                    ariaLabel={t(
+                      "inner.associateCardsPlaceholder",
+                      {},
+                      { default: "Choose a milestone" }
+                    )}
+                    disabled={savingAssociate}
+                  />
+                </div>
+                <Button
+                  variant="filled"
+                  onClick={handleSaveAssociate}
+                  disabled={!associateMilestoneKey || savingAssociate || !isAssociateDirty}
+                >
+                  {savingAssociate
+                    ? t("inner.associateCardsSaving", {}, { default: "Saving…" })
+                    : t("inner.save", {}, { default: "Save" })}
                 </Button>
               </>
             ) : (
@@ -365,10 +597,22 @@ function Inner(props) {
                     style={{
                       background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
                     }}
-                    onClick={() => setCardSelectMode(true)}
+                    onClick={() => setBoardSelectMode("delete")}
                     leadingIcon={trashIcon}
                   >
                     {t("inner.deleteItems", {}, { default: "Delete items" })}
+                  </Button>
+                )}
+                {canAssociateCards && (
+                  <Button
+                    variant="tonal"
+                    style={{
+                      background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+                    }}
+                    onClick={() => setBoardSelectMode("associate")}
+                    leadingIcon={milestoneIcon}
+                  >
+                    {t("inner.linkMilestoneToCards", {}, { default: "Link a milestone to cards" })}
                   </Button>
                 )}
               </>
@@ -396,8 +640,10 @@ function Inner(props) {
             addMilestoneTargetSectionId={props.addMilestoneTargetSectionId}
             onAddMilestoneModalOpened={props.onAddMilestoneModalOpened}
             cardSelectMode={cardSelectMode}
+            selectKind={selectKind}
             selectedCardIds={selectedCardIds}
             selectedSectionIds={selectedSectionIds}
+            associateActiveActionCardId={associateActiveActionCardId}
             onToggleCardSelection={toggleCardSelection}
             onToggleSectionSelection={toggleSectionSelection}
           />

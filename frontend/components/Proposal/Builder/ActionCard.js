@@ -16,7 +16,9 @@ export default function ActionCard({
   boardId,
   submitStatuses = {},
   cardSelectMode = false,
+  selectKind = null,
   isSelected = false,
+  isAssociateActive = false,
   onToggleCardSelection,
 }) {
   const { t } = useTranslation("builder");
@@ -56,7 +58,13 @@ export default function ActionCard({
       </svg>
     );
 
+  const isAssociateSelect = selectKind === "associate";
+  const showDeleteCheckbox = cardSelectMode && !isAssociateSelect;
+
   const handleClick = () => {
+    if (isAssociateSelect) {
+      return;
+    }
     if (cardSelectMode) {
       onToggleCardSelection?.(card.id, sectionId);
       return;
@@ -68,13 +76,19 @@ export default function ActionCard({
     <StyledActionCard
       variant={variant}
       proposalBuildMode={proposalBuildMode}
-      className={clsx(cardSelectMode && isSelected && "cardSelectSelected")}
+      className={clsx(
+        showDeleteCheckbox && isSelected && "cardSelectSelected",
+        isAssociateSelect && isAssociateActive && "actionCardAssociateActive"
+      )}
+      data-associate-active-step={
+        isAssociateSelect && isAssociateActive ? "true" : undefined
+      }
       onClick={handleClick}
     >
       <div className="card-drag-handle">
         <div className="card-information">
           <div className="card-left-section">
-            {cardSelectMode ? (
+            {showDeleteCheckbox ? (
               <input
                 type="checkbox"
                 className="cardSelectCheckbox"
@@ -155,7 +169,16 @@ export default function ActionCard({
   );
 
   if (cardSelectMode) {
-    return <div key={card.id}>{cardBody}</div>;
+    return (
+      <div
+        key={card.id}
+        data-associate-active-step={
+          isAssociateSelect && isAssociateActive ? "true" : undefined
+        }
+      >
+        {cardBody}
+      </div>
+    );
   }
 
   return <Draggable key={card.id}>{cardBody}</Draggable>;

@@ -17,6 +17,7 @@ export default function Card({
   isPreview,
   submitStatuses = {},
   cardSelectMode = false,
+  selectKind = null,
   isSelected = false,
   onToggleCardSelection,
 }) {
@@ -70,6 +71,8 @@ export default function Card({
     return null;
   };
 
+  const isAssociateSelect = selectKind === "associate";
+
   const handleClick = () => {
     if (cardSelectMode) {
       onToggleCardSelection?.(card.id, sectionId);
@@ -81,7 +84,10 @@ export default function Card({
   const cardBody = (
     <StyledProposalCard
       variant={cardVariant.variant}
-      className={clsx(cardSelectMode && isSelected && "cardSelectSelected")}
+      className={clsx(
+        cardSelectMode && isSelected && !isAssociateSelect && "cardSelectSelected",
+        isAssociateSelect && isSelected && "cardSelectAssociate"
+      )}
       onClick={handleClick}
     >
       <div className="card-drag-handle">

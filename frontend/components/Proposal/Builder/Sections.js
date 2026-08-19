@@ -168,8 +168,12 @@ class Sections extends Component {
                 }
                 onAddMilestoneModalOpened={this.props.onAddMilestoneModalOpened}
                 cardSelectMode={this.props.cardSelectMode}
+                selectKind={this.props.selectKind}
                 selectedCardIds={this.props.selectedCardIds}
                 selectedSectionIds={this.props.selectedSectionIds}
+                associateActiveActionCardId={
+                  this.props.associateActiveActionCardId
+                }
                 onToggleCardSelection={this.props.onToggleCardSelection}
                 onToggleSectionSelection={this.props.onToggleSectionSelection}
               />

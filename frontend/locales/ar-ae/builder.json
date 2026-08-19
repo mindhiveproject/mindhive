@@ -1314,6 +1314,10 @@
 	},
 	"inner": {
 		"addSection": "إضافة قسم",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
 		"cancel": "",
 		"deleteItems": "",
 		"deleteItemsConfirmBody": "",
@@ -1328,7 +1332,9 @@
 		"deleteItemsConfirmTitle": "",
 		"deleteItemsDeleting": "",
 		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "قسم جديد",
+		"save": "",
 		"sectionTitlePlaceholder": "أدخل عنوان القسم",
 		"selectItem": "",
 		"selectSection": ""

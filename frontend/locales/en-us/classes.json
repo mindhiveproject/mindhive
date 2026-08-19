@@ -254,7 +254,7 @@
 			"studies": "Studies",
 			"tasks": "Tasks",
 			"title": "Title",
-			"titleText": "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the Student Answer Box is enabled.",
+			"titleText": "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the card is associated with a review step.",
 			"type": "Type",
 			"updateAllClones": "Yes, update all clones",
 			"updateOnlyThisBoard": "No, update only this board",

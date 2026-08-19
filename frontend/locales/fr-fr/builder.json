@@ -1314,6 +1314,10 @@
 	},
 	"inner": {
 		"addSection": "Ajouter une section",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
 		"cancel": "",
 		"deleteItems": "",
 		"deleteItemsConfirmBody": "",
@@ -1328,7 +1332,9 @@
 		"deleteItemsConfirmTitle": "",
 		"deleteItemsDeleting": "",
 		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "Nouvelle section",
+		"save": "",
 		"sectionTitlePlaceholder": "Entrez le titre de la section",
 		"selectItem": "",
 		"selectSection": ""

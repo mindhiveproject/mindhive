@@ -48,8 +48,10 @@ const Section = ({
   autoOpenCreateCardAction = false,
   onAddMilestoneModalOpened,
   cardSelectMode = false,
+  selectKind = null,
   selectedCardIds = [],
   selectedSectionIds = [],
+  associateActiveActionCardId = null,
   onToggleCardSelection,
   onToggleSectionSelection,
 }) => {
@@ -84,9 +86,10 @@ const Section = ({
   const [updateCard, updateCardState] = useMutation(UPDATE_CARD_POSITION);
 
   const isSectionSelected = selectedSectionIds.includes(section.id);
+  const isDeleteSelect = cardSelectMode && selectKind !== "associate";
 
   const handleSectionHeaderClick = () => {
-    if (cardSelectMode) {
+    if (isDeleteSelect) {
       onToggleSectionSelection?.(section.id);
     }
   };
@@ -483,17 +486,17 @@ const Section = ({
     <div
       className={clsx(
         "section",
-        cardSelectMode && isSectionSelected && "sectionSelectSelected"
+        isDeleteSelect && isSectionSelected && "sectionSelectSelected"
       )}
     >
       <div
         className="column-drag-handle"
-        onClick={cardSelectMode ? handleSectionHeaderClick : undefined}
+        onClick={isDeleteSelect ? handleSectionHeaderClick : undefined}
       >
         <div
-          className={clsx("firstLine", cardSelectMode && "firstLineSelectMode")}
+          className={clsx("firstLine", isDeleteSelect && "firstLineSelectMode")}
         >
-          {cardSelectMode ? (
+          {isDeleteSelect ? (
             <input
               type="checkbox"
               className="sectionSelectCheckbox"
@@ -607,7 +610,9 @@ const Section = ({
                     settings={settings}
                     submitStatuses={submitStatuses}
                     cardSelectMode={cardSelectMode}
+                    selectKind={selectKind}
                     isSelected={selectedCardIds.includes(card.id)}
+                    isAssociateActive={associateActiveActionCardId === card.id}
                     onToggleCardSelection={onToggleCardSelection}
                   />
                 );
@@ -625,6 +630,7 @@ const Section = ({
                     settings={settings}
                     submitStatuses={submitStatuses}
                     cardSelectMode={cardSelectMode}
+                    selectKind={selectKind}
                     isSelected={selectedCardIds.includes(card.id)}
                     onToggleCardSelection={onToggleCardSelection}
                   />

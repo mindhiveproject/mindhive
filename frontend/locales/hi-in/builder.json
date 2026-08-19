@@ -1314,6 +1314,10 @@
 	},
 	"inner": {
 		"addSection": "अनुभाग जोड़ें",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
 		"cancel": "",
 		"deleteItems": "",
 		"deleteItemsConfirmBody": "",
@@ -1328,7 +1332,9 @@
 		"deleteItemsConfirmTitle": "",
 		"deleteItemsDeleting": "",
 		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "नया खंड",
+		"save": "",
 		"sectionTitlePlaceholder": "अनुभाग शीर्षक दर्ज करें",
 		"selectItem": "",
 		"selectSection": ""

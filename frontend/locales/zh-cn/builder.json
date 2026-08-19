@@ -1314,6 +1314,10 @@
 	},
 	"inner": {
 		"addSection": "添加部分",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
 		"cancel": "",
 		"deleteItems": "",
 		"deleteItemsConfirmBody": "",
@@ -1328,7 +1332,9 @@
 		"deleteItemsConfirmTitle": "",
 		"deleteItemsDeleting": "",
 		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "新部分",
+		"save": "",
 		"sectionTitlePlaceholder": "输入章节标题",
 		"selectItem": "",
 		"selectSection": ""
