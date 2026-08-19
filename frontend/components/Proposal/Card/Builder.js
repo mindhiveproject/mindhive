@@ -34,6 +34,7 @@ export default function BuilderProposalCard({
   onTemplateChangedWithoutPropagation,
   hideBoardChromeNav = false,
   registerCloseHandler,
+  registerCardChrome,
 }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
@@ -223,76 +224,96 @@ export default function BuilderProposalCard({
     return () => registerCloseHandler(null);
   });
 
+  const handleSaveRef = useRef(handleSave);
+  handleSaveRef.current = handleSave;
+  const handlePreviewRef = useRef(handlePreviewAsUser);
+  handlePreviewRef.current = handlePreviewAsUser;
+
+  useEffect(() => {
+    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    registerCardChrome({
+      kind: "project",
+      previewMode,
+      saving: updateLoading,
+      onSave: () => handleSaveRef.current(),
+      onPreview: () => handlePreviewRef.current(),
+      onExitPreview: () => setPreviewMode(false),
+    });
+  }, [
+    hideBoardChromeNav,
+    registerCardChrome,
+    previewMode,
+    updateLoading,
+  ]);
+
+  useEffect(() => {
+    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    return () => registerCardChrome(null);
+  }, [hideBoardChromeNav, registerCardChrome]);
+
   return (
     <div className="post">
-      <div
-        className={clsx(
-          "navigation-build-mode",
-          hideBoardChromeNav && "navigation-build-modeEmbedded"
-        )}
-      >
-        {!hideBoardChromeNav && (
-          <>
-            <div className="left">
-              <div
-                className="icon"
-                onClick={handleBackToBoard}
-                style={{
-                  opacity: updateLoading ? 0.6 : 1,
-                  pointerEvents: updateLoading ? "none" : "auto",
-                }}
-              >
-                <div className="selector">
-                  <img src="/assets/icons/back.svg" alt="back" />
-                </div>
+      {!hideBoardChromeNav ? (
+        <div className="navigation-build-mode">
+          <div className="left">
+            <div
+              className="icon"
+              onClick={handleBackToBoard}
+              style={{
+                opacity: updateLoading ? 0.6 : 1,
+                pointerEvents: updateLoading ? "none" : "auto",
+              }}
+            >
+              <div className="selector">
+                <img src="/assets/icons/back.svg" alt="back" />
               </div>
             </div>
-            <Tooltip
-              content={proposal?.title || ""}
-              side="bottom"
-              maxWidth={400}
-            >
-              <div className="middle">
-                <span className="studyTitle">{proposal?.title}</span>
-              </div>
-            </Tooltip>
-          </>
-        )}
-        <div className={`right${previewMode ? " rightPreviewMode" : ""}`}>
-          {previewMode ? (
-            <button
-              type="button"
-              onClick={() => setPreviewMode(false)}
-              className="narrowButton"
-              style={{ marginRight: "10px" }}
-            >
-              <Icon name="angle left" /> {t("board.expendedCard.backToEditing", "Back to editing")}
-            </button>
-          ) : (
-            <>
-              <div className="editModeMessage">
-                {t("board.editMode", "You are in Edit Mode")}
-              </div>
+          </div>
+          <Tooltip
+            content={proposal?.title || ""}
+            side="bottom"
+            maxWidth={400}
+          >
+            <div className="middle">
+              <span className="studyTitle">{proposal?.title}</span>
+            </div>
+          </Tooltip>
+          <div className={`right${previewMode ? " rightPreviewMode" : ""}`}>
+            {previewMode ? (
               <button
                 type="button"
-                onClick={handlePreviewAsUser}
-                disabled={updateLoading}
-                className="narrowButtonSecondary"
-              >
-                {t("board.expendedCard.preview", "Preview")}
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
+                onClick={() => setPreviewMode(false)}
                 className="narrowButton"
-                disabled={updateLoading}
+                style={{ marginRight: "10px" }}
               >
-                {t("board.save", "Save")}
+                <Icon name="angle left" /> {t("board.expendedCard.backToEditing", "Back to editing")}
               </button>
-            </>
-          )}
+            ) : (
+              <>
+                <div className="editModeMessage">
+                  {t("board.editMode", "You are in Edit Mode")}
+                </div>
+                <button
+                  type="button"
+                  onClick={handlePreviewAsUser}
+                  disabled={updateLoading}
+                  className="narrowButtonSecondary"
+                >
+                  {t("board.expendedCard.preview", "Preview")}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  className="narrowButton"
+                  disabled={updateLoading}
+                >
+                  {t("board.save", "Save")}
+                </button>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Preview modals: open when user clicks linked items in preview mode */}
       <AssignmentViewModal
@@ -334,7 +355,11 @@ export default function BuilderProposalCard({
               </>
             )}
           </div>
-          <div className="infoBoard">
+          <div
+            className={clsx("infoBoard", {
+              infoBoardEdit: hideBoardChromeNav,
+            })}
+          >
             {/* Display Linked Items: Assignments first, then combined Resources */}
             {inputs?.assignments?.length > 0 && (
               <PreviewSection
@@ -548,7 +573,11 @@ export default function BuilderProposalCard({
             </>
           )}
         </div>
-        <div className="infoBoard">
+        <div
+          className={clsx("infoBoard", {
+            infoBoardEdit: hideBoardChromeNav,
+          })}
+        >
           <>
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.linkedItems", "Linked Items")}

@@ -29,6 +29,10 @@ export default function BoardEditorChrome({
   autoUpdateStudentBoards,
   propagateToClones,
   onPropagationSuccess,
+  cardChrome,
+  onCardSave,
+  onCardPreview,
+  onCardExitPreview,
 }) {
   const { t } = useTranslation("builder");
   const { t: tClasses } = useTranslation("classes");
@@ -202,6 +206,40 @@ export default function BoardEditorChrome({
       </div>
 
       <div className="boardEditorChromeRight">
+        {isCardMode && cardChrome?.previewMode ? (
+          <Button variant="outline" onClick={onCardExitPreview}>
+            {tClasses("board.expendedCard.backToEditing", {}, {
+              default: "Back to editing",
+            })}
+          </Button>
+        ) : null}
+        {isCardMode && cardChrome && !cardChrome.previewMode ? (
+          <>
+            <span className="boardEditorChromeEditMode">
+              {tClasses("board.editMode", {}, {
+                default: "You are in Edit Mode",
+              })}
+            </span>
+            {cardChrome.kind === "project" ? (
+              <Button
+                variant="outline"
+                onClick={onCardPreview}
+                disabled={cardChrome.saving}
+              >
+                {tClasses("board.expendedCard.preview", {}, {
+                  default: "Preview",
+                })}
+              </Button>
+            ) : null}
+            <Button
+              variant="filled"
+              onClick={onCardSave}
+              disabled={cardChrome.saving}
+            >
+              {tClasses("board.save", {}, { default: "Save" })}
+            </Button>
+          </>
+        ) : null}
         {hasUnsavedChanges && (
           <Button
             variant="tonal"

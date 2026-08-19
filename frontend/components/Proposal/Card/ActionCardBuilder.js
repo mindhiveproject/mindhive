@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import clsx from "clsx";
 import { useMutation, useQuery, useApolloClient } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
@@ -64,6 +64,7 @@ export default function ActionCardBuilder({
   onTemplateChangedWithoutPropagation,
   hideBoardChromeNav = false,
   registerCloseHandler,
+  registerCardChrome,
 }) {
   const { t } = useTranslation("classes");
   const { t: tBuilder } = useTranslation("builder");
@@ -351,55 +352,66 @@ export default function ActionCardBuilder({
     return () => registerCloseHandler(null);
   });
 
+  const handleSaveRef = useRef(handleSave);
+  handleSaveRef.current = handleSave;
+
+  useEffect(() => {
+    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    registerCardChrome({
+      kind: "milestone",
+      previewMode: false,
+      saving,
+      onSave: () => handleSaveRef.current(),
+    });
+  }, [hideBoardChromeNav, registerCardChrome, saving]);
+
+  useEffect(() => {
+    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    return () => registerCardChrome(null);
+  }, [hideBoardChromeNav, registerCardChrome]);
+
   return (
     <div className="post">
-      <div
-        className={clsx(
-          "navigation-build-mode",
-          hideBoardChromeNav && "navigation-build-modeEmbedded"
-        )}
-      >
-        {!hideBoardChromeNav && (
-          <>
-            <div className="left">
-              <div
-                className="icon"
-                onClick={handleClose}
-                style={{
-                  opacity: saving ? 0.6 : 1,
-                  pointerEvents: saving ? "none" : "auto",
-                }}
-              >
-                <div className="selector">
-                  <img src="/assets/icons/back.svg" alt="back" />
-                </div>
+      {!hideBoardChromeNav ? (
+        <div className="navigation-build-mode">
+          <div className="left">
+            <div
+              className="icon"
+              onClick={handleClose}
+              style={{
+                opacity: saving ? 0.6 : 1,
+                pointerEvents: saving ? "none" : "auto",
+              }}
+            >
+              <div className="selector">
+                <img src="/assets/icons/back.svg" alt="back" />
               </div>
             </div>
-            <Tooltip
-              content={proposal?.title || ""}
-              side="bottom"
-              maxWidth={400}
-            >
-              <div className="middle">
-                <span className="studyTitle">{proposal?.title}</span>
-              </div>
-            </Tooltip>
-          </>
-        )}
-        <div className="right">
-          <div className="editModeMessage">
-            {t("board.editMode", {}, { default: "You are in Edit Mode" })}
           </div>
-          <button
-            type="button"
-            onClick={handleSave}
-            className="narrowButton"
-            disabled={saving}
+          <Tooltip
+            content={proposal?.title || ""}
+            side="bottom"
+            maxWidth={400}
           >
-            {t("board.save", {}, { default: "Save" })}
-          </button>
+            <div className="middle">
+              <span className="studyTitle">{proposal?.title}</span>
+            </div>
+          </Tooltip>
+          <div className="right">
+            <div className="editModeMessage">
+              {t("board.editMode", {}, { default: "You are in Edit Mode" })}
+            </div>
+            <button
+              type="button"
+              onClick={handleSave}
+              className="narrowButton"
+              disabled={saving}
+            >
+              {t("board.save", {}, { default: "Save" })}
+            </button>
+          </div>
         </div>
-      </div>
+      ) : null}
 
       <div className="proposalCardBoard">
         <div className="textBoard">
@@ -558,7 +570,11 @@ export default function ActionCardBuilder({
           ) : null}
         </div>
 
-        <div className="infoBoard">
+        <div
+          className={clsx("infoBoard", {
+            infoBoardEdit: hideBoardChromeNav,
+          })}
+        >
           <div className="cardHeader">
             {t(
               "board.expendedCard.actionCard.includedCardsTitle",

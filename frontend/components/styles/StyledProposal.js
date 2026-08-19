@@ -191,6 +191,14 @@ export const StyledProposal = styled.div`
       gap: 8px;
       flex-shrink: 0;
     }
+    .boardEditorChromeEditMode {
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      color: var(--MH-Theme-Neutrals-Dark, #6A6A6A);
+      white-space: nowrap;
+    }
 
     .narrowButton {
       height: 40px;
@@ -1779,6 +1787,11 @@ export const StyledProposal = styled.div`
       background: var(--MH-Theme-Neutrals-White, #FFF);
       overflow-y: visible;
       min-height: 0;
+
+      &.infoBoardEdit {
+        border-radius: 8px;
+        border-top: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      }
 
       .collaboratorArray {
         display: flex;

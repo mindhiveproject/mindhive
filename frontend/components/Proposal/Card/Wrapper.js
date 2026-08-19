@@ -22,6 +22,7 @@ export default function CardWrapper({
   onTemplateChangedWithoutPropagation,
   hideBoardChromeNav = false,
   registerCloseHandler,
+  registerCardChrome,
 }) {
   const {
     data,
@@ -78,6 +79,7 @@ export default function CardWrapper({
               onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
               hideBoardChromeNav={hideBoardChromeNav}
               registerCloseHandler={registerCloseHandler}
+              registerCardChrome={registerCardChrome}
             />
           );
         }
@@ -92,6 +94,7 @@ export default function CardWrapper({
             onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
             hideBoardChromeNav={hideBoardChromeNav}
             registerCloseHandler={registerCloseHandler}
+            registerCardChrome={registerCardChrome}
           />
         );
       } else {
