@@ -17,6 +17,7 @@ import ConnectResourceToCardModal from "./ConnectResourceToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import Button from "../../../../DesignSystem/Button";
+import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
 import Chip from "../../../../DesignSystem/Chip";
 import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 
@@ -892,11 +893,9 @@ export default function ResourceTab({ resources, myclass, user }) {
           style={{ gap: 12, marginRight: 0, paddingRight: 12 }}
         >
           <span>{t("resource.projectCard", "Project card")}</span>
-          <img
-            src="/assets/icons/project_card_icon.svg"
-            alt=""
-            width={34}
-            height={18}
+          <ProjectCardIcon
+            width={24}
+            height={24}
             style={{ flexShrink: 0, opacity: showLinkedToCardColumn ? 1 : 0.8 }}
           />
         </LinkedCardsToggleButton>

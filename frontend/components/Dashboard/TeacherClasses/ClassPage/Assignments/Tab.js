@@ -22,6 +22,7 @@ import ConnectAssignmentToCardModal from "./ConnectAssignmentToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import Button from "../../../../DesignSystem/Button";
+import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
 
 // Toggle/filter chrome — not a CTA. Keep as local styled button.
 const LinkedCardsToggleButton = styled.button`
@@ -747,12 +748,9 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           style={{ gap: 12, marginRight: 0, paddingRight: 12 }}
         >
           <span>{t("assignment.projectCard", "Project card")}</span>
-          <img
-            // src={showLinkedToCardColumn ? "/assets/icons/eye_open.svg" : "/assets/icons/eye_close.svg"}
-            src="/assets/icons/project_card_icon.svg"
-            alt=""
-            width={34}
-            height={18}
+          <ProjectCardIcon
+            width={24}
+            height={24}
             style={{ flexShrink: 0, opacity: showLinkedToCardColumn ? 1 : 0.8 }}
           />
         </LinkedCardsToggleButton>

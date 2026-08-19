@@ -11,7 +11,9 @@ import Card from "./Card";
 import ActionCard from "./ActionCard";
 import CreateCardModal from "./CreateCardModal";
 import Button from "../../DesignSystem/Button";
-import { CARD_CATEGORY_ACTION } from "./cardTypeOptions";
+import DropdownMenu from "../../DesignSystem/DropdownMenu";
+import { MilestoneIcon, ProjectCardIcon } from "../../DesignSystem/Icons";
+import { CARD_CATEGORY_ACTION, CARD_CATEGORY_PROPOSAL } from "./cardTypeOptions";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import {
@@ -59,11 +61,15 @@ const Section = ({
   const [createCardInitialCategory, setCreateCardInitialCategory] = useState("");
   const addMilestoneOpenedRef = useRef(false);
 
+  const openCreateCardModal = (category) => {
+    setCreateCardInitialCategory(category);
+    setCreateCardModalOpen(true);
+  };
+
   useEffect(() => {
     if (!autoOpenCreateCardAction || addMilestoneOpenedRef.current) return;
     addMilestoneOpenedRef.current = true;
-    setCreateCardInitialCategory(CARD_CATEGORY_ACTION);
-    setCreateCardModalOpen(true);
+    openCreateCardModal(CARD_CATEGORY_ACTION);
     onAddMilestoneModalOpened?.();
   }, [autoOpenCreateCardAction, onAddMilestoneModalOpened]);
   const [isEditingSectionTitle, setIsEditingSectionTitle] = useState(false);
@@ -619,14 +625,51 @@ const Section = ({
       {!cardSelectMode &&
         (proposalBuildMode || (!isPreview && settings?.allowAddingCards)) && (
         <div className="newInput">
-          <Button
-            onClick={() => setCreateCardModalOpen(true)}
-            variant="tonal"
-            style={{ background: "var(--MH-Theme-Secondary-Dark, #E6E6E6)" }}
-            leadingIcon={<img src="/assets/icons/plus.svg" alt="Add card"/>}
-          >
-            {t("section.addCard", {}, { default: "Add card" })}
-          </Button>
+          <DropdownMenu
+            ariaLabel={t(
+              "section.addCardMenu.ariaLabel",
+              {},
+              { default: "Add a project or milestone card" }
+            )}
+            renderTrigger={({ onClick, open, ariaLabel }) => (
+              <Button
+                variant="tonal"
+                style={{
+                  background: "var(--MH-Theme-Secondary-Dark, #E6E6E6)",
+                }}
+                leadingIcon={<img src="/assets/icons/plus.svg" alt="" />}
+                type="button"
+                aria-label={ariaLabel}
+                aria-expanded={open}
+                aria-haspopup="menu"
+                onClick={onClick}
+              >
+                {t("section.addCard", {}, { default: "Add card" })}
+              </Button>
+            )}
+            items={[
+              {
+                key: "project",
+                icon: <ProjectCardIcon width={18} height={18} />,
+                label: t(
+                  "section.addCardMenu.project",
+                  {},
+                  { default: "Project" }
+                ),
+                onClick: () => openCreateCardModal(CARD_CATEGORY_PROPOSAL),
+              },
+              {
+                key: "milestone",
+                icon: <MilestoneIcon width={18} height={18} />,
+                label: t(
+                  "section.addCardMenu.milestone",
+                  {},
+                  { default: "Milestone" }
+                ),
+                onClick: () => openCreateCardModal(CARD_CATEGORY_ACTION),
+              },
+            ]}
+          />
         </div>
       )}
       <CreateCardModal

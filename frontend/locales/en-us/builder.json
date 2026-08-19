@@ -1948,6 +1948,11 @@
 	"section": {
 		"addCard": "Add card",
 		"addCardBtn": "[ Click to add a card ]",
+		"addCardMenu": {
+			"ariaLabel": "Add a project or milestone card",
+			"milestone": "Milestone",
+			"project": "Project"
+		},
 		"card": "card",
 		"cards": "cards",
 		"cardsCount": "{{count}} card{{count == 1 ? '' : 's'}}",

@@ -361,7 +361,7 @@ export const StyledProposal = styled.div`
       flex: 1;
       min-width: 0;
       overflow-x: auto;
-      padding: 2px;
+      padding: 0px;
     }
   }
 

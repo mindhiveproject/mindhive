@@ -235,6 +235,63 @@ export const SearchIcon = filledIcon(
   "M16.6 18L10.3 11.7C9.8 12.1 9.225 12.4167 8.575 12.65C7.925 12.8833 7.23333 13 6.5 13C4.68333 13 3.14583 12.3708 1.8875 11.1125C0.629167 9.85417 0 8.31667 0 6.5C0 4.68333 0.629167 3.14583 1.8875 1.8875C3.14583 0.629167 4.68333 0 6.5 0C8.31667 0 9.85417 0.629167 11.1125 1.8875C12.3708 3.14583 13 4.68333 13 6.5C13 7.23333 12.8833 7.925 12.65 8.575C12.4167 9.225 12.1 9.8 11.7 10.3L18 16.6L16.6 18ZM6.5 11C7.75 11 8.8125 10.5625 9.6875 9.6875C10.5625 8.8125 11 7.75 11 6.5C11 5.25 10.5625 4.1875 9.6875 3.3125C8.8125 2.4375 7.75 2 6.5 2C5.25 2 4.1875 2.4375 3.3125 3.3125C2.4375 4.1875 2 5.25 2 6.5C2 7.75 2.4375 8.8125 3.3125 9.6875C4.1875 10.5625 5.25 11 6.5 11Z",
 );
 
+/** Milestone / review-step flag — Material-style pennant glyph. */
+export const MilestoneIcon = filledIcon(
+  "MilestoneIcon",
+  0,
+  0,
+  "M5 21V4H14L14.4 6H20V16H13L12.6 14H7V21H5ZM14.65 14H18V8H12.75L12.35 6H7V12H14.25L14.65 14Z",
+);
+
+/** Completed milestone — pennant with a check in a circle. */
+export const MilestoneCompletedIcon = filledIcon(
+  "MilestoneCompletedIcon",
+  0,
+  0,
+  "M5 21V4.00001H11.25C11.1667 4.33334 11.1 4.66667 11.05 5.00001C11 5.33334 10.9833 5.66667 11 6.00001H7V12H14.25L14.65 14H18V12.85C18.3333 12.85 18.6667 12.825 19 12.775C19.3333 12.725 19.6667 12.65 20 12.55V16H13L12.6 14H7V21H5ZM17.275 8.10001L20.75 4.65001L19.7 3.60001L17.275 5.97501L16.3 5.00001L15.25 6.07501L17.275 8.10001ZM21.5375 2.31251C22.5125 3.28751 23 4.46667 23 5.85001C23 7.23334 22.5125 8.41251 21.5375 9.38751C20.5625 10.3625 19.3833 10.85 18 10.85C16.6167 10.85 15.4375 10.3625 14.4625 9.38751C13.4875 8.41251 13 7.23334 13 5.85001C13 4.46667 13.4875 3.28751 14.4625 2.31251C15.4375 1.33751 16.6167 0.850006 18 0.850006C19.3833 0.850006 20.5625 1.33751 21.5375 2.31251Z",
+);
+
+/**
+ * Project card — scaled from the original 165×90 illustration into the 24×24
+ * box. Stroke + fill use currentColor so the parent `color` tints the glyph.
+ */
+export function ProjectCardIcon(props) {
+  return (
+    <IconBox {...props}>
+      <g transform="translate(0 5.455) scale(0.145455)">
+        <rect
+          x="11"
+          y="11"
+          width="139"
+          height="64"
+          rx="12"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="10"
+        />
+        <rect
+          x="11"
+          y="11"
+          width="106"
+          height="64"
+          rx="8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="5"
+        />
+        <path
+          d="M27 35C27 30.5817 30.5817 27 35 27H93C97.4183 27 101 30.5817 101 35V51C101 55.4183 97.4183 59 93 59H35C30.5817 59 27 55.4183 27 51V35Z"
+          fill="currentColor"
+        />
+        <path
+          d="M117 11H138C144.627 11 150 16.3726 150 23V63C150 69.6274 144.627 75 138 75H117V11Z"
+          fill="currentColor"
+        />
+      </g>
+    </IconBox>
+  );
+}
+
 /** Feedback Center — custom mindHIVE speech-bubble glyph. */
 export const FeedbackIcon = filledIcon(
   "FeedbackIcon",

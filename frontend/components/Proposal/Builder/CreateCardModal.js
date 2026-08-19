@@ -116,41 +116,6 @@ function StepSection({ label, children }) {
   );
 }
 
-function CardTypeStep({ cardCategory, onSelect, t }) {
-  return (
-    <StepSection
-      label={t(
-        "section.createCardModal.steps.cardType",
-        {},
-        { default: "Card type" }
-      )}
-    >
-      <div style={chipRowStyle}>
-        <Chip
-          shape="square"
-          label={t(
-            "section.createCardModal.categories.proposal",
-            {},
-            { default: "Project card" }
-          )}
-          selected={cardCategory === CARD_CATEGORY_PROPOSAL}
-          onClick={() => onSelect(CARD_CATEGORY_PROPOSAL)}
-        />
-        <Chip
-          shape="square"
-          label={t(
-            "section.createCardModal.categories.action",
-            {},
-            { default: "Milestone" }
-          )}
-          selected={cardCategory === CARD_CATEGORY_ACTION}
-          onClick={() => onSelect(CARD_CATEGORY_ACTION)}
-        />
-      </div>
-    </StepSection>
-  );
-}
-
 function CheckpointStep({
   checkpointChoice,
   checkpointOptions,
@@ -499,14 +464,6 @@ export default function CreateCardModal({
     [t]
   );
 
-  const resetDownstreamFromCategory = () => {
-    setCheckpointChoice("");
-    setTitle("");
-    setDescription("");
-    setSelectedPermissions(DEFAULT_PERMISSIONS);
-    setSelectedTemplateKey("");
-  };
-
   const resetDownstreamFromCheckpoint = () => {
     setTitle("");
     setDescription("");
@@ -567,12 +524,6 @@ export default function CreateCardModal({
               ?.disabled)) ||
         (isNewCheckpoint &&
           (!trimmedTitle || selectedPermissions.length === 0))));
-
-  const handleCardCategorySelect = (category) => {
-    if (category === cardCategory) return;
-    setCardCategory(category);
-    resetDownstreamFromCategory();
-  };
 
   const handleCheckpointSelect = (choice) => {
     if (choice === checkpointChoice) return;
@@ -680,14 +631,6 @@ export default function CreateCardModal({
         </h2>
 
         <div style={{ display: "grid", gap: 20 }}>
-          {!initialCardCategory ? (
-            <CardTypeStep
-              cardCategory={cardCategory}
-              onSelect={handleCardCategorySelect}
-              t={t}
-            />
-          ) : null}
-
           {cardCategory === CARD_CATEGORY_PROPOSAL ? (
             <label style={labelStyle}>
               {t(
