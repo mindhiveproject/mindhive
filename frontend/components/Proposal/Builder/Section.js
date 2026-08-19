@@ -602,8 +602,9 @@ const Section = ({
         <div className="newInput">
           <Button
             onClick={() => setCreateCardModalOpen(true)}
-            variant="primary"
-            size="small"
+            variant="tonal"
+            style={{ background: "var(--MH-Theme-Secondary-Dark, #E6E6E6)" }}
+            leadingIcon={<img src="/assets/icons/plus.svg" alt="Add card"/>}
           >
             {t("section.addCard", {}, { default: "Add card" })}
           </Button>

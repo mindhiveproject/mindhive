@@ -759,7 +759,7 @@ export default function CreateCardModal({
         >
           <Button
             type="button"
-            variant="outline"
+            variant="subtle"
             disabled={creating}
             onClick={onClose}
           >

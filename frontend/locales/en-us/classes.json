@@ -1353,8 +1353,8 @@
 	"projects": {
 		"addTemplateToClass": "Copy template to class",
 		"backToProjects": "Back to projects",
-		"boardSettingsAndPermissions": "Board settings & permissions",
 		"boardCurriculumTypeQuestion": "Which curriculum type applies to this template board?",
+		"boardSettingsAndPermissions": "Board settings & permissions",
 		"boardSettingsModalClose": "Close",
 		"boardSettingsModalDescription": "These settings apply to projects students start from \"{{title}}\".",
 		"boardSettingsSectionDescription": "Configure curriculum and card assignment for projects created from this template.",

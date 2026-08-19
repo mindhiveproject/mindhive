@@ -3,10 +3,25 @@ import styled from "styled-components";
 const StyledClass = styled.div`
   display: grid;
   width: 100%;
+  height: 100%;
   max-width: 100%;
   min-width: 0;
   overflow-x: hidden;
   box-sizing: border-box;
+
+  &.isProjectsFullscreen {
+    overflow-x: visible;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow-y: hidden;
+  }
+
+  &.isProjectsFullscreen > * {
+    max-width: none;
+    min-height: 0;
+    height: 100%;
+  }
 
   > * {
     min-width: 0;
@@ -886,13 +901,6 @@ const StyledClass = styled.div`
       }
     }
   }
-  .projectsBoardBackBar {
-    display: flex;
-    align-items: center;
-    padding: 12px 24px;
-    background: transparent;
-  }
-
   .classTabPage {
     display: grid;
     gap: 28px;

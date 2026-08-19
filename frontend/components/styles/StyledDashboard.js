@@ -72,16 +72,19 @@ export const StyledDashboardWrapper = styled.div`
 export const StyledDashboardContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin: 50px;
+  gap: ${(props) => (props.$boardEditorFullscreen ? "0" : "20px")};
+  margin: ${(props) => (props.$boardEditorFullscreen ? "0" : "50px")};
   max-width: ${(props) => props.theme.maxWidth};
-  /* Fill the scrollport so short pages still push the footer below the fold.
-     The scrollport is the viewport less the dashboard inset top and bottom,
-     then less this element's own 50px top and bottom margins. */
-  min-height: ${(props) =>
-    props.$withFooter
-      ? "calc(100vh - (var(--dashboard-inset, 24px) * 2) - 100px)"
-      : "100%"};
+  /* In board editor fullscreen, pin to the wrapper height so the wrapper
+     cannot scroll vertically. Normal pages use min-height to push the footer. */
+  ${(props) =>
+    props.$boardEditorFullscreen
+      ? "height: 100%; min-height: 0; overflow: hidden;"
+      : `min-height: ${
+          props.$withFooter
+            ? "calc(100vh - (var(--dashboard-inset, 24px) * 2) - 100px)"
+            : "100%"
+        };`}
 
   .dashboardMain {
     flex: 1 0 auto;
@@ -96,6 +99,16 @@ export const StyledDashboardContent = styled.div`
       props.$withFooter
         ? "calc(100vh - (var(--dashboard-inset, 24px) * 2) - 70px)"
         : "unset"};
+
+    ${(props) =>
+      props.$boardEditorFullscreen
+        ? `
+      flex: 1 1 0;
+      min-height: 0;
+      overflow: hidden;
+      align-content: stretch;
+    `
+        : ""}
   }
 
   .header {

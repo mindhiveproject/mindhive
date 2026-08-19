@@ -189,7 +189,7 @@ export default function ClassPage({ code, user, query }) {
 
   if (isProjectsFullscreen) {
     return (
-      <StyledClass>
+      <StyledClass className="isProjectsFullscreen">
         <ClassProjects myclass={myclass} user={user} query={query} />
       </StyledClass>
     );

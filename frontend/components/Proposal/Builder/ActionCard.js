@@ -57,7 +57,8 @@ export default function ActionCard({
                   <div>
                     {t(
                       "actionCard.submitForProposalFeedback",
-                      "Submit for Proposal Feedback"
+                      {},
+                      { default: "Submit for Proposal Feedback" }
                     )}
                   </div>
                 )}
@@ -66,7 +67,8 @@ export default function ActionCard({
                   <div>
                     {t(
                       "actionCard.submitForPeerFeedback",
-                      "Submit for Peer Feedback"
+                      {},
+                      { default: "Submit for Peer Feedback" }
                     )}
                   </div>
                 )}
@@ -75,7 +77,8 @@ export default function ActionCard({
                   <div>
                     {t(
                       "actionCard.submitForDataCollection",
-                      "Submit for Data Collection"
+                      {},
+                      { default: "Submit for Data Collection" }
                     )}
                   </div>
                 )}
@@ -84,7 +87,8 @@ export default function ActionCard({
                   <div>
                     {t(
                       "actionCard.submitForProjectReport",
-                      "Submit for Project Report"
+                      {},
+                      { default: "Submit for Project Report" }
                     )}
                   </div>
                 )}
@@ -100,9 +104,11 @@ export default function ActionCard({
                   </div>
                 )}
               </div>
-              <div className="card-subtitle">
-                {variant === "ACTION_SUBMITTED" ? "Submitted" : "Not Submitted"}
-              </div>
+              {!proposalBuildMode && (
+                <div className="card-subtitle">
+                  {variant === "ACTION_SUBMITTED" ? "Submitted" : "Not Submitted"}
+                </div>
+              )}
             </div>
             <div className="card-right-section">
               {clipboardIcon}

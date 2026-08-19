@@ -130,6 +130,84 @@ export const StyledProposal = styled.div`
       (var(--proposal-section-width) + 2 * var(--proposal-section-margin))
     );
 
+    .boardEditorChrome {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      min-width: 0;
+      margin: 0 0 16px;
+      padding: 8px;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border-radius: 8px;
+      border: 1.5px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+    }
+    .boardEditorChromeLeft {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+    .boardEditorChromeTitleWrap {
+      min-width: 0;
+      flex: 1;
+    }
+    .boardEditorChromeTitleRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .boardEditorChromeTitle {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 32px;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .boardEditorChromeTitleInput {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      font-family: Inter, sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 32px;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+      border: 1px solid var(--MH-Theme-Primary-Dark, #336F8A);
+      border-radius: 8px;
+      padding: 4px 8px;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+    }
+    .boardEditorChromeEditTitle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      img {
+        width: 18px;
+        height: 18px;
+      }
+    }
+    .boardEditorChromeRight {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
     .narrowButton {
       height: 40px;
       padding: 8px 24px 8px 16px;
@@ -292,8 +370,8 @@ export const StyledProposal = styled.div`
     justify-items: center;
     grid-gap: 12px;
     position: relative;
-    background: none;
-    border: 1px solid #A1A1A1;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1.5px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
     border-radius: 8px;
     min-width: 250px;
     width: var(--proposal-section-width);
@@ -397,6 +475,206 @@ export const StyledProposal = styled.div`
         opacity: 1;
       }
     }
+  }
+
+  &.projectsBoardEditorProposal {
+    overflow-y: hidden;
+    min-height: 0;
+    height: 100%;
+  }
+
+  &.projectsBoardEditorProposal .proposalBoard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    --proposal-section-min-width: 420px;
+    --proposal-section-max-width: 500px;
+    --proposal-section-width: var(--proposal-section-min-width);
+    --proposal-section-gap: 24px;
+    --proposal-card-gap: 12px;
+  }
+
+  &.projectsBoardEditorProposal .boardEditorChrome {
+    flex-shrink: 0;
+    background: #fff;
+    z-index: 4;
+  }
+
+  &.projectsBoardEditorProposal .boardInner {
+    flex: 1;
+    min-height: 0;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardInnerToolbar {
+    flex-shrink: 0;
+    z-index: 3;
+    padding: 8px 8px;
+    margin-bottom: 8px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1.5px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+    border-radius: 8px;
+  }
+
+  &.projectsBoardEditorProposal .boardEditorBody {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .boardEditorBody .post {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+    overflow-y: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnsWrap {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdge {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    width: 56px;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeLeft {
+    left: 0;
+    justify-content: flex-start;
+    padding-left: 2px;
+    background: linear-gradient(
+      to right,
+      #f7f9f8 0%,
+      #f7f9f8 42%,
+      rgba(247, 249, 248, 0) 100%
+    );
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeRight {
+    right: 0;
+    justify-content: flex-end;
+    padding-right: 2px;
+    background: linear-gradient(
+      to left,
+      #f7f9f8 0%,
+      #f7f9f8 42%,
+      rgba(247, 249, 248, 0) 100%
+    );
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdge.isHidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow {
+    pointer-events: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow .DesignSystem-IconButton-Icon {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow .DesignSystem-IconButton-Icon img {
+    width: 12px;
+    height: 12px;
+    opacity: 0.55;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .scrollable {
+    flex: 1 1 0;
+    max-width: 100%;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnsWrap .scrollable {
+    overflow-y: visible;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior-x: contain;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &.projectsBoardEditorProposal .sections {
+    min-width: 100%;
+  }
+
+  &.projectsBoardEditorProposal .sections .smooth-dnd-container.horizontal {
+    display: flex !important;
+    gap: var(--proposal-section-gap);
+    min-width: max-content;
+    box-sizing: border-box;
+  }
+
+  &.projectsBoardEditorProposal .sections .smooth-dnd-container.horizontal > .smooth-dnd-draggable-wrapper {
+    flex: 0 0 var(--proposal-section-min-width);
+    min-width: var(--proposal-section-min-width) !important;
+    max-width: var(--proposal-section-max-width);
+    width: auto !important;
+    box-sizing: border-box;
+  }
+
+  &.projectsBoardEditorProposal .section {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  &.projectsBoardEditorProposal .section > div {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  &.projectsBoardEditorProposal .section .smooth-dnd-container.vertical {
+    display: flex;
+    flex-direction: column;
+    gap: var(--proposal-card-gap);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  &.projectsBoardEditorProposal .section .smooth-dnd-container.vertical > .smooth-dnd-draggable-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
   }
 
   .header {
@@ -812,7 +1090,6 @@ export const StyledProposal = styled.div`
     border-radius: 16px;
     overflow: visible;
     background: #ffffff;
-    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
   }
   .templateBannerHeader {
@@ -1232,6 +1509,13 @@ export const StyledProposal = styled.div`
           padding: 10px 24px;
         }
       }
+      &.navigation-build-modeEmbedded {
+        grid-template-columns: 1fr;
+        justify-items: end;
+        .right {
+          justify-self: end;
+        }
+      }
     }
     .buttons {
       width: auto;
@@ -1331,7 +1615,7 @@ export const StyledProposal = styled.div`
       background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
       border-radius: 8px;
       border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
       overflow: hidden;
       width: 100%;
       .originalEntryBlockHeader {
@@ -1678,12 +1962,18 @@ export const StyledProposalCard = styled.div`
   background: #ffffff;
   border: 1px solid #a1a1a1;
   border-radius: 12px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  // box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   width: calc(100% - 20px);
   cursor: pointer;
   margin: 3px 10px;
   font-family: Inter;
   box-sizing: border-box;
+
+  &.projectsBoardEditorProposal & {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
 
   .card-drag-handle {
     height: 100%;
@@ -1811,13 +2101,19 @@ export const StyledActionCard = styled.div`
   justify-content: space-between;
   position: relative;
   border-radius: 12px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  // box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   margin: 3px 10px;
   width: calc(100% - 20px);
   font-family: Inter;
   overflow: hidden;
   box-sizing: border-box;
+
+  &.projectsBoardEditorProposal & {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+  }
 
   background: ${(props) => {
     if (props.proposalBuildMode) return "#FFFFFF";

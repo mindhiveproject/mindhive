@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { v1 as uuidv1 } from "uuid";
 import Sections from "./Sections";
 import AddSectionModal from "./AddSectionModal";
+import BoardColumnScroller from "./BoardColumnScroller";
 import Button from "../../DesignSystem/Button";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
@@ -93,16 +94,18 @@ function Inner(props) {
         {canAddSections && (
           <div className="boardInnerToolbar">
             <Button
-              variant="primary"
-              size="small"
+              variant="tonal"
+              style={{ background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)" }}
               onClick={() => setAddSectionModalOpen(true)}
-              leadingIcon={<img src="../../assets/icons/add_column.svg" alt="Add section" style={{filter: "invert(1)"}}/>}
+              leadingIcon={
+                <img src="../../assets/icons/add_column.svg" alt=""/>
+              }
             >
              {t("inner.addSection", {}, { default: "Add section" })}
             </Button>
           </div>
         )}
-        <div className="scrollable">
+        <BoardColumnScroller>
           <Sections
             board={board}
             boardId={board?.id}
@@ -124,7 +127,7 @@ function Inner(props) {
             addMilestoneTargetSectionId={props.addMilestoneTargetSectionId}
             onAddMilestoneModalOpened={props.onAddMilestoneModalOpened}
           />
-        </div>
+        </BoardColumnScroller>
       </div>
       <AddSectionModal
         open={addSectionModalOpen}

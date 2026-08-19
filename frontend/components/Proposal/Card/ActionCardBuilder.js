@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import clsx from "clsx";
 import { useMutation, useQuery, useApolloClient } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
@@ -61,6 +62,8 @@ export default function ActionCardBuilder({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
+  hideBoardChromeNav = false,
+  registerCloseHandler,
 }) {
   const { t } = useTranslation("classes");
   const { t: tBuilder } = useTranslation("builder");
@@ -342,32 +345,47 @@ export default function ActionCardBuilder({
 
   const saving = updateLoading || milestoneLoading;
 
+  useEffect(() => {
+    if (!registerCloseHandler) return undefined;
+    registerCloseHandler(handleClose);
+    return () => registerCloseHandler(null);
+  });
+
   return (
     <div className="post">
-      <div className="navigation-build-mode">
-        <div className="left">
-          <div
-            className="icon"
-            onClick={handleClose}
-            style={{
-              opacity: saving ? 0.6 : 1,
-              pointerEvents: saving ? "none" : "auto",
-            }}
-          >
-            <div className="selector">
-              <img src="/assets/icons/back.svg" alt="back" />
+      <div
+        className={clsx(
+          "navigation-build-mode",
+          hideBoardChromeNav && "navigation-build-modeEmbedded"
+        )}
+      >
+        {!hideBoardChromeNav && (
+          <>
+            <div className="left">
+              <div
+                className="icon"
+                onClick={handleClose}
+                style={{
+                  opacity: saving ? 0.6 : 1,
+                  pointerEvents: saving ? "none" : "auto",
+                }}
+              >
+                <div className="selector">
+                  <img src="/assets/icons/back.svg" alt="back" />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <Tooltip
-          content={proposal?.title || ""}
-          side="bottom"
-          maxWidth={400}
-        >
-          <div className="middle">
-            <span className="studyTitle">{proposal?.title}</span>
-          </div>
-        </Tooltip>
+            <Tooltip
+              content={proposal?.title || ""}
+              side="bottom"
+              maxWidth={400}
+            >
+              <div className="middle">
+                <span className="studyTitle">{proposal?.title}</span>
+              </div>
+            </Tooltip>
+          </>
+        )}
         <div className="right">
           <div className="editModeMessage">
             {t("board.editMode", {}, { default: "You are in Edit Mode" })}

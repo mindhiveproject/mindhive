@@ -20,6 +20,8 @@ export default function CardWrapper({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
+  hideBoardChromeNav = false,
+  registerCloseHandler,
 }) {
   const {
     data,
@@ -74,6 +76,8 @@ export default function CardWrapper({
               autoUpdateStudentBoards={autoUpdateStudentBoards}
               propagateToClones={propagateToClones}
               onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
+              hideBoardChromeNav={hideBoardChromeNav}
+              registerCloseHandler={registerCloseHandler}
             />
           );
         }
@@ -86,6 +90,8 @@ export default function CardWrapper({
             autoUpdateStudentBoards={autoUpdateStudentBoards}
             propagateToClones={propagateToClones}
             onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
+            hideBoardChromeNav={hideBoardChromeNav}
+            registerCloseHandler={registerCloseHandler}
           />
         );
       } else {

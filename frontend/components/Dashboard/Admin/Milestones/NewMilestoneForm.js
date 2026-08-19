@@ -1,6 +1,5 @@
 // Inline "+ New milestone" form for global milestones. Global scope
-// only — template milestones have their own flow inside a template
-// proposal board's builder (TemplateMilestoneManager).
+// only — template milestones are managed via action cards in the template editor.
 //
 // The wizard auto-slugifies the title into a lowercase snake_case key
 // (matching the unification convention) and defaults reviewStage,

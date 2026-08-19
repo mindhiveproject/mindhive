@@ -46,6 +46,7 @@ export default function EditProposal({ user, boardId }) {
         user={user}
         proposalId={boardId}
         onBack={onBack}
+        showBackButton={false}
         proposalBuildMode={true}
         refetchQueries={[
           {

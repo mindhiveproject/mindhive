@@ -1353,6 +1353,7 @@
 	"projects": {
 		"addTemplateToClass": "Kopieer sjabloon naar klas",
 		"backToProjects": "Terug naar projecten",
+		"boardCurriculumTypeQuestion": "",
 		"boardSettingsAndPermissions": "Bordinstellingen & machtigingen",
 		"boardSettingsModalClose": "Sluiten",
 		"boardSettingsModalDescription": "Deze instellingen zijn van toepassing op projecten die studenten starten vanuit \"{{title}}\".",
