@@ -879,41 +879,11 @@ export const StyledComponentPanel = styled.div`
   align-content: baseline;
   grid-gap: 10px;
   min-width: 0;
-  width: auto;
-  background: white;
-  padding: 12px;
-  overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and legacy Edge */
-  height: 100%;
-  margin: 10px 8px 10px 8px;
+  width: 100%;
   box-sizing: border-box;
-  box-shadow: none;
-  border-radius: 12px;
-  border: 1px solid #e6e6e6;
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-  .panelHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding-bottom: 5px;
-  }
-  .title {
-    font-family: Nunito;
-    font-weight: 700;
-    font-style: Bold;
-    font-size: 16px;
-    leading-trim: NONE;
-    line-height: 24px;
-    letter-spacing: 0px;
-    flex: 1;
-    min-width: 0;
-  }
+  font-family: Inter, sans-serif;
   .subtitle {
-    font-family: Nunito;
+    font-family: Inter, sans-serif;
     font-weight: 700;
     font-style: Bold;
     font-size: 14px;
@@ -927,7 +897,18 @@ export const StyledComponentPanel = styled.div`
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-gap: 10px;
-    margin: 8px 8px 20px 0px;
+    margin: 8px 0 20px;
+    width: 100%;
+
+    /* Tooltip shrink-wraps by default; fill the 1fr track so titles wrap
+       on the column, not on the 72px icon. */
+    .DesignSystem-Tooltip-trigger,
+    .DesignSystem-Tooltip-trigger--fill {
+      width: 100%;
+      max-width: 100%;
+      display: flex;
+      justify-content: center;
+    }
   }
   .card {
     cursor: pointer;
@@ -936,13 +917,15 @@ export const StyledComponentPanel = styled.div`
     gap: 8px;
     align-items: start;
     justify-items: center;
+    width: 100%;
+    box-sizing: border-box;
     border: 1px solid transparent;
     border-radius: 16px;
     padding: 8px;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
     background: #fff;
 
-    font-family: Nunito;
+    font-family: Inter, sans-serif;
     font-weight: 600;
     font-size: 13px;
     line-height: 18px;
@@ -985,12 +968,14 @@ export const StyledComponentPanel = styled.div`
   }
 
   .cardTitle {
-    font-family: Nunito;
+    font-family: Inter, sans-serif;
     font-weight: 700;
     font-size: 13px;
     line-height: 18px;
     color: #111827;
     max-width: 100%;
+    text-align: center;
+    overflow-wrap: break-word;
   }
 `;
 
@@ -1615,7 +1600,7 @@ export const StyledDataWorkspace = styled.div`
         background: #f8f9f8;
         border-bottom: 1px solid #e6e6e6;
         .item {
-          font-family: Nunito;
+          font-family: Inter;
           font-weight: 600;
           font-size: 14px;
           line-height: 20px;
@@ -1631,7 +1616,7 @@ export const StyledDataWorkspace = styled.div`
         }
       } */
       .item {
-        font-family: Nunito;
+        font-family: Inter;
         font-weight: 600;
         font-size: 14px;
         line-height: 20px;
@@ -1870,7 +1855,7 @@ export const StyledDataWorkspace = styled.div`
     input.input-box,
     input.input-box-number,
     textarea.input-box {
-      font-family: Nunito, sans-serif;
+      font-family: Inter, sans-serif;
       font-size: 14px;
       line-height: 20px;
     }
@@ -1885,7 +1870,7 @@ export const StyledDataWorkspace = styled.div`
         color: var(--MH-Theme-Tertiary-Dark, #0d3944);
 
         /* MH-Theme/title/base */
-        font-family: Nunito;
+        font-family: Inter;
         font-size: 16px;
         font-style: normal;
         font-weight: 900;
@@ -1908,7 +1893,7 @@ export const StyledDataWorkspace = styled.div`
         color: var(--MH-Theme-Neutrals-Black, #171717);
 
         /* MH-Theme/body/small */
-        font-family: "Nunito";
+        font-family: "Inter";
         font-size: 12px;
         font-style: normal;
         font-weight: 400;
@@ -1977,7 +1962,7 @@ export const StyledDataWorkspace = styled.div`
           color: var(--MH-Theme-Neutrals-Black, #171717);
 
           /* MH-Theme/title/base */
-          font-family: Nunito;
+          font-family: Inter;
           font-size: 16px;
           font-style: normal;
           font-weight: 700;
@@ -2039,7 +2024,7 @@ export const StyledDataWorkspace = styled.div`
         color: var(--MH-Theme-Neutrals-Black, #171717);
 
         /* MH-Theme/body/small */
-        font-family: "Nunito";
+        font-family: "Inter";
         font-size: 12px;
         font-style: normal;
         font-weight: 400;
@@ -2086,7 +2071,7 @@ export const StyledDataWorkspace = styled.div`
         color: var(--MH-Theme-Neutrals-Black, #171717);
 
         /* MH-Theme/body/small */
-        font-family: "Nunito";
+        font-family: "Inter";
         font-size: 12px;
         font-style: normal;
         font-weight: 400;
@@ -2156,7 +2141,7 @@ export const StyledDatasetCard = styled.div`
   }
 
   .dataset-title {
-    font-family: Nunito, Inter, sans-serif;
+    font-family: Inter, Inter, sans-serif;
     font-weight: 600;
     font-size: 16px;
     line-height: 22px;
@@ -2217,7 +2202,7 @@ export const StyledDatasetView = styled.div`
 
     h2 {
       margin: 0;
-      font-family: Nunito;
+      font-family: Inter;
       font-weight: 700;
       font-size: 24px;
       color: #333;
@@ -2264,7 +2249,7 @@ export const StyledDatasetView = styled.div`
       border: none;
       padding: 12px 24px;
       cursor: pointer;
-      font-family: Nunito;
+      font-family: Inter;
       font-weight: 600;
       font-size: 14px;
       color: #666;
@@ -2290,7 +2275,7 @@ export const StyledDatasetView = styled.div`
   .data-container,
   .settings-container {
     h4 {
-      font-family: Nunito;
+      font-family: Inter;
       font-weight: 600;
       font-size: 18px;
       margin-bottom: 15px;

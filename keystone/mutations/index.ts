@@ -59,6 +59,7 @@ import backfillMilestoneStatus from "./backfillMilestoneStatus";
 import resolveMilestonesForBoard from "./resolveMilestonesForBoard";
 import createTemplateMilestone from "./createTemplateMilestone";
 import updateTemplateMilestone from "./updateTemplateMilestone";
+import deleteTemplateMilestone from "./deleteTemplateMilestone";
 import backfillLinkActionCardsToMilestones from "./backfillLinkActionCardsToMilestones";
 import backfillLowercaseKeys from "./backfillLowercaseKeys";
 import backfillProjectBoardFormScope from "./backfillProjectBoardFormScope";
@@ -256,6 +257,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillClassNetworkPublicIds(limit: Int, dryRun: Boolean): [String!]!
         createTemplateMilestone(input: CreateTemplateMilestoneInput!): Milestone
         updateTemplateMilestone(input: UpdateTemplateMilestoneInput!): Milestone
+        deleteTemplateMilestone(id: ID!): Milestone
       }
       input CreateTemplateMilestoneInput {
         templateBoardId: ID!
@@ -414,6 +416,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillClassNetworkPublicIds,
         createTemplateMilestone,
         updateTemplateMilestone,
+        deleteTemplateMilestone,
       },
     },
   });

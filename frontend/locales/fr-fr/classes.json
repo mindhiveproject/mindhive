@@ -1353,6 +1353,7 @@
 	"projects": {
 		"addTemplateToClass": "Copier le modèle dans la classe",
 		"backToProjects": "Retour aux projets",
+		"boardCurriculumTypeQuestion": "",
 		"boardSettingsAndPermissions": "Paramètres et autorisations du tableau",
 		"boardSettingsModalClose": "Fermer",
 		"boardSettingsModalDescription": "Ces paramètres s'appliquent aux projets que les étudiants démarrent à partir de \"{{title}}\".",

@@ -172,8 +172,8 @@
 				"defaultFormReadOnly": "This is a MindHive default review form. It cannot be edited from this card.",
 				"editReviewForm": "Edit review form",
 				"editReviewFormHint": "Scoped to this template board. Student clones inherit whatever you publish.",
-				"includedCardsEmpty": "No proposal cards are configured for this review step yet.",
-				"includedCardsHelper": "Students submit content from these proposal cards when they reach this action card. Configure inclusion on each proposal card's Student Answer Box settings.",
+				"includedCardsEmpty": "No project cards are configured for this review step yet.",
+				"includedCardsHelper": "Students submit content from these project cards when they reach this action card. Configure inclusion on each project card's Student Answer Box settings.",
 				"includedCardsTitle": "Included in this review step",
 				"milestoneDescription": "Description",
 				"openingEditor": "Opening editor…",
@@ -422,8 +422,8 @@
 	"cardAssignmentDisabled": "Cards cannot be assigned to students",
 	"cardAssignmentEnabled": "Cards can be assigned to students",
 	"classCurriculum": "Class Curriculum",
-	"classCurriculumDescription": "Select which curriculum applies to this class.",
-	"classCurriculumTypeQuestion": "Which curriculum type applies to this class?",
+	"classCurriculumDescription": "Select which curricula apply to this class.",
+	"classCurriculumTypeQuestion": "Which curriculum types apply to this class?",
 	"classDescriptionSettingsDescription": "Add the description students and mentors will see in the class header.",
 	"classDescriptionSettingsEmptyHint": "Leave this blank to hide the description from the class header.",
 	"classDescriptionSettingsTitle": "Class description",
@@ -1353,6 +1353,7 @@
 	"projects": {
 		"addTemplateToClass": "Copy template to class",
 		"backToProjects": "Back to projects",
+		"boardCurriculumTypeQuestion": "Which curriculum type applies to this template board?",
 		"boardSettingsAndPermissions": "Board settings & permissions",
 		"boardSettingsModalClose": "Close",
 		"boardSettingsModalDescription": "These settings apply to projects students start from \"{{title}}\".",
@@ -1451,7 +1452,7 @@
 		"yourProjects": "Your projects",
 		"yourProjectsDescription": "{{count}} project boards in this class that you authored or collaborate on."
 	},
-	"proposalCardsAssignableQuestion": "Should proposal cards be assignable to students?",
+	"proposalCardsAssignableQuestion": "Should project cards be assignable to students?",
 	"resource": {
 		"action": "Action",
 		"actions": "Actions",

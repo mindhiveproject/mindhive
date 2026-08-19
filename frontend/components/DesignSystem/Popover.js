@@ -162,7 +162,10 @@ export default function Popover({
       // of the surface; dismissing on those clicks would close this popover.
       if (
         target instanceof Element &&
-        target.closest(".DesignSystem-DropdownSelect-Panel")
+        (target.closest(".DesignSystem-DropdownSelect-Panel") ||
+          target.closest(".DesignSystem-Tooltip") ||
+          (target.closest(".DesignSystem-Popover") &&
+            target.closest(".DesignSystem-Popover") !== surfaceRef.current))
       ) {
         return;
       }

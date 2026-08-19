@@ -107,7 +107,7 @@ export default function AddSectionModal({ open, onClose, onSubmit, creating }) {
         >
           <Button
             type="button"
-            variant="outline"
+            variant="subtle"
             disabled={creating}
             onClick={onClose}
           >

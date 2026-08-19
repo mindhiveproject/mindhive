@@ -1353,6 +1353,7 @@
 	"projects": {
 		"addTemplateToClass": "Copiar modelo para a turma",
 		"backToProjects": "Voltar para projetos",
+		"boardCurriculumTypeQuestion": "",
 		"boardSettingsAndPermissions": "Configurações e permissões do quadro",
 		"boardSettingsModalClose": "Fechar",
 		"boardSettingsModalDescription": "Essas configurações se aplicam aos projetos que os alunos iniciam a partir de \"{{title}}\".",

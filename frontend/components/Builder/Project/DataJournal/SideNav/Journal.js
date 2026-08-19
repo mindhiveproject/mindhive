@@ -39,15 +39,7 @@ export default function JournalNavigation({
   const { t } = useTranslation("builder");
   const { t: tCommon } = useTranslation("common");
   const router = useRouter();
-  const {
-    user,
-    projectId,
-    studyId,
-    setActiveComponent,
-    setIsAddComponentPanelOpen,
-    setLeftPanelMode,
-    setSidebarVisible,
-  } = useDataJournal();
+  const { user, projectId, studyId } = useDataJournal();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -266,12 +258,8 @@ export default function JournalNavigation({
               <AddWorkspace journalId={journal?.id} />
               <AddComponentButton
                 disabled={!selectedWorkspace?.id}
-                onClick={() => {
-                  setActiveComponent(null);
-                  setLeftPanelMode("addComponent");
-                  setIsAddComponentPanelOpen(true);
-                  setSidebarVisible(true);
-                }}
+                side="right"
+                align="start"
               />
             </div>
 

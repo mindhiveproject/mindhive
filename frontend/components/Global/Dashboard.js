@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useRouter } from "next/router";
 
 import {
   StyledDashboard,
@@ -32,10 +33,18 @@ function shouldShowDashboardFooter(area) {
 
 export default function Dashboard({ children, area, selector }) {
   const { user, loading: authLoading } = useContext(UserContext);
+  const router = useRouter();
   const showFooter = shouldShowDashboardFooter(area);
+  const boardEditorFullscreen =
+    area === "myclasses" &&
+    router.query.action === "edit" &&
+    !!router.query.board;
 
   const content = (
-    <StyledDashboardContent $withFooter={showFooter}>
+    <StyledDashboardContent
+      $withFooter={showFooter}
+      $boardEditorFullscreen={boardEditorFullscreen}
+    >
       <div className="dashboardMain">{children}</div>
       {showFooter ? (
         <StyledDashboardFooterSlot>

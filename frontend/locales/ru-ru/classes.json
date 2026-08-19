@@ -1353,6 +1353,7 @@
 	"projects": {
 		"addTemplateToClass": "Скопировать шаблон в класс",
 		"backToProjects": "Назад к проектам",
+		"boardCurriculumTypeQuestion": "",
 		"boardSettingsAndPermissions": "Настройки доски и разрешения",
 		"boardSettingsModalClose": "Закрыть",
 		"boardSettingsModalDescription": "Эти настройки применяются к проектам, которые студенты начинают из \"{{title}}\".",

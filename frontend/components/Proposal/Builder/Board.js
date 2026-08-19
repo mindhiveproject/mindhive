@@ -18,7 +18,6 @@ import {
   DELETE_SECTION,
 } from "../../Mutations/Proposal";
 import { isClassTemplateBoard } from "../../Utils/proposalBoard";
-import TemplateMilestoneManager from "../../Builder/Project/ProjectBoard/Board/Builder/TemplateMilestoneManager";
 
 const Board = ({
   proposalId,
@@ -67,8 +66,9 @@ const Board = ({
   );
 
   const deleteSection = useCallback(
-    async (opts) => {
+    async (opts, { skipPropagate = false } = {}) => {
       await deleteSectionMut(opts);
+      if (skipPropagate) return;
       if (autoUpdateStudentBoards && propagateToClones) {
         try {
           await propagateToClones();
@@ -225,13 +225,6 @@ const Board = ({
       `Error! ${error.message}`
     );
 
-  // Same gate as the newer Builder/Project/ProjectBoard tree: only
-  // template boards being actively edited (not previewed) get the
-  // Review-steps panel. Kept consistent so an admin editing the same
-  // board from either tree sees the same affordances.
-  const showTemplateMilestoneManager =
-    !isPreview && proposalBuildMode && isClassTemplateBoard(proposal);
-
   return (
     <>
       {proposalBuildMode && errors.length > 0 && (
@@ -243,12 +236,6 @@ const Board = ({
             ))}
           </Message.List>
         </Message>
-      )}
-      {showTemplateMilestoneManager && (
-        <TemplateMilestoneManager
-          templateBoardId={proposal.id}
-          board={proposal}
-        />
       )}
       <Inner
         board={proposal}

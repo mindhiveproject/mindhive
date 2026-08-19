@@ -24,6 +24,7 @@ function SettingsChoiceGroup({ options, disabled }) {
 
 export default function BoardSettingsFields({
   curriculumType,
+  classCurriculumTypes,
   assignableToStudents,
   studentsCanAssignToCards,
   copyVisible,
@@ -90,8 +91,11 @@ export default function BoardSettingsFields({
           <div className="boardSettingsBlock">
             <CurriculumTypeSelector
               curriculumType={curriculumType || DEFAULT_CURRICULUM_TYPE}
+              allowedValues={classCurriculumTypes}
               disabled={disabled}
               onChange={onCurriculumTypeChange}
+              questionKey="projects.boardCurriculumTypeQuestion"
+              questionDefault="Which curriculum type applies to this template board?"
             />
           </div>
 
@@ -99,7 +103,7 @@ export default function BoardSettingsFields({
             <div className="boardSettingsBlock">
               <p className="settingsQuestion">
                 {t("proposalCardsAssignableQuestion", {}, {
-                  default: "Should proposal cards be assignable to students?",
+                  default: "Should project cards be assignable to students?",
                 })}
               </p>
               <SettingsChoiceGroup

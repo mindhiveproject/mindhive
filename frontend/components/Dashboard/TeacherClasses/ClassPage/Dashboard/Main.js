@@ -637,7 +637,7 @@ export default function Dashboard({ myclass }) {
       {selectedStudents.length > 1 ? (
         <div className="dashboardToolbar">
           <Button
-            variant="tonal"
+            variant="subtle"
             leadingIcon={
               <DashboardAssetIcon src="/assets/icons/profile/people.svg" />
             }

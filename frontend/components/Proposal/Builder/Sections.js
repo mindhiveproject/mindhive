@@ -26,6 +26,10 @@ class Sections extends Component {
   };
 
   onColumnDrop = ({ removedIndex, addedIndex, payload }) => {
+    if (this.props.cardSelectMode) {
+      return;
+    }
+
     if (
       (this.props.isPreview || !this.props.settings?.allowMovingSections) &&
       !this.props.proposalBuildMode
@@ -134,8 +138,9 @@ class Sections extends Component {
           getChildPayload={(index) => sections[index]}
           dragHandleSelector=".column-drag-handle"
           lockAxis={
-            (this.props.isPreview || !settings?.allowMovingSections) &&
-            !this.props.proposalBuildMode
+            this.props.cardSelectMode ||
+            ((this.props.isPreview || !settings?.allowMovingSections) &&
+              !this.props.proposalBuildMode)
               ? "undefined"
               : null
           }
@@ -148,7 +153,6 @@ class Sections extends Component {
                 sections={sections}
                 section={section}
                 onUpdateSection={this.props.onUpdateSection}
-                deleteSection={this.props.deleteSection}
                 onCardChange={this.onCardChange}
                 openCard={this.props.openCard}
                 proposalBuildMode={this.props.proposalBuildMode}
@@ -163,6 +167,11 @@ class Sections extends Component {
                   section.id === this.props.addMilestoneTargetSectionId
                 }
                 onAddMilestoneModalOpened={this.props.onAddMilestoneModalOpened}
+                cardSelectMode={this.props.cardSelectMode}
+                selectedCardIds={this.props.selectedCardIds}
+                selectedSectionIds={this.props.selectedSectionIds}
+                onToggleCardSelection={this.props.onToggleCardSelection}
+                onToggleSectionSelection={this.props.onToggleSectionSelection}
               />
             </Draggable>
           ))}

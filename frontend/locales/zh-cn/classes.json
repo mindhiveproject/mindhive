@@ -1353,6 +1353,7 @@
 	"projects": {
 		"addTemplateToClass": "将模板复制到班级",
 		"backToProjects": "返回项目",
+		"boardCurriculumTypeQuestion": "",
 		"boardSettingsAndPermissions": "看板设置与权限",
 		"boardSettingsModalClose": "关闭",
 		"boardSettingsModalDescription": "这些设置适用于学生从“{{title}}”开始的项目。",

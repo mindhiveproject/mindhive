@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import clsx from "clsx";
 import { useMutation, useQuery } from "@apollo/client";
 import { Checkbox, Dropdown, Icon } from "semantic-ui-react";
 import { useRouter } from "next/router";
@@ -31,6 +32,8 @@ export default function BuilderProposalCard({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
+  hideBoardChromeNav = false,
+  registerCloseHandler,
 }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
@@ -185,55 +188,76 @@ export default function BuilderProposalCard({
     ...(inputs?.studies || []),
   ].length;
 
+  const handleBackToBoard = async () => {
+    try {
+      if (!hasCardChanges()) {
+        closeCard({ cardId: proposalCard?.id, lockedByUser: false });
+        return;
+      }
+      await saveCardContentOnly();
+      closeCard({ cardId: proposalCard?.id, lockedByUser: false });
+      const hasClones = proposal?.prototypeFor?.length > 0;
+      const shouldPropagate =
+        hasClones && autoUpdateStudentBoards && propagateToClones;
+      if (shouldPropagate) {
+        const contentChanged =
+          String(content?.current ?? "") !==
+          String(proposalCard?.content ?? "");
+        propagateToClones({
+          contentChangedCardIds:
+            contentChanged && proposalCard?.id ? [proposalCard.id] : [],
+        }).catch((e) => {
+          console.error("Propagate to clones failed:", e);
+        });
+      } else if (hasClones) {
+        onTemplateChangedWithoutPropagation?.();
+      }
+    } catch (e) {
+      // Leave card open; mutation error handling applies
+    }
+  };
+
+  useEffect(() => {
+    if (!registerCloseHandler) return undefined;
+    registerCloseHandler(handleBackToBoard);
+    return () => registerCloseHandler(null);
+  });
+
   return (
     <div className="post">
-      <div className="navigation-build-mode">
-        <div className="left">
-          <div
-            className="icon"
-            onClick={async () => {
-              try {
-                if (!hasCardChanges()) {
-                  closeCard({ cardId: proposalCard?.id, lockedByUser: false });
-                  return;
-                }
-                await saveCardContentOnly();
-                closeCard({ cardId: proposalCard?.id, lockedByUser: false });
-                const hasClones = proposal?.prototypeFor?.length > 0;
-                const shouldPropagate = hasClones && autoUpdateStudentBoards && propagateToClones;
-                if (shouldPropagate) {
-                  const contentChanged =
-                    String(content?.current ?? "") !==
-                    String(proposalCard?.content ?? "");
-                  propagateToClones({
-                    contentChangedCardIds:
-                      contentChanged && proposalCard?.id ? [proposalCard.id] : [],
-                  }).catch((e) => {
-                    console.error("Propagate to clones failed:", e);
-                  });
-                } else if (hasClones) {
-                  onTemplateChangedWithoutPropagation?.();
-                }
-              } catch (e) {
-                // Leave card open; mutation error handling applies
-              }
-            }}
-            style={{ opacity: updateLoading ? 0.6 : 1, pointerEvents: updateLoading ? "none" : "auto" }}
-          >
-            <div className="selector">
-              <img src="/assets/icons/back.svg" alt="back" />
+      <div
+        className={clsx(
+          "navigation-build-mode",
+          hideBoardChromeNav && "navigation-build-modeEmbedded"
+        )}
+      >
+        {!hideBoardChromeNav && (
+          <>
+            <div className="left">
+              <div
+                className="icon"
+                onClick={handleBackToBoard}
+                style={{
+                  opacity: updateLoading ? 0.6 : 1,
+                  pointerEvents: updateLoading ? "none" : "auto",
+                }}
+              >
+                <div className="selector">
+                  <img src="/assets/icons/back.svg" alt="back" />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <Tooltip
-          content={proposal?.title || ""}
-          side="bottom"
-          maxWidth={400}
-        >
-          <div className="middle">
-            <span className="studyTitle">{proposal?.title}</span>
-          </div>
-        </Tooltip>
+            <Tooltip
+              content={proposal?.title || ""}
+              side="bottom"
+              maxWidth={400}
+            >
+              <div className="middle">
+                <span className="studyTitle">{proposal?.title}</span>
+              </div>
+            </Tooltip>
+          </>
+        )}
         <div className={`right${previewMode ? " rightPreviewMode" : ""}`}>
           {previewMode ? (
             <button

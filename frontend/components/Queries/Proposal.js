@@ -249,6 +249,7 @@ export const PROPOSAL_QUERY = gql`
           milestone {
             id
             key
+            scope
             actionCardType
             reviewStage
             statusTarget
@@ -260,6 +261,7 @@ export const PROPOSAL_QUERY = gql`
             formDefinition {
               id
               key
+              scope
             }
           }
           content

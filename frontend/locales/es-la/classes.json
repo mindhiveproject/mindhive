@@ -1353,6 +1353,7 @@
 	"projects": {
 		"addTemplateToClass": "Copiar plantilla a la clase",
 		"backToProjects": "Volver a proyectos",
+		"boardCurriculumTypeQuestion": "",
 		"boardSettingsAndPermissions": "Configuración y permisos del tablero",
 		"boardSettingsModalClose": "Cerrar",
 		"boardSettingsModalDescription": "Estas configuraciones se aplican a los proyectos que los estudiantes inician desde \"{{title}}\".",
