@@ -185,22 +185,6 @@ export const StyledProposal = styled.div`
       padding: 4px 8px;
       background: var(--MH-Theme-Neutrals-White, #ffffff);
     }
-    .boardEditorChromeEditTitle {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      img {
-        width: 18px;
-        height: 18px;
-      }
-    }
     .boardEditorChromeRight {
       display: flex;
       align-items: center;

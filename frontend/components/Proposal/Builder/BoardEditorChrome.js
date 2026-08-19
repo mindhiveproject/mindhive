@@ -182,16 +182,20 @@ export default function BoardEditorChrome({
           ) : (
             <div className="boardEditorChromeTitleRow">
               <h1 className="boardEditorChromeTitle">{displayTitle}</h1>
-              <button
-                type="button"
-                className="boardEditorChromeEditTitle"
-                onClick={() => setIsTitleEditing(true)}
-                aria-label={t("proposal.editTitle", {}, {
+              <IconButton
+                variant="subtle"
+                style={{
+                  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+                }}
+                ariaLabel={t("proposal.editTitle", {}, {
                   default: "Edit board title",
                 })}
-              >
-                <img src="/assets/icons/pencil.svg" alt="" />
-              </button>
+                title={t("proposal.editTitle", {}, {
+                  default: "Edit board title",
+                })}
+                onClick={() => setIsTitleEditing(true)}
+                icon={<img src="/assets/icons/pencil.svg" alt="" />}
+              />
             </div>
           )}
         </div>
