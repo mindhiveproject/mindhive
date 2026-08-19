@@ -66,8 +66,9 @@ const Board = ({
   );
 
   const deleteSection = useCallback(
-    async (opts) => {
+    async (opts, { skipPropagate = false } = {}) => {
       await deleteSectionMut(opts);
+      if (skipPropagate) return;
       if (autoUpdateStudentBoards && propagateToClones) {
         try {
           await propagateToClones();

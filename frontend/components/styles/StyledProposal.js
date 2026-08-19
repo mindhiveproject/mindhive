@@ -352,13 +352,16 @@ export const StyledProposal = styled.div`
     flex: 1;
     .boardInnerToolbar {
       display: flex;
-      justify-content: flex-start ;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
       padding: 0 15px 8px;
     }
     .scrollable {
       flex: 1;
       min-width: 0;
       overflow-x: auto;
+      padding: 2px;
     }
   }
 
@@ -378,6 +381,10 @@ export const StyledProposal = styled.div`
     max-width: var(--proposal-section-width);
     margin: var(--proposal-section-margin);
     padding: 24px;
+    &.sectionSelectSelected {
+      outline: 2px solid var(--MH-Theme-Danger-Dark, #8F1F14);
+      outline-offset: -2px;
+    }
     & > div {
       width: 100%;
     }
@@ -413,6 +420,16 @@ export const StyledProposal = styled.div`
         align-items: center;
         text-align: center;
         margin: 1rem 0px 0px 0rem;
+        &.firstLineSelectMode {
+          grid-template-columns: auto minmax(0, 1fr) auto;
+        }
+      }
+      .sectionSelectCheckbox {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        cursor: pointer;
+        accent-color: var(--MH-Theme-Danger-Dark, #8F1F14);
       }
       .sectionTitle {
         font-family: Inter;
@@ -632,6 +649,8 @@ export const StyledProposal = styled.div`
     gap: var(--proposal-section-gap);
     min-width: max-content;
     box-sizing: border-box;
+    /* Inset columns so danger borders are not clipped by overflow scrollers. */
+    padding: 2px;
   }
 
   &.projectsBoardEditorProposal .sections .smooth-dnd-container.horizontal > .smooth-dnd-draggable-wrapper {
@@ -1975,6 +1994,19 @@ export const StyledProposalCard = styled.div`
     margin: 0;
   }
 
+  &.cardSelectSelected {
+    outline: 2px solid var(--MH-Theme-Danger-Dark, #8F1F14);
+    outline-offset: 0;
+  }
+
+  .cardSelectCheckbox {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--MH-Theme-Danger-Dark, #8F1F14);
+  }
+
   .card-drag-handle {
     height: 100%;
     display: flex;
@@ -2113,6 +2145,19 @@ export const StyledActionCard = styled.div`
     margin: 0;
     width: 100%;
     max-width: 100%;
+  }
+
+  &.cardSelectSelected {
+    outline: 2px solid var(--MH-Theme-Danger-Dark, #8F1F14);
+    outline-offset: 0;
+  }
+
+  .cardSelectCheckbox {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--MH-Theme-Danger-Dark, #8F1F14);
   }
 
   background: ${(props) => {

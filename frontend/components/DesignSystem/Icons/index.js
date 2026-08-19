@@ -128,6 +128,14 @@ export const CloseIcon = filledIcon(
   "M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z",
 );
 
+/** Delete / trash — Material-style bin glyph; color via parent `color`. */
+export const TrashIcon = filledIcon(
+  "TrashIcon",
+  0,
+  0,
+  "M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6ZM9 17H11V8H9V17ZM13 17H15V8H13V17Z",
+);
+
 export const FileCopyIcon = filledIcon(
   "FileCopyIcon",
   2,

@@ -5,6 +5,7 @@ import sortBy from "lodash/sortBy";
 import { Container } from "react-smooth-dnd";
 import { v1 as uuidv1 } from "uuid";
 import useTranslation from "next-translate/useTranslation";
+import clsx from "clsx";
 
 import Card from "./Card";
 import ActionCard from "./ActionCard";
@@ -22,7 +23,6 @@ import { isActionCard } from "../../../lib/milestones";
 import {
   CREATE_CARD,
   UPDATE_CARD_POSITION,
-  DELETE_CARD,
 } from "../../Mutations/Proposal";
 
 const Section = ({
@@ -31,7 +31,6 @@ const Section = ({
   sections,
   boardId,
   onUpdateSection,
-  deleteSection,
   onCardChange,
   openCard,
   proposalBuildMode,
@@ -45,6 +44,11 @@ const Section = ({
   hasClones,
   autoOpenCreateCardAction = false,
   onAddMilestoneModalOpened,
+  cardSelectMode = false,
+  selectedCardIds = [],
+  selectedSectionIds = [],
+  onToggleCardSelection,
+  onToggleSectionSelection,
 }) => {
   const { t } = useTranslation("builder");
   const { cards } = section;
@@ -71,7 +75,14 @@ const Section = ({
     CREATE_TEMPLATE_MILESTONE
   );
   const [updateCard, updateCardState] = useMutation(UPDATE_CARD_POSITION);
-  const [deleteCard, deleteCardState] = useMutation(DELETE_CARD);
+
+  const isSectionSelected = selectedSectionIds.includes(section.id);
+
+  const handleSectionHeaderClick = () => {
+    if (cardSelectMode) {
+      onToggleSectionSelection?.(section.id);
+    }
+  };
 
   const onUpdateCard = (payload, sectionId, position, isDiffColumn) => {
     const { id, title, content, isEditedBy, assignedTo, settings } = payload;
@@ -433,34 +444,6 @@ const Section = ({
     await finishAfterCardCreate(actionCardId);
   };
 
-  const deleteCardMutation = (id) => {
-    deleteCard({
-      variables: {
-        id,
-      },
-      onCompleted: () => {
-        if (autoUpdateStudentBoards && propagateToClones) {
-          propagateToClones().catch((e) =>
-            console.error("Auto-propagate after card delete failed:", e)
-          );
-        } else if (hasClones && onTemplateChangedWithoutPropagation) {
-          onTemplateChangedWithoutPropagation();
-        }
-      },
-      update: (cache, payload) => {
-        cache.evict({ id: cache.identify(payload.data.deleteProposalCard) });
-      },
-      optimisticResponse: {
-        __typename: "Mutation",
-        deleteProposalCard: {
-          id,
-          __typename: "ProposalCard",
-          section: null,
-        },
-      },
-    });
-  };
-
   const startSectionTitleEdit = () => {
     setEditingSectionTitle(section.title || "");
     setIsEditingSectionTitle(true);
@@ -490,10 +473,34 @@ const Section = ({
   };
 
   return (
-    <div className="section">
-      <div className="column-drag-handle">
-        <div className="firstLine">
-          {isEditingSectionTitle ? (
+    <div
+      className={clsx(
+        "section",
+        cardSelectMode && isSectionSelected && "sectionSelectSelected"
+      )}
+    >
+      <div
+        className="column-drag-handle"
+        onClick={cardSelectMode ? handleSectionHeaderClick : undefined}
+      >
+        <div
+          className={clsx("firstLine", cardSelectMode && "firstLineSelectMode")}
+        >
+          {cardSelectMode ? (
+            <input
+              type="checkbox"
+              className="sectionSelectCheckbox"
+              checked={isSectionSelected}
+              readOnly
+              tabIndex={-1}
+              aria-label={t(
+                "inner.selectSection",
+                {},
+                { default: "Select section" }
+              )}
+            />
+          ) : null}
+          {isEditingSectionTitle && !cardSelectMode ? (
             <input
               className="sectionTitleInput"
               type="text"
@@ -512,12 +519,16 @@ const Section = ({
             <>
               <div
                 className="sectionTitle"
-                onClick={!isPreview ? startSectionTitleEdit : undefined}
-                style={!isPreview ? { cursor: "pointer" } : undefined}
+                onClick={
+                  !isPreview && !cardSelectMode ? startSectionTitleEdit : undefined
+                }
+                style={
+                  !isPreview && !cardSelectMode ? { cursor: "pointer" } : undefined
+                }
               >
                 {ReactHTMLParser(section.title)}
               </div>
-              {!isPreview && (
+              {!isPreview && !cardSelectMode && (
                 <img
                   src="/assets/icons/proposal/edit.svg"
                   onClick={startSectionTitleEdit}
@@ -554,7 +565,8 @@ const Section = ({
           }}
           dropPlaceholderAnimationDuration={200}
           lockAxis={
-            (isPreview || !settings?.allowMovingCards) && !proposalBuildMode
+            cardSelectMode ||
+            ((isPreview || !settings?.allowMovingCards) && !proposalBuildMode)
               ? "undefined"
               : null
           }
@@ -566,7 +578,7 @@ const Section = ({
                   <ActionCard
                     key={card.id}
                     card={card}
-                    onDeleteCard={deleteCardMutation}
+                    sectionId={section.id}
                     boardId={boardId}
                     openCard={openCard}
                     proposalBuildMode={proposalBuildMode}
@@ -574,6 +586,9 @@ const Section = ({
                     isPreview={isPreview}
                     settings={settings}
                     submitStatuses={submitStatuses}
+                    cardSelectMode={cardSelectMode}
+                    isSelected={selectedCardIds.includes(card.id)}
+                    onToggleCardSelection={onToggleCardSelection}
                   />
                 );
               } else {
@@ -581,7 +596,7 @@ const Section = ({
                   <Card
                     key={card.id}
                     card={card}
-                    onDeleteCard={deleteCardMutation}
+                    sectionId={section.id}
                     boardId={boardId}
                     openCard={openCard}
                     proposalBuildMode={proposalBuildMode}
@@ -589,6 +604,9 @@ const Section = ({
                     isPreview={isPreview}
                     settings={settings}
                     submitStatuses={submitStatuses}
+                    cardSelectMode={cardSelectMode}
+                    isSelected={selectedCardIds.includes(card.id)}
+                    onToggleCardSelection={onToggleCardSelection}
                   />
                 );
               }
@@ -598,7 +616,8 @@ const Section = ({
           )}
         </Container>
       </div>
-      {(proposalBuildMode || (!isPreview && settings?.allowAddingCards)) && (
+      {!cardSelectMode &&
+        (proposalBuildMode || (!isPreview && settings?.allowAddingCards)) && (
         <div className="newInput">
           <Button
             onClick={() => setCreateCardModalOpen(true)}
@@ -627,30 +646,6 @@ const Section = ({
         sections={sections}
         initialCardCategory={createCardInitialCategory}
       />
-      {(proposalBuildMode || settings?.allowAddingSections) && (
-        <div className="deleteBtn">
-          <img
-            src="/assets/icons/proposal/delete.svg"
-            onClick={() => {
-              if (section?.cards?.length === 0) {
-                deleteSection(section.id);
-                return;
-              }
-              if (
-                confirm(
-                  t(
-                    "section.deleteSectionConfirm",
-                    "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone."
-                  )
-                )
-              ) {
-                deleteSection(section.id);
-              }
-            }}
-          />
-        </div>
-      )}
-
     </div>
   );
 };
