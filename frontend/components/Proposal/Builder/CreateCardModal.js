@@ -131,7 +131,7 @@ function CardTypeStep({ cardCategory, onSelect, t }) {
           label={t(
             "section.createCardModal.categories.proposal",
             {},
-            { default: "Proposal card" }
+            { default: "Project card" }
           )}
           selected={cardCategory === CARD_CATEGORY_PROPOSAL}
           onClick={() => onSelect(CARD_CATEGORY_PROPOSAL)}

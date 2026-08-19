@@ -141,8 +141,8 @@
 	},
 	"checklistTemplate": {
 		"completeCards": {
-			"description": "The text in your proposal cards will be aggregated and exported as a PDF file.",
-			"title": "Double check that all your proposal cards are complete"
+			"description": "The text in your project cards will be aggregated and exported as a PDF file.",
+			"title": "Double check that all your project cards are complete"
 		},
 		"exportPdf": {
 			"description": "Your reviewers will be viewing your proposal as a PDF. It is important to check over your proposal as a PDF before submitting. You will also want to make sure to save your PDF so you can refer back to your original proposal at any time.",
@@ -1943,7 +1943,7 @@
 			"cancel": "Cancel",
 			"categories": {
 				"action": "Milestone",
-				"proposal": "Proposal card"
+				"proposal": "Project card"
 			},
 			"create": "Create",
 			"creating": "Creating...",
@@ -1979,7 +1979,7 @@
 			"openingEditor": "Opening editor…",
 			"previewLabel": "Review form preview",
 			"previewLoading": "Loading preview...",
-			"proposalPreview": "Adds a regular proposal card with content fields for students.",
+			"proposalPreview": "Adds a regular project card with content fields for students.",
 			"publish": "Publish…",
 			"publishing": "Publishing…",
 			"publishModal": {
@@ -2014,7 +2014,7 @@
 				"actionProjectReport": "Default milestone: Submit Project Report",
 				"actionSubmit": "Default milestone: Submit for Proposal Feedback",
 				"custom": "Create your own review step",
-				"proposal": "Proposal card"
+				"proposal": "Project card"
 			}
 		},
 		"deleteSectionConfirm": "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone.",
