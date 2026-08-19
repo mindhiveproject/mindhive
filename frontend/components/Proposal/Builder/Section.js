@@ -11,6 +11,7 @@ import Card from "./Card";
 import ActionCard from "./ActionCard";
 import CreateCardModal from "./CreateCardModal";
 import Button from "../../DesignSystem/Button";
+import IconButton from "../../DesignSystem/IconButton";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import { MilestoneIcon, ProjectCardIcon } from "../../DesignSystem/Icons";
 import { CARD_CATEGORY_ACTION, CARD_CATEGORY_PROPOSAL } from "./cardTypeOptions";
@@ -535,10 +536,23 @@ const Section = ({
                 {ReactHTMLParser(section.title)}
               </div>
               {!isPreview && !cardSelectMode && (
-                <img
-                  src="/assets/icons/proposal/edit.svg"
-                  onClick={startSectionTitleEdit}
-                  alt=""
+                <IconButton
+                  variant="subtle"
+                  style={{
+                    background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+                  }}
+                  ariaLabel={t("section.editTitle", {}, {
+                    default: "Edit section title",
+                  })}
+                  title={t("section.editTitle", {}, {
+                    default: "Edit section title",
+                  })}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    startSectionTitleEdit();
+                  }}
+                  onMouseDown={(event) => event.stopPropagation()}
+                  icon={<img src="/assets/icons/pencil.svg" alt="" />}
                 />
               )}
             </>
