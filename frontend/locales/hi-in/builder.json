@@ -1314,6 +1314,10 @@
 	},
 	"inner": {
 		"addSection": "अनुभाग जोड़ें",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
 		"cancel": "",
 		"deleteItems": "",
 		"deleteItemsConfirmBody": "",
@@ -1328,7 +1332,9 @@
 		"deleteItemsConfirmTitle": "",
 		"deleteItemsDeleting": "",
 		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "नया खंड",
+		"save": "",
 		"sectionTitlePlaceholder": "अनुभाग शीर्षक दर्ज करें",
 		"selectItem": "",
 		"selectSection": ""
@@ -1596,6 +1602,7 @@
 		"delete": "मिटाना",
 		"editingClassProjectTemplateSubtitle": "यह तय करें कि आप इस प्रोजेक्ट बोर्ड से अपने छात्रों की प्रतियों में परिवर्तन कैसे प्रसारित करना चाहते हैं।",
 		"editingClassProjectTemplateTitle": "संपादन कक्षा परियोजना टेम्पलेट",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "टेम्पलेट अनुभाग को बड़ा या छोटा करें",
 		"makeTemplate": "इस प्रोजेक्ट बोर्ड को एक सार्वजनिक टेम्पलेट बनाएँ",
 		"name": "प्रस्ताव का नाम",
@@ -1948,6 +1955,11 @@
 	"section": {
 		"addCard": "कार्ड जोड़ें",
 		"addCardBtn": "[ कार्ड जोड़ने के लिए क्लिक करें ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "कार्ड",
 		"cards": "पत्ते",
 		"cardsCount": "{{count}} कार्ड{{count == 1 ? '' : 's'}}",
@@ -2034,6 +2046,7 @@
 			}
 		},
 		"deleteSectionConfirm": "क्या आप वाकई इस प्रस्ताव अनुभाग को हटाना चाहते हैं? इस अनुभाग के सभी कार्ड भी हटा दिए जाएँगे। इस कार्रवाई को पूर्ववत नहीं किया जा सकता।",
+		"editTitle": "",
 		"enterNewTitle": "कृपया शीर्षक दर्ज करें",
 		"newCard": "नया कार्ड",
 		"newCardPlaceholder": "नया कार्ड शीर्षक दर्ज करें",
@@ -2354,6 +2367,7 @@
 	"tiptap": {
 		"insertImageAria": "चित्र डालें",
 		"insertImagePrompt": "छवि का URL दर्ज करें:",
+		"linkPrompt": "",
 		"mediaCancelEdit": "रद्द करना",
 		"mediaCanvaExportThumb": "कैनवा पीडीएफ निर्यात",
 		"mediaDelete": "मिटाना",
@@ -2394,7 +2408,33 @@
 		"mediaUploading": "अपलोड हो रहा है...",
 		"mediaUploadNew": "नई छवि अपलोड करें",
 		"pasteImageNoMediaScope": "यहां इमेज पेस्ट करने का विकल्प उपलब्ध नहीं है। इमेज बटन का उपयोग करें और इमेज का URL दर्ज करें।",
-		"pasteImageUploadFailed": "पेस्ट की गई इमेज अपलोड नहीं हो सकी। कृपया अपना इंटरनेट कनेक्शन जांचें और दोबारा प्रयास करें।"
+		"pasteImageUploadFailed": "पेस्ट की गई इमेज अपलोड नहीं हो सकी। कृपया अपना इंटरनेट कनेक्शन जांचें और दोबारा प्रयास करें।",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "अध्ययन निर्माता",
 	"titleText": "शीर्षक",

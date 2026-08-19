@@ -58,9 +58,25 @@ const DISABLED_STYLE = {
   cursor: "default",
 };
 
+const GHOST_DISABLED_STYLE = {
+  border: "none",
+  background: "transparent",
+  opacity: 0.2,
+  cursor: "default",
+};
+
+const ACTION_SELECTED_STYLE = {
+  background: "#D3E0E3",
+  border: "none",
+};
+
 const KIND_STYLES = {
   close: {},
   asset: {},
+  ghost: {
+    border: "none",
+    background: "transparent",
+  },
   delete: {
     color: "var(--MH-Theme-Warning-Base, #B9261A)",
   },
@@ -159,7 +175,10 @@ export default function CompactActionButton({
   };
 
   if (disabled) {
-    buttonStyle = { ...buttonStyle, ...DISABLED_STYLE };
+    buttonStyle = {
+      ...buttonStyle,
+      ...(kind === "ghost" ? GHOST_DISABLED_STYLE : DISABLED_STYLE),
+    };
   } else if (pressed) {
     buttonStyle = { ...buttonStyle, ...PRESSED_STYLE };
   } else if (hovered) {
@@ -167,6 +186,8 @@ export default function CompactActionButton({
       kind === "delete"
         ? { ...buttonStyle, ...DELETE_HOVER_STYLE }
         : { ...buttonStyle, ...HOVER_STYLE };
+  } else if (selected) {
+    buttonStyle = { ...buttonStyle, ...ACTION_SELECTED_STYLE };
   }
 
   buttonStyle = { ...buttonStyle, ...style };

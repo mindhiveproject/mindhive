@@ -47,6 +47,8 @@ export default function ProposalBuilder({
 
   const backfillPublicIdDoneRef = useRef(null);
   const cardCloseHandlerRef = useRef(null);
+  const cardChromeHandlersRef = useRef({});
+  const [cardChrome, setCardChrome] = useState(null);
 
   useEffect(() => {
     if (!proposal?.id || !Array.isArray(proposal?.sections)) {
@@ -104,6 +106,8 @@ export default function ProposalBuilder({
       });
     }
     cardCloseHandlerRef.current = null;
+    cardChromeHandlersRef.current = {};
+    setCardChrome(null);
     setPage("board");
     setCard(null);
   };
@@ -111,6 +115,48 @@ export default function ProposalBuilder({
   const registerCloseHandler = useCallback((handler) => {
     cardCloseHandlerRef.current = handler;
   }, []);
+
+  const registerCardChrome = useCallback((config) => {
+    if (!config) {
+      cardChromeHandlersRef.current = {};
+      setCardChrome(null);
+      return;
+    }
+    cardChromeHandlersRef.current = {
+      onSave: config.onSave,
+      onPreview: config.onPreview,
+      onExitPreview: config.onExitPreview,
+    };
+    setCardChrome((prev) => {
+      const next = {
+        kind: config.kind,
+        previewMode: !!config.previewMode,
+        saving: !!config.saving,
+      };
+      if (
+        prev &&
+        prev.kind === next.kind &&
+        prev.previewMode === next.previewMode &&
+        prev.saving === next.saving
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, []);
+
+  const handleCardSave = useCallback(
+    () => cardChromeHandlersRef.current.onSave?.(),
+    []
+  );
+  const handleCardPreview = useCallback(
+    () => cardChromeHandlersRef.current.onPreview?.(),
+    []
+  );
+  const handleCardExitPreview = useCallback(
+    () => cardChromeHandlersRef.current.onExitPreview?.(),
+    []
+  );
 
   const handleChromeBack = async () => {
     if (page === "card") {
@@ -147,6 +193,10 @@ export default function ProposalBuilder({
           onAutoUpdateChange={handleAutoUpdateChange}
           propagateToClones={propagateToClones}
           onPropagationSuccess={clearUnpropagatedChange}
+          cardChrome={page === "card" ? cardChrome : null}
+          onCardSave={handleCardSave}
+          onCardPreview={handleCardPreview}
+          onCardExitPreview={handleCardExitPreview}
         />
       ) : null}
       {page === "board" ? (
@@ -200,6 +250,7 @@ export default function ProposalBuilder({
               onTemplateChangedWithoutPropagation={markUnpropagatedChange}
               hideBoardChromeNav={hideBoardChromeNav}
               registerCloseHandler={registerCloseHandler}
+              registerCardChrome={registerCardChrome}
             />
           </div>
         )

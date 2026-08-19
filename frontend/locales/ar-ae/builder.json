@@ -1314,6 +1314,10 @@
 	},
 	"inner": {
 		"addSection": "إضافة قسم",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
 		"cancel": "",
 		"deleteItems": "",
 		"deleteItemsConfirmBody": "",
@@ -1328,7 +1332,9 @@
 		"deleteItemsConfirmTitle": "",
 		"deleteItemsDeleting": "",
 		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "قسم جديد",
+		"save": "",
 		"sectionTitlePlaceholder": "أدخل عنوان القسم",
 		"selectItem": "",
 		"selectSection": ""
@@ -1596,6 +1602,7 @@
 		"delete": "يمسح",
 		"editingClassProjectTemplateSubtitle": "حدد كيف تريد نقل التغييرات من لوحة المشروع هذه إلى نسخ طلابك.",
 		"editingClassProjectTemplateTitle": "نموذج مشروع تحرير الفصل",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "توسيع أو تصغير قسم القالب",
 		"makeTemplate": "جعل لوحة المشروع هذه قالبًا عامًا",
 		"name": "اسم الاقتراح",
@@ -1948,6 +1955,11 @@
 	"section": {
 		"addCard": "إضافة بطاقة",
 		"addCardBtn": "[ انقر لإضافة بطاقة ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "بطاقة",
 		"cards": "بطاقات",
 		"cardsCount": "{{count}} بطاقة{{count == 1 ? '' : 's'}}",
@@ -2034,6 +2046,7 @@
 			}
 		},
 		"deleteSectionConfirm": "هل أنت متأكد من رغبتك في حذف قسم الاقتراحات هذا؟ سيتم حذف جميع البطاقات في هذا القسم أيضًا. لا يمكن التراجع عن هذا الإجراء.",
+		"editTitle": "",
 		"enterNewTitle": "الرجاء إدخال عنوان",
 		"newCard": "بطاقة جديدة",
 		"newCardPlaceholder": "أدخل عنوان بطاقة جديد",
@@ -2354,6 +2367,7 @@
 	"tiptap": {
 		"insertImageAria": "إدراج الصورة",
 		"insertImagePrompt": "أدخل عنوان URL للصورة:",
+		"linkPrompt": "",
 		"mediaCancelEdit": "يلغي",
 		"mediaCanvaExportThumb": "تصدير ملفات PDF من Canva",
 		"mediaDelete": "يمسح",
@@ -2394,7 +2408,33 @@
 		"mediaUploading": "جارٍ التحميل...",
 		"mediaUploadNew": "تحميل صورة جديدة",
 		"pasteImageNoMediaScope": "لا يمكنك لصق الصور هنا. استخدم زر الصورة وأدخل رابط الصورة.",
-		"pasteImageUploadFailed": "تعذر تحميل الصورة الملصقة. تحقق من اتصالك وحاول مرة أخرى."
+		"pasteImageUploadFailed": "تعذر تحميل الصورة الملصقة. تحقق من اتصالك وحاول مرة أخرى.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "منشئ الدراسة",
 	"titleText": "العنوان",

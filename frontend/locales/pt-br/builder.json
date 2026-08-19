@@ -1314,6 +1314,10 @@
 	},
 	"inner": {
 		"addSection": "Adicionar seção",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
 		"cancel": "",
 		"deleteItems": "",
 		"deleteItemsConfirmBody": "",
@@ -1328,7 +1332,9 @@
 		"deleteItemsConfirmTitle": "",
 		"deleteItemsDeleting": "",
 		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "Nova seção",
+		"save": "",
 		"sectionTitlePlaceholder": "Digite o título da seção",
 		"selectItem": "",
 		"selectSection": ""
@@ -1596,6 +1602,7 @@
 		"delete": "Excluir",
 		"editingClassProjectTemplateSubtitle": "Decida como deseja propagar as alterações deste quadro do projeto para as cópias dos seus alunos.",
 		"editingClassProjectTemplateTitle": "Modelo de projeto para aula de edição",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "Expandir ou minimizar seção do modelo",
 		"makeTemplate": "Tornar este quadro de projeto um modelo público",
 		"name": "Nome da proposta",
@@ -1948,6 +1955,11 @@
 	"section": {
 		"addCard": "Adicionar cartão",
 		"addCardBtn": "[ Clique para adicionar um cartão ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "cartão",
 		"cards": "cartas",
 		"cardsCount": "{{count}} carta{{count == 1 ? '' : 's'}}",
@@ -2034,6 +2046,7 @@
 			}
 		},
 		"deleteSectionConfirm": "Tem certeza de que deseja excluir esta seção de propostas? Todos os cartões nesta seção também serão excluídos. Esta ação não pode ser desfeita.",
+		"editTitle": "",
 		"enterNewTitle": "Por favor insira um título",
 		"newCard": "Novo cartão",
 		"newCardPlaceholder": "Insira um novo título de cartão",
@@ -2354,6 +2367,7 @@
 	"tiptap": {
 		"insertImageAria": "Inserir imagem",
 		"insertImagePrompt": "Insira o URL da imagem:",
+		"linkPrompt": "",
 		"mediaCancelEdit": "Cancelar",
 		"mediaCanvaExportThumb": "Exportação de PDF do Canva",
 		"mediaDelete": "Excluir",
@@ -2394,7 +2408,33 @@
 		"mediaUploading": "Enviando...",
 		"mediaUploadNew": "Carregar nova imagem",
 		"pasteImageNoMediaScope": "Não é possível colar imagens aqui. Use o botão de imagem e insira o URL da imagem.",
-		"pasteImageUploadFailed": "Não foi possível carregar a imagem colada. Verifique sua conexão e tente novamente."
+		"pasteImageUploadFailed": "Não foi possível carregar a imagem colada. Verifique sua conexão e tente novamente.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "Construtor de Estudos",
 	"titleText": "Título",

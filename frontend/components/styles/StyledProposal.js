@@ -191,6 +191,14 @@ export const StyledProposal = styled.div`
       gap: 8px;
       flex-shrink: 0;
     }
+    .boardEditorChromeEditMode {
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      color: var(--MH-Theme-Neutrals-Dark, #6A6A6A);
+      white-space: nowrap;
+    }
 
     .narrowButton {
       height: 40px;
@@ -340,6 +348,10 @@ export const StyledProposal = styled.div`
       justify-content: flex-start;
       gap: 8px;
       padding: 0 15px 8px;
+      .boardInnerToolbarSelect {
+        min-width: 220px;
+        max-width: 280px;
+      }
     }
     .scrollable {
       flex: 1;
@@ -1780,6 +1792,11 @@ export const StyledProposal = styled.div`
       overflow-y: visible;
       min-height: 0;
 
+      &.infoBoardEdit {
+        border-radius: 8px;
+        border-top: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      }
+
       .collaboratorArray {
         display: flex;
         gap: 8px;
@@ -1983,12 +2000,21 @@ export const StyledProposalCard = styled.div`
     outline-offset: 0;
   }
 
+  &.cardSelectAssociate {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
+    outline-offset: 0;
+  }
+
   .cardSelectCheckbox {
     width: 20px;
     height: 20px;
     margin: 0;
     cursor: pointer;
     accent-color: var(--MH-Theme-Danger-Dark, #8F1F14);
+  }
+
+  &.cardSelectAssociate .cardSelectCheckbox {
+    accent-color: var(--MH-Theme-Primary-Dark, #336F8A);
   }
 
   .card-drag-handle {
@@ -2133,6 +2159,11 @@ export const StyledActionCard = styled.div`
 
   &.cardSelectSelected {
     outline: 2px solid var(--MH-Theme-Danger-Dark, #8F1F14);
+    outline-offset: 0;
+  }
+
+  &.actionCardAssociateActive {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
     outline-offset: 0;
   }
 

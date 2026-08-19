@@ -60,105 +60,16 @@ export const StyledTipTap = styled.div`
       grid-template-rows: repeat(auto-fill, minmax(40px, 1fr)); /* Vertical (column) layout */
       grid-gap: -1px;
       width: fit-content;
-      
-      .toolbarButton { 
-        height: 32px;
-        background: #00000000;
-        display: grid;
-        justify-content: center;
-        align-content: center;
-
-        &:hover {
-          background: #5D5763;
-          cursor: pointer;
-          color: white; 
-        }
-
-        /* Toolbar SVGs use fixed gray fills; invert on hover to match former Semantic icon color */
-        &:hover .tiptap-toolbar-icon {
-          filter: brightness(0) invert(1);
-        }
-         
-        &.active {
-        background: #D3E0E3;
-          color: #434343; 
-        }
-
-        &.active .tiptap-toolbar-icon {
-          filter: none;
-          opacity: 0.92;
-        }
-
-        &.active:hover .tiptap-toolbar-icon {
-          filter: brightness(0) invert(1);
-          opacity: 1;
-        }
-      }
 
       .tiptap-toolbar-icon {
         display: block;
         flex-shrink: 0;
         object-fit: contain;
       }
-      
-      .table-dropdown {
-        position: relative;
-
-        > .icon.dropdown {
-        display: none !important;
-        }
-      }
 
       .specialButtonGroup {
         margin-left: auto;
         padding-right: 4px;
-      }
-
-      .specialToolbarButton {
-        height: 36px;
-        min-width: 124px;
-        padding: 0 18px;
-        border-radius: 999px !important;
-        border: 1.5px solid var(--special-button-border, #274e5b) !important;
-        background: var(--special-button-background, #ffffff) !important;
-        color: var(--special-button-text, #274e5b) !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.01em;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease,
-          transform 0.2s ease;
-
-        .icon {
-          margin: 0 !important;
-          font-size: 1em;
-        }
-
-        &:hover:not(.disabled):not(.loading) {
-          background: var(--special-button-hover-background, #274e5b) !important;
-          color: var(--special-button-hover-text, #ffffff) !important;
-          border-color: var(--special-button-hover-border, #274e5b) !important;
-          box-shadow: 0 6px 16px rgba(39, 78, 91, 0.2);
-        }
-
-        &:active:not(.disabled):not(.loading) {
-          transform: translateY(1px);
-          box-shadow: 0 2px 8px rgba(39, 78, 91, 0.2);
-        }
-
-        &.loading {
-          opacity: 0.8;
-        }
-
-        &.disabled,
-        &:disabled {
-          opacity: 0.6 !important;
-          border-color: #d3e0e3 !important;
-          color: #7a7a7a !important;
-          box-shadow: none;
-          cursor: not-allowed;
-        }
       }
     }
   }
