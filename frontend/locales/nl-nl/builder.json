@@ -1596,6 +1596,7 @@
 		"delete": "Verwijderen",
 		"editingClassProjectTemplateSubtitle": "Bepaal hoe je de wijzigingen van dit projectbord wilt doorvoeren in de kopieën van je leerlingen.",
 		"editingClassProjectTemplateTitle": "Sjabloon voor een bewerkingsproject",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "Vouw de sjabloonsectie uit of in.",
 		"makeTemplate": "Maak van dit projectbord een openbaar sjabloon",
 		"name": "Voorstelnaam",
@@ -1948,6 +1949,11 @@
 	"section": {
 		"addCard": "Kaart toevoegen",
 		"addCardBtn": "[ Klik om een ​​kaart toe te voegen ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "kaart",
 		"cards": "kaarten",
 		"cardsCount": "{{count}} kaart{{count == 1 ? '' : 's'}}",
@@ -2034,6 +2040,7 @@
 			}
 		},
 		"deleteSectionConfirm": "Weet u zeker dat u deze voorstelsectie wilt verwijderen? Alle kaarten in deze sectie worden ook verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
+		"editTitle": "",
 		"enterNewTitle": "Voer een titel in",
 		"newCard": "Nieuwe kaart",
 		"newCardPlaceholder": "Voer een nieuwe kaarttitel in",
@@ -2354,6 +2361,7 @@
 	"tiptap": {
 		"insertImageAria": "Afbeelding invoegen",
 		"insertImagePrompt": "Voer de URL van de afbeelding in:",
+		"linkPrompt": "",
 		"mediaCancelEdit": "Annuleren",
 		"mediaCanvaExportThumb": "Canva PDF-export",
 		"mediaDelete": "Verwijderen",
@@ -2394,7 +2402,33 @@
 		"mediaUploading": "Uploaden...",
 		"mediaUploadNew": "Nieuwe afbeelding uploaden",
 		"pasteImageNoMediaScope": "Het is hier niet mogelijk om afbeeldingen te plakken. Gebruik de afbeeldingsknop en voer een afbeeldings-URL in.",
-		"pasteImageUploadFailed": "Het uploaden van de afbeelding is mislukt. Controleer uw internetverbinding en probeer het opnieuw."
+		"pasteImageUploadFailed": "Het uploaden van de afbeelding is mislukt. Controleer uw internetverbinding en probeer het opnieuw.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "Studie Builder",
 	"titleText": "Titel",

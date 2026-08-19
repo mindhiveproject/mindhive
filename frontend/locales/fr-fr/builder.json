@@ -1596,6 +1596,7 @@
 		"delete": "Supprimer",
 		"editingClassProjectTemplateSubtitle": "Décidez comment vous souhaitez propager les modifications de ce tableau de projet aux copies de vos élèves.",
 		"editingClassProjectTemplateTitle": "Modèle de projet de classe d'édition",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "Développer ou réduire la section du modèle",
 		"makeTemplate": "Faire de ce tableau de projet un modèle public",
 		"name": "Nom de la proposition",
@@ -1948,6 +1949,11 @@
 	"section": {
 		"addCard": "Ajouter une carte",
 		"addCardBtn": "[ Cliquez pour ajouter une carte ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "carte",
 		"cards": "cartes",
 		"cardsCount": "{{count}} carte{{count == 1 ? '' : 's'}}",
@@ -2034,6 +2040,7 @@
 			}
 		},
 		"deleteSectionConfirm": "Êtes-vous sûr de vouloir supprimer cette section de propositions ? Toutes les cartes de cette section seront également supprimées. Cette action est irréversible.",
+		"editTitle": "",
 		"enterNewTitle": "Veuillez entrer un titre",
 		"newCard": "Nouvelle carte",
 		"newCardPlaceholder": "Entrez un nouveau titre de carte",
@@ -2354,6 +2361,7 @@
 	"tiptap": {
 		"insertImageAria": "Insérer une image",
 		"insertImagePrompt": "Saisissez l'URL de l'image :",
+		"linkPrompt": "",
 		"mediaCancelEdit": "Annuler",
 		"mediaCanvaExportThumb": "Exportation PDF Canva",
 		"mediaDelete": "SUPPRIMER",
@@ -2394,7 +2402,33 @@
 		"mediaUploading": "Téléchargement...",
 		"mediaUploadNew": "Télécharger une nouvelle image",
 		"pasteImageNoMediaScope": "Il n'est pas possible de coller des images ici. Utilisez le bouton image et saisissez l'URL d'une image.",
-		"pasteImageUploadFailed": "Impossible de charger l'image collée. Vérifiez votre connexion et réessayez."
+		"pasteImageUploadFailed": "Impossible de charger l'image collée. Vérifiez votre connexion et réessayez.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "Générateur d'études",
 	"titleText": "Titre",

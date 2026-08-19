@@ -12,13 +12,14 @@ import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
 import Collaboration from "@tiptap/extension-collaboration";
 import { HocuspocusProvider } from "@hocuspocus/provider";
-import { Button, Dropdown } from "semantic-ui-react";
 import { useApolloClient } from "@apollo/client";
 
 import CollaborationCursorExtension from "./CollaborationCursorExtension";
 import { collabWsUrl } from "../../config";
 
 import DesignSystemButton from "../DesignSystem/Button";
+import CompactActionButton from "../DesignSystem/CompactActionButton";
+import DropdownMenu from "../DesignSystem/DropdownMenu";
 import { StyledTipTap } from "./StyledTipTap";
 import { PasteImageExtension } from "./pasteImageExtension";
 import MediaLibraryModal from "./MediaLibraryModal";
@@ -40,6 +41,26 @@ function TipTapToolbarIcon({ file, width = 18, height = 18 }) {
       height={height}
       className="tiptap-toolbar-icon"
       draggable={false}
+    />
+  );
+}
+
+function TipTapToolbarButton({
+  icon,
+  onClick,
+  disabled = false,
+  selected = false,
+  ariaLabel,
+}) {
+  return (
+    <CompactActionButton
+      kind="ghost"
+      icon={icon}
+      onClick={onClick}
+      disabled={disabled}
+      selected={selected}
+      ariaLabel={ariaLabel}
+      aria-pressed={selected}
     />
   );
 }
@@ -408,7 +429,10 @@ export default function TipTapEditor({
       if (!editor.isEditable) return;
     
       const previousUrl = editor.getAttributes('link').href;
-      const url = window.prompt('Enter link URL:', previousUrl);
+      const url = window.prompt(
+        t("tiptap.linkPrompt", {}, { default: "Enter link URL:" }),
+        previousUrl,
+      );
     
       // Cancelled
       if (url === null) return;
@@ -503,8 +527,7 @@ export default function TipTapEditor({
     const tableOptions = [
       {
         key: "insert",
-        text: "Insert Table",
-        value: "insert",
+        label: t("tiptap.toolbar.tableInsert", {}, { default: "Insert Table" }),
         iconSrc: `${TIPTAP_ICONS_BASE}/table.svg`,
         onClick: () =>
           editor
@@ -515,89 +538,94 @@ export default function TipTapEditor({
       },
       {
         key: "addColumnBefore",
-        text: "Add Column Before",
-        value: "addColumnBefore",
+        label: t("tiptap.toolbar.tableAddColumnBefore", {}, { default: "Add Column Before" }),
         onClick: () => editor.chain().focus().addColumnBefore().run(),
         disabled: !editor.can().addColumnBefore(),
       },
       {
         key: "addColumnAfter",
-        text: "Add Column After",
-        value: "addColumnAfter",
+        label: t("tiptap.toolbar.tableAddColumnAfter", {}, { default: "Add Column After" }),
         onClick: () => editor.chain().focus().addColumnAfter().run(),
         disabled: !editor.can().addColumnAfter(),
       },
       {
         key: "deleteColumn",
-        text: "Delete Column",
-        value: "deleteColumn",
+        label: t("tiptap.toolbar.tableDeleteColumn", {}, { default: "Delete Column" }),
         onClick: () => editor.chain().focus().deleteColumn().run(),
         disabled: !editor.can().deleteColumn(),
       },
       {
         key: "addRowBefore",
-        text: "Add Row Before",
-        value: "addRowBefore",
+        label: t("tiptap.toolbar.tableAddRowBefore", {}, { default: "Add Row Before" }),
         onClick: () => editor.chain().focus().addRowBefore().run(),
         disabled: !editor.can().addRowBefore(),
       },
       {
         key: "addRowAfter",
-        text: "Add Row After",
-        value: "addRowAfter",
+        label: t("tiptap.toolbar.tableAddRowAfter", {}, { default: "Add Row After" }),
         onClick: () => editor.chain().focus().addRowAfter().run(),
         disabled: !editor.can().addRowAfter(),
       },
       {
         key: "deleteRow",
-        text: "Delete Row",
-        value: "deleteRow",
+        label: t("tiptap.toolbar.tableDeleteRow", {}, { default: "Delete Row" }),
         onClick: () => editor.chain().focus().deleteRow().run(),
         disabled: !editor.can().deleteRow(),
       },
       {
         key: "deleteTable",
-        text: "Delete Table",
-        value: "deleteTable",
+        label: t("tiptap.toolbar.tableDeleteTable", {}, { default: "Delete Table" }),
         onClick: () => editor.chain().focus().deleteTable().run(),
         disabled: !editor.can().deleteTable(),
       },
       {
         key: "toggleHeaderColumn",
-        text: "Toggle Header Column",
-        value: "toggleHeaderColumn",
+        label: t("tiptap.toolbar.tableToggleHeaderColumn", {}, { default: "Toggle Header Column" }),
         onClick: () => editor.chain().focus().toggleHeaderColumn().run(),
         disabled: !editor.can().toggleHeaderColumn(),
       },
       {
         key: "toggleHeaderRow",
-        text: "Toggle Header Row",
-        value: "toggleHeaderRow",
+        label: t("tiptap.toolbar.tableToggleHeaderRow", {}, { default: "Toggle Header Row" }),
         onClick: () => editor.chain().focus().toggleHeaderRow().run(),
         disabled: !editor.can().toggleHeaderRow(),
       },
       {
         key: "toggleHeaderCell",
-        text: "Toggle Header Cell",
-        value: "toggleHeaderCell",
+        label: t("tiptap.toolbar.tableToggleHeaderCell", {}, { default: "Toggle Header Cell" }),
         onClick: () => editor.chain().focus().toggleHeaderCell().run(),
         disabled: !editor.can().toggleHeaderCell(),
       },
       {
         key: "mergeCells",
-        text: "Merge Cells",
-        value: "mergeCells",
+        label: t("tiptap.toolbar.tableMergeCells", {}, { default: "Merge Cells" }),
         onClick: () => editor.chain().focus().mergeCells().run(),
         disabled: !editor.can().mergeCells(),
       },
       {
         key: "splitCell",
-        text: "Split Cell",
-        value: "splitCell",
+        label: t("tiptap.toolbar.tableSplitCell", {}, { default: "Split Cell" }),
         onClick: () => editor.chain().focus().splitCell().run(),
         disabled: !editor.can().splitCell(),
       },
     ];
+
+    const tableMenuItems = tableOptions.map((option) => ({
+      key: option.key,
+      label: option.label,
+      icon: option.iconSrc ? (
+        <img
+          src={option.iconSrc}
+          alt=""
+          width={18}
+          height={18}
+          style={{ flexShrink: 0 }}
+          draggable={false}
+        />
+      ) : null,
+      onClick: option.disabled ? undefined : option.onClick,
+      static: option.disabled,
+    }));
 
     // Limited toolbar mode - only show: bold, italic, underline, link, bullet list, ordered list
     if (limitedToolbar) {
@@ -611,92 +639,73 @@ export default function TipTapEditor({
                 e.stopPropagation();
               }}
             >
-              <Button
-                icon
-                className="toolbarButton"
+              <TipTapToolbarButton
+                icon={<TipTapToolbarIcon file="bold" />}
                 onClick={(e) =>
                   handleStyleClick(() => editor.commands.toggleBold(), e)
                 }
                 disabled={!editor.isEditable}
-                active={editor.isActive("bold")}
-                aria-label="Toggle bold"
-              >
-                <TipTapToolbarIcon file="bold" />
-              </Button>
-              <Button
-                icon
-                className="toolbarButton"
+                selected={editor.isActive("bold")}
+                ariaLabel={t("tiptap.toolbar.toggleBold", {}, { default: "Toggle bold" })}
+              />
+              <TipTapToolbarButton
+                icon={<TipTapToolbarIcon file="italics" />}
                 onClick={(e) =>
                   handleStyleClick(() => editor.commands.toggleItalic(), e)
                 }
                 disabled={!editor.isEditable}
-                active={editor.isActive("italic")}
-                aria-label="Toggle italic"
-              >
-                <TipTapToolbarIcon file="italics" />
-              </Button>
-              <Button
-                icon
-                className="toolbarButton"
+                selected={editor.isActive("italic")}
+                ariaLabel={t("tiptap.toolbar.toggleItalic", {}, { default: "Toggle italic" })}
+              />
+              <TipTapToolbarButton
+                icon={<TipTapToolbarIcon file="underline" />}
                 onClick={(e) =>
                   handleStyleClick(() => editor.commands.toggleUnderline(), e)
                 }
                 disabled={!editor.isEditable}
-                active={editor.isActive("underline")}
-                aria-label="Toggle underline"
-              >
-                <TipTapToolbarIcon file="underline" />
-              </Button>
-              <Button
-                icon
-                className="toolbarButton"
+                selected={editor.isActive("underline")}
+                ariaLabel={t("tiptap.toolbar.toggleUnderline", {}, { default: "Toggle underline" })}
+              />
+              <TipTapToolbarButton
+                icon={<TipTapToolbarIcon file="link" />}
                 onClick={handleLinkClick}
                 disabled={!editor.isEditable}
-                active={editor.isActive("link")}
-                aria-label="Insert/edit link"
-              >
-                <TipTapToolbarIcon file="link" />
-              </Button>
-              <Button
-                icon
-                className="toolbarButton"
+                selected={editor.isActive("link")}
+                ariaLabel={t("tiptap.toolbar.insertLink", {}, { default: "Insert/edit link" })}
+              />
+              <TipTapToolbarButton
+                icon={<TipTapToolbarIcon file="bulletList" />}
                 onClick={(e) =>
                   handleStyleClick(() => editor.commands.toggleBulletList(), e)
                 }
                 disabled={!editor.isEditable}
-                active={editor.isActive("bulletList")}
-                aria-label="Toggle bullet list"
-              >
-                <TipTapToolbarIcon file="bulletList" />
-              </Button>
-              <Button
-                icon
-                className="toolbarButton"
+                selected={editor.isActive("bulletList")}
+                ariaLabel={t("tiptap.toolbar.toggleBulletList", {}, { default: "Toggle bullet list" })}
+              />
+              <TipTapToolbarButton
+                icon={<TipTapToolbarIcon file="numberedList" />}
                 onClick={(e) =>
                   handleStyleClick(() => editor.commands.toggleOrderedList(), e)
                 }
                 disabled={!editor.isEditable}
-                active={editor.isActive("orderedList")}
-                aria-label="Toggle numbered list"
-              >
-                <TipTapToolbarIcon file="numberedList" />
-              </Button>
+                selected={editor.isActive("orderedList")}
+                ariaLabel={t("tiptap.toolbar.toggleNumberedList", {}, { default: "Toggle numbered list" })}
+              />
               {mediaLibraryId && (
-                <Button
-                  className="toolbarButton"
+                <TipTapToolbarButton
+                  icon={MEDIA_LIBRARY_ICON}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     setMediaLibraryModalOpen(true);
                   }}
                   disabled={!editor.isEditable}
-                  aria-label={t(
+                  ariaLabel={t(
                     "tiptap.mediaLibraryAria",
-                    "Open media library",
+                    {},
+                    { default: "Open media library" },
                   )}
-                >
-                  {MEDIA_LIBRARY_ICON}
-                </Button>
+                />
               )}
             </div>
             {renderSpecialButton()}
@@ -716,28 +725,22 @@ export default function TipTapEditor({
               e.stopPropagation();
             }}
           >
-            <Button
-              icon
-              className="toolbarButton"
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="undo" />}
               onClick={(e) =>
                 handleStyleClick(() => editor.chain().focus().undo().run(), e)
               }
               disabled={!editor.isEditable || !editor.can().undo()}
-              aria-label="Undo"
-            >
-              <TipTapToolbarIcon file="undo" />
-            </Button>
-            <Button
-              icon
-              className="toolbarButton"
+              ariaLabel={t("tiptap.toolbar.undo", {}, { default: "Undo" })}
+            />
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="redo" />}
               onClick={(e) =>
                 handleStyleClick(() => editor.chain().focus().redo().run(), e)
               }
               disabled={!editor.isEditable || !editor.can().redo()}
-              aria-label="Redo"
-            >
-              <TipTapToolbarIcon file="redo" />
-            </Button>
+              ariaLabel={t("tiptap.toolbar.redo", {}, { default: "Redo" })}
+            />
           </div>
           <div
             style={{
@@ -757,9 +760,8 @@ export default function TipTapEditor({
           >
             {/* Text formatting */}
 
-            <Button
-              icon
-              className="toolbarButton"
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="h1" />}
               onClick={(e) =>
                 handleStyleClick(
                   () => editor.commands.toggleHeading({ level: 1 }),
@@ -767,58 +769,44 @@ export default function TipTapEditor({
                 )
               }
               disabled={!editor.isEditable}
-              active={editor.isActive("heading", { level: 1 })}
-              aria-label="Toggle heading 1"
-            >
-              <TipTapToolbarIcon file="h1" />
-            </Button>
-            <Button
-              icon
-              className="toolbarButton"
+              selected={editor.isActive("heading", { level: 1 })}
+              ariaLabel={t("tiptap.toolbar.toggleHeading1", {}, { default: "Toggle heading 1" })}
+            />
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="bold" />}
               onClick={(e) =>
                 handleStyleClick(() => editor.commands.toggleBold(), e)
               }
               disabled={!editor.isEditable}
-              active={editor.isActive("bold")}
-              aria-label="Toggle bold"
-            >
-              <TipTapToolbarIcon file="bold" />
-            </Button>
-            <Button
-              icon
-              className="toolbarButton"
+              selected={editor.isActive("bold")}
+              ariaLabel={t("tiptap.toolbar.toggleBold", {}, { default: "Toggle bold" })}
+            />
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="italics" />}
               onClick={(e) =>
                 handleStyleClick(() => editor.commands.toggleItalic(), e)
               }
               disabled={!editor.isEditable}
-              active={editor.isActive("italic")}
-              aria-label="Toggle italic"
-            >
-              <TipTapToolbarIcon file="italics" />
-            </Button>
-            <Button
-              icon
-              className="toolbarButton"
+              selected={editor.isActive("italic")}
+              ariaLabel={t("tiptap.toolbar.toggleItalic", {}, { default: "Toggle italic" })}
+            />
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="underline" />}
               onClick={(e) =>
                 handleStyleClick(() => editor.commands.toggleUnderline(), e)
               }
               disabled={!editor.isEditable}
-              active={editor.isActive("underline")}
-              aria-label="Toggle underline"
-            >
-              <TipTapToolbarIcon file="underline" />
-            </Button>
+              selected={editor.isActive("underline")}
+              ariaLabel={t("tiptap.toolbar.toggleUnderline", {}, { default: "Toggle underline" })}
+            />
             {/* Link */}
-            <Button
-              icon
-              className="toolbarButton"
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="link" />}
               onClick={handleLinkClick}
               disabled={!editor.isEditable}
-              active={editor.isActive("link")}
-              aria-label="Insert/edit link"
-            >
-              <TipTapToolbarIcon file="link" />
-            </Button>
+              selected={editor.isActive("link")}
+              ariaLabel={t("tiptap.toolbar.insertLink", {}, { default: "Insert/edit link" })}
+            />
             </div>
           <div
             style={{
@@ -836,42 +824,33 @@ export default function TipTapEditor({
               e.stopPropagation();
             }}
           >
-            <Button
-              icon
-              className="toolbarButton"
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="bulletList" />}
               onClick={(e) =>
                 handleStyleClick(() => editor.commands.toggleBulletList(), e)
               }
               disabled={!editor.isEditable}
-              active={editor.isActive("bulletList")}
-              aria-label="Toggle bullet list"
-            >
-              <TipTapToolbarIcon file="bulletList" />
-            </Button>
-            <Button
-              icon
-              className="toolbarButton"
+              selected={editor.isActive("bulletList")}
+              ariaLabel={t("tiptap.toolbar.toggleBulletList", {}, { default: "Toggle bullet list" })}
+            />
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="numberedList" />}
               onClick={(e) =>
                 handleStyleClick(() => editor.commands.toggleOrderedList(), e)
               }
               disabled={!editor.isEditable}
-              active={editor.isActive("orderedList")}
-              aria-label="Toggle numbered list"
-            >
-              <TipTapToolbarIcon file="numberedList" />
-            </Button>
-            <Button
-              icon
-              className="toolbarButton"
+              selected={editor.isActive("orderedList")}
+              ariaLabel={t("tiptap.toolbar.toggleNumberedList", {}, { default: "Toggle numbered list" })}
+            />
+            <TipTapToolbarButton
+              icon={<TipTapToolbarIcon file="quotes" />}
               onClick={(e) =>
                 handleStyleClick(() => editor.commands.toggleBlockquote(), e)
               }
               disabled={!editor.isEditable}
-              active={editor.isActive("blockquote")}
-              aria-label="Toggle blockquote"
-            >
-              <TipTapToolbarIcon file="quotes" />
-            </Button>
+              selected={editor.isActive("blockquote")}
+              ariaLabel={t("tiptap.toolbar.toggleBlockquote", {}, { default: "Toggle blockquote" })}
+            />
           </div>
           <div
             style={{
@@ -892,16 +871,16 @@ export default function TipTapEditor({
             
             {/* Image: URL only when no board media scope (e.g. assignments) */}
             {!mediaLibraryId && (
-              <Button
-                icon
-                className="toolbarButton"
+              <TipTapToolbarButton
+                icon={<TipTapToolbarIcon file="imagePlus" />}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   const url = window.prompt(
                     t(
                       "tiptap.insertImagePrompt",
-                      "Enter image URL:",
+                      {},
+                      { default: "Enter image URL:" },
                     ),
                   );
                   if (url && editor.isEditable) {
@@ -909,78 +888,42 @@ export default function TipTapEditor({
                   }
                 }}
                 disabled={!editor.isEditable}
-                aria-label={t("tiptap.insertImageAria", "Insert image")}
-              >
-                <TipTapToolbarIcon file="imagePlus" />
-              </Button>
+                ariaLabel={t("tiptap.insertImageAria", {}, { default: "Insert image" })}
+              />
             )}
             {mediaLibraryId && (
-              <Button
-                className="toolbarButton"
+              <TipTapToolbarButton
+                icon={MEDIA_LIBRARY_ICON}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   setMediaLibraryModalOpen(true);
                 }}
                 disabled={!editor.isEditable}
-                aria-label={t(
+                ariaLabel={t(
                   "tiptap.mediaLibraryAria",
-                  "Open media library",
+                  {},
+                  { default: "Open media library" },
                 )}
-              >
-                {MEDIA_LIBRARY_ICON}
-              </Button>
+              />
             )}
-            <Dropdown
-              trigger={
-                <Button
-                  icon
-                  className="toolbarButton"
+            <DropdownMenu
+              ariaLabel={t("tiptap.toolbar.tableOptions", {}, { default: "Table options" })}
+              items={tableMenuItems}
+              renderTrigger={({ onClick, open, ariaLabel: triggerAriaLabel }) => (
+                <TipTapToolbarButton
+                  icon={<TipTapToolbarIcon file="table" />}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onClick();
+                  }}
                   disabled={!editor.isEditable}
-                  active={editor.isActive("table")}
-                  aria-label="Table options"
-                >
-                  <TipTapToolbarIcon file="table" />
-                </Button>
-              }
-              pointing
-              className="table-dropdown"
-              disabled={!editor.isEditable}
-            >
-              <Dropdown.Menu>
-                {tableOptions.map((option) => (
-                  <Dropdown.Item
-                    key={option.key}
-                    disabled={option.disabled}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      option.onClick();
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                      }}
-                    >
-                      {option.iconSrc ? (
-                        <img
-                          src={option.iconSrc}
-                          alt=""
-                          width={18}
-                          height={18}
-                          style={{ flexShrink: 0 }}
-                          draggable={false}
-                        />
-                      ) : null}
-                      {option.text}
-                    </span>
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
+                  selected={open || editor.isActive("table")}
+                  ariaLabel={triggerAriaLabel}
+                />
+              )}
+            />
           </div>
         {renderSpecialButton()}
         </div>

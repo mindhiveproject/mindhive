@@ -1596,6 +1596,7 @@
 		"delete": "Borrar",
 		"editingClassProjectTemplateSubtitle": "Decide cómo quieres propagar los cambios desde este tablero de proyecto a las copias de tus estudiantes.",
 		"editingClassProjectTemplateTitle": "Plantilla de proyecto de edición de clase",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "Expandir o minimizar la sección de plantillas",
 		"makeTemplate": "Convertir este tablero de proyecto en una plantilla pública",
 		"name": "Nombre de la propuesta",
@@ -1948,6 +1949,11 @@
 	"section": {
 		"addCard": "Añadir tarjeta",
 		"addCardBtn": "[ Haga clic para agregar una tarjeta ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "tarjeta",
 		"cards": "tarjetas",
 		"cardsCount": "{{count}} tarjeta{{count == 1 ? '' : 's'}}",
@@ -2034,6 +2040,7 @@
 			}
 		},
 		"deleteSectionConfirm": "¿Seguro que desea eliminar esta sección de propuestas? Todas las tarjetas de esta sección también se eliminarán. Esta acción no se puede deshacer.",
+		"editTitle": "",
 		"enterNewTitle": "Por favor, introduzca un título",
 		"newCard": "Nueva tarjeta",
 		"newCardPlaceholder": "Introduzca un nuevo título de tarjeta",
@@ -2354,6 +2361,7 @@
 	"tiptap": {
 		"insertImageAria": "Insertar imagen",
 		"insertImagePrompt": "Introduzca la URL de la imagen:",
+		"linkPrompt": "",
 		"mediaCancelEdit": "Cancelar",
 		"mediaCanvaExportThumb": "Exportación a PDF de Canva",
 		"mediaDelete": "BORRAR",
@@ -2394,7 +2402,33 @@
 		"mediaUploading": "Subiendo...",
 		"mediaUploadNew": "Subir nueva imagen",
 		"pasteImageNoMediaScope": "Aquí no es posible pegar imágenes. Utilice el botón de imagen e introduzca la URL de la imagen.",
-		"pasteImageUploadFailed": "No se pudo cargar la imagen pegada. Comprueba tu conexión e inténtalo de nuevo."
+		"pasteImageUploadFailed": "No se pudo cargar la imagen pegada. Comprueba tu conexión e inténtalo de nuevo.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "Constructor de estudios",
 	"titleText": "Título",

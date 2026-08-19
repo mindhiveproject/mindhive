@@ -1596,6 +1596,7 @@
 		"delete": "删除",
 		"editingClassProjectTemplateSubtitle": "决定如何将此项目看板上的更改同步到学生的副本上。",
 		"editingClassProjectTemplateTitle": "编辑课程项目模板",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "展开或折叠模板部分",
 		"makeTemplate": "将该项目板设为公共模板",
 		"name": "提案名称",
@@ -1948,6 +1949,11 @@
 	"section": {
 		"addCard": "添加卡片",
 		"addCardBtn": "[点击添加卡片]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "卡片",
 		"cards": "牌",
 		"cardsCount": "{{count}} 张卡{{count == 1 ? '' : 's'}}",
@@ -2034,6 +2040,7 @@
 			}
 		},
 		"deleteSectionConfirm": "您确定要删除此提案部分吗？此部分中的所有卡片也将被删除。此操作无法撤消。",
+		"editTitle": "",
 		"enterNewTitle": "请输入标题",
 		"newCard": "新卡",
 		"newCardPlaceholder": "输入新的卡片标题",
@@ -2354,6 +2361,7 @@
 	"tiptap": {
 		"insertImageAria": "插入图片",
 		"insertImagePrompt": "请输入图片网址：",
+		"linkPrompt": "",
 		"mediaCancelEdit": "取消",
 		"mediaCanvaExportThumb": "Canva PDF导出",
 		"mediaDelete": "删除",
@@ -2394,7 +2402,33 @@
 		"mediaUploading": "正在上传…",
 		"mediaUploadNew": "上传新图片",
 		"pasteImageNoMediaScope": "此处不支持粘贴图片。请使用图片按钮并输入图片网址。",
-		"pasteImageUploadFailed": "粘贴的图片无法上传。请检查您的网络连接并重试。"
+		"pasteImageUploadFailed": "粘贴的图片无法上传。请检查您的网络连接并重试。",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "学习构建器",
 	"titleText": "标题",

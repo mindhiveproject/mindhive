@@ -1596,6 +1596,7 @@
 		"delete": "Удалить",
 		"editingClassProjectTemplateSubtitle": "Определите, как вы хотите передавать изменения с этой доски проекта на копии ваших учеников.",
 		"editingClassProjectTemplateTitle": "Шаблон проекта для урока редактирования",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "Развернуть или свернуть раздел шаблона",
 		"makeTemplate": "Сделать эту доску проекта общедоступным шаблоном",
 		"name": "Название предложения",
@@ -1948,6 +1949,11 @@
 	"section": {
 		"addCard": "Добавить карту",
 		"addCardBtn": "[ Нажмите, чтобы добавить карту ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "карта",
 		"cards": "карты",
 		"cardsCount": "{{count}} карта{{count == 1 ? '' : 's'}}",
@@ -2034,6 +2040,7 @@
 			}
 		},
 		"deleteSectionConfirm": "Вы уверены, что хотите удалить этот раздел предложений? Все карточки в этом разделе также будут удалены. Это действие не может быть отменено.",
+		"editTitle": "",
 		"enterNewTitle": "Пожалуйста, введите название",
 		"newCard": "Новая карта",
 		"newCardPlaceholder": "Введите новое название карты",
@@ -2354,6 +2361,7 @@
 	"tiptap": {
 		"insertImageAria": "Вставить изображение",
 		"insertImagePrompt": "Введите URL изображения:",
+		"linkPrompt": "",
 		"mediaCancelEdit": "Отмена",
 		"mediaCanvaExportThumb": "Экспорт в PDF из Canva",
 		"mediaDelete": "Удалить",
@@ -2394,7 +2402,33 @@
 		"mediaUploading": "Загрузка...",
 		"mediaUploadNew": "Загрузить новое изображение",
 		"pasteImageNoMediaScope": "Вставка изображений здесь недоступна. Воспользуйтесь кнопкой «Изображение» и введите URL-адрес изображения.",
-		"pasteImageUploadFailed": "Не удалось загрузить вставленное изображение. Проверьте подключение к интернету и попробуйте снова."
+		"pasteImageUploadFailed": "Не удалось загрузить вставленное изображение. Проверьте подключение к интернету и попробуйте снова.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "Конструктор исследований",
 	"titleText": "Название",
