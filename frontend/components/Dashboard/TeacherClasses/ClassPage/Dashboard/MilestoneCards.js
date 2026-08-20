@@ -4,13 +4,10 @@ import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import IconButton from "../../../../DesignSystem/IconButton";
+import { ProjectBoardIcon, MilestoneIcon } from "../../../../DesignSystem/Icons";
 import DashboardAssetIcon from "./DashboardAssetIcon";
-import {
-  DASHBOARD_PROJECTS_CARD_KEY,
-  getMilestoneActionIcon,
-} from "./dashboardUtils";
+import { DASHBOARD_PROJECTS_CARD_KEY } from "./dashboardUtils";
 
-const PROJECTS_CARD_ICON = "/assets/icons/document.svg";
 const ARROW_ICON = "/assets/icons/profile/arrow.svg";
 const SCROLL_AMOUNT = 240;
 const SCROLL_EDGE_WIDTH = 56;
@@ -167,7 +164,7 @@ export default function MilestoneCards({
           onClick={() => onSelect?.(DASHBOARD_PROJECTS_CARD_KEY)}
         >
           <div className="milestoneCardHeader">
-            <DashboardAssetIcon src={PROJECTS_CARD_ICON} size={24} />
+            <ProjectBoardIcon />
             <span className="milestoneCardTitle">
               {t("dashboard.projectsCardTitle", {}, { default: "Projects" })}
             </span>
@@ -184,7 +181,6 @@ export default function MilestoneCards({
         {milestones.map((milestone) => {
           const selected = milestone.key === selectedKey;
           const completed = completionByKey[milestone.key] || 0;
-          const iconSrc = getMilestoneActionIcon(milestone.actionCardType);
           return (
             <button
               key={milestone.id || milestone.key}
@@ -196,9 +192,7 @@ export default function MilestoneCards({
               onClick={() => onSelect?.(milestone.key)}
             >
               <div className="milestoneCardHeader">
-                {iconSrc ? (
-                  <DashboardAssetIcon src={iconSrc} size={24} />
-                ) : null}
+                <MilestoneIcon />
                 <span className="milestoneCardTitle">
                   {milestone.title || milestone.key}
                 </span>
@@ -367,6 +361,11 @@ const StyledMilestoneCards = styled.div`
     align-items: center;
     gap: 8px;
     width: 100%;
+
+    svg {
+      flex-shrink: 0;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+    }
   }
 
   .milestoneCardTitle {

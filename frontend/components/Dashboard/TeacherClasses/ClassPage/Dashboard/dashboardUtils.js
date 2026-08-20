@@ -1,22 +1,11 @@
 export const DASHBOARD_PROJECTS_CARD_KEY = "projects";
 
-export const MILESTONE_ACTION_ICONS = {
-  ACTION_SUBMIT: "/assets/icons/user.svg",
-  ACTION_PEER_FEEDBACK: "/assets/connect/group.svg",
-  ACTION_COLLECTING_DATA: "/assets/icons/builder/collect.svg",
-  ACTION_PROJECT_REPORT: "/assets/icons/document.svg",
-};
-
 export const STATUS_ICON_SRC = {
   NOT_STARTED: "/assets/icons/status/notStarted.svg",
   IN_PROGRESS: "/assets/icons/status/inProgress.svg",
   SUBMITTED: "/assets/icons/status/completed.svg",
   FINISHED: "/assets/icons/status/completed.svg",
 };
-
-export function getMilestoneActionIcon(actionCardType) {
-  return MILESTONE_ACTION_ICONS[actionCardType] || null;
-}
 
 export function isCompleteStatus(status) {
   return status === "SUBMITTED" || status === "FINISHED";
