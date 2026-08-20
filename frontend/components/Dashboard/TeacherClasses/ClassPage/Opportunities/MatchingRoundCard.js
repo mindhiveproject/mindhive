@@ -1018,11 +1018,7 @@ function MatchingRoundEditor({
     const selectedSet = new Set(selectedOpportunities);
     return sortOpportunitiesByTitle(
       networkOpportunities.filter((opportunity) => {
-        const inRound = selectedSet.has(opportunity.id);
-        // Appointment doorbells land on Available. Keep an open meeting
-        // request visible here even if the opportunity is already in the round
-        // (typical after a teacher return).
-        if (inRound && !opportunity.requestsAppointment) return false;
+        if (selectedSet.has(opportunity.id)) return false;
         return (
           opportunity.status === "pending_review" ||
           opportunity.status === "returned" ||
