@@ -440,7 +440,7 @@ export default function CreateTemplateBoardModal({
                       })}
                     >
                       <div style={previewShellStyle}>
-                        <StyledProposal>
+                        <StyledProposal className="projectsBoardEditorProposal">
                           <ProposalBuilder
                             proposalId={selectedTemplate.id}
                             proposal={selectedTemplate}

@@ -41,7 +41,7 @@ export default function EditProposal({ user, boardId }) {
     return <p>{t("projectBoard.notFound", "Project board not found.")}</p>;
 
   return (
-    <StyledProposal>
+    <StyledProposal className="projectsBoardEditorProposal">
       <ProposalPage
         user={user}
         proposalId={boardId}
