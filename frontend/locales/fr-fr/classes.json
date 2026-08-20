@@ -1441,6 +1441,7 @@
 		"templateLibraryCount": "{{count}} disponible(s)",
 		"templateLibraryNoMine": "Vous n'avez pas encore de modèles de classe dans vos autres classes.",
 		"templateManagement": "Gestion des modèles",
+		"templateMoreMilestonesHint": "",
 		"templateOptions": "Options du modèle",
 		"templatePreviewModal": {
 			"title": "Aperçu \u000e2\u000e2 {{title}}"

@@ -1441,6 +1441,7 @@
 		"templateLibraryCount": "{{count}} available",
 		"templateLibraryNoMine": "You don't have any class templates in your other classes yet.",
 		"templateManagement": "Project board",
+		"templateMoreMilestonesHint": "Manage them on the board",
 		"templateOptions": "Template options",
 		"templatePreviewModal": {
 			"title": "Preview — {{title}}"

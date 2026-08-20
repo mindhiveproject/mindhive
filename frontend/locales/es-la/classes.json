@@ -1441,6 +1441,7 @@
 		"templateLibraryCount": "{{count}} disponibles",
 		"templateLibraryNoMine": "Aún no tienes plantillas de clase en tus otras clases.",
 		"templateManagement": "Gestión de plantillas",
+		"templateMoreMilestonesHint": "",
 		"templateOptions": "Opciones de plantilla",
 		"templatePreviewModal": {
 			"title": "Vista previa \n\n{{title}}"
