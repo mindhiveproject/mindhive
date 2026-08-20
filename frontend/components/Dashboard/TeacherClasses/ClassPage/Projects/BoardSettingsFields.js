@@ -103,7 +103,7 @@ export default function BoardSettingsFields({
             <div className="boardSettingsBlock">
               <p className="settingsQuestion">
                 {t("proposalCardsAssignableQuestion", {}, {
-                  default: "Should project cards be assignable to students?",
+                  default: "Should cards be assignable to students?",
                 })}
               </p>
               <SettingsChoiceGroup

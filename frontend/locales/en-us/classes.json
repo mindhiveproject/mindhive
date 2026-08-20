@@ -172,8 +172,8 @@
 				"defaultFormReadOnly": "This is a MindHive default review form. It cannot be edited from this card.",
 				"editReviewForm": "Edit review form",
 				"editReviewFormHint": "Scoped to this template board. Student clones inherit whatever you publish.",
-				"includedCardsEmpty": "No project cards are configured for this review step yet.",
-				"includedCardsHelper": "Students submit content from these project cards when they reach this action card. Configure inclusion on each project card's Student Answer Box settings.",
+				"includedCardsEmpty": "No cards are configured for this review step yet.",
+				"includedCardsHelper": "Students submit content from these cards when they reach this action card. Configure inclusion on each card's Student Answer Box settings.",
 				"includedCardsTitle": "Included in this review step",
 				"milestoneDescription": "Description",
 				"openingEditor": "Opening editor…",
@@ -1452,7 +1452,7 @@
 		"yourProjects": "Your projects",
 		"yourProjectsDescription": "{{count}} project boards in this class that you authored or collaborate on."
 	},
-	"proposalCardsAssignableQuestion": "Should project cards be assignable to students?",
+	"proposalCardsAssignableQuestion": "Should cards be assignable to students?",
 	"resource": {
 		"action": "Action",
 		"actions": "Actions",

@@ -588,7 +588,7 @@ export default function ActionCardBuilder({
               {},
               {
                 default:
-                  "Students submit content from these project cards when they reach this action card. Configure inclusion on each project card's Student Answer Box settings.",
+                  "Students submit content from these cards when they reach this action card. Configure inclusion on each card's Student Answer Box settings.",
               }
             )}
           </p>
@@ -624,7 +624,7 @@ export default function ActionCardBuilder({
                 {},
                 {
                   default:
-                    "No project cards are configured for this review step yet.",
+                    "No cards are configured for this review step yet.",
                 }
               )}
             </p>

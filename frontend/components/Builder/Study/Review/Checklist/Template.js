@@ -1,9 +1,9 @@
 export const items = [
   {
     name: "complete-cards",
-    title: "Double check that all your project cards are complete",
+    title: "Double check that all your cards are complete",
     description:
-      "The text in your project cards will be aggregated and exported as a PDF file.",
+      "The text in your cards will be aggregated and exported as a PDF file.",
     isComplete: false,
   },
   {

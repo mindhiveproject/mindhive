@@ -203,7 +203,7 @@ export default function BoardExport() {
           }
         } else {
           exportSummaries.push(
-            "No project card content matched the current scope."
+            "No card content matched the current scope."
           );
         }
       }
