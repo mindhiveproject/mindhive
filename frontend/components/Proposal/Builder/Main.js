@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
-import { v1 as uuidv1 } from "uuid";
 
 import BoardEditorChrome from "./BoardEditorChrome";
 import ProposalBoard from "./Board";
@@ -10,7 +9,6 @@ import useTemplatePropagation from "./useTemplatePropagation";
 
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
-import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 import { isActionCard } from "../../../lib/milestones";
 import { getActionCardLabel } from "../../../lib/templateBoardActionCards";
 
@@ -45,45 +43,9 @@ export default function ProposalBuilder({
     }
   );
 
-  const backfillPublicIdDoneRef = useRef(null);
   const cardCloseHandlerRef = useRef(null);
   const cardChromeHandlersRef = useRef({});
   const [cardChrome, setCardChrome] = useState(null);
-
-  useEffect(() => {
-    if (!proposal?.id || !Array.isArray(proposal?.sections)) {
-      return;
-    }
-
-    if (!isClassTemplateBoard(proposal)) return;
-    if (backfillPublicIdDoneRef.current === proposal.id) return;
-
-    const sections = proposal.sections || [];
-    const cardsWithoutPublicId = sections
-      .flatMap((section) => section?.cards || [])
-      .filter((card) => card && !card.publicId);
-
-    if (cardsWithoutPublicId.length === 0) {
-      backfillPublicIdDoneRef.current = proposal.id;
-      return;
-    }
-
-    cardsWithoutPublicId.forEach((card) => {
-      updateEdit({
-        variables: {
-          id: card.id,
-          input: {
-            publicId: uuidv1(),
-          },
-        },
-      }).catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error("Failed to backfill card publicId in ProposalBuilder:", e);
-      });
-    });
-
-    backfillPublicIdDoneRef.current = proposal.id;
-  }, [proposal, updateEdit]);
 
   const [page, setPage] = useState("board");
   const [card, setCard] = useState(null);
