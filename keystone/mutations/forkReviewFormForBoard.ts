@@ -2,7 +2,7 @@
 // board (scope=project_board) so the teacher can edit it without
 // mutating the global MindHive form. Idempotent: if this board already
 // has a project_board row for the source key, that row is returned.
-import { assertTemplateBoardTeacher } from "./resolveMilestonesForBoard";
+import { assertCanMutateClassTemplateBoard } from "./resolveMilestonesForBoard";
 import {
   copyFormCardsAndFields,
   FORM_DEFINITION_NESTED_QUERY,
@@ -28,7 +28,7 @@ async function forkReviewFormForBoard(
   if (!templateBoardId || !milestoneId) {
     throw new Error("templateBoardId and milestoneId are required.");
   }
-  await assertTemplateBoardTeacher(context, templateBoardId);
+  await assertCanMutateClassTemplateBoard(context, templateBoardId);
   const sudo = context.sudo();
   const sessionId = context.session?.itemId;
 

@@ -7,14 +7,18 @@
 // classNetwork) tuple — only one "live" version per scope at a time.
 //
 // Permission: canManageUsers OR canManageForms (organization scope), or
-// the class creator for a project_board-scoped template form.
+// class creator / Class.mentors / board collaborators for a
+// project_board-scoped class template form.
 //
 // Before flipping status, runs validateFormDefinition() — refuses to
 // publish a definition with broken field wiring (typo'd storageColumn,
 // missing options on a select, etc.). All errors surface together so
 // the admin can fix them in one pass.
 import { validateFormDefinition } from "./formValidation";
-import { canMutateFormDefinition } from "../access";
+import {
+  canMutateFormDefinition,
+  CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
+} from "../access";
 
 async function publishFormDefinition(
   root: any,
@@ -52,9 +56,7 @@ async function publishFormDefinition(
       classNetwork { id }
       class { id creator { id } mentors { id } }
       proposalBoard {
-        id
-        templateForClasses { creator { id } }
-        templatesForClass { creator { id } }
+        ${CLASS_TEMPLATE_BOARD_ACCESS_QUERY}
       }
       cards(orderBy: { order: asc }) {
         id

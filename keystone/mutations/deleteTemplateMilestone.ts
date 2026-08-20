@@ -1,4 +1,4 @@
-import { assertTemplateBoardTeacher } from "./resolveMilestonesForBoard";
+import { assertCanMutateClassTemplateBoard } from "./resolveMilestonesForBoard";
 
 /**
  * Deletes a template-scoped milestone from a class template board.
@@ -29,7 +29,7 @@ async function deleteTemplateMilestone(
     throw new Error("Template milestone has no template board.");
   }
 
-  await assertTemplateBoardTeacher(context, templateBoardId);
+  await assertCanMutateClassTemplateBoard(context, templateBoardId);
 
   const sudo = context.sudo();
   await sudo.db.Milestone.deleteOne({ where: { id } });
