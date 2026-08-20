@@ -563,10 +563,10 @@ export const StyledProposal = styled.div`
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdge {
     position: absolute;
     top: 0;
-    bottom: 0;
+    bottom: auto;
+    height: var(--board-scroll-edge-height, 100%);
     z-index: 2;
-    display: flex;
-    align-items: center;
+    display: block;
     width: 56px;
     margin: 0;
     padding: 0;
@@ -575,7 +575,6 @@ export const StyledProposal = styled.div`
 
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeLeft {
     left: 0;
-    justify-content: flex-start;
     padding-left: 2px;
     background: linear-gradient(
       to right,
@@ -587,7 +586,6 @@ export const StyledProposal = styled.div`
 
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeRight {
     right: 0;
-    justify-content: flex-end;
     padding-right: 2px;
     background: linear-gradient(
       to left,
@@ -603,7 +601,18 @@ export const StyledProposal = styled.div`
   }
 
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow {
+    position: absolute;
+    top: var(--board-scroll-arrow-top, 50%);
+    transform: translateY(-50%);
     pointer-events: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeLeft .boardColumnScrollArrow {
+    left: 2px;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeRight .boardColumnScrollArrow {
+    right: 2px;
   }
 
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow .DesignSystem-IconButton-Icon {
