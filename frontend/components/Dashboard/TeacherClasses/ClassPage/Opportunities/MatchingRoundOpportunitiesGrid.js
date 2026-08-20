@@ -853,14 +853,45 @@ export default function MatchingRoundOpportunitiesGrid({
     }
 
     cols.push({
+      colId: "video",
       field: "video",
       headerName: "",
       headerTooltip: t("opportunities.matchingRound.grid.columns.video", {}, {
         default: "Intro video",
       }),
+      headerClass: "matchingRoundOppVideoGridHeader",
+      valueGetter: (params) => hasOpportunityIntroVideo(params?.data),
+      cellDataType: "boolean",
       cellRenderer: VideoStatusRenderer,
-      sortable: false,
-      filter: false,
+      sortable: true,
+      filter: true,
+      filterParams: {
+        maxNumConditions: 1,
+        debounceMs: 0,
+        filterOptions: [
+          "empty",
+          {
+            displayKey: "true",
+            displayName: t(
+              "opportunities.matchingRound.grid.columns.videoProvided",
+              {},
+              { default: "Intro video provided" },
+            ),
+            predicate: (_, cellValue) => cellValue === true,
+            numberOfInputs: 0,
+          },
+          {
+            displayKey: "false",
+            displayName: t(
+              "opportunities.matchingRound.grid.columns.videoMissing",
+              {},
+              { default: "No intro video" },
+            ),
+            predicate: (_, cellValue) => cellValue === false,
+            numberOfInputs: 0,
+          },
+        ],
+      },
       width: 52,
       maxWidth: 52,
       pinned: "right",

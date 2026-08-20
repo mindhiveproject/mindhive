@@ -2242,6 +2242,32 @@ const StyledClass = styled.div`
       }
     }
 
+    .matchingRoundOppVideoGridHeader {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+
+      .ag-header-cell-comp-wrapper {
+        justify-content: center;
+      }
+
+      .ag-header-cell-label {
+        justify-content: center;
+        overflow: visible;
+      }
+
+      .ag-header-cell-text {
+        display: none;
+      }
+
+      .ag-sort-indicator-container {
+        margin: 0;
+      }
+
+      .ag-header-cell-filter-button {
+        margin: 0;
+      }
+    }
+
     .matchingRoundOppVideoCell {
       display: flex;
       align-items: center;
