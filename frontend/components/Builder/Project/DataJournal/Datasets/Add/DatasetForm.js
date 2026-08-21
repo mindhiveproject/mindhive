@@ -36,9 +36,11 @@ export default function DatasetForm({
   loading,
   error,
   onCancel,
+  onCreated,
 }) {
   const { t } = useTranslation("builder");
   const [collaboratorsCanEdit, setCollaboratorsCanEdit] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const sharingIds = useMemo(
     () =>
@@ -117,7 +119,7 @@ export default function DatasetForm({
   };
 
   const handleCreateDataset = async () => {
-    if (!datasetName || !dataOrigin) return;
+    if (!datasetName || !dataOrigin || submitting || loading) return;
 
     const mutationVariables = {
       data: {
@@ -129,77 +131,88 @@ export default function DatasetForm({
       },
     };
 
-    if (dataOrigin === "STUDY") {
-      if (!studyId || !studyData?.study) {
-        // nothing to connect to – bail out early
-        return;
-      }
-      mutationVariables.data.study = { connect: { id: studyId } };
-      await createDatasource({ variables: mutationVariables });
-    } else if (dataOrigin === "UPLOADED" && file) {
-      let data;
-      if (file.type === "application/json") {
-        const text = await file.text();
-        data = JSON.parse(text);
-      } else {
-        data = await toJson(file);
-      }
+    setSubmitting(true);
+    try {
+      let createResult = null;
 
-      const normalizedData = data.map(normalizeRowKeys);
-      const variableNames = columnNamesFromUploadData(normalizedData);
-      const variables = variableNames.map((variable) => ({
-        field: variable,
-        type: "general",
-        editable: true,
-      }));
+      if (dataOrigin === "STUDY") {
+        if (!studyId || !studyData?.study) {
+          // nothing to connect to – bail out early
+          return;
+        }
+        mutationVariables.data.study = { connect: { id: studyId } };
+        createResult = await createDatasource({ variables: mutationVariables });
+      } else if (dataOrigin === "UPLOADED" && file) {
+        let data;
+        if (file.type === "application/json") {
+          const text = await file.text();
+          data = JSON.parse(text);
+        } else {
+          data = await toJson(file);
+        }
 
-      const metadata = {
-        id: nanoid(),
-        payload: "upload",
-        timestampUploaded: Date.now(),
-        variables: variables,
-      };
+        const normalizedData = data.map(normalizeRowKeys);
+        const variableNames = columnNamesFromUploadData(normalizedData);
+        const variables = variableNames.map((variable) => ({
+          field: variable,
+          type: "general",
+          editable: true,
+        }));
 
-      const dataFile = {
-        metadata,
-        data: normalizedData,
-      };
+        const metadata = {
+          id: nanoid(),
+          payload: "upload",
+          timestampUploaded: Date.now(),
+          variables: variables,
+        };
 
-      const curDate = new Date();
-      const date = {
-        year: parseInt(curDate.getFullYear()),
-        month: parseInt(curDate.getMonth()) + 1,
-        day: parseInt(curDate.getDate()),
-      };
+        const dataFile = {
+          metadata,
+          data: normalizedData,
+        };
 
-      await fetch(`/api/save?y=${date.year}&m=${date.month}&d=${date.day}`, {
-        method: "POST",
-        body: JSON.stringify(dataFile),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
+        const curDate = new Date();
+        const date = {
+          year: parseInt(curDate.getFullYear()),
+          month: parseInt(curDate.getMonth()) + 1,
+          day: parseInt(curDate.getDate()),
+        };
 
-      const fileAddress = {
-        ...date,
-        token: metadata?.id,
-      };
-
-      mutationVariables.data.content = {
-        uploaded: {
-          address: fileAddress,
-          metadata: {
-            id: metadata?.id,
-            payload: metadata?.payload,
-            timestampUploaded: metadata?.timestampUploaded,
+        await fetch(`/api/save?y=${date.year}&m=${date.month}&d=${date.day}`, {
+          method: "POST",
+          body: JSON.stringify(dataFile),
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
           },
-        },
-      };
+        });
 
-      await createDatasource({ variables: mutationVariables });
+        const fileAddress = {
+          ...date,
+          token: metadata?.id,
+        };
+
+        mutationVariables.data.content = {
+          uploaded: {
+            address: fileAddress,
+            metadata: {
+              id: metadata?.id,
+              payload: metadata?.payload,
+              timestampUploaded: metadata?.timestampUploaded,
+            },
+          },
+        };
+
+        createResult = await createDatasource({ variables: mutationVariables });
+      }
+      // TEMPLATE: reserved for future extension
+
+      if (createResult?.data?.createDatasource && onCreated) {
+        await onCreated(createResult.data.createDatasource, dataOrigin);
+      }
+    } finally {
+      setSubmitting(false);
     }
-    // TEMPLATE: reserved for future extension
   };
 
   const hasStudy = !!studyData?.study;
@@ -212,6 +225,8 @@ export default function DatasetForm({
       );
 
   const createDisabled =
+    submitting ||
+    loading ||
     !datasetName ||
     !dataOrigin ||
     (dataOrigin === "UPLOADED" && !file) ||
