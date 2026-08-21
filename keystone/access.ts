@@ -376,8 +376,9 @@ export const rules = {
   // Connect customizable forms — FormDefinition mutate.
   // Admins (canManageUsers) can manage any definition. Users with
   // canManageForms can manage scope=organization definitions for orgs
-  // they are members of. Class creators can manage scope=project_board
-  // definitions on their template boards and scope=class definitions
+  // they are members of. Class creators, Class.mentors, and board
+  // creator/author/collaborators can manage scope=project_board
+  // definitions on class template boards and scope=class definitions
   // for their class (teacher form wizard).
   formDefinitionMutate({ session }: ListAccessArgs) {
     return formDefinitionMutateFilter(session);
@@ -408,8 +409,8 @@ export const rules = {
   async formFieldCreate({ session, context, inputData }: ListAccessArgs) {
     return canCreateFormField({ session, context, inputData });
   },
-  // Template-scoped milestones: admins, canManageForms, or class creators
-  // whose class uses the linked template board.
+  // Template-scoped milestones: admins, canManageForms, or class staff /
+  // board collaborators on a non-platform class template board.
   milestoneMutate({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageUsers({ session })) return true;
@@ -417,8 +418,14 @@ export const rules = {
     const me = session.itemId;
     return {
       scope: { equals: "template" },
-      templateBoard: templateBoardCreatorFilter(me),
+      templateBoard: classTemplateBoardFilter(me),
     };
+  },
+  async milestoneCreate({ session, context, inputData }: ListAccessArgs) {
+    return canCreateTemplateMilestone({ session, context, inputData });
+  },
+  async formDefinitionCreate({ session, context, inputData }: ListAccessArgs) {
+    return canCreateScopedFormDefinition({ session, context, inputData });
   },
   // For mutate operations on the above lists: only the owner or admin.
   // The relevant owner-field name is passed via closure.
@@ -433,29 +440,108 @@ export const rules = {
   },
 };
 
+export const CLASS_TEMPLATE_BOARD_ACCESS_QUERY = `
+  id
+  isTemplate
+  creator { id }
+  author { id }
+  collaborators { id }
+  templateForClasses { id creator { id } mentors { id } }
+  templatesForClass { id creator { id } mentors { id } }
+`;
+
 const FORM_DEFINITION_ACCESS_QUERY = `
   id
   scope
   organization { members { id } }
   class { creator { id } mentors { id } }
   proposalBoard {
-    templateForClasses { creator { id } }
-    templatesForClass { creator { id } }
+    ${CLASS_TEMPLATE_BOARD_ACCESS_QUERY}
   }
 `;
 
-function templateBoardCreatorFilter(me: string) {
-  return {
+type ClassLink = {
+  id?: string | null;
+  creator?: { id?: string | null } | null;
+  mentors?: { id?: string | null }[] | null;
+};
+
+export type ClassTemplateBoardAccessShape = {
+  id?: string | null;
+  isTemplate?: boolean | null;
+  creator?: { id?: string | null } | null;
+  author?: { id?: string | null } | null;
+  collaborators?: { id?: string | null }[] | null;
+  templateForClasses?: ClassLink[] | null;
+  templatesForClass?: ClassLink[] | null;
+};
+
+function getLinkedClasses(
+  board: ClassTemplateBoardAccessShape | null | undefined
+) {
+  return [
+    ...(board?.templateForClasses || []),
+    ...(board?.templatesForClass || []),
+  ];
+}
+
+/** True when the board is used as a class template (not a platform library board). */
+export function isClassTemplateBoardAccess(
+  board: ClassTemplateBoardAccessShape | null | undefined
+) {
+  if (!board || board.isTemplate) return false;
+  return getLinkedClasses(board).length > 0;
+}
+
+/**
+ * Class creator, Class.mentors, or board creator/author/collaborator may mutate
+ * class-template milestones and project_board review forms. Platform isTemplate
+ * boards are never allowed here.
+ */
+export function canMutateClassTemplateBoard(
+  userId: string | null | undefined,
+  board: ClassTemplateBoardAccessShape | null | undefined
+) {
+  if (!userId || !isClassTemplateBoardAccess(board)) return false;
+  if (board!.creator?.id === userId) return true;
+  if (board!.author?.id === userId) return true;
+  if ((board!.collaborators || []).some((c) => c?.id === userId)) return true;
+  return getLinkedClasses(board).some(
+    (klass) =>
+      klass?.creator?.id === userId ||
+      (klass?.mentors || []).some((m) => m?.id === userId)
+  );
+}
+
+/**
+ * Prisma/Keystone filter for ProposalBoard rows the user may treat as
+ * class templates: not isTemplate, and either class creator/mentor or
+ * board creator/author/collaborator.
+ */
+function classTemplateBoardFilter(me: string) {
+  const classStaffSome = {
     OR: [
+      { creator: { id: { equals: me } } },
+      { mentors: { some: { id: { equals: me } } } },
+    ],
+  };
+  return {
+    AND: [
+      { isTemplate: { equals: false } },
       {
-        templateForClasses: {
-          some: { creator: { id: { equals: me } } },
-        },
+        OR: [
+          { creator: { id: { equals: me } } },
+          { author: { id: { equals: me } } },
+          { collaborators: { some: { id: { equals: me } } } },
+          { templateForClasses: { some: classStaffSome } },
+          { templatesForClass: { some: classStaffSome } },
+        ],
       },
       {
-        templatesForClass: {
-          some: { creator: { id: { equals: me } } },
-        },
+        OR: [
+          { templateForClasses: { some: {} } },
+          { templatesForClass: { some: {} } },
+        ],
       },
     ],
   };
@@ -464,7 +550,7 @@ function templateBoardCreatorFilter(me: string) {
 function projectBoardFormScopeFilter(me: string) {
   return {
     scope: { equals: "project_board" },
-    proposalBoard: templateBoardCreatorFilter(me),
+    proposalBoard: classTemplateBoardFilter(me),
   };
 }
 
@@ -510,10 +596,7 @@ export function canMutateFormDefinition(
       creator?: { id?: string | null } | null;
       mentors?: { id?: string | null }[] | null;
     } | null;
-    proposalBoard?: {
-      templateForClasses?: { creator?: { id?: string | null } | null }[] | null;
-      templatesForClass?: { creator?: { id?: string | null } | null }[] | null;
-    } | null;
+    proposalBoard?: ClassTemplateBoardAccessShape | null;
   } | null
 ) {
   if (!session?.itemId || !definition) return false;
@@ -534,12 +617,83 @@ export function canMutateFormDefinition(
     );
   }
   if (definition.scope === "project_board") {
-    const classes = [
-      ...(definition.proposalBoard?.templateForClasses || []),
-      ...(definition.proposalBoard?.templatesForClass || []),
-    ];
-    return classes.some((klass) => klass?.creator?.id === me);
+    return canMutateClassTemplateBoard(me, definition.proposalBoard);
   }
+  return false;
+}
+
+async function loadClassTemplateBoard(
+  context: any,
+  boardId: string | null | undefined
+) {
+  if (!boardId || !context) return null;
+  return context.query.ProposalBoard.findOne({
+    where: { id: boardId },
+    query: CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
+  });
+}
+
+async function canCreateTemplateMilestone({
+  session,
+  context,
+  inputData,
+}: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (permissions.canManageUsers({ session })) return true;
+  if (permissions.canManageForms({ session })) return true;
+
+  const scope = inputData?.scope ?? "global";
+  if (scope !== "template") return false;
+
+  const boardId = inputData?.templateBoard?.connect?.id;
+  const board = await loadClassTemplateBoard(context, boardId);
+  return canMutateClassTemplateBoard(session.itemId, board);
+}
+
+async function canCreateScopedFormDefinition({
+  session,
+  context,
+  inputData,
+}: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (permissions.canManageUsers({ session })) return true;
+
+  const scope = inputData?.scope ?? "global";
+  if (scope === "global") return false;
+
+  if (scope === "organization") {
+    if (!permissions.canManageForms({ session })) return false;
+    const orgId = inputData?.organization?.connect?.id;
+    if (!orgId || !context) return false;
+    const org = await context.query.Organization.findOne({
+      where: { id: orgId },
+      query: "id members { id }",
+    });
+    return (org?.members || []).some(
+      (member: { id?: string }) => member?.id === session.itemId
+    );
+  }
+
+  if (scope === "class") {
+    const classId = inputData?.class?.connect?.id;
+    if (!classId || !context) return false;
+    const klass = await context.query.Class.findOne({
+      where: { id: classId },
+      query: "id creator { id } mentors { id }",
+    });
+    if (!klass) return false;
+    if (klass.creator?.id === session.itemId) return true;
+    return (klass.mentors || []).some(
+      (m: { id?: string }) => m?.id === session.itemId
+    );
+  }
+
+  if (scope === "project_board") {
+    const boardId = inputData?.proposalBoard?.connect?.id;
+    const board = await loadClassTemplateBoard(context, boardId);
+    return canMutateClassTemplateBoard(session.itemId, board);
+  }
+
   return false;
 }
 

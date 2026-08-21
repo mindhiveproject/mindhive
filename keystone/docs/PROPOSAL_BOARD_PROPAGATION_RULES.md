@@ -1,6 +1,6 @@
 # Proposal Board Propagation – Rules
 
-*last updated: Mar 8th 2026 (consolidated class/resources/assignments propagation)*
+*last updated: Aug 20th 2026 (claimed leftover publicId matching)*
 
 ## Scope
 
@@ -8,14 +8,20 @@ When a **template** proposal board (with `prototypeFor` clones) is edited, propa
 
 ## Matching (backend)
 
-- **Sections**: By **position index** (template and clone sections ordered by `position`; clone section at index `i` corresponds to template section at index `i`).
-- **Cards**: By **position index** within each section (same ordering). No publicId used in matching.
+Implemented in `boardPropagationMatch.js` / `boardPropagation.ts` (claimed-set aware):
+
+- **Template row with a `publicId`**: match that id on an unclaimed clone row. No match → create (genuinely new).
+- **Template row without a `publicId`** (including `""`): pair with the next unclaimed clone row that also has no `publicId`, in position order among that leftover subset. If none remain → **skip** (do not create; avoids duplicating old columns when a new id’d section was added).
+- Empty string is treated as missing. After a successful leftover pair, sync stamps one shared `publicId` on **both** template and clone.
+- **Delete**: only clone rows whose `publicId` proves they came from a template row that is gone. PublicId-less extras are left alone (manual cleanup).
+
+Scenario checks: `node mutations/utils/boardPropagationMatch.scenarios.js` (from `keystone/`).
 
 ## Template-owned (propagate to clones)
 
 ### Sections
 
-- Add/delete sections so clone section list matches template. Update `title`, `description`, `position`, and `publicId` when creating/updating.
+- Add/delete sections so clone section list matches template (per matching rules above). Update `title`, `description`, `position`, and `publicId` when creating/updating.
 
 ### Cards
 
@@ -37,7 +43,7 @@ When a **template** proposal board (with `prototypeFor` clones) is edited, propa
 ## Backend
 
 - **Mutation**: `applyTemplateBoardChanges(templateBoardId: ID!, cardIdsWithContentUpdate: [ID!])`. Implemented in `keystone/mutations/applyTemplateBoardChanges.ts` and `keystone/mutations/utils/boardPropagation.ts`.
-- **Idempotent**: Same template state → same clone state. Match by index; no publicId required for existing data.
+- **Idempotent** when every row has a stable shared `publicId`: same template state → same clone state.
 
 ### Class templates, student boards, resources & assignments
 

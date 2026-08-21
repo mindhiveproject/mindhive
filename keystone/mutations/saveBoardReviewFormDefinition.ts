@@ -3,14 +3,14 @@
 // surface / scope — those are baked in here. Unlike
 // saveClassFormDefinition, fields always write to json_bucket (no
 // Opportunity.videoFile mapping). Updates edit the same row in place.
-import { canMutateFormDefinition } from "../access";
+import { canMutateFormDefinition, CLASS_TEMPLATE_BOARD_ACCESS_QUERY } from "../access";
 import {
   normalizeFields,
   replaceCardFields,
   slugify,
 } from "./saveClassFormDefinition";
 import { uniqueCopiedFormKey } from "./createTemplateMilestone";
-import { assertTemplateBoardTeacher } from "./resolveMilestonesForBoard";
+import { assertCanMutateClassTemplateBoard } from "./resolveMilestonesForBoard";
 
 type BoardReviewFieldInput = {
   name?: string | null;
@@ -50,7 +50,7 @@ async function saveBoardReviewFormDefinition(
   if (!proposalBoardId) throw new Error("proposalBoardId is required.");
   if (!String(title || "").trim()) throw new Error("Title is required.");
 
-  await assertTemplateBoardTeacher(context, proposalBoardId);
+  await assertCanMutateClassTemplateBoard(context, proposalBoardId);
   const normalizedFields = normalizeFields(fields || [], {
     allowIntroVideo: false,
   });
@@ -67,9 +67,7 @@ async function saveBoardReviewFormDefinition(
         id
         scope
         proposalBoard {
-          id
-          templateForClasses { creator { id } }
-          templatesForClass { creator { id } }
+          ${CLASS_TEMPLATE_BOARD_ACCESS_QUERY}
         }
         cards(orderBy: { order: asc }) { id }
       `,

@@ -124,11 +124,6 @@ export const StyledProposal = styled.div`
     min-height: 0;
     --proposal-section-width: 500px;
     --proposal-section-margin: 15px;
-    --proposal-visible-columns: 2;
-    --proposal-board-content-max-width: calc(
-      var(--proposal-visible-columns) *
-      (var(--proposal-section-width) + 2 * var(--proposal-section-margin))
-    );
 
     .boardEditorChrome {
       display: flex;
@@ -141,7 +136,7 @@ export const StyledProposal = styled.div`
       padding: 8px;
       background: var(--MH-Theme-Neutrals-White, #ffffff);
       border-radius: 8px;
-      border: 1.5px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      border: 1px solid var(--MH-Theme-Neutrals-Light,#e6e6e6);
     }
     .boardEditorChromeLeft {
       display: flex;
@@ -340,12 +335,13 @@ export const StyledProposal = styled.div`
     flex-direction: column;
     min-height: 0;
     width: 100%;
-    max-width: var(--proposal-board-content-max-width);
+    max-width: 100%;
     flex: 1;
     .boardInnerToolbar {
       display: flex;
       align-items: center;
       justify-content: flex-start;
+      width: max-content;
       gap: 8px;
       padding: 0 15px 8px;
       .boardInnerToolbarSelect {
@@ -494,6 +490,12 @@ export const StyledProposal = styled.div`
     overflow-y: hidden;
     min-height: 0;
     height: 100%;
+    /* Layout tokens live on the shell so previews without .proposalBoard still get gaps. */
+    --proposal-section-min-width: 420px;
+    --proposal-section-max-width: 500px;
+    --proposal-section-width: var(--proposal-section-min-width);
+    --proposal-section-gap: 24px;
+    --proposal-card-gap: 12px;
   }
 
   &.projectsBoardEditorProposal .proposalBoard {
@@ -503,11 +505,6 @@ export const StyledProposal = styled.div`
     min-width: 0;
     height: 100%;
     overflow: hidden;
-    --proposal-section-min-width: 420px;
-    --proposal-section-max-width: 500px;
-    --proposal-section-width: var(--proposal-section-min-width);
-    --proposal-section-gap: 24px;
-    --proposal-card-gap: 12px;
   }
 
   &.projectsBoardEditorProposal .boardEditorChrome {
@@ -531,7 +528,7 @@ export const StyledProposal = styled.div`
     padding: 8px 8px;
     margin-bottom: 8px;
     background: var(--MH-Theme-Neutrals-White, #ffffff);
-    border: 1.5px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
     border-radius: 8px;
   }
 
@@ -566,10 +563,10 @@ export const StyledProposal = styled.div`
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdge {
     position: absolute;
     top: 0;
-    bottom: 0;
+    bottom: auto;
+    height: var(--board-scroll-edge-height, 100%);
     z-index: 2;
-    display: flex;
-    align-items: center;
+    display: block;
     width: 56px;
     margin: 0;
     padding: 0;
@@ -578,7 +575,6 @@ export const StyledProposal = styled.div`
 
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeLeft {
     left: 0;
-    justify-content: flex-start;
     padding-left: 2px;
     background: linear-gradient(
       to right,
@@ -590,7 +586,6 @@ export const StyledProposal = styled.div`
 
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeRight {
     right: 0;
-    justify-content: flex-end;
     padding-right: 2px;
     background: linear-gradient(
       to left,
@@ -606,7 +601,18 @@ export const StyledProposal = styled.div`
   }
 
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow {
+    position: absolute;
+    top: var(--board-scroll-arrow-top, 50%);
+    transform: translateY(-50%);
     pointer-events: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeLeft .boardColumnScrollArrow {
+    left: 2px;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeRight .boardColumnScrollArrow {
+    right: 2px;
   }
 
   &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow .DesignSystem-IconButton-Icon {
@@ -698,7 +704,7 @@ export const StyledProposal = styled.div`
     height: fit-content;
     .headerContent {
       width: 100%;
-      max-width: var(--proposal-board-content-max-width);
+      max-width: 100%;
     }
     .headerMainContent {
       display: flex;

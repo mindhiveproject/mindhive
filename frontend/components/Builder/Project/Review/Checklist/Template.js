@@ -7,14 +7,14 @@ export function getChecklistItems(t) {
       title: t(
         "checklistTemplate.completeCards.title",
         {},
-        { default: "Double check that all your project cards are complete" }
+        { default: "Double check that all your cards are complete" }
       ),
       description: t(
         "checklistTemplate.completeCards.description",
         {},
         {
           default:
-            "The text in your project cards will be aggregated and exported as a PDF file.",
+            "The text in your cards will be aggregated and exported as a PDF file.",
         }
       ),
       isComplete: false,

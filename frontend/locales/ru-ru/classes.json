@@ -1441,6 +1441,7 @@
 		"templateLibraryCount": "{{count}} доступно",
 		"templateLibraryNoMine": "У вас пока нет шаблонов классов в других ваших классах.",
 		"templateManagement": "Управление шаблонами",
+		"templateMoreMilestonesHint": "",
 		"templateOptions": "Опции шаблона",
 		"templatePreviewModal": {
 			"title": ""

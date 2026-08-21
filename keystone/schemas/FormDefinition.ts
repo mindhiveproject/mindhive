@@ -6,7 +6,7 @@ import {
   select,
   integer,
 } from "@keystone-6/core/fields";
-import { permissions, rules, isSignedIn } from "../access";
+import { rules, isSignedIn } from "../access";
 
 // The four consumer surfaces admin-defined forms drive today. Purely
 // UX-facing: `surface` is a filter / grouping / picker aid in the admin
@@ -51,12 +51,13 @@ export const FormDefinition = list({
       // Read is open — the renderer needs to load definitions for any
       // signed-in user filling out a form.
       query: () => true,
-      create: ({ session }) =>
-        !!session &&
-        (permissions.canManageUsers({ session }) ||
-          permissions.canManageForms({ session })),
+      // Signed-in create; item.create inspects scope + linked board/class.
+      create: isSignedIn,
       update: isSignedIn,
       delete: isSignedIn,
+    },
+    item: {
+      create: rules.formDefinitionCreate,
     },
     filter: {
       update: rules.formDefinitionMutate,

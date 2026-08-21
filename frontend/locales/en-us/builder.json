@@ -141,8 +141,8 @@
 	},
 	"checklistTemplate": {
 		"completeCards": {
-			"description": "The text in your project cards will be aggregated and exported as a PDF file.",
-			"title": "Double check that all your project cards are complete"
+			"description": "The text in your cards will be aggregated and exported as a PDF file.",
+			"title": "Double check that all your cards are complete"
 		},
 		"exportPdf": {
 			"description": "Your reviewers will be viewing your proposal as a PDF. It is important to check over your proposal as a PDF before submitting. You will also want to make sure to save your PDF so you can refer back to your original proposal at any time.",
@@ -1956,9 +1956,9 @@
 		"addCard": "Add card",
 		"addCardBtn": "[ Click to add a card ]",
 		"addCardMenu": {
-			"ariaLabel": "Add a project or milestone card",
+			"ariaLabel": "Add a card or milestone",
 			"milestone": "Milestone",
-			"project": "Project"
+			"project": "Card"
 		},
 		"card": "card",
 		"cards": "cards",
@@ -1971,7 +1971,7 @@
 			"cancel": "Cancel",
 			"categories": {
 				"action": "Milestone",
-				"proposal": "Project card"
+				"proposal": "Card"
 			},
 			"create": "Create",
 			"creating": "Creating...",
@@ -2007,7 +2007,7 @@
 			"openingEditor": "Opening editor…",
 			"previewLabel": "Review form preview",
 			"previewLoading": "Loading preview...",
-			"proposalPreview": "Adds a regular project card with content fields for students.",
+			"proposalPreview": "Adds a regular card with content fields for students.",
 			"publish": "Publish…",
 			"publishing": "Publishing…",
 			"publishModal": {
@@ -2042,7 +2042,7 @@
 				"actionProjectReport": "Default milestone: Submit Project Report",
 				"actionSubmit": "Default milestone: Submit for Proposal Feedback",
 				"custom": "Create your own review step",
-				"proposal": "Project card"
+				"proposal": "Card"
 			}
 		},
 		"deleteSectionConfirm": "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone.",

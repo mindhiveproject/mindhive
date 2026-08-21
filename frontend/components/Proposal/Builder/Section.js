@@ -649,7 +649,7 @@ const Section = ({
             ariaLabel={t(
               "section.addCardMenu.ariaLabel",
               {},
-              { default: "Add a project or milestone card" }
+              { default: "Add a card or milestone" }
             )}
             renderTrigger={({ onClick, open, ariaLabel }) => (
               <Button
@@ -664,7 +664,7 @@ const Section = ({
                 aria-haspopup="menu"
                 onClick={onClick}
               >
-                {t("section.addCard", {}, { default: "Add card" })}
+                {t("section.addCard", {}, { default: "Add" })}
               </Button>
             )}
             items={[
@@ -674,7 +674,7 @@ const Section = ({
                 label: t(
                   "section.addCardMenu.project",
                   {},
-                  { default: "Project" }
+                  { default: "Card" }
                 ),
                 onClick: () => openCreateCardModal(CARD_CATEGORY_PROPOSAL),
               },

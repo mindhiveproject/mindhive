@@ -1441,6 +1441,7 @@
 		"templateLibraryCount": "{{count}} 可用",
 		"templateLibraryNoMine": "您在其他班级中还没有任何班级模板。",
 		"templateManagement": "模板管理",
+		"templateMoreMilestonesHint": "",
 		"templateOptions": "模板选项",
 		"templatePreviewModal": {
 			"title": ""

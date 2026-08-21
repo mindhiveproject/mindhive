@@ -225,7 +225,7 @@ export default function ClassExport() {
           }
         } else {
           exportSummaries.push(
-            "No project card content matched the current scope."
+            "No card content matched the current scope."
           );
         }
       }

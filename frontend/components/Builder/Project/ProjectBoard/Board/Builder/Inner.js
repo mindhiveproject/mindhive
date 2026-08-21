@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { v1 as uuidv1 } from "uuid";
 import Sections from "./Sections";
 import AddSectionModal from "../../../../../Proposal/Builder/AddSectionModal";
+import BoardColumnScroller from "../../../../../Proposal/Builder/BoardColumnScroller";
 import Button from "../../../../../DesignSystem/Button";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
 import useTranslation from "next-translate/useTranslation";
@@ -96,7 +97,7 @@ export default function Inner(props) {
             </Button>
           </div>
         )}
-        <div className="scrollable">
+        <BoardColumnScroller>
           <Sections
             boardId={board?.id}
             sections={sections}
@@ -110,7 +111,7 @@ export default function Inner(props) {
             settings={board?.settings}
             submitStatuses={props.submitStatuses}
           />
-        </div>
+        </BoardColumnScroller>
       </div>
       <AddSectionModal
         open={addSectionModalOpen}

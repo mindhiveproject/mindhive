@@ -128,7 +128,10 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
             tab={tab}
             toggleSidebar={toggleSidebar}
           />
-          <StyledProposal $cardFullView={isCardFullView}>
+          <StyledProposal
+            className="projectsBoardEditorProposal"
+            $cardFullView={isCardFullView}
+          >
             <ProposalPage
               user={user}
               proposalId={proposalId}

@@ -13,8 +13,8 @@ async function syncClassTemplateBoards(
   // The util writes to Class.classTemplateBoards and ProposalBoard.templatesForClass
   // via context.db (which bypasses list-level access rules), so we must gate the
   // call here. Allow: platform admins (canManageUsers) OR the class creator OR any
-  // class mentor. Follow the same pattern as assertTemplateBoardTeacher in
-  // resolveMilestonesForBoard.ts.
+  // class mentor (same class-staff allow-list as assertCanMutateClassTemplateBoard,
+  // scoped to this class rather than board collaborators).
   const profile = await context.query.Profile.findOne({
     where: { id: sesh.itemId },
     query: "permissions { canManageUsers }",

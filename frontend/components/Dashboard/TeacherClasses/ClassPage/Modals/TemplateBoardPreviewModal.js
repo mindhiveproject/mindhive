@@ -123,7 +123,7 @@ export default function TemplateBoardPreviewModal({ open, onClose, board }) {
 
         {board?.id ? (
           <div style={previewShellStyle}>
-            <StyledProposal>
+            <StyledProposal className="projectsBoardEditorProposal">
               <ProposalBuilder
                 proposalId={board.id}
                 proposal={board}

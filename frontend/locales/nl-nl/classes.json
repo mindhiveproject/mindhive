@@ -1441,6 +1441,7 @@
 		"templateLibraryCount": "{{count}} beschikbaar",
 		"templateLibraryNoMine": "Je hebt nog geen klassen-sjablonen in je andere klassen.",
 		"templateManagement": "Sjabloonbeheer",
+		"templateMoreMilestonesHint": "",
 		"templateOptions": "Sjabloonopties",
 		"templatePreviewModal": {
 			"title": "Voorbeeld \u00151 {{title}}"

@@ -23,7 +23,8 @@ import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import IconButton from "../../../../DesignSystem/IconButton";
-import TemplateBoardMilestonesMenu from "./TemplateBoardMilestonesMenu";
+import { MilestoneIcon } from "../../../../DesignSystem/Icons";
+import { getActionCardsFromBoard } from "../../../../../lib/templateBoardActionCards";
 import TemplateBoardPreviewModal from "../Modals/TemplateBoardPreviewModal";
 import TemplateBoardSettingsModal from "../Modals/TemplateBoardSettingsModal";
 
@@ -188,6 +189,48 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
     return items;
   };
 
+  const buildMilestonesPanelHeader = (board) => (
+    <span
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 8,
+      }}
+    >
+      <MilestoneIcon width={18} height={18} style={{ flexShrink: 0 }} />
+      <span
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          minWidth: 0,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 500,
+            fontSize: 14,
+            lineHeight: "20px",
+            color: "var(--MH-Theme-Neutrals-Black, #171717)",
+          }}
+        >
+          {t(
+            "projects.milestonesMenu.trigger",
+            { count: getActionCardsFromBoard(board).length },
+            { default: "{{count}} milestones" }
+          )}
+        </span>
+        <span>
+          {t(
+            "projects.templateMoreMilestonesHint",
+            {},
+            { default: "Manage them on the board" }
+          )}
+        </span>
+      </span>
+    </span>
+  );
+
   return (
     <>
       <TemplateBoardSettingsModal
@@ -302,15 +345,11 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                           default: "Edit template",
                         })}
                       </Button>
-                      <TemplateBoardMilestonesMenu
-                        board={board}
-                        classCode={code}
-                        classId={classId}
-                      />
                       <DropdownMenu
                         ariaLabel={t("projects.templateOptions", {}, {
                           default: "Template options",
                         })}
+                        panelHeader={buildMilestonesPanelHeader(board)}
                         renderTrigger={({ onClick, open, ariaLabel }) => (
                           <IconButton
                             variant="tonal"

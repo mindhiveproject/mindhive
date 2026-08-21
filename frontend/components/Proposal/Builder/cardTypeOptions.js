@@ -19,10 +19,10 @@ export const CARD_TYPE_DEFINITIONS = [
   {
     value: PROPOSAL_CARD_TYPE,
     labelKey: "section.createCardModal.types.proposal",
-    defaultLabel: "Project card",
+    defaultLabel: "Card",
     previewKey: "section.createCardModal.proposalPreview",
     previewDefault:
-      "Adds a regular project card with content fields for students.",
+      "Adds a regular card with content fields for students.",
   },
   {
     value: "ACTION_SUBMIT",
