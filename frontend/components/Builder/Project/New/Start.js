@@ -16,11 +16,13 @@ import { GET_USER_CLASSES } from "../../../Queries/User";
 import {
   DEFAULT_PROJECT_BOARDS,
   GET_MY_PROJECT_BOARDS_IN_CLASS,
+  TEMPLATE_PROPOSAL_BOARDS_LITE,
 } from "../../../Queries/Proposal";
 import { COPY_PROPOSAL_MUTATION } from "../../../Mutations/Proposal";
 
 import {
-  getTemplateOptionKey,
+  getOptionKey,
+  getPublicTemplateOptions,
   getVisibleTemplateOptionsForClasses,
 } from "../../../../lib/classTemplateBoards";
 import { useEffect, useMemo, useState } from "react";
@@ -89,19 +91,41 @@ export default function StartProject({ query, user }) {
     refetch();
   };
 
-  const templateOptions = useMemo(
+  const classOptions = useMemo(
     () => getVisibleTemplateOptionsForClasses(studentClasses),
     [studentClasses]
   );
-  const hasVisibleTemplates = templateOptions.length > 0;
-  const showTemplatePicker = isStudent && hasVisibleTemplates;
+
+  const {
+    data: publicTemplateData,
+    loading: publicTemplatesLoading,
+  } = useQuery(TEMPLATE_PROPOSAL_BOARDS_LITE, {
+    skip: classOptions.length > 0,
+  });
+
+  const publicOptions = useMemo(() => {
+    if (classOptions.length > 0) return [];
+    return getPublicTemplateOptions(publicTemplateData?.proposalBoards);
+  }, [classOptions.length, publicTemplateData?.proposalBoards]);
+
+  const templateOptions =
+    classOptions.length > 0 ? classOptions : publicOptions;
+  const usingPublicFallback =
+    classOptions.length === 0 && publicOptions.length > 0;
+  const hasAnyTemplates = templateOptions.length > 0;
+  const showTemplatePicker = hasAnyTemplates;
+  const showEmptyState =
+    isStudent
+    && classOptions.length === 0
+    && !publicTemplatesLoading
+    && publicOptions.length === 0;
 
   const [selectedOptionKey, setSelectedOptionKey] = useState(null);
 
   const selectedOption = useMemo(
     () =>
       templateOptions.find(
-        (option) => getTemplateOptionKey(option.board, option.class) === selectedOptionKey
+        (option) => getOptionKey(option) === selectedOptionKey
       ) ?? null,
     [templateOptions, selectedOptionKey]
   );
@@ -125,14 +149,12 @@ export default function StartProject({ query, user }) {
     setSelectedOptionKey((current) => {
       if (
         current
-        && templateOptions.some(
-          (option) => getTemplateOptionKey(option.board, option.class) === current
-        )
+        && templateOptions.some((option) => getOptionKey(option) === current)
       ) {
         const option = templateOptions.find(
-          (item) => getTemplateOptionKey(item.board, item.class) === current
+          (item) => getOptionKey(item) === current
         );
-        if (option) {
+        if (option?.class) {
           handleChange({
             target: {
               name: "class",
@@ -144,13 +166,15 @@ export default function StartProject({ query, user }) {
       }
 
       const first = templateOptions[0];
-      handleChange({
-        target: {
-          name: "class",
-          value: first.class,
-        },
-      });
-      return getTemplateOptionKey(first.board, first.class);
+      if (first?.class) {
+        handleChange({
+          target: {
+            name: "class",
+            value: first.class,
+          },
+        });
+      }
+      return getOptionKey(first);
     });
   }, [templateOptions]);
 
@@ -164,9 +188,9 @@ export default function StartProject({ query, user }) {
   const handleTemplateSelect = (key) => {
     setSelectedOptionKey(key);
     const option = templateOptions.find(
-      (item) => getTemplateOptionKey(item.board, item.class) === key
+      (item) => getOptionKey(item) === key
     );
-    if (option) {
+    if (option?.class) {
       handleChange({
         target: {
           name: "class",
@@ -191,7 +215,7 @@ export default function StartProject({ query, user }) {
     const templateId = selectedOption?.board?.id;
     const classIdUsed = selectedOption?.class?.id ?? inputs?.class?.id;
 
-    if (isStudent && !templateId) {
+    if (showTemplatePicker && !templateId) {
       return alert(
         t("newProject.selectTemplateAlert", {}, {
           default: "Please choose the proposal template",
@@ -214,12 +238,13 @@ export default function StartProject({ query, user }) {
           selector: res?.data?.copyProposalBoard?.id,
         },
       });
-
     }
   };
 
   const showClassChips =
-    studentClasses && studentClasses.length > 1 && !showTemplatePicker;
+    studentClasses
+    && studentClasses.length > 1
+    && (usingPublicFallback || !showTemplatePicker);
 
   const classChipRow = showClassChips ? (
     <div className="formSection">
@@ -266,7 +291,7 @@ export default function StartProject({ query, user }) {
         </div>
       </div>
       <div className="newProject">
-        {!hasVisibleTemplates && isStudent ? (
+        {showEmptyState ? (
           <>
             <div className="modalEmpty">
               <div className="title">
@@ -317,9 +342,15 @@ export default function StartProject({ query, user }) {
                     })}
                   </div>
                   <div className="helpText">
-                    {t("newProject.selectTemplateHelp", {}, {
-                      default: "Choose a project board template your teacher has made available to copy.",
-                    })}
+                    {usingPublicFallback
+                      ? t("newProject.selectTemplateHelpPublic", {}, {
+                          default:
+                            "No class templates are available. Choose a platform public template instead. The new board will not be connected to a teacher-assigned class template.",
+                        })
+                      : t("newProject.selectTemplateHelp", {}, {
+                          default:
+                            "Choose a project board template your teacher has made available to copy.",
+                        })}
                   </div>
                   <TemplateOptionCards
                     options={templateOptions}
@@ -328,6 +359,22 @@ export default function StartProject({ query, user }) {
                     t={t}
                   />
                 </div>
+              )}
+
+              {usingPublicFallback && selectedOption?.origin === "public" && (
+                <Message warning>
+                  <MessageHeader>
+                    {t("newProject.publicTemplateWarningTitle", {}, {
+                      default: "Not a class template",
+                    })}
+                  </MessageHeader>
+                  <p>
+                    {t("newProject.publicTemplateWarningBody", {}, {
+                      default:
+                        "This board is not connected to a teacher-assigned class template. You can still attach it to a class for collaborators and context, but it will not use your class's template settings.",
+                    })}
+                  </p>
+                </Message>
               )}
 
               <div className="formSection">
