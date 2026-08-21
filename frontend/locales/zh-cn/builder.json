@@ -1582,6 +1582,8 @@
 		"selectExistingStudy": "选择现有研究",
 		"selectStudyFirst": "首先选择研究",
 		"study": "学习：",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "请输入 DELETE 来删除您的项目",
 		"typeDeleteToConfirm": "输入“DELETE”确认"
 	},

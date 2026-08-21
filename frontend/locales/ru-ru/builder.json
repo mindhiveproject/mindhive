@@ -1582,6 +1582,8 @@
 		"selectExistingStudy": "Выбрать существующее исследование",
 		"selectStudyFirst": "Сначала выберите исследование",
 		"study": "Изучать:",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "Пожалуйста, введите DELETE, чтобы удалить ваш проект.",
 		"typeDeleteToConfirm": "Нажмите «DELETE» для подтверждения."
 	},

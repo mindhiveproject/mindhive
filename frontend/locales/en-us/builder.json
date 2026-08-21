@@ -1582,6 +1582,8 @@
 		"selectExistingStudy": "Select Existing Study",
 		"selectStudyFirst": "Select the study first",
 		"study": "Study:",
+		"studyNotLinkedToClassBody": "This project board is not connected to a class. The study you create will not be linked to a class either. You can still create and connect a study.",
+		"studyNotLinkedToClassTitle": "Not connected to a class",
 		"typeDeleteAlert": "Please type DELETE to delete your project",
 		"typeDeleteToConfirm": "Type \"DELETE\" to confirm"
 	},

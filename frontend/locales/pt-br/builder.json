@@ -1582,6 +1582,8 @@
 		"selectExistingStudy": "Selecionar estudo existente",
 		"selectStudyFirst": "Selecione o estudo primeiro",
 		"study": "Estudar:",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "Digite DELETE para excluir seu projeto",
 		"typeDeleteToConfirm": "Digite \"DELETE\" para confirmar"
 	},

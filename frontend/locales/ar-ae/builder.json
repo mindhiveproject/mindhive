@@ -1582,6 +1582,8 @@
 		"selectExistingStudy": "حدد الدراسة الموجودة",
 		"selectStudyFirst": "حدد الدراسة أولا",
 		"study": "يذاكر:",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "الرجاء كتابة DELETE لحذف مشروعك",
 		"typeDeleteToConfirm": "اكتب \"حذف\" للتأكيد"
 	},
