@@ -5,18 +5,16 @@ import {
   useRef,
   useState,
 } from "react";
-import { Accordion, Icon } from "semantic-ui-react";
+import { Accordion } from "semantic-ui-react";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import { jsonToCSV } from "react-papaparse";
 import useTranslation from "next-translate/useTranslation";
 
-import Button from "../../../../../DesignSystem/Button";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
 import Chips from "../../../../../DesignSystem/Chip";
 import AddColumnModal from "./Menu/AddColumnModal";
 import Variable from "./Menu/Variable";
-import { useDatasetSaveOrCopy } from "./Menu/UpdateDatasource";
 import DeleteConfirmModal from "../../Helpers/DeleteConfirmModal";
 import { getLastUpdatedDate } from "../../../../../../lib/dataJournalTimestamps";
 
@@ -144,22 +142,19 @@ export default function Menu({
   dataset,
   data,
   variables,
-  settings,
   components,
   updateDataset,
   onVariableChange,
-  onSaved,
-  onCopied,
   writeMode,
-  currentVizPartId,
-  projectId,
-  studyId,
+  copyModalOpen,
+  onCopyModalClose,
+  onConfirmCopy,
+  collaboratorsCanEditOnCopy,
+  onCollaboratorsCanEditOnCopyChange,
+  saving,
 }) {
   const { t } = useTranslation("builder");
   const [isAddColumnOpen, setIsAddColumnOpen] = useState(false);
-  const [copyModalOpen, setCopyModalOpen] = useState(false);
-  const [collaboratorsCanEditOnCopy, setCollaboratorsCanEditOnCopy] =
-    useState(true);
   const [activeIndex, setActiveIndex] = useState([]);
   const [variableSearch, setVariableSearch] = useState("");
 
@@ -254,63 +249,6 @@ export default function Menu({
     ));
   };
 
-  const tAlerts = {
-    updated: t("dataJournal.datasetMenu.alerts.updated", {}, {
-      default: "The data has been updated",
-    }),
-    copySuccess: t("dataJournal.datasets.copyOnSave.successAlert", {}, {
-      default:
-        "We made a copy you own. You're now editing the copy.",
-    }),
-    error: (statusText) =>
-      t(
-        "dataJournal.datasetMenu.alerts.saveError",
-        { statusText: statusText || "" },
-        { default: "There was an error: {{statusText}}" },
-      ),
-  };
-
-  const { save, saveAsCopy, saving } = useDatasetSaveOrCopy({
-    dataset,
-    content: { modified: { data, variables, settings } },
-    writeMode,
-    currentVizPartId,
-    projectId,
-    studyId,
-    onSaved,
-    onCopied,
-    tAlerts,
-  });
-
-  const openCopyModal = () => {
-    setCollaboratorsCanEditOnCopy(dataset?.collaboratorsCanEdit !== false);
-    setCopyModalOpen(true);
-  };
-
-  const handleConfirmCopy = async () => {
-    const prefix = t("dataJournal.datasets.copyTitlePrefix", {}, {
-      default: "Copy of ",
-    });
-    const baseTitle =
-      dataset?.title ||
-      t("dataJournal.datasetMenu.header.untitledDataset", {}, {
-        default: "Untitled dataset",
-      });
-    await saveAsCopy({
-      copyTitle: `${prefix}${baseTitle}`,
-      collaboratorsCanEdit: collaboratorsCanEditOnCopy,
-    });
-    setCopyModalOpen(false);
-  };
-
-  const handleSaveClick = () => {
-    if (writeMode === "copyOnWrite") {
-      openCopyModal();
-      return;
-    }
-    save();
-  };
-
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
     let newIndex;
@@ -399,22 +337,6 @@ export default function Menu({
           .join(", ")
       : "";
 
-  const saveLabel =
-    writeMode === "copyOnWrite"
-      ? t("dataJournal.datasetMenu.actions.saveAsCopy", {}, {
-          default: "Save as copy…",
-        })
-      : t("dataJournal.datasetMenu.actions.save", {}, { default: "Save" });
-
-  const savingLabel =
-    writeMode === "copyOnWrite"
-      ? t("dataJournal.datasetMenu.actions.copying", {}, {
-          default: "Copying…",
-        })
-      : t("dataJournal.datasetMenu.actions.saving", {}, {
-          default: "Saving…",
-        });
-
   const readOnlyToolbarHint = t(
     "dataJournal.datasetMenu.readOnlyToolbarHint",
     {},
@@ -438,8 +360,8 @@ export default function Menu({
         })}
         confirmPrimary
         loading={saving}
-        onClose={() => setCopyModalOpen(false)}
-        onConfirm={handleConfirmCopy}
+        onClose={onCopyModalClose}
+        onConfirm={onConfirmCopy}
         extraContent={
           <label
             style={{
@@ -453,7 +375,9 @@ export default function Menu({
             <input
               type="checkbox"
               checked={collaboratorsCanEditOnCopy}
-              onChange={(e) => setCollaboratorsCanEditOnCopy(e.target.checked)}
+              onChange={(e) =>
+                onCollaboratorsCanEditOnCopyChange(e.target.checked)
+              }
             />
             <span>
               {t("dataJournal.datasets.sharing.allowEditingLabel", {}, {
@@ -475,23 +399,6 @@ export default function Menu({
         <h3 className="header-title" title={datasetTitle}>
           {datasetTitle}
         </h3>
-        {writeMode !== "readOnly" ? (
-          <Button
-            variant="filled"
-            type="button"
-            onClick={handleSaveClick}
-            disabled={saving}
-            leadingIcon={
-              <img
-                src="/assets/icons/visualize/save.svg"
-                alt=""
-                aria-hidden="true"
-              />
-            }
-          >
-            {saving ? savingLabel : saveLabel}
-          </Button>
-        ) : null}
         <div className="metaStrip">
           <span>{dataOriginLabel}</span>
           <span aria-hidden="true">·</span>

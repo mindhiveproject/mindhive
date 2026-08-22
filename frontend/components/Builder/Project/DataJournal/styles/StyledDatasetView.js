@@ -40,7 +40,7 @@ export const StyledDatasetView = styled.div`
 
       .header {
         display: grid;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: auto 1fr;
         align-items: center;
         gap: 12px;
         padding-bottom: 12px;
