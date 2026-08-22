@@ -101,10 +101,14 @@ export function buildDatasourcesWhereForScope({
 
   switch (scope) {
     case "me": {
-      // Union of every visibility path the user can see.
+      // Union of every visibility path the user can see, plus anything they authored
+      // (e.g. study-origin datasets that are not "uploaded" file uploads).
       const or = DATASET_ATOMIC_SCOPES.map((atomicScope) =>
         buildDatasourcesWhereForScope({ ...scopeParams, scope: atomicScope })
       ).filter((where) => where && !isEmptyScopeSentinel(where));
+      if (userId) {
+        or.push({ author: { id: { equals: userId } } });
+      }
       if (or.length === 0) return null;
       if (or.length === 1) return or[0];
       return { OR: or };

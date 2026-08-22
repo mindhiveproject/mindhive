@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { StyledTopNavigation } from "../styles/StyledDataJournal"; // Adjust path
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import { AddIcon } from "../../../../DesignSystem/Icons";
 import Breadcrumbs from "./Breadcrumbs/Main";
 
 import { UPDATE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
@@ -249,12 +250,9 @@ export default function TopNavigation() {
           <div className="datasetScopeNavWithAdd">
             <Button
               type="button"
-              variant="tonal"
-              style={{ display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#336F8A", color: "#FFFFFF", border: "none", height: "fit-content", padding: "6px 12px" }}
+              variant="subtle"
               className="addDatasetNavBtn"
-              leadingIcon={
-                <p style={{ fontSize: "24px", fontWeight: "700", lineHeight: "20px", letterSpacing: "0", color: "#FFFFFF" }}>+</p>
-              }
+              leadingIcon={<AddIcon />}
               onClick={requestOpenAddDataset}
             >
               {tBuilder("dataJournal.datasets.addDataset", {}, {

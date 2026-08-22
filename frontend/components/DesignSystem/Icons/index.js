@@ -128,6 +128,14 @@ export const CloseIcon = filledIcon(
   "M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z",
 );
 
+/** Medium / Add — Figma Design System node 3092:374; 14×14 plus at (5,5). */
+export const AddIcon = filledIcon(
+  "AddIcon",
+  5,
+  5,
+  "M6 8H0V6H6V0H8V6H14V8H8V14H6V8Z",
+);
+
 /** Delete / trash — Material-style bin glyph; color via parent `color`. */
 export const TrashIcon = filledIcon(
   "TrashIcon",

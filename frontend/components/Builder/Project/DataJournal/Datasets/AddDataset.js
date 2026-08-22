@@ -14,7 +14,6 @@ export default function AddDataset({
   studyId,
   onCancel,
   onCreate,
-  refetchDatasources,
 }) {
   const { selectedJournal, user } = useDataJournal();
   const [datasetName, setDatasetName] = useState("");
@@ -38,19 +37,22 @@ export default function AddDataset({
   const [createDatasource, { loading, error }] = useMutation(
     CREATE_DATASOURCE,
     {
-      onCompleted: (data) => {
-        if (refetchDatasources) refetchDatasources();
-        if (onCreate) onCreate(data.createDatasource);
-        setDatasetName("");
-        setDataOrigin("");
-        setFile(null);
-        onCancel();
-      },
-      onError: (error) => {
-        console.error("Mutation error:", error);
+      refetchQueries: ["GET_DATASOURCES"],
+      awaitRefetchQueries: true,
+      onError: (mutationError) => {
+        console.error("Mutation error:", mutationError);
       },
     },
   );
+
+  const handleCreated = async (createdDatasource, createdDataOrigin) => {
+    setDatasetName("");
+    setDataOrigin("");
+    setFile(null);
+    if (onCreate) {
+      await onCreate(createdDatasource, createdDataOrigin);
+    }
+  };
 
   return (
     <DatasetForm
@@ -72,6 +74,7 @@ export default function AddDataset({
       loading={loading}
       error={error}
       onCancel={onCancel}
+      onCreated={handleCreated}
     />
   );
 }
