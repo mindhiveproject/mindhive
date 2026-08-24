@@ -1,9 +1,10 @@
 /** Fixed FormField.name / Opportunity column for the intro-video question. */
 export const INTRO_VIDEO_FIELD_NAME = "videoFile";
 
-/** Client-side preview of the server-enforced file validation. */
+/** Client-side preview of the server-enforced file validation.
+ * Capped at 100MB to match production nginx `client_max_body_size` (100m). */
 export const INTRO_VIDEO_VALIDATION = {
-  maxFileSize: 500 * 1024 * 1024,
+  maxFileSize: 100 * 1024 * 1024,
   allowedMimes: "video/mp4,video/webm",
 };
 

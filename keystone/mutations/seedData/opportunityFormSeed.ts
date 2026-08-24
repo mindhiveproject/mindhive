@@ -239,11 +239,12 @@ export const OPPORTUNITY_FORM_SEED: FormSeed = {
           name: "videoFile",
           fieldType: "file",
           label: "Intro video file",
-          helperText: "Upload an MP4 / WebM (max ~500MB). Used when no embed URL is set.",
+          helperText: "Upload an MP4 / WebM (max ~100MB). Used when no embed URL is set.",
           storage: "column",
           storageColumn: "videoFile",
           validation: {
-            maxFileSize: 524288000,
+            // 100MB — production nginx `client_max_body_size` is 100m.
+            maxFileSize: 104857600,
             allowedMimes: "video/mp4,video/webm"
           },
         },

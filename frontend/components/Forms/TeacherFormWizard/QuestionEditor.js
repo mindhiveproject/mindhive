@@ -368,7 +368,7 @@ export default function QuestionEditor({
                   {},
                   {
                     default:
-                      "Sponsors upload an MP4 or WebM (max 500MB). This updates the opportunity’s intro video — no storage settings to configure.",
+                      "Sponsors upload an MP4 or WebM (max 100MB). This updates the opportunity’s intro video — no storage settings to configure.",
                   },
                 )}
               </span>
