@@ -358,7 +358,15 @@ export const GET_USER = gql`
 // get study participants for Test & Collect
 export const GET_STUDY_PARTICIPANTS = gql`
   query GET_STUDY_PARTICIPANTS($studyId: ID!) {
-    profiles(where: { participantIn: { some: { id: { equals: $studyId } } } }) {
+    profiles(
+      where: {
+        OR: [
+          { participantIn: { some: { id: { equals: $studyId } } } }
+          { researcherIn: { some: { id: { equals: $studyId } } } }
+          { collaboratorInStudy: { some: { id: { equals: $studyId } } } }
+        ]
+      }
+    ) {
       id
       publicId
       publicReadableId

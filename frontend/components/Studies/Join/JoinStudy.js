@@ -21,7 +21,7 @@ export default function JoinStudy({
   study,
   userInfo,
   btnName,
-  variant = "outline",
+  variant = "primary",
 }) {
     const { t } = useTranslation('common');
     const router = useRouter();
@@ -110,7 +110,7 @@ export default function JoinStudy({
         <div>
             <Button
               variant={variant}
-              style={{ width: "100%" }}
+              leadingIcon={<img src="/assets/icons/builder/medium-arrow-outward.svg" alt="arrow-right" filter="invert(1)" />}
               onClick={handleJoin}
               disabled={loading || guestLoading}
             >

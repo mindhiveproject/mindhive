@@ -118,11 +118,10 @@ export default function ParticipantsTable({
   useEffect(() => {
     async function getParticipants() {
       const allParticipants = [...users, ...guests];
-      setParticipants(
-        allParticipants.map((participant) =>
-          processParticipant({ participant })
-        )
+      const processed = allParticipants.map((participant) =>
+        processParticipant({ participant })
       );
+      setParticipants(processed);
     }
     getParticipants();
   }, [study, users, guests]);

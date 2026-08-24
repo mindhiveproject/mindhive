@@ -462,7 +462,7 @@
 				},
 				"intro": {
 					"classNetwork": "Datasets on this project or study from classes in your class networks.",
-					"me": "All datasets you can see — uploaded, shared with you, from your class, class network, or public.",
+					"me": "All datasets you can see — study, uploaded, shared with you, from your class, class network, or public.",
 					"myClass": "Datasets linked to studies or projects in your classes.",
 					"public": "Datasets from public journal templates.",
 					"sharedWithMe": "Datasets others shared with you as a collaborator.",
@@ -489,7 +489,16 @@
 				"tooltipRow": "{{name}} — {{roles}}",
 				"whoTooltipAria": "Who will receive access"
 			},
-			"untitled": "Untitled Dataset"
+			"untitled": "Untitled Dataset",
+			"view": {
+				"empty": {
+					"generic": "There are no rows to display.",
+					"noneIncluded": "No participants are included in the analysis yet. Include them in Test & Collect, then return here.",
+					"title": "This dataset is empty"
+				},
+				"error": "Error: {{message}}",
+				"loading": "Loading dataset…"
+			}
 		},
 		"export": {
 			"button": "Export canva to PDF",
