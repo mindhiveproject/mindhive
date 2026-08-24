@@ -1121,11 +1121,30 @@ const StyledClass = styled.div`
       border-radius: 14px;
       background: #f3f3f3;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+
+      &:hover,
+      &:focus-within {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: #ececec;
+      }
     }
 
     .classTabTemplateCardActive {
       border: 2px solid #336f8a;
       background: rgba(222, 248, 251, 0.3);
+
+      &:hover,
+      &:focus-within {
+        background: rgba(222, 248, 251, 0.55);
+      }
+    }
+
+    .classTabTemplateCardClickable {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: stretch;
+      padding: 0;
+      gap: 0;
     }
 
     .classTabTemplateCardRow {
@@ -1149,7 +1168,8 @@ const StyledClass = styled.div`
       overflow: hidden;
     }
 
-    .classTabTemplateCardTitleLink {
+    .classTabTemplateCardTitleLink,
+    .classTabTemplateCardHit {
       display: block;
       min-width: 0;
       max-width: 100%;
@@ -1157,10 +1177,32 @@ const StyledClass = styled.div`
       color: inherit;
       cursor: pointer;
 
-      &:hover .classTabTemplateCardTitle {
+      &:hover .classTabTemplateCardTitle,
+      &:focus-visible .classTabTemplateCardTitle {
         color: #336f8a;
         text-decoration: underline;
       }
+    }
+
+    .classTabTemplateCardHit {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 18px;
+      box-sizing: border-box;
+
+      &:focus-visible {
+        outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+        outline-offset: -4px;
+      }
+    }
+
+    .classTabTemplateCardClickable .classTabTemplateCardActions {
+      position: relative;
+      z-index: 1;
+      padding: 18px 18px 18px 12px;
+      align-self: stretch;
     }
 
     .classTabTemplateCardTitleGroup {
@@ -2398,13 +2440,18 @@ const StyledClass = styled.div`
         grid-template-columns: 1fr;
       }
 
-      .classTabTemplateCardRow {
+      .classTabTemplateCardRow,
+      .classTabTemplateCardClickable {
         grid-template-columns: 1fr;
       }
 
       .classTabTemplateCardActions {
         justify-content: flex-start;
         flex-wrap: wrap;
+      }
+
+      .classTabTemplateCardClickable .classTabTemplateCardActions {
+        padding-top: 0;
       }
     }
   }

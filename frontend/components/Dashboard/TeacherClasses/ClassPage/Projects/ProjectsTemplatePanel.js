@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import clsx from "clsx";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -23,6 +24,7 @@ import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import IconButton from "../../../../DesignSystem/IconButton";
+import MessageCard from "../../../../DesignSystem/MessageCard";
 import { MilestoneIcon } from "../../../../DesignSystem/Icons";
 import { getActionCardsFromBoard } from "../../../../../lib/templateBoardActionCards";
 import TemplateBoardPreviewModal from "../Modals/TemplateBoardPreviewModal";
@@ -270,26 +272,16 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
           </p>
 
         {classTemplates.length === 0 ? (
-          <div className="classTabEmpty">
-            <div>
-              {t("projects.noClassTemplatesYet", {}, {
-                default: "You haven't created any class template boards yet.",
-              })}
-            </div>
-            <p>
-              {t("projects.noClassTemplatesDescription", {}, {
-                default:
-                  "Create a template board for students in this class to use as a starting point.",
-              })}
-            </p>
-            <Link href={createHref} style={{ textDecoration: "none" }}>
-              <Button variant="filled">
-                {t("projects.createTemplateBoard", {}, {
-                  default: "Create template board",
-                })}
-              </Button>
-            </Link>
-          </div>
+          <MessageCard
+            variant="neutral"
+            message={t("projects.noClassTemplatesYet", {}, {
+              default: "You haven't created any class template boards yet.",
+            })}
+            onClick={() => router.push(createHref)}
+            ariaLabel={t("projects.createTemplateBoard", {}, {
+              default: "Create template board",
+            })}
+          />
         ) : (
           <div className="classTabTemplateList">
             {classTemplates.map((board) => {
@@ -302,89 +294,88 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
               return (
                 <div
                   key={board.id}
-                  className={
-                    isVisible
-                      ? "classTabTemplateCard classTabTemplateCardActive"
-                      : "classTabTemplateCard"
-                  }
+                  className={clsx(
+                    "classTabTemplateCard",
+                    "classTabTemplateCardClickable",
+                    isVisible && "classTabTemplateCardActive"
+                  )}
                 >
-                  <div className="classTabTemplateCardRow">
-                    <div className="classTabTemplateCardTitleGroup">
-                      <Link
-                        href={editHref(board.id)}
-                        className="classTabTemplateCardTitleLink"
-                      >
-                        <h5 className="classTabTemplateCardTitle">{board.title}</h5>
-                      </Link>
-                      <Chip
-                        style={{ 
-                          backgroundColor: isVisible ? "#FFFFFF" : "#F3F3F3",
-                          fontSize: "12px", 
-                          fontWeight: isVisible ? "500" : "400",
-                          color: isVisible ? "#1C1B1F" : "#666666" }}
-                        label={copyStatusLabel}
-                      />
+                  <Link
+                    href={editHref(board.id)}
+                    className="classTabTemplateCardHit"
+                    aria-label={board.title}
+                  >
+                    <h5 className="classTabTemplateCardTitle">{board.title}</h5>
+                    <Chip
+                      style={{
+                        backgroundColor: isVisible ? "#FFFFFF" : "#F3F3F3",
+                        fontSize: "12px",
+                        fontWeight: isVisible ? "500" : "400",
+                        color: isVisible ? "#1C1B1F" : "#666666",
+                        pointerEvents: "none",
+                      }}
+                      label={copyStatusLabel}
+                    />
+                    <div className="classTabTemplateCardMeta">
+                      {board.updatedAt ? (
+                        <span>
+                          {t("projects.dateUpdated", {}, { default: "Updated" })}{" "}
+                          {formatDate(board.updatedAt)}
+                        </span>
+                      ) : null}
+                      {board.createdAt ? (
+                        <span>
+                          {t("projects.dateCreated", {}, { default: "Date created" })}{" "}
+                          {formatDate(board.createdAt)}
+                        </span>
+                      ) : null}
                     </div>
-                    <div className="classTabTemplateCardActions">
-                      <Button
-                        variant="tonal"
-                        style={{ background: "transparent" }}
-                        leadingIcon={
-                          <img
-                            src="/assets/icons/pencil.svg"
-                            alt=""
-                            width={18}
-                            height={18}
-                            aria-hidden
-                            style={{ display: "block" }}
-                          />
-                        }
-                        onClick={() => router.push(editHref(board.id))}
-                      >
-                        {t("projects.editTemplate", {}, {
-                          default: "Edit template",
-                        })}
-                      </Button>
-                      <DropdownMenu
-                        ariaLabel={t("projects.templateOptions", {}, {
-                          default: "Template options",
-                        })}
-                        panelHeader={buildMilestonesPanelHeader(board)}
-                        renderTrigger={({ onClick, open, ariaLabel }) => (
-                          <IconButton
-                            variant="tonal"
-                            style={{ background: "transparent" }}
-                            ariaLabel={ariaLabel}
-                            aria-expanded={open}
-                            aria-haspopup="menu"
-                            onClick={onClick}
-                            icon={
-                              <img
-                                src="/assets/dataviz/three-dots.svg"
-                                alt=""
-                                width={24}
-                                height={24}
-                              />
-                            }
-                          />
-                        )}
-                        items={buildTemplateMenuItems(board, canDelete)}
-                      />
-                    </div>
-                  </div>
-                  <div className="classTabTemplateCardMeta">
-                    {board.updatedAt ? (
-                      <span>
-                        {t("projects.dateUpdated", {}, { default: "Updated" })}{" "}
-                        {formatDate(board.updatedAt)}
-                      </span>
-                    ) : null}
-                    {board.createdAt ? (
-                      <span>
-                        {t("projects.dateCreated", {}, { default: "Date created" })}{" "}
-                        {formatDate(board.createdAt)}
-                      </span>
-                    ) : null}
+                  </Link>
+                  <div className="classTabTemplateCardActions">
+                    <Button
+                      variant="tonal"
+                      style={{ background: "transparent" }}
+                      leadingIcon={
+                        <img
+                          src="/assets/icons/pencil.svg"
+                          alt=""
+                          width={18}
+                          height={18}
+                          aria-hidden
+                          style={{ display: "block" }}
+                        />
+                      }
+                      onClick={() => router.push(editHref(board.id))}
+                    >
+                      {t("projects.editTemplate", {}, {
+                        default: "Edit template",
+                      })}
+                    </Button>
+                    <DropdownMenu
+                      ariaLabel={t("projects.templateOptions", {}, {
+                        default: "Template options",
+                      })}
+                      panelHeader={buildMilestonesPanelHeader(board)}
+                      renderTrigger={({ onClick, open, ariaLabel }) => (
+                        <IconButton
+                          variant="tonal"
+                          style={{ background: "transparent" }}
+                          ariaLabel={ariaLabel}
+                          aria-expanded={open}
+                          aria-haspopup="menu"
+                          onClick={onClick}
+                          icon={
+                            <img
+                              src="/assets/dataviz/three-dots.svg"
+                              alt=""
+                              width={24}
+                              height={24}
+                            />
+                          }
+                        />
+                      )}
+                      items={buildTemplateMenuItems(board, canDelete)}
+                    />
                   </div>
                 </div>
               );
