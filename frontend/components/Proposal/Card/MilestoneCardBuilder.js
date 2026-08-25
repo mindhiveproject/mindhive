@@ -160,11 +160,15 @@ export default function MilestoneCardBuilder({
   );
 
   const isDefault = isDefaultActionCard(proposalCard);
-  const isCustom = isClassTemplateBoard(proposal) && !isDefault;
+  // Prefer boardWithSections (PROPOSAL_QUERY) over the thinner overview
+  // proposal prop so 2nd+ class templates with only templatesForClass still
+  // unlock editing and the Review form section.
+  const isClassTemplate =
+    isClassTemplateBoard(boardWithSections) || isClassTemplateBoard(proposal);
+  const isCustom = isClassTemplate && !isDefault;
   const isTemplateMilestone = milestone?.scope === "template";
   const canEditFields = isCustom && isTemplateMilestone;
   const canEditCapability = canEditFields;
-  const isClassTemplate = isClassTemplateBoard(proposal);
 
   const capability = resolveCapability(milestone, proposalCard);
 
