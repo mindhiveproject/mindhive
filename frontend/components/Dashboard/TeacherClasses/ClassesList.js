@@ -110,10 +110,16 @@ export default function ClassesList({
               aria-label={ariaLabel}
             >
               <div className="classListRow">
-                <div className="a">{myclass?.title}</div>
-                <div>{myclass?.creator?.username}</div>
-                <div>{myclass?.students?.length}</div>
-                <div>{moment(myclass?.createdAt).format("MMMM D, YYYY")}</div>
+                <div className="classListRowTitle">{title}</div>
+                <div className="classListRowMeta">
+                  {myclass?.creator?.username}
+                </div>
+                <div className="classListRowMeta">
+                  {myclass?.students?.length}
+                </div>
+                <div className="classListRowMeta">
+                  {moment(myclass?.createdAt).format("MMMM D, YYYY")}
+                </div>
               </div>
             </Link>
           );

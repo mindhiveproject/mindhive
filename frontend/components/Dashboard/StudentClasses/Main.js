@@ -13,12 +13,14 @@ export default function StudentClasses({ query, user }) {
   if (!selector) {
     return (
       <StyledClass>
-        <h1>{t("myClasses")}</h1>
-        <Link href="/signup/student">
-          <Button variant="filled">
-            {t("joinClass", {}, { default: "Join class" })}
-          </Button>
-        </Link>
+        <div className="teacherClassesHeader">
+          <h1>{t("myClasses", {}, { default: "My classes" })}</h1>
+          <Link href="/signup/student">
+            <Button variant="filled">
+              {t("joinClass", {}, { default: "Join class" })}
+            </Button>
+          </Link>
+        </div>
         <ClassesList query={query} user={user} />
       </StyledClass>
     );
