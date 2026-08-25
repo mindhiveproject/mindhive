@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../DesignSystem/Chip";
 import CopyButton from "../../DesignSystem/CopyButton";
+import Tooltip from "../../DesignSystem/Tooltip";
 import { GET_PROFILE } from "../../Queries/User";
 import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 
@@ -113,36 +114,38 @@ export default function Profile() {
           {(publicId || publicReadableId) && (
             <div className="profileMetaIds">
               {publicId && (
-                <CopyButton
-                  value={publicId}
-                  ariaLabel={t("copyParticipantIdAria", {}, {
-                    default: "Copy participant ID to clipboard",
-                  })}
-                  title={publicId}
-                  style={{
-                    border: "none",
-                    background: "#E6E6E6",
-                    backgroundColor: "#E6E6E6",
-                  }}
-                >
-                  {t("participantID", {}, { default: "Participant ID" })}
-                </CopyButton>
+                <Tooltip content={publicId} side="left">
+                  <CopyButton
+                    value={publicId}
+                    ariaLabel={t("copyParticipantIdAria", {}, {
+                      default: "Copy participant ID to clipboard",
+                    })}
+                    style={{
+                      border: "none",
+                      background: "#E6E6E6",
+                      backgroundColor: "#E6E6E6",
+                    }}
+                  >
+                    {t("participantID", {}, { default: "Participant ID" })}
+                  </CopyButton>
+                </Tooltip>
               )}
               {publicReadableId && (
-                <CopyButton
-                  value={publicReadableId}
-                  ariaLabel={t("copyPublicIdAria", {}, {
-                    default: "Copy public readable ID to clipboard",
-                  })}
-                  title={publicReadableId}
-                  style={{
-                    border: "none",
-                    background: "#E6E6E6",
-                    backgroundColor: "#E6E6E6",
-                  }}
-                >
-                  {t("publicReadableID", {}, { default: "Public readable ID" })}
-                </CopyButton>
+                <Tooltip content={publicReadableId} side="left">
+                  <CopyButton
+                    value={publicReadableId}
+                    ariaLabel={t("copyPublicIdAria", {}, {
+                      default: "Copy public readable ID to clipboard",
+                    })}
+                    style={{
+                      border: "none",
+                      background: "#E6E6E6",
+                      backgroundColor: "#E6E6E6",
+                    }}
+                  >
+                    {t("publicReadableID", {}, { default: "Public readable ID" })}
+                  </CopyButton>
+                </Tooltip>
               )}
             </div>
           )}

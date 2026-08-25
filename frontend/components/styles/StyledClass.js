@@ -322,6 +322,8 @@ const StyledClass = styled.div`
     }
     .classHeaderDescription {
       display: grid;
+      grid-template-columns: auto fit-content(100%);
+      padding: 8px;
       gap: 4px;
       width: 100%;
       min-width: 0;
@@ -333,10 +335,8 @@ const StyledClass = styled.div`
       font-size: 15px;
       line-height: 22px;
       overflow-wrap: anywhere;
-      padding: 8px;
-      border: 1px solid #F3F3F3;
-      border-radius: 8px;
-      background: var(--MH-Theme-Neutrals-White, #FFFFFF);
+      padding: 0 8px 0 0;
+      background: transparent;
       color: #3d3d3d;
 
       &.isCollapsed {
