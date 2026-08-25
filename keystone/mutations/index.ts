@@ -216,7 +216,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         saveBoardReviewFormDefinition(input: SaveBoardReviewFormDefinitionInput!): FormDefinition
         # Copy a milestone's review form onto this template board so the
         # teacher can edit it without mutating the global definition.
-        forkReviewFormForBoard(templateBoardId: ID!, milestoneId: ID!): FormDefinition
+        forkReviewFormForBoard(
+          templateBoardId: ID!
+          milestoneId: ID!
+          sourceFormDefinitionKey: String
+          forceNew: Boolean
+        ): FormDefinition
         # Teacher wizard: clone a published global opportunity form into
         # a class-scoped draft owned by the class creator.
         cloneFormDefinitionForClass(sourceId: ID!, classId: ID!): FormDefinition
@@ -279,6 +284,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         formDefinitionId: ID
         canReviewPermissionIds: [ID!]
         showInFeedbackCenter: Boolean
+        statusTarget: String
         isActive: Boolean
         position: Int
       }

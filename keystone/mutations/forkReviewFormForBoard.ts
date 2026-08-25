@@ -1,7 +1,11 @@
 // Copy a milestone's current review FormDefinition onto the template
 // board (scope=project_board) so the teacher can edit it without
-// mutating the global MindHive form. Idempotent: if this board already
-// has a project_board row for the source key, that row is returned.
+// mutating the global MindHive form.
+//
+// Template forks without forceNew: idempotent — reconnect an existing
+// board-scoped row for that key. With forceNew (UI create/replace): always
+// allocate a unique key and never reconnect orphans.
+import uniqid from "uniqid";
 import { assertCanMutateClassTemplateBoard } from "./resolveMilestonesForBoard";
 import {
   copyFormCardsAndFields,
@@ -11,6 +15,9 @@ import {
 type ForkReviewFormForBoardArgs = {
   templateBoardId: string;
   milestoneId: string;
+  sourceFormDefinitionKey?: string | null;
+  /** When true, always create a new board-scoped form (never reconnect orphans). */
+  forceNew?: boolean | null;
 };
 
 function boardScopeData(proposalBoardId: string) {
@@ -22,7 +29,12 @@ function boardScopeData(proposalBoardId: string) {
 
 async function forkReviewFormForBoard(
   _root: unknown,
-  { templateBoardId, milestoneId }: ForkReviewFormForBoardArgs,
+  {
+    templateBoardId,
+    milestoneId,
+    sourceFormDefinitionKey,
+    forceNew = false,
+  }: ForkReviewFormForBoardArgs,
   context: any
 ) {
   if (!templateBoardId || !milestoneId) {
@@ -31,6 +43,11 @@ async function forkReviewFormForBoard(
   await assertCanMutateClassTemplateBoard(context, templateBoardId);
   const sudo = context.sudo();
   const sessionId = context.session?.itemId;
+  const wantNew = !!forceNew;
+  const explicitSourceKey = sourceFormDefinitionKey?.trim() || null;
+  // Scratch = force new with no template source. Template + forceNew still
+  // copies from the MindHive (or prior) source key into a fresh board row.
+  const createScratch = wantNew && !explicitSourceKey;
 
   const milestone = await context.query.Milestone.findOne({
     where: { id: milestoneId },
@@ -65,10 +82,18 @@ async function forkReviewFormForBoard(
     );
   }
 
-  const sourceId = milestone.formDefinition?.id || null;
-  const sourceKey = milestone.formDefinition?.key || null;
+  const sourceId =
+    createScratch || explicitSourceKey || wantNew
+      ? null
+      : milestone.formDefinition?.id || null;
+  const sourceKey = createScratch
+    ? null
+    : explicitSourceKey ||
+      (!wantNew ? milestone.formDefinition?.key || null : null);
 
+  // Reuse the form already attached to this milestone (edit path).
   if (
+    !wantNew &&
     milestone.formDefinition?.scope === "project_board" &&
     milestone.formDefinition?.proposalBoard?.id === templateBoardId
   ) {
@@ -77,7 +102,8 @@ async function forkReviewFormForBoard(
     });
   }
 
-  if (sourceKey) {
+  // Template forks without forceNew: reconnect an existing board-scoped copy.
+  if (sourceKey && !wantNew) {
     const existingOnBoard = await sudo.query.FormDefinition.findMany({
       where: {
         key: { equals: sourceKey },
@@ -122,7 +148,12 @@ async function forkReviewFormForBoard(
     source = published[0] || null;
   }
 
-  const formKey = source?.key || sourceKey || `review_${milestone.key}`;
+  // forceNew / scratch: unique key so orphans are never reattached by key.
+  // First-time template fork (not forceNew): keep source.key for resolve.
+  const formKey =
+    wantNew || createScratch || !source?.key
+      ? `review_${milestone.key}_${uniqid()}`
+      : source.key;
   const milestoneTitle = milestone.title || milestone.key || "Milestone";
 
   const definition = await sudo.db.FormDefinition.createOne(
@@ -142,7 +173,7 @@ async function forkReviewFormForBoard(
           : {}),
         changelog: source
           ? `Forked from form definition ${source.id} (${source.key}) for template board ${templateBoardId}.`
-          : `Draft review form forked for milestone ${milestone.key}.`,
+          : `Draft review form created for milestone ${milestone.key}.`,
       },
     },
     "id"

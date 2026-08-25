@@ -94,12 +94,16 @@ export default function ProposalBuilder({
         kind: config.kind,
         previewMode: !!config.previewMode,
         saving: !!config.saving,
+        typeLabel: config.typeLabel || null,
+        isDefaultAction: !!config.isDefaultAction,
       };
       if (
         prev &&
         prev.kind === next.kind &&
         prev.previewMode === next.previewMode &&
-        prev.saving === next.saving
+        prev.saving === next.saving &&
+        prev.typeLabel === next.typeLabel &&
+        prev.isDefaultAction === next.isDefaultAction
       ) {
         return prev;
       }

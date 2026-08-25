@@ -107,7 +107,12 @@ export function questionsToMutationFields(questions) {
   });
 }
 
-export function buildPreviewDefinition({ title, description, questions }) {
+export function buildPreviewDefinition({
+  title,
+  description,
+  questions,
+  omitCardHeader = false,
+}) {
   return {
     id: "preview",
     title: title || "",
@@ -116,8 +121,8 @@ export function buildPreviewDefinition({ title, description, questions }) {
       {
         id: "preview-card",
         cardType: "fields",
-        title: title || "",
-        description: description || "",
+        title: omitCardHeader ? "" : title || "",
+        description: omitCardHeader ? "" : description || "",
         order: 0,
         fields: questions.map((q, order) => {
           const introVideo = q.fieldType === "file";

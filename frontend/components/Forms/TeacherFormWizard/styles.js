@@ -65,6 +65,7 @@ export const Split = styled.div`
   gap: 16px;
   flex: 1 1 auto;
   min-height: 0;
+  overflow: hidden;
   align-items: stretch;
 
   @media (max-width: 800px) {
@@ -276,13 +277,18 @@ export const PreviewPane = styled.div`
   border-radius: 12px;
   background: var(--MH-Theme-Neutrals-Soft, #f7f9f8);
   padding: 14px;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+`;
+
+export const PreviewPaneContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
   pointer-events: none;
-  min-height: 0;
-  height: 100%;
-  overflow: auto;
 `;
 
 export const ErrorText = styled.p`
