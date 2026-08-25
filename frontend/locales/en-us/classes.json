@@ -1157,7 +1157,10 @@
 				"remove": "Remove",
 				"review": "Review",
 				"reviewUnreadAria": "Review — unread sponsor message",
-				"scheduledNoteBody": "The sponsor’s meeting request was marked as scheduled."
+				"scheduledNoteBody": "The sponsor’s meeting request was marked as scheduled.",
+				"searchEmpty": "No opportunities match this search.",
+				"searchLabel": "Opportunities",
+				"searchPlaceholder": "Filter by title or sponsor…"
 			},
 			"loading": "Loading matching round…",
 			"manageMatches": "Manage matches",

@@ -439,6 +439,7 @@ export default function MatchingRoundOpportunitiesGrid({
   const { user } = useUser();
   const viewerId = user?.id || null;
   const gridRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [dismissedHighlights, setDismissedHighlights] = useState(() =>
     readDismissedHighlights(),
   );
@@ -543,6 +544,18 @@ export default function MatchingRoundOpportunitiesGrid({
       })),
     [opportunities],
   );
+
+  const quickFilterText = String(searchQuery || "").trim();
+
+  const hasSearchMatches = useMemo(() => {
+    const q = quickFilterText.toLowerCase();
+    if (!q) return true;
+    return rowData.some((row) => {
+      const title = String(row.title || "").toLowerCase();
+      const sponsor = String(row.sponsorName || "").toLowerCase();
+      return title.includes(q) || sponsor.includes(q);
+    });
+  }, [quickFilterText, rowData]);
 
   const InfoButtonRenderer = useCallback(
     (params) => {
@@ -793,6 +806,7 @@ export default function MatchingRoundOpportunitiesGrid({
         sortable: true,
         flex: 2,
         minWidth: 180,
+        getQuickFilterText: (params) => params.value || "",
       },
       {
         field: "sponsorName",
@@ -803,6 +817,7 @@ export default function MatchingRoundOpportunitiesGrid({
         sortable: true,
         flex: 1.2,
         minWidth: 140,
+        getQuickFilterText: (params) => params.value || "",
       },
       {
         field: "organizationName",
@@ -978,37 +993,75 @@ export default function MatchingRoundOpportunitiesGrid({
     return <p className="classTabEmptyInline">{emptyMessage}</p>;
   }
 
+  const searchToolbar = (
+    <div className="matchingRoundOpportunitiesSearchRow">
+      <div className="matchingRoundOpportunitiesSearchField">
+        <input
+          type="search"
+          className="matchingRoundOpportunitiesSearchInput"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label={t("opportunities.matchingRound.grid.searchLabel", {}, {
+            default: "Opportunities",
+          })}
+          placeholder={t(
+            "opportunities.matchingRound.grid.searchPlaceholder",
+            {},
+            { default: "Filter by title or sponsor…" },
+          )}
+        />
+      </div>
+    </div>
+  );
+
   return (
-    <div className="classTabTable ag-theme-quartz matchingRoundOpportunitiesGrid">
-      <AgGridReact
-        ref={gridRef}
-        rowData={rowData}
-        columnDefs={columnDefs}
-        getRowId={(params) => params.data?.id}
-        getRowClass={getRowClass}
-        postSortRows={postSortRows}
-        {...(selectionMode === "multi"
-          ? {
-              rowSelection: {
-                mode: "multiRow",
-                checkboxes: true,
-                headerCheckbox: true,
-                isRowSelectable,
-              },
-              onSelectionChanged: handleSelectionChanged,
-            }
-          : {})}
-        pagination
-        paginationPageSize={50}
-        paginationPageSizeSelector={[50, 100, 200]}
-        autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
-        defaultColDef={{ resizable: true }}
-        initialState={{
-          sort: {
-            sortModel: [{ colId: "title", sort: "asc" }],
-          },
-        }}
-      />
+    <div className="matchingRoundOpportunitiesGridShell">
+      {searchToolbar}
+      {!hasSearchMatches ? (
+        <p className="classTabEmptyInline">
+          {t("opportunities.matchingRound.grid.searchEmpty", {}, {
+            default: "No opportunities match this search.",
+          })}
+        </p>
+      ) : null}
+      <div
+        className="classTabTable ag-theme-quartz matchingRoundOpportunitiesGrid"
+        hidden={!hasSearchMatches}
+      >
+        <AgGridReact
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          getRowId={(params) => params.data?.id}
+          getRowClass={getRowClass}
+          postSortRows={postSortRows}
+          quickFilterText={quickFilterText}
+          {...(selectionMode === "multi"
+            ? {
+                rowSelection: {
+                  mode: "multiRow",
+                  checkboxes: true,
+                  headerCheckbox: true,
+                  isRowSelectable,
+                },
+                onSelectionChanged: handleSelectionChanged,
+              }
+            : {})}
+          pagination
+          paginationPageSize={50}
+          paginationPageSizeSelector={[50, 100, 200]}
+          autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
+          defaultColDef={{
+            resizable: true,
+            getQuickFilterText: () => "",
+          }}
+          initialState={{
+            sort: {
+              sortModel: [{ colId: "title", sort: "asc" }],
+            },
+          }}
+        />
+      </div>
     </div>
   );
 }
