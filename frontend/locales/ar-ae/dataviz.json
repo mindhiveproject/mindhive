@@ -48,12 +48,5 @@
 			"journals": "المجلات",
 			"selectJournal": "اختر دفتر يوميات للبدء ..."
 		}
-	},
-	"overview": {
-		"database": {
-			"csvDownloadMessage": "أعط اسمًا لملف CSV الذي تريد تنزيله\\nلا حاجة لإضافة \".csv\" فنحن نعتني بذلك!",
-			"returnBrowse": "العودة إلى التصفح",
-			"sectionTitle": "البيانات النشطة"
-		}
 	}
 }

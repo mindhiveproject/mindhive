@@ -60,10 +60,6 @@ const TOUR_CONFIG = {
       path: "../../Builder/Project/Collect/tours",
       exportName: "collectTours",
     },
-    visualize: {
-      path: "../../Builder/Project/Visualize/tours",
-      exportName: "visualizeTours",
-    },
     journal: {
       // Special case: DataJournal uses Tours/journalTours.js instead of tours.js
       path: "../../Builder/Project/DataJournal/Tours/journalTours",
