@@ -51,6 +51,10 @@ import MatchingRoundStudentInterestGrid from "./MatchingRoundStudentInterestGrid
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
 import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
+import {
+  readClassMatchingRoundPanelPref,
+  writeClassMatchingRoundPanelPref,
+} from "../classPagePrefs";
 
 const NETWORK_ICON = (
   <img
@@ -584,10 +588,27 @@ function MatchingRoundEditor({
     return raw;
   }, [isNew, router.query?.matchingPanel, roundSummary?.status]);
 
-  const initialPanel =
-    queryMatchingPanel && queryMatchingPanel !== PANELS.settings
-      ? queryMatchingPanel
-      : PANELS.review;
+  const resolveAllowedPanel = useCallback(
+    (panel) => {
+      if (!panel || panel === PANELS.settings) return null;
+      if (
+        panel === PANELS.studentInterest &&
+        (isNew || roundSummary?.status === "draft")
+      ) {
+        return null;
+      }
+      if (
+        panel !== PANELS.review &&
+        panel !== PANELS.selected &&
+        panel !== PANELS.forms &&
+        panel !== PANELS.studentInterest
+      ) {
+        return null;
+      }
+      return panel;
+    },
+    [isNew, roundSummary?.status],
+  );
 
   const [selectedNetworkId, setSelectedNetworkId] = useState(
     isCreate
@@ -603,7 +624,18 @@ function MatchingRoundEditor({
   const [togglingSponsorFormsVisible, setTogglingSponsorFormsVisible] =
     useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
-  const [activePanel, setActivePanel] = useState(initialPanel);
+  const [activePanel, setActivePanel] = useState(() => {
+    const fromQuery = resolveAllowedPanel(
+      queryMatchingPanel && queryMatchingPanel !== PANELS.settings
+        ? queryMatchingPanel
+        : null,
+    );
+    if (fromQuery) return fromQuery;
+    const fromStorage = resolveAllowedPanel(
+      readClassMatchingRoundPanelPref(myclass?.id, roundId),
+    );
+    return fromStorage || PANELS.review;
+  });
   const [settingsModalOpen, setSettingsModalOpen] = useState(
     () => isNew || queryMatchingPanel === PANELS.settings,
   );
@@ -648,6 +680,16 @@ function MatchingRoundEditor({
     null;
   const isStudentInterestDisabled =
     isNew || roundStatusForPanels === "draft";
+
+  const selectPanel = useCallback(
+    (panelId) => {
+      const allowed = resolveAllowedPanel(panelId);
+      if (!allowed) return;
+      setActivePanel(allowed);
+      writeClassMatchingRoundPanelPref(myclass?.id, roundId, allowed);
+    },
+    [myclass?.id, resolveAllowedPanel, roundId],
+  );
 
   useEffect(() => {
     if (
@@ -719,8 +761,11 @@ function MatchingRoundEditor({
       setSettingsModalOpen(true);
       return;
     }
-    setActivePanel(queryMatchingPanel);
-  }, [queryMatchingPanel]);
+    const allowed = resolveAllowedPanel(queryMatchingPanel);
+    if (!allowed) return;
+    setActivePanel(allowed);
+    writeClassMatchingRoundPanelPref(myclass?.id, roundId, allowed);
+  }, [myclass?.id, queryMatchingPanel, resolveAllowedPanel, roundId]);
 
   // Sync network when parent confirms a different network for a draft create card.
   useEffect(() => {
@@ -2840,7 +2885,7 @@ function MatchingRoundEditor({
     const formCount = selectedFormDefinitionIds.length;
     const openFollowUpForms = () => {
       setFormsManagerOpen(true);
-      setActivePanel(PANELS.forms);
+      selectPanel(PANELS.forms);
     };
 
     let formsMessageVariant = "neutral";
@@ -3035,7 +3080,7 @@ function MatchingRoundEditor({
                   onClick={
                     panel.disabled
                       ? undefined
-                      : () => setActivePanel(panel.id)
+                      : () => selectPanel(panel.id)
                   }
                   style={{
                     backgroundColor:
