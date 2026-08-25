@@ -1959,7 +1959,7 @@
 	},
 	"scoringSurvey": "Instructions for scoring (for surveys only)",
 	"section": {
-		"addCard": "Add card",
+		"addCard": "Add",
 		"addCardBtn": "[ Click to add a card ]",
 		"addCardMenu": {
 			"ariaLabel": "Add a card or milestone",
@@ -1970,9 +1970,11 @@
 		"cards": "cards",
 		"cardsCount": "{{count}} card{{count == 1 ? '' : 's'}}",
 		"createCardModal": {
+			"action": "milestone",
 			"alreadyAddedLabel": "{{label}} (already added)",
 			"alreadyAddedTooltip": "This checkpoint is already on the board",
-			"buildFormSubtitle": "Scoped to this template board. Add cards + fields below, then publish. Student clones will inherit whatever you publish.",
+			"allDefaultsAddedNotice": "All default MindHive milestones are already on this board. You're creating a custom milestone.",
+			"buildFormSubtitle": "Scoped to this template board. Adds + fields below, then publish. Student clones will inherit whatever you publish.",
 			"buildFormTitle": "Build the review form: \"{{title}}\"",
 			"cancel": "Cancel",
 			"categories": {
@@ -2013,6 +2015,7 @@
 			"openingEditor": "Opening editor…",
 			"previewLabel": "Review form preview",
 			"previewLoading": "Loading preview...",
+			"proposal": "card",
 			"proposalPreview": "Adds a regular card with content fields for students.",
 			"publish": "Publish…",
 			"publishing": "Publishing…",
@@ -2037,7 +2040,7 @@
 				"permissions": "Form template"
 			},
 			"templateSourceLabel": "{{title}} (custom)",
-			"title": "Create a new card",
+			"title": "Create a new {{cardCategory}}",
 			"titleLabel": "Card title",
 			"titlePlaceholder": "Enter a card title",
 			"typeLabel": "Card type",

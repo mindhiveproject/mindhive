@@ -41,6 +41,13 @@ const StyledClass = styled.div`
     margin: 0;
   }
 
+  .teacherClassesHeader > a {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: fit-content;
+    text-decoration: none;
+  }
+
   .teacherClassesToolbar {
     display: flex;
     flex-wrap: wrap;
@@ -168,64 +175,93 @@ const StyledClass = styled.div`
     }
   }
 
-  .classListHeader {
+  .classListHeader,
+  .classListRow {
     display: grid;
+    grid-template-columns:
+      minmax(8rem, 2fr)
+      minmax(6rem, 1.25fr)
+      minmax(4.5rem, 0.75fr)
+      minmax(7rem, 1fr);
+    column-gap: 16px;
+    align-items: center;
+  }
+
+  .classListHeader {
     margin: 0;
-    margin-top: 16px;
-    padding: 0.75rem 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    padding: 12px 16px 8px;
     font-family: Inter, sans-serif;
     font-weight: 600;
-    font-size: 16px;
-    line-height: 14px;
-    color: #171717;
-    align-items: end;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.04em;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
   .classListBoard {
     display: grid;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 4px;
+    margin-top: 4px;
   }
 
   .classListContainer {
-    margin-top: 12px;
-    background-color: #ffffff;
+    margin-top: 8px;
+    background-color: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
     border-radius: 12px;
-    padding: 0 24px 16px 24px;
+    padding: 4px 8px 12px;
   }
 
   .classListBoard a {
-    font-size: 14px;
-    line-height: 20px;
+    display: block;
     color: inherit;
+    text-decoration: none;
+    border-radius: 8px;
+  }
+
+  .classListBoard a:focus-visible {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+    outline-offset: 2px;
   }
 
   .classListRow {
-    display: grid;
-    padding: 1.5rem 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    padding: 14px 16px;
     cursor: pointer;
     background: transparent;
     border-radius: 8px;
-    border: 1px solid #E6E6E6;
+    border: none;
     font-family: Inter, sans-serif;
     font-size: 16px;
     line-height: 20px;
     font-weight: 400;
-    transition: box-shadow 300ms ease-out;
-    :hover {
-      background-color: #DEF8FB;
-      color: #07365F;
-      font-weight: 600;
-      box-shadow: 0px 2px 24px 0px #DEF8FB;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+    transition:
+      background-color 180ms ease-out,
+      color 180ms ease-out;
+
+    &:hover {
+      background-color: var(--MH-Theme-tertiary-medium, #D3E0E3);
     }
   }
 
   .classListRow > div {
-    font-size: inherit;
-    line-height: inherit;
-    font-weight: inherit;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .classListRowTitle,
+  .classListRow > div:first-child {
+    font-weight: 600;
+  }
+
+  .classListRowMeta {
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+
+  .classListRow:hover .classListRowMeta {
+    color: inherit;
   }
 
   .classListEmpty {
@@ -234,15 +270,44 @@ const StyledClass = styled.div`
     max-width: 36rem;
   }
 
+  .classListEmpty h3 {
+    margin: 0 0 8px;
+    font-family: Inter, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+
+  .classListEmpty p {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
+
   .classListLoading {
     margin-top: 16px;
-    color: #666666;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
   .classListError {
     margin-top: 16px;
-    color: #b00020;
+    color: var(--MH-Theme-Danger-Dark, #8f1f14);
     max-width: 36rem;
+  }
+
+  @media (max-width: 720px) {
+    .classListHeader,
+    .classListRow {
+      grid-template-columns: minmax(0, 1.4fr) minmax(8rem, 1fr);
+    }
+
+    .classListHeader > :nth-child(n + 3),
+    .classListRow > :nth-child(n + 3) {
+      display: none;
+    }
   }
 
   .editableClassHeader {
@@ -322,6 +387,8 @@ const StyledClass = styled.div`
     }
     .classHeaderDescription {
       display: grid;
+      grid-template-columns: auto fit-content(100%);
+      padding: 8px;
       gap: 4px;
       width: 100%;
       min-width: 0;
@@ -333,10 +400,8 @@ const StyledClass = styled.div`
       font-size: 15px;
       line-height: 22px;
       overflow-wrap: anywhere;
-      padding: 8px;
-      border: 1px solid #F3F3F3;
-      border-radius: 8px;
-      background: var(--MH-Theme-Neutrals-White, #FFFFFF);
+      padding: 0 8px 0 0;
+      background: transparent;
       color: #3d3d3d;
 
       &.isCollapsed {

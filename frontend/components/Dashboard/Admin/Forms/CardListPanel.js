@@ -1,6 +1,6 @@
 // Left pane: drag-and-drop sortable list of cards. Each card can be
 // expanded to show its fields (also sortable). Buttons:
-//   - "+ Add card" at the bottom of the list
+//   - "+ Add" at the bottom of the list
 //   - "+" per card: add a field
 //   - "≡" drag handle on each card and field row
 //   - click anywhere else on a row to select it
@@ -51,7 +51,7 @@ const Shell = styled.aside`
   }
 `;
 
-// The cards list scrolls; the "Add card" button stays pinned outside
+// The cards list scrolls; the "Add" button stays pinned outside
 // the scroll area so admins always see it even when the form has many
 // cards.
 const ScrollArea = styled.div`
@@ -401,7 +401,7 @@ export default function CardListPanel({
       </ScrollArea>
 
       <AddCardButton type="button" onClick={addCard} disabled={addingCard}>
-        {addingCard ? "Adding…" : "+ Add card"}
+        {addingCard ? "Adding…" : "+ Add"}
       </AddCardButton>
     </Shell>
   );

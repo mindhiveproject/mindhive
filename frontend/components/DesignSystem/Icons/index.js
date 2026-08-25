@@ -151,6 +151,14 @@ export const FileCopyIcon = filledIcon(
   "M17 18H6C5.45 18 4.97917 17.8042 4.5875 17.4125C4.19583 17.0208 4 16.55 4 16V2C4 1.45 4.19583 0.979167 4.5875 0.5875C4.97917 0.195833 5.45 0 6 0H13L19 6V16C19 16.55 18.8042 17.0208 18.4125 17.4125C18.0208 17.8042 17.55 18 17 18ZM12 7V2H6V16H17V7H12ZM2 22C1.45 22 0.979167 21.8042 0.5875 21.4125C0.195833 21.0208 0 20.55 0 20V6H2V20H13V22H2Z",
 );
 
+/** Success / done check — Material Symbols "check" glyph. */
+export const CheckIcon = filledIcon(
+  "CheckIcon",
+  3,
+  5,
+  "M6.55 13L0.85 7.3L2.275 5.875L6.55 10.15L15.725 0.975L17.15 2.4L6.55 13Z",
+);
+
 export const SettingsIcon = filledIcon(
   "SettingsIcon",
   1.95,
