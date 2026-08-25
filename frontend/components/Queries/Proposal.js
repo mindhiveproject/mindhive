@@ -115,6 +115,14 @@ export const OVERVIEW_PROPOSAL_BOARD_QUERY = gql`
         id
         code
       }
+      # Also select templatesForClass so isClassTemplateBoard() picks up
+      # 2nd-and-later class-template copies (copyProposalBoard connects only
+      # this new relation; templateForClasses is set solely for the first
+      # template in a class). See frontend/components/Utils/proposalBoard.js.
+      templatesForClass {
+        id
+        code
+      }
       study {
         id
         title
@@ -305,6 +313,7 @@ export const GET_CARD_CONTENT = gql`
       milestone {
         id
         key
+        scope
         actionCardType
         reviewStage
         statusTarget
@@ -313,9 +322,12 @@ export const GET_CARD_CONTENT = gql`
         logEventName
         formDefinitionKeyPattern
         title
+        description
         formDefinition {
           id
           key
+          scope
+          status
         }
       }
       publicId
