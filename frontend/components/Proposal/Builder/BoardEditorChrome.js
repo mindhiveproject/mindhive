@@ -8,6 +8,7 @@ import { UPDATE_PROPOSAL_BOARD } from "../../Mutations/Proposal";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../Queries/Proposal";
 import IconButton from "../../DesignSystem/IconButton";
 import Button from "../../DesignSystem/Button";
+import Chip from "../../DesignSystem/Chip";
 import Popover from "../../DesignSystem/Popover";
 import PanelHeader from "../../DesignSystem/PanelHeader";
 import AdvancedOptionsPanel from "./AdvancedOptionsPanel";
@@ -166,7 +167,17 @@ export default function BoardEditorChrome({
         ) : null}
         <div className="boardEditorChromeTitleWrap">
           {isCardMode || !proposalBuildMode ? (
-            <h1 className="boardEditorChromeTitle">{displayTitle}</h1>
+            <div className="boardEditorChromeTitleRow">
+              <h1 className="boardEditorChromeTitle">{displayTitle}</h1>
+              {isCardMode && cardChrome?.typeLabel ? (
+                <Chip
+                  className="boardEditorChromeTypeBadge"
+                  shape="pill"
+                  label={cardChrome.typeLabel}
+                  style={{ cursor: "default", pointerEvents: "none", fontSize: 12 }}
+                />
+              ) : null}
+            </div>
           ) : isTitleEditing ? (
             <input
               type="text"

@@ -23,7 +23,9 @@ function createClient({ initialState }) {
             `[Network error]: ${networkError}. Backend is unreachable. Is it running?`
           );
       }),
-      // this uses apollo-link-http under the hood, so all the options here come from that package
+      // GraphQL multipart uploads (e.g. opportunity/profile videos) POST the
+      // whole file through this link. Production nginx `client_max_body_size`
+      // is 100m — larger payloads get 413 before Keystone.
       createUploadLink({
         uri: graphqlEndpoint,
         // Keystone's session cookie rides along via credentials; the backend is

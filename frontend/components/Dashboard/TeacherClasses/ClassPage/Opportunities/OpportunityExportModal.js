@@ -326,7 +326,7 @@ export default function OpportunityExportModal({
       <p style={HINT_STYLE}>
         {t("opportunities.matchingRound.export.hint", { count: opportunityCount }, {
           default:
-            "Choose which columns to include. {{count}} opportunities from this network will be exported as a ZIP with the CSV and a folder per opportunity (intro video, cover illustration, and follow-up images/PDFs).",
+            "Choose which columns to include. {{count}} opportunities from this network will be exported as a ZIP with the CSV and a folder per opportunity (intro video, cover illustration, and follow-up images, PDFs, and documents).",
         })}
       </p>
       <div style={TOOLBAR_STYLE}>

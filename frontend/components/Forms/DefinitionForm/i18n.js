@@ -55,3 +55,20 @@ export function cardDescription(card, locale) {
 export function optionLabel(option, locale) {
   return pickText(option?.label, option?.labelI18n, locale);
 }
+
+// dual_textarea sub-prompts: prefer options[0]/[1] when present (future-proof),
+// else fall back to validation.subLabelA/B written by review form seeds.
+export function dualTextareaSubLabels(field, locale) {
+  const raw = Array.isArray(field?.options) ? field.options : [];
+  const sorted = raw
+    .slice()
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const validation = field?.validation || {};
+  const subA =
+    (sorted[0] ? optionLabel(sorted[0], locale) : "") ||
+    pickText(validation.subLabelA, validation.subLabelAI18n, locale);
+  const subB =
+    (sorted[1] ? optionLabel(sorted[1], locale) : "") ||
+    pickText(validation.subLabelB, validation.subLabelBI18n, locale);
+  return { subA, subB };
+}

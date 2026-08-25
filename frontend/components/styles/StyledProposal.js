@@ -155,6 +155,11 @@ export const StyledProposal = styled.div`
       gap: 8px;
       min-width: 0;
     }
+    .boardEditorChromeTypeBadge {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+    }
     .boardEditorChromeTitle {
       margin: 0;
       font-family: Inter, sans-serif;
@@ -546,6 +551,51 @@ export const StyledProposal = styled.div`
     min-height: 0;
     height: auto;
     overflow-y: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardEditorBody .post.milestoneCardEditorPost {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &.projectsBoardEditorProposal
+    .boardEditorBody
+    .post.milestoneCardEditorPost
+    .proposalCardBoard {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    align-items: stretch;
+  }
+
+  &.projectsBoardEditorProposal
+    .boardEditorBody
+    .post.milestoneCardEditorPost
+    .textBoard {
+    overflow-y: auto;
+    padding-bottom: 48px;
+    margin-bottom: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &.projectsBoardEditorProposal
+    .boardEditorBody
+    .post.milestoneCardEditorPost
+    .infoBoard {
+    overflow-y: auto;
+    max-height: 100%;
+    align-self: stretch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &.projectsBoardEditorProposal .boardInner .boardColumnsWrap {

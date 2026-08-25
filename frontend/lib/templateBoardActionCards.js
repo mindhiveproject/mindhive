@@ -140,7 +140,7 @@ export function getActionCardTypeLabel(card, tClasses) {
         default: "MindHive default",
       })
     : tClasses("projects.milestonesMenu.customAction", {}, {
-        default: "Custom review step",
+        default: "Custom milestone",
       });
 }
 

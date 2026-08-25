@@ -12,8 +12,10 @@ const ALLOWED_FIELD_TYPES = new Set<string>(
 
 /** Opportunity.videoFile — fixed mapping for the teacher intro-video question. */
 export const INTRO_VIDEO_FIELD_NAME = "videoFile";
+/** 100MB — production nginx `client_max_body_size` is 100m; larger GraphQL
+ *  multipart uploads 413 before this mutation runs. */
 export const INTRO_VIDEO_VALIDATION = {
-  maxFileSize: 500 * 1024 * 1024,
+  maxFileSize: 100 * 1024 * 1024,
   allowedMimes: "video/mp4,video/webm",
 };
 
