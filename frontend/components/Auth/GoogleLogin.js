@@ -123,16 +123,28 @@ export default function LoginWithGoogle({
   };
 
   return (
-    <Button
-      variant="outline"
-      style={{ width: "100%" }}
-      disabled={disabled || loading}
-      onClick={() => {
-        GoogleLogin.onClick();
-      }}
-      leadingIcon={<img src="/assets/externalLogos/google.svg.webp" alt="icon" height="20" />}
-    >
-      {t("auth.loginWithGoogle", {}, { default: "Login with Google" })}
-    </Button>
+    <GoogleLogin
+      clientId={clientID}
+      render={(renderProps) => (
+        <Button
+          type="button"
+          variant="outline"
+          style={{ width: "100%" }}
+          disabled={disabled || loading || renderProps.disabled}
+          onClick={renderProps.onClick}
+          leadingIcon={
+            <img
+              src="/assets/externalLogos/google.svg.webp"
+              alt=""
+              height="20"
+            />
+          }
+        >
+          {t("auth.loginWithGoogle", {}, { default: "Login with Google" })}
+        </Button>
+      )}
+      onSuccess={handleSuccess}
+      onFailure={handleFailure}
+    />
   );
 }
