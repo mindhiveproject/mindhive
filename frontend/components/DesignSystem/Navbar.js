@@ -2,6 +2,8 @@ import styled from "styled-components";
 import clsx from "clsx";
 import { createContext, useContext, useMemo } from "react";
 
+import Tooltip from "./Tooltip";
+
 export const StyledNavbar = styled.div`
   .navbar-container {
     display: flex;
@@ -290,7 +292,11 @@ export function NavbarSection({ label, children }) {
  * @param {React.ReactNode} [trailingContent] - Optional slot pinned to the far end, e.g. a count badge.
  * @param {React.ReactNode} children - Item label.
  * @param {string} [className] - Additional classes on the interactive element.
- * @param {object} [props] - Remaining props (onClick, aria-*, …) forwarded to that element.
+ * @param {React.ReactNode} [tooltipContent] - Optional Design System Tooltip on
+ *   the item. When the item is `disabled`, the trigger wraps the control so
+ *   hover still works (disabled buttons do not receive pointer events).
+ * @param {object} [props] - Remaining props (onClick, aria-*, disabled, …)
+ *   forwarded to that element.
  *
  * @example
  * <NavbarItem href="/settings" leadingIcon={<GearIcon />}>Settings</NavbarItem>
@@ -307,6 +313,9 @@ export function NavbarItem({
   trailingContent = null,
   children,
   className,
+  tooltipContent = null,
+  disabled = false,
+  style,
   ...props
 }) {
   const Component = as ?? (href ? "a" : "button");
@@ -317,33 +326,68 @@ export function NavbarItem({
   const collapsedLabel =
     collapsed && typeof children == "string" ? children : undefined;
 
+  const hasTooltip =
+    tooltipContent != null && tooltipContent !== "";
+  // Disabled controls do not fire mouse events; the Tooltip trigger must sit
+  // outside and the control must not capture the pointer.
+  const disabledWithTooltip = hasTooltip && disabled;
+
+  const interactive = (
+    <Component
+      href={href}
+      type={Component == "button" ? "button" : undefined}
+      className={clsx(
+        "navbar-item",
+        selected && "selected",
+        leadingIcon && "has-icon",
+        trailingContent && "has-trailing",
+        className,
+      )}
+      aria-current={selected ? "page" : undefined}
+      aria-label={collapsedLabel}
+      title={collapsedLabel}
+      disabled={disabled || undefined}
+      style={{
+        ...style,
+        ...(disabledWithTooltip ? { pointerEvents: "none" } : null),
+      }}
+      {...props}
+    >
+      {leadingIcon && (
+        <span className="navbar-item-icon" aria-hidden>
+          {leadingIcon}
+        </span>
+      )}
+      {!collapsed && children}
+      {!collapsed && trailingContent && (
+        <span className="navbar-item-trailing">{trailingContent}</span>
+      )}
+    </Component>
+  );
+
   return (
     <li>
-      <Component
-        href={href}
-        type={Component == "button" ? "button" : undefined}
-        className={clsx(
-          "navbar-item",
-          selected && "selected",
-          leadingIcon && "has-icon",
-          trailingContent && "has-trailing",
-          className,
-        )}
-        aria-current={selected ? "page" : undefined}
-        aria-label={collapsedLabel}
-        title={collapsedLabel}
-        {...props}
-      >
-        {leadingIcon && (
-          <span className="navbar-item-icon" aria-hidden>
-            {leadingIcon}
+      {hasTooltip ? (
+        <Tooltip
+          content={tooltipContent}
+          side="bottom"
+          maxWidth={280}
+          className="DesignSystem-Tooltip-trigger--fill"
+        >
+          <span
+            className="navbar-item-tooltip-trigger"
+            style={{
+              display: "inline-flex",
+              maxWidth: "100%",
+              ...(disabledWithTooltip ? { cursor: "not-allowed" } : null),
+            }}
+          >
+            {interactive}
           </span>
-        )}
-        {!collapsed && children}
-        {!collapsed && trailingContent && (
-          <span className="navbar-item-trailing">{trailingContent}</span>
-        )}
-      </Component>
+        </Tooltip>
+      ) : (
+        interactive
+      )}
     </li>
   );
 }

@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
@@ -10,8 +10,11 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 import Chip from "../../../../DesignSystem/Chip";
+import { StarFilledIcon } from "../../../../DesignSystem/Icons";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 import { slugifyForFilename } from "../../../../../lib/opportunityExportMedia";
 import { CLASS_OPPORTUNITY_PREVIEW_LOGS } from "../../../../Queries/Log";
+import { CLASS_STUDENT_OPPORTUNITY_FAVORITES } from "../../../../Queries/Opportunity";
 
 const VIEW_MODES = {
   table: "table",
@@ -59,9 +62,26 @@ function includesQuery(value, query) {
     .includes(q);
 }
 
-function dwellSeconds(cell) {
-  if (!cell || !cell.visitCount) return "";
-  return Math.max(0, Math.round((Number(cell.dwellMs) || 0) / 1000));
+/**
+ * CSV cell: dwell seconds, "favorited", both as "54;favorited", or empty.
+ */
+function formatInterestCsvCell(cell, favoritedLabel) {
+  const hasVisit = cell?.visitCount > 0;
+  const favorited = !!cell?.favorited;
+  const seconds = hasVisit
+    ? Math.max(0, Math.round((Number(cell.dwellMs) || 0) / 1000))
+    : null;
+
+  if (hasVisit && favorited) {
+    return `${seconds};${favoritedLabel}`;
+  }
+  if (hasVisit) {
+    return String(seconds);
+  }
+  if (favorited) {
+    return favoritedLabel;
+  }
+  return "";
 }
 
 function buildInterestCsvFilename(roundTitle, date = new Date()) {
@@ -77,6 +97,7 @@ function downloadInterestCsv({
   rows,
   opportunities,
   roundTitle,
+  favoritedLabel,
 }) {
   const fields = [
     studentColumnHeader,
@@ -87,7 +108,7 @@ function downloadInterestCsv({
     for (const opportunity of opportunities) {
       const title = opportunity.title || opportunity.id;
       const cell = row.interestByOpportunityId?.[opportunity.id] || null;
-      out[title] = dwellSeconds(cell);
+      out[title] = formatInterestCsvCell(cell, favoritedLabel);
     }
     return out;
   });
@@ -102,6 +123,18 @@ function downloadInterestCsv({
   anchor.remove();
   URL.revokeObjectURL(url);
 }
+
+const InterestCell = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+
+  .matchingRoundStudentInterestStar {
+    flex-shrink: 0;
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+`;
 
 const GridShell = styled.div`
   display: grid;
@@ -182,13 +215,6 @@ const GridShell = styled.div`
     min-width: 0;
   }
 
-  .matchingRoundStudentInterestSearchLabel {
-    margin: 0;
-    font-size: 12px;
-    font-weight: 600;
-    color: #5c6570;
-  }
-
   .matchingRoundStudentInterestSearchInput {
     width: 100%;
     box-sizing: border-box;
@@ -206,11 +232,32 @@ const GridShell = styled.div`
     }
   }
 
+  .matchingRoundStudentInterestColumnHeader {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .ag-theme-quartz.matchingRoundStudentInterestGrid {
     width: 100%;
     height: min(480px, max(240px, calc(var(--student-interest-rows, 4) * 42px + 48px)));
     --ag-font-family: Inter, system-ui, sans-serif;
     --ag-font-size: 13px;
+
+    .ag-header-cell-comp-wrapper {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .ag-header-cell-comp-wrapper .DesignSystem-Tooltip-trigger {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
   }
 
   .matchingRoundStudentInterestCards {
@@ -265,9 +312,17 @@ const GridShell = styled.div`
   .matchingRoundStudentInterestCardDwell {
     margin: 0;
     flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     font-size: 13px;
     font-weight: 600;
     color: var(--MH-Theme-Primary-Dark, #336f8a);
+
+    .matchingRoundStudentInterestStar {
+      flex-shrink: 0;
+      color: var(--MH-Theme-Primary-Dark, #336f8a);
+    }
   }
 
   .matchingRoundStudentInterestCardEmpty {
@@ -276,6 +331,63 @@ const GridShell = styled.div`
     color: #5c6570;
   }
 `;
+
+function InterestCellContent({ cell, t }) {
+  const hasVisit = cell?.visitCount > 0;
+  const favorited = !!cell?.favorited;
+
+  if (!hasVisit && !favorited) {
+    return "—";
+  }
+
+  const favoritedLabel = t(
+    "opportunities.matchingRound.studentInterest.favoritedAria",
+    {},
+    { default: "Favorited" },
+  );
+  const visitTitle = hasVisit
+    ? t(
+        "opportunities.matchingRound.studentInterest.visitCount",
+        { count: cell.visitCount },
+        { default: "{{count}} visits" },
+      )
+    : null;
+  const titleParts = [visitTitle, favorited ? favoritedLabel : null].filter(
+    Boolean,
+  );
+  const titleText = titleParts.join(" · ");
+
+  return (
+    <InterestCell title={titleText}>
+      {hasVisit ? <span>{formatDwellMs(cell.dwellMs, t)}</span> : null}
+      {favorited ? (
+        <StarFilledIcon
+          className="matchingRoundStudentInterestStar"
+          width={16}
+          height={16}
+          aria-label={favoritedLabel}
+        />
+      ) : null}
+    </InterestCell>
+  );
+}
+
+/** Truncated opportunity column header with Design System Tooltip for the full title. */
+function OpportunityColumnHeader(props) {
+  const fullTitle = props.fullTitle || props.displayName || "";
+  const label = props.displayName || fullTitle;
+
+  return (
+    <Tooltip
+      content={fullTitle}
+      side="bottom"
+      maxWidth={320}
+      className="DesignSystem-Tooltip-trigger--fill"
+    >
+      <span className="matchingRoundStudentInterestColumnHeader">{label}</span>
+    </Tooltip>
+  );
+}
 
 /**
  * Class students × pre-selected opportunities preview interest matrix.
@@ -307,11 +419,37 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     [opportunities],
   );
 
-  const { data, loading } = useQuery(CLASS_OPPORTUNITY_PREVIEW_LOGS, {
-    variables: { classId, opportunityIds },
-    skip: !enabled || !classId || !roundId || opportunityIds.length === 0,
-    fetchPolicy: "cache-and-network",
-  });
+  const studentIds = useMemo(
+    () => (students || []).map((student) => student?.id).filter(Boolean),
+    [students],
+  );
+
+  const skipQueries =
+    !enabled ||
+    !classId ||
+    !roundId ||
+    opportunityIds.length === 0 ||
+    studentIds.length === 0;
+
+  const { data, loading: logsLoading } = useQuery(
+    CLASS_OPPORTUNITY_PREVIEW_LOGS,
+    {
+      variables: { classId, opportunityIds },
+      skip: skipQueries,
+      fetchPolicy: "cache-and-network",
+    },
+  );
+
+  const { data: favoritesData, loading: favoritesLoading } = useQuery(
+    CLASS_STUDENT_OPPORTUNITY_FAVORITES,
+    {
+      variables: { studentIds, opportunityIds },
+      skip: skipQueries,
+      fetchPolicy: "cache-and-network",
+    },
+  );
+
+  const loading = logsLoading || favoritesLoading;
 
   const interestByKey = useMemo(() => {
     const map = new Map();
@@ -322,13 +460,30 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
       const opportunityId = log?.opportunity?.id;
       if (!userId || !opportunityId) continue;
       const key = `${userId}::${opportunityId}`;
-      const existing = map.get(key) || { dwellMs: 0, visitCount: 0 };
+      const existing = map.get(key) || {
+        dwellMs: 0,
+        visitCount: 0,
+        favorited: false,
+      };
       existing.dwellMs += Number(content.dwellMs) || 0;
       existing.visitCount += 1;
       map.set(key, existing);
     }
     return map;
   }, [data?.logs, roundId]);
+
+  const favoriteByKey = useMemo(() => {
+    const set = new Set();
+    for (const profile of favoritesData?.profiles || []) {
+      const studentId = profile?.id;
+      if (!studentId) continue;
+      for (const opportunity of profile.favoriteOpportunities || []) {
+        if (!opportunity?.id) continue;
+        set.add(`${studentId}::${opportunity.id}`);
+      }
+    }
+    return set;
+  }, [favoritesData?.profiles]);
 
   const filteredStudents = useMemo(() => {
     return (students || []).filter((student) => {
@@ -352,14 +507,25 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
           const interestByOpportunityId = {};
           let totalDwellMs = 0;
           let totalVisits = 0;
+          let totalFavorites = 0;
           for (const opportunity of opportunityList || []) {
             if (!opportunity?.id) continue;
+            const key = `${student.id}::${opportunity.id}`;
+            const visitCell = interestByKey.get(key) || null;
+            const favorited = favoriteByKey.has(key);
             const cell =
-              interestByKey.get(`${student.id}::${opportunity.id}`) || null;
+              visitCell || favorited
+                ? {
+                    dwellMs: visitCell?.dwellMs || 0,
+                    visitCount: visitCell?.visitCount || 0,
+                    favorited,
+                  }
+                : null;
             interestByOpportunityId[opportunity.id] = cell;
             if (cell) {
               totalDwellMs += cell.dwellMs;
               totalVisits += cell.visitCount;
+              if (cell.favorited) totalFavorites += 1;
             }
           }
           return {
@@ -368,6 +534,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
             interestByOpportunityId,
             totalDwellMs,
             totalVisits,
+            totalFavorites,
           };
         })
         .sort((a, b) =>
@@ -376,7 +543,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
           }),
         );
     },
-    [interestByKey],
+    [interestByKey, favoriteByKey],
   );
 
   // Full matrix (unfiltered) for grid cards and visit empty-state.
@@ -391,6 +558,12 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     [buildRowsFor, filteredStudents, filteredOpportunities],
   );
 
+  const favoritedAria = t(
+    "opportunities.matchingRound.studentInterest.favoritedAria",
+    {},
+    { default: "Favorited" },
+  );
+
   const studentCards = useMemo(() => {
     return tableRowData.map((row) => {
       const topOpportunities = (filteredOpportunities || [])
@@ -402,10 +575,14 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
             title: opportunity.title || opportunity.id,
             dwellMs: cell?.dwellMs || 0,
             visitCount: cell?.visitCount || 0,
+            favorited: !!cell?.favorited,
           };
         })
-        .filter((item) => item.visitCount > 0)
-        .sort((a, b) => b.dwellMs - a.dwellMs)
+        .filter((item) => item.visitCount > 0 || item.favorited)
+        .sort((a, b) => {
+          if (a.favorited !== b.favorited) return a.favorited ? -1 : 1;
+          return b.dwellMs - a.dwellMs;
+        })
         .slice(0, 3);
 
       return {
@@ -441,7 +618,8 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
       cols.push({
         colId: `opp-${opportunity.id}`,
         headerName: truncateLabel(title),
-        headerTooltip: title,
+        headerComponent: OpportunityColumnHeader,
+        headerComponentParams: { fullTitle: title },
         opportunityId: opportunity.id,
         sortable: true,
         flex: 1,
@@ -454,14 +632,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
         cellRenderer: (params) => {
           const cell =
             params?.data?.interestByOpportunityId?.[opportunity.id] || null;
-          if (!cell || !cell.visitCount) return "—";
-          const label = formatDwellMs(cell.dwellMs, t);
-          const titleText = t(
-            "opportunities.matchingRound.studentInterest.visitCount",
-            { count: cell.visitCount },
-            { default: "{{count}} visits" },
-          );
-          return <span title={titleText}>{label}</span>;
+          return <InterestCellContent cell={cell} t={t} />;
         },
       });
     }
@@ -487,6 +658,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
       rows: tableRowData,
       opportunities: filteredOpportunities,
       roundTitle,
+      favoritedLabel: "favorited",
     });
   }, [
     canDownloadCsv,
@@ -503,6 +675,14 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     }),
     [handleDownloadCsv],
   );
+
+  // Favorites often arrive after preview logs; force AG Grid to redraw cells
+  // so stars appear without requiring a filter/mode change.
+  useEffect(() => {
+    const api = gridRef.current?.api;
+    if (!api || viewMode !== VIEW_MODES.table) return;
+    api.refreshCells({ force: true });
+  }, [tableRowData, favoriteByKey, viewMode]);
 
   const headerActions = (
     <div className="matchingRoundStudentInterestHeaderActions">
@@ -543,14 +723,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
 
   const searchToolbar = (
     <div className="matchingRoundStudentInterestSearchRow">
-      <label className="matchingRoundStudentInterestSearchField">
-        <span className="matchingRoundStudentInterestSearchLabel">
-          {t(
-            "opportunities.matchingRound.studentInterest.searchStudentsLabel",
-            {},
-            { default: "Students" },
-          )}
-        </span>
+      <div className="matchingRoundStudentInterestSearchField">
         <input
           type="search"
           className="matchingRoundStudentInterestSearchInput"
@@ -561,16 +734,14 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
             {},
             { default: "Filter students…" },
           )}
-        />
-      </label>
-      <label className="matchingRoundStudentInterestSearchField">
-        <span className="matchingRoundStudentInterestSearchLabel">
-          {t(
-            "opportunities.matchingRound.studentInterest.searchOpportunitiesLabel",
+          aria-label={t(
+            "opportunities.matchingRound.studentInterest.searchStudentsPlaceholder",
             {},
-            { default: "Opportunities" },
+            { default: "Filter students…" },
           )}
-        </span>
+        />
+      </div>
+      <div className="matchingRoundStudentInterestSearchField">
         <input
           type="search"
           className="matchingRoundStudentInterestSearchInput"
@@ -581,8 +752,13 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
             {},
             { default: "Filter opportunities…" },
           )}
+          aria-label={t(
+            "opportunities.matchingRound.studentInterest.searchOpportunitiesPlaceholder",
+            {},
+            { default: "Filter opportunities…" },
+          )}
         />
-      </label>
+      </div>
     </div>
   );
 
@@ -642,7 +818,9 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     );
   }
 
-  const hasAnyVisits = allRowData.some((row) => row.totalVisits > 0);
+  const hasAnyInterest = allRowData.some(
+    (row) => row.totalVisits > 0 || row.totalFavorites > 0,
+  );
 
   return (
     <GridShell
@@ -658,7 +836,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
               {},
               {
                 default:
-                  "Time students spent previewing each opportunity (sessions of 1 second or more).",
+                  "Time students spent previewing each opportunity (sessions of 1 second or more), and which opportunities they favorited.",
               },
             )}
           </p>
@@ -668,23 +846,26 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
 
       {searchToolbar}
 
-      {loading && !data?.logs ? (
+      {loading && !data?.logs && !favoritesData?.profiles ? (
         <p className="matchingRoundStudentInterestHint">
           {t(
             "opportunities.matchingRound.studentInterest.loading",
             {},
-            { default: "Loading student previews…" },
+            { default: "Loading student interest…" },
           )}
         </p>
       ) : null}
 
-      {!loading && !hasAnyVisits ? (
+      {!loading && !hasAnyInterest ? (
         <div className="matchingRoundStudentInterestEmpty">
           <p className="matchingRoundStudentInterestEmptyTitle">
             {t(
               "opportunities.matchingRound.studentInterest.emptyNoVisits",
               {},
-              { default: "No student previews recorded yet." },
+              {
+                default:
+                  "No student previews or favorites recorded yet.",
+              },
             )}
           </p>
         </div>
@@ -729,7 +910,17 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
                         {opp.title}
                       </p>
                       <p className="matchingRoundStudentInterestCardDwell">
-                        {formatDwellMs(opp.dwellMs, t)}
+                        {opp.visitCount > 0
+                          ? formatDwellMs(opp.dwellMs, t)
+                          : null}
+                        {opp.favorited ? (
+                          <StarFilledIcon
+                            className="matchingRoundStudentInterestStar"
+                            width={16}
+                            height={16}
+                            aria-label={favoritedAria}
+                          />
+                        ) : null}
                       </p>
                     </li>
                   ))}
@@ -739,7 +930,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
                   {t(
                     "opportunities.matchingRound.studentInterest.emptyNoInterest",
                     {},
-                    { default: "No previews yet" },
+                    { default: "No previews or favorites yet" },
                   )}
                 </p>
               )}

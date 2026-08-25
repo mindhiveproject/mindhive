@@ -1178,7 +1178,7 @@ function MatchingRoundEditor({
           { default: "Interest" },
         ),
         disabled: isStudentInterestDisabled,
-        title: isStudentInterestDisabled
+        tooltipContent: isStudentInterestDisabled
           ? t(
               "opportunities.matchingRound.studentInterest.disabledDraftHint",
               {},
@@ -1187,7 +1187,7 @@ function MatchingRoundEditor({
                   "Interest is available after the matching round leaves draft.",
               },
             )
-          : undefined,
+          : null,
       },
       // {
       //   id: PANELS.questions,
@@ -3076,7 +3076,7 @@ function MatchingRoundEditor({
                   key={panel.id}
                   selected={activePanel === panel.id}
                   disabled={panel.disabled}
-                  title={panel.title}
+                  tooltipContent={panel.tooltipContent}
                   onClick={
                     panel.disabled
                       ? undefined

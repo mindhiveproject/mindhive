@@ -210,6 +210,22 @@ export const GET_OPPORTUNITY = gql`
   }
 `;
 
+// Class students' favorited opportunities, scoped to a round's opportunity set.
+// Used by the teacher Interest matrix alongside preview dwell logs.
+export const CLASS_STUDENT_OPPORTUNITY_FAVORITES = gql`
+  query CLASS_STUDENT_OPPORTUNITY_FAVORITES(
+    $studentIds: [ID!]!
+    $opportunityIds: [ID!]!
+  ) {
+    profiles(where: { id: { in: $studentIds } }) {
+      id
+      favoriteOpportunities(where: { id: { in: $opportunityIds } }) {
+        id
+      }
+    }
+  }
+`;
+
 // Lightweight context used by the Explore list: which networks the current
 // user is in (for the network filter), and which opportunities the user has
 // favorited (for the heart toggles + favorites-only filter).
