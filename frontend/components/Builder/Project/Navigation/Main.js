@@ -71,11 +71,6 @@ export default function Navigation({
       name: t("testAndCollect"),
     },
     {
-      value: "visualize",
-      name: t("visualize"),
-      requiresAdmin: true, // made sneaky March 20th 2026
-    },
-    {
       value: "journal",
       name: t("visualize"),
       requiresAdmin: false, // made public March 20th 2026
