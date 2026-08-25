@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
+import MessageCard from "../../DesignSystem/MessageCard";
 import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPreview";
 import TeacherFormWizard from "../../Forms/TeacherFormWizard";
 import { isClassTemplateBoard } from "../../Utils/proposalBoard";
@@ -442,10 +443,27 @@ export default function CreateCardModal({
 
   const curriculumType = getCurriculumType(board);
   const canCreateNew = isClassTemplateBoard(board);
-  const isNewCheckpoint = checkpointChoice === NEW_CHECKPOINT_VALUE;
-  const isDefaultCheckpoint = isDefaultActionCardType(checkpointChoice);
+  const resolvedCardCategory = cardCategory || initialCardCategory;
+
+  const checkpointOptions = useMemo(
+    () => getDefaultCheckpointOptions({ t, sections }),
+    [sections, t]
+  );
+
+  const allDefaultMilestonesAdded =
+    checkpointOptions.length > 0 &&
+    checkpointOptions.every((option) => option.disabled);
+  const forceCustomMilestone =
+    canCreateNew &&
+    resolvedCardCategory === CARD_CATEGORY_ACTION &&
+    allDefaultMilestonesAdded;
+  const resolvedCheckpointChoice = forceCustomMilestone
+    ? NEW_CHECKPOINT_VALUE
+    : checkpointChoice;
+  const isNewCheckpoint = resolvedCheckpointChoice === NEW_CHECKPOINT_VALUE;
+  const isDefaultCheckpoint = isDefaultActionCardType(resolvedCheckpointChoice);
   const selectedMilestone = isDefaultCheckpoint
-    ? getMilestoneForCardType(checkpointChoice, milestones)
+    ? getMilestoneForCardType(resolvedCheckpointChoice, milestones)
     : null;
   const templatePreviewMilestone =
     isNewCheckpoint &&
@@ -453,11 +471,6 @@ export default function CreateCardModal({
     selectedTemplateKey !== BLANK_TEMPLATE_VALUE
       ? getMilestoneForCardType(selectedTemplateKey, milestones)
       : null;
-
-  const checkpointOptions = useMemo(
-    () => getDefaultCheckpointOptions({ t, sections }),
-    [sections, t]
-  );
 
   const formTemplateOptions = useMemo(
     () => getDefaultFormTemplateOptions({ t }),
@@ -497,7 +510,7 @@ export default function CreateCardModal({
     if (names.length > 0) {
       setSelectedPermissions(names);
     }
-  }, [checkpointChoice, isDefaultCheckpoint, selectedMilestone]);
+  }, [resolvedCheckpointChoice, isDefaultCheckpoint, selectedMilestone]);
 
   useEffect(() => {
     if (!isNewCheckpoint) return;
@@ -507,6 +520,11 @@ export default function CreateCardModal({
     }
   }, [isNewCheckpoint, selectedTemplateKey]);
 
+  const createCardCategoryNoun =
+    resolvedCardCategory === CARD_CATEGORY_ACTION
+      ? t("section.createCardModal.action", {}, { default: "milestone" })
+      : t("section.createCardModal.proposal", {}, { default: "card" });
+
   if (!open || typeof document === "undefined") return null;
 
   const trimmedTitle = title.trim();
@@ -514,13 +532,13 @@ export default function CreateCardModal({
     creating ||
     !sectionId ||
     milestonesLoading ||
-    !cardCategory ||
-    (cardCategory === CARD_CATEGORY_PROPOSAL && !trimmedTitle) ||
-    (cardCategory === CARD_CATEGORY_ACTION &&
-      (!checkpointChoice ||
+    !resolvedCardCategory ||
+    (resolvedCardCategory === CARD_CATEGORY_PROPOSAL && !trimmedTitle) ||
+    (resolvedCardCategory === CARD_CATEGORY_ACTION &&
+      (!resolvedCheckpointChoice ||
         (isDefaultCheckpoint &&
           (!selectedMilestone?.id ||
-            checkpointOptions.find((o) => o.value === checkpointChoice)
+            checkpointOptions.find((o) => o.value === resolvedCheckpointChoice)
               ?.disabled)) ||
         (isNewCheckpoint &&
           (!trimmedTitle || selectedPermissions.length === 0))));
@@ -539,7 +557,7 @@ export default function CreateCardModal({
     e.preventDefault();
     if (createDisabled) return;
 
-    if (cardCategory === CARD_CATEGORY_PROPOSAL) {
+    if (resolvedCardCategory === CARD_CATEGORY_PROPOSAL) {
       await onCreateCard({
         sectionId,
         title: trimmedTitle,
@@ -579,8 +597,8 @@ export default function CreateCardModal({
 
     await onCreateCard({
       sectionId,
-      title: selectedMilestone?.title || checkpointChoice,
-      type: checkpointChoice,
+      title: selectedMilestone?.title || resolvedCheckpointChoice,
+      type: resolvedCheckpointChoice,
       milestoneId: selectedMilestone?.id || null,
     });
   };
@@ -627,11 +645,29 @@ export default function CreateCardModal({
             color: "#000",
           }}
         >
-          {t("section.createCardModal.title", {}, { default: "Create a new card" })}
+          {t(
+            "section.createCardModal.title",
+            { cardCategory: createCardCategoryNoun },
+            { default: "Create a new {{cardCategory}}" }
+          )}
         </h2>
 
         <div style={{ display: "grid", gap: 20 }}>
-          {cardCategory === CARD_CATEGORY_PROPOSAL ? (
+          {forceCustomMilestone ? (
+            <MessageCard
+              variant="information"
+              message={t(
+                "section.createCardModal.allDefaultsAddedNotice",
+                {},
+                {
+                  default:
+                    "All default MindHive milestones are already on this board. You're creating a custom milestone.",
+                }
+              )}
+            />
+          ) : null}
+
+          {resolvedCardCategory === CARD_CATEGORY_PROPOSAL ? (
             <label style={labelStyle}>
               {t(
                 "section.createCardModal.titleLabel",
@@ -653,7 +689,7 @@ export default function CreateCardModal({
             </label>
           ) : null}
 
-          {cardCategory === CARD_CATEGORY_ACTION ? (
+          {resolvedCardCategory === CARD_CATEGORY_ACTION && !forceCustomMilestone ? (
             <CheckpointStep
               checkpointChoice={checkpointChoice}
               checkpointOptions={checkpointOptions}
@@ -663,10 +699,10 @@ export default function CreateCardModal({
             />
           ) : null}
 
-          {cardCategory === CARD_CATEGORY_ACTION ? (
+          {resolvedCardCategory === CARD_CATEGORY_ACTION ? (
             <MilestonePreviewStep
               board={board}
-              checkpointChoice={checkpointChoice}
+              checkpointChoice={resolvedCheckpointChoice}
               description={description}
               isNewCheckpoint={isNewCheckpoint}
               milestone={selectedMilestone}
@@ -677,10 +713,10 @@ export default function CreateCardModal({
             />
           ) : null}
 
-          {cardCategory === CARD_CATEGORY_ACTION ? (
+          {resolvedCardCategory === CARD_CATEGORY_ACTION ? (
             <PermissionsAndTemplateStep
               board={board}
-              checkpointChoice={checkpointChoice}
+              checkpointChoice={resolvedCheckpointChoice}
               formTemplateOptions={formTemplateOptions}
               isNewCheckpoint={isNewCheckpoint}
               milestone={selectedMilestone}

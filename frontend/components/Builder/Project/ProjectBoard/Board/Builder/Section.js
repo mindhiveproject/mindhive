@@ -440,7 +440,7 @@ const Section = ({
               addCardMutation(section.id, cardName);
             }}
           >
-            {t("section.addCard", "Add card")}
+            {t("section.addCard", "Add")}
           </div>
         </div>
       )}
