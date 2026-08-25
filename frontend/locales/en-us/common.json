@@ -136,12 +136,14 @@
 			"commentPlaceholder": "Short note for viewers",
 			"empty": "No media yet — add one below.",
 			"emptyReadonly": "No media shared",
+			"libraryEmpty": "No media yet. Upload an image or document to get started.",
 			"media": "Media",
 			"remove": "Remove",
 			"replaceUpload": "Upload replacement",
 			"title": "Title",
 			"titlePlaceholder": "Resource name",
-			"upload": "Upload image or PDF"
+			"unsupportedType": "Unsupported file type. Upload an image or a document (PDF, Word, Excel, PowerPoint, etc.).",
+			"upload": "Upload image or document"
 		},
 		"min": "Must be at least {{min}}.",
 		"resourcePreview": {

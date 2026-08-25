@@ -21,8 +21,92 @@ import ResourceChipList from "./ResourceChipList";
 
 const MAX_ITEMS = 25;
 const CREATED_WITH = "opportunity_media_list";
-const ACCEPT =
-  "image/png,image/jpeg,image/gif,image/webp,image/svg+xml,application/pdf";
+
+const IMAGE_EXTS = new Set(["png", "jpg", "jpeg", "gif", "webp", "svg"]);
+const DOCUMENT_EXTS = new Set([
+  "pdf",
+  "doc",
+  "docx",
+  "odt",
+  "rtf",
+  "txt",
+  "xls",
+  "xlsx",
+  "csv",
+  "ods",
+  "ppt",
+  "pptx",
+  "odp",
+]);
+
+const IMAGE_MIME_TYPES = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+  "image/svg+xml",
+]);
+
+const DOCUMENT_MIME_TYPES = new Set([
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.oasis.opendocument.text",
+  "application/rtf",
+  "text/rtf",
+  "text/plain",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "text/csv",
+  "application/csv",
+  "application/vnd.oasis.opendocument.spreadsheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "application/vnd.oasis.opendocument.presentation",
+]);
+
+// MIME types plus extensions (Windows often omits MIME).
+const ACCEPT = [
+  "image/png",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+  "image/svg+xml",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".gif",
+  ".webp",
+  ".svg",
+  "application/pdf",
+  ".pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ".doc",
+  ".docx",
+  "application/vnd.oasis.opendocument.text",
+  ".odt",
+  "application/rtf",
+  "text/rtf",
+  ".rtf",
+  "text/plain",
+  ".txt",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  ".xls",
+  ".xlsx",
+  "text/csv",
+  "application/csv",
+  ".csv",
+  "application/vnd.oasis.opendocument.spreadsheet",
+  ".ods",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  ".ppt",
+  ".pptx",
+  "application/vnd.oasis.opendocument.presentation",
+  ".odp",
+].join(",");
 
 const MEDIA_CHIP_LEADING = (
   <MediaListIcon width={18} height={18} style={{ display: "block" }} />
@@ -48,10 +132,42 @@ const INPUT_STYLE = {
 
 const LABEL_SPAN_STYLE = { fontWeight: 600, color: "#5f6871" };
 
-function isPdfFile(file) {
+function extensionFromName(name) {
+  const match = String(name || "").match(/\.([a-z0-9]{2,5})$/i);
+  return match ? match[1].toLowerCase() : "";
+}
+
+function isImageFile(file) {
   if (!file) return false;
-  if (file.type === "application/pdf") return true;
-  return /\.pdf$/i.test(file.name || "");
+  if (file.type && IMAGE_MIME_TYPES.has(file.type)) return true;
+  return IMAGE_EXTS.has(extensionFromName(file.name));
+}
+
+function isDocumentFile(file) {
+  if (!file) return false;
+  if (file.type && DOCUMENT_MIME_TYPES.has(file.type)) return true;
+  return DOCUMENT_EXTS.has(extensionFromName(file.name));
+}
+
+function isAllowedUploadFile(file) {
+  return isImageFile(file) || isDocumentFile(file);
+}
+
+/** Uppercase extension badge for non-image assets (PDF, DOCX, …). */
+function documentExtLabel(assetOrRef) {
+  const candidates = [
+    assetOrRef?.exportDocument?.filename,
+    assetOrRef?.fileName,
+    assetOrRef?.title,
+    typeof assetOrRef?.url === "string" ? assetOrRef.url : "",
+  ];
+  for (const candidate of candidates) {
+    const ext = extensionFromName(
+      String(candidate || "").split("?")[0].split("#")[0]
+    );
+    if (ext) return ext.toUpperCase();
+  }
+  return "FILE";
 }
 
 function resolveOpenUrl(assetOrRef) {
@@ -65,7 +181,7 @@ function resolveOpenUrl(assetOrRef) {
 }
 
 function emptyRow() {
-  return { id: null, title: "", comment: "", url: null };
+  return { id: null, title: "", comment: "", url: null, fileName: null };
 }
 
 function normalizeList(value) {
@@ -73,7 +189,7 @@ function normalizeList(value) {
   return value.map((row) => {
     if (!row) return emptyRow();
     if (typeof row === "string") {
-      return { id: row, title: "", comment: "", url: null };
+      return { id: row, title: "", comment: "", url: null, fileName: null };
     }
     if (typeof row === "object") {
       const comment =
@@ -92,6 +208,12 @@ function normalizeList(value) {
               : "",
         comment,
         url: row.url || resolveOpenUrl(row) || null,
+        fileName:
+          typeof row.fileName === "string"
+            ? row.fileName
+            : typeof row.exportDocument?.filename === "string"
+              ? row.exportDocument.filename
+              : null,
       };
     }
     return emptyRow();
@@ -240,6 +362,10 @@ export default function MediaAssetListField({
         title,
         comment,
         url: resolveOpenUrl(asset) || null,
+        fileName:
+          asset.fileName ||
+          asset.exportDocument?.filename ||
+          null,
       };
       setRows(next);
       setPickerRowIndex(null);
@@ -253,9 +379,18 @@ export default function MediaAssetListField({
     async (file, rowIndex) => {
       if (!file || !myProfileId) return;
       if (rowIndex < 0 || rowIndex >= rows.length) return;
+      if (!isAllowedUploadFile(file)) {
+        setUploadError(
+          t("definitionForm.mediaAssetList.unsupportedType", {}, {
+            default:
+              "Unsupported file type. Upload an image or a document (PDF, Word, Excel, PowerPoint, etc.).",
+          })
+        );
+        return;
+      }
       setUploadError(null);
       setUploadingRowIndex(rowIndex);
-      const pdf = isPdfFile(file);
+      const asImage = isImageFile(file);
       const row = rows[rowIndex];
       const title = row?.title?.trim() || file.name;
       const comment = row?.comment?.trim() || "";
@@ -268,10 +403,10 @@ export default function MediaAssetListField({
           createdInProfile: { connect: { id: myProfileId } },
           settings: { createdWith: CREATED_WITH },
         };
-        if (pdf) {
-          dataInput.exportDocument = { upload: file };
-        } else {
+        if (asImage) {
           dataInput.image = { upload: file };
+        } else {
+          dataInput.exportDocument = { upload: file };
         }
         const result = await createMediaAsset({
           variables: { data: dataInput },
@@ -286,7 +421,7 @@ export default function MediaAssetListField({
         setUploadingRowIndex(null);
       }
     },
-    [assignAssetToRow, createMediaAsset, myProfileId, rows]
+    [assignAssetToRow, createMediaAsset, myProfileId, rows, t]
   );
 
   const handleMetaBlur = useCallback(
@@ -346,6 +481,7 @@ export default function MediaAssetListField({
         const isImagePreview = Boolean(
           row.url && /\.(png|jpe?g|gif|webp|svg)(\?|$)/i.test(row.url)
         );
+        const fileBadge = documentExtLabel(row);
         const uploading = uploadingRowIndex === i;
         return (
           <div key={row.id || `media-row-${i}`} style={ROW_STYLE}>
@@ -468,7 +604,7 @@ export default function MediaAssetListField({
                         textDecoration: "none",
                       }}
                     >
-                      PDF
+                      {fileBadge}
                     </a>
                   )}
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -558,7 +694,7 @@ export default function MediaAssetListField({
                           default: "Uploading…",
                         })
                       : t("definitionForm.mediaAssetList.upload", {}, {
-                          default: "Upload image or PDF",
+                          default: "Upload image or document",
                         })}
                     <input
                       type="file"
@@ -652,9 +788,9 @@ export default function MediaAssetListField({
               </p>
             ) : assets.length === 0 ? (
               <p style={{ margin: 0, color: "#5f6871" }}>
-                {t("mediaLibrary.empty", {}, {
+                {t("definitionForm.mediaAssetList.libraryEmpty", {}, {
                   default:
-                    "No media yet. Upload an image or PDF to get started.",
+                    "No media yet. Upload an image or document to get started.",
                 })}
               </p>
             ) : (
@@ -670,7 +806,7 @@ export default function MediaAssetListField({
                   const usedElsewhere =
                     selectedIds.has(asset.id) &&
                     rows[pickerRowIndex]?.id !== asset.id;
-                  const pdfUrl = resolveMediaAssetExportDocumentUrl(asset);
+                  const documentUrl = resolveMediaAssetExportDocumentUrl(asset);
                   return (
                     <button
                       key={asset.id}
@@ -689,7 +825,7 @@ export default function MediaAssetListField({
                         opacity: usedElsewhere ? 0.75 : 1,
                       }}
                     >
-                      {url && !pdfUrl ? (
+                      {url && !documentUrl ? (
                         <img
                           src={url}
                           alt=""
@@ -716,7 +852,7 @@ export default function MediaAssetListField({
                             fontWeight: 600,
                           }}
                         >
-                          {pdfUrl ? "PDF" : "—"}
+                          {documentUrl ? documentExtLabel(asset) : "—"}
                         </div>
                       )}
                       <span

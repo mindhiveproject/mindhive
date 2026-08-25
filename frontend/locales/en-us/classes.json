@@ -938,7 +938,7 @@
 					"proposal": "Proposal",
 					"workflow": "Workflow / audit"
 				},
-				"hint": "Choose which columns to include. {{count}} opportunities from this network will be exported as a ZIP with the CSV and a folder per opportunity (intro video, cover illustration, and follow-up images/PDFs).",
+				"hint": "Choose which columns to include. {{count}} opportunities from this network will be exported as a ZIP with the CSV and a folder per opportunity (intro video, cover illustration, and follow-up images, PDFs, and documents).",
 				"openButton": "Export ZIP",
 				"selectAll": "Select all",
 				"title": "Export opportunities"
@@ -1127,7 +1127,7 @@
 					"media": "Media library item",
 					"mediaHint": "Sponsors share an image from their library",
 					"mediaList": "Media",
-					"mediaListHint": "Sponsors upload or pick multiple images/PDFs",
+					"mediaListHint": "Sponsors upload or pick multiple images, PDFs, and documents",
 					"open": "Open answer",
 					"openHint": "Short or long text",
 					"pickMany": "Pick many",

@@ -45,6 +45,20 @@ function stripFileExtension(name) {
   return String(name || "").replace(/\.[a-z0-9]{2,5}$/i, "");
 }
 
+function fallbackExtFromAsset(asset, fallback = "bin") {
+  const fromFilename = extensionFromUrlOrName(
+    trimMediaString(asset?.exportDocument?.filename),
+    "",
+  );
+  if (fromFilename) return fromFilename;
+  const fromFileName = extensionFromUrlOrName(
+    trimMediaString(asset?.fileName),
+    "",
+  );
+  if (fromFileName) return fromFileName;
+  return fallback;
+}
+
 export function slugifyForFilename(text) {
   const slug = String(text || "")
     .trim()
@@ -320,10 +334,10 @@ export function getFollowUpAssetDownloads(opportunity, assetById) {
       });
     };
 
-    add("followUpPdf", pdfUrl, "pdf");
+    add("followUpPdf", pdfUrl, fallbackExtFromAsset(asset, "pdf"));
     add("followUpImage", imageUrl, "jpg");
     if (!pdfUrl && !imageUrl) {
-      add("followUpFile", fallbackUrl, "bin");
+      add("followUpFile", fallbackUrl, fallbackExtFromAsset(asset, "bin"));
     }
   }
 

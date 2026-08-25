@@ -68,7 +68,7 @@ export const TYPE_KEYS = [
     labelKey: "opportunities.matchingRound.formWizard.types.mediaList",
     labelDefault: "Media",
     hintKey: "opportunities.matchingRound.formWizard.types.mediaListHint",
-    hintDefault: "Sponsors upload or pick multiple images/PDFs",
+    hintDefault: "Sponsors upload or pick multiple images, PDFs, and documents",
   },
 ];
 
