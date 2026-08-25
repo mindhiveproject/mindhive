@@ -1217,6 +1217,10 @@
 		"searchPlaceholder": "Search organizations…",
 		"viewOrganization": "View organization {{name}}"
 	},
+	"opportunityCard": {
+		"opportunityButton": "Opportunity",
+		"viewOpportunity": "View opportunity: {{title}}"
+	},
 	"passionNow": "What are you passionate about right now?",
 	"preferences": {
 		"availability": {

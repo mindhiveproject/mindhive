@@ -288,6 +288,9 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
             organization {
               id
               name
+              logo {
+                url
+              }
             }
           }
         }

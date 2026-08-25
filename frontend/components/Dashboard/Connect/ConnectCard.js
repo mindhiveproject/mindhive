@@ -67,6 +67,23 @@ const InfoClusterStatic = styled.div`
   ${infoClusterStyles}
 `;
 
+const InfoClusterButton = styled.button`
+  ${infoClusterStyles}
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+`;
+
 const Avatar = styled.div`
   width: 86px;
   height: 86px;
@@ -205,7 +222,9 @@ const Actions = styled.div`
  * @param {React.ReactNode} [description] - Two-line summary under the chips.
  * @param {React.ReactNode} [actions] - Buttons below the divider, trailing-aligned.
  * @param {string|object} [href] - When set, the avatar/text cluster links here.
- * @param {string} [ariaLabel] - Accessible name for that link.
+ * @param {() => void} [onActivate] - When set and href is absent, the cluster
+ *   is a focusable button that calls this (e.g. open a modal).
+ * @param {string} [ariaLabel] - Accessible name for the link or activate control.
  */
 export default function ConnectCard({
   typeLabel = null,
@@ -217,14 +236,28 @@ export default function ConnectCard({
   description = null,
   actions = null,
   href = null,
+  onActivate = null,
   ariaLabel,
 }) {
-  const InfoCluster = href ? InfoClusterLink : InfoClusterStatic;
+  let InfoCluster = InfoClusterStatic;
+  let clusterProps = {};
+
+  if (href) {
+    InfoCluster = InfoClusterLink;
+    clusterProps = { href, "aria-label": ariaLabel };
+  } else if (typeof onActivate === "function") {
+    InfoCluster = InfoClusterButton;
+    clusterProps = {
+      type: "button",
+      "aria-label": ariaLabel,
+      onClick: onActivate,
+    };
+  }
 
   return (
     <CardContainer>
       {typeLabel && <TypeLabel>{typeLabel}</TypeLabel>}
-      <InfoCluster {...(href ? { href, "aria-label": ariaLabel } : {})}>
+      <InfoCluster {...clusterProps}>
         <Avatar>
           {avatar?.src ? (
             <img src={avatar.src} alt="" />

@@ -1373,8 +1373,13 @@
 			"returned": "Returned"
 		},
 		"studentView": {
+			"emptyFavoritesHint": "Tap the star on an opportunity to save it here.",
+			"emptyFavoritesTitle": "No favorites yet",
 			"emptyHint": "Your teacher hasn’t selected any opportunities for this round yet. Check back soon.",
 			"emptyTitle": "No opportunities yet",
+			"filterAll": "All",
+			"filterFavorites": "Favorites",
+			"filterLabel": "Filter opportunities",
 			"loading": "Loading opportunities…",
 			"meta": {
 				"dates": "{{from}} → {{to}}",

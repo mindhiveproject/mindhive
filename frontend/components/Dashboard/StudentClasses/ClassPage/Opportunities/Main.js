@@ -3,12 +3,13 @@ import { useMutation, useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
+import Chip from "../../../../DesignSystem/Chip";
 import MessageCard from "../../../../DesignSystem/MessageCard";
+import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
 import { RECORD_OPPORTUNITY_PREVIEW_VISIT } from "../../../../Mutations/Log";
 import { CLASS_STUDENT_OPPORTUNITIES } from "../../../../Queries/ConnectRound";
-import OpportunityCompactCard, {
-  OpportunityCompactGrid,
-} from "../../../Connect/OpportunityCompactCard";
+import { BrowseCardsGrid } from "../../../Connect/ConnectBrowseLayout";
+import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import OpportunityPreviewModal from "../../../TeacherClasses/ClassPage/Modals/OpportunityPreviewModal";
 
 /**
@@ -23,69 +24,17 @@ const Page = styled.div`
   gap: 20px;
 `;
 
-const CardHitArea = styled.div`
-  display: block;
-  width: 100%;
-  cursor: pointer;
-  border-radius: 14px;
-
-  &:focus-visible {
-    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
-    outline-offset: 3px;
-  }
+const FilterRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 `;
 
-function formatDate(value) {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return null;
-  }
-}
-
-function mentorDisplayName(mentor) {
-  if (!mentor) return null;
-  const full = [mentor.firstName, mentor.lastName].filter(Boolean).join(" ");
-  return full || mentor.username || null;
-}
-
-function buildStudentOpportunityMeta(opportunity, t) {
-  const parts = [];
-  const sponsor = mentorDisplayName(opportunity.mentor);
-  if (sponsor) {
-    parts.push(
-      t(
-        "opportunities.studentView.meta.sponsor",
-        { name: sponsor },
-        { default: "Sponsor: {{name}}" },
-      ),
-    );
-  }
-  if (opportunity.organization?.name) {
-    parts.push(opportunity.organization.name);
-  }
-  if (opportunity.shortDescription) {
-    parts.push(opportunity.shortDescription);
-  } else {
-    const from = formatDate(opportunity.availableFrom);
-    const to = formatDate(opportunity.availableTo);
-    if (from || to) {
-      parts.push(
-        t(
-          "opportunities.studentView.meta.dates",
-          { from: from || "—", to: to || "—" },
-          { default: "{{from}} → {{to}}" },
-        ),
-      );
-    }
-  }
-  return parts.join(" · ");
-}
-
-export default function StudentClassOpportunities({ myclass }) {
+export default function StudentClassOpportunities({ myclass, user }) {
   const { t } = useTranslation("classes");
   const [previewOpportunityId, setPreviewOpportunityId] = useState(null);
+  const [filterMode, setFilterMode] = useState("all");
 
   const sessionRef = useRef(null);
   const flushedRef = useRef(false);
@@ -100,6 +49,12 @@ export default function StudentClassOpportunities({ myclass }) {
 
   const networks = data?.class?.networks || myclass?.networks || [];
   const classId = data?.class?.id || myclass?.id || null;
+
+  const favoriteIds = useMemo(
+    () =>
+      new Set((user?.favoriteOpportunities || []).map((opp) => opp?.id).filter(Boolean)),
+    [user?.favoriteOpportunities],
+  );
 
   const { isOpenForStudents, opportunities, opportunityRoundIds } =
     useMemo(() => {
@@ -129,6 +84,11 @@ export default function StudentClassOpportunities({ myclass }) {
         opportunityRoundIds: roundByOpportunityId,
       };
     }, [networks]);
+
+  const filteredOpportunities = useMemo(() => {
+    if (filterMode !== "favorites") return opportunities;
+    return opportunities.filter((opp) => favoriteIds.has(opp.id));
+  }, [opportunities, filterMode, favoriteIds]);
 
   const flushPreviewSession = useCallback(async () => {
     const session = sessionRef.current;
@@ -278,38 +238,78 @@ export default function StudentClassOpportunities({ myclass }) {
     );
   }
 
+  const filterAllLabel = t("opportunities.studentView.filterAll", {}, {
+    default: "All",
+  });
+  const filterFavoritesLabel = t(
+    "opportunities.studentView.filterFavorites",
+    {},
+    { default: "Favorites" },
+  );
+
+  const emptyFavoritesTitle = t(
+    "opportunities.studentView.emptyFavoritesTitle",
+    {},
+    { default: "No favorites yet" },
+  );
+  const emptyFavoritesHint = t(
+    "opportunities.studentView.emptyFavoritesHint",
+    {},
+    {
+      default:
+        "Tap the star on an opportunity to save it here.",
+    },
+  );
+
   return (
     <div className="classTabPage opportunities">
       <Page>
-        <OpportunityCompactGrid>
-          {opportunities.map((opportunity) => {
-            const openLabel = t(
-              "opportunities.studentView.openAria",
-              { title: opportunity.title || "" },
-              { default: "View opportunity: {{title}}" },
-            );
-            return (
-              <CardHitArea
+        <FilterRow role="group" aria-label={t(
+          "opportunities.studentView.filterLabel",
+          {},
+          { default: "Filter opportunities" },
+        )}>
+          <Chip
+            shape="square"
+            label={filterAllLabel}
+            selected={filterMode === "all"}
+            onClick={() => setFilterMode("all")}
+            ariaLabel={filterAllLabel}
+          />
+          <Chip
+            shape="square"
+            label={filterFavoritesLabel}
+            selected={filterMode === "favorites"}
+            onClick={() => setFilterMode("favorites")}
+            ariaLabel={filterFavoritesLabel}
+            leading={
+              filterMode === "favorites" ? (
+                <StarFilledIcon width={18} height={18} />
+              ) : (
+                <StarIcon width={18} height={18} />
+              )
+            }
+          />
+        </FilterRow>
+
+        {filteredOpportunities.length === 0 ? (
+          <MessageCard
+            variant="neutral"
+            message={`${emptyFavoritesTitle} ${emptyFavoritesHint}`}
+            ariaLabel={`${emptyFavoritesTitle} ${emptyFavoritesHint}`}
+          />
+        ) : (
+          <BrowseCardsGrid>
+            {filteredOpportunities.map((opportunity) => (
+              <OpportunityConnectCard
                 key={opportunity.id}
-                role="button"
-                tabIndex={0}
-                aria-label={openLabel}
-                onClick={() => handleOpenPreview(opportunity.id)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleOpenPreview(opportunity.id);
-                  }
-                }}
-              >
-                <OpportunityCompactCard
-                  title={opportunity.title}
-                  metaLine={buildStudentOpportunityMeta(opportunity, t)}
-                />
-              </CardHitArea>
-            );
-          })}
-        </OpportunityCompactGrid>
+                opportunity={opportunity}
+                onOpen={handleOpenPreview}
+                user={user}
+              />
+            ))}
+          </BrowseCardsGrid>
+        )}
       </Page>
 
       <OpportunityPreviewModal
