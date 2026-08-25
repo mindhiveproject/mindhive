@@ -215,6 +215,31 @@ export const rules = {
     }
     return false;
   },
+  // Log: opportunity preview visits are private to the student, class
+  // creator/mentors, and admins. Non-visit logs stay openly readable.
+  // Do NOT include opportunity.mentor — sponsors must not see browsing.
+  logQuery({ session }: ListAccessArgs) {
+    const visitEvent = { equals: "OPPORTUNITY_PREVIEW_VISIT" };
+    if (!isSignedIn({ session })) {
+      return { NOT: { event: visitEvent } };
+    }
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session!.itemId;
+    return {
+      OR: [
+        { NOT: { event: visitEvent } },
+        { user: { id: { equals: me } } },
+        { class: { creator: { id: { equals: me } } } },
+        { class: { mentors: { some: { id: { equals: me } } } } },
+      ],
+    };
+  },
+  // Visit rows: admin-only update/delete. Other log events keep open mutate.
+  logVisitMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    return { NOT: { event: { equals: "OPPORTUNITY_PREVIEW_VISIT" } } };
+  },
   // Connect: a profile's own preference / answers / team prefs are visible to:
   // - themselves
   // - the creator of the round (teacher)

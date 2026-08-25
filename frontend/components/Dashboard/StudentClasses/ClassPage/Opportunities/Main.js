@@ -1,9 +1,10 @@
-import { useCallback, useMemo, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import MessageCard from "../../../../DesignSystem/MessageCard";
+import { RECORD_OPPORTUNITY_PREVIEW_VISIT } from "../../../../Mutations/Log";
 import { CLASS_STUDENT_OPPORTUNITIES } from "../../../../Queries/ConnectRound";
 import OpportunityCompactCard, {
   OpportunityCompactGrid,
@@ -15,6 +16,7 @@ import OpportunityPreviewModal from "../../../TeacherClasses/ClassPage/Modals/Op
  * (same gate as Connect Participate: students can view/rank then).
  */
 const STUDENT_OPEN_ROUND_STATUS = "preferences_open";
+const MIN_DWELL_MS = 1000;
 
 const Page = styled.div`
   display: grid;
@@ -85,6 +87,11 @@ export default function StudentClassOpportunities({ myclass }) {
   const { t } = useTranslation("classes");
   const [previewOpportunityId, setPreviewOpportunityId] = useState(null);
 
+  const sessionRef = useRef(null);
+  const flushedRef = useRef(false);
+
+  const [recordVisit] = useMutation(RECORD_OPPORTUNITY_PREVIEW_VISIT);
+
   const { data, loading } = useQuery(CLASS_STUDENT_OPPORTUNITIES, {
     variables: { code: myclass?.code },
     skip: !myclass?.code,
@@ -92,35 +99,133 @@ export default function StudentClassOpportunities({ myclass }) {
   });
 
   const networks = data?.class?.networks || myclass?.networks || [];
+  const classId = data?.class?.id || myclass?.id || null;
 
-  const { isOpenForStudents, opportunities } = useMemo(() => {
-    const byId = new Map();
-    let hasOpenRound = false;
+  const { isOpenForStudents, opportunities, opportunityRoundIds } =
+    useMemo(() => {
+      const byId = new Map();
+      const roundByOpportunityId = new Map();
+      let hasOpenRound = false;
 
-    for (const network of networks) {
-      for (const round of network?.connectRounds || []) {
-        if (round?.status !== STUDENT_OPEN_ROUND_STATUS) continue;
-        hasOpenRound = true;
-        for (const opportunity of round.opportunities || []) {
-          if (!opportunity?.id || byId.has(opportunity.id)) continue;
-          byId.set(opportunity.id, opportunity);
+      for (const network of networks) {
+        for (const round of network?.connectRounds || []) {
+          if (round?.status !== STUDENT_OPEN_ROUND_STATUS) continue;
+          hasOpenRound = true;
+          for (const opportunity of round.opportunities || []) {
+            if (!opportunity?.id) continue;
+            if (!byId.has(opportunity.id)) {
+              byId.set(opportunity.id, opportunity);
+            }
+            if (!roundByOpportunityId.has(opportunity.id) && round.id) {
+              roundByOpportunityId.set(opportunity.id, round.id);
+            }
+          }
         }
       }
+
+      return {
+        isOpenForStudents: hasOpenRound,
+        opportunities: Array.from(byId.values()),
+        opportunityRoundIds: roundByOpportunityId,
+      };
+    }, [networks]);
+
+  const flushPreviewSession = useCallback(async () => {
+    const session = sessionRef.current;
+    if (!session || flushedRef.current) return;
+
+    const closeAt = new Date();
+    const dwellMs = closeAt.getTime() - session.openAt.getTime();
+    flushedRef.current = true;
+    sessionRef.current = null;
+
+    if (
+      dwellMs < MIN_DWELL_MS ||
+      !session.opportunityId ||
+      !session.roundId ||
+      !session.classId
+    ) {
+      return;
     }
 
-    return {
-      isOpenForStudents: hasOpenRound,
-      opportunities: Array.from(byId.values()),
-    };
-  }, [networks]);
+    try {
+      await recordVisit({
+        variables: {
+          opportunityId: session.opportunityId,
+          classId: session.classId,
+          roundId: session.roundId,
+          openAt: session.openAt.toISOString(),
+          closeAt: closeAt.toISOString(),
+        },
+      });
+    } catch (err) {
+      // Preview tracking must not block closing the modal.
+      console.warn("Failed to record opportunity preview visit", err);
+    }
+  }, [recordVisit]);
 
-  const handleOpenPreview = useCallback((id) => {
-    setPreviewOpportunityId(id || null);
-  }, []);
+  const startPreviewSession = useCallback(
+    (opportunityId) => {
+      if (!opportunityId || !classId) return;
+      const roundId = opportunityRoundIds.get(opportunityId);
+      if (!roundId) return;
+      flushedRef.current = false;
+      sessionRef.current = {
+        opportunityId,
+        classId,
+        roundId,
+        openAt: new Date(),
+      };
+    },
+    [classId, opportunityRoundIds],
+  );
+
+  const handleOpenPreview = useCallback(
+    (id) => {
+      const nextId = id || null;
+      if (previewOpportunityId && previewOpportunityId !== nextId) {
+        void flushPreviewSession();
+      }
+      setPreviewOpportunityId(nextId);
+      if (nextId) {
+        startPreviewSession(nextId);
+      }
+    },
+    [flushPreviewSession, previewOpportunityId, startPreviewSession],
+  );
 
   const handleClosePreview = useCallback(() => {
+    void flushPreviewSession();
     setPreviewOpportunityId(null);
-  }, []);
+  }, [flushPreviewSession]);
+
+  useEffect(() => {
+    if (!previewOpportunityId) return undefined;
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        void flushPreviewSession();
+      } else if (
+        document.visibilityState === "visible" &&
+        previewOpportunityId &&
+        !sessionRef.current
+      ) {
+        startPreviewSession(previewOpportunityId);
+      }
+    };
+
+    const onPageHide = () => {
+      void flushPreviewSession();
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("pagehide", onPageHide);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("pagehide", onPageHide);
+      void flushPreviewSession();
+    };
+  }, [flushPreviewSession, previewOpportunityId, startPreviewSession]);
 
   if (loading && !data?.class) {
     return (

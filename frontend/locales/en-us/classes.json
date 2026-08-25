@@ -1188,7 +1188,31 @@
 				"selectedOpportunities": "Selected opportunities",
 				"selectedOpportunitiesWithCount": "Selected opportunities ({{count}})",
 				"settings": "Settings",
-				"sponsorForms": "Sponsor forms"
+				"sponsorForms": "Sponsor forms",
+				"studentInterest": "Interest"
+			},
+			"studentInterest": {
+				"columns": {
+					"student": "Student"
+				},
+				"disabledDraftHint": "Interest is available after the matching round leaves draft.",
+				"downloadCsv": "Download Interest CSV",
+				"dwellMinutes": "{{minutes}}m {{seconds}}s",
+				"dwellSeconds": "{{count}}s",
+				"emptyNoInterest": "No previews yet",
+				"emptyNoOpportunities": "No pre-selected opportunities in this round yet.",
+				"emptyNoStudents": "No students in this class yet.",
+				"emptyNoVisits": "No student previews recorded yet.",
+				"hint": "Time students spent previewing each opportunity (sessions of 1 second or more).",
+				"loading": "Loading student previews…",
+				"modeGrid": "Grid",
+				"modeTable": "Table",
+				"searchOpportunitiesLabel": "Opportunities",
+				"searchOpportunitiesPlaceholder": "Filter opportunities…",
+				"searchStudentsLabel": "Students",
+				"searchStudentsPlaceholder": "Filter students…",
+				"title": "Interest",
+				"visitCount": "{{count}} visits"
 			},
 			"pickNetworkHint": "This association is set when you create the round and cannot be changed later.",
 			"pickNetworkLabel": "Choose a class network for this round",

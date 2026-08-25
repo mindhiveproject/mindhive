@@ -166,6 +166,12 @@ export const Opportunity = list({
       many: true,
     }),
 
+    // Student preview visit sessions (see Log OPPORTUNITY_PREVIEW_VISIT).
+    logs: relationship({
+      ref: "Log.opportunity",
+      many: true,
+    }),
+
     // Average of all public student ratings for this opportunity.
     // Null when no eligible ratings exist.
     publicRatingAverage: virtual({
