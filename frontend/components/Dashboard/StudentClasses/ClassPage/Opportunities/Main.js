@@ -344,13 +344,11 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
 
   if (showRankSubview) {
     return (
-      <div className="classTabPage opportunities">
-        <StudentPreferenceSubmission
-          roundId={requestedRoundId}
-          user={user}
-          onBack={clearRoundQuery}
-        />
-      </div>
+      <StudentPreferenceSubmission
+        roundId={requestedRoundId}
+        user={user}
+        onBack={clearRoundQuery}
+      />
     );
   }
 
