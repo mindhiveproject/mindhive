@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Dropdown } from "semantic-ui-react";
 
-import { GET_PARTICIPATE_VIEW } from "../../../Queries/ConnectPreference";
+import { GET_PARTICIPATE_VIEW } from "../../../../Queries/ConnectPreference";
 import {
   CREATE_PREFERENCE,
   UPDATE_PREFERENCE,
@@ -14,118 +13,14 @@ import {
   DELETE_TEAM_PREFERENCES,
   CREATE_QUESTION_ANSWERS,
   DELETE_QUESTION_ANSWERS,
-} from "../../../Mutations/ConnectPreference";
+} from "../../../../Mutations/ConnectPreference";
 import {
   CREATE_RATING,
   UPDATE_RATING,
-} from "../../../Mutations/ConnectRating";
-import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
-
-const BACK_CHEVRON = (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden
-  >
-    <path
-      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
-      fill="currentColor"
-    />
-  </svg>
-);
-
-const Shell = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 32px clamp(16px, 6vw, 64px);
-  padding-top: 0px;
-  background-color: #f7f9f8;
-  min-height: 100vh;
-  border-radius: 32px 0 0 32px;
-  scroll-padding-top: 126px;
-`;
-
-const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
-  position: sticky;
-  top: 70px;
-  z-index: 5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  margin: -8px calc(-1 * clamp(16px, 6vw, 64px)) 8px;
-  padding: 10px clamp(16px, 6vw, 64px);
-  background: rgba(247, 249, 248, 0.92);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(211, 218, 224, 0.85);
-`;
-
-const TopBarLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  flex: 1 1 220px;
-`;
-
-const TitleRow = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-  min-width: 0;
-  flex: 1 1 auto;
-
-  h1 {
-    margin: 0;
-    min-width: 0;
-    max-width: 100%;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(20px, 2.8vw, 26px);
-    font-weight: 600;
-    color: #171717;
-    line-height: 1.25;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-`;
-
-const BackLink = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  color: #336f8a;
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    background: rgba(51, 111, 138, 0.08);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #336f8a;
-    outline-offset: 2px;
-  }
-`;
+} from "../../../../Mutations/ConnectRating";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
+import MessageCard from "../../../../DesignSystem/MessageCard";
 
 const Card = styled.div`
   display: flex;
@@ -229,13 +124,41 @@ const RankControls = styled.div`
   }
 `;
 
-const Actions = styled.div`
+const RankFormHeader = styled.div`
   display: flex;
-  gap: 8px;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const RankTitleRow = styled.div`
+  display: flex;
   align-items: center;
   flex-wrap: wrap;
-  flex: 0 0 auto;
+  gap: 8px 12px;
+  min-width: 0;
+
+  h2 {
+    margin: 0;
+    min-width: 0;
+    max-width: 100%;
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 30px;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`;
+
+const RankSubmitActions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
 `;
 
 const StatusPill = styled.span`
@@ -489,9 +412,54 @@ function QuestionInput({ question, value, onChange }) {
   );
 }
 
-export default function ParticipateSubmission({ roundId, user }) {
-  const router = useRouter();
-  const { t } = useTranslation("connect");
+function RankFormChrome({
+  title,
+  backLabel,
+  onBack,
+  backDisabled = false,
+  statusChipLabel = null,
+  submitted = false,
+  submitActions = null,
+}) {
+  return (
+    <RankFormHeader>
+      {(title || statusChipLabel) && (
+        <RankTitleRow>
+          {title ? <h2 title={title}>{title}</h2> : null}
+          {statusChipLabel ? (
+            <Chip shape="pill" label={statusChipLabel} selected={submitted} />
+          ) : null}
+        </RankTitleRow>
+      )}
+      <Button
+        type="button"
+        variant="text"
+        onClick={onBack}
+        disabled={backDisabled}
+        leadingIcon={
+          <img
+            src="/assets/icons/back.svg"
+            alt=""
+            aria-hidden
+            width={9}
+            height={14}
+          />
+        }
+      >
+        {backLabel}
+      </Button>
+      {submitActions ? (
+        <RankSubmitActions>{submitActions}</RankSubmitActions>
+      ) : null}
+    </RankFormHeader>
+  );
+}
+
+export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
+  const { t } = useTranslation("classes");
+  const backLabel = t("opportunities.studentView.rankForm.backLink", {}, {
+    default: "Back to opportunities",
+  });
   const { data, loading, refetch } = useQuery(GET_PARTICIPATE_VIEW, {
     variables: { roundId },
     fetchPolicy: "cache-and-network",
@@ -506,7 +474,23 @@ export default function ParticipateSubmission({ roundId, user }) {
   const approvedRoundQuestions = (round?.questions || []).filter(
     (q) => q.status === "approved"
   );
-  const opportunities = round?.opportunities || [];
+  const favoriteIds = new Set(
+    [
+      ...(me?.favoriteOpportunities || []),
+      ...(user?.favoriteOpportunities || []),
+    ]
+      .map((o) => o?.id)
+      .filter(Boolean),
+  );
+  const rankedIds = new Set(
+    (existingPreference?.items || [])
+      .map((item) => item.opportunity?.id)
+      .filter(Boolean),
+  );
+  const roundOpportunities = round?.opportunities || [];
+  const opportunities = roundOpportunities.filter(
+    (opp) => favoriteIds.has(opp.id) || rankedIds.has(opp.id),
+  );
 
   const networkStudents = (() => {
     const map = new Map();
@@ -762,7 +746,9 @@ export default function ParticipateSubmission({ roundId, user }) {
   };
 
   const handleCancel = () => {
-    router.replace({ pathname: "/dashboard/connect/participate" });
+    if (typeof onBack === "function") {
+      onBack();
+    }
   };
 
   const handleSaveRating = async (match) => {
@@ -831,50 +817,49 @@ export default function ParticipateSubmission({ roundId, user }) {
 
   if (loading && !round) {
     return (
-      <Shell>
-        <p>Loading round…</p>
-      </Shell>
+      <div className="classTabPage opportunities">
+        <RankFormChrome backLabel={backLabel} onBack={handleCancel} />
+        <MessageCard
+          variant="information"
+          message={t("opportunities.studentView.rankForm.loading", {}, {
+            default: "Loading round…",
+          })}
+        />
+      </div>
     );
   }
   if (!round) {
     return (
-      <Shell>
-        <p>Round not found.</p>
-      </Shell>
+      <div className="classTabPage opportunities">
+        <RankFormChrome backLabel={backLabel} onBack={handleCancel} />
+        <MessageCard
+          variant="neutral"
+          message={t("opportunities.studentView.rankForm.notFound", {}, {
+            default: "Round not found.",
+          })}
+        />
+      </div>
     );
   }
 
   if (round.status === "draft") {
     const draftTitle = round.title || "";
-    const backLabel = t("matchingRound.submission.backLink", {}, {
-      default: "Back to rounds",
-    });
     return (
-      <Shell>
-        <TopBar>
-          <TopBarLeft>
-            <BackLink
-              type="button"
-              onClick={handleCancel}
-              aria-label={backLabel}
-              title={backLabel}
-            >
-              {BACK_CHEVRON}
-            </BackLink>
-            <TitleRow>
-              <h1 title={draftTitle}>{draftTitle}</h1>
-            </TitleRow>
-          </TopBarLeft>
-        </TopBar>
+      <div className="classTabPage opportunities">
+        <RankFormChrome
+          title={draftTitle}
+          backLabel={backLabel}
+          onBack={handleCancel}
+        />
         <Card>
           <p className="helper">
-            {t("matchingRound.notAvailableYet", {}, {
+            {t("opportunities.studentView.rankForm.notAvailableYet", {}, {
               default:
                 "This round is not available yet. Your teacher is still setting it up.",
             })}
           </p>
         </Card>
-      </Shell>
+      </div>
     );
   }
 
@@ -893,7 +878,7 @@ export default function ParticipateSubmission({ roundId, user }) {
 
   let lockReason = null;
   if (round.status === "draft") {
-    lockReason = t("matchingRound.notAvailableYet", {}, {
+    lockReason = t("opportunities.studentView.rankForm.notAvailableYet", {}, {
       default:
         "This round is not available yet. Your teacher is still setting it up.",
     });
@@ -913,73 +898,58 @@ export default function ParticipateSubmission({ roundId, user }) {
   }
 
   const pageTitle = round.title || "";
-  const backLabel = t("matchingRound.submission.backLink", {}, {
-    default: "Back to rounds",
-  });
   const statusChipLabel = existingPreference
     ? submitted
-      ? t("matchingRound.submission.statusSubmitted", {}, {
+      ? t("opportunities.studentView.rankForm.statusSubmitted", {}, {
           default: "Submitted",
         })
-      : t("matchingRound.submission.statusDraft", {}, {
+      : t("opportunities.studentView.rankForm.statusDraft", {}, {
           default: "Draft saved",
         })
     : null;
+  const savingLabel = t("opportunities.studentView.rankForm.saving", {}, {
+    default: "Saving…",
+  });
+  const rankSubmitActions = isOpen ? (
+    <>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => handleSave("draft")}
+        disabled={saving}
+      >
+        {saving
+          ? savingLabel
+          : t("opportunities.studentView.rankForm.saveDraft", {}, {
+              default: "Save draft",
+            })}
+      </Button>
+      <Button
+        type="button"
+        variant="filled"
+        onClick={() => handleSave("submitted")}
+        disabled={saving}
+      >
+        {saving
+          ? savingLabel
+          : t("opportunities.studentView.rankForm.submit", {}, {
+              default: "Submit preferences",
+            })}
+      </Button>
+    </>
+  ) : null;
 
   return (
-    <Shell>
-      <TopBar>
-        <TopBarLeft>
-          <BackLink
-            type="button"
-            onClick={handleCancel}
-            disabled={saving}
-            aria-label={backLabel}
-            title={backLabel}
-          >
-            {BACK_CHEVRON}
-          </BackLink>
-          <TitleRow>
-            <h1 title={pageTitle}>{pageTitle}</h1>
-            {statusChipLabel && (
-              <Chip shape="pill" label={statusChipLabel} selected={submitted} />
-            )}
-          </TitleRow>
-        </TopBarLeft>
-        {isOpen && (
-          <Actions>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleSave("draft")}
-              disabled={saving}
-            >
-              {saving
-                ? t("matchingRound.submission.saving", {}, {
-                    default: "Saving…",
-                  })
-                : t("matchingRound.submission.saveDraft", {}, {
-                    default: "Save draft",
-                  })}
-            </Button>
-            <Button
-              type="button"
-              variant="filled"
-              onClick={() => handleSave("submitted")}
-              disabled={saving}
-            >
-              {saving
-                ? t("matchingRound.submission.saving", {}, {
-                    default: "Saving…",
-                  })
-                : t("matchingRound.submission.submit", {}, {
-                    default: "Submit preferences",
-                  })}
-            </Button>
-          </Actions>
-        )}
-      </TopBar>
-
+    <div className="classTabPage opportunities">
+      <RankFormChrome
+        title={pageTitle}
+        backLabel={backLabel}
+        onBack={handleCancel}
+        backDisabled={saving}
+        statusChipLabel={statusChipLabel}
+        submitted={submitted}
+        submitActions={rankSubmitActions}
+      />
       {!isOpen && lockReason && (
         <Card>
           <p className="helper">
@@ -1269,7 +1239,7 @@ export default function ParticipateSubmission({ roundId, user }) {
                       disabled={savingRatingId === match.id}
                     >
                       {savingRatingId === match.id
-                        ? t("matchingRound.submission.saving", {}, {
+                        ? t("opportunities.studentView.rankForm.saving", {}, {
                             default: "Saving…",
                           })
                         : myExistingRating
@@ -1312,15 +1282,36 @@ export default function ParticipateSubmission({ roundId, user }) {
       )}
 
       <Card>
-        <h2>Rank opportunities</h2>
+        <h2>
+          {t("opportunities.studentView.rankForm.rankHeading", {}, {
+            default: "Rank your favorites",
+          })}
+        </h2>
         <p className="helper">
-          For each opportunity you&apos;re interested in, set a rank (1 = top
-          choice) and an optional star rating. Leave fields empty for ones you
-          don&apos;t want to be considered for.
+          {t("opportunities.studentView.rankForm.rankHelper", {}, {
+            default:
+              "Rank the opportunities you favorited. Set a rank (1 = top choice) and an optional star rating. Leave fields empty for ones you no longer want to be considered for.",
+          })}
         </p>
         {opportunities.length === 0 && (
           <p className="helper">
-            No opportunities have been added to this round yet.
+            {roundOpportunities.length > 0
+              ? `${t(
+                  "opportunities.studentView.rankForm.emptyFavoritesTitle",
+                  {},
+                  { default: "No favorited opportunities yet" },
+                )} ${t(
+                  "opportunities.studentView.rankForm.emptyFavoritesHint",
+                  {},
+                  {
+                    default:
+                      "Go back and tap the star on the opportunities you want to rank.",
+                  },
+                )}`
+              : t("opportunities.studentView.rankForm.noOpportunities", {}, {
+                  default:
+                    "No opportunities have been added to this round yet.",
+                })}
           </p>
         )}
         {opportunities.map((opp) => {
@@ -1523,6 +1514,6 @@ export default function ParticipateSubmission({ roundId, user }) {
           />
         </Field>
       </Card>
-    </Shell>
+    </div>
   );
 }

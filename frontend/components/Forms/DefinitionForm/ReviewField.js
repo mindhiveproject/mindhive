@@ -5,7 +5,7 @@ const ANSWER_SURFACE_STYLE = {
   margin: 0,
   padding: "10px 12px",
   borderRadius: 8,
-  border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  // border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   fontFamily: "Lato, sans-serif",

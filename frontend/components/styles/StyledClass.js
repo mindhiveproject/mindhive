@@ -313,7 +313,7 @@ const StyledClass = styled.div`
   .editableClassHeader {
     display: grid;
     width: 100%;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     padding: 10px;
     .infoPane {
       display: grid;

@@ -16,6 +16,7 @@ import { MARK_OPPORTUNITY_REVIEW_NOTES_READ } from "../../../../Mutations/Opport
 import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap";
 import { hydrateProposalInputs } from "../../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import OpportunityReviewNotesThread from "../../../Connect/OpportunityReviewNotesThread";
+import OpportunityClassForum from "../../../Connect/OpportunityClassForum";
 import { UPDATE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
 import OpportunityFollowUpFormPanel from "../../../SponsorConnect/Opportunities/OpportunityFollowUpFormPanel";
 import DefinitionForm from "../../../../Forms/DefinitionForm";
@@ -625,6 +626,8 @@ export default function OpportunityPreviewModal({
   initialTab = null,
   /** Hide workflow status chip (e.g. student read-only class view). */
   hideStatus = false,
+  /** Class that owns this teacher preview (scopes the class FAQ). */
+  classId = null,
 }) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
@@ -770,6 +773,7 @@ export default function OpportunityPreviewModal({
     followUpForms,
     // Chat is no longer a content tab; it opens as an on-demand side panel.
     showChat: false,
+    showForum: Boolean(classId),
   });
 
   const activeFollowUpForm = useMemo(() => {
@@ -1070,6 +1074,9 @@ export default function OpportunityPreviewModal({
   const peopleTabLabel = t("opportunities.preview.tabs.peopleAndOrganization", {}, {
     default: "People & Organization",
   });
+  const forumTabLabel = t("opportunities.classForum.tab", {}, {
+    default: "Class FAQ",
+  });
   const followUpFallbackLabel = tConnect(
     "opportunityEditor.tabs.followUpFallback",
     {},
@@ -1114,6 +1121,14 @@ export default function OpportunityPreviewModal({
         />
       ),
     },
+    ...(classId
+      ? [
+          {
+            key: OPPORTUNITY_PREVIEW_TABS.forum,
+            label: forumTabLabel,
+          },
+        ]
+      : []),
   ];
 
   const selectPreviewTab = (tabKey) => {
@@ -1881,6 +1896,16 @@ export default function OpportunityPreviewModal({
                       })}
                     </p>
                   ) : null}
+                </div>
+              ) : null}
+
+              {resolvedTab === OPPORTUNITY_PREVIEW_TABS.forum && classId ? (
+                <div style={{ display: "grid", gap: 16 }}>
+                  <OpportunityClassForum
+                    opportunityId={opportunityId}
+                    classId={classId}
+                    user={user}
+                  />
                 </div>
               ) : null}
 

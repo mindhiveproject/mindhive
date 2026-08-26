@@ -338,35 +338,6 @@ export default function ExploreDetail({ opportunityId }) {
     [me, opportunityId],
   );
 
-  // Find any active round that includes this opportunity AND covers a class
-  // network I'm a student in. Pick the soonest-closing one.
-  const activeRound = useMemo(() => {
-    const seen = new Map();
-    (me?.studentIn || []).forEach((cls) => {
-      (cls.networks || []).forEach((net) => {
-        (net.connectRounds || []).forEach((round) => {
-          // We may see the same round via multiple classes — dedupe.
-          if (!seen.has(round.id)) seen.set(round.id, round);
-        });
-      });
-    });
-    const rounds = Array.from(seen.values()).filter((r) => {
-      if (r.status === "draft") return false;
-      const now = Date.now();
-      const openAt = r.openAt ? new Date(r.openAt).getTime() : null;
-      const closeAt = r.closeAt ? new Date(r.closeAt).getTime() : null;
-      if (openAt && now < openAt) return false;
-      if (closeAt && now > closeAt) return false;
-      return true;
-    });
-    rounds.sort((a, b) => {
-      const ac = a.closeAt ? new Date(a.closeAt).getTime() : Infinity;
-      const bc = b.closeAt ? new Date(b.closeAt).getTime() : Infinity;
-      return ac - bc;
-    });
-    return rounds[0] || null;
-  }, [me]);
-
   const handleToggleFavorite = async () => {
     if (!me?.id) return;
     await toggleFavorite({
@@ -438,85 +409,6 @@ export default function ExploreDetail({ opportunityId }) {
       </BackLink>
 
       {coverSrc && <HeroCover $src={coverSrc} />}
-
-      {activeRound && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 12,
-            padding: "16px 20px",
-            borderRadius: 16,
-            background: "#e3f4ec",
-            border: "1px solid #b6dec7",
-          }}
-        >
-          <div
-            style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 36,
-                height: 36,
-                borderRadius: 50,
-                background: "#1d6b3a",
-                color: "#ffffff",
-                flex: "none",
-              }}
-            >
-              <Icon name="bullhorn" style={{ margin: 0 }} />
-            </span>
-            <div>
-              <div style={{ fontWeight: 600, color: "#1d6b3a" }}>
-                Active in &ldquo;{activeRound.title}&rdquo;
-              </div>
-              <div style={{ fontSize: 13, color: "#1d6b3a" }}>
-                {activeRound.closeAt ? (
-                  <>
-                    Preferences close on{" "}
-                    {new Date(activeRound.closeAt).toLocaleDateString()}
-                    {activeRound.classNetwork?.title &&
-                      ` · ${activeRound.classNetwork.title}`}
-                  </>
-                ) : (
-                  <>Preferences are open now</>
-                )}
-              </div>
-            </div>
-          </div>
-          <Link
-            href={{
-              pathname: "/dashboard/connect/participate",
-              query: { round: activeRound.id },
-            }}
-            passHref
-            legacyBehavior
-          >
-            <a
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "10px 18px",
-                borderRadius: 100,
-                background: "#1d6b3a",
-                color: "#ffffff",
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 600,
-                fontSize: 14,
-                textDecoration: "none",
-              }}
-            >
-              Submit preferences <Icon name="arrow right" />
-            </a>
-          </Link>
-        </div>
-      )}
 
       <Card>
         <TitleRow>

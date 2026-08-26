@@ -270,6 +270,8 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
             id
             title
             shortDescription
+            projectCategory
+            projectCategoryOther
             timeCommitment
             availableFrom
             availableTo
