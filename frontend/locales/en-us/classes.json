@@ -981,6 +981,9 @@
 				"manageForms": "Manage questionnaires",
 				"openFormAria": "{{status}} — open {{form}} for {{opportunity}}",
 				"progressCell": "{{done}}/{{total}}",
+				"searchEmpty": "No opportunities match this search.",
+				"searchLabel": "Filter opportunities",
+				"searchPlaceholder": "Filter by opportunity, sponsor, or organization…",
 				"summary": "{{completeOpps}}/{{totalOpps}} opportunities complete · {{doneResponses}}/{{totalResponses}} form responses",
 				"title": "Response status"
 			},

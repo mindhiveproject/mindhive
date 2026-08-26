@@ -45,6 +45,24 @@ function truncateLabel(label, max = 28) {
   return `${text.slice(0, max - 1)}…`;
 }
 
+function includesQuery(value, query) {
+  const q = String(query || "").trim().toLowerCase();
+  if (!q) return true;
+  return String(value || "")
+    .toLowerCase()
+    .includes(q);
+}
+
+function rowMatchesSearch(row, query) {
+  const q = String(query || "").trim();
+  if (!q) return true;
+  return (
+    includesQuery(row.title, q) ||
+    includesQuery(row.sponsorName, q) ||
+    includesQuery(row.organizationName, q)
+  );
+}
+
 const StatusButton = styled.button`
   display: inline-flex;
   align-items: center;
@@ -94,14 +112,15 @@ export default function MatchingRoundFollowUpCompletionGrid({
   const { t } = useTranslation("classes");
   const gridRef = useRef(null);
   const [incompleteOnly, setIncompleteOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const formList = useMemo(
     () => (Array.isArray(forms) ? forms.filter((f) => f?.id) : []),
     [forms],
   );
 
-  const rowData = useMemo(() => {
-    const rows = (opportunities || []).map((opportunity) => {
+  const allRows = useMemo(() => {
+    return (opportunities || []).map((opportunity) => {
       const completionByFormId = {};
       let doneCount = 0;
       for (const form of formList) {
@@ -128,10 +147,16 @@ export default function MatchingRoundFollowUpCompletionGrid({
         completionByFormId,
       };
     });
+  }, [opportunities, formList]);
 
-    if (!incompleteOnly) return rows;
-    return rows.filter((row) => row.hasIncomplete);
-  }, [opportunities, formList, incompleteOnly]);
+  const chipFilteredRows = useMemo(() => {
+    if (!incompleteOnly) return allRows;
+    return allRows.filter((row) => row.hasIncomplete);
+  }, [allRows, incompleteOnly]);
+
+  const rowData = useMemo(() => {
+    return chipFilteredRows.filter((row) => rowMatchesSearch(row, searchQuery));
+  }, [chipFilteredRows, searchQuery]);
 
   const summary = useMemo(() => {
     const totalOpps = opportunities?.length || 0;
@@ -481,7 +506,7 @@ export default function MatchingRoundFollowUpCompletionGrid({
             )}
             selected={!incompleteOnly}
             onClick={() => setIncompleteOnly(false)}
-            style={{ height: "28px", fontSize: "13px"}}
+            style={{ height: "28px", fontSize: "13px" }}
           />
           <Chip
             shape="square"
@@ -492,9 +517,7 @@ export default function MatchingRoundFollowUpCompletionGrid({
             )}
             selected={incompleteOnly}
             onClick={() => setIncompleteOnly(true)}
-            style={{
-              height: "28px",
-              fontSize: "13px"}}
+            style={{ height: "28px", fontSize: "13px" }}
           />
         </div>
       </div>
@@ -515,25 +538,59 @@ export default function MatchingRoundFollowUpCompletionGrid({
         </p>
       ) : null}
 
+      <div className="matchingRoundFollowUpCompletionSearchRow">
+        <input
+          type="search"
+          className="matchingRoundFollowUpCompletionSearchInput"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label={t(
+            "opportunities.matchingRound.followUpCompletion.searchLabel",
+            {},
+            { default: "Filter opportunities" },
+          )}
+          placeholder={t(
+            "opportunities.matchingRound.followUpCompletion.searchPlaceholder",
+            {},
+            {
+              default:
+                "Filter by opportunity, sponsor, or organization…",
+            },
+          )}
+        />
+      </div>
+
       {rowData.length === 0 ? (
         <div className="matchingRoundFollowUpCompletionEmpty">
-          <p className="matchingRoundFollowUpCompletionEmptyTitle">
-            {t(
-              "opportunities.matchingRound.followUpCompletion.emptyFilterTitle",
-              {},
-              { default: "Everyone is complete" },
-            )}
-          </p>
-          <p className="matchingRoundFollowUpCompletionEmptyHint">
-            {t(
-              "opportunities.matchingRound.followUpCompletion.emptyFilterHint",
-              {},
-              {
-                default:
-                  "No incomplete responses match this filter. Switch to All to see every opportunity.",
-              },
-            )}
-          </p>
+          {chipFilteredRows.length === 0 ? (
+            <>
+              <p className="matchingRoundFollowUpCompletionEmptyTitle">
+                {t(
+                  "opportunities.matchingRound.followUpCompletion.emptyFilterTitle",
+                  {},
+                  { default: "Everyone is complete" },
+                )}
+              </p>
+              <p className="matchingRoundFollowUpCompletionEmptyHint">
+                {t(
+                  "opportunities.matchingRound.followUpCompletion.emptyFilterHint",
+                  {},
+                  {
+                    default:
+                      "No incomplete responses match this filter. Switch to All to see every opportunity.",
+                  },
+                )}
+              </p>
+            </>
+          ) : (
+            <p className="matchingRoundFollowUpCompletionEmptyTitle">
+              {t(
+                "opportunities.matchingRound.followUpCompletion.searchEmpty",
+                {},
+                { default: "No opportunities match this search." },
+              )}
+            </p>
+          )}
         </div>
       ) : (
         <div
