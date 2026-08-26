@@ -67,6 +67,7 @@ export default function ClassOpportunities({ myclass }) {
         initialTab={previewInitialTab}
         onClose={handleClosePreview}
         matchingRoundContext={matchingRoundContext}
+        classId={myclass?.id || null}
       />
     </div>
   );

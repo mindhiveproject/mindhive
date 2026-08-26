@@ -317,6 +317,7 @@ export default function StudentClassOpportunities({ myclass, user }) {
         opportunityId={previewOpportunityId}
         onClose={handleClosePreview}
         user={user}
+        classId={classId}
         roundId={
           previewOpportunityId
             ? opportunityRoundIds.get(previewOpportunityId) || null

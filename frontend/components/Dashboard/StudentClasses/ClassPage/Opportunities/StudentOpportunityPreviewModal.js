@@ -25,6 +25,7 @@ import ConnectProfileCard from "../../../Connect/ConnectProfileCard";
 import { CARD_WIDTH } from "../../../Connect/ConnectBrowseLayout";
 import OrganizationConnectCard from "../../../Connect/Organizations/OrganizationConnectCard";
 import ManageFavoriteOpportunity from "../../../Connect/ManageFavoriteOpportunity";
+import OpportunityClassForum from "../../../Connect/OpportunityClassForum";
 
 function toOptionKey(value) {
   return String(value || "").replace(/_([a-z])/g, (_, c) => c.toUpperCase());
@@ -33,6 +34,7 @@ function toOptionKey(value) {
 const TABS = {
   about: "about",
   people: "people",
+  forum: "forum",
 };
 
 const CATEGORY_LABELS = {
@@ -371,6 +373,8 @@ export default function StudentOpportunityPreviewModal({
   opportunityId,
   onClose,
   user = null,
+  /** Class that owns this student preview (scopes the class FAQ). */
+  classId = null,
   /** Matching round that surfaces this opportunity to the student class. */
   roundId = null,
 }) {
@@ -573,6 +577,11 @@ export default function StudentOpportunityPreviewModal({
     {},
     { default: "Who you’ll work with" },
   );
+  const forumTabLabel = t(
+    "opportunities.classForum.tab",
+    {},
+    { default: "Class FAQ" },
+  );
 
   const modalTitleNode = (
     <TitleRow>
@@ -701,6 +710,15 @@ export default function StudentOpportunityPreviewModal({
                 }
                 onClick={() => setActiveTab(TABS.people)}
                 ariaLabel={peopleTabLabel}
+              />
+              <Chip
+                label={forumTabLabel}
+                shape="square"
+                style={{ padding: "16px" }}
+                selected={activeTab === TABS.forum}
+                pressed={activeTab === TABS.forum}
+                onClick={() => setActiveTab(TABS.forum)}
+                ariaLabel={forumTabLabel}
               />
             </ChipSelectorRow>
 
@@ -1112,6 +1130,16 @@ export default function StudentOpportunityPreviewModal({
                     )}
                   </p>
                 )}
+              </div>
+            ) : null}
+
+            {activeTab === TABS.forum ? (
+              <div style={{ display: "grid", gap: 16 }}>
+                <OpportunityClassForum
+                  opportunityId={opportunityId}
+                  classId={classId}
+                  user={user}
+                />
               </div>
             ) : null}
           </div>

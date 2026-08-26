@@ -562,6 +562,15 @@
 			"unknownRound": "Matching round"
 		},
 		"loading": "Loading…",
+		"classForum": {
+			"modalTitle": "Class FAQ",
+			"modalTitleNamed": "Class FAQ · {{title}}",
+			"noClasses": "No classes are linked to this opportunity’s matching rounds yet.",
+			"open": "Class FAQ",
+			"pickClass": "Choose a class",
+			"pickClassPlaceholder": "Select a class",
+			"selectClassHint": "Select a class to view or ask questions in its FAQ."
+		},
 		"modals": {
 			"chatTitle": "Messages",
 			"chatTitleNamed": "Messages · {{title}}",
