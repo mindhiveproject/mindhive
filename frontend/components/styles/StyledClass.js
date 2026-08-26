@@ -1702,6 +1702,30 @@ const StyledClass = styled.div`
       gap: 8px;
     }
 
+    .matchingRoundFollowUpCompletionSearchRow {
+      display: grid;
+      grid-template-columns: minmax(180px, 360px);
+      width: 100%;
+      min-width: 0;
+    }
+
+    .matchingRoundFollowUpCompletionSearchInput {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 12px;
+      border: 1px solid #ece9e6;
+      border-radius: 10px;
+      background: #ffffff;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+
+      &:focus {
+        outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+        outline-offset: 1px;
+      }
+    }
+
     .matchingRoundFollowUpCompletionHiddenBanner {
       margin: 0;
       padding: 10px 12px;
@@ -2241,6 +2265,41 @@ const StyledClass = styled.div`
       justify-content: flex-end;
       gap: 12px;
       padding-top: 4px;
+    }
+
+    .matchingRoundOpportunitiesGridShell {
+      display: grid;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .matchingRoundOpportunitiesSearchRow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .matchingRoundOpportunitiesSearchField {
+      display: grid;
+      min-width: 0;
+    }
+
+    .matchingRoundOpportunitiesSearchInput {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 12px;
+      border: 1px solid #ece9e6;
+      border-radius: 10px;
+      background: #ffffff;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+
+      &:focus {
+        outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+        outline-offset: 1px;
+      }
     }
 
     .matchingRoundOpportunitiesGrid {

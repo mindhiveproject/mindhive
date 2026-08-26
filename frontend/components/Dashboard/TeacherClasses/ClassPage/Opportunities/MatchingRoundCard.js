@@ -47,9 +47,14 @@ import {
 import { useUser } from "../../../../Utils/Access/User";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
 import MatchingRoundFollowUpCompletionGrid from "./MatchingRoundFollowUpCompletionGrid";
+import MatchingRoundStudentInterestGrid from "./MatchingRoundStudentInterestGrid";
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
 import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
+import {
+  readClassMatchingRoundPanelPref,
+  writeClassMatchingRoundPanelPref,
+} from "../classPagePrefs";
 
 const NETWORK_ICON = (
   <img
@@ -87,6 +92,7 @@ const PANELS = {
   forms: "forms",
   questions: "questions",
   matches: "matches",
+  studentInterest: "studentInterest",
 };
 
 /** Portal-safe styles: DesignSystem Modal mounts outside `.classTabPage`. */
@@ -572,13 +578,37 @@ function MatchingRoundEditor({
     }
     // Matches tab is present but disabled for now — ignore deep links.
     if (raw === PANELS.matches) return null;
+    // Student Interest is disabled for draft / unsaved rounds.
+    if (
+      raw === PANELS.studentInterest &&
+      (isNew || roundSummary?.status === "draft")
+    ) {
+      return null;
+    }
     return raw;
-  }, [router.query?.matchingPanel]);
+  }, [isNew, router.query?.matchingPanel, roundSummary?.status]);
 
-  const initialPanel =
-    queryMatchingPanel && queryMatchingPanel !== PANELS.settings
-      ? queryMatchingPanel
-      : PANELS.review;
+  const resolveAllowedPanel = useCallback(
+    (panel) => {
+      if (!panel || panel === PANELS.settings) return null;
+      if (
+        panel === PANELS.studentInterest &&
+        (isNew || roundSummary?.status === "draft")
+      ) {
+        return null;
+      }
+      if (
+        panel !== PANELS.review &&
+        panel !== PANELS.selected &&
+        panel !== PANELS.forms &&
+        panel !== PANELS.studentInterest
+      ) {
+        return null;
+      }
+      return panel;
+    },
+    [isNew, roundSummary?.status],
+  );
 
   const [selectedNetworkId, setSelectedNetworkId] = useState(
     isCreate
@@ -594,7 +624,18 @@ function MatchingRoundEditor({
   const [togglingSponsorFormsVisible, setTogglingSponsorFormsVisible] =
     useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
-  const [activePanel, setActivePanel] = useState(initialPanel);
+  const [activePanel, setActivePanel] = useState(() => {
+    const fromQuery = resolveAllowedPanel(
+      queryMatchingPanel && queryMatchingPanel !== PANELS.settings
+        ? queryMatchingPanel
+        : null,
+    );
+    if (fromQuery) return fromQuery;
+    const fromStorage = resolveAllowedPanel(
+      readClassMatchingRoundPanelPref(myclass?.id, roundId),
+    );
+    return fromStorage || PANELS.review;
+  });
   const [settingsModalOpen, setSettingsModalOpen] = useState(
     () => isNew || queryMatchingPanel === PANELS.settings,
   );
@@ -616,6 +657,7 @@ function MatchingRoundEditor({
   const [formWizardBanner, setFormWizardBanner] = useState(null);
   const formsManagerInitializedRef = useRef(false);
   const savedSnapshotRef = useRef(null);
+  const interestGridRef = useRef(null);
 
   const selectedNetwork = useMemo(
     () => networks.find((network) => network.id === selectedNetworkId) || null,
@@ -630,6 +672,33 @@ function MatchingRoundEditor({
   const round = roundData?.connectRound;
 
   const { inputs, handleChange, handleMultipleUpdate } = useForm(EMPTY_FORM);
+
+  const roundStatusForPanels =
+    (typeof inputs?.status === "string" && inputs.status) ||
+    round?.status ||
+    roundSummary?.status ||
+    null;
+  const isStudentInterestDisabled =
+    isNew || roundStatusForPanels === "draft";
+
+  const selectPanel = useCallback(
+    (panelId) => {
+      const allowed = resolveAllowedPanel(panelId);
+      if (!allowed) return;
+      setActivePanel(allowed);
+      writeClassMatchingRoundPanelPref(myclass?.id, roundId, allowed);
+    },
+    [myclass?.id, resolveAllowedPanel, roundId],
+  );
+
+  useEffect(() => {
+    if (
+      activePanel === PANELS.studentInterest &&
+      isStudentInterestDisabled
+    ) {
+      setActivePanel(PANELS.review);
+    }
+  }, [activePanel, isStudentInterestDisabled]);
 
   const captureSnapshot = useCallback(
     (
@@ -692,8 +761,11 @@ function MatchingRoundEditor({
       setSettingsModalOpen(true);
       return;
     }
-    setActivePanel(queryMatchingPanel);
-  }, [queryMatchingPanel]);
+    const allowed = resolveAllowedPanel(queryMatchingPanel);
+    if (!allowed) return;
+    setActivePanel(allowed);
+    writeClassMatchingRoundPanelPref(myclass?.id, roundId, allowed);
+  }, [myclass?.id, queryMatchingPanel, resolveAllowedPanel, roundId]);
 
   // Sync network when parent confirms a different network for a draft create card.
   useEffect(() => {
@@ -1045,6 +1117,24 @@ function MatchingRoundEditor({
   const exportLabel = t("opportunities.matchingRound.export.openButton", {}, {
     default: "Export to CSV",
   });
+  const interestExportLabel = t(
+    "opportunities.matchingRound.studentInterest.downloadCsv",
+    {},
+    { default: "Download Interest CSV" },
+  );
+  const showOpportunityExport =
+    activePanel === PANELS.review ||
+    activePanel === PANELS.selected ||
+    activePanel === PANELS.forms;
+  const showInterestExport = activePanel === PANELS.studentInterest;
+  const showDownloadButton = showOpportunityExport || showInterestExport;
+  const downloadButtonLabel = showInterestExport
+    ? interestExportLabel
+    : exportLabel;
+  const downloadButtonDisabled = showInterestExport
+    ? !(myclass?.students?.length > 0) ||
+      selectedNetworkOpportunities.length === 0
+    : networkOpportunities.length === 0;
 
   const panelOptions = useMemo(
     () => [
@@ -1080,6 +1170,25 @@ function MatchingRoundEditor({
           default: "Follow-up",
         }),
       },
+      {
+        id: PANELS.studentInterest,
+        label: t(
+          "opportunities.matchingRound.panels.studentInterest",
+          {},
+          { default: "Interest" },
+        ),
+        disabled: isStudentInterestDisabled,
+        tooltipContent: isStudentInterestDisabled
+          ? t(
+              "opportunities.matchingRound.studentInterest.disabledDraftHint",
+              {},
+              {
+                default:
+                  "Interest is available after the matching round leaves draft.",
+              },
+            )
+          : null,
+      },
       // {
       //   id: PANELS.questions,
       //   label: t("opportunities.matchingRound.panels.questions", {}, {
@@ -1094,7 +1203,7 @@ function MatchingRoundEditor({
         //   disabled: true,
         // },
     ],
-    [reviewOpportunitiesCount, selectedOpportunities.length, t],
+    [isStudentInterestDisabled, reviewOpportunitiesCount, selectedOpportunities.length, t],
   );
 
   const [createConnectRound, { loading: creating }] = useMutation(
@@ -2776,7 +2885,7 @@ function MatchingRoundEditor({
     const formCount = selectedFormDefinitionIds.length;
     const openFollowUpForms = () => {
       setFormsManagerOpen(true);
-      setActivePanel(PANELS.forms);
+      selectPanel(PANELS.forms);
     };
 
     let formsMessageVariant = "neutral";
@@ -2917,6 +3026,27 @@ function MatchingRoundEditor({
     </div>
   );
 
+  const renderStudentInterestPanel = () => (
+    <div className="classTabMatchingRoundPanel">
+      <MatchingRoundStudentInterestGrid
+        ref={interestGridRef}
+        classId={myclass?.id}
+        roundId={roundId}
+        roundTitle={
+          inputs.title ||
+          round?.title ||
+          roundSummary?.title ||
+          ""
+        }
+        students={myclass?.students || []}
+        opportunities={selectedNetworkOpportunities}
+        enabled={
+          activePanel === PANELS.studentInterest && !isStudentInterestDisabled
+        }
+      />
+    </div>
+  );
+
   return (
     <CardShell
       title={cardHeaderTitle}
@@ -2946,10 +3076,11 @@ function MatchingRoundEditor({
                   key={panel.id}
                   selected={activePanel === panel.id}
                   disabled={panel.disabled}
+                  tooltipContent={panel.tooltipContent}
                   onClick={
                     panel.disabled
                       ? undefined
-                      : () => setActivePanel(panel.id)
+                      : () => selectPanel(panel.id)
                   }
                   style={{
                     backgroundColor:
@@ -2964,25 +3095,33 @@ function MatchingRoundEditor({
               ))}
             </Navbar>
             <div className="classTabMatchingRoundNavActions">
-              <IconButton
-                className="classTabMatchingRoundExportButton"
-                variant="text"
-                style={{ background: "#f3f3f3" }}
-                elevated={false}
-                ariaLabel={exportLabel}
-                title={exportLabel}
-                disabled={networkOpportunities.length === 0}
-                onClick={() => setExportModalOpen(true)}
-                icon={
-                  <img
-                    src="/assets/icons/download.svg"
-                    alt=""
-                    aria-hidden
-                    width={24}
-                    height={24}
-                  />
-                }
-              />
+              {showDownloadButton && (
+                <IconButton
+                  className="classTabMatchingRoundExportButton"
+                  variant="text"
+                  style={{ background: "#f3f3f3" }}
+                  elevated={false}
+                  ariaLabel={downloadButtonLabel}
+                  title={downloadButtonLabel}
+                  disabled={downloadButtonDisabled}
+                  onClick={() => {
+                    if (showInterestExport) {
+                      interestGridRef.current?.downloadCsv?.();
+                      return;
+                    }
+                    setExportModalOpen(true);
+                  }}
+                  icon={
+                    <img
+                      src="/assets/icons/download.svg"
+                      alt=""
+                      aria-hidden
+                      width={24}
+                      height={24}
+                    />
+                  }
+                />
+              )}
               <IconButton
                 className="classTabMatchingRoundSettingsButton"
                 style={{ background: "#f3f3f3" }}
@@ -3051,6 +3190,8 @@ function MatchingRoundEditor({
             {activePanel === PANELS.selected && renderSelectedPanel()}
             {activePanel === PANELS.forms && renderFormsPanel()}
             {activePanel === PANELS.questions && renderQuestionsPanel()}
+            {activePanel === PANELS.studentInterest &&
+              renderStudentInterestPanel()}
 
             <div className="classTabMatchingRoundFooter">
               {isDirty ? (

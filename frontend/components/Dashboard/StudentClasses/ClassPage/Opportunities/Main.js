@@ -1,13 +1,15 @@
-import { useCallback, useMemo, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
+import Chip from "../../../../DesignSystem/Chip";
 import MessageCard from "../../../../DesignSystem/MessageCard";
+import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
+import { RECORD_OPPORTUNITY_PREVIEW_VISIT } from "../../../../Mutations/Log";
 import { CLASS_STUDENT_OPPORTUNITIES } from "../../../../Queries/ConnectRound";
-import OpportunityCompactCard, {
-  OpportunityCompactGrid,
-} from "../../../Connect/OpportunityCompactCard";
+import { BrowseCardsGrid } from "../../../Connect/ConnectBrowseLayout";
+import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import OpportunityPreviewModal from "../../../TeacherClasses/ClassPage/Modals/OpportunityPreviewModal";
 
 /**
@@ -15,75 +17,29 @@ import OpportunityPreviewModal from "../../../TeacherClasses/ClassPage/Modals/Op
  * (same gate as Connect Participate: students can view/rank then).
  */
 const STUDENT_OPEN_ROUND_STATUS = "preferences_open";
+const MIN_DWELL_MS = 1000;
 
 const Page = styled.div`
   display: grid;
   gap: 20px;
 `;
 
-const CardHitArea = styled.div`
-  display: block;
-  width: 100%;
-  cursor: pointer;
-  border-radius: 14px;
-
-  &:focus-visible {
-    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
-    outline-offset: 3px;
-  }
+const FilterRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 `;
 
-function formatDate(value) {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return null;
-  }
-}
-
-function mentorDisplayName(mentor) {
-  if (!mentor) return null;
-  const full = [mentor.firstName, mentor.lastName].filter(Boolean).join(" ");
-  return full || mentor.username || null;
-}
-
-function buildStudentOpportunityMeta(opportunity, t) {
-  const parts = [];
-  const sponsor = mentorDisplayName(opportunity.mentor);
-  if (sponsor) {
-    parts.push(
-      t(
-        "opportunities.studentView.meta.sponsor",
-        { name: sponsor },
-        { default: "Sponsor: {{name}}" },
-      ),
-    );
-  }
-  if (opportunity.organization?.name) {
-    parts.push(opportunity.organization.name);
-  }
-  if (opportunity.shortDescription) {
-    parts.push(opportunity.shortDescription);
-  } else {
-    const from = formatDate(opportunity.availableFrom);
-    const to = formatDate(opportunity.availableTo);
-    if (from || to) {
-      parts.push(
-        t(
-          "opportunities.studentView.meta.dates",
-          { from: from || "—", to: to || "—" },
-          { default: "{{from}} → {{to}}" },
-        ),
-      );
-    }
-  }
-  return parts.join(" · ");
-}
-
-export default function StudentClassOpportunities({ myclass }) {
+export default function StudentClassOpportunities({ myclass, user }) {
   const { t } = useTranslation("classes");
   const [previewOpportunityId, setPreviewOpportunityId] = useState(null);
+  const [filterMode, setFilterMode] = useState("all");
+
+  const sessionRef = useRef(null);
+  const flushedRef = useRef(false);
+
+  const [recordVisit] = useMutation(RECORD_OPPORTUNITY_PREVIEW_VISIT);
 
   const { data, loading } = useQuery(CLASS_STUDENT_OPPORTUNITIES, {
     variables: { code: myclass?.code },
@@ -92,35 +48,144 @@ export default function StudentClassOpportunities({ myclass }) {
   });
 
   const networks = data?.class?.networks || myclass?.networks || [];
+  const classId = data?.class?.id || myclass?.id || null;
 
-  const { isOpenForStudents, opportunities } = useMemo(() => {
-    const byId = new Map();
-    let hasOpenRound = false;
+  const favoriteIds = useMemo(
+    () =>
+      new Set((user?.favoriteOpportunities || []).map((opp) => opp?.id).filter(Boolean)),
+    [user?.favoriteOpportunities],
+  );
 
-    for (const network of networks) {
-      for (const round of network?.connectRounds || []) {
-        if (round?.status !== STUDENT_OPEN_ROUND_STATUS) continue;
-        hasOpenRound = true;
-        for (const opportunity of round.opportunities || []) {
-          if (!opportunity?.id || byId.has(opportunity.id)) continue;
-          byId.set(opportunity.id, opportunity);
+  const { isOpenForStudents, opportunities, opportunityRoundIds } =
+    useMemo(() => {
+      const byId = new Map();
+      const roundByOpportunityId = new Map();
+      let hasOpenRound = false;
+
+      for (const network of networks) {
+        for (const round of network?.connectRounds || []) {
+          if (round?.status !== STUDENT_OPEN_ROUND_STATUS) continue;
+          hasOpenRound = true;
+          for (const opportunity of round.opportunities || []) {
+            if (!opportunity?.id) continue;
+            if (!byId.has(opportunity.id)) {
+              byId.set(opportunity.id, opportunity);
+            }
+            if (!roundByOpportunityId.has(opportunity.id) && round.id) {
+              roundByOpportunityId.set(opportunity.id, round.id);
+            }
+          }
         }
       }
+
+      return {
+        isOpenForStudents: hasOpenRound,
+        opportunities: Array.from(byId.values()),
+        opportunityRoundIds: roundByOpportunityId,
+      };
+    }, [networks]);
+
+  const filteredOpportunities = useMemo(() => {
+    if (filterMode !== "favorites") return opportunities;
+    return opportunities.filter((opp) => favoriteIds.has(opp.id));
+  }, [opportunities, filterMode, favoriteIds]);
+
+  const flushPreviewSession = useCallback(async () => {
+    const session = sessionRef.current;
+    if (!session || flushedRef.current) return;
+
+    const closeAt = new Date();
+    const dwellMs = closeAt.getTime() - session.openAt.getTime();
+    flushedRef.current = true;
+    sessionRef.current = null;
+
+    if (
+      dwellMs < MIN_DWELL_MS ||
+      !session.opportunityId ||
+      !session.roundId ||
+      !session.classId
+    ) {
+      return;
     }
 
-    return {
-      isOpenForStudents: hasOpenRound,
-      opportunities: Array.from(byId.values()),
-    };
-  }, [networks]);
+    try {
+      await recordVisit({
+        variables: {
+          opportunityId: session.opportunityId,
+          classId: session.classId,
+          roundId: session.roundId,
+          openAt: session.openAt.toISOString(),
+          closeAt: closeAt.toISOString(),
+        },
+      });
+    } catch (err) {
+      // Preview tracking must not block closing the modal.
+      console.warn("Failed to record opportunity preview visit", err);
+    }
+  }, [recordVisit]);
 
-  const handleOpenPreview = useCallback((id) => {
-    setPreviewOpportunityId(id || null);
-  }, []);
+  const startPreviewSession = useCallback(
+    (opportunityId) => {
+      if (!opportunityId || !classId) return;
+      const roundId = opportunityRoundIds.get(opportunityId);
+      if (!roundId) return;
+      flushedRef.current = false;
+      sessionRef.current = {
+        opportunityId,
+        classId,
+        roundId,
+        openAt: new Date(),
+      };
+    },
+    [classId, opportunityRoundIds],
+  );
+
+  const handleOpenPreview = useCallback(
+    (id) => {
+      const nextId = id || null;
+      if (previewOpportunityId && previewOpportunityId !== nextId) {
+        void flushPreviewSession();
+      }
+      setPreviewOpportunityId(nextId);
+      if (nextId) {
+        startPreviewSession(nextId);
+      }
+    },
+    [flushPreviewSession, previewOpportunityId, startPreviewSession],
+  );
 
   const handleClosePreview = useCallback(() => {
+    void flushPreviewSession();
     setPreviewOpportunityId(null);
-  }, []);
+  }, [flushPreviewSession]);
+
+  useEffect(() => {
+    if (!previewOpportunityId) return undefined;
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        void flushPreviewSession();
+      } else if (
+        document.visibilityState === "visible" &&
+        previewOpportunityId &&
+        !sessionRef.current
+      ) {
+        startPreviewSession(previewOpportunityId);
+      }
+    };
+
+    const onPageHide = () => {
+      void flushPreviewSession();
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("pagehide", onPageHide);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("pagehide", onPageHide);
+      void flushPreviewSession();
+    };
+  }, [flushPreviewSession, previewOpportunityId, startPreviewSession]);
 
   if (loading && !data?.class) {
     return (
@@ -173,38 +238,78 @@ export default function StudentClassOpportunities({ myclass }) {
     );
   }
 
+  const filterAllLabel = t("opportunities.studentView.filterAll", {}, {
+    default: "All",
+  });
+  const filterFavoritesLabel = t(
+    "opportunities.studentView.filterFavorites",
+    {},
+    { default: "Favorites" },
+  );
+
+  const emptyFavoritesTitle = t(
+    "opportunities.studentView.emptyFavoritesTitle",
+    {},
+    { default: "No favorites yet" },
+  );
+  const emptyFavoritesHint = t(
+    "opportunities.studentView.emptyFavoritesHint",
+    {},
+    {
+      default:
+        "Tap the star on an opportunity to save it here.",
+    },
+  );
+
   return (
     <div className="classTabPage opportunities">
       <Page>
-        <OpportunityCompactGrid>
-          {opportunities.map((opportunity) => {
-            const openLabel = t(
-              "opportunities.studentView.openAria",
-              { title: opportunity.title || "" },
-              { default: "View opportunity: {{title}}" },
-            );
-            return (
-              <CardHitArea
+        <FilterRow role="group" aria-label={t(
+          "opportunities.studentView.filterLabel",
+          {},
+          { default: "Filter opportunities" },
+        )}>
+          <Chip
+            shape="square"
+            label={filterAllLabel}
+            selected={filterMode === "all"}
+            onClick={() => setFilterMode("all")}
+            ariaLabel={filterAllLabel}
+          />
+          <Chip
+            shape="square"
+            label={filterFavoritesLabel}
+            selected={filterMode === "favorites"}
+            onClick={() => setFilterMode("favorites")}
+            ariaLabel={filterFavoritesLabel}
+            leading={
+              filterMode === "favorites" ? (
+                <StarFilledIcon width={18} height={18} />
+              ) : (
+                <StarIcon width={18} height={18} />
+              )
+            }
+          />
+        </FilterRow>
+
+        {filteredOpportunities.length === 0 ? (
+          <MessageCard
+            variant="neutral"
+            message={`${emptyFavoritesTitle} ${emptyFavoritesHint}`}
+            ariaLabel={`${emptyFavoritesTitle} ${emptyFavoritesHint}`}
+          />
+        ) : (
+          <BrowseCardsGrid>
+            {filteredOpportunities.map((opportunity) => (
+              <OpportunityConnectCard
                 key={opportunity.id}
-                role="button"
-                tabIndex={0}
-                aria-label={openLabel}
-                onClick={() => handleOpenPreview(opportunity.id)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleOpenPreview(opportunity.id);
-                  }
-                }}
-              >
-                <OpportunityCompactCard
-                  title={opportunity.title}
-                  metaLine={buildStudentOpportunityMeta(opportunity, t)}
-                />
-              </CardHitArea>
-            );
-          })}
-        </OpportunityCompactGrid>
+                opportunity={opportunity}
+                onOpen={handleOpenPreview}
+                user={user}
+              />
+            ))}
+          </BrowseCardsGrid>
+        )}
       </Page>
 
       <OpportunityPreviewModal

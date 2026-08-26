@@ -54,6 +54,8 @@ export const GET_CLASS = gql`
         publicId
         username
         email
+        firstName
+        lastName
       }
       mentors {
         id

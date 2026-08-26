@@ -42,6 +42,7 @@ import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectRe
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
+import recordOpportunityPreviewVisit from "./recordOpportunityPreviewVisit";
 import resolveFormDefinition from "./resolveFormDefinition";
 import seedOpportunityForm from "./seedOpportunityForm";
 import seedProfileForms from "./seedProfileForms";
@@ -191,6 +192,15 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Connect the session user to OpportunityReviewNote.readBy for
         # notes they can see. Needed because list update is author-only.
         markOpportunityReviewNotesRead(noteIds: [ID!]!): [OpportunityReviewNote!]!
+        # Student class Opportunities preview session (dwell >= 1s).
+        # Creates a Log with event OPPORTUNITY_PREVIEW_VISIT.
+        recordOpportunityPreviewVisit(
+          opportunityId: ID!
+          classId: ID!
+          roundId: ID!
+          openAt: DateTime!
+          closeAt: DateTime!
+        ): Log
         # One-off seeder for the global Opportunity FormDefinition.
         # Idempotent unless force=true (which deletes and recreates).
         seedOpportunityForm(force: Boolean): FormDefinition
@@ -402,6 +412,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         followUser,
         unfollowUser,
         markOpportunityReviewNotesRead,
+        recordOpportunityPreviewVisit,
         seedOpportunityForm,
         seedProfileForms,
         seedReviewForms,
