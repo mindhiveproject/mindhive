@@ -1392,7 +1392,52 @@
 			},
 			"notAvailableHint": "When your teacher opens the matching round, selected opportunities will appear here.",
 			"notAvailableTitle": "Opportunities aren’t available yet",
-			"openAria": "View opportunity: {{title}}"
+			"openAria": "View opportunity: {{title}}",
+			"preview": {
+				"aboutTitle": "About this opportunity",
+				"close": "Close",
+				"fallbackTitle": "Opportunity",
+				"fieldResearchChip": "Field research: {{value}}",
+				"followUpTitle": "More project details",
+				"resourcesTitle": "Resources",
+				"fields": {
+					"additionalNotes": "Additional notes",
+					"anticipatedObstacles": "Anticipated obstacles",
+					"available": "Available",
+					"background": "Project background",
+					"datasets": "Datasets",
+					"expectedDeliverables": "Expected deliverables",
+					"fieldResearch": "Field research / site visits",
+					"fieldResearchDetails": "Field research details",
+					"potentialActivities": "Potential activities",
+					"projectCategory": "Project category",
+					"publicRating": "Public rating",
+					"requiredHardware": "Required hardware",
+					"requiredSoftware": "Required software",
+					"scope": "Scope of the project",
+					"specialResources": "Special resources required",
+					"specialResourcesNotes": "Special resources notes",
+					"specificSkills": "Specific skills or qualifications",
+					"timeCommitment": "Time commitment",
+					"workFormat": "Work format"
+				},
+				"loading": "Loading opportunity…",
+				"mentorNotes": "Mentoring notes",
+				"metaAria": "Opportunity details",
+				"notFound": "Opportunity not found, or no longer available.",
+				"orgDepartment": "Department",
+				"orgMission": "Mission",
+				"orgWebsite": "Website",
+				"peopleEmpty": "No organization or mentor details are available yet.",
+				"projectDetails": "Project details",
+				"ratingsTitle": "What past participants said",
+				"specialResourcesChip": "Special resources: {{value}}",
+				"tabs": {
+					"about": "About",
+					"whoYoullWorkWith": "Who you’ll work with"
+				},
+				"tabsAria": "Opportunity sections"
+			}
 		}
 	},
 	"ownedItems": {

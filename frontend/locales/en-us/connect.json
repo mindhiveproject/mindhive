@@ -813,10 +813,10 @@
 			"datasetProvision": "How will the sponsoring organization provide datasets to the student team?",
 			"datasetProvisionHint": "Select all that apply.",
 			"datasetProvisionOptions": {
-				"orgNoRestrictions": "Datasets will be provided directly by the organization to students by September 2026 and are not subject to privacy restrictions, nor do they require significant pre-processing/cleaning.",
-				"orgPrivacyNda": "Datasets will be provided directly by the organization to students by September 2026 and will require special privacy restrictions and/or NDA agreements in advance of the data transfer.",
+				"orgNoRestrictions": "Provided by the organization — no privacy restrictions or major cleaning needed.",
+				"orgPrivacyNda": "Provided by the organization — privacy restrictions and/or an NDA required before transfer.",
 				"other": "Other",
-				"public": "Datasets for this project are publicly available."
+				"public": "Publicly available."
 			},
 			"datasetProvisionOther": "Other (datasets)",
 			"deliverableOptions": {

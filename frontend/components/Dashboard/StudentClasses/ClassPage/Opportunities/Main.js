@@ -10,7 +10,7 @@ import { RECORD_OPPORTUNITY_PREVIEW_VISIT } from "../../../../Mutations/Log";
 import { CLASS_STUDENT_OPPORTUNITIES } from "../../../../Queries/ConnectRound";
 import { BrowseCardsGrid } from "../../../Connect/ConnectBrowseLayout";
 import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
-import OpportunityPreviewModal from "../../../TeacherClasses/ClassPage/Modals/OpportunityPreviewModal";
+import StudentOpportunityPreviewModal from "./StudentOpportunityPreviewModal";
 
 /**
  * Matching rounds are "open for students" when status is preferences_open
@@ -312,11 +312,16 @@ export default function StudentClassOpportunities({ myclass, user }) {
         )}
       </Page>
 
-      <OpportunityPreviewModal
+      <StudentOpportunityPreviewModal
         open={!!previewOpportunityId}
         opportunityId={previewOpportunityId}
         onClose={handleClosePreview}
-        hideStatus
+        user={user}
+        roundId={
+          previewOpportunityId
+            ? opportunityRoundIds.get(previewOpportunityId) || null
+            : null
+        }
       />
     </div>
   );
