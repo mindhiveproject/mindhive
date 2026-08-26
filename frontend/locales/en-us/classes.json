@@ -1426,11 +1426,14 @@
 			"returned": "Returned"
 		},
 		"studentView": {
+			"emptyCategoryHint": "Try another category, or clear the category filter.",
+			"emptyCategoryTitle": "No opportunities in this category",
 			"emptyFavoritesHint": "Tap the star on an opportunity to save it here.",
 			"emptyFavoritesTitle": "No favorites yet",
 			"emptyHint": "Your teacher hasn’t selected any opportunities for this round yet. Check back soon.",
 			"emptyTitle": "No opportunities yet",
 			"filterAll": "All",
+			"filterCategoryLabel": "Filter by project category",
 			"filterFavorites": "Favorites",
 			"filterLabel": "Filter opportunities",
 			"loading": "Loading opportunities…",

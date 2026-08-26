@@ -8,6 +8,10 @@ import MessageCard from "../../../../DesignSystem/MessageCard";
 import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
 import { RECORD_OPPORTUNITY_PREVIEW_VISIT } from "../../../../Mutations/Log";
 import { CLASS_STUDENT_OPPORTUNITIES } from "../../../../Queries/ConnectRound";
+import {
+  getDistinctProjectCategories,
+  getProjectCategoryDisplay,
+} from "../../../../../lib/opportunityCategory";
 import { BrowseCardsGrid } from "../../../Connect/ConnectBrowseLayout";
 import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import StudentOpportunityPreviewModal from "./StudentOpportunityPreviewModal";
@@ -22,6 +26,17 @@ const MIN_DWELL_MS = 1000;
 const Page = styled.div`
   display: grid;
   gap: 20px;
+  width: 100%;
+  max-width: 920px;
+  justify-self: center;
+`;
+
+const Filters = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
 `;
 
 const FilterRow = styled.div`
@@ -33,8 +48,10 @@ const FilterRow = styled.div`
 
 export default function StudentClassOpportunities({ myclass, user }) {
   const { t } = useTranslation("classes");
+  const { t: tConnect } = useTranslation("connect");
   const [previewOpportunityId, setPreviewOpportunityId] = useState(null);
   const [filterMode, setFilterMode] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState(null);
 
   const sessionRef = useRef(null);
   const flushedRef = useRef(false);
@@ -85,10 +102,32 @@ export default function StudentClassOpportunities({ myclass, user }) {
       };
     }, [networks]);
 
+  const categoryOptions = useMemo(
+    () => getDistinctProjectCategories(opportunities),
+    [opportunities],
+  );
+
+  const showCategoryFilters = categoryOptions.length >= 2;
+
+  useEffect(() => {
+    if (
+      categoryFilter &&
+      (!showCategoryFilters || !categoryOptions.includes(categoryFilter))
+    ) {
+      setCategoryFilter(null);
+    }
+  }, [categoryFilter, categoryOptions, showCategoryFilters]);
+
   const filteredOpportunities = useMemo(() => {
-    if (filterMode !== "favorites") return opportunities;
-    return opportunities.filter((opp) => favoriteIds.has(opp.id));
-  }, [opportunities, filterMode, favoriteIds]);
+    let list = opportunities;
+    if (filterMode === "favorites") {
+      list = list.filter((opp) => favoriteIds.has(opp.id));
+    }
+    if (categoryFilter) {
+      list = list.filter((opp) => opp.projectCategory === categoryFilter);
+    }
+    return list;
+  }, [opportunities, filterMode, favoriteIds, categoryFilter]);
 
   const flushPreviewSession = useCallback(async () => {
     const session = sessionRef.current;
@@ -158,6 +197,10 @@ export default function StudentClassOpportunities({ myclass, user }) {
     void flushPreviewSession();
     setPreviewOpportunityId(null);
   }, [flushPreviewSession]);
+
+  const handleCategoryChipClick = useCallback((value) => {
+    setCategoryFilter((prev) => (prev === value ? null : value));
+  }, []);
 
   useEffect(() => {
     if (!previewOpportunityId) return undefined;
@@ -260,43 +303,91 @@ export default function StudentClassOpportunities({ myclass, user }) {
         "Tap the star on an opportunity to save it here.",
     },
   );
+  const emptyCategoryTitle = t(
+    "opportunities.studentView.emptyCategoryTitle",
+    {},
+    { default: "No opportunities in this category" },
+  );
+  const emptyCategoryHint = t(
+    "opportunities.studentView.emptyCategoryHint",
+    {},
+    {
+      default:
+        "Try another category, or clear the category filter.",
+    },
+  );
+
+  // Prefer category empty copy when a category is selected (including Favorites + category).
+  const emptyTitle = categoryFilter ? emptyCategoryTitle : emptyFavoritesTitle;
+  const emptyHint = categoryFilter ? emptyCategoryHint : emptyFavoritesHint;
 
   return (
     <div className="classTabPage opportunities">
       <Page>
-        <FilterRow role="group" aria-label={t(
-          "opportunities.studentView.filterLabel",
-          {},
-          { default: "Filter opportunities" },
-        )}>
-          <Chip
-            shape="square"
-            label={filterAllLabel}
-            selected={filterMode === "all"}
-            onClick={() => setFilterMode("all")}
-            ariaLabel={filterAllLabel}
-          />
-          <Chip
-            shape="square"
-            label={filterFavoritesLabel}
-            selected={filterMode === "favorites"}
-            onClick={() => setFilterMode("favorites")}
-            ariaLabel={filterFavoritesLabel}
-            leading={
-              filterMode === "favorites" ? (
-                <StarFilledIcon width={18} height={18} />
-              ) : (
-                <StarIcon width={18} height={18} />
-              )
-            }
-          />
-        </FilterRow>
+        <Filters>
+          <FilterRow
+            role="group"
+            aria-label={t(
+              "opportunities.studentView.filterLabel",
+              {},
+              { default: "Filter opportunities" },
+            )}
+          >
+            <Chip
+              shape="square"
+              label={filterAllLabel}
+              selected={filterMode === "all"}
+              onClick={() => setFilterMode("all")}
+              ariaLabel={filterAllLabel}
+            />
+            <Chip
+              shape="square"
+              label={filterFavoritesLabel}
+              selected={filterMode === "favorites"}
+              onClick={() => setFilterMode("favorites")}
+              ariaLabel={filterFavoritesLabel}
+              leading={
+                filterMode === "favorites" ? (
+                  <StarFilledIcon width={18} height={18} />
+                ) : (
+                  <StarIcon width={18} height={18} />
+                )
+              }
+            />
+          </FilterRow>
+
+          {showCategoryFilters ? (
+            <FilterRow
+              role="group"
+              aria-label={t(
+                "opportunities.studentView.filterCategoryLabel",
+                {},
+                { default: "Filter by project category" },
+              )}
+            >
+              {categoryOptions.map((value) => {
+                const label =
+                  getProjectCategoryDisplay(value, null, tConnect) || value;
+                return (
+                  <Chip
+                    key={value}
+                    shape="pill"
+                    label={label}
+                    selected={categoryFilter === value}
+                    onClick={() => handleCategoryChipClick(value)}
+                    ariaLabel={label}
+                  />
+                );
+              })}
+            </FilterRow>
+          ) : null}
+        </Filters>
 
         {filteredOpportunities.length === 0 ? (
           <MessageCard
             variant="neutral"
-            message={`${emptyFavoritesTitle} ${emptyFavoritesHint}`}
-            ariaLabel={`${emptyFavoritesTitle} ${emptyFavoritesHint}`}
+            message={`${emptyTitle} ${emptyHint}`}
+            ariaLabel={`${emptyTitle} ${emptyHint}`}
           />
         ) : (
           <BrowseCardsGrid>
