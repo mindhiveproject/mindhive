@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Dropdown } from "semantic-ui-react";
 
-import { GET_PARTICIPATE_VIEW } from "../../../Queries/ConnectPreference";
+import { GET_PARTICIPATE_VIEW } from "../../../../Queries/ConnectPreference";
 import {
   CREATE_PREFERENCE,
   UPDATE_PREFERENCE,
@@ -14,13 +13,13 @@ import {
   DELETE_TEAM_PREFERENCES,
   CREATE_QUESTION_ANSWERS,
   DELETE_QUESTION_ANSWERS,
-} from "../../../Mutations/ConnectPreference";
+} from "../../../../Mutations/ConnectPreference";
 import {
   CREATE_RATING,
   UPDATE_RATING,
-} from "../../../Mutations/ConnectRating";
-import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
+} from "../../../../Mutations/ConnectRating";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
 
 const BACK_CHEVRON = (
   <svg
@@ -489,8 +488,7 @@ function QuestionInput({ question, value, onChange }) {
   );
 }
 
-export default function ParticipateSubmission({ roundId, user }) {
-  const router = useRouter();
+export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const { t } = useTranslation("connect");
   const { data, loading, refetch } = useQuery(GET_PARTICIPATE_VIEW, {
     variables: { roundId },
@@ -762,7 +760,9 @@ export default function ParticipateSubmission({ roundId, user }) {
   };
 
   const handleCancel = () => {
-    router.replace({ pathname: "/dashboard/connect/participate" });
+    if (typeof onBack === "function") {
+      onBack();
+    }
   };
 
   const handleSaveRating = async (match) => {
@@ -847,7 +847,7 @@ export default function ParticipateSubmission({ roundId, user }) {
   if (round.status === "draft") {
     const draftTitle = round.title || "";
     const backLabel = t("matchingRound.submission.backLink", {}, {
-      default: "Back to rounds",
+      default: "Back to opportunities",
     });
     return (
       <Shell>
@@ -914,7 +914,7 @@ export default function ParticipateSubmission({ roundId, user }) {
 
   const pageTitle = round.title || "";
   const backLabel = t("matchingRound.submission.backLink", {}, {
-    default: "Back to rounds",
+    default: "Back to opportunities",
   });
   const statusChipLabel = existingPreference
     ? submitted

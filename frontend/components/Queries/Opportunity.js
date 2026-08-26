@@ -504,27 +504,6 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         favoriteOpportunities {
           id
         }
-        studentIn {
-          id
-          networks {
-            id
-            connectRounds(
-              where: {
-                status: { equals: "preferences_open" }
-                opportunities: { some: { id: { equals: $id } } }
-              }
-            ) {
-              id
-              title
-              openAt
-              closeAt
-              classNetwork {
-                id
-                title
-              }
-            }
-          }
-        }
       }
     }
   }

@@ -503,7 +503,7 @@
 		"publishRequiresMatching": "Set the round status to Matching before publishing final matches.",
 		"studentsPaneHeader": "Unmatched ({{count}})",
 		"submission": {
-			"backLink": "Back to rounds",
+			"backLink": "Back to opportunities",
 			"saveDraft": "Save draft",
 			"saving": "Saving…",
 			"statusDraft": "Draft saved",

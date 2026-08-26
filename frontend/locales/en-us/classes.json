@@ -1431,6 +1431,8 @@
 			"emptyFavoritesHint": "Tap the star on an opportunity to save it here.",
 			"emptyFavoritesTitle": "No favorites yet",
 			"emptyHint": "Your teacher hasn’t selected any opportunities for this round yet. Check back soon.",
+			"emptySearchHint": "Try a different search, or clear the search field.",
+			"emptySearchTitle": "No matching opportunities",
 			"emptyTitle": "No opportunities yet",
 			"filterAll": "All",
 			"filterCategoryLabel": "Filter by project category",
@@ -1444,6 +1446,7 @@
 			"notAvailableHint": "When your teacher opens the matching round, selected opportunities will appear here.",
 			"notAvailableTitle": "Opportunities aren’t available yet",
 			"openAria": "View opportunity: {{title}}",
+			"rankBanner": "Rank your favorite opportunity in {{roundTitle}}",
 			"preview": {
 				"aboutTitle": "About this opportunity",
 				"close": "Close",
@@ -1488,7 +1491,9 @@
 					"whoYoullWorkWith": "Who you’ll work with"
 				},
 				"tabsAria": "Opportunity sections"
-			}
+			},
+			"searchLabel": "Search opportunities",
+			"searchPlaceholder": "Search by title, sponsor, or organization…"
 		}
 	},
 	"ownedItems": {
