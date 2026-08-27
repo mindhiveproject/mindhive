@@ -851,6 +851,7 @@
 			},
 			"algorithmHint": "",
 			"associatedNetwork": "Class network",
+			"backToOpportunities": "Back to opportunities",
 			"changeNetwork": "Change network",
 			"collapsedNetworkHint": "Class network: {{title}}",
 			"collapseLabel": "Collapse matching round settings",
@@ -860,6 +861,7 @@
 			"createRound": "Create round",
 			"creating": "Creating…",
 			"expandLabel": "Expand matching round settings",
+			"openLabel": "Open matching round {{title}}",
 			"export": {
 				"buildingZip": "Building zip…",
 				"cancel": "Cancel",

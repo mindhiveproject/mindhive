@@ -10,7 +10,8 @@ const StyledClass = styled.div`
   box-sizing: border-box;
 
   &.isProjectsFullscreen,
-  &.isContentFullscreen {
+  &.isContentFullscreen,
+  &.isMatchingRoundFullscreen {
     overflow-x: visible;
     height: 100%;
     max-height: 100%;
@@ -19,7 +20,8 @@ const StyledClass = styled.div`
   }
 
   &.isProjectsFullscreen > *,
-  &.isContentFullscreen > * {
+  &.isContentFullscreen > *,
+  &.isMatchingRoundFullscreen > * {
     max-width: none;
     min-height: 0;
     height: 100%;
@@ -112,6 +114,27 @@ const StyledClass = styled.div`
     padding: 12px 0;
     max-width: 36rem;
     color: #666666;
+  }
+
+  .matchingRoundFullscreenLayout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    max-width: none;
+
+    .matchingRoundWorkspaceSlot {
+      flex: 1 1 0;
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+
+      > * {
+        flex: 1 1 0;
+        min-height: 0;
+      }
+    }
   }
 
   /* Class detail tabs — aligned with Builder project nav (StyledProject .secondLine) */
@@ -988,6 +1011,180 @@ const StyledClass = styled.div`
       padding-top: 4px;
     }
 
+    &.isMatchingRoundWorkspace {
+      height: 100%;
+      min-height: 0;
+      gap: 16px;
+      padding-bottom: 16px;
+      overflow: auto;
+      align-content: start;
+    }
+
+    .matchingRoundEntryCard {
+      gap: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .matchingRoundEntryButton {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      min-width: 0;
+      padding: 16px 24px;
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+
+      &:hover:not(:disabled) {
+        background: #def8fb;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #336f8a;
+        outline-offset: -2px;
+      }
+
+      .expandableHeaderMain {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+        flex: 1;
+
+        h3 {
+          margin: 0;
+          font-family: "Inter", sans-serif;
+          font-size: 22px;
+          font-weight: 700;
+          line-height: 30px;
+          color: #171717;
+        }
+      }
+
+      .expandableSummaryHint {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #625b71;
+      }
+
+      .matchingRoundHeaderActions {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        flex-shrink: 0;
+        padding: 0;
+      }
+
+      .summaryStatus {
+        display: inline-flex;
+        align-items: flex-start;
+        flex-shrink: 0;
+        padding: 6px 12px;
+        border-radius: 12px;
+        background: #f0f4f6;
+        color: #5f6871;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 18px;
+
+        &.summaryStatusMuted {
+          background: #f5f0e8;
+          color: #8a6d3b;
+        }
+      }
+    }
+
+    .matchingRoundWorkspace {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+      width: 100%;
+      align-content: start;
+    }
+
+    .matchingRoundWorkspaceChrome {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+      width: 100%;
+      padding: 16px 20px;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 18px;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      align-content: start;
+    }
+
+    .matchingRoundWorkspaceHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 0;
+
+      .matchingRoundWorkspaceHeaderMain {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        flex: 1 1 auto;
+      }
+
+      .matchingRoundWorkspaceBackButton {
+        flex-shrink: 0;
+      }
+
+      .matchingRoundHeaderActions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-shrink: 0;
+      }
+
+      .summaryStatus {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        padding: 6px 12px;
+        border-radius: 12px;
+        background: #f0f4f6;
+        color: #5f6871;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 18px;
+
+        &.summaryStatusMuted {
+          background: #f5f0e8;
+          color: #8a6d3b;
+        }
+      }
+    }
+
+    .matchingRoundWorkspaceTitle {
+      margin: 0;
+      flex: 1 1 auto;
+      min-width: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 30px;
+      color: #171717;
+
+      &.muted {
+        color: #625b71;
+      }
+    }
+
+    .matchingRoundWorkspaceBody {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+      align-content: start;
+    }
+
     .classTabSection {
       display: grid;
       gap: 16px;
@@ -1435,6 +1632,8 @@ const StyledClass = styled.div`
       gap: 12px;
       width: 100%;
       min-width: 0;
+      padding-top: 12px;
+      border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
 
       .navbar-container {
         flex: 1 1 auto;
@@ -1551,6 +1750,7 @@ const StyledClass = styled.div`
     .classTabMatchingRoundForm {
       display: grid;
       gap: 18px;
+      align-content: start;
     }
 
     .classTabMatchingRoundPanel {
@@ -1581,20 +1781,18 @@ const StyledClass = styled.div`
       justify-content: space-between;
       gap: 12px 16px;
       width: 100%;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 8px;
-      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      padding: 16px;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 12px;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
       color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     }
 
     .matchingRoundFormSummary.isInformation {
-      background: var(--MH-Theme-Additional-Accent-Light, #f5f2ff);
       color: var(--MH-Theme-Additional-Accent-Dark, #3f288f);
     }
 
     .matchingRoundFormSummary.isSuccess {
-      background: var(--MH-Theme-Neutrals-Light-Green, #f6f9f8);
       color: var(--MH-Theme-Success-Dark, #1d6b3a);
     }
 
@@ -1610,7 +1808,7 @@ const StyledClass = styled.div`
       font-size: 14px;
       font-weight: 600;
       line-height: 18px;
-      color: inherit;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
     }
 
     .matchingRoundFormSummaryStatus {

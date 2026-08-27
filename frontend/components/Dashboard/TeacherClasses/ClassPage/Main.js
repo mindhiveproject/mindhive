@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import Link from "next/link";
+import clsx from "clsx";
 
 import Header from "./Header";
 import ClassStudents from "./Students";
@@ -182,6 +183,10 @@ export default function ClassPage({ code, user, query }) {
 
   const isProjectsFullscreen =
     page === "projects" && action === "edit" && board;
+  const isMatchingRoundFullscreen =
+    page === "opportunities" &&
+    typeof query?.round === "string" &&
+    Boolean(query.round);
 
   if (page === "board" || (isNyuCuspOnly && NYU_CUSP_HIDDEN_TABS.has(page))) {
     return null;
@@ -196,7 +201,9 @@ export default function ClassPage({ code, user, query }) {
   }
 
   return (
-    <StyledClass>
+    <StyledClass
+      className={clsx(isMatchingRoundFullscreen && "isMatchingRoundFullscreen")}
+    >
       <RestrictedAccess
         userCanAccess={[
           ...user?.teacherIn.map((c) => c?.id),
@@ -204,36 +211,47 @@ export default function ClassPage({ code, user, query }) {
         ]}
         whatToAccess={myclass?.id}
       >
-        <div>
-          <Header user={user} myclass={myclass} />
-          <nav className="classPageNav" aria-label={t("main.classSectionsNav")}>
-            <div className="secondLine">
-              <div className="menu">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.value}
-                    href={{
-                      pathname: `/dashboard/myclasses/${code}`,
-                      query: { page: item.value },
-                    }}
-                    aria-current={page === item.value ? "page" : undefined}
-                  >
-                    <div
-                      className={
-                        page === item.value
-                          ? "menuTitle selectedMenuTitle"
-                          : "menuTitle"
-                      }
-                    >
-                      <div className="titleWithIcon">
-                        <p>{t(item.labelKey)}</p>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </nav>
+        <div
+          className={clsx(
+            isMatchingRoundFullscreen && "matchingRoundFullscreenLayout",
+          )}
+        >
+          {isMatchingRoundFullscreen ? null : (
+            <>
+              <Header user={user} myclass={myclass} />
+              <nav
+                className="classPageNav"
+                aria-label={t("main.classSectionsNav")}
+              >
+                <div className="secondLine">
+                  <div className="menu">
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.value}
+                        href={{
+                          pathname: `/dashboard/myclasses/${code}`,
+                          query: { page: item.value },
+                        }}
+                        aria-current={page === item.value ? "page" : undefined}
+                      >
+                        <div
+                          className={
+                            page === item.value
+                              ? "menuTitle selectedMenuTitle"
+                              : "menuTitle"
+                          }
+                        >
+                          <div className="titleWithIcon">
+                            <p>{t(item.labelKey)}</p>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </nav>
+            </>
+          )}
 
           <div>
             {page === "dashboard" && !isNyuCuspOnly && (
@@ -270,7 +288,11 @@ export default function ClassPage({ code, user, query }) {
               <ClassResources myclass={myclass} user={user} query={query} />
             )}
           </div>
-          <div>
+          <div
+            className={clsx(
+              isMatchingRoundFullscreen && "matchingRoundWorkspaceSlot",
+            )}
+          >
             {page === "opportunities" && showOpportunitiesTab && (
               <ClassOpportunities myclass={myclass} user={user} />
             )}

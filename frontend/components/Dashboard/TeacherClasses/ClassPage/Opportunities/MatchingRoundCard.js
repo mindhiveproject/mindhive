@@ -446,62 +446,22 @@ function NetworkIdentity({ network, t }) {
   );
 }
 
-function CardShell({
-  title,
-  titleMuted,
-  summaryHint,
-  expanded,
-  onToggleExpand,
-  headerActions,
-  children,
-  t,
-}) {
+export const MATCHING_ROUND_CREATE_QUERY = "new";
+
+function isSameMatchingRoundWorkspace(url, classCode, roundKey) {
+  if (!url || !classCode || !roundKey) return false;
+  const [path, search = ""] = url.split("?");
+  if (!path.includes(`/myclasses/${classCode}`)) return false;
+  const params = new URLSearchParams(search);
   return (
-    <section className="classTabSection classTabExpandableCard">
-      <div className="classTabExpandableHeaderBar">
-        <button
-          type="button"
-          className="classTabExpandableHeaderToggle"
-          aria-expanded={expanded}
-          aria-label={
-            expanded
-              ? t("opportunities.matchingRound.collapseLabel", {}, {
-                  default: "Collapse matching round settings",
-                })
-              : t("opportunities.matchingRound.expandLabel", {}, {
-                  default: "Expand matching round settings",
-                })
-          }
-          onClick={onToggleExpand}
-        >
-          <div className="expandableHeaderMain">
-            <h3 className={titleMuted ? "summaryRoundTitleMuted" : undefined}>
-              {title}
-            </h3>
-            {summaryHint ? (
-              <div className="expandableSummaryHint">{summaryHint}</div>
-            ) : null}
-          </div>
-          <img
-            src="/assets/icons/expand.svg"
-            alt=""
-            aria-hidden
-            className={`expandableChevron${expanded ? " expanded" : ""}`}
-            width={16}
-            height={16}
-          />
-        </button>
-        <div className="matchingRoundHeaderActions">{headerActions}</div>
-      </div>
-      {children}
-    </section>
+    params.get("page") === "opportunities" && params.get("round") === roundKey
   );
 }
 
 function MatchingRoundCollapsedCard({
   roundSummary,
   networks,
-  onToggleExpand,
+  onOpen,
   t,
 }) {
   const network =
@@ -539,15 +499,29 @@ function MatchingRoundCollapsedCard({
     />
   ) : null;
 
+  const openLabel = t(
+    "opportunities.matchingRound.openLabel",
+    { title },
+    { default: "Open matching round {{title}}" },
+  );
+
   return (
-    <CardShell
-      title={title}
-      summaryHint={networkHint}
-      expanded={false}
-      onToggleExpand={onToggleExpand}
-      headerActions={statusNode}
-      t={t}
-    />
+    <section className="classTabSection classTabExpandableCard matchingRoundEntryCard">
+      <button
+        type="button"
+        className="matchingRoundEntryButton"
+        onClick={onOpen}
+        aria-label={openLabel}
+      >
+        <div className="expandableHeaderMain">
+          <h3>{title}</h3>
+          {networkHint ? (
+            <div className="expandableSummaryHint">{networkHint}</div>
+          ) : null}
+        </div>
+        <div className="matchingRoundHeaderActions">{statusNode}</div>
+      </button>
+    </section>
   );
 }
 
@@ -557,8 +531,6 @@ function MatchingRoundEditor({
   roundSummary,
   isCreate = false,
   initialNetworkId = null,
-  onToggleExpand,
-  onRegisterDirtyGuard,
   onPreviewOpportunity,
   onMatchingRoundContextChange,
   onCreated,
@@ -681,14 +653,60 @@ function MatchingRoundEditor({
   const isStudentInterestDisabled =
     isNew || roundStatusForPanels === "draft";
 
+  const workspaceRoundKey = isCreate
+    ? MATCHING_ROUND_CREATE_QUERY
+    : roundId || roundSummary?.id || null;
+
+  const writeMatchingPanelQuery = useCallback(
+    (panelId) => {
+      if (!myclass?.code || !workspaceRoundKey) return;
+      const current =
+        typeof router.query?.matchingPanel === "string"
+          ? router.query.matchingPanel
+          : null;
+      if (current === panelId) return;
+      const nextQuery = {
+        page: "opportunities",
+        round: workspaceRoundKey,
+        matchingPanel: panelId,
+      };
+      if (workspaceRoundKey === MATCHING_ROUND_CREATE_QUERY && selectedNetworkId) {
+        nextQuery.networkId = selectedNetworkId;
+      }
+      router.replace(
+        {
+          pathname: `/dashboard/myclasses/${myclass.code}`,
+          query: nextQuery,
+        },
+        undefined,
+        { shallow: true },
+      );
+    },
+    [
+      myclass?.code,
+      router,
+      selectedNetworkId,
+      workspaceRoundKey,
+    ],
+  );
+
+  const goBackToOpportunities = useCallback(() => {
+    if (!myclass?.code) return;
+    router.push({
+      pathname: `/dashboard/myclasses/${myclass.code}`,
+      query: { page: "opportunities" },
+    });
+  }, [myclass?.code, router]);
+
   const selectPanel = useCallback(
     (panelId) => {
       const allowed = resolveAllowedPanel(panelId);
       if (!allowed) return;
       setActivePanel(allowed);
       writeClassMatchingRoundPanelPref(myclass?.id, roundId, allowed);
+      writeMatchingPanelQuery(allowed);
     },
-    [myclass?.id, resolveAllowedPanel, roundId],
+    [myclass?.id, resolveAllowedPanel, roundId, writeMatchingPanelQuery],
   );
 
   useEffect(() => {
@@ -741,19 +759,44 @@ function MatchingRoundEditor({
   ]);
 
   const confirmIfDirty = useCallback(() => {
-    if (!isDirty) return true;
+    if (!formInitialized || !savedSnapshotRef.current) return true;
+    const current = buildSnapshot(
+      inputs,
+      selectedOpportunities,
+      selectedQuestions,
+      selectedFormDefinitionIds,
+      sponsorFormsVisible,
+    );
+    if (snapshotsEqual(current, savedSnapshotRef.current)) return true;
     return window.confirm(
       t("opportunities.matchingRound.unsavedChangesConfirm", {}, {
         default: "You have unsaved changes. Leave without saving?",
       }),
     );
-  }, [isDirty, t]);
+  }, [
+    formInitialized,
+    inputs,
+    selectedOpportunities,
+    selectedQuestions,
+    selectedFormDefinitionIds,
+    sponsorFormsVisible,
+    t,
+  ]);
 
   useEffect(() => {
-    if (!onRegisterDirtyGuard) return;
-    onRegisterDirtyGuard(confirmIfDirty);
-    return () => onRegisterDirtyGuard(null);
-  }, [confirmIfDirty, onRegisterDirtyGuard]);
+    const classCode = myclass?.code;
+    const roundKey = workspaceRoundKey;
+    const handleRouteChangeStart = (url) => {
+      if (isSameMatchingRoundWorkspace(url, classCode, roundKey)) return;
+      if (confirmIfDirty()) return;
+      router.events.emit("routeChangeError");
+      throw "Abort route change. Please ignore this error.";
+    };
+    router.events.on("routeChangeStart", handleRouteChangeStart);
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChangeStart);
+    };
+  }, [confirmIfDirty, myclass?.code, router, workspaceRoundKey]);
 
   useEffect(() => {
     if (!queryMatchingPanel) return;
@@ -1114,6 +1157,11 @@ function MatchingRoundEditor({
   const settingsLabel = t("opportunities.matchingRound.panels.settings", {}, {
     default: "Settings",
   });
+  const backToOpportunitiesLabel = t(
+    "opportunities.matchingRound.backToOpportunities",
+    {},
+    { default: "Back to opportunities" },
+  );
   const exportLabel = t("opportunities.matchingRound.export.openButton", {}, {
     default: "Export to CSV",
   });
@@ -2728,7 +2776,6 @@ function MatchingRoundEditor({
               type="button"
               variant="outline"
               className="matchingRoundFormSummaryManage"
-              style={{ color: "inherit", borderColor: "currentColor" }}
               onClick={() => setFormsManagerOpen(true)}
             >
               {t(
@@ -3048,16 +3095,157 @@ function MatchingRoundEditor({
   );
 
   return (
-    <CardShell
-      title={cardHeaderTitle}
-      titleMuted={isNew}
-      expanded
-      onToggleExpand={onToggleExpand}
-      headerActions={headerActions}
-      t={t}
-    >
+    <div className="matchingRoundWorkspace">
+      <div className="matchingRoundWorkspaceChrome">
+        <div className="matchingRoundWorkspaceHeader">
+          <div className="matchingRoundWorkspaceHeaderMain">
+            <IconButton
+              className="matchingRoundWorkspaceBackButton"
+              variant="text"
+              elevated={false}
+              style={{
+                background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+              }}
+              ariaLabel={backToOpportunitiesLabel}
+              title={backToOpportunitiesLabel}
+              onClick={goBackToOpportunities}
+              icon={
+                <img
+                  src="/assets/icons/back.svg"
+                  alt=""
+                  aria-hidden
+                  width={16}
+                  height={16}
+                />
+              }
+            />
+            <h2
+              className={clsx(
+                "matchingRoundWorkspaceTitle",
+                isNew && "muted",
+              )}
+            >
+              {cardHeaderTitle}
+            </h2>
+          </div>
+          <div className="matchingRoundHeaderActions">{headerActions}</div>
+        </div>
+        <div className="classTabMatchingRoundNavRow">
+          <Navbar style={{ paddingLeft: 0, paddingRight: 0 }}>
+            {panelOptions.map((panel) => (
+              <NavbarItem
+                key={panel.id}
+                selected={activePanel === panel.id}
+                disabled={panel.disabled}
+                tooltipContent={panel.tooltipContent}
+                onClick={
+                  panel.disabled
+                    ? undefined
+                    : () => selectPanel(panel.id)
+                }
+                style={{
+                  backgroundColor:
+                    activePanel === panel.id ? "#DEF8FB" : "transparent",
+                  opacity: panel.disabled ? 0.45 : undefined,
+                  cursor: panel.disabled ? "not-allowed" : undefined,
+                }}
+                aria-disabled={panel.disabled || undefined}
+              >
+                {panel.label}
+              </NavbarItem>
+            ))}
+          </Navbar>
+          <div className="classTabMatchingRoundNavActions">
+            {showDownloadButton && (
+              <IconButton
+                className="classTabMatchingRoundExportButton"
+                variant="text"
+                style={{ background: "#f3f3f3" }}
+                elevated={false}
+                ariaLabel={downloadButtonLabel}
+                title={downloadButtonLabel}
+                disabled={downloadButtonDisabled}
+                onClick={() => {
+                  if (showInterestExport) {
+                    interestGridRef.current?.downloadCsv?.();
+                    return;
+                  }
+                  setExportModalOpen(true);
+                }}
+                icon={
+                  <img
+                    src="/assets/icons/download.svg"
+                    alt=""
+                    aria-hidden
+                    width={24}
+                    height={24}
+                  />
+                }
+              />
+            )}
+            <IconButton
+              className="classTabMatchingRoundSettingsButton"
+              style={{ background: "#f3f3f3" }}
+              variant="text"
+              elevated={false}
+              ariaLabel={settingsLabel}
+              title={settingsLabel}
+              onClick={() => setSettingsModalOpen(true)}
+              icon={
+                <img
+                  src="/assets/icons/settings.svg"
+                  alt=""
+                  aria-hidden
+                  width={24}
+                  height={24}
+                />
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <OpportunityExportModal
+        open={exportModalOpen}
+        onClose={() => setExportModalOpen(false)}
+        listOpportunities={networkOpportunities}
+        selectedOpportunityIds={selectedOpportunities}
+        roundId={roundId}
+        roundTitle={
+          inputs.title ||
+          round?.title ||
+          roundSummary?.title ||
+          t("opportunities.matchingRound.newRoundTitle", {}, {
+            default: "New matching round",
+          })
+        }
+        networkTitle={
+          selectedNetwork?.title ||
+          round?.classNetwork?.title ||
+          roundSummary?.classNetwork?.title ||
+          ""
+        }
+      />
+      <Modal
+        open={settingsModalOpen}
+        onClose={() => setSettingsModalOpen(false)}
+        title={settingsLabel}
+        maxWidth={560}
+        actions={
+          <Button
+            variant="text"
+            type="button"
+            onClick={() => setSettingsModalOpen(false)}
+          >
+            {t("close", {}, { default: "Close" })}
+          </Button>
+        }
+      >
+        <SettingsModalContent>
+          {renderSettingsPanel()}
+        </SettingsModalContent>
+      </Modal>
       {loading ? (
-        <div className="classTabExpandableBody">
+        <div className="matchingRoundWorkspaceBody">
           {renderNetworkRow()}
           <div className="classTabEmpty">
             <p>
@@ -3068,123 +3256,7 @@ function MatchingRoundEditor({
           </div>
         </div>
       ) : (
-        <div className="classTabExpandableBody">
-          <div className="classTabMatchingRoundNavRow">
-            <Navbar style={{ paddingLeft: 0, paddingRight: 0 }}>
-              {panelOptions.map((panel) => (
-                <NavbarItem
-                  key={panel.id}
-                  selected={activePanel === panel.id}
-                  disabled={panel.disabled}
-                  tooltipContent={panel.tooltipContent}
-                  onClick={
-                    panel.disabled
-                      ? undefined
-                      : () => selectPanel(panel.id)
-                  }
-                  style={{
-                    backgroundColor:
-                      activePanel === panel.id ? "#DEF8FB" : "transparent",
-                    opacity: panel.disabled ? 0.45 : undefined,
-                    cursor: panel.disabled ? "not-allowed" : undefined,
-                  }}
-                  aria-disabled={panel.disabled || undefined}
-                >
-                  {panel.label}
-                </NavbarItem>
-              ))}
-            </Navbar>
-            <div className="classTabMatchingRoundNavActions">
-              {showDownloadButton && (
-                <IconButton
-                  className="classTabMatchingRoundExportButton"
-                  variant="text"
-                  style={{ background: "#f3f3f3" }}
-                  elevated={false}
-                  ariaLabel={downloadButtonLabel}
-                  title={downloadButtonLabel}
-                  disabled={downloadButtonDisabled}
-                  onClick={() => {
-                    if (showInterestExport) {
-                      interestGridRef.current?.downloadCsv?.();
-                      return;
-                    }
-                    setExportModalOpen(true);
-                  }}
-                  icon={
-                    <img
-                      src="/assets/icons/download.svg"
-                      alt=""
-                      aria-hidden
-                      width={24}
-                      height={24}
-                    />
-                  }
-                />
-              )}
-              <IconButton
-                className="classTabMatchingRoundSettingsButton"
-                style={{ background: "#f3f3f3" }}
-                variant="text"
-                elevated={false}
-                ariaLabel={settingsLabel}
-                title={settingsLabel}
-                onClick={() => setSettingsModalOpen(true)}
-                icon={
-                  <img
-                    src="/assets/icons/settings.svg"
-                    alt=""
-                    aria-hidden
-                    width={24}
-                    height={24}
-                  />
-                }
-              />
-            </div>
-          </div>
-
-          <OpportunityExportModal
-            open={exportModalOpen}
-            onClose={() => setExportModalOpen(false)}
-            listOpportunities={networkOpportunities}
-            selectedOpportunityIds={selectedOpportunities}
-            roundId={roundId}
-            roundTitle={
-              inputs.title ||
-              round?.title ||
-              roundSummary?.title ||
-              t("opportunities.matchingRound.newRoundTitle", {}, {
-                default: "New matching round",
-              })
-            }
-            networkTitle={
-              selectedNetwork?.title ||
-              round?.classNetwork?.title ||
-              roundSummary?.classNetwork?.title ||
-              ""
-            }
-          />
-
-          <Modal
-            open={settingsModalOpen}
-            onClose={() => setSettingsModalOpen(false)}
-            title={settingsLabel}
-            maxWidth={560}
-            actions={
-              <Button
-                variant="text"
-                type="button"
-                onClick={() => setSettingsModalOpen(false)}
-              >
-                {t("close", {}, { default: "Close" })}
-              </Button>
-            }
-          >
-            <SettingsModalContent>
-              {renderSettingsPanel()}
-            </SettingsModalContent>
-          </Modal>
-
+        <div className="matchingRoundWorkspaceBody">
           <div className="classTabMatchingRoundForm">
             {activePanel === PANELS.review && renderReviewPanel()}
             {activePanel === PANELS.selected && renderSelectedPanel()}
@@ -3193,15 +3265,15 @@ function MatchingRoundEditor({
             {activePanel === PANELS.studentInterest &&
               renderStudentInterestPanel()}
 
-            <div className="classTabMatchingRoundFooter">
-              {isDirty ? (
-                <p className="matchingRoundUnsavedHint">
-                  {t("opportunities.matchingRound.unsavedChanges", {}, {
-                    default: "Unsaved changes",
-                  })}
-                </p>
-              ) : null}
-              {isDirty || isNew ? (
+            {isDirty || isNew ? (
+              <div className="classTabMatchingRoundFooter">
+                {isDirty ? (
+                  <p className="matchingRoundUnsavedHint">
+                    {t("opportunities.matchingRound.unsavedChanges", {}, {
+                      default: "Unsaved changes",
+                    })}
+                  </p>
+                ) : null}
                 <Button
                   variant="filled"
                   onClick={handleSave}
@@ -3219,18 +3291,18 @@ function MatchingRoundEditor({
                           default: "Save changes",
                         })}
                 </Button>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </div>
         </div>
       )}
-    </CardShell>
+    </div>
   );
 }
 
 /**
- * Accordion card for an existing matching round, or a draft create editor.
- * Form/query state is only mounted while expanded.
+ * Compact list card for a matching round, or the full-screen workspace editor.
+ * Form/query state is only mounted in the workspace.
  */
 export default function MatchingRoundCard({
   myclass,
@@ -3238,21 +3310,20 @@ export default function MatchingRoundCard({
   roundSummary,
   isCreate = false,
   initialNetworkId = null,
-  expanded,
-  onToggleExpand,
-  onRegisterDirtyGuard,
+  isWorkspace = false,
+  onOpen,
   onPreviewOpportunity,
   onMatchingRoundContextChange,
   onCreated,
 }) {
   const { t } = useTranslation("classes");
 
-  if (!expanded) {
+  if (!isWorkspace) {
     return (
       <MatchingRoundCollapsedCard
         roundSummary={roundSummary}
         networks={networks}
-        onToggleExpand={onToggleExpand}
+        onOpen={onOpen}
         t={t}
       />
     );
@@ -3265,8 +3336,6 @@ export default function MatchingRoundCard({
       roundSummary={roundSummary}
       isCreate={isCreate}
       initialNetworkId={initialNetworkId}
-      onToggleExpand={onToggleExpand}
-      onRegisterDirtyGuard={onRegisterDirtyGuard}
       onPreviewOpportunity={onPreviewOpportunity}
       onMatchingRoundContextChange={onMatchingRoundContextChange}
       onCreated={onCreated}
