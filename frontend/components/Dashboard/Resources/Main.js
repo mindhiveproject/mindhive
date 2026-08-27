@@ -44,6 +44,7 @@ export default function ResourcesMain({ query, user }) {
             <SectionNavbar
               variant="underline"
               showRule
+              gapless
               aria-label={t("boardManagement.resourceCenterTitle")}
             >
               <NavbarItem

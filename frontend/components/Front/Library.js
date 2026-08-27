@@ -16,6 +16,7 @@ export default function Library({ query, user, isDashboard }) {
       <SectionNavbar
         variant="underline"
         showRule
+        gapless
         aria-label={t("navigation.discover", {}, { default: "Discover" })}
       >
         <NavbarItem

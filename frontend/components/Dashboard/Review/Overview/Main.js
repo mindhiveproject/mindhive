@@ -176,6 +176,7 @@ export default function Overview({ query, user }) {
       <SectionNavbar
         variant="underline"
         showRule
+        gapless
         id="options"
         aria-label={t("review.feedbackCenter")}
       >

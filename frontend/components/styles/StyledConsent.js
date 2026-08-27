@@ -3,6 +3,12 @@ import styled from "styled-components";
 export const StyledConsent = styled.div`
   display: grid;
   grid-gap: 2rem;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
   .singlePost {
     display: grid;
     grid-gap: 2rem;
