@@ -10,6 +10,7 @@ import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
+import { QuestionMarkIcon } from "../../../DesignSystem/Icons";
 import MessageCard from "../../../DesignSystem/MessageCard";
 import { OpportunityPageShell as Shell } from "./OpportunityPageLayout";
 import {
@@ -27,6 +28,7 @@ import {
 } from "../../../../lib/opportunityFlash";
 import { getUnreadReviewerCommentNotes } from "../../../../lib/reviewThreadRound";
 import OpportunityChatModal from "./OpportunityChatModal";
+import OpportunityClassForumModal from "./OpportunityClassForumModal";
 import OpportunityListStepper from "./OpportunityListStepper";
 import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
 import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
@@ -83,6 +85,7 @@ const OpportunityCard = styled.article`
 const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
   align-items: flex-start;
   gap: 16px;
   padding: 16px 20px;
@@ -122,9 +125,13 @@ const Hint = styled.div`
 const HeaderAside = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
   align-items: flex-end;
   gap: 8px;
   flex-shrink: 0;
+  border-top: 1px solid #e6e6e6;
+  padding-top: 16px;
 
   @media (max-width: 720px) {
     align-items: stretch;
@@ -174,7 +181,7 @@ const FormsPanel = styled.div`
   flex-direction: column;
   gap: 10px;
   padding: 14px 20px 16px;
-  background: #fafbfc;
+  background: #ffffff;
   border-top: 1px solid #e6e6e6;
 `;
 
@@ -352,6 +359,7 @@ export default function OpportunitiesList({ user }) {
   });
   const [deleteOpportunity] = useMutation(DELETE_OPPORTUNITY);
   const [chatModal, setChatModal] = useState(null);
+  const [classForumModal, setClassForumModal] = useState(null);
   const [unsubmitOpportunityId, setUnsubmitOpportunityId] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
@@ -538,6 +546,19 @@ export default function OpportunitiesList({ user }) {
                         ) : null}
                       </MessageButtonWrap>
                       <Chip
+                        label={tConnect(
+                          "myOpportunitiesList.classForum.open",
+                          {},
+                          { default: "Class FAQ" },
+                        )}
+                        leading={<QuestionMarkIcon width={18} height={18} />}
+                        onClick={() =>
+                          setClassForumModal({
+                            opportunityId: opportunity.id,
+                          })
+                        }
+                      />
+                      <Chip
                         label={t("opportunities.edit", {}, {
                           default: "Edit",
                         })}
@@ -693,6 +714,12 @@ export default function OpportunitiesList({ user }) {
         onClose={() => setChatModal(null)}
         opportunityId={chatModal?.opportunityId}
         initialRoundId={chatModal?.initialRoundId}
+        user={user}
+      />
+      <OpportunityClassForumModal
+        open={Boolean(classForumModal?.opportunityId)}
+        onClose={() => setClassForumModal(null)}
+        opportunityId={classForumModal?.opportunityId}
         user={user}
       />
       <UnsubmitOpportunityModal

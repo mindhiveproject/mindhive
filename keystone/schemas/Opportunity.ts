@@ -172,6 +172,12 @@ export const Opportunity = list({
       many: true,
     }),
 
+    // Class FAQs (Talk rooms scoped opportunity × class).
+    talks: relationship({
+      ref: "Talk.opportunities",
+      many: true,
+    }),
+
     // Average of all public student ratings for this opportunity.
     // Null when no eligible ratings exist.
     publicRatingAverage: virtual({

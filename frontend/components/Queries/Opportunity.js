@@ -158,6 +158,15 @@ export const GET_OPPORTUNITY = gql`
       specificSkills
       createdAt
       updatedAt
+      talks {
+        id
+        settings
+        classes {
+          id
+          title
+          code
+        }
+      }
       rounds {
         id
         title
@@ -166,6 +175,11 @@ export const GET_OPPORTUNITY = gql`
         classNetwork {
           id
           title
+          classes {
+            id
+            title
+            code
+          }
         }
         formDefinitions {
           id
@@ -489,27 +503,6 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         id
         favoriteOpportunities {
           id
-        }
-        studentIn {
-          id
-          networks {
-            id
-            connectRounds(
-              where: {
-                status: { equals: "preferences_open" }
-                opportunities: { some: { id: { equals: $id } } }
-              }
-            ) {
-              id
-              title
-              openAt
-              closeAt
-              classNetwork {
-                id
-                title
-              }
-            }
-          }
         }
       }
     }

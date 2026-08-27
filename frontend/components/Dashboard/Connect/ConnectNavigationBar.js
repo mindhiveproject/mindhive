@@ -22,7 +22,6 @@ const OPPORTUNITY_PATHS = [
   "/dashboard/connect/my-matches",
   "/dashboard/connect/rounds",
   "/dashboard/connect/questions",
-  "/dashboard/connect/participate",
   "/dashboard/connect/matches",
   "/dashboard/connect/review-queue",
   "/dashboard/connect/review",
@@ -169,7 +168,6 @@ export default function ConnectNavigationBar() {
     isAdmin,
     isTeacher,
     isMentor,
-    isStudent,
     isScientist,
     isReviewer,
     isSponsor,
@@ -279,7 +277,12 @@ export default function ConnectNavigationBar() {
         value: "explore",
         label: t("nav.exploreOpportunities", {}, { default: "Explore opportunities" }),
         href: "/dashboard/connect/explore",
-        visible: true,
+        visible:
+          isAdmin ||
+          isTeacher ||
+          isMentor ||
+          isSponsor ||
+          isClassNetworkAdmin,
       },
       {
         value: "myOpportunities",
@@ -306,12 +309,6 @@ export default function ConnectNavigationBar() {
         visible: isTeacher || isAdmin,
       },
       {
-        value: "participate",
-        label: t("nav.participate", {}, { default: "Participate" }),
-        href: "/dashboard/connect/participate",
-        visible: isStudent || isAdmin,
-      },
-      {
         value: "matches",
         label: t("nav.matches", {}, { default: "Matches" }),
         href: "/dashboard/connect/matches",
@@ -333,7 +330,7 @@ export default function ConnectNavigationBar() {
     isAdmin,
     isTeacher,
     isMentor,
-    isStudent,
+    isSponsor,
     isReviewer,
     isClassNetworkAdmin,
   ]);

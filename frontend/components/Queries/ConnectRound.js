@@ -270,6 +270,8 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
             id
             title
             shortDescription
+            projectCategory
+            projectCategoryOther
             timeCommitment
             availableFrom
             availableTo
@@ -292,6 +294,27 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
                 url
               }
             }
+          }
+        }
+      }
+    }
+    authenticatedItem {
+      ... on Profile {
+        id
+        connectPreferences(
+          where: {
+            round: {
+              classNetwork: {
+                classes: { some: { code: { equals: $code } } }
+              }
+            }
+          }
+        ) {
+          id
+          status
+          submittedAt
+          round {
+            id
           }
         }
       }

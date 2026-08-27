@@ -17,6 +17,7 @@ import {
   collectMediaAssetIdsFromOpportunities,
   collectOpportunityMediaDownloads,
   getDefaultSelectedColumnIds,
+  getSelectedMediaKinds,
 } from "./opportunityExportUtils";
 
 const HINT_STYLE = { margin: "0 0 12px" };
@@ -80,7 +81,7 @@ async function fetchMediaBuffer(url) {
 }
 
 /**
- * Column-picker modal + ZIP download (CSV + per-opportunity media folders).
+ * Column-picker modal + ZIP download (CSV; media folders when Media columns selected).
  */
 export default function OpportunityExportModal({
   open,
@@ -173,19 +174,23 @@ export default function OpportunityExportModal({
         ]),
       );
 
-      const assetIds = collectMediaAssetIdsFromOpportunities(
-        listOpportunities,
-        detailById,
-      );
+      const mediaKinds = getSelectedMediaKinds(selectedColumnIds);
+
       let assetById = new Map();
-      if (assetIds.length > 0) {
-        const { data: assetData, error: assetError } = await fetchMediaAssets({
-          variables: { ids: assetIds },
-        });
-        if (assetError) throw assetError;
-        assetById = new Map(
-          (assetData?.mediaAssets || []).map((asset) => [asset.id, asset]),
+      if (mediaKinds.followUp) {
+        const assetIds = collectMediaAssetIdsFromOpportunities(
+          listOpportunities,
+          detailById,
         );
+        if (assetIds.length > 0) {
+          const { data: assetData, error: assetError } = await fetchMediaAssets({
+            variables: { ids: assetIds },
+          });
+          if (assetError) throw assetError;
+          assetById = new Map(
+            (assetData?.mediaAssets || []).map((asset) => [asset.id, asset]),
+          );
+        }
       }
 
       const rows = buildExportRows({
@@ -226,6 +231,7 @@ export default function OpportunityExportModal({
         listOpportunities,
         detailById,
         assetById,
+        mediaKinds,
       );
       const total = mediaDownloads.length;
       for (let index = 0; index < total; index += 1) {
@@ -327,7 +333,7 @@ export default function OpportunityExportModal({
       <p style={HINT_STYLE}>
         {t("opportunities.matchingRound.export.hint", { count: opportunityCount }, {
           default:
-            "Choose which columns to include. {{count}} opportunities from this network will be exported as a ZIP with the CSV and a folder per opportunity (intro video, cover illustration, and follow-up images, PDFs, and documents).",
+            "Choose which columns to include in the CSV. {{count}} opportunities from this network will be exported as a ZIP. Intro videos, illustrations, and follow-up files are included only when those Media columns are selected.",
         })}
       </p>
       <div style={TOOLBAR_STYLE}>

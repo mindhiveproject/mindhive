@@ -40,13 +40,18 @@ const OpportunityFollowUpFormPanel = forwardRef(
       hideSaveButton = true,
       readOnlyLayout = null,
       hideUnansweredFields = false,
+      /** Optional override — e.g. student preview of sponsor-filled answers. */
+      viewerRoles: viewerRolesProp = null,
     },
     ref,
   ) {
     const router = useRouter();
     const { t } = useTranslation("connect");
     const connectRole = useConnectRole();
-    const viewerRoles = rolesForViewer(connectRole);
+    const viewerRolesFromUser = rolesForViewer(connectRole);
+    const viewerRoles = Array.isArray(viewerRolesProp) && viewerRolesProp.length
+      ? viewerRolesProp
+      : viewerRolesFromUser;
     const opportunityId = opportunity?.id;
 
     // Always load the latest opportunity so follow-up forms hydrate from the

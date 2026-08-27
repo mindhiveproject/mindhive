@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
 import { ArrowOutwardIcon } from "../../DesignSystem/Icons";
+import { getProjectCategoryDisplay } from "../../../lib/opportunityCategory";
 import ConnectCard from "./ConnectCard";
 import ManageFavoriteOpportunity from "./ManageFavoriteOpportunity";
 
@@ -42,6 +43,11 @@ export default function OpportunityConnectCard({
   const orgLogoUrl = opportunity.organization?.logo?.url || null;
   const sponsor = mentorDisplayName(opportunity.mentor);
   const description = opportunity.shortDescription?.trim() || null;
+  const categoryLabel = getProjectCategoryDisplay(
+    opportunity.projectCategory,
+    opportunity.projectCategoryOther,
+    t,
+  );
 
   const opportunityTypeLabel = t(
     "opportunityCard.opportunityButton",
@@ -61,6 +67,36 @@ export default function OpportunityConnectCard({
     }
   };
 
+  const chips = [];
+  if (orgName) {
+    chips.push(
+      <Chip
+        key="organization"
+        shape="pill"
+        label={orgName}
+        title={orgName}
+        style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}
+        leading={
+          <ChipLeading
+            src={orgLogoUrl || "/assets/connect/building.svg"}
+            alt=""
+          />
+        }
+      />,
+    );
+  }
+  if (categoryLabel) {
+    chips.push(
+      <Chip
+        key="projectCategory"
+        shape="pill"
+        label={categoryLabel}
+        title={categoryLabel}
+        style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}
+      />,
+    );
+  }
+
   return (
     <ConnectCard
       typeLabel={opportunityTypeLabel}
@@ -72,22 +108,7 @@ export default function OpportunityConnectCard({
       }}
       title={title}
       subtitle={sponsor}
-      chips={
-        orgName ? (
-          <Chip
-            key="organization"
-            label={orgName}
-            title={orgName}
-            style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}
-            leading={
-              <ChipLeading
-                src={orgLogoUrl || "/assets/connect/building.svg"}
-                alt=""
-              />
-            }
-          />
-        ) : null
-      }
+      chips={chips.length > 0 ? chips : null}
       description={description}
       actions={
         <>

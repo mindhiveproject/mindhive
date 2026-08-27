@@ -36,22 +36,65 @@ function truncateLabel(label, max = 28) {
   return `${text.slice(0, max - 1)}…`;
 }
 
+/** Formats a summed dwell duration, omitting zero remainders and using hours when needed. */
 function formatDwellMs(dwellMs, t) {
-  const seconds = Math.max(0, Math.round((Number(dwellMs) || 0) / 1000));
-  if (seconds < 60) {
+  const totalSeconds = Math.max(0, Math.round((Number(dwellMs) || 0) / 1000));
+  if (totalSeconds < 60) {
     return t(
       "opportunities.matchingRound.studentInterest.dwellSeconds",
-      { count: seconds },
+      { count: totalSeconds },
       { default: "{{count}}s" },
     );
   }
-  const minutes = Math.floor(seconds / 60);
-  const rem = seconds % 60;
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (hours > 0) {
+    if (minutes === 0) {
+      return t(
+        "opportunities.matchingRound.studentInterest.dwellHours",
+        { hours },
+        { default: "{{hours}}h" },
+      );
+    }
+    return t(
+      "opportunities.matchingRound.studentInterest.dwellHoursMinutes",
+      { hours, minutes },
+      { default: "{{hours}}h {{minutes}}m" },
+    );
+  }
+
+  if (seconds === 0) {
+    return t(
+      "opportunities.matchingRound.studentInterest.dwellMinutesOnly",
+      { minutes },
+      { default: "{{minutes}}m" },
+    );
+  }
   return t(
     "opportunities.matchingRound.studentInterest.dwellMinutes",
-    { minutes, seconds: rem },
+    { minutes, seconds },
     { default: "{{minutes}}m {{seconds}}s" },
   );
+}
+
+function formatInterestTooltip({ dwellMs, favorited, favoritedLabel, t }) {
+  const parts = [];
+  if (Number(dwellMs) > 0) {
+    parts.push(
+      t(
+        "opportunities.matchingRound.studentInterest.totalPreviewTime",
+        { time: formatDwellMs(dwellMs, t) },
+        { default: "Total preview time: {{time}}" },
+      ),
+    );
+  }
+  if (favorited) {
+    parts.push(favoritedLabel);
+  }
+  return parts.join("\n");
 }
 
 function includesQuery(value, query) {
@@ -63,25 +106,41 @@ function includesQuery(value, query) {
 }
 
 /**
- * CSV cell: dwell seconds, "favorited", both as "54;favorited", or empty.
+ * CSV cell: visit count and dwell seconds, optionally "favorited".
+ * Examples: "3;54", "3;54;favorited", "favorited", or empty.
  */
 function formatInterestCsvCell(cell, favoritedLabel) {
   const hasVisit = cell?.visitCount > 0;
   const favorited = !!cell?.favorited;
+  const visits = hasVisit ? Number(cell.visitCount) || 0 : null;
   const seconds = hasVisit
     ? Math.max(0, Math.round((Number(cell.dwellMs) || 0) / 1000))
     : null;
 
-  if (hasVisit && favorited) {
-    return `${seconds};${favoritedLabel}`;
-  }
+  const parts = [];
   if (hasVisit) {
-    return String(seconds);
+    parts.push(String(visits), String(seconds));
   }
   if (favorited) {
-    return favoritedLabel;
+    parts.push(favoritedLabel);
   }
-  return "";
+  return parts.join(";");
+}
+
+function formatVisitCountLabel(count, t) {
+  const n = Number(count) || 0;
+  if (n === 1) {
+    return t(
+      "opportunities.matchingRound.studentInterest.visitCountOne",
+      { count: n },
+      { default: "{{count}} visit" },
+    );
+  }
+  return t(
+    "opportunities.matchingRound.studentInterest.visitCount",
+    { count: n },
+    { default: "{{count}} visits" },
+  );
 }
 
 function buildInterestCsvFilename(roundTitle, date = new Date()) {
@@ -264,18 +323,21 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestCards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 12px;
+    align-items: stretch;
   }
 
   .matchingRoundStudentInterestCard {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
+    min-width: 0;
     padding: 14px 16px;
+    box-sizing: border-box;
     border-radius: 12px;
     background: #ffffff;
     border: 1px solid #ece9e6;
-    min-width: 0;
   }
 
   .matchingRoundStudentInterestCardName {
@@ -287,18 +349,43 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestCardList {
     display: grid;
-    gap: 8px;
+    gap: 0;
     margin: 0;
     padding: 0;
     list-style: none;
+    flex: 1;
+    min-height: 135px;
   }
 
   .matchingRoundStudentInterestCardItem {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 10px;
     min-width: 0;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+
+  .matchingRoundStudentInterestCardItemTooltip {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .matchingRoundStudentInterestCardItemInner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7rem;
+    column-gap: 12px;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 24px;
   }
 
   .matchingRoundStudentInterestCardOpp {
@@ -314,9 +401,10 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestCardDwell {
     margin: 0;
-    flex-shrink: 0;
+    justify-self: stretch;
     display: inline-flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 4px;
     font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
@@ -349,21 +437,18 @@ function InterestCellContent({ cell, t }) {
     {},
     { default: "Favorited" },
   );
-  const visitTitle = hasVisit
-    ? t(
-        "opportunities.matchingRound.studentInterest.visitCount",
-        { count: cell.visitCount },
-        { default: "{{count}} visits" },
-      )
-    : null;
-  const titleParts = [visitTitle, favorited ? favoritedLabel : null].filter(
-    Boolean,
-  );
-  const titleText = titleParts.join(" · ");
+  const tooltipContent = formatInterestTooltip({
+    dwellMs: hasVisit ? cell.dwellMs : 0,
+    favorited,
+    favoritedLabel,
+    t,
+  });
 
-  return (
-    <InterestCell title={titleText}>
-      {hasVisit ? <span>{formatDwellMs(cell.dwellMs, t)}</span> : null}
+  const cellBody = (
+    <InterestCell>
+      {hasVisit ? (
+        <span>{formatVisitCountLabel(cell.visitCount, t)}</span>
+      ) : null}
       {favorited ? (
         <StarFilledIcon
           className="matchingRoundStudentInterestStar"
@@ -373,6 +458,16 @@ function InterestCellContent({ cell, t }) {
         />
       ) : null}
     </InterestCell>
+  );
+
+  if (!tooltipContent) {
+    return cellBody;
+  }
+
+  return (
+    <Tooltip content={tooltipContent} side="top" maxWidth={280}>
+      {cellBody}
+    </Tooltip>
   );
 }
 
@@ -395,7 +490,7 @@ function OpportunityColumnHeader(props) {
 
 /**
  * Class students × pre-selected opportunities preview interest matrix.
- * Table mode: AG Grid matrix. Grid mode: student cards with top 3 by dwell.
+ * Table mode: AG Grid matrix. Grid mode: student cards with top 3 by visit count.
  * Parent can call `ref.current.downloadCsv()` for the matching-round export button.
  */
 const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStudentInterestGrid(
@@ -585,7 +680,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
         .filter((item) => item.visitCount > 0 || item.favorited)
         .sort((a, b) => {
           if (a.favorited !== b.favorited) return a.favorited ? -1 : 1;
-          return b.dwellMs - a.dwellMs;
+          return b.visitCount - a.visitCount;
         })
         .slice(0, 3);
 
@@ -595,7 +690,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
         topOpportunities,
       };
     });
-  }, [tableRowData, filteredOpportunities]);
+  }, [tableRowData, filteredOpportunities, t]);
 
   const studentColumnHeader = t(
     "opportunities.matchingRound.studentInterest.columns.student",
@@ -631,7 +726,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
         valueGetter: (params) => {
           const cell =
             params?.data?.interestByOpportunityId?.[opportunity.id] || null;
-          return cell?.dwellMs || 0;
+          return cell?.visitCount || 0;
         },
         cellRenderer: (params) => {
           const cell =
@@ -835,14 +930,23 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
       <div className="matchingRoundStudentInterestHeader">
         <div className="matchingRoundStudentInterestHeaderText">
           <p className="matchingRoundStudentInterestHint">
-            {t(
-              "opportunities.matchingRound.studentInterest.hint",
-              {},
-              {
-                default:
-                  "Time students spent previewing each opportunity (sessions of 1 second or more), and which opportunities they favorited.",
-              },
-            )}
+            {viewMode === VIEW_MODES.grid
+              ? t(
+                  "opportunities.matchingRound.studentInterest.hintGrid",
+                  {},
+                  {
+                    default:
+                      "Each card shows a student's top 3 opportunities by favorites and visit count. Hover a row to see the full title and total preview time.",
+                  },
+                )
+              : t(
+                  "opportunities.matchingRound.studentInterest.hint",
+                  {},
+                  {
+                    default:
+                      "How many times students previewed each opportunity (sessions of 1 second or more), and which opportunities they favorited. Hover a cell to see total preview time.",
+                  },
+                )}
           </p>
         </div>
         {headerActions}
@@ -904,30 +1008,59 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
               </h5>
               {card.topOpportunities.length > 0 ? (
                 <ul className="matchingRoundStudentInterestCardList">
-                  {card.topOpportunities.map((opp) => (
-                    <li
-                      key={opp.id}
-                      className="matchingRoundStudentInterestCardItem"
-                      title={opp.title}
-                    >
-                      <p className="matchingRoundStudentInterestCardOpp">
-                        {opp.title}
-                      </p>
-                      <p className="matchingRoundStudentInterestCardDwell">
-                        {opp.visitCount > 0
-                          ? formatDwellMs(opp.dwellMs, t)
-                          : null}
-                        {opp.favorited ? (
-                          <StarFilledIcon
-                            className="matchingRoundStudentInterestStar"
-                            width={16}
-                            height={16}
-                            aria-label={favoritedAria}
-                          />
-                        ) : null}
-                      </p>
-                    </li>
-                  ))}
+                  {card.topOpportunities.map((opp) => {
+                    const dwellTooltip = formatInterestTooltip({
+                      dwellMs: opp.visitCount > 0 ? opp.dwellMs : 0,
+                      favorited: opp.favorited,
+                      favoritedLabel: favoritedAria,
+                      t,
+                    });
+
+                    const rowTooltip = [opp.title, dwellTooltip]
+                      .filter(Boolean)
+                      .join("\n");
+
+                    const rowBody = (
+                      <div className="matchingRoundStudentInterestCardItemInner">
+                        <p className="matchingRoundStudentInterestCardOpp">
+                          {opp.title}
+                        </p>
+                        <p className="matchingRoundStudentInterestCardDwell">
+                          {opp.visitCount > 0
+                            ? formatVisitCountLabel(opp.visitCount, t)
+                            : null}
+                          {opp.favorited ? (
+                            <StarFilledIcon
+                              className="matchingRoundStudentInterestStar"
+                              width={16}
+                              height={16}
+                              aria-label={favoritedAria}
+                            />
+                          ) : null}
+                        </p>
+                      </div>
+                    );
+
+                    return (
+                      <li
+                        key={opp.id}
+                        className="matchingRoundStudentInterestCardItem"
+                      >
+                        {rowTooltip ? (
+                          <Tooltip
+                            content={rowTooltip}
+                            side="top"
+                            maxWidth={320}
+                            className="matchingRoundStudentInterestCardItemTooltip"
+                          >
+                            {rowBody}
+                          </Tooltip>
+                        ) : (
+                          rowBody
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : (
                 <p className="matchingRoundStudentInterestCardEmpty">

@@ -9,7 +9,8 @@ const StyledClass = styled.div`
   overflow-x: hidden;
   box-sizing: border-box;
 
-  &.isProjectsFullscreen {
+  &.isProjectsFullscreen,
+  &.isContentFullscreen {
     overflow-x: visible;
     height: 100%;
     max-height: 100%;
@@ -17,7 +18,8 @@ const StyledClass = styled.div`
     overflow-y: hidden;
   }
 
-  &.isProjectsFullscreen > * {
+  &.isProjectsFullscreen > *,
+  &.isContentFullscreen > * {
     max-width: none;
     min-height: 0;
     height: 100%;
@@ -249,7 +251,7 @@ const StyledClass = styled.div`
   .editableClassHeader {
     display: grid;
     width: 100%;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     padding: 10px;
     .infoPane {
       display: grid;
@@ -908,7 +910,6 @@ const StyledClass = styled.div`
       border: 1px solid #e6e6e6;
       border-radius: 18px;
       background: linear-gradient(180deg, #ffffff 0%, #fbfbfa 100%);
-      box-shadow: 0 10px 30px rgba(23, 23, 23, 0.06);
     }
 
     .classTabSectionHeader {

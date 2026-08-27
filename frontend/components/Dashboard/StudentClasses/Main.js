@@ -1,4 +1,5 @@
 import Link from "next/link";
+import clsx from "clsx";
 import ClassPage from "./ClassPage/Main";
 
 import ClassesList from "./ClassesList";
@@ -28,8 +29,14 @@ export default function StudentClasses({ query, user }) {
     );
   }
 
+  const isOpportunitiesFullscreen =
+    query?.page === "opportunities" &&
+    (!!query?.opportunity || !!query?.round);
+
   return (
-    <StyledClass>
+    <StyledClass
+      className={clsx(isOpportunitiesFullscreen && "isContentFullscreen")}
+    >
       <ClassPage code={selector} user={user} query={query} />
     </StyledClass>
   );

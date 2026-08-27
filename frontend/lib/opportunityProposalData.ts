@@ -114,6 +114,68 @@ export function getIntakeProposalFormDefinitionId(
   return match?.formDefinitionId || null;
 }
 
+/** Capstone / pitch overview keys used to score which proposalData entry to show. */
+const STUDENT_PITCH_SCORE_KEYS = [
+  "relevance",
+  "requiresSpecialResources",
+  "specialResourcesNotes",
+  "datasetProvision",
+  "datasetProvisionOther",
+  "expectedDeliverables",
+  "expectedDeliverablesOther",
+  "anticipatedObstacles",
+  "fieldResearchRequired",
+  "fieldResearchTravelDetails",
+  "requiredSoftware",
+  "requiredSoftwareOther",
+  "requiredHardware",
+  "requiredHardwareOther",
+] as const;
+
+function scorePitchAnswer(answer: OpportunityProposalAnswer | undefined): number {
+  if (!answer || typeof answer !== "object") return 0;
+  let score = 0;
+  for (const key of STUDENT_PITCH_SCORE_KEYS) {
+    const value = answer[key];
+    if (value == null) continue;
+    if (typeof value === "string" && !value.trim()) continue;
+    if (Array.isArray(value)) {
+      if (value.length === 0) continue;
+      score += value.length;
+      continue;
+    }
+    score += 1;
+  }
+  return score;
+}
+
+/**
+ * Student About "Project details" source: among proposalData entries that are
+ * not round follow-up forms, prefer the richest Capstone/pitch answer set.
+ * Avoids picking a sparse early intake stub when a later Capstone entry exists.
+ */
+export function getStudentPitchProposalFormDefinitionId(
+  proposalData: unknown,
+  excludeFormDefinitionIds: Iterable<string> = []
+): string | null {
+  if (!isProposalDataEntries(proposalData)) return null;
+  const exclude = new Set(
+    Array.from(excludeFormDefinitionIds || []).filter(Boolean)
+  );
+  let bestId: string | null = null;
+  let bestScore = -1;
+  for (const entry of proposalData) {
+    const id = entry?.formDefinitionId;
+    if (!id || exclude.has(id)) continue;
+    const score = scorePitchAnswer(entry.answer);
+    if (score > bestScore) {
+      bestScore = score;
+      bestId = id;
+    }
+  }
+  return bestId;
+}
+
 /**
  * ISO `savedAt` for a proposalData entry, or null when missing / legacy.
  */

@@ -107,6 +107,18 @@ export default function ClassPage({ code, user, query }) {
   const hideDisallowedPage =
     hasClassData && query?.page && !allowedPages.has(query.page);
 
+  const isOpportunitiesFullscreen =
+    page === "opportunities" &&
+    (!!query?.opportunity || !!query?.round);
+
+  // Full-page opportunity preview / ranking: skip class header + tab nav
+  // (left dashboard nav stays). Preview vs rank is decided inside ClassOpportunities.
+  if (isOpportunitiesFullscreen && !hideDisallowedPage) {
+    return (
+      <ClassOpportunities myclass={myclass} user={user} query={query} />
+    );
+  }
+
   return (
     <div>
       <Header myclass={myclass} />
