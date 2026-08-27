@@ -8,14 +8,14 @@ const StyledNotes = styled.div`
 
   p {
     padding: 20px;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
 
   a {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
     color: #666666;

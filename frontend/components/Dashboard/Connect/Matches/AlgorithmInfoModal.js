@@ -31,7 +31,7 @@ const modalStyle = {
   borderRadius: 16,
   boxShadow: "0 16px 48px rgba(0, 0, 0, 0.18)",
   padding: 32,
-  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "#171717",
 };
@@ -46,7 +46,7 @@ const headerStyle = {
 
 const titleStyle = {
   margin: 0,
-  font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Title-Large)',
   letterSpacing: 0,
   color: "#171717",
 };
@@ -70,7 +70,7 @@ const sectionStyle = {
 
 const h3Style = {
   margin: "0 0 8px",
-  font: 'var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Title-Base)',
   letterSpacing: 0,
   color: "#171717",
 };
@@ -97,7 +97,7 @@ const chipStyle = {
   borderRadius: 100,
   background: "#eef5f9",
   color: "#336f8a",
-  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Label-Base)',
   letterSpacing: 0,
   marginBottom: 8,
 };
@@ -106,7 +106,7 @@ const tableStyle = {
   width: "100%",
   borderCollapse: "collapse",
   marginTop: 12,
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
 };
 
@@ -319,31 +319,31 @@ export default function AlgorithmInfoModal({ open, onClose }) {
             </thead>
             <tbody>
               <tr>
-                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)', letterSpacing: 0 }}>Fairness guarantee</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Fairness guarantee</td>
                 <td style={thTdBase}>Stable (best)</td>
                 <td style={thTdBase}>None</td>
                 <td style={thTdBase}>Teacher decides</td>
               </tr>
               <tr>
-                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)', letterSpacing: 0 }}>Determinism</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Determinism</td>
                 <td style={thTdBase}>Yes</td>
                 <td style={thTdBase}>Yes</td>
                 <td style={thTdBase}>N/A</td>
               </tr>
               <tr>
-                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)', letterSpacing: 0 }}>Team coherence</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Team coherence</td>
                 <td style={thTdBase}>Applied automatically</td>
                 <td style={thTdBase}>Applied automatically</td>
                 <td style={thTdBase}>Shown as ranking hint only</td>
               </tr>
               <tr>
-                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)', letterSpacing: 0 }}>Order</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Order</td>
                 <td style={thTdBase}>Student preference</td>
                 <td style={thTdBase}>Global score</td>
                 <td style={thTdBase}>Teacher&apos;s choice</td>
               </tr>
               <tr>
-                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)', letterSpacing: 0 }}>Best for</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Best for</td>
                 <td style={thTdBase}>Large, contested rounds</td>
                 <td style={thTdBase}>Small transparent runs</td>
                 <td style={thTdBase}>Small rounds or algorithm override</td>
@@ -355,7 +355,7 @@ export default function AlgorithmInfoModal({ open, onClose }) {
         <p
           style={{
             marginTop: 20,
-            font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+            font: 'var(--MH-Type-Body-Base)',
             letterSpacing: 0,
             color: "#5f6871",
           }}

@@ -41,7 +41,7 @@ function selectTriggerStyle(hasError) {
     }`,
     borderRadius: 8,
     padding: "9px 11px",
-    font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+    font: 'var(--MH-Type-Body-Base)',
     letterSpacing: 0,
     color: "var(--MH-Theme-Neutrals-Black, #171717)",
     background: "var(--MH-Theme-Neutrals-White, #ffffff)",

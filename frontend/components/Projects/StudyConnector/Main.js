@@ -199,27 +199,27 @@ const StyledStudyConnector = styled.div`
   }
 
   .ui.warning.message .header {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
   }
 
   .ui.warning.message p {
     margin: 0;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 `;
 
 const Header = styled.h2`
-  font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+  font: var(--MH-Type-Heading-Small);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
   margin: 0 0 8px 0;
 `;
 
 const Description = styled.p`
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   margin: 0 0 24px 0;
@@ -244,7 +244,7 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.h3`
-  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Primary-Dark, #336f8a);
   margin: 0;
@@ -253,7 +253,7 @@ const SectionTitle = styled.h3`
 const Input = styled.input`
   width: 100%;
   box-sizing: border-box;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
   padding: 8px 12px;

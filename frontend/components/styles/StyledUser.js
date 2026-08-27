@@ -66,7 +66,7 @@ export const StyledUserPage = styled.div`
 
         .username {
           h1 {
-            font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+            font: var(--MH-Type-Heading-Large);
             letter-spacing: 0;
           }
         }
@@ -128,7 +128,7 @@ export const StyledUserPage = styled.div`
 
       a {
         text-transform: uppercase;
-        font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Large);
         letter-spacing: 0;
         color: var(--green);
       }
@@ -167,7 +167,7 @@ export const StyledUserPage = styled.div`
 
       a {
         text-transform: uppercase;
-        font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Large);
         letter-spacing: 0;
         color: var(--green);
       }
@@ -206,7 +206,7 @@ export const StyledUserPage = styled.div`
 
       a {
         text-transform: uppercase;
-        font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Large);
         letter-spacing: 0;
         color: var(--green);
         cursor: pointer;

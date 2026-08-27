@@ -29,7 +29,7 @@ const EditButton = styled.button`
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   text-align: center;
   border-radius: 100px;

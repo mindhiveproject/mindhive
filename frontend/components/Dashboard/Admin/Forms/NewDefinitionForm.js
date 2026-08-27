@@ -38,7 +38,7 @@ const Header = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -64,13 +64,13 @@ const SurfaceTile = styled.button`
   font-family: inherit;
 
   .surface-label {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
 
   .surface-hint {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #5f6871;
   }
@@ -353,7 +353,7 @@ export default function NewDefinitionForm({ open, onClose }) {
 
       <div>
         <div
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{ color: "#5f6871", marginBottom: 8 }}
         >
           Step 1 — pick a surface
@@ -375,7 +375,7 @@ export default function NewDefinitionForm({ open, onClose }) {
 
       {surface ? (
         <>
-          <div className="MH-Type-Body-Small" style={{ color: "#5f6871" }}>
+          <div className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
             Step 2 — details
           </div>
           <Grid>
@@ -527,7 +527,7 @@ export default function NewDefinitionForm({ open, onClose }) {
       ) : null}
 
       {error ? (
-        <div className="MH-Type-Body-Small" style={{ color: "#871b16" }}>
+        <div className="MH-Type-Body-Base" style={{ color: "#871b16" }}>
           {error}
         </div>
       ) : null}

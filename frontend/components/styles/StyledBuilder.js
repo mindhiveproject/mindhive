@@ -31,16 +31,16 @@ export const StyledBuilderArea = styled.div`
       max-width: 526px;
       text-align: center;
       font-style: normal;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       .title {
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
       }
       .subtitle {
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
       .formSection {
@@ -51,7 +51,7 @@ export const StyledBuilderArea = styled.div`
       .backBtn {
         margin: 8px auto 0;
         padding: 10px 24px;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         border: 1px solid var(--MH-Theme-Primary-Dark, #336f8a);
         border-radius: 100px;
@@ -82,14 +82,14 @@ export const StyledBuilderArea = styled.div`
       }
 
       .title {
-        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
         margin: 0;
       }
 
       .helpText {
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
         margin: 0;
@@ -97,7 +97,7 @@ export const StyledBuilderArea = styled.div`
 
       input[type="text"],
       .ui.dropdown {
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
 
@@ -129,21 +129,21 @@ export const StyledBuilderArea = styled.div`
         margin: 0;
         width: 100%;
         box-sizing: border-box;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
         border-radius: 8px;
       }
 
       .ui.warning.message .header {
-        font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Small);
         letter-spacing: 0;
         margin-bottom: 4px;
       }
 
       .ui.warning.message p {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       }
@@ -181,14 +181,14 @@ export const StyledBuilderArea = styled.div`
       }
 
       .templateOptionCardTitle {
-        font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Small);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
         overflow-wrap: anywhere;
       }
 
       .templateOptionCardClass {
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
         overflow-wrap: anywhere;
@@ -227,7 +227,7 @@ export const StyledBuilderArea = styled.div`
       align-items: center;
       padding: 12px 16px;
       a {
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Primary-Dark, #336f8a);
         text-decoration: none;
@@ -235,7 +235,7 @@ export const StyledBuilderArea = styled.div`
       .centralPanel {
         display: grid;
         justify-items: center;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         text-align: center;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
@@ -279,7 +279,7 @@ export const StyledBuilderArea = styled.div`
         white-space: nowrap;
         max-width: 100%;
         font-style: normal;
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
       }
@@ -340,7 +340,7 @@ export const StyledBuilderArea = styled.div`
           }
 
           p {
-            font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+            font: var(--MH-Type-Label-Large);
             letter-spacing: 0;
             color: #171717;
             margin: 0;
@@ -423,12 +423,12 @@ export const StyledCanvasBuilder = styled.div`
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     h3 {
       margin: 0 0 10px;
-      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Large);
       letter-spacing: 0;
     }
     p {
       margin: 0;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
   }
@@ -509,14 +509,14 @@ export const StyledCanvasBuilder = styled.div`
 
         h3 {
           margin: 0;
-          font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Base);
           letter-spacing: 0;
           color: #171717;
         }
 
         p {
           margin: 0;
-          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
           color: #6a6a6a;
         }
@@ -558,7 +558,7 @@ export const StyledCanvasBuilder = styled.div`
 
         h2 {
           margin: 0;
-          font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Base);
           letter-spacing: 0;
           color: var(--MH-Theme-Neutrals-Black, #171717);
         }
@@ -567,7 +567,7 @@ export const StyledCanvasBuilder = styled.div`
       .settingsSectionNote,
       .settingsEmptyNote {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       }
@@ -580,7 +580,7 @@ export const StyledCanvasBuilder = styled.div`
 
       .settingsFieldLabel {
         margin: 0;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
       }
@@ -598,21 +598,21 @@ export const StyledCanvasBuilder = styled.div`
         flex-wrap: wrap;
         justify-content: space-between;
         gap: 4px 12px;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       }
 
       .studyVersionInfoName {
         margin: 0;
-        font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Small);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
       }
 
       .studyVersionInfoDescription {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       }
@@ -641,7 +641,7 @@ export const StyledCanvasBuilder = styled.div`
         padding: 0 6px;
         border-radius: 100px;
         background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       }
@@ -663,7 +663,7 @@ export const StyledCanvasBuilder = styled.div`
 
       .versionCollectionNote {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 
@@ -706,7 +706,7 @@ export const StyledCanvasBuilder = styled.div`
         padding: 6px 10px;
         border-radius: 8px;
         background: var(--MH-Theme-Primary-Light, #def8fb);
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         color: var(--MH-Theme-Primary-Dark, #336f8a);
       }
@@ -755,7 +755,7 @@ export const StyledCanvasBuilder = styled.div`
       }
 
       .versionListItemName {
-        font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Small);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
         white-space: nowrap;
@@ -769,14 +769,14 @@ export const StyledCanvasBuilder = styled.div`
         padding: 0 6px;
         border-radius: 100px;
         background: var(--MH-Theme-Primary-Light, #def8fb);
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         white-space: nowrap;
         color: var(--MH-Theme-Primary-Dark, #336f8a);
       }
 
       .versionListItemDate {
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
         white-space: nowrap;
@@ -795,14 +795,14 @@ export const StyledCanvasBuilder = styled.div`
       /* StudyTagger lives under settingsCard */
       h2 {
         margin: 0;
-        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
       }
 
       p {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       }
@@ -902,7 +902,7 @@ export const StyledCanvasBuilder = styled.div`
       align-items: center;
       padding: 14px 24px;
       font-style: normal;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       text-align: center;
     }
@@ -969,7 +969,7 @@ export const StyledCanvasBuilder = styled.div`
     p,
     li,
     span {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
     img {
@@ -1000,7 +1000,7 @@ export const StyledCanvasBuilder = styled.div`
       select {
         width: 100%;
         height: 46px;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         background: #ffffff;
         border: 1px solid #cccccc;
@@ -1054,7 +1054,7 @@ export const StyledCanvasBuilder = styled.div`
         outline: none;
         background: transparent;
         padding: 0;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #171717;
 
@@ -1110,7 +1110,7 @@ export const StyledCanvasBuilder = styled.div`
       .blocksMenuTriggerTitle {
         flex: 1;
         min-width: 0;
-        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
         color: #171717;
       }
@@ -1149,7 +1149,7 @@ export const StyledCanvasBuilder = styled.div`
         margin: 0;
         width: 100%;
         min-width: 0;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #5d5763;
         overflow-wrap: anywhere;
@@ -1169,14 +1169,14 @@ export const StyledCanvasBuilder = styled.div`
 
       .blocksMenuSurveyBuilderHint {
         margin: 0;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #6a6a6a;
       }
 
       .blocksMenuSurveyBuilderHintStrong {
         margin: 0;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #171717;
       }
@@ -1224,7 +1224,7 @@ export const StyledCanvasBuilder = styled.div`
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         padding: 0;
-        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
         max-height: 48px;
         color: #171717;
@@ -1267,7 +1267,7 @@ export const StyledCanvasBuilder = styled.div`
     .templateCardBody {
       .node-type-label {
         padding: 0 0 8px;
-        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
         color: #171717;
       }
@@ -1275,7 +1275,7 @@ export const StyledCanvasBuilder = styled.div`
 
     .templateCardDescription {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #6a6a6a;
       display: -webkit-box;
@@ -1301,7 +1301,7 @@ export const StyledCanvasBuilder = styled.div`
     select {
       width: 100%;
       height: 46px;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       background: #ffffff;
       border: 1px solid #cccccc;
@@ -1314,7 +1314,7 @@ export const StyledCanvasBuilder = styled.div`
     }
     textarea {
       width: 100%;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       border: 1px solid #e6e6e6;
       border-radius: 4px;
@@ -1335,7 +1335,7 @@ export const StyledCanvasBuilder = styled.div`
         justify-content: center;
         border-bottom: 2px solid #e6e6e6;
         p {
-          font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Label-Large);
           letter-spacing: 0;
         }
       }
@@ -1446,7 +1446,7 @@ export const StyledParticipantPage = styled.div`
 
       .title {
         font-style: normal;
-        font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+        font: var(--MH-Type-Heading-Large);
         letter-spacing: 0;
         text-align: center;
         color: #1a1a1a;
@@ -1455,7 +1455,7 @@ export const StyledParticipantPage = styled.div`
 
       .description {
         font-style: normal;
-        font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Large);
         letter-spacing: 0;
         text-align: center;
         color: #666666;
@@ -1502,7 +1502,7 @@ export const StyledParticipantPage = styled.div`
       }
       input {
         font-style: normal;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #666666;
         border: 0px solid;
@@ -1583,7 +1583,7 @@ export const StyledParticipantPage = styled.div`
       .selector {
         margin: 10px 0px;
         font-style: normal;
-        font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Large);
         letter-spacing: 0;
         color: #1a1a1a;
       }
@@ -1708,7 +1708,7 @@ export const StyledCollectPage = styled.div`
       display: grid;
 
       span {
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         margin-bottom: 0.5rem;
       }
@@ -1716,7 +1716,7 @@ export const StyledCollectPage = styled.div`
         border: 1px solid #cccccc;
         border-radius: 4px;
         width: 100%;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         padding: 12px;
         &:focus {
@@ -1734,7 +1734,7 @@ export const StyledCollectPage = styled.div`
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         grid-gap: 2rem;
         p {
-          font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Small);
           letter-spacing: 0;
         }
       }
@@ -1812,7 +1812,7 @@ export const StyledChatGPTPage = styled.div`
     color: #000;
     text-align: center;
     font-style: normal;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
   }
 
@@ -1822,7 +1822,7 @@ export const StyledChatGPTPage = styled.div`
       margin-right: 25%;
       text-align: center;
       font-style: normal;
-      font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Large);
       letter-spacing: 0;
       margin-top: 1rem;
       margin-bottom: 2rem;
@@ -1834,7 +1834,7 @@ export const StyledChatGPTPage = styled.div`
       margin-right: 10%;
       text-align: center;
       font-style: normal;
-      font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Large);
       letter-spacing: 0;
   }
 

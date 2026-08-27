@@ -18,7 +18,7 @@ const StyledTools = styled.div`
       justify-content: center;
       width: auto;
       p {
-        font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Large);
         letter-spacing: 0;
       }
     }

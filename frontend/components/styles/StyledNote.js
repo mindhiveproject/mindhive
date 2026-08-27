@@ -6,7 +6,7 @@ const StyledNote = styled.div`
   label {
     display: block;
     font-style: normal;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
   input,
@@ -15,7 +15,7 @@ const StyledNote = styled.div`
     border: 1px solid #cccccc;
     border-radius: 4px;
     width: 100%;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     padding: 12px;
     &:focus {

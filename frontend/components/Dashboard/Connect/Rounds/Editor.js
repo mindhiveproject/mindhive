@@ -109,7 +109,7 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
     overflow: hidden;
@@ -167,7 +167,7 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -187,19 +187,19 @@ const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: #5f6871;
 
   span.label-text {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
   }
 
   span.hint {
     color: #888;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -210,7 +210,7 @@ const Field = styled.label`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #171717;
     outline: none;
@@ -253,14 +253,14 @@ const OpportunityRow = styled.label`
   }
 
   .title {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
 
   .meta {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -658,7 +658,7 @@ export default function RoundEditor({ roundId }) {
             />
             {ALGO_DESCRIPTIONS[inputs.matchingAlgorithm] && (
               <div
-                className="MH-Type-Body-Small"
+                className="MH-Type-Body-Base"
                 style={{
                   marginTop: 8,
                   padding: "10px 14px",

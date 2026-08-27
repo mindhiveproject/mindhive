@@ -30,7 +30,7 @@ const StyledBlockDocumentation = styled.div`
     }
 
     h1 {
-      font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Small);
       letter-spacing: 0;
       margin: 10px 0;
       color: #1b1c1d;
@@ -40,7 +40,7 @@ const StyledBlockDocumentation = styled.div`
       color: #767676;
       max-width: 600px;
       margin: 0 auto;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
   }
@@ -64,14 +64,14 @@ const StyledBlockDocumentation = styled.div`
 
     .content {
       .title {
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         margin-bottom: 4px;
         color: #573a08;
       }
 
       .message {
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #946c00;
       }
@@ -92,7 +92,7 @@ const StyledBlockDocumentation = styled.div`
       padding: 12px;
       border: 1px solid #d4d4d5;
       border-radius: 8px;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
@@ -113,7 +113,7 @@ const StyledBlockDocumentation = styled.div`
       padding: 12px 16px;
       border: none;
       border-radius: 8px;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       background: #336F8A;
       color: white;
@@ -171,14 +171,14 @@ const StyledBlockDocumentation = styled.div`
     border-radius: 8px;
     
     .title {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       margin-bottom: 4px;
       color: #912d2b;
     }
 
     .message {
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #991b1a;
     }
@@ -197,7 +197,7 @@ const StyledBlockDocumentation = styled.div`
       align-items: center;
 
       .label {
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         color: #1b1c1d;
         margin-right: 8px;
@@ -206,7 +206,7 @@ const StyledBlockDocumentation = styled.div`
 
       button {
         padding: 6px 12px;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         border-radius: 16px;
         border: none;
@@ -247,7 +247,7 @@ const StyledBlockDocumentation = styled.div`
         padding: 12px 12px 12px 40px;
         border: 1px solid #d4d4d5;
         border-radius: 8px;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 
@@ -274,7 +274,7 @@ const StyledBlockDocumentation = styled.div`
     grid-gap: 8px;
 
     .sectionTitle {
-      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Large);
       letter-spacing: 0;
       color: #1b1c1d;
       padding-top: 16px;
@@ -306,7 +306,7 @@ const StyledBlockDocumentation = styled.div`
             th {
               padding: 12px 24px;
               text-align: left;
-              font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+              font: var(--MH-Type-Label-Small);
               letter-spacing: 0;
               color: #767676;
               text-transform: uppercase;
@@ -348,7 +348,7 @@ const StyledBlockDocumentation = styled.div`
                 }
 
                 &:last-child {
-                  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+                  font: var(--MH-Type-Body-Base);
                   letter-spacing: 0;
                   color: #1b1c1d;
                   white-space: pre-wrap;
@@ -362,7 +362,7 @@ const StyledBlockDocumentation = styled.div`
 
       .tableFooter {
         text-align: right;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #767676;
         padding: 8px 16px;
@@ -413,7 +413,7 @@ const StyledBlockDocumentation = styled.div`
     }
 
       h2 {
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
         color: #1b1c1d;
         margin: 0;
@@ -427,7 +427,7 @@ const StyledBlockDocumentation = styled.div`
     }
 
     .description {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #767676;
 
@@ -441,7 +441,7 @@ const StyledBlockDocumentation = styled.div`
       border-left: 4px solid #db2828;
       padding: 12px;
       border-radius: 8px;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #991b1a;
     }
@@ -480,7 +480,7 @@ const StyledBlockDocumentation = styled.div`
         padding: 12px 24px;
         border: none;
         border-radius: 8px;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -527,7 +527,7 @@ const StyledBlockDocumentation = styled.div`
     text-align: center;
     padding: 48px;
     color: #767676;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;

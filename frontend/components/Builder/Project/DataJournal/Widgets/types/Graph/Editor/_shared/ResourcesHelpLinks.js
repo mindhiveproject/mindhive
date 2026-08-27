@@ -79,7 +79,7 @@ export default function ResourcesTooltipResourceButtons({
                 />
                 <span style={{ minWidth: 0, flex: 1 }}>
                   <span className="MH-Type-Title-Small" style={TITLE_STYLE}>{item.title}</span>
-                  <span className="MH-Type-Body-Small" style={SUB_STYLE}>{openLinkLabel}</span>
+                  <span className="MH-Type-Body-Base" style={SUB_STYLE}>{openLinkLabel}</span>
                 </span>
               </span>
             </Button>
@@ -115,7 +115,7 @@ export default function ResourcesTooltipResourceButtons({
               />
               <span style={{ minWidth: 0, flex: 1 }}>
                 <span className="MH-Type-Title-Small" style={TITLE_STYLE}>{item.title}</span>
-                <span className="MH-Type-Body-Small" style={SUB_STYLE}>{item.alt || noLinkHint}</span>
+                <span className="MH-Type-Body-Base" style={SUB_STYLE}>{item.alt || noLinkHint}</span>
               </span>
             </span>
           </Button>

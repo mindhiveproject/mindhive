@@ -13,7 +13,7 @@ export default function JournalMain({ query, user }) {
   if (!selector) {
     return (
       <StyledJournal>
-        <h1>{t("journal.menuTitle")}</h1>
+        <h1 className="MH-Type-Heading-Base">{t("journal.menuTitle")}</h1>
         <div className="header">
           <Link href="/dashboard/journals/add">
             <button>{t("journal.createNewJournal")}</button>

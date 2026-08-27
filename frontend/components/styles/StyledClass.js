@@ -65,7 +65,7 @@ const StyledClass = styled.div`
   }
 
   .teacherClassesSortLabel {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
   }
@@ -82,7 +82,7 @@ const StyledClass = styled.div`
     border-radius: 8px;
     background: #ffffff;
     color: #171717;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
@@ -145,7 +145,7 @@ const StyledClass = styled.div`
           }
 
           p {
-            font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+            font: var(--MH-Type-Label-Large);
             letter-spacing: 0;
             color: #5D5763;
             margin: 0;
@@ -184,7 +184,7 @@ const StyledClass = styled.div`
   .classListHeader {
     margin: 0;
     padding: 12px 16px 8px;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
@@ -221,7 +221,7 @@ const StyledClass = styled.div`
     background: transparent;
     border-radius: 8px;
     border: none;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     transition:
@@ -261,14 +261,14 @@ const StyledClass = styled.div`
 
   .classListEmpty h3 {
     margin: 0 0 8px;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .classListEmpty p {
     margin: 0;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
@@ -309,7 +309,7 @@ const StyledClass = styled.div`
     }
     .infoPane label {
       margin-bottom: 8px;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #171717;
     }
@@ -382,7 +382,7 @@ const StyledClass = styled.div`
     .classHeaderDescriptionHtml {
       width: 100%;
       min-width: 0;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       overflow-wrap: anywhere;
       padding: 0 8px 0 0;
@@ -414,7 +414,7 @@ const StyledClass = styled.div`
       max-width: none;
       min-height: auto;
       padding: 0;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
     }
     .classHeaderMetaRow {
@@ -450,7 +450,7 @@ const StyledClass = styled.div`
       flex-shrink: 0;
     }
     .classHeaderMetaLabel {
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
       color: #274e5b;
     }
@@ -459,7 +459,7 @@ const StyledClass = styled.div`
       margin-left: 2px;
     }
     .classHeaderMetaValue {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #171717;
       word-break: break-word;
@@ -499,7 +499,7 @@ const StyledClass = styled.div`
     }
     .title {
       font-style: normal;
-      font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Base);
       letter-spacing: 0;
       text-align: left;
       color: #1a1a1a;
@@ -513,7 +513,7 @@ const StyledClass = styled.div`
     }
     .description {
       font-style: normal;
-      font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Large);
       letter-spacing: 0;
       text-align: left;
       color: #666666;
@@ -525,7 +525,7 @@ const StyledClass = styled.div`
     display: grid;
     padding: 10px;
     grid-template-columns: 70px 1fr 1fr;
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
   }
 
@@ -605,7 +605,7 @@ const StyledClass = styled.div`
       }
       .infoText {
         margin: 1rem 0rem;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
     }
@@ -617,7 +617,7 @@ const StyledClass = styled.div`
       grid-gap: 10px;
       padding: 10px;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
     }
     .studiesRow {
@@ -728,7 +728,7 @@ const StyledClass = styled.div`
         margin: 5px;
         padding: 10px;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Small);
         letter-spacing: 0;
       }
       .row {
@@ -791,7 +791,7 @@ const StyledClass = styled.div`
           display: grid;
           height: 100%;
           grid-row-gap: 10px;
-          font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
 
           .proposalCardBoard {
@@ -806,7 +806,7 @@ const StyledClass = styled.div`
           label {
             display: block;
             font-style: normal;
-            font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+            font: var(--MH-Type-Label-Base);
             letter-spacing: 0;
           }
           input,
@@ -815,7 +815,7 @@ const StyledClass = styled.div`
             border: 1px solid #cccccc;
             border-radius: 4px;
             width: 100%;
-            font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+            font: var(--MH-Type-Body-Base);
             letter-spacing: 0;
             padding: 12px;
             &:focus {
@@ -837,14 +837,14 @@ const StyledClass = styled.div`
           .cardHeader {
             margin-bottom: 15px;
             font-style: normal;
-            font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+            font: var(--MH-Type-Title-Large);
             letter-spacing: 0;
             text-align: left;
           }
           .cardDescription {
             color: #666666;
             font-style: normal;
-            font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+            font: var(--MH-Type-Body-Base);
             letter-spacing: 0;
             text-align: left;
             padding-bottom: 40px;
@@ -862,7 +862,7 @@ const StyledClass = styled.div`
             border-radius: 0px 4px 4px 0px;
             padding: 53px 30px 30px 37px;
             font-style: normal;
-            font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+            font: var(--MH-Type-Label-Large);
             letter-spacing: 0;
             text-align: left;
             height: 100%;
@@ -878,7 +878,7 @@ const StyledClass = styled.div`
             .info-status {
               display: table;
               font-style: normal;
-              font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+              font: var(--MH-Type-Label-Small);
               letter-spacing: 0;
               border-radius: 30px;
               /* position: absolute; */
@@ -968,14 +968,14 @@ const StyledClass = styled.div`
 
       h3 {
         margin: 0;
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
         color: #171717;
       }
 
       p {
         margin: 0;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #625b71;
       }
@@ -1034,7 +1034,7 @@ const StyledClass = styled.div`
 
       .classTabInviteLabel {
         margin: 0;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         color: #625b71;
       }
@@ -1046,7 +1046,7 @@ const StyledClass = styled.div`
         border: 1px solid #d9d6d2;
         border-radius: 12px;
         background: #f9faf9;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #171717;
         word-break: break-all;
@@ -1055,14 +1055,14 @@ const StyledClass = styled.div`
 
     .classTabCodeValue {
       margin: 0;
-      font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Small);
       letter-spacing: 0;
       color: #171717;
     }
 
     .classTabInfoText {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #625b71;
     }
@@ -1079,7 +1079,7 @@ const StyledClass = styled.div`
       justify-items: start;
       padding: 8px 0;
       color: #625b71;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
 
@@ -1090,14 +1090,14 @@ const StyledClass = styled.div`
 
     .classTabSubsectionTitle {
       margin: 0;
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       color: #171717;
     }
 
     .classTabSubsectionDescription {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #625b71;
     }
@@ -1178,7 +1178,7 @@ const StyledClass = styled.div`
 
     .classTabTemplateCardTitle {
       margin: 0;
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       color: #171717;
       word-break: break-word;
@@ -1235,7 +1235,7 @@ const StyledClass = styled.div`
 
     .classTabTemplateCardDescription {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #625b71;
       word-break: break-word;
@@ -1255,7 +1255,7 @@ const StyledClass = styled.div`
       flex-wrap: wrap;
       align-items: center;
       gap: 16px;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #8a8a8a;
     }
@@ -1289,7 +1289,7 @@ const StyledClass = styled.div`
         border-radius: 12px;
         background: #f0f4f6;
         color: #5f6871;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
 
         &.summaryStatusMuted {
@@ -1336,7 +1336,7 @@ const StyledClass = styled.div`
 
         h3 {
           margin: 0;
-          font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Large);
           letter-spacing: 0;
           color: #171717;
         }
@@ -1348,7 +1348,7 @@ const StyledClass = styled.div`
 
       .expandableSummaryHint {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #625b71;
       }
@@ -1373,7 +1373,7 @@ const StyledClass = styled.div`
 
       .expandableBodyDescription {
         margin: 16px 0 0;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #625b71;
       }
@@ -1446,14 +1446,14 @@ const StyledClass = styled.div`
       }
 
       .matchingRoundNetworkLabel {
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         color: #625b71;
       }
 
       .matchingRoundNetworkTitle {
         margin: 0;
-        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
         color: #171717;
         overflow: hidden;
@@ -1463,7 +1463,7 @@ const StyledClass = styled.div`
 
       .matchingRoundNetworkHint {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #625b71;
       }
@@ -1555,14 +1555,14 @@ const StyledClass = styled.div`
 
     .matchingRoundFormSummaryTitle {
       margin: 0;
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
       color: inherit;
     }
 
     .matchingRoundFormSummaryStatus {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: inherit;
     }
@@ -1597,7 +1597,7 @@ const StyledClass = styled.div`
       min-width: 0;
       width: fit-content;
       height: fit-content;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: var(--MH-Theme-Primary-Dark, #336f8a);
     }
@@ -1629,14 +1629,14 @@ const StyledClass = styled.div`
 
     .matchingRoundFollowUpCompletionTitle {
       margin: 0;
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
       color: #171717;
     }
 
     .matchingRoundFollowUpCompletionSummary {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #5f6871;
     }
@@ -1662,7 +1662,7 @@ const StyledClass = styled.div`
       border: 1px solid #ece9e6;
       border-radius: 10px;
       background: #ffffff;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
@@ -1679,7 +1679,7 @@ const StyledClass = styled.div`
       border: 1px solid #e8d4a8;
       background: #fdf6e8;
       color: #8a6d3b;
-      font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Small);
       letter-spacing: 0;
     }
 
@@ -1691,14 +1691,14 @@ const StyledClass = styled.div`
 
     .matchingRoundFollowUpCompletionEmptyTitle {
       margin: 0;
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
       color: #171717;
     }
 
     .matchingRoundFollowUpCompletionEmptyHint {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #5f6871;
     }
@@ -1709,7 +1709,7 @@ const StyledClass = styled.div`
       border: none;
       background: transparent;
       color: var(--MH-Theme-Primary-Dark, #336f8a);
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       width: fit-content;
       cursor: pointer;
@@ -1731,14 +1731,14 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFollowUpProgress {
-      font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Small);
       letter-spacing: 0;
       color: #171717;
     }
 
     .matchingRoundFormPickerTitle {
       margin: 0;
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
       color: #171717;
     }
@@ -1747,7 +1747,7 @@ const StyledClass = styled.div`
     .matchingRoundFormPickerNote,
     .matchingRoundFormPickerSectionHint {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #424242;
     }
@@ -1800,14 +1800,14 @@ const StyledClass = styled.div`
 
     .matchingRoundFormPickerSectionTitle {
       margin: 0;
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
       color: #171717;
     }
 
     .matchingRoundFormPickerLibraryEmpty {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #6b6b6b;
     }
@@ -1851,7 +1851,7 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerVisibilityStatus {
-      font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Small);
       letter-spacing: 0;
       color: var(--MH-Theme-Additional-Accent-Dark, #3f288f);
     }
@@ -1957,7 +1957,7 @@ const StyledClass = styled.div`
     .matchingRoundFormPickerAddButton {
       height: 30px !important;
       padding: 4px 12px !important;
-      font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif) !important;
+      font: var(--MH-Type-Label-Small) !important;
       letter-spacing: 0;
       white-space: nowrap;
     }
@@ -1970,7 +1970,7 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerLibraryRowTitle {
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
       color: #171717;
       overflow-wrap: anywhere;
@@ -1978,7 +1978,7 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerLibraryRowMeta {
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #6b6b6b;
     }
@@ -2008,7 +2008,7 @@ const StyledClass = styled.div`
       flex-shrink: 0;
       height: 22px;
       padding: 2px 8px;
-      font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Small);
       letter-spacing: 0;
     }
 
@@ -2034,7 +2034,7 @@ const StyledClass = styled.div`
       .matchingRoundUnsavedHint {
         margin: 0;
         margin-right: auto;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         color: #8a6d3b;
       }
@@ -2057,19 +2057,19 @@ const StyledClass = styled.div`
       display: grid;
       align-content: start;
       gap: 6px;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #625b71;
 
       .fieldLabel {
         color: #171717;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
       }
 
       .fieldHint {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #888;
       }
@@ -2083,7 +2083,7 @@ const StyledClass = styled.div`
         border: 1px solid #d9d6d2;
         border-radius: 12px;
         background: #ffffff;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #171717;
         outline: none;
@@ -2112,7 +2112,7 @@ const StyledClass = styled.div`
 
       h4 {
         margin: 0;
-        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
         color: #171717;
       }
@@ -2120,7 +2120,7 @@ const StyledClass = styled.div`
       .subsectionHint,
       .classTabEmptyInline {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #625b71;
       }
@@ -2160,14 +2160,14 @@ const StyledClass = styled.div`
       }
 
       .checkboxTitle {
-        font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Small);
         letter-spacing: 0;
         color: #171717;
       }
 
       .checkboxMeta {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #625b71;
 
@@ -2184,7 +2184,7 @@ const StyledClass = styled.div`
         border-radius: 100px;
         background: #f8e1e1;
         color: #b3261e;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
       }
     }
@@ -2223,7 +2223,7 @@ const StyledClass = styled.div`
       border: 1px solid #ece9e6;
       border-radius: 10px;
       background: #ffffff;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
@@ -2402,7 +2402,7 @@ const StyledClass = styled.div`
       border-radius: 100px;
       background: transparent;
       color: #625b71;
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
       line-height: 1;
       cursor: pointer;
@@ -2473,7 +2473,7 @@ const StyledClass = styled.div`
       border-radius: 100px;
       border: 1px solid #336f8a;
       color: #336f8a;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       text-decoration: none;
 
@@ -2531,14 +2531,14 @@ const StyledClass = styled.div`
 
       h3 {
         margin: 0;
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
         color: #171717;
       }
 
       p {
         margin: 0;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #625b71;
       }
@@ -2568,7 +2568,7 @@ const StyledClass = styled.div`
           margin: 0;
           padding-left: 20px;
           color: #3d3d3d;
-          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
         }
       }
@@ -2578,7 +2578,7 @@ const StyledClass = styled.div`
     }
 
     .settingsQuestion {
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       color: #171717;
     }
@@ -2586,7 +2586,7 @@ const StyledClass = styled.div`
     .classDescriptionSettingsHint {
       margin: 0;
       color: #625b71;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
 
@@ -2606,7 +2606,7 @@ const StyledClass = styled.div`
         background: #f9faf9;
         color: #333333;
         cursor: pointer;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         transition: border-color 0.2s ease, background-color 0.2s ease,
           box-shadow 0.2s ease, color 0.2s ease;
@@ -2697,14 +2697,14 @@ const StyledClass = styled.div`
       h4 {
         margin: 0;
         color: #171717;
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
       }
 
       p {
         margin: 0;
         color: #625b71;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
     }
@@ -2767,7 +2767,7 @@ const StyledClass = styled.div`
       border-radius: 14px;
       background: #ffffff;
       color: #625b71;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
 
@@ -2810,7 +2810,7 @@ const StyledClass = styled.div`
       margin: 0;
       overflow: hidden;
       color: #171717;
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
@@ -2820,7 +2820,7 @@ const StyledClass = styled.div`
       display: -webkit-box;
       overflow: hidden;
       color: #625b71;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
@@ -2832,14 +2832,14 @@ const StyledClass = styled.div`
       align-items: center;
       gap: 6px;
       color: #a1a1a1;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
 
     .networkCardAction {
       justify-self: start;
       color: var(--MH-Theme-Primary-Dark, #336f8a);
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
     }
 
@@ -2859,7 +2859,7 @@ const StyledClass = styled.div`
     }
 
     .curriculumTypeLegend {
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       color: #171717;
       margin: 0 0 4px 0;
@@ -2867,7 +2867,7 @@ const StyledClass = styled.div`
     }
 
     .curriculumTypeHelp {
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #625b71;
       margin: 0 0 16px 0;
@@ -2926,14 +2926,14 @@ const StyledClass = styled.div`
     }
 
     .curriculumTypeLabel {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #171717;
     }
 
     .curriculumTypeFallbackNote {
       margin: 8px 0 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #625b71;
     }
@@ -2955,7 +2955,7 @@ const StyledClass = styled.div`
       border-radius: 12px;
       background: #d53533;
       color: #ffffff;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       cursor: pointer;
       transition: background-color 0.2s ease, border-color 0.2s ease,

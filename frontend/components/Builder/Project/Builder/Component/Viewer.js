@@ -99,7 +99,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                   "The following features of this {{taskType}} can be tweaked:"
                 )}
               </p>
-              <p className="MH-Type-Body-Small">
+              <p className="MH-Type-Body-Base">
                 *{" "}
                 {t(
                   "viewer.defaultValues",
@@ -119,7 +119,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                         {parameter.help}
                       </span>
                     </p>
-                    <p className="MH-Type-Body-Small">
+                    <p className="MH-Type-Body-Base">
                       {ReactHtmlParser(parameter.value)}
                     </p>
                   </div>
@@ -138,7 +138,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                   "The following features of this {{taskType}} can be tweaked:"
                 )}
               </p>
-              <p className="MH-Type-Body-Small">
+              <p className="MH-Type-Body-Base">
                 *{" "}
                 {t(
                   "viewer.defaultValues",
@@ -171,10 +171,10 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                           t("viewer.selectMany", "Select many")}
                       </span>
                     </p>
-                    <p className="MH-Type-Body-Small">
+                    <p className="MH-Type-Body-Base">
                       {ReactHtmlParser(item?.header)}
                     </p>
-                    <p className="MH-Type-Body-Small">
+                    <p className="MH-Type-Body-Base">
                       {ReactHtmlParser(item?.text)}
                     </p>
                   </div>

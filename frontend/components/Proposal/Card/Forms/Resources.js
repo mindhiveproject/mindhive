@@ -117,7 +117,7 @@ export default function Resources({
           style={{
             background: "#f9fafb",
             borderBottom: "1px solid #e0e0e0",
-            font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+            font: 'var(--MH-Type-Title-Large)',
             letterSpacing: 0,
           }}
         >
@@ -147,7 +147,7 @@ export default function Resources({
           <div
             className="cardHeader"
             style={{
-              font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Title-Large)',
               letterSpacing: 0,
               color: "#333",
               marginTop: "20px",
@@ -187,7 +187,7 @@ export default function Resources({
                 >
                   <h2
                     style={{
-                      font: 'var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif)',
+                      font: 'var(--MH-Type-Title-Base)',
                       letterSpacing: 0,
                       color: "#333",
                       margin: 0,
@@ -226,7 +226,7 @@ export default function Resources({
                   </div>
                 </div>
                 <div
-                  style={{ font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)', letterSpacing: 0, color: "#666" }}
+                  style={{ font: 'var(--MH-Type-Body-Base)', letterSpacing: 0, color: "#666" }}
                 >
                   {ReactHtmlParser(truncateHtml(resource?.content?.main, 50))}
                 </div>
@@ -299,7 +299,7 @@ const ResourcesTab = ({
             >
               <h2
                 style={{
-                  font: 'var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif)',
+                  font: 'var(--MH-Type-Title-Base)',
                   letterSpacing: 0,
                   color: "#333",
                   margin: 0,
@@ -339,7 +339,7 @@ const ResourcesTab = ({
             </div>
             <div
               style={{
-                font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Body-Base)',
                 letterSpacing: 0,
                 color: "#666",
                 marginBottom: "16px",
@@ -354,7 +354,7 @@ const ResourcesTab = ({
                 background: isSelected ? "#ff4d4f" : "#52c41a",
                 color: "#ffffff",
                 borderRadius: "8px",
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
               }}
             >

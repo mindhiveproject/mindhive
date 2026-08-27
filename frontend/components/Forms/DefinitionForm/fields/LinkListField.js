@@ -142,13 +142,13 @@ export default function LinkListField({
             style={{
               display: "grid",
               gap: 4,
-              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Label-Base)',
               letterSpacing: 0,
             }}
           >
             <span
               style={{
-                font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Title-Small)',
                 letterSpacing: 0,
                 color: "#5f6871",
               }}
@@ -166,7 +166,7 @@ export default function LinkListField({
                 border: "1px solid #d3dae0",
                 borderRadius: 8,
                 padding: "8px 10px",
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
               }}
             />
@@ -175,13 +175,13 @@ export default function LinkListField({
             style={{
               display: "grid",
               gap: 4,
-              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Label-Base)',
               letterSpacing: 0,
             }}
           >
             <span
               style={{
-                font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Title-Small)',
                 letterSpacing: 0,
                 color: "#5f6871",
               }}
@@ -197,7 +197,7 @@ export default function LinkListField({
                 border: "1px solid #d3dae0",
                 borderRadius: 8,
                 padding: "8px 10px",
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
               }}
             />
@@ -212,7 +212,7 @@ export default function LinkListField({
               padding: "8px 12px",
               cursor: "pointer",
               color: "#c0392b",
-              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Label-Base)',
               letterSpacing: 0,
               height: 42,
             }}
@@ -223,14 +223,14 @@ export default function LinkListField({
             style={{
               display: "grid",
               gap: 4,
-              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Label-Base)',
               letterSpacing: 0,
               gridColumn: "1 / -1",
             }}
           >
             <span
               style={{
-                font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Title-Small)',
                 letterSpacing: 0,
                 color: "#5f6871",
               }}
@@ -250,7 +250,7 @@ export default function LinkListField({
                 border: "1px solid #d3dae0",
                 borderRadius: 8,
                 padding: "8px 10px",
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
               }}
             />

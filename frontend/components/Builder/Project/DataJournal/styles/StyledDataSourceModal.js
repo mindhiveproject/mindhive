@@ -34,7 +34,7 @@ export const StyledModalHeader = styled.div`
   border-bottom: 1px solid #e6e6e6;
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #333;
   }
@@ -72,7 +72,7 @@ export const StyledModalButton = styled.button`
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   &.cancel {
     background: #f0f0f0;
@@ -130,7 +130,7 @@ export const StyledDataSourceOption = styled.div`
     min-width: 0;
   }
   .datasource-title {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #333;
     overflow-wrap: break-word;
@@ -141,7 +141,7 @@ export const StyledDataSourceOption = styled.div`
     align-items: center;
     column-gap: 8px;
     row-gap: 4px;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #666;
     margin-top: 6px;
@@ -152,7 +152,7 @@ export const StyledDataSourceOption = styled.div`
     padding: 4px 8px;
     border-radius: 6px;
     border: 1px solid #E6E6E6;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
   }
   .author {

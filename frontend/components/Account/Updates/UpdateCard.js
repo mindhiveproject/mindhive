@@ -54,7 +54,7 @@ const Row = styled.div`
   }
 
   .title {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
     overflow: hidden;
@@ -62,13 +62,13 @@ const Row = styled.div`
   }
 
   .message {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #5f6871;
   }
 
   .time {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #969696;
   }

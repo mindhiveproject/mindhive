@@ -488,7 +488,7 @@ ${funcName}()
       {/* Significance footnote */}
       {result.significant && (
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             color: "#718096",
             textAlign: "center",

@@ -22,7 +22,7 @@ const StyledManagement = styled.div`
     padding: 10px;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     cursor: pointer;
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
   }
   .classRow {

@@ -25,33 +25,33 @@ const StyledHome = styled.div`
   }
 
   .h36 {
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     text-align: left;
     color: var(--neutral_black1, #171717);
     margin-bottom: 16px;
   }
   .h32 {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     text-align: left;
     color: #171717;
     margin-bottom: 17px;
   }
   .h26 {
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     text-align: left;
     color: var(--neutral_grey2, #3b3b3b);
   }
   .p20 {
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
   .p18 {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
     color: var(--neutral_grey2, #3b3b3b);

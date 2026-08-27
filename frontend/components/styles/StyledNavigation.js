@@ -25,7 +25,7 @@ export const StyledSidebar = styled.div`
   }
 
   .workspaceHeader {
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-align: left;
     color: #b3b3b3;
@@ -38,7 +38,7 @@ export const NavLink = styled.div`
   grid-template-columns: 20px auto;
   grid-column-gap: 12px;
   cursor: pointer;
-  font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Large);
   letter-spacing: 0;
   text-align: left;
   padding-right: 1rem;
@@ -58,7 +58,7 @@ export const NavStyles = styled.ul`
   .openMenuBtn {
     cursor: pointer;
     color: #666666;
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     padding-right: 2rem;
   }

@@ -529,7 +529,7 @@ export default function DropdownSelect({
             >
               {filteredOptions.length === 0 ? (
                 <div
-                  className="MH-Type-Body-Small"
+                  className="MH-Type-Body-Base"
                   style={{
                     ...ITEM_STYLE,
                     cursor: "default",

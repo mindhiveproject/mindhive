@@ -189,7 +189,7 @@ const StyledStudyDropdown = styled.div`
 `;
 
 const Label = styled.span`
-  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Small);
   letter-spacing: 0;
   color: #00635a;
   flex-shrink: 0;
@@ -197,7 +197,7 @@ const Label = styled.span`
 
 const StyledModal = styled(Modal)`
   .header {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif) !important;
+    font: var(--MH-Type-Title-Large) !important;
     letter-spacing: 0;
     color: #333333 !important;
     border-bottom: 1px solid #e0e0e0 !important;
@@ -207,7 +207,7 @@ const StyledModal = styled(Modal)`
   .content {
     padding: 20px !important;
     color: #666666 !important;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif) !important;
+    font: var(--MH-Type-Body-Base) !important;
     letter-spacing: 0;
   }
 
@@ -222,7 +222,7 @@ const StyledModal = styled(Modal)`
       background: #ffffff !important;
       color: #666666 !important;
       border: 1px solid #e0e0e0 !important;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif) !important;
+      font: var(--MH-Type-Label-Base) !important;
       letter-spacing: 0;
 
       &:hover {
@@ -232,7 +232,7 @@ const StyledModal = styled(Modal)`
     }
 
     .confirm-button {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif) !important;
+      font: var(--MH-Type-Label-Base) !important;
       letter-spacing: 0;
       background: #3d85b0 !important;
 

@@ -145,7 +145,7 @@ export default function AssignmentEditModal({ open, onClose, assignmentId, user,
                         border: "1px solid #336F8A",
                         background: "white",
                         color: "#336F8A",
-                        font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                        font: 'var(--MH-Type-Label-Base)',
                         letterSpacing: 0,}}
                     onClick={onClose}
                 >
@@ -161,7 +161,7 @@ export default function AssignmentEditModal({ open, onClose, assignmentId, user,
                             border: "1px solid #336F8A",
                             background: "#336F8A",
                             color: "white",
-                            font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                            font: 'var(--MH-Type-Label-Base)',
                         letterSpacing: 0,}}
                 >
                     {hasChanges 

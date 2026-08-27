@@ -53,7 +53,7 @@ export default function AboutDefinitionMode({ user }) {
   return (
     <Shell>
       {error ? (
-        <div className="MH-Type-Body-Small" style={{ color: "#871b16" }}>
+        <div className="MH-Type-Body-Base" style={{ color: "#871b16" }}>
           {error.message}
         </div>
       ) : null}

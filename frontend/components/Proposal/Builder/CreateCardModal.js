@@ -66,7 +66,7 @@ const inputStyle = {
   border: "1px solid #A1A1A1",
   borderRadius: 8,
   padding: "12px 16px",
-  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "#171717",
 };
@@ -75,7 +75,7 @@ const labelStyle = {
   display: "grid",
   gap: 8,
   color: "#5D5763",
-  font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Title-Small)',
   letterSpacing: 0,
 };
 
@@ -90,7 +90,7 @@ const previewShellStyle = {
   borderRadius: 12,
   background: "#F7F9F8",
   color: "#5D5763",
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   padding: 16,
   maxHeight: 260,
@@ -100,7 +100,7 @@ const previewShellStyle = {
 const helperTextStyle = {
   margin: 0,
   color: "#5D5763",
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
 };
 
@@ -634,7 +634,7 @@ export default function CreateCardModal({
         <h2
           style={{
             margin: "0 0 24px",
-            font: 'var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif)',
+            font: 'var(--MH-Type-Heading-Base)',
             letterSpacing: 0,
             color: "#000",
           }}

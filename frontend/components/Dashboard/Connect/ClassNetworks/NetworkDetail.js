@@ -93,7 +93,7 @@ const Header = styled.div`
   h1 {
     margin: 0;
     color: #171717;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
   }
 
@@ -101,7 +101,7 @@ const Header = styled.div`
     max-width: 720px;
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -111,7 +111,7 @@ const Status = styled.div`
   border-radius: 16px;
   background: #ffffff;
   color: #5f6871;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 
@@ -138,14 +138,14 @@ const SectionHeader = styled.div`
   h2 {
     margin: 0;
     color: #171717;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
   }
 
   p {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -159,7 +159,7 @@ const GridTable = styled.div`
 const EmptyNote = styled.p`
   margin: 0;
   color: #5f6871;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 
@@ -177,14 +177,14 @@ const ThinEmptySection = styled.section`
   h2 {
     margin: 0;
     color: #171717;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
   }
 
   p {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -197,7 +197,7 @@ const AdminForm = styled.div`
 
   label {
     color: #171717;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 `;
@@ -212,7 +212,7 @@ const AdminFormRow = styled.div`
     padding: 0 12px;
     border: 1px solid #cccccc;
     border-radius: 4px;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
 
     &:focus {
@@ -225,7 +225,7 @@ const AdminFormRow = styled.div`
 const AdminFeedback = styled.p`
   margin: 0;
   color: ${(props) => (props.$error ? "#871b16" : "#1d6b3a")};
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 
@@ -244,7 +244,7 @@ const DetailsForm = styled.div`
     display: grid;
     gap: 8px;
     color: #171717;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 
@@ -255,7 +255,7 @@ const DetailsForm = styled.div`
     padding: 12px;
     border: 1px solid #cccccc;
     border-radius: 4px;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     background: #ffffff;
 
@@ -279,7 +279,7 @@ const DetailsForm = styled.div`
   .fieldHint {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;

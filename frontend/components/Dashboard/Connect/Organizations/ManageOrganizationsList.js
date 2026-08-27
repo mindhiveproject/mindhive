@@ -27,14 +27,14 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #171717;
   }
   p {
     margin: 4px 0 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     max-width: 640px;
   }
@@ -54,7 +54,7 @@ const Empty = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -62,7 +62,7 @@ const Empty = styled.div`
   p {
     margin: 0;
     max-width: 480px;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;

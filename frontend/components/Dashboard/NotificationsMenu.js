@@ -23,7 +23,7 @@ const BODY_STYLE = {
 
 const EMPTY_STYLE = {
   margin: 0,
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };

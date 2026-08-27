@@ -28,7 +28,7 @@ const TopBar = styled.div`
 
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -36,7 +36,7 @@ const TopBar = styled.div`
   p {
     margin: 4px 0 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -58,7 +58,7 @@ const Card = styled.div`
 
   h3 {
     margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -66,7 +66,7 @@ const Card = styled.div`
   p {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -75,7 +75,7 @@ const CardMeta = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #888;
 
@@ -101,7 +101,7 @@ const CardActions = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     cursor: pointer;
     text-align: center;

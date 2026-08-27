@@ -15,7 +15,7 @@ export const StyledSelector = styled.div`
     cursor: pointer;
     margin: 1rem;
     font-style: normal;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     text-align: left;
     color: #007c70;
@@ -63,20 +63,20 @@ export const StyledSelector = styled.div`
 
   h1 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Large);
     letter-spacing: 0;
     text-align: center;
     margin-bottom: 40px;
   }
   h3 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     text-align: center;
   }
   p {
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 

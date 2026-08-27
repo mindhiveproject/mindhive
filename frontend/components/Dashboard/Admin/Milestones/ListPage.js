@@ -37,7 +37,7 @@ const Shell = styled.div`
 
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -45,7 +45,7 @@ const Shell = styled.div`
   p.intro {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     max-width: 720px;
   }
@@ -63,20 +63,20 @@ const GridShell = styled.div`
   }
 
   .ag-theme-quartz .milestone-key {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
   }
 
   .ag-theme-quartz .milestone-form-pattern {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #336f8a;
   }
 
   .ag-theme-quartz .milestone-edit-link {
     color: #336f8a;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     text-decoration: none;
   }
@@ -93,7 +93,7 @@ const SeedPanel = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -101,7 +101,7 @@ const SeedPanel = styled.div`
   p {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -113,13 +113,13 @@ const SeedPanel = styled.div`
 
   .feedback {
     color: #1d6b3a;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
   .error {
     color: #871b16;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -127,7 +127,7 @@ const SeedPanel = styled.div`
     margin: 0;
     padding-left: 18px;
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -143,7 +143,7 @@ const FilterBar = styled.div`
     flex-direction: column;
     gap: 4px;
     color: #5f6871;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 
@@ -152,7 +152,7 @@ const FilterBar = styled.div`
     border-radius: 100px;
     padding: 8px 16px;
     background: #ffffff;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #171717;
     min-width: 180px;

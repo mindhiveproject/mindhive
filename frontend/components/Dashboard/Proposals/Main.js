@@ -18,7 +18,7 @@ export default function ProposalsMain({ query, user }) {
   if (!selector) {
     return (
       <>
-        <h1>
+        <h1 className="MH-Type-Heading-Base">
           {t("proposalTemplates.myTemplates", {}, {
             default: "My proposal templates",
           })}

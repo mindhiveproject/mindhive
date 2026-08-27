@@ -13,12 +13,12 @@ const loading = keyframes`
 export const StyledAuth = styled.div`
   display: grid;
   text-align: initial;
-  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Large);
   letter-spacing: 0;
   label {
     display: block;
     font-style: normal;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
   input,
@@ -29,7 +29,7 @@ export const StyledAuth = styled.div`
     border: 1px solid #cccccc;
     border-radius: 4px;
     width: 100%;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     padding: 12px;
     &:focus {
@@ -38,7 +38,7 @@ export const StyledAuth = styled.div`
     }
   }
   span {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #795548;
     font-style: normal;
@@ -65,7 +65,7 @@ export const StyledAuth = styled.div`
   }
   .helpMessage {
     font-style: normal;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
   }
@@ -83,7 +83,7 @@ export const StyledAuth = styled.div`
     border-radius: 4px;
     padding: 19px 24px 19px 24px;
     font-style: normal;
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
     text-align: center;
     color: #1a1a1a;
@@ -117,7 +117,7 @@ export const StyledAuth = styled.div`
     padding-top: 20px;
     border-top: 2px solid #f2f2f2;
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #666666;
   }

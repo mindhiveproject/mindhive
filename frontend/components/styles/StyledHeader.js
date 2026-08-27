@@ -57,7 +57,7 @@ export const MainNavLink = styled.div`
   grid-template-columns: 1fr;
   cursor: pointer;
   font-style: normal;
-  font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Large);
   letter-spacing: 0;
   text-align: center;
   padding: 0rem 0rem 0.5rem 0rem;

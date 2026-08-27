@@ -88,7 +88,7 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
     overflow: hidden;
@@ -98,7 +98,7 @@ const TitleRow = styled.div`
 
   .meta {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -152,14 +152,14 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -179,14 +179,14 @@ const OpportunityCard = styled.div`
   gap: 12px;
 
   .title {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
 
   .meta {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -227,7 +227,7 @@ const StickyPane = styled(PaneColumn)`
 
 const PaneHeader = styled.h3`
   margin: 0;
-  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Small);
   letter-spacing: 0;
   color: #171717;
   text-transform: uppercase;
@@ -243,20 +243,20 @@ const AssignedChip = styled.div`
   background: #eef5f9;
   border: 1px solid #d3dae0;
   color: #336f8a;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 
   .assigned-name {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
   }
 
   .assigned-opp {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #5f6871;
   }
@@ -267,7 +267,7 @@ const AssignedChip = styled.div`
     border: 1px solid #e8c4c4;
     background: #fff;
     color: #b3261e;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     cursor: pointer;
 
@@ -286,7 +286,7 @@ const DropZone = styled.div`
   border-radius: 10px;
   padding: 10px 14px;
   color: #5f6871;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   font-style: italic;
   text-align: center;
@@ -309,7 +309,7 @@ const DraggableStudentChip = styled.div`
   border: 1px solid #d3dae0;
   background: #ffffff;
   color: #171717;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   cursor: grab;
   user-select: none;
@@ -330,14 +330,14 @@ const MatchRow = styled.div`
   flex-wrap: wrap;
 
   .name {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
   }
 
   .info {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -933,7 +933,7 @@ export default function RoundMatches({ roundId }) {
                         border: "1px solid #e8c4c4",
                         background: "#fff",
                         color: "#b3261e",
-                        font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                        font: 'var(--MH-Type-Label-Base)',
                         letterSpacing: 0,
                         cursor: "pointer",
                       }}
@@ -995,7 +995,7 @@ export default function RoundMatches({ roundId }) {
                       border: "1px solid #e8c4c4",
                       background: "#fff",
                       color: "#b3261e",
-                      font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                      font: 'var(--MH-Type-Label-Base)',
                       letterSpacing: 0,
                       cursor: "pointer",
                     }}
@@ -1179,7 +1179,7 @@ export default function RoundMatches({ roundId }) {
           <span
             style={{
               color: "#5f6871",
-              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Label-Base)',
               letterSpacing: 0,
             }}
           >

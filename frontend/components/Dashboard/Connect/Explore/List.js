@@ -26,14 +26,14 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #171717;
   }
   p {
     margin: 4px 0 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     max-width: 640px;
   }
@@ -84,7 +84,7 @@ const Cover = styled.div`
     border-radius: 100px;
     background: rgba(0, 0, 0, 0.7);
     color: #ffffff;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     display: inline-flex;
     align-items: center;
@@ -131,14 +131,14 @@ const Body = styled.div`
 
   h3 {
     margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
   p {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -153,7 +153,7 @@ const Meta = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #888;
 
@@ -164,7 +164,7 @@ const Meta = styled.div`
   }
   .rating {
     color: #5f6871;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
   }
 `;
@@ -190,7 +190,7 @@ const Pagination = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     cursor: pointer;
 
@@ -201,7 +201,7 @@ const Pagination = styled.div`
   }
 
   .info {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #5f6871;
   }

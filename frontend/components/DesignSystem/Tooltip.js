@@ -274,7 +274,7 @@ export default function Tooltip({
       ref={bubbleRef}
       id={id}
       role="tooltip"
-      className="DesignSystem-Tooltip MH-Type-Body-Small"
+      className="DesignSystem-Tooltip MH-Type-Body-Base"
       style={{
         ...BUBBLE_STYLE,
         position: "fixed",

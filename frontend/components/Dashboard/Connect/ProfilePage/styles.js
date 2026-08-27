@@ -97,7 +97,7 @@ export const NameRow = styled.div`
   gap: 15px;
 
   .h1 {
-    font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Large);
     letter-spacing: 0;
     color: #171717;
     margin: 0;
@@ -109,13 +109,13 @@ export const PronounTag = styled.span`
   border-radius: 8px;
   background: #edf2ee;
   color: #171717;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
 `;
 
 export const Tagline = styled.p`
   margin: 0;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #171717;
 `;
@@ -138,7 +138,7 @@ export const Avatar = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+  font: var(--MH-Type-Heading-Base);
   letter-spacing: 0;
   color: #1d1b20;
   position: relative;
@@ -155,7 +155,7 @@ export const Avatar = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #1d1b20;
   }
@@ -192,7 +192,7 @@ export const MetaItem = styled.div`
   justify-content: center;
   gap: 10px;
   color: #171717;
-  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Small);
   letter-spacing: 0;
 
   i.icon {
@@ -264,14 +264,14 @@ export const Section = styled.div`
 export const SectionTitle = styled.h3`
   margin: 0;
   justify-content: flex-end;
-  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Base);
   letter-spacing: 0;
   color: #171717;
 `;
 
 export const BodyCopy = styled.p`
   margin: 0;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #2a343d;
   white-space: pre-line;
@@ -307,7 +307,7 @@ export const InterestTag = styled.span`
   border-radius: 8px;
   background: #f3f3f3;
   color: #171717;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   white-space: normal;
   word-break: break-word;
@@ -329,14 +329,14 @@ export const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: #171717;
 
   input,
   textarea,
   select {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
     border: 1px solid #a1a1a1;

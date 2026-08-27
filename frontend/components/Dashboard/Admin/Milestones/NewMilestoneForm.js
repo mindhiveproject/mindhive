@@ -34,7 +34,7 @@ const Header = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -361,7 +361,7 @@ export default function NewMilestoneForm({ open, onClose }) {
       </KeyPreview>
 
       {error ? (
-        <div className="MH-Type-Body-Small" style={{ color: "#871b16" }}>
+        <div className="MH-Type-Body-Base" style={{ color: "#871b16" }}>
           {error}
         </div>
       ) : null}

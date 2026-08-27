@@ -133,7 +133,7 @@ export default function Main({ query, user }) {
           </div>
           <div className="links" style={{ padding: 24 }}>
             <div
-              className="MH-Type-Body-Small"
+              className="MH-Type-Body-Base"
               style={{ marginBottom: 12, color: "#5f6871" }}
             >
               {t("settings.sponsorSetup.description", {}, {
@@ -148,7 +148,7 @@ export default function Main({ query, user }) {
                 })}
               </Button>
             ) : (
-              <div className="MH-Type-Body-Small" style={{ color: "#5f6871" }}>
+              <div className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
                 {t("settings.sponsorSetup.visibleNote", {}, {
                   default: "Setup tips are currently visible on your Home page.",
                 })}

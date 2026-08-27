@@ -30,7 +30,7 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -38,7 +38,7 @@ const Card = styled.div`
   p {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -46,7 +46,7 @@ const Card = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 8px;
     padding: 10px 12px;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     min-height: 80px;
     resize: vertical;
@@ -65,7 +65,7 @@ const Warning = styled.div`
   background: #fff8e6;
   border: 1px solid #f0d39a;
   color: #6e5400;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 
@@ -75,7 +75,7 @@ const ValidationErrors = styled.div`
   background: #fcebea;
   border: 1px solid #f5c2bf;
   color: #871b16;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   white-space: pre-wrap;
   max-height: 240px;

@@ -9,7 +9,7 @@ const StyledDropdown = styled.div`
   }
   .info-status {
     display: table;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     border-radius: 30px;
     position: absolute;

@@ -79,7 +79,7 @@ const Circle = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Small);
   letter-spacing: 0;
   z-index: 1;
   background: ${({ $visual }) =>
@@ -94,7 +94,7 @@ const Circle = styled.span`
 
 const StepLabel = styled.span`
   margin-top: 10px;
-  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Small);
   letter-spacing: 0;
   color: ${({ $visual }) =>
     $visual === "pending" ? "#8a9299" : "#171717"};
@@ -104,7 +104,7 @@ const RoleChip = styled.span`
   margin-top: 6px;
   padding: 3px 10px;
   border-radius: 100px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   background: ${({ $visual }) => {
     const tone = toneFromWorkflowVisual($visual);
@@ -138,7 +138,7 @@ const ContextLine = styled.p`
   border: 1px solid
     ${({ $emphasis }) => ($emphasis ? "#e8d4a8" : "#d3dae0")};
   box-shadow: none;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   font-weight: ${({ $emphasis }) => ($emphasis ? 600 : 500)};
   color: ${({ $emphasis }) => ($emphasis ? "#8a6d3b" : "#5f6871")};

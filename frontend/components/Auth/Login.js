@@ -368,7 +368,7 @@ export default function Login({
         <p
           style={{
             marginBottom: 16,
-            font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+            font: 'var(--MH-Type-Body-Base)',
             letterSpacing: 0,
           }}
         >

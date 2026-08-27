@@ -34,7 +34,7 @@ export const StyledNavbar = styled.div`
 
     color: black;
     /* MH-Type/label/large */
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     font-style: normal;
 
@@ -151,7 +151,7 @@ export const StyledNavbar = styled.div`
 
   .navbar-section-label {
     /* MH-Type/label/large */
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     margin: 0;

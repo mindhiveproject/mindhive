@@ -29,7 +29,7 @@ const ToggleButton = styled.button`
   background: none;
   border: none;
   color: #336f8a;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   cursor: pointer;
   padding: 0;
@@ -51,7 +51,7 @@ const LocaleGrid = styled.div`
 
   .locale-code {
     color: #5f6871;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
   }
 
@@ -60,7 +60,7 @@ const LocaleGrid = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 6px;
     padding: 6px 10px;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #171717;
     background: #ffffff;

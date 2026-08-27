@@ -254,7 +254,7 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
             <div className="inputLineBlock">
               <p className="fieldLabel">Organization logo</p>
               <p
-                className="MH-Type-Body-Small"
+                className="MH-Type-Body-Base"
                 style={{ color: "#5f6871", marginTop: 0 }}
               >
                 A square logo works best (JPG, PNG, or WEBP). Up to{" "}
@@ -306,7 +306,7 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
               />
               {logoUpload && (
                 <div
-                  className="MH-Type-Body-Small"
+                  className="MH-Type-Body-Base"
                   style={{
                     color: "#1d8f47",
                     marginTop: 4,

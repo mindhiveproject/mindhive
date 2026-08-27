@@ -12,7 +12,7 @@ const Legend = styled.div`
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 12px;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #5f6871;
 
@@ -131,7 +131,7 @@ export default function NetworkGraph({ round }) {
       <p
         style={{
           color: "#5f6871",
-          font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+          font: 'var(--MH-Type-Body-Base)',
           letterSpacing: 0,
         }}
       >
@@ -170,7 +170,7 @@ export default function NetworkGraph({ round }) {
           y={20}
           fill="#5f6871"
           style={{
-            font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+            font: 'var(--MH-Type-Label-Small)',
             letterSpacing: 0,
           }}
         >
@@ -182,7 +182,7 @@ export default function NetworkGraph({ round }) {
           fill="#5f6871"
           textAnchor="end"
           style={{
-            font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+            font: 'var(--MH-Type-Label-Small)',
             letterSpacing: 0,
           }}
         >
@@ -225,7 +225,7 @@ export default function NetworkGraph({ round }) {
               textAnchor="end"
               fill="#171717"
               style={{
-                font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Body-Base)',
                 letterSpacing: 0,
               }}
             >
@@ -249,7 +249,7 @@ export default function NetworkGraph({ round }) {
               y={n.y + 4}
               fill="#171717"
               style={{
-                font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Body-Base)',
                 letterSpacing: 0,
               }}
             >
@@ -257,7 +257,7 @@ export default function NetworkGraph({ round }) {
               <tspan
                 fill="#888"
                 style={{
-                  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                  font: 'var(--MH-Type-Body-Base)',
                   letterSpacing: 0,
                 }}
               >

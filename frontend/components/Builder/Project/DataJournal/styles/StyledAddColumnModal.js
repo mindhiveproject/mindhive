@@ -18,7 +18,7 @@ export const StyledAddColumnModal = styled.div`
   }
 
   .addColumnModalRailLabel {
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     text-transform: uppercase;
     letter-spacing: 0.02em;
     color: #64748b;
@@ -35,7 +35,7 @@ export const StyledAddColumnModal = styled.div`
     border: 1px solid #e0e0e0;
     background: #ffffff;
     color: #1e293b;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     text-align: left;
     cursor: pointer;
@@ -69,7 +69,7 @@ export const StyledAddColumnModal = styled.div`
   }
 
   .addColumnModalPaneHeading {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #1e293b;
     margin: 0 0 12px;

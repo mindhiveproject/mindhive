@@ -8,7 +8,7 @@ const ANSWER_SURFACE_STYLE = {
   border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
-  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   width: "100%",
   boxSizing: "border-box",

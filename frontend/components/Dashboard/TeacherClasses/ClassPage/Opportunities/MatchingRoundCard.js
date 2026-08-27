@@ -147,7 +147,7 @@ const SettingsModalContent = styled.div`
 
     .matchingRoundNetworkTitle {
       margin: 0;
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       color: #171717;
       overflow: hidden;
@@ -191,13 +191,13 @@ const SettingsModalContent = styled.div`
     display: grid;
     align-content: start;
     gap: 6px;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #625b71;
 
     .fieldLabel {
       color: #171717;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
     }
 
@@ -210,7 +210,7 @@ const SettingsModalContent = styled.div`
       border: 1px solid #d9d6d2;
       border-radius: 12px;
       background: #ffffff;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #171717;
       outline: none;
@@ -263,7 +263,7 @@ function RoundStatusLabel({ status, t, variant = "chip" }) {
       </span>
       {showHint ? (
         <span
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{ color: "#6a6a6a" }}
         >
           {hint}
@@ -1795,7 +1795,7 @@ function MatchingRoundEditor({
     padding: "6px 12px",
     height: "auto",
     minHeight: "24px",
-    font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+    font: 'var(--MH-Type-Label-Small)',
     letterSpacing: 0,
     alignItems: "flex-start",
     background: isNew ? "#f5f0e8" : "#f0f4f6",

@@ -21,7 +21,7 @@ const Shell = styled.div`
 
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -29,7 +29,7 @@ const Shell = styled.div`
   p.intro {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     max-width: 720px;
   }
@@ -54,14 +54,14 @@ const RoundCard = styled.section`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
 
   .round-meta {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     margin-top: 4px;
   }
@@ -72,7 +72,7 @@ const RoundCard = styled.section`
     border-radius: 100px;
     background: #eef5f9;
     color: #336f8a;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-transform: uppercase;
   }
@@ -85,7 +85,7 @@ const StatusGroup = styled.div`
 
   h3 {
     margin: 0;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: #5f6871;
     text-transform: uppercase;
@@ -116,14 +116,14 @@ const OppCard = styled.button`
   }
 
   .opp-title {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
 
   .opp-short {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -133,7 +133,7 @@ const OppCard = styled.button`
 
   .opp-meta {
     color: #888;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     margin-top: auto;
   }
@@ -261,7 +261,7 @@ function ReviewQueueInner() {
 
             {totalOpps === 0 ? (
               <p
-                className="MH-Type-Body-Small"
+                className="MH-Type-Body-Base"
                 style={{ color: "#5f6871", margin: 0 }}
               >
                 No opportunities in this round yet.

@@ -2,7 +2,7 @@
 export const TASK_TYPE_COLORS = {
   TASK: "#3D85B0",
   SURVEY: "#55808C",
-  BLOCK: "#CF6D6A",
+  BLOCK: "#FF9780",
   DESIGN: "#007C70",
 };
 

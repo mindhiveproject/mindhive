@@ -56,7 +56,7 @@ const modalStyle = {
 
 const titleStyle = {
   margin: "0 0 24px",
-  font: "var(--MH-Type-Heading-Small, 600 28px/36px \"Inter\", sans-serif)",
+  font: "var(--MH-Type-Heading-Small)",
   letterSpacing: 0,
   color: "#000",
 };
@@ -65,7 +65,7 @@ const labelStyle = {
   display: "grid",
   gap: 8,
   color: "#5D5763",
-  font: "var(--MH-Type-Title-Small, 600 14px/20px \"Inter\", sans-serif)",
+  font: "var(--MH-Type-Title-Small)",
   letterSpacing: 0,
 };
 
@@ -80,7 +80,7 @@ const previewShellStyle = {
   borderRadius: 12,
   background: "#F7F9F8",
   color: "#5D5763",
-  font: "var(--MH-Type-Body-Small, 400 12px/16px \"Inter\", sans-serif)",
+  font: "var(--MH-Type-Body-Base)",
   letterSpacing: 0,
   padding: 16,
   maxHeight: "min(55vh, 520px)",
@@ -90,7 +90,7 @@ const previewShellStyle = {
 const helperTextStyle = {
   margin: 0,
   color: "#5D5763",
-  font: "var(--MH-Type-Body-Small, 400 12px/16px \"Inter\", sans-serif)",
+  font: "var(--MH-Type-Body-Base)",
   letterSpacing: 0,
 };
 
@@ -333,7 +333,7 @@ export default function CreateTemplateBoardModal({
         }
         .createTemplateBoardModalForm .proposalBoard h2 {
           margin: 0 0 8px;
-          font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Large);
           letter-spacing: 0;
           color: #171717;
         }
@@ -342,7 +342,7 @@ export default function CreateTemplateBoardModal({
         }
         .createTemplateBoardModalForm .proposalBoard > p {
           margin: 0 0 16px;
-          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
           color: #625b71;
         }

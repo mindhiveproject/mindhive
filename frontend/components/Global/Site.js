@@ -99,19 +99,19 @@ const GlobalStyles = createGlobalStyle`
     height: 100%;
   }
   p {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     font-style: normal;
     color: #666666;
   }
   h1 {
-    font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Large);
     letter-spacing: 0;
     font-style: normal;
     color: #1a1a1a;
   }
   h3 {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     font-style: normal;
     color: #666666;
@@ -178,7 +178,7 @@ const GlobalStyles = createGlobalStyle`
       padding: 1.5rem 1rem;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
       p {
-        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
       }
     }

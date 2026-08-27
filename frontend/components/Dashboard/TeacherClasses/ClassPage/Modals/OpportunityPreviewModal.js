@@ -126,7 +126,7 @@ const FieldsGrid = styled.div`
 
 const FormStatusText = styled.p`
   margin: 0;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
@@ -197,7 +197,7 @@ const ChatPane = styled.aside`
 const ChatPaneTitle = styled.h3`
   margin: 0;
   flex-shrink: 0;
-  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Small);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
@@ -241,7 +241,7 @@ const PeoplePanel = styled.section`
 
   h4 {
     margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
@@ -300,7 +300,7 @@ const UnreadBadge = styled.span`
   border-radius: 100px;
   background: var(--MH-Theme-Secondary-Dark, #6f26ce);
   color: #ffffff;
-  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Small);
   letter-spacing: 0;
   text-align: center;
   box-sizing: border-box;
@@ -317,7 +317,7 @@ const META_ITEM_STYLE = {
 };
 
 const META_LABEL_STYLE = {
-  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Label-Base)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
@@ -329,7 +329,7 @@ const META_VALUE_STYLE = {
   borderRadius: 8,
   border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
-  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   minWidth: 0,
@@ -346,7 +346,7 @@ const FieldItemShell = styled.div`
 `;
 
 const FIELD_LABEL_STYLE = {
-  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Label-Base)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
@@ -358,7 +358,7 @@ const FIELD_VALUE_STYLE = {
   borderRadius: 8,
   border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
-  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
@@ -384,7 +384,7 @@ const PROPOSAL_SECTION_STYLE = {
 
 const SECTION_TITLE_STYLE = {
   margin: 0,
-  font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Title-Large)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
@@ -392,7 +392,7 @@ const SECTION_TITLE_STYLE = {
 const BODY_TEXT_STYLE = {
   margin: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   whiteSpace: "pre-wrap",
 };
@@ -1193,7 +1193,7 @@ export default function OpportunityPreviewModal({
         {showMatchingRoundSection ? (
           showNoRoundHint ? (
             <span
-              className="MH-Type-Body-Small"
+              className="MH-Type-Body-Base"
               style={{ ...MUTED_TEXT_STYLE }}
             >
               {t("opportunities.preview.matchingRound.noRoundHint", {}, {
@@ -1809,7 +1809,7 @@ export default function OpportunityPreviewModal({
                               </span>
                               <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                                 <Stars value={rating.opportunityRating} />
-                                <span className="MH-Type-Body-Small" style={{ color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}>
+                                <span className="MH-Type-Body-Base" style={{ color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}>
                                   {formatDate(rating.createdAt)}
                                 </span>
                               </div>

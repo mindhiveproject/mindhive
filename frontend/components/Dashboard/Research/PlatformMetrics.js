@@ -17,7 +17,7 @@ import {
 const METRICS_DROPDOWN_TRIGGER_STYLE = {
   borderRadius: "12px",
   padding: "12px 14px",
-  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
 };
 

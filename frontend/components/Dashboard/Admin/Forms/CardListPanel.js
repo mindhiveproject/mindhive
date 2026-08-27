@@ -32,7 +32,7 @@ const Shell = styled.aside`
 
   h3 {
     margin: 0;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-transform: uppercase;
     color: #5f6871;
@@ -41,7 +41,7 @@ const Shell = styled.aside`
 
   .empty {
     color: #888;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     padding: 12px;
   }
@@ -75,7 +75,7 @@ const CardItem = styled.div`
     align-items: center;
     gap: 6px;
     padding: 8px 10px;
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
     border-radius: 8px;
@@ -87,7 +87,7 @@ const CardItem = styled.div`
 
     .meta {
       color: #888;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       margin-left: 8px;
     }
@@ -103,7 +103,7 @@ const FieldRow = styled.div`
   align-items: center;
   gap: 6px;
   padding: 6px 10px 6px 22px;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   cursor: pointer;
   color: ${({ $selected }) => ($selected ? "#336f8a" : "#5f6871")};
@@ -118,7 +118,7 @@ const FieldRow = styled.div`
   .type {
     margin-left: auto;
     color: #888;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
   }
 
@@ -151,7 +151,7 @@ const AddCardButton = styled.button`
   border: 1px dashed #336f8a;
   background: #eef5f9;
   color: #336f8a;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   cursor: pointer;
   width: 100%;
@@ -173,7 +173,7 @@ const AddFieldButton = styled.button`
   border: 1px dashed #d3dae0;
   background: transparent;
   color: #336f8a;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   cursor: pointer;
   text-align: left;

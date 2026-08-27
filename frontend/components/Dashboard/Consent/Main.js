@@ -13,7 +13,7 @@ export default function ConsentMain({ query, user }) {
   const { t } = useTranslation("dashboard");
   return (
     <StyledConsent>
-      <h1>Consent protocols</h1>
+      <h1 className="MH-Type-Heading-Base">Consent protocols</h1>
       <div className="header">
         <div className="menu">
           <Link href="/dashboard/irb">

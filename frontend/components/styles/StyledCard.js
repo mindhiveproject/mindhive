@@ -24,7 +24,7 @@ export const StyledStudyCard = styled.div`
       padding: 15px;
       border-radius: 10px;
       justify-items: center;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       background: #ffffffb3;
       .message {
@@ -66,12 +66,12 @@ export const StyledStudyCard = styled.div`
     width: 270px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.7);
     span {
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
     }
     p {
       color: #666666;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
     .heading {
@@ -113,7 +113,7 @@ export const StyledStudyCard = styled.div`
         color: #007c70;
         border-radius: 2rem;
         width: fit-content;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
       }
     }
@@ -123,7 +123,7 @@ export const StyledStudyCard = styled.div`
       grid-gap: 1rem;
       .studyCreatedByHeader {
         display: grid;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         color: #666666;
         text-transform: uppercase;
@@ -140,7 +140,7 @@ export const StyledStudyCard = styled.div`
           grid-gap: 1rem;
           justify-items: center;
           .studyCreatedByNumber {
-            font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+            font: var(--MH-Type-Title-Base);
             letter-spacing: 0;
             color: #000000;
           }
@@ -156,13 +156,13 @@ export const StyledStudyCard = styled.div`
   }
   h2 {
     font-style: normal;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #1a1a1a;
   }
   p {
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
   }
@@ -234,7 +234,7 @@ export const StyledTaskCard = styled.div`
       grid-template-columns: 1fr auto;
       grid-gap: 1rem;
       font-style: normal;
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       margin-bottom: 20px;
       .rightSide {
@@ -246,7 +246,7 @@ export const StyledTaskCard = styled.div`
         }
       }
     .subtitle {
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
   }

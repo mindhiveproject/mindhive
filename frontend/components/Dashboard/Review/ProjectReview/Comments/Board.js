@@ -13,7 +13,7 @@ const StyledBoard = styled.div`
   display: grid;
   margin: 40px 0px;
   grid-gap: 30px;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   font-style: normal;
   letter-spacing: 0;
 
@@ -84,7 +84,7 @@ const StyledBoard = styled.div`
     padding: 8px;
     border-radius: 4px;
     .title {
-      font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Small);
       font-style: normal;
       letter-spacing: 0;
     }

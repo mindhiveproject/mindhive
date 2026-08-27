@@ -89,7 +89,7 @@ const Hero = styled.div`
 
   .placeholder {
     color: #5f6871;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
   }
 
@@ -103,7 +103,7 @@ const Hero = styled.div`
 
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #171717;
     display: inline-flex;
@@ -122,7 +122,7 @@ const Hero = styled.div`
     flex-wrap: wrap;
     align-items: center;
     gap: 12px;
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     color: #5f6871;
 
@@ -170,14 +170,14 @@ export const Card = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -194,7 +194,7 @@ const InterestChips = styled.div`
     border-radius: 100px;
     background: #eef5f9;
     color: var(--MH-Theme-Primary-Dark, #336f8a);
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 `;
@@ -239,14 +239,14 @@ const OppCard = styled.a`
   }
 
   .title {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
 
   .desc {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -259,7 +259,7 @@ const OppCard = styled.a`
     padding-top: 6px;
     border-top: 1px solid #eef1f2;
     color: #5f6871;
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     display: flex;
     align-items: center;

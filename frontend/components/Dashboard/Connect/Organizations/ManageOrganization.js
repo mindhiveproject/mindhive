@@ -52,7 +52,7 @@ const AdminHeader = styled.header`
 
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
@@ -88,7 +88,7 @@ const AdminToolbar = styled.div`
     margin: 0;
     max-width: 560px;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;

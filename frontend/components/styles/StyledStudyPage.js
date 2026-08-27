@@ -103,7 +103,7 @@ export const StyledStudyPage = styled.div`
   .descriptionMenu {
     margin-bottom: 20px;
     .item {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #1a1a1a;
     }
@@ -117,7 +117,7 @@ export const StyledStudyPage = styled.div`
     grid-template-columns: 1fr 1fr;
   }
   .studyInformationHeader {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     margin-bottom: 7px;
   }
@@ -130,7 +130,7 @@ export const StyledStudyPage = styled.div`
     background: #ffffff;
     border: 2px solid #28619e;
     border-radius: 100px;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: #28619e;
     padding: 8px;
@@ -159,7 +159,7 @@ export const StyledTasksPreview = styled.div`
 
   .studyFlowLegend {
     margin: 0 0 16px;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
@@ -232,7 +232,7 @@ export const StyledTasksPreview = styled.div`
 
       .conditionLabel {
         margin: 0;
-        font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Small);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
         overflow-wrap: anywhere;
@@ -240,7 +240,7 @@ export const StyledTasksPreview = styled.div`
 
       .taskCount {
         flex-shrink: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
         white-space: nowrap;
@@ -286,7 +286,7 @@ export const StyledTasksPreview = styled.div`
         margin-top: 10px;
         border-radius: 100px;
         background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       }
@@ -328,19 +328,19 @@ export const StyledTaskCardReview = styled.div`
     color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
   h2 {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     margin: 0;
   }
   span {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     text-align: left;
   }
   p {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     text-align: left;
@@ -375,7 +375,7 @@ export const StyledTaskCard = styled.div`
       display: grid;
       grid-template-columns: 1fr auto;
       grid-gap: 1rem;
-      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Large);
       letter-spacing: 0;
       margin-bottom: 20px;
       .rightSide {
@@ -393,20 +393,20 @@ export const StyledTaskCard = styled.div`
     color: #007c70;
   }
   h2 {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #1a1a1a;
     margin-bottom: 20px;
   }
   p {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
   }
   .actionLinks {
     margin-top: 24px;
     p {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       text-align: center;
     }
@@ -439,20 +439,20 @@ export const StyledStudyRun = styled.div`
     margin-top: 30px;
     padding: 20px;
     h1 {
-      font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Base);
       letter-spacing: 0;
     }
     h3 {
-      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Large);
       letter-spacing: 0;
     }
     p {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
     input {
       max-width: 500px;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       margin-bottom: 1rem;
       height: 48px;
@@ -466,7 +466,7 @@ export const StyledStudyRun = styled.div`
       }
     }
     .checkboxField {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       display: grid;
       grid-gap: 10px;
@@ -487,7 +487,7 @@ export const StyledStudyRun = styled.div`
       width: 300px;
     }
     .questionTitle {
-      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Large);
       letter-spacing: 0;
       margin-top: 20px;
     }

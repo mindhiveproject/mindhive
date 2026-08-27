@@ -29,7 +29,7 @@ const StyledParameterBlock = styled.div`
     font-weight: 500;
   }
   .name {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: lightslategrey;
     justify-self: start;

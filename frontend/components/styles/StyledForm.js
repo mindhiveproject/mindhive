@@ -20,13 +20,13 @@ export const SignupForm = styled.div`
   align-items: center;
   h1 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #1a1a1a;
   }
   span {
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #795548;
     a {
@@ -69,7 +69,7 @@ export const SignupForm = styled.div`
     padding-top: 20px;
     border-top: 2px solid #f2f2f2;
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #666666;
   }
@@ -87,14 +87,14 @@ export const StyledForm = styled.form`
   display: grid;
   grid-gap: 20px;
   text-align: initial;
-  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Large);
   letter-spacing: 0;
   min-width: 320px;
   max-width: 100%;
   label {
     display: block;
     font-style: normal;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
   input,
@@ -104,7 +104,7 @@ export const StyledForm = styled.form`
     border: 1px solid #cccccc;
     border-radius: 4px;
     width: 100%;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     padding: 12px;
     &:focus {
@@ -124,7 +124,7 @@ export const StyledForm = styled.form`
     color: white;
     padding: 1.2rem 0.5rem;
     font-style: normal;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     border: 2px solid #007c70;
     border-radius: 4px;
@@ -141,19 +141,19 @@ export const StyledForm = styled.form`
   }
   h1 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #1a1a1a;
   }
   p {
     font-style: normal;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     margin-bottom: 4px;
   }
   span {
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #795548;
     a {
@@ -195,7 +195,7 @@ export const StyledForm = styled.form`
   }
   .forgotLink {
     font-style: normal;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     text-align: center;
     margin-top: 1rem;
@@ -209,7 +209,7 @@ export const StyledForm = styled.form`
     margin: 0 auto;
     width: 100%;
     height: 56px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #1a1a1a;
     border: 2px solid #e5e5e5;
@@ -227,7 +227,7 @@ export const StyledForm = styled.form`
 
   .infoPane label {
     margin-bottom: 8px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -238,7 +238,7 @@ export const StyledForm = styled.form`
 
   .infoPane .classFormFieldLabel {
     margin-bottom: 8px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -278,7 +278,7 @@ export const SponsorRecommendation = styled.div`
   border-radius: 8px;
   background: #E4DFF6;
   border: 1px solid #6F26CE;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #1a1a1a;
   text-align: left;
@@ -345,7 +345,7 @@ export const SignupButton = styled.div`
   margin: 0 auto;
   width: 100%;
   height: 56px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: #1a1a1a;
   border: 2px solid #e5e5e5;
@@ -382,7 +382,7 @@ export const StyledInput = styled.div`
     border: 1px solid #cccccc;
     border-radius: 4px;
     width: 100%;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     padding: 12px;
     &:focus {
@@ -404,7 +404,7 @@ export const StyledVideoUploader = styled.div`
   .message {
     margin: 3rem 0rem 5rem 0rem;
     //styleName: H3;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     text-align: left;
   }
@@ -432,7 +432,7 @@ export const StyledVideoUploader = styled.div`
   }
 
   .upload-area p {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     margin-bottom: 20px;
   }
@@ -444,7 +444,7 @@ export const StyledVideoUploader = styled.div`
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 

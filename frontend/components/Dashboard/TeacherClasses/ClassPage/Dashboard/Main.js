@@ -754,14 +754,14 @@ const StyledDashboard = styled.div`
   }
 
   .dashboardSourceLabel {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .dashboardEmpty {
     margin: 0;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }

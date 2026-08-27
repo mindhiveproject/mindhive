@@ -63,7 +63,7 @@ const Strip = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -105,7 +105,7 @@ const Row = styled.div`
   }
 
   .title {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     font-weight: ${({ $done }) => ($done ? 500 : 600)};
     color: ${({ $done }) => ($done ? "#5f6871" : "#171717")};
@@ -142,7 +142,7 @@ const ModalBody = styled.div`
   .description {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -174,14 +174,14 @@ const ModalBody = styled.div`
   .networkTitle {
     margin: 0;
     color: #171717;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
   }
 
   .networkDescription {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -197,7 +197,7 @@ const ModalBody = styled.div`
   .feedback {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 

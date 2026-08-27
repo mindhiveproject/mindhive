@@ -88,7 +88,7 @@ export default function JournalNavigation({
       <>
         {descriptionText ? (
           <div
-            className="MH-Type-Body-Small"
+            className="MH-Type-Body-Base"
             style={{
               color: "#6A6A6A",
               marginBottom: formattedDate ? 8 : 0,
@@ -102,7 +102,7 @@ export default function JournalNavigation({
           </div>
         ) : null}
         {formattedDate ? (
-          <div className="MH-Type-Body-Small" style={lastUpdatedBlockStyle}>
+          <div className="MH-Type-Body-Base" style={lastUpdatedBlockStyle}>
             {t(
               "dataJournal.sideNav.lastUpdatedAt",
               { date: formattedDate },
@@ -321,7 +321,7 @@ export default function JournalNavigation({
                   {deleteError ? (
                     <p
                       role="alert"
-                      className="MH-Type-Body-Small"
+                      className="MH-Type-Body-Base"
                       style={{
                         marginTop: 12,
                         marginBottom: 0,

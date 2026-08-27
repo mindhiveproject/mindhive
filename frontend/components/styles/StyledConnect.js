@@ -23,7 +23,7 @@ const StyledConnect = styled.div`
 
       /* H1 */
       font-style: normal;
-      font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Large);
       letter-spacing: 0;
     }
     .subtitle {
@@ -32,7 +32,7 @@ const StyledConnect = styled.div`
 
       /* H3 */
       font-style: normal;
-      font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Large);
       letter-spacing: 0;
     }
   }
@@ -62,7 +62,7 @@ const StyledConnect = styled.div`
       text-align: center;
       /* H3 */
       font-style: normal;
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
     }
     .location {
@@ -73,7 +73,7 @@ const StyledConnect = styled.div`
       color: var(--neutral_grey2, #3b3b3b);
       /* SMALL_TEXT */
       font-style: normal;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
     .interest {
@@ -92,7 +92,7 @@ const StyledConnect = styled.div`
 
       /* SMALL_TEXT */
       font-style: normal;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
     button {

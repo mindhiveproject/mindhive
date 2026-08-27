@@ -7,7 +7,7 @@ const StyledTaskBuilder = styled.div`
     grid-gap: 20px;
     margin: 3rem;
     width: auto;
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
 
     height: 90vh;
@@ -28,7 +28,7 @@ const StyledTaskBuilder = styled.div`
 
     label {
       display: block;
-      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       color: #4a5568;
       margin-bottom: 4px;
@@ -37,7 +37,7 @@ const StyledTaskBuilder = styled.div`
     input,
     textarea,
     select {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       border: 1px solid #e2e8f0;
       border-radius: 6px;
@@ -62,7 +62,7 @@ const StyledTaskBuilder = styled.div`
 
       /* Section header for "Task parameters" */
       > label {
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
         color: #2d3748;
         padding-bottom: 8px;
@@ -75,7 +75,7 @@ const StyledTaskBuilder = styled.div`
   .goBackBtn {
     cursor: pointer;
     margin: 1rem;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     text-align: left;
     color: #007c70;
@@ -155,7 +155,7 @@ const StyledTaskBuilder = styled.div`
       border-radius: 3rem;
       background-color: #a78803;
       color: white;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       :hover {
         background-color: #e5bc0c;
@@ -195,7 +195,7 @@ const StyledTaskBuilder = styled.div`
     color: grey;
     border: 0;
     border-radius: 5px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     padding: 1rem 1.2rem;
     margin-bottom: 10px;
@@ -221,7 +221,7 @@ const StyledTaskBuilder = styled.div`
   }
 
   .surveyPageNavLabel {
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     color: #718096;
     text-transform: uppercase;
     letter-spacing: 0;
@@ -235,7 +235,7 @@ const StyledTaskBuilder = styled.div`
     border: 2px solid #007c70;
     background: white;
     color: #007c70;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     cursor: pointer;
     padding: 0;
@@ -257,7 +257,7 @@ const StyledTaskBuilder = styled.div`
     border: 2px dashed #007c70;
     background: white;
     color: #007c70;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     cursor: pointer;
     transition: background 0.15s;
@@ -274,7 +274,7 @@ const StyledTaskBuilder = styled.div`
     border: 1px solid #e2e8f0;
     background: white;
     color: #a0aec0;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     cursor: pointer;
     transition: all 0.15s;
@@ -292,7 +292,7 @@ const StyledTaskBuilder = styled.div`
     border-radius: 8px;
     border: 2px dashed #e2e8f0;
     color: #a0aec0;
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
   }
 
@@ -312,12 +312,12 @@ const StyledTaskBuilder = styled.div`
       display: flex;
       align-items: center;
       gap: 8px;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #4a5568;
 
       label {
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         display: inline;
       }
@@ -331,14 +331,14 @@ const StyledTaskBuilder = styled.div`
       input[type="number"] {
         width: 100px !important;
         padding: 6px 10px !important;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         display: inline-block;
       }
 
       .timeoutUnit {
         color: #718096;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
       }
     }
@@ -372,7 +372,7 @@ const StyledTaskBuilder = styled.div`
     border-bottom: 1px solid #f0f0f0;
 
     .itemNum {
-      font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Small);
       letter-spacing: 0;
       color: #a0aec0;
       min-width: 28px;
@@ -385,7 +385,7 @@ const StyledTaskBuilder = styled.div`
       min-width: 0;
       width: auto !important;
       padding: 5px 8px !important;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif) !important;
+      font: var(--MH-Type-Label-Base) !important;
       letter-spacing: 0;
       border: 1px solid #e2e8f0 !important;
       border-radius: 4px !important;
@@ -450,7 +450,7 @@ const StyledTaskBuilder = styled.div`
     }
 
     .fieldLabel {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #718096;
       margin-top: 6px;
@@ -489,7 +489,7 @@ const StyledTaskBuilder = styled.div`
       background: none;
       border: none;
       color: #007c70;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       cursor: pointer;
       padding: 4px 0;
@@ -510,7 +510,7 @@ const StyledTaskBuilder = styled.div`
     border-radius: 8px;
     background: white;
     color: #007c70;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     cursor: pointer;
     text-align: center;
@@ -556,7 +556,7 @@ const StyledTaskBuilder = styled.div`
       font-weight: 500;
     }
     .name {
-      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       color: lightslategrey;
       justify-self: start;
@@ -585,19 +585,19 @@ const StyledTaskBuilder = styled.div`
     display: grid;
     gap: 6px;
     .help {
-      font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Large);
       letter-spacing: 0;
       color: #2d3748;
     }
     .example {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #718096;
       font-style: italic;
     }
     .name {
       color: #718096;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       justify-self: end;
     }
@@ -605,7 +605,7 @@ const StyledTaskBuilder = styled.div`
       .name {
         color: #2d3748;
         font-style: normal;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
     }
@@ -646,7 +646,7 @@ const StyledTaskBuilder = styled.div`
     border: 1px solid #e2e8f0;
     background: white;
     color: #4a5568;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     cursor: pointer;
     transition: all 0.15s;

@@ -9,11 +9,11 @@ export const StyledNodeTypeLabel = styled.div`
     align-content: center;
     cursor: pointer;
     font-style: normal;
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
   }
   .subtitle {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     font-style: italic;
     letter-spacing: 0;
   }

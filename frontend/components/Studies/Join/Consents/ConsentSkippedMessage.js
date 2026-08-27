@@ -22,14 +22,14 @@ const StyledContainer = styled.div`
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
   h1 {
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     color: #333333;
     margin-bottom: 16px;
   }
 
   p {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #666666;
     margin-bottom: 16px;

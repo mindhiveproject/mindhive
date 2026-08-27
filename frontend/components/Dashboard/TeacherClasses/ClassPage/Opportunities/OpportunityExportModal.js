@@ -42,7 +42,7 @@ const GROUP_STYLE = {
 };
 const LEGEND_STYLE = {
   padding: "0 4px",
-  font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Title-Small)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #1a1a1a)",
 };
@@ -56,7 +56,7 @@ const CHECK_LABEL_STYLE = {
   display: "flex",
   alignItems: "flex-start",
   gap: 8,
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   cursor: "pointer",
@@ -64,7 +64,7 @@ const CHECK_LABEL_STYLE = {
 const ERROR_STYLE = {
   margin: "12px 0 0",
   color: "#a94442",
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
 };
 

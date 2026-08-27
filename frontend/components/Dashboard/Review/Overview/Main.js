@@ -167,8 +167,10 @@ export default function Overview({ query, user }) {
 
   return (
     <div className="overview" id="overview">
-      <div className="h40">{t("review.feedbackCenter")}</div>
-      <div className="h24">{t("review.overviewIntro")}</div>
+      <header className="overviewHeader">
+        <h1 className="MH-Type-Heading-Base">{t("review.feedbackCenter")}</h1>
+        <p>{t("review.overviewIntro")}</p>
+      </header>
 
       <div id="options" className="menu">
         {!templateBoardsLoading &&

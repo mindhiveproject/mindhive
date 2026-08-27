@@ -16,14 +16,14 @@ export const Card = styled.section`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .card-description {
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     margin: 0;
   }
@@ -43,7 +43,7 @@ export const FieldShell = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 
@@ -55,14 +55,14 @@ export const FieldShell = styled.label`
   }
 
   span.label-text {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   span.hint {
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -73,7 +73,7 @@ export const FieldShell = styled.label`
 
   span.error {
     color: #c0392b;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -85,7 +85,7 @@ export const FieldShell = styled.label`
     border: 2px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "var(--MH-Theme-Neutrals-Medium, #a1a1a1)")};
     border-radius: 8px;
     padding: 9px 11px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     background: var(--MH-Theme-Neutrals-White, #ffffff);
@@ -117,7 +117,7 @@ export const FieldShell = styled.label`
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     cursor: pointer;
@@ -144,14 +144,14 @@ export const FieldShell = styled.label`
     gap: 10px;
     margin: 0;
     padding: 6px 4px;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
   .select-option-preview.is-selected {
     color: var(--MH-Theme-Neutrals-Black, #171717);
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 
@@ -224,7 +224,7 @@ export const ReadOnlyBanner = styled.div`
   background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
   border: 1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1);
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 

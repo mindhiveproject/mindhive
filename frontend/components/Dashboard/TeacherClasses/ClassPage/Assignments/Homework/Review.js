@@ -46,7 +46,7 @@ const UsernameChip = styled.div`
   padding: 4px 12px 4px 12px;
   margin-top: 16px;
   border-radius: 100px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   border: 1px solid #171717;
   background: #FFFFFF;
@@ -70,14 +70,14 @@ const SectionHeader = styled.div`
 
 const SectionTitle = styled.h2`
   margin: 0;
-  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Large);
   letter-spacing: 0;
   color: #1a1a1a;
 `;
 
 const ShowButton = styled.button`
   padding: 8px 16px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   border-radius: 100px;
   border: 1.5px solid #336F8A;
@@ -109,14 +109,14 @@ const InfoItem = styled.div`
 `;
 
 const InfoLabel = styled.label`
-  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Small);
   letter-spacing: 0;
   color: #666666;
   text-transform: uppercase;
 `;
 
 const InfoValue = styled.div`
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #1a1a1a;
 `;
@@ -127,7 +127,7 @@ const CommentsSection = styled.div`
 
 const CommentsLabel = styled.label`
   display: block;
-  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Small);
   letter-spacing: 0;
   color: #666666;
   text-transform: uppercase;
@@ -141,7 +141,7 @@ const CommentsEditorWrapper = styled.div`
   .tiptapEditor {
     .ProseMirror {
       padding: 12px;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       min-height: 120px;
       border: 1px solid #e0e0e0;

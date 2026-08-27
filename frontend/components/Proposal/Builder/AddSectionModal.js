@@ -32,7 +32,7 @@ const inputStyle = {
   border: "1px solid #A1A1A1",
   borderRadius: 8,
   padding: "12px 16px",
-  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "#171717",
 };
@@ -67,7 +67,7 @@ export default function AddSectionModal({ open, onClose, onSubmit, creating }) {
         <h2
           style={{
             margin: "0 0 24px",
-            font: 'var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif)',
+            font: 'var(--MH-Type-Heading-Small)',
             letterSpacing: 0,
             color: "#171717",
           }}

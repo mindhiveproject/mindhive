@@ -6,7 +6,7 @@ const StyledBreadcrumbs = styled.div`
   justify-content: left;
   gap: 8px;
   font-style: normal;
-  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Small);
   letter-spacing: 0;
 
 

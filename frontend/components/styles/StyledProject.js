@@ -4,7 +4,7 @@ export const StyledLinkedProjects = styled.div`
   display: grid;
   margin-top: 20px;
 
-  font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Large);
   letter-spacing: 0;
   text-align: left;
   text-underline-position: from-font;
@@ -94,7 +94,7 @@ const StyledProject = styled.div`
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 100%;
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
         text-align: left;
@@ -146,7 +146,7 @@ const StyledProject = styled.div`
           }
 
           p {
-            font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+            font: var(--MH-Type-Label-Base);
             letter-spacing: 0;
             color: #171717;
             margin: 0;
@@ -206,7 +206,7 @@ const StyledProject = styled.div`
       color: var(--MH-Theme-Neutrals-Black, #171717);
       text-overflow: ellipsis;
       white-space: nowrap;
-      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Large);
       letter-spacing: 0;
       text-align: left;
       text-underline-position: from-font;
@@ -231,7 +231,7 @@ const StyledProject = styled.div`
 
         text-align: center;
         /* MH-Theme/label/base */
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
           &:hover {
             background: var(--MH-Theme-Accent-Medium, #F9D978);
@@ -249,7 +249,7 @@ const StyledProject = styled.div`
         grid-gap: 10px;
       }
       .lockText {
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         display: flex;
         align-items: center;
@@ -260,7 +260,7 @@ const StyledProject = styled.div`
         color: #3d85b0;
         border: 1px solid #3d85b0;
         border-radius: 100px;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         text-align: center;
         text-underline-position: from-font;

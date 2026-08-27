@@ -24,7 +24,7 @@ export const StyledChat = styled.div`
     }
     .title {
       font-style: normal;
-      font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Base);
       letter-spacing: 0;
       text-align: left;
       color: #1a1a1a;
@@ -38,7 +38,7 @@ export const StyledChat = styled.div`
     padding: 1rem;
     grid-template-columns: 1fr 2fr 1fr;
     cursor: pointer;
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
   }
   .wrapper {
@@ -149,11 +149,11 @@ export const StyledChat = styled.div`
       grid-template-columns: 1fr;
       padding: 5px 0px 0px 0px;
       .title {
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
       }
       .nameDate {
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         display: grid;
         grid-gap: 5px;

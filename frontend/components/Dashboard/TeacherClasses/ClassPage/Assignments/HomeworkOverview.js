@@ -27,14 +27,14 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+  font: var(--MH-Type-Heading-Small);
   letter-spacing: 0;
   color: #1a1a1a;
 `;
 
 const Subtitle = styled.p`
   margin: 0;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #666666;
 `;
@@ -48,7 +48,7 @@ const OptionsLink = styled.a`
   padding: 8px 16px;
   border-radius: 100px;
   margin-left: 8px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: #336F8A;
   text-decoration: none;
@@ -72,7 +72,7 @@ const StatusChip = styled.span`
   align-items: center;
   padding: 4px 12px;
   border-radius: 16px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   white-space: nowrap;
   border: 1px solid;
@@ -138,7 +138,7 @@ const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
   gap: 8px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: #1a1a1a;
   cursor: pointer;
@@ -221,7 +221,7 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
     const homeworkCode = params?.data?.homeworkCode;
     if (!homeworkCode) {
       return (
-        <span className="MH-Type-Body-Small" style={{ color: '#999' }}>
+        <span className="MH-Type-Body-Base" style={{ color: '#999' }}>
           {t("assignment.noHomework") || "No homework"}
         </span>
       );

@@ -350,7 +350,7 @@ useEffect(() => {
             >
               {card?.section?.title && (
                 <span
-                  className="MH-Type-Body-Small"
+                  className="MH-Type-Body-Base"
                   style={{
                     color: "#626262",
                     marginBottom: "2px",

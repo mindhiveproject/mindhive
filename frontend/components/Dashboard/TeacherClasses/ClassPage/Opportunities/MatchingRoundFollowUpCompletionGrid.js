@@ -70,7 +70,7 @@ const StatusButton = styled.button`
   margin: 0;
   padding: 2px 8px;
   border-radius: 6px;
-  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Small);
   letter-spacing: 0;
   white-space: nowrap;
   cursor: pointer;

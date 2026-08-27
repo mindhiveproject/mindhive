@@ -4,7 +4,7 @@ const StyledSettings = styled.div`
   display: grid;
   h3 {
     //styleName: H3;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     text-align: left;
   }
@@ -69,7 +69,7 @@ const StyledSettings = styled.div`
 
   .p24 {
     //styleName: Form Text Top Header Type;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     text-align: left;
     color: #000000;
@@ -77,14 +77,14 @@ const StyledSettings = styled.div`
 
   .p24-thin {
     //styleName: Form Text Top Header Type;
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
     text-align: left;
     color: #000000;
   }
 
   .p18 {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     text-align: left;
     color: var(--neutral_black1, #171717);

@@ -9,7 +9,7 @@ const StyledInDev = styled.div`
   justify-content: center;
   align-content: center;
   text-align: center;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 

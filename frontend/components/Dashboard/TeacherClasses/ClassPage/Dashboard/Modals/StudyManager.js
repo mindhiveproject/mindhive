@@ -549,14 +549,14 @@ const StyledModal = styled.div`
     margin-bottom: 24px;
 
     h1 {
-      font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Small);
       letter-spacing: 0;
       color: #333333;
       margin: 0 0 8px;
     }
 
     p {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #666666;
       margin: 0;
@@ -571,7 +571,7 @@ const StyledModal = styled.div`
       background: #f9f9f9;
 
       h2 {
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
         color: #333333;
         margin-bottom: 16px;
@@ -580,7 +580,7 @@ const StyledModal = styled.div`
       &.empty-state {
         text-align: center;
         p {
-          font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
           color: #666666;
         }
@@ -588,7 +588,7 @@ const StyledModal = styled.div`
 
       .project-info {
         p {
-          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
           color: #333333;
           margin-bottom: 8px;
@@ -629,14 +629,14 @@ const StyledModal = styled.div`
 
         .study-info {
           h3 {
-            font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+            font: var(--MH-Type-Title-Base);
             letter-spacing: 0;
             color: #333333;
             margin: 0 0 8px;
           }
 
           p {
-            font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+            font: var(--MH-Type-Body-Base);
             letter-spacing: 0;
             color: #666666;
             margin: 0 0 8px;
@@ -644,7 +644,7 @@ const StyledModal = styled.div`
 
           .collaborators,
           .mentors {
-            font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+            font: var(--MH-Type-Body-Base);
             letter-spacing: 0;
             color: #333333;
             margin: 0 0 8px;
@@ -659,7 +659,7 @@ const StyledModal = styled.div`
             background: #3d85b0;
             border-radius: 6px;
             padding: 8px 16px;
-            font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+            font: var(--MH-Type-Label-Base);
             letter-spacing: 0;
             color: #ffffff;
             text-decoration: none;
@@ -676,7 +676,7 @@ const StyledModal = styled.div`
           border: none;
           border-radius: 6px;
           padding: 8px 16px;
-          font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+          font: var(--MH-Type-Label-Base);
           letter-spacing: 0;
           color: #ffffff;
           cursor: pointer;
@@ -695,7 +695,7 @@ const StyledModal = styled.div`
           border: 1px solid #d0d0d0;
           border-radius: 6px;
           background: #ffffff;
-          font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+          font: var(--MH-Type-Label-Base);
           letter-spacing: 0;
           color: #333333;
           padding: 10px;
@@ -709,7 +709,7 @@ const StyledModal = styled.div`
 
           .menu {
             .item {
-              font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+              font: var(--MH-Type-Label-Base);
               letter-spacing: 0;
             }
           }
@@ -734,7 +734,7 @@ const StyledModal = styled.div`
         border: 1px solid #d0d0d0;
         border-radius: 6px;
         padding: 10px;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #333333;
 
@@ -758,7 +758,7 @@ const StyledModal = styled.div`
       border: 1px solid #d0d0d0;
       border-radius: 6px;
       padding: 10px 20px;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #666666;
       cursor: pointer;
@@ -775,7 +775,7 @@ const StyledModal = styled.div`
       border: none;
       border-radius: 6px;
       padding: 10px 20px;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #ffffff;
       cursor: pointer;
@@ -795,7 +795,7 @@ const StyledModal = styled.div`
 
 const StyledConfirmModal = styled(Modal)`
   .header {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif) !important;
+    font: var(--MH-Type-Title-Large) !important;
     letter-spacing: 0 !important;
     color: #333333 !important;
     border-bottom: 1px solid #e0e0e0 !important;
@@ -805,7 +805,7 @@ const StyledConfirmModal = styled(Modal)`
   .content {
     padding: 20px !important;
     color: #666666 !important;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif) !important;
+    font: var(--MH-Type-Body-Base) !important;
     letter-spacing: 0 !important;
   }
 
@@ -820,7 +820,7 @@ const StyledConfirmModal = styled(Modal)`
       background: #ffffff !important;
       color: #666666 !important;
       border: 1px solid #e0e0e0 !important;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif) !important;
+      font: var(--MH-Type-Label-Base) !important;
       letter-spacing: 0 !important;
 
       &:hover {
@@ -830,7 +830,7 @@ const StyledConfirmModal = styled(Modal)`
     }
 
     .confirm-button {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif) !important;
+      font: var(--MH-Type-Label-Base) !important;
       letter-spacing: 0 !important;
       background: #3d85b0 !important;
 

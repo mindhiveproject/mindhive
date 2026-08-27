@@ -32,7 +32,7 @@ const TopBar = styled.div`
 
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     color: #171717;
   }
@@ -45,7 +45,7 @@ const TopBar = styled.div`
 
   .flash {
     color: #1d6b3a;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -57,7 +57,7 @@ const ReadOnlyGrid = styled.div`
   margin-top: 8px;
 
   div {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #5f6871;
   }
@@ -65,7 +65,7 @@ const ReadOnlyGrid = styled.div`
   strong {
     display: block;
     color: #171717;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-transform: uppercase;
     margin-bottom: 4px;

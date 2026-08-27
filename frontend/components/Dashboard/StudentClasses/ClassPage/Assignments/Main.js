@@ -15,7 +15,7 @@ const EmptyState = styled.div`
   text-align: center;
   padding: 48px 24px;
   color: #666666;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 

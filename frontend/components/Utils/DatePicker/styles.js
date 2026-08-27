@@ -28,7 +28,7 @@ export const StyledDatePicker = styled.div`
     display: grid;
     grid-template-columns: repeat(3, auto);
     align-content: center;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
   .react-date-picker__inputGroup__divider {
@@ -148,7 +148,7 @@ export const StyledDatePicker = styled.div`
   .react-calendar__month-view__weekdays {
     text-align: center;
     text-transform: uppercase;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: white;
   }

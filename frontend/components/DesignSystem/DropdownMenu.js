@@ -275,7 +275,7 @@ export default function DropdownMenu({
             >
               {panelHeader != null && (
                 <>
-                  <div className="MH-Type-Body-Small" style={PANEL_HEADER_WRAPPER_STYLE}>{panelHeader}</div>
+                  <div className="MH-Type-Body-Base" style={PANEL_HEADER_WRAPPER_STYLE}>{panelHeader}</div>
                   {dividerAfterHeader ? <div style={DIVIDER_STYLE} role="separator" /> : null}
                 </>
               )}
@@ -296,7 +296,7 @@ export default function DropdownMenu({
                       : ITEM_STYLE;
 
                   const leadingIcon = renderLeadingIcon(item);
-                  const typeClassName = isStatic ? "MH-Type-Body-Small" : "MH-Type-Label-Base";
+                  const typeClassName = isStatic ? "MH-Type-Body-Base" : "MH-Type-Label-Base";
 
                   if (isStatic) {
                     return (

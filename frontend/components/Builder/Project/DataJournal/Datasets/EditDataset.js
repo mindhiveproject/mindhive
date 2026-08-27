@@ -121,7 +121,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
       {error && (
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             color: "#c53030",
             marginBottom: "10px",
@@ -133,7 +133,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
       {renameDisabled && (
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             color: "#718096",
             marginBottom: "10px",
@@ -147,7 +147,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
       {/* Current info */}
       <div
-        className="MH-Type-Body-Small"
+        className="MH-Type-Body-Base"
         style={{
           marginBottom: "16px",
           color: "#718096",
@@ -188,7 +188,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
           }}
         />
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             marginTop: "6px",
             marginBottom: 0,
@@ -201,7 +201,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
       {loading && (
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             color: "#718096",
             marginBottom: "10px",

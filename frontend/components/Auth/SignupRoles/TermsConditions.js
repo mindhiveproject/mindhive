@@ -3,7 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 
 const StyledTermsConditions = styled.div`
   span {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #666666;
   }

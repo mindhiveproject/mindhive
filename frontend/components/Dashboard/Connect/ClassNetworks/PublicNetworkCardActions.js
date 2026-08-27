@@ -29,7 +29,7 @@ const ActionsRow = styled.div`
 
 const Feedback = styled.span`
   color: ${(props) => (props.$error ? "#871b16" : "#1d6b3a")};
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 

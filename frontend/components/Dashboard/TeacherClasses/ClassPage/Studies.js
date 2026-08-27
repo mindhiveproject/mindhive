@@ -13,7 +13,7 @@ const LinkButton = styled.a`
   display: inline-flex;
   align-items: center;
   padding: 6px 12px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   text-align: center;
   border-radius: 100px;

@@ -91,7 +91,7 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
     overflow: hidden;
@@ -101,7 +101,7 @@ const TitleRow = styled.div`
 
   .round-meta {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -150,7 +150,7 @@ const Card = styled.section`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -159,7 +159,7 @@ const Card = styled.section`
     display: grid;
     grid-template-columns: 180px 1fr;
     gap: 8px 16px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 
@@ -180,7 +180,7 @@ const ConflictBanner = styled.div`
   background: #fff8e6;
   border: 1px solid #f0d39a;
   color: #6e5400;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   display: flex;
   align-items: center;
@@ -197,7 +197,7 @@ const StatusBar = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #5f6871;
   }
@@ -206,7 +206,7 @@ const StatusBar = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 100px;
     padding: 8px 16px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
     background: #ffffff;
@@ -214,7 +214,7 @@ const StatusBar = styled.div`
 
   .saved {
     color: #1d6b3a;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -440,7 +440,7 @@ export default function ReviewOpportunityMain({ query }) {
 
       {returnError ? (
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{ margin: 0, color: "#871b16" }}
         >
           {returnError}
@@ -485,7 +485,7 @@ export default function ReviewOpportunityMain({ query }) {
             {displayName(opportunity.mentor)}{" "}
             {opportunity.mentor?.email ? (
               <span
-                className="MH-Type-Body-Small"
+                className="MH-Type-Body-Base"
                 style={{ color: "#888" }}
               >
                 ({opportunity.mentor.email})

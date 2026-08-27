@@ -47,14 +47,14 @@ const titleBlockStyle = {
 
 const titleStyle = {
   margin: 0,
-  font: 'var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Heading-Small)',
   letterSpacing: 0,
   color: "#171717",
 };
 
 const descriptionStyle = {
   margin: "8px 0 0",
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "#625b71",
 };
@@ -64,7 +64,7 @@ const previewShellStyle = {
   borderRadius: 12,
   background: "#F7F9F8",
   color: "#5D5763",
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   padding: 16,
   maxHeight: "min(65vh, 620px)",

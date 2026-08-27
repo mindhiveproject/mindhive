@@ -52,7 +52,7 @@ const Shell = styled.div`
 
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -60,7 +60,7 @@ const Shell = styled.div`
   p.intro {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     max-width: 720px;
   }
@@ -80,7 +80,7 @@ const Table = styled.table`
     padding: 12px 16px;
     border-bottom: 1px solid #eef1f2;
     text-align: left;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     vertical-align: middle;
   }
@@ -88,7 +88,7 @@ const Table = styled.table`
   th {
     background: #f7f9f8;
     color: #5f6871;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-transform: uppercase;
   }
@@ -102,7 +102,7 @@ const Table = styled.table`
   }
 
   td.key {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
   }
@@ -119,7 +119,7 @@ const Table = styled.table`
     background: none;
     border: none;
     cursor: pointer;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     padding: 0;
   }
@@ -148,7 +148,7 @@ const SeedPanel = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -156,7 +156,7 @@ const SeedPanel = styled.div`
   p {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -168,13 +168,13 @@ const SeedPanel = styled.div`
 
   .feedback {
     color: #1d6b3a;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
   .error {
     color: #871b16;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -182,7 +182,7 @@ const SeedPanel = styled.div`
     margin: 0;
     padding-left: 18px;
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -198,7 +198,7 @@ const FilterBar = styled.div`
     flex-direction: column;
     gap: 4px;
     color: #5f6871;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 
@@ -208,7 +208,7 @@ const FilterBar = styled.div`
     border-radius: 100px;
     padding: 8px 16px;
     background: #ffffff;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #171717;
     min-width: 180px;
@@ -219,7 +219,7 @@ const StatusPill = styled.span`
   display: inline-block;
   padding: 2px 8px;
   border-radius: 100px;
-  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Small);
   letter-spacing: 0;
   text-transform: uppercase;
   background: ${({ $status }) =>
@@ -587,7 +587,7 @@ export default function ListPage() {
       </FilterBar>
       {loading && rows.length === 0 ? <p>Loading…</p> : null}
       {error ? (
-        <p className="MH-Type-Body-Small" style={{ color: "#871b16" }}>
+        <p className="MH-Type-Body-Base" style={{ color: "#871b16" }}>
           Couldn't load definitions: {error.message}
         </p>
       ) : null}

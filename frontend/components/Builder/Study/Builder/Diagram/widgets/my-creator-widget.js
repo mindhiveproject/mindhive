@@ -14,7 +14,7 @@ export const StyledCreatorWidget = styled.div`
     flex-grow: 0;
     flex-shrink: 0;
     color: #6a6b6b;
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
     padding: 10px;
     padding-left: 30px;

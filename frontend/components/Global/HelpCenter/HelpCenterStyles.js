@@ -95,7 +95,7 @@ export const ActionLabel = styled.span`
   padding: 8px 16px;
   border-radius: 25px;
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   box-shadow: ${props => props.theme.bs};
   white-space: nowrap;
@@ -134,7 +134,7 @@ export const ModalHeader = styled.div`
   justify-content: between;
   gap: 12px;
   h2 {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     margin: 0;
     flex: 1;
@@ -181,12 +181,12 @@ export const DocSection = styled.div`
     h4 {
       margin: 0 0 8px 0;
       color: ${props => props.theme.black};
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
     }
     p {
       margin: 0;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
   }
@@ -215,12 +215,12 @@ export const Support = styled.div`
       h4 {
         margin: 0 0 4px 0;
         color: ${props => props.theme.neutral1};
-        font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Small);
         letter-spacing: 0;
       }
       p {
         margin: 0;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
     }

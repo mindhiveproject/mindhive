@@ -35,7 +35,7 @@ const EmptySelection = styled.div`
   padding: 40px;
   color: #5f6871;
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   text-align: center;
   min-height: 200px;
@@ -53,7 +53,7 @@ const ErrorBox = styled.div`
   background: #fcebea;
   border: 1px solid #f5c2bf;
   color: #871b16;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 

@@ -123,7 +123,7 @@ export const StyledMenuBar = styled.div`
        here too, without clipping a label that wraps to two lines in a longer
        translation. */
     .navbar-container.vertical .navbar-item {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Large);
       letter-spacing: 0;
     }
   }
@@ -165,7 +165,7 @@ export const StyledMenuIconButton = styled.button`
     border-radius: 20px;
     background: var(--MH-Theme-Warning-Base, #b9261a);
     color: white;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
   }
 `;
@@ -197,7 +197,7 @@ export const StyledMenuSearch = styled.div`
     border: 0;
     outline: none;
     background: none;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
 
@@ -246,7 +246,7 @@ export const StyledMenuProfile = styled.div`
   /* MH-Theme/label/small. Truncates because a user holding several permissions
      renders them all, which outgrows the card well before the name does. */
   .profileRole {
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     overflow: hidden;
@@ -256,7 +256,7 @@ export const StyledMenuProfile = styled.div`
 
   /* MH-Theme/label/base — matches the nav item and Button label size. */
   .profileName {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     overflow: hidden;
@@ -306,7 +306,7 @@ export const StyledMenuProfile = styled.div`
        Log off button's label/base size below. No explicit height here either
        — see the .menuBarNav override for why. */
     .navbar-container.vertical .navbar-item {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
     }
   }
@@ -326,7 +326,7 @@ export const StyledMenuProfile = styled.div`
     cursor: pointer;
 
     /* MH-Theme/label/base — matches the nav items and Settings above it. */
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Warning-Base, #b9261a);
 

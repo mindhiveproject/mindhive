@@ -17,7 +17,7 @@ const FilterBar = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
     outline: none;
@@ -50,7 +50,7 @@ const FilterBar = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
     display: inline-flex;
@@ -80,7 +80,7 @@ const FilterBar = styled.div`
 
     /* The visible label area */
     > .text {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #171717;
       margin: 0;
@@ -135,7 +135,7 @@ const FilterBar = styled.div`
       border: none;
       background: transparent;
       box-shadow: none;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       color: #171717;
       outline: none;
@@ -159,7 +159,7 @@ const FilterBar = styled.div`
       min-width: 100%;
 
       > .item {
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         padding: 10px 14px !important;
         border-top: none;

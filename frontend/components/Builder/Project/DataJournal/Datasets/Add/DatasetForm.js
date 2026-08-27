@@ -295,7 +295,7 @@ export default function DatasetForm({
           }}
         />
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             marginTop: "6px",
             marginBottom: 0,
@@ -311,7 +311,7 @@ export default function DatasetForm({
       {/* Status / errors */}
       {(loading || studyLoading) && (
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             color: "#718096",
             marginBottom: "10px",
@@ -324,7 +324,7 @@ export default function DatasetForm({
       )}
       {error && (
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             color: "#c53030",
             marginBottom: "10px",
@@ -338,7 +338,7 @@ export default function DatasetForm({
       )}
       {studyError && (
         <p
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             color: "#c53030",
             marginBottom: "10px",
@@ -402,7 +402,7 @@ export default function DatasetForm({
               })}
             </div>
             <div
-              className="MH-Type-Body-Small"
+              className="MH-Type-Body-Base"
               style={{
                 color: hasStudy ? "#4a5568" : "#c53030",
                 marginTop: "2px",
@@ -450,7 +450,7 @@ export default function DatasetForm({
               })}
             </div>
             <div
-              className="MH-Type-Body-Small"
+              className="MH-Type-Body-Base"
               style={{
                 color: "#4a5568",
                 marginTop: "2px",
@@ -464,13 +464,13 @@ export default function DatasetForm({
             {dataOrigin === "UPLOADED" && (
               <div style={{ marginTop: "8px" }}>
                 <input
-                  className="MH-Type-Body-Small"
+                  className="MH-Type-Body-Base"
                   type="file"
                   accept=".csv,.json"
                   onChange={handleFileChange}
                 />
                 <div
-                  className="MH-Type-Body-Small"
+                  className="MH-Type-Body-Base"
                   style={{
                     marginTop: "4px",
                     color: "#a0aec0",
@@ -513,7 +513,7 @@ export default function DatasetForm({
               })}
             </div>
             <div
-              className="MH-Type-Body-Small"
+              className="MH-Type-Body-Base"
               style={{
                 color: "#4a5568",
                 marginTop: "2px",
@@ -529,7 +529,7 @@ export default function DatasetForm({
 
       {(sharingIds.length > 0 || selectedVizPartId) && (
         <div
-          className="MH-Type-Body-Small"
+          className="MH-Type-Body-Base"
           style={{
             marginTop: 14,
             padding: "10px 12px",

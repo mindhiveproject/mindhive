@@ -512,7 +512,7 @@ export default function FieldEditor({ field, definitionId, onDeleted }) {
 
       {errorMsg ? (
         <Section>
-          <span className="MH-Type-Body-Small" style={{ color: "#871b16" }}>
+          <span className="MH-Type-Body-Base" style={{ color: "#871b16" }}>
             {errorMsg}
           </span>
         </Section>

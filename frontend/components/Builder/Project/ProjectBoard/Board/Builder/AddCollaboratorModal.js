@@ -397,7 +397,7 @@ export default function AddCollaboratorModal({
 
             {error && (
               <div
-                className="MH-Type-Body-Small"
+                className="MH-Type-Body-Base"
                 style={{
                   background: "#FDECEA",
                   color: "#B42318",

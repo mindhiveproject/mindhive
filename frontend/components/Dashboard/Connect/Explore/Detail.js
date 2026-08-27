@@ -135,7 +135,7 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -150,7 +150,7 @@ const TitleRow = styled.div`
 
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -174,13 +174,13 @@ const MetaGrid = styled.div`
     background: #f7f9f8;
 
     .label {
-      font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Small);
       letter-spacing: 0;
       color: #888;
       text-transform: uppercase;
     }
     .value {
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
       color: #171717;
       margin-top: 2px;
@@ -213,7 +213,7 @@ const MentorPanel = styled.div`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     flex: none;
   }
@@ -224,18 +224,18 @@ const MentorPanel = styled.div`
     gap: 2px;
 
     .name {
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       color: #171717;
     }
     .tagline {
       color: #5f6871;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
     .org {
       color: #888;
-      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
   }
@@ -246,7 +246,7 @@ const MentorPanel = styled.div`
     align-items: center;
     gap: 4px;
     color: #336f8a;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     text-decoration: none;
   }
@@ -268,18 +268,18 @@ const RatingRow = styled.div`
     gap: 8px;
   }
   .author {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
   }
   .when {
     color: #888;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
   .body {
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -478,7 +478,7 @@ export default function ExploreDetail({ opportunityId }) {
               <div className="MH-Type-Title-Small" style={{ color: "#1d6b3a" }}>
                 Active in &ldquo;{activeRound.title}&rdquo;
               </div>
-              <div className="MH-Type-Body-Small" style={{ color: "#1d6b3a" }}>
+              <div className="MH-Type-Body-Base" style={{ color: "#1d6b3a" }}>
                 {activeRound.closeAt ? (
                   <>
                     Preferences close on{" "}
@@ -571,7 +571,7 @@ export default function ExploreDetail({ opportunityId }) {
                 }}
               >
                 <Stars value={opp.publicRatingAverage} />
-                <span className="MH-Type-Body-Small" style={{ color: "#5f6871" }}>
+                <span className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
                   {opp.publicRatingAverage?.toFixed(1)} (
                   {opp.publicRatingCount} review
                   {opp.publicRatingCount === 1 ? "" : "s"})

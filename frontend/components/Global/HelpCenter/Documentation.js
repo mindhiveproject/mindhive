@@ -47,7 +47,7 @@ const StyledMarkdown = styled.div`
 
 const Heading1 = styled.h1`
   color:rgb(0, 0, 0);
-  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Large);
   letter-spacing: 0;
   color: ${props => props.theme.primaryCalyspo};
   margin-top: 1.5em;
@@ -55,20 +55,20 @@ const Heading1 = styled.h1`
 
 const Heading2 = styled.h2`
   color: ${props => props.theme.secondaryCalyspo};
-  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Base);
   letter-spacing: 0;
   margin-top: 1.5em;
 `;
 
 const Heading3 = styled.h3`
-  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Small);
   letter-spacing: 0;
   margin-top: 1.5em;
 `;
 
 const Paragraph = styled.p`
   margin: 0.5em 0;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 

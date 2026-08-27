@@ -8,7 +8,7 @@ const StyledModal = styled.div`
   margin: 50px 50px 50px 50px;
   .title {
     font-style: normal;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     text-align: left;
     color: #1a1a1a;
@@ -16,7 +16,7 @@ const StyledModal = styled.div`
   .content {
     margin: 15px 0px 40px 0px;
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
   }
@@ -47,7 +47,7 @@ const StyledButton = styled.button`
   align-items: center;
   padding: 14px 20px;
   font-style: normal;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   text-align: center;
   color: #666666;

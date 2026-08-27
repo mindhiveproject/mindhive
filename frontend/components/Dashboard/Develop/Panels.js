@@ -38,6 +38,7 @@ export default function Panels({ query, user }) {
     <>
       <SectionNavbar
         variant="underline"
+        showRule
         id="myPanel"
         aria-label={t("developSections", {}, { default: "Develop sections" })}
       >

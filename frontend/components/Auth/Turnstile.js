@@ -112,7 +112,7 @@ const Turnstile = forwardRef(function Turnstile({ onVerify }, ref) {
       <p
         style={{
           color: "#991b1b",
-          font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+          font: 'var(--MH-Type-Body-Base)',
           letterSpacing: 0,
         }}
       >

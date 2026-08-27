@@ -12,7 +12,7 @@ export const WizardBody = styled.div`
 
 export const StepMeta = styled.p`
   margin: 0;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
@@ -23,20 +23,20 @@ export const FieldStack = styled.div`
   gap: 8px;
 
   label {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .field-hint {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
 
   input,
   textarea {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     border: 2px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
     border-radius: 8px;
@@ -108,7 +108,7 @@ export const QuestionCardHeader = styled.div`
   gap: 8px;
 
   .question-meta {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
@@ -143,19 +143,19 @@ export const QuestionSummary = styled.div`
   }
 
   .summary-main strong {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .summary-type {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
 
   .summary-prompt {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     overflow: hidden;
@@ -237,14 +237,14 @@ export const TypeTile = styled.button`
 
   .type-label {
     display: block;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .type-hint {
     display: block;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
@@ -288,7 +288,7 @@ export const PreviewPaneContent = styled.div`
 
 export const ErrorText = styled.p`
   margin: 0;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #b42318;
 `;
@@ -297,7 +297,7 @@ export const CheckboxRow = styled.label`
   display: flex;
   align-items: center;
   gap: 8px;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif) !important;
+  font: var(--MH-Type-Body-Base) !important;
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   cursor: pointer;
@@ -324,14 +324,14 @@ export const CloneRow = styled.button`
   cursor: pointer;
 
   .clone-title {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
   }
 
   .clone-desc {
     margin-top: 4px;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #5f6871;
   }

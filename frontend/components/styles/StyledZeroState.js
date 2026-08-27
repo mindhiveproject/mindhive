@@ -12,13 +12,13 @@ const StyledZeroState = styled.div`
   border-radius: 4px;
   h2 {
     font-style: normal;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #1a1a1a;
   }
   a {
     font-style: normal;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     text-decoration-line: underline;
     color: #007c70;
@@ -35,7 +35,7 @@ const StyledZeroState = styled.div`
   }
   .contextInfo {
     font-style: normal;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
     color: #969696;

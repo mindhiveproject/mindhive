@@ -44,14 +44,14 @@ const FormFields = styled.div`
   }
 
   .field-label {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #333;
   }
 
   input[type="text"],
   textarea {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #1a1a1a;
     border: 1px solid #e6e6e6;
@@ -88,7 +88,7 @@ const FormFields = styled.div`
   }
 
   .checkboxRow span {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #333;
   }

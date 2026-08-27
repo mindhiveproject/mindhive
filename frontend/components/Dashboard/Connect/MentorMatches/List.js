@@ -23,14 +23,14 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #171717;
   }
   p {
     margin: 4px 0 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     max-width: 640px;
   }
@@ -47,14 +47,14 @@ const OpportunityCard = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -76,14 +76,14 @@ const StudentRow = styled.div`
   }
 
   .name {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
   }
 
   .meta {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     margin-top: 2px;
   }
@@ -93,12 +93,12 @@ const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: #5f6871;
 
   span.label-text {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -108,7 +108,7 @@ const Field = styled.label`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #171717;
     outline: none;
@@ -130,7 +130,7 @@ const Button = styled.button`
   border: 1px solid ${({ $primary }) => ($primary ? "#336f8a" : "#d3dae0")};
   background: ${({ $primary }) => ($primary ? "#336f8a" : "#ffffff")};
   color: ${({ $primary }) => ($primary ? "#ffffff" : "#336f8a")};
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   cursor: pointer;
 
@@ -308,7 +308,7 @@ function StudentMatchCard({ match, opportunity, me, onSaved }) {
                   border: `1px solid ${active ? "#336f8a" : "#d3dae0"}`,
                   background: active ? "#336f8a" : "#ffffff",
                   color: active ? "#ffffff" : "#5f6871",
-                  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                  font: 'var(--MH-Type-Label-Base)',
                   letterSpacing: 0,
                   cursor: "pointer",
                 }}
@@ -325,7 +325,7 @@ function StudentMatchCard({ match, opportunity, me, onSaved }) {
           display: "inline-flex",
           gap: 8,
           alignItems: "center",
-          font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+          font: 'var(--MH-Type-Label-Base)',
           letterSpacing: 0,
           cursor: "pointer",
         }}

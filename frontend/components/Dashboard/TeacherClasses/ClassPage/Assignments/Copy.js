@@ -20,7 +20,7 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+  font: var(--MH-Type-Heading-Small);
   letter-spacing: 0;
   color: #1a1a1a;
 `;
@@ -42,7 +42,7 @@ const FormSection = styled.div`
 const FormLabel = styled.label`
   display: block;
   margin-bottom: 8px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: #1a1a1a;
 `;

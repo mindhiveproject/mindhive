@@ -15,7 +15,7 @@ import { upsertProposalEntry } from "../../../../lib/opportunityProposalData";
 
 const StatusText = styled.p`
   margin: 0;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;

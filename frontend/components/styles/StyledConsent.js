@@ -9,7 +9,7 @@ export const StyledConsent = styled.div`
     margin: 1rem;
   }
   .item {
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
   }
   .consentPage {

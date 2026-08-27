@@ -662,7 +662,7 @@ export default function Proposal({
                   />
                   {canEditCards && saveErrors[card?.id] && (
                     <div
-                      className="cardSaveError MH-Type-Body-Small"
+                      className="cardSaveError MH-Type-Body-Base"
                       style={{
                         marginTop: "0.5rem",
                         color: "#b30000",

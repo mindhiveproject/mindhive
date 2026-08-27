@@ -55,7 +55,7 @@ const inputStyle = {
   border: "1px solid #A1A1A1",
   borderRadius: 10,
   padding: "16px 18px",
-  font: 'var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Large)',
   letterSpacing: 0,
   color: "#171717",
 };
@@ -63,13 +63,13 @@ const inputStyle = {
 const helperTextStyle = {
   margin: "8px 0 0",
   color: "#5D5763",
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
 };
 
 const questionLabelStyle = {
   margin: "0 0 10px",
-  font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Title-Small)',
   letterSpacing: 0,
   color: "#171717",
 };
@@ -724,7 +724,7 @@ export default function MilestoneCardBuilder({
                 )}
               />
             ) : (
-              <p style={{ margin: 0, font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)', letterSpacing: 0 }}>
+              <p style={{ margin: 0, font: 'var(--MH-Type-Body-Base)', letterSpacing: 0 }}>
                 {displayTitle}
               </p>
             )}
@@ -761,7 +761,7 @@ export default function MilestoneCardBuilder({
               <p
                 style={{
                   margin: 0,
-                  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                  font: 'var(--MH-Type-Body-Base)',
                   letterSpacing: 0,
                   color: "#5D5763",
                 }}
@@ -1277,7 +1277,7 @@ export default function MilestoneCardBuilder({
           </>
         }
       >
-        <p style={{ margin: 0, font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)', letterSpacing: 0 }}>
+        <p style={{ margin: 0, font: 'var(--MH-Type-Body-Base)', letterSpacing: 0 }}>
           {t(
             "board.expendedCard.milestoneCard.confirmDataCollectionBody",
             {},
@@ -1329,7 +1329,7 @@ export default function MilestoneCardBuilder({
           </>
         }
       >
-        <p style={{ margin: 0, font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)', letterSpacing: 0 }}>
+        <p style={{ margin: 0, font: 'var(--MH-Type-Body-Base)', letterSpacing: 0 }}>
           {t(
             "board.expendedCard.milestoneCard.confirmRemoveReviewFormBody",
             {},

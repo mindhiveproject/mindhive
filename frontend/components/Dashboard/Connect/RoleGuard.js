@@ -36,7 +36,7 @@ const Shell = styled.div`
 
   h1 {
     margin: 0;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     color: #171717;
   }
@@ -44,7 +44,7 @@ const Shell = styled.div`
   p {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     max-width: 480px;
   }
@@ -58,7 +58,7 @@ const Shell = styled.div`
     border: 1px solid #336f8a;
     background: #336f8a;
     color: #ffffff;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     text-decoration: none;
 

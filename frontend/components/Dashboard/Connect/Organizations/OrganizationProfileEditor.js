@@ -30,7 +30,7 @@ const Card = styled.section`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
@@ -38,7 +38,7 @@ const Card = styled.section`
   .helper {
     margin: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -65,7 +65,7 @@ const Field = styled.label`
 
   .label {
     color: var(--MH-Theme-Neutrals-Black, #171717);
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 
@@ -76,7 +76,7 @@ const Field = styled.label`
     border: 1px solid #cccccc;
     border-radius: 8px;
     padding: 10px 12px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     background: var(--MH-Theme-Neutrals-White, #ffffff);
@@ -124,7 +124,7 @@ const LogoRow = styled.div`
 
     .placeholder {
       color: #5f6871;
-      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Large);
       letter-spacing: 0;
     }
   }
@@ -139,12 +139,12 @@ const LogoRow = styled.div`
   .hint {
     margin: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
   input[type="file"] {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -160,7 +160,7 @@ const Actions = styled.div`
 const Feedback = styled.p`
   margin: 0;
   color: ${(props) => (props.$error ? "#871b16" : "#1d6b3a")};
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 `;
 
@@ -503,7 +503,7 @@ export default function OrganizationProfileEditor({
             disabled={saving}
           />
           <p
-            className="hint MH-Type-Body-Small"
+            className="hint MH-Type-Body-Base"
             style={{ margin: 0, color: "#5f6871" }}
           >
             {t("organizationsDetail.editProfile.interestsHint", {}, {

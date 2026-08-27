@@ -25,7 +25,7 @@ export const StyledNode = styled.div`
 
   .node-header-text {
     color: #1a1a1a;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
   }
 
@@ -84,7 +84,7 @@ export const StyledNode = styled.div`
     position: relative;
     .label {
       color: #666666;
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       text-align: center;
       position: absolute;
@@ -111,7 +111,7 @@ export const StyledNode = styled.div`
     display: grid;
     padding: 0px 20px 0px 20px;
     color: #666666;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
   }
@@ -148,7 +148,7 @@ export const StyledComment = styled.div`
 
   .comment-header-text {
     color: #1a1a1a;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     opacity: 0.85;
   }
@@ -156,7 +156,7 @@ export const StyledComment = styled.div`
   .comment-content {
     display: grid;
     color: #555555;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
     height: 100%;
@@ -176,7 +176,7 @@ export const StyledComment = styled.div`
   }
 
   .post-it {
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
     position: absolute;
     width: 280px;

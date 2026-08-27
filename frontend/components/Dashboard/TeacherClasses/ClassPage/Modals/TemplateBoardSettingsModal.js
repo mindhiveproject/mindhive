@@ -16,7 +16,7 @@ const modalActionsStyle = {
 
 const headerSubtitleStyle = {
   margin: "6px 0 0",
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "#625b71",
 };
@@ -54,7 +54,7 @@ export default function TemplateBoardSettingsModal({
     >
       <Modal.Header
         style={{
-          font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+          font: 'var(--MH-Type-Title-Large)',
           letterSpacing: 0,
           color: "#171717",
         }}

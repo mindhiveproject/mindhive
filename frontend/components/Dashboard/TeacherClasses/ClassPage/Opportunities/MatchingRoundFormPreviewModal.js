@@ -26,7 +26,7 @@ const FormBlock = styled.section`
 
 const FormTitle = styled.h3`
   margin: 0;
-  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
@@ -39,7 +39,7 @@ const Cards = styled.div`
 
 const StatusText = styled.p`
   margin: 0;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;

@@ -17,14 +17,14 @@ const StyledBoardSettings = styled.div`
 
   .boardSettingsSectionTitle {
     margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
 
   .boardSettingsSectionDescription {
     margin: -6px 0 0;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #625b71;
   }
@@ -65,7 +65,7 @@ const StyledBoardSettings = styled.div`
   }
 
   .settingsQuestion {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -85,7 +85,7 @@ const StyledBoardSettings = styled.div`
       background: #f9faf9;
       color: #333333;
       cursor: pointer;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       transition: border-color 0.2s ease, background-color 0.2s ease,
         box-shadow 0.2s ease, color 0.2s ease;
@@ -119,7 +119,7 @@ const StyledBoardSettings = styled.div`
   }
 
   .curriculumTypeLegend {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
     margin: 0 0 4px 0;
@@ -127,7 +127,7 @@ const StyledBoardSettings = styled.div`
   }
 
   .curriculumTypeHelp {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #625b71;
     margin: 0 0 16px 0;
@@ -186,7 +186,7 @@ const StyledBoardSettings = styled.div`
   }
 
   .curriculumTypeLabel {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
   }

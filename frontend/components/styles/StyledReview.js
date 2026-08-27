@@ -29,12 +29,12 @@ export const StyledActionPage = styled.div`
     grid-template-columns: auto 1fr;
   }
   .title {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #3b3b3b;
   }
   .subtitle {
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
     color: #626269;
   }
@@ -58,7 +58,7 @@ export const StyledActionPage = styled.div`
     grid-template-columns: 1fr auto;
   }
   .cardTitle {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
@@ -77,12 +77,12 @@ export const StyledActionPage = styled.div`
     align-items: center;
   }
   .listTitle {
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     color: #626269;
   }
   .listSubtitle {
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     font-style: italic;
     letter-spacing: 0;
     color: #969696;
@@ -111,12 +111,12 @@ export const StyledActionPage = styled.div`
       grid-gap: 15px;
     }
     .reviewerComment {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #3b3b3b;
     }
     .questionTitle {
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       margin-bottom: 5px;
     }
@@ -149,7 +149,7 @@ export const StyledReviewPage = styled.div`
       justify-content: flex-start;
       align-items: center;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       text-align: left;
       color: #007c70;
@@ -168,7 +168,7 @@ export const StyledReviewPage = styled.div`
   .reviewBoard {
     display: grid;
     grid-gap: 30px;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
 
     .block {
@@ -188,7 +188,7 @@ export const StyledReviewPage = styled.div`
   }
   .descriptionMenu {
     .item {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #1a1a1a;
     }
@@ -250,7 +250,7 @@ export const StyledReviewBoard = styled.div`
       .allReviewsToggle {
         cursor: pointer;
         color: #007c70;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         text-align: left;
         text-decoration-line: underline;
@@ -275,7 +275,7 @@ export const StyledReviewBoard = styled.div`
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       text-align: left;
     }
@@ -285,12 +285,12 @@ export const StyledReviewBoard = styled.div`
       .reviewerComment {
         display: grid;
         .question {
-          font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Base);
           letter-spacing: 0;
           text-align: left;
         }
         .answer {
-          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
           text-align: left;
         }
@@ -305,7 +305,7 @@ export const StyledReviewBoard = styled.div`
     box-sizing: border-box;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     text-align: left;
     cursor: pointer;
@@ -319,13 +319,13 @@ export const StyledReviewCard = styled.div`
   height: 80vh;
   overflow: auto;
   h2 {
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     text-align: left;
     color: #1a1a1a;
   }
   p {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
   }
@@ -341,7 +341,7 @@ export const StyledReviewCard = styled.div`
     grid-column-gap: 24px;
     grid-template-columns: auto 1fr;
     .step {
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       text-align: left;
       color: var(--neutral_grey2, #3b3b3b);
@@ -353,6 +353,22 @@ export const StyledDasboardReview = styled.div`
   .overview {
     display: grid;
     grid-gap: 16px;
+    .overviewHeader {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 8px;
+      h1 {
+        margin: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+      p {
+        margin: 0;
+        max-width: 640px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
+      }
+    }
     .board {
       display: grid;
       grid-gap: 24px;
@@ -369,7 +385,7 @@ export const StyledDasboardReview = styled.div`
       input,
       textarea,
       select {
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         border: 1px solid #cccccc;
         border-radius: 4px;
@@ -382,7 +398,7 @@ export const StyledDasboardReview = styled.div`
         justify-content: start;
         border-radius: 4px;
         width: 100%;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         .default.text {
           color: #979797;
@@ -390,7 +406,7 @@ export const StyledDasboardReview = styled.div`
       }
       .checkbox {
         label {
-          font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Label-Large);
           letter-spacing: 0;
           text-align: left;
           color: #666666;
@@ -481,7 +497,7 @@ export const StyledDasboardReview = styled.div`
         padding: 1px 6px;
         width: fit-content;
         border-radius: 4px;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         text-align: left;
       }
@@ -509,7 +525,7 @@ export const StyledDasboardReview = styled.div`
         grid-template-columns: 1fr auto;
         align-content: center;
         justify-items: end;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         text-align: left;
         .option {
@@ -554,7 +570,7 @@ export const StyledDasboardReview = styled.div`
         background: #ffffff;
         padding: 24px 48px;
 
-        font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Large);
         letter-spacing: 0;
         text-align: left;
 
@@ -565,7 +581,7 @@ export const StyledDasboardReview = styled.div`
         }
         .title {
           color: #171717;
-          font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+          font: var(--MH-Type-Heading-Base);
           letter-spacing: 0;
           text-align: left;
         }
@@ -625,7 +641,7 @@ export const StyledDasboardReview = styled.div`
       border-radius: 8px;
 
       p {
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #666666;
       }
@@ -706,7 +722,7 @@ export const StyledDasboardReview = styled.div`
         align-items: center;
         cursor: pointer;
         .text {
-          font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Small);
           letter-spacing: 0;
           text-align: left;
           color: var(--neutral_grey2, #3b3b3b);
@@ -715,7 +731,7 @@ export const StyledDasboardReview = styled.div`
       .title {
         display: grid;
         justify-content: center;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         text-align: center;
         color: var(--neutral_grey2, #3b3b3b);
@@ -736,7 +752,7 @@ export const StyledDasboardReview = styled.div`
       overflow-x: auto;
 
       .headerMenu {
-        font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Large);
         letter-spacing: 0;
         display: grid;
         grid-template-columns: repeat(auto-fill, 150px);
@@ -780,7 +796,7 @@ export const StyledDasboardReview = styled.div`
         .ui.accordion:not(.styled) .accordion .title ~ .content:not(.ui),
         .ui.accordion:not(.styled) .title ~ .content:not(.ui) {
           overflow: hidden;
-          font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
           text-align: left;
           color: #626269;
@@ -790,7 +806,7 @@ export const StyledDasboardReview = styled.div`
           padding: 24px 16px;
         }
         .ui.accordion .title:not(.ui) {
-          font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Large);
           letter-spacing: 0;
           text-align: left;
           padding: 24px 16px;
@@ -814,14 +830,14 @@ export const StyledDasboardReview = styled.div`
           display: grid;
           grid-gap: 10px;
           grid-template-columns: 1fr auto;
-          font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Small);
           letter-spacing: 0;
           text-align: left;
           color: var(--SECONDARY_BLUE1, #28619e);
         }
 
         h1 {
-          font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+          font: var(--MH-Type-Heading-Small);
           letter-spacing: 0;
           text-align: left;
           color: #171717;
@@ -839,7 +855,7 @@ export const StyledDasboardReview = styled.div`
     padding: 27px 44px 37px 50px;
 
     .subtitle {
-      font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Large);
       font-style: italic;
       letter-spacing: 0;
     }
@@ -851,17 +867,17 @@ export const StyledDasboardReview = styled.div`
       margin-bottom: 40px;
     }
     h1 {
-      font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Small);
       letter-spacing: 0;
       text-align: left;
     }
     h2 {
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       margin-bottom: 0;
     }
     p {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       text-align: left;
     }
@@ -874,7 +890,7 @@ export const StyledDasboardReview = styled.div`
       border: 1px solid #cccccc;
       box-sizing: border-box;
       border-radius: 4px;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       text-align: left;
     }
@@ -885,12 +901,12 @@ export const StyledDasboardReview = styled.div`
       display: grid;
       grid-gap: 5px;
       .question {
-        font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Large);
         letter-spacing: 0;
         color: #171717;
       }
       .subtitle {
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         font-style: italic;
         letter-spacing: 0;
         color: #6c6c6c;
@@ -902,7 +918,7 @@ export const StyledDasboardReview = styled.div`
         align-items: center;
         padding: 5px;
         .title {
-          font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Base);
           display: flex;
           align-items: center;
           letter-spacing: 0;
@@ -910,7 +926,7 @@ export const StyledDasboardReview = styled.div`
           margin-bottom: 2px;
         }
         .subtitle {
-          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
           color: #626269;
         }
@@ -921,7 +937,7 @@ export const StyledDasboardReview = styled.div`
         grid-template-columns: auto 1fr;
         align-items: center;
         .title {
-          font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+          font: var(--MH-Type-Title-Base);
           display: flex;
           align-items: center;
           letter-spacing: 0;
@@ -946,7 +962,7 @@ export const StyledDasboardReview = styled.div`
           padding: 10px 20px !important;
           width: fit-content !important;
           .title {
-            font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+            font: var(--MH-Type-Body-Base);
             letter-spacing: 0;
             display: flex;
             color: #5d5763;
@@ -957,79 +973,79 @@ export const StyledDasboardReview = styled.div`
   }
 
   .p12 {
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-align: left;
     color: #6e6a6a;
   }
   .p12_400 {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
   .p13 {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     text-align: left;
     color: #47484d;
   }
   .p14 {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
     color: var(--neutral_grey2, #3b3b3b);
   }
   .p16 {
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: center;
     color: #6e6d71;
   }
   .p16_500 {
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
   .p16_600 {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     text-align: left;
     color: var(--neutral_black1, #171717);
   }
   .p17 {
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     text-align: left;
   }
   .p18 {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: var(--neutral_black1, #171717);
   }
   .p22 {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     text-align: left;
     color: #007c70;
   }
   .h24 {
     //styleName: H3;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
   .h28 {
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     text-align: left;
     color: #171717;
   }
   .h40 {
     //styleName: H2;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     text-align: left;
     color: var(--neutral_black1, #171717);
@@ -1044,7 +1060,7 @@ export const StyledDasboardReview = styled.div`
   }
   .descriptionMenu {
     .item {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #1a1a1a;
     }

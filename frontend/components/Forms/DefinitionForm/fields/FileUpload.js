@@ -127,7 +127,7 @@ export default function FileUpload({
       {existing && !pending ? (
         <div
           style={{
-            font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+            font: 'var(--MH-Type-Body-Base)',
             letterSpacing: 0,
             color: "#5f6871",
           }}
@@ -189,7 +189,7 @@ export default function FileUpload({
                 background: "none",
                 border: "none",
                 color: "var(--MH-Theme-Primary-Dark, #336f8a)",
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
                 cursor: interactionsDisabled ? "not-allowed" : "pointer",
                 padding: 0,
@@ -214,7 +214,7 @@ export default function FileUpload({
                 background: "none",
                 border: "none",
                 color: "#c0392b",
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
                 cursor: disabled ? "not-allowed" : "pointer",
                 padding: 0,

@@ -145,7 +145,7 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
                 )}
               </p>
               {hasUnsupportedOnCanvas ? (
-                <p className="MH-Type-Body-Small" style={noticeStyle} role="note">
+                <p className="MH-Type-Body-Base" style={noticeStyle} role="note">
                   {t("dataJournal.export.modal.unsupportedNotice", {}, {
                     default:
                       "Table and code components on this canva are not included in the exported PDF.",

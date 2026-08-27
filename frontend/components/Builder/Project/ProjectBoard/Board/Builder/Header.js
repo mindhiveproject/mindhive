@@ -450,7 +450,7 @@ export default function ProposalHeader({
             </div>
 
             {isClassTemplateBoard(proposal) && (
-              <div className="MH-Type-Body-Small" style={{ marginBottom: "8px", color: "#5D5763" }}>
+              <div className="MH-Type-Body-Base" style={{ marginBottom: "8px", color: "#5D5763" }}>
                 {t("header.classTemplateReadOnly", "Class template (used by class board)")}
               </div>
             )}

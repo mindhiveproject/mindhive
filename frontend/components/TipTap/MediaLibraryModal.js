@@ -141,7 +141,7 @@ function MediaLibraryThumbCell(params) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+          font: 'var(--MH-Type-Label-Small)',
           letterSpacing: 0,
           color: "#336F8A",
         }}
@@ -164,7 +164,7 @@ function MediaLibraryThumbCell(params) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+          font: 'var(--MH-Type-Label-Small)',
           letterSpacing: 0,
           color: "#6A6A6A",
         }}
@@ -384,7 +384,7 @@ const TITLE_ROW_STYLE = {
 
 const TITLE_STYLE = {
   margin: 0,
-  font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Title-Large)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
@@ -412,7 +412,7 @@ const FOOTER_STYLE = {
 
 const LABEL_STYLE = {
   display: "block",
-  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Label-Base)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   marginBottom: 6,
@@ -424,7 +424,7 @@ const INPUT_STYLE = {
   padding: "10px 12px",
   border: "1px solid #A1A1A1",
   borderRadius: 8,
-  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Label-Base)',
   letterSpacing: 0,
   boxSizing: "border-box",
   color: "#171717",
@@ -445,7 +445,7 @@ const ERROR_BOX_STYLE = {
   background: "#FEF3F2",
   border: "1px solid #FECDCA",
   color: "#B42318",
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
 };
 
@@ -459,7 +459,7 @@ const EDIT_PANEL_STYLE = {
 };
 
 const EDIT_TITLE_STYLE = {
-  font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Title-Small)',
   letterSpacing: 0,
   color: "var(--MH-Theme-Primary-Dark, #336F8A)",
   marginBottom: 14,
@@ -475,7 +475,7 @@ const ACTIONS_ROW_STYLE = {
 
 const EMPTY_TEXT_STYLE = {
   margin: 0,
-  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
   color: "#6A6A6A",
 };

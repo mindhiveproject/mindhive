@@ -32,7 +32,7 @@ const CardContainer = styled.article`
 const TypeLabel = styled.p`
   margin: 0;
   align-self: flex-start;
-  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Small);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
@@ -103,7 +103,7 @@ const Avatar = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
@@ -132,7 +132,7 @@ const NameBlock = styled.div`
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     word-break: break-word;
@@ -140,7 +140,7 @@ const NameBlock = styled.div`
 
   .subtitle {
     margin: 0;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     word-break: break-word;
@@ -170,7 +170,7 @@ const Chips = styled.div`
 const Description = styled.p`
   margin: 0;
   width: 100%;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   text-align: center;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);

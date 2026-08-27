@@ -217,7 +217,7 @@ export const StyledTipTap = styled.div`
         li {
           // margin-bottom: 0.1rem;
           color: #434343;
-          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          font: var(--MH-Type-Body-Base);
           letter-spacing: 0;
         }
 
@@ -235,7 +235,7 @@ export const StyledTipTap = styled.div`
       
       /* Heading Styles */
       h1 {
-        font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+        font: var(--MH-Type-Heading-Large);
         letter-spacing: 0;
         margin: 0 0 0.25rem 0;
         color: #274E5B;
@@ -259,7 +259,7 @@ export const StyledTipTap = styled.div`
       .collaboration-cursor__label {
         border-radius: 3px 3px 3px 0;
         color: #fff;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         font-style: normal;
         letter-spacing: 0;
         left: -1px;

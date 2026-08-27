@@ -42,14 +42,14 @@ export default function DeleteCardsConfirmModal({
 
   const noteHeadingStyle = {
     margin: "0 0 4px",
-    font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+    font: 'var(--MH-Type-Title-Small)',
     letterSpacing: 0,
     color: "var(--MH-Theme-Neutrals-Black, #171717)",
   };
 
   const noteBodyStyle = {
     margin: 0,
-    font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+    font: 'var(--MH-Type-Body-Base)',
     letterSpacing: 0,
     color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
   };

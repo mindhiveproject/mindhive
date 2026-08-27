@@ -143,7 +143,7 @@ const StyledProfile = styled.div`
   .reviewOverview {
     display: grid;
     grid-gap: 1rem;
-    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Large);
     letter-spacing: 0;
     .section {
       display: grid;
@@ -154,7 +154,7 @@ const StyledProfile = styled.div`
       text-align: left;
       align-content: baseline;
       .title {
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
       }
       .answer {
@@ -210,7 +210,7 @@ export const StyledCreateProfileFlow = styled.div`
       border-radius: 10px;
     }
     .ui.progress > .label {
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
     }
     .progressLabels {
@@ -218,7 +218,7 @@ export const StyledCreateProfileFlow = styled.div`
       grid-template-columns: 1fr 1fr;
       justify-items: center;
       margin-top: 16px;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
       text-align: left;
       color: var(--neutral_grey2, #3b3b3b);
@@ -249,21 +249,21 @@ export const StyledCreateProfileFlow = styled.div`
         border: 2px solid var(--sds-color-border-default-default);
         background: var(--neutral_white, #fff);
         color: var(--neutral_black1, #171717);
-        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Base);
         letter-spacing: 0;
         max-width: 377px;
       }
       p {
         color: var(--neutral_black1, #171717);
         text-align: center;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
     }
     h2 {
       color: var(--neutral_black1, #171717);
       /* H2 */
-      font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Base);
       letter-spacing: 0;
     }
   }
@@ -299,13 +299,13 @@ export const StyledCreateProfileFlow = styled.div`
       }
       .title {
         color: var(--neutral_black1, #171717);
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
         margin-bottom: 12px;
       }
       .subtitle {
         color: var(--neutral_black1, #171717);
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
       .inputLineBlock {
@@ -320,19 +320,19 @@ export const StyledCreateProfileFlow = styled.div`
         p {
           color: var(--SECONDARY_BLUE1, #28619e);
           /* BUTTON_1 */
-          font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+          font: var(--MH-Type-Label-Base);
           letter-spacing: 0;
         }
       }
       p {
         color: var(--neutral_black1, #171717);
         /* BODY_1 */
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
       .fieldLabel {
         color: var(--neutral_black1, #171717);
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         margin: 0 0 8px;
       }
@@ -350,7 +350,7 @@ export const StyledCreateProfileFlow = styled.div`
           border-radius: 8px;
           background: var(--neutral_white, #fff);
           cursor: pointer;
-          font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+          font: var(--MH-Type-Label-Base);
           letter-spacing: 0;
           color: var(--neutral_black1, #171717);
           transition:
@@ -384,11 +384,11 @@ export const StyledCreateProfileFlow = styled.div`
       h3 {
         color: var(--neutral_black1, #171717);
         /* H3 */
-        font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+        font: var(--MH-Type-Heading-Small);
         letter-spacing: 0;
       }
       .ui.fluid.dropdown {
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         border: 1px solid #cccccc;
         border-radius: 4px;
@@ -398,7 +398,7 @@ export const StyledCreateProfileFlow = styled.div`
       }
       .ui.checkbox input.hidden + label {
         color: var(--neutral_black1, #171717);
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
       }
     }
@@ -414,14 +414,14 @@ export const StyledCreateProfileFlow = styled.div`
       justify-items: center;
       .h40 {
         //styleName: H2;
-        font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+        font: var(--MH-Type-Heading-Base);
         letter-spacing: 0;
         text-align: left;
         color: var(--neutral_black1, #171717);
       }
       .p15 {
         //styleName: BODY_1;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         text-align: center;
         color: var(--neutral_grey2, #3b3b3b);
@@ -462,14 +462,14 @@ export const StyledCreateProfileFlow = styled.div`
     }
     .primary {
       text-align: center;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
     }
     .secondary {
       background: var(--neutral_white5, #f7f9f8);
       color: var(--Button-Green, #347a70);
       text-align: center;
-      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
     }
   }
@@ -495,7 +495,7 @@ export const StyledAdaptableButton = styled.button`
   border-color: ${(props) => (props.changed ? props.color : "#9a9a9a")};
   color: white;
   border-radius: 4px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   padding: 10px 20px;
   cursor: pointer;

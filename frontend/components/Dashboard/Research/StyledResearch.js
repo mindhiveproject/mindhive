@@ -29,7 +29,7 @@ const StyledResearch = styled.div`
     }
 
     h1 {
-      font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Base);
       letter-spacing: 0;
       margin: 10px 0;
       color: #1b1c1d;
@@ -39,7 +39,7 @@ const StyledResearch = styled.div`
   .intro {
     max-width: 720px;
     color: #4a4a4a;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -66,14 +66,14 @@ const StyledResearch = styled.div`
 
       h2 {
         margin: 0;
-        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        font: var(--MH-Type-Title-Large);
         letter-spacing: 0;
         color: #1b1c1d;
       }
 
       span {
         color: #6f6f6f;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
       }
     }
@@ -96,7 +96,7 @@ const StyledResearch = styled.div`
       gap: 16px;
 
       label {
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         color: #3a3a3a;
       }
@@ -108,7 +108,7 @@ const StyledResearch = styled.div`
         padding: 12px 14px;
         border: 1px solid #d4d4d5;
         border-radius: 12px;
-        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
         background: #ffffff;
@@ -127,7 +127,7 @@ const StyledResearch = styled.div`
 
       span {
         margin-top: -4px;
-        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
         color: #6f6f6f;
       }
@@ -155,7 +155,7 @@ const StyledResearch = styled.div`
         border-radius: 999px;
         background: #f6f7f8;
         cursor: pointer;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         color: #333333;
         transition: all 0.2s ease;
@@ -188,7 +188,7 @@ const StyledResearch = styled.div`
         border-radius: 12px;
         background: #ffffff;
         cursor: pointer;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         color: #333333;
         transition: all 0.2s ease;
@@ -221,7 +221,7 @@ const StyledResearch = styled.div`
         border: 1px solid #d4d4d5;
         background: #ffffff;
         color: #4a4a4a;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -253,7 +253,7 @@ const StyledResearch = styled.div`
         border: none;
         border-radius: 999px;
         padding: 12px 24px;
-        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Base);
         letter-spacing: 0;
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -301,7 +301,7 @@ const StyledResearch = styled.div`
   .metricsTable {
     width: 100%;
     border-collapse: collapse;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     min-width: 960px;
 
@@ -315,7 +315,7 @@ const StyledResearch = styled.div`
         z-index: 1;
         padding: 10px 12px;
         text-align: left;
-        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        font: var(--MH-Type-Label-Small);
         letter-spacing: 0;
         white-space: nowrap;
         background: #336f8a;
@@ -348,7 +348,7 @@ const StyledResearch = styled.div`
   .toast {
     padding: 14px 18px;
     border-radius: 12px;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     display: flex;
     gap: 12px;

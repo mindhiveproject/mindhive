@@ -36,7 +36,7 @@ const Section = styled.div`
 
 const WarningSection = styled.div`
   display: flex;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   width: fit-content;
   color: white;
@@ -66,7 +66,7 @@ const ReadOnlyTipTapWrapper = styled.div`
 const CloseButton = styled(Button)`
   border-radius: 100px !important;
   background: #336F8A !important;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif) !important;
+  font: var(--MH-Type-Label-Base) !important;
   letter-spacing: 0;
   color: white !important;
   border: 1px solid #336F8A !important;

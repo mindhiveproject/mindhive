@@ -383,7 +383,7 @@ const StyledBulkBody = styled.div`
 
   p {
     margin: 0 0 16px;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
@@ -394,7 +394,7 @@ const StyledBulkBody = styled.div`
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 16px;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -406,7 +406,7 @@ const StyledBulkBody = styled.div`
 
     h3 {
       margin: 0 0 12px;
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
     }
   }
@@ -424,7 +424,7 @@ const StyledBulkBody = styled.div`
     border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
     border-radius: 6px;
     background: var(--MH-Theme-Neutrals-White, #ffffff);
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 
@@ -443,7 +443,7 @@ const StyledBulkBody = styled.div`
   .fieldLabel {
     display: block;
     margin: 12px 0 6px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 `;

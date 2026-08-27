@@ -23,7 +23,7 @@ const Shell = styled.aside`
 
   h3 {
     margin: 0;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-transform: uppercase;
     color: #5f6871;
@@ -31,7 +31,7 @@ const Shell = styled.aside`
 
   .preview-disclaimer {
     color: #888;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     margin: 0;
   }

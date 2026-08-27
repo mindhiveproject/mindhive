@@ -17,7 +17,7 @@ const ErrorStyles = styled.div`
     border-left: 5px solid var(--red);
     p {
       margin: 0;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
     }
     strong {

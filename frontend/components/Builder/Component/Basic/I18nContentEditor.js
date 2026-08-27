@@ -195,7 +195,7 @@ export default function I18nContentEditor({ task, handleChange }) {
               color: activeLanguage === code ? 'white' : '#333',
               cursor: 'pointer',
               whiteSpace: 'nowrap',
-              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Label-Base)',
               letterSpacing: 0
             }}
           >
@@ -316,7 +316,7 @@ export default function I18nContentEditor({ task, handleChange }) {
         padding: '2rem', 
         background: '',
         borderRadius: '4px',
-        font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+        font: 'var(--MH-Type-Body-Base)',
         letterSpacing: 0,
         color: ''
       }}>

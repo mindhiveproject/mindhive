@@ -1125,7 +1125,7 @@ export default function ProposalCard({
                             style={{
                               borderRadius: "100px",
                               background: "#f7f9fa",
-                              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                              font: 'var(--MH-Type-Label-Base)',
                               letterSpacing: 0,
                               color: "#B9261A",
                               border: "1px solid #B9261A",

@@ -10,35 +10,35 @@ export const StyledDocumentPage = styled.div`
   p,
   li {
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #666666;
   }
 
   h1 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Large);
     letter-spacing: 0;
     color: #1a1a1a;
   }
 
   h2 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
     color: #1a1a1a;
   }
 
   h3 {
     font-style: normal;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #1a1a1a;
   }
 
   a {
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-decoration-line: underline;
     color: #007c70;
@@ -135,37 +135,37 @@ export const StyledTeachersInfo = styled.div`
 
   h1 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Large);
     letter-spacing: 0;
     color: #1a1a1a;
   }
   h2 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
     color: #1a1a1a;
   }
   h3 {
     font-style: normal;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: #1a1a1a;
   }
   h4 {
     font-style: normal;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: #1a1a1a;
   }
   h5 {
     font-style: normal;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #1a1a1a;
   }
   p {
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #666666;
   }
@@ -179,7 +179,7 @@ export const StyledTeachersInfo = styled.div`
   a {
     text-decoration-line: underline;
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #666666;
   }
@@ -215,7 +215,7 @@ export const StyledProgram = styled.div`
       font-weight: normal;
     }
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     line-height: 48px;
   }
@@ -243,13 +243,13 @@ export const StyledProgram = styled.div`
   }
   h3 {
     font-style: normal;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     text-align: left;
   }
   h4 {
     font-style: normal;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-align: left;
     color: #666666;

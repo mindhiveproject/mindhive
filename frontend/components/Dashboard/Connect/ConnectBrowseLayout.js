@@ -52,7 +52,7 @@ export const BrowseHeader = styled.div`
   h1 {
     margin: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
   }
 
@@ -60,7 +60,7 @@ export const BrowseHeader = styled.div`
     margin: 0;
     max-width: 640px;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -100,7 +100,7 @@ export const BrowseSearchField = styled.label`
     border: none;
     outline: none;
     background: transparent;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
 
@@ -131,7 +131,7 @@ export const BrowseEmptyState = styled.p`
   margin: 0;
   padding: 32px 0;
   text-align: center;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;

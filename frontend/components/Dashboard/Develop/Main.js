@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
-import Trans from "next-translate/Trans";
 import { useEffect } from 'react';
 
 import Selector from "./DevelopNew/Selector";
@@ -17,7 +16,7 @@ import { StyledSelector } from "../../styles/StyledSelector";
 // in the platform green the old Develop new button wore.
 const DEVELOP_NEW_TRIGGER_STYLE = {
   height: "40px",
-  padding: "8px 16px 8px 24px",
+  padding: "8px 12px 8px 20px",
   borderRadius: "100px",
   background: " var(--MH-Theme-Primary-Dark, #336F8A)",
   border: "none",
@@ -162,15 +161,10 @@ export default function DevelopMain({ query, user }) {
 
   return (
     <>
-      <h1>{t("develop")}</h1>
       <div className="header">
         <div>
-          <p>
-            <Trans
-              i18nKey="builder:developHeaderDescription"
-              components={[<strong />]}
-            />
-          </p>
+          <h1 className="MH-Type-Heading-Base">{t("develop")}</h1>
+          <p>{t("developHeaderDescription")}</p>
         </div>
         <DevelopNewButton id="developNewBtn">
           <DropdownMenu

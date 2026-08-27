@@ -127,12 +127,12 @@ const INPUT_STYLE = {
   border: "1px solid #d3dae0",
   borderRadius: 8,
   padding: "8px 10px",
-  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Label-Base)',
   letterSpacing: 0,
 };
 
 const LABEL_SPAN_STYLE = {
-  font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Title-Small)',
   letterSpacing: 0,
   color: "#5f6871",
 };
@@ -494,7 +494,7 @@ export default function MediaAssetListField({
               style={{
                 display: "grid",
                 gap: 4,
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
               }}
             >
@@ -526,7 +526,7 @@ export default function MediaAssetListField({
                 padding: "8px 12px",
                 cursor: "pointer",
                 color: "#c0392b",
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
                 height: 42,
               }}
@@ -540,7 +540,7 @@ export default function MediaAssetListField({
               style={{
                 display: "grid",
                 gap: 4,
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
                 gridColumn: "1 / -1",
               }}
@@ -612,7 +612,7 @@ export default function MediaAssetListField({
                         borderRadius: 6,
                         background: "#eef5f9",
                         border: "1px solid #d3dae0",
-                        font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+                        font: 'var(--MH-Type-Label-Small)',
                         letterSpacing: 0,
                         color: "var(--MH-Theme-Primary-Dark, #336f8a)",
                         textDecoration: "none",
@@ -633,7 +633,7 @@ export default function MediaAssetListField({
                         borderRadius: 8,
                         padding: "8px 12px",
                         cursor: "pointer",
-                        font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                        font: 'var(--MH-Type-Label-Base)',
                         letterSpacing: 0,
                       }}
                     >
@@ -649,7 +649,7 @@ export default function MediaAssetListField({
                         borderRadius: 8,
                         padding: "8px 12px",
                         cursor: uploading ? "wait" : "pointer",
-                        font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                        font: 'var(--MH-Type-Label-Base)',
                         letterSpacing: 0,
                       }}
                     >
@@ -687,7 +687,7 @@ export default function MediaAssetListField({
                       borderRadius: 8,
                       padding: "8px 12px",
                       cursor: "pointer",
-                      font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                      font: 'var(--MH-Type-Label-Base)',
                       letterSpacing: 0,
                     }}
                   >
@@ -703,7 +703,7 @@ export default function MediaAssetListField({
                       borderRadius: 8,
                       padding: "8px 12px",
                       cursor: uploading ? "wait" : "pointer",
-                      font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                      font: 'var(--MH-Type-Label-Base)',
                       letterSpacing: 0,
                     }}
                   >
@@ -865,7 +865,7 @@ export default function MediaAssetListField({
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+                            font: 'var(--MH-Type-Label-Small)',
                             letterSpacing: 0,
                             color: "#5f6871",
                           }}
@@ -875,7 +875,7 @@ export default function MediaAssetListField({
                       )}
                       <span
                         style={{
-                          font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                          font: 'var(--MH-Type-Body-Base)',
                           letterSpacing: 0,
                           color: "#171717",
                           display: "block",
@@ -889,7 +889,7 @@ export default function MediaAssetListField({
                       {usedElsewhere ? (
                         <span
                           style={{
-                            font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                            font: 'var(--MH-Type-Body-Base)',
                             letterSpacing: 0,
                             color: "var(--MH-Theme-Primary-Dark, #336f8a)",
                           }}

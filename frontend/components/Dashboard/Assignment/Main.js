@@ -29,7 +29,7 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+  font: var(--MH-Type-Heading-Small);
   letter-spacing: 0;
   padding-top: 16px;
   color: #1a1a1a;
@@ -58,7 +58,7 @@ const ContentSection = styled.div`
 
 const ContentTitle = styled.h2`
   margin: 0 0 16px 0;
-  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Large);
   letter-spacing: 0;
   color: #1a1a1a;
 `;
@@ -269,7 +269,7 @@ export default function AssignmentMain({ query, user }) {
             style={{
               borderRadius: "100px",
               background: "#336F8A",
-              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Label-Base)',
               letterSpacing: 0,
               color: "white",
               border: "1px solid #336F8A",
@@ -291,7 +291,7 @@ export default function AssignmentMain({ query, user }) {
             marginTop: "16px",
           }}>
             <div style={{
-              font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Title-Large)',
               letterSpacing: 0,
               marginBottom: "16px"
             }}>
@@ -336,7 +336,7 @@ export default function AssignmentMain({ query, user }) {
                 style={{
                   borderRadius: "100px",
                   background: "#336F8A",
-                  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                  font: 'var(--MH-Type-Label-Base)',
                   letterSpacing: 0,
                   color: "white",
                   border: "1px solid #336F8A",
@@ -352,7 +352,7 @@ export default function AssignmentMain({ query, user }) {
                 style={{
                   borderRadius: "100px",
                   background: "white",
-                  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                  font: 'var(--MH-Type-Label-Base)',
                   letterSpacing: 0,
                   color: "#336F8A",
                   border: "1px solid #336F8A",
@@ -369,7 +369,7 @@ export default function AssignmentMain({ query, user }) {
                 style={{
                   borderRadius: "100px",
                   background: "#f7f9fa",
-                  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                  font: 'var(--MH-Type-Label-Base)',
                   letterSpacing: 0,
                   color: "#B9261A",
                   border: "1px solid #B9261A",

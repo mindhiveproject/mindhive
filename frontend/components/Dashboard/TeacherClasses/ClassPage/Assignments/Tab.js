@@ -30,7 +30,7 @@ const LinkedCardsToggleButton = styled.button`
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   text-align: center;
   border-radius: 8px;
@@ -77,7 +77,7 @@ const EditButton = styled.button`
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   text-align: center;
   border-radius: 100px;
@@ -120,7 +120,7 @@ const StatusChip = styled.span`
   align-items: center;
   padding: 4px 12px;
   border-radius: 8px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   white-space: nowrap;
   border: 1.5px solid;
@@ -143,7 +143,7 @@ const LinkedCardChip = styled.span`
   align-items: center;
   padding: 4px 12px;
   border-radius: 8px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   white-space: normal;
   overflow-wrap: break-word;
@@ -420,7 +420,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
         }}
       >
         {countLabel && (
-          <span className="MH-Type-Body-Small" style={{ marginRight: "8px", color: "#616161" }}>
+          <span className="MH-Type-Body-Base" style={{ marginRight: "8px", color: "#616161" }}>
             {countLabel}:
           </span>
         )}
@@ -446,7 +446,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
             >
               <LinkedCardChip>{c?.section?.title || "Section"}</LinkedCardChip>
             </button>
-            <span className="MH-Type-Body-Small" style={{ margin: "0 4px", color: "#616161" }}>/</span>
+            <span className="MH-Type-Body-Base" style={{ margin: "0 4px", color: "#616161" }}>/</span>
             <button
               type="button"
               onClick={(e) => {

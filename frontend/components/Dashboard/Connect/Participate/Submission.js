@@ -87,7 +87,7 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
     overflow: hidden;
@@ -136,14 +136,14 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -152,19 +152,19 @@ const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   color: #5f6871;
 
   span.label-text {
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: #171717;
   }
 
   span.hint {
     color: #888;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 
@@ -175,7 +175,7 @@ const Field = styled.label`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #171717;
     outline: none;
@@ -208,14 +208,14 @@ const OppHead = styled.div`
 
   .title {
     margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: #171717;
   }
 
   .meta {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     margin-top: 2px;
   }
@@ -246,7 +246,7 @@ const StatusPill = styled.span`
   gap: 6px;
   padding: 4px 10px;
   border-radius: 100px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   background: ${({ $submitted }) => ($submitted ? "#e3f4ec" : "#fdf6e3")};
   color: ${({ $submitted }) => ($submitted ? "#1d6b3a" : "#7a5b00")};
@@ -1047,7 +1047,7 @@ export default function ParticipateSubmission({ roundId, user }) {
                   {opp?.title || "(opportunity)"}
                 </div>
                 <div
-                  className="MH-Type-Body-Small"
+                  className="MH-Type-Body-Base"
                   style={{ color: "#5f6871" }}
                 >
                   By {mentorName} ·{" "}
@@ -1262,7 +1262,7 @@ export default function ParticipateSubmission({ roundId, user }) {
                                 padding: "6px 10px",
                                 border: "1px solid #d3dae0",
                                 borderRadius: 8,
-                                font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                                font: 'var(--MH-Type-Body-Base)',
                                 letterSpacing: 0,
                                 outline: "none",
                               }}
@@ -1405,7 +1405,7 @@ export default function ParticipateSubmission({ roundId, user }) {
               )}
               {!oppAvailable && (
                 <div
-                  className="MH-Type-Body-Small"
+                  className="MH-Type-Body-Base"
                   style={{
                     padding: "10px 14px",
                     border: "1px solid #f1c8c8",

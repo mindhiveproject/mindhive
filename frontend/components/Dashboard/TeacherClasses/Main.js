@@ -37,7 +37,9 @@ export default function TeacherClasses({ query, user }) {
     return (
       <StyledClass>
         <div className="teacherClassesHeader">
-          <h1>{t("teacherClasses.teacherClasses")}</h1>
+          <h1 className="MH-Type-Heading-Base">
+            {t("teacherClasses.teacherClasses")}
+          </h1>
           <Button onClick={() => router.push("/dashboard/myclasses/add")}>
             {t("teacherClasses.addClass")}
           </Button>

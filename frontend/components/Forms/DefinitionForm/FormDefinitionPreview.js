@@ -16,7 +16,7 @@ const previewShellStyle = {
   borderRadius: 12,
   background: "#F7F9F8",
   color: "#5D5763",
-  font: "var(--MH-Type-Body-Base, 400 16px/24px \"Inter\", sans-serif)",
+  font: "var(--MH-Type-Body-Base)",
   letterSpacing: 0,
   padding: 16,
   maxHeight: 260,
@@ -100,7 +100,7 @@ export default function FormDefinitionPreview({
     <div style={shellStyle}>
       <div
         style={{
-          font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+          font: 'var(--MH-Type-Label-Small)',
           letterSpacing: 0,
           marginBottom: 12,
         }}

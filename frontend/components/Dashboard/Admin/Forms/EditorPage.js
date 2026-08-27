@@ -69,7 +69,7 @@ const TopBar = styled.div`
 const StatusBadge = styled.span`
   padding: 2px 10px;
   border-radius: 100px;
-  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Small);
   letter-spacing: 0;
   text-transform: uppercase;
   margin-left: 6px;
@@ -84,7 +84,7 @@ const BackLink = styled.button`
   background: none;
   border: none;
   color: #336f8a;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   cursor: pointer;
   padding: 0;
@@ -226,7 +226,7 @@ export default function EditorPage({ definitionId }) {
               {definition.status}
             </StatusBadge>
           </h1>
-          <div className="meta MH-Type-Body-Small">
+          <div className="meta MH-Type-Body-Base">
             {definition.surface ? (
               <>
                 <strong>{SURFACE_LABEL[definition.surface] || definition.surface}</strong>{" "}

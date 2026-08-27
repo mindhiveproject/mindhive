@@ -105,7 +105,7 @@ export default function ImageUpload({
             background: "none",
             border: "none",
             color: "#c0392b",
-            font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+            font: 'var(--MH-Type-Label-Base)',
             letterSpacing: 0,
             cursor: "pointer",
             padding: 0,

@@ -29,7 +29,7 @@ const Shell = styled.section`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-transform: uppercase;
     color: #5f6871;
@@ -43,14 +43,14 @@ const Row = styled.div`
   align-items: center;
   padding: 8px 6px;
   border-radius: 8px;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   background: ${({ $current }) => ($current ? "#eef5f9" : "transparent")};
   border: 1px solid
     ${({ $current }) => ($current ? "#336f8a" : "transparent")};
 
   .version {
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: #171717;
   }
@@ -59,7 +59,7 @@ const Row = styled.div`
     display: inline-block;
     padding: 2px 8px;
     border-radius: 100px;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-transform: uppercase;
     color: #ffffff;
@@ -73,7 +73,7 @@ const Row = styled.div`
 
   .meta {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -82,7 +82,7 @@ const Row = styled.div`
 
   .changelog {
     color: #171717;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -97,7 +97,7 @@ const Row = styled.div`
   a,
   button {
     color: #336f8a;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     text-decoration: none;
     background: none;
@@ -152,7 +152,7 @@ export default function VersionHistoryPanel({ definition }) {
     return (
       <Shell>
         <h2>Version history</h2>
-        <span className="MH-Type-Body-Small" style={{ color: "#5f6871" }}>
+        <span className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
           This is the only version of <code>{definition.key}</code> at scope{" "}
           <code>{definition.scope}</code>. Use "Duplicate" on the list page
           to fork a new draft.
@@ -188,7 +188,7 @@ export default function VersionHistoryPanel({ definition }) {
             </div>
             <div className="actions">
               {isCurrent ? (
-                <span className="MH-Type-Body-Small" style={{ color: "#888" }}>
+                <span className="MH-Type-Body-Base" style={{ color: "#888" }}>
                   (current)
                 </span>
               ) : (

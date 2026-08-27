@@ -15,7 +15,7 @@ const StatusChip = styled.span`
   align-items: center;
   padding: 4px 12px;
   border-radius: 16px;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   white-space: nowrap;
   border: none;

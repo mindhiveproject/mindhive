@@ -22,7 +22,7 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     color: #171717;
   }
@@ -30,7 +30,7 @@ const Card = styled.div`
   .helper {
     margin: 0;
     color: #5f6871;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
 `;
@@ -47,7 +47,7 @@ const Row = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 100px;
     padding: 10px 16px;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
   }
 
@@ -57,7 +57,7 @@ const Row = styled.div`
     background: #336f8a;
     color: #ffffff;
     border: none;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     cursor: pointer;
 
@@ -93,14 +93,14 @@ const ReviewerRow = styled.li`
   }
 
   .name {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
   }
 
   .email {
     color: #5f6871;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -110,7 +110,7 @@ const ReviewerRow = styled.li`
     background: none;
     border: 1px solid #f5c2bf;
     color: #c0392b;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     border-radius: 100px;
     padding: 6px 14px;
@@ -124,14 +124,14 @@ const ReviewerRow = styled.li`
 
 const Empty = styled.div`
   color: #5f6871;
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   font-style: italic;
   padding: 8px 0;
 `;
 
 const Feedback = styled.div`
-  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: ${({ $kind }) => ($kind === "error" ? "#871b16" : "#1d6b3a")};
 `;

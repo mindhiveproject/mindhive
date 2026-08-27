@@ -181,7 +181,7 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
                     border: "1px solid #336F8A",
                     background: "white",
                     color: "#336F8A",
-                    font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                    font: 'var(--MH-Type-Label-Base)',
                         letterSpacing: 0,}}
                 onClick={onClose}
                 >
@@ -199,7 +199,7 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
                             border: "1px solid #336F8A",
                             background: "white",
                             color: "#336F8A",
-                            font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                            font: 'var(--MH-Type-Label-Base)',
                         letterSpacing: 0,}}
                     >
                         {t("assignment.saveWithoutClass", "Save without class association")}
@@ -216,14 +216,14 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
                                 border:  "1px solid #171717",
                                 background: "#EFEFEF",
                                 color: "#171717",
-                                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                                font: 'var(--MH-Type-Label-Base)',
                         letterSpacing: 0,}
                             : {
                                 borderRadius: "100px",
                                 border:  "1px solid #336F8A",
                                 background: "#336F8A",
                                 color: "white",
-                                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                                font: 'var(--MH-Type-Label-Base)',
                         letterSpacing: 0,}
                             }
                     >

@@ -21,7 +21,7 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.div`
-  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Base);
   letter-spacing: 0;
   color: #171717;
 `;

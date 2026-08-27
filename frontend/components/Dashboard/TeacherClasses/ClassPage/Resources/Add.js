@@ -22,14 +22,14 @@ const SectionContainer = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Large);
   letter-spacing: 0;
   color: #1a1a1a;
   margin-bottom: 16px;
 `;
 
 const SectionDescription = styled.p`
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #666666;
   margin-bottom: 16px;

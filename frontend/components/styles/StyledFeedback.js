@@ -5,7 +5,7 @@ const StyledFeedback = styled.div`
   margin: 40px 0px;
   grid-gap: 30px;
   font-style: normal;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
 
   .section {
@@ -82,12 +82,12 @@ const StyledFeedback = styled.div`
     grid-gap: 1rem;
 
     .reviewerComment {
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #3b3b3b;
     }
     .questionTitle {
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       margin-bottom: 5px;
     }
@@ -119,7 +119,7 @@ const StyledFeedback = styled.div`
     border-radius: 4px;
     .title {
       font-style: normal;
-      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Small);
       letter-spacing: 0;
     }
   }

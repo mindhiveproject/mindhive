@@ -130,7 +130,7 @@ export default function MediaAssetField({
           <div
             style={{
               flex: 1,
-              font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Body-Base)',
               letterSpacing: 0,
               color: "#5f6871",
             }}
@@ -146,7 +146,7 @@ export default function MediaAssetField({
                 background: "transparent",
                 color: "#336f8a",
                 cursor: "pointer",
-                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                font: 'var(--MH-Type-Label-Base)',
                 letterSpacing: 0,
               }}
             >
@@ -168,7 +168,7 @@ export default function MediaAssetField({
               borderRadius: 8,
               padding: "8px 12px",
               cursor: "pointer",
-              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Label-Base)',
               letterSpacing: 0,
             }}
           >
@@ -184,7 +184,7 @@ export default function MediaAssetField({
               borderRadius: 8,
               padding: "8px 12px",
               cursor: uploading ? "wait" : "pointer",
-              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              font: 'var(--MH-Type-Label-Base)',
               letterSpacing: 0,
             }}
           >
@@ -322,7 +322,7 @@ export default function MediaAssetField({
                       )}
                       <span
                         style={{
-                          font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                          font: 'var(--MH-Type-Body-Base)',
                           letterSpacing: 0,
                           color: "#171717",
                           display: "block",

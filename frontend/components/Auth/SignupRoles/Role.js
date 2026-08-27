@@ -48,14 +48,14 @@ const InviteBanner = styled.div`
 
   strong {
     display: block;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     margin-bottom: 4px;
     color: #1d6b3a;
   }
 
   span {
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #1d6b3a;
   }

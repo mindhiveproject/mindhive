@@ -15,7 +15,7 @@ export const StyledWrapper = styled.div`
     margin-bottom: 40px;
     border-bottom: 2px solid #f2f2f2;
     font-style: normal;
-    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     color: #28619e;
     .logo {
@@ -34,17 +34,17 @@ export const StyledWrapper = styled.div`
   }
   h1 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
   }
   h3 {
     font-style: normal;
-    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
   }
   p {
     font-style: normal;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
   input {
@@ -53,7 +53,7 @@ export const StyledWrapper = styled.div`
     height: 48px;
     border: 1px solid #cccccc;
     border-radius: 4px;
-    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     padding: 12px;
     &:focus {
@@ -63,7 +63,7 @@ export const StyledWrapper = styled.div`
   }
   .checkboxField {
     font-style: normal;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     display: grid;
     grid-gap: 10px;
@@ -84,7 +84,7 @@ export const StyledWrapper = styled.div`
     width: 300px;
   }
   .questionTitle {
-    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Large);
     letter-spacing: 0;
     margin-top: 20px;
   }
@@ -142,7 +142,7 @@ export const ResponseButtons = styled.div`
     color: #666666 !important;
     padding: 1rem 0.5rem;
     font-style: normal;
-    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     border: 1px solid #cccccc;
     border-radius: 4px;

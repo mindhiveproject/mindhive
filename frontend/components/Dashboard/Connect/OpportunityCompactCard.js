@@ -56,7 +56,7 @@ const TitleRow = styled.div`
 const Title = styled.h3`
   margin: 0;
   flex: 1 1 120px;
-  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Base);
   letter-spacing: 0;
   color: #171717;
 `;
@@ -66,7 +66,7 @@ const STATUS_CHIP_STYLE = {
   minHeight: "32px",
   padding: "6px 12px",
   borderRadius: "8px",
-  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  font: 'var(--MH-Type-Label-Base)',
   letterSpacing: 0,
   boxSizing: "border-box",
   textTransform: "capitalize",
@@ -134,7 +134,7 @@ const StatusPill = styled.span`
   padding: 6px 12px;
   border-radius: 8px;
   box-sizing: border-box;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   text-transform: capitalize;
   background: ${({ $status }) => getStatusChipColors($status).background};
@@ -178,7 +178,7 @@ const STATUS_CHEVRON = (
 
 const Meta = styled.p`
   margin: 0;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #625b71;
 `;
@@ -200,7 +200,7 @@ const DELETE_CHIP_STYLE = {
 
 const ReviewNoteHint = styled.p`
   margin: 0;
-  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Small);
   letter-spacing: 0;
   color: #6f26ce;
 `;
@@ -215,7 +215,7 @@ const ReviewCommentsButton = styled.button`
   border: 1px solid #3f288f;
   background: #3f288f;
   color: #ffffff;
-  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Base);
   letter-spacing: 0;
   cursor: pointer;
   text-align: center;

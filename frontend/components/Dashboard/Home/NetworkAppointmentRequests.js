@@ -75,7 +75,7 @@ const Strip = styled.div`
 
   h2 {
     margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     font-weight: ${({ $collapsed }) => ($collapsed ? 500 : 600)};
     color: ${({ $collapsed }) => ($collapsed ? "#5f6871" : "#171717")};
@@ -125,7 +125,7 @@ const Row = styled.div`
   }
 
   .title {
-    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
     max-width: 280px;

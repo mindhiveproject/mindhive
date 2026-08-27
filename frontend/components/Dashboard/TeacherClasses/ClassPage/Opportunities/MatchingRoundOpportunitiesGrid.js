@@ -87,14 +87,14 @@ const OpportunityInfoTooltip = styled.div`
 
   .matchingRoundOppInfoTooltipTitle {
     margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .matchingRoundOppInfoTooltipDescription {
     margin: 0;
-    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     white-space: pre-wrap;
@@ -120,7 +120,7 @@ const OpportunityInfoTooltip = styled.div`
   }
 
   .matchingRoundOppInfoTooltipLabel {
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-transform: uppercase;
     color: var(--MH-Theme-Neutrals-Grey-3, #888);
@@ -133,7 +133,7 @@ const OpportunityInfoTooltip = styled.div`
     justify-content: flex-end;
     gap: 8px;
     flex-wrap: wrap;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     text-align: right;
@@ -162,7 +162,7 @@ const OpportunityInfoTooltip = styled.div`
     min-width: 0;
     width: fit-content;
     height: fit-content;
-    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     color: var(--MH-Theme-Primary-Dark, #336f8a);
   }

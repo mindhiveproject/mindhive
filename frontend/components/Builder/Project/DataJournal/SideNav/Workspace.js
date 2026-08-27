@@ -231,7 +231,7 @@ export default function WorkspaceNavigation({
                   {deleteError ? (
                     <p
                       role="alert"
-                      className="MH-Type-Body-Small"
+                      className="MH-Type-Body-Base"
                       style={{
                         marginTop: 12,
                         marginBottom: 0,

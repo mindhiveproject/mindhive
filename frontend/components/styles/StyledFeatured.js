@@ -74,7 +74,7 @@ export const StyledFeaturedStudies = styled.div`
         align-content: baseline;
         .studyFeatured {
           display: grid;
-          font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+          font: var(--MH-Type-Label-Small);
           letter-spacing: 0;
           color: #666666;
           text-transform: uppercase;
@@ -103,7 +103,7 @@ export const StyledFeaturedStudies = styled.div`
     a {
       cursor: pointer;
       font-style: normal;
-      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Title-Base);
       letter-spacing: 0;
       text-align: left;
       color: #007c70;
@@ -111,14 +111,14 @@ export const StyledFeaturedStudies = styled.div`
 
     p {
       font-style: normal;
-      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       text-align: left;
     }
 
     h1 {
       font-style: normal;
-      font: var(--MH-Type-Heading-Large, 700 46px/52px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Base);
       letter-spacing: 0;
       text-align: left;
       color: #1a1a1a;
@@ -126,7 +126,7 @@ export const StyledFeaturedStudies = styled.div`
 
     h2 {
       font-style: normal;
-      font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+      font: var(--MH-Type-Heading-Small);
       letter-spacing: 0;
       color: #1a1a1a;
     }

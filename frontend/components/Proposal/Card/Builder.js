@@ -499,7 +499,7 @@ export default function BuilderProposalCard({
                 >
                   <p style={{
                     color: "#8F1F14",
-                    font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+                    font: 'var(--MH-Type-Body-Base)',
                     letterSpacing: 0,
                     margin: 0,
                     }}>
@@ -527,7 +527,7 @@ export default function BuilderProposalCard({
                       marginTop: "8px",
                       padding: "12px 16px",
                       borderRadius: "8px",
-                      font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+                      font: 'var(--MH-Type-Body-Base)',
                       letterSpacing: 0,
                       opacity: "0",
                       transform: "translateY(-5px)",

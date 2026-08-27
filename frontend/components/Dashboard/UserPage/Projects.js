@@ -148,7 +148,7 @@ const EmptyState = styled.div`
   justify-content: center;
   align-items: center;
   height: 200px;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #666666;
 `;
@@ -160,7 +160,7 @@ const Header = styled.div`
   padding: 12px 16px;
   background: #f9f9f9;
   border-bottom: 1px solid #e0e0e0;
-  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  font: var(--MH-Type-Label-Small);
   letter-spacing: 0;
   color: #333333;
   text-transform: uppercase;
@@ -185,7 +185,7 @@ const Row = styled.div`
 const Cell = styled.div`
   display: flex;
   align-items: center;
-  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   color: #333333;
 `;
@@ -214,7 +214,7 @@ const StyledIcon = styled(Icon)`
 
 const DeletedMessage = styled.span`
   color: #d32f2f;
-  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Small);
   letter-spacing: 0;
 `;
 
