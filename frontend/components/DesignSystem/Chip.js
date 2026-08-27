@@ -59,8 +59,11 @@ const CHIP_TONES = {
     color: "#171717",
   },
   neutral: {
+    // Figma's Non-Interactive chip labels in Neutrals/Black; keep that here so a
+    // neutral static chip reads as quiet-but-active, not disabled (Neutrals/Dark
+    // #6a6a6a on this fill is ~3.9:1 — below AA and too close to the disabled grey).
     background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
-    color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
   },
   success: {
     background: "var(--MH-Theme-Success, #e3f4ec)",

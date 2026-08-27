@@ -20,6 +20,17 @@ import { useRef, useState } from "react";
 import AddCollaboratorModal from "./AddCollaboratorModal";
 import { isClassTemplateBoard } from "../../../../../Utils/proposalBoard";
 
+// Inlined so it inherits the Button label color via currentColor (the imported
+// SVG asset is hard-coded black and can't follow the text-button styling).
+const DownloadIcon = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path
+      d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
 export default function ProposalHeader({
   user,
   proposal,
@@ -289,41 +300,22 @@ export default function ProposalHeader({
                     content={t("proposalPage.downloadTooltip", "Download content is based on the status and review step filters selected below.")}
                     side="bottom"
                   >
-                    <div
+                    <Button
+                      variant="text"
                       onClick={handleDownload}
-                      className="downloadButton"
-                      style={{
-                        position: "relative",
-                        cursor: "pointer",
-                      }}
+                      leadingIcon={DownloadIcon}
                     >
-                      <img
-                        src="/assets/icons/download.svg"
-                        alt=""
-                        style={{ width: 18, height: 18 }}
-                      />
-                      <span className="downloadButtonText">
-                        {t("proposalPage.download", "Download")}
-                      </span>
-                    </div>
+                      {t("proposalPage.download", "Download")}
+                    </Button>
                   </Tooltip>
                 ) : (
-                  <div
-                    className="downloadButton"
-                    style={{
-                      visibility: "hidden",
-                      cursor: "default",
-                    }}
+                  <Button
+                    variant="text"
+                    style={{ visibility: "hidden" }}
+                    leadingIcon={DownloadIcon}
                   >
-                    <img
-                      src="/assets/icons/download.svg"
-                      alt=""
-                      style={{ width: 18, height: 18 }}
-                    />
-                    <span className="downloadButtonText">
-                      {t("proposalPage.download", "Download")}
-                    </span>
-                  </div>
+                    {t("proposalPage.download", "Download")}
+                  </Button>
                 )}
               </div>
             </div>

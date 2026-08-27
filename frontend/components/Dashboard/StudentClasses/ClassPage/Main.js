@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import Link from "next/link";
-import clsx from "clsx";
 
 import Header from "./Header";
 import ClassAssignments from "./Assignments/Main";
@@ -12,6 +11,7 @@ import ClassProjects from "./Projects";
 import ClassOpportunities from "./Opportunities/Main";
 
 import { GET_CLASS } from "../../../Queries/Classes";
+import { NavbarItem, SectionNavbar } from "../../../DesignSystem/Navbar";
 import {
   classHasNyuCusp,
   classIsNyuCuspOnly,
@@ -110,42 +110,28 @@ export default function ClassPage({ code, user, query }) {
   return (
     <div>
       <Header myclass={myclass} />
-      <nav
+      <SectionNavbar
         className="classPageNav"
+        variant="underline"
+        showRule
         aria-label={t("main.classSectionsNav", {}, {
           default: "Class sections",
         })}
       >
-        <div className="secondLine">
-          <div className="menu">
-            {navItems.map((item) => (
-              <Link
-                key={item.value}
-                href={{
-                  pathname: `/dashboard/classes/${code}`,
-                  query: { page: item.value },
-                }}
-                aria-current={page === item.value ? "page" : undefined}
-              >
-                <div
-                  className={clsx(
-                    "menuTitle",
-                    page === item.value && "selectedMenuTitle"
-                  )}
-                >
-                  <div className="titleWithIcon">
-                    <p>
-                      {t(item.labelKey, {}, {
-                        default: item.defaultLabel,
-                      })}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </nav>
+        {navItems.map((item) => (
+          <NavbarItem
+            key={item.value}
+            as={Link}
+            href={{
+              pathname: `/dashboard/classes/${code}`,
+              query: { page: item.value },
+            }}
+            selected={page === item.value}
+          >
+            {t(item.labelKey, {}, { default: item.defaultLabel })}
+          </NavbarItem>
+        ))}
+      </SectionNavbar>
 
       {!hideDisallowedPage && page === "assignments" && (
         <div>

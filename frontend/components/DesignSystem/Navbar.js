@@ -97,6 +97,13 @@ export const StyledNavbar = styled.div`
     border-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
   }
 
+  /* Items butt directly against each other. Pairs with the underline variant to
+     read as one continuous rule broken only by the selected tab. Row gap is
+     kept so a wrapped bar still separates its lines. */
+  .navbar-container.gapless {
+    column-gap: 0px;
+  }
+
   /* Vertical orientation — sidebars and menu rails. */
   .navbar-container.vertical {
     flex-direction: column;
@@ -199,6 +206,10 @@ const NavbarContext = createContext({ collapsed: false });
  *   become accessible names instead of visible text. Works in both orientations.
  * @param {boolean} [showRule=false] - Underline variant only. Gives unselected
  *   items a resting 1px divider line instead of a transparent one.
+ * @param {boolean} [gapless=false] - Removes the horizontal gap between items so
+ *   they sit flush against each other. With the underline variant this reads as
+ *   one continuous rule broken only by the selected tab. Row gap is kept, so a
+ *   wrapped bar still separates its lines.
  * @param {React.ReactNode} children - NavbarItem and NavbarSection elements.
  *
  * @example
@@ -221,6 +232,7 @@ export default function Navbar({
   orientation = "horizontal",
   collapsed = false,
   showRule = false,
+  gapless = false,
   children,
   className,
   ...props
@@ -238,6 +250,7 @@ export default function Navbar({
             isVertical && "vertical",
             collapsed && "collapsed",
             showRule && "show-rule",
+            gapless && "gapless",
           )}
         >
           {children}

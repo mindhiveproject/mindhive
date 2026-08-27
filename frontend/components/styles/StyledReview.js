@@ -28,14 +28,14 @@ export const StyledActionPage = styled.div`
     grid-gap: 10px;
     grid-template-columns: auto 1fr;
   }
+  /* Type comes from the MH-Type-* utility classes in the markup; these only
+     carry the text tone, which has no design-system token yet. */
   .title {
-    font: var(--MH-Type-Title-Large);
-    letter-spacing: 0;
     color: #3b3b3b;
   }
-  .subtitle {
-    font: var(--MH-Type-Body-Large);
-    letter-spacing: 0;
+  .subtitle,
+  .listTitle,
+  .listSubtitle {
     color: #626269;
   }
   .warning {
@@ -75,17 +75,6 @@ export const StyledActionPage = styled.div`
     grid-gap: 10px;
     grid-template-columns: auto 1fr;
     align-items: center;
-  }
-  .listTitle {
-    font: var(--MH-Type-Label-Large);
-    letter-spacing: 0;
-    color: #626269;
-  }
-  .listSubtitle {
-    font: var(--MH-Type-Label-Large);
-    font-style: italic;
-    letter-spacing: 0;
-    color: #969696;
   }
 
   .reviews {
@@ -429,7 +418,7 @@ export const StyledDasboardReview = styled.div`
       grid-template-columns: auto auto 1fr;
     }
 
-    .customlink: hover {
+    .customlink:hover {
       opacity: 1;
       .card {
         box-shadow: 0px 4px 4px 0px #97979d40;

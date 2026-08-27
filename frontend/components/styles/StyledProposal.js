@@ -453,13 +453,6 @@ export const StyledProposal = styled.div`
       bottom: -12px;
       left: -5px;
       cursor: pointer;
-      img {
-        width: 20px;
-        opacity: 0.1;
-      }
-      img: hover {
-        opacity: 1;
-      }
     }
   }
 
@@ -888,29 +881,6 @@ export const StyledProposal = styled.div`
       flex-wrap: nowrap;
       width: 100%;
     }
-    .collaboratorChip {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 32px;
-      border: 1px solid #A1A1A1;
-      border-radius: 30px;
-      padding: 4px 12px 4px 12px;
-      gap: 8px;
-      background: white;
-      overflow: hidden;
-      width: fit-content;
-      max-width: 300px;
-      span {
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: flex;
-        height: 100%;
-        align-items: center;
-      }
-    }
     .addCollaboratorButton {
       display: flex;
       align-items: center;
@@ -937,40 +907,6 @@ export const StyledProposal = styled.div`
         color: #171717;
         margin: 0;
       }
-    }
-    .downloadButton {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      height: 40px;
-      padding: 8px 12px 8px 16px;
-      border-radius: 100px;
-      // border: 1px solid #336F8A;
-      // background: white;
-      color: #336F8A;
-      font: var(--MH-Type-Label-Base);
-      letter-spacing: 0;
-      cursor: pointer;
-      flex-shrink: 0;
-      &:hover {
-        background: #ffffff;
-        paddingRight: 12px;
-        border: 1px solid #336F8A;
-        // color: #625B71;
-        .icon {
-          color: #625B71;
-        }
-      }
-      .icon {
-        margin: 0;
-        width: 24px;
-        height: 24px;
-        color: #336F8A;
-      }
-    }
-    .downloadButtonText {
-      white-space: nowrap;
     }
     .viewToggleGroup {
       display: flex;
@@ -1075,7 +1011,7 @@ export const StyledProposal = styled.div`
     .title {
       letter-spacing: 0;
       text-align: left;
-      color: #1a1a1a; */
+      color: #1a1a1a; 
     }
     .description {
       font: var(--MH-Type-Body-Large);
@@ -1676,31 +1612,6 @@ export const StyledProposal = styled.div`
         width: 100%;
         margin-top: 8px;
       }
-      .collaboratorChip {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 24px;
-        border: 1px solid #A1A1A1;
-        border-radius: 30px;
-        padding: 4px 12px 4px 12px;
-        gap: 8px;
-        background: white;
-        overflow: hidden;
-        width: fit-content;
-        max-width: 300px;
-        span {
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font: var(--MH-Type-Label-Base);
-          letter-spacing: 0;
-          display: flex;
-          height: 100%;
-          align-items: center;
-        }
-      }
       .addCollaboratorButton {
         display: flex;
         align-items: center;
@@ -1757,29 +1668,6 @@ export const StyledProposal = styled.div`
         flex-wrap: nowrap;
         width: 100%;
         margin-top: 8px;
-      }
-      .collaboratorChip {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 32px;
-        border: 1px solid #A1A1A1;
-        border-radius: 30px;
-        padding: 4px 12px 4px 12px;
-        gap: 8px;
-        background: white;
-        overflow: hidden;
-        width: fit-content;
-        max-width: 300px;
-        span {
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          display: flex;
-          height: 100%;
-          align-items: center;
-        }
       }
       .addCollaboratorButton {
         display: flex;

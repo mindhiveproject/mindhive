@@ -541,9 +541,6 @@ const Section = ({
               {!isPreview && !cardSelectMode && (
                 <IconButton
                   variant="subtle"
-                  style={{
-                    background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
-                  }}
                   ariaLabel={t("section.editTitle", {}, {
                     default: "Edit section title",
                   })}
@@ -654,9 +651,6 @@ const Section = ({
             renderTrigger={({ onClick, open, ariaLabel }) => (
               <Button
                 variant="tonal"
-                style={{
-                  background: "var(--MH-Theme-Secondary-Dark, #E6E6E6)",
-                }}
                 leadingIcon={<img src="/assets/icons/plus.svg" alt="" />}
                 type="button"
                 aria-label={ariaLabel}
