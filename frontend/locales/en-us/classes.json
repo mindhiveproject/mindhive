@@ -939,7 +939,7 @@
 					"proposal": "Proposal",
 					"workflow": "Workflow / audit"
 				},
-				"hint": "Choose which columns to include. {{count}} opportunities from this network will be exported as a ZIP with the CSV and a folder per opportunity (intro video, cover illustration, and follow-up images, PDFs, and documents).",
+				"hint": "Choose which columns to include in the CSV. {{count}} opportunities from this network will be exported as a ZIP. Intro videos, illustrations, and follow-up files are included only when those Media columns are selected.",
 				"openButton": "Export ZIP",
 				"selectAll": "Select all",
 				"title": "Export opportunities"
@@ -1215,6 +1215,7 @@
 				"favoritedAria": "Favorited",
 				"favoritedLabel": "Favorited",
 				"hint": "How many times students previewed each opportunity (sessions of 1 second or more), and which opportunities they favorited. Hover a cell to see total preview time.",
+				"hintGrid": "Each card shows a student's top 3 opportunities by favorites and visit count. Hover a row to see the full title and total preview time.",
 				"loading": "Loading student interest…",
 				"modeGrid": "Grid",
 				"modeTable": "Table",
@@ -1451,7 +1452,19 @@
 			"notAvailableHint": "When your teacher opens the matching round, selected opportunities will appear here.",
 			"notAvailableTitle": "Opportunities aren’t available yet",
 			"openAria": "View opportunity: {{title}}",
-			"rankBanner": "Rank your favorite opportunity in {{roundTitle}}",
+			"rankCard": {
+				"ctaContinue": "Continue ranking",
+				"ctaRankNow": "Rank now",
+				"ctaView": "View ranking",
+				"due": "Ranking closes {{date}}.",
+				"helperBrowse": "This is how you get matched. Browse below, then rank.",
+				"helperDraft": "You have a draft saved. Continue to submit.",
+				"helperEmpty": "When opportunities appear, come back here to rank them.",
+				"helperSubmitted": "You can review what you sent.",
+				"titleDraft": "Finish your ranking for {{roundTitle}}",
+				"titleNotStarted": "Rank your opportunities for {{roundTitle}}",
+				"titleSubmitted": "You submitted your ranking for {{roundTitle}}"
+			},
 			"rankForm": {
 				"backLink": "Back to opportunities",
 				"emptyFavoritesHint": "Go back and tap the star on the opportunities you want to rank.",
@@ -1471,6 +1484,8 @@
 			},
 			"preview": {
 				"aboutTitle": "About this opportunity",
+				"back": "Back to opportunities",
+				"backAria": "Back to opportunities",
 				"close": "Close",
 				"fallbackTitle": "Opportunity",
 				"fieldResearchChip": "Field research: {{value}}",

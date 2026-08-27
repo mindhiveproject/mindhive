@@ -3,10 +3,9 @@ import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
-import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
-import { CodeIcon } from "../../../../DesignSystem/Icons";
-import Modal from "../../../../DesignSystem/Modal";
+import IconButton from "../../../../DesignSystem/IconButton";
+import { CodeIcon, QuestionMarkIcon } from "../../../../DesignSystem/Icons";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../../Queries/Opportunity";
 import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap";
 import ReviewCard from "../../../../Forms/DefinitionForm/ReviewCard";
@@ -46,43 +45,86 @@ const CATEGORY_LABELS = {
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
-const FROSTED_CHROME_PAD_TOP = "var(--ds-modal-frosted-pad-top, 64px)";
-const FROSTED_CHROME_PAD_BOTTOM = "var(--ds-modal-frosted-pad-bottom, 96px)";
-/** Extra space under scroll content so the last section isn’t tight against the footer. */
+const CONTENT_MAX_WIDTH = 960;
 const CONTENT_BOTTOM_GAP = "24px";
 
+const PageShell = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  border-radius: 12px;
+  border: 1px solid var(--MH-Theme-Neutrals-Medium, #E6E6E6);
+  overflow: hidden;
+`;
+
+const PreviewChrome = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-shrink: 0;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 16px 24px 12px;
+  box-sizing: border-box;
+`;
+
+const ChromeTitleWrap = styled.div`
+  flex: 1 1 auto;
+  min-width: 0;
+`;
+
+const ChromeTitle = styled.h1`
+  margin: 0;
+  font-family: Inter, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--MH-Theme-Neutrals-Black, #171717);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+`;
+
 const ContentPane = styled.div`
+  flex: 1 1 0;
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  padding-top: ${FROSTED_CHROME_PAD_TOP};
-  padding-bottom: calc(${FROSTED_CHROME_PAD_BOTTOM} + ${CONTENT_BOTTOM_GAP});
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  padding: 0 24px ${CONTENT_BOTTOM_GAP};
   box-sizing: border-box;
+`;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+const ContentInner = styled.div`
+  width: 100%;
+  max-width: ${CONTENT_MAX_WIDTH}px;
+  margin: 0 auto;
+  display: grid;
+  gap: 8px;
+  color: var(--MH-Theme-Neutrals-Black, #171717);
+  box-sizing: border-box;
 `;
 
 const ChipSelectorRow = styled.div`
   position: sticky;
-  top: -4px;
+  top: 0;
   z-index: 1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  width: calc(100% + 24px);
+  width: 100%;
   min-width: 0;
-  margin-left: -24px;
-  padding: 8px 0 8px 24px;
+  padding: 8px 8px 16px 8px;
   box-sizing: border-box;
-  border-bottom: 1px solid rgba(211, 218, 224, 0.45);
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(12px) saturate(1.2);
-  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
 `;
 
 const MetaChipRow = styled.div`
@@ -139,24 +181,6 @@ const PeoplePanel = styled.section`
   > article {
     max-width: ${CARD_WIDTH};
   }
-`;
-
-const TitleRow = styled.span`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  min-width: 0;
-  flex-wrap: nowrap;
-`;
-
-const TitleText = styled.span`
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  white-space: normal;
 `;
 
 const HeaderActions = styled.span`
@@ -366,10 +390,9 @@ function textListToChips(value) {
 
 /**
  * Student-facing opportunity preview — project pitch, not teacher review UI.
- * Does not import OpportunityPreviewModal.
+ * Full-page view (class header/tabs hidden); does not import OpportunityPreviewModal.
  */
-export default function StudentOpportunityPreviewModal({
-  open,
+export default function StudentOpportunityPreview({
   opportunityId,
   onClose,
   user = null,
@@ -384,16 +407,15 @@ export default function StudentOpportunityPreviewModal({
 
   const { data, loading } = useQuery(EXPLORE_OPPORTUNITY_DETAIL, {
     variables: { id: opportunityId },
-    skip: !open || !opportunityId,
+    skip: !opportunityId,
     fetchPolicy: "cache-and-network",
   });
 
   const opp = data?.opportunity;
 
   useEffect(() => {
-    if (!open) return;
     setActiveTab(TABS.about);
-  }, [open, opportunityId]);
+  }, [opportunityId]);
 
   const coverSrc = opp?.coverImage?.url || opp?.coverImageUrl || null;
   const from = formatDate(opp?.availableFrom);
@@ -563,7 +585,7 @@ export default function StudentOpportunityPreviewModal({
       hasProposalDetails,
   );
 
-  const modalTitle =
+  const pageTitle =
     opp?.title ||
     t("opportunities.studentView.preview.fallbackTitle", {}, {
       default: "Opportunity",
@@ -582,87 +604,68 @@ export default function StudentOpportunityPreviewModal({
     {},
     { default: "Class FAQ" },
   );
-
-  const modalTitleNode = (
-    <TitleRow>
-      <TitleText>{modalTitle}</TitleText>
-      <HeaderActions>
-        <ManageFavoriteOpportunity user={user} opportunityId={opportunityId} />
-      </HeaderActions>
-    </TitleRow>
-  );
-
-  const modalActions = (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        width: "100%",
-      }}
-    >
-      <Button variant="outline" onClick={onClose}>
-        {t("opportunities.studentView.preview.close", {}, { default: "Close" })}
-      </Button>
-    </div>
-  );
+  const backLabel = t("opportunities.studentView.preview.back", {}, {
+    default: "Back to opportunities",
+  });
+  const backAria = t("opportunities.studentView.preview.backAria", {}, {
+    default: "Back to opportunities",
+  });
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      size="large"
-      maxWidth={960}
-      maxHeight="90vh"
-      height="90vh"
-      title={modalTitleNode}
-      actions={modalActions}
-      frostedChrome
-      bodyStyle={{
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        flex: 1,
-        minHeight: 0,
-      }}
-    >
-      {loading && !opp ? (
-        <p
+    <PageShell>
+      <PreviewChrome>
+        <IconButton
+          variant="tonal"
           style={{
-            ...MUTED_TEXT_STYLE,
-            paddingTop: FROSTED_CHROME_PAD_TOP,
-            paddingBottom: `calc(${FROSTED_CHROME_PAD_BOTTOM} + ${CONTENT_BOTTOM_GAP})`,
+            background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
           }}
-        >
-          {t("opportunities.studentView.preview.loading", {}, {
-            default: "Loading opportunity…",
-          })}
-        </p>
-      ) : null}
+          ariaLabel={backAria}
+          title={backLabel}
+          onClick={onClose}
+          icon={
+            <img
+              src="/assets/icons/back.svg"
+              alt=""
+              width={12}
+              height={12}
+              style={{ width: 12, height: 12 }}
+            />
+          }
+        />
+        <ChromeTitleWrap>
+          <ChromeTitle>{pageTitle}</ChromeTitle>
+        </ChromeTitleWrap>
+        <HeaderActions>
+          <ManageFavoriteOpportunity
+            user={user}
+            opportunityId={opportunityId}
+          />
+        </HeaderActions>
+      </PreviewChrome>
 
-      {!loading && !opp ? (
-        <p
-          style={{
-            ...MUTED_TEXT_STYLE,
-            paddingTop: FROSTED_CHROME_PAD_TOP,
-            paddingBottom: `calc(${FROSTED_CHROME_PAD_BOTTOM} + ${CONTENT_BOTTOM_GAP})`,
-          }}
-        >
-          {t("opportunities.studentView.preview.notFound", {}, {
-            default: "Opportunity not found, or no longer available.",
-          })}
-        </p>
-      ) : null}
+      <ContentPane>
+        {loading && !opp ? (
+          <ContentInner>
+            <p style={MUTED_TEXT_STYLE}>
+              {t("opportunities.studentView.preview.loading", {}, {
+                default: "Loading opportunity…",
+              })}
+            </p>
+          </ContentInner>
+        ) : null}
 
-      {opp ? (
-        <ContentPane>
-          <div
-            style={{
-              display: "grid",
-              gap: 8,
-              color: "var(--MH-Theme-Neutrals-Black, #171717)",
-            }}
-          >
+        {!loading && !opp ? (
+          <ContentInner>
+            <p style={MUTED_TEXT_STYLE}>
+              {t("opportunities.studentView.preview.notFound", {}, {
+                default: "Opportunity not found, or no longer available.",
+              })}
+            </p>
+          </ContentInner>
+        ) : null}
+
+        {opp ? (
+          <ContentInner>
             {coverSrc ? (
               <div
                 role="img"
@@ -717,6 +720,7 @@ export default function StudentOpportunityPreviewModal({
                 style={{ padding: "16px" }}
                 selected={activeTab === TABS.forum}
                 pressed={activeTab === TABS.forum}
+                leading={<QuestionMarkIcon width={18} height={18} />}
                 onClick={() => setActiveTab(TABS.forum)}
                 ariaLabel={forumTabLabel}
               />
@@ -1142,9 +1146,9 @@ export default function StudentOpportunityPreviewModal({
                 />
               </div>
             ) : null}
-          </div>
-        </ContentPane>
-      ) : null}
-    </Modal>
+          </ContentInner>
+        ) : null}
+      </ContentPane>
+    </PageShell>
   );
 }

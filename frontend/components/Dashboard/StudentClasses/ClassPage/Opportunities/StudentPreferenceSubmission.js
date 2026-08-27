@@ -20,6 +20,7 @@ import {
 } from "../../../../Mutations/ConnectRating";
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import IconButton from "../../../../DesignSystem/IconButton";
 import MessageCard from "../../../../DesignSystem/MessageCard";
 
 const Card = styled.div`
@@ -126,25 +127,35 @@ const RankControls = styled.div`
 
 const RankFormHeader = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
+  flex-shrink: 0;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 1px solid var(--MH-Theme-Neutrals-Medium, #E6E6E6);
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
 `;
 
-const RankTitleRow = styled.div`
+const RankTitleWrap = styled.div`
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 12px;
-  min-width: 0;
 
-  h2 {
+  h1 {
     margin: 0;
     min-width: 0;
-    max-width: 100%;
-    font-family: "Inter", sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 30px;
+    font-family: Inter, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -157,8 +168,38 @@ const RankSubmitActions = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
+  flex: 0 0 auto;
   flex-wrap: wrap;
+  margin-left: auto;
+  align-self: flex-start;
+`;
+
+const RankPageShell = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const RankPageBody = styled.div`
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  gap: 20px;
+  align-content: start;
+  padding: 12px 0 24px;
+  box-sizing: border-box;
 `;
 
 const StatusPill = styled.span`
@@ -423,31 +464,31 @@ function RankFormChrome({
 }) {
   return (
     <RankFormHeader>
-      {(title || statusChipLabel) && (
-        <RankTitleRow>
-          {title ? <h2 title={title}>{title}</h2> : null}
-          {statusChipLabel ? (
-            <Chip shape="pill" label={statusChipLabel} selected={submitted} />
-          ) : null}
-        </RankTitleRow>
-      )}
-      <Button
-        type="button"
-        variant="text"
+      <IconButton
+        variant="tonal"
+        style={{
+          background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+        }}
+        ariaLabel={backLabel}
+        title={backLabel}
         onClick={onBack}
         disabled={backDisabled}
-        leadingIcon={
+        icon={
           <img
             src="/assets/icons/back.svg"
             alt=""
-            aria-hidden
-            width={9}
-            height={14}
+            width={12}
+            height={12}
+            style={{ width: 12, height: 12 }}
           />
         }
-      >
-        {backLabel}
-      </Button>
+      />
+      <RankTitleWrap>
+        {title ? <h1 title={title}>{title}</h1> : null}
+        {statusChipLabel ? (
+          <Chip shape="pill" label={statusChipLabel} selected={submitted} />
+        ) : null}
+      </RankTitleWrap>
       {submitActions ? (
         <RankSubmitActions>{submitActions}</RankSubmitActions>
       ) : null}
@@ -817,49 +858,55 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
 
   if (loading && !round) {
     return (
-      <div className="classTabPage opportunities">
+      <RankPageShell>
         <RankFormChrome backLabel={backLabel} onBack={handleCancel} />
-        <MessageCard
-          variant="information"
-          message={t("opportunities.studentView.rankForm.loading", {}, {
-            default: "Loading round…",
-          })}
-        />
-      </div>
+        <RankPageBody>
+          <MessageCard
+            variant="information"
+            message={t("opportunities.studentView.rankForm.loading", {}, {
+              default: "Loading round…",
+            })}
+          />
+        </RankPageBody>
+      </RankPageShell>
     );
   }
   if (!round) {
     return (
-      <div className="classTabPage opportunities">
+      <RankPageShell>
         <RankFormChrome backLabel={backLabel} onBack={handleCancel} />
-        <MessageCard
-          variant="neutral"
-          message={t("opportunities.studentView.rankForm.notFound", {}, {
-            default: "Round not found.",
-          })}
-        />
-      </div>
+        <RankPageBody>
+          <MessageCard
+            variant="neutral"
+            message={t("opportunities.studentView.rankForm.notFound", {}, {
+              default: "Round not found.",
+            })}
+          />
+        </RankPageBody>
+      </RankPageShell>
     );
   }
 
   if (round.status === "draft") {
     const draftTitle = round.title || "";
     return (
-      <div className="classTabPage opportunities">
+      <RankPageShell>
         <RankFormChrome
           title={draftTitle}
           backLabel={backLabel}
           onBack={handleCancel}
         />
-        <Card>
-          <p className="helper">
-            {t("opportunities.studentView.rankForm.notAvailableYet", {}, {
-              default:
-                "This round is not available yet. Your teacher is still setting it up.",
-            })}
-          </p>
-        </Card>
-      </div>
+        <RankPageBody>
+          <Card>
+            <p className="helper">
+              {t("opportunities.studentView.rankForm.notAvailableYet", {}, {
+                default:
+                  "This round is not available yet. Your teacher is still setting it up.",
+              })}
+            </p>
+          </Card>
+        </RankPageBody>
+      </RankPageShell>
     );
   }
 
@@ -940,7 +987,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   ) : null;
 
   return (
-    <div className="classTabPage opportunities">
+    <RankPageShell>
       <RankFormChrome
         title={pageTitle}
         backLabel={backLabel}
@@ -950,6 +997,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         submitted={submitted}
         submitActions={rankSubmitActions}
       />
+      <RankPageBody>
       {!isOpen && lockReason && (
         <Card>
           <p className="helper">
@@ -1514,6 +1562,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
           />
         </Field>
       </Card>
-    </div>
+      </RankPageBody>
+    </RankPageShell>
   );
 }

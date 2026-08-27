@@ -22,8 +22,9 @@ import {
   BrowseSearchField,
 } from "../../../Connect/ConnectBrowseLayout";
 import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
-import StudentOpportunityPreviewModal from "./StudentOpportunityPreviewModal";
+import StudentOpportunityPreview from "./StudentOpportunityPreview";
 import StudentPreferenceSubmission from "./StudentPreferenceSubmission";
+import StudentRankActionCard from "./StudentRankActionCard";
 
 /**
  * Matching rounds are "open for students" when status is preferences_open
@@ -63,6 +64,8 @@ const RankBanners = styled.div`
   display: grid;
   gap: 12px;
   width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
 `;
 
 const Filters = styled.div`
@@ -95,20 +98,24 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
   const router = useRouter();
-  const [previewOpportunityId, setPreviewOpportunityId] = useState(null);
   const [filterMode, setFilterMode] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const sessionRef = useRef(null);
   const flushedRef = useRef(false);
+  const startPreviewSessionRef = useRef(null);
 
   const [recordVisit] = useMutation(RECORD_OPPORTUNITY_PREVIEW_VISIT);
 
   const classCode = myclass?.code;
-  // Prefer router.query so shallow back navigation clears the rank subview.
+  // Prefer router.query so shallow back navigation clears the rank/preview subviews.
   const requestedRoundId =
     typeof router.query?.round === "string" ? router.query.round : null;
+  const requestedOpportunityId =
+    typeof router.query?.opportunity === "string"
+      ? router.query.opportunity
+      : null;
 
   const { data, loading } = useQuery(CLASS_STUDENT_OPPORTUNITIES, {
     variables: { code: classCode },
@@ -131,6 +138,7 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     opportunityRoundIds,
     openRounds,
     classRoundIds,
+    opportunityIds,
   } = useMemo(() => {
     const byId = new Map();
     const roundByOpportunityId = new Map();
@@ -149,6 +157,7 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
             openById.set(round.id, {
               id: round.id,
               title: round.title || "",
+              closeAt: round.closeAt || null,
             });
           }
           for (const opportunity of round.opportunities || []) {
@@ -170,10 +179,44 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       opportunityRoundIds: roundByOpportunityId,
       openRounds: Array.from(openById.values()),
       classRoundIds: allRoundIds,
+      opportunityIds: new Set(byId.keys()),
     };
   }, [networks]);
 
+  const preferenceByRoundId = useMemo(() => {
+    const map = new Map();
+    const prefs =
+      data?.authenticatedItem?.connectPreferences ||
+      [];
+    for (const pref of prefs) {
+      const roundId = pref?.round?.id;
+      if (!roundId) continue;
+      map.set(roundId, {
+        status: pref.status,
+        submittedAt: pref.submittedAt,
+      });
+    }
+    return map;
+  }, [data?.authenticatedItem?.connectPreferences]);
+
+  const clearOpportunitiesQuery = useCallback(() => {
+    if (!classCode) return;
+    router.push({
+      pathname: `/dashboard/classes/${classCode}`,
+      query: { page: "opportunities" },
+    });
+  }, [classCode, router]);
+
   const clearRoundQuery = useCallback(() => {
+    if (!classCode) return;
+    router.push({
+      pathname: `/dashboard/classes/${classCode}`,
+      query: { page: "opportunities" },
+    });
+  }, [classCode, router]);
+
+  // Invalid deep-links: replace so the bad URL does not stay in history.
+  const stripInvalidOpportunitiesQuery = useCallback(() => {
     if (!classCode) return;
     router.replace({
       pathname: `/dashboard/classes/${classCode}`,
@@ -197,18 +240,38 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     if (!requestedRoundId || loading) return;
     if (!data?.class && !myclass?.networks) return;
     if (classRoundIds.has(requestedRoundId)) return;
-    clearRoundQuery();
+    stripInvalidOpportunitiesQuery();
   }, [
     requestedRoundId,
     loading,
     data?.class,
     myclass?.networks,
     classRoundIds,
-    clearRoundQuery,
+    stripInvalidOpportunitiesQuery,
   ]);
 
+  // Strip invalid opportunity deep-links once class opportunities are known.
+  // Preview wins over ranking when both params are present.
+  useEffect(() => {
+    if (!requestedOpportunityId || loading) return;
+    if (!data?.class && !myclass?.networks) return;
+    if (opportunityIds.has(requestedOpportunityId)) return;
+    stripInvalidOpportunitiesQuery();
+  }, [
+    requestedOpportunityId,
+    loading,
+    data?.class,
+    myclass?.networks,
+    opportunityIds,
+    stripInvalidOpportunitiesQuery,
+  ]);
+
+  // Preview wins over ranking when both params are present. Show immediately so
+  // the class chrome (already hidden by ClassPage) is not replaced by the list.
+  const showPreviewSubview = Boolean(requestedOpportunityId);
+
   const showRankSubview =
-    Boolean(requestedRoundId) && classRoundIds.has(requestedRoundId);
+    !showPreviewSubview && Boolean(requestedRoundId);
 
   const categoryOptions = useMemo(
     () => getDistinctProjectCategories(opportunities),
@@ -270,7 +333,7 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
         },
       });
     } catch (err) {
-      // Preview tracking must not block closing the modal.
+      // Preview tracking must not block leaving the preview.
       console.warn("Failed to record opportunity preview visit", err);
     }
   }, [recordVisit]);
@@ -280,6 +343,14 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       if (!opportunityId || !classId) return;
       const roundId = opportunityRoundIds.get(opportunityId);
       if (!roundId) return;
+      if (
+        sessionRef.current?.opportunityId === opportunityId &&
+        sessionRef.current?.classId === classId &&
+        sessionRef.current?.roundId === roundId &&
+        !flushedRef.current
+      ) {
+        return;
+      }
       flushedRef.current = false;
       sessionRef.current = {
         opportunityId,
@@ -290,42 +361,49 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     },
     [classId, opportunityRoundIds],
   );
+  startPreviewSessionRef.current = startPreviewSession;
 
   const handleOpenPreview = useCallback(
     (id) => {
-      const nextId = id || null;
-      if (previewOpportunityId && previewOpportunityId !== nextId) {
+      if (!classCode || !id) return;
+      if (requestedOpportunityId && requestedOpportunityId !== id) {
         void flushPreviewSession();
       }
-      setPreviewOpportunityId(nextId);
-      if (nextId) {
-        startPreviewSession(nextId);
-      }
+      router.push({
+        pathname: `/dashboard/classes/${classCode}`,
+        query: { page: "opportunities", opportunity: id },
+      });
     },
-    [flushPreviewSession, previewOpportunityId, startPreviewSession],
+    [classCode, flushPreviewSession, requestedOpportunityId, router],
   );
 
   const handleClosePreview = useCallback(() => {
     void flushPreviewSession();
-    setPreviewOpportunityId(null);
-  }, [flushPreviewSession]);
+    clearOpportunitiesQuery();
+  }, [clearOpportunitiesQuery, flushPreviewSession]);
 
   const handleCategoryChipClick = useCallback((value) => {
     setCategoryFilter((prev) => (prev === value ? null : value));
   }, []);
 
+  // Start (or resume) dwell once class/round context is available.
   useEffect(() => {
-    if (!previewOpportunityId) return undefined;
+    if (!showPreviewSubview || !requestedOpportunityId) return;
+    startPreviewSession(requestedOpportunityId);
+  }, [requestedOpportunityId, showPreviewSubview, startPreviewSession]);
+
+  useEffect(() => {
+    if (!showPreviewSubview || !requestedOpportunityId) return undefined;
 
     const onVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
         void flushPreviewSession();
       } else if (
         document.visibilityState === "visible" &&
-        previewOpportunityId &&
+        requestedOpportunityId &&
         !sessionRef.current
       ) {
-        startPreviewSession(previewOpportunityId);
+        startPreviewSessionRef.current?.(requestedOpportunityId);
       }
     };
 
@@ -340,7 +418,19 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       window.removeEventListener("pagehide", onPageHide);
       void flushPreviewSession();
     };
-  }, [flushPreviewSession, previewOpportunityId, startPreviewSession]);
+  }, [flushPreviewSession, requestedOpportunityId, showPreviewSubview]);
+
+  if (showPreviewSubview) {
+    return (
+      <StudentOpportunityPreview
+        opportunityId={requestedOpportunityId}
+        onClose={handleClosePreview}
+        user={user}
+        classId={classId}
+        roundId={opportunityRoundIds.get(requestedOpportunityId) || null}
+      />
+    );
+  }
 
   if (showRankSubview) {
     return (
@@ -396,26 +486,15 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       <div className="classTabPage opportunities">
         {openRounds.length > 0 ? (
           <RankBanners>
-            {openRounds.map((round) => {
-              const roundTitle = round.title?.trim() || round.id;
-              const message = t(
-                "opportunities.studentView.rankBanner",
-                { roundTitle },
-                {
-                  default:
-                    "Rank your favorite opportunity in {{roundTitle}}",
-                },
-              );
-              return (
-                <MessageCard
-                  key={round.id}
-                  variant="information"
-                  message={message}
-                  ariaLabel={message}
-                  onClick={() => openRankRound(round.id)}
-                />
-              );
-            })}
+            {openRounds.map((round) => (
+              <StudentRankActionCard
+                key={round.id}
+                round={round}
+                preference={preferenceByRoundId.get(round.id)}
+                hasOpportunities={false}
+                onRank={openRankRound}
+              />
+            ))}
           </RankBanners>
         ) : null}
         <MessageCard
@@ -500,25 +579,15 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     <div className="classTabPage opportunities">
       {openRounds.length > 0 ? (
         <RankBanners>
-          {openRounds.map((round) => {
-            const roundTitle = round.title?.trim() || round.id;
-            const message = t(
-              "opportunities.studentView.rankBanner",
-              { roundTitle },
-              {
-                default: "Rank your favorite opportunity in {{roundTitle}}",
-              },
-            );
-            return (
-              <MessageCard
-                key={round.id}
-                variant="information"
-                message={message}
-                ariaLabel={message}
-                onClick={() => openRankRound(round.id)}
-              />
-            );
-          })}
+          {openRounds.map((round) => (
+            <StudentRankActionCard
+              key={round.id}
+              round={round}
+              preference={preferenceByRoundId.get(round.id)}
+              hasOpportunities={true}
+              onRank={openRankRound}
+            />
+          ))}
         </RankBanners>
       ) : null}
 
@@ -613,19 +682,6 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
           </BrowseCardsGrid>
         )}
       </Page>
-
-      <StudentOpportunityPreviewModal
-        open={!!previewOpportunityId}
-        opportunityId={previewOpportunityId}
-        onClose={handleClosePreview}
-        user={user}
-        classId={classId}
-        roundId={
-          previewOpportunityId
-            ? opportunityRoundIds.get(previewOpportunityId) || null
-            : null
-        }
-      />
     </div>
   );
 }

@@ -298,5 +298,26 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
         }
       }
     }
+    authenticatedItem {
+      ... on Profile {
+        id
+        connectPreferences(
+          where: {
+            round: {
+              classNetwork: {
+                classes: { some: { code: { equals: $code } } }
+              }
+            }
+          }
+        ) {
+          id
+          status
+          submittedAt
+          round {
+            id
+          }
+        }
+      }
+    }
   }
 `;
