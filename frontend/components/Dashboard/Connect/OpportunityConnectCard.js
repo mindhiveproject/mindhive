@@ -72,7 +72,6 @@ export default function OpportunityConnectCard({
     chips.push(
       <Chip
         key="organization"
-        shape="pill"
         label={orgName}
         title={orgName}
         style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}
@@ -89,7 +88,6 @@ export default function OpportunityConnectCard({
     chips.push(
       <Chip
         key="projectCategory"
-        shape="pill"
         label={categoryLabel}
         title={categoryLabel}
         style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}

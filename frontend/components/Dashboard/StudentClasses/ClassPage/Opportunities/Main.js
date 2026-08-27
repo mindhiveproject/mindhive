@@ -648,7 +648,6 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
               return (
                 <Chip
                   key={value}
-                  shape="pill"
                   label={label}
                   selected={categoryFilter === value}
                   onClick={() => handleCategoryChipClick(value)}

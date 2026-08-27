@@ -199,7 +199,10 @@ export default function Chip({
   } else if (selected || isPressed) {
     rootStyle = { ...CHIP_SELECTED_STYLE };
     if (hovered && canHover) {
-      rootStyle = { ...rootStyle, backgroundColor: "#e6e6e6" };
+      // Deepen the primary-light fill on hover rather than dropping to grey —
+      // same move as Button's tonal hover (one step past Primary Light, short
+      // of Primary Medium), so a selected chip stays on-theme while hovered.
+      rootStyle = { ...rootStyle, backgroundColor: "#C0EAEF" };
     }
   } else if (hovered && canHover) {
     rootStyle = { ...rootStyle, backgroundColor: "#f3f3f3" };

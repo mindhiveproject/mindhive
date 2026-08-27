@@ -122,12 +122,14 @@ function StepChip({ step, label, onClick, openLabel }) {
   return (
     <Chip
       label={label}
+      variant="static"
       selected={visual === "action" || visual === "waiting"}
       disabled={visual === "pending" && !clickable}
       onClick={clickable ? onClick : undefined}
       ariaLabel={clickable && openLabel ? openLabel : undefined}
       title={clickable ? openLabel : undefined}
       style={style}
+      
     />
   );
 }

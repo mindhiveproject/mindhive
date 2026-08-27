@@ -25,9 +25,8 @@ const TitleWithIcon = styled.span`
 
 const StatusText = styled.p`
   margin: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
@@ -38,9 +37,8 @@ const FieldBlock = styled.div`
 
   label {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 13px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 `;

@@ -156,10 +156,8 @@ const RankTitleWrap = styled.div`
   h1 {
     margin: 0;
     min-width: 0;
-    font-family: Inter, sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.3;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -204,18 +202,6 @@ const RankPageBody = styled.div`
   align-content: start;
   padding: 12px 0 24px;
   box-sizing: border-box;
-`;
-
-const StatusPill = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 600;
-  background: ${({ $submitted }) => ($submitted ? "#e3f4ec" : "#fdf6e3")};
-  color: ${({ $submitted }) => ($submitted ? "#1d6b3a" : "#7a5b00")};
 `;
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
@@ -490,7 +476,11 @@ function RankFormChrome({
       <RankTitleWrap>
         {title ? <h1 title={title}>{title}</h1> : null}
         {statusChipLabel ? (
-          <Chip shape="pill" label={statusChipLabel} selected={submitted} />
+          <Chip
+            variant="static"
+            tone={submitted ? "success" : "warning"}
+            label={statusChipLabel}
+          />
         ) : null}
       </RankTitleWrap>
       {submitActions ? (
@@ -1284,7 +1274,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                                 padding: "6px 10px",
                                 border: "1px solid #d3dae0",
                                 borderRadius: 8,
-                                font: 'var(--MH-Type-Body-Base)',
+                                font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
                                 letterSpacing: 0,
                                 outline: "none",
                               }}
