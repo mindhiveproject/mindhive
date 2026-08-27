@@ -4,6 +4,7 @@ import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
+import Button from "../../../../../../DesignSystem/Button";
 
 export default function Navigation({
   query,
@@ -49,7 +50,8 @@ export default function Navigation({
       </div>
       <div className="right">
         {cardId && !isProposalSubmitted && (
-          <button
+          <Button
+            variant="filled"
             onClick={async () => {
               if (
                 confirm(
@@ -62,11 +64,10 @@ export default function Navigation({
                 await saveBtnFunction();
               }
             }}
-            className={allCardsCompleted ? "saveButton" : "saveButton disabled"}
             disabled={!allCardsCompleted}
           >
             {saveBtnName}
-          </button>
+          </Button>
         )}
         {cardId && isProposalSubmitted && (
           <div className="iconBtn">

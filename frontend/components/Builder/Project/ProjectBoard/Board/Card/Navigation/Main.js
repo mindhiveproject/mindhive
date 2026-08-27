@@ -4,6 +4,7 @@ import StatusChip from "../../PDF/Preview/StatusChip";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
+import Button from "../../../../../../DesignSystem/Button";
 
 export default function Navigation({
   proposalId,
@@ -62,14 +63,14 @@ export default function Navigation({
         /> */}
 
         {cardId && (
-          <button
+          <Button
+            variant="filled"
             onClick={async () => {
               await saveBtnFunction({ shoudBeSaved: true });
             }}
-            className={`saveButton ${hasContentChanged ? "on" : "off"}`}
           >
             {t("cardNavigation.save", "Save")}
-          </button>
+          </Button>
         )}
       </div>
     </div>

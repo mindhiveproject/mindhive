@@ -1,6 +1,7 @@
 import DiscoverStudyBank from "../Studies/Bank/Discover";
 import StyledLibrary from "../styles/StyledLibrary";
 import DiscoverTaskBank from "../Tasks/Bank/Discover";
+import { NavbarItem, SectionNavbar } from "../DesignSystem/Navbar";
 
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
@@ -8,36 +9,31 @@ import useTranslation from "next-translate/useTranslation";
 export default function Library({ query, user, isDashboard }) {
   const { t } = useTranslation("common");
   const selector = query?.selector || "study";
+  const basePath = `${isDashboard ? "/dashboard" : ""}/discover`;
 
   return (
     <StyledLibrary>
-      <div>
-        <div className="menu">
-          <Link
-            href={{
-              pathname: `${isDashboard ? "/dashboard" : ""}/discover${
-                isDashboard ? "/study" : ""
-              }`,
-            }}
-            className={
-              selector === "study" ? "menuTitle selectedMenuTitle" : "menuTitle"
-            }
-          >
-            <p>{t("navigation.studies")}</p>
-          </Link>
+      <SectionNavbar
+        variant="underline"
+        showRule
+        aria-label={t("navigation.discover", {}, { default: "Discover" })}
+      >
+        <NavbarItem
+          as={Link}
+          href={{ pathname: isDashboard ? `${basePath}/study` : basePath }}
+          selected={selector === "study"}
+        >
+          {t("navigation.studies")}
+        </NavbarItem>
 
-          <Link
-            href={{
-              pathname: `${isDashboard ? "/dashboard" : ""}/discover/task`,
-            }}
-            className={
-              selector === "task" ? "menuTitle selectedMenuTitle" : "menuTitle"
-            }
-          >
-            <p>{t("tasksAndSurveys")}</p>
-          </Link>
-        </div>
-      </div>
+        <NavbarItem
+          as={Link}
+          href={{ pathname: `${basePath}/task` }}
+          selected={selector === "task"}
+        >
+          {t("tasksAndSurveys")}
+        </NavbarItem>
+      </SectionNavbar>
 
       {selector === "study" && (
         <DiscoverStudyBank

@@ -23,12 +23,6 @@ export const StyledDashboard = styled.div`
   font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   margin: 0;
-  button:hover {
-    opacity: 0.6;
-  }
-  a:hover {
-    opacity: 0.6;
-  }
 `;
 
 export const StyledDashboardNavigation = styled.div`

@@ -43,9 +43,6 @@ export const NavLink = styled.div`
   text-align: left;
   padding-right: 1rem;
   ${(props) => props.selected && `border-right: 3px solid #ffc107`};
-  :hover {
-    opacity: 0.6;
-  }
 `;
 
 export const NavStyles = styled.ul`

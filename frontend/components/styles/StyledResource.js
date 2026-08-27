@@ -25,21 +25,7 @@ export const StyledResource = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .menu {
-      display: flex;
-      gap: 1rem;
-      .menuTitle {
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background 0.2s;
-        &:hover {
-          background: #f0f0f0;
-        }
-      }
-      .selectedMenuTitle {
-      }
-    }
+    gap: 1rem;
     button {
       padding: 0.75rem 1.5rem;
       background: #007bff;

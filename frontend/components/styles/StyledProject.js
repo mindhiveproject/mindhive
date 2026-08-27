@@ -218,31 +218,8 @@ const StyledProject = styled.div`
       grid-template-columns: 1fr auto;
       grid-gap: 10px;
       align-items: center;
-      .saveButton {
-        display: flex;
-        height: 40px;
-        padding: 8px 24px;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        border-radius: 100px;
-        background: var(--MH-Theme-Primary-Dark, #336F8A);
-        border: 1px solid var(--MH-Theme-Neutrals-White, #336F8A);
-
-        text-align: center;
-        /* MH-Theme/label/base */
-        font: var(--MH-Type-Label-Base);
-        letter-spacing: 0;
-          &:hover {
-            background: var(--MH-Theme-Accent-Medium, #F9D978);
-            color: var(--MH-Theme-Accent-Dark, #5D5763);
-            border: 1px solid var(--MH-Theme-Accent-Dark, #5D5763);
-            border-color: var(--MH-Theme-Accent-Dark, #5D5763);
-          }
-      }
-      .disabled {
-        opacity: 50%;
-      }
+      /* The save/submit button here is DesignSystem/Button (variant="filled")
+         now — no local CSS to keep in sync with it. */
       .iconBtn {
         display: grid;
         grid-template-columns: auto 1fr;

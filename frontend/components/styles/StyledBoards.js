@@ -117,14 +117,19 @@ const StyledBoards = styled.div`
     transition: background 0.3s ease;
     }
     
+  /* Filled hover, matching DesignSystem/Button: a 20% Primary Light state layer
+     over the resting fill + Elevation Medium. Was an Accent-yellow colour flip. */
   .createButton.narrowButton:hover,
   .backButton:hover,
   .saveButton:hover {
     border-radius: 100px;
-    border: 1px #F9D978;
-    color: #274E5B;
-    background: #F9D978;
-    box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
+    background: linear-gradient(
+        0deg,
+        rgba(222, 248, 251, 0.2),
+        rgba(222, 248, 251, 0.2)
+      ),
+      #336f8a;
+    box-shadow: var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1));
   }
 
   .buttonGroup {

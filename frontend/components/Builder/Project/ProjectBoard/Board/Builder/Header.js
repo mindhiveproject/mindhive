@@ -12,6 +12,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import exportPDF from "../PDF/exportPDF";
 import Button from "../../../../../DesignSystem/Button";
+import Chip from "../../../../../DesignSystem/Chip";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
 
 import { useRef, useState } from "react";
@@ -236,9 +237,13 @@ export default function ProposalHeader({
                 
                 <div className="collaboratorArray">
                   {collaborators.map((collab) => (
-                    <div key={collab?.id} className="collaboratorChip">
-                      <span >{collab?.username || ""}</span>
-                    </div>
+                    <Chip
+                      key={collab?.id}
+                      variant="static"
+                      tone="neutral"
+                      label={collab?.username || ""}
+                      title={collab?.username || ""}
+                    />
                   ))}
                   {(() => {
                     const userHasClasses = 

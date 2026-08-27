@@ -25,13 +25,21 @@ const DEVELOP_NEW_TRIGGER_STYLE = {
 };
 
 /**
- * DropdownMenu writes its trigger styles inline, so only the keys it already
- * declares can be overridden via triggerStyle. box-shadow is not one of them,
- * which leaves the hover lift free to live here as ordinary CSS.
+ * DropdownMenu writes its trigger styles inline and has no hover state of its
+ * own, so the filled-button hover lives here as ordinary CSS. It mirrors
+ * DesignSystem/Button's FILLED_HOVER: a 20% Primary Light state layer over the
+ * resting fill, plus Elevation Medium — not a bare shadow, and never a colour
+ * flip.
  */
 const DevelopNewButton = styled.div`
   button:hover {
-    box-shadow: var(--MH-Theme-Elevation-High, 2px 2px 12px rgba(0, 0, 0, 0.15));
+    background: linear-gradient(
+        0deg,
+        rgba(222, 248, 251, 0.2),
+        rgba(222, 248, 251, 0.2)
+      ),
+      var(--MH-Theme-Primary-Dark, #336f8a);
+    box-shadow: var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1));
   }
 `;
 

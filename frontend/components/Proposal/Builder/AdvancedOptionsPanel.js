@@ -140,7 +140,7 @@ export default function AdvancedOptionsPanel({
           {!autoUpdateStudentBoards && (
             <div className="templateBannerActions">
               <Button
-                variant="primary"
+                variant="filled"
                 className="templateBannerPrimaryBtn"
                 onClick={onSaveAndUpdateStudentBoards}
                 disabled={applyLoading}

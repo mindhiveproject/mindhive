@@ -248,6 +248,17 @@ export default function Navbar({
 }
 
 /**
+ * Navbar for tab bars that sit inside the page body rather than at the window
+ * edge. The design system's 24px container inset suits edge-anchored nav; a
+ * section tab bar runs flush with the heading above it instead.
+ */
+export const SectionNavbar = styled(Navbar)`
+  .navbar-container {
+    padding: 4px 0px;
+  }
+`;
+
+/**
  * A labelled group of NavbarItems. Renders the label as a presentational <li>
  * so the surrounding <ul> stays valid, followed by the items themselves.
  *

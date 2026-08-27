@@ -395,7 +395,7 @@ useEffect(() => {
           {card.isLocked ? (
             <>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
-                <h2 style={{ margin: 0 }}>{t("mainCard.originalSubmission", "Original Submission")}</h2>
+                <h2 className="MH-Type-Title-Base" style={{ margin: 0 }}>{t("mainCard.originalSubmission", "Original Submission")}</h2>
                 <InfoPopover
                   content={t("mainCard.originalSubmissionTooltip", "This is the content you originaly submitted to the Feedback Center. We copied it bellow for you to make edits and conserved a 'Revised content'.")}
                   ariaLabel={t("mainCard.originalSubmission", "Original Submission")}
@@ -415,7 +415,7 @@ useEffect(() => {
               </Accordion>
               {card.settings?.includeInReport && (
                 <div style={{ marginTop: "24px" }}>
-                  <h2>{t("mainCard.revisedContent", "Revised Content")}</h2>
+                  <h2 className="MH-Type-Title-Base" style={{ margin: 0 }}>{t("mainCard.revisedContent", "Revised Content")}</h2>
                   {/* <h2>{t("mainCard.newSubmission", "New Submission")}</h2> */}
                   {isUsedLoggedIn ? (
                       <TipTapEditor

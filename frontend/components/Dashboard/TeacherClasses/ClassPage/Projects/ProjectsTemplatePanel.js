@@ -391,7 +391,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             </h3>
           </div>
           <Link href={createHref} style={{ textDecoration: "none" }}>
-            <Button variant="primary">
+            <Button variant="filled">
               {t("projects.newTemplate", {}, {
                 default: "Create new class template",
               })}

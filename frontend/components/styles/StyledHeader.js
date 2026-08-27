@@ -47,9 +47,6 @@ export const Logo = styled.div`
   img {
     margin-right: 10px;
   }
-  :hover {
-    opacity: 0.6;
-  }
 `;
 
 export const MainNavLink = styled.div`
