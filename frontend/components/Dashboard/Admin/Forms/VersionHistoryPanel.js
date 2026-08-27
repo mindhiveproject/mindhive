@@ -29,10 +29,9 @@ const Shell = styled.section`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
     color: #5f6871;
   }
 `;
@@ -44,14 +43,15 @@ const Row = styled.div`
   align-items: center;
   padding: 8px 6px;
   border-radius: 8px;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   background: ${({ $current }) => ($current ? "#eef5f9" : "transparent")};
   border: 1px solid
     ${({ $current }) => ($current ? "#336f8a" : "transparent")};
 
   .version {
-    font-family: "Nunito", sans-serif;
-    font-weight: 700;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -59,10 +59,9 @@ const Row = styled.div`
     display: inline-block;
     padding: 2px 8px;
     border-radius: 100px;
-    font-size: 10px;
-    font-weight: 700;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
     color: #ffffff;
     background: ${({ $status }) =>
       $status === "published"
@@ -74,7 +73,8 @@ const Row = styled.div`
 
   .meta {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -82,7 +82,8 @@ const Row = styled.div`
 
   .changelog {
     color: #171717;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -96,9 +97,8 @@ const Row = styled.div`
   a,
   button {
     color: #336f8a;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    font-size: 12px;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     text-decoration: none;
     background: none;
     border: none;
@@ -152,7 +152,7 @@ export default function VersionHistoryPanel({ definition }) {
     return (
       <Shell>
         <h2>Version history</h2>
-        <span style={{ color: "#5f6871", fontSize: 13 }}>
+        <span className="MH-Type-Body-Small" style={{ color: "#5f6871" }}>
           This is the only version of <code>{definition.key}</code> at scope{" "}
           <code>{definition.scope}</code>. Use "Duplicate" on the list page
           to fork a new draft.
@@ -188,7 +188,9 @@ export default function VersionHistoryPanel({ definition }) {
             </div>
             <div className="actions">
               {isCurrent ? (
-                <span style={{ color: "#888", fontSize: 12 }}>(current)</span>
+                <span className="MH-Type-Body-Small" style={{ color: "#888" }}>
+                  (current)
+                </span>
               ) : (
                 <>
                   <Link

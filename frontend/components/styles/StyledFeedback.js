@@ -4,12 +4,9 @@ const StyledFeedback = styled.div`
   display: grid;
   margin: 40px 0px;
   grid-gap: 30px;
-  font-family: Lato;
-  font-size: 14px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 21px;
-  letter-spacing: 0em;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
 
   .section {
     display: grid;
@@ -85,14 +82,13 @@ const StyledFeedback = styled.div`
     grid-gap: 1rem;
 
     .reviewerComment {
-      font-family: "Nunito";
-      font-size: 16px;
-      line-height: 137%;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #3b3b3b;
     }
     .questionTitle {
-      font-size: 18px;
-      font-weight: bold;
+      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       margin-bottom: 5px;
     }
     .questionAnswer {
@@ -122,11 +118,9 @@ const StyledFeedback = styled.div`
     padding: 8px;
     border-radius: 4px;
     .title {
-      font-family: "Nunito";
       font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 24px;
+      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
     }
   }
   .readyMoveForward {

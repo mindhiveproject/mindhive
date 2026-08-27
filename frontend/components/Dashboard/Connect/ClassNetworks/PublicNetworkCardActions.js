@@ -29,9 +29,8 @@ const ActionsRow = styled.div`
 
 const Feedback = styled.span`
   color: ${(props) => (props.$error ? "#871b16" : "#1d6b3a")};
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  line-height: 18px;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 export default function PublicNetworkCardActions({

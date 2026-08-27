@@ -260,7 +260,7 @@ export default function TopNavigation() {
               })}
             </Button>
             <div className="datasetScopeNav" role="tablist">
-              <span style={{ fontSize: "14px", fontWeight: "400", lineHeight: "20px", letterSpacing: "0", color: "#5D5763" }}>Filter by:</span>
+              <span className="MH-Type-Label-Base" style={{ color: "#5D5763" }}>Filter by:</span>
             {DATASET_SCOPES.map((scope) => {
               const meta = DATASET_SCOPE_META[scope];
               if (!meta) return null;

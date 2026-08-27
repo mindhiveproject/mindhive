@@ -18,7 +18,6 @@ export const StudentPageLink = (props) => {
         paddingBottom: 0,
         paddingLeft: 8,
         paddingRight: 8,
-        fontWeight: 500,
         color: "var(--color-text-primary)",
       }}
     >

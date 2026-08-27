@@ -138,8 +138,21 @@ export default function LinkListField({
             background: "#fafbfc",
           }}
         >
-          <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
-            <span style={{ fontWeight: 600, color: "#5f6871" }}>
+          <label
+            style={{
+              display: "grid",
+              gap: 4,
+              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              letterSpacing: 0,
+            }}
+          >
+            <span
+              style={{
+                font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+                letterSpacing: 0,
+                color: "#5f6871",
+              }}
+            >
               {t("definitionForm.linkList.title", {}, { default: "Title" })}
             </span>
             <input
@@ -153,12 +166,26 @@ export default function LinkListField({
                 border: "1px solid #d3dae0",
                 borderRadius: 8,
                 padding: "8px 10px",
-                fontSize: 14,
+                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                letterSpacing: 0,
               }}
             />
           </label>
-          <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
-            <span style={{ fontWeight: 600, color: "#5f6871" }}>
+          <label
+            style={{
+              display: "grid",
+              gap: 4,
+              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              letterSpacing: 0,
+            }}
+          >
+            <span
+              style={{
+                font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+                letterSpacing: 0,
+                color: "#5f6871",
+              }}
+            >
               {t("definitionForm.linkList.url", {}, { default: "URL" })}
             </span>
             <input
@@ -170,7 +197,8 @@ export default function LinkListField({
                 border: "1px solid #d3dae0",
                 borderRadius: 8,
                 padding: "8px 10px",
-                fontSize: 14,
+                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                letterSpacing: 0,
               }}
             />
           </label>
@@ -184,7 +212,8 @@ export default function LinkListField({
               padding: "8px 12px",
               cursor: "pointer",
               color: "#c0392b",
-              fontSize: 13,
+              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              letterSpacing: 0,
               height: 42,
             }}
           >
@@ -194,11 +223,18 @@ export default function LinkListField({
             style={{
               display: "grid",
               gap: 4,
-              fontSize: 13,
+              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              letterSpacing: 0,
               gridColumn: "1 / -1",
             }}
           >
-            <span style={{ fontWeight: 600, color: "#5f6871" }}>
+            <span
+              style={{
+                font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+                letterSpacing: 0,
+                color: "#5f6871",
+              }}
+            >
               {t("definitionForm.linkList.comment", {}, {
                 default: "Comment (optional)",
               })}
@@ -214,7 +250,8 @@ export default function LinkListField({
                 border: "1px solid #d3dae0",
                 borderRadius: 8,
                 padding: "8px 10px",
-                fontSize: 14,
+                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                letterSpacing: 0,
               }}
             />
           </label>

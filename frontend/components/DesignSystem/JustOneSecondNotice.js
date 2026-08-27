@@ -77,7 +77,6 @@ export default function JustOneSecondNotice({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          lineHeight: "24px",
           fontStyle: "normal",
           whiteSpace: hasCustomMessage ? "normal" : "nowrap",
           textAlign: "center",
@@ -85,10 +84,8 @@ export default function JustOneSecondNotice({
         }}
       >
         <p
+          className="MH-Type-Title-Base"
           style={{
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 600,
-            fontSize: 16,
             margin: 0,
             color: "#000000",
           }}
@@ -96,10 +93,8 @@ export default function JustOneSecondNotice({
           {title}
         </p>
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 400,
-            fontSize: 16,
             margin: 0,
             color: "#000000",
             opacity: 0.95,

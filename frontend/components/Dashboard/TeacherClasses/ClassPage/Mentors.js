@@ -59,7 +59,8 @@ export default function ClassMentors({ myclass, user }) {
     return (
       <Link
         href={{ pathname: `/dashboard/mentors/${mentor?.publicId}` }}
-        style={{ color: "inherit", textDecoration: "none", fontWeight: 500 }}
+        className="MH-Type-Label-Base"
+        style={{ color: "inherit", textDecoration: "none" }}
       >
         {mentor?.username}
       </Link>
@@ -75,7 +76,7 @@ export default function ClassMentors({ myclass, user }) {
         renderTrigger={({ onClick, open, ariaLabel }) => (
           <Button
             variant="subtle"
-            style={{ fontSize: "12px", lineHeight: "10px", fontWeight: 500 }}
+            className="MH-Type-Label-Small"
             leadingIcon={
               <img
                 src="/assets/dataviz/three-dots.svg"
@@ -168,7 +169,7 @@ export default function ClassMentors({ myclass, user }) {
                     {origin}/signup/mentor?code={myclass.code}&i=
                     {mentorInvitationCode}
                   </div>
-                  <CopyButton value={mentorSignupLink} style={{ fontWeight: 500 }}>
+                  <CopyButton value={mentorSignupLink}>
                     {t("mentors.copy")}
                   </CopyButton>
                 </div>

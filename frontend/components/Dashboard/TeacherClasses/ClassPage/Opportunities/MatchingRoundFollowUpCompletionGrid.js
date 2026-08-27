@@ -70,12 +70,10 @@ const StatusButton = styled.button`
   margin: 0;
   padding: 2px 8px;
   border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 16px;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   white-space: nowrap;
   cursor: pointer;
-  font-family: inherit;
 
   &.complete {
     background: #e3f4ec;
@@ -408,15 +406,13 @@ export default function MatchingRoundFollowUpCompletionGrid({
             <Button
               type="button"
               variant="text"
-              className="matchingRoundFollowUpCompletionEmptyAction"
+              className="matchingRoundFollowUpCompletionEmptyAction MH-Type-Label-Small"
               onClick={onManageForms}
               style={{
                 padding: 0,
                 minWidth: 0,
                 width: "fit-content",
                 height: "fit-content",
-                fontSize: "13px",
-                fontWeight: 600,
                 color: "var(--MH-Theme-Primary-Dark, #336f8a)",
               }}
             >
@@ -499,6 +495,7 @@ export default function MatchingRoundFollowUpCompletionGrid({
         <div className="matchingRoundFollowUpCompletionFilters">
           <Chip
             shape="square"
+            className="MH-Type-Label-Small"
             label={t(
               "opportunities.matchingRound.followUpCompletion.filterAll",
               {},
@@ -506,10 +503,11 @@ export default function MatchingRoundFollowUpCompletionGrid({
             )}
             selected={!incompleteOnly}
             onClick={() => setIncompleteOnly(false)}
-            style={{ height: "28px", fontSize: "13px" }}
+            style={{ height: "28px" }}
           />
           <Chip
             shape="square"
+            className="MH-Type-Label-Small"
             label={t(
               "opportunities.matchingRound.followUpCompletion.filterIncomplete",
               {},
@@ -517,7 +515,7 @@ export default function MatchingRoundFollowUpCompletionGrid({
             )}
             selected={incompleteOnly}
             onClick={() => setIncompleteOnly(true)}
-            style={{ height: "28px", fontSize: "13px" }}
+            style={{ height: "28px" }}
           />
         </div>
       </div>

@@ -365,7 +365,13 @@ export default function Login({
         <ClassNetworkInviteErrorBanner message={inviteError} />
       ) : null}
       {inviteErrorKind === "wrongRole" && classNetworkId ? (
-        <p style={{ marginBottom: 16, fontSize: 14 }}>
+        <p
+          style={{
+            marginBottom: 16,
+            font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+            letterSpacing: 0,
+          }}
+        >
           <Link href={`/signup/sponsor?classNetwork=${classNetworkShareRef}`}>
             {t(
               "auth.classNetworkInvite.signUpAsSponsor",

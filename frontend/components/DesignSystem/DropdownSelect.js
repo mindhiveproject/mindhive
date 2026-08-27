@@ -31,10 +31,6 @@ const DEFAULT_TRIGGER_STYLE = {
   border: "1px solid #A1A1A1",
   background: "transparent",
   color: "#5D5763",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "14px",
-  lineHeight: "20px",
-  fontWeight: 500,
   padding: "8px 12px",
   cursor: "pointer",
   display: "flex",
@@ -50,10 +46,7 @@ const ITEM_STYLE = {
   display: "flex",
   alignItems: "flex-start",
   padding: "8px 12px",
-  fontFamily: "Inter, sans-serif",
   fontWeight: 500,
-  fontSize: "14px",
-  lineHeight: "20px",
   cursor: "pointer",
   transition: "background-color 0.2s",
   border: "none",
@@ -87,10 +80,6 @@ const SEARCH_INPUT_STYLE = {
   padding: "8px 12px",
   border: "none",
   borderBottom: "1px solid #e6e6e6",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "14px",
-  lineHeight: "20px",
-  fontWeight: 500,
   color: "#5D5763",
   outline: "none",
   background: "#ffffff",
@@ -423,7 +412,7 @@ export default function DropdownSelect({
   const buttonNode = (
     <button
       type="button"
-      className={triggerClassName}
+      className={triggerClassName ?? "MH-Type-Label-Base"}
       disabled={disabled}
       aria-disabled={disabled}
       aria-haspopup="listbox"
@@ -525,6 +514,7 @@ export default function DropdownSelect({
                 placeholder={t("dropdownSelect.searchPlaceholder", {}, { default: "Search options" })}
                 aria-label={t("dropdownSelect.searchPlaceholder", {}, { default: "Search options" })}
                 autoComplete="off"
+                className="MH-Type-Label-Base"
                 style={SEARCH_INPUT_STYLE}
               />
             )}
@@ -539,6 +529,7 @@ export default function DropdownSelect({
             >
               {filteredOptions.length === 0 ? (
                 <div
+                  className="MH-Type-Body-Small"
                   style={{
                     ...ITEM_STYLE,
                     cursor: "default",
@@ -558,6 +549,7 @@ export default function DropdownSelect({
                     <button
                       key={String(opt.value)}
                       type="button"
+                      className="MH-Type-Label-Base"
                       disabled={isDisabled}
                       role="option"
                       aria-selected={isSelected}

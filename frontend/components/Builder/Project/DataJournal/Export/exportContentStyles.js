@@ -4,9 +4,8 @@
 export const EXPORT_CONTENT_STYLES = `
   .export-content-root {
     box-sizing: border-box;
-    font-family: Inter, system-ui, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
     background: #ffffff;
     width: 100%;

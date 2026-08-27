@@ -39,8 +39,6 @@ const TRIGGER_STYLE = {
 
 const BODY_STYLE = {
   padding: "12px 16px",
-  fontSize: 14,
-  lineHeight: "20px",
   overflowY: "auto",
 };
 
@@ -144,7 +142,7 @@ export default function InfoPopover({
         width={width}
         ariaLabel={ariaLabel}
       >
-        <div className="DesignSystem-InfoPopover-body" style={BODY_STYLE}>
+        <div className="DesignSystem-InfoPopover-body MH-Type-Body-Base" style={BODY_STYLE}>
           {content}
         </div>
       </Popover>

@@ -379,13 +379,12 @@ export const SelectedStudentsModal = ({
 };
 
 const StyledBulkBody = styled.div`
-  font-family: Inter, sans-serif;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 
   p {
     margin: 0 0 16px;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
@@ -395,7 +394,8 @@ const StyledBulkBody = styled.div`
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 16px;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .section {
@@ -406,9 +406,8 @@ const StyledBulkBody = styled.div`
 
     h3 {
       margin: 0 0 12px;
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
     }
   }
 
@@ -425,7 +424,8 @@ const StyledBulkBody = styled.div`
     border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
     border-radius: 6px;
     background: var(--MH-Theme-Neutrals-White, #ffffff);
-    font-size: 14px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 
     span {
@@ -443,8 +443,7 @@ const StyledBulkBody = styled.div`
   .fieldLabel {
     display: block;
     margin: 12px 0 6px;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 18px;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 `;

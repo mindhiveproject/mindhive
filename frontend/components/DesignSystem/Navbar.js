@@ -33,12 +33,10 @@ export const StyledNavbar = styled.div`
     cursor: pointer;
 
     color: black;
-    font-family: "Inter";
-    font-weight: 600;
+    /* MH-Type/label/large */
+    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     font-style: normal;
-    line-height: 24px;
-    font-size: 14px;
-
 
     &:hover {
       background-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
@@ -114,9 +112,6 @@ export const StyledNavbar = styled.div`
     .navbar-item {
       width: 100%;
       justify-content: flex-start;
-      /* MH-Theme/label/base — same size as buttons carry. */
-      font-size: 14px;
-      line-height: 20px;
       padding-left: 16px;
       padding-right: 24px;
     }
@@ -155,11 +150,9 @@ export const StyledNavbar = styled.div`
   }
 
   .navbar-section-label {
-    /* MH-Theme/label/base */
-    font-family: "Inter";
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
+    /* MH-Type/label/large */
+    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     margin: 0;
     padding: 0;

@@ -53,9 +53,8 @@ export const StyledDatasetView = styled.div`
         }
 
         .header-title {
-          font-family: "Nunito", sans-serif;
-          font-size: 18px;
-          font-weight: 700;
+          font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #1e293b;
           margin: 0;
           min-width: 0;
@@ -71,9 +70,8 @@ export const StyledDatasetView = styled.div`
           align-items: center;
           gap: 6px;
           margin-top: 2px;
-          font-family: Inter, sans-serif;
-          font-size: 12px;
-          line-height: 1.4;
+          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #6a6a6a;
         }
       }
@@ -87,10 +85,8 @@ export const StyledDatasetView = styled.div`
         border: 1px solid var(--MH-Theme-Primary-Dark, #336f8a);
         background: var(--MH-Theme-Primary-Dark, #336f8a);
         color: #ffffff;
-        font-family: Inter, sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1;
+        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        letter-spacing: 0;
         cursor: pointer;
         transition: background-color 0.15s ease, box-shadow 0.15s ease,
           opacity 0.15s ease;
@@ -129,10 +125,8 @@ export const StyledDatasetView = styled.div`
           border: 1px solid #e0e0e0;
           background: #ffffff;
           color: #1e293b;
-          font-family: Inter, sans-serif;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 1;
+          font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+          letter-spacing: 0;
           cursor: pointer;
           transition: background-color 0.15s ease, border-color 0.15s ease;
 
@@ -170,10 +164,8 @@ export const StyledDatasetView = styled.div`
         border: 1.5px solid #e0e0e0;
         background: #ffffff;
         color: #1e293b;
-        font-family: Inter, sans-serif;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 1.4;
+        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        letter-spacing: 0;
         min-width: 0;
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
@@ -194,9 +186,8 @@ export const StyledDatasetView = styled.div`
         gap: 8px;
 
         .section-header {
-          font-family: "Nunito", sans-serif;
-          font-size: 16px;
-          font-weight: 600;
+          font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #1e293b;
           margin-bottom: 4px;
           padding: 12px;
@@ -212,9 +203,8 @@ export const StyledDatasetView = styled.div`
         }
 
         .variables-section__searchEmpty {
-          font-family: Inter, sans-serif;
-          font-size: 13px;
-          line-height: 1.4;
+          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #64748b;
           padding: 8px 4px;
         }
@@ -258,10 +248,8 @@ export const StyledDatasetView = styled.div`
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          font-family: Inter, sans-serif;
-          font-weight: 300;
-          font-size: 14px;
-          line-height: 1.5;
+          font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #000000;
         }
 
@@ -301,8 +289,8 @@ export const StyledDatasetView = styled.div`
             align-items: center;
             justify-content: space-between;
             gap: 8px;
-            font-family: "Inter";
-            font-size: 14px;
+            font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+            letter-spacing: 0;
             color: #1e293b;
             border: 1.5px solid #F3F3F3;
             border-radius: 8px;
@@ -319,7 +307,8 @@ export const StyledDatasetView = styled.div`
             }
 
             .subtitle {
-              font-size: 12px;
+              font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+              letter-spacing: 0;
               color: #666666;
             }
           }
@@ -345,7 +334,7 @@ export const StyledDatasetView = styled.div`
     }
 
     .ag-theme-quartz {
-      --ag-font-family: "Nunito", sans-serif;
+      --ag-font-family: "Inter", sans-serif;
       --ag-font-size: 14px;
       --ag-header-background-color: #f8fafc;
       --ag-header-foreground-color: #1e293b;

@@ -14,7 +14,7 @@ const GridContainer = styled.div`
   margin-top: 24px;
   
   .ag-theme-alpine {
-    --ag-font-family: Lato;
+    --ag-font-family: "Inter", sans-serif;
     --ag-font-size: 14px;
     --ag-header-height: 48px;
     --ag-row-height: 48px;
@@ -31,10 +31,8 @@ const StatusChip = styled.span`
   align-items: center;
   padding: 4px 12px;
   border-radius: 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   white-space: nowrap;
   border: none;
   

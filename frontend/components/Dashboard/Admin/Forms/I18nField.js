@@ -29,9 +29,8 @@ const ToggleButton = styled.button`
   background: none;
   border: none;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 12px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   cursor: pointer;
   padding: 0;
   width: max-content;
@@ -51,10 +50,9 @@ const LocaleGrid = styled.div`
   margin-top: 4px;
 
   .locale-code {
-    font-size: 12px;
     color: #5f6871;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   input,
@@ -62,8 +60,8 @@ const LocaleGrid = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 6px;
     padding: 6px 10px;
-    font-family: "Lato", sans-serif;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
     background: #ffffff;
   }

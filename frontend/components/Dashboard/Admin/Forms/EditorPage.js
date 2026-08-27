@@ -53,14 +53,11 @@ const TopBar = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 22px;
     color: #171717;
   }
 
   .meta {
     color: #5f6871;
-    font-size: 13px;
   }
 
   .actions {
@@ -72,10 +69,9 @@ const TopBar = styled.div`
 const StatusBadge = styled.span`
   padding: 2px 10px;
   border-radius: 100px;
-  font-size: 11px;
-  font-weight: 700;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
   margin-left: 6px;
   background: ${({ $status }) =>
     $status === "published" ? "#1d6b3a" :
@@ -88,9 +84,8 @@ const BackLink = styled.button`
   background: none;
   border: none;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   cursor: pointer;
   padding: 0;
 `;
@@ -225,13 +220,13 @@ export default function EditorPage({ definitionId }) {
           >
             ← All form definitions
           </BackLink>
-          <h1>
+          <h1 className="MH-Type-Heading-Small">
             {definition.title}
             <StatusBadge $status={definition.status}>
               {definition.status}
             </StatusBadge>
           </h1>
-          <div className="meta">
+          <div className="meta MH-Type-Body-Small">
             {definition.surface ? (
               <>
                 <strong>{SURFACE_LABEL[definition.surface] || definition.surface}</strong>{" "}

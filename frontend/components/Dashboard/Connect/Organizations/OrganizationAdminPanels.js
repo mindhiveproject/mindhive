@@ -33,14 +33,15 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 `;
 
@@ -52,10 +53,8 @@ const AdminForm = styled.div`
 
   label {
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 22px;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 `;
 
@@ -79,8 +78,8 @@ const AdminFormRow = styled.div`
     padding: 0 12px;
     border: 1px solid #cccccc;
     border-radius: 4px;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
 
     &:focus {
       outline: 0;
@@ -92,9 +91,8 @@ const AdminFormRow = styled.div`
 const AdminFeedback = styled.p`
   margin: 0;
   color: ${(props) => (props.$error ? "#871b16" : "#1d6b3a")};
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  line-height: 20px;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 const InviteLinkRow = styled.div`
@@ -128,17 +126,14 @@ const PendingRow = styled.div`
   }
 
   .email {
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 14px;
+    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .meta {
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 16px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #5f6871;
   }
 `;
@@ -574,7 +569,6 @@ export default function OrganizationAdminPanels({
                     <InviteLinkRow>
                       <CopyButton
                         value={inviteFeedback.manualLink}
-                        style={{ fontWeight: 500 }}
                         ariaLabel={t(
                           "organizationsDetail.invites.copyInviteLinkAria",
                           {},
@@ -595,10 +589,9 @@ export default function OrganizationAdminPanels({
           {canManage && pendingInvites.length > 0 && (
             <div>
               <h3
+                className="MH-Type-Title-Small"
                 style={{
                   margin: "0 0 8px",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 14,
                   color: "#171717",
                 }}
               >
@@ -627,7 +620,6 @@ export default function OrganizationAdminPanels({
                       {link ? (
                         <CopyButton
                           value={link}
-                          style={{ fontWeight: 500 }}
                           ariaLabel={t(
                             "organizationsDetail.invites.copyInviteLinkAria",
                             {},

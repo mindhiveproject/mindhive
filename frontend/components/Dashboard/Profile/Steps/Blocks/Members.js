@@ -22,16 +22,15 @@ const Shell = styled.div`
 
   .blockTitle {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .blockHint {
     color: #5f6871;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     margin: 0;
   }
 `;
@@ -55,19 +54,20 @@ const MemberRow = styled.div`
 
   .name {
     color: #171717;
-    font-weight: 600;
-    font-size: 14px;
+    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .email {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .you {
     color: #336f8a;
-    font-size: 11px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 `;
 
@@ -87,8 +87,8 @@ const AddRow = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 10px;
     background: #ffffff;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     outline: none;
 
     &:focus {
@@ -108,9 +108,8 @@ const Btn = styled.button`
   background: ${({ $primary }) => ($primary ? "#336f8a" : "#ffffff")};
   color: ${({ $primary, $danger }) =>
     $primary ? "#ffffff" : $danger ? "#b3261e" : "#336f8a"};
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 13px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   cursor: pointer;
 
   &:disabled {
@@ -338,7 +337,14 @@ export default function Members({ user, organization }) {
 
         {pendingInvites.length > 0 && (
           <div>
-            <h3 className="blockTitle" style={{ fontSize: 14, marginBottom: 8 }}>
+            <h3
+              className="blockTitle"
+              style={{
+                font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+                letterSpacing: 0,
+                marginBottom: 8,
+              }}
+            >
               Pending invites
             </h3>
             <div
@@ -401,7 +407,12 @@ export default function Members({ user, organization }) {
           </AddRow>
           <span
             className="blockHint"
-            style={{ fontSize: 12, marginTop: -4, display: "block" }}
+            style={{
+              font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+              letterSpacing: 0,
+              marginTop: -4,
+              display: "block",
+            }}
           >
             If they already have a MindHive account we&apos;ll add them now;
             otherwise we&apos;ll email them an invite to sign up.
@@ -425,7 +436,8 @@ export default function Members({ user, organization }) {
                   : feedback.type === "success"
                   ? "#1d6b3a"
                   : "#7a5b00",
-              fontSize: 13,
+              font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+              letterSpacing: 0,
             }}
           >
             <Icon

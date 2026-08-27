@@ -32,15 +32,15 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
   p {
     margin: 4px 0 0;
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     max-width: 640px;
   }
 `;
@@ -66,9 +66,8 @@ const Pagination = styled.nav`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     cursor: pointer;
 
     &:disabled {
@@ -83,7 +82,8 @@ const Pagination = styled.nav`
   }
 
   .info {
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #5f6871;
   }
 `;

@@ -16,8 +16,8 @@ const previewShellStyle = {
   borderRadius: 12,
   background: "#F7F9F8",
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
+  font: "var(--MH-Type-Body-Base, 400 16px/24px \"Inter\", sans-serif)",
+  letterSpacing: 0,
   padding: 16,
   maxHeight: 260,
   overflowY: "auto",
@@ -98,7 +98,13 @@ export default function FormDefinitionPreview({
 
   return (
     <div style={shellStyle}>
-      <div style={{ fontWeight: 700, marginBottom: 12 }}>
+      <div
+        style={{
+          font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+          letterSpacing: 0,
+          marginBottom: 12,
+        }}
+      >
         {t(
           "section.createCardModal.previewLabel",
           {},

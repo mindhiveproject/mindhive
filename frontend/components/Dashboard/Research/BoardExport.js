@@ -299,7 +299,10 @@ export default function BoardExport() {
 
   const policyContent = (
     <>
-      <h3 style={{ margin: "0 0 12px", fontSize: "15px", fontWeight: 600, color: "#2c4f5f" }}>
+      <h3
+        className="MH-Type-Title-Small"
+        style={{ margin: "0 0 12px", color: "#2c4f5f" }}
+      >
         {t("filteringPolicies", {
           defaultValue: "Pulling data policies",
         })}

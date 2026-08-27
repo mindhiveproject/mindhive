@@ -88,7 +88,6 @@ function MediaThumbPreviewPortal({ url, open, anchorRect }) {
         borderRadius: 16,
         boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
         pointerEvents: "none",
-        fontFamily: "Inter, sans-serif",
       }}
     >
       <img
@@ -142,8 +141,8 @@ function MediaLibraryThumbCell(params) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 10,
-          fontWeight: 600,
+          font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+          letterSpacing: 0,
           color: "#336F8A",
         }}
         title={ctx.t("tiptap.mediaCanvaExportThumb", {}, { default: "Canva PDF export" })}
@@ -165,7 +164,8 @@ function MediaLibraryThumbCell(params) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 11,
+          font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+          letterSpacing: 0,
           color: "#6A6A6A",
         }}
         aria-hidden
@@ -363,7 +363,6 @@ const PANEL_STYLE = {
   border: "1px solid #A1A1A1",
   boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
   overflow: "hidden",
-  fontFamily: "Inter, sans-serif",
 };
 
 const HEADER_STYLE = {
@@ -385,9 +384,8 @@ const TITLE_ROW_STYLE = {
 
 const TITLE_STYLE = {
   margin: 0,
-  fontSize: 18,
-  lineHeight: "24px",
-  fontWeight: 600,
+  font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -414,9 +412,8 @@ const FOOTER_STYLE = {
 
 const LABEL_STYLE = {
   display: "block",
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 600,
+  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   marginBottom: 6,
 };
@@ -427,9 +424,8 @@ const INPUT_STYLE = {
   padding: "10px 12px",
   border: "1px solid #A1A1A1",
   borderRadius: 8,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 14,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  letterSpacing: 0,
   boxSizing: "border-box",
   color: "#171717",
 };
@@ -449,8 +445,8 @@ const ERROR_BOX_STYLE = {
   background: "#FEF3F2",
   border: "1px solid #FECDCA",
   color: "#B42318",
-  fontSize: 13,
-  lineHeight: "18px",
+  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  letterSpacing: 0,
 };
 
 const EDIT_PANEL_STYLE = {
@@ -463,9 +459,8 @@ const EDIT_PANEL_STYLE = {
 };
 
 const EDIT_TITLE_STYLE = {
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 600,
+  font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Primary-Dark, #336F8A)",
   marginBottom: 14,
 };
@@ -480,8 +475,8 @@ const ACTIONS_ROW_STYLE = {
 
 const EMPTY_TEXT_STYLE = {
   margin: 0,
-  fontSize: 14,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "#6A6A6A",
 };
 
@@ -1025,7 +1020,7 @@ export default function MediaLibraryModal({
                 "tiptap.mediaLibraryQueryError",
                 "Could not load your media library.",
               )}{" "}
-              <span style={{ fontWeight: 400 }}>{error.message}</span>
+              <span>{error.message}</span>
             </div>
           )}
 

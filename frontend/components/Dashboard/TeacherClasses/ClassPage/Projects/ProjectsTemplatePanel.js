@@ -209,10 +209,8 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
         }}
       >
         <span
+          className="MH-Type-Label-Base"
           style={{
-            fontWeight: 500,
-            fontSize: 14,
-            lineHeight: "20px",
             color: "var(--MH-Theme-Neutrals-Black, #171717)",
           }}
         >
@@ -307,10 +305,10 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                   >
                     <h5 className="classTabTemplateCardTitle">{board.title}</h5>
                     <Chip
+                      className="MH-Type-Label-Small"
                       style={{
                         backgroundColor: isVisible ? "#FFFFFF" : "#F3F3F3",
-                        fontSize: "12px",
-                        fontWeight: isVisible ? "500" : "400",
+                        fontWeight: isVisible ? 500 : 400,
                         color: isVisible ? "#1C1B1F" : "#666666",
                         pointerEvents: "none",
                       }}

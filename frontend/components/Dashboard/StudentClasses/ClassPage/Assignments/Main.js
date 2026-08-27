@@ -15,8 +15,8 @@ const EmptyState = styled.div`
   text-align: center;
   padding: 48px 24px;
   color: #666666;
-  font-family: Lato;
-  font-size: 16px;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 export default function Settings({ myclass, user, query }) {

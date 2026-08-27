@@ -20,17 +20,12 @@ const ROW_INNER_STYLE = {
 
 const TITLE_STYLE = {
   display: "block",
-  fontWeight: 600,
-  lineHeight: "1.25",
 };
 
 const SUB_STYLE = {
   display: "block",
-  fontSize: "12px",
-  fontWeight: 500,
   color: "#6a6a6a",
   marginTop: "2px",
-  lineHeight: "1.3",
 };
 
 function itemKey(item, index) {
@@ -83,8 +78,8 @@ export default function ResourcesTooltipResourceButtons({
                   aria-hidden
                 />
                 <span style={{ minWidth: 0, flex: 1 }}>
-                  <span style={TITLE_STYLE}>{item.title}</span>
-                  <span style={SUB_STYLE}>{openLinkLabel}</span>
+                  <span className="MH-Type-Title-Small" style={TITLE_STYLE}>{item.title}</span>
+                  <span className="MH-Type-Body-Small" style={SUB_STYLE}>{openLinkLabel}</span>
                 </span>
               </span>
             </Button>
@@ -119,8 +114,8 @@ export default function ResourcesTooltipResourceButtons({
                 aria-hidden
               />
               <span style={{ minWidth: 0, flex: 1 }}>
-                <span style={TITLE_STYLE}>{item.title}</span>
-                <span style={SUB_STYLE}>{item.alt || noLinkHint}</span>
+                <span className="MH-Type-Title-Small" style={TITLE_STYLE}>{item.title}</span>
+                <span className="MH-Type-Body-Small" style={SUB_STYLE}>{item.alt || noLinkHint}</span>
               </span>
             </span>
           </Button>

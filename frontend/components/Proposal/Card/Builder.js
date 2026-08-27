@@ -499,11 +499,8 @@ export default function BuilderProposalCard({
                 >
                   <p style={{
                     color: "#8F1F14",
-                    fontFamily: "Nunito",
-                    fontSize: "16px",
-                    fontStyle: "normal",
-                    fontWeight: "400",
-                    lineHeight: "24px",
+                    font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+                    letterSpacing: 0,
                     margin: 0,
                     }}>
                     {t("board.expendedCard.overwriteWarning", "")}
@@ -530,9 +527,8 @@ export default function BuilderProposalCard({
                       marginTop: "8px",
                       padding: "12px 16px",
                       borderRadius: "8px",
-                      fontSize: "16px",
-                      fontFamily: "Nunito",
-                      lineHeight: "20px",
+                      font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+                      letterSpacing: 0,
                       opacity: "0",
                       transform: "translateY(-5px)",
                       transition: "all 0.3s ease",

@@ -11,13 +11,12 @@ const StyledModal = styled.div`
   input,
   textarea,
   select {
-    font-family: Lato;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     height: 48px;
     border: 1px solid #cccccc;
     border-radius: 4px;
     width: 100%;
-    font-size: 16px;
-    line-height: 24px;
     padding: 12px;
     &:focus {
       outline: 0;
@@ -32,21 +31,13 @@ const StyledModal = styled.div`
     padding: 66px 86px 66px 86px;
   }
   h2 {
-    font-family: Lato;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     /* text-align: center !important; */
   }
   p {
-    font-family: Lato;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     /* text-align: center !important; */
   }
   .selectUser {
@@ -69,23 +60,20 @@ const StyledModal = styled.div`
 
     p {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      letter-spacing: normal;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
     }
   }
   .classNetworkDetailTitle {
     margin: 0;
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 30px;
-    letter-spacing: normal;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
   }
   .classNetworkDetailDescription {
     color: #3d3d3d;
-    font-size: 15px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
   }
   .classNetworkDetailSummary {
     display: grid;
@@ -101,17 +89,13 @@ const StyledModal = styled.div`
   }
   .classNetworkDetailLabel {
     color: #625b71;
-    font-family: "Inter", sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
   }
   .classNetworkDetailValue {
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 24px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .classNetworkDetailNames {
@@ -120,9 +104,8 @@ const StyledModal = styled.div`
     margin: 4px 0 0;
     padding-left: 20px;
     color: #3d3d3d;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
   .classNetworkAdmins {
     display: grid;
@@ -139,16 +122,14 @@ const StyledModal = styled.div`
     h4 {
       margin: 0;
       color: #171717;
-      font-family: "Inter", sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 24px;
+      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
     }
 
     p {
       color: #625b71;
-      font-size: 14px;
-      line-height: 22px;
+      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      letter-spacing: 0;
     }
   }
   .classNetworkAdminList {
@@ -177,9 +158,8 @@ const StyledModal = styled.div`
     strong {
       overflow: hidden;
       color: #171717;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -187,9 +167,8 @@ const StyledModal = styled.div`
     span {
       overflow: hidden;
       color: #625b71;
-      font-family: "Inter", sans-serif;
-      font-size: 12px;
-      line-height: 18px;
+      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      letter-spacing: 0;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -203,9 +182,8 @@ const StyledModal = styled.div`
     border: none;
     background: transparent;
     color: #336f8a;
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
-    line-height: 18px;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     text-align: left;
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -224,8 +202,8 @@ const StyledModal = styled.div`
   }
   .classNetworkAdminEmpty {
     color: #625b71;
-    font-size: 14px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
   .classNetworkAdminForm {
     display: grid;
@@ -233,10 +211,8 @@ const StyledModal = styled.div`
 
     label {
       color: #171717;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
     }
   }
   .classNetworkAdminFormRow {
@@ -246,14 +222,14 @@ const StyledModal = styled.div`
 
     input {
       height: 42px;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
     }
   }
   .classNetworkAdminFeedback {
     color: #1d6b3a;
-    font-size: 13px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
 
     &.error {
       color: #871b16;
@@ -304,12 +280,8 @@ export const StyledModalButtons = styled.div`
     border-radius: 4px;
     align-items: center;
     padding: 14px 24px;
-    font-family: Lato;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 18px;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     text-align: center;
   }
   .addBtn {

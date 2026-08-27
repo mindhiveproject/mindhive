@@ -217,11 +217,9 @@ export default function WorkspaceNavigation({
                 </StyledModalHeader>
                 <StyledModalBody>
                   <p
+                    className="MH-Type-Body-Base"
                     style={{
                       margin: 0,
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: 14,
-                      lineHeight: 1.5,
                       color: "#333",
                     }}
                   >
@@ -233,11 +231,10 @@ export default function WorkspaceNavigation({
                   {deleteError ? (
                     <p
                       role="alert"
+                      className="MH-Type-Body-Small"
                       style={{
                         marginTop: 12,
                         marginBottom: 0,
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: 13,
                         color: "#c62828",
                       }}
                     >
@@ -258,6 +255,7 @@ export default function WorkspaceNavigation({
                   </StyledModalButton>
                   <StyledModalButton
                     type="button"
+                    className="MH-Type-Label-Base"
                     disabled={deleting}
                     style={{
                       marginLeft: 8,
@@ -265,8 +263,6 @@ export default function WorkspaceNavigation({
                       border: "none",
                       borderRadius: 6,
                       cursor: deleting ? "not-allowed" : "pointer",
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: 14,
                       background: "#c62828",
                       color: "#fff",
                     }}

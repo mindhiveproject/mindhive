@@ -109,11 +109,9 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(20px, 2.8vw, 26px);
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
-    line-height: 1.25;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -169,8 +167,8 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 `;
@@ -189,18 +187,20 @@ const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #5f6871;
 
   span.label-text {
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
   span.hint {
     color: #888;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   input[type="text"],
@@ -210,8 +210,8 @@ const Field = styled.label`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
     outline: none;
 
@@ -253,14 +253,15 @@ const OpportunityRow = styled.label`
   }
 
   .title {
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
-    font-size: 14px;
   }
 
   .meta {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 `;
 
@@ -657,14 +658,13 @@ export default function RoundEditor({ roundId }) {
             />
             {ALGO_DESCRIPTIONS[inputs.matchingAlgorithm] && (
               <div
+                className="MH-Type-Body-Small"
                 style={{
                   marginTop: 8,
                   padding: "10px 14px",
                   border: "1px solid #d3dae0",
                   borderRadius: 12,
                   background: "#f7f9f8",
-                  fontSize: 13,
-                  lineHeight: 1.5,
                   color: "#5f6871",
                 }}
               >
@@ -683,13 +683,13 @@ export default function RoundEditor({ roundId }) {
       <Card>
         <h2>Opportunities in this round</h2>
         {!selectedNetwork && (
-          <p style={{ color: "#5f6871", fontSize: 14 }}>
+          <p className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
             Pick a class network above to see opportunities available for this
             round.
           </p>
         )}
         {selectedNetwork && networkOpportunities.length === 0 && (
-          <p style={{ color: "#5f6871", fontSize: 14 }}>
+          <p className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
             No opportunities have been added to this class network yet. Mentors
             can publish opportunities and select this network as a destination.
           </p>
@@ -718,6 +718,7 @@ export default function RoundEditor({ roundId }) {
                       {opportunity.title}
                       {expired && (
                         <span
+                          className="MH-Type-Label-Small"
                           style={{
                             marginLeft: 8,
                             display: "inline-block",
@@ -725,8 +726,6 @@ export default function RoundEditor({ roundId }) {
                             borderRadius: 100,
                             background: "#f8e1e1",
                             color: "#b3261e",
-                            fontSize: 11,
-                            fontWeight: 600,
                           }}
                         >
                           Expired
@@ -767,12 +766,12 @@ export default function RoundEditor({ roundId }) {
 
       <Card>
         <h2>Round questions</h2>
-        <p style={{ color: "#5f6871", fontSize: 14, margin: 0 }}>
+        <p className="MH-Type-Body-Base" style={{ color: "#5f6871", margin: 0 }}>
           Students answer these questions once when participating in this
           round. Pick from approved library questions.
         </p>
         {libraryQuestions.length === 0 ? (
-          <p style={{ color: "#5f6871", fontSize: 14 }}>
+          <p className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
             No approved library questions yet. Add some in{" "}
             <strong>Question library</strong>.
           </p>

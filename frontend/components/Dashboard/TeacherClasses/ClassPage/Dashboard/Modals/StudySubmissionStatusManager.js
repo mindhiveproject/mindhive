@@ -188,7 +188,6 @@ export default function StudySubmissionStatusManager(props) {
 }
 
 const StyledModal = styled.div`
-  font-family: Nunito, sans-serif !important;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -200,14 +199,15 @@ const StyledModal = styled.div`
     margin-bottom: 24px;
 
     h1 {
-      font-size: 24px;
-      font-weight: 700;
+      font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #333333;
       margin: 0 0 8px;
     }
 
     p {
-      font-size: 16px;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #666666;
       margin: 0;
     }
@@ -228,17 +228,17 @@ const StyledModal = styled.div`
 
     .firstSide {
       h2 {
-        font-size: 18px;
-        font-weight: 600;
+        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        letter-spacing: 0;
         color: #333333;
         margin-bottom: 16px;
       }
 
       p {
-        font-size: 14px;
+        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        letter-spacing: 0;
         color: #666666;
         margin: 8px 0;
-        line-height: 1.5;
 
         strong {
           color: #333333;
@@ -248,8 +248,8 @@ const StyledModal = styled.div`
 
     .secondSide {
       h2 {
-        font-size: 18px;
-        font-weight: 600;
+        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        letter-spacing: 0;
         color: #333333;
         margin-bottom: 12px;
       }
@@ -262,7 +262,8 @@ const StyledModal = styled.div`
           border: 1px solid #d0d0d0;
           border-radius: 6px;
           background: #ffffff;
-          font-size: 16px; /* Increased font size */
+          font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #333333;
           padding: 10px;
 
@@ -275,7 +276,8 @@ const StyledModal = styled.div`
 
           .menu {
             .item {
-              font-size: 16px; /* Increased font size for menu items */
+              font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+              letter-spacing: 0;
             }
           }
 
@@ -303,8 +305,8 @@ const StyledModal = styled.div`
       border: 1px solid #d0d0d0;
       border-radius: 6px;
       padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #666666;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -320,8 +322,8 @@ const StyledModal = styled.div`
       border: none;
       border-radius: 6px;
       padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #ffffff;
       cursor: pointer;
       transition: all 0.2s ease;

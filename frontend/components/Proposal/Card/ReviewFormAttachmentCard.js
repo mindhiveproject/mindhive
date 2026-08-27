@@ -34,17 +34,15 @@ const cardHeaderStyle = {
 
 const titleStyle = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 16,
-  fontWeight: 600,
-  lineHeight: "24px",
+  font: 'var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "#171717",
 };
 
 const metaStyle = {
   margin: "4px 0 0",
-  fontSize: 14,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "#5D5763",
 };
 
@@ -59,7 +57,6 @@ const scopeChipStyle = {
   background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
   border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
   color: "var(--MH-Theme-Neutrals-Dark, #5D5763)",
-  fontWeight: 500,
 };
 
 const scopeIconStyle = {

@@ -58,7 +58,8 @@ const StyledSurveyBuilderItemLine = styled.div`
     border-radius: 3rem;
     background-color: #a78803;
     color: white;
-    font-size: 1.5rem;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     :hover {
       background-color: #e5bc0c;
       transform: scale(1.1);

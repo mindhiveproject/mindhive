@@ -54,27 +54,22 @@ const Row = styled.div`
   }
 
   .title {
-    font-family: "Lato", sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .message {
-    font-family: "Lato", sans-serif;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 18px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #5f6871;
   }
 
   .time {
-    font-family: "Lato", sans-serif;
-    font-size: 12px;
-    line-height: 16px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #969696;
   }
 

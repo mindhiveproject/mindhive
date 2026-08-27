@@ -19,15 +19,16 @@ const Banner = styled.div`
 
   strong {
     display: block;
-    font-size: 15px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     margin-bottom: 4px;
     color: #1d6b3a;
   }
 
   span {
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #1d6b3a;
-    line-height: 1.4;
   }
 `;
 

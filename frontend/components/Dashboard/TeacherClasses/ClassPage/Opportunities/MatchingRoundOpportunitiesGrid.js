@@ -87,17 +87,15 @@ const OpportunityInfoTooltip = styled.div`
 
   .matchingRoundOppInfoTooltipTitle {
     margin: 0;
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .matchingRoundOppInfoTooltipDescription {
     margin: 0;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 18px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -122,10 +120,8 @@ const OpportunityInfoTooltip = styled.div`
   }
 
   .matchingRoundOppInfoTooltipLabel {
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 16px;
-    letter-spacing: 0.04em;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     text-transform: uppercase;
     color: var(--MH-Theme-Neutrals-Grey-3, #888);
     white-space: nowrap;
@@ -137,9 +133,8 @@ const OpportunityInfoTooltip = styled.div`
     justify-content: flex-end;
     gap: 8px;
     flex-wrap: wrap;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 16px;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     text-align: right;
     overflow-wrap: anywhere;
@@ -167,9 +162,8 @@ const OpportunityInfoTooltip = styled.div`
     min-width: 0;
     width: fit-content;
     height: fit-content;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 16px;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
 `;
@@ -264,9 +258,6 @@ function TooltipMetaRow({
               minWidth: 0,
               width: "fit-content",
               height: "fit-content",
-              fontSize: "12px",
-              fontWeight: 600,
-              lineHeight: "16px",
               color: "var(--MH-Theme-Primary-Dark, #336f8a)",
             }}
           >
@@ -725,8 +716,6 @@ export default function MatchingRoundOpportunitiesGrid({
             minWidth: 0,
             width: "fit-content",
             height: "fit-content",
-            fontSize: "14px",
-            fontWeight: 500,
             color: unread
               ? "var(--MH-Theme-Additional-Accent-Dark, #3f288f)"
               : "#171717",
@@ -775,8 +764,6 @@ export default function MatchingRoundOpportunitiesGrid({
             minWidth: 0,
             width: "fit-content",
             height: "fit-content",
-            fontSize: "14px",
-            fontWeight: 500,
             color: togglingOpportunityId ? "#a1a1a1" : "#171717",
           }}
           onClick={(e) => {

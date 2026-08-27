@@ -46,9 +46,8 @@ const UsernameChip = styled.div`
   padding: 4px 12px 4px 12px;
   margin-top: 16px;
   border-radius: 100px;
-  font-family: Inter;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   border: 1px solid #171717;
   background: #FFFFFF;
   color: #171717;
@@ -71,17 +70,15 @@ const SectionHeader = styled.div`
 
 const SectionTitle = styled.h2`
   margin: 0;
-  font-family: Lato;
-  font-size: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
 const ShowButton = styled.button`
   padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   border-radius: 100px;
   border: 1.5px solid #336F8A;
   background: #ffffff;
@@ -112,18 +109,15 @@ const InfoItem = styled.div`
 `;
 
 const InfoLabel = styled.label`
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #666666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 `;
 
 const InfoValue = styled.div`
-  font-family: Lato;
-  font-size: 16px;
-  font-weight: 400;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
@@ -133,12 +127,10 @@ const CommentsSection = styled.div`
 
 const CommentsLabel = styled.label`
   display: block;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #666666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   margin-bottom: 12px;
 `;
 
@@ -149,9 +141,8 @@ const CommentsEditorWrapper = styled.div`
   .tiptapEditor {
     .ProseMirror {
       padding: 12px;
-      font-family: Lato;
-      font-size: 14px;
-      line-height: 1.5;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       min-height: 120px;
       border: 1px solid #e0e0e0;
       border-radius: 4px;

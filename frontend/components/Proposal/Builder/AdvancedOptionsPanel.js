@@ -88,9 +88,8 @@ export default function AdvancedOptionsPanel({
                 default: "This board is a class template",
               })}
               style={{
-                fontSize: "12px",
-                fontWeight: "600",
-                lineHeight: "18px",
+                font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+                letterSpacing: 0,
                 padding: "4px 12px",
               }}
             />

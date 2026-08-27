@@ -45,28 +45,31 @@ const StyledMarkdown = styled.div`
   border-radius: 8px;
 `;
 
-const Heading1 = styled.h1`  
+const Heading1 = styled.h1`
   color:rgb(0, 0, 0);
-  font-size: 22px;
+  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  letter-spacing: 0;
   color: ${props => props.theme.primaryCalyspo};
-  font-weight: 600;
   margin-top: 1.5em;
   `;
-  
+
 const Heading2 = styled.h2`
   color: ${props => props.theme.secondaryCalyspo};
-  font-size: 18px;
+  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   margin-top: 1.5em;
 `;
 
 const Heading3 = styled.h3`
-  font-size: 16px;
+  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   margin-top: 1.5em;
 `;
 
 const Paragraph = styled.p`
   margin: 0.5em 0;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 export default function Documentation() {

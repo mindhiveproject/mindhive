@@ -19,11 +19,9 @@ export const StyledDashboard = styled.div`
   padding: var(--dashboard-inset);
   background: #f6f9f8;
   color: ${(props) => props.theme.grey};
-  font-family: "Lato";
   font-style: normal;
-  font-weight: normal;
-  font-size: 1.5rem;
-  line-height: 1.6;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   margin: 0;
   button:hover {
     opacity: 0.6;
@@ -131,7 +129,8 @@ export const StyledDashboardContent = styled.div`
     display: grid;
     justify-content: end;
     p {
-      font-size: 16px;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
     }
   }
 `;

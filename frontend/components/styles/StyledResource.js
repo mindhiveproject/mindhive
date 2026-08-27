@@ -10,12 +10,14 @@ export const StyledResource = styled.div`
   position: relative;
 
   h1 {
-    font-size: 2.5rem;
+    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    letter-spacing: 0;
     margin-bottom: 0.5rem;
   }
 
   h2 {
-    font-size: 1.8rem;
+    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    letter-spacing: 0;
     margin-bottom: 0.5rem;
   }
 
@@ -77,13 +79,15 @@ export const StyledResource = styled.div`
       padding: 0.75rem;
       border: 1px solid #ced4da;
       border-radius: 4px;
-      font-size: 1.2rem;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
     }
     select {
       padding: 0.75rem;
       border: 1px solid #ced4da;
       border-radius: 4px;
-      font-size: 1.2rem;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
     }
   }
 
@@ -109,18 +113,19 @@ export const StyledResource = styled.div`
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     .card-title {
-      font-size: 1.8rem;
-      font-weight: bold;
+      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       margin: 0;
-      line-height: 1.3;
     }
     .card-meta {
-      font-size: 1.2rem;
+      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #6c757d;
       margin: 0;
     }
     .card-collaborators {
-      font-size: 1.1rem;
+      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #495057;
       margin: 0;
       display: flex;
@@ -199,7 +204,8 @@ export const StyledResource = styled.div`
     width: 100%;
     box-sizing: border-box;
     h2 {
-      font-size: 1.5rem;
+      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      letter-spacing: 0;
       margin-bottom: 1rem;
     }
     .closeBtn {
@@ -229,7 +235,8 @@ export const StyledResource = styled.div`
           padding: 0.75rem;
           border: 1px solid #ced4da;
           border-radius: 4px;
-          font-size: 1.2rem;
+          font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+          letter-spacing: 0;
         }
         .clearSearchBtn {
           position: absolute;
@@ -255,7 +262,8 @@ export const StyledResource = styled.div`
           padding: 0.5rem 0;
           border-bottom: 1px solid #e9ecef;
           span {
-            font-size: 1.2rem;
+            font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+            letter-spacing: 0;
             color: #495057;
           }
           .actionBtn {
@@ -280,7 +288,8 @@ export const StyledResource = styled.div`
     .selectedSection {
       margin-bottom: 1.5rem;
       h3 {
-        font-size: 1.3rem;
+        font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+        letter-spacing: 0;
         margin-bottom: 0.5rem;
       }
       .collaboratorsList {
@@ -294,7 +303,8 @@ export const StyledResource = styled.div`
           background: #e9ecef;
           padding: 0.3rem 0.6rem;
           border-radius: 4px;
-          font-size: 1.1rem;
+          font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+          letter-spacing: 0;
           span {
             color: #495057;
           }
@@ -322,7 +332,8 @@ export const StyledResource = styled.div`
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        font-size: 1.2rem;
+        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        letter-spacing: 0;
         &:hover {
           background: #0056b3;
         }
@@ -334,7 +345,8 @@ export const StyledResource = styled.div`
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        font-size: 1.2rem;
+        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        letter-spacing: 0;
         &:hover {
           background: #5a6268;
         }
@@ -342,7 +354,8 @@ export const StyledResource = styled.div`
     }
     .error {
       color: #dc3545;
-      font-size: 1.1rem;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       margin-top: 1rem;
     }
   }

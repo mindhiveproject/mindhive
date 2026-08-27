@@ -67,7 +67,8 @@ const StyledAvatarEditor = styled.div`
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
 
     &:hover {
       background: #1678d0;

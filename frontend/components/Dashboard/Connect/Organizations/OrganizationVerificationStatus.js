@@ -99,7 +99,6 @@ export default function OrganizationVerificationStatus({
             <div style={{ marginTop: 8 }}>
               <CopyButton
                 value={VERIFICATION_EMAIL}
-                style={{ fontWeight: 500 }}
                 ariaLabel={t(
                   "organizationsDetail.verification.copyEmailAria",
                   {},

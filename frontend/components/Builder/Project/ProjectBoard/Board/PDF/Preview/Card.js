@@ -343,23 +343,15 @@ useEffect(() => {
             }}
           >
             <div
+              className="MH-Type-Title-Base"
               style={{
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 600,
-                fontSize: "16px",
-                lineHeight: "24px",
-                letterSpacing: "0.15px",
                 color: "#000000",
               }}
             >
               {card?.section?.title && (
                 <span
+                  className="MH-Type-Body-Small"
                   style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 400,
-                    fontSize: "12px",
-                    lineHeight: "16px",
-                    letterSpacing: "0.1px",
                     color: "#626262",
                     marginBottom: "2px",
                     display: "block",

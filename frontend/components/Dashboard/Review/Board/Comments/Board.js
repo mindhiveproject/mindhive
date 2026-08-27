@@ -12,12 +12,9 @@ const StyledBoard = styled.div`
   display: grid;
   margin: 40px 0px;
   grid-gap: 30px;
-  font-family: Lato;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
   font-style: normal;
-  font-weight: 400;
-  line-height: 21px;
-  letter-spacing: 0em;
+  letter-spacing: 0;
 
   .section {
     display: grid;

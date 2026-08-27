@@ -27,16 +27,15 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font-family: Lato;
-  font-size: 28px;
-  font-weight: 600;
+  font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
 const Subtitle = styled.p`
   margin: 0;
-  font-family: Lato;
-  font-size: 16px;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #666666;
 `;
 
@@ -49,10 +48,8 @@ const OptionsLink = styled.a`
   padding: 8px 16px;
   border-radius: 100px;
   margin-left: 8px;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #336F8A;
   text-decoration: none;
   cursor: pointer;
@@ -75,10 +72,8 @@ const StatusChip = styled.span`
   align-items: center;
   padding: 4px 12px;
   border-radius: 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   white-space: nowrap;
   border: 1px solid;
   
@@ -116,7 +111,7 @@ const GridContainer = styled.div`
   margin-top: 24px;
   
   .ag-theme-alpine {
-    --ag-font-family: Lato;
+    --ag-font-family: "Inter", sans-serif;
     --ag-font-size: 14px;
     --ag-header-height: 48px;
     --ag-row-height: 48px;
@@ -143,8 +138,8 @@ const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: Lato;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #1a1a1a;
   cursor: pointer;
   
@@ -226,7 +221,7 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
     const homeworkCode = params?.data?.homeworkCode;
     if (!homeworkCode) {
       return (
-        <span style={{ color: '#999', fontSize: '12px' }}>
+        <span className="MH-Type-Body-Small" style={{ color: '#999' }}>
           {t("assignment.noHomework") || "No homework"}
         </span>
       );

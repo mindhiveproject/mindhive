@@ -147,10 +147,8 @@ const SettingsModalContent = styled.div`
 
     .matchingRoundNetworkTitle {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #171717;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -193,14 +191,14 @@ const SettingsModalContent = styled.div`
     display: grid;
     align-content: start;
     gap: 6px;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #625b71;
 
     .fieldLabel {
-      font-weight: 600;
       color: #171717;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
     }
 
     input[type="text"],
@@ -212,9 +210,8 @@ const SettingsModalContent = styled.div`
       border: 1px solid #d9d6d2;
       border-radius: 12px;
       background: #ffffff;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #171717;
       outline: none;
       box-sizing: border-box;
@@ -259,23 +256,15 @@ function RoundStatusLabel({ status, t, variant = "chip" }) {
       }}
     >
       <span
-        style={{
-          fontWeight: 600,
-          fontSize: isChip || variant === "short" ? "12px" : "14px",
-          lineHeight: isChip || variant === "short" ? "16px" : "18px",
-          color: "#5f6871",
-        }}
+        className={isChip || variant === "short" ? "MH-Type-Label-Small" : "MH-Type-Title-Small"}
+        style={{ color: "#5f6871" }}
       >
         {short}
       </span>
       {showHint ? (
         <span
-          style={{
-            fontWeight: 500,
-            fontSize: isChip ? "11px" : "12px",
-            lineHeight: isChip ? "14px" : "16px",
-            color: "#6a6a6a",
-          }}
+          className="MH-Type-Body-Small"
+          style={{ color: "#6a6a6a" }}
         >
           {hint}
         </span>
@@ -353,7 +342,7 @@ function FormOwnershipOptionLabel({ title, ownershipKind, t }) {
       <Chip
         label={chipLabel}
         shape="pill"
-        className="matchingRoundFormOwnershipChip"
+        className="matchingRoundFormOwnershipChip MH-Type-Label-Small"
         ariaLabel={chipLabel}
         style={{
           height: 22,
@@ -361,9 +350,6 @@ function FormOwnershipOptionLabel({ title, ownershipKind, t }) {
           paddingRight: 8,
           paddingTop: 2,
           paddingBottom: 2,
-          fontSize: 11,
-          fontWeight: 500,
-          lineHeight: "16px",
           flexShrink: 0,
         }}
       />
@@ -1809,9 +1795,8 @@ function MatchingRoundEditor({
     padding: "6px 12px",
     height: "auto",
     minHeight: "24px",
-    fontSize: "12px",
-    fontWeight: 600,
-    lineHeight: "18px",
+    font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+    letterSpacing: 0,
     alignItems: "flex-start",
     background: isNew ? "#f5f0e8" : "#f0f4f6",
     color: isNew ? "#8a6d3b" : "#5f6871",
@@ -1859,7 +1844,6 @@ function MatchingRoundEditor({
           <div className="matchingRoundNetworkInviteActions">
             <CopyButton
               value={sponsorSignupAndInviteLink}
-              style={{ fontWeight: 500 }}
               ariaLabel={t("opportunities.compactInvite.signupAndInviteLink", {}, {
                 default: "Signup + invite to network",
               })}
@@ -1870,7 +1854,6 @@ function MatchingRoundEditor({
             </CopyButton>
             <CopyButton
               value={sponsorNetworkInviteLink}
-              style={{ fontWeight: 500 }}
               ariaLabel={t("opportunities.compactInvite.inviteToNetworkLink", {}, {
                 default: "Invite to network only",
               })}
@@ -2212,9 +2195,6 @@ function MatchingRoundEditor({
       paddingRight: 8,
       paddingTop: 2,
       paddingBottom: 2,
-      fontSize: 11,
-      fontWeight: 500,
-      lineHeight: "16px",
       flexShrink: 0,
     };
 
@@ -2233,6 +2213,7 @@ function MatchingRoundEditor({
             className={clsx(
               "matchingRoundFormOwnershipChip",
               "matchingRoundFormOriginChip--public",
+              "MH-Type-Label-Small",
             )}
             ariaLabel={label}
             style={chipStyle}
@@ -2252,6 +2233,7 @@ function MatchingRoundEditor({
             className={clsx(
               "matchingRoundFormOwnershipChip",
               "matchingRoundFormOriginChip--owned",
+              "MH-Type-Label-Small",
             )}
             ariaLabel={label}
             style={chipStyle}
@@ -2270,6 +2252,7 @@ function MatchingRoundEditor({
           className={clsx(
             "matchingRoundFormOwnershipChip",
             "matchingRoundFormOriginChip--custom",
+            "MH-Type-Label-Small",
           )}
           ariaLabel={label}
           style={chipStyle}

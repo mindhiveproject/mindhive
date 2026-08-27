@@ -100,7 +100,7 @@ function visibilityTooltipContent(networks, t) {
 
   return (
     <div>
-      <div style={{ fontWeight: 600, marginBottom: 8 }}>
+      <div className="MH-Type-Label-Base" style={{ marginBottom: 8 }}>
         {t("myOpportunitiesList.visibility.modalTitle", {}, {
           default: "Visible in class networks",
         })}

@@ -29,9 +29,9 @@ const StyledParameterBlock = styled.div`
     font-weight: 500;
   }
   .name {
-    font-size: 1.5rem;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: lightslategrey;
-    font-weight: 900;
     justify-self: start;
     margin: 2rem 0rem 1rem 0rem;
   }

@@ -151,13 +151,14 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestEmptyTitle {
     margin: 0;
-    font-size: 14px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .matchingRoundStudentInterestEmptyHint {
     margin: 0;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #5c6570;
   }
 
@@ -178,13 +179,14 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestTitle {
     margin: 0;
-    font-size: 15px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .matchingRoundStudentInterestHint {
     margin: 0;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #5c6570;
   }
 
@@ -222,8 +224,8 @@ const GridShell = styled.div`
     border: 1px solid #ece9e6;
     border-radius: 10px;
     background: #ffffff;
-    font-family: inherit;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
 
     &:focus {
@@ -278,8 +280,8 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestCardName {
     margin: 0;
-    font-size: 14px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
@@ -301,7 +303,8 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestCardOpp {
     margin: 0;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #5c6570;
     min-width: 0;
     overflow: hidden;
@@ -315,8 +318,8 @@ const GridShell = styled.div`
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 13px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Primary-Dark, #336f8a);
 
     .matchingRoundStudentInterestStar {
@@ -327,7 +330,8 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestCardEmpty {
     margin: 0;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #5c6570;
   }
 `;
@@ -697,6 +701,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
       >
         <Chip
           shape="square"
+          className="MH-Type-Label-Small"
           label={t(
             "opportunities.matchingRound.studentInterest.modeTable",
             {},
@@ -704,10 +709,11 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
           )}
           selected={viewMode === VIEW_MODES.table}
           onClick={() => setViewMode(VIEW_MODES.table)}
-          style={{ height: "28px", fontSize: "13px" }}
+          style={{ height: "28px" }}
         />
         <Chip
           shape="square"
+          className="MH-Type-Label-Small"
           label={t(
             "opportunities.matchingRound.studentInterest.modeGrid",
             {},
@@ -715,7 +721,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
           )}
           selected={viewMode === VIEW_MODES.grid}
           onClick={() => setViewMode(VIEW_MODES.grid)}
-          style={{ height: "28px", fontSize: "13px" }}
+          style={{ height: "28px" }}
         />
       </div>
     </div>

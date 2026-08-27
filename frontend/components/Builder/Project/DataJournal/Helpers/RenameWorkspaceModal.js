@@ -19,9 +19,6 @@ import {
 } from "../styles/StyledDataSourceModal";
 
 const inputStyle = {
-  fontFamily: "Inter, sans-serif",
-  fontSize: 14,
-  lineHeight: 1.4,
   color: "#1a1a1a",
   border: "1px solid #e6e6e6",
   borderRadius: 6,
@@ -33,9 +30,6 @@ const inputStyle = {
 
 const labelStyle = {
   display: "block",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 13,
-  fontWeight: 500,
   color: "#333",
   marginBottom: 6,
 };
@@ -112,7 +106,11 @@ export default function RenameWorkspaceModal({
           </h2>
         </StyledModalHeader> */}
         <StyledModalBody>
-          <label htmlFor="rename-workspace-title-input" style={labelStyle}>
+          <label
+            htmlFor="rename-workspace-title-input"
+            className="MH-Type-Label-Base"
+            style={labelStyle}
+          >
             {t("dataJournal.sideNav.renameWorkspaceModalTitle", {}, {
               default: "Rename workspace",
             })}
@@ -134,6 +132,7 @@ export default function RenameWorkspaceModal({
             }}
             disabled={loading}
             autoFocus
+            className="MH-Type-Body-Base"
             style={{
               ...inputStyle,
               outline: "none",

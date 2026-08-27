@@ -25,44 +25,34 @@ const StyledHome = styled.div`
   }
 
   .h36 {
-    font-family: Lato;
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 45px;
+    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    letter-spacing: 0;
     text-align: left;
     color: var(--neutral_black1, #171717);
     margin-bottom: 16px;
   }
   .h32 {
-    font-family: Lato;
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 32px;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     text-align: left;
     color: #171717;
     margin-bottom: 17px;
   }
   .h26 {
-    font-family: Lato;
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 32px;
+    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    letter-spacing: 0;
     text-align: left;
     color: var(--neutral_grey2, #3b3b3b);
   }
   .p20 {
-    font-family: Lato;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 32px;
+    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
   .p18 {
-    font-family: Lato;
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 22.5px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     text-align: left;
     color: var(--neutral_grey2, #3b3b3b);
   }

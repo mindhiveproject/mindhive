@@ -8,7 +8,6 @@ export const OpportunityCompactGrid = styled.div`
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  font-family: "Inter", sans-serif;
 
   @media (max-width: 1023px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -57,10 +56,8 @@ const TitleRow = styled.div`
 const Title = styled.h3`
   margin: 0;
   flex: 1 1 120px;
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 22px;
+  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #171717;
 `;
 
@@ -69,10 +66,8 @@ const STATUS_CHIP_STYLE = {
   minHeight: "32px",
   padding: "6px 12px",
   borderRadius: "8px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "14px",
-  fontWeight: 600,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  letterSpacing: 0,
   boxSizing: "border-box",
   textTransform: "capitalize",
 };
@@ -139,10 +134,8 @@ const StatusPill = styled.span`
   padding: 6px 12px;
   border-radius: 8px;
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   text-transform: capitalize;
   background: ${({ $status }) => getStatusChipColors($status).background};
   border: 1px solid ${({ $status }) => getStatusChipColors($status).border};
@@ -185,8 +178,8 @@ const STATUS_CHEVRON = (
 
 const Meta = styled.p`
   margin: 0;
-  font-size: 14px;
-  line-height: 20px;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #625b71;
 `;
 
@@ -207,9 +200,8 @@ const DELETE_CHIP_STYLE = {
 
 const ReviewNoteHint = styled.p`
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.35;
+  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #6f26ce;
 `;
 
@@ -223,10 +215,8 @@ const ReviewCommentsButton = styled.button`
   border: 1px solid #3f288f;
   background: #3f288f;
   color: #ffffff;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 1.25;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   cursor: pointer;
   text-align: center;
   max-width: 100%;

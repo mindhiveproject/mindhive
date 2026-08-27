@@ -25,12 +25,8 @@ export const StyledSidebar = styled.div`
   }
 
   .workspaceHeader {
-    font-family: Lato;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 14px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     text-align: left;
     color: #b3b3b3;
     margin-top: 7px;
@@ -42,12 +38,8 @@ export const NavLink = styled.div`
   grid-template-columns: 20px auto;
   grid-column-gap: 12px;
   cursor: pointer;
-  font-family: Lato;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  letter-spacing: 0em;
+  font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   text-align: left;
   padding-right: 1rem;
   ${(props) => props.selected && `border-right: 3px solid #ffc107`};
@@ -66,12 +58,8 @@ export const NavStyles = styled.ul`
   .openMenuBtn {
     cursor: pointer;
     color: #666666;
-    font-family: Lato;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     padding-right: 2rem;
   }
 `;

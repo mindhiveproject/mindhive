@@ -16,9 +16,6 @@ import useCanvaPdfExport from "./useCanvaPdfExport";
 
 const bodyTextStyle = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 14,
-  lineHeight: 1.5,
   color: "#333",
 };
 
@@ -27,9 +24,6 @@ const noticeStyle = {
   padding: "10px 12px",
   borderRadius: 6,
   background: "#f5f3f0",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 13,
-  lineHeight: 1.45,
   color: "#5D5763",
 };
 
@@ -38,9 +32,6 @@ const checkboxRowStyle = {
   alignItems: "flex-start",
   gap: 10,
   marginTop: 16,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 14,
-  lineHeight: 1.45,
   color: "#333",
   cursor: "pointer",
 };
@@ -143,7 +134,7 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
         <StyledModalBody>
           {!showResult ? (
             <>
-              <p style={bodyTextStyle}>
+              <p className="MH-Type-Body-Base" style={bodyTextStyle}>
                 {t(
                   "dataJournal.export.modal.confirmWorkspace",
                   { workspace: workspaceTitle },
@@ -154,7 +145,7 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
                 )}
               </p>
               {hasUnsupportedOnCanvas ? (
-                <p style={noticeStyle} role="note">
+                <p className="MH-Type-Body-Small" style={noticeStyle} role="note">
                   {t("dataJournal.export.modal.unsupportedNotice", {}, {
                     default:
                       "Table and code components on this canva are not included in the exported PDF.",
@@ -162,7 +153,11 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
                 </p>
               ) : null}
               {canSaveToLibrary ? (
-                <label style={checkboxRowStyle} htmlFor="canva-export-save-media">
+                <label
+                  className="MH-Type-Label-Base"
+                  style={checkboxRowStyle}
+                  htmlFor="canva-export-save-media"
+                >
                   <input
                     id="canva-export-save-media"
                     type="checkbox"
@@ -181,6 +176,7 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
               ) : null}
               {isExporting ? (
                 <p
+                  className="MH-Type-Body-Base"
                   style={{ ...bodyTextStyle, marginTop: 16, color: "#336F8A" }}
                   role="status"
                   aria-live="polite"
@@ -192,7 +188,11 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
           ) : (
             <>
               {phase === "done" ? (
-                <p style={{ ...bodyTextStyle, color: "#2e7d32" }} role="status">
+                <p
+                  className="MH-Type-Body-Base"
+                  style={{ ...bodyTextStyle, color: "#2e7d32" }}
+                  role="status"
+                >
                   {saveToMediaLibrary && canSaveToLibrary
                     ? t("dataJournal.export.modal.successWithMedia", {}, {
                         default:
@@ -204,12 +204,17 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
                 </p>
               ) : null}
               {phase === "error" && errorMessage ? (
-                <p style={{ ...bodyTextStyle, color: "#c62828" }} role="alert">
+                <p
+                  className="MH-Type-Body-Base"
+                  style={{ ...bodyTextStyle, color: "#c62828" }}
+                  role="alert"
+                >
                   {errorMessage}
                 </p>
               ) : null}
               {phase === "done" && hasUnsupportedSkipped ? (
                 <p
+                  className="MH-Type-Body-Base"
                   style={{ ...bodyTextStyle, marginTop: 12, color: "#5D5763" }}
                   role="status"
                 >
@@ -221,6 +226,7 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
               ) : null}
               {phase === "done" && hasFallbackWarnings ? (
                 <p
+                  className="MH-Type-Body-Base"
                   style={{ ...bodyTextStyle, marginTop: 12, color: "#5D5763" }}
                   role="status"
                 >
@@ -247,6 +253,7 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
               </StyledModalButton>
               <StyledModalButton
                 type="button"
+                className="MH-Type-Label-Base"
                 disabled={isExporting}
                 style={{
                   marginLeft: 8,
@@ -254,8 +261,6 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
                   border: "none",
                   borderRadius: 6,
                   cursor: isExporting ? "not-allowed" : "pointer",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 14,
                   background: "#336F8A",
                   color: "#fff",
                 }}
@@ -271,13 +276,12 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
           ) : (
             <StyledModalButton
               type="button"
+              className="MH-Type-Label-Base"
               style={{
                 padding: "8px 16px",
                 border: "none",
                 borderRadius: 6,
                 cursor: "pointer",
-                fontFamily: "Inter, sans-serif",
-                fontSize: 14,
                 background: "#336F8A",
                 color: "#fff",
               }}

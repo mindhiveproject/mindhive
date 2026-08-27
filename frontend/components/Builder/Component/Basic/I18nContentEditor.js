@@ -195,7 +195,8 @@ export default function I18nContentEditor({ task, handleChange }) {
               color: activeLanguage === code ? 'white' : '#333',
               cursor: 'pointer',
               whiteSpace: 'nowrap',
-              fontSize: '1.1rem'
+              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              letterSpacing: 0
             }}
           >
             {name}
@@ -313,9 +314,10 @@ export default function I18nContentEditor({ task, handleChange }) {
       <div style={{ 
         marginTop: '1rem', 
         padding: '2rem', 
-        background: '', 
+        background: '',
         borderRadius: '4px',
-        fontSize: '1.2rem',
+        font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+        letterSpacing: 0,
         color: ''
       }}>
         <strong>Note:</strong> English (US) content is automatically populated from the main fields. 

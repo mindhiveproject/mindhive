@@ -52,8 +52,8 @@ const AdminHeader = styled.header`
 
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(24px, 3vw, 32px);
+    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 `;
@@ -88,10 +88,8 @@ const AdminToolbar = styled.div`
     margin: 0;
     max-width: 560px;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-    font-family: "Inter", sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 `;
 
@@ -119,12 +117,18 @@ export default function ManageOrganization({ organizationId, user }) {
   if (!organizationId || !canManage) {
     return (
       <Shell>
-        <h1 style={{ margin: 0, fontFamily: "Inter, sans-serif", fontSize: 28 }}>
+        <h1
+          className="MH-Type-Heading-Small"
+          style={{ margin: 0 }}
+        >
           {t("manageOrganization.unauthorizedTitle", {}, {
             default: "You can’t manage this organization",
           })}
         </h1>
-        <p style={{ margin: 0, color: "#5f6871", fontSize: 14, maxWidth: 480 }}>
+        <p
+          className="MH-Type-Body-Base"
+          style={{ margin: 0, color: "#5f6871", maxWidth: 480 }}
+        >
           {t("manageOrganization.unauthorizedDescription", {}, {
             default:
               "You don’t have admin access to this organization. Choose one you administer from the list.",

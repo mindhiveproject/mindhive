@@ -130,14 +130,12 @@ export default function ProposalHeader({
                     style={{
                       minWidth: "60px",
                       padding: "0 12px",
-                      fontFamily: "Inter, sans-serif",
-                      letterSpacing: "0.15px",
                     }}
                   >
                     {loading ? (
-                      <span style={{ fontSize: "14px", fontWeight: 600, color: "#171717" }}>{t("header.saving", "Saving")}</span>
+                      <span className="MH-Type-Label-Base" style={{ color: "#171717" }}>{t("header.saving", "Saving")}</span>
                     ) : (
-                      <span style={{ fontSize: "14px", fontWeight: 600, color: "#171717" }}>{t("header.save", "Save")}</span>
+                      <span className="MH-Type-Label-Base" style={{ color: "#171717" }}>{t("header.save", "Save")}</span>
                     )}
                   </button>
                 ) : (
@@ -182,14 +180,9 @@ export default function ProposalHeader({
                         setIsTitleEditing(false);
                       }
                     }}
-                    className="headerTitle"
-                    style={{ 
-                      fontFamily: "Inter, sans-serif",
+                    className="headerTitle MH-Type-Heading-Base"
+                    style={{
                       fontStyle: "normal",
-                      fontWeight: 600,
-                      fontSize: "36px",
-                      lineHeight: "44px",
-                      letterSpacing: "0.15px",
                       color: "#171717",
                       margin: 0,
                       flex: 1,
@@ -457,7 +450,7 @@ export default function ProposalHeader({
             </div>
 
             {isClassTemplateBoard(proposal) && (
-              <div style={{ marginBottom: "8px", fontSize: "14px", color: "#5D5763" }}>
+              <div className="MH-Type-Body-Small" style={{ marginBottom: "8px", color: "#5D5763" }}>
                 {t("header.classTemplateReadOnly", "Class template (used by class board)")}
               </div>
             )}

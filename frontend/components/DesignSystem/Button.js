@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-// Shared base: 40px height, 8px vertical padding, 24px horizontal, pill radius, Inter Semi Bold 14/20
+// Shared base: 40px height, 8px vertical padding, 24px horizontal, pill radius, MH-Type/label/base (Inter Medium 14/20)
 const BASE_STYLE = {
   display: "inline-flex",
   alignItems: "center",
@@ -17,10 +17,6 @@ const BASE_STYLE = {
   paddingLeft: "24px",
   paddingRight: "24px",
   borderRadius: "100px",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: "14px",
-  lineHeight: "20px",
   boxSizing: "border-box",
   border: "none",
   cursor: "pointer",
@@ -207,7 +203,11 @@ export default function Button({
       <style dangerouslySetInnerHTML={{ __html: FOCUS_VISIBLE_STYLE }} />
       <button
         type={type}
-        className={className ? `DesignSystem-Button ${className}` : "DesignSystem-Button"}
+        className={
+          className
+            ? `DesignSystem-Button MH-Type-Label-Base ${className}`
+            : "DesignSystem-Button MH-Type-Label-Base"
+        }
         style={buttonStyle}
         onClick={onClick}
         disabled={disabled}

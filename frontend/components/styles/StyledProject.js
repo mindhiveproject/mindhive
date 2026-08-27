@@ -4,10 +4,8 @@ export const StyledLinkedProjects = styled.div`
   display: grid;
   margin-top: 20px;
 
-  font-family: Nunito;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 40px;
+  font: var(--MH-Type-Label-Large, 500 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
@@ -96,11 +94,8 @@ const StyledProject = styled.div`
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 100%;
-        font-family: Inter;
-        font-size: 22px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 28px;
+        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
         text-align: left;
         text-underline-position: from-font;
@@ -151,10 +146,8 @@ const StyledProject = styled.div`
           }
 
           p {
-            font-family: Inter, sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 20px;
+            font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+            letter-spacing: 0;
             color: #171717;
             margin: 0;
           }
@@ -213,11 +206,8 @@ const StyledProject = styled.div`
       color: var(--MH-Theme-Neutrals-Black, #171717);
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-family: Inter;
-      font-size: 22px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 28px;
+      font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+      letter-spacing: 0;
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
@@ -241,11 +231,8 @@ const StyledProject = styled.div`
 
         text-align: center;
         /* MH-Theme/label/base */
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px; /* 142.857% */
+        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        letter-spacing: 0;
           &:hover {
             background: var(--MH-Theme-Accent-Medium, #F9D978);
             color: var(--MH-Theme-Accent-Dark, #5D5763);
@@ -262,11 +249,8 @@ const StyledProject = styled.div`
         grid-gap: 10px;
       }
       .lockText {
-        font-family: "Nunito";
-        font-style: normal;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 22px;
+        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        letter-spacing: 0;
         display: flex;
         align-items: center;
         color: #666666;
@@ -276,11 +260,8 @@ const StyledProject = styled.div`
         color: #3d85b0;
         border: 1px solid #3d85b0;
         border-radius: 100px;
-        font-family: Nunito;
-        font-size: 20px;
-        font-weight: 700;
-        line-height: var(--LabelLargeLineHeight);
-        letter-spacing: var(--LabelLargeTracking);
+        font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+        letter-spacing: 0;
         text-align: center;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;

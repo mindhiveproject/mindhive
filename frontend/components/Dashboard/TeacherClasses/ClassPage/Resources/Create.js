@@ -20,9 +20,8 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font-family: Lato;
-  font-size: 28px;
-  font-weight: 600;
+  font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 

@@ -34,8 +34,8 @@ const Header = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 `;
@@ -51,8 +51,12 @@ const KeyPreview = styled.div`
   border-radius: 8px;
   background: #f7f9f8;
   border: 1px dashed #d3dae0;
+  /* Monospace kept deliberately: renders the literal milestone/review
+     keys, code-like identifiers rather than prose. */
   font-family: "Nunito", monospace;
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
   color: #171717;
 
   strong {
@@ -357,7 +361,9 @@ export default function NewMilestoneForm({ open, onClose }) {
       </KeyPreview>
 
       {error ? (
-        <div style={{ color: "#871b16", fontSize: 13 }}>{error}</div>
+        <div className="MH-Type-Body-Small" style={{ color: "#871b16" }}>
+          {error}
+        </div>
       ) : null}
 
       <div>

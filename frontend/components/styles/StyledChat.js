@@ -23,12 +23,9 @@ export const StyledChat = styled.div`
       }
     }
     .title {
-      font-family: Lato;
-      font-size: 36px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 56px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+      letter-spacing: 0;
       text-align: left;
       color: #1a1a1a;
       margin-bottom: 23px;
@@ -41,7 +38,8 @@ export const StyledChat = styled.div`
     padding: 1rem;
     grid-template-columns: 1fr 2fr 1fr;
     cursor: pointer;
-    font-weight: bold;
+    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
   }
   .wrapper {
     display: grid;
@@ -151,10 +149,12 @@ export const StyledChat = styled.div`
       grid-template-columns: 1fr;
       padding: 5px 0px 0px 0px;
       .title {
-        font-size: 20px;
+        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        letter-spacing: 0;
       }
       .nameDate {
-        font-size: 14px;
+        font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+        letter-spacing: 0;
         display: grid;
         grid-gap: 5px;
         grid-template-columns: 1fr auto;

@@ -48,15 +48,15 @@ const Header = styled.div`
   h2,
   h3 {
     margin: 0;
-    font-size: 18px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   p {
     margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
 `;
@@ -127,9 +127,8 @@ const Avatar = styled.div`
           ? "var(--MH-Theme-Primary-Dark, #336f8a)"
           : "var(--MH-Theme-Secondary-Dark, #6f26ce)"};
   color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   display: grid;
   place-items: center;
   border: ${(p) => (p.$panel ? "none" : "1.5px solid #ffffff")};
@@ -158,9 +157,8 @@ const MetaRow = styled.div`
   align-items: baseline;
   gap: 6px;
   flex-wrap: wrap;
-  font-family: Inter, sans-serif;
-  font-size: 12px;
-  line-height: 1.3;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   padding: 0 4px;
   justify-content: ${(p) => (p.$alignEnd ? "flex-end" : "flex-start")};
@@ -229,9 +227,8 @@ const BodyText = styled.p`
   margin: 0;
   white-space: pre-wrap;
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 const Compose = styled.form`
@@ -242,9 +239,8 @@ const Compose = styled.form`
 
   label {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 13px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
@@ -258,9 +254,8 @@ const Compose = styled.form`
     border-radius: ${(p) => (p.$panel ? "8px" : "10px")};
     /* 2px border in both states — focus only changes color (no outer ring to clip). */
     border: 2px solid transparent;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
   }
@@ -288,9 +283,8 @@ const EmptyState = styled.p`
       ? "var(--MH-Theme-Neutrals-White, #ffffff)"
       : "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)"};
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   ${(p) =>
     p.$panel
       ? `
@@ -311,14 +305,14 @@ const EmptyState = styled.p`
 const ErrorText = styled.p`
   margin: 0;
   color: #871b16;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 const InviteText = styled.p`
   margin: 0;
-  font-family: Inter, sans-serif;
-  font-size: 13px;
-  line-height: 1.45;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
@@ -338,8 +332,8 @@ const PANEL_ACTION_STYLE = {
   padding: 0,
   minWidth: 0,
   height: "fit-content",
-  fontSize: 12,
-  fontWeight: 500,
+  font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+  letterSpacing: 0,
 };
 
 function displayName(profile, fallback) {
@@ -540,9 +534,8 @@ function MessageItem({
                   padding: "8px 10px",
                   borderRadius: 8,
                   border: "1px solid var(--MH-Theme-Neutrals-Light, #d3dae0)",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 14,
-                  lineHeight: 1.45,
+                  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+                  letterSpacing: 0,
                 }}
               />
               <ActionsRow>
@@ -583,8 +576,8 @@ function MessageItem({
                               padding: 0,
                               minWidth: 0,
                               height: "fit-content",
-                              fontSize: 12,
-                              fontWeight: 600,
+                              font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+                              letterSpacing: 0,
                             }
                       }
                     >
@@ -606,8 +599,8 @@ function MessageItem({
                               padding: 0,
                               minWidth: 0,
                               height: "fit-content",
-                              fontSize: 12,
-                              fontWeight: 600,
+                              font: 'var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif)',
+                              letterSpacing: 0,
                               color: "#c0392b",
                             }
                       }
@@ -955,8 +948,8 @@ export default function OpportunityReviewNotesThread({
           <label
             htmlFor="review-thread-round"
             style={{
-              fontSize: 13,
-              fontWeight: 600,
+              font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+              letterSpacing: 0,
               color: "var(--MH-Theme-Neutrals-Black, #171717)",
             }}
           >

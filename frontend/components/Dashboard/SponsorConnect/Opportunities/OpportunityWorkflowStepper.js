@@ -79,10 +79,8 @@ const Circle = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: "Lato", sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 1;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   z-index: 1;
   background: ${({ $visual }) =>
     OPPORTUNITY_STATUS_TONE_SOLID[toneFromWorkflowVisual($visual)].background};
@@ -96,22 +94,18 @@ const Circle = styled.span`
 
 const StepLabel = styled.span`
   margin-top: 10px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
+  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   color: ${({ $visual }) =>
     $visual === "pending" ? "#8a9299" : "#171717"};
-  line-height: 1.25;
 `;
 
 const RoleChip = styled.span`
   margin-top: 6px;
   padding: 3px 10px;
   border-radius: 100px;
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.2;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   background: ${({ $visual }) => {
     const tone = toneFromWorkflowVisual($visual);
     if (tone === "action") return "#fdf6e8";
@@ -144,10 +138,9 @@ const ContextLine = styled.p`
   border: 1px solid
     ${({ $emphasis }) => ($emphasis ? "#e8d4a8" : "#d3dae0")};
   box-shadow: none;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   font-weight: ${({ $emphasis }) => ($emphasis ? 600 : 500)};
-  line-height: 1.5;
   color: ${({ $emphasis }) => ($emphasis ? "#8a6d3b" : "#5f6871")};
 `;
 

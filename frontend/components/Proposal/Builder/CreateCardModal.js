@@ -53,7 +53,6 @@ const modalStyle = {
   borderRadius: 16,
   boxShadow: "0 16px 48px rgba(0, 0, 0, 0.18)",
   padding: 32,
-  fontFamily: "Inter, sans-serif",
 };
 
 const newActionCardChipStyle = {
@@ -67,9 +66,8 @@ const inputStyle = {
   border: "1px solid #A1A1A1",
   borderRadius: 8,
   padding: "12px 16px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 16,
-  lineHeight: "24px",
+  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "#171717",
 };
 
@@ -77,9 +75,8 @@ const labelStyle = {
   display: "grid",
   gap: 8,
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 600,
+  font: 'var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif)',
+  letterSpacing: 0,
 };
 
 const chipRowStyle = {
@@ -93,8 +90,8 @@ const previewShellStyle = {
   borderRadius: 12,
   background: "#F7F9F8",
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  letterSpacing: 0,
   padding: 16,
   maxHeight: 260,
   overflowY: "auto",
@@ -103,9 +100,8 @@ const previewShellStyle = {
 const helperTextStyle = {
   margin: 0,
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 400,
+  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  letterSpacing: 0,
 };
 
 function StepSection({ label, children }) {
@@ -638,10 +634,8 @@ export default function CreateCardModal({
         <h2
           style={{
             margin: "0 0 24px",
-            fontFamily: "Inter, sans-serif",
-            fontSize: 32,
-            lineHeight: "40px",
-            fontWeight: 800,
+            font: 'var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif)',
+            letterSpacing: 0,
             color: "#000",
           }}
         >

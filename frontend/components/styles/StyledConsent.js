@@ -9,7 +9,8 @@ export const StyledConsent = styled.div`
     margin: 1rem;
   }
   .item {
-    font-size: 1.5rem;
+    font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
   }
   .consentPage {
     display: grid;

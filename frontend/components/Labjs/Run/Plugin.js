@@ -7,7 +7,8 @@ export const StyledLogger = styled.div`
   grid-gap: 5px;
   margin: 10px;
   padding: 20px;
-  font-size: 20px;
+  font: var(--MH-Type-Body-Large, 400 22px/28px "Inter", sans-serif);
+  letter-spacing: 0;
   background: #454444;
   color: white;
   width: 400px;

@@ -245,7 +245,7 @@ const TeacherProjects = ({ user, query }) => {
     <StyledBoards>
       <div className="headerSection">
         <h3>{t("boardManagement.title")}</h3>
-        <p style={{fontSize: "18px"}}>{t("boardManagement.intro")}</p>
+        <p className="MH-Type-Body-Base">{t("boardManagement.intro")}</p>
         <button onClick={handleCreateNew} className="createButton narrowButton">
           {/* <Icon name="plus" /> */}
           {t("boardManagement.createBtn")}

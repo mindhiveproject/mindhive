@@ -29,7 +29,6 @@ const modalStyle = {
   borderRadius: 16,
   boxShadow: "0 16px 48px rgba(0, 0, 0, 0.18)",
   padding: 32,
-  fontFamily: "Inter, sans-serif",
 };
 
 const headerStyle = {
@@ -42,10 +41,8 @@ const headerStyle = {
 
 const titleStyle = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 22,
-  lineHeight: "28px",
-  fontWeight: 700,
+  font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "#171717",
 };
 

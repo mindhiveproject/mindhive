@@ -50,9 +50,8 @@ const TopBar = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 `;
@@ -64,14 +63,14 @@ const Empty = styled.div`
   border: 1px solid #e6e6e6;
   border-radius: 16px;
   color: #5f6871;
-  font-family: "Inter", sans-serif;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 const ListStack = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  font-family: "Inter", sans-serif;
 `;
 
 const OpportunityCard = styled.article`
@@ -104,16 +103,15 @@ const Identity = styled.div`
 
 const Title = styled.h2`
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #171717;
   word-break: break-word;
-  font-family: "Inter", sans-serif;
 `;
 
 const Hint = styled.div`
-  font-size: 13px;
-  line-height: 1.4;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #92400e;
   background: #fef9ee;
   border: 1px solid #fcd34d;
@@ -164,9 +162,8 @@ const UnreadBadge = styled.span`
   border-radius: 100px;
   background: var(--MH-Theme-Secondary-Dark, #6f26ce);
   color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   text-align: center;
   box-sizing: border-box;
   pointer-events: none;
@@ -193,7 +190,8 @@ const ROW_FLASH_STYLE = {
 };
 
 const RoundMeta = styled.div`
-  font-size: 12px;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #5f6871;
 `;
 
@@ -214,9 +212,8 @@ const FormGridHeader = styled.div`
   padding: 10px 14px;
   background: #f0f4f6;
   border-bottom: 1px solid #e6e6e6;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   text-transform: uppercase;
   color: #5f6871;
 
@@ -244,8 +241,8 @@ const FormGridRow = styled.div`
 `;
 
 const FormName = styled.div`
-  font-size: 13px;
-  font-weight: 500;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   color: #171717;
   min-width: 0;
   word-break: break-word;
@@ -257,8 +254,8 @@ const FormStatus = styled.span`
   justify-self: end;
   padding: 2px 8px;
   border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   white-space: nowrap;
 
   &.complete {

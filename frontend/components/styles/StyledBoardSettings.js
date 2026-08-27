@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 const StyledBoardSettings = styled.div`
-  font-family: "Inter", sans-serif;
   display: grid;
   gap: 28px;
 
@@ -18,16 +17,15 @@ const StyledBoardSettings = styled.div`
 
   .boardSettingsSectionTitle {
     margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .boardSettingsSectionDescription {
     margin: -6px 0 0;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #625b71;
   }
 
@@ -67,9 +65,8 @@ const StyledBoardSettings = styled.div`
   }
 
   .settingsQuestion {
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -88,9 +85,8 @@ const StyledBoardSettings = styled.div`
       background: #f9faf9;
       color: #333333;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
       transition: border-color 0.2s ease, background-color 0.2s ease,
         box-shadow 0.2s ease, color 0.2s ease;
 
@@ -123,18 +119,16 @@ const StyledBoardSettings = styled.div`
   }
 
   .curriculumTypeLegend {
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
     margin: 0 0 4px 0;
     padding: 0;
   }
 
   .curriculumTypeHelp {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #625b71;
     margin: 0 0 16px 0;
   }
@@ -192,9 +186,8 @@ const StyledBoardSettings = styled.div`
   }
 
   .curriculumTypeLabel {
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 `;

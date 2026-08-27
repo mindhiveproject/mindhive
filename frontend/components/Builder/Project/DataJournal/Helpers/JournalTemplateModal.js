@@ -53,23 +53,21 @@ const TemplateBody = styled.div`
   min-width: 0;
   h3 {
     margin: 0 0 6px;
-    font-family: Nunito, sans-serif;
-    font-weight: 600;
-    font-size: 16px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #333;
   }
   p {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 1.4;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #555;
   }
   .meta {
     margin-top: 8px;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #666;
-    font-family: Inter, sans-serif;
   }
 `;
 

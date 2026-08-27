@@ -85,7 +85,7 @@ export default function AxesBarPlot({
 
   const helpContent = useMemo(
     () => (
-      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+      <p className="MH-Type-Body-Base" style={{ margin: 0, color: "#625B71" }}>
         {t(`${G}.axes.help.resourcesIntro`, {}, {
           default: "Click on the resources below to learn more about this component",
         })}

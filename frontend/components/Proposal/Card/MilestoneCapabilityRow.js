@@ -12,7 +12,6 @@ const rowStyle = {
   textAlign: "left",
   width: "100%",
   boxSizing: "border-box",
-  fontFamily: "Inter, sans-serif",
 };
 
 const radioWrapStyle = {
@@ -27,17 +26,15 @@ const radioWrapStyle = {
 
 const headlineStyle = {
   margin: 0,
-  fontSize: 16,
-  fontWeight: 600,
-  lineHeight: "24px",
+  font: 'var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
 const supportingStyle = {
   margin: "4px 0 0",
-  fontSize: 14,
-  fontWeight: 400,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #5D5763)",
 };
 

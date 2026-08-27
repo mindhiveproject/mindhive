@@ -9,8 +9,8 @@ const StyledInDev = styled.div`
   justify-content: center;
   align-content: center;
   text-align: center;
-  font-family: Roboto;
-  font-size: 16px;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 export default function InDev({ header, message }) {

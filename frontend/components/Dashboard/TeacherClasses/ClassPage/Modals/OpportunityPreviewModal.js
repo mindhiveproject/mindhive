@@ -126,8 +126,8 @@ const FieldsGrid = styled.div`
 
 const FormStatusText = styled.p`
   margin: 0;
-  font-size: 13px;
-  line-height: 1.4;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
@@ -197,10 +197,8 @@ const ChatPane = styled.aside`
 const ChatPaneTitle = styled.h3`
   margin: 0;
   flex-shrink: 0;
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.3;
+  font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
 
@@ -243,10 +241,8 @@ const PeoplePanel = styled.section`
 
   h4 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
@@ -304,9 +300,8 @@ const UnreadBadge = styled.span`
   border-radius: 100px;
   background: var(--MH-Theme-Secondary-Dark, #6f26ce);
   color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   text-align: center;
   box-sizing: border-box;
   pointer-events: none;
@@ -322,8 +317,8 @@ const META_ITEM_STYLE = {
 };
 
 const META_LABEL_STYLE = {
-  fontSize: 14,
-  fontWeight: 600,
+  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -334,9 +329,8 @@ const META_VALUE_STYLE = {
   borderRadius: 8,
   border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
-  fontSize: 14,
-  fontWeight: 400,
-  lineHeight: 1.4,
+  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   minWidth: 0,
   overflowWrap: "anywhere",
@@ -352,8 +346,8 @@ const FieldItemShell = styled.div`
 `;
 
 const FIELD_LABEL_STYLE = {
-  fontSize: 14,
-  fontWeight: 600,
+  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -364,9 +358,8 @@ const FIELD_VALUE_STYLE = {
   borderRadius: 8,
   border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
-  fontSize: 14,
-  fontWeight: 400,
-  lineHeight: 1.4,
+  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -391,16 +384,16 @@ const PROPOSAL_SECTION_STYLE = {
 
 const SECTION_TITLE_STYLE = {
   margin: 0,
-  fontSize: 16,
-  fontWeight: 700,
+  font: 'var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
 const BODY_TEXT_STYLE = {
   margin: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-  fontSize: 14,
-  lineHeight: 1.6,
+  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  letterSpacing: 0,
   whiteSpace: "pre-wrap",
 };
 
@@ -1199,7 +1192,10 @@ export default function OpportunityPreviewModal({
         ) : null}
         {showMatchingRoundSection ? (
           showNoRoundHint ? (
-            <span style={{ fontSize: 13, ...MUTED_TEXT_STYLE }}>
+            <span
+              className="MH-Type-Body-Small"
+              style={{ ...MUTED_TEXT_STYLE }}
+            >
               {t("opportunities.preview.matchingRound.noRoundHint", {}, {
                 default:
                   "Create a matching round above to include this opportunity.",
@@ -1382,11 +1378,10 @@ export default function OpportunityPreviewModal({
                 <div style={{ display: "grid", gap: 24 }}>
                   {opp.shortDescription ? (
                     <p
+                      className="MH-Type-Body-Base"
                       style={{
                         margin: 0,
                         color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-                        fontSize: 15,
-                        lineHeight: 1.5,
                       }}
                     >
                       {opp.shortDescription}
@@ -1809,12 +1804,12 @@ export default function OpportunityPreviewModal({
                                 flexWrap: "wrap",
                               }}
                             >
-                              <span style={{ fontWeight: 600, color: "var(--MH-Theme-Neutrals-Black, #171717)", fontSize: 13 }}>
+                              <span className="MH-Type-Label-Small" style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>
                                 {displayName(rating.rater)}
                               </span>
                               <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                                 <Stars value={rating.opportunityRating} />
-                                <span style={{ color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)", fontSize: 12 }}>
+                                <span className="MH-Type-Body-Small" style={{ color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}>
                                   {formatDate(rating.createdAt)}
                                 </span>
                               </div>

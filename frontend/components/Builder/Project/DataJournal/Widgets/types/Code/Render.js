@@ -195,15 +195,14 @@ ${funcName}()
   const { success, message, stdout, stderr, result: payload } = result;
 
   return (
-    <div style={{ padding: "1rem", fontSize: "0.9rem" }}>
+    <div className="MH-Type-Body-Base" style={{ padding: "1rem" }}>
       {/* Status / message */}
       {(success === false || message) && (
         <div
+          className="MH-Type-Title-Small"
           style={{
             marginBottom: "0.75rem",
-            fontFamily: "system-ui, sans-serif",
             color: success === false ? "#c53030" : "#2d3748",
-            fontWeight: "bold",
           }}
         >
           {message ||
@@ -225,8 +224,8 @@ ${funcName}()
           }}
         >
           <div
+            className="MH-Type-Label-Small"
             style={{
-              fontSize: "0.75rem",
               textTransform: "uppercase",
               letterSpacing: "0.05em",
               color: "#4a5568",
@@ -254,8 +253,8 @@ ${funcName}()
           }}
         >
           <div
+            className="MH-Type-Label-Small"
             style={{
-              fontSize: "0.75rem",
               textTransform: "uppercase",
               letterSpacing: "0.05em",
               color: "#9b2c2c",
@@ -281,8 +280,8 @@ ${funcName}()
           }}
         >
           <div
+            className="MH-Type-Label-Small"
             style={{
-              fontSize: "0.75rem",
               textTransform: "uppercase",
               letterSpacing: "0.05em",
               color: "#4a5568",

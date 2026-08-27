@@ -16,8 +16,8 @@ const StyledBoards = styled.div`
 
   .filterChipsLabel {
     display: block;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #4a5568;
     margin-bottom: 0.5rem;
   }
@@ -36,8 +36,8 @@ const StyledBoards = styled.div`
     border: 1px solid #e2e8f0;
     background: #edf2f7;
     color: #2d3748;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   }
@@ -60,23 +60,23 @@ const StyledBoards = styled.div`
   }
 
   h1 {
-    font-size: 2.2rem;
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #2d3748;
     margin-bottom: 0.5rem;
   }
 
   h2 {
-    font-size: 2rem;
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #2d3748;
     margin-bottom: 0.5rem;
   }
 
   p {
     color: #4a5568;
-    font-size: 1.1rem;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .createButton.narrowButton {
@@ -91,8 +91,8 @@ const StyledBoards = styled.div`
     border-radius: 100px;
     // border: none;
     border: 1px solid #336F8A;
-    font-size: 16px;
-    font-weight: 500;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     cursor: pointer;
     transition: background 0.3s ease;
   }
@@ -111,8 +111,8 @@ const StyledBoards = styled.div`
     background: #336F8A;
     color: white;
     border-radius: 100px;
-    font-size: 16px;
-    font-weight: 500;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     cursor: pointer;
     transition: background 0.3s ease;
     }
@@ -136,7 +136,8 @@ const StyledBoards = styled.div`
   .manageDropdown.ui.dropdown {
     border-radius: 8px;
     border: 1px solid #e2e8f0;
-    font-size: 1.1rem;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     margin-bottom: 1rem;
   }
 
@@ -166,22 +167,24 @@ const StyledBoards = styled.div`
 
   .projectCard h3,
   .clonedBoardItem h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #2d3748;
     margin-bottom: 0.5rem;
   }
 
   .description {
     color: #718096;
-    font-size: 1.1rem;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     margin-bottom: 1rem;
   }
 
   .meta p,
   .clonedBoardItem p {
     color: #4a5568;
-    font-size: 1rem;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     margin-bottom: 0.5rem;
   }
 
@@ -274,8 +277,8 @@ const StyledBoards = styled.div`
   }
 
   .modalHeader h3 {
-    font-size: 1.75rem;
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #2d3748;
     margin: 0;
   }
@@ -306,8 +309,8 @@ const StyledBoards = styled.div`
     padding: 0.75rem 1rem;
     border-radius: 8px;
     border: none;
-    font-size: 1.1rem;
-    font-weight: 500;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     cursor: pointer;
     transition: background 0.3s ease;
   }
@@ -328,7 +331,8 @@ const StyledBoards = styled.div`
   .dropdownSection .ui.dropdown {
     border-radius: 8px;
     border: 1px solid #e2e8f0;
-    font-size: 1.1rem;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .clonedBoardsSection {

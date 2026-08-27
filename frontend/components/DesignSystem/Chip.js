@@ -24,6 +24,9 @@ const BORDER_RADIUS = {
   pill: "100px",
 };
 
+// MH-Type/label/base (Inter Medium 14/20). Vertical padding is 6px to hit
+// Figma's fixed 32px chip height with this line-height — not on the 4px grid,
+// but pixel-precise, so left as-is.
 const CHIP_BASE_STYLE = {
   display: "inline-flex",
   alignItems: "center",
@@ -37,10 +40,6 @@ const CHIP_BASE_STYLE = {
   background: "#ffffff",
   backgroundColor: "#ffffff",
   color: "#171717",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: "14px",
-  lineHeight: "20px",
   boxSizing: "border-box",
   transition: "background-color 0.2s, border-color 0.2s",
 };
@@ -50,7 +49,6 @@ const CHIP_SELECTED_STYLE = {
   background: "var(--MH-Theme-Primary-Light, #def8fb)",
   backgroundColor: "var(--MH-Theme-Primary-Light, #def8fb)",
   border: "2px solid var(--MH-Theme-Primary-Dark, #336f8a)",
-  fontWeight: 700,
 };
 
 const CHIP_DISABLED_STYLE = {
@@ -226,7 +224,9 @@ export default function Chip({
         aria-pressed={isClickable && typeof pressed === "boolean" ? pressed : undefined}
         title={title}
         className={
-          className ? `DesignSystem-Chip ${className}` : "DesignSystem-Chip"
+          className
+            ? `DesignSystem-Chip MH-Type-Label-Base ${className}`
+            : "DesignSystem-Chip MH-Type-Label-Base"
         }
         style={{
           ...rootStyle,

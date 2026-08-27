@@ -127,7 +127,7 @@ export default function CopyButton({
       onClick={copied ? undefined : handleClick}
       leading={copied ? CHECK_ICON : COPY_ICON}
       className={className}
-      style={{ fontWeight: 600, ...style }}
+      style={style}
       ariaLabel={ariaLabel}
       title={title}
       {...rest}

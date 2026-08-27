@@ -27,10 +27,8 @@ const LinkedCardsToggleButton = styled.button`
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   text-align: center;
   border-radius: 8px;
   cursor: pointer;
@@ -64,11 +62,8 @@ const EditButton = styled.button`
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   text-align: center;
   border-radius: 100px;
   cursor: pointer;
@@ -93,10 +88,8 @@ const StatusChip = styled.span`
   align-items: center;
   padding: 4px 12px;
   border-radius: 8px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   white-space: nowrap;
   border: 1.5px solid;
   background: transparent;
@@ -119,10 +112,8 @@ const LinkedCardChip = styled.span`
   align-items: center;
   padding: 4px 12px;
   border-radius: 8px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   white-space: normal;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -147,9 +138,6 @@ const styledChipPublished = {
   maxWidth: "100%",
   wordBreak: "break-word",
   cursor: "pointer",
-  fontFamily: "Lato",
-  fontSize: "14px",
-  fontWeight: 400,
   color: "#434343",
 };
 
@@ -167,9 +155,6 @@ const styledChipUnpublished = {
   maxWidth: "100%",
   wordBreak: "break-word",
   cursor: "pointer",
-  fontFamily: "Lato",
-  fontSize: "14px",
-  fontWeight: 400,
   color: "#434343",
 };
 
@@ -510,7 +495,7 @@ export default function ResourceTab({ resources, myclass, user }) {
     return (
       <span style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 0 }}>
         {countLabel && (
-          <span style={{ marginRight: "8px", marginBottom: "4px", fontSize: "13px", color: "#616161" }}>
+          <span className="MH-Type-Body-Small" style={{ marginRight: "8px", marginBottom: "4px", color: "#616161" }}>
             {countLabel}:
           </span>
         )}
@@ -536,7 +521,7 @@ export default function ResourceTab({ resources, myclass, user }) {
             >
               <LinkedCardChip>{c?.section?.title || "Section"}</LinkedCardChip>
             </button>
-            <span style={{ margin: "0 4px", fontSize: "14px", color: "#616161" }}>/</span>
+            <span className="MH-Type-Body-Small" style={{ margin: "0 4px", color: "#616161" }}>/</span>
             <button
               type="button"
               onClick={(e) => {
@@ -921,6 +906,7 @@ export default function ResourceTab({ resources, myclass, user }) {
         <span style={{ flexShrink: 0 }} aria-hidden>|</span>
         <button
           type="button"
+          className="MH-Type-Label-Base"
           onClick={() => handlePublishedFilterToggle(true)}
           style={{
             ...styledChipPublished,
@@ -954,6 +940,7 @@ export default function ResourceTab({ resources, myclass, user }) {
         </button>
         <button
           type="button"
+          className="MH-Type-Label-Base"
           onClick={() => handlePublishedFilterToggle(false)}
           style={{
             ...styledChipUnpublished,
@@ -990,6 +977,7 @@ export default function ResourceTab({ resources, myclass, user }) {
             <span style={{ flexShrink: 0 }} aria-hidden>|</span>
             <button
               type="button"
+              className="MH-Type-Label-Base"
               onClick={clearLinkedCardFilter}
               style={{
                 display: "inline-flex",
@@ -998,7 +986,6 @@ export default function ResourceTab({ resources, myclass, user }) {
                 height: "32px",
                 boxSizing: "border-box",
                 justifyContent: "center",
-                fontSize: "14px",
                 flexShrink: 0,
                 borderRadius: "8px",
                 padding: "6px 8px 6px 12px",

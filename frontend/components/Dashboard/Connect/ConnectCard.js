@@ -32,10 +32,8 @@ const CardContainer = styled.article`
 const TypeLabel = styled.p`
   margin: 0;
   align-self: flex-start;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 16px;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
@@ -105,9 +103,8 @@ const Avatar = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 32px;
+    font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 `;
@@ -135,20 +132,16 @@ const NameBlock = styled.div`
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     word-break: break-word;
   }
 
   .subtitle {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     word-break: break-word;
   }
@@ -177,10 +170,8 @@ const Chips = styled.div`
 const Description = styled.p`
   margin: 0;
   width: 100%;
-  font-family: "Inter", sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   text-align: center;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   display: -webkit-box;

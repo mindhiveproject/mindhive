@@ -52,16 +52,16 @@ const Shell = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base, 600 36px/44px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
   p.intro {
     margin: 0;
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     max-width: 720px;
   }
 `;
@@ -80,17 +80,17 @@ const Table = styled.table`
     padding: 12px 16px;
     border-bottom: 1px solid #eef1f2;
     text-align: left;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     vertical-align: middle;
   }
 
   th {
     background: #f7f9f8;
     color: #5f6871;
-    font-weight: 600;
-    font-size: 12px;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
   }
 
   tr:last-child td {
@@ -102,8 +102,8 @@ const Table = styled.table`
   }
 
   td.key {
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small, 600 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -115,13 +115,12 @@ const Table = styled.table`
   td.actions button {
     color: #336f8a;
     text-decoration: none;
-    font-weight: 600;
     margin-right: 12px;
     background: none;
     border: none;
     cursor: pointer;
-    font-family: "Nunito", sans-serif;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     padding: 0;
   }
 
@@ -149,16 +148,16 @@ const SeedPanel = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
   }
 
   p {
     margin: 0;
     color: #5f6871;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .actions {
@@ -169,19 +168,22 @@ const SeedPanel = styled.div`
 
   .feedback {
     color: #1d6b3a;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   .error {
     color: #871b16;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   ul {
     margin: 0;
     padding-left: 18px;
     color: #5f6871;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 `;
 
@@ -195,10 +197,9 @@ const FilterBar = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-size: 12px;
     color: #5f6871;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
   }
 
   select,
@@ -207,8 +208,8 @@ const FilterBar = styled.div`
     border-radius: 100px;
     padding: 8px 16px;
     background: #ffffff;
-    font-family: "Lato", sans-serif;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #171717;
     min-width: 180px;
   }
@@ -218,10 +219,9 @@ const StatusPill = styled.span`
   display: inline-block;
   padding: 2px 8px;
   border-radius: 100px;
-  font-size: 11px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
   background: ${({ $status }) =>
     $status === "published" ? "#1d6b3a" :
     $status === "draft" ? "#8a6d3b" :
@@ -493,9 +493,13 @@ export default function ListPage() {
                   <li
                     key={i}
                     style={{
+                      // Monospace kept deliberately for i > 0: these are
+                      // literal backfill diff/log lines, not prose.
                       fontFamily:
                         i === 0 ? "inherit" : "'Nunito', monospace",
-                      fontSize: 13,
+                      fontSize: 12,
+                      lineHeight: "16px",
+                      letterSpacing: 0,
                       color: i === 0 ? "#171717" : "#5f6871",
                       marginBottom: 2,
                     }}
@@ -583,7 +587,7 @@ export default function ListPage() {
       </FilterBar>
       {loading && rows.length === 0 ? <p>Loading…</p> : null}
       {error ? (
-        <p style={{ color: "#871b16" }}>
+        <p className="MH-Type-Body-Small" style={{ color: "#871b16" }}>
           Couldn't load definitions: {error.message}
         </p>
       ) : null}

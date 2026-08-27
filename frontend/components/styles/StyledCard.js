@@ -24,7 +24,8 @@ export const StyledStudyCard = styled.div`
       padding: 15px;
       border-radius: 10px;
       justify-items: center;
-      font-size: 1rem;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       background: #ffffffb3;
       .message {
         text-align: center;
@@ -65,13 +66,13 @@ export const StyledStudyCard = styled.div`
     width: 270px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.7);
     span {
-      font-size: 16px;
-      font-weight: bold;
+      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
     }
     p {
       color: #666666;
-      line-height: 150%;
-      font-size: 16px;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
     }
     .heading {
       line-height: 200%;
@@ -112,8 +113,8 @@ export const StyledStudyCard = styled.div`
         color: #007c70;
         border-radius: 2rem;
         width: fit-content;
-        font-size: 12px;
-        font-weight: bold;
+        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        letter-spacing: 0;
       }
     }
 
@@ -122,12 +123,9 @@ export const StyledStudyCard = styled.div`
       grid-gap: 1rem;
       .studyCreatedByHeader {
         display: grid;
-        font-family: Lato;
-        font-weight: bold;
-        font-size: 10px;
-        line-height: 0px;
+        font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+        letter-spacing: 0;
         color: #666666;
-        letter-spacing: 0.2rem;
         text-transform: uppercase;
       }
       .studyCreatedByPanel {
@@ -142,9 +140,8 @@ export const StyledStudyCard = styled.div`
           grid-gap: 1rem;
           justify-items: center;
           .studyCreatedByNumber {
-            font-family: Lato;
-            font-weight: bold;
-            font-size: 14px;
+            font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+            letter-spacing: 0;
             color: #000000;
           }
         }
@@ -153,25 +150,20 @@ export const StyledStudyCard = styled.div`
   }
 
   a {
-    letter-spacing: 0.04em;
+    letter-spacing: 0;
     text-decoration-line: underline;
     color: #007c70;
   }
   h2 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
-    line-height: 30px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
   p {
-    font-family: Roboto;
-    font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     text-align: left;
   }
   .studyLink {
@@ -241,11 +233,9 @@ export const StyledTaskCard = styled.div`
       display: grid;
       grid-template-columns: 1fr auto;
       grid-gap: 1rem;
-      font-family: Roboto;
       font-style: normal;
-      font-weight: normal;
-      font-size: 24px;
-      line-height: 30px;
+      font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       margin-bottom: 20px;
       .rightSide {
         display: grid;
@@ -256,7 +246,8 @@ export const StyledTaskCard = styled.div`
         }
       }
     .subtitle {
-      font-size: 14px;
+      font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+      letter-spacing: 0;
     }
   }
 `;

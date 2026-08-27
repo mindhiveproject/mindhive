@@ -109,7 +109,13 @@ const Turnstile = forwardRef(function Turnstile({ onVerify }, ref) {
 
   if (failed) {
     return (
-      <p style={{ color: "#991b1b", fontSize: 13 }}>
+      <p
+        style={{
+          color: "#991b1b",
+          font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+          letterSpacing: 0,
+        }}
+      >
         Could not load human verification. Please disable any ad blocker for
         this page and reload.
       </p>

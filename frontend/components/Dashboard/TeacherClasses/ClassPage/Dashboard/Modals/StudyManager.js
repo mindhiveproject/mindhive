@@ -538,7 +538,6 @@ export default function studyManager(props) {
 }
 
 const StyledModal = styled.div`
-  font-family: Nunito, sans-serif !important;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -550,14 +549,15 @@ const StyledModal = styled.div`
     margin-bottom: 24px;
 
     h1 {
-      font-size: 24px;
-      font-weight: 700;
+      font: var(--MH-Type-Heading-Small, 600 28px/36px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #333333;
       margin: 0 0 8px;
     }
 
     p {
-      font-size: 16px;
+      font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #666666;
       margin: 0;
     }
@@ -571,8 +571,8 @@ const StyledModal = styled.div`
       background: #f9f9f9;
 
       h2 {
-        font-size: 18px;
-        font-weight: 600;
+        font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+        letter-spacing: 0;
         color: #333333;
         margin-bottom: 16px;
       }
@@ -580,14 +580,16 @@ const StyledModal = styled.div`
       &.empty-state {
         text-align: center;
         p {
-          font-size: 16px;
+          font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #666666;
         }
       }
 
       .project-info {
         p {
-          font-size: 14px;
+          font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #333333;
           margin-bottom: 8px;
 
@@ -627,21 +629,23 @@ const StyledModal = styled.div`
 
         .study-info {
           h3 {
-            font-size: 16px;
-            font-weight: 600;
+            font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+            letter-spacing: 0;
             color: #333333;
             margin: 0 0 8px;
           }
 
           p {
-            font-size: 14px;
+            font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+            letter-spacing: 0;
             color: #666666;
             margin: 0 0 8px;
           }
 
           .collaborators,
           .mentors {
-            font-size: 14px;
+            font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+            letter-spacing: 0;
             color: #333333;
             margin: 0 0 8px;
 
@@ -655,8 +659,8 @@ const StyledModal = styled.div`
             background: #3d85b0;
             border-radius: 6px;
             padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 600;
+            font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+            letter-spacing: 0;
             color: #ffffff;
             text-decoration: none;
             transition: all 0.2s ease;
@@ -672,8 +676,8 @@ const StyledModal = styled.div`
           border: none;
           border-radius: 6px;
           padding: 8px 16px;
-          font-size: 14px;
-          font-weight: 600;
+          font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #ffffff;
           cursor: pointer;
           transition: all 0.2s ease;
@@ -691,7 +695,8 @@ const StyledModal = styled.div`
           border: 1px solid #d0d0d0;
           border-radius: 6px;
           background: #ffffff;
-          font-size: 16px;
+          font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+          letter-spacing: 0;
           color: #333333;
           padding: 10px;
 
@@ -704,7 +709,8 @@ const StyledModal = styled.div`
 
           .menu {
             .item {
-              font-size: 16px;
+              font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+              letter-spacing: 0;
             }
           }
 
@@ -728,9 +734,9 @@ const StyledModal = styled.div`
         border: 1px solid #d0d0d0;
         border-radius: 6px;
         padding: 10px;
-        font-size: 16px;
+        font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+        letter-spacing: 0;
         color: #333333;
-        font-family: Nunito, sans-serif;
 
         &:focus {
           outline: none;
@@ -752,8 +758,8 @@ const StyledModal = styled.div`
       border: 1px solid #d0d0d0;
       border-radius: 6px;
       padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #666666;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -769,8 +775,8 @@ const StyledModal = styled.div`
       border: none;
       border-radius: 6px;
       padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+      letter-spacing: 0;
       color: #ffffff;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -788,11 +794,9 @@ const StyledModal = styled.div`
 `;
 
 const StyledConfirmModal = styled(Modal)`
-  font-family: Nunito, sans-serif !important;
-
   .header {
-    font-size: 18px !important;
-    font-weight: 600 !important;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif) !important;
+    letter-spacing: 0 !important;
     color: #333333 !important;
     border-bottom: 1px solid #e0e0e0 !important;
     padding-bottom: 12px !important;
@@ -801,8 +805,8 @@ const StyledConfirmModal = styled(Modal)`
   .content {
     padding: 20px !important;
     color: #666666 !important;
-    font-size: 14px !important;
-    line-height: 1.5 !important;
+    font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif) !important;
+    letter-spacing: 0 !important;
   }
 
   .actions {
@@ -816,7 +820,8 @@ const StyledConfirmModal = styled(Modal)`
       background: #ffffff !important;
       color: #666666 !important;
       border: 1px solid #e0e0e0 !important;
-      font-family: Nunito, sans-serif !important;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif) !important;
+      letter-spacing: 0 !important;
 
       &:hover {
         background: #f5f5f5 !important;
@@ -825,7 +830,8 @@ const StyledConfirmModal = styled(Modal)`
     }
 
     .confirm-button {
-      font-family: Nunito, sans-serif !important;
+      font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif) !important;
+      letter-spacing: 0 !important;
       background: #3d85b0 !important;
 
       &:hover {
