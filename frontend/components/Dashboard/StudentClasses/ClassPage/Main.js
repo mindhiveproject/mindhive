@@ -107,6 +107,16 @@ export default function ClassPage({ code, user, query }) {
   const hideDisallowedPage =
     hasClassData && query?.page && !allowedPages.has(query.page);
 
+  const isOpportunityPreview =
+    page === "opportunities" && !!query?.opportunity;
+
+  // Full-page opportunity preview: skip class header + tab nav (left dashboard nav stays).
+  if (isOpportunityPreview && !hideDisallowedPage) {
+    return (
+      <ClassOpportunities myclass={myclass} user={user} query={query} />
+    );
+  }
+
   return (
     <div>
       <Header myclass={myclass} />

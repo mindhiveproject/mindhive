@@ -9,7 +9,8 @@ const StyledClass = styled.div`
   overflow-x: hidden;
   box-sizing: border-box;
 
-  &.isProjectsFullscreen {
+  &.isProjectsFullscreen,
+  &.isContentFullscreen {
     overflow-x: visible;
     height: 100%;
     max-height: 100%;
@@ -17,7 +18,8 @@ const StyledClass = styled.div`
     overflow-y: hidden;
   }
 
-  &.isProjectsFullscreen > * {
+  &.isProjectsFullscreen > *,
+  &.isContentFullscreen > * {
     max-width: none;
     min-height: 0;
     height: 100%;

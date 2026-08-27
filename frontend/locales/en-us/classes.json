@@ -1471,6 +1471,8 @@
 			},
 			"preview": {
 				"aboutTitle": "About this opportunity",
+				"back": "Back to opportunities",
+				"backAria": "Back to opportunities",
 				"close": "Close",
 				"fallbackTitle": "Opportunity",
 				"fieldResearchChip": "Field research: {{value}}",
