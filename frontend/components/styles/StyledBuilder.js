@@ -442,7 +442,7 @@ export const StyledCanvasBuilder = styled.div`
     right: 0;
     bottom: 0;
     z-index: 2;
-    width: min(500px, 38%);
+    width: min(640px, 46%);
     height: auto;
     min-width: 280px;
     max-width: 100%;
@@ -451,7 +451,12 @@ export const StyledCanvasBuilder = styled.div`
     scrollbar-width: none;
     -ms-overflow-style: none;
     background: #ffffff;
-    padding: 16px;
+    /* Top padding is dropped here and re-added inside .sidepanelNavbar so that
+       the navbar can sit flush at top:0 when the panel scrolls. Keep this in
+       sync with the navbar's rendered height (16px top pad + 40px row + 8px
+       bottom pad). */
+    --sidepanel-nav-h: 64px;
+    padding: 0 16px 16px;
     margin: 8px;
     border-radius: 12px;
     border: 1px solid #e6e6e6;
@@ -465,14 +470,18 @@ export const StyledCanvasBuilder = styled.div`
     }
 
     .sidepanelNavbar {
+      position: sticky;
+      top: 0;
+      z-index: 3;
       width: 100%;
       min-width: 0;
-      padding: 0 0 8px;
+      padding: 16px 0 8px;
+      background: #ffffff;
       box-sizing: border-box;
 
       .navbar-container {
         padding: 0;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         justify-content: center;
         width: 100%;
         min-width: 0;
@@ -1023,12 +1032,17 @@ export const StyledCanvasBuilder = styled.div`
     box-sizing: border-box;
 
     .addBlockFilters {
+      position: sticky;
+      /* Sits directly under the sticky navbar; -1px closes any sub-pixel seam. */
+      top: calc(var(--sidepanel-nav-h) - 1px);
+      z-index: 2;
       display: flex;
       flex-direction: column;
       gap: 16px;
       width: 100%;
       min-width: 0;
       padding: 0 0 16px;
+      background: #ffffff;
       box-sizing: border-box;
     }
 

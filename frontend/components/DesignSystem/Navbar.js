@@ -143,6 +143,16 @@ export const StyledNavbar = styled.div`
     }
   }
 
+  /* Collapsed horizontal items — icon only. Triggered either by the whole bar
+     collapsing (container .collapsed) or by a single item collapsing while its
+     siblings stay expanded (item .collapsed), e.g. a selected tab that keeps its
+     label while the rest compress. */
+  .navbar-container:not(.vertical).collapsed .navbar-item,
+  .navbar-container:not(.vertical) .navbar-item.collapsed {
+    justify-content: center;
+    padding: 8px;
+  }
+
   .navbar-item-trailing {
     display: flex;
     align-items: center;
@@ -185,8 +195,8 @@ const NavbarContext = createContext({ collapsed: false });
  *
  * @param {"tonal"|"underline"} [variant="tonal"] - Visual style for all items.
  * @param {"horizontal"|"vertical"} [orientation="horizontal"] - Layout direction.
- * @param {boolean} [collapsed=false] - Vertical only. Renders an icon-only rail;
- *   item labels become accessible names instead of visible text.
+ * @param {boolean} [collapsed=false] - Renders an icon-only rail; item labels
+ *   become accessible names instead of visible text. Works in both orientations.
  * @param {boolean} [showRule=false] - Underline variant only. Gives unselected
  *   items a resting 1px divider line instead of a transparent one.
  * @param {React.ReactNode} children - NavbarItem and NavbarSection elements.
@@ -216,10 +226,7 @@ export default function Navbar({
   ...props
 }) {
   const isVertical = orientation == "vertical";
-  const context = useMemo(
-    () => ({ collapsed: isVertical && collapsed }),
-    [isVertical, collapsed],
-  );
+  const context = useMemo(() => ({ collapsed }), [collapsed]);
 
   return (
     <NavbarContext.Provider value={context}>
@@ -229,7 +236,7 @@ export default function Navbar({
             "navbar-container",
             variant,
             isVertical && "vertical",
-            isVertical && collapsed && "collapsed",
+            collapsed && "collapsed",
             showRule && "show-rule",
           )}
         >
@@ -279,6 +286,9 @@ export function NavbarSection({ label, children }) {
  * to override — most commonly `as={Link}` for Next.js routing.
  *
  * @param {boolean} [selected=false] - Marks the active entry; also sets aria-current="page".
+ * @param {boolean} [collapsed] - Overrides the parent Navbar's collapsed state
+ *   for this one item, so a bar can mix expanded and icon-only items (e.g. keep
+ *   the selected tab's label while its siblings compress).
  * @param {string} [href] - Destination. Its presence selects <a> over <button>.
  * @param {React.ElementType} [as] - Override the rendered element, e.g. Next's Link.
  * @param {React.ReactNode} [leadingIcon] - Optional 24px icon left of the label; inherits text color.
@@ -300,6 +310,7 @@ export function NavbarSection({ label, children }) {
  */
 export function NavbarItem({
   selected = false,
+  collapsed: collapsedProp,
   href,
   as,
   leadingIcon = null,
@@ -312,7 +323,8 @@ export function NavbarItem({
   ...props
 }) {
   const Component = as ?? (href ? "a" : "button");
-  const { collapsed } = useContext(NavbarContext);
+  const { collapsed: collapsedContext } = useContext(NavbarContext);
+  const collapsed = collapsedProp ?? collapsedContext;
 
   // Collapsed rails drop the visible label, so it has to survive as the
   // element's accessible name instead of disappearing from the tree entirely.
@@ -332,13 +344,14 @@ export function NavbarItem({
       className={clsx(
         "navbar-item",
         selected && "selected",
+        collapsed && "collapsed",
         leadingIcon && "has-icon",
         trailingContent && "has-trailing",
         className,
       )}
       aria-current={selected ? "page" : undefined}
       aria-label={collapsedLabel}
-      title={collapsedLabel}
+      title={hasTooltip ? undefined : collapsedLabel}
       disabled={disabled || undefined}
       style={{
         ...style,
