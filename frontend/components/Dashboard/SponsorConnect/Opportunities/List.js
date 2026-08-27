@@ -10,6 +10,7 @@ import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
+import { QuestionMarkIcon } from "../../../DesignSystem/Icons";
 import MessageCard from "../../../DesignSystem/MessageCard";
 import { OpportunityPageShell as Shell } from "./OpportunityPageLayout";
 import {
@@ -553,6 +554,7 @@ export default function OpportunitiesList({ user }) {
                           {},
                           { default: "Class FAQ" },
                         )}
+                        leading={<QuestionMarkIcon width={18} height={18} />}
                         onClick={() =>
                           setClassForumModal({
                             opportunityId: opportunity.id,

@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import { QuestionMarkIcon } from "../../../../DesignSystem/Icons";
 import MessageCard from "../../../../DesignSystem/MessageCard";
 import Modal from "../../../../DesignSystem/Modal";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../../Queries/Opportunity";
@@ -1126,6 +1127,7 @@ export default function OpportunityPreviewModal({
           {
             key: OPPORTUNITY_PREVIEW_TABS.forum,
             label: forumTabLabel,
+            leading: <QuestionMarkIcon width={18} height={18} />,
           },
         ]
       : []),

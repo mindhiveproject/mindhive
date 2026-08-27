@@ -24,6 +24,7 @@ import {
 import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import StudentOpportunityPreview from "./StudentOpportunityPreview";
 import StudentPreferenceSubmission from "./StudentPreferenceSubmission";
+import StudentRankActionCard from "./StudentRankActionCard";
 
 /**
  * Matching rounds are "open for students" when status is preferences_open
@@ -63,6 +64,8 @@ const RankBanners = styled.div`
   display: grid;
   gap: 12px;
   width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
 `;
 
 const Filters = styled.div`
@@ -154,6 +157,7 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
             openById.set(round.id, {
               id: round.id,
               title: round.title || "",
+              closeAt: round.closeAt || null,
             });
           }
           for (const opportunity of round.opportunities || []) {
@@ -178,6 +182,22 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       opportunityIds: new Set(byId.keys()),
     };
   }, [networks]);
+
+  const preferenceByRoundId = useMemo(() => {
+    const map = new Map();
+    const prefs =
+      data?.authenticatedItem?.connectPreferences ||
+      [];
+    for (const pref of prefs) {
+      const roundId = pref?.round?.id;
+      if (!roundId) continue;
+      map.set(roundId, {
+        status: pref.status,
+        submittedAt: pref.submittedAt,
+      });
+    }
+    return map;
+  }, [data?.authenticatedItem?.connectPreferences]);
 
   const clearOpportunitiesQuery = useCallback(() => {
     if (!classCode) return;
@@ -466,26 +486,15 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       <div className="classTabPage opportunities">
         {openRounds.length > 0 ? (
           <RankBanners>
-            {openRounds.map((round) => {
-              const roundTitle = round.title?.trim() || round.id;
-              const message = t(
-                "opportunities.studentView.rankBanner",
-                { roundTitle },
-                {
-                  default:
-                    "Rank your favorite opportunity in {{roundTitle}}",
-                },
-              );
-              return (
-                <MessageCard
-                  key={round.id}
-                  variant="information"
-                  message={message}
-                  ariaLabel={message}
-                  onClick={() => openRankRound(round.id)}
-                />
-              );
-            })}
+            {openRounds.map((round) => (
+              <StudentRankActionCard
+                key={round.id}
+                round={round}
+                preference={preferenceByRoundId.get(round.id)}
+                hasOpportunities={false}
+                onRank={openRankRound}
+              />
+            ))}
           </RankBanners>
         ) : null}
         <MessageCard
@@ -570,25 +579,15 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     <div className="classTabPage opportunities">
       {openRounds.length > 0 ? (
         <RankBanners>
-          {openRounds.map((round) => {
-            const roundTitle = round.title?.trim() || round.id;
-            const message = t(
-              "opportunities.studentView.rankBanner",
-              { roundTitle },
-              {
-                default: "Rank your favorite opportunity in {{roundTitle}}",
-              },
-            );
-            return (
-              <MessageCard
-                key={round.id}
-                variant="information"
-                message={message}
-                ariaLabel={message}
-                onClick={() => openRankRound(round.id)}
-              />
-            );
-          })}
+          {openRounds.map((round) => (
+            <StudentRankActionCard
+              key={round.id}
+              round={round}
+              preference={preferenceByRoundId.get(round.id)}
+              hasOpportunities={true}
+              onRank={openRankRound}
+            />
+          ))}
         </RankBanners>
       ) : null}
 

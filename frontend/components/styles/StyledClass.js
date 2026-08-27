@@ -995,7 +995,6 @@ const StyledClass = styled.div`
       border: 1px solid #e6e6e6;
       border-radius: 18px;
       background: linear-gradient(180deg, #ffffff 0%, #fbfbfa 100%);
-      box-shadow: 0 10px 30px rgba(23, 23, 23, 0.06);
     }
 
     .classTabSectionHeader {

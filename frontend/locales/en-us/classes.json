@@ -1451,7 +1451,19 @@
 			"notAvailableHint": "When your teacher opens the matching round, selected opportunities will appear here.",
 			"notAvailableTitle": "Opportunities aren’t available yet",
 			"openAria": "View opportunity: {{title}}",
-			"rankBanner": "Rank your favorite opportunity in {{roundTitle}}",
+			"rankCard": {
+				"ctaContinue": "Continue ranking",
+				"ctaRankNow": "Rank now",
+				"ctaView": "View ranking",
+				"due": "Ranking closes {{date}}.",
+				"helperBrowse": "This is how you get matched. Browse below, then rank.",
+				"helperDraft": "You have a draft saved. Continue to submit.",
+				"helperEmpty": "When opportunities appear, come back here to rank them.",
+				"helperSubmitted": "You can review what you sent.",
+				"titleDraft": "Finish your ranking for {{roundTitle}}",
+				"titleNotStarted": "Rank your opportunities for {{roundTitle}}",
+				"titleSubmitted": "You submitted your ranking for {{roundTitle}}"
+			},
 			"rankForm": {
 				"backLink": "Back to opportunities",
 				"emptyFavoritesHint": "Go back and tap the star on the opportunities you want to rank.",

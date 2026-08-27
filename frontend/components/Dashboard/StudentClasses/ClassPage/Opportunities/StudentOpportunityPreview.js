@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import Chip from "../../../../DesignSystem/Chip";
 import IconButton from "../../../../DesignSystem/IconButton";
-import { CodeIcon } from "../../../../DesignSystem/Icons";
+import { CodeIcon, QuestionMarkIcon } from "../../../../DesignSystem/Icons";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../../Queries/Opportunity";
 import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap";
 import ReviewCard from "../../../../Forms/DefinitionForm/ReviewCard";
@@ -720,6 +720,7 @@ export default function StudentOpportunityPreview({
                 style={{ padding: "16px" }}
                 selected={activeTab === TABS.forum}
                 pressed={activeTab === TABS.forum}
+                leading={<QuestionMarkIcon width={18} height={18} />}
                 onClick={() => setActiveTab(TABS.forum)}
                 ariaLabel={forumTabLabel}
               />

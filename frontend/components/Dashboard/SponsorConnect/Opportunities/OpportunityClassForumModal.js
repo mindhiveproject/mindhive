@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import Button from "../../../DesignSystem/Button";
 import DropdownSelect from "../../../DesignSystem/DropdownSelect";
+import { QuestionMarkIcon } from "../../../DesignSystem/Icons";
 import Modal from "../../../DesignSystem/Modal";
 import { GET_OPPORTUNITY } from "../../../Queries/Opportunity";
 import OpportunityClassForum from "../../Connect/OpportunityClassForum";
@@ -12,6 +13,13 @@ import OpportunityClassForum from "../../Connect/OpportunityClassForum";
 const Body = styled.div`
   display: grid;
   gap: 16px;
+  min-width: 0;
+`;
+
+const TitleWithIcon = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   min-width: 0;
 `;
 
@@ -157,7 +165,12 @@ export default function OpportunityClassForumModal({
       open={open}
       onClose={onClose}
       size="large"
-      title={title}
+      title={
+        <TitleWithIcon>
+          <QuestionMarkIcon width={24} height={24} />
+          {title}
+        </TitleWithIcon>
+      }
       actions={
         <Button type="button" variant="outline" onClick={onClose}>
           {t("myOpportunitiesList.modals.close", {}, { default: "Close" })}
