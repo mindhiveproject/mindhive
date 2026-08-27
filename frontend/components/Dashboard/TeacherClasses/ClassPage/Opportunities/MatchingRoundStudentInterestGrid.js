@@ -321,46 +321,76 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestCards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 12px;
+    align-items: stretch;
   }
 
   .matchingRoundStudentInterestCard {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
+    min-width: 0;
     padding: 14px 16px;
+    box-sizing: border-box;
     border-radius: 12px;
     background: #ffffff;
     border: 1px solid #ece9e6;
-    min-width: 0;
   }
 
   .matchingRoundStudentInterestCardName {
     margin: 0;
     font-size: 14px;
     font-weight: 600;
+    line-height: 20px;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .matchingRoundStudentInterestCardList {
     display: grid;
-    gap: 8px;
+    gap: 0;
     margin: 0;
     padding: 0;
     list-style: none;
+    flex: 1;
+    min-height: 135px;
   }
 
   .matchingRoundStudentInterestCardItem {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 10px;
     min-width: 0;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+
+  .matchingRoundStudentInterestCardItemTooltip {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .matchingRoundStudentInterestCardItemInner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7rem;
+    column-gap: 12px;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 24px;
   }
 
   .matchingRoundStudentInterestCardOpp {
     margin: 0;
     font-size: 13px;
+    line-height: 18px;
     color: #5c6570;
     min-width: 0;
     overflow: hidden;
@@ -370,12 +400,16 @@ const GridShell = styled.div`
 
   .matchingRoundStudentInterestCardDwell {
     margin: 0;
-    flex-shrink: 0;
+    justify-self: stretch;
     display: inline-flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 4px;
     font-size: 13px;
+    line-height: 18px;
     font-weight: 600;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
     color: var(--MH-Theme-Primary-Dark, #336f8a);
 
     .matchingRoundStudentInterestStar {
@@ -385,8 +419,12 @@ const GridShell = styled.div`
   }
 
   .matchingRoundStudentInterestCardEmpty {
-    margin: 0;
+    margin: auto 0;
+    min-height: 135px;
+    display: flex;
+    align-items: center;
     font-size: 13px;
+    line-height: 18px;
     color: #5c6570;
   }
 `;
@@ -897,14 +935,23 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
       <div className="matchingRoundStudentInterestHeader">
         <div className="matchingRoundStudentInterestHeaderText">
           <p className="matchingRoundStudentInterestHint">
-            {t(
-              "opportunities.matchingRound.studentInterest.hint",
-              {},
-              {
-                default:
-                  "Time students spent previewing each opportunity (sessions of 1 second or more), and which opportunities they favorited.",
-              },
-            )}
+            {viewMode === VIEW_MODES.grid
+              ? t(
+                  "opportunities.matchingRound.studentInterest.hintGrid",
+                  {},
+                  {
+                    default:
+                      "Each card shows a student's top 3 opportunities by favorites and visit count. Hover a row to see the full title and total preview time.",
+                  },
+                )
+              : t(
+                  "opportunities.matchingRound.studentInterest.hint",
+                  {},
+                  {
+                    default:
+                      "How many times students previewed each opportunity (sessions of 1 second or more), and which opportunities they favorited. Hover a cell to see total preview time.",
+                  },
+                )}
           </p>
         </div>
         {headerActions}
@@ -974,20 +1021,29 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
                       t,
                     });
 
-                    const dwellBody = (
-                      <p className="matchingRoundStudentInterestCardDwell">
-                        {opp.visitCount > 0
-                          ? formatVisitCountLabel(opp.visitCount, t)
-                          : null}
-                        {opp.favorited ? (
-                          <StarFilledIcon
-                            className="matchingRoundStudentInterestStar"
-                            width={16}
-                            height={16}
-                            aria-label={favoritedAria}
-                          />
-                        ) : null}
-                      </p>
+                    const rowTooltip = [opp.title, dwellTooltip]
+                      .filter(Boolean)
+                      .join("\n");
+
+                    const rowBody = (
+                      <div className="matchingRoundStudentInterestCardItemInner">
+                        <p className="matchingRoundStudentInterestCardOpp">
+                          {opp.title}
+                        </p>
+                        <p className="matchingRoundStudentInterestCardDwell">
+                          {opp.visitCount > 0
+                            ? formatVisitCountLabel(opp.visitCount, t)
+                            : null}
+                          {opp.favorited ? (
+                            <StarFilledIcon
+                              className="matchingRoundStudentInterestStar"
+                              width={16}
+                              height={16}
+                              aria-label={favoritedAria}
+                            />
+                          ) : null}
+                        </p>
+                      </div>
                     );
 
                     return (
@@ -995,22 +1051,17 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
                         key={opp.id}
                         className="matchingRoundStudentInterestCardItem"
                       >
-                        <p
-                          className="matchingRoundStudentInterestCardOpp"
-                          title={opp.title}
-                        >
-                          {opp.title}
-                        </p>
-                        {dwellTooltip ? (
+                        {rowTooltip ? (
                           <Tooltip
-                            content={dwellTooltip}
+                            content={rowTooltip}
                             side="top"
-                            maxWidth={280}
+                            maxWidth={320}
+                            className="matchingRoundStudentInterestCardItemTooltip"
                           >
-                            {dwellBody}
+                            {rowBody}
                           </Tooltip>
                         ) : (
-                          dwellBody
+                          rowBody
                         )}
                       </li>
                     );

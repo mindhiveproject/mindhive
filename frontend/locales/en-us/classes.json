@@ -1215,6 +1215,7 @@
 				"favoritedAria": "Favorited",
 				"favoritedLabel": "Favorited",
 				"hint": "How many times students previewed each opportunity (sessions of 1 second or more), and which opportunities they favorited. Hover a cell to see total preview time.",
+				"hintGrid": "Each card shows a student's top 3 opportunities by favorites and visit count. Hover a row to see the full title and total preview time.",
 				"loading": "Loading student interest…",
 				"modeGrid": "Grid",
 				"modeTable": "Table",
