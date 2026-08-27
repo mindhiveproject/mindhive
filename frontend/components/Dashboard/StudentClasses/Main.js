@@ -27,11 +27,14 @@ export default function StudentClasses({ query, user }) {
     );
   }
 
-  const isOpportunityPreview =
-    query?.page === "opportunities" && !!query?.opportunity;
+  const isOpportunitiesFullscreen =
+    query?.page === "opportunities" &&
+    (!!query?.opportunity || !!query?.round);
 
   return (
-    <StyledClass className={clsx(isOpportunityPreview && "isContentFullscreen")}>
+    <StyledClass
+      className={clsx(isOpportunitiesFullscreen && "isContentFullscreen")}
+    >
       <ClassPage code={selector} user={user} query={query} />
     </StyledClass>
   );

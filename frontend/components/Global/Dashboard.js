@@ -41,7 +41,7 @@ export default function Dashboard({ children, area, selector }) {
       !!router.query.board) ||
     (area === "classes" &&
       router.query.page === "opportunities" &&
-      !!router.query.opportunity);
+      (!!router.query.opportunity || !!router.query.round));
 
   const content = (
     <StyledDashboardContent

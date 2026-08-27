@@ -189,6 +189,15 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
 
   const clearRoundQuery = useCallback(() => {
     if (!classCode) return;
+    router.push({
+      pathname: `/dashboard/classes/${classCode}`,
+      query: { page: "opportunities" },
+    });
+  }, [classCode, router]);
+
+  // Invalid deep-links: replace so the bad URL does not stay in history.
+  const stripInvalidOpportunitiesQuery = useCallback(() => {
+    if (!classCode) return;
     router.replace({
       pathname: `/dashboard/classes/${classCode}`,
       query: { page: "opportunities" },
@@ -211,14 +220,14 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     if (!requestedRoundId || loading) return;
     if (!data?.class && !myclass?.networks) return;
     if (classRoundIds.has(requestedRoundId)) return;
-    clearRoundQuery();
+    stripInvalidOpportunitiesQuery();
   }, [
     requestedRoundId,
     loading,
     data?.class,
     myclass?.networks,
     classRoundIds,
-    clearRoundQuery,
+    stripInvalidOpportunitiesQuery,
   ]);
 
   // Strip invalid opportunity deep-links once class opportunities are known.
@@ -227,14 +236,14 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     if (!requestedOpportunityId || loading) return;
     if (!data?.class && !myclass?.networks) return;
     if (opportunityIds.has(requestedOpportunityId)) return;
-    clearRoundQuery();
+    stripInvalidOpportunitiesQuery();
   }, [
     requestedOpportunityId,
     loading,
     data?.class,
     myclass?.networks,
     opportunityIds,
-    clearRoundQuery,
+    stripInvalidOpportunitiesQuery,
   ]);
 
   // Preview wins over ranking when both params are present. Show immediately so
@@ -242,9 +251,7 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
   const showPreviewSubview = Boolean(requestedOpportunityId);
 
   const showRankSubview =
-    !showPreviewSubview &&
-    Boolean(requestedRoundId) &&
-    classRoundIds.has(requestedRoundId);
+    !showPreviewSubview && Boolean(requestedRoundId);
 
   const categoryOptions = useMemo(
     () => getDistinctProjectCategories(opportunities),
