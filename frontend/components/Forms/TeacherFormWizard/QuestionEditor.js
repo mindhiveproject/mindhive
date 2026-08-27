@@ -326,7 +326,6 @@ export default function QuestionEditor({
               <div>
                 <Chip
                   type="button"
-                  shape="square"
                   style={{font: 'var(--MH-Type-Body-Base)', letterSpacing: 0, border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
                   leading={<p>–</p>}
                   onClick={() => {
@@ -347,7 +346,6 @@ export default function QuestionEditor({
             <div>
               <Chip
                 type="button"
-                shape="square"
                 style={{font: 'var(--MH-Type-Body-Base)', letterSpacing: 0, border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
                 leading={<p>+</p>}
                 onClick={() => setHelperEditorOpen(true)}

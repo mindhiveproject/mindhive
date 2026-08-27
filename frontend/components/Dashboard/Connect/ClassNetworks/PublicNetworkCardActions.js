@@ -105,7 +105,6 @@ export default function PublicNetworkCardActions({
     return (
       <ActionsRow>
         <Chip 
-          shape="square"
           label={t("classNetworks.invites.member", {}, { default: "Member" })}>
         </Chip>
         <DesignSystemButton
@@ -145,7 +144,6 @@ export default function PublicNetworkCardActions({
     return (
       <ActionsRow>
         <Chip 
-          shape="square"
           label={t("classNetworks.invites.pendingRequest", {}, { default: "Request pending" })}>
         </Chip>
         <DesignSystemButton
@@ -178,7 +176,6 @@ export default function PublicNetworkCardActions({
     return (
       <ActionsRow>
         <Chip
-          shape="square"
           label={t("classNetworks.invites.rejected", {}, { default: "Request declined" })}>
         </Chip>
         <DesignSystemButton
@@ -212,7 +209,6 @@ export default function PublicNetworkCardActions({
     return (
       <ActionsRow>
         <Chip
-          shape="square"
           label={t("classNetworks.invites.incomingInvite", {}, { default: "You're invited" })}>
         </Chip>
         <DesignSystemButton

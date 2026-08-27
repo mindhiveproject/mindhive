@@ -134,7 +134,6 @@ export default function ConnectProfileCard({ user, profile, actions = null }) {
           ? orgTags.map((tag) => (
               <Chip
                 key={tag.key}
-                shape="pill"
                 label={tag.label}
                 title={tag.label}
                 style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}

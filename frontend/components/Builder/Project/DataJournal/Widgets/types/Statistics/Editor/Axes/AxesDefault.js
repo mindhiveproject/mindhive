@@ -336,7 +336,6 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
                   label={option.chipLabel}
                   selected={selectedDataLayout === option.value}
                   onClick={() => onLayoutChoice(option)}
-                  shape="square"
                   ariaLabel={option.title}
                   style={
                     selectedDataLayout === option.value
@@ -387,7 +386,6 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
                   label={option.chipLabel}
                   selected={selectedValueMode === option.value}
                   onClick={() => onValueModeChoice(option)}
-                  shape="square"
                   ariaLabel={option.title}
                   style={
                     selectedValueMode === option.value

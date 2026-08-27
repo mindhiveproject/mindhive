@@ -9,6 +9,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import styled from "styled-components";
 
+import Chip from "../../../DesignSystem/Chip";
 import {
   ADMIN_FORM_DEFINITION,
   ADMIN_FORM_DEFINITIONS,
@@ -66,19 +67,8 @@ const TopBar = styled.div`
   }
 `;
 
-const StatusBadge = styled.span`
-  padding: 2px 10px;
-  border-radius: 100px;
-  font: var(--MH-Type-Label-Small);
-  letter-spacing: 0;
-  text-transform: uppercase;
-  margin-left: 6px;
-  background: ${({ $status }) =>
-    $status === "published" ? "#1d6b3a" :
-    $status === "draft" ? "#8a6d3b" :
-    "#5f6871"};
-  color: #ffffff;
-`;
+const STATUS_TONE = { published: "success", draft: "warning" };
+const statusTone = (status) => STATUS_TONE[status] ?? "neutral";
 
 const BackLink = styled.button`
   background: none;
@@ -222,9 +212,12 @@ export default function EditorPage({ definitionId }) {
           </BackLink>
           <h1 className="MH-Type-Heading-Small">
             {definition.title}
-            <StatusBadge $status={definition.status}>
-              {definition.status}
-            </StatusBadge>
+            <Chip
+              variant="static"
+              tone={statusTone(definition.status)}
+              label={definition.status}
+              style={{ marginLeft: 6, verticalAlign: "middle" }}
+            />
           </h1>
           <div className="meta MH-Type-Body-Base">
             {definition.surface ? (

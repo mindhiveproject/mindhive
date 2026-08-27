@@ -43,7 +43,6 @@ export default function AdvancedOptionsPanel({
     <div className="advancedOptionsPanel" style={BODY_STYLE}>
       <div style={TABS_STYLE}>
         <Chip
-          shape="square"
           label={t("proposal.templateSectionAutoUpdate", {}, {
             default: "Auto-update",
           })}
@@ -52,7 +51,6 @@ export default function AdvancedOptionsPanel({
         />
         {proposalBuildMode && (
           <Chip
-            shape="square"
             label={t("proposal.templateSectionStudentSettings", {}, {
               default: "Student settings",
             })}
@@ -62,7 +60,6 @@ export default function AdvancedOptionsPanel({
         )}
         {proposalBuildMode && isAdmin && (
           <Chip
-            shape="square"
             label={t("proposal.templateSectionAdminSettings", {}, {
               default: "Admin settings",
             })}
@@ -76,7 +73,6 @@ export default function AdvancedOptionsPanel({
         <>
           {isClassTemplate && (
             <Chip
-              shape="pill"
               leading={
                 <img
                   src="/assets/icons/info.svg"

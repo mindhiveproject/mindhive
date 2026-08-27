@@ -142,7 +142,7 @@ export default function InfoPopover({
         width={width}
         ariaLabel={ariaLabel}
       >
-        <div className="DesignSystem-InfoPopover-body MH-Type-Body-Base" style={BODY_STYLE}>
+        <div className="DesignSystem-InfoPopover-body MH-Type-Body-Small" style={BODY_STYLE}>
           {content}
         </div>
       </Popover>

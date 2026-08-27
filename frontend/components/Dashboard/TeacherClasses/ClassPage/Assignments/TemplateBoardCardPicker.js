@@ -117,7 +117,6 @@ export default function TemplateBoardCardPicker({
                       disabled={disabled}
                       onClick={() => onToggleCard(card.id)}
                       onClose={isSelected ? () => onToggleCard(card.id) : undefined}
-                      shape="square"
                     />
                   );
                 })}

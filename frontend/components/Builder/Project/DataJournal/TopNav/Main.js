@@ -197,7 +197,6 @@ export default function TopNavigation() {
           label={t("dataJournal.topNav.journals", "Journals")}
           selected={area === "journals"}
           onClick={() => setArea("journals")}
-          shape="square"
           style={{
             border: "none",
             background: area === "journals" ? LEFT_NAV_SELECTED_BG : "transparent",
@@ -223,7 +222,6 @@ export default function TopNavigation() {
           label={t("dataJournal.topNav.datasets", "Datasets")}
           selected={area === "datasets"}
           onClick={navigateToDatasets}
-          shape="square"
           style={{
             border: "none",
             background: area === "datasets" ? LEFT_NAV_SELECTED_BG : "transparent",
@@ -273,7 +271,6 @@ export default function TopNavigation() {
                 label={tBuilder(meta.i18nKey, {}, { default: meta.defaultLabel })}
                 selected={datasetScope === scope}
                 onClick={() => setDatasetScope(scope)}
-                shape="square"
                 leading={
                   <img
                     src={meta.iconSrc}

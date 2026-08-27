@@ -494,7 +494,6 @@ export default function MatchingRoundFollowUpCompletionGrid({
         </div>
         <div className="matchingRoundFollowUpCompletionFilters">
           <Chip
-            shape="square"
             className="MH-Type-Label-Small"
             label={t(
               "opportunities.matchingRound.followUpCompletion.filterAll",
@@ -506,7 +505,6 @@ export default function MatchingRoundFollowUpCompletionGrid({
             style={{ height: "28px" }}
           />
           <Chip
-            shape="square"
             className="MH-Type-Label-Small"
             label={t(
               "opportunities.matchingRound.followUpCompletion.filterIncomplete",

@@ -516,7 +516,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
                 <Chip
                   key={chip.key}
                   label={chip.label}
-                  shape="square"
                   style={{ padding: "16px" }}
                   selected={isSelected}
                   pressed={isSelected}

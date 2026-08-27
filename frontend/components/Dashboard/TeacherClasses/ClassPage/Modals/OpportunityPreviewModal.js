@@ -1034,7 +1034,7 @@ export default function OpportunityPreviewModal({
       <TitleText>{modalTitle}</TitleText>
       <HeaderActions>
         {statusLabel && !hideStatus ? (
-          <Chip label={statusLabel} shape="square" />
+          <Chip label={statusLabel} />
         ) : null}
         {messagesToggleButton}
       </HeaderActions>
@@ -1283,7 +1283,6 @@ export default function OpportunityPreviewModal({
                   {mentorName ? (
                     <Chip
                       label={mentorName}
-                      shape="pill"
                       leading={chipLeadingImage(mentorAvatar, mentorName)}
                       onClick={
                         mentorProfileUrl
@@ -1309,7 +1308,6 @@ export default function OpportunityPreviewModal({
                   {orgName ? (
                     <Chip
                       label={orgName}
-                      shape="pill"
                       leading={chipLeadingImage(orgLogo, orgName)}
                       onClick={
                         orgProfileUrl
@@ -1360,7 +1358,6 @@ export default function OpportunityPreviewModal({
                     <Chip
                       key={chip.key}
                       label={chip.label}
-                      shape="square"
                       style={{
                         padding: "16px",
                       }}
@@ -1499,7 +1496,7 @@ export default function OpportunityPreviewModal({
                     >
                       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                         {opp.classNetworks.map((network) => (
-                          <Chip key={network.id} label={network.title} shape="square" />
+                          <Chip key={network.id} label={network.title} />
                         ))}
                       </div>
                     </PreviewSection>

@@ -172,7 +172,6 @@ export default function BoardEditorChrome({
               {isCardMode && cardChrome?.typeLabel ? (
                 <Chip
                   className="boardEditorChromeTypeBadge"
-                  shape="pill"
                   label={cardChrome.typeLabel}
                   style={{ cursor: "default", pointerEvents: "none", fontSize: 12 }}
                 />

@@ -403,7 +403,6 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
           role="group"
         >
           <Chip
-            shape="square"
             selected={libraryCategory === "public"}
             pressed={libraryCategory === "public"}
             onClick={() => toggleLibraryCategory("public")}
@@ -414,7 +413,6 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             )}
           />
           <Chip
-            shape="square"
             selected={libraryCategory === "mine"}
             pressed={libraryCategory === "mine"}
             onClick={() => toggleLibraryCategory("mine")}
@@ -425,7 +423,6 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             )}
           />
           <Chip
-            shape="square"
             disabled
             label={t(
               "projects.templateLibraryCategory.network",

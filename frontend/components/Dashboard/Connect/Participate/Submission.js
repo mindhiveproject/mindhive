@@ -240,17 +240,6 @@ const Actions = styled.div`
   flex: 0 0 auto;
 `;
 
-const StatusPill = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 100px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  background: ${({ $submitted }) => ($submitted ? "#e3f4ec" : "#fdf6e3")};
-  color: ${({ $submitted }) => ($submitted ? "#1d6b3a" : "#7a5b00")};
-`;
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
@@ -944,7 +933,7 @@ export default function ParticipateSubmission({ roundId, user }) {
           <TitleRow>
             <h1 title={pageTitle}>{pageTitle}</h1>
             {statusChipLabel && (
-              <Chip shape="pill" label={statusChipLabel} selected={submitted} />
+              <Chip label={statusChipLabel} selected={submitted} />
             )}
           </TitleRow>
         </TopBarLeft>
@@ -1051,9 +1040,11 @@ export default function ParticipateSubmission({ roundId, user }) {
                   style={{ color: "#5f6871" }}
                 >
                   By {mentorName} ·{" "}
-                  <StatusPill $submitted={match.status === "active"}>
-                    {match.status}
-                  </StatusPill>
+                  <Chip
+                    variant="static"
+                    tone={match.status === "active" ? "success" : "warning"}
+                    label={match.status}
+                  />
                 </div>
                 {opp?.shortDescription && (
                   <p

@@ -232,7 +232,6 @@ export default function JournalNavigation({
           <div className="dataSourceChips">
             <Chip
               label={datasetsChipLabel}
-              shape="square"
               selected={isJournalSelected}
               onClick={(e) => {
                 e.stopPropagation();

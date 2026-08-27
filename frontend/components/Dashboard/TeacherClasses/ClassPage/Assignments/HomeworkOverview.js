@@ -11,6 +11,19 @@ import { GET_ASSIGNMENT } from "../../../../Queries/Assignment";
 import { GET_STUDENTS_DATA } from "../../../../Queries/Classes";
 import ReviewHomework from "./Homework/Review";
 import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
+
+// Homework status -> Chip tone (was a bespoke colour map; keeps the coding).
+const STATUS_TONE = {
+  completed: "success",
+  submitted: "success",
+  "feedback given": "success",
+  started: "info",
+  "in progress": "info",
+  "needs feedback": "warning",
+};
+const statusTone = (status) =>
+  STATUS_TONE[String(status || "").toLowerCase()] ?? "neutral";
 
 const Container = styled.div`
   max-width: 1400px;
@@ -64,45 +77,6 @@ const ButtonContainer = styled.div`
   display: flex;
   gap: 16px;
   align-items: center;
-`;
-
-// Status chip (colors match Builder Card homework status scheme)
-const StatusChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  white-space: nowrap;
-  border: 1px solid;
-  
-  ${props => {
-    const status = props.status?.toLowerCase() || '';
-    const backgroundColor = status === 'completed'
-      ? '#DEF8FB'
-      : status === 'started'
-      ? '#FDFEF0'
-      : status === 'needs feedback'
-      ? '#E4DFF6'
-      : status === 'feedback given'
-      ? '#F6F9F8'
-      : '#666';
-    const color = status === 'completed'
-      ? '#337C84'
-      : status === 'started'
-      ? '#5D5763'
-      : status === 'needs feedback'
-      ? '#3F288F'
-      : status === 'feedback given'
-      ? '#0D3944'
-      : '#666';
-    return `
-      background-color: ${backgroundColor};
-      border-color: ${color};
-      color: ${color};
-    `;
-  }}
 `;
 
 const GridContainer = styled.div`
@@ -213,7 +187,7 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
   // Status renderer
   const StatusRenderer = useCallback((params) => {
     const status = params?.value || 'Not started';
-    return <StatusChip status={status}>{status}</StatusChip>;
+    return <Chip variant="static" tone={statusTone(status)} label={status} />;
   }, []);
 
   // View button renderer

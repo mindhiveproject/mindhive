@@ -1,10 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { useState, useEffect, useRef } from "react";
-import { Dropdown, Checkbox } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROJECTS_QUERY } from "../../../../Queries/Proposal";
 import { getProjectsQueryFilterForTab, isMilestoneSubmitted, isOpenForComments } from "../../../../../lib/milestoneStatus";
+import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import { ArrowDropDownIcon } from "../../../../DesignSystem/Icons";
 import Card from "./Card";
 
 function containsAny(arr1, arr2) {
@@ -17,6 +18,16 @@ const sortOptions = [
   { label: "Least comments", value: "LEAST_COMMENTS" },
   { label: "Most comments", value: "MOST_COMMENTS" },
 ];
+
+// Align the dropdown triggers with the search input sitting next to them in
+// `.searchTopArea` (StyledReview): same border, radius and padding.
+const FILTER_TRIGGER_STYLE = {
+  border: "1px solid #cccccc",
+  borderRadius: "4px",
+  padding: "12px",
+};
+
+const DROPDOWN_GLYPH = <ArrowDropDownIcon width={22} height={22} />;
 
 export default function ProjectsBoard({
   selector,
@@ -264,37 +275,33 @@ export default function ProjectsBoard({
         </div>
 
         <div id="sortBy">
-          <Dropdown
+          <DropdownSelect
+            ariaLabel={t("review.sortBy")}
             placeholder={t("review.sortBy")}
-            fluid
-            selection
-            options={sortOptions.map((p) => ({
-              key: p.value,
-              value: p.value,
-              text: t(`review.${p.value.toLowerCase()}`),
-            }))}
-            onChange={(event, data) => {
-              setSortBy(data?.value);
-            }}
             value={sortBy}
+            options={sortOptions.map((p) => ({
+              value: p.value,
+              label: t(`review.${p.value.toLowerCase()}`),
+            }))}
+            triggerStyle={FILTER_TRIGGER_STYLE}
+            icon={DROPDOWN_GLYPH}
+            onChange={(next) => setSortBy(next)}
           />
         </div>
         <div id="filterByClasses">
-          <Dropdown
-            placeholder={t("review.filterByClasses")}
-            fluid
+          <DropdownSelect
             multiple
-            selection
-            options={allUniqueClasses.map((c) => ({
-              key: c.id,
-              value: c.id,
-              text: c.title,
-            }))}
-            onChange={(event, data) => {
-              setFilteredClasses(data.value);
-            }}
+            ariaLabel={t("review.filterByClasses")}
+            placeholder={t("review.filterByClasses")}
             value={filteredClasses}
-            />
+            options={allUniqueClasses.map((c) => ({
+              value: c.id,
+              label: c.title,
+            }))}
+            triggerStyle={FILTER_TRIGGER_STYLE}
+            icon={DROPDOWN_GLYPH}
+            onChange={(next) => setFilteredClasses(next)}
+          />
         </div>
       </div>
 

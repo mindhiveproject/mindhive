@@ -121,7 +121,6 @@ export default function CopyButton({
   return (
     <Chip
       label={stableLabel}
-      shape="square"
       selected={copied}
       disabled={disabled}
       onClick={copied ? undefined : handleClick}

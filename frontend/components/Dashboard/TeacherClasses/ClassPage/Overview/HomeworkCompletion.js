@@ -5,6 +5,19 @@ import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { GET_STUDENTS_DATA } from "../../../../Queries/Classes";
 import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
+
+// Homework status -> Chip tone (was a bespoke colour map; keeps the coding).
+const STATUS_TONE = {
+  completed: "success",
+  submitted: "success",
+  "feedback given": "success",
+  started: "info",
+  "in progress": "info",
+  "needs feedback": "warning",
+};
+const statusTone = (status) =>
+  STATUS_TONE[String(status || "").toLowerCase()] ?? "neutral";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -39,46 +52,6 @@ const Container = styled.div`
   max-width: 1400px;
   margin: 0 auto;
   padding: 24px;
-`;
-
-// Status chip styled components (colors match Builder Card homework status scheme)
-const StatusChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  white-space: nowrap;
-  background: #FFFFFF;
-  border: 1px solid;
-  
-  ${props => {
-    const status = props.status?.toLowerCase() || '';
-    const backgroundColor = status === 'completed'
-      ? '#DEF8FB'
-      : status === 'started'
-      ? '#FDFEF0'
-      : status === 'needs feedback'
-      ? '#E4DFF6'
-      : status === 'feedback given'
-      ? '#F6F9F8'
-      : '#FFFFFF';
-    const color = status === 'completed'
-      ? '#337C84'
-      : status === 'started'
-      ? '#5D5763'
-      : status === 'needs feedback'
-      ? '#3F288F'
-      : status === 'feedback given'
-      ? '#0D3944'
-      : '#666';
-    return `
-      background-color: ${backgroundColor};
-      border-color: ${color};
-      color: ${color};
-    `;
-  }}
 `;
 
 export default function HomeworkCompletion({
@@ -136,7 +109,7 @@ export default function HomeworkCompletion({
     
     // If there's no homework (status is "Not started"), just show the chip
     if (!homeworkCode || !assignment || status === 'Not started') {
-      return <StatusChip status={status}>{status}</StatusChip>;
+      return <Chip variant="static" tone={statusTone(status)} label={status} />;
     }
 
     // If there's homework, make it clickable
@@ -153,12 +126,12 @@ export default function HomeworkCompletion({
         }}
         style={{ textDecoration: 'none' }}
       >
-        <StatusChip 
-          status={status}
-          style={{ cursor: 'pointer' }}
-        >
-          {status}
-        </StatusChip>
+        <Chip
+          variant="static"
+          tone={statusTone(status)}
+          label={status}
+          style={{ cursor: "pointer" }}
+        />
       </Link>
     );
   };

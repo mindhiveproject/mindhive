@@ -1,6 +1,8 @@
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
+import Chip from "../../../DesignSystem/Chip";
+
 import { OPPORTUNITY_STATUS_TONE_SOLID } from "../../../../lib/opportunityStatusTones";
 
 const Shell = styled.section`
@@ -100,35 +102,15 @@ const StepLabel = styled.span`
     $visual === "pending" ? "#8a9299" : "#171717"};
 `;
 
-const RoleChip = styled.span`
-  margin-top: 6px;
-  padding: 3px 10px;
-  border-radius: 100px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  background: ${({ $visual }) => {
-    const tone = toneFromWorkflowVisual($visual);
-    if (tone === "action") return "#fdf6e8";
-    if (tone === "waiting") return "#def8fb";
-    if (tone === "done") return "#e3f4ec";
-    return "#ffffff";
-  }};
-  color: ${({ $visual }) => {
-    const tone = toneFromWorkflowVisual($visual);
-    if (tone === "action") return "#8a6d3b";
-    if (tone === "waiting") return "var(--MH-Theme-Primary-Dark, #336f8a)";
-    if (tone === "done") return "#1d6b3a";
-    return "#5f6871";
-  }};
-  border: 1px solid
-    ${({ $visual }) => {
-      const tone = toneFromWorkflowVisual($visual);
-      if (tone === "action") return "#e8d4a8";
-      if (tone === "waiting") return "#b5e4ea";
-      if (tone === "done") return "#b8dcc8";
-      return "#d3dae0";
-    }};
-`;
+// Workflow visual -> Chip tone for the role chip under each step.
+const WORKFLOW_CHIP_TONE = {
+  action: "warning",
+  waiting: "info",
+  done: "success",
+  pending: "neutral",
+};
+const roleChipTone = (visual) =>
+  WORKFLOW_CHIP_TONE[toneFromWorkflowVisual(visual)] ?? "neutral";
 
 const ContextLine = styled.p`
   margin: 0;
@@ -314,11 +296,14 @@ export default function OpportunityWorkflowStepper({
                   default: STEP_DEFAULTS[step.key] || step.key,
                 })}
               </StepLabel>
-              <RoleChip $visual={visual}>
-                {t(`opportunityEditor.workflow.roles.${step.role}`, {}, {
+              <Chip
+                variant="static"
+                tone={roleChipTone(visual)}
+                style={{ marginTop: 6 }}
+                label={t(`opportunityEditor.workflow.roles.${step.role}`, {}, {
                   default: step.role === "sponsor" ? "Sponsor" : "Teacher",
                 })}
-              </RoleChip>
+              />
             </StepItem>
           );
         })}

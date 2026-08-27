@@ -369,7 +369,6 @@ export default function CreateTemplateBoardModal({
           >
             <div style={chipRowStyle} role="tablist">
               <Chip
-                shape="square"
                 label={t("projects.createTemplateModal.fromLibrary", {}, {
                   default: "From template library",
                 })}
@@ -377,7 +376,6 @@ export default function CreateTemplateBoardModal({
                 onClick={() => setMode(MODE_LIBRARY)}
               />
               <Chip
-                shape="square"
                 label={t("projects.createTemplateModal.blankTemplate", {}, {
                   default: "Blank template",
                 })}

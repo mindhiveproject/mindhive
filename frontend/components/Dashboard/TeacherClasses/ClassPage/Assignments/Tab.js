@@ -22,6 +22,7 @@ import ConnectAssignmentToCardModal from "./ConnectAssignmentToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
 import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
 
 // Toggle/filter chrome — not a CTA. Keep as local styled button.
@@ -113,85 +114,6 @@ const BulkActionsButtonWrapper = styled.div`
   overflow: hidden;
   transition: max-width 0.2s ease, max-height 0.2s ease, opacity 0.2s ease;
 `;
-
-// Status chip styled components based on Figma design
-const StatusChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 8px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  white-space: nowrap;
-  border: 1.5px solid;
-  background: transparent;
-  
-  ${props => props.isPublished ? `
-    background: #def8fb;
-    border-color: #625b71;
-    color: #434343;
-  ` : `
-    background: #f3f3f3;
-    border-color: #616161;
-    color: #616161;
-  `}
-`;
-
-// Chip for "Linked to card" column (Section > Card or "Click to connect to card")
-const LinkedCardChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 8px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  white-space: normal;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  max-width: 100%;
-  border: 1px solid #625B71;
-  background: ${(props) => (props.$placeholder ? "#D8D3E7" : "#F5F5F5")};
-  color: #434343;
-  margin: 2px 4px 2px 0;
-`;
-
-// Chip styles reused from LinkedItems.js (Published/Unpublished only)
-// Fixed height; padding and width adapt to presence of cross icon
-const styledChipPublished = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "8px",
-  height: "32px",
-  boxSizing: "border-box",
-  justifyContent: "center",
-  flexShrink: "0",
-  borderRadius: "8px",
-  background: "#DEF8FB",
-  border: "1px solid #625B71",
-  maxWidth: '100%',
-  wordBreak: 'break-word',
-  cursor: 'pointer',
-  transition: 'background-color 0.2s ease, border-color 0.2s ease',
-  color: '#434343',
-};
-
-const styledChipUnpublished = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "8px",
-  height: "32px",
-  boxSizing: "border-box",
-  justifyContent: "center",
-  flexShrink: "0",
-  borderRadius: "8px",
-  background: "#F3F3F3",
-  border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
-  maxWidth: '100%',
-  wordBreak: 'break-word',
-  cursor: 'pointer',
-  transition: 'background-color 0.2s ease, border-color 0.2s ease',
-  color: '#434343',
-};
 
 export default function AssignmentTab({ assignments, myclass, user }) {
   const { t } = useTranslation("classes");
@@ -317,9 +239,11 @@ export default function AssignmentTab({ assignments, myclass, user }) {
         }}
         title={isUpdating ? t("common.loading", "Updating…") : (isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents"))}
       >
-        <StatusChip isPublished={isPublished}>
-          {isUpdating ? t("common.loading", "Updating…") : (isPublished ? t("assignment.published") : t("assignment.unpublished"))}
-        </StatusChip>
+        <Chip
+          variant="static"
+          tone={isPublished ? "info" : "neutral"}
+          label={isUpdating ? t("common.loading", "Updating…") : (isPublished ? t("assignment.published") : t("assignment.unpublished"))}
+        />
       </button>
     );
   };
@@ -370,9 +294,12 @@ export default function AssignmentTab({ assignments, myclass, user }) {
             }}
             style={{ ...chipButtonStyle, display: "flex", alignItems: "center", textDecoration: "none" }}
           >
-            <LinkedCardChip $placeholder>
-              {t("assignment.noTemplateBoardAssociated", "No template board associated to class")}
-            </LinkedCardChip>
+            <Chip
+              variant="static"
+              tone="warning"
+              labelLines={2}
+              label={t("assignment.noTemplateBoardAssociated", "No template board associated to class")}
+            />
           </Link>
         );
       }
@@ -382,9 +309,12 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           onClick={handleConnectClick}
           style={{ ...chipButtonStyle, display: "flex", alignItems: "center" }}
         >
-          <LinkedCardChip $placeholder>
-            {t("assignment.clickToConnectToCard", "Click to connect to card")}
-          </LinkedCardChip>
+          <Chip
+            variant="static"
+            tone="warning"
+            labelLines={2}
+            label={t("assignment.clickToConnectToCard", "Click to connect to card")}
+          />
         </button>
       );
     }
@@ -444,7 +374,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
               }}
               style={chipButtonStyle}
             >
-              <LinkedCardChip>{c?.section?.title || "Section"}</LinkedCardChip>
+              <Chip variant="static" tone="neutral" label={c?.section?.title || "Section"} style={{ margin: "2px 4px 2px 0" }} />
             </button>
             <span className="MH-Type-Body-Base" style={{ margin: "0 4px", color: "#616161" }}>/</span>
             <button
@@ -455,7 +385,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
               }}
               style={chipButtonStyle}
             >
-              <LinkedCardChip>{c?.title || "Card"}</LinkedCardChip>
+              <Chip variant="static" tone="neutral" label={c?.title || "Card"} style={{ margin: "2px 4px 2px 0" }} />
             </button>
           </span>
         ))}
@@ -751,142 +681,35 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           </Button>
         </BulkActionsButtonWrapper>
         <span style={{ flexShrink: 0 }} aria-hidden>|</span>
-        <button
-          type="button"
-          className="MH-Type-Label-Base"
+        <Chip
+          label={t("assignment.published") || "Published"}
+          selected={selectedPublishedFilter === true}
           onClick={() => handlePublishedFilterToggle(true)}
-          style={{
-            ...styledChipPublished,
-            padding: selectedPublishedFilter === true ? "6px 8px 6px 12px" : "6px 12px",
-            backgroundColor: selectedPublishedFilter === true ? "#DEF8FB" : "#ffffff",
-            borderColor: selectedPublishedFilter === true ? "#625B71" : "#A1A1A1",
-          }}
-        >
-          <span>{t("assignment.published") || "Published"}</span>
-          {selectedPublishedFilter === true && (
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "18px",
-                height: "18px",
-                flexShrink: 0,
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePublishedFilterToggle(true);
-              }}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
-                  fill="#171717"
-                />
-              </svg>
-            </span>
-          )}
-        </button>
-        <button
-          type="button"
-          className="MH-Type-Label-Base"
+          onClose={
+            selectedPublishedFilter === true
+              ? () => handlePublishedFilterToggle(true)
+              : undefined
+          }
+        />
+        <Chip
+          label={t("assignment.unpublished") || "Unpublished"}
+          selected={selectedPublishedFilter === false}
           onClick={() => handlePublishedFilterToggle(false)}
-          style={{
-            ...styledChipUnpublished,
-            padding: selectedPublishedFilter === false ? "6px 8px 6px 12px" : "6px 12px",
-            backgroundColor: selectedPublishedFilter === false ? "#F3F3F3" : "#ffffff",
-            borderColor: selectedPublishedFilter === false ? "#625B71" : "#A1A1A1",
-          }}
-        >
-          <span>{t("assignment.unpublished") || "Unpublished"}</span>
-          {selectedPublishedFilter === false && (
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "18px",
-                height: "18px",
-                flexShrink: 0,
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePublishedFilterToggle(false);
-              }}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
-                  fill="#171717"
-                />
-              </svg>
-            </span>
-          )}
-        </button>
+          onClose={
+            selectedPublishedFilter === false
+              ? () => handlePublishedFilterToggle(false)
+              : undefined
+          }
+        />
         {linkedCardFilter != null && (
           <>
             <span style={{ flexShrink: 0 }} aria-hidden>|</span>
-            <button
-              type="button"
-              className="MH-Type-Label-Base"
+            <Chip
+              label={t("assignment.removeCardColumnFilter", "Remove card/column filter")}
+              selected
               onClick={clearLinkedCardFilter}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                height: "32px",
-                boxSizing: "border-box",
-                justifyContent: "center",
-                flexShrink: 0,
-                borderRadius: "8px",
-                padding: "6px 8px 6px 12px",
-                background: "#E4DFF6",
-                border: "1px solid #625B71",
-                color: "#625B71",
-                maxWidth: "100%",
-                wordBreak: "break-word",
-                cursor: "pointer",
-              }}
-            >
-              <span>{t("assignment.removeCardColumnFilter", "Remove card/column filter")}</span>
-              <span
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "18px",
-                  height: "18px",
-                  flexShrink: 0,
-                }}
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
-                    fill="#171717"
-                  />
-                </svg>
-              </span>
-            </button>
+              onClose={clearLinkedCardFilter}
+            />
           </>
         )}
       </div>

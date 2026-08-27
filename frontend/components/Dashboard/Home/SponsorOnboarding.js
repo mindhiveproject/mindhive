@@ -492,7 +492,6 @@ export default function SponsorOnboarding() {
           untitledNetworkLabel
         }
         leading={NETWORK_ICON}
-        shape="square"
       />
     ) : null;
 
@@ -655,7 +654,6 @@ export default function SponsorOnboarding() {
                             {isPending ? (
                               <>
                                 <Chip
-                                  shape="square"
                                   label={pendingRequestLabel}
                                 />
                                 <Button

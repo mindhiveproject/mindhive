@@ -341,7 +341,6 @@ function FormOwnershipOptionLabel({ title, ownershipKind, t }) {
       </span>
       <Chip
         label={chipLabel}
-        shape="pill"
         className="matchingRoundFormOwnershipChip MH-Type-Label-Small"
         ariaLabel={chipLabel}
         style={{
@@ -515,7 +514,6 @@ function MatchingRoundCollapsedCard({
     <Chip
       label={network.title}
       leading={NETWORK_ICON}
-      shape="square"
       style={{ color: "#171717", borderColor: "#171717", opacity: 0.7 }}
       ariaLabel={t("opportunities.matchingRound.collapsedNetworkHint", {
         title: network.title,
@@ -2209,7 +2207,6 @@ function MatchingRoundEditor({
         return (
           <Chip
             label={label}
-            shape="pill"
             className={clsx(
               "matchingRoundFormOwnershipChip",
               "matchingRoundFormOriginChip--public",
@@ -2229,7 +2226,6 @@ function MatchingRoundEditor({
         return (
           <Chip
             label={label}
-            shape="pill"
             className={clsx(
               "matchingRoundFormOwnershipChip",
               "matchingRoundFormOriginChip--owned",
@@ -2248,7 +2244,6 @@ function MatchingRoundEditor({
       return (
         <Chip
           label={label}
-          shape="pill"
           className={clsx(
             "matchingRoundFormOwnershipChip",
             "matchingRoundFormOriginChip--custom",

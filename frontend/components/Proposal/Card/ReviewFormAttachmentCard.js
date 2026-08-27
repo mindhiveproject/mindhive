@@ -172,7 +172,6 @@ export default function ReviewFormAttachmentCard({
         </div>
         <div style={{ display: "flex", gap: 6, flexShrink: 0, flexWrap: "wrap" }}>
           <Chip
-            shape="square"
             label={scopeLabel}
             leading={scopeLeading}
             disabled

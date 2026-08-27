@@ -423,7 +423,6 @@ export default function ClassExport() {
               label={t("filteringPolicies", {
                 defaultValue: "Data pulling policies",
               })}
-              shape="square"
               style={{ border: "none" }}
             />
           </InfoPopover>

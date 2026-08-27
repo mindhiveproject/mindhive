@@ -284,7 +284,6 @@ function MediaLibraryActionsCell(params) {
     >
       {myProfileId && (
         <Chip
-          shape="pill"
           ariaLabel={favLabel}
           title={favLabel}
           leading={isFav ? FAVORITE_ICON_FILLED : FAVORITE_ICON_OUTLINE}
@@ -302,7 +301,6 @@ function MediaLibraryActionsCell(params) {
       )}
       {!isCanvaExport ? (
         <Chip
-          shape="square"
           label={ctx.t("tiptap.mediaInsert", "Insert")}
           onClick={() => ctx.pick(data)}
           style={{ flexShrink: 0, border: "1px solid #A1A1A1" }}
@@ -310,14 +308,12 @@ function MediaLibraryActionsCell(params) {
       ) : null}
       {isCanvaExport && exportPdfUrl ? (
         <Chip
-          shape="square"
           label={ctx.t("tiptap.mediaDownloadPdf", {}, { default: "Download PDF" })}
           onClick={handleDownloadPdf}
           style={{ flexShrink: 0, border: "1px solid #336F8A" }}
         />
       ) : null}
       <Chip
-        shape="square"
         label={ctx.t("tiptap.mediaEdit", "Edit")}
         disabled={ctx.savingMeta}
         onClick={() => ctx.startEdit(data)}
@@ -325,7 +321,6 @@ function MediaLibraryActionsCell(params) {
       />
       {isOwner && (
         <Chip
-          shape="square"
           label={ctx.t("tiptap.mediaDelete", "Delete")}
           onClick={() => void ctx.handleDelete(data)}
           style={{

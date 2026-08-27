@@ -69,7 +69,6 @@ export default function TeacherClasses({ query, user }) {
                       "Least recent at the top"
                     )
               }
-              shape="square"
               onClick={() =>
                 setDateSortOrder((prev) =>
                   prev === "newest" ? "oldest" : "newest"

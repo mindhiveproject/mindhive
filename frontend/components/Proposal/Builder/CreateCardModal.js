@@ -132,7 +132,6 @@ function CheckpointStep({
         {checkpointOptions.map((option) => (
           <Chip
             key={option.value}
-            shape="square"
             label={option.label}
             selected={checkpointChoice === option.value}
             disabled={option.disabled}
@@ -152,7 +151,6 @@ function CheckpointStep({
         ))}
         {canCreateNew ? (
           <Chip
-            shape="square"
             label={t(
               "section.createCardModal.newCheckpoint",
               {},
@@ -352,14 +350,12 @@ function PermissionsAndTemplateStep({
               {formTemplateOptions.map((option) => (
                 <Chip
                   key={option.value}
-                  shape="square"
                   label={option.label}
                   selected={selectedTemplateKey === option.value}
                   onClick={() => onTemplateSelect(option.value)}
                 />
               ))}
               <Chip
-                shape="square"
                 label={t(
                   "section.createCardModal.formTemplate.blank",
                   {},
@@ -372,7 +368,6 @@ function PermissionsAndTemplateStep({
           ) : (
             <div style={chipRowStyle}>
               <Chip
-                shape="square"
                 label={t(
                   "section.createCardModal.formTemplate.defaultLabel",
                   { label: resolvedTemplateLabel },

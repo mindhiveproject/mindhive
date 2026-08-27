@@ -8,6 +8,7 @@ import ReactHtmlParser from "react-html-parser";
 
 import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 import TipTapEditor from "../../TipTap/Main";
+import Chip from "../../DesignSystem/Chip";
 
 import { EDIT_HOMEWORK } from "../../Mutations/Homework";
 import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../Queries/Homework";
@@ -70,46 +71,6 @@ const StatusChipsContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const StatusChip = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1.5px solid;
-  background: ${props => props.active ? '#D8D3E7' : '#ffffff'};
-  border-color: ${props => props.active ? '#7D70AD' : '#D8D3E7'};
-  color: ${props => props.active ? '#434343' : '#434343'};
-  
-  &:hover:not(:disabled) {
-    border-color: ${props => props.active ? '#7D70AD' : '#7D70AD'};
-    background: ${props => props.active ? '#D8D3E7' : '#F5F5F5'};
-  }
-  
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const FeedbackGivenChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  white-space: nowrap;
-  border: 1.5px solid #8A2CF6;
-  background: #D8D3E7;
-  color: #8A2CF6; 
-`;
 
 const ContentSection = styled.div`
   margin-top: 24px;
@@ -447,18 +408,18 @@ export default function HomeworkTab({ user, assignment, homework }) {
             <span>{moment(homework?.createdAt).format("MMM D, YYYY")}</span>
             <StatusChipsContainer>
               {currentStatus === "Feedback given" && (
-                <FeedbackGivenChip>
-                  {t("teacherClass.feedbackGiven") || "Feedback given"}
-                </FeedbackGivenChip>
+                <Chip
+                  variant="static"
+                  tone="success"
+                  label={t("teacherClass.feedbackGiven") || "Feedback given"}
+                />
               )}
               {canSeeFeedbackGiven && currentStatus !== "Feedback given" && (
-                <StatusChip
-                  active={currentStatus === "Feedback given"}
+                <Chip
+                  label={t("teacherClass.feedbackGiven") || "Feedback given"}
                   onClick={() => handleStatusChange("Feedback given")}
                   disabled={isEditing || loading}
-                >
-                  {t("teacherClass.feedbackGiven") || "Feedback given"}
-                </StatusChip>
+                />
               )}
             </StatusChipsContainer>
           </MetaInfo>

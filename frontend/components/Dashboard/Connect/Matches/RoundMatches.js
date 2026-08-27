@@ -1079,7 +1079,7 @@ export default function RoundMatches({ roundId }) {
           <TitleRow>
             <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
               <h1 title={pageTitle}>{pageTitle}</h1>
-              <Chip shape="pill" label={roundStatusLabel} />
+              <Chip label={roundStatusLabel} />
             </div>
             <div className="meta">
               {matches.length} match{matches.length === 1 ? "" : "es"} ·{" "}

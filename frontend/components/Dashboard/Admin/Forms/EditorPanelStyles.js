@@ -2,6 +2,8 @@
 // one file so the two editors stay visually consistent.
 import styled from "styled-components";
 
+import Chip from "../../../DesignSystem/Chip";
+
 export const EditorPanelShell = styled.div`
   display: flex;
   flex-direction: column;
@@ -88,14 +90,13 @@ export const FieldRow = styled.label`
   }
 `;
 
-export const PillCheckbox = styled.button`
-  padding: 4px 12px;
-  border-radius: 100px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  cursor: pointer;
-  border: 1px solid
-    ${({ $checked }) => ($checked ? "#336f8a" : "#d3dae0")};
-  background: ${({ $checked }) => ($checked ? "#336f8a" : "#ffffff")};
-  color: ${({ $checked }) => ($checked ? "#ffffff" : "#5f6871")};
-`;
+// Toggle chip: selected = primary-light fill + primary border (DS Chip).
+export const PillCheckbox = ({ $checked, children, onClick, ...rest }) => (
+  <Chip
+    selected={!!$checked}
+    label={children}
+    onClick={onClick}
+    ariaLabel={rest["aria-label"]}
+    title={rest.title}
+  />
+);

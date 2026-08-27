@@ -125,22 +125,17 @@ function getStatusChipColors(status) {
   return OPPORTUNITY_STATUS_CHIP_COLORS[status] || DEFAULT_STATUS_CHIP_COLORS;
 }
 
-const StatusPill = styled.span`
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  height: 32px;
-  min-height: 32px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  box-sizing: border-box;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  text-transform: capitalize;
-  background: ${({ $status }) => getStatusChipColors($status).background};
-  border: 1px solid ${({ $status }) => getStatusChipColors($status).border};
-  color: ${({ $status }) => getStatusChipColors($status).color};
-`;
+const STATUS_TONE = {
+  draft: "neutral",
+  pending_review: "warning",
+  returned: "warning",
+  pre_selected: "info",
+  accepted: "success",
+  published: "success",
+  closed: "neutral",
+  archived: "neutral",
+};
+const statusTone = (status) => STATUS_TONE[status] ?? "neutral";
 
 const StatusSelectWrap = styled.div`
   flex-shrink: 0;
@@ -383,7 +378,7 @@ export default function OpportunityCompactCard({
             />
           </StatusSelectWrap>
         ) : statusLabel ? (
-          <StatusPill $status={status}>{statusLabel}</StatusPill>
+          <Chip variant="static" tone={statusTone(status)} label={statusLabel} />
         ) : null}
       </TitleRow>
       {metaLine ? <Meta>{metaLine}</Meta> : null}
@@ -396,14 +391,13 @@ export default function OpportunityCompactCard({
                 {editLabel}
               </ReviewCommentsButton>
             ) : (
-              <Chip label={editLabel} onClick={onEdit} ariaLabel={editLabel} shape="square" />
+              <Chip label={editLabel} onClick={onEdit} ariaLabel={editLabel} />
             )
           ) : null}
           {reviewHref ? (
             <Chip
               label={reviewLabel}
               onClick={() => router.push(reviewHref)}
-              shape="square"
               ariaLabel={reviewLabel}
             />
           ) : null}
@@ -411,7 +405,6 @@ export default function OpportunityCompactCard({
             <Chip
               label={deleteLabel}
               onClick={onDelete}
-              shape="square"
               ariaLabel={deleteLabel}
               style={DELETE_CHIP_STYLE}
             />

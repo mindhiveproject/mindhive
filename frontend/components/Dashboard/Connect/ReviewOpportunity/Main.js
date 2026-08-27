@@ -458,7 +458,7 @@ export default function ReviewOpportunityMain({ query }) {
       <Card>
         <h2>Status</h2>
         <StatusBar>
-          <Chip shape="pill" label={currentStatus} selected />
+          <Chip label={currentStatus} selected />
           <label>
             Change to{" "}
             <select

@@ -700,7 +700,6 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
         )}
       >
         <Chip
-          shape="square"
           className="MH-Type-Label-Small"
           label={t(
             "opportunities.matchingRound.studentInterest.modeTable",
@@ -712,7 +711,6 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
           style={{ height: "28px" }}
         />
         <Chip
-          shape="square"
           className="MH-Type-Label-Small"
           label={t(
             "opportunities.matchingRound.studentInterest.modeGrid",

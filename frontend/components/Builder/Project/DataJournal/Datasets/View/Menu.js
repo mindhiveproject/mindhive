@@ -105,7 +105,6 @@ function TaskAccordionItem({
           <Chips
             label={isOpen ? collapseLabel : expandLabel}
             selected={isOpen}
-            shape="square"
             style={{ fontSize: "12px" }}
             ariaLabel={chipAria}
             leading={

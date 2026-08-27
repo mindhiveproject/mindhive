@@ -1155,7 +1155,6 @@ export default function MilestoneCardBuilder({
           </div>
           {capability === CAPABILITY_DATA_COLLECTION ? (
             <Chip
-              shape="square"
               label={t(
                 "board.expendedCard.milestoneCard.dataCollectionPanelChip",
                 {},
@@ -1214,7 +1213,6 @@ export default function MilestoneCardBuilder({
                   return (
                     <li key={card.id}>
                       <Chip
-                        shape="square"
                         label={cardLabel}
                         disabled
                         style={{

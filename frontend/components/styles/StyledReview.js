@@ -378,6 +378,16 @@ export const StyledDasboardReview = styled.div`
         grid-gap: 16px;
         grid-template-columns: 3fr 1fr 1fr 1fr;
       }
+      /* !important: DropdownSelect sets these inline for its clamp-and-wrap
+         full-width case. Here the trigger is a compact filter — keep it to one
+         line and ellipsize instead. */
+      .searchTopArea [data-dropdown-label] {
+        white-space: nowrap !important;
+        -webkit-line-clamp: 1 !important;
+        line-clamp: 1 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
       .checkboxArea {
         display: grid;
         align-items: center;

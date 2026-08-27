@@ -7,7 +7,8 @@ import { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import styled from "styled-components";
 
-import TipTapEditor from "../../../../../TipTap/Main";  
+import Chip from "../../../../../DesignSystem/Chip";
+import TipTapEditor from "../../../../../TipTap/Main";
 import { StyledTipTap } from "../../../../../TipTap/StyledTipTap";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 
@@ -39,19 +40,6 @@ const ButtonContainer = styled.div`
   align-items: center;
 `;
 
-const UsernameChip = styled.div`
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  padding: 4px 12px 4px 12px;
-  margin-top: 16px;
-  border-radius: 100px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  border: 1px solid #171717;
-  background: #FFFFFF;
-  color: #171717;
-`;
 
 const Section = styled.div`
   margin-bottom: 32px;
@@ -287,9 +275,12 @@ export default function ReviewHomework({
       {/* Student's Homework Section */}
       <Section>
         <SectionTitle>{t("assignment.studentEntry") || "Student's entry"}</SectionTitle>
-        <UsernameChip>
-          {homework?.author?.username || 'Unknown Student'}
-        </UsernameChip>
+        <Chip
+          variant="static"
+          tone="neutral"
+          label={homework?.author?.username || 'Unknown Student'}
+          style={{ marginTop: 16 }}
+        />
         <StyledTipTap>
           <TipTapEditor
             content={inputs?.content}

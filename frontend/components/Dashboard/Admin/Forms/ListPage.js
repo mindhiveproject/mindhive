@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import { useMutation, useQuery } from "@apollo/client";
 
+import Chip from "../../../DesignSystem/Chip";
 import { ADMIN_FORM_DEFINITIONS } from "../../../Queries/FormDefinition";
 import {
   DELETE_FORM_DEFINITION,
@@ -215,19 +216,8 @@ const FilterBar = styled.div`
   }
 `;
 
-const StatusPill = styled.span`
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 100px;
-  font: var(--MH-Type-Label-Small);
-  letter-spacing: 0;
-  text-transform: uppercase;
-  background: ${({ $status }) =>
-    $status === "published" ? "#1d6b3a" :
-    $status === "draft" ? "#8a6d3b" :
-    "#5f6871"};
-  color: #ffffff;
-`;
+const STATUS_TONE = { published: "success", draft: "warning" };
+const statusTone = (status) => STATUS_TONE[status] ?? "neutral";
 
 function fmtDate(s) {
   if (!s) return "—";
@@ -625,7 +615,7 @@ export default function ListPage() {
                 </td>
                 <td>v{r.version}</td>
                 <td>
-                  <StatusPill $status={r.status}>{r.status}</StatusPill>
+                  <Chip variant="static" tone={statusTone(r.status)} label={r.status} />
                 </td>
                 <td>{fmtDate(r.publishedAt)}</td>
                 <td className="actions">

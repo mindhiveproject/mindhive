@@ -1414,7 +1414,6 @@ function NetworkDetailPage({ query, user }) {
                   </SectionHeader>
                   <SummaryChips>
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/icons/education.svg"
@@ -1434,7 +1433,6 @@ function NetworkDetailPage({ query, user }) {
                       )}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/connect/building.svg"
@@ -1464,7 +1462,6 @@ function NetworkDetailPage({ query, user }) {
                       onClick={() => selectTab(TABS.organizations)}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/connect/user.svg"
@@ -1494,7 +1491,6 @@ function NetworkDetailPage({ query, user }) {
                       onClick={() => selectTab(TABS.profiles)}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/connect/group.svg"
@@ -1514,7 +1510,6 @@ function NetworkDetailPage({ query, user }) {
                       )}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/icons/project/proposal.svg"
@@ -1534,7 +1529,6 @@ function NetworkDetailPage({ query, user }) {
                       )}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/icons/profile/documents.svg"
@@ -1564,7 +1558,6 @@ function NetworkDetailPage({ query, user }) {
                       onClick={() => selectTab(TABS.matching)}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/icons/profile/consent.svg"

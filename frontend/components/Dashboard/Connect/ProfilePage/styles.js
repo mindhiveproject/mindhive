@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import Chip from "../../../DesignSystem/Chip";
+
 const imgBackground = "/assets/connect/background.svg";
 
 export const FALLBACK_COLORS = [
@@ -104,14 +106,9 @@ export const NameRow = styled.div`
   }
 `;
 
-export const PronounTag = styled.span`
-  padding: 6px 12px;
-  border-radius: 8px;
-  background: #edf2ee;
-  color: #171717;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-`;
+export const PronounTag = ({ children }) => (
+  <Chip variant="static" tone="neutral" label={children} />
+);
 
 export const Tagline = styled.p`
   margin: 0;
@@ -294,26 +291,9 @@ export const ChipList = styled.div`
   flex-wrap: wrap;
 `;
 
-export const InterestTag = styled.span`
-  display: inline-flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: fit-content;
-  min-width: fit-content;
-  min-height: 32px;
-  height: fit-content;
-  max-height: 64px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  background: #f3f3f3;
-  color: #171717;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  white-space: normal;
-  word-break: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
+export const InterestTag = ({ children }) => (
+  <Chip variant="static" tone="neutral" label={children} labelLines={2} />
+);
 
 export const FieldGrid = styled.div`
   display: grid;

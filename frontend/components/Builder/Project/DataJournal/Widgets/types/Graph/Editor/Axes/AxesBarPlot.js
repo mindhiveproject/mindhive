@@ -213,7 +213,6 @@ export default function AxesBarPlot({
                   label={option.chipLabel}
                   selected={selectedDataFormat === option.value}
                   onClick={() => onSelectorChoice(option)}
-                  shape="square"
                   ariaLabel={option.title}
                   style={
                     selectedDataFormat === option.value

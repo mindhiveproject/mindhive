@@ -64,7 +64,6 @@ export default function OrganizationVerificationStatus({
             default: "Verified",
           })}
           leading={VerifiedIcon}
-          shape="pill"
           style={{
             ...VERIFIED_CHIP_STYLE,
             ...(compact
@@ -120,7 +119,6 @@ export default function OrganizationVerificationStatus({
           label={t("organizationsDetail.verification.notVerified", {}, {
             default: "Not verified",
           })}
-          shape="pill"
           style={{
             ...UNVERIFIED_CHIP_STYLE,
             ...(compact

@@ -76,7 +76,6 @@ export default function OrganizationConnectCard({ org, href, linkLabel }) {
       chips={
         opportunityCount > 0 ? (
           <Chip
-            shape="square"
             leading={<BriefcaseIcon width={18} height={18} />}
             label={t(
               opportunityCount === 1

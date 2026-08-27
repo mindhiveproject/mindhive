@@ -366,7 +366,6 @@ export default function BoardExport() {
               label={t("filteringPolicies", {
                 defaultValue: "Data pulling policies",
               })}
-              shape="square"
               style={{ border: "none" }}
             />
           </InfoPopover>

@@ -1,15 +1,26 @@
 import { useQuery } from "@apollo/client";
 import { useState, useEffect, useRef } from "react";
-import { Dropdown } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import Card from "./Card.js";
 
 import { STUDIES_COLLECTING_DATA } from "../../../../Queries/Study.js";
+import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import { ArrowDropDownIcon } from "../../../../DesignSystem/Icons";
 
 function containsAny(arr1, arr2) {
   return arr1.some((item) => arr2.includes(item));
 }
+
+// Align the dropdown triggers with the search input sitting next to them in
+// `.searchTopArea` (StyledReview): same border, radius and padding.
+const FILTER_TRIGGER_STYLE = {
+  border: "1px solid #cccccc",
+  borderRadius: "4px",
+  padding: "12px",
+};
+
+const DROPDOWN_GLYPH = <ArrowDropDownIcon width={22} height={22} />;
 
 export default function StudiesBoard({
   allUniqueClassIds,
@@ -234,37 +245,35 @@ export default function StudiesBoard({
           />
         </div>
 
-        <div>
-          <Dropdown
+        <div id="sortBy">
+          <DropdownSelect
+            ariaLabel={t("review.sortBy")}
             placeholder={t("review.sortBy")}
-            fluid
-            selection
-            options={sortOptions.map((p) => ({
-              key: p.value,
-              value: p.value,
-              text: p.label,
-            }))}
-            onChange={(event, data) => {
-              setSortBy(data?.value);
-            }}
             value={sortBy}
+            options={sortOptions.map((p) => ({
+              value: p.value,
+              label: p.label,
+            }))}
+            triggerStyle={FILTER_TRIGGER_STYLE}
+            icon={DROPDOWN_GLYPH}
+            onChange={(next) => setSortBy(next)}
           />
         </div>
-        <Dropdown
-          placeholder={t("review.filterByClasses")}
-          fluid
-          multiple
-          selection
-          options={allUniqueClasses.map((c) => ({
-            key: c.id,
-            value: c.id,
-            text: c.title,
-          }))}
-          onChange={(event, data) => {
-            setFilteredClasses(data.value);
-          }}
-          value={filteredClasses}
-        />
+        <div id="filterByClasses">
+          <DropdownSelect
+            multiple
+            ariaLabel={t("review.filterByClasses")}
+            placeholder={t("review.filterByClasses")}
+            value={filteredClasses}
+            options={allUniqueClasses.map((c) => ({
+              value: c.id,
+              label: c.title,
+            }))}
+            triggerStyle={FILTER_TRIGGER_STYLE}
+            icon={DROPDOWN_GLYPH}
+            onChange={(next) => setFilteredClasses(next)}
+          />
+        </div>
       </div>
 
       <div className="p16_500">{filterSortMessage}</div>

@@ -218,7 +218,6 @@ export default function ManageOrganization({ organizationId, user }) {
                     height={24}
                   />
                 }
-                shape="pill"
               />
             </div>
             <p className="tabsHint">

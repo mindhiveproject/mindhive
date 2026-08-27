@@ -76,7 +76,6 @@ export default function OpportunityConnectCard({
         orgName ? (
           <Chip
             key="organization"
-            shape="pill"
             label={orgName}
             title={orgName}
             style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}

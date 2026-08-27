@@ -146,7 +146,7 @@ const StyledProject = styled.div`
           }
 
           p {
-            font: var(--MH-Type-Label-Base);
+            font: var(--MH-Type-Label-Large);
             letter-spacing: 0;
             color: #171717;
             margin: 0;

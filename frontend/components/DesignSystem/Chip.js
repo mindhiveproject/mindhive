@@ -2,31 +2,12 @@
 
 import { useState } from "react";
 
-const CLOSE_ICON = (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    style={{ flexShrink: 0, display: "block" }}
-    aria-hidden
-  >
-    <path
-      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
-      fill="currentColor"
-    />
-  </svg>
-);
-
-const BORDER_RADIUS = {
-  square: "8px",
-  pill: "100px",
-};
+import { CloseIcon } from "./Icons";
 
 // MH-Type/label/base (Inter Medium 14/20). Vertical padding is 6px to hit
 // Figma's fixed 32px chip height with this line-height — not on the 4px grid,
-// but pixel-precise, so left as-is.
+// but pixel-precise, so left as-is. Corner radius is a fixed 8px for every
+// chip (Figma "Basic Chips" + Material 3), so there is no shape option.
 const CHIP_BASE_STYLE = {
   display: "inline-flex",
   alignItems: "center",
@@ -36,6 +17,7 @@ const CHIP_BASE_STYLE = {
   paddingRight: "12px",
   paddingTop: "6px",
   paddingBottom: "6px",
+  borderRadius: "8px",
   border: "1px solid #a1a1a1",
   background: "#ffffff",
   backgroundColor: "#ffffff",
@@ -48,7 +30,7 @@ const CHIP_SELECTED_STYLE = {
   ...CHIP_BASE_STYLE,
   background: "var(--MH-Theme-Primary-Light, #def8fb)",
   backgroundColor: "var(--MH-Theme-Primary-Light, #def8fb)",
-  border: "2px solid var(--MH-Theme-Primary-Dark, #336f8a)",
+  border: "1px solid var(--MH-Theme-Primary-Base, #69bbc4)",
 };
 
 const CHIP_DISABLED_STYLE = {
@@ -59,6 +41,43 @@ const CHIP_DISABLED_STYLE = {
   border: "1px solid #e6e6e6",
   cursor: "default",
   pointerEvents: "none",
+};
+
+// Non-interactive display chip — Figma "Non-Interactive" state: filled, no
+// border, no hover, no trailing/close affordance. Used for read-only tags,
+// statuses and metadata. `tone` swaps the fill/text pair for semantic statuses;
+// toned chips stay fill-only (no outline), matching the Figma treatment.
+const CHIP_STATIC_STYLE = {
+  ...CHIP_BASE_STYLE,
+  border: "none",
+  cursor: "default",
+};
+
+const CHIP_TONES = {
+  default: {
+    background: "var(--MH-Theme-Primary-Light, #def8fb)",
+    color: "#171717",
+  },
+  neutral: {
+    background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+    color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+  },
+  success: {
+    background: "var(--MH-Theme-Success, #e3f4ec)",
+    color: "var(--MH-Theme-Success-Dark, #1d6b3a)",
+  },
+  warning: {
+    background: "var(--MH-Theme-Warning-Light, #fdf6e8)",
+    color: "var(--MH-Theme-Warning-Dark, #8a6d3b)",
+  },
+  info: {
+    background: "var(--MH-Theme-Primary-Light, #def8fb)",
+    color: "var(--MH-Theme-Primary-Dark, #336f8a)",
+  },
+  danger: {
+    background: "var(--MH-Theme-Danger-Light, #fdecea)",
+    color: "var(--MH-Theme-Danger-Dark, #b3261e)",
+  },
 };
 
 const CHIP_WITH_LEADING = {
@@ -95,18 +114,27 @@ const CHIP_FOCUS_STYLE = `
 `;
 
 /**
- * Reusable input chip (pill) for tags, filters, and removable tokens.
- * Matches Figma Basic Chips: label-only, label + icon/avatar, optional close and trailing actions.
+ * Reusable chip for tags, filters, statuses and removable tokens.
+ * Matches Figma "Basic Chips": fixed 32px height, 8px corners, Inter Medium
+ * 14/20 label, label-only / label + icon / label + avatar, optional close.
+ *
+ * Two variants:
+ *  - "interactive" (default): white + 1px border; hover fills grey; `selected`
+ *    fills primary-light with a 2px primary border; supports `onClick`,
+ *    `onClose`, `disabled`.
+ *  - "static": non-interactive display chip — primary-light fill, no border,
+ *    no hover, no close/trailing. For read-only tags and statuses.
  *
  * @param {React.ReactNode} label - Main text (required).
- * @param {boolean} [selected=false] - Visual selected state (primary light background when true).
+ * @param {"interactive"|"static"} [variant="interactive"] - Interaction model (see above).
+ * @param {"default"|"neutral"|"success"|"warning"|"info"|"danger"} [tone="default"] - Static chips only: semantic fill/text pair for statuses.
+ * @param {boolean} [selected=false] - Selected state (interactive only): primary-light fill + primary border.
  * @param {boolean} [pressed] - Optional toggle pressed state; when provided, sets aria-pressed.
- * @param {boolean} [disabled=false] - Disabled state (greyed, not clickable).
- * @param {() => void} [onClick] - Fired when the chip body is clicked; not fired when close or trailing is clicked.
- * @param {() => void} [onClose] - If provided, a close (X) icon is shown and this is called when it is clicked.
+ * @param {boolean} [disabled=false] - Disabled state (interactive only): greyed, not clickable.
+ * @param {() => void} [onClick] - Fired when the chip body is clicked; ignored for static chips and when close/trailing is clicked.
+ * @param {() => void} [onClose] - If provided (interactive only), a close (X) icon is shown and this is called when it is clicked.
  * @param {React.ReactNode} [leading] - Optional leading content (icon or avatar, typically 24px).
- * @param {React.ReactNode} [trailing] - Optional trailing content (e.g. star for favorite); rendered before the close icon.
- * @param {"square"|"pill"} [shape="pill"] - Corner radius: "square" (8px) or "pill" (100px).
+ * @param {React.ReactNode} [trailing] - Optional trailing content (interactive only); rendered before the close icon.
  * @param {React.CSSProperties} [style] - Optional override for the root chip container.
  * @param {string} [className] - Optional class for the root (e.g. for parent layout).
  * @param {string} [ariaLabel] - Optional accessible name (e.g. icon-only chips).
@@ -114,19 +142,21 @@ const CHIP_FOCUS_STYLE = `
  * @param {number} [labelLines=1] - Max lines for label text (1 = single line, no wrap).
  *
  * @example
- * // Removable chip
+ * // Read-only tag
+ * <Chip label="Biology" variant="static" />
+ *
+ * @example
+ * // Removable filter chip
  * <Chip label="Filter A" onClose={() => remove('A')} />
  *
  * @example
  * // Selectable chip with icon
  * <Chip label="Option" selected={isSelected} onClick={() => toggle()} leading={<Icon />} />
- *
- * @example
- * // Chip with favorite star (trailing) and close
- * <Chip label="Tag" trailing={<StarIcon onClick={toggleFav} />} onClose={onRemove} />
  */
 export default function Chip({
   label,
+  variant = "interactive",
+  tone = "default",
   selected = false,
   pressed,
   disabled = false,
@@ -134,7 +164,6 @@ export default function Chip({
   onClose,
   leading,
   trailing,
-  shape = "pill",
   style = {},
   className,
   ariaLabel,
@@ -143,23 +172,34 @@ export default function Chip({
 }) {
   const [hovered, setHovered] = useState(false);
 
+  const isStatic = variant === "static";
+  const isInteractive = !isStatic && !disabled;
+  const isClickable = isInteractive && typeof onClick === "function";
   const hasLeading = leading != null;
-  const hasClose = typeof onClose === "function";
-  const borderRadius = BORDER_RADIUS[shape] ?? BORDER_RADIUS.pill;
+  const hasTrailing = isInteractive && trailing != null;
+  const hasClose = isInteractive && typeof onClose === "function";
+  // Figma only shows a hover state for chips you can actually act on.
+  const canHover = isInteractive && (isClickable || hasClose);
   const isPressed = typeof pressed === "boolean" ? pressed : selected;
 
   let rootStyle = { ...CHIP_BASE_STYLE };
-  if (disabled) {
+  if (isStatic) {
+    const toneStyle = CHIP_TONES[tone] ?? CHIP_TONES.default;
+    rootStyle = {
+      ...CHIP_STATIC_STYLE,
+      background: toneStyle.background,
+      backgroundColor: toneStyle.background,
+      color: toneStyle.color,
+    };
+  } else if (disabled) {
     rootStyle = { ...CHIP_DISABLED_STYLE };
   } else if (selected || isPressed) {
     rootStyle = { ...CHIP_SELECTED_STYLE };
-    if (hovered) {
+    if (hovered && canHover) {
       rootStyle = { ...rootStyle, backgroundColor: "#e6e6e6" };
     }
-  } else {
-    if (hovered) {
-      rootStyle = { ...rootStyle, backgroundColor: "#f3f3f3" };
-    }
+  } else if (hovered && canHover) {
+    rootStyle = { ...rootStyle, backgroundColor: "#f3f3f3" };
   }
   if (hasLeading) {
     rootStyle = { ...rootStyle, ...CHIP_WITH_LEADING };
@@ -178,7 +218,7 @@ export default function Chip({
       alignItems: "center",
     };
   }
-  rootStyle = { ...rootStyle, borderRadius, ...style };
+  rootStyle = { ...rootStyle, ...style };
 
   const labelStyle = multilineLabel
     ? {
@@ -193,9 +233,8 @@ export default function Chip({
       }
     : { flexShrink: 0 };
 
-  const isClickable = !disabled && onClick;
   const handleRootClick = (e) => {
-    if (disabled || !onClick) return;
+    if (!isClickable) return;
     const target = e.target;
     const isClose = target.closest?.("[data-chip-close]");
     const isTrailing = target.closest?.("[data-chip-trailing]");
@@ -230,16 +269,18 @@ export default function Chip({
         }
         style={{
           ...rootStyle,
-          cursor: disabled ? "default" : isClickable ? "pointer" : "default",
+          cursor: isClickable ? "pointer" : "default",
         }}
         onClick={handleRootClick}
         onKeyDown={handleKeyDown}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        onMouseEnter={canHover ? () => setHovered(true) : undefined}
+        onMouseLeave={canHover ? () => setHovered(false) : undefined}
       >
-        {leading && <span style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>{leading}</span>}
+        {leading && (
+          <span style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>{leading}</span>
+        )}
         <span style={labelStyle}>{label}</span>
-        {trailing != null && (
+        {hasTrailing && (
           <span
             data-chip-trailing
             style={{ flexShrink: 0, display: "inline-flex", alignItems: "center" }}
@@ -260,7 +301,7 @@ export default function Chip({
             }}
             onKeyDown={(e) => e.stopPropagation()}
           >
-            {CLOSE_ICON}
+            <CloseIcon width={18} height={18} style={{ display: "block" }} />
           </button>
         )}
       </div>

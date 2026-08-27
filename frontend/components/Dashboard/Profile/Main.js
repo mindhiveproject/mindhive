@@ -106,7 +106,7 @@ export default function Profile() {
           {permissionNames.length > 0 && (
             <div className="profileMetaChips">
               {permissionNames.map((name) => (
-                <Chip key={name} label={name} shape="pill" />
+                <Chip key={name} label={name} />
               ))}
             </div>
           )}

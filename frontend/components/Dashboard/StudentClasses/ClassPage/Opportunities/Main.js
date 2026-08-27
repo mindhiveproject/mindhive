@@ -270,14 +270,12 @@ export default function StudentClassOpportunities({ myclass, user }) {
           { default: "Filter opportunities" },
         )}>
           <Chip
-            shape="square"
             label={filterAllLabel}
             selected={filterMode === "all"}
             onClick={() => setFilterMode("all")}
             ariaLabel={filterAllLabel}
           />
           <Chip
-            shape="square"
             label={filterFavoritesLabel}
             selected={filterMode === "favorites"}
             onClick={() => setFilterMode("favorites")}
