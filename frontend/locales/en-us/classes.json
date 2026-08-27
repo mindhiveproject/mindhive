@@ -939,7 +939,7 @@
 					"proposal": "Proposal",
 					"workflow": "Workflow / audit"
 				},
-				"hint": "Choose which columns to include. {{count}} opportunities from this network will be exported as a ZIP with the CSV and a folder per opportunity (intro video, cover illustration, and follow-up images, PDFs, and documents).",
+				"hint": "Choose which columns to include in the CSV. {{count}} opportunities from this network will be exported as a ZIP. Intro videos, illustrations, and follow-up files are included only when those Media columns are selected.",
 				"openButton": "Export ZIP",
 				"selectAll": "Select all",
 				"title": "Export opportunities"

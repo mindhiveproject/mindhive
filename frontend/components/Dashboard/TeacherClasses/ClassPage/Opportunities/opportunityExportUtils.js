@@ -383,6 +383,36 @@ export const ALL_EXPORT_COLUMN_IDS = EXPORT_COLUMN_GROUPS.flatMap((group) =>
   group.columns.map((column) => column.id),
 );
 
+/** Column IDs that gate which media files are bundled into the export ZIP. */
+export const MEDIA_KIND_COLUMN_IDS = {
+  video: [
+    "hasIntroVideo",
+    "introVideoFilename",
+    "introVideoUrl",
+    "introVideoZipPath",
+  ],
+  illustration: [
+    "hasCoverImage",
+    "coverImageFilename",
+    "coverImageZipPath",
+  ],
+  followUp: ["followUpAssetCount", "followUpAssetZipPaths"],
+};
+
+/**
+ * Derive which media file kinds to include in the ZIP from selected CSV columns.
+ * Selecting any column of a kind includes those files.
+ */
+export function getSelectedMediaKinds(selectedColumnIds) {
+  const selected = new Set(selectedColumnIds || []);
+  const hasAny = (ids) => ids.some((id) => selected.has(id));
+  return {
+    video: hasAny(MEDIA_KIND_COLUMN_IDS.video),
+    illustration: hasAny(MEDIA_KIND_COLUMN_IDS.illustration),
+    followUp: hasAny(MEDIA_KIND_COLUMN_IDS.followUp),
+  };
+}
+
 export function getDefaultSelectedColumnIds() {
   return [...ALL_EXPORT_COLUMN_IDS];
 }
