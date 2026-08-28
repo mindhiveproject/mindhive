@@ -3105,8 +3105,6 @@ function MatchingRoundEditor({
                     : () => selectPanel(panel.id)
                 }
                 style={{
-                  backgroundColor:
-                    activePanel === panel.id ? "#DEF8FB" : "transparent",
                   opacity: panel.disabled ? 0.45 : undefined,
                   cursor: panel.disabled ? "not-allowed" : undefined,
                 }}
