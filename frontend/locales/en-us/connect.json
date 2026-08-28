@@ -396,7 +396,61 @@
 	"editProfile": "Edit profile",
 	"exploreConnect": "Explore Connect",
 	"exploreDetail": {
-		"backLink": "Back to all opportunities"
+		"about": "About this opportunity",
+		"available": "Available",
+		"backLink": "Back to all opportunities",
+		"capacity": "Capacity",
+		"expectedDeliverables": "Expected deliverables",
+		"favorited": "Favorited",
+		"hardware": "Hardware",
+		"hostedBy": "Hosted by",
+		"introVideo": "Intro video",
+		"loading": "Loading opportunity…",
+		"mentorTimeCommitment": "Time commitment: {{value}}",
+		"notFound": "Opportunity not found, or no longer available.",
+		"pastParticipants": "What past participants said",
+		"ratingSummary": "({{count}} reviews)",
+		"relevance": "Relevance to CUSP",
+		"requirements": "Project requirements",
+		"saveToFavorites": "Save to favorites",
+		"software": "Software",
+		"solo": "Solo",
+		"teamOf": "Team of {{count}}",
+		"teamSize": "Team size",
+		"timeCommitment": "Time commitment",
+		"viewOrganization": "View organization",
+		"viewProfile": "View profile",
+		"website": "Website",
+		"yourContact": "Your contact"
+	},
+	"exploreForStaff": {
+		"notAvailable": "Explore opportunities is not available for your account.",
+		"redirecting": "Redirecting to your classes…"
+	},
+	"exploreList": {
+		"description": "Browse every published opportunity available to your class networks. Tap the star on any card to save it for later, or open the opportunity for full details, intro video, and mentor info.",
+		"emptyFavorites": "You haven't favorited any opportunities yet. Tap the star on a card to save it.",
+		"emptyFiltered": "No opportunities match the current filters.",
+		"favoritesOnly": "Favorites only",
+		"groupFilterLabel": "Filter by team size",
+		"groupFilterPlaceholder": "Solo or team",
+		"groupSolo": "Solo (1 student)",
+		"groupTeam": "Team (2+ students)",
+		"loading": "Loading…",
+		"networkFilterLabel": "Filter by network",
+		"networkFilterPlaceholder": "All networks",
+		"next": "Next",
+		"noNetworks": "You're not in any class networks yet. Once a teacher adds you to a class with a network, opportunities will show up here.",
+		"pageTitle": "Explore opportunities",
+		"paginationInfo": "Page {{page}} of {{totalPages}} · {{total}} total",
+		"paginationLabel": "Opportunities pagination",
+		"previous": "Previous",
+		"searchLabel": "Search opportunities",
+		"searchPlaceholder": "Search opportunities…",
+		"solo": "Solo",
+		"teamOf": "Team of {{count}}",
+		"unknownMentor": "Unknown mentor",
+		"videoTag": "Video"
 	},
 	"interests": {
 		"description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
@@ -459,6 +513,9 @@
 		"unauthorizedDescription": "You don’t have admin access to this organization. Choose one you administer from the list.",
 		"unauthorizedTitle": "You can’t manage this organization",
 		"viewPublic": "View public page"
+	},
+	"matchesList": {
+		"emptyNoRounds": "No matching rounds yet. Create and configure a round from your class Opportunities tab, then return here to run matching."
 	},
 	"matchesRound": {
 		"backLink": "Back to matches"
@@ -673,12 +730,10 @@
 		"manageNetwork": "Manage network",
 		"manageOrganization": "Manage organization",
 		"matches": "Matches",
-		"matchingRounds": "Matching rounds",
 		"myMatchedStudents": "My matched students",
 		"myOpportunities": "My opportunities",
 		"opportunities": "Opportunities",
 		"organizations": "Organizations",
-		"participate": "Participate",
 		"questionLibrary": "Question library",
 		"reviewQueue": ""
 	},

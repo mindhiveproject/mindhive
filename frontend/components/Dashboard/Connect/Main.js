@@ -2,12 +2,10 @@ import ConnectBank from "./Bank/Main";
 import Connections from "./Connections/Main";
 import ProfilePage from "./ProfilePage/Main";
 import MyProfile from "./MyProfile/Main";
-import RoundsMain from "./Rounds/Main";
 import QuestionsMain from "./Questions/Main";
 import MatchesMain from "./Matches/Main";
 import MentorMatchesMain from "./MentorMatches/Main";
 import ExploreForStaff from "./ExploreForStaff";
-import ParticipateRedirect from "./ParticipateRedirect";
 import OrganizationsMain from "./Organizations/Main";
 import ManageMain from "./Organizations/ManageMain";
 import ReviewQueueMain from "./ReviewQueue/Main";
@@ -31,12 +29,8 @@ export default function ConnectMain({ query, user }) {
         <MyProfile user={user} />
       </RoleGuard>
     );
-  } else if (selector === "rounds") {
-    content = <RoundsMain query={query} user={user} />;
   } else if (selector === "questions") {
     content = <QuestionsMain query={query} user={user} />;
-  } else if (selector === "participate") {
-    content = <ParticipateRedirect query={query} />;
   } else if (selector === "matches") {
     content = <MatchesMain query={query} user={user} />;
   } else if (selector === "my-matches") {

@@ -1,14 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { Icon, Dropdown } from "semantic-ui-react";
 
 import {
   EXPLORE_CONTEXT,
   EXPLORE_OPPORTUNITIES_PAGED,
 } from "../../../Queries/Opportunity";
 import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../Mutations/Opportunity";
+import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
+import DropdownSelect from "../../../DesignSystem/DropdownSelect";
+import FavoriteButton from "../../../DesignSystem/FavoriteButton";
+import { GroupIcon, StarFilledIcon, StarIcon } from "../../../DesignSystem/Icons";
 import FilterBar from "../FilterBar";
 
 const PAGE_SIZE = 12;
@@ -18,7 +23,7 @@ const Shell = styled.div`
   flex-direction: column;
   gap: 32px;
   padding: 32px clamp(16px, 6vw, 64px);
-  background-color: #f7f9f8;
+  background-color: var(--MH-Theme-Neutrals-Lighter, #f7f9f8);
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 `;
@@ -28,11 +33,11 @@ const Header = styled.div`
     margin: 0;
     font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
-    color: #171717;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
   }
   p {
     margin: 4px 0 0;
-    color: #5f6871;
+    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     max-width: 640px;
@@ -48,16 +53,16 @@ const Grid = styled.div`
 const Card = styled.div`
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--MH-Theme-Elevation-Low, 0px 4px 24px rgba(0, 0, 0, 0.05));
   position: relative;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--MH-Theme-Elevation-Medium, 0px 8px 32px rgba(0, 0, 0, 0.1));
   }
 `;
 
@@ -73,53 +78,23 @@ const CardLink = styled.a`
 const Cover = styled.div`
   height: 140px;
   background: ${({ $src }) =>
-    $src ? `url(${$src}) center/cover no-repeat #eef1f2` : "#eef1f2"};
+    $src
+      ? `url(${$src}) center/cover no-repeat var(--MH-Theme-Neutrals-Light, #eef1f2)`
+      : "var(--MH-Theme-Neutrals-Light, #eef1f2)"};
   position: relative;
-
-  .video-tag {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 4px 10px;
-    border-radius: 100px;
-    background: rgba(0, 0, 0, 0.7);
-    color: #ffffff;
-    font: var(--MH-Type-Label-Small);
-    letter-spacing: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
 `;
 
-const FavoriteButton = styled.button`
+const VideoTag = styled.div`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+`;
+
+const FavoriteWrap = styled.div`
   position: absolute;
   top: 10px;
   left: 10px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.95);
-  color: ${({ $active }) => ($active ? "#e8174c" : "#5f6871")};
-  cursor: pointer;
-  font-size: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  transition: transform 0.15s ease, color 0.15s ease;
   z-index: 2;
-
-  &:hover {
-    transform: scale(1.08);
-    color: #e8174c;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
 `;
 
 const Body = styled.div`
@@ -133,11 +108,11 @@ const Body = styled.div`
     margin: 0;
     font: var(--MH-Type-Title-Base);
     letter-spacing: 0;
-    color: #171717;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
   }
   p {
     margin: 0;
-    color: #5f6871;
+    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     display: -webkit-box;
@@ -155,7 +130,7 @@ const Meta = styled.div`
   gap: 8px;
   font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
-  color: #888;
+  color: var(--MH-Theme-Neutrals-Medium, #888);
 
   span {
     display: inline-flex;
@@ -163,48 +138,45 @@ const Meta = styled.div`
     gap: 4px;
   }
   .rating {
-    color: #5f6871;
+    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
     font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
   }
 `;
 
+const MetaIcon = styled.img`
+  width: 16px;
+  height: 16px;
+  display: block;
+  flex-shrink: 0;
+`;
+
 const Empty = styled.div`
   padding: 48px 24px;
   text-align: center;
-  background: #ffffff;
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
   border-radius: 16px;
-  color: #5f6871;
+  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
-const Pagination = styled.div`
+const Pagination = styled.nav`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 12px;
   padding: 16px;
-
-  button {
-    padding: 8px 16px;
-    border-radius: 100px;
-    border: 1px solid #d3dae0;
-    background: #ffffff;
-    color: #336f8a;
-    font: var(--MH-Type-Label-Base);
-    letter-spacing: 0;
-    cursor: pointer;
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  }
+  flex-wrap: wrap;
 
   .info {
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
-    color: #5f6871;
+    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
+`;
+
+const FilterDropdown = styled.div`
+  flex: 0 0 auto;
+  min-width: 180px;
 `;
 
 function formatDate(value) {
@@ -217,16 +189,14 @@ function formatDate(value) {
 }
 
 export default function ExploreList() {
-  // Step 1: lightweight context fetch (which networks the user is in,
-  // which opportunities they've favorited).
+  const { t } = useTranslation("connect");
+
   const { data: ctxData, refetch: refetchContext } = useQuery(EXPLORE_CONTEXT, {
     fetchPolicy: "cache-and-network",
   });
   const me = ctxData?.authenticatedItem;
   const profileId = me?.id;
 
-  // Collect every network the user can see opportunities through —
-  // a student via studentIn, a teacher via teacherIn, a mentor via mentorIn.
   const networkIds = useMemo(() => {
     const set = new Set();
     const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || []];
@@ -251,9 +221,8 @@ export default function ExploreList() {
       });
     });
     return Array.from(seen.values()).map((n) => ({
-      key: n.id,
-      text: n.title,
       value: n.id,
+      label: n.title,
     }));
   }, [me]);
 
@@ -262,18 +231,29 @@ export default function ExploreList() {
     [me],
   );
 
-  // Filter state
   const [search, setSearch] = useState("");
-  const [networkFilter, setNetworkFilter] = useState(null);
-  const [groupFilter, setGroupFilter] = useState(null);
+  const [networkFilter, setNetworkFilter] = useState("");
+  const [groupFilter, setGroupFilter] = useState("");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [page, setPage] = useState(1);
 
-  // Build the GraphQL `where` filter from the current state.
+  const groupOptions = useMemo(
+    () => [
+      {
+        value: "solo",
+        label: t("exploreList.groupSolo", {}, { default: "Solo (1 student)" }),
+      },
+      {
+        value: "team",
+        label: t("exploreList.groupTeam", {}, { default: "Team (2+ students)" }),
+      },
+    ],
+    [t],
+  );
+
   const where = useMemo(() => {
     const conditions = [{ status: { equals: "published" } }];
 
-    // Scope to the user's networks. If a specific network is selected, use it.
     if (networkFilter) {
       conditions.push({
         classNetworks: { some: { id: { equals: networkFilter } } },
@@ -283,7 +263,6 @@ export default function ExploreList() {
         classNetworks: { some: { id: { in: networkIds } } },
       });
     } else {
-      // User belongs to no networks at all — match nothing.
       conditions.push({ id: { equals: "__no_networks__" } });
     }
 
@@ -306,14 +285,12 @@ export default function ExploreList() {
     if (favoritesOnly && favoriteIds.size > 0) {
       conditions.push({ id: { in: Array.from(favoriteIds) } });
     } else if (favoritesOnly) {
-      // Favorites only with no favorites = empty result
       conditions.push({ id: { equals: "__no_favorites__" } });
     }
 
     return { AND: conditions };
   }, [networkFilter, networkIds, search, groupFilter, favoritesOnly, favoriteIds]);
 
-  // Reset to page 1 when any filter changes
   useEffect(() => {
     setPage(1);
   }, [search, networkFilter, groupFilter, favoritesOnly]);
@@ -325,7 +302,7 @@ export default function ExploreList() {
       skip: (page - 1) * PAGE_SIZE,
     },
     fetchPolicy: "cache-and-network",
-    skip: !me, // wait until we know which networks the user is in
+    skip: !me,
   });
 
   const opportunities = pagedData?.opportunities || [];
@@ -353,11 +330,14 @@ export default function ExploreList() {
   return (
     <Shell>
       <Header>
-        <h1>Explore opportunities</h1>
+        <h1>
+          {t("exploreList.pageTitle", {}, { default: "Explore opportunities" })}
+        </h1>
         <p>
-          Browse every published opportunity available to your class networks.
-          Tap the heart on any card to save it for later, or open the
-          opportunity for full details, intro video, and mentor info.
+          {t("exploreList.description", {}, {
+            default:
+              "Browse every published opportunity available to your class networks. Tap the star on any card to save it for later, or open the opportunity for full details, intro video, and mentor info.",
+          })}
         </p>
       </Header>
 
@@ -365,71 +345,95 @@ export default function ExploreList() {
         <FilterBar>
           <input
             className="search"
-            placeholder="Search opportunities…"
+            type="search"
+            placeholder={t("exploreList.searchPlaceholder", {}, {
+              default: "Search opportunities…",
+            })}
+            aria-label={t("exploreList.searchLabel", {}, {
+              default: "Search opportunities",
+            })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           {networkOptions.length > 1 && (
-            <Dropdown
-              selection
-              clearable
-              search
-              placeholder="All networks"
-              options={networkOptions}
-              value={networkFilter}
-              onChange={(_, { value }) => setNetworkFilter(value || null)}
-            />
+            <FilterDropdown>
+              <DropdownSelect
+                value={networkFilter}
+                options={networkOptions}
+                onChange={setNetworkFilter}
+                fitContent
+                searchableSingle
+                placeholder={t("exploreList.networkFilterPlaceholder", {}, {
+                  default: "All networks",
+                })}
+                ariaLabel={t("exploreList.networkFilterLabel", {}, {
+                  default: "Filter by network",
+                })}
+              />
+            </FilterDropdown>
           )}
-          <Dropdown
-            selection
-            clearable
-            placeholder="Solo or team"
-            options={[
-              { key: "solo", text: "Solo (1 student)", value: "solo" },
-              { key: "team", text: "Team (2+ students)", value: "team" },
-            ]}
-            value={groupFilter}
-            onChange={(_, { value }) => setGroupFilter(value || null)}
-          />
-          <button
-            type="button"
+          <FilterDropdown>
+            <DropdownSelect
+              value={groupFilter}
+              options={groupOptions}
+              onChange={setGroupFilter}
+              fitContent
+              placeholder={t("exploreList.groupFilterPlaceholder", {}, {
+                default: "Solo or team",
+              })}
+              ariaLabel={t("exploreList.groupFilterLabel", {}, {
+                default: "Filter by team size",
+              })}
+            />
+          </FilterDropdown>
+          <Chip
+            variant="interactive"
+            selected={favoritesOnly}
+            label={t("exploreList.favoritesOnly", {}, { default: "Favorites only" })}
+            leading={
+              <span
+                aria-hidden
+                style={{
+                  display: "flex",
+                  color: favoritesOnly
+                    ? "var(--MH-Theme-Accent-Base, #f2be42)"
+                    : "currentColor",
+                }}
+              >
+                {favoritesOnly ? <StarFilledIcon /> : <StarIcon />}
+              </span>
+            }
             onClick={() => setFavoritesOnly((v) => !v)}
-            className="MH-Type-Label-Base"
-            style={{
-              padding: "0 18px",
-              height: 42,
-              borderRadius: 12,
-              border: `1px solid ${favoritesOnly ? "#e8174c" : "#d3dae0"}`,
-              background: favoritesOnly ? "#ffeef2" : "#ffffff",
-              color: favoritesOnly ? "#e8174c" : "#5f6871",
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            <Icon name={favoritesOnly ? "heart" : "heart outline"} />
-            Favorites only
-          </button>
+            aria-pressed={favoritesOnly}
+          />
         </FilterBar>
       )}
 
       {networkIds.length === 0 && (
         <Empty>
-          You&apos;re not in any class networks yet. Once a teacher adds you to
-          a class with a network, opportunities will show up here.
+          {t("exploreList.noNetworks", {}, {
+            default:
+              "You're not in any class networks yet. Once a teacher adds you to a class with a network, opportunities will show up here.",
+          })}
         </Empty>
       )}
 
       {networkIds.length > 0 && loading && opportunities.length === 0 && (
-        <Empty>Loading…</Empty>
+        <Empty>
+          {t("exploreList.loading", {}, { default: "Loading…" })}
+        </Empty>
       )}
 
       {networkIds.length > 0 && !loading && total === 0 && (
         <Empty>
           {favoritesOnly
-            ? "You haven't favorited any opportunities yet. Tap the heart on a card to save it."
-            : "No opportunities match the current filters."}
+            ? t("exploreList.emptyFavorites", {}, {
+                default:
+                  "You haven't favorited any opportunities yet. Tap the star on a card to save it.",
+              })
+            : t("exploreList.emptyFiltered", {}, {
+                default: "No opportunities match the current filters.",
+              })}
         </Empty>
       )}
 
@@ -441,29 +445,24 @@ export default function ExploreList() {
             const mentorName =
               opp.mentor?.firstName ||
               opp.mentor?.username ||
-              "Unknown mentor";
+              t("exploreList.unknownMentor", {}, { default: "Unknown mentor" });
             const from = formatDate(opp.availableFrom);
             const to = formatDate(opp.availableTo);
             const isFavorite = favoriteIds.has(opp.id);
             return (
               <Card key={opp.id}>
-                <FavoriteButton
-                  type="button"
-                  $active={isFavorite}
-                  aria-label={
-                    isFavorite ? "Remove from favorites" : "Save to favorites"
-                  }
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleToggleFavorite(opp.id);
-                  }}
-                >
-                  <Icon
-                    name={isFavorite ? "heart" : "heart outline"}
-                    style={{ margin: 0 }}
+                <FavoriteWrap>
+                  <FavoriteButton
+                    active={isFavorite}
+                    addLabel={t("a11y.favorite.add", {}, {
+                      default: "Add to favorites",
+                    })}
+                    removeLabel={t("a11y.favorite.remove", {}, {
+                      default: "Remove from favorites",
+                    })}
+                    onToggle={() => handleToggleFavorite(opp.id)}
                   />
-                </FavoriteButton>
+                </FavoriteWrap>
                 <Link
                   href={{
                     pathname: "/dashboard/connect/explore",
@@ -475,9 +474,22 @@ export default function ExploreList() {
                   <CardLink>
                     <Cover $src={coverSrc}>
                       {hasVideo && (
-                        <span className="video-tag">
-                          <Icon name="play" /> Video
-                        </span>
+                        <VideoTag>
+                          <Chip
+                            variant="static"
+                            tone="neutral"
+                            label={t("exploreList.videoTag", {}, {
+                              default: "Video",
+                            })}
+                            leading={
+                              <MetaIcon
+                                src="/assets/icons/builder/play.svg"
+                                alt=""
+                                aria-hidden
+                              />
+                            }
+                          />
+                        </VideoTag>
                       )}
                     </Cover>
                     <Body>
@@ -485,21 +497,35 @@ export default function ExploreList() {
                       {opp.shortDescription && <p>{opp.shortDescription}</p>}
                       <Meta>
                         <span>
-                          <Icon name="user" /> {mentorName}
+                          <MetaIcon
+                            src="/assets/connect/user.svg"
+                            alt=""
+                            aria-hidden
+                          />
+                          {mentorName}
                         </span>
                         {opp.teamSize > 1 ? (
                           <span>
-                            <Icon name="group" /> Team of {opp.teamSize}
+                            <GroupIcon />
+                            {t(
+                              "exploreList.teamOf",
+                              { count: opp.teamSize },
+                              { default: "Team of {{count}}" },
+                            )}
                           </span>
                         ) : (
                           <span>
-                            <Icon name="user outline" /> Solo
+                            <MetaIcon
+                              src="/assets/connect/user.svg"
+                              alt=""
+                              aria-hidden
+                            />
+                            {t("exploreList.solo", {}, { default: "Solo" })}
                           </span>
                         )}
                         {(from || to) && (
                           <span>
-                            <Icon name="calendar outline" /> {from || "—"} →{" "}
-                            {to || "—"}
+                            {from || "—"} → {to || "—"}
                           </span>
                         )}
                         {opp.publicRatingCount > 0 && (
@@ -520,24 +546,34 @@ export default function ExploreList() {
       )}
 
       {totalPages > 1 && (
-        <Pagination>
-          <button
-            type="button"
+        <Pagination
+          aria-label={t("exploreList.paginationLabel", {}, {
+            default: "Opportunities pagination",
+          })}
+        >
+          <Button
+            variant="outline"
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
           >
-            <Icon name="chevron left" /> Previous
-          </button>
+            {t("exploreList.previous", {}, { default: "Previous" })}
+          </Button>
           <span className="info">
-            Page {page} of {totalPages} · {total} total
+            {t(
+              "exploreList.paginationInfo",
+              { page, totalPages, total },
+              {
+                default: "Page {{page}} of {{totalPages}} · {{total}} total",
+              },
+            )}
           </span>
-          <button
-            type="button"
+          <Button
+            variant="outline"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
           >
-            Next <Icon name="chevron right" />
-          </button>
+            {t("exploreList.next", {}, { default: "Next" })}
+          </Button>
         </Pagination>
       )}
     </Shell>

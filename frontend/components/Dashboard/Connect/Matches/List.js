@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 import { Icon, Label, Dropdown } from "semantic-ui-react";
 
 import { MY_CONNECT_ROUNDS } from "../../../Queries/ConnectRound";
@@ -134,6 +135,7 @@ function collectManagedRounds(profile) {
 }
 
 export default function MatchesList() {
+  const { t } = useTranslation("connect");
   const { data, loading } = useQuery(MY_CONNECT_ROUNDS, {
     fetchPolicy: "cache-and-network",
   });
@@ -218,7 +220,12 @@ export default function MatchesList() {
       {loading && rounds.length === 0 && <Empty>Loading…</Empty>}
 
       {!loading && rounds.length === 0 && (
-        <Empty>You haven&apos;t created any matching rounds yet.</Empty>
+        <Empty>
+          {t("matchesList.emptyNoRounds", {}, {
+            default:
+              "No matching rounds yet. Create and configure a round from your class Opportunities tab, then return here to run matching.",
+          })}
+        </Empty>
       )}
 
       {!loading && rounds.length > 0 && filtered.length === 0 && (
