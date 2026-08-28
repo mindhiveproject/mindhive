@@ -221,7 +221,19 @@ export default function DropdownMenu({
   };
 
   return (
-    <div ref={dropdownRef} style={{ position: "relative", zIndex: dropdownOpen ? 1001 : "auto" }}>
+    <div
+      ref={dropdownRef}
+      style={{
+        position: "relative",
+        zIndex: dropdownOpen ? 1001 : "auto",
+        // Panel placement is measured from this wrapper's rect, so it must
+        // shrink-wrap the trigger. Without this, a menu dropped straight into a
+        // grid/flex container stretches to the row height and the panel opens a
+        // trigger-height too low.
+        alignSelf: "start",
+        justifySelf: "start",
+      }}
+    >
       {useRenderTrigger ? (
         renderTrigger({
           onClick: () => setDropdownOpen((prev) => !prev),

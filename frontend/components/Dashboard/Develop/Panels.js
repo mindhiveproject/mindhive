@@ -53,7 +53,7 @@ export default function Panels({ query, user }) {
           href="/dashboard/develop/tasks"
           selected={selectorForUser === "tasks"}
         >
-          {t("myTasks")}
+          {t("developTasks.tabTasks", {}, { default: "Tasks" })}
         </NavbarItem>
 
         <NavbarItem
@@ -61,7 +61,7 @@ export default function Panels({ query, user }) {
           href="/dashboard/develop/surveys"
           selected={selectorForUser === "surveys"}
         >
-          {t("mySurveys")}
+          {t("developTasks.tabSurveys", {}, { default: "Surveys" })}
         </NavbarItem>
 
         <NavbarItem
@@ -69,7 +69,7 @@ export default function Panels({ query, user }) {
           href="/dashboard/develop/blocks"
           selected={selectorForUser === "blocks"}
         >
-          {t("myBlocks")}
+          {t("developTasks.tabBlocks", {}, { default: "Blocks" })}
         </NavbarItem>
 
         {isAdmin && (

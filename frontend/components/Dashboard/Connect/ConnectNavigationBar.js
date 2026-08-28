@@ -131,6 +131,40 @@ function ConnectNavDropdown({
     return null;
   }
 
+  const label = t(placeholderKey, {}, { default: placeholderDefault });
+  const ariaLabel = t(ariaLabelKey, {}, { default: ariaLabelDefault });
+
+  // A group with a single destination has nothing to choose between: render the
+  // nav item as a plain link that navigates straight there, no menu.
+  if (options.length === 1) {
+    const [only] = options;
+    return (
+      <li>
+        <a
+          href={only.href}
+          aria-label={ariaLabel}
+          aria-current={active ? "page" : undefined}
+          className={clsx(
+            "navbar-item",
+            icon && "has-icon",
+            active && "selected"
+          )}
+          onClick={(event) => {
+            event.preventDefault();
+            router.push(only.href);
+          }}
+        >
+          {icon ? (
+            <span className="navbar-item-icon" aria-hidden>
+              {icon}
+            </span>
+          ) : null}
+          <span data-dropdown-label>{label}</span>
+        </a>
+      </li>
+    );
+  }
+
   return (
     <li>
       <DropdownSelect
@@ -138,8 +172,8 @@ function ConnectNavDropdown({
         options={options}
         onChange={handleChange}
         fitContent
-        placeholder={t(placeholderKey, {}, { default: placeholderDefault })}
-        ariaLabel={t(ariaLabelKey, {}, { default: ariaLabelDefault })}
+        placeholder={label}
+        ariaLabel={ariaLabel}
         triggerClassName={clsx(
           "navbar-item",
           icon && "has-icon",

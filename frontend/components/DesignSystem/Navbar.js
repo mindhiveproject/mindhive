@@ -39,7 +39,7 @@ export const StyledNavbar = styled.div`
     font-style: normal;
 
     &:hover {
-      background-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      background-color: var(--MH-Theme-Accent-Light, #fdf2d0);
       opacity: 1;
     }
 
@@ -77,18 +77,17 @@ export const StyledNavbar = styled.div`
   }
   .navbar-container.underline .navbar-item {
     border-radius: 0px;
-    border-bottom: 2px solid transparent;
+    border-bottom: 3px solid transparent;
     background: none;
 
     &.selected,
     &:active {
-      border-color: var(--MH-Theme-Accent-Medium, #f9d978);
+      border-color: var(--MH-Theme-Accent-Base, #f2be42);
       background: none;
     }
+    /* Hover is a background fill only — the resting rule stays put. */
     &:hover:not(.selected) {
-      border-bottom-width: 2px;
-      border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
-      background: none;
+      background-color: var(--MH-Theme-Accent-Light, #fdf2d0);
     }
   }
 
@@ -116,11 +115,30 @@ export const StyledNavbar = styled.div`
       flex-direction: column;
     }
 
+    /* Sidebar text sits a touch lighter than pure black. */
     .navbar-item {
       width: 100%;
       justify-content: flex-start;
       padding-left: 16px;
       padding-right: 24px;
+      /* Square edges — the hover fill and the selected right rule both need to
+         reach the corners. Rounded pills are the tonal variant's job only. */
+      border-radius: 0px;
+      color: var(--MH-Theme-Accent-Dark, #5d5763);
+      /* Reserved so the label doesn't shift when the item becomes selected. */
+      border-right: 3px solid transparent;
+
+      /* Selected: an accent rule down the right edge, no fill. */
+      &.selected,
+      &:active {
+        background: none;
+        border-right-color: var(--MH-Theme-Accent-Base, #f2be42);
+      }
+
+      /* Only the glyph recolors — svgs inherit currentColor. */
+      &.selected .navbar-item-icon {
+        color: var(--MH-Theme-Accent-Base, #f2be42);
+      }
     }
 
     /* Items sit 8px apart via the container gap; a section heading opens a
@@ -128,13 +146,6 @@ export const StyledNavbar = styled.div`
     li:not(:first-child) > .navbar-section-label,
     li:not(:first-child) > .navbar-section-rule {
       margin-top: 24px;
-    }
-  }
-  .navbar-container.soft .navbar-item {
-    &.selected,
-    &:active {
-      background-color: var(--MH-Theme-Tertiary-Medium, #D3E0E3);
-      color: #0D3944;
     }
   }
 
@@ -147,6 +158,14 @@ export const StyledNavbar = styled.div`
       width: auto;
       justify-content: center;
       padding: 8px;
+
+      /* A right-edge rule reads oddly on a centered icon button; the collapsed
+         rail marks the selected item with a fill instead. */
+      &.selected,
+      &:active {
+        border-right-color: transparent;
+        background: var(--MH-Theme-Accent-Light, #fdf2d0);
+      }
     }
   }
 
@@ -193,14 +212,16 @@ const NavbarContext = createContext({ collapsed: false });
 /**
  * Design System Navbar. Renders a <nav> landmark wrapping a <ul> of NavbarItem.
  *
- * Two visual variants: tonal (pill background) and underline (bottom border).
- * Two orientations: horizontal (default, for tab bars) and vertical (for
- * sidebars and menu rails).
+ * Horizontal bars take a visual variant: underline (bottom-border tabs, the
+ * default) or tonal (rounded pills — legacy, kept for the study builder block
+ * menu). Vertical bars ignore `variant` and always render the sidebar style: an
+ * accent rule down the right edge of the selected item.
  *
  * Variant and orientation are set once here and cascade to every item via CSS,
  * so items themselves take no variant or orientation prop.
  *
- * @param {"tonal"|"underline"} [variant="tonal"] - Visual style for all items.
+ * @param {"underline"|"tonal"} [variant="underline"] - Visual style for a
+ *   horizontal bar. Ignored when orientation is "vertical".
  * @param {"horizontal"|"vertical"} [orientation="horizontal"] - Layout direction.
  * @param {boolean} [collapsed=false] - Renders an icon-only rail; item labels
  *   become accessible names instead of visible text. Works in both orientations.
@@ -228,7 +249,7 @@ const NavbarContext = createContext({ collapsed: false });
  * </Navbar>
  */
 export default function Navbar({
-  variant = "tonal",
+  variant = "underline",
   orientation = "horizontal",
   collapsed = false,
   showRule = false,
@@ -246,7 +267,7 @@ export default function Navbar({
         <ul
           className={clsx(
             "navbar-container",
-            variant,
+            !isVertical && variant,
             isVertical && "vertical",
             collapsed && "collapsed",
             showRule && "show-rule",

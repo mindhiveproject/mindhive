@@ -28,6 +28,11 @@ const WITH_LEADING_ICON = {
   paddingLeft: "16px",
 };
 
+// With trailing icon: right padding 16px, mirroring WITH_LEADING_ICON.
+const WITH_TRAILING_ICON = {
+  paddingRight: "16px",
+};
+
 // --- Filled
 const FILLED_BASE = {
   ...BASE_STYLE,
@@ -136,12 +141,13 @@ const FOCUS_VISIBLE_STYLE = `
   outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
   outline-offset: 2px;
 }
-.DesignSystem-Button-LeadingIcon svg {
+.DesignSystem-Button-LeadingIcon svg,
+.DesignSystem-Button-TrailingIcon svg {
   fill: currentColor;
 }
 `;
 
-const LEADING_ICON_WRAPPER_STYLE = {
+const ICON_WRAPPER_STYLE = {
   flexShrink: 0,
   display: "flex",
   alignItems: "center",
@@ -161,6 +167,7 @@ const LEADING_ICON_WRAPPER_STYLE = {
  * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
  * @param {React.ReactNode} children - Button label (required).
  * @param {React.ReactNode} [leadingIcon] - Optional 24px icon left of label.
+ * @param {React.ReactNode} [trailingIcon] - Optional 24px icon right of label (e.g. a dropdown caret).
  * @param {boolean} [disabled=false] - Disabled state.
  * @param {"button"|"submit"|"reset"} [type="button"] - Native button type.
  * @param {(e: React.MouseEvent<HTMLButtonElement>) => void} [onClick] - Click handler.
@@ -179,6 +186,7 @@ export default function Button({
   variant = "filled",
   children,
   leadingIcon = null,
+  trailingIcon = null,
   disabled = false,
   type = "button",
   onClick,
@@ -206,6 +214,10 @@ export default function Button({
     buttonStyle = { ...buttonStyle, ...WITH_LEADING_ICON };
   }
 
+  if (trailingIcon != null) {
+    buttonStyle = { ...buttonStyle, ...WITH_TRAILING_ICON };
+  }
+
   buttonStyle = { ...buttonStyle, ...style };
 
   return (
@@ -231,11 +243,16 @@ export default function Button({
         {...rest}
       >
         {leadingIcon != null && (
-          <span className="DesignSystem-Button-LeadingIcon" style={LEADING_ICON_WRAPPER_STYLE} aria-hidden>
+          <span className="DesignSystem-Button-LeadingIcon" style={ICON_WRAPPER_STYLE} aria-hidden>
             {leadingIcon}
           </span>
         )}
         {children}
+        {trailingIcon != null && (
+          <span className="DesignSystem-Button-TrailingIcon" style={ICON_WRAPPER_STYLE} aria-hidden>
+            {trailingIcon}
+          </span>
+        )}
       </button>
     </>
   );

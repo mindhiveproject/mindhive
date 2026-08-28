@@ -302,11 +302,12 @@ export const StyledMenuProfile = styled.div`
     min-width: 0;
     align-items: ${(props) => (props.$collapsed ? "center" : "stretch")};
 
-    /* Settings renders through the shared Navbar component; match it to the
-       Log off button's label/base size below. No explicit height here either
+    /* Settings renders through the shared Navbar component; keep it at the
+       navbar's own label/large size so it lines up with the rest of the rail
+       (and with the Log off button below). No explicit height here either
        — see the .menuBarNav override for why. */
     .navbar-container.vertical .navbar-item {
-      font: var(--MH-Type-Label-Base);
+      font: var(--MH-Type-Label-Large);
       letter-spacing: 0;
     }
   }
@@ -321,17 +322,23 @@ export const StyledMenuProfile = styled.div`
     padding: ${(props) => (props.$collapsed ? "8px" : "8px 24px 8px 16px")};
     width: ${(props) => (props.$collapsed ? "40px" : "auto")};
     border: 0;
-    border-radius: 100px;
+    /* Square edges like the vertical nav items above — no pill. The 3px
+       transparent right border mirrors their reserved selected-rule space so
+       the hover fills line up exactly. */
+    border-radius: 0;
+    border-right: 3px solid transparent;
     background: none;
     cursor: pointer;
 
-    /* MH-Theme/label/base — matches the nav items and Settings above it. */
-    font: var(--MH-Type-Label-Base);
+    /* MH-Type/label/large — matches the nav items and Settings above it. */
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     color: var(--MH-Theme-Warning-Base, #b9261a);
 
+    /* Hover is a background fill only, matching the nav items — a warning tint
+       here rather than the accent, since this is the destructive action. */
     &:hover {
-      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      background: var(--MH-Theme-Warning-Light, #edcecd);
       opacity: 1;
     }
   }

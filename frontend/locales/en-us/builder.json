@@ -1230,7 +1230,13 @@
 	"developTasks": {
 		"emptyBlock": "No blocks to show.",
 		"emptySurvey": "No surveys to show.",
-		"emptyTask": "No tasks to show."
+		"emptyTask": "No tasks to show.",
+		"filterCreatedByMe": "Created by me",
+		"filterFavorited": "Favorited",
+		"filterPublic": "Public",
+		"tabBlocks": "Blocks",
+		"tabSurveys": "Surveys",
+		"tabTasks": "Tasks"
 	},
 	"duplicateEditBlock": "Duplicate and edit a pre-existing MindHive block and its parameters.",
 	"duplicateEditSurvey": "Duplicate and edit a pre-existing MindHive survey and its parameters.",

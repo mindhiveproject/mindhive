@@ -124,6 +124,8 @@ export default function ConnectProfileCard({ user, profile, actions = null }) {
           ? orgTags.map((tag) => (
               <Chip
                 key={tag.key}
+                variant="static"
+                tone="neutral"
                 avatar
                 label={tag.label}
                 leading={
