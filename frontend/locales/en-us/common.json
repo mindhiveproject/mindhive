@@ -142,7 +142,7 @@
 			"replaceUpload": "Upload replacement",
 			"title": "Title",
 			"titlePlaceholder": "Resource name",
-			"unsupportedType": "Unsupported file type. Upload an image or a document (PDF, Word, Excel, PowerPoint, etc.).",
+			"unsupportedType": "Unsupported file type. Upload an image or a document (PDF, Word, Excel, PowerPoint, ZIP, etc.).",
 			"upload": "Upload image or document"
 		},
 		"min": "Must be at least {{min}}.",

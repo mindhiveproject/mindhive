@@ -198,6 +198,12 @@ const InterestCell = styled.span`
 const GridShell = styled.div`
   display: grid;
   gap: 12px;
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  border-radius: 12px;
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
 
   .matchingRoundStudentInterestEmpty {
     display: grid;
@@ -224,7 +230,7 @@ const GridShell = styled.div`
   .matchingRoundStudentInterestHeader {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 12px;
   }
@@ -417,7 +423,10 @@ const GridShell = styled.div`
   }
 
   .matchingRoundStudentInterestCardEmpty {
-    margin: 0;
+    margin: auto 0;
+    min-height: 135px;
+    display: flex;
+    align-items: center;
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #5c6570;

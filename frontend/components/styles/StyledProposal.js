@@ -457,6 +457,8 @@ export const StyledProposal = styled.div`
   }
 
   &.projectsBoardEditorProposal {
+    display: flex;
+    flex-direction: column;
     overflow-y: hidden;
     min-height: 0;
     height: 100%;
@@ -474,7 +476,30 @@ export const StyledProposal = styled.div`
     width: 100%;
     min-width: 0;
     height: 100%;
+    margin: 0;
+    padding: ${(props) => (props.$cardFullView ? "0" : "20px")};
+    box-sizing: border-box;
     overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .header {
+    flex-shrink: 0;
+  }
+
+  &.projectsBoardEditorProposal .proposalBoardContent {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .proposalPDF {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    max-width: none;
   }
 
   &.projectsBoardEditorProposal .boardEditorChrome {
@@ -739,9 +764,22 @@ export const StyledProposal = styled.div`
     .headerRightSection {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       flex-shrink: 0;
-      padding-left: 8px;
+    }
+    @media (max-width: 800px) {
+      .headerMainContent {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .headerLeftSection {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+      .headerRightSection {
+        width: 100%;
+        justify-content: flex-start;
+      }
     }
     .headerTitleRow {
       display: flex;

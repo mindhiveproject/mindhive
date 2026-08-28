@@ -157,7 +157,9 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
             openById.set(round.id, {
               id: round.id,
               title: round.title || "",
+              openAt: round.openAt || null,
               closeAt: round.closeAt || null,
+              settings: round.settings || null,
             });
           }
           for (const opportunity of round.opportunities || []) {
@@ -577,21 +579,7 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
 
   return (
     <div className="classTabPage opportunities">
-      {openRounds.length > 0 ? (
-        <RankBanners>
-          {openRounds.map((round) => (
-            <StudentRankActionCard
-              key={round.id}
-              round={round}
-              preference={preferenceByRoundId.get(round.id)}
-              hasOpportunities={true}
-              onRank={openRankRound}
-            />
-          ))}
-        </RankBanners>
-      ) : null}
-
-      <Filters>
+      <Filters className="Main__Filters">
         <FilterRow
           role="group"
           aria-label={t(
@@ -658,6 +646,20 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
           </CategoryFilterRow>
         ) : null}
       </Filters>
+
+      {openRounds.length > 0 ? (
+        <RankBanners>
+          {openRounds.map((round) => (
+            <StudentRankActionCard
+              key={round.id}
+              round={round}
+              preference={preferenceByRoundId.get(round.id)}
+              hasOpportunities={true}
+              onRank={openRankRound}
+            />
+          ))}
+        </RankBanners>
+      ) : null}
 
       <Page>
         {filteredOpportunities.length === 0 ? (

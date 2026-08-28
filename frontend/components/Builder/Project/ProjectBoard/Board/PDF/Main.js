@@ -371,7 +371,9 @@ export default function ProposalPDF({
         className="proposalPDF"
         style={{
           backgroundColor: "#f6f9f8",
-          height: "100vh",
+          flex: 1,
+          minHeight: 0,
+          height: "100%",
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",

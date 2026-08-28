@@ -4,13 +4,16 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { Icon, Label } from "semantic-ui-react";
 
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../Queries/Opportunity";
 import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import { hydrateProposalInputs } from "../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import { formatOrganizationLabel } from "../../../../lib/organizationLabels";
+import Chip from "../../../DesignSystem/Chip";
+import FavoriteButton from "../../../DesignSystem/FavoriteButton";
+import IconButton from "../../../DesignSystem/IconButton";
+import { ArrowOutwardIcon, CheckIcon } from "../../../DesignSystem/Icons";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
@@ -71,7 +74,7 @@ const Shell = styled.div`
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
-  background-color: #f7f9f8;
+  background-color: var(--MH-Theme-Neutrals-Lighter, #f7f9f8);
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 `;
@@ -92,28 +95,10 @@ const BACK_CHEVRON = (
   </svg>
 );
 
-const BackLink = styled.button`
+const FavoriteRow = styled.div`
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  color: #336f8a;
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    background: rgba(51, 111, 138, 0.08);
-  }
-
-  &:focus-visible {
-    outline: 2px solid #336f8a;
-    outline-offset: 2px;
-  }
+  gap: 8px;
 `;
 
 const HeroCover = styled.div`
@@ -359,22 +344,28 @@ export default function ExploreDetail({ opportunityId }) {
   if (loading && !opp) {
     return (
       <Shell>
-        <p>Loading opportunity…</p>
+        <p>
+          {t("exploreDetail.loading", {}, { default: "Loading opportunity…" })}
+        </p>
       </Shell>
     );
   }
   if (!opp) {
     return (
       <Shell>
-        <p>Opportunity not found, or no longer available.</p>
-        <BackLink
-          type="button"
+        <p>
+          {t("exploreDetail.notFound", {}, {
+            default: "Opportunity not found, or no longer available.",
+          })}
+        </p>
+        <IconButton
+          variant="tonal"
+          elevated={false}
           onClick={() => router.back()}
-          aria-label={backLabel}
+          ariaLabel={backLabel}
           title={backLabel}
-        >
-          {BACK_CHEVRON}
-        </BackLink>
+          icon={BACK_CHEVRON}
+        />
       </Shell>
     );
   }
@@ -402,14 +393,14 @@ export default function ExploreDetail({ opportunityId }) {
 
   return (
     <Shell>
-      <BackLink
-        type="button"
+      <IconButton
+        variant="tonal"
+        elevated={false}
         onClick={() => router.back()}
-        aria-label={backLabel}
+        ariaLabel={backLabel}
         title={backLabel}
-      >
-        {BACK_CHEVRON}
-      </BackLink>
+        icon={BACK_CHEVRON}
+      />
 
       {coverSrc && <HeroCover $src={coverSrc} />}
 
@@ -430,32 +421,26 @@ export default function ExploreDetail({ opportunityId }) {
             )}
           </div>
           <div className="right">
-            <button
-              type="button"
-              onClick={handleToggleFavorite}
-              disabled={toggling || !me?.id}
-              aria-label={
-                isFavorite ? "Remove from favorites" : "Save to favorites"
-              }
-              className="MH-Type-Label-Base"
-              style={{
-                padding: "8px 14px",
-                borderRadius: 100,
-                border: `1px solid ${isFavorite ? "#e8174c" : "#d3dae0"}`,
-                background: isFavorite ? "#ffeef2" : "#ffffff",
-                color: isFavorite ? "#e8174c" : "#5f6871",
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-              }}
-            >
-              <Icon
-                name={isFavorite ? "heart" : "heart outline"}
-                style={{ margin: 0 }}
+            <FavoriteRow>
+              <FavoriteButton
+                active={isFavorite}
+                disabled={toggling || !me?.id}
+                addLabel={t("a11y.favorite.add", {}, {
+                  default: "Add to favorites",
+                })}
+                removeLabel={t("a11y.favorite.remove", {}, {
+                  default: "Remove from favorites",
+                })}
+                onToggle={handleToggleFavorite}
               />
-              {isFavorite ? "Favorited" : "Save to favorites"}
-            </button>
+              <span className="MH-Type-Label-Base">
+                {isFavorite
+                  ? t("exploreDetail.favorited", {}, { default: "Favorited" })
+                  : t("exploreDetail.saveToFavorites", {}, {
+                      default: "Save to favorites",
+                    })}
+              </span>
+            </FavoriteRow>
             {opp.publicRatingCount > 0 && (
               <div
                 style={{
@@ -466,25 +451,34 @@ export default function ExploreDetail({ opportunityId }) {
               >
                 <Stars value={opp.publicRatingAverage} />
                 <span className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
-                  {opp.publicRatingAverage?.toFixed(1)} (
-                  {opp.publicRatingCount} review
-                  {opp.publicRatingCount === 1 ? "" : "s"})
+                  {opp.publicRatingAverage?.toFixed(1)}{" "}
+                  {t(
+                    "exploreDetail.ratingSummary",
+                    {
+                      count: opp.publicRatingCount,
+                      average: opp.publicRatingAverage?.toFixed(1),
+                    },
+                    {
+                      default: "({{count}} reviews)",
+                    },
+                  )}
                 </span>
               </div>
             )}
-            <Label
-              color={opp.status === "published" ? "green" : "grey"}
-              size="tiny"
-            >
-              {opp.status}
-            </Label>
+            <Chip
+              variant="static"
+              tone={opp.status === "published" ? "success" : "neutral"}
+              label={opp.status}
+            />
           </div>
         </TitleRow>
 
         <MetaGrid>
           {(from || to) && (
             <div className="item">
-              <div className="label">Available</div>
+              <div className="label">
+                {t("exploreDetail.available", {}, { default: "Available" })}
+              </div>
               <div className="value">
                 {from || "—"} → {to || "—"}
               </div>
@@ -492,18 +486,32 @@ export default function ExploreDetail({ opportunityId }) {
           )}
           {opp.timeCommitment && (
             <div className="item">
-              <div className="label">Time commitment</div>
+              <div className="label">
+                {t("exploreDetail.timeCommitment", {}, {
+                  default: "Time commitment",
+                })}
+              </div>
               <div className="value">{opp.timeCommitment}</div>
             </div>
           )}
           <div className="item">
-            <div className="label">Capacity</div>
+            <div className="label">
+              {t("exploreDetail.capacity", {}, { default: "Capacity" })}
+            </div>
             <div className="value">{opp.studentCapacity || 1}</div>
           </div>
           <div className="item">
-            <div className="label">Team size</div>
+            <div className="label">
+              {t("exploreDetail.teamSize", {}, { default: "Team size" })}
+            </div>
             <div className="value">
-              {opp.teamSize > 1 ? `Team of ${opp.teamSize}` : "Solo"}
+              {opp.teamSize > 1
+                ? t(
+                    "exploreDetail.teamOf",
+                    { count: opp.teamSize },
+                    { default: "Team of {{count}}" },
+                  )
+                : t("exploreDetail.solo", {}, { default: "Solo" })}
             </div>
           </div>
         </MetaGrid>
@@ -511,7 +519,9 @@ export default function ExploreDetail({ opportunityId }) {
 
       {(directVideoSrc || embedUrl || fallbackIframeSrc) && (
         <Card>
-          <h2>Intro video</h2>
+          <h2>
+            {t("exploreDetail.introVideo", {}, { default: "Intro video" })}
+          </h2>
           {directVideoSrc ? (
             <video
               controls
@@ -557,7 +567,11 @@ export default function ExploreDetail({ opportunityId }) {
 
       {opp.description && (
         <Card>
-          <h2>About this opportunity</h2>
+          <h2>
+            {t("exploreDetail.about", {}, {
+              default: "About this opportunity",
+            })}
+          </h2>
           <ReadOnlyTipTap
             dangerouslySetInnerHTML={{ __html: opp.description }}
           />
@@ -566,7 +580,11 @@ export default function ExploreDetail({ opportunityId }) {
 
       {proposal.relevance && (
         <Card>
-          <h2>Relevance to CUSP</h2>
+          <h2>
+            {t("exploreDetail.relevance", {}, {
+              default: "Relevance to CUSP",
+            })}
+          </h2>
           <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
             {proposal.relevance}
           </p>
@@ -577,7 +595,11 @@ export default function ExploreDetail({ opportunityId }) {
         proposal.requiredSoftware.length > 0 ||
         proposal.requiredHardware.length > 0) && (
         <Card>
-          <h2>Project requirements</h2>
+          <h2>
+            {t("exploreDetail.requirements", {}, {
+              default: "Project requirements",
+            })}
+          </h2>
           {proposal.expectedDeliverables.length > 0 && (
               <div>
                 <h3
@@ -587,7 +609,9 @@ export default function ExploreDetail({ opportunityId }) {
                     color: "#171717",
                   }}
                 >
-                  Expected deliverables
+                  {t("exploreDetail.expectedDeliverables", {}, {
+                    default: "Expected deliverables",
+                  })}
                 </h3>
                 <p style={{ margin: 0, color: "#5f6871" }}>
                   {proposal.expectedDeliverables.join(", ")}
@@ -606,7 +630,7 @@ export default function ExploreDetail({ opportunityId }) {
                     color: "#171717",
                   }}
                 >
-                  Software
+                  {t("exploreDetail.software", {}, { default: "Software" })}
                 </h3>
                 <p style={{ margin: 0, color: "#5f6871" }}>
                   {proposal.requiredSoftware.join(", ")}
@@ -622,7 +646,7 @@ export default function ExploreDetail({ opportunityId }) {
                     color: "#171717",
                   }}
                 >
-                  Hardware
+                  {t("exploreDetail.hardware", {}, { default: "Hardware" })}
                 </h3>
                 <p style={{ margin: 0, color: "#5f6871" }}>
                   {proposal.requiredHardware.join(", ")}
@@ -634,7 +658,9 @@ export default function ExploreDetail({ opportunityId }) {
 
       {opp.organization && (
         <Card>
-          <h2>Hosted by</h2>
+          <h2>
+            {t("exploreDetail.hostedBy", {}, { default: "Hosted by" })}
+          </h2>
           <MentorPanel>
             {opp.organization?.logo?.url ? (
               <img
@@ -650,14 +676,19 @@ export default function ExploreDetail({ opportunityId }) {
               <span className="name">
                 {opp.organization.name}
                 {opp.organization.verified && (
-                  <Icon
-                    name="check circle"
+                  <span
                     style={{
-                      color: "#1d6b3a",
+                      display: "inline-flex",
+                      alignItems: "center",
                       marginLeft: 6,
+                      color: "var(--MH-Theme-Success-Dark, #1d6b3a)",
                     }}
-                    title="Verified organization"
-                  />
+                    title={t("a11y.verified", {}, {
+                      default: "Verified",
+                    })}
+                  >
+                    <CheckIcon />
+                  </span>
                 )}
               </span>
               {opp.organization.tagline && (
@@ -689,7 +720,8 @@ export default function ExploreDetail({ opportunityId }) {
                   rel="noreferrer"
                   className="profile-link"
                 >
-                  Website <Icon name="external alternate" />
+                  {t("exploreDetail.website", {}, { default: "Website" })}{" "}
+                  <ArrowOutwardIcon />
                 </a>
               )}
               <Link
@@ -701,7 +733,10 @@ export default function ExploreDetail({ opportunityId }) {
                 legacyBehavior
               >
                 <a className="profile-link">
-                  View organization <Icon name="arrow right" />
+                  {t("exploreDetail.viewOrganization", {}, {
+                    default: "View organization",
+                  })}{" "}
+                  <ArrowOutwardIcon />
                 </a>
               </Link>
             </div>
@@ -717,7 +752,9 @@ export default function ExploreDetail({ opportunityId }) {
       )}
 
       <Card>
-        <h2>Your contact</h2>
+        <h2>
+          {t("exploreDetail.yourContact", {}, { default: "Your contact" })}
+        </h2>
         <MentorPanel>
           {mentorAvatar ? (
             <img src={mentorAvatar} alt={mentorName} />
@@ -739,7 +776,11 @@ export default function ExploreDetail({ opportunityId }) {
             )}
             {opp.mentor?.timeCommitment && (
               <span className="org">
-                Time commitment: {opp.mentor.timeCommitment}
+                {t(
+                  "exploreDetail.mentorTimeCommitment",
+                  { value: opp.mentor.timeCommitment },
+                  { default: "Time commitment: {{value}}" },
+                )}
               </span>
             )}
           </div>
@@ -753,7 +794,10 @@ export default function ExploreDetail({ opportunityId }) {
               legacyBehavior
             >
               <a className="profile-link">
-                View profile <Icon name="arrow right" />
+                {t("exploreDetail.viewProfile", {}, {
+                  default: "View profile",
+                })}{" "}
+                <ArrowOutwardIcon />
               </a>
             </Link>
           )}
@@ -767,7 +811,11 @@ export default function ExploreDetail({ opportunityId }) {
 
       {opp.ratings?.length > 0 && (
         <Card>
-          <h2>What past participants said</h2>
+          <h2>
+            {t("exploreDetail.pastParticipants", {}, {
+              default: "What past participants said",
+            })}
+          </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {opp.ratings.map((r) => (
               <RatingRow key={r.id}>

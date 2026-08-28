@@ -49,6 +49,19 @@ export const ConnectRound = list({
       defaultValue: "stable_matching",
     }),
 
+    // JSON bag. Known shape:
+    // {
+    //   sponsorFormsVisible?: boolean,
+    //   schedule?: {
+    //     introductionAt?: "YYYY-MM-DD",
+    //     matchingStartAt?: "YYYY-MM-DD",
+    //     matchingEndAt?: "YYYY-MM-DD",
+    //     reviewStartAt?: "YYYY-MM-DD",
+    //     reviewEndAt?: "YYYY-MM-DD",
+    //     sponsorIntroAt?: "YYYY-MM-DD",
+    //   }
+    // }
+    // Preference window remains openAt / closeAt (not duplicated here).
     settings: json(),
 
     opportunities: relationship({

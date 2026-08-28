@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Sidebar } from "semantic-ui-react";
+import styled from "styled-components";
 import { useEffect, useState } from "react";
 
 import CardWrapper from "./Board/Card/Wrapper";
@@ -10,6 +11,26 @@ import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import { projectBoardTours } from "./tours";
 
 import { StyledProposal } from "../../../styles/StyledProposal";
+
+const ProjectBoardShell = styled(Sidebar.Pushable)`
+  display: flex;
+  flex-direction: column;
+  grid-row: 1 / -1;
+  align-self: stretch;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+
+  .navigation {
+    flex-shrink: 0;
+  }
+
+  .projectsBoardEditorProposal {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+  }
+`;
 
 export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
   const proposalId = query?.selector;
@@ -118,7 +139,7 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
   }
 
   return (
-    <Sidebar.Pushable>
+    <ProjectBoardShell>
       {proposalId && (
         <>
           <Navigation
@@ -140,7 +161,7 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
           </StyledProposal>
         </>
       )}
-    </Sidebar.Pushable>
+    </ProjectBoardShell>
   );
 }
 
