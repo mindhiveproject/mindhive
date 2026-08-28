@@ -1,8 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { CloseIcon } from "./Icons";
+import RawTooltip from "./Tooltip";
+
+// Tooltip is still plain JS; TS 4.9 mis-infers its destructured props param from
+// the JSDoc. Assert its real contract here until DesignSystem/Tooltip is on TS.
+const Tooltip = RawTooltip as unknown as React.FC<{
+  content: React.ReactNode;
+  children: React.ReactNode;
+  side?: "top" | "bottom" | "left" | "right";
+  disabled?: boolean;
+  delayMs?: number;
+  maxWidth?: number;
+  className?: string;
+}>;
 
 /** Interaction model for a {@link Chip}. */
 export type ChipVariant = "interactive" | "static";
@@ -156,6 +169,11 @@ const CHIP_FOCUS_STYLE = `
  * @example
  * // Selectable chip with icon
  * <Chip label="Option" selected={isSelected} onClick={() => toggle()} leading={<Icon />} />
+ *
+ * @example
+ * // Long label: ellipsised on one line by default, full text in a tooltip when clipped.
+ * // Pass truncate={false} to let it size to its content instead.
+ * <Chip label={organizationName} variant="static" />
  */
 export interface ChipProps {
   /** Main text (required). */
@@ -199,12 +217,24 @@ export interface ChipProps {
   title?: string;
   /** Max lines for label text (1 = single line, no wrap). @default 1 */
   labelLines?: number;
+  /**
+   * Single-line labels only: keep the label on one line, ellipsise it at the
+   * available width, and show the full text in a tooltip when it is clipped.
+   * Pass `false` to let a long label render at its natural width. Ignored when
+   * `labelLines > 1`, where the multi-line clamp handles overflow itself.
+   * @default true
+   */
+  truncate?: boolean;
 }
 
 /**
  * Reusable chip for tags, filters, statuses and removable tokens.
  * Matches Figma "Basic Chips": fixed 32px height, 8px corners, Inter Medium
  * 14/20 label, label-only / label + icon / label + avatar, optional close.
+ *
+ * A single-line label is ellipsised at the available width by default, with the
+ * full text shown in a tooltip when it is clipped; pass `truncate={false}` to
+ * opt out, or `labelLines={n}` for a multi-line clamp instead.
  */
 export default function Chip({
   label,
@@ -224,8 +254,31 @@ export default function Chip({
   ariaLabel,
   title,
   labelLines = 1,
+  truncate = true,
 }: ChipProps) {
   const [hovered, setHovered] = useState(false);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const [truncated, setTruncated] = useState(false);
+
+  const multilineLabel = labelLines > 1;
+  // Single-line ellipsis + tooltip-when-clipped is the chip's default; the
+  // multi-line clamp path handles its own overflow, so it opts out.
+  const truncating = truncate && !multilineLabel;
+
+  useEffect(() => {
+    if (!truncating) {
+      setTruncated(false);
+      return undefined;
+    }
+    const el = labelRef.current;
+    if (!el) return undefined;
+    const check = () => setTruncated(el.scrollWidth > el.clientWidth + 1);
+    check();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [label, truncating]);
 
   const isStatic = variant === "static";
   const isInteractive = !isStatic && !disabled;
@@ -268,7 +321,6 @@ export default function Chip({
   if (avatar) {
     rootStyle = { ...rootStyle, ...CHIP_WITH_AVATAR };
   }
-  const multilineLabel = labelLines > 1;
   if (multilineLabel) {
     rootStyle = {
       ...rootStyle,
@@ -278,6 +330,9 @@ export default function Chip({
       minHeight: 32,
       alignItems: "center",
     };
+  }
+  if (truncating) {
+    rootStyle = { ...rootStyle, maxWidth: "100%" };
   }
   rootStyle = { ...rootStyle, ...style };
 
@@ -293,7 +348,14 @@ export default function Chip({
           whiteSpace: "normal",
           overflowWrap: "break-word",
         } as React.CSSProperties)
-      : { flexShrink: 0 }),
+      : truncating
+        ? {
+            minWidth: 0,
+            flexShrink: 1,
+            display: "block",
+            overflow: "hidden",
+          }
+        : { flexShrink: 0 }),
     ...labelStyleOverride,
   };
 
@@ -317,7 +379,7 @@ export default function Chip({
     }
   };
 
-  return (
+  const chipWithStyle = (
     <>
       <style dangerouslySetInnerHTML={{ __html: CHIP_FOCUS_STYLE }} />
       <div
@@ -325,7 +387,12 @@ export default function Chip({
         tabIndex={isClickable ? 0 : undefined}
         aria-label={ariaLabel}
         aria-pressed={isClickable && typeof pressed === "boolean" ? pressed : undefined}
-        title={title}
+        title={
+          title ??
+          (truncating && truncated && typeof label === "string"
+            ? label
+            : undefined)
+        }
         className={
           className
             ? `DesignSystem-Chip MH-Type-Label-Base ${className}`
@@ -343,7 +410,23 @@ export default function Chip({
         {leading && (
           <span style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>{leading}</span>
         )}
-        <span style={labelStyle}>{label}</span>
+        <span style={labelStyle}>
+          {truncating ? (
+            <span
+              ref={labelRef}
+              style={{
+                display: "block",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {label}
+            </span>
+          ) : (
+            label
+          )}
+        </span>
         {hasTrailing && (
           <span
             data-chip-trailing
@@ -370,5 +453,13 @@ export default function Chip({
         )}
       </div>
     </>
+  );
+
+  if (!truncating) return chipWithStyle;
+
+  return (
+    <Tooltip content={label} disabled={!truncated} side="top">
+      {chipWithStyle}
+    </Tooltip>
   );
 }

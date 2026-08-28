@@ -67,11 +67,10 @@ Components are being moved from `.js` to `.tsx` as they're touched, newest first
 | `Card` | ✅ `.tsx` |
 | `Chip` | ✅ `.tsx` |
 | `FavoriteButton` | ✅ `.tsx` |
-| `Dashboard/Connect/TruncatingChip` | ✅ `.tsx` (consumer, lives outside this folder) |
 | `lib/taskTypeColors` | ✅ `.ts` |
 | `Button`, `IconButton`, `Modal`, `Navbar`, `Popover`, `Tooltip`, `DropdownMenu`, `DropdownSelect`, `MessageCard`, `InfoPopover`, `PanelHeader`, `CopyButton`, `CompactActionButton`, `Icons/` | ⏳ still `.js` |
 
 When converting a `.js` component that another `.tsx` file already imports, watch
 for TS mis-inferring its JSDoc-typed props — see the `RawTooltip` cast in
-`TruncatingChip.tsx` for the interim workaround, which should be deleted once the
-imported component is itself `.tsx`.
+`Chip.tsx` for the interim workaround, which should be deleted once `Tooltip` is
+itself `.tsx`.

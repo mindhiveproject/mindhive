@@ -4,8 +4,8 @@ import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
+import Chip from "../../DesignSystem/Chip";
 import ConnectCard from "./ConnectCard";
-import TruncatingChip from "./TruncatingChip";
 import ManageFavorite from "./ManageFavorite";
 import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 import { normalizeOrganizationNames } from "../../../lib/organizationLabels";
@@ -122,7 +122,7 @@ export default function ConnectProfileCard({ user, profile, actions = null }) {
       chips={
         orgTags.length
           ? orgTags.map((tag) => (
-              <TruncatingChip
+              <Chip
                 key={tag.key}
                 avatar
                 label={tag.label}

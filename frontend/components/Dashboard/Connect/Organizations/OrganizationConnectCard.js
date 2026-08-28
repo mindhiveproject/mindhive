@@ -6,7 +6,6 @@ import Chip from "../../../DesignSystem/Chip";
 import { BriefcaseIcon } from "../../../DesignSystem/Icons";
 import { stripHtml } from "../../../Proposal/Card/Forms/utils";
 import ConnectCard from "../ConnectCard";
-import TruncatingChip from "../TruncatingChip";
 import OrganizationVerificationStatus from "./OrganizationVerificationStatus";
 
 const GLOBE_GLYPH = (
@@ -65,7 +64,7 @@ export default function OrganizationConnectCard({ org, href, linkLabel }) {
         <>
           <OrganizationVerificationStatus verified={!!org.verified} />
           {location && (
-            <TruncatingChip
+            <Chip
               variant="static"
               label={location}
               leading={GLOBE_GLYPH}

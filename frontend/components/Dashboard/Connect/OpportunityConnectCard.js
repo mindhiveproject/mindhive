@@ -2,10 +2,10 @@ import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
+import Chip from "../../DesignSystem/Chip";
 import { getProjectCategoryDisplay } from "../../../lib/opportunityCategory";
 import ConnectCard from "./ConnectCard";
 import ManageFavoriteOpportunity from "./ManageFavoriteOpportunity";
-import TruncatingChip from "./TruncatingChip";
 
 const ChipLeading = styled.img`
   width: 24px;
@@ -69,7 +69,7 @@ export default function OpportunityConnectCard({
   const chips = [];
   if (orgName) {
     chips.push(
-      <TruncatingChip
+      <Chip
         key="organization"
         avatar
         label={orgName}
@@ -84,7 +84,7 @@ export default function OpportunityConnectCard({
   }
   if (categoryLabel) {
     chips.push(
-      <TruncatingChip
+      <Chip
         key="projectCategory"
         variant="static"
         tone="neutral"
