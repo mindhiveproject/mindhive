@@ -30,6 +30,12 @@ import {
   formatDateShort,
   isExpired,
 } from "./roundFormConfig";
+import MatchingRoundScheduleFields from "./MatchingRoundScheduleFields";
+import {
+  mergeRoundSettings,
+  readRoundSchedule,
+  scheduleFromInputs,
+} from "../../../../lib/connectRoundSettings";
 import { collectMemberClassNetworks } from "../../../../lib/opportunityClassNetworks";
 
 /** Statuses that should not be overwritten when adding to a matching round. */
@@ -299,6 +305,7 @@ export default function RoundEditor({ roundId }) {
       openAt: toDateInputValue(round.openAt),
       closeAt: toDateInputValue(round.closeAt),
       matchingAlgorithm: round.matchingAlgorithm || "stable_matching",
+      ...readRoundSchedule(round.settings),
     });
     setSelectedNetwork(round.classNetwork?.id || null);
     setSelectedOpportunities(
@@ -447,6 +454,9 @@ export default function RoundEditor({ roundId }) {
             closeAt: toIsoOrNull(inputs.closeAt),
             matchingAlgorithm:
               inputs.matchingAlgorithm || "stable_matching",
+            settings: mergeRoundSettings(null, {
+              schedule: scheduleFromInputs(inputs),
+            }),
             opportunities: opportunitiesConnect.length
               ? { connect: opportunitiesConnect }
               : undefined,
@@ -470,6 +480,9 @@ export default function RoundEditor({ roundId }) {
             closeAt: toIsoOrNull(inputs.closeAt),
             matchingAlgorithm:
               inputs.matchingAlgorithm || "stable_matching",
+            settings: mergeRoundSettings(round?.settings, {
+              schedule: scheduleFromInputs(inputs),
+            }),
             opportunities: { set: opportunitiesConnect },
             questions: { set: questionsConnect },
             updatedAt: new Date().toISOString(),
@@ -611,26 +624,10 @@ export default function RoundEditor({ roundId }) {
 
       <Card>
         <h2>Lifecycle</h2>
-        <Row $cols="1fr 1fr">
-          <Field>
-            <span className="label-text">Preferences open from</span>
-            <input
-              type="date"
-              name="openAt"
-              value={inputs.openAt}
-              onChange={handleChange}
-            />
-          </Field>
-          <Field>
-            <span className="label-text">Preferences close on</span>
-            <input
-              type="date"
-              name="closeAt"
-              value={inputs.closeAt}
-              onChange={handleChange}
-            />
-          </Field>
-        </Row>
+        <MatchingRoundScheduleFields
+          inputs={inputs}
+          onChange={handleChange}
+        />
         <Row $cols="1fr 1fr">
           <Field>
             <span className="label-text">Status</span>

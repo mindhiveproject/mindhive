@@ -960,6 +960,55 @@
 				"status": "Status",
 				"title": "Title"
 			},
+			"schedule": {
+				"dateLabel": "Date",
+				"effectAria": "{{object}} → {{status}}",
+				"effectPrefix": "{{object}} →",
+				"executive": "Executive",
+				"executiveUnavailable": "Executive dates are not available yet",
+				"hint": "Each date is tied to an object and status. When that date is reached, that status applies.",
+				"informative": "Informative",
+				"introduction": {
+					"description": "Students are introduced to the projects and begin reviewing sponsor materials.",
+					"title": "Introduction"
+				},
+				"matchStatus": {
+					"active": "Active",
+					"cancelled": "Cancelled",
+					"completed": "Completed",
+					"declined": "Declined",
+					"proposed": "Proposed"
+				},
+				"matching": {
+					"description": "Student preferences, skills, and project needs are used to develop team assignments.",
+					"title": "Team matching"
+				},
+				"modeLabel": "Date mode",
+				"noStatusChange": "No status change",
+				"objectLabel": "Object",
+				"objects": {
+					"connectMatch": "Match",
+					"connectRound": "Matching round",
+					"opportunity": "Opportunity"
+				},
+				"review": {
+					"description": "Students can review their project match and request a change.",
+					"title": "Review period"
+				},
+				"selection": {
+					"description": "Students review projects, discuss opportunities, and submit ranked preferences.",
+					"title": "Project selection"
+				},
+				"sponsorIntro": {
+					"description": "Once teams are confirmed, each sponsor is connected with their student team to begin the project kickoff.",
+					"title": "Sponsor introductions"
+				},
+				"startLabel": "Starts",
+				"statusLabel": "Status",
+				"statusOnEnd": "Status on end",
+				"statusOnStart": "Status on start",
+				"title": "Round schedule"
+			},
 			"followUpCompletion": {
 				"columns": {
 					"opportunity": "Opportunity",
@@ -1532,7 +1581,10 @@
 				"tabsAria": "Opportunity sections"
 			},
 			"searchLabel": "Search opportunities",
-			"searchPlaceholder": "Search by title, sponsor, or organization…"
+			"searchPlaceholder": "Search by title, sponsor, or organization…",
+			"schedule": {
+				"title": "Matching timeline"
+			}
 		}
 	},
 	"ownedItems": {

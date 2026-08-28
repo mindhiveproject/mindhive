@@ -44,6 +44,13 @@ import {
   toDateInputValue,
   toIsoOrNull,
 } from "../../../Connect/Rounds/roundFormConfig";
+import MatchingRoundScheduleFields from "../../../Connect/Rounds/MatchingRoundScheduleFields";
+import {
+  mergeRoundSettings,
+  readRoundSchedule,
+  readSponsorFormsVisible,
+  scheduleFromInputs,
+} from "../../../../../lib/connectRoundSettings";
 import { useUser } from "../../../../Utils/Access/User";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
 import MatchingRoundFollowUpCompletionGrid from "./MatchingRoundFollowUpCompletionGrid";
@@ -363,12 +370,14 @@ function buildSnapshot(
   formDefinitionIds,
   sponsorFormsVisible,
 ) {
+  const schedule = scheduleFromInputs(inputs);
   return {
     title: inputs.title || "",
     description: inputs.description || "",
     status: inputs.status || "draft",
     openAt: inputs.openAt || "",
     closeAt: inputs.closeAt || "",
+    ...schedule,
     opportunities: [...opportunityIds].sort(),
     questions: [...questionIds].sort(),
     formDefinitions: [...(formDefinitionIds || [])].sort(),
@@ -384,29 +393,17 @@ function snapshotsEqual(a, b) {
     a.status === b.status &&
     a.openAt === b.openAt &&
     a.closeAt === b.closeAt &&
+    a.introductionAt === b.introductionAt &&
+    a.matchingStartAt === b.matchingStartAt &&
+    a.matchingEndAt === b.matchingEndAt &&
+    a.reviewStartAt === b.reviewStartAt &&
+    a.reviewEndAt === b.reviewEndAt &&
+    a.sponsorIntroAt === b.sponsorIntroAt &&
     JSON.stringify(a.opportunities) === JSON.stringify(b.opportunities) &&
     JSON.stringify(a.questions) === JSON.stringify(b.questions) &&
     JSON.stringify(a.formDefinitions) === JSON.stringify(b.formDefinitions) &&
     a.sponsorFormsVisible === b.sponsorFormsVisible
   );
-}
-
-function readSponsorFormsVisible(settings) {
-  if (!settings || typeof settings !== "object" || Array.isArray(settings)) {
-    return false;
-  }
-  return Boolean(settings.sponsorFormsVisible);
-}
-
-function mergeRoundSettings(existing, sponsorFormsVisible) {
-  const base =
-    existing && typeof existing === "object" && !Array.isArray(existing)
-      ? existing
-      : {};
-  return {
-    ...base,
-    sponsorFormsVisible: Boolean(sponsorFormsVisible),
-  };
 }
 
 function sortOpportunitiesByTitle(opportunities) {
@@ -820,6 +817,7 @@ function MatchingRoundEditor({
         status: suggested.status || "draft",
         openAt: suggested.openAt || "",
         closeAt: suggested.closeAt || "",
+        ...readRoundSchedule(null),
       };
       handleMultipleUpdate(defaults);
       setSelectedOpportunities([]);
@@ -841,6 +839,7 @@ function MatchingRoundEditor({
       status: round.status || "draft",
       openAt: toDateInputValue(round.openAt),
       closeAt: toDateInputValue(round.closeAt),
+      ...readRoundSchedule(round.settings),
     };
     const nextOpportunities = (round.opportunities || []).map((o) => o.id);
     const nextQuestions = (round.questions || []).map((q) => q.id);
@@ -1519,7 +1518,9 @@ function MatchingRoundEditor({
           id: roundId,
           input: {
             formDefinitions: { set: formDefinitionsConnect },
-            settings: mergeRoundSettings(round?.settings, nextVisible),
+            settings: mergeRoundSettings(round?.settings, {
+              sponsorFormsVisible: nextVisible,
+            }),
             updatedAt: new Date().toISOString(),
           },
         },
@@ -1686,7 +1687,10 @@ function MatchingRoundEditor({
               formDefinitions: formDefinitionsConnect.length
                 ? { connect: formDefinitionsConnect }
                 : undefined,
-              settings: mergeRoundSettings(null, sponsorFormsVisible),
+              settings: mergeRoundSettings(null, {
+                sponsorFormsVisible,
+                schedule: scheduleFromInputs(inputs),
+              }),
             },
           },
         });
@@ -1715,7 +1719,10 @@ function MatchingRoundEditor({
               opportunities: { set: opportunitiesConnect },
               questions: { set: questionsConnect },
               formDefinitions: { set: formDefinitionsConnect },
-              settings: mergeRoundSettings(round?.settings, sponsorFormsVisible),
+              settings: mergeRoundSettings(round?.settings, {
+                sponsorFormsVisible,
+                schedule: scheduleFromInputs(inputs),
+              }),
               updatedAt: new Date().toISOString(),
               publishedAt:
                 inputs.status === "published" && !round?.publishedAt
@@ -1946,34 +1953,10 @@ function MatchingRoundEditor({
         />
       </label>
 
-      <div className="classTabFormGrid classTabFormGridTwo">
-        <label className="classTabFormField">
-          <span className="fieldLabel">
-            {t("opportunities.matchingRound.fields.openAt", {}, {
-              default: "Preferences open from",
-            })}
-          </span>
-          <input
-            type="date"
-            name="openAt"
-            value={inputs.openAt}
-            onChange={handleChange}
-          />
-        </label>
-        <label className="classTabFormField">
-          <span className="fieldLabel">
-            {t("opportunities.matchingRound.fields.closeAt", {}, {
-              default: "Preferences close on",
-            })}
-          </span>
-          <input
-            type="date"
-            name="closeAt"
-            value={inputs.closeAt}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
+      <MatchingRoundScheduleFields
+        inputs={inputs}
+        onChange={handleChange}
+      />
     </div>
   );
 
@@ -3207,15 +3190,37 @@ function MatchingRoundEditor({
         open={settingsModalOpen}
         onClose={() => setSettingsModalOpen(false)}
         title={settingsLabel}
-        maxWidth={560}
+        maxWidth={640}
+        maxHeight="90vh"
+        hideScrollbar
         actions={
-          <Button
-            variant="text"
-            type="button"
-            onClick={() => setSettingsModalOpen(false)}
-          >
-            {t("close", {}, { default: "Close" })}
-          </Button>
+          <>
+            <Button
+              variant="text"
+              type="button"
+              onClick={() => setSettingsModalOpen(false)}
+            >
+              {t("close", {}, { default: "Close" })}
+            </Button>
+            <Button
+              variant="filled"
+              type="button"
+              onClick={handleSave}
+              disabled={saving || !formInitialized || (!isDirty && !isNew)}
+            >
+              {saving
+                ? t("opportunities.matchingRound.saving", {}, {
+                    default: "Saving…",
+                  })
+                : isNew
+                  ? t("opportunities.matchingRound.createRound", {}, {
+                      default: "Create round",
+                    })
+                  : t("opportunities.matchingRound.saveRound", {}, {
+                      default: "Save changes",
+                    })}
+            </Button>
+          </>
         }
       >
         <SettingsModalContent>

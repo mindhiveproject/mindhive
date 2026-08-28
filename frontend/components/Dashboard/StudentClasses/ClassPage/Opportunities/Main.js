@@ -25,6 +25,7 @@ import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import StudentOpportunityPreview from "./StudentOpportunityPreview";
 import StudentPreferenceSubmission from "./StudentPreferenceSubmission";
 import StudentRankActionCard from "./StudentRankActionCard";
+import MatchingRoundSchedule from "./MatchingRoundSchedule";
 
 /**
  * Matching rounds are "open for students" when status is preferences_open
@@ -157,7 +158,9 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
             openById.set(round.id, {
               id: round.id,
               title: round.title || "",
+              openAt: round.openAt || null,
               closeAt: round.closeAt || null,
+              settings: round.settings || null,
             });
           }
           for (const opportunity of round.opportunities || []) {
@@ -487,6 +490,9 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
         {openRounds.length > 0 ? (
           <RankBanners>
             {openRounds.map((round) => (
+              <MatchingRoundSchedule key={`schedule-${round.id}`} round={round} />
+            ))}
+            {openRounds.map((round) => (
               <StudentRankActionCard
                 key={round.id}
                 round={round}
@@ -579,6 +585,9 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     <div className="classTabPage opportunities">
       {openRounds.length > 0 ? (
         <RankBanners>
+          {openRounds.map((round) => (
+            <MatchingRoundSchedule key={`schedule-${round.id}`} round={round} />
+          ))}
           {openRounds.map((round) => (
             <StudentRankActionCard
               key={round.id}

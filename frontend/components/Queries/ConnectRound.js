@@ -266,6 +266,7 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
           status
           openAt
           closeAt
+          settings
           opportunities {
             id
             title
