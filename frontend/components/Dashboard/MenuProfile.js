@@ -95,7 +95,6 @@ export default function MenuProfile({ user, collapsed = false, area }) {
             <Navbar
               orientation="vertical"
               collapsed={collapsed}
-              variant="soft"
               aria-label={t("account", {}, { default: "Account" })}
             >
               <NavbarItem

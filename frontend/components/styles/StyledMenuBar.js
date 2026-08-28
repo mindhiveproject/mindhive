@@ -302,11 +302,12 @@ export const StyledMenuProfile = styled.div`
     min-width: 0;
     align-items: ${(props) => (props.$collapsed ? "center" : "stretch")};
 
-    /* Settings renders through the shared Navbar component; match it to the
-       Log off button's label/base size below. No explicit height here either
+    /* Settings renders through the shared Navbar component; keep it at the
+       navbar's own label/large size so it lines up with the rest of the rail
+       (and with the Log off button below). No explicit height here either
        — see the .menuBarNav override for why. */
     .navbar-container.vertical .navbar-item {
-      font: var(--MH-Type-Label-Base);
+      font: var(--MH-Type-Label-Large);
       letter-spacing: 0;
     }
   }
@@ -325,8 +326,8 @@ export const StyledMenuProfile = styled.div`
     background: none;
     cursor: pointer;
 
-    /* MH-Theme/label/base — matches the nav items and Settings above it. */
-    font: var(--MH-Type-Label-Base);
+    /* MH-Type/label/large — matches the nav items and Settings above it. */
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     color: var(--MH-Theme-Warning-Base, #b9261a);
 
