@@ -69,11 +69,8 @@ const StyledClass = styled.div`
   }
 
   .teacherClassesSortLabel {
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
-    letter-spacing: 0.01em;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -89,9 +86,8 @@ const StyledClass = styled.div`
     border-radius: 8px;
     background: #ffffff;
     color: #171717;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
 
@@ -116,87 +112,14 @@ const StyledClass = styled.div`
     color: #666666;
   }
 
-  .matchingRoundFullscreenLayout {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 0;
-    max-width: none;
-
-    .matchingRoundWorkspaceSlot {
-      flex: 1 1 0;
-      min-height: 0;
-      overflow: auto;
-      display: flex;
-      flex-direction: column;
-
-      > * {
-        flex: 1 1 0;
-        min-height: 0;
-      }
-    }
-  }
-
-  /* Class detail tabs — aligned with Builder project nav (StyledProject .secondLine) */
+  /* Class detail tabs — Design System Navbar (see DesignSystem/Navbar SectionNavbar) */
   .classPageNav {
     margin-bottom: 30px;
 
-    .secondLine {
-      padding: 0 8px;
-      background: #f6f9f8;
-      border-bottom: 1px solid #e6e6e6;
-
-      .menu {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 16px;
-        row-gap: 8px;
-      }
-
-      .menuTitle {
-        display: flex;
-        align-items: center;
-        padding: 0px 8px 8px 8px;
-        border-bottom: 4px solid transparent;
-        cursor: pointer;
-
-        .titleWithIcon {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          white-space: nowrap;
-
-          img {
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-          }
-
-          p {
-            font-family: Inter, sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 20px;
-            color: #5D5763;
-            margin: 0;
-          }
-        }
-      }
-
-      .selectedMenuTitle {
-        border-bottom-color: #f2be42;
-      }
-
-      @media (max-width: 800px) {
-        .menuTitle {
-          flex: 1 1 45%;
-        }
-
-        .menuTitle .titleWithIcon {
-          white-space: normal;
-        }
-      }
+    /* Up to 9 sections here — let the row wrap instead of overflowing. */
+    .navbar-container {
+      flex-wrap: wrap;
+      row-gap: 4px;
     }
   }
 
@@ -215,11 +138,8 @@ const StyledClass = styled.div`
   .classListHeader {
     margin: 0;
     padding: 12px 16px 8px;
-    font-family: Inter, sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 16px;
-    letter-spacing: 0.04em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
@@ -255,10 +175,8 @@ const StyledClass = styled.div`
     background: transparent;
     border-radius: 8px;
     border: none;
-    font-family: Inter, sans-serif;
-    font-size: 16px;
-    line-height: 20px;
-    font-weight: 400;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     transition:
       background-color 180ms ease-out,
@@ -297,18 +215,15 @@ const StyledClass = styled.div`
 
   .classListEmpty h3 {
     margin: 0 0 8px;
-    font-family: Inter, sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 24px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .classListEmpty p {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
@@ -348,8 +263,8 @@ const StyledClass = styled.div`
     }
     .infoPane label {
       margin-bottom: 8px;
-      font-size: 18px;
-      line-height: 24px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       color: #171717;
     }
     .classHeaderTitleBlock {
@@ -421,9 +336,8 @@ const StyledClass = styled.div`
     .classHeaderDescriptionHtml {
       width: 100%;
       min-width: 0;
-      font-family: Inter, sans-serif;
-      font-size: 15px;
-      line-height: 22px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       overflow-wrap: anywhere;
       padding: 0 8px 0 0;
       background: transparent;
@@ -454,9 +368,8 @@ const StyledClass = styled.div`
       max-width: none;
       min-height: auto;
       padding: 0;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
     }
     .classHeaderMetaRow {
       display: flex;
@@ -491,10 +404,8 @@ const StyledClass = styled.div`
       flex-shrink: 0;
     }
     .classHeaderMetaLabel {
-      font-family: Inter, sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 20px;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
       color: #274e5b;
     }
     .classHeaderMetaLabel::after {
@@ -502,10 +413,8 @@ const StyledClass = styled.div`
       margin-left: 2px;
     }
     .classHeaderMetaValue {
-      font-family: Inter, sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       color: #171717;
       word-break: break-word;
     }
@@ -543,12 +452,9 @@ const StyledClass = styled.div`
       }
     }
     .title {
-      font-family: Inter;
-      font-size: 32px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 56px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Heading-Base);
+      letter-spacing: 0;
       text-align: left;
       color: #1a1a1a;
       margin-bottom: 10px;
@@ -558,14 +464,11 @@ const StyledClass = styled.div`
       word-break: break-word;
       overflow-wrap: break-word;
       min-height: 40px;
-    } 
+    }
     .description {
-      font-family: Inter
-      font-size: 28px;
       font-style: normal;
-      font-weight: 400;
-      /* line-height: 32px; */
-      letter-spacing: 0em;
+      font: var(--MH-Type-Body-Large);
+      letter-spacing: 0;
       text-align: left;
       color: #666666;
       margin-bottom: 8px;
@@ -576,7 +479,8 @@ const StyledClass = styled.div`
     display: grid;
     padding: 10px;
     grid-template-columns: 70px 1fr 1fr;
-    font-weight: bold;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
   }
 
   .listWrapper {
@@ -655,7 +559,8 @@ const StyledClass = styled.div`
       }
       .infoText {
         margin: 1rem 0rem;
-        font-size: 1.2rem;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
     }
   }
@@ -666,7 +571,8 @@ const StyledClass = styled.div`
       grid-gap: 10px;
       padding: 10px;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      font-weight: bold;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
     }
     .studiesRow {
       display: grid;
@@ -776,7 +682,8 @@ const StyledClass = styled.div`
         margin: 5px;
         padding: 10px;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        font-weight: bold;
+        font: var(--MH-Type-Title-Small);
+        letter-spacing: 0;
       }
       .row {
         display: grid;
@@ -838,8 +745,8 @@ const StyledClass = styled.div`
           display: grid;
           height: 100%;
           grid-row-gap: 10px;
-          font-family: Lato;
-          font-size: 18px;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
 
           .proposalCardBoard {
             display: grid;
@@ -853,9 +760,8 @@ const StyledClass = styled.div`
           label {
             display: block;
             font-style: normal;
-            font-weight: normal;
-            font-size: 14px;
-            line-height: 20px;
+            font: var(--MH-Type-Label-Base);
+            letter-spacing: 0;
           }
           input,
           textarea,
@@ -863,8 +769,8 @@ const StyledClass = styled.div`
             border: 1px solid #cccccc;
             border-radius: 4px;
             width: 100%;
-            font-size: 16px;
-            line-height: 24px;
+            font: var(--MH-Type-Body-Base);
+            letter-spacing: 0;
             padding: 12px;
             &:focus {
               outline: 0;
@@ -884,22 +790,16 @@ const StyledClass = styled.div`
           }
           .cardHeader {
             margin-bottom: 15px;
-            font-family: Roboto;
-            font-size: 24px;
             font-style: normal;
-            font-weight: 400;
-            line-height: 30px;
-            letter-spacing: 0em;
+            font: var(--MH-Type-Title-Large);
+            letter-spacing: 0;
             text-align: left;
           }
           .cardDescription {
             color: #666666;
-            font-family: Roboto;
-            font-size: 16px;
             font-style: normal;
-            font-weight: 400;
-            line-height: 24px;
-            letter-spacing: 0em;
+            font: var(--MH-Type-Body-Base);
+            letter-spacing: 0;
             text-align: left;
             padding-bottom: 40px;
             margin-bottom: 44px;
@@ -915,12 +815,9 @@ const StyledClass = styled.div`
             background: #f7f9f8;
             border-radius: 0px 4px 4px 0px;
             padding: 53px 30px 30px 37px;
-            font-family: Roboto;
-            font-size: 16px;
             font-style: normal;
-            font-weight: 500;
-            line-height: 30px;
-            letter-spacing: 0em;
+            font: var(--MH-Type-Label-Large);
+            letter-spacing: 0;
             text-align: left;
             height: 100%;
           }
@@ -934,11 +831,9 @@ const StyledClass = styled.div`
             }
             .info-status {
               display: table;
-              font-family: Lato;
               font-style: normal;
-              font-size: 12px;
-              line-height: 100%;
-              letter-spacing: 0.05em;
+              font: var(--MH-Type-Label-Small);
+              letter-spacing: 0;
               border-radius: 30px;
               /* position: absolute; */
               margin: 8px;
@@ -997,7 +892,6 @@ const StyledClass = styled.div`
     width: 100%;
     max-width: 100%;
     padding-bottom: 40px;
-    font-family: "Inter", sans-serif;
 
     .matchingRoundsList {
       display: grid;
@@ -1201,17 +1095,15 @@ const StyledClass = styled.div`
 
       h3 {
         margin: 0;
-        font-family: "Inter", sans-serif;
-        font-size: 22px;
-        font-weight: 700;
-        line-height: 30px;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         color: #171717;
       }
 
       p {
         margin: 0;
-        font-size: 15px;
-        line-height: 22px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #625b71;
       }
     }
@@ -1269,8 +1161,8 @@ const StyledClass = styled.div`
 
       .classTabInviteLabel {
         margin: 0;
-        font-size: 15px;
-        line-height: 22px;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
         color: #625b71;
       }
 
@@ -1281,9 +1173,8 @@ const StyledClass = styled.div`
         border: 1px solid #d9d6d2;
         border-radius: 12px;
         background: #f9faf9;
-        font-family: "Inter", sans-serif;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #171717;
         word-break: break-all;
       }
@@ -1291,18 +1182,15 @@ const StyledClass = styled.div`
 
     .classTabCodeValue {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      font-size: 24px;
-      font-weight: 600;
-      line-height: 36px;
+      font: var(--MH-Type-Heading-Small);
+      letter-spacing: 0;
       color: #171717;
-      letter-spacing: 0.04em;
     }
 
     .classTabInfoText {
       margin: 0;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #625b71;
     }
 
@@ -1318,8 +1206,8 @@ const StyledClass = styled.div`
       justify-items: start;
       padding: 8px 0;
       color: #625b71;
-      font-size: 15px;
-      line-height: 22px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
 
     .classTabSubsection {
@@ -1329,17 +1217,15 @@ const StyledClass = styled.div`
 
     .classTabSubsectionTitle {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
     }
 
     .classTabSubsectionDescription {
       margin: 0;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #625b71;
     }
 
@@ -1419,10 +1305,8 @@ const StyledClass = styled.div`
 
     .classTabTemplateCardTitle {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 24px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
       word-break: break-word;
       display: -webkit-box;
@@ -1478,8 +1362,8 @@ const StyledClass = styled.div`
 
     .classTabTemplateCardDescription {
       margin: 0;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #625b71;
       word-break: break-word;
     }
@@ -1498,8 +1382,8 @@ const StyledClass = styled.div`
       flex-wrap: wrap;
       align-items: center;
       gap: 16px;
-      font-size: 12px;
-      line-height: 16px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #8a8a8a;
     }
 
@@ -1532,9 +1416,8 @@ const StyledClass = styled.div`
         border-radius: 12px;
         background: #f0f4f6;
         color: #5f6871;
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 18px;
+        font: var(--MH-Type-Label-Small);
+        letter-spacing: 0;
 
         &.summaryStatusMuted {
           background: #f5f0e8;
@@ -1580,10 +1463,8 @@ const StyledClass = styled.div`
 
         h3 {
           margin: 0;
-          font-family: "Inter", sans-serif;
-          font-size: 22px;
-          font-weight: 700;
-          line-height: 30px;
+          font: var(--MH-Type-Title-Large);
+          letter-spacing: 0;
           color: #171717;
         }
       }
@@ -1594,8 +1475,8 @@ const StyledClass = styled.div`
 
       .expandableSummaryHint {
         margin: 0;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #625b71;
       }
 
@@ -1619,8 +1500,8 @@ const StyledClass = styled.div`
 
       .expandableBodyDescription {
         margin: 16px 0 0;
-        font-size: 15px;
-        line-height: 22px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #625b71;
       }
     }
@@ -1694,18 +1575,15 @@ const StyledClass = styled.div`
       }
 
       .matchingRoundNetworkLabel {
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 16px;
+        font: var(--MH-Type-Label-Small);
+        letter-spacing: 0;
         color: #625b71;
       }
 
       .matchingRoundNetworkTitle {
         margin: 0;
-        font-family: "Inter", sans-serif;
-        font-size: 15px;
-        font-weight: 700;
-        line-height: 22px;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
         color: #171717;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1714,8 +1592,8 @@ const StyledClass = styled.div`
 
       .matchingRoundNetworkHint {
         margin: 0;
-        font-size: 13px;
-        line-height: 18px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #625b71;
       }
 
@@ -1805,16 +1683,15 @@ const StyledClass = styled.div`
 
     .matchingRoundFormSummaryTitle {
       margin: 0;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 18px;
-      color: var(--MH-Theme-Neutrals-Black, #171717);
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
+      color: inherit;
     }
 
     .matchingRoundFormSummaryStatus {
       margin: 0;
-      font-size: 13px;
-      line-height: 18px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: inherit;
     }
 
@@ -1848,8 +1725,8 @@ const StyledClass = styled.div`
       min-width: 0;
       width: fit-content;
       height: fit-content;
-      font-size: 13px;
-      font-weight: 600;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       color: var(--MH-Theme-Primary-Dark, #336f8a);
     }
 
@@ -1880,17 +1757,15 @@ const StyledClass = styled.div`
 
     .matchingRoundFollowUpCompletionTitle {
       margin: 0;
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 20px;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
       color: #171717;
     }
 
     .matchingRoundFollowUpCompletionSummary {
       margin: 0;
-      font-size: 13px;
-      font-weight: 400;
-      line-height: 18px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #5f6871;
     }
 
@@ -1915,8 +1790,8 @@ const StyledClass = styled.div`
       border: 1px solid #ece9e6;
       border-radius: 10px;
       background: #ffffff;
-      font-family: inherit;
-      font-size: 13px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
       &:focus {
@@ -1932,9 +1807,8 @@ const StyledClass = styled.div`
       border: 1px solid #e8d4a8;
       background: #fdf6e8;
       color: #8a6d3b;
-      font-size: 13px;
-      font-weight: 500;
-      line-height: 18px;
+      font: var(--MH-Type-Label-Small);
+      letter-spacing: 0;
     }
 
     .matchingRoundFollowUpCompletionEmpty {
@@ -1945,17 +1819,15 @@ const StyledClass = styled.div`
 
     .matchingRoundFollowUpCompletionEmptyTitle {
       margin: 0;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 18px;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
       color: #171717;
     }
 
     .matchingRoundFollowUpCompletionEmptyHint {
       margin: 0;
-      font-size: 13px;
-      font-weight: 400;
-      line-height: 18px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #5f6871;
     }
 
@@ -1965,9 +1837,8 @@ const StyledClass = styled.div`
       border: none;
       background: transparent;
       color: var(--MH-Theme-Primary-Dark, #336f8a);
-      font: inherit;
-      font-size: 13px;
-      font-weight: 600;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       width: fit-content;
       cursor: pointer;
       text-align: left;
@@ -1988,16 +1859,15 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFollowUpProgress {
-      font-size: 13px;
-      font-weight: 600;
+      font: var(--MH-Type-Label-Small);
+      letter-spacing: 0;
       color: #171717;
     }
 
     .matchingRoundFormPickerTitle {
       margin: 0;
-      font-size: 15px;
-      font-weight: 600;
-      line-height: 20px;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
       color: #171717;
     }
 
@@ -2005,8 +1875,8 @@ const StyledClass = styled.div`
     .matchingRoundFormPickerNote,
     .matchingRoundFormPickerSectionHint {
       margin: 0;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #424242;
     }
 
@@ -2058,16 +1928,15 @@ const StyledClass = styled.div`
 
     .matchingRoundFormPickerSectionTitle {
       margin: 0;
-      font-size: 13px;
-      font-weight: 600;
-      line-height: 18px;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
       color: #171717;
     }
 
     .matchingRoundFormPickerLibraryEmpty {
       margin: 0;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #6b6b6b;
     }
 
@@ -2110,9 +1979,8 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerVisibilityStatus {
-      font-size: 13px;
-      font-weight: 600;
-      line-height: 18px;
+      font: var(--MH-Type-Label-Small);
+      letter-spacing: 0;
       color: var(--MH-Theme-Additional-Accent-Dark, #3f288f);
     }
 
@@ -2217,8 +2085,8 @@ const StyledClass = styled.div`
     .matchingRoundFormPickerAddButton {
       height: 30px !important;
       padding: 4px 12px !important;
-      font-size: 12px !important;
-      line-height: 16px !important;
+      font: var(--MH-Type-Label-Small) !important;
+      letter-spacing: 0;
       white-space: nowrap;
     }
 
@@ -2230,17 +2098,16 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerLibraryRowTitle {
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 18px;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
       color: #171717;
       overflow-wrap: anywhere;
       word-break: break-word;
     }
 
     .matchingRoundFormPickerLibraryRowMeta {
-      font-size: 12px;
-      line-height: 16px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #6b6b6b;
     }
 
@@ -2269,9 +2136,8 @@ const StyledClass = styled.div`
       flex-shrink: 0;
       height: 22px;
       padding: 2px 8px;
-      font-size: 11px;
-      font-weight: 500;
-      line-height: 16px;
+      font: var(--MH-Type-Label-Small);
+      letter-spacing: 0;
     }
 
     .matchingRoundFormOriginChip--public,
@@ -2281,7 +2147,6 @@ const StyledClass = styled.div`
       background-color: #ffffff !important;
       border-color: #a1a1a1 !important;
       color: #5f6871 !important;
-      font-weight: 500 !important;
     }
 
     .classTabMatchingRoundFooter {
@@ -2297,10 +2162,9 @@ const StyledClass = styled.div`
       .matchingRoundUnsavedHint {
         margin: 0;
         margin-right: auto;
-        font-size: 13px;
-        line-height: 18px;
+        font: var(--MH-Type-Label-Small);
+        letter-spacing: 0;
         color: #8a6d3b;
-        font-weight: 500;
       }
     }
 
@@ -2321,20 +2185,20 @@ const StyledClass = styled.div`
       display: grid;
       align-content: start;
       gap: 6px;
-      font-size: 14px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #625b71;
 
       .fieldLabel {
-        font-weight: 600;
         color: #171717;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
       }
 
       .fieldHint {
         margin: 0;
-        font-size: 12px;
-        line-height: 18px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #888;
       }
 
@@ -2347,9 +2211,8 @@ const StyledClass = styled.div`
         border: 1px solid #d9d6d2;
         border-radius: 12px;
         background: #ffffff;
-        font-family: "Inter", sans-serif;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #171717;
         outline: none;
         box-sizing: border-box;
@@ -2377,17 +2240,16 @@ const StyledClass = styled.div`
 
       h4 {
         margin: 0;
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 22px;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
         color: #171717;
       }
 
       .subsectionHint,
       .classTabEmptyInline {
         margin: 0;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #625b71;
       }
     }
@@ -2426,16 +2288,15 @@ const StyledClass = styled.div`
       }
 
       .checkboxTitle {
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 20px;
+        font: var(--MH-Type-Title-Small);
+        letter-spacing: 0;
         color: #171717;
       }
 
       .checkboxMeta {
         margin: 0;
-        font-size: 12px;
-        line-height: 18px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #625b71;
 
         &.expired {
@@ -2451,9 +2312,8 @@ const StyledClass = styled.div`
         border-radius: 100px;
         background: #f8e1e1;
         color: #b3261e;
-        font-size: 11px;
-        font-weight: 600;
-        line-height: 16px;
+        font: var(--MH-Type-Label-Small);
+        letter-spacing: 0;
       }
     }
 
@@ -2491,8 +2351,8 @@ const StyledClass = styled.div`
       border: 1px solid #ece9e6;
       border-radius: 10px;
       background: #ffffff;
-      font-family: inherit;
-      font-size: 13px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
       &:focus {
@@ -2670,9 +2530,8 @@ const StyledClass = styled.div`
       border-radius: 100px;
       background: transparent;
       color: #625b71;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
-      font-weight: 700;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
       line-height: 1;
       cursor: pointer;
 
@@ -2742,10 +2601,8 @@ const StyledClass = styled.div`
       border-radius: 100px;
       border: 1px solid #336f8a;
       color: #336f8a;
-      font-family: "Inter", sans-serif;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       text-decoration: none;
 
       &:hover {
@@ -2784,7 +2641,6 @@ const StyledClass = styled.div`
     gap: 28px;
     max-width: 980px;
     padding-bottom: 40px;
-    font-family: "Inter", sans-serif;
 
     .settingsSection {
       display: grid;
@@ -2803,17 +2659,15 @@ const StyledClass = styled.div`
 
       h3 {
         margin: 0;
-        font-family: "Inter", sans-serif;
-        font-size: 22px;
-        font-weight: 700;
-        line-height: 30px;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         color: #171717;
       }
 
       p {
         margin: 0;
-        font-size: 15px;
-        line-height: 22px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #625b71;
       }
     }
@@ -2842,8 +2696,8 @@ const StyledClass = styled.div`
           margin: 0;
           padding-left: 20px;
           color: #3d3d3d;
-          font-size: 14px;
-          line-height: 20px;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
         }
       }
       .curriculumTypeBlock {
@@ -2852,18 +2706,16 @@ const StyledClass = styled.div`
     }
 
     .settingsQuestion {
-      font-family: "Inter", sans-serif;
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
     }
 
     .classDescriptionSettingsHint {
       margin: 0;
       color: #625b71;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
 
     .settingsChoiceGroup {
@@ -2882,9 +2734,8 @@ const StyledClass = styled.div`
         background: #f9faf9;
         color: #333333;
         cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 20px;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
         transition: border-color 0.2s ease, background-color 0.2s ease,
           box-shadow 0.2s ease, color 0.2s ease;
 
@@ -2974,17 +2825,15 @@ const StyledClass = styled.div`
       h4 {
         margin: 0;
         color: #171717;
-        font-family: "Inter", sans-serif;
-        font-size: 17px;
-        font-weight: 700;
-        line-height: 24px;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
       }
 
       p {
         margin: 0;
         color: #625b71;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
     }
 
@@ -3046,8 +2895,8 @@ const StyledClass = styled.div`
       border-radius: 14px;
       background: #ffffff;
       color: #625b71;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
 
     .networkCard {
@@ -3062,7 +2911,6 @@ const StyledClass = styled.div`
       border-radius: 16px;
       background: #ffffff;
       color: inherit;
-      font-family: "Inter", sans-serif;
       text-align: left;
       box-shadow: 0 6px 18px rgba(23, 23, 23, 0.03);
       transition: border-color 0.2s ease, background-color 0.2s ease,
@@ -3090,10 +2938,8 @@ const StyledClass = styled.div`
       margin: 0;
       overflow: hidden;
       color: #171717;
-      font-family: "Inter", sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
     }
@@ -3102,8 +2948,8 @@ const StyledClass = styled.div`
       display: -webkit-box;
       overflow: hidden;
       color: #625b71;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
     }
@@ -3114,16 +2960,15 @@ const StyledClass = styled.div`
       align-items: center;
       gap: 6px;
       color: #a1a1a1;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
 
     .networkCardAction {
       justify-self: start;
       color: var(--MH-Theme-Primary-Dark, #336f8a);
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 18px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
     }
 
     .networkCardActions {
@@ -3142,20 +2987,16 @@ const StyledClass = styled.div`
     }
 
     .curriculumTypeLegend {
-      font-family: "Inter", sans-serif;
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 24px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
       margin: 0 0 4px 0;
       padding: 0;
     }
 
     .curriculumTypeHelp {
-      font-family: "Inter", sans-serif;
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #625b71;
       margin: 0 0 16px 0;
     }
@@ -3213,16 +3054,15 @@ const StyledClass = styled.div`
     }
 
     .curriculumTypeLabel {
-      font-family: "Inter", sans-serif;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       color: #171717;
     }
 
     .curriculumTypeFallbackNote {
       margin: 8px 0 0;
-      font-size: 13px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #625b71;
     }
 
@@ -3243,10 +3083,8 @@ const StyledClass = styled.div`
       border-radius: 12px;
       background: #d53533;
       color: #ffffff;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       cursor: pointer;
       transition: background-color 0.2s ease, border-color 0.2s ease,
         box-shadow 0.2s ease;

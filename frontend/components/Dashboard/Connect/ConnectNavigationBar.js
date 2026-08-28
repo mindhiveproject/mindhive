@@ -340,6 +340,7 @@ export default function ConnectNavigationBar() {
       aria-label={t("nav.mainNavAriaLabel", {}, { default: "Connect sections" })}
       variant="underline"
       showRule
+      gapless
     >
       <ConnectNavDropdown
         placeholderKey="nav.organizations"

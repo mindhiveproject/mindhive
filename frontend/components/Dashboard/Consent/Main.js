@@ -6,6 +6,7 @@ import ConsentsList from "./ConsentsList";
 import PublicConsentsList from "./PublicConsentsList";
 import StyledConsent from "../../styles/StyledConsent";
 import Button from "../../DesignSystem/Button";
+import { NavbarItem, SectionNavbar } from "../../DesignSystem/Navbar";
 import useTranslation from "next-translate/useTranslation";
 
 export default function ConsentMain({ query, user }) {
@@ -13,31 +14,25 @@ export default function ConsentMain({ query, user }) {
   const { t } = useTranslation("dashboard");
   return (
     <StyledConsent>
-      <h1>Consent protocols</h1>
+      <h1 className="MH-Type-Heading-Base">Consent protocols</h1>
       <div className="header">
-        <div className="menu">
-          <Link href="/dashboard/irb">
-            <div
-              className={
-                !selector ? "menuTitle selectedMenuTitle" : "menuTitle"
-              }
-            >
-              <p>My protocols</p>
-            </div>
-          </Link>
-
-          <Link href="/dashboard/irb/public">
-            <div
-              className={
-                selector === "public"
-                  ? "menuTitle selectedMenuTitle"
-                  : "menuTitle"
-              }
-            >
-              <p>Public protocols</p>
-            </div>
-          </Link>
-        </div>
+        <SectionNavbar
+          variant="underline"
+          showRule
+          gapless
+          aria-label="Consent protocols"
+        >
+          <NavbarItem as={Link} href="/dashboard/irb" selected={!selector}>
+            My protocols
+          </NavbarItem>
+          <NavbarItem
+            as={Link}
+            href="/dashboard/irb/public"
+            selected={selector === "public"}
+          >
+            Public protocols
+          </NavbarItem>
+        </SectionNavbar>
         {!selector && (
           <Link href="/dashboard/irb/add">
             <Button variant="filled" type="button">

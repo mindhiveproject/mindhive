@@ -12,8 +12,8 @@ export const WizardBody = styled.div`
 
 export const StepMeta = styled.p`
   margin: 0;
-  font-family: Inter, sans-serif;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
@@ -23,23 +23,21 @@ export const FieldStack = styled.div`
   gap: 8px;
 
   label {
-    font-family: Lato, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .field-hint {
-    font-family: Inter, sans-serif;
-    font-size: 12px;
-    line-height: 1.4;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
 
   input,
   textarea {
-    font-family: Inter, sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     border: 2px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
     border-radius: 8px;
     padding: 9px 11px;
@@ -110,8 +108,8 @@ export const QuestionCardHeader = styled.div`
   gap: 8px;
 
   .question-meta {
-    font-family: Inter, sans-serif;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
 
@@ -145,20 +143,20 @@ export const QuestionSummary = styled.div`
   }
 
   .summary-main strong {
-    font-family: Lato, sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .summary-type {
-    font-family: Inter, sans-serif;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
 
   .summary-prompt {
-    font-family: Inter, sans-serif;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -239,18 +237,15 @@ export const TypeTile = styled.button`
 
   .type-label {
     display: block;
-    font-family: Lato, sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1.25;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .type-hint {
     display: block;
-    font-family: Inter, sans-serif;
-    font-size: 11px;
-    line-height: 1.3;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
 
@@ -293,8 +288,8 @@ export const PreviewPaneContent = styled.div`
 
 export const ErrorText = styled.p`
   margin: 0;
-  font-family: Inter, sans-serif;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #b42318;
 `;
 
@@ -302,9 +297,8 @@ export const CheckboxRow = styled.label`
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: Inter, sans-serif;
-  font-size: 13px;
-  font-weight: 400 !important;
+  font: var(--MH-Type-Body-Base) !important;
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   cursor: pointer;
 
@@ -330,16 +324,15 @@ export const CloneRow = styled.button`
   cursor: pointer;
 
   .clone-title {
-    font-family: Lato, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .clone-desc {
     margin-top: 4px;
-    font-family: Inter, sans-serif;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #5f6871;
   }
 `;

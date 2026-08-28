@@ -48,15 +48,16 @@ const InviteBanner = styled.div`
 
   strong {
     display: block;
-    font-size: 15px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     margin-bottom: 4px;
     color: #1d6b3a;
   }
 
   span {
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #1d6b3a;
-    line-height: 1.4;
   }
 `;
 

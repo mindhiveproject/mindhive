@@ -10,10 +10,13 @@ export default function CreateProfile() {
 
   return (
     <>
-        <div style={{ minHeight: "60vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontSize: 32 }}>
+        <div
+          className="MH-Type-Heading-Small"
+          style={{ minHeight: "60vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}
+        >
             {t('underConstruction')}
         </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontSize: 32 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
             <Button
               variant="filled"
               type="button"

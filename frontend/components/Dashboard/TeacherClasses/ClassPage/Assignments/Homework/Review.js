@@ -7,7 +7,8 @@ import { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import styled from "styled-components";
 
-import TipTapEditor from "../../../../../TipTap/Main";  
+import Chip from "../../../../../DesignSystem/Chip";
+import TipTapEditor from "../../../../../TipTap/Main";
 import { StyledTipTap } from "../../../../../TipTap/StyledTipTap";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 
@@ -39,20 +40,6 @@ const ButtonContainer = styled.div`
   align-items: center;
 `;
 
-const UsernameChip = styled.div`
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  padding: 4px 12px 4px 12px;
-  margin-top: 16px;
-  border-radius: 100px;
-  font-family: Inter;
-  font-size: 14px;
-  font-weight: 600;
-  border: 1px solid #171717;
-  background: #FFFFFF;
-  color: #171717;
-`;
 
 const Section = styled.div`
   margin-bottom: 32px;
@@ -71,17 +58,15 @@ const SectionHeader = styled.div`
 
 const SectionTitle = styled.h2`
   margin: 0;
-  font-family: Lato;
-  font-size: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
 const ShowButton = styled.button`
   padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   border-radius: 100px;
   border: 1.5px solid #336F8A;
   background: #ffffff;
@@ -112,18 +97,15 @@ const InfoItem = styled.div`
 `;
 
 const InfoLabel = styled.label`
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   color: #666666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 `;
 
 const InfoValue = styled.div`
-  font-family: Lato;
-  font-size: 16px;
-  font-weight: 400;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
@@ -133,12 +115,10 @@ const CommentsSection = styled.div`
 
 const CommentsLabel = styled.label`
   display: block;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   color: #666666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   margin-bottom: 12px;
 `;
 
@@ -149,9 +129,8 @@ const CommentsEditorWrapper = styled.div`
   .tiptapEditor {
     .ProseMirror {
       padding: 12px;
-      font-family: Lato;
-      font-size: 14px;
-      line-height: 1.5;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       min-height: 120px;
       border: 1px solid #e0e0e0;
       border-radius: 4px;
@@ -296,9 +275,12 @@ export default function ReviewHomework({
       {/* Student's Homework Section */}
       <Section>
         <SectionTitle>{t("assignment.studentEntry") || "Student's entry"}</SectionTitle>
-        <UsernameChip>
-          {homework?.author?.username || 'Unknown Student'}
-        </UsernameChip>
+        <Chip
+          variant="static"
+          tone="neutral"
+          label={homework?.author?.username || 'Unknown Student'}
+          style={{ marginTop: 16 }}
+        />
         <StyledTipTap>
           <TipTapEditor
             content={inputs?.content}

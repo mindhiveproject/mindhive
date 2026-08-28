@@ -83,10 +83,8 @@ const ChromeTitleWrap = styled.div`
 
 const ChromeTitle = styled.h1`
   margin: 0;
-  font-family: Inter, sans-serif;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.3;
+  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -171,10 +169,8 @@ const PeoplePanel = styled.section`
 
   h4 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
@@ -194,16 +190,16 @@ const HeaderActions = styled.span`
 
 const SECTION_TITLE_STYLE = {
   margin: 0,
-  fontSize: 16,
-  fontWeight: 700,
+  font: 'var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
 const BODY_TEXT_STYLE = {
   margin: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-  fontSize: 14,
-  lineHeight: 1.6,
+  font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+  letterSpacing: 0,
   whiteSpace: "pre-wrap",
 };
 
@@ -330,7 +326,6 @@ function ChipList({ label, items, ariaLabel, leading = null }) {
         {chips.map((item, index) => (
           <Chip
             key={`${index}-${item}`}
-            shape="pill"
             label={item}
             title={item}
             labelLines={4}
@@ -357,10 +352,8 @@ function BulletList({ label, items }) {
           margin: 0,
           paddingLeft: 20,
           color: "var(--MH-Theme-Neutrals-Black, #171717)",
-          fontFamily: "Lato, sans-serif",
-          fontSize: 14,
-          fontWeight: 400,
-          lineHeight: 1.5,
+          font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+          letterSpacing: 0,
         }}
       >
         {entries.map((item, index) => (
@@ -689,8 +682,6 @@ export default function StudentOpportunityPreview({
             >
               <Chip
                 label={aboutTabLabel}
-                shape="square"
-                style={{ padding: "16px" }}
                 selected={activeTab === TABS.about}
                 pressed={activeTab === TABS.about}
                 onClick={() => setActiveTab(TABS.about)}
@@ -698,8 +689,6 @@ export default function StudentOpportunityPreview({
               />
               <Chip
                 label={peopleTabLabel}
-                shape="square"
-                style={{ padding: "16px" }}
                 selected={activeTab === TABS.people}
                 pressed={activeTab === TABS.people}
                 leading={
@@ -716,8 +705,6 @@ export default function StudentOpportunityPreview({
               />
               <Chip
                 label={forumTabLabel}
-                shape="square"
-                style={{ padding: "16px" }}
                 selected={activeTab === TABS.forum}
                 pressed={activeTab === TABS.forum}
                 leading={<QuestionMarkIcon width={18} height={18} />}
@@ -737,7 +724,6 @@ export default function StudentOpportunityPreview({
                   )}
                 >
                   <Chip
-                    shape="pill"
                     label={teamSizeLabel}
                     leading={
                       <img
@@ -754,20 +740,19 @@ export default function StudentOpportunityPreview({
                     }
                   />
                   {opp.timeCommitment ? (
-                    <Chip shape="pill" label={opp.timeCommitment} />
+                    <Chip label={opp.timeCommitment} />
                   ) : null}
                   {datesLabel ? (
-                    <Chip shape="pill" label={datesLabel} />
+                    <Chip label={datesLabel} />
                   ) : null}
                   {categoryDisplay ? (
-                    <Chip shape="pill" label={categoryDisplay} />
+                    <Chip label={categoryDisplay} />
                   ) : null}
                   {ratingLabel ? (
-                    <Chip shape="pill" label={ratingLabel} />
+                    <Chip label={ratingLabel} />
                   ) : null}
                   {specialResourcesLabel ? (
                     <Chip
-                      shape="pill"
                       label={t(
                         "opportunities.studentView.preview.specialResourcesChip",
                         { value: specialResourcesLabel },
@@ -777,7 +762,6 @@ export default function StudentOpportunityPreview({
                   ) : null}
                   {fieldResearchLabel ? (
                     <Chip
-                      shape="pill"
                       label={t(
                         "opportunities.studentView.preview.fieldResearchChip",
                         { value: fieldResearchLabel },
@@ -792,8 +776,8 @@ export default function StudentOpportunityPreview({
                     style={{
                       margin: 0,
                       color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-                      fontSize: 15,
-                      lineHeight: 1.5,
+                      font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+                      letterSpacing: 0,
                     }}
                   >
                     {opp.shortDescription}
@@ -1004,10 +988,10 @@ export default function StudentOpportunityPreview({
                           >
                             <span
                               style={{
-                                fontWeight: 600,
+                                font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
+                                letterSpacing: 0,
                                 color:
                                   "var(--MH-Theme-Neutrals-Black, #171717)",
-                                fontSize: 13,
                               }}
                             >
                               {displayName(rating.rater)}
@@ -1024,7 +1008,8 @@ export default function StudentOpportunityPreview({
                                 style={{
                                   color:
                                     "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-                                  fontSize: 12,
+                                  font: 'var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif)',
+                                  letterSpacing: 0,
                                 }}
                               >
                                 {formatDate(rating.createdAt)}

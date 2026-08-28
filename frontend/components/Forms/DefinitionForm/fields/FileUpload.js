@@ -125,7 +125,13 @@ export default function FileUpload({
         <span className="hint">{fieldHelper(field, locale)}</span>
       ) : null}
       {existing && !pending ? (
-        <div style={{ fontSize: 13, color: "#5f6871" }}>
+        <div
+          style={{
+            font: 'var(--MH-Type-Body-Base)',
+            letterSpacing: 0,
+            color: "#5f6871",
+          }}
+        >
           {t("definitionForm.file.current", {}, { default: "Current:" })}{" "}
           {existing.url ? (
             <a
@@ -183,7 +189,8 @@ export default function FileUpload({
                 background: "none",
                 border: "none",
                 color: "var(--MH-Theme-Primary-Dark, #336f8a)",
-                fontSize: 12,
+                font: 'var(--MH-Type-Label-Base)',
+                letterSpacing: 0,
                 cursor: interactionsDisabled ? "not-allowed" : "pointer",
                 padding: 0,
                 width: "max-content",
@@ -207,7 +214,8 @@ export default function FileUpload({
                 background: "none",
                 border: "none",
                 color: "#c0392b",
-                fontSize: 12,
+                font: 'var(--MH-Type-Label-Base)',
+                letterSpacing: 0,
                 cursor: disabled ? "not-allowed" : "pointer",
                 padding: 0,
                 width: "max-content",

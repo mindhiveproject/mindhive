@@ -62,7 +62,6 @@ export default function ResearchMain({ query, user }) {
 
       <div className="filterModeRow">
         <Chip
-          shape="square"
           label={t("filterByClass", {
             defaultValue: "Class boards",
           })}
@@ -70,7 +69,6 @@ export default function ResearchMain({ query, user }) {
           onClick={() => setFilterMode("byClass")}
         />
         <Chip
-          shape="square"
           label={t("byBoard", {
             defaultValue: "Individual board",
           })}
@@ -78,7 +76,6 @@ export default function ResearchMain({ query, user }) {
           onClick={() => setFilterMode("byBoard")}
         />
         <Chip
-          shape="square"
           label={t("metrics.tabLabel", {}, { default: "Platform metrics" })}
           selected={filterMode === "platformMetrics"}
           onClick={() => setFilterMode("platformMetrics")}

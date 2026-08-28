@@ -20,9 +20,8 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font-family: Lato;
-  font-size: 28px;
-  font-weight: 600;
+  font: var(--MH-Type-Heading-Small);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
@@ -43,9 +42,8 @@ const FormSection = styled.div`
 const FormLabel = styled.label`
   display: block;
   margin-bottom: 8px;
-  font-family: Lato;
-  font-size: 16px;
-  font-weight: 500;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 

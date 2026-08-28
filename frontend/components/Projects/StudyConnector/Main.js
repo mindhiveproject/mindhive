@@ -192,43 +192,35 @@ const StyledStudyConnector = styled.div`
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   border-radius: 12px;
-  font-family: Inter, sans-serif;
   box-sizing: border-box;
 
   .ui.warning.message {
     margin: 0 0 20px;
-    font-family: Inter, sans-serif;
   }
 
   .ui.warning.message .header {
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
   }
 
   .ui.warning.message p {
     margin: 0;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 `;
 
 const Header = styled.h2`
-  font-family: Inter, sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 32px;
+  font: var(--MH-Type-Heading-Small);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
   margin: 0 0 8px 0;
 `;
 
 const Description = styled.p`
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   margin: 0 0 24px 0;
 `;
@@ -252,10 +244,8 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.h3`
-  font-family: Inter, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 24px;
+  font: var(--MH-Type-Title-Base);
+  letter-spacing: 0;
   color: var(--MH-Theme-Primary-Dark, #336f8a);
   margin: 0;
 `;
@@ -263,10 +253,8 @@ const SectionTitle = styled.h3`
 const Input = styled.input`
   width: 100%;
   box-sizing: border-box;
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
   padding: 8px 12px;
   border: 1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1);

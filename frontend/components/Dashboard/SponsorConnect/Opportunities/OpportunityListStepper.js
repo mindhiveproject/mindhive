@@ -100,7 +100,7 @@ function visibilityTooltipContent(networks, t) {
 
   return (
     <div>
-      <div style={{ fontWeight: 600, marginBottom: 8 }}>
+      <div className="MH-Type-Label-Base" style={{ marginBottom: 8 }}>
         {t("myOpportunitiesList.visibility.modalTitle", {}, {
           default: "Visible in class networks",
         })}
@@ -122,12 +122,14 @@ function StepChip({ step, label, onClick, openLabel }) {
   return (
     <Chip
       label={label}
+      variant="static"
       selected={visual === "action" || visual === "waiting"}
       disabled={visual === "pending" && !clickable}
       onClick={clickable ? onClick : undefined}
       ariaLabel={clickable && openLabel ? openLabel : undefined}
       title={clickable ? openLabel : undefined}
       style={style}
+      
     />
   );
 }

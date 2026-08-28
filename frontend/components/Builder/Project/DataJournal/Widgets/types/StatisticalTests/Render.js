@@ -265,7 +265,7 @@ ${funcName}()
             marginBottom: "1rem",
           }}
         >
-          <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+          <div className="MH-Type-Title-Base" style={{ textAlign: "left" }}>
             {t(
               "dataJournal.statTest.emptyState.title",
               {},
@@ -335,7 +335,6 @@ ${funcName}()
         padding: "1.5rem",
         maxWidth: "800px",
         margin: "0 auto",
-        fontFamily: "system-ui, sans-serif",
       }}
     >
       <h3
@@ -476,10 +475,10 @@ ${funcName}()
       {/* Interpretation */}
       {result.interpretation && (
         <p
+          className="MH-Type-Body-Base"
           style={{
             marginTop: "1.5rem",
             textAlign: "center",
-            lineHeight: "1.6",
             color: "#2d3748",
           }}
           dangerouslySetInnerHTML={{ __html: result.interpretation }}
@@ -489,8 +488,8 @@ ${funcName}()
       {/* Significance footnote */}
       {result.significant && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85em",
             color: "#718096",
             textAlign: "center",
             marginTop: "1rem",

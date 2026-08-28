@@ -44,9 +44,8 @@ const BODY_STYLE = {
 const BANNER_STYLE = {
   margin: "0 0 12px",
   flexShrink: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 14,
-  lineHeight: 1.5,
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   color: "#3f288f",
   fontWeight: 600,
 };
@@ -66,9 +65,8 @@ const UnreadBadge = styled.span`
   border-radius: 100px;
   background: var(--MH-Theme-Secondary-Dark, #6f26ce);
   color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   text-align: center;
   box-sizing: border-box;
   pointer-events: none;

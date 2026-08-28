@@ -38,8 +38,8 @@ const Header = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 `;
@@ -64,17 +64,15 @@ const SurfaceTile = styled.button`
   font-family: inherit;
 
   .surface-label {
-    font-family: "Lato", sans-serif;
-    font-size: 15px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .surface-hint {
-    font-family: "Lato", sans-serif;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #5f6871;
-    line-height: 1.4;
   }
 
   &:hover {
@@ -93,8 +91,13 @@ const KeyPreview = styled.div`
   border-radius: 8px;
   background: #f7f9f8;
   border: 1px dashed #d3dae0;
+  /* Monospace kept deliberately: renders the literal resolver key
+     (e.g. review_submitted_as_proposal_mindhive) — a code-like
+     identifier, not prose. Size/line-height tokenized to Body-Small. */
   font-family: "Nunito", monospace;
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
   color: #171717;
 
   strong {
@@ -349,7 +352,10 @@ export default function NewDefinitionForm({ open, onClose }) {
       </Header>
 
       <div>
-        <div style={{ fontSize: 13, color: "#5f6871", marginBottom: 8 }}>
+        <div
+          className="MH-Type-Body-Base"
+          style={{ color: "#5f6871", marginBottom: 8 }}
+        >
           Step 1 — pick a surface
         </div>
         <SurfaceGrid>
@@ -369,7 +375,7 @@ export default function NewDefinitionForm({ open, onClose }) {
 
       {surface ? (
         <>
-          <div style={{ fontSize: 13, color: "#5f6871" }}>
+          <div className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
             Step 2 — details
           </div>
           <Grid>
@@ -521,7 +527,9 @@ export default function NewDefinitionForm({ open, onClose }) {
       ) : null}
 
       {error ? (
-        <div style={{ color: "#871b16", fontSize: 13 }}>{error}</div>
+        <div className="MH-Type-Body-Base" style={{ color: "#871b16" }}>
+          {error}
+        </div>
       ) : null}
 
       <div>

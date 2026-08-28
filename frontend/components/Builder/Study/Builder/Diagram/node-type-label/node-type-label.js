@@ -8,14 +8,12 @@ export const StyledNodeTypeLabel = styled.div`
     padding: 16px;
     align-content: center;
     cursor: pointer;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
   }
   .subtitle {
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
     font-style: italic;
-    font-family: "Lato";
+    letter-spacing: 0;
   }
 `;

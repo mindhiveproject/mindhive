@@ -18,7 +18,8 @@ const StyledTools = styled.div`
       justify-content: center;
       width: auto;
       p {
-        font-size: 18px;
+        font: var(--MH-Type-Label-Large);
+        letter-spacing: 0;
       }
     }
     .selectedMenuTitle {

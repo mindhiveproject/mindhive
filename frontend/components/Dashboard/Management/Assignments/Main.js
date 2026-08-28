@@ -29,10 +29,8 @@ const EditButton = styled.button`
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  font-family: Lato;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 16px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   text-align: center;
   border-radius: 100px;
   cursor: pointer;
@@ -140,7 +138,7 @@ export default function TemplateAssignments({ query, user }) {
     const classTitles = classesFromCopies.map((cls) => cls?.title || 'Unknown');
     const tooltipContent = (
       <div style={{ padding: '8px' }}>
-        <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
+        <div className="MH-Type-Label-Base" style={{ marginBottom: '8px' }}>
           Classes using this template ({classesFromCopies.length}):
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -289,7 +287,7 @@ export default function TemplateAssignments({ query, user }) {
           }}
           style={{ textDecoration: 'none' }}
         >
-          <Button variant="filled" style={{ padding: '14px 24px', fontSize: '18px', lineHeight: '18px' }}>Add assignment</Button>
+          <Button variant="filled" style={{ padding: '14px 24px' }}>Add assignment</Button>
         </Link>
       </ButtonContainer>
 

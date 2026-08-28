@@ -123,11 +123,9 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(20px, 2.8vw, 26px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     color: #171717;
-    line-height: 1.25;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -518,8 +516,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
                 <Chip
                   key={chip.key}
                   label={chip.label}
-                  shape="square"
-                  style={{ padding: "16px" }}
                   selected={isSelected}
                   pressed={isSelected}
                   onClick={() => selectEditorTab(chip.key)}

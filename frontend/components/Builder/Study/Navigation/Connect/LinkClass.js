@@ -133,14 +133,12 @@ export default function LinkClass({ study, handleChange }) {
       {myClasses.map((cl) => (
         <Chip
           key={cl.id}
-          shape="square"
           label={cl.title}
           selected={displaySelectedId === cl.id && !displayDisconnected}
           onClick={() => onSelectClass(cl)}
         />
       ))}
       <Chip
-        shape="square"
         label={noClassLabel}
         selected={displayDisconnected}
         onClick={onSelectNoClass}

@@ -64,7 +64,6 @@ export default function OrganizationVerificationStatus({
             default: "Verified",
           })}
           leading={VerifiedIcon}
-          shape="pill"
           style={{
             ...VERIFIED_CHIP_STYLE,
             ...(compact
@@ -99,7 +98,6 @@ export default function OrganizationVerificationStatus({
             <div style={{ marginTop: 8 }}>
               <CopyButton
                 value={VERIFICATION_EMAIL}
-                style={{ fontWeight: 500 }}
                 ariaLabel={t(
                   "organizationsDetail.verification.copyEmailAria",
                   {},
@@ -121,7 +119,6 @@ export default function OrganizationVerificationStatus({
           label={t("organizationsDetail.verification.notVerified", {}, {
             default: "Not verified",
           })}
-          shape="pill"
           style={{
             ...UNVERIFIED_CHIP_STYLE,
             ...(compact

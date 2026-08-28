@@ -12,12 +12,24 @@ import useTranslation from "next-translate/useTranslation";
 
 import exportPDF from "../PDF/exportPDF";
 import Button from "../../../../../DesignSystem/Button";
+import Chip from "../../../../../DesignSystem/Chip";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
 
 import { useRef, useState } from "react";
 
 import AddCollaboratorModal from "./AddCollaboratorModal";
 import { isClassTemplateBoard } from "../../../../../Utils/proposalBoard";
+
+// Inlined so it inherits the Button label color via currentColor (the imported
+// SVG asset is hard-coded black and can't follow the text-button styling).
+const DownloadIcon = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path
+      d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z"
+      fill="currentColor"
+    />
+  </svg>
+);
 
 export default function ProposalHeader({
   user,
@@ -130,14 +142,12 @@ export default function ProposalHeader({
                     style={{
                       minWidth: "60px",
                       padding: "0 12px",
-                      fontFamily: "Inter, sans-serif",
-                      letterSpacing: "0.15px",
                     }}
                   >
                     {loading ? (
-                      <span style={{ fontSize: "14px", fontWeight: 600, color: "#171717" }}>{t("header.saving", "Saving")}</span>
+                      <span className="MH-Type-Label-Base" style={{ color: "#171717" }}>{t("header.saving", "Saving")}</span>
                     ) : (
-                      <span style={{ fontSize: "14px", fontWeight: 600, color: "#171717" }}>{t("header.save", "Save")}</span>
+                      <span className="MH-Type-Label-Base" style={{ color: "#171717" }}>{t("header.save", "Save")}</span>
                     )}
                   </button>
                 ) : (
@@ -182,14 +192,9 @@ export default function ProposalHeader({
                         setIsTitleEditing(false);
                       }
                     }}
-                    className="headerTitle"
-                    style={{ 
-                      fontFamily: "Inter, sans-serif",
+                    className="headerTitle MH-Type-Heading-Base"
+                    style={{
                       fontStyle: "normal",
-                      fontWeight: 600,
-                      fontSize: "36px",
-                      lineHeight: "44px",
-                      letterSpacing: "0.15px",
                       color: "#171717",
                       margin: 0,
                       flex: 1,
@@ -243,9 +248,13 @@ export default function ProposalHeader({
                 
                 <div className="collaboratorArray">
                   {collaborators.map((collab) => (
-                    <div key={collab?.id} className="collaboratorChip">
-                      <span >{collab?.username || ""}</span>
-                    </div>
+                    <Chip
+                      key={collab?.id}
+                      variant="static"
+                      tone="neutral"
+                      label={collab?.username || ""}
+                      title={collab?.username || ""}
+                    />
                   ))}
                   {(() => {
                     const userHasClasses = 
@@ -291,41 +300,22 @@ export default function ProposalHeader({
                     content={t("proposalPage.downloadTooltip", "Download content is based on the status and review step filters selected below.")}
                     side="bottom"
                   >
-                    <div
+                    <Button
+                      variant="text"
                       onClick={handleDownload}
-                      className="downloadButton"
-                      style={{
-                        position: "relative",
-                        cursor: "pointer",
-                      }}
+                      leadingIcon={DownloadIcon}
                     >
-                      <img
-                        src="/assets/icons/download.svg"
-                        alt=""
-                        style={{ width: 18, height: 18 }}
-                      />
-                      <span className="downloadButtonText">
-                        {t("proposalPage.download", "Download")}
-                      </span>
-                    </div>
+                      {t("proposalPage.download", "Download")}
+                    </Button>
                   </Tooltip>
                 ) : (
-                  <div
-                    className="downloadButton"
-                    style={{
-                      visibility: "hidden",
-                      cursor: "default",
-                    }}
+                  <Button
+                    variant="text"
+                    style={{ visibility: "hidden" }}
+                    leadingIcon={DownloadIcon}
                   >
-                    <img
-                      src="/assets/icons/download.svg"
-                      alt=""
-                      style={{ width: 18, height: 18 }}
-                    />
-                    <span className="downloadButtonText">
-                      {t("proposalPage.download", "Download")}
-                    </span>
-                  </div>
+                    {t("proposalPage.download", "Download")}
+                  </Button>
                 )}
               </div>
             </div>
@@ -457,7 +447,7 @@ export default function ProposalHeader({
             </div>
 
             {isClassTemplateBoard(proposal) && (
-              <div style={{ marginBottom: "8px", fontSize: "14px", color: "#5D5763" }}>
+              <div className="MH-Type-Body-Base" style={{ marginBottom: "8px", color: "#5D5763" }}>
                 {t("header.classTemplateReadOnly", "Class template (used by class board)")}
               </div>
             )}

@@ -121,13 +121,12 @@ export default function CopyButton({
   return (
     <Chip
       label={stableLabel}
-      shape="square"
       selected={copied}
       disabled={disabled}
       onClick={copied ? undefined : handleClick}
       leading={copied ? CHECK_ICON : COPY_ICON}
       className={className}
-      style={{ fontWeight: 600, ...style }}
+      style={style}
       ariaLabel={ariaLabel}
       title={title}
       {...rest}

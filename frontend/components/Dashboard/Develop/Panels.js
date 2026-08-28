@@ -1,22 +1,11 @@
 import Link from "next/link";
-import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
-import Navbar, { NavbarItem } from "../../DesignSystem/Navbar";
+import { NavbarItem, SectionNavbar } from "../../DesignSystem/Navbar";
 import DevelopProjectBank from "../../Projects/Bank/Develop";
 import DevelopStudyBank from "../../Studies/Bank/Develop";
 import DevelopTaskBank from "../../Tasks/Bank/Develop";
 import DevelopVisualsBank from "./Visuals/Main";
-
-/**
- * The design system's 24px inset suits nav that sits at the window edge; these
- * tabs sit inside the page body, so they run flush with the heading above them.
- */
-const SectionNavbar = styled(Navbar)`
-  .navbar-container {
-    padding: 4px 0px;
-  }
-`;
 
 export default function Panels({ query, user }) {
   const { t } = useTranslation("builder");
@@ -38,6 +27,8 @@ export default function Panels({ query, user }) {
     <>
       <SectionNavbar
         variant="underline"
+        showRule
+        gapless
         id="myPanel"
         aria-label={t("developSections", {}, { default: "Develop sections" })}
       >

@@ -579,10 +579,7 @@ function Inner(props) {
               <>
                 {canAddSections && (
                   <Button
-                    variant="tonal"
-                    style={{
-                      background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
-                    }}
+                    variant="subtle"
                     onClick={() => setAddSectionModalOpen(true)}
                     leadingIcon={
                       <img src="../../assets/icons/add_column.svg" alt="" />
@@ -593,10 +590,7 @@ function Inner(props) {
                 )}
                 {canDeleteCards && (
                   <Button
-                    variant="tonal"
-                    style={{
-                      background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
-                    }}
+                    variant="subtle"
                     onClick={() => setBoardSelectMode("delete")}
                     leadingIcon={trashIcon}
                   >
@@ -605,10 +599,7 @@ function Inner(props) {
                 )}
                 {canAssociateCards && (
                   <Button
-                    variant="tonal"
-                    style={{
-                      background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
-                    }}
+                    variant="subtle"
                     onClick={() => setBoardSelectMode("associate")}
                     leadingIcon={milestoneIcon}
                   >

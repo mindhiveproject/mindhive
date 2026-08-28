@@ -22,16 +22,16 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     margin: 0;
     color: #5f6871;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -47,8 +47,8 @@ const Row = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 100px;
     padding: 10px 16px;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 
   button {
@@ -57,9 +57,8 @@ const Row = styled.div`
     background: #336f8a;
     color: #ffffff;
     border: none;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
 
     &:disabled {
@@ -94,14 +93,15 @@ const ReviewerRow = styled.li`
   }
 
   .name {
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
-    font-size: 14px;
   }
 
   .email {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -110,9 +110,8 @@ const ReviewerRow = styled.li`
     background: none;
     border: 1px solid #f5c2bf;
     color: #c0392b;
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     border-radius: 100px;
     padding: 6px 14px;
     cursor: pointer;
@@ -125,13 +124,15 @@ const ReviewerRow = styled.li`
 
 const Empty = styled.div`
   color: #5f6871;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   font-style: italic;
   padding: 8px 0;
 `;
 
 const Feedback = styled.div`
-  font-size: 13px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: ${({ $kind }) => ($kind === "error" ? "#871b16" : "#1d6b3a")};
 `;
 

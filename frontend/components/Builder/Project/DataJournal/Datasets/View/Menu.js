@@ -105,7 +105,6 @@ function TaskAccordionItem({
           <Chips
             label={isOpen ? collapseLabel : expandLabel}
             selected={isOpen}
-            shape="square"
             style={{ fontSize: "12px" }}
             ariaLabel={chipAria}
             leading={
@@ -364,11 +363,11 @@ export default function Menu({
         onConfirm={onConfirmCopy}
         extraContent={
           <label
+            className="MH-Type-Label-Base"
             style={{
               display: "flex",
               alignItems: "flex-start",
               gap: 8,
-              fontSize: 13,
               cursor: "pointer",
             }}
           >

@@ -32,8 +32,8 @@ const TopBar = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 22px;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -45,7 +45,8 @@ const TopBar = styled.div`
 
   .flash {
     color: #1d6b3a;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -56,16 +57,17 @@ const ReadOnlyGrid = styled.div`
   margin-top: 8px;
 
   div {
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #5f6871;
   }
 
   strong {
     display: block;
     color: #171717;
-    font-size: 12px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
     margin-bottom: 4px;
   }
 `;

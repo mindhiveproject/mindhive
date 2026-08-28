@@ -30,7 +30,6 @@ const modalStyle = {
   borderRadius: 16,
   boxShadow: "0 16px 48px rgba(0, 0, 0, 0.18)",
   padding: 32,
-  fontFamily: "Inter, sans-serif",
 };
 
 const headerStyle = {
@@ -48,19 +47,15 @@ const titleBlockStyle = {
 
 const titleStyle = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 24,
-  lineHeight: "32px",
-  fontWeight: 700,
+  font: 'var(--MH-Type-Heading-Small)',
+  letterSpacing: 0,
   color: "#171717",
 };
 
 const descriptionStyle = {
   margin: "8px 0 0",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 400,
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   color: "#625b71",
 };
 
@@ -69,8 +64,8 @@ const previewShellStyle = {
   borderRadius: 12,
   background: "#F7F9F8",
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   padding: 16,
   maxHeight: "min(65vh, 620px)",
   overflowY: "auto",

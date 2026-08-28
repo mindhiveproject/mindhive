@@ -7,23 +7,17 @@ const StyledModal = styled.div`
   display: grid;
   margin: 50px 50px 50px 50px;
   .title {
-    font-family: Roboto;
-    font-size: 24px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     text-align: left;
     color: #1a1a1a;
   }
   .content {
     margin: 15px 0px 40px 0px;
-    font-family: Roboto;
-    font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
   }
 `;
@@ -52,12 +46,9 @@ const StyledButton = styled.button`
   border-radius: 4px;
   align-items: center;
   padding: 14px 20px;
-  font-family: Lato;
-  font-size: 18px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   text-align: center;
   color: #666666;
 `;

@@ -93,18 +93,16 @@ const Header = styled.div`
   h1 {
     margin: 0;
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
   }
 
   p {
     max-width: 720px;
     margin: 0;
     color: #5f6871;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -113,9 +111,8 @@ const Status = styled.div`
   border-radius: 16px;
   background: #ffffff;
   color: #5f6871;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  line-height: 22px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 const SummaryChips = styled.div`
@@ -141,18 +138,15 @@ const SectionHeader = styled.div`
   h2 {
     margin: 0;
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 28px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
   }
 
   p {
     margin: 0;
     color: #5f6871;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -165,9 +159,8 @@ const GridTable = styled.div`
 const EmptyNote = styled.p`
   margin: 0;
   color: #5f6871;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  line-height: 22px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 const ThinEmptySection = styled.section`
@@ -184,18 +177,15 @@ const ThinEmptySection = styled.section`
   h2 {
     margin: 0;
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 24px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
   }
 
   p {
     margin: 0;
     color: #5f6871;
-    font-family: "Inter", sans-serif;
-    font-size: 13px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -207,10 +197,8 @@ const AdminForm = styled.div`
 
   label {
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 22px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -224,8 +212,8 @@ const AdminFormRow = styled.div`
     padding: 0 12px;
     border: 1px solid #cccccc;
     border-radius: 4px;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
 
     &:focus {
       outline: 0;
@@ -237,9 +225,8 @@ const AdminFormRow = styled.div`
 const AdminFeedback = styled.p`
   margin: 0;
   color: ${(props) => (props.$error ? "#871b16" : "#1d6b3a")};
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  line-height: 20px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 const InviteLinkRow = styled.div`
@@ -257,10 +244,8 @@ const DetailsForm = styled.div`
     display: grid;
     gap: 8px;
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 22px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 
   input,
@@ -270,9 +255,8 @@ const DetailsForm = styled.div`
     padding: 12px;
     border: 1px solid #cccccc;
     border-radius: 4px;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     background: #ffffff;
 
     &:focus {
@@ -295,9 +279,8 @@ const DetailsForm = styled.div`
   .fieldHint {
     margin: 0;
     color: #5f6871;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -1046,7 +1029,6 @@ function NetworkDetailPage({ query, user }) {
           {params.data.manualLink ? (
             <CopyButton
               value={params.data.manualLink}
-              style={{ fontWeight: 500 }}
               ariaLabel={t("classNetworks.invites.copyInviteLinkAria", {}, {
                 default: "Copy invite signup or login link",
               })}
@@ -1432,7 +1414,6 @@ function NetworkDetailPage({ query, user }) {
                   </SectionHeader>
                   <SummaryChips>
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/icons/education.svg"
@@ -1452,7 +1433,6 @@ function NetworkDetailPage({ query, user }) {
                       )}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/connect/building.svg"
@@ -1482,7 +1462,6 @@ function NetworkDetailPage({ query, user }) {
                       onClick={() => selectTab(TABS.organizations)}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/connect/user.svg"
@@ -1512,7 +1491,6 @@ function NetworkDetailPage({ query, user }) {
                       onClick={() => selectTab(TABS.profiles)}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/connect/group.svg"
@@ -1532,7 +1510,6 @@ function NetworkDetailPage({ query, user }) {
                       )}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/icons/project/proposal.svg"
@@ -1552,7 +1529,6 @@ function NetworkDetailPage({ query, user }) {
                       )}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/icons/profile/documents.svg"
@@ -1582,7 +1558,6 @@ function NetworkDetailPage({ query, user }) {
                       onClick={() => selectTab(TABS.matching)}
                     />
                     <Chip
-                      shape="square"
                       leading={
                         <img
                           src="/assets/icons/profile/consent.svg"
@@ -1918,7 +1893,6 @@ function NetworkDetailPage({ query, user }) {
                             <InviteLinkRow>
                               <CopyButton
                                 value={inviteFeedback.manualLink}
-                                style={{ fontWeight: 500 }}
                                 ariaLabel={t(
                                   "classNetworks.invites.copyInviteLinkAria",
                                   {},
@@ -1993,7 +1967,6 @@ function NetworkDetailPage({ query, user }) {
                                 <InviteLinkRow>
                                   <CopyButton
                                     value={sponsorSignupAndInviteLink}
-                                    style={{ fontWeight: 500 }}
                                     ariaLabel={t(
                                       "classNetworks.signupAndInviteLink",
                                       {},

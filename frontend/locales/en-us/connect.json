@@ -1283,6 +1283,7 @@
 		"defaultName": "MindHive Member",
 		"defaultSummary": "Click to view profile",
 		"profileButton": "Profile",
+		"typeLabel": "Connect Profile",
 		"viewProfile": "View profile of {{name}}"
 	},
 	"profileType": {

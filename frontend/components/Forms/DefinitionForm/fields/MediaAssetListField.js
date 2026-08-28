@@ -127,10 +127,15 @@ const INPUT_STYLE = {
   border: "1px solid #d3dae0",
   borderRadius: 8,
   padding: "8px 10px",
-  fontSize: 14,
+  font: 'var(--MH-Type-Label-Base)',
+  letterSpacing: 0,
 };
 
-const LABEL_SPAN_STYLE = { fontWeight: 600, color: "#5f6871" };
+const LABEL_SPAN_STYLE = {
+  font: 'var(--MH-Type-Title-Small)',
+  letterSpacing: 0,
+  color: "#5f6871",
+};
 
 function extensionFromName(name) {
   const match = String(name || "").match(/\.([a-z0-9]{2,5})$/i);
@@ -485,7 +490,14 @@ export default function MediaAssetListField({
         const uploading = uploadingRowIndex === i;
         return (
           <div key={row.id || `media-row-${i}`} style={ROW_STYLE}>
-            <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+            <label
+              style={{
+                display: "grid",
+                gap: 4,
+                font: 'var(--MH-Type-Label-Base)',
+                letterSpacing: 0,
+              }}
+            >
               <span style={LABEL_SPAN_STYLE}>
                 {t("definitionForm.mediaAssetList.title", {}, {
                   default: "Title",
@@ -514,7 +526,8 @@ export default function MediaAssetListField({
                 padding: "8px 12px",
                 cursor: "pointer",
                 color: "#c0392b",
-                fontSize: 13,
+                font: 'var(--MH-Type-Label-Base)',
+                letterSpacing: 0,
                 height: 42,
               }}
             >
@@ -527,7 +540,8 @@ export default function MediaAssetListField({
               style={{
                 display: "grid",
                 gap: 4,
-                fontSize: 13,
+                font: 'var(--MH-Type-Label-Base)',
+                letterSpacing: 0,
                 gridColumn: "1 / -1",
               }}
             >
@@ -557,7 +571,7 @@ export default function MediaAssetListField({
                 gap: 8,
               }}
             >
-              <span style={{ ...LABEL_SPAN_STYLE, fontSize: 13 }}>
+              <span style={LABEL_SPAN_STYLE}>
                 {t("definitionForm.mediaAssetList.media", {}, {
                   default: "Media",
                 })}
@@ -598,8 +612,8 @@ export default function MediaAssetListField({
                         borderRadius: 6,
                         background: "#eef5f9",
                         border: "1px solid #d3dae0",
-                        fontSize: 13,
-                        fontWeight: 600,
+                        font: 'var(--MH-Type-Label-Small)',
+                        letterSpacing: 0,
                         color: "var(--MH-Theme-Primary-Dark, #336f8a)",
                         textDecoration: "none",
                       }}
@@ -619,7 +633,8 @@ export default function MediaAssetListField({
                         borderRadius: 8,
                         padding: "8px 12px",
                         cursor: "pointer",
-                        fontSize: 13,
+                        font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,
                       }}
                     >
                       {t("definitionForm.mediaAssetList.changeFromLibrary", {}, {
@@ -634,7 +649,8 @@ export default function MediaAssetListField({
                         borderRadius: 8,
                         padding: "8px 12px",
                         cursor: uploading ? "wait" : "pointer",
-                        fontSize: 13,
+                        font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,
                       }}
                     >
                       {uploading
@@ -671,7 +687,8 @@ export default function MediaAssetListField({
                       borderRadius: 8,
                       padding: "8px 12px",
                       cursor: "pointer",
-                      fontSize: 13,
+                      font: 'var(--MH-Type-Label-Base)',
+                      letterSpacing: 0,
                     }}
                   >
                     {t("definitionForm.mediaAssetList.addFromLibrary", {}, {
@@ -686,7 +703,8 @@ export default function MediaAssetListField({
                       borderRadius: 8,
                       padding: "8px 12px",
                       cursor: uploading ? "wait" : "pointer",
-                      fontSize: 13,
+                      font: 'var(--MH-Type-Label-Base)',
+                      letterSpacing: 0,
                     }}
                   >
                     {uploading
@@ -847,9 +865,9 @@ export default function MediaAssetListField({
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: 12,
+                            font: 'var(--MH-Type-Label-Small)',
+                            letterSpacing: 0,
                             color: "#5f6871",
-                            fontWeight: 600,
                           }}
                         >
                           {documentUrl ? documentExtLabel(asset) : "—"}
@@ -857,7 +875,8 @@ export default function MediaAssetListField({
                       )}
                       <span
                         style={{
-                          fontSize: 12,
+                          font: 'var(--MH-Type-Body-Base)',
+                          letterSpacing: 0,
                           color: "#171717",
                           display: "block",
                           overflow: "hidden",
@@ -870,7 +889,8 @@ export default function MediaAssetListField({
                       {usedElsewhere ? (
                         <span
                           style={{
-                            fontSize: 11,
+                            font: 'var(--MH-Type-Body-Base)',
+                            letterSpacing: 0,
                             color: "var(--MH-Theme-Primary-Dark, #336f8a)",
                           }}
                         >

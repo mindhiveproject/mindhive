@@ -72,13 +72,13 @@ const CardMeta = styled.div`
   flex-wrap: wrap;
   gap: 6px;
   align-items: baseline;
-  font-family: Inter, sans-serif;
-  font-size: 12px;
-  line-height: 1.4;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 
   .name {
-    font-weight: 600;
+    font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 `;
@@ -101,10 +101,8 @@ const PlusOneButton = styled.button`
   border: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-  font-family: Inter, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   cursor: pointer;
   box-sizing: border-box;
 
@@ -144,26 +142,23 @@ const BodyText = styled.p`
   white-space: pre-wrap;
   word-break: break-word;
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 const AnswerBlock = styled.div`
   display: grid;
   gap: 6px;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
   border: 1px solid var(--MH-Theme-Primary-Medium, #a3d6db);
 `;
 
 const AnswerHeading = styled.p`
   margin: 0;
-  font-family: Inter, sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font: var(--MH-Type-Label-Small, 600 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--MH-Theme-Primary-Dark, #336f8a);
 `;
@@ -171,26 +166,25 @@ const AnswerHeading = styled.p`
 const EmptyState = styled.p`
   margin: 0;
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 const StatusText = styled.p`
   margin: 0;
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
 const ErrorText = styled.p`
   margin: 0;
   color: #871b16;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Small, 400 12px/16px "Inter", sans-serif);
+  letter-spacing: 0;
 `;
 
 const Compose = styled.form`
@@ -200,9 +194,8 @@ const Compose = styled.form`
 
   label {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 13px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
@@ -213,11 +206,10 @@ const Compose = styled.form`
     min-height: 72px;
     max-height: 160px;
     padding: 9px 11px;
-    border-radius: 10px;
+    border-radius: 12px;
     border: 2px solid transparent;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
   }
@@ -236,9 +228,8 @@ const SearchField = styled.div`
 
   label {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 13px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
@@ -261,11 +252,10 @@ const SearchField = styled.div`
     width: 100%;
     box-sizing: border-box;
     padding: 9px 11px 9px 38px;
-    border-radius: 10px;
+    border-radius: 12px;
     border: 2px solid transparent;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
   }
@@ -886,8 +876,8 @@ export default function OpportunityClassForum({
                   <HeaderActions>
                     {isAnswered ? (
                       <Chip
-                        shape="square"
-                        style={{border: "none", background: "#F3F3F3"}}
+                        variant="static"
+                        tone="neutral"
                         label={t(
                           "opportunities.classForum.statusAnswered",
                           {},
@@ -898,8 +888,8 @@ export default function OpportunityClassForum({
                     ) : null}
                     {isPinned ? (
                       <Chip
-                        shape="square"
-                        style={{border: "none", background: "#F3F3F3"}}
+                        variant="static"
+                        tone="neutral"
                         label={t("opportunities.classForum.pinned", {}, {
                           default: "Pinned",
                         })}

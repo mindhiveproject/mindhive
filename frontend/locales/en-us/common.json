@@ -178,6 +178,10 @@
 		"oops": "Oops!"
 	},
 	"featured": "Featured",
+	"favorite": {
+		"add": "Add to favorites",
+		"remove": "Remove from favorites"
+	},
 	"flow": {
 		"header": {
 			"login": "Login",

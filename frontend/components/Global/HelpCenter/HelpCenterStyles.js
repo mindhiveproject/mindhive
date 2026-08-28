@@ -95,11 +95,8 @@ export const ActionLabel = styled.span`
   padding: 8px 16px;
   border-radius: 25px;
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  font-family: "Nunito Sans", sans-serif;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 16px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   box-shadow: ${props => props.theme.bs};
   white-space: nowrap;
 `;
@@ -137,9 +134,8 @@ export const ModalHeader = styled.div`
   justify-content: between;
   gap: 12px;
   h2 {
-    font-family: 'Lato', sans-serif;
-    font-size: 20px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     margin: 0;
     flex: 1;
   }
@@ -185,11 +181,13 @@ export const DocSection = styled.div`
     h4 {
       margin: 0 0 8px 0;
       color: ${props => props.theme.black};
-      font-family: 'Lato', sans-serif;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
     }
     p {
       margin: 0;
-      font-size: 14px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
   }
 `;
@@ -217,11 +215,13 @@ export const Support = styled.div`
       h4 {
         margin: 0 0 4px 0;
         color: ${props => props.theme.neutral1};
-        font-family: 'Lato', sans-serif;
+        font: var(--MH-Type-Title-Small);
+        letter-spacing: 0;
       }
       p {
         margin: 0;
-        font-size: 14px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
     }
   }
