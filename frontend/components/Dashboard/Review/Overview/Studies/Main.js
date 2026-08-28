@@ -225,13 +225,6 @@ export default function StudiesBoard({
     }
   }, [studies?.length, keyword, sortBy, filteredClasses]);
 
-  // Function to navigate to a study page
-  const navigateToStudy = ({ slug, dataCollectionOpenForParticipation }) => {
-    if (!dataCollectionOpenForParticipation) return; // Do not navigate if study is closed
-    const studyUrl = `/dashboard/discover/studies?name=${slug}`;
-    window.open(studyUrl, "_blank"); // Open in a new tab
-  };
-
   return (
     <div className="board">
       <div className="searchTopArea">
@@ -280,23 +273,7 @@ export default function StudiesBoard({
 
       <div className="cardsArea">
         {filteredStudies.map((study) => (
-          <div
-            key={study?.id}
-            onClick={() =>
-              navigateToStudy({
-                slug: study?.slug,
-                dataCollectionOpenForParticipation:
-                  study?.dataCollectionOpenForParticipation,
-              })
-            }
-            style={{
-              cursor: study?.dataCollectionOpenForParticipation
-                ? "pointer"
-                : "default",
-            }}
-          >
-            <Card study={study} />
-          </div>
+          <Card key={study?.id} study={study} />
         ))}
       </div>
     </div>

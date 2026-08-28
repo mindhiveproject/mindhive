@@ -1,221 +1,27 @@
-import Link from "next/link";
-import styled, { css } from "styled-components";
+import Card from "../../DesignSystem/Card";
+import Chip from "../../DesignSystem/Chip";
 
 /**
- * Shared Connect entity card (Figma 506:1306), used for both people and
- * organizations: avatar, name, subtitle and tag chips stacked centre-aligned,
- * a two-line description, then a divider and the trailing actions.
- */
-
-const CardContainer = styled.article`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  min-width: 0;
-  max-width: 368px;
-  padding: 16px;
-  box-sizing: border-box;
-  border-radius: 12px;
-  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
-
-  /* The card is a static surface: the buttons in it are the affordances, so it
-     has no hover state of its own. The dashboard fades every link and button on
-     hover, which would undo that, so opt out of it here. */
-  a:hover,
-  button:hover {
-    opacity: 1;
-  }
-`;
-
-const TypeLabel = styled.p`
-  margin: 0;
-  align-self: flex-start;
-  font: var(--MH-Type-Label-Small);
-  letter-spacing: 0;
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-`;
-
-const infoClusterStyles = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  min-width: 0;
-  text-decoration: none;
-  color: inherit;
-`;
-
-const InfoClusterLink = styled(Link)`
-  ${infoClusterStyles}
-  cursor: pointer;
-
-  /* No hover styling by design — see CardContainer. The pointer cursor still
-     signals the shortcut, and focus-visible stays for keyboard users. */
-  &:focus-visible {
-    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
-    outline-offset: 2px;
-    border-radius: 8px;
-  }
-`;
-
-const InfoClusterStatic = styled.div`
-  ${infoClusterStyles}
-`;
-
-const InfoClusterButton = styled.button`
-  ${infoClusterStyles}
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-  text-align: inherit;
-
-  &:focus-visible {
-    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
-    outline-offset: 2px;
-    border-radius: 8px;
-  }
-`;
-
-const Avatar = styled.div`
-  width: 86px;
-  height: 86px;
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .fallback {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font: var(--MH-Type-Heading-Small);
-    letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Black, #171717);
-  }
-`;
-
-const TextColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  min-width: 0;
-  text-align: center;
-`;
-
-const NameBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 0;
-  max-width: 100%;
-
-  .name {
-    margin: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    font: var(--MH-Type-Title-Base);
-    letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Black, #171717);
-    word-break: break-word;
-  }
-
-  .subtitle {
-    margin: 0;
-    font: var(--MH-Type-Body-Base);
-    letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-    word-break: break-word;
-  }
-`;
-
-const Chips = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  min-width: 0;
-
-  /* Chips hug their label. One too long for the card wraps onto another line
-     rather than being clipped, so no org name is ever cut off. Chip pins its
-     label with an inline flex-shrink: 0, which is what this undoes; the
-     matching height: auto comes from the call sites, since Chip's 32px height
-     is inline too. */
-  .DesignSystem-Chip > span:last-child {
-    flex-shrink: 1 !important;
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-`;
-
-const Description = styled.p`
-  margin: 0;
-  width: 100%;
-  font: var(--MH-Type-Body-Base);
-  letter-spacing: 0;
-  text-align: center;
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  word-break: break-word;
-`;
-
-const Divider = styled.hr`
-  /* Auto top margin keeps the action row on the baseline of the grid row, so
-     cards with a short description do not float their buttons mid-card. */
-  margin: auto 0 0;
-  width: 100%;
-  height: 0;
-  border: none;
-  border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
-`;
-
-const Actions = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  width: 100%;
-  flex-wrap: wrap;
-`;
-
-/**
- * @param {React.ReactNode} [typeLabel] - Quiet eyebrow in the top-left naming
- *   what kind of entity this is ("Profile", "Organization"), so a card is
- *   legible on its own outside the browse page that grouped it.
+ * Shared Connect entity card (Figma nodes 5082:1843 / 5093:2371), used for both
+ * people and organizations: a quiet type chip, a left-aligned avatar + name
+ * row, a description, tag chips, then a divider and trailing actions.
+ *
+ * The card is a static outline container — the trailing "Profile" button is the
+ * only navigation, so nothing here is a link. Surface styling and the
+ * page-fade guard live in DesignSystem/Card.
+ *
+ * @param {React.ReactNode} [typeLabel] - Text for the top-left type chip
+ *   ("Connect Profile", "Organization").
  * @param {{ src?: string, fallbackLabel?: string, fallbackBackground?: string }} [avatar]
  * @param {React.ReactNode} title - Primary line (name).
  * @param {React.ReactNode} [subtitle] - Secondary line (occupation, location).
  * @param {React.ReactNode} [status] - Standing of the entity (e.g. verified),
- *   on its own line under the name rather than crowding the title.
- * @param {React.ReactNode} [chips] - Tag chips stacked under the name.
- * @param {React.ReactNode} [description] - Two-line summary under the chips.
+ *   on its own line under the name.
+ * @param {React.ReactNode} [chips] - Tag chips under the description.
+ * @param {"row"|"column"} [chipsDirection="row"] - Chip layout: org tags wrap in
+ *   a row, a person's organization chips stack in a column.
+ * @param {React.ReactNode} [description] - Two-line summary.
  * @param {React.ReactNode} [actions] - Buttons below the divider, trailing-aligned.
- * @param {string|object} [href] - When set, the avatar/text cluster links here.
- * @param {() => void} [onActivate] - When set and href is absent, the cluster
- *   is a focusable button that calls this (e.g. open a modal).
- * @param {string} [ariaLabel] - Accessible name for the link or activate control.
  */
 export default function ConnectCard({
   typeLabel = null,
@@ -224,71 +30,166 @@ export default function ConnectCard({
   subtitle = null,
   status = null,
   chips = null,
+  chipsDirection = "row",
   description = null,
   actions = null,
-  href = null,
-  onActivate = null,
-  ariaLabel,
 }) {
-  let InfoCluster = InfoClusterStatic;
-  let clusterProps = {};
-
-  if (href) {
-    InfoCluster = InfoClusterLink;
-    clusterProps = { href, "aria-label": ariaLabel };
-  } else if (typeof onActivate === "function") {
-    InfoCluster = InfoClusterButton;
-    clusterProps = {
-      type: "button",
-      "aria-label": ariaLabel,
-      onClick: onActivate,
-    };
-  }
-
   return (
-    <CardContainer>
-      {typeLabel && <TypeLabel>{typeLabel}</TypeLabel>}
-      <InfoCluster {...clusterProps}>
-        <Avatar>
-          {avatar?.src ? (
-            <img src={avatar.src} alt="" />
-          ) : (
-            <div
-              className="fallback"
-              style={
-                avatar?.fallbackBackground
-                  ? { background: avatar.fallbackBackground }
-                  : undefined
-              }
-              aria-hidden
-            >
-              {avatar?.fallbackLabel}
-            </div>
-          )}
-        </Avatar>
+    <Card variant="outline" padding={16} style={{ maxWidth: 368 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+          flex: "1 1 auto",
+          minHeight: 0,
+        }}
+      >
+        {typeLabel && (
+          <Chip
+            variant="static"
+            tone="neutral"
+            label={typeLabel}
+            style={{ alignSelf: "flex-start" }}
+          />
+        )}
 
-        <TextColumn>
-          <NameBlock>
-            <div className="name">
-              <span>{title}</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div
+              style={{
+                width: 78,
+                height: 78,
+                flexShrink: 0,
+                borderRadius: "50%",
+                overflow: "hidden",
+                background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+              }}
+            >
+              {avatar?.src ? (
+                <img
+                  src={avatar.src}
+                  alt=""
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                <div
+                  aria-hidden
+                  className="MH-Type-Heading-Small"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+                    background: avatar?.fallbackBackground || undefined,
+                  }}
+                >
+                  {avatar?.fallbackLabel}
+                </div>
+              )}
             </div>
-            {subtitle && <p className="subtitle">{subtitle}</p>}
-          </NameBlock>
+
+            <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+              <span
+                className="MH-Type-Title-Base"
+                style={{
+                  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  wordBreak: "break-word",
+                }}
+              >
+                {title}
+              </span>
+              {subtitle && (
+                <span
+                  className="MH-Type-Body-Base"
+                  style={{
+                    color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {subtitle}
+                </span>
+              )}
+            </div>
+          </div>
 
           {status}
 
-          {chips && <Chips>{chips}</Chips>}
-        </TextColumn>
-      </InfoCluster>
+          {description && (
+            <p
+              className="MH-Type-Body-Base"
+              style={{
+                margin: 0,
+                color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                wordBreak: "break-word",
+              }}
+            >
+              {description}
+            </p>
+          )}
 
-      {description && <Description>{description}</Description>}
+          {chips && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: chipsDirection === "column" ? "column" : "row",
+                alignItems: "flex-start",
+                flexWrap: chipsDirection === "column" ? "nowrap" : "wrap",
+                gap: 4,
+                minWidth: 0,
+              }}
+            >
+              {chips}
+            </div>
+          )}
+        </div>
 
-      {actions && (
-        <>
-          <Divider />
-          <Actions>{actions}</Actions>
-        </>
-      )}
-    </CardContainer>
+        {actions && (
+          <>
+            {/* Figma keeps a fixed 16px on each side of the divider (the column
+               gap), so it is not floated to the card bottom. */}
+            <hr
+              style={{
+                margin: 0,
+                width: "100%",
+                height: 0,
+                flexShrink: 0,
+                border: "none",
+                borderTop:
+                  "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                gap: 8,
+                flexWrap: "wrap",
+              }}
+            >
+              {actions}
+            </div>
+          </>
+        )}
+      </div>
+    </Card>
   );
 }

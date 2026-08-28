@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROJECTS_QUERY } from "../../../../Queries/Proposal";
-import { getProjectsQueryFilterForTab, isMilestoneSubmitted, isOpenForComments } from "../../../../../lib/milestoneStatus";
+import { getProjectsQueryFilterForTab, isMilestoneSubmitted } from "../../../../../lib/milestoneStatus";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import { ArrowDropDownIcon } from "../../../../DesignSystem/Icons";
 import Card from "./Card";
@@ -252,15 +252,6 @@ export default function ProjectsBoard({
     status,
   ]);
 
-  // Function to navigate to a project page
-  const navigateToProject = ({ id, stage }) => {
-    const feedbackCenterUrl = window.location.href; // Current URL with filters
-    const projectUrl = `/dashboard/review/project?id=${id}&stage=${stage}&from=${encodeURIComponent(
-      feedbackCenterUrl
-    )}`; // Adjust this path as needed
-    window.location.href = projectUrl; // Full navigation to another page
-  };
-
   return (
     <div className="board">
       <div className="searchTopArea">
@@ -316,10 +307,6 @@ export default function ProjectsBoard({
             isOpenForCommentsQuery={isOpenForCommentsQuery}
             milestones={milestones}
             key={project?.id}
-            onClick={() =>
-              navigateToProject({ id: project.id, stage: selector })
-            }
-            style={{ cursor: "pointer"}}
           />
         ))}
       </div>

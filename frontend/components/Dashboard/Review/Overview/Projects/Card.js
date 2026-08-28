@@ -1,103 +1,134 @@
-import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import { isOpenForComments } from "../../../../../lib/milestoneStatus";
 
-export default function Card({
+import Card from "../../../../DesignSystem/Card";
+import Chip from "../../../../DesignSystem/Chip";
+import { ProjectBoardIcon } from "../../../../DesignSystem/Icons";
+
+// Same card surface as the Develop/Discover project cards (DesignSystem/Card),
+// with the Feedback Center's own content: milestone status + comment state as
+// chips, the review count as body text, and no action button.
+const STATUS_LABEL_KEYS = {
+  SUBMITTED_AS_PROPOSAL: "review.proposalTag",
+  PEER_REVIEW: "review.peerReviewTag",
+  PROJECT_REPORT: "review.projectReport",
+};
+
+const IMAGE_WRAP_STYLE = {
+  height: 192,
+  width: "100%",
+  flexShrink: 0,
+  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderTopLeftRadius: 12,
+  borderTopRightRadius: 12,
+  overflow: "hidden",
+};
+const BODY_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 8,
+  padding: 16,
+};
+const CHIP_ROW_STYLE = { display: "flex", flexWrap: "wrap", gap: 8 };
+const TITLE_STYLE = {
+  color: "#171717",
+  minHeight: 72,
+  display: "-webkit-box",
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: "vertical",
+  overflow: "hidden",
+};
+const COUNT_STYLE = { color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)" };
+
+export default function ProjectCard({
   stage,
   project,
   status,
   isOpenForCommentsQuery,
   milestones = [],
-  onClick,
-  className = "",
-  style,
-  ...rest
 }) {
   const { t } = useTranslation("builder");
-  const imageURL = null;
 
-  const isOpenForCommentsValue =
+  const isOpen =
     isOpenForComments(project, status, milestones) ||
     (isOpenForCommentsQuery ? !!project[isOpenForCommentsQuery] : false);
 
-  const shortenTitle = (title) => {
-    if (title?.length <= 48) {
-      return title;
-    }
-    const truncated = title.substr(0, 48);
-    const lastSpaceIndex = truncated.lastIndexOf(" ");
-    return title.substr(0, lastSpaceIndex) + "...";
+  const reviewCount =
+    project?.reviews?.filter((r) => r?.stage === status).length || 0;
+
+  const statusLabel = STATUS_LABEL_KEYS[status]
+    ? t(STATUS_LABEL_KEYS[status])
+    : milestones.find((m) => m?.key === status)?.title || null;
+
+  const countText =
+    reviewCount === 1
+      ? `${reviewCount} ${t("review.reviewSingular")}`
+      : `${reviewCount} ${t("review.reviewPlural")}`;
+
+  // Preserve the old navigation: a full page load to the review view, carrying
+  // the current Feedback Center URL (filters and all) as `from`.
+  const reviewUrl = `/dashboard/review/project?id=${project?.id}&stage=${stage}`;
+  const handleClick = (e) => {
+    e.preventDefault();
+    const from = encodeURIComponent(window.location.href);
+    window.location.href = `${reviewUrl}&from=${from}`;
   };
-
-  const reviewCount = project?.reviews?.filter((r) => r?.stage === status).length;
-
-  const handleKeyDown = (event) => {
-    if (!onClick) return;
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      onClick(event);
-    }
-  };
-
-  const cardClassName = ["card", onClick ? "isClickable" : "", className]
-    .filter(Boolean)
-    .join(" ");
 
   return (
-    <div
-      className={cardClassName}
-      onClick={onClick}
-      onKeyDown={handleKeyDown}
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      style={style}
-      {...rest}
+    <Card
+      variant="elevated"
+      padding={0}
+      href={reviewUrl}
+      onClick={handleClick}
+      ariaLabel={project?.title}
     >
-      <div className="headline">
-        {project?.study?.featured && (
-          <div className="p12">{t("review.featuredProject")}</div>
-        )}
-        <div className="p12">
-          {reviewCount} {reviewCount > 1 ? t("review.reviewPlural") : t("review.reviewSingular")}
+      <div style={IMAGE_WRAP_STYLE}>
+        <ProjectBoardIcon
+          width={24}
+          height={24}
+          style={{ color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)" }}
+        />
+      </div>
+
+      <div style={BODY_STYLE}>
+        <div style={CHIP_ROW_STYLE}>
+          <Chip
+            variant="static"
+            tone="neutral"
+            label={t("projectCard.typeLabel", {}, { default: "Project" })}
+          />
+        </div>
+
+        <span className="MH-Type-Title-Base" style={TITLE_STYLE}>
+          {project?.title}
+        </span>
+
+        <span className="MH-Type-Body-Base" style={COUNT_STYLE}>
+          {countText}
+        </span>
+
+        <div style={CHIP_ROW_STYLE}>
+          {statusLabel && (
+            <Chip variant="static" tone="neutral" label={statusLabel} />
+          )}
+          {project?.study?.featured && (
+            <Chip
+              variant="static"
+              tone="warning"
+              label={t("review.featuredProject")}
+            />
+          )}
+          <Chip
+            variant="static"
+            tone={isOpen ? "success" : "neutral"}
+            label={isOpen ? t("review.commentBtn") : t("review.locked")}
+          />
         </div>
       </div>
-      <div className="p13">{shortenTitle(project?.title)}</div>
-      <div className="imageContainer">
-        {imageURL ? (
-          <img src={imageURL} alt={project?.title} />
-        ) : (
-          <div className="noImage">
-            <img src="/logo.png" alt={project?.title} />
-          </div>
-        )}
-      </div>
-      <div className="lowPanel">
-        <div>
-          {status === "Proposal" && (
-            <div className="tag proposal">{t("review.proposalTag")}</div>
-          )}
-          {status === "Peer Review" && (
-            <div className="tag peerreview">{t("review.peerReviewTag")}</div>
-          )}
-          {status === "Collecting data" && (
-            <div className="tag peerreview">{t("review.collectingDataTag")}</div>
-          )}
-        </div>
-        <div className="options">
-          {isOpenForCommentsValue ? (
-            <div className="option">
-              <img src="/assets/icons/review/comment.svg" />
-              <div>{t("review.commentBtn")}</div>
-            </div>
-          ) : (
-            <div className="option">
-              <img src="/assets/icons/proposal/status-completed.svg" />
-              <div>{t("review.locked")}</div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    </Card>
   );
 }

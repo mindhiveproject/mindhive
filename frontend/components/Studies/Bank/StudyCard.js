@@ -1,12 +1,13 @@
 import { useLazyQuery } from "@apollo/client";
-import Link from "next/link";
-import { getStudyImageUrl } from "../../../lib/profileStudyImageUrls";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import { STUDY_PROPOSALS_QUERY } from "../../Queries/Study";
+import { getStudyImageUrl } from "../../../lib/profileStudyImageUrls";
 
-import { StyledStudyCard } from "../../styles/StyledCard";
+import Card from "../../DesignSystem/Card";
+import Chip from "../../DesignSystem/Chip";
+import { BuilderIcon } from "../../DesignSystem/Icons";
 import StudyOptions from "./StudyOptions";
 
 export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
@@ -55,12 +56,11 @@ export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
             String(p.author.id) === String(user?.id)
         ) || null;
 
-      const nonTemplateFirst =
-        nonTemplateMain
-          ? nonTemplateMain
-          : nonTemplateByAuthor ||
-            proposals.find((p) => p && !p?.isTemplate) ||
-            null;
+      const nonTemplateFirst = nonTemplateMain
+        ? nonTemplateMain
+        : nonTemplateByAuthor ||
+          proposals.find((p) => p && !p?.isTemplate) ||
+          null;
 
       const projectId = nonTemplateFirst?.id;
 
@@ -70,37 +70,110 @@ export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
           query: { selector: projectId, tab: "builder" },
         });
       } else {
-        // Fallback to the original study link.
         router.push(linkHref);
       }
     } catch (err) {
-      // Fallback to the original study link on any failure.
       router.push(linkHref);
     }
   };
 
+  const createdBy = study?.author?.username
+    ? t("createdBy", { username: study.author.username })
+    : null;
+
   return (
-    <StyledStudyCard>
+    <Card
+      variant="elevated"
+      href={linkHref}
+      onClick={handleClick}
+      padding={0}
+      ariaLabel={study?.title}
+    >
+      <div
+        style={{
+          height: 192,
+          width: "100%",
+          flexShrink: 0,
+          background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
+          overflow: "hidden",
+        }}
+      >
+        {imageURL ? (
+          <img
+            src={imageURL}
+            alt=""
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          />
+        ) : (
+          <BuilderIcon
+            width={24}
+            height={24}
+            style={{ color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)" }}
+          />
+        )}
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+          padding: 16,
+        }}
+      >
+        <Chip
+          variant="static"
+          tone="neutral"
+          label={t("studyCard.typeLabel", {}, { default: "Study" })}
+          style={{ alignSelf: "flex-start" }}
+        />
+        <span
+          className="MH-Type-Title-Base"
+          style={{
+            color: "#171717",
+            minHeight: 72,
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {study?.title}
+        </span>
+        {createdBy && (
+          <span
+            className="MH-Type-Body-Base"
+            style={{
+              color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {createdBy}
+          </span>
+        )}
+      </div>
+
+      {/* TODO: favorite studies once a backend exists (Figma shows a star here). */}
       {studiesInfo && (
-        <StudyOptions user={user} study={study} studiesInfo={studiesInfo} />
+        <div
+          style={{
+            marginTop: "auto",
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 8,
+            padding: "0 16px 16px",
+          }}
+        >
+          <StudyOptions user={user} study={study} studiesInfo={studiesInfo} />
+        </div>
       )}
-      <Link href={linkHref} onClick={handleClick}>
-        <div className="studyImage">
-          {imageURL ? (
-            <img src={imageURL} alt={study?.title} />
-          ) : (
-            <div className="noImage"></div>
-          )}
-        </div>
-        <div className="cardInfo">
-          <div className="studyHeader">
-            <h2>{study.title}</h2>
-            {study?.author?.username && (
-              <span>{t("createdBy", { username: study.author.username })}</span>
-            )}
-          </div>
-        </div>
-      </Link>
-    </StyledStudyCard>
+    </Card>
   );
 }

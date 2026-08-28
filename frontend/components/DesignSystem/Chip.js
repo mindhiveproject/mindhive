@@ -83,11 +83,25 @@ const CHIP_TONES = {
   },
 };
 
+// Figma: a chip with a leading (or trailing) 18px icon tightens the padding on
+// that side from 12px to 8px; the icon-to-label gap stays 8px.
 const CHIP_WITH_LEADING = {
-  paddingLeft: "4px",
+  paddingLeft: "8px",
 };
 const CHIP_WITH_CLOSE = {
   paddingRight: "8px",
+};
+
+// Avatar chips (Figma "Label & Avatar", Material 3): the leading avatar is 24px
+// — larger than a normal 18px chip icon — so its side padding drops to 4px (vs
+// the 8px of a leading icon) and its vertical padding drops to 4px to keep the
+// chip at the same fixed 32px height as every other chip. Without this a 24px
+// avatar + 6px padding pushes the chip to 36px. Applied after CHIP_WITH_LEADING,
+// so paddingLeft here overrides the leading-icon value.
+const CHIP_WITH_AVATAR = {
+  paddingLeft: "4px",
+  paddingTop: "4px",
+  paddingBottom: "4px",
 };
 
 const CLOSE_BUTTON_STYLE = {
@@ -138,7 +152,9 @@ const CHIP_FOCUS_STYLE = `
  * @param {() => void} [onClose] - If provided (interactive only), a close (X) icon is shown and this is called when it is clicked.
  * @param {React.ReactNode} [leading] - Optional leading content (icon or avatar, typically 24px).
  * @param {React.ReactNode} [trailing] - Optional trailing content (interactive only); rendered before the close icon.
+ * @param {boolean} [avatar=false] - Set when `leading` is a 24px avatar: trims vertical padding so the chip stays at the standard 32px height.
  * @param {React.CSSProperties} [style] - Optional override for the root chip container.
+ * @param {React.CSSProperties} [labelStyle] - Optional override for the label span (e.g. single-line ellipsis).
  * @param {string} [className] - Optional class for the root (e.g. for parent layout).
  * @param {string} [ariaLabel] - Optional accessible name (e.g. icon-only chips).
  * @param {string} [title] - Optional native tooltip on the root.
@@ -167,7 +183,9 @@ export default function Chip({
   onClose,
   leading,
   trailing,
+  avatar = false,
   style = {},
+  labelStyle: labelStyleOverride,
   className,
   ariaLabel,
   title,
@@ -213,6 +231,9 @@ export default function Chip({
   if (hasClose) {
     rootStyle = { ...rootStyle, ...CHIP_WITH_CLOSE };
   }
+  if (avatar) {
+    rootStyle = { ...rootStyle, ...CHIP_WITH_AVATAR };
+  }
   const multilineLabel = labelLines > 1;
   if (multilineLabel) {
     rootStyle = {
@@ -226,18 +247,21 @@ export default function Chip({
   }
   rootStyle = { ...rootStyle, ...style };
 
-  const labelStyle = multilineLabel
-    ? {
-        flex: 1,
-        minWidth: 0,
-        display: "-webkit-box",
-        WebkitLineClamp: labelLines,
-        WebkitBoxOrient: "vertical",
-        overflow: "hidden",
-        whiteSpace: "normal",
-        overflowWrap: "break-word",
-      }
-    : { flexShrink: 0 };
+  const labelStyle = {
+    ...(multilineLabel
+      ? {
+          flex: 1,
+          minWidth: 0,
+          display: "-webkit-box",
+          WebkitLineClamp: labelLines,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+          whiteSpace: "normal",
+          overflowWrap: "break-word",
+        }
+      : { flexShrink: 0 }),
+    ...labelStyleOverride,
+  };
 
   const handleRootClick = (e) => {
     if (!isClickable) return;

@@ -217,6 +217,12 @@
 	},
 	"createdBy": "created by {{username}}",
 	"createNewBlock": "Create new block",
+	"projectCard": {
+		"typeLabel": "Project"
+	},
+	"studyCard": {
+		"typeLabel": "Study"
+	},
 	"createProposal": {
 		"copyStudyProposal": "Copy the study proposal",
 		"create": "Create",
@@ -1734,6 +1740,7 @@
 		"most_participants": "Most participants",
 		"newest": "Newest",
 		"oldest": "Oldest",
+		"openForParticipation": "Open for participation",
 		"overviewIntro": "Whether you're starting your study or collecting participants, use this page to give feedback to your fellow peers on their proposals and finalized studies",
 		"participantOverOne": "{{count}} participant",
 		"participantOverOnePlural": "{{count}} participants",
@@ -1745,8 +1752,10 @@
 		"proposals": "Proposals",
 		"proposalTag": "Proposal",
 		"review": "Review",
+		"reviewOverOne": "{{count}} reviews",
 		"reviewPlural": "reviews",
 		"reviewSingular": "review",
+		"reviewUnder": "No reviews yet",
 		"search": "Search",
 		"showingAllProjects": "Showing all projects",
 		"showingAllStudies": "Showing all studies",
