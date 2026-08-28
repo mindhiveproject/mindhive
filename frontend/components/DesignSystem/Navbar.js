@@ -11,7 +11,7 @@ export const StyledNavbar = styled.div`
     margin: 0px;
     padding: 0px;
     gap: 8px;
-    padding: 4px 24px;
+    padding: 4px 0;
     li {
       display: flex;
     }

@@ -442,7 +442,7 @@ export const StyledCanvasBuilder = styled.div`
     right: 0;
     bottom: 0;
     z-index: 2;
-    width: min(640px, 46%);
+    width: min(548px, 46%);
     height: auto;
     min-width: 280px;
     max-width: 100%;

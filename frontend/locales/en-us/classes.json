@@ -851,6 +851,7 @@
 			},
 			"algorithmHint": "",
 			"associatedNetwork": "Class network",
+			"backToOpportunities": "Back to opportunities",
 			"changeNetwork": "Change network",
 			"collapsedNetworkHint": "Class network: {{title}}",
 			"collapseLabel": "Collapse matching round settings",
@@ -860,6 +861,7 @@
 			"createRound": "Create round",
 			"creating": "Creating…",
 			"expandLabel": "Expand matching round settings",
+			"openLabel": "Open matching round {{title}}",
 			"export": {
 				"buildingZip": "Building zip…",
 				"cancel": "Cancel",
@@ -957,6 +959,55 @@
 				"questionsHint": "Students answer these once when participating. Pick from approved library questions.",
 				"status": "Status",
 				"title": "Title"
+			},
+			"schedule": {
+				"dateLabel": "Date",
+				"effectAria": "{{object}} → {{status}}",
+				"effectPrefix": "{{object}} →",
+				"executive": "Executive",
+				"executiveUnavailable": "Executive dates are not available yet",
+				"hint": "Each date is tied to an object and status. When that date is reached, that status applies.",
+				"informative": "Informative",
+				"introduction": {
+					"description": "Students are introduced to the projects and begin reviewing sponsor materials.",
+					"title": "Introduction"
+				},
+				"matchStatus": {
+					"active": "Active",
+					"cancelled": "Cancelled",
+					"completed": "Completed",
+					"declined": "Declined",
+					"proposed": "Proposed"
+				},
+				"matching": {
+					"description": "Student preferences, skills, and project needs are used to develop team assignments.",
+					"title": "Team matching"
+				},
+				"modeLabel": "Date mode",
+				"noStatusChange": "No status change",
+				"objectLabel": "Object",
+				"objects": {
+					"connectMatch": "Match",
+					"connectRound": "Matching round",
+					"opportunity": "Opportunity"
+				},
+				"review": {
+					"description": "Students can review their project match and request a change.",
+					"title": "Review period"
+				},
+				"selection": {
+					"description": "Students review projects, discuss opportunities, and submit ranked preferences.",
+					"title": "Project selection"
+				},
+				"sponsorIntro": {
+					"description": "Once teams are confirmed, each sponsor is connected with their student team to begin the project kickoff.",
+					"title": "Sponsor introductions"
+				},
+				"startLabel": "Starts",
+				"statusLabel": "Status",
+				"statusOnEnd": "Status on end",
+				"statusOnStart": "Status on start",
+				"title": "Round schedule"
 			},
 			"followUpCompletion": {
 				"columns": {
@@ -1131,7 +1182,7 @@
 					"media": "Media library item",
 					"mediaHint": "Sponsors share an image from their library",
 					"mediaList": "Media",
-					"mediaListHint": "Sponsors upload or pick multiple images, PDFs, and documents",
+					"mediaListHint": "Sponsors upload or pick multiple images, PDFs, documents, and ZIP files",
 					"open": "Open answer",
 					"openHint": "Short or long text",
 					"pickMany": "Pick many",
@@ -1530,7 +1581,12 @@
 				"tabsAria": "Opportunity sections"
 			},
 			"searchLabel": "Search opportunities",
-			"searchPlaceholder": "Search by title, sponsor, or organization…"
+			"searchPlaceholder": "Search by title, sponsor, or organization…",
+			"schedule": {
+				"close": "Close matching timeline",
+				"openAria": "View matching timeline",
+				"title": "Matching timeline"
+			}
 		}
 	},
 	"ownedItems": {

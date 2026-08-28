@@ -10,6 +10,10 @@ import {
 } from "@keystone-6/core/fields";
 import { rules, isSignedIn } from "../access";
 import { sendNotificationEmail } from "../lib/mail";
+import {
+  pickStudentClassForRound,
+  studentOpportunitiesUrl,
+} from "../lib/connectRoundLinks";
 
 const frontendUrl = () =>
   (process.env.NODE_ENV === "development"
@@ -43,8 +47,18 @@ export const ConnectRating = list({
             rater { firstName lastName username }
             opportunity { id title }
             match {
-              round { id }
-              student { email username firstName }
+              round {
+                id
+                classNetwork {
+                  classes { id code }
+                }
+              }
+              student {
+                email
+                username
+                firstName
+                studentIn { id code }
+              }
               opportunity { mentor { email username firstName } }
             }
           `,
@@ -69,11 +83,19 @@ export const ConnectRating = list({
         } else if (rating.raterRole === "mentor") {
           const to = rating.match?.student?.email;
           if (!to) return;
+          const targetClass = pickStudentClassForRound(
+            rating.match?.student?.studentIn,
+            rating.match?.round?.classNetwork?.classes,
+          );
+          const dashboardUrl = studentOpportunitiesUrl(
+            targetClass?.code,
+            rating.match?.round?.id,
+          );
           await sendNotificationEmail(
             to,
             `Your mentor left feedback`,
             `${raterName} rated your work on "${oppTitle}". You can review the feedback in your dashboard.`,
-            `${frontendUrl()}/dashboard/connect/participate?round=${rating.match?.round?.id || ""}`,
+            dashboardUrl,
           );
         }
       } catch (e) {

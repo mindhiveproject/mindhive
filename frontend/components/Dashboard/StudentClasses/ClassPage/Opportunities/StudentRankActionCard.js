@@ -1,9 +1,19 @@
+import { useCallback, useRef, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
-import { CheckIcon, EditDocumentIcon } from "../../../../DesignSystem/Icons";
+import IconButton from "../../../../DesignSystem/IconButton";
+import PanelHeader from "../../../../DesignSystem/PanelHeader";
+import Popover from "../../../../DesignSystem/Popover";
+import {
+  CheckIcon,
+  ClockIcon,
+  EditDocumentIcon,
+} from "../../../../DesignSystem/Icons";
+import { visibleSchedulePhases } from "../../../../../lib/connectRoundSettings";
+import MatchingRoundSchedule from "./MatchingRoundSchedule";
 
 const Card = styled.article`
   display: flex;
@@ -51,11 +61,27 @@ const Due = styled.p`
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
 
+const TitleActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+`;
+
 const Actions = styled.div`
   display: flex;
   justify-content: flex-start;
   padding-top: 4px;
 `;
+
+const SCHEDULE_BODY_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  flex: 1,
+  minHeight: 0,
+  padding: "0 16px 16px",
+  overflowY: "auto",
+};
 
 /**
  * Task-shaped entry card for student opportunity ranking on the browse tab.
@@ -67,8 +93,37 @@ export default function StudentRankActionCard({
   onRank,
 }) {
   const { t } = useTranslation("classes");
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const scheduleAnchorRef = useRef(null);
+
+  const closeSchedule = useCallback(() => {
+    setScheduleOpen(false);
+    scheduleAnchorRef.current?.focus();
+  }, []);
+
+  const toggleSchedule = useCallback(() => {
+    setScheduleOpen((wasOpen) => {
+      if (wasOpen) scheduleAnchorRef.current?.focus();
+      return !wasOpen;
+    });
+  }, []);
 
   if (!round?.id) return null;
+
+  const hasSchedule = visibleSchedulePhases(round).length > 0;
+  const scheduleTitle = t("opportunities.studentView.schedule.title", {}, {
+    default: "Matching timeline",
+  });
+  const scheduleOpenLabel = t(
+    "opportunities.studentView.schedule.openAria",
+    {},
+    { default: "View matching timeline" },
+  );
+  const scheduleCloseLabel = t(
+    "opportunities.studentView.schedule.close",
+    {},
+    { default: "Close matching timeline" },
+  );
 
   const roundTitle = round.title?.trim() || round.id;
   const submitted = preference?.status === "submitted";
@@ -168,22 +223,59 @@ export default function StudentRankActionCard({
     <Card aria-labelledby={`rank-action-title-${round.id}`}>
       <TitleRow>
         <Title id={`rank-action-title-${round.id}`}>{title}</Title>
-        {statusChipLabel ? (
-          <Chip
-            variant="static"
-            tone={submitted ? "success" : "warning"}
-            label={statusChipLabel}
-            ariaLabel={statusChipLabel}
-            leading={
-              submitted ? (
-                <CheckIcon width={16} height={16} aria-hidden />
-              ) : (
-                <EditDocumentIcon width={16} height={16} aria-hidden />
-              )
-            }
-          />
-        ) : null}
+        <TitleActions>
+          {hasSchedule ? (
+            <span ref={scheduleAnchorRef}>
+              <IconButton
+                variant="subtle"
+                icon={<ClockIcon />}
+                ariaLabel={scheduleOpenLabel}
+                title={scheduleOpenLabel}
+                aria-expanded={scheduleOpen}
+                aria-haspopup="dialog"
+                elevated={false}
+                onClick={toggleSchedule}
+              />
+            </span>
+          ) : null}
+          {statusChipLabel ? (
+            <Chip
+              variant="static"
+              tone={submitted ? "success" : "warning"}
+              label={statusChipLabel}
+              ariaLabel={statusChipLabel}
+              leading={
+                submitted ? (
+                  <CheckIcon width={16} height={16} aria-hidden />
+                ) : (
+                  <EditDocumentIcon width={16} height={16} aria-hidden />
+                )
+              }
+            />
+          ) : null}
+        </TitleActions>
       </TitleRow>
+      {hasSchedule ? (
+        <Popover
+          open={scheduleOpen}
+          anchorRef={scheduleAnchorRef}
+          onClose={closeSchedule}
+          side="bottom"
+          align="end"
+          width={420}
+          ariaLabel={scheduleTitle}
+        >
+          <PanelHeader
+            title={scheduleTitle}
+            titleId={`matching-round-schedule-${round.id}`}
+            onClose={closeSchedule}
+            closeLabel={scheduleCloseLabel}
+          />
+          <div style={SCHEDULE_BODY_STYLE}>
+            <MatchingRoundSchedule round={round} embedded />
+          </div>
+        </Popover>
+      ) : null}
       {helper ? <Helper>{helper}</Helper> : null}
       {dueLine ? <Due>{dueLine}</Due> : null}
       <Actions>

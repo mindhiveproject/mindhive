@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 
 import MessageCard from "../../DesignSystem/MessageCard";
 import useConnectRole from "./useConnectRole";
@@ -11,6 +12,7 @@ import ExploreMain from "./Explore/Main";
  */
 export default function ExploreForStaff({ query, user }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const { isStudent, isAdmin, isTeacher, isMentor, isSponsor, isClassNetworkAdmin } =
     useConnectRole();
 
@@ -28,7 +30,9 @@ export default function ExploreForStaff({ query, user }) {
     return (
       <MessageCard
         variant="information"
-        message="Redirecting to your classes…"
+        message={t("exploreForStaff.redirecting", {}, {
+          default: "Redirecting to your classes…",
+        })}
       />
     );
   }
@@ -37,7 +41,9 @@ export default function ExploreForStaff({ query, user }) {
     return (
       <MessageCard
         variant="neutral"
-        message="Explore opportunities is not available for your account."
+        message={t("exploreForStaff.notAvailable", {}, {
+          default: "Explore opportunities is not available for your account.",
+        })}
       />
     );
   }

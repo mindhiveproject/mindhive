@@ -20,7 +20,6 @@ const CONNECT_NAV_ICONS = {
 const OPPORTUNITY_PATHS = [
   "/dashboard/connect/explore",
   "/dashboard/connect/my-matches",
-  "/dashboard/connect/rounds",
   "/dashboard/connect/questions",
   "/dashboard/connect/matches",
   "/dashboard/connect/review-queue",
@@ -319,22 +318,10 @@ export default function ConnectNavigationBar() {
           isClassNetworkAdmin,
       },
       {
-        value: "myOpportunities",
-        label: t("nav.myOpportunities", {}, { default: "My opportunities" }),
-        href: "/dashboard/sponsor-connect/opportunities",
-        visible: isMentor || isAdmin,
-      },
-      {
         value: "myMatchedStudents",
         label: t("nav.myMatchedStudents", {}, { default: "My matched students" }),
         href: "/dashboard/connect/my-matches",
         visible: isMentor || isAdmin,
-      },
-      {
-        value: "matchingRounds",
-        label: t("nav.matchingRounds", {}, { default: "Matching rounds" }),
-        href: "/dashboard/connect/rounds",
-        visible: isTeacher || isAdmin || isClassNetworkAdmin,
       },
       {
         value: "questionLibrary",
