@@ -64,17 +64,27 @@ export default function DevelopTaskBank({ user, taskType }) {
           display: "flex",
           flexWrap: "wrap",
           gap: 8,
-          margin: "24px 0 16px",
+          margin: "12px 0 16px",
         }}
       >
-        {FILTERS.map((f) => (
-          <Chip
-            key={f.key}
-            label={t(f.labelKey, {}, { default: f.default })}
-            selected={filter === f.key}
-            onClick={() => setFilter(f.key)}
-          />
-        ))}
+        {FILTERS.map((f) => {
+          const isSelected = filter === f.key;
+          return (
+            <Chip
+              key={f.key}
+              label={t(f.labelKey, {}, { default: f.default })}
+              selected={isSelected}
+              onClick={() => setFilter(f.key)}
+              // Filter-chip affordance: the active non-default chip carries a
+              // close icon that clears back to the default (favorited) view.
+              onClose={
+                isSelected && f.key !== "favorited"
+                  ? () => setFilter("favorited")
+                  : undefined
+              }
+            />
+          );
+        })}
       </div>
 
       {tasks.length === 0 ? (

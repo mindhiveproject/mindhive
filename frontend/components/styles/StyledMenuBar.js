@@ -322,7 +322,11 @@ export const StyledMenuProfile = styled.div`
     padding: ${(props) => (props.$collapsed ? "8px" : "8px 24px 8px 16px")};
     width: ${(props) => (props.$collapsed ? "40px" : "auto")};
     border: 0;
-    border-radius: 100px;
+    /* Square edges like the vertical nav items above — no pill. The 3px
+       transparent right border mirrors their reserved selected-rule space so
+       the hover fills line up exactly. */
+    border-radius: 0;
+    border-right: 3px solid transparent;
     background: none;
     cursor: pointer;
 
@@ -331,8 +335,10 @@ export const StyledMenuProfile = styled.div`
     letter-spacing: 0;
     color: var(--MH-Theme-Warning-Base, #b9261a);
 
+    /* Hover is a background fill only, matching the nav items — a warning tint
+       here rather than the accent, since this is the destructive action. */
     &:hover {
-      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      background: var(--MH-Theme-Warning-Light, #edcecd);
       opacity: 1;
     }
   }
