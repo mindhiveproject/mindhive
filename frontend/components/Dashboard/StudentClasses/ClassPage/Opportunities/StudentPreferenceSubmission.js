@@ -22,6 +22,7 @@ import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import IconButton from "../../../../DesignSystem/IconButton";
 import MessageCard from "../../../../DesignSystem/MessageCard";
+import FavoriteRankList from "./FavoriteRankList";
 
 const Card = styled.div`
   display: flex;
@@ -30,7 +31,7 @@ const Card = styled.div`
   padding: 24px;
   border-radius: 16px;
   background: #ffffff;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--MH-Theme-Neutrals-Medium, #E6E6E6);
 
   h2 {
     margin: 0;
@@ -89,43 +90,19 @@ const Field = styled.label`
   }
 `;
 
-const OpportunityRow = styled.div`
+const OpportunityExtras = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 16px;
   border: 1px solid #d3dae0;
   border-radius: 12px;
-`;
 
-const OppHead = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
-
-  .title {
+  .extrasTitle {
     margin: 0;
-    font: var(--MH-Type-Title-Base);
+    font: var(--MH-Type-Title-Small);
     letter-spacing: 0;
     color: #171717;
-  }
-
-  .meta {
-    color: #5f6871;
-    font: var(--MH-Type-Body-Base);
-    letter-spacing: 0;
-    margin-top: 2px;
-  }
-`;
-
-const RankControls = styled.div`
-  display: grid;
-  gap: 12px;
-  grid-template-columns: 120px 1fr 1fr;
-
-  @media (max-width: 700px) {
-    grid-template-columns: 1fr;
   }
 `;
 
@@ -141,7 +118,7 @@ const RankFormHeader = styled.div`
   border-radius: 12px;
   border: 1px solid var(--MH-Theme-Neutrals-Medium, #E6E6E6);
   padding: 8px 16px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   background: var(--MH-Theme-Neutrals-White, #ffffff);
 `;
 
@@ -198,171 +175,11 @@ const RankPageBody = styled.div`
   min-height: 0;
   overflow-y: auto;
   display: grid;
-  gap: 20px;
+  gap: 8px;
   align-content: start;
   padding: 12px 0 24px;
   box-sizing: border-box;
 `;
-
-const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
-
-// Mentors sometimes paste the full <iframe ...> embed snippet instead of just
-// the URL. Pull out the src attribute when we detect that case so downstream
-// code receives a usable URL.
-function extractUrl(raw) {
-  if (!raw) return null;
-  const trimmed = String(raw).trim();
-  if (!trimmed) return null;
-  const m = trimmed.match(/<iframe[^>]+src=["']([^"']+)["']/i);
-  return m ? m[1] : trimmed;
-}
-
-// Same idea for cover image fields — handle a pasted <img src="..."> snippet.
-function extractImageUrl(raw) {
-  if (!raw) return null;
-  const trimmed = String(raw).trim();
-  if (!trimmed) return null;
-  const m = trimmed.match(/<img[^>]+src=["']([^"']+)["']/i);
-  return m ? m[1] : trimmed;
-}
-
-function isDirectVideoFile(url) {
-  if (!url) return false;
-  try {
-    return DIRECT_VIDEO_EXT.test(new URL(url).pathname);
-  } catch {
-    return DIRECT_VIDEO_EXT.test(url);
-  }
-}
-
-function getEmbedUrl(rawUrl) {
-  if (!rawUrl) return null;
-  try {
-    const u = new URL(rawUrl);
-    const host = u.hostname.replace(/^www\./, "");
-
-    if (host === "youtube.com" || host === "m.youtube.com") {
-      const v = u.searchParams.get("v");
-      if (v) return `https://www.youtube.com/embed/${v}`;
-      const shortsMatch = u.pathname.match(/^\/shorts\/([^/]+)/);
-      if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
-      const embedMatch = u.pathname.match(/^\/embed\/([^/]+)/);
-      if (embedMatch) return `https://www.youtube.com/embed/${embedMatch[1]}`;
-    }
-    if (host === "youtu.be") {
-      const id = u.pathname.replace(/^\//, "");
-      if (id) return `https://www.youtube.com/embed/${id}`;
-    }
-    if (host === "vimeo.com" || host === "player.vimeo.com") {
-      const id = u.pathname.replace(/^\/(video\/)?/, "").split("/")[0];
-      if (id) return `https://player.vimeo.com/video/${id}`;
-    }
-    if (host === "loom.com" || host.endsWith(".loom.com")) {
-      const m = u.pathname.match(/\/(share|embed)\/([^/?]+)/);
-      if (m) return `https://www.loom.com/embed/${m[2]}`;
-    }
-    if (host === "drive.google.com") {
-      const m = u.pathname.match(/\/file\/d\/([^/]+)/);
-      if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-function OpportunityMedia({ opportunity }) {
-  const coverUrl =
-    opportunity.coverImage?.url ||
-    extractImageUrl(opportunity.coverImageUrl) ||
-    null;
-  const uploadedVideoUrl = opportunity.videoFile?.url || null;
-  const rawVideoUrl = extractUrl(opportunity.videoUrl);
-
-  // Pick how to render the video. Priority:
-  //   1. Uploaded file        → HTML5 <video>
-  //   2. Direct video URL     → HTML5 <video>
-  //   3. Known embed platform → iframe with normalized embed URL
-  //   4. Other external URL   → iframe as-is (best-effort)
-  let videoNode = null;
-  const directVideoSrc =
-    uploadedVideoUrl || (isDirectVideoFile(rawVideoUrl) ? rawVideoUrl : null);
-  const embedUrl = !directVideoSrc ? getEmbedUrl(rawVideoUrl) : null;
-  const fallbackIframeSrc =
-    !directVideoSrc && !embedUrl && rawVideoUrl ? rawVideoUrl : null;
-
-  if (directVideoSrc) {
-    videoNode = (
-      <video
-        controls
-        preload="metadata"
-        poster={coverUrl || undefined}
-        src={directVideoSrc}
-        style={{
-          width: "100%",
-          maxHeight: 360,
-          borderRadius: 12,
-          background: "#000",
-        }}
-      />
-    );
-  } else if (embedUrl || fallbackIframeSrc) {
-    videoNode = (
-      <div
-        style={{
-          position: "relative",
-          paddingBottom: "56.25%",
-          height: 0,
-          borderRadius: 12,
-          overflow: "hidden",
-          background: "#000",
-        }}
-      >
-        <iframe
-          src={embedUrl || fallbackIframeSrc}
-          title={`${opportunity.title} intro video`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          frameBorder="0"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        />
-      </div>
-    );
-  }
-
-  if (!coverUrl && !videoNode) return null;
-
-  // The cover image is only used as the <video> poster when the video itself
-  // is a direct file (HTML5 <video> supports the poster attribute). For iframe
-  // embeds (YouTube / Vimeo / Loom / Drive) there's no poster mechanism, so we
-  // show the cover image separately above the embed.
-  const coverUsedAsPoster = !!directVideoSrc && !!coverUrl;
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      {coverUrl && !coverUsedAsPoster && (
-        <img
-          src={coverUrl}
-          alt={opportunity.title}
-          style={{
-            width: "100%",
-            maxHeight: 220,
-            objectFit: "cover",
-            borderRadius: 12,
-            background: "#eef1f2",
-          }}
-        />
-      )}
-      {videoNode}
-    </div>
-  );
-}
 
 function QuestionInput({ question, value, onChange }) {
   const type = question.questionType;
@@ -598,11 +415,10 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const [ratingDrafts, setRatingDrafts] = useState({});
   const [savingRatingId, setSavingRatingId] = useState(null);
 
-  const updateRanking = (oppId, key, value) => {
-    setRankings((prev) => ({
-      ...prev,
-      [oppId]: { ...(prev[oppId] || {}), [key]: value },
-    }));
+  const updateRankings = (updater) => {
+    setRankings((prev) =>
+      typeof updater === "function" ? updater(prev) : updater,
+    );
   };
 
   const updateOppAnswer = (oppId, questionId, value) => {
@@ -1343,7 +1159,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         <p className="helper">
           {t("opportunities.studentView.rankForm.rankHelper", {}, {
             default:
-              "Rank the opportunities you favorited. Set a rank (1 = top choice) and an optional star rating. Leave fields empty for ones you no longer want to be considered for.",
+              "Drag to set your order (1 = top choice). Rate each opportunity and add a private note for your teacher.",
           })}
         </p>
         {opportunities.length === 0 && (
@@ -1367,17 +1183,24 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                 })}
           </p>
         )}
+        {opportunities.length > 0 ? (
+          <FavoriteRankList
+            opportunities={opportunities}
+            rankings={rankings}
+            onRankingsChange={updateRankings}
+            rankingEnabled={isOpen}
+            syncKey={`${existingPreference?.id || "new"}:${opportunities.map((o) => o.id).join(",")}`}
+            now={now}
+          />
+        ) : null}
         {opportunities.map((opp) => {
-          const r = rankings[opp.id] || {};
           const oppApprovedQuestions = (opp.questions || []).filter(
-            (q) => q.status === "approved"
+            (q) => q.status === "approved",
           );
-          const mentorName =
-            opp.mentor?.firstName ||
-            opp.mentor?.username ||
-            "Unknown";
           const canPickTeammates =
             opp.teamSize > 1 && opp.allowsTeamPreferences;
+          if (!oppApprovedQuestions.length && !canPickTeammates) return null;
+
           const availableToMs = opp.availableTo
             ? new Date(opp.availableTo).getTime()
             : null;
@@ -1389,110 +1212,10 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
             availableFromMs && availableFromMs > now;
           const oppAvailable = !oppExpired && !oppNotYetAvailable;
           const rankingEnabled = isOpen && oppAvailable;
-          return (
-            <OpportunityRow key={opp.id}>
-              <OpportunityMedia opportunity={opp} />
-              <OppHead>
-                <div>
-                  <h3 className="title">{opp.title}</h3>
-                  <div className="meta">
-                    By {mentorName}
-                    {opp.timeCommitment && ` · ${opp.timeCommitment}`}
-                    {opp.teamSize > 1 && ` · Team of ${opp.teamSize}`}
-                    {opp.publicRatingCount > 0 && (
-                      <>
-                        {" "}
-                        ·{" "}
-                        <span style={{ color: "#f5b800" }}>★</span>
-                        {opp.publicRatingAverage?.toFixed(1)} (
-                        {opp.publicRatingCount})
-                      </>
-                    )}
-                  </div>
-                  {(opp.availableFrom || opp.availableTo) && (
-                    <div
-                      className="meta"
-                      style={{
-                        color: oppExpired ? "#b3261e" : "#5f6871",
-                      }}
-                    >
-                      Available{" "}
-                      {opp.availableFrom
-                        ? new Date(opp.availableFrom).toLocaleDateString()
-                        : "—"}{" "}
-                      →{" "}
-                      {opp.availableTo
-                        ? new Date(opp.availableTo).toLocaleDateString()
-                        : "—"}
-                    </div>
-                  )}
-                </div>
-              </OppHead>
-              {opp.shortDescription && (
-                <p
-                  className="MH-Type-Body-Base"
-                  style={{ margin: 0, color: "#5f6871" }}
-                >
-                  {opp.shortDescription}
-                </p>
-              )}
-              {!oppAvailable && (
-                <div
-                  className="MH-Type-Body-Base"
-                  style={{
-                    padding: "10px 14px",
-                    border: "1px solid #f1c8c8",
-                    background: "#fdf1f1",
-                    borderRadius: 10,
-                    color: "#b3261e",
-                  }}
-                >
-                  <Icon name="warning circle" />{" "}
-                  {oppExpired
-                    ? `This opportunity ended on ${new Date(opp.availableTo).toLocaleDateString()}. You can no longer rank it.`
-                    : `This opportunity starts on ${new Date(opp.availableFrom).toLocaleDateString()}. Ranking will unlock once it's available.`}
-                </div>
-              )}
-              <RankControls>
-                <Field>
-                  <span className="label-text">Rank</span>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="e.g. 1"
-                    value={r.rank ?? ""}
-                    onChange={(e) =>
-                      updateRanking(opp.id, "rank", e.target.value)
-                    }
-                    disabled={!rankingEnabled}
-                  />
-                </Field>
-                <Field>
-                  <span className="label-text">Stars (1-5)</span>
-                  <input
-                    type="number"
-                    min="1"
-                    max="5"
-                    value={r.starRating ?? ""}
-                    onChange={(e) =>
-                      updateRanking(opp.id, "starRating", e.target.value)
-                    }
-                    disabled={!rankingEnabled}
-                  />
-                </Field>
-                <Field>
-                  <span className="label-text">Comment (private)</span>
-                  <input
-                    type="text"
-                    value={r.comment || ""}
-                    onChange={(e) =>
-                      updateRanking(opp.id, "comment", e.target.value)
-                    }
-                    disabled={!rankingEnabled}
-                  />
-                </Field>
-              </RankControls>
 
+          return (
+            <OpportunityExtras key={`extras-${opp.id}`}>
+              <p className="extrasTitle">{opp.title}</p>
               {oppApprovedQuestions.length > 0 && (
                 <div
                   style={{ display: "flex", flexDirection: "column", gap: 10 }}
@@ -1501,7 +1224,9 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                     className="MH-Type-Title-Small"
                     style={{ color: "#171717" }}
                   >
-                    Questions for this opportunity
+                    {t("opportunities.studentView.rankForm.oppQuestions", {}, {
+                      default: "Questions for this opportunity",
+                    })}
                   </strong>
                   {oppApprovedQuestions
                     .sort((a, b) => (a.order || 0) - (b.order || 0))
@@ -1523,19 +1248,25 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                     ))}
                 </div>
               )}
-
               {canPickTeammates && (
                 <Field>
-                  <span className="label-text">Preferred teammates</span>
+                  <span className="label-text">
+                    {t("opportunities.studentView.rankForm.teammates", {}, {
+                      default: "Preferred teammates",
+                    })}
+                  </span>
                   <span className="hint">
-                    Search any student in this round&apos;s class network — not
-                    just your own class — and pick the people you&apos;d like
-                    to be teamed up with on this opportunity. Order matters: the
-                    first person is your top choice. Mutual nominations (both
-                    of you pick each other) are the strongest signal.
+                    {t("opportunities.studentView.rankForm.teammatesHint", {}, {
+                      default:
+                        "Pick classmates you'd like to work with on this opportunity. Order matters.",
+                    })}
                   </span>
                   <Dropdown
-                    placeholder="Search students"
+                    placeholder={t(
+                      "opportunities.studentView.rankForm.teammatesSearch",
+                      {},
+                      { default: "Search students" },
+                    )}
                     fluid
                     multiple
                     selection
@@ -1555,7 +1286,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                   />
                 </Field>
               )}
-            </OpportunityRow>
+            </OpportunityExtras>
           );
         })}
       </Card>

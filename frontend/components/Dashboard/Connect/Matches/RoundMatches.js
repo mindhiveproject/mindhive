@@ -392,6 +392,25 @@ function displayName(profile) {
   );
 }
 
+function formatPreferenceSummary(pref, t) {
+  if (!pref) return null;
+  const rankPart = t(
+    "matchingRound.preferenceRankStars",
+    { rank: pref.rank ?? "—", stars: pref.starRating ?? 0 },
+    { default: "rank {{rank}}, {{stars}}★" },
+  );
+  const comment = (pref.comment || "").trim();
+  if (!comment) return rankPart;
+  const truncated =
+    comment.length > 60 ? `${comment.slice(0, 59)}…` : comment;
+  const notePart = t(
+    "matchingRound.preferencePrivateNote",
+    { note: truncated },
+    { default: 'note: "{{note}}"' },
+  );
+  return `${rankPart} — ${notePart}`;
+}
+
 export default function RoundMatches({ roundId }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
@@ -826,9 +845,12 @@ export default function RoundMatches({ roundId }) {
           })
           .map((s) => {
             const pref = prefFor(s.id, opp.id);
-            const suffix = pref
-              ? ` — rank ${pref.rank ?? "—"}, ${pref.starRating ?? 0}★`
-              : ` — no preference`;
+            const summary = formatPreferenceSummary(pref, t);
+            const suffix = summary
+              ? ` — ${summary}`
+              : t("matchingRound.noPreference", {}, {
+                  default: " — no preference",
+                });
             return {
               value: s.id,
               label: `${displayName(s)}${suffix}`,
@@ -1440,9 +1462,8 @@ export default function RoundMatches({ roundId }) {
                     const cap = opp.studentCapacity || 1;
                     const used = (matchesByOpportunity.get(opp.id) || []).length;
                     const pref = prefFor(s.id, opp.id);
-                    const prefLabel = pref
-                      ? ` · rank ${pref.rank ?? "—"}, ${pref.starRating ?? 0}★`
-                      : "";
+                    const summary = formatPreferenceSummary(pref, t);
+                    const prefLabel = summary ? ` · ${summary}` : "";
                     return {
                       value: opp.id,
                       label: `${opp.title} (${used}/${cap})${prefLabel}`,
