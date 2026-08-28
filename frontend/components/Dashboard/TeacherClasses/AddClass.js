@@ -93,7 +93,7 @@ export default function AddClass({ user }) {
 
   return (
     <>
-      <h1 style={{ fontSize: "32px", fontWeight: "500", marginBottom: "16px" }}>
+      <h1 className="MH-Type-Heading-Small" style={{ marginBottom: "16px" }}>
         {t("addClass.addNewClass", {}, { default: "Add new class" })}
       </h1>
       <ClassForm

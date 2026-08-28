@@ -36,14 +36,15 @@ export default function SectionHeader({
     gridTemplateColumns: gridCols,
     alignItems: "center",
     gap: "10px",
-    fontWeight: 700,
-    fontSize: "18px",
     margin: "10px 0",
     minWidth: 0,
   };
 
   return (
-    <div className="graphEditorSectionHeader" style={headerRowStyle}>
+    <div
+      className="graphEditorSectionHeader MH-Type-Title-Large"
+      style={headerRowStyle}
+    >
       {/* {hasIcon ?  (
         <img src={iconSrc} alt={iconAlt} style={{ display: "block", flexShrink: 0 }} />
       ) : null} */}

@@ -80,7 +80,6 @@ function FormStatusTag({ kind, t }) {
   return (
     <Chip
       label={label}
-      shape="square"
       selected={selected}
       style={style}
       ariaLabel={label}

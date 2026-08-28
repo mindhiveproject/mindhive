@@ -28,10 +28,6 @@ const DIALOG_STYLE = {
 
 const TITLE_STYLE = {
   margin: "0 0 12px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 18,
-  fontWeight: 600,
-  lineHeight: 1.3,
   color: "var(--MH-Theme-Neutrals-Black, #1a1a1a)",
   flexShrink: 0,
   display: "flex",
@@ -42,9 +38,6 @@ const TITLE_STYLE = {
 
 const BODY_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 14,
-  lineHeight: 1.5,
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
   minHeight: 0,
   flex: 1,
@@ -258,13 +251,13 @@ export default function Modal({
           <h2
             ref={titleRef}
             id={titleId}
-            className="DesignSystem-Modal-Title"
+            className="DesignSystem-Modal-Title MH-Type-Title-Base"
             style={titleStyle}
           >
             {title}
           </h2>
         ) : null}
-        <div className="DesignSystem-Modal-Body" style={resolvedBodyStyle}>
+        <div className="DesignSystem-Modal-Body MH-Type-Body-Base" style={resolvedBodyStyle}>
           {children}
         </div>
         {actions != null ? (

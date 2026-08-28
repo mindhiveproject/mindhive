@@ -8,50 +8,19 @@ import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import ReviewHomework from "./Review";
 import Button from "../../../../../DesignSystem/Button";
+import Chip from "../../../../../DesignSystem/Chip";
 
-// Status chip matching the design from HomeworkCompletion
-const StatusChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  white-space: nowrap;
-  border: none;
-  
-  ${props => {
-    const status = props.status?.toLowerCase() || '';
-    if (status === 'completed') {
-      return `
-        background: #E0F2F1; /* Light teal */
-        color: #00695C;      /* Medium green */
-      `;
-    } else if (status === 'started') {
-      return `
-        background: #E3F2FD; /* Very light pastel blue */
-        color: #1976D2;      /* Medium blue */
-      `;
-    } else if (status === 'needs feedback') {
-      return `
-        background: #FCE4EC; /* Very light pastel pink/light red */
-        color: #C2185B;      /* Medium red */
-      `;
-    } else if (status === 'feedback given') {
-      return `
-        background: #F3E5F5; /* Very light pastel lavender/light purple */
-        color: #7B1FA2;      /* Medium purple */
-      `;
-    } else {
-      return `
-        background: #F5F5F5; /* Light gray */
-        color: #616161;      /* Gray text */
-      `;
-    }
-  }}
-`;
+// Homework status -> Chip tone (was a bespoke colour map; keeps the coding).
+const STATUS_TONE = {
+  completed: "success",
+  submitted: "success",
+  "feedback given": "success",
+  started: "info",
+  "in progress": "info",
+  "needs feedback": "warning",
+};
+const statusTone = (status) =>
+  STATUS_TONE[String(status || "").toLowerCase()] ?? "neutral";
 
 const GridContainer = styled.div`
   width: 100%;
@@ -59,7 +28,7 @@ const GridContainer = styled.div`
   margin-top: 24px;
   
   .ag-theme-alpine {
-    --ag-font-family: Lato;
+    --ag-font-family: "Inter", sans-serif;
     --ag-font-size: 14px;
     --ag-header-height: 48px;
     --ag-row-height: 48px;
@@ -108,7 +77,7 @@ export default function HomeworkMain({
   // Status renderer
   const StatusRenderer = (params) => {
     const status = params?.value || 'Not started';
-    return <StatusChip status={status}>{status}</StatusChip>;
+    return <Chip variant="static" tone={statusTone(status)} label={status} />;
   };
 
   // View button renderer

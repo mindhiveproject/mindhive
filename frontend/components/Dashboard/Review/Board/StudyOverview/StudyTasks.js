@@ -304,7 +304,6 @@ export default function StudyTasks({ study }) {
                 <div className="probability">
                   <Chip
                     label={`${frequency}%`}
-                    shape="pill"
                     style={{
                       height: 28,
                       fontSize: 12,
@@ -351,7 +350,6 @@ export default function StudyTasks({ study }) {
                                 height={20}
                               />
                             }
-                            shape="square"
                             style={{
                               height: 28,
                               fontSize: 14,

@@ -29,16 +29,16 @@ const TopBar = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
   p {
     margin: 4px 0 0;
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     max-width: 640px;
   }
 `;
@@ -60,15 +60,15 @@ const Row = styled.div`
 
   h3 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 16px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
-    font-weight: 600;
   }
 
   .helper {
     color: #5f6871;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -84,7 +84,8 @@ const ChipRow = styled.div`
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  font-size: 12px;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   color: #888;
 `;
 
@@ -99,9 +100,8 @@ const Actions = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 12px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
     text-decoration: none;
   }

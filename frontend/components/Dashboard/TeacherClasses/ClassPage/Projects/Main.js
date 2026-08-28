@@ -12,11 +12,8 @@ const LinkButton = styled.a`
   display: inline-flex;
   align-items: center;
   padding: 6px 12px;
-  font-family: Lato, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   text-align: center;
   border-radius: 100px;
   cursor: pointer;

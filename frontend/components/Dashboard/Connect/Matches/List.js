@@ -20,15 +20,15 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #171717;
   }
   p {
     margin: 4px 0 0;
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     max-width: 640px;
   }
 `;
@@ -50,8 +50,8 @@ const Card = styled.div`
 
   h3 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -59,7 +59,8 @@ const Card = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #888;
     span {
       display: inline-flex;
@@ -83,9 +84,8 @@ const Action = styled.div`
     border: 1px solid #336f8a;
     background: #336f8a;
     color: #ffffff;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
     text-decoration: none;
   }

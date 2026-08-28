@@ -6,9 +6,8 @@ const StyledNote = styled.div`
   label {
     display: block;
     font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
   input,
   textarea,
@@ -16,8 +15,8 @@ const StyledNote = styled.div`
     border: 1px solid #cccccc;
     border-radius: 4px;
     width: 100%;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     padding: 12px;
     &:focus {
       outline: 0;

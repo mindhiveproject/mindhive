@@ -44,17 +44,16 @@ const Card = styled.section`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .helper {
     margin: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -80,10 +79,8 @@ const Field = styled.label`
 
   .label {
     color: var(--MH-Theme-Neutrals-Black, #171717);
-    font-family: "Inter", sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 
   input,
@@ -93,9 +90,8 @@ const Field = styled.label`
     border: 1px solid #cccccc;
     border-radius: 8px;
     padding: 10px 12px;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     background: var(--MH-Theme-Neutrals-White, #ffffff);
 
@@ -118,8 +114,8 @@ const Field = styled.label`
   .hint {
     margin: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-    font-size: 12px;
-    line-height: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -149,8 +145,8 @@ const LogoRow = styled.div`
 
     .placeholder {
       color: #5f6871;
-      font-weight: 700;
-      font-size: 28px;
+      font: var(--MH-Type-Heading-Small);
+      letter-spacing: 0;
     }
   }
 
@@ -171,9 +167,8 @@ const Actions = styled.div`
 
 const Feedback = styled.p`
   margin: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  line-height: 18px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: ${({ $error }) =>
     $error
       ? "var(--MH-Theme-Error, #b42318)"

@@ -6,88 +6,6 @@ import Meta from "./Meta";
 const theme = {
 // Design System: https://www.figma.com/design/AODZL5Cne8QAt0Yy9ZcKkM/Design-System?node-id=2275-1249&t=i5eXhFYKPtMSetWj-1
 
-  // Typography
-
-  titleLarge: {
-    color: "var(--MH-Theme-Neutrals-Black, #171717)",
-    fontFamily: "Nunito, sans-serif",
-    fontSize: "22px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "28px", // 127.273%
-  },
-  
-  titleBase: {
-    color: "#171717",
-    fontFamily: "Nunito, sans-serif",
-    fontSize: "16px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "24px"
-  },
-
-  titleSmall: {
-    color: "var(--MH-Theme-Neutrals-Black, #171717)",
-    fontFamily: "Nunito, sans-serif",
-    fontSize: "14px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "20px"
-  },
-
-  bodyLarge: {
-    color: "var(--MH-Theme-Neutrals-Black, #171717)",
-    fontFamily: "Nunito Sans",
-    fontSize: "22px",
-    fontStyle: "normal",
-    fontWeight: 400,
-    lineHeight: "28px"
-  },
-
-  bodyBase: {
-    color: "var(--MH-Theme-Neutrals-Black, #171717)",
-    fontFamily: "Nunito Sans",
-    fontSize: "16px",
-    fontStyle: "normal",
-    fontWeight: 400,
-    lineHeight: "24px"
-  },
-
-  bodySmall: {
-    color: "var(--MH-Theme-Neutrals-Black, #171717)",
-    fontFamily: "Nunito Sans",
-    fontSize: "12px",
-    fontStyle: "normal",
-    fontWeight: 400,
-    lineHeight: "16px"
-  },
-  labelLarge: {
-    color: "var(--MH-Theme-Neutrals-Black, #171717)",
-    fontFamily: "Nunito Sans",
-    fontSize: "16px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "24px"
-  },
-
-  labelBase: {
-    color: "var(--MH-Theme-Neutrals-Black, #171717)",
-    fontFamily: "Nunito Sans",
-    fontSize: "14px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "20px"
-  },
-
-  labelSmall: {
-    color: "var(--MH-Theme-Neutrals-Black, #171717)",
-    fontFamily: "Nunito Sans",
-    fontSize: "12px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "16px"
-  },
-
   // Colors
 
   primaryBlue:   "#265390",  
@@ -139,9 +57,6 @@ const theme = {
 };
 
 const GlobalStyles = createGlobalStyle`
-  @import url("https://fonts.googleapis.com/css?family=Lato");
-  @import url("https://fonts.googleapis.com/css?family=Roboto");
-  @import url("https://fonts.googleapis.com/css?family=Inconsolata");
   html {
     --green: #007C70;
     --primary-blue: ${props => props.theme.primaryBlue};
@@ -168,66 +83,11 @@ const GlobalStyles = createGlobalStyle`
     --neutral-4: ${props => props.theme.neutral4};
     --neutral-5: ${props => props.theme.neutral5};
     --neutral-6: ${props => props.theme.neutral6};
-    
-    /* Typography CSS Variables */
-    --title-large-font-family: ${props => props.theme.titleLarge.fontFamily};
-    --title-large-font-size: ${props => props.theme.titleLarge.fontSize};
-    --title-large-font-weight: ${props => props.theme.titleLarge.fontWeight};
-    --title-large-line-height: ${props => props.theme.titleLarge.lineHeight};
-    --title-large-color: ${props => props.theme.titleLarge.color};
-    
-    --title-base-font-family: ${props => props.theme.titleBase.fontFamily};
-    --title-base-font-size: ${props => props.theme.titleBase.fontSize};
-    --title-base-font-weight: ${props => props.theme.titleBase.fontWeight};
-    --title-base-line-height: ${props => props.theme.titleBase.lineHeight};
-    --title-base-color: ${props => props.theme.titleBase.color};
-    
-    --title-small-font-family: ${props => props.theme.titleSmall.fontFamily};
-    --title-small-font-size: ${props => props.theme.titleSmall.fontSize};
-    --title-small-font-weight: ${props => props.theme.titleSmall.fontWeight};
-    --title-small-line-height: ${props => props.theme.titleSmall.lineHeight};
-    --title-small-color: ${props => props.theme.titleSmall.color};
-    
-    --body-large-font-family: ${props => props.theme.bodyLarge.fontFamily};
-    --body-large-font-size: ${props => props.theme.bodyLarge.fontSize};
-    --body-large-font-weight: ${props => props.theme.bodyLarge.fontWeight};
-    --body-large-line-height: ${props => props.theme.bodyLarge.lineHeight};
-    --body-large-color: ${props => props.theme.bodyLarge.color};
-    
-    --body-base-font-family: ${props => props.theme.bodyBase.fontFamily};
-    --body-base-font-size: ${props => props.theme.bodyBase.fontSize};
-    --body-base-font-weight: ${props => props.theme.bodyBase.fontWeight};
-    --body-base-line-height: ${props => props.theme.bodyBase.lineHeight};
-    --body-base-color: ${props => props.theme.bodyBase.color};
-    
-    --body-small-font-family: ${props => props.theme.bodySmall.fontFamily};
-    --body-small-font-size: ${props => props.theme.bodySmall.fontSize};
-    --body-small-font-weight: ${props => props.theme.bodySmall.fontWeight};
-    --body-small-line-height: ${props => props.theme.bodySmall.lineHeight};
-    --body-small-color: ${props => props.theme.bodySmall.color};
-    
-    --label-large-font-family: ${props => props.theme.labelLarge.fontFamily};
-    --label-large-font-size: ${props => props.theme.labelLarge.fontSize};
-    --label-large-font-weight: ${props => props.theme.labelLarge.fontWeight};
-    --label-large-line-height: ${props => props.theme.labelLarge.lineHeight};
-    --label-large-color: ${props => props.theme.labelLarge.color};
-    
-    --label-base-font-family: ${props => props.theme.labelBase.fontFamily};
-    --label-base-font-size: ${props => props.theme.labelBase.fontSize};
-    --label-base-font-weight: ${props => props.theme.labelBase.fontWeight};
-    --label-base-line-height: ${props => props.theme.labelBase.lineHeight};
-    --label-base-color: ${props => props.theme.labelBase.color};
-    
-    --label-small-font-family: ${props => props.theme.labelSmall.fontFamily};
-    --label-small-font-size: ${props => props.theme.labelSmall.fontSize};
-    --label-small-font-weight: ${props => props.theme.labelSmall.fontWeight};
-    --label-small-line-height: ${props => props.theme.labelSmall.lineHeight};
-    --label-small-color: ${props => props.theme.labelSmall.color};
-    
+
     box-sizing: border-box;
     font-size: 14px;
     height: 100%;
-    font-family: 'Lato';
+    font-family: 'Inter', sans-serif;
   }
   *, *:before, *:after {
     box-sizing: inherit;
@@ -239,33 +99,26 @@ const GlobalStyles = createGlobalStyle`
     height: 100%;
   }
   p {
-    font-family: Lato;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
     color: #666666;
   }
   h1 {
-    font-family: Lato;
+    font: var(--MH-Type-Heading-Large);
+    letter-spacing: 0;
     font-style: normal;
-    font-weight: normal;
-    font-size: 48px;
-    line-height: 56px;
     color: #1a1a1a;
   }
   h3 {
-    font-family: Lato;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
-    line-height: 32px;
     color: #666666;
   }
   a {
     text-decoration: none !important;
     color: var(--black);
-    font-family: 'Raleway', --apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   a:hover {
     text-decoration: underline;
@@ -283,10 +136,10 @@ const GlobalStyles = createGlobalStyle`
     cursor: pointer;
   }
   input {
-    font-family: 'Raleway', --apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
   textarea {
-    font-family: 'Raleway', --apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
   .menu {
       width: 100%;
@@ -325,7 +178,8 @@ const GlobalStyles = createGlobalStyle`
       padding: 1.5rem 1rem;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
       p {
-        font-weight: bold
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
       }
     }
     .item {

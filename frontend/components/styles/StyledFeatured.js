@@ -74,12 +74,9 @@ export const StyledFeaturedStudies = styled.div`
         align-content: baseline;
         .studyFeatured {
           display: grid;
-          font-family: Lato;
-          font-weight: bold;
-          font-size: 10px;
-          line-height: 0px;
+          font: var(--MH-Type-Label-Small);
+          letter-spacing: 0;
           color: #666666;
-          letter-spacing: 0.2rem;
           text-transform: uppercase;
         }
       }
@@ -105,43 +102,32 @@ export const StyledFeaturedStudies = styled.div`
 
     a {
       cursor: pointer;
-      font-family: Lato;
-      font-size: 18px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 22px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       text-align: left;
       color: #007c70;
     }
 
     p {
-      font-family: Roboto;
-      font-size: 16px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 20px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       text-align: left;
     }
 
     h1 {
-      font-family: Lato;
-      font-size: 48px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 56px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Heading-Base);
+      letter-spacing: 0;
       text-align: left;
       color: #1a1a1a;
     }
 
     h2 {
-      font-family: Lato;
       font-style: normal;
-      font-weight: normal;
-      font-size: 24px;
-      line-height: 30px;
+      font: var(--MH-Type-Heading-Small);
+      letter-spacing: 0;
       color: #1a1a1a;
     }
   }

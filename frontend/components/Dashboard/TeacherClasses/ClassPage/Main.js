@@ -16,6 +16,7 @@ import ClassSettings from "./Settings";
 
 import { GET_CLASS } from "../../../Queries/Classes";
 import RestrictedAccess from "../../../Global/Restricted";
+import { NavbarItem, SectionNavbar } from "../../../DesignSystem/Navbar";
 
 import StyledClass from "../../../styles/StyledClass";
 
@@ -206,34 +207,27 @@ export default function ClassPage({ code, user, query }) {
       >
         <div>
           <Header user={user} myclass={myclass} />
-          <nav className="classPageNav" aria-label={t("main.classSectionsNav")}>
-            <div className="secondLine">
-              <div className="menu">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.value}
-                    href={{
-                      pathname: `/dashboard/myclasses/${code}`,
-                      query: { page: item.value },
-                    }}
-                    aria-current={page === item.value ? "page" : undefined}
-                  >
-                    <div
-                      className={
-                        page === item.value
-                          ? "menuTitle selectedMenuTitle"
-                          : "menuTitle"
-                      }
-                    >
-                      <div className="titleWithIcon">
-                        <p>{t(item.labelKey)}</p>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </nav>
+          <SectionNavbar
+            className="classPageNav"
+            variant="underline"
+            showRule
+            gapless
+            aria-label={t("main.classSectionsNav")}
+          >
+            {navItems.map((item) => (
+              <NavbarItem
+                key={item.value}
+                as={Link}
+                href={{
+                  pathname: `/dashboard/myclasses/${code}`,
+                  query: { page: item.value },
+                }}
+                selected={page === item.value}
+              >
+                {t(item.labelKey)}
+              </NavbarItem>
+            ))}
+          </SectionNavbar>
 
           <div>
             {page === "dashboard" && !isNyuCuspOnly && (

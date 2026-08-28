@@ -78,5 +78,5 @@ export function buildTableHtmlFromContent(content, slice) {
     })
     .join("");
 
-  return `<table style="border-collapse:collapse;width:100%;font-size:12px;"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
+  return `<table style="border-collapse:collapse;width:100%;font-family:'Inter',sans-serif;font-weight:400;font-size:12px;line-height:16px;letter-spacing:0;"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
 }

@@ -22,22 +22,18 @@ const StyledConnect = styled.div`
       color: var(--neutral_black1, #171717);
 
       /* H1 */
-      font-family: Lato;
-      font-size: 60px;
       font-style: normal;
-      font-weight: 600;
-      line-height: 41px; /* 68.333% */
+      font: var(--MH-Type-Heading-Large);
+      letter-spacing: 0;
     }
     .subtitle {
       color: #666;
       text-align: center;
 
       /* H3 */
-      font-family: Lato;
-      font-size: 24px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 32px; /* 133.333% */
+      font: var(--MH-Type-Body-Large);
+      letter-spacing: 0;
     }
   }
   .cards {
@@ -65,11 +61,9 @@ const StyledConnect = styled.div`
       color: var(--neutral_black1, #171717);
       text-align: center;
       /* H3 */
-      font-family: Lato;
-      font-size: 24px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 32px; /* 133.333% */
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
     }
     .location {
       display: grid;
@@ -78,11 +72,9 @@ const StyledConnect = styled.div`
       justify-items: center;
       color: var(--neutral_grey2, #3b3b3b);
       /* SMALL_TEXT */
-      font-family: Lato;
-      font-size: 11px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 13px; /* 118.182% */
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
     .interest {
       display: inline-flex;
@@ -99,11 +91,9 @@ const StyledConnect = styled.div`
       text-align: center;
 
       /* SMALL_TEXT */
-      font-family: Lato;
-      font-size: 11px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 13px; /* 118.182% */
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
     button {
       width: 118px;

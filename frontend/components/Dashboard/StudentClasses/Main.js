@@ -15,7 +15,9 @@ export default function StudentClasses({ query, user }) {
     return (
       <StyledClass>
         <div className="teacherClassesHeader">
-          <h1>{t("myClasses", {}, { default: "My classes" })}</h1>
+          <h1 className="MH-Type-Heading-Base">
+            {t("myClasses", {}, { default: "My classes" })}
+          </h1>
           <Link href="/signup/student">
             <Button variant="filled">
               {t("joinClass", {}, { default: "Join class" })}

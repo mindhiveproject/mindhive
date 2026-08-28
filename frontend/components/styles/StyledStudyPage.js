@@ -103,11 +103,8 @@ export const StyledStudyPage = styled.div`
   .descriptionMenu {
     margin-bottom: 20px;
     .item {
-      font-family: Lato;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 23px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #1a1a1a;
     }
   }
@@ -120,11 +117,8 @@ export const StyledStudyPage = styled.div`
     grid-template-columns: 1fr 1fr;
   }
   .studyInformationHeader {
-    font-family: Lato;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 28px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     margin-bottom: 7px;
   }
   .studyTags {
@@ -136,12 +130,8 @@ export const StyledStudyPage = styled.div`
     background: #ffffff;
     border: 2px solid #28619e;
     border-radius: 100px;
-    font-family: Lato;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 100%;
-    letter-spacing: 0.03em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: #28619e;
     padding: 8px;
     text-align: center;
@@ -169,10 +159,8 @@ export const StyledTasksPreview = styled.div`
 
   .studyFlowLegend {
     margin: 0 0 16px;
-    font-family: Inter, sans-serif;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
@@ -244,20 +232,16 @@ export const StyledTasksPreview = styled.div`
 
       .conditionLabel {
         margin: 0;
-        font-family: Inter, sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Title-Small);
+        letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Black, #171717);
         overflow-wrap: anywhere;
       }
 
       .taskCount {
         flex-shrink: 0;
-        font-family: Inter, sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-        line-height: 16px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
         white-space: nowrap;
       }
@@ -302,10 +286,8 @@ export const StyledTasksPreview = styled.div`
         margin-top: 10px;
         border-radius: 100px;
         background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
-        font-family: Inter, sans-serif;
-        font-weight: 600;
-        font-size: 12px;
-        line-height: 16px;
+        font: var(--MH-Type-Label-Small);
+        letter-spacing: 0;
         color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       }
     }
@@ -346,29 +328,20 @@ export const StyledTaskCardReview = styled.div`
     color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
   h2 {
-    font-family: Inter, sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     margin: 0;
   }
   span {
-    font-family: Inter, sans-serif;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 16px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     text-align: left;
   }
   p {
-    font-family: Inter, sans-serif;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 16px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     text-align: left;
     margin: 0;
@@ -402,11 +375,8 @@ export const StyledTaskCard = styled.div`
       display: grid;
       grid-template-columns: 1fr auto;
       grid-gap: 1rem;
-      font-family: Roboto;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 24px;
-      line-height: 30px;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
       margin-bottom: 20px;
       .rightSide {
         display: grid;
@@ -423,32 +393,21 @@ export const StyledTaskCard = styled.div`
     color: #007c70;
   }
   h2 {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
-    line-height: 30px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #1a1a1a;
     margin-bottom: 20px;
   }
   p {
-    font-family: Roboto;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 16px;
-    letter-spacing: 0.04em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
   }
   .actionLinks {
     margin-top: 24px;
     p {
-      font-family: Lato;
-      font-size: 18px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 18px;
-      letter-spacing: 0.05em;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       text-align: center;
     }
   }
@@ -480,36 +439,26 @@ export const StyledStudyRun = styled.div`
     margin-top: 30px;
     padding: 20px;
     h1 {
-      font-family: Lato;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 36px;
-      line-height: 56px;
+      font: var(--MH-Type-Heading-Base);
+      letter-spacing: 0;
     }
     h3 {
-      font-family: Lato;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 24px;
-      line-height: 32px;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
     }
     p {
-      font-family: Lato;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
     input {
       max-width: 500px;
-      font-family: Lato;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       margin-bottom: 1rem;
       height: 48px;
       border: 1px solid #cccccc;
       border-radius: 4px;
       /* width: 100%; */
-      font-size: 16px;
-      line-height: 24px;
       padding: 12px;
       &:focus {
         outline: 0;
@@ -517,11 +466,8 @@ export const StyledStudyRun = styled.div`
       }
     }
     .checkboxField {
-      font-family: Lato;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 24px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       display: grid;
       grid-gap: 10px;
       grid-template-columns: 1fr 14fr;
@@ -541,7 +487,8 @@ export const StyledStudyRun = styled.div`
       width: 300px;
     }
     .questionTitle {
-      font-size: 20px;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
       margin-top: 20px;
     }
     .message {

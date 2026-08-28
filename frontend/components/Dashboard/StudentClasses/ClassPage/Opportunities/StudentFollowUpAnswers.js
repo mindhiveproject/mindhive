@@ -47,15 +47,14 @@ const CUSP_OVERVIEW_GROUPS = {
 
 const SECTION_TITLE_STYLE = {
   margin: 0,
-  fontSize: 16,
-  fontWeight: 700,
+  font: 'var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif)',
+  letterSpacing: 0,
   color: 'var(--MH-Theme-Neutrals-Black, #171717)',
 };
 
 const SUBHEADING_STYLE = {
   ...SECTION_TITLE_STYLE,
-  fontSize: 15,
-  fontWeight: 600,
+  font: 'var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif)',
 };
 
 const LIST_CHIP_STYLE = {
@@ -98,7 +97,6 @@ function ChipList({ label, items, ariaLabel }) {
         {chips.map((item, index) => (
           <Chip
             key={`${index}-${item}`}
-            shape="pill"
             label={item}
             title={item}
             labelLines={4}

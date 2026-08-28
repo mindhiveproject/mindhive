@@ -225,7 +225,7 @@ ${funcName}()
             marginBottom: "1rem",
           }}
         >
-          <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+          <div className="MH-Type-Title-Base" style={{ textAlign: "left" }}>
             {t(
               "dataJournal.statistics.emptyState.title",
               {},
@@ -295,7 +295,6 @@ ${funcName}()
         padding: "1.5rem",
         maxWidth: "900px",
         margin: "0 auto",
-        fontFamily: "system-ui, sans-serif",
       }}
     >
       <h3

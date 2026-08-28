@@ -31,10 +31,9 @@ const modalStyle = {
   borderRadius: 16,
   boxShadow: "0 16px 48px rgba(0, 0, 0, 0.18)",
   padding: 32,
-  fontFamily: "Inter, sans-serif",
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   color: "#171717",
-  fontSize: 14,
-  lineHeight: 1.55,
 };
 
 const headerStyle = {
@@ -47,10 +46,8 @@ const headerStyle = {
 
 const titleStyle = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 22,
-  lineHeight: "28px",
-  fontWeight: 700,
+  font: 'var(--MH-Type-Title-Large)',
+  letterSpacing: 0,
   color: "#171717",
 };
 
@@ -73,11 +70,14 @@ const sectionStyle = {
 
 const h3Style = {
   margin: "0 0 8px",
-  fontSize: 16,
-  fontWeight: 700,
+  font: 'var(--MH-Type-Title-Base)',
+  letterSpacing: 0,
   color: "#171717",
 };
 
+// Genuine monospace need: displays the literal scoring formula/expressions,
+// not styled prose. Font-family is intentionally kept off the Inter token;
+// size/line-height are tokenized to the nearest scale value (body/small).
 const kbdStyle = {
   fontFamily:
     "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace",
@@ -86,6 +86,8 @@ const kbdStyle = {
   borderRadius: 4,
   padding: "1px 6px",
   fontSize: 12,
+  lineHeight: "16px",
+  letterSpacing: 0,
   color: "#5f6871",
 };
 
@@ -95,8 +97,8 @@ const chipStyle = {
   borderRadius: 100,
   background: "#eef5f9",
   color: "#336f8a",
-  fontSize: 12,
-  fontWeight: 600,
+  font: 'var(--MH-Type-Label-Base)',
+  letterSpacing: 0,
   marginBottom: 8,
 };
 
@@ -104,7 +106,8 @@ const tableStyle = {
   width: "100%",
   borderCollapse: "collapse",
   marginTop: 12,
-  fontSize: 13,
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
 };
 
 const thTdBase = {
@@ -316,31 +319,31 @@ export default function AlgorithmInfoModal({ open, onClose }) {
             </thead>
             <tbody>
               <tr>
-                <td style={{ ...thTdBase, fontWeight: 600 }}>Fairness guarantee</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Fairness guarantee</td>
                 <td style={thTdBase}>Stable (best)</td>
                 <td style={thTdBase}>None</td>
                 <td style={thTdBase}>Teacher decides</td>
               </tr>
               <tr>
-                <td style={{ ...thTdBase, fontWeight: 600 }}>Determinism</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Determinism</td>
                 <td style={thTdBase}>Yes</td>
                 <td style={thTdBase}>Yes</td>
                 <td style={thTdBase}>N/A</td>
               </tr>
               <tr>
-                <td style={{ ...thTdBase, fontWeight: 600 }}>Team coherence</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Team coherence</td>
                 <td style={thTdBase}>Applied automatically</td>
                 <td style={thTdBase}>Applied automatically</td>
                 <td style={thTdBase}>Shown as ranking hint only</td>
               </tr>
               <tr>
-                <td style={{ ...thTdBase, fontWeight: 600 }}>Order</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Order</td>
                 <td style={thTdBase}>Student preference</td>
                 <td style={thTdBase}>Global score</td>
                 <td style={thTdBase}>Teacher&apos;s choice</td>
               </tr>
               <tr>
-                <td style={{ ...thTdBase, fontWeight: 600 }}>Best for</td>
+                <td style={{ ...thTdBase, font: 'var(--MH-Type-Label-Small)', letterSpacing: 0 }}>Best for</td>
                 <td style={thTdBase}>Large, contested rounds</td>
                 <td style={thTdBase}>Small transparent runs</td>
                 <td style={thTdBase}>Small rounds or algorithm override</td>
@@ -349,7 +352,14 @@ export default function AlgorithmInfoModal({ open, onClose }) {
           </table>
         </div>
 
-        <p style={{ marginTop: 20, fontSize: 13, color: "#5f6871" }}>
+        <p
+          style={{
+            marginTop: 20,
+            font: 'var(--MH-Type-Body-Base)',
+            letterSpacing: 0,
+            color: "#5f6871",
+          }}
+        >
           You can switch between algorithms at any time using the dropdown at
           the top of this page — existing proposed and active matches are
           preserved either direction.

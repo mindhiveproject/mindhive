@@ -12,7 +12,8 @@ const Legend = styled.div`
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 12px;
-  font-size: 12px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #5f6871;
 
   span {
@@ -127,7 +128,13 @@ export default function NetworkGraph({ round }) {
 
   if (studentNodes.length === 0 && opportunityNodes.length === 0) {
     return (
-      <p style={{ color: "#5f6871", fontSize: 14 }}>
+      <p
+        style={{
+          color: "#5f6871",
+          font: 'var(--MH-Type-Body-Base)',
+          letterSpacing: 0,
+        }}
+      >
         No matches or preferences to visualize yet.
       </p>
     );
@@ -161,19 +168,23 @@ export default function NetworkGraph({ round }) {
         <text
           x={60}
           y={20}
-          fontSize={12}
           fill="#5f6871"
-          fontWeight={600}
+          style={{
+            font: 'var(--MH-Type-Label-Small)',
+            letterSpacing: 0,
+          }}
         >
           Students
         </text>
         <text
           x={720}
           y={20}
-          fontSize={12}
           fill="#5f6871"
-          fontWeight={600}
           textAnchor="end"
+          style={{
+            font: 'var(--MH-Type-Label-Small)',
+            letterSpacing: 0,
+          }}
         >
           Opportunities
         </text>
@@ -212,8 +223,11 @@ export default function NetworkGraph({ round }) {
               x={n.x - 12}
               y={n.y + 4}
               textAnchor="end"
-              fontSize={12}
               fill="#171717"
+              style={{
+                font: 'var(--MH-Type-Body-Base)',
+                letterSpacing: 0,
+              }}
             >
               {n.name}
             </text>
@@ -233,11 +247,20 @@ export default function NetworkGraph({ round }) {
             <text
               x={n.x + 12}
               y={n.y + 4}
-              fontSize={12}
               fill="#171717"
+              style={{
+                font: 'var(--MH-Type-Body-Base)',
+                letterSpacing: 0,
+              }}
             >
               {n.title}{" "}
-              <tspan fill="#888" fontSize={10}>
+              <tspan
+                fill="#888"
+                style={{
+                  font: 'var(--MH-Type-Body-Base)',
+                  letterSpacing: 0,
+                }}
+              >
                 · cap {n.capacity}
               </tspan>
             </text>

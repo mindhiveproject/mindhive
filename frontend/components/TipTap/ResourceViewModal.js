@@ -49,7 +49,8 @@ const ReadOnlyTipTapWrapper = styled.div`
 const CloseButton = styled(Button)`
   border-radius: 100px !important;
   background: #336f8a !important;
-  font-size: 16px !important;
+  font: var(--MH-Type-Label-Base) !important;
+  letter-spacing: 0;
   color: white !important;
   border: 1px solid #336f8a !important;
 `;

@@ -34,14 +34,15 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -49,18 +50,20 @@ const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: #5f6871;
 
   span.label-text {
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
   span.hint {
     color: #888;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   input[type="text"],
@@ -70,8 +73,8 @@ const Field = styled.label`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #171717;
     outline: none;
 
@@ -103,14 +106,15 @@ const OppHead = styled.div`
 
   .title {
     margin: 0;
-    font-size: 16px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .meta {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     margin-top: 2px;
   }
 `;
@@ -152,10 +156,8 @@ const RankTitleWrap = styled.div`
   h1 {
     margin: 0;
     min-width: 0;
-    font-family: Inter, sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.3;
+    font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -200,18 +202,6 @@ const RankPageBody = styled.div`
   align-content: start;
   padding: 12px 0 24px;
   box-sizing: border-box;
-`;
-
-const StatusPill = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 600;
-  background: ${({ $submitted }) => ($submitted ? "#e3f4ec" : "#fdf6e3")};
-  color: ${({ $submitted }) => ($submitted ? "#1d6b3a" : "#7a5b00")};
 `;
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
@@ -486,7 +476,11 @@ function RankFormChrome({
       <RankTitleWrap>
         {title ? <h1 title={title}>{title}</h1> : null}
         {statusChipLabel ? (
-          <Chip shape="pill" label={statusChipLabel} selected={submitted} />
+          <Chip
+            variant="static"
+            tone={submitted ? "success" : "warning"}
+            label={statusChipLabel}
+          />
         ) : null}
       </RankTitleWrap>
       {submitActions ? (
@@ -1055,22 +1049,29 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                 }}
               >
                 <div
+                  className="MH-Type-Title-Base"
                   style={{
-                    fontSize: 16,
-                    fontWeight: 600,
                     color: "#171717",
                   }}
                 >
                   {opp?.title || "(opportunity)"}
                 </div>
-                <div style={{ color: "#5f6871", fontSize: 13 }}>
+                <div
+                  className="MH-Type-Body-Base"
+                  style={{ color: "#5f6871" }}
+                >
                   By {mentorName} ·{" "}
-                  <StatusPill $submitted={match.status === "active"}>
-                    {match.status}
-                  </StatusPill>
+                  <Chip
+                    variant="static"
+                    tone={match.status === "active" ? "success" : "warning"}
+                    label={match.status}
+                  />
                 </div>
                 {opp?.shortDescription && (
-                  <p style={{ margin: 0, color: "#5f6871", fontSize: 14 }}>
+                  <p
+                    className="MH-Type-Body-Base"
+                    style={{ margin: 0, color: "#5f6871" }}
+                  >
                     {opp.shortDescription}
                   </p>
                 )}
@@ -1138,12 +1139,12 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                     />
                   </Field>
                   <label
+                    className="MH-Type-Label-Base"
                     style={{
                       display: "inline-flex",
                       gap: 8,
                       alignItems: "center",
                       cursor: "pointer",
-                      fontSize: 14,
                     }}
                   >
                     <input
@@ -1174,7 +1175,10 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                         gap: 10,
                       }}
                     >
-                      <strong style={{ color: "#171717", fontSize: 14 }}>
+                      <strong
+                        className="MH-Type-Title-Small"
+                        style={{ color: "#171717" }}
+                      >
                         Rate your teammates
                       </strong>
                       <span className="helper">
@@ -1233,7 +1237,8 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                               }}
                             >
                               <strong
-                                style={{ color: "#171717", fontSize: 14 }}
+                                className="MH-Type-Title-Small"
+                                style={{ color: "#171717" }}
                               >
                                 {tName}
                               </strong>
@@ -1269,8 +1274,8 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                                 padding: "6px 10px",
                                 border: "1px solid #d3dae0",
                                 borderRadius: 8,
-                                fontFamily: "Inter, sans-serif",
-                                fontSize: 13,
+                                font: 'var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif)',
+                                letterSpacing: 0,
                                 outline: "none",
                               }}
                             />
@@ -1424,19 +1429,22 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                 </div>
               </OppHead>
               {opp.shortDescription && (
-                <p style={{ margin: 0, color: "#5f6871", fontSize: 14 }}>
+                <p
+                  className="MH-Type-Body-Base"
+                  style={{ margin: 0, color: "#5f6871" }}
+                >
                   {opp.shortDescription}
                 </p>
               )}
               {!oppAvailable && (
                 <div
+                  className="MH-Type-Body-Base"
                   style={{
                     padding: "10px 14px",
                     border: "1px solid #f1c8c8",
                     background: "#fdf1f1",
                     borderRadius: 10,
                     color: "#b3261e",
-                    fontSize: 13,
                   }}
                 >
                   <Icon name="warning circle" />{" "}
@@ -1489,7 +1497,10 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                 <div
                   style={{ display: "flex", flexDirection: "column", gap: 10 }}
                 >
-                  <strong style={{ color: "#171717", fontSize: 14 }}>
+                  <strong
+                    className="MH-Type-Title-Small"
+                    style={{ color: "#171717" }}
+                  >
                     Questions for this opportunity
                   </strong>
                   {oppApprovedQuestions

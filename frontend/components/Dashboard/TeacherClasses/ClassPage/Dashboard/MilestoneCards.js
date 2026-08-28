@@ -335,7 +335,6 @@ const StyledMilestoneCards = styled.div`
     border-radius: 12px;
     background: var(--MH-Theme-Neutrals-White, #ffffff);
     color: var(--MH-Theme-Neutrals-Black, #171717);
-    font-family: Inter, sans-serif;
     text-align: left;
     cursor: pointer;
     box-sizing: border-box;
@@ -369,16 +368,14 @@ const StyledMilestoneCards = styled.div`
   }
 
   .milestoneCardTitle {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
   }
 
   .milestoneCardCount {
     margin: 0;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 18px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 `;

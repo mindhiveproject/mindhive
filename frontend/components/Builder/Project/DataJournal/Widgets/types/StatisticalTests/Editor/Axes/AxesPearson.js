@@ -38,7 +38,7 @@ export default function AxesPearsonCorr({
 
   const helpContent = useMemo(
     () => (
-      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+      <p className="MH-Type-Body-Base" style={{ margin: 0, color: "#625B71" }}>
         {t(`${G_COMMON}.help.resourcesIntro`, {}, {
           default:
             "Learn more about this component with the resources below.",

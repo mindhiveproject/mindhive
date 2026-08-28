@@ -257,7 +257,6 @@ export default function StartProject({ query, user }) {
         {studentClasses.map((cl) => (
           <Chip
             key={cl.id}
-            shape="square"
             label={cl.title}
             selected={inputs?.class?.id === cl.id}
             onClick={() => handleClassSelect(cl)}
@@ -312,7 +311,6 @@ export default function StartProject({ query, user }) {
                     {studentClasses.map((cl) => (
                       <Chip
                         key={cl.id}
-                        shape="square"
                         label={cl.title}
                         selected={inputs?.class?.id === cl.id}
                         onClick={() => handleClassSelect(cl)}

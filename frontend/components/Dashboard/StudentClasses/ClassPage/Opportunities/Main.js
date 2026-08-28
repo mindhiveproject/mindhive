@@ -601,14 +601,12 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
           )}
         >
           <Chip
-            shape="square"
             label={filterAllLabel}
             selected={filterMode === "all"}
             onClick={() => setFilterMode("all")}
             ariaLabel={filterAllLabel}
           />
           <Chip
-            shape="square"
             label={filterFavoritesLabel}
             selected={filterMode === "favorites"}
             onClick={() => setFilterMode("favorites")}
@@ -650,7 +648,6 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
               return (
                 <Chip
                   key={value}
-                  shape="pill"
                   label={label}
                   selected={categoryFilter === value}
                   onClick={() => handleCategoryChipClick(value)}

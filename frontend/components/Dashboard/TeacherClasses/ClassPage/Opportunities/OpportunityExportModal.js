@@ -43,8 +43,8 @@ const GROUP_STYLE = {
 };
 const LEGEND_STYLE = {
   padding: "0 4px",
-  fontSize: 13,
-  fontWeight: 600,
+  font: 'var(--MH-Type-Title-Small)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #1a1a1a)",
 };
 const COLUMNS_STYLE = {
@@ -57,15 +57,16 @@ const CHECK_LABEL_STYLE = {
   display: "flex",
   alignItems: "flex-start",
   gap: 8,
-  fontSize: 13,
-  lineHeight: "18px",
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   cursor: "pointer",
 };
 const ERROR_STYLE = {
   margin: "12px 0 0",
   color: "#a94442",
-  fontSize: 13,
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
 };
 
 async function fetchMediaBuffer(url) {

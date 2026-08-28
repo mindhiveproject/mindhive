@@ -43,7 +43,6 @@ export default function AdvancedOptionsPanel({
     <div className="advancedOptionsPanel" style={BODY_STYLE}>
       <div style={TABS_STYLE}>
         <Chip
-          shape="square"
           label={t("proposal.templateSectionAutoUpdate", {}, {
             default: "Auto-update",
           })}
@@ -52,7 +51,6 @@ export default function AdvancedOptionsPanel({
         />
         {proposalBuildMode && (
           <Chip
-            shape="square"
             label={t("proposal.templateSectionStudentSettings", {}, {
               default: "Student settings",
             })}
@@ -62,7 +60,6 @@ export default function AdvancedOptionsPanel({
         )}
         {proposalBuildMode && isAdmin && (
           <Chip
-            shape="square"
             label={t("proposal.templateSectionAdminSettings", {}, {
               default: "Admin settings",
             })}
@@ -76,7 +73,6 @@ export default function AdvancedOptionsPanel({
         <>
           {isClassTemplate && (
             <Chip
-              shape="pill"
               leading={
                 <img
                   src="/assets/icons/info.svg"
@@ -88,9 +84,8 @@ export default function AdvancedOptionsPanel({
                 default: "This board is a class template",
               })}
               style={{
-                fontSize: "12px",
-                fontWeight: "600",
-                lineHeight: "18px",
+                font: 'var(--MH-Type-Label-Small)',
+                letterSpacing: 0,
                 padding: "4px 12px",
               }}
             />
@@ -145,7 +140,7 @@ export default function AdvancedOptionsPanel({
           {!autoUpdateStudentBoards && (
             <div className="templateBannerActions">
               <Button
-                variant="primary"
+                variant="filled"
                 className="templateBannerPrimaryBtn"
                 onClick={onSaveAndUpdateStudentBoards}
                 disabled={applyLoading}

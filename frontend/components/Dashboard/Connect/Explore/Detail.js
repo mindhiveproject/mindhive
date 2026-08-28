@@ -135,8 +135,8 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 `;
@@ -150,9 +150,8 @@ const TitleRow = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 36px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -175,15 +174,15 @@ const MetaGrid = styled.div`
     background: #f7f9f8;
 
     .label {
-      font-size: 11px;
+      font: var(--MH-Type-Label-Small);
+      letter-spacing: 0;
       color: #888;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
     }
     .value {
-      font-size: 14px;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
       color: #171717;
-      font-weight: 600;
       margin-top: 2px;
     }
   }
@@ -214,8 +213,8 @@ const MentorPanel = styled.div`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: 22px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     flex: none;
   }
 
@@ -225,16 +224,19 @@ const MentorPanel = styled.div`
     gap: 2px;
 
     .name {
-      font-weight: 600;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
     }
     .tagline {
       color: #5f6871;
-      font-size: 13px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
     .org {
       color: #888;
-      font-size: 12px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
   }
 
@@ -244,8 +246,8 @@ const MentorPanel = styled.div`
     align-items: center;
     gap: 4px;
     color: #336f8a;
-    font-size: 13px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     text-decoration: none;
   }
 `;
@@ -266,18 +268,19 @@ const RatingRow = styled.div`
     gap: 8px;
   }
   .author {
-    font-weight: 600;
-    font-size: 13px;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
   }
   .when {
     color: #888;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
   .body {
     color: #5f6871;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -416,10 +419,10 @@ export default function ExploreDetail({ opportunityId }) {
             <h1>{opp.title}</h1>
             {opp.shortDescription && (
               <div
+                className="MH-Type-Body-Base"
                 style={{
                   marginTop: 6,
                   color: "#5f6871",
-                  fontSize: 15,
                 }}
               >
                 {opp.shortDescription}
@@ -434,15 +437,13 @@ export default function ExploreDetail({ opportunityId }) {
               aria-label={
                 isFavorite ? "Remove from favorites" : "Save to favorites"
               }
+              className="MH-Type-Label-Base"
               style={{
                 padding: "8px 14px",
                 borderRadius: 100,
                 border: `1px solid ${isFavorite ? "#e8174c" : "#d3dae0"}`,
                 background: isFavorite ? "#ffeef2" : "#ffffff",
                 color: isFavorite ? "#e8174c" : "#5f6871",
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 600,
-                fontSize: 13,
                 cursor: "pointer",
                 display: "inline-flex",
                 alignItems: "center",
@@ -464,7 +465,7 @@ export default function ExploreDetail({ opportunityId }) {
                 }}
               >
                 <Stars value={opp.publicRatingAverage} />
-                <span style={{ color: "#5f6871", fontSize: 13 }}>
+                <span className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
                   {opp.publicRatingAverage?.toFixed(1)} (
                   {opp.publicRatingCount} review
                   {opp.publicRatingCount === 1 ? "" : "s"})
@@ -580,11 +581,10 @@ export default function ExploreDetail({ opportunityId }) {
           {proposal.expectedDeliverables.length > 0 && (
               <div>
                 <h3
+                  className="MH-Type-Title-Small"
                   style={{
                     margin: "0 0 6px",
-                    fontSize: 14,
                     color: "#171717",
-                    fontWeight: 600,
                   }}
                 >
                   Expected deliverables
@@ -600,11 +600,10 @@ export default function ExploreDetail({ opportunityId }) {
           {proposal.requiredSoftware.length > 0 && (
               <div style={{ marginTop: 12 }}>
                 <h3
+                  className="MH-Type-Title-Small"
                   style={{
                     margin: "0 0 6px",
-                    fontSize: 14,
                     color: "#171717",
-                    fontWeight: 600,
                   }}
                 >
                   Software
@@ -617,11 +616,10 @@ export default function ExploreDetail({ opportunityId }) {
           {proposal.requiredHardware.length > 0 && (
               <div style={{ marginTop: 12 }}>
                 <h3
+                  className="MH-Type-Title-Small"
                   style={{
                     margin: "0 0 6px",
-                    fontSize: 14,
                     color: "#171717",
-                    fontWeight: 600,
                   }}
                 >
                   Hardware
@@ -761,7 +759,7 @@ export default function ExploreDetail({ opportunityId }) {
           )}
         </MentorPanel>
         {opp.mentor?.bio && (
-          <div style={{ color: "#5f6871", fontSize: 14, lineHeight: 1.5 }}>
+          <div className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
             {opp.mentor.bio}
           </div>
         )}

@@ -91,11 +91,9 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(20px, 2.8vw, 26px);
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
-    line-height: 1.25;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -103,7 +101,8 @@ const TitleRow = styled.div`
 
   .round-meta {
     color: #5f6871;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -151,8 +150,8 @@ const Card = styled.section`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -160,7 +159,8 @@ const Card = styled.section`
     display: grid;
     grid-template-columns: 180px 1fr;
     gap: 8px 16px;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 
   .field-grid dt {
@@ -180,7 +180,8 @@ const ConflictBanner = styled.div`
   background: #fff8e6;
   border: 1px solid #f0d39a;
   color: #6e5400;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -196,7 +197,8 @@ const StatusBar = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #5f6871;
   }
 
@@ -204,15 +206,16 @@ const StatusBar = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 100px;
     padding: 8px 16px;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
     background: #ffffff;
   }
 
   .saved {
     color: #1d6b3a;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -436,7 +439,10 @@ export default function ReviewOpportunityMain({ query }) {
       </TopBar>
 
       {returnError ? (
-        <p style={{ margin: 0, color: "#871b16", fontSize: 13 }}>
+        <p
+          className="MH-Type-Body-Base"
+          style={{ margin: 0, color: "#871b16" }}
+        >
           {returnError}
         </p>
       ) : null}
@@ -452,7 +458,7 @@ export default function ReviewOpportunityMain({ query }) {
       <Card>
         <h2>Status</h2>
         <StatusBar>
-          <Chip shape="pill" label={currentStatus} selected />
+          <Chip label={currentStatus} selected />
           <label>
             Change to{" "}
             <select
@@ -478,7 +484,10 @@ export default function ReviewOpportunityMain({ query }) {
           <dd>
             {displayName(opportunity.mentor)}{" "}
             {opportunity.mentor?.email ? (
-              <span style={{ color: "#888", fontSize: 13 }}>
+              <span
+                className="MH-Type-Body-Base"
+                style={{ color: "#888" }}
+              >
                 ({opportunity.mentor.email})
               </span>
             ) : null}

@@ -1,10 +1,10 @@
 import { useMemo } from "react";
+import Link from "next/link";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
-import { ArrowOutwardIcon } from "../../DesignSystem/Icons";
 import ConnectCard from "./ConnectCard";
 import ManageFavorite from "./ManageFavorite";
 import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
@@ -42,20 +42,6 @@ const ChipLeading = styled.img`
   display: block;
   flex-shrink: 0;
 `;
-
-function hrefToPath(href) {
-  if (!href) return null;
-  if (typeof href === "string") return href;
-  const pathname = href.pathname || "";
-  const query = href.query || {};
-  const params = new URLSearchParams();
-  Object.entries(query).forEach(([key, value]) => {
-    if (value == null) return;
-    params.set(key, String(value));
-  });
-  const search = params.toString();
-  return search ? `${pathname}?${search}` : pathname;
-}
 
 export default function ConnectProfileCard({ user, profile, actions = null }) {
   const { t } = useTranslation("connect");
@@ -103,7 +89,6 @@ export default function ConnectProfileCard({ user, profile, actions = null }) {
         query: { id: profile.publicId },
       }
     : null;
-  const profileUrl = hrefToPath(profileHref);
 
   const viewProfileLabel = t(
     "profileCard.viewProfile",
@@ -111,17 +96,21 @@ export default function ConnectProfileCard({ user, profile, actions = null }) {
     { default: "View profile of {{name}}" }
   );
 
-  const profileTypeLabel = t(
+  const profileButtonLabel = t(
     "profileCard.profileButton",
     {},
     { default: "Profile" }
   );
 
+  const typeLabel = t(
+    "profileCard.typeLabel",
+    {},
+    { default: "Connect Profile" }
+  );
+
   return (
     <ConnectCard
-      typeLabel={profileTypeLabel}
-      href={profileHref}
-      ariaLabel={viewProfileLabel}
+      typeLabel={typeLabel}
       avatar={{
         src: avatar,
         fallbackLabel: fullName.charAt(0).toUpperCase(),
@@ -129,15 +118,14 @@ export default function ConnectProfileCard({ user, profile, actions = null }) {
       }}
       title={fullName}
       subtitle={occupation}
+      chipsDirection="column"
       chips={
         orgTags.length
           ? orgTags.map((tag) => (
               <Chip
                 key={tag.key}
-                shape="pill"
+                avatar
                 label={tag.label}
-                title={tag.label}
-                style={{ maxWidth: "100%", height: "auto", minHeight: 32 }}
                 leading={
                   <ChipLeading
                     src={tag.logoUrl || "/assets/connect/building.svg"}
@@ -154,20 +142,11 @@ export default function ConnectProfileCard({ user, profile, actions = null }) {
           {actions}
           <ManageFavorite user={user} profileId={profile?.id} />
           {profileHref ? (
-            <Button
-              variant="outline"
-              leadingIcon={<ArrowOutwardIcon />}
-              aria-label={viewProfileLabel}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (profileUrl) {
-                  window.open(profileUrl, "_blank", "noopener,noreferrer");
-                }
-              }}
-            >
-              {profileTypeLabel}
-            </Button>
+            <Link href={profileHref}>
+              <Button variant="filled" aria-label={viewProfileLabel}>
+                {profileButtonLabel}
+              </Button>
+            </Link>
           ) : null}
         </>
       }

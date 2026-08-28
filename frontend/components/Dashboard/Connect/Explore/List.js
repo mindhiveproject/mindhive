@@ -26,15 +26,15 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #171717;
   }
   p {
     margin: 4px 0 0;
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     max-width: 640px;
   }
 `;
@@ -84,8 +84,8 @@ const Cover = styled.div`
     border-radius: 100px;
     background: rgba(0, 0, 0, 0.7);
     color: #ffffff;
-    font-size: 11px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -131,16 +131,15 @@ const Body = styled.div`
 
   h3 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
   }
   p {
     margin: 0;
     color: #5f6871;
-    font-size: 13px;
-    line-height: 1.4;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -154,7 +153,8 @@ const Meta = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 11px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #888;
 
   span {
@@ -164,7 +164,8 @@ const Meta = styled.div`
   }
   .rating {
     color: #5f6871;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
   }
 `;
 
@@ -189,9 +190,8 @@ const Pagination = styled.div`
     border: 1px solid #d3dae0;
     background: #ffffff;
     color: #336f8a;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
 
     &:disabled {
@@ -201,7 +201,8 @@ const Pagination = styled.div`
   }
 
   .info {
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #5f6871;
   }
 `;
@@ -393,6 +394,7 @@ export default function ExploreList() {
           <button
             type="button"
             onClick={() => setFavoritesOnly((v) => !v)}
+            className="MH-Type-Label-Base"
             style={{
               padding: "0 18px",
               height: 42,
@@ -400,9 +402,6 @@ export default function ExploreList() {
               border: `1px solid ${favoritesOnly ? "#e8174c" : "#d3dae0"}`,
               background: favoritesOnly ? "#ffeef2" : "#ffffff",
               color: favoritesOnly ? "#e8174c" : "#5f6871",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: 600,
-              fontSize: 13,
               cursor: "pointer",
               display: "inline-flex",
               alignItems: "center",

@@ -71,9 +71,6 @@ export default function JournalNavigation({
     typeof journal?.description === "string" ? journal.description.trim() : "";
 
   const descriptionBlockStyle = {
-    fontFamily: "Inter, sans-serif",
-    fontSize: "12px",
-    lineHeight: "16px",
     color: "#333",
     marginBottom: formattedDate ? 8 : 0,
     maxHeight: 96,
@@ -83,9 +80,6 @@ export default function JournalNavigation({
   };
 
   const lastUpdatedBlockStyle = {
-    fontFamily: "Inter, sans-serif",
-    fontSize: "12px",
-    lineHeight: "16px",
     color: "#6a6a6a",
   };
 
@@ -93,21 +87,22 @@ export default function JournalNavigation({
     descriptionText || formattedDate ? (
       <>
         {descriptionText ? (
-          <div style={
-            {fontFamily: "Inter, sans-serif",
-            fontSize: "14px",
-            lineHeight: "16px",
-            color: "#6A6A6A",
-            marginBottom: formattedDate ? 8 : 0,
-            maxHeight: 96,
-            overflow: "auto",
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word"}}>
+          <div
+            className="MH-Type-Body-Base"
+            style={{
+              color: "#6A6A6A",
+              marginBottom: formattedDate ? 8 : 0,
+              maxHeight: 96,
+              overflow: "auto",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+            }}
+          >
               {descriptionText}
           </div>
         ) : null}
         {formattedDate ? (
-          <div style={lastUpdatedBlockStyle}>
+          <div className="MH-Type-Body-Base" style={lastUpdatedBlockStyle}>
             {t(
               "dataJournal.sideNav.lastUpdatedAt",
               { date: formattedDate },
@@ -237,7 +232,6 @@ export default function JournalNavigation({
           <div className="dataSourceChips">
             <Chip
               label={datasetsChipLabel}
-              shape="square"
               selected={isJournalSelected}
               onClick={(e) => {
                 e.stopPropagation();
@@ -312,11 +306,9 @@ export default function JournalNavigation({
                 </StyledModalHeader>
                 <StyledModalBody>
                   <p
+                    className="MH-Type-Body-Base"
                     style={{
                       margin: 0,
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: 14,
-                      lineHeight: 1.5,
                       color: "#333",
                     }}
                   >
@@ -328,11 +320,10 @@ export default function JournalNavigation({
                   {deleteError ? (
                     <p
                       role="alert"
+                      className="MH-Type-Body-Base"
                       style={{
                         marginTop: 12,
                         marginBottom: 0,
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: 13,
                         color: "#c62828",
                       }}
                     >
@@ -353,6 +344,7 @@ export default function JournalNavigation({
                   </StyledModalButton>
                   <StyledModalButton
                     type="button"
+                    className="MH-Type-Label-Base"
                     disabled={deleting}
                     style={{
                       marginLeft: 8,
@@ -360,8 +352,6 @@ export default function JournalNavigation({
                       border: "none",
                       borderRadius: 6,
                       cursor: deleting ? "not-allowed" : "pointer",
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: 14,
                       background: "#c62828",
                       color: "#fff",
                     }}

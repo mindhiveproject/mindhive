@@ -326,8 +326,7 @@ export default function QuestionEditor({
               <div>
                 <Chip
                   type="button"
-                  shape="square"
-                  style={{fontWeight:"400", fontSize:"12px", border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
+                  style={{font: 'var(--MH-Type-Body-Base)', letterSpacing: 0, border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
                   leading={<p>–</p>}
                   onClick={() => {
                     onChange({ ...question, helperText: "" });
@@ -347,8 +346,7 @@ export default function QuestionEditor({
             <div>
               <Chip
                 type="button"
-                shape="square"
-                style={{fontWeight:"400", fontSize:"12px", border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
+                style={{font: 'var(--MH-Type-Body-Base)', letterSpacing: 0, border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
                 leading={<p>+</p>}
                 onClick={() => setHelperEditorOpen(true)}
                 label={t(

@@ -145,8 +145,8 @@ export default function AssignmentEditModal({ open, onClose, assignmentId, user,
                         border: "1px solid #336F8A",
                         background: "white",
                         color: "#336F8A",
-                        fontSize: "16px",
-                    }}
+                        font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,}}
                     onClick={onClose}
                 >
                     {t("board.expendedCard.close", "Close")}
@@ -161,8 +161,8 @@ export default function AssignmentEditModal({ open, onClose, assignmentId, user,
                             border: "1px solid #336F8A",
                             background: "#336F8A",
                             color: "white",
-                            fontSize: "16px",
-                        }}
+                            font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,}}
                 >
                     {hasChanges 
                         ? t("assignment.saveChanges", "Save Changes") 

@@ -253,7 +253,10 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
 
             <div className="inputLineBlock">
               <p className="fieldLabel">Organization logo</p>
-              <p style={{ fontSize: 13, color: "#5f6871", marginTop: 0 }}>
+              <p
+                className="MH-Type-Body-Base"
+                style={{ color: "#5f6871", marginTop: 0 }}
+              >
                 A square logo works best (JPG, PNG, or WEBP). Up to{" "}
                 {MAX_LOGO_BYTES / 1024 / 1024} MB.
               </p>
@@ -303,8 +306,8 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
               />
               {logoUpload && (
                 <div
+                  className="MH-Type-Body-Base"
                   style={{
-                    fontSize: 12,
                     color: "#1d8f47",
                     marginTop: 4,
                   }}

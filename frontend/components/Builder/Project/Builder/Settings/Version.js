@@ -367,7 +367,6 @@ export default function StudyVersion({
                 selected={showFavoritesOnly}
                 onClick={() => setFavoritesOnly(!showFavoritesOnly)}
                 leading={<StarIcon filled={showFavoritesOnly} />}
-                shape="pill"
               />
             </div>
           )}

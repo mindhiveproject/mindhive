@@ -15,7 +15,7 @@ export default function TagsMain({ query, user }) {
   if (!selector) {
     return (
       <StyledTag>
-        <h1>{t("tag.myTags")}</h1>
+        <h1 className="MH-Type-Heading-Base">{t("tag.myTags")}</h1>
         <Link href="/dashboard/tags/add">
           <Button variant="filled" type="button">
             {t("tag.createTag")}

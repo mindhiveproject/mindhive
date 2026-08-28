@@ -197,7 +197,6 @@ export default function TopNavigation() {
           label={t("dataJournal.topNav.journals", "Journals")}
           selected={area === "journals"}
           onClick={() => setArea("journals")}
-          shape="square"
           style={{
             border: "none",
             background: area === "journals" ? LEFT_NAV_SELECTED_BG : "transparent",
@@ -223,7 +222,6 @@ export default function TopNavigation() {
           label={t("dataJournal.topNav.datasets", "Datasets")}
           selected={area === "datasets"}
           onClick={navigateToDatasets}
-          shape="square"
           style={{
             border: "none",
             background: area === "datasets" ? LEFT_NAV_SELECTED_BG : "transparent",
@@ -260,7 +258,7 @@ export default function TopNavigation() {
               })}
             </Button>
             <div className="datasetScopeNav" role="tablist">
-              <span style={{ fontSize: "14px", fontWeight: "400", lineHeight: "20px", letterSpacing: "0", color: "#5D5763" }}>Filter by:</span>
+              <span className="MH-Type-Label-Base" style={{ color: "#5D5763" }}>Filter by:</span>
             {DATASET_SCOPES.map((scope) => {
               const meta = DATASET_SCOPE_META[scope];
               if (!meta) return null;
@@ -273,7 +271,6 @@ export default function TopNavigation() {
                 label={tBuilder(meta.i18nKey, {}, { default: meta.defaultLabel })}
                 selected={datasetScope === scope}
                 onClick={() => setDatasetScope(scope)}
-                shape="square"
                 leading={
                   <img
                     src={meta.iconSrc}

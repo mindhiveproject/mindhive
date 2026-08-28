@@ -55,25 +55,22 @@ const inputStyle = {
   border: "1px solid #A1A1A1",
   borderRadius: 10,
   padding: "16px 18px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 18,
-  lineHeight: "28px",
+  font: 'var(--MH-Type-Body-Large)',
+  letterSpacing: 0,
   color: "#171717",
 };
 
 const helperTextStyle = {
   margin: "8px 0 0",
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
 };
 
 const questionLabelStyle = {
   margin: "0 0 10px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 15,
-  fontWeight: 600,
-  lineHeight: "22px",
+  font: 'var(--MH-Type-Title-Small)',
+  letterSpacing: 0,
   color: "#171717",
 };
 
@@ -727,7 +724,7 @@ export default function MilestoneCardBuilder({
                 )}
               />
             ) : (
-              <p style={{ margin: 0, fontSize: 16, lineHeight: "24px" }}>
+              <p style={{ margin: 0, font: 'var(--MH-Type-Body-Base)', letterSpacing: 0 }}>
                 {displayTitle}
               </p>
             )}
@@ -764,8 +761,8 @@ export default function MilestoneCardBuilder({
               <p
                 style={{
                   margin: 0,
-                  fontSize: 14,
-                  lineHeight: "20px",
+                  font: 'var(--MH-Type-Body-Base)',
+                  letterSpacing: 0,
                   color: "#5D5763",
                 }}
               >
@@ -1158,7 +1155,6 @@ export default function MilestoneCardBuilder({
           </div>
           {capability === CAPABILITY_DATA_COLLECTION ? (
             <Chip
-              shape="square"
               label={t(
                 "board.expendedCard.milestoneCard.dataCollectionPanelChip",
                 {},
@@ -1170,7 +1166,6 @@ export default function MilestoneCardBuilder({
                 background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
                 border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
                 color: "var(--MH-Theme-Neutrals-Dark, #5D5763)",
-                fontWeight: 500,
               }}
             />
           ) : null}
@@ -1218,12 +1213,10 @@ export default function MilestoneCardBuilder({
                   return (
                     <li key={card.id}>
                       <Chip
-                        shape="square"
                         label={cardLabel}
                         disabled
                         style={{
                           background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
-                          fontWeight: 500,
                         }}
                       />
                     </li>
@@ -1282,7 +1275,7 @@ export default function MilestoneCardBuilder({
           </>
         }
       >
-        <p style={{ margin: 0, fontSize: 14, lineHeight: "20px" }}>
+        <p style={{ margin: 0, font: 'var(--MH-Type-Body-Base)', letterSpacing: 0 }}>
           {t(
             "board.expendedCard.milestoneCard.confirmDataCollectionBody",
             {},
@@ -1334,7 +1327,7 @@ export default function MilestoneCardBuilder({
           </>
         }
       >
-        <p style={{ margin: 0, fontSize: 14, lineHeight: "20px" }}>
+        <p style={{ margin: 0, font: 'var(--MH-Type-Body-Base)', letterSpacing: 0 }}>
           {t(
             "board.expendedCard.milestoneCard.confirmRemoveReviewFormBody",
             {},

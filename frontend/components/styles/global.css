@@ -7,6 +7,7 @@
  * browser than the same 600 weight does in Figma.
  */
 body {
+  font-family: "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

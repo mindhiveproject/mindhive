@@ -91,7 +91,6 @@ export default function AssignCardModal({
   const styledPrimaryButton = {
     borderRadius: "100px",
     background: "#336F8A",
-    fontSize: "16px",
     color: "white",
     border: "1px solid #336F8A",
     padding: "10px 20px",
@@ -102,7 +101,6 @@ export default function AssignCardModal({
   const styledSecondaryButton = {
     borderRadius: "100px",
     background: "white",
-    fontSize: "16px",
     color: "#336F8A",
     border: "1.5px solid #336F8A",
     padding: "10px 20px",
@@ -120,11 +118,10 @@ export default function AssignCardModal({
       closeOnEscape
     >
       <Modal.Header
+        className="MH-Type-Title-Large"
         style={{
           background: "#f9fafb",
           borderBottom: "1px solid #e0e0e0",
-          fontFamily: "Inter, sans-serif",
-          fontWeight: 600,
         }}
       >
         {t("assigned.assignCard", "Assign Card")}
@@ -145,6 +142,7 @@ export default function AssignCardModal({
               <div style={{ position: "relative", marginBottom: "16px" }}>
                 <input
                   type="text"
+                  className="MH-Type-Body-Base"
                   placeholder={t("assigned.searchPlaceholder", "Search by username...")}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -153,8 +151,6 @@ export default function AssignCardModal({
                     padding: "12px 40px 12px 12px",
                     border: "1px solid #d0d5dd",
                     borderRadius: "8px",
-                    fontSize: "16px",
-                    fontFamily: "inherit",
                   }}
                 />
                 {search && (
@@ -181,7 +177,7 @@ export default function AssignCardModal({
 
               {availableCollaborators.length > 0 ? (
                 <div>
-                  <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "12px" }}>
+                  <h3 className="MH-Type-Title-Large" style={{ marginBottom: "12px" }}>
                     {t("assigned.searchResults", "Search Results")}
                   </h3>
                   <div
@@ -197,6 +193,7 @@ export default function AssignCardModal({
                     {availableCollaborators.map((c) => (
                       <div
                         key={c.id}
+                        className="MH-Type-Label-Base"
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -205,7 +202,6 @@ export default function AssignCardModal({
                           border: "1px solid #274E5B",
                           padding: "6px 12px",
                           borderRadius: "8px",
-                          fontSize: "14px",
                         }}
                       >
                         <span style={{ color: "#274E5B" }}>{c.username}</span>
@@ -237,7 +233,7 @@ export default function AssignCardModal({
 
             {selected.length > 0 && (
               <div style={{ marginTop: "24px" }}>
-                <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "12px" }}>
+                <h3 className="MH-Type-Title-Large" style={{ marginBottom: "12px" }}>
                   {t("assigned.selected", "Selected")}
                 </h3>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
@@ -246,6 +242,7 @@ export default function AssignCardModal({
                     return (
                       <div
                         key={s}
+                        className="MH-Type-Label-Base"
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -254,7 +251,6 @@ export default function AssignCardModal({
                           background: "#FDF2D0",
                           padding: "6px 12px",
                           borderRadius: "8px",
-                          fontSize: "14px",
                         }}
                       >
                         <span style={{ color: "#495057" }}>
@@ -291,6 +287,7 @@ export default function AssignCardModal({
       >
         {allAvailableUsers.length > 0 && (
           <Button
+            className="MH-Type-Label-Base"
             onClick={handleSave}
             loading={saving}
             disabled={saving}
@@ -299,7 +296,7 @@ export default function AssignCardModal({
             {saving ? t("assigned.saving", "Saving...") : t("assigned.save", "Save")}
           </Button>
         )}
-        <button onClick={onClose} style={styledSecondaryButton}>
+        <button className="MH-Type-Label-Base" onClick={onClose} style={styledSecondaryButton}>
           {t("assigned.cancel", "Cancel")}
         </button>
       </Modal.Actions>

@@ -13,7 +13,7 @@ export default function LessonsMain({ query, user }) {
   if (!selector) {
     return (
       <>
-        <h1>My lessons</h1>
+        <h1 className="MH-Type-Heading-Base">My lessons</h1>
         <Link href="/dashboard/lessons/add">
           <Button variant="filled" type="button">
             {t("lessons.addLesson", {}, { default: "Add lesson" })}

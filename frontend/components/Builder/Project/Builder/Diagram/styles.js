@@ -25,10 +25,9 @@ export const StyledNode = styled.div`
 
   .node-header-text {
     color: #1a1a1a;
-    font-size: 16px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 150%;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
   }
 
   .node-header-icons {
@@ -86,11 +85,8 @@ export const StyledNode = styled.div`
     position: relative;
     .label {
       color: #666666;
-      font-family: Lato;
-      font-size: 16px;
       font-style: normal;
-      font-weight: 600;
-      line-height: 18px;
+      font: var(--MH-Type-Label-Small);
       letter-spacing: 0.05em;
       text-align: center;
       position: absolute;
@@ -117,10 +113,8 @@ export const StyledNode = styled.div`
     display: grid;
     padding: 0px 20px 0px 20px;
     color: #666666;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
   }
 
@@ -157,19 +151,16 @@ export const StyledComment = styled.div`
 
   .comment-header-text {
     color: #1a1a1a;
-    font-size: 13px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 150%;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     opacity: 0.85;
   }
 
   .comment-content {
     display: grid;
     color: #555555;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     text-align: left;
     height: 100%;
@@ -177,19 +168,19 @@ export const StyledComment = styled.div`
     textarea {
       padding: 12px 14px;
       min-height: 100px;
-      font-size: 16px;
-      line-height: 1.5;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #333333;
       resize: none;
       border: none;
       outline: none;
       background: transparent;
-      font-family: inherit;
     }
   }
 
   .post-it {
-    font-size: 20px;
+    font: var(--MH-Type-Body-Large);
+    letter-spacing: 0;
     position: absolute;
     width: 280px;
     margin: 16px;

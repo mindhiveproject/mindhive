@@ -8,7 +8,6 @@ export const OpportunityCompactGrid = styled.div`
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  font-family: "Inter", sans-serif;
 
   @media (max-width: 1023px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -57,10 +56,8 @@ const TitleRow = styled.div`
 const Title = styled.h3`
   margin: 0;
   flex: 1 1 120px;
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 22px;
+  font: var(--MH-Type-Title-Base);
+  letter-spacing: 0;
   color: #171717;
 `;
 
@@ -69,10 +66,8 @@ const STATUS_CHIP_STYLE = {
   minHeight: "32px",
   padding: "6px 12px",
   borderRadius: "8px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "14px",
-  fontWeight: 600,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Label-Base)',
+  letterSpacing: 0,
   boxSizing: "border-box",
   textTransform: "capitalize",
 };
@@ -130,24 +125,17 @@ function getStatusChipColors(status) {
   return OPPORTUNITY_STATUS_CHIP_COLORS[status] || DEFAULT_STATUS_CHIP_COLORS;
 }
 
-const StatusPill = styled.span`
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  height: 32px;
-  min-height: 32px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  box-sizing: border-box;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-  text-transform: capitalize;
-  background: ${({ $status }) => getStatusChipColors($status).background};
-  border: 1px solid ${({ $status }) => getStatusChipColors($status).border};
-  color: ${({ $status }) => getStatusChipColors($status).color};
-`;
+const STATUS_TONE = {
+  draft: "neutral",
+  pending_review: "warning",
+  returned: "warning",
+  pre_selected: "info",
+  accepted: "success",
+  published: "success",
+  closed: "neutral",
+  archived: "neutral",
+};
+const statusTone = (status) => STATUS_TONE[status] ?? "neutral";
 
 const StatusSelectWrap = styled.div`
   flex-shrink: 0;
@@ -185,8 +173,8 @@ const STATUS_CHEVRON = (
 
 const Meta = styled.p`
   margin: 0;
-  font-size: 14px;
-  line-height: 20px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #625b71;
 `;
 
@@ -207,9 +195,8 @@ const DELETE_CHIP_STYLE = {
 
 const ReviewNoteHint = styled.p`
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.35;
+  font: var(--MH-Type-Title-Small);
+  letter-spacing: 0;
   color: #6f26ce;
 `;
 
@@ -223,10 +210,8 @@ const ReviewCommentsButton = styled.button`
   border: 1px solid #3f288f;
   background: #3f288f;
   color: #ffffff;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 1.25;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
   text-align: center;
   max-width: 100%;
@@ -393,7 +378,7 @@ export default function OpportunityCompactCard({
             />
           </StatusSelectWrap>
         ) : statusLabel ? (
-          <StatusPill $status={status}>{statusLabel}</StatusPill>
+          <Chip variant="static" tone={statusTone(status)} label={statusLabel} />
         ) : null}
       </TitleRow>
       {metaLine ? <Meta>{metaLine}</Meta> : null}
@@ -406,14 +391,13 @@ export default function OpportunityCompactCard({
                 {editLabel}
               </ReviewCommentsButton>
             ) : (
-              <Chip label={editLabel} onClick={onEdit} ariaLabel={editLabel} shape="square" />
+              <Chip label={editLabel} onClick={onEdit} ariaLabel={editLabel} />
             )
           ) : null}
           {reviewHref ? (
             <Chip
               label={reviewLabel}
               onClick={() => router.push(reviewHref)}
-              shape="square"
               ariaLabel={reviewLabel}
             />
           ) : null}
@@ -421,7 +405,6 @@ export default function OpportunityCompactCard({
             <Chip
               label={deleteLabel}
               onClick={onDelete}
-              shape="square"
               ariaLabel={deleteLabel}
               style={DELETE_CHIP_STYLE}
             />

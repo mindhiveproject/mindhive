@@ -32,39 +32,22 @@ const Title = styled.h2`
   margin: 0;
   flex: 1 1 auto;
   min-width: 0;
-  font-family: Inter, sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.3;
+  font: var(--MH-Type-Title-Large, 600 22px/28px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
 
-const SUBMITTED_CHIP_STYLE = {
-  background: "#e3f4ec",
-  backgroundColor: "#e3f4ec",
-  color: "#1d6b3a",
-};
-
-const DRAFT_CHIP_STYLE = {
-  background: "#fdf6e3",
-  backgroundColor: "#fdf6e3",
-  color: "#7a5b00",
-};
-
 const Helper = styled.p`
   margin: 0;
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
 const Due = styled.p`
   margin: 0;
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
 
@@ -187,10 +170,10 @@ export default function StudentRankActionCard({
         <Title id={`rank-action-title-${round.id}`}>{title}</Title>
         {statusChipLabel ? (
           <Chip
-            shape="pill"
+            variant="static"
+            tone={submitted ? "success" : "warning"}
             label={statusChipLabel}
             ariaLabel={statusChipLabel}
-            style={submitted ? SUBMITTED_CHIP_STYLE : DRAFT_CHIP_STYLE}
             leading={
               submitted ? (
                 <CheckIcon width={16} height={16} aria-hidden />

@@ -24,9 +24,11 @@ const FILLED_BASE = {
   background: "var(--MH-Theme-Primary-Dark, #336F8A)",
   color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
 };
+// Matches Button's FILLED_HOVER: a 20% Primary Light state layer over the
+// resting fill, plus Elevation Medium. Was an Accent-yellow colour flip.
 const FILLED_HOVER = {
-  background: "var(--MH-Theme-Accent-Medium, #F9D978)",
-  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+  background:
+    "linear-gradient(0deg, rgba(222, 248, 251, 0.2), rgba(222, 248, 251, 0.2)), var(--MH-Theme-Primary-Dark, #336F8A)",
   boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0,0,0,0.1))",
 };
 const FILLED_PRESSED = {
@@ -47,22 +49,22 @@ const OUTLINE_BASE = {
   color: "var(--MH-Theme-Primary-Base, #69BBC4)",
   border: "1px solid var(--MH-Theme-Primary-Base, #69BBC4)",
 };
+// Matches Button's OUTLINE_HOVER background. Was opacity: 0.8 — a dip on the
+// whole control rather than a designed hover fill.
 const OUTLINE_HOVER = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  border: "1px solid var(--MH-Theme-Primary-Base, #69BBC4)",
-  opacity: 0.8,
-};
-const OUTLINE_PRESSED = {
   background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
   border: "1px solid var(--MH-Theme-Primary-Base, #69BBC4)",
-  opacity: 1,
+};
+// Matches Button's OUTLINE_PRESSED — a step deeper than hover.
+const OUTLINE_PRESSED = {
+  background: "var(--MH-Theme-Primary-Light, #DEF8FB)",
+  border: "1px solid var(--MH-Theme-Primary-Base, #69BBC4)",
 };
 const OUTLINE_DISABLED = {
   background: "transparent",
   color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
   border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
   cursor: "default",
-  opacity: 1,
 };
 
 // --- Tonal (Primary Light — Icon Button DS, not Accent)
