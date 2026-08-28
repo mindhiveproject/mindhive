@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Dropdown } from "semantic-ui-react";
@@ -22,6 +23,17 @@ import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import IconButton from "../../../../DesignSystem/IconButton";
 import MessageCard from "../../../../DesignSystem/MessageCard";
+import ClassmateRankList, {
+  deriveClassmateOrder,
+} from "./ClassmateRankList";
+import FavoriteRankList from "./FavoriteRankList";
+import PreferenceSubmissionReview from "./PreferenceSubmissionReview";
+import PreferenceSubmissionStepper, {
+  TOTAL_STEPS,
+} from "./PreferenceSubmissionStepper";
+
+/** Round/opportunity questions are deferred; keep save paths dormant until re-enabled. */
+const PREFERENCE_QUESTIONS_ENABLED = false;
 
 const Card = styled.div`
   display: flex;
@@ -30,7 +42,7 @@ const Card = styled.div`
   padding: 24px;
   border-radius: 16px;
   background: #ffffff;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--MH-Theme-Neutrals-Medium, #E6E6E6);
 
   h2 {
     margin: 0;
@@ -89,46 +101,6 @@ const Field = styled.label`
   }
 `;
 
-const OpportunityRow = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid #d3dae0;
-  border-radius: 12px;
-`;
-
-const OppHead = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
-
-  .title {
-    margin: 0;
-    font: var(--MH-Type-Title-Base);
-    letter-spacing: 0;
-    color: #171717;
-  }
-
-  .meta {
-    color: #5f6871;
-    font: var(--MH-Type-Body-Base);
-    letter-spacing: 0;
-    margin-top: 2px;
-  }
-`;
-
-const RankControls = styled.div`
-  display: grid;
-  gap: 12px;
-  grid-template-columns: 120px 1fr 1fr;
-
-  @media (max-width: 700px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
 const RankFormHeader = styled.div`
   display: flex;
   align-items: flex-start;
@@ -141,7 +113,7 @@ const RankFormHeader = styled.div`
   border-radius: 12px;
   border: 1px solid var(--MH-Theme-Neutrals-Medium, #E6E6E6);
   padding: 8px 16px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   background: var(--MH-Theme-Neutrals-White, #ffffff);
 `;
 
@@ -198,171 +170,11 @@ const RankPageBody = styled.div`
   min-height: 0;
   overflow-y: auto;
   display: grid;
-  gap: 20px;
+  gap: 8px;
   align-content: start;
   padding: 12px 0 24px;
   box-sizing: border-box;
 `;
-
-const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
-
-// Mentors sometimes paste the full <iframe ...> embed snippet instead of just
-// the URL. Pull out the src attribute when we detect that case so downstream
-// code receives a usable URL.
-function extractUrl(raw) {
-  if (!raw) return null;
-  const trimmed = String(raw).trim();
-  if (!trimmed) return null;
-  const m = trimmed.match(/<iframe[^>]+src=["']([^"']+)["']/i);
-  return m ? m[1] : trimmed;
-}
-
-// Same idea for cover image fields — handle a pasted <img src="..."> snippet.
-function extractImageUrl(raw) {
-  if (!raw) return null;
-  const trimmed = String(raw).trim();
-  if (!trimmed) return null;
-  const m = trimmed.match(/<img[^>]+src=["']([^"']+)["']/i);
-  return m ? m[1] : trimmed;
-}
-
-function isDirectVideoFile(url) {
-  if (!url) return false;
-  try {
-    return DIRECT_VIDEO_EXT.test(new URL(url).pathname);
-  } catch {
-    return DIRECT_VIDEO_EXT.test(url);
-  }
-}
-
-function getEmbedUrl(rawUrl) {
-  if (!rawUrl) return null;
-  try {
-    const u = new URL(rawUrl);
-    const host = u.hostname.replace(/^www\./, "");
-
-    if (host === "youtube.com" || host === "m.youtube.com") {
-      const v = u.searchParams.get("v");
-      if (v) return `https://www.youtube.com/embed/${v}`;
-      const shortsMatch = u.pathname.match(/^\/shorts\/([^/]+)/);
-      if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
-      const embedMatch = u.pathname.match(/^\/embed\/([^/]+)/);
-      if (embedMatch) return `https://www.youtube.com/embed/${embedMatch[1]}`;
-    }
-    if (host === "youtu.be") {
-      const id = u.pathname.replace(/^\//, "");
-      if (id) return `https://www.youtube.com/embed/${id}`;
-    }
-    if (host === "vimeo.com" || host === "player.vimeo.com") {
-      const id = u.pathname.replace(/^\/(video\/)?/, "").split("/")[0];
-      if (id) return `https://player.vimeo.com/video/${id}`;
-    }
-    if (host === "loom.com" || host.endsWith(".loom.com")) {
-      const m = u.pathname.match(/\/(share|embed)\/([^/?]+)/);
-      if (m) return `https://www.loom.com/embed/${m[2]}`;
-    }
-    if (host === "drive.google.com") {
-      const m = u.pathname.match(/\/file\/d\/([^/]+)/);
-      if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-function OpportunityMedia({ opportunity }) {
-  const coverUrl =
-    opportunity.coverImage?.url ||
-    extractImageUrl(opportunity.coverImageUrl) ||
-    null;
-  const uploadedVideoUrl = opportunity.videoFile?.url || null;
-  const rawVideoUrl = extractUrl(opportunity.videoUrl);
-
-  // Pick how to render the video. Priority:
-  //   1. Uploaded file        → HTML5 <video>
-  //   2. Direct video URL     → HTML5 <video>
-  //   3. Known embed platform → iframe with normalized embed URL
-  //   4. Other external URL   → iframe as-is (best-effort)
-  let videoNode = null;
-  const directVideoSrc =
-    uploadedVideoUrl || (isDirectVideoFile(rawVideoUrl) ? rawVideoUrl : null);
-  const embedUrl = !directVideoSrc ? getEmbedUrl(rawVideoUrl) : null;
-  const fallbackIframeSrc =
-    !directVideoSrc && !embedUrl && rawVideoUrl ? rawVideoUrl : null;
-
-  if (directVideoSrc) {
-    videoNode = (
-      <video
-        controls
-        preload="metadata"
-        poster={coverUrl || undefined}
-        src={directVideoSrc}
-        style={{
-          width: "100%",
-          maxHeight: 360,
-          borderRadius: 12,
-          background: "#000",
-        }}
-      />
-    );
-  } else if (embedUrl || fallbackIframeSrc) {
-    videoNode = (
-      <div
-        style={{
-          position: "relative",
-          paddingBottom: "56.25%",
-          height: 0,
-          borderRadius: 12,
-          overflow: "hidden",
-          background: "#000",
-        }}
-      >
-        <iframe
-          src={embedUrl || fallbackIframeSrc}
-          title={`${opportunity.title} intro video`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          frameBorder="0"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        />
-      </div>
-    );
-  }
-
-  if (!coverUrl && !videoNode) return null;
-
-  // The cover image is only used as the <video> poster when the video itself
-  // is a direct file (HTML5 <video> supports the poster attribute). For iframe
-  // embeds (YouTube / Vimeo / Loom / Drive) there's no poster mechanism, so we
-  // show the cover image separately above the embed.
-  const coverUsedAsPoster = !!directVideoSrc && !!coverUrl;
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      {coverUrl && !coverUsedAsPoster && (
-        <img
-          src={coverUrl}
-          alt={opportunity.title}
-          style={{
-            width: "100%",
-            maxHeight: 220,
-            objectFit: "cover",
-            borderRadius: 12,
-            background: "#eef1f2",
-          }}
-        />
-      )}
-      {videoNode}
-    </div>
-  );
-}
 
 function QuestionInput({ question, value, onChange }) {
   const type = question.questionType;
@@ -492,6 +304,7 @@ function RankFormChrome({
 
 export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const { t } = useTranslation("classes");
+  const router = useRouter();
   const backLabel = t("opportunities.studentView.rankForm.backLink", {}, {
     default: "Back to opportunities",
   });
@@ -527,6 +340,29 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     (opp) => favoriteIds.has(opp.id) || rankedIds.has(opp.id),
   );
 
+  const [roundAnswers, setRoundAnswers] = useState({});
+  const [oppAnswers, setOppAnswers] = useState({});
+  const [rankings, setRankings] = useState({});
+  const [classmateOrder, setClassmateOrder] = useState([]);
+  const [notes, setNotes] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const teamEligibleOpps = useMemo(
+    () =>
+      roundOpportunities.filter(
+        (o) => o.teamSize > 1 && o.allowsTeamPreferences,
+      ),
+    [roundOpportunities],
+  );
+  const teamEligibleOppIds = useMemo(
+    () => teamEligibleOpps.map((o) => o.id).filter(Boolean),
+    [teamEligibleOpps],
+  );
+  const hasTeamOpps = teamEligibleOpps.length > 0;
+  const maxClassmatePicks = hasTeamOpps
+    ? Math.max(...teamEligibleOpps.map((o) => (o.teamSize || 1) - 1), 0)
+    : 0;
+
   const networkStudents = (() => {
     const map = new Map();
     (round?.classNetwork?.classes || []).forEach((cls) => {
@@ -537,11 +373,31 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     return Array.from(map.values());
   })();
 
-  const [roundAnswers, setRoundAnswers] = useState({});
-  const [oppAnswers, setOppAnswers] = useState({});
-  const [rankings, setRankings] = useState({});
-  const [teammates, setTeammates] = useState({});
-  const [notes, setNotes] = useState("");
+  useEffect(() => {
+    const raw = router.query.step;
+    const stepNum = Number(raw);
+    if (raw && stepNum >= 1 && stepNum <= TOTAL_STEPS) {
+      setCurrentStep(stepNum);
+    }
+  }, [router.query.step]);
+
+  const goToStep = useCallback(
+    (step) => {
+      const next = Math.min(TOTAL_STEPS, Math.max(1, step));
+      setCurrentStep(next);
+      if (router.query.round) {
+        router.replace(
+          {
+            pathname: router.pathname,
+            query: { ...router.query, step: String(next) },
+          },
+          undefined,
+          { shallow: true },
+        );
+      }
+    },
+    [router],
+  );
 
   useEffect(() => {
     if (!round) return;
@@ -570,19 +426,13 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     });
     setRankings(r);
 
-    const t = {};
-    existingTeamPrefs.forEach((tp) => {
-      const oppId = tp.opportunity?.id;
-      const tmId = tp.preferredTeammate?.id;
-      if (!oppId || !tmId) return;
-      if (!t[oppId]) t[oppId] = [];
-      t[oppId].push(tmId);
-    });
-    setTeammates(t);
+    setClassmateOrder(
+      deriveClassmateOrder(existingTeamPrefs, teamEligibleOppIds),
+    );
 
     setNotes(existingPreference?.notes || "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [round?.id, existingPreference?.id]);
+  }, [round?.id, existingPreference?.id, teamEligibleOppIds.join(",")]);
 
   const [createPreference] = useMutation(CREATE_PREFERENCE);
   const [updatePreference] = useMutation(UPDATE_PREFERENCE);
@@ -598,11 +448,10 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const [ratingDrafts, setRatingDrafts] = useState({});
   const [savingRatingId, setSavingRatingId] = useState(null);
 
-  const updateRanking = (oppId, key, value) => {
-    setRankings((prev) => ({
-      ...prev,
-      [oppId]: { ...(prev[oppId] || {}), [key]: value },
-    }));
+  const updateRankings = (updater) => {
+    setRankings((prev) =>
+      typeof updater === "function" ? updater(prev) : updater,
+    );
   };
 
   const updateOppAnswer = (oppId, questionId, value) => {
@@ -615,8 +464,34 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const handleSave = async (targetStatus) => {
     if (!round) return;
 
-    // 1) Validation: when submitting (not drafting), enforce required questions.
     if (targetStatus === "submitted") {
+      const hasItems = Object.entries(rankings).some(([, r]) => {
+        if (!r) return false;
+        return (
+          (r.rank !== "" && r.rank !== undefined && r.rank !== null) ||
+          (r.starRating !== "" &&
+            r.starRating !== undefined &&
+            r.starRating !== null) ||
+          (r.comment || "").trim()
+        );
+      });
+      if (!hasItems) {
+        alert(
+          t(
+            "opportunities.studentView.rankForm.steps.needRankedOpportunity",
+            {},
+            {
+              default:
+                "Favorite and rank at least one opportunity before continuing.",
+            },
+          ),
+        );
+        return;
+      }
+    }
+
+    // Validation: when submitting (not drafting), enforce required questions.
+    if (PREFERENCE_QUESTIONS_ENABLED && targetStatus === "submitted") {
       const missing = [];
 
       // Required round-level questions must have an answer.
@@ -721,37 +596,39 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         });
       }
 
-      // 3) Wipe + recreate question answers
-      if (existingAnswers.length) {
-        await deleteQuestionAnswers({
-          variables: { where: existingAnswers.map((a) => ({ id: a.id })) },
-        });
-      }
-      const newAnswers = [];
-      Object.entries(roundAnswers).forEach(([qId, ans]) => {
-        if (ans === undefined || ans === null || ans === "") return;
-        newAnswers.push({
-          question: { connect: { id: qId } },
-          round: { connect: { id: round.id } },
-          answer: ans,
-        });
-      });
-      Object.entries(oppAnswers).forEach(([oppId, qMap]) => {
-        Object.entries(qMap).forEach(([qId, ans]) => {
+      // 3) Wipe + recreate question answers (deferred while questions UI is hidden)
+      if (PREFERENCE_QUESTIONS_ENABLED) {
+        if (existingAnswers.length) {
+          await deleteQuestionAnswers({
+            variables: { where: existingAnswers.map((a) => ({ id: a.id })) },
+          });
+        }
+        const newAnswers = [];
+        Object.entries(roundAnswers).forEach(([qId, ans]) => {
           if (ans === undefined || ans === null || ans === "") return;
           newAnswers.push({
             question: { connect: { id: qId } },
             round: { connect: { id: round.id } },
-            opportunity: { connect: { id: oppId } },
             answer: ans,
           });
         });
-      });
-      if (newAnswers.length) {
-        await createQuestionAnswers({ variables: { data: newAnswers } });
+        Object.entries(oppAnswers).forEach(([oppId, qMap]) => {
+          Object.entries(qMap).forEach(([qId, ans]) => {
+            if (ans === undefined || ans === null || ans === "") return;
+            newAnswers.push({
+              question: { connect: { id: qId } },
+              round: { connect: { id: round.id } },
+              opportunity: { connect: { id: oppId } },
+              answer: ans,
+            });
+          });
+        });
+        if (newAnswers.length) {
+          await createQuestionAnswers({ variables: { data: newAnswers } });
+        }
       }
 
-      // 4) Wipe + recreate team preferences
+      // 4) Wipe + recreate team preferences (class-wide order fan-out)
       if (existingTeamPrefs.length) {
         await deleteTeamPreferences({
           variables: {
@@ -760,11 +637,11 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         });
       }
       const newTeamPrefs = [];
-      Object.entries(teammates).forEach(([oppId, ids]) => {
-        ids.forEach((tmId, idx) => {
+      teamEligibleOpps.forEach((opp) => {
+        classmateOrder.forEach((tmId, idx) => {
           newTeamPrefs.push({
             round: { connect: { id: round.id } },
-            opportunity: { connect: { id: oppId } },
+            opportunity: { connect: { id: opp.id } },
             preferredTeammate: { connect: { id: tmId } },
             priority: idx + 1,
           });
@@ -948,27 +825,30 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
           default: "Draft saved",
         })
     : null;
+  const handleSaveDraft = () => handleSave("draft");
+  const handleSubmitPreferences = () => handleSave("submitted");
+
   const savingLabel = t("opportunities.studentView.rankForm.saving", {}, {
     default: "Saving…",
   });
-  const rankSubmitActions = isOpen ? (
+  const headerSubmitActions = isOpen ? (
     <>
       <Button
         type="button"
         variant="outline"
-        onClick={() => handleSave("draft")}
+        onClick={handleSaveDraft}
         disabled={saving}
       >
         {saving
           ? savingLabel
-          : t("opportunities.studentView.rankForm.saveDraft", {}, {
-              default: "Save draft",
+          : t("opportunities.studentView.rankForm.steps.saveStep", {}, {
+              default: "Save progress",
             })}
       </Button>
       <Button
         type="button"
         variant="filled"
-        onClick={() => handleSave("submitted")}
+        onClick={handleSubmitPreferences}
         disabled={saving}
       >
         {saving
@@ -989,7 +869,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         backDisabled={saving}
         statusChipLabel={statusChipLabel}
         submitted={submitted}
-        submitActions={rankSubmitActions}
+        submitActions={headerSubmitActions}
       />
       <RankPageBody>
       {!isOpen && lockReason && (
@@ -1306,272 +1186,119 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
           );
         })}
 
-      {approvedRoundQuestions.length > 0 && (
-        <Card>
-          <h2>Round questions</h2>
-          <p className="helper">
-            Answer these once. They&apos;re used to match you across
-            opportunities.
-          </p>
-          {approvedRoundQuestions
-            .sort((a, b) => (a.order || 0) - (b.order || 0))
-            .map((q) => (
-              <Field key={q.id}>
-                <span className="label-text">
-                  {q.prompt}
-                  {q.isRequired && " *"}
-                </span>
-                {q.helperText && <span className="hint">{q.helperText}</span>}
-                <QuestionInput
-                  question={q}
-                  value={roundAnswers[q.id]}
-                  onChange={(v) =>
-                    setRoundAnswers((prev) => ({ ...prev, [q.id]: v }))
-                  }
-                />
-              </Field>
-            ))}
-        </Card>
-      )}
-
       <Card>
-        <h2>
-          {t("opportunities.studentView.rankForm.rankHeading", {}, {
-            default: "Rank your favorites",
-          })}
-        </h2>
-        <p className="helper">
-          {t("opportunities.studentView.rankForm.rankHelper", {}, {
-            default:
-              "Rank the opportunities you favorited. Set a rank (1 = top choice) and an optional star rating. Leave fields empty for ones you no longer want to be considered for.",
-          })}
-        </p>
-        {opportunities.length === 0 && (
-          <p className="helper">
-            {roundOpportunities.length > 0
-              ? `${t(
-                  "opportunities.studentView.rankForm.emptyFavoritesTitle",
-                  {},
-                  { default: "No favorited opportunities yet" },
-                )} ${t(
-                  "opportunities.studentView.rankForm.emptyFavoritesHint",
-                  {},
-                  {
-                    default:
-                      "Go back and tap the star on the opportunities you want to rank.",
-                  },
-                )}`
-              : t("opportunities.studentView.rankForm.noOpportunities", {}, {
-                  default:
-                    "No opportunities have been added to this round yet.",
+        <PreferenceSubmissionStepper
+          currentStep={currentStep}
+          onStepChange={goToStep}
+        >
+          {currentStep === 1 && (
+            <>
+              <h2>
+                {t("opportunities.studentView.rankForm.classmatesHeading", {}, {
+                  default: "Rank your classmates",
                 })}
-          </p>
-        )}
-        {opportunities.map((opp) => {
-          const r = rankings[opp.id] || {};
-          const oppApprovedQuestions = (opp.questions || []).filter(
-            (q) => q.status === "approved"
-          );
-          const mentorName =
-            opp.mentor?.firstName ||
-            opp.mentor?.username ||
-            "Unknown";
-          const canPickTeammates =
-            opp.teamSize > 1 && opp.allowsTeamPreferences;
-          const availableToMs = opp.availableTo
-            ? new Date(opp.availableTo).getTime()
-            : null;
-          const availableFromMs = opp.availableFrom
-            ? new Date(opp.availableFrom).getTime()
-            : null;
-          const oppExpired = availableToMs && availableToMs < now;
-          const oppNotYetAvailable =
-            availableFromMs && availableFromMs > now;
-          const oppAvailable = !oppExpired && !oppNotYetAvailable;
-          const rankingEnabled = isOpen && oppAvailable;
-          return (
-            <OpportunityRow key={opp.id}>
-              <OpportunityMedia opportunity={opp} />
-              <OppHead>
-                <div>
-                  <h3 className="title">{opp.title}</h3>
-                  <div className="meta">
-                    By {mentorName}
-                    {opp.timeCommitment && ` · ${opp.timeCommitment}`}
-                    {opp.teamSize > 1 && ` · Team of ${opp.teamSize}`}
-                    {opp.publicRatingCount > 0 && (
-                      <>
-                        {" "}
-                        ·{" "}
-                        <span style={{ color: "#f5b800" }}>★</span>
-                        {opp.publicRatingAverage?.toFixed(1)} (
-                        {opp.publicRatingCount})
-                      </>
-                    )}
-                  </div>
-                  {(opp.availableFrom || opp.availableTo) && (
-                    <div
-                      className="meta"
-                      style={{
-                        color: oppExpired ? "#b3261e" : "#5f6871",
-                      }}
-                    >
-                      Available{" "}
-                      {opp.availableFrom
-                        ? new Date(opp.availableFrom).toLocaleDateString()
-                        : "—"}{" "}
-                      →{" "}
-                      {opp.availableTo
-                        ? new Date(opp.availableTo).toLocaleDateString()
-                        : "—"}
-                    </div>
+              </h2>
+              {hasTeamOpps ? (
+                <>
+                  <p className="helper">
+                    {t("opportunities.studentView.rankForm.classmatesHelper", {}, {
+                      default:
+                        "Pick classmates you'd like on your team. Order matters — 1 is your top choice.",
+                    })}
+                  </p>
+                  <ClassmateRankList
+                    students={networkStudents}
+                    classmateOrder={classmateOrder}
+                    onClassmateOrderChange={setClassmateOrder}
+                    maxPicks={maxClassmatePicks}
+                    rankingEnabled={isOpen}
+                  />
+                </>
+              ) : (
+                <p className="helper">
+                  {t(
+                    "opportunities.studentView.rankForm.classmatesNoneInRound",
+                    {},
+                    {
+                      default:
+                        "No team projects in this round — you can skip to opportunity ranking.",
+                    },
                   )}
-                </div>
-              </OppHead>
-              {opp.shortDescription && (
-                <p
-                  className="MH-Type-Body-Base"
-                  style={{ margin: 0, color: "#5f6871" }}
-                >
-                  {opp.shortDescription}
                 </p>
               )}
-              {!oppAvailable && (
-                <div
-                  className="MH-Type-Body-Base"
-                  style={{
-                    padding: "10px 14px",
-                    border: "1px solid #f1c8c8",
-                    background: "#fdf1f1",
-                    borderRadius: 10,
-                    color: "#b3261e",
-                  }}
-                >
-                  <Icon name="warning circle" />{" "}
-                  {oppExpired
-                    ? `This opportunity ended on ${new Date(opp.availableTo).toLocaleDateString()}. You can no longer rank it.`
-                    : `This opportunity starts on ${new Date(opp.availableFrom).toLocaleDateString()}. Ranking will unlock once it's available.`}
-                </div>
-              )}
-              <RankControls>
-                <Field>
-                  <span className="label-text">Rank</span>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="e.g. 1"
-                    value={r.rank ?? ""}
-                    onChange={(e) =>
-                      updateRanking(opp.id, "rank", e.target.value)
-                    }
-                    disabled={!rankingEnabled}
-                  />
-                </Field>
-                <Field>
-                  <span className="label-text">Stars (1-5)</span>
-                  <input
-                    type="number"
-                    min="1"
-                    max="5"
-                    value={r.starRating ?? ""}
-                    onChange={(e) =>
-                      updateRanking(opp.id, "starRating", e.target.value)
-                    }
-                    disabled={!rankingEnabled}
-                  />
-                </Field>
-                <Field>
-                  <span className="label-text">Comment (private)</span>
-                  <input
-                    type="text"
-                    value={r.comment || ""}
-                    onChange={(e) =>
-                      updateRanking(opp.id, "comment", e.target.value)
-                    }
-                    disabled={!rankingEnabled}
-                  />
-                </Field>
-              </RankControls>
+            </>
+          )}
 
-              {oppApprovedQuestions.length > 0 && (
-                <div
-                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
-                >
-                  <strong
-                    className="MH-Type-Title-Small"
-                    style={{ color: "#171717" }}
-                  >
-                    Questions for this opportunity
-                  </strong>
-                  {oppApprovedQuestions
-                    .sort((a, b) => (a.order || 0) - (b.order || 0))
-                    .map((q) => (
-                      <Field key={q.id}>
-                        <span className="label-text">
-                          {q.prompt}
-                          {q.isRequired && " *"}
-                        </span>
-                        {q.helperText && (
-                          <span className="hint">{q.helperText}</span>
-                        )}
-                        <QuestionInput
-                          question={q}
-                          value={(oppAnswers[opp.id] || {})[q.id]}
-                          onChange={(v) => updateOppAnswer(opp.id, q.id, v)}
-                        />
-                      </Field>
-                    ))}
-                </div>
+          {currentStep === 2 && (
+            <>
+              <h2>
+                {t("opportunities.studentView.rankForm.rankHeading", {}, {
+                  default: "Rank your favorites",
+                })}
+              </h2>
+              <p className="helper">
+                {t("opportunities.studentView.rankForm.rankHelper", {}, {
+                  default:
+                    "Drag to set your order (1 = top choice). Rate each opportunity and add a private note for your teacher.",
+                })}
+              </p>
+              {opportunities.length === 0 && (
+                <p className="helper">
+                  {roundOpportunities.length > 0
+                    ? `${t(
+                        "opportunities.studentView.rankForm.emptyFavoritesTitle",
+                        {},
+                        { default: "No favorited opportunities yet" },
+                      )} ${t(
+                        "opportunities.studentView.rankForm.emptyFavoritesHint",
+                        {},
+                        {
+                          default:
+                            "Go back and tap the star on the opportunities you want to rank.",
+                        },
+                      )}`
+                    : t(
+                        "opportunities.studentView.rankForm.noOpportunities",
+                        {},
+                        {
+                          default:
+                            "No opportunities have been added to this round yet.",
+                        },
+                      )}
+                </p>
               )}
+              {opportunities.length > 0 ? (
+                <FavoriteRankList
+                  opportunities={opportunities}
+                  rankings={rankings}
+                  onRankingsChange={updateRankings}
+                  rankingEnabled={isOpen}
+                  syncKey={`${existingPreference?.id || "new"}:${opportunities.map((o) => o.id).join(",")}`}
+                  now={now}
+                />
+              ) : null}
+            </>
+          )}
 
-              {canPickTeammates && (
-                <Field>
-                  <span className="label-text">Preferred teammates</span>
-                  <span className="hint">
-                    Search any student in this round&apos;s class network — not
-                    just your own class — and pick the people you&apos;d like
-                    to be teamed up with on this opportunity. Order matters: the
-                    first person is your top choice. Mutual nominations (both
-                    of you pick each other) are the strongest signal.
-                  </span>
-                  <Dropdown
-                    placeholder="Search students"
-                    fluid
-                    multiple
-                    selection
-                    search
-                    options={networkStudents.map((s) => ({
-                      key: s.id,
-                      text:
-                        `${s.firstName || ""} ${s.lastName || ""}`.trim() ||
-                        s.username,
-                      value: s.id,
-                    }))}
-                    value={teammates[opp.id] || []}
-                    onChange={(_, { value }) =>
-                      setTeammates((prev) => ({ ...prev, [opp.id]: value }))
-                    }
-                    disabled={!rankingEnabled}
-                  />
-                </Field>
-              )}
-            </OpportunityRow>
-          );
-        })}
-      </Card>
-
-      <Card>
-        <h2>Additional notes</h2>
-        <Field>
-          <span className="hint">
-            Anything else you want the teacher to know.
-          </span>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            disabled={!isOpen}
-          />
-        </Field>
+          {currentStep === 3 && (
+            <>
+              <h2>
+                {t("opportunities.studentView.rankForm.reviewHeading", {}, {
+                  default: "Review and submit",
+                })}
+              </h2>
+              <PreferenceSubmissionReview
+                students={networkStudents}
+                classmateOrder={classmateOrder}
+                opportunities={opportunities}
+                rankings={rankings}
+                notes={notes}
+                onNotesChange={setNotes}
+                isOpen={isOpen}
+              />
+            </>
+          )}
+        </PreferenceSubmissionStepper>
       </Card>
       </RankPageBody>
     </RankPageShell>

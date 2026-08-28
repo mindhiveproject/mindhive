@@ -20,50 +20,10 @@
 // bonus so the matcher tends to keep mutual pairs together on team projects.
 // -----------------------------------------------------------------------------
 
-function rankBonus(rank, totalOpps) {
-  if (rank == null) return 0;
-  return Math.max(0, totalOpps - rank + 1);
-}
-
-export function computeScore(item, totalOpps) {
-  const ranks = rankBonus(item.rank, totalOpps) * 10;
-  const stars = (item.starRating || 0) * 2;
-  return ranks + stars;
-}
-
-// Build a Map<studentId, Set<studentId>> of MUTUAL team-preference pairs for
-// each opportunity. A pair counts only if both students nominated each other
-// for the same opportunity.
-function buildMutualTeamPrefMap(teamPreferences) {
-  // key: `${opportunityId}::${studentId}` → Set of preferredTeammateIds
-  const directed = new Map();
-  (teamPreferences || []).forEach((tp) => {
-    const oppId = tp.opportunity?.id;
-    const a = tp.submitter?.id;
-    const b = tp.preferredTeammate?.id;
-    if (!oppId || !a || !b) return;
-    const key = `${oppId}::${a}`;
-    if (!directed.has(key)) directed.set(key, new Set());
-    directed.get(key).add(b);
-  });
-
-  // Now keep only mutual entries
-  // mutual: opportunityId → Map<studentId, Set<studentId>>
-  const mutual = new Map();
-  directed.forEach((targets, key) => {
-    const [oppId, a] = key.split("::");
-    targets.forEach((b) => {
-      const reverse = directed.get(`${oppId}::${b}`);
-      if (reverse?.has(a)) {
-        if (!mutual.has(oppId)) mutual.set(oppId, new Map());
-        const oppMap = mutual.get(oppId);
-        if (!oppMap.has(a)) oppMap.set(a, new Set());
-        oppMap.get(a).add(b);
-      }
-    });
-  });
-  return mutual;
-}
+import {
+  buildMutualTeamPrefMap,
+  computeScore,
+} from "../../../../lib/connectBallotUtils";
 
 // Returns a score bonus for student S being placed in opportunity O given the
 // set of students CURRENTLY placed in O. The bonus rewards mutual team prefs
@@ -266,3 +226,5 @@ export function runMatching(round, { includeDrafts = false } = {}) {
 
   return { matches: result.matches, unmatchedStudents };
 }
+
+export { computeScore } from "../../../../lib/connectBallotUtils";
