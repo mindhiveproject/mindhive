@@ -61,12 +61,32 @@
 		"seedSuccess_plural": "Sembrado {{count}} hitos: {{keys}}.",
 		"yes": "Sí"
 	},
+	"chat": {
+		"addGroupChat": "",
+		"addPosting": "",
+		"myGroupChats": "",
+		"reply": "",
+		"save": "",
+		"saving": "",
+		"update": ""
+	},
+	"consentAdmin": {
+		"addConsentForm": "",
+		"customize": "",
+		"edit": ""
+	},
 	"develop": {
 		"headerDescription": "Todos los estudios, tareas o encuestas que hayas <0>desarrollado o en los que estés colaborando</0>.",
 		"headerTitle": "Desarrollar"
 	},
+	"lessons": {
+		"addLesson": "",
+		"save": ""
+	},
 	"management": {
-		"milestonesTab": "Hitos"
+		"addClassNetwork": "",
+		"milestonesTab": "Hitos",
+		"save": ""
 	},
 	"update": "Actualizar"
 }

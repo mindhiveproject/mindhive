@@ -365,9 +365,13 @@
 				"sharedWithCount": "Gedeeld: {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "Bereken een nieuwe variabele",
+				"copy": "",
 				"copyExisting": "Kopieer bestaande variabele",
+				"recode": "",
 				"recodeVariable": "Een variabele hercoderen",
+				"reverse": "",
 				"reverseScore": "Omgekeerde score"
 			},
 			"readOnlyToolbarHint": "Open dit logboek vanuit een werkruimte om deze dataset te bewerken of te kopiëren.",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "Voeg dataset toe",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "Kopie opslaan",
 				"message": "Er wordt een nieuwe dataset van u aangemaakt met uw wijzigingen, die aan dit tijdschrift wordt gekoppeld. U kunt kiezen of medewerkers de kopie mogen bewerken."
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "Hoe deze dataset is gemaakt.",
 			"renameDisabledNotOwner": "Alleen de maker van deze dataset kan deze hernoemen.",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "Klassennetwerk",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "Onderdeel",
 			"addComponentAria": "Voeg een component toe aan deze werkruimte.",
 			"addJournal": "Logboek",
+			"addJournalAria": "",
 			"addJournalScratch": "Maak een dagboek helemaal zelf.",
 			"addJournalTemplate": "Voeg een dagboeksjabloon toe",
 			"addWorkspace": "Werkruimte toevoegen",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "Werkruimte",
 			"addWorkspaceError": "Fout bij het toevoegen van de werkruimte",
 			"addWorkspaceLoading": "Toevoegen...",
@@ -1137,6 +1146,10 @@
 			"working": "Werk in uitvoering"
 		}
 	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
+	},
 	"dataUsage": {
 		"and": "En",
 		"educationLabel": "Ja, maar alleen voor educatieve en gemeenschapsprogramma's.",
@@ -1301,8 +1314,30 @@
 	},
 	"inner": {
 		"addSection": "Sectie toevoegen",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
+		"cancel": "",
+		"deleteItems": "",
+		"deleteItemsConfirmBody": "",
+		"deleteItemsConfirmCardsOnlyNote": "",
+		"deleteItemsConfirmMilestonesCustom": "",
+		"deleteItemsConfirmMilestonesCustomHeading": "",
+		"deleteItemsConfirmMilestonesDefault": "",
+		"deleteItemsConfirmMilestonesDefaultHeading": "",
+		"deleteItemsConfirmMixedBody": "",
+		"deleteItemsConfirmReviewStepsHeading": "",
+		"deleteItemsConfirmSectionsBody": "",
+		"deleteItemsConfirmTitle": "",
+		"deleteItemsDeleting": "",
+		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "Nieuwe sectie",
-		"sectionTitlePlaceholder": "Voer sectietitel in"
+		"save": "",
+		"sectionTitlePlaceholder": "Voer sectietitel in",
+		"selectItem": "",
+		"selectSection": ""
 	},
 	"interests": "Interesses",
 	"introductionVideo": "Introductievideo",
@@ -1409,12 +1444,16 @@
 		"nameYourStudy": "Geef je onderzoek een naam.",
 		"noTemplatesSubtitle": "Om een ​​project te starten, heb je een projectbordsjabloon nodig. Het is mogelijk dat je docent geen projectbordsjabloon aan deze les heeft gekoppeld.",
 		"noTemplatesTitle": "Er zijn geen projectbordsjablonen in de klas",
+		"publicTemplateWarningBody": "",
+		"publicTemplateWarningTitle": "",
 		"selectClass": "Selecteer de klas",
 		"selectTemplate": "Selecteer Sjabloon",
 		"selectTemplateAlert": "Kies het voorstelsjabloon.",
 		"selectTemplateHelp": "Kies een sjabloon voor een projectbord dat je docent beschikbaar heeft gesteld om te kopiëren.",
+		"selectTemplateHelpPublic": "",
 		"templateClassLabel": "Klasse: {{className}}",
 		"templateOptionLabel": "{{templateName}} — {{className}}",
+		"templatePublicLabel": "",
 		"untitledProject": "Ongetiteld project",
 		"untitledStudy": "Naamloze studie"
 	},
@@ -1508,6 +1547,10 @@
 	},
 	"participate": "Deelnemen",
 	"participateAsGuest": "Deelnemen als gast",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "Log eerst in!",
 	"preview": {
 		"description": "Beschrijving",
@@ -1539,6 +1582,8 @@
 		"selectExistingStudy": "Selecteer bestaande studie",
 		"selectStudyFirst": "Selecteer eerst de studie",
 		"study": "Studie:",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "Typ DELETE om uw project te verwijderen",
 		"typeDeleteToConfirm": "Typ \"DELETE\" om te bevestigen"
 	},
@@ -1563,6 +1608,7 @@
 		"delete": "Verwijderen",
 		"editingClassProjectTemplateSubtitle": "Bepaal hoe je de wijzigingen van dit projectbord wilt doorvoeren in de kopieën van je leerlingen.",
 		"editingClassProjectTemplateTitle": "Sjabloon voor een bewerkingsproject",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "Vouw de sjabloonsectie uit of in.",
 		"makeTemplate": "Maak van dit projectbord een openbaar sjabloon",
 		"name": "Voorstelnaam",
@@ -1659,6 +1705,10 @@
 		"linkToProposal": "Link naar voorstel",
 		"selectCard": "Selecteer kaart"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "Hulpbron",
 	"resources": "Bronnen",
 	"resourcesCards": {
@@ -1750,7 +1800,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "Feedback",
-		"instruction": "Zodra u uw voorstel of onderzoek indient, verschijnen uw beoordelingen hier."
+		"instruction": "Zodra u uw voorstel of onderzoek indient, verschijnen uw beoordelingen hier.",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "Hoe",
@@ -1902,6 +1961,11 @@
 	"section": {
 		"addCard": "Kaart toevoegen",
 		"addCardBtn": "[ Klik om een ​​kaart toe te voegen ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "kaart",
 		"cards": "kaarten",
 		"cardsCount": "{{count}} kaart{{count == 1 ? '' : 's'}}",
@@ -1988,6 +2052,7 @@
 			}
 		},
 		"deleteSectionConfirm": "Weet u zeker dat u deze voorstelsectie wilt verwijderen? Alle kaarten in deze sectie worden ook verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
+		"editTitle": "",
 		"enterNewTitle": "Voer een titel in",
 		"newCard": "Nieuwe kaart",
 		"newCardPlaceholder": "Voer een nieuwe kaarttitel in",
@@ -2308,6 +2373,7 @@
 	"tiptap": {
 		"insertImageAria": "Afbeelding invoegen",
 		"insertImagePrompt": "Voer de URL van de afbeelding in:",
+		"linkPrompt": "",
 		"mediaCancelEdit": "Annuleren",
 		"mediaCanvaExportThumb": "Canva PDF-export",
 		"mediaDelete": "Verwijderen",
@@ -2348,7 +2414,33 @@
 		"mediaUploading": "Uploaden...",
 		"mediaUploadNew": "Nieuwe afbeelding uploaden",
 		"pasteImageNoMediaScope": "Het is hier niet mogelijk om afbeeldingen te plakken. Gebruik de afbeeldingsknop en voer een afbeeldings-URL in.",
-		"pasteImageUploadFailed": "Het uploaden van de afbeelding is mislukt. Controleer uw internetverbinding en probeer het opnieuw."
+		"pasteImageUploadFailed": "Het uploaden van de afbeelding is mislukt. Controleer uw internetverbinding en probeer het opnieuw.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "Studie Builder",
 	"titleText": "Titel",

@@ -10,12 +10,8 @@ import {
   UPDATE_MILESTONE,
   DELETE_MILESTONE,
 } from "../../../Mutations/Milestone";
-import {
-  EditorPanelShell,
-  FieldRow,
-  PrimaryButton,
-  SecondaryButton,
-} from "../Forms/EditorPanelStyles";
+import { EditorPanelShell, FieldRow } from "../Forms/EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const Shell = styled.div`
   display: flex;
@@ -36,8 +32,8 @@ const TopBar = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 22px;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -49,7 +45,8 @@ const TopBar = styled.div`
 
   .flash {
     color: #1d6b3a;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -60,16 +57,17 @@ const ReadOnlyGrid = styled.div`
   margin-top: 8px;
 
   div {
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #5f6871;
   }
 
   strong {
     display: block;
     color: #171717;
-    font-size: 12px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
     margin-bottom: 4px;
   }
 `;
@@ -221,13 +219,15 @@ export default function EditorPage({ milestoneId }) {
               {t("adminMilestones.saved", {}, { default: "Changes saved." })}
             </span>
           ) : null}
-          <SecondaryButton
+          <Button
+            variant="outline"
             type="button"
             onClick={() => router.push("/dashboard/admin-milestones")}
           >
             {t("adminMilestones.backToList", {}, { default: "← Back to list" })}
-          </SecondaryButton>
-          <SecondaryButton
+          </Button>
+          <Button
+            variant="outline"
             type="button"
             onClick={handleDelete}
             disabled={deleting || saving}
@@ -236,12 +236,12 @@ export default function EditorPage({ milestoneId }) {
             {deleting
               ? t("adminMilestones.deleting", {}, { default: "Deleting…" })
               : t("adminMilestones.delete", {}, { default: "Delete milestone" })}
-          </SecondaryButton>
-          <PrimaryButton type="submit" form="milestone-editor" disabled={saving}>
+          </Button>
+          <Button variant="filled" type="submit" form="milestone-editor" disabled={saving}>
             {saving
               ? t("adminMilestones.saving", {}, { default: "Saving…" })
               : t("adminMilestones.save", {}, { default: "Save changes" })}
-          </PrimaryButton>
+          </Button>
         </div>
       </TopBar>
 

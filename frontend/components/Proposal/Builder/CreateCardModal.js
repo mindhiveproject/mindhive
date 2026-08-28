@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
+import MessageCard from "../../DesignSystem/MessageCard";
 import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPreview";
 import TeacherFormWizard from "../../Forms/TeacherFormWizard";
 import { isClassTemplateBoard } from "../../Utils/proposalBoard";
@@ -52,7 +53,6 @@ const modalStyle = {
   borderRadius: 16,
   boxShadow: "0 16px 48px rgba(0, 0, 0, 0.18)",
   padding: 32,
-  fontFamily: "Inter, sans-serif",
 };
 
 const newActionCardChipStyle = {
@@ -66,9 +66,8 @@ const inputStyle = {
   border: "1px solid #A1A1A1",
   borderRadius: 8,
   padding: "12px 16px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 16,
-  lineHeight: "24px",
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   color: "#171717",
 };
 
@@ -76,9 +75,8 @@ const labelStyle = {
   display: "grid",
   gap: 8,
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 600,
+  font: 'var(--MH-Type-Title-Small)',
+  letterSpacing: 0,
 };
 
 const chipRowStyle = {
@@ -92,8 +90,8 @@ const previewShellStyle = {
   borderRadius: 12,
   background: "#F7F9F8",
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   padding: 16,
   maxHeight: 260,
   overflowY: "auto",
@@ -102,9 +100,8 @@ const previewShellStyle = {
 const helperTextStyle = {
   margin: 0,
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 400,
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
 };
 
 function StepSection({ label, children }) {
@@ -113,41 +110,6 @@ function StepSection({ label, children }) {
       <div style={{ ...labelStyle, marginBottom: 0 }}>{label}</div>
       {children}
     </div>
-  );
-}
-
-function CardTypeStep({ cardCategory, onSelect, t }) {
-  return (
-    <StepSection
-      label={t(
-        "section.createCardModal.steps.cardType",
-        {},
-        { default: "Card type" }
-      )}
-    >
-      <div style={chipRowStyle}>
-        <Chip
-          shape="square"
-          label={t(
-            "section.createCardModal.categories.proposal",
-            {},
-            { default: "Proposal card" }
-          )}
-          selected={cardCategory === CARD_CATEGORY_PROPOSAL}
-          onClick={() => onSelect(CARD_CATEGORY_PROPOSAL)}
-        />
-        <Chip
-          shape="square"
-          label={t(
-            "section.createCardModal.categories.action",
-            {},
-            { default: "Milestone" }
-          )}
-          selected={cardCategory === CARD_CATEGORY_ACTION}
-          onClick={() => onSelect(CARD_CATEGORY_ACTION)}
-        />
-      </div>
-    </StepSection>
   );
 }
 
@@ -170,7 +132,6 @@ function CheckpointStep({
         {checkpointOptions.map((option) => (
           <Chip
             key={option.value}
-            shape="square"
             label={option.label}
             selected={checkpointChoice === option.value}
             disabled={option.disabled}
@@ -190,7 +151,6 @@ function CheckpointStep({
         ))}
         {canCreateNew ? (
           <Chip
-            shape="square"
             label={t(
               "section.createCardModal.newCheckpoint",
               {},
@@ -390,14 +350,12 @@ function PermissionsAndTemplateStep({
               {formTemplateOptions.map((option) => (
                 <Chip
                   key={option.value}
-                  shape="square"
                   label={option.label}
                   selected={selectedTemplateKey === option.value}
                   onClick={() => onTemplateSelect(option.value)}
                 />
               ))}
               <Chip
-                shape="square"
                 label={t(
                   "section.createCardModal.formTemplate.blank",
                   {},
@@ -410,7 +368,6 @@ function PermissionsAndTemplateStep({
           ) : (
             <div style={chipRowStyle}>
               <Chip
-                shape="square"
                 label={t(
                   "section.createCardModal.formTemplate.defaultLabel",
                   { label: resolvedTemplateLabel },
@@ -477,10 +434,27 @@ export default function CreateCardModal({
 
   const curriculumType = getCurriculumType(board);
   const canCreateNew = isClassTemplateBoard(board);
-  const isNewCheckpoint = checkpointChoice === NEW_CHECKPOINT_VALUE;
-  const isDefaultCheckpoint = isDefaultActionCardType(checkpointChoice);
+  const resolvedCardCategory = cardCategory || initialCardCategory;
+
+  const checkpointOptions = useMemo(
+    () => getDefaultCheckpointOptions({ t, sections }),
+    [sections, t]
+  );
+
+  const allDefaultMilestonesAdded =
+    checkpointOptions.length > 0 &&
+    checkpointOptions.every((option) => option.disabled);
+  const forceCustomMilestone =
+    canCreateNew &&
+    resolvedCardCategory === CARD_CATEGORY_ACTION &&
+    allDefaultMilestonesAdded;
+  const resolvedCheckpointChoice = forceCustomMilestone
+    ? NEW_CHECKPOINT_VALUE
+    : checkpointChoice;
+  const isNewCheckpoint = resolvedCheckpointChoice === NEW_CHECKPOINT_VALUE;
+  const isDefaultCheckpoint = isDefaultActionCardType(resolvedCheckpointChoice);
   const selectedMilestone = isDefaultCheckpoint
-    ? getMilestoneForCardType(checkpointChoice, milestones)
+    ? getMilestoneForCardType(resolvedCheckpointChoice, milestones)
     : null;
   const templatePreviewMilestone =
     isNewCheckpoint &&
@@ -489,23 +463,10 @@ export default function CreateCardModal({
       ? getMilestoneForCardType(selectedTemplateKey, milestones)
       : null;
 
-  const checkpointOptions = useMemo(
-    () => getDefaultCheckpointOptions({ t, sections }),
-    [sections, t]
-  );
-
   const formTemplateOptions = useMemo(
     () => getDefaultFormTemplateOptions({ t }),
     [t]
   );
-
-  const resetDownstreamFromCategory = () => {
-    setCheckpointChoice("");
-    setTitle("");
-    setDescription("");
-    setSelectedPermissions(DEFAULT_PERMISSIONS);
-    setSelectedTemplateKey("");
-  };
 
   const resetDownstreamFromCheckpoint = () => {
     setTitle("");
@@ -540,7 +501,7 @@ export default function CreateCardModal({
     if (names.length > 0) {
       setSelectedPermissions(names);
     }
-  }, [checkpointChoice, isDefaultCheckpoint, selectedMilestone]);
+  }, [resolvedCheckpointChoice, isDefaultCheckpoint, selectedMilestone]);
 
   useEffect(() => {
     if (!isNewCheckpoint) return;
@@ -550,6 +511,11 @@ export default function CreateCardModal({
     }
   }, [isNewCheckpoint, selectedTemplateKey]);
 
+  const createCardCategoryNoun =
+    resolvedCardCategory === CARD_CATEGORY_ACTION
+      ? t("section.createCardModal.action", {}, { default: "milestone" })
+      : t("section.createCardModal.proposal", {}, { default: "card" });
+
   if (!open || typeof document === "undefined") return null;
 
   const trimmedTitle = title.trim();
@@ -557,22 +523,16 @@ export default function CreateCardModal({
     creating ||
     !sectionId ||
     milestonesLoading ||
-    !cardCategory ||
-    (cardCategory === CARD_CATEGORY_PROPOSAL && !trimmedTitle) ||
-    (cardCategory === CARD_CATEGORY_ACTION &&
-      (!checkpointChoice ||
+    !resolvedCardCategory ||
+    (resolvedCardCategory === CARD_CATEGORY_PROPOSAL && !trimmedTitle) ||
+    (resolvedCardCategory === CARD_CATEGORY_ACTION &&
+      (!resolvedCheckpointChoice ||
         (isDefaultCheckpoint &&
           (!selectedMilestone?.id ||
-            checkpointOptions.find((o) => o.value === checkpointChoice)
+            checkpointOptions.find((o) => o.value === resolvedCheckpointChoice)
               ?.disabled)) ||
         (isNewCheckpoint &&
           (!trimmedTitle || selectedPermissions.length === 0))));
-
-  const handleCardCategorySelect = (category) => {
-    if (category === cardCategory) return;
-    setCardCategory(category);
-    resetDownstreamFromCategory();
-  };
 
   const handleCheckpointSelect = (choice) => {
     if (choice === checkpointChoice) return;
@@ -588,7 +548,7 @@ export default function CreateCardModal({
     e.preventDefault();
     if (createDisabled) return;
 
-    if (cardCategory === CARD_CATEGORY_PROPOSAL) {
+    if (resolvedCardCategory === CARD_CATEGORY_PROPOSAL) {
       await onCreateCard({
         sectionId,
         title: trimmedTitle,
@@ -628,8 +588,8 @@ export default function CreateCardModal({
 
     await onCreateCard({
       sectionId,
-      title: selectedMilestone?.title || checkpointChoice,
-      type: checkpointChoice,
+      title: selectedMilestone?.title || resolvedCheckpointChoice,
+      type: resolvedCheckpointChoice,
       milestoneId: selectedMilestone?.id || null,
     });
   };
@@ -669,26 +629,34 @@ export default function CreateCardModal({
         <h2
           style={{
             margin: "0 0 24px",
-            fontFamily: "Inter, sans-serif",
-            fontSize: 32,
-            lineHeight: "40px",
-            fontWeight: 800,
+            font: 'var(--MH-Type-Heading-Base)',
+            letterSpacing: 0,
             color: "#000",
           }}
         >
-          {t("section.createCardModal.title", {}, { default: "Create a new card" })}
+          {t(
+            "section.createCardModal.title",
+            { cardCategory: createCardCategoryNoun },
+            { default: "Create a new {{cardCategory}}" }
+          )}
         </h2>
 
         <div style={{ display: "grid", gap: 20 }}>
-          {!initialCardCategory ? (
-            <CardTypeStep
-              cardCategory={cardCategory}
-              onSelect={handleCardCategorySelect}
-              t={t}
+          {forceCustomMilestone ? (
+            <MessageCard
+              variant="information"
+              message={t(
+                "section.createCardModal.allDefaultsAddedNotice",
+                {},
+                {
+                  default:
+                    "All default MindHive milestones are already on this board. You're creating a custom milestone.",
+                }
+              )}
             />
           ) : null}
 
-          {cardCategory === CARD_CATEGORY_PROPOSAL ? (
+          {resolvedCardCategory === CARD_CATEGORY_PROPOSAL ? (
             <label style={labelStyle}>
               {t(
                 "section.createCardModal.titleLabel",
@@ -710,7 +678,7 @@ export default function CreateCardModal({
             </label>
           ) : null}
 
-          {cardCategory === CARD_CATEGORY_ACTION ? (
+          {resolvedCardCategory === CARD_CATEGORY_ACTION && !forceCustomMilestone ? (
             <CheckpointStep
               checkpointChoice={checkpointChoice}
               checkpointOptions={checkpointOptions}
@@ -720,10 +688,10 @@ export default function CreateCardModal({
             />
           ) : null}
 
-          {cardCategory === CARD_CATEGORY_ACTION ? (
+          {resolvedCardCategory === CARD_CATEGORY_ACTION ? (
             <MilestonePreviewStep
               board={board}
-              checkpointChoice={checkpointChoice}
+              checkpointChoice={resolvedCheckpointChoice}
               description={description}
               isNewCheckpoint={isNewCheckpoint}
               milestone={selectedMilestone}
@@ -734,10 +702,10 @@ export default function CreateCardModal({
             />
           ) : null}
 
-          {cardCategory === CARD_CATEGORY_ACTION ? (
+          {resolvedCardCategory === CARD_CATEGORY_ACTION ? (
             <PermissionsAndTemplateStep
               board={board}
-              checkpointChoice={checkpointChoice}
+              checkpointChoice={resolvedCheckpointChoice}
               formTemplateOptions={formTemplateOptions}
               isNewCheckpoint={isNewCheckpoint}
               milestone={selectedMilestone}
@@ -759,7 +727,7 @@ export default function CreateCardModal({
         >
           <Button
             type="button"
-            variant="outline"
+            variant="subtle"
             disabled={creating}
             onClick={onClose}
           >

@@ -61,12 +61,32 @@
 		"seedSuccess_plural": "Заданные этапы {{count}} : {{keys}}.",
 		"yes": "Да"
 	},
+	"chat": {
+		"addGroupChat": "",
+		"addPosting": "",
+		"myGroupChats": "",
+		"reply": "",
+		"save": "",
+		"saving": "",
+		"update": ""
+	},
+	"consentAdmin": {
+		"addConsentForm": "",
+		"customize": "",
+		"edit": ""
+	},
 	"develop": {
 		"headerDescription": "Все исследования, задачи или опросы, которые вы <0>разработали или в которых участвуете</0>.",
 		"headerTitle": "Развивать"
 	},
+	"lessons": {
+		"addLesson": "",
+		"save": ""
+	},
 	"management": {
-		"milestonesTab": "Вехи"
+		"addClassNetwork": "",
+		"milestonesTab": "Вехи",
+		"save": ""
 	},
 	"update": "Обновлять"
 }

@@ -13,6 +13,7 @@ import { UPDATE_USER_STUDY_INFO } from "../../../Mutations/User";
 
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { GET_GUEST } from "../../../Queries/Guest";
+import Button from "../../../DesignSystem/Button";
 
 export default function Prompt({
   user,
@@ -125,7 +126,13 @@ export default function Prompt({
               setDataUse={setDataUse}
             />
           )}
-          <button onClick={() => closeDataUseQuestion()}>{t('prompt.next')}</button>
+          <Button
+            variant="filled"
+            style={{ width: "100%" }}
+            onClick={() => closeDataUseQuestion()}
+          >
+            {t("prompt.next", {}, { default: "Next" })}
+          </Button>
         </div>
       </div>
     );
@@ -135,11 +142,13 @@ export default function Prompt({
     <div className="prompt">
       <div className="buttonsHolder">
         {nextStep && (
-          <button
+          <Button
+            variant="filled"
+            style={{ width: "100%" }}
             onClick={() => saveResponsesAndProceed({ proceedToNextTask: true })}
           >
-            {t('prompt.proceedNextTask')}
-          </button>
+            {t("prompt.proceedNextTask", {}, { default: "Proceed to the next task" })}
+          </Button>
         )}
       </div>
 

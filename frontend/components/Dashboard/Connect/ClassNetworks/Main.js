@@ -40,18 +40,16 @@ const Header = styled.div`
   h1 {
     margin: 0;
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
   }
 
   p {
     max-width: 680px;
     margin: 0;
     color: #5f6871;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -75,10 +73,8 @@ const Card = styled.article`
   h3 {
     margin: 0;
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 24px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
   }
 
   p {
@@ -86,9 +82,8 @@ const Card = styled.article`
     margin: 0;
     overflow: hidden;
     color: #5f6871;
-    font-family: "Inter", sans-serif;
-    font-size: 13px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
   }
@@ -101,9 +96,8 @@ const Card = styled.article`
     padding-top: 8px;
     border-top: 1px solid #eef1f2;
     color: #625b71;
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
-    line-height: 18px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
   }
 
   .actions {
@@ -119,9 +113,8 @@ const Empty = styled.div`
   border-radius: 16px;
   background: #ffffff;
   color: #5f6871;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  line-height: 22px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   text-align: center;
 `;
 
@@ -130,9 +123,8 @@ const Status = styled.div`
   border-radius: 16px;
   background: #ffffff;
   color: #5f6871;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  line-height: 22px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 const Section = styled.section`
@@ -143,10 +135,8 @@ const Section = styled.section`
   h2 {
     margin: 0;
     color: #171717;
-    font-family: "Inter", sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 28px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
   }
 `;
 

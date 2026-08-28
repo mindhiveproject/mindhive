@@ -26,6 +26,7 @@ import {
   ClassNetworkInviteErrorBanner,
 } from "./ClassNetworkInviteBanner";
 import { backendOrigin } from "../../config";
+import Button from "../DesignSystem/Button";
 
 const backendBase = backendOrigin;
 
@@ -364,7 +365,13 @@ export default function Login({
         <ClassNetworkInviteErrorBanner message={inviteError} />
       ) : null}
       {inviteErrorKind === "wrongRole" && classNetworkId ? (
-        <p style={{ marginBottom: 16, fontSize: 14 }}>
+        <p
+          style={{
+            marginBottom: 16,
+            font: 'var(--MH-Type-Body-Base)',
+            letterSpacing: 0,
+          }}
+        >
           <Link href={`/signup/sponsor?classNetwork=${classNetworkShareRef}`}>
             {t(
               "auth.classNetworkInvite.signUpAsSponsor",
@@ -415,14 +422,16 @@ export default function Login({
               />
             </label>
 
-            <button
+            <Button
               type="submit"
+              variant="filled"
+              style={{ width: "100%" }}
               disabled={
                 loading || isClassNetworkInvalid || isTokenInviteInvalid
               }
             >
-              {t("auth.login")}
-            </button>
+              {t("auth.login", {}, { default: "Login" })}
+            </Button>
           </fieldset>
 
           <LoginWithGoogle

@@ -15,10 +15,7 @@ import {
   BACKFILL_LINK_ACTION_CARDS_TO_MILESTONES,
   BACKFILL_MILESTONE_STATUS,
 } from "../../../Mutations/Milestone";
-import {
-  PrimaryButton,
-  SecondaryButton,
-} from "../Forms/EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 // Lowercase to match the unified naming convention (see
 // keystone/mutations/seedData/milestoneSeed.ts).
@@ -40,16 +37,16 @@ const Shell = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
   p.intro {
     margin: 0;
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     max-width: 720px;
   }
 `;
@@ -66,22 +63,21 @@ const GridShell = styled.div`
   }
 
   .ag-theme-quartz .milestone-key {
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .ag-theme-quartz .milestone-form-pattern {
-    font-family: "Nunito", sans-serif;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #336f8a;
   }
 
   .ag-theme-quartz .milestone-edit-link {
     color: #336f8a;
-    font-weight: 600;
-    font-family: "Nunito", sans-serif;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     text-decoration: none;
   }
 `;
@@ -97,16 +93,16 @@ const SeedPanel = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   p {
     margin: 0;
     color: #5f6871;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .actions {
@@ -117,19 +113,22 @@ const SeedPanel = styled.div`
 
   .feedback {
     color: #1d6b3a;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .error {
     color: #871b16;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   ul {
     margin: 0;
     padding-left: 18px;
     color: #5f6871;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -143,10 +142,9 @@ const FilterBar = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-size: 12px;
     color: #5f6871;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 
   select {
@@ -154,8 +152,8 @@ const FilterBar = styled.div`
     border-radius: 100px;
     padding: 8px 16px;
     background: #ffffff;
-    font-family: "Lato", sans-serif;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #171717;
     min-width: 180px;
   }
@@ -373,9 +371,9 @@ export default function ListPage() {
         }}
       >
         <h1>{t("adminMilestones.pageTitle", {}, { default: "Milestones" })}</h1>
-        <PrimaryButton type="button" onClick={() => setNewOpen((v) => !v)}>
+        <Button variant="filled" type="button" onClick={() => setNewOpen((v) => !v)}>
           {newOpen ? "Close form" : "+ New milestone"}
-        </PrimaryButton>
+        </Button>
       </div>
 
       <NewMilestoneForm open={newOpen} onClose={() => setNewOpen(false)} />
@@ -412,7 +410,7 @@ export default function ListPage() {
             ))}
           </ul>
           <div className="actions">
-            <PrimaryButton
+            <Button variant="filled"
               type="button"
               onClick={handleSeedMissing}
               disabled={seeding}
@@ -431,7 +429,7 @@ export default function ListPage() {
                           : "Seed {{count}} missing milestones",
                     }
                   )}
-            </PrimaryButton>
+            </Button>
             {seedError ? (
               <span className="error">
                 {seedError.message?.replace(/^Error: /, "") || String(seedError)}
@@ -458,9 +456,9 @@ export default function ListPage() {
             )}
           </p>
           <div className="actions">
-            <SecondaryButton type="button" onClick={() => resetSeed()}>
+            <Button variant="outline" type="button" onClick={() => resetSeed()}>
               {t("adminMilestones.dismiss", {}, { default: "Dismiss" })}
-            </SecondaryButton>
+            </Button>
           </div>
         </SeedPanel>
       ) : null}
@@ -480,7 +478,7 @@ export default function ListPage() {
           )}
         </p>
         <div className="actions">
-          <SecondaryButton
+          <Button variant="outline"
             type="button"
             onClick={handleBackfillLinks}
             disabled={backfillingLinks || backfillingStatus}
@@ -488,8 +486,8 @@ export default function ListPage() {
             {backfillingLinks
               ? t("adminMilestones.backfilling", {}, { default: "Running…" })
               : t("adminMilestones.backfillLinksButton", {}, { default: "Link action cards" })}
-          </SecondaryButton>
-          <SecondaryButton
+          </Button>
+          <Button variant="outline"
             type="button"
             onClick={handleBackfillStatus}
             disabled={backfillingLinks || backfillingStatus}
@@ -497,7 +495,7 @@ export default function ListPage() {
             {backfillingStatus
               ? t("adminMilestones.backfilling", {}, { default: "Running…" })
               : t("adminMilestones.backfillStatusButton", {}, { default: "Backfill milestone status" })}
-          </SecondaryButton>
+          </Button>
         </div>
         {backfillLinksCount != null ? (
           <p className="feedback">
@@ -561,9 +559,9 @@ export default function ListPage() {
           </select>
         </label>
         {scopeFilter && (
-          <SecondaryButton type="button" onClick={() => setScopeFilter("")}>
+          <Button variant="outline" type="button" onClick={() => setScopeFilter("")}>
             {t("adminMilestones.clearFilters", {}, { default: "Clear filters" })}
-          </SecondaryButton>
+          </Button>
         )}
       </FilterBar>
 

@@ -2,7 +2,7 @@ import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import Chip from "../../../DesignSystem/Chip";
-import InfoTooltip from "../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../DesignSystem/InfoPopover";
 import { resolveOpportunityListStepper } from "../../../../lib/opportunityListStepper";
 import {
   OPPORTUNITY_LIST_OPENABLE_STEP_KEYS,
@@ -100,7 +100,7 @@ function visibilityTooltipContent(networks, t) {
 
   return (
     <div>
-      <div style={{ fontWeight: 600, marginBottom: 8 }}>
+      <div className="MH-Type-Label-Base" style={{ marginBottom: 8 }}>
         {t("myOpportunitiesList.visibility.modalTitle", {}, {
           default: "Visible in class networks",
         })}
@@ -122,12 +122,14 @@ function StepChip({ step, label, onClick, openLabel }) {
   return (
     <Chip
       label={label}
+      variant="static"
       selected={visual === "action" || visual === "waiting"}
       disabled={visual === "pending" && !clickable}
       onClick={clickable ? onClick : undefined}
       ariaLabel={clickable && openLabel ? openLabel : undefined}
       title={clickable ? openLabel : undefined}
       style={style}
+      
     />
   );
 }
@@ -194,15 +196,14 @@ export default function OpportunityListStepper({
               </Connector>
             )}
             {step.isVisibility ? (
-              <InfoTooltip
+              <InfoPopover
                 content={visibilityTooltipContent(networks, t)}
-                position="bottomLeft"
-                portal
-                wrapperStyle={{ maxWidth: "100%" }}
-                tooltipStyle={{ maxWidth: "min(320px, 90vw)" }}
+                ariaLabel={t("myOpportunitiesList.visibility.modalTitle", {}, {
+                  default: "Visible in class networks",
+                })}
               >
                 {chip}
-              </InfoTooltip>
+              </InfoPopover>
             ) : (
               chip
             )}

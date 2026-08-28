@@ -2,12 +2,8 @@ import React, { Component } from "react";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
-import {
-  NavStyles,
-  NavRightContainer,
-  NavButton,
-  NavButtonSecondary,
-} from "../styles/StyledNavigation";
+import { NavStyles, NavRightContainer } from "../styles/StyledNavigation";
+import Button from "../DesignSystem/Button";
 
 const Nav = ({ user }) => {
   const { t } = useTranslation("common");
@@ -16,15 +12,21 @@ const Nav = ({ user }) => {
       <NavRightContainer>
         {user ? (
           <Link href="/dashboard">
-            <NavButton>{t("navigation.dashboard")}</NavButton>
+            <Button variant="outline">
+              {t("navigation.dashboard", {}, { default: "Dashboard" })}
+            </Button>
           </Link>
         ) : (
           <div className="menuLinks">
             <Link href="/login">
-              <NavButton>{t("navigation.login")}</NavButton>
+              <Button variant="outline">
+                {t("navigation.login", {}, { default: "Log in" })}
+              </Button>
             </Link>
             <Link href="/signup">
-              <NavButtonSecondary>{t("navigation.signup")}</NavButtonSecondary>
+              <Button variant="filled">
+                {t("navigation.signup", {}, { default: "Sign up" })}
+              </Button>
             </Link>
           </div>
         )}

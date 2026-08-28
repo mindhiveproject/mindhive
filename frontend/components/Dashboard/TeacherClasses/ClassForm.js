@@ -94,7 +94,9 @@ export default function ClassForm({
             </div>
 
             <div className="submitButton">
-              <Button type="submit">{submitBtnName}</Button>
+              <Button type="submit" style={{ width: "100%" }}>
+                {submitBtnName}
+              </Button>
             </div>
           </div>
         </fieldset>

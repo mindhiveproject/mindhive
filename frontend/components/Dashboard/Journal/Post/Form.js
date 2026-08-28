@@ -1,6 +1,7 @@
 import JoditEditorPro from "../../../Jodit/EditorPro";
 import StyledNote from "../../../styles/StyledNote";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../../DesignSystem/Button";
 
 export default function CreatePost({
   journal,
@@ -28,7 +29,9 @@ export default function CreatePost({
         />
       </label>
       <JoditEditorPro content={content} setContent={setContent} />
-      <button onClick={handleSave}>{t("save")}</button>
+      <Button variant="filled" onClick={handleSave}>
+        {t("assignments.save", {}, { default: "Save" })}
+      </Button>
     </StyledNote>
   );
 }

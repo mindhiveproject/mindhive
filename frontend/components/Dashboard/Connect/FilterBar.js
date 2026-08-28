@@ -17,8 +17,8 @@ const FilterBar = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
     outline: none;
     transition: border-color 0.15s ease;
@@ -50,10 +50,9 @@ const FilterBar = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
-    line-height: 1.2;
     display: inline-flex;
     align-items: center;
     box-shadow: none;
@@ -81,9 +80,9 @@ const FilterBar = styled.div`
 
     /* The visible label area */
     > .text {
-      font-size: 14px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       color: #171717;
-      line-height: 1.2;
       margin: 0;
       padding: 0;
       max-width: calc(100% - 16px);
@@ -136,9 +135,8 @@ const FilterBar = styled.div`
       border: none;
       background: transparent;
       box-shadow: none;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
-      line-height: 1.2;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       color: #171717;
       outline: none;
       border-radius: 12px;
@@ -161,8 +159,8 @@ const FilterBar = styled.div`
       min-width: 100%;
 
       > .item {
-        font-family: "Inter", sans-serif;
-        font-size: 14px;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
         padding: 10px 14px !important;
         border-top: none;
       }

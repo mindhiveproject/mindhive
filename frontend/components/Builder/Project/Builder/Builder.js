@@ -201,7 +201,7 @@ export default function Builder({
           <Button
             id="commentButton"
             type="button"
-            variant="primary"
+            variant="filled"
             style={{ backgroundColor: "#5D5763" }}
             onClick={lockedAddFunctions.addComment}
             disabled={isCanvasLocked}

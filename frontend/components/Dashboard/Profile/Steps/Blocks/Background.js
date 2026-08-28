@@ -9,7 +9,7 @@ import { UPDATE_PROFILE } from "../../../../Mutations/User";
 import { resolveProfileType } from "../../../../../lib/profileEditNavigation";
 
 import { StyledInput } from "../../../../styles/StyledForm";
-import { StyledSaveButton } from "../../../../styles/StyledProfile";
+import Button from "../../../../DesignSystem/Button";
 
 export default function Background({ query, user, onDirtyChange }) {
   const { t } = useTranslation("connect");
@@ -238,11 +238,14 @@ export default function Background({ query, user, onDirtyChange }) {
           </div>
         )}
 
-        <StyledSaveButton changed={changed}>
-          <button onClick={handleSubmit} disabled={!changed}>
-            {t("background.saveChanges")}
-          </button>
-        </StyledSaveButton>
+        <Button
+          variant="filled"
+          type="button"
+          onClick={handleSubmit}
+          disabled={!changed}
+        >
+          {t("background.saveChanges")}
+        </Button>
       </StyledInput>
     </div>
   );

@@ -61,12 +61,32 @@
 		"seedSuccess_plural": "已播种 {{count}} 个里程碑： {{keys}}。",
 		"yes": "是的"
 	},
+	"chat": {
+		"addGroupChat": "",
+		"addPosting": "",
+		"myGroupChats": "",
+		"reply": "",
+		"save": "",
+		"saving": "",
+		"update": ""
+	},
+	"consentAdmin": {
+		"addConsentForm": "",
+		"customize": "",
+		"edit": ""
+	},
 	"develop": {
 		"headerDescription": "您<0>已开展或正在合作开展</0>的所有研究、任务或调查。",
 		"headerTitle": "发展"
 	},
+	"lessons": {
+		"addLesson": "",
+		"save": ""
+	},
 	"management": {
-		"milestonesTab": "里程碑"
+		"addClassNetwork": "",
+		"milestonesTab": "里程碑",
+		"save": ""
 	},
 	"update": "更新"
 }

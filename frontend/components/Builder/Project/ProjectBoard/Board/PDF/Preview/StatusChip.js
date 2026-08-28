@@ -134,12 +134,8 @@ export default function StatusChip({
           }}
         />
         <span
+          className="MH-Type-Label-Base"
           style={{
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 600,
-            fontSize: "14px",
-            lineHeight: "20px",
-            letterSpacing: "0.15px",
             color: currentStatusStyles.color,
           }}
         >
@@ -185,6 +181,7 @@ export default function StatusChip({
               <div
                 key={option.key}
                 onClick={() => handleSelect(option.value)}
+                className="MH-Type-Label-Base"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -192,11 +189,6 @@ export default function StatusChip({
                   padding: "6px 8px",
                   backgroundColor: isSelected ? optionStyles.backgroundColor : "transparent",
                   color: optionStyles.color,
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 600,
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  letterSpacing: "0.15px",
                   cursor: "pointer",
                   transition: "background-color 0.2s",
                 }}

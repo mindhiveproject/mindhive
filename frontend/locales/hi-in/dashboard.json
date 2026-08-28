@@ -61,12 +61,32 @@
 		"seedSuccess_plural": "सीडेड {{count}} मील के पत्थर: {{keys}}.",
 		"yes": "हाँ"
 	},
+	"chat": {
+		"addGroupChat": "",
+		"addPosting": "",
+		"myGroupChats": "",
+		"reply": "",
+		"save": "",
+		"saving": "",
+		"update": ""
+	},
+	"consentAdmin": {
+		"addConsentForm": "",
+		"customize": "",
+		"edit": ""
+	},
 	"develop": {
 		"headerDescription": "सभी अध्ययन, कार्य या सर्वेक्षण जिन्हें आपने <0>विकसित किया है या जिन पर आप सहयोग कर रहे हैं</0>।",
 		"headerTitle": "विकास करना"
 	},
+	"lessons": {
+		"addLesson": "",
+		"save": ""
+	},
 	"management": {
-		"milestonesTab": "मील के पत्थर"
+		"addClassNetwork": "",
+		"milestonesTab": "मील के पत्थर",
+		"save": ""
 	},
 	"update": "अद्यतन"
 }

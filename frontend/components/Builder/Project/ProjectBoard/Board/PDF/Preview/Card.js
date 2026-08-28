@@ -11,7 +11,7 @@ import { UPDATE_CARD_EDIT, UPDATE_CARD_CONTENT } from "../../../../../../Mutatio
 import { GET_CARD_CONTENT, PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { getRegularCardVariant } from "../../../../../../Utils/cardVariants";
 import StatusChip from "./StatusChip";
-import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../../../../DesignSystem/InfoPopover";
 
 export default function Card({ card, cardId, user, submitStatuses = {}, proposalId, onUnsavedChange }) {
   const { t } = useTranslation("builder");
@@ -343,23 +343,15 @@ useEffect(() => {
             }}
           >
             <div
+              className="MH-Type-Title-Base"
               style={{
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 600,
-                fontSize: "16px",
-                lineHeight: "24px",
-                letterSpacing: "0.15px",
                 color: "#000000",
               }}
             >
               {card?.section?.title && (
                 <span
+                  className="MH-Type-Body-Base"
                   style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 400,
-                    fontSize: "12px",
-                    lineHeight: "16px",
-                    letterSpacing: "0.1px",
                     color: "#626262",
                     marginBottom: "2px",
                     display: "block",
@@ -403,9 +395,10 @@ useEffect(() => {
           {card.isLocked ? (
             <>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
-                <h2 style={{ margin: 0 }}>{t("mainCard.originalSubmission", "Original Submission")}</h2>
-                <InfoTooltip
+                <h2 className="MH-Type-Title-Base" style={{ margin: 0 }}>{t("mainCard.originalSubmission", "Original Submission")}</h2>
+                <InfoPopover
                   content={t("mainCard.originalSubmissionTooltip", "This is the content you originaly submitted to the Feedback Center. We copied it bellow for you to make edits and conserved a 'Revised content'.")}
+                  ariaLabel={t("mainCard.originalSubmission", "Original Submission")}
                 />
               </div>
               <Accordion styled={card.isLocked ? false : true} fluid style={{ border: "none" }}>
@@ -422,7 +415,7 @@ useEffect(() => {
               </Accordion>
               {card.settings?.includeInReport && (
                 <div style={{ marginTop: "24px" }}>
-                  <h2>{t("mainCard.revisedContent", "Revised Content")}</h2>
+                  <h2 className="MH-Type-Title-Base" style={{ margin: 0 }}>{t("mainCard.revisedContent", "Revised Content")}</h2>
                   {/* <h2>{t("mainCard.newSubmission", "New Submission")}</h2> */}
                   {isUsedLoggedIn ? (
                       <TipTapEditor

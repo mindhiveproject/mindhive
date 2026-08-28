@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import { QuestionMarkIcon } from "../../../../DesignSystem/Icons";
 import MessageCard from "../../../../DesignSystem/MessageCard";
 import Modal from "../../../../DesignSystem/Modal";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../../Queries/Opportunity";
@@ -14,14 +15,18 @@ import { GET_CONNECT_ROUND, NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../../
 import { FORM_DEFINITION_BY_ID } from "../../../../Queries/FormDefinition";
 import { MARK_OPPORTUNITY_REVIEW_NOTES_READ } from "../../../../Mutations/OpportunityReviewNote";
 import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap";
-import { hydrateProposalInputs } from "../../../Connect/Opportunities/OpportunityProposalConfig";
-import ReturnOpportunityModal from "../../../Connect/ReturnOpportunityModal";
+import { hydrateProposalInputs } from "../../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import OpportunityReviewNotesThread from "../../../Connect/OpportunityReviewNotesThread";
+import OpportunityClassForum from "../../../Connect/OpportunityClassForum";
+import { UPDATE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
 import OpportunityFollowUpFormPanel from "../../../SponsorConnect/Opportunities/OpportunityFollowUpFormPanel";
 import DefinitionForm from "../../../../Forms/DefinitionForm";
 import ReviewCard from "../../../../Forms/DefinitionForm/ReviewCard";
 import ReviewField from "../../../../Forms/DefinitionForm/ReviewField";
-import { isReturnableOpportunityStatus } from "../../../Connect/returnOpportunityUtils";
+import {
+  isReturnableOpportunityStatus,
+  returnOpportunityToSponsor,
+} from "../../../Connect/returnOpportunityUtils";
 import ConnectProfileCard from "../../../Connect/ConnectProfileCard";
 import { CARD_WIDTH } from "../../../Connect/ConnectBrowseLayout";
 import OrganizationConnectCard from "../../../Connect/Organizations/OrganizationConnectCard";
@@ -47,7 +52,7 @@ import {
  * - Review with unread should open this modal and open the Messages panel
  *   (e.g. initialChatOpen), without marking notes read until Messages opens.
  * - Revisit dual selection paths (grid checkbox vs modal Select/Remove).
- * - Clarify or replace the opaque `!` InfoTooltip vs Review.
+ * - Clarify or replace the opaque `!` InfoPopover vs Review.
  */
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
@@ -123,8 +128,8 @@ const FieldsGrid = styled.div`
 
 const FormStatusText = styled.p`
   margin: 0;
-  font-size: 13px;
-  line-height: 1.4;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
@@ -194,10 +199,8 @@ const ChatPane = styled.aside`
 const ChatPaneTitle = styled.h3`
   margin: 0;
   flex-shrink: 0;
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.3;
+  font: var(--MH-Type-Title-Small);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
 
@@ -240,10 +243,8 @@ const PeoplePanel = styled.section`
 
   h4 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
@@ -301,9 +302,8 @@ const UnreadBadge = styled.span`
   border-radius: 100px;
   background: var(--MH-Theme-Secondary-Dark, #6f26ce);
   color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   text-align: center;
   box-sizing: border-box;
   pointer-events: none;
@@ -319,8 +319,8 @@ const META_ITEM_STYLE = {
 };
 
 const META_LABEL_STYLE = {
-  fontSize: 14,
-  fontWeight: 600,
+  font: 'var(--MH-Type-Label-Base)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -331,9 +331,8 @@ const META_VALUE_STYLE = {
   borderRadius: 8,
   border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
-  fontSize: 14,
-  fontWeight: 400,
-  lineHeight: 1.4,
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   minWidth: 0,
   overflowWrap: "anywhere",
@@ -349,8 +348,8 @@ const FieldItemShell = styled.div`
 `;
 
 const FIELD_LABEL_STYLE = {
-  fontSize: 14,
-  fontWeight: 600,
+  font: 'var(--MH-Type-Label-Base)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -361,9 +360,8 @@ const FIELD_VALUE_STYLE = {
   borderRadius: 8,
   border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
-  fontSize: 14,
-  fontWeight: 400,
-  lineHeight: 1.4,
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -388,16 +386,16 @@ const PROPOSAL_SECTION_STYLE = {
 
 const SECTION_TITLE_STYLE = {
   margin: 0,
-  fontSize: 16,
-  fontWeight: 700,
+  font: 'var(--MH-Type-Title-Large)',
+  letterSpacing: 0,
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
 const BODY_TEXT_STYLE = {
   margin: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-  fontSize: 14,
-  lineHeight: 1.6,
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   whiteSpace: "pre-wrap",
 };
 
@@ -622,14 +620,17 @@ export default function OpportunityPreviewModal({
   initialTab = null,
   /** Hide workflow status chip (e.g. student read-only class view). */
   hideStatus = false,
+  /** Class that owns this teacher preview (scopes the class FAQ). */
+  classId = null,
 }) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
   const router = useRouter();
   const { user } = useUser();
-  const [returnModalOpen, setReturnModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(OPPORTUNITY_PREVIEW_TABS.detail);
   const [chatOpen, setChatOpen] = useState(false);
+  const [showReturnInvite, setShowReturnInvite] = useState(false);
+  const [returnError, setReturnError] = useState(null);
   const [toggleFlash, setToggleFlash] = useState(null);
   const markedReadNoteIdsRef = useRef(new Set());
 
@@ -766,6 +767,7 @@ export default function OpportunityPreviewModal({
     followUpForms,
     // Chat is no longer a content tab; it opens as an on-demand side panel.
     showChat: false,
+    showForum: Boolean(classId),
   });
 
   const activeFollowUpForm = useMemo(() => {
@@ -777,6 +779,8 @@ export default function OpportunityPreviewModal({
   useEffect(() => {
     if (!open) {
       setChatOpen(false);
+      setShowReturnInvite(false);
+      setReturnError(null);
       setToggleFlash(null);
       return;
     }
@@ -786,6 +790,8 @@ export default function OpportunityPreviewModal({
         : initialTab || OPPORTUNITY_PREVIEW_TABS.detail;
     setActiveTab(nextTab);
     setChatOpen(false);
+    setShowReturnInvite(false);
+    setReturnError(null);
     setToggleFlash(null);
   }, [open, opportunityId, initialTab]);
 
@@ -835,6 +841,13 @@ export default function OpportunityPreviewModal({
   }, [opportunityId, activeRoundId, selectedNetworkId]);
 
   const [markNotesRead] = useMutation(MARK_OPPORTUNITY_REVIEW_NOTES_READ);
+  const [updateOpportunity, { loading: returning }] = useMutation(
+    UPDATE_OPPORTUNITY,
+    {
+      refetchQueries: returnRefetchQueries,
+      awaitRefetchQueries: true,
+    },
+  );
 
   // Mark sponsor replies read only once the teacher opens Messages (not on modal open).
   useEffect(() => {
@@ -870,9 +883,24 @@ export default function OpportunityPreviewModal({
     returnRefetchQueries,
   ]);
 
-  const handleReturnSuccess = () => {
-    setReturnModalOpen(false);
-    onClose?.();
+  const handleReturnAndWriteMessage = async () => {
+    if (!opportunityId || returning) return;
+    setReturnError(null);
+    try {
+      await returnOpportunityToSponsor({
+        updateOpportunity,
+        opportunityId,
+      });
+      setChatOpen(true);
+      setShowReturnInvite(true);
+    } catch (e) {
+      setReturnError(
+        e?.message ||
+          t("opportunities.preview.returnModal.error", {}, {
+            default: "Could not return this opportunity. Please try again.",
+          }),
+      );
+    }
   };
 
   const categoryKey = CATEGORY_LABELS[opp?.projectCategory];
@@ -1011,7 +1039,7 @@ export default function OpportunityPreviewModal({
       <TitleText>{modalTitle}</TitleText>
       <HeaderActions>
         {statusLabel && !hideStatus ? (
-          <Chip label={statusLabel} shape="square" />
+          <Chip label={statusLabel} />
         ) : null}
         {messagesToggleButton}
       </HeaderActions>
@@ -1039,6 +1067,9 @@ export default function OpportunityPreviewModal({
   });
   const peopleTabLabel = t("opportunities.preview.tabs.peopleAndOrganization", {}, {
     default: "People & Organization",
+  });
+  const forumTabLabel = t("opportunities.classForum.tab", {}, {
+    default: "Class FAQ",
   });
   const followUpFallbackLabel = tConnect(
     "opportunityEditor.tabs.followUpFallback",
@@ -1084,6 +1115,15 @@ export default function OpportunityPreviewModal({
         />
       ),
     },
+    ...(classId
+      ? [
+          {
+            key: OPPORTUNITY_PREVIEW_TABS.forum,
+            label: forumTabLabel,
+            leading: <QuestionMarkIcon width={18} height={18} />,
+          },
+        ]
+      : []),
   ];
 
   const selectPreviewTab = (tabKey) => {
@@ -1129,6 +1169,16 @@ export default function OpportunityPreviewModal({
           })}
         />
       ) : null}
+      {returnError ? (
+        <MessageCard
+          variant="warning"
+          message={returnError}
+          onClose={() => setReturnError(null)}
+          closeAriaLabel={t("opportunities.preview.flashDismiss", {}, {
+            default: "Dismiss",
+          })}
+        />
+      ) : null}
       <div
         style={{
           display: "flex",
@@ -1143,15 +1193,26 @@ export default function OpportunityPreviewModal({
           {t("opportunities.preview.close", {}, { default: "Close" })}
         </Button>
         {canReturnToSponsor ? (
-          <Button variant="outline" onClick={() => setReturnModalOpen(true)}>
-            {t("opportunities.preview.returnToSponsor", {}, {
-              default: "Return with comments",
-            })}
+          <Button
+            variant="outline"
+            onClick={handleReturnAndWriteMessage}
+            disabled={returning}
+          >
+            {returning
+              ? t("opportunities.preview.returnModal.submitting", {}, {
+                  default: "Returning…",
+                })
+              : t("opportunities.preview.returnToSponsor", {}, {
+                  default: "Return and write message",
+                })}
           </Button>
         ) : null}
         {showMatchingRoundSection ? (
           showNoRoundHint ? (
-            <span style={{ fontSize: 13, ...MUTED_TEXT_STYLE }}>
+            <span
+              className="MH-Type-Body-Base"
+              style={{ ...MUTED_TEXT_STYLE }}
+            >
               {t("opportunities.preview.matchingRound.noRoundHint", {}, {
                 default:
                   "Create a matching round above to include this opportunity.",
@@ -1239,7 +1300,6 @@ export default function OpportunityPreviewModal({
                   {mentorName ? (
                     <Chip
                       label={mentorName}
-                      shape="pill"
                       leading={chipLeadingImage(mentorAvatar, mentorName)}
                       onClick={
                         mentorProfileUrl
@@ -1265,7 +1325,6 @@ export default function OpportunityPreviewModal({
                   {orgName ? (
                     <Chip
                       label={orgName}
-                      shape="pill"
                       leading={chipLeadingImage(orgLogo, orgName)}
                       onClick={
                         orgProfileUrl
@@ -1316,7 +1375,6 @@ export default function OpportunityPreviewModal({
                     <Chip
                       key={chip.key}
                       label={chip.label}
-                      shape="square"
                       style={{
                         padding: "16px",
                       }}
@@ -1334,11 +1392,10 @@ export default function OpportunityPreviewModal({
                 <div style={{ display: "grid", gap: 24 }}>
                   {opp.shortDescription ? (
                     <p
+                      className="MH-Type-Body-Base"
                       style={{
                         margin: 0,
                         color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-                        fontSize: 15,
-                        lineHeight: 1.5,
                       }}
                     >
                       {opp.shortDescription}
@@ -1353,10 +1410,12 @@ export default function OpportunityPreviewModal({
                     <FieldsGrid>
                       {opp.requestsAppointment ? (
                         <FieldItem
-                          label={t("opportunities.preview.requestsAppointment", {}, {
-                            default: "Appointment requested",
+                          label={t("opportunities.preview.meetingRequestLabel", {}, {
+                            default: "Meeting request",
                           })}
-                          value={t("opportunities.preview.yes", {}, { default: "Yes" })}
+                          value={t("opportunities.preview.sponsorRequestedMeeting", {}, {
+                            default: "Sponsor asked to meet",
+                          })}
                           highlight
                         />
                       ) : null}
@@ -1454,7 +1513,7 @@ export default function OpportunityPreviewModal({
                     >
                       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                         {opp.classNetworks.map((network) => (
-                          <Chip key={network.id} label={network.title} shape="square" />
+                          <Chip key={network.id} label={network.title} />
                         ))}
                       </div>
                     </PreviewSection>
@@ -1759,12 +1818,12 @@ export default function OpportunityPreviewModal({
                                 flexWrap: "wrap",
                               }}
                             >
-                              <span style={{ fontWeight: 600, color: "var(--MH-Theme-Neutrals-Black, #171717)", fontSize: 13 }}>
+                              <span className="MH-Type-Label-Small" style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>
                                 {displayName(rating.rater)}
                               </span>
                               <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                                 <Stars value={rating.opportunityRating} />
-                                <span style={{ color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)", fontSize: 12 }}>
+                                <span className="MH-Type-Body-Base" style={{ color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}>
                                   {formatDate(rating.createdAt)}
                                 </span>
                               </div>
@@ -1834,6 +1893,16 @@ export default function OpportunityPreviewModal({
                 </div>
               ) : null}
 
+              {resolvedTab === OPPORTUNITY_PREVIEW_TABS.forum && classId ? (
+                <div style={{ display: "grid", gap: 16 }}>
+                  <OpportunityClassForum
+                    opportunityId={opportunityId}
+                    classId={classId}
+                    user={user}
+                  />
+                </div>
+              ) : null}
+
               {activeFollowUpForm ? (
                 <div style={{ display: "grid", gap: 16 }}>
                   {activeFormStatusLabel ? (
@@ -1874,6 +1943,10 @@ export default function OpportunityPreviewModal({
                       refetchQueries={returnRefetchQueries}
                       showTitle={false}
                       layout="panel"
+                      autoFocusCompose={showReturnInvite}
+                      showReturnInvite={showReturnInvite}
+                      requestsAppointment={Boolean(opp.requestsAppointment)}
+                      onPosted={() => setShowReturnInvite(false)}
                     />
                   </ChatThreadWrap>
                 </ChatPane>
@@ -1881,15 +1954,6 @@ export default function OpportunityPreviewModal({
             </SplitShell>
           ) : null}
       </Modal>
-      <ReturnOpportunityModal
-        open={returnModalOpen}
-        onClose={() => setReturnModalOpen(false)}
-        onSuccess={handleReturnSuccess}
-        opportunityId={opportunityId}
-        roundId={activeRoundId}
-        mentorId={opp?.mentor?.id}
-        refetchQueries={returnRefetchQueries}
-      />
     </>
   );
 }

@@ -1,6 +1,5 @@
 // Inline "+ New milestone" form for global milestones. Global scope
-// only — template milestones have their own flow inside a template
-// proposal board's builder (TemplateMilestoneManager).
+// only — template milestones are managed via action cards in the template editor.
 //
 // The wizard auto-slugifies the title into a lowercase snake_case key
 // (matching the unification convention) and defaults reviewStage,
@@ -13,12 +12,8 @@ import styled from "styled-components";
 
 import { CREATE_MILESTONE } from "../../../Mutations/Milestone";
 import { ADMIN_MILESTONES } from "../../../Queries/Milestone";
-import {
-  FieldRow,
-  PrimaryButton,
-  SecondaryButton,
-  PillCheckbox,
-} from "../Forms/EditorPanelStyles";
+import { FieldRow, PillCheckbox } from "../Forms/EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const Shell = styled.div`
   display: ${({ $open }) => ($open ? "flex" : "none")};
@@ -39,8 +34,8 @@ const Header = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 `;
@@ -56,8 +51,12 @@ const KeyPreview = styled.div`
   border-radius: 8px;
   background: #f7f9f8;
   border: 1px dashed #d3dae0;
+  /* Monospace kept deliberately: renders the literal milestone/review
+     keys, code-like identifiers rather than prose. */
   font-family: "Nunito", monospace;
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
   color: #171717;
 
   strong {
@@ -207,9 +206,9 @@ export default function NewMilestoneForm({ open, onClose }) {
     <Shell $open={open}>
       <Header>
         <h2>New milestone</h2>
-        <SecondaryButton type="button" onClick={onClose}>
+        <Button variant="outline" type="button" onClick={onClose}>
           Cancel
-        </SecondaryButton>
+        </Button>
       </Header>
 
       <Grid>
@@ -362,17 +361,20 @@ export default function NewMilestoneForm({ open, onClose }) {
       </KeyPreview>
 
       {error ? (
-        <div style={{ color: "#871b16", fontSize: 13 }}>{error}</div>
+        <div className="MH-Type-Body-Base" style={{ color: "#871b16" }}>
+          {error}
+        </div>
       ) : null}
 
       <div>
-        <PrimaryButton
+        <Button
+          variant="filled"
           type="button"
           onClick={handleCreate}
           disabled={loading || !title.trim()}
         >
           {loading ? "Creating…" : "Create milestone"}
-        </PrimaryButton>
+        </Button>
       </div>
     </Shell>
   );

@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import IconButton from "../../../../DesignSystem/IconButton";
 
 import { useDataJournal } from "../Context/DataJournalContext";
 import { useDeleteWorkspace } from "../Helpers/DeleteWorkspace";
@@ -32,7 +33,6 @@ export default function WorkspaceNavigation({
     setSelectedWorkspace,
     activeComponent,
     setActiveComponent,
-    setIsAddComponentPanelOpen,
     setSidebarVisible,
     setPendingCanvasFocusComponentId,
   } = useDataJournal();
@@ -122,9 +122,16 @@ export default function WorkspaceNavigation({
               ariaLabel={t("dataJournal.sideNav.workspaceMore", {}, {
                 default: "Workspace options",
               })}
-              trigger={
-                <img src="/assets/dataviz/three-dots.svg" alt="" width={18} height={18} />
-              }
+              renderTrigger={({ onClick, open, ariaLabel }) => (
+                <IconButton
+                  variant="text"
+                  icon={<img src="/assets/dataviz/three-dots.svg" />}
+                  ariaLabel={ariaLabel}
+                  aria-expanded={open}
+                  aria-haspopup="menu"
+                  onClick={onClick}
+                />
+              )}
               items={menuItems}
             />
           </div>
@@ -152,7 +159,6 @@ export default function WorkspaceNavigation({
                     onClick={(e) => {
                       e.stopPropagation();
                       if (!component?.id) return;
-                      setIsAddComponentPanelOpen(false);
                       setActiveComponent(component);
                       setSidebarVisible(true);
                       setPendingCanvasFocusComponentId(component.id);
@@ -211,11 +217,9 @@ export default function WorkspaceNavigation({
                 </StyledModalHeader>
                 <StyledModalBody>
                   <p
+                    className="MH-Type-Body-Base"
                     style={{
                       margin: 0,
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: 14,
-                      lineHeight: 1.5,
                       color: "#333",
                     }}
                   >
@@ -227,11 +231,10 @@ export default function WorkspaceNavigation({
                   {deleteError ? (
                     <p
                       role="alert"
+                      className="MH-Type-Body-Base"
                       style={{
                         marginTop: 12,
                         marginBottom: 0,
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: 13,
                         color: "#c62828",
                       }}
                     >
@@ -252,6 +255,7 @@ export default function WorkspaceNavigation({
                   </StyledModalButton>
                   <StyledModalButton
                     type="button"
+                    className="MH-Type-Label-Base"
                     disabled={deleting}
                     style={{
                       marginLeft: 8,
@@ -259,8 +263,6 @@ export default function WorkspaceNavigation({
                       border: "none",
                       borderRadius: 6,
                       cursor: deleting ? "not-allowed" : "pointer",
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: 14,
                       background: "#c62828",
                       color: "#fff",
                     }}

@@ -21,16 +21,16 @@ const Shell = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
   p.intro {
     margin: 0;
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     max-width: 720px;
   }
 `;
@@ -54,14 +54,15 @@ const RoundCard = styled.section`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 20px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .round-meta {
     color: #5f6871;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     margin-top: 4px;
   }
 
@@ -71,10 +72,9 @@ const RoundCard = styled.section`
     border-radius: 100px;
     background: #eef5f9;
     color: #336f8a;
-    font-size: 11px;
-    font-weight: 700;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
   }
 `;
 
@@ -85,12 +85,10 @@ const StatusGroup = styled.div`
 
   h3 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
-    font-weight: 700;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: #5f6871;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
   }
 `;
 
@@ -118,16 +116,15 @@ const OppCard = styled.button`
   }
 
   .opp-title {
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
-    font-size: 14px;
-    line-height: 1.3;
   }
 
   .opp-short {
     color: #5f6871;
-    font-size: 13px;
-    line-height: 1.4;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -136,7 +133,8 @@ const OppCard = styled.button`
 
   .opp-meta {
     color: #888;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     margin-top: auto;
   }
 `;
@@ -262,7 +260,10 @@ function ReviewQueueInner() {
             </header>
 
             {totalOpps === 0 ? (
-              <p style={{ color: "#5f6871", fontSize: 13, margin: 0 }}>
+              <p
+                className="MH-Type-Body-Base"
+                style={{ color: "#5f6871", margin: 0 }}
+              >
                 No opportunities in this round yet.
               </p>
             ) : null}

@@ -1,5 +1,10 @@
 // Returns merged global + template-scoped milestones for a proposal board.
 import slugify from "slugify";
+import {
+  canMutateClassTemplateBoard,
+  isClassTemplateBoardAccess,
+  CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
+} from "../access";
 
 function getTemplateBoardId(board: any): string | null {
   if (!board) return null;
@@ -77,7 +82,12 @@ async function resolveMilestonesForBoard(
 
 export default resolveMilestonesForBoard;
 
-export async function assertTemplateBoardTeacher(
+/**
+ * Gate for create/update/delete of template milestones and board-scoped review
+ * forms. Admins pass; everyone else must be class staff or a board collaborator
+ * on a non-platform class template board.
+ */
+export async function assertCanMutateClassTemplateBoard(
   context: any,
   templateBoardId: string
 ) {
@@ -97,19 +107,32 @@ export async function assertTemplateBoardTeacher(
 
   const board = await context.query.ProposalBoard.findOne({
     where: { id: templateBoardId },
-    query: "id templateForClasses { id creator { id } } templatesForClass { id creator { id } }",
+    query: CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
   });
   if (!board) {
     throw new Error("Template board not found.");
   }
-
-  const isCreator = [
-    ...(board.templateForClasses || []),
-    ...(board.templatesForClass || []),
-  ].some((c: any) => c?.creator?.id === session.itemId);
-  if (!isCreator) {
-    throw new Error("Forbidden: you must be the class creator for this template.");
+  if (board.isTemplate) {
+    throw new Error(
+      "Forbidden: platform template boards cannot be edited this way."
+    );
   }
+  if (!isClassTemplateBoardAccess(board)) {
+    throw new Error("Forbidden: this board is not a class template.");
+  }
+  if (!canMutateClassTemplateBoard(session.itemId, board)) {
+    throw new Error(
+      "Forbidden: you must be the class creator, a class mentor, or a board collaborator for this template."
+    );
+  }
+}
+
+/** @deprecated Prefer assertCanMutateClassTemplateBoard */
+export async function assertTemplateBoardTeacher(
+  context: any,
+  templateBoardId: string
+) {
+  return assertCanMutateClassTemplateBoard(context, templateBoardId);
 }
 
 export function slugifyMilestoneKey(title: string, fallback: string) {

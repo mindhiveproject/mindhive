@@ -9,7 +9,6 @@ const COMPACT_BUTTON_STYLE = {
   paddingBottom: 0,
   paddingLeft: 12,
   paddingRight: 16,
-  fontWeight: 500,
 };
 
 export function ManageProjectCell(props) {

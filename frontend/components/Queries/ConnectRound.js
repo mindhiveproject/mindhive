@@ -216,6 +216,7 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
       coverImageUrl
       coverImage {
         url
+        extension
       }
       mentor {
         id
@@ -230,6 +231,7 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
       createdAt
       updatedAt
       proposalData
+      videoUrl
       videoFile {
         url
         filename
@@ -264,10 +266,13 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
           status
           openAt
           closeAt
+          settings
           opportunities {
             id
             title
             shortDescription
+            projectCategory
+            projectCategoryOther
             timeCommitment
             availableFrom
             availableTo
@@ -286,7 +291,31 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
             organization {
               id
               name
+              logo {
+                url
+              }
             }
+          }
+        }
+      }
+    }
+    authenticatedItem {
+      ... on Profile {
+        id
+        connectPreferences(
+          where: {
+            round: {
+              classNetwork: {
+                classes: { some: { code: { equals: $code } } }
+              }
+            }
+          }
+        ) {
+          id
+          status
+          submittedAt
+          round {
+            id
           }
         }
       }

@@ -1,9 +1,10 @@
 import { useQuery } from "@apollo/client";
-import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
+import Tooltip from "../../../../../../DesignSystem/Tooltip";
 import StatusChip from "../../PDF/Preview/StatusChip";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
+import Button from "../../../../../../DesignSystem/Button";
 
 export default function Navigation({
   proposalId,
@@ -40,19 +41,16 @@ export default function Navigation({
           </div>
         </div>
       </div>
-      <InfoTooltip
+      <Tooltip
         content={study?.title || t("header.myProjectBoard", "My Project Board")}
+        side="bottom"
         delayMs={650}
-        wrapperStyle={{ width: "100%", minWidth: 0 }}
-        tooltipStyle={{
-          width: "400px",
-          background: "#F7F9F8",
-        }}
+        maxWidth={400}
       >
         <div className="middle">
           <span className="studyTitle">{study?.title}</span>
         </div>
-      </InfoTooltip>
+      </Tooltip>
       <div className="right">
         <StatusChip
           value={inputs?.settings?.status}
@@ -65,14 +63,14 @@ export default function Navigation({
         /> */}
 
         {cardId && (
-          <button
+          <Button
+            variant="filled"
             onClick={async () => {
               await saveBtnFunction({ shoudBeSaved: true });
             }}
-            className={`saveButton ${hasContentChanged ? "on" : "off"}`}
           >
             {t("cardNavigation.save", "Save")}
-          </button>
+          </Button>
         )}
       </div>
     </div>

@@ -13,56 +13,35 @@ const loading = keyframes`
 export const StyledAuth = styled.div`
   display: grid;
   text-align: initial;
-  font-size: 1.5rem;
-  line-height: 1.5;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large);
+  letter-spacing: 0;
   label {
     display: block;
     font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
   input,
   textarea,
   select {
-    font-family: Lato;
     margin-bottom: 1rem;
     height: 48px;
     border: 1px solid #cccccc;
     border-radius: 4px;
     width: 100%;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     padding: 12px;
     &:focus {
       outline: 0;
       border-color: ${(props) => props.theme.red};
     }
   }
-  button,
-  input[type="submit"] {
-    font-family: Lato;
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-    width: 100%;
-    background: #007c70;
-    color: white;
-    padding: 1.5rem 0.5rem;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 100%;
-    border: 2px solid #007c70;
-    border-radius: 4px;
-    cursor: pointer;
-  }
   span {
-    font-size: 18px;
-    line-height: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #795548;
     font-style: normal;
-    font-weight: normal;
     a {
       color: #007c70;
       border-bottom: 1px solid #64c9e2;
@@ -85,12 +64,9 @@ export const StyledAuth = styled.div`
     }
   }
   .helpMessage {
-    font-family: Lato;
-    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 16px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
   }
   .enterCodeScreen {
@@ -106,12 +82,9 @@ export const StyledAuth = styled.div`
     background: #fff3cd;
     border-radius: 4px;
     padding: 19px 24px 19px 24px;
-    font-family: Roboto;
-    font-size: 24px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Body-Large);
+    letter-spacing: 0;
     text-align: center;
     color: #1a1a1a;
     margin-top: 20px;
@@ -121,16 +94,9 @@ export const StyledAuth = styled.div`
     display: grid;
     grid-template-columns: 220px 220px;
     grid-gap: 15px;
-  }
-  .primaryBtn {
-    background: #007c70;
-    color: #ffffff;
-    max-width: 220px;
-  }
-  .secondaryBtn {
-    background: #ffffff;
-    color: #007c70;
-    max-width: 220px;
+    justify-content: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
   }
   .signupOptions {
     margin-top: 35px;
@@ -150,11 +116,9 @@ export const StyledAuth = styled.div`
     margin-top: 40px;
     padding-top: 20px;
     border-top: 2px solid #f2f2f2;
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666666;
   }
   .loginHereLine {

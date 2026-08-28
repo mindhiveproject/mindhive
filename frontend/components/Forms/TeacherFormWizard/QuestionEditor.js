@@ -68,7 +68,7 @@ export const TYPE_KEYS = [
     labelKey: "opportunities.matchingRound.formWizard.types.mediaList",
     labelDefault: "Media",
     hintKey: "opportunities.matchingRound.formWizard.types.mediaListHint",
-    hintDefault: "Sponsors upload or pick multiple images/PDFs",
+    hintDefault: "Sponsors upload or pick multiple images, PDFs, documents, and ZIP files",
   },
 ];
 
@@ -326,8 +326,7 @@ export default function QuestionEditor({
               <div>
                 <Chip
                   type="button"
-                  shape="square"
-                  style={{fontWeight:"400", fontSize:"12px", border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
+                  style={{font: 'var(--MH-Type-Body-Base)', letterSpacing: 0, border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
                   leading={<p>–</p>}
                   onClick={() => {
                     onChange({ ...question, helperText: "" });
@@ -347,8 +346,7 @@ export default function QuestionEditor({
             <div>
               <Chip
                 type="button"
-                shape="square"
-                style={{fontWeight:"400", fontSize:"12px", border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
+                style={{font: 'var(--MH-Type-Body-Base)', letterSpacing: 0, border:"2px solid var(--MH-Theme-Neutrals-Light,#d3dae0)"}}
                 leading={<p>+</p>}
                 onClick={() => setHelperEditorOpen(true)}
                 label={t(
@@ -368,7 +366,7 @@ export default function QuestionEditor({
                   {},
                   {
                     default:
-                      "Sponsors upload an MP4 or WebM (max 500MB). This updates the opportunity’s intro video — no storage settings to configure.",
+                      "Sponsors upload an MP4 or WebM (max 100MB). This updates the opportunity’s intro video — no storage settings to configure.",
                   },
                 )}
               </span>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-// Shared base: 40px height, 8px vertical padding, 24px horizontal, pill radius, Inter Semi Bold 14/20
+// Shared base: 40px height, 8px vertical padding, 24px horizontal, pill radius, MH-Type/label/base (Inter Medium 14/20)
 const BASE_STYLE = {
   display: "inline-flex",
   alignItems: "center",
@@ -17,10 +17,6 @@ const BASE_STYLE = {
   paddingLeft: "24px",
   paddingRight: "24px",
   borderRadius: "100px",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: "14px",
-  lineHeight: "20px",
   boxSizing: "border-box",
   border: "none",
   cursor: "pointer",
@@ -32,30 +28,26 @@ const WITH_LEADING_ICON = {
   paddingLeft: "16px",
 };
 
-// The colour families a button can be painted in. `primary` is the platform
-// default; `accent` is the hue the mockups give the Parameters area, so a
-// parameter's own actions read as one group set apart from the chrome round it.
-// Only the three variants that carry a brand colour vary by tone — tonal and
-// subtle are neutral surfaces and stay the same in both.
-const TONES = {
-  primary: {
-    fill: "var(--MH-Theme-Primary-Dark, #336F8A)",
-    fillPressed: "var(--MH-Theme-Primary-Base, #69BBC4)",
-    edge: "var(--MH-Theme-Primary-Dark, #336F8A)",
-    edgePressed: "var(--MH-Theme-Primary-Light, #DEF8FB)",
-    label: "var(--MH-Theme-Primary-Base, #337C84)",
-  },
-  accent: {
-    fill: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
-    fillPressed: "var(--MH-Theme-Additional-Accent-Dark, #3F288F)",
-    edge: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
-    edgePressed: "var(--MH-Theme-Additional-Accent-Light, #F5F2FF)",
-    label: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
-  },
+// With trailing icon: right padding 16px, mirroring WITH_LEADING_ICON.
+const WITH_TRAILING_ICON = {
+  paddingRight: "16px",
 };
 
 // --- Filled
-const FILLED_HOVER = { boxShadow: "var(--MH-Theme-Elevation-High, 2px 2px 12px rgba(0,0,0,0.15))" };
+const FILLED_BASE = {
+  ...BASE_STYLE,
+  background: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+};
+// Figma hover: resting fill + a 20% Primary Light state layer, plus Elevation Medium.
+const FILLED_HOVER = {
+  background:
+    "linear-gradient(0deg, rgba(222, 248, 251, 0.2), rgba(222, 248, 251, 0.2)), var(--MH-Theme-Primary-Dark, #336F8A)",
+  boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0,0,0,0.1))",
+};
+// Figma pressed — a mid calypso, softer than Primary Base so the drop from the
+// hover tint doesn't read as harsh without a Material-style fill animation.
+const FILLED_PRESSED = { background: "#559BBB" };
 const FILLED_DISABLED = {
   background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
@@ -72,14 +64,15 @@ const OUTLINE_DISABLED = {
   cursor: "default",
 };
 
-// --- Tonal
+// --- Tonal (calypso: Primary Light container behind a Primary Dark label — Figma node 1049-3662)
 const TONAL_BASE = {
   ...BASE_STYLE,
-  background: "var(--MH-Theme-Accent-Medium, #F9D978)",
-  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+  background: "var(--MH-Theme-Primary-Light, #DEF8FB)",
+  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
 };
-const TONAL_HOVER = { boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0,0,0,0.1))" };
-const TONAL_PRESSED = { background: "var(--MH-Theme-Accent-Light, #FDF2D0)" };
+// Figma literal — one step deeper than Primary Light, short of Primary Medium.
+const TONAL_HOVER = { background: "#C0EAEF" };
+const TONAL_PRESSED = { background: "var(--MH-Theme-Primary-Medium, #A3D6DB)" };
 const TONAL_DISABLED = {
   background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
@@ -105,10 +98,17 @@ const SUBTLE_DISABLED = {
 };
 
 // --- Text
-const TEXT_HOVER = { background: "#F3F3F3" };
-const TEXT_PRESSED = { background: "#E6E6E6" };
+// Figma draws the label at Primary Base (#69BBC4); that lands ~2:1 on white, so
+// the DS keeps the accessible Primary Dark instead. Backgrounds match Figma.
+const TEXT_BASE = {
+  ...BASE_STYLE,
+  background: "transparent",
+  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
+};
+const TEXT_HOVER = { background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)" };
+const TEXT_PRESSED = { background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)" };
 const TEXT_DISABLED = {
-  color: "#A1A1A1",
+  color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
   background: "transparent",
   cursor: "default",
 };
@@ -159,12 +159,13 @@ const FOCUS_VISIBLE_STYLE = `
   outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
   outline-offset: 2px;
 }
-.DesignSystem-Button-LeadingIcon svg {
+.DesignSystem-Button-LeadingIcon svg,
+.DesignSystem-Button-TrailingIcon svg {
   fill: currentColor;
 }
 `;
 
-const LEADING_ICON_WRAPPER_STYLE = {
+const ICON_WRAPPER_STYLE = {
   flexShrink: 0,
   display: "flex",
   alignItems: "center",
@@ -187,6 +188,7 @@ const LEADING_ICON_WRAPPER_STYLE = {
  *   subtle are neutral surfaces and ignore it.
  * @param {React.ReactNode} children - Button label (required).
  * @param {React.ReactNode} [leadingIcon] - Optional 24px icon left of label.
+ * @param {React.ReactNode} [trailingIcon] - Optional 24px icon right of label (e.g. a dropdown caret).
  * @param {boolean} [disabled=false] - Disabled state.
  * @param {"button"|"submit"|"reset"} [type="button"] - Native button type.
  * @param {(e: React.MouseEvent<HTMLButtonElement>) => void} [onClick] - Click handler.
@@ -206,6 +208,7 @@ export default function Button({
   tone = "primary",
   children,
   leadingIcon = null,
+  trailingIcon = null,
   disabled = false,
   type = "button",
   onClick,
@@ -233,6 +236,10 @@ export default function Button({
     buttonStyle = { ...buttonStyle, ...WITH_LEADING_ICON };
   }
 
+  if (trailingIcon != null) {
+    buttonStyle = { ...buttonStyle, ...WITH_TRAILING_ICON };
+  }
+
   buttonStyle = { ...buttonStyle, ...style };
 
   return (
@@ -240,7 +247,11 @@ export default function Button({
       <style dangerouslySetInnerHTML={{ __html: FOCUS_VISIBLE_STYLE }} />
       <button
         type={type}
-        className={className ? `DesignSystem-Button ${className}` : "DesignSystem-Button"}
+        className={
+          className
+            ? `DesignSystem-Button MH-Type-Label-Base ${className}`
+            : "DesignSystem-Button MH-Type-Label-Base"
+        }
         style={buttonStyle}
         onClick={onClick}
         disabled={disabled}
@@ -254,11 +265,16 @@ export default function Button({
         {...rest}
       >
         {leadingIcon != null && (
-          <span className="DesignSystem-Button-LeadingIcon" style={LEADING_ICON_WRAPPER_STYLE} aria-hidden>
+          <span className="DesignSystem-Button-LeadingIcon" style={ICON_WRAPPER_STYLE} aria-hidden>
             {leadingIcon}
           </span>
         )}
         {children}
+        {trailingIcon != null && (
+          <span className="DesignSystem-Button-TrailingIcon" style={ICON_WRAPPER_STYLE} aria-hidden>
+            {trailingIcon}
+          </span>
+        )}
       </button>
     </>
   );

@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "Создайте новое задание с нуля или выберите одно из списка ниже.",
 		"createFromTemplate": "Создать новое задание из шаблона",
 		"createNew": "Создать новое задание",
+		"creating": "",
 		"creator": "Создатель",
 		"dateCreated": "Дата создания",
 		"dateUpdated": "Дата обновления",
@@ -134,6 +135,7 @@
 		"unpublish": "Отменить публикацию",
 		"unpublished": "Неопубликовано",
 		"unsavedChanges": "Несохраненные изменения!",
+		"view": "",
 		"visibleForStudents": "Задание видно студентам"
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "Добавьте или отредактируйте название карточки. Это название будет отображаться как название раздела, если информация, введенная учащимся, будет видна.",
 		"cardWillBeReleased": "Карта будет выпущена",
 		"close": "Закрывать",
+		"closeWithoutSaving": "",
 		"collective": "Коллектив",
 		"commentPlaceholder": "Введите комментарий...",
 		"commentsComment": "Это автоматически заполнит поле для комментариев для учащихся. Вы сможете удалить комментарии позже.",
@@ -728,6 +731,13 @@
 		"yourEntry": "Ваша заявка"
 	},
 	"joinClass": "Присоединиться к классу",
+	"joinClassFlow": {
+		"goBack": "",
+		"noClassFound": "",
+		"noGoBack": "",
+		"wantToJoin": "",
+		"yesContinue": ""
+	},
 	"joinClassInfo": "Как только вы присоединитесь к классу, он появится здесь.",
 	"journal": {
 		"dateCreated": "Дата создания",
@@ -809,6 +819,7 @@
 			"creating": "Создание...",
 			"expandLabel": "",
 			"export": {
+				"buildingZip": "",
 				"cancel": "Отмена",
 				"clearAll": "Очистить все",
 				"columns": {
@@ -817,6 +828,8 @@
 					"anticipatedObstacles": "",
 					"availableFrom": "",
 					"availableTo": "",
+					"coverImageFilename": "",
+					"coverImageZipPath": "",
 					"createdAt": "Создано в",
 					"datasetProvision": "",
 					"datasetProvisionOther": "",
@@ -825,11 +838,18 @@
 					"expectedDeliverablesOther": "",
 					"fieldResearchRequired": "",
 					"fieldResearchTravelDetails": "",
+					"followUpAssetCount": "",
+					"followUpAssetZipPaths": "",
 					"guidelinesAcknowledged": "",
 					"guidelinesAcknowledgedAt": "",
+					"hasCoverImage": "",
+					"hasIntroVideo": "",
 					"hasReviewNotes": "",
 					"id": "",
 					"internshipInterest": "",
+					"introVideoFilename": "",
+					"introVideoUrl": "",
+					"introVideoZipPath": "",
 					"issueRelevance": "",
 					"mentorEmail": "",
 					"mentorFirstName": "",
@@ -864,12 +884,14 @@
 					"updatedAt": "Обновлено"
 				},
 				"download": "Скачать CSV",
+				"downloadingMedia": "",
 				"empty": "",
 				"exporting": "",
 				"failed": "",
 				"groups": {
 					"basics": "",
 					"capacity": "",
+					"media": "",
 					"people": "",
 					"postAcceptance": "",
 					"proposal": "",
@@ -1083,12 +1105,17 @@
 					"name": "",
 					"organization": "Организация",
 					"review": "Обзор",
-					"sponsor": "Спонсор"
+					"sponsor": "Спонсор",
+					"video": "",
+					"videoMissing": "",
+					"videoProvided": ""
 				},
 				"dismissHighlight": "Закрыть",
+				"markScheduled": "",
 				"remove": "Удалить",
 				"review": "Обзор",
-				"reviewUnreadAria": ""
+				"reviewUnreadAria": "",
+				"scheduledNoteBody": ""
 			},
 			"loading": "",
 			"manageMatches": "",
@@ -1188,6 +1215,7 @@
 				"saving": "Сохранение...",
 				"toggleFailed": ""
 			},
+			"meetingRequestLabel": "",
 			"mentor": "",
 			"mentorContact": "",
 			"mentorNotes": "",
@@ -1226,6 +1254,7 @@
 				"updatedAt": ""
 			},
 			"sponsorIsMentor": "",
+			"sponsorRequestedMeeting": "",
 			"status": "Статус",
 			"summaryTitle": "Резюме",
 			"tabs": {
@@ -1249,8 +1278,13 @@
 			"capacity": "",
 			"capacityLabel": "Вместимость",
 			"flagLabel": "",
+			"introVideoExternal": "",
+			"introVideoLabel": "",
+			"introVideoNotProvided": "",
+			"introVideoUploaded": "",
 			"lastUpdated": "",
 			"lastUpdatedLabel": "",
+			"meetingRequestLabel": "",
 			"sponsorLabel": "Спонсор",
 			"statusLabel": "Статус",
 			"teamOf": ""
@@ -1319,6 +1353,7 @@
 	"projects": {
 		"addTemplateToClass": "Скопировать шаблон в класс",
 		"backToProjects": "Назад к проектам",
+		"boardCurriculumTypeQuestion": "",
 		"boardSettingsAndPermissions": "Настройки доски и разрешения",
 		"boardSettingsModalClose": "Закрыть",
 		"boardSettingsModalDescription": "Эти настройки применяются к проектам, которые студенты начинают из \"{{title}}\".",
@@ -1382,6 +1417,7 @@
 			"unnamedColumn": "Колонка без названия",
 			"viewDetails": ""
 		},
+		"more": "",
 		"newTemplate": "Создать новый шаблон класса",
 		"noClassTemplatesDescription": "Создайте доску шаблона, чтобы студенты этого класса могли использовать её в качестве отправной точки.",
 		"noClassTemplatesYet": "Вы еще не создали ни одной доски с шаблонами классов.",
@@ -1405,6 +1441,7 @@
 		"templateLibraryCount": "{{count}} доступно",
 		"templateLibraryNoMine": "У вас пока нет шаблонов классов в других ваших классах.",
 		"templateManagement": "Управление шаблонами",
+		"templateMoreMilestonesHint": "",
 		"templateOptions": "Опции шаблона",
 		"templatePreviewModal": {
 			"title": ""

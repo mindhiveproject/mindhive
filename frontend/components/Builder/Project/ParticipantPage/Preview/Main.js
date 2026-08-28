@@ -1,6 +1,7 @@
 import Tabs from "./Tabs";
 import useTranslation from "next-translate/useTranslation";
 import { getStudyImageUrl } from "../../../../../lib/profileStudyImageUrls";
+import Button from "../../../../DesignSystem/Button";
 
 export default function Preview({
   user,
@@ -53,11 +54,11 @@ export default function Preview({
                 : "upload-btn-wrapper"
             }
           >
-            <button className="btn">
+            <Button variant="filled" type="button">
               {studyImageUrl
-                ? t('preview.updateStudyImage')
-                : t('preview.uploadStudyImage')}
-            </button>
+                ? t("preview.updateStudyImage")
+                : t("preview.uploadStudyImage")}
+            </Button>
             <input
               type="file"
               id="file"

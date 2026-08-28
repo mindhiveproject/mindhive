@@ -5,11 +5,9 @@ const StyledBreadcrumbs = styled.div`
   align-items: center;
   justify-content: left;
   gap: 8px;
-  font-family: "Inter";
-  font-size: 14px;
   font-style: normal;
-  font-weight: 600;
-  line-height: 20px;
+  font: var(--MH-Type-Title-Small);
+  letter-spacing: 0;
 
 
   .crumbRow {

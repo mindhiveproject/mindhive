@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import Button from "../../DesignSystem/Button";
 import {
   METRICS_COLUMN_KEYS,
   buildMetricsRows,
@@ -16,7 +17,8 @@ import {
 const METRICS_DROPDOWN_TRIGGER_STYLE = {
   borderRadius: "12px",
   padding: "12px 14px",
-  fontSize: "15px",
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
 };
 
 const formatColumnLabel = (key, t) => {
@@ -424,32 +426,32 @@ export default function PlatformMetrics() {
         </div>
 
         <div className="actions">
-          <button
+          <Button
+            variant="outline"
             type="button"
-            className="secondary"
             onClick={resetFilters}
             disabled={isLoading}
           >
             {t("resetFilters", {}, { default: "Reset Filters" })}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outline"
             type="button"
-            className="secondary"
             onClick={handleLoadMetrics}
             disabled={isLoading}
           >
             {isLoading
               ? t("metrics.loading", {}, { default: "Loading metrics…" })
               : t("metrics.loadMetrics", {}, { default: "Load metrics" })}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="filled"
             type="button"
-            className="primary"
             onClick={handleExportCsv}
             disabled={isLoading || visibleRows.length === 0}
           >
             {t("metrics.exportCsv", {}, { default: "Export CSV" })}
-          </button>
+          </Button>
         </div>
       </div>
 

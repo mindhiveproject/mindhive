@@ -1,16 +1,36 @@
 import { useRouter } from "next/router";
-import useTranslation from "next-translate/useTranslation";
 
-import { Sidebar } from "semantic-ui-react";
+import styled from 'styled-components';
 
 import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../../Queries/Proposal";
-import Button from "../../../../DesignSystem/Button";
-import { StyledProposal } from "../../../../styles/StyledProposal";
+import {
+  StyledActionCard,
+  StyledProposal,
+  StyledProposalCard,
+} from '../../../../styles/StyledProposal';
 import ProposalPage from "./ProjectBoard/ProposalPage";
+
+const StyledProjectsBoardEditor = styled.div`
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  overflow-x: visible;
+  overflow-y: hidden;
+
+  .proposalBoard {
+    margin: 0 !important;
+  }
+
+  ${StyledProposalCard},
+  ${StyledActionCard} {
+    box-shadow: none !important;
+  }
+`;
 
 export default function ProjectsBoardEditor({ myclass, user, boardId }) {
   const router = useRouter();
-  const { t } = useTranslation("classes");
   const autoOpenAddMilestone = router.query.addMilestone === "1";
 
   const projectsHref = {
@@ -30,13 +50,8 @@ export default function ProjectsBoardEditor({ myclass, user, boardId }) {
   ];
 
   return (
-    <Sidebar.Pushable style={{ overflowY: "hidden" }}>
-      <div className="projectsBoardBackBar">
-        <Button variant="outline" type="button" onClick={onBack}>
-          ← {t("projects.backToClass", {}, { default: "Back to class" })}
-        </Button>
-      </div>
-      <StyledProposal>
+    <StyledProjectsBoardEditor className="projectsBoardEditor">
+      <StyledProposal className="projectsBoardEditorProposal">
         <ProposalPage
           user={user}
           proposalId={boardId}
@@ -47,6 +62,6 @@ export default function ProjectsBoardEditor({ myclass, user, boardId }) {
           autoOpenAddMilestone={autoOpenAddMilestone}
         />
       </StyledProposal>
-    </Sidebar.Pushable>
+    </StyledProjectsBoardEditor>
   );
 }

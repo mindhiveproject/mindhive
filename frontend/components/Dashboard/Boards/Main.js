@@ -4,6 +4,14 @@ import useTranslation from "next-translate/useTranslation";
 import Edit from "./Edit";
 import ManageClasses from "./ManageClasses";
 
+const boardsEditShellStyle = {
+  width: "100%",
+  height: "100%",
+  minHeight: 0,
+  minWidth: 0,
+  overflow: "hidden",
+};
+
 export default function ProjectsMain({ query, user }) {
   const { selector, id } = query;
   const { t } = useTranslation("classes");
@@ -18,9 +26,9 @@ export default function ProjectsMain({ query, user }) {
 
   if (selector === "edit") {
     return (
-      <StyledBoards>
+      <div style={boardsEditShellStyle}>
         <Edit user={user} boardId={id} />
-      </StyledBoards>
+      </div>
     );
   }
   return (

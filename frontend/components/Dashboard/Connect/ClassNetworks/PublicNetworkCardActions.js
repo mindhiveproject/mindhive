@@ -29,9 +29,8 @@ const ActionsRow = styled.div`
 
 const Feedback = styled.span`
   color: ${(props) => (props.$error ? "#871b16" : "#1d6b3a")};
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  line-height: 18px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 export default function PublicNetworkCardActions({
@@ -106,7 +105,6 @@ export default function PublicNetworkCardActions({
     return (
       <ActionsRow>
         <Chip 
-          shape="square"
           label={t("classNetworks.invites.member", {}, { default: "Member" })}>
         </Chip>
         <DesignSystemButton
@@ -146,7 +144,6 @@ export default function PublicNetworkCardActions({
     return (
       <ActionsRow>
         <Chip 
-          shape="square"
           label={t("classNetworks.invites.pendingRequest", {}, { default: "Request pending" })}>
         </Chip>
         <DesignSystemButton
@@ -179,7 +176,6 @@ export default function PublicNetworkCardActions({
     return (
       <ActionsRow>
         <Chip
-          shape="square"
           label={t("classNetworks.invites.rejected", {}, { default: "Request declined" })}>
         </Chip>
         <DesignSystemButton
@@ -213,7 +209,6 @@ export default function PublicNetworkCardActions({
     return (
       <ActionsRow>
         <Chip
-          shape="square"
           label={t("classNetworks.invites.incomingInvite", {}, { default: "You're invited" })}>
         </Chip>
         <DesignSystemButton

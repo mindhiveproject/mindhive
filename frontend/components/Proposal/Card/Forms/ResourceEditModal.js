@@ -254,7 +254,6 @@ export default function ResourceEditModal({
         <Chip
           label={t("board.editMode", "You are in Edit Mode")}
           selected={false}
-          shape="square"
         />
       </Modal.Header>
       <Modal.Content

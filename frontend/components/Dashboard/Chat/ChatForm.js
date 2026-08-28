@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import FindMembers from "../../Find/Members";
 import FindStudies from "../../Find/MyStudies";
 import FindClasses from "../../Find/MyClasses";
+import Button from "../../DesignSystem/Button";
 
 export default function ChatForm({
   user,
@@ -62,7 +63,9 @@ export default function ChatForm({
             </div>
 
             <div className="submitButton">
-              <button type="submit">{submitBtnName}</button>
+              <Button type="submit" style={{ width: "100%" }}>
+                {submitBtnName}
+              </Button>
             </div>
           </div>
         </fieldset>

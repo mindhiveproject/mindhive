@@ -1,7 +1,8 @@
 import { useQuery } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
-import { Icon, Popup } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
+import Tooltip from "../../DesignSystem/Tooltip";
 import useTranslation from "next-translate/useTranslation";
 import { GET_PUBLIC_RESOURCES } from "../../Queries/Resource";
 import { stripHtml } from "../../Proposal/Card/Forms/utils";
@@ -57,29 +58,23 @@ export default function PublicResourcesList({
             </div>
           )}
           <div className="card-actions">
-            <Popup
-              content={t("boardManagement.preview")}
-              trigger={
-                <Icon
-                  name="eye"
-                  className="action-icon preview"
-                  onClick={() => onPreview(resource.id)}
-                />
-              }
-            />
-            <Popup
-              content={t("boardManagement.copy")}
-              trigger={
-                <Link
-                  href={{
-                    pathname: "/dashboard/resources/copy",
-                    query: { id: resource.id },
-                  }}
-                >
-                  <Icon name="copy" className="action-icon copy" />
-                </Link>
-              }
-            />
+            <Tooltip content={t("boardManagement.preview")}>
+              <Icon
+                name="eye"
+                className="action-icon preview"
+                onClick={() => onPreview(resource.id)}
+              />
+            </Tooltip>
+            <Tooltip content={t("boardManagement.copy")}>
+              <Link
+                href={{
+                  pathname: "/dashboard/resources/copy",
+                  query: { id: resource.id },
+                }}
+              >
+                <Icon name="copy" className="action-icon copy" />
+              </Link>
+            </Tooltip>
           </div>
         </div>
       ))}

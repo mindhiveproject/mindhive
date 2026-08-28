@@ -3,8 +3,11 @@ import absoluteUrl from "next-absolute-url";
 import DownloadRawData from "../Download/RawData";
 import DownloadSummaryData from "../Download/Summary";
 import DownloadByComponent from "../Download/ByComponent";
+import Button from "../../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Header({ study, slug, participants, components }) {
+  const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
 
   // filter out the datasets with explicit disagreement for data sharing (data policy is "no")
@@ -28,7 +31,7 @@ export default function Header({ study, slug, participants, components }) {
     temp.select();
     document.execCommand("copy");
     temp.remove();
-    alert("The link is copied");
+    alert(t("header.linkCopied", {}, { default: "The link is copied" }));
   };
 
   return (
@@ -36,15 +39,27 @@ export default function Header({ study, slug, participants, components }) {
       <div className="study">
         <div className="shareStudy">
           <p>
-            Share the link below with your participants to invite them to join
-            your study
+            {t(
+              "header.shareInstructions",
+              {},
+              {
+                default:
+                  "Share the link below with your participants to invite them to join your study",
+              }
+            )}
           </p>
           <h3>
             {origin}/studies/{slug}
           </h3>
           <div className="buttons">
             <div>
-              <button onClick={() => copyLink()}>Copy study link</button>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => copyLink()}
+              >
+                {t("header.copyLink", {}, { default: "Copy study link" })}
+              </Button>
             </div>
             <div>
               <a
@@ -52,7 +67,9 @@ export default function Header({ study, slug, participants, components }) {
                 href={`${origin}/studies/${slug}`}
                 rel="noreferrer"
               >
-                <button>Test your study</button>
+                <Button variant="outline" type="button">
+                  {t("header.testStudy", {}, { default: "Test your study" })}
+                </Button>
               </a>
             </div>
           </div>

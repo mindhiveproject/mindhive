@@ -173,17 +173,6 @@ const SCOPE_OPTIONS = [
   },
 ];
 
-const POLICY_TOOLTIP_STYLE = {
-  width: "600px",
-  maxWidth: "90vw",
-  padding: "16px 20px",
-  border: "1px dashed #c7d2d9",
-  borderRadius: "16px",
-  // background: "rgba(51, 111, 138, 0.05)",
-  color: "#3a4b56",
-  fontSize: "14px",
-  lineHeight: "1.5",
-};
 
 const scopeFilterMap = {
   ALL: () => true,
@@ -529,7 +518,6 @@ export {
   BOARD_EXPORT_QUERY,
   STAGE_OPTIONS,
   SCOPE_OPTIONS,
-  POLICY_TOOLTIP_STYLE,
   scopeFilterMap,
   hasResearchAccess,
   flattenBoards,

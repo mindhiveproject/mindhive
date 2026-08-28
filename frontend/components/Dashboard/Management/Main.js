@@ -15,7 +15,7 @@ export default function ManagementMain({ query, user }) {
   return (
     <StyledManagement>
       <div>
-        <h1>Management</h1>
+        <h1 className="MH-Type-Heading-Base">Management</h1>
         <div>
           <p>
             All classes, class networks, assignments, and block documentation on

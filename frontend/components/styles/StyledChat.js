@@ -22,20 +22,10 @@ export const StyledChat = styled.div`
         border-color: mintcream;
       }
     }
-    button {
-      background: #007c70;
-      color: white;
-      max-width: 256px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
     .title {
-      font-family: Lato;
-      font-size: 36px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 56px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Heading-Base);
+      letter-spacing: 0;
       text-align: left;
       color: #1a1a1a;
       margin-bottom: 23px;
@@ -48,7 +38,8 @@ export const StyledChat = styled.div`
     padding: 1rem;
     grid-template-columns: 1fr 2fr 1fr;
     cursor: pointer;
-    font-weight: bold;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
   }
   .wrapper {
     display: grid;
@@ -111,16 +102,6 @@ export const StyledChat = styled.div`
       grid-template-columns: auto 1fr;
       grid-column-gap: 1rem;
       align-items: center;
-      button {
-        padding: 10px 24px 10px 24px;
-        background: #007c70;
-        border: 2px solid #007c70;
-        box-sizing: border-box;
-        border-radius: 4px;
-        color: white;
-        cursor: pointer;
-        font-family: "Lato";
-      }
     }
     .members {
       display: grid;
@@ -159,17 +140,6 @@ export const StyledChat = styled.div`
         position: absolute;
         display: grid;
         margin-bottom: 5px;
-        button {
-          padding: 3px 10px 3px 10px;
-          background: #007c70;
-          border: 1px solid #007c70;
-          box-sizing: border-box;
-          border-radius: 4px;
-          color: white;
-          cursor: pointer;
-          font-size: 14px;
-          font-family: "Lato";
-        }
       }
     }
     .header {
@@ -179,10 +149,12 @@ export const StyledChat = styled.div`
       grid-template-columns: 1fr;
       padding: 5px 0px 0px 0px;
       .title {
-        font-size: 20px;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
       }
       .nameDate {
-        font-size: 14px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         display: grid;
         grid-gap: 5px;
         grid-template-columns: 1fr auto;

@@ -132,7 +132,10 @@ export default function Main({ query, user }) {
             })}
           </div>
           <div className="links" style={{ padding: 24 }}>
-            <div style={{ marginBottom: 12, color: "#5f6871", fontSize: 14 }}>
+            <div
+              className="MH-Type-Body-Base"
+              style={{ marginBottom: 12, color: "#5f6871" }}
+            >
               {t("settings.sponsorSetup.description", {}, {
                 default:
                   "Show the profile, organization, and opportunity setup tips on your Home page.",
@@ -145,7 +148,7 @@ export default function Main({ query, user }) {
                 })}
               </Button>
             ) : (
-              <div style={{ color: "#5f6871", fontSize: 14 }}>
+              <div className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
                 {t("settings.sponsorSetup.visibleNote", {}, {
                   default: "Setup tips are currently visible on your Home page.",
                 })}

@@ -234,7 +234,6 @@ export default function TableEditor({ content, onChange, sectionId }) {
                   </label>
                   {isSelected ? (
                     <Chip
-                      shape="square"
                       selected={isExpanded}
                       leading={FUNNEL_CHIP_ICON}
                       label={

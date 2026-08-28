@@ -3,11 +3,14 @@ import moment from "moment";
 import Link from "next/link";
 
 import { GET_ALL_NETWORKS } from "../../../Queries/ClassNetwork";
+import Button from "../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 import EditNetwork from "./Edit";
 import AddNetwork from "./Add";
 
 export default function Networks({ query, user }) {
+  const { t } = useTranslation("dashboard");
   const { data, loading, error } = useQuery(GET_ALL_NETWORKS);
   const networks = data?.classNetworks || [];
 
@@ -32,7 +35,11 @@ export default function Networks({ query, user }) {
             },
           }}
         >
-          <button>Add class network</button>
+          <Button variant="filled" type="button">
+            {t("management.addClassNetwork", {}, {
+              default: "Add class network",
+            })}
+          </Button>
         </Link>
       </div>
 

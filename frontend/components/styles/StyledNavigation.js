@@ -25,12 +25,8 @@ export const StyledSidebar = styled.div`
   }
 
   .workspaceHeader {
-    font-family: Lato;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 14px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-align: left;
     color: #b3b3b3;
     margin-top: 7px;
@@ -42,18 +38,11 @@ export const NavLink = styled.div`
   grid-template-columns: 20px auto;
   grid-column-gap: 12px;
   cursor: pointer;
-  font-family: Lato;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  letter-spacing: 0em;
+  font: var(--MH-Type-Label-Large);
+  letter-spacing: 0;
   text-align: left;
   padding-right: 1rem;
   ${(props) => props.selected && `border-right: 3px solid #ffc107`};
-  :hover {
-    opacity: 0.6;
-  }
 `;
 
 export const NavStyles = styled.ul`
@@ -66,12 +55,8 @@ export const NavStyles = styled.ul`
   .openMenuBtn {
     cursor: pointer;
     color: #666666;
-    font-family: Lato;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
     padding-right: 2rem;
   }
 `;
@@ -86,54 +71,7 @@ export const NavRightContainer = styled.div`
   .menuLinks {
     display: grid;
     grid-template-columns: auto auto;
-  }
-`;
-
-export const NavButton = styled.button`
-  margin: 6px;
-  height: 56px;
-  font-size: 18px;
-  line-height: 100%;
-  letter-spacing: 0.05em;
-  color: #007c70;
-  border: 2px solid #007c70;
-  cursor: pointer;
-  border-radius: 4px;
-  padding: 14px 24px 14px 24px;
-  background: none;
-  align-items: center;
-`;
-
-export const NavButtonSecondary = styled.button`
-  margin: 6px;
-  height: 56px;
-  font-size: 18px;
-  line-height: 100%;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  border: 2px solid #007c70;
-  cursor: pointer;
-  border-radius: 4px;
-  padding: 1rem 3rem;
-  background: #007c70;
-  align-items: center;
-`;
-
-export const SignoutButton = styled.button`
-  width: 150px;
-  font-size: 18px;
-  line-height: 100%;
-  letter-spacing: 0.05em;
-  color: #007c70;
-  border: 2px solid #007c70;
-  cursor: pointer;
-  border-radius: 4px;
-  padding: 14px 24px 14px 24px;
-  background: none;
-  align-items: center;
-  margin-top: 8px;
-  :hover {
-    opacity: 0.6;
+    grid-column-gap: 12px;
   }
 `;
 

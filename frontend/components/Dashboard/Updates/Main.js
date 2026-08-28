@@ -14,7 +14,9 @@ export default function UpdatesMain({ query, user }) {
   if (!selector) {
     return (
       <StyledTag>
-        <h1>{t("update.notificationsAndUpdates")}</h1>
+        <h1 className="MH-Type-Heading-Base">
+          {t("update.notificationsAndUpdates")}
+        </h1>
         <Link href="/dashboard/updates/add">
           <button>{t("update.createUpdate")}</button>
         </Link>

@@ -7,9 +7,12 @@ import NetworkForm from "./Form";
 import { GET_NETWORK } from "../../../Queries/ClassNetwork";
 import { UPDATE_NETWORK } from "../../../Mutations/ClassNetwork";
 import useForm from "../../../../lib/useForm";
+import Button from "../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function EditNetwork({ user, id }) {
   const router = useRouter();
+  const { t } = useTranslation("dashboard");
   const { data, loading, error } = useQuery(GET_NETWORK, { variables: { id } });
   const network = data?.classNetwork || {};
 
@@ -48,7 +51,9 @@ export default function EditNetwork({ user, id }) {
     <div>
       <h3>Edit the class network</h3>
       <NetworkForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save</button>
+      <Button variant="filled" type="button" onClick={handleSave}>
+        {t("management.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

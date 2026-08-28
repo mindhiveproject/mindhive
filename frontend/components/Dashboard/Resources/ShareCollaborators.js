@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import gql from "graphql-tag";
-import { Icon, Popup } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
+import Tooltip from "../../DesignSystem/Tooltip";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_RESOURCE, GET_MY_RESOURCES } from "../../Queries/Resource";
@@ -131,17 +132,14 @@ export default function ShareCollaborators({ id, user, onClose }) {
               {users.map((u) => (
                 <div key={u.id} className="userItem">
                   <span>{u.username}</span>
-                  <Popup
-                    content={t("boardManagement.addCollaborator")}
-                    trigger={
-                      <button
-                        className="actionBtn add"
-                        onClick={() => handleAdd(u.id)}
-                      >
-                        <Icon name="plus" />
-                      </button>
-                    }
-                  />
+                  <Tooltip content={t("boardManagement.addCollaborator")}>
+                    <button
+                      className="actionBtn add"
+                      onClick={() => handleAdd(u.id)}
+                    >
+                      <Icon name="plus" />
+                    </button>
+                  </Tooltip>
                 </div>
               ))}
             </div>
@@ -159,17 +157,14 @@ export default function ShareCollaborators({ id, user, onClose }) {
                 return (
                   <div key={s} className="collaboratorTag">
                     <span>{userObj?.username || s}</span>
-                    <Popup
-                      content={t("boardManagement.removeCollaborator")}
-                      trigger={
-                        <button
-                          className="actionBtn remove"
-                          onClick={() => handleRemove(s)}
-                        >
-                          <Icon name="minus" />
-                        </button>
-                      }
-                    />
+                    <Tooltip content={t("boardManagement.removeCollaborator")}>
+                      <button
+                        className="actionBtn remove"
+                        onClick={() => handleRemove(s)}
+                      >
+                        <Icon name="minus" />
+                      </button>
+                    </Tooltip>
                   </div>
                 );
               })}

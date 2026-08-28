@@ -1,6 +1,6 @@
 import uniqid from "uniqid";
 import {
-  assertTemplateBoardTeacher,
+  assertCanMutateClassTemplateBoard,
   slugifyMilestoneKey,
 } from "./resolveMilestonesForBoard";
 
@@ -266,7 +266,7 @@ async function createTemplateMilestone(
   { input }: { input: CreateTemplateMilestoneInput },
   context: any
 ) {
-  await assertTemplateBoardTeacher(context, input.templateBoardId);
+  await assertCanMutateClassTemplateBoard(context, input.templateBoardId);
   const sudo = context.sudo();
 
   const existingTemplate = await context.query.Milestone.findMany({

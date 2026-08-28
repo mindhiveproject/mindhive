@@ -28,7 +28,8 @@ export const StyledDatePicker = styled.div`
     display: grid;
     grid-template-columns: repeat(3, auto);
     align-content: center;
-    font-size: 16px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
   .react-date-picker__inputGroup__divider {
     display: none;
@@ -94,7 +95,7 @@ export const StyledDatePicker = styled.div`
     max-width: 100%;
     background: #007c70;
     border: 1px solid #607980;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Inter", sans-serif;
     line-height: 1.125em;
   }
   .react-calendar--doubleView {
@@ -147,8 +148,8 @@ export const StyledDatePicker = styled.div`
   .react-calendar__month-view__weekdays {
     text-align: center;
     text-transform: uppercase;
-    font-weight: bold;
-    font-size: 0.75em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: white;
   }
   .react-calendar__month-view__weekdays__weekday {

@@ -11,19 +11,15 @@ const StyledZeroState = styled.div`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.09), 0px 5px 6px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
   h2 {
-    font-family: Roboto;
     font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 21px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
   a {
-    font-family: Roboto;
     font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     text-decoration-line: underline;
     color: #007c70;
   }
@@ -38,12 +34,9 @@ const StyledZeroState = styled.div`
     justify-content: center;
   }
   .contextInfo {
-    font-family: Roboto;
-    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 16px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
     color: #969696;
   }

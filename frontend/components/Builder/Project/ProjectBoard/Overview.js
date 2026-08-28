@@ -5,6 +5,7 @@ import DeleteProposal from "./Delete";
 
 import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 import MakeMain from "./MakeMain";
+import Button from "../../../DesignSystem/Button";
 
 export default function ProposalOverview({
   user,
@@ -27,7 +28,9 @@ export default function ProposalOverview({
       <div className="empty">
         <h3>{t("overview.zeroState1", "You haven’t created any proposals yet.")}</h3>
         <p>{t("overview.zeroState2", "Once you create a proposal, it will appear here.")}</p>
-        <button onClick={() => createProposal()}>{t("overview.createNewProposal", "Create a new proposal")}</button>
+        <Button variant="filled" onClick={() => createProposal()}>
+          {t("overview.createNewProposal", {}, { default: "Create a new proposal" })}
+        </Button>
       </div>
     );
   }
@@ -36,9 +39,9 @@ export default function ProposalOverview({
       <div className="navigationHeader">
         <div></div>
         <div>
-          <button onClick={() => createProposal()}>
-            {t("proposal.create")}
-          </button>
+          <Button variant="filled" onClick={() => createProposal()}>
+            {t("proposal.create", {}, { default: "Create a new proposal" })}
+          </Button>
         </div>
       </div>
 

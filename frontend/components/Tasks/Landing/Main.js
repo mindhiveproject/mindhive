@@ -9,6 +9,7 @@ import ReactHtmlParser from "react-html-parser";
 import { GET_TASK } from "../../Queries/Task";
 import TaskPage from "./TaskPage";
 import ManageFavorite from "../../User/ManageFavorite";
+import Button from "../../DesignSystem/Button";
 
 export default function TaskLandingMain({ slug }) {
   const { user } = useContext(UserContext);
@@ -36,7 +37,9 @@ export default function TaskLandingMain({ slug }) {
           target="_blank"
           href={`/preview/${task?.taskType?.toLowerCase()}/${task?.id}`}
         >
-          <button>{t("preview")}</button>
+          <Button variant="filled">
+            {t("preview", {}, { default: "Preview" })}
+          </Button>
         </a>
       </div>
       <TaskPage user={user} task={task} />

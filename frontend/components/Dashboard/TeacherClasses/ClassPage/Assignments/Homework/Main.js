@@ -7,87 +7,20 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import ReviewHomework from "./Review";
+import Button from "../../../../../DesignSystem/Button";
+import Chip from "../../../../../DesignSystem/Chip";
 
-// Styled button matching Figma design (Primary Action - Teal)
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #336F8A;
-  color: #ffffff;
-  
-  &:hover {
-    background: #ffc107;
-    color: #1a1a1a;
-  }
-  
-  &:active {
-    background: #4db6ac;
-    color: #1a1a1a;
-  }
-  
-  &:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-  }
-`;
-
-// Status chip matching the design from HomeworkCompletion
-const StatusChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  white-space: nowrap;
-  border: none;
-  
-  ${props => {
-    const status = props.status?.toLowerCase() || '';
-    if (status === 'completed') {
-      return `
-        background: #E0F2F1; /* Light teal */
-        color: #00695C;      /* Medium green */
-      `;
-    } else if (status === 'started') {
-      return `
-        background: #E3F2FD; /* Very light pastel blue */
-        color: #1976D2;      /* Medium blue */
-      `;
-    } else if (status === 'needs feedback') {
-      return `
-        background: #FCE4EC; /* Very light pastel pink/light red */
-        color: #C2185B;      /* Medium red */
-      `;
-    } else if (status === 'feedback given') {
-      return `
-        background: #F3E5F5; /* Very light pastel lavender/light purple */
-        color: #7B1FA2;      /* Medium purple */
-      `;
-    } else {
-      return `
-        background: #F5F5F5; /* Light gray */
-        color: #616161;      /* Gray text */
-      `;
-    }
-  }}
-`;
+// Homework status -> Chip tone (was a bespoke colour map; keeps the coding).
+const STATUS_TONE = {
+  completed: "success",
+  submitted: "success",
+  "feedback given": "success",
+  started: "info",
+  "in progress": "info",
+  "needs feedback": "warning",
+};
+const statusTone = (status) =>
+  STATUS_TONE[String(status || "").toLowerCase()] ?? "neutral";
 
 const GridContainer = styled.div`
   width: 100%;
@@ -95,7 +28,7 @@ const GridContainer = styled.div`
   margin-top: 24px;
   
   .ag-theme-alpine {
-    --ag-font-family: Lato;
+    --ag-font-family: "Inter", sans-serif;
     --ag-font-size: 14px;
     --ag-header-height: 48px;
     --ag-row-height: 48px;
@@ -144,7 +77,7 @@ export default function HomeworkMain({
   // Status renderer
   const StatusRenderer = (params) => {
     const status = params?.value || 'Not started';
-    return <StatusChip status={status}>{status}</StatusChip>;
+    return <Chip variant="static" tone={statusTone(status)} label={status} />;
   };
 
   // View button renderer
@@ -165,9 +98,9 @@ export default function HomeworkMain({
         }}
         style={{ textDecoration: 'none' }}
       >
-        <PrimaryButton style={{ padding: '6px 12px', fontSize: '12px' }}>
-          View
-        </PrimaryButton>
+        <Button variant="filled">
+          {t("assignment.view", {}, { default: "View" })}
+        </Button>
       </Link>
     );
   };

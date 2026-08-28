@@ -14,12 +14,9 @@ export const StyledSelector = styled.div`
   .goBackBtn {
     cursor: pointer;
     margin: 1rem;
-    font-family: Lato;
-    font-size: 18px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     text-align: left;
     color: #007c70;
   }
@@ -65,31 +62,22 @@ export const StyledSelector = styled.div`
   }
 
   h1 {
-    font-family: Lato;
-    font-size: 48px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 56px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Heading-Large);
+    letter-spacing: 0;
     text-align: center;
     margin-bottom: 40px;
   }
   h3 {
-    font-family: Lato;
-    font-size: 24px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     text-align: center;
   }
   p {
-    font-family: Lato;
-    font-size: 18px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .option {

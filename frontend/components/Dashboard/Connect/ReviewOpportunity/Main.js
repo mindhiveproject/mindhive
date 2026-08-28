@@ -20,9 +20,11 @@ import { UserContext } from "../../../Global/Authorized";
 import { REVIEW_OPPORTUNITY } from "../../../Queries/OpportunityReviewNote";
 import { UPDATE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import useConnectRole from "../useConnectRole";
-import ReturnOpportunityModal from "../ReturnOpportunityModal";
 import OpportunityReviewNotesThread from "../OpportunityReviewNotesThread";
-import { isReturnableOpportunityStatus } from "../returnOpportunityUtils";
+import {
+  isReturnableOpportunityStatus,
+  returnOpportunityToSponsor,
+} from "../returnOpportunityUtils";
 import { REVIEW_NOTE_KIND } from "../../../../lib/reviewThreadRound";
 
 const Shell = styled.div`
@@ -89,11 +91,9 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(20px, 2.8vw, 26px);
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
-    line-height: 1.25;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -101,7 +101,8 @@ const TitleRow = styled.div`
 
   .round-meta {
     color: #5f6871;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -149,8 +150,8 @@ const Card = styled.section`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -158,7 +159,8 @@ const Card = styled.section`
     display: grid;
     grid-template-columns: 180px 1fr;
     gap: 8px 16px;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 
   .field-grid dt {
@@ -178,7 +180,8 @@ const ConflictBanner = styled.div`
   background: #fff8e6;
   border: 1px solid #f0d39a;
   color: #6e5400;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -194,7 +197,8 @@ const StatusBar = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #5f6871;
   }
 
@@ -202,15 +206,16 @@ const StatusBar = styled.div`
     border: 1px solid #d3dae0;
     border-radius: 100px;
     padding: 8px 16px;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
     background: #ffffff;
   }
 
   .saved {
     color: #1d6b3a;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -268,7 +273,8 @@ export default function ReviewOpportunityMain({ query }) {
 
   const [status, setStatus] = useState(null);
   const [statusFlash, setStatusFlash] = useState(null);
-  const [returnModalOpen, setReturnModalOpen] = useState(false);
+  const [showReturnInvite, setShowReturnInvite] = useState(false);
+  const [returnError, setReturnError] = useState(null);
 
   const reviewRefetchQueries = useMemo(
     () => [{ query: REVIEW_OPPORTUNITY, variables: { oppId, roundId } }],
@@ -286,12 +292,27 @@ export default function ReviewOpportunityMain({ query }) {
   const currentStatus = status || opportunity?.status;
   const canReturnToSponsor =
     (isReviewerOnRound || isAdmin) &&
-    opportunity?.status &&
-    isReturnableOpportunityStatus(opportunity.status);
+    currentStatus &&
+    isReturnableOpportunityStatus(currentStatus);
 
-  const handleReturnSuccess = () => {
-    setReturnModalOpen(false);
-    router.push("/dashboard/connect/review-queue");
+  const handleReturnAndWriteMessage = async () => {
+    if (!opportunity?.id || updatingStatus) return;
+    setReturnError(null);
+    try {
+      await returnOpportunityToSponsor({
+        updateOpportunity,
+        opportunityId: opportunity.id,
+      });
+      setStatus("returned");
+      setShowReturnInvite(true);
+    } catch (e) {
+      setReturnError(
+        e?.message ||
+          t("returnModal.error", {}, {
+            default: "Could not return this opportunity. Please try again.",
+          }),
+      );
+    }
   };
 
   if (!oppId || !roundId) {
@@ -379,7 +400,7 @@ export default function ReviewOpportunityMain({ query }) {
     default: "Back to review queue",
   });
   const returnLabel = t("reviewOpportunity.returnToSponsor", {}, {
-    default: "Return with comments",
+    default: "Return and write message",
   });
 
   return (
@@ -406,13 +427,25 @@ export default function ReviewOpportunityMain({ query }) {
           <Actions>
             <Button
               variant="filled"
-              onClick={() => setReturnModalOpen(true)}
+              onClick={handleReturnAndWriteMessage}
+              disabled={updatingStatus}
             >
-              {returnLabel}
+              {updatingStatus
+                ? t("returnModal.submitting", {}, { default: "Returning…" })
+                : returnLabel}
             </Button>
           </Actions>
         ) : null}
       </TopBar>
+
+      {returnError ? (
+        <p
+          className="MH-Type-Body-Base"
+          style={{ margin: 0, color: "#871b16" }}
+        >
+          {returnError}
+        </p>
+      ) : null}
 
       {isMentorOfOpp ? (
         <ConflictBanner>
@@ -425,7 +458,7 @@ export default function ReviewOpportunityMain({ query }) {
       <Card>
         <h2>Status</h2>
         <StatusBar>
-          <Chip shape="pill" label={currentStatus} selected />
+          <Chip label={currentStatus} selected />
           <label>
             Change to{" "}
             <select
@@ -451,7 +484,10 @@ export default function ReviewOpportunityMain({ query }) {
           <dd>
             {displayName(opportunity.mentor)}{" "}
             {opportunity.mentor?.email ? (
-              <span style={{ color: "#888", fontSize: 13 }}>
+              <span
+                className="MH-Type-Body-Base"
+                style={{ color: "#888" }}
+              >
                 ({opportunity.mentor.email})
               </span>
             ) : null}
@@ -558,17 +594,12 @@ export default function ReviewOpportunityMain({ query }) {
           mode="teacher"
           refetchQueries={reviewRefetchQueries}
           titleAs="h2"
+          autoFocusCompose={showReturnInvite}
+          showReturnInvite={showReturnInvite}
+          requestsAppointment={Boolean(opportunity.requestsAppointment)}
+          onPosted={() => setShowReturnInvite(false)}
         />
       </Card>
-      <ReturnOpportunityModal
-        open={returnModalOpen}
-        onClose={() => setReturnModalOpen(false)}
-        onSuccess={handleReturnSuccess}
-        opportunityId={opportunity.id}
-        roundId={round.id}
-        mentorId={opportunity.mentor?.id}
-        refetchQueries={reviewRefetchQueries}
-      />
     </Shell>
   );
 }

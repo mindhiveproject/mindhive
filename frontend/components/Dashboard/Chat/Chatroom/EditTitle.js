@@ -1,9 +1,12 @@
 import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
+import Button from "../../../DesignSystem/Button";
 
 import { UPDATE_CHAT_SETTINGS } from "../../../Mutations/Chat";
 
 export default function EditTitle({ chat }) {
+  const { t } = useTranslation("dashboard");
   const [title, setTitle] = useState("");
 
   useEffect(() => {
@@ -34,14 +37,16 @@ export default function EditTitle({ chat }) {
       </label>
       {title !== chat?.settings?.title && (
         <div>
-          <button
-            className="secondaryBtn"
+          <Button
+            variant="filled"
             onClick={async () => {
               await updateChatSettings();
             }}
           >
-            {loading ? "Saving" : "Save"}
-          </button>
+            {loading
+              ? t("chat.saving", {}, { default: "Saving" })
+              : t("chat.save", {}, { default: "Save" })}
+          </Button>
         </div>
       )}
     </div>

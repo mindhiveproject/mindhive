@@ -4,11 +4,11 @@ import { saveAs } from "file-saver";
 import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../DesignSystem/Chip";
-import InfoTooltip from "../../DesignSystem/InfoTooltip";
+import Button from "../../DesignSystem/Button";
+import InfoPopover from "../../DesignSystem/InfoPopover";
 import {
   GRAPHQL_ENDPOINT,
   BOARD_EXPORT_QUERY,
-  POLICY_TOOLTIP_STYLE,
   STAGE_OPTIONS,
   SCOPE_OPTIONS,
   scopeFilterMap,
@@ -203,7 +203,7 @@ export default function BoardExport() {
           }
         } else {
           exportSummaries.push(
-            "No proposal card content matched the current scope."
+            "No card content matched the current scope."
           );
         }
       }
@@ -299,7 +299,10 @@ export default function BoardExport() {
 
   const policyContent = (
     <>
-      <h3 style={{ margin: "0 0 12px", fontSize: "15px", fontWeight: 600, color: "#2c4f5f" }}>
+      <h3
+        className="MH-Type-Title-Small"
+        style={{ margin: "0 0 12px", color: "#2c4f5f" }}
+      >
         {t("filteringPolicies", {
           defaultValue: "Pulling data policies",
         })}
@@ -351,19 +354,21 @@ export default function BoardExport() {
             </h2>
             <span>Download board and associated review data.</span>
           </div>
-          <InfoTooltip
+          <InfoPopover
             content={policyContent}
-            position="bottomRight"
-            tooltipStyle={POLICY_TOOLTIP_STYLE}
+            align="end"
+            width={440}
+            ariaLabel={t("filteringPolicies", {
+              defaultValue: "Data pulling policies",
+            })}
           >
             <Chip
               label={t("filteringPolicies", {
                 defaultValue: "Data pulling policies",
               })}
-              shape="square"
-              style={{ border: "none"}}
+              style={{ border: "none" }}
             />
-          </InfoTooltip>
+          </InfoPopover>
         </div>
 
         <div className="fieldGroup">
@@ -555,19 +560,19 @@ export default function BoardExport() {
         </div>
 
         <div className="actions">
-          <button
+          <Button
+            variant="outline"
             type="button"
-            className="secondary"
             onClick={resetFilters}
             disabled={isLoading}
           >
             {t("resetFilters", {
               defaultValue: "Reset Filters",
             })}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="filled"
             type="button"
-            className="primary"
             onClick={handleDownload}
             disabled={
               isLoading ||
@@ -582,7 +587,7 @@ export default function BoardExport() {
               : t("runExport", {
                   defaultValue: "Run Export",
                 })}
-          </button>
+          </Button>
         </div>
       </div>
 

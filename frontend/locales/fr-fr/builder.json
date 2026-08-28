@@ -365,9 +365,13 @@
 				"sharedWithCount": "Partagé : {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "Calculer une nouvelle variable",
+				"copy": "",
 				"copyExisting": "Copier la variable existante",
+				"recode": "",
 				"recodeVariable": "Recoder une variable",
+				"reverse": "",
 				"reverseScore": "Score inversé"
 			},
 			"readOnlyToolbarHint": "Ouvrez ce journal depuis un espace de travail pour modifier ou copier cet ensemble de données.",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "Ajouter un jeu de données",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "Enregistrer une copie",
 				"message": "Un nouveau jeu de données vous appartenant sera créé avec vos modifications et lié à cette revue. Vous pouvez choisir si vos collaborateurs peuvent modifier cette copie."
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "Comment ce jeu de données a été créé.",
 			"renameDisabledNotOwner": "Seul le créateur de cet ensemble de données peut le renommer.",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "Réseau de classe",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "Composant",
 			"addComponentAria": "Ajouter un composant à cet espace de travail",
 			"addJournal": "Journal",
+			"addJournalAria": "",
 			"addJournalScratch": "Créer un journal à partir de zéro",
 			"addJournalTemplate": "Ajouter un modèle de journal",
 			"addWorkspace": "Ajouter un espace de travail",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "Espace de travail",
 			"addWorkspaceError": "Erreur lors de l'ajout de l'espace de travail",
 			"addWorkspaceLoading": "Ajout...",
@@ -1137,6 +1146,10 @@
 			"working": "Travaux en cours"
 		}
 	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
+	},
 	"dataUsage": {
 		"and": "et",
 		"educationLabel": "Oui, mais uniquement pour une utilisation dans le cadre de programmes éducatifs et communautaires",
@@ -1301,8 +1314,30 @@
 	},
 	"inner": {
 		"addSection": "Ajouter une section",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
+		"cancel": "",
+		"deleteItems": "",
+		"deleteItemsConfirmBody": "",
+		"deleteItemsConfirmCardsOnlyNote": "",
+		"deleteItemsConfirmMilestonesCustom": "",
+		"deleteItemsConfirmMilestonesCustomHeading": "",
+		"deleteItemsConfirmMilestonesDefault": "",
+		"deleteItemsConfirmMilestonesDefaultHeading": "",
+		"deleteItemsConfirmMixedBody": "",
+		"deleteItemsConfirmReviewStepsHeading": "",
+		"deleteItemsConfirmSectionsBody": "",
+		"deleteItemsConfirmTitle": "",
+		"deleteItemsDeleting": "",
+		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "Nouvelle section",
-		"sectionTitlePlaceholder": "Entrez le titre de la section"
+		"save": "",
+		"sectionTitlePlaceholder": "Entrez le titre de la section",
+		"selectItem": "",
+		"selectSection": ""
 	},
 	"interests": "Intérêts",
 	"introductionVideo": "Vidéo d'introduction",
@@ -1409,12 +1444,16 @@
 		"nameYourStudy": "Nommez votre étude",
 		"noTemplatesSubtitle": "Pour démarrer un projet, vous avez besoin d'un modèle de tableau de projet. Votre enseignant n'a peut-être pas de modèle de tableau de projet associé à ce cours.",
 		"noTemplatesTitle": "Il n'y a pas de modèles de tableau de projet dans la classe",
+		"publicTemplateWarningBody": "",
+		"publicTemplateWarningTitle": "",
 		"selectClass": "Sélectionnez la classe",
 		"selectTemplate": "Sélectionnez le modèle",
 		"selectTemplateAlert": "Veuillez choisir le modèle de proposition",
 		"selectTemplateHelp": "Choisissez un modèle de tableau de projet que votre enseignant a mis à votre disposition.",
+		"selectTemplateHelpPublic": "",
 		"templateClassLabel": "Classe : {{className}}",
 		"templateOptionLabel": "{{templateName}} — {{className}}",
+		"templatePublicLabel": "",
 		"untitledProject": "Projet sans titre",
 		"untitledStudy": "Étude sans titre"
 	},
@@ -1508,6 +1547,10 @@
 	},
 	"participate": "Participer",
 	"participateAsGuest": "Participer en tant qu'invité",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "Veuillez d'abord vous connecter !",
 	"preview": {
 		"description": "Description",
@@ -1539,6 +1582,8 @@
 		"selectExistingStudy": "Sélectionner une étude existante",
 		"selectStudyFirst": "Sélectionnez d'abord l'étude",
 		"study": "Étude:",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "Veuillez taper SUPPRIMER pour supprimer votre projet",
 		"typeDeleteToConfirm": "Tapez « DELETE » pour confirmer"
 	},
@@ -1563,6 +1608,7 @@
 		"delete": "Supprimer",
 		"editingClassProjectTemplateSubtitle": "Décidez comment vous souhaitez propager les modifications de ce tableau de projet aux copies de vos élèves.",
 		"editingClassProjectTemplateTitle": "Modèle de projet de classe d'édition",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "Développer ou réduire la section du modèle",
 		"makeTemplate": "Faire de ce tableau de projet un modèle public",
 		"name": "Nom de la proposition",
@@ -1659,6 +1705,10 @@
 		"linkToProposal": "Lien vers la proposition",
 		"selectCard": "Sélectionnez la carte"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "Ressource",
 	"resources": "Ressources",
 	"resourcesCards": {
@@ -1750,7 +1800,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "Retour",
-		"instruction": "Une fois que vous aurez soumis votre proposition ou votre étude, vos avis apparaîtront ici."
+		"instruction": "Une fois que vous aurez soumis votre proposition ou votre étude, vos avis apparaîtront ici.",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "Comment",
@@ -1902,6 +1961,11 @@
 	"section": {
 		"addCard": "Ajouter une carte",
 		"addCardBtn": "[ Cliquez pour ajouter une carte ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "carte",
 		"cards": "cartes",
 		"cardsCount": "{{count}} carte{{count == 1 ? '' : 's'}}",
@@ -1988,6 +2052,7 @@
 			}
 		},
 		"deleteSectionConfirm": "Êtes-vous sûr de vouloir supprimer cette section de propositions ? Toutes les cartes de cette section seront également supprimées. Cette action est irréversible.",
+		"editTitle": "",
 		"enterNewTitle": "Veuillez entrer un titre",
 		"newCard": "Nouvelle carte",
 		"newCardPlaceholder": "Entrez un nouveau titre de carte",
@@ -2308,6 +2373,7 @@
 	"tiptap": {
 		"insertImageAria": "Insérer une image",
 		"insertImagePrompt": "Saisissez l'URL de l'image :",
+		"linkPrompt": "",
 		"mediaCancelEdit": "Annuler",
 		"mediaCanvaExportThumb": "Exportation PDF Canva",
 		"mediaDelete": "SUPPRIMER",
@@ -2348,7 +2414,33 @@
 		"mediaUploading": "Téléchargement...",
 		"mediaUploadNew": "Télécharger une nouvelle image",
 		"pasteImageNoMediaScope": "Il n'est pas possible de coller des images ici. Utilisez le bouton image et saisissez l'URL d'une image.",
-		"pasteImageUploadFailed": "Impossible de charger l'image collée. Vérifiez votre connexion et réessayez."
+		"pasteImageUploadFailed": "Impossible de charger l'image collée. Vérifiez votre connexion et réessayez.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "Générateur d'études",
 	"titleText": "Titre",

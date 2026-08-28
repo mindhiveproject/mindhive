@@ -396,7 +396,61 @@
 	"editProfile": "Edit profile",
 	"exploreConnect": "Explore Connect",
 	"exploreDetail": {
-		"backLink": "Back to all opportunities"
+		"about": "About this opportunity",
+		"available": "Available",
+		"backLink": "Back to all opportunities",
+		"capacity": "Capacity",
+		"expectedDeliverables": "Expected deliverables",
+		"favorited": "Favorited",
+		"hardware": "Hardware",
+		"hostedBy": "Hosted by",
+		"introVideo": "Intro video",
+		"loading": "Loading opportunity…",
+		"mentorTimeCommitment": "Time commitment: {{value}}",
+		"notFound": "Opportunity not found, or no longer available.",
+		"pastParticipants": "What past participants said",
+		"ratingSummary": "({{count}} reviews)",
+		"relevance": "Relevance to CUSP",
+		"requirements": "Project requirements",
+		"saveToFavorites": "Save to favorites",
+		"software": "Software",
+		"solo": "Solo",
+		"teamOf": "Team of {{count}}",
+		"teamSize": "Team size",
+		"timeCommitment": "Time commitment",
+		"viewOrganization": "View organization",
+		"viewProfile": "View profile",
+		"website": "Website",
+		"yourContact": "Your contact"
+	},
+	"exploreForStaff": {
+		"notAvailable": "Explore opportunities is not available for your account.",
+		"redirecting": "Redirecting to your classes…"
+	},
+	"exploreList": {
+		"description": "Browse every published opportunity available to your class networks. Tap the star on any card to save it for later, or open the opportunity for full details, intro video, and mentor info.",
+		"emptyFavorites": "You haven't favorited any opportunities yet. Tap the star on a card to save it.",
+		"emptyFiltered": "No opportunities match the current filters.",
+		"favoritesOnly": "Favorites only",
+		"groupFilterLabel": "Filter by team size",
+		"groupFilterPlaceholder": "Solo or team",
+		"groupSolo": "Solo (1 student)",
+		"groupTeam": "Team (2+ students)",
+		"loading": "Loading…",
+		"networkFilterLabel": "Filter by network",
+		"networkFilterPlaceholder": "All networks",
+		"next": "Next",
+		"noNetworks": "You're not in any class networks yet. Once a teacher adds you to a class with a network, opportunities will show up here.",
+		"pageTitle": "Explore opportunities",
+		"paginationInfo": "Page {{page}} of {{totalPages}} · {{total}} total",
+		"paginationLabel": "Opportunities pagination",
+		"previous": "Previous",
+		"searchLabel": "Search opportunities",
+		"searchPlaceholder": "Search opportunities…",
+		"solo": "Solo",
+		"teamOf": "Team of {{count}}",
+		"unknownMentor": "Unknown mentor",
+		"videoTag": "Video"
 	},
 	"interests": {
 		"description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
@@ -460,6 +514,9 @@
 		"unauthorizedTitle": "You can’t manage this organization",
 		"viewPublic": "View public page"
 	},
+	"matchesList": {
+		"emptyNoRounds": "No matching rounds yet. Create and configure a round from your class Opportunities tab, then return here to run matching."
+	},
 	"matchesRound": {
 		"backLink": "Back to matches"
 	},
@@ -503,7 +560,7 @@
 		"publishRequiresMatching": "Set the round status to Matching before publishing final matches.",
 		"studentsPaneHeader": "Unmatched ({{count}})",
 		"submission": {
-			"backLink": "Back to rounds",
+			"backLink": "Back to opportunities",
 			"saveDraft": "Save draft",
 			"saving": "Saving…",
 			"statusDraft": "Draft saved",
@@ -562,6 +619,15 @@
 			"unknownRound": "Matching round"
 		},
 		"loading": "Loading…",
+		"classForum": {
+			"modalTitle": "Class FAQ",
+			"modalTitleNamed": "Class FAQ · {{title}}",
+			"noClasses": "No classes are linked to this opportunity’s matching rounds yet.",
+			"open": "Class FAQ",
+			"pickClass": "Choose a class",
+			"pickClassPlaceholder": "Select a class",
+			"selectClassHint": "Select a class to view or ask questions in its FAQ."
+		},
 		"modals": {
 			"chatTitle": "Messages",
 			"chatTitleNamed": "Messages · {{title}}",
@@ -637,6 +703,7 @@
 			"cancel": "Cancel",
 			"error": "Could not unsubmit this opportunity. Please try again.",
 			"helper": "Choose how to pull this opportunity out of review. Draft hides it from teachers until you submit again. In revision keeps it visible as returned so you can revise and resubmit.",
+			"helperHeld": "This opportunity is already selected for a matching round. Unsubmitting does not remove it — students may still see it until a teacher removes it. Ask the teacher if you want it hidden. If they remove it, they will need to re-select it later for students to see it again.",
 			"successDraft": "Unsubmitted — back to draft.",
 			"successRevision": "Unsubmitted — marked as in revision.",
 			"title": "Unsubmit opportunity?",
@@ -663,12 +730,10 @@
 		"manageNetwork": "Manage network",
 		"manageOrganization": "Manage organization",
 		"matches": "Matches",
-		"matchingRounds": "Matching rounds",
 		"myMatchedStudents": "My matched students",
 		"myOpportunities": "My opportunities",
 		"opportunities": "Opportunities",
 		"organizations": "Organizations",
-		"participate": "Participate",
 		"questionLibrary": "Question library",
 		"reviewQueue": ""
 	},
@@ -812,10 +877,10 @@
 			"datasetProvision": "How will the sponsoring organization provide datasets to the student team?",
 			"datasetProvisionHint": "Select all that apply.",
 			"datasetProvisionOptions": {
-				"orgNoRestrictions": "Datasets will be provided directly by the organization to students by September 2026 and are not subject to privacy restrictions, nor do they require significant pre-processing/cleaning.",
-				"orgPrivacyNda": "Datasets will be provided directly by the organization to students by September 2026 and will require special privacy restrictions and/or NDA agreements in advance of the data transfer.",
+				"orgNoRestrictions": "Provided by the organization — no privacy restrictions or major cleaning needed.",
+				"orgPrivacyNda": "Provided by the organization — privacy restrictions and/or an NDA required before transfer.",
 				"other": "Other",
-				"public": "Datasets for this project are publicly available."
+				"public": "Publicly available."
 			},
 			"datasetProvisionOther": "Other (datasets)",
 			"deliverableOptions": {
@@ -1216,6 +1281,10 @@
 		"searchPlaceholder": "Search organizations…",
 		"viewOrganization": "View organization {{name}}"
 	},
+	"opportunityCard": {
+		"opportunityButton": "Opportunity",
+		"viewOpportunity": "View opportunity: {{title}}"
+	},
 	"passionNow": "What are you passionate about right now?",
 	"preferences": {
 		"availability": {
@@ -1269,6 +1338,7 @@
 		"defaultName": "MindHive Member",
 		"defaultSummary": "Click to view profile",
 		"profileButton": "Profile",
+		"typeLabel": "Connect Profile",
 		"viewProfile": "View profile of {{name}}"
 	},
 	"profileType": {
@@ -1305,18 +1375,27 @@
 	},
 	"reviewOpportunity": {
 		"backLink": "Back to review queue",
-		"returnToSponsor": "Return with comments"
+		"returnToSponsor": "Return and write message"
 	},
 	"reviewThread": {
+		"appointment": {
+			"markScheduled": "Mark meeting as scheduled",
+			"request": "Request a meeting",
+			"requestDefaultBody": "I request a meeting to discuss this proposal further.",
+			"requestExplanation": "Ask to meet about this proposal. This is separate from sending a message.",
+			"scheduledDefaultBody": "This meeting request was marked as scheduled.",
+			"scheduledExplanation": "Mark this meeting as scheduled when you have agreed a time."
+		},
 		"cancel": "Cancel",
 		"compose": {
 			"post": "Post note",
 			"posting": "Posting…",
 			"postReply": "Post reply",
+			"returnInvite": "Write a message explaining what the sponsor should change.",
 			"sponsorLabel": "Your reply",
 			"sponsorPlaceholder": "Write a reply for the reviewers…",
 			"teacherLabel": "Your note",
-			"teacherPlaceholder": "Leave a note for the sponsor…"
+			"teacherPlaceholder": "Write a message for the sponsor…"
 		},
 		"delete": "Delete",
 		"deleteConfirm": "Delete this message?",
@@ -1324,11 +1403,15 @@
 		"editAria": "Edit message",
 		"empty": "No messages yet. Start the conversation below.",
 		"errors": {
+			"appointmentRequest": "Could not request a meeting. Please try again.",
+			"appointmentScheduled": "Could not mark this meeting request as scheduled. Please try again.",
 			"delete": "Could not delete this message. Please try again.",
 			"post": "Could not post this message. Please try again.",
 			"save": "Could not save this message. Please try again."
 		},
 		"kind": {
+			"appointmentRequest": "Appointment request",
+			"appointmentScheduled": "Appointment scheduled",
 			"reviewerComment": "Reviewer comment",
 			"sponsorReply": "Sponsor reply"
 		},

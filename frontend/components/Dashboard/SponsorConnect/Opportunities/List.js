@@ -10,13 +10,17 @@ import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
+import { QuestionMarkIcon } from "../../../DesignSystem/Icons";
 import MessageCard from "../../../DesignSystem/MessageCard";
 import { OpportunityPageShell as Shell } from "./OpportunityPageLayout";
 import {
   isProposalFormAnswerComplete,
   getProposalEntrySavedAt,
 } from "../../../../lib/opportunityProposalData";
-import { isRoundSponsorFormsVisible } from "../../../../lib/opportunityEditorTabs";
+import {
+  formTabKey,
+  isRoundSponsorFormsVisible,
+} from "../../../../lib/opportunityEditorTabs";
 import {
   OPPORTUNITY_FLASH,
   resolveOpportunityFlashMessage,
@@ -24,9 +28,10 @@ import {
 } from "../../../../lib/opportunityFlash";
 import { getUnreadReviewerCommentNotes } from "../../../../lib/reviewThreadRound";
 import OpportunityChatModal from "./OpportunityChatModal";
-import OpportunityFollowUpFormModal from "./OpportunityFollowUpFormModal";
+import OpportunityClassForumModal from "./OpportunityClassForumModal";
 import OpportunityListStepper from "./OpportunityListStepper";
 import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
+import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
 
 const MESSAGE_ICON = (
   <img
@@ -47,9 +52,8 @@ const TopBar = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 `;
@@ -61,14 +65,14 @@ const Empty = styled.div`
   border: 1px solid #e6e6e6;
   border-radius: 16px;
   color: #5f6871;
-  font-family: "Inter", sans-serif;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 const ListStack = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  font-family: "Inter", sans-serif;
 `;
 
 const OpportunityCard = styled.article`
@@ -81,6 +85,7 @@ const OpportunityCard = styled.article`
 const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
   align-items: flex-start;
   gap: 16px;
   padding: 16px 20px;
@@ -101,16 +106,15 @@ const Identity = styled.div`
 
 const Title = styled.h2`
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Base);
+  letter-spacing: 0;
   color: #171717;
   word-break: break-word;
-  font-family: "Inter", sans-serif;
 `;
 
 const Hint = styled.div`
-  font-size: 13px;
-  line-height: 1.4;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #92400e;
   background: #fef9ee;
   border: 1px solid #fcd34d;
@@ -121,9 +125,13 @@ const Hint = styled.div`
 const HeaderAside = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
   align-items: flex-end;
   gap: 8px;
   flex-shrink: 0;
+  border-top: 1px solid #e6e6e6;
+  padding-top: 16px;
 
   @media (max-width: 720px) {
     align-items: stretch;
@@ -161,9 +169,8 @@ const UnreadBadge = styled.span`
   border-radius: 100px;
   background: var(--MH-Theme-Secondary-Dark, #6f26ce);
   color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   text-align: center;
   box-sizing: border-box;
   pointer-events: none;
@@ -174,7 +181,7 @@ const FormsPanel = styled.div`
   flex-direction: column;
   gap: 10px;
   padding: 14px 20px 16px;
-  background: #fafbfc;
+  background: #ffffff;
   border-top: 1px solid #e6e6e6;
 `;
 
@@ -190,7 +197,8 @@ const ROW_FLASH_STYLE = {
 };
 
 const RoundMeta = styled.div`
-  font-size: 12px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #5f6871;
 `;
 
@@ -211,9 +219,8 @@ const FormGridHeader = styled.div`
   padding: 10px 14px;
   background: #f0f4f6;
   border-bottom: 1px solid #e6e6e6;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   text-transform: uppercase;
   color: #5f6871;
 
@@ -241,8 +248,8 @@ const FormGridRow = styled.div`
 `;
 
 const FormName = styled.div`
-  font-size: 13px;
-  font-weight: 500;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: #171717;
   min-width: 0;
   word-break: break-word;
@@ -254,8 +261,8 @@ const FormStatus = styled.span`
   justify-self: end;
   padding: 2px 8px;
   border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   white-space: nowrap;
 
   &.complete {
@@ -352,10 +359,13 @@ export default function OpportunitiesList({ user }) {
   });
   const [deleteOpportunity] = useMutation(DELETE_OPPORTUNITY);
   const [chatModal, setChatModal] = useState(null);
-  const [formModal, setFormModal] = useState(null);
+  const [classForumModal, setClassForumModal] = useState(null);
   const [unsubmitOpportunityId, setUnsubmitOpportunityId] = useState(null);
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
+  const unsubmitStatus = opportunities.find(
+    (opportunity) => opportunity.id === unsubmitOpportunityId,
+  )?.status;
 
   const handleDelete = async (id) => {
     if (
@@ -378,35 +388,11 @@ export default function OpportunitiesList({ user }) {
     });
   };
 
-  const handleOpenForm = (opportunity, form, round) => {
-    setFormModal({
-      opportunity,
-      formMeta: {
-        id: form.id,
-        title: form.title || form.key || form.id,
-        key: form.key,
-        version: form.version,
-        status: form.status,
-        roundId: round?.id || null,
-        roundTitle: round?.title || null,
-        networkId: round?.classNetwork?.id || null,
-        networkTitle: round?.classNetwork?.title || null,
-      },
+  const handleOpenForm = (opportunity, form) => {
+    router.push({
+      pathname: "/dashboard/sponsor-connect/opportunities",
+      query: { op: opportunity.id, tab: formTabKey(form.id) },
     });
-  };
-
-  const handleFormSaved = () => {
-    const opportunityId = formModal?.opportunity?.id || null;
-    setFormModal(null);
-    if (opportunityId) {
-      setRowFlash({
-        opportunityId,
-        message: tConnect("myOpportunitiesList.flash.formSaved", {}, {
-          default: "Follow-up form saved.",
-        }),
-      });
-    }
-    refetch();
   };
 
   const handleUnsubmitSuccess = (nextStatus) => {
@@ -487,7 +473,7 @@ export default function OpportunitiesList({ user }) {
             const networks = opportunity.classNetworks || [];
             const networkCount = networks.length;
             const isPreSelected = opportunity.status === "pre_selected";
-            const canUnsubmit = opportunity.status === "pending_review";
+            const canUnsubmit = isReturnableOpportunityStatus(opportunity.status);
             const heldRounds = isPreSelected ? opportunity.rounds || [] : [];
             const unreadNotes = getUnreadReviewerCommentNotes({
               notes: opportunity.reviewNotes,
@@ -559,6 +545,19 @@ export default function OpportunitiesList({ user }) {
                           </UnreadBadge>
                         ) : null}
                       </MessageButtonWrap>
+                      <Chip
+                        label={tConnect(
+                          "myOpportunitiesList.classForum.open",
+                          {},
+                          { default: "Class FAQ" },
+                        )}
+                        leading={<QuestionMarkIcon width={18} height={18} />}
+                        onClick={() =>
+                          setClassForumModal({
+                            opportunityId: opportunity.id,
+                          })
+                        }
+                      />
                       <Chip
                         label={t("opportunities.edit", {}, {
                           default: "Edit",
@@ -674,11 +673,7 @@ export default function OpportunitiesList({ user }) {
                                           "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
                                       }}
                                       onClick={() =>
-                                        handleOpenForm(
-                                          opportunity,
-                                          form,
-                                          round,
-                                        )
+                                        handleOpenForm(opportunity, form)
                                       }
                                     >
                                       {tConnect(
@@ -695,11 +690,7 @@ export default function OpportunitiesList({ user }) {
                                         { default: "Respond to form" },
                                       )}
                                       onClick={() =>
-                                        handleOpenForm(
-                                          opportunity,
-                                          form,
-                                          round,
-                                        )
+                                        handleOpenForm(opportunity, form)
                                       }
                                     />
                                   )}
@@ -725,17 +716,17 @@ export default function OpportunitiesList({ user }) {
         initialRoundId={chatModal?.initialRoundId}
         user={user}
       />
-      <OpportunityFollowUpFormModal
-        open={Boolean(formModal?.formMeta?.id)}
-        onClose={() => setFormModal(null)}
-        onSaved={handleFormSaved}
-        opportunity={formModal?.opportunity}
-        formMeta={formModal?.formMeta}
+      <OpportunityClassForumModal
+        open={Boolean(classForumModal?.opportunityId)}
+        onClose={() => setClassForumModal(null)}
+        opportunityId={classForumModal?.opportunityId}
+        user={user}
       />
       <UnsubmitOpportunityModal
         open={Boolean(unsubmitOpportunityId)}
         onClose={() => setUnsubmitOpportunityId(null)}
         opportunityId={unsubmitOpportunityId}
+        status={unsubmitStatus}
         onSuccess={handleUnsubmitSuccess}
       />
     </Shell>

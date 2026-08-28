@@ -17,18 +17,18 @@ import ConnectResourceToCardModal from "./ConnectResourceToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import Button from "../../../../DesignSystem/Button";
+import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
 import Chip from "../../../../DesignSystem/Chip";
 import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 
-const SecondaryButton = styled.button`
+// Toggle/filter chrome — not a CTA. Keep as local styled button.
+const LinkedCardsToggleButton = styled.button`
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   text-align: center;
   border-radius: 8px;
   cursor: pointer;
@@ -46,9 +46,6 @@ const SecondaryButton = styled.button`
     border-color: #4db6ac;
     color: #4db6ac;
   }
-`;
-
-const LinkedCardsToggleButton = styled(SecondaryButton)`
   ${(props) =>
     props.$active &&
     `
@@ -65,11 +62,8 @@ const EditButton = styled.button`
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   text-align: center;
   border-radius: 100px;
   cursor: pointer;
@@ -88,91 +82,6 @@ const EditButton = styled.button`
     color: #4db6ac;
   }
 `;
-
-const StatusChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  white-space: nowrap;
-  border: 1.5px solid;
-  background: transparent;
-  ${(props) =>
-    props.$isPublished
-      ? `
-    background: #def8fb;
-    border-color: #625b71;
-    color: #434343;
-  `
-      : `
-    background: #f3f3f3;
-    border-color: #616161;
-    color: #616161;
-  `}
-`;
-
-const LinkedCardChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  white-space: normal;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  max-width: 100%;
-  border: 1px solid #625B71;
-  background: ${(props) => (props.$placeholder ? "#D8D3E7" : "#F5F5F5")};
-  color: #434343;
-  margin: 2px 4px 2px 0;
-`;
-
-const styledChipPublished = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "8px",
-  height: "32px",
-  boxSizing: "border-box",
-  justifyContent: "center",
-  flexShrink: "0",
-  borderRadius: "8px",
-  background: "#DEF8FB",
-  border: "1px solid #625B71",
-  maxWidth: "100%",
-  wordBreak: "break-word",
-  cursor: "pointer",
-  fontFamily: "Lato",
-  fontSize: "14px",
-  fontWeight: 400,
-  color: "#434343",
-};
-
-const styledChipUnpublished = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "8px",
-  height: "32px",
-  boxSizing: "border-box",
-  justifyContent: "center",
-  flexShrink: "0",
-  borderRadius: "8px",
-  background: "#F3F3F3",
-  border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
-  maxWidth: "100%",
-  wordBreak: "break-word",
-  cursor: "pointer",
-  fontFamily: "Lato",
-  fontSize: "14px",
-  fontWeight: 400,
-  color: "#434343",
-};
 
 const BulkActionsButtonWrapper = styled.div`
   display: inline-flex;
@@ -381,13 +290,13 @@ export default function ResourceTab({ resources, myclass, user }) {
     const isPublic = resource?.isPublic === true;
     const isYou = resource?.author?.id === user?.id;
     if (isPublic) {
-      return <Chip label={t("resource.public", "Public")} shape="pill" />;
+      return <Chip label={t("resource.public", "Public")} />;
     }
     if (isYou) {
-      return <Chip label={t("resource.you", "You")} shape="pill" />;
+      return <Chip label={t("resource.you", "You")} />;
     }
     const username = resource?.author?.username ?? "";
-    return <Chip label={username || "—"} shape="pill" />;
+    return <Chip label={username || "—"} />;
   };
 
   const StatusRenderer = (params) => {
@@ -423,13 +332,17 @@ export default function ResourceTab({ resources, myclass, user }) {
               : t("resource.publishToStudents", "Publish to students")
         }
       >
-        <StatusChip $isPublished={isPublished}>
-          {isUpdating
-            ? t("common.loading", "Updating…")
-            : isPublished
-              ? t("resource.published", "Published")
-              : t("resource.unpublished", "Unpublished")}
-        </StatusChip>
+        <Chip
+          variant="static"
+          tone={isPublished ? "info" : "neutral"}
+          label={
+            isUpdating
+              ? t("common.loading", "Updating…")
+              : isPublished
+                ? t("resource.published", "Published")
+                : t("resource.unpublished", "Unpublished")
+          }
+        />
       </button>
     );
   };
@@ -468,9 +381,12 @@ export default function ResourceTab({ resources, myclass, user }) {
             }}
             style={{ ...chipButtonStyle, display: "flex", alignItems: "center", textDecoration: "none" }}
           >
-            <LinkedCardChip $placeholder>
-              {t("resource.noTemplateBoardAssociated", "No template board associated to class")}
-            </LinkedCardChip>
+            <Chip
+              variant="static"
+              tone="warning"
+              labelLines={2}
+              label={t("resource.noTemplateBoardAssociated", "No template board associated to class")}
+            />
           </Link>
         );
       }
@@ -480,9 +396,12 @@ export default function ResourceTab({ resources, myclass, user }) {
           onClick={handleConnectClick}
           style={{ ...chipButtonStyle, display: "flex", alignItems: "center" }}
         >
-          <LinkedCardChip $placeholder>
-            {t("resource.clickToConnectToCard", "Click to connect to card")}
-          </LinkedCardChip>
+          <Chip
+            variant="static"
+            tone="warning"
+            labelLines={2}
+            label={t("resource.clickToConnectToCard", "Click to connect to card")}
+          />
         </button>
       );
     }
@@ -511,7 +430,7 @@ export default function ResourceTab({ resources, myclass, user }) {
     return (
       <span style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 0 }}>
         {countLabel && (
-          <span style={{ marginRight: "8px", marginBottom: "4px", fontSize: "13px", color: "#616161" }}>
+          <span className="MH-Type-Body-Base" style={{ marginRight: "8px", marginBottom: "4px", color: "#616161" }}>
             {countLabel}:
           </span>
         )}
@@ -535,9 +454,9 @@ export default function ResourceTab({ resources, myclass, user }) {
               }}
               style={chipButtonStyle}
             >
-              <LinkedCardChip>{c?.section?.title || "Section"}</LinkedCardChip>
+              <Chip variant="static" tone="neutral" label={c?.section?.title || "Section"} style={{ margin: "2px 4px 2px 0" }} />
             </button>
-            <span style={{ margin: "0 4px", fontSize: "14px", color: "#616161" }}>/</span>
+            <span className="MH-Type-Body-Base" style={{ margin: "0 4px", color: "#616161" }}>/</span>
             <button
               type="button"
               onClick={(e) => {
@@ -546,7 +465,7 @@ export default function ResourceTab({ resources, myclass, user }) {
               }}
               style={chipButtonStyle}
             >
-              <LinkedCardChip>{c?.title || "Card"}</LinkedCardChip>
+              <Chip variant="static" tone="neutral" label={c?.title || "Card"} style={{ margin: "2px 4px 2px 0" }} />
             </button>
           </span>
         ))}
@@ -894,11 +813,9 @@ export default function ResourceTab({ resources, myclass, user }) {
           style={{ gap: 12, marginRight: 0, paddingRight: 12 }}
         >
           <span>{t("resource.projectCard", "Project card")}</span>
-          <img
-            src="/assets/icons/project_card_icon.svg"
-            alt=""
-            width={34}
-            height={18}
+          <ProjectCardIcon
+            width={24}
+            height={24}
             style={{ flexShrink: 0, opacity: showLinkedToCardColumn ? 1 : 0.8 }}
           />
         </LinkedCardsToggleButton>
@@ -922,104 +839,35 @@ export default function ResourceTab({ resources, myclass, user }) {
           </Button>
         </BulkActionsButtonWrapper>
         <span style={{ flexShrink: 0 }} aria-hidden>|</span>
-        <button
-          type="button"
+        <Chip
+          label={t("resource.published", "Published")}
+          selected={selectedPublishedFilter === true}
           onClick={() => handlePublishedFilterToggle(true)}
-          style={{
-            ...styledChipPublished,
-            padding: selectedPublishedFilter === true ? "6px 8px 6px 12px" : "6px 12px",
-            backgroundColor: selectedPublishedFilter === true ? "#DEF8FB" : "#ffffff",
-            borderColor: selectedPublishedFilter === true ? "#625B71" : "#A1A1A1",
-          }}
-        >
-          <span>{t("resource.published", "Published")}</span>
-          {selectedPublishedFilter === true && (
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "18px",
-                height: "18px",
-                flexShrink: 0,
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePublishedFilterToggle(true);
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#171717" />
-              </svg>
-            </span>
-          )}
-        </button>
-        <button
-          type="button"
+          onClose={
+            selectedPublishedFilter === true
+              ? () => handlePublishedFilterToggle(true)
+              : undefined
+          }
+        />
+        <Chip
+          label={t("resource.unpublished", "Unpublished")}
+          selected={selectedPublishedFilter === false}
           onClick={() => handlePublishedFilterToggle(false)}
-          style={{
-            ...styledChipUnpublished,
-            padding: selectedPublishedFilter === false ? "6px 8px 6px 12px" : "6px 12px",
-            backgroundColor: selectedPublishedFilter === false ? "#F3F3F3" : "#ffffff",
-            borderColor: selectedPublishedFilter === false ? "#625B71" : "#A1A1A1",
-          }}
-        >
-          <span>{t("resource.unpublished", "Unpublished")}</span>
-          {selectedPublishedFilter === false && (
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "18px",
-                height: "18px",
-                flexShrink: 0,
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePublishedFilterToggle(false);
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#171717" />
-              </svg>
-            </span>
-          )}
-        </button>
+          onClose={
+            selectedPublishedFilter === false
+              ? () => handlePublishedFilterToggle(false)
+              : undefined
+          }
+        />
         {linkedCardFilter != null && (
           <>
             <span style={{ flexShrink: 0 }} aria-hidden>|</span>
-            <button
-              type="button"
+            <Chip
+              label={t("resource.removeCardColumnFilter", "Remove card/column filter")}
+              selected
               onClick={clearLinkedCardFilter}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                height: "32px",
-                boxSizing: "border-box",
-                justifyContent: "center",
-                fontSize: "14px",
-                flexShrink: 0,
-                borderRadius: "8px",
-                padding: "6px 8px 6px 12px",
-                background: "#E4DFF6",
-                border: "1px solid #625B71",
-                color: "#625B71",
-                maxWidth: "100%",
-                wordBreak: "break-word",
-                cursor: "pointer",
-              }}
-            >
-              <span>{t("resource.removeCardColumnFilter", "Remove card/column filter")}</span>
-              <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", flexShrink: 0 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#171717" />
-                </svg>
-              </span>
-            </button>
+              onClose={clearLinkedCardFilter}
+            />
           </>
         )}
       </div>

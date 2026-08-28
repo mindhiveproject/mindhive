@@ -7,7 +7,8 @@ import { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import styled from "styled-components";
 
-import TipTapEditor from "../../../../../TipTap/Main";  
+import Chip from "../../../../../DesignSystem/Chip";
+import TipTapEditor from "../../../../../TipTap/Main";
 import { StyledTipTap } from "../../../../../TipTap/StyledTipTap";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 
@@ -17,6 +18,7 @@ import { EDIT_HOMEWORK } from "../../../../../Mutations/Homework";
 import useForm from "../../../../../../lib/useForm";
 
 import Status from "./Status";
+import Button from "../../../../../DesignSystem/Button";
 
 // Styled components
 const Container = styled.div`
@@ -38,88 +40,6 @@ const ButtonContainer = styled.div`
   align-items: center;
 `;
 
-const SecondaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
-  
-  &:hover {
-    background: #f5f5f5;
-    border-color: #b3b3b3;
-    color: #666666;
-  }
-  
-  &:active {
-    background: #e0f2f1;
-    border-color: #4db6ac;
-    color: #4db6ac;
-  }
-`;
-
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #336F8A;
-  color: #ffffff;
-  
-  &:hover {
-    background: #ffc107;
-    color: #1a1a1a;
-  }
-  
-  &:active {
-    background: #4db6ac;
-    color: #1a1a1a;
-  }
-  
-  &:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-  }
-`;
-
-const UsernameChip = styled.div`
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  padding: 4px 12px 4px 12px;
-  margin-top: 16px;
-  border-radius: 100px;
-  font-family: Inter;
-  font-size: 14px;
-  font-weight: 600;
-  border: 1px solid #171717;
-  background: #FFFFFF;
-  color: #171717;
-`;
 
 const Section = styled.div`
   margin-bottom: 32px;
@@ -138,17 +58,15 @@ const SectionHeader = styled.div`
 
 const SectionTitle = styled.h2`
   margin: 0;
-  font-family: Lato;
-  font-size: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
 const ShowButton = styled.button`
   padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   border-radius: 100px;
   border: 1.5px solid #336F8A;
   background: #ffffff;
@@ -179,18 +97,15 @@ const InfoItem = styled.div`
 `;
 
 const InfoLabel = styled.label`
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   color: #666666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 `;
 
 const InfoValue = styled.div`
-  font-family: Lato;
-  font-size: 16px;
-  font-weight: 400;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
@@ -200,12 +115,10 @@ const CommentsSection = styled.div`
 
 const CommentsLabel = styled.label`
   display: block;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   color: #666666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   margin-bottom: 12px;
 `;
 
@@ -216,9 +129,8 @@ const CommentsEditorWrapper = styled.div`
   .tiptapEditor {
     .ProseMirror {
       padding: 12px;
-      font-family: Lato;
-      font-size: 14px;
-      line-height: 1.5;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       min-height: 120px;
       border: 1px solid #e0e0e0;
       border-radius: 4px;
@@ -317,7 +229,7 @@ export default function ReviewHomework({
             }}
             style={{ textDecoration: 'none' }}
           >
-            <SecondaryButton>← {t("assignment.goBack") || "Go back"}</SecondaryButton>
+            <Button variant="outline">{t("assignment.goBack", {}, { default: "Go back" })}</Button>
           </Link>
         </ButtonContainer>
       </TopSection>
@@ -363,9 +275,12 @@ export default function ReviewHomework({
       {/* Student's Homework Section */}
       <Section>
         <SectionTitle>{t("assignment.studentEntry") || "Student's entry"}</SectionTitle>
-        <UsernameChip>
-          {homework?.author?.username || 'Unknown Student'}
-        </UsernameChip>
+        <Chip
+          variant="static"
+          tone="neutral"
+          label={homework?.author?.username || 'Unknown Student'}
+          style={{ marginTop: 16 }}
+        />
         <StyledTipTap>
           <TipTapEditor
             content={inputs?.content}
@@ -426,14 +341,15 @@ export default function ReviewHomework({
           }}
           style={{ textDecoration: 'none' }}
         >
-          <SecondaryButton>{t("teacherClass.closeWithoutSaving") || "Close without saving"}</SecondaryButton>
+          <Button variant="outline">{t("teacherClass.closeWithoutSaving", {}, { default: "Close without saving" })}</Button>
         </Link>
-        <PrimaryButton
+        <Button
+          variant="filled"
           onClick={handleSave}
           disabled={editLoading || homeworkLoading}
         >
-          {editLoading ? (t("teacherClass.saving") || "Saving...") : (t("teacherClass.saveAndClose") || "Save and close")}
-        </PrimaryButton>
+          {editLoading ? t("teacherClass.saving", {}, { default: "Saving..." }) : t("teacherClass.saveAndClose", {}, { default: "Save and close" })}
+        </Button>
       </ActionButtons>
     </Container>
   );

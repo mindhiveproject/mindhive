@@ -3,7 +3,6 @@ import ParticipantPage from "./ParticipantPage/Main";
 import Builder from "./Builder/Main";
 import Review from "./Review/Main";
 import Collect from "./Collect/Wrapper";
-import Visualize from "./Visualize/Wrapper";
 import DataJournals from "./DataJournal/Main";
 
 export default function Router({ query, user, tab, toggleSidebar }) {
@@ -54,17 +53,6 @@ export default function Router({ query, user, tab, toggleSidebar }) {
   if (tab === "collect") {
     return (
       <Collect
-        query={query}
-        user={user}
-        tab={tab}
-        toggleSidebar={toggleSidebar}
-      />
-    );
-  }
-
-  if (tab === "visualize") {
-    return (
-      <Visualize
         query={query}
         user={user}
         tab={tab}

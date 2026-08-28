@@ -6,7 +6,7 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
-import { PrimaryButton, SecondaryButton } from "./EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -30,24 +30,24 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 20px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   p {
     margin: 0;
     color: #5f6871;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   textarea {
     border: 1px solid #d3dae0;
     border-radius: 8px;
     padding: 10px 12px;
-    font-family: "Lato", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     min-height: 80px;
     resize: vertical;
   }
@@ -65,8 +65,8 @@ const Warning = styled.div`
   background: #fff8e6;
   border: 1px solid #f0d39a;
   color: #6e5400;
-  font-size: 13px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 const ValidationErrors = styled.div`
@@ -75,8 +75,8 @@ const ValidationErrors = styled.div`
   background: #fcebea;
   border: 1px solid #f5c2bf;
   color: #871b16;
-  font-size: 13px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   white-space: pre-wrap;
   max-height: 240px;
   overflow-y: auto;
@@ -154,7 +154,10 @@ export default function PublishModal({
         <label
           style={{ display: "flex", flexDirection: "column", gap: 6 }}
         >
-          <span style={{ fontSize: 13, fontWeight: 600, color: "#171717" }}>
+          <span
+            className="MH-Type-Label-Base"
+            style={{ color: "#171717" }}
+          >
             {t(
               "section.createCardModal.publishModal.changelogLabel",
               {},
@@ -176,14 +179,15 @@ export default function PublishModal({
         </label>
 
         <div className="actions">
-          <SecondaryButton type="button" onClick={onCancel} disabled={busy}>
+          <Button variant="outline" type="button" onClick={onCancel} disabled={busy}>
             {t(
               "section.createCardModal.publishModal.cancel",
               {},
               { default: "Cancel" }
             )}
-          </SecondaryButton>
-          <PrimaryButton
+          </Button>
+          <Button
+            variant="filled"
             type="button"
             onClick={() => onConfirm(changelog.trim() || null)}
             disabled={busy}
@@ -199,7 +203,7 @@ export default function PublishModal({
                   {},
                   { default: "Confirm publish" }
                 )}
-          </PrimaryButton>
+          </Button>
         </div>
       </Card>
     </Backdrop>

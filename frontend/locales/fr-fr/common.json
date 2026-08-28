@@ -31,6 +31,7 @@
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
+		"confirmPassword": "",
 		"email": "E-mail",
 		"forgotPassword": "Mot de passe oublié?",
 		"login": "Se connecter",
@@ -40,8 +41,11 @@
 			"bannerTitle": "",
 			"invalid": ""
 		},
+		"next": "",
 		"password": "Mot de passe",
 		"requestReset": "Demande de réinitialisation",
+		"reset": "",
+		"resetTitle": "",
 		"username": "Nom d'utilisateur"
 	},
 	"cancel": "Annuler",
@@ -455,6 +459,7 @@
 		"level": "Niveau",
 		"myTags": "Mes tags",
 		"noParentTag": "Aucune balise parent",
+		"save": "",
 		"searchPlaceholder": "Rechercher des tags",
 		"secondLevel": "Deuxième niveau",
 		"selectParentTag": "Sélectionner la balise parent",

@@ -213,7 +213,7 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
 
   const helpContent = useMemo(
     () => (
-      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+      <p className="MH-Type-Body-Base" style={{ margin: 0, color: "#625B71" }}>
         {t(`${G_COMMON}.help.resourcesIntro`, {}, {
           default: "Learn more about this component with the resources below.",
         })}
@@ -336,7 +336,6 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
                   label={option.chipLabel}
                   selected={selectedDataLayout === option.value}
                   onClick={() => onLayoutChoice(option)}
-                  shape="square"
                   ariaLabel={option.title}
                   style={
                     selectedDataLayout === option.value
@@ -387,7 +386,6 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
                   label={option.chipLabel}
                   selected={selectedValueMode === option.value}
                   onClick={() => onValueModeChoice(option)}
-                  shape="square"
                   ariaLabel={option.title}
                   style={
                     selectedValueMode === option.value

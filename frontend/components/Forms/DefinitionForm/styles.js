@@ -7,7 +7,8 @@ export const Card = styled.section`
   gap: ${(p) => (p.$quiet ? "16px" : "20px")};
   padding: ${(p) => (p.$quiet ? "0" : "28px")};
   border-radius: ${(p) => (p.$quiet ? "0" : "16px")};
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  background: ${(p) =>
+    p.$quiet ? "transparent" : "var(--MH-Theme-Neutrals-White, #ffffff)"};
   box-shadow: ${(p) =>
     p.$quiet ? "none" : "0px 4px 24px rgba(0, 0, 0, 0.05)"};
   border: ${(p) =>
@@ -15,14 +16,15 @@ export const Card = styled.section`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .card-description {
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     margin: 0;
   }
 `;
@@ -41,8 +43,8 @@ export const FieldShell = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: "Lato", sans-serif;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 
   .field-label-block {
@@ -53,13 +55,15 @@ export const FieldShell = styled.label`
   }
 
   span.label-text {
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   span.hint {
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   span.required {
@@ -69,7 +73,8 @@ export const FieldShell = styled.label`
 
   span.error {
     color: #c0392b;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   input[type="text"],
@@ -80,8 +85,8 @@ export const FieldShell = styled.label`
     border: 2px solid ${({ $hasError }) => ($hasError ? "#c0392b" : "var(--MH-Theme-Neutrals-Medium, #a1a1a1)")};
     border-radius: 8px;
     padding: 9px 11px;
-    font-family: "Lato", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     background: var(--MH-Theme-Neutrals-White, #ffffff);
     width: 100%;
@@ -112,7 +117,8 @@ export const FieldShell = styled.label`
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     cursor: pointer;
   }
@@ -138,14 +144,15 @@ export const FieldShell = styled.label`
     gap: 10px;
     margin: 0;
     padding: 6px 4px;
-    font-size: 14px;
-    line-height: 1.4;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
   .select-option-preview.is-selected {
     color: var(--MH-Theme-Neutrals-Black, #171717);
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 
   .select-option-marker {
@@ -217,8 +224,8 @@ export const ReadOnlyBanner = styled.div`
   background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
   border: 1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1);
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 export function fieldShellErrorProps(error) {

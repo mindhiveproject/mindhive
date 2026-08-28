@@ -29,7 +29,6 @@ export const StyledMenuBar = styled.div`
   border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   border-radius: 12px;
 
-  font-family: "Inter";
   color: var(--MH-Theme-Neutrals-Black, #171717);
 
   /* Long permission sets overflow; keep the scrollbar out of the layout. */
@@ -124,8 +123,8 @@ export const StyledMenuBar = styled.div`
        here too, without clipping a label that wraps to two lines in a longer
        translation. */
     .navbar-container.vertical .navbar-item {
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Large);
+      letter-spacing: 0;
     }
   }
 `;
@@ -166,10 +165,8 @@ export const StyledMenuIconButton = styled.button`
     border-radius: 20px;
     background: var(--MH-Theme-Warning-Base, #b9261a);
     color: white;
-    font-family: "Inter";
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 18px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
   }
 `;
 
@@ -200,10 +197,8 @@ export const StyledMenuSearch = styled.div`
     border: 0;
     outline: none;
     background: none;
-    font-family: "Inter";
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
 
     &::placeholder {
@@ -233,7 +228,6 @@ export const StyledMenuProfile = styled.div`
     color: var(--MH-Theme-Neutrals-Black, #171717);
     cursor: pointer;
     text-align: left;
-    font-family: "Inter";
 
     &:hover {
       background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
@@ -252,9 +246,8 @@ export const StyledMenuProfile = styled.div`
   /* MH-Theme/label/small. Truncates because a user holding several permissions
      renders them all, which outgrows the card well before the name does. */
   .profileRole {
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 16px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -263,9 +256,8 @@ export const StyledMenuProfile = styled.div`
 
   /* MH-Theme/label/base — matches the nav item and Button label size. */
   .profileName {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -310,12 +302,13 @@ export const StyledMenuProfile = styled.div`
     min-width: 0;
     align-items: ${(props) => (props.$collapsed ? "center" : "stretch")};
 
-    /* Settings renders through the shared Navbar component; match it to the
-       Log off button's label/base size below. No explicit height here either
+    /* Settings renders through the shared Navbar component; keep it at the
+       navbar's own label/large size so it lines up with the rest of the rail
+       (and with the Log off button below). No explicit height here either
        — see the .menuBarNav override for why. */
     .navbar-container.vertical .navbar-item {
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Large);
+      letter-spacing: 0;
     }
   }
 
@@ -329,19 +322,23 @@ export const StyledMenuProfile = styled.div`
     padding: ${(props) => (props.$collapsed ? "8px" : "8px 24px 8px 16px")};
     width: ${(props) => (props.$collapsed ? "40px" : "auto")};
     border: 0;
-    border-radius: 100px;
+    /* Square edges like the vertical nav items above — no pill. The 3px
+       transparent right border mirrors their reserved selected-rule space so
+       the hover fills line up exactly. */
+    border-radius: 0;
+    border-right: 3px solid transparent;
     background: none;
     cursor: pointer;
 
-    /* MH-Theme/label/base — matches the nav items and Settings above it. */
-    font-family: "Inter";
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
+    /* MH-Type/label/large — matches the nav items and Settings above it. */
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
     color: var(--MH-Theme-Warning-Base, #b9261a);
 
+    /* Hover is a background fill only, matching the nav items — a warning tint
+       here rather than the accent, since this is the destructive action. */
     &:hover {
-      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      background: var(--MH-Theme-Warning-Light, #edcecd);
       opacity: 1;
     }
   }

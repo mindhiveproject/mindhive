@@ -76,6 +76,17 @@ export function getTemplateOptionKey(board, myclass) {
   return `${myclass?.id}:${board?.id}`;
 }
 
+export function getPublicTemplateOptionKey(board) {
+  return `public:${board?.id}`;
+}
+
+export function getOptionKey(option) {
+  if (option?.origin === "public") {
+    return getPublicTemplateOptionKey(option.board);
+  }
+  return getTemplateOptionKey(option?.board, option?.class);
+}
+
 export function getVisibleTemplateOptionsForClasses(classes) {
   if (!Array.isArray(classes)) return [];
   const seen = new Set();
@@ -88,11 +99,18 @@ export function getVisibleTemplateOptionsForClasses(classes) {
       const key = getTemplateOptionKey(board, myclass);
       if (seen.has(key)) continue;
       seen.add(key);
-      options.push({ board, class: myclass });
+      options.push({ board, class: myclass, origin: "class" });
     }
   }
 
   return options;
+}
+
+export function getPublicTemplateOptions(boards) {
+  if (!Array.isArray(boards)) return [];
+  return boards
+    .filter((board) => board?.id)
+    .map((board) => ({ board, origin: "public", class: null }));
 }
 
 export function setTemplateVisibilityForClass(settings, classId, visible) {

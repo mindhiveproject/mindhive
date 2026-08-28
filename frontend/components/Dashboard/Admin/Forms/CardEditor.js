@@ -16,13 +16,10 @@ import {
   EditorPanelShell,
   FieldRow,
   Section,
-  PrimaryButton,
-  SecondaryButton,
   PillCheckbox,
 } from "./EditorPanelStyles";
 import I18nField, { cleanI18n } from "./I18nField";
-
-const DangerButton = SecondaryButton;
+import Button from "../../../DesignSystem/Button";
 
 const CARD_TYPES = [
   { value: "fields", label: "Fields" },
@@ -228,17 +225,18 @@ export default function CardEditor({ card, definitionId, onDeleted }) {
       </FieldRow>
 
       <Section>
-        <PrimaryButton type="button" onClick={handleSave} disabled={loading}>
+        <Button variant="filled" type="button" onClick={handleSave} disabled={loading}>
           {loading ? "Saving…" : "Save card"}
-        </PrimaryButton>
-        <DangerButton
+        </Button>
+        <Button
+          variant="outline"
           type="button"
           onClick={handleDelete}
           disabled={deleting}
           style={{ color: "#c0392b", borderColor: "#f5c2bf" }}
         >
           {deleting ? "Deleting…" : "Delete card"}
-        </DangerButton>
+        </Button>
         {flash ? <span className="flash">{flash}</span> : null}
       </Section>
     </EditorPanelShell>

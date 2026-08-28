@@ -8,23 +8,15 @@ const StyledNotes = styled.div`
 
   p {
     padding: 20px;
-    font-family: Lato;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
 
   a {
-    font-family: Lato;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
     color: #666666;
   }

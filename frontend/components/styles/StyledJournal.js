@@ -45,7 +45,8 @@ const StyledJournal = styled.div`
       margin: 5px;
       padding: 10px;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      font-weight: bold;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
     }
 
     .line {
@@ -76,7 +77,8 @@ const StyledJournal = styled.div`
       grid-gap: 10px;
       grid-template-columns: 1fr auto auto;
       .date {
-        font-size: 14px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: grey;
       }
     }

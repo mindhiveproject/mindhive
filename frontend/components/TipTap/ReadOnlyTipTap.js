@@ -13,7 +13,6 @@ export const ReadOnlyTipTap = styled.div`
 
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
     margin: 1rem 0 0.5rem;
     color: #274E5B;
   }
@@ -30,12 +29,12 @@ export const ReadOnlyTipTap = styled.div`
     }
   }
 
-  h1 { font-size: 2.5rem; }
-  h2 { font-size: 2rem; }
-  h3 { font-size: 1.75rem; }
-  h4 { font-size: 1.5rem; }
-  h5 { font-size: 1.25rem; }
-  h6 { font-size: 1rem; }
+  h1 { font: var(--MH-Type-Heading-Base); letter-spacing: 0; }
+  h2 { font: var(--MH-Type-Heading-Small); letter-spacing: 0; }
+  h3 { font: var(--MH-Type-Title-Large); letter-spacing: 0; }
+  h4 { font: var(--MH-Type-Title-Base); letter-spacing: 0; }
+  h5 { font: var(--MH-Type-Title-Small); letter-spacing: 0; }
+  h6 { font: var(--MH-Type-Title-Small); letter-spacing: 0; }
 
   /* Paragraphs */
   p {
@@ -96,7 +95,8 @@ export const ReadOnlyTipTap = styled.div`
     padding: 4px 8px;
     position: relative;
     vertical-align: top;
-    font-size: 1rem;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
 
     > * {
       margin-bottom: 0;

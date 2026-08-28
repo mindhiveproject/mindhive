@@ -5,7 +5,7 @@ import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import moment from "moment";
-import { Button } from "semantic-ui-react";
+import { Button as SemanticButton } from "semantic-ui-react";
 
 import { GET_ASSIGNMENT_FOR_STUDENT } from "../../Queries/Assignment";
 import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../Queries/Homework";
@@ -18,39 +18,7 @@ import useForm from "../../../lib/useForm";
 import HomeworkTab from "./Tab";
 import StyledClass from "../../styles/StyledClass";
 import Homework from "./Homework/Main";
-
-// Styled secondary button (Outline style from Figma)
-const SecondaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
-  
-  &:hover {
-    background: #f5f5f5;
-    border-color: #b3b3b3;
-    color: #666666;
-  }
-  
-  &:active {
-    background: #e0f2f1;
-    border-color: #4db6ac;
-    color: #4db6ac;
-  }
-`;
+import Button from "../../DesignSystem/Button";
 
 const TopSection = styled.div`
   display: flex;
@@ -61,9 +29,8 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font-family: Lato;
-  font-size: 28px;
-  font-weight: 600;
+  font: var(--MH-Type-Heading-Small);
+  letter-spacing: 0;
   padding-top: 16px;
   color: #1a1a1a;
 `;
@@ -91,9 +58,8 @@ const ContentSection = styled.div`
 
 const ContentTitle = styled.h2`
   margin: 0 0 16px 0;
-  font-family: Lato;
-  font-size: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
@@ -223,7 +189,7 @@ export default function AssignmentMain({ query, user }) {
           user={user}
           assignmentCode={selector}
           homeworkCode={homework}
-          btnName="Save"
+          btnName={t("board.save", {}, { default: "Save" })}
         />
       </StyledClass>
     );
@@ -248,7 +214,7 @@ export default function AssignmentMain({ query, user }) {
               }}
               style={{ textDecoration: 'none' }}
             >
-              <SecondaryButton>← {t("students.goBack") || "Go back to class"}</SecondaryButton>
+              <Button variant="outline">{t("students.goBack", {}, { default: "Go back to class" })}</Button>
             </Link>
           </ButtonContainer>
         )}
@@ -298,20 +264,21 @@ export default function AssignmentMain({ query, user }) {
 
         {/* New Homework Section */}
         {homeworks.length < 1 && !showNewHomework && (
-          <Button
+          <SemanticButton
             onClick={() => setShowNewHomework(true)}
             style={{
               borderRadius: "100px",
               background: "#336F8A",
-              fontSize: "14px",
+              font: 'var(--MH-Type-Label-Base)',
+              letterSpacing: 0,
               color: "white",
               border: "1px solid #336F8A",
               marginRight: "10px"
             }}
             disabled={createLoading}
           >
-            {t("homework.createNewHomework", "Create New Assignment")}
-          </Button>
+            {t("homework.createNewHomework", {}, { default: "Create New Assignment" })}
+          </SemanticButton>
         )}
 
         {showNewHomework && (
@@ -324,8 +291,8 @@ export default function AssignmentMain({ query, user }) {
             marginTop: "16px",
           }}>
             <div style={{
-              fontSize: "18px",
-              fontWeight: "600",
+              font: 'var(--MH-Type-Title-Large)',
+              letterSpacing: 0,
               marginBottom: "16px"
             }}>
               {t("homework.createNewHomework", "Create New Assignment")}
@@ -362,37 +329,39 @@ export default function AssignmentMain({ query, user }) {
             </div>
 
             <div style={{ display: "flex", gap: "8px" }}>
-              <Button
+              <SemanticButton
                 onClick={handleCreateHomeworkSubmit}
                 loading={createLoading}
                 disabled={createLoading}
                 style={{
                   borderRadius: "100px",
                   background: "#336F8A",
-                  fontSize: "12px",
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   color: "white",
                   border: "1px solid #336F8A",
                   marginRight: "10px"
                 }}
               >
-                {t("homework.createHomeworkSubmit", "Create & Submit")}
-              </Button>
-              <Button
+                {t("homework.createHomeworkSubmit", {}, { default: "Create & Submit" })}
+              </SemanticButton>
+              <SemanticButton
                 onClick={handleCreateHomeworkDraft}
                 loading={createLoading}
                 disabled={createLoading}
                 style={{
                   borderRadius: "100px",
                   background: "white",
-                  fontSize: "12px",
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   color: "#336F8A",
                   border: "1px solid #336F8A",
                   marginRight: "10px"
                 }}
               >
-                {t("homework.createHomeworkDraft", "Create Draft")}
-              </Button>
-              <Button
+                {t("homework.createHomeworkDraft", {}, { default: "Create Draft" })}
+              </SemanticButton>
+              <SemanticButton
                 onClick={() => {
                   setShowNewHomework(false);
                   clearForm();
@@ -400,14 +369,15 @@ export default function AssignmentMain({ query, user }) {
                 style={{
                   borderRadius: "100px",
                   background: "#f7f9fa",
-                  fontSize: "12px",
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   color: "#B9261A",
                   border: "1px solid #B9261A",
                   marginRight: "10px"
                 }}
               >
-                {t("homework.cancel", "Cancel")}
-              </Button>
+                {t("homework.cancel", {}, { default: "Cancel" })}
+              </SemanticButton>
             </div>
           </div>
         )}

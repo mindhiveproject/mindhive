@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { fieldLabel, optionLabel } from "../i18n";
+import { dualTextareaSubLabels, fieldLabel } from "../i18n";
 import { FieldShell } from "../styles";
 
 function ErrorRow({ error }) {
@@ -29,16 +29,10 @@ export default function DualTextarea({
   const label = fieldLabel(field, locale);
   const current = normalizeValue(value);
 
-  const [subALabel, subBLabel] = useMemo(() => {
-    const raw = Array.isArray(field?.options) ? field.options : [];
-    const sorted = raw
-      .slice()
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-    return [
-      sorted[0] ? optionLabel(sorted[0], locale) : "",
-      sorted[1] ? optionLabel(sorted[1], locale) : "",
-    ];
-  }, [field?.options, locale]);
+  const { subA: subALabel, subB: subBLabel } = useMemo(
+    () => dualTextareaSubLabels(field, locale),
+    [field, locale]
+  );
 
   const updatePart = (part, text) => {
     onChange({ ...current, [part]: text });

@@ -1,5 +1,8 @@
 import { isProposalFormAnswerComplete } from "./opportunityProposalData";
-import { isRoundSponsorFormsVisible } from "./opportunityEditorTabs";
+import {
+  isRoundSponsorFormsVisible,
+  POST_PRESELECT_STATUSES,
+} from "./opportunityEditorTabs";
 import { REVIEW_NOTE_KIND } from "./reviewThreadRound";
 
 export const OPPORTUNITY_LIST_STEP_KEYS = [
@@ -21,20 +24,18 @@ export function hasReviewerReturnComments(reviewNotes) {
   return (reviewNotes || []).some((note) => {
     if (!note) return false;
     if (note.kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) return false;
+    if (
+      note.kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST ||
+      note.kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
+    ) {
+      return false;
+    }
     // reviewer_comment, or legacy notes without kind
     return true;
   });
 }
 
 const MATCHED_ROUND_STATUSES = new Set(["published", "archived"]);
-
-const POST_PRESELECT_STATUSES = new Set([
-  "pre_selected",
-  "accepted",
-  "published",
-  "closed",
-  "archived",
-]);
 
 /**
  * Visible follow-up forms across held rounds (sponsor-visible only).

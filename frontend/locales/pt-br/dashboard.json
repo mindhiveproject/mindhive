@@ -61,12 +61,32 @@
 		"seedSuccess_plural": "Marcos iniciais {{count}} : {{keys}}.",
 		"yes": "Sim"
 	},
+	"chat": {
+		"addGroupChat": "",
+		"addPosting": "",
+		"myGroupChats": "",
+		"reply": "",
+		"save": "",
+		"saving": "",
+		"update": ""
+	},
+	"consentAdmin": {
+		"addConsentForm": "",
+		"customize": "",
+		"edit": ""
+	},
 	"develop": {
 		"headerDescription": "Todos os estudos, tarefas ou pesquisas que você <0>desenvolveu ou está colaborando</0>.",
 		"headerTitle": "Desenvolver"
 	},
+	"lessons": {
+		"addLesson": "",
+		"save": ""
+	},
 	"management": {
-		"milestonesTab": "Conquistas"
+		"addClassNetwork": "",
+		"milestonesTab": "Conquistas",
+		"save": ""
 	},
 	"update": "Atualizar"
 }

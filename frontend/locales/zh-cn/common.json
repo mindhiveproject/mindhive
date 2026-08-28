@@ -31,6 +31,7 @@
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
+		"confirmPassword": "",
 		"email": "电子邮件",
 		"forgotPassword": "忘记密码了吗？",
 		"login": "登录",
@@ -40,8 +41,11 @@
 			"bannerTitle": "",
 			"invalid": ""
 		},
+		"next": "",
 		"password": "密码",
 		"requestReset": "请求重置",
+		"reset": "",
+		"resetTitle": "",
 		"username": "用户名"
 	},
 	"cancel": "取消",
@@ -455,6 +459,7 @@
 		"level": "等级",
 		"myTags": "我的标签",
 		"noParentTag": "没有父标签",
+		"save": "",
 		"searchPlaceholder": "搜索标签",
 		"secondLevel": "二级",
 		"selectParentTag": "选择父标签",

@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useMutation } from "@apollo/client";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
@@ -33,6 +33,8 @@ const Shell = styled.section`
     p.$panel
       ? `
     height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
   `
       : ""}
 `;
@@ -46,15 +48,15 @@ const Header = styled.div`
   h2,
   h3 {
     margin: 0;
-    font-size: 18px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   p {
     margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   }
 `;
@@ -119,11 +121,14 @@ const Avatar = styled.div`
   background: ${(p) =>
     p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
       ? "var(--MH-Theme-Primary-Dark, #336f8a)"
-      : "var(--MH-Theme-Secondary-Dark, #6f26ce)"};
+      : p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST
+        ? "var(--MH-Theme-Error-Dark, #b9261a)"
+        : p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
+          ? "var(--MH-Theme-Primary-Dark, #336f8a)"
+          : "var(--MH-Theme-Secondary-Dark, #6f26ce)"};
   color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   display: grid;
   place-items: center;
   border: ${(p) => (p.$panel ? "none" : "1.5px solid #ffffff")};
@@ -152,9 +157,8 @@ const MetaRow = styled.div`
   align-items: baseline;
   gap: 6px;
   flex-wrap: wrap;
-  font-family: Inter, sans-serif;
-  font-size: 12px;
-  line-height: 1.3;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
   padding: 0 4px;
   justify-content: ${(p) => (p.$alignEnd ? "flex-end" : "flex-start")};
@@ -184,21 +188,37 @@ const MessageBubble = styled.div`
   padding: 10px 12px;
   border-radius: ${(p) =>
     p.$alignEnd ? "14px 14px 4px 14px" : "14px 14px 14px 4px"};
-  background: ${(p) =>
-    p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
-      ? "var(--MH-Theme-Primary-Light, #def8fb)"
-      : p.$panel
-        ? "var(--MH-Theme-Neutrals-White, #ffffff)"
-        : "#faf8ff"};
+  background: ${(p) => {
+    if (p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) {
+      return "var(--MH-Theme-Primary-Light, #def8fb)";
+    }
+    if (p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST) {
+      return "#fce8e6";
+    }
+    if (p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED) {
+      return "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)";
+    }
+    return p.$panel
+      ? "var(--MH-Theme-Neutrals-White, #ffffff)"
+      : "#faf8ff";
+  }};
   border: 1px solid
-    ${(p) =>
-      p.$panel
-        ? p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
+    ${(p) => {
+      if (p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) {
+        return p.$panel
           ? "var(--MH-Theme-Primary-Medium, #a3d6db)"
-          : "var(--MH-Theme-Neutrals-Light, #d3dae0)"
-        : p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
-          ? "rgba(51, 111, 138, 0.28)"
-          : "rgba(160, 144, 224, 0.35)"};
+          : "rgba(51, 111, 138, 0.28)";
+      }
+      if (p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST) {
+        return "rgba(185, 38, 26, 0.28)";
+      }
+      if (p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED) {
+        return "var(--MH-Theme-Neutrals-Light, #d3dae0)";
+      }
+      return p.$panel
+        ? "var(--MH-Theme-Neutrals-Light, #d3dae0)"
+        : "rgba(160, 144, 224, 0.35)";
+    }};
   box-shadow: ${(p) =>
     p.$panel ? "none" : "0 1px 4px rgba(23, 23, 23, 0.05)"};
 `;
@@ -207,9 +227,8 @@ const BodyText = styled.p`
   margin: 0;
   white-space: pre-wrap;
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 const Compose = styled.form`
@@ -220,9 +239,8 @@ const Compose = styled.form`
 
   label {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 13px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
@@ -236,9 +254,8 @@ const Compose = styled.form`
     border-radius: ${(p) => (p.$panel ? "8px" : "10px")};
     /* 2px border in both states — focus only changes color (no outer ring to clip). */
     border: 2px solid transparent;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
   }
@@ -266,9 +283,8 @@ const EmptyState = styled.p`
       ? "var(--MH-Theme-Neutrals-White, #ffffff)"
       : "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)"};
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   ${(p) =>
     p.$panel
       ? `
@@ -289,7 +305,15 @@ const EmptyState = styled.p`
 const ErrorText = styled.p`
   margin: 0;
   color: #871b16;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
+`;
+
+const InviteText = styled.p`
+  margin: 0;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
+  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
 const VisuallyHidden = styled.span`
@@ -308,8 +332,8 @@ const PANEL_ACTION_STYLE = {
   padding: 0,
   minWidth: 0,
   height: "fit-content",
-  fontSize: 12,
-  fontWeight: 500,
+  font: 'var(--MH-Type-Label-Small)',
+  letterSpacing: 0,
 };
 
 function displayName(profile, fallback) {
@@ -380,13 +404,23 @@ function MessageItem({
   const canDelete = isOwn || canDeleteAsAdmin;
   const kind = note.kind || REVIEW_NOTE_KIND.REVIEWER_COMMENT;
   // Sponsor replies sit on the right; reviewer comments on the left.
-  const alignEnd = kind === REVIEW_NOTE_KIND.SPONSOR_REPLY;
+  const alignEnd =
+    kind === REVIEW_NOTE_KIND.SPONSOR_REPLY ||
+    note?.payload?.source === "form";
   const kindLabel =
     kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
       ? t("reviewThread.kind.sponsorReply", {}, { default: "Sponsor reply" })
-      : t("reviewThread.kind.reviewerComment", {}, {
-          default: "Reviewer comment",
-        });
+      : kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST
+        ? t("reviewThread.kind.appointmentRequest", {}, {
+            default: "Appointment request",
+          })
+        : kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
+          ? t("reviewThread.kind.appointmentScheduled", {}, {
+              default: "Appointment scheduled",
+            })
+          : t("reviewThread.kind.reviewerComment", {}, {
+              default: "Reviewer comment",
+            });
   const authorFallback = t("reviewThread.unknownAuthor", {}, {
     default: "Unknown",
   });
@@ -500,9 +534,8 @@ function MessageItem({
                   padding: "8px 10px",
                   borderRadius: 8,
                   border: "1px solid var(--MH-Theme-Neutrals-Light, #d3dae0)",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 14,
-                  lineHeight: 1.45,
+                  font: 'var(--MH-Type-Body-Base)',
+                  letterSpacing: 0,
                 }}
               />
               <ActionsRow>
@@ -543,8 +576,8 @@ function MessageItem({
                               padding: 0,
                               minWidth: 0,
                               height: "fit-content",
-                              fontSize: 12,
-                              fontWeight: 600,
+                              font: 'var(--MH-Type-Label-Small)',
+                              letterSpacing: 0,
                             }
                       }
                     >
@@ -566,8 +599,8 @@ function MessageItem({
                               padding: 0,
                               minWidth: 0,
                               height: "fit-content",
-                              fontSize: 12,
-                              fontWeight: 600,
+                              font: 'var(--MH-Type-Label-Small)',
+                              letterSpacing: 0,
                               color: "#c0392b",
                             }
                       }
@@ -591,8 +624,12 @@ function MessageItem({
  * @param {"teacher"|"sponsor"} mode - Controls compose kind labels/copy.
  * @param {string} messageKind - Keystone kind to post (`reviewer_comment` or `sponsor_reply`).
  * @param {"default"|"panel"} [layout="default"] - `panel` fills a split-pane column (full width).
+ * @param {boolean} [requestsAppointment] - Live opportunity flag. Either side
+ *   can request a meeting when false, or mark it scheduled when true.
  * @param {(note: object|null, meta: { kind: string, body: string }) => void} [onPosted]
  *   Called after a successful create (compose). Parent owns follow-up UX.
+ * @param {boolean} [autoFocusCompose] - Focus and scroll to the compose field.
+ * @param {boolean} [showReturnInvite] - Show copy inviting the teacher to write a return message.
  */
 export default function OpportunityReviewNotesThread({
   opportunityId,
@@ -612,16 +649,26 @@ export default function OpportunityReviewNotesThread({
   showTitle = true,
   layout = "default",
   className,
+  autoFocusCompose = false,
+  showReturnInvite = false,
+  requestsAppointment = false,
 }) {
   const isPanel = layout === "panel";
   const { t } = useTranslation("connect");
   const composeFieldId = useId();
+  const composeRef = useRef(null);
   const [draft, setDraft] = useState("");
   const [error, setError] = useState(null);
   const [previousExpanded, setPreviousExpanded] = useState(false);
 
   const mutationOptions = {
-    refetchQueries,
+    refetchQueries: [
+      ...refetchQueries,
+      "NETWORK_APPOINTMENT_REQUESTS",
+      "COUNT_NEW_UPDATES",
+      "GET_MY_UPDATES",
+      "MY_OPPORTUNITIES",
+    ],
     awaitRefetchQueries: true,
   };
 
@@ -713,13 +760,22 @@ export default function OpportunityReviewNotesThread({
   );
 
   const composeEnabled = canCreate && !!roundId && !needsRoundSelection;
+
+  useEffect(() => {
+    if (!autoFocusCompose || !composeEnabled) return;
+    const el = composeRef.current;
+    if (!el) return;
+    el.focus();
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [autoFocusCompose, composeEnabled]);
+
   const composePlaceholder =
     mode === "sponsor"
       ? t("reviewThread.compose.sponsorPlaceholder", {}, {
           default: "Write a reply for the reviewers…",
         })
       : t("reviewThread.compose.teacherPlaceholder", {}, {
-          default: "Leave a note for the sponsor…",
+          default: "Write a message for the sponsor…",
         });
   const composeLabel =
     mode === "sponsor"
@@ -733,6 +789,28 @@ export default function OpportunityReviewNotesThread({
     mode === "sponsor"
       ? t("reviewThread.compose.postReply", {}, { default: "Post reply" })
       : t("reviewThread.compose.post", {}, { default: "Post note" });
+  const markScheduledLabel = t("reviewThread.appointment.markScheduled", {}, {
+    default: "Mark meeting as scheduled",
+  });
+  const markScheduledExplanation = t(
+    "reviewThread.appointment.scheduledExplanation",
+    {},
+    {
+      default:
+        "Mark this meeting as scheduled when you have agreed a time.",
+    }
+  );
+  const requestMeetingLabel = t("reviewThread.appointment.request", {}, {
+    default: "Request a meeting",
+  });
+  const requestMeetingExplanation = t(
+    "reviewThread.appointment.requestExplanation",
+    {},
+    {
+      default:
+        "Ask to meet about this proposal. This is separate from sending a message.",
+    }
+  );
 
   const handlePost = async (event) => {
     event?.preventDefault?.();
@@ -765,6 +843,52 @@ export default function OpportunityReviewNotesThread({
       );
     }
   };
+
+  const postAppointmentNote = async (kind, defaultBody, errorDefault) => {
+    if (!composeEnabled || !opportunityId || !roundId) return;
+    setError(null);
+    try {
+      const result = await createNote({
+        variables: {
+          input: {
+            body: defaultBody,
+            kind,
+            opportunity: { connect: { id: opportunityId } },
+            round: { connect: { id: roundId } },
+          },
+        },
+      });
+      onPosted?.(result?.data?.createOpportunityReviewNote || null, {
+        kind,
+        body: defaultBody,
+      });
+    } catch (e) {
+      setError(e?.message || errorDefault);
+    }
+  };
+
+  const handleMarkScheduled = () =>
+    postAppointmentNote(
+      REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED,
+      t("reviewThread.appointment.scheduledDefaultBody", {}, {
+        default: "This meeting request was marked as scheduled.",
+      }),
+      t("reviewThread.errors.appointmentScheduled", {}, {
+        default:
+          "Could not mark this meeting request as scheduled. Please try again.",
+      })
+    );
+
+  const handleRequestMeeting = () =>
+    postAppointmentNote(
+      REVIEW_NOTE_KIND.APPOINTMENT_REQUEST,
+      t("reviewThread.appointment.requestDefaultBody", {}, {
+        default: "I request a meeting to discuss this proposal further.",
+      }),
+      t("reviewThread.errors.appointmentRequest", {}, {
+        default: "Could not request a meeting. Please try again.",
+      })
+    );
 
   const handleSave = async (noteId, body) => {
     setError(null);
@@ -824,8 +948,8 @@ export default function OpportunityReviewNotesThread({
           <label
             htmlFor="review-thread-round"
             style={{
-              fontSize: 13,
-              fontWeight: 600,
+              font: 'var(--MH-Type-Label-Base)',
+              letterSpacing: 0,
               color: "var(--MH-Theme-Neutrals-Black, #171717)",
             }}
           >
@@ -871,6 +995,9 @@ export default function OpportunityReviewNotesThread({
                   <Button
                     type="button"
                     variant={isPanel ? "text" : "outline"}
+                    style={{
+                      color: "var(--MH-Theme-Neutrals-Black, #171717)",
+                      }}
                     onClick={() => setPreviousExpanded(true)}
                   >
                     {t("reviewThread.loadPreviousMessages", {}, {
@@ -901,7 +1028,16 @@ export default function OpportunityReviewNotesThread({
               {/* {isPanel ? (
                 <label htmlFor={composeFieldId}>{composeLabel}</label>
               ) : null} */}
+              {showReturnInvite ? (
+                <InviteText>
+                  {t("reviewThread.compose.returnInvite", {}, {
+                    default:
+                      "Write a message explaining what the sponsor should change.",
+                  })}
+                </InviteText>
+              ) : null}
               <textarea
+                ref={composeRef}
                 id={composeFieldId}
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
@@ -911,6 +1047,29 @@ export default function OpportunityReviewNotesThread({
                 aria-label={isPanel ? undefined : composePlaceholder}
               />
               <ActionsRow>
+                {requestsAppointment ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleMarkScheduled}
+                    disabled={creating}
+                    title={markScheduledExplanation}
+                    aria-label={`${markScheduledLabel}. ${markScheduledExplanation}`}
+                  >
+                    {markScheduledLabel}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleRequestMeeting}
+                    disabled={creating}
+                    title={requestMeetingExplanation}
+                    aria-label={`${requestMeetingLabel}. ${requestMeetingExplanation}`}
+                  >
+                    {requestMeetingLabel}
+                  </Button>
+                )}
                 <Button
                   type="submit"
                   variant="filled"

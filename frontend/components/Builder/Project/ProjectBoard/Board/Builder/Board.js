@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import sortBy from "lodash/sortBy";
 import useTranslation from "next-translate/useTranslation";
 
@@ -6,8 +6,6 @@ import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
-import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
-import { v1 as uuidv1 } from "uuid";
 
 import Inner from "./Inner";
 
@@ -16,7 +14,6 @@ import {
   UPDATE_SECTION,
   DELETE_SECTION,
 } from "../../../../../Mutations/Proposal";
-import { isClassTemplateBoard } from "../../../../../Utils/proposalBoard";
 
 const Board = ({
   proposalId,
@@ -42,7 +39,6 @@ const Board = ({
   const [createSectionMut, createSectionState] = useMutation(CREATE_SECTION);
   const [updateSectionMut, updateSectionState] = useMutation(UPDATE_SECTION);
   const [deleteSectionMut, deleteSectionState] = useMutation(DELETE_SECTION);
-  const [updateCardEdit] = useMutation(UPDATE_CARD_EDIT);
 
   const hasClones = proposal?.prototypeFor?.length > 0;
 
@@ -115,8 +111,6 @@ const Board = ({
     ],
   );
 
-  const backfillPublicIdDoneRef = useRef(null);
-
   useEffect(() => {
     if (proposal) {
       const newSections = proposal.sections;
@@ -133,43 +127,6 @@ const Board = ({
       setSections(sortedCardsSections);
     }
   }, [proposal]);
-
-  useEffect(() => {
-    if (!proposal?.id || !isClassTemplateBoard(proposal)) return;
-    if (backfillPublicIdDoneRef.current === proposal.id) return;
-
-    const templateSections = proposal.sections || [];
-    const cardsWithoutPublicId = templateSections
-      .flatMap((section) => section?.cards || [])
-      .filter((card) => card && !card.publicId);
-
-    if (cardsWithoutPublicId.length === 0) {
-      backfillPublicIdDoneRef.current = proposal.id;
-      return;
-    }
-
-    cardsWithoutPublicId.forEach((card) => {
-      updateCardEdit({
-        variables: {
-          id: card.id,
-          input: {
-            publicId: uuidv1(),
-          },
-        },
-        refetchQueries: [
-          { query: PROPOSAL_QUERY, variables: { id: proposalId } },
-        ],
-      }).catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(
-          "Failed to backfill card publicId in ProjectBoard Builder:",
-          e,
-        );
-      });
-    });
-
-    backfillPublicIdDoneRef.current = proposal.id;
-  }, [proposal, proposalId, updateCardEdit]);
 
   if (loading) return t("board.loading");
   if (error) return t("board.error", { message: error.message });

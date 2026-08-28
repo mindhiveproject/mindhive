@@ -61,12 +61,32 @@
 		"seedSuccess_plural": "تم تحديد {{count}} معالم رئيسية: {{keys}}.",
 		"yes": "نعم"
 	},
+	"chat": {
+		"addGroupChat": "",
+		"addPosting": "",
+		"myGroupChats": "",
+		"reply": "",
+		"save": "",
+		"saving": "",
+		"update": ""
+	},
+	"consentAdmin": {
+		"addConsentForm": "",
+		"customize": "",
+		"edit": ""
+	},
 	"develop": {
 		"headerDescription": "جميع الدراسات أو المهام أو الاستطلاعات التي <0>طورتها أو تتعاون في إنجازها</0>.",
 		"headerTitle": "يطور"
 	},
+	"lessons": {
+		"addLesson": "",
+		"save": ""
+	},
 	"management": {
-		"milestonesTab": "المعالم البارزة"
+		"addClassNetwork": "",
+		"milestonesTab": "المعالم البارزة",
+		"save": ""
 	},
 	"update": "تحديث"
 }

@@ -6,7 +6,7 @@ import {
   checkbox,
   integer,
 } from "@keystone-6/core/fields";
-import { permissions, rules, isSignedIn } from "../access";
+import { rules, isSignedIn } from "../access";
 
 // Milestone — global platform steps (scope=global) or teacher-authored
 // template steps (scope=template) paired with action cards on a template board.
@@ -14,12 +14,13 @@ export const Milestone = list({
   access: {
     operation: {
       query: () => true,
-      create: ({ session }) =>
-        !!session &&
-        (permissions.canManageUsers({ session }) ||
-          permissions.canManageForms({ session })),
+      // Signed-in create; item.create inspects scope + templateBoard.
+      create: isSignedIn,
       update: isSignedIn,
       delete: isSignedIn,
+    },
+    item: {
+      create: rules.milestoneCreate,
     },
     filter: {
       update: rules.milestoneMutate,

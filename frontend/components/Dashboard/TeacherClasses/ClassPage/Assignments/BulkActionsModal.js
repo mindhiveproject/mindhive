@@ -21,10 +21,8 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.div`
-  font-family: Inter, sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
+  font: var(--MH-Type-Title-Base);
+  letter-spacing: 0;
   color: #171717;
 `;
 

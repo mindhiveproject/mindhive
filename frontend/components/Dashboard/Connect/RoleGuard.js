@@ -36,16 +36,16 @@ const Shell = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 28px;
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     color: #171717;
   }
 
   p {
     margin: 0;
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     max-width: 480px;
   }
 
@@ -58,9 +58,8 @@ const Shell = styled.div`
     border: 1px solid #336f8a;
     background: #336f8a;
     color: #ffffff;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     text-decoration: none;
 
     &:focus-visible {

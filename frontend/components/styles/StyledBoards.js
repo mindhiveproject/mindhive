@@ -16,8 +16,8 @@ const StyledBoards = styled.div`
 
   .filterChipsLabel {
     display: block;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #4a5568;
     margin-bottom: 0.5rem;
   }
@@ -36,8 +36,8 @@ const StyledBoards = styled.div`
     border: 1px solid #e2e8f0;
     background: #edf2f7;
     color: #2d3748;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   }
@@ -60,23 +60,23 @@ const StyledBoards = styled.div`
   }
 
   h1 {
-    font-size: 2.2rem;
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #2d3748;
     margin-bottom: 0.5rem;
   }
 
   h2 {
-    font-size: 2rem;
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     color: #2d3748;
     margin-bottom: 0.5rem;
   }
 
   p {
     color: #4a5568;
-    font-size: 1.1rem;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .createButton.narrowButton {
@@ -91,8 +91,8 @@ const StyledBoards = styled.div`
     border-radius: 100px;
     // border: none;
     border: 1px solid #336F8A;
-    font-size: 16px;
-    font-weight: 500;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
     transition: background 0.3s ease;
   }
@@ -111,20 +111,25 @@ const StyledBoards = styled.div`
     background: #336F8A;
     color: white;
     border-radius: 100px;
-    font-size: 16px;
-    font-weight: 500;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
     transition: background 0.3s ease;
     }
     
+  /* Filled hover, matching DesignSystem/Button: a 20% Primary Light state layer
+     over the resting fill + Elevation Medium. Was an Accent-yellow colour flip. */
   .createButton.narrowButton:hover,
   .backButton:hover,
   .saveButton:hover {
     border-radius: 100px;
-    border: 1px #F9D978;
-    color: #274E5B;
-    background: #F9D978;
-    box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
+    background: linear-gradient(
+        0deg,
+        rgba(222, 248, 251, 0.2),
+        rgba(222, 248, 251, 0.2)
+      ),
+      #336f8a;
+    box-shadow: var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1));
   }
 
   .buttonGroup {
@@ -136,7 +141,8 @@ const StyledBoards = styled.div`
   .manageDropdown.ui.dropdown {
     border-radius: 8px;
     border: 1px solid #e2e8f0;
-    font-size: 1.1rem;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     margin-bottom: 1rem;
   }
 
@@ -166,22 +172,24 @@ const StyledBoards = styled.div`
 
   .projectCard h3,
   .clonedBoardItem h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #2d3748;
     margin-bottom: 0.5rem;
   }
 
   .description {
     color: #718096;
-    font-size: 1.1rem;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     margin-bottom: 1rem;
   }
 
   .meta p,
   .clonedBoardItem p {
     color: #4a5568;
-    font-size: 1rem;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     margin-bottom: 0.5rem;
   }
 
@@ -274,8 +282,8 @@ const StyledBoards = styled.div`
   }
 
   .modalHeader h3 {
-    font-size: 1.75rem;
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     color: #2d3748;
     margin: 0;
   }
@@ -306,8 +314,8 @@ const StyledBoards = styled.div`
     padding: 0.75rem 1rem;
     border-radius: 8px;
     border: none;
-    font-size: 1.1rem;
-    font-weight: 500;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
     transition: background 0.3s ease;
   }
@@ -328,7 +336,8 @@ const StyledBoards = styled.div`
   .dropdownSection .ui.dropdown {
     border-radius: 8px;
     border: 1px solid #e2e8f0;
-    font-size: 1.1rem;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .clonedBoardsSection {

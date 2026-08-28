@@ -3,13 +3,20 @@ import styled from "styled-components";
 export const StyledConsent = styled.div`
   display: grid;
   grid-gap: 2rem;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
   .singlePost {
     display: grid;
     grid-gap: 2rem;
     margin: 1rem;
   }
   .item {
-    font-size: 1.5rem;
+    font: var(--MH-Type-Body-Large);
+    letter-spacing: 0;
   }
   .consentPage {
     display: grid;

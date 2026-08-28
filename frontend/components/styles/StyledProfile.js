@@ -143,12 +143,8 @@ const StyledProfile = styled.div`
   .reviewOverview {
     display: grid;
     grid-gap: 1rem;
-    font-family: Lato;
-    font-size: 1.4rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 21px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Large);
+    letter-spacing: 0;
     .section {
       display: grid;
       grid-gap: 1rem;
@@ -158,8 +154,8 @@ const StyledProfile = styled.div`
       text-align: left;
       align-content: baseline;
       .title {
-        font-weight: bold;
-        font-size: 1.3rem;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
       }
       .answer {
         display: grid;
@@ -214,17 +210,16 @@ export const StyledCreateProfileFlow = styled.div`
       border-radius: 10px;
     }
     .ui.progress > .label {
-      font-size: 16px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
     }
     .progressLabels {
       display: grid;
       grid-template-columns: 1fr 1fr;
       justify-items: center;
       margin-top: 16px;
-      font-family: Inter;
-      font-size: 13px;
-      font-weight: 500;
-      line-height: 18px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       text-align: left;
       color: var(--neutral_grey2, #3b3b3b);
     }
@@ -254,31 +249,22 @@ export const StyledCreateProfileFlow = styled.div`
         border: 2px solid var(--sds-color-border-default-default);
         background: var(--neutral_white, #fff);
         color: var(--neutral_black1, #171717);
-        font-family: Inter;
-        font-size: 17px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 22px; /* 129.412% */
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
         max-width: 377px;
       }
       p {
         color: var(--neutral_black1, #171717);
         text-align: center;
-        font-family: Inter;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 133.333% */
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
     }
     h2 {
       color: var(--neutral_black1, #171717);
       /* H2 */
-      font-family: Inter;
-      font-size: 40px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 125%; /* 50px */
+      font: var(--MH-Type-Heading-Base);
+      letter-spacing: 0;
     }
   }
 
@@ -313,20 +299,14 @@ export const StyledCreateProfileFlow = styled.div`
       }
       .title {
         color: var(--neutral_black1, #171717);
-        font-family: Inter;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 32px; /* 133.333% */
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         margin-bottom: 12px;
       }
       .subtitle {
         color: var(--neutral_black1, #171717);
-        font-family: Inter;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 133.333% */
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
       .inputLineBlock {
         margin: 1rem 0rem;
@@ -340,29 +320,20 @@ export const StyledCreateProfileFlow = styled.div`
         p {
           color: var(--SECONDARY_BLUE1, #28619e);
           /* BUTTON_1 */
-          font-family: Inter;
-          font-size: 17px;
-          font-style: normal;
-          font-weight: 600;
-          line-height: 22px; /* 129.412% */
+          font: var(--MH-Type-Label-Base);
+          letter-spacing: 0;
         }
       }
       p {
         color: var(--neutral_black1, #171717);
         /* BODY_1 */
-        font-family: Inter;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 133.333% */
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
       .fieldLabel {
         color: var(--neutral_black1, #171717);
-        font-family: Inter;
-        font-size: 17px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 22px;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
         margin: 0 0 8px;
       }
       .chipRadioGroup {
@@ -379,10 +350,8 @@ export const StyledCreateProfileFlow = styled.div`
           border-radius: 8px;
           background: var(--neutral_white, #fff);
           cursor: pointer;
-          font-family: Inter;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 20px;
+          font: var(--MH-Type-Label-Base);
+          letter-spacing: 0;
           color: var(--neutral_black1, #171717);
           transition:
             border-color 0.15s ease,
@@ -415,29 +384,22 @@ export const StyledCreateProfileFlow = styled.div`
       h3 {
         color: var(--neutral_black1, #171717);
         /* H3 */
-        font-family: Inter;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 32px; /* 133.333% */
+        font: var(--MH-Type-Heading-Small);
+        letter-spacing: 0;
       }
       .ui.fluid.dropdown {
-        font-family: Inter;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         border: 1px solid #cccccc;
         border-radius: 4px;
         width: 100%;
-        font-size: 16px;
-        line-height: 24px;
         padding: 12px;
         height: 50px;
       }
       .ui.checkbox input.hidden + label {
         color: var(--neutral_black1, #171717);
-        font-family: Inter;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 133.333% */
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
       }
     }
   }
@@ -452,19 +414,15 @@ export const StyledCreateProfileFlow = styled.div`
       justify-items: center;
       .h40 {
         //styleName: H2;
-        font-family: Inter;
-        font-size: 40px;
-        font-weight: 600;
-        line-height: 50px;
+        font: var(--MH-Type-Heading-Base);
+        letter-spacing: 0;
         text-align: left;
         color: var(--neutral_black1, #171717);
       }
       .p15 {
         //styleName: BODY_1;
-        font-family: Inter;
-        font-size: 15px;
-        font-weight: 400;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         text-align: center;
         color: var(--neutral_grey2, #3b3b3b);
       }
@@ -504,21 +462,15 @@ export const StyledCreateProfileFlow = styled.div`
     }
     .primary {
       text-align: center;
-      font-family: Inter;
-      font-size: 18px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 125%; /* 22.5px */
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
     }
     .secondary {
       background: var(--neutral_white5, #f7f9f8);
       color: var(--Button-Green, #347a70);
       text-align: center;
-      font-family: Inter;
-      font-size: 18px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 125%; /* 22.5px */
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
     }
   }
 `;
@@ -543,11 +495,10 @@ export const StyledAdaptableButton = styled.button`
   border-color: ${(props) => (props.changed ? props.color : "#9a9a9a")};
   color: white;
   border-radius: 4px;
-  font-size: 16px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   padding: 10px 20px;
   cursor: pointer;
-  font-family: Lato;
-  font-weight: 600;
   transition: background 0.2s, border-color 0.2s;
   &:disabled {
     background: #cccccc;

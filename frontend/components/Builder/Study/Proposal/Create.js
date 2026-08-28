@@ -8,6 +8,7 @@ import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 import { useMutation } from "@apollo/client";
 import ProposalBuilder from "../../../Proposal/Builder/Main";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../../DesignSystem/Button";
 
 export default function CreateProposal({
   studyId,
@@ -80,9 +81,11 @@ export default function CreateProposal({
           </div>
         )}
 
-        <button onClick={createProposalCopy}>
-          {isCopy ? t("createProposal.createCopy", "Create a copy") : t("createProposal.create", "Create")}
-        </button>
+        <Button variant="filled" onClick={createProposalCopy}>
+          {isCopy
+            ? t("createProposal.createCopy", {}, { default: "Create a copy" })
+            : t("createProposal.create", {}, { default: "Create" })}
+        </Button>
       </div>
 
       {template && !isCopy && (

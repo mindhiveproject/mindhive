@@ -14,6 +14,7 @@ import useForm from "../../../../../../../lib/useForm";
 import Status from "../Forms/Status";
 import Navigation from "../../../../Navigation/Main";
 import { StyledProposal } from "../../../../../../styles/StyledProposal";
+import Button from "../../../../../../DesignSystem/Button";
 
 export default function IndividualCard({
   query,
@@ -179,11 +180,15 @@ export default function IndividualCard({
                 </div>
 
                 <div className="buttons">
-                  <button className="primary" onClick={() => saveHomework()}>
+                  <Button
+                    variant="filled"
+                    type="button"
+                    onClick={() => saveHomework()}
+                  >
                     {editLoading
-                      ? t("individualCard.saving", "Saving ...")
-                      : t("individualCard.save", "Save")}
-                  </button>
+                      ? t("individualCard.saving", {}, { default: "Saving ..." })
+                      : t("individualCard.save", {}, { default: "Save" })}
+                  </Button>
                 </div>
               </div>
             )}

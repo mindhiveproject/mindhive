@@ -5,6 +5,7 @@ export const OPPORTUNITY_PREVIEW_TABS = {
   chat: "chat",
   detail: "detail",
   people: "people",
+  forum: "forum",
 };
 
 /**
@@ -70,11 +71,14 @@ export function resolvePreviewFollowUpForms({
 
 export function resolveOpportunityPreviewTab(
   tab,
-  { followUpForms = [], showChat = false } = {},
+  { followUpForms = [], showChat = false, showForum = false } = {},
 ) {
   const value = typeof tab === "string" ? tab : "";
   if (value === OPPORTUNITY_PREVIEW_TABS.chat && showChat) {
     return OPPORTUNITY_PREVIEW_TABS.chat;
+  }
+  if (value === OPPORTUNITY_PREVIEW_TABS.forum && showForum) {
+    return OPPORTUNITY_PREVIEW_TABS.forum;
   }
   if (value === OPPORTUNITY_PREVIEW_TABS.people) {
     return OPPORTUNITY_PREVIEW_TABS.people;

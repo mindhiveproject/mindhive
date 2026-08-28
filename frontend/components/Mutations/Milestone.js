@@ -58,6 +58,19 @@ export const BACKFILL_LINK_ACTION_CARDS_TO_MILESTONES = gql`
   }
 `;
 
+export const DELETE_TEMPLATE_MILESTONE = gql`
+  mutation DELETE_TEMPLATE_MILESTONE($id: ID!) {
+    deleteTemplateMilestone(id: $id) {
+      id
+    }
+  }
+`;
+
+// deleteTemplateMilestone removes the template milestone only; review forms
+// stay in the database and become unavailable on the board. See
+// keystone/mutations/deleteTemplateMilestone.ts and DeleteCardsConfirmModal.js
+// when teachers can reassociate forms to milestones.
+
 export const BACKFILL_MILESTONE_STATUS = gql`
   mutation BACKFILL_MILESTONE_STATUS($limit: Int, $dryRun: Boolean) {
     backfillMilestoneStatus(limit: $limit, dryRun: $dryRun)

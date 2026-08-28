@@ -30,8 +30,8 @@ const StyledBlockDocumentation = styled.div`
     }
 
     h1 {
-      font-size: 30px;
-      font-weight: 800;
+      font: var(--MH-Type-Heading-Small);
+      letter-spacing: 0;
       margin: 10px 0;
       color: #1b1c1d;
     }
@@ -40,7 +40,8 @@ const StyledBlockDocumentation = styled.div`
       color: #767676;
       max-width: 600px;
       margin: 0 auto;
-      font-size: 14px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
   }
 
@@ -63,13 +64,15 @@ const StyledBlockDocumentation = styled.div`
 
     .content {
       .title {
-        font-weight: bold;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
         margin-bottom: 4px;
         color: #573a08;
       }
 
       .message {
-        font-size: 14px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #946c00;
       }
     }
@@ -89,7 +92,8 @@ const StyledBlockDocumentation = styled.div`
       padding: 12px;
       border: 1px solid #d4d4d5;
       border-radius: 8px;
-      font-size: 14px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
       &:focus {
@@ -109,8 +113,8 @@ const StyledBlockDocumentation = styled.div`
       padding: 12px 16px;
       border: none;
       border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       background: #336F8A;
       color: white;
       cursor: pointer;
@@ -167,14 +171,15 @@ const StyledBlockDocumentation = styled.div`
     border-radius: 8px;
     
     .title {
-      font-weight: bold;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       margin-bottom: 4px;
       color: #912d2b;
-      font-size: 14px;
     }
 
     .message {
-      font-size: 12px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #991b1a;
     }
   }
@@ -192,8 +197,8 @@ const StyledBlockDocumentation = styled.div`
       align-items: center;
 
       .label {
-        font-size: 14px;
-        font-weight: 600;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
         color: #1b1c1d;
         margin-right: 8px;
         white-space: nowrap;
@@ -201,11 +206,11 @@ const StyledBlockDocumentation = styled.div`
 
       button {
         padding: 6px 12px;
-        font-size: 12px;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
         border-radius: 16px;
         border: none;
         cursor: pointer;
-        font-weight: 500;
         white-space: nowrap;
         transition: all 0.15s;
         display: flex;
@@ -242,7 +247,8 @@ const StyledBlockDocumentation = styled.div`
         padding: 12px 12px 12px 40px;
         border: 1px solid #d4d4d5;
         border-radius: 8px;
-        font-size: 14px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 
         &:focus {
@@ -268,8 +274,8 @@ const StyledBlockDocumentation = styled.div`
     grid-gap: 8px;
 
     .sectionTitle {
-      font-size: 20px;
-      font-weight: bold;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
       color: #1b1c1d;
       padding-top: 16px;
       border-top: 1px solid #e0e1e2;
@@ -300,11 +306,10 @@ const StyledBlockDocumentation = styled.div`
             th {
               padding: 12px 24px;
               text-align: left;
-              font-size: 12px;
-              font-weight: 600;
+              font: var(--MH-Type-Label-Small);
+              letter-spacing: 0;
               color: #767676;
               text-transform: uppercase;
-              letter-spacing: 0.5px;
               white-space: nowrap;
               border-bottom: 1px solid #d4d4d5;
 
@@ -332,14 +337,19 @@ const StyledBlockDocumentation = styled.div`
                 vertical-align: top;
 
                 &:first-child {
+                  /* Monospace kept deliberately: renders the literal
+                     translation key, a code-like identifier. */
                   font-family: 'Courier New', monospace;
                   font-size: 12px;
+                  line-height: 16px;
+                  letter-spacing: 0;
                   color: #1b1c1d;
                   width: 25%;
                 }
 
                 &:last-child {
-                  font-size: 14px;
+                  font: var(--MH-Type-Body-Base);
+                  letter-spacing: 0;
                   color: #1b1c1d;
                   white-space: pre-wrap;
                   width: 75%;
@@ -352,7 +362,8 @@ const StyledBlockDocumentation = styled.div`
 
       .tableFooter {
         text-align: right;
-        font-size: 12px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #767676;
         padding: 8px 16px;
         border-top: 1px solid #d4d4d5;
@@ -402,8 +413,8 @@ const StyledBlockDocumentation = styled.div`
     }
 
       h2 {
-        font-size: 20px;
-        font-weight: bold;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         color: #1b1c1d;
         margin: 0;
       }
@@ -416,7 +427,8 @@ const StyledBlockDocumentation = styled.div`
     }
 
     .description {
-      font-size: 14px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #767676;
 
       strong {
@@ -429,7 +441,8 @@ const StyledBlockDocumentation = styled.div`
       border-left: 4px solid #db2828;
       padding: 12px;
       border-radius: 8px;
-      font-size: 14px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #991b1a;
     }
 
@@ -437,8 +450,11 @@ const StyledBlockDocumentation = styled.div`
       width: 100%;
       height: 320px;
       padding: 16px;
+      /* Monospace kept deliberately: this textarea edits raw JSON. */
       font-family: 'Courier New', monospace;
       font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0;
       // border: 1px solid #d4d4d5;
       border-radius: 8px;
       background: #171717;
@@ -464,8 +480,8 @@ const StyledBlockDocumentation = styled.div`
         padding: 12px 24px;
         border: none;
         border-radius: 8px;
-        font-size: 16px;
-        font-weight: 600;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: all 0.2s;
@@ -511,7 +527,8 @@ const StyledBlockDocumentation = styled.div`
     text-align: center;
     padding: 48px;
     color: #767676;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 

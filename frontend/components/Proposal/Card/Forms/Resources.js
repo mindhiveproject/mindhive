@@ -117,14 +117,14 @@ export default function Resources({
           style={{
             background: "#f9fafb",
             borderBottom: "1px solid #e0e0e0",
-            fontFamily: "Nunito",
-            fontWeight: 600,
+            font: 'var(--MH-Type-Title-Large)',
+            letterSpacing: 0,
           }}
         >
           {t("board.expendedCard.selectResourcesToConnect")}
         </Modal.Header>
         <Modal.Content scrolling style={{ background: "#ffffff", padding: 0 }}>
-          <Tab panes={panes} style={{ fontFamily: "Nunito" }} />
+          <Tab panes={panes} />
         </Modal.Content>
         <Modal.Actions
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
@@ -147,9 +147,8 @@ export default function Resources({
           <div
             className="cardHeader"
             style={{
-              fontFamily: "Nunito",
-              fontSize: "20px",
-              fontWeight: 600,
+              font: 'var(--MH-Type-Title-Large)',
+              letterSpacing: 0,
               color: "#333",
               marginTop: "20px",
             }}
@@ -188,8 +187,8 @@ export default function Resources({
                 >
                   <h2
                     style={{
-                      fontSize: "18px",
-                      fontWeight: 600,
+                      font: 'var(--MH-Type-Title-Base)',
+                      letterSpacing: 0,
                       color: "#333",
                       margin: 0,
                     }}
@@ -227,7 +226,7 @@ export default function Resources({
                   </div>
                 </div>
                 <div
-                  style={{ fontSize: "14px", color: "#666", lineHeight: "1.5" }}
+                  style={{ font: 'var(--MH-Type-Body-Base)', letterSpacing: 0, color: "#666" }}
                 >
                   {ReactHtmlParser(truncateHtml(resource?.content?.main, 50))}
                 </div>
@@ -300,8 +299,8 @@ const ResourcesTab = ({
             >
               <h2
                 style={{
-                  fontSize: "18px",
-                  fontWeight: 600,
+                  font: 'var(--MH-Type-Title-Base)',
+                  letterSpacing: 0,
                   color: "#333",
                   margin: 0,
                 }}
@@ -340,9 +339,9 @@ const ResourcesTab = ({
             </div>
             <div
               style={{
-                fontSize: "14px",
+                font: 'var(--MH-Type-Body-Base)',
+                letterSpacing: 0,
                 color: "#666",
-                lineHeight: "1.5",
                 marginBottom: "16px",
               }}
             >
@@ -355,7 +354,8 @@ const ResourcesTab = ({
                 background: isSelected ? "#ff4d4f" : "#52c41a",
                 color: "#ffffff",
                 borderRadius: "8px",
-                fontWeight: 500,
+                font: 'var(--MH-Type-Label-Base)',
+                letterSpacing: 0,
               }}
             >
               {isSelected

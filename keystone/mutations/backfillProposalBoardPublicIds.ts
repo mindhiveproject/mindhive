@@ -3,20 +3,26 @@
 // identity instead of by position.
 //
 // Runs in three passes per template:
-//   1. Ensure every template section/card has a `publicId` (generate one if
-//      missing).
+//   1. Re-fetch the template from the DB, then ensure every section/card has a
+//      `publicId` (generate one if missing). Re-fetch matters for chained
+//      boards (class template that is itself a clone): an earlier parent
+//      iteration may already have copied publicIds onto this board; using the
+//      initial list snapshot would overwrite those with new ids.
 //   2. For each clone board (a ProposalBoard whose `clonedFrom` points at the
 //      template), align sections and cards positionally AT THIS SNAPSHOT and
 //      copy the template's publicId onto the clone side when the clone lacks
-//      one. Positional alignment is only safe because we run this BEFORE the
-//      new propagation code deploys — nothing has been reordered since the
-//      clone was made.
+//      one.
 //   3. If a template section/card has a publicId AND the aligned clone has a
 //      DIFFERENT publicId, log it and skip — this is a data-inconsistency
 //      case that shouldn't be auto-resolved. Same for length mismatches.
 //
 // Admin-only. Dry-run by default so you can preview the plan; pass
 // dryRun:false to apply.
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { hasPublicId } = require("./utils/boardPropagationMatch") as {
+  hasPublicId: (value: string | null | undefined) => value is string;
+};
 
 type BackfillArgs = {
   limit?: number;
@@ -129,18 +135,29 @@ export default async function backfillProposalBoardPublicIds(
   let cloneCardsStamped = 0;
   let mismatches = 0;
 
-  for (const template of templates) {
+  for (const templateStub of templates) {
+    if (!templateStub?.id) continue;
+
+    // Re-fetch so parent→child publicId copies from earlier iterations are
+    // visible (initial findMany snapshot would still show empty strings).
+    const template = (await context.sudo().query.ProposalBoard.findOne({
+      where: { id: templateStub.id },
+      query: TEMPLATE_QUERY,
+    })) as BoardRow | null;
     if (!template?.id) continue;
 
     // ── Pass 1: ensure template has publicIds everywhere ────────────
     const tSections = sortByPosition(template.sections || []);
     const templateSectionPublicIds: Record<string, string> = {}; // sectionId -> publicId
     const templateCardPublicIds: Record<string, Record<string, string>> = {}; // sectionId -> {cardId -> publicId}
+    let templateSectionsStampedThis = 0;
+    let templateCardsStampedThis = 0;
 
     for (const s of tSections) {
-      let publicId = s.publicId ?? null;
+      let publicId = hasPublicId(s.publicId) ? s.publicId : null;
       if (!publicId) {
         publicId = uniqid();
+        templateSectionsStampedThis += 1;
         sectionsStamped += 1;
         record(
           `[template ${template.id}] section ${s.id}: stamp publicId=${publicId}`
@@ -157,9 +174,10 @@ export default async function backfillProposalBoardPublicIds(
 
       const tCards = sortByPosition(s.cards || []);
       for (const c of tCards) {
-        let cardPublicId = c.publicId ?? null;
+        let cardPublicId = hasPublicId(c.publicId) ? c.publicId : null;
         if (!cardPublicId) {
           cardPublicId = uniqid();
+          templateCardsStampedThis += 1;
           cardsStamped += 1;
           record(
             `[template ${template.id}] card ${c.id}: stamp publicId=${cardPublicId}`
@@ -175,7 +193,9 @@ export default async function backfillProposalBoardPublicIds(
       }
     }
 
-    if (sectionsStamped > 0 || cardsStamped > 0) templatesTouched += 1;
+    if (templateSectionsStampedThis > 0 || templateCardsStampedThis > 0) {
+      templatesTouched += 1;
+    }
 
     // ── Pass 2 & 3: for each clone, copy template's publicIds by position ─
     const clones = (await context.sudo().query.ProposalBoard.findMany({
@@ -205,7 +225,7 @@ export default async function backfillProposalBoardPublicIds(
         const templatePublicId = templateSectionPublicIds[tSection.id];
 
         // Fill clone.publicId when empty.
-        if (!cSection.publicId) {
+        if (!hasPublicId(cSection.publicId)) {
           record(
             `[clone ${clone.id}] section ${cSection.id}: copy publicId=${templatePublicId} from template section ${tSection.id}`
           );
@@ -243,7 +263,7 @@ export default async function backfillProposalBoardPublicIds(
           const templateCardPublicId =
             templateCardPublicIds[tSection.id][tCard.id];
 
-          if (!cCard.publicId) {
+          if (!hasPublicId(cCard.publicId)) {
             record(
               `[clone ${clone.id}] card ${cCard.id}: copy publicId=${templateCardPublicId} from template card ${tCard.id}`
             );

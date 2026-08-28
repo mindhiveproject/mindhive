@@ -6,7 +6,8 @@ import { useRouter } from "next/router";
 
 import Chip from "../../../../DesignSystem/Chip";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import IconButton from "../../../../DesignSystem/IconButton";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 
 import { useDataJournal } from "../Context/DataJournalContext";
 import { getLastUpdatedDate } from "../../../../../lib/dataJournalTimestamps";
@@ -38,15 +39,7 @@ export default function JournalNavigation({
   const { t } = useTranslation("builder");
   const { t: tCommon } = useTranslation("common");
   const router = useRouter();
-  const {
-    user,
-    projectId,
-    studyId,
-    setActiveComponent,
-    setIsAddComponentPanelOpen,
-    setLeftPanelMode,
-    setSidebarVisible,
-  } = useDataJournal();
+  const { user, projectId, studyId } = useDataJournal();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -78,9 +71,6 @@ export default function JournalNavigation({
     typeof journal?.description === "string" ? journal.description.trim() : "";
 
   const descriptionBlockStyle = {
-    fontFamily: "Inter, sans-serif",
-    fontSize: "12px",
-    lineHeight: "16px",
     color: "#333",
     marginBottom: formattedDate ? 8 : 0,
     maxHeight: 96,
@@ -90,9 +80,6 @@ export default function JournalNavigation({
   };
 
   const lastUpdatedBlockStyle = {
-    fontFamily: "Inter, sans-serif",
-    fontSize: "12px",
-    lineHeight: "16px",
     color: "#6a6a6a",
   };
 
@@ -100,21 +87,22 @@ export default function JournalNavigation({
     descriptionText || formattedDate ? (
       <>
         {descriptionText ? (
-          <div style={
-            {fontFamily: "Inter, sans-serif",
-            fontSize: "14px",
-            lineHeight: "16px",
-            color: "#6A6A6A",
-            marginBottom: formattedDate ? 8 : 0,
-            maxHeight: 96,
-            overflow: "auto",
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word"}}>
+          <div
+            className="MH-Type-Body-Base"
+            style={{
+              color: "#6A6A6A",
+              marginBottom: formattedDate ? 8 : 0,
+              maxHeight: 96,
+              overflow: "auto",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+            }}
+          >
               {descriptionText}
           </div>
         ) : null}
         {formattedDate ? (
-          <div style={lastUpdatedBlockStyle}>
+          <div className="MH-Type-Body-Base" style={lastUpdatedBlockStyle}>
             {t(
               "dataJournal.sideNav.lastUpdatedAt",
               { date: formattedDate },
@@ -131,7 +119,7 @@ export default function JournalNavigation({
       label: (
         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <img src="/assets/icons/visualize/edit.svg" alt="" width={18} height={18} />
-          {t("dataJournal.sideNav.editJournal", "Edit")}
+          {t("dataJournal.sideNav.editJournal", {}, { default: "Edit" })}
         </span>
       ),
       onClick: () => setEditOpen(true),
@@ -141,14 +129,14 @@ export default function JournalNavigation({
       label: (
         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <img src="/assets/icons/visualize/database.svg" alt="" width={18} height={18} />
-          {t("dataJournal.sideNav.manageDatasets", "Manage datasets")}
+          {t("dataJournal.sideNav.manageDatasets", {}, { default: "Manage datasets" })}
         </span>
       ),
       onClick: () => handleOpenModal(),
     },
     {
       key: "delete",
-      label: t("dataJournal.sideNav.deleteJournal", "Delete"),
+      label: t("dataJournal.sideNav.deleteJournal", {}, { default: "Delete" }),
       danger: true,
       onClick: () => {
         setDeleteError(null);
@@ -196,15 +184,14 @@ export default function JournalNavigation({
   };
 
   const titleWithTooltip = (
-    <InfoTooltip
+    <Tooltip
       content={titleText}
-      position="right"
-      portal
-      wrapperStyle={{ minWidth: 0, maxWidth: "100%", display: "block" }}
-      delay={900}
+      side="right"
+      delayMs={900}
+      className="DesignSystem-Tooltip-trigger--fill"
     >
       {titleButton}
-    </InfoTooltip>
+    </Tooltip>
   );
 
   return (
@@ -217,20 +204,24 @@ export default function JournalNavigation({
           {titleWithTooltip}
           <div onClick={(e) => e.stopPropagation()}>
             <DropdownMenu
-              ariaLabel={t("dataJournal.sideNav.journalMore", "Journal options")}
-              trigger={
-                <img
-                  src="/assets/dataviz/three-dots.svg"
-                  alt=""
-                  width={18}
-                  height={18}
+              ariaLabel={t(
+                "dataJournal.sideNav.journalMore",
+                {},
+                { default: "Journal options" },
+              )}
+              renderTrigger={({ onClick, open, ariaLabel }) => (
+                <IconButton
+                  variant="subtle"
+                  icon={<img src="/assets/dataviz/three-dots.svg" alt="" />}
+                  ariaLabel={ariaLabel}
+                  aria-expanded={open}
+                  aria-haspopup="menu"
+                  onClick={onClick}
                   style={{
                     opacity: isJournalSelected ? 1 : 0.3,
-                    transition: "opacity 0.2s"
                   }}
                 />
-              }
-
+              )}
               panelHeader={panelHeader}
               items={menuItems}
             />
@@ -241,7 +232,6 @@ export default function JournalNavigation({
           <div className="dataSourceChips">
             <Chip
               label={datasetsChipLabel}
-              shape="square"
               selected={isJournalSelected}
               onClick={(e) => {
                 e.stopPropagation();
@@ -262,12 +252,8 @@ export default function JournalNavigation({
               <AddWorkspace journalId={journal?.id} />
               <AddComponentButton
                 disabled={!selectedWorkspace?.id}
-                onClick={() => {
-                  setActiveComponent(null);
-                  setLeftPanelMode("addComponent");
-                  setIsAddComponentPanelOpen(true);
-                  setSidebarVisible(true);
-                }}
+                side="right"
+                align="start"
               />
             </div>
 
@@ -320,11 +306,9 @@ export default function JournalNavigation({
                 </StyledModalHeader>
                 <StyledModalBody>
                   <p
+                    className="MH-Type-Body-Base"
                     style={{
                       margin: 0,
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: 14,
-                      lineHeight: 1.5,
                       color: "#333",
                     }}
                   >
@@ -336,11 +320,10 @@ export default function JournalNavigation({
                   {deleteError ? (
                     <p
                       role="alert"
+                      className="MH-Type-Body-Base"
                       style={{
                         marginTop: 12,
                         marginBottom: 0,
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: 13,
                         color: "#c62828",
                       }}
                     >
@@ -361,6 +344,7 @@ export default function JournalNavigation({
                   </StyledModalButton>
                   <StyledModalButton
                     type="button"
+                    className="MH-Type-Label-Base"
                     disabled={deleting}
                     style={{
                       marginLeft: 8,
@@ -368,8 +352,6 @@ export default function JournalNavigation({
                       border: "none",
                       borderRadius: 6,
                       cursor: deleting ? "not-allowed" : "pointer",
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: 14,
                       background: "#c62828",
                       color: "#fff",
                     }}

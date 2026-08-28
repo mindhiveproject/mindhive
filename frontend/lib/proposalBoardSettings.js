@@ -1,6 +1,7 @@
 import {
   DEFAULT_CURRICULUM_TYPE,
   normalizeCurriculumType,
+  normalizeCurriculumTypes,
 } from "./curriculumTypes";
 
 export function mergeBoardSettings(existingSettings, patch) {
@@ -39,9 +40,16 @@ export function getBoardSetting(board, classContext, key, defaultValue) {
 }
 
 export function getBoardCurriculumType(board, classContext) {
-  return normalizeCurriculumType(
-    getBoardSetting(board, classContext, "curriculumType", DEFAULT_CURRICULUM_TYPE)
+  const raw = getBoardSetting(
+    board,
+    classContext,
+    "curriculumType",
+    DEFAULT_CURRICULUM_TYPE
   );
+  if (Array.isArray(raw)) {
+    return normalizeCurriculumTypes(raw)[0];
+  }
+  return normalizeCurriculumType(raw);
 }
 
 export function getBoardAssignableToStudents(board, classContext) {

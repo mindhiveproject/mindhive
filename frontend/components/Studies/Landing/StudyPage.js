@@ -9,6 +9,7 @@ import StudyInfo from "./StudyInfo";
 
 import UserPath from "./UserPath";
 import { getStudyImageUrl } from "../../../lib/profileStudyImageUrls";
+import Button from "../../DesignSystem/Button";
 
 export default function StudyPage({ query, user, study, isDashboard }) {
   const { t } = useTranslation("builder");
@@ -79,7 +80,9 @@ export default function StudyPage({ query, user, study, isDashboard }) {
                   }}
                 >
                   <div className="controlBtns">
-                    <button>{t("participateAsGuest")}</button>
+                    <Button variant="filled">
+                      {t("participateAsGuest", {}, { default: "Participate as a guest" })}
+                    </Button>
                   </div>
                 </Link>
               ) : (
@@ -90,7 +93,9 @@ export default function StudyPage({ query, user, study, isDashboard }) {
                   }}
                 >
                   <div className="controlBtns">
-                    <button>{t("participate")}</button>
+                    <Button variant="filled">
+                      {t("participate", {}, { default: "Participate" })}
+                    </Button>
                   </div>
                 </Link>
               )}

@@ -88,11 +88,9 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(20px, 2.8vw, 26px);
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
-    line-height: 1.25;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -100,7 +98,8 @@ const TitleRow = styled.div`
 
   .meta {
     color: #5f6871;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -153,14 +152,15 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -179,14 +179,15 @@ const OpportunityCard = styled.div`
   gap: 12px;
 
   .title {
-    font-size: 16px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .meta {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -226,12 +227,10 @@ const StickyPane = styled(PaneColumn)`
 
 const PaneHeader = styled.h3`
   margin: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
+  font: var(--MH-Type-Title-Small);
+  letter-spacing: 0;
   color: #171717;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
 `;
 
 const AssignedChip = styled.div`
@@ -244,18 +243,21 @@ const AssignedChip = styled.div`
   background: #eef5f9;
   border: 1px solid #d3dae0;
   color: #336f8a;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 
   .assigned-name {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .assigned-opp {
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #5f6871;
   }
 
@@ -265,9 +267,8 @@ const AssignedChip = styled.div`
     border: 1px solid #e8c4c4;
     background: #fff;
     color: #b3261e;
-    font-family: Inter, sans-serif;
-    font-weight: 600;
-    font-size: 12px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
 
     &:disabled {
@@ -285,7 +286,8 @@ const DropZone = styled.div`
   border-radius: 10px;
   padding: 10px 14px;
   color: #5f6871;
-  font-size: 12px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   font-style: italic;
   text-align: center;
   background: #f7f9f8;
@@ -307,7 +309,8 @@ const DraggableStudentChip = styled.div`
   border: 1px solid #d3dae0;
   background: #ffffff;
   color: #171717;
-  font-size: 13px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: grab;
   user-select: none;
 
@@ -327,14 +330,15 @@ const MatchRow = styled.div`
   flex-wrap: wrap;
 
   .name {
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
-    font-size: 14px;
   }
 
   .info {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .controls {
@@ -929,9 +933,8 @@ export default function RoundMatches({ roundId }) {
                         border: "1px solid #e8c4c4",
                         background: "#fff",
                         color: "#b3261e",
-                        fontFamily: "Inter",
-                        fontWeight: 600,
-                        fontSize: 12,
+                        font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,
                         cursor: "pointer",
                       }}
                     >
@@ -992,9 +995,8 @@ export default function RoundMatches({ roundId }) {
                       border: "1px solid #e8c4c4",
                       background: "#fff",
                       color: "#b3261e",
-                      fontFamily: "Inter",
-                      fontWeight: 600,
-                      fontSize: 12,
+                      font: 'var(--MH-Type-Label-Base)',
+                      letterSpacing: 0,
                       cursor: "pointer",
                     }}
                   >
@@ -1077,7 +1079,7 @@ export default function RoundMatches({ roundId }) {
           <TitleRow>
             <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
               <h1 title={pageTitle}>{pageTitle}</h1>
-              <Chip shape="pill" label={roundStatusLabel} />
+              <Chip label={roundStatusLabel} />
             </div>
             <div className="meta">
               {matches.length} match{matches.length === 1 ? "" : "es"} ·{" "}
@@ -1174,7 +1176,13 @@ export default function RoundMatches({ roundId }) {
             flexWrap: "wrap",
           }}
         >
-          <span style={{ fontSize: 14, color: "#5f6871", fontWeight: 500 }}>
+          <span
+            style={{
+              color: "#5f6871",
+              font: 'var(--MH-Type-Label-Base)',
+              letterSpacing: 0,
+            }}
+          >
             {t("matchingRound.matchingAlgorithmLabel", {}, {
               default: "Matching algorithm",
             })}

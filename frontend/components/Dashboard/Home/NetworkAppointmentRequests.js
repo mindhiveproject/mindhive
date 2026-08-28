@@ -16,7 +16,9 @@ function buildAppointmentRequestsWhere(networkIds) {
   if (ids.length === 0) return null;
   return {
     requestsAppointment: { equals: true },
-    status: { equals: "pending_review" },
+    status: {
+      in: ["pending_review", "returned", "pre_selected", "accepted"],
+    },
     classNetworks: { some: { id: { in: ids } } },
   };
 }
@@ -73,8 +75,8 @@ const Strip = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 16px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     font-weight: ${({ $collapsed }) => ($collapsed ? 500 : 600)};
     color: ${({ $collapsed }) => ($collapsed ? "#5f6871" : "#171717")};
   }
@@ -123,10 +125,8 @@ const Row = styled.div`
   }
 
   .title {
-    font-family: "Lato", sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
     max-width: 280px;
     overflow: hidden;

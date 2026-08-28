@@ -637,7 +637,7 @@ export default function Dashboard({ myclass }) {
       {selectedStudents.length > 1 ? (
         <div className="dashboardToolbar">
           <Button
-            variant="tonal"
+            variant="subtle"
             leadingIcon={
               <DashboardAssetIcon src="/assets/icons/profile/people.svg" />
             }
@@ -646,7 +646,7 @@ export default function Dashboard({ myclass }) {
             {t("dashboard.manageSelectedStudents", {
               count: selectedStudents.length,
             }, {
-              default: "Manage Selected Students ({{count}})",
+              default: "Manage selected students ({{count}})",
             })}
           </Button>
         </div>
@@ -754,19 +754,15 @@ const StyledDashboard = styled.div`
   }
 
   .dashboardSourceLabel {
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .dashboardEmpty {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 

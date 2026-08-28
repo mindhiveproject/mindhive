@@ -529,10 +529,10 @@ export default function Proposal({
           <div className="proposal">
             <div className="iconTitle">
               <img src="/assets/icons/project.svg" />
-              <div className="title">{previewTitle}</div>
+              <div className="title MH-Type-Title-Base">{previewTitle}</div>
             </div>
 
-            <div className="subtitle">
+            <div className="subtitle MH-Type-Body-Base">
               {t("proposalAction.feedbackCenterPreview", "This is how your proposal will appear in the Feedback Center")}
             </div>
             <div className="cards">
@@ -662,11 +662,10 @@ export default function Proposal({
                   />
                   {canEditCards && saveErrors[card?.id] && (
                     <div
-                      className="cardSaveError"
+                      className="cardSaveError MH-Type-Body-Base"
                       style={{
                         marginTop: "0.5rem",
                         color: "#b30000",
-                        fontSize: "0.85rem",
                       }}
                     >
                       {saveErrors[card?.id]}
@@ -682,7 +681,7 @@ export default function Proposal({
               <>
                 <div className="iconTitle">
                   <img src="/assets/icons/eye.svg" />
-                  <div className="title">{t("proposalAction.comments", "Comments")}</div>
+                  <div className="title MH-Type-Title-Base">{t("proposalAction.comments", "Comments")}</div>
                 </div>
 
                 <div className="reviews">
@@ -700,13 +699,13 @@ export default function Proposal({
               </>
             ) : (
               <>
-                <div className="title">
+                <div className="title MH-Type-Title-Base">
                   {t("proposalAction.submitForTitle", {
                     name: submitName,
                   }, `Submit your proposal for ${submitName}`)}
                 </div>
 
-                <div className="subtitle">
+                <div className="subtitle MH-Type-Body-Base">
                   {t("proposalAction.submitForFeedbackIntro", "Once you submit your proposal for feedback:")}
                   <ul>
                     <li>{t("proposalAction.appearInFeedbackCenter", "Your proposal will appear in the Feedback Center.")}</li>
@@ -717,7 +716,7 @@ export default function Proposal({
                   </ul>
                 </div>
 
-                <div className="subtitle">
+                <div className="subtitle MH-Type-Body-Base">
                   {t("proposalAction.completeAllBeforeSubmit", "Please make sure all cards listed below are marked as “completed” before you submit.")}
                 </div>
 
@@ -731,8 +730,8 @@ export default function Proposal({
                           }.svg`}
                         />
                         <div>
-                          <div className="listTitle">{card?.title}</div>
-                          <div className="listSubtitle">
+                          <div className="listTitle MH-Type-Label-Large">{card?.title}</div>
+                          <div className="listSubtitle MH-Type-Label-Large">
                             {card?.settings?.status || t("proposalAction.notStarted", "Not started")}
                           </div>
                         </div>
@@ -742,11 +741,11 @@ export default function Proposal({
                 </div>
 
                 {allCardsCompleted ? (
-                  <div className="subtitle">
+                  <div className="subtitle MH-Type-Body-Base">
                     {t("proposalAction.readyToSubmit", "The proposal is ready to be submitted for feedback!")}
                   </div>
                 ) : (
-                  <div className="subtitle warning">
+                  <div className="subtitle warning MH-Type-Body-Base">
                     {t("proposalAction.completeAllRequired", "Please complete all required cards before submitting your proposal for feedback.")}
                   </div>
                 )}

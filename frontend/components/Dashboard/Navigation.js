@@ -121,7 +121,6 @@ export default function DashboardNavigation() {
           orientation="vertical"
           collapsed={collapsed}
           aria-label={t("workspace")}
-          variant="soft"
         >
           {sections.map((section) => {
             const label = resolveSectionLabel(section, permissions);

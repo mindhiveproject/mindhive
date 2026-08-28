@@ -8,7 +8,7 @@ import useTranslation from "next-translate/useTranslation";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { UPDATE_USER } from "../../Mutations/User";
 import { StyledInput } from "../../styles/StyledForm";
-import { StyledSimpleSaveButton } from "../../styles/StyledProfile";
+import Button from "../../DesignSystem/Button";
 import LanguageSelector from "../../LanguageSelector";
 
 export default function Languages({ query }) {
@@ -52,16 +52,24 @@ export default function Languages({ query }) {
         </div>
 
         <div className="buttons">
-          <StyledSimpleSaveButton changed={changed}>
-            <button onClick={handleSave}>{t("languages.updatePreferences")}</button>
-          </StyledSimpleSaveButton>
+          <Button
+            variant="filled"
+            type="button"
+            onClick={handleSave}
+            disabled={!changed}
+            style={{ width: "100%" }}
+          >
+            {t("languages.updatePreferences")}
+          </Button>
 
           <Link
             href={{
               pathname: `/dashboard/settings`,
             }}
           >
-            <button className="back">{t("languages.backToSettings")}</button>
+            <Button variant="text" type="button" style={{ width: "100%" }}>
+              {t("languages.backToSettings")}
+            </Button>
           </Link>
         </div>
       </div>

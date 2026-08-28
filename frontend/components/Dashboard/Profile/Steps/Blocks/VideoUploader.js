@@ -1,8 +1,11 @@
 import React, { useState, useRef } from "react";
 import { StyledVideoUploader } from "../../../../styles/StyledForm";
+import Button from "../../../../DesignSystem/Button";
 import useTranslation from "next-translate/useTranslation";
 
-const MAX_VIDEO_BYTES = 500 * 1024 * 1024; // 500 MB, same cap as opportunity videos
+// 100MB — same GraphQL multipart path as opportunity videos; production
+// nginx `client_max_body_size` is 100m (larger POSTs 413).
+const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 
 const VideoUploader = ({ publicReadableId, onFileUpload }) => {
   const { t } = useTranslation("connect");
@@ -91,7 +94,9 @@ const VideoUploader = ({ publicReadableId, onFileUpload }) => {
       <div className="message">{t("videoUploader.dragAndDrop")}</div>
 
       <div>
-        <button onClick={onButtonClick}>{t("videoUploader.selectFile")}</button>
+        <Button variant="filled" type="button" onClick={onButtonClick}>
+          {t("videoUploader.selectFile")}
+        </Button>
       </div>
 
       {uploading && <p>{t("videoUploader.uploading", {}, { default: "Uploading..." })}</p>}

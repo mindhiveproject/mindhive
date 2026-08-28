@@ -13,12 +13,9 @@ const StyledBoard = styled.div`
   display: grid;
   margin: 40px 0px;
   grid-gap: 30px;
-  font-family: Lato;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Base);
   font-style: normal;
-  font-weight: 400;
-  line-height: 21px;
-  letter-spacing: 0em;
+  letter-spacing: 0;
 
   .section {
     display: grid;
@@ -87,11 +84,9 @@ const StyledBoard = styled.div`
     padding: 8px;
     border-radius: 4px;
     .title {
-      font-family: "Nunito";
+      font: var(--MH-Type-Label-Small);
       font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 24px;
+      letter-spacing: 0;
     }
   }
   .readyMoveForward {

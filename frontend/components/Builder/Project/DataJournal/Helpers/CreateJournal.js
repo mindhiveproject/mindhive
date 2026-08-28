@@ -2,15 +2,13 @@ import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import Button from "../../../../DesignSystem/Button";
+import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import { CREATE_VIZJOURNAL } from "../../../../Mutations/VizJournal";
 import { ADD_VIZPART } from "../../../../Mutations/VizPart";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 
 import JournalTemplateModal from "./JournalTemplateModal";
-
-const ADD_NEW_JOURNAL_VALUE = "__add_new_journal__";
-const ADD_TEMPLATE_JOURNAL_VALUE = "__add_template_journal__";
 
 export default function CreateJournal({
   projectId,
@@ -19,7 +17,7 @@ export default function CreateJournal({
   journalCollections,
 }) {
   const { t } = useTranslation("builder");
-  const [createJournal, { data, loading, error }] = useMutation(
+  const [createJournal, { loading }] = useMutation(
     CREATE_VIZJOURNAL,
     {
       refetchQueries: [
@@ -48,9 +46,7 @@ export default function CreateJournal({
   const [
     createPart,
     {
-      data: createPartData,
       loading: createPartLoading,
-      error: createPartError,
     },
   ] = useMutation(ADD_VIZPART, {
     refetchQueries: [
@@ -147,51 +143,55 @@ export default function CreateJournal({
     setTemplateModalOpen(true);
   };
 
-  const [journalDropdownValue, setJournalDropdownValue] = useState(undefined);
+  const blocked = loading || createPartLoading;
 
-  const handleJournalDropdownChange = (next) => {
-    if (next === ADD_NEW_JOURNAL_VALUE) {
-      addNewJournal();
-      setJournalDropdownValue(undefined);
-      return;
-    }
-    if (next === ADD_TEMPLATE_JOURNAL_VALUE) {
-      addNewJournalFromTemplate();
-      setJournalDropdownValue(undefined);
-      return;
-    }
-    setJournalDropdownValue(next);
-  };
+  const label = t(
+    "dataJournal.sideNav.addJournal",
+    {},
+    { default: "Journal" },
+  );
+  const ariaLabel = t(
+    "dataJournal.sideNav.addJournalAria",
+    {},
+    { default: "Add a new journal" },
+  );
 
-  const journalDropdownOptions = [
+  const menuItems = [
     {
-      value: ADD_NEW_JOURNAL_VALUE,
+      key: "scratch",
       label: t("dataJournal.sideNav.addJournalScratch", {}, {
         default: "Create a journal from scratch",
       }),
+      onClick: addNewJournal,
     },
     {
-      value: ADD_TEMPLATE_JOURNAL_VALUE,
+      key: "template",
       label: t("dataJournal.sideNav.addJournalTemplate", {}, {
         default: "Add a journal template",
       }),
+      onClick: addNewJournalFromTemplate,
     },
   ];
 
   return (
     <div className="createJournalBtn">
-      <DropdownSelect
-        value={journalDropdownValue}
-        options={journalDropdownOptions}
-        onChange={handleJournalDropdownChange}
-        ariaLabel={t("dataJournal.sideNav.addJournal", {}, {
-          default: "Journal",
-        })}
-        placeholder={t("dataJournal.sideNav.addJournal", {}, {
-          default: "Journal",
-        })}
-        icon="+"
-        triggerStyle={{ backgroundColor: "#F6F9F8", border: "2px solid #E6E6E6", fontWeight: 600, fontSize: "16px", color: "#5D5763" }}
+      <DropdownMenu
+        ariaLabel={ariaLabel}
+        renderTrigger={({ onClick, open, ariaLabel: triggerAriaLabel }) => (
+          <Button
+            variant="subtle"
+            leadingIcon={<img src="/assets/icons/plus.svg" alt="" />}
+            type="button"
+            aria-label={triggerAriaLabel}
+            aria-expanded={open}
+            aria-haspopup="menu"
+            onClick={onClick}
+            disabled={blocked}
+          >
+            {label}
+          </Button>
+        )}
+        items={menuItems}
       />
       <JournalTemplateModal
         open={templateModalOpen}

@@ -172,9 +172,8 @@ const SaveButton = styled.button`
   background: #336f8a;
   color: #ffffff;
   border: none;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
 
   &:disabled {
@@ -189,7 +188,8 @@ const ErrorBox = styled.div`
   background: #fcebea;
   border: 1px solid #f5c2bf;
   color: #871b16;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 const Loading = styled.div`

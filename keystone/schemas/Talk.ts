@@ -24,8 +24,11 @@ export const Talk = list({
     author: relationship({
       ref: "Profile.authorOfTalk",
       hooks: {
-        async resolveInput({ context }) {
-          return { connect: { id: context.session.itemId } };
+        async resolveInput({ operation, resolvedData, context }) {
+          if (operation === "create") {
+            return { connect: { id: context.session.itemId } };
+          }
+          return resolvedData.author;
         },
       },
     }),
@@ -44,6 +47,10 @@ export const Talk = list({
     }),
     classes: relationship({
       ref: "Class.talks",
+      many: true,
+    }),
+    opportunities: relationship({
+      ref: "Opportunity.talks",
       many: true,
     }),
     createdAt: timestamp({

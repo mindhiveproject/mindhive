@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import Button from "../../../../DesignSystem/Button";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import {
   UPDATE_DATASOURCE,
@@ -96,24 +97,22 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
         borderRadius: "10px",
         boxShadow:
           "0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.05)",
-        fontFamily:
-          "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       <h3
+        className="MH-Type-Title-Large"
         style={{
           margin: 0,
-          fontSize: "1.4rem",
           color: "#1a202c",
         }}
       >
         Edit dataset
       </h3>
       <p
+        className="MH-Type-Body-Base"
         style={{
           marginTop: "6px",
           marginBottom: "18px",
-          fontSize: "0.95rem",
           color: "#4a5568",
         }}
       >
@@ -122,8 +121,8 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
       {error && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85rem",
             color: "#c53030",
             marginBottom: "10px",
           }}
@@ -134,8 +133,8 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
       {renameDisabled && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85rem",
             color: "#718096",
             marginBottom: "10px",
           }}
@@ -148,13 +147,13 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
       {/* Current info */}
       <div
+        className="MH-Type-Body-Base"
         style={{
           marginBottom: "16px",
-          fontSize: "0.85rem",
           color: "#718096",
         }}
       >
-        <span style={{ fontWeight: 600, color: "#4a5568" }}>
+        <span className="MH-Type-Label-Base" style={{ color: "#4a5568" }}>
           Dataset ID:
         </span>{" "}
         {dataset.id}
@@ -163,17 +162,17 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
       {/* Title field */}
       <div style={{ marginBottom: "20px" }}>
         <label
+          className="MH-Type-Label-Base"
           style={{
             display: "block",
             marginBottom: "6px",
-            fontSize: "0.9rem",
-            fontWeight: 600,
             color: "#2d3748",
           }}
         >
           Dataset name
         </label>
         <input
+          className="MH-Type-Body-Base"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -184,16 +183,15 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
             padding: "9px 11px",
             borderRadius: "6px",
             border: "1px solid #cbd5e0",
-            fontSize: "0.95rem",
             outline: "none",
             opacity: renameDisabled ? 0.65 : 1,
           }}
         />
         <p
+          className="MH-Type-Body-Base"
           style={{
             marginTop: "6px",
             marginBottom: 0,
-            fontSize: "0.8rem",
             color: "#a0aec0",
           }}
         >
@@ -203,8 +201,8 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
       {loading && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85rem",
             color: "#718096",
             marginBottom: "10px",
           }}
@@ -224,79 +222,49 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
         }}
       >
         <div style={{ display: "flex", gap: "8px" }}>
-          <button
+          <Button
+            variant="filled"
             onClick={handleUpdate}
             disabled={saveDisabled}
             type="button"
-            style={{
-              padding: "8px 16px",
-              borderRadius: "6px",
-              border: "none",
-              background: saveDisabled ? "#cbd5e0" : "#3182ce",
-              color: "#fff",
-              fontWeight: 500,
-              fontSize: "0.9rem",
-              cursor: saveDisabled ? "not-allowed" : "pointer",
-            }}
           >
-            {loading ? "Saving…" : "Save changes"}
-          </button>
-          <button
-            onClick={onCancel}
-            type="button"
-            style={{
-              padding: "8px 14px",
-              borderRadius: "6px",
-              border: "1px solid #e2e8f0",
-              background: "#fff",
-              color: "#4a5568",
-              fontSize: "0.9rem",
-              cursor: "pointer",
-            }}
-          >
-            Cancel
-          </button>
+            {loading
+              ? t("dataJournal.datasets.saving", {}, { default: "Saving…" })
+              : t("dataJournal.datasets.saveChanges", {}, {
+                  default: "Save changes",
+                })}
+          </Button>
+          <Button variant="outline" onClick={onCancel} type="button">
+            {t("dataJournal.datasets.cancel", {}, { default: "Cancel" })}
+          </Button>
         </div>
 
         {deleteDisabled ? (
-          <InfoTooltip content={deleteTooltip} position="topRight" portal>
+          <Tooltip content={deleteTooltip} side="top">
             <span style={{ display: "inline-flex", cursor: "not-allowed" }}>
-              <button
+              <Button
+                variant="outline"
                 type="button"
                 disabled
                 style={{
-                  padding: "8px 14px",
-                  borderRadius: "6px",
-                  border: "none",
-                  background: "#feb2b2",
-                  color: "#fff",
-                  fontSize: "0.85rem",
-                  fontWeight: 500,
-                  cursor: "not-allowed",
+                  color: "#c0392b",
+                  borderColor: "#f5c2bf",
                   pointerEvents: "none",
                 }}
               >
                 {t("dataJournal.datasets.deleteLabel", {}, {
                   default: "Delete",
                 })}
-              </button>
+              </Button>
             </span>
-          </InfoTooltip>
+          </Tooltip>
         ) : (
-          <button
+          <Button
+            variant="outline"
             onClick={() => setDeleteConfirmOpen(true)}
             disabled={loading}
             type="button"
-            style={{
-              padding: "8px 14px",
-              borderRadius: "6px",
-              border: "none",
-              background: loading ? "#feb2b2" : "#e53e3e",
-              color: "#fff",
-              fontSize: "0.85rem",
-              fontWeight: 500,
-              cursor: loading ? "not-allowed" : "pointer",
-            }}
+            style={{ color: "#c0392b", borderColor: "#f5c2bf" }}
           >
             {loading
               ? t("dataJournal.datasets.deleting", {}, {
@@ -305,7 +273,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
               : t("dataJournal.datasets.deleteDataset", {}, {
                   default: "Delete dataset",
                 })}
-          </button>
+          </Button>
         )}
       </div>
       <DeleteConfirmModal

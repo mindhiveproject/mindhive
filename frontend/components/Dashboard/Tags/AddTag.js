@@ -9,6 +9,7 @@ import useForm from "../../../lib/useForm";
 import DisplayError from "../../ErrorMessage";
 
 import TagForm from "./TagForm";
+import Button from "../../DesignSystem/Button";
 
 import { CREATE_TAG } from "../../Mutations/Tag";
 import { GET_TAGS } from "../../Queries/Tag";
@@ -43,7 +44,9 @@ export default function AddTag({ user }) {
   return (
     <div>
       <TagForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>{t("tag.save")}</button>
+      <Button variant="filled" type="button" onClick={handleSave}>
+        {t("tag.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

@@ -24,7 +24,7 @@ import {
 } from "unique-names-generator";
 
 const adjectives = baseAdjectives
-  .filter((w) => !["booby", "tasty"].includes(w))
+  .filter((w) => !["booby", "tasty", "nutty"].includes(w))
   .concat(["curious", "kind"]);
 
 const customConfig: Config = {

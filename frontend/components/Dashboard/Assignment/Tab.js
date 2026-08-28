@@ -8,6 +8,7 @@ import ReactHtmlParser from "react-html-parser";
 
 import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 import TipTapEditor from "../../TipTap/Main";
+import Chip from "../../DesignSystem/Chip";
 
 import { EDIT_HOMEWORK } from "../../Mutations/Homework";
 import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../Queries/Homework";
@@ -40,9 +41,8 @@ const InfoSection = styled.div`
 
 const Title = styled.h2`
   margin: 0;
-  font-family: Lato;
-  font-size: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
@@ -51,8 +51,8 @@ const MetaInfo = styled.div`
   gap: 16px;
   align-items: center;
   flex-wrap: wrap;
-  font-family: Lato;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #666666;
 `;
 
@@ -71,50 +71,6 @@ const StatusChipsContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const StatusChip = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1.5px solid;
-  background: ${props => props.active ? '#D8D3E7' : '#ffffff'};
-  border-color: ${props => props.active ? '#7D70AD' : '#D8D3E7'};
-  color: ${props => props.active ? '#434343' : '#434343'};
-  
-  &:hover:not(:disabled) {
-    border-color: ${props => props.active ? '#7D70AD' : '#7D70AD'};
-    background: ${props => props.active ? '#D8D3E7' : '#F5F5F5'};
-  }
-  
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const FeedbackGivenChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  white-space: nowrap;
-  border: 1.5px solid #8A2CF6;
-  background: #D8D3E7;
-  color: #8A2CF6; 
-`;
 
 const ContentSection = styled.div`
   margin-top: 24px;
@@ -126,9 +82,8 @@ const EditableTitle = styled.div`
   input {
     width: 100%;
     padding: 8px 12px;
-    font-family: Lato;
-    font-size: 20px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #1a1a1a;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
@@ -159,12 +114,10 @@ const CommentsSection = styled.div`
 
 const CommentsLabel = styled.label`
   display: block;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   color: #666666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   margin-bottom: 12px;
 `;
 
@@ -173,9 +126,8 @@ const CommentsContent = styled.div`
   background: #f9f9f9;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
-  font-family: Lato;
-  font-size: 14px;
-  line-height: 1.6;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #1a1a1a;
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -315,7 +267,8 @@ export default function HomeworkTab({ user, assignment, homework }) {
                 style={{
                   borderRadius: "100px",
                   background: "#336F8A",
-                  fontSize: "12px",
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   color: "white",
                   border: "1px solid #336F8A",
                 }}
@@ -328,7 +281,8 @@ export default function HomeworkTab({ user, assignment, homework }) {
                 style={{
                   borderRadius: "100px",
                   background: "#f7f9fa",
-                  fontSize: "12px",
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   color: "#666666",
                   border: "1px solid #e0e0e0",
                 }}
@@ -343,7 +297,8 @@ export default function HomeworkTab({ user, assignment, homework }) {
                 style={{
                   borderRadius: "100px",
                   background: "#336F8A",
-                  fontSize: "12px",
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   color: "white",
                   border: "1px solid #336F8A",
                 }}
@@ -359,7 +314,8 @@ export default function HomeworkTab({ user, assignment, homework }) {
                   style={{
                     borderRadius: "100px",
                     background: "#f7f9fa",
-                    fontSize: "12px",
+                    font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                     color: "#B9261A",
                     border: "1px solid #B9261A",
                   }}
@@ -374,7 +330,8 @@ export default function HomeworkTab({ user, assignment, homework }) {
                   style={{
                     borderRadius: "100px",
                     background: currentStatus === "Needs feedback" ? "#D8D3E7" : "#ffffff",
-                    fontSize: "12px",
+                    font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                     color: "#434343",
                     border: `1.5px solid ${currentStatus === "Needs feedback" ? "#7D70AD" : "#625B71"}`,
                   }}
@@ -391,7 +348,8 @@ export default function HomeworkTab({ user, assignment, homework }) {
                     style={{
                       borderRadius: "100px",
                       background: "#D3E2F1",
-                      fontSize: "12px",
+                      font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                       color: "#3D85B0",
                       border: "1px solid #3D85B0",
                       cursor: "not-allowed",
@@ -405,7 +363,8 @@ export default function HomeworkTab({ user, assignment, homework }) {
                     style={{
                       borderRadius: "100px",
                       background: "#FDF2D0",
-                      fontSize: "12px",
+                      font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                       color: "#434343",
                       border: "1px solid #434343",
                     }}
@@ -420,7 +379,8 @@ export default function HomeworkTab({ user, assignment, homework }) {
                   style={{
                     borderRadius: "100px",
                     background: "#ffffff",
-                    fontSize: "12px",
+                    font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                     color: "#336F8A",
                     border: "1px solid #336F8A",
                   }}
@@ -448,18 +408,18 @@ export default function HomeworkTab({ user, assignment, homework }) {
             <span>{moment(homework?.createdAt).format("MMM D, YYYY")}</span>
             <StatusChipsContainer>
               {currentStatus === "Feedback given" && (
-                <FeedbackGivenChip>
-                  {t("teacherClass.feedbackGiven") || "Feedback given"}
-                </FeedbackGivenChip>
+                <Chip
+                  variant="static"
+                  tone="success"
+                  label={t("teacherClass.feedbackGiven") || "Feedback given"}
+                />
               )}
               {canSeeFeedbackGiven && currentStatus !== "Feedback given" && (
-                <StatusChip
-                  active={currentStatus === "Feedback given"}
+                <Chip
+                  label={t("teacherClass.feedbackGiven") || "Feedback given"}
                   onClick={() => handleStatusChange("Feedback given")}
                   disabled={isEditing || loading}
-                >
-                  {t("teacherClass.feedbackGiven") || "Feedback given"}
-                </StatusChip>
+                />
               )}
             </StatusChipsContainer>
           </MetaInfo>

@@ -6,6 +6,7 @@ import useForm from "../../../../lib/useForm";
 import { UPDATE_HOMEWORK } from "../../../Mutations/Homework";
 import JoditEditor from "../../../Jodit/Editor";
 import useTranslation from 'next-translate/useTranslation';
+import Button from "../../../DesignSystem/Button";
 
 const options = [
   {
@@ -124,13 +125,15 @@ export default function Homework({ homeworkId }) {
         </select>
       </div>
       <div className="buttons">
-        <button
-          className="primary"
+        <Button
+          variant="filled"
           onClick={() => onUpdateHomework()}
           disabled={updateLoading}
         >
-          {updateLoading ? t('board.saving', 'Saving ...') : t('board.save', 'Save')}
-        </button>
+          {updateLoading
+            ? t("board.saving", {}, { default: "Saving ..." })
+            : t("board.save", {}, { default: "Save" })}
+        </Button>
       </div>
     </>
   );

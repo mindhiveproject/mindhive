@@ -20,9 +20,7 @@ const CONNECT_NAV_ICONS = {
 const OPPORTUNITY_PATHS = [
   "/dashboard/connect/explore",
   "/dashboard/connect/my-matches",
-  "/dashboard/connect/rounds",
   "/dashboard/connect/questions",
-  "/dashboard/connect/participate",
   "/dashboard/connect/matches",
   "/dashboard/connect/review-queue",
   "/dashboard/connect/review",
@@ -133,6 +131,40 @@ function ConnectNavDropdown({
     return null;
   }
 
+  const label = t(placeholderKey, {}, { default: placeholderDefault });
+  const ariaLabel = t(ariaLabelKey, {}, { default: ariaLabelDefault });
+
+  // A group with a single destination has nothing to choose between: render the
+  // nav item as a plain link that navigates straight there, no menu.
+  if (options.length === 1) {
+    const [only] = options;
+    return (
+      <li>
+        <a
+          href={only.href}
+          aria-label={ariaLabel}
+          aria-current={active ? "page" : undefined}
+          className={clsx(
+            "navbar-item",
+            icon && "has-icon",
+            active && "selected"
+          )}
+          onClick={(event) => {
+            event.preventDefault();
+            router.push(only.href);
+          }}
+        >
+          {icon ? (
+            <span className="navbar-item-icon" aria-hidden>
+              {icon}
+            </span>
+          ) : null}
+          <span data-dropdown-label>{label}</span>
+        </a>
+      </li>
+    );
+  }
+
   return (
     <li>
       <DropdownSelect
@@ -140,8 +172,8 @@ function ConnectNavDropdown({
         options={options}
         onChange={handleChange}
         fitContent
-        placeholder={t(placeholderKey, {}, { default: placeholderDefault })}
-        ariaLabel={t(ariaLabelKey, {}, { default: ariaLabelDefault })}
+        placeholder={label}
+        ariaLabel={ariaLabel}
         triggerClassName={clsx(
           "navbar-item",
           icon && "has-icon",
@@ -169,7 +201,6 @@ export default function ConnectNavigationBar() {
     isAdmin,
     isTeacher,
     isMentor,
-    isStudent,
     isScientist,
     isReviewer,
     isSponsor,
@@ -279,13 +310,12 @@ export default function ConnectNavigationBar() {
         value: "explore",
         label: t("nav.exploreOpportunities", {}, { default: "Explore opportunities" }),
         href: "/dashboard/connect/explore",
-        visible: true,
-      },
-      {
-        value: "myOpportunities",
-        label: t("nav.myOpportunities", {}, { default: "My opportunities" }),
-        href: "/dashboard/sponsor-connect/opportunities",
-        visible: isMentor || isAdmin,
+        visible:
+          isAdmin ||
+          isTeacher ||
+          isMentor ||
+          isSponsor ||
+          isClassNetworkAdmin,
       },
       {
         value: "myMatchedStudents",
@@ -294,22 +324,10 @@ export default function ConnectNavigationBar() {
         visible: isMentor || isAdmin,
       },
       {
-        value: "matchingRounds",
-        label: t("nav.matchingRounds", {}, { default: "Matching rounds" }),
-        href: "/dashboard/connect/rounds",
-        visible: isTeacher || isAdmin || isClassNetworkAdmin,
-      },
-      {
         value: "questionLibrary",
         label: t("nav.questionLibrary", {}, { default: "Question library" }),
         href: "/dashboard/connect/questions",
         visible: isTeacher || isAdmin,
-      },
-      {
-        value: "participate",
-        label: t("nav.participate", {}, { default: "Participate" }),
-        href: "/dashboard/connect/participate",
-        visible: isStudent || isAdmin,
       },
       {
         value: "matches",
@@ -333,7 +351,7 @@ export default function ConnectNavigationBar() {
     isAdmin,
     isTeacher,
     isMentor,
-    isStudent,
+    isSponsor,
     isReviewer,
     isClassNetworkAdmin,
   ]);
@@ -343,6 +361,7 @@ export default function ConnectNavigationBar() {
       aria-label={t("nav.mainNavAriaLabel", {}, { default: "Connect sections" })}
       variant="underline"
       showRule
+      gapless
     >
       <ConnectNavDropdown
         placeholderKey="nav.organizations"

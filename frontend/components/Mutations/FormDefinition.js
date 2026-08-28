@@ -201,10 +201,14 @@ export const FORK_REVIEW_FORM_FOR_BOARD = gql`
   mutation FORK_REVIEW_FORM_FOR_BOARD(
     $templateBoardId: ID!
     $milestoneId: ID!
+    $sourceFormDefinitionKey: String
+    $forceNew: Boolean
   ) {
     forkReviewFormForBoard(
       templateBoardId: $templateBoardId
       milestoneId: $milestoneId
+      sourceFormDefinitionKey: $sourceFormDefinitionKey
+      forceNew: $forceNew
     ) {
       id
       key

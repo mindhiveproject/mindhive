@@ -124,7 +124,7 @@ export default function Axes({
 
   const topHelpContent = useMemo(
     () => (
-      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+      <p className="MH-Type-Body-Base" style={{ margin: 0, color: "#625B71" }}>
         {t(`${HV_COMMON}.help.resourcesIntro`, {}, {
           default:
             "Use the buttons below to open a reference in a new tab when a link is available.",

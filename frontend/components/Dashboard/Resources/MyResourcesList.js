@@ -1,7 +1,8 @@
 import { useQuery } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
-import { Icon, Popup } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
+import Tooltip from "../../DesignSystem/Tooltip";
 
 import { GET_MY_RESOURCES, GET_PUBLIC_RESOURCES } from "../../Queries/Resource";
 import DeleteResource from "./DeleteResource";
@@ -86,55 +87,40 @@ export default function MyResourcesList({
             </div>
           )}
           <div className="card-actions">
-            <Popup
-              content={t("boardManagement.preview")}
-              trigger={
-                <Icon
-                  name="eye"
-                  className="action-icon preview"
-                  onClick={() => onPreview(resource.id)}
-                />
-              }
-            />
-            <Popup
-              content={t("boardManagement.edit")}
-              trigger={
-                <Link href={`/dashboard/resources/edit?id=${resource.id}`}>
-                  <Icon name="edit" className="action-icon edit" />
-                </Link>
-              }
-            />
-            <Popup
-              content={t("boardManagement.duplicate")}
-              trigger={
-                <Link
-                  href={`/dashboard/resources/duplicate?id=${resource.id}`}
-                >
-                  <Icon name="copy" className="action-icon copy" />
-                </Link>
-              }
-            />
-            <Popup
-              content={t("boardManagement.share")}
-              trigger={
-                <Icon
-                  name="share"
-                  className="action-icon share"
-                  onClick={() => onShare(resource.id)}
-                />
-              }
-            />
-            <Popup
-              content={t("boardManagement.delete")}
-              trigger={
-                <DeleteResource
-                  resourceId={resource.id}
-                  refetchQueries={refetchQueries}
-                >
-                  <Icon name="trash" className="action-icon delete" />
-                </DeleteResource>
-              }
-            />
+            <Tooltip content={t("boardManagement.preview")}>
+              <Icon
+                name="eye"
+                className="action-icon preview"
+                onClick={() => onPreview(resource.id)}
+              />
+            </Tooltip>
+            <Tooltip content={t("boardManagement.edit")}>
+              <Link href={`/dashboard/resources/edit?id=${resource.id}`}>
+                <Icon name="edit" className="action-icon edit" />
+              </Link>
+            </Tooltip>
+            <Tooltip content={t("boardManagement.duplicate")}>
+              <Link
+                href={`/dashboard/resources/duplicate?id=${resource.id}`}
+              >
+                <Icon name="copy" className="action-icon copy" />
+              </Link>
+            </Tooltip>
+            <Tooltip content={t("boardManagement.share")}>
+              <Icon
+                name="share"
+                className="action-icon share"
+                onClick={() => onShare(resource.id)}
+              />
+            </Tooltip>
+            <Tooltip content={t("boardManagement.delete")}>
+              <DeleteResource
+                resourceId={resource.id}
+                refetchQueries={refetchQueries}
+              >
+                <Icon name="trash" className="action-icon delete" />
+              </DeleteResource>
+            </Tooltip>
           </div>
         </div>
       ))}

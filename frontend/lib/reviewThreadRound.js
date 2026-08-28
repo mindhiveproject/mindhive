@@ -115,7 +115,16 @@ export function getCollapsedReviewNotes(
 export const REVIEW_NOTE_KIND = {
   REVIEWER_COMMENT: "reviewer_comment",
   SPONSOR_REPLY: "sponsor_reply",
+  APPOINTMENT_REQUEST: "appointment_request",
+  APPOINTMENT_SCHEDULED: "appointment_scheduled",
 };
+
+export function isAppointmentReviewNoteKind(kind) {
+  return (
+    kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST ||
+    kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
+  );
+}
 
 /**
  * Sponsor replies in a round that the viewer has not marked as read.
@@ -144,12 +153,17 @@ export function hasUnreadSponsorReply({
   );
 }
 
-function isReviewerCommentNote(note, viewerId) {
+function isOtherPartyVisibleNote(note, viewerId) {
   if (!note) return false;
   if (note.kind === REVIEW_NOTE_KIND.SPONSOR_REPLY) return false;
   if (note.author?.id && note.author.id === viewerId) return false;
-  // reviewer_comment, or legacy notes without kind
-  return !note.kind || note.kind === REVIEW_NOTE_KIND.REVIEWER_COMMENT;
+  // reviewer_comment, appointment actions from the other party, or legacy notes
+  return (
+    !note.kind ||
+    note.kind === REVIEW_NOTE_KIND.REVIEWER_COMMENT ||
+    note.kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST ||
+    note.kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
+  );
 }
 
 /**
@@ -169,7 +183,7 @@ export function getUnreadReviewerCommentNotes({
       ? notes
       : [];
   return scoped.filter((note) => {
-    if (!isReviewerCommentNote(note, viewerId)) return false;
+    if (!isOtherPartyVisibleNote(note, viewerId)) return false;
     const readers = note?.readBy || [];
     return !readers.some((reader) => reader?.id === viewerId);
   });

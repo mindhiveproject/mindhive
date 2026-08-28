@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
-import { v1 as uuidv1 } from "uuid";
 
-import ProposalHeader from "./Header";
+import BoardEditorChrome from "./BoardEditorChrome";
 import ProposalBoard from "./Board";
 import ProposalCardWrapper from "../Card/Wrapper";
 import useTemplatePropagation from "./useTemplatePropagation";
 
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
-import { isClassTemplateBoard } from "../../Utils/proposalBoard";
+import { isActionCard } from "../../../lib/milestones";
+import { getActionCardLabel } from "../../../lib/templateBoardActionCards";
 
 export default function ProposalBuilder({
   user,
@@ -26,11 +26,9 @@ export default function ProposalBuilder({
   const {
     autoUpdateStudentBoards,
     handleAutoUpdateChange,
-    hasUnpropagatedChanges,
     markUnpropagatedChange,
     clearUnpropagatedChange,
     propagateToClones,
-    propagateLoading,
   } = useTemplatePropagation({
     proposalId: proposal?.id,
     refetchQueries,
@@ -45,54 +43,20 @@ export default function ProposalBuilder({
     }
   );
 
-  const backfillPublicIdDoneRef = useRef(null);
-
-  useEffect(() => {
-    if (!proposal?.id || !Array.isArray(proposal?.sections)) {
-      return;
-    }
-
-    if (!isClassTemplateBoard(proposal)) return;
-    if (backfillPublicIdDoneRef.current === proposal.id) return;
-
-    const sections = proposal.sections || [];
-    const cardsWithoutPublicId = sections
-      .flatMap((section) => section?.cards || [])
-      .filter((card) => card && !card.publicId);
-
-    if (cardsWithoutPublicId.length === 0) {
-      backfillPublicIdDoneRef.current = proposal.id;
-      return;
-    }
-
-    cardsWithoutPublicId.forEach((card) => {
-      updateEdit({
-        variables: {
-          id: card.id,
-          input: {
-            publicId: uuidv1(),
-          },
-        },
-      }).catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error("Failed to backfill card publicId in ProposalBuilder:", e);
-      });
-    });
-
-    backfillPublicIdDoneRef.current = proposal.id;
-  }, [proposal, updateEdit]);
+  const cardCloseHandlerRef = useRef(null);
+  const cardChromeHandlersRef = useRef({});
+  const [cardChrome, setCardChrome] = useState(null);
 
   const [page, setPage] = useState("board");
   const [card, setCard] = useState(null);
 
-  const openCard = (card) => {
-    setCard(card);
+  const openCard = (nextCard) => {
+    setCard(nextCard);
     setPage("card");
   };
 
   const closeCard = async ({ cardId, lockedByUser }) => {
     if (cardId && lockedByUser) {
-      // unlock the card
       await updateEdit({
         variables: {
           id: cardId,
@@ -103,12 +67,104 @@ export default function ProposalBuilder({
         },
       });
     }
+    cardCloseHandlerRef.current = null;
+    cardChromeHandlersRef.current = {};
+    setCardChrome(null);
     setPage("board");
     setCard(null);
   };
 
+  const registerCloseHandler = useCallback((handler) => {
+    cardCloseHandlerRef.current = handler;
+  }, []);
+
+  const registerCardChrome = useCallback((config) => {
+    if (!config) {
+      cardChromeHandlersRef.current = {};
+      setCardChrome(null);
+      return;
+    }
+    cardChromeHandlersRef.current = {
+      onSave: config.onSave,
+      onPreview: config.onPreview,
+      onExitPreview: config.onExitPreview,
+    };
+    setCardChrome((prev) => {
+      const next = {
+        kind: config.kind,
+        previewMode: !!config.previewMode,
+        saving: !!config.saving,
+        typeLabel: config.typeLabel || null,
+        isDefaultAction: !!config.isDefaultAction,
+      };
+      if (
+        prev &&
+        prev.kind === next.kind &&
+        prev.previewMode === next.previewMode &&
+        prev.saving === next.saving &&
+        prev.typeLabel === next.typeLabel &&
+        prev.isDefaultAction === next.isDefaultAction
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, []);
+
+  const handleCardSave = useCallback(
+    () => cardChromeHandlersRef.current.onSave?.(),
+    []
+  );
+  const handleCardPreview = useCallback(
+    () => cardChromeHandlersRef.current.onPreview?.(),
+    []
+  );
+  const handleCardExitPreview = useCallback(
+    () => cardChromeHandlersRef.current.onExitPreview?.(),
+    []
+  );
+
+  const handleChromeBack = async () => {
+    if (page === "card") {
+      if (cardCloseHandlerRef.current) {
+        await cardCloseHandlerRef.current();
+        return;
+      }
+      await closeCard({ cardId: card?.id, lockedByUser: false });
+      return;
+    }
+    onClose?.();
+  };
+
+  const cardTitle = card
+    ? isActionCard(card)
+      ? getActionCardLabel(card, t)
+      : card?.title
+    : "";
+  const hideBoardChromeNav = !isPreview && !!proposalBuildMode;
+  const showChrome = !isPreview;
+
   return (
     <>
+      {showChrome ? (
+        <BoardEditorChrome
+          user={user}
+          proposal={proposal}
+          proposalBuildMode={proposalBuildMode}
+          refetchQueries={refetchQueries}
+          mode={page === "card" ? "card" : "board"}
+          cardTitle={cardTitle}
+          onBack={onClose || page === "card" ? handleChromeBack : undefined}
+          autoUpdateStudentBoards={autoUpdateStudentBoards}
+          onAutoUpdateChange={handleAutoUpdateChange}
+          propagateToClones={propagateToClones}
+          onPropagationSuccess={clearUnpropagatedChange}
+          cardChrome={page === "card" ? cardChrome : null}
+          onCardSave={handleCardSave}
+          onCardPreview={handleCardPreview}
+          onCardExitPreview={handleCardExitPreview}
+        />
+      ) : null}
       {page === "board" ? (
         <>
           {isPreview && !hidePreviewHeader ? (
@@ -123,19 +179,6 @@ export default function ProposalBuilder({
               </h2>
               {proposal.description ? <p>{proposal.description}</p> : null}
             </>
-          ) : !isPreview ? (
-            <ProposalHeader
-              user={user}
-              proposal={proposal}
-              proposalBuildMode={proposalBuildMode}
-              refetchQueries={refetchQueries}
-              autoUpdateStudentBoards={autoUpdateStudentBoards}
-              onAutoUpdateChange={handleAutoUpdateChange}
-              propagateToClones={propagateToClones}
-              hasUnpropagatedChanges={hasUnpropagatedChanges}
-              onPropagationSuccess={clearUnpropagatedChange}
-              isPropagatingToClones={propagateLoading}
-            />
           ) : null}
           {proposal && (
             <ProposalBoard
@@ -153,6 +196,7 @@ export default function ProposalBuilder({
       ) : (
         card && (
           <div
+            className="boardEditorBody"
             style={{
               flex: 1,
               display: "flex",
@@ -170,6 +214,9 @@ export default function ProposalBuilder({
               autoUpdateStudentBoards={autoUpdateStudentBoards}
               propagateToClones={propagateToClones}
               onTemplateChangedWithoutPropagation={markUnpropagatedChange}
+              hideBoardChromeNav={hideBoardChromeNav}
+              registerCloseHandler={registerCloseHandler}
+              registerCardChrome={registerCardChrome}
             />
           </div>
         )

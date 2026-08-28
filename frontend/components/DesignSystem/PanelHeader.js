@@ -12,13 +12,8 @@ const HEADER_STYLE = {
   padding: 16,
 };
 
-// MH-Theme/title/base
 const TITLE_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 16,
-  fontWeight: 600,
-  lineHeight: "24px",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -50,7 +45,7 @@ export default function PanelHeader({
     <div className="DesignSystem-PanelHeader" style={HEADER_STYLE}>
       <h2
         id={titleId}
-        className="DesignSystem-PanelHeader-Title"
+        className="DesignSystem-PanelHeader-Title MH-Type-Title-Base"
         style={TITLE_STYLE}
       >
         {title}

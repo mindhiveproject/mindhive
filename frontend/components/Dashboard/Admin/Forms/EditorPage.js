@@ -9,6 +9,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import styled from "styled-components";
 
+import Chip from "../../../DesignSystem/Chip";
 import {
   ADMIN_FORM_DEFINITION,
   ADMIN_FORM_DEFINITIONS,
@@ -21,10 +22,7 @@ import {
 import FormDefinitionEditor from "./FormDefinitionEditor";
 import PublishModal from "./PublishModal";
 import VersionHistoryPanel from "./VersionHistoryPanel";
-import {
-  PrimaryButton,
-  SecondaryButton,
-} from "./EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 
 const SURFACE_LABEL = {
   profile_individual: "Individual profile",
@@ -56,14 +54,11 @@ const TopBar = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 22px;
     color: #171717;
   }
 
   .meta {
     color: #5f6871;
-    font-size: 13px;
   }
 
   .actions {
@@ -72,28 +67,15 @@ const TopBar = styled.div`
   }
 `;
 
-const StatusBadge = styled.span`
-  padding: 2px 10px;
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-left: 6px;
-  background: ${({ $status }) =>
-    $status === "published" ? "#1d6b3a" :
-    $status === "draft" ? "#8a6d3b" :
-    "#5f6871"};
-  color: #ffffff;
-`;
+const STATUS_TONE = { published: "success", draft: "warning" };
+const statusTone = (status) => STATUS_TONE[status] ?? "neutral";
 
 const BackLink = styled.button`
   background: none;
   border: none;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
   padding: 0;
 `;
@@ -228,13 +210,16 @@ export default function EditorPage({ definitionId }) {
           >
             ← All form definitions
           </BackLink>
-          <h1>
+          <h1 className="MH-Type-Heading-Small">
             {definition.title}
-            <StatusBadge $status={definition.status}>
-              {definition.status}
-            </StatusBadge>
+            <Chip
+              variant="static"
+              tone={statusTone(definition.status)}
+              label={definition.status}
+              style={{ marginLeft: 6, verticalAlign: "middle" }}
+            />
           </h1>
-          <div className="meta">
+          <div className="meta MH-Type-Body-Base">
             {definition.surface ? (
               <>
                 <strong>{SURFACE_LABEL[definition.surface] || definition.surface}</strong>{" "}
@@ -257,31 +242,34 @@ export default function EditorPage({ definitionId }) {
         </div>
         <div className="actions">
           {definition.status === "draft" ? (
-            <PrimaryButton
+            <Button
+              variant="filled"
               type="button"
               onClick={() => setPublishOpen(true)}
               disabled={savingDef || publishing}
             >
               Publish…
-            </PrimaryButton>
+            </Button>
           ) : null}
           {definition.status === "published" ? (
-            <SecondaryButton
+            <Button
+              variant="outline"
               type="button"
               onClick={revertToDraft}
               disabled={savingDef}
             >
               Revert to draft
-            </SecondaryButton>
+            </Button>
           ) : null}
           {definition.status !== "archived" ? (
-            <SecondaryButton
+            <Button
+              variant="outline"
               type="button"
               onClick={archive}
               disabled={savingDef}
             >
               Archive
-            </SecondaryButton>
+            </Button>
           ) : null}
         </div>
       </TopBar>

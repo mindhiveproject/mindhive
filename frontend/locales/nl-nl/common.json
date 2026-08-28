@@ -31,6 +31,7 @@
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
+		"confirmPassword": "",
 		"email": "E-mail",
 		"forgotPassword": "Wachtwoord vergeten?",
 		"login": "Login",
@@ -40,8 +41,11 @@
 			"bannerTitle": "",
 			"invalid": ""
 		},
+		"next": "",
 		"password": "Wachtwoord",
 		"requestReset": "Verzoek om reset",
+		"reset": "",
+		"resetTitle": "",
 		"username": "Gebruikersnaam"
 	},
 	"cancel": "Annuleren",
@@ -455,6 +459,7 @@
 		"level": "Niveau",
 		"myTags": "Mijn tags",
 		"noParentTag": "Geen bovenliggende tag",
+		"save": "",
 		"searchPlaceholder": "Zoeken naar tags",
 		"secondLevel": "Tweede niveau",
 		"selectParentTag": "Selecteer bovenliggende tag",

@@ -49,7 +49,7 @@ export default function AxesHistogram({
   const noLinkHint = t(`${G}.common.resources.noLink`, {}, { default: "No external link" });
 
   const helpContent = (
-    <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+    <p className="MH-Type-Body-Base" style={{ margin: 0, color: "#625B71" }}>
       {t(`${G}.axes.help.resourcesIntro`, {}, {
         default: "Click on the resources below to learn more about this component",
       })}

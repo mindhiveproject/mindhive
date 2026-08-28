@@ -18,10 +18,9 @@ import {
   EditorPanelShell,
   FieldRow,
   Section,
-  PrimaryButton,
-  SecondaryButton,
   PillCheckbox,
 } from "./EditorPanelStyles";
+import Button from "../../../DesignSystem/Button";
 import I18nField, { cleanI18n } from "./I18nField";
 import JsonArraySchemaEditor from "./JsonArraySchemaEditor";
 
@@ -513,22 +512,25 @@ export default function FieldEditor({ field, definitionId, onDeleted }) {
 
       {errorMsg ? (
         <Section>
-          <span style={{ color: "#871b16", fontSize: 13 }}>{errorMsg}</span>
+          <span className="MH-Type-Body-Base" style={{ color: "#871b16" }}>
+            {errorMsg}
+          </span>
         </Section>
       ) : null}
 
       <Section>
-        <PrimaryButton type="button" onClick={handleSave} disabled={loading}>
+        <Button variant="filled" type="button" onClick={handleSave} disabled={loading}>
           {loading ? "Saving…" : "Save field"}
-        </PrimaryButton>
-        <SecondaryButton
+        </Button>
+        <Button
+          variant="outline"
           type="button"
           onClick={handleDelete}
           disabled={deleting}
           style={{ color: "#c0392b", borderColor: "#f5c2bf" }}
         >
           {deleting ? "Deleting…" : "Delete field"}
-        </SecondaryButton>
+        </Button>
         {flash ? <span className="flash">{flash}</span> : null}
       </Section>
     </EditorPanelShell>

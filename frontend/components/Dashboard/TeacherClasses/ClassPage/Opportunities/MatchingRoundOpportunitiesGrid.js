@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
 import styled from "styled-components";
@@ -8,13 +9,27 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 import Button from "../../../../DesignSystem/Button";
-import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../../DesignSystem/InfoPopover";
 import { useUser } from "../../../../Utils/Access/User";
-import { hasUnreadSponsorReply } from "../../../../../lib/reviewThreadRound";
+import {
+  hasUnreadSponsorReply,
+  REVIEW_NOTE_KIND,
+} from "../../../../../lib/reviewThreadRound";
 import {
   formatDateShort,
   isExpired,
 } from "../../../Connect/Rounds/roundFormConfig";
+import { CREATE_REVIEW_NOTE } from "../../../../Mutations/OpportunityReviewNote";
+import { UPDATE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
+import {
+  GET_CONNECT_ROUND,
+  NETWORK_OPPORTUNITIES_FOR_ROUND,
+} from "../../../../Queries/ConnectRound";
+import {
+  getOpportunityIntroVideoFilename,
+  getOpportunityIntroVideoKind,
+  hasOpportunityIntroVideo,
+} from "../../../../../lib/opportunityIntroVideo";
 
 const INFO_HIGHLIGHT_DISMISSED_KEY =
   "mh.classMatchingRound.infoHighlightDismissed";
@@ -63,7 +78,7 @@ function dismissHighlightInMap(map, opportunityId, kind, stamp) {
   };
 }
 
-/** Self-contained so portaled InfoTooltip content keeps styles outside .classTabPage. */
+/** Self-contained so portaled popover content keeps styles outside .classTabPage. */
 const OpportunityInfoTooltip = styled.div`
   display: grid;
   gap: 10px;
@@ -72,17 +87,15 @@ const OpportunityInfoTooltip = styled.div`
 
   .matchingRoundOppInfoTooltipTitle {
     margin: 0;
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .matchingRoundOppInfoTooltipDescription {
     margin: 0;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -107,10 +120,8 @@ const OpportunityInfoTooltip = styled.div`
   }
 
   .matchingRoundOppInfoTooltipLabel {
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 16px;
-    letter-spacing: 0.04em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-transform: uppercase;
     color: var(--MH-Theme-Neutrals-Grey-3, #888);
     white-space: nowrap;
@@ -122,9 +133,8 @@ const OpportunityInfoTooltip = styled.div`
     justify-content: flex-end;
     gap: 8px;
     flex-wrap: wrap;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 16px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     text-align: right;
     overflow-wrap: anywhere;
@@ -152,9 +162,8 @@ const OpportunityInfoTooltip = styled.div`
     min-width: 0;
     width: fit-content;
     height: fit-content;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 16px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
 `;
@@ -201,7 +210,34 @@ function formatDateTime(iso) {
   }
 }
 
-function TooltipMetaRow({ label, value, valueClassName, dismissLabel, onDismiss }) {
+function introVideoStatusValue(opportunity, t) {
+  const kind = getOpportunityIntroVideoKind(opportunity);
+  if (kind === "file") {
+    return (
+      getOpportunityIntroVideoFilename(opportunity) ||
+      t("opportunities.rowMeta.introVideoUploaded", {}, {
+        default: "Uploaded file",
+      })
+    );
+  }
+  if (kind === "url") {
+    return t("opportunities.rowMeta.introVideoExternal", {}, {
+      default: "External link",
+    });
+  }
+  return t("opportunities.rowMeta.introVideoNotProvided", {}, {
+    default: "Not provided",
+  });
+}
+
+function TooltipMetaRow({
+  label,
+  value,
+  valueClassName,
+  dismissLabel,
+  onDismiss,
+  dismissDisabled = false,
+}) {
   if (value == null || value === "") return null;
   return (
     <div className="matchingRoundOppInfoTooltipRow">
@@ -212,6 +248,7 @@ function TooltipMetaRow({ label, value, valueClassName, dismissLabel, onDismiss 
           <Button
             variant="text"
             className="matchingRoundOppInfoTooltipDismiss"
+            disabled={dismissDisabled}
             onClick={(e) => {
               e.stopPropagation();
               onDismiss();
@@ -221,9 +258,6 @@ function TooltipMetaRow({ label, value, valueClassName, dismissLabel, onDismiss 
               minWidth: 0,
               width: "fit-content",
               height: "fit-content",
-              fontSize: "12px",
-              fontWeight: 600,
-              lineHeight: "16px",
               color: "var(--MH-Theme-Primary-Dark, #336f8a)",
             }}
           >
@@ -240,8 +274,9 @@ function OpportunityInfoContent({
   t,
   showAppointmentHighlight = false,
   showReturnedHighlight = false,
-  onDismissAppointment,
+  onMarkScheduled,
   onDismissReturned,
+  markingScheduled = false,
 }) {
   const from = formatDateShort(opportunity.availableFrom);
   const to = formatDateShort(opportunity.availableTo);
@@ -276,6 +311,11 @@ function OpportunityInfoContent({
   const dismissLabel = t("opportunities.matchingRound.grid.dismissHighlight", {}, {
     default: "Dismiss",
   });
+  const markScheduledLabel = t(
+    "opportunities.matchingRound.grid.markScheduled",
+    {},
+    { default: "Mark as scheduled" },
+  );
   const hasHeaderMeta = Boolean(opportunity.status || showAppointmentHighlight);
 
   return (
@@ -303,15 +343,16 @@ function OpportunityInfoContent({
           ) : null}
           {showAppointmentHighlight ? (
             <TooltipMetaRow
-              label={t("opportunities.rowMeta.flagLabel", {}, {
-                default: "Flag",
+              label={t("opportunities.rowMeta.meetingRequestLabel", {}, {
+                default: "Meeting request",
               })}
-              value={t("opportunities.preview.requestsAppointment", {}, {
-                default: "Appointment requested",
+              value={t("opportunities.preview.sponsorRequestedMeeting", {}, {
+                default: "Sponsor asked to meet",
               })}
               valueClassName="appointmentRequested"
-              dismissLabel={dismissLabel}
-              onDismiss={onDismissAppointment}
+              dismissLabel={markScheduledLabel}
+              onDismiss={onMarkScheduled}
+              dismissDisabled={markingScheduled}
             />
           ) : null}
         </div>
@@ -355,6 +396,12 @@ function OpportunityInfoContent({
           value={teamSizeValue}
         />
         <TooltipMetaRow
+          label={t("opportunities.rowMeta.introVideoLabel", {}, {
+            default: "Intro video",
+          })}
+          value={introVideoStatusValue(opportunity, t)}
+        />
+        <TooltipMetaRow
           label={t("opportunities.rowMeta.lastUpdatedLabel", {}, {
             default: "Last updated",
           })}
@@ -376,11 +423,14 @@ export default function MatchingRoundOpportunitiesGrid({
   togglingOpportunityId = null,
   emptyMessage,
   roundId = null,
+  classNetworkId = null,
+  inRoundOpportunityIds = [],
 }) {
   const { t } = useTranslation("classes");
   const { user } = useUser();
   const viewerId = user?.id || null;
   const gridRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [dismissedHighlights, setDismissedHighlights] = useState(() =>
     readDismissedHighlights(),
   );
@@ -393,6 +443,89 @@ export default function MatchingRoundOpportunitiesGrid({
     });
   }, []);
 
+  const appointmentRefetchQueries = useMemo(() => {
+    const queries = [
+      "NETWORK_APPOINTMENT_REQUESTS",
+      "COUNT_NEW_UPDATES",
+      "GET_MY_UPDATES",
+    ];
+    if (classNetworkId) {
+      queries.push({
+        query: NETWORK_OPPORTUNITIES_FOR_ROUND,
+        variables: { classNetworkId },
+      });
+    }
+    if (roundId) {
+      queries.push({
+        query: GET_CONNECT_ROUND,
+        variables: { id: roundId },
+      });
+    }
+    return queries;
+  }, [classNetworkId, roundId]);
+
+  const [createAppointmentNote, { loading: creatingScheduledNote }] =
+    useMutation(CREATE_REVIEW_NOTE, {
+      refetchQueries: appointmentRefetchQueries,
+      awaitRefetchQueries: true,
+    });
+  const [updateOpportunity, { loading: updatingAppointmentFlag }] = useMutation(
+    UPDATE_OPPORTUNITY,
+    {
+      refetchQueries: appointmentRefetchQueries,
+      awaitRefetchQueries: true,
+    },
+  );
+  const markingScheduled = creatingScheduledNote || updatingAppointmentFlag;
+  const inRoundIdSet = useMemo(
+    () => new Set((inRoundOpportunityIds || []).filter(Boolean)),
+    [inRoundOpportunityIds],
+  );
+
+  const handleMarkScheduled = useCallback(
+    async (opportunityId) => {
+      if (!opportunityId || markingScheduled) return;
+      try {
+        if (roundId && inRoundIdSet.has(opportunityId)) {
+          await createAppointmentNote({
+            variables: {
+              input: {
+                body: t(
+                  "opportunities.matchingRound.grid.scheduledNoteBody",
+                  {},
+                  {
+                    default:
+                      "The sponsor’s meeting request was marked as scheduled.",
+                  },
+                ),
+                kind: REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED,
+                opportunity: { connect: { id: opportunityId } },
+                round: { connect: { id: roundId } },
+              },
+            },
+          });
+          return;
+        }
+        await updateOpportunity({
+          variables: {
+            id: opportunityId,
+            input: { requestsAppointment: false },
+          },
+        });
+      } catch {
+        // Leave the highlight in place so the teacher can retry.
+      }
+    },
+    [
+      createAppointmentNote,
+      inRoundIdSet,
+      markingScheduled,
+      roundId,
+      t,
+      updateOpportunity,
+    ],
+  );
+
   const rowData = useMemo(
     () =>
       opportunities.map((opportunity) => ({
@@ -403,6 +536,18 @@ export default function MatchingRoundOpportunitiesGrid({
     [opportunities],
   );
 
+  const quickFilterText = String(searchQuery || "").trim();
+
+  const hasSearchMatches = useMemo(() => {
+    const q = quickFilterText.toLowerCase();
+    if (!q) return true;
+    return rowData.some((row) => {
+      const title = String(row.title || "").toLowerCase();
+      const sponsor = String(row.sponsorName || "").toLowerCase();
+      return title.includes(q) || sponsor.includes(q);
+    });
+  }, [quickFilterText, rowData]);
+
   const InfoButtonRenderer = useCallback(
     (params) => {
       const opportunity = params?.data;
@@ -411,14 +556,7 @@ export default function MatchingRoundOpportunitiesGrid({
       const returned = isReturnedOpportunity(opportunity);
       const appointmentRequested = isAppointmentRequested(opportunity);
       const stamp = opportunityHighlightStamp(opportunity);
-      const showAppointmentHighlight =
-        appointmentRequested &&
-        !isHighlightDismissed(
-          dismissedHighlights,
-          opportunity.id,
-          "appointment",
-          stamp,
-        );
+      const showAppointmentHighlight = appointmentRequested;
       const showReturnedHighlight =
         returned &&
         !isHighlightDismissed(
@@ -428,10 +566,10 @@ export default function MatchingRoundOpportunitiesGrid({
           stamp,
         );
 
-      const infoLabelKey = showReturnedHighlight
-        ? "infoReturned"
-        : showAppointmentHighlight
-          ? "infoAppointment"
+      const infoLabelKey = showAppointmentHighlight
+        ? "infoAppointment"
+        : showReturnedHighlight
+          ? "infoReturned"
           : "info";
       const infoLabelDefaults = {
         info: "More information",
@@ -441,59 +579,81 @@ export default function MatchingRoundOpportunitiesGrid({
 
       const cellClass = clsx("matchingRoundOppInfoCell", {
         matchingRoundOppInfoCellAppointment: showAppointmentHighlight,
-        matchingRoundOppInfoCellReturned: showReturnedHighlight,
+        matchingRoundOppInfoCellReturned:
+          showReturnedHighlight && !showAppointmentHighlight,
         matchingRoundOppInfoCellReturnedQuiet:
-          returned && !showReturnedHighlight,
+          returned && !showReturnedHighlight && !showAppointmentHighlight,
       });
 
       return (
-        <InfoTooltip
-          portal
-          position="left"
-          trigger="click"
+        <InfoPopover
+          side="left"
+          width={320}
           content={
             <OpportunityInfoContent
               opportunity={opportunity}
               t={t}
               showAppointmentHighlight={showAppointmentHighlight}
               showReturnedHighlight={showReturnedHighlight}
-              onDismissAppointment={() =>
-                handleDismissHighlight(opportunity.id, "appointment", stamp)
-              }
+              markingScheduled={markingScheduled}
+              onMarkScheduled={() => handleMarkScheduled(opportunity.id)}
               onDismissReturned={() =>
                 handleDismissHighlight(opportunity.id, "returned", stamp)
               }
             />
           }
-          tooltipStyle={{ width: "320px", maxWidth: "min(320px, calc(100vw - 24px))" }}
-          wrapperStyle={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            height: "100%",
-          }}
+          ariaLabel={t(
+            `opportunities.matchingRound.grid.columns.${infoLabelKey}`,
+            {},
+            { default: infoLabelDefaults[infoLabelKey] },
+          )}
+          className="matchingRoundOppInfoCellTrigger"
         >
-          <button
-            type="button"
-            className={cellClass}
-            aria-label={t(
-              `opportunities.matchingRound.grid.columns.${infoLabelKey}`,
-              {},
-              { default: infoLabelDefaults[infoLabelKey] },
-            )}
-            aria-haspopup="dialog"
-          >
-            !
-          </button>
-        </InfoTooltip>
+          <span className={cellClass}>!</span>
+        </InfoPopover>
       );
     },
-    [dismissedHighlights, handleDismissHighlight, t],
+    [dismissedHighlights, handleDismissHighlight, handleMarkScheduled, markingScheduled, t],
+  );
+
+  const VideoStatusRenderer = useCallback(
+    (params) => {
+      const opportunity = params?.data;
+      if (!opportunity) return null;
+
+      const hasVideo = hasOpportunityIntroVideo(opportunity);
+      const videoAria = hasVideo
+        ? t("opportunities.matchingRound.grid.columns.videoProvided", {}, {
+            default: "Intro video provided",
+          })
+        : t("opportunities.matchingRound.grid.columns.videoMissing", {}, {
+            default: "No intro video",
+          });
+
+      return (
+        <span className="matchingRoundOppVideoCell">
+          <img
+            className="matchingRoundOppVideoIcon"
+            src={
+              hasVideo
+                ? "/assets/icons/movie_person.svg"
+                : "/assets/icons/no_movie.svg"
+            }
+            alt={videoAria}
+            title={videoAria}
+            width={20}
+            height={20}
+          />
+        </span>
+      );
+    },
+    [t],
   );
 
   const getRowClass = useCallback((params) => {
-    if (isReturnedOpportunity(params?.data)) {
+    const data = params?.data;
+    if (isAppointmentRequested(data)) return undefined;
+    if (isReturnedOpportunity(data)) {
       return "matchingRoundOppRowReturned";
     }
     return undefined;
@@ -508,24 +668,15 @@ export default function MatchingRoundOpportunitiesGrid({
       const returned = [];
       for (const node of nodes) {
         const data = node?.data;
-        // Returned always stays at the bottom (greyed), even with appointment /
-        // unread signals — those still show on the row via info/review chrome.
+        if (isAppointmentRequested(data)) {
+          appointment.push(node);
+          continue;
+        }
         if (isReturnedOpportunity(data)) {
           returned.push(node);
           continue;
         }
-        const stamp = opportunityHighlightStamp(data);
-        const appointmentHighlightActive =
-          isAppointmentRequested(data) &&
-          !isHighlightDismissed(
-            dismissedHighlights,
-            data?.id,
-            "appointment",
-            stamp,
-          );
-        if (appointmentHighlightActive) {
-          appointment.push(node);
-        } else if (
+        if (
           hasUnreadSponsorReply({
             notes: data?.reviewNotes,
             roundId,
@@ -540,7 +691,7 @@ export default function MatchingRoundOpportunitiesGrid({
       nodes.length = 0;
       nodes.push(...appointment, ...unread, ...active, ...returned);
     },
-    [dismissedHighlights, roundId, viewerId],
+    [roundId, viewerId],
   );
 
   const ReviewButtonRenderer = useCallback(
@@ -565,8 +716,6 @@ export default function MatchingRoundOpportunitiesGrid({
             minWidth: 0,
             width: "fit-content",
             height: "fit-content",
-            fontSize: "14px",
-            fontWeight: 500,
             color: unread
               ? "var(--MH-Theme-Additional-Accent-Dark, #3f288f)"
               : "#171717",
@@ -615,8 +764,6 @@ export default function MatchingRoundOpportunitiesGrid({
             minWidth: 0,
             width: "fit-content",
             height: "fit-content",
-            fontSize: "14px",
-            fontWeight: 500,
             color: togglingOpportunityId ? "#a1a1a1" : "#171717",
           }}
           onClick={(e) => {
@@ -646,6 +793,7 @@ export default function MatchingRoundOpportunitiesGrid({
         sortable: true,
         flex: 2,
         minWidth: 180,
+        getQuickFilterText: (params) => params.value || "",
       },
       {
         field: "sponsorName",
@@ -656,6 +804,7 @@ export default function MatchingRoundOpportunitiesGrid({
         sortable: true,
         flex: 1.2,
         minWidth: 140,
+        getQuickFilterText: (params) => params.value || "",
       },
       {
         field: "organizationName",
@@ -706,6 +855,58 @@ export default function MatchingRoundOpportunitiesGrid({
     }
 
     cols.push({
+      colId: "video",
+      field: "video",
+      headerName: "",
+      headerTooltip: t("opportunities.matchingRound.grid.columns.video", {}, {
+        default: "Intro video",
+      }),
+      headerClass: "matchingRoundOppVideoGridHeader",
+      valueGetter: (params) => hasOpportunityIntroVideo(params?.data),
+      cellDataType: "boolean",
+      cellRenderer: VideoStatusRenderer,
+      sortable: true,
+      filter: true,
+      filterParams: {
+        maxNumConditions: 1,
+        debounceMs: 0,
+        filterOptions: [
+          "empty",
+          {
+            displayKey: "true",
+            displayName: t(
+              "opportunities.matchingRound.grid.columns.videoProvided",
+              {},
+              { default: "Intro video provided" },
+            ),
+            predicate: (_, cellValue) => cellValue === true,
+            numberOfInputs: 0,
+          },
+          {
+            displayKey: "false",
+            displayName: t(
+              "opportunities.matchingRound.grid.columns.videoMissing",
+              {},
+              { default: "No intro video" },
+            ),
+            predicate: (_, cellValue) => cellValue === false,
+            numberOfInputs: 0,
+          },
+        ],
+      },
+      width: 52,
+      maxWidth: 52,
+      pinned: "right",
+      cellClass: "matchingRoundOppVideoGridCell",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 0,
+      },
+    });
+
+    cols.push({
       field: "info",
       headerName: "",
       cellRenderer: InfoButtonRenderer,
@@ -725,6 +926,7 @@ export default function MatchingRoundOpportunitiesGrid({
     InfoButtonRenderer,
     RemoveButtonRenderer,
     ReviewButtonRenderer,
+    VideoStatusRenderer,
     onPreview,
     onRemove,
     t,
@@ -733,7 +935,7 @@ export default function MatchingRoundOpportunitiesGrid({
   useEffect(() => {
     const api = gridRef.current?.api;
     if (!api) return;
-    api.refreshCells({ columns: ["info", "review"], force: true });
+    api.refreshCells({ columns: ["info", "review", "video"], force: true });
     api.refreshClientSideRowModel("sort");
   }, [dismissedHighlights, opportunities, roundId, viewerId]);
 
@@ -751,8 +953,13 @@ export default function MatchingRoundOpportunitiesGrid({
   );
 
   const isRowSelectable = useCallback(
-    () => !selectionDisabled,
-    [selectionDisabled],
+    (rowNode) => {
+      if (selectionDisabled) return false;
+      const opportunityId = rowNode?.data?.id;
+      if (opportunityId && inRoundIdSet.has(opportunityId)) return false;
+      return true;
+    },
+    [inRoundIdSet, selectionDisabled],
   );
 
   useEffect(() => {
@@ -773,37 +980,75 @@ export default function MatchingRoundOpportunitiesGrid({
     return <p className="classTabEmptyInline">{emptyMessage}</p>;
   }
 
+  const searchToolbar = (
+    <div className="matchingRoundOpportunitiesSearchRow">
+      <div className="matchingRoundOpportunitiesSearchField">
+        <input
+          type="search"
+          className="matchingRoundOpportunitiesSearchInput"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label={t("opportunities.matchingRound.grid.searchLabel", {}, {
+            default: "Opportunities",
+          })}
+          placeholder={t(
+            "opportunities.matchingRound.grid.searchPlaceholder",
+            {},
+            { default: "Filter by title or sponsor…" },
+          )}
+        />
+      </div>
+    </div>
+  );
+
   return (
-    <div className="classTabTable ag-theme-quartz matchingRoundOpportunitiesGrid">
-      <AgGridReact
-        ref={gridRef}
-        rowData={rowData}
-        columnDefs={columnDefs}
-        getRowId={(params) => params.data?.id}
-        getRowClass={getRowClass}
-        postSortRows={postSortRows}
-        {...(selectionMode === "multi"
-          ? {
-              rowSelection: {
-                mode: "multiRow",
-                checkboxes: true,
-                headerCheckbox: true,
-                isRowSelectable,
-              },
-              onSelectionChanged: handleSelectionChanged,
-            }
-          : {})}
-        pagination
-        paginationPageSize={50}
-        paginationPageSizeSelector={[50, 100, 200]}
-        autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
-        defaultColDef={{ resizable: true }}
-        initialState={{
-          sort: {
-            sortModel: [{ colId: "title", sort: "asc" }],
-          },
-        }}
-      />
+    <div className="matchingRoundOpportunitiesGridShell">
+      {searchToolbar}
+      {!hasSearchMatches ? (
+        <p className="classTabEmptyInline">
+          {t("opportunities.matchingRound.grid.searchEmpty", {}, {
+            default: "No opportunities match this search.",
+          })}
+        </p>
+      ) : null}
+      <div
+        className="classTabTable ag-theme-quartz matchingRoundOpportunitiesGrid"
+        hidden={!hasSearchMatches}
+      >
+        <AgGridReact
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          getRowId={(params) => params.data?.id}
+          getRowClass={getRowClass}
+          postSortRows={postSortRows}
+          quickFilterText={quickFilterText}
+          {...(selectionMode === "multi"
+            ? {
+                rowSelection: {
+                  mode: "multiRow",
+                  checkboxes: true,
+                  headerCheckbox: true,
+                  isRowSelectable,
+                },
+                onSelectionChanged: handleSelectionChanged,
+              }
+            : {})}
+          pagination
+          paginationPageSize={50}
+          paginationPageSizeSelector={[50, 100, 200]}
+          autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
+          defaultColDef={{
+            resizable: true,
+            getQuickFilterText: () => "",
+          }}
+          initialState={{
+            sort: {
+              sortModel: [{ colId: "title", sort: "asc" }],
+            },
+          }}
+        />
+      </div>
     </div>
   );
 }

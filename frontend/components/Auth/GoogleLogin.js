@@ -2,6 +2,7 @@ import { useApolloClient, useMutation } from "@apollo/client";
 import { GoogleLogin } from "react-google-login";
 import { useRouter } from "next/dist/client/router";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../DesignSystem/Button";
 
 const clientID =
   "1042393944588-od9nbqtdfefltmpq8kjnnhir0lbb14se.apps.googleusercontent.com";
@@ -125,17 +126,22 @@ export default function LoginWithGoogle({
     <GoogleLogin
       clientId={clientID}
       render={(renderProps) => (
-        <button
+        <Button
           type="button"
-          className="googleButton"
+          variant="outline"
+          style={{ width: "100%" }}
+          disabled={disabled || loading || renderProps.disabled}
           onClick={renderProps.onClick}
-          disabled={disabled || loading}
+          leadingIcon={
+            <img
+              src="/assets/externalLogos/google.svg.webp"
+              alt=""
+              height="20"
+            />
+          }
         >
-          <div>
-            <img src="/assets/signup/google.png" alt="icon" height="20" />
-          </div>
-          <div>Login with Google</div>
-        </button>
+          {t("auth.loginWithGoogle", {}, { default: "Login with Google" })}
+        </Button>
       )}
       onSuccess={handleSuccess}
       onFailure={handleFailure}

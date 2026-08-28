@@ -10,7 +10,6 @@ export const StyledProposal = styled.div`
   // min-height: 80vh;
   background: #f7f9f8;
   align-items: ${(props) => (props.$cardFullView ? "stretch" : "baseline")};
-  font-family: "Inter";
   min-height: ${(props) => (props.$cardFullView ? "0" : "unset")};
 
   i.icon {
@@ -39,7 +38,7 @@ export const StyledProposal = styled.div`
     }
   }
 
-  button {
+  button:not(.DesignSystem-Button) {
     display: grid;
     align-content: center;
     max-width: 300px;
@@ -50,12 +49,8 @@ export const StyledProposal = styled.div`
     border: 1px solid #cccccc;
     border-radius: 4px;
     cursor: pointer;
-    font-family: Roboto;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 16px;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     text-align: center;
   }
 
@@ -124,11 +119,75 @@ export const StyledProposal = styled.div`
     min-height: 0;
     --proposal-section-width: 500px;
     --proposal-section-margin: 15px;
-    --proposal-visible-columns: 2;
-    --proposal-board-content-max-width: calc(
-      var(--proposal-visible-columns) *
-      (var(--proposal-section-width) + 2 * var(--proposal-section-margin))
-    );
+
+    .boardEditorChrome {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      min-width: 0;
+      margin: 0 0 8px;
+      padding: 8px;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border-radius: 8px;
+      border: 1px solid var(--MH-Theme-Neutrals-Light,#e6e6e6);
+    }
+    .boardEditorChromeLeft {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+    .boardEditorChromeTitleWrap {
+      min-width: 0;
+      flex: 1;
+    }
+    .boardEditorChromeTitleRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .boardEditorChromeTypeBadge {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+    }
+    .boardEditorChromeTitle {
+      margin: 0;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .boardEditorChromeTitleInput {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+      border: 1px solid var(--MH-Theme-Primary-Dark, #336F8A);
+      border-radius: 8px;
+      padding: 4px 8px;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+    }
+    .boardEditorChromeRight {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .boardEditorChromeEditMode {
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
+      color: var(--MH-Theme-Neutrals-Dark, #6A6A6A);
+      white-space: nowrap;
+    }
 
     .narrowButton {
       height: 40px;
@@ -143,8 +202,8 @@ export const StyledProposal = styled.div`
       background: #336F8A;
       color: white;
       border-radius: 100px;
-      font-size: 16px;
-      font-weight: 500;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       cursor: pointer;
       transition: background 0.3s ease;
     }
@@ -169,8 +228,8 @@ export const StyledProposal = styled.div`
       background: white;
       color: #336F8A;
       border-radius: 100px;
-      font-size: 16px;
-      font-weight: 500;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       cursor: pointer;
       transition: background 0.3s ease;
     }
@@ -195,12 +254,8 @@ export const StyledProposal = styled.div`
       align-items: center;
       margin: 5px 36px 15px 0px;
       span {
-        font-family: Roboto;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 24px;
-        letter-spacing: 0.05em;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
       .goBackButton {
         cursor: pointer;
@@ -218,8 +273,8 @@ export const StyledProposal = styled.div`
         border-radius: 4px;
         span,
         .icon {
-          font-weight: 400;
-          font-size: 13px;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
           color: #666666;
         }
       }
@@ -270,17 +325,25 @@ export const StyledProposal = styled.div`
     flex-direction: column;
     min-height: 0;
     width: 100%;
-    max-width: var(--proposal-board-content-max-width);
+    max-width: 100%;
     flex: 1;
     .boardInnerToolbar {
       display: flex;
-      justify-content: flex-start ;
+      align-items: center;
+      justify-content: flex-start;
+      width: max-content;
+      gap: 8px;
       padding: 0 15px 8px;
+      .boardInnerToolbarSelect {
+        min-width: 220px;
+        max-width: 280px;
+      }
     }
     .scrollable {
       flex: 1;
       min-width: 0;
       overflow-x: auto;
+      padding: 0px;
     }
   }
 
@@ -292,14 +355,18 @@ export const StyledProposal = styled.div`
     justify-items: center;
     grid-gap: 12px;
     position: relative;
-    background: none;
-    border: 1px solid #A1A1A1;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1.5px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
     border-radius: 8px;
     min-width: 250px;
     width: var(--proposal-section-width);
     max-width: var(--proposal-section-width);
     margin: var(--proposal-section-margin);
     padding: 24px;
+    &.sectionSelectSelected {
+      outline: 2px solid var(--MH-Theme-Danger-Dark, #8F1F14);
+      outline-offset: -2px;
+    }
     & > div {
       width: 100%;
     }
@@ -310,11 +377,8 @@ export const StyledProposal = styled.div`
       margin: 1rem 0px 0px 0rem;
       display: grid;
       color: #b3b3b3;
-      font-family: Inter;
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 24px;
-      letter-spacing: var(--BodySmallTracking);
+      font: var(--MH-Type-Label-Large);
+      letter-spacing: 0;
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
@@ -335,14 +399,21 @@ export const StyledProposal = styled.div`
         align-items: center;
         text-align: center;
         margin: 1rem 0px 0px 0rem;
+        &.firstLineSelectMode {
+          grid-template-columns: auto minmax(0, 1fr) auto;
+        }
+      }
+      .sectionSelectCheckbox {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        cursor: pointer;
+        accent-color: var(--MH-Theme-Danger-Dark, #8F1F14);
       }
       .sectionTitle {
-        font-family: Inter;
-        font-size: 22px;
-        font-weight: 600;
+        font: var(--MH-Type-Title-Large);
         color: #171717;
-        line-height: 28px;
-        letter-spacing: 0.05em;
+        letter-spacing: 0;
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
@@ -355,11 +426,8 @@ export const StyledProposal = styled.div`
         text-overflow: ellipsis;
       }
       .sectionTitleInput {
-        font-family: Inter;
-        font-size: 22px;
-        font-weight: 600;
-        line-height: 28px;
-        letter-spacing: 0.05em;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         text-align: left;
         width: 100%;
         min-width: 0;
@@ -375,12 +443,8 @@ export const StyledProposal = styled.div`
         overflow-y: auto;
       }
       span {
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 21px;
-        letter-spacing: 0em;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         text-align: center;
       }
     }
@@ -389,14 +453,289 @@ export const StyledProposal = styled.div`
       bottom: -12px;
       left: -5px;
       cursor: pointer;
-      img {
-        width: 20px;
-        opacity: 0.1;
-      }
-      img: hover {
-        opacity: 1;
-      }
     }
+  }
+
+  &.projectsBoardEditorProposal {
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    min-height: 0;
+    height: 100%;
+    /* Layout tokens live on the shell so previews without .proposalBoard still get gaps. */
+    --proposal-section-min-width: 420px;
+    --proposal-section-max-width: 500px;
+    --proposal-section-width: var(--proposal-section-min-width);
+    --proposal-section-gap: 24px;
+    --proposal-card-gap: 12px;
+  }
+
+  &.projectsBoardEditorProposal .proposalBoard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    padding: ${(props) => (props.$cardFullView ? "0" : "20px")};
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .header {
+    flex-shrink: 0;
+  }
+
+  &.projectsBoardEditorProposal .proposalBoardContent {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .proposalPDF {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    max-width: none;
+  }
+
+  &.projectsBoardEditorProposal .boardEditorChrome {
+    flex-shrink: 0;
+    background: #fff;
+    z-index: 4;
+  }
+
+  &.projectsBoardEditorProposal .boardInner {
+    flex: 1;
+    min-height: 0;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardInnerToolbar {
+    flex-shrink: 0;
+    z-index: 3;
+    padding: 8px 8px;
+    margin-bottom: 8px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border-radius: 8px;
+  }
+
+  &.projectsBoardEditorProposal .boardEditorBody {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .boardEditorBody .post {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+    overflow-y: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardEditorBody .post.milestoneCardEditorPost {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &.projectsBoardEditorProposal
+    .boardEditorBody
+    .post.milestoneCardEditorPost
+    .proposalCardBoard {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    align-items: stretch;
+  }
+
+  &.projectsBoardEditorProposal
+    .boardEditorBody
+    .post.milestoneCardEditorPost
+    .textBoard {
+    overflow-y: auto;
+    padding-bottom: 48px;
+    margin-bottom: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &.projectsBoardEditorProposal
+    .boardEditorBody
+    .post.milestoneCardEditorPost
+    .infoBoard {
+    overflow-y: auto;
+    max-height: 100%;
+    align-self: stretch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnsWrap {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdge {
+    position: absolute;
+    top: 0;
+    bottom: auto;
+    height: var(--board-scroll-edge-height, 100%);
+    z-index: 2;
+    display: block;
+    width: 56px;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeLeft {
+    left: 0;
+    padding-left: 2px;
+    background: linear-gradient(
+      to right,
+      #f7f9f8 0%,
+      #f7f9f8 42%,
+      rgba(247, 249, 248, 0) 100%
+    );
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeRight {
+    right: 0;
+    padding-right: 2px;
+    background: linear-gradient(
+      to left,
+      #f7f9f8 0%,
+      #f7f9f8 42%,
+      rgba(247, 249, 248, 0) 100%
+    );
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdge.isHidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow {
+    position: absolute;
+    top: var(--board-scroll-arrow-top, 50%);
+    transform: translateY(-50%);
+    pointer-events: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeLeft .boardColumnScrollArrow {
+    left: 2px;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollEdgeRight .boardColumnScrollArrow {
+    right: 2px;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow .DesignSystem-IconButton-Icon {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnScrollArrow .DesignSystem-IconButton-Icon img {
+    width: 12px;
+    height: 12px;
+    opacity: 0.55;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .scrollable {
+    flex: 1 1 0;
+    max-width: 100%;
+  }
+
+  &.projectsBoardEditorProposal .boardInner .boardColumnsWrap .scrollable {
+    overflow-y: visible;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior-x: contain;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &.projectsBoardEditorProposal .sections {
+    min-width: 100%;
+  }
+
+  &.projectsBoardEditorProposal .sections .smooth-dnd-container.horizontal {
+    display: flex !important;
+    gap: var(--proposal-section-gap);
+    min-width: max-content;
+    box-sizing: border-box;
+    /* Inset columns so danger borders are not clipped by overflow scrollers. */
+    padding: 2px;
+  }
+
+  &.projectsBoardEditorProposal .sections .smooth-dnd-container.horizontal > .smooth-dnd-draggable-wrapper {
+    flex: 0 0 var(--proposal-section-min-width);
+    min-width: var(--proposal-section-min-width) !important;
+    max-width: var(--proposal-section-max-width);
+    width: auto !important;
+    box-sizing: border-box;
+  }
+
+  &.projectsBoardEditorProposal .section {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  &.projectsBoardEditorProposal .section > div {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  &.projectsBoardEditorProposal .section .smooth-dnd-container.vertical {
+    display: flex;
+    flex-direction: column;
+    gap: var(--proposal-card-gap);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  &.projectsBoardEditorProposal .section .smooth-dnd-container.vertical > .smooth-dnd-draggable-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
   }
 
   .header {
@@ -405,7 +744,7 @@ export const StyledProposal = styled.div`
     height: fit-content;
     .headerContent {
       width: 100%;
-      max-width: var(--proposal-board-content-max-width);
+      max-width: 100%;
     }
     .headerMainContent {
       display: flex;
@@ -425,9 +764,22 @@ export const StyledProposal = styled.div`
     .headerRightSection {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       flex-shrink: 0;
-      padding-left: 8px;
+    }
+    @media (max-width: 800px) {
+      .headerMainContent {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .headerLeftSection {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+      .headerRightSection {
+        width: 100%;
+        justify-content: flex-start;
+      }
     }
     .headerTitleRow {
       display: flex;
@@ -472,11 +824,8 @@ export const StyledProposal = styled.div`
       min-width: 0;
     }
     .headerTitle {
-      font-family: "Inter", sans-serif;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 36px;
-      line-height: 44px;
+      font: var(--MH-Type-Heading-Base);
+      letter-spacing: 0;
       color: #171717;
       margin: 0;
       display: -webkit-box;
@@ -554,15 +903,11 @@ export const StyledProposal = styled.div`
     }
     .studyLinkText {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
       color: #171717;
       white-space: nowrap;
       text-align: left;
-      letter-spacing: 0px;
+      letter-spacing: 0;
       width: fit-content;
       vertical-align: middle;
       min-width: 0;
@@ -573,29 +918,6 @@ export const StyledProposal = styled.div`
       align-items: center;
       flex-wrap: nowrap;
       width: 100%;
-    }
-    .collaboratorChip {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 32px;
-      border: 1px solid #A1A1A1;
-      border-radius: 30px;
-      padding: 4px 12px 4px 12px;
-      gap: 8px;
-      background: white;
-      overflow: hidden;
-      width: fit-content;
-      max-width: 300px;
-      span {
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: flex;
-        height: 100%;
-        align-items: center;
-      }
     }
     .addCollaboratorButton {
       display: flex;
@@ -624,43 +946,6 @@ export const StyledProposal = styled.div`
         margin: 0;
       }
     }
-    .downloadButton {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      height: 40px;
-      padding: 8px 12px 8px 16px;
-      border-radius: 100px;
-      // border: 1px solid #336F8A;
-      // background: white;
-      color: #336F8A;
-      font-family: "Inter", sans-serif;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
-      cursor: pointer;
-      flex-shrink: 0;
-      &:hover {
-        background: #ffffff;
-        paddingRight: 12px;
-        border: 1px solid #336F8A;
-        // color: #625B71;
-        .icon {
-          color: #625B71;
-        }
-      }
-      .icon {
-        margin: 0;
-        width: 24px;
-        height: 24px;
-        color: #336F8A;
-      }
-    }
-    .downloadButtonText {
-      white-space: nowrap;
-    }
     .viewToggleGroup {
       display: flex;
       align-items: center;
@@ -674,11 +959,8 @@ export const StyledProposal = styled.div`
       height: 40px;
       padding: 8px 24px 8px 16px;
       border: 1px solid #336F8A;
-      font-family: "Inter", sans-serif;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       cursor: pointer;
       white-space: nowrap;
       margin-right: -1px;
@@ -720,11 +1002,8 @@ export const StyledProposal = styled.div`
       }
     }
     .titleEdit {
-      font-family: "Inter";
-      font-style: normal;
-      font-weight: 600;
-      font-size: 40px;
-      line-height: 125%;
+      font: var(--MH-Type-Heading-Base);
+      letter-spacing: 0;
       color: #171717;
       background: white;
       width: 100%;
@@ -737,11 +1016,8 @@ export const StyledProposal = styled.div`
       grid-template-columns: auto 1fr;
       min-width: 0;
       .title {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 600;
-        font-size: 40px;
-        line-height: 125%;
+        font: var(--MH-Type-Heading-Base);
+        letter-spacing: 0;
         color: #171717;
         min-width: 0;
         overflow-wrap: break-word;
@@ -753,11 +1029,8 @@ export const StyledProposal = styled.div`
       }
     }
     .subtitle {
-      font-family: "Inter";
-      font-style: normal;
-      font-weight: 400;
-      font-size: 24px;
-      line-height: 32px;
+      font: var(--MH-Type-Body-Large);
+      letter-spacing: 0;
       color: #6c6c6c;
     }
     input,
@@ -773,25 +1046,14 @@ export const StyledProposal = styled.div`
         border-color: mintcream;
       }
     }
-    button {
-      background: #007c70;
-      color: white;
-      max-width: 256px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
     .title {
-      letter-spacing: 0em;
+      letter-spacing: 0;
       text-align: left;
-      color: #1a1a1a; */
+      color: #1a1a1a; 
     }
     .description {
-      font-family: Inter;
-      font-size: 24px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 32px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Body-Large);
+      letter-spacing: 0;
       text-align: left;
       color: #666666;
     }
@@ -819,7 +1081,6 @@ export const StyledProposal = styled.div`
     border-radius: 16px;
     overflow: visible;
     background: #ffffff;
-    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
   }
   .templateBannerHeader {
@@ -886,19 +1147,14 @@ export const StyledProposal = styled.div`
     }
   }
   .templateBanner .templateBannerHeaderToggle .templateBannerTitle {
-    font-family: "Inter", sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #5D5763;
     margin: 0;
   }
   .templateBannerSubtitle {
-    font-family: "Inter", sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: rgba(255, 255, 255, 0.9);
     margin: 4px 0 0 0;
   }
@@ -939,18 +1195,14 @@ export const StyledProposal = styled.div`
   }
   .templateBannerStudentSettings {
     .templateBannerStudentSettingsHeading {
-      font-family: "Inter", sans-serif;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
       margin: 0 0 8px 0;
     }
     .templateBannerStudentSettingsHelp {
-      font-family: "Inter", sans-serif;
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #625B71;
       margin: 0 0 16px 0;
     }
@@ -963,10 +1215,8 @@ export const StyledProposal = styled.div`
   }
   .templateBannerAdminSettings {
     .templateBannerAdminSettingsHeading {
-      font-family: "Inter", sans-serif;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
       margin: 0 0 8px 0;
     }
@@ -984,18 +1234,14 @@ export const StyledProposal = styled.div`
     flex-wrap: wrap;
   }
   .templateBannerBoardTypeIntro {
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
     margin: 0 0 4px 0;
   }
   .templateBannerBoardTypeMentorNote {
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #625B71;
     margin: 0 0 16px 0;
   }
@@ -1011,7 +1257,6 @@ export const StyledProposal = styled.div`
     border-radius: 12px;
     background: #ffffff;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
     transition: border-color 0.2s, background-color 0.2s;
     &:hover {
       border-color: #A1A1A1;
@@ -1038,9 +1283,8 @@ export const StyledProposal = styled.div`
     object-fit: contain;
   }
   .templateBannerBoardTypeOptionLabel {
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
   }
   .templateBannerSection {
@@ -1053,20 +1297,14 @@ export const StyledProposal = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: "Inter", sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
     margin: 0 0 6px 0;
   }
   .templateBannerSectionBody {
-    font-family: "Inter", sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #625B71;
     margin: 0;
     padding-left: 0;
@@ -1086,10 +1324,8 @@ export const StyledProposal = styled.div`
     align-items: center;
     justify-content: center;
     padding: 10px 20px;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
     max-width: 320px;
   }
@@ -1110,38 +1346,14 @@ export const StyledProposal = styled.div`
       grid-template-columns: 1fr auto;
       justify-items: end;
       grid-gap: 10px;
-
-      .button {
-        cursor: pointer;
-        border-radius: 4px;
-        align-items: center;
-        padding: 14px 24px;
-        font-family: Inter;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 18px;
-        letter-spacing: 0.05em;
-        text-align: center;
-      }
-      .primary {
-        background: #007c70;
-        color: #ffffff;
-        border: 2px solid #007c70;
-      }
-      .secondary {
-        background: #ffffff;
-        color: #666666;
-        border: 2px solid #b3b3b3;
-      }
     }
   }
 
   .post {
     display: grid;
     // grid-row-gap: 10px;
-    font-family: Inter;
-    font-size: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
     background: #F7F9F8;
     padding: 0px;
@@ -1219,10 +1431,8 @@ export const StyledProposal = styled.div`
         }
       }
       .middle {
-        font-family: Inter;
-        font-size: 24px;
-        font-weight: 500;
-        line-height: 40px;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
@@ -1252,15 +1462,19 @@ export const StyledProposal = styled.div`
           background: #3d85b0;
           color: white;
           border-radius: 100px;
-          font-family: Inter;
-          font-size: 20px;
-          font-weight: 700;
-          line-height: var(--LabelLargeLineHeight);
-          letter-spacing: var(--LabelLargeTracking);
+          font: var(--MH-Type-Label-Base);
+          letter-spacing: 0;
           text-align: center;
           text-underline-position: from-font;
           text-decoration-skip-ink: none;
           padding: 10px 24px;
+        }
+      }
+      &.navigation-build-modeEmbedded {
+        grid-template-columns: 1fr;
+        justify-items: end;
+        .right {
+          justify-self: end;
         }
       }
     }
@@ -1270,16 +1484,6 @@ export const StyledProposal = styled.div`
       grid-gap: 10px;
       grid-template-columns: 200px 200px;
       justify-content: end;
-      .primary {
-        background: #007c70;
-        color: #ffffff;
-        border: 2px solid #007c70;
-      }
-      .secondary {
-        background: #ffffff;
-        color: #666666;
-        border: 2px solid #b3b3b3;
-      }
     }
 
     .proposalCardBoard {
@@ -1294,10 +1498,8 @@ export const StyledProposal = styled.div`
 
     label {
       display: block;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
     }
     input,
     textarea,
@@ -1305,28 +1507,13 @@ export const StyledProposal = styled.div`
       border: 1px solid #cccccc;
       border-radius: 4px;
       width: 100%;
-      font-size: 16px;
-      line-height: 24px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       padding: 12px;
       &:focus {
         outline: 0;
         border-color: ${(props) => props.theme.red};
       }
-    }
-    input[type="submit"] {
-      margin-top: 3rem;
-      margin-bottom: 1rem;
-      width: 100%;
-      background: #007c70;
-      color: white;
-      padding: 1.5rem 0.5rem;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 100%;
-      border: 2px solid #007c70;
-      border-radius: 4px;
-      cursor: pointer;
     }
     fieldset {
       display: grid;
@@ -1344,39 +1531,27 @@ export const StyledProposal = styled.div`
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
       /* MH-Theme/title/large */
-      font-family: Inter;
-      font-size: 22px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 28px; /* 127.273% */
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
     }
     .cardSubheaderAssign {
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
       /* MH-Theme/title/base */
-      font-family: Inter;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 24px; /* 150% */
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
     }
     .cardSubheader {
       margin-top: 16px;
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
       /* MH-Theme/title/large */
-      font-family: Inter;
-      font-size: 22px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 28px; /* 127.273% */
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
     }
     .cardSubheaderComment {
-      font-family: 'Inter';
-      font-style: normal;
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 22px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       display: flex;
       align-items: center;
       color: #626269;
@@ -1387,7 +1562,7 @@ export const StyledProposal = styled.div`
       background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
       border-radius: 8px;
       border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
       overflow: hidden;
       width: 100%;
       .originalEntryBlockHeader {
@@ -1398,10 +1573,8 @@ export const StyledProposal = styled.div`
         width: 100%;
         max-width: none;
         padding: 12px 16px;
-        font-family: Inter;
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: var(--MH-Theme-Accent-Dark, #5D5763);
         background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
         border: 0;
@@ -1418,18 +1591,14 @@ export const StyledProposal = styled.div`
       .originalEntryBlockContent {
         padding: 16px;
         background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
-        font-family: Inter;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 24px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
     }
     .cardDescription {
       color: #626269;
-      font-family: Inter;
-      font-size: 17px;
-      font-weight: 400;
-      line-height: 23.19px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
@@ -1481,30 +1650,6 @@ export const StyledProposal = styled.div`
         width: 100%;
         margin-top: 8px;
       }
-      .collaboratorChip {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 24px;
-        border: 1px solid #A1A1A1;
-        border-radius: 30px;
-        padding: 4px 12px 4px 12px;
-        gap: 8px;
-        background: white;
-        overflow: hidden;
-        width: fit-content;
-        max-width: 300px;
-        span {
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 14px;
-          display: flex;
-          height: 100%;
-          align-items: center;
-        }
-      }
       .addCollaboratorButton {
         display: flex;
         align-items: center;
@@ -1549,6 +1694,11 @@ export const StyledProposal = styled.div`
       overflow-y: visible;
       min-height: 0;
 
+      &.infoBoardEdit {
+        border-radius: 8px;
+        border-top: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      }
+
       .collaboratorArray {
         display: flex;
         gap: 8px;
@@ -1556,29 +1706,6 @@ export const StyledProposal = styled.div`
         flex-wrap: nowrap;
         width: 100%;
         margin-top: 8px;
-      }
-      .collaboratorChip {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 32px;
-        border: 1px solid #A1A1A1;
-        border-radius: 30px;
-        padding: 4px 12px 4px 12px;
-        gap: 8px;
-        background: white;
-        overflow: hidden;
-        width: fit-content;
-        max-width: 300px;
-        span {
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          display: flex;
-          height: 100%;
-          align-items: center;
-        }
       }
       .addCollaboratorButton {
         display: flex;
@@ -1625,10 +1752,8 @@ export const StyledProposal = styled.div`
         border: 1px solid #cccccc;
         border-radius: 20px;
         padding: 9px 16px;
-        font-family: Inter;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 21.82px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
@@ -1705,18 +1830,14 @@ export const StyledProposal = styled.div`
       min-width: 0;
     }
     .feedbackOptionCardTitle {
-      font-family: Inter;
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Black, #171717);
       margin-bottom: 2px;
     }
     .feedbackOptionCardDescription {
-      font-family: Inter;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #626269;
     }
     .proposalCardComments {
@@ -1734,12 +1855,39 @@ export const StyledProposalCard = styled.div`
   background: #ffffff;
   border: 1px solid #a1a1a1;
   border-radius: 12px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  // box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   width: calc(100% - 20px);
   cursor: pointer;
   margin: 3px 10px;
-  font-family: Inter;
   box-sizing: border-box;
+
+  &.projectsBoardEditorProposal & {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  &.cardSelectSelected {
+    outline: 2px solid var(--MH-Theme-Danger-Dark, #8F1F14);
+    outline-offset: 0;
+  }
+
+  &.cardSelectAssociate {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
+    outline-offset: 0;
+  }
+
+  .cardSelectCheckbox {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--MH-Theme-Danger-Dark, #8F1F14);
+  }
+
+  &.cardSelectAssociate .cardSelectCheckbox {
+    accent-color: var(--MH-Theme-Primary-Dark, #336F8A);
+  }
 
   .card-drag-handle {
     height: 100%;
@@ -1780,11 +1928,8 @@ export const StyledProposalCard = styled.div`
       border: 1px solid #e6e6e6;
       box-sizing: border-box;
       border-radius: 60px;
-      font-family: Inter;
-      font-size: 12px;
-      font-style: normal;
-      font-weight: 400;
-      letter-spacing: 0.05em;
+      font: var(--MH-Type-Label-Small);
+      letter-spacing: 0;
       padding: 1px 7px 1px 7px;
     }
 
@@ -1809,11 +1954,8 @@ export const StyledProposalCard = styled.div`
       .card-title {
         display: flex;
         flex: 1 0 0;
-        font-family: Inter;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 24px;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
         color: #171717;
         min-width: 0;
         div {
@@ -1829,6 +1971,11 @@ export const StyledProposalCard = styled.div`
         display: grid;
         align-content: end;
       }
+    }
+    /* The tag hangs in a Tooltip trigger, which shrink-wraps by default; it has
+       to stretch so the tag can still span the card's full height. */
+    .DesignSystem-Tooltip-trigger {
+      align-self: stretch;
     }
     .card-feedback-tag {
       display: flex;
@@ -1862,13 +2009,36 @@ export const StyledActionCard = styled.div`
   justify-content: space-between;
   position: relative;
   border-radius: 12px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  // box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   margin: 3px 10px;
   width: calc(100% - 20px);
-  font-family: Inter;
   overflow: hidden;
   box-sizing: border-box;
+
+  &.projectsBoardEditorProposal & {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  &.cardSelectSelected {
+    outline: 2px solid var(--MH-Theme-Danger-Dark, #8F1F14);
+    outline-offset: 0;
+  }
+
+  &.actionCardAssociateActive {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
+    outline-offset: 0;
+  }
+
+  .cardSelectCheckbox {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--MH-Theme-Danger-Dark, #8F1F14);
+  }
 
   background: ${(props) => {
     if (props.proposalBuildMode) return "#FFFFFF";
@@ -1963,20 +2133,14 @@ export const StyledActionCard = styled.div`
       gap: 4px;
 
       .card-title {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 24px;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
         color: #171717;
       }
 
       .card-subtitle {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #6a6a6a;
       }
     }

@@ -365,9 +365,13 @@
 				"sharedWithCount": "Общее: {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "Вычислите новую переменную",
+				"copy": "",
 				"copyExisting": "Скопировать существующую переменную",
+				"recode": "",
 				"recodeVariable": "Перекодировать переменную",
+				"reverse": "",
 				"reverseScore": "Обратный счет"
 			},
 			"readOnlyToolbarHint": "Откройте этот журнал из рабочей области, чтобы отредактировать или скопировать этот набор данных.",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "Добавить набор данных",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "Сохранить копию",
 				"message": "В результате ваших изменений будет создан новый набор данных, принадлежащий вам, и он будет связан с этим журналом. Вы можете выбрать, разрешат ли соавторы редактировать эту копию."
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "Как был создан этот набор данных.",
 			"renameDisabledNotOwner": "Переименовать этот набор данных может только его создатель.",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "Сеть классов",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "Компонент",
 			"addComponentAria": "Добавьте компонент в это рабочее пространство",
 			"addJournal": "ЖУРНАЛ",
+			"addJournalAria": "",
 			"addJournalScratch": "Создайте дневник с нуля",
 			"addJournalTemplate": "Добавить шаблон журнала",
 			"addWorkspace": "Добавить рабочее пространство",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "Рабочее пространство",
 			"addWorkspaceError": "Ошибка при добавлении рабочей области.",
 			"addWorkspaceLoading": "Добавляем…",
@@ -1137,6 +1146,10 @@
 			"working": "Работа в процессе"
 		}
 	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
+	},
 	"dataUsage": {
 		"and": "и",
 		"educationLabel": "Да, но только для образовательных и общественных программ используйте",
@@ -1301,8 +1314,30 @@
 	},
 	"inner": {
 		"addSection": "Добавить раздел",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
+		"cancel": "",
+		"deleteItems": "",
+		"deleteItemsConfirmBody": "",
+		"deleteItemsConfirmCardsOnlyNote": "",
+		"deleteItemsConfirmMilestonesCustom": "",
+		"deleteItemsConfirmMilestonesCustomHeading": "",
+		"deleteItemsConfirmMilestonesDefault": "",
+		"deleteItemsConfirmMilestonesDefaultHeading": "",
+		"deleteItemsConfirmMixedBody": "",
+		"deleteItemsConfirmReviewStepsHeading": "",
+		"deleteItemsConfirmSectionsBody": "",
+		"deleteItemsConfirmTitle": "",
+		"deleteItemsDeleting": "",
+		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "Новый раздел",
-		"sectionTitlePlaceholder": "Введите название раздела"
+		"save": "",
+		"sectionTitlePlaceholder": "Введите название раздела",
+		"selectItem": "",
+		"selectSection": ""
 	},
 	"interests": "Интересы",
 	"introductionVideo": "Вводное видео",
@@ -1409,12 +1444,16 @@
 		"nameYourStudy": "Назовите ваше исследование",
 		"noTemplatesSubtitle": "Чтобы начать проект, вам понадобится шаблон доски проекта. У вашего преподавателя может не быть шаблона доски проекта, связанного с этим курсом.",
 		"noTemplatesTitle": "В классе нет шаблонов проектных досок.",
+		"publicTemplateWarningBody": "",
+		"publicTemplateWarningTitle": "",
 		"selectClass": "Выберите класс",
 		"selectTemplate": "Выбрать шаблон",
 		"selectTemplateAlert": "Пожалуйста, выберите шаблон предложения.",
 		"selectTemplateHelp": "Выберите шаблон проектной доски, предоставленный вашим учителем, и скопируйте его.",
+		"selectTemplateHelpPublic": "",
 		"templateClassLabel": "Класс: {{className}}",
 		"templateOptionLabel": "{{templateName}} — {{className}}",
+		"templatePublicLabel": "",
 		"untitledProject": "Проект без названия",
 		"untitledStudy": "Исследование без названия"
 	},
@@ -1508,6 +1547,10 @@
 	},
 	"participate": "Участвовать",
 	"participateAsGuest": "Принять участие в качестве гостя",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "Пожалуйста, сначала войдите в систему!",
 	"preview": {
 		"description": "Описание",
@@ -1539,6 +1582,8 @@
 		"selectExistingStudy": "Выбрать существующее исследование",
 		"selectStudyFirst": "Сначала выберите исследование",
 		"study": "Изучать:",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "Пожалуйста, введите DELETE, чтобы удалить ваш проект.",
 		"typeDeleteToConfirm": "Нажмите «DELETE» для подтверждения."
 	},
@@ -1563,6 +1608,7 @@
 		"delete": "Удалить",
 		"editingClassProjectTemplateSubtitle": "Определите, как вы хотите передавать изменения с этой доски проекта на копии ваших учеников.",
 		"editingClassProjectTemplateTitle": "Шаблон проекта для урока редактирования",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "Развернуть или свернуть раздел шаблона",
 		"makeTemplate": "Сделать эту доску проекта общедоступным шаблоном",
 		"name": "Название предложения",
@@ -1659,6 +1705,10 @@
 		"linkToProposal": "Ссылка на предложение",
 		"selectCard": "Выбрать карту"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "Ресурс",
 	"resources": "Ресурсы",
 	"resourcesCards": {
@@ -1750,7 +1800,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "Обратная связь",
-		"instruction": "После того, как вы отправите свое предложение или исследование, ваши отзывы появятся здесь."
+		"instruction": "После того, как вы отправите свое предложение или исследование, ваши отзывы появятся здесь.",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "Как",
@@ -1902,6 +1961,11 @@
 	"section": {
 		"addCard": "Добавить карту",
 		"addCardBtn": "[ Нажмите, чтобы добавить карту ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "карта",
 		"cards": "карты",
 		"cardsCount": "{{count}} карта{{count == 1 ? '' : 's'}}",
@@ -1988,6 +2052,7 @@
 			}
 		},
 		"deleteSectionConfirm": "Вы уверены, что хотите удалить этот раздел предложений? Все карточки в этом разделе также будут удалены. Это действие не может быть отменено.",
+		"editTitle": "",
 		"enterNewTitle": "Пожалуйста, введите название",
 		"newCard": "Новая карта",
 		"newCardPlaceholder": "Введите новое название карты",
@@ -2308,6 +2373,7 @@
 	"tiptap": {
 		"insertImageAria": "Вставить изображение",
 		"insertImagePrompt": "Введите URL изображения:",
+		"linkPrompt": "",
 		"mediaCancelEdit": "Отмена",
 		"mediaCanvaExportThumb": "Экспорт в PDF из Canva",
 		"mediaDelete": "Удалить",
@@ -2348,7 +2414,33 @@
 		"mediaUploading": "Загрузка...",
 		"mediaUploadNew": "Загрузить новое изображение",
 		"pasteImageNoMediaScope": "Вставка изображений здесь недоступна. Воспользуйтесь кнопкой «Изображение» и введите URL-адрес изображения.",
-		"pasteImageUploadFailed": "Не удалось загрузить вставленное изображение. Проверьте подключение к интернету и попробуйте снова."
+		"pasteImageUploadFailed": "Не удалось загрузить вставленное изображение. Проверьте подключение к интернету и попробуйте снова.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "Конструктор исследований",
 	"titleText": "Название",

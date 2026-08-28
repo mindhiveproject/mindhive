@@ -4,8 +4,30 @@
  */
 
 import { isClassTemplateBoard } from "./classTemplateBoards";
+// Pure matcher lives in .js so scenarios can run with plain Node.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const {
+  hasPublicId,
+  planRowMatches,
+} = require("./boardPropagationMatch") as {
+  hasPublicId: (value: string | null | undefined) => value is string;
+  planRowMatches: <
+    T extends { id: string; publicId?: string | null; position?: number | null },
+    C extends { id: string; publicId?: string | null; position?: number | null }
+  >(
+    templateRows: T[],
+    cloneRows: C[]
+  ) => Array<{
+    template: T;
+    decision:
+      | { action: "update"; clone: C; needsSharedPublicId: boolean }
+      | { action: "create" }
+      | { action: "skip" };
+  }>;
+};
 
 export { isClassTemplateBoard };
+export { hasPublicId, planRowMatches };
 
 const uniqid = require("uniqid") as () => string;
 
@@ -192,70 +214,33 @@ export async function getTemplateAndClones(
 }
 
 /**
- * Match a template section to its clone by publicId. Positional matching is
- * unsafe: reordering or deleting a middle section causes every subsequent
- * clone section to be overwritten with the wrong template's title/description
- * and the trailing clone section (which may hold real student work) to be
- * deleted.
- *
- * Falls back to positional match ONLY when both sides lack a publicId AND the
- * two lists have identical length (no structural change possible). Otherwise
- * returns null, forcing the caller to create a new section rather than
- * blindly overwrite one that might belong to a different template section.
+ * Ensure a shared publicId exists on a template row (and in-memory object).
+ * Generates once when missing; writes to the template DB row so later clones
+ * in the same applyTemplateToClones loop see the same id.
  */
-function findCloneSection(
-  templateSection: TemplateBoard["sections"][0],
-  cloneSections: CloneBoard["sections"],
-  templateIndex: number,
-  templateSectionCount: number
-): CloneBoard["sections"][0] | null {
-  if (templateSection.publicId) {
-    const byPublicId = cloneSections.find(
-      (s) => s.publicId && s.publicId === templateSection.publicId
-    );
-    if (byPublicId) return byPublicId;
-    // Template has a publicId but no clone matches — genuinely new section.
-    return null;
+async function ensureTemplatePublicId(
+  context: any,
+  listKey: "ProposalSection" | "ProposalCard",
+  row: { id: string; publicId?: string | null }
+): Promise<string> {
+  if (hasPublicId(row.publicId)) {
+    return row.publicId;
   }
-  // Legacy rows without publicIds: only trust position when neither side has
-  // any publicIds AND lengths match (no reorder/delete possible).
-  const anyCloneHasPublicId = cloneSections.some((s) => !!s.publicId);
-  if (
-    !anyCloneHasPublicId &&
-    cloneSections.length === templateSectionCount
-  ) {
-    return cloneSections[templateIndex] ?? null;
-  }
-  return null;
-}
-
-/**
- * Match a template card to its clone by publicId. Same safety rules as
- * findCloneSection: positional fallback only when both sides are publicId-less
- * AND lengths match exactly.
- */
-function findCloneCard(
-  templateCard: TemplateBoard["sections"][0]["cards"][0],
-  cloneCards: CloneBoard["sections"][0]["cards"],
-  templateIndex: number,
-  templateCardCount: number
-): CloneBoard["sections"][0]["cards"][0] | null {
-  if (templateCard.publicId) {
-    const byPublicId = cloneCards.find(
-      (c) => c.publicId && c.publicId === templateCard.publicId
-    );
-    if (byPublicId) return byPublicId;
-    return null;
-  }
-  const anyCloneHasPublicId = cloneCards.some((c) => !!c.publicId);
-  if (!anyCloneHasPublicId && cloneCards.length === templateCardCount) {
-    return cloneCards[templateIndex] ?? null;
-  }
-  return null;
+  const publicId = uniqid();
+  await context.db[listKey].updateOne({
+    where: { id: row.id },
+    data: { publicId },
+  });
+  row.publicId = publicId;
+  return publicId;
 }
 
 /**
  * Sync sections from template to one clone board: add missing, remove extra, update order and title/description.
+ *
+ * Matching is claimed-set aware (see boardPropagationMatch.ts): publicId rows
+ * match by identity; publicId-less leftovers pair with publicId-less clones;
+ * create only when a template row has a publicId and no clone match.
  */
 export async function syncSectionsToClone(
   context: any,
@@ -265,41 +250,56 @@ export async function syncSectionsToClone(
   const templateSectionIdsToCloneSectionIds = new Map<string, string>();
   const templateSections = template.sections ?? [];
   const cloneSections = clone.sections ?? [];
+  const plans = planRowMatches(templateSections, cloneSections);
 
-  for (let i = 0; i < templateSections.length; i++) {
-    const ts = templateSections[i];
-    const existing = findCloneSection(
-      ts,
-      cloneSections,
-      i,
-      templateSections.length
-    );
-    let cloneSectionId: string;
-    if (existing) {
-      cloneSectionId = existing.id;
+  for (let i = 0; i < plans.length; i++) {
+    const { template: ts, decision } = plans[i];
+    const position = ts.position ?? i * 16384;
+
+    if (decision.action === "skip") {
+      continue;
+    }
+
+    if (decision.action === "update") {
+      const existing = decision.clone;
+      let publicId = hasPublicId(ts.publicId) ? ts.publicId : undefined;
+      if (decision.needsSharedPublicId || !publicId) {
+        publicId = await ensureTemplatePublicId(
+          context,
+          "ProposalSection",
+          ts
+        );
+      }
       await context.db.ProposalSection.updateOne({
         where: { id: existing.id },
         data: {
           title: ts.title,
           description: ts.description ?? undefined,
-          position: ts.position ?? i * 16384,
-          ...(ts.publicId ? { publicId: ts.publicId } : {}),
+          position,
+          publicId,
         },
       });
-    } else {
-      const created = await context.db.ProposalSection.createOne({
-        data: {
-          board: { connect: { id: clone.id } },
-          title: ts.title,
-          description: ts.description ?? undefined,
-          position: ts.position ?? i * 16384,
-          ...(ts.publicId ? { publicId: ts.publicId } : {}),
-        },
-        query: "id",
-      });
-      cloneSectionId = created.id;
+      // Keep in-memory clone row aligned for card sync within this pass.
+      existing.publicId = publicId;
+      templateSectionIdsToCloneSectionIds.set(ts.id, existing.id);
+      continue;
     }
-    templateSectionIdsToCloneSectionIds.set(ts.id, cloneSectionId);
+
+    // create — only reached for template rows that already have a publicId
+    const publicId = hasPublicId(ts.publicId)
+      ? ts.publicId
+      : await ensureTemplatePublicId(context, "ProposalSection", ts);
+    const created = await context.db.ProposalSection.createOne({
+      data: {
+        board: { connect: { id: clone.id } },
+        title: ts.title,
+        description: ts.description ?? undefined,
+        position,
+        publicId,
+      },
+      query: "id",
+    });
+    templateSectionIdsToCloneSectionIds.set(ts.id, created.id);
   }
 
   // Only delete clone sections whose publicId proves they descend from a
@@ -310,13 +310,13 @@ export async function syncSectionsToClone(
     templateSectionIdsToCloneSectionIds.values()
   );
   const templatePublicIds = new Set(
-    templateSections.map((s) => s.publicId).filter(Boolean) as string[]
+    templateSections
+      .map((s) => s.publicId)
+      .filter((id): id is string => hasPublicId(id))
   );
   const cloneSectionsToDelete = cloneSections.filter((s) => {
     if (keptCloneSectionIds.has(s.id)) return false;
-    // Kept by ID match — safe to delete only if the clone has a publicId AND
-    // that publicId is not in the current template (i.e., template removed it).
-    return !!s.publicId && !templatePublicIds.has(s.publicId);
+    return hasPublicId(s.publicId) && !templatePublicIds.has(s.publicId);
   });
 
   for (const section of cloneSectionsToDelete) {
@@ -346,6 +346,10 @@ export type SyncCardsOptions = {
  * unless in cardIdsWithContentUpdate; settings.status). Template card settings
  * (all keys except status) are merged into clone card settings.
  *
+ * Matching uses the same claimed leftover pairing as sections (see
+ * boardPropagationMatch.ts). Shared publicIds are stamped on both sides when
+ * a publicId-less template card is paired with a leftover clone card.
+ *
  * Student-owned fields never synced for existing clones:
  * content (unless in cardIdsWithContentUpdate), settings.status, internalContent,
  * revisedContent, comment, assignedTo.
@@ -371,21 +375,34 @@ export async function syncCardsToClone(
       ? (cloneSection as any).cards ?? []
       : [];
 
+    const plans = planRowMatches(templateCards, cloneCards);
     const matchedCloneCardIds = new Set<string>();
-    for (let ci = 0; ci < templateCards.length; ci++) {
-      const tc = templateCards[ci];
-      const existing = findCloneCard(tc, cloneCards, ci, templateCards.length);
-      if (existing) matchedCloneCardIds.add(existing.id);
+
+    for (let ci = 0; ci < plans.length; ci++) {
+      const { template: tc, decision } = plans[ci];
       const position = tc.position ?? ci * 16384;
       const settings =
         tc.settings && typeof tc.settings === "object"
           ? { ...tc.settings, status: "Not started" }
           : { status: "Not started" };
 
-      if (existing) {
-        // Update template-owned fields; preserve student content unless in
-        // cardIdsWithContentUpdate. Merge settings from template into clone,
-        // preserving the clone's status.
+      if (decision.action === "skip") {
+        continue;
+      }
+
+      if (decision.action === "update") {
+        const existing = decision.clone;
+        matchedCloneCardIds.add(existing.id);
+
+        let publicId = hasPublicId(tc.publicId) ? tc.publicId : undefined;
+        if (decision.needsSharedPublicId || !publicId) {
+          publicId = await ensureTemplatePublicId(
+            context,
+            "ProposalCard",
+            tc
+          );
+        }
+
         const overwriteContent = contentUpdateSet.has(tc.id);
         const mergedSettings = mergeSettingsPreservingStatus(
           (existing as { settings?: Record<string, unknown> | null }).settings,
@@ -405,10 +422,12 @@ export async function syncCardsToClone(
             // the freshly propagated HTML. Without this, a stale yjsState blob
             // would mask the propagated text. See keystone/collab-server.js.
             yjsState: null,
-            publicId: tc.publicId ?? uniqid(),
+            publicId,
             settings: mergedSettings,
             resources: { set: (tc.resources ?? []).map((r) => ({ id: r.id })) },
-            assignments: { set: (tc.assignments ?? []).map((a) => ({ id: a.id })) },
+            assignments: {
+              set: (tc.assignments ?? []).map((a) => ({ id: a.id })),
+            },
             studies: { set: (tc.studies ?? []).map((s) => ({ id: s.id })) },
             tasks: { set: (tc.tasks ?? []).map((t) => ({ id: t.id })) },
             ...((tc as any).milestone?.id
@@ -416,51 +435,56 @@ export async function syncCardsToClone(
               : {}),
           },
         });
-      } else {
-        await context.db.ProposalCard.createOne({
-          data: {
-            section: { connect: { id: cloneSectionId } },
-            publicId: tc.publicId ?? uniqid(),
-            title: tc.title,
-            description: tc.description ?? undefined,
-            type: tc.type ?? undefined,
-            shareType: tc.shareType ?? undefined,
-            position,
-            content: tc.content ?? undefined,
-            settings,
-            ...((tc as any).milestone?.id
-              ? { milestone: { connect: { id: (tc as any).milestone.id } } }
-              : {}),
-            resources: {
-              connect: (tc.resources ?? []).map((r) => ({ id: r.id })),
-            },
-            assignments: {
-              connect: (tc.assignments ?? []).map((a) => ({ id: a.id })),
-            },
-            studies: {
-              connect: (tc.studies ?? []).map((s) => ({ id: s.id })),
-            },
-            tasks: {
-              connect: (tc.tasks ?? []).map((t) => ({ id: t.id })),
-            },
-          },
-          query: "id",
-        });
+        continue;
       }
+
+      // create — template row has (or receives) a publicId and no clone match
+      const publicId = hasPublicId(tc.publicId)
+        ? tc.publicId
+        : await ensureTemplatePublicId(context, "ProposalCard", tc);
+      await context.db.ProposalCard.createOne({
+        data: {
+          section: { connect: { id: cloneSectionId } },
+          publicId,
+          title: tc.title,
+          description: tc.description ?? undefined,
+          type: tc.type ?? undefined,
+          shareType: tc.shareType ?? undefined,
+          position,
+          content: tc.content ?? undefined,
+          settings,
+          ...((tc as any).milestone?.id
+            ? { milestone: { connect: { id: (tc as any).milestone.id } } }
+            : {}),
+          resources: {
+            connect: (tc.resources ?? []).map((r) => ({ id: r.id })),
+          },
+          assignments: {
+            connect: (tc.assignments ?? []).map((a) => ({ id: a.id })),
+          },
+          studies: {
+            connect: (tc.studies ?? []).map((s) => ({ id: s.id })),
+          },
+          tasks: {
+            connect: (tc.tasks ?? []).map((t) => ({ id: t.id })),
+          },
+        },
+        query: "id",
+      });
     }
 
     // Only delete clone cards whose publicId proves they descend from a
-    // template card that has since been removed. Cards matched by findCloneCard
-    // are always kept (matchedCloneCardIds). Cards with no publicId are of
-    // unknown provenance — leave them alone. Previously this filter deleted
-    // by index-tail, which silently destroyed real student work whenever a
-    // teacher reordered or removed a middle template card.
+    // template card that has since been removed. Cards matched above are
+    // always kept. Cards with no publicId are of unknown provenance — leave
+    // them alone.
     const templatePublicIds = new Set(
-      templateCards.map((c) => c.publicId).filter(Boolean) as string[]
+      templateCards
+        .map((c) => c.publicId)
+        .filter((id): id is string => hasPublicId(id))
     );
     const cloneCardsToDelete = cloneCards.filter((c: any) => {
       if (matchedCloneCardIds.has(c.id)) return false;
-      return !!c.publicId && !templatePublicIds.has(c.publicId);
+      return hasPublicId(c.publicId) && !templatePublicIds.has(c.publicId);
     });
     for (const c of cloneCardsToDelete) {
       await context.db.ProposalCard.deleteOne({ where: { id: c.id } });

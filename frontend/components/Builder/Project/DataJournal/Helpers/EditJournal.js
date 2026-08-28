@@ -44,17 +44,15 @@ const FormFields = styled.div`
   }
 
   .field-label {
-    font-family: Inter, sans-serif;
-    font-size: 13px;
-    font-weight: 500;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #333;
   }
 
   input[type="text"],
   textarea {
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 1.4;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #1a1a1a;
     border: 1px solid #e6e6e6;
     border-radius: 6px;
@@ -90,10 +88,9 @@ const FormFields = styled.div`
   }
 
   .checkboxRow span {
-    font-family: Inter, sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #333;
-    line-height: 1.35;
   }
 `;
 

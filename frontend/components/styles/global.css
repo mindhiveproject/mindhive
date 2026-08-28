@@ -7,6 +7,17 @@
  * browser than the same 600 weight does in Figma.
  */
 body {
+  font-family: "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+ * A Tooltip trigger shrink-wraps its content so the bubble points at the text.
+ * Triggers that are themselves a sized surface — a form control, a card, a nav
+ * row — opt back into filling their container.
+ */
+.DesignSystem-Tooltip-trigger--fill {
+  display: block;
+  width: 100%;
 }

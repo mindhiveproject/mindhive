@@ -3,8 +3,11 @@ import { useRouter } from "next/router";
 
 import { CREATE_STUDY } from "../../../Mutations/Study";
 import { MY_STUDIES } from "../../../Queries/Study";
+import Button from "../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function CreateStudy({ study, user }) {
+  const { t } = useTranslation("builder");
   const router = useRouter();
 
   const [
@@ -34,7 +37,9 @@ export default function CreateStudy({ study, user }) {
 
   return (
     <div>
-      <button onClick={saveNewStudy}>Save</button>
+      <Button variant="filled" type="button" onClick={saveNewStudy}>
+        {t("createStudy.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

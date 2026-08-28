@@ -138,7 +138,6 @@ export default function Projects({ query, user, profile }) {
 }
 
 const ProjectsContainer = styled.div`
-  font-family: Nunito, sans-serif;
   /* max-width: 1200px; */
   margin: 0 auto;
   padding: 20px;
@@ -149,8 +148,8 @@ const EmptyState = styled.div`
   justify-content: center;
   align-items: center;
   height: 200px;
-  font-family: Nunito, sans-serif;
-  font-size: 16px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #666666;
 `;
 
@@ -161,8 +160,8 @@ const Header = styled.div`
   padding: 12px 16px;
   background: #f9f9f9;
   border-bottom: 1px solid #e0e0e0;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   color: #333333;
   text-transform: uppercase;
 `;
@@ -186,7 +185,8 @@ const Row = styled.div`
 const Cell = styled.div`
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #333333;
 `;
 
@@ -214,8 +214,8 @@ const StyledIcon = styled(Icon)`
 
 const DeletedMessage = styled.span`
   color: #d32f2f;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Small);
+  letter-spacing: 0;
 `;
 
 const StyledToggle = styled.div`

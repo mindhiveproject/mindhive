@@ -28,6 +28,7 @@ import {
   MetaActions,
   MetaHeader,
   PreviewPane,
+  PreviewPaneContent,
   QuestionList,
   Split,
   StepMeta,
@@ -113,6 +114,7 @@ export default function TeacherFormWizard({
         title,
         description,
         questions: questions.filter((q) => q.typeChosen),
+        omitCardHeader: true,
       }),
     [title, description, questions]
   );
@@ -538,17 +540,20 @@ export default function TeacherFormWizard({
               </EditorColumn>
               <PreviewPane>
                 {hasPreviewCards ? (
-                  (previewDefinition.cards || []).map((card) => (
-                    <CardRenderer
-                      key={card.id}
-                      card={card}
-                      values={{}}
-                      errors={{}}
-                      onFieldChange={() => {}}
-                      locale={locale}
-                      disabled
-                    />
-                  ))
+                  <PreviewPaneContent>
+                    {(previewDefinition.cards || []).map((card) => (
+                      <CardRenderer
+                        key={card.id}
+                        card={card}
+                        values={{}}
+                        errors={{}}
+                        onFieldChange={() => {}}
+                        locale={locale}
+                        disabled
+                        quiet
+                      />
+                    ))}
+                  </PreviewPaneContent>
                 ) : (
                   <StepMeta>
                     {t(

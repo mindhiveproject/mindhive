@@ -5,13 +5,6 @@ import TipTapEditor from "../../../../../../../TipTap/Main";
 import { StyledTipTap } from "../../../../../../../TipTap/StyledTipTap";
 import { useDataJournal } from "../../../../Context/DataJournalContext";
 
-const TITLE_TYPO = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 500,
-  fontSize: "18px",
-  lineHeight: "150%",
-  color: "#000000",
-};
 
 const EMPTY_DOC = "<p></p>";
 
@@ -47,7 +40,10 @@ export default function ParagraphEditor({ content, onChange, sectionId }) {
         minWidth: 0,
       }}
     >
-      <h3 style={{ marginTop: 0, margin: "0.5rem 0 1rem 0", ...TITLE_TYPO }}>
+      <h3
+        className="MH-Type-Title-Large"
+        style={{ marginTop: 0, margin: "0.5rem 0 1rem 0", color: "#000000" }}
+      >
         {t("dataJournal.componentEditor.editParagraph", {}, { default: "Edit Paragraph" })}
       </h3>
       <TipTapEditor

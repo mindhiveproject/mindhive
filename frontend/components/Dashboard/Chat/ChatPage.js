@@ -6,9 +6,11 @@ import EditTitle from "./Chatroom/EditTitle";
 import NewMessage from "./Chatroom/NewMessage";
 import Message from "./Chatroom/Message";
 
-import { Image, Popup } from "semantic-ui-react";
+import { Image } from "semantic-ui-react";
+import Tooltip from "../../DesignSystem/Tooltip";
 
 export default function ClassPage({ code, user, query, studyid }) {
+  const { t } = useTranslation("dashboard");
   const { data, loading, error } = useQuery(GET_CHAT, {
     variables: { id: code },
   });
@@ -46,21 +48,16 @@ export default function ClassPage({ code, user, query, studyid }) {
           <span className="title">Members</span>
           <div>
             {chat?.members.map((member, num) => (
-              <Popup
-                content={member?.username}
-                key={num}
-                trigger={
-                  member?.image?.image?.publicUrlTransformed ? (
-                    <Image
-                      src={member?.image?.image?.publicUrlTransformed}
-                      avatar
-                    />
-                  ) : (
-                    <Image src="/assets/icons/builder/page.svg" avatar />
-                  )
-                }
-                size="huge"
-              />
+              <Tooltip content={member?.username} key={num}>
+                {member?.image?.image?.publicUrlTransformed ? (
+                  <Image
+                    src={member?.image?.image?.publicUrlTransformed}
+                    avatar
+                  />
+                ) : (
+                  <Image src="/assets/icons/builder/page.svg" avatar />
+                )}
+              </Tooltip>
             ))}
           </div>
         </div>
@@ -69,7 +66,7 @@ export default function ClassPage({ code, user, query, studyid }) {
       <div className="chatRoom">
         <NewMessage
           chat={chat}
-          btnName="Add posting"
+          btnName={t("chat.addPosting", {}, { default: "Add posting" })}
           membersIds={membersIds}
           isMain
           studyid={studyid}

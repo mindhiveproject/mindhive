@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -7,9 +7,9 @@ import Button from "../../../../DesignSystem/Button";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import Modal from "../../../../DesignSystem/Modal";
 import { MY_CONNECT_ROUNDS } from "../../../../Queries/ConnectRound";
-import MatchingRoundCard from "./MatchingRoundCard";
-
-const CREATE_KEY = "new";
+import MatchingRoundCard, {
+  MATCHING_ROUND_CREATE_QUERY,
+} from "./MatchingRoundCard";
 
 function sortRoundsByRecency(rounds) {
   return [...rounds].sort(
@@ -30,6 +30,11 @@ function collectAllRounds(profile) {
   return Array.from(seen.values());
 }
 
+function firstQueryValue(value) {
+  if (Array.isArray(value)) return value[0] || null;
+  return typeof value === "string" ? value : null;
+}
+
 export default function MatchingRoundsList({
   myclass,
   onPreviewOpportunity,
@@ -38,18 +43,14 @@ export default function MatchingRoundsList({
   const { t } = useTranslation("classes");
   const router = useRouter();
   const networks = myclass?.networks || [];
+  const classCode = myclass?.code;
 
-  const queryNetworkId = useMemo(() => {
-    const raw = router.query?.networkId;
-    return typeof raw === "string" ? raw : null;
-  }, [router.query?.networkId]);
+  const requestedRound = firstQueryValue(router.query?.round);
+  const queryNetworkId = firstQueryValue(router.query?.networkId);
+  const queryMatchingPanel = firstQueryValue(router.query?.matchingPanel);
 
-  const [expandedKey, setExpandedKey] = useState(null);
-  const [hasAppliedInitialExpand, setHasAppliedInitialExpand] = useState(false);
   const [networkModalOpen, setNetworkModalOpen] = useState(false);
   const [modalNetworkId, setModalNetworkId] = useState(null);
-  const [createNetworkId, setCreateNetworkId] = useState(null);
-  const dirtyGuardRef = useRef(null);
 
   const { data: roundsData, loading: loadingRounds } = useQuery(
     MY_CONNECT_ROUNDS,
@@ -71,124 +72,89 @@ export default function MatchingRoundsList({
     );
   }, [roundsData?.authenticatedItem, classNetworkIds]);
 
-  const defaultNetworkId = useMemo(() => {
-    if (networks.length === 0) return null;
-
-    if (createNetworkId && networks.some((n) => n.id === createNetworkId)) {
-      return createNetworkId;
-    }
-
-    const expandedRound = roundsForClass.find(
-      (round) => round.id === expandedKey,
-    );
-    if (expandedRound?.classNetwork?.id) {
-      const fromExpanded = networks.find(
-        (network) => network.id === expandedRound.classNetwork.id,
-      );
-      if (fromExpanded) return fromExpanded.id;
-    }
-
-    if (queryNetworkId) {
-      const fromQuery = networks.find(
+  const resolvedQueryNetwork = useMemo(() => {
+    if (!queryNetworkId) return null;
+    return (
+      networks.find(
         (network) =>
           network.id === queryNetworkId ||
           network.publicId === queryNetworkId,
-      );
-      if (fromQuery) return fromQuery.id;
-    }
+      ) || null
+    );
+  }, [networks, queryNetworkId]);
 
+  const defaultNetworkId = useMemo(() => {
+    if (networks.length === 0) return null;
+    if (resolvedQueryNetwork) return resolvedQueryNetwork.id;
     return networks[0].id;
-  }, [
-    networks,
-    createNetworkId,
-    roundsForClass,
-    expandedKey,
-    queryNetworkId,
-  ]);
+  }, [networks, resolvedQueryNetwork]);
 
+  const isCreating = requestedRound === MATCHING_ROUND_CREATE_QUERY;
+  const createNetworkId = isCreating ? resolvedQueryNetwork?.id || null : null;
+  const showWorkspace = Boolean(requestedRound);
+  const activeRoundSummary = useMemo(() => {
+    if (!requestedRound || isCreating) return null;
+    return (
+      roundsForClass.find((round) => round.id === requestedRound) || {
+        id: requestedRound,
+      }
+    );
+  }, [requestedRound, isCreating, roundsForClass]);
+
+  const classOpportunitiesHref = useCallback(
+    (extra = {}) => ({
+      pathname: `/dashboard/myclasses/${classCode}`,
+      query: { page: "opportunities", ...extra },
+    }),
+    [classCode],
+  );
+
+  // Create without a network, or a matchingPanel deep-link without a round.
   useEffect(() => {
-    if (loadingRounds || hasAppliedInitialExpand) return;
+    if (!router.isReady || !classCode) return;
 
-    if (networks.length === 0) {
-      setExpandedKey(null);
-      setHasAppliedInitialExpand(true);
+    if (isCreating && !createNetworkId) {
+      router.replace(classOpportunitiesHref());
       return;
     }
 
-    const preferredFromQuery = queryNetworkId
-      ? networks.find(
-          (network) =>
-            network.id === queryNetworkId ||
-            network.publicId === queryNetworkId,
+    if (requestedRound || loadingRounds) return;
+    if (!queryMatchingPanel) return;
+
+    const preferredRound = resolvedQueryNetwork
+      ? roundsForClass.find(
+          (round) => round.classNetwork?.id === resolvedQueryNetwork.id,
         )
       : null;
+    const target = preferredRound || roundsForClass[0];
+    if (!target?.id) return;
 
-    if (roundsForClass.length > 0) {
-      const preferredRound = preferredFromQuery
-        ? roundsForClass.find(
-            (round) => round.classNetwork?.id === preferredFromQuery.id,
-          )
-        : null;
-      setExpandedKey((preferredRound || roundsForClass[0]).id);
-    } else {
-      setExpandedKey(null);
-    }
-
-    setHasAppliedInitialExpand(true);
+    router.replace(
+      classOpportunitiesHref({
+        round: target.id,
+        matchingPanel: queryMatchingPanel,
+      }),
+    );
   }, [
+    router,
+    router.isReady,
+    classCode,
+    isCreating,
+    createNetworkId,
+    requestedRound,
     loadingRounds,
-    hasAppliedInitialExpand,
-    networks,
+    queryMatchingPanel,
+    resolvedQueryNetwork,
     roundsForClass,
-    queryNetworkId,
+    classOpportunitiesHref,
   ]);
 
-  // If the expanded round was deleted / unlinked, fall back.
-  useEffect(() => {
-    if (!hasAppliedInitialExpand || loadingRounds) return;
-    if (expandedKey == null || expandedKey === CREATE_KEY) return;
-    const stillExists = roundsForClass.some((round) => round.id === expandedKey);
-    if (!stillExists) {
-      setExpandedKey(roundsForClass[0]?.id || null);
-    }
-  }, [
-    hasAppliedInitialExpand,
-    loadingRounds,
-    expandedKey,
-    roundsForClass,
-  ]);
-
-  const handleRegisterDirtyGuard = useCallback((guard) => {
-    dirtyGuardRef.current = guard;
-  }, []);
-
-  const discardCreateDraft = useCallback(() => {
-    setCreateNetworkId(null);
-    if (expandedKey === CREATE_KEY) {
-      setExpandedKey(null);
-    }
-  }, [expandedKey]);
-
-  const requestExpand = useCallback(
-    (nextKey) => {
-      if (nextKey === expandedKey) {
-        const guard = dirtyGuardRef.current;
-        if (guard && !guard()) return;
-        if (expandedKey === CREATE_KEY) {
-          discardCreateDraft();
-          return;
-        }
-        setExpandedKey(null);
-        return;
-      }
-      const guard = dirtyGuardRef.current;
-      if (guard && !guard()) return;
-      if (expandedKey === CREATE_KEY) {
-        setCreateNetworkId(null);
-      }
-      setExpandedKey(nextKey);
+  const openRound = useCallback(
+    (roundId) => {
+      if (!classCode || !roundId) return;
+      router.push(classOpportunitiesHref({ round: roundId }));
     },
-    [expandedKey, discardCreateDraft],
+    [classCode, classOpportunitiesHref, router],
   );
 
   const openNetworkModal = useCallback(() => {
@@ -200,8 +166,6 @@ export default function MatchingRoundsList({
       );
       return;
     }
-    const guard = dirtyGuardRef.current;
-    if (guard && !guard()) return;
     setModalNetworkId(defaultNetworkId || networks[0].id);
     setNetworkModalOpen(true);
   }, [networks, defaultNetworkId, t]);
@@ -219,21 +183,82 @@ export default function MatchingRoundsList({
       );
       return;
     }
-    dirtyGuardRef.current = null;
-    setCreateNetworkId(modalNetworkId);
-    setExpandedKey(CREATE_KEY);
+    if (!classCode) return;
     setNetworkModalOpen(false);
-  }, [modalNetworkId, t]);
+    router.push(
+      classOpportunitiesHref({
+        round: MATCHING_ROUND_CREATE_QUERY,
+        networkId: modalNetworkId,
+      }),
+    );
+  }, [modalNetworkId, t, classCode, classOpportunitiesHref, router]);
 
-  const handleCreated = useCallback((newRoundId) => {
-    setCreateNetworkId(null);
-    dirtyGuardRef.current = null;
-    if (newRoundId) setExpandedKey(newRoundId);
-  }, []);
+  const handleCreated = useCallback(
+    (newRoundId) => {
+      if (!classCode || !newRoundId) return;
+      const nextQuery = { round: newRoundId };
+      if (queryMatchingPanel) nextQuery.matchingPanel = queryMatchingPanel;
+      router.replace(classOpportunitiesHref(nextQuery));
+    },
+    [classCode, classOpportunitiesHref, queryMatchingPanel, router],
+  );
 
-  const isCreating = expandedKey === CREATE_KEY && !!createNetworkId;
+  if (loadingRounds && !roundsData) {
+    return (
+      <div className="classTabEmpty">
+        <p>
+          {t("opportunities.matchingRound.loading", {}, {
+            default: "Loading matching round…",
+          })}
+        </p>
+      </div>
+    );
+  }
 
-  if (loadingRounds && !hasAppliedInitialExpand) {
+  if (showWorkspace && isCreating) {
+    if (!createNetworkId) {
+      return (
+        <div className="classTabEmpty">
+          <p>
+            {t("opportunities.matchingRound.loading", {}, {
+              default: "Loading matching round…",
+            })}
+          </p>
+        </div>
+      );
+    }
+    return (
+      <MatchingRoundCard
+        key={`${MATCHING_ROUND_CREATE_QUERY}-${createNetworkId}`}
+        myclass={myclass}
+        networks={networks}
+        roundSummary={null}
+        isCreate
+        isWorkspace
+        initialNetworkId={createNetworkId}
+        onPreviewOpportunity={onPreviewOpportunity}
+        onMatchingRoundContextChange={onMatchingRoundContextChange}
+        onCreated={handleCreated}
+      />
+    );
+  }
+
+  if (showWorkspace && activeRoundSummary?.id) {
+    return (
+      <MatchingRoundCard
+        key={activeRoundSummary.id}
+        myclass={myclass}
+        networks={networks}
+        roundSummary={activeRoundSummary}
+        isCreate={false}
+        isWorkspace
+        onPreviewOpportunity={onPreviewOpportunity}
+        onMatchingRoundContextChange={onMatchingRoundContextChange}
+      />
+    );
+  }
+
+  if (queryMatchingPanel && roundsForClass.length > 0) {
     return (
       <div className="classTabEmpty">
         <p>
@@ -254,47 +279,23 @@ export default function MatchingRoundsList({
           networks={networks}
           roundSummary={round}
           isCreate={false}
-          expanded={expandedKey === round.id}
-          onToggleExpand={() => requestExpand(round.id)}
-          onRegisterDirtyGuard={
-            expandedKey === round.id ? handleRegisterDirtyGuard : undefined
-          }
-          onPreviewOpportunity={onPreviewOpportunity}
-          onMatchingRoundContextChange={
-            expandedKey === round.id ? onMatchingRoundContextChange : undefined
-          }
+          isWorkspace={false}
+          onOpen={() => openRound(round.id)}
         />
       ))}
 
-      {isCreating ? (
-        <MatchingRoundCard
-          key={`${CREATE_KEY}-${createNetworkId}`}
-          myclass={myclass}
-          networks={networks}
-          roundSummary={null}
-          isCreate
-          initialNetworkId={createNetworkId}
-          expanded
-          onToggleExpand={() => requestExpand(CREATE_KEY)}
-          onRegisterDirtyGuard={handleRegisterDirtyGuard}
-          onPreviewOpportunity={onPreviewOpportunity}
-          onMatchingRoundContextChange={onMatchingRoundContextChange}
-          onCreated={handleCreated}
-        />
-      ) : (
-        <div className="matchingRoundsListCreate">
-          <Button
-            variant="filled"
-            type="button"
-            onClick={openNetworkModal}
-            disabled={networks.length === 0}
-          >
-            {t("opportunities.matchingRound.createNewRound", {}, {
-              default: "Create new round",
-            })}
-          </Button>
-        </div>
-      )}
+      <div className="matchingRoundsListCreate">
+        <Button
+          variant="filled"
+          type="button"
+          onClick={openNetworkModal}
+          disabled={networks.length === 0}
+        >
+          {t("opportunities.matchingRound.createNewRound", {}, {
+            default: "Create new round",
+          })}
+        </Button>
+      </div>
 
       <Modal
         open={networkModalOpen}

@@ -89,8 +89,8 @@ const Hero = styled.div`
 
   .placeholder {
     color: #5f6871;
-    font-weight: 700;
-    font-size: 40px;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
   }
 
   .info {
@@ -103,8 +103,8 @@ const Hero = styled.div`
 
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 38px);
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #171717;
     display: inline-flex;
     align-items: center;
@@ -122,10 +122,8 @@ const Hero = styled.div`
     flex-wrap: wrap;
     align-items: center;
     gap: 12px;
-    font-family: "Inter", sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 16px;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
     color: #5f6871;
 
     span {
@@ -172,14 +170,15 @@ export const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -195,10 +194,8 @@ const InterestChips = styled.div`
     border-radius: 100px;
     background: #eef5f9;
     color: var(--MH-Theme-Primary-Dark, #336f8a);
-    font-family: "Inter", sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 18px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -242,15 +239,15 @@ const OppCard = styled.a`
   }
 
   .title {
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
-    font-size: 14px;
   }
 
   .desc {
     color: #5f6871;
-    font-size: 12px;
-    line-height: 1.3;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -262,10 +259,8 @@ const OppCard = styled.a`
     padding-top: 6px;
     border-top: 1px solid #eef1f2;
     color: #5f6871;
-    font-family: "Inter", sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 16px;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
     display: flex;
     align-items: center;
     gap: 12px;

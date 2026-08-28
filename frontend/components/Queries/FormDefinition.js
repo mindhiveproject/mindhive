@@ -376,3 +376,30 @@ export const PUBLIC_OPPORTUNITY_FORM_DEFINITIONS = gql`
     }
   }
 `;
+
+// Board-scoped review/feedback forms for a template board (draft + published).
+// Used so teachers can re-link forms they created earlier on this board.
+export const BOARD_REVIEW_FORM_DEFINITIONS = gql`
+  query BOARD_REVIEW_FORM_DEFINITIONS($proposalBoardId: ID!) {
+    formDefinitions(
+      where: {
+        scope: { equals: "project_board" }
+        surface: { equals: "feedback" }
+        status: { in: ["draft", "published"] }
+        proposalBoard: { id: { equals: $proposalBoardId } }
+      }
+      orderBy: [{ updatedAt: desc }, { title: asc }]
+    ) {
+      id
+      title
+      key
+      scope
+      status
+      version
+      updatedAt
+      proposalBoard {
+        id
+      }
+    }
+  }
+`;

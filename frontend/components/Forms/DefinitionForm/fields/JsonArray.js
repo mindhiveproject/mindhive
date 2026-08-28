@@ -126,7 +126,8 @@ export default function JsonArray({
               padding: "8px 12px",
               cursor: rows.length <= minRows ? "not-allowed" : "pointer",
               color: "#c0392b",
-              fontSize: 13,
+              font: 'var(--MH-Type-Label-Base)',
+              letterSpacing: 0,
               alignSelf: "end",
               height: 42,
             }}
@@ -146,8 +147,8 @@ export default function JsonArray({
           borderRadius: 8,
           padding: "10px 16px",
           color: "#336f8a",
-          fontFamily: "Nunito, sans-serif",
-          fontWeight: 600,
+          font: 'var(--MH-Type-Label-Base)',
+          letterSpacing: 0,
           cursor: rows.length >= maxRows ? "not-allowed" : "pointer",
           width: "max-content",
         }}

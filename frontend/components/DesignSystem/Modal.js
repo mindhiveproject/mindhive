@@ -28,10 +28,6 @@ const DIALOG_STYLE = {
 
 const TITLE_STYLE = {
   margin: "0 0 12px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 18,
-  fontWeight: 600,
-  lineHeight: 1.3,
   color: "var(--MH-Theme-Neutrals-Black, #1a1a1a)",
   flexShrink: 0,
   display: "flex",
@@ -42,9 +38,6 @@ const TITLE_STYLE = {
 
 const BODY_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 14,
-  lineHeight: 1.5,
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
   minHeight: 0,
   flex: 1,
@@ -69,6 +62,16 @@ const FROSTED_SURFACE = {
 const FROSTED_PAD_TOP_FALLBACK_PX = 64;
 const FROSTED_PAD_BOTTOM_FALLBACK_PX = 96;
 
+const MODAL_BODY_HIDE_SCROLLBAR_STYLE = `
+.DesignSystem-Modal-Body--hideScrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.DesignSystem-Modal-Body--hideScrollbar::-webkit-scrollbar {
+  display: none;
+}
+`;
+
 /**
  * Design System Modal (basic). Portal overlay with title, body, and optional actions.
  *
@@ -82,6 +85,7 @@ const FROSTED_PAD_BOTTOM_FALLBACK_PX = 96;
  * @param {number|string} [height] - Dialog height (px number or CSS string). Use with maxHeight for fixed-size flex layouts.
  * @param {"default"|"large"} [size="default"] - Preset: large → 800px wide, 90vh tall.
  * @param {React.CSSProperties} [bodyStyle] - Optional style merge for the scrollable body.
+ * @param {boolean} [hideScrollbar=false] - Hide the body scrollbar while keeping scroll behavior.
  * @param {boolean} [frostedChrome=false] - Overlay title/actions as frosted glass so body content soft-blurs underneath.
  *   When true, sets `--ds-modal-frosted-pad-top` / `--ds-modal-frosted-pad-bottom` on the dialog from
  *   measured chrome heights (ResizeObserver) so consumers can clear overlays as the title wraps.
@@ -97,6 +101,7 @@ export default function Modal({
   height,
   size = "default",
   bodyStyle,
+  hideScrollbar = false,
   frostedChrome = false,
 }) {
   const titleId = useId();
@@ -235,16 +240,22 @@ export default function Modal({
   };
 
   return createPortal(
-    <div
-      role="presentation"
-      className="DesignSystem-Modal-Overlay"
-      onClick={(e) => {
-        if (e.target === e.currentTarget && typeof onClose === "function") {
-          onClose();
-        }
-      }}
-      style={OVERLAY_STYLE}
-    >
+    <>
+      {hideScrollbar ? (
+        <style
+          dangerouslySetInnerHTML={{ __html: MODAL_BODY_HIDE_SCROLLBAR_STYLE }}
+        />
+      ) : null}
+      <div
+        role="presentation"
+        className="DesignSystem-Modal-Overlay"
+        onClick={(e) => {
+          if (e.target === e.currentTarget && typeof onClose === "function") {
+            onClose();
+          }
+        }}
+        style={OVERLAY_STYLE}
+      >
       <div
         ref={dialogRef}
         role="dialog"
@@ -258,13 +269,20 @@ export default function Modal({
           <h2
             ref={titleRef}
             id={titleId}
-            className="DesignSystem-Modal-Title"
+            className="DesignSystem-Modal-Title MH-Type-Title-Base"
             style={titleStyle}
           >
             {title}
           </h2>
         ) : null}
-        <div className="DesignSystem-Modal-Body" style={resolvedBodyStyle}>
+        <div
+          className={
+            hideScrollbar
+              ? "DesignSystem-Modal-Body DesignSystem-Modal-Body--hideScrollbar MH-Type-Body-Base"
+              : "DesignSystem-Modal-Body MH-Type-Body-Base"
+          }
+          style={resolvedBodyStyle}
+        >
           {children}
         </div>
         {actions != null ? (
@@ -277,7 +295,8 @@ export default function Modal({
           </div>
         ) : null}
       </div>
-    </div>,
+    </div>
+    </>,
     document.body
   );
 }

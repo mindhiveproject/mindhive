@@ -8,6 +8,7 @@ import { UPDATE_HOMEWORK } from "../../../../../../Mutations/Homework";
 
 import JoditEditor from "../../../../../../Jodit/Editor";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../../../../../DesignSystem/Button";
 
 export default function Homework({ homeworkId }) {
   const { t } = useTranslation("builder");
@@ -125,15 +126,16 @@ export default function Homework({ homeworkId }) {
         </select>
       </div>
       <div className="buttons">
-        <button
-          className="primary"
+        <Button
+          variant="filled"
+          type="button"
           onClick={() => onUpdateHomework()}
           disabled={updateLoading}
         >
           {updateLoading
-            ? t("homeworkCard.saving", "Saving ...")
-            : t("homeworkCard.save", "Save")}
-        </button>
+            ? t("homeworkCard.saving", {}, { default: "Saving ..." })
+            : t("homeworkCard.save", {}, { default: "Save" })}
+        </Button>
       </div>
     </>
   );

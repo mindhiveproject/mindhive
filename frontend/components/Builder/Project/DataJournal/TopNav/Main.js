@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { StyledTopNavigation } from "../styles/StyledDataJournal"; // Adjust path
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import { AddIcon } from "../../../../DesignSystem/Icons";
 import Breadcrumbs from "./Breadcrumbs/Main";
 
 import { UPDATE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
@@ -84,10 +85,6 @@ export default function TopNavigation() {
     workspace,
     projectId,
     studyId,
-    setActiveComponent,
-    setIsAddComponentPanelOpen,
-    setLeftPanelMode,
-    setSidebarVisible,
   } = useDataJournal();
 
   const [editingTarget, setEditingTarget] = useState(null);
@@ -190,13 +187,6 @@ export default function TopNavigation() {
     }
   };
 
-  const openAddComponentPanel = () => {
-    setActiveComponent(null);
-    setLeftPanelMode("addComponent");
-    setIsAddComponentPanelOpen(true);
-    setSidebarVisible(true);
-  };
-
   return (
     <StyledTopNavigation
       className={area === "datasets" ? "withDatasetScopes" : undefined}
@@ -207,7 +197,6 @@ export default function TopNavigation() {
           label={t("dataJournal.topNav.journals", "Journals")}
           selected={area === "journals"}
           onClick={() => setArea("journals")}
-          shape="square"
           style={{
             border: "none",
             background: area === "journals" ? LEFT_NAV_SELECTED_BG : "transparent",
@@ -233,7 +222,6 @@ export default function TopNavigation() {
           label={t("dataJournal.topNav.datasets", "Datasets")}
           selected={area === "datasets"}
           onClick={navigateToDatasets}
-          shape="square"
           style={{
             border: "none",
             background: area === "datasets" ? LEFT_NAV_SELECTED_BG : "transparent",
@@ -260,12 +248,9 @@ export default function TopNavigation() {
           <div className="datasetScopeNavWithAdd">
             <Button
               type="button"
-              variant="tonal"
-              style={{ display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#336F8A", color: "#FFFFFF", border: "none", height: "fit-content", padding: "6px 12px" }}
+              variant="subtle"
               className="addDatasetNavBtn"
-              leadingIcon={
-                <p style={{ fontSize: "24px", fontWeight: "700", lineHeight: "20px", letterSpacing: "0", color: "#FFFFFF" }}>+</p>
-              }
+              leadingIcon={<AddIcon />}
               onClick={requestOpenAddDataset}
             >
               {tBuilder("dataJournal.datasets.addDataset", {}, {
@@ -273,7 +258,7 @@ export default function TopNavigation() {
               })}
             </Button>
             <div className="datasetScopeNav" role="tablist">
-              <span style={{ fontSize: "14px", fontWeight: "400", lineHeight: "20px", letterSpacing: "0", color: "#5D5763" }}>Filter by:</span>
+              <span className="MH-Type-Label-Base" style={{ color: "#5D5763" }}>Filter by:</span>
             {DATASET_SCOPES.map((scope) => {
               const meta = DATASET_SCOPE_META[scope];
               if (!meta) return null;
@@ -286,7 +271,6 @@ export default function TopNavigation() {
                 label={tBuilder(meta.i18nKey, {}, { default: meta.defaultLabel })}
                 selected={datasetScope === scope}
                 onClick={() => setDatasetScope(scope)}
-                shape="square"
                 leading={
                   <img
                     src={meta.iconSrc}
@@ -341,7 +325,8 @@ export default function TopNavigation() {
             <AddWorkspace journalId={journal?.id} />
             <AddComponentButton
               disabled={!workspace?.id}
-              onClick={openAddComponentPanel}
+              side="bottom"
+              align="end"
             />
           </div>
         )}

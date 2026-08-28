@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 import DownloadRawData from "../Download/RawData";
 import DownloadSummaryData from "../Download/Summary";
 import DownloadByComponent from "../Download/ByComponent";
+import Button from "../../../../DesignSystem/Button";
 
 export default function Header({ study, slug, participants, components }) {
   const { t } = useTranslation("builder");
@@ -30,7 +31,7 @@ export default function Header({ study, slug, participants, components }) {
     temp.select();
     document.execCommand("copy");
     temp.remove();
-    alert(t("header.linkCopied", "The link is copied"));
+    alert(t("header.linkCopied", {}, { default: "The link is copied" }));
   };
 
   return (
@@ -40,7 +41,11 @@ export default function Header({ study, slug, participants, components }) {
           <p>
             {t(
               "header.shareInstructions",
-              "Share the link below with your participants to invite them to join your study"
+              {},
+              {
+                default:
+                  "Share the link below with your participants to invite them to join your study",
+              }
             )}
           </p>
           <h3>
@@ -48,7 +53,13 @@ export default function Header({ study, slug, participants, components }) {
           </h3>
           <div className="buttons">
             <div>
-              <button onClick={() => copyLink()}>{t("header.copyLink", "Copy study link")}</button>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => copyLink()}
+              >
+                {t("header.copyLink", {}, { default: "Copy study link" })}
+              </Button>
             </div>
             <div>
               <a
@@ -56,7 +67,9 @@ export default function Header({ study, slug, participants, components }) {
                 href={`${origin}/studies/${slug}`}
                 rel="noreferrer"
               >
-                <button>{t("header.testStudy", "Test your study")}</button>
+                <Button variant="outline" type="button">
+                  {t("header.testStudy", {}, { default: "Test your study" })}
+                </Button>
               </a>
             </div>
           </div>

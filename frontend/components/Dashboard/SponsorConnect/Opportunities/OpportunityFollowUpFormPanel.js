@@ -15,9 +15,8 @@ import { upsertProposalEntry } from "../../../../lib/opportunityProposalData";
 
 const StatusText = styled.p`
   margin: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
@@ -41,13 +40,18 @@ const OpportunityFollowUpFormPanel = forwardRef(
       hideSaveButton = true,
       readOnlyLayout = null,
       hideUnansweredFields = false,
+      /** Optional override — e.g. student preview of sponsor-filled answers. */
+      viewerRoles: viewerRolesProp = null,
     },
     ref,
   ) {
     const router = useRouter();
     const { t } = useTranslation("connect");
     const connectRole = useConnectRole();
-    const viewerRoles = rolesForViewer(connectRole);
+    const viewerRolesFromUser = rolesForViewer(connectRole);
+    const viewerRoles = Array.isArray(viewerRolesProp) && viewerRolesProp.length
+      ? viewerRolesProp
+      : viewerRolesFromUser;
     const opportunityId = opportunity?.id;
 
     // Always load the latest opportunity so follow-up forms hydrate from the

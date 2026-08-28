@@ -54,10 +54,8 @@ const Nav = styled.nav`
   gap: 8px;
   width: 100%;
   padding: 8px 0;
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
 
   > *:first-child {
     justify-self: start;
@@ -88,10 +86,8 @@ const PageButton = styled.button`
   border-radius: 100px;
   background: transparent;
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
   box-sizing: border-box;
   transition: background-color 0.2s, color 0.2s;
@@ -120,10 +116,8 @@ const Ellipsis = styled.span`
   min-width: 32px;
   height: 40px;
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  font-family: Inter, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   user-select: none;
 `;
 

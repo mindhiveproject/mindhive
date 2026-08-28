@@ -132,7 +132,6 @@ const StyledStudyDropdown = styled.div`
 
   .study-selector {
     width: 100%;
-    font-family: Nunito, sans-serif !important;
 
     &.ui.dropdown {
       border: 1px solid #e0e0e0;
@@ -190,19 +189,16 @@ const StyledStudyDropdown = styled.div`
 `;
 
 const Label = styled.span`
-  font-family: Nunito, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Small);
+  letter-spacing: 0;
   color: #00635a;
   flex-shrink: 0;
 `;
 
 const StyledModal = styled(Modal)`
-  font-family: Nunito, sans-serif !important;
-
   .header {
-    font-size: 18px !important;
-    font-weight: 600 !important;
+    font: var(--MH-Type-Title-Large) !important;
+    letter-spacing: 0;
     color: #333333 !important;
     border-bottom: 1px solid #e0e0e0 !important;
     padding-bottom: 12px !important;
@@ -211,8 +207,8 @@ const StyledModal = styled(Modal)`
   .content {
     padding: 20px !important;
     color: #666666 !important;
-    font-size: 14px !important;
-    line-height: 1.5 !important;
+    font: var(--MH-Type-Body-Base) !important;
+    letter-spacing: 0;
   }
 
   .actions {
@@ -226,7 +222,8 @@ const StyledModal = styled(Modal)`
       background: #ffffff !important;
       color: #666666 !important;
       border: 1px solid #e0e0e0 !important;
-      font-family: Nunito, sans-serif !important;
+      font: var(--MH-Type-Label-Base) !important;
+      letter-spacing: 0;
 
       &:hover {
         background: #f5f5f5 !important;
@@ -235,7 +232,8 @@ const StyledModal = styled(Modal)`
     }
 
     .confirm-button {
-      font-family: Nunito, sans-serif !important;
+      font: var(--MH-Type-Label-Base) !important;
+      letter-spacing: 0;
       background: #3d85b0 !important;
 
       &:hover {

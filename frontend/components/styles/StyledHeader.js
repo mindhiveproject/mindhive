@@ -47,21 +47,15 @@ export const Logo = styled.div`
   img {
     margin-right: 10px;
   }
-  :hover {
-    opacity: 0.6;
-  }
 `;
 
 export const MainNavLink = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   cursor: pointer;
-  font-family: Lato;
-  font-size: 18px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  letter-spacing: 0em;
+  font: var(--MH-Type-Label-Large);
+  letter-spacing: 0;
   text-align: center;
   padding: 0rem 0rem 0.5rem 0rem;
   ${(props) => props.selected && `border-bottom: 3px solid #ffc107`};

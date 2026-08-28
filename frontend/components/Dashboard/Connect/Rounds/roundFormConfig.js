@@ -43,6 +43,12 @@ export const EMPTY_FORM = {
   status: "draft",
   openAt: "",
   closeAt: "",
+  introductionAt: "",
+  matchingStartAt: "",
+  matchingEndAt: "",
+  reviewStartAt: "",
+  reviewEndAt: "",
+  sponsorIntroAt: "",
   matchingAlgorithm: "stable_matching",
 };
 

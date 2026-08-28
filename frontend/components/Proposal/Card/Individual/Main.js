@@ -12,6 +12,7 @@ import JoditEditor from "../../../Jodit/Editor";
 import useForm from "../../../../lib/useForm";
 
 import Status from "../Forms/Status";
+import Button from "../../../DesignSystem/Button";
 
 export default function IndividualCard({
   user,
@@ -155,18 +156,20 @@ export default function IndividualCard({
             </div>
 
             <div className="buttons">
-              <button
-                className="secondary"
+              <Button
+                variant="outline"
                 onClick={() =>
                   closeCard({ cardId: false, lockedByUser: false })
                 }
               >
-                {t('board.close', 'Close without saving')}
-              </button>
+                {t("board.closeWithoutSaving", {}, { default: "Close without saving" })}
+              </Button>
 
-              <button className="primary" onClick={() => saveHomework()}>
-                {editLoading ? t('board.saving', 'Saving ...') : t('board.saveAndClose', 'Save & close')}
-              </button>
+              <Button variant="filled" onClick={() => saveHomework()}>
+                {editLoading
+                  ? t("board.saving", {}, { default: "Saving ..." })
+                  : t("board.saveAndClose", {}, { default: "Save & close" })}
+              </Button>
             </div>
           </div>
         )}

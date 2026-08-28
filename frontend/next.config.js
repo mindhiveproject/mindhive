@@ -99,6 +99,17 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Deprecated Connect Opportunities UI now lives under Sponsor Connect.
+  // Full page loads (bookmarks, emails, Update.window.open) still hit this.
+  async redirects() {
+    return [
+      {
+        source: "/dashboard/connect/opportunities",
+        destination: "/dashboard/sponsor-connect/opportunities",
+        permanent: true,
+      },
+    ];
+  },
   // Non-production: browser Apollo uses same-origin /api/graphql (see config.js). Proxy to Keystone.
   // `npm run dev` runs `node server` without NODE_ENV=development; rewrites must still apply.
   // Omit when NODE_ENV=production — client uses https://backend.mindhive.science via withData.js.

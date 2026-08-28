@@ -9,47 +9,37 @@ export const StyledDocumentPage = styled.div`
 
   p,
   li {
-    font-family: Lato;
     font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666666;
   }
 
   h1 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: 400;
-    font-size: 48px;
-    line-height: 56px;
+    font: var(--MH-Type-Heading-Large);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
 
   h2 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 32px;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
 
   h3 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 20px;
-    line-height: 32px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
 
   a {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-decoration-line: underline;
     color: #007c70;
   }
@@ -144,77 +134,43 @@ export const StyledTeachersInfo = styled.div`
   }
 
   h1 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 48px;
-    line-height: 56px;
+    font: var(--MH-Type-Heading-Large);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
   h2 {
-    font-family: Roboto;
     font-style: normal;
-    font-weight: normal;
-    font-size: 36px;
-    line-height: 42px;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
   h3 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 32px;
-    letter-spacing: 0.3em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
   h4 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 32px;
-    letter-spacing: 0.3em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
   h5 {
-    font-family: Roboto;
     font-style: normal;
-    font-weight: bold;
-    font-size: 24px;
-    line-height: 28px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
   p {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666666;
   }
   .centered {
     text-align: center;
-  }
-  button {
-    font-family: Lato;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 18px;
-    letter-spacing: 0.05em;
-    text-align: center;
-    background: white;
-    color: #007c70;
-    padding: 19px 24px 19px 24px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .primary {
-    border: 2px solid #007c70;
-  }
-  .secondary {
-    border: 0px solid white;
   }
   .stretchedBlockForTwo {
     display: grid;
@@ -222,11 +178,9 @@ export const StyledTeachersInfo = styled.div`
   }
   a {
     text-decoration-line: underline;
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666666;
   }
   .underscored {
@@ -260,10 +214,9 @@ export const StyledProgram = styled.div`
       color: #666666;
       font-weight: normal;
     }
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     line-height: 48px;
   }
   .content {
@@ -289,21 +242,15 @@ export const StyledProgram = styled.div`
     }
   }
   h3 {
-    font-family: Lato;
-    font-size: 18px;
     font-style: normal;
-    font-weight: 700;
-    line-height: 22px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     text-align: left;
   }
   h4 {
-    font-family: Lato;
-    font-size: 12px;
     font-style: normal;
-    font-weight: 700;
-    line-height: 14px;
-    letter-spacing: 0.3em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-align: left;
     color: #666666;
   }

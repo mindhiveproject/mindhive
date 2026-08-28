@@ -57,7 +57,6 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   /** Incremented when Add dataset is clicked in top nav; Datasets/Main opens the add panel. */
   const [datasetsAddRequestNonce, setDatasetsAddRequestNonce] = useState(0);
   const [sidebarVisible, setSidebarVisible] = useState(true);
-  const [isAddComponentPanelOpen, setIsAddComponentPanelOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState("journal");
 
   // Additional states for user, projectId, studyId
@@ -180,12 +179,8 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
       setLeftPanelMode("editor");
       return;
     }
-    if (isAddComponentPanelOpen) {
-      setLeftPanelMode("addComponent");
-      return;
-    }
     setLeftPanelMode("journal");
-  }, [activeComponent, isAddComponentPanelOpen]);
+  }, [activeComponent]);
 
   // Provide value to children
   const value = {
@@ -222,8 +217,6 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     requestOpenAddDataset,
     sidebarVisible,
     setSidebarVisible,
-    isAddComponentPanelOpen,
-    setIsAddComponentPanelOpen,
     leftPanelMode,
     setLeftPanelMode,
     user,

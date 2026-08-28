@@ -31,6 +31,7 @@
 			"signUpAsSponsor": "",
 			"wrongRole": ""
 		},
+		"confirmPassword": "",
 		"email": "Электронная почта",
 		"forgotPassword": "Забыли пароль?",
 		"login": "Авторизоваться",
@@ -40,8 +41,11 @@
 			"bannerTitle": "",
 			"invalid": ""
 		},
+		"next": "",
 		"password": "Пароль",
 		"requestReset": "Запрос сброса",
+		"reset": "",
+		"resetTitle": "",
 		"username": "Имя пользователя"
 	},
 	"cancel": "Отмена",
@@ -455,6 +459,7 @@
 		"level": "Уровень",
 		"myTags": "Мои теги",
 		"noParentTag": "Нет родительского тега",
+		"save": "",
 		"searchPlaceholder": "Поиск по тегам",
 		"secondLevel": "Второй уровень",
 		"selectParentTag": "Выберите родительский тег",

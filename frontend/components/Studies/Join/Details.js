@@ -8,6 +8,7 @@ import {
   ResponseButtons,
 } from "../../styles/StyledJoinStudyFlow";
 import JoinStudy from "./JoinStudy";
+import Button from "../../DesignSystem/Button";
 
 export default function Details({ user, study, query }) {
   const { t } = useTranslation('common');
@@ -168,7 +169,9 @@ export default function Details({ user, study, query }) {
             },
           }}
         >
-          <button>{t('join.details.next')}</button>
+          <Button variant="outline" style={{ width: "100%" }}>
+            {t("join.details.next", {}, { default: "Next" })}
+          </Button>
         </Link>
       ) : (
         <JoinStudy

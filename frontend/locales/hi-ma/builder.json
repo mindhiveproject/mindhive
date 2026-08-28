@@ -365,9 +365,13 @@
 				"sharedWithCount": ""
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "",
+				"copy": "",
 				"copyExisting": "",
+				"recode": "",
 				"recodeVariable": "",
+				"reverse": "",
 				"reverseScore": ""
 			},
 			"readOnlyToolbarHint": "",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "",
 				"message": ""
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "",
 			"renameDisabledNotOwner": "",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "",
 			"addComponentAria": "",
 			"addJournal": "",
+			"addJournalAria": "",
 			"addJournalScratch": "",
 			"addJournalTemplate": "",
 			"addWorkspace": "",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "",
 			"addWorkspaceError": "",
 			"addWorkspaceLoading": "",
@@ -1137,6 +1146,10 @@
 			"working": "कार्य प्रगति पर है"
 		}
 	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
+	},
 	"dataUsage": {
 		"and": "और",
 		"educationLabel": "हाँ, लेकिन केवल शैक्षिक और सामुदायिक कार्यक्रमों के लिए उपयोग करें",
@@ -1301,8 +1314,30 @@
 	},
 	"inner": {
 		"addSection": "अनुभाग जोड़ें",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
+		"cancel": "",
+		"deleteItems": "",
+		"deleteItemsConfirmBody": "",
+		"deleteItemsConfirmCardsOnlyNote": "",
+		"deleteItemsConfirmMilestonesCustom": "",
+		"deleteItemsConfirmMilestonesCustomHeading": "",
+		"deleteItemsConfirmMilestonesDefault": "",
+		"deleteItemsConfirmMilestonesDefaultHeading": "",
+		"deleteItemsConfirmMixedBody": "",
+		"deleteItemsConfirmReviewStepsHeading": "",
+		"deleteItemsConfirmSectionsBody": "",
+		"deleteItemsConfirmTitle": "",
+		"deleteItemsDeleting": "",
+		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "नया खंड",
-		"sectionTitlePlaceholder": "अनुभाग शीर्षक दर्ज करें"
+		"save": "",
+		"sectionTitlePlaceholder": "अनुभाग शीर्षक दर्ज करें",
+		"selectItem": "",
+		"selectSection": ""
 	},
 	"interests": "",
 	"introductionVideo": "",
@@ -1409,12 +1444,16 @@
 		"nameYourStudy": "",
 		"noTemplatesSubtitle": "प्रोजेक्ट शुरू करने के लिए, आपको एक प्रोजेक्ट बोर्ड टेम्पलेट की आवश्यकता होगी। हो सकता है कि आपके शिक्षक के पास इस कक्षा से जुड़ा कोई प्रोजेक्ट बोर्ड टेम्पलेट न हो।",
 		"noTemplatesTitle": "कक्षा में कोई प्रोजेक्ट बोर्ड टेम्पलेट नहीं हैं",
+		"publicTemplateWarningBody": "",
+		"publicTemplateWarningTitle": "",
 		"selectClass": "कक्षा का चयन करें",
 		"selectTemplate": "",
 		"selectTemplateAlert": "",
 		"selectTemplateHelp": "",
+		"selectTemplateHelpPublic": "",
 		"templateClassLabel": "",
 		"templateOptionLabel": "",
+		"templatePublicLabel": "",
 		"untitledProject": "शीर्षकहीन परियोजना",
 		"untitledStudy": ""
 	},
@@ -1508,6 +1547,10 @@
 	},
 	"participate": "हिस्सा लेना",
 	"participateAsGuest": "अतिथि के रूप में भाग लें",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "कृपया पहले लॉग इन करें!",
 	"preview": {
 		"description": "विवरण",
@@ -1539,6 +1582,8 @@
 		"selectExistingStudy": "मौजूदा अध्ययन का चयन करें",
 		"selectStudyFirst": "पहले अध्ययन का चयन करें",
 		"study": "अध्ययन:",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "कृपया अपना प्रोजेक्ट हटाने के लिए DELETE टाइप करें",
 		"typeDeleteToConfirm": "पुष्टि करने के लिए \"DELETE\" टाइप करें"
 	},
@@ -1563,6 +1608,7 @@
 		"delete": "मिटाना",
 		"editingClassProjectTemplateSubtitle": "",
 		"editingClassProjectTemplateTitle": "",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "",
 		"makeTemplate": "इस प्रोजेक्ट बोर्ड को एक सार्वजनिक टेम्पलेट बनाएँ",
 		"name": "प्रस्ताव का नाम",
@@ -1659,6 +1705,10 @@
 		"linkToProposal": "प्रस्ताव का लिंक",
 		"selectCard": "कार्ड चुनें"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "संसाधन",
 	"resources": "संसाधन",
 	"resourcesCards": {
@@ -1750,7 +1800,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "प्रतिक्रिया",
-		"instruction": "एक बार जब आप अपना प्रस्ताव या अध्ययन प्रस्तुत कर देंगे, तो आपकी समीक्षाएं यहां दिखाई देंगी।"
+		"instruction": "एक बार जब आप अपना प्रस्ताव या अध्ययन प्रस्तुत कर देंगे, तो आपकी समीक्षाएं यहां दिखाई देंगी।",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "कैसे",
@@ -1902,6 +1961,11 @@
 	"section": {
 		"addCard": "कार्ड जोड़ें",
 		"addCardBtn": "[ कार्ड जोड़ने के लिए क्लिक करें ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "कार्ड",
 		"cards": "पत्ते",
 		"cardsCount": "{{count}} कार्ड{{count == 1 ? '' : 's'}}",
@@ -1988,6 +2052,7 @@
 			}
 		},
 		"deleteSectionConfirm": "क्या आप वाकई इस प्रस्ताव अनुभाग को हटाना चाहते हैं? इस अनुभाग के सभी कार्ड भी हटा दिए जाएँगे। इस कार्रवाई को पूर्ववत नहीं किया जा सकता।",
+		"editTitle": "",
 		"enterNewTitle": "कृपया शीर्षक दर्ज करें",
 		"newCard": "नया कार्ड",
 		"newCardPlaceholder": "नया कार्ड शीर्षक दर्ज करें",
@@ -2308,6 +2373,7 @@
 	"tiptap": {
 		"insertImageAria": "",
 		"insertImagePrompt": "",
+		"linkPrompt": "",
 		"mediaCancelEdit": "",
 		"mediaCanvaExportThumb": "",
 		"mediaDelete": "",
@@ -2348,7 +2414,33 @@
 		"mediaUploading": "",
 		"mediaUploadNew": "",
 		"pasteImageNoMediaScope": "",
-		"pasteImageUploadFailed": ""
+		"pasteImageUploadFailed": "",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "अध्ययन निर्माता",
 	"titleText": "",

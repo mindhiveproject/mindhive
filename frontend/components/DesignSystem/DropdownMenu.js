@@ -27,9 +27,6 @@ const DEFAULT_TRIGGER_STYLE = {
   border: "1px solid var(--MH-Theme-Primary-Dark, #336F8A)",
   background: "#ffffff",
   color: "#0D3944",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "14px",
-  lineHeight: "20px",
   padding: "4px 12px",
   cursor: "pointer",
   display: "inline-flex",
@@ -53,10 +50,6 @@ const ITEM_STYLE = {
   alignItems: "center",
   gap: "8px",
   padding: "8px 12px",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 500,
-  fontSize: "14px",
-  lineHeight: "20px",
   cursor: "pointer",
   transition: "background-color 0.2s",
   border: "none",
@@ -69,9 +62,6 @@ const STATIC_ITEM_STYLE = {
   ...ITEM_STYLE,
   cursor: "default",
   color: "#6a6a6a",
-  fontWeight: 400,
-  fontSize: "12px",
-  lineHeight: "16px",
 };
 
 const PANEL_STYLE = {
@@ -86,9 +76,6 @@ const PANEL_STYLE = {
 
 const PANEL_HEADER_WRAPPER_STYLE = {
   padding: "8px 12px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "12px",
-  lineHeight: "16px",
   color: "#6a6a6a",
   borderBottom: "1px solid #e6e6e6",
 };
@@ -126,6 +113,7 @@ function renderLeadingIcon(item) {
  *
  * @param {string} [triggerLabel] - Label when using default trigger (with ellipsis). Omit when `trigger` is set.
  * @param {React.ReactNode} [trigger] - Custom trigger content inside the button (e.g. icon). When set, `triggerLabel` and default ellipsis are not shown; provide `ariaLabel` for a11y.
+ * @param {(args: { onClick: () => void, open: boolean, ariaLabel?: string }) => React.ReactNode} [renderTrigger] - Render a custom trigger control (e.g. Button or IconButton). When set, the default trigger button is not used.
  * @param {string} [ariaLabel] - Accessible name for the trigger button (required when `trigger` is used without visible text).
  * @param {React.ReactNode} [panelHeader] - Read-only block above menu items (e.g. metadata).
  * @param {boolean} [dividerAfterHeader=true] - Show a divider between `panelHeader` and items when `panelHeader` is set.
@@ -138,6 +126,7 @@ function renderLeadingIcon(item) {
 export default function DropdownMenu({
   triggerLabel,
   trigger = null,
+  renderTrigger = null,
   ariaLabel,
   panelHeader = null,
   dividerAfterHeader = true,
@@ -153,6 +142,7 @@ export default function DropdownMenu({
   const dropdownRef = useRef(null);
   const dropdownPanelRef = useRef(null);
 
+  const useRenderTrigger = typeof renderTrigger === "function";
   const useCustomTrigger = trigger != null;
   const mergedTriggerStyle = {
     ...DEFAULT_TRIGGER_STYLE,
@@ -231,20 +221,41 @@ export default function DropdownMenu({
   };
 
   return (
-    <div ref={dropdownRef} style={{ position: "relative", zIndex: dropdownOpen ? 1001 : "auto" }}>
-      <button
-        type="button"
-        aria-label={ariaLabel}
-        onClick={() => setDropdownOpen((prev) => !prev)}
-        style={mergedTriggerStyle}
-      >
-        {useCustomTrigger ? trigger : (
-          <>
-            {triggerLabel}
-            {ELLIPSIS_ICON}
-          </>
-        )}
-      </button>
+    <div
+      ref={dropdownRef}
+      style={{
+        position: "relative",
+        zIndex: dropdownOpen ? 1001 : "auto",
+        // Panel placement is measured from this wrapper's rect, so it must
+        // shrink-wrap the trigger. Without this, a menu dropped straight into a
+        // grid/flex container stretches to the row height and the panel opens a
+        // trigger-height too low.
+        alignSelf: "start",
+        justifySelf: "start",
+      }}
+    >
+      {useRenderTrigger ? (
+        renderTrigger({
+          onClick: () => setDropdownOpen((prev) => !prev),
+          open: dropdownOpen,
+          ariaLabel,
+        })
+      ) : (
+        <button
+          type="button"
+          className="MH-Type-Label-Base"
+          aria-label={ariaLabel}
+          onClick={() => setDropdownOpen((prev) => !prev)}
+          style={mergedTriggerStyle}
+        >
+          {useCustomTrigger ? trigger : (
+            <>
+              {triggerLabel}
+              {ELLIPSIS_ICON}
+            </>
+          )}
+        </button>
+      )}
       {dropdownOpen &&
         (() => {
           const tr = dropdownRef.current?.getBoundingClientRect();
@@ -276,7 +287,7 @@ export default function DropdownMenu({
             >
               {panelHeader != null && (
                 <>
-                  <div style={PANEL_HEADER_WRAPPER_STYLE}>{panelHeader}</div>
+                  <div className="MH-Type-Body-Base" style={PANEL_HEADER_WRAPPER_STYLE}>{panelHeader}</div>
                   {dividerAfterHeader ? <div style={DIVIDER_STYLE} role="separator" /> : null}
                 </>
               )}
@@ -297,10 +308,11 @@ export default function DropdownMenu({
                       : ITEM_STYLE;
 
                   const leadingIcon = renderLeadingIcon(item);
+                  const typeClassName = isStatic ? "MH-Type-Body-Base" : "MH-Type-Label-Base";
 
                   if (isStatic) {
                     return (
-                      <div key={item.key} style={style}>
+                      <div key={item.key} className={typeClassName} style={style}>
                         {leadingIcon}
                         <span>{item.label}</span>
                       </div>
@@ -312,6 +324,7 @@ export default function DropdownMenu({
                       key={item.key}
                       role="button"
                       tabIndex={0}
+                      className={typeClassName}
                       style={style}
                       onClick={(e) => {
                         // Portaled menu: native document listeners can fire before React’s

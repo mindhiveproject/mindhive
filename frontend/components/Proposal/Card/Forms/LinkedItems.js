@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Button, Icon, Modal, Tab } from "semantic-ui-react";
+import { Modal, Tab } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { TYPO } from "./utils";
@@ -18,6 +18,7 @@ import { GET_MY_ASSIGNMENTS } from "../../../Queries/Assignment";
 import AssignmentEditModal from "../../../TipTap/AssignmentEditModal"
 import AssignmentViewModal from "../../../TipTap/AssignmentViewModal"
 import AssignmentCopyModal from "../../../TipTap/AssignmentCopyModal";
+import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import { PreviewSection } from "./PreviewSection";
 import ResourceEditModal from "./ResourceEditModal";
@@ -475,43 +476,12 @@ export default function LinkedItems({
     },
   ];
 
-  const styledSecondaryButtonBlue = {
-    height: "30px",
-    padding: "16px 24px 16px 24px",
-    justifyContent: "center",
-    gap: "8px",
-    flexShrink: 0,
-    width: "auto",
-    display: "inline-flex",
-    alignItems: "center",
-    margin: "1rem 0",
-    background: "#336F8A",
-    color: "white",
-    borderRadius: "100px",
-    ...TYPO.bodyMedium,
-    cursor: "pointer",
-    transition: "background 0.3s ease",
-    border: "1.5px solid #336F8A",
-  };
-
   return (
     <>
       <Button
+        variant="subtle"
+        leadingIcon={<img src="/assets/icons/plus.svg" alt="Link Items" />}
         onClick={() => setOpen(true)}
-        style={{
-          display: "inline-flex",
-          height: "40px",
-          padding: "8px 24px 8px 16px",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "8px",
-          color: "#336F8A",
-          background: "white",
-          border: "2px solid #336F8A",
-          borderRadius: "100px",
-          cursor: "pointer",
-          ...TYPO.bodyMedium,
-        }}
       >
         {t("board.expendedCard.linkItems", "Link Items")} ({totalLinked})
       </Button>
@@ -541,12 +511,9 @@ export default function LinkedItems({
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
         >
 
-          <button
-            onClick={handleCloseModal}
-            style={styledSecondaryButtonBlue}
-            >
-            {t("board.expendedCard.done")}
-          </button>
+          <Button variant="filled" onClick={handleCloseModal}>
+            {t("board.expendedCard.done", {}, { default: "Done" })}
+          </Button>
         </Modal.Actions>
       </Modal>
 

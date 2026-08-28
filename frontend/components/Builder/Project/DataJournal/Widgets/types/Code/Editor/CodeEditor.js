@@ -32,7 +32,6 @@ export default function CodeEditor({ content, onChange, sectionId }) {
               label={item.label}
               leading={item.icon}
               selected
-              shape="square"
               style={{ backgroundColor: "#F6F9F8" }}
             />
           ))}

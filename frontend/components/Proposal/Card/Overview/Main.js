@@ -6,6 +6,7 @@ import { useState } from "react";
 import useTranslation from 'next-translate/useTranslation';
 
 import Homework from "./Homework";
+import Button from "../../../DesignSystem/Button";
 
 export default function OverviewOfIndividualCards({
   user,
@@ -36,12 +37,12 @@ export default function OverviewOfIndividualCards({
     <div className="post">
       <div className="proposalCardBoard">
         <div className="textBoard">
-          <button
-            className="secondary"
+          <Button
+            variant="outline"
             onClick={() => closeCard({ cardId: false, lockedByUser: false })}
           >
-            {t('board.close', 'Close')}
-          </button>
+            {t("board.close", {}, { default: "Close" })}
+          </Button>
           <div className="cardHeader">{proposalCard?.title}</div>
           <div className="cardDescription">
             {ReactHtmlParser(proposalCard?.description)}

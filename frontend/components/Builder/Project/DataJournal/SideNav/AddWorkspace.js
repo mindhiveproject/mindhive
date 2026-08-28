@@ -1,27 +1,13 @@
 import { useMutation } from "@apollo/client";
-import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import Button from "../../../../DesignSystem/Button";
+import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import { ADD_VIZCHAPTER } from "../../../../Mutations/VizChapter";
 import { GET_DATA_JOURNAL } from "../../../../Queries/DataJournal";
 
-const ADD_NEW_WORKSPACE_VALUE = "__add_new_workspace__";
-const ADD_TEMPLATE_WORKSPACE_VALUE = "__add_template_workspace__";
-
-const WORKSPACE_DROPDOWN_TRIGGER_STYLE = {
-  backgroundColor: "#F6F9F8",
-  border: "2px solid #E6E6E6",
-  fontWeight: 600,
-  fontSize: "16px",
-  color: "#5D5763",
-};
-
 export default function AddWorkspace({ journalId }) {
   const { t } = useTranslation("builder");
-  const [workspaceDropdownValue, setWorkspaceDropdownValue] = useState(
-    undefined
-  );
 
   const [addChapter, { loading, error }] = useMutation(ADD_VIZCHAPTER, {
     refetchQueries: [
@@ -51,41 +37,35 @@ export default function AddWorkspace({ journalId }) {
     });
   };
 
-  const addNewWorkspaceFromTemplate = () => {
-    console.log("addNewWorkspaceFromTemplate");
-  };
+  const blocked = loading || !journalId;
 
-  const handleWorkspaceDropdownChange = (next) => {
-    if (loading || !journalId) return;
-    if (next === ADD_NEW_WORKSPACE_VALUE) {
-      addNewWorkspace();
-      setWorkspaceDropdownValue(undefined);
-      return;
-    }
-    if (next === ADD_TEMPLATE_WORKSPACE_VALUE) {
-      addNewWorkspaceFromTemplate();
-      setWorkspaceDropdownValue(undefined);
-      return;
-    }
-    setWorkspaceDropdownValue(next);
-  };
+  const label = t(
+    "dataJournal.sideNav.addWorkspaceDropdown",
+    {},
+    { default: "Workspace" },
+  );
+  const ariaLabel = t(
+    "dataJournal.sideNav.addWorkspaceAria",
+    {},
+    { default: "Add a workspace to this journal" },
+  );
 
-  const workspaceDropdownOptions = [
+  const menuItems = [
     {
-      value: ADD_NEW_WORKSPACE_VALUE,
+      key: "scratch",
       label: t("dataJournal.sideNav.addWorkspaceScratch", {}, {
         default: "Create a workspace from scratch",
       }),
+      onClick: addNewWorkspace,
     },
     // {
-    //   value: ADD_TEMPLATE_WORKSPACE_VALUE,
+    //   key: "template",
     //   label: t("dataJournal.sideNav.addWorkspaceTemplate", {}, {
     //     default: "Add a workspace template",
     //   }),
+    //   onClick: addNewWorkspaceFromTemplate,
     // },
   ];
-
-  const blocked = loading || !journalId;
 
   if (error) {
     return (
@@ -99,27 +79,23 @@ export default function AddWorkspace({ journalId }) {
 
   return (
     <div className="addWorkspaceBtn">
-      <DropdownSelect
-        value={workspaceDropdownValue}
-        options={workspaceDropdownOptions}
-        onChange={handleWorkspaceDropdownChange}
-        ariaLabel={t("dataJournal.sideNav.addWorkspaceDropdown", {}, {
-          default: "Workspace",
-        })}
-        placeholder={t("dataJournal.sideNav.addWorkspaceDropdown", {}, {
-          default: "Workspace",
-        })}
-        icon="+"
-        triggerStyle={{
-          ...WORKSPACE_DROPDOWN_TRIGGER_STYLE,
-          ...(blocked
-            ? {
-                opacity: 0.55,
-                pointerEvents: "none",
-                cursor: "not-allowed",
-              }
-            : {}),
-        }}
+      <DropdownMenu
+        ariaLabel={ariaLabel}
+        renderTrigger={({ onClick, open, ariaLabel: triggerAriaLabel }) => (
+          <Button
+            variant="subtle"
+            leadingIcon={<img src="/assets/icons/plus.svg" alt="" />}
+            type="button"
+            aria-label={triggerAriaLabel}
+            aria-expanded={open}
+            aria-haspopup="menu"
+            onClick={onClick}
+            disabled={blocked}
+          >
+            {label}
+          </Button>
+        )}
+        items={menuItems}
       />
     </div>
   );

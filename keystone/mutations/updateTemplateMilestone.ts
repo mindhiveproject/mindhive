@@ -1,4 +1,4 @@
-import { assertTemplateBoardTeacher } from "./resolveMilestonesForBoard";
+import { assertCanMutateClassTemplateBoard } from "./resolveMilestonesForBoard";
 
 type UpdateTemplateMilestoneInput = {
   id: string;
@@ -7,6 +7,7 @@ type UpdateTemplateMilestoneInput = {
   formDefinitionId?: string | null;
   canReviewPermissionIds?: string[];
   showInFeedbackCenter?: boolean;
+  statusTarget?: "board" | "study";
   isActive?: boolean;
   position?: number;
 };
@@ -23,13 +24,16 @@ async function updateTemplateMilestone(
   if (!existing || existing.scope !== "template") {
     throw new Error("Template milestone not found.");
   }
-  await assertTemplateBoardTeacher(context, existing.templateBoard.id);
+  await assertCanMutateClassTemplateBoard(context, existing.templateBoard.id);
 
   const data: Record<string, unknown> = {};
   if (input.title != null) data.title = input.title;
   if (input.description != null) data.description = input.description;
   if (input.showInFeedbackCenter != null) {
     data.showInFeedbackCenter = input.showInFeedbackCenter;
+  }
+  if (input.statusTarget != null) {
+    data.statusTarget = input.statusTarget;
   }
   if (input.isActive != null) data.isActive = input.isActive;
   if (input.position != null) data.position = input.position;

@@ -28,20 +28,14 @@ export const StyledActionPage = styled.div`
     grid-gap: 10px;
     grid-template-columns: auto 1fr;
   }
+  /* Type comes from the MH-Type-* utility classes in the markup; these only
+     carry the text tone, which has no design-system token yet. */
   .title {
-    font-family: "Nunito";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
     color: #3b3b3b;
   }
-  .subtitle {
-    font-family: "Nunito";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 137%;
+  .subtitle,
+  .listTitle,
+  .listSubtitle {
     color: #626269;
   }
   .warning {
@@ -64,11 +58,8 @@ export const StyledActionPage = styled.div`
     grid-template-columns: 1fr auto;
   }
   .cardTitle {
-    font-family: "Nunito";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 125%;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
   }
   .lists {
@@ -84,24 +75,6 @@ export const StyledActionPage = styled.div`
     grid-gap: 10px;
     grid-template-columns: auto 1fr;
     align-items: center;
-  }
-  .listTitle {
-    font-family: "Nunito";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #626269;
-  }
-  .listSubtitle {
-    font-family: "Nunito";
-    font-style: italic;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #969696;
   }
 
   .reviews {
@@ -127,14 +100,13 @@ export const StyledActionPage = styled.div`
       grid-gap: 15px;
     }
     .reviewerComment {
-      font-family: "Nunito";
-      font-size: 16px;
-      line-height: 137%;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #3b3b3b;
     }
     .questionTitle {
-      font-size: 18px;
-      font-weight: bold;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       margin-bottom: 5px;
     }
     .questionAnswer {
@@ -166,13 +138,10 @@ export const StyledReviewPage = styled.div`
       justify-content: flex-start;
       align-items: center;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-      font-family: Lato;
-      font-style: normal;
-      font-weight: 400;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       text-align: left;
       color: #007c70;
-      font-size: 18px;
       .backBtn {
         cursor: pointer;
       }
@@ -188,12 +157,8 @@ export const StyledReviewPage = styled.div`
   .reviewBoard {
     display: grid;
     grid-gap: 30px;
-    font-family: Lato;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 21px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
 
     .block {
       display: grid;
@@ -212,11 +177,8 @@ export const StyledReviewPage = styled.div`
   }
   .descriptionMenu {
     .item {
-      font-family: Lato;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 23px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #1a1a1a;
     }
   }
@@ -277,12 +239,8 @@ export const StyledReviewBoard = styled.div`
       .allReviewsToggle {
         cursor: pointer;
         color: #007c70;
-        font-family: Lato;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 24px;
-        letter-spacing: 0em;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         text-align: left;
         text-decoration-line: underline;
       }
@@ -306,10 +264,8 @@ export const StyledReviewBoard = styled.div`
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      font-family: Inter;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 16.94px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       text-align: left;
     }
     .reviewerComments {
@@ -318,17 +274,13 @@ export const StyledReviewBoard = styled.div`
       .reviewerComment {
         display: grid;
         .question {
-          font-family: Lato;
-          font-size: 16px;
-          font-weight: 600;
-          line-height: 20px;
+          font: var(--MH-Type-Title-Base);
+          letter-spacing: 0;
           text-align: left;
         }
         .answer {
-          font-family: Lato;
-          font-size: 14px;
-          font-weight: 400;
-          line-height: 24px;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
           text-align: left;
         }
       }
@@ -342,12 +294,8 @@ export const StyledReviewBoard = styled.div`
     box-sizing: border-box;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-    font-family: Lato;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 24px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     text-align: left;
     cursor: pointer;
   }
@@ -360,22 +308,14 @@ export const StyledReviewCard = styled.div`
   height: 80vh;
   overflow: auto;
   h2 {
-    font-family: Lato;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 36px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     text-align: left;
     color: #1a1a1a;
   }
   p {
-    font-family: Lato;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
   }
 
@@ -390,39 +330,10 @@ export const StyledReviewCard = styled.div`
     grid-column-gap: 24px;
     grid-template-columns: auto 1fr;
     .step {
-      font-family: Lato;
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       text-align: left;
       color: var(--neutral_grey2, #3b3b3b);
-    }
-    .submitBtn {
-      display: grid;
-      grid-gap: 8px;
-      grid-template-columns: auto 1fr;
-      width: fit-content;
-      border-radius: 5px;
-      padding: 10px 30px;
-      font-family: Lato;
-      font-size: 17px;
-      line-height: 22px;
-    }
-    .active {
-      border: 2px solid #007c70;
-      background: #007c70;
-      color: white;
-      cursor: pointer;
-    }
-    .locked {
-      border: 2px solid #e5e5e5;
-      background: #e5e5e5;
-      color: #8a888d;
-    }
-    .view {
-      border: 2px solid var(--PRIMARY_GREEN3, #007c70);
-      background: white;
-      color: var(--PRIMARY_GREEN3, #007c70);
     }
   }
 `;
@@ -431,6 +342,22 @@ export const StyledDasboardReview = styled.div`
   .overview {
     display: grid;
     grid-gap: 16px;
+    .overviewHeader {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 8px;
+      h1 {
+        margin: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+      p {
+        margin: 0;
+        max-width: 640px;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
+      }
+    }
     .board {
       display: grid;
       grid-gap: 24px;
@@ -440,6 +367,16 @@ export const StyledDasboardReview = styled.div`
         grid-gap: 16px;
         grid-template-columns: 3fr 1fr 1fr 1fr;
       }
+      /* !important: DropdownSelect sets these inline for its clamp-and-wrap
+         full-width case. Here the trigger is a compact filter — keep it to one
+         line and ellipsize instead. */
+      .searchTopArea [data-dropdown-label] {
+        white-space: nowrap !important;
+        -webkit-line-clamp: 1 !important;
+        line-clamp: 1 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
       .checkboxArea {
         display: grid;
         align-items: center;
@@ -447,12 +384,11 @@ export const StyledDasboardReview = styled.div`
       input,
       textarea,
       select {
-        font-family: Lato;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         border: 1px solid #cccccc;
         border-radius: 4px;
         width: 100%;
-        font-size: 16px;
-        line-height: 24px;
         padding: 12px;
       }
       .dropdown {
@@ -461,18 +397,16 @@ export const StyledDasboardReview = styled.div`
         justify-content: start;
         border-radius: 4px;
         width: 100%;
-        font-size: 16px;
-        line-height: 24px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         .default.text {
           color: #979797;
         }
       }
       .checkbox {
         label {
-          font-family: Inter;
-          font-size: 16px;
-          font-weight: 500;
-          line-height: 20px;
+          font: var(--MH-Type-Label-Large);
+          letter-spacing: 0;
           text-align: left;
           color: #666666;
         }
@@ -484,7 +418,7 @@ export const StyledDasboardReview = styled.div`
       grid-template-columns: auto auto 1fr;
     }
 
-    .customlink: hover {
+    .customlink:hover {
       opacity: 1;
       .card {
         box-shadow: 0px 4px 4px 0px #97979d40;
@@ -562,10 +496,8 @@ export const StyledDasboardReview = styled.div`
         padding: 1px 6px;
         width: fit-content;
         border-radius: 4px;
-        font-family: Lato;
-        font-size: 11px;
-        font-weight: 500;
-        line-height: 18px;
+        font: var(--MH-Type-Label-Small);
+        letter-spacing: 0;
         text-align: left;
       }
       .proposal {
@@ -592,10 +524,8 @@ export const StyledDasboardReview = styled.div`
         grid-template-columns: 1fr auto;
         align-content: center;
         justify-items: end;
-        font-family: Lato;
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 18px;
+        font: var(--MH-Type-Label-Small);
+        letter-spacing: 0;
         text-align: left;
         .option {
           display: grid;
@@ -639,10 +569,8 @@ export const StyledDasboardReview = styled.div`
         background: #ffffff;
         padding: 24px 48px;
 
-        font-family: Lato;
-        font-size: 22px;
-        font-weight: 400;
-        line-height: 30.14px;
+        font: var(--MH-Type-Body-Large);
+        letter-spacing: 0;
         text-align: left;
 
         .topLine {
@@ -652,10 +580,8 @@ export const StyledDasboardReview = styled.div`
         }
         .title {
           color: #171717;
-          font-family: Lato;
-          font-size: 32px;
-          font-weight: 700;
-          line-height: 40px;
+          font: var(--MH-Type-Heading-Base);
+          letter-spacing: 0;
           text-align: left;
         }
         .studyWhatWhoHow {
@@ -714,12 +640,8 @@ export const StyledDasboardReview = styled.div`
       border-radius: 8px;
 
       p {
-        font-family: Lato;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 23px;
-        letter-spacing: 0em;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #666666;
       }
     }
@@ -799,10 +721,8 @@ export const StyledDasboardReview = styled.div`
         align-items: center;
         cursor: pointer;
         .text {
-          font-family: Lato;
-          font-size: 15px;
-          font-weight: 600;
-          line-height: 20px;
+          font: var(--MH-Type-Title-Small);
+          letter-spacing: 0;
           text-align: left;
           color: var(--neutral_grey2, #3b3b3b);
         }
@@ -810,10 +730,8 @@ export const StyledDasboardReview = styled.div`
       .title {
         display: grid;
         justify-content: center;
-        font-family: Lato;
-        font-size: 15px;
-        font-weight: 500;
-        line-height: 20px;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
         text-align: center;
         color: var(--neutral_grey2, #3b3b3b);
       }
@@ -833,7 +751,8 @@ export const StyledDasboardReview = styled.div`
       overflow-x: auto;
 
       .headerMenu {
-        font-size: 18px;
+        font: var(--MH-Type-Label-Large);
+        letter-spacing: 0;
         display: grid;
         grid-template-columns: repeat(auto-fill, 150px);
         cursor: pointer;
@@ -876,10 +795,8 @@ export const StyledDasboardReview = styled.div`
         .ui.accordion:not(.styled) .accordion .title ~ .content:not(.ui),
         .ui.accordion:not(.styled) .title ~ .content:not(.ui) {
           overflow: hidden;
-          font-family: Lato;
-          font-size: 18px;
-          font-weight: 400;
-          line-height: 24.66px;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
           text-align: left;
           color: #626269;
           border-bottom: 1px solid var(--neutral_grey2, #3b3b3b);
@@ -888,10 +805,8 @@ export const StyledDasboardReview = styled.div`
           padding: 24px 16px;
         }
         .ui.accordion .title:not(.ui) {
-          font-family: Lato;
-          font-size: 24px;
-          font-weight: 600;
-          line-height: 32px;
+          font: var(--MH-Type-Title-Large);
+          letter-spacing: 0;
           text-align: left;
           padding: 24px 16px;
           margin-top: 24px;
@@ -914,19 +829,15 @@ export const StyledDasboardReview = styled.div`
           display: grid;
           grid-gap: 10px;
           grid-template-columns: 1fr auto;
-          font-family: Lato;
-          font-size: 16px;
-          font-weight: 600;
-          line-height: 20px;
+          font: var(--MH-Type-Title-Small);
+          letter-spacing: 0;
           text-align: left;
           color: var(--SECONDARY_BLUE1, #28619e);
         }
 
         h1 {
-          font-family: Lato;
-          font-size: 28px;
-          font-weight: 700;
-          line-height: 35px;
+          font: var(--MH-Type-Heading-Small);
+          letter-spacing: 0;
           text-align: left;
           color: #171717;
         }
@@ -943,11 +854,9 @@ export const StyledDasboardReview = styled.div`
     padding: 27px 44px 37px 50px;
 
     .subtitle {
-      font-family: "Nunito";
+      font: var(--MH-Type-Body-Large);
       font-style: italic;
-      font-weight: 400;
-      font-size: 20px;
-      line-height: 137%;
+      letter-spacing: 0;
     }
 
     .reviewItems {
@@ -957,29 +866,18 @@ export const StyledDasboardReview = styled.div`
       margin-bottom: 40px;
     }
     h1 {
-      font-family: Lato;
-      font-size: 24px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 36px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Heading-Small);
+      letter-spacing: 0;
       text-align: left;
     }
     h2 {
-      font-family: Lato;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 700, Bold;
-      line-height: 24px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       margin-bottom: 0;
     }
     p {
-      font-family: Lato;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 24px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       text-align: left;
     }
 
@@ -991,12 +889,8 @@ export const StyledDasboardReview = styled.div`
       border: 1px solid #cccccc;
       box-sizing: border-box;
       border-radius: 4px;
-      font-family: Lato;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 24px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       text-align: left;
     }
     .updateMessage {
@@ -1006,19 +900,14 @@ export const StyledDasboardReview = styled.div`
       display: grid;
       grid-gap: 5px;
       .question {
-        font-family: "Nunito";
-        font-style: normal;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 137%;
+        font: var(--MH-Type-Label-Large);
+        letter-spacing: 0;
         color: #171717;
       }
       .subtitle {
-        font-family: "Nunito";
+        font: var(--MH-Type-Body-Base);
         font-style: italic;
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 137%;
+        letter-spacing: 0;
         color: #6c6c6c;
       }
       .dropdownOption {
@@ -1028,23 +917,16 @@ export const StyledDasboardReview = styled.div`
         align-items: center;
         padding: 5px;
         .title {
-          font-family: "Nunito";
-          font-style: normal;
-          font-weight: 600;
-          font-size: 16px;
-          line-height: 24px;
+          font: var(--MH-Type-Title-Base);
           display: flex;
           align-items: center;
-          letter-spacing: 0.5px;
+          letter-spacing: 0;
           color: #171717;
           margin-bottom: 2px;
         }
         .subtitle {
-          font-family: "Nunito";
-          font-style: normal;
-          font-weight: 400;
-          font-size: 14px;
-          line-height: 16px;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
           color: #626269;
         }
       }
@@ -1054,14 +936,10 @@ export const StyledDasboardReview = styled.div`
         grid-template-columns: auto 1fr;
         align-items: center;
         .title {
-          font-family: "Nunito";
-          font-style: normal;
-          font-weight: 600;
-          font-size: 16px;
-          line-height: 24px;
+          font: var(--MH-Type-Title-Base);
           display: flex;
           align-items: center;
-          letter-spacing: 0.5px;
+          letter-spacing: 0;
           color: #171717;
         }
       }
@@ -1083,11 +961,8 @@ export const StyledDasboardReview = styled.div`
           padding: 10px 20px !important;
           width: fit-content !important;
           .title {
-            font-family: "Nunito";
-            font-style: normal;
-            font-weight: 400;
-            font-size: 16px;
-            line-height: 22px;
+            font: var(--MH-Type-Body-Base);
+            letter-spacing: 0;
             display: flex;
             color: #5d5763;
           }
@@ -1097,106 +972,80 @@ export const StyledDasboardReview = styled.div`
   }
 
   .p12 {
-    font-family: Lato;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 8px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-align: left;
     color: #6e6a6a;
   }
   .p12_400 {
-    font-family: Lato;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
   .p13 {
-    font-family: Lato;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 24px;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     text-align: left;
     color: #47484d;
   }
   .p14 {
-    font-family: Lato;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
     color: var(--neutral_grey2, #3b3b3b);
   }
   .p16 {
-    font-family: Lato;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: center;
     color: #6e6d71;
   }
   .p16_500 {
-    font-family: Inter;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
   .p16_600 {
-    font-family: Lato;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     text-align: left;
     color: var(--neutral_black1, #171717);
   }
   .p17 {
-    font-family: Lato;
-    font-size: 17px;
-    font-weight: 600;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     text-align: left;
   }
   .p18 {
-    font-family: Lato;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 32px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: var(--neutral_black1, #171717);
   }
   .p22 {
-    font-family: Lato;
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     text-align: left;
     color: #007c70;
   }
   .h24 {
     //styleName: H3;
-    font-family: Lato;
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 32px;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     text-align: left;
     color: #666666;
   }
   .h28 {
-    font-family: Lato;
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 35px;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     text-align: left;
     color: #171717;
   }
   .h40 {
     //styleName: H2;
-    font-family: Lato;
-    font-size: 40px;
-    font-weight: 600;
-    line-height: 50px;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     text-align: left;
     color: var(--neutral_black1, #171717);
   }
@@ -1210,11 +1059,8 @@ export const StyledDasboardReview = styled.div`
   }
   .descriptionMenu {
     .item {
-      font-family: Lato;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 23px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #1a1a1a;
     }
   }

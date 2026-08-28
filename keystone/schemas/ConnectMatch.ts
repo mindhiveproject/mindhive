@@ -8,11 +8,10 @@ import {
 } from "@keystone-6/core/fields";
 import { rules, isSignedIn } from "../access";
 import { sendNotificationEmail } from "../lib/mail";
-
-const frontendUrl = () =>
-  (process.env.NODE_ENV === "development"
-    ? process.env.FRONTEND_URL_DEV
-    : process.env.FRONTEND_URL) || "https://mindhive.science";
+import {
+  pickStudentClassForRound,
+  studentOpportunitiesUrl,
+} from "../lib/connectRoundLinks";
 
 export const ConnectMatch = list({
   access: {
@@ -76,9 +75,20 @@ export const ConnectMatch = list({
         const match = await context.sudo().query.ConnectMatch.findOne({
           where: { id: item.id },
           query: `
-            student { email firstName username }
+            student {
+              email
+              firstName
+              username
+              studentIn { id code }
+            }
             opportunity { title }
-            round { id title }
+            round {
+              id
+              title
+              classNetwork {
+                classes { id code }
+              }
+            }
           `,
         });
         const email = match?.student?.email;
@@ -87,11 +97,19 @@ export const ConnectMatch = list({
         const roundTitle = match?.round?.title || "your matching round";
         const studentName =
           match?.student?.firstName || match?.student?.username || "there";
+        const targetClass = pickStudentClassForRound(
+          match?.student?.studentIn,
+          match?.round?.classNetwork?.classes,
+        );
+        const dashboardUrl = studentOpportunitiesUrl(
+          targetClass?.code,
+          match?.round?.id,
+        );
         await sendNotificationEmail(
           email,
           `You're matched: ${oppTitle}`,
           `Hi ${studentName}, your match for "${roundTitle}" is now active — you've been placed on "${oppTitle}". Open your dashboard for details, and remember to rate the experience when the project wraps up.`,
-          `${frontendUrl()}/dashboard/connect/participate?round=${match?.round?.id || ""}`,
+          dashboardUrl,
         );
       } catch (e) {
         // eslint-disable-next-line no-console

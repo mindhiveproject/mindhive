@@ -4,8 +4,6 @@ import sortBy from "lodash/sortBy";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
-import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
-import { v1 as uuidv1 } from "uuid";
 
 import Inner from "./Inner";
 import useTranslation from "next-translate/useTranslation";
@@ -17,8 +15,6 @@ import {
   UPDATE_SECTION,
   DELETE_SECTION,
 } from "../../Mutations/Proposal";
-import { isClassTemplateBoard } from "../../Utils/proposalBoard";
-import TemplateMilestoneManager from "../../Builder/Project/ProjectBoard/Board/Builder/TemplateMilestoneManager";
 
 const Board = ({
   proposalId,
@@ -46,7 +42,6 @@ const Board = ({
   const [createSectionMut, createSectionState] = useMutation(CREATE_SECTION);
   const [updateSectionMut, updateSectionState] = useMutation(UPDATE_SECTION);
   const [deleteSectionMut, deleteSectionState] = useMutation(DELETE_SECTION);
-  const [updateCardEdit] = useMutation(UPDATE_CARD_EDIT);
 
   const hasClones = proposal?.prototypeFor?.length > 0;
 
@@ -67,8 +62,9 @@ const Board = ({
   );
 
   const deleteSection = useCallback(
-    async (opts) => {
+    async (opts, { skipPropagate = false } = {}) => {
       await deleteSectionMut(opts);
+      if (skipPropagate) return;
       if (autoUpdateStudentBoards && propagateToClones) {
         try {
           await propagateToClones();
@@ -99,7 +95,6 @@ const Board = ({
   );
 
   const [errors, setErrors] = useState([]);
-  const backfillPublicIdDoneRef = useRef(null);
 
   useEffect(() => {
     if (proposal) {
@@ -143,41 +138,6 @@ const Board = ({
   const handleAddMilestoneModalOpened = useCallback(() => {
     setAddMilestoneTargetSectionId(null);
   }, []);
-
-  useEffect(() => {
-    if (!proposal?.id || !isClassTemplateBoard(proposal)) return;
-    if (!Array.isArray(proposal.sections)) return;
-    if (backfillPublicIdDoneRef.current === proposal.id) return;
-
-    const sectionsWithCards = proposal.sections || [];
-    const cardsWithoutPublicId = sectionsWithCards
-      .flatMap((section) => section?.cards || [])
-      .filter((card) => card && !card.publicId);
-
-    if (cardsWithoutPublicId.length === 0) {
-      backfillPublicIdDoneRef.current = proposal.id;
-      return;
-    }
-
-    cardsWithoutPublicId.forEach((card) => {
-      updateCardEdit({
-        variables: {
-          id: card.id,
-          input: {
-            publicId: uuidv1(),
-          },
-        },
-      }).catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(
-          "Failed to backfill card publicId in Proposal Board:",
-          e
-        );
-      });
-    });
-
-    backfillPublicIdDoneRef.current = proposal.id;
-  }, [proposal, updateCardEdit]);
 
   // Check for duplicate action cards only in proposalBuildMode
   const actionTypes = [
@@ -225,13 +185,6 @@ const Board = ({
       `Error! ${error.message}`
     );
 
-  // Same gate as the newer Builder/Project/ProjectBoard tree: only
-  // template boards being actively edited (not previewed) get the
-  // Review-steps panel. Kept consistent so an admin editing the same
-  // board from either tree sees the same affordances.
-  const showTemplateMilestoneManager =
-    !isPreview && proposalBuildMode && isClassTemplateBoard(proposal);
-
   return (
     <>
       {proposalBuildMode && errors.length > 0 && (
@@ -243,12 +196,6 @@ const Board = ({
             ))}
           </Message.List>
         </Message>
-      )}
-      {showTemplateMilestoneManager && (
-        <TemplateMilestoneManager
-          templateBoardId={proposal.id}
-          board={proposal}
-        />
       )}
       <Inner
         board={proposal}

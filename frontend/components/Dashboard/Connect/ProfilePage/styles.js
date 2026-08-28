@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import Chip from "../../../DesignSystem/Chip";
+
 const imgBackground = "/assets/connect/background.svg";
 
 export const FALLBACK_COLORS = [
@@ -97,32 +99,21 @@ export const NameRow = styled.div`
   gap: 15px;
 
   .h1 {
-    font-family: "Inter", sans-serif;
-    font-size: 46px;
-    font-weight: 700;
-    line-height: 52px;
+    font: var(--MH-Type-Heading-Large);
+    letter-spacing: 0;
     color: #171717;
     margin: 0;
   }
 `;
 
-export const PronounTag = styled.span`
-  padding: 6px 12px;
-  border-radius: 8px;
-  background: #edf2ee;
-  color: #171717;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-`;
+export const PronounTag = ({ children }) => (
+  <Chip variant="static" tone="neutral" label={children} />
+);
 
 export const Tagline = styled.p`
   margin: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #171717;
 `;
 
@@ -144,8 +135,8 @@ export const Avatar = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 40px;
+  font: var(--MH-Type-Heading-Base);
+  letter-spacing: 0;
   color: #1d1b20;
   position: relative;
 
@@ -161,8 +152,8 @@ export const Avatar = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
-    font-family: "Inter", sans-serif;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #1d1b20;
   }
 `;
@@ -198,10 +189,8 @@ export const MetaItem = styled.div`
   justify-content: center;
   gap: 10px;
   color: #171717;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
+  font: var(--MH-Type-Title-Small);
+  letter-spacing: 0;
 
   i.icon {
     color: #171717;
@@ -272,17 +261,15 @@ export const Section = styled.div`
 export const SectionTitle = styled.h3`
   margin: 0;
   justify-content: flex-end;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 16px;
+  font: var(--MH-Type-Title-Base);
+  letter-spacing: 0;
   color: #171717;
 `;
 
 export const BodyCopy = styled.p`
   margin: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  line-height: 24px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #2a343d;
   white-space: pre-line;
 `;
@@ -304,28 +291,9 @@ export const ChipList = styled.div`
   flex-wrap: wrap;
 `;
 
-export const InterestTag = styled.span`
-  display: inline-flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: fit-content;
-  min-width: fit-content;
-  min-height: 32px;
-  height: fit-content;
-  max-height: 64px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  background: #f3f3f3;
-  color: #171717;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 20px;
-  white-space: normal;
-  word-break: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
+export const InterestTag = ({ children }) => (
+  <Chip variant="static" tone="neutral" label={children} labelLines={2} />
+);
 
 export const FieldGrid = styled.div`
   display: grid;
@@ -341,18 +309,15 @@ export const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: #171717;
 
   input,
   textarea,
   select {
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
     border: 1px solid #a1a1a1;
     border-radius: 8px;

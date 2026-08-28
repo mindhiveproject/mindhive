@@ -6,6 +6,7 @@ import Tools from "./Tools";
 import Program from "./Program";
 
 import { StyledTeachersInfo } from "../../styles/StyledDocument";
+import Button from "../../DesignSystem/Button";
 export default function NotionData({ pageId }) {
   const router = useRouter();
   const currentLocale = router.locale;
@@ -135,7 +136,9 @@ export default function NotionData({ pageId }) {
             target="_blank"
             href={notionContent.interestLink || "https://docs.google.com/forms/d/e/1FAIpQLSfeaomKF-CrgKPAWF--Dy-IQpxjX1ginylqRJQ11SSnRjXKmQ/viewform?usp=sf_link"}
           >
-            <button>{notionContent.interestButton || "Interested? Fill out our contact form"}</button>
+            <Button variant="outline">
+              {notionContent.interestButton || "Interested? Fill out our contact form"}
+            </Button>
           </a>
         </div>
         <p className="centered">
@@ -180,7 +183,7 @@ export default function NotionData({ pageId }) {
               </div>
               <div>
                 <Link href={`${notionContent.pic1Link}`}>
-                  <button className="secondary">{notionContent.pic1ButtonText}</button>
+                  <Button variant="outline">{notionContent.pic1ButtonText}</Button>
                 </Link>
               </div>
             </div>
@@ -197,7 +200,7 @@ export default function NotionData({ pageId }) {
               </div>
               <div>
               <Link href={`${notionContent.pic2Link}`}>
-                  <button className="secondary">{notionContent.pic2ButtonText}</button>
+                  <Button variant="outline">{notionContent.pic2ButtonText}</Button>
                 </Link>
               </div>
             </div>
@@ -217,7 +220,7 @@ export default function NotionData({ pageId }) {
                   target="_blank"
                   href={`${notionContent.pic3Link}`}
                 >
-                  <button className="secondary">{notionContent.pic3ButtonText}</button>
+                  <Button variant="outline">{notionContent.pic3ButtonText}</Button>
                 </a>
               </div>
             </div>
@@ -257,7 +260,7 @@ export default function NotionData({ pageId }) {
                 target="_blank"
                 href={`${notionContent.caseStudyLink}`}
               >
-                <button className="secondary">{notionContent.caseStudyButton}</button>
+                <Button variant="outline">{notionContent.caseStudyButton}</Button>
               </a>
             </div>
           </div>
@@ -271,7 +274,7 @@ export default function NotionData({ pageId }) {
             target="_blank"
             href={notionContent.interestLink || "https://docs.google.com/forms/d/e/1FAIpQLSfeaomKF-CrgKPAWF--Dy-IQpxjX1ginylqRJQ11SSnRjXKmQ/viewform?usp=sf_link"}
           >
-            <button>{notionContent.getInTouch}</button>
+            <Button variant="outline">{notionContent.getInTouch}</Button>
           </a>
         </div>
 

@@ -4,10 +4,8 @@ const StyledSettings = styled.div`
   display: grid;
   h3 {
     //styleName: H3;
-    font-family: Lato;
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 32px;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     text-align: left;
   }
 
@@ -71,29 +69,23 @@ const StyledSettings = styled.div`
 
   .p24 {
     //styleName: Form Text Top Header Type;
-    font-family: Lato;
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 32px;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     text-align: left;
     color: #000000;
   }
 
   .p24-thin {
     //styleName: Form Text Top Header Type;
-    font-family: Lato;
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 32px;
+    font: var(--MH-Type-Body-Large);
+    letter-spacing: 0;
     text-align: left;
     color: #000000;
   }
 
   .p18 {
-    font-family: Lato;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     text-align: left;
     color: var(--neutral_black1, #171717);
   }

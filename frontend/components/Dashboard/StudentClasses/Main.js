@@ -1,8 +1,10 @@
 import Link from "next/link";
+import clsx from "clsx";
 import ClassPage from "./ClassPage/Main";
 
 import ClassesList from "./ClassesList";
 import StyledClass from "../../styles/StyledClass";
+import Button from "../../DesignSystem/Button";
 import useTranslation from "next-translate/useTranslation";
 
 export default function StudentClasses({ query, user }) {
@@ -12,17 +14,29 @@ export default function StudentClasses({ query, user }) {
   if (!selector) {
     return (
       <StyledClass>
-        <h1>{t("myClasses")}</h1>
-        <Link href="/signup/student">
-          <button>{t("joinClass")}</button>
-        </Link>
+        <div className="teacherClassesHeader">
+          <h1 className="MH-Type-Heading-Base">
+            {t("myClasses", {}, { default: "My classes" })}
+          </h1>
+          <Link href="/signup/student">
+            <Button variant="filled">
+              {t("joinClass", {}, { default: "Join class" })}
+            </Button>
+          </Link>
+        </div>
         <ClassesList query={query} user={user} />
       </StyledClass>
     );
   }
 
+  const isOpportunitiesFullscreen =
+    query?.page === "opportunities" &&
+    (!!query?.opportunity || !!query?.round);
+
   return (
-    <StyledClass>
+    <StyledClass
+      className={clsx(isOpportunitiesFullscreen && "isContentFullscreen")}
+    >
       <ClassPage code={selector} user={user} query={query} />
     </StyledClass>
   );

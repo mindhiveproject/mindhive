@@ -152,7 +152,6 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
               <Chip
                 key={option.value}
                 label={option.label}
-                shape="square"
                 selected={selected}
                 style={selected ? CHIP_SELECTED_STYLE : undefined}
                 onClick={() => setCreatedBy(option.value)}

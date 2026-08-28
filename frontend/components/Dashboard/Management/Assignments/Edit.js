@@ -8,9 +8,12 @@ import { GET_TEMPLATE_ASSIGNMENT, GET_TEMPLATE_ASSIGNMENTS } from "../../../Quer
 import { EDIT_ASSIGNMENT } from "../../../Mutations/Assignment";
 
 import useForm from "../../../../lib/useForm";
+import Button from "../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function EditAssignment({ user, id }) {
   const router = useRouter();
+  const { t } = useTranslation("dashboard");
   const { data, loading, error } = useQuery(GET_TEMPLATE_ASSIGNMENT, { variables: { id } });
   const assignment = data?.assignment || { title: ""};
 
@@ -47,7 +50,9 @@ export default function EditAssignment({ user, id }) {
   return (
     <div>
       <AssignmentForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save</button>
+      <Button variant="filled" type="button" onClick={handleSave}>
+        {t("management.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

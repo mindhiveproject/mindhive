@@ -1,4 +1,4 @@
-import { getTemplateOptionKey } from "../../../../lib/classTemplateBoards";
+import { getOptionKey } from "../../../../lib/classTemplateBoards";
 
 export default function TemplateOptionCards({
   options,
@@ -9,10 +9,18 @@ export default function TemplateOptionCards({
   if (!options?.length) return null;
 
   return (
-    <div className="templateOptionCards" role="listbox" aria-label={t("newProject.selectTemplate", {}, { default: "Select template" })}>
-      {options.map(({ board, class: myclass }) => {
-        const key = getTemplateOptionKey(board, myclass);
+    <div
+      className="templateOptionCards"
+      role="listbox"
+      aria-label={t("newProject.selectTemplate", {}, {
+        default: "Select template",
+      })}
+    >
+      {options.map((option) => {
+        const { board, class: myclass, origin } = option;
+        const key = getOptionKey(option);
         const isSelected = key === selectedKey;
+        const isPublic = origin === "public";
 
         return (
           <button
@@ -29,11 +37,15 @@ export default function TemplateOptionCards({
           >
             <span className="templateOptionCardTitle">{board.title}</span>
             <span className="templateOptionCardClass">
-              {t(
-                "newProject.templateClassLabel",
-                { className: myclass.title },
-                { default: "Class: {{className}}" }
-              )}
+              {isPublic
+                ? t("newProject.templatePublicLabel", {}, {
+                    default: "Platform public template",
+                  })
+                : t(
+                    "newProject.templateClassLabel",
+                    { className: myclass?.title },
+                    { default: "Class: {{className}}" }
+                  )}
             </span>
           </button>
         );

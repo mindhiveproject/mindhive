@@ -18,9 +18,7 @@ export const StyledAddColumnModal = styled.div`
   }
 
   .addColumnModalRailLabel {
-    font-family: Inter, sans-serif;
-    font-size: 12px;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Small);
     text-transform: uppercase;
     letter-spacing: 0.02em;
     color: #64748b;
@@ -37,10 +35,8 @@ export const StyledAddColumnModal = styled.div`
     border: 1px solid #e0e0e0;
     background: #ffffff;
     color: #1e293b;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.2;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     text-align: left;
     cursor: pointer;
     transition: background-color 0.15s ease, border-color 0.15s ease,
@@ -73,9 +69,8 @@ export const StyledAddColumnModal = styled.div`
   }
 
   .addColumnModalPaneHeading {
-    font-family: "Nunito", sans-serif;
-    font-size: 18px;
-    font-weight: 700;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #1e293b;
     margin: 0 0 12px;
     flex-shrink: 0;
@@ -95,26 +90,5 @@ export const StyledAddColumnModal = styled.div`
     align-items: center;
     gap: 10px;
     width: 100%;
-  }
-
-  .addColumnModalCancelBtn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    background: #ffffff;
-    color: #1e293b;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-
-    &:hover {
-      background: #f8fafc;
-      border-color: #cbd5e1;
-    }
   }
 `;

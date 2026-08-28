@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_CLASS } from "../../../Queries/Classes";
 import { GET_CLASSES } from "../../../Queries/Classes";
@@ -11,9 +12,11 @@ import {
 } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { SignupForm } from "../../../styles/StyledForm";
+import Button from "../../../DesignSystem/Button";
 
 export default function JoinClass({ user, role, classCode, invitationCode }) {
   const router = useRouter();
+  const { t } = useTranslation("classes");
 
   const query =
     role === "mentor"
@@ -59,10 +62,14 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
       <SignupForm>
         <div className="classFoundScreen">
           <h1>
-            No class found for the code <i>{classCode}</i>
+            {t("joinClassFlow.noClassFound", { code: classCode }, {
+              default: "No class found for the code {{code}}",
+            })}
           </h1>
           <Link href="/signup/student">
-            <button className="primaryBtn">Go back</button>
+            <Button variant="outline">
+              {t("joinClassFlow.goBack", {}, { default: "Go back" })}
+            </Button>
           </Link>
         </div>
       </SignupForm>
@@ -72,7 +79,11 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
   return (
     <SignupForm>
       <div className="classFoundScreen">
-        <h1>Do you want to join the following class as a {role}?</h1>
+        <h1>
+          {t("joinClassFlow.wantToJoin", { role }, {
+            default: "Do you want to join the following class as a {{role}}?",
+          })}
+        </h1>
 
         <div className="classInformation">
           {myclass.title} - {myclass.creator.username}
@@ -80,11 +91,16 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
 
         <div className="navigationBtns">
           <Link href={`/signup/${role}`}>
-            <button className="secondaryBtn">No, go back</button>
+            <Button variant="outline" style={{ width: "100%" }}>
+              {t("joinClassFlow.noGoBack", {}, { default: "No, go back" })}
+            </Button>
           </Link>
 
           {user ? (
-            <button
+            <Button
+              variant="filled"
+              style={{ width: "100%" }}
+              disabled={joinClassAsStudentLoading || joinClassAsMentorLoading}
               onClick={async () => {
                 if (role === "mentor") {
                   await joinClassAsMentor();
@@ -99,10 +115,9 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
                   });
                 }
               }}
-              className="primaryBtn"
             >
-              Yes, continue
-            </button>
+              {t("joinClassFlow.yesContinue", {}, { default: "Yes, continue" })}
+            </Button>
           ) : (
             <Link
               href={{
@@ -110,7 +125,9 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
                 query: query,
               }}
             >
-              <button className="primaryBtn">Yes, continue</button>
+              <Button variant="filled" style={{ width: "100%" }}>
+                {t("joinClassFlow.yesContinue", {}, { default: "Yes, continue" })}
+              </Button>
             </Link>
           )}
         </div>

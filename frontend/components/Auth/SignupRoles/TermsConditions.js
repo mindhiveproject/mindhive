@@ -3,8 +3,8 @@ import useTranslation from "next-translate/useTranslation";
 
 const StyledTermsConditions = styled.div`
   span {
-    font-size: 14px;
-    line-height: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666666;
   }
 `;

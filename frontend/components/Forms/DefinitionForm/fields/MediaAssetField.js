@@ -127,7 +127,14 @@ export default function MediaAssetField({
               }}
             />
           ) : null}
-          <div style={{ flex: 1, fontSize: 13, color: "#5f6871" }}>
+          <div
+            style={{
+              flex: 1,
+              font: 'var(--MH-Type-Body-Base)',
+              letterSpacing: 0,
+              color: "#5f6871",
+            }}
+          >
             {selected.title || selected.id}
           </div>
           {!disabled ? (
@@ -139,7 +146,8 @@ export default function MediaAssetField({
                 background: "transparent",
                 color: "#336f8a",
                 cursor: "pointer",
-                fontSize: 13,
+                font: 'var(--MH-Type-Label-Base)',
+                letterSpacing: 0,
               }}
             >
               {t("remove", {}, { default: "Remove" })}
@@ -160,7 +168,8 @@ export default function MediaAssetField({
               borderRadius: 8,
               padding: "8px 12px",
               cursor: "pointer",
-              fontSize: 13,
+              font: 'var(--MH-Type-Label-Base)',
+              letterSpacing: 0,
             }}
           >
             {t("mediaLibrary.choose", {}, {
@@ -175,7 +184,8 @@ export default function MediaAssetField({
               borderRadius: 8,
               padding: "8px 12px",
               cursor: uploading ? "wait" : "pointer",
-              fontSize: 13,
+              font: 'var(--MH-Type-Label-Base)',
+              letterSpacing: 0,
             }}
           >
             {uploading
@@ -312,7 +322,8 @@ export default function MediaAssetField({
                       )}
                       <span
                         style={{
-                          fontSize: 12,
+                          font: 'var(--MH-Type-Body-Base)',
+                          letterSpacing: 0,
                           color: "#171717",
                           display: "block",
                           overflow: "hidden",

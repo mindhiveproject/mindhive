@@ -110,6 +110,9 @@ export const GET_PARTICIPATE_VIEW = gql`
     authenticatedItem {
       ... on Profile {
         id
+        favoriteOpportunities {
+          id
+        }
         connectPreferences(
           where: { round: { id: { equals: $roundId } } }
         ) {

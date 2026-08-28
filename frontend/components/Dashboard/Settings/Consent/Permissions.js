@@ -8,7 +8,7 @@ import useTranslation from "next-translate/useTranslation";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { UPDATE_USER } from "../../../Mutations/User";
 import { StyledInput } from "../../../styles/StyledForm";
-import { StyledSimpleSaveButton } from "../../../styles/StyledProfile";
+import Button from "../../../DesignSystem/Button";
 
 export default function Permissions({ query, user }) {
   const { t } = useTranslation("common");
@@ -40,16 +40,24 @@ export default function Permissions({ query, user }) {
 
       <div className="content">
         <div className="buttons">
-          <StyledSimpleSaveButton changed={changed}>
-            <button onClick={handleSave}>{t("permissions.updatePreferences")}</button>
-          </StyledSimpleSaveButton>
+          <Button
+            variant="filled"
+            type="button"
+            onClick={handleSave}
+            disabled={!changed}
+            style={{ width: "100%" }}
+          >
+            {t("permissions.updatePreferences")}
+          </Button>
 
           <Link
             href={{
               pathname: `/dashboard/settings/consent`,
             }}
           >
-            <button className="back">{t("permissions.goBack")}</button>
+            <Button variant="text" type="button" style={{ width: "100%" }}>
+              {t("permissions.goBack")}
+            </Button>
           </Link>
         </div>
       </div>

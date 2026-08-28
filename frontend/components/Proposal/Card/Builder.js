@@ -1,11 +1,8 @@
-import { useRef, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import { Checkbox, Dropdown, Icon } from "semantic-ui-react";
-import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import clsx from "clsx";
+import { useMutation } from "@apollo/client";
+import { Icon } from "semantic-ui-react";
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
-import { useBoardMilestones } from "../../../lib/useBoardMilestones";
-import { getReviewStepOptions } from "../../../lib/milestones";
-import { getClassTemplateClasses } from "../../Utils/proposalBoard";
 
 import ReactHtmlParser from "react-html-parser";
 
@@ -18,7 +15,8 @@ import LinkedItems from "./Forms/LinkedItems";
 import { PreviewSection } from "./Forms/PreviewSection";
 import AssignmentViewModal from "../../TipTap/AssignmentViewModal";
 import ResourceViewModal from "../../TipTap/ResourceViewModal";
-import InfoTooltip from "../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../DesignSystem/InfoPopover";
+import Tooltip from "../../DesignSystem/Tooltip";
 import Button from "../../DesignSystem/Button";
 import useTranslation from "next-translate/useTranslation";
 
@@ -30,11 +28,11 @@ export default function BuilderProposalCard({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
+  hideBoardChromeNav = false,
+  registerCloseHandler,
+  registerCardChrome,
 }) {
   const { t } = useTranslation("classes");
-  const router = useRouter();
-  const { milestones } = useBoardMilestones(proposal?.id);
-  const peerReviewOptions = getReviewStepOptions(milestones, t);
 
   const { inputs, handleChange } = useForm({
     ...proposalCard,
@@ -184,90 +182,131 @@ export default function BuilderProposalCard({
     ...(inputs?.studies || []),
   ].length;
 
+  const handleBackToBoard = async () => {
+    try {
+      if (!hasCardChanges()) {
+        closeCard({ cardId: proposalCard?.id, lockedByUser: false });
+        return;
+      }
+      await saveCardContentOnly();
+      closeCard({ cardId: proposalCard?.id, lockedByUser: false });
+      const hasClones = proposal?.prototypeFor?.length > 0;
+      const shouldPropagate =
+        hasClones && autoUpdateStudentBoards && propagateToClones;
+      if (shouldPropagate) {
+        const contentChanged =
+          String(content?.current ?? "") !==
+          String(proposalCard?.content ?? "");
+        propagateToClones({
+          contentChangedCardIds:
+            contentChanged && proposalCard?.id ? [proposalCard.id] : [],
+        }).catch((e) => {
+          console.error("Propagate to clones failed:", e);
+        });
+      } else if (hasClones) {
+        onTemplateChangedWithoutPropagation?.();
+      }
+    } catch (e) {
+      // Leave card open; mutation error handling applies
+    }
+  };
+
+  useEffect(() => {
+    if (!registerCloseHandler) return undefined;
+    registerCloseHandler(handleBackToBoard);
+    return () => registerCloseHandler(null);
+  });
+
+  const handleSaveRef = useRef(handleSave);
+  handleSaveRef.current = handleSave;
+  const handlePreviewRef = useRef(handlePreviewAsUser);
+  handlePreviewRef.current = handlePreviewAsUser;
+
+  useEffect(() => {
+    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    registerCardChrome({
+      kind: "project",
+      previewMode,
+      saving: updateLoading,
+      onSave: () => handleSaveRef.current(),
+      onPreview: () => handlePreviewRef.current(),
+      onExitPreview: () => setPreviewMode(false),
+    });
+  }, [
+    hideBoardChromeNav,
+    registerCardChrome,
+    previewMode,
+    updateLoading,
+  ]);
+
+  useEffect(() => {
+    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    return () => registerCardChrome(null);
+  }, [hideBoardChromeNav, registerCardChrome]);
+
   return (
     <div className="post">
-      <div className="navigation-build-mode">
-        <div className="left">
-          <div
-            className="icon"
-            onClick={async () => {
-              try {
-                if (!hasCardChanges()) {
-                  closeCard({ cardId: proposalCard?.id, lockedByUser: false });
-                  return;
-                }
-                await saveCardContentOnly();
-                closeCard({ cardId: proposalCard?.id, lockedByUser: false });
-                const hasClones = proposal?.prototypeFor?.length > 0;
-                const shouldPropagate = hasClones && autoUpdateStudentBoards && propagateToClones;
-                if (shouldPropagate) {
-                  const contentChanged =
-                    String(content?.current ?? "") !==
-                    String(proposalCard?.content ?? "");
-                  propagateToClones({
-                    contentChangedCardIds:
-                      contentChanged && proposalCard?.id ? [proposalCard.id] : [],
-                  }).catch((e) => {
-                    console.error("Propagate to clones failed:", e);
-                  });
-                } else if (hasClones) {
-                  onTemplateChangedWithoutPropagation?.();
-                }
-              } catch (e) {
-                // Leave card open; mutation error handling applies
-              }
-            }}
-            style={{ opacity: updateLoading ? 0.6 : 1, pointerEvents: updateLoading ? "none" : "auto" }}
-          >
-            <div className="selector">
-              <img src="/assets/icons/back.svg" alt="back" />
+      {!hideBoardChromeNav ? (
+        <div className="navigation-build-mode">
+          <div className="left">
+            <div
+              className="icon"
+              onClick={handleBackToBoard}
+              style={{
+                opacity: updateLoading ? 0.6 : 1,
+                pointerEvents: updateLoading ? "none" : "auto",
+              }}
+            >
+              <div className="selector">
+                <img src="/assets/icons/back.svg" alt="back" />
+              </div>
             </div>
           </div>
-        </div>
-        <InfoTooltip
-          content={proposal?.title || ""}
-          wrapperStyle={{ minWidth: 0, width: "100%" }}
-          tooltipStyle={{ maxWidth: "min(400px, 90vw)" }}
-        >
-          <div className="middle">
-            <span className="studyTitle">{proposal?.title}</span>
-          </div>
-        </InfoTooltip>
-        <div className={`right${previewMode ? " rightPreviewMode" : ""}`}>
-          {previewMode ? (
-            <button
-              type="button"
-              onClick={() => setPreviewMode(false)}
-              className="narrowButton"
-              style={{ marginRight: "10px" }}
-            >
-              <Icon name="angle left" /> {t("board.expendedCard.backToEditing", "Back to editing")}
-            </button>
-          ) : (
-            <>
-              <div className="editModeMessage">
-                {t("board.editMode", "You are in Edit Mode")}
-              </div>
+          <Tooltip
+            content={proposal?.title || ""}
+            side="bottom"
+            maxWidth={400}
+          >
+            <div className="middle">
+              <span className="studyTitle">{proposal?.title}</span>
+            </div>
+          </Tooltip>
+          <div className={`right${previewMode ? " rightPreviewMode" : ""}`}>
+            {previewMode ? (
               <button
                 type="button"
-                onClick={handlePreviewAsUser}
-                disabled={updateLoading}
-                className="narrowButtonSecondary"
-              >
-                {t("board.expendedCard.preview", "Preview")}
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
+                onClick={() => setPreviewMode(false)}
                 className="narrowButton"
-                disabled={updateLoading}
+                style={{ marginRight: "10px" }}
               >
-                {t("board.save", "Save")}
+                <Icon name="angle left" /> {t("board.expendedCard.backToEditing", "Back to editing")}
               </button>
-            </>
-          )}
+            ) : (
+              <>
+                <div className="editModeMessage">
+                  {t("board.editMode", "You are in Edit Mode")}
+                </div>
+                <button
+                  type="button"
+                  onClick={handlePreviewAsUser}
+                  disabled={updateLoading}
+                  className="narrowButtonSecondary"
+                >
+                  {t("board.expendedCard.preview", "Preview")}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  className="narrowButton"
+                  disabled={updateLoading}
+                >
+                  {t("board.save", "Save")}
+                </button>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Preview modals: open when user clicks linked items in preview mode */}
       <AssignmentViewModal
@@ -309,7 +348,11 @@ export default function BuilderProposalCard({
               </>
             )}
           </div>
-          <div className="infoBoard">
+          <div
+            className={clsx("infoBoard", {
+              infoBoardEdit: hideBoardChromeNav,
+            })}
+          >
             {/* Display Linked Items: Assignments first, then combined Resources */}
             {inputs?.assignments?.length > 0 && (
               <PreviewSection
@@ -356,12 +399,16 @@ export default function BuilderProposalCard({
           <label htmlFor="title">
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.title")}
-              <InfoTooltip
+              <InfoPopover
                 content={t(
                   "board.expendedCard.titleText",
-                  "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the box titled 'Include text input for Feedback Center' is checked."
+                  {},
+                  {
+                    default:
+                      "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the card is associated with a review step.",
+                  }
                 )}
-                iconStyle={{opacity: 0.4}}
+                ariaLabel={t("board.expendedCard.title")}
               />
             </div>
             <p></p>
@@ -376,12 +423,12 @@ export default function BuilderProposalCard({
           <label htmlFor="description">
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.instructions")}
-              <InfoTooltip
+              <InfoPopover
                 content={t(
                   "board.expendedCard.instructionsText",
                   "Add or edit instructions for students telling them how to complete the card."
                 )}
-                iconStyle={{opacity: 0.4}}
+                ariaLabel={t("board.expendedCard.instructions")}
               />
             </div>
             <TipTapEditor
@@ -409,12 +456,12 @@ export default function BuilderProposalCard({
               <label htmlFor="description">
                 <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   {t("board.expendedCard.studentResponseBoxNetwork")}
-                  <InfoTooltip
+                  <InfoPopover
                     content={t(
                       "board.expendedCard.studentResponseBoxNetworkText",
                       "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
                     )}
-                    iconStyle={{opacity: 0.4}}
+                    ariaLabel={t("board.expendedCard.studentResponseBoxNetwork")}
                   />
                 </div>
               </label>
@@ -452,11 +499,8 @@ export default function BuilderProposalCard({
                 >
                   <p style={{
                     color: "#8F1F14",
-                    fontFamily: "Nunito",
-                    fontSize: "16px",
-                    fontStyle: "normal",
-                    fontWeight: "400",
-                    lineHeight: "24px",
+                    font: 'var(--MH-Type-Body-Base)',
+                    letterSpacing: 0,
                     margin: 0,
                     }}>
                     {t("board.expendedCard.overwriteWarning", "")}
@@ -483,9 +527,8 @@ export default function BuilderProposalCard({
                       marginTop: "8px",
                       padding: "12px 16px",
                       borderRadius: "8px",
-                      fontSize: "16px",
-                      fontFamily: "Nunito",
-                      lineHeight: "20px",
+                      font: 'var(--MH-Type-Body-Base)',
+                      letterSpacing: 0,
                       opacity: "0",
                       transform: "translateY(-5px)",
                       transition: "all 0.3s ease",
@@ -523,21 +566,21 @@ export default function BuilderProposalCard({
             </>
           )}
         </div>
-        <div className="infoBoard">
+        <div
+          className={clsx("infoBoard", {
+            infoBoardEdit: hideBoardChromeNav,
+          })}
+        >
           <>
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.linkedItems", "Linked Items")}
-              <InfoTooltip
+              <InfoPopover
                 content={t(
                   "board.expendedCard.addLinkedItems",
                   "Add existing assignments, tasks, studies, or resources"
                 )}
-                iconStyle={{
-                  opacity: 0.4,
-                }}
-                tooltipStyle={{
-                  width: "200px",
-                }}
+                ariaLabel={t("board.expendedCard.linkedItems", "Linked Items")}
+                width={240}
               />
             </div>
             <LinkedItems
@@ -562,10 +605,11 @@ export default function BuilderProposalCard({
           <div className="proposalCardComments">
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.comments")}
-              <InfoTooltip
+              <InfoPopover
                 content={t("board.expendedCard.commentsText")}
-                iconStyle={{opacity: 0.4}}
-                position="topRight"
+                ariaLabel={t("board.expendedCard.comments")}
+                side="top"
+                align="end"
               />
             </div>
             <TipTapEditor
@@ -598,190 +642,6 @@ export default function BuilderProposalCard({
               <CardType type={inputs?.type} handleChange={handleChange} />
             </div>
           )}
-          {/* Student Answer Box panel */}
-          <div className="visibilityPanel">
-            <div className="visibilityPanelHeader">
-              <div>
-                <div className="visibilityPanelTitleRow">
-                  <span className="cardHeader">
-                    {t("board.expendedCard.studentAnswerBox", "Student Answer Box")}
-                  </span>
-                  <InfoTooltip
-                    content={t(
-                      "board.expendedCard.studentAnswerBoxTooltip",
-                      "When enabled, students can type a response in a dedicated field on this card."
-                    )}
-                    iconStyle={{ opacity: 0.4 }}
-                    position="topRight"
-                  />
-                </div>
-                <div className="cardDescription" style={{ marginTop: "4px" }}>
-                  {t("board.expendedCard.studentAnswerBoxDescription", "Enable input field for students on this card")}
-                </div>
-              </div>
-              <Checkbox
-                toggle
-                name="feedbackCenterCardToggle"
-                id="feedbackCenterCardToggle"
-                onChange={(event, data) => {
-                  const wasIncluded = !!inputs?.settings?.includeInReport;
-                  const nextSettings = {
-                    ...(inputs.settings || {}),
-                    includeInReport: data.checked,
-                  };
-
-                  if (data.checked && !wasIncluded) {
-                    const currentSteps = inputs?.settings?.includeInReviewSteps || [];
-                    if (!currentSteps.length) {
-                      nextSettings.includeInReviewSteps = peerReviewOptions.map(
-                        (option) => option.value
-                      );
-                    }
-
-                    alert(
-                      t(
-                        "board.expendedCard.feedbackCenterToggleOnAlert",
-                        "Response box added!\n- The default selection will show text from this response box in the Feedback Center for all action card steps on the Project Board.\n- Please deselect any action card steps if you do not want the student response to go to the Feedback Center."
-                      )
-                    );
-                  }
-
-                  handleChange({
-                    target: {
-                      name: "settings",
-                      value: nextSettings,
-                    },
-                  });
-                }}
-                checked={!!inputs?.settings?.includeInReport}
-              />
-            </div>
-            
-            {/* Feedback Center panel — only when Student Answer Box is enabled */}
-            {inputs?.settings?.includeInReport && (
-              <div className="feedbackCenterPanel">
-                <div className="feedbackCenterPanelHeader">
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
-                    <div className="feedbackCenterPanelTitleRow">
-                      <img
-                        src="/assets/connect/group.svg"
-                        alt=""
-                        aria-hidden
-                        style={{ width: 24, height: 24, flexShrink: 0 }}
-                      />
-                      <span className="cardHeader">
-                        {t("board.expendedCard.feedbackCenter", "Feedback Center")}
-                      </span>
-                    </div>
-                    <div className="cardDescription" style={{ marginTop: "4px" }}>
-                      {t("board.expendedCard.feedbackCenterDescription", "Choose how students' contributions will be shared and reviewed within the network.")}
-                    </div>
-                    {/* <Button
-                      variant="text"
-                      leadingIcon={
-                        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                          <path
-                            d="M11 17H7C5.61667 17 4.4375 16.5125 3.4625 15.5375C2.4875 14.5625 2 13.3833 2 12C2 10.6167 2.4875 9.4375 3.4625 8.4625C4.4375 7.4875 5.61667 7 7 7H11V9H7C6.16667 9 5.45833 9.29167 4.875 9.875C4.29167 10.4583 4 11.1667 4 12C4 12.8333 4.29167 13.5417 4.875 14.125C5.45833 14.7083 6.16667 15 7 15H11V17ZM8 13V11H16V13H8ZM13 17V15H17C17.8333 15 18.5417 14.7083 19.125 14.125C19.7083 13.5417 20 12.8333 20 12C20 11.1667 19.7083 10.4583 19.125 9.875C18.5417 9.29167 17.8333 9 17 9H13V7H17C18.3833 7 19.5625 7.4875 20.5375 8.4625C21.5125 9.4375 22 10.6167 22 12C22 13.3833 21.5125 14.5625 20.5375 15.5375C19.5625 16.5125 18.3833 17 17 17H13Z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      }
-                      onClick={() => {
-                        const classCode = getClassTemplateClasses(proposal)[0]?.code;
-                        if (classCode) {
-                          const url = `/dashboard/myclasses/${classCode}?page=settings`;
-                          window.open(url, "_blank", "noopener,noreferrer");
-                        } else {
-                          alert(t("board.expendedCard.manageNetworksAlert", "Please connect a class to this proposal before managing networks."));
-                        }
-                      }}
-                    >
-                      {t("board.expendedCard.manageNetworks", "Manage Networks")}
-                    </Button> */}
-                  </div>
-                </div>
-
-                <div className="feedbackOptionCards">
-                  {peerReviewOptions.map((option) => {
-                    const current = inputs?.settings?.includeInReviewSteps || [];
-                    const selected =
-                      current.includes(option.value) ||
-                      (option.actionCardType &&
-                        current.includes(option.actionCardType));
-                    const toggleReviewStep = () => {
-                      const legacyKey = option.actionCardType;
-                      const next = selected
-                        ? current.filter(
-                            (v) =>
-                              v !== option.value &&
-                              (!legacyKey || v !== legacyKey)
-                          )
-                        : [...current, option.value];
-                      handleChange({
-                        target: {
-                          name: "settings",
-                          value: {
-                            ...inputs.settings,
-                            includeInReviewSteps: next,
-                          },
-                        },
-                      });
-                    };
-                    return (
-                      <div
-                        key={option.key}
-                        role="button"
-                        tabIndex={0}
-                        aria-pressed={selected}
-                        className={`feedbackOptionCard ${selected ? "feedbackOptionCardSelected" : ""}`}
-                        onClick={toggleReviewStep}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            toggleReviewStep();
-                          }
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            background: "rgba(255, 255, 255, 0.7)",
-                            border: `1px solid ${selected ? "#336F8A" : "#E0E0E0"}`,
-                            padding: "4px",
-                            borderRadius: "8px",
-                            width: "40px",
-                            height: "40px",
-                          }}
-                        >
-                          <img
-                            src={option.icon}
-                            alt=""
-                            aria-hidden
-                            className="feedbackOptionCardIcon"
-                            style={{ filter: selected ? "opacity(1)" : "opacity(0.6)" }}
-                          />
-                        </div>
-                        <div className="feedbackOptionCardContent">
-                          <div className="feedbackOptionCardTitle">
-                            {option.titleKey
-                              ? t(option.titleKey, option.text)
-                              : option.text}
-                          </div>
-                          <div className="feedbackOptionCardDescription">
-                            {option.descriptionKey
-                              ? t(option.descriptionKey, option.descriptionFallback)
-                              : option.descriptionFallback}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       </div>
       )}

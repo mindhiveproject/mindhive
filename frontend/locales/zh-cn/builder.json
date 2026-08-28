@@ -365,9 +365,13 @@
 				"sharedWithCount": "共享： {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "计算新变量",
+				"copy": "",
 				"copyExisting": "复制现有变量",
+				"recode": "",
 				"recodeVariable": "重新编码变量",
+				"reverse": "",
 				"reverseScore": "反向得分"
 			},
 			"readOnlyToolbarHint": "从工作区打开此日志，即可编辑或复制此数据集。",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "添加数据集",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "保存副本",
 				"message": "系统将根据您的更改创建一个新的数据集，并将其链接到本期刊。您可以选择是否允许合作者编辑该副本。"
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "该数据集是如何创建的。",
 			"renameDisabledNotOwner": "只有该数据集的创建者才能重命名它。",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "阶级网络",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "成分",
 			"addComponentAria": "向此工作区添加组件",
 			"addJournal": "杂志",
+			"addJournalAria": "",
 			"addJournalScratch": "从零开始创建一本日记",
 			"addJournalTemplate": "添加日志模板",
 			"addWorkspace": "添加工作区",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "工作区",
 			"addWorkspaceError": "添加工作区时出错",
 			"addWorkspaceLoading": "添加...",
@@ -1137,6 +1146,10 @@
 			"working": "正在进行中"
 		}
 	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
+	},
 	"dataUsage": {
 		"and": "和",
 		"educationLabel": "是的，但仅用于教育和社区项目",
@@ -1301,8 +1314,30 @@
 	},
 	"inner": {
 		"addSection": "添加部分",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
+		"cancel": "",
+		"deleteItems": "",
+		"deleteItemsConfirmBody": "",
+		"deleteItemsConfirmCardsOnlyNote": "",
+		"deleteItemsConfirmMilestonesCustom": "",
+		"deleteItemsConfirmMilestonesCustomHeading": "",
+		"deleteItemsConfirmMilestonesDefault": "",
+		"deleteItemsConfirmMilestonesDefaultHeading": "",
+		"deleteItemsConfirmMixedBody": "",
+		"deleteItemsConfirmReviewStepsHeading": "",
+		"deleteItemsConfirmSectionsBody": "",
+		"deleteItemsConfirmTitle": "",
+		"deleteItemsDeleting": "",
+		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "新部分",
-		"sectionTitlePlaceholder": "输入章节标题"
+		"save": "",
+		"sectionTitlePlaceholder": "输入章节标题",
+		"selectItem": "",
+		"selectSection": ""
 	},
 	"interests": "兴趣",
 	"introductionVideo": "介绍视频",
@@ -1409,12 +1444,16 @@
 		"nameYourStudy": "给你的研究命名",
 		"noTemplatesSubtitle": "要启动项目，你需要一个项目板模板。你的老师可能没有链接到此课程的项目板模板。",
 		"noTemplatesTitle": "课堂上没有项目板模板",
+		"publicTemplateWarningBody": "",
+		"publicTemplateWarningTitle": "",
 		"selectClass": "选择班级",
 		"selectTemplate": "选择模板",
 		"selectTemplateAlert": "请选择提案模板",
 		"selectTemplateHelp": "选择老师提供的可供复制的项目看板模板。",
+		"selectTemplateHelpPublic": "",
 		"templateClassLabel": "类别： {{className}}",
 		"templateOptionLabel": "{{templateName}} — {{className}}",
+		"templatePublicLabel": "",
 		"untitledProject": "无标题项目",
 		"untitledStudy": "无标题研究"
 	},
@@ -1508,6 +1547,10 @@
 	},
 	"participate": "参加",
 	"participateAsGuest": "以嘉宾身份参与",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "请先登录！",
 	"preview": {
 		"description": "描述",
@@ -1539,6 +1582,8 @@
 		"selectExistingStudy": "选择现有研究",
 		"selectStudyFirst": "首先选择研究",
 		"study": "学习：",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "请输入 DELETE 来删除您的项目",
 		"typeDeleteToConfirm": "输入“DELETE”确认"
 	},
@@ -1563,6 +1608,7 @@
 		"delete": "删除",
 		"editingClassProjectTemplateSubtitle": "决定如何将此项目看板上的更改同步到学生的副本上。",
 		"editingClassProjectTemplateTitle": "编辑课程项目模板",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "展开或折叠模板部分",
 		"makeTemplate": "将该项目板设为公共模板",
 		"name": "提案名称",
@@ -1659,6 +1705,10 @@
 		"linkToProposal": "提案链接",
 		"selectCard": "选择卡"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "资源",
 	"resources": "资源",
 	"resourcesCards": {
@@ -1750,7 +1800,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "反馈",
-		"instruction": "一旦您提交您的提案或研究，您的评论就会出现在这里。"
+		"instruction": "一旦您提交您的提案或研究，您的评论就会出现在这里。",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "如何",
@@ -1902,6 +1961,11 @@
 	"section": {
 		"addCard": "添加卡片",
 		"addCardBtn": "[点击添加卡片]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "卡片",
 		"cards": "牌",
 		"cardsCount": "{{count}} 张卡{{count == 1 ? '' : 's'}}",
@@ -1988,6 +2052,7 @@
 			}
 		},
 		"deleteSectionConfirm": "您确定要删除此提案部分吗？此部分中的所有卡片也将被删除。此操作无法撤消。",
+		"editTitle": "",
 		"enterNewTitle": "请输入标题",
 		"newCard": "新卡",
 		"newCardPlaceholder": "输入新的卡片标题",
@@ -2308,6 +2373,7 @@
 	"tiptap": {
 		"insertImageAria": "插入图片",
 		"insertImagePrompt": "请输入图片网址：",
+		"linkPrompt": "",
 		"mediaCancelEdit": "取消",
 		"mediaCanvaExportThumb": "Canva PDF导出",
 		"mediaDelete": "删除",
@@ -2348,7 +2414,33 @@
 		"mediaUploading": "正在上传…",
 		"mediaUploadNew": "上传新图片",
 		"pasteImageNoMediaScope": "此处不支持粘贴图片。请使用图片按钮并输入图片网址。",
-		"pasteImageUploadFailed": "粘贴的图片无法上传。请检查您的网络连接并重试。"
+		"pasteImageUploadFailed": "粘贴的图片无法上传。请检查您的网络连接并重试。",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "学习构建器",
 	"titleText": "标题",

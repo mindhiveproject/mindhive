@@ -365,9 +365,13 @@
 				"sharedWithCount": "تمت المشاركة: {{count}}"
 			},
 			"operations": {
+				"compute": "",
 				"computeNew": "احسب متغيرًا جديدًا",
+				"copy": "",
 				"copyExisting": "نسخ المتغير الموجود",
+				"recode": "",
 				"recodeVariable": "إعادة ترميز متغير",
+				"reverse": "",
 				"reverseScore": "النتيجة المعكوسة"
 			},
 			"readOnlyToolbarHint": "افتح هذه المدونة من مساحة العمل لتحرير أو نسخ مجموعة البيانات هذه.",
@@ -403,6 +407,7 @@
 		},
 		"datasets": {
 			"addDataset": "إضافة مجموعة بيانات",
+			"cancel": "",
 			"copyConfirm": {
 				"confirm": "حفظ نسخة",
 				"message": "سيتم إنشاء مجموعة بيانات جديدة خاصة بك تتضمن التغييرات التي أجريتها، وسيتم ربطها بهذه المدونة. يمكنك تحديد ما إذا كان بإمكان المتعاونين تعديل النسخة."
@@ -443,6 +448,8 @@
 			},
 			"originTooltip": "كيف تم إنشاء مجموعة البيانات هذه.",
 			"renameDisabledNotOwner": "لا يمكن إعادة تسمية هذه المجموعة من البيانات إلا منشئها.",
+			"saveChanges": "",
+			"saving": "",
 			"scopes": {
 				"classNetwork": "شبكة الفصول الدراسية",
 				"empty": {
@@ -819,9 +826,11 @@
 			"addComponent": "عنصر",
 			"addComponentAria": "أضف مكونًا إلى مساحة العمل هذه",
 			"addJournal": "مجلة",
+			"addJournalAria": "",
 			"addJournalScratch": "أنشئ دفتر يوميات من الصفر",
 			"addJournalTemplate": "أضف قالبًا للمجلة",
 			"addWorkspace": "إضافة مساحة عمل",
+			"addWorkspaceAria": "",
 			"addWorkspaceDropdown": "مساحة العمل",
 			"addWorkspaceError": "خطأ في إضافة مساحة العمل",
 			"addWorkspaceLoading": "إضافة...",
@@ -1137,6 +1146,10 @@
 			"working": "العمل قيد التقدم"
 		}
 	},
+	"dataUpload": {
+		"chooseDataFile": "",
+		"useStudyData": ""
+	},
 	"dataUsage": {
 		"and": "و",
 		"educationLabel": "نعم، ولكن فقط للاستخدام في البرامج التعليمية والمجتمعية",
@@ -1301,8 +1314,30 @@
 	},
 	"inner": {
 		"addSection": "إضافة قسم",
+		"associateCardsFailed": "",
+		"associateCardsPlaceholder": "",
+		"associateCardsSaving": "",
+		"associateCardsUnsavedSwitch": "",
+		"cancel": "",
+		"deleteItems": "",
+		"deleteItemsConfirmBody": "",
+		"deleteItemsConfirmCardsOnlyNote": "",
+		"deleteItemsConfirmMilestonesCustom": "",
+		"deleteItemsConfirmMilestonesCustomHeading": "",
+		"deleteItemsConfirmMilestonesDefault": "",
+		"deleteItemsConfirmMilestonesDefaultHeading": "",
+		"deleteItemsConfirmMixedBody": "",
+		"deleteItemsConfirmReviewStepsHeading": "",
+		"deleteItemsConfirmSectionsBody": "",
+		"deleteItemsConfirmTitle": "",
+		"deleteItemsDeleting": "",
+		"deleteItemsFailed": "",
+		"linkMilestoneToCards": "",
 		"newSection": "قسم جديد",
-		"sectionTitlePlaceholder": "أدخل عنوان القسم"
+		"save": "",
+		"sectionTitlePlaceholder": "أدخل عنوان القسم",
+		"selectItem": "",
+		"selectSection": ""
 	},
 	"interests": "الإهتمامات",
 	"introductionVideo": "فيديو تعريفي",
@@ -1409,12 +1444,16 @@
 		"nameYourStudy": "سمِّ دراستك",
 		"noTemplatesSubtitle": "لبدء مشروع، ستحتاج إلى قالب لوحة مشروع. قد لا يتوفر لدى معلمك قالب لوحة مشروع مرتبط بهذه الحصة.",
 		"noTemplatesTitle": "لا توجد قوالب لوحة المشروع في الفصل",
+		"publicTemplateWarningBody": "",
+		"publicTemplateWarningTitle": "",
 		"selectClass": "حدد الفصل",
 		"selectTemplate": "حدد قالب",
 		"selectTemplateAlert": "يرجى اختيار نموذج الاقتراح",
 		"selectTemplateHelp": "اختر نموذج لوحة المشروع الذي أتاحه لك معلمك لنسخه.",
+		"selectTemplateHelpPublic": "",
 		"templateClassLabel": "الفئة: {{className}}",
 		"templateOptionLabel": "{{templateName}} — {{className}}",
+		"templatePublicLabel": "",
 		"untitledProject": "مشروع بلا عنوان",
 		"untitledStudy": "دراسة بدون عنوان"
 	},
@@ -1508,6 +1547,10 @@
 	},
 	"participate": "يشارك",
 	"participateAsGuest": "المشاركة كضيف",
+	"partSettings": {
+		"closeWithoutSaving": "",
+		"saveAndClose": ""
+	},
 	"pleaseLogin": "الرجاء تسجيل الدخول أولاً!",
 	"preview": {
 		"description": "وصف",
@@ -1539,6 +1582,8 @@
 		"selectExistingStudy": "حدد الدراسة الموجودة",
 		"selectStudyFirst": "حدد الدراسة أولا",
 		"study": "يذاكر:",
+		"studyNotLinkedToClassBody": "",
+		"studyNotLinkedToClassTitle": "",
 		"typeDeleteAlert": "الرجاء كتابة DELETE لحذف مشروعك",
 		"typeDeleteToConfirm": "اكتب \"حذف\" للتأكيد"
 	},
@@ -1563,6 +1608,7 @@
 		"delete": "يمسح",
 		"editingClassProjectTemplateSubtitle": "حدد كيف تريد نقل التغييرات من لوحة المشروع هذه إلى نسخ طلابك.",
 		"editingClassProjectTemplateTitle": "نموذج مشروع تحرير الفصل",
+		"editTitle": "",
 		"expandCollapseTemplateBanner": "توسيع أو تصغير قسم القالب",
 		"makeTemplate": "جعل لوحة المشروع هذه قالبًا عامًا",
 		"name": "اسم الاقتراح",
@@ -1659,6 +1705,10 @@
 		"linkToProposal": "رابط إلى الاقتراح",
 		"selectCard": "اختر البطاقة"
 	},
+	"proposalTemplates": {
+		"create": "",
+		"myTemplates": ""
+	},
 	"resource": "الموارد",
 	"resources": "موارد",
 	"resourcesCards": {
@@ -1750,7 +1800,16 @@
 	},
 	"reviewProposal": {
 		"feedback": "تعليق",
-		"instruction": "بمجرد تقديم مقترحك أو دراستك، ستظهر مراجعاتك هنا."
+		"instruction": "بمجرد تقديم مقترحك أو دراستك، ستظهر مراجعاتك هنا.",
+		"needChecklist": "",
+		"needProjectBoard": "",
+		"step1": "",
+		"step2": "",
+		"submitProposal": "",
+		"submitProposalConfirm": "",
+		"submitStudyConfirm": "",
+		"submitStudyForFeedback": "",
+		"viewSubmission": ""
 	},
 	"reviewTabs": {
 		"howTab": "كيف",
@@ -1902,6 +1961,11 @@
 	"section": {
 		"addCard": "إضافة بطاقة",
 		"addCardBtn": "[ انقر لإضافة بطاقة ]",
+		"addCardMenu": {
+			"ariaLabel": "",
+			"milestone": "",
+			"project": ""
+		},
 		"card": "بطاقة",
 		"cards": "بطاقات",
 		"cardsCount": "{{count}} بطاقة{{count == 1 ? '' : 's'}}",
@@ -1988,6 +2052,7 @@
 			}
 		},
 		"deleteSectionConfirm": "هل أنت متأكد من رغبتك في حذف قسم الاقتراحات هذا؟ سيتم حذف جميع البطاقات في هذا القسم أيضًا. لا يمكن التراجع عن هذا الإجراء.",
+		"editTitle": "",
 		"enterNewTitle": "الرجاء إدخال عنوان",
 		"newCard": "بطاقة جديدة",
 		"newCardPlaceholder": "أدخل عنوان بطاقة جديد",
@@ -2308,6 +2373,7 @@
 	"tiptap": {
 		"insertImageAria": "إدراج الصورة",
 		"insertImagePrompt": "أدخل عنوان URL للصورة:",
+		"linkPrompt": "",
 		"mediaCancelEdit": "يلغي",
 		"mediaCanvaExportThumb": "تصدير ملفات PDF من Canva",
 		"mediaDelete": "يمسح",
@@ -2348,7 +2414,33 @@
 		"mediaUploading": "جارٍ التحميل...",
 		"mediaUploadNew": "تحميل صورة جديدة",
 		"pasteImageNoMediaScope": "لا يمكنك لصق الصور هنا. استخدم زر الصورة وأدخل رابط الصورة.",
-		"pasteImageUploadFailed": "تعذر تحميل الصورة الملصقة. تحقق من اتصالك وحاول مرة أخرى."
+		"pasteImageUploadFailed": "تعذر تحميل الصورة الملصقة. تحقق من اتصالك وحاول مرة أخرى.",
+		"toolbar": {
+			"insertLink": "",
+			"redo": "",
+			"tableAddColumnAfter": "",
+			"tableAddColumnBefore": "",
+			"tableAddRowAfter": "",
+			"tableAddRowBefore": "",
+			"tableDeleteColumn": "",
+			"tableDeleteRow": "",
+			"tableDeleteTable": "",
+			"tableInsert": "",
+			"tableMergeCells": "",
+			"tableOptions": "",
+			"tableSplitCell": "",
+			"tableToggleHeaderCell": "",
+			"tableToggleHeaderColumn": "",
+			"tableToggleHeaderRow": "",
+			"toggleBlockquote": "",
+			"toggleBold": "",
+			"toggleBulletList": "",
+			"toggleHeading1": "",
+			"toggleItalic": "",
+			"toggleNumberedList": "",
+			"toggleUnderline": "",
+			"undo": ""
+		}
 	},
 	"title": "منشئ الدراسة",
 	"titleText": "العنوان",

@@ -116,7 +116,7 @@ export default function AxesAnova({
 
   const helpContent = useMemo(
     () => (
-      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+      <p className="MH-Type-Body-Base" style={{ margin: 0, color: "#625B71" }}>
         {t(`${G_COMMON}.help.resourcesIntro`, {}, {
           default:
             "Use the buttons below to open a reference in a new tab when a link is available.",
@@ -199,7 +199,6 @@ export default function AxesAnova({
                   label={option.chipLabel}
                   selected={selectedDataFormat === option.value}
                   onClick={() => onSelectorChoice(option)}
-                  shape="square"
                   ariaLabel={option.title}
                   style={
                     selectedDataFormat === option.value

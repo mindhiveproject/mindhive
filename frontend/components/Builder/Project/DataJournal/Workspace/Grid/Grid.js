@@ -6,7 +6,6 @@ import GridLayout from "react-grid-layout";
 import useTranslation from "next-translate/useTranslation";
 
 import {
-  CREATE_DATA_COMPONENT,
   DELETE_DATA_COMPONENT,
   UPDATE_DATA_COMPONENT,
 } from "../../../../../Mutations/DataComponent";
@@ -22,7 +21,6 @@ import SideNavigation from "../../SideNav/Main";
 import TopNavigation from "../../TopNav/Main";
 import Datasets from "../../Datasets/Main";
 import ComponentEditor from "../../Editors/ComponentEditor";
-import ComponentPanel from "./ComponentPanel/Main";
 import CreateJournal from "../../Helpers/CreateJournal";
 import Widget from "../../Widgets/Widget";
 
@@ -59,8 +57,6 @@ export default function Grid({
     setArea,
     sidebarVisible,
     setSidebarVisible,
-    isAddComponentPanelOpen,
-    setIsAddComponentPanelOpen,
     leftPanelMode,
     setLeftPanelMode,
     projectId,
@@ -137,11 +133,6 @@ export default function Grid({
     });
     return () => window.cancelAnimationFrame(raf);
   }, [pendingCanvasFocusComponentId, setPendingCanvasFocusComponentId]);
-
-  const [createComponent] = useMutation(CREATE_DATA_COMPONENT, {
-    variables: {},
-    refetchQueries: [],
-  });
 
   const [deleteComponent] = useMutation(DELETE_DATA_COMPONENT, {
     variables: {},
@@ -222,10 +213,8 @@ export default function Grid({
           updatedComponents: components,
         });
         setActiveComponent(null);
-        setIsAddComponentPanelOpen(false);
         setLeftPanelMode("journal");
       } else {
-        setIsAddComponentPanelOpen(false);
         setActiveComponent(component);
         setLeftPanelMode("editor");
         setSidebarVisible(true);
@@ -237,85 +226,9 @@ export default function Grid({
       components,
       setActiveComponent,
       handleSaveComponent,
-      setIsAddComponentPanelOpen,
       setLeftPanelMode,
       setSidebarVisible,
       setPendingCanvasFocusComponentId,
-    ],
-  );
-
-  const handleAddComponent = useCallback(
-    async ({ title, type, content }) => {
-      const firstDsId = journal?.datasources?.[0]?.id;
-      const contentWithDs =
-        firstDsId && content && typeof content === "object"
-          ? { ...content, datasourceId: content.datasourceId || firstDsId }
-          : content;
-
-      const res = await createComponent({
-        variables: {
-          input: {
-            title: title,
-            type: type,
-            content: contentWithDs,
-            vizChapter: {
-              connect: {
-                id: workspace?.id,
-              },
-            },
-          },
-        },
-      });
-      const newComponent = res?.data?.createVizSection; // Assuming correct response field
-      if (newComponent) {
-        const newLayoutItem = {
-          i: newComponent.id,
-          x: 0,
-          y: 0,
-          w: 4,
-          h: 10,
-          minW: 2,
-          minH: 5,
-          maxW: 12,
-          maxH: 20,
-        };
-        const shiftBy = newLayoutItem.h;
-        const shiftedLayout = (Array.isArray(layout) ? layout : []).map((item) => ({
-          ...item,
-          y: (Number.isFinite(item?.y) ? item.y : 0) + shiftBy,
-        }));
-
-        // Update local workspace
-        updateWorkspace({
-          vizSections: [...components, newComponent],
-          layout: [newLayoutItem, ...shiftedLayout],
-        });
-        setIsAddComponentPanelOpen(false);
-        setActiveComponent(newComponent);
-        setLeftPanelMode("editor");
-        setSidebarVisible(true);
-        window.requestAnimationFrame(() => {
-          const canvasEl = canvasRef.current;
-          if (!canvasEl) return;
-          if (typeof canvasEl.scrollTo === "function") {
-            canvasEl.scrollTo({ top: 0, behavior: "smooth" });
-            return;
-          }
-          canvasEl.scrollTop = 0;
-        });
-      }
-    },
-    [
-      createComponent,
-      journal,
-      workspace?.id,
-      layout,
-      components,
-      updateWorkspace,
-      setIsAddComponentPanelOpen,
-      setActiveComponent,
-      setLeftPanelMode,
-      setSidebarVisible,
     ],
   );
 
@@ -387,27 +300,20 @@ export default function Grid({
     if (activeComponent) {
       setActiveComponent(null);
     }
-    if (isAddComponentPanelOpen) {
-      setIsAddComponentPanelOpen(false);
-    }
     setLeftPanelMode("journal");
     setSidebarVisible(true);
   }, [
     activeComponent,
-    isAddComponentPanelOpen,
     setActiveComponent,
-    setIsAddComponentPanelOpen,
     setLeftPanelMode,
     setSidebarVisible,
   ]);
 
   const handleResetToJournal = useCallback(() => {
-    setIsAddComponentPanelOpen(false);
     setActiveComponent(null);
     setLeftPanelMode("journal");
     setSidebarVisible(true);
   }, [
-    setIsAddComponentPanelOpen,
     setActiveComponent,
     setLeftPanelMode,
     setSidebarVisible,
@@ -417,12 +323,10 @@ export default function Grid({
     const target = event.target;
     if (!(target instanceof Element)) return;
     if (target.closest(".widgetContainer")) return;
-    setIsAddComponentPanelOpen(false);
     setActiveComponent(null);
     setLeftPanelMode("journal");
     setSidebarVisible(true);
   }, [
-    setIsAddComponentPanelOpen,
     setActiveComponent,
     setLeftPanelMode,
     setSidebarVisible,
@@ -486,18 +390,6 @@ export default function Grid({
           onClose={() => {
             debouncedSaveRef.current?.flush?.();
             setActiveComponent(null);
-            setLeftPanelMode("journal");
-          }}
-        />
-      );
-    }
-
-    if (leftPanelMode === "addComponent" || isAddComponentPanelOpen) {
-      return (
-        <ComponentPanel
-          handleAddComponent={handleAddComponent}
-          onClose={() => {
-            setIsAddComponentPanelOpen(false);
             setLeftPanelMode("journal");
           }}
         />

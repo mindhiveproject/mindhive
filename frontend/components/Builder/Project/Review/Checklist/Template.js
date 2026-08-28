@@ -4,10 +4,18 @@ export function getChecklistItems(t) {
   return [
     {
       name: "complete-cards",
-      title: t("checklistTemplate.completeCards.title", "Double check that all your proposal cards are complete"),
+      title: t(
+        "checklistTemplate.completeCards.title",
+        {},
+        { default: "Double check that all your cards are complete" }
+      ),
       description: t(
         "checklistTemplate.completeCards.description",
-        "The text in your proposal cards will be aggregated and exported as a PDF file."
+        {},
+        {
+          default:
+            "The text in your cards will be aggregated and exported as a PDF file.",
+        }
       ),
       isComplete: false,
     },

@@ -81,11 +81,9 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(20px, 2.8vw, 26px);
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
-    line-height: 1.25;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -141,8 +139,8 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 `;
@@ -161,18 +159,20 @@ const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: #5f6871;
 
   span.label-text {
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
   span.hint {
     color: #888;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   input[type="text"],
@@ -182,8 +182,8 @@ const Field = styled.label`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #171717;
     outline: none;
 
@@ -195,7 +195,6 @@ const Field = styled.label`
   textarea {
     min-height: 90px;
     resize: vertical;
-    font-family: "Inter", sans-serif;
   }
 
   input[type="checkbox"] {

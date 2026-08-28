@@ -112,7 +112,7 @@ export default function Proposal({
           <div className="proposal">
             <div className="iconTitle">
               <img src="/assets/icons/project.svg" />
-              <div className="title">{t("submitStudy.dataCollection", "Data Collection")}</div>
+              <div className="title MH-Type-Title-Base">{t("submitStudy.dataCollection", "Data Collection")}</div>
             </div>
             <div className="card">
               <h3>{t("submitStudy.studyUrl", "Study url")}</h3>
@@ -133,16 +133,16 @@ export default function Proposal({
               <>
                 <div className="iconTitle">
                   <img src="/assets/icons/eye.svg" />
-                  <div className="title">{t("submitStudy.studyWasSubmitted", "The study was submitted")}</div>
+                  <div className="title MH-Type-Title-Base">{t("submitStudy.studyWasSubmitted", "The study was submitted")}</div>
                 </div>
               </>
             ) : (
               <>
-                <div className="title">
+                <div className="title MH-Type-Title-Base">
                   {t("submitStudy.submitForDataCollection", "Submit your study for data collection")}
                 </div>
 
-                <div className="subtitle">
+                <div className="subtitle MH-Type-Body-Base">
                   {t("submitStudy.submitForFeedbackIntro", "Once you submit your study for feedback:")}
                   <ul>
                     <li>{t("submitStudy.appearInFeedbackCenter", "Your study will appear in the Feedback Center.")}</li>
@@ -150,11 +150,11 @@ export default function Proposal({
                 </div>
 
                 {allCardsCompleted ? (
-                  <div className="subtitle">
+                  <div className="subtitle MH-Type-Body-Base">
                     {t("submitStudy.readyToSubmit", "The study is ready to be submitted for feedback!")}
                   </div>
                 ) : (
-                  <div className="subtitle warning">
+                  <div className="subtitle warning MH-Type-Body-Base">
                     {t("submitStudy.completeAllRequired", "Please complete all required cards before submitting your proposal for feedback.")}
                   </div>
                 )}

@@ -34,9 +34,9 @@ export default async function exportPDF(
   };
 
   const styles = {
-    h1: "color: #171717; font-family: Inter, sans-serif; font-size: 32px; font-weight: 600; line-height: 44px;",
-    h2: "color: #171717; font-family: Inter, sans-serif; font-size: 24px; font-weight: 400; line-height: 28px;",
-    h3: "color: #171717; font-family: Inter, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;"
+    h1: "color: #171717; font-family: 'Inter', sans-serif; font-size: 36px; font-weight: 600; line-height: 44px; letter-spacing: 0;",
+    h2: "color: #171717; font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 400; line-height: 28px; letter-spacing: 0;",
+    h3: "color: #171717; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; letter-spacing: 0;"
   };
 
   // Order sections by position
@@ -199,7 +199,11 @@ function generatePDFBrowserPrint(content, title, date, t) {
           padding: 4px 8px;
           position: relative;
           vertical-align: top;
-          font-size: 1rem;
+          font-family: 'Inter', sans-serif;
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 24px;
+          letter-spacing: 0;
         }
 
         th {
@@ -255,8 +259,11 @@ function generatePDFBrowserPrint(content, title, date, t) {
           color: white;
           border-radius: 100px;
           border: 1px solid #336F8A;
-          font-size: 16px;
+          font-family: 'Inter', sans-serif;
           font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          letter-spacing: 0;
           cursor: pointer;
           transition: background 0.3s ease;
         }
@@ -280,8 +287,11 @@ function generatePDFBrowserPrint(content, title, date, t) {
           color: #f56565;
           border-radius: 100px;
           border: 1px solid #f56565;
-          font-size: 16px;
+          font-family: 'Inter', sans-serif;
           font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          letter-spacing: 0;
           cursor: pointer;
           transition: background 0.3s ease;
         }
@@ -323,7 +333,7 @@ function generatePDFBrowserPrint(content, title, date, t) {
       <div class="content">
         ${content}
       </div>
-      <div style="font-size:10px;color:#9ca3af;margin-top:40px;">Generated on ${date}</div>
+      <div style="font-family:'Inter',sans-serif;font-weight:400;font-size:12px;line-height:16px;letter-spacing:0;color:#9ca3af;margin-top:40px;">Generated on ${date}</div>
     </body>
     </html>
   `;

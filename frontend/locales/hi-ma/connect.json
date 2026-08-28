@@ -637,6 +637,7 @@
 			"cancel": "",
 			"error": "",
 			"helper": "",
+			"helperHeld": "",
 			"successDraft": "",
 			"successRevision": "",
 			"title": "",
@@ -1308,11 +1309,20 @@
 		"returnToSponsor": ""
 	},
 	"reviewThread": {
+		"appointment": {
+			"markScheduled": "",
+			"request": "",
+			"requestDefaultBody": "",
+			"requestExplanation": "",
+			"scheduledDefaultBody": "",
+			"scheduledExplanation": ""
+		},
 		"cancel": "",
 		"compose": {
 			"post": "",
 			"posting": "",
 			"postReply": "",
+			"returnInvite": "",
 			"sponsorLabel": "",
 			"sponsorPlaceholder": "",
 			"teacherLabel": "",
@@ -1324,11 +1334,15 @@
 		"editAria": "",
 		"empty": "",
 		"errors": {
+			"appointmentRequest": "",
+			"appointmentScheduled": "",
 			"delete": "",
 			"post": "",
 			"save": ""
 		},
 		"kind": {
+			"appointmentRequest": "",
+			"appointmentScheduled": "",
 			"reviewerComment": "",
 			"sponsorReply": ""
 		},

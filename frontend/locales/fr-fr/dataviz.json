@@ -48,12 +48,5 @@
 			"journals": "Journaux",
 			"selectJournal": "Sélectionnez un journal pour commencer..."
 		}
-	},
-	"overview": {
-		"database": {
-			"csvDownloadMessage": "Donnez un nom au CSV que vous êtes sur le point de télécharger\\nPas besoin d'ajouter '.csv', nous nous en occupons !",
-			"returnBrowse": "Retour à la navigation",
-			"sectionTitle": "Données actives"
-		}
 	}
 }

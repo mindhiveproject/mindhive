@@ -61,6 +61,7 @@
 		"createFromScratchOrList": "Crea una nueva tarea desde cero o selecciona una de la lista a continuación",
 		"createFromTemplate": "Crear una nueva tarea a partir de una plantilla",
 		"createNew": "Crear una nueva tarea",
+		"creating": "",
 		"creator": "Creador",
 		"dateCreated": "Fecha de creación",
 		"dateUpdated": "Fecha de actualización",
@@ -134,6 +135,7 @@
 		"unpublish": "Anular publicación",
 		"unpublished": "Inédito",
 		"unsavedChanges": "¡Cambios no guardados!",
+		"view": "",
 		"visibleForStudents": "La tarea es visible para los estudiantes."
 	},
 	"assignments": {
@@ -154,6 +156,7 @@
 		"cardTitleComment": "Añade o edita el título de la tarjeta. Este título aparecerá como título de sección si la entrada del estudiante es visible.",
 		"cardWillBeReleased": "La tarjeta será lanzada",
 		"close": "Cerca",
+		"closeWithoutSaving": "",
 		"collective": "Colectivo",
 		"commentPlaceholder": "Escribe un comentario...",
 		"commentsComment": "Esto rellenará automáticamente el cuadro de comentarios para los estudiantes. Puedes eliminar los comentarios más tarde.",
@@ -728,6 +731,13 @@
 		"yourEntry": "Tu entrada"
 	},
 	"joinClass": "Unirse a la clase",
+	"joinClassFlow": {
+		"goBack": "",
+		"noClassFound": "",
+		"noGoBack": "",
+		"wantToJoin": "",
+		"yesContinue": ""
+	},
 	"joinClassInfo": "Una vez que te unas a una clase, aparecerá aquí.",
 	"journal": {
 		"dateCreated": "Fecha de creación",
@@ -809,6 +819,7 @@
 			"creating": "Creando...",
 			"expandLabel": "Expandir configuración de la ronda de emparejamiento",
 			"export": {
+				"buildingZip": "",
 				"cancel": "Cancelar",
 				"clearAll": "Limpiar todo",
 				"columns": {
@@ -817,6 +828,8 @@
 					"anticipatedObstacles": "Obstáculos anticipados",
 					"availableFrom": "Disponible desde",
 					"availableTo": "Disponible hasta",
+					"coverImageFilename": "",
+					"coverImageZipPath": "",
 					"createdAt": "Creado en",
 					"datasetProvision": "Provisión de conjunto de datos",
 					"datasetProvisionOther": "Provisión de conjunto de datos (otro)",
@@ -825,11 +838,18 @@
 					"expectedDeliverablesOther": "Entregables esperados (otro)",
 					"fieldResearchRequired": "Investigación de campo requerida",
 					"fieldResearchTravelDetails": "Detalles del viaje para investigación de campo",
+					"followUpAssetCount": "",
+					"followUpAssetZipPaths": "",
 					"guidelinesAcknowledged": "Directrices reconocidas",
 					"guidelinesAcknowledgedAt": "Directrices reconocidas en",
+					"hasCoverImage": "",
+					"hasIntroVideo": "",
 					"hasReviewNotes": "Tiene notas de revisión",
 					"id": "ID de oportunidad",
 					"internshipInterest": "Interés en pasantía",
+					"introVideoFilename": "",
+					"introVideoUrl": "",
+					"introVideoZipPath": "",
 					"issueRelevance": "Relevancia del problema",
 					"mentorEmail": "Correo electrónico del mentor",
 					"mentorFirstName": "Nombre del mentor",
@@ -864,12 +884,14 @@
 					"updatedAt": "Actualizado en"
 				},
 				"download": "Descargar CSV",
+				"downloadingMedia": "",
 				"empty": "No hay oportunidades para exportar.",
 				"exporting": "Exportando...",
 				"failed": "No se pudieron exportar las oportunidades. Por favor, inténtelo de nuevo.",
 				"groups": {
 					"basics": "Conceptos básicos",
 					"capacity": "Capacidad y disponibilidad",
+					"media": "",
 					"people": "Personas y organización",
 					"postAcceptance": "Después de la aceptación",
 					"proposal": "Propuesta",
@@ -1083,12 +1105,17 @@
 					"name": "",
 					"organization": "Organización",
 					"review": "Revisar",
-					"sponsor": "Patrocinador"
+					"sponsor": "Patrocinador",
+					"video": "",
+					"videoMissing": "",
+					"videoProvided": ""
 				},
 				"dismissHighlight": "Descartar",
+				"markScheduled": "",
 				"remove": "Eliminar",
 				"review": "Revisar",
-				"reviewUnreadAria": ""
+				"reviewUnreadAria": "",
+				"scheduledNoteBody": ""
 			},
 			"loading": "",
 			"manageMatches": "",
@@ -1188,6 +1215,7 @@
 				"saving": "Guardando...",
 				"toggleFailed": ""
 			},
+			"meetingRequestLabel": "",
 			"mentor": "Mentor",
 			"mentorContact": "",
 			"mentorNotes": "",
@@ -1226,6 +1254,7 @@
 				"updatedAt": ""
 			},
 			"sponsorIsMentor": "",
+			"sponsorRequestedMeeting": "",
 			"status": "Estado",
 			"summaryTitle": "Resumen",
 			"tabs": {
@@ -1249,8 +1278,13 @@
 			"capacity": "",
 			"capacityLabel": "Capacidad",
 			"flagLabel": "Bandera",
+			"introVideoExternal": "",
+			"introVideoLabel": "",
+			"introVideoNotProvided": "",
+			"introVideoUploaded": "",
 			"lastUpdated": "",
 			"lastUpdatedLabel": "Última actualización",
+			"meetingRequestLabel": "",
 			"sponsorLabel": "Patrocinador",
 			"statusLabel": "Estado",
 			"teamOf": ""
@@ -1319,6 +1353,7 @@
 	"projects": {
 		"addTemplateToClass": "Copiar plantilla a la clase",
 		"backToProjects": "Volver a proyectos",
+		"boardCurriculumTypeQuestion": "",
 		"boardSettingsAndPermissions": "Configuración y permisos del tablero",
 		"boardSettingsModalClose": "Cerrar",
 		"boardSettingsModalDescription": "Estas configuraciones se aplican a los proyectos que los estudiantes inician desde \"{{title}}\".",
@@ -1382,6 +1417,7 @@
 			"unnamedColumn": "Columna sin título",
 			"viewDetails": ""
 		},
+		"more": "",
 		"newTemplate": "Crear nueva plantilla de clase",
 		"noClassTemplatesDescription": "Crear un tablero de plantilla para que los estudiantes de esta clase lo usen como punto de partida.",
 		"noClassTemplatesYet": "Aún no has creado ningún tablero de plantilla de clase.",
@@ -1405,6 +1441,7 @@
 		"templateLibraryCount": "{{count}} disponibles",
 		"templateLibraryNoMine": "Aún no tienes plantillas de clase en tus otras clases.",
 		"templateManagement": "Gestión de plantillas",
+		"templateMoreMilestonesHint": "",
 		"templateOptions": "Opciones de plantilla",
 		"templatePreviewModal": {
 			"title": "Vista previa \n\n{{title}}"

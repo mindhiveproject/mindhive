@@ -1,5 +1,5 @@
 // components/DataJournal/Datasets/Main.js
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { useState, useMemo, useEffect, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 
@@ -58,11 +58,13 @@ const SCOPE_EMPTY_DEFAULTS = {
 
 export default function Datasets() {
   const { t } = useTranslation("builder");
+  const client = useApolloClient();
   const {
     user,
     projectId,
     studyId,
     datasetScope,
+    setDatasetScope,
     datasetsListNavNonce,
     datasetsAddRequestNonce,
   } = useDataJournal();
@@ -159,8 +161,44 @@ export default function Datasets() {
     setViewingDatasetId(null);
   };
 
-  const handleCreate = () => {
-    refetch();
+  /** Current tab is guaranteed to include the newly created dataset. */
+  const currentScopeShowsCreatedDataset = (createdDataOrigin) => {
+    if (datasetScope === "me") return true;
+    if (datasetScope === "uploaded" && createdDataOrigin === "UPLOADED") {
+      return true;
+    }
+    return false;
+  };
+
+  const handleCreate = async (_createdDatasource, createdDataOrigin) => {
+    const switchToMe = !currentScopeShowsCreatedDataset(createdDataOrigin);
+
+    if (switchToMe) {
+      const meWhere = buildDatasourcesWhereForScope({
+        scope: "me",
+        projectId,
+        studyId,
+        userId: user?.id,
+        directClassIds,
+        networkClassIds,
+      });
+      if (meWhere) {
+        await client.query({
+          query: GET_DATASOURCES,
+          variables: { where: meWhere },
+          fetchPolicy: "network-only",
+        });
+      }
+      // Keep the scope-change effect from racing the close (we close ourselves).
+      lastDatasetScopeRef.current = "me";
+      setDatasetScope("me");
+    } else {
+      await refetch();
+    }
+
+    setShowAddDataset(false);
+    setEditingDataset(null);
+    setViewingDatasetId(null);
   };
 
   const handleEdit = (dataset) => {
@@ -230,7 +268,6 @@ export default function Datasets() {
           studyId={studyId}
           onCancel={handleCancel}
           onCreate={handleCreate}
-          refetchDatasources={refetch}
         />
       ) : editingDataset ? (
         <EditDataset

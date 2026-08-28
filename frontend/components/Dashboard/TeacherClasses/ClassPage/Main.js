@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import Link from "next/link";
+import clsx from "clsx";
 
 import Header from "./Header";
 import ClassStudents from "./Students";
@@ -16,11 +17,15 @@ import ClassSettings from "./Settings";
 
 import { GET_CLASS } from "../../../Queries/Classes";
 import RestrictedAccess from "../../../Global/Restricted";
+import { NavbarItem, SectionNavbar } from "../../../DesignSystem/Navbar";
 
 import StyledClass from "../../../styles/StyledClass";
 
 import Dashboard from "./Dashboard/Main";
-import { normalizeCurriculumType } from "../../../../lib/curriculumTypes";
+import {
+  classHasNyuCusp,
+  classIsNyuCuspOnly,
+} from "../../../../lib/curriculumTypes";
 import {
   readClassPrefs,
   writeClassPagePref,
@@ -91,26 +96,24 @@ export default function ClassPage({ code, user, query }) {
   });
 
   const myclass = data?.class || { title: "", description: "" };
-  const curriculumType = normalizeCurriculumType(
-    myclass?.settings?.curriculumType
-  );
-  const isNyuCusp = curriculumType === "nyu_cusp";
-  const showOpportunitiesTab = isNyuCusp;
-  const defaultPage = isNyuCusp ? "opportunities" : "dashboard";
+  const hasNyuCusp = classHasNyuCusp(myclass?.settings);
+  const isNyuCuspOnly = classIsNyuCuspOnly(myclass?.settings);
+  const showOpportunitiesTab = hasNyuCusp;
+  const defaultPage = isNyuCuspOnly ? "opportunities" : "dashboard";
   const pageFromQuery = query?.page;
   const page = pageFromQuery || defaultPage;
   const navItems = useMemo(() => {
     const filtered = CLASS_PAGE_NAV_ITEMS.filter((item) => {
       if (item.value === "opportunities" && !showOpportunitiesTab) return false;
-      if (isNyuCusp && NYU_CUSP_HIDDEN_TABS.has(item.value)) return false;
+      if (isNyuCuspOnly && NYU_CUSP_HIDDEN_TABS.has(item.value)) return false;
       return true;
     });
-    if (!isNyuCusp) return filtered;
+    if (!isNyuCuspOnly) return filtered;
     return [
       ...filtered.filter((item) => item.value === "opportunities"),
       ...filtered.filter((item) => item.value !== "opportunities"),
     ];
-  }, [isNyuCusp, showOpportunitiesTab]);
+  }, [isNyuCuspOnly, showOpportunitiesTab]);
   const allowedPageValues = useMemo(
     () => navItems.map((item) => item.value),
     [navItems]
@@ -148,14 +151,14 @@ export default function ClassPage({ code, user, query }) {
       });
       return;
     }
-    if (isNyuCusp && NYU_CUSP_HIDDEN_TABS.has(page)) {
+    if (isNyuCuspOnly && NYU_CUSP_HIDDEN_TABS.has(page)) {
       router.replace({
         pathname: `/dashboard/myclasses/${code}`,
         query: { page: defaultPage },
       });
       return;
     }
-    if (isNyuCusp && showOpportunitiesTab && !query?.page) {
+    if (isNyuCuspOnly && showOpportunitiesTab && !query?.page) {
       const savedPage = myclass?.id
         ? readClassPrefs(myclass.id)?.page
         : null;
@@ -171,7 +174,7 @@ export default function ClassPage({ code, user, query }) {
     page,
     code,
     router,
-    isNyuCusp,
+    isNyuCuspOnly,
     defaultPage,
     showOpportunitiesTab,
     query?.page,
@@ -181,21 +184,27 @@ export default function ClassPage({ code, user, query }) {
 
   const isProjectsFullscreen =
     page === "projects" && action === "edit" && board;
+  const isMatchingRoundFullscreen =
+    page === "opportunities" &&
+    typeof query?.round === "string" &&
+    Boolean(query.round);
 
-  if (page === "board" || (isNyuCusp && NYU_CUSP_HIDDEN_TABS.has(page))) {
+  if (page === "board" || (isNyuCuspOnly && NYU_CUSP_HIDDEN_TABS.has(page))) {
     return null;
   }
 
   if (isProjectsFullscreen) {
     return (
-      <StyledClass>
+      <StyledClass className="isProjectsFullscreen">
         <ClassProjects myclass={myclass} user={user} query={query} />
       </StyledClass>
     );
   }
 
   return (
-    <StyledClass>
+    <StyledClass
+      className={clsx(isMatchingRoundFullscreen && "isMatchingRoundFullscreen")}
+    >
       <RestrictedAccess
         userCanAccess={[
           ...user?.teacherIn.map((c) => c?.id),
@@ -203,39 +212,40 @@ export default function ClassPage({ code, user, query }) {
         ]}
         whatToAccess={myclass?.id}
       >
-        <div>
-          <Header user={user} myclass={myclass} />
-          <nav className="classPageNav" aria-label={t("main.classSectionsNav")}>
-            <div className="secondLine">
-              <div className="menu">
+        <div
+          className={clsx(
+            isMatchingRoundFullscreen && "matchingRoundFullscreenLayout",
+          )}
+        >
+          {isMatchingRoundFullscreen ? null : (
+            <>
+              <Header user={user} myclass={myclass} />
+              <SectionNavbar
+                className="classPageNav"
+                variant="underline"
+                showRule
+                gapless
+                aria-label={t("main.classSectionsNav")}
+              >
                 {navItems.map((item) => (
-                  <Link
+                  <NavbarItem
                     key={item.value}
+                    as={Link}
                     href={{
                       pathname: `/dashboard/myclasses/${code}`,
                       query: { page: item.value },
                     }}
-                    aria-current={page === item.value ? "page" : undefined}
+                    selected={page === item.value}
                   >
-                    <div
-                      className={
-                        page === item.value
-                          ? "menuTitle selectedMenuTitle"
-                          : "menuTitle"
-                      }
-                    >
-                      <div className="titleWithIcon">
-                        <p>{t(item.labelKey)}</p>
-                      </div>
-                    </div>
-                  </Link>
+                    {t(item.labelKey)}
+                  </NavbarItem>
                 ))}
-              </div>
-            </div>
-          </nav>
+              </SectionNavbar>
+            </>
+          )}
 
           <div>
-            {page === "dashboard" && !isNyuCusp && (
+            {page === "dashboard" && !isNyuCuspOnly && (
               <Dashboard myclass={myclass} user={user} query={query} />
             )}
           </div>
@@ -255,7 +265,7 @@ export default function ClassPage({ code, user, query }) {
             )}
           </div>
           <div>
-            {page === "studies" && !isNyuCusp && (
+            {page === "studies" && !isNyuCuspOnly && (
               <ClassStudies myclass={myclass} user={user} query={query} />
             )}
           </div>
@@ -269,7 +279,11 @@ export default function ClassPage({ code, user, query }) {
               <ClassResources myclass={myclass} user={user} query={query} />
             )}
           </div>
-          <div>
+          <div
+            className={clsx(
+              isMatchingRoundFullscreen && "matchingRoundWorkspaceSlot",
+            )}
+          >
             {page === "opportunities" && showOpportunitiesTab && (
               <ClassOpportunities myclass={myclass} user={user} />
             )}

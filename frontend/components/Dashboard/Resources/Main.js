@@ -13,6 +13,7 @@ import PublicResourcesList from "./PublicResourcesList";
 import ResourcePreviewModal from "./ResourcePreviewModal";
 
 import StyledResource from "../../styles/StyledResource";
+import { NavbarItem, SectionNavbar } from "../../DesignSystem/Navbar";
 
 import useTranslation from "next-translate/useTranslation";
 
@@ -40,28 +41,27 @@ export default function ResourcesMain({ query, user }) {
           <h1>{t("boardManagement.resourceCenterTitle")}</h1>
           <p>{t("boardManagement.resourceCenterDescription")}</p>
           <div className="header">
-            <div className="menu">
-              <Link href="/dashboard/resources">
-                <div
-                  className={
-                    !selector ? "menuTitle selectedMenuTitle" : "menuTitle"
-                  }
-                >
-                  <p>{t("boardManagement.myResources")}</p>
-                </div>
-              </Link>
-              <Link href="/dashboard/resources/public">
-                <div
-                  className={
-                    selector === "public"
-                      ? "menuTitle selectedMenuTitle"
-                      : "menuTitle"
-                  }
-                >
-                  <p>{t("boardManagement.publicResources")}</p>
-                </div>
-              </Link>
-            </div>
+            <SectionNavbar
+              variant="underline"
+              showRule
+              gapless
+              aria-label={t("boardManagement.resourceCenterTitle")}
+            >
+              <NavbarItem
+                as={Link}
+                href="/dashboard/resources"
+                selected={!selector}
+              >
+                {t("boardManagement.myResources")}
+              </NavbarItem>
+              <NavbarItem
+                as={Link}
+                href="/dashboard/resources/public"
+                selected={selector === "public"}
+              >
+                {t("boardManagement.publicResources")}
+              </NavbarItem>
+            </SectionNavbar>
             <Link href="/dashboard/resources/add">
               <button>{t("boardManagement.createNewResource")}</button>
             </Link>

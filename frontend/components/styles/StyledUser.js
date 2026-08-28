@@ -66,8 +66,8 @@ export const StyledUserPage = styled.div`
 
         .username {
           h1 {
-            font-size: 3rem;
-            font-weight: 500;
+            font: var(--MH-Type-Heading-Large);
+            letter-spacing: 0;
           }
         }
       }
@@ -91,28 +91,6 @@ export const StyledUserPage = styled.div`
 
         @media only screen and (max-width: 500px) {
           grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        }
-
-        button {
-          min-width: 150px;
-          width: 100%;
-          border-radius: 12px;
-          height: auto;
-          font-size: 1.8rem;
-          padding: 1rem;
-          background: white;
-          color: var(--green);
-          border: 2px solid var(--green);
-        }
-        button: hover {
-          transition: background-color 0.5s ease;
-          background: var(--green);
-          color: white;
-        }
-        .followed: hover {
-          transition: background-color 0.5s ease;
-          background: var(--pink);
-          color: white;
         }
       }
     }
@@ -150,8 +128,8 @@ export const StyledUserPage = styled.div`
 
       a {
         text-transform: uppercase;
-        font-weight: bold;
-        font-size: 1.5em;
+        font: var(--MH-Type-Label-Large);
+        letter-spacing: 0;
         color: var(--green);
       }
 
@@ -189,8 +167,8 @@ export const StyledUserPage = styled.div`
 
       a {
         text-transform: uppercase;
-        font-weight: bold;
-        font-size: 1.5em;
+        font: var(--MH-Type-Label-Large);
+        letter-spacing: 0;
         color: var(--green);
       }
 
@@ -228,8 +206,8 @@ export const StyledUserPage = styled.div`
 
       a {
         text-transform: uppercase;
-        font-weight: bold;
-        font-size: 1.5em;
+        font: var(--MH-Type-Label-Large);
+        letter-spacing: 0;
         color: var(--green);
         cursor: pointer;
       }

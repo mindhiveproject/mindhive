@@ -140,12 +140,12 @@ export default function ConnectResourceToCardModal({
           }}
         >
           <Button
+            className="MH-Type-Label-Base"
             style={{
               borderRadius: "100px",
               border: "1px solid #336F8A",
               background: "white",
               color: "#336F8A",
-              fontSize: "16px",
             }}
             onClick={handleClose}
             disabled={isBusy}
@@ -195,12 +195,12 @@ export default function ConnectResourceToCardModal({
         }}
       >
         <Button
+          className="MH-Type-Label-Base"
           style={{
             borderRadius: "100px",
             border: "1px solid #336F8A",
             background: "white",
             color: "#336F8A",
-            fontSize: "16px",
           }}
           onClick={handleClose}
           disabled={isBusy}
@@ -210,6 +210,7 @@ export default function ConnectResourceToCardModal({
         <div style={{ display: "flex", gap: "12px" }}>
           {hasLinkedCards && (
             <Button
+              className="MH-Type-Label-Base"
               disabled={isBusy}
               onClick={handleDisconnect}
               style={{
@@ -218,13 +219,13 @@ export default function ConnectResourceToCardModal({
                 border: "1px solid #336F8A",
                 background: "white",
                 color: "#336F8A",
-                fontSize: "16px",
               }}
             >
               {t("resource.connectModal.disconnect", "Disconnect from card")}
             </Button>
           )}
           <Button
+            className="MH-Type-Label-Base"
             loading={linkLoading}
             disabled={isBusy}
             onClick={handleSave}
@@ -233,7 +234,6 @@ export default function ConnectResourceToCardModal({
               border: "1px solid #336F8A",
               background: "#336F8A",
               color: "white",
-              fontSize: "16px",
             }}
           >
             {t("resource.connectModal.save", "Save")}

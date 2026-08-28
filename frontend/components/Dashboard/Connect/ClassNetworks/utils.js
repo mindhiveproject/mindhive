@@ -98,9 +98,8 @@ const EmailButton = styled.button`
   border: none;
   background: transparent;
   color: #336f8a;
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   text-align: left;
   text-decoration: underline;
   text-underline-offset: 2px;

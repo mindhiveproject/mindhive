@@ -14,7 +14,7 @@ import {
 import { FIND_ORG_FOR_PROFILE_SAVE } from "../../../../Queries/Organization";
 
 import { StyledInput } from "../../../../styles/StyledForm";
-import { StyledSaveButton } from "../../../../styles/StyledProfile";
+import Button from "../../../../DesignSystem/Button";
 import { useState, useEffect } from "react";
 import { getProfileImageUrl } from "../../../../../lib/profileStudyImageUrls";
 import {
@@ -253,7 +253,10 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
 
             <div className="inputLineBlock">
               <p className="fieldLabel">Organization logo</p>
-              <p style={{ fontSize: 13, color: "#5f6871", marginTop: 0 }}>
+              <p
+                className="MH-Type-Body-Base"
+                style={{ color: "#5f6871", marginTop: 0 }}
+              >
                 A square logo works best (JPG, PNG, or WEBP). Up to{" "}
                 {MAX_LOGO_BYTES / 1024 / 1024} MB.
               </p>
@@ -303,8 +306,8 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
               />
               {logoUpload && (
                 <div
+                  className="MH-Type-Body-Base"
                   style={{
-                    fontSize: 12,
                     color: "#1d8f47",
                     marginTop: 4,
                   }}
@@ -524,11 +527,14 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
           </>
         )}
 
-        <StyledSaveButton changed={changed}>
-          <button onClick={handleSubmit} disabled={!changed}>
-            {t("basic.saveChanges")}
-          </button>
-        </StyledSaveButton>
+        <Button
+          variant="filled"
+          type="button"
+          onClick={handleSubmit}
+          disabled={!changed}
+        >
+          {t("basic.saveChanges")}
+        </Button>
       </StyledInput>
     </div>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
+import Button from "../../DesignSystem/Button";
 
 const itemsInternalTask = [
   {
@@ -99,9 +100,9 @@ export default function Navigation({
         </div>
         <div className="rightPanel">
           <div className="submitButton">
-            <button onClick={() => handleSubmit()}>
-              {submitBtnName || t("submit")}
-            </button>
+            <Button variant="filled" type="button" onClick={() => handleSubmit()}>
+              {submitBtnName || t("submit", {}, { default: "Submit" })}
+            </Button>
           </div>
 
           {/* {openFullscreenPreview && (

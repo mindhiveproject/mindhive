@@ -2,11 +2,16 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useMutation } from "@apollo/client";
 import { Icon } from "semantic-ui-react";
-import InfoTooltip from "../../../DesignSystem/InfoTooltip";
+import InfoPopover from "../../../DesignSystem/InfoPopover";
+import Tooltip from "../../../DesignSystem/Tooltip";
 import { MANAGE_FAVORITE_TASKS } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { stripHtml, TYPO } from "./utils";
 import { isPublishedToClassId } from "../../../Mutations/Resource";
+
+// Chip tooltip's "Type:" prefix. Weight only — the size comes from the
+// tooltip or popover it sits in, so it never outgrows the title beside it.
+const TOOLTIP_LABEL_STYLE = { fontWeight: 600 };
 
 // Base chip layout (all chips)
 const CHIP_BASE_STYLES = {
@@ -67,16 +72,6 @@ const TASK_STYLES = {
   },
 };
 
-// Shared tooltip container style for chip tooltips
-const CHIP_TOOLTIP_STYLE = {
-  width: "max-content",
-  maxWidth: "320px",
-  borderRadius: "8px",
-  padding: "12px 16px",
-  marginTop: "8px",
-  ...TYPO.label,
-};
-
 // Assignment chip (Disabled, Public, Completed states)
 // Teachers and mentors can click disabled (unpublished) chips; style stays greyed.
 const AssignmentChip = ({
@@ -112,18 +107,13 @@ const AssignmentChip = ({
     ? t("board.expendedCard.assignmentNotPublished", "Not published")
     : (
         <>
-          <span style={{ ...TYPO.labelSemibold, fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+          <span style={TOOLTIP_LABEL_STYLE}>{typeLabel}:</span> {fullTitle}
         </>
       );
   const isHovered = hoveredItemId === item.id;
 
   return (
-    <InfoTooltip
-      content={tooltipContent}
-      delayMs={550}
-      tooltipStyle={{ ...CHIP_TOOLTIP_STYLE, background: chipStyle.background, border: chipStyle.border, color: "#171717" }}
-      wrapperStyle={{ display: "inline-block", maxWidth: "320px" }}
-    >
+    <Tooltip content={tooltipContent} delayMs={550} maxWidth={320}>
       <div
         className="itemBlockPreview"
         onClick={handleClick}
@@ -147,7 +137,7 @@ const AssignmentChip = ({
       >
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{fullTitle}</span>
       </div>
-    </InfoTooltip>
+    </Tooltip>
   );
 };
 
@@ -168,7 +158,7 @@ const ResourceStudyChip = ({
   const typeLabel = isStudy ? t("board.expendedCard.studies", "Studies") : t("board.expendedCard.resources", "Resources");
   const tooltipContent = (
     <>
-      <span style={{ ...TYPO.labelSemibold, fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+      <span style={TOOLTIP_LABEL_STYLE}>{typeLabel}:</span> {fullTitle}
     </>
   );
 
@@ -178,12 +168,7 @@ const ResourceStudyChip = ({
   };
 
   return (
-    <InfoTooltip
-      content={tooltipContent}
-      delayMs={550}
-      tooltipStyle={{ ...CHIP_TOOLTIP_STYLE, background: "#FFFFFF", border: RESOURCE_STUDY_STYLES.border, color: "#171717" }}
-      wrapperStyle={{ display: "inline-block", maxWidth: "320px" }}
-    >
+    <Tooltip content={tooltipContent} delayMs={550} maxWidth={320}>
       <div
         className="itemBlockPreview"
         onClick={handleClick}
@@ -207,7 +192,7 @@ const ResourceStudyChip = ({
       >
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, ...TYPO.label, color: "#171717" }}>{fullTitle}</span>
       </div>
-    </InfoTooltip>
+    </Tooltip>
   );
 };
 
@@ -226,7 +211,7 @@ const TaskSurveyChip = ({
   const typeLabel = t("board.expendedCard.tasks", "Tasks");
   const tooltipContent = (
     <>
-      <span style={{ ...TYPO.labelSemibold, fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+      <span style={TOOLTIP_LABEL_STYLE}>{typeLabel}:</span> {fullTitle}
     </>
   );
 
@@ -276,12 +261,14 @@ const TaskSurveyChip = ({
   );
 
   return (
-    <InfoTooltip
-      content={tooltipContent}
-      delayMs={550}
-      action={tooltipAction}
-      tooltipStyle={{ ...CHIP_TOOLTIP_STYLE, background: style.background, border: style.border, color: "#171717" }}
-      wrapperStyle={{ display: "inline-block", maxWidth: "320px" }}
+    <InfoPopover
+      content={
+        <>
+          {tooltipContent}
+          <div style={{ marginTop: 8 }}>{tooltipAction}</div>
+        </>
+      }
+      width={320}
     >
       <div
         className="itemBlockPreview"
@@ -357,7 +344,7 @@ const TaskSurveyChip = ({
           {fullTitle}
         </span>
       </div>
-    </InfoTooltip>
+    </InfoPopover>
   );
 };
 

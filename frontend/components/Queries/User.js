@@ -122,6 +122,9 @@ export const CURRENT_USER_QUERY = gql`
         favoritePeople {
           id
         }
+        favoriteOpportunities {
+          id
+        }
         bio
         location
         language

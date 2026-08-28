@@ -262,7 +262,7 @@ json.dumps(to_native(result))
             marginBottom: "1rem",
           }}
         >
-          <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+          <div className="MH-Type-Title-Base" style={{ textAlign: "left" }}>
             {t(
               "dataJournal.hypVis.emptyState.title",
               {},

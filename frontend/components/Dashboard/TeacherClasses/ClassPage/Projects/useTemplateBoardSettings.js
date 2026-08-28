@@ -16,7 +16,10 @@ import {
   getBoardStudentsCanAssignToCards,
   mergeBoardSettings,
 } from "../../../../../lib/proposalBoardSettings";
-import { normalizeCurriculumType } from "../../../../../lib/curriculumTypes";
+import {
+  getClassCurriculumTypes,
+  normalizeCurriculumType,
+} from "../../../../../lib/curriculumTypes";
 
 function readBoardSettings(board) {
   return board?.settings && typeof board.settings === "object"
@@ -40,6 +43,11 @@ export default function useTemplateBoardSettings({
       classTemplateBoards: classTemplates,
     }),
     [myclass, classTemplates]
+  );
+
+  const classCurriculumTypes = useMemo(
+    () => getClassCurriculumTypes(myclass?.settings),
+    [myclass?.settings?.curriculumType, myclass?.settings?.curriculumTypes]
   );
 
   const [curriculumType, setCurriculumType] = useState("mindhive");
@@ -214,7 +222,9 @@ export default function useTemplateBoardSettings({
 
   return {
     updating,
+    disabled: updating,
     curriculumType,
+    classCurriculumTypes,
     assignableToStudents,
     studentsCanAssignToCards,
     copyVisible,

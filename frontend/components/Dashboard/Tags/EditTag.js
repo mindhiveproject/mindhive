@@ -7,6 +7,7 @@ import { UPDATE_TAG } from "../../Mutations/Tag";
 
 import useForm from "../../../lib/useForm";
 import TagForm from "./TagForm";
+import Button from "../../DesignSystem/Button";
 
 export default function EditTag({ selector, query, user }) {
   const { t } = useTranslation("common");
@@ -50,7 +51,9 @@ export default function EditTag({ selector, query, user }) {
   return (
     <div>
       <TagForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>{t("tag.save")}</button>
+      <Button variant="filled" type="button" onClick={handleSave}>
+        {t("tag.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

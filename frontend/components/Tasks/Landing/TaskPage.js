@@ -1,6 +1,7 @@
 import Head from "next/head";
 import ReactHtmlParser from "react-html-parser";
-import { Icon, Accordion, Popup } from "semantic-ui-react";
+import { Icon, Accordion } from "semantic-ui-react";
+import InfoPopover from "../../DesignSystem/InfoPopover";
 import { useRouter } from "next/router";
 import { StyledContent } from "../../styles/StyledTaskPage";
 import { useState } from "react";
@@ -85,7 +86,7 @@ export default function TaskPage({ user, task }) {
           <div>
             <h2>{t("taskPage.parameters")}</h2>
             <p>{t("taskPage.parametersDescription", { taskType })}</p>
-            <p style={{ fontSize: "14px" }}>
+            <p className="MH-Type-Body-Base">
               {t("taskPage.parametersNote", { taskType })}
             </p>
             <div className="symbolBlock">
@@ -113,7 +114,7 @@ export default function TaskPage({ user, task }) {
           <div>
             <h2>{t("taskPage.surveyParameters")}</h2>
             <p>{t("taskPage.parametersDescription", { taskType })}</p>
-            <p style={{ fontSize: "14px" }}>
+            <p className="MH-Type-Body-Base">
               {t("taskPage.parametersNote", { taskType })}
             </p>
             <div className="symbolBlock">
@@ -205,21 +206,9 @@ export default function TaskPage({ user, task }) {
                     <li key={variable.varName || idx} style={{ marginBottom: "0.5rem" }}>
                       {ReactHtmlParser(variable.varName || "")}{" "}
                       {variable.varDesc && (
-                        <Popup
+                        <InfoPopover
                           content={ReactHtmlParser(variable.varDesc)}
-                          trigger={
-                            <img
-                            src="/assets/icons/info.svg" // Next.js serves public/ as root
-                            alt="info"
-                            style={{
-                              width: "16px",
-                              height: "16px",
-                              marginLeft: "4px",
-                              cursor: "pointer",
-                              verticalAlign: "middle"
-                            }}
-                          />
-                          }
+                          ariaLabel={variable.name}
                         />
                       )}
                     </li>

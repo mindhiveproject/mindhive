@@ -10,76 +10,20 @@ import { useQuery } from "@apollo/client";
 import { GET_ASSIGNMENT } from "../../../../Queries/Assignment";
 import { GET_STUDENTS_DATA } from "../../../../Queries/Classes";
 import ReviewHomework from "./Homework/Review";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
 
-// Styled button matching Figma design (Primary Action - Teal)
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #336F8A;
-  color: #ffffff;
-  
-  &:hover {
-    background: #ffc107;
-    color: #1a1a1a;
-  }
-  
-  &:active {
-    background: #4db6ac;
-    color: #1a1a1a;
-  }
-  
-  &:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-  }
-`;
-
-// Styled secondary button (Outline style from Figma)
-const SecondaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  font-family: Lato;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
-  
-  &:hover {
-    background: #f5f5f5;
-    border-color: #b3b3b3;
-    color: #666666;
-  }
-  
-  &:active {
-    background: #e0f2f1;
-    border-color: #4db6ac;
-    color: #4db6ac;
-  }
-`;
+// Homework status -> Chip tone (was a bespoke colour map; keeps the coding).
+const STATUS_TONE = {
+  completed: "success",
+  submitted: "success",
+  "feedback given": "success",
+  started: "info",
+  "in progress": "info",
+  "needs feedback": "warning",
+};
+const statusTone = (status) =>
+  STATUS_TONE[String(status || "").toLowerCase()] ?? "neutral";
 
 const Container = styled.div`
   max-width: 1400px;
@@ -96,16 +40,15 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font-family: Lato;
-  font-size: 28px;
-  font-weight: 600;
+  font: var(--MH-Type-Heading-Small);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
 const Subtitle = styled.p`
   margin: 0;
-  font-family: Lato;
-  font-size: 16px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #666666;
 `;
 
@@ -118,10 +61,8 @@ const OptionsLink = styled.a`
   padding: 8px 16px;
   border-radius: 100px;
   margin-left: 8px;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: #336F8A;
   text-decoration: none;
   cursor: pointer;
@@ -138,54 +79,13 @@ const ButtonContainer = styled.div`
   align-items: center;
 `;
 
-// Status chip (colors match Builder Card homework status scheme)
-const StatusChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  white-space: nowrap;
-  border: 1px solid;
-  
-  ${props => {
-    const status = props.status?.toLowerCase() || '';
-    const backgroundColor = status === 'completed'
-      ? '#DEF8FB'
-      : status === 'started'
-      ? '#FDFEF0'
-      : status === 'needs feedback'
-      ? '#E4DFF6'
-      : status === 'feedback given'
-      ? '#F6F9F8'
-      : '#666';
-    const color = status === 'completed'
-      ? '#337C84'
-      : status === 'started'
-      ? '#5D5763'
-      : status === 'needs feedback'
-      ? '#3F288F'
-      : status === 'feedback given'
-      ? '#0D3944'
-      : '#666';
-    return `
-      background-color: ${backgroundColor};
-      border-color: ${color};
-      color: ${color};
-    `;
-  }}
-`;
-
 const GridContainer = styled.div`
   width: 100%;
   height: 600px;
   margin-top: 24px;
   
   .ag-theme-alpine {
-    --ag-font-family: Lato;
+    --ag-font-family: "Inter", sans-serif;
     --ag-font-size: 14px;
     --ag-header-height: 48px;
     --ag-row-height: 48px;
@@ -212,8 +112,8 @@ const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: Lato;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: #1a1a1a;
   cursor: pointer;
   
@@ -287,7 +187,7 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
   // Status renderer
   const StatusRenderer = useCallback((params) => {
     const status = params?.value || 'Not started';
-    return <StatusChip status={status}>{status}</StatusChip>;
+    return <Chip variant="static" tone={statusTone(status)} label={status} />;
   }, []);
 
   // View button renderer
@@ -295,7 +195,7 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
     const homeworkCode = params?.data?.homeworkCode;
     if (!homeworkCode) {
       return (
-        <span style={{ color: '#999', fontSize: '12px' }}>
+        <span className="MH-Type-Body-Base" style={{ color: '#999' }}>
           {t("assignment.noHomework") || "No homework"}
         </span>
       );
@@ -314,9 +214,9 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
         }}
         style={{ textDecoration: 'none' }}
       >
-        <PrimaryButton style={{ padding: '6px 12px', fontSize: '12px' }}>
-          {t("assignment.open") || "Open"}
-        </PrimaryButton>
+        <Button variant="filled">
+          {t("assignment.open", {}, { default: "Open" })}
+        </Button>
       </Link>
     );
   }, [code, myclass, t]);
@@ -444,7 +344,7 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
             }}
             style={{ textDecoration: 'none' }}
           >
-            <SecondaryButton>← {t("assignment.goBack") || "Go back"}</SecondaryButton>
+            <Button variant="outline">{t("assignment.goBack", {}, { default: "Go back" })}</Button>
           </Link>
         </ButtonContainer>
         <HeaderTitle>{assignmentTitle}</HeaderTitle>

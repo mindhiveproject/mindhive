@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TaskBlock from "./Blocks/TaskBlock";
-import { Popup } from "semantic-ui-react";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 import useTranslation from "next-translate/useTranslation";
 
 import { StyledTasksPreview } from "../../../../styles/StyledStudyPage";
@@ -134,11 +134,9 @@ export default function StudyTasks({ study }) {
             {path?.filter((block) => block?.type === "task").length > 0 && (
               <div className="firstLine">
                 <div>{label}</div>
-                <Popup
-                  content={t("selector.studyDesign.conditionProbabilityInfo")}
-                  trigger={<div>{frequency}%</div>}
-                  size="huge"
-                />
+                <Tooltip content={t("selector.studyDesign.conditionProbabilityInfo")}>
+                  <div>{frequency}%</div>
+                </Tooltip>
               </div>
             )}
 

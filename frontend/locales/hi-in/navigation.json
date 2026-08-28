@@ -1,6 +1,7 @@
 {
 	"account": "खाता",
 	"admin": "व्यवस्थापक",
+	"adminDashboard": "व्यवस्थापक डैशबोर्ड",
 	"analyze": "विश्लेषण करें",
 	"archived": "",
 	"boards": "परियोजना बोर्ड",
@@ -27,14 +28,18 @@
 	"proposalTemplates": "प्रस्ताव टेम्पलेट",
 	"research": "अनुसंधान",
 	"researcher": "अनुसंधान",
+	"researcherDashboard": "शोधकर्ता डैशबोर्ड",
 	"resources": "संसाधन",
 	"review": "समीक्षा",
 	"search": "खोजें",
 	"settings": "सेटिंग्स",
 	"sponsors": "प्रायोजक",
+	"sponsorDashboard": "प्रायोजक डैशबोर्ड",
 	"student": "छात्र",
+	"studentDashboard": "छात्र डैशबोर्ड",
 	"tags": "टैग",
 	"teacher": "शिक्षण",
+	"teacherDashboard": "शिक्षक डैशबोर्ड",
 	"updates": "Updates",
 	"workspace": "कार्यस्थान"
 }

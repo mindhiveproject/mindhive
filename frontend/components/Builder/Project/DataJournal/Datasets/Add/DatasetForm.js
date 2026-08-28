@@ -4,7 +4,8 @@ import { customAlphabet } from "nanoid";
 import { useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
+import Button from "../../../../../DesignSystem/Button";
+import InfoPopover from "../../../../../DesignSystem/InfoPopover";
 import {
   collectSharingProfileIdsFromStudyAndProject,
   getSharingRecipientEntries,
@@ -35,9 +36,11 @@ export default function DatasetForm({
   loading,
   error,
   onCancel,
+  onCreated,
 }) {
   const { t } = useTranslation("builder");
   const [collaboratorsCanEdit, setCollaboratorsCanEdit] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const sharingIds = useMemo(
     () =>
@@ -116,7 +119,7 @@ export default function DatasetForm({
   };
 
   const handleCreateDataset = async () => {
-    if (!datasetName || !dataOrigin) return;
+    if (!datasetName || !dataOrigin || submitting || loading) return;
 
     const mutationVariables = {
       data: {
@@ -128,77 +131,88 @@ export default function DatasetForm({
       },
     };
 
-    if (dataOrigin === "STUDY") {
-      if (!studyId || !studyData?.study) {
-        // nothing to connect to – bail out early
-        return;
-      }
-      mutationVariables.data.study = { connect: { id: studyId } };
-      await createDatasource({ variables: mutationVariables });
-    } else if (dataOrigin === "UPLOADED" && file) {
-      let data;
-      if (file.type === "application/json") {
-        const text = await file.text();
-        data = JSON.parse(text);
-      } else {
-        data = await toJson(file);
-      }
+    setSubmitting(true);
+    try {
+      let createResult = null;
 
-      const normalizedData = data.map(normalizeRowKeys);
-      const variableNames = columnNamesFromUploadData(normalizedData);
-      const variables = variableNames.map((variable) => ({
-        field: variable,
-        type: "general",
-        editable: true,
-      }));
+      if (dataOrigin === "STUDY") {
+        if (!studyId || !studyData?.study) {
+          // nothing to connect to – bail out early
+          return;
+        }
+        mutationVariables.data.study = { connect: { id: studyId } };
+        createResult = await createDatasource({ variables: mutationVariables });
+      } else if (dataOrigin === "UPLOADED" && file) {
+        let data;
+        if (file.type === "application/json") {
+          const text = await file.text();
+          data = JSON.parse(text);
+        } else {
+          data = await toJson(file);
+        }
 
-      const metadata = {
-        id: nanoid(),
-        payload: "upload",
-        timestampUploaded: Date.now(),
-        variables: variables,
-      };
+        const normalizedData = data.map(normalizeRowKeys);
+        const variableNames = columnNamesFromUploadData(normalizedData);
+        const variables = variableNames.map((variable) => ({
+          field: variable,
+          type: "general",
+          editable: true,
+        }));
 
-      const dataFile = {
-        metadata,
-        data: normalizedData,
-      };
+        const metadata = {
+          id: nanoid(),
+          payload: "upload",
+          timestampUploaded: Date.now(),
+          variables: variables,
+        };
 
-      const curDate = new Date();
-      const date = {
-        year: parseInt(curDate.getFullYear()),
-        month: parseInt(curDate.getMonth()) + 1,
-        day: parseInt(curDate.getDate()),
-      };
+        const dataFile = {
+          metadata,
+          data: normalizedData,
+        };
 
-      await fetch(`/api/save?y=${date.year}&m=${date.month}&d=${date.day}`, {
-        method: "POST",
-        body: JSON.stringify(dataFile),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
+        const curDate = new Date();
+        const date = {
+          year: parseInt(curDate.getFullYear()),
+          month: parseInt(curDate.getMonth()) + 1,
+          day: parseInt(curDate.getDate()),
+        };
 
-      const fileAddress = {
-        ...date,
-        token: metadata?.id,
-      };
-
-      mutationVariables.data.content = {
-        uploaded: {
-          address: fileAddress,
-          metadata: {
-            id: metadata?.id,
-            payload: metadata?.payload,
-            timestampUploaded: metadata?.timestampUploaded,
+        await fetch(`/api/save?y=${date.year}&m=${date.month}&d=${date.day}`, {
+          method: "POST",
+          body: JSON.stringify(dataFile),
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
           },
-        },
-      };
+        });
 
-      await createDatasource({ variables: mutationVariables });
+        const fileAddress = {
+          ...date,
+          token: metadata?.id,
+        };
+
+        mutationVariables.data.content = {
+          uploaded: {
+            address: fileAddress,
+            metadata: {
+              id: metadata?.id,
+              payload: metadata?.payload,
+              timestampUploaded: metadata?.timestampUploaded,
+            },
+          },
+        };
+
+        createResult = await createDatasource({ variables: mutationVariables });
+      }
+      // TEMPLATE: reserved for future extension
+
+      if (createResult?.data?.createDatasource && onCreated) {
+        await onCreated(createResult.data.createDatasource, dataOrigin);
+      }
+    } finally {
+      setSubmitting(false);
     }
-    // TEMPLATE: reserved for future extension
   };
 
   const hasStudy = !!studyData?.study;
@@ -211,6 +225,8 @@ export default function DatasetForm({
       );
 
   const createDisabled =
+    submitting ||
+    loading ||
     !datasetName ||
     !dataOrigin ||
     (dataOrigin === "UPLOADED" && !file) ||
@@ -226,23 +242,22 @@ export default function DatasetForm({
         borderRadius: "10px",
         boxShadow:
           "0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.05)",
-        fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       <h3
+        className="MH-Type-Title-Large"
         style={{
           margin: 0,
-          fontSize: "1.4rem",
           color: "#1a202c",
         }}
       >
         {t("dataJournal.datasetForm.title", {}, { default: "New dataset" })}
       </h3>
       <p
+        className="MH-Type-Body-Base"
         style={{
           marginTop: "6px",
           marginBottom: "18px",
-          fontSize: "0.95rem",
           color: "#4a5568",
         }}
       >
@@ -254,17 +269,17 @@ export default function DatasetForm({
       {/* Dataset name */}
       <div style={{ marginBottom: "20px" }}>
         <label
+          className="MH-Type-Label-Base"
           style={{
             display: "block",
             marginBottom: "6px",
-            fontSize: "0.9rem",
-            fontWeight: 600,
             color: "#2d3748",
           }}
         >
           {t("dataJournal.datasetForm.nameLabel", {}, { default: "Dataset name" })}
         </label>
         <input
+          className="MH-Type-Body-Base"
           type="text"
           value={datasetName}
           onChange={(e) => setDatasetName(e.target.value)}
@@ -276,15 +291,14 @@ export default function DatasetForm({
             padding: "9px 11px",
             borderRadius: "6px",
             border: "1px solid #cbd5e0",
-            fontSize: "0.95rem",
             outline: "none",
           }}
         />
         <p
+          className="MH-Type-Body-Base"
           style={{
             marginTop: "6px",
             marginBottom: 0,
-            fontSize: "0.8rem",
             color: "#a0aec0",
           }}
         >
@@ -297,8 +311,8 @@ export default function DatasetForm({
       {/* Status / errors */}
       {(loading || studyLoading) && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85rem",
             color: "#718096",
             marginBottom: "10px",
           }}
@@ -310,8 +324,8 @@ export default function DatasetForm({
       )}
       {error && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85rem",
             color: "#c53030",
             marginBottom: "10px",
           }}
@@ -324,8 +338,8 @@ export default function DatasetForm({
       )}
       {studyError && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85rem",
             color: "#c53030",
             marginBottom: "10px",
           }}
@@ -347,10 +361,9 @@ export default function DatasetForm({
         }}
       >
         <legend
+          className="MH-Type-Label-Base"
           style={{
             padding: "0 6px",
-            fontSize: "0.9rem",
-            fontWeight: 600,
             color: "#2d3748",
           }}
         >
@@ -381,15 +394,16 @@ export default function DatasetForm({
           />
           <div>
             <div
-              style={{ fontWeight: 500, color: "#2d3748", fontSize: "0.95rem" }}
+              className="MH-Type-Label-Large"
+              style={{ color: "#2d3748" }}
             >
               {t("dataJournal.datasetForm.study.optionTitle", {}, {
                 default: "Use data from the current study",
               })}
             </div>
             <div
+              className="MH-Type-Body-Base"
               style={{
-                fontSize: "0.8rem",
                 color: hasStudy ? "#4a5568" : "#c53030",
                 marginTop: "2px",
               }}
@@ -428,15 +442,16 @@ export default function DatasetForm({
           />
           <div>
             <div
-              style={{ fontWeight: 500, color: "#2d3748", fontSize: "0.95rem" }}
+              className="MH-Type-Label-Large"
+              style={{ color: "#2d3748" }}
             >
               {t("dataJournal.datasetForm.upload.optionTitle", {}, {
                 default: "Upload a CSV or JSON file",
               })}
             </div>
             <div
+              className="MH-Type-Body-Base"
               style={{
-                fontSize: "0.8rem",
                 color: "#4a5568",
                 marginTop: "2px",
               }}
@@ -449,15 +464,15 @@ export default function DatasetForm({
             {dataOrigin === "UPLOADED" && (
               <div style={{ marginTop: "8px" }}>
                 <input
+                  className="MH-Type-Body-Base"
                   type="file"
                   accept=".csv,.json"
                   onChange={handleFileChange}
-                  style={{ fontSize: "0.85rem" }}
                 />
                 <div
+                  className="MH-Type-Body-Base"
                   style={{
                     marginTop: "4px",
-                    fontSize: "0.75rem",
                     color: "#a0aec0",
                   }}
                 >
@@ -490,15 +505,16 @@ export default function DatasetForm({
           />
           <div>
             <div
-              style={{ fontWeight: 500, color: "#2d3748", fontSize: "0.95rem" }}
+              className="MH-Type-Label-Large"
+              style={{ color: "#2d3748" }}
             >
               {t("dataJournal.datasetForm.template.optionTitle", {}, {
                 default: "Copy from an existing dataset",
               })}
             </div>
             <div
+              className="MH-Type-Body-Base"
               style={{
-                fontSize: "0.8rem",
                 color: "#4a5568",
                 marginTop: "2px",
               }}
@@ -513,12 +529,12 @@ export default function DatasetForm({
 
       {(sharingIds.length > 0 || selectedVizPartId) && (
         <div
+          className="MH-Type-Body-Base"
           style={{
             marginTop: 14,
             padding: "10px 12px",
             borderRadius: 8,
             border: "1px solid #e2e8f0",
-            fontSize: "0.85rem",
             color: "#4a5568",
           }}
         >
@@ -546,39 +562,17 @@ export default function DatasetForm({
                   })}
             </span>
             {sharingIds.length > 0 && sharingRecipientsTooltip ? (
-              <InfoTooltip
+              <InfoPopover
                 content={sharingRecipientsTooltip}
-                position="topLeft"
-                portal
-              >
-                <button
-                  type="button"
-                  aria-label={t(
-                    "dataJournal.datasets.sharing.whoTooltipAria",
-                    {},
-                    { default: "Who will receive access" },
-                  )}
-                  style={{
-                    flex: "0 0 auto",
-                    margin: 0,
-                    padding: 2,
-                    border: "none",
-                    background: "transparent",
-                    cursor: "help",
-                    lineHeight: 0,
-                  }}
-                >
-                  <img
-                    src="/assets/icons/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    style={{ display: "block", opacity: 0.65 }}
-                  />
-                </button>
-              </InfoTooltip>
+                ariaLabel={t(
+                  "dataJournal.datasets.sharing.whoTooltipAria",
+                  {},
+                  { default: "Who will receive access" },
+                )}
+                side="top"
+              />
             ) : sharingIds.length === 0 && selectedVizPartId ? (
-              <InfoTooltip
+              <InfoPopover
                 content={t(
                   "dataJournal.datasets.sharing.journalOnlyTooltip",
                   {},
@@ -587,35 +581,13 @@ export default function DatasetForm({
                       "Collaborators from this journal’s study or project will be connected when you create the dataset.",
                   },
                 )}
-                position="topLeft"
-                portal
-              >
-                <button
-                  type="button"
-                  aria-label={t(
-                    "dataJournal.datasets.sharing.whoTooltipAria",
-                    {},
-                    { default: "Who will receive access" },
-                  )}
-                  style={{
-                    flex: "0 0 auto",
-                    margin: 0,
-                    padding: 2,
-                    border: "none",
-                    background: "transparent",
-                    cursor: "help",
-                    lineHeight: 0,
-                  }}
-                >
-                  <img
-                    src="/assets/icons/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    style={{ display: "block", opacity: 0.65 }}
-                  />
-                </button>
-              </InfoTooltip>
+                ariaLabel={t(
+                  "dataJournal.datasets.sharing.whoTooltipAria",
+                  {},
+                  { default: "Who will receive access" },
+                )}
+                side="top"
+              />
             ) : null}
           </p>
           <label
@@ -649,40 +621,19 @@ export default function DatasetForm({
           gap: "8px",
         }}
       >
-        <button
-          onClick={onCancel}
-          type="button"
-          style={{
-            padding: "8px 14px",
-            borderRadius: "6px",
-            border: "1px solid #e2e8f0",
-            background: "#fff",
-            color: "#4a5568",
-            fontSize: "0.9rem",
-            cursor: "pointer",
-          }}
-        >
+        <Button variant="outline" onClick={onCancel} type="button">
           {t("dataJournal.datasetForm.actions.cancel", {}, { default: "Cancel" })}
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="filled"
           onClick={handleCreateDataset}
           disabled={createDisabled}
           type="button"
-          style={{
-            padding: "8px 16px",
-            borderRadius: "6px",
-            border: "none",
-            background: createDisabled ? "#cbd5e0" : "#3182ce",
-            color: "#fff",
-            fontWeight: 500,
-            fontSize: "0.9rem",
-            cursor: createDisabled ? "not-allowed" : "pointer",
-          }}
         >
           {t("dataJournal.datasetForm.actions.create", {}, {
             default: "Create dataset",
           })}
-        </button>
+        </Button>
       </div>
     </div>
   );

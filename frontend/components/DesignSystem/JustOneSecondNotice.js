@@ -1,7 +1,8 @@
 "use client";
 
 import useTranslation from "next-translate/useTranslation";
-import { Loader } from "semantic-ui-react";
+
+import LoadingIcon from "./LoadingIcon";
 
 /**
  * @param {{ h1?: string, p?: string }} [message] — Optional copy; keys match heading + paragraph.
@@ -62,12 +63,12 @@ export default function JustOneSecondNotice({
       <div
         style={{
           position: "relative",
-          width: 40,
-          height: 40,
+          width: 32,
+          height: 32,
           flexShrink: 0,
         }}
       >
-        <Loader active inline="centered" />
+        <LoadingIcon size={32} />
       </div>
 
       <div
@@ -76,7 +77,6 @@ export default function JustOneSecondNotice({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          lineHeight: "24px",
           fontStyle: "normal",
           whiteSpace: hasCustomMessage ? "normal" : "nowrap",
           textAlign: "center",
@@ -84,10 +84,8 @@ export default function JustOneSecondNotice({
         }}
       >
         <p
+          className="MH-Type-Title-Base"
           style={{
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 600,
-            fontSize: 16,
             margin: 0,
             color: "#000000",
           }}
@@ -95,10 +93,8 @@ export default function JustOneSecondNotice({
           {title}
         </p>
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 400,
-            fontSize: 16,
             margin: 0,
             color: "#000000",
             opacity: 0.95,
@@ -107,24 +103,6 @@ export default function JustOneSecondNotice({
           {body}
         </p>
       </div>
-
-      <style jsx>{`
-        @keyframes mh-justOneSecond-pulse {
-          0% {
-            transform: scale(1);
-            opacity: 1;
-          }
-          50% {
-            transform: scale(1.05);
-            opacity: 0.85;
-          }
-          100% {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </div>
   );
 }
-

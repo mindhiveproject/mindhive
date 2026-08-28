@@ -7,9 +7,12 @@ import { useRouter } from "next/router";
 
 import Link from "next/link";
 import { customAlphabet } from "nanoid";
+import Button from "../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ConsentsList({ query, user }) {
   const router = useRouter();
+  const { t } = useTranslation("dashboard");
   
   const [newConsentId, setNewConsentId] = useState(null); // State to store the new consent ID
   
@@ -88,7 +91,13 @@ export default function ConsentsList({ query, user }) {
             <p>{consent?.title}</p>
             <p>{consent?.description}</p>
             <p>{moment(consent?.createdAt).format("MMMM D, YYYY")}</p>
-            <button onClick={() => createConsentlCopy(i)}>Customize</button>
+            <Button
+              variant="filled"
+              type="button"
+              onClick={() => createConsentlCopy(i)}
+            >
+              {t("consentAdmin.customize", {}, { default: "Customize" })}
+            </Button>
           </div>
         </Link>
       ))}

@@ -8,9 +8,12 @@ import { GET_TEMPLATE_ASSIGNMENTS } from "../../../Queries/Assignment";
 import { CREATE_ASSIGNMENT } from "../../../Mutations/Assignment";
 
 import useForm from "../../../../lib/useForm";
+import Button from "../../../DesignSystem/Button";
+import useTranslation from "next-translate/useTranslation";
 
 export default function AddNetwork({}) {
   const router = useRouter();
+  const { t } = useTranslation("dashboard");
 
   const { inputs, handleChange } = useForm({ 
     title: "",
@@ -42,7 +45,9 @@ export default function AddNetwork({}) {
   return (
     <div>
       <NetworkForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save</button>
+      <Button variant="filled" type="button" onClick={handleSave}>
+        {t("management.save", {}, { default: "Save" })}
+      </Button>
     </div>
   );
 }

@@ -89,11 +89,9 @@ export default function TemplateBoardCardPicker({
         return (
           <div key={section.id}>
             <div
+              className="MH-Type-Title-Base"
               style={{
-                fontWeight: 600,
                 marginBottom: "8px",
-                fontFamily: "Lato",
-                fontSize: "16px",
               }}
             >
               {sectionTitle}
@@ -119,7 +117,6 @@ export default function TemplateBoardCardPicker({
                       disabled={disabled}
                       onClick={() => onToggleCard(card.id)}
                       onClose={isSelected ? () => onToggleCard(card.id) : undefined}
-                      shape="square"
                     />
                   );
                 })}
@@ -131,6 +128,7 @@ export default function TemplateBoardCardPicker({
                   return (
                     <li
                       key={card.id}
+                      className="MH-Type-Label-Base"
                       style={{
                         marginBottom: "4px",
                         padding: "8px 12px",
@@ -140,8 +138,6 @@ export default function TemplateBoardCardPicker({
                           ? "1px solid #336F8A"
                           : "1px solid #e0e0e0",
                         cursor: disabled ? "default" : "pointer",
-                        fontFamily: "Lato",
-                        fontSize: "14px",
                         opacity: disabled ? 0.7 : 1,
                       }}
                       onClick={() => !disabled && onSelectCard?.(card.id)}
