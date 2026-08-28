@@ -414,13 +414,8 @@ export const StyledDasboardReview = styled.div`
     }
     .cardsArea {
       display: grid;
-      grid-gap: 24px;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      align-items: stretch;
-
-      @media (max-width: 500px) {
-        grid-template-columns: 1fr;
-      }
+      grid-gap: 16px;
+      grid-template-columns: auto auto 1fr;
     }
 
     .customlink:hover {
