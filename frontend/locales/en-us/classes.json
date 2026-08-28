@@ -1133,7 +1133,7 @@
 					"media": "Media library item",
 					"mediaHint": "Sponsors share an image from their library",
 					"mediaList": "Media",
-					"mediaListHint": "Sponsors upload or pick multiple images, PDFs, and documents",
+					"mediaListHint": "Sponsors upload or pick multiple images, PDFs, documents, and ZIP files",
 					"open": "Open answer",
 					"openHint": "Short or long text",
 					"pickMany": "Pick many",

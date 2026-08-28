@@ -37,6 +37,7 @@ const DOCUMENT_EXTS = new Set([
   "ppt",
   "pptx",
   "odp",
+  "zip",
 ]);
 
 const IMAGE_MIME_TYPES = new Set([
@@ -63,6 +64,9 @@ const DOCUMENT_MIME_TYPES = new Set([
   "application/vnd.ms-powerpoint",
   "application/vnd.openxmlformats-officedocument.presentationml.presentation",
   "application/vnd.oasis.opendocument.presentation",
+  "application/zip",
+  "application/x-zip-compressed",
+  "application/x-zip",
 ]);
 
 // MIME types plus extensions (Windows often omits MIME).
@@ -106,6 +110,10 @@ const ACCEPT = [
   ".pptx",
   "application/vnd.oasis.opendocument.presentation",
   ".odp",
+  "application/zip",
+  "application/x-zip-compressed",
+  "application/x-zip",
+  ".zip",
 ].join(",");
 
 const MEDIA_CHIP_LEADING = (
@@ -388,7 +396,7 @@ export default function MediaAssetListField({
         setUploadError(
           t("definitionForm.mediaAssetList.unsupportedType", {}, {
             default:
-              "Unsupported file type. Upload an image or a document (PDF, Word, Excel, PowerPoint, etc.).",
+              "Unsupported file type. Upload an image or a document (PDF, Word, Excel, PowerPoint, ZIP, etc.).",
           })
         );
         return;
