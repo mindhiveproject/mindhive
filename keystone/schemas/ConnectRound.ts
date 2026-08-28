@@ -106,7 +106,11 @@ export const ConnectRound = list({
       ref: "Profile.connectRoundsCreated",
       hooks: {
         async resolveInput({ context, operation, inputData }) {
-          if (operation === "create" && !inputData.createdBy) {
+          if (
+            operation === "create" &&
+            !inputData.createdBy &&
+            context.session?.itemId
+          ) {
             return { connect: { id: context.session.itemId } };
           }
           return inputData.createdBy;
@@ -136,6 +140,21 @@ export const ConnectRound = list({
     updatedAt: timestamp(),
   },
   hooks: {
+    async resolveInput({ operation, resolvedData, context, item }) {
+      // Backfill createdBy when a round was created without a session (e.g.
+      // admin/sudo) and a signed-in teacher later saves it.
+      if (
+        context.session?.itemId &&
+        (operation === "create" || operation === "update") &&
+        !resolvedData.createdBy &&
+        !item?.createdById
+      ) {
+        resolvedData.createdBy = {
+          connect: { id: context.session.itemId },
+        };
+      }
+      return resolvedData;
+    },
     // When a round is created on a class network, auto-add as reviewers:
     // - teachers (class.creator) and mentors on classes linked to that network
     // - the round creator

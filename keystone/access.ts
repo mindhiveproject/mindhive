@@ -35,6 +35,26 @@ export function canAdminManageNetworks({ session }: ListAccessArgs) {
   );
 }
 
+/** Teachers/mentors/reviewers who may read student ballot data for a round. */
+function connectRoundStaffRoundClauses(me: string) {
+  return [
+    { createdBy: { id: { equals: me } } },
+    { reviewers: { some: { id: { equals: me } } } },
+    { classNetwork: { creator: { id: { equals: me } } } },
+    { classNetwork: { admins: { some: { id: { equals: me } } } } },
+    {
+      classNetwork: {
+        classes: { some: { creator: { id: { equals: me } } } },
+      },
+    },
+    {
+      classNetwork: {
+        classes: { some: { mentors: { some: { id: { equals: me } } } } },
+      },
+    },
+  ];
+}
+
 // Rule based functions
 // rules can return a boolean or a filter that limits which products they can CRUD
 export const rules = {
@@ -252,7 +272,9 @@ export const rules = {
     return {
       OR: [
         { submitter: { id: { equals: me } } },
-        { round: { createdBy: { id: { equals: me } } } },
+        ...connectRoundStaffRoundClauses(me).map((clause) => ({
+          round: clause,
+        })),
       ],
     };
   },
@@ -264,7 +286,9 @@ export const rules = {
     return {
       OR: [
         { respondent: { id: { equals: me } } },
-        { round: { createdBy: { id: { equals: me } } } },
+        ...connectRoundStaffRoundClauses(me).map((clause) => ({
+          round: clause,
+        })),
       ],
     };
   },
@@ -277,10 +301,22 @@ export const rules = {
     return {
       OR: [
         { student: { id: { equals: me } } },
-        { round: { createdBy: { id: { equals: me } } } },
         { opportunity: { mentor: { id: { equals: me } } } },
+        ...connectRoundStaffRoundClauses(me).map((clause) => ({
+          round: clause,
+        })),
         { classNetwork: { creator: { id: { equals: me } } } },
         { classNetwork: { admins: { some: { id: { equals: me } } } } },
+        {
+          classNetwork: {
+            classes: { some: { creator: { id: { equals: me } } } },
+          },
+        },
+        {
+          classNetwork: {
+            classes: { some: { mentors: { some: { id: { equals: me } } } } },
+          },
+        },
       ],
     };
   },
@@ -349,7 +385,9 @@ export const rules = {
     return {
       OR: [
         { preference: { submitter: { id: { equals: me } } } },
-        { preference: { round: { createdBy: { id: { equals: me } } } } },
+        ...connectRoundStaffRoundClauses(me).map((clause) => ({
+          preference: { round: clause },
+        })),
       ],
     };
   },

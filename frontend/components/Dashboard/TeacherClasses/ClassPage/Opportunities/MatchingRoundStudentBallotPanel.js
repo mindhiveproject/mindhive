@@ -44,7 +44,7 @@ const PanelHeader = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px 16px;
-  margin-left: 8px;
+  margin-left: 14px;
 `;
 
 const HeaderText = styled.div`
