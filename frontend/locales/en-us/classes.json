@@ -1246,7 +1246,35 @@
 				"selectedOpportunitiesWithCount": "Selected opportunities ({{count}})",
 				"settings": "Settings",
 				"sponsorForms": "Sponsor forms",
-				"studentInterest": "Interest"
+				"studentInterest": "Interest",
+				"studentRanking": "Student Ranking"
+			},
+			"studentRanking": {
+				"title": "Student ballots",
+				"summary": "{{submitted}} submitted · {{matched}} matched · {{projectFirst}} project-first · {{teamFirst}} team-first",
+				"loading": "Loading student ballots…",
+				"modeBallot": "Ballots",
+				"modeInterest": "Interest",
+				"searchPlaceholder": "Search students…",
+				"queueProjectFirst": "Project-first queue",
+				"queueProjectFirstHint": "Students who did not rank classmates. Process these first.",
+				"queueTeamFirst": "Team-first queue",
+				"queueTeamFirstHint": "Students who ranked classmates. Review mutual picks here.",
+				"queueEmpty": "No students in this queue.",
+				"mutualSummary": "{{mutual}} mutual · {{oneWay}} one-way · {{received}} received",
+				"mutual": "Mutual",
+				"oneWay": "One-way",
+				"currentMatch": "Matched to {{title}}",
+				"skills": "Skills assessment",
+				"skillsEmpty": "Skills not collected for this round.",
+				"noNotes": "None",
+				"submittedAt": "Submitted {{date}}",
+				"status": {
+					"not_started": "Not started",
+					"draft": "Draft",
+					"submitted": "Submitted",
+					"matched": "Matched"
+				}
 			},
 			"studentInterest": {
 				"columns": {

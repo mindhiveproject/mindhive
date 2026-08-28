@@ -7,6 +7,12 @@ import Card from "../../../../DesignSystem/Card";
 import Chip from "../../../../DesignSystem/Chip";
 import IconButton from "../../../../DesignSystem/IconButton";
 import { AddIcon, CloseIcon } from "../../../../DesignSystem/Icons";
+import {
+  deriveClassmateOrder,
+  studentDisplayName,
+} from "../../../../../lib/connectBallotUtils";
+
+export { studentDisplayName, deriveClassmateOrder };
 
 const ListShell = styled.div`
   display: flex;
@@ -154,35 +160,6 @@ function reorderArray(arr, fromIndex, toIndex) {
   const [removed] = next.splice(fromIndex, 1);
   next.splice(toIndex, 0, removed);
   return next;
-}
-
-export function studentDisplayName(student) {
-  if (!student) return "";
-  const full = [student.firstName, student.lastName].filter(Boolean).join(" ");
-  return full || student.username || "";
-}
-
-export function deriveClassmateOrder(existingTeamPrefs, teamEligibleOppIds) {
-  if (!teamEligibleOppIds?.length) return [];
-
-  const byOpp = new Map();
-  (existingTeamPrefs || []).forEach((tp) => {
-    const oppId = tp.opportunity?.id;
-    const tmId = tp.preferredTeammate?.id;
-    if (!oppId || !tmId || !teamEligibleOppIds.includes(oppId)) return;
-    if (!byOpp.has(oppId)) byOpp.set(oppId, []);
-    byOpp.get(oppId).push({ tmId, priority: tp.priority ?? 999 });
-  });
-
-  for (const oppId of teamEligibleOppIds) {
-    const entries = byOpp.get(oppId);
-    if (entries?.length) {
-      return entries
-        .sort((a, b) => a.priority - b.priority)
-        .map((e) => e.tmId);
-    }
-  }
-  return [];
 }
 
 export default function ClassmateRankList({

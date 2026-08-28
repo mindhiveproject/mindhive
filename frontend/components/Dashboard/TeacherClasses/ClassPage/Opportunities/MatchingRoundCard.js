@@ -55,6 +55,9 @@ import { useUser } from "../../../../Utils/Access/User";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
 import MatchingRoundFollowUpCompletionGrid from "./MatchingRoundFollowUpCompletionGrid";
 import MatchingRoundStudentInterestGrid from "./MatchingRoundStudentInterestGrid";
+import MatchingRoundStudentBallotPanel, {
+  STUDENT_RANKING_SUB_MODES,
+} from "./MatchingRoundStudentBallotPanel";
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
 import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
@@ -638,6 +641,32 @@ function MatchingRoundEditor({
     ? MATCHING_ROUND_CREATE_QUERY
     : roundId || roundSummary?.id || null;
 
+  const studentRankingSubModeStorageKey = workspaceRoundKey
+    ? `matchingRoundStudentRankingSubMode:${workspaceRoundKey}`
+    : null;
+  const [studentRankingSubMode, setStudentRankingSubMode] = useState(
+    STUDENT_RANKING_SUB_MODES.ballot,
+  );
+
+  useEffect(() => {
+    if (!studentRankingSubModeStorageKey) return;
+    const stored = window.localStorage.getItem(studentRankingSubModeStorageKey);
+    if (
+      stored === STUDENT_RANKING_SUB_MODES.interest ||
+      stored === STUDENT_RANKING_SUB_MODES.ballot
+    ) {
+      setStudentRankingSubMode(stored);
+    }
+  }, [studentRankingSubModeStorageKey]);
+
+  useEffect(() => {
+    if (!studentRankingSubModeStorageKey) return;
+    window.localStorage.setItem(
+      studentRankingSubModeStorageKey,
+      studentRankingSubMode,
+    );
+  }, [studentRankingSubMode, studentRankingSubModeStorageKey]);
+
   const writeMatchingPanelQuery = useCallback(
     (panelId) => {
       if (!myclass?.code || !workspaceRoundKey) return;
@@ -1157,7 +1186,9 @@ function MatchingRoundEditor({
     activePanel === PANELS.review ||
     activePanel === PANELS.selected ||
     activePanel === PANELS.forms;
-  const showInterestExport = activePanel === PANELS.studentInterest;
+  const showInterestExport =
+    activePanel === PANELS.studentInterest &&
+    studentRankingSubMode === STUDENT_RANKING_SUB_MODES.interest;
   const showDownloadButton = showOpportunityExport || showInterestExport;
   const downloadButtonLabel = showInterestExport
     ? interestExportLabel
@@ -1204,9 +1235,9 @@ function MatchingRoundEditor({
       {
         id: PANELS.studentInterest,
         label: t(
-          "opportunities.matchingRound.panels.studentInterest",
+          "opportunities.matchingRound.panels.studentRanking",
           {},
-          { default: "Interest" },
+          { default: "Student Ranking" },
         ),
         disabled: isStudentInterestDisabled,
         tooltipContent: isStudentInterestDisabled
@@ -1215,7 +1246,7 @@ function MatchingRoundEditor({
               {},
               {
                 default:
-                  "Interest is available after the matching round leaves draft.",
+                  "Student Ranking is available after the matching round leaves draft.",
               },
             )
           : null,
@@ -3034,23 +3065,35 @@ function MatchingRoundEditor({
     </div>
   );
 
-  const renderStudentInterestPanel = () => (
+  const renderStudentRankingPanel = () => (
     <div className="classTabMatchingRoundPanel">
-      <MatchingRoundStudentInterestGrid
-        ref={interestGridRef}
-        classId={myclass?.id}
+      <MatchingRoundStudentBallotPanel
         roundId={roundId}
-        roundTitle={
-          inputs.title ||
-          round?.title ||
-          roundSummary?.title ||
-          ""
-        }
         students={myclass?.students || []}
-        opportunities={selectedNetworkOpportunities}
         enabled={
           activePanel === PANELS.studentInterest && !isStudentInterestDisabled
         }
+        subMode={studentRankingSubMode}
+        onSubModeChange={setStudentRankingSubMode}
+        renderInterestGrid={() => (
+          <MatchingRoundStudentInterestGrid
+            ref={interestGridRef}
+            classId={myclass?.id}
+            roundId={roundId}
+            roundTitle={
+              inputs.title ||
+              round?.title ||
+              roundSummary?.title ||
+              ""
+            }
+            students={myclass?.students || []}
+            opportunities={selectedNetworkOpportunities}
+            enabled={
+              activePanel === PANELS.studentInterest &&
+              !isStudentInterestDisabled
+            }
+          />
+        )}
       />
     </div>
   );
@@ -3244,7 +3287,7 @@ function MatchingRoundEditor({
             {activePanel === PANELS.forms && renderFormsPanel()}
             {activePanel === PANELS.questions && renderQuestionsPanel()}
             {activePanel === PANELS.studentInterest &&
-              renderStudentInterestPanel()}
+              renderStudentRankingPanel()}
 
             {isDirty || isNew ? (
               <div className="classTabMatchingRoundFooter">

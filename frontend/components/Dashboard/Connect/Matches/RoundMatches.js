@@ -18,7 +18,15 @@ import {
   DELETE_MATCHES,
 } from "../../../Mutations/ConnectMatch";
 import { UPDATE_CONNECT_ROUND } from "../../../Mutations/ConnectRound";
-import { runMatching, computeScore } from "./matchingAlgorithm";
+import { runMatching } from "./matchingAlgorithm";
+import {
+  buildPrefIndex,
+  displayName,
+  formatPreferenceSummary,
+  prefForStudentOpp,
+  scoreForStudentOpp,
+} from "../../../../lib/connectBallotUtils";
+import useConnectMatchAssign from "../../../../lib/useConnectMatchAssign";
 import { ALGO_OPTIONS } from "../Rounds/roundFormConfig";
 import NetworkGraph from "./NetworkGraph";
 import Button from "../../../DesignSystem/Button";
@@ -384,33 +392,6 @@ const ROUND_STATUS_LABELS = {
   archived: "Archived",
 };
 
-function displayName(profile) {
-  if (!profile) return "Unknown";
-  return (
-    `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
-    profile.username
-  );
-}
-
-function formatPreferenceSummary(pref, t) {
-  if (!pref) return null;
-  const rankPart = t(
-    "matchingRound.preferenceRankStars",
-    { rank: pref.rank ?? "—", stars: pref.starRating ?? 0 },
-    { default: "rank {{rank}}, {{stars}}★" },
-  );
-  const comment = (pref.comment || "").trim();
-  if (!comment) return rankPart;
-  const truncated =
-    comment.length > 60 ? `${comment.slice(0, 59)}…` : comment;
-  const notePart = t(
-    "matchingRound.preferencePrivateNote",
-    { note: truncated },
-    { default: 'note: "{{note}}"' },
-  );
-  return `${rankPart} — ${notePart}`;
-}
-
 export default function RoundMatches({ roundId }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
@@ -445,30 +426,22 @@ export default function RoundMatches({ roundId }) {
   // Preference index for teacher-curated ranking. Key: `${studentId}::${oppId}`
   // → the student's PreferenceItem for that opportunity (rank, starRating).
   // Only submitted preferences count — drafts are noise in the ranking.
-  const prefIndex = new Map();
-  preferences
-    .filter((p) => p.status === "submitted")
-    .forEach((p) => {
-      const studentId = p.submitter?.id;
-      if (!studentId) return;
-      (p.items || []).forEach((it) => {
-        const oppId = it.opportunity?.id;
-        if (!oppId) return;
-        prefIndex.set(`${studentId}::${oppId}`, it);
-      });
-    });
+  const prefIndex = buildPrefIndex(preferences, { submittedOnly: true });
 
   const totalOpps = opportunities.length;
-  // Score a (student, opportunity) pair the same way the auto-matchers do
-  // (matchingAlgorithm.js:computeScore). Students with no submitted preference
-  // for the opportunity get score 0 so they sort last.
-  const scoreFor = (studentId, oppId) => {
-    const item = prefIndex.get(`${studentId}::${oppId}`);
-    return item ? computeScore(item, totalOpps) : 0;
-  };
-  const prefFor = (studentId, oppId) => prefIndex.get(`${studentId}::${oppId}`);
+  const scoreFor = (studentId, oppId) =>
+    scoreForStudentOpp(studentId, oppId, prefIndex, totalOpps);
+  const prefFor = (studentId, oppId) =>
+    prefForStudentOpp(studentId, oppId, prefIndex);
 
-  const [createMatch, { loading: assigning }] = useMutation(CREATE_MATCH);
+  const { handleAssign, assigning: assigningFromHook } = useConnectMatchAssign({
+    round,
+    opportunities,
+    matches,
+    refetch,
+  });
+  const [createMatch] = useMutation(CREATE_MATCH);
+  const assigning = assigningFromHook;
   const [createMatches, { loading: creating }] = useMutation(CREATE_MATCHES);
   const [deleteMatches, { loading: bulkDeleting }] = useMutation(DELETE_MATCHES);
   const [updateMatch] = useMutation(UPDATE_MATCH);
@@ -749,47 +722,6 @@ export default function RoundMatches({ roundId }) {
         id: matchId,
         input: {
           opportunity: { connect: { id: newOpportunityId } },
-        },
-      },
-    });
-    await refetch();
-  };
-
-  // Manual assign for teacher-curated rounds. Capacity is enforced at the
-  // callsite (the dropdown hides opportunities that are full), but we
-  // re-check here as a safety net — the query result might be stale.
-  const handleAssign = async (studentId, opportunityId) => {
-    if (!studentId || !opportunityId) return;
-    const opp = opportunities.find((o) => o.id === opportunityId);
-    const cap = opp?.studentCapacity || 1;
-    const currentCount = (matchesByOpportunity.get(opportunityId) || []).length;
-    if (currentCount >= cap) {
-      window.alert(
-        t("matchingRound.capacityFull", {}, {
-          default:
-            "This opportunity is already at capacity. Remove an existing match first.",
-        })
-      );
-      return;
-    }
-    // Guard against duplicate (round, student, opportunity) triples — the
-    // schema doesn't enforce uniqueness so we check client-side.
-    const duplicate = matches.some(
-      (m) => m.student?.id === studentId && m.opportunity?.id === opportunityId
-    );
-    if (duplicate) return;
-
-    await createMatch({
-      variables: {
-        input: {
-          round: { connect: { id: round.id } },
-          classNetwork: round.classNetwork?.id
-            ? { connect: { id: round.classNetwork.id } }
-            : undefined,
-          opportunity: { connect: { id: opportunityId } },
-          student: { connect: { id: studentId } },
-          status: "proposed",
-          proposedAt: new Date().toISOString(),
         },
       },
     });
