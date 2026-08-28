@@ -423,7 +423,10 @@ const GridShell = styled.div`
   }
 
   .matchingRoundStudentInterestCardEmpty {
-    margin: 0;
+    margin: auto 0;
+    min-height: 135px;
+    display: flex;
+    align-items: center;
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: #5c6570;

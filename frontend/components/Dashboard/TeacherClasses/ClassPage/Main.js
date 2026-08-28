@@ -212,29 +212,37 @@ export default function ClassPage({ code, user, query }) {
         ]}
         whatToAccess={myclass?.id}
       >
-        <div>
-          <Header user={user} myclass={myclass} />
-          <SectionNavbar
-            className="classPageNav"
-            variant="underline"
-            showRule
-            gapless
-            aria-label={t("main.classSectionsNav")}
-          >
-            {navItems.map((item) => (
-              <NavbarItem
-                key={item.value}
-                as={Link}
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: { page: item.value },
-                }}
-                selected={page === item.value}
+        <div
+          className={clsx(
+            isMatchingRoundFullscreen && "matchingRoundFullscreenLayout",
+          )}
+        >
+          {isMatchingRoundFullscreen ? null : (
+            <>
+              <Header user={user} myclass={myclass} />
+              <SectionNavbar
+                className="classPageNav"
+                variant="underline"
+                showRule
+                gapless
+                aria-label={t("main.classSectionsNav")}
               >
-                {t(item.labelKey)}
-              </NavbarItem>
-            ))}
-          </SectionNavbar>
+                {navItems.map((item) => (
+                  <NavbarItem
+                    key={item.value}
+                    as={Link}
+                    href={{
+                      pathname: `/dashboard/myclasses/${code}`,
+                      query: { page: item.value },
+                    }}
+                    selected={page === item.value}
+                  >
+                    {t(item.labelKey)}
+                  </NavbarItem>
+                ))}
+              </SectionNavbar>
+            </>
+          )}
 
           <div>
             {page === "dashboard" && !isNyuCuspOnly && (

@@ -112,6 +112,27 @@ const StyledClass = styled.div`
     color: #666666;
   }
 
+  .matchingRoundFullscreenLayout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    max-width: none;
+
+    .matchingRoundWorkspaceSlot {
+      flex: 1 1 0;
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+
+      > * {
+        flex: 1 1 0;
+        min-height: 0;
+      }
+    }
+  }
+
   /* Class detail tabs — Design System Navbar (see DesignSystem/Navbar SectionNavbar) */
   .classPageNav {
     margin-bottom: 30px;
