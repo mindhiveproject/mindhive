@@ -1,7 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 
-import Chip from "../../DesignSystem/Chip";
-import Tooltip from "../../DesignSystem/Tooltip";
+import Chip, { type ChipProps } from "../../DesignSystem/Chip";
+import RawTooltip from "../../DesignSystem/Tooltip";
+
+// Tooltip is still plain JS; TS 4.9 mis-infers its destructured props param from
+// the JSDoc. Assert its real contract here until DesignSystem/Tooltip is on TS.
+const Tooltip = RawTooltip as unknown as React.FC<{
+  content: React.ReactNode;
+  children: React.ReactNode;
+  side?: "top" | "bottom" | "left" | "right";
+  disabled?: boolean;
+  delayMs?: number;
+  maxWidth?: number;
+  className?: string;
+}>;
+
+/** Props for {@link TruncatingChip}: every {@link ChipProps} except `label`, which is narrowed to a string. */
+export interface TruncatingChipProps extends Omit<ChipProps, "label"> {
+  /** The full label text; ellipsised to fit, with the full string shown in a tooltip when clipped. */
+  label: string;
+}
 
 /**
  * A Chip whose label stays on one line and ellipsises at the available width;
@@ -11,11 +29,12 @@ import Tooltip from "../../DesignSystem/Tooltip";
  *
  * All other Chip props (`variant`, `leading`, `style`, ...) pass straight
  * through.
- *
- * @param {string} label - The full label text.
  */
-export default function TruncatingChip({ label, ...chipProps }) {
-  const labelRef = useRef(null);
+export default function TruncatingChip({
+  label,
+  ...chipProps
+}: TruncatingChipProps) {
+  const labelRef = useRef<HTMLSpanElement>(null);
   const [truncated, setTruncated] = useState(false);
 
   useEffect(() => {

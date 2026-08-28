@@ -2,6 +2,34 @@
 
 import { createElement, useState } from "react";
 import Link from "next/link";
+import type { LinkProps } from "next/link";
+
+/** Surface style for a {@link Card}. */
+export type CardVariant = "elevated" | "filled" | "outline";
+
+/** Props for {@link Card}. Any extra prop is spread onto the root element. */
+export interface CardProps {
+  /** Surface style. @default "elevated" */
+  variant?: CardVariant;
+  /** When set, the whole card becomes a link to this destination. */
+  href?: LinkProps["href"] | null;
+  /** Passed to the card link (interactive only). */
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  /** Accessible name for the card link. */
+  ariaLabel?: string;
+  /** Inner padding. Pass 0 for image-topped cards. @default 16 */
+  padding?: number | string;
+  /** Root element tag. @default "article" */
+  as?: React.ElementType;
+  /** Optional extra class on the root. */
+  className?: string;
+  /** Optional root style override. */
+  style?: React.CSSProperties;
+  /** Card content. */
+  children: React.ReactNode;
+  /** Extra props are spread onto the root element. */
+  [key: string]: unknown;
+}
 
 /**
  * Card surface (Figma Design System node 1143:2619). Owns the container look
@@ -10,7 +38,7 @@ import Link from "next/link";
  *
  * Two modes:
  *  - static (no `href`): a plain container. No hover or pressed styling.
- *  - interactive (`href` set): the whole card is a link. A full-bleed <Link> is
+ *  - interactive (`href` set): the whole card is a link. A full-bleed `<Link>` is
  *    rendered as the last child, painted over the content; anything in the
  *    content marked as an interactive island (`<a>`, `<button>`, or
  *    `[data-card-action]`) is lifted above that link with `z-index`, so it keeps
@@ -20,16 +48,6 @@ import Link from "next/link";
  * Hover is deliberately quiet, per the interaction spec: elevated cards change
  * elevation only; filled and outline cards take a whisper of extra tint plus a
  * small shadow. Pressed is one gentle step further.
- *
- * @param {"elevated"|"filled"|"outline"} [variant="elevated"] - Surface style.
- * @param {string|object} [href] - When set, the whole card links here.
- * @param {(e) => void} [onClick] - Passed to the card link (interactive only).
- * @param {string} [ariaLabel] - Accessible name for the card link.
- * @param {number|string} [padding=16] - Inner padding. Pass 0 for image-topped cards.
- * @param {string} [as="article"] - Root element tag.
- * @param {string} [className] - Optional extra class on the root.
- * @param {object} [style] - Optional root style override.
- * @param {React.ReactNode} children - Card content.
  */
 // Fallback matches IconButton's Elevation Medium so cards and their buttons cast
 // the same shadow.
@@ -38,7 +56,10 @@ const ELEVATION_SM =
   "var(--MH-Theme-Elevation-Small, 1px 1px 4px rgba(0, 0, 0, 0.08))";
 const OUTLINE_BORDER = "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)";
 
-const VARIANTS = {
+const VARIANTS: Record<
+  CardVariant,
+  { base: React.CSSProperties; hover: React.CSSProperties; pressed: React.CSSProperties }
+> = {
   elevated: {
     base: { background: "#FFFFFF" },
     // Elevation only — no colour shift.
@@ -57,7 +78,7 @@ const VARIANTS = {
   },
 };
 
-const ROOT_STYLE = {
+const ROOT_STYLE: React.CSSProperties = {
   position: "relative",
   display: "flex",
   flexDirection: "column",
@@ -71,7 +92,7 @@ const ROOT_STYLE = {
   overflow: "visible",
 };
 
-const CONTENT_STYLE = {
+const CONTENT_STYLE: React.CSSProperties = {
   position: "relative",
   display: "flex",
   flexDirection: "column",
@@ -116,14 +137,14 @@ export default function Card({
   style = {},
   children,
   ...rest
-}) {
+}: CardProps) {
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
 
   const interactive = href != null;
   const tokens = VARIANTS[variant] || VARIANTS.elevated;
 
-  let rootStyle = { ...ROOT_STYLE, ...tokens.base };
+  let rootStyle: React.CSSProperties = { ...ROOT_STYLE, ...tokens.base };
   if (interactive && pressed) {
     rootStyle = { ...rootStyle, ...tokens.pressed };
   } else if (interactive && hovered) {
@@ -141,17 +162,17 @@ export default function Card({
 
   // Pressing an island (star, settings) shouldn't flash the card's pressed
   // state — that reads as "the card was clicked".
-  const isIsland = (target) =>
-    !!target?.closest?.("a, button, [data-card-action]");
+  const isIsland = (target: EventTarget | null) =>
+    !!(target as Element | null)?.closest?.("a, button, [data-card-action]");
 
-  const interactionHandlers = interactive
+  const interactionHandlers: React.HTMLAttributes<HTMLElement> = interactive
     ? {
         onMouseEnter: () => setHovered(true),
         onMouseLeave: () => {
           setHovered(false);
           setPressed(false);
         },
-        onMouseDown: (e) => {
+        onMouseDown: (e: React.MouseEvent) => {
           if (!isIsland(e.target)) setPressed(true);
         },
         onMouseUp: () => setPressed(false),
@@ -172,7 +193,7 @@ export default function Card({
         </div>,
         interactive ? (
           <Link
-            href={href}
+            href={href as LinkProps["href"]}
             onClick={onClick}
             aria-label={ariaLabel}
             className="DesignSystem-Card-link"

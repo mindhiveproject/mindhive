@@ -5,6 +5,29 @@ import { useState } from "react";
 import { StarFilledIcon, StarIcon } from "./Icons";
 
 /**
+ * Props for {@link FavoriteButton}. Any extra prop (e.g. `data-card-action`) is
+ * forwarded to the underlying `<button>`.
+ */
+export interface FavoriteButtonProps
+  extends Omit<
+    React.ComponentPropsWithoutRef<"button">,
+    "onToggle" | "aria-pressed" | "aria-label"
+  > {
+  /** Whether the item is favorited. @default false */
+  active?: boolean;
+  /** Fired on click. The event is already `preventDefault`/`stopPropagation`-ed. */
+  onToggle?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  /** Accessible name when inactive, e.g. "Add to favorites". */
+  addLabel: string;
+  /** Accessible name when active, e.g. "Remove from favorites". */
+  removeLabel: string;
+  /** Disabled state. @default false */
+  disabled?: boolean;
+  /** Optional extra class on the root button. */
+  className?: string;
+}
+
+/**
  * Star toggle used on cards (Figma Design System node 5082:1655). A 40px circle:
  *
  *  - inactive: Neutrals/Lighter fill behind a black outline star.
@@ -16,16 +39,8 @@ import { StarFilledIcon, StarIcon } from "./Icons";
  * Controlled and data-free: the caller owns `active` and `onToggle`. It also
  * stops the event so the button can sit on top of a clickable card without
  * triggering the card's link.
- *
- * @param {boolean} [active=false] - Whether the item is favorited.
- * @param {(e) => void} [onToggle] - Fired on click (event already stopped).
- * @param {string} addLabel - Accessible name when inactive ("Add to favorites").
- * @param {string} removeLabel - Accessible name when active ("Remove from favorites").
- * @param {boolean} [disabled=false] - Disabled state.
- * @param {string} [className] - Optional extra class on the root.
- * @param {object} [rest] - Forwarded to the button (e.g. data-card-action).
  */
-const BASE_STYLE = {
+const BASE_STYLE: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
@@ -40,19 +55,21 @@ const BASE_STYLE = {
   transition: "background-color 0.2s, color 0.2s",
 };
 
-const INACTIVE = {
+const INACTIVE: React.CSSProperties = {
   background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
-const INACTIVE_HOVER = { background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)" };
+const INACTIVE_HOVER: React.CSSProperties = {
+  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+};
 
-const ACTIVE = {
+const ACTIVE: React.CSSProperties = {
   background: "var(--MH-Theme-Accent-Light, #FDF2D0)",
   color: "var(--MH-Theme-Accent-Base, #F2BE42)",
 };
-const ACTIVE_HOVER = { background: "#FBE9B8" };
+const ACTIVE_HOVER: React.CSSProperties = { background: "#FBE9B8" };
 
-const DISABLED = {
+const DISABLED: React.CSSProperties = {
   background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
   color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
   cursor: "default",
@@ -78,10 +95,10 @@ export default function FavoriteButton({
   disabled = false,
   className,
   ...rest
-}) {
+}: FavoriteButtonProps) {
   const [hovered, setHovered] = useState(false);
 
-  let style = { ...BASE_STYLE, ...(active ? ACTIVE : INACTIVE) };
+  let style: React.CSSProperties = { ...BASE_STYLE, ...(active ? ACTIVE : INACTIVE) };
   if (disabled) {
     style = { ...style, ...DISABLED };
   } else if (hovered) {
