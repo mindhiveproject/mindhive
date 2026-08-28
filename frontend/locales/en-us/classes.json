@@ -1583,6 +1583,8 @@
 			"searchLabel": "Search opportunities",
 			"searchPlaceholder": "Search by title, sponsor, or organization…",
 			"schedule": {
+				"close": "Close matching timeline",
+				"openAria": "View matching timeline",
 				"title": "Matching timeline"
 			}
 		}

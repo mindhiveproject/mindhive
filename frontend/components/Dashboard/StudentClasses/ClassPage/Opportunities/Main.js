@@ -25,7 +25,6 @@ import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import StudentOpportunityPreview from "./StudentOpportunityPreview";
 import StudentPreferenceSubmission from "./StudentPreferenceSubmission";
 import StudentRankActionCard from "./StudentRankActionCard";
-import MatchingRoundSchedule from "./MatchingRoundSchedule";
 
 /**
  * Matching rounds are "open for students" when status is preferences_open
@@ -490,9 +489,6 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
         {openRounds.length > 0 ? (
           <RankBanners>
             {openRounds.map((round) => (
-              <MatchingRoundSchedule key={`schedule-${round.id}`} round={round} />
-            ))}
-            {openRounds.map((round) => (
               <StudentRankActionCard
                 key={round.id}
                 round={round}
@@ -583,24 +579,7 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
 
   return (
     <div className="classTabPage opportunities">
-      {openRounds.length > 0 ? (
-        <RankBanners>
-          {openRounds.map((round) => (
-            <MatchingRoundSchedule key={`schedule-${round.id}`} round={round} />
-          ))}
-          {openRounds.map((round) => (
-            <StudentRankActionCard
-              key={round.id}
-              round={round}
-              preference={preferenceByRoundId.get(round.id)}
-              hasOpportunities={true}
-              onRank={openRankRound}
-            />
-          ))}
-        </RankBanners>
-      ) : null}
-
-      <Filters>
+      <Filters className="Main__Filters">
         <FilterRow
           role="group"
           aria-label={t(
@@ -667,6 +646,20 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
           </CategoryFilterRow>
         ) : null}
       </Filters>
+
+      {openRounds.length > 0 ? (
+        <RankBanners>
+          {openRounds.map((round) => (
+            <StudentRankActionCard
+              key={round.id}
+              round={round}
+              preference={preferenceByRoundId.get(round.id)}
+              hasOpportunities={true}
+              onRank={openRankRound}
+            />
+          ))}
+        </RankBanners>
+      ) : null}
 
       <Page>
         {filteredOpportunities.length === 0 ? (
