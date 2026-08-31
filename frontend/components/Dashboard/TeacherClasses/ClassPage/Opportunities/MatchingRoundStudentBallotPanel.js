@@ -1,4 +1,10 @@
-import { useCallback, useMemo, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
@@ -26,6 +32,8 @@ import {
   studentDisplayName,
   summarizeMutualClassmates,
 } from "../../../../../lib/connectBallotUtils";
+import { downloadStudentBallotCsv } from "../../../../../lib/downloadStudentBallotCsv";
+import MessageCard from "../../../../DesignSystem/MessageCard";
 
 const STUDENT_RANKING_SUB_MODES = {
   ballot: "ballot",
@@ -616,14 +624,21 @@ function StudentBallotRow({
 
 export { STUDENT_RANKING_SUB_MODES };
 
-export default function MatchingRoundStudentBallotPanel({
-  roundId,
-  students = [],
-  enabled = true,
-  subMode = STUDENT_RANKING_SUB_MODES.ballot,
-  onSubModeChange,
-  renderInterestGrid,
-}) {
+const MatchingRoundStudentBallotPanel = forwardRef(
+  function MatchingRoundStudentBallotPanel(
+    {
+      roundId,
+      students = [],
+      enabled = true,
+      subMode = STUDENT_RANKING_SUB_MODES.ballot,
+      onSubModeChange,
+      renderInterestGrid,
+      ballotWindowActive = true,
+      inactiveBallotMessage = null,
+      roundTitle = "",
+    },
+    ref,
+  ) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
   const [search, setSearch] = useState("");
@@ -799,6 +814,130 @@ export default function MatchingRoundStudentBallotPanel({
     }));
   }, []);
 
+  const canDownloadBallotCsv = rosterStudents.length > 0;
+
+  const handleDownloadBallotCsv = useCallback(() => {
+    if (!canDownloadBallotCsv) return;
+    downloadStudentBallotCsv({
+      ballotRows,
+      studentById,
+      classmateListsByStudent,
+      assessmentFormDefinitionId: assessmentFormDefinition?.id,
+      roundTitle: roundTitle || round?.title || "",
+      labels: {
+        studentName: t(
+          "opportunities.matchingRound.studentBallotExport.columns.student",
+          {},
+          { default: "Student" },
+        ),
+        username: t(
+          "opportunities.matchingRound.studentBallotExport.columns.username",
+          {},
+          { default: "Username" },
+        ),
+        status: t(
+          "opportunities.matchingRound.studentBallotExport.columns.status",
+          {},
+          { default: "Status" },
+        ),
+        queue: t(
+          "opportunities.matchingRound.studentBallotExport.columns.queue",
+          {},
+          { default: "Queue" },
+        ),
+        mutualClassmates: t(
+          "opportunities.matchingRound.studentBallotExport.columns.mutualClassmates",
+          {},
+          { default: "Mutual classmates" },
+        ),
+        oneWayClassmates: t(
+          "opportunities.matchingRound.studentBallotExport.columns.oneWayClassmates",
+          {},
+          { default: "One-way classmates" },
+        ),
+        receivedClassmates: t(
+          "opportunities.matchingRound.studentBallotExport.columns.receivedClassmates",
+          {},
+          { default: "Received classmates" },
+        ),
+        preferredClassmates: t(
+          "opportunities.matchingRound.studentBallotExport.columns.preferredClassmates",
+          {},
+          { default: "Preferred classmates" },
+        ),
+        rankedOpportunities: t(
+          "opportunities.matchingRound.studentBallotExport.columns.rankedOpportunities",
+          {},
+          { default: "Ranked opportunities" },
+        ),
+        additionalNotes: t(
+          "opportunities.matchingRound.studentBallotExport.columns.additionalNotes",
+          {},
+          { default: "Additional notes" },
+        ),
+        matchedOpportunity: t(
+          "opportunities.matchingRound.studentBallotExport.columns.matchedOpportunity",
+          {},
+          { default: "Matched opportunity" },
+        ),
+        submittedAt: t(
+          "opportunities.matchingRound.studentBallotExport.columns.submittedAt",
+          {},
+          { default: "Submitted at" },
+        ),
+        queueProjectFirst: t(
+          "opportunities.matchingRound.studentRanking.queueProjectFirst",
+          {},
+          { default: "Project-first queue" },
+        ),
+        queueTeamFirst: t(
+          "opportunities.matchingRound.studentRanking.queueTeamFirst",
+          {},
+          { default: "Team-first queue" },
+        ),
+        statusNotStarted: t(
+          "opportunities.matchingRound.studentRanking.status.not_started",
+          {},
+          { default: "Not started" },
+        ),
+        statusDraft: t(
+          "opportunities.matchingRound.studentRanking.status.draft",
+          {},
+          { default: "Draft" },
+        ),
+        statusSubmitted: t(
+          "opportunities.matchingRound.studentRanking.status.submitted",
+          {},
+          { default: "Submitted" },
+        ),
+        statusMatched: t(
+          "opportunities.matchingRound.studentRanking.status.matched",
+          {},
+          { default: "Matched" },
+        ),
+      },
+    });
+  }, [
+    assessmentFormDefinition?.id,
+    ballotRows,
+    canDownloadBallotCsv,
+    classmateListsByStudent,
+    round?.title,
+    roundTitle,
+    rosterStudents.length,
+    studentById,
+    t,
+  ]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      downloadCsv: handleDownloadBallotCsv,
+      canDownloadCsv: canDownloadBallotCsv,
+    }),
+    [canDownloadBallotCsv, handleDownloadBallotCsv],
+  );
+
   const subModeNav =
     onSubModeChange ? (
       <Navbar style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -849,6 +988,24 @@ export default function MatchingRoundStudentBallotPanel({
             default: "Loading student ballots…",
           })}
         </EmptyNote>
+      </Shell>
+    );
+  }
+
+  if (!ballotWindowActive && inactiveBallotMessage) {
+    return (
+      <Shell className="matchingRoundStudentBallotPanel">
+        <PanelHeader>
+          <HeaderText>
+            <h4>
+              {t("opportunities.matchingRound.studentRanking.title", {}, {
+                default: "Student ballots",
+              })}
+            </h4>
+          </HeaderText>
+          {subModeNav}
+        </PanelHeader>
+        <MessageCard variant="neutral" message={inactiveBallotMessage} />
       </Shell>
     );
   }
@@ -993,4 +1150,7 @@ export default function MatchingRoundStudentBallotPanel({
       )}
     </Shell>
   );
-}
+  },
+);
+
+export default MatchingRoundStudentBallotPanel;

@@ -1261,6 +1261,7 @@
 			},
 			"studentRanking": {
 				"title": "Student ballots",
+				"downloadCsv": "Download Ballots CSV",
 				"summary": "{{submitted}} submitted · {{matched}} matched · {{projectFirst}} project-first · {{teamFirst}} team-first",
 				"loading": "Loading student ballots…",
 				"modeBallot": "Ballots",
@@ -1307,6 +1308,22 @@
 					"draft": "Draft",
 					"submitted": "Submitted",
 					"matched": "Matched"
+				}
+			},
+			"studentBallotExport": {
+				"columns": {
+					"student": "Student",
+					"username": "Username",
+					"status": "Status",
+					"queue": "Queue",
+					"mutualClassmates": "Mutual classmates",
+					"oneWayClassmates": "One-way classmates",
+					"receivedClassmates": "Received classmates",
+					"preferredClassmates": "Preferred classmates",
+					"rankedOpportunities": "Ranked opportunities",
+					"additionalNotes": "Additional notes",
+					"matchedOpportunity": "Matched opportunity",
+					"submittedAt": "Submitted at"
 				}
 			},
 			"studentInterest": {

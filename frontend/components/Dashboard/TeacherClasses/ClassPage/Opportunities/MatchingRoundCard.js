@@ -618,6 +618,7 @@ function MatchingRoundEditor({
   const formsManagerInitializedRef = useRef(false);
   const savedSnapshotRef = useRef(null);
   const interestGridRef = useRef(null);
+  const ballotPanelRef = useRef(null);
 
   const selectedNetwork = useMemo(
     () => networks.find((network) => network.id === selectedNetworkId) || null,
@@ -1188,21 +1189,36 @@ function MatchingRoundEditor({
     {},
     { default: "Download Interest CSV" },
   );
+  const ballotExportLabel = t(
+    "opportunities.matchingRound.studentRanking.downloadCsv",
+    {},
+    { default: "Download Ballots CSV" },
+  );
   const showOpportunityExport =
     activePanel === PANELS.review ||
     activePanel === PANELS.selected ||
     activePanel === PANELS.forms;
+  const showStudentRankingExport =
+    activePanel === PANELS.studentInterest && !isStudentInterestDisabled;
   const showInterestExport =
-    activePanel === PANELS.studentInterest &&
+    showStudentRankingExport &&
     studentRankingSubMode === STUDENT_RANKING_SUB_MODES.interest;
-  const showDownloadButton = showOpportunityExport || showInterestExport;
-  const downloadButtonLabel = showInterestExport
-    ? interestExportLabel
-    : exportLabel;
-  const downloadButtonDisabled = showInterestExport
-    ? !(myclass?.students?.length > 0) ||
-      selectedNetworkOpportunities.length === 0
-    : networkOpportunities.length === 0;
+  const showBallotExport =
+    showStudentRankingExport &&
+    studentRankingSubMode === STUDENT_RANKING_SUB_MODES.ballot;
+  const showDownloadButton =
+    showOpportunityExport || showInterestExport || showBallotExport;
+  const downloadButtonLabel = showBallotExport
+    ? ballotExportLabel
+    : showInterestExport
+      ? interestExportLabel
+      : exportLabel;
+  const downloadButtonDisabled = showBallotExport
+    ? !(myclass?.students?.length > 0)
+    : showInterestExport
+      ? !(myclass?.students?.length > 0) ||
+        selectedNetworkOpportunities.length === 0
+      : networkOpportunities.length === 0;
 
   const panelOptions = useMemo(
     () => [
@@ -3093,6 +3109,40 @@ function MatchingRoundEditor({
     const openAtLabel = openAtSource
       ? formatScheduleDate(openAtSource)
       : null;
+    const inactiveBallotMessage =
+      roundStatusForPanels === "draft"
+        ? t(
+            "opportunities.matchingRound.studentRanking.ballotsDraftHint",
+            {},
+            {
+              default:
+                "Student ballots and interest tracking appear after the matching round leaves draft and the ranking window opens.",
+            },
+          )
+        : beforeOpen
+          ? t(
+              "opportunities.matchingRound.studentRanking.ballotsBeforeOpen",
+              { date: openAtLabel || "" },
+              {
+                default:
+                  "Student ballots and interest tracking open on {{date}}.",
+              },
+            )
+          : afterClose
+            ? t(
+                "opportunities.matchingRound.studentRanking.ballotsClosed",
+                {},
+                {
+                  default:
+                    "The student ranking window has closed. Ballots remain available for review when the window is open.",
+                },
+              )
+            : null;
+    const resolvedRoundTitle =
+      inputs.title ||
+      round?.title ||
+      roundSummary?.title ||
+      "";
 
     return (
     <div className="classTabMatchingRoundPanel">
@@ -3106,8 +3156,9 @@ function MatchingRoundEditor({
         beforeOpen={beforeOpen}
         openAtLabel={openAtLabel}
       />
-      {ballotEnabled ? (
+      {!isNew ? (
       <MatchingRoundStudentBallotPanel
+        ref={ballotPanelRef}
         roundId={roundId}
         students={myclass?.students || []}
         enabled={
@@ -3115,17 +3166,15 @@ function MatchingRoundEditor({
         }
         subMode={studentRankingSubMode}
         onSubModeChange={setStudentRankingSubMode}
+        ballotWindowActive={ballotEnabled}
+        inactiveBallotMessage={inactiveBallotMessage}
+        roundTitle={resolvedRoundTitle}
         renderInterestGrid={() => (
           <MatchingRoundStudentInterestGrid
             ref={interestGridRef}
             classId={myclass?.id}
             roundId={roundId}
-            roundTitle={
-              inputs.title ||
-              round?.title ||
-              roundSummary?.title ||
-              ""
-            }
+            roundTitle={resolvedRoundTitle}
             students={myclass?.students || []}
             opportunities={selectedNetworkOpportunities}
             enabled={
@@ -3135,39 +3184,7 @@ function MatchingRoundEditor({
           />
         )}
       />
-      ) : (
-        <MessageCard
-          variant="neutral"
-          message={
-            roundStatusForPanels === "draft"
-              ? t(
-                  "opportunities.matchingRound.studentRanking.ballotsDraftHint",
-                  {},
-                  {
-                    default:
-                      "Student ballots and interest tracking appear after the matching round leaves draft and the ranking window opens.",
-                  },
-                )
-              : beforeOpen
-                ? t(
-                    "opportunities.matchingRound.studentRanking.ballotsBeforeOpen",
-                    { date: openAtLabel || "" },
-                    {
-                      default:
-                        "Student ballots and interest tracking open on {{date}}.",
-                    },
-                  )
-                : t(
-                    "opportunities.matchingRound.studentRanking.ballotsClosed",
-                    {},
-                    {
-                      default:
-                        "The student ranking window has closed. Ballots remain available for review when the window is open.",
-                    },
-                  )
-          }
-        />
-      )}
+      ) : null}
     </div>
     );
   };
@@ -3242,6 +3259,10 @@ function MatchingRoundEditor({
                 title={downloadButtonLabel}
                 disabled={downloadButtonDisabled}
                 onClick={() => {
+                  if (showBallotExport) {
+                    ballotPanelRef.current?.downloadCsv?.();
+                    return;
+                  }
                   if (showInterestExport) {
                     interestGridRef.current?.downloadCsv?.();
                     return;
