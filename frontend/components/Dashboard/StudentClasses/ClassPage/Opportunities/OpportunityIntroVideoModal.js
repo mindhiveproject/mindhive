@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Modal from "../../../../DesignSystem/Modal";
-import { getOpportunityVideoSources } from "../../../../../lib/opportunityVideoEmbed";
+import OpportunityIntroVideoPlayer from "../../../Connect/OpportunityIntroVideoPlayer";
 import {
   formatOpportunityMentorLabel,
   formatOpportunitySponsorLabel,
@@ -56,57 +56,6 @@ function formatDate(value) {
   } catch {
     return null;
   }
-}
-
-function OpportunityIntroVideoPlayer({ opportunity, title }) {
-  const { directVideoSrc, embedUrl, fallbackIframeSrc, coverUrl } =
-    getOpportunityVideoSources(opportunity);
-
-  if (directVideoSrc) {
-    return (
-      <video
-        controls
-        preload="metadata"
-        poster={coverUrl || undefined}
-        src={directVideoSrc}
-        style={{
-          width: "100%",
-          maxHeight: 420,
-          display: "block",
-          background: "#000",
-        }}
-      />
-    );
-  }
-
-  const iframeSrc = embedUrl || fallbackIframeSrc;
-  if (!iframeSrc) return null;
-
-  return (
-    <div
-      style={{
-        position: "relative",
-        paddingBottom: "56.25%",
-        height: 0,
-        background: "#000",
-      }}
-    >
-      <iframe
-        src={iframeSrc}
-        title={title}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
-        frameBorder="0"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-        }}
-      />
-    </div>
-  );
 }
 
 /**
@@ -163,6 +112,11 @@ export default function OpportunityIntroVideoModal({
     "opportunities.studentView.rankForm.videoModal.introVideo",
     {},
     { default: "Intro video" },
+  );
+  const openVideoInNewTabLabel = t(
+    "opportunities.studentView.rankForm.videoModal.openVideoInNewTab",
+    {},
+    { default: "Open video in new tab" },
   );
 
   return (
@@ -229,6 +183,7 @@ export default function OpportunityIntroVideoModal({
         <OpportunityIntroVideoPlayer
           opportunity={opportunity}
           title={`${title} ${videoTitle}`}
+          openInNewTabLabel={openVideoInNewTabLabel}
         />
       </VideoWrap>
     </Modal>

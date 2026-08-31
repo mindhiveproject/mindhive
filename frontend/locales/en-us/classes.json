@@ -1614,7 +1614,8 @@
 				"teammatesSearch": "Search students",
 				"videoModal": {
 					"close": "Close",
-					"introVideo": "Intro video"
+					"introVideo": "Intro video",
+					"openVideoInNewTab": "Open video in new tab"
 				},
 				"watchVideo": "Watch intro video for {{title}}"
 			},

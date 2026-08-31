@@ -22,60 +22,8 @@ import Chip from "../../../DesignSystem/Chip";
 import FavoriteButton from "../../../DesignSystem/FavoriteButton";
 import IconButton from "../../../DesignSystem/IconButton";
 import { ArrowOutwardIcon, CheckIcon } from "../../../DesignSystem/Icons";
-
-const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
-
-function isDirectVideoFile(url) {
-  if (!url) return false;
-  try {
-    return DIRECT_VIDEO_EXT.test(new URL(url).pathname);
-  } catch {
-    return DIRECT_VIDEO_EXT.test(url);
-  }
-}
-
-function extractUrl(raw) {
-  if (!raw) return null;
-  const trimmed = String(raw).trim();
-  if (!trimmed) return null;
-  const m = trimmed.match(/<iframe[^>]+src=["']([^"']+)["']/i);
-  return m ? m[1] : trimmed;
-}
-
-function getEmbedUrl(rawUrl) {
-  if (!rawUrl) return null;
-  try {
-    const u = new URL(rawUrl);
-    const host = u.hostname.replace(/^www\./, "");
-    if (host === "youtube.com" || host === "m.youtube.com") {
-      const v = u.searchParams.get("v");
-      if (v) return `https://www.youtube.com/embed/${v}`;
-      const shortsMatch = u.pathname.match(/^\/shorts\/([^/]+)/);
-      if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
-      const embedMatch = u.pathname.match(/^\/embed\/([^/]+)/);
-      if (embedMatch) return `https://www.youtube.com/embed/${embedMatch[1]}`;
-    }
-    if (host === "youtu.be") {
-      const id = u.pathname.replace(/^\//, "");
-      if (id) return `https://www.youtube.com/embed/${id}`;
-    }
-    if (host === "vimeo.com" || host === "player.vimeo.com") {
-      const id = u.pathname.replace(/^\/(video\/)?/, "").split("/")[0];
-      if (id) return `https://player.vimeo.com/video/${id}`;
-    }
-    if (host === "loom.com" || host.endsWith(".loom.com")) {
-      const m = u.pathname.match(/\/(share|embed)\/([^/?]+)/);
-      if (m) return `https://www.loom.com/embed/${m[2]}`;
-    }
-    if (host === "drive.google.com") {
-      const m = u.pathname.match(/\/file\/d\/([^/]+)/);
-      if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
+import OpportunityIntroVideoPlayer from "../OpportunityIntroVideoPlayer";
+import { hasOpportunityPlayableVideo } from "../../../../lib/opportunityVideoEmbed";
 
 const Shell = styled.div`
   display: flex;
@@ -381,13 +329,9 @@ export default function ExploreDetail({ opportunityId }) {
   const proposal = hydrateProposalInputs(opp);
 
   const coverSrc = opp.coverImage?.url || opp.coverImageUrl || null;
-  const cleanVideoUrl = extractUrl(opp.videoUrl);
-  const directVideoSrc =
-    opp.videoFile?.url ||
-    (isDirectVideoFile(cleanVideoUrl) ? cleanVideoUrl : null);
-  const embedUrl = !directVideoSrc ? getEmbedUrl(cleanVideoUrl) : null;
-  const fallbackIframeSrc =
-    !directVideoSrc && !embedUrl && cleanVideoUrl ? cleanVideoUrl : null;
+  const openVideoInNewTabLabel = t("exploreDetail.openVideoInNewTab", {}, {
+    default: "Open video in new tab",
+  });
 
   const primarySponsor = getPrimarySponsor(opp);
   const primaryMentor = getOpportunityMentors(opp)[0] || null;
@@ -530,51 +474,18 @@ export default function ExploreDetail({ opportunityId }) {
         </MetaGrid>
       </Card>
 
-      {(directVideoSrc || embedUrl || fallbackIframeSrc) && (
+      {hasOpportunityPlayableVideo(opp) && (
         <Card>
           <h2>
             {t("exploreDetail.introVideo", {}, { default: "Intro video" })}
           </h2>
-          {directVideoSrc ? (
-            <video
-              controls
-              preload="metadata"
-              poster={coverSrc || undefined}
-              src={directVideoSrc}
-              style={{
-                width: "100%",
-                maxHeight: 480,
-                borderRadius: 12,
-                background: "#000",
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                position: "relative",
-                paddingBottom: "56.25%",
-                height: 0,
-                borderRadius: 12,
-                overflow: "hidden",
-                background: "#000",
-              }}
-            >
-              <iframe
-                src={embedUrl || fallbackIframeSrc}
-                title={`${opp.title} intro video`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                frameBorder="0"
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </div>
-          )}
+          <OpportunityIntroVideoPlayer
+            opportunity={opp}
+            title={`${opp.title} intro video`}
+            openInNewTabLabel={openVideoInNewTabLabel}
+            borderRadius={12}
+            videoStyle={{ maxHeight: 480 }}
+          />
         </Card>
       )}
 

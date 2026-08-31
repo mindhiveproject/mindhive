@@ -23,6 +23,8 @@ import StudentFollowUpAnswers from "./StudentFollowUpAnswers";
 import OpportunityPeoplePanels from "../../../Connect/OpportunityPeoplePanels";
 import ManageFavoriteOpportunity from "../../../Connect/ManageFavoriteOpportunity";
 import OpportunityClassForum from "../../../Connect/OpportunityClassForum";
+import OpportunityIntroVideoPlayer from "../../../Connect/OpportunityIntroVideoPlayer";
+import { hasOpportunityPlayableVideo } from "../../../../../lib/opportunityVideoEmbed";
 
 function toOptionKey(value) {
   return String(value || "").replace(/_([a-z])/g, (_, c) => c.toUpperCase());
@@ -40,8 +42,6 @@ const CATEGORY_LABELS = {
   urban_infrastructure: "urbanInfrastructure",
   other: "other",
 };
-
-const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
 const CONTENT_MAX_WIDTH = 960;
 const CONTENT_BOTTOM_GAP = "24px";
@@ -172,58 +172,6 @@ const MUTED_TEXT_STYLE = {
   margin: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
 };
-
-function extractUrl(raw) {
-  if (!raw) return null;
-  const trimmed = String(raw).trim();
-  if (!trimmed) return null;
-  const m = trimmed.match(/<iframe[^>]+src=["']([^"']+)["']/i);
-  return m ? m[1] : trimmed;
-}
-
-function isDirectVideoFile(url) {
-  if (!url) return false;
-  try {
-    return DIRECT_VIDEO_EXT.test(new URL(url).pathname);
-  } catch {
-    return DIRECT_VIDEO_EXT.test(url);
-  }
-}
-
-function getEmbedUrl(rawUrl) {
-  if (!rawUrl) return null;
-  try {
-    const u = new URL(rawUrl);
-    const host = u.hostname.replace(/^www\./, "");
-    if (host === "youtube.com" || host === "m.youtube.com") {
-      const v = u.searchParams.get("v");
-      if (v) return `https://www.youtube.com/embed/${v}`;
-      const shortsMatch = u.pathname.match(/^\/shorts\/([^/]+)/);
-      if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
-      const embedMatch = u.pathname.match(/^\/embed\/([^/]+)/);
-      if (embedMatch) return `https://www.youtube.com/embed/${embedMatch[1]}`;
-    }
-    if (host === "youtu.be") {
-      const id = u.pathname.replace(/^\//, "");
-      if (id) return `https://www.youtube.com/embed/${id}`;
-    }
-    if (host === "vimeo.com" || host === "player.vimeo.com") {
-      const id = u.pathname.replace(/^\/(video\/)?/, "").split("/")[0];
-      if (id) return `https://player.vimeo.com/video/${id}`;
-    }
-    if (host === "loom.com" || host.endsWith(".loom.com")) {
-      const m = u.pathname.match(/\/(share|embed)\/([^/?]+)/);
-      if (m) return `https://www.loom.com/embed/${m[2]}`;
-    }
-    if (host === "drive.google.com") {
-      const m = u.pathname.match(/\/file\/d\/([^/]+)/);
-      if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
 
 function displayName(profile) {
   if (!profile) return null;
@@ -414,13 +362,9 @@ export default function StudentOpportunityPreview({
       ? `${opp.publicRatingAverage?.toFixed(1)} (${opp.publicRatingCount})`
       : null;
 
-  const cleanVideoUrl = extractUrl(opp?.videoUrl);
-  const directVideoSrc =
-    opp?.videoFile?.url ||
-    (isDirectVideoFile(cleanVideoUrl) ? cleanVideoUrl : null);
-  const embedUrl = !directVideoSrc ? getEmbedUrl(cleanVideoUrl) : null;
-  const fallbackIframeSrc =
-    !directVideoSrc && !embedUrl && cleanVideoUrl ? cleanVideoUrl : null;
+  const openVideoInNewTabLabel = tConnect("opportunityEditor.openVideoInNewTab", {}, {
+    default: "Open video in new tab",
+  });
 
   const followUpForms = useMemo(() => {
     if (!opp) return [];
@@ -749,51 +693,22 @@ export default function StudentOpportunityPreview({
                   </p>
                 ) : null}
 
-                {directVideoSrc || embedUrl || fallbackIframeSrc ? (
+                {hasOpportunityPlayableVideo(opp) ? (
                   <PreviewSection
                     title={tConnect("opportunityEditor.introVideo", {}, {
                       default: "Intro video",
                     })}
                   >
-                    {directVideoSrc ? (
-                      <video
-                        src={directVideoSrc}
-                        controls
-                        style={{
-                          width: "100%",
-                          borderRadius: 12,
-                          maxHeight: 360,
-                        }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          position: "relative",
-                          paddingBottom: "56.25%",
-                          height: 0,
-                          overflow: "hidden",
-                          borderRadius: 12,
-                          background: "#111",
-                        }}
-                      >
-                        <iframe
-                          title={tConnect("opportunityEditor.introVideo", {}, {
-                            default: "Intro video",
-                          })}
-                          src={embedUrl || fallbackIframeSrc}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "100%",
-                            height: "100%",
-                            border: 0,
-                          }}
-                        />
-                      </div>
-                    )}
+                    <OpportunityIntroVideoPlayer
+                      opportunity={opp}
+                      title={tConnect("opportunityEditor.introVideo", {}, {
+                        default: "Intro video",
+                      })}
+                      openInNewTabLabel={openVideoInNewTabLabel}
+                      borderRadius={12}
+                      videoStyle={{ maxHeight: 360 }}
+                      iframeWrapStyle={{ background: "#111" }}
+                    />
                   </PreviewSection>
                 ) : null}
 
