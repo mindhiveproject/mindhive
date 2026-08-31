@@ -33,10 +33,7 @@ const BANNER_STYLE = {
   borderRadius: 8,
   background: "var(--MH-Theme-Additional-Accent-Light, #F5F2FF)",
   color: "var(--MH-Theme-Additional-Accent-Dark, #3F288F)",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
 };
 
 const CARD_STYLE = {
@@ -75,10 +72,7 @@ const NAME_BLOCK_STYLE = {
 // MH-Theme/title/base
 const NAME_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Title-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -88,10 +82,7 @@ const NAME_STYLE = {
 // MH-Theme/body/base
 const TYPE_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
@@ -124,10 +115,7 @@ const MAPPED_NOTE_STYLE = {
   padding: "12px 16px",
   borderRadius: 8,
   background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
@@ -141,18 +129,13 @@ const UNMAP_STYLE = {
 const FIELD_STYLE = { display: "flex", flexDirection: "column", gap: 4 };
 
 const FIELD_LABEL_STYLE = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
 const EMPTY_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
@@ -366,7 +349,6 @@ function MapChip({ binding, onClick }) {
   if (!mapping) {
     return (
       <Chip
-        shape="square"
         label={t("mapADataSource", "Map a data source")}
         style={CHIP_UNMAPPED_STYLE}
         onClick={onClick}
@@ -377,7 +359,6 @@ function MapChip({ binding, onClick }) {
   if (mapping.kind === "manual") {
     return (
       <Chip
-        shape="square"
         label={t("manualValue", "Manual value")}
         style={CHIP_MANUAL_STYLE}
         onClick={onClick}
@@ -391,7 +372,6 @@ function MapChip({ binding, onClick }) {
   // resting look until there is a running stream to read it from.
   return (
     <Chip
-      shape="square"
       label={mapping.streamID}
       leading={<WaveformIcon width={18} height={18} />}
       style={CHIP_MAPPED_STYLE}

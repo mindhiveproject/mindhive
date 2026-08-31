@@ -29,20 +29,14 @@ const NAME_BLOCK_STYLE = {
 // what makes the name below it unambiguous when a visual is opened from a study.
 const EYEBROW_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
 // MH-Theme/title/large
 const NAME_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 22,
-  lineHeight: "28px",
+  font: "var(--MH-Type-Title-Large)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   overflow: "hidden",
   textOverflow: "ellipsis",

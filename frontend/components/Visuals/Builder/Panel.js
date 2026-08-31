@@ -25,10 +25,7 @@ const HEADER_STYLE = {
 // MH-Theme/title/large
 const TITLE_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 22,
-  lineHeight: "28px",
+  font: "var(--MH-Type-Title-Large)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   overflow: "hidden",
   textOverflow: "ellipsis",

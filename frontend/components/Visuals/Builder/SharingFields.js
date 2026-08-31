@@ -24,19 +24,13 @@ import { SEARCH_PROFILES } from "../../Queries/YQVisual";
 const FIELDS_STYLE = { display: "flex", flexDirection: "column", gap: 12 };
 
 const FIELD_LABEL_STYLE = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
 const HELP_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
@@ -151,7 +145,7 @@ export function EditingFields({ visual, draft, setDraft, isOwner }) {
         <Card key={profile.id} variant="subtle">
           <div style={COLLABORATOR_ROW_STYLE}>
             <div style={{ flex: "1 1 auto", minWidth: 0 }}>
-              <p style={{ ...FIELD_LABEL_STYLE, margin: 0, fontWeight: 600 }}>
+              <p style={{ ...FIELD_LABEL_STYLE, margin: 0, font: "var(--MH-Type-Title-Base)" }}>
                 {profile.username}
               </p>
               <p style={{ ...HELP_STYLE }}>

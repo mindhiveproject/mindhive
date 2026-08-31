@@ -30,20 +30,14 @@ const ICON_STYLE = {
 
 const TITLE_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Title-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
 const BODY_STYLE = {
   margin: 0,
   maxWidth: 380,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 

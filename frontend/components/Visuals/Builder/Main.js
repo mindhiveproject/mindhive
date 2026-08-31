@@ -110,13 +110,10 @@ const RAIL_CONTENT_STYLE = {
   width: RAIL_WIDTH,
 };
 
-// MH-Theme/label/large, turned on its side.
+// MH-Theme/label/base, turned on its side.
 const RAIL_LABEL_STYLE = {
   writingMode: "vertical-rl",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 500,
-  fontSize: 14,
-  lineHeight: "20px",
+  font: "var(--MH-Type-Label-Base)",
   whiteSpace: "nowrap",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };

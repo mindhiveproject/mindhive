@@ -31,10 +31,7 @@ const RULE_STYLE = {
 // only two groups here and both are the reason the modal was opened.
 const GROUP_TITLE_STYLE = {
   margin: "0 0 12px",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Title-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 

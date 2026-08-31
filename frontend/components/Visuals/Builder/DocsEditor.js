@@ -67,9 +67,7 @@ const INVITE_STYLE = {
   left: 24,
   right: 24,
   pointerEvents: "none",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
 };
 
@@ -83,24 +81,18 @@ const CONTENT_STYLE = `
   padding: 24px;
   box-sizing: border-box;
   outline: none;
-  font-family: Inter, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
+  font: var(--MH-Type-Body-Base);
   color: var(--MH-Theme-Neutrals-Black, #171717);
 }
 .Visuals-DocsEditor .ProseMirror > * + * { margin-top: 12px; }
 .Visuals-DocsEditor .ProseMirror p { margin: 0; }
 .Visuals-DocsEditor .ProseMirror h1 {
   margin: 0;
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 28px;
+  font: var(--MH-Type-Title-Large);
 }
 .Visuals-DocsEditor .ProseMirror h2 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 24px;
+  font: var(--MH-Type-Title-Base);
 }
 .Visuals-DocsEditor .ProseMirror ul,
 .Visuals-DocsEditor .ProseMirror ol { margin: 0; padding-left: 24px; }

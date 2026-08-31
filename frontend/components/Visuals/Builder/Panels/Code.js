@@ -237,7 +237,6 @@ export default function CodePanel() {
         {ordered.map((file) => (
           <Chip
             key={file.id}
-            shape="square"
             label={file.name}
             selected={file.id === selected.id}
             onClick={() => setSelectedId(file.id)}
@@ -250,7 +249,6 @@ export default function CodePanel() {
         ))}
         {canEdit ? (
           <Chip
-            shape="square"
             leading={<AddIcon />}
             label={t("newFile", "New file")}
             onClick={() => setAddOpen(true)}

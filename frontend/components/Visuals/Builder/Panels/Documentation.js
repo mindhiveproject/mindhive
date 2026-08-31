@@ -136,7 +136,6 @@ export default function DocumentationPanel() {
     >
       <div style={STRIP_STYLE}>
         <Chip
-          shape="square"
           label={t("overview", "Overview")}
           selected={field === MAIN_FIELD}
           onClick={() => setField(MAIN_FIELD)}
@@ -144,7 +143,6 @@ export default function DocumentationPanel() {
         {pages.map((page) => (
           <Chip
             key={page.id}
-            shape="square"
             label={page.title}
             selected={field === `docs:${page.id}`}
             onClick={() => setField(`docs:${page.id}`)}
@@ -153,7 +151,6 @@ export default function DocumentationPanel() {
         ))}
         {canEdit ? (
           <Chip
-            shape="square"
             leading={<AddIcon />}
             label={t("newPage", "New page")}
             onClick={() => setAddOpen(true)}
@@ -288,7 +285,7 @@ function DeletePageModal({ page, onKeep, onDelete }) {
       {/* The title stands on its own line rather than inside the sentence: this
           folder's `t()` calls can't interpolate, and a name spliced into a
           translated string is where word order breaks anyway. */}
-      <p style={{ margin: 0, fontWeight: 600 }}>{page?.title}</p>
+      <p style={{ margin: 0, font: "var(--MH-Type-Title-Base)" }}>{page?.title}</p>
       <p style={{ margin: "8px 0 0" }}>
         {t(
           "deletePageBody",

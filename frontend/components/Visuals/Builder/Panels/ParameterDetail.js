@@ -45,10 +45,7 @@ const HEADER_TITLE_STYLE = {
   margin: 0,
   flex: "1 1 auto",
   minWidth: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 22,
-  lineHeight: "28px",
+  font: "var(--MH-Type-Title-Large)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -97,10 +94,7 @@ const FOOTER_STYLE = {
 // MH-Theme/title/base — a section heading inside the panel body.
 const SECTION_TITLE_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Title-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -121,10 +115,7 @@ const SECTION_HEADER_STYLE = {
 // weight difference between a heading and a row label is the only thing
 // separating the sections from what is in them.
 const LABEL_STYLE = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -144,9 +135,7 @@ const FROM_CODE_STYLE = {
   alignItems: "center",
   justifyContent: "space-between",
   gap: 8,
-  fontFamily: "Inter, sans-serif",
-  fontSize: 14,
-  lineHeight: "20px",
+  font: "var(--MH-Type-Body-Small)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 

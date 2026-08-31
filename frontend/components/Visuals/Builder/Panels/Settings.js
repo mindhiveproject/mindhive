@@ -33,10 +33,7 @@ const SECTION_HEADER_STYLE = {
   border: "none",
   background: "transparent",
   cursor: "pointer",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Title-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -49,19 +46,13 @@ const RULE_STYLE = {
 };
 
 const FIELD_LABEL_STYLE = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
 const HELP_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
@@ -215,7 +206,7 @@ export default function SettingsPanel({ user }) {
           >
             <div style={OPTION_ROW_STYLE}>
               <div style={{ flex: "1 1 auto", minWidth: 0 }}>
-                <p style={{ ...FIELD_LABEL_STYLE, margin: 0, fontWeight: 600 }}>
+                <p style={{ ...FIELD_LABEL_STYLE, margin: 0, font: "var(--MH-Type-Title-Base)" }}>
                   {t("sandboxMode", "Sandbox mode")}
                 </p>
                 <p style={HELP_STYLE}>
@@ -261,7 +252,7 @@ export default function SettingsPanel({ user }) {
           >
             <div style={OPTION_ROW_STYLE}>
               <div style={{ flex: "1 1 auto", minWidth: 0 }}>
-                <p style={{ ...FIELD_LABEL_STYLE, margin: 0, fontWeight: 600 }}>
+                <p style={{ ...FIELD_LABEL_STYLE, margin: 0, font: "var(--MH-Type-Title-Base)" }}>
                   {t("authoredMode", "Authored mode")}
                 </p>
                 <p style={HELP_STYLE}>

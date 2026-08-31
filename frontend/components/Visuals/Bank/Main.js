@@ -26,10 +26,7 @@ const HEADER_STYLE = {
 const TITLE_STYLE = {
   margin: 0,
   flex: "1 1 auto",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 22,
-  lineHeight: "28px",
+  font: "var(--MH-Type-Title-Large)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
@@ -49,10 +46,7 @@ const COVER_STYLE = {
 
 const CARD_TITLE_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Title-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -61,10 +55,7 @@ const CARD_TITLE_STYLE = {
 
 const CARD_BODY_STYLE = {
   margin: 0,
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 14,
-  lineHeight: "20px",
+  font: "var(--MH-Type-Body-Small)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
   display: "-webkit-box",
   WebkitLineClamp: 2,
@@ -75,9 +66,7 @@ const CARD_BODY_STYLE = {
 const EMPTY_STYLE = {
   padding: "48px 24px",
   textAlign: "center",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 16,
-  lineHeight: "24px",
+  font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
@@ -232,7 +221,8 @@ export default function VisualsBank({ user }) {
                   ) : null}
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <Chip
-                      shape="square"
+                      variant="static"
+                      tone="neutral"
                       label={t(
                         visual.privacy,
                         PRIVACY_LABELS[visual.privacy] || visual.privacy
@@ -240,7 +230,8 @@ export default function VisualsBank({ user }) {
                     />
                     {isOwner ? null : (
                       <Chip
-                        shape="square"
+                        variant="static"
+                        tone="neutral"
                         label={
                           visual.collaborators?.some((c) => c.id === user?.id)
                             ? t("editor", "Editor")
