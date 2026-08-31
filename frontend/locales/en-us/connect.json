@@ -1384,7 +1384,7 @@
 		"emailTitle": "Your Capstone proposal was returned",
 		"error": "Could not return this opportunity. Please try again.",
 		"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
-		"placeholder": "Optional note for the sponsor…",
+		"placeholder": "Optional note for the respondent…",
 		"submitting": "Returning…",
 		"title": "Return with comments"
 	},

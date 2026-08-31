@@ -100,6 +100,12 @@ export const TEACHER_STUDENT_BALLOT_VIEW = gql`
       title
       status
       matchingAlgorithm
+      studentAssessmentFormDefinition {
+        id
+        title
+        status
+        version
+      }
       classNetwork {
         id
       }
@@ -122,6 +128,7 @@ export const TEACHER_STUDENT_BALLOT_VIEW = gql`
         status
         notes
         submittedAt
+        assessmentData
         submitter {
           id
           username

@@ -65,6 +65,13 @@ export const GET_PARTICIPATE_VIEW = gql`
         order
         status
       }
+      studentAssessmentFormDefinition {
+        id
+        title
+        description
+        status
+        version
+      }
       opportunities {
         id
         title
@@ -133,6 +140,7 @@ export const GET_PARTICIPATE_VIEW = gql`
           status
           notes
           submittedAt
+          assessmentData
           items {
             id
             opportunity {

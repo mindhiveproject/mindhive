@@ -82,6 +82,11 @@ export const ConnectRound = list({
       many: true,
     }),
 
+    // Single class-scoped student competency assessment form for this round.
+    studentAssessmentFormDefinition: relationship({
+      ref: "FormDefinition.studentAssessmentRounds",
+    }),
+
     questionAnswers: relationship({
       ref: "QuestionAnswer.round",
       many: true,

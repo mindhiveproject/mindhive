@@ -5,17 +5,18 @@ import styled from "styled-components";
 
 import Chip from "../../../../DesignSystem/Chip";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import DefinitionForm from "../../../../Forms/DefinitionForm";
 import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import { TEACHER_STUDENT_BALLOT_VIEW } from "../../../../Queries/ConnectMatch";
 import useConnectMatchAssign from "../../../../../lib/useConnectMatchAssign";
+import { isAssessmentFormAnswerComplete } from "../../../../../lib/connectPreferenceAssessmentData";
 import {
   buildClassmateListsByStudent,
   buildPrefIndex,
   buildTeamPrefsByStudent,
   displayName,
   formatPreferenceSummary,
-  formatQuestionAnswer,
   getClassmateMutualStatus,
   getSubmissionStatus,
   getTeamEligibleOpportunities,
@@ -267,7 +268,7 @@ function StudentBallotRow({
   matchesByOpp,
   prefIndex,
   totalOpps,
-  questionAnswers,
+  assessmentFormDefinition,
   isCurated,
   handleAssign,
   assigning,
@@ -331,9 +332,12 @@ function StudentBallotRow({
     .sort((a, b) => Number(a.rank) - Number(b.rank))
     .map((item) => ({ opportunity: item.opportunity, item }));
 
-  const skillsAnswers = (questionAnswers || []).filter(
-    (a) => a.respondent?.id === studentId,
-  );
+  const hasCompetencyAnswer =
+    assessmentFormDefinition?.id &&
+    isAssessmentFormAnswerComplete(
+      row.preference?.assessmentData,
+      assessmentFormDefinition.id,
+    );
 
   const statusLabel = t(
     `opportunities.matchingRound.studentRanking.status.${row.submissionStatus}`,
@@ -554,40 +558,42 @@ function StudentBallotRow({
 
           <DetailSection>
             <DetailTitle>
-              {t("opportunities.matchingRound.studentRanking.skills", {}, {
-                default: "Skills assessment",
+              {t("opportunities.matchingRound.studentRanking.competency", {}, {
+                default: "Core competency assessment",
               })}
             </DetailTitle>
-            {skillsAnswers.length === 0 ? (
+            {!assessmentFormDefinition?.id ? (
               <EmptyNote>
                 {t(
-                  "opportunities.matchingRound.studentRanking.skillsEmpty",
+                  "opportunities.matchingRound.studentRanking.competencyNotConfigured",
                   {},
                   {
                     default:
-                      "Skills not collected for this round.",
+                      "No assessment questionnaire is linked to this round.",
+                  },
+                )}
+              </EmptyNote>
+            ) : !hasCompetencyAnswer ? (
+              <EmptyNote>
+                {t(
+                  "opportunities.matchingRound.studentRanking.competencyEmpty",
+                  {},
+                  {
+                    default:
+                      "Assessment not completed for this student.",
                   },
                 )}
               </EmptyNote>
             ) : (
-              <DetailList>
-                {skillsAnswers
-                  .sort(
-                    (a, b) =>
-                      (a.question?.order || 0) - (b.question?.order || 0),
-                  )
-                  .map((ans) => (
-                    <DetailItem key={ans.id}>
-                      <ItemTitle>{ans.question?.prompt || "—"}</ItemTitle>
-                      <Meta>
-                        {formatQuestionAnswer(
-                          ans.answer,
-                          ans.question?.questionType,
-                        )}
-                      </Meta>
-                    </DetailItem>
-                  ))}
-              </DetailList>
+              <DefinitionForm
+                definitionId={assessmentFormDefinition.id}
+                assessmentEntryFormDefinitionId={assessmentFormDefinition.id}
+                entity={{ assessmentData: row.preference?.assessmentData }}
+                readOnly
+                hideUnansweredFields
+                hideSaveButton
+                quiet
+              />
             )}
           </DetailSection>
 
@@ -637,9 +643,7 @@ export default function MatchingRoundStudentBallotPanel({
   const preferences = round?.preferences || [];
   const teamPreferences = round?.teamPreferences || [];
   const matches = round?.matches || [];
-  const questionAnswers = (round?.questionAnswers || []).filter(
-    (a) => !a.opportunity?.id,
-  );
+  const assessmentFormDefinition = round?.studentAssessmentFormDefinition;
 
   const teamEligibleOpps = useMemo(
     () => getTeamEligibleOpportunities(opportunities),
@@ -894,7 +898,7 @@ export default function MatchingRoundStudentBallotPanel({
               matchesByOpp={matchesByOpp}
               prefIndex={prefIndex}
               totalOpps={totalOpps}
-              questionAnswers={questionAnswers}
+              assessmentFormDefinition={assessmentFormDefinition}
               isCurated={isCurated}
               handleAssign={handleAssign}
               assigning={assigning}

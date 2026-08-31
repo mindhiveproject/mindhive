@@ -46,6 +46,7 @@ export default function TeacherFormWizard({
   onSaved,
 }) {
   const isReview = mode === "review";
+  const isStudentAssessment = mode === "student_assessment";
   const { t } = useTranslation("classes");
   const router = useRouter();
   const locale = router?.locale || "en-us";
@@ -71,7 +72,11 @@ export default function TeacherFormWizard({
   const [saveClassForm] = useMutation(SAVE_CLASS_FORM_DEFINITION);
   const [saveBoardReviewForm] = useMutation(SAVE_BOARD_REVIEW_FORM_DEFINITION);
   const [cloneForClass] = useMutation(CLONE_FORM_DEFINITION_FOR_CLASS);
-  const hiddenTypeKeys = isReview ? REVIEW_HIDDEN_TYPE_KEYS : [];
+  const hiddenTypeKeys = isReview
+    ? REVIEW_HIDDEN_TYPE_KEYS
+    : isStudentAssessment
+      ? ["file"]
+      : [];
 
   const resetBlank = useCallback(() => {
     const first = createBlankQuestion();
@@ -175,7 +180,7 @@ export default function TeacherFormWizard({
       }
     }
     const introVideoCount = chosen.filter((q) => isIntroVideoQuestion(q)).length;
-    if (!isReview && introVideoCount > 1) {
+    if (!isReview && !isStudentAssessment && introVideoCount > 1) {
       setError(
         t(
           "opportunities.matchingRound.formWizard.errors.introVideoOnce",
@@ -216,6 +221,7 @@ export default function TeacherFormWizard({
       return;
     }
     if (!validateName() || !validateQuestions()) return;
+    if (saving) return;
 
     setSaving(true);
     setError(null);
@@ -249,6 +255,7 @@ export default function TeacherFormWizard({
               description: description.trim(),
               fields,
               publish: !!publish,
+              surface: isStudentAssessment ? "student_assessment" : "opportunity",
             },
           },
         });
@@ -261,7 +268,10 @@ export default function TeacherFormWizard({
       // Pass explicit publish intent — do not infer from saved.status.
       // Editing a published form and choosing Save as draft must not
       // trigger round auto-attach (status alone is not a safe signal).
-      onSaved?.(saved, { didPublish: !!publish });
+      const publishIntent = !!publish;
+      if (onSaved) {
+        await onSaved(saved, { didPublish: publishIntent });
+      }
       onClose?.();
       resetBlank();
     } catch (err) {
@@ -313,9 +323,13 @@ export default function TeacherFormWizard({
       ? t("projects.formWizard.title", {}, {
           default: "Edit review form",
         })
-      : t("opportunities.matchingRound.formWizard.title", {}, {
-          default: "Create a questionnaire",
-        });
+      : isStudentAssessment
+        ? t("opportunities.matchingRound.studentAssessmentWizard.title", {}, {
+            default: "Create student assessment",
+          })
+        : t("opportunities.matchingRound.formWizard.title", {}, {
+            default: "Create a questionnaire",
+          });
 
   const actions = showClone ? (
     <>
@@ -446,7 +460,7 @@ export default function TeacherFormWizard({
                       {
                         default: isReview
                           ? "Optional note for reviewers"
-                          : "Optional note for sponsors",
+                          : "Optional note for respondents",
                       },
                     )}
                   </span>
@@ -466,7 +480,7 @@ export default function TeacherFormWizard({
                   disabled={saving}
                 />
               </FieldShell>
-              {!isReview && !initialDefinitionId ? (
+              {!isReview && !isStudentAssessment && !initialDefinitionId ? (
                 <MetaActions>
                   <Button
                     type="button"

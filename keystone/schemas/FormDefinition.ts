@@ -18,6 +18,7 @@ export const SURFACE_OPTIONS = [
   { label: "Organization profile", value: "profile_organization" },
   { label: "Opportunity", value: "opportunity" },
   { label: "Feedback (review)", value: "feedback" },
+  { label: "Student assessment", value: "student_assessment" },
 ] as const;
 
 const SURFACE_VALUES = new Set(SURFACE_OPTIONS.map((o) => o.value));
@@ -34,6 +35,7 @@ export function inferSurfaceFromKey(
   if (key === "profile_organization") return "profile_organization";
   if (key === "opportunity") return "opportunity";
   if (key.startsWith("review_")) return "feedback";
+  if (key.startsWith("student_assessment")) return "student_assessment";
   return null;
 }
 
@@ -122,6 +124,10 @@ export const FormDefinition = list({
     }),
     connectRounds: relationship({
       ref: "ConnectRound.formDefinitions",
+      many: true,
+    }),
+  studentAssessmentRounds: relationship({
+      ref: "ConnectRound.studentAssessmentFormDefinition",
       many: true,
     }),
     createdBy: relationship({

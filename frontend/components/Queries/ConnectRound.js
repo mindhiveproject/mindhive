@@ -131,6 +131,14 @@ export const GET_CONNECT_ROUND = gql`
           id
         }
       }
+      studentAssessmentFormDefinition {
+        id
+        title
+        key
+        scope
+        status
+        version
+      }
       createdBy {
         id
         username
