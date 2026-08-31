@@ -437,12 +437,8 @@ export const ChevronRightIcon = filledIcon(
   "M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z",
 );
 
-export const AddIcon = filledIcon(
-  "AddIcon",
-  0,
-  0,
-  "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z",
-);
+// Adding a parameter or block uses AddIcon, defined with the navigation glyphs
+// above.
 
 export const DeleteIcon = filledIcon(
   "DeleteIcon",
@@ -480,13 +476,8 @@ export const DescriptionIcon = filledIcon(
   "M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z",
 );
 
-/** The Code tab. */
-export const CodeIcon = filledIcon(
-  "CodeIcon",
-  0,
-  0,
-  "M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z",
-);
+// The Code tab and inline `code` mark use CodeIcon, defined with the navigation
+// glyphs above.
 
 /** The Parameters tab, and the per-parameter controls toggle. */
 export const TuneIcon = filledIcon(

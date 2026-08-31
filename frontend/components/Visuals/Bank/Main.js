@@ -5,15 +5,14 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
-import Button from "../../DesignSystem/Button";
 import Card, { CardSection } from "../../DesignSystem/Card";
 import Chip from "../../DesignSystem/Chip";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import Input from "../../DesignSystem/Input";
-import { AddIcon, MoreVertIcon } from "../../DesignSystem/Icons";
+import { MoreVertIcon } from "../../DesignSystem/Icons";
 
 import { MY_VISUALS } from "../../Queries/YQVisual";
-import { CREATE_VISUAL, DELETE_VISUAL } from "../../Mutations/YQVisual";
+import { DELETE_VISUAL } from "../../Mutations/YQVisual";
 
 const HEADER_STYLE = {
   display: "flex",
@@ -104,7 +103,6 @@ export default function VisualsBank({ user }) {
     fetchPolicy: "cache-and-network",
   });
 
-  const [createVisual, { loading: creating }] = useMutation(CREATE_VISUAL);
   const [deleteVisual] = useMutation(DELETE_VISUAL);
 
   const visuals = (data?.visuals || []).filter((visual) =>
@@ -112,24 +110,6 @@ export default function VisualsBank({ user }) {
       ? visual.title?.toLowerCase().includes(search.trim().toLowerCase())
       : true
   );
-
-  async function onCreate() {
-    const result = await createVisual({
-      variables: {
-        data: {
-          title: t("untitledVisual", "Untitled Visual"),
-          author: { connect: { id: user.id } },
-          privacy: "private",
-          participationMode: "sandbox",
-          // The legacy array default would be read as a set of YQ-era
-          // parameters; a new visual declares its own in code instead.
-          parameters: { schemaVersion: 3, bindings: {} },
-        },
-      },
-    });
-    const id = result.data?.createVisual?.id;
-    if (id) router.push(`/builder/visuals/${id}`);
-  }
 
   async function onDelete(visual) {
     if (
@@ -156,14 +136,6 @@ export default function VisualsBank({ user }) {
             onChange={setSearch}
           />
         </div>
-        <Button
-          variant="filled"
-          leadingIcon={<AddIcon />}
-          disabled={creating || !user?.id}
-          onClick={onCreate}
-        >
-          {t("newVisual", "New Visual")}
-        </Button>
       </div>
 
       {loading && !data ? (

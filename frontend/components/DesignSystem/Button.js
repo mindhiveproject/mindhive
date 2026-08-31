@@ -33,21 +33,39 @@ const WITH_TRAILING_ICON = {
   paddingRight: "16px",
 };
 
-// --- Filled
-const FILLED_BASE = {
-  ...BASE_STYLE,
-  background: "var(--MH-Theme-Primary-Dark, #336F8A)",
-  color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+// The colour families a button can be painted in. `primary` is the platform
+// default; `accent` is the hue the mockups give the Parameters area, so a
+// parameter's own actions read as one group set apart from the chrome round it.
+// Only filled, outline and text carry a brand colour and vary by tone — tonal
+// and subtle are neutral surfaces and ignore it.
+const TONES = {
+  primary: {
+    fill: "var(--MH-Theme-Primary-Dark, #336F8A)",
+    // Figma pressed — a mid calypso, softer than Primary Base so the drop from
+    // the hover tint doesn't read as harsh without a fill animation.
+    fillPressed: "#559BBB",
+    edge: "var(--MH-Theme-Primary-Dark, #336F8A)",
+    edgePressed: "var(--MH-Theme-Primary-Light, #DEF8FB)",
+    // Figma draws the text label at Primary Base (~2:1 on white); the DS keeps
+    // the accessible Primary Dark instead.
+    label: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  },
+  accent: {
+    fill: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+    fillPressed: "var(--MH-Theme-Additional-Accent-Dark, #3F288F)",
+    edge: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+    edgePressed: "var(--MH-Theme-Additional-Accent-Light, #F5F2FF)",
+    label: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+  },
 };
+
+// --- Filled
 // Figma hover: resting fill + a 20% Primary Light state layer, plus Elevation Medium.
 const FILLED_HOVER = {
   background:
     "linear-gradient(0deg, rgba(222, 248, 251, 0.2), rgba(222, 248, 251, 0.2)), var(--MH-Theme-Primary-Dark, #336F8A)",
   boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0,0,0,0.1))",
 };
-// Figma pressed — a mid calypso, softer than Primary Base so the drop from the
-// hover tint doesn't read as harsh without a Material-style fill animation.
-const FILLED_PRESSED = { background: "#559BBB" };
 const FILLED_DISABLED = {
   background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
@@ -97,14 +115,7 @@ const SUBTLE_DISABLED = {
   cursor: "default",
 };
 
-// --- Text
-// Figma draws the label at Primary Base (#69BBC4); that lands ~2:1 on white, so
-// the DS keeps the accessible Primary Dark instead. Backgrounds match Figma.
-const TEXT_BASE = {
-  ...BASE_STYLE,
-  background: "transparent",
-  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
-};
+// --- Text (backgrounds match Figma; the label colour comes from the tone)
 const TEXT_HOVER = { background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)" };
 const TEXT_PRESSED = { background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)" };
 const TEXT_DISABLED = {
