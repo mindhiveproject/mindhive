@@ -13,7 +13,7 @@ export interface TaskTypeLabelColors {
 export const TASK_TYPE_COLORS: Record<TaskType, string> = {
   TASK: "#64C9E2",
   SURVEY: "#28619E",
-  BLOCK: "#FF9780",
+  BLOCK: "#FFC7C3",
   DESIGN: "#007C70",
 };
 
@@ -37,7 +37,7 @@ export function getTaskTypeColor(
 export const TASK_TYPE_LABEL_COLORS: Record<TaskType, TaskTypeLabelColors> = {
   TASK: { bg: "#ECF9FC", fg: "#38717F" },
   SURVEY: { bg: "#E5ECF3", fg: "#23558B" },
-  BLOCK: { bg: "#FFEEEA", fg: "#A84A32" },
+  BLOCK: { bg: "#FFEBE9", fg: "#5E4A48" },
   DESIGN: { bg: "#E1F0EE", fg: "#005F55" },
 };
 
