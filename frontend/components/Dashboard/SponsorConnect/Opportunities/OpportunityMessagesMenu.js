@@ -17,6 +17,7 @@ import {
   getUnreadReviewerCommentNotes,
   resolveActiveReviewRound,
 } from "../../../../lib/reviewThreadRound";
+import { isOpportunityStakeholder } from "../../../../lib/opportunityPeople";
 
 const MESSAGE_ICON = (
   <img
@@ -150,9 +151,7 @@ export default function OpportunityMessagesMenu({ opportunity, user }) {
 
   const activeRoundId = roundResolution.roundId;
   const needsRoundSelection = roundResolution.needsSelection;
-  const isMentorOfOpportunity = !!(
-    viewerId && opportunity?.mentor?.id === viewerId
-  );
+  const isMentorOfOpportunity = isOpportunityStakeholder(opportunity, viewerId);
 
   const unreadReviewerComments = useMemo(
     () =>

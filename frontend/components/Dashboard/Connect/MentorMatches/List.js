@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Label } from "semantic-ui-react";
 
+import { mergeOpportunityLists } from "../../../../lib/opportunityPeople";
 import { MY_MENTOR_MATCHES } from "../../../Queries/Opportunity";
 import {
   CREATE_RATING,
@@ -348,11 +350,16 @@ function StudentMatchCard({ match, opportunity, me, onSaved }) {
 }
 
 export default function MentorMatchesList({ user }) {
+  const { t } = useTranslation("connect");
   const { data, loading, refetch } = useQuery(MY_MENTOR_MATCHES, {
     fetchPolicy: "cache-and-network",
   });
 
-  const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
+  const opportunities = mergeOpportunityLists(
+    data?.authenticatedItem?.opportunitiesCreated,
+    data?.authenticatedItem?.opportunitiesSponsored,
+    data?.authenticatedItem?.opportunitiesMentoring,
+  );
   const me = data?.authenticatedItem;
 
   // Only show opportunities that actually have matches — clutter-reducer
@@ -369,11 +376,18 @@ export default function MentorMatchesList({ user }) {
   return (
     <Shell>
       <Header>
-        <h1>My matched students</h1>
+        <h1>
+          {t("myMatchedStudents.title", {}, { default: "My matched students" })}
+        </h1>
         <p>
-          Students placed on your opportunities. After a project is active or
-          completed, rate the student so future teachers and admins can see
-          their track record.
+          {t(
+            "myMatchedStudents.description",
+            {},
+            {
+              default:
+                "Students placed on opportunities where you are the sponsor or mentor. After a project is active or completed, rate the student so future teachers and admins can see their track record.",
+            },
+          )}
         </p>
       </Header>
 

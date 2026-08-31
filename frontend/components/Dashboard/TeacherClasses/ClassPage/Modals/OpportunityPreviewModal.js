@@ -27,9 +27,11 @@ import {
   isReturnableOpportunityStatus,
   returnOpportunityToSponsor,
 } from "../../../Connect/returnOpportunityUtils";
-import ConnectProfileCard from "../../../Connect/ConnectProfileCard";
-import { CARD_WIDTH } from "../../../Connect/ConnectBrowseLayout";
-import OrganizationConnectCard from "../../../Connect/Organizations/OrganizationConnectCard";
+import OpportunityPeoplePanels from "../../../Connect/OpportunityPeoplePanels";
+import {
+  getPrimarySponsor,
+  getOpportunityMentors,
+} from "../../../../../lib/opportunityPeople";
 import { useUser } from "../../../../Utils/Access/User";
 import {
   getUnreadSponsorReplyNotes,
@@ -210,54 +212,6 @@ const ChatThreadWrap = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-`;
-
-/**
- * The People tab keeps the real Connect card rather than inventing a shape that
- * exists on one screen. Each entity sits in a tinted panel that supplies the
- * heading and, for the contact, the opportunity fields they attested to — so
- * the card itself renders exactly as it does on the browse pages.
- */
-const PeopleColumns = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
-
-  @media (max-width: 900px) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-`;
-
-const PeoplePanel = styled.section`
-  display: grid;
-  /* Heading and card sit centred; only the meta grid below stretches (see the
-     rule at the bottom), since its fields need the panel's full width. */
-  justify-items: center;
-  gap: 12px;
-  min-width: 0;
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
-  box-sizing: border-box;
-
-  h4 {
-    margin: 0;
-    font: var(--MH-Type-Title-Base);
-    letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Black, #171717);
-  }
-
-  /* Hold the card to its browse width so it reads as the same object here. */
-  > article {
-    max-width: ${CARD_WIDTH};
-  }
-
-  /* Meta fields span the panel rather than the card. */
-  > *:not(article):not(h4) {
-    justify-self: stretch;
-    min-width: 0;
-  }
 `;
 
 const TitleRow = styled.span`
@@ -491,68 +445,6 @@ function MetaItem({ label, value, style, valueStyle }) {
   );
 }
 
-/**
- * Guidelines / mentor-role fields for the sponsor profile on this opportunity.
- * These sit inside the contact's own panel, so the value carries no name — the
- * card directly above it already says who acknowledged.
- */
-function SponsorProfileOpportunityMeta({ opportunity, t }) {
-  if (!opportunity) return null;
-
-  const showGuidelines = !!opportunity.guidelinesAcknowledged;
-  const showSponsorIsMentor = opportunity.sponsorIsMentor != null;
-  const showMentorNotes =
-    !opportunity.sponsorIsMentor && !!opportunity.mentorNotes;
-
-  if (!showGuidelines && !showSponsorIsMentor && !showMentorNotes) {
-    return null;
-  }
-
-  const acknowledgedAt = formatDate(opportunity.guidelinesAcknowledgedAt);
-  const guidelinesValue =
-    acknowledgedAt || t("opportunities.preview.yes", {}, { default: "Yes" });
-
-  return (
-    <FieldsGrid>
-      {showGuidelines ? (
-        <MetaItem
-          label={t("opportunities.preview.guidelinesAcknowledged", {}, {
-            default: "Guidelines acknowledged",
-          })}
-          value={guidelinesValue}
-          valueStyle={{
-            background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
-            border: "2px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-            fontWeight: 600,
-          }}
-        />
-      ) : null}
-      {showSponsorIsMentor ? (
-        <MetaItem
-          label={t("opportunities.preview.sponsorIsMentor", {}, {
-            default: "Sponsor is mentor",
-          })}
-          value={
-            opportunity.sponsorIsMentor
-              ? t("opportunities.preview.yes", {}, { default: "Yes" })
-              : t("opportunities.preview.no", {}, { default: "No" })
-          }
-        />
-      ) : null}
-      {showMentorNotes ? (
-        <div style={{ gridColumn: "1 / -1", minWidth: 0 }}>
-          <ReviewField
-            label={t("opportunities.preview.mentorNotes", {}, {
-              default: "Mentor notes",
-            })}
-            value={opportunity.mentorNotes}
-          />
-        </div>
-      ) : null}
-    </FieldsGrid>
-  );
-}
-
 function FieldItem({ label, value, highlight, className }) {
   if (value == null || value === "") return null;
   const valueStyle = {
@@ -691,14 +583,17 @@ export default function OpportunityPreviewModal({
   const viewerId = data?.authenticatedItem?.id;
 
   const coverSrc = opp?.coverImage?.url || opp?.coverImageUrl || null;
-  const mentorName = displayName(opp?.mentor);
+  const primarySponsor = getPrimarySponsor(opp);
+  const primaryMentor = getOpportunityMentors(opp)[0] || null;
+  const headerContact = primaryMentor || primarySponsor;
+  const mentorName = displayName(headerContact);
   const orgName = opp?.organization?.name || null;
   const mentorAvatar =
-    opp?.mentor?.image?.keystoneImage?.url ||
-    opp?.mentor?.image?.image?.publicUrlTransformed ||
+    headerContact?.image?.keystoneImage?.url ||
+    headerContact?.image?.image?.publicUrlTransformed ||
     null;
   const orgLogo = opp?.organization?.logo?.url || null;
-  const mentorProfileId = opp?.mentor?.publicId || null;
+  const mentorProfileId = headerContact?.publicId || null;
   const orgId = opp?.organization?.id || null;
   const mentorProfileUrl = mentorProfileId
     ? `/dashboard/connect/with?id=${encodeURIComponent(mentorProfileId)}`
@@ -1841,55 +1736,11 @@ export default function OpportunityPreviewModal({
 
               {resolvedTab === OPPORTUNITY_PREVIEW_TABS.people ? (
                 <div style={{ display: "grid", gap: 16 }}>
-                  {opp.organization || opp.mentor ? (
-                    <PeopleColumns>
-                      {opp.mentor ? (
-                        <PeoplePanel>
-                          <h4>
-                            {t("opportunities.preview.primaryContact", {}, {
-                              default: "Primary contact",
-                            })}
-                          </h4>
-                          <ConnectProfileCard
-                            user={user}
-                            profile={opp.mentor}
-                          />
-                          <SponsorProfileOpportunityMeta
-                            opportunity={opp}
-                            t={t}
-                          />
-                        </PeoplePanel>
-                      ) : null}
-
-                      {opp.organization ? (
-                        <PeoplePanel>
-                          <h4>
-                            {t("opportunities.preview.organization", {}, {
-                              default: "Organization",
-                            })}
-                          </h4>
-                          <OrganizationConnectCard org={opp.organization} />
-                        </PeoplePanel>
-                      ) : null}
-                    </PeopleColumns>
-                  ) : null}
-
-                  {/* Meta without a contact panel to live in — still show it. */}
-                  {!opp.mentor ? (
-                    <SponsorProfileOpportunityMeta opportunity={opp} t={t} />
-                  ) : null}
-
-                  {!opp.organization &&
-                  !opp.mentor &&
-                  !opp.guidelinesAcknowledged &&
-                  opp.sponsorIsMentor == null &&
-                  !opp.mentorNotes ? (
-                    <p style={BODY_TEXT_STYLE}>
-                      {t("opportunities.preview.peopleEmpty", {}, {
-                        default: "No organization or mentor details are available yet.",
-                      })}
-                    </p>
-                  ) : null}
+                  <OpportunityPeoplePanels
+                    opportunity={opp}
+                    user={user}
+                    t={t}
+                  />
                 </div>
               ) : null}
 

@@ -51,6 +51,9 @@ export const SPONSOR_ONBOARDING_STATE = gql`
         opportunitiesCreated {
           id
         }
+        opportunitiesSponsored {
+          id
+        }
       }
     }
   }

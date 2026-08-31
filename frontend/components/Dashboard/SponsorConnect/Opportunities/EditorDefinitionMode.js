@@ -304,7 +304,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
       const createInput = {
         ...input,
         status: input.status || "draft",
-        ...(user?.id ? { mentor: { connect: { id: user.id } } } : {}),
+        ...(user?.id ? { sponsors: { connect: [{ id: user.id }] } } : {}),
         ...(myOrgId ? { organization: { connect: { id: myOrgId } } } : {}),
       };
       const res = await createOpportunity({ variables: { input: createInput } });

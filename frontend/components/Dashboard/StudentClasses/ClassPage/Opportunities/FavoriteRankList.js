@@ -9,6 +9,10 @@ import {
   getOpportunityThumbnailSources,
   hasOpportunityPlayableVideo,
 } from "../../../../../lib/opportunityVideoEmbed";
+import {
+  formatOpportunityMentorLabel,
+  formatOpportunitySponsorLabel,
+} from "../../../../../lib/opportunityPeople";
 import OpportunityIntroVideoModal from "./OpportunityIntroVideoModal";
 
 const ListShell = styled.div`
@@ -377,7 +381,8 @@ function RankRowItem({
   const hasVideo = hasOpportunityPlayableVideo(opportunity);
   const { coverUrl, directVideoSrc, embedThumbUrl } =
     getOpportunityThumbnailSources(opportunity);
-  const mentor = mentorDisplayName(opportunity.mentor);
+  const sponsorLine = formatOpportunitySponsorLabel(opportunity);
+  const mentorLine = formatOpportunityMentorLabel(opportunity, t);
   const rankLabel = t(
     "opportunities.studentView.rankForm.rankBadge",
     { rank },
@@ -441,7 +446,22 @@ function RankRowItem({
           <p className="title" title={opportunity.title}>
             {opportunity.title}
           </p>
-          {mentor ? <p className="meta">{mentor}</p> : null}
+          {sponsorLine !== "—" ? (
+            <p className="meta">
+              {t(
+                "opportunities.studentView.meta.sponsor",
+                { name: sponsorLine },
+                { default: "Sponsor: {{name}}" },
+              )}
+            </p>
+          ) : null}
+          <p className="meta">
+            {t(
+              "opportunities.studentView.meta.mentor",
+              { name: mentorLine },
+              { default: "Mentor: {{name}}" },
+            )}
+          </p>
         </OppText>
       </OppMain>
 

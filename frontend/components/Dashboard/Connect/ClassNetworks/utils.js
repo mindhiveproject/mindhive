@@ -2,6 +2,8 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
+import { isOpportunityStakeholder } from "../../../../lib/opportunityPeople";
+
 export const ROUND_STATUS_DEFAULTS = {
   draft: "Draft",
   preferences_open: "Preferences open",
@@ -52,8 +54,8 @@ export function countProfileOwnedClasses(network, profileId) {
 
 export function countProfileOwnedOpportunities(network, profileId) {
   if (!profileId) return 0;
-  return (network?.opportunities || []).filter(
-    (opportunity) => opportunity?.mentor?.id === profileId
+  return (network?.opportunities || []).filter((opportunity) =>
+    isOpportunityStakeholder(opportunity, profileId)
   ).length;
 }
 

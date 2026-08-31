@@ -4,6 +4,10 @@ import styled from "styled-components";
 import Button from "../../../../DesignSystem/Button";
 import Modal from "../../../../DesignSystem/Modal";
 import { getOpportunityVideoSources } from "../../../../../lib/opportunityVideoEmbed";
+import {
+  formatOpportunityMentorLabel,
+  formatOpportunitySponsorLabel,
+} from "../../../../../lib/opportunityPeople";
 
 const MetaGrid = styled.div`
   display: grid;
@@ -118,20 +122,24 @@ export default function OpportunityIntroVideoModal({
   if (!opportunity) return null;
 
   const title = opportunity.title || "";
-  const mentor = mentorDisplayName(opportunity.mentor);
   const from = formatDate(opportunity.availableFrom);
   const to = formatDate(opportunity.availableTo);
   const closeLabel = t("opportunities.studentView.rankForm.videoModal.close", {}, {
     default: "Close",
   });
-
-  const sponsorLine = mentor
-    ? t(
-        "opportunities.studentView.meta.sponsor",
-        { name: mentor },
-        { default: "Sponsor: {{name}}" },
-      )
-    : null;
+  const sponsorLine =
+    formatOpportunitySponsorLabel(opportunity) !== "—"
+      ? t(
+          "opportunities.studentView.meta.sponsor",
+          { name: formatOpportunitySponsorLabel(opportunity) },
+          { default: "Sponsor: {{name}}" },
+        )
+      : null;
+  const mentorLine = t(
+    "opportunities.studentView.meta.mentor",
+    { name: formatOpportunityMentorLabel(opportunity, t) },
+    { default: "Mentor: {{name}}" },
+  );
 
   const datesLine =
     from || to
@@ -178,6 +186,12 @@ export default function OpportunityIntroVideoModal({
           {sponsorLine}
         </p>
       ) : null}
+      <p
+        className="MH-Type-Label-Base"
+        style={{ margin: sponsorLine ? "4px 0 0" : 0, color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}
+      >
+        {mentorLine}
+      </p>
       {opportunity.shortDescription ? (
         <Description>{opportunity.shortDescription}</Description>
       ) : null}

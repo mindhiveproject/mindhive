@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Icon, Dropdown } from "semantic-ui-react";
 
 import { GET_PARTICIPATE_VIEW } from "../../../../Queries/ConnectPreference";
+import { formatOpportunitySponsorLabel } from "../../../../../lib/opportunityPeople";
 import {
   CREATE_PREFERENCE,
   UPDATE_PREFERENCE,
@@ -884,10 +885,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         .filter((m) => m.status !== "proposed" || round.status === "published")
         .map((match) => {
           const opp = match.opportunity;
-          const mentorName = opp?.mentor
-            ? `${opp.mentor.firstName || ""} ${opp.mentor.lastName || ""}`.trim() ||
-              opp.mentor.username
-            : "Unknown";
+          const mentorName = formatOpportunitySponsorLabel(opp);
           const myExistingRating = (match.ratings || []).find(
             (r) => r.raterRole === "student" && r.rater?.id === me?.id
           );

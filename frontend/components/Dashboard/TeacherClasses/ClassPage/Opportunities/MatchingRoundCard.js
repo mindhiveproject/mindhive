@@ -3117,9 +3117,9 @@ function MatchingRoundEditor({
                 <img
                   src="/assets/icons/back.svg"
                   alt=""
-                  aria-hidden
                   width={16}
                   height={16}
+                  style={{ width: 16, height: 16 }}
                 />
               }
             />

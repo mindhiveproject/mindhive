@@ -10,6 +10,14 @@ import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import { hydrateProposalInputs } from "../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import { formatOrganizationLabel } from "../../../../lib/organizationLabels";
+import {
+  displayProfileName,
+  formatOpportunityMentorLabel,
+  formatOpportunitySponsorLabel,
+  getOpportunityMentors,
+  getPrimarySponsor,
+  isMentorTbd,
+} from "../../../../lib/opportunityPeople";
 import Chip from "../../../DesignSystem/Chip";
 import FavoriteButton from "../../../DesignSystem/FavoriteButton";
 import IconButton from "../../../DesignSystem/IconButton";
@@ -381,12 +389,17 @@ export default function ExploreDetail({ opportunityId }) {
   const fallbackIframeSrc =
     !directVideoSrc && !embedUrl && cleanVideoUrl ? cleanVideoUrl : null;
 
+  const primarySponsor = getPrimarySponsor(opp);
+  const primaryMentor = getOpportunityMentors(opp)[0] || null;
+  const contactProfile = primaryMentor || primarySponsor;
   const mentorAvatar =
-    opp.mentor?.image?.keystoneImage?.url ||
-    opp.mentor?.image?.image?.publicUrlTransformed ||
+    contactProfile?.image?.keystoneImage?.url ||
+    contactProfile?.image?.image?.publicUrlTransformed ||
     null;
-  const mentorName = displayName(opp.mentor);
-  const mentorOrgLabel = formatOrganizationLabel(opp.mentor?.organization);
+  const mentorName = displayProfileName(contactProfile) || "—";
+  const mentorOrgLabel = formatOrganizationLabel(contactProfile?.organization);
+  const sponsorName = formatOpportunitySponsorLabel(opp);
+  const mentorLabel = formatOpportunityMentorLabel(opp, t);
 
   const from = formatDate(opp.availableFrom);
   const to = formatDate(opp.availableTo);
@@ -752,60 +765,80 @@ export default function ExploreDetail({ opportunityId }) {
       )}
 
       <Card>
-        <h2>
-          {t("exploreDetail.yourContact", {}, { default: "Your contact" })}
-        </h2>
+        <h2>{t("exploreDetail.sponsor", {}, { default: "Sponsor" })}</h2>
         <MentorPanel>
-          {mentorAvatar ? (
-            <img src={mentorAvatar} alt={mentorName} />
-          ) : (
-            <span className="placeholder">
-              {mentorName.charAt(0).toUpperCase()}
-            </span>
-          )}
           <div className="info">
-            <span className="name">{mentorName}</span>
-            {opp.mentor?.tagline && (
-              <span className="tagline">{opp.mentor.tagline}</span>
-            )}
-            {mentorOrgLabel && (
-              <span className="org">
-                {mentorOrgLabel}
-                {opp.mentor.department ? ` · ${opp.mentor.department}` : ""}
-              </span>
-            )}
-            {opp.mentor?.timeCommitment && (
-              <span className="org">
-                {t(
-                  "exploreDetail.mentorTimeCommitment",
-                  { value: opp.mentor.timeCommitment },
-                  { default: "Time commitment: {{value}}" },
-                )}
-              </span>
-            )}
+            <span className="name">{sponsorName}</span>
           </div>
-          {opp.mentor?.publicId && (
-            <Link
-              href={{
-                pathname: "/dashboard/connect/with",
-                query: { id: opp.mentor.publicId },
-              }}
-              passHref
-              legacyBehavior
-            >
-              <a className="profile-link">
-                {t("exploreDetail.viewProfile", {}, {
-                  default: "View profile",
-                })}{" "}
-                <ArrowOutwardIcon />
-              </a>
-            </Link>
-          )}
         </MentorPanel>
-        {opp.mentor?.bio && (
+      </Card>
+
+      <Card>
+        <h2>{t("exploreDetail.mentor", {}, { default: "Mentor" })}</h2>
+        {isMentorTbd(opp) ? (
           <div className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
-            {opp.mentor.bio}
+            {mentorLabel}
+            {opp.mentorNotes ? (
+              <p style={{ marginTop: 12 }}>{opp.mentorNotes}</p>
+            ) : null}
           </div>
+        ) : (
+          <>
+            <MentorPanel>
+              {mentorAvatar ? (
+                <img src={mentorAvatar} alt={mentorName} />
+              ) : (
+                <span className="placeholder">
+                  {mentorName.charAt(0).toUpperCase()}
+                </span>
+              )}
+              <div className="info">
+                <span className="name">{mentorName}</span>
+                {primaryMentor?.tagline && (
+                  <span className="tagline">{primaryMentor.tagline}</span>
+                )}
+                {mentorOrgLabel && (
+                  <span className="org">
+                    {mentorOrgLabel}
+                    {primaryMentor?.department
+                      ? ` · ${primaryMentor.department}`
+                      : ""}
+                  </span>
+                )}
+                {primaryMentor?.timeCommitment && (
+                  <span className="org">
+                    {t(
+                      "exploreDetail.mentorTimeCommitment",
+                      { value: primaryMentor.timeCommitment },
+                      { default: "Time commitment: {{value}}" },
+                    )}
+                  </span>
+                )}
+              </div>
+              {primaryMentor?.publicId && (
+                <Link
+                  href={{
+                    pathname: "/dashboard/connect/with",
+                    query: { id: primaryMentor.publicId },
+                  }}
+                  passHref
+                  legacyBehavior
+                >
+                  <a className="profile-link">
+                    {t("exploreDetail.viewProfile", {}, {
+                      default: "View profile",
+                    })}{" "}
+                    <ArrowOutwardIcon />
+                  </a>
+                </Link>
+              )}
+            </MentorPanel>
+            {primaryMentor?.bio && (
+              <div className="MH-Type-Body-Base" style={{ color: "#5f6871" }}>
+                {primaryMentor.bio}
+              </div>
+            )}
+          </>
         )}
       </Card>
 

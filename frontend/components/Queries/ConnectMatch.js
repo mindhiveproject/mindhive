@@ -16,6 +16,19 @@ export const ROUND_MATCH_VIEW = gql`
         title
         studentCapacity
         teamSize
+        sponsors {
+          id
+          username
+          firstName
+          lastName
+        }
+        mentors {
+          id
+          username
+          firstName
+          lastName
+        }
+        sponsorIsMentor
         mentor {
           id
           username

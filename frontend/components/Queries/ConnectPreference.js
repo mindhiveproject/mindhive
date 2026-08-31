@@ -89,6 +89,19 @@ export const GET_PARTICIPATE_VIEW = gql`
         allowsTeamPreferences
         publicRatingAverage
         publicRatingCount
+        sponsors {
+          id
+          username
+          firstName
+          lastName
+        }
+        mentors {
+          id
+          username
+          firstName
+          lastName
+        }
+        sponsorIsMentor
         mentor {
           id
           username
@@ -173,6 +186,19 @@ export const GET_PARTICIPATE_VIEW = gql`
             title
             shortDescription
             teamSize
+            sponsors {
+              id
+              username
+              firstName
+              lastName
+            }
+            mentors {
+              id
+              username
+              firstName
+              lastName
+            }
+            sponsorIsMentor
             mentor {
               id
               username

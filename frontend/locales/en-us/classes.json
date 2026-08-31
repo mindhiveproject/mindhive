@@ -900,6 +900,11 @@
 					"mentorId": "Mentor ID",
 					"mentorLastName": "Mentor last name",
 					"mentorUsername": "Mentor username",
+					"sponsorEmail": "Sponsor email",
+					"sponsorFirstName": "Sponsor first name",
+					"sponsorId": "Sponsor ID",
+					"sponsorLastName": "Sponsor last name",
+					"sponsorUsername": "Sponsor username",
 					"organizationId": "Organization ID",
 					"organizationName": "Organization name",
 					"potentialActivities": "Potential activities",
@@ -1011,6 +1016,7 @@
 			},
 			"followUpCompletion": {
 				"columns": {
+					"mentor": "Mentor",
 					"opportunity": "Opportunity",
 					"organization": "Organization",
 					"progress": "Progress",
@@ -1198,6 +1204,7 @@
 					"info": "More information",
 					"infoAppointment": "More information — appointment requested",
 					"infoReturned": "More information — returned",
+					"mentor": "Mentor",
 					"name": "Opportunity name",
 					"organization": "Organization",
 					"review": "Review",
@@ -1426,6 +1433,8 @@
 			"mentor": "Mentor",
 			"mentorContact": "Your contact",
 			"mentorNotes": "Mentor notes",
+			"mentorTbd": "Mentor to be assigned",
+			"mentors": "Mentors",
 			"messages": "Messages",
 			"messagesUnreadAria": "Messages, {{count}} unread",
 			"no": "No",
@@ -1460,7 +1469,10 @@
 				"title": "Review notes",
 				"updatedAt": "Updated {{date}}"
 			},
+			"sponsor": "Sponsor",
 			"sponsorIsMentor": "Sponsor is mentor",
+			"sponsorPending": "Sponsor details pending",
+			"sponsors": "Sponsors",
 			"sponsorRequestedMeeting": "Sponsor asked to meet",
 			"status": "Status",
 			"summaryTitle": "Summary",
@@ -1526,6 +1538,7 @@
 			"loading": "Loading opportunities…",
 			"meta": {
 				"dates": "{{from}} → {{to}}",
+				"mentor": "Mentor: {{name}}",
 				"sponsor": "Sponsor: {{name}}"
 			},
 			"notAvailableHint": "When your teacher opens the matching round, selected opportunities will appear here.",

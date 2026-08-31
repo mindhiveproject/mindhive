@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import moment from "moment";
+import { isOpportunityStakeholder } from "../../../lib/opportunityPeople";
 
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
@@ -437,8 +438,8 @@ export default function OpportunityClassForum({
       talk.classes?.[0] ||
       null;
     const isTeacher = isClassTeacher(cls, viewerId);
-    const isSponsor = (talk.opportunities || []).some(
-      (opp) => opp?.mentor?.id === viewerId,
+    const isSponsor = (talk.opportunities || []).some((opp) =>
+      isOpportunityStakeholder(opp, viewerId),
     );
     const canModerate = Boolean(isTeacher || isSponsor);
     return {

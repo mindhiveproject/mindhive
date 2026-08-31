@@ -15,6 +15,10 @@ import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import FavoriteButton from "../../../DesignSystem/FavoriteButton";
 import { GroupIcon, StarFilledIcon, StarIcon } from "../../../DesignSystem/Icons";
 import FilterBar from "../FilterBar";
+import {
+  formatOpportunityMentorLabel,
+  formatOpportunitySponsorLabel,
+} from "../../../../lib/opportunityPeople";
 
 const PAGE_SIZE = 12;
 
@@ -442,10 +446,8 @@ export default function ExploreList() {
           {opportunities.map((opp) => {
             const coverSrc = opp.coverImage?.url || opp.coverImageUrl || null;
             const hasVideo = !!opp.videoFile?.url || !!opp.videoUrl;
-            const mentorName =
-              opp.mentor?.firstName ||
-              opp.mentor?.username ||
-              t("exploreList.unknownMentor", {}, { default: "Unknown mentor" });
+            const sponsorName = formatOpportunitySponsorLabel(opp);
+            const mentorName = formatOpportunityMentorLabel(opp, t);
             const from = formatDate(opp.availableFrom);
             const to = formatDate(opp.availableTo);
             const isFavorite = favoriteIds.has(opp.id);
@@ -496,6 +498,14 @@ export default function ExploreList() {
                       <h3>{opp.title}</h3>
                       {opp.shortDescription && <p>{opp.shortDescription}</p>}
                       <Meta>
+                        <span>
+                          <MetaIcon
+                            src="/assets/connect/user.svg"
+                            alt=""
+                            aria-hidden
+                          />
+                          {sponsorName}
+                        </span>
                         <span>
                           <MetaIcon
                             src="/assets/connect/user.svg"

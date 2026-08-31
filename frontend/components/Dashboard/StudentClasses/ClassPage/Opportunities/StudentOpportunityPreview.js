@@ -20,9 +20,7 @@ import {
   hydrateProposalInputs,
 } from "../../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import StudentFollowUpAnswers from "./StudentFollowUpAnswers";
-import ConnectProfileCard from "../../../Connect/ConnectProfileCard";
-import { CARD_WIDTH } from "../../../Connect/ConnectBrowseLayout";
-import OrganizationConnectCard from "../../../Connect/Organizations/OrganizationConnectCard";
+import OpportunityPeoplePanels from "../../../Connect/OpportunityPeoplePanels";
 import ManageFavoriteOpportunity from "../../../Connect/ManageFavoriteOpportunity";
 import OpportunityClassForum from "../../../Connect/OpportunityClassForum";
 
@@ -145,39 +143,6 @@ const LIST_CHIP_STYLE = {
   minHeight: 32,
   alignItems: "flex-start",
 };
-
-const PeopleColumns = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
-
-  @media (max-width: 900px) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-`;
-
-const PeoplePanel = styled.section`
-  display: grid;
-  justify-items: center;
-  gap: 12px;
-  min-width: 0;
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
-  box-sizing: border-box;
-
-  h4 {
-    margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
-    letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Black, #171717);
-  }
-
-  > article {
-    max-width: ${CARD_WIDTH};
-  }
-`;
 
 const HeaderActions = styled.span`
   display: flex;
@@ -1031,94 +996,12 @@ export default function StudentOpportunityPreview({
 
             {activeTab === TABS.people ? (
               <div style={{ display: "grid", gap: 16 }}>
-                {opp.organization || opp.mentor ? (
-                  <PeopleColumns>
-                    {opp.mentor ? (
-                      <PeoplePanel>
-                        <h4>
-                          {t("opportunities.preview.mentorContact", {}, {
-                            default: "Your contact",
-                          })}
-                        </h4>
-                        <ConnectProfileCard
-                          user={user}
-                          profile={opp.mentor}
-                        />
-                        {opp.mentorNotes ? (
-                          <div style={{ width: "100%", minWidth: 0 }}>
-                            <ReviewField
-                              label={t(
-                                "opportunities.studentView.preview.mentorNotes",
-                                {},
-                                { default: "Mentoring notes" },
-                              )}
-                              value={opp.mentorNotes}
-                            />
-                          </div>
-                        ) : null}
-                      </PeoplePanel>
-                    ) : null}
-
-                    {opp.organization ? (
-                      <PeoplePanel>
-                        <h4>
-                          {t("opportunities.preview.organization", {}, {
-                            default: "Organization",
-                          })}
-                        </h4>
-                        <OrganizationConnectCard org={opp.organization} />
-                        {opp.organization.mission ||
-                        opp.organization.department ||
-                        opp.organization.website ? (
-                          <div
-                            style={{
-                              display: "grid",
-                              gap: 12,
-                              width: "100%",
-                              minWidth: 0,
-                            }}
-                          >
-                            <ReviewField
-                              label={t(
-                                "opportunities.studentView.preview.orgMission",
-                                {},
-                                { default: "Mission" },
-                              )}
-                              value={opp.organization.mission}
-                            />
-                            <ReviewField
-                              label={t(
-                                "opportunities.studentView.preview.orgDepartment",
-                                {},
-                                { default: "Department" },
-                              )}
-                              value={opp.organization.department}
-                            />
-                            <ReviewField
-                              label={t(
-                                "opportunities.studentView.preview.orgWebsite",
-                                {},
-                                { default: "Website" },
-                              )}
-                              value={opp.organization.website}
-                            />
-                          </div>
-                        ) : null}
-                      </PeoplePanel>
-                    ) : null}
-                  </PeopleColumns>
-                ) : (
-                  <p style={BODY_TEXT_STYLE}>
-                    {t(
-                      "opportunities.studentView.preview.peopleEmpty",
-                      {},
-                      {
-                        default:
-                          "No organization or mentor details are available yet.",
-                      },
-                    )}
-                  </p>
-                )}
+                <OpportunityPeoplePanels
+                  opportunity={opp}
+                  user={user}
+                  t={t}
+                  mentorNotesLabelKey="opportunities.studentView.preview.mentorNotes"
+                />
               </div>
             ) : null}
 
