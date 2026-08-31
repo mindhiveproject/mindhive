@@ -14,7 +14,10 @@ import {
   isProposalFormAnswerComplete,
 } from "../../../../../lib/opportunityProposalData";
 import { formTabKey } from "../../../../../lib/opportunityEditorTabs";
-import { opportunityToneChipStyle } from "../../../../../lib/opportunityStatusTones";
+import {
+  formatOpportunityMentorLabel,
+  formatOpportunitySponsorLabel,
+} from "../../../../../lib/opportunityPeople";
 
 function displayName(profile) {
   if (!profile) return null;
@@ -59,6 +62,7 @@ function rowMatchesSearch(row, query) {
   return (
     includesQuery(row.title, q) ||
     includesQuery(row.sponsorName, q) ||
+    includesQuery(row.mentorName, q) ||
     includesQuery(row.organizationName, q)
   );
 }
@@ -136,7 +140,8 @@ export default function MatchingRoundFollowUpCompletionGrid({
       }
       return {
         ...opportunity,
-        sponsorName: displayName(opportunity.mentor) || "—",
+        sponsorName: formatOpportunitySponsorLabel(opportunity),
+        mentorName: formatOpportunityMentorLabel(opportunity, t),
         organizationName: opportunity.organization?.name || "—",
         formsDone: doneCount,
         formsTotal: formList.length,
@@ -308,6 +313,18 @@ export default function MatchingRoundFollowUpCompletionGrid({
           "opportunities.matchingRound.followUpCompletion.columns.sponsor",
           {},
           { default: "Sponsor" },
+        ),
+        filter: "agTextColumnFilter",
+        sortable: true,
+        flex: 1.1,
+        minWidth: 120,
+      },
+      {
+        field: "mentorName",
+        headerName: t(
+          "opportunities.matchingRound.followUpCompletion.columns.mentor",
+          {},
+          { default: "Mentor" },
         ),
         filter: "agTextColumnFilter",
         sortable: true,

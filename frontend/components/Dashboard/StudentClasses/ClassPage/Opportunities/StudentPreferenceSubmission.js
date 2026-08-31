@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Icon, Dropdown } from "semantic-ui-react";
 
 import { GET_PARTICIPATE_VIEW } from "../../../../Queries/ConnectPreference";
+import { formatOpportunitySponsorLabel } from "../../../../../lib/opportunityPeople";
 import {
   CREATE_PREFERENCE,
   UPDATE_PREFERENCE,
@@ -29,8 +30,12 @@ import ClassmateRankList, {
 import FavoriteRankList from "./FavoriteRankList";
 import PreferenceSubmissionReview from "./PreferenceSubmissionReview";
 import PreferenceSubmissionStepper, {
-  TOTAL_STEPS,
+  buildPreferenceStepKeys,
 } from "./PreferenceSubmissionStepper";
+import StudentAssessmentStep from "./StudentAssessmentStep";
+import {
+  isAssessmentFormAnswerComplete,
+} from "../../../../../lib/connectPreferenceAssessmentData";
 
 /** Round/opportunity questions are deferred; keep save paths dormant until re-enabled. */
 const PREFERENCE_QUESTIONS_ENABLED = false;
@@ -305,6 +310,7 @@ function RankFormChrome({
 export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
+  const locale = router?.locale || "en-us";
   const backLabel = t("opportunities.studentView.rankForm.backLink", {}, {
     default: "Back to opportunities",
   });
@@ -315,6 +321,12 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
 
   const round = data?.connectRound;
   const me = data?.authenticatedItem;
+  const assessmentForm = round?.studentAssessmentFormDefinition;
+  const assessmentFormId =
+    assessmentForm?.status === "published" ? assessmentForm?.id : null;
+  const includeAssessment = Boolean(assessmentFormId);
+  const stepKeys = buildPreferenceStepKeys(includeAssessment);
+  const totalSteps = stepKeys.length;
   const existingPreference = me?.connectPreferences?.[0];
   const existingTeamPrefs = me?.teamPreferencesSubmitted || [];
   const existingAnswers = me?.questionAnswers || [];
@@ -345,6 +357,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const [rankings, setRankings] = useState({});
   const [classmateOrder, setClassmateOrder] = useState([]);
   const [notes, setNotes] = useState("");
+  const [assessmentData, setAssessmentData] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
 
   const teamEligibleOpps = useMemo(
@@ -376,14 +389,14 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   useEffect(() => {
     const raw = router.query.step;
     const stepNum = Number(raw);
-    if (raw && stepNum >= 1 && stepNum <= TOTAL_STEPS) {
+    if (raw && stepNum >= 1 && stepNum <= totalSteps) {
       setCurrentStep(stepNum);
     }
-  }, [router.query.step]);
+  }, [router.query.step, totalSteps]);
 
   const goToStep = useCallback(
     (step) => {
-      const next = Math.min(TOTAL_STEPS, Math.max(1, step));
+      const next = Math.min(totalSteps, Math.max(1, step));
       setCurrentStep(next);
       if (router.query.round) {
         router.replace(
@@ -396,7 +409,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         );
       }
     },
-    [router],
+    [router, totalSteps],
   );
 
   useEffect(() => {
@@ -431,6 +444,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     );
 
     setNotes(existingPreference?.notes || "");
+    setAssessmentData(existingPreference?.assessmentData || null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round?.id, existingPreference?.id, teamEligibleOppIds.join(",")]);
 
@@ -447,6 +461,19 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const [saving, setSaving] = useState(false);
   const [ratingDrafts, setRatingDrafts] = useState({});
   const [savingRatingId, setSavingRatingId] = useState(null);
+  const [formSaveFeedback, setFormSaveFeedback] = useState(null);
+  const [assessmentSaveFeedback, setAssessmentSaveFeedback] = useState(null);
+
+  const setScopedSaveFeedback = (scope, feedback) => {
+    if (scope === "assessment") {
+      setAssessmentSaveFeedback(feedback);
+      return;
+    }
+    setFormSaveFeedback(feedback);
+  };
+
+  const clearFormSaveFeedback = () => setFormSaveFeedback(null);
+  const clearAssessmentSaveFeedback = () => setAssessmentSaveFeedback(null);
 
   const updateRankings = (updater) => {
     setRankings((prev) =>
@@ -461,10 +488,39 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     }));
   };
 
-  const handleSave = async (targetStatus) => {
-    if (!round) return;
+  const handleSave = async (targetStatus, options = {}) => {
+    const { assessmentDataOverride, feedbackScope: feedbackScopeOption } =
+      options;
+    if (!round) return false;
+
+    const feedbackScope =
+      feedbackScopeOption ||
+      (assessmentDataOverride !== undefined && assessmentDataOverride !== null
+        ? "assessment"
+        : "form");
+
+    const nextAssessmentData = assessmentDataOverride ?? assessmentData;
 
     if (targetStatus === "submitted") {
+      if (
+        includeAssessment &&
+        assessmentFormId &&
+        !isAssessmentFormAnswerComplete(nextAssessmentData, assessmentFormId)
+      ) {
+        setScopedSaveFeedback(feedbackScope, {
+          variant: "warning",
+          message: t(
+            "opportunities.studentView.rankForm.assessmentRequired",
+            {},
+            {
+              default:
+                "Complete the Individual Core Competency Assessment before submitting.",
+            },
+          ),
+        });
+        return false;
+      }
+
       const hasItems = Object.entries(rankings).some(([, r]) => {
         if (!r) return false;
         return (
@@ -476,8 +532,9 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         );
       });
       if (!hasItems) {
-        alert(
-          t(
+        setScopedSaveFeedback("form", {
+          variant: "warning",
+          message: t(
             "opportunities.studentView.rankForm.steps.needRankedOpportunity",
             {},
             {
@@ -485,8 +542,8 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                 "Favorite and rank at least one opportunity before continuing.",
             },
           ),
-        );
-        return;
+        });
+        return false;
       }
     }
 
@@ -533,13 +590,22 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
       });
 
       if (missing.length > 0) {
-        alert(
-          `Please answer these required questions before submitting:\n\n• ${missing.join("\n• ")}`
-        );
-        return;
+        setScopedSaveFeedback("form", {
+          variant: "warning",
+          message: t(
+            "opportunities.studentView.rankForm.requiredQuestions",
+            { count: missing.length },
+            {
+              default:
+                "Answer all required questions before submitting ({{count}} remaining).",
+            },
+          ),
+        });
+        return false;
       }
     }
 
+    setScopedSaveFeedback(feedbackScope, null);
     setSaving(true);
     try {
       // 1) Build items from rankings
@@ -576,6 +642,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
               status: targetStatus,
               notes,
               submittedAt,
+              assessmentData: nextAssessmentData,
               items: items.length ? { create: items } : undefined,
               updatedAt: new Date().toISOString(),
             },
@@ -590,10 +657,15 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
               status: targetStatus,
               notes,
               submittedAt,
+              assessmentData: nextAssessmentData,
               items: items.length ? { create: items } : undefined,
             },
           },
         });
+      }
+
+      if (assessmentDataOverride) {
+        setAssessmentData(nextAssessmentData);
       }
 
       // 3) Wipe + recreate question answers (deferred while questions UI is hidden)
@@ -652,6 +724,49 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
       }
 
       await refetch();
+
+      if (targetStatus === "submitted") {
+        setScopedSaveFeedback("form", {
+          variant: "success",
+          message: t(
+            "opportunities.studentView.rankForm.submitSuccess",
+            {},
+            { default: "Your preferences were submitted." },
+          ),
+        });
+      } else if (feedbackScope === "assessment") {
+        setScopedSaveFeedback("assessment", {
+          variant: "success",
+          message: t(
+            "opportunities.studentView.rankForm.assessmentSaveSuccess",
+            {},
+            { default: "Your assessment answers were saved." },
+          ),
+        });
+      } else {
+        setScopedSaveFeedback("form", {
+          variant: "success",
+          message: t(
+            "opportunities.studentView.rankForm.draftSaveSuccess",
+            {},
+            { default: "Your progress was saved." },
+          ),
+        });
+      }
+      return true;
+    } catch (error) {
+      console.error("Failed to save student preferences", error);
+      setScopedSaveFeedback(feedbackScope, {
+        variant: "warning",
+        message: t(
+          "opportunities.studentView.rankForm.saveFailed",
+          {},
+          {
+            default: "Could not save your progress. Please try again.",
+          },
+        ),
+      });
+      return false;
     } finally {
       setSaving(false);
     }
@@ -686,9 +801,15 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         : draft.teammateRatings;
 
     if (!opportunityRating) {
-      alert("Pick a star rating before saving.");
+      setFormSaveFeedback({
+        variant: "warning",
+        message: t("opportunities.studentView.rankForm.ratingRequired", {}, {
+          default: "Pick a star rating before saving.",
+        }),
+      });
       return;
     }
+    setFormSaveFeedback(null);
     setSavingRatingId(match.id);
     try {
       if (myExistingRating) {
@@ -722,6 +843,20 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
       }
       await refetch();
       setRatingDrafts((prev) => ({ ...prev, [match.id]: {} }));
+      setFormSaveFeedback({
+        variant: "success",
+        message: t("opportunities.studentView.rankForm.ratingSaveSuccess", {}, {
+          default: "Your rating was saved.",
+        }),
+      });
+    } catch (error) {
+      console.error("Failed to save match rating", error);
+      setFormSaveFeedback({
+        variant: "warning",
+        message: t("opportunities.studentView.rankForm.saveFailed", {}, {
+          default: "Could not save your progress. Please try again.",
+        }),
+      });
     } finally {
       setSavingRatingId(null);
     }
@@ -828,6 +963,34 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const handleSaveDraft = () => handleSave("draft");
   const handleSubmitPreferences = () => handleSave("submitted");
 
+  const preferenceEntity = {
+    id: existingPreference?.id,
+    assessmentData,
+  };
+
+  const handleSaveAssessment = async (nextAssessmentData) => {
+    return handleSave("draft", {
+      assessmentDataOverride: nextAssessmentData,
+      feedbackScope: "assessment",
+    });
+  };
+
+  const handleAssessmentValidationFailed = () => {
+    setAssessmentSaveFeedback({
+      variant: "warning",
+      message: t(
+        "opportunities.studentView.rankForm.assessmentValidationFailed",
+        {},
+        {
+          default:
+            "Fix the highlighted fields before saving your assessment.",
+        },
+      ),
+    });
+  };
+
+  const currentStepKey = stepKeys[currentStep - 1] || stepKeys[0];
+
   const savingLabel = t("opportunities.studentView.rankForm.saving", {}, {
     default: "Saving…",
   });
@@ -872,22 +1035,28 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         submitActions={headerSubmitActions}
       />
       <RankPageBody>
-      {!isOpen && lockReason && (
-        <Card>
-          <p className="helper">
-            <Icon name="lock" /> {lockReason}
-          </p>
-        </Card>
-      )}
+      {formSaveFeedback ? (
+        <MessageCard
+          variant={formSaveFeedback.variant}
+          message={formSaveFeedback.message}
+          onClose={clearFormSaveFeedback}
+          closeAriaLabel={t(
+            "opportunities.matchingRound.formWizard.bannerDismiss",
+            {},
+            { default: "Dismiss" },
+          )}
+        />
+      ) : null}
+
+      {!isOpen && lockReason ? (
+        <MessageCard variant="information" message={lockReason} />
+      ) : null}
 
       {(me?.connectMatches || [])
         .filter((m) => m.status !== "proposed" || round.status === "published")
         .map((match) => {
           const opp = match.opportunity;
-          const mentorName = opp?.mentor
-            ? `${opp.mentor.firstName || ""} ${opp.mentor.lastName || ""}`.trim() ||
-              opp.mentor.username
-            : "Unknown";
+          const mentorName = formatOpportunitySponsorLabel(opp);
           const myExistingRating = (match.ratings || []).find(
             (r) => r.raterRole === "student" && r.rater?.id === me?.id
           );
@@ -1190,8 +1359,23 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         <PreferenceSubmissionStepper
           currentStep={currentStep}
           onStepChange={goToStep}
+          includeAssessment={includeAssessment}
         >
-          {currentStep === 1 && (
+          {currentStepKey === "assessment" && (
+            <StudentAssessmentStep
+              formDefinitionId={assessmentFormId}
+              preferenceEntity={preferenceEntity}
+              isOpen={isOpen}
+              locale={locale}
+              onSaveAssessment={handleSaveAssessment}
+              onValidationFailed={handleAssessmentValidationFailed}
+              saving={saving}
+              saveFeedback={assessmentSaveFeedback}
+              onDismissSaveFeedback={clearAssessmentSaveFeedback}
+            />
+          )}
+
+          {currentStepKey === "classmates" && (
             <>
               <h2>
                 {t("opportunities.studentView.rankForm.classmatesHeading", {}, {
@@ -1229,7 +1413,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
             </>
           )}
 
-          {currentStep === 2 && (
+          {currentStepKey === "opportunities" && (
             <>
               <h2>
                 {t("opportunities.studentView.rankForm.rankHeading", {}, {
@@ -1280,7 +1464,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
             </>
           )}
 
-          {currentStep === 3 && (
+          {currentStepKey === "review" && (
             <>
               <h2>
                 {t("opportunities.studentView.rankForm.reviewHeading", {}, {

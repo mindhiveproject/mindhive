@@ -68,6 +68,7 @@ export const ROUND_SCHEDULE_PHASES = [
     startAt: "openAt",
     endAt: "closeAt",
     storedOnRound: true,
+    enforcesPreferenceWindow: true,
     object: "connectRound",
     startStatus: "preferences_open",
     endStatus: "preferences_closed",

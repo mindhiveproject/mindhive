@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 import { NavbarItem, SectionNavbar } from "../../../../DesignSystem/Navbar";
 
-const TOTAL_STEPS = 3;
+const BASE_STEP_KEYS = ["classmates", "opportunities", "review"];
+const ASSESSMENT_STEP_KEY = "assessment";
 
 const WizardShell = styled.div`
   display: flex;
@@ -21,14 +22,20 @@ const WizardContent = styled.div`
   min-width: 0;
 `;
 
-const STEP_KEYS = ["classmates", "opportunities", "review"];
+export function buildPreferenceStepKeys(includeAssessment) {
+  return includeAssessment
+    ? [ASSESSMENT_STEP_KEY, ...BASE_STEP_KEYS]
+    : BASE_STEP_KEYS;
+}
 
 export default function PreferenceSubmissionStepper({
   currentStep,
   onStepChange,
+  includeAssessment = false,
   children,
 }) {
   const { t } = useTranslation("classes");
+  const stepKeys = buildPreferenceStepKeys(includeAssessment);
 
   return (
     <WizardShell>
@@ -39,7 +46,7 @@ export default function PreferenceSubmissionStepper({
           default: "Preference ranking",
         })}
       >
-        {STEP_KEYS.map((key, index) => {
+        {stepKeys.map((key, index) => {
           const stepNum = index + 1;
           const isActive = currentStep === stepNum;
           const label = t(
@@ -47,11 +54,13 @@ export default function PreferenceSubmissionStepper({
             {},
             {
               default:
-                key === "classmates"
-                  ? "Classmates"
-                  : key === "opportunities"
-                    ? "Opportunities"
-                    : "Review",
+                key === "assessment"
+                  ? "Assessment"
+                  : key === "classmates"
+                    ? "Classmates"
+                    : key === "opportunities"
+                      ? "Opportunities"
+                      : "Review",
             },
           );
 
@@ -72,5 +81,3 @@ export default function PreferenceSubmissionStepper({
     </WizardShell>
   );
 }
-
-export { TOTAL_STEPS };

@@ -4,6 +4,11 @@ import useTranslation from "next-translate/useTranslation";
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
 import { getProjectCategoryDisplay } from "../../../lib/opportunityCategory";
+import {
+  displayProfileName,
+  getOpportunityMentors,
+  getPrimarySponsor,
+} from "../../../lib/opportunityPeople";
 import ConnectCard from "./ConnectCard";
 import ManageFavoriteOpportunity from "./ManageFavoriteOpportunity";
 
@@ -15,12 +20,6 @@ const ChipLeading = styled.img`
   display: block;
   flex-shrink: 0;
 `;
-
-function mentorDisplayName(mentor) {
-  if (!mentor) return null;
-  const full = [mentor.firstName, mentor.lastName].filter(Boolean).join(" ");
-  return full || mentor.username || null;
-}
 
 /**
  * Connect-style opportunity card for the student class Opportunities tab.
@@ -40,7 +39,25 @@ export default function OpportunityConnectCard({
   const title = opportunity.title || "";
   const orgName = opportunity.organization?.name?.trim() || null;
   const orgLogoUrl = opportunity.organization?.logo?.url || null;
-  const sponsor = mentorDisplayName(opportunity.mentor);
+  const sponsorName = displayProfileName(getPrimarySponsor(opportunity));
+  const mentorNames = getOpportunityMentors(opportunity)
+    .map((profile) => displayProfileName(profile))
+    .filter(Boolean);
+  const mentorLabel = mentorNames.length
+    ? mentorNames.join(", ")
+    : t("opportunityCard.mentorTbd", {}, { default: "Mentor TBD" });
+  const subtitle = [
+    sponsorName
+      ? t("opportunityCard.sponsorLine", { name: sponsorName }, {
+          default: "Sponsor: {{name}}",
+        })
+      : null,
+    t("opportunityCard.mentorLine", { name: mentorLabel }, {
+      default: "Mentor: {{name}}",
+    }),
+  ]
+    .filter(Boolean)
+    .join(" · ");
   const description = opportunity.shortDescription?.trim() || null;
   const categoryLabel = getProjectCategoryDisplay(
     opportunity.projectCategory,
@@ -101,7 +118,7 @@ export default function OpportunityConnectCard({
         fallbackLabel: (orgName || title || "?").charAt(0).toUpperCase(),
       }}
       title={title}
-      subtitle={sponsor}
+      subtitle={subtitle}
       chips={chips.length > 0 ? chips : null}
       description={description}
       actions={

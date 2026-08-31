@@ -16,6 +16,19 @@ export const ROUND_MATCH_VIEW = gql`
         title
         studentCapacity
         teamSize
+        sponsors {
+          id
+          username
+          firstName
+          lastName
+        }
+        mentors {
+          id
+          username
+          firstName
+          lastName
+        }
+        sponsorIsMentor
         mentor {
           id
           username
@@ -87,6 +100,12 @@ export const TEACHER_STUDENT_BALLOT_VIEW = gql`
       title
       status
       matchingAlgorithm
+      studentAssessmentFormDefinition {
+        id
+        title
+        status
+        version
+      }
       classNetwork {
         id
       }
@@ -109,6 +128,7 @@ export const TEACHER_STUDENT_BALLOT_VIEW = gql`
         status
         notes
         submittedAt
+        assessmentData
         submitter {
           id
           username

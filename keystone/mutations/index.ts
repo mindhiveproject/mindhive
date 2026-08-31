@@ -355,6 +355,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         description: String
         fields: [ClassFormFieldInput!]!
         publish: Boolean
+        surface: String
       }
       input SaveBoardReviewFormDefinitionInput {
         proposalBoardId: ID!

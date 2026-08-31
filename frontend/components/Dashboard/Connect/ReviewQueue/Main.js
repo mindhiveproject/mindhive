@@ -8,6 +8,10 @@ import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 
 import { MY_REVIEW_QUEUE } from "../../../Queries/ConnectRound";
+import {
+  formatOpportunitySponsorLabel,
+  getPrimarySponsor,
+} from "../../../../lib/opportunityPeople";
 import RoleGuard from "../RoleGuard";
 
 const Shell = styled.div`
@@ -288,8 +292,8 @@ function ReviewQueueInner() {
                         {opp.organization?.name
                           ? `${opp.organization.name}`
                           : ""}
-                        {opp.mentor
-                          ? `${opp.organization?.name ? " · " : ""}${mentorName(opp.mentor)}`
+                        {getPrimarySponsor(opp)
+                          ? `${opp.organization?.name ? " · " : ""}${formatOpportunitySponsorLabel(opp)}`
                           : ""}
                       </span>
                     </OppCard>

@@ -131,6 +131,14 @@ export const GET_CONNECT_ROUND = gql`
           id
         }
       }
+      studentAssessmentFormDefinition {
+        id
+        title
+        key
+        scope
+        status
+        version
+      }
       createdBy {
         id
         username
@@ -178,6 +186,19 @@ export const MY_REVIEW_QUEUE = gql`
             shortDescription
             status
             updatedAt
+            sponsors {
+              id
+              firstName
+              lastName
+              username
+            }
+            mentors {
+              id
+              firstName
+              lastName
+              username
+            }
+            sponsorIsMentor
             mentor {
               id
               firstName
@@ -218,6 +239,19 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
         url
         extension
       }
+      sponsors {
+        id
+        username
+        firstName
+        lastName
+      }
+      mentors {
+        id
+        username
+        firstName
+        lastName
+      }
+      sponsorIsMentor
       mentor {
         id
         username
@@ -282,6 +316,19 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
               id
               url
             }
+            sponsors {
+              id
+              username
+              firstName
+              lastName
+            }
+            mentors {
+              id
+              username
+              firstName
+              lastName
+            }
+            sponsorIsMentor
             mentor {
               id
               username

@@ -10,6 +10,7 @@ import {
 } from "@keystone-6/core/fields";
 import { rules, isSignedIn } from "../access";
 import { sendNotificationEmail } from "../lib/mail";
+import { getNotificationRecipients } from "../lib/opportunityStakeholders";
 import {
   pickStudentClassForRound,
   studentOpportunitiesUrl,
@@ -59,7 +60,12 @@ export const ConnectRating = list({
                 firstName
                 studentIn { id code }
               }
-              opportunity { mentor { email username firstName } }
+              opportunity {
+                sponsorIsMentor
+                mentor { email username firstName }
+                sponsors { email username firstName }
+                mentors { email username firstName }
+              }
             }
           `,
         });
@@ -72,14 +78,18 @@ export const ConnectRating = list({
         const oppTitle = rating.opportunity?.title || "an opportunity";
 
         if (rating.raterRole === "student") {
-          const to = rating.match?.opportunity?.mentor?.email;
-          if (!to) return;
-          await sendNotificationEmail(
-            to,
-            `New rating for "${oppTitle}"`,
-            `${raterName} just rated their experience with "${oppTitle}". Open your dashboard to see the feedback.`,
-            `${frontendUrl()}/dashboard/connect/my-matches`,
-          );
+          const recipients = getNotificationRecipients(
+            rating.match?.opportunity
+          ).filter((p) => p?.email);
+          if (!recipients.length) return;
+          for (const recipient of recipients) {
+            await sendNotificationEmail(
+              recipient.email!,
+              `New rating for "${oppTitle}"`,
+              `${raterName} just rated their experience with "${oppTitle}". Open your dashboard to see the feedback.`,
+              `${frontendUrl()}/dashboard/connect/my-matches`
+            );
+          }
         } else if (rating.raterRole === "mentor") {
           const to = rating.match?.student?.email;
           if (!to) return;

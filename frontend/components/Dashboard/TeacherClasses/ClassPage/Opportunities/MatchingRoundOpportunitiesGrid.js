@@ -16,9 +16,9 @@ import {
   REVIEW_NOTE_KIND,
 } from "../../../../../lib/reviewThreadRound";
 import {
-  formatDateShort,
-  isExpired,
-} from "../../../Connect/Rounds/roundFormConfig";
+  formatOpportunityMentorLabel,
+  formatOpportunitySponsorLabel,
+} from "../../../../../lib/opportunityPeople";
 import { CREATE_REVIEW_NOTE } from "../../../../Mutations/OpportunityReviewNote";
 import { UPDATE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
 import {
@@ -530,10 +530,11 @@ export default function MatchingRoundOpportunitiesGrid({
     () =>
       opportunities.map((opportunity) => ({
         ...opportunity,
-        sponsorName: displayName(opportunity.mentor) || "—",
+        sponsorName: formatOpportunitySponsorLabel(opportunity),
+        mentorName: formatOpportunityMentorLabel(opportunity, t),
         organizationName: opportunity.organization?.name || "—",
       })),
-    [opportunities],
+    [opportunities, t],
   );
 
   const quickFilterText = String(searchQuery || "").trim();
@@ -544,7 +545,8 @@ export default function MatchingRoundOpportunitiesGrid({
     return rowData.some((row) => {
       const title = String(row.title || "").toLowerCase();
       const sponsor = String(row.sponsorName || "").toLowerCase();
-      return title.includes(q) || sponsor.includes(q);
+      const mentor = String(row.mentorName || "").toLowerCase();
+      return title.includes(q) || sponsor.includes(q) || mentor.includes(q);
     });
   }, [quickFilterText, rowData]);
 
@@ -799,6 +801,17 @@ export default function MatchingRoundOpportunitiesGrid({
         field: "sponsorName",
         headerName: t("opportunities.matchingRound.grid.columns.sponsor", {}, {
           default: "Sponsor",
+        }),
+        filter: "agTextColumnFilter",
+        sortable: true,
+        flex: 1.2,
+        minWidth: 140,
+        getQuickFilterText: (params) => params.value || "",
+      },
+      {
+        field: "mentorName",
+        headerName: t("opportunities.matchingRound.grid.columns.mentor", {}, {
+          default: "Mentor",
         }),
         filter: "agTextColumnFilter",
         sortable: true,

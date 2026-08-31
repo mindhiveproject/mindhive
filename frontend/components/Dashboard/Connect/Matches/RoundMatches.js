@@ -9,6 +9,7 @@ import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import AlgorithmInfoModal from "./AlgorithmInfoModal";
 
 import { ROUND_MATCH_VIEW } from "../../../Queries/ConnectMatch";
+import { formatOpportunitySponsorLabel } from "../../../../lib/opportunityPeople";
 import { MY_CONNECT_ROUNDS } from "../../../Queries/ConnectRound";
 import {
   CREATE_MATCH,
@@ -763,7 +764,7 @@ export default function RoundMatches({ roundId }) {
   const renderOpportunityCard = (opp) => {
     const oppMatches = matchesByOpportunity.get(opp.id) || [];
     const cap = opp.studentCapacity || 1;
-    const mentorName = displayName(opp.mentor);
+    const mentorName = formatOpportunitySponsorLabel(opp);
     const hasCapacity = oppMatches.length < cap;
     // Only teacher-curated rounds get the manual assign affordance.
     // Options list = unmatched students, sorted by their preference
@@ -1456,6 +1457,7 @@ export default function RoundMatches({ roundId }) {
       <AlgorithmInfoModal
         open={algoInfoOpen}
         onClose={() => setAlgoInfoOpen(false)}
+        matchingAlgorithm={round?.matchingAlgorithm}
       />
     </Shell>
   );

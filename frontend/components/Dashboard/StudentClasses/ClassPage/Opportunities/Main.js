@@ -25,27 +25,30 @@ import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import StudentOpportunityPreview from "./StudentOpportunityPreview";
 import StudentPreferenceSubmission from "./StudentPreferenceSubmission";
 import StudentRankActionCard from "./StudentRankActionCard";
-
-/**
- * Matching rounds are "open for students" when status is preferences_open
- * (same gate as Connect Participate: students can view/rank then).
- */
+import {
+  getOpportunityMentors,
+  getOpportunitySponsors,
+} from "../../../../../lib/opportunityPeople";
 const STUDENT_OPEN_ROUND_STATUS = "preferences_open";
 const MIN_DWELL_MS = 1000;
 
 function opportunitySearchHaystack(opportunity) {
-  const mentor = [
-    opportunity?.mentor?.firstName,
-    opportunity?.mentor?.lastName,
-    opportunity?.mentor?.username,
+  const people = [
+    ...getOpportunitySponsors(opportunity),
+    ...getOpportunityMentors(opportunity),
   ]
+    .flatMap((profile) => [
+      profile?.firstName,
+      profile?.lastName,
+      profile?.username,
+    ])
     .filter(Boolean)
     .join(" ");
   return [
     opportunity?.title,
     opportunity?.shortDescription,
     opportunity?.organization?.name,
-    mentor,
+    people,
   ]
     .filter(Boolean)
     .join(" ")

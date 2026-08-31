@@ -405,8 +405,10 @@
 		"hardware": "Hardware",
 		"hostedBy": "Hosted by",
 		"introVideo": "Intro video",
+		"openVideoInNewTab": "Open video in new tab",
 		"loading": "Loading opportunity…",
 		"mentorTimeCommitment": "Time commitment: {{value}}",
+		"mentor": "Mentor",
 		"notFound": "Opportunity not found, or no longer available.",
 		"pastParticipants": "What past participants said",
 		"ratingSummary": "({{count}} reviews)",
@@ -415,6 +417,7 @@
 		"saveToFavorites": "Save to favorites",
 		"software": "Software",
 		"solo": "Solo",
+		"sponsor": "Sponsor",
 		"teamOf": "Team of {{count}}",
 		"teamSize": "Team size",
 		"timeCommitment": "Time commitment",
@@ -587,6 +590,10 @@
 			"title": "Grade level"
 		}
 	},
+	"myMatchedStudents": {
+		"description": "Students placed on opportunities where you are the sponsor or mentor. After a project is active or completed, rate the student so future teachers and admins can see their track record.",
+		"title": "My matched students"
+	},
 	"myOpportunitiesList": {
 		"capacity": "Capacity {{count}}",
 		"columns": {
@@ -659,6 +666,7 @@
 		"reviewCommentsWaiting": "Teacher review comments are waiting for you.",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
+			"mentor": "Mentor: {{name}}",
 			"sponsor": "Sponsor: {{name}}",
 			"submitted": "Submitted {{date}}"
 		},
@@ -857,6 +865,7 @@
 		"guidelinesWarning": "Tick the guidelines checkbox before submitting this opportunity.",
 		"introVideo": "Intro video",
 		"introVideoHint": "Upload a video file or paste an embed URL (YouTube, Vimeo). Uploaded files are stored on our cloud bucket.",
+		"openVideoInNewTab": "Open video in new tab",
 		"introVideoUrlHint": "Or paste a video URL (the URL itself — not the full <iframe> embed code). Supports YouTube, Vimeo, Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload size: {{maxMb}} MB.",
 		"issueRelevance": "Organizational relevance",
 		"issueRelevanceDescription": "Why is this challenge of particular relevance to your organization? What are the implications of this issue or problem for your agency? 100 words maximum.",
@@ -1054,7 +1063,7 @@
 			"requiresBusinessHoursHint": "Must a significant portion of research and data gathering be done during regular business hours? (Many students work full-time and may have constraints on their daytime availability). 50 words maximum.",
 			"title": "Special considerations"
 		},
-		"sponsorIsMentor": "I'm also the day-to-day mentor for this project (uncheck if someone else will be mentoring)",
+		"sponsorIsMentor": "I will also mentor the matched team (leave unchecked if a mentor will be assigned later)",
 		"sponsorStatusHint": "Set to Submitted for review when your proposal is ready — a teacher will review it.",
 		"sponsorStatusLocked": "— locked. A teacher or admin will update the status.",
 		"sponsorStatusReturnedHint": "— use Resubmit above when your changes are ready.",
@@ -1285,7 +1294,10 @@
 		"viewOrganization": "View organization {{name}}"
 	},
 	"opportunityCard": {
+		"mentorLine": "Mentor: {{name}}",
+		"mentorTbd": "Mentor TBD",
 		"opportunityButton": "Opportunity",
+		"sponsorLine": "Sponsor: {{name}}",
 		"viewOpportunity": "View opportunity: {{title}}"
 	},
 	"passionNow": "What are you passionate about right now?",
@@ -1372,7 +1384,7 @@
 		"emailTitle": "Your Capstone proposal was returned",
 		"error": "Could not return this opportunity. Please try again.",
 		"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
-		"placeholder": "Optional note for the sponsor…",
+		"placeholder": "Optional note for the respondent…",
 		"submitting": "Returning…",
 		"title": "Return with comments"
 	},

@@ -27,6 +27,10 @@ import {
   useOpportunityFlashQuery,
 } from "../../../../lib/opportunityFlash";
 import { getUnreadReviewerCommentNotes } from "../../../../lib/reviewThreadRound";
+import {
+  mergeOpportunityLists,
+  isOpportunitySponsor,
+} from "../../../../lib/opportunityPeople";
 import OpportunityChatModal from "./OpportunityChatModal";
 import OpportunityClassForumModal from "./OpportunityClassForumModal";
 import OpportunityListStepper from "./OpportunityListStepper";
@@ -362,7 +366,12 @@ export default function OpportunitiesList({ user }) {
   const [classForumModal, setClassForumModal] = useState(null);
   const [unsubmitOpportunityId, setUnsubmitOpportunityId] = useState(null);
 
-  const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
+  const opportunities = mergeOpportunityLists(
+    data?.authenticatedItem?.opportunitiesCreated,
+    data?.authenticatedItem?.opportunitiesSponsored,
+    data?.authenticatedItem?.opportunitiesMentoring,
+  );
+  const viewerId = data?.authenticatedItem?.id;
   const unsubmitStatus = opportunities.find(
     (opportunity) => opportunity.id === unsubmitOpportunityId,
   )?.status;
@@ -470,6 +479,7 @@ export default function OpportunitiesList({ user }) {
           })}
         >
           {opportunities.map((opportunity) => {
+            const canEdit = isOpportunitySponsor(opportunity, viewerId);
             const networks = opportunity.classNetworks || [];
             const networkCount = networks.length;
             const isPreSelected = opportunity.status === "pre_selected";
@@ -558,13 +568,15 @@ export default function OpportunitiesList({ user }) {
                           })
                         }
                       />
-                      <Chip
-                        label={t("opportunities.edit", {}, {
-                          default: "Edit",
-                        })}
-                        onClick={() => handleEdit(opportunity.id)}
-                      />
-                      {canUnsubmit ? (
+                      {canEdit ? (
+                        <Chip
+                          label={t("opportunities.edit", {}, {
+                            default: "Edit",
+                          })}
+                          onClick={() => handleEdit(opportunity.id)}
+                        />
+                      ) : null}
+                      {canEdit && canUnsubmit ? (
                         <Chip
                           label={tConnect(
                             "myOpportunitiesList.unsubmit.button",
@@ -576,13 +588,15 @@ export default function OpportunitiesList({ user }) {
                           }
                         />
                       ) : null}
-                      <Chip
-                        label={t("opportunities.delete", {}, {
-                          default: "Delete",
-                        })}
-                        onClick={() => handleDelete(opportunity.id)}
-                        style={DELETE_CHIP_STYLE}
-                      />
+                      {canEdit ? (
+                        <Chip
+                          label={t("opportunities.delete", {}, {
+                            default: "Delete",
+                          })}
+                          onClick={() => handleDelete(opportunity.id)}
+                          style={DELETE_CHIP_STYLE}
+                        />
+                      ) : null}
                     </Actions>
                   </HeaderAside>
                 </CardHeader>

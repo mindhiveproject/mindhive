@@ -3,7 +3,11 @@ import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Modal from "../../../../DesignSystem/Modal";
-import { getOpportunityVideoSources } from "../../../../../lib/opportunityVideoEmbed";
+import OpportunityIntroVideoPlayer from "../../../Connect/OpportunityIntroVideoPlayer";
+import {
+  formatOpportunityMentorLabel,
+  formatOpportunitySponsorLabel,
+} from "../../../../../lib/opportunityPeople";
 
 const MetaGrid = styled.div`
   display: grid;
@@ -54,57 +58,6 @@ function formatDate(value) {
   }
 }
 
-function OpportunityIntroVideoPlayer({ opportunity, title }) {
-  const { directVideoSrc, embedUrl, fallbackIframeSrc, coverUrl } =
-    getOpportunityVideoSources(opportunity);
-
-  if (directVideoSrc) {
-    return (
-      <video
-        controls
-        preload="metadata"
-        poster={coverUrl || undefined}
-        src={directVideoSrc}
-        style={{
-          width: "100%",
-          maxHeight: 420,
-          display: "block",
-          background: "#000",
-        }}
-      />
-    );
-  }
-
-  const iframeSrc = embedUrl || fallbackIframeSrc;
-  if (!iframeSrc) return null;
-
-  return (
-    <div
-      style={{
-        position: "relative",
-        paddingBottom: "56.25%",
-        height: 0,
-        background: "#000",
-      }}
-    >
-      <iframe
-        src={iframeSrc}
-        title={title}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
-        frameBorder="0"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-        }}
-      />
-    </div>
-  );
-}
-
 /**
  * Lightweight modal for intro video + key opportunity info in ranking flow.
  */
@@ -118,20 +71,24 @@ export default function OpportunityIntroVideoModal({
   if (!opportunity) return null;
 
   const title = opportunity.title || "";
-  const mentor = mentorDisplayName(opportunity.mentor);
   const from = formatDate(opportunity.availableFrom);
   const to = formatDate(opportunity.availableTo);
   const closeLabel = t("opportunities.studentView.rankForm.videoModal.close", {}, {
     default: "Close",
   });
-
-  const sponsorLine = mentor
-    ? t(
-        "opportunities.studentView.meta.sponsor",
-        { name: mentor },
-        { default: "Sponsor: {{name}}" },
-      )
-    : null;
+  const sponsorLine =
+    formatOpportunitySponsorLabel(opportunity) !== "—"
+      ? t(
+          "opportunities.studentView.meta.sponsor",
+          { name: formatOpportunitySponsorLabel(opportunity) },
+          { default: "Sponsor: {{name}}" },
+        )
+      : null;
+  const mentorLine = t(
+    "opportunities.studentView.meta.mentor",
+    { name: formatOpportunityMentorLabel(opportunity, t) },
+    { default: "Mentor: {{name}}" },
+  );
 
   const datesLine =
     from || to
@@ -156,6 +113,11 @@ export default function OpportunityIntroVideoModal({
     {},
     { default: "Intro video" },
   );
+  const openVideoInNewTabLabel = t(
+    "opportunities.studentView.rankForm.videoModal.openVideoInNewTab",
+    {},
+    { default: "Open video in new tab" },
+  );
 
   return (
     <Modal
@@ -178,6 +140,12 @@ export default function OpportunityIntroVideoModal({
           {sponsorLine}
         </p>
       ) : null}
+      <p
+        className="MH-Type-Label-Base"
+        style={{ margin: sponsorLine ? "4px 0 0" : 0, color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}
+      >
+        {mentorLine}
+      </p>
       {opportunity.shortDescription ? (
         <Description>{opportunity.shortDescription}</Description>
       ) : null}
@@ -215,6 +183,7 @@ export default function OpportunityIntroVideoModal({
         <OpportunityIntroVideoPlayer
           opportunity={opportunity}
           title={`${title} ${videoTitle}`}
+          openInNewTabLabel={openVideoInNewTabLabel}
         />
       </VideoWrap>
     </Modal>

@@ -4,35 +4,12 @@ import styled from "styled-components";
 import Chip from "../../../DesignSystem/Chip";
 import {
   ROUND_SCHEDULE_PHASES,
-  ROUND_STATUS_I18N_KEYS,
-  SCHEDULE_MATCH_STATUS_DEFAULTS,
-  SCHEDULE_OBJECT_LABEL_DEFAULTS,
   SCHEDULE_PHASE_COPY_DEFAULTS,
 } from "../../../../lib/connectRoundSettings";
-
-const SCHEDULE_DATE_MODE = {
-  informative: "informative",
-  executive: "executive",
-};
 
 const Section = styled.section`
   display: grid;
   gap: 12px;
-`;
-
-const Header = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 12px;
-`;
-
-const ModeFilters = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
 `;
 
 const Heading = styled.h3`
@@ -73,6 +50,12 @@ const PhaseDescription = styled.p`
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
+const PhaseNote = styled.p`
+  margin: 0;
+  font: var(--MH-Type-Body-Base);
+  color: var(--MH-Theme-Primary-Dark, #336f8a);
+`;
+
 const Fields = styled.div`
   display: grid;
   gap: 12px;
@@ -110,14 +93,6 @@ const DateInput = styled.input`
   }
 `;
 
-const STATUS_TONE = {
-  preferences_open: "info",
-  preferences_closed: "warning",
-  matching: "info",
-  published: "success",
-  active: "success",
-};
-
 function phaseCopy(t, key) {
   const defaults = SCHEDULE_PHASE_COPY_DEFAULTS[key] || {};
   return {
@@ -134,58 +109,59 @@ function phaseCopy(t, key) {
   };
 }
 
-function objectLabel(t, objectKey) {
-  return t(
-    `opportunities.matchingRound.schedule.objects.${objectKey}`,
-    {},
-    { default: SCHEDULE_OBJECT_LABEL_DEFAULTS[objectKey] || objectKey },
+function TimelineDateField({ name, value, onChange, t }) {
+  const label = t("opportunities.matchingRound.schedule.timelineDateLabel", {}, {
+    default: "Timeline date",
+  });
+  const ariaLabel = t("opportunities.matchingRound.schedule.timelineDateAria", {}, {
+    default: "Date shown on the student matching timeline",
+  });
+
+  return (
+    <Control>
+      <FieldLabel>{label}</FieldLabel>
+      <DateInput
+        type="date"
+        name={name}
+        value={value || ""}
+        onChange={onChange}
+        aria-label={ariaLabel}
+      />
+    </Control>
   );
 }
 
-function statusLabel(t, objectKey, status) {
-  if (!status) {
-    return t("opportunities.matchingRound.schedule.noStatusChange", {}, {
-      default: "No status change",
-    });
-  }
-  if (objectKey === "connectMatch") {
-    return t(
-      `opportunities.matchingRound.schedule.matchStatus.${status}`,
-      {},
-      { default: SCHEDULE_MATCH_STATUS_DEFAULTS[status] || status },
-    );
-  }
-  const i18nKey = ROUND_STATUS_I18N_KEYS[status];
-  return t(
-    `opportunities.matchingRound.status.${i18nKey || status}`,
-    {},
-    { default: status },
-  );
-}
-
-function DateField({ name, value, onChange, t, objectKey, status }) {
-  const object = objectLabel(t, objectKey);
-  const statusText = statusLabel(t, objectKey, status);
-  const prefix = t(
-    "opportunities.matchingRound.schedule.effectPrefix",
-    { object },
-    { default: "{{object}} →" },
-  );
+function PreferenceWindowDateField({ name, value, onChange, t, boundary }) {
+  const isOpen = boundary === "open";
+  const label = isOpen
+    ? t("opportunities.matchingRound.schedule.preferenceWindowOpenLabel", {}, {
+        default: "Ranking opens",
+      })
+    : t("opportunities.matchingRound.schedule.preferenceWindowCloseLabel", {}, {
+        default: "Ranking closes",
+      });
+  const effect = isOpen
+    ? t("opportunities.matchingRound.schedule.preferenceWindowOpenEffect", {}, {
+        default: "Students can submit from this date",
+      })
+    : t("opportunities.matchingRound.schedule.preferenceWindowCloseEffect", {}, {
+        default: "Submissions close after this date",
+      });
   const ariaLabel = t(
-    "opportunities.matchingRound.schedule.effectAria",
-    { object, status: statusText },
-    { default: "{{object}} → {{status}}" },
+    "opportunities.matchingRound.schedule.preferenceWindowDateAria",
+    { label, effect },
+    { default: "{{label}}. {{effect}}" },
   );
 
   return (
     <Control>
       <FieldLabel>
-        {prefix}
+        {label}
         <Chip
           variant="static"
-          tone={status ? STATUS_TONE[status] || "neutral" : "neutral"}
-          label={statusText}
-          ariaLabel={statusText}
+          tone={isOpen ? "info" : "warning"}
+          label={effect}
+          ariaLabel={effect}
           truncate={false}
         />
       </FieldLabel>
@@ -205,65 +181,26 @@ export default function MatchingRoundScheduleFields({
   onChange,
 }) {
   const { t } = useTranslation("classes");
-  const dateMode = SCHEDULE_DATE_MODE.informative;
-  const informativeLabel = t(
-    "opportunities.matchingRound.schedule.informative",
-    {},
-    { default: "Informative" },
-  );
-  const executiveLabel = t(
-    "opportunities.matchingRound.schedule.executive",
-    {},
-    { default: "Executive" },
-  );
-  const executiveUnavailable = t(
-    "opportunities.matchingRound.schedule.executiveUnavailable",
-    {},
-    { default: "Executive dates are not available yet" },
-  );
 
   return (
     <Section>
-      <Header>
-        <Heading>
-          {t("opportunities.matchingRound.schedule.title", {}, {
-            default: "Round schedule",
-          })}
-        </Heading>
-        <ModeFilters
-          role="group"
-          aria-label={t("opportunities.matchingRound.schedule.modeLabel", {}, {
-            default: "Date mode",
-          })}
-        >
-          <Chip
-            label={informativeLabel}
-            selected={dateMode === SCHEDULE_DATE_MODE.informative}
-            pressed={dateMode === SCHEDULE_DATE_MODE.informative}
-            onClick={() => {}}
-            truncate={false}
-            ariaLabel={informativeLabel}
-          />
-          <span title={executiveUnavailable}>
-            <Chip
-              label={executiveLabel}
-              disabled
-              truncate={false}
-              ariaLabel={executiveUnavailable}
-            />
-          </span>
-        </ModeFilters>
-      </Header>
+      <Heading>
+        {t("opportunities.matchingRound.schedule.title", {}, {
+          default: "Round schedule",
+        })}
+      </Heading>
       <Hint>
         {t("opportunities.matchingRound.schedule.hint", {}, {
           default:
-            "Each date is tied to an object and status. When that date is reached, that status applies.",
+            "Dates appear on the student matching timeline. Project selection open and close dates also control when students can submit rankings. Set round status to Preferences open separately; other dates do not change status automatically.",
         })}
       </Hint>
 
       {ROUND_SCHEDULE_PHASES.map((phase) => {
         const copy = phaseCopy(t, phase.key);
         const isRange = phase.kind === "range";
+        const enforcesWindow = Boolean(phase.enforcesPreferenceWindow);
+
         return (
           <Phase key={phase.key}>
             <PhaseCopy>
@@ -271,35 +208,58 @@ export default function MatchingRoundScheduleFields({
               {copy.description ? (
                 <PhaseDescription>{copy.description}</PhaseDescription>
               ) : null}
+              {enforcesWindow ? (
+                <PhaseNote>
+                  {t("opportunities.matchingRound.schedule.selectionWindowNote", {}, {
+                    default:
+                      "Ranking submission is only allowed between these dates when the round status is Preferences open. Students can still browse opportunities before ranking opens.",
+                  })}
+                </PhaseNote>
+              ) : null}
             </PhaseCopy>
 
             {isRange ? (
               <Fields>
-                <DateField
-                  name={phase.startAt}
-                  value={inputs[phase.startAt]}
-                  onChange={onChange}
-                  t={t}
-                  objectKey={phase.object}
-                  status={phase.startStatus}
-                />
-                <DateField
-                  name={phase.endAt}
-                  value={inputs[phase.endAt]}
-                  onChange={onChange}
-                  t={t}
-                  objectKey={phase.object}
-                  status={phase.endStatus}
-                />
+                {enforcesWindow ? (
+                  <>
+                    <PreferenceWindowDateField
+                      name={phase.startAt}
+                      value={inputs[phase.startAt]}
+                      onChange={onChange}
+                      t={t}
+                      boundary="open"
+                    />
+                    <PreferenceWindowDateField
+                      name={phase.endAt}
+                      value={inputs[phase.endAt]}
+                      onChange={onChange}
+                      t={t}
+                      boundary="close"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <TimelineDateField
+                      name={phase.startAt}
+                      value={inputs[phase.startAt]}
+                      onChange={onChange}
+                      t={t}
+                    />
+                    <TimelineDateField
+                      name={phase.endAt}
+                      value={inputs[phase.endAt]}
+                      onChange={onChange}
+                      t={t}
+                    />
+                  </>
+                )}
               </Fields>
             ) : (
-              <DateField
+              <TimelineDateField
                 name={phase.at}
                 value={inputs[phase.at]}
                 onChange={onChange}
                 t={t}
-                objectKey={phase.object}
-                status={phase.status}
               />
             )}
           </Phase>

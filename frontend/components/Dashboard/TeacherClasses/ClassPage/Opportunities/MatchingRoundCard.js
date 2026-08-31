@@ -50,6 +50,7 @@ import {
   readRoundSchedule,
   readSponsorFormsVisible,
   scheduleFromInputs,
+  formatScheduleDate,
 } from "../../../../../lib/connectRoundSettings";
 import { useUser } from "../../../../Utils/Access/User";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
@@ -58,6 +59,7 @@ import MatchingRoundStudentInterestGrid from "./MatchingRoundStudentInterestGrid
 import MatchingRoundStudentBallotPanel, {
   STUDENT_RANKING_SUB_MODES,
 } from "./MatchingRoundStudentBallotPanel";
+import MatchingRoundStudentAssessmentSetup from "./MatchingRoundStudentAssessmentSetup";
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
 import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
@@ -576,6 +578,8 @@ function MatchingRoundEditor({
   const [selectedFormDefinitionIds, setSelectedFormDefinitionIds] = useState(
     [],
   );
+  const [linkedStudentAssessmentForm, setLinkedStudentAssessmentForm] =
+    useState(null);
   const [sponsorFormsVisible, setSponsorFormsVisible] = useState(false);
   const [togglingSponsorFormsVisible, setTogglingSponsorFormsVisible] =
     useState(false);
@@ -614,6 +618,7 @@ function MatchingRoundEditor({
   const formsManagerInitializedRef = useRef(false);
   const savedSnapshotRef = useRef(null);
   const interestGridRef = useRef(null);
+  const ballotPanelRef = useRef(null);
 
   const selectedNetwork = useMemo(
     () => networks.find((network) => network.id === selectedNetworkId) || null,
@@ -634,8 +639,7 @@ function MatchingRoundEditor({
     round?.status ||
     roundSummary?.status ||
     null;
-  const isStudentInterestDisabled =
-    isNew || roundStatusForPanels === "draft";
+  const isStudentInterestDisabled = isNew;
 
   const workspaceRoundKey = isCreate
     ? MATCHING_ROUND_CREATE_QUERY
@@ -874,6 +878,8 @@ function MatchingRoundEditor({
     const nextQuestions = (round.questions || []).map((q) => q.id);
     const nextFormDefinitions = (round.formDefinitions || []).map((f) => f.id);
     const nextSponsorFormsVisible = readSponsorFormsVisible(round.settings);
+    const nextStudentAssessmentForm =
+      round.studentAssessmentFormDefinition || null;
 
     if (round.classNetwork?.id && round.classNetwork.id !== selectedNetworkId) {
       setSelectedNetworkId(round.classNetwork.id);
@@ -884,6 +890,7 @@ function MatchingRoundEditor({
     setSelectedQuestions(nextQuestions);
     setSelectedFormDefinitionIds(nextFormDefinitions);
     setSponsorFormsVisible(nextSponsorFormsVisible);
+    setLinkedStudentAssessmentForm(nextStudentAssessmentForm);
     setFormInitialized(true);
     captureSnapshot(
       nextInputs,
@@ -1182,21 +1189,36 @@ function MatchingRoundEditor({
     {},
     { default: "Download Interest CSV" },
   );
+  const ballotExportLabel = t(
+    "opportunities.matchingRound.studentRanking.downloadCsv",
+    {},
+    { default: "Download Ballots CSV" },
+  );
   const showOpportunityExport =
     activePanel === PANELS.review ||
     activePanel === PANELS.selected ||
     activePanel === PANELS.forms;
+  const showStudentRankingExport =
+    activePanel === PANELS.studentInterest && !isStudentInterestDisabled;
   const showInterestExport =
-    activePanel === PANELS.studentInterest &&
+    showStudentRankingExport &&
     studentRankingSubMode === STUDENT_RANKING_SUB_MODES.interest;
-  const showDownloadButton = showOpportunityExport || showInterestExport;
-  const downloadButtonLabel = showInterestExport
-    ? interestExportLabel
-    : exportLabel;
-  const downloadButtonDisabled = showInterestExport
-    ? !(myclass?.students?.length > 0) ||
-      selectedNetworkOpportunities.length === 0
-    : networkOpportunities.length === 0;
+  const showBallotExport =
+    showStudentRankingExport &&
+    studentRankingSubMode === STUDENT_RANKING_SUB_MODES.ballot;
+  const showDownloadButton =
+    showOpportunityExport || showInterestExport || showBallotExport;
+  const downloadButtonLabel = showBallotExport
+    ? ballotExportLabel
+    : showInterestExport
+      ? interestExportLabel
+      : exportLabel;
+  const downloadButtonDisabled = showBallotExport
+    ? !(myclass?.students?.length > 0)
+    : showInterestExport
+      ? !(myclass?.students?.length > 0) ||
+        selectedNetworkOpportunities.length === 0
+      : networkOpportunities.length === 0;
 
   const panelOptions = useMemo(
     () => [
@@ -1242,11 +1264,11 @@ function MatchingRoundEditor({
         disabled: isStudentInterestDisabled,
         tooltipContent: isStudentInterestDisabled
           ? t(
-              "opportunities.matchingRound.studentInterest.disabledDraftHint",
+              "opportunities.matchingRound.studentRanking.disabledNewHint",
               {},
               {
                 default:
-                  "Student Ranking is available after the matching round leaves draft.",
+                  "Save the matching round first to set up student ranking.",
               },
             )
           : null,
@@ -1718,6 +1740,9 @@ function MatchingRoundEditor({
               formDefinitions: formDefinitionsConnect.length
                 ? { connect: formDefinitionsConnect }
                 : undefined,
+              studentAssessmentFormDefinition: linkedStudentAssessmentForm?.id
+                ? { connect: { id: linkedStudentAssessmentForm.id } }
+                : undefined,
               settings: mergeRoundSettings(null, {
                 sponsorFormsVisible,
                 schedule: scheduleFromInputs(inputs),
@@ -1750,6 +1775,9 @@ function MatchingRoundEditor({
               opportunities: { set: opportunitiesConnect },
               questions: { set: questionsConnect },
               formDefinitions: { set: formDefinitionsConnect },
+              studentAssessmentFormDefinition: linkedStudentAssessmentForm?.id
+                ? { connect: { id: linkedStudentAssessmentForm.id } }
+                : { disconnect: true },
               settings: mergeRoundSettings(round?.settings, {
                 sponsorFormsVisible,
                 schedule: scheduleFromInputs(inputs),
@@ -3065,9 +3093,72 @@ function MatchingRoundEditor({
     </div>
   );
 
-  const renderStudentRankingPanel = () => (
+  const renderStudentRankingPanel = () => {
+    const now = Date.now();
+    const openAtSource = inputs.openAt || round?.openAt;
+    const closeAtSource = inputs.closeAt || round?.closeAt;
+    const openAtMs = openAtSource ? new Date(openAtSource).getTime() : null;
+    const closeAtMs = closeAtSource ? new Date(closeAtSource).getTime() : null;
+    const beforeOpen = openAtMs && now < openAtMs;
+    const afterClose = closeAtMs && now > closeAtMs;
+    const rankingWindowActive = !beforeOpen && !afterClose;
+    const ballotEnabled =
+      !isNew &&
+      roundStatusForPanels !== "draft" &&
+      rankingWindowActive;
+    const openAtLabel = openAtSource
+      ? formatScheduleDate(openAtSource)
+      : null;
+    const inactiveBallotMessage =
+      roundStatusForPanels === "draft"
+        ? t(
+            "opportunities.matchingRound.studentRanking.ballotsDraftHint",
+            {},
+            {
+              default:
+                "Student ballots and interest tracking appear after the matching round leaves draft and the ranking window opens.",
+            },
+          )
+        : beforeOpen
+          ? t(
+              "opportunities.matchingRound.studentRanking.ballotsBeforeOpen",
+              { date: openAtLabel || "" },
+              {
+                default:
+                  "Student ballots and interest tracking open on {{date}}.",
+              },
+            )
+          : afterClose
+            ? t(
+                "opportunities.matchingRound.studentRanking.ballotsClosed",
+                {},
+                {
+                  default:
+                    "The student ranking window has closed. Ballots remain available for review when the window is open.",
+                },
+              )
+            : null;
+    const resolvedRoundTitle =
+      inputs.title ||
+      round?.title ||
+      roundSummary?.title ||
+      "";
+
+    return (
     <div className="classTabMatchingRoundPanel">
+      <MatchingRoundStudentAssessmentSetup
+        classId={myclass?.id}
+        roundId={roundId}
+        isNew={isNew}
+        canManage={canManageOpportunities}
+        linkedForm={linkedStudentAssessmentForm}
+        onLinkedFormChange={setLinkedStudentAssessmentForm}
+        beforeOpen={beforeOpen}
+        openAtLabel={openAtLabel}
+      />
+      {!isNew ? (
       <MatchingRoundStudentBallotPanel
+        ref={ballotPanelRef}
         roundId={roundId}
         students={myclass?.students || []}
         enabled={
@@ -3075,17 +3166,15 @@ function MatchingRoundEditor({
         }
         subMode={studentRankingSubMode}
         onSubModeChange={setStudentRankingSubMode}
+        ballotWindowActive={ballotEnabled}
+        inactiveBallotMessage={inactiveBallotMessage}
+        roundTitle={resolvedRoundTitle}
         renderInterestGrid={() => (
           <MatchingRoundStudentInterestGrid
             ref={interestGridRef}
             classId={myclass?.id}
             roundId={roundId}
-            roundTitle={
-              inputs.title ||
-              round?.title ||
-              roundSummary?.title ||
-              ""
-            }
+            roundTitle={resolvedRoundTitle}
             students={myclass?.students || []}
             opportunities={selectedNetworkOpportunities}
             enabled={
@@ -3095,8 +3184,10 @@ function MatchingRoundEditor({
           />
         )}
       />
+      ) : null}
     </div>
-  );
+    );
+  };
 
   return (
     <div className="matchingRoundWorkspace">
@@ -3117,9 +3208,9 @@ function MatchingRoundEditor({
                 <img
                   src="/assets/icons/back.svg"
                   alt=""
-                  aria-hidden
                   width={16}
                   height={16}
+                  style={{ width: 16, height: 16 }}
                 />
               }
             />
@@ -3168,6 +3259,10 @@ function MatchingRoundEditor({
                 title={downloadButtonLabel}
                 disabled={downloadButtonDisabled}
                 onClick={() => {
+                  if (showBallotExport) {
+                    ballotPanelRef.current?.downloadCsv?.();
+                    return;
+                  }
                   if (showInterestExport) {
                     interestGridRef.current?.downloadCsv?.();
                     return;

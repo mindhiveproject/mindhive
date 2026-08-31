@@ -1,21 +1,29 @@
-import { useCallback, useMemo, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import Chip from "../../../../DesignSystem/Chip";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import IconButton from "../../../../DesignSystem/IconButton";
+import DefinitionForm from "../../../../Forms/DefinitionForm";
 import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import { TEACHER_STUDENT_BALLOT_VIEW } from "../../../../Queries/ConnectMatch";
 import useConnectMatchAssign from "../../../../../lib/useConnectMatchAssign";
+import { isAssessmentFormAnswerComplete } from "../../../../../lib/connectPreferenceAssessmentData";
 import {
   buildClassmateListsByStudent,
   buildPrefIndex,
   buildTeamPrefsByStudent,
   displayName,
   formatPreferenceSummary,
-  formatQuestionAnswer,
   getClassmateMutualStatus,
   getSubmissionStatus,
   getTeamEligibleOpportunities,
@@ -25,6 +33,9 @@ import {
   studentDisplayName,
   summarizeMutualClassmates,
 } from "../../../../../lib/connectBallotUtils";
+import { downloadStudentBallotCsv } from "../../../../../lib/downloadStudentBallotCsv";
+import MessageCard from "../../../../DesignSystem/MessageCard";
+import MatchingAlgorithmInfoModal from "../../../shared/MatchingAlgorithmInfoModal";
 
 const STUDENT_RANKING_SUB_MODES = {
   ballot: "ballot",
@@ -63,6 +74,13 @@ const HeaderText = styled.div`
     font: var(--MH-Type-Body-Base);
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
+`;
+
+const SearchRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 `;
 
 const SearchInput = styled.input`
@@ -267,7 +285,7 @@ function StudentBallotRow({
   matchesByOpp,
   prefIndex,
   totalOpps,
-  questionAnswers,
+  assessmentFormDefinition,
   isCurated,
   handleAssign,
   assigning,
@@ -331,9 +349,12 @@ function StudentBallotRow({
     .sort((a, b) => Number(a.rank) - Number(b.rank))
     .map((item) => ({ opportunity: item.opportunity, item }));
 
-  const skillsAnswers = (questionAnswers || []).filter(
-    (a) => a.respondent?.id === studentId,
-  );
+  const hasCompetencyAnswer =
+    assessmentFormDefinition?.id &&
+    isAssessmentFormAnswerComplete(
+      row.preference?.assessmentData,
+      assessmentFormDefinition.id,
+    );
 
   const statusLabel = t(
     `opportunities.matchingRound.studentRanking.status.${row.submissionStatus}`,
@@ -554,40 +575,42 @@ function StudentBallotRow({
 
           <DetailSection>
             <DetailTitle>
-              {t("opportunities.matchingRound.studentRanking.skills", {}, {
-                default: "Skills assessment",
+              {t("opportunities.matchingRound.studentRanking.competency", {}, {
+                default: "Core competency assessment",
               })}
             </DetailTitle>
-            {skillsAnswers.length === 0 ? (
+            {!assessmentFormDefinition?.id ? (
               <EmptyNote>
                 {t(
-                  "opportunities.matchingRound.studentRanking.skillsEmpty",
+                  "opportunities.matchingRound.studentRanking.competencyNotConfigured",
                   {},
                   {
                     default:
-                      "Skills not collected for this round.",
+                      "No assessment questionnaire is linked to this round.",
+                  },
+                )}
+              </EmptyNote>
+            ) : !hasCompetencyAnswer ? (
+              <EmptyNote>
+                {t(
+                  "opportunities.matchingRound.studentRanking.competencyEmpty",
+                  {},
+                  {
+                    default:
+                      "Assessment not completed for this student.",
                   },
                 )}
               </EmptyNote>
             ) : (
-              <DetailList>
-                {skillsAnswers
-                  .sort(
-                    (a, b) =>
-                      (a.question?.order || 0) - (b.question?.order || 0),
-                  )
-                  .map((ans) => (
-                    <DetailItem key={ans.id}>
-                      <ItemTitle>{ans.question?.prompt || "—"}</ItemTitle>
-                      <Meta>
-                        {formatQuestionAnswer(
-                          ans.answer,
-                          ans.question?.questionType,
-                        )}
-                      </Meta>
-                    </DetailItem>
-                  ))}
-              </DetailList>
+              <DefinitionForm
+                definitionId={assessmentFormDefinition.id}
+                assessmentEntryFormDefinitionId={assessmentFormDefinition.id}
+                entity={{ assessmentData: row.preference?.assessmentData }}
+                readOnly
+                hideUnansweredFields
+                hideSaveButton
+                quiet
+              />
             )}
           </DetailSection>
 
@@ -610,17 +633,25 @@ function StudentBallotRow({
 
 export { STUDENT_RANKING_SUB_MODES };
 
-export default function MatchingRoundStudentBallotPanel({
-  roundId,
-  students = [],
-  enabled = true,
-  subMode = STUDENT_RANKING_SUB_MODES.ballot,
-  onSubModeChange,
-  renderInterestGrid,
-}) {
+const MatchingRoundStudentBallotPanel = forwardRef(
+  function MatchingRoundStudentBallotPanel(
+    {
+      roundId,
+      students = [],
+      enabled = true,
+      subMode = STUDENT_RANKING_SUB_MODES.ballot,
+      onSubModeChange,
+      renderInterestGrid,
+      ballotWindowActive = true,
+      inactiveBallotMessage = null,
+      roundTitle = "",
+    },
+    ref,
+  ) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
   const [search, setSearch] = useState("");
+  const [matchingInfoOpen, setMatchingInfoOpen] = useState(false);
   const [expandedQueue, setExpandedQueue] = useState({
     project_first: true,
     team_first: true,
@@ -637,9 +668,7 @@ export default function MatchingRoundStudentBallotPanel({
   const preferences = round?.preferences || [];
   const teamPreferences = round?.teamPreferences || [];
   const matches = round?.matches || [];
-  const questionAnswers = (round?.questionAnswers || []).filter(
-    (a) => !a.opportunity?.id,
-  );
+  const assessmentFormDefinition = round?.studentAssessmentFormDefinition;
 
   const teamEligibleOpps = useMemo(
     () => getTeamEligibleOpportunities(opportunities),
@@ -795,6 +824,130 @@ export default function MatchingRoundStudentBallotPanel({
     }));
   }, []);
 
+  const canDownloadBallotCsv = rosterStudents.length > 0;
+
+  const handleDownloadBallotCsv = useCallback(() => {
+    if (!canDownloadBallotCsv) return;
+    downloadStudentBallotCsv({
+      ballotRows,
+      studentById,
+      classmateListsByStudent,
+      assessmentFormDefinitionId: assessmentFormDefinition?.id,
+      roundTitle: roundTitle || round?.title || "",
+      labels: {
+        studentName: t(
+          "opportunities.matchingRound.studentBallotExport.columns.student",
+          {},
+          { default: "Student" },
+        ),
+        username: t(
+          "opportunities.matchingRound.studentBallotExport.columns.username",
+          {},
+          { default: "Username" },
+        ),
+        status: t(
+          "opportunities.matchingRound.studentBallotExport.columns.status",
+          {},
+          { default: "Status" },
+        ),
+        queue: t(
+          "opportunities.matchingRound.studentBallotExport.columns.queue",
+          {},
+          { default: "Queue" },
+        ),
+        mutualClassmates: t(
+          "opportunities.matchingRound.studentBallotExport.columns.mutualClassmates",
+          {},
+          { default: "Mutual classmates" },
+        ),
+        oneWayClassmates: t(
+          "opportunities.matchingRound.studentBallotExport.columns.oneWayClassmates",
+          {},
+          { default: "One-way classmates" },
+        ),
+        receivedClassmates: t(
+          "opportunities.matchingRound.studentBallotExport.columns.receivedClassmates",
+          {},
+          { default: "Received classmates" },
+        ),
+        preferredClassmates: t(
+          "opportunities.matchingRound.studentBallotExport.columns.preferredClassmates",
+          {},
+          { default: "Preferred classmates" },
+        ),
+        rankedOpportunities: t(
+          "opportunities.matchingRound.studentBallotExport.columns.rankedOpportunities",
+          {},
+          { default: "Ranked opportunities" },
+        ),
+        additionalNotes: t(
+          "opportunities.matchingRound.studentBallotExport.columns.additionalNotes",
+          {},
+          { default: "Additional notes" },
+        ),
+        matchedOpportunity: t(
+          "opportunities.matchingRound.studentBallotExport.columns.matchedOpportunity",
+          {},
+          { default: "Matched opportunity" },
+        ),
+        submittedAt: t(
+          "opportunities.matchingRound.studentBallotExport.columns.submittedAt",
+          {},
+          { default: "Submitted at" },
+        ),
+        queueProjectFirst: t(
+          "opportunities.matchingRound.studentRanking.queueProjectFirst",
+          {},
+          { default: "Project-first queue" },
+        ),
+        queueTeamFirst: t(
+          "opportunities.matchingRound.studentRanking.queueTeamFirst",
+          {},
+          { default: "Team-first queue" },
+        ),
+        statusNotStarted: t(
+          "opportunities.matchingRound.studentRanking.status.not_started",
+          {},
+          { default: "Not started" },
+        ),
+        statusDraft: t(
+          "opportunities.matchingRound.studentRanking.status.draft",
+          {},
+          { default: "Draft" },
+        ),
+        statusSubmitted: t(
+          "opportunities.matchingRound.studentRanking.status.submitted",
+          {},
+          { default: "Submitted" },
+        ),
+        statusMatched: t(
+          "opportunities.matchingRound.studentRanking.status.matched",
+          {},
+          { default: "Matched" },
+        ),
+      },
+    });
+  }, [
+    assessmentFormDefinition?.id,
+    ballotRows,
+    canDownloadBallotCsv,
+    classmateListsByStudent,
+    round?.title,
+    roundTitle,
+    rosterStudents.length,
+    studentById,
+    t,
+  ]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      downloadCsv: handleDownloadBallotCsv,
+      canDownloadCsv: canDownloadBallotCsv,
+    }),
+    [canDownloadBallotCsv, handleDownloadBallotCsv],
+  );
+
   const subModeNav =
     onSubModeChange ? (
       <Navbar style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -849,6 +1002,24 @@ export default function MatchingRoundStudentBallotPanel({
     );
   }
 
+  if (!ballotWindowActive && inactiveBallotMessage) {
+    return (
+      <Shell className="matchingRoundStudentBallotPanel">
+        <PanelHeader>
+          <HeaderText>
+            <h4>
+              {t("opportunities.matchingRound.studentRanking.title", {}, {
+                default: "Student ballots",
+              })}
+            </h4>
+          </HeaderText>
+          {subModeNav}
+        </PanelHeader>
+        <MessageCard variant="neutral" message={inactiveBallotMessage} />
+      </Shell>
+    );
+  }
+
   const renderQueue = (queueKey, title, hint, rows) => (
     <QueueSection key={queueKey}>
       <button
@@ -894,7 +1065,7 @@ export default function MatchingRoundStudentBallotPanel({
               matchesByOpp={matchesByOpp}
               prefIndex={prefIndex}
               totalOpps={totalOpps}
-              questionAnswers={questionAnswers}
+              assessmentFormDefinition={assessmentFormDefinition}
               isCurated={isCurated}
               handleAssign={handleAssign}
               assigning={assigning}
@@ -936,20 +1107,54 @@ export default function MatchingRoundStudentBallotPanel({
         {subModeNav}
       </PanelHeader>
 
-      <SearchInput
-        type="search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder={t(
-          "opportunities.matchingRound.studentRanking.searchPlaceholder",
-          {},
-          { default: "Search students…" },
-        )}
-        aria-label={t(
-          "opportunities.matchingRound.studentRanking.searchPlaceholder",
-          {},
-          { default: "Search students…" },
-        )}
+      <SearchRow>
+        <SearchInput
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={t(
+            "opportunities.matchingRound.studentRanking.searchPlaceholder",
+            {},
+            { default: "Search students…" },
+          )}
+          aria-label={t(
+            "opportunities.matchingRound.studentRanking.searchPlaceholder",
+            {},
+            { default: "Search students…" },
+          )}
+        />
+        <IconButton
+          variant="text"
+          elevated={false}
+          style={{ background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)" }}
+          ariaLabel={t(
+            "opportunities.matchingRound.matchingInfo.infoAria",
+            {},
+            { default: "How student matching works" },
+          )}
+          title={t(
+            "opportunities.matchingRound.matchingInfo.infoAria",
+            {},
+            { default: "How student matching works" },
+          )}
+          onClick={() => setMatchingInfoOpen(true)}
+          icon={
+            <img
+              src="/assets/icons/info.svg"
+              alt=""
+              width={20}
+              height={20}
+              style={{ width: 20, height: 20 }}
+            />
+          }
+        />
+      </SearchRow>
+
+      <MatchingAlgorithmInfoModal
+        open={matchingInfoOpen}
+        onClose={() => setMatchingInfoOpen(false)}
+        matchingAlgorithm={round?.matchingAlgorithm}
+        showBallotWorkflow
       />
 
       {renderQueue(
@@ -989,4 +1194,7 @@ export default function MatchingRoundStudentBallotPanel({
       )}
     </Shell>
   );
-}
+  },
+);
+
+export default MatchingRoundStudentBallotPanel;
