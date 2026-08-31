@@ -1457,6 +1457,7 @@ export default function RoundMatches({ roundId }) {
       <AlgorithmInfoModal
         open={algoInfoOpen}
         onClose={() => setAlgoInfoOpen(false)}
+        matchingAlgorithm={round?.matchingAlgorithm}
       />
     </Shell>
   );

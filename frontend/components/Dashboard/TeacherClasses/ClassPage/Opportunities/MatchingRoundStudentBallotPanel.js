@@ -11,6 +11,7 @@ import styled from "styled-components";
 
 import Chip from "../../../../DesignSystem/Chip";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import IconButton from "../../../../DesignSystem/IconButton";
 import DefinitionForm from "../../../../Forms/DefinitionForm";
 import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
@@ -34,6 +35,7 @@ import {
 } from "../../../../../lib/connectBallotUtils";
 import { downloadStudentBallotCsv } from "../../../../../lib/downloadStudentBallotCsv";
 import MessageCard from "../../../../DesignSystem/MessageCard";
+import MatchingAlgorithmInfoModal from "../../../shared/MatchingAlgorithmInfoModal";
 
 const STUDENT_RANKING_SUB_MODES = {
   ballot: "ballot",
@@ -72,6 +74,13 @@ const HeaderText = styled.div`
     font: var(--MH-Type-Body-Base);
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
+`;
+
+const SearchRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 `;
 
 const SearchInput = styled.input`
@@ -642,6 +651,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
   const [search, setSearch] = useState("");
+  const [matchingInfoOpen, setMatchingInfoOpen] = useState(false);
   const [expandedQueue, setExpandedQueue] = useState({
     project_first: true,
     team_first: true,
@@ -1097,20 +1107,54 @@ const MatchingRoundStudentBallotPanel = forwardRef(
         {subModeNav}
       </PanelHeader>
 
-      <SearchInput
-        type="search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder={t(
-          "opportunities.matchingRound.studentRanking.searchPlaceholder",
-          {},
-          { default: "Search students…" },
-        )}
-        aria-label={t(
-          "opportunities.matchingRound.studentRanking.searchPlaceholder",
-          {},
-          { default: "Search students…" },
-        )}
+      <SearchRow>
+        <SearchInput
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={t(
+            "opportunities.matchingRound.studentRanking.searchPlaceholder",
+            {},
+            { default: "Search students…" },
+          )}
+          aria-label={t(
+            "opportunities.matchingRound.studentRanking.searchPlaceholder",
+            {},
+            { default: "Search students…" },
+          )}
+        />
+        <IconButton
+          variant="text"
+          elevated={false}
+          style={{ background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)" }}
+          ariaLabel={t(
+            "opportunities.matchingRound.matchingInfo.infoAria",
+            {},
+            { default: "How student matching works" },
+          )}
+          title={t(
+            "opportunities.matchingRound.matchingInfo.infoAria",
+            {},
+            { default: "How student matching works" },
+          )}
+          onClick={() => setMatchingInfoOpen(true)}
+          icon={
+            <img
+              src="/assets/icons/info.svg"
+              alt=""
+              width={20}
+              height={20}
+              style={{ width: 20, height: 20 }}
+            />
+          }
+        />
+      </SearchRow>
+
+      <MatchingAlgorithmInfoModal
+        open={matchingInfoOpen}
+        onClose={() => setMatchingInfoOpen(false)}
+        matchingAlgorithm={round?.matchingAlgorithm}
+        showBallotWorkflow
       />
 
       {renderQueue(
