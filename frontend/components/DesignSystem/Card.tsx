@@ -54,6 +54,8 @@ export interface CardProps {
 const ELEVATION = "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1))";
 const ELEVATION_SM =
   "var(--MH-Theme-Elevation-Small, 1px 1px 4px rgba(0, 0, 0, 0.08))";
+const ELEVATION_HIGH =
+  "var(--MH-Theme-Elevation-High, 2px 2px 12px rgba(0, 0, 0, 0.19))";
 const OUTLINE_BORDER = "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)";
 
 const VARIANTS: Record<
@@ -61,9 +63,9 @@ const VARIANTS: Record<
   { base: React.CSSProperties; hover: React.CSSProperties; pressed: React.CSSProperties }
 > = {
   elevated: {
-    base: { background: "#FFFFFF" },
-    // Elevation only — no colour shift.
-    hover: { background: "#FFFFFF", boxShadow: ELEVATION },
+    // Raised at rest; hover climbs to High, pressed dips to Small.
+    base: { background: "#FFFFFF", boxShadow: ELEVATION },
+    hover: { background: "#FFFFFF", boxShadow: ELEVATION_HIGH },
     pressed: { background: "#FFFFFF", boxShadow: ELEVATION_SM },
   },
   filled: {

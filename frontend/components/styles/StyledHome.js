@@ -24,6 +24,25 @@ const StyledHome = styled.div`
     max-width: 280px;
   }
 
+  .profileMetaIds {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .profileMetaId {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    max-width: 100%;
+  }
+
+  .profileMetaIdLabel {
+    font: var(--MH-Type-Label-Small);
+    color: var(--neutral_grey2, #3b3b3b);
+  }
+
   .h36 {
     font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
