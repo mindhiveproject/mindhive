@@ -390,6 +390,24 @@ export const Profile = list({
     opportunitiesCreated: relationship({
       ref: "Opportunity.mentor",
       many: true,
+      ui: {
+        description:
+          "Legacy inverse (pre–sponsor/mentor split). Opportunities where this profile is the legacy mentor/creator.",
+      },
+    }),
+    opportunitiesSponsored: relationship({
+      ref: "Opportunity.sponsors",
+      many: true,
+      ui: {
+        description: "Opportunities where this profile is a sponsor (new model).",
+      },
+    }),
+    opportunitiesMentoring: relationship({
+      ref: "Opportunity.mentors",
+      many: true,
+      ui: {
+        description: "Opportunities where this profile is an assigned mentor.",
+      },
     }),
     opportunitiesReviewed: relationship({
       ref: "Opportunity.reviewedBy",

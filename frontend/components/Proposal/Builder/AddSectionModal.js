@@ -24,7 +24,6 @@ const modalStyle = {
   borderRadius: 16,
   boxShadow: "0 16px 48px rgba(0, 0, 0, 0.18)",
   padding: 32,
-  fontFamily: "Inter, sans-serif",
 };
 
 const inputStyle = {
@@ -33,9 +32,8 @@ const inputStyle = {
   border: "1px solid #A1A1A1",
   borderRadius: 8,
   padding: "12px 16px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 16,
-  lineHeight: "24px",
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
   color: "#171717",
 };
 
@@ -69,10 +67,8 @@ export default function AddSectionModal({ open, onClose, onSubmit, creating }) {
         <h2
           style={{
             margin: "0 0 24px",
-            fontFamily: "Inter, sans-serif",
-            fontSize: 24,
-            lineHeight: "32px",
-            fontWeight: 700,
+            font: 'var(--MH-Type-Heading-Small)',
+            letterSpacing: 0,
             color: "#171717",
           }}
         >

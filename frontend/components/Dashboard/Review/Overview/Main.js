@@ -7,6 +7,7 @@ import { useEffect, useMemo } from 'react';
 
 import ProjectsBoard from "./Projects/Main";
 import StudiesBoard from "./Studies/Main";
+import { NavbarItem, SectionNavbar } from "../../../DesignSystem/Navbar";
 import useTranslation from "next-translate/useTranslation";
 import { reviewOverviewTours } from "./tours";
 import { buildFeedbackCenterTabs } from "../../../../lib/feedbackCenterTabs";
@@ -167,47 +168,44 @@ export default function Overview({ query, user }) {
 
   return (
     <div className="overview" id="overview">
-      <div className="h40">{t("review.feedbackCenter")}</div>
-      <div className="h24">{t("review.overviewIntro")}</div>
+      <header className="overviewHeader">
+        <h1 className="MH-Type-Heading-Base">{t("review.feedbackCenter")}</h1>
+        <p>{t("review.overviewIntro")}</p>
+      </header>
 
-      <div id="options" className="menu">
+      <SectionNavbar
+        variant="underline"
+        showRule
+        gapless
+        id="options"
+        aria-label={t("review.feedbackCenter")}
+      >
         {!templateBoardsLoading &&
           feedbackTabs.map((tab) => (
-            <Link
+            <NavbarItem
               key={tab.selector}
+              as={Link}
               href={`/dashboard/review/${tab.selector}`}
               id={tab.selector === "proposals" ? "proposal" : tab.selector}
+              selected={
+                activeSelector === tab.selector ||
+                (!selector && tab.selector === feedbackTabs[0]?.selector)
+              }
             >
-              <div
-                className={
-                  activeSelector === tab.selector ||
-                  (!selector && tab.selector === feedbackTabs[0]?.selector)
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>
-                  {tab.label ||
-                    t(tab.labelKey, {}, { default: tab.milestoneKey })}
-                </p>
-              </div>
-            </Link>
+              {tab.label || t(tab.labelKey, {}, { default: tab.milestoneKey })}
+            </NavbarItem>
           ))}
 
-        <Link href="/dashboard/review/collectingdata" id="collectData">
-          <div
-            className={
-              selector === "collectingdata"
-                ? "menuTitle selectedMenuTitle"
-                : "menuTitle"
-            }
-          >
-            <p>{t("review.collectingDataMenu")}</p>
-          </div>
-        </Link>
-
         {/* collectingdata tab is study-based, not milestone-driven */}
-      </div>
+        <NavbarItem
+          as={Link}
+          href="/dashboard/review/collectingdata"
+          id="collectData"
+          selected={selector === "collectingdata"}
+        >
+          {t("review.collectingDataMenu")}
+        </NavbarItem>
+      </SectionNavbar>
 
       {!isCollectingData && activeSelector ? (
         <ProjectsBoard

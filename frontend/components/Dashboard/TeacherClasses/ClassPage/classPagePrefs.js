@@ -29,6 +29,20 @@ export function writeClassPrefs(classId, patch) {
     } else {
       next.dashboard = current.dashboard || {};
     }
+    if (patch.matchingRound) {
+      const currentMatching = current.matchingRound || {};
+      const patchMatching = patch.matchingRound;
+      next.matchingRound = {
+        ...currentMatching,
+        ...patchMatching,
+        panelByRoundId: {
+          ...(currentMatching.panelByRoundId || {}),
+          ...(patchMatching.panelByRoundId || {}),
+        },
+      };
+    } else {
+      next.matchingRound = current.matchingRound || {};
+    }
     window.localStorage.setItem(storageKey(classId), JSON.stringify(next));
   } catch {
     // Ignore quota / private-mode failures.
@@ -45,6 +59,43 @@ export function writeClassDashboardPrefs(classId, { template, step } = {}) {
     dashboard: {
       template: template || null,
       step: step || null,
+    },
+  });
+}
+
+const MATCHING_ROUND_PERSISTABLE_PANELS = new Set([
+  "review",
+  "selected",
+  "forms",
+  "studentInterest",
+]);
+
+export function readClassMatchingRoundPanelPref(classId, roundId) {
+  if (!classId || !roundId) return null;
+  const panel = readClassPrefs(classId)?.matchingRound?.panelByRoundId?.[roundId];
+  if (
+    typeof panel !== "string" ||
+    !MATCHING_ROUND_PERSISTABLE_PANELS.has(panel)
+  ) {
+    return null;
+  }
+  return panel;
+}
+
+export function writeClassMatchingRoundPanelPref(classId, roundId, panel) {
+  if (
+    !classId ||
+    !roundId ||
+    !panel ||
+    !MATCHING_ROUND_PERSISTABLE_PANELS.has(panel)
+  ) {
+    return;
+  }
+  writeClassPrefs(classId, {
+    matchingRound: {
+      panelByRoundId: {
+        [roundId]: panel,
+      },
     },
   });
 }

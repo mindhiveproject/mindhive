@@ -66,8 +66,8 @@ export const StyledUserPage = styled.div`
 
         .username {
           h1 {
-            font-size: 3rem;
-            font-weight: 500;
+            font: var(--MH-Type-Heading-Large);
+            letter-spacing: 0;
           }
         }
       }
@@ -128,8 +128,8 @@ export const StyledUserPage = styled.div`
 
       a {
         text-transform: uppercase;
-        font-weight: bold;
-        font-size: 1.5em;
+        font: var(--MH-Type-Label-Large);
+        letter-spacing: 0;
         color: var(--green);
       }
 
@@ -167,8 +167,8 @@ export const StyledUserPage = styled.div`
 
       a {
         text-transform: uppercase;
-        font-weight: bold;
-        font-size: 1.5em;
+        font: var(--MH-Type-Label-Large);
+        letter-spacing: 0;
         color: var(--green);
       }
 
@@ -206,8 +206,8 @@ export const StyledUserPage = styled.div`
 
       a {
         text-transform: uppercase;
-        font-weight: bold;
-        font-size: 1.5em;
+        font: var(--MH-Type-Label-Large);
+        letter-spacing: 0;
         color: var(--green);
         cursor: pointer;
       }

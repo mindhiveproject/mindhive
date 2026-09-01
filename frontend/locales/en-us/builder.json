@@ -1,7 +1,7 @@
 {
 	"actionCard": {
 		"clickToSubmit": "Click to submit for {{title}}",
-		"customStep": "Review step",
+		"customStep": "Milestone",
 		"dataCollection": "Data Collection",
 		"deleteCardConfirmation": "Are you sure you want to delete this card? This action cannot be undone.",
 		"deleteConfirm": "Are you sure you want to delete this card? This action cannot be undone.",
@@ -217,6 +217,12 @@
 	},
 	"createdBy": "created by {{username}}",
 	"createNewBlock": "Create new block",
+	"projectCard": {
+		"typeLabel": "Project"
+	},
+	"studyCard": {
+		"typeLabel": "Study"
+	},
 	"createProposal": {
 		"copyStudyProposal": "Copy the study proposal",
 		"create": "Create",
@@ -1233,7 +1239,13 @@
 	"developTasks": {
 		"emptyBlock": "No blocks to show.",
 		"emptySurvey": "No surveys to show.",
-		"emptyTask": "No tasks to show."
+		"emptyTask": "No tasks to show.",
+		"filterCreatedByMe": "Created by me",
+		"filterFavorited": "Favorited",
+		"filterPublic": "Public",
+		"tabBlocks": "Blocks",
+		"tabSurveys": "Surveys",
+		"tabTasks": "Tasks"
 	},
 	"duplicateEditBlock": "Duplicate and edit a pre-existing MindHive block and its parameters.",
 	"duplicateEditSurvey": "Duplicate and edit a pre-existing MindHive survey and its parameters.",
@@ -1743,6 +1755,7 @@
 		"most_participants": "Most participants",
 		"newest": "Newest",
 		"oldest": "Oldest",
+		"openForParticipation": "Open for participation",
 		"overviewIntro": "Whether you're starting your study or collecting participants, use this page to give feedback to your fellow peers on their proposals and finalized studies",
 		"participantOverOne": "{{count}} participant",
 		"participantOverOnePlural": "{{count}} participants",
@@ -1754,8 +1767,10 @@
 		"proposals": "Proposals",
 		"proposalTag": "Proposal",
 		"review": "Review",
+		"reviewOverOne": "{{count}} reviews",
 		"reviewPlural": "reviews",
 		"reviewSingular": "review",
+		"reviewUnder": "No reviews yet",
 		"search": "Search",
 		"showingAllProjects": "Showing all projects",
 		"showingAllStudies": "Showing all studies",
@@ -1968,7 +1983,7 @@
 	},
 	"scoringSurvey": "Instructions for scoring (for surveys only)",
 	"section": {
-		"addCard": "Add card",
+		"addCard": "Add",
 		"addCardBtn": "[ Click to add a card ]",
 		"addCardMenu": {
 			"ariaLabel": "Add a card or milestone",
@@ -1979,9 +1994,11 @@
 		"cards": "cards",
 		"cardsCount": "{{count}} card{{count == 1 ? '' : 's'}}",
 		"createCardModal": {
+			"action": "milestone",
 			"alreadyAddedLabel": "{{label}} (already added)",
 			"alreadyAddedTooltip": "This checkpoint is already on the board",
-			"buildFormSubtitle": "Scoped to this template board. Add cards + fields below, then publish. Student clones will inherit whatever you publish.",
+			"allDefaultsAddedNotice": "All default MindHive milestones are already on this board. You're creating a custom milestone.",
+			"buildFormSubtitle": "Scoped to this template board. Adds + fields below, then publish. Student clones will inherit whatever you publish.",
 			"buildFormTitle": "Build the review form: \"{{title}}\"",
 			"cancel": "Cancel",
 			"categories": {
@@ -2022,6 +2039,7 @@
 			"openingEditor": "Opening editor…",
 			"previewLabel": "Review form preview",
 			"previewLoading": "Loading preview...",
+			"proposal": "card",
 			"proposalPreview": "Adds a regular card with content fields for students.",
 			"publish": "Publish…",
 			"publishing": "Publishing…",
@@ -2046,7 +2064,7 @@
 				"permissions": "Form template"
 			},
 			"templateSourceLabel": "{{title}} (custom)",
-			"title": "Create a new card",
+			"title": "Create a new {{cardCategory}}",
 			"titleLabel": "Card title",
 			"titlePlaceholder": "Enter a card title",
 			"typeLabel": "Card type",

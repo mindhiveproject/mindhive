@@ -4,34 +4,41 @@ import { useState, useRef, useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import Chip from "./Chip";
+import { CheckIcon, FileCopyIcon } from "./Icons";
+
+const ICON_SLOT_STYLE = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 20,
+  height: 20,
+  flexShrink: 0,
+};
 
 const COPY_ICON = (
-  <img
-    src="/assets/icons/copy.svg"
-    alt="Copy to clipboard"
-    width="20"
-    height="20"
-    aria-hidden
-    style={{ flexShrink: 0, display: "block", opacity: 0.8 }}
-  />
+  <span style={ICON_SLOT_STYLE} aria-hidden>
+    <FileCopyIcon width={20} height={20} style={{ display: "block", opacity: 0.8 }} />
+  </span>
 );
 
 const CHECK_ICON = (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    style={{ flexShrink: 0, display: "block" }}
-    aria-hidden
-  >
-    <path
-      d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
-      fill="currentColor"
-    />
-  </svg>
+  <span style={ICON_SLOT_STYLE} aria-hidden>
+    <CheckIcon width={20} height={20} style={{ display: "block" }} />
+  </span>
 );
+
+const LABEL_GRID_STYLE = {
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  gridTemplateRows: "1fr",
+  alignItems: "center",
+  justifyItems: "start",
+  width: "100%",
+};
+
+const LABEL_CELL_STYLE = {
+  gridArea: "1 / 1",
+};
 
 async function copyText(text) {
   if (navigator.clipboard?.writeText) {
@@ -48,6 +55,8 @@ async function copyText(text) {
 
 /**
  * Copy-to-clipboard button. Shows a checkmark and "Copied" for 2 seconds after success.
+ * Label width stays stable: both the idle and "Copied" strings occupy the same grid cell
+ * so the chip always sizes to the longer of the two. "Copied" is centered in that width.
  */
 export default function CopyButton({
   value,
@@ -62,6 +71,7 @@ export default function CopyButton({
   const { t } = useTranslation("common");
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef(null);
+  const copiedLabel = t("copied", {}, { default: "Copied" });
 
   useEffect(
     () => () => {
@@ -83,10 +93,34 @@ export default function CopyButton({
     }
   };
 
+  const stableLabel = (
+    <span style={LABEL_GRID_STYLE}>
+      <span
+        style={{
+          ...LABEL_CELL_STYLE,
+          visibility: copied ? "hidden" : "visible",
+        }}
+        aria-hidden={copied}
+      >
+        {children}
+      </span>
+      <span
+        style={{
+          ...LABEL_CELL_STYLE,
+          visibility: copied ? "visible" : "hidden",
+          width: "100%",
+          textAlign: "center",
+        }}
+        aria-hidden={!copied}
+      >
+        {copiedLabel}
+      </span>
+    </span>
+  );
+
   return (
     <Chip
-      label={copied ? t("copied", {}, { default: "Copied" }) : children}
-      shape="square"
+      label={stableLabel}
       selected={copied}
       disabled={disabled}
       onClick={copied ? undefined : handleClick}

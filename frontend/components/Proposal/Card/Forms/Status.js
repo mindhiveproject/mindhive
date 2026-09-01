@@ -9,11 +9,8 @@ const StyledDropdown = styled.div`
   }
   .info-status {
     display: table;
-    font-family: Lato;
-    font-style: normal;
-    font-size: 12px;
-    line-height: 100%;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     border-radius: 30px;
     position: absolute;
     margin: 8px;

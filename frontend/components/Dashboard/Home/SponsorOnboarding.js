@@ -63,9 +63,8 @@ const Strip = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -106,10 +105,9 @@ const Row = styled.div`
   }
 
   .title {
-    font-family: "Lato", sans-serif;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     font-weight: ${({ $done }) => ($done ? 500 : 600)};
-    font-size: 14px;
-    line-height: 20px;
     color: ${({ $done }) => ($done ? "#5f6871" : "#171717")};
     max-width: 280px;
     overflow: hidden;
@@ -144,9 +142,8 @@ const ModalBody = styled.div`
   .description {
     margin: 0;
     color: #5f6871;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .networkList {
@@ -177,17 +174,15 @@ const ModalBody = styled.div`
   .networkTitle {
     margin: 0;
     color: #171717;
-    font-family: "Lato", sans-serif;
-    font-size: 15px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
   }
 
   .networkDescription {
     margin: 0;
     color: #5f6871;
-    font-family: "Inter", sans-serif;
-    font-size: 13px;
-    line-height: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .networkActions {
@@ -202,9 +197,8 @@ const ModalBody = styled.div`
   .feedback {
     margin: 0;
     color: #5f6871;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    line-height: 22px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .feedback.error {
@@ -342,7 +336,9 @@ export default function SponsorOnboarding() {
   const memberNetworks = collectMemberClassNetworks(me);
   const joinedNetwork = memberNetworks[0] || null;
   const networkStepDone = !!joinedNetwork;
-  const oppStepDone = (me?.opportunitiesCreated || []).length > 0;
+  const oppStepDone =
+    (me?.opportunitiesCreated || []).length > 0 ||
+    (me?.opportunitiesSponsored || []).length > 0;
 
   const pendingInvite = invites.find((invite) => {
     if (!invite?.classNetwork?.id) return false;
@@ -498,7 +494,6 @@ export default function SponsorOnboarding() {
           untitledNetworkLabel
         }
         leading={NETWORK_ICON}
-        shape="square"
       />
     ) : null;
 
@@ -661,7 +656,6 @@ export default function SponsorOnboarding() {
                             {isPending ? (
                               <>
                                 <Chip
-                                  shape="square"
                                   label={pendingRequestLabel}
                                 />
                                 <Button

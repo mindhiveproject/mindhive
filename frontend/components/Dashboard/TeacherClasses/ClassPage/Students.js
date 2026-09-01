@@ -14,6 +14,7 @@ import {
 } from "../../../Mutations/Classes";
 import StudyCompletionOverview from "./Overview/StudyCompletion";
 import DropdownMenu from "../../../DesignSystem/DropdownMenu";
+import Button from "../../../DesignSystem/Button";
 import CopyButton from "../../../DesignSystem/CopyButton";
 
 export default function ClassStudents({ myclass, user, query }) {
@@ -129,7 +130,8 @@ export default function ClassStudents({ myclass, user, query }) {
     return (
       <Link
         href={{ pathname: `/dashboard/students/${student?.publicId}` }}
-        style={{ color: "inherit", textDecoration: "none", fontWeight: 500 }}
+        className="MH-Type-Label-Base"
+        style={{ color: "inherit", textDecoration: "none" }}
       >
         {student.username}
       </Link>
@@ -141,7 +143,29 @@ export default function ClassStudents({ myclass, user, query }) {
     if (!student) return null;
     return (
       <DropdownMenu
-        triggerLabel={t("assignment.more", {}, { default: "More" })}
+        ariaLabel={t("assignment.action", {}, { default: "Action" })}
+        renderTrigger={({ onClick, open, ariaLabel }) => (
+          <Button
+            variant="subtle"
+            className="MH-Type-Label-Small"
+            leadingIcon={
+              <img
+                src="/assets/dataviz/three-dots.svg"
+                alt=""
+                width={14}
+                height={14}
+                aria-hidden
+              />
+            }
+            type="button"
+            aria-label={ariaLabel}
+            aria-expanded={open}
+            aria-haspopup="menu"
+            onClick={onClick}
+          >
+            {t("assignment.action", {}, { default: "Action" })}
+          </Button>
+        )}
         items={getStudentActionItems(student)}
       />
     );
@@ -167,7 +191,7 @@ export default function ClassStudents({ myclass, user, query }) {
     },
     {
       field: "actions",
-      headerName: t("assignment.actions", {}, { default: "Actions" }),
+      headerName: "",
       cellRenderer: ActionsRenderer,
       suppressFilter: true,
       sortable: false,
@@ -203,7 +227,7 @@ export default function ClassStudents({ myclass, user, query }) {
                 <div className="classTabInviteLink">
                   {origin}/signup/student/?code={myclass.code}
                 </div>
-                <CopyButton value={studentSignupLink} style={{ fontWeight: 500 }}>
+                <CopyButton value={studentSignupLink}>
                   {t("studentsTab.copy")}
                 </CopyButton>
               </div>
@@ -213,7 +237,7 @@ export default function ClassStudents({ myclass, user, query }) {
             <p className="classTabInviteLabel">{t("studentsTab.code")}</p>
             <div className="classTabCopyArea">
               <p className="classTabCodeValue">{myclass.code}</p>
-              <CopyButton value={myclass.code} style={{ fontWeight: 500 }}>
+              <CopyButton value={myclass.code}>
                 {t("studentsTab.copy")}
               </CopyButton>
             </div>

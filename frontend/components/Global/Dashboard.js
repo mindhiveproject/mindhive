@@ -23,7 +23,7 @@ import FullScreenLoading from "../DesignSystem/FullScreenLoading";
  * Platform-browsing dashboard areas that show the site footer.
  * Focused workspaces (builder, develop, review, classes, etc.) are excluded.
  */
-const DASHBOARD_FOOTER_AREAS = new Set(["discover", "connect", "review", "settings", "sponsor-connect"]);
+const DASHBOARD_FOOTER_AREAS = new Set(["discover", "settings"]);
 
 function shouldShowDashboardFooter(area) {
   // Home is `/dashboard` with no area param
@@ -36,9 +36,15 @@ export default function Dashboard({ children, area, selector }) {
   const router = useRouter();
   const showFooter = shouldShowDashboardFooter(area);
   const boardEditorFullscreen =
-    area === "myclasses" &&
-    router.query.action === "edit" &&
-    !!router.query.board;
+    (area === "myclasses" &&
+      router.query.action === "edit" &&
+      !!router.query.board) ||
+    (area === "classes" &&
+      router.query.page === "opportunities" &&
+      (!!router.query.opportunity || !!router.query.round)) ||
+    (area === "myclasses" &&
+      router.query.page === "opportunities" &&
+      !!router.query.round);
 
   const content = (
     <StyledDashboardContent

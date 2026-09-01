@@ -149,10 +149,10 @@ export default function UnsubmitOpportunityModal({
       {error ? (
         <p
           role="alert"
+          className="MH-Type-Body-Base"
           style={{
             margin: "12px 0 0",
             color: "var(--MH-Theme-Error-Dark, #b3261e)",
-            fontSize: 13,
           }}
         >
           {error}

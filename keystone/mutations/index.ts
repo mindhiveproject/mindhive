@@ -42,6 +42,7 @@ import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectRe
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
+import recordOpportunityPreviewVisit from "./recordOpportunityPreviewVisit";
 import resolveFormDefinition from "./resolveFormDefinition";
 import seedOpportunityForm from "./seedOpportunityForm";
 import seedProfileForms from "./seedProfileForms";
@@ -212,6 +213,15 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Connect the session user to OpportunityReviewNote.readBy for
         # notes they can see. Needed because list update is author-only.
         markOpportunityReviewNotesRead(noteIds: [ID!]!): [OpportunityReviewNote!]!
+        # Student class Opportunities preview session (dwell >= 1s).
+        # Creates a Log with event OPPORTUNITY_PREVIEW_VISIT.
+        recordOpportunityPreviewVisit(
+          opportunityId: ID!
+          classId: ID!
+          roundId: ID!
+          openAt: DateTime!
+          closeAt: DateTime!
+        ): Log
         # One-off seeder for the global Opportunity FormDefinition.
         # Idempotent unless force=true (which deletes and recreates).
         seedOpportunityForm(force: Boolean): FormDefinition
@@ -237,7 +247,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         saveBoardReviewFormDefinition(input: SaveBoardReviewFormDefinitionInput!): FormDefinition
         # Copy a milestone's review form onto this template board so the
         # teacher can edit it without mutating the global definition.
-        forkReviewFormForBoard(templateBoardId: ID!, milestoneId: ID!): FormDefinition
+        forkReviewFormForBoard(
+          templateBoardId: ID!
+          milestoneId: ID!
+          sourceFormDefinitionKey: String
+          forceNew: Boolean
+        ): FormDefinition
         # Teacher wizard: clone a published global opportunity form into
         # a class-scoped draft owned by the class creator.
         cloneFormDefinitionForClass(sourceId: ID!, classId: ID!): FormDefinition
@@ -327,6 +342,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         formDefinitionId: ID
         canReviewPermissionIds: [ID!]
         showInFeedbackCenter: Boolean
+        statusTarget: String
         isActive: Boolean
         position: Int
       }
@@ -388,6 +404,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         description: String
         fields: [ClassFormFieldInput!]!
         publish: Boolean
+        surface: String
       }
       input SaveBoardReviewFormDefinitionInput {
         proposalBoardId: ID!
@@ -449,6 +466,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         followUser,
         unfollowUser,
         markOpportunityReviewNotesRead,
+        recordOpportunityPreviewVisit,
         seedOpportunityForm,
         seedProfileForms,
         seedReviewForms,

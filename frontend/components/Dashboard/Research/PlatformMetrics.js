@@ -17,7 +17,8 @@ import {
 const METRICS_DROPDOWN_TRIGGER_STYLE = {
   borderRadius: "12px",
   padding: "12px 14px",
-  fontSize: "15px",
+  font: 'var(--MH-Type-Body-Base)',
+  letterSpacing: 0,
 };
 
 const formatColumnLabel = (key, t) => {

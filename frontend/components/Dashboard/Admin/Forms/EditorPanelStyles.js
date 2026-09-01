@@ -2,6 +2,8 @@
 // one file so the two editors stay visually consistent.
 import styled from "styled-components";
 
+import Chip from "../../../DesignSystem/Chip";
+
 export const EditorPanelShell = styled.div`
   display: flex;
   flex-direction: column;
@@ -22,14 +24,15 @@ export const Section = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .flash {
     color: #1d6b3a;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -37,19 +40,20 @@ export const FieldRow = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: "Lato", sans-serif;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #5f6871;
 
   span.label-text {
-    font-weight: 600;
     color: #171717;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
   }
 
   span.hint {
     color: #888;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   input[type="text"],
@@ -59,8 +63,8 @@ export const FieldRow = styled.label`
     border: 1px solid #d3dae0;
     border-radius: 8px;
     padding: 8px 10px;
-    font-family: "Lato", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #171717;
     background: #ffffff;
   }
@@ -80,20 +84,19 @@ export const FieldRow = styled.label`
     display: inline-flex;
     gap: 8px;
     align-items: center;
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 `;
 
-export const PillCheckbox = styled.button`
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-family: "Nunito", sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid
-    ${({ $checked }) => ($checked ? "#336f8a" : "#d3dae0")};
-  background: ${({ $checked }) => ($checked ? "#336f8a" : "#ffffff")};
-  color: ${({ $checked }) => ($checked ? "#ffffff" : "#5f6871")};
-`;
+// Toggle chip: selected = primary-light fill + primary border (DS Chip).
+export const PillCheckbox = ({ $checked, children, onClick, ...rest }) => (
+  <Chip
+    selected={!!$checked}
+    label={children}
+    onClick={onClick}
+    ariaLabel={rest["aria-label"]}
+    title={rest.title}
+  />
+);

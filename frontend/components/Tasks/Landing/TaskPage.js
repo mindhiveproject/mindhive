@@ -86,7 +86,7 @@ export default function TaskPage({ user, task }) {
           <div>
             <h2>{t("taskPage.parameters")}</h2>
             <p>{t("taskPage.parametersDescription", { taskType })}</p>
-            <p style={{ fontSize: "14px" }}>
+            <p className="MH-Type-Body-Base">
               {t("taskPage.parametersNote", { taskType })}
             </p>
             <div className="symbolBlock">
@@ -114,7 +114,7 @@ export default function TaskPage({ user, task }) {
           <div>
             <h2>{t("taskPage.surveyParameters")}</h2>
             <p>{t("taskPage.parametersDescription", { taskType })}</p>
-            <p style={{ fontSize: "14px" }}>
+            <p className="MH-Type-Body-Base">
               {t("taskPage.parametersNote", { taskType })}
             </p>
             <div className="symbolBlock">

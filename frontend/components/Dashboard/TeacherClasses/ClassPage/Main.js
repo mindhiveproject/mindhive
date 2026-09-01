@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import Link from "next/link";
+import clsx from "clsx";
 
 import Header from "./Header";
 import ClassStudents from "./Students";
@@ -16,6 +17,7 @@ import ClassSettings from "./Settings";
 
 import { GET_CLASS } from "../../../Queries/Classes";
 import RestrictedAccess from "../../../Global/Restricted";
+import { NavbarItem, SectionNavbar } from "../../../DesignSystem/Navbar";
 
 import StyledClass from "../../../styles/StyledClass";
 
@@ -182,6 +184,10 @@ export default function ClassPage({ code, user, query }) {
 
   const isProjectsFullscreen =
     page === "projects" && action === "edit" && board;
+  const isMatchingRoundFullscreen =
+    page === "opportunities" &&
+    typeof query?.round === "string" &&
+    Boolean(query.round);
 
   if (page === "board" || (isNyuCuspOnly && NYU_CUSP_HIDDEN_TABS.has(page))) {
     return null;
@@ -196,7 +202,9 @@ export default function ClassPage({ code, user, query }) {
   }
 
   return (
-    <StyledClass>
+    <StyledClass
+      className={clsx(isMatchingRoundFullscreen && "isMatchingRoundFullscreen")}
+    >
       <RestrictedAccess
         userCanAccess={[
           ...user?.teacherIn.map((c) => c?.id),
@@ -204,36 +212,37 @@ export default function ClassPage({ code, user, query }) {
         ]}
         whatToAccess={myclass?.id}
       >
-        <div>
-          <Header user={user} myclass={myclass} />
-          <nav className="classPageNav" aria-label={t("main.classSectionsNav")}>
-            <div className="secondLine">
-              <div className="menu">
+        <div
+          className={clsx(
+            isMatchingRoundFullscreen && "matchingRoundFullscreenLayout",
+          )}
+        >
+          {isMatchingRoundFullscreen ? null : (
+            <>
+              <Header user={user} myclass={myclass} />
+              <SectionNavbar
+                className="classPageNav"
+                variant="underline"
+                showRule
+                gapless
+                aria-label={t("main.classSectionsNav")}
+              >
                 {navItems.map((item) => (
-                  <Link
+                  <NavbarItem
                     key={item.value}
+                    as={Link}
                     href={{
                       pathname: `/dashboard/myclasses/${code}`,
                       query: { page: item.value },
                     }}
-                    aria-current={page === item.value ? "page" : undefined}
+                    selected={page === item.value}
                   >
-                    <div
-                      className={
-                        page === item.value
-                          ? "menuTitle selectedMenuTitle"
-                          : "menuTitle"
-                      }
-                    >
-                      <div className="titleWithIcon">
-                        <p>{t(item.labelKey)}</p>
-                      </div>
-                    </div>
-                  </Link>
+                    {t(item.labelKey)}
+                  </NavbarItem>
                 ))}
-              </div>
-            </div>
-          </nav>
+              </SectionNavbar>
+            </>
+          )}
 
           <div>
             {page === "dashboard" && !isNyuCuspOnly && (
@@ -270,7 +279,11 @@ export default function ClassPage({ code, user, query }) {
               <ClassResources myclass={myclass} user={user} query={query} />
             )}
           </div>
-          <div>
+          <div
+            className={clsx(
+              isMatchingRoundFullscreen && "matchingRoundWorkspaceSlot",
+            )}
+          >
             {page === "opportunities" && showOpportunitiesTab && (
               <ClassOpportunities myclass={myclass} user={user} />
             )}

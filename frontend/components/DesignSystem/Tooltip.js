@@ -64,11 +64,6 @@ const BUBBLE_STYLE = {
   borderRadius: 4,
   background: "var(--MH-Theme-Neutrals-Black, #171717)",
   color: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: 12,
-  lineHeight: "16px",
-  letterSpacing: 0,
   overflowWrap: "break-word",
   whiteSpace: "pre-line",
 };
@@ -279,7 +274,7 @@ export default function Tooltip({
       ref={bubbleRef}
       id={id}
       role="tooltip"
-      className="DesignSystem-Tooltip"
+      className="DesignSystem-Tooltip MH-Type-Body-Small"
       style={{
         ...BUBBLE_STYLE,
         position: "fixed",

@@ -99,7 +99,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                   "The following features of this {{taskType}} can be tweaked:"
                 )}
               </p>
-              <p style={{ fontSize: "14px" }}>
+              <p className="MH-Type-Body-Base">
                 *{" "}
                 {t(
                   "viewer.defaultValues",
@@ -115,11 +115,11 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                         name={parameter?.icon || "clipboard outline"}
                         style={{ color: "#556AEB" }}
                       />
-                      <span style={{ fontWeight: "600" }}>
+                      <span className="MH-Type-Title-Small">
                         {parameter.help}
                       </span>
                     </p>
-                    <p style={{ fontWeight: "lighter" }}>
+                    <p className="MH-Type-Body-Base">
                       {ReactHtmlParser(parameter.value)}
                     </p>
                   </div>
@@ -138,7 +138,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                   "The following features of this {{taskType}} can be tweaked:"
                 )}
               </p>
-              <p style={{ fontSize: "14px" }}>
+              <p className="MH-Type-Body-Base">
                 *{" "}
                 {t(
                   "viewer.defaultValues",
@@ -154,7 +154,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                         name={item?.icon || "clipboard outline"}
                         style={{ color: "#556AEB" }}
                       />
-                      <span style={{ fontWeight: "600" }}>
+                      <span className="MH-Type-Title-Small">
                         {item?.type === "text" && t("viewer.text", "Text")}
                         {item?.type === "vas" &&
                           t(
@@ -171,10 +171,10 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                           t("viewer.selectMany", "Select many")}
                       </span>
                     </p>
-                    <p style={{ fontWeight: "lighter" }}>
+                    <p className="MH-Type-Body-Base">
                       {ReactHtmlParser(item?.header)}
                     </p>
-                    <p style={{ fontWeight: "lighter" }}>
+                    <p className="MH-Type-Body-Base">
                       {ReactHtmlParser(item?.text)}
                     </p>
                   </div>

@@ -27,9 +27,6 @@ const DEFAULT_TRIGGER_STYLE = {
   border: "1px solid var(--MH-Theme-Primary-Dark, #336F8A)",
   background: "#ffffff",
   color: "#0D3944",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "14px",
-  lineHeight: "20px",
   padding: "4px 12px",
   cursor: "pointer",
   display: "inline-flex",
@@ -53,10 +50,6 @@ const ITEM_STYLE = {
   alignItems: "center",
   gap: "8px",
   padding: "8px 12px",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 500,
-  fontSize: "14px",
-  lineHeight: "20px",
   cursor: "pointer",
   transition: "background-color 0.2s",
   border: "none",
@@ -69,9 +62,6 @@ const STATIC_ITEM_STYLE = {
   ...ITEM_STYLE,
   cursor: "default",
   color: "#6a6a6a",
-  fontWeight: 400,
-  fontSize: "12px",
-  lineHeight: "16px",
 };
 
 const PANEL_STYLE = {
@@ -86,9 +76,6 @@ const PANEL_STYLE = {
 
 const PANEL_HEADER_WRAPPER_STYLE = {
   padding: "8px 12px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "12px",
-  lineHeight: "16px",
   color: "#6a6a6a",
   borderBottom: "1px solid #e6e6e6",
 };
@@ -234,7 +221,19 @@ export default function DropdownMenu({
   };
 
   return (
-    <div ref={dropdownRef} style={{ position: "relative", zIndex: dropdownOpen ? 1001 : "auto" }}>
+    <div
+      ref={dropdownRef}
+      style={{
+        position: "relative",
+        zIndex: dropdownOpen ? 1001 : "auto",
+        // Panel placement is measured from this wrapper's rect, so it must
+        // shrink-wrap the trigger. Without this, a menu dropped straight into a
+        // grid/flex container stretches to the row height and the panel opens a
+        // trigger-height too low.
+        alignSelf: "start",
+        justifySelf: "start",
+      }}
+    >
       {useRenderTrigger ? (
         renderTrigger({
           onClick: () => setDropdownOpen((prev) => !prev),
@@ -244,6 +243,7 @@ export default function DropdownMenu({
       ) : (
         <button
           type="button"
+          className="MH-Type-Label-Base"
           aria-label={ariaLabel}
           onClick={() => setDropdownOpen((prev) => !prev)}
           style={mergedTriggerStyle}
@@ -287,7 +287,7 @@ export default function DropdownMenu({
             >
               {panelHeader != null && (
                 <>
-                  <div style={PANEL_HEADER_WRAPPER_STYLE}>{panelHeader}</div>
+                  <div className="MH-Type-Body-Base" style={PANEL_HEADER_WRAPPER_STYLE}>{panelHeader}</div>
                   {dividerAfterHeader ? <div style={DIVIDER_STYLE} role="separator" /> : null}
                 </>
               )}
@@ -308,10 +308,11 @@ export default function DropdownMenu({
                       : ITEM_STYLE;
 
                   const leadingIcon = renderLeadingIcon(item);
+                  const typeClassName = isStatic ? "MH-Type-Body-Base" : "MH-Type-Label-Base";
 
                   if (isStatic) {
                     return (
-                      <div key={item.key} style={style}>
+                      <div key={item.key} className={typeClassName} style={style}>
                         {leadingIcon}
                         <span>{item.label}</span>
                       </div>
@@ -323,6 +324,7 @@ export default function DropdownMenu({
                       key={item.key}
                       role="button"
                       tabIndex={0}
+                      className={typeClassName}
                       style={style}
                       onClick={(e) => {
                         // Portaled menu: native document listeners can fire before React’s

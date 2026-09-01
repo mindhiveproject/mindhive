@@ -52,15 +52,12 @@ const modalStyle = {
   borderRadius: 16,
   boxShadow: "0 16px 48px rgba(0, 0, 0, 0.18)",
   padding: 32,
-  fontFamily: "Inter, sans-serif",
 };
 
 const titleStyle = {
   margin: "0 0 24px",
-  fontFamily: "Inter, sans-serif",
-  fontSize: 32,
-  lineHeight: "40px",
-  fontWeight: 800,
+  font: "var(--MH-Type-Heading-Small)",
+  letterSpacing: 0,
   color: "#000",
 };
 
@@ -68,9 +65,8 @@ const labelStyle = {
   display: "grid",
   gap: 8,
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 600,
+  font: "var(--MH-Type-Title-Small)",
+  letterSpacing: 0,
 };
 
 const chipRowStyle = {
@@ -84,8 +80,8 @@ const previewShellStyle = {
   borderRadius: 12,
   background: "#F7F9F8",
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
+  font: "var(--MH-Type-Body-Base)",
+  letterSpacing: 0,
   padding: 16,
   maxHeight: "min(55vh, 520px)",
   overflowY: "auto",
@@ -94,9 +90,8 @@ const previewShellStyle = {
 const helperTextStyle = {
   margin: 0,
   color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 400,
+  font: "var(--MH-Type-Body-Base)",
+  letterSpacing: 0,
 };
 
 function StepSection({ label, children }) {
@@ -338,9 +333,8 @@ export default function CreateTemplateBoardModal({
         }
         .createTemplateBoardModalForm .proposalBoard h2 {
           margin: 0 0 8px;
-          font-family: Inter, sans-serif;
-          font-size: 18px;
-          font-weight: 600;
+          font: var(--MH-Type-Title-Large);
+          letter-spacing: 0;
           color: #171717;
         }
         .createTemplateBoardModalForm .proposalBoard h2 .templateName {
@@ -348,8 +342,8 @@ export default function CreateTemplateBoardModal({
         }
         .createTemplateBoardModalForm .proposalBoard > p {
           margin: 0 0 16px;
-          font-size: 14px;
-          line-height: 20px;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
           color: #625b71;
         }
       `}</style>
@@ -375,7 +369,6 @@ export default function CreateTemplateBoardModal({
           >
             <div style={chipRowStyle} role="tablist">
               <Chip
-                shape="square"
                 label={t("projects.createTemplateModal.fromLibrary", {}, {
                   default: "From template library",
                 })}
@@ -383,7 +376,6 @@ export default function CreateTemplateBoardModal({
                 onClick={() => setMode(MODE_LIBRARY)}
               />
               <Chip
-                shape="square"
                 label={t("projects.createTemplateModal.blankTemplate", {}, {
                   default: "Blank template",
                 })}

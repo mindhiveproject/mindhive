@@ -89,8 +89,7 @@ export default function Inner(props) {
         {canAddSections && (
           <div className="boardInnerToolbar">
             <Button
-              variant="primary"
-              size="small"
+              variant="filled"
               onClick={() => setAddSectionModalOpen(true)}
             >
               {t("inner.addSection", {}, { default: "Add section" })}

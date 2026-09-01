@@ -1,76 +1,144 @@
 import gql from "graphql-tag";
 
+const OPPORTUNITY_SPONSOR_FIELDS = `
+  id
+  username
+  firstName
+  lastName
+`;
+
+const OPPORTUNITY_MENTOR_FIELDS = `
+  id
+  username
+  firstName
+  lastName
+`;
+
+const OPPORTUNITY_LEGACY_MENTOR_FIELDS = OPPORTUNITY_SPONSOR_FIELDS;
+
+const OPPORTUNITY_MENTOR_DETAIL_FIELDS = `
+  id
+  username
+  firstName
+  lastName
+  bio
+  bioInformal
+  email
+  tagline
+  occupation
+  organizations {
+    id
+    name
+    logo {
+      url
+    }
+  }
+  organization
+  department
+  primaryDomain
+  timeCommitment
+  publicId
+  image {
+    keystoneImage {
+      url
+    }
+    image {
+      publicUrlTransformed
+    }
+  }
+`;
+
+const MY_OPPORTUNITY_LIST_FIELDS = `
+  id
+  title
+  shortDescription
+  status
+  guidelinesAcknowledged
+  studentCapacity
+  teamSize
+  availableFrom
+  availableTo
+  timeCommitment
+  coverImageUrl
+  coverImage {
+    id
+    url
+    width
+    height
+  }
+  videoUrl
+  videoFile {
+    url
+    filename
+    filesize
+  }
+  classNetworks {
+    id
+    title
+  }
+  proposalData
+  preSelectedAt
+  publicRatingAverage
+  publicRatingCount
+  createdAt
+  updatedAt
+  requestsAppointment
+  rounds {
+    id
+    title
+    status
+    settings
+    classNetwork {
+      id
+      title
+    }
+    formDefinitions {
+      id
+      title
+      key
+      version
+      status
+    }
+  }
+  reviewNotes(orderBy: { createdAt: asc }) {
+    id
+    kind
+    createdAt
+    author {
+      id
+    }
+    round {
+      id
+    }
+    readBy {
+      id
+    }
+  }
+  sponsorIsMentor
+  sponsors {
+    id
+  }
+  mentors {
+    id
+  }
+  mentor {
+    id
+  }
+`;
+
 export const MY_OPPORTUNITIES = gql`
   query MY_OPPORTUNITIES {
     authenticatedItem {
       ... on Profile {
         id
         opportunitiesCreated {
-          id
-          title
-          shortDescription
-          status
-          guidelinesAcknowledged
-          studentCapacity
-          teamSize
-          availableFrom
-          availableTo
-          timeCommitment
-          coverImageUrl
-          coverImage {
-            id
-            url
-            width
-            height
-          }
-          videoUrl
-          videoFile {
-            url
-            filename
-            filesize
-          }
-          classNetworks {
-            id
-            title
-          }
-          proposalData
-          preSelectedAt
-          publicRatingAverage
-          publicRatingCount
-          createdAt
-          updatedAt
-          requestsAppointment
-          rounds {
-            id
-            title
-            status
-            settings
-            classNetwork {
-              id
-              title
-            }
-            formDefinitions {
-              id
-              title
-              key
-              version
-              status
-            }
-          }
-          reviewNotes(orderBy: { createdAt: asc }) {
-            id
-            kind
-            createdAt
-            author {
-              id
-            }
-            round {
-              id
-            }
-            readBy {
-              id
-            }
-          }
+          ${MY_OPPORTUNITY_LIST_FIELDS}
+        }
+        opportunitiesSponsored {
+          ${MY_OPPORTUNITY_LIST_FIELDS}
+        }
+        opportunitiesMentoring {
+          ${MY_OPPORTUNITY_LIST_FIELDS}
         }
       }
     }
@@ -117,11 +185,14 @@ export const GET_OPPORTUNITY = gql`
         id
         title
       }
+      sponsors {
+        ${OPPORTUNITY_SPONSOR_FIELDS}
+      }
+      mentors {
+        ${OPPORTUNITY_MENTOR_FIELDS}
+      }
       mentor {
-        id
-        username
-        firstName
-        lastName
+        ${OPPORTUNITY_LEGACY_MENTOR_FIELDS}
       }
       organization {
         id
@@ -158,6 +229,15 @@ export const GET_OPPORTUNITY = gql`
       specificSkills
       createdAt
       updatedAt
+      talks {
+        id
+        settings
+        classes {
+          id
+          title
+          code
+        }
+      }
       rounds {
         id
         title
@@ -166,6 +246,11 @@ export const GET_OPPORTUNITY = gql`
         classNetwork {
           id
           title
+          classes {
+            id
+            title
+            code
+          }
         }
         formDefinitions {
           id
@@ -205,6 +290,22 @@ export const GET_OPPORTUNITY = gql`
         readBy {
           id
         }
+      }
+    }
+  }
+`;
+
+// Class students' favorited opportunities, scoped to a round's opportunity set.
+// Used by the teacher Interest matrix alongside preview dwell logs.
+export const CLASS_STUDENT_OPPORTUNITY_FAVORITES = gql`
+  query CLASS_STUDENT_OPPORTUNITY_FAVORITES(
+    $studentIds: [ID!]!
+    $opportunityIds: [ID!]!
+  ) {
+    profiles(where: { id: { in: $studentIds } }) {
+      id
+      favoriteOpportunities(where: { id: { in: $opportunityIds } }) {
+        id
       }
     }
   }
@@ -291,11 +392,14 @@ export const EXPLORE_OPPORTUNITIES_PAGED = gql`
       }
       publicRatingAverage
       publicRatingCount
+      sponsors {
+        ${OPPORTUNITY_SPONSOR_FIELDS}
+      }
+      mentors {
+        ${OPPORTUNITY_MENTOR_FIELDS}
+      }
       mentor {
-        id
-        username
-        firstName
-        lastName
+        ${OPPORTUNITY_LEGACY_MENTOR_FIELDS}
       }
       classNetworks {
         id
@@ -345,38 +449,14 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       guidelinesAcknowledgedAt
       sponsorIsMentor
       mentorNotes
+      sponsors {
+        ${OPPORTUNITY_SPONSOR_FIELDS}
+      }
+      mentors {
+        ${OPPORTUNITY_MENTOR_DETAIL_FIELDS}
+      }
       mentor {
-        id
-        username
-        firstName
-        lastName
-        bio
-        bioInformal
-        email
-        tagline
-        occupation
-        # Linked organizations drive the card's chips; the free-text
-        # organization field below is only the fallback when there are none.
-        organizations {
-          id
-          name
-          logo {
-            url
-          }
-        }
-        organization
-        department
-        primaryDomain
-        timeCommitment
-        publicId
-        image {
-          keystoneImage {
-            url
-          }
-          image {
-            publicUrlTransformed
-          }
-        }
+        ${OPPORTUNITY_LEGACY_MENTOR_FIELDS}
       }
       organization {
         id
@@ -474,27 +554,6 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         favoriteOpportunities {
           id
         }
-        studentIn {
-          id
-          networks {
-            id
-            connectRounds(
-              where: {
-                status: { equals: "preferences_open" }
-                opportunities: { some: { id: { equals: $id } } }
-              }
-            ) {
-              id
-              title
-              openAt
-              closeAt
-              classNetwork {
-                id
-                title
-              }
-            }
-          }
-        }
       }
     }
   }
@@ -506,6 +565,98 @@ export const MY_MENTOR_MATCHES = gql`
       ... on Profile {
         id
         opportunitiesCreated(orderBy: { createdAt: desc }) {
+          id
+          title
+          shortDescription
+          status
+          studentCapacity
+          teamSize
+          coverImageUrl
+          coverImage {
+            url
+          }
+          matches(orderBy: { proposedAt: desc }) {
+            id
+            status
+            matchScore
+            activatedAt
+            completedAt
+            student {
+              id
+              username
+              firstName
+              lastName
+              email
+              image {
+                keystoneImage {
+                  url
+                }
+                image {
+                  publicUrlTransformed
+                }
+              }
+            }
+            ratings {
+              id
+              raterRole
+              rater {
+                id
+              }
+              mentorRating
+              feedback
+              tags
+              isPublic
+              createdAt
+            }
+          }
+        }
+        opportunitiesSponsored(orderBy: { createdAt: desc }) {
+          id
+          title
+          shortDescription
+          status
+          studentCapacity
+          teamSize
+          coverImageUrl
+          coverImage {
+            url
+          }
+          matches(orderBy: { proposedAt: desc }) {
+            id
+            status
+            matchScore
+            activatedAt
+            completedAt
+            student {
+              id
+              username
+              firstName
+              lastName
+              email
+              image {
+                keystoneImage {
+                  url
+                }
+                image {
+                  publicUrlTransformed
+                }
+              }
+            }
+            ratings {
+              id
+              raterRole
+              rater {
+                id
+              }
+              mentorRating
+              feedback
+              tags
+              isPublic
+              createdAt
+            }
+          }
+        }
+        opportunitiesMentoring(orderBy: { createdAt: desc }) {
           id
           title
           shortDescription
@@ -637,11 +788,15 @@ export const PENDING_OPPORTUNITIES_FOR_REVIEW = gql`
       updatedAt
       preSelectedAt
       acceptedAt
+      sponsorIsMentor
+      sponsors {
+        ${OPPORTUNITY_SPONSOR_FIELDS}
+      }
+      mentors {
+        ${OPPORTUNITY_MENTOR_FIELDS}
+      }
       mentor {
-        id
-        username
-        firstName
-        lastName
+        ${OPPORTUNITY_LEGACY_MENTOR_FIELDS}
       }
       organization {
         id
@@ -739,6 +894,21 @@ export const OPPORTUNITIES_FOR_CSV_EXPORT = gql`
       specificSkills
       issueRelevance
       specialConsiderations
+      sponsorIsMentor
+      sponsors {
+        id
+        email
+        firstName
+        lastName
+        username
+      }
+      mentors {
+        id
+        email
+        firstName
+        lastName
+        username
+      }
       mentor {
         id
         email

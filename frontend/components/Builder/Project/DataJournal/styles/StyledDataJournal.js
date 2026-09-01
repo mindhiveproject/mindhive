@@ -53,10 +53,8 @@ const barPlotDataFormatPanelStyles = css`
   }
   .barPlotDataFormat__title {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.35;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
     display: -webkit-box;
     -webkit-line-clamp: 4;
@@ -70,9 +68,8 @@ const barPlotDataFormatPanelStyles = css`
   }
   .barPlotDataFormat__desc {
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 1.45;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #5d5763;
     overflow-wrap: break-word;
   }
@@ -81,9 +78,8 @@ const barPlotDataFormatPanelStyles = css`
     align-items: flex-start;
     gap: 8px;
     flex-wrap: wrap;
-    font-family: Inter, sans-serif;
-    font-size: 13px;
-    line-height: 1.4;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     min-width: 0;
   }
   .barPlotDataFormat__slides img {
@@ -119,11 +115,9 @@ export const StyledSidebar = styled.div`
   flex-direction: column;
   grid-gap: 10px;
   margin: 10px;
-  font-family: "Inter";
   font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 17px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   border-radius: 16px;
   .navigationPanelHeader {
     display: flex;
@@ -196,11 +190,8 @@ export const StyledSidebar = styled.div`
       outline-offset: 2px;
       border-radius: 4px;
     }
-    .title { 
-      font-family: Inter, sans-serif;
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 24px;
+    .title {
+      font: var(--MH-Type-Label-Large);
       letter-spacing: 0;
       color: #888888;
       display: -webkit-box;
@@ -214,10 +205,7 @@ export const StyledSidebar = styled.div`
       word-break: break-word;
     }
     .selectedTitle {
-      font-family: Inter, sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      line-height: 24px;
+      font: var(--MH-Type-Label-Large);
       letter-spacing: 0;
       color: inherit;
       display: -webkit-box;
@@ -259,11 +247,8 @@ export const StyledSidebar = styled.div`
     grid-gap: 10px;
     margin: 10px 0px 10px 17px;
 
-    font-family: Inter;
-    font-size: 14px;
-    leading-trim: NONE;
-    line-height: 100%;
-    letter-spacing: 0%;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
 
     .titleLine {
       display: grid;
@@ -276,14 +261,12 @@ export const StyledSidebar = styled.div`
       display: grid;
       cursor: pointer;
       font-weight: 400;
-      font-style: Regular;
     }
     .selectedWorkspace {
       display: grid;
       color: #5d5763;
       cursor: pointer;
       font-weight: 700;
-      font-style: Bold;
 
       .titleHeader {
         display: flex;
@@ -370,13 +353,8 @@ export const StyledSidebar = styled.div`
     grid-gap: 10px;
     margin: 15px 0px 10px 17px;
 
-    font-family: Inter;
-    font-weight: 400;
-    font-style: Regular;
-    font-size: 14px;
-    leading-trim: NONE;
-    line-height: 100%;
-    letter-spacing: 0%;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
   }
   /* Change the default styles of the Dropdown Menu */
   .menu {
@@ -390,9 +368,9 @@ export const StyledSidebar = styled.div`
     grid-gap: 12px;
     align-items: center;
     color: #000;
-    font-size: 14px;
     font-style: normal;
-    font-weight: 400;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
   }
   /* The button in the side menu */
@@ -474,8 +452,8 @@ export const StyledTopNavigation = styled.div`
   }
   .canvaExportMessage {
     margin: 0;
-    font-size: 12px;
-    line-height: 16px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: right;
   }
   .canvaExportMessageError {
@@ -552,9 +530,9 @@ export const StyledDataComponent = styled.div`
     max-width: 250px;
     align-items: center;
     color: #000;
-    font-size: 14px;
     font-style: normal;
-    font-weight: 400;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
   }
   .menuItem {
@@ -563,9 +541,9 @@ export const StyledDataComponent = styled.div`
     grid-gap: 12px;
     align-items: center;
     color: #000;
-    font-size: 14px;
     font-style: normal;
-    font-weight: 400;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
   }
   .menuButton {
@@ -583,9 +561,9 @@ export const StyledDataComponent = styled.div`
     padding: 20px;
     grid-gap: 12px;
     align-items: start;
-    font-size: 14px;
     font-style: normal;
-    font-weight: 400;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
     .img {
       width: 100%;
@@ -597,12 +575,14 @@ export const StyledDataComponent = styled.div`
       width: 350px;
     }
     h3 {
-      font-size: 18px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #007c70;
       margin: 0;
     }
     p {
-      font-size: 14px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       width: auto;
       margin: 0 4;
       word-break: break-word;
@@ -681,10 +661,8 @@ export const StyledComponentEditor = styled.div`
       background-color: #F6F9F8;
       border-radius: 12px;
       padding: 0.5rem 1rem;
-      font-family: Inter, sans-serif;
-      font-size: 15px;
-      line-height: 150%;
-      font-weight: 400;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       font-style: italic;
     }
   }
@@ -735,8 +713,8 @@ export const StyledComponentEditor = styled.div`
     padding: 0.75rem 1rem;
     border: 1px solid #d1d5db; /* gray-300 */
     border-radius: 0.375rem;
-    font-size: 1rem;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     resize: vertical; /* or resize: none / both / horizontal */
     min-height: 80px;
     background-color: white;
@@ -795,7 +773,6 @@ export const StyledComponentEditor = styled.div`
     .editor-component-name-input {
 
       input {
-        font-family: Lato;
         border: 1px solid #cccccc;
         border-radius: 10px;
         width: 100%;
@@ -853,17 +830,15 @@ export const StyledDatasetsRoot = styled.div`
   .datasets-list-intro {
     margin: 0 0 16px;
     max-width: 720px;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 1.45;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #4a5568;
   }
 
   .datasets-list-empty {
     margin: 0 0 16px;
-    font-family: Inter, sans-serif;
-    font-size: 14px;
-    line-height: 1.45;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #5d5763;
   }
 
@@ -881,15 +856,9 @@ export const StyledComponentPanel = styled.div`
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
-  font-family: Inter, sans-serif;
   .subtitle {
-    font-family: Inter, sans-serif;
-    font-weight: 700;
-    font-style: Bold;
-    font-size: 14px;
-    leading-trim: NONE;
-    line-height: 20px;
-    letter-spacing: 0px;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     border-bottom: 1px solid lightgrey;
     padding-bottom: 5px;
   }
@@ -925,11 +894,8 @@ export const StyledComponentPanel = styled.div`
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
     background: #fff;
 
-    font-family: Inter, sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    line-height: 18px;
-    letter-spacing: 0px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     text-align: center;
 
     &:hover {
@@ -968,10 +934,8 @@ export const StyledComponentPanel = styled.div`
   }
 
   .cardTitle {
-    font-family: Inter, sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    line-height: 18px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #111827;
     max-width: 100%;
     text-align: center;
@@ -1370,19 +1334,15 @@ export const StyledDataWorkspace = styled.div`
           grid-gap: 0px;
           .title {
             color: #000;
-            font-family: Inter;
-            font-size: 14px;
             font-style: normal;
-            font-weight: 500;
-            line-height: 150%;
+            font: var(--MH-Type-Title-Base);
+            letter-spacing: 0;
           }
           .description {
             color: var(--gray-500666666, #666);
-            font-family: Inter;
-            font-size: 12px;
             font-style: normal;
-            font-weight: 400;
-            line-height: 150%;
+            font: var(--MH-Type-Body-Base);
+            letter-spacing: 0;
           }
         }
       }
@@ -1423,8 +1383,8 @@ export const StyledDataWorkspace = styled.div`
         display: grid;
         grid-gap: 10px;
         grid-template-columns: auto 1fr;
-        font-weight: bold;
-        font-size: 18px;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         margin: 10px 0px 10px 0px;
       }
 
@@ -1444,9 +1404,8 @@ export const StyledDataWorkspace = styled.div`
       max-width: 100%;
 
       .statTestDataFormatSummary {
-        font-family: Inter, sans-serif;
-        font-size: 14px;
-        line-height: 1.45;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #000000;
         min-width: 0;
         max-width: 100%;
@@ -1487,10 +1446,8 @@ export const StyledDataWorkspace = styled.div`
       background: #fff;
       // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
       color: #171717;
-      font-family: Inter, sans-serif;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.4;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       .graphEditorFieldRow__label {
         background: transparent;
         color: #0D3944;
@@ -1533,10 +1490,8 @@ export const StyledDataWorkspace = styled.div`
       max-width: 100%;
       background: #fff;
       color: #171717;
-      font-family: Inter;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.4;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       .title {
         color: #0D3944;
         font-weight: 600;
@@ -1616,10 +1571,8 @@ export const StyledDataWorkspace = styled.div`
         }
       } */
       .item {
-        font-family: Inter;
-        font-weight: 600;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Title-Small);
+        letter-spacing: 0;
         padding: 10px 20px;
         cursor: pointer;
         border-radius: 8px;
@@ -1641,16 +1594,13 @@ export const StyledDataWorkspace = styled.div`
         display: grid;
         grid-gap: 10px;
         h3 {
-          font-family: Inter;
-          font-weight: 700;
-          font-size: 16px;
-          line-height: 24px;
+          font: var(--MH-Type-Title-Base);
+          letter-spacing: 0;
           color: #333;
         }
         p {
-          font-family: Inter;
-          font-size: 14px;
-          line-height: 150%;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
           color: #666;
         }
       }
@@ -1678,18 +1628,15 @@ export const StyledDataWorkspace = styled.div`
       display: grid;
       grid-gap: 10px;
       grid-template-columns: auto 1fr;
-      font-size: 18px;
-      font-weight: bold;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
       margin: 0px 0px 10px 0px;
     }
     .subheader {
       background: transparent;
       padding: 2px 2px 0;
       margin-top: 4px;
-      font-family: Inter, sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      line-height: 1.4;
+      font: var(--MH-Type-Label-Small);
       color: #6a6a6a;
       text-transform: uppercase;
       letter-spacing: 0.02em;
@@ -1717,20 +1664,18 @@ export const StyledDataWorkspace = styled.div`
     label {
       display: block;
       font-style: normal;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
     }
     input,
     textarea,
     select {
-      font-family: Inter, sans-serif;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       min-height: 44px;
       border: 1px solid #cccccc;
       border-radius: 10px;
       width: 100%;
-      font-size: 14px;
-      line-height: 20px;
       padding: 10px 12px;
       &:focus {
         outline: 0;
@@ -1755,8 +1700,8 @@ export const StyledDataWorkspace = styled.div`
     .graphColorHexRowLabel {
       flex: 1;
       min-width: 120px;
-      font-size: 14px;
-      line-height: 1.35;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       color: #3f3f46;
     }
     .graphColorHexRowControls {
@@ -1773,8 +1718,8 @@ export const StyledDataWorkspace = styled.div`
       cursor: pointer;
     }
     .graphColorHexRowReset {
-      font-family: Inter, sans-serif;
-      font-size: 13px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       padding: 8px 12px;
       border-radius: 8px;
       border: 1px solid #cccccc;
@@ -1793,13 +1738,13 @@ export const StyledDataWorkspace = styled.div`
     .graphColorHint {
       margin: 0.25rem 0 0;
       color: #666666;
-      font-size: 14px;
-      line-height: 150%;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
     .graphColorResetAll {
       margin-top: 4px;
-      font-family: Inter, sans-serif;
-      font-size: 13px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       padding: 8px 12px;
       border-radius: 8px;
       border: 1px solid #cccccc;
@@ -1855,9 +1800,8 @@ export const StyledDataWorkspace = styled.div`
     input.input-box,
     input.input-box-number,
     textarea.input-box {
-      font-family: Inter, sans-serif;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
     }
 
     .header {
@@ -1870,11 +1814,9 @@ export const StyledDataWorkspace = styled.div`
         color: var(--MH-Theme-Tertiary-Dark, #0d3944);
 
         /* MH-Theme/title/base */
-        font-family: Inter;
-        font-size: 16px;
+        font: var(--MH-Type-Title-Base);
         font-style: normal;
-        font-weight: 900;
-        line-height: 24px; /* 150% */
+        letter-spacing: 0;
       }
     }
 
@@ -1893,11 +1835,9 @@ export const StyledDataWorkspace = styled.div`
         color: var(--MH-Theme-Neutrals-Black, #171717);
 
         /* MH-Theme/body/small */
-        font-family: "Inter";
-        font-size: 12px;
+        font: var(--MH-Type-Body-Base);
         font-style: normal;
-        font-weight: 400;
-        line-height: 16px; /* 133.333% */
+        letter-spacing: 0;
         display: -webkit-box;
         -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
@@ -1962,11 +1902,9 @@ export const StyledDataWorkspace = styled.div`
           color: var(--MH-Theme-Neutrals-Black, #171717);
 
           /* MH-Theme/title/base */
-          font-family: Inter;
-          font-size: 16px;
+          font: var(--MH-Type-Title-Base);
           font-style: normal;
-          font-weight: 700;
-          line-height: 24px; /* 150% */
+          letter-spacing: 0;
         }
       }
     }
@@ -2024,11 +1962,9 @@ export const StyledDataWorkspace = styled.div`
         color: var(--MH-Theme-Neutrals-Black, #171717);
 
         /* MH-Theme/body/small */
-        font-family: "Inter";
-        font-size: 12px;
+        font: var(--MH-Type-Body-Base);
         font-style: normal;
-        font-weight: 400;
-        line-height: 16px; /* 133.333% */
+        letter-spacing: 0;
       }
 
       .a-blank {
@@ -2071,11 +2007,9 @@ export const StyledDataWorkspace = styled.div`
         color: var(--MH-Theme-Neutrals-Black, #171717);
 
         /* MH-Theme/body/small */
-        font-family: "Inter";
-        font-size: 12px;
+        font: var(--MH-Type-Body-Base);
         font-style: normal;
-        font-weight: 400;
-        line-height: 16px; /* 133.333% */
+        letter-spacing: 0;
       }
 
       .a-blank {
@@ -2141,10 +2075,8 @@ export const StyledDatasetCard = styled.div`
   }
 
   .dataset-title {
-    font-family: Inter, Inter, sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #1f2937;
     margin: 0;
     flex: 1;
@@ -2177,9 +2109,9 @@ export const StyledDatasetCard = styled.div`
   .dataset-info {
     display: flex;
     gap: 8px;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #6b7280;
-    font-family: Inter, sans-serif;
   }
 
   .author {
@@ -2202,9 +2134,8 @@ export const StyledDatasetView = styled.div`
 
     h2 {
       margin: 0;
-      font-family: Inter;
-      font-weight: 700;
-      font-size: 24px;
+      font: var(--MH-Type-Heading-Small);
+      letter-spacing: 0;
       color: #333;
     }
 
@@ -2221,8 +2152,8 @@ export const StyledDatasetView = styled.div`
       padding: 8px 16px;
       border-radius: 6px;
       cursor: pointer;
-      font-family: Inter;
-      font-size: 14px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
 
       &:hover {
         background: #2a5a6f;
@@ -2249,9 +2180,8 @@ export const StyledDatasetView = styled.div`
       border: none;
       padding: 12px 24px;
       cursor: pointer;
-      font-family: Inter;
-      font-weight: 600;
-      font-size: 14px;
+      font: var(--MH-Type-Title-Small);
+      letter-spacing: 0;
       color: #666;
       border-bottom: 2px solid transparent;
       transition: all 0.2s ease;
@@ -2275,9 +2205,8 @@ export const StyledDatasetView = styled.div`
   .data-container,
   .settings-container {
     h4 {
-      font-family: Inter;
-      font-weight: 600;
-      font-size: 18px;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
       margin-bottom: 15px;
       color: #333;
     }
@@ -2298,8 +2227,8 @@ export const StyledDatasetView = styled.div`
         padding: 12px;
         text-align: left;
         border-bottom: 1px solid #e6e6e6;
-        font-family: Inter;
-        font-size: 14px;
+        font: var(--MH-Type-Label-Base);
+        letter-spacing: 0;
       }
 
       th {
@@ -2322,7 +2251,8 @@ export const StyledDatasetView = styled.div`
 
   .row-count {
     margin-top: 10px;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666;
     font-style: italic;
   }
@@ -2332,7 +2262,9 @@ export const StyledDatasetView = styled.div`
       background: #f8f9f8;
       padding: 16px;
       border-radius: 8px;
+      /* monospace exception: raw JSON dump, keep the browser's default <pre> monospace family */
       font-size: 12px;
+      line-height: 16px;
       overflow-x: auto;
       white-space: pre-wrap;
       word-wrap: break-word;
@@ -2343,16 +2275,15 @@ export const StyledDatasetView = styled.div`
     margin-top: 20px;
     padding-top: 15px;
     border-top: 1px solid #e6e6e6;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666;
-    font-family: Inter;
   }
 `;
 
 export const StyledDataSourceLabels = styled.span`
-  font-family: Inter;
-  font-weight: 500;
-  font-size: 12px;
+  font: var(--MH-Type-Label-Small);
+  letter-spacing: 0;
   color: #336f8a;
   margin-left: 8px;
 `;
@@ -2362,14 +2293,12 @@ export const StyledTableEditor = styled.div`
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  font-family: Inter, sans-serif;
 
   .tableEditorTitle {
     margin-top: 0;
     margin-bottom: 0.25rem;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 150%;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #000000;
   }
 
@@ -2377,9 +2306,8 @@ export const StyledTableEditor = styled.div`
   .tableEditorEmptyState {
     margin-top: 0;
     margin-bottom: 0.75rem;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 150%;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666666;
   }
 
@@ -2387,10 +2315,8 @@ export const StyledTableEditor = styled.div`
   .tableEditorNumericInput {
     width: 100%;
     max-width: 100%;
-    font-family: Inter, sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 150%;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #000000;
     border: 1px solid #cccccc;
     border-radius: 10px;
@@ -2454,9 +2380,8 @@ export const StyledTableEditor = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 150%;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #000000;
   }
 
@@ -2482,9 +2407,8 @@ export const StyledTableEditor = styled.div`
 
   .tableEditorFieldLabel {
     margin-bottom: 0.25rem;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 150%;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #6a6a6a;
   }
 `;

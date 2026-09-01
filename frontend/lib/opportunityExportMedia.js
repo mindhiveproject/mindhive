@@ -45,6 +45,20 @@ function stripFileExtension(name) {
   return String(name || "").replace(/\.[a-z0-9]{2,5}$/i, "");
 }
 
+function fallbackExtFromAsset(asset, fallback = "bin") {
+  const fromFilename = extensionFromUrlOrName(
+    trimMediaString(asset?.exportDocument?.filename),
+    "",
+  );
+  if (fromFilename) return fromFilename;
+  const fromFileName = extensionFromUrlOrName(
+    trimMediaString(asset?.fileName),
+    "",
+  );
+  if (fromFileName) return fromFileName;
+  return fallback;
+}
+
 export function slugifyForFilename(text) {
   const slug = String(text || "")
     .trim()
@@ -320,10 +334,10 @@ export function getFollowUpAssetDownloads(opportunity, assetById) {
       });
     };
 
-    add("followUpPdf", pdfUrl, "pdf");
+    add("followUpPdf", pdfUrl, fallbackExtFromAsset(asset, "pdf"));
     add("followUpImage", imageUrl, "jpg");
     if (!pdfUrl && !imageUrl) {
-      add("followUpFile", fallbackUrl, "bin");
+      add("followUpFile", fallbackUrl, fallbackExtFromAsset(asset, "bin"));
     }
   }
 
@@ -345,23 +359,33 @@ export function getOpportunityMediaCsvFields(opportunity, assetById) {
   };
 }
 
-export function getOpportunityMediaDownloads(opportunity, assetById) {
+export function getOpportunityMediaDownloads(
+  opportunity,
+  assetById,
+  mediaKinds = { video: true, illustration: true, followUp: true },
+) {
   const downloads = [];
-  const videoZipPath = buildIntroVideoZipPath(opportunity);
-  const videoUrl = trimMediaString(opportunity?.videoFile?.url);
-  if (videoZipPath && videoUrl) {
-    downloads.push({ kind: "video", url: videoUrl, zipPath: videoZipPath });
+  if (mediaKinds.video !== false) {
+    const videoZipPath = buildIntroVideoZipPath(opportunity);
+    const videoUrl = trimMediaString(opportunity?.videoFile?.url);
+    if (videoZipPath && videoUrl) {
+      downloads.push({ kind: "video", url: videoUrl, zipPath: videoZipPath });
+    }
   }
-  const coverZipPath = buildCoverImageZipPath(opportunity);
-  const coverUrl = getOpportunityCoverImageUrl(opportunity);
-  if (coverZipPath && coverUrl) {
-    downloads.push({
-      kind: "illustration",
-      url: coverUrl,
-      zipPath: coverZipPath,
-    });
+  if (mediaKinds.illustration !== false) {
+    const coverZipPath = buildCoverImageZipPath(opportunity);
+    const coverUrl = getOpportunityCoverImageUrl(opportunity);
+    if (coverZipPath && coverUrl) {
+      downloads.push({
+        kind: "illustration",
+        url: coverUrl,
+        zipPath: coverZipPath,
+      });
+    }
   }
-  downloads.push(...getFollowUpAssetDownloads(opportunity, assetById));
+  if (mediaKinds.followUp !== false) {
+    downloads.push(...getFollowUpAssetDownloads(opportunity, assetById));
+  }
   return downloads;
 }
 
@@ -369,6 +393,7 @@ export function collectOpportunityMediaDownloads(
   listOpportunities,
   detailById,
   assetById,
+  mediaKinds = { video: true, illustration: true, followUp: true },
 ) {
   const downloads = [];
   for (const listOpportunity of listOpportunities || []) {
@@ -376,7 +401,9 @@ export function collectOpportunityMediaDownloads(
       listOpportunity,
       detailById?.get(listOpportunity.id),
     );
-    downloads.push(...getOpportunityMediaDownloads(media, assetById));
+    downloads.push(
+      ...getOpportunityMediaDownloads(media, assetById, mediaKinds),
+    );
   }
   return downloads;
 }

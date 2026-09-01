@@ -13,7 +13,6 @@ export default function ConsentSkippedMessage() {
 }
 
 const StyledContainer = styled.div`
-  font-family: Nunito, sans-serif;
   max-width: 600px;
   margin: 50px auto;
   padding: 20px;
@@ -23,16 +22,16 @@ const StyledContainer = styled.div`
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
   h1 {
-    font-size: 24px;
-    font-weight: 700;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     color: #333333;
     margin-bottom: 16px;
   }
 
   p {
-    font-size: 16px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666666;
     margin-bottom: 16px;
-    line-height: 1.5;
   }
 `;

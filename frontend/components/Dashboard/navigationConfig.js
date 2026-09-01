@@ -4,7 +4,6 @@ import {
   ConnectIcon,
   BuilderIcon,
   FeedbackIcon,
-  JournalIcon,
   SchoolIcon,
   ConsentFormIcon,
   LessonsIcon,
@@ -80,12 +79,6 @@ export const NAV_SECTIONS = [
         fallback: "Connect",
         Icon: ConnectIcon,
       },
-    ],
-  },
-  {
-    id: "projects",
-    label: { key: "projects", fallback: "Projects" },
-    items: [
       {
         id: "develop",
         href: "/dashboard/develop",
@@ -104,15 +97,6 @@ export const NAV_SECTIONS = [
         Icon: FeedbackIcon,
         canView: (p) => p.canDevelop,
       },
-      {
-        id: "journals",
-        href: "/dashboard/journals",
-        area: "journals",
-        labelKey: "journal",
-        fallback: "Journal",
-        Icon: JournalIcon,
-        canView: (p) => p.isAdmin,
-      },
     ],
   },
   // Teacher and student workflows are separate sections so dual-role users
@@ -120,7 +104,7 @@ export const NAV_SECTIONS = [
   // section whose label flips based on permissions.
   {
     id: "teacher",
-    label: { key: "teacher", fallback: "Teacher" },
+    label: { key: "teacherDashboard", fallback: "Teacher dashboard" },
     items: [
       {
         id: "myclasses",
@@ -136,7 +120,7 @@ export const NAV_SECTIONS = [
         href: "/dashboard/irb",
         area: "irb",
         labelKey: "consentProtocol",
-        fallback: "Consent Protocol",
+        fallback: "Consent Protocols",
         Icon: ConsentFormIcon,
         // Prefer the teacher section when the user also manages classes or
         // sees lessons, so dual-role users do not get a duplicate link.
@@ -173,7 +157,7 @@ export const NAV_SECTIONS = [
   },
   {
     id: "student",
-    label: { key: "student", fallback: "Student" },
+    label: { key: "studentDashboard", fallback: "Student dashboard" },
     items: [
       {
         id: "classes",
@@ -189,7 +173,7 @@ export const NAV_SECTIONS = [
         href: "/dashboard/irb",
         area: "irb",
         labelKey: "consentProtocol",
-        fallback: "Consent Protocol",
+        fallback: "Consent Protocols",
         Icon: ConsentFormIcon,
         canView: (p) => p.isStudent,
       },
@@ -197,7 +181,7 @@ export const NAV_SECTIONS = [
   },
   {
     id: "research",
-    label: { key: "researcher", fallback: "Researcher" },
+    label: { key: "researcherDashboard", fallback: "Researcher dashboard" },
     items: [
       {
         id: "research",
@@ -214,7 +198,7 @@ export const NAV_SECTIONS = [
     // Not drawn in Figma, but sponsor accounts still need somewhere to go.
     // Route is /dashboard/sponsor-connect to avoid colliding with /dashboard/connect.
     id: "sponsors",
-    label: { key: "sponsors", fallback: "Sponsors" },
+    label: { key: "sponsorDashboard", fallback: "Sponsor dashboard" },
     items: [
       {
         id: "sponsor-connect",
@@ -229,7 +213,7 @@ export const NAV_SECTIONS = [
   },
   {
     id: "admin",
-    label: { key: "admin", fallback: "Admin" },
+    label: { key: "adminDashboard", fallback: "Admin dashboard" },
     items: [
       {
         id: "management",

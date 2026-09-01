@@ -22,16 +22,15 @@ const SectionContainer = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: Lato;
-  font-size: 24px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large);
+  letter-spacing: 0;
   color: #1a1a1a;
   margin-bottom: 16px;
 `;
 
 const SectionDescription = styled.p`
-  font-family: Lato;
-  font-size: 16px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #666666;
   margin-bottom: 16px;
 `;
@@ -174,12 +173,13 @@ export default function AddResource({ myclass, user, query }) {
         const resource = params?.data;
         const id = resource?.id;
         const isLinked = alreadyLinkedIds.has(id);
-        const buttonStyle = { height: "32px", padding: "0px 12px", fontSize: "12px" };
+        const buttonStyle = { height: "32px", padding: "0px 12px" };
         if (isLinked) {
           return (
             <Button
               variant="outline"
               type="button"
+              className="MH-Type-Label-Small"
               style={buttonStyle}
               disabled={linkUnlinkLoading}
               onClick={() => handleUnlinkFromClass(id)}
@@ -192,6 +192,7 @@ export default function AddResource({ myclass, user, query }) {
           <Button
             variant="filled"
             type="button"
+            className="MH-Type-Label-Small"
             style={buttonStyle}
             disabled={linkUnlinkLoading}
             onClick={() => handleLinkToClass(id)}

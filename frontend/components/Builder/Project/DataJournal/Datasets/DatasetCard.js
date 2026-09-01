@@ -293,7 +293,6 @@ export default function DatasetCard({
                       style={{ opacity: 0.8 }}
                     />
                   }
-                  shape="square"
                   style={{ color: "#5D5763" }}
                 />
               </span>
@@ -311,7 +310,6 @@ export default function DatasetCard({
                       height={20}
                     />
                   }
-                  shape="square"
                   style={{ opacity: 0.8 }}
                 />
               </span>

@@ -242,23 +242,22 @@ export default function DatasetForm({
         borderRadius: "10px",
         boxShadow:
           "0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.05)",
-        fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       <h3
+        className="MH-Type-Title-Large"
         style={{
           margin: 0,
-          fontSize: "1.4rem",
           color: "#1a202c",
         }}
       >
         {t("dataJournal.datasetForm.title", {}, { default: "New dataset" })}
       </h3>
       <p
+        className="MH-Type-Body-Base"
         style={{
           marginTop: "6px",
           marginBottom: "18px",
-          fontSize: "0.95rem",
           color: "#4a5568",
         }}
       >
@@ -270,17 +269,17 @@ export default function DatasetForm({
       {/* Dataset name */}
       <div style={{ marginBottom: "20px" }}>
         <label
+          className="MH-Type-Label-Base"
           style={{
             display: "block",
             marginBottom: "6px",
-            fontSize: "0.9rem",
-            fontWeight: 600,
             color: "#2d3748",
           }}
         >
           {t("dataJournal.datasetForm.nameLabel", {}, { default: "Dataset name" })}
         </label>
         <input
+          className="MH-Type-Body-Base"
           type="text"
           value={datasetName}
           onChange={(e) => setDatasetName(e.target.value)}
@@ -292,15 +291,14 @@ export default function DatasetForm({
             padding: "9px 11px",
             borderRadius: "6px",
             border: "1px solid #cbd5e0",
-            fontSize: "0.95rem",
             outline: "none",
           }}
         />
         <p
+          className="MH-Type-Body-Base"
           style={{
             marginTop: "6px",
             marginBottom: 0,
-            fontSize: "0.8rem",
             color: "#a0aec0",
           }}
         >
@@ -313,8 +311,8 @@ export default function DatasetForm({
       {/* Status / errors */}
       {(loading || studyLoading) && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85rem",
             color: "#718096",
             marginBottom: "10px",
           }}
@@ -326,8 +324,8 @@ export default function DatasetForm({
       )}
       {error && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85rem",
             color: "#c53030",
             marginBottom: "10px",
           }}
@@ -340,8 +338,8 @@ export default function DatasetForm({
       )}
       {studyError && (
         <p
+          className="MH-Type-Body-Base"
           style={{
-            fontSize: "0.85rem",
             color: "#c53030",
             marginBottom: "10px",
           }}
@@ -363,10 +361,9 @@ export default function DatasetForm({
         }}
       >
         <legend
+          className="MH-Type-Label-Base"
           style={{
             padding: "0 6px",
-            fontSize: "0.9rem",
-            fontWeight: 600,
             color: "#2d3748",
           }}
         >
@@ -397,15 +394,16 @@ export default function DatasetForm({
           />
           <div>
             <div
-              style={{ fontWeight: 500, color: "#2d3748", fontSize: "0.95rem" }}
+              className="MH-Type-Label-Large"
+              style={{ color: "#2d3748" }}
             >
               {t("dataJournal.datasetForm.study.optionTitle", {}, {
                 default: "Use data from the current study",
               })}
             </div>
             <div
+              className="MH-Type-Body-Base"
               style={{
-                fontSize: "0.8rem",
                 color: hasStudy ? "#4a5568" : "#c53030",
                 marginTop: "2px",
               }}
@@ -444,15 +442,16 @@ export default function DatasetForm({
           />
           <div>
             <div
-              style={{ fontWeight: 500, color: "#2d3748", fontSize: "0.95rem" }}
+              className="MH-Type-Label-Large"
+              style={{ color: "#2d3748" }}
             >
               {t("dataJournal.datasetForm.upload.optionTitle", {}, {
                 default: "Upload a CSV or JSON file",
               })}
             </div>
             <div
+              className="MH-Type-Body-Base"
               style={{
-                fontSize: "0.8rem",
                 color: "#4a5568",
                 marginTop: "2px",
               }}
@@ -465,15 +464,15 @@ export default function DatasetForm({
             {dataOrigin === "UPLOADED" && (
               <div style={{ marginTop: "8px" }}>
                 <input
+                  className="MH-Type-Body-Base"
                   type="file"
                   accept=".csv,.json"
                   onChange={handleFileChange}
-                  style={{ fontSize: "0.85rem" }}
                 />
                 <div
+                  className="MH-Type-Body-Base"
                   style={{
                     marginTop: "4px",
-                    fontSize: "0.75rem",
                     color: "#a0aec0",
                   }}
                 >
@@ -506,15 +505,16 @@ export default function DatasetForm({
           />
           <div>
             <div
-              style={{ fontWeight: 500, color: "#2d3748", fontSize: "0.95rem" }}
+              className="MH-Type-Label-Large"
+              style={{ color: "#2d3748" }}
             >
               {t("dataJournal.datasetForm.template.optionTitle", {}, {
                 default: "Copy from an existing dataset",
               })}
             </div>
             <div
+              className="MH-Type-Body-Base"
               style={{
-                fontSize: "0.8rem",
                 color: "#4a5568",
                 marginTop: "2px",
               }}
@@ -529,12 +529,12 @@ export default function DatasetForm({
 
       {(sharingIds.length > 0 || selectedVizPartId) && (
         <div
+          className="MH-Type-Body-Base"
           style={{
             marginTop: 14,
             padding: "10px 12px",
             borderRadius: 8,
             border: "1px solid #e2e8f0",
-            fontSize: "0.85rem",
             color: "#4a5568",
           }}
         >

@@ -555,23 +555,16 @@ export default function ProposalCard({
     }, [assignmentProp?.id]);
 
     const h1 = {
-      fontSize: "18px",
-      fontWeight: "600",
       marginBottom: "16px",
     };
     const instructionBox = {
-      lineHeight: "1.5",
       // background: "#F3F3F3",
       borderLeft: "4px solid #274E5B",
       borderRadius: "4px",
       padding: "16px",
-      fontSize: "16px",
-      fontWeight: "400",
       marginBottom: "16px",
     };
     const styleField = {
-      fontSize: "14px",
-      lineHeight: "1.5",
       color: "#274E5B",
       border: "1px solid #e0e0e0",
       borderRadius: "8px",
@@ -773,12 +766,10 @@ export default function ProposalCard({
           style={{ borderRadius: "12px", overflow: "hidden" }}
         >
           <Modal.Header
+            className="MH-Type-Title-Large"
             style={{
               background: "#f9fafb",
               borderBottom: "1px solid #e0e0e0",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: 600,
-              letterSpacing: "0.15px",
             }}
           >
             {t("assignment.loading")}
@@ -807,12 +798,10 @@ export default function ProposalCard({
           style={{ borderRadius: "12px", overflow: "hidden" }}
         >
           <Modal.Header
+            className="MH-Type-Title-Large"
             style={{
               background: "#f9fafb",
               borderBottom: "1px solid #e0e0e0",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: 600,
-              letterSpacing: "0.15px",
             }}
           >
             {t("assignment.error", "Error Loading Assignment")}
@@ -856,12 +845,10 @@ export default function ProposalCard({
         style={{ borderRadius: "12px", overflow: "hidden" }}
       >
         <Modal.Header
+          className="MH-Type-Title-Large"
           style={{
             background: "#f9fafb",
             borderBottom: "1px solid #e0e0e0",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 600,
-            letterSpacing: "0.15px",
           }}
         >
           {t("board.expendedCard.assignment", "Assignment")}
@@ -871,7 +858,7 @@ export default function ProposalCard({
           style={{ background: "#ffffff", padding: "24px" }}
         >
           <div>
-            <div style={h1}>{title}</div>
+            <div className="MH-Type-Title-Large" style={h1}>{title}</div>
             <ReadOnlyTipTap>
               <div className="ProseMirror">
                 {ReactHtmlParser(content || "")}
@@ -921,10 +908,9 @@ export default function ProposalCard({
                     >
                       <div>
                         <div
+                          className="MH-Type-Title-Small"
                           style={{
-                            fontWeight: "600",
                             marginBottom: "4px",
-                            fontSize: "14px",
                           }}
                         >
                           {homework.title}
@@ -943,9 +929,8 @@ export default function ProposalCard({
                           )}
                         </div>
                         <div
+                          className="MH-Type-Label-Base"
                           style={{
-                            fontSize: "14px",
-                            fontWeight: "normal",
                             marginTop: "4px",
                             display: "inline-block",
                             padding: "4px 8px",
@@ -979,6 +964,7 @@ export default function ProposalCard({
                       </div>
                       <Button
                         size="small"
+                        className="MH-Type-Label-Base"
                         onClick={() => {
                           const isActive = activeHomework?.id === homework?.id;
                           if (isActive) {
@@ -994,7 +980,6 @@ export default function ProposalCard({
                         }}
                         style={{
                           borderRadius: "100px",
-                          fontSize: "12px",
                           ...(activeHomework?.id === homework?.id
                             ? {
                                 background: "#ffffff",
@@ -1047,7 +1032,7 @@ export default function ProposalCard({
                           marginBottom: "16px",
                         }}
                       >
-                        <div style={h1}>
+                        <div className="MH-Type-Title-Large" style={h1}>
                           {t(
                             "homework.editEntry",
                             "Edit your entry",
@@ -1119,10 +1104,10 @@ export default function ProposalCard({
                             onClick={handleUpdateHomeworkSubmit}
                             loading={updateLoading}
                             disabled={updateLoading}
+                            className="MH-Type-Label-Base"
                             style={{
                               borderRadius: "100px",
                               background: "#def8fb",
-                              fontSize: "12px",
                               color: "#3d85b0",
                               border: "1px solid #3d85b0",
                               marginRight: "10px",
@@ -1140,7 +1125,8 @@ export default function ProposalCard({
                             style={{
                               borderRadius: "100px",
                               background: "#f7f9fa",
-                              fontSize: "12px",
+                              font: 'var(--MH-Type-Label-Base)',
+                              letterSpacing: 0,
                               color: "#B9261A",
                               border: "1px solid #B9261A",
                               marginRight: "10px",
@@ -1161,6 +1147,7 @@ export default function ProposalCard({
                             }}
                             loading={updateLoading}
                             disabled={updateLoading}
+                            className="MH-Type-Label-Base"
                             style={{
                               borderRadius: "100px",
                               background:
@@ -1169,7 +1156,6 @@ export default function ProposalCard({
                                 "Needs feedback"
                                   ? "#D8D3E7"
                                   : "#ffffff",
-                              fontSize: "12px",
                               color: "#434343",
                               border: `1.5px solid ${
                                 (inputs?.settings?.status ||
@@ -1201,10 +1187,10 @@ export default function ProposalCard({
                                 onClick={() => handleStatusUpdate("Feedback given")}
                                 loading={updateLoading}
                                 disabled={updateLoading}
+                                className="MH-Type-Label-Base"
                                 style={{
                                   borderRadius: "100px",
                                   background: "white",
-                                  fontSize: "12px",
                                   color: "#0D3944",
                                   border: "1.5px solid #0D3944",
                                   marginRight: "10px",
@@ -1253,10 +1239,10 @@ export default function ProposalCard({
                     });
                     homeworkContent.current = assignment?.placeholder || "";
                   }}
+                  className="MH-Type-Label-Base"
                   style={{
                     borderRadius: "100px",
                     background: "#FDF2D0",
-                    fontSize: "14px",
                     color: "#5D5763",
                     border: "2px solid #5D5763",
                     marginRight: "10px",
@@ -1277,7 +1263,7 @@ export default function ProposalCard({
                     boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
                   }}
                 >
-                  <div style={h1}>
+                  <div className="MH-Type-Title-Large" style={h1}>
                     {t("homework.createNewEntry", "Create entry")}
                   </div>
 
@@ -1339,10 +1325,10 @@ export default function ProposalCard({
                       onClick={handleCreateHomeworkSubmit}
                       loading={createLoading}
                       disabled={createLoading}
+                      className="MH-Type-Label-Base"
                       style={{
                         borderRadius: "100px",
                         background: "#def8fb",
-                        fontSize: "12px",
                         color: "#3d85b0",
                         border: "1px solid #3d85b0",
                         marginRight: "10px",
@@ -1354,10 +1340,10 @@ export default function ProposalCard({
                       onClick={handleCreateHomeworkDraft}
                       loading={createLoading}
                       disabled={createLoading}
+                      className="MH-Type-Label-Base"
                       style={{
                         borderRadius: "100px",
                         background: "white",
-                        fontSize: "12px",
                         color: "#336F8A",
                         border: "1px solid #336F8A",
                         marginRight: "10px",
@@ -1370,10 +1356,10 @@ export default function ProposalCard({
                         setShowNewHomework(false);
                         clearForm();
                       }}
+                      className="MH-Type-Label-Base"
                       style={{
                         borderRadius: "100px",
                         background: "#f7f9fa",
-                        fontSize: "12px",
                         color: "#B9261A",
                         border: "1px solid #B9261A",
                         marginRight: "10px",
@@ -1392,10 +1378,10 @@ export default function ProposalCard({
         >
           <Button
             onClick={onClose}
+            className="MH-Type-Label-Base"
             style={{
               borderRadius: "100px",
               background: "#f7f9fa",
-              fontSize: "12px",
               color: "#336F8A",
               border: "1px solid #336F8A",
               marginRight: "10px",
@@ -1672,12 +1658,10 @@ export default function ProposalCard({
                 style={{ borderRadius: "12px", overflow: "hidden" }}
               >
                 <Modal.Header
+                  className="MH-Type-Title-Large"
                   style={{
                     background: "#f9fafb",
                     borderBottom: "1px solid #e0e0e0",
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 600,
-                    letterSpacing: "0.15px",
                   }}
                 >
                   {activeResource?.title ||
@@ -1716,10 +1700,10 @@ export default function ProposalCard({
                 >
                   <Button
                     onClick={closeResourceModalHandler}
+                    className="MH-Type-Label-Base"
                     style={{
                       borderRadius: "100px",
                       background: "#336F8A",
-                      fontSize: "16px",
                       color: "white",
                       border: "1px solid #336F8A",
                     }}

@@ -181,8 +181,8 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
                     border: "1px solid #336F8A",
                     background: "white",
                     color: "#336F8A",
-                    fontSize: "16px",
-                }}
+                    font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,}}
                 onClick={onClose}
                 >
                 {t("board.expendedCard.close", "Close")}
@@ -199,8 +199,8 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
                             border: "1px solid #336F8A",
                             background: "white",
                             color: "#336F8A",
-                            fontSize: "16px",
-                        }}
+                            font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,}}
                     >
                         {t("assignment.saveWithoutClass", "Save without class association")}
                     </Button>
@@ -216,13 +216,15 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
                                 border:  "1px solid #171717",
                                 background: "#EFEFEF",
                                 color: "#171717",
-                                fontSize: "16px",}
+                                font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,}
                             : {
                                 borderRadius: "100px",
                                 border:  "1px solid #336F8A",
                                 background: "#336F8A",
                                 color: "white",
-                                fontSize: "16px",}
+                                font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,}
                             }
                     >
                     {selectedClasses.length === 0 ? (

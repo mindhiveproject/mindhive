@@ -371,7 +371,9 @@ export default function ProposalPDF({
         className="proposalPDF"
         style={{
           backgroundColor: "#f6f9f8",
-          height: "100vh",
+          flex: 1,
+          minHeight: 0,
+          height: "100%",
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
@@ -407,12 +409,8 @@ export default function ProposalPDF({
           >
             {/* Filter by title */}
             <h2
+              className="MH-Type-Title-Large"
               style={{
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 600,
-                fontSize: "22px",
-                lineHeight: "28px",
-                letterSpacing: "0.15px",
                 color: "#171717",
                 margin: 0,
               }}
@@ -429,12 +427,8 @@ export default function ProposalPDF({
               }}
             >
               <label
+                className="MH-Type-Title-Base"
                 style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 600,
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  letterSpacing: "0.15px",
                   color: "#171717",
                   marginBottom: "4px",
                 }}
@@ -454,6 +448,7 @@ export default function ProposalPDF({
                     <button
                       key={option.key}
                       onClick={() => toggleStatus(option.value)}
+                      className="MH-Type-Label-Base"
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -466,11 +461,6 @@ export default function ProposalPDF({
                         borderRadius: "8px",
                         backgroundColor: isSelected ? "#FDF2D0" : "#ffffff",
                         cursor: "pointer",
-                        fontFamily: "Inter, sans-serif",
-                        fontWeight: 600,
-                        fontSize: "14px",
-                        lineHeight: "20px",
-                        letterSpacing: "0.15px",
                         color: "#171717",
                         transition: "background-color 0.2s",
                         width: "fit-content",
@@ -531,12 +521,8 @@ export default function ProposalPDF({
               }}
             >
               <label
+                className="MH-Type-Title-Base"
                 style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 600,
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  letterSpacing: "0.15px",
                   color: "#171717",
                   marginBottom: "4px",
                 }}
@@ -559,6 +545,7 @@ export default function ProposalPDF({
                     <button
                       key={option.key}
                       onClick={() => toggleReviewStep(option.value)}
+                      className="MH-Type-Label-Base"
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -571,11 +558,6 @@ export default function ProposalPDF({
                         borderRadius: "8px",
                         backgroundColor: isSelected ? "#FDF2D0" : "#ffffff",
                         cursor: "pointer",
-                        fontFamily: "Inter, sans-serif",
-                        fontWeight: 600,
-                        fontSize: "14px",
-                        lineHeight: "20px",
-                        letterSpacing: "0.15px",
                         color: "#171717",
                         transition: "background-color 0.2s",
                         width: "fit-content",
@@ -652,12 +634,8 @@ export default function ProposalPDF({
               {assignableToStudents && (
               <>
               <label
+                className="MH-Type-Title-Base"
                 style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 600,
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  letterSpacing: "0.15px",
                   color: "#171717",
                   marginBottom: "4px",
                 }}
@@ -674,12 +652,8 @@ export default function ProposalPDF({
               >
                 {assignedUserOptions.length === 0 ? (
                   <div
+                    className="MH-Type-Label-Base"
                     style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontWeight: 600,
-                      fontSize: "14px",
-                      lineHeight: "20px",
-                      letterSpacing: "0.15px",
                       color: "#6a6a6a",
                       padding: "6px 0",
                     }}
@@ -696,6 +670,7 @@ export default function ProposalPDF({
                       <button
                         key={u.id}
                         onClick={() => toggleAssignedUser(u.id)}
+                        className="MH-Type-Label-Base"
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -706,11 +681,6 @@ export default function ProposalPDF({
                           borderRadius: "8px",
                           backgroundColor: isSelected ? "#FDF2D0" : "#ffffff",
                           cursor: "pointer",
-                          fontFamily: "Inter, sans-serif",
-                          fontWeight: 600,
-                          fontSize: "14px",
-                          lineHeight: "20px",
-                          letterSpacing: "0.15px",
                           color: "#171717",
                           transition: "background-color 0.2s",
                           width: "fit-content",
@@ -778,6 +748,7 @@ export default function ProposalPDF({
               >
                 <button
                   onClick={handleToggleAssignable}
+                  className="MH-Type-Label-Base"
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -789,11 +760,6 @@ export default function ProposalPDF({
                     borderRadius: "8px",
                     backgroundColor: "#ffffff",
                     cursor: "pointer",
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 600,
-                    fontSize: "10px",
-                    lineHeight: "20px",
-                    letterSpacing: "0.15px",
                     color: "#0D3944",
                     transition: "background-color 0.2s, border-color 0.2s, color 0.2s",
                     width: "fit-content",
@@ -808,6 +774,7 @@ export default function ProposalPDF({
                   <button
                     onClick={handleToggleStudentsCanAssign}
                     disabled={updatingAssignable}
+                    className="MH-Type-Label-Base"
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -819,11 +786,6 @@ export default function ProposalPDF({
                       borderRadius: "8px",
                       backgroundColor: "#ffffff",
                       cursor: "pointer",
-                      fontFamily: "Inter, sans-serif",
-                      fontWeight: 600,
-                      fontSize: "10px",
-                      lineHeight: "20px",
-                      letterSpacing: "0.15px",
                       color: "#0D3944",
                       transition: "background-color 0.2s, border-color 0.2s, color 0.2s",
                       width: "fit-content",
@@ -874,12 +836,8 @@ export default function ProposalPDF({
                 }}
               >
                 <p
+                  className="MH-Type-Title-Base"
                   style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 600,
-                    fontSize: "16px",
-                    lineHeight: "24px",
-                    letterSpacing: "0.15px",
                     color: "#6a6a6a",
                     margin: 0,
                   }}

@@ -29,9 +29,8 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font-family: Lato;
-  font-size: 28px;
-  font-weight: 600;
+  font: var(--MH-Type-Heading-Small);
+  letter-spacing: 0;
   padding-top: 16px;
   color: #1a1a1a;
 `;
@@ -59,9 +58,8 @@ const ContentSection = styled.div`
 
 const ContentTitle = styled.h2`
   margin: 0 0 16px 0;
-  font-family: Lato;
-  font-size: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
@@ -271,7 +269,8 @@ export default function AssignmentMain({ query, user }) {
             style={{
               borderRadius: "100px",
               background: "#336F8A",
-              fontSize: "14px",
+              font: 'var(--MH-Type-Label-Base)',
+              letterSpacing: 0,
               color: "white",
               border: "1px solid #336F8A",
               marginRight: "10px"
@@ -292,8 +291,8 @@ export default function AssignmentMain({ query, user }) {
             marginTop: "16px",
           }}>
             <div style={{
-              fontSize: "18px",
-              fontWeight: "600",
+              font: 'var(--MH-Type-Title-Large)',
+              letterSpacing: 0,
               marginBottom: "16px"
             }}>
               {t("homework.createNewHomework", "Create New Assignment")}
@@ -337,7 +336,8 @@ export default function AssignmentMain({ query, user }) {
                 style={{
                   borderRadius: "100px",
                   background: "#336F8A",
-                  fontSize: "12px",
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   color: "white",
                   border: "1px solid #336F8A",
                   marginRight: "10px"
@@ -352,7 +352,8 @@ export default function AssignmentMain({ query, user }) {
                 style={{
                   borderRadius: "100px",
                   background: "white",
-                  fontSize: "12px",
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   color: "#336F8A",
                   border: "1px solid #336F8A",
                   marginRight: "10px"
@@ -368,7 +369,8 @@ export default function AssignmentMain({ query, user }) {
                 style={{
                   borderRadius: "100px",
                   background: "#f7f9fa",
-                  fontSize: "12px",
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   color: "#B9261A",
                   border: "1px solid #B9261A",
                   marginRight: "10px"

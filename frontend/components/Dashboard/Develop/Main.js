@@ -1,40 +1,15 @@
 import { useRouter } from "next/router";
-import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
-import Trans from "next-translate/Trans";
 import { useEffect } from 'react';
 
 import Selector from "./DevelopNew/Selector";
 import Panels from "./Panels";
 import { developTours } from "./tours";
 
+import Button from "../../DesignSystem/Button";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import { ArrowDropDownIcon } from "../../DesignSystem/Icons";
 import { StyledSelector } from "../../styles/StyledSelector";
-
-// A custom `trigger` puts DropdownMenu into its icon-button styling, which is
-// wrong for a labelled primary action — these put it back on a filled button
-// in the platform green the old Develop new button wore.
-const DEVELOP_NEW_TRIGGER_STYLE = {
-  height: "40px",
-  padding: "8px 16px 8px 24px",
-  borderRadius: "100px",
-  background: " var(--MH-Theme-Primary-Dark, #336F8A)",
-  border: "none",
-  color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
-  fontWeight: 600,
-};
-
-/**
- * DropdownMenu writes its trigger styles inline, so only the keys it already
- * declares can be overridden via triggerStyle. box-shadow is not one of them,
- * which leaves the hover lift free to live here as ordinary CSS.
- */
-const DevelopNewButton = styled.div`
-  button:hover {
-    box-shadow: var(--MH-Theme-Elevation-High, 2px 2px 12px rgba(0, 0, 0, 0.15));
-  }
-`;
 
 export default function DevelopMain({ query, user }) {
   const { t } = useTranslation("builder");
@@ -162,29 +137,26 @@ export default function DevelopMain({ query, user }) {
 
   return (
     <>
-      <h1>{t("develop")}</h1>
       <div className="header">
         <div>
-          <p>
-            <Trans
-              i18nKey="builder:developHeaderDescription"
-              components={[<strong />]}
-            />
-          </p>
+          <h1 className="MH-Type-Heading-Base">{t("develop")}</h1>
+          <p>{t("developHeaderDescription")}</p>
         </div>
-        <DevelopNewButton id="developNewBtn">
-          <DropdownMenu
-            ariaLabel={t("developNew")}
-            triggerStyle={DEVELOP_NEW_TRIGGER_STYLE}
-            trigger={
-              <>
-                {t("developNew")}
-                <ArrowDropDownIcon />
-              </>
-            }
-            items={developNewItems}
-          />
-        </DevelopNewButton>
+        <DropdownMenu
+          ariaLabel={t("developNew")}
+          renderTrigger={({ onClick, ariaLabel }) => (
+            <Button
+              id="developNewBtn"
+              variant="filled"
+              trailingIcon={<ArrowDropDownIcon />}
+              onClick={onClick}
+              aria-label={ariaLabel}
+            >
+              {t("developNew")}
+            </Button>
+          )}
+          items={developNewItems}
+        />
       </div>
       <Panels query={query} user={user} />
     </>

@@ -1,3 +1,10 @@
+import {
+  getNotificationRecipients,
+  getOpportunityStakeholderIds,
+  getPrimarySponsor,
+  isOpportunitySponsor,
+} from "./opportunityStakeholders";
+
 const APPOINTMENT_REQUEST_UPDATE_KIND = "appointment_request";
 const APPOINTMENT_SCHEDULED_UPDATE_KIND = "appointment_scheduled";
 const SPONSOR_OPPORTUNITIES_LINK = "/dashboard/sponsor-connect/opportunities";
@@ -126,7 +133,7 @@ async function loadNetworkRounds(context: any, opportunity: any) {
 
 function reviewerRecipientIds(
   rounds: any[],
-  mentorId: string,
+  stakeholderIds: string[],
   authorId: string
 ) {
   const recipientIds = new Set<string>();
@@ -136,14 +143,27 @@ function reviewerRecipientIds(
       if (reviewer?.id) recipientIds.add(reviewer.id);
     }
   }
-  if (mentorId) recipientIds.delete(mentorId);
+  for (const id of stakeholderIds) recipientIds.delete(id);
   if (authorId) recipientIds.delete(authorId);
   return recipientIds;
 }
 
+function isSponsorActor(opportunity: any, authorId: string): boolean {
+  if (!authorId) return true;
+  return isOpportunitySponsor(opportunity, authorId);
+}
+
+function getStakeholderIds(opportunity: any): string[] {
+  return getOpportunityStakeholderIds(opportunity);
+}
+
+function getStakeholderRecipients(opportunity: any): Person[] {
+  return getNotificationRecipients(opportunity);
+}
+
 /**
  * Notify the other party when a meeting is requested.
- * Sponsor / form requests notify reviewers; teacher requests notify the sponsor.
+ * Sponsor / form requests notify reviewers; teacher requests notify stakeholders.
  */
 export async function notifyAppointmentRequestUpdates(
   context: any,
@@ -155,10 +175,9 @@ export async function notifyAppointmentRequestUpdates(
 
     const author = options?.author || null;
     const authorId = author?.id ? String(author.id) : "";
-    const mentorId = opportunity.mentor?.id
-      ? String(opportunity.mentor.id)
-      : "";
-    const requesterName = displayName(author || opportunity.mentor);
+    const stakeholderIds = getStakeholderIds(opportunity);
+    const primarySponsor = getPrimarySponsor(opportunity);
+    const requesterName = displayName(author || primarySponsor);
     const title = opportunity.title || "an opportunity";
     const opportunityId = String(opportunity.id);
     const content = {
@@ -169,23 +188,31 @@ export async function notifyAppointmentRequestUpdates(
       opportunityId,
     };
 
-    const isSponsorRequest = !authorId || authorId === mentorId;
+    const isSponsorRequest = isSponsorActor(opportunity, authorId);
 
     if (!isSponsorRequest) {
-      if (!mentorId || mentorId === authorId) return;
-      await createConnectAppointmentUpdate(
-        context,
-        mentorId,
-        SPONSOR_OPPORTUNITIES_LINK,
-        { ...content, linkTitle: "Messages" }
+      const recipients = getStakeholderRecipients(opportunity).filter(
+        (p) => p?.id && String(p.id) !== authorId
       );
+      for (const recipient of recipients) {
+        await createConnectAppointmentUpdate(
+          context,
+          String(recipient.id),
+          SPONSOR_OPPORTUNITIES_LINK,
+          { ...content, linkTitle: "Messages" }
+        );
+      }
       return;
     }
 
     const rounds = await loadNetworkRounds(context, opportunity);
     if (!rounds.length) return;
 
-    const recipientIds = reviewerRecipientIds(rounds, mentorId, authorId);
+    const recipientIds = reviewerRecipientIds(
+      rounds,
+      stakeholderIds,
+      authorId
+    );
     if (recipientIds.size === 0) return;
 
     for (const userId of recipientIds) {
@@ -213,10 +240,9 @@ export async function notifyAppointmentScheduledUpdates(
   try {
     const author = options?.author || null;
     const authorId = author?.id ? String(author.id) : "";
-    const mentorId = opportunity.mentor?.id
-      ? String(opportunity.mentor.id)
-      : "";
-    const actorName = displayName(author || opportunity.mentor);
+    const stakeholderIds = getStakeholderIds(opportunity);
+    const primarySponsor = getPrimarySponsor(opportunity);
+    const actorName = displayName(author || primarySponsor);
     const title = opportunity.title || "an opportunity";
     const opportunityId = String(opportunity.id);
     const content = {
@@ -227,23 +253,31 @@ export async function notifyAppointmentScheduledUpdates(
       opportunityId,
     };
 
-    const isSponsorActor = !authorId || authorId === mentorId;
+    const isSponsorActorFlag = isSponsorActor(opportunity, authorId);
 
-    if (!isSponsorActor) {
-      if (!mentorId || mentorId === authorId) return;
-      await createConnectAppointmentUpdate(
-        context,
-        mentorId,
-        SPONSOR_OPPORTUNITIES_LINK,
-        { ...content, linkTitle: "Messages" }
+    if (!isSponsorActorFlag) {
+      const recipients = getStakeholderRecipients(opportunity).filter(
+        (p) => p?.id && String(p.id) !== authorId
       );
+      for (const recipient of recipients) {
+        await createConnectAppointmentUpdate(
+          context,
+          String(recipient.id),
+          SPONSOR_OPPORTUNITIES_LINK,
+          { ...content, linkTitle: "Messages" }
+        );
+      }
       return;
     }
 
     const rounds = await loadNetworkRounds(context, opportunity);
     if (!rounds.length) return;
 
-    const recipientIds = reviewerRecipientIds(rounds, mentorId, authorId);
+    const recipientIds = reviewerRecipientIds(
+      rounds,
+      stakeholderIds,
+      authorId
+    );
     if (recipientIds.size === 0) return;
 
     for (const userId of recipientIds) {

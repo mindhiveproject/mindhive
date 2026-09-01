@@ -2,6 +2,8 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
+import { isOpportunityStakeholder } from "../../../../lib/opportunityPeople";
+
 export const ROUND_STATUS_DEFAULTS = {
   draft: "Draft",
   preferences_open: "Preferences open",
@@ -52,8 +54,8 @@ export function countProfileOwnedClasses(network, profileId) {
 
 export function countProfileOwnedOpportunities(network, profileId) {
   if (!profileId) return 0;
-  return (network?.opportunities || []).filter(
-    (opportunity) => opportunity?.mentor?.id === profileId
+  return (network?.opportunities || []).filter((opportunity) =>
+    isOpportunityStakeholder(opportunity, profileId)
   ).length;
 }
 
@@ -98,9 +100,8 @@ const EmailButton = styled.button`
   border: none;
   background: transparent;
   color: #336f8a;
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  line-height: 18px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   text-align: left;
   text-decoration: underline;
   text-underline-offset: 2px;

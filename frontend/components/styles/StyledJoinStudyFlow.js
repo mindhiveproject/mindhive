@@ -14,12 +14,9 @@ export const StyledWrapper = styled.div`
     padding-bottom: 20px;
     margin-bottom: 40px;
     border-bottom: 2px solid #f2f2f2;
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 100%;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
     color: #28619e;
     .logo {
       display: grid;
@@ -36,35 +33,28 @@ export const StyledWrapper = styled.div`
     margin: 0 auto;
   }
   h1 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 36px;
-    line-height: 56px;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
   }
   h3 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
-    line-height: 32px;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
   }
   p {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
   input {
     max-width: 500px;
-    font-family: Lato;
     margin-bottom: 1rem;
     height: 48px;
     border: 1px solid #cccccc;
     border-radius: 4px;
-    font-size: 16px;
-    line-height: 24px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     padding: 12px;
     &:focus {
       outline: 0;
@@ -72,11 +62,9 @@ export const StyledWrapper = styled.div`
     }
   }
   .checkboxField {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 24px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     display: grid;
     grid-gap: 10px;
     grid-template-columns: 1fr 14fr;
@@ -96,7 +84,8 @@ export const StyledWrapper = styled.div`
     width: 300px;
   }
   .questionTitle {
-    font-size: 20px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     margin-top: 20px;
   }
 `;
@@ -146,7 +135,6 @@ export const ResponseButtons = styled.div`
   }
   button {
     max-width: 322px !important;
-    font-family: Lato;
     margin-top: 0.5rem !important;
     margin-bottom: 1rem !important;
     width: 100%;
@@ -154,9 +142,8 @@ export const ResponseButtons = styled.div`
     color: #666666 !important;
     padding: 1rem 0.5rem;
     font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 100%;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     border: 1px solid #cccccc;
     border-radius: 4px;
     cursor: pointer;

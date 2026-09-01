@@ -11,7 +11,11 @@ import {
   normalizeCurriculumType,
   DEFAULT_CURRICULUM_TYPE,
 } from "../../../../../lib/curriculumTypes";
-import { fieldLabel, optionLabel } from "../../../../Forms/DefinitionForm/i18n";
+import {
+  dualTextareaSubLabels,
+  fieldLabel,
+  optionLabel,
+} from "../../../../Forms/DefinitionForm/i18n";
 
 const FIELD_TYPE_TO_RESPONSE = {
   select_one_icon: "selectOne",
@@ -64,12 +68,9 @@ function fieldToReviewItem(field, locale) {
   }
 
   if (field.fieldType === "dual_textarea") {
-    const raw = Array.isArray(field.options) ? field.options : [];
-    const sorted = raw
-      .slice()
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-    item.subQuestionA = sorted[0] ? optionLabel(sorted[0], locale) : "";
-    item.subQuestionB = sorted[1] ? optionLabel(sorted[1], locale) : "";
+    const { subA, subB } = dualTextareaSubLabels(field, locale);
+    item.subQuestionA = subA;
+    item.subQuestionB = subB;
     item.answer = { subA: "", subB: "" };
   }
 

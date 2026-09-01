@@ -4,6 +4,7 @@ import {
   relationship,
   timestamp,
   select,
+  json,
 } from "@keystone-6/core/fields";
 import { rules, isSignedIn } from "../access";
 
@@ -55,6 +56,9 @@ export const ConnectPreference = list({
     }),
 
     notes: text({ ui: { displayMode: "textarea" } }),
+
+    // [{ formDefinitionId, answer, savedAt? }] — student competency assessment.
+    assessmentData: json(),
 
     items: relationship({
       ref: "ConnectPreferenceItem.preference",

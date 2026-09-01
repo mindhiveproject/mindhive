@@ -22,16 +22,15 @@ const SectionContainer = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: Lato;
-  font-size: 24px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large);
+  letter-spacing: 0;
   color: #1a1a1a;
   margin-bottom: 16px;
 `;
 
 const SectionDescription = styled.p`
-  font-family: Lato;
-  font-size: 16px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: #666666;
   margin-bottom: 16px;
 `;

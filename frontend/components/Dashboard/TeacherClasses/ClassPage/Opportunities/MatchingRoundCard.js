@@ -44,12 +44,29 @@ import {
   toDateInputValue,
   toIsoOrNull,
 } from "../../../Connect/Rounds/roundFormConfig";
+import MatchingRoundScheduleFields from "../../../Connect/Rounds/MatchingRoundScheduleFields";
+import {
+  mergeRoundSettings,
+  readRoundSchedule,
+  readSponsorFormsVisible,
+  scheduleFromInputs,
+  formatScheduleDate,
+} from "../../../../../lib/connectRoundSettings";
 import { useUser } from "../../../../Utils/Access/User";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
 import MatchingRoundFollowUpCompletionGrid from "./MatchingRoundFollowUpCompletionGrid";
+import MatchingRoundStudentInterestGrid from "./MatchingRoundStudentInterestGrid";
+import MatchingRoundStudentBallotPanel, {
+  STUDENT_RANKING_SUB_MODES,
+} from "./MatchingRoundStudentBallotPanel";
+import MatchingRoundStudentAssessmentSetup from "./MatchingRoundStudentAssessmentSetup";
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
 import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
+import {
+  readClassMatchingRoundPanelPref,
+  writeClassMatchingRoundPanelPref,
+} from "../classPagePrefs";
 
 const NETWORK_ICON = (
   <img
@@ -87,6 +104,7 @@ const PANELS = {
   forms: "forms",
   questions: "questions",
   matches: "matches",
+  studentInterest: "studentInterest",
 };
 
 /** Portal-safe styles: DesignSystem Modal mounts outside `.classTabPage`. */
@@ -141,10 +159,8 @@ const SettingsModalContent = styled.div`
 
     .matchingRoundNetworkTitle {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -187,14 +203,14 @@ const SettingsModalContent = styled.div`
     display: grid;
     align-content: start;
     gap: 6px;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #625b71;
 
     .fieldLabel {
-      font-weight: 600;
       color: #171717;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
     }
 
     input[type="text"],
@@ -206,9 +222,8 @@ const SettingsModalContent = styled.div`
       border: 1px solid #d9d6d2;
       border-radius: 12px;
       background: #ffffff;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       color: #171717;
       outline: none;
       box-sizing: border-box;
@@ -253,23 +268,15 @@ function RoundStatusLabel({ status, t, variant = "chip" }) {
       }}
     >
       <span
-        style={{
-          fontWeight: 600,
-          fontSize: isChip || variant === "short" ? "12px" : "14px",
-          lineHeight: isChip || variant === "short" ? "16px" : "18px",
-          color: "#5f6871",
-        }}
+        className={isChip || variant === "short" ? "MH-Type-Label-Small" : "MH-Type-Title-Small"}
+        style={{ color: "#5f6871" }}
       >
         {short}
       </span>
       {showHint ? (
         <span
-          style={{
-            fontWeight: 500,
-            fontSize: isChip ? "11px" : "12px",
-            lineHeight: isChip ? "14px" : "16px",
-            color: "#6a6a6a",
-          }}
+          className="MH-Type-Body-Base"
+          style={{ color: "#6a6a6a" }}
         >
           {hint}
         </span>
@@ -346,8 +353,7 @@ function FormOwnershipOptionLabel({ title, ownershipKind, t }) {
       </span>
       <Chip
         label={chipLabel}
-        shape="pill"
-        className="matchingRoundFormOwnershipChip"
+        className="matchingRoundFormOwnershipChip MH-Type-Label-Small"
         ariaLabel={chipLabel}
         style={{
           height: 22,
@@ -355,9 +361,6 @@ function FormOwnershipOptionLabel({ title, ownershipKind, t }) {
           paddingRight: 8,
           paddingTop: 2,
           paddingBottom: 2,
-          fontSize: 11,
-          fontWeight: 500,
-          lineHeight: "16px",
           flexShrink: 0,
         }}
       />
@@ -372,12 +375,14 @@ function buildSnapshot(
   formDefinitionIds,
   sponsorFormsVisible,
 ) {
+  const schedule = scheduleFromInputs(inputs);
   return {
     title: inputs.title || "",
     description: inputs.description || "",
     status: inputs.status || "draft",
     openAt: inputs.openAt || "",
     closeAt: inputs.closeAt || "",
+    ...schedule,
     opportunities: [...opportunityIds].sort(),
     questions: [...questionIds].sort(),
     formDefinitions: [...(formDefinitionIds || [])].sort(),
@@ -393,29 +398,17 @@ function snapshotsEqual(a, b) {
     a.status === b.status &&
     a.openAt === b.openAt &&
     a.closeAt === b.closeAt &&
+    a.introductionAt === b.introductionAt &&
+    a.matchingStartAt === b.matchingStartAt &&
+    a.matchingEndAt === b.matchingEndAt &&
+    a.reviewStartAt === b.reviewStartAt &&
+    a.reviewEndAt === b.reviewEndAt &&
+    a.sponsorIntroAt === b.sponsorIntroAt &&
     JSON.stringify(a.opportunities) === JSON.stringify(b.opportunities) &&
     JSON.stringify(a.questions) === JSON.stringify(b.questions) &&
     JSON.stringify(a.formDefinitions) === JSON.stringify(b.formDefinitions) &&
     a.sponsorFormsVisible === b.sponsorFormsVisible
   );
-}
-
-function readSponsorFormsVisible(settings) {
-  if (!settings || typeof settings !== "object" || Array.isArray(settings)) {
-    return false;
-  }
-  return Boolean(settings.sponsorFormsVisible);
-}
-
-function mergeRoundSettings(existing, sponsorFormsVisible) {
-  const base =
-    existing && typeof existing === "object" && !Array.isArray(existing)
-      ? existing
-      : {};
-  return {
-    ...base,
-    sponsorFormsVisible: Boolean(sponsorFormsVisible),
-  };
 }
 
 function sortOpportunitiesByTitle(opportunities) {
@@ -440,62 +433,22 @@ function NetworkIdentity({ network, t }) {
   );
 }
 
-function CardShell({
-  title,
-  titleMuted,
-  summaryHint,
-  expanded,
-  onToggleExpand,
-  headerActions,
-  children,
-  t,
-}) {
+export const MATCHING_ROUND_CREATE_QUERY = "new";
+
+function isSameMatchingRoundWorkspace(url, classCode, roundKey) {
+  if (!url || !classCode || !roundKey) return false;
+  const [path, search = ""] = url.split("?");
+  if (!path.includes(`/myclasses/${classCode}`)) return false;
+  const params = new URLSearchParams(search);
   return (
-    <section className="classTabSection classTabExpandableCard">
-      <div className="classTabExpandableHeaderBar">
-        <button
-          type="button"
-          className="classTabExpandableHeaderToggle"
-          aria-expanded={expanded}
-          aria-label={
-            expanded
-              ? t("opportunities.matchingRound.collapseLabel", {}, {
-                  default: "Collapse matching round settings",
-                })
-              : t("opportunities.matchingRound.expandLabel", {}, {
-                  default: "Expand matching round settings",
-                })
-          }
-          onClick={onToggleExpand}
-        >
-          <div className="expandableHeaderMain">
-            <h3 className={titleMuted ? "summaryRoundTitleMuted" : undefined}>
-              {title}
-            </h3>
-            {summaryHint ? (
-              <div className="expandableSummaryHint">{summaryHint}</div>
-            ) : null}
-          </div>
-          <img
-            src="/assets/icons/expand.svg"
-            alt=""
-            aria-hidden
-            className={`expandableChevron${expanded ? " expanded" : ""}`}
-            width={16}
-            height={16}
-          />
-        </button>
-        <div className="matchingRoundHeaderActions">{headerActions}</div>
-      </div>
-      {children}
-    </section>
+    params.get("page") === "opportunities" && params.get("round") === roundKey
   );
 }
 
 function MatchingRoundCollapsedCard({
   roundSummary,
   networks,
-  onToggleExpand,
+  onOpen,
   t,
 }) {
   const network =
@@ -523,7 +476,6 @@ function MatchingRoundCollapsedCard({
     <Chip
       label={network.title}
       leading={NETWORK_ICON}
-      shape="square"
       style={{ color: "#171717", borderColor: "#171717", opacity: 0.7 }}
       ariaLabel={t("opportunities.matchingRound.collapsedNetworkHint", {
         title: network.title,
@@ -533,15 +485,29 @@ function MatchingRoundCollapsedCard({
     />
   ) : null;
 
+  const openLabel = t(
+    "opportunities.matchingRound.openLabel",
+    { title },
+    { default: "Open matching round {{title}}" },
+  );
+
   return (
-    <CardShell
-      title={title}
-      summaryHint={networkHint}
-      expanded={false}
-      onToggleExpand={onToggleExpand}
-      headerActions={statusNode}
-      t={t}
-    />
+    <section className="classTabSection classTabExpandableCard matchingRoundEntryCard">
+      <button
+        type="button"
+        className="matchingRoundEntryButton"
+        onClick={onOpen}
+        aria-label={openLabel}
+      >
+        <div className="expandableHeaderMain">
+          <h3>{title}</h3>
+          {networkHint ? (
+            <div className="expandableSummaryHint">{networkHint}</div>
+          ) : null}
+        </div>
+        <div className="matchingRoundHeaderActions">{statusNode}</div>
+      </button>
+    </section>
   );
 }
 
@@ -551,8 +517,6 @@ function MatchingRoundEditor({
   roundSummary,
   isCreate = false,
   initialNetworkId = null,
-  onToggleExpand,
-  onRegisterDirtyGuard,
   onPreviewOpportunity,
   onMatchingRoundContextChange,
   onCreated,
@@ -572,13 +536,37 @@ function MatchingRoundEditor({
     }
     // Matches tab is present but disabled for now — ignore deep links.
     if (raw === PANELS.matches) return null;
+    // Student Interest is disabled for draft / unsaved rounds.
+    if (
+      raw === PANELS.studentInterest &&
+      (isNew || roundSummary?.status === "draft")
+    ) {
+      return null;
+    }
     return raw;
-  }, [router.query?.matchingPanel]);
+  }, [isNew, router.query?.matchingPanel, roundSummary?.status]);
 
-  const initialPanel =
-    queryMatchingPanel && queryMatchingPanel !== PANELS.settings
-      ? queryMatchingPanel
-      : PANELS.review;
+  const resolveAllowedPanel = useCallback(
+    (panel) => {
+      if (!panel || panel === PANELS.settings) return null;
+      if (
+        panel === PANELS.studentInterest &&
+        (isNew || roundSummary?.status === "draft")
+      ) {
+        return null;
+      }
+      if (
+        panel !== PANELS.review &&
+        panel !== PANELS.selected &&
+        panel !== PANELS.forms &&
+        panel !== PANELS.studentInterest
+      ) {
+        return null;
+      }
+      return panel;
+    },
+    [isNew, roundSummary?.status],
+  );
 
   const [selectedNetworkId, setSelectedNetworkId] = useState(
     isCreate
@@ -590,11 +578,24 @@ function MatchingRoundEditor({
   const [selectedFormDefinitionIds, setSelectedFormDefinitionIds] = useState(
     [],
   );
+  const [linkedStudentAssessmentForm, setLinkedStudentAssessmentForm] =
+    useState(null);
   const [sponsorFormsVisible, setSponsorFormsVisible] = useState(false);
   const [togglingSponsorFormsVisible, setTogglingSponsorFormsVisible] =
     useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
-  const [activePanel, setActivePanel] = useState(initialPanel);
+  const [activePanel, setActivePanel] = useState(() => {
+    const fromQuery = resolveAllowedPanel(
+      queryMatchingPanel && queryMatchingPanel !== PANELS.settings
+        ? queryMatchingPanel
+        : null,
+    );
+    if (fromQuery) return fromQuery;
+    const fromStorage = resolveAllowedPanel(
+      readClassMatchingRoundPanelPref(myclass?.id, roundId),
+    );
+    return fromStorage || PANELS.review;
+  });
   const [settingsModalOpen, setSettingsModalOpen] = useState(
     () => isNew || queryMatchingPanel === PANELS.settings,
   );
@@ -616,6 +617,8 @@ function MatchingRoundEditor({
   const [formWizardBanner, setFormWizardBanner] = useState(null);
   const formsManagerInitializedRef = useRef(false);
   const savedSnapshotRef = useRef(null);
+  const interestGridRef = useRef(null);
+  const ballotPanelRef = useRef(null);
 
   const selectedNetwork = useMemo(
     () => networks.find((network) => network.id === selectedNetworkId) || null,
@@ -630,6 +633,104 @@ function MatchingRoundEditor({
   const round = roundData?.connectRound;
 
   const { inputs, handleChange, handleMultipleUpdate } = useForm(EMPTY_FORM);
+
+  const roundStatusForPanels =
+    (typeof inputs?.status === "string" && inputs.status) ||
+    round?.status ||
+    roundSummary?.status ||
+    null;
+  const isStudentInterestDisabled = isNew;
+
+  const workspaceRoundKey = isCreate
+    ? MATCHING_ROUND_CREATE_QUERY
+    : roundId || roundSummary?.id || null;
+
+  const studentRankingSubModeStorageKey = workspaceRoundKey
+    ? `matchingRoundStudentRankingSubMode:${workspaceRoundKey}`
+    : null;
+  const [studentRankingSubMode, setStudentRankingSubMode] = useState(
+    STUDENT_RANKING_SUB_MODES.ballot,
+  );
+
+  useEffect(() => {
+    if (!studentRankingSubModeStorageKey) return;
+    const stored = window.localStorage.getItem(studentRankingSubModeStorageKey);
+    if (
+      stored === STUDENT_RANKING_SUB_MODES.interest ||
+      stored === STUDENT_RANKING_SUB_MODES.ballot
+    ) {
+      setStudentRankingSubMode(stored);
+    }
+  }, [studentRankingSubModeStorageKey]);
+
+  useEffect(() => {
+    if (!studentRankingSubModeStorageKey) return;
+    window.localStorage.setItem(
+      studentRankingSubModeStorageKey,
+      studentRankingSubMode,
+    );
+  }, [studentRankingSubMode, studentRankingSubModeStorageKey]);
+
+  const writeMatchingPanelQuery = useCallback(
+    (panelId) => {
+      if (!myclass?.code || !workspaceRoundKey) return;
+      const current =
+        typeof router.query?.matchingPanel === "string"
+          ? router.query.matchingPanel
+          : null;
+      if (current === panelId) return;
+      const nextQuery = {
+        page: "opportunities",
+        round: workspaceRoundKey,
+        matchingPanel: panelId,
+      };
+      if (workspaceRoundKey === MATCHING_ROUND_CREATE_QUERY && selectedNetworkId) {
+        nextQuery.networkId = selectedNetworkId;
+      }
+      router.replace(
+        {
+          pathname: `/dashboard/myclasses/${myclass.code}`,
+          query: nextQuery,
+        },
+        undefined,
+        { shallow: true },
+      );
+    },
+    [
+      myclass?.code,
+      router,
+      selectedNetworkId,
+      workspaceRoundKey,
+    ],
+  );
+
+  const goBackToOpportunities = useCallback(() => {
+    if (!myclass?.code) return;
+    router.push({
+      pathname: `/dashboard/myclasses/${myclass.code}`,
+      query: { page: "opportunities" },
+    });
+  }, [myclass?.code, router]);
+
+  const selectPanel = useCallback(
+    (panelId) => {
+      const allowed = resolveAllowedPanel(panelId);
+      if (!allowed) return;
+      setActivePanel(allowed);
+      writeClassMatchingRoundPanelPref(myclass?.id, roundId, allowed);
+      writeMatchingPanelQuery(allowed);
+    },
+    [myclass?.id, resolveAllowedPanel, roundId, writeMatchingPanelQuery],
+  );
+
+  useEffect(() => {
+    if (
+      activePanel === PANELS.studentInterest &&
+      isStudentInterestDisabled
+    ) {
+      setActivePanel(PANELS.review);
+    }
+  }, [activePanel, isStudentInterestDisabled]);
 
   const captureSnapshot = useCallback(
     (
@@ -672,19 +773,44 @@ function MatchingRoundEditor({
   ]);
 
   const confirmIfDirty = useCallback(() => {
-    if (!isDirty) return true;
+    if (!formInitialized || !savedSnapshotRef.current) return true;
+    const current = buildSnapshot(
+      inputs,
+      selectedOpportunities,
+      selectedQuestions,
+      selectedFormDefinitionIds,
+      sponsorFormsVisible,
+    );
+    if (snapshotsEqual(current, savedSnapshotRef.current)) return true;
     return window.confirm(
       t("opportunities.matchingRound.unsavedChangesConfirm", {}, {
         default: "You have unsaved changes. Leave without saving?",
       }),
     );
-  }, [isDirty, t]);
+  }, [
+    formInitialized,
+    inputs,
+    selectedOpportunities,
+    selectedQuestions,
+    selectedFormDefinitionIds,
+    sponsorFormsVisible,
+    t,
+  ]);
 
   useEffect(() => {
-    if (!onRegisterDirtyGuard) return;
-    onRegisterDirtyGuard(confirmIfDirty);
-    return () => onRegisterDirtyGuard(null);
-  }, [confirmIfDirty, onRegisterDirtyGuard]);
+    const classCode = myclass?.code;
+    const roundKey = workspaceRoundKey;
+    const handleRouteChangeStart = (url) => {
+      if (isSameMatchingRoundWorkspace(url, classCode, roundKey)) return;
+      if (confirmIfDirty()) return;
+      router.events.emit("routeChangeError");
+      throw "Abort route change. Please ignore this error.";
+    };
+    router.events.on("routeChangeStart", handleRouteChangeStart);
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChangeStart);
+    };
+  }, [confirmIfDirty, myclass?.code, router, workspaceRoundKey]);
 
   useEffect(() => {
     if (!queryMatchingPanel) return;
@@ -692,8 +818,11 @@ function MatchingRoundEditor({
       setSettingsModalOpen(true);
       return;
     }
-    setActivePanel(queryMatchingPanel);
-  }, [queryMatchingPanel]);
+    const allowed = resolveAllowedPanel(queryMatchingPanel);
+    if (!allowed) return;
+    setActivePanel(allowed);
+    writeClassMatchingRoundPanelPref(myclass?.id, roundId, allowed);
+  }, [myclass?.id, queryMatchingPanel, resolveAllowedPanel, roundId]);
 
   // Sync network when parent confirms a different network for a draft create card.
   useEffect(() => {
@@ -721,6 +850,7 @@ function MatchingRoundEditor({
         status: suggested.status || "draft",
         openAt: suggested.openAt || "",
         closeAt: suggested.closeAt || "",
+        ...readRoundSchedule(null),
       };
       handleMultipleUpdate(defaults);
       setSelectedOpportunities([]);
@@ -742,11 +872,14 @@ function MatchingRoundEditor({
       status: round.status || "draft",
       openAt: toDateInputValue(round.openAt),
       closeAt: toDateInputValue(round.closeAt),
+      ...readRoundSchedule(round.settings),
     };
     const nextOpportunities = (round.opportunities || []).map((o) => o.id);
     const nextQuestions = (round.questions || []).map((q) => q.id);
     const nextFormDefinitions = (round.formDefinitions || []).map((f) => f.id);
     const nextSponsorFormsVisible = readSponsorFormsVisible(round.settings);
+    const nextStudentAssessmentForm =
+      round.studentAssessmentFormDefinition || null;
 
     if (round.classNetwork?.id && round.classNetwork.id !== selectedNetworkId) {
       setSelectedNetworkId(round.classNetwork.id);
@@ -757,6 +890,7 @@ function MatchingRoundEditor({
     setSelectedQuestions(nextQuestions);
     setSelectedFormDefinitionIds(nextFormDefinitions);
     setSponsorFormsVisible(nextSponsorFormsVisible);
+    setLinkedStudentAssessmentForm(nextStudentAssessmentForm);
     setFormInitialized(true);
     captureSnapshot(
       nextInputs,
@@ -1042,9 +1176,49 @@ function MatchingRoundEditor({
   const settingsLabel = t("opportunities.matchingRound.panels.settings", {}, {
     default: "Settings",
   });
+  const backToOpportunitiesLabel = t(
+    "opportunities.matchingRound.backToOpportunities",
+    {},
+    { default: "Back to opportunities" },
+  );
   const exportLabel = t("opportunities.matchingRound.export.openButton", {}, {
     default: "Export to CSV",
   });
+  const interestExportLabel = t(
+    "opportunities.matchingRound.studentInterest.downloadCsv",
+    {},
+    { default: "Download Interest CSV" },
+  );
+  const ballotExportLabel = t(
+    "opportunities.matchingRound.studentRanking.downloadCsv",
+    {},
+    { default: "Download Ballots CSV" },
+  );
+  const showOpportunityExport =
+    activePanel === PANELS.review ||
+    activePanel === PANELS.selected ||
+    activePanel === PANELS.forms;
+  const showStudentRankingExport =
+    activePanel === PANELS.studentInterest && !isStudentInterestDisabled;
+  const showInterestExport =
+    showStudentRankingExport &&
+    studentRankingSubMode === STUDENT_RANKING_SUB_MODES.interest;
+  const showBallotExport =
+    showStudentRankingExport &&
+    studentRankingSubMode === STUDENT_RANKING_SUB_MODES.ballot;
+  const showDownloadButton =
+    showOpportunityExport || showInterestExport || showBallotExport;
+  const downloadButtonLabel = showBallotExport
+    ? ballotExportLabel
+    : showInterestExport
+      ? interestExportLabel
+      : exportLabel;
+  const downloadButtonDisabled = showBallotExport
+    ? !(myclass?.students?.length > 0)
+    : showInterestExport
+      ? !(myclass?.students?.length > 0) ||
+        selectedNetworkOpportunities.length === 0
+      : networkOpportunities.length === 0;
 
   const panelOptions = useMemo(
     () => [
@@ -1080,6 +1254,25 @@ function MatchingRoundEditor({
           default: "Follow-up",
         }),
       },
+      {
+        id: PANELS.studentInterest,
+        label: t(
+          "opportunities.matchingRound.panels.studentRanking",
+          {},
+          { default: "Student Ranking" },
+        ),
+        disabled: isStudentInterestDisabled,
+        tooltipContent: isStudentInterestDisabled
+          ? t(
+              "opportunities.matchingRound.studentRanking.disabledNewHint",
+              {},
+              {
+                default:
+                  "Save the matching round first to set up student ranking.",
+              },
+            )
+          : null,
+      },
       // {
       //   id: PANELS.questions,
       //   label: t("opportunities.matchingRound.panels.questions", {}, {
@@ -1094,7 +1287,7 @@ function MatchingRoundEditor({
         //   disabled: true,
         // },
     ],
-    [reviewOpportunitiesCount, selectedOpportunities.length, t],
+    [isStudentInterestDisabled, reviewOpportunitiesCount, selectedOpportunities.length, t],
   );
 
   const [createConnectRound, { loading: creating }] = useMutation(
@@ -1378,7 +1571,9 @@ function MatchingRoundEditor({
           id: roundId,
           input: {
             formDefinitions: { set: formDefinitionsConnect },
-            settings: mergeRoundSettings(round?.settings, nextVisible),
+            settings: mergeRoundSettings(round?.settings, {
+              sponsorFormsVisible: nextVisible,
+            }),
             updatedAt: new Date().toISOString(),
           },
         },
@@ -1545,7 +1740,13 @@ function MatchingRoundEditor({
               formDefinitions: formDefinitionsConnect.length
                 ? { connect: formDefinitionsConnect }
                 : undefined,
-              settings: mergeRoundSettings(null, sponsorFormsVisible),
+              studentAssessmentFormDefinition: linkedStudentAssessmentForm?.id
+                ? { connect: { id: linkedStudentAssessmentForm.id } }
+                : undefined,
+              settings: mergeRoundSettings(null, {
+                sponsorFormsVisible,
+                schedule: scheduleFromInputs(inputs),
+              }),
             },
           },
         });
@@ -1574,7 +1775,13 @@ function MatchingRoundEditor({
               opportunities: { set: opportunitiesConnect },
               questions: { set: questionsConnect },
               formDefinitions: { set: formDefinitionsConnect },
-              settings: mergeRoundSettings(round?.settings, sponsorFormsVisible),
+              studentAssessmentFormDefinition: linkedStudentAssessmentForm?.id
+                ? { connect: { id: linkedStudentAssessmentForm.id } }
+                : { disconnect: true },
+              settings: mergeRoundSettings(round?.settings, {
+                sponsorFormsVisible,
+                schedule: scheduleFromInputs(inputs),
+              }),
               updatedAt: new Date().toISOString(),
               publishedAt:
                 inputs.status === "published" && !round?.publishedAt
@@ -1700,9 +1907,8 @@ function MatchingRoundEditor({
     padding: "6px 12px",
     height: "auto",
     minHeight: "24px",
-    fontSize: "12px",
-    fontWeight: 600,
-    lineHeight: "18px",
+    font: 'var(--MH-Type-Label-Small)',
+    letterSpacing: 0,
     alignItems: "flex-start",
     background: isNew ? "#f5f0e8" : "#f0f4f6",
     color: isNew ? "#8a6d3b" : "#5f6871",
@@ -1750,7 +1956,6 @@ function MatchingRoundEditor({
           <div className="matchingRoundNetworkInviteActions">
             <CopyButton
               value={sponsorSignupAndInviteLink}
-              style={{ fontWeight: 500 }}
               ariaLabel={t("opportunities.compactInvite.signupAndInviteLink", {}, {
                 default: "Signup + invite to network",
               })}
@@ -1761,7 +1966,6 @@ function MatchingRoundEditor({
             </CopyButton>
             <CopyButton
               value={sponsorNetworkInviteLink}
-              style={{ fontWeight: 500 }}
               ariaLabel={t("opportunities.compactInvite.inviteToNetworkLink", {}, {
                 default: "Invite to network only",
               })}
@@ -1808,34 +2012,10 @@ function MatchingRoundEditor({
         />
       </label>
 
-      <div className="classTabFormGrid classTabFormGridTwo">
-        <label className="classTabFormField">
-          <span className="fieldLabel">
-            {t("opportunities.matchingRound.fields.openAt", {}, {
-              default: "Preferences open from",
-            })}
-          </span>
-          <input
-            type="date"
-            name="openAt"
-            value={inputs.openAt}
-            onChange={handleChange}
-          />
-        </label>
-        <label className="classTabFormField">
-          <span className="fieldLabel">
-            {t("opportunities.matchingRound.fields.closeAt", {}, {
-              default: "Preferences close on",
-            })}
-          </span>
-          <input
-            type="date"
-            name="closeAt"
-            value={inputs.closeAt}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
+      <MatchingRoundScheduleFields
+        inputs={inputs}
+        onChange={handleChange}
+      />
     </div>
   );
 
@@ -2103,9 +2283,6 @@ function MatchingRoundEditor({
       paddingRight: 8,
       paddingTop: 2,
       paddingBottom: 2,
-      fontSize: 11,
-      fontWeight: 500,
-      lineHeight: "16px",
       flexShrink: 0,
     };
 
@@ -2120,10 +2297,10 @@ function MatchingRoundEditor({
         return (
           <Chip
             label={label}
-            shape="pill"
             className={clsx(
               "matchingRoundFormOwnershipChip",
               "matchingRoundFormOriginChip--public",
+              "MH-Type-Label-Small",
             )}
             ariaLabel={label}
             style={chipStyle}
@@ -2139,10 +2316,10 @@ function MatchingRoundEditor({
         return (
           <Chip
             label={label}
-            shape="pill"
             className={clsx(
               "matchingRoundFormOwnershipChip",
               "matchingRoundFormOriginChip--owned",
+              "MH-Type-Label-Small",
             )}
             ariaLabel={label}
             style={chipStyle}
@@ -2157,10 +2334,10 @@ function MatchingRoundEditor({
       return (
         <Chip
           label={label}
-          shape="pill"
           className={clsx(
             "matchingRoundFormOwnershipChip",
             "matchingRoundFormOriginChip--custom",
+            "MH-Type-Label-Small",
           )}
           ariaLabel={label}
           style={chipStyle}
@@ -2619,7 +2796,6 @@ function MatchingRoundEditor({
               type="button"
               variant="outline"
               className="matchingRoundFormSummaryManage"
-              style={{ color: "inherit", borderColor: "currentColor" }}
               onClick={() => setFormsManagerOpen(true)}
             >
               {t(
@@ -2776,7 +2952,7 @@ function MatchingRoundEditor({
     const formCount = selectedFormDefinitionIds.length;
     const openFollowUpForms = () => {
       setFormsManagerOpen(true);
-      setActivePanel(PANELS.forms);
+      selectPanel(PANELS.forms);
     };
 
     let formsMessageVariant = "neutral";
@@ -2917,62 +3093,182 @@ function MatchingRoundEditor({
     </div>
   );
 
+  const renderStudentRankingPanel = () => {
+    const now = Date.now();
+    const openAtSource = inputs.openAt || round?.openAt;
+    const closeAtSource = inputs.closeAt || round?.closeAt;
+    const openAtMs = openAtSource ? new Date(openAtSource).getTime() : null;
+    const closeAtMs = closeAtSource ? new Date(closeAtSource).getTime() : null;
+    const beforeOpen = openAtMs && now < openAtMs;
+    const afterClose = closeAtMs && now > closeAtMs;
+    const rankingWindowActive = !beforeOpen && !afterClose;
+    const ballotEnabled =
+      !isNew &&
+      roundStatusForPanels !== "draft" &&
+      rankingWindowActive;
+    const openAtLabel = openAtSource
+      ? formatScheduleDate(openAtSource)
+      : null;
+    const inactiveBallotMessage =
+      roundStatusForPanels === "draft"
+        ? t(
+            "opportunities.matchingRound.studentRanking.ballotsDraftHint",
+            {},
+            {
+              default:
+                "Student ballots and interest tracking appear after the matching round leaves draft and the ranking window opens.",
+            },
+          )
+        : beforeOpen
+          ? t(
+              "opportunities.matchingRound.studentRanking.ballotsBeforeOpen",
+              { date: openAtLabel || "" },
+              {
+                default:
+                  "Student ballots and interest tracking open on {{date}}.",
+              },
+            )
+          : afterClose
+            ? t(
+                "opportunities.matchingRound.studentRanking.ballotsClosed",
+                {},
+                {
+                  default:
+                    "The student ranking window has closed. Ballots remain available for review when the window is open.",
+                },
+              )
+            : null;
+    const resolvedRoundTitle =
+      inputs.title ||
+      round?.title ||
+      roundSummary?.title ||
+      "";
+
+    return (
+    <div className="classTabMatchingRoundPanel">
+      <MatchingRoundStudentAssessmentSetup
+        classId={myclass?.id}
+        roundId={roundId}
+        isNew={isNew}
+        canManage={canManageOpportunities}
+        linkedForm={linkedStudentAssessmentForm}
+        onLinkedFormChange={setLinkedStudentAssessmentForm}
+        beforeOpen={beforeOpen}
+        openAtLabel={openAtLabel}
+      />
+      {!isNew ? (
+      <MatchingRoundStudentBallotPanel
+        ref={ballotPanelRef}
+        roundId={roundId}
+        students={myclass?.students || []}
+        enabled={
+          activePanel === PANELS.studentInterest && !isStudentInterestDisabled
+        }
+        subMode={studentRankingSubMode}
+        onSubModeChange={setStudentRankingSubMode}
+        ballotWindowActive={ballotEnabled}
+        inactiveBallotMessage={inactiveBallotMessage}
+        roundTitle={resolvedRoundTitle}
+        renderInterestGrid={() => (
+          <MatchingRoundStudentInterestGrid
+            ref={interestGridRef}
+            classId={myclass?.id}
+            roundId={roundId}
+            roundTitle={resolvedRoundTitle}
+            students={myclass?.students || []}
+            opportunities={selectedNetworkOpportunities}
+            enabled={
+              activePanel === PANELS.studentInterest &&
+              !isStudentInterestDisabled
+            }
+          />
+        )}
+      />
+      ) : null}
+    </div>
+    );
+  };
+
   return (
-    <CardShell
-      title={cardHeaderTitle}
-      titleMuted={isNew}
-      expanded
-      onToggleExpand={onToggleExpand}
-      headerActions={headerActions}
-      t={t}
-    >
-      {loading ? (
-        <div className="classTabExpandableBody">
-          {renderNetworkRow()}
-          <div className="classTabEmpty">
-            <p>
-              {t("opportunities.matchingRound.loading", {}, {
-                default: "Loading matching round…",
-              })}
-            </p>
+    <div className="matchingRoundWorkspace">
+      <div className="matchingRoundWorkspaceChrome">
+        <div className="matchingRoundWorkspaceHeader">
+          <div className="matchingRoundWorkspaceHeaderMain">
+            <IconButton
+              className="matchingRoundWorkspaceBackButton"
+              variant="text"
+              elevated={false}
+              style={{
+                background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+              }}
+              ariaLabel={backToOpportunitiesLabel}
+              title={backToOpportunitiesLabel}
+              onClick={goBackToOpportunities}
+              icon={
+                <img
+                  src="/assets/icons/back.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  style={{ width: 16, height: 16 }}
+                />
+              }
+            />
+            <h2
+              className={clsx(
+                "matchingRoundWorkspaceTitle",
+                isNew && "muted",
+              )}
+            >
+              {cardHeaderTitle}
+            </h2>
           </div>
+          <div className="matchingRoundHeaderActions">{headerActions}</div>
         </div>
-      ) : (
-        <div className="classTabExpandableBody">
-          <div className="classTabMatchingRoundNavRow">
-            <Navbar style={{ paddingLeft: 0, paddingRight: 0 }}>
-              {panelOptions.map((panel) => (
-                <NavbarItem
-                  key={panel.id}
-                  selected={activePanel === panel.id}
-                  disabled={panel.disabled}
-                  onClick={
-                    panel.disabled
-                      ? undefined
-                      : () => setActivePanel(panel.id)
-                  }
-                  style={{
-                    backgroundColor:
-                      activePanel === panel.id ? "#DEF8FB" : "transparent",
-                    opacity: panel.disabled ? 0.45 : undefined,
-                    cursor: panel.disabled ? "not-allowed" : undefined,
-                  }}
-                  aria-disabled={panel.disabled || undefined}
-                >
-                  {panel.label}
-                </NavbarItem>
-              ))}
-            </Navbar>
-            <div className="classTabMatchingRoundNavActions">
+        <div className="classTabMatchingRoundNavRow">
+          <Navbar style={{ paddingLeft: 0, paddingRight: 0 }}>
+            {panelOptions.map((panel) => (
+              <NavbarItem
+                key={panel.id}
+                selected={activePanel === panel.id}
+                disabled={panel.disabled}
+                tooltipContent={panel.tooltipContent}
+                onClick={
+                  panel.disabled
+                    ? undefined
+                    : () => selectPanel(panel.id)
+                }
+                style={{
+                  opacity: panel.disabled ? 0.45 : undefined,
+                  cursor: panel.disabled ? "not-allowed" : undefined,
+                }}
+                aria-disabled={panel.disabled || undefined}
+              >
+                {panel.label}
+              </NavbarItem>
+            ))}
+          </Navbar>
+          <div className="classTabMatchingRoundNavActions">
+            {showDownloadButton && (
               <IconButton
                 className="classTabMatchingRoundExportButton"
                 variant="text"
                 style={{ background: "#f3f3f3" }}
                 elevated={false}
-                ariaLabel={exportLabel}
-                title={exportLabel}
-                disabled={networkOpportunities.length === 0}
-                onClick={() => setExportModalOpen(true)}
+                ariaLabel={downloadButtonLabel}
+                title={downloadButtonLabel}
+                disabled={downloadButtonDisabled}
+                onClick={() => {
+                  if (showBallotExport) {
+                    ballotPanelRef.current?.downloadCsv?.();
+                    return;
+                  }
+                  if (showInterestExport) {
+                    interestGridRef.current?.downloadCsv?.();
+                    return;
+                  }
+                  setExportModalOpen(true);
+                }}
                 icon={
                   <img
                     src="/assets/icons/download.svg"
@@ -2983,84 +3279,120 @@ function MatchingRoundEditor({
                   />
                 }
               />
-              <IconButton
-                className="classTabMatchingRoundSettingsButton"
-                style={{ background: "#f3f3f3" }}
-                variant="text"
-                elevated={false}
-                ariaLabel={settingsLabel}
-                title={settingsLabel}
-                onClick={() => setSettingsModalOpen(true)}
-                icon={
-                  <img
-                    src="/assets/icons/settings.svg"
-                    alt=""
-                    aria-hidden
-                    width={24}
-                    height={24}
-                  />
-                }
-              />
-            </div>
+            )}
+            <IconButton
+              className="classTabMatchingRoundSettingsButton"
+              style={{ background: "#f3f3f3" }}
+              variant="text"
+              elevated={false}
+              ariaLabel={settingsLabel}
+              title={settingsLabel}
+              onClick={() => setSettingsModalOpen(true)}
+              icon={
+                <img
+                  src="/assets/icons/settings.svg"
+                  alt=""
+                  aria-hidden
+                  width={24}
+                  height={24}
+                />
+              }
+            />
           </div>
-
-          <OpportunityExportModal
-            open={exportModalOpen}
-            onClose={() => setExportModalOpen(false)}
-            listOpportunities={networkOpportunities}
-            selectedOpportunityIds={selectedOpportunities}
-            roundId={roundId}
-            roundTitle={
-              inputs.title ||
-              round?.title ||
-              roundSummary?.title ||
-              t("opportunities.matchingRound.newRoundTitle", {}, {
-                default: "New matching round",
-              })
-            }
-            networkTitle={
-              selectedNetwork?.title ||
-              round?.classNetwork?.title ||
-              roundSummary?.classNetwork?.title ||
-              ""
-            }
-          />
-
-          <Modal
-            open={settingsModalOpen}
-            onClose={() => setSettingsModalOpen(false)}
-            title={settingsLabel}
-            maxWidth={560}
-            actions={
-              <Button
-                variant="text"
-                type="button"
-                onClick={() => setSettingsModalOpen(false)}
-              >
-                {t("close", {}, { default: "Close" })}
-              </Button>
-            }
-          >
-            <SettingsModalContent>
-              {renderSettingsPanel()}
-            </SettingsModalContent>
-          </Modal>
-
+        </div>
+      </div>
+      <OpportunityExportModal
+        open={exportModalOpen}
+        onClose={() => setExportModalOpen(false)}
+        listOpportunities={networkOpportunities}
+        selectedOpportunityIds={selectedOpportunities}
+        roundId={roundId}
+        roundTitle={
+          inputs.title ||
+          round?.title ||
+          roundSummary?.title ||
+          t("opportunities.matchingRound.newRoundTitle", {}, {
+            default: "New matching round",
+          })
+        }
+        networkTitle={
+          selectedNetwork?.title ||
+          round?.classNetwork?.title ||
+          roundSummary?.classNetwork?.title ||
+          ""
+        }
+      />
+      <Modal
+        open={settingsModalOpen}
+        onClose={() => setSettingsModalOpen(false)}
+        title={settingsLabel}
+        maxWidth={640}
+        maxHeight="90vh"
+        hideScrollbar
+        actions={
+          <>
+            <Button
+              variant="text"
+              type="button"
+              onClick={() => setSettingsModalOpen(false)}
+            >
+              {t("close", {}, { default: "Close" })}
+            </Button>
+            <Button
+              variant="filled"
+              type="button"
+              onClick={handleSave}
+              disabled={saving || !formInitialized || (!isDirty && !isNew)}
+            >
+              {saving
+                ? t("opportunities.matchingRound.saving", {}, {
+                    default: "Saving…",
+                  })
+                : isNew
+                  ? t("opportunities.matchingRound.createRound", {}, {
+                      default: "Create round",
+                    })
+                  : t("opportunities.matchingRound.saveRound", {}, {
+                      default: "Save changes",
+                    })}
+            </Button>
+          </>
+        }
+      >
+        <SettingsModalContent>
+          {renderSettingsPanel()}
+        </SettingsModalContent>
+      </Modal>
+      {loading ? (
+        <div className="matchingRoundWorkspaceBody">
+          {renderNetworkRow()}
+          <div className="classTabEmpty">
+            <p>
+              {t("opportunities.matchingRound.loading", {}, {
+                default: "Loading matching round…",
+              })}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="matchingRoundWorkspaceBody">
           <div className="classTabMatchingRoundForm">
             {activePanel === PANELS.review && renderReviewPanel()}
             {activePanel === PANELS.selected && renderSelectedPanel()}
             {activePanel === PANELS.forms && renderFormsPanel()}
             {activePanel === PANELS.questions && renderQuestionsPanel()}
+            {activePanel === PANELS.studentInterest &&
+              renderStudentRankingPanel()}
 
-            <div className="classTabMatchingRoundFooter">
-              {isDirty ? (
-                <p className="matchingRoundUnsavedHint">
-                  {t("opportunities.matchingRound.unsavedChanges", {}, {
-                    default: "Unsaved changes",
-                  })}
-                </p>
-              ) : null}
-              {isDirty || isNew ? (
+            {isDirty || isNew ? (
+              <div className="classTabMatchingRoundFooter">
+                {isDirty ? (
+                  <p className="matchingRoundUnsavedHint">
+                    {t("opportunities.matchingRound.unsavedChanges", {}, {
+                      default: "Unsaved changes",
+                    })}
+                  </p>
+                ) : null}
                 <Button
                   variant="filled"
                   onClick={handleSave}
@@ -3078,18 +3410,18 @@ function MatchingRoundEditor({
                           default: "Save changes",
                         })}
                 </Button>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </div>
         </div>
       )}
-    </CardShell>
+    </div>
   );
 }
 
 /**
- * Accordion card for an existing matching round, or a draft create editor.
- * Form/query state is only mounted while expanded.
+ * Compact list card for a matching round, or the full-screen workspace editor.
+ * Form/query state is only mounted in the workspace.
  */
 export default function MatchingRoundCard({
   myclass,
@@ -3097,21 +3429,20 @@ export default function MatchingRoundCard({
   roundSummary,
   isCreate = false,
   initialNetworkId = null,
-  expanded,
-  onToggleExpand,
-  onRegisterDirtyGuard,
+  isWorkspace = false,
+  onOpen,
   onPreviewOpportunity,
   onMatchingRoundContextChange,
   onCreated,
 }) {
   const { t } = useTranslation("classes");
 
-  if (!expanded) {
+  if (!isWorkspace) {
     return (
       <MatchingRoundCollapsedCard
         roundSummary={roundSummary}
         networks={networks}
-        onToggleExpand={onToggleExpand}
+        onOpen={onOpen}
         t={t}
       />
     );
@@ -3124,8 +3455,6 @@ export default function MatchingRoundCard({
       roundSummary={roundSummary}
       isCreate={isCreate}
       initialNetworkId={initialNetworkId}
-      onToggleExpand={onToggleExpand}
-      onRegisterDirtyGuard={onRegisterDirtyGuard}
       onPreviewOpportunity={onPreviewOpportunity}
       onMatchingRoundContextChange={onMatchingRoundContextChange}
       onCreated={onCreated}

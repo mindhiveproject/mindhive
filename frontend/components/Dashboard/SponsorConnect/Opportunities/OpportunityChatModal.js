@@ -16,6 +16,7 @@ import {
   getUnreadReviewerCommentNotes,
   resolveActiveReviewRound,
 } from "../../../../lib/reviewThreadRound";
+import { isOpportunityStakeholder } from "../../../../lib/opportunityPeople";
 
 const ThreadWrap = styled.div`
   section {
@@ -26,9 +27,8 @@ const ThreadWrap = styled.div`
 
 const StatusText = styled.p`
   margin: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #5f6871);
 `;
 
@@ -83,9 +83,7 @@ export default function OpportunityChatModal({
 
   const activeRoundId = roundResolution.roundId;
   const needsRoundSelection = roundResolution.needsSelection;
-  const isMentorOfOpportunity = !!(
-    viewerId && opportunity?.mentor?.id === viewerId
-  );
+  const isMentorOfOpportunity = isOpportunityStakeholder(opportunity, viewerId);
 
   const unreadReviewerComments = useMemo(
     () =>

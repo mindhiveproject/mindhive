@@ -2,6 +2,7 @@
 CLAUDE.md
 .vscode/
 pydantic/.env
+.DS_Store
 
 # Claude Code local config
 .claude/

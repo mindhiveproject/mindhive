@@ -144,7 +144,7 @@ export default function MessageCard({
         role={isClickable ? "button" : "status"}
         tabIndex={isClickable ? 0 : undefined}
         aria-label={ariaLabel}
-        className={clsx("DesignSystem-MessageCard", className)}
+        className={clsx("DesignSystem-MessageCard", "MH-Type-Body-Base", className)}
         style={{
           display: "flex",
           alignItems: "center",
@@ -155,10 +155,6 @@ export default function MessageCard({
           padding: "12px 16px",
           borderRadius: "8px",
           border: "none",
-          fontFamily: "Inter, sans-serif",
-          fontWeight: 400,
-          fontSize: "16px",
-          lineHeight: "24px",
           ...tones,
           cursor: isClickable ? "pointer" : "default",
           ...style,

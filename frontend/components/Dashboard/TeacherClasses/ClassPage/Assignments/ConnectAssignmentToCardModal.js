@@ -155,8 +155,8 @@ export default function ConnectAssignmentToCardModal({
               border: "1px solid #336F8A",
               background: "white",
               color: "#336F8A",
-              fontSize: "16px",
             }}
+            className="MH-Type-Label-Base"
             onClick={handleClose}
             disabled={isBusy}
           >
@@ -207,12 +207,12 @@ export default function ConnectAssignmentToCardModal({
         }}
       >
         <Button
+          className="MH-Type-Label-Base"
           style={{
             borderRadius: "100px",
             border: "1px solid #336F8A",
             background: "white",
             color: "#336F8A",
-            fontSize: "16px",
           }}
           onClick={handleClose}
           disabled={isBusy}
@@ -222,6 +222,7 @@ export default function ConnectAssignmentToCardModal({
         <div style={{ display: "flex", gap: "12px" }}>
           {hasLinkedCards && (
             <Button
+              className="MH-Type-Label-Base"
               disabled={isBusy}
               onClick={handleDisconnect}
               style={{
@@ -230,7 +231,6 @@ export default function ConnectAssignmentToCardModal({
                 border: "1px solid #336F8A",
                 background: "white",
                 color: "#336F8A",
-                fontSize: "16px",
               }}
             >
               {t(
@@ -240,6 +240,7 @@ export default function ConnectAssignmentToCardModal({
             </Button>
           )}
           <Button
+            className="MH-Type-Label-Base"
             loading={setLoading}
             disabled={isBusy}
             onClick={handleSave}
@@ -248,7 +249,6 @@ export default function ConnectAssignmentToCardModal({
               border: "1px solid #336F8A",
               background: "#336F8A",
               color: "white",
-              fontSize: "16px",
             }}
           >
             {t("assignment.connectModal.save", "Save")}

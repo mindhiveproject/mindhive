@@ -10,7 +10,6 @@ export const StyledProposal = styled.div`
   // min-height: 80vh;
   background: #f7f9f8;
   align-items: ${(props) => (props.$cardFullView ? "stretch" : "baseline")};
-  font-family: "Inter";
   min-height: ${(props) => (props.$cardFullView ? "0" : "unset")};
 
   i.icon {
@@ -50,12 +49,8 @@ export const StyledProposal = styled.div`
     border: 1px solid #cccccc;
     border-radius: 4px;
     cursor: pointer;
-    font-family: Roboto;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 16px;
-    letter-spacing: 0.05em;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     text-align: center;
   }
 
@@ -155,12 +150,15 @@ export const StyledProposal = styled.div`
       gap: 8px;
       min-width: 0;
     }
+    .boardEditorChromeTypeBadge {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+    }
     .boardEditorChromeTitle {
       margin: 0;
-      font-family: Inter, sans-serif;
-      font-size: 24px;
-      font-weight: 600;
-      line-height: 32px;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Black, #171717);
       overflow: hidden;
       text-overflow: ellipsis;
@@ -170,10 +168,8 @@ export const StyledProposal = styled.div`
       width: 100%;
       min-width: 0;
       box-sizing: border-box;
-      font-family: Inter, sans-serif;
-      font-size: 24px;
-      font-weight: 600;
-      line-height: 32px;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Black, #171717);
       border: 1px solid var(--MH-Theme-Primary-Dark, #336F8A);
       border-radius: 8px;
@@ -187,10 +183,8 @@ export const StyledProposal = styled.div`
       flex-shrink: 0;
     }
     .boardEditorChromeEditMode {
-      font-family: Inter, sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Dark, #6A6A6A);
       white-space: nowrap;
     }
@@ -208,8 +202,8 @@ export const StyledProposal = styled.div`
       background: #336F8A;
       color: white;
       border-radius: 100px;
-      font-size: 16px;
-      font-weight: 500;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       cursor: pointer;
       transition: background 0.3s ease;
     }
@@ -234,8 +228,8 @@ export const StyledProposal = styled.div`
       background: white;
       color: #336F8A;
       border-radius: 100px;
-      font-size: 16px;
-      font-weight: 500;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       cursor: pointer;
       transition: background 0.3s ease;
     }
@@ -260,12 +254,8 @@ export const StyledProposal = styled.div`
       align-items: center;
       margin: 5px 36px 15px 0px;
       span {
-        font-family: Roboto;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 24px;
-        letter-spacing: 0.05em;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
       .goBackButton {
         cursor: pointer;
@@ -283,8 +273,8 @@ export const StyledProposal = styled.div`
         border-radius: 4px;
         span,
         .icon {
-          font-weight: 400;
-          font-size: 13px;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
           color: #666666;
         }
       }
@@ -387,11 +377,8 @@ export const StyledProposal = styled.div`
       margin: 1rem 0px 0px 0rem;
       display: grid;
       color: #b3b3b3;
-      font-family: Inter;
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 24px;
-      letter-spacing: var(--BodySmallTracking);
+      font: var(--MH-Type-Label-Large);
+      letter-spacing: 0;
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
@@ -424,12 +411,9 @@ export const StyledProposal = styled.div`
         accent-color: var(--MH-Theme-Danger-Dark, #8F1F14);
       }
       .sectionTitle {
-        font-family: Inter;
-        font-size: 22px;
-        font-weight: 600;
+        font: var(--MH-Type-Title-Large);
         color: #171717;
-        line-height: 28px;
-        letter-spacing: 0.05em;
+        letter-spacing: 0;
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
@@ -442,11 +426,8 @@ export const StyledProposal = styled.div`
         text-overflow: ellipsis;
       }
       .sectionTitleInput {
-        font-family: Inter;
-        font-size: 22px;
-        font-weight: 600;
-        line-height: 28px;
-        letter-spacing: 0.05em;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         text-align: left;
         width: 100%;
         min-width: 0;
@@ -462,12 +443,8 @@ export const StyledProposal = styled.div`
         overflow-y: auto;
       }
       span {
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 21px;
-        letter-spacing: 0em;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         text-align: center;
       }
     }
@@ -476,17 +453,12 @@ export const StyledProposal = styled.div`
       bottom: -12px;
       left: -5px;
       cursor: pointer;
-      img {
-        width: 20px;
-        opacity: 0.1;
-      }
-      img: hover {
-        opacity: 1;
-      }
     }
   }
 
   &.projectsBoardEditorProposal {
+    display: flex;
+    flex-direction: column;
     overflow-y: hidden;
     min-height: 0;
     height: 100%;
@@ -504,7 +476,30 @@ export const StyledProposal = styled.div`
     width: 100%;
     min-width: 0;
     height: 100%;
+    margin: 0;
+    padding: ${(props) => (props.$cardFullView ? "0" : "20px")};
+    box-sizing: border-box;
     overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .header {
+    flex-shrink: 0;
+  }
+
+  &.projectsBoardEditorProposal .proposalBoardContent {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &.projectsBoardEditorProposal .proposalPDF {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    max-width: none;
   }
 
   &.projectsBoardEditorProposal .boardEditorChrome {
@@ -546,6 +541,51 @@ export const StyledProposal = styled.div`
     min-height: 0;
     height: auto;
     overflow-y: auto;
+  }
+
+  &.projectsBoardEditorProposal .boardEditorBody .post.milestoneCardEditorPost {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &.projectsBoardEditorProposal
+    .boardEditorBody
+    .post.milestoneCardEditorPost
+    .proposalCardBoard {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    align-items: stretch;
+  }
+
+  &.projectsBoardEditorProposal
+    .boardEditorBody
+    .post.milestoneCardEditorPost
+    .textBoard {
+    overflow-y: auto;
+    padding-bottom: 48px;
+    margin-bottom: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &.projectsBoardEditorProposal
+    .boardEditorBody
+    .post.milestoneCardEditorPost
+    .infoBoard {
+    overflow-y: auto;
+    max-height: 100%;
+    align-self: stretch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &.projectsBoardEditorProposal .boardInner .boardColumnsWrap {
@@ -724,9 +764,22 @@ export const StyledProposal = styled.div`
     .headerRightSection {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       flex-shrink: 0;
-      padding-left: 8px;
+    }
+    @media (max-width: 800px) {
+      .headerMainContent {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .headerLeftSection {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+      .headerRightSection {
+        width: 100%;
+        justify-content: flex-start;
+      }
     }
     .headerTitleRow {
       display: flex;
@@ -771,11 +824,8 @@ export const StyledProposal = styled.div`
       min-width: 0;
     }
     .headerTitle {
-      font-family: "Inter", sans-serif;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 36px;
-      line-height: 44px;
+      font: var(--MH-Type-Heading-Base);
+      letter-spacing: 0;
       color: #171717;
       margin: 0;
       display: -webkit-box;
@@ -853,15 +903,11 @@ export const StyledProposal = styled.div`
     }
     .studyLinkText {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
       color: #171717;
       white-space: nowrap;
       text-align: left;
-      letter-spacing: 0px;
+      letter-spacing: 0;
       width: fit-content;
       vertical-align: middle;
       min-width: 0;
@@ -872,29 +918,6 @@ export const StyledProposal = styled.div`
       align-items: center;
       flex-wrap: nowrap;
       width: 100%;
-    }
-    .collaboratorChip {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 32px;
-      border: 1px solid #A1A1A1;
-      border-radius: 30px;
-      padding: 4px 12px 4px 12px;
-      gap: 8px;
-      background: white;
-      overflow: hidden;
-      width: fit-content;
-      max-width: 300px;
-      span {
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: flex;
-        height: 100%;
-        align-items: center;
-      }
     }
     .addCollaboratorButton {
       display: flex;
@@ -923,43 +946,6 @@ export const StyledProposal = styled.div`
         margin: 0;
       }
     }
-    .downloadButton {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      height: 40px;
-      padding: 8px 12px 8px 16px;
-      border-radius: 100px;
-      // border: 1px solid #336F8A;
-      // background: white;
-      color: #336F8A;
-      font-family: "Inter", sans-serif;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
-      cursor: pointer;
-      flex-shrink: 0;
-      &:hover {
-        background: #ffffff;
-        paddingRight: 12px;
-        border: 1px solid #336F8A;
-        // color: #625B71;
-        .icon {
-          color: #625B71;
-        }
-      }
-      .icon {
-        margin: 0;
-        width: 24px;
-        height: 24px;
-        color: #336F8A;
-      }
-    }
-    .downloadButtonText {
-      white-space: nowrap;
-    }
     .viewToggleGroup {
       display: flex;
       align-items: center;
@@ -973,11 +959,8 @@ export const StyledProposal = styled.div`
       height: 40px;
       padding: 8px 24px 8px 16px;
       border: 1px solid #336F8A;
-      font-family: "Inter", sans-serif;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
       cursor: pointer;
       white-space: nowrap;
       margin-right: -1px;
@@ -1019,11 +1002,8 @@ export const StyledProposal = styled.div`
       }
     }
     .titleEdit {
-      font-family: "Inter";
-      font-style: normal;
-      font-weight: 600;
-      font-size: 40px;
-      line-height: 125%;
+      font: var(--MH-Type-Heading-Base);
+      letter-spacing: 0;
       color: #171717;
       background: white;
       width: 100%;
@@ -1036,11 +1016,8 @@ export const StyledProposal = styled.div`
       grid-template-columns: auto 1fr;
       min-width: 0;
       .title {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 600;
-        font-size: 40px;
-        line-height: 125%;
+        font: var(--MH-Type-Heading-Base);
+        letter-spacing: 0;
         color: #171717;
         min-width: 0;
         overflow-wrap: break-word;
@@ -1052,11 +1029,8 @@ export const StyledProposal = styled.div`
       }
     }
     .subtitle {
-      font-family: "Inter";
-      font-style: normal;
-      font-weight: 400;
-      font-size: 24px;
-      line-height: 32px;
+      font: var(--MH-Type-Body-Large);
+      letter-spacing: 0;
       color: #6c6c6c;
     }
     input,
@@ -1073,17 +1047,13 @@ export const StyledProposal = styled.div`
       }
     }
     .title {
-      letter-spacing: 0em;
+      letter-spacing: 0;
       text-align: left;
-      color: #1a1a1a; */
+      color: #1a1a1a; 
     }
     .description {
-      font-family: Inter;
-      font-size: 24px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 32px;
-      letter-spacing: 0em;
+      font: var(--MH-Type-Body-Large);
+      letter-spacing: 0;
       text-align: left;
       color: #666666;
     }
@@ -1177,19 +1147,14 @@ export const StyledProposal = styled.div`
     }
   }
   .templateBanner .templateBannerHeaderToggle .templateBannerTitle {
-    font-family: "Inter", sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #5D5763;
     margin: 0;
   }
   .templateBannerSubtitle {
-    font-family: "Inter", sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: rgba(255, 255, 255, 0.9);
     margin: 4px 0 0 0;
   }
@@ -1230,18 +1195,14 @@ export const StyledProposal = styled.div`
   }
   .templateBannerStudentSettings {
     .templateBannerStudentSettingsHeading {
-      font-family: "Inter", sans-serif;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
       margin: 0 0 8px 0;
     }
     .templateBannerStudentSettingsHelp {
-      font-family: "Inter", sans-serif;
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #625B71;
       margin: 0 0 16px 0;
     }
@@ -1254,10 +1215,8 @@ export const StyledProposal = styled.div`
   }
   .templateBannerAdminSettings {
     .templateBannerAdminSettingsHeading {
-      font-family: "Inter", sans-serif;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: #171717;
       margin: 0 0 8px 0;
     }
@@ -1275,18 +1234,14 @@ export const StyledProposal = styled.div`
     flex-wrap: wrap;
   }
   .templateBannerBoardTypeIntro {
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
     margin: 0 0 4px 0;
   }
   .templateBannerBoardTypeMentorNote {
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #625B71;
     margin: 0 0 16px 0;
   }
@@ -1302,7 +1257,6 @@ export const StyledProposal = styled.div`
     border-radius: 12px;
     background: #ffffff;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
     transition: border-color 0.2s, background-color 0.2s;
     &:hover {
       border-color: #A1A1A1;
@@ -1329,9 +1283,8 @@ export const StyledProposal = styled.div`
     object-fit: contain;
   }
   .templateBannerBoardTypeOptionLabel {
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
   }
   .templateBannerSection {
@@ -1344,20 +1297,14 @@ export const StyledProposal = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: "Inter", sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
     margin: 0 0 6px 0;
   }
   .templateBannerSectionBody {
-    font-family: "Inter", sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #625B71;
     margin: 0;
     padding-left: 0;
@@ -1377,10 +1324,8 @@ export const StyledProposal = styled.div`
     align-items: center;
     justify-content: center;
     padding: 10px 20px;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
     max-width: 320px;
   }
@@ -1407,8 +1352,8 @@ export const StyledProposal = styled.div`
   .post {
     display: grid;
     // grid-row-gap: 10px;
-    font-family: Inter;
-    font-size: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     text-align: left;
     background: #F7F9F8;
     padding: 0px;
@@ -1486,10 +1431,8 @@ export const StyledProposal = styled.div`
         }
       }
       .middle {
-        font-family: Inter;
-        font-size: 24px;
-        font-weight: 500;
-        line-height: 40px;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
@@ -1519,11 +1462,8 @@ export const StyledProposal = styled.div`
           background: #3d85b0;
           color: white;
           border-radius: 100px;
-          font-family: Inter;
-          font-size: 20px;
-          font-weight: 700;
-          line-height: var(--LabelLargeLineHeight);
-          letter-spacing: var(--LabelLargeTracking);
+          font: var(--MH-Type-Label-Base);
+          letter-spacing: 0;
           text-align: center;
           text-underline-position: from-font;
           text-decoration-skip-ink: none;
@@ -1558,10 +1498,8 @@ export const StyledProposal = styled.div`
 
     label {
       display: block;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 20px;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
     }
     input,
     textarea,
@@ -1569,8 +1507,8 @@ export const StyledProposal = styled.div`
       border: 1px solid #cccccc;
       border-radius: 4px;
       width: 100%;
-      font-size: 16px;
-      line-height: 24px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       padding: 12px;
       &:focus {
         outline: 0;
@@ -1593,39 +1531,27 @@ export const StyledProposal = styled.div`
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
       /* MH-Theme/title/large */
-      font-family: Inter;
-      font-size: 22px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 28px; /* 127.273% */
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
     }
     .cardSubheaderAssign {
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
       /* MH-Theme/title/base */
-      font-family: Inter;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 24px; /* 150% */
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
     }
     .cardSubheader {
       margin-top: 16px;
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
       /* MH-Theme/title/large */
-      font-family: Inter;
-      font-size: 22px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 28px; /* 127.273% */
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
     }
     .cardSubheaderComment {
-      font-family: 'Inter';
-      font-style: normal;
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 22px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       display: flex;
       align-items: center;
       color: #626269;
@@ -1647,10 +1573,8 @@ export const StyledProposal = styled.div`
         width: 100%;
         max-width: none;
         padding: 12px 16px;
-        font-family: Inter;
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: var(--MH-Theme-Accent-Dark, #5D5763);
         background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
         border: 0;
@@ -1667,18 +1591,14 @@ export const StyledProposal = styled.div`
       .originalEntryBlockContent {
         padding: 16px;
         background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
-        font-family: Inter;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 24px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
       }
     }
     .cardDescription {
       color: #626269;
-      font-family: Inter;
-      font-size: 17px;
-      font-weight: 400;
-      line-height: 23.19px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
@@ -1729,30 +1649,6 @@ export const StyledProposal = styled.div`
         flex-wrap: nowrap;
         width: 100%;
         margin-top: 8px;
-      }
-      .collaboratorChip {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 24px;
-        border: 1px solid #A1A1A1;
-        border-radius: 30px;
-        padding: 4px 12px 4px 12px;
-        gap: 8px;
-        background: white;
-        overflow: hidden;
-        width: fit-content;
-        max-width: 300px;
-        span {
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 14px;
-          display: flex;
-          height: 100%;
-          align-items: center;
-        }
       }
       .addCollaboratorButton {
         display: flex;
@@ -1811,29 +1707,6 @@ export const StyledProposal = styled.div`
         width: 100%;
         margin-top: 8px;
       }
-      .collaboratorChip {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 32px;
-        border: 1px solid #A1A1A1;
-        border-radius: 30px;
-        padding: 4px 12px 4px 12px;
-        gap: 8px;
-        background: white;
-        overflow: hidden;
-        width: fit-content;
-        max-width: 300px;
-        span {
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          display: flex;
-          height: 100%;
-          align-items: center;
-        }
-      }
       .addCollaboratorButton {
         display: flex;
         align-items: center;
@@ -1879,10 +1752,8 @@ export const StyledProposal = styled.div`
         border: 1px solid #cccccc;
         border-radius: 20px;
         padding: 9px 16px;
-        font-family: Inter;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 21.82px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
@@ -1959,18 +1830,14 @@ export const StyledProposal = styled.div`
       min-width: 0;
     }
     .feedbackOptionCardTitle {
-      font-family: Inter;
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 22px;
+      font: var(--MH-Type-Title-Base);
+      letter-spacing: 0;
       color: var(--MH-Theme-Neutrals-Black, #171717);
       margin-bottom: 2px;
     }
     .feedbackOptionCardDescription {
-      font-family: Inter;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 20px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #626269;
     }
     .proposalCardComments {
@@ -1992,7 +1859,6 @@ export const StyledProposalCard = styled.div`
   width: calc(100% - 20px);
   cursor: pointer;
   margin: 3px 10px;
-  font-family: Inter;
   box-sizing: border-box;
 
   &.projectsBoardEditorProposal & {
@@ -2062,11 +1928,8 @@ export const StyledProposalCard = styled.div`
       border: 1px solid #e6e6e6;
       box-sizing: border-box;
       border-radius: 60px;
-      font-family: Inter;
-      font-size: 12px;
-      font-style: normal;
-      font-weight: 400;
-      letter-spacing: 0.05em;
+      font: var(--MH-Type-Label-Small);
+      letter-spacing: 0;
       padding: 1px 7px 1px 7px;
     }
 
@@ -2091,11 +1954,8 @@ export const StyledProposalCard = styled.div`
       .card-title {
         display: flex;
         flex: 1 0 0;
-        font-family: Inter;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 24px;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
         color: #171717;
         min-width: 0;
         div {
@@ -2153,7 +2013,6 @@ export const StyledActionCard = styled.div`
   cursor: pointer;
   margin: 3px 10px;
   width: calc(100% - 20px);
-  font-family: Inter;
   overflow: hidden;
   box-sizing: border-box;
 
@@ -2274,20 +2133,14 @@ export const StyledActionCard = styled.div`
       gap: 4px;
 
       .card-title {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 24px;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
         color: #171717;
       }
 
       .card-subtitle {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 20px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #6a6a6a;
       }
     }

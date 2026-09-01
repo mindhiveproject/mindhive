@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
+import clsx from "clsx";
 
 import DesignSystemButton from "../../../../DesignSystem/Button";
 import MatchingRoundsList from "./MatchingRoundsList";
@@ -33,8 +34,17 @@ export default function ClassOpportunities({ myclass }) {
     });
   };
 
+  const isWorkspace =
+    typeof router.query?.round === "string" && Boolean(router.query.round);
+
   return (
-    <div className="classTabPage opportunities">
+    <div
+      className={clsx(
+        "classTabPage",
+        "opportunities",
+        isWorkspace && "isMatchingRoundWorkspace",
+      )}
+    >
       {networks.length === 0 ? (
         <div className="classTabEmpty">
           <p>
@@ -67,6 +77,7 @@ export default function ClassOpportunities({ myclass }) {
         initialTab={previewInitialTab}
         onClose={handleClosePreview}
         matchingRoundContext={matchingRoundContext}
+        classId={myclass?.id || null}
       />
     </div>
   );

@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { GET_CARD_CONTENT } from "../../Queries/Proposal";
 
 import CardBuilder from "./Builder";
-import ActionCardBuilder from "./ActionCardBuilder";
+import MilestoneCardBuilder from "./MilestoneCardBuilder";
 import ProposalCard from "./Main";
 
 import IndividualCard from "./Individual/Main";
@@ -69,7 +69,7 @@ export default function CardWrapper({
       if (proposalBuildMode) {
         if (isActionCard(proposalCard)) {
           return (
-            <ActionCardBuilder
+            <MilestoneCardBuilder
               user={user}
               proposal={proposal}
               proposalCard={proposalCard}

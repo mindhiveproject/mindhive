@@ -59,7 +59,8 @@ export default function ClassMentors({ myclass, user }) {
     return (
       <Link
         href={{ pathname: `/dashboard/mentors/${mentor?.publicId}` }}
-        style={{ color: "inherit", textDecoration: "none", fontWeight: 500 }}
+        className="MH-Type-Label-Base"
+        style={{ color: "inherit", textDecoration: "none" }}
       >
         {mentor?.username}
       </Link>
@@ -71,7 +72,29 @@ export default function ClassMentors({ myclass, user }) {
     if (!mentor) return null;
     return (
       <DropdownMenu
-        triggerLabel={t("assignment.more", {}, { default: "More" })}
+        ariaLabel={t("assignment.action", {}, { default: "Action" })}
+        renderTrigger={({ onClick, open, ariaLabel }) => (
+          <Button
+            variant="subtle"
+            className="MH-Type-Label-Small"
+            leadingIcon={
+              <img
+                src="/assets/dataviz/three-dots.svg"
+                alt=""
+                width={14}
+                height={14}
+                aria-hidden
+              />
+            }
+            type="button"
+            aria-label={ariaLabel}
+            aria-expanded={open}
+            aria-haspopup="menu"
+            onClick={onClick}
+          >
+            {t("assignment.action", {}, { default: "Action" })}
+          </Button>
+        )}
         items={[
           {
             key: "remove",
@@ -112,7 +135,7 @@ export default function ClassMentors({ myclass, user }) {
     },
     {
       field: "actions",
-      headerName: t("assignment.actions", {}, { default: "Actions" }),
+      headerName: "",
       cellRenderer: ActionsRenderer,
       suppressFilter: true,
       sortable: false,
@@ -146,7 +169,7 @@ export default function ClassMentors({ myclass, user }) {
                     {origin}/signup/mentor?code={myclass.code}&i=
                     {mentorInvitationCode}
                   </div>
-                  <CopyButton value={mentorSignupLink} style={{ fontWeight: 500 }}>
+                  <CopyButton value={mentorSignupLink}>
                     {t("mentors.copy")}
                   </CopyButton>
                 </div>

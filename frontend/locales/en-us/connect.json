@@ -396,7 +396,64 @@
 	"editProfile": "Edit profile",
 	"exploreConnect": "Explore Connect",
 	"exploreDetail": {
-		"backLink": "Back to all opportunities"
+		"about": "About this opportunity",
+		"available": "Available",
+		"backLink": "Back to all opportunities",
+		"capacity": "Capacity",
+		"expectedDeliverables": "Expected deliverables",
+		"favorited": "Favorited",
+		"hardware": "Hardware",
+		"hostedBy": "Hosted by",
+		"introVideo": "Intro video",
+		"openVideoInNewTab": "Open video in new tab",
+		"loading": "Loading opportunity…",
+		"mentorTimeCommitment": "Time commitment: {{value}}",
+		"mentor": "Mentor",
+		"notFound": "Opportunity not found, or no longer available.",
+		"pastParticipants": "What past participants said",
+		"ratingSummary": "({{count}} reviews)",
+		"relevance": "Relevance to CUSP",
+		"requirements": "Project requirements",
+		"saveToFavorites": "Save to favorites",
+		"software": "Software",
+		"solo": "Solo",
+		"sponsor": "Sponsor",
+		"teamOf": "Team of {{count}}",
+		"teamSize": "Team size",
+		"timeCommitment": "Time commitment",
+		"viewOrganization": "View organization",
+		"viewProfile": "View profile",
+		"website": "Website",
+		"yourContact": "Your contact"
+	},
+	"exploreForStaff": {
+		"notAvailable": "Explore opportunities is not available for your account.",
+		"redirecting": "Redirecting to your classes…"
+	},
+	"exploreList": {
+		"description": "Browse every published opportunity available to your class networks. Tap the star on any card to save it for later, or open the opportunity for full details, intro video, and mentor info.",
+		"emptyFavorites": "You haven't favorited any opportunities yet. Tap the star on a card to save it.",
+		"emptyFiltered": "No opportunities match the current filters.",
+		"favoritesOnly": "Favorites only",
+		"groupFilterLabel": "Filter by team size",
+		"groupFilterPlaceholder": "Solo or team",
+		"groupSolo": "Solo (1 student)",
+		"groupTeam": "Team (2+ students)",
+		"loading": "Loading…",
+		"networkFilterLabel": "Filter by network",
+		"networkFilterPlaceholder": "All networks",
+		"next": "Next",
+		"noNetworks": "You're not in any class networks yet. Once a teacher adds you to a class with a network, opportunities will show up here.",
+		"pageTitle": "Explore opportunities",
+		"paginationInfo": "Page {{page}} of {{totalPages}} · {{total}} total",
+		"paginationLabel": "Opportunities pagination",
+		"previous": "Previous",
+		"searchLabel": "Search opportunities",
+		"searchPlaceholder": "Search opportunities…",
+		"solo": "Solo",
+		"teamOf": "Team of {{count}}",
+		"unknownMentor": "Unknown mentor",
+		"videoTag": "Video"
 	},
 	"interests": {
 		"description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
@@ -460,6 +517,9 @@
 		"unauthorizedTitle": "You can’t manage this organization",
 		"viewPublic": "View public page"
 	},
+	"matchesList": {
+		"emptyNoRounds": "No matching rounds yet. Create and configure a round from your class Opportunities tab, then return here to run matching."
+	},
 	"matchesRound": {
 		"backLink": "Back to matches"
 	},
@@ -492,18 +552,21 @@
 		},
 		"matchingAlgorithmLabel": "Matching algorithm",
 		"noRankedCandidates": "No unmatched students ranked this opportunity. Assign one manually instead.",
+		"noPreference": " — no preference",
 		"notAvailableYet": "This round is not available yet. Your teacher is still setting it up.",
 		"noUnmatched": "No unmatched students",
 		"openConfirm": "Students in this network will see this round and can submit preferences. Continue?",
 		"openingPreferences": "Opening…",
 		"openPreferences": "Open preferences",
+		"preferencePrivateNote": "note: \"{{note}}\"",
+		"preferenceRankStars": "rank {{rank}}, {{stars}}★",
 		"proposeTopCandidates": "Propose top candidates",
 		"proposeTopConfirm": "Propose the top {{count}} candidate(s) for \"{{title}}\"?",
 		"publishDisabledWhileDraft": "Open preferences and move the round to Matching before publishing matches.",
 		"publishRequiresMatching": "Set the round status to Matching before publishing final matches.",
 		"studentsPaneHeader": "Unmatched ({{count}})",
 		"submission": {
-			"backLink": "Back to rounds",
+			"backLink": "Back to opportunities",
 			"saveDraft": "Save draft",
 			"saving": "Saving…",
 			"statusDraft": "Draft saved",
@@ -526,6 +589,10 @@
 		"gradeLevel": {
 			"title": "Grade level"
 		}
+	},
+	"myMatchedStudents": {
+		"description": "Students placed on opportunities where you are the sponsor or mentor. After a project is active or completed, rate the student so future teachers and admins can see their track record.",
+		"title": "My matched students"
 	},
 	"myOpportunitiesList": {
 		"capacity": "Capacity {{count}}",
@@ -562,6 +629,15 @@
 			"unknownRound": "Matching round"
 		},
 		"loading": "Loading…",
+		"classForum": {
+			"modalTitle": "Class FAQ",
+			"modalTitleNamed": "Class FAQ · {{title}}",
+			"noClasses": "No classes are linked to this opportunity’s matching rounds yet.",
+			"open": "Class FAQ",
+			"pickClass": "Choose a class",
+			"pickClassPlaceholder": "Select a class",
+			"selectClassHint": "Select a class to view or ask questions in its FAQ."
+		},
 		"modals": {
 			"chatTitle": "Messages",
 			"chatTitleNamed": "Messages · {{title}}",
@@ -590,6 +666,7 @@
 		"reviewCommentsWaiting": "Teacher review comments are waiting for you.",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
+			"mentor": "Mentor: {{name}}",
 			"sponsor": "Sponsor: {{name}}",
 			"submitted": "Submitted {{date}}"
 		},
@@ -664,12 +741,10 @@
 		"manageNetwork": "Manage network",
 		"manageOrganization": "Manage organization",
 		"matches": "Matches",
-		"matchingRounds": "Matching rounds",
 		"myMatchedStudents": "My matched students",
 		"myOpportunities": "My opportunities",
 		"opportunities": "Opportunities",
 		"organizations": "Organizations",
-		"participate": "Participate",
 		"questionLibrary": "Question library",
 		"reviewQueue": ""
 	},
@@ -790,6 +865,7 @@
 		"guidelinesWarning": "Tick the guidelines checkbox before submitting this opportunity.",
 		"introVideo": "Intro video",
 		"introVideoHint": "Upload a video file or paste an embed URL (YouTube, Vimeo). Uploaded files are stored on our cloud bucket.",
+		"openVideoInNewTab": "Open video in new tab",
 		"introVideoUrlHint": "Or paste a video URL (the URL itself — not the full <iframe> embed code). Supports YouTube, Vimeo, Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload size: {{maxMb}} MB.",
 		"issueRelevance": "Organizational relevance",
 		"issueRelevanceDescription": "Why is this challenge of particular relevance to your organization? What are the implications of this issue or problem for your agency? 100 words maximum.",
@@ -813,10 +889,10 @@
 			"datasetProvision": "How will the sponsoring organization provide datasets to the student team?",
 			"datasetProvisionHint": "Select all that apply.",
 			"datasetProvisionOptions": {
-				"orgNoRestrictions": "Datasets will be provided directly by the organization to students by September 2026 and are not subject to privacy restrictions, nor do they require significant pre-processing/cleaning.",
-				"orgPrivacyNda": "Datasets will be provided directly by the organization to students by September 2026 and will require special privacy restrictions and/or NDA agreements in advance of the data transfer.",
+				"orgNoRestrictions": "Provided by the organization — no privacy restrictions or major cleaning needed.",
+				"orgPrivacyNda": "Provided by the organization — privacy restrictions and/or an NDA required before transfer.",
 				"other": "Other",
-				"public": "Datasets for this project are publicly available."
+				"public": "Publicly available."
 			},
 			"datasetProvisionOther": "Other (datasets)",
 			"deliverableOptions": {
@@ -987,7 +1063,7 @@
 			"requiresBusinessHoursHint": "Must a significant portion of research and data gathering be done during regular business hours? (Many students work full-time and may have constraints on their daytime availability). 50 words maximum.",
 			"title": "Special considerations"
 		},
-		"sponsorIsMentor": "I'm also the day-to-day mentor for this project (uncheck if someone else will be mentoring)",
+		"sponsorIsMentor": "I will also mentor the matched team (leave unchecked if a mentor will be assigned later)",
 		"sponsorStatusHint": "Set to Submitted for review when your proposal is ready — a teacher will review it.",
 		"sponsorStatusLocked": "— locked. A teacher or admin will update the status.",
 		"sponsorStatusReturnedHint": "— use Resubmit above when your changes are ready.",
@@ -1217,6 +1293,13 @@
 		"searchPlaceholder": "Search organizations…",
 		"viewOrganization": "View organization {{name}}"
 	},
+	"opportunityCard": {
+		"mentorLine": "Mentor: {{name}}",
+		"mentorTbd": "Mentor TBD",
+		"opportunityButton": "Opportunity",
+		"sponsorLine": "Sponsor: {{name}}",
+		"viewOpportunity": "View opportunity: {{title}}"
+	},
 	"passionNow": "What are you passionate about right now?",
 	"preferences": {
 		"availability": {
@@ -1270,6 +1353,7 @@
 		"defaultName": "MindHive Member",
 		"defaultSummary": "Click to view profile",
 		"profileButton": "Profile",
+		"typeLabel": "Connect Profile",
 		"viewProfile": "View profile of {{name}}"
 	},
 	"profileType": {
@@ -1300,7 +1384,7 @@
 		"emailTitle": "Your Capstone proposal was returned",
 		"error": "Could not return this opportunity. Please try again.",
 		"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
-		"placeholder": "Optional note for the sponsor…",
+		"placeholder": "Optional note for the respondent…",
 		"submitting": "Returning…",
 		"title": "Return with comments"
 	},

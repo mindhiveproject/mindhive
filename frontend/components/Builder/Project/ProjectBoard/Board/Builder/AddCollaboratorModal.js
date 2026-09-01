@@ -201,7 +201,6 @@ export default function AddCollaboratorModal({
   const styledPrimaryButton = {
     borderRadius: "100px",
     background: "#336F8A",
-    fontSize: "16px",
     color: "white",
     border: "1px solid #336F8A",
     padding: "10px 20px",
@@ -212,7 +211,6 @@ export default function AddCollaboratorModal({
   const styledSecondaryButton = {
     borderRadius: "100px",
     background: "white",
-    fontSize: "16px",
     color: "#336F8A",
     border: "1.5px solid #336F8A",
     padding: "10px 20px",
@@ -230,11 +228,10 @@ export default function AddCollaboratorModal({
       closeOnEscape
     >
       <Modal.Header
+        className="MH-Type-Title-Large"
         style={{
           background: "#f9fafb",
           borderBottom: "1px solid #e0e0e0",
-          fontFamily: "Inter, sans-serif",
-          fontWeight: 600,
         }}
       >
         {t("header.addCollaborator", "Add Collaborator")}
@@ -254,6 +251,7 @@ export default function AddCollaboratorModal({
               <div style={{ position: "relative", marginBottom: "16px" }}>
                 <input
                   type="text"
+                  className="MH-Type-Body-Base"
                   placeholder={t("header.searchPlaceholder", "Search by username...")}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -262,8 +260,6 @@ export default function AddCollaboratorModal({
                     padding: "12px 40px 12px 12px",
                     border: "1px solid #d0d5dd",
                     borderRadius: "8px",
-                    fontSize: "16px",
-                    fontFamily: "inherit",
                   }}
                 />
                 {search && (
@@ -292,13 +288,14 @@ export default function AddCollaboratorModal({
                 <p>{t("header.loading", "Loading...")}</p>
               ) : users.length > 0 ? (
                 <div>
-                  <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "12px" }}>
+                  <h3 className="MH-Type-Title-Large" style={{ marginBottom: "12px" }}>
                     {t("header.searchResults", "Search Results")}
                   </h3>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", maxHeight: "200px", overflowY: "auto", padding: "4px 0" }}>
                     {users.map((u) => (
                       <div
                         key={u.id}
+                        className="MH-Type-Label-Base"
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -307,7 +304,6 @@ export default function AddCollaboratorModal({
                           border: "1px solid #274E5B",
                           padding: "6px 12px",
                           borderRadius: "8px",
-                          fontSize: "14px",
                         }}
                       >
                         <span style={{ color: "#274E5B" }}>
@@ -348,7 +344,7 @@ export default function AddCollaboratorModal({
 
             {selected.length > 0 && (
               <div style={{ marginTop: "24px" }}>
-                <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "12px" }}>
+                <h3 className="MH-Type-Title-Large" style={{ marginBottom: "12px" }}>
                   {t("header.collaborators", "Collaborators")}
                 </h3>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
@@ -361,6 +357,7 @@ export default function AddCollaboratorModal({
                       return (
                         <div
                           key={s}
+                          className="MH-Type-Label-Base"
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -369,7 +366,6 @@ export default function AddCollaboratorModal({
                             background: "#FDF2D0",
                             padding: "6px 12px",
                             borderRadius: "8px",
-                            fontSize: "14px",
                           }}
                         >
                           <span style={{ color: "#495057" }}>
@@ -401,6 +397,7 @@ export default function AddCollaboratorModal({
 
             {error && (
               <div
+                className="MH-Type-Body-Base"
                 style={{
                   background: "#FDECEA",
                   color: "#B42318",
@@ -408,7 +405,6 @@ export default function AddCollaboratorModal({
                   borderRadius: "8px",
                   padding: "12px 16px",
                   marginTop: "16px",
-                  fontSize: "14px",
                 }}
               >
                 {t("header.error", "Error")}: {error.message}
@@ -422,6 +418,7 @@ export default function AddCollaboratorModal({
       >
         {userHasClasses && classId && (
           <Button
+            className="MH-Type-Label-Base"
             onClick={handleSave}
             disabled={loading}
             loading={loading}
@@ -432,7 +429,7 @@ export default function AddCollaboratorModal({
               : t("header.save", "Save")}
           </Button>
         )}
-        <button onClick={onClose} style={styledSecondaryButton}>
+        <button className="MH-Type-Label-Base" onClick={onClose} style={styledSecondaryButton}>
           {t("header.cancel", "Cancel")}
         </button>
       </Modal.Actions>

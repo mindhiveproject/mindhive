@@ -23,17 +23,16 @@ const Shell = styled.aside`
 
   h3 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
     color: #5f6871;
   }
 
   .preview-disclaimer {
     color: #888;
-    font-size: 12px;
-    line-height: 1.5;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     margin: 0;
   }
 `;

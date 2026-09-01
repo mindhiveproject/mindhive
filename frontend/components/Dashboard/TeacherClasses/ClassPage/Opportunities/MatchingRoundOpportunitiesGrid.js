@@ -16,9 +16,9 @@ import {
   REVIEW_NOTE_KIND,
 } from "../../../../../lib/reviewThreadRound";
 import {
-  formatDateShort,
-  isExpired,
-} from "../../../Connect/Rounds/roundFormConfig";
+  formatOpportunityMentorLabel,
+  formatOpportunitySponsorLabel,
+} from "../../../../../lib/opportunityPeople";
 import { CREATE_REVIEW_NOTE } from "../../../../Mutations/OpportunityReviewNote";
 import { UPDATE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
 import {
@@ -87,17 +87,15 @@ const OpportunityInfoTooltip = styled.div`
 
   .matchingRoundOppInfoTooltipTitle {
     margin: 0;
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 20px;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .matchingRoundOppInfoTooltipDescription {
     margin: 0;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 18px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -122,10 +120,8 @@ const OpportunityInfoTooltip = styled.div`
   }
 
   .matchingRoundOppInfoTooltipLabel {
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 16px;
-    letter-spacing: 0.04em;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-transform: uppercase;
     color: var(--MH-Theme-Neutrals-Grey-3, #888);
     white-space: nowrap;
@@ -137,9 +133,8 @@ const OpportunityInfoTooltip = styled.div`
     justify-content: flex-end;
     gap: 8px;
     flex-wrap: wrap;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 16px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
     text-align: right;
     overflow-wrap: anywhere;
@@ -167,9 +162,8 @@ const OpportunityInfoTooltip = styled.div`
     min-width: 0;
     width: fit-content;
     height: fit-content;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 16px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
 `;
@@ -264,9 +258,6 @@ function TooltipMetaRow({
               minWidth: 0,
               width: "fit-content",
               height: "fit-content",
-              fontSize: "12px",
-              fontWeight: 600,
-              lineHeight: "16px",
               color: "var(--MH-Theme-Primary-Dark, #336f8a)",
             }}
           >
@@ -439,6 +430,7 @@ export default function MatchingRoundOpportunitiesGrid({
   const { user } = useUser();
   const viewerId = user?.id || null;
   const gridRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [dismissedHighlights, setDismissedHighlights] = useState(() =>
     readDismissedHighlights(),
   );
@@ -538,11 +530,25 @@ export default function MatchingRoundOpportunitiesGrid({
     () =>
       opportunities.map((opportunity) => ({
         ...opportunity,
-        sponsorName: displayName(opportunity.mentor) || "—",
+        sponsorName: formatOpportunitySponsorLabel(opportunity),
+        mentorName: formatOpportunityMentorLabel(opportunity, t),
         organizationName: opportunity.organization?.name || "—",
       })),
-    [opportunities],
+    [opportunities, t],
   );
+
+  const quickFilterText = String(searchQuery || "").trim();
+
+  const hasSearchMatches = useMemo(() => {
+    const q = quickFilterText.toLowerCase();
+    if (!q) return true;
+    return rowData.some((row) => {
+      const title = String(row.title || "").toLowerCase();
+      const sponsor = String(row.sponsorName || "").toLowerCase();
+      const mentor = String(row.mentorName || "").toLowerCase();
+      return title.includes(q) || sponsor.includes(q) || mentor.includes(q);
+    });
+  }, [quickFilterText, rowData]);
 
   const InfoButtonRenderer = useCallback(
     (params) => {
@@ -712,8 +718,6 @@ export default function MatchingRoundOpportunitiesGrid({
             minWidth: 0,
             width: "fit-content",
             height: "fit-content",
-            fontSize: "14px",
-            fontWeight: 500,
             color: unread
               ? "var(--MH-Theme-Additional-Accent-Dark, #3f288f)"
               : "#171717",
@@ -762,8 +766,6 @@ export default function MatchingRoundOpportunitiesGrid({
             minWidth: 0,
             width: "fit-content",
             height: "fit-content",
-            fontSize: "14px",
-            fontWeight: 500,
             color: togglingOpportunityId ? "#a1a1a1" : "#171717",
           }}
           onClick={(e) => {
@@ -793,6 +795,7 @@ export default function MatchingRoundOpportunitiesGrid({
         sortable: true,
         flex: 2,
         minWidth: 180,
+        getQuickFilterText: (params) => params.value || "",
       },
       {
         field: "sponsorName",
@@ -803,6 +806,18 @@ export default function MatchingRoundOpportunitiesGrid({
         sortable: true,
         flex: 1.2,
         minWidth: 140,
+        getQuickFilterText: (params) => params.value || "",
+      },
+      {
+        field: "mentorName",
+        headerName: t("opportunities.matchingRound.grid.columns.mentor", {}, {
+          default: "Mentor",
+        }),
+        filter: "agTextColumnFilter",
+        sortable: true,
+        flex: 1.2,
+        minWidth: 140,
+        getQuickFilterText: (params) => params.value || "",
       },
       {
         field: "organizationName",
@@ -978,37 +993,75 @@ export default function MatchingRoundOpportunitiesGrid({
     return <p className="classTabEmptyInline">{emptyMessage}</p>;
   }
 
+  const searchToolbar = (
+    <div className="matchingRoundOpportunitiesSearchRow">
+      <div className="matchingRoundOpportunitiesSearchField">
+        <input
+          type="search"
+          className="matchingRoundOpportunitiesSearchInput"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label={t("opportunities.matchingRound.grid.searchLabel", {}, {
+            default: "Opportunities",
+          })}
+          placeholder={t(
+            "opportunities.matchingRound.grid.searchPlaceholder",
+            {},
+            { default: "Filter by title or sponsor…" },
+          )}
+        />
+      </div>
+    </div>
+  );
+
   return (
-    <div className="classTabTable ag-theme-quartz matchingRoundOpportunitiesGrid">
-      <AgGridReact
-        ref={gridRef}
-        rowData={rowData}
-        columnDefs={columnDefs}
-        getRowId={(params) => params.data?.id}
-        getRowClass={getRowClass}
-        postSortRows={postSortRows}
-        {...(selectionMode === "multi"
-          ? {
-              rowSelection: {
-                mode: "multiRow",
-                checkboxes: true,
-                headerCheckbox: true,
-                isRowSelectable,
-              },
-              onSelectionChanged: handleSelectionChanged,
-            }
-          : {})}
-        pagination
-        paginationPageSize={50}
-        paginationPageSizeSelector={[50, 100, 200]}
-        autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
-        defaultColDef={{ resizable: true }}
-        initialState={{
-          sort: {
-            sortModel: [{ colId: "title", sort: "asc" }],
-          },
-        }}
-      />
+    <div className="matchingRoundOpportunitiesGridShell">
+      {searchToolbar}
+      {!hasSearchMatches ? (
+        <p className="classTabEmptyInline">
+          {t("opportunities.matchingRound.grid.searchEmpty", {}, {
+            default: "No opportunities match this search.",
+          })}
+        </p>
+      ) : null}
+      <div
+        className="classTabTable ag-theme-quartz matchingRoundOpportunitiesGrid"
+        hidden={!hasSearchMatches}
+      >
+        <AgGridReact
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          getRowId={(params) => params.data?.id}
+          getRowClass={getRowClass}
+          postSortRows={postSortRows}
+          quickFilterText={quickFilterText}
+          {...(selectionMode === "multi"
+            ? {
+                rowSelection: {
+                  mode: "multiRow",
+                  checkboxes: true,
+                  headerCheckbox: true,
+                  isRowSelectable,
+                },
+                onSelectionChanged: handleSelectionChanged,
+              }
+            : {})}
+          pagination
+          paginationPageSize={50}
+          paginationPageSizeSelector={[50, 100, 200]}
+          autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
+          defaultColDef={{
+            resizable: true,
+            getQuickFilterText: () => "",
+          }}
+          initialState={{
+            sort: {
+              sortModel: [{ colId: "title", sort: "asc" }],
+            },
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -12,8 +12,10 @@ const ALLOWED_FIELD_TYPES = new Set<string>(
 
 /** Opportunity.videoFile — fixed mapping for the teacher intro-video question. */
 export const INTRO_VIDEO_FIELD_NAME = "videoFile";
+/** 100MB — production nginx `client_max_body_size` is 100m; larger GraphQL
+ *  multipart uploads 413 before this mutation runs. */
 export const INTRO_VIDEO_VALIDATION = {
-  maxFileSize: 500 * 1024 * 1024,
+  maxFileSize: 100 * 1024 * 1024,
   allowedMimes: "video/mp4,video/webm",
 };
 
@@ -35,7 +37,26 @@ type SaveClassFormDefinitionInput = {
   description?: string | null;
   fields: ClassFormFieldInput[];
   publish?: boolean | null;
+  /** Defaults to opportunity; student_assessment for competency forms. */
+  surface?: string | null;
 };
+
+const CLASS_FORM_SURFACES = new Set(["opportunity", "student_assessment"]);
+
+function surfaceConfig(surface: string) {
+  if (surface === "student_assessment") {
+    return {
+      surface: "student_assessment",
+      keyPrefix: "student_assessment_class",
+      allowIntroVideo: false,
+    };
+  }
+  return {
+    surface: "opportunity",
+    keyPrefix: "opportunity_class",
+    allowIntroVideo: true,
+  };
+}
 
 type NormalizedClassField = {
   name: string;
@@ -266,12 +287,26 @@ async function saveClassFormDefinition(
   { input }: { input: SaveClassFormDefinitionInput },
   context: any
 ) {
-  const { classId, definitionId, title, description, fields, publish } = input;
+  const {
+    classId,
+    definitionId,
+    title,
+    description,
+    fields,
+    publish,
+    surface: surfaceInput,
+  } = input;
+  const requestedSurface = String(surfaceInput || "opportunity").trim();
+  if (!CLASS_FORM_SURFACES.has(requestedSurface)) {
+    throw new Error(`Unsupported form surface: ${requestedSurface}`);
+  }
+  const { surface, keyPrefix, allowIntroVideo } = surfaceConfig(requestedSurface);
+
   if (!classId) throw new Error("classId is required.");
   if (!String(title || "").trim()) throw new Error("Title is required.");
 
   await assertClassTeacherOrMentor(context, classId);
-  const normalizedFields = normalizeFields(fields || []);
+  const normalizedFields = normalizeFields(fields || [], { allowIntroVideo });
   const sudo = context.sudo();
   const trimmedTitle = String(title).trim();
   const trimmedDescription = description ? String(description).trim() : "";
@@ -285,6 +320,7 @@ async function saveClassFormDefinition(
         id
         scope
         status
+        surface
         class { id creator { id } mentors { id } }
         cards(orderBy: { order: asc }) { id }
       `,
@@ -293,6 +329,7 @@ async function saveClassFormDefinition(
     if (
       existing.scope !== "class" ||
       existing.class?.id !== classId ||
+      existing.surface !== surface ||
       !canMutateFormDefinition(context.session, existing)
     ) {
       throw new Error("Forbidden: you cannot edit this form.");
@@ -329,7 +366,7 @@ async function saveClassFormDefinition(
     }
     await replaceCardFields(sudo, cardId, normalizedFields);
   } else {
-    const keyBase = `opportunity_class_${slugify(trimmedTitle, "form")}`;
+    const keyBase = `${keyPrefix}_${slugify(trimmedTitle, "form")}`;
     let key = keyBase;
     let suffix = 1;
     while (true) {
@@ -352,7 +389,7 @@ async function saveClassFormDefinition(
         title: trimmedTitle,
         description: trimmedDescription,
         scope: "class",
-        surface: "opportunity",
+        surface,
         status: "draft",
         version: 1,
         class: { connect: { id: classId } },

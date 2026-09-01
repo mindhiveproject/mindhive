@@ -93,7 +93,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                   "The following features of this {{taskType}} can be tweaked:"
                 )}
               </p>
-              <p style={{ fontSize: "14px" }}>
+              <p className="MH-Type-Body-Base">
                 *{" "}
                 {t(
                   "viewer.defaultValues",
@@ -132,7 +132,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                   "The following features of this {{taskType}} can be tweaked:"
                 )}
               </p>
-              <p style={{ fontSize: "14px" }}>
+              <p className="MH-Type-Body-Base">
                 *{" "}
                 {t(
                   "viewer.defaultValues",

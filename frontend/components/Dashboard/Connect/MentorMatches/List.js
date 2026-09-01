@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Label } from "semantic-ui-react";
 
+import { mergeOpportunityLists } from "../../../../lib/opportunityPeople";
 import { MY_MENTOR_MATCHES } from "../../../Queries/Opportunity";
 import {
   CREATE_RATING,
@@ -23,15 +25,15 @@ const Shell = styled.div`
 const Header = styled.div`
   h1 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 600;
+    font: var(--MH-Type-Heading-Base);
+    letter-spacing: 0;
     color: #171717;
   }
   p {
     margin: 4px 0 0;
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     max-width: 640px;
   }
 `;
@@ -47,14 +49,15 @@ const OpportunityCard = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -75,14 +78,15 @@ const StudentRow = styled.div`
   }
 
   .name {
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
-    font-size: 15px;
   }
 
   .meta {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     margin-top: 2px;
   }
 `;
@@ -91,12 +95,13 @@ const Field = styled.label`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   color: #5f6871;
 
   span.label-text {
-    font-weight: 600;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
@@ -105,8 +110,8 @@ const Field = styled.label`
     border: 1px solid #d3dae0;
     border-radius: 12px;
     background: #ffffff;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #171717;
     outline: none;
     min-height: 80px;
@@ -127,9 +132,8 @@ const Button = styled.button`
   border: 1px solid ${({ $primary }) => ($primary ? "#336f8a" : "#d3dae0")};
   background: ${({ $primary }) => ($primary ? "#336f8a" : "#ffffff")};
   color: ${({ $primary }) => ($primary ? "#ffffff" : "#336f8a")};
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 13px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
 
   &:disabled {
@@ -306,8 +310,8 @@ function StudentMatchCard({ match, opportunity, me, onSaved }) {
                   border: `1px solid ${active ? "#336f8a" : "#d3dae0"}`,
                   background: active ? "#336f8a" : "#ffffff",
                   color: active ? "#ffffff" : "#5f6871",
-                  fontSize: 12,
-                  fontWeight: 600,
+                  font: 'var(--MH-Type-Label-Base)',
+                  letterSpacing: 0,
                   cursor: "pointer",
                 }}
               >
@@ -323,7 +327,8 @@ function StudentMatchCard({ match, opportunity, me, onSaved }) {
           display: "inline-flex",
           gap: 8,
           alignItems: "center",
-          fontSize: 13,
+          font: 'var(--MH-Type-Label-Base)',
+          letterSpacing: 0,
           cursor: "pointer",
         }}
       >
@@ -345,11 +350,16 @@ function StudentMatchCard({ match, opportunity, me, onSaved }) {
 }
 
 export default function MentorMatchesList({ user }) {
+  const { t } = useTranslation("connect");
   const { data, loading, refetch } = useQuery(MY_MENTOR_MATCHES, {
     fetchPolicy: "cache-and-network",
   });
 
-  const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
+  const opportunities = mergeOpportunityLists(
+    data?.authenticatedItem?.opportunitiesCreated,
+    data?.authenticatedItem?.opportunitiesSponsored,
+    data?.authenticatedItem?.opportunitiesMentoring,
+  );
   const me = data?.authenticatedItem;
 
   // Only show opportunities that actually have matches — clutter-reducer
@@ -366,11 +376,18 @@ export default function MentorMatchesList({ user }) {
   return (
     <Shell>
       <Header>
-        <h1>My matched students</h1>
+        <h1>
+          {t("myMatchedStudents.title", {}, { default: "My matched students" })}
+        </h1>
         <p>
-          Students placed on your opportunities. After a project is active or
-          completed, rate the student so future teachers and admins can see
-          their track record.
+          {t(
+            "myMatchedStudents.description",
+            {},
+            {
+              default:
+                "Students placed on opportunities where you are the sponsor or mentor. After a project is active or completed, rate the student so future teachers and admins can see their track record.",
+            },
+          )}
         </p>
       </Header>
 

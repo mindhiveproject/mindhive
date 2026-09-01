@@ -46,11 +46,9 @@ export default function DeleteConfirmModal({
         </StyledModalHeader> */}
         <StyledModalBody>
           <p
+            className="MH-Type-Body-Base"
             style={{
               margin: 0,
-              fontFamily: "Inter, sans-serif",
-              fontSize: 14,
-              lineHeight: 1.5,
               color: "#333",
             }}
           >
@@ -59,11 +57,10 @@ export default function DeleteConfirmModal({
           {error ? (
             <p
               role="alert"
+              className="MH-Type-Body-Base"
               style={{
                 marginTop: 12,
                 marginBottom: 0,
-                fontFamily: "Inter, sans-serif",
-                fontSize: 13,
                 color: "#c62828",
               }}
             >
@@ -88,15 +85,13 @@ export default function DeleteConfirmModal({
           <StyledModalButton
             type="button"
             disabled={loading}
-            className={confirmPrimary ? "save" : undefined}
+            className={`MH-Type-Label-Base${confirmPrimary ? " save" : ""}`}
             style={{
               marginLeft: 8,
               padding: "8px 16px",
               border: "none",
               borderRadius: 6,
               cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "Inter, sans-serif",
-              fontSize: 14,
               ...(confirmPrimary
                 ? { background: "#3182ce", color: "#fff" }
                 : { background: "#c62828", color: "#fff" }),

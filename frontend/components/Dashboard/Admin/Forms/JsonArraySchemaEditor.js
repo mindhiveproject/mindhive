@@ -60,8 +60,8 @@ const SmallButton = styled.button`
   border-radius: 8px;
   padding: 8px 12px;
   color: #c0392b;
-  font-family: "Nunito", sans-serif;
-  font-size: 12px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
   height: 36px;
 
@@ -78,9 +78,8 @@ const AddRowButton = styled.button`
   border: 1px dashed #336f8a;
   background: #eef5f9;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 12px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
 `;
 
@@ -197,7 +196,10 @@ export default function JsonArraySchemaEditor({ value, onChange }) {
       </FieldRow>
 
       {rowSchema.length === 0 ? (
-        <span style={{ color: "#888", fontSize: 13, fontStyle: "italic" }}>
+        <span
+          className="MH-Type-Body-Base"
+          style={{ color: "#888", fontStyle: "italic" }}
+        >
           No sub-fields yet — click "Add sub-field" below.
         </span>
       ) : null}

@@ -49,27 +49,21 @@ export const StyledTaskPage = styled.div`
   }
 
   p {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #666666;
   }
   h1 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 48px;
-    line-height: 56px;
+    font: var(--MH-Type-Heading-Large);
+    letter-spacing: 0;
     color: #1a1a1a;
   }
   h3 {
-    font-family: Lato;
     font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
-    line-height: 32px;
+    font: var(--MH-Type-Heading-Small);
+    letter-spacing: 0;
     color: #666666;
   }
   a {
@@ -120,7 +114,8 @@ export const StyledContent = styled.div`
   p,
   li,
   span {
-    font-size: 16px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
   img {
     width: 100%;

@@ -1,6 +1,7 @@
 {
 	"account": "账户",
 	"admin": "行政",
+	"adminDashboard": "管理面板",
 	"analyze": "分析",
 	"archived": "已归档",
 	"boards": "项目委员会",
@@ -27,14 +28,18 @@
 	"proposalTemplates": "提案模板",
 	"research": "研究",
 	"researcher": "研究",
+	"researcherDashboard": "研究员面板",
 	"resources": "资源",
 	"review": "审查",
 	"search": "搜索",
 	"settings": "设置",
 	"sponsors": "赞助方",
+	"sponsorDashboard": "赞助方面板",
 	"student": "学生",
+	"studentDashboard": "学生面板",
 	"tags": "标签",
 	"teacher": "教学",
+	"teacherDashboard": "教师面板",
 	"updates": "更新",
 	"workspace": "工作区"
 }

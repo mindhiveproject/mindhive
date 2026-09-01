@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import AssignCardModal from "./AssignCardModal";
+import Chip from "../../../../../../DesignSystem/Chip";
 
 export default function Assigned(props) {
   const {
@@ -54,9 +55,13 @@ export default function Assigned(props) {
         {assignedIds.map((userId) => {
           const username = userLookup[userId] || "";
           return (
-            <div key={userId} className="collaboratorChip">
-              <span>{username}</span>
-            </div>
+            <Chip
+              key={userId}
+              variant="static"
+              tone="neutral"
+              label={username}
+              title={username}
+            />
           );
         })}
         {canAddAssignment ? (

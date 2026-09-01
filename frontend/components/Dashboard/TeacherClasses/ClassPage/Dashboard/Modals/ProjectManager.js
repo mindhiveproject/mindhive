@@ -410,7 +410,6 @@ export default function ProjectManager(props) {
 }
 
 const StyledModal = styled.div`
-  font-family: Nunito, sans-serif !important;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -422,14 +421,15 @@ const StyledModal = styled.div`
     margin-bottom: 24px;
 
     h1 {
-      font-size: 24px;
-      font-weight: 700;
+      font: var(--MH-Type-Heading-Small);
+      letter-spacing: 0;
       color: #333333;
       margin: 0 0 8px;
     }
 
     p {
-      font-size: 16px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       color: #666666;
       margin: 0;
     }
@@ -443,8 +443,8 @@ const StyledModal = styled.div`
       background: #f9f9f9;
 
       h2 {
-        font-size: 18px;
-        font-weight: 600;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
         color: #333333;
         margin-bottom: 16px;
       }
@@ -452,7 +452,8 @@ const StyledModal = styled.div`
       &.empty-state {
         text-align: center;
         p {
-          font-size: 16px;
+          font: var(--MH-Type-Body-Base);
+          letter-spacing: 0;
           color: #666666;
         }
       }
@@ -483,8 +484,8 @@ const StyledModal = styled.div`
           margin-bottom: 12px;
 
           h3 {
-            font-size: 16px;
-            font-weight: 600;
+            font: var(--MH-Type-Title-Base);
+            letter-spacing: 0;
             color: #333333;
             margin: 0;
           }
@@ -505,7 +506,8 @@ const StyledModal = styled.div`
                   background-color: ${(props) =>
                     props.active ? "#3d85b0" : "#b0b0b0"};
                   color: #ffffff;
-                  font-size: 14px;
+                  font: var(--MH-Type-Label-Base);
+                  letter-spacing: 0;
                   padding: 6px 12px;
 
                   &:hover {
@@ -521,8 +523,8 @@ const StyledModal = styled.div`
               }
 
               .toggle-label {
-                font-size: 14px;
-                font-weight: 600;
+                font: var(--MH-Type-Label-Base);
+                letter-spacing: 0;
                 color: ${(props) => (props.isMain ? "#3d85b0" : "#666666")};
               }
             }
@@ -531,8 +533,8 @@ const StyledModal = styled.div`
               visibility: hidden;
               background-color: #333333;
               color: #ffffff;
-              font-size: 12px;
-              font-weight: normal;
+              font: var(--MH-Type-Body-Base);
+              letter-spacing: 0;
               text-align: center;
               border-radius: 4px;
               padding: 8px;
@@ -555,14 +557,16 @@ const StyledModal = styled.div`
 
         .project-info {
           p {
-            font-size: 14px;
+            font: var(--MH-Type-Body-Base);
+            letter-spacing: 0;
             color: #666666;
             margin: 0 0 8px;
           }
 
           .collaborators,
           .mentors {
-            font-size: 14px;
+            font: var(--MH-Type-Body-Base);
+            letter-spacing: 0;
             color: #333333;
             margin: 0 0 8px;
 
@@ -576,8 +580,8 @@ const StyledModal = styled.div`
             background: #3d85b0;
             border-radius: 6px;
             padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 600;
+            font: var(--MH-Type-Label-Base);
+            letter-spacing: 0;
             color: #ffffff;
             text-decoration: none;
             transition: all 0.2s ease;
@@ -593,8 +597,8 @@ const StyledModal = styled.div`
           border: none;
           border-radius: 6px;
           padding: 8px 16px;
-          font-size: 14px;
-          font-weight: 600;
+          font: var(--MH-Type-Label-Base);
+          letter-spacing: 0;
           color: #ffffff;
           cursor: pointer;
           transition: all 0.2s ease;
@@ -621,7 +625,8 @@ const StyledModal = styled.div`
           border: 1px solid #d0d0d0;
           border-radius: 6px;
           background: #ffffff;
-          font-size: 16px;
+          font: var(--MH-Type-Label-Base);
+          letter-spacing: 0;
           color: #333333;
           padding: 10px;
 
@@ -634,7 +639,8 @@ const StyledModal = styled.div`
 
           .menu {
             .item {
-              font-size: 16px;
+              font: var(--MH-Type-Label-Base);
+              letter-spacing: 0;
             }
           }
 
@@ -658,9 +664,9 @@ const StyledModal = styled.div`
         border: 1px solid #d0d0d0;
         border-radius: 6px;
         padding: 10px;
-        font-size: 16px;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
         color: #333333;
-        font-family: Nunito, sans-serif;
 
         &:focus {
           outline: none;

@@ -142,8 +142,10 @@ export default withAuth(
     lists,
     extendGraphqlSchema,
     graphql: {
-      // Issue #11: reduced from 100mb. File uploads go through Cloudinary/local
-      // storage routes, not the GraphQL body, so 10mb covers all legitimate queries.
+      // Issue #11: reduced from 100mb. JSON GraphQL bodies stay at 10mb.
+      // Multipart file uploads (opportunity/profile videos) still POST through
+      // /api/graphql; production nginx `client_max_body_size` is 100m — raise
+      // that (not this limit) if those payloads need to grow.
       bodyParser: {
         limit: "10mb",
       },

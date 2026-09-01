@@ -19,9 +19,8 @@ const TopSection = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  font-family: Lato;
-  font-size: 28px;
-  font-weight: 600;
+  font: var(--MH-Type-Heading-Small);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 
@@ -47,9 +46,8 @@ const ContentSection = styled.div`
 
 const ContentTitle = styled.h2`
   margin: 0 0 16px 0;
-  font-family: Lato;
-  font-size: 20px;
-  font-weight: 600;
+  font: var(--MH-Type-Title-Large);
+  letter-spacing: 0;
   color: #1a1a1a;
 `;
 

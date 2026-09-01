@@ -239,11 +239,12 @@ export const OPPORTUNITY_FORM_SEED: FormSeed = {
           name: "videoFile",
           fieldType: "file",
           label: "Intro video file",
-          helperText: "Upload an MP4 / WebM (max ~500MB). Used when no embed URL is set.",
+          helperText: "Upload an MP4 / WebM (max ~100MB). Used when no embed URL is set.",
           storage: "column",
           storageColumn: "videoFile",
           validation: {
-            maxFileSize: 524288000,
+            // 100MB — production nginx `client_max_body_size` is 100m.
+            maxFileSize: 104857600,
             allowedMimes: "video/mp4,video/webm"
           },
         },
@@ -501,7 +502,8 @@ export const OPPORTUNITY_FORM_SEED: FormSeed = {
     },
     {
       title: "Sponsor mentor",
-      description: "If you'll be the day-to-day mentor for matched students, leave this checked.",
+      description:
+        "Leave unchecked if a mentor will be assigned later (Mentor TBD). Check this if you will mentor the matched team yourself.",
       fields: [
         {
           name: "sponsorIsMentor",
@@ -509,7 +511,7 @@ export const OPPORTUNITY_FORM_SEED: FormSeed = {
           label: "I will mentor the matched team",
           storage: "column",
           storageColumn: "sponsorIsMentor",
-          defaultValue: true,
+          defaultValue: false,
         },
         {
           name: "mentorNotes",

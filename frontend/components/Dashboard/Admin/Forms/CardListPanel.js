@@ -1,6 +1,6 @@
 // Left pane: drag-and-drop sortable list of cards. Each card can be
 // expanded to show its fields (also sortable). Buttons:
-//   - "+ Add card" at the bottom of the list
+//   - "+ Add" at the bottom of the list
 //   - "+" per card: add a field
 //   - "≡" drag handle on each card and field row
 //   - click anywhere else on a row to select it
@@ -32,17 +32,17 @@ const Shell = styled.aside`
 
   h3 {
     margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: 13px;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
     color: #5f6871;
     flex-shrink: 0;
   }
 
   .empty {
     color: #888;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     padding: 12px;
   }
 
@@ -51,7 +51,7 @@ const Shell = styled.aside`
   }
 `;
 
-// The cards list scrolls; the "Add card" button stays pinned outside
+// The cards list scrolls; the "Add" button stays pinned outside
 // the scroll area so admins always see it even when the form has many
 // cards.
 const ScrollArea = styled.div`
@@ -75,9 +75,9 @@ const CardItem = styled.div`
     align-items: center;
     gap: 6px;
     padding: 8px 10px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
-    font-size: 14px;
     border-radius: 8px;
     cursor: pointer;
 
@@ -87,8 +87,8 @@ const CardItem = styled.div`
 
     .meta {
       color: #888;
-      font-size: 11px;
-      font-weight: 400;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
       margin-left: 8px;
     }
 
@@ -103,7 +103,8 @@ const FieldRow = styled.div`
   align-items: center;
   gap: 6px;
   padding: 6px 10px 6px 22px;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   cursor: pointer;
   color: ${({ $selected }) => ($selected ? "#336f8a" : "#5f6871")};
   background: ${({ $selected }) => ($selected ? "#eef5f9" : "transparent")};
@@ -117,8 +118,8 @@ const FieldRow = styled.div`
   .type {
     margin-left: auto;
     color: #888;
-    font-size: 11px;
-    font-family: "Nunito", monospace;
+    font: var(--MH-Type-Label-Small);
+    letter-spacing: 0;
   }
 
   .name-text {
@@ -150,9 +151,8 @@ const AddCardButton = styled.button`
   border: 1px dashed #336f8a;
   background: #eef5f9;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
   width: 100%;
   flex-shrink: 0;
@@ -173,9 +173,8 @@ const AddFieldButton = styled.button`
   border: 1px dashed #d3dae0;
   background: transparent;
   color: #336f8a;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 12px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
   text-align: left;
   margin: 2px 0 6px;
@@ -401,7 +400,7 @@ export default function CardListPanel({
       </ScrollArea>
 
       <AddCardButton type="button" onClick={addCard} disabled={addingCard}>
-        {addingCard ? "Adding…" : "+ Add card"}
+        {addingCard ? "Adding…" : "+ Add"}
       </AddCardButton>
     </Shell>
   );

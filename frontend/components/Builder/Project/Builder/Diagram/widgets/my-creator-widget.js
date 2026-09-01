@@ -14,8 +14,8 @@ export const StyledCreatorWidget = styled.div`
     flex-grow: 0;
     flex-shrink: 0;
     color: #6a6b6b;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 20px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     padding: 10px;
     padding-left: 30px;
     align-items: center;

@@ -51,6 +51,9 @@ export const SPONSOR_ONBOARDING_STATE = gql`
         opportunitiesCreated {
           id
         }
+        opportunitiesSponsored {
+          id
+        }
       }
     }
   }
@@ -120,6 +123,9 @@ export const CURRENT_USER_QUERY = gql`
           id
         }
         favoritePeople {
+          id
+        }
+        favoriteOpportunities {
           id
         }
         bio

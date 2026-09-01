@@ -7,6 +7,7 @@ type UpdateTemplateMilestoneInput = {
   formDefinitionId?: string | null;
   canReviewPermissionIds?: string[];
   showInFeedbackCenter?: boolean;
+  statusTarget?: "board" | "study";
   isActive?: boolean;
   position?: number;
 };
@@ -30,6 +31,9 @@ async function updateTemplateMilestone(
   if (input.description != null) data.description = input.description;
   if (input.showInFeedbackCenter != null) {
     data.showInFeedbackCenter = input.showInFeedbackCenter;
+  }
+  if (input.statusTarget != null) {
+    data.statusTarget = input.statusTarget;
   }
   if (input.isActive != null) data.isActive = input.isActive;
   if (input.position != null) data.position = input.position;

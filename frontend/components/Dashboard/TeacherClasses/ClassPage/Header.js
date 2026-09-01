@@ -311,8 +311,6 @@ export default function Header({ myclass, readOnly = false }) {
                 variant="tonal"
                 style={{
                   background: "#F3F3F3",
-                  border: "none",
-                  boxShadow: "none",
                 }}
                 className="classHeaderDescriptionToggle"
                 onClick={() => setDescriptionExpanded((prev) => !prev)}

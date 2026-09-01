@@ -9,6 +9,7 @@ import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import AlgorithmInfoModal from "./AlgorithmInfoModal";
 
 import { ROUND_MATCH_VIEW } from "../../../Queries/ConnectMatch";
+import { formatOpportunitySponsorLabel } from "../../../../lib/opportunityPeople";
 import { MY_CONNECT_ROUNDS } from "../../../Queries/ConnectRound";
 import {
   CREATE_MATCH,
@@ -18,7 +19,15 @@ import {
   DELETE_MATCHES,
 } from "../../../Mutations/ConnectMatch";
 import { UPDATE_CONNECT_ROUND } from "../../../Mutations/ConnectRound";
-import { runMatching, computeScore } from "./matchingAlgorithm";
+import { runMatching } from "./matchingAlgorithm";
+import {
+  buildPrefIndex,
+  displayName,
+  formatPreferenceSummary,
+  prefForStudentOpp,
+  scoreForStudentOpp,
+} from "../../../../lib/connectBallotUtils";
+import useConnectMatchAssign from "../../../../lib/useConnectMatchAssign";
 import { ALGO_OPTIONS } from "../Rounds/roundFormConfig";
 import NetworkGraph from "./NetworkGraph";
 import Button from "../../../DesignSystem/Button";
@@ -88,11 +97,9 @@ const TitleRow = styled.div`
     margin: 0;
     min-width: 0;
     max-width: 100%;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(20px, 2.8vw, 26px);
-    font-weight: 600;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
-    line-height: 1.25;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -100,7 +107,8 @@ const TitleRow = styled.div`
 
   .meta {
     color: #5f6871;
-    font-size: 13px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -153,14 +161,15 @@ const Card = styled.div`
 
   h2 {
     margin: 0;
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font: var(--MH-Type-Title-Large);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .helper {
     color: #5f6871;
-    font-size: 14px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -179,14 +188,15 @@ const OpportunityCard = styled.div`
   gap: 12px;
 
   .title {
-    font-size: 16px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Base);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .meta {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 `;
 
@@ -226,12 +236,10 @@ const StickyPane = styled(PaneColumn)`
 
 const PaneHeader = styled.h3`
   margin: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
+  font: var(--MH-Type-Title-Small);
+  letter-spacing: 0;
   color: #171717;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
 `;
 
 const AssignedChip = styled.div`
@@ -244,18 +252,21 @@ const AssignedChip = styled.div`
   background: #eef5f9;
   border: 1px solid #d3dae0;
   color: #336f8a;
-  font-size: 13px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 
   .assigned-name {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
   }
 
   .assigned-opp {
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
     color: #5f6871;
   }
 
@@ -265,9 +276,8 @@ const AssignedChip = styled.div`
     border: 1px solid #e8c4c4;
     background: #fff;
     color: #b3261e;
-    font-family: Inter, sans-serif;
-    font-weight: 600;
-    font-size: 12px;
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
     cursor: pointer;
 
     &:disabled {
@@ -285,7 +295,8 @@ const DropZone = styled.div`
   border-radius: 10px;
   padding: 10px 14px;
   color: #5f6871;
-  font-size: 12px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
   font-style: italic;
   text-align: center;
   background: #f7f9f8;
@@ -307,7 +318,8 @@ const DraggableStudentChip = styled.div`
   border: 1px solid #d3dae0;
   background: #ffffff;
   color: #171717;
-  font-size: 13px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: grab;
   user-select: none;
 
@@ -327,14 +339,15 @@ const MatchRow = styled.div`
   flex-wrap: wrap;
 
   .name {
-    font-weight: 600;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
     color: #171717;
-    font-size: 14px;
   }
 
   .info {
     color: #5f6871;
-    font-size: 12px;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
   }
 
   .controls {
@@ -380,14 +393,6 @@ const ROUND_STATUS_LABELS = {
   archived: "Archived",
 };
 
-function displayName(profile) {
-  if (!profile) return "Unknown";
-  return (
-    `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
-    profile.username
-  );
-}
-
 export default function RoundMatches({ roundId }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
@@ -422,30 +427,22 @@ export default function RoundMatches({ roundId }) {
   // Preference index for teacher-curated ranking. Key: `${studentId}::${oppId}`
   // → the student's PreferenceItem for that opportunity (rank, starRating).
   // Only submitted preferences count — drafts are noise in the ranking.
-  const prefIndex = new Map();
-  preferences
-    .filter((p) => p.status === "submitted")
-    .forEach((p) => {
-      const studentId = p.submitter?.id;
-      if (!studentId) return;
-      (p.items || []).forEach((it) => {
-        const oppId = it.opportunity?.id;
-        if (!oppId) return;
-        prefIndex.set(`${studentId}::${oppId}`, it);
-      });
-    });
+  const prefIndex = buildPrefIndex(preferences, { submittedOnly: true });
 
   const totalOpps = opportunities.length;
-  // Score a (student, opportunity) pair the same way the auto-matchers do
-  // (matchingAlgorithm.js:computeScore). Students with no submitted preference
-  // for the opportunity get score 0 so they sort last.
-  const scoreFor = (studentId, oppId) => {
-    const item = prefIndex.get(`${studentId}::${oppId}`);
-    return item ? computeScore(item, totalOpps) : 0;
-  };
-  const prefFor = (studentId, oppId) => prefIndex.get(`${studentId}::${oppId}`);
+  const scoreFor = (studentId, oppId) =>
+    scoreForStudentOpp(studentId, oppId, prefIndex, totalOpps);
+  const prefFor = (studentId, oppId) =>
+    prefForStudentOpp(studentId, oppId, prefIndex);
 
-  const [createMatch, { loading: assigning }] = useMutation(CREATE_MATCH);
+  const { handleAssign, assigning: assigningFromHook } = useConnectMatchAssign({
+    round,
+    opportunities,
+    matches,
+    refetch,
+  });
+  const [createMatch] = useMutation(CREATE_MATCH);
+  const assigning = assigningFromHook;
   const [createMatches, { loading: creating }] = useMutation(CREATE_MATCHES);
   const [deleteMatches, { loading: bulkDeleting }] = useMutation(DELETE_MATCHES);
   const [updateMatch] = useMutation(UPDATE_MATCH);
@@ -732,47 +729,6 @@ export default function RoundMatches({ roundId }) {
     await refetch();
   };
 
-  // Manual assign for teacher-curated rounds. Capacity is enforced at the
-  // callsite (the dropdown hides opportunities that are full), but we
-  // re-check here as a safety net — the query result might be stale.
-  const handleAssign = async (studentId, opportunityId) => {
-    if (!studentId || !opportunityId) return;
-    const opp = opportunities.find((o) => o.id === opportunityId);
-    const cap = opp?.studentCapacity || 1;
-    const currentCount = (matchesByOpportunity.get(opportunityId) || []).length;
-    if (currentCount >= cap) {
-      window.alert(
-        t("matchingRound.capacityFull", {}, {
-          default:
-            "This opportunity is already at capacity. Remove an existing match first.",
-        })
-      );
-      return;
-    }
-    // Guard against duplicate (round, student, opportunity) triples — the
-    // schema doesn't enforce uniqueness so we check client-side.
-    const duplicate = matches.some(
-      (m) => m.student?.id === studentId && m.opportunity?.id === opportunityId
-    );
-    if (duplicate) return;
-
-    await createMatch({
-      variables: {
-        input: {
-          round: { connect: { id: round.id } },
-          classNetwork: round.classNetwork?.id
-            ? { connect: { id: round.classNetwork.id } }
-            : undefined,
-          opportunity: { connect: { id: opportunityId } },
-          student: { connect: { id: studentId } },
-          status: "proposed",
-          proposedAt: new Date().toISOString(),
-        },
-      },
-    });
-    await refetch();
-  };
-
   const handleBack = () => {
     router.replace({ pathname: "/dashboard/connect/matches" });
   };
@@ -808,7 +764,7 @@ export default function RoundMatches({ roundId }) {
   const renderOpportunityCard = (opp) => {
     const oppMatches = matchesByOpportunity.get(opp.id) || [];
     const cap = opp.studentCapacity || 1;
-    const mentorName = displayName(opp.mentor);
+    const mentorName = formatOpportunitySponsorLabel(opp);
     const hasCapacity = oppMatches.length < cap;
     // Only teacher-curated rounds get the manual assign affordance.
     // Options list = unmatched students, sorted by their preference
@@ -822,9 +778,12 @@ export default function RoundMatches({ roundId }) {
           })
           .map((s) => {
             const pref = prefFor(s.id, opp.id);
-            const suffix = pref
-              ? ` — rank ${pref.rank ?? "—"}, ${pref.starRating ?? 0}★`
-              : ` — no preference`;
+            const summary = formatPreferenceSummary(pref, t);
+            const suffix = summary
+              ? ` — ${summary}`
+              : t("matchingRound.noPreference", {}, {
+                  default: " — no preference",
+                });
             return {
               value: s.id,
               label: `${displayName(s)}${suffix}`,
@@ -929,9 +888,8 @@ export default function RoundMatches({ roundId }) {
                         border: "1px solid #e8c4c4",
                         background: "#fff",
                         color: "#b3261e",
-                        fontFamily: "Inter",
-                        fontWeight: 600,
-                        fontSize: 12,
+                        font: 'var(--MH-Type-Label-Base)',
+                        letterSpacing: 0,
                         cursor: "pointer",
                       }}
                     >
@@ -992,9 +950,8 @@ export default function RoundMatches({ roundId }) {
                       border: "1px solid #e8c4c4",
                       background: "#fff",
                       color: "#b3261e",
-                      fontFamily: "Inter",
-                      fontWeight: 600,
-                      fontSize: 12,
+                      font: 'var(--MH-Type-Label-Base)',
+                      letterSpacing: 0,
                       cursor: "pointer",
                     }}
                   >
@@ -1077,7 +1034,7 @@ export default function RoundMatches({ roundId }) {
           <TitleRow>
             <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
               <h1 title={pageTitle}>{pageTitle}</h1>
-              <Chip shape="pill" label={roundStatusLabel} />
+              <Chip label={roundStatusLabel} />
             </div>
             <div className="meta">
               {matches.length} match{matches.length === 1 ? "" : "es"} ·{" "}
@@ -1174,7 +1131,13 @@ export default function RoundMatches({ roundId }) {
             flexWrap: "wrap",
           }}
         >
-          <span style={{ fontSize: 14, color: "#5f6871", fontWeight: 500 }}>
+          <span
+            style={{
+              color: "#5f6871",
+              font: 'var(--MH-Type-Label-Base)',
+              letterSpacing: 0,
+            }}
+          >
             {t("matchingRound.matchingAlgorithmLabel", {}, {
               default: "Matching algorithm",
             })}
@@ -1432,9 +1395,8 @@ export default function RoundMatches({ roundId }) {
                     const cap = opp.studentCapacity || 1;
                     const used = (matchesByOpportunity.get(opp.id) || []).length;
                     const pref = prefFor(s.id, opp.id);
-                    const prefLabel = pref
-                      ? ` · rank ${pref.rank ?? "—"}, ${pref.starRating ?? 0}★`
-                      : "";
+                    const summary = formatPreferenceSummary(pref, t);
+                    const prefLabel = summary ? ` · ${summary}` : "";
                     return {
                       value: opp.id,
                       label: `${opp.title} (${used}/${cap})${prefLabel}`,
@@ -1495,6 +1457,7 @@ export default function RoundMatches({ roundId }) {
       <AlgorithmInfoModal
         open={algoInfoOpen}
         onClose={() => setAlgoInfoOpen(false)}
+        matchingAlgorithm={round?.matchingAlgorithm}
       />
     </Shell>
   );

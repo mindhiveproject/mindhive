@@ -35,6 +35,35 @@ export function canAdminManageNetworks({ session }: ListAccessArgs) {
   );
 }
 
+/** Teachers/mentors/reviewers who may read student ballot data for a round. */
+function connectRoundStaffRoundClauses(me: string) {
+  return [
+    { createdBy: { id: { equals: me } } },
+    { reviewers: { some: { id: { equals: me } } } },
+    { classNetwork: { creator: { id: { equals: me } } } },
+    { classNetwork: { admins: { some: { id: { equals: me } } } } },
+    {
+      classNetwork: {
+        classes: { some: { creator: { id: { equals: me } } } },
+      },
+    },
+    {
+      classNetwork: {
+        classes: { some: { mentors: { some: { id: { equals: me } } } } },
+      },
+    },
+  ];
+}
+
+/** Opportunity sponsors, assigned mentors, or legacy mentor (Connect stakeholder access). */
+function opportunityStakeholderClauses(me: string) {
+  return [
+    { opportunity: { sponsors: { some: { id: { equals: me } } } } },
+    { opportunity: { mentors: { some: { id: { equals: me } } } } },
+    { opportunity: { mentor: { id: { equals: me } } } },
+  ];
+}
+
 // Rule based functions
 // rules can return a boolean or a filter that limits which products they can CRUD
 export const rules = {
@@ -215,6 +244,31 @@ export const rules = {
     }
     return false;
   },
+  // Log: opportunity preview visits are private to the student, class
+  // creator/mentors, and admins. Non-visit logs stay openly readable.
+  // Do NOT include opportunity sponsors — sponsors must not see browsing.
+  logQuery({ session }: ListAccessArgs) {
+    const visitEvent = { equals: "OPPORTUNITY_PREVIEW_VISIT" };
+    if (!isSignedIn({ session })) {
+      return { NOT: { event: visitEvent } };
+    }
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session!.itemId;
+    return {
+      OR: [
+        { NOT: { event: visitEvent } },
+        { user: { id: { equals: me } } },
+        { class: { creator: { id: { equals: me } } } },
+        { class: { mentors: { some: { id: { equals: me } } } } },
+      ],
+    };
+  },
+  // Visit rows: admin-only update/delete. Other log events keep open mutate.
+  logVisitMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    return { NOT: { event: { equals: "OPPORTUNITY_PREVIEW_VISIT" } } };
+  },
   // Connect: a profile's own preference / answers / team prefs are visible to:
   // - themselves
   // - the creator of the round (teacher)
@@ -227,7 +281,9 @@ export const rules = {
     return {
       OR: [
         { submitter: { id: { equals: me } } },
-        { round: { createdBy: { id: { equals: me } } } },
+        ...connectRoundStaffRoundClauses(me).map((clause) => ({
+          round: clause,
+        })),
       ],
     };
   },
@@ -239,11 +295,13 @@ export const rules = {
     return {
       OR: [
         { respondent: { id: { equals: me } } },
-        { round: { createdBy: { id: { equals: me } } } },
+        ...connectRoundStaffRoundClauses(me).map((clause) => ({
+          round: clause,
+        })),
       ],
     };
   },
-  // ConnectMatch visible to: the matched student, the opportunity's mentor,
+  // ConnectMatch visible to: the matched student, opportunity sponsors/mentors,
   // the round creator, class-network creators/admins, or platform admins.
   connectMatchVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
@@ -252,14 +310,26 @@ export const rules = {
     return {
       OR: [
         { student: { id: { equals: me } } },
-        { round: { createdBy: { id: { equals: me } } } },
-        { opportunity: { mentor: { id: { equals: me } } } },
+        ...opportunityStakeholderClauses(me),
+        ...connectRoundStaffRoundClauses(me).map((clause) => ({
+          round: clause,
+        })),
         { classNetwork: { creator: { id: { equals: me } } } },
         { classNetwork: { admins: { some: { id: { equals: me } } } } },
+        {
+          classNetwork: {
+            classes: { some: { creator: { id: { equals: me } } } },
+          },
+        },
+        {
+          classNetwork: {
+            classes: { some: { mentors: { some: { id: { equals: me } } } } },
+          },
+        },
       ],
     };
   },
-  // ConnectRating: rater, opportunity mentor, round creator (via match.round),
+  // ConnectRating: rater, opportunity sponsors/mentors, round creator (via match.round),
   // or a public rating — visible to anyone signed in.
   connectRatingVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
@@ -269,7 +339,7 @@ export const rules = {
       OR: [
         { rater: { id: { equals: me } } },
         { isPublic: { equals: true } },
-        { opportunity: { mentor: { id: { equals: me } } } },
+        ...opportunityStakeholderClauses(me),
         { match: { round: { createdBy: { id: { equals: me } } } } },
       ],
     };
@@ -324,13 +394,15 @@ export const rules = {
     return {
       OR: [
         { preference: { submitter: { id: { equals: me } } } },
-        { preference: { round: { createdBy: { id: { equals: me } } } } },
+        ...connectRoundStaffRoundClauses(me).map((clause) => ({
+          preference: { round: clause },
+        })),
       ],
     };
   },
   // OpportunityReviewNote query: visible to the author, any reviewer on
   // the same round, the round creator, class-network admins/class teachers,
-  // the opportunity's mentor, or admins.
+  // opportunity sponsors/mentors, or admins.
   connectReviewNoteVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageUsers({ session })) return true;
@@ -356,7 +428,7 @@ export const rules = {
             },
           },
         },
-        { opportunity: { mentor: { id: { equals: me } } } },
+        ...opportunityStakeholderClauses(me),
       ],
     };
   },

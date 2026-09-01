@@ -54,6 +54,10 @@ import {
   getProposalAnswer,
   upsertProposalEntry,
 } from "../../../lib/opportunityProposalData";
+import {
+  getAssessmentAnswer,
+  upsertAssessmentEntry,
+} from "../../../lib/connectPreferenceAssessmentData";
 
 /** Managed Opportunity.videoFile column — never serialized into proposalData. */
 const INTRO_VIDEO_COLUMN = "videoFile";
@@ -172,9 +176,8 @@ const SaveButton = styled.button`
   background: #336f8a;
   color: #ffffff;
   border: none;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
+  font: var(--MH-Type-Label-Base);
+  letter-spacing: 0;
   cursor: pointer;
 
   &:disabled {
@@ -189,7 +192,8 @@ const ErrorBox = styled.div`
   background: #fcebea;
   border: 1px solid #f5c2bf;
   color: #871b16;
-  font-size: 14px;
+  font: var(--MH-Type-Body-Base);
+  letter-spacing: 0;
 `;
 
 const Loading = styled.div`
@@ -229,6 +233,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     definitionId = null,
     /** When set, Save upserts answers into Opportunity.proposalData under this id. */
     proposalEntryFormDefinitionId = null,
+    /** When set, Save upserts answers into ConnectPreference.assessmentData under this id. */
+    assessmentEntryFormDefinitionId = null,
     entity,
     related = {},
     scopeContext = {},
@@ -302,6 +308,10 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     proposalEntryFormDefinitionId || definition?.id || null;
   const forceProposalEntry = Boolean(proposalEntryFormDefinitionId);
 
+  const effectiveAssessmentEntryId =
+    assessmentEntryFormDefinitionId || definition?.id || null;
+  const forceAssessmentEntry = Boolean(assessmentEntryFormDefinitionId);
+
   // storage.js assumes flat json buckets; Opportunity.proposalData is an
   // array of { formDefinitionId, answer }. Unwrap for hydrate/merge.
   // When forcing a proposal entry, also spread the flat answer onto the
@@ -311,7 +321,42 @@ const DefinitionForm = forwardRef(function DefinitionForm(
   // hydrate can find values.
   const entityForStorage = useMemo(() => {
     if (!entity) return entity;
-    if (!forceProposalEntry && !usesProposalDataBucket) return entity;
+    if (
+      !forceProposalEntry &&
+      !usesProposalDataBucket &&
+      !forceAssessmentEntry
+    ) {
+      return entity;
+    }
+
+    if (forceAssessmentEntry) {
+      const flatAnswer = getAssessmentAnswer(
+        entity.assessmentData,
+        effectiveAssessmentEntryId
+      );
+      const bucketMirrors = {};
+      if (forceAssessmentEntry && flatAnswer) {
+        for (const field of allFields) {
+          if (field?.storage !== "json_bucket") continue;
+          const bucket = field.storageBucket;
+          if (!bucket || bucketMirrors[bucket]) continue;
+          const existing =
+            entity[bucket] &&
+            typeof entity[bucket] === "object" &&
+            !Array.isArray(entity[bucket])
+              ? entity[bucket]
+              : {};
+          bucketMirrors[bucket] = { ...existing, ...flatAnswer };
+        }
+      }
+      return {
+        ...entity,
+        ...(forceAssessmentEntry ? flatAnswer : null),
+        ...bucketMirrors,
+        assessmentData: flatAnswer,
+      };
+    }
+
     const flatAnswer = getProposalAnswer(
       entity.proposalData,
       effectiveProposalEntryId
@@ -355,9 +400,12 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     entity,
     entity?.id,
     entity?.proposalData,
+    entity?.assessmentData,
     forceProposalEntry,
+    forceAssessmentEntry,
     usesProposalDataBucket,
     effectiveProposalEntryId,
+    effectiveAssessmentEntryId,
     allFields,
   ]);
 
@@ -439,7 +487,20 @@ const DefinitionForm = forwardRef(function DefinitionForm(
 
     let updateInput;
 
-    if (forceProposalEntry && effectiveProposalEntryId) {
+    if (forceAssessmentEntry && effectiveAssessmentEntryId) {
+      const answer = buildAnswerFromValues(values, allFields, {
+        omitManagedIntroVideo: true,
+      });
+      updateInput = {
+        self: {
+          assessmentData: upsertAssessmentEntry(
+            entity?.assessmentData,
+            effectiveAssessmentEntryId,
+            answer
+          ),
+        },
+      };
+    } else if (forceProposalEntry && effectiveProposalEntryId) {
       // Follow-up / forced entry: always persist under Opportunity.proposalData
       // keyed by this form definition id. The only allowlisted exception is the
       // managed intro-video field (storage=column, storageColumn=videoFile),
@@ -539,6 +600,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     locale,
     forceProposalEntry,
     effectiveProposalEntryId,
+    forceAssessmentEntry,
+    effectiveAssessmentEntryId,
     allFields,
     entity,
     entityForStorage,

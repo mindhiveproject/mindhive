@@ -48,9 +48,8 @@ export default function DatasetSourceSelect({
   return (
     <div className="datasetSourceSelect">
       <div
+        className="MH-Type-Label-Base"
         style={{
-          fontSize: "13px",
-          fontWeight: 600,
           color: "#5D5763",
           marginBottom: "6px",
         }}
