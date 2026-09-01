@@ -126,6 +126,7 @@ const StyledNavbar = styled.div`
   .navbar-container.underline.hover-underline .navbar-item:hover:not(.selected) {
     background: none;
     border-color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    border-bottom-width: 2px;
   }
 
   /* Dense — for a tab bar embedded in a fixed-height chrome strip that already
