@@ -35,7 +35,9 @@ import OpportunityChatModal from "./OpportunityChatModal";
 import OpportunityClassForumModal from "./OpportunityClassForumModal";
 import OpportunityListStepper from "./OpportunityListStepper";
 import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
+import CopyOpportunityModal from "./CopyOpportunityModal";
 import { isReturnableOpportunityStatus } from "../../Connect/returnOpportunityUtils";
+import { isSponsorOpportunityLockedByRound } from "../../../../lib/opportunitySponsorLock";
 
 const MESSAGE_ICON = (
   <img
@@ -365,6 +367,7 @@ export default function OpportunitiesList({ user }) {
   const [chatModal, setChatModal] = useState(null);
   const [classForumModal, setClassForumModal] = useState(null);
   const [unsubmitOpportunityId, setUnsubmitOpportunityId] = useState(null);
+  const [copyOpportunityId, setCopyOpportunityId] = useState(null);
 
   const opportunities = mergeOpportunityLists(
     data?.authenticatedItem?.opportunitiesCreated,
@@ -480,6 +483,7 @@ export default function OpportunitiesList({ user }) {
         >
           {opportunities.map((opportunity) => {
             const canEdit = isOpportunitySponsor(opportunity, viewerId);
+            const sponsorLocked = isSponsorOpportunityLockedByRound(opportunity);
             const networks = opportunity.classNetworks || [];
             const networkCount = networks.length;
             const isPreSelected = opportunity.status === "pre_selected";
@@ -570,10 +574,28 @@ export default function OpportunitiesList({ user }) {
                       />
                       {canEdit ? (
                         <Chip
-                          label={t("opportunities.edit", {}, {
-                            default: "Edit",
-                          })}
+                          label={
+                            sponsorLocked
+                              ? tConnect("myOpportunitiesList.view", {}, {
+                                  default: "View",
+                                })
+                              : t("opportunities.edit", {}, {
+                                  default: "Edit",
+                                })
+                          }
                           onClick={() => handleEdit(opportunity.id)}
+                        />
+                      ) : null}
+                      {canEdit && sponsorLocked ? (
+                        <Chip
+                          label={tConnect(
+                            "myOpportunitiesList.copyOpportunity.button",
+                            {},
+                            { default: "Copy opportunity" },
+                          )}
+                          onClick={() =>
+                            setCopyOpportunityId(opportunity.id)
+                          }
                         />
                       ) : null}
                       {canEdit && canUnsubmit ? (
@@ -588,7 +610,7 @@ export default function OpportunitiesList({ user }) {
                           }
                         />
                       ) : null}
-                      {canEdit ? (
+                      {canEdit && !sponsorLocked ? (
                         <Chip
                           label={t("opportunities.delete", {}, {
                             default: "Delete",
@@ -678,7 +700,25 @@ export default function OpportunitiesList({ user }) {
                                   )}
                                 </FormStatus>
                                 <FormAction role="cell">
-                                  {complete ? (
+                                  {sponsorLocked ? (
+                                    <Button
+                                      type="button"
+                                      variant="text"
+                                      style={{
+                                        color:
+                                          "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+                                      }}
+                                      onClick={() =>
+                                        handleOpenForm(opportunity, form)
+                                      }
+                                    >
+                                      {tConnect(
+                                        "myOpportunitiesList.held.viewForm",
+                                        {},
+                                        { default: "View response" },
+                                      )}
+                                    </Button>
+                                  ) : complete ? (
                                     <Button
                                       type="button"
                                       variant="text"
@@ -742,6 +782,12 @@ export default function OpportunitiesList({ user }) {
         opportunityId={unsubmitOpportunityId}
         status={unsubmitStatus}
         onSuccess={handleUnsubmitSuccess}
+      />
+      <CopyOpportunityModal
+        open={Boolean(copyOpportunityId)}
+        onClose={() => setCopyOpportunityId(null)}
+        opportunityId={copyOpportunityId}
+        userId={user?.id}
       />
     </Shell>
   );

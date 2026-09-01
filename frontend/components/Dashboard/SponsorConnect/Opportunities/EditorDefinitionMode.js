@@ -13,11 +13,13 @@ import { UserContext } from "../../../Global/Authorized";
 import DefinitionForm from "../../../Forms/DefinitionForm";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
 import OpportunityFollowUpFormPanel from "./OpportunityFollowUpFormPanel";
 import OpportunityListStepper from "./OpportunityListStepper";
 import OpportunityMessagesMenu from "./OpportunityMessagesMenu";
 import UnsubmitOpportunityModal from "./UnsubmitOpportunityModal";
+import CopyOpportunityModal from "./CopyOpportunityModal";
 import {
   GET_OPPORTUNITY,
   MY_OPPORTUNITIES,
@@ -50,6 +52,10 @@ import {
   parseFormTabKey,
   resolveOpportunityEditorTab,
 } from "../../../../lib/opportunityEditorTabs";
+import {
+  getSponsorLockRound,
+  isSponsorOpportunityLockedByRound,
+} from "../../../../lib/opportunitySponsorLock";
 
 const BACK_CHEVRON = (
   <svg
@@ -237,6 +243,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
 
   const [saving, setSaving] = useState(false);
   const [unsubmitOpen, setUnsubmitOpen] = useState(false);
+  const [copyOpen, setCopyOpen] = useState(false);
   const proposalFormRef = useRef(null);
   const followUpFormRef = useRef(null);
   const saveIntentRef = useRef({ submitForReview: false });
@@ -266,6 +273,14 @@ export default function EditorDefinitionMode({ opportunityId }) {
   const canSponsorUnsubmit =
     !isAdmin && !isNew && isReturnableOpportunityStatus(currentStatus);
   const showSponsorDraftOnlySave = !isAdmin && !isNew && !canSponsorSubmit;
+  const sponsorLocked =
+    !isAdmin &&
+    !isNew &&
+    isSponsorOpportunityLockedByRound(opportunity, { isAdmin });
+  const lockRound = sponsorLocked ? getSponsorLockRound(opportunity) : null;
+  const canShowSaveActions =
+    !sponsorLocked &&
+    (canSponsorSubmit || showSponsorDraftOnlySave || isNew || isAdmin);
 
   const handleSubmit = async (result) => {
     const submitForReview = !!saveIntentRef.current.submitForReview;
@@ -384,7 +399,12 @@ export default function EditorDefinitionMode({ opportunityId }) {
   }
 
   const entityTitle = (opportunity?.title || "").trim();
-  const pageTitle = entityTitle
+  const pageTitle = sponsorLocked
+    ? entityTitle ||
+      t("opportunityEditor.pageTitleView", {}, {
+        default: "View opportunity",
+      })
+    : entityTitle
     ? entityTitle
     : isNew
     ? t("opportunityEditor.pageTitleNew", {}, {
@@ -414,6 +434,22 @@ export default function EditorDefinitionMode({ opportunityId }) {
   const unsubmitLabel = t("myOpportunitiesList.unsubmit.button", {}, {
     default: "Unsubmit",
   });
+  const copyLabel = t("myOpportunitiesList.copyOpportunity.button", {}, {
+    default: "Copy opportunity",
+  });
+  const lockedBannerMessage = lockRound?.title
+    ? t(
+        "opportunityEditor.lockedBannerNamed",
+        { roundTitle: lockRound.title },
+        {
+          default:
+            "This opportunity is in an active matching round ({{roundTitle}}). Editing is locked while students rank preferences. Copy this opportunity to make changes, or unsubmit to withdraw it.",
+        },
+      )
+    : t("opportunityEditor.lockedBanner", {}, {
+        default:
+          "This opportunity is in an active matching round. Editing is locked while students rank preferences. Copy this opportunity to make changes, or unsubmit to withdraw it.",
+      });
   const opportunityFormLabel = t("opportunityEditor.tabs.proposal", {}, {
     default: "Opportunity form",
   });
@@ -477,6 +513,16 @@ export default function EditorDefinitionMode({ opportunityId }) {
                 {unsubmitLabel}
               </Button>
             ) : null}
+            {sponsorLocked ? (
+              <Button
+                type="button"
+                variant="filled"
+                onClick={() => setCopyOpen(true)}
+                disabled={saving}
+              >
+                {copyLabel}
+              </Button>
+            ) : null}
             {canSponsorSubmit ? (
               <>
                 <Button
@@ -496,7 +542,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
                   {submitForReviewLabel}
                 </Button>
               </>
-            ) : showSponsorDraftOnlySave || isNew || isAdmin ? (
+            ) : canShowSaveActions ? (
               <Button
                 type="button"
                 variant="filled"
@@ -527,11 +573,16 @@ export default function EditorDefinitionMode({ opportunityId }) {
         ) : null}
       </StickyHeader>
 
+      {sponsorLocked ? (
+        <MessageCard variant="information" message={lockedBannerMessage} />
+      ) : null}
+
       <IntakePane $hidden={!isProposalTab}>
         <OpportunityClassNetworksField
           availableNetworks={availableNetworks}
           selectedNetworks={selectedNetworks}
           onChange={setSelectedNetworks}
+          readOnly={sponsorLocked}
           quiet
         />
         <DefinitionForm
@@ -542,6 +593,7 @@ export default function EditorDefinitionMode({ opportunityId }) {
           viewerRoles={viewerRoles}
           locale={router.locale}
           onSubmit={handleSubmit}
+          readOnly={sponsorLocked}
           hideSaveButton
           quiet
           saveLabel={editPrimaryLabel}
@@ -552,9 +604,17 @@ export default function EditorDefinitionMode({ opportunityId }) {
           ref={followUpFormRef}
           opportunity={opportunity}
           formMeta={activeFollowUpForm}
+          readOnly={sponsorLocked}
           hideSaveButton
         />
       ) : null}
+
+      <CopyOpportunityModal
+        open={copyOpen}
+        onClose={() => setCopyOpen(false)}
+        opportunityId={opportunityId}
+        userId={user?.id}
+      />
 
       <UnsubmitOpportunityModal
         open={unsubmitOpen}

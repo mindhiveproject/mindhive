@@ -23,6 +23,10 @@ import {
   getPrimarySponsor,
   getOpportunityStakeholderIds,
 } from "../lib/opportunityStakeholders";
+import {
+  isSponsorOpportunityLockedByRound,
+  SPONSOR_LOCK_ALLOWED_UPDATE_KEYS,
+} from "../lib/opportunitySponsorLock";
 
 const frontendUrl = () =>
   (process.env.NODE_ENV === "development"
@@ -369,6 +373,39 @@ export const Opportunity = list({
     }),
   },
   hooks: {
+    async beforeOperation({ operation, item, context, inputData }) {
+      if (operation !== "update" || !item?.id || !inputData) return;
+
+      const sessionId = context.session?.itemId;
+      if (sessionId) {
+        const profile = await context.sudo().query.Profile.findOne({
+          where: { id: String(sessionId) },
+          query: "permissions { name }",
+        });
+        const isAdmin = (profile?.permissions || []).some(
+          (p: { name?: string }) => p?.name === "ADMIN"
+        );
+        if (isAdmin) return;
+      }
+
+      const opp = await context.sudo().query.Opportunity.findOne({
+        where: { id: String(item.id) },
+        query: "id status rounds { status }",
+      });
+      if (!isSponsorOpportunityLockedByRound(opp)) return;
+
+      const keys = Object.keys(inputData).filter(
+        (key) => inputData[key] !== undefined
+      );
+      const disallowed = keys.filter(
+        (key) => !SPONSOR_LOCK_ALLOWED_UPDATE_KEYS.has(key)
+      );
+      if (disallowed.length > 0) {
+        throw new Error(
+          "This opportunity cannot be edited while its matching round is active. Copy it to make changes, or unsubmit to withdraw it."
+        );
+      }
+    },
     async resolveInput({ operation, inputData, resolvedData, item, context }) {
       // List hooks run after field hooks — must spread resolvedData so auto-set
       // fields (e.g. mentor from session) are not wiped by raw GraphQL input.

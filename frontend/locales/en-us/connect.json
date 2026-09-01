@@ -622,6 +622,7 @@
 			"formIncompleteSaved": "Incomplete · saved {{date}}",
 			"noFurtherQuestions": "The teacher has not asked any further questions so far.",
 			"openForm": "Edit response",
+			"viewForm": "View response",
 			"preSelected": "Pre-selected for this matching round",
 			"roundFormsTitle": "Matching round · {{network}} · {{round}}",
 			"title": "Held · {{network}} · {{round}}",
@@ -637,6 +638,17 @@
 			"pickClass": "Choose a class",
 			"pickClassPlaceholder": "Select a class",
 			"selectClassHint": "Select a class to view or ask questions in its FAQ."
+		},
+		"copyOpportunity": {
+			"button": "Copy opportunity",
+			"cancel": "Cancel",
+			"confirm": "Copy opportunity",
+			"disclaimer": "Only the initial opportunity form and intro video are copied. Follow-up questionnaire answers and round-specific data are not included.",
+			"error": "Could not copy this opportunity. Please try again.",
+			"successFlash": "Opportunity copied as a new draft.",
+			"title": "Copy opportunity?",
+			"titleSuffix": " (Copy)",
+			"working": "Copying…"
 		},
 		"modals": {
 			"chatTitle": "Messages",
@@ -709,6 +721,7 @@
 		},
 		"teamOf": "Team of {{size}}",
 		"unknownSponsor": "Unknown",
+		"view": "View",
 		"unsubmit": {
 			"button": "Unsubmit",
 			"cancel": "Cancel",
@@ -987,6 +1000,9 @@
 		},
 		"pageTitleEdit": "Edit opportunity",
 		"pageTitleNew": "New opportunity",
+		"pageTitleView": "View opportunity",
+		"lockedBanner": "This opportunity is in an active matching round. Editing is locked while students rank preferences. Copy this opportunity to make changes, or unsubmit to withdraw it.",
+		"lockedBannerNamed": "This opportunity is in an active matching round ({{roundTitle}}). Editing is locked while students rank preferences. Copy this opportunity to make changes, or unsubmit to withdraw it.",
 		"preferredClassTypes": "Preferred class types",
 		"preferredGrades": "Preferred grade levels",
 		"projectAbstract": "Capstone Project Abstract",
