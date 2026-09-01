@@ -1384,6 +1384,11 @@
 				"skillsEmpty": "Skills not collected for this round.",
 				"noNotes": "None",
 				"submittedAt": "Submitted {{date}}",
+				"reopenBallot": "Reopen ballot",
+				"reopenBallotConfirm": "This student will be able to edit and resubmit their preferences. Continue?",
+				"reopenBallotSuccess": "Ballot reopened. The student can edit their preferences again.",
+				"reopenBallotFailed": "Could not reopen this ballot. Please try again.",
+				"reopenBallotDisabledMatched": "Cannot reopen a ballot after the student has been matched.",
 				"status": {
 					"not_started": "Not started",
 					"draft": "Draft",
@@ -1679,6 +1684,8 @@
 				"helperDraft": "You have a draft saved. Continue to submit.",
 				"helperEmpty": "When opportunities appear, come back here to rank them.",
 				"helperSubmitted": "You can review what you sent.",
+				"helperSubmittedReopen": "You can review what you sent. Need to change something? Ask your teacher to reopen your submission.",
+				"helperDraftWindowClosed": "Your ranking window has closed. You can review your draft, but changes are no longer accepted.",
 				"titleDraft": "Finish your ranking for {{roundTitle}}",
 				"titleNotStarted": "Rank your opportunities for {{roundTitle}}",
 				"titleSubmitted": "You submitted your ranking for {{roundTitle}}"
@@ -1717,6 +1724,13 @@
 				"emptyFavoritesTitle": "No favorited opportunities yet",
 				"expired": "This opportunity ended on {{date}}. You can no longer rank it.",
 				"loading": "Loading round…",
+				"lockReason": {
+					"roundClosed": "Preferences are {{status}} for this round. You can review what you submitted, but changes are no longer accepted.",
+					"beforeOpen": "This round opens on {{date}}. Come back then to submit your preferences.",
+					"afterClose": "Preferences closed on {{date}}. You can review what you submitted, but changes are no longer accepted.",
+					"submitted": "You submitted your preferences {{when}}. Need to change something? Ask your teacher — they can reopen your submission.",
+					"submittedEarlier": "earlier"
+				},
 				"navAria": "Preference ranking",
 				"noOpportunities": "No opportunities have been added to this round yet.",
 				"notAvailableYet": "This round is not available yet. Your teacher is still setting it up.",

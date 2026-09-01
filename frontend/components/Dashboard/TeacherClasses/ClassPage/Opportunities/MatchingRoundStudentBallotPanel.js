@@ -5,17 +5,19 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import Chip from "../../../../DesignSystem/Chip";
+import Button from "../../../../DesignSystem/Button";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import IconButton from "../../../../DesignSystem/IconButton";
 import DefinitionForm from "../../../../Forms/DefinitionForm";
-import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
+import { StarFilledIcon, StarIcon, UnlockIcon } from "../../../../DesignSystem/Icons";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import { TEACHER_STUDENT_BALLOT_VIEW } from "../../../../Queries/ConnectMatch";
+import { UPDATE_PREFERENCE } from "../../../../Mutations/ConnectPreference";
 import useConnectMatchAssign from "../../../../../lib/useConnectMatchAssign";
 import { isAssessmentFormAnswerComplete } from "../../../../../lib/connectPreferenceAssessmentData";
 import {
@@ -309,6 +311,8 @@ function StudentBallotRow({
   isCurated,
   handleAssign,
   assigning,
+  handleReopenBallot,
+  reopeningPreferenceId,
   t,
   tConnect,
 }) {
@@ -403,6 +407,16 @@ function StudentBallotRow({
           },
         )
       : null;
+
+  const canReopenBallot =
+    row.preference?.status === "submitted" && Boolean(row.preference?.id);
+  const isReopening = reopeningPreferenceId === row.preference?.id;
+
+  const handleReopenClick = (event) => {
+    event.stopPropagation();
+    if (!canReopenBallot || isReopening) return;
+    handleReopenBallot(row.preference.id, displayName(row.student));
+  };
 
   return (
     <StudentRow>
@@ -747,7 +761,19 @@ function StudentBallotRow({
               />
             )}
           </DetailSection>
-
+          {canReopenBallot ? (
+            <Button
+              type="button"
+              variant="tonal"
+              leadingIcon={<UnlockIcon />}
+              onClick={handleReopenClick}
+              disabled={isReopening || assigning}
+            >
+              {t("opportunities.matchingRound.studentRanking.reopenBallot", {}, {
+                default: "Reopen ballot",
+              })}
+            </Button>
+          ) : null}
           {row.preference?.submittedAt ? (
             <Meta>
               {t(
@@ -786,6 +812,8 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   const { t: tConnect } = useTranslation("connect");
   const [search, setSearch] = useState("");
   const [matchingInfoOpen, setMatchingInfoOpen] = useState(false);
+  const [reopeningPreferenceId, setReopeningPreferenceId] = useState(null);
+  const [reopenFeedback, setReopenFeedback] = useState(null);
   const [expandedQueue, setExpandedQueue] = useState({
     project_first: true,
     team_first: true,
@@ -797,7 +825,10 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     fetchPolicy: "cache-and-network",
   });
 
+  const [updatePreference] = useMutation(UPDATE_PREFERENCE);
+
   const round = data?.connectRound;
+  const roundStatus = round?.status || "";
   const opportunities = round?.opportunities || [];
   const preferences = round?.preferences || [];
   const teamPreferences = round?.teamPreferences || [];
@@ -947,6 +978,65 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     matches,
     refetch,
   });
+
+  const handleReopenBallot = useCallback(
+    async (preferenceId, studentName) => {
+      if (
+        !window.confirm(
+          t(
+            "opportunities.matchingRound.studentRanking.reopenBallotConfirm",
+            { name: studentName },
+            {
+              default:
+                "This student will be able to edit and resubmit their preferences. Continue?",
+            },
+          ),
+        )
+      ) {
+        return;
+      }
+
+      setReopenFeedback(null);
+      setReopeningPreferenceId(preferenceId);
+      try {
+        await updatePreference({
+          variables: {
+            id: preferenceId,
+            input: {
+              status: "draft",
+              submittedAt: null,
+            },
+          },
+        });
+        await refetch();
+        setReopenFeedback({
+          variant: "success",
+          message: t(
+            "opportunities.matchingRound.studentRanking.reopenBallotSuccess",
+            {},
+            {
+              default:
+                "Ballot reopened. The student can edit their preferences again.",
+            },
+          ),
+        });
+      } catch {
+        setReopenFeedback({
+          variant: "warning",
+          message: t(
+            "opportunities.matchingRound.studentRanking.reopenBallotFailed",
+            {},
+            {
+              default: "Could not reopen this ballot. Please try again.",
+            },
+          ),
+        });
+      } finally {
+        setReopeningPreferenceId(null);
+      }
+    },
+    [refetch, t, updatePreference],
+  );
 
   const submittedCount = ballotRows.filter(
     (r) => r.submissionStatus === "submitted",
@@ -1142,7 +1232,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     );
   }
 
-  if (!ballotWindowActive && inactiveBallotMessage) {
+  if (!ballotWindowActive && inactiveBallotMessage && roundStatus === "draft") {
     return (
       <Shell className="matchingRoundStudentBallotPanel">
         <PanelHeader>
@@ -1210,6 +1300,8 @@ const MatchingRoundStudentBallotPanel = forwardRef(
               isCurated={isCurated}
               handleAssign={handleAssign}
               assigning={assigning}
+              handleReopenBallot={handleReopenBallot}
+              reopeningPreferenceId={reopeningPreferenceId}
               t={t}
               tConnect={tConnect}
             />
@@ -1247,6 +1339,16 @@ const MatchingRoundStudentBallotPanel = forwardRef(
         </HeaderText>
         {subModeNav}
       </PanelHeader>
+
+      {!ballotWindowActive && inactiveBallotMessage ? (
+        <MessageCard variant="neutral" message={inactiveBallotMessage} />
+      ) : null}
+      {reopenFeedback ? (
+        <MessageCard
+          variant={reopenFeedback.variant}
+          message={reopenFeedback.message}
+        />
+      ) : null}
 
       <SearchRow>
         <SearchInput

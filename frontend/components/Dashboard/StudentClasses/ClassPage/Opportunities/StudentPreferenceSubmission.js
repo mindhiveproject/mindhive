@@ -946,8 +946,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const inTimeWindow = !beforeOpen && !afterClose;
   const submitted = existingPreference?.status === "submitted";
   // Once submitted, lock the form. Students still see what they sent.
-  // (If the round re-opens after a teacher pushed status back, the form
-  // unlocks automatically because `submitted` is recomputed from data.)
+  // Reopening requires the teacher to reset preference.status to draft.
   const isOpen =
     round.status === "preferences_open" && inTimeWindow && !submitted;
 
@@ -958,18 +957,48 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         "This round is not available yet. Your teacher is still setting it up.",
     });
   } else if (round.status !== "preferences_open") {
-    lockReason = `Preferences are ${round.status.replace("_", " ")} for this round. You can review what you submitted, but changes are no longer accepted.`;
+    lockReason = t(
+      "opportunities.studentView.rankForm.lockReason.roundClosed",
+      { status: round.status.replace(/_/g, " ") },
+      {
+        default:
+          "Preferences are {{status}} for this round. You can review what you submitted, but changes are no longer accepted.",
+      },
+    );
   } else if (beforeOpen) {
     const openDate = new Date(round.openAt).toLocaleDateString();
-    lockReason = `This round opens on ${openDate}. Come back then to submit your preferences.`;
+    lockReason = t(
+      "opportunities.studentView.rankForm.lockReason.beforeOpen",
+      { date: openDate },
+      {
+        default:
+          "This round opens on {{date}}. Come back then to submit your preferences.",
+      },
+    );
   } else if (afterClose) {
     const closeDate = new Date(round.closeAt).toLocaleDateString();
-    lockReason = `Preferences closed on ${closeDate}. You can review what you submitted, but changes are no longer accepted.`;
+    lockReason = t(
+      "opportunities.studentView.rankForm.lockReason.afterClose",
+      { date: closeDate },
+      {
+        default:
+          "Preferences closed on {{date}}. You can review what you submitted, but changes are no longer accepted.",
+      },
+    );
   } else if (submitted) {
     const when = existingPreference?.submittedAt
       ? new Date(existingPreference.submittedAt).toLocaleString()
-      : "earlier";
-    lockReason = `You submitted your preferences ${when}. Need to change something? Ask your teacher — they can reopen your submission.`;
+      : t("opportunities.studentView.rankForm.lockReason.submittedEarlier", {}, {
+          default: "earlier",
+        });
+    lockReason = t(
+      "opportunities.studentView.rankForm.lockReason.submitted",
+      { when },
+      {
+        default:
+          "You submitted your preferences {{when}}. Need to change something? Ask your teacher — they can reopen your submission.",
+      },
+    );
   }
 
   const pageTitle = round.title || "";

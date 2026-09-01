@@ -13,6 +13,8 @@ import { UserContext } from "../../../Global/Authorized";
 import DefinitionForm from "../../../Forms/DefinitionForm";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
+import IconButton from "../../../DesignSystem/IconButton";
+import { CloseIcon } from "../../../DesignSystem/Icons";
 import MessageCard from "../../../DesignSystem/MessageCard";
 import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
 import OpportunityFollowUpFormPanel from "./OpportunityFollowUpFormPanel";
@@ -43,7 +45,6 @@ import {
 } from "../../../../lib/opportunityFlash";
 import {
   OpportunityPageShell as Shell,
-  OPPORTUNITY_PAGE_GUTTER,
 } from "./OpportunityPageLayout";
 import {
   OPPORTUNITY_EDITOR_TABS,
@@ -57,31 +58,28 @@ import {
   isSponsorOpportunityLockedByRound,
 } from "../../../../lib/opportunitySponsorLock";
 
-const BACK_CHEVRON = (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden
-  >
-    <path
-      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"
-      fill="currentColor"
-    />
-  </svg>
-);
+const EditorSurface = styled.div`
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  border-radius: 12px;
+  box-sizing: border-box;
+`;
 
-const StickyHeader = styled.div`
+const StickyHeader = styled(EditorSurface)`
   position: sticky;
   /* Sponsor Connect has no ConnectNavigationBar — stick to the top of the scrollport */
   top: 0;
   z-index: 5;
-  margin: 0 calc(-1 * ${OPPORTUNITY_PAGE_GUTTER}) 8px;
-  background: rgba(247, 249, 248, 0.92);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  margin: 0 0 8px;
+  overflow: hidden;
+`;
+
+const ContentPanel = styled(EditorSurface)`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  min-width: 0;
 `;
 
 const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
@@ -90,8 +88,8 @@ const TopBar = styled.header.attrs({ className: "Editor__TopBar" })`
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 16px;
-  padding: 10px ${OPPORTUNITY_PAGE_GUTTER};
-  border-bottom: 1px solid rgba(211, 218, 224, 0.85);
+  padding: 12px 16px;
+  box-sizing: border-box;
 `;
 
 const ChipSelectorRow = styled.div`
@@ -100,9 +98,9 @@ const ChipSelectorRow = styled.div`
   align-items: center;
   gap: 8px;
   min-width: 0;
-  padding: 8px ${OPPORTUNITY_PAGE_GUTTER} 10px;
+  padding: 8px 16px 10px;
   box-sizing: border-box;
-  border-bottom: 1px solid rgba(211, 218, 224, 0.45);
+  border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
 `;
 
 const IntakePane = styled.div`
@@ -135,30 +133,6 @@ const TitleRow = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-`;
-
-const BackLink = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  color: #336f8a;
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    background: rgba(51, 111, 138, 0.08);
-  }
-
-  &:focus-visible {
-    outline: 2px solid #336f8a;
-    outline-offset: 2px;
   }
 `;
 
@@ -476,15 +450,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
       <StickyHeader>
         <TopBar>
           <TopBarLeft>
-            <BackLink
-              type="button"
-              onClick={() => router.push({ pathname: LIST_PATH })}
-              aria-label={backLabel}
-              title={backLabel}
-              disabled={saving}
-            >
-              {BACK_CHEVRON}
-            </BackLink>
             <TitleRow>
               <h1 title={pageTitle}>{pageTitle}</h1>
               {!isNew && (
@@ -552,6 +517,14 @@ export default function EditorDefinitionMode({ opportunityId }) {
                 {editPrimaryLabel}
               </Button>
             ) : null}
+            <IconButton
+              variant="subtle"
+              ariaLabel={backLabel}
+              title={backLabel}
+              onClick={() => router.push({ pathname: LIST_PATH })}
+              disabled={saving}
+              icon={<CloseIcon />}
+            />
           </Actions>
         </TopBar>
         {showFollowUpChips ? (
@@ -573,41 +546,43 @@ export default function EditorDefinitionMode({ opportunityId }) {
         ) : null}
       </StickyHeader>
 
-      {sponsorLocked ? (
-        <MessageCard variant="information" message={lockedBannerMessage} />
-      ) : null}
+      <ContentPanel>
+        {sponsorLocked ? (
+          <MessageCard variant="information" message={lockedBannerMessage} />
+        ) : null}
 
-      <IntakePane $hidden={!isProposalTab}>
-        <OpportunityClassNetworksField
-          availableNetworks={availableNetworks}
-          selectedNetworks={selectedNetworks}
-          onChange={setSelectedNetworks}
-          readOnly={sponsorLocked}
-          quiet
-        />
-        <DefinitionForm
-          ref={proposalFormRef}
-          definitionKey="opportunity"
-          entity={opportunity || null}
-          scopeContext={{ organizationId: myOrgId }}
-          viewerRoles={viewerRoles}
-          locale={router.locale}
-          onSubmit={handleSubmit}
-          readOnly={sponsorLocked}
-          hideSaveButton
-          quiet
-          saveLabel={editPrimaryLabel}
-        />
-      </IntakePane>
-      {activeFollowUpForm ? (
-        <OpportunityFollowUpFormPanel
-          ref={followUpFormRef}
-          opportunity={opportunity}
-          formMeta={activeFollowUpForm}
-          readOnly={sponsorLocked}
-          hideSaveButton
-        />
-      ) : null}
+        <IntakePane $hidden={!isProposalTab}>
+          <OpportunityClassNetworksField
+            availableNetworks={availableNetworks}
+            selectedNetworks={selectedNetworks}
+            onChange={setSelectedNetworks}
+            readOnly={sponsorLocked}
+            quiet
+          />
+          <DefinitionForm
+            ref={proposalFormRef}
+            definitionKey="opportunity"
+            entity={opportunity || null}
+            scopeContext={{ organizationId: myOrgId }}
+            viewerRoles={viewerRoles}
+            locale={router.locale}
+            onSubmit={handleSubmit}
+            readOnly={sponsorLocked}
+            hideSaveButton
+            quiet
+            saveLabel={editPrimaryLabel}
+          />
+        </IntakePane>
+        {activeFollowUpForm ? (
+          <OpportunityFollowUpFormPanel
+            ref={followUpFormRef}
+            opportunity={opportunity}
+            formMeta={activeFollowUpForm}
+            readOnly={sponsorLocked}
+            hideSaveButton
+          />
+        ) : null}
+      </ContentPanel>
 
       <CopyOpportunityModal
         open={copyOpen}
