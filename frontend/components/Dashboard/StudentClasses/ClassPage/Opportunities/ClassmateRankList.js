@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Container, Draggable } from "react-smooth-dnd";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Card from "../../../../DesignSystem/Card";
 import Chip from "../../../../DesignSystem/Chip";
 import IconButton from "../../../../DesignSystem/IconButton";
-import { AddIcon, CloseIcon } from "../../../../DesignSystem/Icons";
+import { AddIcon, CloseIcon, DragIndicatorIcon } from "../../../../DesignSystem/Icons";
 import {
   deriveClassmateOrder,
   studentDisplayName,
@@ -14,24 +14,39 @@ import {
 
 export { studentDisplayName, deriveClassmateOrder };
 
+const ROW_GAP_PX = 10;
+const ACTIVE_ELEVATION =
+  "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1))";
+
 const ListShell = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   width: 100%;
+  overflow: visible;
 
   .smooth-dnd-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: ${ROW_GAP_PX}px;
     min-height: 4px;
+    padding: 0;
+    overflow: visible;
+  }
+
+  /* smooth-dnd sets overflow:hidden on vertical wrappers — clips row elevation */
+  .smooth-dnd-container.vertical > .smooth-dnd-draggable-wrapper,
+  .smooth-dnd-draggable-wrapper.vertical {
+    overflow: visible !important;
+    box-sizing: border-box;
   }
 `;
 
 const Section = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  overflow: visible;
 `;
 
 const SectionLabel = styled.h3`
@@ -39,6 +54,43 @@ const SectionLabel = styled.h3`
   font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
+`;
+
+const ZoneLabel = styled.p`
+  margin: 0 0 8px;
+  font: var(--MH-Type-Body-Base, 400 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+`;
+
+const RankListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+`;
+
+const RankRow = styled.div`
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--MH-Theme-Neutrals-Medium, #e6e6e6);
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  min-width: 0;
+  box-sizing: border-box;
+  position: relative;
+
+  ${({ $active }) =>
+    $active
+      ? `
+    box-shadow: ${ACTIVE_ELEVATION};
+  `
+      : ""}
 `;
 
 const PoolToggle = styled.button`
@@ -105,18 +157,6 @@ const ChipPool = styled.div`
   gap: 8px;
 `;
 
-const RankRow = styled.div`
-  display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--MH-Theme-Neutrals-Medium, #e6e6e6);
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
-  min-width: 0;
-`;
-
 const DragHandle = styled.span`
   display: inline-flex;
   align-items: center;
@@ -166,12 +206,17 @@ export default function ClassmateRankList({
   students,
   classmateOrder,
   onClassmateOrderChange,
-  maxPicks = 0,
+  effectivePicks = 0,
   rankingEnabled = true,
 }) {
   const { t } = useTranslation("classes");
   const [search, setSearch] = useState("");
   const [poolOpen, setPoolOpen] = useState(true);
+  const [orderedIds, setOrderedIds] = useState(classmateOrder);
+
+  useEffect(() => {
+    setOrderedIds(classmateOrder);
+  }, [classmateOrder]);
 
   const studentById = useMemo(() => {
     const map = new Map();
@@ -181,28 +226,35 @@ export default function ClassmateRankList({
     return map;
   }, [students]);
 
-  const atMax = maxPicks > 0 && classmateOrder.length >= maxPicks;
+  const activeCount = Math.min(
+    effectivePicks > 0 ? effectivePicks : 0,
+    orderedIds.length,
+  );
 
   const availableStudents = useMemo(() => {
     const query = search.trim().toLowerCase();
     return (students || []).filter((s) => {
-      if (!s?.id || classmateOrder.includes(s.id)) return false;
+      if (!s?.id || orderedIds.includes(s.id)) return false;
       if (!query) return true;
       return studentDisplayName(s).toLowerCase().includes(query);
     });
-  }, [students, classmateOrder, search]);
+  }, [students, orderedIds, search]);
 
   const showPool =
-    rankingEnabled && !atMax && (students?.length || 0) > classmateOrder.length;
+    rankingEnabled && (students?.length || 0) > orderedIds.length;
 
   const handleAdd = (studentId) => {
-    if (!studentId || !rankingEnabled || atMax) return;
-    onClassmateOrderChange([...classmateOrder, studentId]);
+    if (!studentId || !rankingEnabled) return;
+    const next = [...orderedIds, studentId];
+    setOrderedIds(next);
+    onClassmateOrderChange(next);
   };
 
   const handleRemove = (studentId) => {
     if (!rankingEnabled) return;
-    onClassmateOrderChange(classmateOrder.filter((id) => id !== studentId));
+    const next = orderedIds.filter((id) => id !== studentId);
+    setOrderedIds(next);
+    onClassmateOrderChange(next);
   };
 
   const handleDrop = useCallback(
@@ -210,14 +262,30 @@ export default function ClassmateRankList({
       if (!rankingEnabled) return;
       if (removedIndex == null || addedIndex == null) return;
       if (removedIndex === addedIndex) return;
-      onClassmateOrderChange(reorderArray(classmateOrder, removedIndex, addedIndex));
+      setOrderedIds((prev) => {
+        const next = reorderArray(prev, removedIndex, addedIndex);
+        onClassmateOrderChange(next);
+        return next;
+      });
     },
-    [classmateOrder, onClassmateOrderChange, rankingEnabled],
+    [onClassmateOrderChange, rankingEnabled],
   );
 
   const dragHint = t("opportunities.studentView.rankForm.dragHint", {}, {
     default: "Drag to reorder",
   });
+
+  const activeZoneLabel =
+    effectivePicks > 0
+      ? t(
+          "opportunities.studentView.rankForm.classmatesActiveZoneLabel",
+          { count: effectivePicks },
+          {
+            default:
+              "Your top {{count}} highlighted picks count toward team matching (order does not matter)",
+          },
+        )
+      : null;
 
   const renderRow = (studentId, index, wrapDraggable) => {
     const student = studentById.get(studentId);
@@ -230,25 +298,24 @@ export default function ClassmateRankList({
       { default: "Remove {{name}}" },
     );
 
+    const isActivePick = effectivePicks > 0 && index < activeCount;
+
     const row = (
-      <RankRow>
+      <RankRow
+        data-rank-row
+        data-active-row={isActivePick ? "true" : undefined}
+        $active={isActivePick}
+      >
         <DragHandle
           className="classmate-drag-handle"
           aria-disabled={!rankingEnabled}
           title={dragHint}
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
-            <circle cx="4" cy="3" r="1.25" fill="currentColor" />
-            <circle cx="10" cy="3" r="1.25" fill="currentColor" />
-            <circle cx="4" cy="7" r="1.25" fill="currentColor" />
-            <circle cx="10" cy="7" r="1.25" fill="currentColor" />
-            <circle cx="4" cy="11" r="1.25" fill="currentColor" />
-            <circle cx="10" cy="11" r="1.25" fill="currentColor" />
-          </svg>
+          <DragIndicatorIcon />
         </DragHandle>
         <Chip
           variant="static"
-          tone="neutral"
+          tone={isActivePick ? "info" : "neutral"}
           label={String(rank)}
           ariaLabel={t(
             "opportunities.studentView.rankForm.rankBadge",
@@ -283,35 +350,32 @@ export default function ClassmateRankList({
 
   return (
     <ListShell>
-      {classmateOrder.length > 0 ? (
+      {orderedIds.length > 0 ? (
         <Section>
           <SectionLabel>
             {t("opportunities.studentView.rankForm.classmatesRanked", {}, {
               default: "Your ranked classmates",
             })}
           </SectionLabel>
+          {activeZoneLabel && activeCount > 0 ? (
+            <ZoneLabel>{activeZoneLabel}</ZoneLabel>
+          ) : null}
           {rankingEnabled ? (
-            <Container
-              dragHandleSelector=".classmate-drag-handle"
-              lockAxis="y"
-              onDrop={handleDrop}
-            >
-              {classmateOrder.map((id, index) => renderRow(id, index, true))}
-            </Container>
+            <RankListContainer>
+              <Container
+                dragHandleSelector=".classmate-drag-handle"
+                lockAxis="y"
+                onDrop={handleDrop}
+              >
+                {orderedIds.map((id, index) => renderRow(id, index, true))}
+              </Container>
+            </RankListContainer>
           ) : (
-            classmateOrder.map((id, index) => renderRow(id, index, false))
+            <RankListContainer>
+              {orderedIds.map((id, index) => renderRow(id, index, false))}
+            </RankListContainer>
           )}
         </Section>
-      ) : null}
-
-      {atMax ? (
-        <Hint>
-          {t(
-            "opportunities.studentView.rankForm.classmatesMaxReached",
-            { max: maxPicks },
-            { default: "You can rank up to {{max}} classmates." },
-          )}
-        </Hint>
       ) : null}
 
       {showPool ? (

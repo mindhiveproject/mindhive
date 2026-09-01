@@ -203,7 +203,7 @@ export function runMatching(round, { includeDrafts = false } = {}) {
     });
   });
 
-  const mutualMap = buildMutualTeamPrefMap(round?.teamPreferences);
+  const mutualMap = buildMutualTeamPrefMap(round?.teamPreferences, opportunities);
 
   let result;
   if (algorithm === "teacher_curated") {
