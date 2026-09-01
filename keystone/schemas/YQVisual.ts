@@ -218,6 +218,8 @@ export const Visual = list({
         },
       ],
     }),
+    version: text({ defaultValue: "1" }),
+    tasks: relationship({ ref: "Task.visual", many: true }),
     likes: relationship({ ref: "Profile.liked", many: true }),
     extensions: json({ defaultValue: [] }),
     docs: json(),

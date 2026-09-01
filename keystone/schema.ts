@@ -48,6 +48,7 @@ import { Resource } from "./schemas/Resource";
 import { Log } from "./schemas/Log";
 import { Datasource } from "./schemas/Datasource";
 import { Visual } from "./schemas/YQVisual";
+import { JsPsychExperiment } from "./schemas/JsPsychExperiment";
 import { Friendship } from "./schemas/YQFriendship";
 import { YQGenAI } from "./schemas/YQGenAI";
 import { YQTag } from "./schemas/YQTag";
@@ -127,6 +128,7 @@ export const lists: Lists = {
   Log,
   Datasource,
   Visual,
+  JsPsychExperiment,
   Friendship,
   YQTag,
   YQGenAI,

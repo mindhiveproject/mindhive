@@ -31,6 +31,16 @@ export const Task = list({
         { label: "Block", value: "BLOCK" },
       ],
     }),
+    runtimeType: select({
+      type: "enum",
+      options: [
+        { label: "Lab.js", value: "LABJS" },
+        { label: "p5.js", value: "P5" },
+        { label: "jsPsych", value: "JSPSYCH" },
+      ],
+      defaultValue: "LABJS",
+      validation: { isRequired: true },
+    }),
     slug: text({
       validation: { isRequired: true },
       isIndexed: "unique",
@@ -89,8 +99,15 @@ export const Task = list({
     template: relationship({
       ref: "Template.tasks",
     }),
+    visual: relationship({
+      ref: "Visual.tasks",
+    }),
+    jsPsychExperiment: relationship({
+      ref: "JsPsychExperiment.tasks",
+    }),
     parameters: json(),
     settings: json(),
+    aggregateVariables: json(),
     link: text(),
     public: checkbox(),
     submitForPublishing: checkbox(),

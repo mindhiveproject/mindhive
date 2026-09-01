@@ -340,6 +340,22 @@ export const Profile = list({
       ref: "SummaryResult.user",
       many: true,
     }),
+    datasetsAsAssetAuthor: relationship({
+      ref: "Dataset.assetAuthor",
+      many: true,
+    }),
+    datasetsAsTaskAuthor: relationship({
+      ref: "Dataset.taskAuthor",
+      many: true,
+    }),
+    summaryResultsAsAssetAuthor: relationship({
+      ref: "SummaryResult.assetAuthor",
+      many: true,
+    }),
+    summaryResultsAsTaskAuthor: relationship({
+      ref: "SummaryResult.taskAuthor",
+      many: true,
+    }),
     authoredSpecs: relationship({
       ref: "Spec.author",
       many: true,
@@ -569,6 +585,14 @@ export const Profile = list({
     }),
     // YQ-related properties
     visuals: relationship({ ref: "Visual.author", many: true }),
+    jsPsychExperiments: relationship({
+      ref: "JsPsychExperiment.author",
+      many: true,
+    }),
+    collaboratorInJsPsychExperiment: relationship({
+      ref: "JsPsychExperiment.collaborators",
+      many: true,
+    }),
     collaboratorInVisual: relationship({ ref: "Visual.collaborators", many: true }),
     liked: relationship({ ref: "Visual.likes", many: true }),
     following: relationship({ ref: "Friendship.requester", many: true }),

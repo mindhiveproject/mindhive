@@ -333,6 +333,33 @@ export const StyledDatasetView = styled.div`
       display: none;
     }
 
+    .datasetEmpty {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      min-height: 100%;
+      padding: 32px 24px;
+      gap: 8px;
+    }
+
+    .datasetEmptyTitle {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--MH-Theme-Primary-Dark, #336f8a);
+    }
+
+    .datasetEmptyBody {
+      margin: 0;
+      max-width: 36rem;
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #5d5763;
+    }
+
     .ag-theme-quartz {
       --ag-font-family: "Inter", sans-serif;
       --ag-font-size: 14px;

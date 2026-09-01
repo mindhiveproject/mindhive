@@ -28,7 +28,7 @@ const SCOPE_INTRO_KEYS = {
 };
 
 const SCOPE_INTRO_DEFAULTS = {
-  me: "All datasets you can see — uploaded, shared with you, from your class, class network, or public.",
+  me: "All datasets you can see — study, uploaded, shared with you, from your class, class network, or public.",
   uploaded: "Datasets you uploaded.",
   sharedWithMe: "Datasets others shared with you as a collaborator.",
   myClass: "Datasets linked to studies or projects in your classes.",

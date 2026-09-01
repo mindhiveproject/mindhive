@@ -71,6 +71,12 @@ import {
   searchConnectUsersCount,
 } from "./searchConnectUsers";
 import { GraphQLSchema } from "graphql";
+import {
+  ingestRunMessage,
+  runtimeRunContext,
+  startRun,
+  updateRunDataPolicy,
+} from "./runtimeRuns";
 
 // make a fake gql tagged template literal
 const graphql = String.raw;
@@ -85,6 +91,21 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         errors: [String!]!
       }
       type Mutation {
+        startRun(
+          taskId: ID!
+          studyId: ID!
+          requestedTestVersion: String
+          guestPublicId: String
+        ): RuntimeRunContext!
+        ingestRunMessage(
+          runToken: String!
+          sequence: Int!
+          messageType: RuntimeMessageType!
+          data: JSON
+          aggregated: JSON
+          error: String
+        ): RuntimeAcknowledgement!
+        updateRunDataPolicy(runToken: String!, dataPolicy: String!): Boolean!
         sendEmail(
           receiverId: ID!
           title: String
@@ -274,6 +295,33 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         updateTemplateMilestone(input: UpdateTemplateMilestoneInput!): Milestone
         deleteTemplateMilestone(id: ID!): Milestone
       }
+      enum RuntimeMessageType {
+        BATCH
+        FINAL
+        COMPLETE
+        FAILURE
+      }
+      type RuntimeRunContext {
+        runToken: String!
+        datasetToken: String!
+        runtimeType: String!
+        testVersion: String
+        studyVersion: String
+        assetId: ID!
+        assetVersion: String!
+        participantType: String!
+        participantPublicId: String
+        studyId: ID!
+        taskId: ID!
+        templateId: ID
+      }
+      type RuntimeAcknowledgement {
+        accepted: Boolean!
+        duplicate: Boolean!
+        sequence: Int!
+        datasetToken: String!
+        completed: Boolean!
+      }
       input CreateTemplateMilestoneInput {
         templateBoardId: ID!
         title: String!
@@ -313,6 +361,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         classNetwork: NetworkInviteContextNetwork
       }
       extend type Query {
+        runtimeRunContext(runToken: String!): RuntimeRunContext!
         resolveMilestonesForBoard(boardId: ID!): [Milestone!]!
         # Resolve the most-specific published FormDefinition for the
         # current viewer's scope. Pass any subset of the scope IDs the
@@ -370,6 +419,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
     resolvers: {
       Opportunity: opportunityMultiselectResolvers,
       Query: {
+        runtimeRunContext,
         resolveFormDefinition,
         resolveMilestonesForBoard,
         networkInviteContext,
@@ -377,6 +427,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         searchConnectUsersCount,
       },
       Mutation: {
+        startRun,
+        ingestRunMessage,
+        updateRunDataPolicy,
         sendEmail,
         copyProposalBoard,
         deleteProposal,

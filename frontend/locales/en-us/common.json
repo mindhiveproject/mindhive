@@ -378,6 +378,16 @@
 	"reviewed": {
 		"menuTitle": "Reviewed"
 	},
+	"runtime": {
+		"configurationError": "This task cannot start because its runtime is misconfigured.",
+		"jsPsychFrameTitle": "jsPsych runtime shell",
+		"jsPsychShellLoading": "Preparing the jsPsych runtime bridge…",
+		"jsPsychShellReady": "The jsPsych bridge is ready, but experiment execution is not enabled yet.",
+		"loadingLabJs": "Loading experiment…",
+		"loadingLabJsDescription": "The experiment is loading and should start in a few seconds.",
+		"p5Shell": "This p5.js task is configured, but execution is not enabled yet.",
+		"starting": "Starting task…"
+	},
 	"save": "Save",
 	"searchMembers": {
 		"admin": "Admin",
