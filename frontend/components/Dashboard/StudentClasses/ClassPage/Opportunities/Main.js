@@ -29,6 +29,10 @@ import {
   getOpportunityMentors,
   getOpportunitySponsors,
 } from "../../../../../lib/opportunityPeople";
+import {
+  readStudentOpportunityBrowsePrefs,
+  writeStudentOpportunityBrowsePrefs,
+} from "../studentClassPagePrefs";
 const STUDENT_OPEN_ROUND_STATUS = "preferences_open";
 const MIN_DWELL_MS = 1000;
 
@@ -72,11 +76,21 @@ const RankBanners = styled.div`
 `;
 
 const Filters = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  align-self: start;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px 16px;
   width: 100%;
+  padding: 8px 0;
+  box-sizing: border-box;
+  background: rgba(247, 249, 248, 0.95);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
 `;
 
 const FilterRow = styled.div`
@@ -108,6 +122,8 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
   const sessionRef = useRef(null);
   const flushedRef = useRef(false);
   const startPreviewSessionRef = useRef(null);
+  const hasRestoredBrowsePrefs = useRef(false);
+  const browsePrefsClassId = useRef(null);
 
   const [recordVisit] = useMutation(RECORD_OPPORTUNITY_PREVIEW_VISIT);
 
@@ -293,6 +309,36 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       setCategoryFilter(null);
     }
   }, [categoryFilter, categoryOptions, showCategoryFilters]);
+
+  useEffect(() => {
+    if (!classId) return;
+
+    if (browsePrefsClassId.current !== classId) {
+      browsePrefsClassId.current = classId;
+      hasRestoredBrowsePrefs.current = false;
+    }
+
+    if (hasRestoredBrowsePrefs.current) return;
+
+    const stored = readStudentOpportunityBrowsePrefs(classId);
+    if (stored) {
+      setFilterMode(stored.filterMode);
+      setCategoryFilter(stored.categoryFilter);
+      setSearchQuery(stored.searchQuery);
+    }
+
+    hasRestoredBrowsePrefs.current = true;
+  }, [classId]);
+
+  useEffect(() => {
+    if (!classId || !hasRestoredBrowsePrefs.current) return;
+
+    writeStudentOpportunityBrowsePrefs(classId, {
+      filterMode,
+      categoryFilter,
+      searchQuery,
+    });
+  }, [classId, filterMode, categoryFilter, searchQuery]);
 
   const filteredOpportunities = useMemo(() => {
     let list = opportunities;

@@ -129,6 +129,15 @@ export default function StudentRankActionCard({
   const submitted = preference?.status === "submitted";
   const hasDraft = Boolean(preference) && !submitted;
 
+  const now = Date.now();
+  const openAtMs = round.openAt ? new Date(round.openAt).getTime() : null;
+  const closeAtMs = round.closeAt ? new Date(round.closeAt).getTime() : null;
+  const beforeOpen = openAtMs && now < openAtMs;
+  const afterClose = closeAtMs && now > closeAtMs;
+  const inTimeWindow = !beforeOpen && !afterClose;
+  const rankingEditable =
+    round.status === "preferences_open" && inTimeWindow;
+
   let title;
   let helper = null;
   let ctaLabel;
@@ -141,9 +150,12 @@ export default function StudentRankActionCard({
       { default: "You submitted your ranking for {{roundTitle}}" },
     );
     helper = t(
-      "opportunities.studentView.rankCard.helperSubmitted",
+      "opportunities.studentView.rankCard.helperSubmittedReopen",
       {},
-      { default: "You can review what you sent." },
+      {
+        default:
+          "You can review what you sent. Need to change something? Ask your teacher to reopen your submission.",
+      },
     );
     ctaLabel = t(
       "opportunities.studentView.rankCard.ctaView",
@@ -157,11 +169,28 @@ export default function StudentRankActionCard({
       { roundTitle },
       { default: "Finish your ranking for {{roundTitle}}" },
     );
-    ctaLabel = t(
-      "opportunities.studentView.rankCard.ctaContinue",
-      {},
-      { default: "Continue ranking" },
-    );
+    if (rankingEditable) {
+      ctaLabel = t(
+        "opportunities.studentView.rankCard.ctaContinue",
+        {},
+        { default: "Continue ranking" },
+      );
+    } else {
+      helper = t(
+        "opportunities.studentView.rankCard.helperDraftWindowClosed",
+        {},
+        {
+          default:
+            "Your ranking window has closed. You can review your draft, but changes are no longer accepted.",
+        },
+      );
+      ctaLabel = t(
+        "opportunities.studentView.rankCard.ctaView",
+        {},
+        { default: "View ranking" },
+      );
+      buttonVariant = "outline";
+    }
   } else {
     title = t(
       "opportunities.studentView.rankCard.titleNotStarted",

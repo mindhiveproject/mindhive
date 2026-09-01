@@ -1,10 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Container, Draggable } from "react-smooth-dnd";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
 import styled from "styled-components";
 
-import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
+import {
+  DragIndicatorIcon,
+  StarFilledIcon,
+  StarIcon,
+} from "../../../../DesignSystem/Icons";
+import PanelHeader from "../../../../DesignSystem/PanelHeader";
+import Popover from "../../../../DesignSystem/Popover";
 import {
   getOpportunityThumbnailSources,
   hasOpportunityPlayableVideo,
@@ -12,6 +20,9 @@ import {
 import {
   formatOpportunityMentorLabel,
   formatOpportunitySponsorLabel,
+  getOpportunityMentors,
+  getOpportunitySponsors,
+  isMentorTbd,
 } from "../../../../../lib/opportunityPeople";
 import OpportunityIntroVideoModal from "./OpportunityIntroVideoModal";
 
@@ -31,7 +42,7 @@ const ListShell = styled.div`
 
 const RankRow = styled.div`
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto minmax(160px, 1.2fr);
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
@@ -46,16 +57,23 @@ const RankRow = styled.div`
   }
 
   @media (max-width: 820px) {
-    grid-template-columns: auto auto minmax(0, 1fr);
-    grid-template-rows: auto auto auto;
-    align-items: start;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    align-items: center;
 
     .rankRowStars {
-      grid-column: 2 / -1;
+      grid-column: 2 / 4;
+      grid-row: 2;
     }
 
     .rankRowNote {
-      grid-column: 1 / -1;
+      grid-column: 2 / 3;
+      grid-row: 2;
+    }
+
+    .rankRowVideo {
+      grid-column: 4;
+      grid-row: 1;
     }
   }
 `;
@@ -97,10 +115,30 @@ const RankBadge = styled.span`
 `;
 
 const OppMain = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
   min-width: 0;
+`;
+
+const MetaRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  min-width: 0;
+`;
+
+const NotePopoverBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 16px 16px;
+
+  .hint {
+    margin: 0;
+    font: var(--MH-Type-Body-Base, 400 13px/18px "Inter", sans-serif);
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
 `;
 
 const VideoThumbButton = styled.button`
@@ -277,10 +315,20 @@ function reorderArray(arr, fromIndex, toIndex) {
   return next;
 }
 
-function mentorDisplayName(mentor) {
-  if (!mentor) return null;
-  const full = [mentor.firstName, mentor.lastName].filter(Boolean).join(" ");
-  return full || mentor.username || null;
+function sponsorsIncludeAllMentors(opportunity) {
+  const mentors = getOpportunityMentors(opportunity);
+  if (!mentors.length) return false;
+  const sponsorIds = new Set(
+    getOpportunitySponsors(opportunity).map((profile) => String(profile.id)),
+  );
+  return mentors.every((mentor) => sponsorIds.has(String(mentor.id)));
+}
+
+function isSponsorAlsoMentor(opportunity) {
+  if (isMentorTbd(opportunity)) return false;
+  return (
+    opportunity?.sponsorIsMentor === true || sponsorsIncludeAllMentors(opportunity)
+  );
 }
 
 function buildInitialOrder(opportunities, rankings) {
@@ -337,6 +385,135 @@ function VideoThumbMedia({ coverUrl, directVideoSrc, embedThumbUrl }) {
   return null;
 }
 
+function OpportunityPeopleMeta({ opportunity, t }) {
+  const sponsorLine = formatOpportunitySponsorLabel(opportunity);
+  const mentorLine = formatOpportunityMentorLabel(opportunity, t);
+  const sponsorIsAlsoMentor = isSponsorAlsoMentor(opportunity);
+  const sponsorIsMentorLabel = t(
+    "opportunities.preview.sponsorIsMentor",
+    {},
+    { default: "Sponsor is mentor" },
+  );
+  const sponsorRoleLabel = t(
+    "opportunities.studentView.meta.sponsorRole",
+    {},
+    { default: "Sponsor" },
+  );
+  const mentorRoleLabel = t(
+    "opportunities.studentView.meta.mentorRole",
+    {},
+    { default: "Mentor" },
+  );
+
+  return (
+    <>
+      {sponsorLine !== "—" ? (
+        <MetaRow>
+          <Chip variant="static" tone="neutral" label={sponsorLine} />
+          <p className="meta">
+            {sponsorIsAlsoMentor ? sponsorIsMentorLabel : sponsorRoleLabel}
+          </p>
+        </MetaRow>
+      ) : null}
+      {!sponsorIsAlsoMentor ? (
+        isMentorTbd(opportunity) ? (
+          <p className="meta">{mentorLine}</p>
+        ) : (
+          <MetaRow>
+            <Chip variant="static" tone="neutral" label={mentorLine} />
+            <p className="meta">{mentorRoleLabel}</p>
+          </MetaRow>
+        )
+      ) : null}
+    </>
+  );
+}
+
+function RankNoteButton({
+  value,
+  onChange,
+  disabled,
+  opportunity,
+  t,
+}) {
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+  const noteButtonLabel = t(
+    "opportunities.studentView.rankForm.noteButton",
+    {},
+    { default: "Leave a note" },
+  );
+  const notePopoverTitle = t(
+    "opportunities.studentView.rankForm.notePopoverTitle",
+    {},
+    { default: "Note for your teacher" },
+  );
+  const noteSharedHint = t(
+    "opportunities.studentView.rankForm.noteSharedWithTeacher",
+    {},
+    { default: "This note is shared with your teacher." },
+  );
+  const closeLabel = t(
+    "opportunities.studentView.rankForm.notePopoverClose",
+    {},
+    { default: "Close" },
+  );
+  const notePlaceholder = t(
+    "opportunities.studentView.rankForm.privateNotePlaceholder",
+    {},
+    { default: "Add a note for your teacher…" },
+  );
+  const noteAriaLabel = t(
+    "opportunities.studentView.rankForm.privateNoteLabel",
+    { title: opportunity.title || "" },
+    { default: "Private note for {{title}}" },
+  );
+
+  return (
+    <>
+      <span ref={anchorRef} className="rankRowNote">
+        <Button
+          type="button"
+          variant="subtle"
+          disabled={disabled}
+          aria-label={noteAriaLabel}
+          aria-expanded={open}
+          aria-haspopup="dialog"
+          onClick={() => setOpen((prev) => !prev)}
+        >
+          {noteButtonLabel}
+        </Button>
+      </span>
+
+      <Popover
+        open={open}
+        anchorRef={anchorRef}
+        onClose={() => setOpen(false)}
+        side="bottom"
+        align="end"
+        width={320}
+        ariaLabel={notePopoverTitle}
+      >
+        <PanelHeader
+          title={notePopoverTitle}
+          onClose={() => setOpen(false)}
+          closeLabel={closeLabel}
+        />
+        <NotePopoverBody>
+          <p className="hint">{noteSharedHint}</p>
+          <NoteField
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={notePlaceholder}
+            disabled={disabled}
+            aria-label={noteAriaLabel}
+          />
+        </NotePopoverBody>
+      </Popover>
+    </>
+  );
+}
+
 function FiveStarRating({ value, onChange, disabled, labelPrefix }) {
   const stars = value === "" || value == null ? 0 : Number(value);
 
@@ -381,8 +558,6 @@ function RankRowItem({
   const hasVideo = hasOpportunityPlayableVideo(opportunity);
   const { coverUrl, directVideoSrc, embedThumbUrl } =
     getOpportunityThumbnailSources(opportunity);
-  const sponsorLine = formatOpportunitySponsorLabel(opportunity);
-  const mentorLine = formatOpportunityMentorLabel(opportunity, t);
   const rankLabel = t(
     "opportunities.studentView.rankForm.rankBadge",
     { rank },
@@ -392,11 +567,6 @@ function RankRowItem({
     "opportunities.studentView.rankForm.starRatingLabel",
     { title: opportunity.title || "" },
     { default: "Star rating for {{title}}" },
-  );
-  const notePlaceholder = t(
-    "opportunities.studentView.rankForm.privateNotePlaceholder",
-    {},
-    { default: "Private note for your teacher…" },
   );
   const watchVideoLabel = t(
     "opportunities.studentView.rankForm.watchVideo",
@@ -413,55 +583,17 @@ function RankRowItem({
           default: "Drag to reorder",
         })}
       >
-        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
-          <circle cx="4" cy="3" r="1.25" fill="currentColor" />
-          <circle cx="10" cy="3" r="1.25" fill="currentColor" />
-          <circle cx="4" cy="7" r="1.25" fill="currentColor" />
-          <circle cx="10" cy="7" r="1.25" fill="currentColor" />
-          <circle cx="4" cy="11" r="1.25" fill="currentColor" />
-          <circle cx="10" cy="11" r="1.25" fill="currentColor" />
-        </svg>
+        <DragIndicatorIcon />
       </DragHandle>
 
       <RankBadge aria-label={rankLabel}>{rank}</RankBadge>
 
       <OppMain>
-        {hasVideo ? (
-          <VideoThumbButton
-            type="button"
-            onClick={() => onOpenVideo(opportunity)}
-            aria-label={watchVideoLabel}
-          >
-            <VideoThumbMedia
-              coverUrl={coverUrl}
-              directVideoSrc={directVideoSrc}
-              embedThumbUrl={embedThumbUrl}
-            />
-            <span className="playOverlay" aria-hidden>
-              <span className="playIcon" />
-            </span>
-          </VideoThumbButton>
-        ) : null}
         <OppText>
           <p className="title" title={opportunity.title}>
             {opportunity.title}
           </p>
-          {sponsorLine !== "—" ? (
-            <p className="meta">
-              {t(
-                "opportunities.studentView.meta.sponsor",
-                { name: sponsorLine },
-                { default: "Sponsor: {{name}}" },
-              )}
-            </p>
-          ) : null}
-          <p className="meta">
-            {t(
-              "opportunities.studentView.meta.mentor",
-              { name: mentorLine },
-              { default: "Mentor: {{name}}" },
-            )}
-          </p>
+          <OpportunityPeopleMeta opportunity={opportunity} t={t} />
         </OppText>
       </OppMain>
 
@@ -472,18 +604,31 @@ function RankRowItem({
         labelPrefix={starsLabel}
       />
 
-      <NoteField
-        className="rankRowNote"
+      <RankNoteButton
         value={ranking?.comment || ""}
-        onChange={(e) => onCommentChange(e.target.value)}
-        placeholder={notePlaceholder}
+        onChange={onCommentChange}
         disabled={!rankingEnabled}
-        aria-label={t(
-          "opportunities.studentView.rankForm.privateNoteLabel",
-          { title: opportunity.title || "" },
-          { default: "Private note for {{title}}" },
-        )}
+        opportunity={opportunity}
+        t={t}
       />
+
+      {hasVideo ? (
+        <VideoThumbButton
+          className="rankRowVideo"
+          type="button"
+          onClick={() => onOpenVideo(opportunity)}
+          aria-label={watchVideoLabel}
+        >
+          <VideoThumbMedia
+            coverUrl={coverUrl}
+            directVideoSrc={directVideoSrc}
+            embedThumbUrl={embedThumbUrl}
+          />
+          <span className="playOverlay" aria-hidden>
+            <span className="playIcon" />
+          </span>
+        </VideoThumbButton>
+      ) : null}
 
       {unavailableMessage ? (
         <UnavailableNote>{unavailableMessage}</UnavailableNote>

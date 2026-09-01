@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
 import { studentDisplayName } from "./ClassmateRankList";
+import { buildFavoritedTeamProjectsNote } from "./classmatePickLimitCopy";
 
 const Section = styled.section`
   display: flex;
@@ -40,7 +41,21 @@ const ReviewItem = styled.li`
   padding: 12px 14px;
   border-radius: 12px;
   border: 1px solid var(--MH-Theme-Neutrals-Medium, #e6e6e6);
-  background: var(--MH-Theme-Neutrals-Lighter, #f9f9f9);
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+
+  ${({ $active }) =>
+    $active
+      ? `
+    box-shadow: var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1));
+  `
+      : ""}
+`;
+
+const ZoneLabel = styled.p`
+  margin: 0 0 4px;
+  font: var(--MH-Type-Body-Base, 400 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
 const ReviewRow = styled.div`
@@ -59,9 +74,17 @@ const RankBadge = styled.span`
   padding: 0 8px;
   border-radius: 999px;
   font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
   color: var(--MH-Theme-Neutrals-Black, #171717);
-  border: 1px solid var(--MH-Theme-Neutrals-Medium, #e6e6e6);
+  border: none;
+
+  ${({ $active }) =>
+    $active
+      ? `
+    background: var(--MH-Theme-Primary-Light, #def8fb);
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
+  `
+      : ""}
 `;
 
 const ItemTitle = styled.span`
@@ -143,6 +166,8 @@ function buildOpportunityReviewList(opportunities, rankings) {
 export default function PreferenceSubmissionReview({
   students,
   classmateOrder,
+  effectivePicks = 0,
+  teamEligibleOpportunities = [],
   opportunities,
   rankings,
   notes,
@@ -150,6 +175,11 @@ export default function PreferenceSubmissionReview({
   isOpen,
 }) {
   const { t } = useTranslation("classes");
+
+  const favoritedTeamProjectsNote = buildFavoritedTeamProjectsNote(
+    teamEligibleOpportunities,
+    t,
+  );
 
   const studentById = new Map(
     (students || []).filter((s) => s?.id).map((s) => [s.id, s]),
@@ -159,6 +189,23 @@ export default function PreferenceSubmissionReview({
     opportunities,
     rankings,
   );
+
+  const activeCount = Math.min(
+    effectivePicks > 0 ? effectivePicks : 0,
+    classmateOrder.length,
+  );
+
+  const activeZoneLabel =
+    effectivePicks > 0 && activeCount > 0
+      ? t(
+          "opportunities.studentView.rankForm.classmatesActiveZoneLabel",
+          { count: effectivePicks },
+          {
+            default:
+              "Your top {{count}} highlighted picks count toward team matching (order does not matter)",
+          },
+        )
+      : null;
 
   return (
     <>
@@ -175,21 +222,28 @@ export default function PreferenceSubmissionReview({
             })}
           </EmptyNote>
         ) : (
-          <ReviewList>
-            {classmateOrder.map((id, index) => {
-              const student = studentById.get(id);
-              return (
-                <ReviewItem key={id}>
-                  <ReviewRow>
-                    <RankBadge>{index + 1}</RankBadge>
-                    <ItemTitle>
-                      {studentDisplayName(student) || id}
-                    </ItemTitle>
-                  </ReviewRow>
-                </ReviewItem>
-              );
-            })}
-          </ReviewList>
+          <>
+            {activeZoneLabel ? <ZoneLabel>{activeZoneLabel}</ZoneLabel> : null}
+            {favoritedTeamProjectsNote ? (
+              <ZoneLabel>{favoritedTeamProjectsNote}</ZoneLabel>
+            ) : null}
+            <ReviewList>
+              {classmateOrder.map((id, index) => {
+                const student = studentById.get(id);
+                const isActivePick = effectivePicks > 0 && index < activeCount;
+                return (
+                  <ReviewItem key={id} $active={isActivePick}>
+                    <ReviewRow>
+                      <RankBadge $active={isActivePick}>{index + 1}</RankBadge>
+                      <ItemTitle>
+                        {studentDisplayName(student) || id}
+                      </ItemTitle>
+                    </ReviewRow>
+                  </ReviewItem>
+                );
+              })}
+            </ReviewList>
+          </>
         )}
       </Section>
 

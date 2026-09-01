@@ -27,6 +27,11 @@ import MessageCard from "../../../../DesignSystem/MessageCard";
 import ClassmateRankList, {
   deriveClassmateOrder,
 } from "./ClassmateRankList";
+import { buildFavoritedTeamProjectsNote } from "./classmatePickLimitCopy";
+import {
+  getMaxActiveClassmatePicks,
+  getStudentTeamEligibleOpportunities,
+} from "../../../../../lib/connectBallotUtils";
 import FavoriteRankList from "./FavoriteRankList";
 import PreferenceSubmissionReview from "./PreferenceSubmissionReview";
 import PreferenceSubmissionStepper, {
@@ -334,22 +339,36 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const approvedRoundQuestions = (round?.questions || []).filter(
     (q) => q.status === "approved"
   );
-  const favoriteIds = new Set(
+  const roundOpportunities = round?.opportunities || [];
+  const roundOppIdSet = useMemo(
+    () => new Set(roundOpportunities.map((o) => o.id).filter(Boolean)),
+    [roundOpportunities],
+  );
+  const favoriteOppIdsInRound = useMemo(() => {
+    const ids = new Set();
     [
       ...(me?.favoriteOpportunities || []),
       ...(user?.favoriteOpportunities || []),
     ]
       .map((o) => o?.id)
-      .filter(Boolean),
-  );
-  const rankedIds = new Set(
+      .filter((id) => id && roundOppIdSet.has(id))
+      .forEach((id) => ids.add(id));
+    return ids;
+  }, [
+    me?.favoriteOpportunities,
+    user?.favoriteOpportunities,
+    roundOppIdSet,
+  ]);
+  const selectedOppIds = useMemo(() => {
+    const ids = new Set(favoriteOppIdsInRound);
     (existingPreference?.items || [])
       .map((item) => item.opportunity?.id)
-      .filter(Boolean),
-  );
-  const roundOpportunities = round?.opportunities || [];
-  const opportunities = roundOpportunities.filter(
-    (opp) => favoriteIds.has(opp.id) || rankedIds.has(opp.id),
+      .filter(Boolean)
+      .forEach((id) => ids.add(id));
+    return ids;
+  }, [favoriteOppIdsInRound, existingPreference?.items]);
+  const opportunities = roundOpportunities.filter((opp) =>
+    selectedOppIds.has(opp.id),
   );
 
   const [roundAnswers, setRoundAnswers] = useState({});
@@ -362,19 +381,22 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
 
   const teamEligibleOpps = useMemo(
     () =>
-      roundOpportunities.filter(
-        (o) => o.teamSize > 1 && o.allowsTeamPreferences,
+      getStudentTeamEligibleOpportunities(
+        roundOpportunities,
+        favoriteOppIdsInRound,
       ),
-    [roundOpportunities],
+    [roundOpportunities, favoriteOppIdsInRound],
   );
   const teamEligibleOppIds = useMemo(
     () => teamEligibleOpps.map((o) => o.id).filter(Boolean),
     [teamEligibleOpps],
   );
   const hasTeamOpps = teamEligibleOpps.length > 0;
-  const maxClassmatePicks = hasTeamOpps
-    ? Math.max(...teamEligibleOpps.map((o) => (o.teamSize || 1) - 1), 0)
-    : 0;
+  const effectivePicks = getMaxActiveClassmatePicks(teamEligibleOpps);
+  const favoritedTeamProjectsNote = buildFavoritedTeamProjectsNote(
+    teamEligibleOpps,
+    t,
+  );
 
   const networkStudents = (() => {
     const map = new Map();
@@ -924,8 +946,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const inTimeWindow = !beforeOpen && !afterClose;
   const submitted = existingPreference?.status === "submitted";
   // Once submitted, lock the form. Students still see what they sent.
-  // (If the round re-opens after a teacher pushed status back, the form
-  // unlocks automatically because `submitted` is recomputed from data.)
+  // Reopening requires the teacher to reset preference.status to draft.
   const isOpen =
     round.status === "preferences_open" && inTimeWindow && !submitted;
 
@@ -936,18 +957,48 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         "This round is not available yet. Your teacher is still setting it up.",
     });
   } else if (round.status !== "preferences_open") {
-    lockReason = `Preferences are ${round.status.replace("_", " ")} for this round. You can review what you submitted, but changes are no longer accepted.`;
+    lockReason = t(
+      "opportunities.studentView.rankForm.lockReason.roundClosed",
+      { status: round.status.replace(/_/g, " ") },
+      {
+        default:
+          "Preferences are {{status}} for this round. You can review what you submitted, but changes are no longer accepted.",
+      },
+    );
   } else if (beforeOpen) {
     const openDate = new Date(round.openAt).toLocaleDateString();
-    lockReason = `This round opens on ${openDate}. Come back then to submit your preferences.`;
+    lockReason = t(
+      "opportunities.studentView.rankForm.lockReason.beforeOpen",
+      { date: openDate },
+      {
+        default:
+          "This round opens on {{date}}. Come back then to submit your preferences.",
+      },
+    );
   } else if (afterClose) {
     const closeDate = new Date(round.closeAt).toLocaleDateString();
-    lockReason = `Preferences closed on ${closeDate}. You can review what you submitted, but changes are no longer accepted.`;
+    lockReason = t(
+      "opportunities.studentView.rankForm.lockReason.afterClose",
+      { date: closeDate },
+      {
+        default:
+          "Preferences closed on {{date}}. You can review what you submitted, but changes are no longer accepted.",
+      },
+    );
   } else if (submitted) {
     const when = existingPreference?.submittedAt
       ? new Date(existingPreference.submittedAt).toLocaleString()
-      : "earlier";
-    lockReason = `You submitted your preferences ${when}. Need to change something? Ask your teacher — they can reopen your submission.`;
+      : t("opportunities.studentView.rankForm.lockReason.submittedEarlier", {}, {
+          default: "earlier",
+        });
+    lockReason = t(
+      "opportunities.studentView.rankForm.lockReason.submitted",
+      { when },
+      {
+        default:
+          "You submitted your preferences {{when}}. Need to change something? Ask your teacher — they can reopen your submission.",
+      },
+    );
   }
 
   const pageTitle = round.title || "";
@@ -1385,16 +1436,23 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
               {hasTeamOpps ? (
                 <>
                   <p className="helper">
-                    {t("opportunities.studentView.rankForm.classmatesHelper", {}, {
-                      default:
-                        "Pick classmates you'd like on your team. Order matters — 1 is your top choice.",
-                    })}
+                    {t(
+                      "opportunities.studentView.rankForm.classmatesHelper",
+                      { count: effectivePicks },
+                      {
+                        default:
+                          "Rank classmates you'd like on your team. How many top picks are highlighted ({{count}} for you) depends on the team size of the team projects you favorited in this round — classmates who favorited different projects may see a different number. To be placed together on a project, everyone in your group must pick each other within their highlighted picks; order does not matter. You may rank additional classmates as backups.",
+                      },
+                    )}
                   </p>
+                  {favoritedTeamProjectsNote ? (
+                    <p className="helper">{favoritedTeamProjectsNote}</p>
+                  ) : null}
                   <ClassmateRankList
                     students={networkStudents}
                     classmateOrder={classmateOrder}
                     onClassmateOrderChange={setClassmateOrder}
-                    maxPicks={maxClassmatePicks}
+                    effectivePicks={effectivePicks}
                     rankingEnabled={isOpen}
                   />
                 </>
@@ -1474,6 +1532,8 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
               <PreferenceSubmissionReview
                 students={networkStudents}
                 classmateOrder={classmateOrder}
+                effectivePicks={effectivePicks}
+                teamEligibleOpportunities={teamEligibleOpps}
                 opportunities={opportunities}
                 rankings={rankings}
                 notes={notes}

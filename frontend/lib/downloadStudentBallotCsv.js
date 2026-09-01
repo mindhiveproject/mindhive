@@ -19,7 +19,13 @@ function formatCsvCellValue(value) {
   return String(value);
 }
 
-function formatClassmatesList(studentId, classmateIds, studentById, classmateListsByStudent) {
+function formatClassmatesList(
+  studentId,
+  classmateIds,
+  studentById,
+  classmateListsByStudent,
+  activePickCount = 0,
+) {
   return (classmateIds || [])
     .map((classmateId, index) => {
       const classmate = studentById.get(classmateId);
@@ -28,6 +34,7 @@ function formatClassmatesList(studentId, classmateIds, studentById, classmateLis
         studentId,
         classmateId,
         classmateListsByStudent,
+        activePickCount,
       );
       const statusSuffix =
         status === "mutual"
@@ -97,6 +104,7 @@ export function buildStudentBallotCsvRows({
   ballotRows = [],
   studentById,
   classmateListsByStudent,
+  activePickCount = 0,
   assessmentFormDefinitionId,
   labels = {},
 }) {
@@ -161,6 +169,7 @@ export function buildStudentBallotCsvRows({
       studentId,
       classmateIds,
       classmateListsByStudent,
+      activePickCount,
     );
     const assessmentAnswer = getAssessmentAnswer(
       row.preference?.assessmentData,
@@ -180,6 +189,7 @@ export function buildStudentBallotCsvRows({
         classmateIds,
         studentById,
         classmateListsByStudent,
+        activePickCount,
       ),
       [rankedOpportunities]: formatRankedOpportunitiesList(row.preference),
       [additionalNotes]: (row.preference?.notes || "").trim(),

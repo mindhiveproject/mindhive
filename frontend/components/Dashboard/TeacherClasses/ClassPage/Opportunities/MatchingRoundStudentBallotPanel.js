@@ -5,17 +5,19 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import Chip from "../../../../DesignSystem/Chip";
+import Button from "../../../../DesignSystem/Button";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import IconButton from "../../../../DesignSystem/IconButton";
 import DefinitionForm from "../../../../Forms/DefinitionForm";
-import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
+import { StarFilledIcon, StarIcon, UnlockIcon } from "../../../../DesignSystem/Icons";
 import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
 import { TEACHER_STUDENT_BALLOT_VIEW } from "../../../../Queries/ConnectMatch";
+import { UPDATE_PREFERENCE } from "../../../../Mutations/ConnectPreference";
 import useConnectMatchAssign from "../../../../../lib/useConnectMatchAssign";
 import { isAssessmentFormAnswerComplete } from "../../../../../lib/connectPreferenceAssessmentData";
 import {
@@ -25,6 +27,7 @@ import {
   displayName,
   formatPreferenceSummary,
   getClassmateMutualStatus,
+  getMaxActiveClassmatePicks,
   getSubmissionStatus,
   getTeamEligibleOpportunities,
   inferBallotQueue,
@@ -202,6 +205,17 @@ const DetailList = styled.ol`
   gap: 8px;
 `;
 
+const ActiveZoneGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--MH-Theme-Neutrals-Lighter, #f9f9f9);
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  box-shadow: 0 1px 2px rgba(23, 23, 23, 0.06);
+`;
+
 const DetailItem = styled.li`
   display: flex;
   flex-wrap: wrap;
@@ -277,10 +291,18 @@ function sortStudents(a, b) {
   return displayName(a.student).localeCompare(displayName(b.student));
 }
 
+const ZoneLabel = styled.p`
+  margin: 0;
+  font: var(--MH-Type-Body-Base, 400 14px/20px "Inter", sans-serif);
+  letter-spacing: 0;
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+`;
+
 function StudentBallotRow({
   row,
   studentById,
   classmateListsByStudent,
+  activePickCount = 0,
   opportunities,
   matchesByOpp,
   prefIndex,
@@ -289,6 +311,8 @@ function StudentBallotRow({
   isCurated,
   handleAssign,
   assigning,
+  handleReopenBallot,
+  reopeningPreferenceId,
   t,
   tConnect,
 }) {
@@ -299,6 +323,7 @@ function StudentBallotRow({
     studentId,
     classmateIds,
     classmateListsByStudent,
+    activePickCount,
   );
 
   const assignOptions = useMemo(() => {
@@ -383,6 +408,16 @@ function StudentBallotRow({
         )
       : null;
 
+  const canReopenBallot =
+    row.preference?.status === "submitted" && Boolean(row.preference?.id);
+  const isReopening = reopeningPreferenceId === row.preference?.id;
+
+  const handleReopenClick = (event) => {
+    event.stopPropagation();
+    if (!canReopenBallot || isReopening) return;
+    handleReopenBallot(row.preference.id, displayName(row.student));
+  };
+
   return (
     <StudentRow>
       <RowSummary
@@ -458,47 +493,160 @@ function StudentBallotRow({
                 )}
               </EmptyNote>
             ) : (
-              <DetailList>
-                {classmateIds.map((classmateId, index) => {
-                  const classmate = studentById.get(classmateId);
-                  const mutualStatus = getClassmateMutualStatus(
-                    studentId,
-                    classmateId,
-                    classmateListsByStudent,
-                  );
-                  const mutualChip =
-                    mutualStatus === "mutual"
-                      ? t(
-                          "opportunities.matchingRound.studentRanking.mutual",
-                          {},
-                          { default: "Mutual" },
-                        )
-                      : mutualStatus === "one_way"
-                        ? t(
-                            "opportunities.matchingRound.studentRanking.oneWay",
-                            {},
-                            { default: "One-way" },
-                          )
-                        : null;
-                  return (
-                    <DetailItem key={classmateId}>
-                      <RankBadge>{index + 1}</RankBadge>
-                      <ItemTitle>
-                        {studentDisplayName(classmate) || classmateId}
-                      </ItemTitle>
-                      {mutualChip ? (
-                        <Chip
-                          variant="static"
-                          tone={
-                            mutualStatus === "mutual" ? "success" : "warning"
-                          }
-                          label={mutualChip}
-                        />
-                      ) : null}
-                    </DetailItem>
-                  );
-                })}
-              </DetailList>
+              <>
+                {activePickCount > 0 && classmateIds.length > 0 ? (
+                  <ZoneLabel>
+                    {t(
+                      "opportunities.studentView.rankForm.classmatesActiveZoneLabel",
+                      { count: activePickCount },
+                      {
+                        default:
+                          "These {{count}} classmates count toward team matching (order does not matter)",
+                      },
+                    )}
+                  </ZoneLabel>
+                ) : null}
+                {activePickCount > 0 && classmateIds.length > 0 ? (
+                  <ActiveZoneGroup>
+                    {classmateIds.slice(0, activePickCount).map((classmateId, index) => {
+                      const classmate = studentById.get(classmateId);
+                      const mutualStatus = getClassmateMutualStatus(
+                        studentId,
+                        classmateId,
+                        classmateListsByStudent,
+                        activePickCount,
+                      );
+                      const mutualChip =
+                        mutualStatus === "mutual"
+                          ? t(
+                              "opportunities.matchingRound.studentRanking.mutual",
+                              {},
+                              { default: "Mutual" },
+                            )
+                          : mutualStatus === "one_way"
+                            ? t(
+                                "opportunities.matchingRound.studentRanking.oneWay",
+                                {},
+                                { default: "One-way" },
+                              )
+                            : null;
+                      return (
+                        <DetailItem key={classmateId}>
+                          <RankBadge>{index + 1}</RankBadge>
+                          <ItemTitle>
+                            {studentDisplayName(classmate) || classmateId}
+                          </ItemTitle>
+                          {mutualChip ? (
+                            <Chip
+                              variant="static"
+                              tone={
+                                mutualStatus === "mutual" ? "success" : "warning"
+                              }
+                              label={mutualChip}
+                            />
+                          ) : null}
+                        </DetailItem>
+                      );
+                    })}
+                  </ActiveZoneGroup>
+                ) : null}
+                {classmateIds.length > activePickCount && activePickCount > 0 ? (
+                  <>
+                    <ZoneLabel>
+                      {t(
+                        "opportunities.studentView.rankForm.classmatesOverflowLabel",
+                        {},
+                        { default: "Additional rankings" },
+                      )}
+                    </ZoneLabel>
+                    <DetailList>
+                      {classmateIds.slice(activePickCount).map((classmateId, index) => {
+                        const classmate = studentById.get(classmateId);
+                        const mutualStatus = getClassmateMutualStatus(
+                          studentId,
+                          classmateId,
+                          classmateListsByStudent,
+                          activePickCount,
+                        );
+                        const mutualChip =
+                          mutualStatus === "mutual"
+                            ? t(
+                                "opportunities.matchingRound.studentRanking.mutual",
+                                {},
+                                { default: "Mutual" },
+                              )
+                            : mutualStatus === "one_way"
+                              ? t(
+                                  "opportunities.matchingRound.studentRanking.oneWay",
+                                  {},
+                                  { default: "One-way" },
+                                )
+                              : null;
+                        return (
+                          <DetailItem key={classmateId}>
+                            <RankBadge>{activePickCount + index + 1}</RankBadge>
+                            <ItemTitle>
+                              {studentDisplayName(classmate) || classmateId}
+                            </ItemTitle>
+                            {mutualChip ? (
+                              <Chip
+                                variant="static"
+                                tone={
+                                  mutualStatus === "mutual" ? "success" : "warning"
+                                }
+                                label={mutualChip}
+                              />
+                            ) : null}
+                          </DetailItem>
+                        );
+                      })}
+                    </DetailList>
+                  </>
+                ) : activePickCount === 0 ? (
+                  <DetailList>
+                    {classmateIds.map((classmateId, index) => {
+                      const classmate = studentById.get(classmateId);
+                      const mutualStatus = getClassmateMutualStatus(
+                        studentId,
+                        classmateId,
+                        classmateListsByStudent,
+                        activePickCount,
+                      );
+                      const mutualChip =
+                        mutualStatus === "mutual"
+                          ? t(
+                              "opportunities.matchingRound.studentRanking.mutual",
+                              {},
+                              { default: "Mutual" },
+                            )
+                          : mutualStatus === "one_way"
+                            ? t(
+                                "opportunities.matchingRound.studentRanking.oneWay",
+                                {},
+                                { default: "One-way" },
+                              )
+                            : null;
+                      return (
+                        <DetailItem key={classmateId}>
+                          <RankBadge>{index + 1}</RankBadge>
+                          <ItemTitle>
+                            {studentDisplayName(classmate) || classmateId}
+                          </ItemTitle>
+                          {mutualChip ? (
+                            <Chip
+                              variant="static"
+                              tone={
+                                mutualStatus === "mutual" ? "success" : "warning"
+                              }
+                              label={mutualChip}
+                            />
+                          ) : null}
+                        </DetailItem>
+                      );
+                    })}
+                  </DetailList>
+                ) : null}
+              </>
             )}
           </DetailSection>
 
@@ -613,7 +761,19 @@ function StudentBallotRow({
               />
             )}
           </DetailSection>
-
+          {canReopenBallot ? (
+            <Button
+              type="button"
+              variant="tonal"
+              leadingIcon={<UnlockIcon />}
+              onClick={handleReopenClick}
+              disabled={isReopening || assigning}
+            >
+              {t("opportunities.matchingRound.studentRanking.reopenBallot", {}, {
+                default: "Reopen ballot",
+              })}
+            </Button>
+          ) : null}
           {row.preference?.submittedAt ? (
             <Meta>
               {t(
@@ -652,6 +812,8 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   const { t: tConnect } = useTranslation("connect");
   const [search, setSearch] = useState("");
   const [matchingInfoOpen, setMatchingInfoOpen] = useState(false);
+  const [reopeningPreferenceId, setReopeningPreferenceId] = useState(null);
+  const [reopenFeedback, setReopenFeedback] = useState(null);
   const [expandedQueue, setExpandedQueue] = useState({
     project_first: true,
     team_first: true,
@@ -663,7 +825,10 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     fetchPolicy: "cache-and-network",
   });
 
+  const [updatePreference] = useMutation(UPDATE_PREFERENCE);
+
   const round = data?.connectRound;
+  const roundStatus = round?.status || "";
   const opportunities = round?.opportunities || [];
   const preferences = round?.preferences || [];
   const teamPreferences = round?.teamPreferences || [];
@@ -677,6 +842,10 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   const teamEligibleOppIds = useMemo(
     () => teamEligibleOpps.map((o) => o.id),
     [teamEligibleOpps],
+  );
+  const activePickCount = useMemo(
+    () => getMaxActiveClassmatePicks(opportunities),
+    [opportunities],
   );
 
   const teamPrefsByStudent = useMemo(
@@ -810,6 +979,65 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     refetch,
   });
 
+  const handleReopenBallot = useCallback(
+    async (preferenceId, studentName) => {
+      if (
+        !window.confirm(
+          t(
+            "opportunities.matchingRound.studentRanking.reopenBallotConfirm",
+            { name: studentName },
+            {
+              default:
+                "This student will be able to edit and resubmit their preferences. Continue?",
+            },
+          ),
+        )
+      ) {
+        return;
+      }
+
+      setReopenFeedback(null);
+      setReopeningPreferenceId(preferenceId);
+      try {
+        await updatePreference({
+          variables: {
+            id: preferenceId,
+            input: {
+              status: "draft",
+              submittedAt: null,
+            },
+          },
+        });
+        await refetch();
+        setReopenFeedback({
+          variant: "success",
+          message: t(
+            "opportunities.matchingRound.studentRanking.reopenBallotSuccess",
+            {},
+            {
+              default:
+                "Ballot reopened. The student can edit their preferences again.",
+            },
+          ),
+        });
+      } catch {
+        setReopenFeedback({
+          variant: "warning",
+          message: t(
+            "opportunities.matchingRound.studentRanking.reopenBallotFailed",
+            {},
+            {
+              default: "Could not reopen this ballot. Please try again.",
+            },
+          ),
+        });
+      } finally {
+        setReopeningPreferenceId(null);
+      }
+    },
+    [refetch, t, updatePreference],
+  );
+
   const submittedCount = ballotRows.filter(
     (r) => r.submissionStatus === "submitted",
   ).length;
@@ -832,6 +1060,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
       ballotRows,
       studentById,
       classmateListsByStudent,
+      activePickCount,
       assessmentFormDefinitionId: assessmentFormDefinition?.id,
       roundTitle: roundTitle || round?.title || "",
       labels: {
@@ -928,6 +1157,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
       },
     });
   }, [
+    activePickCount,
     assessmentFormDefinition?.id,
     ballotRows,
     canDownloadBallotCsv,
@@ -1002,7 +1232,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     );
   }
 
-  if (!ballotWindowActive && inactiveBallotMessage) {
+  if (!ballotWindowActive && inactiveBallotMessage && roundStatus === "draft") {
     return (
       <Shell className="matchingRoundStudentBallotPanel">
         <PanelHeader>
@@ -1061,6 +1291,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
               row={row}
               studentById={studentById}
               classmateListsByStudent={classmateListsByStudent}
+              activePickCount={activePickCount}
               opportunities={opportunities}
               matchesByOpp={matchesByOpp}
               prefIndex={prefIndex}
@@ -1069,6 +1300,8 @@ const MatchingRoundStudentBallotPanel = forwardRef(
               isCurated={isCurated}
               handleAssign={handleAssign}
               assigning={assigning}
+              handleReopenBallot={handleReopenBallot}
+              reopeningPreferenceId={reopeningPreferenceId}
               t={t}
               tConnect={tConnect}
             />
@@ -1106,6 +1339,16 @@ const MatchingRoundStudentBallotPanel = forwardRef(
         </HeaderText>
         {subModeNav}
       </PanelHeader>
+
+      {!ballotWindowActive && inactiveBallotMessage ? (
+        <MessageCard variant="neutral" message={inactiveBallotMessage} />
+      ) : null}
+      {reopenFeedback ? (
+        <MessageCard
+          variant={reopenFeedback.variant}
+          message={reopenFeedback.message}
+        />
+      ) : null}
 
       <SearchRow>
         <SearchInput

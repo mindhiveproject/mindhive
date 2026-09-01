@@ -54,14 +54,77 @@ export function getTeamEligibleOpportunities(opportunities) {
   );
 }
 
+/** Team-eligible opps the student selected (favorited or ranked). */
+export function getStudentTeamEligibleOpportunities(
+  opportunities,
+  selectedOppIds,
+) {
+  const ids =
+    selectedOppIds instanceof Set
+      ? selectedOppIds
+      : new Set(selectedOppIds);
+  return getTeamEligibleOpportunities(opportunities).filter((o) => ids.has(o.id));
+}
+
+/** Max active classmate picks for UI (largest teamSize − 1). Pass student-scoped opps for student UI; full round for teacher views. */
+export function getMaxActiveClassmatePicks(opportunities) {
+  const eligible = getTeamEligibleOpportunities(opportunities);
+  if (!eligible.length) return 0;
+  return Math.max(...eligible.map((o) => (o.teamSize || 1) - 1), 0);
+}
+
+export function sliceActiveClassmates(classmateIds, activeCount) {
+  if (!activeCount || activeCount <= 0) return [];
+  return (classmateIds || []).slice(0, activeCount);
+}
+
+function activePickCapForOpportunity(opp) {
+  if (!opp || !opp.allowsTeamPreferences || (opp.teamSize || 1) <= 1) return 0;
+  return (opp.teamSize || 1) - 1;
+}
+
+/** Keep only top (teamSize − 1) prefs per submitter per opportunity. */
+export function filterActiveTeamPreferences(teamPreferences, opportunities) {
+  const oppById = new Map(
+    (opportunities || []).map((o) => [o.id, o]),
+  );
+  const grouped = new Map();
+
+  (teamPreferences || []).forEach((tp) => {
+    const oppId = tp.opportunity?.id;
+    const submitterId = tp.submitter?.id;
+    if (!oppId || !submitterId) return;
+    const key = `${oppId}::${submitterId}`;
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(tp);
+  });
+
+  const filtered = [];
+  grouped.forEach((prefs, key) => {
+    const oppId = key.split("::")[0];
+    const cap = activePickCapForOpportunity(oppById.get(oppId));
+    if (cap <= 0) return;
+    prefs
+      .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))
+      .slice(0, cap)
+      .forEach((tp) => filtered.push(tp));
+  });
+
+  return filtered;
+}
+
 export function inferBallotQueue(teamPrefsForStudent) {
   return (teamPrefsForStudent || []).length > 0 ? "team_first" : "project_first";
 }
 
 /** Per-opportunity mutual map (used by matching algorithm). */
-export function buildMutualTeamPrefMap(teamPreferences) {
+export function buildMutualTeamPrefMap(teamPreferences, opportunities = []) {
+  const activePrefs = filterActiveTeamPreferences(
+    teamPreferences,
+    opportunities,
+  );
   const directed = new Map();
-  (teamPreferences || []).forEach((tp) => {
+  activePrefs.forEach((tp) => {
     const oppId = tp.opportunity?.id;
     const a = tp.submitter?.id;
     const b = tp.preferredTeammate?.id;
@@ -109,9 +172,16 @@ export function getClassmateMutualStatus(
   studentId,
   classmateId,
   classmateListsByStudent,
+  activePickCount = 0,
 ) {
-  const myList = classmateListsByStudent.get(studentId) || [];
-  const theirList = classmateListsByStudent.get(classmateId) || [];
+  const myList = sliceActiveClassmates(
+    classmateListsByStudent.get(studentId) || [],
+    activePickCount,
+  );
+  const theirList = sliceActiveClassmates(
+    classmateListsByStudent.get(classmateId) || [],
+    activePickCount,
+  );
   const iPickThem = myList.includes(classmateId);
   const theyPickMe = theirList.includes(studentId);
 
@@ -125,18 +195,23 @@ export function summarizeMutualClassmates(
   studentId,
   classmateIds,
   classmateListsByStudent,
+  activePickCount = 0,
 ) {
   let mutual = 0;
   let oneWay = 0;
   let received = 0;
 
-  const myList = classmateListsByStudent.get(studentId) || [];
+  const myList = sliceActiveClassmates(
+    classmateListsByStudent.get(studentId) || [],
+    activePickCount,
+  );
 
   (classmateIds || []).forEach((classmateId) => {
     const status = getClassmateMutualStatus(
       studentId,
       classmateId,
       classmateListsByStudent,
+      activePickCount,
     );
     if (status === "mutual") mutual += 1;
     else if (status === "one_way") oneWay += 1;
@@ -144,7 +219,8 @@ export function summarizeMutualClassmates(
 
   classmateListsByStudent.forEach((theirPicks, otherId) => {
     if (otherId === studentId) return;
-    if (theirPicks.includes(studentId) && !myList.includes(otherId)) {
+    const theirActive = sliceActiveClassmates(theirPicks, activePickCount);
+    if (theirActive.includes(studentId) && !myList.includes(otherId)) {
       received += 1;
     }
   });

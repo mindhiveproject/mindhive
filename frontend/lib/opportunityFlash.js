@@ -12,6 +12,7 @@ export const OPPORTUNITY_FLASH = {
   PRE_SELECTED: "preSelected",
   ACCEPTED: "accepted",
   PUBLISHED: "published",
+  COPIED: "copied",
 };
 
 /**
@@ -57,6 +58,10 @@ export function resolveOpportunityFlashMessage(flashKey, t) {
     case OPPORTUNITY_FLASH.PUBLISHED:
       return t("opportunityEditor.review.publishSuccess", {}, {
         default: "Opportunity published.",
+      });
+    case OPPORTUNITY_FLASH.COPIED:
+      return t("myOpportunitiesList.copyOpportunity.successFlash", {}, {
+        default: "Opportunity copied as a new draft.",
       });
     default:
       return null;
