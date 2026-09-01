@@ -71,6 +71,8 @@ export default function OpportunityConnectCard({
     chips.push(
       <Chip
         key="organization"
+        variant="static"
+        tone="neutral"
         avatar
         label={orgName}
         leading={

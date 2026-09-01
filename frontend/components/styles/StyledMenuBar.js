@@ -3,7 +3,7 @@ import styled from "styled-components";
 /**
  * Width of the floating menu card in each state, shared with the dashboard grid.
  */
-export const MENU_BAR_WIDTH = 248;
+export const MENU_BAR_WIDTH = 256;
 export const MENU_BAR_COLLAPSED_WIDTH = 72;
 
 /**
@@ -111,10 +111,6 @@ export const StyledMenuBar = styled.div`
     width: 100%;
     align-items: ${(props) => (props.$collapsed ? "center" : "stretch")};
 
-    .navbar-container.vertical .navbar-item {
-      font: var(--MH-Type-Label-Base);
-      letter-spacing: 0;
-    }
   }
 `;
 

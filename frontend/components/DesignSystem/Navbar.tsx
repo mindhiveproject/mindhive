@@ -1,10 +1,33 @@
+"use client";
+
 import styled from "styled-components";
 import clsx from "clsx";
 import { createContext, useContext, useMemo } from "react";
+import type { LinkProps } from "next/link";
 
-import Tooltip from "./Tooltip";
+import RawTooltip from "./Tooltip";
 
-export const StyledNavbar = styled.div`
+// Tooltip is still plain JS; TS 4.9 mis-infers its destructured props param from
+// the JSDoc. Assert its real contract here until DesignSystem/Tooltip is on TS.
+const Tooltip = RawTooltip as unknown as React.FC<{
+  content: React.ReactNode;
+  children: React.ReactNode;
+  side?: "top" | "bottom" | "left" | "right";
+  disabled?: boolean;
+  delayMs?: number;
+  maxWidth?: number;
+  className?: string;
+}>;
+
+/**
+ * Class names here stay the legacy `navbar-container` / `navbar-item` (not the
+ * usual `DesignSystem-<Name>` scoping) because they're targeted from outside
+ * this file (ConnectNavigationBar, StyledMenuBar, StyledBuilder, StyledProject,
+ * StyledClass, ManageOrganization, NetworkDetail) via `styled(Navbar)` wrappers
+ * and ancestor `styled.div`s. Renaming them would silently break those
+ * overrides — grep for a class name before changing it.
+ */
+const StyledNavbar = styled.div`
   .navbar-container {
     display: flex;
     list-style: none;
@@ -34,7 +57,7 @@ export const StyledNavbar = styled.div`
 
     color: black;
     /* MH-Type/label/base */
-    font: var(--MH-Type-Label-Base);
+    font: var(--MH-Type-Label-Large);
     letter-spacing: 0;
     font-style: normal;
 
@@ -94,6 +117,30 @@ export const StyledNavbar = styled.div`
   .navbar-container.underline.show-rule .navbar-item:not(.selected):not(:hover) {
     border-bottom-width: 1px;
     border-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  }
+
+  /* Hover-underline — rules the tab in the text color on hover instead of a
+     background fill. A surface only ever gets one hover treatment; this swaps
+     which one the underline variant uses. MH-Theme/neutrals/dark, matching
+     the rest of the design system's secondary-text color. */
+  .navbar-container.underline.hover-underline .navbar-item:hover:not(.selected) {
+    background: none;
+    border-color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
+
+  /* Dense — for a tab bar embedded in a fixed-height chrome strip that already
+     supplies its own padding (e.g. a builder page's second-line navigation).
+     Drops the container's own padding/gap and tightens each item's horizontal
+     padding; vertical padding and icon/label gap stay at the base scale. */
+  .navbar-container.dense {
+    padding: 0;
+    gap: 4px;
+  }
+
+  .navbar-container.dense .navbar-item,
+  .navbar-container.dense .navbar-item.has-icon {
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   /* Items butt directly against each other. Pairs with the underline variant to
@@ -203,35 +250,22 @@ export const StyledNavbar = styled.div`
   }
 `;
 
+/** Visual style for a horizontal {@link Navbar}. Ignored when `orientation="vertical"`. */
+export type NavbarVariant = "underline" | "tonal";
+
+/** Layout direction for {@link Navbar}. */
+export type NavbarOrientation = "horizontal" | "vertical";
+
 /**
  * Set once by Navbar so items know whether they are rendering as a collapsed
  * rail. Only state lives here — visual styling still cascades through CSS.
  */
-const NavbarContext = createContext({ collapsed: false });
+const NavbarContext = createContext<{ collapsed: boolean }>({
+  collapsed: false,
+});
 
 /**
- * Design System Navbar. Renders a <nav> landmark wrapping a <ul> of NavbarItem.
- *
- * Horizontal bars take a visual variant: underline (bottom-border tabs, the
- * default) or tonal (rounded pills — legacy, kept for the study builder block
- * menu). Vertical bars ignore `variant` and always render the sidebar style: an
- * accent rule down the right edge of the selected item.
- *
- * Variant and orientation are set once here and cascade to every item via CSS,
- * so items themselves take no variant or orientation prop.
- *
- * @param {"underline"|"tonal"} [variant="underline"] - Visual style for a
- *   horizontal bar. Ignored when orientation is "vertical".
- * @param {"horizontal"|"vertical"} [orientation="horizontal"] - Layout direction.
- * @param {boolean} [collapsed=false] - Renders an icon-only rail; item labels
- *   become accessible names instead of visible text. Works in both orientations.
- * @param {boolean} [showRule=false] - Underline variant only. Gives unselected
- *   items a resting 1px divider line instead of a transparent one.
- * @param {boolean} [gapless=false] - Removes the horizontal gap between items so
- *   they sit flush against each other. With the underline variant this reads as
- *   one continuous rule broken only by the selected tab. Row gap is kept, so a
- *   wrapped bar still separates its lines.
- * @param {React.ReactNode} children - NavbarItem and NavbarSection elements.
+ * Props for {@link Navbar}.
  *
  * @example
  * <Navbar variant="underline">
@@ -248,16 +282,50 @@ const NavbarContext = createContext({ collapsed: false });
  *   </NavbarSection>
  * </Navbar>
  */
+export interface NavbarProps
+  extends Omit<React.ComponentPropsWithoutRef<"nav">, "children"> {
+  /** Visual style for a horizontal bar. Ignored when orientation is "vertical". @default "underline" */
+  variant?: NavbarVariant;
+  /** Layout direction. @default "horizontal" */
+  orientation?: NavbarOrientation;
+  /** Renders an icon-only rail; item labels become accessible names instead of visible text. Works in both orientations. @default false */
+  collapsed?: boolean;
+  /** Underline variant only. Gives unselected items a resting 1px divider line instead of a transparent one. @default false */
+  showRule?: boolean;
+  /** Removes the horizontal gap between items so they sit flush against each other. With the underline variant this reads as one continuous rule broken only by the selected tab. Row gap is kept, so a wrapped bar still separates its lines. @default false */
+  gapless?: boolean;
+  /** Drops the container's own padding/gap and tightens item horizontal padding, for a bar embedded in a chrome strip that already supplies its own spacing. @default false */
+  dense?: boolean;
+  /** Underline variant only. Hovering an unselected item previews the accent underline instead of a background fill. @default false */
+  hoverUnderline?: boolean;
+  /** NavbarItem and NavbarSection elements. */
+  children: React.ReactNode;
+}
+
+/**
+ * Design System Navbar. Renders a `<nav>` landmark wrapping a `<ul>` of
+ * {@link NavbarItem}.
+ *
+ * Horizontal bars take a visual `variant`: underline (bottom-border tabs, the
+ * default) or tonal (rounded pills — legacy, kept for the study builder block
+ * menu). Vertical bars ignore `variant` and always render the sidebar style: an
+ * accent rule down the right edge of the selected item.
+ *
+ * Variant and orientation are set once here and cascade to every item via CSS,
+ * so items themselves take no variant or orientation prop.
+ */
 export default function Navbar({
   variant = "underline",
   orientation = "horizontal",
   collapsed = false,
   showRule = false,
   gapless = false,
+  dense = false,
+  hoverUnderline = false,
   children,
   className,
   ...props
-}) {
+}: NavbarProps) {
   const isVertical = orientation == "vertical";
   const context = useMemo(() => ({ collapsed }), [collapsed]);
 
@@ -272,6 +340,8 @@ export default function Navbar({
             collapsed && "collapsed",
             showRule && "show-rule",
             gapless && "gapless",
+            dense && "dense",
+            hoverUnderline && "hover-underline",
           )}
         >
           {children}
@@ -292,17 +362,22 @@ export const SectionNavbar = styled(Navbar)`
   }
 `;
 
+/** Props for {@link NavbarSection}. */
+export interface NavbarSectionProps {
+  /** Section heading, e.g. "Projects". */
+  label?: string;
+  /** NavbarItem elements. */
+  children: React.ReactNode;
+}
+
 /**
- * A labelled group of NavbarItems. Renders the label as a presentational <li>
- * so the surrounding <ul> stays valid, followed by the items themselves.
+ * A labelled group of NavbarItems. Renders the label as a presentational `<li>`
+ * so the surrounding `<ul>` stays valid, followed by the items themselves.
  *
  * When the parent Navbar is collapsed the label would have no room, so it is
  * replaced by a horizontal rule that keeps the visual grouping intact.
- *
- * @param {string} [label] - Section heading, e.g. "Projects".
- * @param {React.ReactNode} children - NavbarItem elements.
  */
-export function NavbarSection({ label, children }) {
+export function NavbarSection({ label, children }: NavbarSectionProps) {
   const { collapsed } = useContext(NavbarContext);
 
   return (
@@ -322,29 +397,8 @@ export function NavbarSection({ label, children }) {
 }
 
 /**
- * A single Navbar entry. Must be rendered inside a Navbar, which supplies the
- * variant and orientation styling; the item inherits them and needs no props of
- * its own for either.
- *
- * The underlying element is chosen for you: `href` renders an <a>, otherwise a
- * <button> (typed "button", so it won't submit a surrounding form). Pass `as`
- * to override — most commonly `as={Link}` for Next.js routing.
- *
- * @param {boolean} [selected=false] - Marks the active entry; also sets aria-current="page".
- * @param {boolean} [collapsed] - Overrides the parent Navbar's collapsed state
- *   for this one item, so a bar can mix expanded and icon-only items (e.g. keep
- *   the selected tab's label while its siblings compress).
- * @param {string} [href] - Destination. Its presence selects <a> over <button>.
- * @param {React.ElementType} [as] - Override the rendered element, e.g. Next's Link.
- * @param {React.ReactNode} [leadingIcon] - Optional 24px icon left of the label; inherits text color.
- * @param {React.ReactNode} [trailingContent] - Optional slot pinned to the far end, e.g. a count badge.
- * @param {React.ReactNode} children - Item label.
- * @param {string} [className] - Additional classes on the interactive element.
- * @param {React.ReactNode} [tooltipContent] - Optional Design System Tooltip on
- *   the item. When the item is `disabled`, the trigger wraps the control so
- *   hover still works (disabled buttons do not receive pointer events).
- * @param {object} [props] - Remaining props (onClick, aria-*, disabled, …)
- *   forwarded to that element.
+ * Props for {@link NavbarItem}. Any extra prop (onClick, aria-*, disabled, …)
+ * is forwarded to the rendered element.
  *
  * @example
  * <NavbarItem href="/settings" leadingIcon={<GearIcon />}>Settings</NavbarItem>
@@ -352,6 +406,42 @@ export function NavbarSection({ label, children }) {
  * <NavbarItem onClick={() => setTab("overview")} selected>Overview</NavbarItem>
  * @example
  * <NavbarItem as={Link} href="/studies">Studies</NavbarItem>
+ */
+export interface NavbarItemProps {
+  /** Marks the active entry; also sets aria-current="page". @default false */
+  selected?: boolean;
+  /** Overrides the parent Navbar's collapsed state for this one item, so a bar can mix expanded and icon-only items (e.g. keep the selected tab's label while its siblings compress). */
+  collapsed?: boolean;
+  /** Destination. Its presence selects `<a>` over `<button>`. */
+  href?: LinkProps["href"];
+  /** Override the rendered element, e.g. Next's Link. */
+  as?: React.ElementType;
+  /** Optional 24px icon left of the label; inherits text color. */
+  leadingIcon?: React.ReactNode;
+  /** Optional slot pinned to the far end, e.g. a count badge. */
+  trailingContent?: React.ReactNode;
+  /** Item label. */
+  children?: React.ReactNode;
+  /** Additional classes on the interactive element. */
+  className?: string;
+  /** Optional Design System Tooltip on the item. When the item is `disabled`, the trigger wraps the control so hover still works (disabled buttons do not receive pointer events). */
+  tooltipContent?: React.ReactNode;
+  /** Disabled state. @default false */
+  disabled?: boolean;
+  /** Optional style override for the interactive element. */
+  style?: React.CSSProperties;
+  /** Remaining props (onClick, aria-*, disabled, …) forwarded to that element. */
+  [key: string]: unknown;
+}
+
+/**
+ * A single Navbar entry. Must be rendered inside a Navbar, which supplies the
+ * variant and orientation styling; the item inherits them and needs no props of
+ * its own for either.
+ *
+ * The underlying element is chosen for you: `href` renders an `<a>`, otherwise a
+ * `<button>` (typed "button", so it won't submit a surrounding form). Pass `as`
+ * to override — most commonly `as={Link}` for Next.js routing.
  */
 export function NavbarItem({
   selected = false,
@@ -366,7 +456,7 @@ export function NavbarItem({
   disabled = false,
   style,
   ...props
-}) {
+}: NavbarItemProps) {
   const Component = as ?? (href ? "a" : "button");
   const { collapsed: collapsedContext } = useContext(NavbarContext);
   const collapsed = collapsedProp ?? collapsedContext;
@@ -376,8 +466,7 @@ export function NavbarItem({
   const collapsedLabel =
     collapsed && typeof children == "string" ? children : undefined;
 
-  const hasTooltip =
-    tooltipContent != null && tooltipContent !== "";
+  const hasTooltip = tooltipContent != null && tooltipContent !== "";
   // Disabled controls do not fire mouse events; the Tooltip trigger must sit
   // outside and the control must not capture the pointer.
   const disabledWithTooltip = hasTooltip && disabled;

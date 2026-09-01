@@ -724,6 +724,8 @@ export default function StudentOpportunityPreview({
                   )}
                 >
                   <Chip
+                    variant="static"
+                    tone="neutral"
                     label={teamSizeLabel}
                     leading={
                       <img
@@ -740,19 +742,21 @@ export default function StudentOpportunityPreview({
                     }
                   />
                   {opp.timeCommitment ? (
-                    <Chip label={opp.timeCommitment} />
+                    <Chip variant="static" tone="neutral" label={opp.timeCommitment} />
                   ) : null}
                   {datesLabel ? (
-                    <Chip label={datesLabel} />
+                    <Chip variant="static" tone="neutral" label={datesLabel} />
                   ) : null}
                   {categoryDisplay ? (
-                    <Chip label={categoryDisplay} />
+                    <Chip variant="static" tone="neutral" label={categoryDisplay} />
                   ) : null}
                   {ratingLabel ? (
-                    <Chip label={ratingLabel} />
+                    <Chip variant="static" tone="neutral" label={ratingLabel} />
                   ) : null}
                   {specialResourcesLabel ? (
                     <Chip
+                      variant="static"
+                      tone="neutral"
                       label={t(
                         "opportunities.studentView.preview.specialResourcesChip",
                         { value: specialResourcesLabel },
@@ -762,6 +766,8 @@ export default function StudentOpportunityPreview({
                   ) : null}
                   {fieldResearchLabel ? (
                     <Chip
+                      variant="static"
+                      tone="neutral"
                       label={t(
                         "opportunities.studentView.preview.fieldResearchChip",
                         { value: fieldResearchLabel },

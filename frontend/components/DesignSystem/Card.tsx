@@ -1,6 +1,8 @@
 "use client";
 
-import { createElement, useState } from "react";
+import { useState } from "react";
+import styled from "styled-components";
+import clsx from "clsx";
 import Link from "next/link";
 import type { LinkProps } from "next/link";
 
@@ -48,6 +50,11 @@ export interface CardProps {
  * Hover is deliberately quiet, per the interaction spec: elevated cards change
  * elevation only; filled and outline cards take a whisper of extra tint plus a
  * small shadow. Pressed is one gentle step further.
+ *
+ * Hover is plain CSS (`:hover`, scoped to the `--interactive` modifier class).
+ * Pressed stays JS-driven (a `--pressed` class toggled from `pressed` state)
+ * because native `:active` also fires for a click on a nested island (the star,
+ * the settings menu) — see `isIsland` below — and CSS alone can't exclude that.
  */
 // Fallback matches IconButton's Elevation Medium so cards and their buttons cast
 // the same shadow.
@@ -58,41 +65,82 @@ const ELEVATION_HIGH =
   "var(--MH-Theme-Elevation-High, 2px 2px 12px rgba(0, 0, 0, 0.19))";
 const OUTLINE_BORDER = "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)";
 
-const VARIANTS: Record<
-  CardVariant,
-  { base: React.CSSProperties; hover: React.CSSProperties; pressed: React.CSSProperties }
-> = {
-  elevated: {
-    // Raised at rest; hover climbs to High, pressed dips to Small.
-    base: { background: "#FFFFFF", boxShadow: ELEVATION },
-    hover: { background: "#FFFFFF", boxShadow: ELEVATION_HIGH },
-    pressed: { background: "#FFFFFF", boxShadow: ELEVATION_SM },
-  },
-  filled: {
-    base: { background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)" },
-    hover: { background: "#EFEFEF", boxShadow: ELEVATION_SM },
-    pressed: { background: "#EBEBEB", boxShadow: "none" },
-  },
-  outline: {
-    base: { background: "#FFFFFF", border: OUTLINE_BORDER },
-    hover: { background: "#FAFAFA", border: OUTLINE_BORDER, boxShadow: ELEVATION_SM },
-    pressed: { background: "#F4F4F4", border: OUTLINE_BORDER, boxShadow: "none" },
-  },
-};
+const StyledCard = styled.article`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  /* Not clipped: the hover shadow paints outside the box, and interactive cards
+     host overflowing children (e.g. a settings dropdown). Cards clip their own
+     top media to the radius instead. */
+  overflow: visible;
 
-const ROOT_STYLE: React.CSSProperties = {
-  position: "relative",
-  display: "flex",
-  flexDirection: "column",
-  height: "100%",
-  boxSizing: "border-box",
-  borderRadius: "12px",
-  transition: "background-color 0.2s, box-shadow 0.2s",
-  // Not clipped: the hover shadow paints outside the box, and interactive cards
-  // host overflowing children (e.g. a settings dropdown). Cards clip their own
-  // top media to the radius instead.
-  overflow: "visible",
-};
+  &.DesignSystem-Card--elevated {
+    background: #ffffff;
+    box-shadow: ${ELEVATION};
+  }
+  &.DesignSystem-Card--filled {
+    background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+  }
+  &.DesignSystem-Card--outline {
+    background: #ffffff;
+    border: ${OUTLINE_BORDER};
+  }
+
+  /* Hover: climbs to High elevation, or a whisper of extra tint + a small shadow. */
+  &.DesignSystem-Card--interactive.DesignSystem-Card--elevated:hover {
+    box-shadow: ${ELEVATION_HIGH};
+  }
+  &.DesignSystem-Card--interactive.DesignSystem-Card--filled:hover {
+    background: #efefef;
+    box-shadow: ${ELEVATION_SM};
+  }
+  &.DesignSystem-Card--interactive.DesignSystem-Card--outline:hover {
+    background: #fafafa;
+    box-shadow: ${ELEVATION_SM};
+  }
+
+  /* Pressed: one gentle step further than hover; wins over hover when both are
+     true (declared after the hover rules, same specificity). */
+  &.DesignSystem-Card--pressed.DesignSystem-Card--elevated {
+    box-shadow: ${ELEVATION_SM};
+  }
+  &.DesignSystem-Card--pressed.DesignSystem-Card--filled {
+    background: #ebebeb;
+    box-shadow: none;
+  }
+  &.DesignSystem-Card--pressed.DesignSystem-Card--outline {
+    background: #f4f4f4;
+    box-shadow: none;
+  }
+
+  .DesignSystem-Card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: 12px;
+    font-size: 0;
+  }
+  .DesignSystem-Card-link:focus-visible {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+    outline-offset: 2px;
+  }
+  /* Interactive islands sit above the card link so their own click wins. */
+  &.DesignSystem-Card--interactive > .DesignSystem-Card-content a,
+  &.DesignSystem-Card--interactive > .DesignSystem-Card-content button,
+  &.DesignSystem-Card--interactive > .DesignSystem-Card-content [data-card-action] {
+    position: relative;
+    z-index: 1;
+  }
+  /* Some pages fade every link/button on hover; that must not dim card internals. */
+  a:hover,
+  button:hover {
+    opacity: 1;
+  }
+`;
 
 const CONTENT_STYLE: React.CSSProperties = {
   position: "relative",
@@ -102,31 +150,17 @@ const CONTENT_STYLE: React.CSSProperties = {
   minHeight: 0,
 };
 
-const CARD_CSS = `
-.DesignSystem-Card-link {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: 12px;
-  font-size: 0;
-}
-.DesignSystem-Card-link:focus-visible {
-  outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
-  outline-offset: 2px;
-}
-/* Interactive islands sit above the card link so their own click wins. */
-.DesignSystem-Card--interactive > .DesignSystem-Card-content a,
-.DesignSystem-Card--interactive > .DesignSystem-Card-content button,
-.DesignSystem-Card--interactive > .DesignSystem-Card-content [data-card-action] {
-  position: relative;
-  z-index: 1;
-}
-/* Some pages fade every link/button on hover; that must not dim card internals. */
-.DesignSystem-Card a:hover,
-.DesignSystem-Card button:hover {
-  opacity: 1;
-}
-`;
+const VISUALLY_HIDDEN_STYLE: React.CSSProperties = {
+  position: "absolute",
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: "hidden",
+  clip: "rect(0 0 0 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
 
 export default function Card({
   variant = "elevated",
@@ -136,31 +170,12 @@ export default function Card({
   padding = 16,
   as = "article",
   className,
-  style = {},
+  style,
   children,
   ...rest
 }: CardProps) {
-  const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
-
   const interactive = href != null;
-  const tokens = VARIANTS[variant] || VARIANTS.elevated;
-
-  let rootStyle: React.CSSProperties = { ...ROOT_STYLE, ...tokens.base };
-  if (interactive && pressed) {
-    rootStyle = { ...rootStyle, ...tokens.pressed };
-  } else if (interactive && hovered) {
-    rootStyle = { ...rootStyle, ...tokens.hover };
-  }
-  rootStyle = { ...rootStyle, ...style };
-
-  const rootClass = [
-    "DesignSystem-Card",
-    interactive ? "DesignSystem-Card--interactive" : null,
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
 
   // Pressing an island (star, settings) shouldn't flash the card's pressed
   // state — that reads as "the card was clicked".
@@ -169,55 +184,44 @@ export default function Card({
 
   const interactionHandlers: React.HTMLAttributes<HTMLElement> = interactive
     ? {
-        onMouseEnter: () => setHovered(true),
-        onMouseLeave: () => {
-          setHovered(false);
-          setPressed(false);
-        },
         onMouseDown: (e: React.MouseEvent) => {
           if (!isIsland(e.target)) setPressed(true);
         },
         onMouseUp: () => setPressed(false),
+        onMouseLeave: () => setPressed(false),
       }
     : {};
 
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: CARD_CSS }} />
-      {createElement(
-        as,
-        { className: rootClass, style: rootStyle, ...interactionHandlers, ...rest },
-        <div
-          className="DesignSystem-Card-content"
-          style={{ ...CONTENT_STYLE, padding }}
-        >
-          {children}
-        </div>,
-        interactive ? (
-          <Link
-            href={href as LinkProps["href"]}
-            onClick={onClick}
-            aria-label={ariaLabel}
-            className="DesignSystem-Card-link"
-          >
-            <span
-              style={{
-                position: "absolute",
-                width: 1,
-                height: 1,
-                padding: 0,
-                margin: -1,
-                overflow: "hidden",
-                clip: "rect(0 0 0 0)",
-                whiteSpace: "nowrap",
-                border: 0,
-              }}
-            >
-              {ariaLabel}
-            </span>
-          </Link>
-        ) : null
+    <StyledCard
+      as={as}
+      className={clsx(
+        "DesignSystem-Card",
+        `DesignSystem-Card--${variant}`,
+        interactive && "DesignSystem-Card--interactive",
+        interactive && pressed && "DesignSystem-Card--pressed",
+        className,
       )}
-    </>
+      style={style}
+      {...interactionHandlers}
+      {...rest}
+    >
+      <div
+        className="DesignSystem-Card-content"
+        style={{ ...CONTENT_STYLE, padding }}
+      >
+        {children}
+      </div>
+      {interactive && (
+        <Link
+          href={href as LinkProps["href"]}
+          onClick={onClick}
+          aria-label={ariaLabel}
+          className="DesignSystem-Card-link"
+        >
+          <span style={VISUALLY_HIDDEN_STYLE}>{ariaLabel}</span>
+        </Link>
+      )}
+    </StyledCard>
   );
 }
