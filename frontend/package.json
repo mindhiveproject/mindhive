@@ -114,6 +114,7 @@
     "@babel/preset-react": "^7.18.6",
     "@types/jsonfile": "^6.1.4",
     "@types/node": "^18.11.18",
+    "@types/styled-components": "^5.1.36",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",

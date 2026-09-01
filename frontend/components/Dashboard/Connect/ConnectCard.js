@@ -10,6 +10,12 @@ import Chip from "../../DesignSystem/Chip";
  * only navigation, so nothing here is a link. Surface styling and the
  * page-fade guard live in DesignSystem/Card.
  *
+ * In a grid row taller than this card's own content (set by a taller sibling
+ * card), the top group (chip + avatar/title/description/chips) and the
+ * bottom group (divider + actions) space-between: the top keeps its natural
+ * height and the bottom group stays pinned to the card's bottom edge, so any
+ * leftover height collects between the two groups instead of below actions.
+ *
  * @param {React.ReactNode} [typeLabel] - Text for the top-left type chip
  *   ("Connect Profile", "Organization").
  * @param {{ src?: string, fallbackLabel?: string, fallbackBackground?: string }} [avatar]
@@ -40,67 +46,106 @@ export default function ConnectCard({
         style={{
           display: "flex",
           flexDirection: "column",
+          // In a grid row taller than this card's own content (a taller
+          // sibling card sets the row height), push the divider + actions
+          // to the card's bottom edge instead of leaving the leftover
+          // space stranded below them.
+          justifyContent: "space-between",
           gap: 16,
           flex: "1 1 auto",
           minHeight: 0,
         }}
       >
-        {typeLabel && (
-          <Chip
-            variant="static"
-            tone="neutral"
-            label={typeLabel}
-            style={{ alignSelf: "flex-start" }}
-          />
-        )}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {typeLabel && (
+            <Chip
+              variant="static"
+              tone="neutral"
+              label={typeLabel}
+              style={{ alignSelf: "flex-start" }}
+            />
+          )}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div
-              style={{
-                width: 78,
-                height: 78,
-                flexShrink: 0,
-                borderRadius: "50%",
-                overflow: "hidden",
-                background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
-              }}
-            >
-              {avatar?.src ? (
-                <img
-                  src={avatar.src}
-                  alt=""
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div
+                style={{
+                  width: 78,
+                  height: 78,
+                  flexShrink: 0,
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+                }}
+              >
+                {avatar?.src ? (
+                  <img
+                    src={avatar.src}
+                    alt=""
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                ) : (
+                  <div
+                    aria-hidden
+                    className="MH-Type-Heading-Small"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "var(--MH-Theme-Neutrals-Black, #171717)",
+                      background: avatar?.fallbackBackground || undefined,
+                    }}
+                  >
+                    {avatar?.fallbackLabel}
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                <span
+                  className="MH-Type-Title-Base"
                   style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                />
-              ) : (
-                <div
-                  aria-hidden
-                  className="MH-Type-Heading-Small"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     color: "var(--MH-Theme-Neutrals-Black, #171717)",
-                    background: avatar?.fallbackBackground || undefined,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    wordBreak: "break-word",
                   }}
                 >
-                  {avatar?.fallbackLabel}
-                </div>
-              )}
+                  {title}
+                </span>
+                {subtitle && (
+                  <span
+                    className="MH-Type-Body-Base"
+                    style={{
+                      color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {subtitle}
+                  </span>
+                )}
+              </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-              <span
-                className="MH-Type-Title-Base"
+            {status}
+
+            {description && (
+              <p
+                className="MH-Type-Body-Base"
                 style={{
-                  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+                  margin: 0,
+                  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
                   display: "-webkit-box",
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",
@@ -108,63 +153,32 @@ export default function ConnectCard({
                   wordBreak: "break-word",
                 }}
               >
-                {title}
-              </span>
-              {subtitle && (
-                <span
-                  className="MH-Type-Body-Base"
-                  style={{
-                    color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {subtitle}
-                </span>
-              )}
-            </div>
+                {description}
+              </p>
+            )}
+
+            {chips && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: chipsDirection === "column" ? "column" : "row",
+                  alignItems: "flex-start",
+                  flexWrap: chipsDirection === "column" ? "nowrap" : "wrap",
+                  gap: 4,
+                  minWidth: 0,
+                }}
+              >
+                {chips}
+              </div>
+            )}
           </div>
-
-          {status}
-
-          {description && (
-            <p
-              className="MH-Type-Body-Base"
-              style={{
-                margin: 0,
-                color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-                wordBreak: "break-word",
-              }}
-            >
-              {description}
-            </p>
-          )}
-
-          {chips && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: chipsDirection === "column" ? "column" : "row",
-                alignItems: "flex-start",
-                flexWrap: chipsDirection === "column" ? "nowrap" : "wrap",
-                gap: 4,
-                minWidth: 0,
-              }}
-            >
-              {chips}
-            </div>
-          )}
         </div>
 
         {actions && (
-          <>
-            {/* Figma keeps a fixed 16px on each side of the divider (the column
-               gap), so it is not floated to the card bottom. */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {/* Fixed 16px on each side of the divider (the wrapper's own
+               gap); the wrapper as a whole is what the outer space-between
+               pins to the card's bottom edge. */}
             <hr
               style={{
                 margin: 0,
@@ -187,7 +201,7 @@ export default function ConnectCard({
             >
               {actions}
             </div>
-          </>
+          </div>
         )}
       </div>
     </Card>

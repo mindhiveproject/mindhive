@@ -309,61 +309,21 @@ export const StyledBuilderArea = styled.div`
       }
     }
     .secondLine {
+      /* Study journey tab bar — rendered via the shared Navbar component
+         (variant="underline" dense). */
       padding: 0 8px;
       background: #f6f9f8;
       border-bottom: 1px solid #e6e6e6;
       border-top: 1px solid #e6e6e6;
 
-      .menu {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-
-      .menuTitle {
-        display: flex;
-        align-items: center;
-        padding: 0px 8px 8px 8px;
-        border-bottom: 4px solid transparent;
-        cursor: pointer;
-
-        .titleWithIcon {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          white-space: nowrap;
-
-          img {
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-          }
-
-          p {
-            font: var(--MH-Type-Label-Large);
-            letter-spacing: 0;
-            color: #171717;
-            margin: 0;
-          }
-        }
-      }
-
-      .selectedMenuTitle {
-        border-bottom-color: #f2be42;
-      }
-
       @media (max-width: 800px) {
-        .menu {
+        .navbar-container {
           flex-wrap: wrap;
           row-gap: 8px;
         }
 
-        .menuTitle {
+        .navbar-item {
           flex: 1 1 45%;
-        }
-
-        .menuTitle .titleWithIcon {
-          white-space: normal;
         }
       }
     }

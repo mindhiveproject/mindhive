@@ -15,14 +15,12 @@ const Wrap = styled.span`
 `;
 
 const VERIFIED_CHIP_STYLE = {
-  borderColor: "var(--MH-Theme-Success, #1d6b3a)",
   background: "#eef8f1",
   backgroundColor: "#eef8f1",
   color: "var(--MH-Theme-Success, #1d6b3a)",
 };
 
 const UNVERIFIED_CHIP_STYLE = {
-  borderColor: "#a1a1a1",
   background: "#f3f3f3",
   backgroundColor: "#f3f3f3",
   color: "#5f6871",
@@ -60,6 +58,7 @@ export default function OrganizationVerificationStatus({
         }}
       >
         <Chip
+          variant="static"
           label={t("organizationsDetail.verification.verified", {}, {
             default: "Verified",
           })}
@@ -116,6 +115,7 @@ export default function OrganizationVerificationStatus({
         })}
       >
         <Chip
+          variant="static"
           label={t("organizationsDetail.verification.notVerified", {}, {
             default: "Not verified",
           })}

@@ -114,38 +114,58 @@ export default function Profile() {
           {(publicId || publicReadableId) && (
             <div className="profileMetaIds">
               {publicId && (
-                <Tooltip content={publicId} side="left">
-                  <CopyButton
-                    value={publicId}
-                    ariaLabel={t("copyParticipantIdAria", {}, {
+                <div className="profileMetaId">
+                  <span className="profileMetaIdLabel">
+                    {t("participantID", {}, { default: "Participant ID" })}
+                  </span>
+                  <Tooltip
+                    content={t("copyParticipantIdAria", {}, {
                       default: "Copy participant ID to clipboard",
                     })}
-                    style={{
-                      border: "none",
-                      background: "#E6E6E6",
-                      backgroundColor: "#E6E6E6",
-                    }}
+                    side="left"
                   >
-                    {t("participantID", {}, { default: "Participant ID" })}
-                  </CopyButton>
-                </Tooltip>
+                    <CopyButton
+                      value={publicId}
+                      ariaLabel={t("copyParticipantIdAria", {}, {
+                        default: "Copy participant ID to clipboard",
+                      })}
+                      style={{
+                        border: "none",
+                        background: "#E6E6E6",
+                        backgroundColor: "#E6E6E6",
+                      }}
+                    >
+                      {publicId}
+                    </CopyButton>
+                  </Tooltip>
+                </div>
               )}
               {publicReadableId && (
-                <Tooltip content={publicReadableId} side="left">
-                  <CopyButton
-                    value={publicReadableId}
-                    ariaLabel={t("copyPublicIdAria", {}, {
+                <div className="profileMetaId">
+                  <span className="profileMetaIdLabel">
+                    {t("publicReadableID", {}, { default: "Public readable ID" })}
+                  </span>
+                  <Tooltip
+                    content={t("copyPublicIdAria", {}, {
                       default: "Copy public readable ID to clipboard",
                     })}
-                    style={{
-                      border: "none",
-                      background: "#E6E6E6",
-                      backgroundColor: "#E6E6E6",
-                    }}
+                    side="left"
                   >
-                    {t("publicReadableID", {}, { default: "Public readable ID" })}
-                  </CopyButton>
-                </Tooltip>
+                    <CopyButton
+                      value={publicReadableId}
+                      ariaLabel={t("copyPublicIdAria", {}, {
+                        default: "Copy public readable ID to clipboard",
+                      })}
+                      style={{
+                        border: "none",
+                        background: "#E6E6E6",
+                        backgroundColor: "#E6E6E6",
+                      }}
+                    >
+                      {publicReadableId}
+                    </CopyButton>
+                  </Tooltip>
+                </div>
               )}
             </div>
           )}
