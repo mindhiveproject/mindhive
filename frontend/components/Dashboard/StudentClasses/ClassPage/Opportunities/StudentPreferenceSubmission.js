@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -378,6 +378,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const [notes, setNotes] = useState("");
   const [assessmentData, setAssessmentData] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
+  const assessmentStepRef = useRef(null);
 
   const teamEligibleOpps = useMemo(
     () =>
@@ -1011,7 +1012,19 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
           default: "Draft saved",
         })
     : null;
-  const handleSaveDraft = () => handleSave("draft");
+  const handleSaveDraft = async () => {
+    const stepKey = stepKeys[currentStep - 1] || stepKeys[0];
+    if (
+      stepKey === "assessment" &&
+      typeof assessmentStepRef.current?.save === "function"
+    ) {
+      return assessmentStepRef.current.save({
+        skipValidation: true,
+        feedbackScope: "form",
+      });
+    }
+    return handleSave("draft");
+  };
   const handleSubmitPreferences = () => handleSave("submitted");
 
   const preferenceEntity = {
@@ -1019,24 +1032,10 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     assessmentData,
   };
 
-  const handleSaveAssessment = async (nextAssessmentData) => {
+  const handleSaveAssessment = async (nextAssessmentData, options = {}) => {
     return handleSave("draft", {
       assessmentDataOverride: nextAssessmentData,
-      feedbackScope: "assessment",
-    });
-  };
-
-  const handleAssessmentValidationFailed = () => {
-    setAssessmentSaveFeedback({
-      variant: "warning",
-      message: t(
-        "opportunities.studentView.rankForm.assessmentValidationFailed",
-        {},
-        {
-          default:
-            "Fix the highlighted fields before saving your assessment.",
-        },
-      ),
+      feedbackScope: options.feedbackScope || "assessment",
     });
   };
 
@@ -1414,13 +1413,12 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         >
           {currentStepKey === "assessment" && (
             <StudentAssessmentStep
+              ref={assessmentStepRef}
               formDefinitionId={assessmentFormId}
               preferenceEntity={preferenceEntity}
               isOpen={isOpen}
               locale={locale}
               onSaveAssessment={handleSaveAssessment}
-              onValidationFailed={handleAssessmentValidationFailed}
-              saving={saving}
               saveFeedback={assessmentSaveFeedback}
               onDismissSaveFeedback={clearAssessmentSaveFeedback}
             />

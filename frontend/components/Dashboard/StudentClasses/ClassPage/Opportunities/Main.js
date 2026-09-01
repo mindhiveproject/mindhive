@@ -71,9 +71,7 @@ const RankBanners = styled.div`
   display: grid;
   gap: 12px;
   width: 100%;
-  max-width: 920px;
-  margin: 0 auto;
-`;
+`
 
 const Filters = styled.div`
   position: sticky;
@@ -85,12 +83,13 @@ const Filters = styled.div`
   align-items: center;
   gap: 12px 16px;
   width: 100%;
-  padding: 8px 0;
+  padding: 8px 16px;
   box-sizing: border-box;
-  background: rgba(247, 249, 248, 0.95);
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+  border-radius: 12px;
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
 `;
 
 const FilterRow = styled.div`
@@ -628,6 +627,20 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
 
   return (
     <div className="classTabPage opportunities">
+      {openRounds.length > 0 ? (
+        <RankBanners>
+          {openRounds.map((round) => (
+            <StudentRankActionCard
+              key={round.id}
+              round={round}
+              preference={preferenceByRoundId.get(round.id)}
+              hasOpportunities={true}
+              onRank={openRankRound}
+            />
+          ))}
+        </RankBanners>
+      ) : null}
+
       <Filters className="Main__Filters">
         <FilterRow
           role="group"
@@ -695,20 +708,6 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
           </CategoryFilterRow>
         ) : null}
       </Filters>
-
-      {openRounds.length > 0 ? (
-        <RankBanners>
-          {openRounds.map((round) => (
-            <StudentRankActionCard
-              key={round.id}
-              round={round}
-              preference={preferenceByRoundId.get(round.id)}
-              hasOpportunities={true}
-              onRank={openRankRound}
-            />
-          ))}
-        </RankBanners>
-      ) : null}
 
       <Page>
         {filteredOpportunities.length === 0 ? (

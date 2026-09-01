@@ -20,8 +20,6 @@ const Card = styled.article`
   flex-direction: column;
   gap: 12px;
   width: 100%;
-  max-width: 920px;
-  margin: 0 auto;
   padding: 16px;
   box-sizing: border-box;
   border-radius: 12px;
@@ -59,6 +57,32 @@ const Due = styled.p`
   font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
+`;
+
+const StepList = styled.ol`
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  font: var(--MH-Type-Body-Base, 400 16px/24px "Inter", sans-serif);
+  letter-spacing: 0;
+  color: var(--MH-Theme-Neutrals-Black, #171717);
+`;
+
+const StepItem = styled.li`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+`;
+
+const StepIndex = styled.span`
+  flex-shrink: 0;
+`;
+
+const StepText = styled.span`
+  padding-top: 4px;
 `;
 
 const TitleActions = styled.div`
@@ -142,6 +166,7 @@ export default function StudentRankActionCard({
   let helper = null;
   let ctaLabel;
   let buttonVariant = "filled";
+  let showSteps = false;
 
   if (submitted) {
     title = t(
@@ -201,10 +226,7 @@ export default function StudentRankActionCard({
       ? t(
           "opportunities.studentView.rankCard.helperBrowse",
           {},
-          {
-            default:
-              "This is how you get matched. Browse below, then rank.",
-          },
+          { default: "This is how you get matched." },
         )
       : t(
           "opportunities.studentView.rankCard.helperEmpty",
@@ -214,12 +236,46 @@ export default function StudentRankActionCard({
               "When opportunities appear, come back here to rank them.",
           },
         );
+    showSteps = hasOpportunities;
     ctaLabel = t(
       "opportunities.studentView.rankCard.ctaRankNow",
       {},
-      { default: "Rank now" },
+      { default: "Start ranking" },
     );
   }
+
+  const steps = showSteps
+    ? [
+        t(
+          "opportunities.studentView.rankCard.stepBrowse",
+          {},
+          {
+            default:
+              "Browse the opportunities below and star your favorite. You can only rank opportunities you have chosen here.",
+          },
+        ),
+        t(
+          "opportunities.studentView.rankCard.stepAssessment",
+          {},
+          { default: "Complete skills assessment" },
+        ),
+        t(
+          "opportunities.studentView.rankCard.stepClassmates",
+          {},
+          { default: "Rank your classmates" },
+        ),
+        t(
+          "opportunities.studentView.rankCard.stepOpportunities",
+          {},
+          { default: "Rank favorite opportunities" },
+        ),
+      ]
+    : [];
+  const stepsAria = t(
+    "opportunities.studentView.rankCard.stepsAria",
+    {},
+    { default: "How ranking works" },
+  );
 
   const statusChipLabel = submitted
     ? t("opportunities.studentView.rankForm.statusSubmitted", {}, {
@@ -306,6 +362,23 @@ export default function StudentRankActionCard({
         </Popover>
       ) : null}
       {helper ? <Helper>{helper}</Helper> : null}
+      {steps.length > 0 ? (
+        <StepList aria-label={stepsAria}>
+          {steps.map((step, index) => (
+            <StepItem key={step}>
+              <StepIndex aria-hidden="true">
+                <Chip
+                  variant="static"
+                  tone="neutral"
+                  label={String(index + 1)}
+                  truncate={false}
+                />
+              </StepIndex>
+              <StepText>{step}</StepText>
+            </StepItem>
+          ))}
+        </StepList>
+      ) : null}
       {dueLine ? <Due>{dueLine}</Due> : null}
       <Actions>
         <Button type="button" variant={buttonVariant} onClick={handleRank}>

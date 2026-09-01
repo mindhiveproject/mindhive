@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Container, Draggable } from "react-smooth-dnd";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
@@ -115,6 +115,12 @@ const PoolToggle = styled.button`
   }
 `;
 
+const PoolToggleIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
 const PoolToggleIcon = styled.img`
   width: 20px;
   height: 20px;
@@ -202,6 +208,72 @@ function reorderArray(arr, fromIndex, toIndex) {
   return next;
 }
 
+const BAND = {
+  TOP: "top",
+  BACKUPS: "backups",
+  REMAINING: "remaining",
+};
+
+const RANK_DND_GROUP = "classmateRankBands";
+
+function splitRankedBands(orderedIds, topCap) {
+  const cap = Math.max(0, topCap);
+  return {
+    top: orderedIds.slice(0, cap),
+    backups: orderedIds.slice(cap),
+  };
+}
+
+function applyBandDrop({
+  orderedIds,
+  remainingIds,
+  topCap,
+  destBand,
+  addedIndex,
+  removedIndex,
+  payload,
+}) {
+  const id = payload?.id;
+  if (!id || addedIndex == null) {
+    return { orderedIds, remainingIds };
+  }
+
+  const fromBand = payload.fromBand;
+  const { top, backups } = splitRankedBands(orderedIds, topCap);
+  const lists = {
+    [BAND.TOP]: top.slice(),
+    [BAND.BACKUPS]: backups.slice(),
+    [BAND.REMAINING]: remainingIds.slice(),
+  };
+
+  if (!fromBand || !Array.isArray(lists[destBand]) || !Array.isArray(lists[fromBand])) {
+    return { orderedIds, remainingIds };
+  }
+
+  if (fromBand === destBand) {
+    if (removedIndex == null || removedIndex === addedIndex) {
+      return { orderedIds, remainingIds };
+    }
+    lists[destBand] = reorderArray(lists[destBand], removedIndex, addedIndex);
+  } else {
+    lists[fromBand] = lists[fromBand].filter((itemId) => itemId !== id);
+    const dest = lists[destBand].filter((itemId) => itemId !== id);
+    const idx = Math.max(0, Math.min(addedIndex, dest.length));
+    dest.splice(idx, 0, id);
+    lists[destBand] = dest;
+  }
+
+  const cap = Math.max(0, topCap);
+  while (lists[BAND.TOP].length > cap) {
+    lists[BAND.BACKUPS].unshift(lists[BAND.TOP].pop());
+  }
+
+  return {
+    orderedIds: [...lists[BAND.TOP], ...lists[BAND.BACKUPS]],
+    remainingIds: lists[BAND.REMAINING],
+  };
+}
+
 export default function ClassmateRankList({
   students,
   classmateOrder,
@@ -213,10 +285,27 @@ export default function ClassmateRankList({
   const [search, setSearch] = useState("");
   const [poolOpen, setPoolOpen] = useState(true);
   const [orderedIds, setOrderedIds] = useState(classmateOrder);
+  const [remainingIds, setRemainingIds] = useState([]);
+  const orderedIdsRef = useRef(orderedIds);
+  const remainingIdsRef = useRef(remainingIds);
+
+  const topCap = effectivePicks > 0 ? effectivePicks : 0;
 
   useEffect(() => {
     setOrderedIds(classmateOrder);
   }, [classmateOrder]);
+
+  useEffect(() => {
+    const ranked = new Set(classmateOrder);
+    const available = (students || [])
+      .map((s) => s?.id)
+      .filter((id) => id && !ranked.has(id));
+    setRemainingIds((prev) => {
+      const kept = prev.filter((id) => available.includes(id));
+      const incoming = available.filter((id) => !kept.includes(id));
+      return [...kept, ...incoming];
+    });
+  }, [students, classmateOrder]);
 
   const studentById = useMemo(() => {
     const map = new Map();
@@ -226,79 +315,134 @@ export default function ClassmateRankList({
     return map;
   }, [students]);
 
-  const activeCount = Math.min(
-    effectivePicks > 0 ? effectivePicks : 0,
-    orderedIds.length,
+  const knownOrderedIds = useMemo(
+    () => (orderedIds || []).filter((id) => studentById.has(id)),
+    [orderedIds, studentById],
   );
 
-  const availableStudents = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    return (students || []).filter((s) => {
-      if (!s?.id || orderedIds.includes(s.id)) return false;
-      if (!query) return true;
-      return studentDisplayName(s).toLowerCase().includes(query);
-    });
-  }, [students, orderedIds, search]);
+  const knownRemainingIds = useMemo(
+    () => remainingIds.filter((id) => studentById.has(id)),
+    [remainingIds, studentById],
+  );
 
-  const showPool =
-    rankingEnabled && (students?.length || 0) > orderedIds.length;
+  orderedIdsRef.current = knownOrderedIds;
+  remainingIdsRef.current = knownRemainingIds;
+
+  const { top: topIds, backups: backupIds } = splitRankedBands(
+    knownOrderedIds,
+    topCap,
+  );
+
+  const visibleRemainingIds = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return knownRemainingIds.filter((id) => {
+      if (!query) return true;
+      const student = studentById.get(id);
+      if (!student) return false;
+      return studentDisplayName(student).toLowerCase().includes(query);
+    });
+  }, [knownRemainingIds, search, studentById]);
+
+  const showRemaining = (students?.length || 0) > 0;
+
+  const commitOrder = useCallback(
+    (nextOrdered, nextRemaining) => {
+      setOrderedIds(nextOrdered);
+      if (Array.isArray(nextRemaining)) setRemainingIds(nextRemaining);
+      onClassmateOrderChange(nextOrdered);
+    },
+    [onClassmateOrderChange],
+  );
 
   const handleAdd = (studentId) => {
     if (!studentId || !rankingEnabled) return;
-    const next = [...orderedIds, studentId];
-    setOrderedIds(next);
-    onClassmateOrderChange(next);
+    const nextRemaining = knownRemainingIds.filter((id) => id !== studentId);
+    const nextOrdered = knownOrderedIds.includes(studentId)
+      ? knownOrderedIds
+      : topIds.length < topCap
+        ? [...topIds, studentId, ...backupIds]
+        : [...topIds, ...backupIds, studentId];
+    commitOrder(nextOrdered, nextRemaining);
   };
 
   const handleRemove = (studentId) => {
     if (!rankingEnabled) return;
-    const next = orderedIds.filter((id) => id !== studentId);
-    setOrderedIds(next);
-    onClassmateOrderChange(next);
+    const nextOrdered = knownOrderedIds.filter((id) => id !== studentId);
+    const nextRemaining = knownRemainingIds.includes(studentId)
+      ? knownRemainingIds
+      : [...knownRemainingIds, studentId];
+    commitOrder(nextOrdered, nextRemaining);
   };
 
-  const handleDrop = useCallback(
-    ({ removedIndex, addedIndex }) => {
-      if (!rankingEnabled) return;
-      if (removedIndex == null || addedIndex == null) return;
-      if (removedIndex === addedIndex) return;
-      setOrderedIds((prev) => {
-        const next = reorderArray(prev, removedIndex, addedIndex);
-        onClassmateOrderChange(next);
-        return next;
-      });
-    },
-    [onClassmateOrderChange, rankingEnabled],
+  const handleBandDrop = useCallback(
+    (destBand) =>
+      ({ removedIndex, addedIndex, payload }) => {
+        if (!rankingEnabled) return;
+        if (addedIndex == null) return;
+        const result = applyBandDrop({
+          orderedIds: orderedIdsRef.current,
+          remainingIds: remainingIdsRef.current,
+          topCap,
+          destBand,
+          addedIndex,
+          removedIndex,
+          payload,
+        });
+        commitOrder(result.orderedIds, result.remainingIds);
+      },
+    [commitOrder, rankingEnabled, topCap],
   );
 
   const dragHint = t("opportunities.studentView.rankForm.dragHint", {}, {
     default: "Drag to reorder",
   });
 
-  const activeZoneLabel =
-    effectivePicks > 0
-      ? t(
-          "opportunities.studentView.rankForm.classmatesActiveZoneLabel",
-          { count: effectivePicks },
-          {
-            default:
-              "Your top {{count}} highlighted picks count toward team matching (order does not matter)",
-          },
-        )
-      : null;
+  const handleRemainingDrop = useCallback(
+    ({ removedIndex, addedIndex, payload }) => {
+      if (!rankingEnabled || addedIndex == null) return;
+      const remaining = remainingIdsRef.current;
 
-  const renderRow = (studentId, index, wrapDraggable) => {
+      const mapVisibleIndex = (visibleIndex) => {
+        if (visibleIndex == null) return null;
+        if (visibleIndex >= visibleRemainingIds.length) {
+          return remaining.length;
+        }
+        const targetId = visibleRemainingIds[visibleIndex];
+        const idx = remaining.indexOf(targetId);
+        return idx < 0 ? remaining.length : idx;
+      };
+
+      const result = applyBandDrop({
+        orderedIds: orderedIdsRef.current,
+        remainingIds: remaining,
+        topCap,
+        destBand: BAND.REMAINING,
+        addedIndex: mapVisibleIndex(addedIndex),
+        removedIndex:
+          payload?.fromBand === BAND.REMAINING
+            ? mapVisibleIndex(removedIndex)
+            : removedIndex,
+        payload,
+      });
+      commitOrder(result.orderedIds, result.remainingIds);
+    },
+    [commitOrder, rankingEnabled, topCap, visibleRemainingIds],
+  );
+
+  const renderRow = (studentId, { rank, isActivePick, showRemove, wrapDraggable }) => {
     const student = studentById.get(studentId);
     if (!student) return null;
-    const rank = index + 1;
     const name = studentDisplayName(student);
     const removeLabel = t(
       "opportunities.studentView.rankForm.classmatesRemove",
       { name },
       { default: "Remove {{name}}" },
     );
-
-    const isActivePick = effectivePicks > 0 && index < activeCount;
+    const addLabel = t(
+      "opportunities.studentView.rankForm.classmatesAddOne",
+      { name },
+      { default: "Add {{name}}" },
+    );
 
     const row = (
       <RankRow
@@ -313,24 +457,37 @@ export default function ClassmateRankList({
         >
           <DragIndicatorIcon />
         </DragHandle>
-        <Chip
-          variant="static"
-          tone={isActivePick ? "info" : "neutral"}
-          label={String(rank)}
-          ariaLabel={t(
-            "opportunities.studentView.rankForm.rankBadge",
-            { rank },
-            { default: "Rank {{rank}}" },
-          )}
-        />
+        {rank != null ? (
+          <Chip
+            variant="static"
+            tone={isActivePick ? "info" : "neutral"}
+            label={String(rank)}
+            ariaLabel={t(
+              "opportunities.studentView.rankForm.rankBadge",
+              { rank },
+              { default: "Rank {{rank}}" },
+            )}
+          />
+        ) : (
+          <span aria-hidden />
+        )}
         <StudentName title={name}>{name}</StudentName>
-        {rankingEnabled ? (
+        {rankingEnabled && showRemove ? (
           <IconButton
             variant="subtle"
             ariaLabel={removeLabel}
             title={removeLabel}
             onClick={() => handleRemove(studentId)}
             icon={<CloseIcon width={18} height={18} aria-hidden />}
+          />
+        ) : null}
+        {rankingEnabled && !showRemove ? (
+          <IconButton
+            variant="subtle"
+            ariaLabel={addLabel}
+            title={addLabel}
+            onClick={() => handleAdd(studentId)}
+            icon={<AddIcon width={18} height={18} aria-hidden />}
           />
         ) : null}
       </RankRow>
@@ -342,50 +499,148 @@ export default function ClassmateRankList({
     return <div key={studentId}>{row}</div>;
   };
 
-  const poolToggleLabel = t(
-    "opportunities.studentView.rankForm.classmatesPoolToggle",
+  const renderDropList = (ids, band, getRank, isActive) => {
+    const onDrop =
+      band === BAND.REMAINING ? handleRemainingDrop : handleBandDrop(band);
+    const payloadIds =
+      band === BAND.REMAINING ? visibleRemainingIds : ids;
+
+    if (!rankingEnabled) {
+      return (
+        <RankListContainer>
+          {ids.map((id, index) =>
+            renderRow(id, {
+              rank: getRank(index),
+              isActivePick: isActive(index),
+              showRemove: band !== BAND.REMAINING,
+              wrapDraggable: false,
+            }),
+          )}
+        </RankListContainer>
+      );
+    }
+
+    return (
+      <RankListContainer>
+        <Container
+          groupName={RANK_DND_GROUP}
+          dragHandleSelector=".classmate-drag-handle"
+          lockAxis="y"
+          onDrop={onDrop}
+          getChildPayload={(index) => ({
+            id: payloadIds[index],
+            fromBand: band,
+          })}
+        >
+          {ids.map((id, index) =>
+            renderRow(id, {
+              rank: getRank(index),
+              isActivePick: isActive(index),
+              showRemove: band !== BAND.REMAINING,
+              wrapDraggable: true,
+            }),
+          )}
+        </Container>
+      </RankListContainer>
+    );
+  };
+
+  const remainingToggleLabel = t(
+    "opportunities.studentView.rankForm.classmatesRemaining",
     {},
-    { default: "Add classmates from your class" },
+    { default: "Add a classmate" },
   );
+
+  const hasClassmates = (students?.length || 0) > 0;
 
   return (
     <ListShell>
-      {orderedIds.length > 0 ? (
+      {hasClassmates ? (
         <Section>
           <SectionLabel>
-            {t("opportunities.studentView.rankForm.classmatesRanked", {}, {
-              default: "Your ranked classmates",
-            })}
+            {t(
+              "opportunities.studentView.rankForm.classmatesTopPicks",
+              { count: topCap },
+              {
+                default:
+                  "Your top {{count}} picks — only these count for matching",
+              },
+            )}
           </SectionLabel>
-          {activeZoneLabel && activeCount > 0 ? (
-            <ZoneLabel>{activeZoneLabel}</ZoneLabel>
-          ) : null}
-          {rankingEnabled ? (
-            <RankListContainer>
-              <Container
-                dragHandleSelector=".classmate-drag-handle"
-                lockAxis="y"
-                onDrop={handleDrop}
-              >
-                {orderedIds.map((id, index) => renderRow(id, index, true))}
-              </Container>
-            </RankListContainer>
-          ) : (
-            <RankListContainer>
-              {orderedIds.map((id, index) => renderRow(id, index, false))}
-            </RankListContainer>
-          )}
+          {topIds.length > 0
+            ? renderDropList(
+                topIds,
+                BAND.TOP,
+                (index) => index + 1,
+                () => topCap > 0,
+              )
+            : (
+              <>
+                {rankingEnabled
+                  ? renderDropList(topIds, BAND.TOP, () => null, () => false)
+                  : null}
+                <Hint>
+                  {t("opportunities.studentView.rankForm.classmatesTopEmpty", {}, {
+                    default: "Drag classmates here for your top picks.",
+                  })}
+                </Hint>
+              </>
+            )}
         </Section>
       ) : null}
 
-      {showPool ? (
+      {hasClassmates ? (
+        <Section>
+          <SectionLabel>
+            {t("opportunities.studentView.rankForm.classmatesBackups", {}, {
+              default: "Backups",
+            })}
+          </SectionLabel>
+          <ZoneLabel>
+            {t("opportunities.studentView.rankForm.classmatesBackupsHelper", {}, {
+              default: "Used only if your top picks don't work out.",
+            })}
+          </ZoneLabel>
+          {backupIds.length > 0
+            ? renderDropList(
+                backupIds,
+                BAND.BACKUPS,
+                (index) => topIds.length + index + 1,
+                () => false,
+              )
+            : (
+              <>
+                {rankingEnabled
+                  ? renderDropList(
+                      backupIds,
+                      BAND.BACKUPS,
+                      () => null,
+                      () => false,
+                    )
+                  : null}
+                <Hint>
+                  {t(
+                    "opportunities.studentView.rankForm.classmatesBackupsEmpty",
+                    {},
+                    { default: "Drag classmates here as backups." },
+                  )}
+                </Hint>
+              </>
+            )}
+        </Section>
+      ) : null}
+
+      {showRemaining ? (
         <Card variant="outline" as="section" padding={14}>
           <PoolToggle
             type="button"
             aria-expanded={poolOpen}
             onClick={() => setPoolOpen((open) => !open)}
           >
-            <span>{poolToggleLabel}</span>
+            <PoolToggleIconContainer>
+              <AddIcon width={18} height={18} aria-hidden />
+              <span>{remainingToggleLabel}</span>
+            </PoolToggleIconContainer>
             <PoolToggleIcon
               $open={poolOpen}
               src="/assets/icons/builder/medium-chevron-down.svg"
@@ -395,6 +650,16 @@ export default function ClassmateRankList({
           </PoolToggle>
           {poolOpen ? (
             <PoolBody>
+              <ZoneLabel>
+                {t(
+                  "opportunities.studentView.rankForm.classmatesRemainingHelper",
+                  {},
+                  {
+                    default:
+                      "Classmates not in your top picks or backups. Drag someone up to rank them.",
+                  },
+                )}
+              </ZoneLabel>
               <SearchInput
                 type="search"
                 value={search}
@@ -402,37 +667,23 @@ export default function ClassmateRankList({
                 placeholder={t(
                   "opportunities.studentView.rankForm.classmatesSearch",
                   {},
-                  { default: "Search classmates" },
+                  { default: "Add a classmate — search by name" },
                 )}
                 aria-label={t(
                   "opportunities.studentView.rankForm.classmatesSearch",
                   {},
-                  { default: "Search classmates" },
+                  { default: "Add a classmate — search by name" },
                 )}
               />
-              {availableStudents.length > 0 ? (
-                <ChipPool>
-                  {availableStudents.map((student) => {
-                    const name = studentDisplayName(student);
-                    const addLabel = t(
-                      "opportunities.studentView.rankForm.classmatesAddOne",
-                      { name },
-                      { default: "Add {{name}}" },
-                    );
-                    return (
-                      <Chip
-                        key={student.id}
-                        variant="interactive"
-                        label={name}
-                        leading={<AddIcon width={18} height={18} aria-hidden />}
-                        onClick={() => handleAdd(student.id)}
-                        ariaLabel={addLabel}
-                        title={addLabel}
-                      />
-                    );
-                  })}
-                </ChipPool>
-              ) : (
+              {visibleRemainingIds.length > 0 || rankingEnabled
+                ? renderDropList(
+                    visibleRemainingIds,
+                    BAND.REMAINING,
+                    () => null,
+                    () => false,
+                  )
+                : null}
+              {visibleRemainingIds.length === 0 ? (
                 <Hint>
                   {search.trim()
                     ? t(
@@ -441,15 +692,15 @@ export default function ClassmateRankList({
                         { default: "No classmates match your search." },
                       )
                     : t(
-                        "opportunities.studentView.rankForm.classmatesEmpty",
+                        "opportunities.studentView.rankForm.classmatesRemainingNone",
                         {},
                         {
                           default:
-                            "Add classmates you'd like to work with. Drag to set priority (1 = first choice).",
+                            "All classmates are in your top picks or backups.",
                         },
                       )}
                 </Hint>
-              )}
+              ) : null}
             </PoolBody>
           ) : null}
         </Card>
