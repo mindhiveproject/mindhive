@@ -111,19 +111,8 @@ export const StyledMenuBar = styled.div`
     width: 100%;
     align-items: ${(props) => (props.$collapsed ? "center" : "stretch")};
 
-    /* Match the Design System Button's label size (MH-Theme/label/base) rather
-       than the vertical Navbar default (title/base), so the nav items read at
-       the same scale as the buttons elsewhere in the app. Scoped to this menu
-       bar's nav only — other vertical Navbar usages are untouched. The extra
-       .navbar-container.vertical qualifier matches Navbar.js's own selector
-       specificity so this override reliably wins regardless of CSS order.
-       No explicit height: Figma's own Button derives its 40px from 8px
-       top/bottom padding plus the 24px leading icon (the tallest flex child),
-       not a hardcoded height — that's what keeps single-line items at 40px
-       here too, without clipping a label that wraps to two lines in a longer
-       translation. */
     .navbar-container.vertical .navbar-item {
-      font: var(--MH-Type-Label-Large);
+      font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
     }
   }

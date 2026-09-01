@@ -33,8 +33,8 @@ export const StyledNavbar = styled.div`
     cursor: pointer;
 
     color: black;
-    /* MH-Type/label/large */
-    font: var(--MH-Type-Label-Large);
+    /* MH-Type/label/base */
+    font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     font-style: normal;
 

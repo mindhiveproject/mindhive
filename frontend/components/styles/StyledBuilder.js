@@ -340,7 +340,7 @@ export const StyledBuilderArea = styled.div`
           }
 
           p {
-            font: var(--MH-Type-Label-Large);
+            font: var(--MH-Type-Label-Base);
             letter-spacing: 0;
             color: #171717;
             margin: 0;
