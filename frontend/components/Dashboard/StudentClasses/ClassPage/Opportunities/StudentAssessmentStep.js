@@ -1,21 +1,21 @@
-import { useCallback, useRef } from "react";
+import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import DefinitionForm from "../../../../Forms/DefinitionForm";
-import Button from "../../../../DesignSystem/Button";
 import MessageCard from "../../../../DesignSystem/MessageCard";
 
-export default function StudentAssessmentStep({
-  formDefinitionId,
-  preferenceEntity,
-  isOpen,
-  locale,
-  onSaveAssessment,
-  onValidationFailed,
-  saving = false,
-  saveFeedback = null,
-  onDismissSaveFeedback,
-}) {
+const StudentAssessmentStep = forwardRef(function StudentAssessmentStep(
+  {
+    formDefinitionId,
+    preferenceEntity,
+    isOpen,
+    locale,
+    onSaveAssessment,
+    saveFeedback = null,
+    onDismissSaveFeedback,
+  },
+  ref,
+) {
   const { t } = useTranslation("classes");
   const formRef = useRef(null);
 
@@ -25,21 +25,30 @@ export default function StudentAssessmentStep({
     { default: "Dismiss" },
   );
 
+  const pendingSaveOptionsRef = useRef({});
+
   const handleSubmit = useCallback(
     async (updateInput) => {
-      return onSaveAssessment?.(updateInput?.self?.assessmentData);
+      const extra = pendingSaveOptionsRef.current || {};
+      pendingSaveOptionsRef.current = {};
+      return onSaveAssessment?.(updateInput?.self?.assessmentData, extra);
     },
     [onSaveAssessment],
   );
 
-  const handleSaveClick = async () => {
+  const save = useCallback(async (options = {}) => {
+    pendingSaveOptionsRef.current = {
+      feedbackScope: options.feedbackScope,
+    };
     onDismissSaveFeedback?.();
-    if (!formRef.current?.save) return;
-    const ok = await formRef.current.save();
-    if (!ok) {
-      onValidationFailed?.();
-    }
-  };
+    if (!formRef.current?.save) return false;
+    const ok = await formRef.current.save({
+      skipValidation: Boolean(options.skipValidation),
+    });
+    return ok;
+  }, [onDismissSaveFeedback]);
+
+  useImperativeHandle(ref, () => ({ save }), [save]);
 
   if (!formDefinitionId) return null;
 
@@ -76,24 +85,8 @@ export default function StudentAssessmentStep({
         readOnly={!isOpen}
         hideSaveButton
       />
-      {isOpen ? (
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleSaveClick}
-            disabled={saving}
-          >
-            {saving
-              ? t("opportunities.studentView.rankForm.saving", {}, {
-                  default: "Saving…",
-                })
-              : t("opportunities.studentView.rankForm.assessmentSave", {}, {
-                  default: "Save assessment",
-                })}
-          </Button>
-        </div>
-      ) : null}
     </>
   );
-}
+});
+
+export default StudentAssessmentStep;

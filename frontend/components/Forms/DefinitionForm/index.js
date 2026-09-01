@@ -27,8 +27,10 @@
 // each field's storage/column configuration. The only allowlisted exception
 // is the managed intro-video field (storage=column → Opportunity.videoFile).
 //
-// Imperative API (via ref): `save()` runs the same path as the submit button
-// so parents can drive Save from a top bar while `hideSaveButton` is set.
+// Imperative API (via ref): `save({ skipValidation }?)` runs the same path as
+// the submit button so parents can drive Save from a top bar while
+// `hideSaveButton` is set. Pass `skipValidation: true` to persist a draft
+// without required-field checks (JSON-backed answers only).
 import {
   forwardRef,
   useMemo,
@@ -434,53 +436,57 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     });
   }, []);
 
-  const save = useCallback(async () => {
+  const save = useCallback(async (options = {}) => {
     if (readOnly || submitting) return false;
     if (!definition) return false;
 
+    const skipValidation = Boolean(options.skipValidation);
     const visibleFields = getVisibleFields(definition, {
       viewerRoles,
       entityStatus,
     });
-    const rawErrors = validateValues(values, visibleFields);
 
-    if (Object.keys(rawErrors).length > 0) {
-      const formattedErrors = {};
-      const failingLabels = [];
+    if (!skipValidation) {
+      const rawErrors = validateValues(values, visibleFields);
 
-      for (const [name, detail] of Object.entries(rawErrors)) {
-        const field = visibleFields.find((f) => f.name === name);
-        formattedErrors[name] = formatFieldError(field, detail, t, locale);
-        if (field) {
-          failingLabels.push(fieldLabel(field, locale));
+      if (Object.keys(rawErrors).length > 0) {
+        const formattedErrors = {};
+        const failingLabels = [];
+
+        for (const [name, detail] of Object.entries(rawErrors)) {
+          const field = visibleFields.find((f) => f.name === name);
+          formattedErrors[name] = formatFieldError(field, detail, t, locale);
+          if (field) {
+            failingLabels.push(fieldLabel(field, locale));
+          }
         }
+
+        setErrors(formattedErrors);
+
+        const allSelectRequired = Object.values(rawErrors).every(
+          (d) => d?.code === "selectRequired",
+        );
+        const banner = allSelectRequired
+          ? buildSelectValidationBanner(failingLabels, t)
+          : failingLabels.length === 1
+            ? t(
+                "definitionForm.fixSingleField",
+                { field: failingLabels[0] },
+                { default: "Please fix {{field}} before saving." }
+              )
+            : t(
+                "definitionForm.fixMultipleFields",
+                { fields: failingLabels.join(", ") },
+                {
+                  default:
+                    "Please fix the following fields: {{fields}}",
+                }
+              );
+
+        setSubmitError(banner);
+        scrollToFirstFieldError();
+        return false;
       }
-
-      setErrors(formattedErrors);
-
-      const allSelectRequired = Object.values(rawErrors).every(
-        (d) => d?.code === "selectRequired",
-      );
-      const banner = allSelectRequired
-        ? buildSelectValidationBanner(failingLabels, t)
-        : failingLabels.length === 1
-          ? t(
-              "definitionForm.fixSingleField",
-              { field: failingLabels[0] },
-              { default: "Please fix {{field}} before saving." }
-            )
-          : t(
-              "definitionForm.fixMultipleFields",
-              { fields: failingLabels.join(", ") },
-              {
-                default:
-                  "Please fix the following fields: {{fields}}",
-              }
-            );
-
-      setSubmitError(banner);
-      scrollToFirstFieldError();
-      return false;
     }
 
     setSubmitError(null);

@@ -195,18 +195,6 @@ export default function PreferenceSubmissionReview({
     classmateOrder.length,
   );
 
-  const activeZoneLabel =
-    effectivePicks > 0 && activeCount > 0
-      ? t(
-          "opportunities.studentView.rankForm.classmatesActiveZoneLabel",
-          { count: effectivePicks },
-          {
-            default:
-              "Your top {{count}} highlighted picks count toward team matching (order does not matter)",
-          },
-        )
-      : null;
-
   return (
     <>
       <Section>
@@ -223,26 +211,63 @@ export default function PreferenceSubmissionReview({
           </EmptyNote>
         ) : (
           <>
-            {activeZoneLabel ? <ZoneLabel>{activeZoneLabel}</ZoneLabel> : null}
             {favoritedTeamProjectsNote ? (
               <ZoneLabel>{favoritedTeamProjectsNote}</ZoneLabel>
             ) : null}
-            <ReviewList>
-              {classmateOrder.map((id, index) => {
-                const student = studentById.get(id);
-                const isActivePick = effectivePicks > 0 && index < activeCount;
-                return (
-                  <ReviewItem key={id} $active={isActivePick}>
-                    <ReviewRow>
-                      <RankBadge $active={isActivePick}>{index + 1}</RankBadge>
-                      <ItemTitle>
-                        {studentDisplayName(student) || id}
-                      </ItemTitle>
-                    </ReviewRow>
-                  </ReviewItem>
-                );
-              })}
-            </ReviewList>
+            {activeCount > 0 ? (
+              <>
+                <ZoneLabel>
+                  {t(
+                    "opportunities.studentView.rankForm.classmatesTopPicks",
+                    { count: effectivePicks },
+                    {
+                      default:
+                        "Your top {{count}} picks — only these count for matching",
+                    },
+                  )}
+                </ZoneLabel>
+                <ReviewList>
+                  {classmateOrder.slice(0, activeCount).map((id, index) => {
+                    const student = studentById.get(id);
+                    return (
+                      <ReviewItem key={id} $active>
+                        <ReviewRow>
+                          <RankBadge $active>{index + 1}</RankBadge>
+                          <ItemTitle>
+                            {studentDisplayName(student) || id}
+                          </ItemTitle>
+                        </ReviewRow>
+                      </ReviewItem>
+                    );
+                  })}
+                </ReviewList>
+              </>
+            ) : null}
+            {classmateOrder.length > activeCount ? (
+              <>
+                <ZoneLabel>
+                  {t("opportunities.studentView.rankForm.classmatesBackups", {}, {
+                    default: "Backups",
+                  })}
+                </ZoneLabel>
+                <ReviewList>
+                  {classmateOrder.slice(activeCount).map((id, index) => {
+                    const student = studentById.get(id);
+                    const rank = activeCount + index + 1;
+                    return (
+                      <ReviewItem key={id}>
+                        <ReviewRow>
+                          <RankBadge>{rank}</RankBadge>
+                          <ItemTitle>
+                            {studentDisplayName(student) || id}
+                          </ItemTitle>
+                        </ReviewRow>
+                      </ReviewItem>
+                    );
+                  })}
+                </ReviewList>
+              </>
+            ) : null}
           </>
         )}
       </Section>
