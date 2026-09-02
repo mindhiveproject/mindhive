@@ -841,7 +841,16 @@ export const StyledProposal = styled.div`
       gap: 8px;
       width: 100%;
       justify-content: flex-start;
-      align-items: flex-start;
+      align-items: center;
+    }
+    .headerViewControls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .headerDownloadTrigger {
+      flex-shrink: 0;
     }
     .studyLinkChip {
       display: inline-flex;
@@ -857,6 +866,7 @@ export const StyledProposal = styled.div`
       white-space: nowrap;
       font-family: inherit;
       width: fit-content;
+      flex-shrink: 0;
       &:focus {
         outline: none;
       }
@@ -917,7 +927,8 @@ export const StyledProposal = styled.div`
       gap: 8px;
       align-items: center;
       flex-wrap: nowrap;
-      width: 100%;
+      flex: 1 1 auto;
+      min-width: 0;
     }
     .addCollaboratorButton {
       display: flex;
@@ -950,6 +961,7 @@ export const StyledProposal = styled.div`
       display: flex;
       align-items: center;
       gap: 0;
+      flex-shrink: 0;
     }
     .viewToggleButton {
       display: flex;
@@ -958,12 +970,21 @@ export const StyledProposal = styled.div`
       gap: 8px;
       height: 40px;
       padding: 8px 24px 8px 16px;
-      border: 1px solid #336F8A;
+      border: 1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1);
       font: var(--MH-Type-Label-Base);
       letter-spacing: 0;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
       cursor: pointer;
       white-space: nowrap;
       margin-right: -1px;
+      background: var(--MH-Theme-Neutrals-White, #FFFFFF);
+      box-sizing: border-box;
+      svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        color: currentColor;
+      }
       &.left {
         border-top-left-radius: 100px;
         border-bottom-left-radius: 100px;
@@ -973,32 +994,17 @@ export const StyledProposal = styled.div`
         border-bottom-right-radius: 100px;
       }
       &.active {
-        background: #D3E0E3;
-        color: #336F8A;
-        border-color: #336F8A;
-        .icon {
-          color: #336F8A;
-          margin: 0;
-        }
+        background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        border-color: var(--MH-Theme-Neutrals-Medium, #A1A1A1);
       }
       &.inactive {
-        background: white;
-        color: #336F8A;
-        border-color: #336F8A;
-        .icon {
-          color: #336F8A;
-          margin: 0;
-        }
+        background: var(--MH-Theme-Neutrals-White, #FFFFFF);
+        color: var(--MH-Theme-Neutrals-Dark, #6A6A6A);
+        border-color: var(--MH-Theme-Neutrals-Medium, #A1A1A1);
       }
       &:hover {
-        background: #F3F3F3;
-      }
-      img {
-        width: 18px;
-        height: 18px;
-        object-fit: contain;
-        margin: 0;
-        filter: brightness(0) saturate(100%) invert(26%) sepia(94%) saturate(1234%) hue-rotate(158deg) brightness(92%) contrast(87%);
+        background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
       }
     }
     .titleEdit {

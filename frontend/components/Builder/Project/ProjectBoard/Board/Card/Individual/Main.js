@@ -11,10 +11,10 @@ import {
 import JoditEditor from "../../../../../../Jodit/Editor";
 import useForm from "../../../../../../../lib/useForm";
 
-import Status from "../Forms/Status";
 import Navigation from "../../../../Navigation/Main";
 import { StyledProposal } from "../../../../../../styles/StyledProposal";
 import Button from "../../../../../../DesignSystem/Button";
+import Status from "../../../../../../Dashboard/TeacherClasses/ClassPage/Assignments/Homework/Status";
 
 export default function IndividualCard({
   query,
@@ -159,15 +159,16 @@ export default function IndividualCard({
             {!isPreview && (
               <div className="infoBoard">
                 <div>
-                  <h4>{t("individualCard.status", "Status")}</h4>
-                  <Status
-                    settings={inputs?.settings}
-                    onSettingsChange={handleSettingsChange}
-                  />
+                  <h4 className="MH-Type-Title-Small">
+                    {t("individualCard.status", "Status")}
+                  </h4>
+                  <Status settings={inputs?.settings} handleChange={handleChange} />
                 </div>
 
                 <div className="proposalCardComments">
-                  <h4>{t("individualCard.comments", "Comments")}</h4>
+                  <h4 className="MH-Type-Title-Small">
+                    {t("individualCard.comments", "Comments")}
+                  </h4>
                   <textarea
                     rows="5"
                     type="text"

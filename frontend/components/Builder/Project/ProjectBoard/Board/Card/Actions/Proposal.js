@@ -27,7 +27,7 @@ import { cardTypes } from "../../Builder/Actions/ActionCard";
 import TipTapEditor from "../../../../../../TipTap/Main";
 import { StyledActionPage } from "../../../../../../styles/StyledReview";
 import Feedback from "../../../../../../Dashboard/Review/Feedback/Main";
-import Status from "../Forms/Status";
+import StatusChip from "../../PDF/Preview/StatusChip";
 
 export default function Proposal({
   query,
@@ -571,20 +571,19 @@ export default function Proposal({
                       <div
                         className="cardStatusDropdown"
                         style={{
-                          minWidth: "200px",
                           display: "inline-flex",
                           alignItems: "center",
                         }}
                       >
-                        <Status
-                          settings={{
-                            status:
-                              editedCards[card?.id]?.status ??
-                              card?.settings?.status,
-                          }}
-                          onSettingsChange={(_, value) =>
+                        <StatusChip
+                          value={
+                            editedCards[card?.id]?.status ??
+                            card?.settings?.status
+                          }
+                          onStatusChange={(value) =>
                             handleStatusChange(card, value)
                           }
+                          canEdit
                         />
                       </div>
                     ) : (

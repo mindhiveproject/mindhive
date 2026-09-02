@@ -98,7 +98,6 @@ export default function Reset({ query }) {
         <Button
           type="submit"
           variant="filled"
-          style={{ width: "100%" }}
           disabled={loading}
         >
           {t("auth.reset", {}, { default: "Reset" })}
