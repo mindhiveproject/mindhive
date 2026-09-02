@@ -1663,6 +1663,8 @@
 		"comments": "Comments",
 		"completeAllBeforeSubmit": "Please make sure all cards listed below are marked as \"completed\" before you submit.",
 		"completeAllRequired": "Please complete all required cards before submitting your proposal for feedback.",
+		"feedbackFormModalClose": "Close",
+		"feedbackFormModalTitle": "Feedback form attached to this milestone",
 		"feedbackCenterPreview": "This is how your proposal will appear in the Feedback Center",
 		"lockedForFeedback": "The proposal was locked for feedback",
 		"notStarted": "Not started",
@@ -1674,7 +1676,8 @@
 		"submitForFeedbackIntro": "Once you submit your proposal for feedback:",
 		"submitForTitle": "Submit your proposal for {{name}}",
 		"submittedForReview": "The proposal was submitted for review",
-		"unlockedForFeedback": "The proposal was unlocked for feedback"
+		"unlockedForFeedback": "The proposal was unlocked for feedback",
+		"viewAttachedFeedbackForm": "View feedback form attached to this milestone."
 	},
 	"proposalBoard": {
 		"allowAddingCards": "Allow adding new cards",
