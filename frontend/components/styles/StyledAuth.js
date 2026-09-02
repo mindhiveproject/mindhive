@@ -13,6 +13,7 @@ const loading = keyframes`
 export const StyledAuth = styled.div`
   display: grid;
   text-align: initial;
+  justify-content: center;
   font: var(--MH-Type-Title-Large);
   letter-spacing: 0;
   label {

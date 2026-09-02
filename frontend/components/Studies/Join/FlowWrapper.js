@@ -1,5 +1,6 @@
+import { useRouter } from "next/router";
+
 import { StyledWrapper } from "../../styles/StyledJoinStudyFlow";
-import Link from "next/link";
 
 import Selector from "./Selector";
 import SignIn from "../../Auth/Login";
@@ -7,38 +8,72 @@ import RoleSignup from "../../Auth/SignupRoles/Role";
 import Details from "./Details";
 import Consents from "./Consents/Main";
 import ConsentSkippedMessage from "./Consents/ConsentSkippedMessage";
+import IconButton from "../../DesignSystem/IconButton";
+import { CloseIcon } from "../../DesignSystem/Icons";
 import useTranslation from "next-translate/useTranslation";
+
+function JoinFlowHeader({ header, closeHref, closeLabel }) {
+  const router = useRouter();
+
+  return (
+    <div className="header">
+      <div className="logo">
+        <img src="/logo.png" alt="icon" height="30" />
+      </div>
+      <div className="headerTitle">{header}</div>
+      <div className="headerClose">
+        <IconButton
+          variant="subtle"
+          icon={<CloseIcon />}
+          ariaLabel={closeLabel}
+          title={closeLabel}
+          onClick={() => router.push(closeHref)}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function FlowWrapper({ query, user, study, step }) {
   const { guest } = query;
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
+  const closeLabel = t("close", {}, { default: "Close" });
 
   let header;
   switch (step) {
     case "select":
-      header = t('flow.header.participation');
+      header = t("flow.header.participation", {}, { default: "Participation" });
       break;
     case "signup":
-      header = t('flow.header.participantDetails');
+      header = t("flow.header.participantDetails", {}, {
+        default: "Participant details",
+      });
       break;
     case "login":
-      header = t('flow.header.login');
+      header = t("flow.header.login", {}, { default: "Login" });
       break;
     case "details":
-      header = t('flow.header.participantDetails');
+      header = t("flow.header.participantDetails", {}, {
+        default: "Participant details",
+      });
       break;
     case "consent":
-      header = t('flow.header.studyConsent');
+    case "consent-skipped":
+      header = t("flow.header.studyConsent", {}, { default: "Study consent" });
       break;
     default:
-      header = t('flow.header.participation');
+      header = t("flow.header.participation", {}, { default: "Participation" });
   }
 
-  if (step === "consent-skipped") {
-    return <ConsentSkippedMessage />;
-  }
+  const closeHref = user
+    ? {
+        pathname: `/dashboard/discover/studies`,
+        query: { name: study?.slug },
+      }
+    : {
+        pathname: `/studies/${study?.slug}`,
+      };
 
-  // for the cases when the direct link is copied in browser but there is no user logged in
   if (
     (step === "details" || step === "consent") &&
     guest === "false" &&
@@ -46,19 +81,13 @@ export default function FlowWrapper({ query, user, study, step }) {
   ) {
     return (
       <StyledWrapper>
-        <div className="header">
-          <div className="logo">
-            <img src="/logo.png" alt="icon" height="30" />
-          </div>
-          <div>{t('flow.header.participation')}</div>
-          <Link
-            href={{
-              pathname: `/studies/${study?.slug}`,
-            }}
-          >
-            <div className="closeBtn">&times;</div>
-          </Link>
-        </div>
+        <JoinFlowHeader
+          header={t("flow.header.participation", {}, {
+            default: "Participation",
+          })}
+          closeHref={{ pathname: `/studies/${study?.slug}` }}
+          closeLabel={closeLabel}
+        />
         <div className="main">
           <Selector user={user} study={study} query={query} />
         </div>
@@ -68,30 +97,11 @@ export default function FlowWrapper({ query, user, study, step }) {
 
   return (
     <StyledWrapper>
-      <div className="header">
-        <div className="logo">
-          <img src="/logo.png" alt="icon" height="30" />
-        </div>
-        <div>{header}</div>
-        {user ? (
-          <Link
-            href={{
-              pathname: `/dashboard/discover/studies`,
-              query: { name: study?.slug },
-            }}
-          >
-            <div className="closeBtn">&times;</div>
-          </Link>
-        ) : (
-          <Link
-            href={{
-              pathname: `/studies/${study?.slug}`,
-            }}
-          >
-            <div className="closeBtn">&times;</div>
-          </Link>
-        )}
-      </div>
+      <JoinFlowHeader
+        header={header}
+        closeHref={closeHref}
+        closeLabel={closeLabel}
+      />
       <div className="main">
         {step === "select" && (
           <Selector user={user} study={study} query={query} />
@@ -111,6 +121,9 @@ export default function FlowWrapper({ query, user, study, step }) {
         )}
         {step === "consent" && (
           <Consents user={user} study={study} query={query} />
+        )}
+        {step === "consent-skipped" && (
+          <ConsentSkippedMessage study={study} />
         )}
       </div>
     </StyledWrapper>

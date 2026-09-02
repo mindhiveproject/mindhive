@@ -62,6 +62,7 @@ export default function ClassForm({
                   id="class-title"
                   type="text"
                   name="title"
+                  style={{ width: "100%", maxWidth: "400px" }}
                   value={inputs?.title ?? ""}
                   onChange={handleTitleChange}
                   disabled={loading}
@@ -73,7 +74,7 @@ export default function ClassForm({
               <div className="classFormFieldLabel">
                 {t("classForm.description", {}, { default: "Description" })}
               </div>
-              <div className="classFormDescriptionEditor">
+              <div style={{ width: "100%", maxWidth: "400px" }}>
                 <TipTapEditor
                   content=""
                   onUpdate={handleDescriptionChange}
@@ -94,7 +95,7 @@ export default function ClassForm({
             </div>
 
             <div className="submitButton">
-              <Button type="submit" style={{ width: "100%" }}>
+              <Button type="submit">
                 {submitBtnName}
               </Button>
             </div>

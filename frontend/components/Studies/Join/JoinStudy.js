@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
 import useTranslation from "next-translate/useTranslation";
@@ -8,114 +7,106 @@ import { GET_USER_STUDIES } from "../../Queries/User";
 import { CREATE_GUEST } from "../../Mutations/Guest";
 import Button from "../../DesignSystem/Button";
 
-// to check whether a participant is under 18 based on age
 const isUnder18 = (age) => {
-    if (!age && age !== 0) return false; // treat missing age as not under 18 for safety
-    const ageNum = typeof age === 'string' ? parseInt(age, 10) : Number(age);
-    return !isNaN(ageNum) && ageNum < 18;
-  };
+  if (!age && age !== 0) return false;
+  const ageNum = typeof age === "string" ? parseInt(age, 10) : Number(age);
+  return !isNaN(ageNum) && ageNum < 18;
+};
 
-// function to join the study from any place
 export default function JoinStudy({
   user,
   study,
   userInfo,
   btnName,
-  variant = "outline",
+  variant = "filled",
 }) {
-    const { t } = useTranslation('common');
-    const router = useRouter();
-    const { settings } = study;
+  const { t } = useTranslation("common");
+  const router = useRouter();
+  const { settings } = study;
 
-    const [joinStudy, { data, loading, error }] = useMutation(
-        JOIN_STUDY_MUTATION,
-        {
-          variables: {
-            id: user?.id,
-            studyId: study?.id,
-          },
-          refetchQueries: [{ query: GET_USER_STUDIES }],
-        }
-      );
-    
-      const [createGuest, { 
-        data: guestData, 
-        loading: guestLoading, 
-        error: guestError 
-      }] = useMutation(
-        CREATE_GUEST,
-        {
-          variables: {
-            input: {
-                generalInfo: userInfo, 
-                participantIn: { 
-                    connect: { id: study?.id }
-                }
-            }
-          },
-        }
-      ); 
+  const [joinStudy, { loading }] = useMutation(JOIN_STUDY_MUTATION, {
+    variables: {
+      id: user?.id,
+      studyId: study?.id,
+    },
+    refetchQueries: [{ query: GET_USER_STUDIES }],
+  });
 
-    async function joinAsUser() {
-        await joinStudy();
-    
-        // if there is a redirect to the first task
-        if (study?.settings?.proceedToFirstTask) {
-          router.push({
-            pathname: `/participate/run`,
-            query: { name: study?.slug },
-          });
-        } else {
-          router.push({
-            pathname: `/dashboard/discover/studies`,
-            query: { name: study?.slug },
-          });
-        }
+  const [createGuest, { loading: guestLoading }] = useMutation(CREATE_GUEST, {
+    variables: {
+      input: {
+        generalInfo: userInfo,
+        participantIn: {
+          connect: { id: study?.id },
+        },
+      },
+    },
+  });
+
+  async function joinAsUser() {
+    await joinStudy();
+
+    if (study?.settings?.proceedToFirstTask) {
+      router.push({
+        pathname: `/participate/run`,
+        query: { name: study?.slug },
+      });
+    } else {
+      router.push({
+        pathname: `/dashboard/discover/studies`,
+        query: { name: study?.slug },
+      });
+    }
+  }
+
+  async function joinAsGuest() {
+    const guest = await createGuest();
+    const publicId = guest?.data?.createGuest?.publicId;
+
+    if (study?.settings?.proceedToFirstTask) {
+      router.push({
+        pathname: `/participate/run`,
+        query: { name: study?.slug, guest: publicId },
+      });
+    } else {
+      router.push({
+        pathname: `/studies/${study?.slug}`,
+        query: { guest: publicId },
+      });
+    }
+  }
+
+  function handleJoin() {
+    if (settings?.minorsBlocked) {
+      if (!userInfo?.age) {
+        return alert(
+          t("join.details.error.enterAge", {}, {
+            default: "Please enter your age",
+          }),
+        );
+      } else if (isUnder18(userInfo?.age)) {
+        return alert(
+          t("join.details.error.minorBlocked", {}, {
+            default:
+              "We are very sorry but only participants who are 18 or older can take part in this study at this time.",
+          }),
+        );
       }
-    
-    async function joinAsGuest() {
-        const guest = await createGuest();
-        const publicId = guest?.data?.createGuest?.publicId;
-    
-        if (study?.settings?.proceedToFirstTask) {
-          router.push({
-            pathname: `/participate/run`,
-            query: { name: study?.slug, guest: publicId },
-          });
-        } else {
-          router.push({
-            pathname: `/studies/${study?.slug}`,
-            query: { guest: publicId },
-          });
-        }
     }
-    
-    function handleJoin() {
-         // check the age and block the minor
-        if(settings?.minorsBlocked) {
-            if(!userInfo?.age) {
-                return alert(t('join.details.error.enterAge'));
-            } else if (isUnder18(userInfo?.age)) {
-                return alert(t('join.details.error.minorBlocked'));
-            }
-        }
-        if(userInfo?.guest === "true") {
-            joinAsGuest();
-        } else {
-            joinAsUser();
-        }
+    if (userInfo?.guest === "true") {
+      joinAsGuest();
+    } else {
+      joinAsUser();
     }
+  }
 
-    return (
-        <div>
-            <Button
-              variant={variant}
-              style={{ width: "100%" }}
-              onClick={handleJoin}
-              disabled={loading || guestLoading}
-            >
-              {btnName}
-            </Button>
-        </div>
-    )
+  return (
+    <Button
+      variant={variant}
+      onClick={handleJoin}
+      disabled={loading || guestLoading}
+    >
+      {btnName}
+    </Button>
+  );
 }
