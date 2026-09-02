@@ -6,11 +6,7 @@ import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
-import {
-  DragIndicatorIcon,
-  StarFilledIcon,
-  StarIcon,
-} from "../../../../DesignSystem/Icons";
+import { DragIndicatorIcon } from "../../../../DesignSystem/Icons";
 import PanelHeader from "../../../../DesignSystem/PanelHeader";
 import Popover from "../../../../DesignSystem/Popover";
 import {
@@ -42,7 +38,7 @@ const ListShell = styled.div`
 
 const RankRow = styled.div`
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto auto auto;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
@@ -60,11 +56,6 @@ const RankRow = styled.div`
     grid-template-columns: auto auto minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
     align-items: center;
-
-    .rankRowStars {
-      grid-column: 2 / 4;
-      grid-row: 2;
-    }
 
     .rankRowNote {
       grid-column: 2 / 3;
@@ -233,41 +224,6 @@ const OppText = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-`;
-
-const StarRow = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  flex-shrink: 0;
-`;
-
-const StarButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--MH-Theme-Neutrals-Medium, #d3dae0);
-
-  &.filled {
-    color: #f5b800;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.45;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
-    outline-offset: 1px;
-    border-radius: 4px;
   }
 `;
 
@@ -514,42 +470,11 @@ function RankNoteButton({
   );
 }
 
-function FiveStarRating({ value, onChange, disabled, labelPrefix }) {
-  const stars = value === "" || value == null ? 0 : Number(value);
-
-  return (
-    <StarRow className="rankRowStars" role="group" aria-label={labelPrefix}>
-      {[1, 2, 3, 4, 5].map((n) => {
-        const filled = n <= stars;
-        const starLabel = `${labelPrefix} ${n}`;
-        return (
-          <StarButton
-            key={n}
-            type="button"
-            className={clsx({ filled })}
-            disabled={disabled}
-            aria-label={starLabel}
-            aria-pressed={filled}
-            onClick={() => onChange(stars === n ? "" : n)}
-          >
-            {filled ? (
-              <StarFilledIcon width={22} height={22} aria-hidden />
-            ) : (
-              <StarIcon width={22} height={22} aria-hidden />
-            )}
-          </StarButton>
-        );
-      })}
-    </StarRow>
-  );
-}
-
 function RankRowItem({
   opportunity,
   rank,
   ranking,
   rankingEnabled,
-  onStarChange,
   onCommentChange,
   onOpenVideo,
   unavailableMessage,
@@ -562,11 +487,6 @@ function RankRowItem({
     "opportunities.studentView.rankForm.rankBadge",
     { rank },
     { default: "Rank {{rank}}" },
-  );
-  const starsLabel = t(
-    "opportunities.studentView.rankForm.starRatingLabel",
-    { title: opportunity.title || "" },
-    { default: "Star rating for {{title}}" },
   );
   const watchVideoLabel = t(
     "opportunities.studentView.rankForm.watchVideo",
@@ -596,13 +516,6 @@ function RankRowItem({
           <OpportunityPeopleMeta opportunity={opportunity} t={t} />
         </OppText>
       </OppMain>
-
-      <FiveStarRating
-        value={ranking?.starRating ?? ""}
-        onChange={onStarChange}
-        disabled={!rankingEnabled}
-        labelPrefix={starsLabel}
-      />
 
       <RankNoteButton
         value={ranking?.comment || ""}
@@ -772,7 +685,6 @@ export default function FavoriteRankList({
         ranking={ranking}
         rankingEnabled={rowEnabled}
         unavailableMessage={unavailableMessage}
-        onStarChange={(value) => updateField(oppId, "starRating", value)}
         onCommentChange={(value) => updateField(oppId, "comment", value)}
         onOpenVideo={setVideoModalOpp}
         t={t}

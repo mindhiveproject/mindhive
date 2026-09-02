@@ -1865,7 +1865,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
               <p className="helper">
                 {t("opportunities.studentView.rankForm.rankHelper", {}, {
                   default:
-                    "Drag to set your order (1 = top choice). Rate each opportunity and add a private note for your teacher.",
+                    "Drag to set your order (1 = top choice). Add a private note for your teacher if you like.",
                 })}
               </p>
               {opportunities.length === 0 && (

@@ -1,7 +1,6 @@
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
-import { StarFilledIcon, StarIcon } from "../../../../DesignSystem/Icons";
 import { studentDisplayName } from "./ClassmateRankList";
 import { buildFavoritedTeamProjectsNote } from "./classmatePickLimitCopy";
 
@@ -97,13 +96,6 @@ const Meta = styled.span`
   font: var(--MH-Type-Body-Base, 400 14px/20px "Inter", sans-serif);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-`;
-
-const StarRow = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  color: #f5b800;
 `;
 
 const NotesField = styled.label`
@@ -288,37 +280,12 @@ export default function PreferenceSubmissionReview({
           <ReviewList>
             {rankedOpportunities.map((opp) => {
               const r = rankings[opp.id] || {};
-              const stars =
-                r.starRating === "" || r.starRating == null
-                  ? 0
-                  : Number(r.starRating);
               const comment = truncate(r.comment);
               return (
                 <ReviewItem key={opp.id}>
                   <ReviewRow>
                     <RankBadge>{r.rank}</RankBadge>
                     <ItemTitle>{opp.title}</ItemTitle>
-                    {stars > 0 ? (
-                      <StarRow aria-label={`${stars} stars`}>
-                        {[1, 2, 3, 4, 5].map((n) =>
-                          n <= stars ? (
-                            <StarFilledIcon
-                              key={n}
-                              width={18}
-                              height={18}
-                              aria-hidden
-                            />
-                          ) : (
-                            <StarIcon
-                              key={n}
-                              width={18}
-                              height={18}
-                              aria-hidden
-                            />
-                          ),
-                        )}
-                      </StarRow>
-                    ) : null}
                   </ReviewRow>
                   {comment ? <Meta>{comment}</Meta> : null}
                 </ReviewItem>

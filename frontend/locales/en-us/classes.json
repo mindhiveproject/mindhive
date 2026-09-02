@@ -1801,7 +1801,7 @@
 				"privateNotePlaceholder": "Add a note for your teacher…",
 				"rankBadge": "Rank {{rank}}",
 				"rankHeading": "Rank your favorites",
-				"rankHelper": "Drag to set your order (1 = top choice). Rate each opportunity and add a private note for your teacher.",
+				"rankHelper": "Drag to set your order (1 = top choice). Add a private note for your teacher if you like.",
 				"reviewClassmates": "Preferred classmates",
 				"reviewHeading": "Review and submit",
 				"reviewNoClassmates": "None selected",
@@ -1811,7 +1811,6 @@
 				"reviewOpportunities": "Ranked opportunities",
 				"saveDraft": "Save draft",
 				"saving": "Saving…",
-				"starRatingLabel": "Star rating for {{title}}",
 				"statusDraft": "Draft saved",
 				"statusSubmitted": "Submitted",
 				"steps": {
