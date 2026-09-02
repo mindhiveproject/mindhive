@@ -18,6 +18,73 @@ function getQuestionTitle(card, status, templates) {
   return templateItem?.question || "";
 }
 
+function getQuestionSubLabels(card, status, templates) {
+  if (card?.subQuestionA || card?.subQuestionB) {
+    return {
+      subA: card.subQuestionA,
+      subB: card.subQuestionB,
+    };
+  }
+
+  const templateItem = templates[status]?.find((item) => item.name === card?.name);
+  return {
+    subA: templateItem?.subQuestionA,
+    subB: templateItem?.subQuestionB,
+  };
+}
+
+function hasReviewAnswer(card) {
+  const { answer } = card || {};
+  if (answer == null || answer === "") return false;
+
+  if (card.responseType === "dualTextarea" && typeof answer === "object") {
+    return Boolean(String(answer.subA || "").trim() || String(answer.subB || "").trim());
+  }
+
+  if (Array.isArray(answer)) {
+    return answer.length > 0;
+  }
+
+  if (typeof answer === "object") {
+    return false;
+  }
+
+  return true;
+}
+
+function ReviewAnswerContent({ card, status, templates }) {
+  const { answer, responseType } = card;
+
+  if (responseType === "dualTextarea" && answer && typeof answer === "object") {
+    const { subA: labelA, subB: labelB } = getQuestionSubLabels(card, status, templates);
+    const valueA = String(answer.subA || "").trim();
+    const valueB = String(answer.subB || "").trim();
+
+    return (
+      <>
+        {valueA ? (
+          <div className="reviewAnswerPart">
+            {labelA ? <div className="questionTitle">{labelA}</div> : null}
+            <div className="questionAnswer">{answer.subA}</div>
+          </div>
+        ) : null}
+        {valueB ? (
+          <div className="reviewAnswerPart">
+            {labelB ? <div className="questionTitle">{labelB}</div> : null}
+            <div className="questionAnswer">{answer.subB}</div>
+          </div>
+        ) : null}
+      </>
+    );
+  }
+
+  if (typeof answer === "object") {
+    return null;
+  }
+
+  return <div className="questionAnswer">{answer}</div>;
+}
+
 export default function Board({
   user,
   projectId,
@@ -186,13 +253,17 @@ export default function Board({
                     card.responseType !== "selectOne" &&
                     card.responseType !== "taskSelector"
                 )
-                .filter((card) => card.answer)
+                .filter((card) => hasReviewAnswer(card))
                 .map((card, cardNum) => (
                   <div key={cardNum} className="reviewerComment">
                     <div className="questionTitle">
                       {getQuestionTitle(card, status, templates)}
                     </div>
-                    <div className="questionAnswer">{card?.answer}</div>
+                    <ReviewAnswerContent
+                      card={card}
+                      status={status}
+                      templates={templates}
+                    />
                   </div>
                 ))}
             </div>
