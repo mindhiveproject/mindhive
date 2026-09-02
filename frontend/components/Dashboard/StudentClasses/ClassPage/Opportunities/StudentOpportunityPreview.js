@@ -302,6 +302,8 @@ export default function StudentOpportunityPreview({
   classId = null,
   /** Matching round that surfaces this opportunity to the student class. */
   roundId = null,
+  hasDraftRanking = false,
+  favoriteRefetchQueries = [],
 }) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
@@ -516,6 +518,9 @@ export default function StudentOpportunityPreview({
           <ManageFavoriteOpportunity
             user={user}
             opportunityId={opportunityId}
+            roundId={roundId}
+            hasDraftRanking={hasDraftRanking}
+            refetchQueries={favoriteRefetchQueries}
           />
           <IconButton
             variant="subtle"

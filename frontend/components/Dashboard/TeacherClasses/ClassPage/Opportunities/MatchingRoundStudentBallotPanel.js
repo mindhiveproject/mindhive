@@ -36,9 +36,11 @@ import {
   studentDisplayName,
   summarizeMutualClassmates,
 } from "../../../../../lib/connectBallotUtils";
+import { getMatchingQueue } from "../../../../../lib/connectPreferenceMatchingPreference";
 import { downloadStudentBallotCsv } from "../../../../../lib/downloadStudentBallotCsv";
 import MessageCard from "../../../../DesignSystem/MessageCard";
 import MatchingAlgorithmInfoModal from "../../../shared/MatchingAlgorithmInfoModal";
+import Modal from "../../../../DesignSystem/Modal";
 
 const STUDENT_RANKING_SUB_MODES = {
   ballot: "ballot",
@@ -164,11 +166,6 @@ const RowName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`;
-
-const RowUsername = styled.span`
-  font: var(--MH-Type-Body-Base);
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
 const RowActions = styled.div`
@@ -396,6 +393,24 @@ function StudentBallotRow({
     },
   );
 
+  const matchingQueue =
+    getMatchingQueue(row.preference?.studentMatchingPreference) ||
+    (row.preference ? row.queue : null);
+  const matchingQueueLabel =
+    matchingQueue === "team_first"
+      ? t(
+          "opportunities.matchingRound.studentRanking.choiceTeamFirst",
+          {},
+          { default: "Team first" },
+        )
+      : matchingQueue === "project_first"
+        ? t(
+            "opportunities.matchingRound.studentRanking.choiceProjectFirst",
+            {},
+            { default: "Project first" },
+          )
+        : null;
+
   const mutualLabel =
     mutualSummary.mutual + mutualSummary.oneWay + mutualSummary.received > 0
       ? t(
@@ -427,12 +442,17 @@ function StudentBallotRow({
       >
         <RowMain>
           <RowName>{displayName(row.student)}</RowName>
-          <RowUsername>{row.student.username}</RowUsername>
           <Chip
             variant="static"
             tone={STATUS_TONE[row.submissionStatus] || "neutral"}
             label={statusLabel}
           />
+          {matchingQueueLabel ? (
+            <Chip
+              variant="static"
+              label={matchingQueueLabel}
+            />
+          ) : null}
           {mutualLabel ? (
             <Chip variant="static" tone="neutral" label={mutualLabel} />
           ) : null}
@@ -814,6 +834,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   const [matchingInfoOpen, setMatchingInfoOpen] = useState(false);
   const [reopeningPreferenceId, setReopeningPreferenceId] = useState(null);
   const [reopenFeedback, setReopenFeedback] = useState(null);
+  const [reopenTarget, setReopenTarget] = useState(null);
   const [expandedQueue, setExpandedQueue] = useState({
     project_first: true,
     team_first: true,
@@ -921,7 +942,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
         preference,
         match,
         submissionStatus: getSubmissionStatus(student, preference, match),
-        queue: inferBallotQueue(studentTeamPrefs),
+        queue: inferBallotQueue(studentTeamPrefs, preference),
       };
     });
   }, [rosterStudents, prefByStudentId, matchByStudentId, teamPrefsByStudent]);
@@ -979,64 +1000,60 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     refetch,
   });
 
-  const handleReopenBallot = useCallback(
-    async (preferenceId, studentName) => {
-      if (
-        !window.confirm(
-          t(
-            "opportunities.matchingRound.studentRanking.reopenBallotConfirm",
-            { name: studentName },
-            {
-              default:
-                "This student will be able to edit and resubmit their preferences. Continue?",
-            },
-          ),
-        )
-      ) {
-        return;
-      }
+  const handleReopenBallot = useCallback((preferenceId, studentName) => {
+    setReopenFeedback(null);
+    setReopenTarget({ preferenceId, studentName });
+  }, []);
 
-      setReopenFeedback(null);
-      setReopeningPreferenceId(preferenceId);
-      try {
-        await updatePreference({
-          variables: {
-            id: preferenceId,
-            input: {
-              status: "draft",
-              submittedAt: null,
-            },
+  const closeReopenModal = useCallback(() => {
+    if (reopeningPreferenceId) return;
+    setReopenTarget(null);
+  }, [reopeningPreferenceId]);
+
+  const confirmReopenBallot = useCallback(async () => {
+    const preferenceId = reopenTarget?.preferenceId;
+    if (!preferenceId) return;
+
+    setReopenFeedback(null);
+    setReopeningPreferenceId(preferenceId);
+    try {
+      await updatePreference({
+        variables: {
+          id: preferenceId,
+          input: {
+            status: "draft",
+            submittedAt: null,
           },
-        });
-        await refetch();
-        setReopenFeedback({
-          variant: "success",
-          message: t(
-            "opportunities.matchingRound.studentRanking.reopenBallotSuccess",
-            {},
-            {
-              default:
-                "Ballot reopened. The student can edit their preferences again.",
-            },
-          ),
-        });
-      } catch {
-        setReopenFeedback({
-          variant: "warning",
-          message: t(
-            "opportunities.matchingRound.studentRanking.reopenBallotFailed",
-            {},
-            {
-              default: "Could not reopen this ballot. Please try again.",
-            },
-          ),
-        });
-      } finally {
-        setReopeningPreferenceId(null);
-      }
-    },
-    [refetch, t, updatePreference],
-  );
+        },
+      });
+      await refetch();
+      setReopenTarget(null);
+      setReopenFeedback({
+        variant: "success",
+        message: t(
+          "opportunities.matchingRound.studentRanking.reopenBallotSuccess",
+          {},
+          {
+            default:
+              "Ballot reopened. The student can edit their preferences again.",
+          },
+        ),
+      });
+    } catch {
+      setReopenFeedback({
+        variant: "warning",
+        message: t(
+          "opportunities.matchingRound.studentRanking.reopenBallotFailed",
+          {},
+          {
+            default: "Could not reopen this ballot. Please try again.",
+          },
+        ),
+      });
+    } finally {
+      setReopeningPreferenceId(null);
+    }
+  }, [refetch, reopenTarget, t, updatePreference]);
 
   const submittedCount = ballotRows.filter(
     (r) => r.submissionStatus === "submitted",
@@ -1400,6 +1417,57 @@ const MatchingRoundStudentBallotPanel = forwardRef(
         showBallotWorkflow
       />
 
+      <Modal
+        open={Boolean(reopenTarget)}
+        onClose={reopeningPreferenceId ? undefined : closeReopenModal}
+        title={t(
+          "opportunities.matchingRound.studentRanking.reopenBallotConfirmTitle",
+          { name: reopenTarget?.studentName || "" },
+          { default: "Reopen {{name}}’s ballot?" },
+        )}
+        actions={
+          <>
+            <Button
+              type="button"
+              variant="text"
+              onClick={closeReopenModal}
+              disabled={Boolean(reopeningPreferenceId)}
+            >
+              {t("cancel", {}, { default: "Cancel" })}
+            </Button>
+            <Button
+              type="button"
+              variant="filled"
+              onClick={confirmReopenBallot}
+              disabled={Boolean(reopeningPreferenceId)}
+            >
+              {reopeningPreferenceId
+                ? t(
+                    "opportunities.matchingRound.studentRanking.reopenBallotWorking",
+                    {},
+                    { default: "Reopening…" },
+                  )
+                : t(
+                    "opportunities.matchingRound.studentRanking.reopenBallotConfirmAction",
+                    {},
+                    { default: "Reopen ballot" },
+                  )}
+            </Button>
+          </>
+        }
+      >
+        <p style={{ margin: 0 }}>
+          {t(
+            "opportunities.matchingRound.studentRanking.reopenBallotConfirm",
+            { name: reopenTarget?.studentName || "" },
+            {
+              default:
+                "This student will be able to edit and resubmit their preferences.",
+            },
+          )}
+        </p>
+      </Modal>
+
       {renderQueue(
         "project_first",
         t(
@@ -1412,7 +1480,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
           {},
           {
             default:
-              "Students who did not rank classmates. Process these first.",
+              "Students who chose Project first. Process these first.",
           },
         ),
         projectFirstRows,
@@ -1430,7 +1498,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
           {},
           {
             default:
-              "Students who ranked classmates. Review mutual picks here.",
+              "Students who chose Team first. Review mutual picks here.",
           },
         ),
         teamFirstRows,

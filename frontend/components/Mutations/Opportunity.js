@@ -50,3 +50,21 @@ export const TOGGLE_FAVORITE_OPPORTUNITY = gql`
     }
   }
 `;
+
+/** Guarded favorite toggle — prompts before removing draft ranking items. */
+export const TOGGLE_FAVORITE_OPPORTUNITY_GUARDED = gql`
+  mutation TOGGLE_FAVORITE_OPPORTUNITY_GUARDED(
+    $opportunityId: ID!
+    $confirmRemoveFromDraftRanking: Boolean
+  ) {
+    toggleFavoriteOpportunity(
+      opportunityId: $opportunityId
+      confirmRemoveFromDraftRanking: $confirmRemoveFromDraftRanking
+    ) {
+      isFavorite
+      requiresConfirmation
+      draftPreferenceItemIds
+      draftPreferenceId
+    }
+  }
+`;

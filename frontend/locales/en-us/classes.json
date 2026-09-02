@@ -858,8 +858,8 @@
 				"ballotWorkflowTitle": "Using Student ballots",
 				"ballotWorkflowIntro": "After students submit ranked preferences, this panel summarizes who submitted, who is matched, and splits students into two review queues.",
 				"ballotSummary": "The header counts show submitted ballots, matched students, and how many sit in each queue (project-first vs team-first).",
-				"queueProjectFirstExplain": "Project-first queue — students who did not rank classmates. Process these first.",
-				"queueTeamFirstExplain": "Team-first queue — students who ranked classmates. Review mutual picks here.",
+				"queueProjectFirstExplain": "Project-first queue — students who chose Project first. Process these first.",
+				"queueTeamFirstExplain": "Team-first queue — students who chose Team first. Review mutual picks here.",
 				"mutualClassmatesExplain": "Mutual means both students ranked each other. One-way means only one student ranked the other. Received counts classmates who ranked this student but were not ranked back.",
 				"manualAssignExplain": "When the round uses teacher-curated matching, each unmatched student row shows an Assign to opportunity dropdown ranked by the same scoring formula the automatic algorithms use.",
 				"connectMigration": "Matching algorithm selection and Run matching currently live in Connect → Matches. Matches computed there appear on this screen. Those controls are moving into Student Ranking here.",
@@ -1349,10 +1349,12 @@
 				"modeInterest": "Interest",
 				"searchPlaceholder": "Search students…",
 				"queueProjectFirst": "Project-first queue",
-				"queueProjectFirstHint": "Students who did not rank classmates. Process these first.",
+				"queueProjectFirstHint": "Students who chose Project first. Process these first.",
 				"queueTeamFirst": "Team-first queue",
-				"queueTeamFirstHint": "Students who ranked classmates. Review mutual picks here.",
+				"queueTeamFirstHint": "Students who chose Team first. Review mutual picks here.",
 				"queueEmpty": "No students in this queue.",
+				"choiceTeamFirst": "Team first",
+				"choiceProjectFirst": "Project first",
 				"mutualSummary": "{{mutual}} mutual · {{oneWay}} one-way · {{received}} received",
 				"mutual": "Mutual",
 				"oneWay": "One-way",
@@ -1385,7 +1387,10 @@
 				"noNotes": "None",
 				"submittedAt": "Submitted {{date}}",
 				"reopenBallot": "Reopen ballot",
-				"reopenBallotConfirm": "This student will be able to edit and resubmit their preferences. Continue?",
+				"reopenBallotConfirmTitle": "Reopen {{name}}’s ballot?",
+				"reopenBallotConfirm": "This student will be able to edit and resubmit their preferences.",
+				"reopenBallotConfirmAction": "Reopen ballot",
+				"reopenBallotWorking": "Reopening…",
 				"reopenBallotSuccess": "Ballot reopened. The student can edit their preferences again.",
 				"reopenBallotFailed": "Could not reopen this ballot. Please try again.",
 				"reopenBallotDisabledMatched": "Cannot reopen a ballot after the student has been matched.",
@@ -1702,6 +1707,38 @@
 				"assessmentSaveSuccess": "Your assessment answers were saved.",
 				"assessmentValidationFailed": "Fix the highlighted fields before saving your assessment.",
 				"assessmentRequired": "Complete the Individual Core Competency Assessment before submitting.",
+				"matchingPreference": {
+					"question": "Are you interested in ranking \"Team first\" or \"Project first\"?",
+					"teamFirst": "Team first",
+					"projectFirst": "Project first",
+					"teamFirstHelper": "Classmate rankings matter more. Matching will try to keep your preferred team together.",
+					"projectFirstHelper": "Opportunity rankings matter more. Classmate picks are used only when project ranks align.",
+					"confirm": "Save choice",
+					"change": "Change",
+					"selected": "You have selected \"{{choice}}\".",
+					"required": "Choose Team first or Project first before ranking classmates or opportunities.",
+					"confirmed": {
+						"teamFirst": {
+							"classmates": {
+								"body": "To maximize your chance to be matched together, ensure that ALL team members are ranking each other in their top spots (order does not matter here).",
+								"note": "Note: The number of top spots below is based on the largest team capacity among your favorited opportunities. This count may differ for your preferred classmates, but it will not impact matching as long as your preferred team occupies those top spots (including backups)."
+							},
+							"opportunities": {
+								"body": "To successfully match as a team, all of your team members MUST rank the exact same top opportunities in the EXACT SAME ORDER.",
+								"note": "Note: We strongly encourage ranking additional backup opportunities beyond your top choices. If your team's top preferences are unavailable, having shared backup rankings ensures your team stays together instead of being manually assigned."
+							}
+						},
+						"projectFirst": {
+							"classmates": {
+								"body": "Your individual project preferences will take priority over classmate matching. You may still rank preferred classmates, but you will only be paired with them if your project rankings align."
+							},
+							"opportunities": {
+								"body": "Rank opportunities strictly in order of your individual preference. Your project choices will take priority during matching regardless of what your classmates choose.",
+								"note": "Note: We strongly encourage ranking additional backup opportunities beyond your top choices. Adding backup projects ensures you are matched to a project you like if your top preferences reach capacity."
+							}
+						}
+					}
+				},
 				"draftSaveSuccess": "Your progress was saved.",
 				"submitSuccess": "Your preferences were submitted.",
 				"saveFailed": "Could not save your progress. Please try again.",
@@ -1709,16 +1746,22 @@
 				"ratingRequired": "Pick a star rating before saving.",
 				"requiredQuestions": "Answer all required questions before submitting ({{count}} remaining).",
 				"backLink": "Back to opportunities",
+				"driftRepair": {
+					"title": "Ranking out of sync with favorites",
+					"body": "{{count}} opportunities in your draft ranking are no longer starred. Restore them as favorites or remove them from your draft ranking.",
+					"restoreFavorites": "Restore favorites",
+					"removeFromDraft": "Remove from draft ranking"
+				},
 				"classmatesAdd": "Add a classmate",
 				"classmatesAddOne": "Add {{name}}",
 				"classmatesEmpty": "Add classmates you'd like to work with. Drag to set priority (1 = first choice).",
 				"classmatesHeading": "Rank your classmates",
-				"classmatesHelper": "You'll be on a team with {{count}} other classmates. Pick the {{count}} classmates you want with you. Drag to order them. Your top {{count}} are highlighted, and those are the ones that count. To be placed together, all of you have to pick each other. Add more names below as backups.",
-				"classmatesFavoritedTeamProjectsNote": "Based on your favourited projects: {{projectList}}.",
+				"classmatesHelper": "You'll be on a team with {{count}} other classmates (based on the largest favorited team: {{title}}). Pick the {{count}} classmates you want with you. Drag to order them. Your top {{count}} are highlighted, and those are the ones that count. To be placed together, all of you have to pick each other. Add more names below as backups.",
+				"classmatesFavoritedTeamProjectsNote": "Example: {{title}} (team of {{teamSize}}) — {{picks}} top spots are highlighted. Classmates who favorited different projects may see a different number.",
 				"classmatesTeamProjectLimitItem": "{{title}} (team of {{teamSize}})",
-				"classmatesActiveZoneLabel": "Your top {{count}} picks — only these count for matching",
+				"classmatesActiveZoneLabel": "Your top {{count}} picks",
 				"classmatesOverflowLabel": "Backups",
-				"classmatesTopPicks": "Your top {{count}} picks — only these count for matching",
+				"classmatesTopPicks": "Your top {{count}} picks",
 				"classmatesTopEmpty": "Drag classmates here for your top picks.",
 				"classmatesBackups": "Backups",
 				"classmatesBackupsHelper": "Used only if your top picks don't work out.",
@@ -1758,7 +1801,7 @@
 				"privateNotePlaceholder": "Add a note for your teacher…",
 				"rankBadge": "Rank {{rank}}",
 				"rankHeading": "Rank your favorites",
-				"rankHelper": "Drag to set your order (1 = top choice). Rate each opportunity and add a private note for your teacher.",
+				"rankHelper": "Drag to set your order (1 = top choice). Add a private note for your teacher if you like.",
 				"reviewClassmates": "Preferred classmates",
 				"reviewHeading": "Review and submit",
 				"reviewNoClassmates": "None selected",
@@ -1768,7 +1811,6 @@
 				"reviewOpportunities": "Ranked opportunities",
 				"saveDraft": "Save draft",
 				"saving": "Saving…",
-				"starRatingLabel": "Star rating for {{title}}",
 				"statusDraft": "Draft saved",
 				"statusSubmitted": "Submitted",
 				"steps": {
@@ -1782,6 +1824,7 @@
 					"stepOf": "Step {{current}} of {{total}}"
 				},
 				"submit": "Submit preferences",
+				"submitDisabledHint": "Answer all required fields on every tab before submitting.",
 				"teammates": "Preferred teammates",
 				"teammatesHint": "Pick classmates you'd like to work with on this opportunity. Order matters.",
 				"teammatesSearch": "Search students",

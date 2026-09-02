@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../Queries/Opportunity";
-import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../Mutations/Opportunity";
+import GuardedFavoriteOpportunityButton from "../GuardedFavoriteOpportunityButton";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import { hydrateProposalInputs } from "../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import { formatOrganizationLabel } from "../../../../lib/organizationLabels";
@@ -19,7 +19,6 @@ import {
   isMentorTbd,
 } from "../../../../lib/opportunityPeople";
 import Chip from "../../../DesignSystem/Chip";
-import FavoriteButton from "../../../DesignSystem/FavoriteButton";
 import IconButton from "../../../DesignSystem/IconButton";
 import { ArrowOutwardIcon, CheckIcon } from "../../../DesignSystem/Icons";
 import OpportunityIntroVideoPlayer from "../OpportunityIntroVideoPlayer";
@@ -271,31 +270,11 @@ export default function ExploreDetail({ opportunityId }) {
   const opp = data?.opportunity;
   const me = data?.authenticatedItem;
 
-  const [toggleFavorite, { loading: toggling }] = useMutation(
-    TOGGLE_FAVORITE_OPPORTUNITY,
-  );
-
-  // Is this opportunity in my favorites list?
   const isFavorite = useMemo(
     () =>
       !!(me?.favoriteOpportunities || []).find((o) => o.id === opportunityId),
     [me, opportunityId],
   );
-
-  const handleToggleFavorite = async () => {
-    if (!me?.id) return;
-    await toggleFavorite({
-      variables: {
-        profileId: me.id,
-        input: {
-          favoriteOpportunities: isFavorite
-            ? { disconnect: [{ id: opportunityId }] }
-            : { connect: [{ id: opportunityId }] },
-        },
-      },
-    });
-    refetch();
-  };
 
   if (loading && !opp) {
     return (
@@ -379,16 +358,14 @@ export default function ExploreDetail({ opportunityId }) {
           </div>
           <div className="right">
             <FavoriteRow>
-              <FavoriteButton
-                active={isFavorite}
-                disabled={toggling || !me?.id}
-                addLabel={t("a11y.favorite.add", {}, {
-                  default: "Add to favorites",
-                })}
-                removeLabel={t("a11y.favorite.remove", {}, {
-                  default: "Remove from favorites",
-                })}
-                onToggle={handleToggleFavorite}
+              <GuardedFavoriteOpportunityButton
+                opportunityId={opportunityId}
+                isFavorite={isFavorite}
+                refetchQueries={[
+                  { query: EXPLORE_OPPORTUNITY_DETAIL, variables: { id: opportunityId } },
+                ]}
+                onAfterToggle={refetch}
+                disabled={!me?.id}
               />
               <span className="MH-Type-Label-Base">
                 {isFavorite

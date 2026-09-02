@@ -12,11 +12,15 @@ import {
   StarIcon,
 } from "../../../../DesignSystem/Icons";
 import { RECORD_OPPORTUNITY_PREVIEW_VISIT } from "../../../../Mutations/Log";
+import { DELETE_PREFERENCE_ITEMS } from "../../../../Mutations/ConnectPreference";
+import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
 import { CLASS_STUDENT_OPPORTUNITIES } from "../../../../Queries/ConnectRound";
+import { CURRENT_USER_QUERY } from "../../../../Queries/User";
 import {
   getDistinctProjectCategories,
   getProjectCategoryDisplay,
 } from "../../../../../lib/opportunityCategory";
+import { getBrowseDraftDriftEntries } from "../../../../../lib/opportunityFavoriteRanking";
 import {
   BrowseCardsGrid,
   BrowseSearchField,
@@ -25,6 +29,7 @@ import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import StudentOpportunityPreview from "./StudentOpportunityPreview";
 import StudentPreferenceSubmission from "./StudentPreferenceSubmission";
 import StudentRankActionCard from "./StudentRankActionCard";
+import RankingDriftRepairModal from "./RankingDriftRepairModal";
 import {
   getOpportunityMentors,
   getOpportunitySponsors,
@@ -117,6 +122,8 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
   const [filterMode, setFilterMode] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [driftRepairResolved, setDriftRepairResolved] = useState(false);
+  const [driftRepairLoading, setDriftRepairLoading] = useState(false);
 
   const sessionRef = useRef(null);
   const flushedRef = useRef(false);
@@ -135,10 +142,19 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       ? router.query.opportunity
       : null;
 
-  const { data, loading } = useQuery(CLASS_STUDENT_OPPORTUNITIES, {
-    variables: { code: classCode },
-    skip: !classCode,
-    fetchPolicy: "cache-and-network",
+  const { data, loading, refetch: refetchOpportunities } = useQuery(
+    CLASS_STUDENT_OPPORTUNITIES,
+    {
+      variables: { code: classCode },
+      skip: !classCode,
+      fetchPolicy: "cache-and-network",
+    },
+  );
+
+  const [deletePreferenceItems] = useMutation(DELETE_PREFERENCE_ITEMS);
+  const [restoreFavorites] = useMutation(TOGGLE_FAVORITE_OPPORTUNITY, {
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    awaitRefetchQueries: true,
   });
 
   const networks = data?.class?.networks || myclass?.networks || [];
@@ -218,6 +234,136 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     }
     return map;
   }, [data?.authenticatedItem?.connectPreferences]);
+
+  const draftRankedOppIds = useMemo(() => {
+    const ids = new Set();
+    const prefs = data?.authenticatedItem?.connectPreferences || [];
+    for (const pref of prefs) {
+      if (pref?.status !== "draft") continue;
+      for (const item of pref.items || []) {
+        const oppId = item?.opportunity?.id;
+        if (oppId) ids.add(oppId);
+      }
+    }
+    return ids;
+  }, [data?.authenticatedItem?.connectPreferences]);
+
+  const classFavoriteRefetchQueries = useMemo(
+    () =>
+      classCode
+        ? [{ query: CLASS_STUDENT_OPPORTUNITIES, variables: { code: classCode } }]
+        : [],
+    [classCode],
+  );
+
+  const openRoundsById = useMemo(
+    () => new Map(openRounds.map((round) => [round.id, round])),
+    [openRounds],
+  );
+
+  const roundOpportunityIdsByRoundId = useMemo(() => {
+    const map = new Map();
+    for (const network of networks) {
+      for (const round of network?.connectRounds || []) {
+        if (round?.status !== STUDENT_OPEN_ROUND_STATUS || !round?.id) continue;
+        const ids = new Set(
+          (round.opportunities || []).map((opp) => opp?.id).filter(Boolean),
+        );
+        map.set(round.id, ids);
+      }
+    }
+    return map;
+  }, [networks]);
+
+  const browseDraftDriftEntries = useMemo(
+    () =>
+      getBrowseDraftDriftEntries({
+        connectPreferences: data?.authenticatedItem?.connectPreferences,
+        favoriteOpportunities: user?.favoriteOpportunities,
+        roundOpportunityIdsByRoundId,
+        openRoundsById,
+      }),
+    [
+      data?.authenticatedItem?.connectPreferences,
+      openRoundsById,
+      roundOpportunityIdsByRoundId,
+      user?.favoriteOpportunities,
+    ],
+  );
+
+  const showBrowseDriftRepairModal =
+    browseDraftDriftEntries.length > 0 && !driftRepairResolved;
+
+  useEffect(() => {
+    setDriftRepairResolved(false);
+  }, [data?.authenticatedItem?.connectPreferences, user?.favoriteOpportunities]);
+
+  const handleRestoreBrowseDriftFavorites = useCallback(async () => {
+    if (!user?.id || !browseDraftDriftEntries.length) return;
+    setDriftRepairLoading(true);
+    try {
+      await restoreFavorites({
+        variables: {
+          profileId: user.id,
+          input: {
+            favoriteOpportunities: {
+              connect: browseDraftDriftEntries.map((entry) => ({
+                id: entry.oppId,
+              })),
+            },
+          },
+        },
+      });
+      setDriftRepairResolved(true);
+      await refetchOpportunities();
+    } catch (error) {
+      console.error("Failed to restore drift favorites from browse", error);
+    } finally {
+      setDriftRepairLoading(false);
+    }
+  }, [
+    browseDraftDriftEntries,
+    refetchOpportunities,
+    restoreFavorites,
+    user?.id,
+  ]);
+
+  const handleRemoveBrowseDriftFromDraft = useCallback(async () => {
+    if (!browseDraftDriftEntries.length) return;
+    setDriftRepairLoading(true);
+    try {
+      const itemIds = browseDraftDriftEntries
+        .map((entry) => entry.itemId)
+        .filter(Boolean);
+      if (itemIds.length) {
+        await deletePreferenceItems({
+          variables: {
+            where: itemIds.map((id) => ({ id })),
+          },
+        });
+      }
+      setDriftRepairResolved(true);
+      await refetchOpportunities();
+    } catch (error) {
+      console.error("Failed to remove drifted draft items from browse", error);
+    } finally {
+      setDriftRepairLoading(false);
+    }
+  }, [
+    browseDraftDriftEntries,
+    deletePreferenceItems,
+    refetchOpportunities,
+  ]);
+
+  const browseDriftRepairModal = (
+    <RankingDriftRepairModal
+      open={showBrowseDriftRepairModal}
+      driftCount={browseDraftDriftEntries.length}
+      onRestoreFavorites={handleRestoreBrowseDriftFavorites}
+      onRemoveFromDraft={handleRemoveBrowseDriftFromDraft}
+      loading={driftRepairLoading}
+    />
+  );
 
   const clearOpportunitiesQuery = useCallback(() => {
     if (!classCode) return;
@@ -472,13 +618,18 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
 
   if (showPreviewSubview) {
     return (
-      <StudentOpportunityPreview
-        opportunityId={requestedOpportunityId}
-        onClose={handleClosePreview}
-        user={user}
-        classId={classId}
-        roundId={opportunityRoundIds.get(requestedOpportunityId) || null}
-      />
+      <>
+        <StudentOpportunityPreview
+          opportunityId={requestedOpportunityId}
+          onClose={handleClosePreview}
+          user={user}
+          classId={classId}
+          roundId={opportunityRoundIds.get(requestedOpportunityId) || null}
+          hasDraftRanking={draftRankedOppIds.has(requestedOpportunityId)}
+          favoriteRefetchQueries={classFavoriteRefetchQueries}
+        />
+        {browseDriftRepairModal}
+      </>
     );
   }
 
@@ -724,11 +875,15 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
                 opportunity={opportunity}
                 onOpen={handleOpenPreview}
                 user={user}
+                roundId={opportunityRoundIds.get(opportunity.id) || null}
+                hasDraftRanking={draftRankedOppIds.has(opportunity.id)}
+                favoriteRefetchQueries={classFavoriteRefetchQueries}
               />
             ))}
           </BrowseCardsGrid>
         )}
       </Page>
+      {browseDriftRepairModal}
     </div>
   );
 }

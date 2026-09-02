@@ -563,7 +563,7 @@ export default function ClassmateRankList({
               { count: topCap },
               {
                 default:
-                  "Your top {{count}} picks — only these count for matching",
+                  "Your top {{count}} picks",
               },
             )}
           </SectionLabel>

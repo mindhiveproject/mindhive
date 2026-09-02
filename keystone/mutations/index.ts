@@ -43,6 +43,7 @@ import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
 import recordOpportunityPreviewVisit from "./recordOpportunityPreviewVisit";
+import toggleFavoriteOpportunity from "./toggleFavoriteOpportunity";
 import resolveFormDefinition from "./resolveFormDefinition";
 import seedOpportunityForm from "./seedOpportunityForm";
 import seedProfileForms from "./seedProfileForms";
@@ -83,6 +84,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         id: ID!
         updatedCloneCount: Int!
         errors: [String!]!
+      }
+      type ToggleFavoriteOpportunityResult {
+        isFavorite: Boolean!
+        requiresConfirmation: Boolean!
+        draftPreferenceItemIds: [ID!]!
+        draftPreferenceId: ID
       }
       type Mutation {
         sendEmail(
@@ -201,6 +208,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           openAt: DateTime!
           closeAt: DateTime!
         ): Log
+        toggleFavoriteOpportunity(
+          opportunityId: ID!
+          confirmRemoveFromDraftRanking: Boolean
+        ): ToggleFavoriteOpportunityResult!
         # One-off seeder for the global Opportunity FormDefinition.
         # Idempotent unless force=true (which deletes and recreates).
         seedOpportunityForm(force: Boolean): FormDefinition
@@ -414,6 +425,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         unfollowUser,
         markOpportunityReviewNotesRead,
         recordOpportunityPreviewVisit,
+        toggleFavoriteOpportunity,
         seedOpportunityForm,
         seedProfileForms,
         seedReviewForms,

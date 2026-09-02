@@ -195,14 +195,14 @@ export default function MatchingAlgorithmInfoContent({
             {tKey(
               t,
               "queueProjectFirstExplain",
-              "Project-first queue — students who did not rank classmates. Process these first.",
+              "Project-first queue — students who chose Project first. Process these first.",
             )}
           </BodyText>
           <BodyText>
             {tKey(
               t,
               "queueTeamFirstExplain",
-              "Team-first queue — students who ranked classmates. Review mutual picks here.",
+              "Team-first queue — students who chose Team first. Review mutual picks here.",
             )}
           </BodyText>
           <BodyText>
