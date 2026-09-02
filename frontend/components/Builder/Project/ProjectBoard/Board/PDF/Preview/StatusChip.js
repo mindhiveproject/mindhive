@@ -170,7 +170,6 @@ export default function StatusChip({
             borderRadius: "8px",
             boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
             overflow: "hidden",
-            minWidth: "200px",
             zIndex: 10000,
           }}
         >

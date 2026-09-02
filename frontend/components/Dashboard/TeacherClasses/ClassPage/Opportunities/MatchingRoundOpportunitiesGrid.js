@@ -26,6 +26,10 @@ import {
   NETWORK_OPPORTUNITIES_FOR_ROUND,
 } from "../../../../Queries/ConnectRound";
 import {
+  formatDateShort,
+  isExpired,
+} from "../../../Connect/Rounds/roundFormConfig";
+import {
   getOpportunityIntroVideoFilename,
   getOpportunityIntroVideoKind,
   hasOpportunityIntroVideo,

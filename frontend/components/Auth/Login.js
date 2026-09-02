@@ -424,8 +424,7 @@ export default function Login({
 
             <Button
               type="submit"
-              variant="filled"
-              style={{ width: "100%" }}
+              variant="primary"
               disabled={
                 loading || isClassNetworkInvalid || isTokenInviteInvalid
               }

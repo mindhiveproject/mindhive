@@ -23,11 +23,16 @@ const FILTER_TRIGGER_STYLE = {
 const DROPDOWN_GLYPH = <ArrowDropDownIcon width={22} height={22} />;
 
 export default function StudiesBoard({
+  selectedClassId,
   allUniqueClassIds,
   myClassesIds,
   allUniqueClasses,
 }) {
   const { t } = useTranslation("builder");
+  const scopedClassId = selectedClassId || null;
+  const classIdsForQuery = scopedClassId
+    ? [scopedClassId]
+    : allUniqueClassIds || [];
   const [keyword, setKeyword] = useState("");
   const [filteredStudies, setFilteredStudies] = useState([]);
   const [sortBy, setSortBy] = useState("");
@@ -49,8 +54,9 @@ export default function StudiesBoard({
 
   const { data, loading, error } = useQuery(STUDIES_COLLECTING_DATA, {
     variables: {
-      classIds: allUniqueClassIds,
+      classIds: classIdsForQuery,
     },
+    skip: !classIdsForQuery.length,
   });
 
   const studies = data?.studies || [];
@@ -101,24 +107,36 @@ export default function StudiesBoard({
   useEffect(() => {
     if (isInitialMount.current) return;
 
-    const queryParams = new URLSearchParams();
+    const queryParams = new URLSearchParams(window.location.search);
+    if (scopedClassId) {
+      queryParams.set("class", scopedClassId);
+    }
     if (filteredClasses.length > 0) {
       queryParams.set("classes", filteredClasses.join(","));
+    } else {
+      queryParams.delete("classes");
     }
     if (keyword) {
       queryParams.set("keyword", keyword);
+    } else {
+      queryParams.delete("keyword");
     }
     if (sortBy) {
       queryParams.set("sort", sortBy);
+    } else {
+      queryParams.delete("sort");
     }
 
-    const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
+    const queryString = queryParams.toString();
+    const newUrl = queryString
+      ? `${window.location.pathname}?${queryString}`
+      : window.location.pathname;
     window.history.pushState(
       { filteredClasses, keyword, sortBy },
       document.title,
       newUrl
     );
-  }, [filteredClasses, keyword, sortBy]);
+  }, [filteredClasses, keyword, sortBy, scopedClassId]);
 
   // Restore state on popstate (back/forward navigation)
   useEffect(() => {
@@ -260,19 +278,21 @@ export default function StudiesBoard({
           />
         </div>
         <div id="filterByClasses">
-          <DropdownSelect
-            multiple
-            ariaLabel={t("review.filterByClasses")}
-            placeholder={t("review.filterByClasses")}
-            value={filteredClasses}
-            options={allUniqueClasses.map((c) => ({
-              value: c.id,
-              label: c.title,
-            }))}
-            triggerStyle={FILTER_TRIGGER_STYLE}
-            icon={DROPDOWN_GLYPH}
-            onChange={(next) => setFilteredClasses(next)}
-          />
+          {!scopedClassId && allUniqueClasses?.length ? (
+            <DropdownSelect
+              multiple
+              ariaLabel={t("review.filterByClasses")}
+              placeholder={t("review.filterByClasses")}
+              value={filteredClasses}
+              options={allUniqueClasses.map((c) => ({
+                value: c.id,
+                label: c.title,
+              }))}
+              triggerStyle={FILTER_TRIGGER_STYLE}
+              icon={DROPDOWN_GLYPH}
+              onChange={(next) => setFilteredClasses(next)}
+            />
+          ) : null}
         </div>
       </div>
 

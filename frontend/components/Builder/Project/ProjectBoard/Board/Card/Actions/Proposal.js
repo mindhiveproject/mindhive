@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import {
@@ -18,16 +18,22 @@ import {
 import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
 import {
   cardIncludedInReviewStep,
+  milestoneHasReviewQuestionnaire,
   resolveMilestoneFromCard,
 } from "../../../../../../../lib/milestones";
 
 import Navigation from "./Navigation";
 import { cardTypes } from "../../Builder/Actions/ActionCard";
 
+import Button from "../../../../../../DesignSystem/Button";
+import IconButton from "../../../../../../DesignSystem/IconButton";
+import { CloseIcon } from "../../../../../../DesignSystem/Icons";
+import Modal from "../../../../../../DesignSystem/Modal";
+import FormDefinitionPreview from "../../../../../../Forms/DefinitionForm/FormDefinitionPreview";
 import TipTapEditor from "../../../../../../TipTap/Main";
 import { StyledActionPage } from "../../../../../../styles/StyledReview";
 import Feedback from "../../../../../../Dashboard/Review/Feedback/Main";
-import Status from "../Forms/Status";
+import StatusChip from "../../PDF/Preview/StatusChip";
 
 export default function Proposal({
   query,
@@ -68,8 +74,23 @@ export default function Proposal({
       ) || [];
 
   const [editedCards, setEditedCards] = useState({});
-  const [saveStates, setSaveStates] = useState({});
   const [saveErrors, setSaveErrors] = useState({});
+  const [formPreviewOpen, setFormPreviewOpen] = useState(false);
+  const pendingEntryByCardRef = useRef({});
+  const saveChainByCardRef = useRef({});
+  const handleSaveCardRef = useRef(async () => {});
+  const inFlightSavesRef = useRef(new Set());
+
+  const collaborationUser = useMemo(
+    () => ({
+      id: user?.id || null,
+      name:
+        user?.username ||
+        [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
+        "Editor",
+    }),
+    [user?.firstName, user?.id, user?.lastName, user?.username]
+  );
 
   const statusesDict = {
     Completed: "completed",
@@ -109,7 +130,63 @@ export default function Proposal({
   const [createLog] = useMutation(CREATE_LOG);
   const [updateCardContent] = useMutation(UPDATE_CARD_EDIT);
 
+  const flushPendingCardSaves = async () => {
+    cards.forEach((card) => {
+      if (card?.id && pendingEntryByCardRef.current[card.id]) {
+        ensureCardSaveChain(card);
+      }
+    });
+    await Promise.all(
+      Object.values(saveChainByCardRef.current).filter(Boolean)
+    );
+    if (inFlightSavesRef.current.size > 0) {
+      await Promise.all(Array.from(inFlightSavesRef.current));
+    }
+  };
+
+  const ensureCardSaveChain = (card) => {
+    if (!card?.id) return null;
+    const cardId = card.id;
+    if (saveChainByCardRef.current[cardId]) {
+      return saveChainByCardRef.current[cardId];
+    }
+
+    const chain = (async () => {
+      while (pendingEntryByCardRef.current[cardId]) {
+        const entry = pendingEntryByCardRef.current[cardId];
+        delete pendingEntryByCardRef.current[cardId];
+        if (!entry?.dirty) continue;
+        await handleSaveCardRef.current(card, entry);
+      }
+    })().finally(() => {
+      saveChainByCardRef.current[cardId] = null;
+    });
+
+    saveChainByCardRef.current[cardId] = chain;
+    return chain;
+  };
+
+  const queueCardContentSave = (card, entry) => {
+    if (!card?.id || !entry?.dirty) return;
+    pendingEntryByCardRef.current[card.id] = entry;
+    ensureCardSaveChain(card);
+  };
+
   const submitProposal = async () => {
+    await flushPendingCardSaves();
+
+    const snapshotCards = cards.map((card) => {
+      const entry = editedCards[card?.id];
+      if (!entry) return card;
+      return {
+        ...card,
+        content: entry.content ?? card.content,
+        settings: entry.status
+          ? { ...(card.settings || {}), status: entry.status }
+          : card.settings,
+      };
+    });
+
     const updateInput = buildDualWriteUpdate(
       milestone,
       {
@@ -140,7 +217,7 @@ export default function Proposal({
             connect: { id: proposal?.usedInClass?.id },
           },
           content: {
-            proposalSnapshot: cards,
+            proposalSnapshot: snapshotCards,
           },
         },
       },
@@ -263,6 +340,8 @@ export default function Proposal({
   const handleCardContentChange = (card, newContent) => {
     if (!card?.id) return;
     const normalizedContent = newContent || "";
+    let nextEntry = null;
+
     setEditedCards((prev) => {
       const defaultContent = card?.content || "";
       const defaultStatus = card?.settings?.status || "Not started";
@@ -293,25 +372,24 @@ export default function Proposal({
         normalizedContent !== contentBaseline ||
         currentStatus !== statusBaseline;
 
+      nextEntry = {
+        ...currentEntry,
+        content: normalizedContent,
+        contentBaseline,
+        status: currentStatus,
+        statusBaseline,
+        dirty: isDirty,
+      };
+
       return {
         ...prev,
-        [card.id]: {
-          ...currentEntry,
-          content: normalizedContent,
-          contentBaseline,
-          status: currentStatus,
-          statusBaseline,
-          dirty: isDirty,
-        },
+        [card.id]: nextEntry,
       };
     });
 
-    setSaveStates((prev) => {
-      if (prev[card.id] && prev[card.id] !== "saving") {
-        return { ...prev, [card.id]: "idle" };
-      }
-      return prev;
-    });
+    if (nextEntry?.dirty) {
+      queueCardContentSave(card, nextEntry);
+    }
 
     setSaveErrors((prev) => {
       if (!prev[card.id]) return prev;
@@ -372,13 +450,6 @@ export default function Proposal({
         ...prev,
         [card.id]: nextEntry,
       };
-    });
-
-    setSaveStates((prev) => {
-      if (prev[card.id] && prev[card.id] !== "saving") {
-        return { ...prev, [card.id]: "idle" };
-      }
-      return prev;
     });
 
     setSaveErrors((prev) => {
@@ -447,65 +518,86 @@ export default function Proposal({
       return;
     }
 
-    setSaveStates((prev) => ({ ...prev, [card.id]: "saving" }));
+    const isContentOnlySave = shouldSaveContent && !shouldSaveStatus;
+
     setSaveErrors((prev) => {
       if (!prev[card.id]) return prev;
       const { [card.id]: _discard, ...rest } = prev;
       return rest;
     });
 
-    try {
-      await updateCardContent({
-        variables: {
-          id: card.id,
-          input,
-        },
-        refetchQueries: [
-          {
-            query: PROPOSAL_QUERY,
-            variables: { id: proposal?.id },
+    const savePromise = (async () => {
+      try {
+        await updateCardContent({
+          variables: {
+            id: card.id,
+            input,
           },
-        ],
-        awaitRefetchQueries: true,
-      });
-
-      setEditedCards((prev) => ({
-        ...prev,
-        [card.id]: {
-          content: contentToSave,
-          contentBaseline: contentToSave,
-          status: statusToSave,
-          statusBaseline: statusToSave,
-          dirty: false,
-        },
-      }));
-
-      setSaveStates((prev) => ({ ...prev, [card.id]: "success" }));
-
-      setTimeout(() => {
-        setSaveStates((prev) => {
-          if (prev[card.id] !== "success") {
-            return prev;
-          }
-          const { [card.id]: _discard, ...rest } = prev;
-          return rest;
+          ...(isContentOnlySave
+            ? {}
+            : {
+                refetchQueries: [
+                  {
+                    query: PROPOSAL_QUERY,
+                    variables: { id: proposal?.id },
+                  },
+                ],
+                awaitRefetchQueries: true,
+              }),
         });
-      }, 2000);
-    } catch (error) {
-      console.error("Failed to save proposal card content", error);
-      const fallbackMessage = t(
-        "proposalAction.saveError",
-        "Unable to save changes. Please try again."
-      );
-      setSaveErrors((prev) => ({
-        ...prev,
-        [card.id]: error?.message || fallbackMessage,
-      }));
-      setSaveStates((prev) => ({ ...prev, [card.id]: "error" }));
+
+        setEditedCards((prev) => {
+          const current = prev[card.id] || {};
+          const nextContentBaseline =
+            current.content === contentToSave
+              ? contentToSave
+              : current.contentBaseline;
+          const nextStatusBaseline =
+            current.status === statusToSave
+              ? statusToSave
+              : current.statusBaseline;
+          const resolvedContent = current.content ?? contentToSave;
+          const resolvedStatus = current.status ?? statusToSave;
+
+          return {
+            ...prev,
+            [card.id]: {
+              ...current,
+              content: resolvedContent,
+              status: resolvedStatus,
+              contentBaseline: nextContentBaseline,
+              statusBaseline: nextStatusBaseline,
+              dirty:
+                resolvedContent !== nextContentBaseline ||
+                resolvedStatus !== nextStatusBaseline,
+            },
+          };
+        });
+      } catch (error) {
+        console.error("Failed to save proposal card content", error);
+        const fallbackMessage = t(
+          "proposalAction.saveError",
+          "Unable to save changes. Please try again."
+        );
+        setSaveErrors((prev) => ({
+          ...prev,
+          [card.id]: error?.message || fallbackMessage,
+        }));
+      }
+    })();
+
+    inFlightSavesRef.current.add(savePromise);
+    try {
+      await savePromise;
+    } finally {
+      inFlightSavesRef.current.delete(savePromise);
     }
   };
 
+  handleSaveCardRef.current = handleSaveCard;
+
   const canEditCards = !isProposalSubmitted;
+  const hasReviewQuestionnaire = milestoneHasReviewQuestionnaire(milestone);
 
   return (
     <>
@@ -571,20 +663,19 @@ export default function Proposal({
                       <div
                         className="cardStatusDropdown"
                         style={{
-                          minWidth: "200px",
                           display: "inline-flex",
                           alignItems: "center",
                         }}
                       >
-                        <Status
-                          settings={{
-                            status:
-                              editedCards[card?.id]?.status ??
-                              card?.settings?.status,
-                          }}
-                          onSettingsChange={(_, value) =>
+                        <StatusChip
+                          value={
+                            editedCards[card?.id]?.status ??
+                            card?.settings?.status
+                          }
+                          onStatusChange={(value) =>
                             handleStatusChange(card, value)
                           }
+                          canEdit
                         />
                       </div>
                     ) : (
@@ -611,6 +702,15 @@ export default function Proposal({
                         ? editedCards[card.id].content
                         : card?.content || ""
                     }
+                    collaboration={
+                      card?.id
+                        ? {
+                            documentName: `proposalCard:${card.id}`,
+                            field: "content",
+                          }
+                        : null
+                    }
+                    collaborationUser={collaborationUser}
                     onUpdate={(newContent) =>
                       handleCardContentChange(card, newContent)
                     }
@@ -623,42 +723,6 @@ export default function Proposal({
                       createdWith: "upload",
                     }}
                     mediaDisplayedInProposalCardId={card?.id ?? null}
-                    specialButton={
-                      canEditCards
-                        ? {
-                            label:
-                              saveStates[card?.id] === "success"
-                                ? t("proposalAction.saved", "Saved")
-                                : saveStates[card?.id] === "error"
-                                ? t("proposalAction.retrySave", "Retry save")
-                                : t(
-                                    "proposalAction.saveChangesButton",
-                                    "Save changes"
-                                  ),
-                            icon:
-                              saveStates[card?.id] === "success"
-                                ? "check"
-                                : undefined,
-                            onClick: () => handleSaveCard(card),
-                            disabled:
-                              !(card?.id && editedCards[card.id]?.dirty) ||
-                              saveStates[card?.id] === "saving",
-                            loading: saveStates[card?.id] === "saving",
-                            color:
-                              saveStates[card?.id] === "success"
-                                ? "#1C8F36"
-                                : saveStates[card?.id] === "error"
-                                ? "#B21E1E"
-                                : "#274E5B",
-                            colorBackground:
-                              saveStates[card?.id] === "success"
-                                ? "#E8F7EC"
-                                : saveStates[card?.id] === "error"
-                                ? "#FDEAEA"
-                                : "#f0f5f5",
-                          }
-                        : null
-                    }
                   />
                   {canEditCards && saveErrors[card?.id] && (
                     <div
@@ -716,6 +780,23 @@ export default function Proposal({
                   </ul>
                 </div>
 
+                {/* {hasReviewQuestionnaire ? (
+                  <Button
+                    type="button"
+                    variant="filled"
+                    onClick={() => setFormPreviewOpen(true)}
+                  >
+                    {t(
+                      "proposalAction.viewAttachedFeedbackForm",
+                      {},
+                      {
+                        default:
+                          "View feedback form attached to this milestone.",
+                      }
+                    )}
+                  </Button>
+                ) : null} */}
+
                 <div className="subtitle MH-Type-Body-Base">
                   {t("proposalAction.completeAllBeforeSubmit", "Please make sure all cards listed below are marked as “completed” before you submit.")}
                 </div>
@@ -754,6 +835,51 @@ export default function Proposal({
           </div>
         </div>
       </StyledActionPage>
+
+      <Modal
+        open={formPreviewOpen}
+        onClose={() => setFormPreviewOpen(false)}
+        size="large"
+        title={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
+              width: "100%",
+            }}
+          >
+            <span>
+              {t(
+                "proposalAction.feedbackFormModalTitle",
+                {},
+                { default: "Feedback form attached to this milestone" }
+              )}
+            </span>
+            <IconButton
+              type="button"
+              variant="subtle"
+              icon={<CloseIcon />}
+              ariaLabel={t(
+                "proposalAction.feedbackFormModalClose",
+                {},
+                { default: "Close" }
+              )}
+              onClick={() => setFormPreviewOpen(false)}
+            />
+          </div>
+        }
+      >
+        {formPreviewOpen ? (
+          <FormDefinitionPreview
+            board={proposal}
+            milestone={milestone}
+            proposalBoardId={proposal?.id}
+            maxHeight="none"
+          />
+        ) : null}
+      </Modal>
     </>
   );
 }
