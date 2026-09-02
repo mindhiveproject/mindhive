@@ -129,7 +129,53 @@ function getUserColor(userId) {
   return CURSOR_COLORS[Math.abs(hash) % CURSOR_COLORS.length];
 }
 
-export default function TipTapEditor({
+export default function TipTapEditor(props) {
+  const collabDocumentName = props.collaboration?.documentName || null;
+  const collabField = props.collaboration?.field || null;
+  const [provider, setProvider] = useState(null);
+  const [collabSynced, setCollabSynced] = useState(false);
+
+  // Connect first; only bind Collaboration after the document has synced.
+  // If the collab server is down, we keep a normal HTML editor so Save and
+  // reload still work from the HTML columns.
+  useEffect(() => {
+    if (!collabDocumentName || !collabField) {
+      setProvider(null);
+      setCollabSynced(false);
+      return undefined;
+    }
+    const p = new HocuspocusProvider({
+      url: getCollaborationUrl(),
+      name: collabDocumentName,
+      // Auth travels with the session cookie on the WS upgrade — no token needed.
+      token: "",
+    });
+    setProvider(p);
+    const markSynced = () => setCollabSynced(true);
+    if (p.synced) markSynced();
+    p.on("synced", markSynced);
+    return () => {
+      p.off("synced", markSynced);
+      p.destroy();
+      setProvider(null);
+      setCollabSynced(false);
+    };
+  }, [collabDocumentName, collabField]);
+
+  const collabReady = !!(provider && collabSynced);
+
+  return (
+    <TipTapEditorInner
+      key={collabReady ? "collab" : "html"}
+      {...props}
+      provider={collabReady ? provider : null}
+      collabDocumentName={collabReady ? collabDocumentName : null}
+      collabField={collabReady ? collabField : null}
+    />
+  );
+}
+
+function TipTapEditorInner({
   content,
   onUpdate,
   onBlur: onBlurCallback,
@@ -146,60 +192,39 @@ export default function TipTapEditor({
   emptyInvite = null,
   floatingToolbarTop = null,
   floatingToolbarAutoOffset = false,
-  /**
-   * Enables real-time collaborative editing for this editor instance.
-   * Shape: { documentName: string, field: string }
-   *   - documentName: the shared Yjs doc, e.g. `proposalCard:<id>`
-   *   - field: the named Yjs fragment for this editor, e.g. "description"
-   * When set, Yjs owns the content (the `content` prop is ignored and not
-   * hydrated) and the Hocuspocus server mirrors it back to the HTML field.
-   */
-  collaboration = null,
-  /** Identity for the remote cursor label: { id, name }. */
   collaborationUser = null,
+  provider = null,
+  collabDocumentName = null,
+  collabField = null,
 }) {
   const { t } = useTranslation("builder");
   const apolloClient = useApolloClient();
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [docEmpty, setDocEmpty] = useState(true);
   const [mediaLibraryModalOpen, setMediaLibraryModalOpen] = useState(false);
   const [computedFloatingToolbarTop, setComputedFloatingToolbarTop] = useState(null);
   const editorRef = useRef(null);
   const editorHostRef = useRef(null);
+  const onUpdateRef = useRef(onUpdate);
+  const onBlurCallbackRef = useRef(onBlurCallback);
+  onUpdateRef.current = onUpdate;
+  onBlurCallbackRef.current = onBlurCallback;
+  // Keep the original HTML for first-load seeding even if a parent briefly
+  // passes an empty `content` after a stale onUpdate.
+  const contentSeedRef = useRef(content);
+  if (content) {
+    contentSeedRef.current = content;
+  }
 
-  // ── Collaboration provider lifecycle ────────────────────────────────────────
-  // One Hocuspocus provider per collaborative editor instance. Multiple editors
-  // on the same card share the server-side Yjs doc (same documentName) but bind
-  // different named fragments via `field`, and each gets its own awareness so
-  // remote cursors don't collide across the card's editors.
-  const collabDocumentName = collaboration?.documentName || null;
-  const collabField = collaboration?.field || null;
-  const [provider, setProvider] = useState(null);
   // Guards one-time seeding of an empty shared document from the initial HTML.
   const collabSeededRef = useRef(false);
   useEffect(() => {
     collabSeededRef.current = false;
   }, [collabDocumentName, collabField]);
 
-  useEffect(() => {
-    if (!collabDocumentName || !collabField) {
-      setProvider(null);
-      return undefined;
-    }
-    const p = new HocuspocusProvider({
-      url: getCollaborationUrl(),
-      name: collabDocumentName,
-      // Auth travels with the session cookie on the WS upgrade — no token needed.
-      token: "",
-    });
-    setProvider(p);
-    return () => {
-      p.destroy();
-      setProvider(null);
-    };
-  }, [collabDocumentName, collabField]);
-
+  // One Hocuspocus provider per collaborative editor instance (created by the
+  // wrapper). Multiple editors on the same card share the server-side Yjs doc
+  // (same documentName) but bind different named fragments via `field`.
   const collabEnabled = !!(provider && collabField);
 
   const pasteImageContextRef = useRef({});
@@ -296,13 +321,15 @@ export default function TipTapEditor({
     [collabEnabled, provider, collabField, collabUserName, collabUserColor],
   );
 
+  const emitHtmlToParent = (html) => {
+    onUpdateRef.current?.(html);
+  };
+
   const editor = useEditor({
     extensions,
     content: "",
     onUpdate: ({ editor }) => {
-      if (hasUserInteracted && onUpdate) {
-        onUpdate(editor.getHTML());
-      }
+      emitHtmlToParent(editor.getHTML());
     },
     editable: isEditable,
     immediatelyRender: false,
@@ -313,6 +340,9 @@ export default function TipTapEditor({
   }, [extensions]);
 
   // Expose getContent so parent can read latest HTML before submit (e.g. Mark as complete)
+  if (getContentRef) {
+    getContentRef.current = editor ? () => editor.getHTML() : getContentRef.current;
+  }
   useEffect(() => {
     if (!getContentRef || !editor) return;
     getContentRef.current = () => editor.getHTML();
@@ -325,12 +355,12 @@ export default function TipTapEditor({
   useEffect(() => {
     if (!editor) return;
     const handleBlur = () => {
-      if (onUpdate) onUpdate(editor.getHTML());
-      onBlurCallback?.();
+      emitHtmlToParent(editor.getHTML());
+      onBlurCallbackRef.current?.();
     };
     editor.on("blur", handleBlur);
     return () => editor.off("blur", handleBlur);
-  }, [editor, onUpdate, onBlurCallback]);
+  }, [editor]);
 
   // Set content when editor + content are ready.
   // In collaborative mode Yjs owns the document — never hydrate from the `content`
@@ -363,11 +393,15 @@ export default function TipTapEditor({
       if (!provider.synced) return; // wait for the initial sync
       if (!editor.isEmpty) {
         // yjsState or a peer already provided content — nothing to seed.
+        // Still push HTML to the parent so Save writes the live document,
+        // not an empty ref from before sync.
         collabSeededRef.current = true;
+        emitHtmlToParent(editor.getHTML());
         return;
       }
-      if (!content) return; // initial HTML not available yet; retry on change
-      editor.commands.setContent(content, { emitUpdate: true });
+      const seedHtml = contentSeedRef.current;
+      if (!seedHtml) return; // initial HTML not available yet; retry on change
+      editor.commands.setContent(seedHtml, { emitUpdate: true });
       collabSeededRef.current = true;
     };
 
@@ -391,24 +425,6 @@ export default function TipTapEditor({
       editor.off("transaction", sync);
     };
   }, [editor, emptyInvite]);
-
-  // Set "user has interacted" flag
-  useEffect(() => {
-    if (!editor) return;
-
-    const handleTransaction = () => {
-      if (!hasUserInteracted) {
-        setHasUserInteracted(true);
-      }
-    };
-    
-    editor.on('transaction', handleTransaction);
-    
-    return () => {
-      editor.off('transaction', handleTransaction);
-    };
-    
-  }, [editor, hasUserInteracted]);
 
 
   const Toolbar = () => {

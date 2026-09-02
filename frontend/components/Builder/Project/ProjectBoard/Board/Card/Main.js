@@ -114,6 +114,9 @@ export default function ProposalCard({
   const revisedContent = useRef(
     proposalCard?.revisedContent || proposalCard?.content,
   );
+  const contentGetHtmlRef = useRef(null);
+  const revisedGetHtmlRef = useRef(null);
+  const commentGetHtmlRef = useRef(null);
 
   // Collaborative editing: the ProposalCard-backed editors (content,
   // revisedContent, comment) share one Yjs doc per card; each binds its own
@@ -294,17 +297,39 @@ export default function ProposalCard({
 
       // content/revisedContent/comment are edited collaboratively (Yjs is the
       // source of truth on reload), but the server stays DOM-free and does not
-      // mirror them to these HTML columns. So the client writes the current
-      // editor HTML here to keep the columns up to date for the read-only /
-      // export / propagation flows. This does not cause the old reload
-      // divergence: onLoadDocument always restores the editor from yjsState, not
-      // from these columns.
+      // mirror them to these HTML columns. Read live HTML from the editors so
+      // Save cannot persist an empty/stale ref from before Yjs synced.
+      const isEmptyHtml = (html) => {
+        if (!html) return true;
+        return (
+          String(html)
+            .replace(/<p>(\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, "")
+            .replace(/\s/g, "") === ""
+        );
+      };
+      const readLiveHtml = (getHtmlRef, fallback) => {
+        const live = getHtmlRef.current?.();
+        const fallbackHtml = fallback || "";
+        if (typeof live !== "string") return fallbackHtml;
+        if (isEmptyHtml(live) && !isEmptyHtml(fallbackHtml)) return fallbackHtml;
+        return live;
+      };
+      const liveContent = readLiveHtml(contentGetHtmlRef, content?.current);
+      const liveRevisedContent = readLiveHtml(
+        revisedGetHtmlRef,
+        revisedContent?.current,
+      );
+      const liveComment = readLiveHtml(commentGetHtmlRef, inputs?.comment);
+      content.current = liveContent;
+      revisedContent.current = liveRevisedContent;
+
       await updateCard({
         variables: {
           ...inputs,
           internalContent: internalContent?.current,
-          content: content?.current,
-          revisedContent: revisedContent?.current,
+          content: liveContent,
+          revisedContent: liveRevisedContent,
+          comment: liveComment,
           settings: mergedSettings,
           assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
           resources: inputs?.resources?.map((resource) => ({
@@ -1388,6 +1413,7 @@ export default function ProposalCard({
                             : null
                         }
                         collaborationUser={collaborationUser}
+                        getContentRef={contentGetHtmlRef}
                         onUpdate={(newContent) =>
                           handleContentChange({
                             contentType: "content",
@@ -1428,6 +1454,7 @@ export default function ProposalCard({
                             : null
                         }
                         collaborationUser={collaborationUser}
+                        getContentRef={revisedGetHtmlRef}
                         onUpdate={(newContent) =>
                           handleContentChange({
                             contentType: "revisedContent",
@@ -1514,6 +1541,7 @@ export default function ProposalCard({
                       : null
                   }
                   collaborationUser={collaborationUser}
+                  getContentRef={commentGetHtmlRef}
                   onUpdate={(newContent) => {
                     if (!hasContentChanged) {
                       setHasContentChanged(true);
