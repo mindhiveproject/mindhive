@@ -129,6 +129,7 @@ export const TEACHER_STUDENT_BALLOT_VIEW = gql`
         notes
         submittedAt
         assessmentData
+        studentMatchingPreference
         submitter {
           id
           username

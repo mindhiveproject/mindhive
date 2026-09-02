@@ -1,3 +1,5 @@
+import { getMatchingQueue } from "./connectPreferenceMatchingPreference";
+
 function rankBonus(rank, totalOpps) {
   if (rank == null) return 0;
   return Math.max(0, totalOpps - rank + 1);
@@ -113,7 +115,9 @@ export function filterActiveTeamPreferences(teamPreferences, opportunities) {
   return filtered;
 }
 
-export function inferBallotQueue(teamPrefsForStudent) {
+export function inferBallotQueue(teamPrefsForStudent, preference) {
+  const explicit = getMatchingQueue(preference?.studentMatchingPreference);
+  if (explicit) return explicit;
   return (teamPrefsForStudent || []).length > 0 ? "team_first" : "project_first";
 }
 

@@ -60,6 +60,9 @@ export const ConnectPreference = list({
     // [{ formDefinitionId, answer, savedAt? }] — student competency assessment.
     assessmentData: json(),
 
+    // { queue: "team_first" | "project_first", chosenAt } — student matching mode.
+    studentMatchingPreference: json(),
+
     items: relationship({
       ref: "ConnectPreferenceItem.preference",
       many: true,

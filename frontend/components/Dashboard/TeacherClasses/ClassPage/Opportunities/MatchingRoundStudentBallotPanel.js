@@ -36,6 +36,7 @@ import {
   studentDisplayName,
   summarizeMutualClassmates,
 } from "../../../../../lib/connectBallotUtils";
+import { getMatchingQueue } from "../../../../../lib/connectPreferenceMatchingPreference";
 import { downloadStudentBallotCsv } from "../../../../../lib/downloadStudentBallotCsv";
 import MessageCard from "../../../../DesignSystem/MessageCard";
 import MatchingAlgorithmInfoModal from "../../../shared/MatchingAlgorithmInfoModal";
@@ -164,11 +165,6 @@ const RowName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`;
-
-const RowUsername = styled.span`
-  font: var(--MH-Type-Body-Base);
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
 const RowActions = styled.div`
@@ -396,6 +392,24 @@ function StudentBallotRow({
     },
   );
 
+  const matchingQueue =
+    getMatchingQueue(row.preference?.studentMatchingPreference) ||
+    (row.preference ? row.queue : null);
+  const matchingQueueLabel =
+    matchingQueue === "team_first"
+      ? t(
+          "opportunities.matchingRound.studentRanking.choiceTeamFirst",
+          {},
+          { default: "Team first" },
+        )
+      : matchingQueue === "project_first"
+        ? t(
+            "opportunities.matchingRound.studentRanking.choiceProjectFirst",
+            {},
+            { default: "Project first" },
+          )
+        : null;
+
   const mutualLabel =
     mutualSummary.mutual + mutualSummary.oneWay + mutualSummary.received > 0
       ? t(
@@ -427,12 +441,17 @@ function StudentBallotRow({
       >
         <RowMain>
           <RowName>{displayName(row.student)}</RowName>
-          <RowUsername>{row.student.username}</RowUsername>
           <Chip
             variant="static"
             tone={STATUS_TONE[row.submissionStatus] || "neutral"}
             label={statusLabel}
           />
+          {matchingQueueLabel ? (
+            <Chip
+              variant="static"
+              label={matchingQueueLabel}
+            />
+          ) : null}
           {mutualLabel ? (
             <Chip variant="static" tone="neutral" label={mutualLabel} />
           ) : null}
@@ -921,7 +940,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
         preference,
         match,
         submissionStatus: getSubmissionStatus(student, preference, match),
-        queue: inferBallotQueue(studentTeamPrefs),
+        queue: inferBallotQueue(studentTeamPrefs, preference),
       };
     });
   }, [rosterStudents, prefByStudentId, matchByStudentId, teamPrefsByStudent]);
@@ -1412,7 +1431,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
           {},
           {
             default:
-              "Students who did not rank classmates. Process these first.",
+              "Students who chose Project first. Process these first.",
           },
         ),
         projectFirstRows,
@@ -1430,7 +1449,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
           {},
           {
             default:
-              "Students who ranked classmates. Review mutual picks here.",
+              "Students who chose Team first. Review mutual picks here.",
           },
         ),
         teamFirstRows,

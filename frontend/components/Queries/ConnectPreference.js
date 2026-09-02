@@ -141,6 +141,7 @@ export const GET_PARTICIPATE_VIEW = gql`
           notes
           submittedAt
           assessmentData
+          studentMatchingPreference
           items {
             id
             opportunity {

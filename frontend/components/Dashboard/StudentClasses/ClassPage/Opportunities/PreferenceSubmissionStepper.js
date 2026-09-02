@@ -20,6 +20,7 @@ const WizardContent = styled.div`
   flex-direction: column;
   gap: 16px;
   min-width: 0;
+  padding-bottom: 32px;
 `;
 
 export function buildPreferenceStepKeys(includeAssessment) {
