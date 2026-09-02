@@ -1746,6 +1746,12 @@
 				"ratingRequired": "Pick a star rating before saving.",
 				"requiredQuestions": "Answer all required questions before submitting ({{count}} remaining).",
 				"backLink": "Back to opportunities",
+				"driftRepair": {
+					"title": "Ranking out of sync with favorites",
+					"body": "{{count}} opportunities in your draft ranking are no longer starred. Restore them as favorites or remove them from your draft ranking.",
+					"restoreFavorites": "Restore favorites",
+					"removeFromDraft": "Remove from draft ranking"
+				},
 				"classmatesAdd": "Add a classmate",
 				"classmatesAddOne": "Add {{name}}",
 				"classmatesEmpty": "Add classmates you'd like to work with. Drag to set priority (1 = first choice).",

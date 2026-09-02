@@ -666,6 +666,12 @@ export default function FavoriteRankList({
     onRankingsChange((prev) => {
       const next = { ...prev };
       let changed = false;
+      Object.keys(next).forEach((id) => {
+        if (!order.includes(id)) {
+          delete next[id];
+          changed = true;
+        }
+      });
       order.forEach((id, idx) => {
         const expectedRank = idx + 1;
         if (next[id]?.rank !== expectedRank) {

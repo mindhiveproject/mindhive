@@ -1,50 +1,38 @@
-import useTranslation from "next-translate/useTranslation";
-import { useMutation } from "@apollo/client";
-
-import FavoriteButton from "../../DesignSystem/FavoriteButton";
-import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../Mutations/Opportunity";
-import { CURRENT_USER_QUERY } from "../../Queries/User";
+import { GET_PARTICIPATE_VIEW } from "../../Queries/ConnectPreference";
+import GuardedFavoriteOpportunityButton from "./GuardedFavoriteOpportunityButton";
 
 /**
- * Star toggle wired to Profile.favoriteOpportunities. Same DS FavoriteButton as
- * every other favourite star on the platform.
+ * Star toggle wired to Profile.favoriteOpportunities with draft-ranking guard.
  */
-export default function ManageFavoriteOpportunity({ user, opportunityId }) {
-  const { t } = useTranslation("connect");
+export default function ManageFavoriteOpportunity({
+  user,
+  opportunityId,
+  roundId = null,
+  hasDraftRanking = false,
+  refetchQueries: extraRefetchQueries = [],
+}) {
   const isFavorite = user?.favoriteOpportunities
     ?.map((opportunity) => opportunity?.id)
     .includes(opportunityId);
 
-  const [toggleFavorite] = useMutation(TOGGLE_FAVORITE_OPPORTUNITY, {
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
-  });
+  const refetchQueries = [
+    ...(roundId
+      ? [{ query: GET_PARTICIPATE_VIEW, variables: { roundId } }]
+      : []),
+    ...extraRefetchQueries,
+  ];
 
   if (!user?.id || !opportunityId) {
     return null;
   }
 
   return (
-    <FavoriteButton
-      active={!!isFavorite}
+    <GuardedFavoriteOpportunityButton
+      opportunityId={opportunityId}
+      isFavorite={!!isFavorite}
+      hasDraftRanking={hasDraftRanking}
+      refetchQueries={refetchQueries}
       data-card-action
-      addLabel={t("a11y.favorite.add", {}, { default: "Add to favorites" })}
-      removeLabel={t(
-        "a11y.favorite.remove",
-        {},
-        { default: "Remove from favorites" }
-      )}
-      onToggle={async () => {
-        await toggleFavorite({
-          variables: {
-            profileId: user.id,
-            input: {
-              favoriteOpportunities: isFavorite
-                ? { disconnect: [{ id: opportunityId }] }
-                : { connect: [{ id: opportunityId }] },
-            },
-          },
-        });
-      }}
     />
   );
 }

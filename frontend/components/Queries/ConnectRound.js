@@ -364,6 +364,12 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
           round {
             id
           }
+          items {
+            id
+            opportunity {
+              id
+            }
+          }
         }
       }
     }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
@@ -8,11 +8,10 @@ import {
   EXPLORE_CONTEXT,
   EXPLORE_OPPORTUNITIES_PAGED,
 } from "../../../Queries/Opportunity";
-import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import DropdownSelect from "../../../DesignSystem/DropdownSelect";
-import FavoriteButton from "../../../DesignSystem/FavoriteButton";
+import GuardedFavoriteOpportunityButton from "../GuardedFavoriteOpportunityButton";
 import { GroupIcon, StarFilledIcon, StarIcon } from "../../../DesignSystem/Icons";
 import FilterBar from "../FilterBar";
 import {
@@ -313,24 +312,6 @@ export default function ExploreList() {
   const total = pagedData?.opportunitiesCount || 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-  const [toggleFavorite] = useMutation(TOGGLE_FAVORITE_OPPORTUNITY);
-
-  const handleToggleFavorite = async (oppId) => {
-    if (!profileId) return;
-    const isFavorited = favoriteIds.has(oppId);
-    await toggleFavorite({
-      variables: {
-        profileId,
-        input: {
-          favoriteOpportunities: isFavorited
-            ? { disconnect: [{ id: oppId }] }
-            : { connect: [{ id: oppId }] },
-        },
-      },
-    });
-    refetchContext();
-  };
-
   return (
     <Shell>
       <Header>
@@ -454,15 +435,11 @@ export default function ExploreList() {
             return (
               <Card key={opp.id}>
                 <FavoriteWrap>
-                  <FavoriteButton
-                    active={isFavorite}
-                    addLabel={t("a11y.favorite.add", {}, {
-                      default: "Add to favorites",
-                    })}
-                    removeLabel={t("a11y.favorite.remove", {}, {
-                      default: "Remove from favorites",
-                    })}
-                    onToggle={() => handleToggleFavorite(opp.id)}
+                  <GuardedFavoriteOpportunityButton
+                    opportunityId={opp.id}
+                    isFavorite={isFavorite}
+                    refetchQueries={[{ query: EXPLORE_CONTEXT }]}
+                    onAfterToggle={refetchContext}
                   />
                 </FavoriteWrap>
                 <Link

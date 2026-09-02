@@ -7,6 +7,12 @@
 		"opensInNewTab": "(opens in new tab)",
 		"verified": "Verified"
 	},
+	"favoriteDraftConflict": {
+		"title": "Remove from favorites?",
+		"body": "This opportunity is in your draft ranking. Removing it from favorites will also remove it from your draft ranking list.",
+		"keepFavorite": "Keep favorite",
+		"confirmRemove": "Unfavorite and remove from draft ranking"
+	},
 	"asyncAnsweringQuestions": "Answering student questions (based on your profile).",
 	"asyncProvidingFeedback": "Providing feedback on student projects",
 	"availability": "Availability",
