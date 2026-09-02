@@ -222,7 +222,7 @@ export default function PreferenceSubmissionReview({
                     { count: effectivePicks },
                     {
                       default:
-                        "Your top {{count}} picks — only these count for matching",
+                        "Your top {{count}} picks",
                     },
                   )}
                 </ZoneLabel>

@@ -44,11 +44,25 @@ import PreferenceSubmissionStepper, {
 import StudentAssessmentStep from "./StudentAssessmentStep";
 import StudentMatchingPreferenceCard from "./StudentMatchingPreferenceCard";
 import {
+  isAssessmentDataEntries,
   isAssessmentFormAnswerComplete,
 } from "../../../../../lib/connectPreferenceAssessmentData";
 
 /** Round/opportunity questions are deferred; keep save paths dormant until re-enabled. */
 const PREFERENCE_QUESTIONS_ENABLED = false;
+
+function hasRankedPreferenceItems(rankings) {
+  return Object.entries(rankings).some(([, r]) => {
+    if (!r) return false;
+    return (
+      (r.rank !== "" && r.rank !== undefined && r.rank !== null) ||
+      (r.starRating !== "" &&
+        r.starRating !== undefined &&
+        r.starRating !== null) ||
+      (r.comment || "").trim()
+    );
+  });
+}
 
 const Card = styled.div`
   display: flex;
@@ -388,7 +402,16 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const [editingMatchingPreference, setEditingMatchingPreference] =
     useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [assessmentValid, setAssessmentValid] = useState(false);
   const assessmentStepRef = useRef(null);
+  const preferenceIdRef = useRef(existingPreference?.id || null);
+  const preferenceEntity = useMemo(
+    () => ({
+      id: existingPreference?.id,
+      assessmentData,
+    }),
+    [existingPreference?.id, assessmentData],
+  );
 
   const teamEligibleOpps = useMemo(
     () =>
@@ -478,7 +501,13 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     );
 
     setNotes(existingPreference?.notes || "");
-    setAssessmentData(existingPreference?.assessmentData || null);
+    setAssessmentData((prev) => {
+      const incoming = existingPreference?.assessmentData || null;
+      if (isAssessmentDataEntries(prev) && !isAssessmentDataEntries(incoming)) {
+        return prev;
+      }
+      return incoming;
+    });
     const savedMatching = existingPreference?.studentMatchingPreference || null;
     setStudentMatchingPreference(savedMatching);
     setMatchingPreferenceDraft(getMatchingQueue(savedMatching));
@@ -501,6 +530,12 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const [savingRatingId, setSavingRatingId] = useState(null);
   const [formSaveFeedback, setFormSaveFeedback] = useState(null);
   const [assessmentSaveFeedback, setAssessmentSaveFeedback] = useState(null);
+
+  useEffect(() => {
+    if (existingPreference?.id) {
+      preferenceIdRef.current = existingPreference.id;
+    }
+  }, [existingPreference?.id]);
 
   const setScopedSaveFeedback = (scope, feedback) => {
     if (scope === "assessment") {
@@ -576,17 +611,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         return false;
       }
 
-      const hasItems = Object.entries(rankings).some(([, r]) => {
-        if (!r) return false;
-        return (
-          (r.rank !== "" && r.rank !== undefined && r.rank !== null) ||
-          (r.starRating !== "" &&
-            r.starRating !== undefined &&
-            r.starRating !== null) ||
-          (r.comment || "").trim()
-        );
-      });
-      if (!hasItems) {
+      if (!hasRankedPreferenceItems(rankings)) {
         setScopedSaveFeedback("form", {
           variant: "warning",
           message: t(
@@ -689,10 +714,12 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
       const submittedAt =
         targetStatus === "submitted" ? new Date().toISOString() : null;
 
-      if (existingPreference?.id) {
+      const preferenceId = existingPreference?.id || preferenceIdRef.current;
+
+      if (preferenceId) {
         await updatePreference({
           variables: {
-            id: existingPreference.id,
+            id: preferenceId,
             input: {
               status: targetStatus,
               notes,
@@ -705,7 +732,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
           },
         });
       } else {
-        await createPreference({
+        const created = await createPreference({
           variables: {
             input: {
               round: { connect: { id: round.id } },
@@ -719,6 +746,8 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
             },
           },
         });
+        const createdId = created?.data?.createConnectPreference?.id;
+        if (createdId) preferenceIdRef.current = createdId;
       }
 
       if (assessmentDataOverride) {
@@ -787,33 +816,35 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
 
       await refetch();
 
-      if (targetStatus === "submitted") {
-        setScopedSaveFeedback("form", {
-          variant: "success",
-          message: t(
-            "opportunities.studentView.rankForm.submitSuccess",
-            {},
-            { default: "Your preferences were submitted." },
-          ),
-        });
-      } else if (feedbackScope === "assessment") {
-        setScopedSaveFeedback("assessment", {
-          variant: "success",
-          message: t(
-            "opportunities.studentView.rankForm.assessmentSaveSuccess",
-            {},
-            { default: "Your assessment answers were saved." },
-          ),
-        });
-      } else {
-        setScopedSaveFeedback("form", {
-          variant: "success",
-          message: t(
-            "opportunities.studentView.rankForm.draftSaveSuccess",
-            {},
-            { default: "Your progress was saved." },
-          ),
-        });
+      if (!options.skipSuccessFeedback) {
+        if (targetStatus === "submitted") {
+          setScopedSaveFeedback("form", {
+            variant: "success",
+            message: t(
+              "opportunities.studentView.rankForm.submitSuccess",
+              {},
+              { default: "Your preferences were submitted." },
+            ),
+          });
+        } else if (feedbackScope === "assessment") {
+          setScopedSaveFeedback("assessment", {
+            variant: "success",
+            message: t(
+              "opportunities.studentView.rankForm.assessmentSaveSuccess",
+              {},
+              { default: "Your assessment answers were saved." },
+            ),
+          });
+        } else {
+          setScopedSaveFeedback("form", {
+            variant: "success",
+            message: t(
+              "opportunities.studentView.rankForm.draftSaveSuccess",
+              {},
+              { default: "Your progress was saved." },
+            ),
+          });
+        }
       }
       return true;
     } catch (error) {
@@ -1064,14 +1095,85 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     }
     return handleSave("draft");
   };
-  const handleSubmitPreferences = () => handleSave("submitted");
+  const handleSubmitPreferences = async () => {
+    if (includeAssessment) {
+      const assessmentStep = stepKeys.indexOf("assessment") + 1;
+      const saved = await assessmentStepRef.current?.save?.({
+        skipValidation: false,
+        feedbackScope: "form",
+        skipSuccessFeedback: true,
+      });
+      if (saved === false || saved == null) {
+        if (assessmentStep >= 1) goToStep(assessmentStep);
+        return false;
+      }
+      const assessmentDataOverride = saved === true ? assessmentData : saved;
+      return handleSave("submitted", {
+        assessmentDataOverride,
+        feedbackScope: "form",
+      });
+    }
+    return handleSave("submitted");
+  };
 
-  const preferenceEntity = {
-    id: existingPreference?.id,
-    assessmentData,
+  const persistAssessmentDraft = async (
+    nextAssessmentData,
+    { manageSaving = true } = {},
+  ) => {
+    if (!round) return false;
+    if (manageSaving) setSaving(true);
+    try {
+      const preferenceId = existingPreference?.id || preferenceIdRef.current;
+      if (preferenceId) {
+        await updatePreference({
+          variables: {
+            id: preferenceId,
+            input: {
+              assessmentData: nextAssessmentData,
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        });
+      } else {
+        const created = await createPreference({
+          variables: {
+            input: {
+              round: { connect: { id: round.id } },
+              role: "student",
+              status: "draft",
+              assessmentData: nextAssessmentData,
+            },
+          },
+        });
+        const createdId = created?.data?.createConnectPreference?.id;
+        if (createdId) preferenceIdRef.current = createdId;
+      }
+      setAssessmentData(nextAssessmentData);
+      return true;
+    } catch (error) {
+      console.error("Failed to save student assessment", error);
+      setScopedSaveFeedback("form", {
+        variant: "warning",
+        message: t(
+          "opportunities.studentView.rankForm.saveFailed",
+          {},
+          {
+            default: "Could not save your progress. Please try again.",
+          },
+        ),
+      });
+      return false;
+    } finally {
+      if (manageSaving) setSaving(false);
+    }
   };
 
   const handleSaveAssessment = async (nextAssessmentData, options = {}) => {
+    if (options.skipSuccessFeedback) {
+      return persistAssessmentDraft(nextAssessmentData, {
+        manageSaving: options.manageSaving !== false,
+      });
+    }
     return handleSave("draft", {
       assessmentDataOverride: nextAssessmentData,
       feedbackScope: options.feedbackScope || "assessment",
@@ -1083,32 +1185,54 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     const next = buildStudentMatchingPreference(queue);
     setSaving(true);
     try {
-      if (existingPreference?.id) {
+      let nextAssessmentData = assessmentData;
+      if (includeAssessment && typeof assessmentStepRef.current?.save === "function") {
+        const saved = await assessmentStepRef.current.save({
+          skipValidation: true,
+          skipSuccessFeedback: true,
+          manageSaving: false,
+          feedbackScope: "assessment",
+        });
+        if (saved !== false && saved != null && saved !== true) {
+          nextAssessmentData = saved;
+        }
+      }
+
+      const preferenceId = existingPreference?.id || preferenceIdRef.current;
+      if (preferenceId) {
         await updatePreference({
           variables: {
-            id: existingPreference.id,
+            id: preferenceId,
             input: {
               studentMatchingPreference: next,
+              ...(nextAssessmentData != null
+                ? { assessmentData: nextAssessmentData }
+                : {}),
               updatedAt: new Date().toISOString(),
             },
           },
         });
       } else {
-        await createPreference({
+        const created = await createPreference({
           variables: {
             input: {
               round: { connect: { id: round.id } },
               role: "student",
               status: "draft",
               studentMatchingPreference: next,
-              assessmentData,
+              assessmentData: nextAssessmentData,
             },
           },
         });
+        const createdId = created?.data?.createConnectPreference?.id;
+        if (createdId) preferenceIdRef.current = createdId;
       }
       setStudentMatchingPreference(next);
       setMatchingPreferenceDraft(queue);
       setEditingMatchingPreference(false);
+      if (nextAssessmentData != null) {
+        setAssessmentData(nextAssessmentData);
+      }
       await refetch();
       return true;
     } catch (error) {
@@ -1150,6 +1274,19 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const savingLabel = t("opportunities.studentView.rankForm.saving", {}, {
     default: "Saving…",
   });
+  const submitDisabledHint = t(
+    "opportunities.studentView.rankForm.submitDisabledHint",
+    {},
+    {
+      default:
+        "Answer all required fields on every tab before submitting.",
+    },
+  );
+  const canSubmitPreferences =
+    !saving &&
+    (!includeAssessment || assessmentValid) &&
+    Boolean(savedMatchingQueue) &&
+    hasRankedPreferenceItems(rankings);
   const headerSubmitActions = isOpen ? (
     <>
       <Button
@@ -1168,7 +1305,13 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         type="button"
         variant="filled"
         onClick={handleSubmitPreferences}
-        disabled={saving}
+        disabled={!canSubmitPreferences}
+        title={!canSubmitPreferences && !saving ? submitDisabledHint : undefined}
+        aria-label={
+          !canSubmitPreferences && !saving
+            ? submitDisabledHint
+            : undefined
+        }
       >
         {saving
           ? savingLabel
@@ -1517,18 +1660,21 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
           onStepChange={goToStep}
           includeAssessment={includeAssessment}
         >
-          {currentStepKey === "assessment" && (
-            <StudentAssessmentStep
-              ref={assessmentStepRef}
-              formDefinitionId={assessmentFormId}
-              preferenceEntity={preferenceEntity}
-              isOpen={isOpen}
-              locale={locale}
-              onSaveAssessment={handleSaveAssessment}
-              saveFeedback={assessmentSaveFeedback}
-              onDismissSaveFeedback={clearAssessmentSaveFeedback}
-            />
-          )}
+          {includeAssessment ? (
+            <div hidden={currentStepKey !== "assessment"}>
+              <StudentAssessmentStep
+                ref={assessmentStepRef}
+                formDefinitionId={assessmentFormId}
+                preferenceEntity={preferenceEntity}
+                isOpen={isOpen}
+                locale={locale}
+                onSaveAssessment={handleSaveAssessment}
+                onValidityChange={setAssessmentValid}
+                saveFeedback={assessmentSaveFeedback}
+                onDismissSaveFeedback={clearAssessmentSaveFeedback}
+              />
+            </div>
+          ) : null}
 
           {currentStepKey === "classmates" && (
             <>

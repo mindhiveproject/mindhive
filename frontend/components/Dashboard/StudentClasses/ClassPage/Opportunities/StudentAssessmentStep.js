@@ -13,6 +13,7 @@ const StudentAssessmentStep = forwardRef(function StudentAssessmentStep(
     onSaveAssessment,
     saveFeedback = null,
     onDismissSaveFeedback,
+    onValidityChange,
   },
   ref,
 ) {
@@ -26,12 +27,15 @@ const StudentAssessmentStep = forwardRef(function StudentAssessmentStep(
   );
 
   const pendingSaveOptionsRef = useRef({});
+  const lastSavedAssessmentRef = useRef(null);
 
   const handleSubmit = useCallback(
     async (updateInput) => {
       const extra = pendingSaveOptionsRef.current || {};
       pendingSaveOptionsRef.current = {};
-      return onSaveAssessment?.(updateInput?.self?.assessmentData, extra);
+      const data = updateInput?.self?.assessmentData;
+      lastSavedAssessmentRef.current = data;
+      return onSaveAssessment?.(data, extra);
     },
     [onSaveAssessment],
   );
@@ -39,13 +43,16 @@ const StudentAssessmentStep = forwardRef(function StudentAssessmentStep(
   const save = useCallback(async (options = {}) => {
     pendingSaveOptionsRef.current = {
       feedbackScope: options.feedbackScope,
+      skipSuccessFeedback: options.skipSuccessFeedback,
+      manageSaving: options.manageSaving,
     };
     onDismissSaveFeedback?.();
     if (!formRef.current?.save) return false;
     const ok = await formRef.current.save({
       skipValidation: Boolean(options.skipValidation),
     });
-    return ok;
+    if (!ok) return false;
+    return lastSavedAssessmentRef.current ?? true;
   }, [onDismissSaveFeedback]);
 
   useImperativeHandle(ref, () => ({ save }), [save]);
@@ -84,6 +91,7 @@ const StudentAssessmentStep = forwardRef(function StudentAssessmentStep(
         onSubmit={handleSubmit}
         readOnly={!isOpen}
         hideSaveButton
+        onValidityChange={onValidityChange}
       />
     </>
   );

@@ -40,6 +40,7 @@ import { getMatchingQueue } from "../../../../../lib/connectPreferenceMatchingPr
 import { downloadStudentBallotCsv } from "../../../../../lib/downloadStudentBallotCsv";
 import MessageCard from "../../../../DesignSystem/MessageCard";
 import MatchingAlgorithmInfoModal from "../../../shared/MatchingAlgorithmInfoModal";
+import Modal from "../../../../DesignSystem/Modal";
 
 const STUDENT_RANKING_SUB_MODES = {
   ballot: "ballot",
@@ -833,6 +834,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   const [matchingInfoOpen, setMatchingInfoOpen] = useState(false);
   const [reopeningPreferenceId, setReopeningPreferenceId] = useState(null);
   const [reopenFeedback, setReopenFeedback] = useState(null);
+  const [reopenTarget, setReopenTarget] = useState(null);
   const [expandedQueue, setExpandedQueue] = useState({
     project_first: true,
     team_first: true,
@@ -998,64 +1000,60 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     refetch,
   });
 
-  const handleReopenBallot = useCallback(
-    async (preferenceId, studentName) => {
-      if (
-        !window.confirm(
-          t(
-            "opportunities.matchingRound.studentRanking.reopenBallotConfirm",
-            { name: studentName },
-            {
-              default:
-                "This student will be able to edit and resubmit their preferences. Continue?",
-            },
-          ),
-        )
-      ) {
-        return;
-      }
+  const handleReopenBallot = useCallback((preferenceId, studentName) => {
+    setReopenFeedback(null);
+    setReopenTarget({ preferenceId, studentName });
+  }, []);
 
-      setReopenFeedback(null);
-      setReopeningPreferenceId(preferenceId);
-      try {
-        await updatePreference({
-          variables: {
-            id: preferenceId,
-            input: {
-              status: "draft",
-              submittedAt: null,
-            },
+  const closeReopenModal = useCallback(() => {
+    if (reopeningPreferenceId) return;
+    setReopenTarget(null);
+  }, [reopeningPreferenceId]);
+
+  const confirmReopenBallot = useCallback(async () => {
+    const preferenceId = reopenTarget?.preferenceId;
+    if (!preferenceId) return;
+
+    setReopenFeedback(null);
+    setReopeningPreferenceId(preferenceId);
+    try {
+      await updatePreference({
+        variables: {
+          id: preferenceId,
+          input: {
+            status: "draft",
+            submittedAt: null,
           },
-        });
-        await refetch();
-        setReopenFeedback({
-          variant: "success",
-          message: t(
-            "opportunities.matchingRound.studentRanking.reopenBallotSuccess",
-            {},
-            {
-              default:
-                "Ballot reopened. The student can edit their preferences again.",
-            },
-          ),
-        });
-      } catch {
-        setReopenFeedback({
-          variant: "warning",
-          message: t(
-            "opportunities.matchingRound.studentRanking.reopenBallotFailed",
-            {},
-            {
-              default: "Could not reopen this ballot. Please try again.",
-            },
-          ),
-        });
-      } finally {
-        setReopeningPreferenceId(null);
-      }
-    },
-    [refetch, t, updatePreference],
-  );
+        },
+      });
+      await refetch();
+      setReopenTarget(null);
+      setReopenFeedback({
+        variant: "success",
+        message: t(
+          "opportunities.matchingRound.studentRanking.reopenBallotSuccess",
+          {},
+          {
+            default:
+              "Ballot reopened. The student can edit their preferences again.",
+          },
+        ),
+      });
+    } catch {
+      setReopenFeedback({
+        variant: "warning",
+        message: t(
+          "opportunities.matchingRound.studentRanking.reopenBallotFailed",
+          {},
+          {
+            default: "Could not reopen this ballot. Please try again.",
+          },
+        ),
+      });
+    } finally {
+      setReopeningPreferenceId(null);
+    }
+  }, [refetch, reopenTarget, t, updatePreference]);
 
   const submittedCount = ballotRows.filter(
     (r) => r.submissionStatus === "submitted",
@@ -1418,6 +1416,57 @@ const MatchingRoundStudentBallotPanel = forwardRef(
         matchingAlgorithm={round?.matchingAlgorithm}
         showBallotWorkflow
       />
+
+      <Modal
+        open={Boolean(reopenTarget)}
+        onClose={reopeningPreferenceId ? undefined : closeReopenModal}
+        title={t(
+          "opportunities.matchingRound.studentRanking.reopenBallotConfirmTitle",
+          { name: reopenTarget?.studentName || "" },
+          { default: "Reopen {{name}}’s ballot?" },
+        )}
+        actions={
+          <>
+            <Button
+              type="button"
+              variant="text"
+              onClick={closeReopenModal}
+              disabled={Boolean(reopeningPreferenceId)}
+            >
+              {t("cancel", {}, { default: "Cancel" })}
+            </Button>
+            <Button
+              type="button"
+              variant="filled"
+              onClick={confirmReopenBallot}
+              disabled={Boolean(reopeningPreferenceId)}
+            >
+              {reopeningPreferenceId
+                ? t(
+                    "opportunities.matchingRound.studentRanking.reopenBallotWorking",
+                    {},
+                    { default: "Reopening…" },
+                  )
+                : t(
+                    "opportunities.matchingRound.studentRanking.reopenBallotConfirmAction",
+                    {},
+                    { default: "Reopen ballot" },
+                  )}
+            </Button>
+          </>
+        }
+      >
+        <p style={{ margin: 0 }}>
+          {t(
+            "opportunities.matchingRound.studentRanking.reopenBallotConfirm",
+            { name: reopenTarget?.studentName || "" },
+            {
+              default:
+                "This student will be able to edit and resubmit their preferences.",
+            },
+          )}
+        </p>
+      </Modal>
 
       {renderQueue(
         "project_first",
