@@ -31,10 +31,11 @@ import {
 
 import Navigation from "./Navigation/Main";
 import Assigned from "./Forms/Assigned";
-import Status from "../../../../../Dashboard/TeacherClasses/ClassPage/Assignments/Homework/Status";
 import TipTapEditor from "../../../../../TipTap/Main";
 import { PreviewSection } from "../../../../../Proposal/Card/Forms/PreviewSection";
-import { Modal, Button, Icon, Dropdown } from "semantic-ui-react";
+import { Modal, Icon } from "semantic-ui-react";
+import Button from "../../../../../DesignSystem/Button";
+import Chip from "../../../../../DesignSystem/Chip";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
@@ -113,6 +114,9 @@ export default function ProposalCard({
   const revisedContent = useRef(
     proposalCard?.revisedContent || proposalCard?.content,
   );
+  const contentGetHtmlRef = useRef(null);
+  const revisedGetHtmlRef = useRef(null);
+  const commentGetHtmlRef = useRef(null);
 
   // Collaborative editing: the ProposalCard-backed editors (content,
   // revisedContent, comment) share one Yjs doc per card; each binds its own
@@ -293,17 +297,39 @@ export default function ProposalCard({
 
       // content/revisedContent/comment are edited collaboratively (Yjs is the
       // source of truth on reload), but the server stays DOM-free and does not
-      // mirror them to these HTML columns. So the client writes the current
-      // editor HTML here to keep the columns up to date for the read-only /
-      // export / propagation flows. This does not cause the old reload
-      // divergence: onLoadDocument always restores the editor from yjsState, not
-      // from these columns.
+      // mirror them to these HTML columns. Read live HTML from the editors so
+      // Save cannot persist an empty/stale ref from before Yjs synced.
+      const isEmptyHtml = (html) => {
+        if (!html) return true;
+        return (
+          String(html)
+            .replace(/<p>(\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, "")
+            .replace(/\s/g, "") === ""
+        );
+      };
+      const readLiveHtml = (getHtmlRef, fallback) => {
+        const live = getHtmlRef.current?.();
+        const fallbackHtml = fallback || "";
+        if (typeof live !== "string") return fallbackHtml;
+        if (isEmptyHtml(live) && !isEmptyHtml(fallbackHtml)) return fallbackHtml;
+        return live;
+      };
+      const liveContent = readLiveHtml(contentGetHtmlRef, content?.current);
+      const liveRevisedContent = readLiveHtml(
+        revisedGetHtmlRef,
+        revisedContent?.current,
+      );
+      const liveComment = readLiveHtml(commentGetHtmlRef, inputs?.comment);
+      content.current = liveContent;
+      revisedContent.current = liveRevisedContent;
+
       await updateCard({
         variables: {
           ...inputs,
           internalContent: internalContent?.current,
-          content: content?.current,
-          revisedContent: revisedContent?.current,
+          content: liveContent,
+          revisedContent: liveRevisedContent,
+          comment: liveComment,
           settings: mergedSettings,
           assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
           resources: inputs?.resources?.map((resource) => ({
@@ -557,6 +583,24 @@ export default function ProposalCard({
     const h1 = {
       marginBottom: "16px",
     };
+    const fieldLabelStyle = {
+      margin: "0 0 4px",
+      font: "var(--MH-Type-Label-Base)",
+      letterSpacing: 0,
+      color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    };
+    const fieldInputStyle = {
+      width: "50%",
+      minWidth: "20px",
+      padding: "8px 12px",
+      borderRadius: "8px",
+      border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+      marginTop: "4px",
+      font: "var(--MH-Type-Body-Base)",
+      letterSpacing: 0,
+      color: "var(--MH-Theme-Neutrals-Black, #171717)",
+      boxSizing: "border-box",
+    };
     const instructionBox = {
       // background: "#F3F3F3",
       borderLeft: "4px solid #274E5B",
@@ -570,6 +614,14 @@ export default function ProposalCard({
       borderRadius: "8px",
       padding: "12px",
       marginBottom: "3rem",
+    };
+
+    const getHomeworkStatusTone = (status) => {
+      if (status === "Completed") return "success";
+      if (status === "Needs feedback") return "info";
+      if (status === "Feedback given") return "neutral";
+      if (status === "Started") return "warning";
+      return "neutral";
     };
 
     const updateHomeworkContent = async (newContent) => {
@@ -817,14 +869,7 @@ export default function ProposalCard({
           <Modal.Actions
             style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
           >
-            <Button
-              onClick={onClose}
-              style={{
-                background: "#f0f4f8",
-                color: "#007c70",
-                borderRadius: "8px",
-              }}
-            >
+            <Button variant="outline" type="button" onClick={onClose}>
               {t("board.expendedCard.close", "Close")}
             </Button>
           </Modal.Actions>
@@ -867,11 +912,14 @@ export default function ProposalCard({
             {/* Homework Section */}
             <div style={{ marginTop: "24px", paddingTop: "24px" }}>
               {homeworks.length > 0 && (
-                <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
+                <div
+                  className="MH-Type-Title-Small"
+                  style={{ marginBottom: "16px", color: "var(--MH-Theme-Primary-Dark, #336F8A)" }}
+                >
                   {isMentorOrTeacher
                     ? t("homework.allEntries", "All entries")
                     : t("homework.myEntry", "My entry")}
-                </h3>
+                </div>
               )}
               {/* Show existing homeworks */}
               {homeworks.length > 0 && (
@@ -932,39 +980,27 @@ export default function ProposalCard({
                           className="MH-Type-Label-Base"
                           style={{
                             marginTop: "4px",
-                            display: "inline-block",
-                            padding: "4px 8px",
-                            borderRadius: "8px",
-                            border: "1px solid",
-                            borderColor: homework.settings?.status === "Completed"
-                                ? "#337C84"
-                                : homework.settings?.status === "Started"
-                                ? "#5D5763"
-                                : homework.settings?.status === "Needs feedback"
-                                ? "#3F288F"
-                                : homework.settings?.status === "Feedback given"
-                                ? "#0D3944"
-                                : "#666",
-                            background: "#FFFFFF",
-                            color:
-                              homework.settings?.status === "Completed"
-                                ? "#337C84"
-                                : homework.settings?.status === "Started"
-                                ? "#5D5763"
-                                : homework.settings?.status === "Needs feedback"
-                                ? "#3F288F"
-                                : homework.settings?.status === "Feedback given"
-                                ? "#0D3944"
-                                : "#666", // default color
                           }}
                         >
-                          {homework.settings?.status ||
-                            "Open assignment to see more"}
+                          <Chip
+                            variant="static"
+                            tone={getHomeworkStatusTone(homework.settings?.status)}
+                            label={
+                              homework.settings?.status ||
+                              t(
+                                "homework.openAssignmentHint",
+                                {},
+                                { default: "Open assignment to see more" },
+                              )
+                            }
+                          />
                         </div>
                       </div>
                       <Button
-                        size="small"
-                        className="MH-Type-Label-Base"
+                        type="button"
+                        variant={
+                          activeHomework?.id === homework?.id ? "filled" : "outline"
+                        }
                         onClick={() => {
                           const isActive = activeHomework?.id === homework?.id;
                           if (isActive) {
@@ -977,42 +1013,6 @@ export default function ProposalCard({
                             setShowNewHomework(false);
                             loadHomeworkIntoForm(homework);
                           }
-                        }}
-                        style={{
-                          borderRadius: "100px",
-                          ...(activeHomework?.id === homework?.id
-                            ? {
-                                background: "#ffffff",
-                                color: "#171717",
-                                border: "2px solid #171717",
-                              }
-                            : {
-                                color:
-                                  homework.settings?.status === "Completed"
-                                    ? "#3D85B0"
-                                    : homework.settings?.status === "Started"
-                                    ? "#5D5763"
-                                    : homework.settings?.status ===
-                                      "Needs feedback"
-                                    ? "#3F288F"
-                                    : homework.settings?.status ===
-                                      "Feedback given"
-                                    ? "#0D3944"
-                                    : "#69BBC4", // default color
-                                border:
-                                  homework.settings?.status === "Completed"
-                                    ? "1px solid #3D85B0"
-                                    : homework.settings?.status === "Started"
-                                    ? "1px solid #5D5763"
-                                    : homework.settings?.status ===
-                                      "Needs feedback"
-                                    ? "1px solid #3F288F"
-                                    : homework.settings?.status ===
-                                      "Feedback given"
-                                    ? "1px solid #0D3944"
-                                    : "1px solid #69BBC4", // default color
-                                background: "white",
-                              }),
                         }}
                       >
                         {activeHomework?.id === homework?.id
@@ -1040,7 +1040,7 @@ export default function ProposalCard({
                         </div>
 
                         <div style={{ marginBottom: "12px" }}>
-                          <p style={{ marginBottom: "0px" }}>
+                          <p style={fieldLabelStyle}>
                             {t("homework.assignmentTitle", "Assignment title")}
                           </p>
                           <input
@@ -1051,14 +1051,7 @@ export default function ProposalCard({
                                 target: { name: "title", value: e.target.value },
                               })
                             }
-                            style={{
-                              width: "50%",
-                              minWidth: "20px",
-                              padding: "8px",
-                              borderRadius: "4px",
-                              border: "1px solid #ccc",
-                              marginTop: "4px",
-                            }}
+                            style={fieldInputStyle}
                           />
                         </div>
 
@@ -1069,7 +1062,7 @@ export default function ProposalCard({
                               marginTop: "4px",
                             }}
                           >
-                            <p style={{ marginBottom: "0px" }}>
+                            <p style={fieldLabelStyle}>
                               {t("homework.yourEntry", "Your entry")}
                             </p>
                             <TipTapEditor
@@ -1099,19 +1092,12 @@ export default function ProposalCard({
                           </div>
                         </div>
 
-                        <div style={{ display: "flex", gap: "8px" }}>
+                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                           <Button
+                            type="button"
+                            variant="tonal"
                             onClick={handleUpdateHomeworkSubmit}
-                            loading={updateLoading}
                             disabled={updateLoading}
-                            className="MH-Type-Label-Base"
-                            style={{
-                              borderRadius: "100px",
-                              background: "#def8fb",
-                              color: "#3d85b0",
-                              border: "1px solid #3d85b0",
-                              marginRight: "10px",
-                            }}
                           >
                             {t("homework.createHomeworkSubmit", "Mark as complete")}
                           </Button>
@@ -1135,6 +1121,8 @@ export default function ProposalCard({
                             {t("homework.cancel", "Cancel")}
                           </Button> */}
                           <Button
+                            type="button"
+                            variant="outline"
                             onClick={() => {
                               const currentStatus =
                                 inputs?.settings?.status ||
@@ -1145,27 +1133,7 @@ export default function ProposalCard({
                                   : "Needs feedback",
                               );
                             }}
-                            loading={updateLoading}
                             disabled={updateLoading}
-                            className="MH-Type-Label-Base"
-                            style={{
-                              borderRadius: "100px",
-                              background:
-                                (inputs?.settings?.status ||
-                                  activeHomework?.settings?.status) ===
-                                "Needs feedback"
-                                  ? "#D8D3E7"
-                                  : "#ffffff",
-                              color: "#434343",
-                              border: `1.5px solid ${
-                                (inputs?.settings?.status ||
-                                  activeHomework?.settings?.status) ===
-                                "Needs feedback"
-                                  ? "#7D70AD"
-                                  : "#625B71"
-                              }`,
-                              marginRight: "10px",
-                            }}
                           >
                             {(inputs?.settings?.status ||
                               activeHomework?.settings?.status) ===
@@ -1184,17 +1152,10 @@ export default function ProposalCard({
                               activeHomework?.settings?.status) ===
                               "Needs feedback" && (
                               <Button
+                                type="button"
+                                variant="outline"
                                 onClick={() => handleStatusUpdate("Feedback given")}
-                                loading={updateLoading}
                                 disabled={updateLoading}
-                                className="MH-Type-Label-Base"
-                                style={{
-                                  borderRadius: "100px",
-                                  background: "white",
-                                  color: "#0D3944",
-                                  border: "1.5px solid #0D3944",
-                                  marginRight: "10px",
-                                }}
                               >
                                 {t(
                                   "teacherClass.feedbackGiven",
@@ -1213,6 +1174,8 @@ export default function ProposalCard({
               {/* New Homework Section */}
               {homeworks.length < 1 && !showNewHomework && (
                 <Button
+                  type="button"
+                  variant="filled"
                   onClick={() => {
                     setActiveHomework(null);
                     setShowNewHomework(true);
@@ -1239,14 +1202,6 @@ export default function ProposalCard({
                     });
                     homeworkContent.current = assignment?.placeholder || "";
                   }}
-                  className="MH-Type-Label-Base"
-                  style={{
-                    borderRadius: "100px",
-                    background: "#FDF2D0",
-                    color: "#5D5763",
-                    border: "2px solid #5D5763",
-                    marginRight: "10px",
-                  }}
                   disabled={createLoading}
                 >
                   {t("homework.createNewEntry", "Create entry")}
@@ -1268,7 +1223,7 @@ export default function ProposalCard({
                   </div>
 
                   <div style={{ marginBottom: "12px" }}>
-                    <p style={{ marginBottom: "0px" }}>
+                    <p style={fieldLabelStyle}>
                       {t("homework.assignmentTitle", "Assignment title")}
                     </p>
                     <input
@@ -1279,14 +1234,7 @@ export default function ProposalCard({
                           target: { name: "title", value: e.target.value },
                         })
                       }
-                      style={{
-                        width: "50%",
-                        minWidth: "20px",
-                        padding: "8px",
-                        borderRadius: "4px",
-                        border: "1px solid #ccc",
-                        marginTop: "4px",
-                      }}
+                      style={fieldInputStyle}
                     />
                   </div>
 
@@ -1297,7 +1245,7 @@ export default function ProposalCard({
                         marginTop: "4px",
                       }}
                     >
-                      <p style={{ marginBottom: "0px" }}>
+                      <p style={fieldLabelStyle}>
                         {t("homework.yourEntry", "Your entry")}
                       </p>
                       <TipTapEditor
@@ -1320,49 +1268,29 @@ export default function ProposalCard({
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", gap: "8px" }}>
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                     <Button
+                      type="button"
+                      variant="tonal"
                       onClick={handleCreateHomeworkSubmit}
-                      loading={createLoading}
                       disabled={createLoading}
-                      className="MH-Type-Label-Base"
-                      style={{
-                        borderRadius: "100px",
-                        background: "#def8fb",
-                        color: "#3d85b0",
-                        border: "1px solid #3d85b0",
-                        marginRight: "10px",
-                      }}
                     >
                       {t("homework.createHomeworkSubmit", "Mark as complete")}
                     </Button>
                     <Button
+                      type="button"
+                      variant="outline"
                       onClick={handleCreateHomeworkDraft}
-                      loading={createLoading}
                       disabled={createLoading}
-                      className="MH-Type-Label-Base"
-                      style={{
-                        borderRadius: "100px",
-                        background: "white",
-                        color: "#336F8A",
-                        border: "1px solid #336F8A",
-                        marginRight: "10px",
-                      }}
                     >
                       {t("homework.saveHomeworkDraft", "Save Draft")}
                     </Button>
                     <Button
+                      type="button"
+                      variant="text"
                       onClick={() => {
                         setShowNewHomework(false);
                         clearForm();
-                      }}
-                      className="MH-Type-Label-Base"
-                      style={{
-                        borderRadius: "100px",
-                        background: "#f7f9fa",
-                        color: "#B9261A",
-                        border: "1px solid #B9261A",
-                        marginRight: "10px",
                       }}
                     >
                       {t("homework.cancel", "Cancel")}
@@ -1376,17 +1304,7 @@ export default function ProposalCard({
         <Modal.Actions
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
         >
-          <Button
-            onClick={onClose}
-            className="MH-Type-Label-Base"
-            style={{
-              borderRadius: "100px",
-              background: "#f7f9fa",
-              color: "#336F8A",
-              border: "1px solid #336F8A",
-              marginRight: "10px",
-            }}
-          >
+          <Button variant="outline" type="button" onClick={onClose}>
             {t("board.expendedCard.close", "Close")}
           </Button>
         </Modal.Actions>
@@ -1495,6 +1413,7 @@ export default function ProposalCard({
                             : null
                         }
                         collaborationUser={collaborationUser}
+                        getContentRef={contentGetHtmlRef}
                         onUpdate={(newContent) =>
                           handleContentChange({
                             contentType: "content",
@@ -1535,6 +1454,7 @@ export default function ProposalCard({
                             : null
                         }
                         collaborationUser={collaborationUser}
+                        getContentRef={revisedGetHtmlRef}
                         onUpdate={(newContent) =>
                           handleContentChange({
                             contentType: "revisedContent",
@@ -1621,6 +1541,7 @@ export default function ProposalCard({
                       : null
                   }
                   collaborationUser={collaborationUser}
+                  getContentRef={commentGetHtmlRef}
                   onUpdate={(newContent) => {
                     if (!hasContentChanged) {
                       setHasContentChanged(true);
@@ -1699,14 +1620,9 @@ export default function ProposalCard({
                   }}
                 >
                   <Button
+                    type="button"
+                    variant="filled"
                     onClick={closeResourceModalHandler}
-                    className="MH-Type-Label-Base"
-                    style={{
-                      borderRadius: "100px",
-                      background: "#336F8A",
-                      color: "white",
-                      border: "1px solid #336F8A",
-                    }}
                   >
                     {t("board.expendedCard.close", "Close")}
                   </Button>

@@ -650,7 +650,7 @@ const Section = ({
             )}
             renderTrigger={({ onClick, open, ariaLabel }) => (
               <Button
-                variant="tonal"
+                variant="subtle"
                 leadingIcon={<img src="/assets/icons/plus.svg" alt="" />}
                 type="button"
                 aria-label={ariaLabel}

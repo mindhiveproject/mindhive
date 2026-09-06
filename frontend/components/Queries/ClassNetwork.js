@@ -56,6 +56,13 @@ export const GET_ALL_NETWORKS = gql`
       }
       opportunities {
         id
+        sponsors {
+          id
+        }
+        mentors {
+          id
+        }
+        sponsorIsMentor
         mentor {
           id
         }

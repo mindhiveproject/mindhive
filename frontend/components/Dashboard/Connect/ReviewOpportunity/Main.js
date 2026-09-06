@@ -26,6 +26,13 @@ import {
   returnOpportunityToSponsor,
 } from "../returnOpportunityUtils";
 import { REVIEW_NOTE_KIND } from "../../../../lib/reviewThreadRound";
+import {
+  displayProfileName,
+  getOpportunityMentors,
+  getOpportunitySponsors,
+  isMentorTbd,
+  isOpportunityStakeholder,
+} from "../../../../lib/opportunityPeople";
 
 const Shell = styled.div`
   display: flex;
@@ -269,7 +276,7 @@ export default function ReviewOpportunityMain({ query }) {
     return (round.reviewers || []).some((r) => r.id === me.id);
   }, [round, me]);
 
-  const isMentorOfOpp = !!(me?.id && opportunity?.mentor?.id === me.id);
+  const isMentorOfOpp = isOpportunityStakeholder(opportunity, me?.id);
 
   const [status, setStatus] = useState(null);
   const [statusFlash, setStatusFlash] = useState(null);
@@ -480,17 +487,22 @@ export default function ReviewOpportunityMain({ query }) {
       <Card>
         <h2>Opportunity details</h2>
         <dl className="field-grid">
-          <dt>Mentor</dt>
+          <dt>Sponsor(s)</dt>
           <dd>
-            {displayName(opportunity.mentor)}{" "}
-            {opportunity.mentor?.email ? (
-              <span
-                className="MH-Type-Body-Base"
-                style={{ color: "#888" }}
-              >
-                ({opportunity.mentor.email})
-              </span>
-            ) : null}
+            {getOpportunitySponsors(opportunity)
+              .map((profile) => displayProfileName(profile))
+              .filter(Boolean)
+              .join(", ") || "—"}
+          </dd>
+
+          <dt>Mentor(s)</dt>
+          <dd>
+            {isMentorTbd(opportunity)
+              ? "Mentor TBD"
+              : getOpportunityMentors(opportunity)
+                  .map((profile) => displayProfileName(profile))
+                  .filter(Boolean)
+                  .join(", ") || "—"}
           </dd>
 
           <dt>Organization</dt>

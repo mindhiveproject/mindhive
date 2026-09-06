@@ -28,13 +28,12 @@ export interface FavoriteButtonProps
 }
 
 /**
- * Star toggle used on cards (Figma Design System node 5082:1655). A 40px circle:
+ * Star toggle used on cards (Figma Design System node 5082:1655). A 40px
+ * circle, text-button style: transparent at rest, with a fill that only
+ * appears on hover.
  *
- *  - inactive: Neutrals/Lighter fill behind a black outline star.
- *  - active:   Accent/Light fill behind a filled Accent star.
- *
- * Hover deepens whichever fill is showing — "more ink, same hue", no drop
- * shadow — so the on/off read stays clear across a grid of cards.
+ *  - inactive: transparent + black outline star; hover fills Neutrals/Lighter.
+ *  - active:   transparent + filled Accent star; hover fills Accent/Light.
  *
  * Controlled and data-free: the caller owns `active` and `onToggle`. It also
  * stops the event so the button can sit on top of a clickable card without
@@ -56,21 +55,23 @@ const BASE_STYLE: React.CSSProperties = {
 };
 
 const INACTIVE: React.CSSProperties = {
-  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  background: "transparent",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 const INACTIVE_HOVER: React.CSSProperties = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
 };
 
 const ACTIVE: React.CSSProperties = {
-  background: "var(--MH-Theme-Accent-Light, #FDF2D0)",
+  background: "transparent",
   color: "var(--MH-Theme-Accent-Base, #F2BE42)",
 };
-const ACTIVE_HOVER: React.CSSProperties = { background: "#FBE9B8" };
+const ACTIVE_HOVER: React.CSSProperties = {
+  background: "var(--MH-Theme-Accent-Light, #FDF2D0)",
+};
 
 const DISABLED: React.CSSProperties = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  background: "transparent",
   color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
   cursor: "default",
 };

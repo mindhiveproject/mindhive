@@ -6,7 +6,9 @@ const StyledClass = styled.div`
   height: 100%;
   max-width: 100%;
   min-width: 0;
-  overflow-x: hidden;
+  /* clip avoids the overflow-x:hidden → overflow-y:auto pairing that breaks
+     position:sticky descendants against the dashboard scroll wrapper */
+  overflow-x: clip;
   box-sizing: border-box;
 
   &.isProjectsFullscreen,
@@ -390,6 +392,7 @@ const StyledClass = styled.div`
       min-height: auto;
       padding: 0;
       font: var(--MH-Type-Label-Base);
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
       letter-spacing: 0;
     }
     .classHeaderMetaRow {

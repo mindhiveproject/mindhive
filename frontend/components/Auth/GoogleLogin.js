@@ -129,7 +129,6 @@ export default function LoginWithGoogle({
         <Button
           type="button"
           variant="outline"
-          style={{ width: "100%" }}
           disabled={disabled || loading || renderProps.disabled}
           onClick={renderProps.onClick}
           leadingIcon={

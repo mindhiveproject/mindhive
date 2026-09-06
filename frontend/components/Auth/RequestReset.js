@@ -53,7 +53,6 @@ export default function RequestReset() {
         <Button
           type="submit"
           variant="filled"
-          style={{ width: "100%" }}
           disabled={loading}
         >
           {t("auth.requestReset", {}, { default: "Request reset" })}

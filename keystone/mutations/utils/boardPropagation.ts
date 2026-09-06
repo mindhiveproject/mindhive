@@ -351,8 +351,10 @@ export type SyncCardsOptions = {
  * a publicId-less template card is paired with a leftover clone card.
  *
  * Student-owned fields never synced for existing clones:
- * content (unless in cardIdsWithContentUpdate), settings.status, internalContent,
- * revisedContent, comment, assignedTo.
+ * content and yjsState (unless in cardIdsWithContentUpdate), settings.status,
+ * internalContent, revisedContent, comment, assignedTo. When content is
+ * overwritten, yjsState is cleared to "" (not null — Keystone text is NOT NULL)
+ * so the next collab open re-seeds from the new HTML.
  */
 export async function syncCardsToClone(
   context: any,
@@ -416,12 +418,16 @@ export async function syncCardsToClone(
             type: tc.type ?? undefined,
             shareType: tc.shareType ?? undefined,
             position,
-            ...(overwriteContent ? { content: tc.content ?? undefined } : {}),
-            // Drop any collaborative Yjs state so the next time this clone card is
-            // opened in the collaborative editor it re-seeds (browser-side) from
-            // the freshly propagated HTML. Without this, a stale yjsState blob
-            // would mask the propagated text. See keystone/collab-server.js.
-            yjsState: null,
+            ...(overwriteContent
+              ? {
+                  content: tc.content ?? undefined,
+                  // Keystone text() is NOT NULL, so pass "" rather than null
+                  // ("Yjs State is required"). Empty string is falsy in
+                  // collab-server onLoadDocument, so the next open re-seeds
+                  // from the freshly propagated HTML instead of a stale CRDT.
+                  yjsState: "",
+                }
+              : {}),
             publicId,
             settings: mergedSettings,
             resources: { set: (tc.resources ?? []).map((r) => ({ id: r.id })) },

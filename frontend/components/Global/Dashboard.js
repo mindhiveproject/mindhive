@@ -23,7 +23,7 @@ import FullScreenLoading from "../DesignSystem/FullScreenLoading";
  * Platform-browsing dashboard areas that show the site footer.
  * Focused workspaces (builder, develop, review, classes, etc.) are excluded.
  */
-const DASHBOARD_FOOTER_AREAS = new Set(["discover", "connect", "review", "settings", "sponsor-connect"]);
+const DASHBOARD_FOOTER_AREAS = new Set(["discover", "settings"]);
 
 function shouldShowDashboardFooter(area) {
   // Home is `/dashboard` with no area param

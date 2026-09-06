@@ -326,6 +326,35 @@ export const ROUND_PICKABLE_FORM_DEFINITIONS = gql`
   }
 `;
 
+// Class-scoped student assessment forms for a class (draft + published).
+export const CLASS_STUDENT_ASSESSMENT_FORM_DEFINITIONS = gql`
+  query CLASS_STUDENT_ASSESSMENT_FORM_DEFINITIONS($classId: ID!) {
+    formDefinitions(
+      where: {
+        surface: { equals: "student_assessment" }
+        scope: { equals: "class" }
+        status: { in: ["draft", "published"] }
+        class: { id: { equals: $classId } }
+      }
+      orderBy: [{ title: asc }, { updatedAt: desc }]
+    ) {
+      id
+      title
+      key
+      scope
+      status
+      version
+      updatedAt
+      class {
+        id
+      }
+      createdBy {
+        id
+      }
+    }
+  }
+`;
+
 // Class-scoped opportunity forms for a class (draft + published), shared
 // across co-teachers. Used by the matching-round class form library panel.
 // `createdBy` is selected so the UI can gate delete on ownership.

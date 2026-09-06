@@ -6,7 +6,7 @@ import styled from "styled-components";
  * width; modest vertical padding keeps a light inset without the old 50px feel.
  */
 export const DASHBOARD_CONTENT_MARGIN_PX = 50;
-export const OPPORTUNITY_PAGE_GUTTER = "clamp(16px, 6vw, 64px)";
+export const OPPORTUNITY_PAGE_GUTTER = "clamp(16px, 6vw, 24px)";
 /** Modest top/bottom inset inside the shell (keeps list + editor aligned). */
 export const OPPORTUNITY_PAGE_VERTICAL_PADDING_PX = 64;
 
@@ -25,5 +25,5 @@ export const OpportunityPageShell = styled.div`
   background-color: #f7f9f8;
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
-  scroll-padding-top: 56px;
+  scroll-padding-top: 6px;
 `;

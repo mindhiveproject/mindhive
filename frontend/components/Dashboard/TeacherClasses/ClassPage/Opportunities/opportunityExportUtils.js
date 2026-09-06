@@ -2,6 +2,10 @@
 
 import { getProposalAnswer } from "../../../../../lib/opportunityProposalData";
 import {
+  getOpportunityMentors,
+  getPrimarySponsor,
+} from "../../../../../lib/opportunityPeople";
+import {
   collectMediaAssetIdsFromOpportunities,
   collectOpportunityMediaDownloads,
   getOpportunityMediaCsvFields,
@@ -143,6 +147,31 @@ export const EXPORT_COLUMN_GROUPS = [
     labelKey: "opportunities.matchingRound.export.groups.people",
     labelDefault: "People & org",
     columns: [
+      {
+        id: "sponsorId",
+        headerKey: "opportunities.matchingRound.export.columns.sponsorId",
+        headerDefault: "Sponsor ID",
+      },
+      {
+        id: "sponsorFirstName",
+        headerKey: "opportunities.matchingRound.export.columns.sponsorFirstName",
+        headerDefault: "Sponsor first name",
+      },
+      {
+        id: "sponsorLastName",
+        headerKey: "opportunities.matchingRound.export.columns.sponsorLastName",
+        headerDefault: "Sponsor last name",
+      },
+      {
+        id: "sponsorUsername",
+        headerKey: "opportunities.matchingRound.export.columns.sponsorUsername",
+        headerDefault: "Sponsor username",
+      },
+      {
+        id: "sponsorEmail",
+        headerKey: "opportunities.matchingRound.export.columns.sponsorEmail",
+        headerDefault: "Sponsor email",
+      },
       {
         id: "mentorId",
         headerKey: "opportunities.matchingRound.export.columns.mentorId",
@@ -463,7 +492,9 @@ export function buildOpportunityExportValues({
 }) {
   const list = listOpportunity || {};
   const detail = detailOpportunity || {};
-  const mentor = detail.mentor || list.mentor || {};
+  const merged = { ...list, ...detail };
+  const sponsor = getPrimarySponsor(merged) || {};
+  const mentor = getOpportunityMentors(merged)[0] || {};
   const organization = detail.organization || list.organization || {};
   const selectedSet = new Set(selectedOpportunityIds || []);
   const media = mergeOpportunityMedia(list, detail);
@@ -492,6 +523,11 @@ export function buildOpportunityExportValues({
     coverImageZipPath: mediaFields.coverImageZipPath,
     followUpAssetCount: mediaFields.followUpAssetCount ?? 0,
     followUpAssetZipPaths: mediaFields.followUpAssetZipPaths || "",
+    sponsorId: sponsor.id || "",
+    sponsorFirstName: sponsor.firstName || "",
+    sponsorLastName: sponsor.lastName || "",
+    sponsorUsername: sponsor.username || "",
+    sponsorEmail: sponsor.email || "",
     mentorId: mentor.id || "",
     mentorFirstName: mentor.firstName || "",
     mentorLastName: mentor.lastName || "",

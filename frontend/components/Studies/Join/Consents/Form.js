@@ -2,24 +2,23 @@ import ReactHtmlParser from "react-html-parser";
 import useTranslation from "next-translate/useTranslation";
 
 const getConsent = (consent, name) =>
-  consent?.info.filter((info) => info.name === name).map((info) => info.text) || "";
+  consent?.info?.filter((info) => info.name === name).map((info) => info.text) ||
+  "";
 
-// to check whether a participant is under 18 based on age
 const isUnder18 = (age) => {
-  if (!age && age !== 0) return false; // treat missing age as not under 18 for safety
-  const ageNum = typeof age === 'string' ? parseInt(age, 10) : Number(age);
+  if (!age && age !== 0) return false;
+  const ageNum = typeof age === "string" ? parseInt(age, 10) : Number(age);
   return !isNaN(ageNum) && ageNum < 18;
 };
 
 export default function ConsentForm({
   consent,
-  settings,
   userInfo,
   inputs,
   handleChange,
 }) {
-  const { t } = useTranslation('common');
-  const publicStudies = consent?.studies.filter((study) => study.public) || [];
+  const { t } = useTranslation("common");
+  const publicStudies = consent?.studies?.filter((study) => study.public) || [];
 
   const regularAdultsConsent = getConsent(consent, "regularAdults");
   const sonaAdultsConsent = getConsent(consent, "sonaAdults");
@@ -42,14 +41,11 @@ export default function ConsentForm({
     });
   };
 
-  // Determine which consent content to display
   let consentContent = [];
 
   if (anyoneConsent && anyoneConsent.length) {
-    // If an "anyone" consent exists, use it regardless of age
     consentContent = anyoneConsent;
   } else if (isUnder18(userInfo?.age)) {
-    // For participants under 18, choose based on other criteria:
     if (
       userInfo.sona === "yes" &&
       sonaMinorsConsent.length &&
@@ -66,7 +62,6 @@ export default function ConsentForm({
       consentContent = [regularMinorsConsent, regularMinorsKidsConsent];
     }
   } else {
-    // For participants 18 or older, choose based on other criteria:
     if (userInfo.sona === "yes" && sonaAdultsConsent.length) {
       consentContent = [sonaAdultsConsent];
     } else if (userInfo.studentNYC === "yes" && studentsNYCConsent.length) {
@@ -78,44 +73,53 @@ export default function ConsentForm({
 
   return (
     <div>
-      {/* Consent Text Section */}
-      <div>
+      <div className="consentContent">
         {consentContent.map((text, index) => (
           <div key={index}>{ReactHtmlParser(text)}</div>
         ))}
       </div>
 
-      {/* Study & Protocol Information */}
       <div className="consentInfo">
         <div>
           <p>
-            {t('consent.form.studyInfo', {
-              organization: consent?.organization,
-              title: consent?.title,
-            })}
+            {t(
+              "consent.form.studyInfo",
+              {
+                organization: consent?.organization,
+                title: consent?.title,
+              },
+              {
+                default:
+                  "This study is part of the {{organization}} research protocol {{title}}.",
+              },
+            )}
           </p>
 
           {publicStudies?.length ? (
             <div>
-              <p>{t('consent.form.coveredStudiesDesc')}</p>
-              <div className="coveredStudiesAndTasks">
+              <p>
+                {t("consent.form.coveredStudiesDesc", {}, {
+                  default:
+                    "Tasks and surveys associated with the following studies are covered under this protocol",
+                })}
+              </p>
+              <ul className="coveredStudiesAndTasks">
                 {publicStudies.map((study) => (
                   <li key={study.id}>{study.title}</li>
                 ))}
-              </div>
+              </ul>
             </div>
-          ) : (
-            <div></div>
-          )}
+          ) : null}
         </div>
       </div>
 
-      {/* Additional fields for participants under 18 */}
       {isUnder18(userInfo?.age) && (
         <>
           <div>
             <label htmlFor="parentname">
-              <p>{t('consent.form.parentName')}</p>
+              <p className="questionTitle">
+                {t("consent.form.parentName", {}, { default: "Parent name" })}
+              </p>
               <input
                 type="text"
                 id="parentname"
@@ -128,7 +132,11 @@ export default function ConsentForm({
 
           <div>
             <label htmlFor="parentemail">
-              <p>{t('consent.form.parentEmail')}</p>
+              <p className="questionTitle">
+                {t("consent.form.parentEmail", {}, {
+                  default: "Parent email address",
+                })}
+              </p>
               <input
                 type="email"
                 id="parentemail"
@@ -141,7 +149,9 @@ export default function ConsentForm({
 
           <div>
             <label htmlFor="kidname">
-              <p>{t('consent.form.kidName')}</p>
+              <p className="questionTitle">
+                {t("consent.form.kidName", {}, { default: "Your name" })}
+              </p>
               <input
                 type="text"
                 id="kidname"

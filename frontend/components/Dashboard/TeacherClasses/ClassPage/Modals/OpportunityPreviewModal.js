@@ -27,9 +27,11 @@ import {
   isReturnableOpportunityStatus,
   returnOpportunityToSponsor,
 } from "../../../Connect/returnOpportunityUtils";
-import ConnectProfileCard from "../../../Connect/ConnectProfileCard";
-import { CARD_WIDTH } from "../../../Connect/ConnectBrowseLayout";
-import OrganizationConnectCard from "../../../Connect/Organizations/OrganizationConnectCard";
+import OpportunityPeoplePanels from "../../../Connect/OpportunityPeoplePanels";
+import {
+  getPrimarySponsor,
+  getOpportunityMentors,
+} from "../../../../../lib/opportunityPeople";
 import { useUser } from "../../../../Utils/Access/User";
 import {
   getUnreadSponsorReplyNotes,
@@ -46,6 +48,8 @@ import {
   getIntakeProposalFormDefinitionId,
   isProposalFormAnswerComplete,
 } from "../../../../../lib/opportunityProposalData";
+import OpportunityIntroVideoPlayer from "../../../Connect/OpportunityIntroVideoPlayer";
+import { hasOpportunityPlayableVideo } from "../../../../../lib/opportunityVideoEmbed";
 
 /*
  * Backlog (Available / Pre-selected grid — later):
@@ -54,8 +58,6 @@ import {
  * - Revisit dual selection paths (grid checkbox vs modal Select/Remove).
  * - Clarify or replace the opaque `!` InfoPopover vs Review.
  */
-
-const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
 const STATUS_KEYS = {
   draft: "draft",
@@ -212,54 +214,6 @@ const ChatThreadWrap = styled.div`
   flex-direction: column;
 `;
 
-/**
- * The People tab keeps the real Connect card rather than inventing a shape that
- * exists on one screen. Each entity sits in a tinted panel that supplies the
- * heading and, for the contact, the opportunity fields they attested to — so
- * the card itself renders exactly as it does on the browse pages.
- */
-const PeopleColumns = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
-
-  @media (max-width: 900px) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-`;
-
-const PeoplePanel = styled.section`
-  display: grid;
-  /* Heading and card sit centred; only the meta grid below stretches (see the
-     rule at the bottom), since its fields need the panel's full width. */
-  justify-items: center;
-  gap: 12px;
-  min-width: 0;
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
-  box-sizing: border-box;
-
-  h4 {
-    margin: 0;
-    font: var(--MH-Type-Title-Base);
-    letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Black, #171717);
-  }
-
-  /* Hold the card to its browse width so it reads as the same object here. */
-  > article {
-    max-width: ${CARD_WIDTH};
-  }
-
-  /* Meta fields span the panel rather than the card. */
-  > *:not(article):not(h4) {
-    justify-self: stretch;
-    min-width: 0;
-  }
-`;
-
 const TitleRow = styled.span`
   display: flex;
   align-items: flex-start;
@@ -404,58 +358,6 @@ const MUTED_TEXT_STYLE = {
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
 };
 
-function extractUrl(raw) {
-  if (!raw) return null;
-  const trimmed = String(raw).trim();
-  if (!trimmed) return null;
-  const m = trimmed.match(/<iframe[^>]+src=["']([^"']+)["']/i);
-  return m ? m[1] : trimmed;
-}
-
-function isDirectVideoFile(url) {
-  if (!url) return false;
-  try {
-    return DIRECT_VIDEO_EXT.test(new URL(url).pathname);
-  } catch {
-    return DIRECT_VIDEO_EXT.test(url);
-  }
-}
-
-function getEmbedUrl(rawUrl) {
-  if (!rawUrl) return null;
-  try {
-    const u = new URL(rawUrl);
-    const host = u.hostname.replace(/^www\./, "");
-    if (host === "youtube.com" || host === "m.youtube.com") {
-      const v = u.searchParams.get("v");
-      if (v) return `https://www.youtube.com/embed/${v}`;
-      const shortsMatch = u.pathname.match(/^\/shorts\/([^/]+)/);
-      if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
-      const embedMatch = u.pathname.match(/^\/embed\/([^/]+)/);
-      if (embedMatch) return `https://www.youtube.com/embed/${embedMatch[1]}`;
-    }
-    if (host === "youtu.be") {
-      const id = u.pathname.replace(/^\//, "");
-      if (id) return `https://www.youtube.com/embed/${id}`;
-    }
-    if (host === "vimeo.com" || host === "player.vimeo.com") {
-      const id = u.pathname.replace(/^\/(video\/)?/, "").split("/")[0];
-      if (id) return `https://player.vimeo.com/video/${id}`;
-    }
-    if (host === "loom.com" || host.endsWith(".loom.com")) {
-      const m = u.pathname.match(/\/(share|embed)\/([^/?]+)/);
-      if (m) return `https://www.loom.com/embed/${m[2]}`;
-    }
-    if (host === "drive.google.com") {
-      const m = u.pathname.match(/\/file\/d\/([^/]+)/);
-      if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
 function displayName(profile) {
   if (!profile) return null;
   return (
@@ -488,68 +390,6 @@ function MetaItem({ label, value, style, valueStyle }) {
         {value}
       </div>
     </div>
-  );
-}
-
-/**
- * Guidelines / mentor-role fields for the sponsor profile on this opportunity.
- * These sit inside the contact's own panel, so the value carries no name — the
- * card directly above it already says who acknowledged.
- */
-function SponsorProfileOpportunityMeta({ opportunity, t }) {
-  if (!opportunity) return null;
-
-  const showGuidelines = !!opportunity.guidelinesAcknowledged;
-  const showSponsorIsMentor = opportunity.sponsorIsMentor != null;
-  const showMentorNotes =
-    !opportunity.sponsorIsMentor && !!opportunity.mentorNotes;
-
-  if (!showGuidelines && !showSponsorIsMentor && !showMentorNotes) {
-    return null;
-  }
-
-  const acknowledgedAt = formatDate(opportunity.guidelinesAcknowledgedAt);
-  const guidelinesValue =
-    acknowledgedAt || t("opportunities.preview.yes", {}, { default: "Yes" });
-
-  return (
-    <FieldsGrid>
-      {showGuidelines ? (
-        <MetaItem
-          label={t("opportunities.preview.guidelinesAcknowledged", {}, {
-            default: "Guidelines acknowledged",
-          })}
-          value={guidelinesValue}
-          valueStyle={{
-            background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
-            border: "2px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
-            fontWeight: 600,
-          }}
-        />
-      ) : null}
-      {showSponsorIsMentor ? (
-        <MetaItem
-          label={t("opportunities.preview.sponsorIsMentor", {}, {
-            default: "Sponsor is mentor",
-          })}
-          value={
-            opportunity.sponsorIsMentor
-              ? t("opportunities.preview.yes", {}, { default: "Yes" })
-              : t("opportunities.preview.no", {}, { default: "No" })
-          }
-        />
-      ) : null}
-      {showMentorNotes ? (
-        <div style={{ gridColumn: "1 / -1", minWidth: 0 }}>
-          <ReviewField
-            label={t("opportunities.preview.mentorNotes", {}, {
-              default: "Mentor notes",
-            })}
-            value={opportunity.mentorNotes}
-          />
-        </div>
-      ) : null}
-    </FieldsGrid>
   );
 }
 
@@ -691,14 +531,17 @@ export default function OpportunityPreviewModal({
   const viewerId = data?.authenticatedItem?.id;
 
   const coverSrc = opp?.coverImage?.url || opp?.coverImageUrl || null;
-  const mentorName = displayName(opp?.mentor);
+  const primarySponsor = getPrimarySponsor(opp);
+  const primaryMentor = getOpportunityMentors(opp)[0] || null;
+  const headerContact = primaryMentor || primarySponsor;
+  const mentorName = displayName(headerContact);
   const orgName = opp?.organization?.name || null;
   const mentorAvatar =
-    opp?.mentor?.image?.keystoneImage?.url ||
-    opp?.mentor?.image?.image?.publicUrlTransformed ||
+    headerContact?.image?.keystoneImage?.url ||
+    headerContact?.image?.image?.publicUrlTransformed ||
     null;
   const orgLogo = opp?.organization?.logo?.url || null;
-  const mentorProfileId = opp?.mentor?.publicId || null;
+  const mentorProfileId = headerContact?.publicId || null;
   const orgId = opp?.organization?.id || null;
   const mentorProfileUrl = mentorProfileId
     ? `/dashboard/connect/with?id=${encodeURIComponent(mentorProfileId)}`
@@ -910,13 +753,9 @@ export default function OpportunityPreviewModal({
       })
     : opp?.projectCategory;
 
-  const cleanVideoUrl = extractUrl(opp?.videoUrl);
-  const directVideoSrc =
-    opp?.videoFile?.url ||
-    (isDirectVideoFile(cleanVideoUrl) ? cleanVideoUrl : null);
-  const embedUrl = !directVideoSrc ? getEmbedUrl(cleanVideoUrl) : null;
-  const fallbackIframeSrc =
-    !directVideoSrc && !embedUrl && cleanVideoUrl ? cleanVideoUrl : null;
+  const openVideoInNewTabLabel = tConnect("opportunityEditor.openVideoInNewTab", {}, {
+    default: "Open video in new tab",
+  });
 
   const gradeLevelsLabel = (opp?.preferGradeLevels || [])
     .map((value) =>
@@ -1519,49 +1358,24 @@ export default function OpportunityPreviewModal({
                     </PreviewSection>
                   ) : null}
 
-                  {(directVideoSrc || embedUrl || fallbackIframeSrc) && (
+                  {hasOpportunityPlayableVideo(opp) ? (
                     <PreviewSection
                       title={tConnect("opportunityEditor.introVideo", {}, {
                         default: "Intro video",
                       })}
                     >
-                      {directVideoSrc ? (
-                        <video
-                          src={directVideoSrc}
-                          controls
-                          style={{ width: "100%", borderRadius: 12, maxHeight: 360 }}
-                        />
-                      ) : (
-                        <div
-                          style={{
-                            position: "relative",
-                            paddingBottom: "56.25%",
-                            height: 0,
-                            overflow: "hidden",
-                            borderRadius: 12,
-                            background: "#111",
-                          }}
-                        >
-                          <iframe
-                            title={tConnect("opportunityEditor.introVideo", {}, {
-                              default: "Intro video",
-                            })}
-                            src={embedUrl || fallbackIframeSrc}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              width: "100%",
-                              height: "100%",
-                              border: 0,
-                            }}
-                          />
-                        </div>
-                      )}
+                      <OpportunityIntroVideoPlayer
+                        opportunity={opp}
+                        title={tConnect("opportunityEditor.introVideo", {}, {
+                          default: "Intro video",
+                        })}
+                        openInNewTabLabel={openVideoInNewTabLabel}
+                        borderRadius={12}
+                        videoStyle={{ maxHeight: 360 }}
+                        iframeWrapStyle={{ background: "#111" }}
+                      />
                     </PreviewSection>
-                  )}
+                  ) : null}
 
                   {(opp.description ||
                     showIntakeDefinitionForm ||
@@ -1841,55 +1655,11 @@ export default function OpportunityPreviewModal({
 
               {resolvedTab === OPPORTUNITY_PREVIEW_TABS.people ? (
                 <div style={{ display: "grid", gap: 16 }}>
-                  {opp.organization || opp.mentor ? (
-                    <PeopleColumns>
-                      {opp.mentor ? (
-                        <PeoplePanel>
-                          <h4>
-                            {t("opportunities.preview.primaryContact", {}, {
-                              default: "Primary contact",
-                            })}
-                          </h4>
-                          <ConnectProfileCard
-                            user={user}
-                            profile={opp.mentor}
-                          />
-                          <SponsorProfileOpportunityMeta
-                            opportunity={opp}
-                            t={t}
-                          />
-                        </PeoplePanel>
-                      ) : null}
-
-                      {opp.organization ? (
-                        <PeoplePanel>
-                          <h4>
-                            {t("opportunities.preview.organization", {}, {
-                              default: "Organization",
-                            })}
-                          </h4>
-                          <OrganizationConnectCard org={opp.organization} />
-                        </PeoplePanel>
-                      ) : null}
-                    </PeopleColumns>
-                  ) : null}
-
-                  {/* Meta without a contact panel to live in — still show it. */}
-                  {!opp.mentor ? (
-                    <SponsorProfileOpportunityMeta opportunity={opp} t={t} />
-                  ) : null}
-
-                  {!opp.organization &&
-                  !opp.mentor &&
-                  !opp.guidelinesAcknowledged &&
-                  opp.sponsorIsMentor == null &&
-                  !opp.mentorNotes ? (
-                    <p style={BODY_TEXT_STYLE}>
-                      {t("opportunities.preview.peopleEmpty", {}, {
-                        default: "No organization or mentor details are available yet.",
-                      })}
-                    </p>
-                  ) : null}
+                  <OpportunityPeoplePanels
+                    opportunity={opp}
+                    user={user}
+                    t={t}
+                  />
                 </div>
               ) : null}
 

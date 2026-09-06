@@ -100,10 +100,11 @@ export default function ResourceChipList({
     if (!active?.url) return;
     if (kind === "media") {
       downloadExternalUrl(active.url, active);
+      closeModal();
       return;
     }
     openExternalUrl(active.url);
-  }, [active, kind]);
+  }, [active, closeModal, kind]);
 
   if (list.length === 0) {
     return emptyLabel ? (

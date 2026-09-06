@@ -10,8 +10,31 @@ import {
 import JoinStudy from "./JoinStudy";
 import Button from "../../DesignSystem/Button";
 
+function YesNoButtons({ labelledBy, value, onChange, yesLabel, noLabel }) {
+  return (
+    <ResponseButtons role="group" aria-labelledby={labelledBy}>
+      <Button
+        type="button"
+        variant={value === "yes" ? "tonal" : "outline"}
+        onClick={() => onChange("yes")}
+        aria-pressed={value === "yes"}
+      >
+        {yesLabel}
+      </Button>
+      <Button
+        type="button"
+        variant={value === "no" ? "tonal" : "outline"}
+        onClick={() => onChange("no")}
+        aria-pressed={value === "no"}
+      >
+        {noLabel}
+      </Button>
+    </ResponseButtons>
+  );
+}
+
 export default function Details({ user, study, query }) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const { inputs, handleChange } = useForm({
     zip: "",
     sona: "",
@@ -27,17 +50,31 @@ export default function Details({ user, study, query }) {
   const { settings } = study;
   const consents = study?.consent || [];
 
+  const setField = (name, value) =>
+    handleChange({ target: { name, value } });
+
   return (
     <StyledDetails>
-      <h1>{t('join.details.header')}</h1>
-      <h3>
-        {t('join.details.intro', { title: study.title })}
-      </h3>
+      <h1>
+        {t("join.details.header", {}, { default: "Let's get started" })}
+      </h1>
+      <p className="pageIntro">
+        {t(
+          "join.details.intro",
+          { title: study.title },
+          {
+            default:
+              'We are glad that you are interested in participating in "{{title}}".',
+          },
+        )}
+      </p>
 
       {settings?.zipCode && (
         <div>
           <label htmlFor="zip">
-            <p className="questionTitle">{t('join.details.zip')}</p>
+            <p className="questionTitle">
+              {t("join.details.zip", {}, { default: "Your zip code" })}
+            </p>
             <input
               type="number"
               id="zip"
@@ -51,35 +88,33 @@ export default function Details({ user, study, query }) {
 
       {settings?.sonaId && (
         <div>
-          <label htmlFor="sona">
-            <p className="questionTitle">{t('join.details.sona')}</p>
-            <ResponseButtons>
-              <button
-                onClick={() =>
-                  handleChange({ target: { name: "sona", value: "yes" } })
-                }
-                className={inputs?.sona === "yes" ? "selectedBtn" : undefined}
-              >
-                {t('join.details.sonaYes')}
-              </button>
-              <button
-                onClick={() =>
-                  handleChange({ target: { name: "sona", value: "no" } })
-                }
-                className={inputs?.sona === "no" ? "selectedBtn" : undefined}
-              >
-                {t('join.details.sonaNo')}
-              </button>
-            </ResponseButtons>
-          </label>
+          <p className="questionTitle" id="sona-label">
+            {t("join.details.sona", {}, {
+              default: "Are you an NYU SONA participant?",
+            })}
+          </p>
+          <YesNoButtons
+            labelledBy="sona-label"
+            value={inputs?.sona}
+            onChange={(value) => setField("sona", value)}
+            yesLabel={t("join.details.sonaYes", {}, { default: "Yes" })}
+            noLabel={t("join.details.sonaNo", {}, { default: "No" })}
+          />
         </div>
       )}
 
       {settings?.askStudentsNYC && (
         <div>
           <label htmlFor="sonaid">
-            <p className="questionTitle">{t('join.details.nyuId')}</p>
-            <span>{t('join.details.nyuIdDesc')}</span>
+            <p className="questionTitle">
+              {t("join.details.nyuId", {}, { default: "What is your NYU ID?" })}
+            </p>
+            <span className="pageIntro">
+              {t("join.details.nyuIdDesc", {}, {
+                default:
+                  "By entering your ID, we can ensure that you will receive course credit for your participation in this study.",
+              })}
+            </span>
             <input
               type="text"
               id="sonaid"
@@ -92,38 +127,34 @@ export default function Details({ user, study, query }) {
       )}
 
       <div>
-        <label htmlFor="eng">
-          <p className="questionTitle">
-            {t('join.details.english')}
-          </p>
-
-          <ResponseButtons>
-            <button
-              onClick={() =>
-                handleChange({ target: { name: "eng", value: "yes" } })
-              }
-              className={inputs?.eng === "yes" ? "selectedBtn" : undefined}
-            >
-              {t('join.details.englishYes')}
-            </button>
-            <button
-              onClick={() =>
-                handleChange({ target: { name: "eng", value: "no" } })
-              }
-              className={inputs?.eng === "no" ? "selectedBtn" : undefined}
-            >
-              {t('join.details.englishNo')}
-            </button>
-          </ResponseButtons>
-          <p className="translation">
-            <em>{t('join.details.englishTranslationNote')}</em>
-          </p>
-        </label>
+        <p className="questionTitle" id="eng-label">
+          {t("join.details.english", {}, {
+            default:
+              "Do you understand basic instruction written in English?",
+          })}
+        </p>
+        <YesNoButtons
+          labelledBy="eng-label"
+          value={inputs?.eng}
+          onChange={(value) => setField("eng", value)}
+          yesLabel={t("join.details.englishYes", {}, { default: "Yes" })}
+          noLabel={t("join.details.englishNo", {}, { default: "No" })}
+        />
+        <p className="translation">
+          <em>
+            {t("join.details.englishTranslationNote", {}, {
+              default:
+                "(La versión en español de la plataforma estará disponible en poco tiempo.)",
+            })}
+          </em>
+        </p>
       </div>
 
       <div>
         <label htmlFor="age">
-          <p className="questionTitle">{t('join.details.age')}</p>
+          <p className="questionTitle">
+            {t("join.details.age", {}, { default: "What is your age?" })}
+          </p>
           <input
             type="number"
             id="age"
@@ -153,34 +184,42 @@ export default function Details({ user, study, query }) {
                 })
               }
             />
-            <span>{t('join.details.saveInfo')}</span>
+            <span>
+              {t("join.details.saveInfo", {}, {
+                default: "Save my information for future studies",
+              })}
+            </span>
           </div>
         </label>
       </div>
 
-      {settings?.consentObtained && consents?.length > 0 ? (
-        <Link
-          href={{
-            pathname: `/join/consent`,
-            query: {
-              ...inputs,
-              id: study?.id,
-              consent: study?.consent[0]?.id,
-            },
-          }}
-        >
-          <Button variant="outline" style={{ width: "100%" }}>
-            {t("join.details.next", {}, { default: "Next" })}
-          </Button>
-        </Link>
-      ) : (
-        <JoinStudy
-          user={user}
-          study={study}
-          userInfo={inputs}
-          btnName={t('join.details.joinButton')}
-        />
-      )}
+      <div className="actions">
+        {settings?.consentObtained && consents?.length > 0 ? (
+          <Link
+            href={{
+              pathname: `/join/consent`,
+              query: {
+                ...inputs,
+                id: study?.id,
+                consent: study?.consent[0]?.id,
+              },
+            }}
+          >
+            <Button variant="filled" style={{ width: "100%" }}>
+              {t("join.details.next", {}, { default: "Next" })}
+            </Button>
+          </Link>
+        ) : (
+          <JoinStudy
+            user={user}
+            study={study}
+            userInfo={inputs}
+            btnName={t("join.details.joinButton", {}, {
+              default: "Join the study",
+            })}
+          />
+        )}
+      </div>
     </StyledDetails>
   );
 }

@@ -12,11 +12,15 @@ import {
   StarIcon,
 } from "../../../../DesignSystem/Icons";
 import { RECORD_OPPORTUNITY_PREVIEW_VISIT } from "../../../../Mutations/Log";
+import { DELETE_PREFERENCE_ITEMS } from "../../../../Mutations/ConnectPreference";
+import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../../Mutations/Opportunity";
 import { CLASS_STUDENT_OPPORTUNITIES } from "../../../../Queries/ConnectRound";
+import { CURRENT_USER_QUERY } from "../../../../Queries/User";
 import {
   getDistinctProjectCategories,
   getProjectCategoryDisplay,
 } from "../../../../../lib/opportunityCategory";
+import { getBrowseDraftDriftEntries } from "../../../../../lib/opportunityFavoriteRanking";
 import {
   BrowseCardsGrid,
   BrowseSearchField,
@@ -25,27 +29,35 @@ import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import StudentOpportunityPreview from "./StudentOpportunityPreview";
 import StudentPreferenceSubmission from "./StudentPreferenceSubmission";
 import StudentRankActionCard from "./StudentRankActionCard";
-
-/**
- * Matching rounds are "open for students" when status is preferences_open
- * (same gate as Connect Participate: students can view/rank then).
- */
+import RankingDriftRepairModal from "./RankingDriftRepairModal";
+import {
+  getOpportunityMentors,
+  getOpportunitySponsors,
+} from "../../../../../lib/opportunityPeople";
+import {
+  readStudentOpportunityBrowsePrefs,
+  writeStudentOpportunityBrowsePrefs,
+} from "../studentClassPagePrefs";
 const STUDENT_OPEN_ROUND_STATUS = "preferences_open";
 const MIN_DWELL_MS = 1000;
 
 function opportunitySearchHaystack(opportunity) {
-  const mentor = [
-    opportunity?.mentor?.firstName,
-    opportunity?.mentor?.lastName,
-    opportunity?.mentor?.username,
+  const people = [
+    ...getOpportunitySponsors(opportunity),
+    ...getOpportunityMentors(opportunity),
   ]
+    .flatMap((profile) => [
+      profile?.firstName,
+      profile?.lastName,
+      profile?.username,
+    ])
     .filter(Boolean)
     .join(" ");
   return [
     opportunity?.title,
     opportunity?.shortDescription,
     opportunity?.organization?.name,
-    mentor,
+    people,
   ]
     .filter(Boolean)
     .join(" ")
@@ -64,16 +76,25 @@ const RankBanners = styled.div`
   display: grid;
   gap: 12px;
   width: 100%;
-  max-width: 920px;
-  margin: 0 auto;
-`;
+`
 
 const Filters = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  align-self: start;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px 16px;
   width: 100%;
+  padding: 8px 16px;
+  box-sizing: border-box;
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 12px;
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
 `;
 
 const FilterRow = styled.div`
@@ -101,10 +122,14 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
   const [filterMode, setFilterMode] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [driftRepairResolved, setDriftRepairResolved] = useState(false);
+  const [driftRepairLoading, setDriftRepairLoading] = useState(false);
 
   const sessionRef = useRef(null);
   const flushedRef = useRef(false);
   const startPreviewSessionRef = useRef(null);
+  const hasRestoredBrowsePrefs = useRef(false);
+  const browsePrefsClassId = useRef(null);
 
   const [recordVisit] = useMutation(RECORD_OPPORTUNITY_PREVIEW_VISIT);
 
@@ -117,10 +142,19 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       ? router.query.opportunity
       : null;
 
-  const { data, loading } = useQuery(CLASS_STUDENT_OPPORTUNITIES, {
-    variables: { code: classCode },
-    skip: !classCode,
-    fetchPolicy: "cache-and-network",
+  const { data, loading, refetch: refetchOpportunities } = useQuery(
+    CLASS_STUDENT_OPPORTUNITIES,
+    {
+      variables: { code: classCode },
+      skip: !classCode,
+      fetchPolicy: "cache-and-network",
+    },
+  );
+
+  const [deletePreferenceItems] = useMutation(DELETE_PREFERENCE_ITEMS);
+  const [restoreFavorites] = useMutation(TOGGLE_FAVORITE_OPPORTUNITY, {
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    awaitRefetchQueries: true,
   });
 
   const networks = data?.class?.networks || myclass?.networks || [];
@@ -200,6 +234,136 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     }
     return map;
   }, [data?.authenticatedItem?.connectPreferences]);
+
+  const draftRankedOppIds = useMemo(() => {
+    const ids = new Set();
+    const prefs = data?.authenticatedItem?.connectPreferences || [];
+    for (const pref of prefs) {
+      if (pref?.status !== "draft") continue;
+      for (const item of pref.items || []) {
+        const oppId = item?.opportunity?.id;
+        if (oppId) ids.add(oppId);
+      }
+    }
+    return ids;
+  }, [data?.authenticatedItem?.connectPreferences]);
+
+  const classFavoriteRefetchQueries = useMemo(
+    () =>
+      classCode
+        ? [{ query: CLASS_STUDENT_OPPORTUNITIES, variables: { code: classCode } }]
+        : [],
+    [classCode],
+  );
+
+  const openRoundsById = useMemo(
+    () => new Map(openRounds.map((round) => [round.id, round])),
+    [openRounds],
+  );
+
+  const roundOpportunityIdsByRoundId = useMemo(() => {
+    const map = new Map();
+    for (const network of networks) {
+      for (const round of network?.connectRounds || []) {
+        if (round?.status !== STUDENT_OPEN_ROUND_STATUS || !round?.id) continue;
+        const ids = new Set(
+          (round.opportunities || []).map((opp) => opp?.id).filter(Boolean),
+        );
+        map.set(round.id, ids);
+      }
+    }
+    return map;
+  }, [networks]);
+
+  const browseDraftDriftEntries = useMemo(
+    () =>
+      getBrowseDraftDriftEntries({
+        connectPreferences: data?.authenticatedItem?.connectPreferences,
+        favoriteOpportunities: user?.favoriteOpportunities,
+        roundOpportunityIdsByRoundId,
+        openRoundsById,
+      }),
+    [
+      data?.authenticatedItem?.connectPreferences,
+      openRoundsById,
+      roundOpportunityIdsByRoundId,
+      user?.favoriteOpportunities,
+    ],
+  );
+
+  const showBrowseDriftRepairModal =
+    browseDraftDriftEntries.length > 0 && !driftRepairResolved;
+
+  useEffect(() => {
+    setDriftRepairResolved(false);
+  }, [data?.authenticatedItem?.connectPreferences, user?.favoriteOpportunities]);
+
+  const handleRestoreBrowseDriftFavorites = useCallback(async () => {
+    if (!user?.id || !browseDraftDriftEntries.length) return;
+    setDriftRepairLoading(true);
+    try {
+      await restoreFavorites({
+        variables: {
+          profileId: user.id,
+          input: {
+            favoriteOpportunities: {
+              connect: browseDraftDriftEntries.map((entry) => ({
+                id: entry.oppId,
+              })),
+            },
+          },
+        },
+      });
+      setDriftRepairResolved(true);
+      await refetchOpportunities();
+    } catch (error) {
+      console.error("Failed to restore drift favorites from browse", error);
+    } finally {
+      setDriftRepairLoading(false);
+    }
+  }, [
+    browseDraftDriftEntries,
+    refetchOpportunities,
+    restoreFavorites,
+    user?.id,
+  ]);
+
+  const handleRemoveBrowseDriftFromDraft = useCallback(async () => {
+    if (!browseDraftDriftEntries.length) return;
+    setDriftRepairLoading(true);
+    try {
+      const itemIds = browseDraftDriftEntries
+        .map((entry) => entry.itemId)
+        .filter(Boolean);
+      if (itemIds.length) {
+        await deletePreferenceItems({
+          variables: {
+            where: itemIds.map((id) => ({ id })),
+          },
+        });
+      }
+      setDriftRepairResolved(true);
+      await refetchOpportunities();
+    } catch (error) {
+      console.error("Failed to remove drifted draft items from browse", error);
+    } finally {
+      setDriftRepairLoading(false);
+    }
+  }, [
+    browseDraftDriftEntries,
+    deletePreferenceItems,
+    refetchOpportunities,
+  ]);
+
+  const browseDriftRepairModal = (
+    <RankingDriftRepairModal
+      open={showBrowseDriftRepairModal}
+      driftCount={browseDraftDriftEntries.length}
+      onRestoreFavorites={handleRestoreBrowseDriftFavorites}
+      onRemoveFromDraft={handleRemoveBrowseDriftFromDraft}
+      loading={driftRepairLoading}
+    />
+  );
 
   const clearOpportunitiesQuery = useCallback(() => {
     if (!classCode) return;
@@ -290,6 +454,36 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       setCategoryFilter(null);
     }
   }, [categoryFilter, categoryOptions, showCategoryFilters]);
+
+  useEffect(() => {
+    if (!classId) return;
+
+    if (browsePrefsClassId.current !== classId) {
+      browsePrefsClassId.current = classId;
+      hasRestoredBrowsePrefs.current = false;
+    }
+
+    if (hasRestoredBrowsePrefs.current) return;
+
+    const stored = readStudentOpportunityBrowsePrefs(classId);
+    if (stored) {
+      setFilterMode(stored.filterMode);
+      setCategoryFilter(stored.categoryFilter);
+      setSearchQuery(stored.searchQuery);
+    }
+
+    hasRestoredBrowsePrefs.current = true;
+  }, [classId]);
+
+  useEffect(() => {
+    if (!classId || !hasRestoredBrowsePrefs.current) return;
+
+    writeStudentOpportunityBrowsePrefs(classId, {
+      filterMode,
+      categoryFilter,
+      searchQuery,
+    });
+  }, [classId, filterMode, categoryFilter, searchQuery]);
 
   const filteredOpportunities = useMemo(() => {
     let list = opportunities;
@@ -424,13 +618,18 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
 
   if (showPreviewSubview) {
     return (
-      <StudentOpportunityPreview
-        opportunityId={requestedOpportunityId}
-        onClose={handleClosePreview}
-        user={user}
-        classId={classId}
-        roundId={opportunityRoundIds.get(requestedOpportunityId) || null}
-      />
+      <>
+        <StudentOpportunityPreview
+          opportunityId={requestedOpportunityId}
+          onClose={handleClosePreview}
+          user={user}
+          classId={classId}
+          roundId={opportunityRoundIds.get(requestedOpportunityId) || null}
+          hasDraftRanking={draftRankedOppIds.has(requestedOpportunityId)}
+          favoriteRefetchQueries={classFavoriteRefetchQueries}
+        />
+        {browseDriftRepairModal}
+      </>
     );
   }
 
@@ -579,6 +778,20 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
 
   return (
     <div className="classTabPage opportunities">
+      {openRounds.length > 0 ? (
+        <RankBanners>
+          {openRounds.map((round) => (
+            <StudentRankActionCard
+              key={round.id}
+              round={round}
+              preference={preferenceByRoundId.get(round.id)}
+              hasOpportunities={true}
+              onRank={openRankRound}
+            />
+          ))}
+        </RankBanners>
+      ) : null}
+
       <Filters className="Main__Filters">
         <FilterRow
           role="group"
@@ -647,20 +860,6 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
         ) : null}
       </Filters>
 
-      {openRounds.length > 0 ? (
-        <RankBanners>
-          {openRounds.map((round) => (
-            <StudentRankActionCard
-              key={round.id}
-              round={round}
-              preference={preferenceByRoundId.get(round.id)}
-              hasOpportunities={true}
-              onRank={openRankRound}
-            />
-          ))}
-        </RankBanners>
-      ) : null}
-
       <Page>
         {filteredOpportunities.length === 0 ? (
           <MessageCard
@@ -676,11 +875,15 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
                 opportunity={opportunity}
                 onOpen={handleOpenPreview}
                 user={user}
+                roundId={opportunityRoundIds.get(opportunity.id) || null}
+                hasDraftRanking={draftRankedOppIds.has(opportunity.id)}
+                favoriteRefetchQueries={classFavoriteRefetchQueries}
               />
             ))}
           </BrowseCardsGrid>
         )}
       </Page>
+      {browseDriftRepairModal}
     </div>
   );
 }

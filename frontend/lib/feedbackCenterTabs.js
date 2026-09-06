@@ -92,6 +92,52 @@ export function buildFeedbackCenterTabs(milestones = [], t) {
     });
 }
 
+/** Tabs from a class template board's attached action-card milestones. */
+export function buildClassTemplateTabs(milestones = [], t) {
+  return (milestones || [])
+    .filter((milestone) => milestone && milestone.isActive !== false)
+    .map((milestone) => {
+      const isDataCollection =
+        milestone.key === "data_collection" ||
+        milestone.actionCardType === "ACTION_COLLECTING_DATA" ||
+        milestone.statusTarget === "study";
+
+      if (isDataCollection) {
+        return {
+          selector: "collectingdata",
+          milestoneKey: milestone.key,
+          labelKey: "review.collectingDataMenu",
+          label: t("review.collectingDataMenu", {}, {
+            default: milestone.title || milestone.key,
+          }),
+          isCustom: false,
+          milestone,
+        };
+      }
+
+      const legacy = legacyTabForMilestone(milestone);
+      if (legacy) {
+        return {
+          ...legacy,
+          label: t(legacy.labelKey, {}, {
+            default: milestone.title || milestone.key,
+          }),
+          isCustom: false,
+          milestone,
+        };
+      }
+
+      return {
+        selector: milestone.key,
+        milestoneKey: milestone.key,
+        labelKey: null,
+        label: milestone.title || milestone.key,
+        isCustom: true,
+        milestone,
+      };
+    });
+}
+
 export function resolveStageFromQuery(stage, milestones = []) {
   if (!stage) return getMilestoneKeyFromStage("proposals");
 

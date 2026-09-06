@@ -7,6 +7,12 @@
 		"opensInNewTab": "(opens in new tab)",
 		"verified": "Verified"
 	},
+	"favoriteDraftConflict": {
+		"title": "Remove from favorites?",
+		"body": "This opportunity is in your draft ranking. Removing it from favorites will also remove it from your draft ranking list.",
+		"keepFavorite": "Keep favorite",
+		"confirmRemove": "Unfavorite and remove from draft ranking"
+	},
 	"asyncAnsweringQuestions": "Answering student questions (based on your profile).",
 	"asyncProvidingFeedback": "Providing feedback on student projects",
 	"availability": "Availability",
@@ -405,8 +411,10 @@
 		"hardware": "Hardware",
 		"hostedBy": "Hosted by",
 		"introVideo": "Intro video",
+		"openVideoInNewTab": "Open video in new tab",
 		"loading": "Loading opportunity…",
 		"mentorTimeCommitment": "Time commitment: {{value}}",
+		"mentor": "Mentor",
 		"notFound": "Opportunity not found, or no longer available.",
 		"pastParticipants": "What past participants said",
 		"ratingSummary": "({{count}} reviews)",
@@ -415,6 +423,7 @@
 		"saveToFavorites": "Save to favorites",
 		"software": "Software",
 		"solo": "Solo",
+		"sponsor": "Sponsor",
 		"teamOf": "Team of {{count}}",
 		"teamSize": "Team size",
 		"timeCommitment": "Time commitment",
@@ -549,11 +558,14 @@
 		},
 		"matchingAlgorithmLabel": "Matching algorithm",
 		"noRankedCandidates": "No unmatched students ranked this opportunity. Assign one manually instead.",
+		"noPreference": " — no preference",
 		"notAvailableYet": "This round is not available yet. Your teacher is still setting it up.",
 		"noUnmatched": "No unmatched students",
 		"openConfirm": "Students in this network will see this round and can submit preferences. Continue?",
 		"openingPreferences": "Opening…",
 		"openPreferences": "Open preferences",
+		"preferencePrivateNote": "note: \"{{note}}\"",
+		"preferenceRankStars": "rank {{rank}}, {{stars}}★",
 		"proposeTopCandidates": "Propose top candidates",
 		"proposeTopConfirm": "Propose the top {{count}} candidate(s) for \"{{title}}\"?",
 		"publishDisabledWhileDraft": "Open preferences and move the round to Matching before publishing matches.",
@@ -584,6 +596,10 @@
 			"title": "Grade level"
 		}
 	},
+	"myMatchedStudents": {
+		"description": "Students placed on opportunities where you are the sponsor or mentor. After a project is active or completed, rate the student so future teachers and admins can see their track record.",
+		"title": "My matched students"
+	},
 	"myOpportunitiesList": {
 		"capacity": "Capacity {{count}}",
 		"columns": {
@@ -612,6 +628,7 @@
 			"formIncompleteSaved": "Incomplete · saved {{date}}",
 			"noFurtherQuestions": "The teacher has not asked any further questions so far.",
 			"openForm": "Edit response",
+			"viewForm": "View response",
 			"preSelected": "Pre-selected for this matching round",
 			"roundFormsTitle": "Matching round · {{network}} · {{round}}",
 			"title": "Held · {{network}} · {{round}}",
@@ -627,6 +644,17 @@
 			"pickClass": "Choose a class",
 			"pickClassPlaceholder": "Select a class",
 			"selectClassHint": "Select a class to view or ask questions in its FAQ."
+		},
+		"copyOpportunity": {
+			"button": "Copy opportunity",
+			"cancel": "Cancel",
+			"confirm": "Copy opportunity",
+			"disclaimer": "Only the initial opportunity form and intro video are copied. Follow-up questionnaire answers and round-specific data are not included.",
+			"error": "Could not copy this opportunity. Please try again.",
+			"successFlash": "Opportunity copied as a new draft.",
+			"title": "Copy opportunity?",
+			"titleSuffix": " (Copy)",
+			"working": "Copying…"
 		},
 		"modals": {
 			"chatTitle": "Messages",
@@ -656,6 +684,7 @@
 		"reviewCommentsWaiting": "Teacher review comments are waiting for you.",
 		"rowMeta": {
 			"dates": "{{from}} → {{to}}",
+			"mentor": "Mentor: {{name}}",
 			"sponsor": "Sponsor: {{name}}",
 			"submitted": "Submitted {{date}}"
 		},
@@ -698,6 +727,7 @@
 		},
 		"teamOf": "Team of {{size}}",
 		"unknownSponsor": "Unknown",
+		"view": "View",
 		"unsubmit": {
 			"button": "Unsubmit",
 			"cancel": "Cancel",
@@ -854,6 +884,7 @@
 		"guidelinesWarning": "Tick the guidelines checkbox before submitting this opportunity.",
 		"introVideo": "Intro video",
 		"introVideoHint": "Upload a video file or paste an embed URL (YouTube, Vimeo). Uploaded files are stored on our cloud bucket.",
+		"openVideoInNewTab": "Open video in new tab",
 		"introVideoUrlHint": "Or paste a video URL (the URL itself — not the full <iframe> embed code). Supports YouTube, Vimeo, Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload size: {{maxMb}} MB.",
 		"issueRelevance": "Organizational relevance",
 		"issueRelevanceDescription": "Why is this challenge of particular relevance to your organization? What are the implications of this issue or problem for your agency? 100 words maximum.",
@@ -975,6 +1006,9 @@
 		},
 		"pageTitleEdit": "Edit opportunity",
 		"pageTitleNew": "New opportunity",
+		"pageTitleView": "View opportunity",
+		"lockedBanner": "This opportunity is in an active matching round. Editing is locked while students rank preferences. Copy this opportunity to make changes, or unsubmit to withdraw it.",
+		"lockedBannerNamed": "This opportunity is in an active matching round ({{roundTitle}}). Editing is locked while students rank preferences. Copy this opportunity to make changes, or unsubmit to withdraw it.",
 		"preferredClassTypes": "Preferred class types",
 		"preferredGrades": "Preferred grade levels",
 		"projectAbstract": "Capstone Project Abstract",
@@ -1051,7 +1085,7 @@
 			"requiresBusinessHoursHint": "Must a significant portion of research and data gathering be done during regular business hours? (Many students work full-time and may have constraints on their daytime availability). 50 words maximum.",
 			"title": "Special considerations"
 		},
-		"sponsorIsMentor": "I'm also the day-to-day mentor for this project (uncheck if someone else will be mentoring)",
+		"sponsorIsMentor": "I will also mentor the matched team (leave unchecked if a mentor will be assigned later)",
 		"sponsorStatusHint": "Set to Submitted for review when your proposal is ready — a teacher will review it.",
 		"sponsorStatusLocked": "— locked. A teacher or admin will update the status.",
 		"sponsorStatusReturnedHint": "— use Resubmit above when your changes are ready.",
@@ -1282,7 +1316,10 @@
 		"viewOrganization": "View organization {{name}}"
 	},
 	"opportunityCard": {
+		"mentorLine": "Mentor: {{name}}",
+		"mentorTbd": "Mentor TBD",
 		"opportunityButton": "Opportunity",
+		"sponsorLine": "Sponsor: {{name}}",
 		"viewOpportunity": "View opportunity: {{title}}"
 	},
 	"passionNow": "What are you passionate about right now?",
@@ -1369,7 +1406,7 @@
 		"emailTitle": "Your Capstone proposal was returned",
 		"error": "Could not return this opportunity. Please try again.",
 		"helper": "The sponsor will be notified to revise their proposal. You can optionally leave a note explaining what needs to change.",
-		"placeholder": "Optional note for the sponsor…",
+		"placeholder": "Optional note for the respondent…",
 		"submitting": "Returning…",
 		"title": "Return with comments"
 	},

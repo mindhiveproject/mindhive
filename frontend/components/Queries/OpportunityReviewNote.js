@@ -37,6 +37,21 @@ export const REVIEW_OPPORTUNITY = gql`
       proposalData
       extraDetails
       requestsAppointment
+      sponsors {
+        id
+        firstName
+        lastName
+        username
+        email
+      }
+      mentors {
+        id
+        firstName
+        lastName
+        username
+        email
+      }
+      sponsorIsMentor
       mentor {
         id
         firstName

@@ -13,7 +13,7 @@ export default function QuestionsMain({
   return (
     <div className="panelRight">
       <div className="reviewQuestions">
-        <h1>
+        <h1 style={{ marginBottom: "24px" }}>
           {status === "SUBMITTED_AS_PROPOSAL" || status === "PEER_REVIEW"
             ? t("reviewTabs.proposalFeedback")
             : t("reviewDetail.studyFeedback")}

@@ -17,6 +17,16 @@ import {
   archiveAppointmentRequestUpdates,
   notifyAppointmentRequestUpdates,
 } from "../lib/appointmentRequestNotifications";
+import {
+  displayName as stakeholderDisplayName,
+  getNotificationRecipients,
+  getPrimarySponsor,
+  getOpportunityStakeholderIds,
+} from "../lib/opportunityStakeholders";
+import {
+  isSponsorOpportunityLockedByRound,
+  SPONSOR_LOCK_ALLOWED_UPDATE_KEYS,
+} from "../lib/opportunitySponsorLock";
 
 const frontendUrl = () =>
   (process.env.NODE_ENV === "development"
@@ -93,13 +103,31 @@ export const Opportunity = list({
 
     mentor: relationship({
       ref: "Profile.opportunitiesCreated",
+      ui: {
+        description:
+          "Legacy (pre–sponsor/mentor split). Existing production data lives here. Do not use for new opportunities — use Sponsors and Mentors.",
+        createView: { fieldMode: "hidden" },
+        itemView: { fieldMode: "read" },
+      },
+    }),
+
+    sponsors: relationship({
+      ref: "Profile.opportunitiesSponsored",
+      many: true,
+      ui: {
+        description:
+          "Primary sponsors for this opportunity. The creator is auto-added on create via the app.",
+      },
       hooks: {
         async resolveInput({ context, operation, resolvedData, fieldKey }) {
           const current = resolvedData[fieldKey];
           if (operation === "create") {
-            if (current?.connect?.id) return current;
+            const hasConnect =
+              (Array.isArray(current?.connect) && current.connect.length > 0) ||
+              current?.connect?.id;
+            if (hasConnect) return current;
             if (context.session?.itemId) {
-              return { connect: { id: context.session.itemId } };
+              return { connect: [{ id: context.session.itemId }] };
             }
           }
           return current;
@@ -107,9 +135,18 @@ export const Opportunity = list({
       },
     }),
 
+    mentors: relationship({
+      ref: "Profile.opportunitiesMentoring",
+      many: true,
+      ui: {
+        description:
+          "Assigned mentors. Empty means Mentor TBD for new opportunities (unless legacy mentor is set).",
+      },
+    }),
+
     // Sponsoring Organization. One-to-many — each Opportunity has at most one
     // org; an Org has many Opportunities. Auto-attached during opportunity
-    // creation if the mentor belongs to exactly one org.
+    // creation if the sponsor belongs to exactly one org.
     organization: relationship({
       ref: "Organization.opportunities",
     }),
@@ -283,7 +320,7 @@ export const Opportunity = list({
     proposalData: json(),
 
     // Legacy CUSP fields (kept for existing records; no longer in the editor form)
-    sponsorIsMentor: checkbox({ defaultValue: true }),
+    sponsorIsMentor: checkbox({ defaultValue: false }),
     mentorNotes: text({ ui: { displayMode: "textarea" } }),
     researchQuestion: text({ ui: { displayMode: "textarea" } }),
     dataRequirements: text({ ui: { displayMode: "textarea" } }),
@@ -336,7 +373,40 @@ export const Opportunity = list({
     }),
   },
   hooks: {
-    async resolveInput({ operation, inputData, resolvedData, item }) {
+    async beforeOperation({ operation, item, context, inputData }) {
+      if (operation !== "update" || !item?.id || !inputData) return;
+
+      const sessionId = context.session?.itemId;
+      if (sessionId) {
+        const profile = await context.sudo().query.Profile.findOne({
+          where: { id: String(sessionId) },
+          query: "permissions { name }",
+        });
+        const isAdmin = (profile?.permissions || []).some(
+          (p: { name?: string }) => p?.name === "ADMIN"
+        );
+        if (isAdmin) return;
+      }
+
+      const opp = await context.sudo().query.Opportunity.findOne({
+        where: { id: String(item.id) },
+        query: "id status rounds { status }",
+      });
+      if (!isSponsorOpportunityLockedByRound(opp)) return;
+
+      const keys = Object.keys(inputData).filter(
+        (key) => inputData[key] !== undefined
+      );
+      const disallowed = keys.filter(
+        (key) => !SPONSOR_LOCK_ALLOWED_UPDATE_KEYS.has(key)
+      );
+      if (disallowed.length > 0) {
+        throw new Error(
+          "This opportunity cannot be edited while its matching round is active. Copy it to make changes, or unsubmit to withdraw it."
+        );
+      }
+    },
+    async resolveInput({ operation, inputData, resolvedData, item, context }) {
       // List hooks run after field hooks — must spread resolvedData so auto-set
       // fields (e.g. mentor from session) are not wiped by raw GraphQL input.
       const data = { ...resolvedData };
@@ -381,6 +451,17 @@ export const Opportunity = list({
         data.preSelectedAt = null;
         data.acceptedAt = null;
       }
+
+      // When sponsorIsMentor toggles, sync the editing sponsor in/out of mentors.
+      if (data.sponsorIsMentor !== undefined && context.session?.itemId) {
+        const profileId = String(context.session.itemId);
+        if (data.sponsorIsMentor === true) {
+          data.mentors = { connect: [{ id: profileId }] };
+        } else {
+          data.mentors = { disconnect: [{ id: profileId }] };
+        }
+      }
+
       return data;
     },
     // Email reviewers when an opportunity transitions to "pending_review"
@@ -414,7 +495,10 @@ export const Opportunity = list({
             id
             title
             requestsAppointment
+            sponsorIsMentor
             mentor { id email firstName lastName username }
+            sponsors { id email firstName lastName username }
+            mentors { id email firstName lastName username }
             classNetworks { id publicId }
             rounds {
               id
@@ -426,10 +510,16 @@ export const Opportunity = list({
         if (!fresh) return;
 
         const actorId = context.session?.itemId;
-        const mentorId = fresh.mentor?.id;
-        const mentorName = reviewerDisplayName(fresh.mentor);
+        const primarySponsor = getPrimarySponsor(fresh);
+        const sponsorName = stakeholderDisplayName(primarySponsor);
+        const stakeholderIds = getOpportunityStakeholderIds(fresh);
 
-        if (becameReturned && mentorId && mentorId !== actorId) {
+        if (becameReturned) {
+          const recipients = getNotificationRecipients(fresh).filter(
+            (p) => p?.id && String(p.id) !== String(actorId || "")
+          );
+          if (!recipients.length) return;
+
           // Prefer the round from the most recent review note. Teachers now
           // write the return message after status change, so this may miss
           // until a note exists. Fall back to a single linked round.
@@ -455,43 +545,46 @@ export const Opportunity = list({
           const relativeLink = `/dashboard/sponsor-connect/opportunities?${linkParams.toString()}`;
           const absoluteLink = `${frontendUrl()}${relativeLink}`;
 
-          try {
-            await context.sudo().db.Update.createOne({
-              data: {
-                user: { connect: { id: mentorId } },
-                updateArea: "CONNECT",
-                link: relativeLink,
-                content: {
-                  title: "Opportunity returned with comments",
-                  message: `A teacher returned "${fresh.title || "your opportunity"}" with comments. Review the notes and resubmit for review.`,
-                  linkTitle: "Review & resubmit",
-                },
-              },
-            });
-          } catch (e) {
-            // eslint-disable-next-line no-console
-            console.error(
-              `Failed to create mentor return Update for user ${mentorId}:`,
-              e
-            );
-          }
-
-          if (fresh.mentor?.email) {
+          for (const recipient of recipients) {
+            const recipientId = String(recipient.id);
             try {
-              await sendNotificationEmail(
-                fresh.mentor.email,
-                `Your Capstone proposal was returned: "${fresh.title}"`,
-                `Hi ${mentorName},\n\n` +
-                  `A teacher has returned your Capstone proposal "${fresh.title}" for revision. ` +
-                  `Open the link below to read their notes, make changes, and resubmit for review.`,
-                absoluteLink
-              );
+              await context.sudo().db.Update.createOne({
+                data: {
+                  user: { connect: { id: recipientId } },
+                  updateArea: "CONNECT",
+                  link: relativeLink,
+                  content: {
+                    title: "Opportunity returned with comments",
+                    message: `A teacher returned "${fresh.title || "your opportunity"}" with comments. Review the notes and resubmit for review.`,
+                    linkTitle: "Review & resubmit",
+                  },
+                },
+              });
             } catch (e) {
               // eslint-disable-next-line no-console
               console.error(
-                `Mentor return notification failed for ${fresh.mentor.email}:`,
+                `Failed to create return Update for user ${recipientId}:`,
                 e
               );
+            }
+
+            if (recipient.email) {
+              try {
+                await sendNotificationEmail(
+                  recipient.email,
+                  `Your Capstone proposal was returned: "${fresh.title}"`,
+                  `Hi ${stakeholderDisplayName(recipient)},\n\n` +
+                    `A teacher has returned your Capstone proposal "${fresh.title}" for revision. ` +
+                    `Open the link below to read their notes, make changes, and resubmit for review.`,
+                  absoluteLink
+                );
+              } catch (e) {
+                // eslint-disable-next-line no-console
+                console.error(
+                  `Return notification failed for ${recipient.email}:`,
+                  e
+                );
+              }
             }
           }
           return;
@@ -515,7 +608,7 @@ export const Opportunity = list({
         for (const round of fresh.rounds || []) {
           for (const reviewer of round.reviewers || []) {
             if (!reviewer?.email) continue;
-            if (reviewer.id === mentorId) continue; // skip self-spam
+            if (stakeholderIds.includes(String(reviewer.id))) continue;
             if (seen.has(reviewer.id)) continue;
             seen.add(reviewer.id);
 
@@ -525,7 +618,7 @@ export const Opportunity = list({
                 reviewer.email,
                 `New opportunity to review: "${fresh.title}"`,
                 `Hi ${reviewerDisplayName(reviewer)},\n\n` +
-                  `${mentorName} just submitted "${fresh.title}" for review in the round "${round.title}". ` +
+                  `${sponsorName} just submitted "${fresh.title}" for review in the round "${round.title}". ` +
                   `Open the link below to read the proposal, leave notes, and change its status.`,
                 link
               );

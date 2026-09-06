@@ -34,6 +34,11 @@ export const ProposalCard = list({
      * rich-text fields. Managed by the standalone collaboration server
      * (keystone/collab-server.js). The HTML columns above are kept in sync by the
      * browser editor on save (the server stays DOM-free). Hidden from the Admin UI.
+     *
+     * Keystone `text()` is NOT NULL by default. To clear state (e.g. after
+     * template content is propagated onto a clone card) write `""`, not `null`.
+     * The collab server treats a falsy value as "no document yet" and the
+     * browser re-seeds from HTML on next open.
      */
     yjsState: text({
       ui: {

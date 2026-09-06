@@ -27,8 +27,10 @@
 // each field's storage/column configuration. The only allowlisted exception
 // is the managed intro-video field (storage=column → Opportunity.videoFile).
 //
-// Imperative API (via ref): `save()` runs the same path as the submit button
-// so parents can drive Save from a top bar while `hideSaveButton` is set.
+// Imperative API (via ref): `save({ skipValidation }?)` runs the same path as
+// the submit button so parents can drive Save from a top bar while
+// `hideSaveButton` is set. Pass `skipValidation: true` to persist a draft
+// without required-field checks (JSON-backed answers only).
 import {
   forwardRef,
   useMemo,
@@ -36,6 +38,7 @@ import {
   useEffect,
   useCallback,
   useImperativeHandle,
+  useRef,
 } from "react";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
@@ -54,6 +57,10 @@ import {
   getProposalAnswer,
   upsertProposalEntry,
 } from "../../../lib/opportunityProposalData";
+import {
+  getAssessmentAnswer,
+  upsertAssessmentEntry,
+} from "../../../lib/connectPreferenceAssessmentData";
 
 /** Managed Opportunity.videoFile column — never serialized into proposalData. */
 const INTRO_VIDEO_COLUMN = "videoFile";
@@ -223,16 +230,20 @@ function buildSelectValidationBanner(failingLabels, t) {
   );
 }
 
+const EMPTY_VIEWER_ROLES = [];
+
 const DefinitionForm = forwardRef(function DefinitionForm(
   {
     definitionKey,
     definitionId = null,
     /** When set, Save upserts answers into Opportunity.proposalData under this id. */
     proposalEntryFormDefinitionId = null,
+    /** When set, Save upserts answers into ConnectPreference.assessmentData under this id. */
+    assessmentEntryFormDefinitionId = null,
     entity,
     related = {},
     scopeContext = {},
-    viewerRoles = [],
+    viewerRoles = EMPTY_VIEWER_ROLES,
     locale = "en",
     onSubmit,
     saveLabel = "Save",
@@ -245,6 +256,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     hideUnansweredFields = false,
     /** Flatter card chrome (e.g. inside a DesignSystem Modal). */
     quiet = false,
+    /** Called when required-field validity of visible fields changes. */
+    onValidityChange,
   },
   ref,
 ) {
@@ -302,6 +315,10 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     proposalEntryFormDefinitionId || definition?.id || null;
   const forceProposalEntry = Boolean(proposalEntryFormDefinitionId);
 
+  const effectiveAssessmentEntryId =
+    assessmentEntryFormDefinitionId || definition?.id || null;
+  const forceAssessmentEntry = Boolean(assessmentEntryFormDefinitionId);
+
   // storage.js assumes flat json buckets; Opportunity.proposalData is an
   // array of { formDefinitionId, answer }. Unwrap for hydrate/merge.
   // When forcing a proposal entry, also spread the flat answer onto the
@@ -311,7 +328,42 @@ const DefinitionForm = forwardRef(function DefinitionForm(
   // hydrate can find values.
   const entityForStorage = useMemo(() => {
     if (!entity) return entity;
-    if (!forceProposalEntry && !usesProposalDataBucket) return entity;
+    if (
+      !forceProposalEntry &&
+      !usesProposalDataBucket &&
+      !forceAssessmentEntry
+    ) {
+      return entity;
+    }
+
+    if (forceAssessmentEntry) {
+      const flatAnswer = getAssessmentAnswer(
+        entity.assessmentData,
+        effectiveAssessmentEntryId
+      );
+      const bucketMirrors = {};
+      if (forceAssessmentEntry && flatAnswer) {
+        for (const field of allFields) {
+          if (field?.storage !== "json_bucket") continue;
+          const bucket = field.storageBucket;
+          if (!bucket || bucketMirrors[bucket]) continue;
+          const existing =
+            entity[bucket] &&
+            typeof entity[bucket] === "object" &&
+            !Array.isArray(entity[bucket])
+              ? entity[bucket]
+              : {};
+          bucketMirrors[bucket] = { ...existing, ...flatAnswer };
+        }
+      }
+      return {
+        ...entity,
+        ...(forceAssessmentEntry ? flatAnswer : null),
+        ...bucketMirrors,
+        assessmentData: flatAnswer,
+      };
+    }
+
     const flatAnswer = getProposalAnswer(
       entity.proposalData,
       effectiveProposalEntryId
@@ -352,12 +404,14 @@ const DefinitionForm = forwardRef(function DefinitionForm(
       proposalData: flatAnswer,
     };
   }, [
-    entity,
     entity?.id,
     entity?.proposalData,
+    entity?.assessmentData,
     forceProposalEntry,
+    forceAssessmentEntry,
     usesProposalDataBucket,
     effectiveProposalEntryId,
+    effectiveAssessmentEntryId,
     allFields,
   ]);
 
@@ -368,14 +422,31 @@ const DefinitionForm = forwardRef(function DefinitionForm(
 
   const entityStatus = values.status ?? entity?.status ?? null;
 
-  // Hydrate values whenever the definition, entity, or related entities change.
+  const assessmentHydrateSource = forceAssessmentEntry
+    ? entity?.assessmentData
+    : null;
+  const proposalHydrateSource = forceProposalEntry
+    ? entity?.proposalData
+    : null;
+
+  // Hydrate from saved entity data. Assessment/proposal answers are keyed off
+  // those buckets only so creating a preference id (e.g. matching save) does
+  // not wipe in-progress form values.
   useEffect(() => {
     if (allFields.length === 0) return;
     setValues(hydrate(entityForStorage, allFields, related));
     setErrors({});
     setSubmitError(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allFields, entityForStorage, related?.organization?.id]);
+  }, [
+    allFields,
+    related?.organization?.id,
+    forceAssessmentEntry,
+    forceProposalEntry,
+    assessmentHydrateSource,
+    proposalHydrateSource,
+    forceAssessmentEntry || forceProposalEntry ? null : entityForStorage,
+  ]);
 
   const handleFieldChange = useCallback((name, value) => {
     setValues((prev) => ({ ...prev, [name]: value }));
@@ -386,60 +457,101 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     });
   }, []);
 
-  const save = useCallback(async () => {
+  const lastValidityRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof onValidityChange !== "function") return;
+    let isValid = false;
+    if (definition) {
+      const visibleFields = getVisibleFields(definition, {
+        viewerRoles,
+        entityStatus,
+      });
+      const rawErrors = validateValues(values, visibleFields);
+      isValid = Object.keys(rawErrors).length === 0;
+    }
+    if (lastValidityRef.current === isValid) return;
+    lastValidityRef.current = isValid;
+    onValidityChange(isValid);
+  }, [
+    onValidityChange,
+    definition,
+    values,
+    viewerRoles,
+    entityStatus,
+  ]);
+
+  const save = useCallback(async (options = {}) => {
     if (readOnly || submitting) return false;
     if (!definition) return false;
 
+    const skipValidation = Boolean(options.skipValidation);
     const visibleFields = getVisibleFields(definition, {
       viewerRoles,
       entityStatus,
     });
-    const rawErrors = validateValues(values, visibleFields);
 
-    if (Object.keys(rawErrors).length > 0) {
-      const formattedErrors = {};
-      const failingLabels = [];
+    if (!skipValidation) {
+      const rawErrors = validateValues(values, visibleFields);
 
-      for (const [name, detail] of Object.entries(rawErrors)) {
-        const field = visibleFields.find((f) => f.name === name);
-        formattedErrors[name] = formatFieldError(field, detail, t, locale);
-        if (field) {
-          failingLabels.push(fieldLabel(field, locale));
+      if (Object.keys(rawErrors).length > 0) {
+        const formattedErrors = {};
+        const failingLabels = [];
+
+        for (const [name, detail] of Object.entries(rawErrors)) {
+          const field = visibleFields.find((f) => f.name === name);
+          formattedErrors[name] = formatFieldError(field, detail, t, locale);
+          if (field) {
+            failingLabels.push(fieldLabel(field, locale));
+          }
         }
+
+        setErrors(formattedErrors);
+
+        const allSelectRequired = Object.values(rawErrors).every(
+          (d) => d?.code === "selectRequired",
+        );
+        const banner = allSelectRequired
+          ? buildSelectValidationBanner(failingLabels, t)
+          : failingLabels.length === 1
+            ? t(
+                "definitionForm.fixSingleField",
+                { field: failingLabels[0] },
+                { default: "Please fix {{field}} before saving." }
+              )
+            : t(
+                "definitionForm.fixMultipleFields",
+                { fields: failingLabels.join(", ") },
+                {
+                  default:
+                    "Please fix the following fields: {{fields}}",
+                }
+              );
+
+        setSubmitError(banner);
+        scrollToFirstFieldError();
+        return false;
       }
-
-      setErrors(formattedErrors);
-
-      const allSelectRequired = Object.values(rawErrors).every(
-        (d) => d?.code === "selectRequired",
-      );
-      const banner = allSelectRequired
-        ? buildSelectValidationBanner(failingLabels, t)
-        : failingLabels.length === 1
-          ? t(
-              "definitionForm.fixSingleField",
-              { field: failingLabels[0] },
-              { default: "Please fix {{field}} before saving." }
-            )
-          : t(
-              "definitionForm.fixMultipleFields",
-              { fields: failingLabels.join(", ") },
-              {
-                default:
-                  "Please fix the following fields: {{fields}}",
-              }
-            );
-
-      setSubmitError(banner);
-      scrollToFirstFieldError();
-      return false;
     }
 
     setSubmitError(null);
 
     let updateInput;
 
-    if (forceProposalEntry && effectiveProposalEntryId) {
+    if (forceAssessmentEntry && effectiveAssessmentEntryId) {
+      const answer = buildAnswerFromValues(values, allFields, {
+        omitManagedIntroVideo: true,
+      });
+      updateInput = {
+        self: {
+          assessmentData: upsertAssessmentEntry(
+            entity?.assessmentData,
+            effectiveAssessmentEntryId,
+            answer
+          ),
+        },
+      };
+    } else if (forceProposalEntry && effectiveProposalEntryId) {
       // Follow-up / forced entry: always persist under Opportunity.proposalData
       // keyed by this form definition id. The only allowlisted exception is the
       // managed intro-video field (storage=column, storageColumn=videoFile),
@@ -490,7 +602,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
 
     setSubmitting(true);
     try {
-      await onSubmit(updateInput);
+      const result = await onSubmit(updateInput);
+      if (result === false) return false;
       return true;
     } catch (err) {
       const invalidSelectNames = parseInvalidSelectFieldNamesFromError(err);
@@ -539,6 +652,8 @@ const DefinitionForm = forwardRef(function DefinitionForm(
     locale,
     forceProposalEntry,
     effectiveProposalEntryId,
+    forceAssessmentEntry,
+    effectiveAssessmentEntryId,
     allFields,
     entity,
     entityForStorage,

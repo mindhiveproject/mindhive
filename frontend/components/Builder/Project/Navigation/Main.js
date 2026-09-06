@@ -10,6 +10,7 @@ import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import StudyDropdown from "../../../Projects/StudyConnector/StudyDropdown";
 import Tooltip from "../../../DesignSystem/Tooltip";
 import Button from "../../../DesignSystem/Button";
+import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 
 export default function Navigation({
   proposalId,
@@ -154,10 +155,11 @@ export default function Navigation({
       </div>
 
       <div className="secondLine">
-        <div className="menu" id="menue">
+        <Navbar variant="underline" dense hoverUnderline id="menue">
           {filteredItems.map((item) => (
-            <Link
+            <NavbarItem
               key={item.value}
+              as={Link}
               href={{
                 pathname: `/builder/${area}`,
                 query: {
@@ -166,26 +168,20 @@ export default function Navigation({
                 },
               }}
               onClick={tryToLeave}
-              aria-current={tab === item?.value ? "page" : undefined}
+              selected={tab === item?.value}
+              leadingIcon={
+                <img
+                  src={`/assets/icons/project/${item?.value}.svg`}
+                  alt=""
+                  width="24"
+                  height="24"
+                />
+              }
             >
-              <div
-                className={
-                  tab === item?.value
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <div className="titleWithIcon">
-                  <img
-                    src={`/assets/icons/project/${item?.value}.svg`}
-                    alt=""
-                  />
-                  <p>{item?.name}</p>
-                </div>
-              </div>
-            </Link>
+              {item?.name}
+            </NavbarItem>
           ))}
-        </div>
+        </Navbar>
       </div>
     </div>
   );

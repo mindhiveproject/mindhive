@@ -13,6 +13,7 @@ import {
   notifyAppointmentRequestUpdates,
   notifyAppointmentScheduledUpdates,
 } from "../lib/appointmentRequestNotifications";
+import { isOpportunityStakeholder, getOpportunityStakeholderIds } from "../lib/opportunityStakeholders";
 
 const frontendUrl = () =>
   (process.env.NODE_ENV === "development"
@@ -77,11 +78,11 @@ async function getPairActors(
 
   const opportunity = await context.sudo().query.Opportunity.findOne({
     where: { id: opportunityId },
-    query: `id mentor { id }`,
+    query: `id sponsorIsMentor mentor { id } sponsors { id } mentors { id }`,
   });
   if (!opportunity) return null;
 
-  const isMentor = opportunity.mentor?.id === userId;
+  const isMentor = isOpportunityStakeholder(opportunity, userId);
   const isReviewerSide =
     round.createdBy?.id === userId ||
     (round.reviewers || []).some((r: { id: string }) => r.id === userId) ||
@@ -350,7 +351,10 @@ export const OpportunityReviewNote = list({
                 id
                 title
                 requestsAppointment
+                sponsorIsMentor
                 mentor { id email firstName lastName username }
+                sponsors { id email firstName lastName username }
+                mentors { id email firstName lastName username }
                 classNetworks { id publicId }
                 rounds {
                   id
@@ -418,7 +422,14 @@ export const OpportunityReviewNote = list({
             id
             body
             author { id firstName lastName username }
-            opportunity { id title mentor { id } }
+            opportunity {
+              id
+              title
+              sponsorIsMentor
+              mentor { id }
+              sponsors { id }
+              mentors { id }
+            }
             round {
               id
               title
@@ -429,7 +440,7 @@ export const OpportunityReviewNote = list({
         });
         if (!note?.round || !note?.opportunity) return;
 
-        const mentorId = note.opportunity.mentor?.id;
+        const stakeholderIds = getOpportunityStakeholderIds(note.opportunity);
         const authorName = displayName(note.author);
         const title = note.opportunity.title || "Capstone proposal";
         const link =
@@ -447,7 +458,7 @@ export const OpportunityReviewNote = list({
 
         for (const recipient of recipients) {
           if (!recipient?.email) continue;
-          if (recipient.id === mentorId) continue;
+          if (stakeholderIds.includes(recipient.id)) continue;
           if (seen.has(recipient.id)) continue;
           seen.add(recipient.id);
 

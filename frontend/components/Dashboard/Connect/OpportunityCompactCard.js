@@ -3,6 +3,10 @@ import styled from "styled-components";
 
 import Chip from "../../DesignSystem/Chip";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import {
+  formatOpportunityMentorLabel,
+  formatOpportunitySponsorLabel,
+} from "../../../lib/opportunityPeople";
 
 export const OpportunityCompactGrid = styled.div`
   display: grid;
@@ -301,17 +305,23 @@ export function buildMyOpportunityMetaLine(opportunity, t) {
 export function buildReviewOpportunityMetaLine(opportunity, t) {
   const parts = [];
   const sponsor =
-    [opportunity.mentor?.firstName, opportunity.mentor?.lastName]
-      .filter(Boolean)
-      .join(" ") ||
-    opportunity.mentor?.username ||
-    t("myOpportunitiesList.unknownSponsor", {}, { default: "Unknown" });
+    formatOpportunitySponsorLabel(opportunity) !== "—"
+      ? formatOpportunitySponsorLabel(opportunity)
+      : t("myOpportunitiesList.unknownSponsor", {}, { default: "Unknown" });
+  const mentor = formatOpportunityMentorLabel(opportunity, t);
 
   parts.push(
     t(
       "myOpportunitiesList.rowMeta.sponsor",
       { name: sponsor },
       { default: "Sponsor: {{name}}" },
+    ),
+  );
+  parts.push(
+    t(
+      "myOpportunitiesList.rowMeta.mentor",
+      { name: mentor },
+      { default: "Mentor: {{name}}" },
     ),
   );
 

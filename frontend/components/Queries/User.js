@@ -51,6 +51,9 @@ export const SPONSOR_ONBOARDING_STATE = gql`
         opportunitiesCreated {
           id
         }
+        opportunitiesSponsored {
+          id
+        }
       }
     }
   }
@@ -193,6 +196,13 @@ export const GET_USER_CLASSES = gql`
               title
               code
             }
+          }
+          templateProposal {
+            id
+          }
+          classTemplateBoards {
+            id
+            title
           }
         }
       }

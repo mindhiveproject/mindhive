@@ -16,6 +16,7 @@ import {
   getUnreadReviewerCommentNotes,
   resolveActiveReviewRound,
 } from "../../../../lib/reviewThreadRound";
+import { isOpportunityStakeholder } from "../../../../lib/opportunityPeople";
 
 const ThreadWrap = styled.div`
   section {
@@ -82,9 +83,7 @@ export default function OpportunityChatModal({
 
   const activeRoundId = roundResolution.roundId;
   const needsRoundSelection = roundResolution.needsSelection;
-  const isMentorOfOpportunity = !!(
-    viewerId && opportunity?.mentor?.id === viewerId
-  );
+  const isMentorOfOpportunity = isOpportunityStakeholder(opportunity, viewerId);
 
   const unreadReviewerComments = useMemo(
     () =>

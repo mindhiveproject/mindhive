@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { GET_ALL_HOMEWORK_FOR_PROPOSAL_CARD } from "../../../../../../Queries/Homework";
-import { Dropdown } from "semantic-ui-react";
+import DropdownSelect from "../../../../../../DesignSystem/DropdownSelect";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
@@ -60,13 +60,15 @@ export default function OverviewOfIndividualCards({
                 {ReactHtmlParser(proposalCard?.description)}
               </div>
 
-              <Dropdown
+              <DropdownSelect
+                value={homeworkId || ""}
+                onChange={(value) => setHomeworkId(value)}
+                options={studentFilterOptions.map((opt) => ({
+                  value: String(opt.value),
+                  label: opt.text,
+                }))}
                 placeholder={t("overviewCard.selectStudent", "Select student")}
-                fluid
-                selection
-                options={studentFilterOptions}
-                onChange={(event, data) => setHomeworkId(data?.value)}
-                value={homeworkId}
+                ariaLabel={t("overviewCard.selectStudent", "Select student")}
               />
 
               {homeworkId && <Homework homeworkId={homeworkId} />}

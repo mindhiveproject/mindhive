@@ -5,7 +5,8 @@ import styled from "styled-components";
 
 import Chip from "../../../../DesignSystem/Chip";
 import IconButton from "../../../../DesignSystem/IconButton";
-import { CodeIcon, QuestionMarkIcon } from "../../../../DesignSystem/Icons";
+import { NavbarItem, SectionNavbar } from "../../../../DesignSystem/Navbar";
+import { CloseIcon, CodeIcon, QuestionMarkIcon } from "../../../../DesignSystem/Icons";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../../Queries/Opportunity";
 import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap";
 import ReviewCard from "../../../../Forms/DefinitionForm/ReviewCard";
@@ -20,11 +21,11 @@ import {
   hydrateProposalInputs,
 } from "../../../SponsorConnect/Opportunities/OpportunityProposalConfig";
 import StudentFollowUpAnswers from "./StudentFollowUpAnswers";
-import ConnectProfileCard from "../../../Connect/ConnectProfileCard";
-import { CARD_WIDTH } from "../../../Connect/ConnectBrowseLayout";
-import OrganizationConnectCard from "../../../Connect/Organizations/OrganizationConnectCard";
+import OpportunityPeoplePanels from "../../../Connect/OpportunityPeoplePanels";
 import ManageFavoriteOpportunity from "../../../Connect/ManageFavoriteOpportunity";
 import OpportunityClassForum from "../../../Connect/OpportunityClassForum";
+import OpportunityIntroVideoPlayer from "../../../Connect/OpportunityIntroVideoPlayer";
+import { hasOpportunityPlayableVideo } from "../../../../../lib/opportunityVideoEmbed";
 
 function toOptionKey(value) {
   return String(value || "").replace(/_([a-z])/g, (_, c) => c.toUpperCase());
@@ -42,8 +43,6 @@ const CATEGORY_LABELS = {
   urban_infrastructure: "urbanInfrastructure",
   other: "other",
 };
-
-const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
 const CONTENT_MAX_WIDTH = 960;
 const CONTENT_BOTTOM_GAP = "24px";
@@ -109,19 +108,14 @@ const ContentInner = styled.div`
   box-sizing: border-box;
 `;
 
-const ChipSelectorRow = styled.div`
+const PreviewSectionNav = styled(SectionNavbar)`
   position: sticky;
   top: 0;
   z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
   width: 100%;
   min-width: 0;
   padding: 8px 8px 16px 8px;
   box-sizing: border-box;
-  border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
   background: var(--MH-Theme-Neutrals-White, #ffffff);
 `;
 
@@ -145,39 +139,6 @@ const LIST_CHIP_STYLE = {
   minHeight: 32,
   alignItems: "flex-start",
 };
-
-const PeopleColumns = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
-
-  @media (max-width: 900px) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-`;
-
-const PeoplePanel = styled.section`
-  display: grid;
-  justify-items: center;
-  gap: 12px;
-  min-width: 0;
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
-  box-sizing: border-box;
-
-  h4 {
-    margin: 0;
-    font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
-    letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Black, #171717);
-  }
-
-  > article {
-    max-width: ${CARD_WIDTH};
-  }
-`;
 
 const HeaderActions = styled.span`
   display: flex;
@@ -207,58 +168,6 @@ const MUTED_TEXT_STYLE = {
   margin: 0,
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
 };
-
-function extractUrl(raw) {
-  if (!raw) return null;
-  const trimmed = String(raw).trim();
-  if (!trimmed) return null;
-  const m = trimmed.match(/<iframe[^>]+src=["']([^"']+)["']/i);
-  return m ? m[1] : trimmed;
-}
-
-function isDirectVideoFile(url) {
-  if (!url) return false;
-  try {
-    return DIRECT_VIDEO_EXT.test(new URL(url).pathname);
-  } catch {
-    return DIRECT_VIDEO_EXT.test(url);
-  }
-}
-
-function getEmbedUrl(rawUrl) {
-  if (!rawUrl) return null;
-  try {
-    const u = new URL(rawUrl);
-    const host = u.hostname.replace(/^www\./, "");
-    if (host === "youtube.com" || host === "m.youtube.com") {
-      const v = u.searchParams.get("v");
-      if (v) return `https://www.youtube.com/embed/${v}`;
-      const shortsMatch = u.pathname.match(/^\/shorts\/([^/]+)/);
-      if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
-      const embedMatch = u.pathname.match(/^\/embed\/([^/]+)/);
-      if (embedMatch) return `https://www.youtube.com/embed/${embedMatch[1]}`;
-    }
-    if (host === "youtu.be") {
-      const id = u.pathname.replace(/^\//, "");
-      if (id) return `https://www.youtube.com/embed/${id}`;
-    }
-    if (host === "vimeo.com" || host === "player.vimeo.com") {
-      const id = u.pathname.replace(/^\/(video\/)?/, "").split("/")[0];
-      if (id) return `https://player.vimeo.com/video/${id}`;
-    }
-    if (host === "loom.com" || host.endsWith(".loom.com")) {
-      const m = u.pathname.match(/\/(share|embed)\/([^/?]+)/);
-      if (m) return `https://www.loom.com/embed/${m[2]}`;
-    }
-    if (host === "drive.google.com") {
-      const m = u.pathname.match(/\/file\/d\/([^/]+)/);
-      if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
 
 function displayName(profile) {
   if (!profile) return null;
@@ -393,6 +302,8 @@ export default function StudentOpportunityPreview({
   classId = null,
   /** Matching round that surfaces this opportunity to the student class. */
   roundId = null,
+  hasDraftRanking = false,
+  favoriteRefetchQueries = [],
 }) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
@@ -449,13 +360,9 @@ export default function StudentOpportunityPreview({
       ? `${opp.publicRatingAverage?.toFixed(1)} (${opp.publicRatingCount})`
       : null;
 
-  const cleanVideoUrl = extractUrl(opp?.videoUrl);
-  const directVideoSrc =
-    opp?.videoFile?.url ||
-    (isDirectVideoFile(cleanVideoUrl) ? cleanVideoUrl : null);
-  const embedUrl = !directVideoSrc ? getEmbedUrl(cleanVideoUrl) : null;
-  const fallbackIframeSrc =
-    !directVideoSrc && !embedUrl && cleanVideoUrl ? cleanVideoUrl : null;
+  const openVideoInNewTabLabel = tConnect("opportunityEditor.openVideoInNewTab", {}, {
+    default: "Open video in new tab",
+  });
 
   const followUpForms = useMemo(() => {
     if (!opp) return [];
@@ -597,34 +504,13 @@ export default function StudentOpportunityPreview({
     {},
     { default: "Class FAQ" },
   );
-  const backLabel = t("opportunities.studentView.preview.back", {}, {
-    default: "Back to opportunities",
-  });
-  const backAria = t("opportunities.studentView.preview.backAria", {}, {
-    default: "Back to opportunities",
+  const closeLabel = t("opportunities.studentView.preview.close", {}, {
+    default: "Close",
   });
 
   return (
     <PageShell>
       <PreviewChrome>
-        <IconButton
-          variant="tonal"
-          style={{
-            background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
-          }}
-          ariaLabel={backAria}
-          title={backLabel}
-          onClick={onClose}
-          icon={
-            <img
-              src="/assets/icons/back.svg"
-              alt=""
-              width={12}
-              height={12}
-              style={{ width: 12, height: 12 }}
-            />
-          }
-        />
         <ChromeTitleWrap>
           <ChromeTitle>{pageTitle}</ChromeTitle>
         </ChromeTitleWrap>
@@ -632,6 +518,16 @@ export default function StudentOpportunityPreview({
           <ManageFavoriteOpportunity
             user={user}
             opportunityId={opportunityId}
+            roundId={roundId}
+            hasDraftRanking={hasDraftRanking}
+            refetchQueries={favoriteRefetchQueries}
+          />
+          <IconButton
+            variant="subtle"
+            ariaLabel={closeLabel}
+            title={closeLabel}
+            onClick={onClose}
+            icon={<CloseIcon />}
           />
         </HeaderActions>
       </PreviewChrome>
@@ -672,26 +568,25 @@ export default function StudentOpportunityPreview({
               />
             ) : null}
 
-            <ChipSelectorRow
-              role="group"
+            <PreviewSectionNav
+              variant="underline"
+              showRule
               aria-label={t(
                 "opportunities.studentView.preview.tabsAria",
                 {},
                 { default: "Opportunity sections" },
               )}
             >
-              <Chip
-                label={aboutTabLabel}
+              <NavbarItem
                 selected={activeTab === TABS.about}
-                pressed={activeTab === TABS.about}
                 onClick={() => setActiveTab(TABS.about)}
-                ariaLabel={aboutTabLabel}
-              />
-              <Chip
-                label={peopleTabLabel}
+              >
+                {aboutTabLabel}
+              </NavbarItem>
+              <NavbarItem
                 selected={activeTab === TABS.people}
-                pressed={activeTab === TABS.people}
-                leading={
+                onClick={() => setActiveTab(TABS.people)}
+                leadingIcon={
                   <img
                     src="/assets/connect/group.svg"
                     alt=""
@@ -700,18 +595,17 @@ export default function StudentOpportunityPreview({
                     height={16}
                   />
                 }
-                onClick={() => setActiveTab(TABS.people)}
-                ariaLabel={peopleTabLabel}
-              />
-              <Chip
-                label={forumTabLabel}
+              >
+                {peopleTabLabel}
+              </NavbarItem>
+              <NavbarItem
                 selected={activeTab === TABS.forum}
-                pressed={activeTab === TABS.forum}
-                leading={<QuestionMarkIcon width={18} height={18} />}
                 onClick={() => setActiveTab(TABS.forum)}
-                ariaLabel={forumTabLabel}
-              />
-            </ChipSelectorRow>
+                leadingIcon={<QuestionMarkIcon width={18} height={18} />}
+              >
+                {forumTabLabel}
+              </NavbarItem>
+            </PreviewSectionNav>
 
             {activeTab === TABS.about ? (
               <div style={{ display: "grid", gap: 24 }}>
@@ -724,6 +618,8 @@ export default function StudentOpportunityPreview({
                   )}
                 >
                   <Chip
+                    variant="static"
+                    tone="neutral"
                     label={teamSizeLabel}
                     leading={
                       <img
@@ -740,19 +636,21 @@ export default function StudentOpportunityPreview({
                     }
                   />
                   {opp.timeCommitment ? (
-                    <Chip label={opp.timeCommitment} />
+                    <Chip variant="static" tone="neutral" label={opp.timeCommitment} />
                   ) : null}
                   {datesLabel ? (
-                    <Chip label={datesLabel} />
+                    <Chip variant="static" tone="neutral" label={datesLabel} />
                   ) : null}
                   {categoryDisplay ? (
-                    <Chip label={categoryDisplay} />
+                    <Chip variant="static" tone="neutral" label={categoryDisplay} />
                   ) : null}
                   {ratingLabel ? (
-                    <Chip label={ratingLabel} />
+                    <Chip variant="static" tone="neutral" label={ratingLabel} />
                   ) : null}
                   {specialResourcesLabel ? (
                     <Chip
+                      variant="static"
+                      tone="neutral"
                       label={t(
                         "opportunities.studentView.preview.specialResourcesChip",
                         { value: specialResourcesLabel },
@@ -762,6 +660,8 @@ export default function StudentOpportunityPreview({
                   ) : null}
                   {fieldResearchLabel ? (
                     <Chip
+                      variant="static"
+                      tone="neutral"
                       label={t(
                         "opportunities.studentView.preview.fieldResearchChip",
                         { value: fieldResearchLabel },
@@ -784,51 +684,22 @@ export default function StudentOpportunityPreview({
                   </p>
                 ) : null}
 
-                {directVideoSrc || embedUrl || fallbackIframeSrc ? (
+                {hasOpportunityPlayableVideo(opp) ? (
                   <PreviewSection
                     title={tConnect("opportunityEditor.introVideo", {}, {
                       default: "Intro video",
                     })}
                   >
-                    {directVideoSrc ? (
-                      <video
-                        src={directVideoSrc}
-                        controls
-                        style={{
-                          width: "100%",
-                          borderRadius: 12,
-                          maxHeight: 360,
-                        }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          position: "relative",
-                          paddingBottom: "56.25%",
-                          height: 0,
-                          overflow: "hidden",
-                          borderRadius: 12,
-                          background: "#111",
-                        }}
-                      >
-                        <iframe
-                          title={tConnect("opportunityEditor.introVideo", {}, {
-                            default: "Intro video",
-                          })}
-                          src={embedUrl || fallbackIframeSrc}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "100%",
-                            height: "100%",
-                            border: 0,
-                          }}
-                        />
-                      </div>
-                    )}
+                    <OpportunityIntroVideoPlayer
+                      opportunity={opp}
+                      title={tConnect("opportunityEditor.introVideo", {}, {
+                        default: "Intro video",
+                      })}
+                      openInNewTabLabel={openVideoInNewTabLabel}
+                      borderRadius={12}
+                      videoStyle={{ maxHeight: 360 }}
+                      iframeWrapStyle={{ background: "#111" }}
+                    />
                   </PreviewSection>
                 ) : null}
 
@@ -1031,94 +902,12 @@ export default function StudentOpportunityPreview({
 
             {activeTab === TABS.people ? (
               <div style={{ display: "grid", gap: 16 }}>
-                {opp.organization || opp.mentor ? (
-                  <PeopleColumns>
-                    {opp.mentor ? (
-                      <PeoplePanel>
-                        <h4>
-                          {t("opportunities.preview.mentorContact", {}, {
-                            default: "Your contact",
-                          })}
-                        </h4>
-                        <ConnectProfileCard
-                          user={user}
-                          profile={opp.mentor}
-                        />
-                        {opp.mentorNotes ? (
-                          <div style={{ width: "100%", minWidth: 0 }}>
-                            <ReviewField
-                              label={t(
-                                "opportunities.studentView.preview.mentorNotes",
-                                {},
-                                { default: "Mentoring notes" },
-                              )}
-                              value={opp.mentorNotes}
-                            />
-                          </div>
-                        ) : null}
-                      </PeoplePanel>
-                    ) : null}
-
-                    {opp.organization ? (
-                      <PeoplePanel>
-                        <h4>
-                          {t("opportunities.preview.organization", {}, {
-                            default: "Organization",
-                          })}
-                        </h4>
-                        <OrganizationConnectCard org={opp.organization} />
-                        {opp.organization.mission ||
-                        opp.organization.department ||
-                        opp.organization.website ? (
-                          <div
-                            style={{
-                              display: "grid",
-                              gap: 12,
-                              width: "100%",
-                              minWidth: 0,
-                            }}
-                          >
-                            <ReviewField
-                              label={t(
-                                "opportunities.studentView.preview.orgMission",
-                                {},
-                                { default: "Mission" },
-                              )}
-                              value={opp.organization.mission}
-                            />
-                            <ReviewField
-                              label={t(
-                                "opportunities.studentView.preview.orgDepartment",
-                                {},
-                                { default: "Department" },
-                              )}
-                              value={opp.organization.department}
-                            />
-                            <ReviewField
-                              label={t(
-                                "opportunities.studentView.preview.orgWebsite",
-                                {},
-                                { default: "Website" },
-                              )}
-                              value={opp.organization.website}
-                            />
-                          </div>
-                        ) : null}
-                      </PeoplePanel>
-                    ) : null}
-                  </PeopleColumns>
-                ) : (
-                  <p style={BODY_TEXT_STYLE}>
-                    {t(
-                      "opportunities.studentView.preview.peopleEmpty",
-                      {},
-                      {
-                        default:
-                          "No organization or mentor details are available yet.",
-                      },
-                    )}
-                  </p>
-                )}
+                <OpportunityPeoplePanels
+                  opportunity={opp}
+                  user={user}
+                  t={t}
+                  mentorNotesLabelKey="opportunities.studentView.preview.mentorNotes"
+                />
               </div>
             ) : null}
 

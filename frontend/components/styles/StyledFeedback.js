@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 const StyledFeedback = styled.div`
   display: grid;
-  margin: 40px 0px;
-  grid-gap: 30px;
+  margin: 0;
+  grid-gap: 16px;
   font-style: normal;
   font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
@@ -12,12 +12,12 @@ const StyledFeedback = styled.div`
     display: grid;
     grid-gap: 1rem;
     min-width: 300px;
-    padding: 16px 23px;
+    padding: 20px 24px;
 
     align-content: baseline;
-    background: #ffffff;
-    border: 1px solid #deddd9;
-    border-radius: 8px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border-radius: 12px;
 
     .topLine {
       display: grid;
@@ -84,7 +84,15 @@ const StyledFeedback = styled.div`
     .reviewerComment {
       font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
-      color: #3b3b3b;
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      padding: 16px 20px;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 12px;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+
+      .reviewAnswerPart + .reviewAnswerPart {
+        margin-top: 12px;
+      }
     }
     .questionTitle {
       font: var(--MH-Type-Title-Base);

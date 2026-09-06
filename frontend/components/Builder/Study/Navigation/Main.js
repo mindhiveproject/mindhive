@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import Connect from "./Connect/Main";
 import StudyOptions from "../../../Studies/Bank/StudyOptions";
 import Tooltip from "../../../DesignSystem/Tooltip";
+import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 
 import { MY_STUDY } from "../../../Queries/Study";
 
@@ -151,10 +152,11 @@ export default function Navigation({
       </div>
 
       <div className="secondLine">
-        <div className="menu">
-          {items.map((item, i) => (
-            <Link
+        <Navbar variant="underline" dense hoverUnderline>
+          {items.map((item) => (
+            <NavbarItem
               key={item.value}
+              as={Link}
               href={{
                 pathname: `/builder/${area}`,
                 query: {
@@ -163,23 +165,20 @@ export default function Navigation({
                 },
               }}
               onClick={tryToLeave}
-              aria-current={tab === item?.value ? "page" : undefined}
+              selected={tab === item?.value}
+              leadingIcon={
+                <img
+                  src={`/assets/icons/project/${item?.value}.svg`}
+                  alt=""
+                  width="24"
+                  height="24"
+                />
+              }
             >
-              <div
-                className={
-                  tab === item?.value
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <div className="titleWithIcon">
-                  <img src={`/assets/icons/project/${item?.value}.svg`} alt="" />
-                  <p>{item?.name}</p>
-                </div>
-              </div>
-            </Link>
+              {item?.name}
+            </NavbarItem>
           ))}
-        </div>
+        </Navbar>
       </div>
     </div>
   );

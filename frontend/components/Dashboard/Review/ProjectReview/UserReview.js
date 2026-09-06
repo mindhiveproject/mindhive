@@ -3,6 +3,7 @@ import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
+import clsx from "clsx";
 
 import { GET_REVIEW } from "../../../Queries/Review";
 
@@ -22,6 +23,7 @@ import {
   getCurriculumType,
   mergeReviewContentWithTemplate,
 } from "../../../../lib/curriculumTypes";
+import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 
 export default function UserReview({
   query,
@@ -78,7 +80,7 @@ export default function UserReview({
     return templateFallback;
   }, [definition, review?.content, locale, templateFallback]);
 
-  const { inputs, handleChange, resetForm, handleMultipleUpdate } = useForm(
+  const { inputs, handleChange, handleMultipleUpdate } = useForm(
     {
       id: review?.id,
       content: defaultContent,
@@ -128,6 +130,19 @@ export default function UserReview({
     });
   };
 
+  const commentsCount =
+    project?.reviews?.filter((r) => r?.stage === status).length || 0;
+
+  const tabHref = (nextTab) => ({
+    pathname: "/dashboard/review/project",
+    query: {
+      id: project?.id,
+      stage: query?.stage,
+      tab: nextTab,
+      ...(query?.from ? { from: query.from } : {}),
+    },
+  });
+
   return (
     <div className="reviewContainer">
       <Navigation
@@ -135,83 +150,85 @@ export default function UserReview({
         inputs={inputs}
         canReview={canReview}
         handleChange={handleChange}
-        resetForm={resetForm}
         status={status}
+        milestone={milestone}
       />
 
-      <div className={canReview ? `double` : `single`}>
-        <div className="panelLeft">
-          <div className="headerMenu">
-            <Link
-              href={{
-                pathname: `/dashboard/review/project`,
-                query: {
-                  id: project?.id,
-                  stage: query?.stage,
-                  tab: "proposal",
-                },
-              }}
-              className={
-                tab === "proposal"
-                  ? "headerMenuTitle selectedMenuTitle"
-                  : "headerMenuTitle"
-              }
-            >
-              <p>{t("reviewDetail.proposalTab")}</p>
-            </Link>
+      <div className="reviewBody">
+        <div
+          className={clsx(
+            "reviewLayout",
+            canReview
+              ? "reviewLayout--withForm"
+              : "reviewLayout--contentOnly"
+          )}
+        >
+          <div className="reviewMainColumn">
+            <div className="reviewTabBar">
+              <Navbar
+                variant="underline"
+                showRule
+                gapless
+                aria-label={t(
+                  "reviewDetail.reviewNavLabel",
+                  {},
+                  { default: "Review sections" }
+                )}
+              >
+                <NavbarItem
+                  as={Link}
+                  href={tabHref("proposal")}
+                  selected={tab === "proposal"}
+                >
+                  {t("reviewDetail.proposalTab")}
+                </NavbarItem>
+                <NavbarItem
+                  as={Link}
+                  href={tabHref("reviews")}
+                  selected={tab === "reviews"}
+                  trailingContent={
+                    commentsCount > 0 ? commentsCount : undefined
+                  }
+                >
+                  {t("reviewDetail.commentsTab")}
+                </NavbarItem>
+              </Navbar>
+            </div>
 
-            <Link
-              href={{
-                pathname: `/dashboard/review/project`,
-                query: {
-                  id: project?.id,
-                  stage: query?.stage,
-                  tab: "reviews",
-                },
-              }}
-              className={
-                tab === "reviews"
-                  ? "headerMenuTitle selectedMenuTitle"
-                  : "headerMenuTitle"
-              }
-            >
-              <p>
-                {t("reviewDetail.commentsTab")} (
-                {project?.reviews?.filter((r) => r?.stage === status).length})
-              </p>
-            </Link>
+            <div className="reviewContentColumn">
+              {tab === "proposal" ? (
+                <StudyDetails
+                  project={project}
+                  status={status}
+                  actionCardType={actionCardType}
+                />
+              ) : null}
+              {tab === "reviews" ? (
+                <Feedback
+                  user={user}
+                  projectId={project?.id}
+                  status={status}
+                  curriculumType={curriculumType}
+                  reviews={
+                    project?.reviews?.filter(
+                      (item) => item.stage === status
+                    ) || []
+                  }
+                />
+              ) : null}
+            </div>
           </div>
 
-          {tab === "proposal" && (
-            <StudyDetails
-              project={project}
-              status={status}
-              actionCardType={actionCardType}
-            />
-          )}
-          {tab === "reviews" && (
-            <Feedback
-              user={user}
+          {canReview ? (
+            <Questions
               projectId={project?.id}
+              review={review}
+              reviewContent={inputs?.content || []}
               status={status}
-              curriculumType={curriculumType}
-              reviews={
-                project?.reviews?.filter((review) => review.stage === status) ||
-                []
-              }
+              handleItemChange={handleItemChange}
             />
-          )}
+          ) : null}
         </div>
-
-        {canReview && (
-          <Questions
-            projectId={project?.id}
-            review={review}
-            reviewContent={inputs?.content || []}
-            status={status}
-            handleItemChange={handleItemChange}
-          />
-        )}
       </div>
     </div>
   );

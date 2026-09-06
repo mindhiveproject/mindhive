@@ -336,7 +336,9 @@ export default function SponsorOnboarding() {
   const memberNetworks = collectMemberClassNetworks(me);
   const joinedNetwork = memberNetworks[0] || null;
   const networkStepDone = !!joinedNetwork;
-  const oppStepDone = (me?.opportunitiesCreated || []).length > 0;
+  const oppStepDone =
+    (me?.opportunitiesCreated || []).length > 0 ||
+    (me?.opportunitiesSponsored || []).length > 0;
 
   const pendingInvite = invites.find((invite) => {
     if (!invite?.classNetwork?.id) return false;

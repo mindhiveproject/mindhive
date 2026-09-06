@@ -28,13 +28,29 @@ Every component in this folder should be:
   a **TSDoc `/** … *\/` comment on every field**. This interface _is_ the
   component's documentation; keep it complete enough that someone can use the
   component from the type alone.
-- Styled with **plain style objects**, not CSS-in-JS: module-level
-  `const FOO_STYLE: React.CSSProperties = { … }` consts, merged into the element's
-  `style` prop. Pull colors from `--MH-Theme-*` CSS variables with a hex fallback:
-  `"var(--MH-Theme-Primary-Light, #def8fb)"`.
-- Scoped class names of the form `DesignSystem-<Name>` on the root, plus a small
-  injected `<style>` block for what inline styles can't do (`:focus-visible`
-  outlines, descendant rules).
+- Styled with **styled-components** (`@types/styled-components` is installed),
+  not raw inline style objects or a hand-rolled `<style dangerouslySetInnerHTML>`
+  block: fixed design-system CSS (borders, radii, transitions, hover/pressed/
+  selected/disabled states, focus-visible) lives in a module-level
+  `const StyledFoo = styled.div\`…\`` and is toggled with modifier classes
+  (`DesignSystem-Foo--selected`, `--disabled`, …) via `clsx`, generally in the
+  same **priority order** the modifiers should win in when more than one could
+  apply at once (later in the template wins ties — see `Card.tsx`'s pressed
+  vs. hover ordering). Genuinely **per-instance** values that come from a
+  caller, not a fixed token — `padding`, a numeric `labelLines` clamp — stay on
+  the `style` prop, layered on top. Pull colors from `--MH-Theme-*` CSS
+  variables with a hex fallback: `"var(--MH-Theme-Primary-Light, #def8fb)"`.
+- Scoped class names of the form `DesignSystem-<Name>` on the root, with
+  `DesignSystem-<Name>--<modifier>` for variants/states. If another file reaches
+  into a component's classes from outside (grep for the class name first),
+  remember `styled(Foo)` wrappers reliably win equal-specificity ties against
+  the wrapped component's own rules — that's the mechanism, lean on it rather
+  than fighting it.
+- Prefer real CSS pseudo-classes (`:hover`, `:focus-visible`) over JS-tracked
+  state. Only fall back to a JS-driven modifier class when CSS genuinely can't
+  express the rule — e.g. `Card`'s pressed state can't be plain `:active`
+  because that also fires when a nested interactive island (a button rendered
+  inside the card) is clicked, so it's excluded in `onMouseDown` instead.
 
 ## Documenting props
 
@@ -67,8 +83,9 @@ Components are being moved from `.js` to `.tsx` as they're touched, newest first
 | `Card` | ✅ `.tsx` |
 | `Chip` | ✅ `.tsx` |
 | `FavoriteButton` | ✅ `.tsx` |
+| `Navbar` | ✅ `.tsx` |
 | `lib/taskTypeColors` | ✅ `.ts` |
-| `Button`, `IconButton`, `Modal`, `Navbar`, `Popover`, `Tooltip`, `DropdownMenu`, `DropdownSelect`, `MessageCard`, `InfoPopover`, `PanelHeader`, `CopyButton`, `CompactActionButton`, `Icons/` | ⏳ still `.js` |
+| `Button`, `IconButton`, `Modal`, `Popover`, `Tooltip`, `DropdownMenu`, `DropdownSelect`, `MessageCard`, `InfoPopover`, `PanelHeader`, `CopyButton`, `CompactActionButton`, `Icons/` | ⏳ still `.js` |
 
 When converting a `.js` component that another `.tsx` file already imports, watch
 for TS mis-inferring its JSDoc-typed props — see the `RawTooltip` cast in
