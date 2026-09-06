@@ -49,6 +49,7 @@ import { Log } from "./schemas/Log";
 import { Datasource } from "./schemas/Datasource";
 import { Visual } from "./schemas/YQVisual";
 import { VisualCodeFile } from "./schemas/YQVisualCodeFile";
+import { JsPsychExperiment } from "./schemas/JsPsychExperiment";
 import { Friendship } from "./schemas/YQFriendship";
 import { YQGenAI } from "./schemas/YQGenAI";
 import { YQTag } from "./schemas/YQTag";
@@ -129,6 +130,7 @@ export const lists: Lists = {
   Datasource,
   Visual,
   VisualCodeFile,
+  JsPsychExperiment,
   Friendship,
   YQTag,
   YQGenAI,
