@@ -154,6 +154,40 @@ export function parseDateOnly(value) {
   return new Date(year, month - 1, date);
 }
 
+/**
+ * Inclusive local-calendar bounds for openAt / closeAt.
+ * Teachers pick dates (not times); stored values are UTC midnight of that
+ * calendar day, so comparing `now > closeAt` falsely closes the window for
+ * the entire close date in US timezones.
+ */
+export function getPreferenceTimeWindowState(roundLike, now = Date.now()) {
+  const openDate = parseDateOnly(roundLike?.openAt);
+  const closeDate = parseDateOnly(roundLike?.closeAt);
+  const openAtMs = openDate ? openDate.getTime() : null;
+  const closeAtMs = closeDate
+    ? new Date(
+        closeDate.getFullYear(),
+        closeDate.getMonth(),
+        closeDate.getDate(),
+        23,
+        59,
+        59,
+        999,
+      ).getTime()
+    : null;
+  const beforeOpen = openAtMs != null && now < openAtMs;
+  const afterClose = closeAtMs != null && now > closeAtMs;
+  return {
+    beforeOpen,
+    afterClose,
+    isOpen: !beforeOpen && !afterClose,
+  };
+}
+
+export function isPreferenceTimeWindowOpen(roundLike, now = Date.now()) {
+  return getPreferenceTimeWindowState(roundLike, now).isOpen;
+}
+
 export function readSponsorFormsVisible(settings) {
   if (!isPlainObject(settings)) return false;
   return Boolean(settings.sponsorFormsVisible);

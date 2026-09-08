@@ -2,6 +2,8 @@
  * Helpers for keeping student opportunity favorites and ranking membership aligned.
  */
 
+import { isPreferenceTimeWindowOpen } from "./connectRoundSettings";
+
 /** Round-scoped favorite IDs from the authoritative Profile relation. */
 export function getFavoriteOppIdsInRound(favoriteOpportunities, roundOpportunityIds) {
   const roundSet =
@@ -26,12 +28,7 @@ export function isPreferenceSnapshotLocked({ preferenceStatus, isOpen }) {
 /** True when a round accepts new draft ranking edits (status + time window). */
 export function isRoundRankingEditable(round) {
   if (!round || round.status !== "preferences_open") return false;
-  const now = Date.now();
-  const openAtMs = round.openAt ? new Date(round.openAt).getTime() : null;
-  const closeAtMs = round.closeAt ? new Date(round.closeAt).getTime() : null;
-  const beforeOpen = openAtMs && now < openAtMs;
-  const afterClose = closeAtMs && now > closeAtMs;
-  return !beforeOpen && !afterClose;
+  return isPreferenceTimeWindowOpen(round);
 }
 
 /** Draft ranking items that no longer match favorites on class browse. */

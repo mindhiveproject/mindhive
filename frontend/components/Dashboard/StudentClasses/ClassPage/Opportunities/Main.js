@@ -191,6 +191,7 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
             openById.set(round.id, {
               id: round.id,
               title: round.title || "",
+              status: round.status || STUDENT_OPEN_ROUND_STATUS,
               openAt: round.openAt || null,
               closeAt: round.closeAt || null,
               settings: round.settings || null,

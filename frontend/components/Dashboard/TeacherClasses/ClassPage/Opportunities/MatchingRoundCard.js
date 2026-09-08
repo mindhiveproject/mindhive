@@ -51,6 +51,7 @@ import {
   readSponsorFormsVisible,
   scheduleFromInputs,
   formatScheduleDate,
+  getPreferenceTimeWindowState,
 } from "../../../../../lib/connectRoundSettings";
 import { useUser } from "../../../../Utils/Access/User";
 import MatchingRoundOpportunitiesGrid from "./MatchingRoundOpportunitiesGrid";
@@ -3094,14 +3095,13 @@ function MatchingRoundEditor({
   );
 
   const renderStudentRankingPanel = () => {
-    const now = Date.now();
     const openAtSource = inputs.openAt || round?.openAt;
     const closeAtSource = inputs.closeAt || round?.closeAt;
-    const openAtMs = openAtSource ? new Date(openAtSource).getTime() : null;
-    const closeAtMs = closeAtSource ? new Date(closeAtSource).getTime() : null;
-    const beforeOpen = openAtMs && now < openAtMs;
-    const afterClose = closeAtMs && now > closeAtMs;
-    const rankingWindowActive = !beforeOpen && !afterClose;
+    const { beforeOpen, afterClose, isOpen: rankingWindowActive } =
+      getPreferenceTimeWindowState({
+        openAt: openAtSource,
+        closeAt: closeAtSource,
+      });
     const ballotEnabled =
       !isNew &&
       roundStatusForPanels !== "draft" &&

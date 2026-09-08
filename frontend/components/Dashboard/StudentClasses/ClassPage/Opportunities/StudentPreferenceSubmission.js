@@ -15,8 +15,13 @@ import {
   getDraftDriftedOpportunityIds,
   getFavoriteOppIdsInRound,
   isPreferenceSnapshotLocked,
+  isRoundRankingEditable,
   pruneRankingsToOpportunityIds,
 } from "../../../../../lib/opportunityFavoriteRanking";
+import {
+  formatScheduleDate,
+  getPreferenceTimeWindowState,
+} from "../../../../../lib/connectRoundSettings";
 import {
   CREATE_PREFERENCE,
   UPDATE_PREFERENCE,
@@ -375,19 +380,8 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     [roundOpportunities],
   );
   const submittedEarly = existingPreference?.status === "submitted";
-  const preferenceTimeWindowOpen = useMemo(() => {
-    if (!round) return false;
-    const now = Date.now();
-    const openAtMs = round.openAt ? new Date(round.openAt).getTime() : null;
-    const closeAtMs = round.closeAt ? new Date(round.closeAt).getTime() : null;
-    const beforeOpen = openAtMs && now < openAtMs;
-    const afterClose = closeAtMs && now > closeAtMs;
-    return !beforeOpen && !afterClose;
-  }, [round?.openAt, round?.closeAt, round?.id]);
   const isRankingEditable =
-    round?.status === "preferences_open" &&
-    preferenceTimeWindowOpen &&
-    !submittedEarly;
+    isRoundRankingEditable(round) && !submittedEarly;
   const isSnapshotLocked = isPreferenceSnapshotLocked({
     preferenceStatus: existingPreference?.status,
     isOpen: isRankingEditable,
@@ -1078,11 +1072,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     );
   }
 
-  const now = Date.now();
-  const openAtMs = round.openAt ? new Date(round.openAt).getTime() : null;
-  const closeAtMs = round.closeAt ? new Date(round.closeAt).getTime() : null;
-  const beforeOpen = openAtMs && now < openAtMs;
-  const afterClose = closeAtMs && now > closeAtMs;
+  const { beforeOpen, afterClose } = getPreferenceTimeWindowState(round);
   const submitted = submittedEarly;
   const isOpen = isRankingEditable;
   const showDriftRepairModal =
@@ -1165,7 +1155,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
       },
     );
   } else if (beforeOpen) {
-    const openDate = new Date(round.openAt).toLocaleDateString();
+    const openDate = formatScheduleDate(round.openAt);
     lockReason = t(
       "opportunities.studentView.rankForm.lockReason.beforeOpen",
       { date: openDate },
@@ -1175,7 +1165,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
       },
     );
   } else if (afterClose) {
-    const closeDate = new Date(round.closeAt).toLocaleDateString();
+    const closeDate = formatScheduleDate(round.closeAt);
     lockReason = t(
       "opportunities.studentView.rankForm.lockReason.afterClose",
       { date: closeDate },
