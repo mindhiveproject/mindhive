@@ -18,7 +18,7 @@ export default function JoinStudy({
   study,
   userInfo,
   btnName,
-  variant = "filled",
+  variant = "primary",
 }) {
   const { t } = useTranslation("common");
   const router = useRouter();
