@@ -6,7 +6,7 @@ import {
   select,
   json,
 } from "@keystone-6/core/fields";
-import { rules, isSignedIn } from "../access";
+import { rules, isSignedIn, canAccessTeachingTeamNote } from "../access";
 
 export const ConnectPreference = list({
   access: {
@@ -56,6 +56,17 @@ export const ConnectPreference = list({
     }),
 
     notes: text({ ui: { displayMode: "textarea" } }),
+
+    // Private teaching-team comments about this student for the round.
+    // Not the student-facing `notes` field; students cannot read or write.
+    teachingTeamNote: text({
+      ui: { displayMode: "textarea" },
+      access: {
+        read: (...args) => canAccessTeachingTeamNote(args[0]),
+        create: () => false,
+        update: (...args) => canAccessTeachingTeamNote(args[0]),
+      },
+    }),
 
     // [{ formDefinitionId, answer, savedAt? }] — student competency assessment.
     assessmentData: json(),

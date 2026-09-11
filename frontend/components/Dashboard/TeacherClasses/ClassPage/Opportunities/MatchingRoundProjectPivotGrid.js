@@ -8,6 +8,7 @@ import { AgGridReact } from "ag-grid-react";
 
 import Tooltip from "../../../../DesignSystem/Tooltip";
 import { buildOpportunityPreferenceStats } from "../../../../../lib/connectBallotUtils";
+import StudentNameDisplay from "./StudentNameDisplay";
 
 const EmptyNote = styled.p`
   margin: 0;
@@ -52,6 +53,26 @@ const HeaderLabel = styled.span`
   white-space: nowrap;
 `;
 
+const RankedStudentsCell = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  padding: 4px 0;
+`;
+
+const RankedStudentEntry = styled.span`
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+`;
+
+const RankSuffix = styled.span`
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  white-space: nowrap;
+`;
+
 function formatOrdinalRank(rank, t) {
   if (rank === 1) {
     return t(
@@ -85,6 +106,39 @@ function formatStudentRankEntry(entry, t) {
   return `${entry.name} (${formatOrdinalRank(entry.rank, t)})`;
 }
 
+function RankedStudentsCellRenderer(props) {
+  const { t } = useTranslation("classes");
+  const entries = props.data?.rankedStudents || [];
+  const preferenceBySubmitterId = props.preferenceBySubmitterId;
+
+  if (!entries.length) {
+    return t(
+      "opportunities.matchingRound.matching.pivotNoRankings",
+      {},
+      { default: "—" },
+    );
+  }
+
+  return (
+    <RankedStudentsCell>
+      {entries.map((entry, index) => (
+        <RankedStudentEntry
+          key={`${entry.student?.id || entry.name}-${entry.rank}`}
+        >
+          {index > 0 ? <span aria-hidden="true">;</span> : null}
+          <StudentNameDisplay
+            student={entry.student}
+            preference={
+              preferenceBySubmitterId?.get?.(entry.student?.id) || null
+            }
+          />
+          <RankSuffix>({formatOrdinalRank(entry.rank, t)})</RankSuffix>
+        </RankedStudentEntry>
+      ))}
+    </RankedStudentsCell>
+  );
+}
+
 /** Column header with Design System Tooltip for the column description. */
 function PivotColumnHeader(props) {
   const label = props.displayName || "";
@@ -115,6 +169,15 @@ export default function MatchingRoundProjectPivotGrid({
   const { t } = useTranslation("classes");
   const gridRef = useRef(null);
 
+  const preferenceBySubmitterId = useMemo(() => {
+    const map = new Map();
+    (preferences || []).forEach((preference) => {
+      const id = preference.submitter?.id;
+      if (id) map.set(id, preference);
+    });
+    return map;
+  }, [preferences]);
+
   const rowData = useMemo(() => {
     return (opportunities || []).map((opportunity) => {
       const stats = buildOpportunityPreferenceStats(
@@ -124,7 +187,8 @@ export default function MatchingRoundProjectPivotGrid({
       );
       const matches = matchesByOpportunity.get(opportunity.id) || [];
       const capacity = opportunity.studentCapacity || 1;
-      const rankedStudentsLabel = (stats.students || [])
+      const rankedStudents = stats.students || [];
+      const rankedStudentsLabel = rankedStudents
         .map((entry) => formatStudentRankEntry(entry, t))
         .join("; ");
 
@@ -132,6 +196,7 @@ export default function MatchingRoundProjectPivotGrid({
         id: opportunity.id,
         title: opportunity.title || "—",
         rankedCount: stats.total,
+        rankedStudents,
         rankedStudentsLabel,
         placedLabel: t(
           "opportunities.matchingRound.matching.capacity",
@@ -196,6 +261,9 @@ export default function MatchingRoundProjectPivotGrid({
         wrapText: true,
         autoHeight: true,
         cellClass: "ag-cell-wrap-text",
+        cellRenderer: RankedStudentsCellRenderer,
+        cellRendererParams: { preferenceBySubmitterId },
+        valueGetter: (params) => params.data?.rankedStudentsLabel || "",
         valueFormatter: (params) =>
           params.value ||
           t(
@@ -259,7 +327,7 @@ export default function MatchingRoundProjectPivotGrid({
         },
       },
     ],
-    [t],
+    [preferenceBySubmitterId, t],
   );
 
   const defaultColDef = useMemo(

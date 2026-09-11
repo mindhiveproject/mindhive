@@ -15,6 +15,8 @@ import Tooltip from "../../../../DesignSystem/Tooltip";
 import { slugifyForFilename } from "../../../../../lib/opportunityExportMedia";
 import { CLASS_OPPORTUNITY_PREVIEW_LOGS } from "../../../../Queries/Log";
 import { CLASS_STUDENT_OPPORTUNITY_FAVORITES } from "../../../../Queries/Opportunity";
+import { TEACHER_ROUND_PREFERENCE_NAME_CONTEXT } from "../../../../Queries/ConnectMatch";
+import StudentNameDisplay from "./StudentNameDisplay";
 
 const VIEW_MODES = {
   table: "table",
@@ -562,6 +564,26 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     },
   );
 
+  const { data: preferenceNameData } = useQuery(
+    TEACHER_ROUND_PREFERENCE_NAME_CONTEXT,
+    {
+      variables: { roundId },
+      skip: !enabled || !roundId,
+      fetchPolicy: "cache-and-network",
+    },
+  );
+
+  const preferenceByStudentId = useMemo(() => {
+    const map = new Map();
+    (preferenceNameData?.connectRound?.preferences || []).forEach(
+      (preference) => {
+        const id = preference.submitter?.id;
+        if (id) map.set(id, preference);
+      },
+    );
+    return map;
+  }, [preferenceNameData?.connectRound?.preferences]);
+
   const loading = logsLoading || favoritesLoading;
 
   const interestByKey = useMemo(() => {
@@ -643,6 +665,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
           }
           return {
             id: student.id,
+            student,
             studentName: displayName(student),
             interestByOpportunityId,
             totalDwellMs,
@@ -700,6 +723,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
 
       return {
         id: row.id,
+        student: row.student,
         studentName: row.studentName,
         topOpportunities,
       };
@@ -712,6 +736,16 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     { default: "Student" },
   );
 
+  const StudentNameCellRenderer = useCallback(
+    (params) => (
+      <StudentNameDisplay
+        student={params.data?.student}
+        preference={preferenceByStudentId.get(params.data?.id) || null}
+      />
+    ),
+    [preferenceByStudentId],
+  );
+
   const columnDefs = useMemo(() => {
     const cols = [
       {
@@ -722,6 +756,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
         pinned: "left",
         flex: 1.4,
         minWidth: 160,
+        cellRenderer: StudentNameCellRenderer,
       },
     ];
 
@@ -751,7 +786,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     }
 
     return cols;
-  }, [filteredOpportunities, studentColumnHeader, t]);
+  }, [StudentNameCellRenderer, filteredOpportunities, studentColumnHeader, t]);
 
   const defaultColDef = useMemo(
     () => ({
@@ -1023,7 +1058,10 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
               className="matchingRoundStudentInterestCard"
             >
               <h5 className="matchingRoundStudentInterestCardName">
-                {card.studentName}
+                <StudentNameDisplay
+                  student={card.student}
+                  preference={preferenceByStudentId.get(card.id) || null}
+                />
               </h5>
               {card.topOpportunities.length > 0 ? (
                 <ul className="matchingRoundStudentInterestCardList">

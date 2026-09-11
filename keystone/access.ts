@@ -1,7 +1,7 @@
 // access functions, the access control returns yes or no
 
 import { permissionsList } from "./schemas/fields";
-import { ListAccessArgs } from "./types";
+import { ListAccessArgs, Session } from "./types";
 
 export function isSignedIn({ session }: ListAccessArgs) {
   return !!session; // if undefinened, return false
@@ -53,6 +53,35 @@ function connectRoundStaffRoundClauses(me: string) {
       },
     },
   ];
+}
+
+/**
+ * Field access for ConnectPreference.teachingTeamNote: platform admins or
+ * teaching-team staff on the preference's round. Students (including the
+ * submitter) never read or write this field.
+ */
+export async function canAccessTeachingTeamNote({
+  session,
+  context,
+  item,
+}: {
+  session?: Session;
+  context: any;
+  item?: any;
+}): Promise<boolean> {
+  if (!isSignedIn({ session })) return false;
+  if (permissions.canManageUsers({ session })) return true;
+  const roundId = item?.roundId as string | null | undefined;
+  if (!roundId || !session?.itemId) return false;
+  const rounds = await context.sudo().query.ConnectRound.findMany({
+    where: {
+      id: { equals: roundId },
+      OR: connectRoundStaffRoundClauses(session.itemId),
+    },
+    query: "id",
+    take: 1,
+  });
+  return rounds.length > 0;
 }
 
 /** Opportunity sponsors, assigned mentors, or legacy mentor (Connect stakeholder access). */

@@ -6,7 +6,8 @@ import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
-import { DragIndicatorIcon } from "../../../../DesignSystem/Icons";
+import IconButton from "../../../../DesignSystem/IconButton";
+import { CloseIcon, DragIndicatorIcon } from "../../../../DesignSystem/Icons";
 import PanelHeader from "../../../../DesignSystem/PanelHeader";
 import Popover from "../../../../DesignSystem/Popover";
 import {
@@ -47,6 +48,10 @@ const RankRow = styled.div`
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   min-width: 0;
 
+  &.withRemove {
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto auto;
+  }
+
   &.unavailable {
     opacity: 0.72;
     background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
@@ -56,6 +61,10 @@ const RankRow = styled.div`
     grid-template-columns: auto auto minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
     align-items: center;
+
+    &.withRemove {
+      grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    }
 
     .rankRowNote {
       grid-column: 2 / 3;
@@ -477,6 +486,7 @@ function RankRowItem({
   rankingEnabled,
   onCommentChange,
   onOpenVideo,
+  onRemove,
   unavailableMessage,
   t,
 }) {
@@ -493,9 +503,19 @@ function RankRowItem({
     { title: opportunity.title || "" },
     { default: "Watch intro video for {{title}}" },
   );
+  const removeLabel = t(
+    "opportunities.matchingRound.studentRanking.editBallotRemoveOne",
+    { title: opportunity.title || "" },
+    { default: "Remove {{title}}" },
+  );
 
   return (
-    <RankRow className={clsx({ unavailable: !rankingEnabled })}>
+    <RankRow
+      className={clsx({
+        unavailable: !rankingEnabled,
+        withRemove: Boolean(onRemove),
+      })}
+    >
       <DragHandle
         className="rank-drag-handle"
         aria-disabled={!rankingEnabled}
@@ -543,6 +563,18 @@ function RankRowItem({
         </VideoThumbButton>
       ) : null}
 
+      {onRemove ? (
+        <IconButton
+          type="button"
+          variant="tonal"
+          ariaLabel={removeLabel}
+          title={removeLabel}
+          disabled={!rankingEnabled}
+          onClick={() => onRemove(opportunity.id)}
+          icon={<CloseIcon width={16} height={16} aria-hidden />}
+        />
+      ) : null}
+
       {unavailableMessage ? (
         <UnavailableNote>{unavailableMessage}</UnavailableNote>
       ) : null}
@@ -560,6 +592,7 @@ export default function FavoriteRankList({
   rankingEnabled,
   syncKey = "",
   now = Date.now(),
+  onRemoveOpportunity,
 }) {
   const { t } = useTranslation("classes");
   const [orderedIds, setOrderedIds] = useState([]);
@@ -596,6 +629,21 @@ export default function FavoriteRankList({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncKey]);
+
+  // Keep local order in sync when opportunities are added/removed outside drag.
+  useEffect(() => {
+    const nextIds = opportunities.map((opp) => opp?.id).filter(Boolean);
+    setOrderedIds((prev) => {
+      const prevSet = new Set(prev);
+      const nextSet = new Set(nextIds);
+      const same =
+        prev.length === nextIds.length && prev.every((id) => nextSet.has(id));
+      if (same) return prev;
+      const kept = prev.filter((id) => nextSet.has(id));
+      const added = nextIds.filter((id) => !prevSet.has(id));
+      return [...kept, ...added];
+    });
+  }, [opportunities]);
 
   const applyOrderToRankings = useCallback(
     (ids) => {
@@ -687,6 +735,11 @@ export default function FavoriteRankList({
         unavailableMessage={unavailableMessage}
         onCommentChange={(value) => updateField(oppId, "comment", value)}
         onOpenVideo={setVideoModalOpp}
+        onRemove={
+          onRemoveOpportunity
+            ? () => onRemoveOpportunity(oppId)
+            : undefined
+        }
         t={t}
       />
     );

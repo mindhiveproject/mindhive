@@ -62,6 +62,7 @@ export const ROUND_MATCH_VIEW = gql`
       preferences {
         id
         status
+        teachingTeamNote
         studentMatchingPreference
         submitter {
           id
@@ -102,6 +103,23 @@ export const ROUND_MATCH_VIEW = gql`
   }
 `;
 
+/** Slim preference context for teacher name display (queue chip + notes). */
+export const TEACHER_ROUND_PREFERENCE_NAME_CONTEXT = gql`
+  query TEACHER_ROUND_PREFERENCE_NAME_CONTEXT($roundId: ID!) {
+    connectRound(where: { id: $roundId }) {
+      id
+      preferences {
+        id
+        teachingTeamNote
+        studentMatchingPreference
+        submitter {
+          id
+        }
+      }
+    }
+  }
+`;
+
 export const TEACHER_STUDENT_BALLOT_VIEW = gql`
   query TEACHER_STUDENT_BALLOT_VIEW($roundId: ID!) {
     connectRound(where: { id: $roundId }) {
@@ -136,6 +154,7 @@ export const TEACHER_STUDENT_BALLOT_VIEW = gql`
         id
         status
         notes
+        teachingTeamNote
         submittedAt
         assessmentData
         studentMatchingPreference

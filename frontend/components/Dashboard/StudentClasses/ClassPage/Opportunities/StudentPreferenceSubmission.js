@@ -41,6 +41,7 @@ import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import IconButton from "../../../../DesignSystem/IconButton";
 import MessageCard from "../../../../DesignSystem/MessageCard";
+import { AddIcon } from "../../../../DesignSystem/Icons";
 import ClassmateRankList, {
   deriveClassmateOrder,
 } from "./ClassmateRankList";
@@ -48,6 +49,7 @@ import { buildFavoritedTeamProjectsNote, getLargestTeamOpportunity } from "./cla
 import {
   getMaxActiveClassmatePicks,
   getStudentTeamEligibleOpportunities,
+  getTeamEligibleOpportunities,
 } from "../../../../../lib/connectBallotUtils";
 import {
   buildStudentMatchingPreference,
@@ -68,6 +70,7 @@ import {
 
 /** Round/opportunity questions are deferred; keep save paths dormant until re-enabled. */
 const PREFERENCE_QUESTIONS_ENABLED = false;
+const EMPTY_OPPORTUNITIES = [];
 
 function hasRankedPreferenceItems(rankings) {
   return Object.entries(rankings).some(([, r]) => {
@@ -223,6 +226,86 @@ const RankPageBody = styled.div`
   box-sizing: border-box;
 `;
 
+const StaffOppPool = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--MH-Theme-Neutrals-Medium, #e6e6e6);
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+`;
+
+const StaffOppPoolToggle = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: var(--MH-Type-Label-Base, 500 14px/20px "Inter", sans-serif);
+  color: var(--MH-Theme-Neutrals-Black, #171717);
+  text-align: left;
+`;
+
+const StaffOppPoolToggleLeading = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const StaffOppSearch = styled.input`
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--MH-Theme-Neutrals-Medium, #d3dae0);
+  border-radius: 12px;
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  font: var(--MH-Type-Body-Base);
+  color: var(--MH-Theme-Neutrals-Black, #171717);
+  outline: none;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+`;
+
+const StaffOppPoolList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const StaffOppPoolRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  background: var(--MH-Theme-Neutrals-Lighter, #f9f9f9);
+`;
+
+const StaffOppPoolTitle = styled.span`
+  min-width: 0;
+  font: var(--MH-Type-Title-Small);
+  color: var(--MH-Theme-Neutrals-Black, #171717);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+const StaffOppPoolHint = styled.p`
+  margin: 0;
+  font: var(--MH-Type-Body-Base);
+  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+`;
+
 function QuestionInput({ question, value, onChange }) {
   const type = question.questionType;
   const options = Array.isArray(question.options) ? question.options : [];
@@ -349,13 +432,28 @@ function RankFormChrome({
   );
 }
 
-export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
+export default function StudentPreferenceSubmission({
+  roundId,
+  user,
+  onBack,
+  staffForStudent = null,
+  onSaved,
+  onStaffRefetch,
+}) {
   const { t } = useTranslation("classes");
   const router = useRouter();
   const locale = router?.locale || "en-us";
-  const backLabel = t("opportunities.studentView.rankForm.backLink", {}, {
-    default: "Back to opportunities",
-  });
+  const staffStudentId = staffForStudent?.id || null;
+  const isStaffEdit = Boolean(staffStudentId);
+  const backLabel = isStaffEdit
+    ? t(
+        "opportunities.matchingRound.studentRanking.editBallotClose",
+        {},
+        { default: "Close" },
+      )
+    : t("opportunities.studentView.rankForm.backLink", {}, {
+        default: "Back to opportunities",
+      });
   const { data, loading, refetch } = useQuery(GET_PARTICIPATE_VIEW, {
     variables: { roundId },
     fetchPolicy: "cache-and-network",
@@ -369,54 +467,114 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const includeAssessment = Boolean(assessmentFormId);
   const stepKeys = buildPreferenceStepKeys(includeAssessment);
   const totalSteps = stepKeys.length;
-  const existingPreference = me?.connectPreferences?.[0];
-  const existingTeamPrefs = me?.teamPreferencesSubmitted || [];
-  const existingAnswers = me?.questionAnswers || [];
+  const existingPreference = isStaffEdit
+    ? staffForStudent?.preference || null
+    : me?.connectPreferences?.[0];
+  const existingTeamPrefs = isStaffEdit
+    ? staffForStudent?.teamPreferences || []
+    : me?.teamPreferencesSubmitted || [];
+  const existingAnswers = isStaffEdit
+    ? staffForStudent?.questionAnswers || []
+    : me?.questionAnswers || [];
 
   const approvedRoundQuestions = (round?.questions || []).filter(
     (q) => q.status === "approved"
   );
-  const roundOpportunities = round?.opportunities || [];
+  const roundOpportunities = round?.opportunities ?? EMPTY_OPPORTUNITIES;
   const roundOppIdSet = useMemo(
     () => new Set(roundOpportunities.map((o) => o.id).filter(Boolean)),
     [roundOpportunities],
   );
   const submittedEarly = existingPreference?.status === "submitted";
-  const isRankingEditable =
-    isRoundRankingEditable(round) && !submittedEarly;
-  const isSnapshotLocked = isPreferenceSnapshotLocked({
-    preferenceStatus: existingPreference?.status,
-    isOpen: isRankingEditable,
-  });
-  const favoriteOppIdsInRound = useMemo(
-    () =>
-      getFavoriteOppIdsInRound(
-        me?.favoriteOpportunities ?? user?.favoriteOpportunities,
-        roundOppIdSet,
-      ),
-    [me?.favoriteOpportunities, user?.favoriteOpportunities, roundOppIdSet],
+  const isRankingEditable = isStaffEdit
+    ? true
+    : isRoundRankingEditable(round) && !submittedEarly;
+  const isSnapshotLocked = isStaffEdit
+    ? false
+    : isPreferenceSnapshotLocked({
+        preferenceStatus: existingPreference?.status,
+        isOpen: isRankingEditable,
+      });
+
+  const [roundAnswers, setRoundAnswers] = useState({});
+  const [oppAnswers, setOppAnswers] = useState({});
+  const [rankings, setRankings] = useState({});
+  const [staffBallotOppIds, setStaffBallotOppIds] = useState([]);
+  const [staffOppSearch, setStaffOppSearch] = useState("");
+  const [staffOppPoolOpen, setStaffOppPoolOpen] = useState(true);
+  const [classmateOrder, setClassmateOrder] = useState([]);
+  const [notes, setNotes] = useState("");
+  const [assessmentData, setAssessmentData] = useState(null);
+  const [studentMatchingPreference, setStudentMatchingPreference] =
+    useState(null);
+  const [matchingPreferenceDraft, setMatchingPreferenceDraft] = useState(null);
+  const [editingMatchingPreference, setEditingMatchingPreference] =
+    useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [assessmentValid, setAssessmentValid] = useState(false);
+  const [driftRepairResolved, setDriftRepairResolved] = useState(false);
+  const [driftRepairLoading, setDriftRepairLoading] = useState(false);
+  const assessmentStepRef = useRef(null);
+  const preferenceIdRef = useRef(existingPreference?.id || null);
+
+  const staffBallotOppIdsKey = useMemo(
+    () => [...staffBallotOppIds].sort().join(","),
+    [staffBallotOppIds],
   );
-  const rankingOppIds = useMemo(
-    () =>
-      deriveRankingOpportunityIds({
-        favoriteOppIdsInRound,
-        existingPreference,
-        isSnapshotLocked,
-      }),
-    [favoriteOppIdsInRound, existingPreference, isSnapshotLocked],
-  );
+
+  const favoriteOppIdsInRound = useMemo(() => {
+    if (isStaffEdit) {
+      // Staff ballot membership only — do not mirror/mutate student favorites.
+      return new Set(staffBallotOppIds);
+    }
+    return getFavoriteOppIdsInRound(
+      me?.favoriteOpportunities ?? user?.favoriteOpportunities,
+      roundOppIdSet,
+    );
+  }, [
+    isStaffEdit,
+    staffBallotOppIdsKey,
+    staffBallotOppIds,
+    me?.favoriteOpportunities,
+    user?.favoriteOpportunities,
+    roundOppIdSet,
+  ]);
+  const rankingOppIds = useMemo(() => {
+    if (isStaffEdit) {
+      return new Set(staffBallotOppIds);
+    }
+    return deriveRankingOpportunityIds({
+      favoriteOppIdsInRound,
+      existingPreference,
+      isSnapshotLocked,
+    });
+  }, [
+    isStaffEdit,
+    staffBallotOppIdsKey,
+    staffBallotOppIds,
+    favoriteOppIdsInRound,
+    existingPreference,
+    isSnapshotLocked,
+  ]);
   const rankingOppIdsKey = useMemo(
-    () => [...rankingOppIds].sort().join(","),
-    [rankingOppIds],
+    () =>
+      isStaffEdit
+        ? staffBallotOppIdsKey
+        : [...rankingOppIds].sort().join(","),
+    [isStaffEdit, staffBallotOppIdsKey, rankingOppIds],
   );
   const opportunities = useMemo(
     () => roundOpportunities.filter((opp) => rankingOppIds.has(opp.id)),
     [roundOpportunities, rankingOppIds],
   );
+  const staffSubmitterConnect = useMemo(
+    () =>
+      isStaffEdit
+        ? { submitter: { connect: { id: staffStudentId } } }
+        : null,
+    [isStaffEdit, staffStudentId],
+  );
 
-  const [roundAnswers, setRoundAnswers] = useState({});
-  const [oppAnswers, setOppAnswers] = useState({});
-  const [rankings, setRankings] = useState({});
   const draftDriftEntries = useMemo(
     () =>
       getDraftDriftedOpportunityIds({
@@ -432,20 +590,6 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
       rankings,
     ],
   );
-  const [classmateOrder, setClassmateOrder] = useState([]);
-  const [notes, setNotes] = useState("");
-  const [assessmentData, setAssessmentData] = useState(null);
-  const [studentMatchingPreference, setStudentMatchingPreference] =
-    useState(null);
-  const [matchingPreferenceDraft, setMatchingPreferenceDraft] = useState(null);
-  const [editingMatchingPreference, setEditingMatchingPreference] =
-    useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [assessmentValid, setAssessmentValid] = useState(false);
-  const [driftRepairResolved, setDriftRepairResolved] = useState(false);
-  const [driftRepairLoading, setDriftRepairLoading] = useState(false);
-  const assessmentStepRef = useRef(null);
-  const preferenceIdRef = useRef(existingPreference?.id || null);
   const preferenceEntity = useMemo(
     () => ({
       id: existingPreference?.id,
@@ -454,14 +598,15 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     [existingPreference?.id, assessmentData],
   );
 
-  const teamEligibleOpps = useMemo(
-    () =>
-      getStudentTeamEligibleOpportunities(
-        roundOpportunities,
-        favoriteOppIdsInRound,
-      ),
-    [roundOpportunities, favoriteOppIdsInRound],
-  );
+  const teamEligibleOpps = useMemo(() => {
+    if (isStaffEdit) {
+      return getTeamEligibleOpportunities(roundOpportunities);
+    }
+    return getStudentTeamEligibleOpportunities(
+      roundOpportunities,
+      favoriteOppIdsInRound,
+    );
+  }, [isStaffEdit, roundOpportunities, favoriteOppIdsInRound]);
   const teamEligibleOppIds = useMemo(
     () => teamEligibleOpps.map((o) => o.id).filter(Boolean),
     [teamEligibleOpps],
@@ -469,16 +614,16 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const hasTeamOpps = teamEligibleOpps.length > 0;
   const effectivePicks = getMaxActiveClassmatePicks(teamEligibleOpps);
   const largestTeamOpp = getLargestTeamOpportunity(teamEligibleOpps);
-  const favoritedTeamProjectsNote = buildFavoritedTeamProjectsNote(
-    teamEligibleOpps,
-    t,
-  );
+  const favoritedTeamProjectsNote = isStaffEdit
+    ? null
+    : buildFavoritedTeamProjectsNote(teamEligibleOpps, t);
 
   const networkStudents = (() => {
     const map = new Map();
+    const excludeId = isStaffEdit ? staffStudentId : me?.id;
     (round?.classNetwork?.classes || []).forEach((cls) => {
       (cls.students || []).forEach((s) => {
-        if (s.id !== me?.id) map.set(s.id, s);
+        if (s.id !== excludeId) map.set(s.id, s);
       });
     });
     return Array.from(map.values());
@@ -490,22 +635,34 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
 
   useEffect(() => {
     if (isSnapshotLocked) return;
-    setRankings((prev) => pruneRankingsToOpportunityIds(prev, rankingOppIds));
+    setRankings((prev) => {
+      const next = pruneRankingsToOpportunityIds(prev, rankingOppIds);
+      const prevKeys = Object.keys(prev);
+      const nextKeys = Object.keys(next);
+      if (
+        prevKeys.length === nextKeys.length &&
+        nextKeys.every((key) => prev[key] === next[key])
+      ) {
+        return prev;
+      }
+      return next;
+    });
   }, [rankingOppIdsKey, isSnapshotLocked, rankingOppIds]);
 
   useEffect(() => {
+    if (isStaffEdit) return;
     const raw = router.query.step;
     const stepNum = Number(raw);
     if (raw && stepNum >= 1 && stepNum <= totalSteps) {
       setCurrentStep(stepNum);
     }
-  }, [router.query.step, totalSteps]);
+  }, [isStaffEdit, router.query.step, totalSteps]);
 
   const goToStep = useCallback(
     (step) => {
       const next = Math.min(totalSteps, Math.max(1, step));
       setCurrentStep(next);
-      if (router.query.round) {
+      if (!isStaffEdit && router.query.round) {
         router.replace(
           {
             pathname: router.pathname,
@@ -516,7 +673,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         );
       }
     },
-    [router, totalSteps],
+    [isStaffEdit, router, totalSteps],
   );
 
   useEffect(() => {
@@ -536,14 +693,20 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     setOppAnswers(oA);
 
     const r = {};
-    (existingPreference?.items || []).forEach((item) => {
+    const staffItemIds = [];
+    const preferenceItems = [...(existingPreference?.items || [])].sort(
+      (a, b) => Number(a.rank || 0) - Number(b.rank || 0),
+    );
+    preferenceItems.forEach((item) => {
       if (!item.opportunity?.id) return;
       if (
+        !isStaffEdit &&
         !isSnapshotLocked &&
         !favoriteOppIdsInRound.has(item.opportunity.id)
       ) {
         return;
       }
+      staffItemIds.push(item.opportunity.id);
       r[item.opportunity.id] = {
         rank: item.rank ?? "",
         starRating: item.starRating ?? "",
@@ -551,6 +714,10 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
       };
     });
     setRankings(r);
+    if (isStaffEdit) {
+      setStaffBallotOppIds(staffItemIds);
+      setStaffOppSearch("");
+    }
 
     setClassmateOrder(
       deriveClassmateOrder(existingTeamPrefs, teamEligibleOppIds),
@@ -574,7 +741,10 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     existingPreference?.id,
     teamEligibleOppIds.join(","),
     isSnapshotLocked,
-    favoriteOppIdsInRound,
+    isStaffEdit,
+    // Student favorites membership can change without a preference id change.
+    // Staff ballot ids are seeded from preference items above — do not depend on them.
+    isStaffEdit ? "" : rankingOppIdsKey,
   ]);
 
   const [createPreference] = useMutation(CREATE_PREFERENCE);
@@ -808,6 +978,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
               assessmentData: nextAssessmentData,
               studentMatchingPreference: nextMatchingPreference,
               items: items.length ? { create: items } : undefined,
+              ...(staffSubmitterConnect || {}),
             },
           },
         });
@@ -872,6 +1043,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
             opportunity: { connect: { id: opp.id } },
             preferredTeammate: { connect: { id: tmId } },
             priority: idx + 1,
+            ...(staffSubmitterConnect || {}),
           });
         });
       });
@@ -881,15 +1053,28 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
 
       await refetch();
 
+      if (
+        isStaffEdit &&
+        typeof onStaffRefetch === "function"
+      ) {
+        await onStaffRefetch();
+      }
+
       if (!options.skipSuccessFeedback) {
         if (targetStatus === "submitted") {
           setScopedSaveFeedback("form", {
             variant: "success",
-            message: t(
-              "opportunities.studentView.rankForm.submitSuccess",
-              {},
-              { default: "Your preferences were submitted." },
-            ),
+            message: isStaffEdit
+              ? t(
+                  "opportunities.matchingRound.studentRanking.editBallotSubmitSuccess",
+                  {},
+                  { default: "Student ballot saved." },
+                )
+              : t(
+                  "opportunities.studentView.rankForm.submitSuccess",
+                  {},
+                  { default: "Your preferences were submitted." },
+                ),
           });
         } else if (feedbackScope === "assessment") {
           setScopedSaveFeedback("assessment", {
@@ -903,13 +1088,26 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         } else {
           setScopedSaveFeedback("form", {
             variant: "success",
-            message: t(
-              "opportunities.studentView.rankForm.draftSaveSuccess",
-              {},
-              { default: "Your progress was saved." },
-            ),
+            message: isStaffEdit
+              ? t(
+                  "opportunities.matchingRound.studentRanking.editBallotDraftSuccess",
+                  {},
+                  { default: "Student ballot progress saved." },
+                )
+              : t(
+                  "opportunities.studentView.rankForm.draftSaveSuccess",
+                  {},
+                  { default: "Your progress was saved." },
+                ),
           });
         }
+      }
+      if (
+        isStaffEdit &&
+        targetStatus === "submitted" &&
+        typeof onSaved === "function"
+      ) {
+        onSaved();
       }
       return true;
     } catch (error) {
@@ -1020,6 +1218,52 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
     }
   };
 
+  const staffPoolOpportunities = useMemo(() => {
+    if (!isStaffEdit) return [];
+    const inBallot = new Set(staffBallotOppIds);
+    const query = staffOppSearch.trim().toLowerCase();
+    return roundOpportunities
+      .filter((opp) => opp?.id && !inBallot.has(opp.id))
+      .filter((opp) => {
+        if (!query) return true;
+        const hay = [opp.title, formatOpportunitySponsorLabel(opp)]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        return hay.includes(query);
+      })
+      .sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+  }, [isStaffEdit, staffBallotOppIds, staffOppSearch, roundOpportunities]);
+
+  const handleStaffAddOpportunity = useCallback((oppId) => {
+    if (!oppId) return;
+    setStaffBallotOppIds((prev) =>
+      prev.includes(oppId) ? prev : [...prev, oppId],
+    );
+    setRankings((prev) => {
+      if (prev[oppId]) return prev;
+      const nextRank =
+        Object.values(prev).reduce((max, entry) => {
+          const rank = Number(entry?.rank);
+          return Number.isFinite(rank) ? Math.max(max, rank) : max;
+        }, 0) + 1;
+      return {
+        ...prev,
+        [oppId]: { rank: nextRank, starRating: "", comment: "" },
+      };
+    });
+  }, []);
+
+  const handleStaffRemoveOpportunity = useCallback((oppId) => {
+    if (!oppId) return;
+    setStaffBallotOppIds((prev) => prev.filter((id) => id !== oppId));
+    setRankings((prev) => {
+      const next = { ...prev };
+      delete next[oppId];
+      return pruneRankingsToOpportunityIds(next, Object.keys(next));
+    });
+  }, []);
+
   if (loading && !round) {
     return (
       <RankPageShell>
@@ -1076,10 +1320,15 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
 
   const now = Date.now();
   const { beforeOpen, afterClose } = getPreferenceTimeWindowState(round, now);
-  const submitted = submittedEarly;
-  const isOpen = isRankingEditable;
+  const preferenceIsSubmitted = existingPreference?.status === "submitted";
+  // Staff edit stays unlocked even when the ballot is already submitted.
+  const submitted = isStaffEdit ? false : submittedEarly;
+  const isOpen = isStaffEdit ? true : isRankingEditable;
   const showDriftRepairModal =
-    isRankingEditable && draftDriftEntries.length > 0 && !driftRepairResolved;
+    !isStaffEdit &&
+    isRankingEditable &&
+    draftDriftEntries.length > 0 &&
+    !driftRepairResolved;
 
   const handleRestoreDriftFavorites = async () => {
     if (!me?.id || !draftDriftEntries.length) return;
@@ -1143,83 +1392,85 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   };
 
   let lockReason = null;
-  if (round.status === "draft") {
-    lockReason = t("opportunities.studentView.rankForm.notAvailableYet", {}, {
-      default:
-        "This round is not available yet. Your teacher is still setting it up.",
-    });
-  } else if (round.status !== "preferences_open") {
-    lockReason = t(
-      "opportunities.studentView.rankForm.lockReason.roundClosed",
-      { status: round.status.replace(/_/g, " ") },
-      {
+  if (!isStaffEdit) {
+    if (round.status === "draft") {
+      lockReason = t("opportunities.studentView.rankForm.notAvailableYet", {}, {
         default:
-          "Preferences are {{status}} for this round. You can review what you submitted, but changes are no longer accepted.",
-      },
-    );
-  } else if (beforeOpen) {
-    const timeZone = readPreferenceWindowTimeZone(round.settings);
-    const openMs = resolvePreferenceWindowInstantMs(
-      round.openAt,
-      "open",
-      timeZone,
-    );
-    const openDate =
-      openMs != null
-        ? formatPreferenceWindowInstant(
-            new Date(openMs).toISOString(),
-            timeZone,
-          )
-        : "";
-    lockReason = t(
-      "opportunities.studentView.rankForm.lockReason.beforeOpen",
-      { date: openDate },
-      {
-        default:
-          "This round opens on {{date}}. Come back then to submit your preferences.",
-      },
-    );
-  } else if (afterClose) {
-    const timeZone = readPreferenceWindowTimeZone(round.settings);
-    const closeMs = resolvePreferenceWindowInstantMs(
-      round.closeAt,
-      "close",
-      timeZone,
-    );
-    const closeDate =
-      closeMs != null
-        ? formatPreferenceWindowInstant(
-            new Date(closeMs).toISOString(),
-            timeZone,
-          )
-        : "";
-    lockReason = t(
-      "opportunities.studentView.rankForm.lockReason.afterClose",
-      { date: closeDate },
-      {
-        default:
-          "Preferences closed on {{date}}. You can review what you submitted, but changes are no longer accepted.",
-      },
-    );
-  } else if (submitted) {
-    const when = existingPreference?.submittedAt
-      ? new Date(existingPreference.submittedAt).toLocaleString()
-      : t("opportunities.studentView.rankForm.lockReason.submittedEarlier", {}, {
-          default: "earlier",
-        });
-    lockReason = t(
-      "opportunities.studentView.rankForm.lockReason.submitted",
-      { when },
-      {
-        default:
-          "You submitted your preferences {{when}}. Need to change something? Ask your teacher — they can reopen your submission.",
-      },
-    );
+          "This round is not available yet. Your teacher is still setting it up.",
+      });
+    } else if (round.status !== "preferences_open") {
+      lockReason = t(
+        "opportunities.studentView.rankForm.lockReason.roundClosed",
+        { status: round.status.replace(/_/g, " ") },
+        {
+          default:
+            "Preferences are {{status}} for this round. You can review what you submitted, but changes are no longer accepted.",
+        },
+      );
+    } else if (beforeOpen) {
+      const timeZone = readPreferenceWindowTimeZone(round.settings);
+      const openMs = resolvePreferenceWindowInstantMs(
+        round.openAt,
+        "open",
+        timeZone,
+      );
+      const openDate =
+        openMs != null
+          ? formatPreferenceWindowInstant(
+              new Date(openMs).toISOString(),
+              timeZone,
+            )
+          : "";
+      lockReason = t(
+        "opportunities.studentView.rankForm.lockReason.beforeOpen",
+        { date: openDate },
+        {
+          default:
+            "This round opens on {{date}}. Come back then to submit your preferences.",
+        },
+      );
+    } else if (afterClose) {
+      const timeZone = readPreferenceWindowTimeZone(round.settings);
+      const closeMs = resolvePreferenceWindowInstantMs(
+        round.closeAt,
+        "close",
+        timeZone,
+      );
+      const closeDate =
+        closeMs != null
+          ? formatPreferenceWindowInstant(
+              new Date(closeMs).toISOString(),
+              timeZone,
+            )
+          : "";
+      lockReason = t(
+        "opportunities.studentView.rankForm.lockReason.afterClose",
+        { date: closeDate },
+        {
+          default:
+            "Preferences closed on {{date}}. You can review what you submitted, but changes are no longer accepted.",
+        },
+      );
+    } else if (submitted) {
+      const when = existingPreference?.submittedAt
+        ? new Date(existingPreference.submittedAt).toLocaleString()
+        : t("opportunities.studentView.rankForm.lockReason.submittedEarlier", {}, {
+            default: "earlier",
+          });
+      lockReason = t(
+        "opportunities.studentView.rankForm.lockReason.submitted",
+        { when },
+        {
+          default:
+            "You submitted your preferences {{when}}. Need to change something? Ask your teacher — they can reopen your submission.",
+        },
+      );
+    }
   }
 
   const pageTitle = round.title || "";
   const statusChipLabel = existingPreference
-    ? submitted
+    ? preferenceIsSubmitted
       ? t("opportunities.studentView.rankForm.statusSubmitted", {}, {
           default: "Submitted",
         })
@@ -1231,7 +1482,9 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   // Editable ranking with round opportunities available, but nothing favorited yet
   // (covers both first entry before a draft exists, and an existing draft).
   // Submitted/closed rankings stay reviewable; drift repair takes precedence.
+  // Staff edit uses all round opportunities — skip the student favorites gate.
   const showEmptyFavoritesZeroState =
+    !isStaffEdit &&
     isOpen &&
     !submitted &&
     favoriteOppIdsInRound.size === 0 &&
@@ -1340,6 +1593,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
               role: "student",
               status: "draft",
               assessmentData: nextAssessmentData,
+              ...(staffSubmitterConnect || {}),
             },
           },
         });
@@ -1347,6 +1601,9 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         if (createdId) preferenceIdRef.current = createdId;
       }
       setAssessmentData(nextAssessmentData);
+      if (isStaffEdit && typeof onStaffRefetch === "function") {
+        await onStaffRefetch();
+      }
       return true;
     } catch (error) {
       console.error("Failed to save student assessment", error);
@@ -1419,6 +1676,7 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
               status: "draft",
               studentMatchingPreference: next,
               assessmentData: nextAssessmentData,
+              ...(staffSubmitterConnect || {}),
             },
           },
         });
@@ -1432,6 +1690,9 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         setAssessmentData(nextAssessmentData);
       }
       await refetch();
+      if (isStaffEdit && typeof onStaffRefetch === "function") {
+        await onStaffRefetch();
+      }
       return true;
     } catch (error) {
       console.error("Failed to save matching preference", error);
@@ -1454,7 +1715,9 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
   const currentStepKey = stepKeys[currentStep - 1] || stepKeys[0];
   const savedMatchingQueue = getMatchingQueue(studentMatchingPreference);
   const rankingEnabled =
-    isOpen && Boolean(savedMatchingQueue) && !showDriftRepairModal;
+    isOpen &&
+    !showDriftRepairModal &&
+    (isStaffEdit || Boolean(savedMatchingQueue));
 
   const matchingPreferenceCard = (
     <StudentMatchingPreferenceCard
@@ -1529,10 +1792,23 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         onBack={handleCancel}
         backDisabled={saving}
         statusChipLabel={statusChipLabel}
-        submitted={submitted}
+        submitted={preferenceIsSubmitted}
         submitActions={headerSubmitActions}
       />
       <RankPageBody>
+      {isStaffEdit ? (
+        <MessageCard
+          variant="information"
+          message={t(
+            "opportunities.matchingRound.studentRanking.editBallotHelper",
+            {},
+            {
+              default:
+                "You are editing this ballot on behalf of the student. Saving does not reopen the round for them.",
+            },
+          )}
+        />
+      ) : null}
       {formSaveFeedback ? (
         <MessageCard
           variant={formSaveFeedback.variant}
@@ -1550,9 +1826,10 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
         <MessageCard variant="information" message={lockReason} />
       ) : null}
 
-      {(me?.connectMatches || [])
-        .filter((m) => m.status !== "proposed" || round.status === "published")
-        .map((match) => {
+      {!isStaffEdit
+        ? (me?.connectMatches || [])
+            .filter((m) => m.status !== "proposed" || round.status === "published")
+            .map((match) => {
           const opp = match.opportunity;
           const mentorName = formatOpportunitySponsorLabel(opp);
           const myExistingRating = (match.ratings || []).find(
@@ -1851,7 +2128,8 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
               )}
             </Card>
           );
-        })}
+        })
+        : null}
 
       <Card>
         <PreferenceSubmissionStepper
@@ -1928,17 +2206,32 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
             <>
               {matchingPreferenceCard}
               <h2>
-                {t("opportunities.studentView.rankForm.rankHeading", {}, {
-                  default: "Rank your favorites",
-                })}
+                {isStaffEdit
+                  ? t(
+                      "opportunities.matchingRound.studentRanking.editBallotRankHeading",
+                      {},
+                      { default: "Rank opportunities" },
+                    )
+                  : t("opportunities.studentView.rankForm.rankHeading", {}, {
+                      default: "Rank your favorites",
+                    })}
               </h2>
               <p className="helper">
-                {t("opportunities.studentView.rankForm.rankHelper", {}, {
-                  default:
-                    "Drag to set your order (1 = top choice). Add a private note for your teacher if you like.",
-                })}
+                {isStaffEdit
+                  ? t(
+                      "opportunities.matchingRound.studentRanking.editBallotRankHelper",
+                      {},
+                      {
+                        default:
+                          "Add opportunities by searching their title, then drag to set order (1 = top choice).",
+                      },
+                    )
+                  : t("opportunities.studentView.rankForm.rankHelper", {}, {
+                      default:
+                        "Drag to set your order (1 = top choice). Add a private note for your teacher if you like.",
+                    })}
               </p>
-              {opportunities.length === 0 && (
+              {!isStaffEdit && opportunities.length === 0 && (
                 <p className="helper">
                   {roundOpportunities.length > 0
                     ? `${t(
@@ -1963,6 +2256,18 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                       )}
                 </p>
               )}
+              {isStaffEdit && opportunities.length === 0 ? (
+                <p className="helper">
+                  {t(
+                    "opportunities.matchingRound.studentRanking.editBallotRankEmpty",
+                    {},
+                    {
+                      default:
+                        "No opportunities on this ballot yet. Search below to add one.",
+                    },
+                  )}
+                </p>
+              ) : null}
               {opportunities.length > 0 ? (
                 <FavoriteRankList
                   opportunities={opportunities}
@@ -1971,7 +2276,134 @@ export default function StudentPreferenceSubmission({ roundId, user, onBack }) {
                   rankingEnabled={rankingEnabled}
                   syncKey={`${existingPreference?.id || "new"}:${rankingOppIdsKey}`}
                   now={now}
+                  onRemoveOpportunity={
+                    isStaffEdit ? handleStaffRemoveOpportunity : undefined
+                  }
                 />
+              ) : null}
+              {isStaffEdit && roundOpportunities.length > 0 ? (
+                <StaffOppPool>
+                  <StaffOppPoolToggle
+                    type="button"
+                    aria-expanded={staffOppPoolOpen}
+                    onClick={() => setStaffOppPoolOpen((open) => !open)}
+                  >
+                    <StaffOppPoolToggleLeading>
+                      <AddIcon width={18} height={18} aria-hidden />
+                      <span>
+                        {t(
+                          "opportunities.matchingRound.studentRanking.editBallotAddOpportunity",
+                          {},
+                          { default: "Add an opportunity" },
+                        )}
+                      </span>
+                    </StaffOppPoolToggleLeading>
+                    <img
+                      src="/assets/icons/builder/medium-chevron-down.svg"
+                      alt=""
+                      aria-hidden
+                      width={16}
+                      height={16}
+                      style={{
+                        transform: staffOppPoolOpen
+                          ? "rotate(180deg)"
+                          : "none",
+                        transition: "transform 0.15s ease",
+                      }}
+                    />
+                  </StaffOppPoolToggle>
+                  {staffOppPoolOpen ? (
+                    <>
+                      <StaffOppPoolHint>
+                        {t(
+                          "opportunities.matchingRound.studentRanking.editBallotAddOpportunityHelper",
+                          {},
+                          {
+                            default:
+                              "Search round opportunities by title. This does not change the student’s favorites.",
+                          },
+                        )}
+                      </StaffOppPoolHint>
+                      <StaffOppSearch
+                        type="search"
+                        value={staffOppSearch}
+                        onChange={(e) => setStaffOppSearch(e.target.value)}
+                        placeholder={t(
+                          "opportunities.matchingRound.studentRanking.editBallotOppSearch",
+                          {},
+                          {
+                            default:
+                              "Add an opportunity — search by title",
+                          },
+                        )}
+                        aria-label={t(
+                          "opportunities.matchingRound.studentRanking.editBallotOppSearch",
+                          {},
+                          {
+                            default:
+                              "Add an opportunity — search by title",
+                          },
+                        )}
+                      />
+                      <StaffOppPoolList>
+                        {staffPoolOpportunities.length === 0 ? (
+                          <StaffOppPoolHint>
+                            {staffOppSearch.trim()
+                              ? t(
+                                  "opportunities.matchingRound.studentRanking.editBallotOppSearchEmpty",
+                                  {},
+                                  {
+                                    default:
+                                      "No opportunities match your search.",
+                                  },
+                                )
+                              : t(
+                                  "opportunities.matchingRound.studentRanking.editBallotOppPoolEmpty",
+                                  {},
+                                  {
+                                    default:
+                                      "All round opportunities are already on this ballot.",
+                                  },
+                                )}
+                          </StaffOppPoolHint>
+                        ) : (
+                          staffPoolOpportunities.map((opp) => (
+                            <StaffOppPoolRow key={opp.id}>
+                              <StaffOppPoolTitle title={opp.title}>
+                                {opp.title || "—"}
+                              </StaffOppPoolTitle>
+                              <IconButton
+                                type="button"
+                                variant="tonal"
+                                ariaLabel={t(
+                                  "opportunities.matchingRound.studentRanking.editBallotAddOne",
+                                  { title: opp.title || "" },
+                                  { default: "Add {{title}}" },
+                                )}
+                                title={t(
+                                  "opportunities.matchingRound.studentRanking.editBallotAddOne",
+                                  { title: opp.title || "" },
+                                  { default: "Add {{title}}" },
+                                )}
+                                onClick={() =>
+                                  handleStaffAddOpportunity(opp.id)
+                                }
+                                disabled={!rankingEnabled}
+                                icon={
+                                  <AddIcon
+                                    width={18}
+                                    height={18}
+                                    aria-hidden
+                                  />
+                                }
+                              />
+                            </StaffOppPoolRow>
+                          ))
+                        )}
+                      </StaffOppPoolList>
+                    </>
+                  ) : null}
+                </StaffOppPool>
               ) : null}
             </>
           )}

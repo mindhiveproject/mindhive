@@ -21,6 +21,7 @@ import {
 } from "../../../../../lib/connectBallotUtils";
 import MatchingRoundMatchingHeaderBar from "./MatchingRoundMatchingHeaderBar";
 import MatchingRoundProjectPivotGrid from "./MatchingRoundProjectPivotGrid";
+import StudentNameDisplay from "./StudentNameDisplay";
 import {
   MATCHING_VIEW_PIVOT,
   MATCHING_VIEW_PROJECT_FIRST,
@@ -241,7 +242,12 @@ function formatOrdinalRank(rank, t) {
   );
 }
 
-function OpportunityPreferenceDetails({ opportunity, preferences, t }) {
+function OpportunityPreferenceDetails({
+  opportunity,
+  preferences,
+  preferenceBySubmitterId,
+  t,
+}) {
   const stats = useMemo(
     () =>
       buildOpportunityPreferenceStats(opportunity.id, preferences, {
@@ -320,7 +326,12 @@ function OpportunityPreferenceDetails({ opportunity, preferences, t }) {
                   tone="neutral"
                   label={formatOrdinalRank(entry.rank, t)}
                 />
-                <span>{entry.name}</span>
+                <StudentNameDisplay
+                  student={entry.student}
+                  preference={
+                    preferenceBySubmitterId?.get?.(entry.student.id) || null
+                  }
+                />
               </PopoverListItem>
             ))}
           </PopoverList>
@@ -345,6 +356,7 @@ function ProjectFirstOpportunityCard({
   opportunity,
   matches,
   preferences,
+  preferenceBySubmitterId,
   t,
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -413,11 +425,12 @@ function ProjectFirstOpportunityCard({
         {matches.length > 0 ? (
           <MemberRow>
             {matches.map((match) => (
-              <Chip
+              <StudentNameDisplay
                 key={match.id}
-                variant="static"
-                tone="neutral"
-                label={displayName(match.student)}
+                student={match.student}
+                preference={
+                  preferenceBySubmitterId?.get?.(match.student?.id) || null
+                }
               />
             ))}
           </MemberRow>
@@ -436,6 +449,7 @@ function ProjectFirstOpportunityCard({
           <OpportunityPreferenceDetails
             opportunity={opportunity}
             preferences={preferences}
+            preferenceBySubmitterId={preferenceBySubmitterId}
             t={t}
           />
         </ProjectCardSide>
@@ -449,6 +463,7 @@ const MISSING_PICK_PREVIEW = 3;
 function TeamFirstGroupCard({
   group,
   preferences,
+  preferenceBySubmitterId,
   classmateListsByStudent,
   activePickCount,
   teamSize,
@@ -614,16 +629,43 @@ function TeamFirstGroupCard({
         ) : null}
       </MemberRow>
       {missingPreview.length > 0 ? (
-        <Meta>
-          {missingPreview
-            .map((edge) =>
-              t(
-                "opportunities.matchingRound.matching.teamGroupMissingPick",
-                { from: edge.fromName, to: edge.toName },
-                { default: "{{from}} didn’t pick {{to}}" },
-              ),
-            )
-            .join(" · ")}
+        <Meta as="div" style={{ display: "flex", flexWrap: "wrap", gap: "4px 0", alignItems: "baseline" }}>
+          {missingPreview.map((edge, index) => {
+            const fromStudent =
+              group.members.find((member) => member.id === edge.fromId) || {
+                id: edge.fromId,
+                username: edge.fromName || edge.fromId,
+              };
+            const toStudent =
+              group.members.find((member) => member.id === edge.toId) || {
+                id: edge.toId,
+                username: edge.toName || edge.toId,
+              };
+            return (
+              <span key={`${edge.fromId}-${edge.toId}`} style={{ display: "inline-flex", flexWrap: "wrap", alignItems: "baseline", gap: 4 }}>
+                {index > 0 ? <span aria-hidden="true"> · </span> : null}
+                <StudentNameDisplay
+                  student={fromStudent}
+                  preference={
+                    preferenceBySubmitterId?.get?.(edge.fromId) || null
+                  }
+                />
+                <span>
+                  {t(
+                    "opportunities.matchingRound.matching.teamGroupMissingPickVerb",
+                    {},
+                    { default: "didn’t pick" },
+                  )}
+                </span>
+                <StudentNameDisplay
+                  student={toStudent}
+                  preference={
+                    preferenceBySubmitterId?.get?.(edge.toId) || null
+                  }
+                />
+              </span>
+            );
+          })}
           {missingMore > 0
             ? ` · ${t(
                 "opportunities.matchingRound.matching.teamGroupMissingMore",
@@ -635,10 +677,10 @@ function TeamFirstGroupCard({
       ) : null}
       <MemberRow>
         {group.members.map((member) => (
-          <Chip
+          <StudentNameDisplay
             key={member.id}
-            variant="static"
-            label={displayName(member)}
+            student={member}
+            preference={preferenceBySubmitterId?.get?.(member.id) || null}
           />
         ))}
       </MemberRow>
@@ -840,6 +882,7 @@ export default function MatchingRoundMatchingPanel({
                 opportunity={opportunity}
                 matches={matchesByOpportunity.get(opportunity.id) || []}
                 preferences={preferences}
+                preferenceBySubmitterId={preferenceBySubmitterId}
                 t={t}
               />
             ))
@@ -866,6 +909,7 @@ export default function MatchingRoundMatchingPanel({
                 key={group.id}
                 group={group}
                 preferences={preferences}
+                preferenceBySubmitterId={preferenceBySubmitterId}
                 classmateListsByStudent={
                   teamClosureContext.classmateListsByStudent
                 }
