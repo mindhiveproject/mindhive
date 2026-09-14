@@ -57,7 +57,9 @@ export default function NetworkGraph({ round }) {
   const { studentNodes, opportunityNodes, edges, height } = useMemo(() => {
     const studentMap = new Map();
     matches.forEach((m) => {
-      if (m.student?.id) studentMap.set(m.student.id, m.student);
+      (m.students || []).forEach((s) => {
+        if (s?.id) studentMap.set(s.id, s);
+      });
     });
     preferences.forEach((p) => {
       if (p.submitter?.id) studentMap.set(p.submitter.id, p.submitter);
@@ -99,13 +101,15 @@ export default function NetworkGraph({ round }) {
     const sPos = new Map(sNodes.map((n) => [n.id, n]));
     const oPos = new Map(oNodes.map((n) => [n.id, n]));
 
-    const eList = matches
-      .map((m) => {
-        const s = sPos.get(m.student?.id);
-        const o = oPos.get(m.opportunity?.id);
-        if (!s || !o) return null;
-        return {
-          id: m.id,
+    const eList = [];
+    matches.forEach((m) => {
+      const o = oPos.get(m.opportunity?.id);
+      if (!o) return;
+      (m.students || []).forEach((student) => {
+        const s = sPos.get(student?.id);
+        if (!s) return;
+        eList.push({
+          id: `${m.id}-${student.id}`,
           x1: s.x + 6,
           y1: s.y,
           x2: o.x - 6,
@@ -114,9 +118,9 @@ export default function NetworkGraph({ round }) {
           studentName: s.name,
           opportunityTitle: o.title,
           score: m.matchScore,
-        };
-      })
-      .filter(Boolean);
+        });
+      });
+    });
 
     return {
       studentNodes: sNodes,

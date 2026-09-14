@@ -46,7 +46,7 @@ export const ROUND_MATCH_VIEW = gql`
         status
         matchScore
         teacherNotes
-        student {
+        students {
           id
           username
           firstName
@@ -211,7 +211,7 @@ export const TEACHER_STUDENT_BALLOT_VIEW = gql`
       matches {
         id
         status
-        student {
+        students {
           id
         }
         opportunity {

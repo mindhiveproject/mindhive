@@ -330,7 +330,7 @@ export const rules = {
       ],
     };
   },
-  // ConnectMatch visible to: the matched student, opportunity sponsors/mentors,
+  // ConnectMatch visible to: any matched student, opportunity sponsors/mentors,
   // the round creator, class-network creators/admins, or platform admins.
   connectMatchVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;
@@ -338,7 +338,7 @@ export const rules = {
     const me = session.itemId;
     return {
       OR: [
-        { student: { id: { equals: me } } },
+        { students: { some: { id: { equals: me } } } },
         ...opportunityStakeholderClauses(me),
         ...connectRoundStaffRoundClauses(me).map((clause) => ({
           round: clause,

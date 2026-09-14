@@ -68,6 +68,7 @@ import MatchingRoundStudentBallotPanel, {
 } from "./MatchingRoundStudentBallotPanel";
 import MatchingRoundStudentAssessmentSetup from "./MatchingRoundStudentAssessmentSetup";
 import MatchingRoundMatchingPanel from "./MatchingRoundMatchingPanel";
+import MatchingRoundMatchesPanel from "./MatchingRoundMatchesPanel";
 import MatchingRoundFormPreviewModal from "./MatchingRoundFormPreviewModal";
 import OpportunityExportModal from "./OpportunityExportModal";
 import TeacherFormWizard from "../../../../Forms/TeacherFormWizard";
@@ -112,6 +113,7 @@ const PANELS = {
   forms: "forms",
   questions: "questions",
   matches: "matches",
+  placedMatches: "placedMatches",
   studentInterest: "studentInterest",
 };
 
@@ -598,7 +600,10 @@ function MatchingRoundEditor({
     if (typeof raw !== "string" || !Object.values(PANELS).includes(raw)) {
       return null;
     }
-    if (raw === PANELS.matches && isNew) {
+    if (
+      (raw === PANELS.matches || raw === PANELS.placedMatches) &&
+      isNew
+    ) {
       return null;
     }
     // Student Interest is disabled for draft / unsaved rounds.
@@ -614,7 +619,10 @@ function MatchingRoundEditor({
   const resolveAllowedPanel = useCallback(
     (panel) => {
       if (!panel || panel === PANELS.settings) return null;
-      if (panel === PANELS.matches && isNew) {
+      if (
+        (panel === PANELS.matches || panel === PANELS.placedMatches) &&
+        isNew
+      ) {
         return null;
       }
       if (
@@ -628,7 +636,8 @@ function MatchingRoundEditor({
         panel !== PANELS.selected &&
         panel !== PANELS.forms &&
         panel !== PANELS.studentInterest &&
-        panel !== PANELS.matches
+        panel !== PANELS.matches &&
+        panel !== PANELS.placedMatches
       ) {
         return null;
       }
@@ -805,7 +814,11 @@ function MatchingRoundEditor({
   }, [activePanel, isStudentInterestDisabled]);
 
   useEffect(() => {
-    if (activePanel === PANELS.matches && isMatchesDisabled) {
+    if (
+      (activePanel === PANELS.matches ||
+        activePanel === PANELS.placedMatches) &&
+      isMatchesDisabled
+    ) {
       setActivePanel(PANELS.review);
     }
   }, [activePanel, isMatchesDisabled]);
@@ -1457,6 +1470,23 @@ function MatchingRoundEditor({
               {
                 default:
                   "Save the matching round first to open matching.",
+              },
+            )
+          : null,
+      },
+      {
+        id: PANELS.placedMatches,
+        label: t("opportunities.matchingRound.panels.matches", {}, {
+          default: "Matches",
+        }),
+        disabled: isMatchesDisabled,
+        tooltipContent: isMatchesDisabled
+          ? t(
+              "opportunities.matchingRound.placedMatches.disabledNewHint",
+              {},
+              {
+                default:
+                  "Save the matching round first to view matches.",
               },
             )
           : null,
@@ -3431,6 +3461,14 @@ function MatchingRoundEditor({
     />
   );
 
+  const renderPlacedMatchesPanel = () => (
+    <MatchingRoundMatchesPanel
+      roundId={roundId}
+      students={myclass?.students || []}
+      enabled={activePanel === PANELS.placedMatches && !isMatchesDisabled}
+    />
+  );
+
   return (
     <div className="matchingRoundWorkspace">
       <div className="matchingRoundWorkspaceChrome">
@@ -3637,6 +3675,8 @@ function MatchingRoundEditor({
             {activePanel === PANELS.studentInterest &&
               renderStudentRankingPanel()}
             {activePanel === PANELS.matches && renderMatchesPanel()}
+            {activePanel === PANELS.placedMatches &&
+              renderPlacedMatchesPanel()}
 
             {isNew ? (
               <div

@@ -22,8 +22,11 @@ import { UPDATE_CONNECT_ROUND } from "../../../Mutations/ConnectRound";
 import { runMatching } from "./matchingAlgorithm";
 import {
   buildPrefIndex,
+  countPlacedStudents,
   displayName,
+  formatMatchStudentNames,
   formatPreferenceSummary,
+  getMatchStudents,
   prefForStudentOpp,
   scoreForStudentOpp,
 } from "../../../../lib/connectBallotUtils";
@@ -416,7 +419,12 @@ export default function RoundMatches({ roundId }) {
     matchesByOpportunity.get(oppId).push(m);
   });
 
-  const studentsInMatches = new Set(matches.map((m) => m.student?.id).filter(Boolean));
+  const studentsInMatches = new Set();
+  matches.forEach((m) => {
+    getMatchStudents(m).forEach((s) => {
+      if (s?.id) studentsInMatches.add(s.id);
+    });
+  });
   const studentsWithPrefs = preferences
     .filter((p) => p.status === "submitted")
     .map((p) => p.submitter);
@@ -521,7 +529,7 @@ export default function RoundMatches({ roundId }) {
                 ? { connect: { id: round.classNetwork.id } }
                 : undefined,
               opportunity: { connect: { id: m.opportunityId } },
-              student: { connect: { id: m.studentId } },
+              students: { connect: [{ id: m.studentId }] },
               status: "proposed",
               matchScore: m.score,
               proposedAt: new Date().toISOString(),
@@ -649,7 +657,9 @@ export default function RoundMatches({ roundId }) {
     const opp = opportunities.find((o) => o.id === opportunityId);
     if (!opp) return;
     const cap = opp.studentCapacity || 1;
-    const currentCount = (matchesByOpportunity.get(opportunityId) || []).length;
+    const currentCount = countPlacedStudents(
+      matchesByOpportunity.get(opportunityId) || [],
+    );
     const slotsLeft = cap - currentCount;
     if (slotsLeft <= 0) return;
 
@@ -689,7 +699,7 @@ export default function RoundMatches({ roundId }) {
               ? { connect: { id: round.classNetwork.id } }
               : undefined,
             opportunity: { connect: { id: opportunityId } },
-            student: { connect: { id: r.student.id } },
+            students: { connect: [{ id: r.student.id }] },
             status: "proposed",
             matchScore: r.score,
             proposedAt: new Date().toISOString(),
@@ -708,7 +718,9 @@ export default function RoundMatches({ roundId }) {
     if (!matchId || !newOpportunityId) return;
     const opp = opportunities.find((o) => o.id === newOpportunityId);
     const cap = opp?.studentCapacity || 1;
-    const currentCount = (matchesByOpportunity.get(newOpportunityId) || []).length;
+    const currentCount = countPlacedStudents(
+      matchesByOpportunity.get(newOpportunityId) || [],
+    );
     if (currentCount >= cap) {
       window.alert(
         t("matchingRound.capacityFull", {}, {
@@ -765,7 +777,7 @@ export default function RoundMatches({ roundId }) {
     const oppMatches = matchesByOpportunity.get(opp.id) || [];
     const cap = opp.studentCapacity || 1;
     const mentorName = formatOpportunitySponsorLabel(opp);
-    const hasCapacity = oppMatches.length < cap;
+    const hasCapacity = countPlacedStudents(oppMatches) < cap;
     // Only teacher-curated rounds get the manual assign affordance.
     // Options list = unmatched students, sorted by their preference
     // score for THIS opportunity (highest first).
@@ -799,7 +811,7 @@ export default function RoundMatches({ roundId }) {
             By {mentorName} · Capacity {cap}
             {opp.teamSize > 1 && ` · Team of ${opp.teamSize}`}
             {" · "}
-            {oppMatches.length} / {cap} assigned
+            {countPlacedStudents(oppMatches)} / {cap} assigned
           </div>
         </div>
         {isCurated ? (
@@ -842,10 +854,11 @@ export default function RoundMatches({ roundId }) {
             getChildPayload={(index) => {
               const m = oppMatches[index];
               if (!m) return null;
+              const firstStudent = getMatchStudents(m)[0];
               return {
                 matchId: m.id,
                 fromOppId: opp.id,
-                studentId: m.student?.id,
+                studentId: firstStudent?.id,
               };
             }}
             style={{ display: "flex", flexDirection: "column", gap: 8 }}
@@ -854,7 +867,7 @@ export default function RoundMatches({ roundId }) {
               <Draggable key={m.id}>
                 <MatchRow>
                   <div>
-                    <div className="name">{displayName(m.student)}</div>
+                    <div className="name">{formatMatchStudentNames(m)}</div>
                     <div className="info">
                       score{" "}
                       {typeof m.matchScore === "number"
@@ -875,8 +888,8 @@ export default function RoundMatches({ roundId }) {
                       options={STATUS_OPTIONS}
                       triggerStyle={COMPACT_STATUS_TRIGGER_STYLE}
                       fitContent
-                      ariaLabel={t("matchingRound.statusFor", { name: displayName(m.student) }, {
-                        default: `Status for ${displayName(m.student)}`,
+                      ariaLabel={t("matchingRound.statusFor", { name: formatMatchStudentNames(m) }, {
+                        default: `Status for ${formatMatchStudentNames(m)}`,
                       })}
                     />
                     <button
@@ -916,7 +929,7 @@ export default function RoundMatches({ roundId }) {
             {oppMatches.map((m) => (
               <MatchRow key={m.id}>
                 <div>
-                  <div className="name">{displayName(m.student)}</div>
+                  <div className="name">{formatMatchStudentNames(m)}</div>
                   <div className="info">
                     score{" "}
                     {typeof m.matchScore === "number"
@@ -937,8 +950,8 @@ export default function RoundMatches({ roundId }) {
                     options={STATUS_OPTIONS}
                     triggerStyle={COMPACT_STATUS_TRIGGER_STYLE}
                     fitContent
-                    ariaLabel={t("matchingRound.statusFor", { name: displayName(m.student) }, {
-                      default: `Status for ${displayName(m.student)}`,
+                    ariaLabel={t("matchingRound.statusFor", { name: formatMatchStudentNames(m) }, {
+                      default: `Status for ${formatMatchStudentNames(m)}`,
                     })}
                   />
                   <button
@@ -1302,7 +1315,7 @@ export default function RoundMatches({ roundId }) {
                         <AssignedChip key={m.id}>
                           <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
                             <span className="assigned-name">
-                              <Icon name="user" /> {displayName(m.student)}
+                              <Icon name="user" /> {formatMatchStudentNames(m)}
                             </span>
                             <span className="assigned-opp">
                               →{" "}

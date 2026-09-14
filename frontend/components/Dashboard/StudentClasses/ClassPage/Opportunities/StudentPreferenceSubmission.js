@@ -1850,7 +1850,7 @@ export default function StudentPreferenceSubmission({
             {};
           // Other students matched to the same opportunity (excluding me)
           const teammates = (opp?.matches || [])
-            .map((m) => m.student)
+            .flatMap((m) => m.students || [])
             .filter((s) => s?.id && s.id !== me?.id);
           const showTeammateSection =
             (opp?.teamSize || 1) > 1 &&

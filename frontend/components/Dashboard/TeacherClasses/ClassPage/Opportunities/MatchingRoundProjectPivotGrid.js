@@ -7,7 +7,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 import Tooltip from "../../../../DesignSystem/Tooltip";
-import { buildOpportunityPreferenceStats } from "../../../../../lib/connectBallotUtils";
+import { buildOpportunityPreferenceStats, countPlacedStudents } from "../../../../../lib/connectBallotUtils";
 import StudentNameDisplay from "./StudentNameDisplay";
 
 const EmptyNote = styled.p`
@@ -110,6 +110,7 @@ function RankedStudentsCellRenderer(props) {
   const { t } = useTranslation("classes");
   const entries = props.data?.rankedStudents || [];
   const preferenceBySubmitterId = props.preferenceBySubmitterId;
+  const matchedStudentIds = props.matchedStudentIds;
 
   if (!entries.length) {
     return t(
@@ -131,6 +132,7 @@ function RankedStudentsCellRenderer(props) {
             preference={
               preferenceBySubmitterId?.get?.(entry.student?.id) || null
             }
+            matched={matchedStudentIds?.has?.(entry.student?.id)}
           />
           <RankSuffix>({formatOrdinalRank(entry.rank, t)})</RankSuffix>
         </RankedStudentEntry>
@@ -165,6 +167,8 @@ export default function MatchingRoundProjectPivotGrid({
   opportunities = [],
   preferences = [],
   matchesByOpportunity = new Map(),
+  matchedStudentIds = new Set(),
+  hideMatched = false,
 }) {
   const { t } = useTranslation("classes");
   const gridRef = useRef(null);
@@ -187,7 +191,13 @@ export default function MatchingRoundProjectPivotGrid({
       );
       const matches = matchesByOpportunity.get(opportunity.id) || [];
       const capacity = opportunity.studentCapacity || 1;
-      const rankedStudents = stats.students || [];
+      const used = countPlacedStudents(matches);
+      let rankedStudents = stats.students || [];
+      if (hideMatched && matchedStudentIds?.size) {
+        rankedStudents = rankedStudents.filter(
+          (entry) => !matchedStudentIds.has(entry.student?.id),
+        );
+      }
       const rankedStudentsLabel = rankedStudents
         .map((entry) => formatStudentRankEntry(entry, t))
         .join("; ");
@@ -195,19 +205,26 @@ export default function MatchingRoundProjectPivotGrid({
       return {
         id: opportunity.id,
         title: opportunity.title || "—",
-        rankedCount: stats.total,
+        rankedCount: rankedStudents.length,
         rankedStudents,
         rankedStudentsLabel,
         placedLabel: t(
           "opportunities.matchingRound.matching.capacity",
-          { used: matches.length, capacity },
+          { used, capacity },
           { default: "{{used}} / {{capacity}} placed" },
         ),
-        placedUsed: matches.length,
+        placedUsed: used,
         placedCapacity: capacity,
       };
     });
-  }, [opportunities, preferences, matchesByOpportunity, t]);
+  }, [
+    opportunities,
+    preferences,
+    matchesByOpportunity,
+    matchedStudentIds,
+    hideMatched,
+    t,
+  ]);
 
   const columnDefs = useMemo(
     () => [
@@ -262,7 +279,7 @@ export default function MatchingRoundProjectPivotGrid({
         autoHeight: true,
         cellClass: "ag-cell-wrap-text",
         cellRenderer: RankedStudentsCellRenderer,
-        cellRendererParams: { preferenceBySubmitterId },
+        cellRendererParams: { preferenceBySubmitterId, matchedStudentIds },
         valueGetter: (params) => params.data?.rankedStudentsLabel || "",
         valueFormatter: (params) =>
           params.value ||
@@ -327,7 +344,7 @@ export default function MatchingRoundProjectPivotGrid({
         },
       },
     ],
-    [preferenceBySubmitterId, t],
+    [preferenceBySubmitterId, matchedStudentIds, t],
   );
 
   const defaultColDef = useMemo(

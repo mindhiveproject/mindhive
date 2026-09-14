@@ -390,10 +390,44 @@ export function formatQuestionAnswer(answer, questionType) {
 
 const INACTIVE_MATCH_STATUSES = new Set(["cancelled", "declined"]);
 
-/** True when the student holds a match that removes them from the unmatched pool. */
+/** True when the match removes students from the unmatched pool. */
 export function isStudentInActiveMatch(match) {
   if (!match) return false;
   return !INACTIVE_MATCH_STATUSES.has(match.status);
+}
+
+/**
+ * Students on a ConnectMatch (many-to-many). Empty array when none.
+ * @param {{ students?: object[] } | null | undefined} match
+ * @returns {object[]}
+ */
+export function getMatchStudents(match) {
+  if (!match) return [];
+  return Array.isArray(match.students) ? match.students.filter(Boolean) : [];
+}
+
+/**
+ * Display names for all students on a match, comma-separated.
+ * @param {{ students?: object[] } | null | undefined} match
+ * @returns {string}
+ */
+export function formatMatchStudentNames(match) {
+  const names = getMatchStudents(match).map(displayName).filter(Boolean);
+  return names.length ? names.join(", ") : "Unknown";
+}
+
+/**
+ * Count of placed seats for capacity UI (students on active matches).
+ * @param {Array} matches
+ * @returns {number}
+ */
+export function countPlacedStudents(matches) {
+  let n = 0;
+  (matches || []).forEach((match) => {
+    if (!isStudentInActiveMatch(match)) return;
+    n += getMatchStudents(match).length;
+  });
+  return n;
 }
 
 /**
@@ -461,10 +495,10 @@ export function buildTeamFirstCongruentGroups({
 
   const matchByStudentId = new Map();
   matches.forEach((match) => {
-    const id = match.student?.id;
-    if (id && isStudentInActiveMatch(match)) {
-      matchByStudentId.set(id, match);
-    }
+    if (!isStudentInActiveMatch(match)) return;
+    getMatchStudents(match).forEach((student) => {
+      if (student?.id) matchByStudentId.set(student.id, match);
+    });
   });
 
   const teamPrefsByStudent = buildTeamPrefsByStudent(teamPreferences);

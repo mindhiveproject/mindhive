@@ -22,6 +22,10 @@ const Root = styled.span`
   gap: 6px;
   min-width: 0;
   max-width: 100%;
+
+  &.isMatched {
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
 `;
 
 const NameButton = styled.button`
@@ -49,6 +53,15 @@ const NameButton = styled.button`
     outline: 2px solid var(--MH-Theme-Primary-Base, #69bbc4);
     outline-offset: 2px;
   }
+
+  &.isMatched {
+    text-decoration: line-through;
+  }
+
+  &.isMatched:hover,
+  &.isMatched:focus-visible {
+    text-decoration: line-through underline;
+  }
 `;
 
 const NameText = styled.span`
@@ -57,6 +70,10 @@ const NameText = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  &.isMatched {
+    text-decoration: line-through;
+  }
 `;
 
 const NoteField = styled.textarea`
@@ -92,11 +109,13 @@ const COMPACT_CHIP_STYLE = {
  * @param {object} props
  * @param {object} props.student
  * @param {{ id?: string, studentMatchingPreference?: unknown, teachingTeamNote?: string } | null} [props.preference]
+ * @param {boolean} [props.matched] - When true, name is struck through and muted.
  * @param {string} [props.className]
  */
 export default function StudentNameDisplay({
   student,
   preference = null,
+  matched = false,
   className,
 }) {
   const { t } = useTranslation("classes");
@@ -175,10 +194,17 @@ export default function StudentNameDisplay({
   };
 
   return (
-    <Root className={clsx("matchingRoundStudentNameDisplay", className)}>
+    <Root
+      className={clsx(
+        "matchingRoundStudentNameDisplay",
+        matched && "isMatched",
+        className,
+      )}
+    >
       {canOpenNotes ? (
         <NameButton
           type="button"
+          className={clsx(matched && "isMatched")}
           onClick={openModal}
           aria-label={t(
             "opportunities.matchingRound.studentName.openNotesAria",
@@ -189,7 +215,7 @@ export default function StudentNameDisplay({
           {name}
         </NameButton>
       ) : (
-        <NameText>{name}</NameText>
+        <NameText className={clsx(matched && "isMatched")}>{name}</NameText>
       )}
 
       {queueChip ? (

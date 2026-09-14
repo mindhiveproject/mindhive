@@ -477,7 +477,7 @@ export const Profile = list({
       many: true,
     }),
     connectMatches: relationship({
-      ref: "ConnectMatch.student",
+      ref: "ConnectMatch.students",
       many: true,
     }),
     connectMatchesCreated: relationship({

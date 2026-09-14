@@ -863,8 +863,9 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   const matchByStudentId = useMemo(() => {
     const map = new Map();
     matches.forEach((m) => {
-      const id = m.student?.id;
-      if (id) map.set(id, m);
+      (m.students || []).forEach((s) => {
+        if (s?.id) map.set(s.id, m);
+      });
     });
     return map;
   }, [matches]);
