@@ -12,14 +12,17 @@ import {
   buildOpportunityPreferenceStats,
   buildTeamFirstCongruentGroups,
   buildTeamPrefsByStudent,
+  countPlacedStudents,
   describeTeamGroupClosure,
   displayName,
   getLargestTeamSize,
+  getMatchStudents,
   getMaxActiveClassmatePicks,
   getTeamEligibleOpportunities,
   isStudentInActiveMatch,
 } from "../../../../../lib/connectBallotUtils";
 import MatchingRoundMatchingHeaderBar from "./MatchingRoundMatchingHeaderBar";
+import MatchingRoundCreateMatchModal from "./MatchingRoundCreateMatchModal";
 import MatchingRoundProjectPivotGrid from "./MatchingRoundProjectPivotGrid";
 import StudentNameDisplay from "./StudentNameDisplay";
 import {
@@ -246,6 +249,8 @@ function OpportunityPreferenceDetails({
   opportunity,
   preferences,
   preferenceBySubmitterId,
+  matchedStudentIds,
+  hideMatched = false,
   t,
 }) {
   const stats = useMemo(
@@ -256,11 +261,20 @@ function OpportunityPreferenceDetails({
     [opportunity.id, preferences],
   );
 
-  const rankCounts = useMemo(
-    () =>
-      [...stats.countsByRank.entries()].sort((a, b) => a[0] - b[0]),
-    [stats.countsByRank],
-  );
+  const visibleStudents = useMemo(() => {
+    if (!hideMatched || !matchedStudentIds?.size) return stats.students;
+    return stats.students.filter(
+      (entry) => !matchedStudentIds.has(entry.student?.id),
+    );
+  }, [stats.students, hideMatched, matchedStudentIds]);
+
+  const rankCounts = useMemo(() => {
+    const counts = new Map();
+    visibleStudents.forEach(({ rank }) => {
+      counts.set(rank, (counts.get(rank) || 0) + 1);
+    });
+    return [...counts.entries()].sort((a, b) => a[0] - b[0]);
+  }, [visibleStudents]);
 
   return (
     <PopoverBody>
@@ -274,7 +288,7 @@ function OpportunityPreferenceDetails({
       <PopoverSectionLabel>
         {t(
           "opportunities.matchingRound.matching.preferenceTotal",
-          { count: stats.total },
+          { count: visibleStudents.length },
           {
             default:
               "{{count}} student(s) included this on a submitted ballot",
@@ -309,7 +323,7 @@ function OpportunityPreferenceDetails({
           </MemberRow>
         </>
       ) : null}
-      {stats.students.length > 0 ? (
+      {visibleStudents.length > 0 ? (
         <>
           <PopoverSectionLabel>
             {t(
@@ -319,7 +333,7 @@ function OpportunityPreferenceDetails({
             )}
           </PopoverSectionLabel>
           <PopoverList>
-            {stats.students.map((entry) => (
+            {visibleStudents.map((entry) => (
               <PopoverListItem key={`${entry.student.id}-${entry.rank}`}>
                 <Chip
                   variant="static"
@@ -331,6 +345,7 @@ function OpportunityPreferenceDetails({
                   preference={
                     preferenceBySubmitterId?.get?.(entry.student.id) || null
                   }
+                  matched={matchedStudentIds?.has?.(entry.student.id)}
                 />
               </PopoverListItem>
             ))}
@@ -357,11 +372,13 @@ function ProjectFirstOpportunityCard({
   matches,
   preferences,
   preferenceBySubmitterId,
+  matchedStudentIds,
+  hideMatched = false,
   t,
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const capacity = opportunity.studentCapacity || 1;
-  const used = matches.length;
+  const used = countPlacedStudents(matches);
   const peopleLine = [
     ...(opportunity.sponsors || []),
     ...(opportunity.mentors || []),
@@ -382,6 +399,13 @@ function ProjectFirstOpportunityCard({
         {},
         { default: "Who ranked this" },
       );
+
+  const placedStudents = matches.flatMap((match) =>
+    getMatchStudents(match).map((student) => ({
+      matchId: match.id,
+      student,
+    })),
+  );
 
   return (
     <ProjectCard className={clsx({ isDetailsOpen: detailsOpen })}>
@@ -422,15 +446,16 @@ function ProjectFirstOpportunityCard({
             {toggleLabel}
           </Button>
         </ItemHeader>
-        {matches.length > 0 ? (
+        {placedStudents.length > 0 ? (
           <MemberRow>
-            {matches.map((match) => (
+            {placedStudents.map(({ matchId, student }) => (
               <StudentNameDisplay
-                key={match.id}
-                student={match.student}
+                key={`${matchId}-${student.id}`}
+                student={student}
                 preference={
-                  preferenceBySubmitterId?.get?.(match.student?.id) || null
+                  preferenceBySubmitterId?.get?.(student?.id) || null
                 }
+                matched
               />
             ))}
           </MemberRow>
@@ -450,6 +475,8 @@ function ProjectFirstOpportunityCard({
             opportunity={opportunity}
             preferences={preferences}
             preferenceBySubmitterId={preferenceBySubmitterId}
+            matchedStudentIds={matchedStudentIds}
+            hideMatched={hideMatched}
             t={t}
           />
         </ProjectCardSide>
@@ -467,6 +494,7 @@ function TeamFirstGroupCard({
   classmateListsByStudent,
   activePickCount,
   teamSize,
+  matchedStudentIds,
   t,
 }) {
   const sharedHints = useMemo(() => {
@@ -649,6 +677,7 @@ function TeamFirstGroupCard({
                   preference={
                     preferenceBySubmitterId?.get?.(edge.fromId) || null
                   }
+                  matched={matchedStudentIds?.has?.(edge.fromId)}
                 />
                 <span>
                   {t(
@@ -662,6 +691,7 @@ function TeamFirstGroupCard({
                   preference={
                     preferenceBySubmitterId?.get?.(edge.toId) || null
                   }
+                  matched={matchedStudentIds?.has?.(edge.toId)}
                 />
               </span>
             );
@@ -681,6 +711,7 @@ function TeamFirstGroupCard({
             key={member.id}
             student={member}
             preference={preferenceBySubmitterId?.get?.(member.id) || null}
+            matched={matchedStudentIds?.has?.(member.id)}
           />
         ))}
       </MemberRow>
@@ -697,8 +728,10 @@ export default function MatchingRoundMatchingPanel({
   const [queueMode, setQueueMode] = useState(MATCHING_VIEW_PROJECT_FIRST);
   const [peopleQuery, setPeopleQuery] = useState("");
   const [opportunityQuery, setOpportunityQuery] = useState("");
+  const [createMatchOpen, setCreateMatchOpen] = useState(false);
+  const [hideMatched, setHideMatched] = useState(false);
 
-  const { data, loading } = useQuery(ROUND_MATCH_VIEW, {
+  const { data, loading, refetch } = useQuery(ROUND_MATCH_VIEW, {
     variables: { roundId },
     skip: !roundId || !enabled,
     fetchPolicy: "cache-and-network",
@@ -709,6 +742,17 @@ export default function MatchingRoundMatchingPanel({
   const preferences = round?.preferences || [];
   const teamPreferences = round?.teamPreferences || [];
   const matches = round?.matches || [];
+
+  const matchedStudentIds = useMemo(() => {
+    const ids = new Set();
+    matches.forEach((match) => {
+      if (!isStudentInActiveMatch(match)) return;
+      getMatchStudents(match).forEach((student) => {
+        if (student?.id) ids.add(student.id);
+      });
+    });
+    return ids;
+  }, [matches]);
 
   const rosterStudents = useMemo(() => {
     const ids = new Set();
@@ -729,6 +773,11 @@ export default function MatchingRoundMatchingPanel({
     return list;
   }, [students, preferences]);
 
+  const createMatchStudents = useMemo(() => {
+    if (!hideMatched || matchedStudentIds.size === 0) return rosterStudents;
+    return rosterStudents.filter((student) => !matchedStudentIds.has(student.id));
+  }, [rosterStudents, hideMatched, matchedStudentIds]);
+
   const matchesByOpportunity = useMemo(() => {
     const map = new Map();
     matches.forEach((match) => {
@@ -744,15 +793,24 @@ export default function MatchingRoundMatchingPanel({
   const preferenceStatsByOpportunity = useMemo(() => {
     const map = new Map();
     opportunities.forEach((opportunity) => {
-      map.set(
-        opportunity.id,
-        buildOpportunityPreferenceStats(opportunity.id, preferences, {
-          submittedOnly: true,
-        }),
-      );
+      const stats = buildOpportunityPreferenceStats(opportunity.id, preferences, {
+        submittedOnly: true,
+      });
+      if (hideMatched && matchedStudentIds.size > 0) {
+        const studentsFiltered = stats.students.filter(
+          (entry) => !matchedStudentIds.has(entry.student?.id),
+        );
+        map.set(opportunity.id, {
+          ...stats,
+          students: studentsFiltered,
+          total: studentsFiltered.length,
+        });
+      } else {
+        map.set(opportunity.id, stats);
+      }
     });
     return map;
-  }, [opportunities, preferences]);
+  }, [opportunities, preferences, hideMatched, matchedStudentIds]);
 
   const peopleQ = normalizeQuery(peopleQuery);
   const opportunityQ = normalizeQuery(opportunityQuery);
@@ -819,18 +877,26 @@ export default function MatchingRoundMatchingPanel({
   const filteredTeamGroups = useMemo(() => {
     return teamGroups
       .map((group) => {
+        let members = group.members;
+        if (hideMatched && matchedStudentIds.size > 0) {
+          members = members.filter(
+            (member) => !matchedStudentIds.has(member.id),
+          );
+          if (members.length === 0) return null;
+        }
         if (peopleQ) {
-          const haystack = group.members.map(profileHaystack).join(" ");
+          const haystack = members.map(profileHaystack).join(" ");
           if (!haystack.includes(peopleQ)) return null;
         }
-        if (!opportunityQ) return group;
-        const members = group.members.filter((member) =>
-          preferenceRanksOpportunityQuery(
-            preferenceBySubmitterId.get(member.id),
-            opportunityQ,
-          ),
-        );
-        if (members.length === 0) return null;
+        if (opportunityQ) {
+          members = members.filter((member) =>
+            preferenceRanksOpportunityQuery(
+              preferenceBySubmitterId.get(member.id),
+              opportunityQ,
+            ),
+          );
+          if (members.length === 0) return null;
+        }
         return {
           ...group,
           members,
@@ -838,7 +904,14 @@ export default function MatchingRoundMatchingPanel({
         };
       })
       .filter(Boolean);
-  }, [teamGroups, peopleQ, opportunityQ, preferenceBySubmitterId]);
+  }, [
+    teamGroups,
+    peopleQ,
+    opportunityQ,
+    preferenceBySubmitterId,
+    hideMatched,
+    matchedStudentIds,
+  ]);
 
   if (loading && !round) {
     return (
@@ -863,6 +936,23 @@ export default function MatchingRoundMatchingPanel({
         onPeopleQueryChange={setPeopleQuery}
         opportunityQuery={opportunityQuery}
         onOpportunityQueryChange={setOpportunityQuery}
+        hideMatched={hideMatched}
+        onHideMatchedChange={setHideMatched}
+        onCreateMatch={() => setCreateMatchOpen(true)}
+      />
+
+      <MatchingRoundCreateMatchModal
+        open={createMatchOpen}
+        onClose={() => setCreateMatchOpen(false)}
+        round={round}
+        students={createMatchStudents}
+        opportunities={opportunities}
+        preferences={preferences}
+        matches={matches}
+        matchedStudentIds={matchedStudentIds}
+        onCreated={async () => {
+          await refetch();
+        }}
       />
 
       {queueMode === MATCHING_VIEW_PROJECT_FIRST ? (
@@ -883,6 +973,8 @@ export default function MatchingRoundMatchingPanel({
                 matches={matchesByOpportunity.get(opportunity.id) || []}
                 preferences={preferences}
                 preferenceBySubmitterId={preferenceBySubmitterId}
+                matchedStudentIds={matchedStudentIds}
+                hideMatched={hideMatched}
                 t={t}
               />
             ))
@@ -915,6 +1007,7 @@ export default function MatchingRoundMatchingPanel({
                 }
                 activePickCount={teamClosureContext.activePickCount}
                 teamSize={teamClosureContext.teamSize}
+                matchedStudentIds={matchedStudentIds}
                 t={t}
               />
             ))
@@ -927,6 +1020,8 @@ export default function MatchingRoundMatchingPanel({
           opportunities={filteredOpportunities}
           preferences={preferences}
           matchesByOpportunity={matchesByOpportunity}
+          matchedStudentIds={matchedStudentIds}
+          hideMatched={hideMatched}
         />
       ) : null}
     </Shell>

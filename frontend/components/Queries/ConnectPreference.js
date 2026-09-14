@@ -222,7 +222,7 @@ export const GET_PARTICIPATE_VIEW = gql`
               }
             ) {
               id
-              student {
+              students {
                 id
                 username
                 firstName

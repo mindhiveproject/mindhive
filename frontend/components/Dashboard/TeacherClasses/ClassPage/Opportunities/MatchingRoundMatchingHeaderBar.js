@@ -1,7 +1,10 @@
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
+import Button from "../../../../DesignSystem/Button";
 import ButtonGroup from "../../../../DesignSystem/ButtonGroup";
+import ToggleSwitch from "../../../../DesignSystem/ToggleSwitch";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 import {
   MATCHING_VIEW_PIVOT,
   MATCHING_VIEW_PROJECT_FIRST,
@@ -48,6 +51,14 @@ const SearchInput = styled.input`
   }
 `;
 
+const ActionsRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-left: auto;
+`;
+
 export default function MatchingRoundMatchingHeaderBar({
   queueMode = MATCHING_VIEW_PROJECT_FIRST,
   onQueueModeChange,
@@ -55,6 +66,9 @@ export default function MatchingRoundMatchingHeaderBar({
   onPeopleQueryChange,
   opportunityQuery = "",
   onOpportunityQueryChange,
+  hideMatched = false,
+  onHideMatchedChange,
+  onCreateMatch,
 }) {
   const { t } = useTranslation("classes");
 
@@ -84,6 +98,18 @@ export default function MatchingRoundMatchingHeaderBar({
       ),
     },
   ];
+
+  const hideMatchedTooltip = hideMatched
+    ? t(
+        "opportunities.matchingRound.matching.hideMatchedTooltipOn",
+        {},
+        { default: "Currently hidding matched student" },
+      )
+    : t(
+        "opportunities.matchingRound.matching.hideMatchedTooltipOff",
+        {},
+        { default: "Currently showing everyone" },
+      );
 
   return (
     <HeaderCard className="matchingRoundMatchingHeaderBar">
@@ -137,6 +163,26 @@ export default function MatchingRoundMatchingHeaderBar({
           )}
         />
       </SearchRow>
+      <ActionsRow>
+        {typeof onHideMatchedChange === "function" ? (
+          <Tooltip content={hideMatchedTooltip} side="top">
+            <ToggleSwitch
+              checked={hideMatched}
+              onChange={onHideMatchedChange}
+              aria-label={hideMatchedTooltip}
+            />
+          </Tooltip>
+        ) : null}
+        {typeof onCreateMatch === "function" ? (
+          <Button variant="filled" onClick={onCreateMatch}>
+            {t(
+              "opportunities.matchingRound.matching.createMatch",
+              {},
+              { default: "Create a match" },
+            )}
+          </Button>
+        ) : null}
+      </ActionsRow>
     </HeaderCard>
   );
 }

@@ -581,7 +581,7 @@ export const MY_MENTOR_MATCHES = gql`
             matchScore
             activatedAt
             completedAt
-            student {
+            students {
               id
               username
               firstName
@@ -627,7 +627,7 @@ export const MY_MENTOR_MATCHES = gql`
             matchScore
             activatedAt
             completedAt
-            student {
+            students {
               id
               username
               firstName
@@ -673,7 +673,7 @@ export const MY_MENTOR_MATCHES = gql`
             matchScore
             activatedAt
             completedAt
-            student {
+            students {
               id
               username
               firstName
