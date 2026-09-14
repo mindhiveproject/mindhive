@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 import Widget from "./Widget";
 import Menu from "./Menu";
 import Component from "./Component/Main";
+import DataSources from "./DataSources/Main";
 
 import { StyledCanvasBuilder } from "../../../styles/StyledBuilder";
 import Modal from "./Modal/Main";
@@ -40,6 +41,7 @@ export default function Builder({
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStudyPreviewOpen, setStudyPreviewOpen] = useState(false);
+  const [dataSourceSettingsId, setDataSourceSettingsId] = useState(null);
 
   if (isCanvasLocked && engine?.getModel()) {
     engine.getModel().setLocked(true);
@@ -195,8 +197,15 @@ export default function Builder({
             handleMultipleUpdate={handleMultipleUpdate}
             hasStudyChanged={hasStudyChanged}
             isCanvasLocked={isCanvasLocked}
+            dataSourceSettingsId={dataSourceSettingsId}
+            onCloseDataSourceSettings={() => setDataSourceSettingsId(null)}
           />
         </div>
+        <DataSources
+          study={study}
+          user={user}
+          onOpenSettings={setDataSourceSettingsId}
+        />
         <div className="boardTopActions">
           <Button
             id="commentButton"

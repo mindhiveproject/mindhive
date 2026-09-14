@@ -47,6 +47,9 @@ import { VizSection } from "./schemas/VizSection";
 import { Resource } from "./schemas/Resource";
 import { Log } from "./schemas/Log";
 import { Datasource } from "./schemas/Datasource";
+import { DataSourceBlock } from "./schemas/DataSourceBlock";
+import { StudyDataSource } from "./schemas/StudyDataSource";
+import { StudyDataSourceRecord } from "./schemas/StudyDataSourceRecord";
 import { Visual } from "./schemas/YQVisual";
 import { VisualCodeFile } from "./schemas/YQVisualCodeFile";
 import { JsPsychExperiment } from "./schemas/JsPsychExperiment";
@@ -128,6 +131,9 @@ export const lists: Lists = {
   Resource,
   Log,
   Datasource,
+  DataSourceBlock,
+  StudyDataSource,
+  StudyDataSourceRecord,
   Visual,
   VisualCodeFile,
   JsPsychExperiment,

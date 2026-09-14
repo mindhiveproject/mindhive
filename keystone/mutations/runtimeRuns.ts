@@ -89,7 +89,7 @@ async function ensureSummaryResult(
   });
 }
 
-async function participantForRun(
+export async function participantForRun(
   context: any,
   study: any,
   guestPublicId?: string | null,

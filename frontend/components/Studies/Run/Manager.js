@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 
 import TaskRun from "../../Tasks/Run/Main";
 import Prompt from "./Prompt/Main";
+import StudyDataSourcesRuntime from "./DataSources/Main";
 
 import { UPDATE_USER_STUDY_INFO } from "../../Mutations/User";
 import { UPDATE_GUEST_STUDY_INFO } from "../../Mutations/Guest";
@@ -297,33 +298,40 @@ export default function Manager({
     }
   };
 
-  if (page === "test" && (task || currentStep?.componentID)) {
+  // One StudyDataSourcesRuntime wraps the whole participation rather than
+  // being remounted per page: it owns live device connections and the
+  // aggregate recorder, both of which need to survive the test -> post
+  // transition, not reconnect/restart at the worst possible moment.
+  if (
+    (page === "test" && (task || currentStep?.componentID)) ||
+    page === "post"
+  ) {
     return (
-      <TaskRun
-        user={user}
-        study={study}
-        id={task || currentStep?.componentID}
-        testVersion={version || currentStep?.testId}
-        currentStep={currentStep}
-        isTaskRetaken={task && version}
-        onFinish={onTaskFinish}
-        isSavingData
-      />
-    );
-  }
-
-  if (page === "post") {
-    return (
-      <Prompt
-        user={user}
-        study={study}
-        studiesInfo={studiesInfo}
-        info={info}
-        currentStep={currentStep}
-        nextStep={nextStep}
-        closePrompt={closePrompt}
-        runToken={runToken}
-      />
+      <StudyDataSourcesRuntime study={study} user={user} currentStepId={currentStep?.id}>
+        {page === "test" ? (
+          <TaskRun
+            user={user}
+            study={study}
+            id={task || currentStep?.componentID}
+            testVersion={version || currentStep?.testId}
+            currentStep={currentStep}
+            isTaskRetaken={task && version}
+            onFinish={onTaskFinish}
+            isSavingData
+          />
+        ) : (
+          <Prompt
+            user={user}
+            study={study}
+            studiesInfo={studiesInfo}
+            info={info}
+            currentStep={currentStep}
+            nextStep={nextStep}
+            closePrompt={closePrompt}
+            runToken={runToken}
+          />
+        )}
+      </StudyDataSourcesRuntime>
     );
   }
 }

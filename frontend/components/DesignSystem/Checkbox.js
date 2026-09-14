@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 
-// The box is 20x20 but sits in a 24x24 target so it lines up with the 24px
-// icons everywhere else in a row of controls.
+// Material spec (Figma node 1096:10): a 48px touch target holding a 40px
+// circular state-layer, itself holding the 18px box — the halo is what
+// communicates hover/press, the box's own colour never shifts.
 const TARGET_STYLE = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  width: 24,
-  height: 24,
+  width: 48,
+  height: 48,
   flexShrink: 0,
   padding: 0,
   border: "none",
@@ -17,62 +18,67 @@ const TARGET_STYLE = {
   cursor: "pointer",
 };
 
+const STATE_LAYER_STYLE = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 40,
+  height: 40,
+  borderRadius: "50%",
+  background: "transparent",
+};
+
 // The colour families the box can be painted in, matching Button's `tone`.
+// Figma only specifies `primary` (Dark border / Base fill); `accent` keeps a
+// single hue for both since there's no lighter accent shade to fill with.
 const TONES = {
   primary: {
-    main: "var(--MH-Theme-Primary-Dark, #336F8A)",
-    hover: "var(--MH-Theme-Primary-Base, #337C84)",
+    border: "var(--MH-Theme-Primary-Dark, #336F8A)",
+    fill: "var(--MH-Theme-Primary-Base, #69BBC4)",
   },
   accent: {
-    main: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
-    hover: "var(--MH-Theme-Additional-Accent-Dark, #3F288F)",
+    border: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+    fill: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
   },
 };
 
+const HALO_HOVER = "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)";
+const HALO_PRESSED = "var(--MH-Theme-Neutrals-Light, #E6E6E6)";
+const DISABLED_COLOR = "var(--MH-Theme-Neutrals-Medium, #A1A1A1)";
+
 const BOX_STYLE = {
+  position: "relative",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   boxSizing: "border-box",
-  width: 20,
-  height: 20,
-  borderRadius: 4,
+  width: 18,
+  height: 18,
+  borderRadius: 2,
   background: "transparent",
+};
+
+// Figma overlays the glyph as a full 24px icon centered on the 18px box, so
+// it deliberately overflows the box edges by 3px on each side.
+const GLYPH_STYLE = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  width: 24,
+  height: 24,
+  transform: "translate(-50%, -50%)",
   color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
-  transition: "background-color 0.2s, border-color 0.2s",
-};
-
-const BOX_DISABLED_STYLE = {
-  borderColor: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
-  background: "transparent",
-  cursor: "default",
-};
-
-const BOX_DISABLED_CHECKED_STYLE = {
-  borderColor: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
-  background: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
 };
 
 const CHECK = (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-    <path
-      d="M1.5 7.5L5 11L12.5 3"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <path d="M10 16.4L6 12.4L7.4 11L10 13.6L16.6 7L18 8.4L10 16.4Z" fill="currentColor" />
   </svg>
 );
 
 const INDETERMINATE = (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-    <path
-      d="M2.5 7H11.5"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-    />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <path d="M6 13V11H18V13H6Z" fill="currentColor" />
   </svg>
 );
 
@@ -80,7 +86,7 @@ const FOCUS_VISIBLE_STYLE = `
 .DesignSystem-Checkbox:focus-visible {
   outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 50%;
 }
 `;
 
@@ -97,7 +103,7 @@ const FOCUS_VISIBLE_STYLE = `
  * @param {boolean} [disabled=false] - Disabled state.
  * @param {string} [ariaLabel] - Accessible name when no visible label is tied to it.
  * @param {string} [ariaLabelledBy] - Id of the element naming this checkbox.
- * @param {React.CSSProperties} [style] - Override for the 24px target.
+ * @param {React.CSSProperties} [style] - Override for the 48px target.
  *
  * @example
  * <Checkbox checked={normalize} onChange={setNormalize} ariaLabel="Normalize" />
@@ -113,21 +119,21 @@ export default function Checkbox({
   style = {},
 }) {
   const [hovered, setHovered] = useState(false);
+  const [pressed, setPressed] = useState(false);
   const palette = TONES[tone] || TONES.primary;
+  const filled = checked || indeterminate;
 
-  // Checked is a fill, not a fill plus a heavier outline — the border colour is
-  // already the fill colour, so the box simply solidifies.
-  let boxStyle = { ...BOX_STYLE, border: `2px solid ${palette.main}` };
-  if (checked || indeterminate) boxStyle = { ...boxStyle, background: palette.main };
-  if (!disabled && hovered) boxStyle = { ...boxStyle, borderColor: palette.hover };
-  if (disabled) {
-    boxStyle = {
-      ...boxStyle,
-      ...(checked || indeterminate
-        ? BOX_DISABLED_CHECKED_STYLE
-        : BOX_DISABLED_STYLE),
-    };
+  let stateLayerStyle = { ...STATE_LAYER_STYLE };
+  if (!disabled && pressed) {
+    stateLayerStyle = { ...stateLayerStyle, background: HALO_PRESSED };
+  } else if (!disabled && hovered) {
+    stateLayerStyle = { ...stateLayerStyle, background: HALO_HOVER };
   }
+
+  const color = disabled ? DISABLED_COLOR : filled ? palette.fill : palette.border;
+  const boxStyle = filled
+    ? { ...BOX_STYLE, background: color }
+    : { ...BOX_STYLE, border: `2px solid ${color}` };
 
   return (
     <>
@@ -143,10 +149,21 @@ export default function Checkbox({
         style={{ ...TARGET_STYLE, ...(disabled ? { cursor: "default" } : null), ...style }}
         onClick={() => !disabled && onChange?.(!checked)}
         onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        onMouseLeave={() => {
+          setHovered(false);
+          setPressed(false);
+        }}
+        onMouseDown={() => !disabled && setPressed(true)}
+        onMouseUp={() => setPressed(false)}
       >
-        <span style={boxStyle}>
-          {indeterminate ? INDETERMINATE : checked ? CHECK : null}
+        <span style={stateLayerStyle}>
+          <span style={boxStyle}>
+            {indeterminate ? (
+              <span style={GLYPH_STYLE}>{INDETERMINATE}</span>
+            ) : checked ? (
+              <span style={GLYPH_STYLE}>{CHECK}</span>
+            ) : null}
+          </span>
         </span>
       </button>
     </>

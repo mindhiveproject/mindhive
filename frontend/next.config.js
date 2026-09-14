@@ -25,8 +25,12 @@ const securityHeaders = [
     value: "strict-origin-when-cross-origin",
   },
   {
+    // camera/microphone are opened by yq-data's video and audio receivers
+    // (face tracking, rPPG, voice emotion) during a data-source session. An
+    // empty allowlist disables getUserMedia site-wide, so those must be
+    // self. Third parties in iframes still get nothing.
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+    value: "camera=(self), microphone=(self), geolocation=(), interest-cohort=()",
   },
   {
     key: "Content-Security-Policy",
@@ -48,14 +52,20 @@ const securityHeaders = [
       // + any HTTPS (covers external direct video URLs and future CDN-served files).
       "media-src 'self' http://localhost:4444 https: data: blob:",
       // Fetch/XHR: self + MindHive backends + Google auth
-      // cdn.jsdelivr.net: Pyodide fetches .wasm and package files at runtime
+      // cdn.jsdelivr.net: Pyodide fetches .wasm and package files at runtime;
+      // also yq-data's MediaPipe FaceLandmarker fetches its wasm runtime from here
       // pypi.org: Pyodide micropip queries PyPI to resolve Python package metadata
       // files.pythonhosted.org: Pyodide micropip downloads wheel files from here
       // ws://localhost:4444: dev collaborative-editing WebSocket (Hocuspocus);
       // production uses wss://*.mindhive.science (already covered above).
       // sheets.googleapis.com: Block Documentation admin tool reads Google Sheets metadata + values
       // challenges.cloudflare.com: Turnstile challenge API
-      "connect-src 'self' http://localhost:4444 ws://localhost:4444 ws://localhost:4445 https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net https://pypi.org https://files.pythonhosted.org https://api.cloudinary.com https://sheets.googleapis.com https://challenges.cloudflare.com",
+      // wss://localhost:6868: EMOTIV Cortex API, always local to whoever's headset is
+      // connecting (researcher or participant machine) — never a MindHive-hosted origin,
+      // so this is the same in dev and production builds.
+      // storage.googleapis.com: yq-data's face_landmark receiver downloads its
+      // FaceLandmarker .task model from Google's hosted MediaPipe model bucket
+      "connect-src 'self' http://localhost:4444 ws://localhost:4444 ws://localhost:4445 https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science wss://localhost:6868 https://cdn.jsdelivr.net https://storage.googleapis.com https://pypi.org https://files.pythonhosted.org https://api.cloudinary.com https://sheets.googleapis.com https://challenges.cloudflare.com",
       // iframes for Google OAuth popup + supported Connect Opportunity video embeds
       // challenges.cloudflare.com: Turnstile challenge iframe
       "frame-src 'self' https://accounts.google.com https://docs.google.com https://drive.google.com https://calendar.google.com https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com https://www.loom.com https://challenges.cloudflare.com",

@@ -30,6 +30,12 @@ const TONES = {
     fill: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
     label: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
   },
+  // Matches Button's `tertiary` tone — the data sources mockups' link/unlink
+  // and catalog actions.
+  tertiary: {
+    fill: "var(--MH-Theme-Tertiary-Base, #55808C)",
+    label: "var(--MH-Theme-Tertiary-Base, #55808C)",
+  },
 };
 
 // --- Filled (Figma Icon Button 1049:4895)
@@ -129,6 +135,27 @@ const SUBTLE_DISABLED = {
   cursor: "default",
 };
 
+// --- Neutral (Neutrals Lighter behind a black glyph — Figma's default "Icon
+// Button": row actions like star/settings on a card, where subtle's Primary
+// tint would read as branded rather than a plain utility control)
+const NEUTRAL_BASE = {
+  ...BASE_STYLE,
+  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+};
+const NEUTRAL_HOVER = {
+  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+};
+const NEUTRAL_PRESSED = {
+  background: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+};
+const NEUTRAL_DISABLED = {
+  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  cursor: "default",
+};
+
 // --- Text
 const TEXT_HOVER = {
   background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
@@ -165,6 +192,13 @@ function getVariantStyles(variant, tone) {
         hover: SUBTLE_HOVER,
         pressed: SUBTLE_PRESSED,
         disabled: SUBTLE_DISABLED,
+      };
+    case "neutral":
+      return {
+        base: NEUTRAL_BASE,
+        hover: NEUTRAL_HOVER,
+        pressed: NEUTRAL_PRESSED,
+        disabled: NEUTRAL_DISABLED,
       };
     case "text":
       return {
@@ -218,11 +252,13 @@ const ICON_WRAPPER_STYLE = {
  * Design System Icon Button. Circular 40px control for icon-only actions.
  * Matches Figma (node 1049-4895).
  *
- * Variants: filled, outline, tonal, text, and subtle — a quiet light chip
- * (Primary Lighter behind a black glyph) for close and dismiss actions.
+ * Variants: filled, outline, tonal, text, subtle, and neutral. Subtle is a
+ * quiet light chip (Primary Lighter behind a black glyph) for close and
+ * dismiss actions; neutral (Neutrals Lighter behind a black glyph) is Figma's
+ * default row-action Icon Button — star, edit, settings on a card.
  *
- * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
- * @param {"primary"|"accent"} [tone="primary"] - Colour family for the filled
+ * @param {"filled"|"outline"|"tonal"|"text"|"subtle"|"neutral"} [variant="filled"] - Visual style.
+ * @param {"primary"|"accent"|"tertiary"} [tone="primary"] - Colour family for the filled
  *   and text variants; the neutral variants ignore it.
  * @param {React.ReactNode} icon - 24px icon (required).
  * @param {boolean} [elevated=true] - Hover elevation. Set false to drop the

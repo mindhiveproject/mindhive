@@ -78,6 +78,7 @@ import {
   startRun,
   updateRunDataPolicy,
 } from "./runtimeRuns";
+import { saveStudyDataSourceRecord } from "./dataSourceRecords";
 
 // make a fake gql tagged template literal
 const graphql = String.raw;
@@ -113,6 +114,15 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           error: String
         ): RuntimeAcknowledgement!
         updateRunDataPolicy(runToken: String!, dataPolicy: String!): Boolean!
+        # Upserts the calling participant's StudyDataSourceRecord for a study
+        # with the AggregateRecorder's current running snapshot. Called on
+        # every step close and once more on finish/leave.
+        saveStudyDataSourceRecord(
+          studyId: ID!
+          guestPublicId: String
+          steps: JSON
+          session: JSON
+        ): ID
         sendEmail(
           receiverId: ID!
           title: String
@@ -441,6 +451,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         startRun,
         ingestRunMessage,
         updateRunDataPolicy,
+        saveStudyDataSourceRecord,
         sendEmail,
         copyProposalBoard,
         deleteProposal,

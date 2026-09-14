@@ -57,6 +57,24 @@ const TONES = {
     edgePressed: "var(--MH-Theme-Additional-Accent-Light, #F5F2FF)",
     label: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
   },
+  // The hue the data sources mockups give link/unlink and catalog actions, so
+  // that area reads as one group set apart from the platform's Primary chrome.
+  tertiary: {
+    fill: "var(--MH-Theme-Tertiary-Base, #55808C)",
+    fillPressed: "var(--MH-Theme-Tertiary-Dark, #0D3944)",
+    edge: "var(--MH-Theme-Tertiary-Base, #55808C)",
+    edgePressed: "var(--MH-Theme-Tertiary-Light, #F6F9F8)",
+    label: "var(--MH-Theme-Tertiary-Base, #55808C)",
+  },
+  // Muted grey, for a secondary action that sits beside a primary one and
+  // should read as quieter — e.g. "Disconnect" next to a connected device.
+  neutral: {
+    fill: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+    fillPressed: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+    edge: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+    edgePressed: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+    label: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  },
 };
 
 // --- Filled
@@ -194,9 +212,11 @@ const ICON_WRAPPER_STYLE = {
  * pairs with IconButton's subtle variant.
  *
  * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
- * @param {"primary"|"accent"} [tone="primary"] - Colour family. `accent` paints
- *   the filled, outline and text variants in Additional Accent; tonal and
- *   subtle are neutral surfaces and ignore it.
+ * @param {"primary"|"accent"|"tertiary"|"neutral"} [tone="primary"] - Colour family. `accent` paints
+ *   the filled, outline and text variants in Additional Accent, `tertiary` in
+ *   Tertiary (the data sources area's link/unlink actions), `neutral` in grey
+ *   (a quieter secondary action, e.g. "Disconnect"); tonal and subtle are
+ *   neutral surfaces already and ignore this prop.
  * @param {React.ReactNode} children - Button label (required).
  * @param {React.ReactNode} [leadingIcon] - Optional 24px icon left of label.
  * @param {React.ReactNode} [trailingIcon] - Optional 24px icon right of label (e.g. a dropdown caret).

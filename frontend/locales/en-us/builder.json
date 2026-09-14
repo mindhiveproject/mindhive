@@ -1161,6 +1161,51 @@
 			"working": "Work in progress"
 		}
 	},
+	"dataSources": {
+		"favoriteAddLabel": "Add to favorites",
+		"favoriteRemoveLabel": "Remove from favorites",
+		"linkLabel": "Link",
+		"linkModal": {
+			"catalogEmpty": "No data sources match your search.",
+			"catalogHeading": "All Data Sources",
+			"close": "Close",
+			"continue": "Continue",
+			"description": "Add external data sources to collect physiological data while a study is happening.",
+			"filterMine": "Created by you",
+			"filterOfficial": "Created by MindHive",
+			"filterShowOutputs": "Show Outputs",
+			"linkedHeading": "Linked Data Sources",
+			"noneLinkedYet": "You haven't linked any data sources yet.",
+			"searchPlaceholder": "Search for data sources",
+			"title": "Link a Data Source",
+			"warning": "Proceed only if you know what you're doing or if you need external data sources in your study."
+		},
+		"more": "More",
+		"panelEmpty": "No data sources linked to this study yet.",
+		"panelSubtitle": "This study collects data from external devices",
+		"panelTitle": "External data sources",
+		"settings": {
+			"advancedOptions": "Advanced Options",
+			"close": "Close",
+			"copyAndEdit": "Copy & Edit",
+			"downloadToComputer": "Download to computer",
+			"editNotice": "To change how the data is aggregated, add more inputs, or add more analysis steps, you must edit this block.",
+			"general": "General",
+			"notFound": "This data source is no longer linked to the study.",
+			"outputs": "Outputs",
+			"outputsHint": "Review the outputs of the device and filter out the ones you won't be using.",
+			"recordParticipantData": "Record participant data",
+			"recordParticipantDataHint": "Save the device's output as part of your dataset.",
+			"streamToNextBlock": "Stream the output to the next block",
+			"streamToNextBlockHint": "After calculating aggregate data, stream the output to the next block",
+			"title": "{{title}} Settings",
+			"viewSignal": "Allow participants to view the signal",
+			"viewSignalHint": "View the raw signal during participation."
+		},
+		"settingsLabel": "Settings",
+		"tab": "Data source",
+		"unlinkLabel": "Unlink"
+	},
 	"dataUpload": {
 		"chooseDataFile": "Choose the data file",
 		"useStudyData": "Use study data"

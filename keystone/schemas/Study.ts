@@ -162,6 +162,19 @@ export const Study = list({
       ref: "Datasource.study",
       many: true,
     }),
+    // Real-time data sources from the yq-data package (DataSourceBlock
+    // instances). Distinct from `datasources` above, which is the Data-Tool
+    // tabular list.
+    dataSources: relationship({
+      ref: "StudyDataSource.study",
+      many: true,
+    }),
+    // Per-participant real-time data source aggregates collected while
+    // running this study — see StudyDataSourceRecord.
+    dataSourceRecords: relationship({
+      ref: "StudyDataSourceRecord.study",
+      many: true,
+    }),
     proposalCards: relationship({
       ref: "ProposalCard.studies",
       many: true,

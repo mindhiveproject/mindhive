@@ -790,7 +790,7 @@ export const StyledCanvasBuilder = styled.div`
     position: relative;
     overflow: hidden;
 
-    > *:not(.sidepanel):not(.boardTopActions) {
+    > *:not(.sidepanel):not(.boardTopActions):not(.dataSourcesPanel) {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -814,6 +814,13 @@ export const StyledCanvasBuilder = styled.div`
     flex-wrap: wrap;
     align-items: center;
     gap: 8px;
+  }
+
+  .dataSourcesPanel {
+    position: absolute;
+    z-index: 10;
+    left: 10px;
+    bottom: 10px;
   }
 
   .background {
