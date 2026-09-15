@@ -13,7 +13,11 @@ import {
   file,
 } from "@keystone-6/core/fields";
 import { permissions, rules } from "../access";
-import { ensureTeacherPermission, relationshipConnectIds } from "../lib/classStaff";
+import {
+  ensureTeacherPermission,
+  relationshipAssignedIds,
+  syncClassStaffAsRoundReviewers,
+} from "../lib/classStaff";
 
 import uniqid from "uniqid";
 import {
@@ -600,10 +604,22 @@ export const Profile = list({
   hooks: {
     async afterOperation({ operation, inputData, context, item }) {
       if (operation !== "create" && operation !== "update") return;
-      const connectedClass = relationshipConnectIds(inputData?.teachingTeamIn);
-      if (connectedClass.length === 0) return;
-      const profileId = item?.id ? String(item.id) : "";
-      await ensureTeacherPermission(context, profileId);
+      const teachingTeamClasses = relationshipAssignedIds(
+        inputData?.teachingTeamIn
+      );
+      if (teachingTeamClasses.length > 0) {
+        const profileId = item?.id ? String(item.id) : "";
+        await ensureTeacherPermission(context, profileId);
+      }
+      const classIds = [
+        ...new Set([
+          ...teachingTeamClasses,
+          ...relationshipAssignedIds(inputData?.mentorIn),
+        ]),
+      ];
+      for (const classId of classIds) {
+        await syncClassStaffAsRoundReviewers(context, classId);
+      }
     },
   },
 });

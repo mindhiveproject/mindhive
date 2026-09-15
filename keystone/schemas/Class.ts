@@ -12,6 +12,7 @@ import {
 import {
   ensureTeacherPermission,
   relationshipConnectIds,
+  syncClassStaffAsRoundReviewers,
 } from "../lib/classStaff";
 
 export const Class = list({
@@ -108,11 +109,18 @@ export const Class = list({
     }),
   },
   hooks: {
-    async afterOperation({ operation, inputData, context }) {
+    async afterOperation({ operation, inputData, item, context }) {
       if (operation !== "create" && operation !== "update") return;
       const profileIds = relationshipConnectIds(inputData?.teachingTeam);
       for (const profileId of profileIds) {
         await ensureTeacherPermission(context, profileId);
+      }
+      if (
+        inputData?.teachingTeam ||
+        inputData?.mentors ||
+        inputData?.networks
+      ) {
+        await syncClassStaffAsRoundReviewers(context, item?.id ? String(item.id) : "");
       }
     },
   },
