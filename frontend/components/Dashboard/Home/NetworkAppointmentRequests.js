@@ -25,7 +25,7 @@ function buildAppointmentRequestsWhere(networkIds) {
 
 function collectReviewClasses(profile) {
   const byId = new Map();
-  [...(profile?.teacherIn || []), ...(profile?.mentorIn || [])]
+  [...(profile?.teacherIn || []), ...(profile?.teachingTeamIn || []), ...(profile?.mentorIn || [])]
     .filter((cls) => cls?.id && cls?.code)
     .forEach((cls) => {
       if (!byId.has(cls.id)) {

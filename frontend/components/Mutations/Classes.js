@@ -47,6 +47,24 @@ export const EDIT_CLASS = gql`
   }
 `;
 
+export const UPDATE_CLASS_TEACHING_TEAM = gql`
+  mutation UPDATE_CLASS_TEACHING_TEAM(
+    $id: ID!
+    $teachingTeam: ProfileRelateToManyForUpdateInput
+  ) {
+    updateClass(where: { id: $id }, data: { teachingTeam: $teachingTeam }) {
+      id
+      teachingTeam {
+        id
+        username
+        email
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
 // delete class
 export const DELETE_CLASS = gql`
   mutation DELETE_CLASS($id: ID!) {

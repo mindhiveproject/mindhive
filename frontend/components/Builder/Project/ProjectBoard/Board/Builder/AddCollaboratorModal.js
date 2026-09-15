@@ -39,6 +39,7 @@ export default function AddCollaboratorModal({
     ...(user?.studentIn || []),
     ...(user?.mentorIn || []),
     ...(user?.teacherIn || []),
+    ...(user?.teachingTeamIn || []),
   ].map((cl) => cl?.id);
 
   // For all roles, proposal class members include students, teachers, and mentors in this class.
@@ -48,6 +49,7 @@ export default function AddCollaboratorModal({
     OR: [
       { studentIn: { some: { id: { equals: classId } } } },
       { teacherIn: { some: { id: { equals: classId } } } },
+      { teachingTeamIn: { some: { id: { equals: classId } } } },
       { mentorIn: { some: { id: { equals: classId } } } },
     ],
   };
@@ -64,6 +66,7 @@ export default function AddCollaboratorModal({
           { studentIn: { some: { id: { in: userClasses } } } },
           { mentorIn: { some: { id: { in: userClasses } } } },
           { teacherIn: { some: { id: { in: userClasses } } } },
+          { teachingTeamIn: { some: { id: { in: userClasses } } } },
         ],
       },
     },
@@ -196,7 +199,8 @@ export default function AddCollaboratorModal({
   const userHasClasses = 
     (user?.studentIn?.length > 0) ||
     (user?.mentorIn?.length > 0) ||
-    (user?.teacherIn?.length > 0);
+    (user?.teacherIn?.length > 0) ||
+    (user?.teachingTeamIn?.length > 0);
 
   const styledPrimaryButton = {
     borderRadius: "100px",

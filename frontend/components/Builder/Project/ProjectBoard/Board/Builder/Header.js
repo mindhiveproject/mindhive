@@ -111,7 +111,8 @@ export default function ProposalHeader({
     const userHasClasses = 
       (user?.studentIn?.length > 0) ||
       (user?.mentorIn?.length > 0) ||
-      (user?.teacherIn?.length > 0);
+      (user?.teacherIn?.length > 0) ||
+      (user?.teachingTeamIn?.length > 0);
     
     if (userHasClasses) {
       setShowCollaboratorModal(true);
@@ -317,7 +318,8 @@ export default function ProposalHeader({
                     const userHasClasses = 
                       (user?.studentIn?.length > 0) ||
                       (user?.mentorIn?.length > 0) ||
-                      (user?.teacherIn?.length > 0);
+                      (user?.teacherIn?.length > 0) ||
+                      (user?.teachingTeamIn?.length > 0);
                     
                     return userHasClasses ? (
                       <IconButton

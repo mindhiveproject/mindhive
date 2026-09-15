@@ -8,6 +8,7 @@ import styled from "styled-components";
 
 import useForm from "../../../../../lib/useForm";
 import { classNetworkUrlRef } from "../../../../../lib/classNetworkRef";
+import { isClassTeacherOrMentor } from "../../../../../lib/classTeacherUtils";
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import CopyButton from "../../../../DesignSystem/CopyButton";
@@ -2068,11 +2069,7 @@ function MatchingRoundEditor({
       !isNew,
   );
 
-  const canManageClassForms = Boolean(
-    user?.id &&
-      (myclass?.creator?.id === user.id ||
-        (myclass?.mentors || []).some((m) => m?.id === user.id)),
-  );
+  const canManageClassForms = isClassTeacherOrMentor(myclass, user?.id);
 
   const toggleOpportunityInRound = useCallback(
     async (opportunityId) => {

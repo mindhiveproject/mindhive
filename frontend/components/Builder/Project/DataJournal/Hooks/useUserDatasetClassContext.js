@@ -40,6 +40,7 @@ export function useUserDatasetClassContext() {
     const classLists = [
       ...(user.studentIn || []),
       ...(user.teacherIn || []),
+      ...(user.teachingTeamIn || []),
       ...(user.mentorIn || []),
     ];
 

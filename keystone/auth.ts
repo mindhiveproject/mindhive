@@ -65,6 +65,10 @@ async function findTeacherEmailsForStudent(
             id
             email
           }
+          teachingTeam {
+            id
+            email
+          }
         }
       `,
     });
@@ -110,6 +114,11 @@ async function findTeacherEmailsForStudent(
         console.log(`[Password Reset] Found a teacher for class ${classItem.id}.`);
       } else {
         console.log(`[Password Reset] WARNING: Class ${classItem.id} has no creator email.`);
+      }
+      for (const member of classItem.teachingTeam || []) {
+        if (member?.email) {
+          teacherEmails.add(member.email);
+        }
       }
     }
 

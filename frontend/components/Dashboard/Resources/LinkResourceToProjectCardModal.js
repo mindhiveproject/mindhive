@@ -34,6 +34,7 @@ function mergeTeacherMentorClasses(authenticatedItem) {
   const byId = new Map();
   for (const cls of [
     ...(authenticatedItem?.teacherIn || []),
+    ...(authenticatedItem?.teachingTeamIn || []),
     ...(authenticatedItem?.mentorIn || []),
   ]) {
     if (cls?.id && !byId.has(cls.id)) {

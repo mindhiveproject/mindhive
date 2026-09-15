@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 import { ROUND_MATCH_VIEW } from "../../../../Queries/ConnectMatch";
 import {
   buildClassmateListsByStudent,
@@ -916,13 +917,15 @@ export default function MatchingRoundMatchingPanel({
   if (loading && !round) {
     return (
       <Shell className="classTabMatchingRoundPanel">
-        <EmptyNote>
-          {t(
-            "opportunities.matchingRound.matching.loading",
-            {},
-            { default: "Loading matching…" },
-          )}
-        </EmptyNote>
+        <JustOneSecondNotice>
+          <p>
+            {t(
+              "opportunities.matchingRound.matching.loading",
+              {},
+              { default: "Loading matching…" },
+            )}
+          </p>
+        </JustOneSecondNotice>
       </Shell>
     );
   }

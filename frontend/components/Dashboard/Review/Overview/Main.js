@@ -36,10 +36,11 @@ export default function Overview({ query, user }) {
   const us = classesData?.authenticatedItem || {
     studentIn: [],
     teacherIn: [],
+    teachingTeamIn: [],
     mentorIn: [],
   };
 
-  const myClasses = [...us?.studentIn, ...us?.teacherIn, ...us?.mentorIn] || [];
+  const myClasses = [...us?.studentIn, ...us?.teacherIn, ...us?.teachingTeamIn, ...us?.mentorIn] || [];
 
   const networkClasses =
     myClasses

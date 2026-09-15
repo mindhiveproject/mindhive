@@ -180,6 +180,7 @@ export const ConnectRound = list({
               id
               classes {
                 creator { id }
+                teachingTeam { id }
                 mentors { id }
               }
             }
@@ -192,6 +193,9 @@ export const ConnectRound = list({
 
         for (const cls of round.classNetwork.classes || []) {
           if (cls?.creator?.id) reviewerIds.add(cls.creator.id);
+          for (const member of cls?.teachingTeam || []) {
+            if (member?.id) reviewerIds.add(member.id);
+          }
           for (const mentor of cls?.mentors || []) {
             if (mentor?.id) reviewerIds.add(mentor.id);
           }

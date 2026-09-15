@@ -9,6 +9,10 @@ import {
   checkbox,
   json,
 } from "@keystone-6/core/fields";
+import {
+  ensureTeacherPermission,
+  relationshipConnectIds,
+} from "../lib/classStaff";
 
 export const Class = list({
   access: {
@@ -16,7 +20,13 @@ export const Class = list({
       query: () => true,
       create: () => true,
       update: () => true,
-      delete: () => true,
+      delete: ({ session }) => !!session?.itemId,
+    },
+    filter: {
+      delete: ({ session }) =>
+        session?.itemId
+          ? { creator: { id: { equals: session.itemId } } }
+          : false,
     },
   },
   fields: {
@@ -30,6 +40,10 @@ export const Class = list({
     settings: json(),
     mentors: relationship({
       ref: "Profile.mentorIn",
+      many: true,
+    }),
+    teachingTeam: relationship({
+      ref: "Profile.teachingTeamIn",
       many: true,
     }),
     students: relationship({
@@ -92,5 +106,14 @@ export const Class = list({
       ref: "FormDefinition.class",
       many: true,
     }),
+  },
+  hooks: {
+    async afterOperation({ operation, inputData, context }) {
+      if (operation !== "create" && operation !== "update") return;
+      const profileIds = relationshipConnectIds(inputData?.teachingTeam);
+      for (const profileId of profileIds) {
+        await ensureTeacherPermission(context, profileId);
+      }
+    },
   },
 });

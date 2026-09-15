@@ -11,10 +11,11 @@ export default function LinkClass({ study, handleChange }) {
   const user = data?.authenticatedItem || {
     studentIn: [],
     teacherIn: [],
+    teachingTeamIn: [],
     mentorIn: [],
   };
   const myClassObjects =
-    [...user?.studentIn, ...user?.teacherIn, ...user?.mentorIn] || [];
+    [...user?.studentIn, ...user?.teacherIn, ...user?.teachingTeamIn, ...user?.mentorIn] || [];
   const myClasses = myClassObjects.map((cl) => ({
     key: cl.id,
     text: cl.title,

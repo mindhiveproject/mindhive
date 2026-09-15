@@ -202,7 +202,7 @@ export default function ExploreList() {
 
   const networkIds = useMemo(() => {
     const set = new Set();
-    const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || []];
+    const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || [], me?.teachingTeamIn || []];
     groups.forEach((classes) => {
       classes.forEach((cls) => {
         (cls.networks || []).forEach((n) => {
@@ -215,7 +215,7 @@ export default function ExploreList() {
 
   const networkOptions = useMemo(() => {
     const seen = new Map();
-    const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || []];
+    const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || [], me?.teachingTeamIn || []];
     groups.forEach((classes) => {
       classes.forEach((cls) => {
         (cls.networks || []).forEach((n) => {

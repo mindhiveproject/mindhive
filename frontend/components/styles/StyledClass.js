@@ -3082,6 +3082,63 @@ const StyledClass = styled.div`
       color: #625b71;
     }
 
+    .teachingTeamRoster {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .teachingTeamRosterItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid #ece9e6;
+      border-radius: 12px;
+      background: #ffffff;
+
+      div {
+        display: grid;
+        gap: 2px;
+      }
+
+      span {
+        font: var(--MH-Type-Body-Base);
+        color: #625b71;
+      }
+    }
+
+    .teachingTeamAddRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+
+      input[type="email"] {
+        flex: 1 1 240px;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1px solid #d6d3d1;
+        border-radius: 12px;
+        font: var(--MH-Type-Body-Base);
+      }
+    }
+
+    .teachingTeamFeedbackError {
+      margin: 0;
+      color: #b62524;
+      font: var(--MH-Type-Body-Base);
+    }
+
+    .teachingTeamFeedbackOk {
+      margin: 0;
+      color: var(--MH-Theme-Primary-Dark, #336f8a);
+      font: var(--MH-Type-Body-Base);
+    }
+
     .settingsDangerSection {
       border-color: #f2d2d1;
       background: linear-gradient(180deg, #fffefe 0%, #fff8f7 100%);
