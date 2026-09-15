@@ -33,10 +33,15 @@ import {
 } from "./matchingViewModes";
 
 const Shell = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: hidden;
 `;
 
 const List = styled.div`
@@ -44,6 +49,10 @@ const List = styled.div`
   gap: 12px;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+  align-content: start;
 `;
 
 const ItemCard = styled.section`

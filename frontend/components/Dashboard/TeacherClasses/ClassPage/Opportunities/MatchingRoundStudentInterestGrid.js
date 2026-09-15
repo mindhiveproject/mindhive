@@ -198,10 +198,14 @@ const InterestCell = styled.span`
 `;
 
 const GridShell = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
   padding: ${({ $embedded }) => ($embedded ? "0" : "16px")};
   border: ${({ $embedded }) =>
     $embedded ? "none" : "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)"};
@@ -239,6 +243,7 @@ const GridShell = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    flex: 0 0 auto;
   }
 
   .matchingRoundStudentInterestHeaderText {
@@ -280,6 +285,7 @@ const GridShell = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 10px;
+    flex: 0 0 auto;
   }
 
   .matchingRoundStudentInterestSearchField {
@@ -316,7 +322,9 @@ const GridShell = styled.div`
 
   .ag-theme-quartz.matchingRoundStudentInterestGrid {
     width: 100%;
-    height: min(480px, max(240px, calc(var(--student-interest-rows, 4) * 42px + 48px)));
+    flex: 1 1 auto;
+    min-height: 240px;
+    height: 100%;
     --ag-font-family: Inter, system-ui, sans-serif;
     --ag-font-size: 13px;
 
@@ -338,6 +346,9 @@ const GridShell = styled.div`
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 12px;
     align-items: stretch;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
   }
 
   .matchingRoundStudentInterestCard {
@@ -975,12 +986,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
   );
 
   return (
-    <GridShell
-      $embedded={embedded}
-      style={{
-        "--student-interest-rows": Math.min(tableRowData.length || 4, 12),
-      }}
-    >
+    <GridShell $embedded={embedded}>
       <div className="matchingRoundStudentInterestHeader">
         <div className="matchingRoundStudentInterestHeaderText">
           <p className="matchingRoundStudentInterestHint">
