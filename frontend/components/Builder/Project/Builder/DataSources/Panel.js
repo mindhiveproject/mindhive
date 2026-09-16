@@ -26,8 +26,15 @@ const ROW_STYLE = {
   width: "100%",
   padding: "12px 8px 12px 16px",
   boxSizing: "border-box",
-  background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
   borderRadius: 12,
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+};
+
+// Selected means "this source's settings panel is open" — same fill the
+// Visual Builder's parameter cards use for their active row, border unchanged.
+const ROW_SELECTED_STYLE = {
+  background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
 };
 
 const ROW_TEXT_STYLE = {
@@ -60,7 +67,12 @@ const ROW_SUBTITLE_STYLE = {
  * DesignSystem `Panel` shell shared with the study run's data preview panel
  * and the visual builder's work panels.
  */
-export default function DataSourcesPanel({ sources, onOpenLink, onOpenSettings }) {
+export default function DataSourcesPanel({
+  sources,
+  selectedSourceId,
+  onOpenLink,
+  onOpenSettings,
+}) {
   const { t } = useTranslation("builder");
 
   return (
@@ -86,7 +98,14 @@ export default function DataSourcesPanel({ sources, onOpenLink, onOpenSettings }
         </p>
       ) : (
         sources.map((source) => (
-          <div key={source.id} style={ROW_STYLE}>
+          <div
+            key={source.id}
+            style={
+              source.id === selectedSourceId
+                ? { ...ROW_STYLE, ...ROW_SELECTED_STYLE }
+                : ROW_STYLE
+            }
+          >
             <div style={ROW_TEXT_STYLE}>
               <p className="MH-Type-Title-Base" style={ROW_TITLE_STYLE}>
                 {source.label || source.block?.title}

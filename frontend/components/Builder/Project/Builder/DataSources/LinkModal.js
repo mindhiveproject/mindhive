@@ -20,6 +20,7 @@ import {
 
 import { DATA_SOURCE_BLOCKS } from "../../../../Queries/DataSourceBlock";
 import { MANAGE_FAVORITE_DATA_SOURCE_BLOCKS } from "../../../../Mutations/User";
+import { channelKey } from "../../../../../lib/yqOutputs";
 
 const HEADER_ROW_STYLE = {
   position: "sticky",
@@ -148,7 +149,7 @@ function flattenOutputs(block) {
   (block?.outputs || []).forEach((stream) => {
     (stream?.channels || []).forEach((channel) => {
       channels.push({
-        key: `${stream.streamID}::${channel.index}`,
+        key: channelKey(stream, channel.index),
         label: channel.label,
       });
     });
@@ -171,6 +172,7 @@ export default function LinkDataSourceModal({
   open,
   user,
   sources,
+  selectedSourceId,
   onClose,
   onAddSource,
   onRemoveSource,
@@ -321,7 +323,15 @@ export default function LinkDataSourceModal({
             </p>
           ) : (
             sources.map((source) => (
-              <div key={source.id} style={ROW_STYLE("var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)")}>
+              <div
+                key={source.id}
+                style={ROW_STYLE(
+                  source.id === selectedSourceId
+                    ? "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)"
+                    : "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+                  "1px solid var(--MH-Theme-Neutrals-Lighter, #F3F3F3)"
+                )}
+              >
                 <div style={ROW_HEADER_STYLE}>
                   <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
                     <p className="MH-Type-Title-Base" style={ROW_TITLE_STYLE}>

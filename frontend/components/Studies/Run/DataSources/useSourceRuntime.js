@@ -2,13 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createReceiver, describeReceiver, needsVideoElement } from "./receivers";
+import { channelKey, findOutput } from "../../../../lib/yqOutputs";
 
 // How many recent samples a raw-signal buffer keeps for the preview canvas.
 const BUFFER_LENGTH = 300;
-
-function bufferKey(streamID, channelIndex) {
-  return `${streamID}::${channelIndex}`;
-}
 
 // Runs one linked data source's yq-data pipeline for as long as this hook is
 // mounted: connects/disconnects its declared device inputs and keeps a raw
@@ -32,7 +29,7 @@ export default function useSourceRuntime(row) {
   const videoElsRef = useRef({}); // inputId -> HTMLVideoElement (camera-backed inputs only)
   const hiddenContainerRef = useRef(null); // detached host for those <video> elements
   const pipelineRef = useRef(null);
-  const buffersRef = useRef(new Map()); // "streamID::channelIndex" -> Float32Array
+  const buffersRef = useRef(new Map()); // channelKey(output, index) -> Float32Array
 
   // One Pipeline per linked source, built once for this hook's lifetime;
   // receivers attach to it as their inputs connect.
@@ -48,15 +45,17 @@ export default function useSourceRuntime(row) {
       pipelineRef.current = pipeline;
       pipeline.start();
 
-      pipeline.recordTargets().forEach((output) => {
+      pipeline.recordTargets().forEach((output, nodeId) => {
         subscriptions.push(
           output.subscribe((packet) => {
-            const declared = outputs.find((o) => o.streamID === packet.streamID);
+            const declared = findOutput(outputs, nodeId, packet);
             if (!declared) return;
-            const channelCount = declared.channels?.length || 1;
+            // The packet knows its real layout; a block may list fewer channels.
+            const channelCount =
+              packet.metadata?.channelCount || declared.channels?.length || 1;
             const samples = Math.floor(packet.data.length / channelCount);
-            declared.channels.forEach((channel) => {
-              const key = bufferKey(packet.streamID, channel.index);
+            (declared.channels || []).forEach((channel) => {
+              const key = channelKey(declared, channel.index);
               let buf = buffersRef.current.get(key);
               if (!buf) {
                 buf = new Float32Array(BUFFER_LENGTH).fill(NaN);
@@ -167,7 +166,7 @@ export default function useSourceRuntime(row) {
   }, []);
 
   const getBuffer = useCallback(
-    (streamID, channelIndex) => buffersRef.current.get(bufferKey(streamID, channelIndex)) || null,
+    (output, channelIndex) => buffersRef.current.get(channelKey(output, channelIndex)) || null,
     []
   );
 

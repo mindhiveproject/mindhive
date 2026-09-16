@@ -117,7 +117,7 @@
     "y-prosemirror": "^1.3.7",
     "y-protocols": "^1.0.7",
     "yjs": "^13.6.27",
-    "yq-data": "git+https://github.com/mindhiveproject/quantified-self.git#main"
+    "yq-data": "github:mindhiveproject/yq-data#main"
   },
   "devDependencies": {
     "@babel/core": "^7.20.7",

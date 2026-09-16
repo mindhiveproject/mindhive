@@ -43,11 +43,14 @@ export const DataSourceBlock = list({
           (c: { id: string }) => c.id === session.itemId
         );
       },
-      // Deleting stays with the author or an admin.
-      delete: ({ session, item }) =>
-        !!session?.itemId &&
-        item.authorId != null &&
-        (isAdmin({ session }) || item.authorId === session.itemId),
+      // Deleting stays with the author or an admin. An admin can delete a
+      // built-in block (authorId null) too — only a non-admin needs to be
+      // the author.
+      delete: ({ session, item }) => {
+        if (!session?.itemId) return false;
+        if (isAdmin({ session })) return true;
+        return item.authorId != null && item.authorId === session.itemId;
+      },
     },
   },
   fields: {
@@ -78,8 +81,11 @@ export const DataSourceBlock = list({
     inputs: json({ defaultValue: [] }),
 
     // The terminal streams the graph produces, with their channels — the output
-    // chips in the builder. Mirrors yq-data StreamMetadata / ChannelInfo:
-    //   [{ streamID, modality, valueType, samplingRate,
+    // chips in the builder, the live preview and channel exclusion. Matched by
+    // graph node (and stream name when a node emits several), not by stream ID,
+    // which starts with the connected device's runtime ID; see
+    // frontend/lib/yqOutputs.js:
+    //   [{ node, stream?, modality, valueType, samplingRate,
     //      channels: [{ index, label, unit }] }]
     outputs: json({ defaultValue: [] }),
 

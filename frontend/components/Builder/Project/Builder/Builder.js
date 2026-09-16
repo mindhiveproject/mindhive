@@ -204,6 +204,7 @@ export default function Builder({
         <DataSources
           study={study}
           user={user}
+          dataSourceSettingsId={dataSourceSettingsId}
           onOpenSettings={setDataSourceSettingsId}
         />
         <div className="boardTopActions">

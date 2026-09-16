@@ -23,6 +23,8 @@
 // participant-facing preview UI, the latter has no wiring yet (see
 // Studies/Run/DataSources/Main.js).
 
+import { channelKey, findOutput } from "./yqOutputs";
+
 // Welford's online algorithm, rather than summing squares: a session can run
 // for an hour at 256 Hz and this stays stable across that many updates.
 function newStat() {
@@ -84,18 +86,19 @@ function foldMarkers(window, packet) {
   window.endedAt = packet.timestamp;
 }
 
-// `excludedChannels` holds "<streamID>::<channelIndex>" keys — the study
-// builder's Outputs section, per linked source. An excluded channel is still
+// `excludedChannels` holds `channelKey()` keys from the study builder's Outputs
+// section, per linked source, so they only apply to a packet that matches one
+// of the block's declared outputs (`declared`). An excluded channel is still
 // read off the packet (so sample indices stay correct) but never folded into
 // a stat and never appears in the stream's channel list, so it's simply
 // absent from what reaches the server.
-function foldPacket(window, packet, channelCount, excludedChannels) {
+function foldPacket(window, packet, channelCount, excludedChannels, declared) {
   let stream = window.streams.get(packet.streamID);
   if (!stream) {
     const info = packet.metadata?.channelInfo;
     const channels = [];
     for (let i = 0; i < channelCount; i += 1) {
-      if (excludedChannels?.has(`${packet.streamID}::${i}`)) continue;
+      if (declared && excludedChannels?.has(channelKey(declared, i))) continue;
       channels.push({
         index: i,
         label: info?.[i]?.label ?? `channel ${i + 1}`,
@@ -205,6 +208,7 @@ export default class AggregateRecorder {
           label: row.label || row.block.title,
           scope: row.scope,
           blockInputs,
+          outputs: row.block.outputs || [],
           excludedChannels: new Set(row.settings?.excludedChannels || []),
           pipeline,
           session: newWindow(null),
@@ -218,9 +222,9 @@ export default class AggregateRecorder {
       // recordTargets() resolves the graph's own `record` selection to
       // observables — the nodes the block author marked as captured. Anything
       // not named there is processed and shown but never aggregated.
-      for (const output of source.pipeline.recordTargets().values()) {
+      for (const [nodeId, output] of source.pipeline.recordTargets()) {
         source.subscriptions.push(
-          output.subscribe((packet) => this.capture(source, packet))
+          output.subscribe((packet) => this.capture(source, packet, nodeId))
         );
       }
     });
@@ -241,7 +245,7 @@ export default class AggregateRecorder {
     source.pipeline.attachReceiver(input.id, receiver);
   }
 
-  capture(source, packet) {
+  capture(source, packet, nodeId) {
     if (!isInScope(source.scope, this.stepId)) return;
     // Markers reach the graph from the task layer (MarkerReceiver, or an LSL
     // Markers stream) and are tallied per label rather than averaged.
@@ -251,8 +255,9 @@ export default class AggregateRecorder {
       return;
     }
     const channelCount = this.getChannelCount(packet);
-    foldPacket(source.session, packet, channelCount, source.excludedChannels);
-    foldPacket(source.step, packet, channelCount, source.excludedChannels);
+    const declared = findOutput(source.outputs, nodeId, packet);
+    foldPacket(source.session, packet, channelCount, source.excludedChannels, declared);
+    foldPacket(source.step, packet, channelCount, source.excludedChannels, declared);
   }
 
   /**

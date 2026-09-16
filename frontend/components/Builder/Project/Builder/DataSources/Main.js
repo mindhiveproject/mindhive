@@ -20,7 +20,12 @@ import LinkDataSourceModal from "./LinkModal";
  * (see Menu.js + DataSources/SettingsTab), so opening them here just hands
  * the selection up and gets out of the way.
  */
-export default function DataSources({ study, user, onOpenSettings }) {
+export default function DataSources({
+  study,
+  user,
+  dataSourceSettingsId,
+  onOpenSettings,
+}) {
   const studyId = study?.id;
   const [isLinkModalOpen, setLinkModalOpen] = useState(false);
 
@@ -64,6 +69,7 @@ export default function DataSources({ study, user, onOpenSettings }) {
     <>
       <DataSourcesPanel
         sources={sources}
+        selectedSourceId={dataSourceSettingsId}
         onOpenLink={() => setLinkModalOpen(true)}
         onOpenSettings={openSettings}
       />
@@ -71,6 +77,7 @@ export default function DataSources({ study, user, onOpenSettings }) {
         open={isLinkModalOpen}
         user={user}
         sources={sources}
+        selectedSourceId={dataSourceSettingsId}
         onClose={() => setLinkModalOpen(false)}
         onAddSource={addSource}
         onRemoveSource={removeSource}

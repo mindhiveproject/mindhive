@@ -38,7 +38,7 @@ export const StudyDataSource = list({
     //   { viewSignal?: boolean,          // participants can see the raw signal
     //     streamToNextBlock?: boolean,   // pass the aggregate on to the next block
     //     recordParticipantData?: boolean, // save the aggregate as part of the dataset
-    //     excludedChannels?: string[],   // "<streamID>::<channelIndex>" pairs filtered
+    //     excludedChannels?: string[],   // "<node>[/<stream>]::<channelIndex>" keys filtered
     //                                    // out of `block.outputs`, still processed but
     //                                    // never aggregated
     //     advanced?: { [key: string]: unknown } } // keyed by DataSourceBlock.settingsSchema[].key

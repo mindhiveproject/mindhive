@@ -8,6 +8,7 @@ import IconButton from "../../../DesignSystem/IconButton";
 import Chip from "../../../DesignSystem/Chip";
 import { ArrowDropDownIcon, PlugIcon } from "../../../DesignSystem/Icons";
 import CameraCanvas from "./CameraCanvas";
+import { channelKey } from "../../../../lib/yqOutputs";
 
 const ROOT_STYLE = {
   position: "fixed",
@@ -160,7 +161,7 @@ export default function PreviewPanel({ row, api, onClose }) {
         {outputsOpen &&
           api.outputs.flatMap((output) =>
             (output.channels || []).map((channel) => (
-              <OutputRow key={`${output.streamID}-${channel.index}`} channel={channel} />
+              <OutputRow key={channelKey(output, channel.index)} channel={channel} />
             ))
           )}
       </div>

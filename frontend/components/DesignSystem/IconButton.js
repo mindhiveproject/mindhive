@@ -140,9 +140,22 @@ const SUBTLE_DISABLED = {
 // tint would read as branded rather than a plain utility control)
 const NEUTRAL_BASE = {
   ...BASE_STYLE,
-  background: "transparent",
-  color: "var(--MH-Theme-Primary-Dark, #336f8a)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
+const NEUTRAL_HOVER = {
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+};
+const NEUTRAL_PRESSED = {
+  background: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  color: "var(--MH-Theme-Neutrals-White, #ffffff)",
+};
+const NEUTRAL_DISABLED = {
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+  color: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  cursor: "default",
+};
+
 const TEXT_HOVER = {
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
 };

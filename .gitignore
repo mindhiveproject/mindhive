@@ -6,6 +6,7 @@ pydantic/.env
 
 # Claude Code local config
 .claude/*
+
 # ...but share project commands with the team; only local settings stay out.
 !.claude/commands/
 

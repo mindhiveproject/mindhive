@@ -3,6 +3,7 @@
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import { WaveformIcon, PlugIcon } from "../../../DesignSystem/Icons";
+import { channelKey } from "../../../../lib/yqOutputs";
 
 const PAGE_STYLE = {
   minHeight: "100vh",
@@ -183,7 +184,7 @@ function SourceCard({ row, api, onPreview }) {
             {outputs.flatMap((output) =>
               (output.channels || []).map((channel) => (
                 <Chip
-                  key={`${output.streamID}-${channel.index}`}
+                  key={channelKey(output, channel.index)}
                   variant="static"
                   tone="neutral"
                   label={channel.label}

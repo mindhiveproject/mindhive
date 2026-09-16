@@ -10,10 +10,14 @@ import Checkbox from "../../../../DesignSystem/Checkbox";
 import Chip from "../../../../DesignSystem/Chip";
 import Input from "../../../../DesignSystem/Input";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
-import { ArrowDropDownIcon, CloseIcon, EditIcon } from "../../../../DesignSystem/Icons";
+import { ArrowDropDownIcon, CloseIcon, DeleteIcon, EditIcon } from "../../../../DesignSystem/Icons";
 
 import { STUDY_DATA_SOURCES } from "../../../../Queries/DataSourceBlock";
-import { UPDATE_STUDY_DATA_SOURCE } from "../../../../Mutations/DataSourceBlock";
+import {
+  UPDATE_STUDY_DATA_SOURCE,
+  DELETE_STUDY_DATA_SOURCE,
+} from "../../../../Mutations/DataSourceBlock";
+import { channelKey } from "../../../../../lib/yqOutputs";
 
 const DEFAULT_SETTINGS = {
   viewSignal: false,
@@ -30,7 +34,7 @@ function flattenOutputs(block) {
   (block?.outputs || []).forEach((stream) => {
     (stream?.channels || []).forEach((channel) => {
       channels.push({
-        key: `${stream.streamID}::${channel.index}`,
+        key: channelKey(stream, channel.index),
         label: channel.label,
       });
     });
@@ -40,7 +44,7 @@ function flattenOutputs(block) {
 
 const HEADER_ROW_STYLE = {
   display: "flex",
-  alignItems: "flex-start",
+  alignItems: "center",
   justifyContent: "space-between",
   gap: 8,
 };
@@ -163,6 +167,10 @@ const FIELD_UNIT_STYLE = {
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
+const DELETE_BUTTON_STYLE = {
+  color: "var(--MH-Theme-Warning-Base, #B9261A)",
+};
+
 /**
  * Per-instance settings for one linked data source (Figma node 430-2782).
  * Lives in the study builder's right sidebar as its own tab, appearing while
@@ -179,7 +187,7 @@ export default function DataSourceSettingsTab({ study, studyDataSourceId, onClos
 
   // Shares the cache entry Panel/LinkModal/Main already populate for this
   // study — no extra network round trip in the common case.
-  const { data } = useQuery(STUDY_DATA_SOURCES, {
+  const { data, refetch } = useQuery(STUDY_DATA_SOURCES, {
     variables: { studyId: study?.id },
     skip: !study?.id,
   });
@@ -188,6 +196,7 @@ export default function DataSourceSettingsTab({ study, studyDataSourceId, onClos
   );
 
   const [updateStudyDataSource] = useMutation(UPDATE_STUDY_DATA_SOURCE);
+  const [deleteStudyDataSource] = useMutation(DELETE_STUDY_DATA_SOURCE);
 
   const toggleSection = (key) =>
     setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -235,14 +244,36 @@ export default function DataSourceSettingsTab({ study, studyDataSourceId, onClos
     patchSettings({ advanced: { ...settings.advanced, [field.key]: value } });
   };
 
+  const deleteLabel = t("dataSources.settings.delete", {}, {
+    default: "Remove Data Source",
+  });
+  const handleDelete = async () => {
+    if (
+      !window.confirm(
+        t("dataSources.settings.confirmDelete", {}, {
+          default: "Remove this data source from the study?",
+        })
+      )
+    )
+      return;
+    await deleteStudyDataSource({ variables: { id: source.id } });
+    await refetch();
+    onClose();
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "16px 0" }}>
       <div style={HEADER_ROW_STYLE}>
-        <h2 className="MH-Type-Title-Large" style={TITLE_STYLE}>
-          {t("dataSources.settings.title", { title: source.label || source.block?.title }, {
-            default: "{{title}} Settings",
-          })}
-        </h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0, minWidth: 0 }}>
+          <p className="MH-Type-Body-Base" style={TOGGLE_HINT_STYLE}>
+            {t("dataSources.settings.eyebrow", {}, { default: "Data source" })}
+          </p>
+          <h2 className="MH-Type-Title-Large" style={TITLE_STYLE}>
+            {t("dataSources.settings.title", { title: source.label || source.block?.title }, {
+              default: "{{title}} Settings",
+            })}
+          </h2>
+        </div>
         <IconButton
           variant="neutral"
           icon={<CloseIcon />}
@@ -463,7 +494,13 @@ export default function DataSourceSettingsTab({ study, studyDataSourceId, onClos
                   <p className="MH-Type-Body-Base" style={FIELD_LABEL_STYLE}>
                     {field.label}
                   </p>
-                  {field.type === "select" ? (
+                  {field.type === "boolean" ? (
+                    <Checkbox
+                      checked={getAdvancedValue(field) === true}
+                      onChange={(next) => setAdvancedValue(field, next)}
+                      ariaLabel={field.label}
+                    />
+                  ) : field.type === "select" ? (
                     <DropdownSelect
                       value={String(getAdvancedValue(field))}
                       onChange={(next) => setAdvancedValue(field, next)}
@@ -497,6 +534,18 @@ export default function DataSourceSettingsTab({ study, studyDataSourceId, onClos
           </div>
         </>
       )}
+
+      <div style={DIVIDER_STYLE} />
+      <div>
+        <Button
+          variant="text"
+          leadingIcon={<DeleteIcon />}
+          onClick={handleDelete}
+          style={DELETE_BUTTON_STYLE}
+        >
+          {deleteLabel}
+        </Button>
+      </div>
     </div>
   );
 }
