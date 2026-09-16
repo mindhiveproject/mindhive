@@ -1851,6 +1851,12 @@
 			"notAvailableHint": "When your teacher opens the matching round, selected opportunities will appear here.",
 			"notAvailableTitle": "Opportunities aren’t available yet",
 			"openAria": "View opportunity: {{title}}",
+			"matchCard": {
+				"title": "You've been matched",
+				"teamHeading": "Your team",
+				"sponsor": "Sponsor: {{name}}",
+				"mentor": "Mentor: {{name}}"
+			},
 			"rankCard": {
 				"ctaContinue": "Continue ranking",
 				"ctaRankNow": "Start ranking",

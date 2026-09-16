@@ -161,6 +161,7 @@ export default function StudentRankActionCard({
   const hasDraft = Boolean(preference) && !submitted;
 
   const rankingEditable = isRoundRankingEditable(round);
+  const isPublished = round.status === "published";
 
   let title;
   let helper = null;
@@ -168,7 +169,13 @@ export default function StudentRankActionCard({
   let buttonVariant = "filled";
   let showSteps = false;
 
-  if (submitted) {
+  if (isPublished) {
+    title = t(
+      "opportunities.studentView.rankCard.titleSubmitted",
+      { roundTitle },
+      { default: "You submitted your ranking for {{roundTitle}}" },
+    );
+  } else if (submitted) {
     title = t(
       "opportunities.studentView.rankCard.titleSubmitted",
       { roundTitle },
@@ -305,7 +312,8 @@ export default function StudentRankActionCard({
       : null;
 
   const closeAt = round.closeAt;
-  const showDue = closeAt && !submitted && isPreferenceTimeWindowOpen(round);
+  const showDue =
+    closeAt && !submitted && !isPublished && isPreferenceTimeWindowOpen(round);
   const timeZone = readPreferenceWindowTimeZone(round.settings);
   const closeMs = showDue
     ? resolvePreferenceWindowInstantMs(closeAt, "close", timeZone)

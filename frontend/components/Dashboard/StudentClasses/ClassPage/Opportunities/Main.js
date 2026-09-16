@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -31,6 +31,7 @@ import {
 import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import StudentOpportunityPreview from "./StudentOpportunityPreview";
 import StudentPreferenceSubmission from "./StudentPreferenceSubmission";
+import StudentMatchCard from "./StudentMatchCard";
 import StudentRankActionCard from "./StudentRankActionCard";
 import RankingDriftRepairModal from "./RankingDriftRepairModal";
 import {
@@ -243,6 +244,19 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     }
     return map;
   }, [data?.authenticatedItem?.connectPreferences]);
+
+  const matchesByRoundId = useMemo(() => {
+    const map = new Map();
+    const matches = data?.authenticatedItem?.connectMatches || [];
+    for (const match of matches) {
+      const roundId = match?.round?.id;
+      if (!roundId || !match?.id) continue;
+      const list = map.get(roundId) || [];
+      list.push(match);
+      map.set(roundId, list);
+    }
+    return map;
+  }, [data?.authenticatedItem?.connectMatches]);
 
   const draftRankedOppIds = useMemo(() => {
     const ids = new Set();
@@ -833,15 +847,29 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     <div className="classTabPage opportunities">
       {visibleRounds.length > 0 ? (
         <RankBanners>
-          {visibleRounds.map((round) => (
-            <StudentRankActionCard
-              key={round.id}
-              round={round}
-              preference={preferenceByRoundId.get(round.id)}
-              hasOpportunities={true}
-              onRank={openRankRound}
-            />
-          ))}
+          {visibleRounds.map((round) => {
+            const publishedMatches =
+              round.status === "published"
+                ? matchesByRoundId.get(round.id) || []
+                : [];
+            return (
+              <Fragment key={round.id}>
+                <StudentRankActionCard
+                  round={round}
+                  preference={preferenceByRoundId.get(round.id)}
+                  hasOpportunities={true}
+                  onRank={openRankRound}
+                />
+                {publishedMatches.map((match) => (
+                  <StudentMatchCard
+                    key={match.id}
+                    match={match}
+                    onOpenOpportunity={handleOpenPreview}
+                  />
+                ))}
+              </Fragment>
+            );
+          })}
         </RankBanners>
       ) : null}
 
