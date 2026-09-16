@@ -138,7 +138,7 @@ export const NAV_SECTIONS = [
         labelKey: "boards",
         fallback: "Project Boards",
         Icon: AssignmentIcon,
-        canView: (p) => p.canDevelop,
+        canView: (p) => p.isAdmin,
       },
       {
         id: "resources",
