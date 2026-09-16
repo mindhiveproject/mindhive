@@ -87,7 +87,7 @@ const barPlotDataFormatPanelStyles = css`
     margin-top: 1px;
   }
   .barPlotDataFormat__slides a {
-    color: var(--MH-Theme-Primary-Base, #7D70AD);
+    color: #7D70AD;
     text-decoration: underline;
     word-break: break-word;
   }
@@ -150,14 +150,14 @@ export const StyledSidebar = styled.div`
     .journal:not(.journal--selected):hover {
       background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
       border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
-      box-shadow: var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.08));
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.08);
     }
     .journal.journal--selected {
-      border: 1.5px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      border: 1.5px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
     }
     .journal.journal--selected:hover {
       background: #F6F9F8;
-      border-color: var(--MH-Theme-Primary-Base, #E6E6E6);
+      border-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
     }
     .titleHeader {
       display: grid;
@@ -1925,7 +1925,7 @@ export const StyledDataWorkspace = styled.div`
         gap: 10px;
 
         border-radius: 4px;
-        background: var(--MH-Theme-Tertiary-Lighter, #f4f8f7);
+        background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
       }
 
       .clipboard-fig-copy-button {
@@ -1935,7 +1935,7 @@ export const StyledDataWorkspace = styled.div`
         gap: 10px;
 
         border-radius: 4px;
-        background: var(--MH-Theme-Tertiary-Lighter, #f3f3f3);
+        background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
       }
 
       .clipboard-AI-copy-button {
@@ -1945,7 +1945,7 @@ export const StyledDataWorkspace = styled.div`
         gap: 10px;
 
         border-radius: 4px;
-        background: var(--MH-Theme-Tertiary-Lighter, #fdf2d0);
+        background: var(--MH-Theme-Accent-Light, #fdf2d0);
       }
     }
 
@@ -1975,7 +1975,7 @@ export const StyledDataWorkspace = styled.div`
 
         border-bottom: 1px solid var(--MH-Theme-Primary-Medium, #a3d6db);
         margin-bottom: -1px;
-        background: var(--MH-Theme-Neutrals-White, #fff);
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
       }
     }
 
@@ -2020,7 +2020,7 @@ export const StyledDataWorkspace = styled.div`
 
         border-bottom: 1px solid var(--MH-Theme-Primary-Medium, #a3d6db);
         margin-bottom: -1px;
-        background: var(--MH-Theme-Neutrals-White, #fff);
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
       }
     }
   }

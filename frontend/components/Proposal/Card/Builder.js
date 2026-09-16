@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery, useApolloClient } from "@apollo/client";
 import { Icon } from "semantic-ui-react";
-import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
+import { v1 as uuidv1 } from "uuid";
+import { CREATE_CARD, UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
+import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
 import ReactHtmlParser from "react-html-parser";
 
@@ -17,13 +19,31 @@ import AssignmentViewModal from "../../TipTap/AssignmentViewModal";
 import ResourceViewModal from "../../TipTap/ResourceViewModal";
 import InfoPopover from "../../DesignSystem/InfoPopover";
 import Tooltip from "../../DesignSystem/Tooltip";
-import Button from "../../DesignSystem/Button";
 import useTranslation from "next-translate/useTranslation";
+import { PROPOSAL_CARD_TYPE } from "../Builder/cardTypeOptions";
+
+const EMPTY_CARD = {
+  title: "",
+  description: "",
+  content: "",
+  internalContent: "",
+  comment: "",
+  type: PROPOSAL_CARD_TYPE,
+  settings: { status: "Not started" },
+  resources: [],
+  assignments: [],
+  tasks: [],
+  studies: [],
+  assignedTo: [],
+};
 
 export default function BuilderProposalCard({
   user,
   proposal,
   proposalCard,
+  isCreateMode = false,
+  sectionId = null,
+  onCreated = null,
   closeCard,
   autoUpdateStudentBoards,
   propagateToClones,
@@ -33,17 +53,34 @@ export default function BuilderProposalCard({
   registerCardChrome,
 }) {
   const { t } = useTranslation("classes");
+  const { t: tBuilder } = useTranslation("builder");
+  const client = useApolloClient();
+
+  const initialCard = isCreateMode ? EMPTY_CARD : proposalCard;
 
   const { inputs, handleChange } = useForm({
-    ...proposalCard,
+    ...initialCard,
   });
 
-  const description = useRef(proposalCard?.description);
-  const content = useRef(proposalCard?.content);
-  const internalContent = useRef(proposalCard?.internalContent);
+  const description = useRef(initialCard?.description || "");
+  const content = useRef(initialCard?.content || "");
+  const internalContent = useRef(initialCard?.internalContent || "");
 
   const [updateCard, { loading: updateLoading }] =
     useMutation(UPDATE_CARD_CONTENT);
+  const [createCard, { loading: createLoading }] = useMutation(CREATE_CARD);
+  const [creating, setCreating] = useState(false);
+
+  const { data: boardData } = useQuery(PROPOSAL_QUERY, {
+    variables: { id: proposal?.id },
+    skip: !isCreateMode || !proposal?.id,
+    fetchPolicy: "cache-first",
+  });
+
+  const sectionCards = useMemo(() => {
+    const sections = boardData?.proposalBoard?.sections || proposal?.sections || [];
+    return sections.find((s) => s.id === sectionId)?.cards || [];
+  }, [boardData?.proposalBoard?.sections, proposal?.sections, sectionId]);
 
   const [showWarningBox, setShowWarningBox] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
@@ -81,6 +118,22 @@ export default function BuilderProposalCard({
 
   // Compare current state to initial proposalCard to detect unsaved changes.
   const hasCardChanges = () => {
+    if (isCreateMode) {
+      const hasTitle = String(inputs?.title ?? "").trim().length > 0;
+      const hasDesc = String(description?.current ?? "").trim().length > 0;
+      const hasContent = String(content?.current ?? "").trim().length > 0;
+      const hasInternal = String(internalContent?.current ?? "").trim().length > 0;
+      const hasComment = String(inputs?.comment ?? "").trim().length > 0;
+      const hasLinks =
+        (inputs?.resources?.length || 0) +
+          (inputs?.assignments?.length || 0) +
+          (inputs?.tasks?.length || 0) +
+          (inputs?.studies?.length || 0) >
+        0;
+      return (
+        hasTitle || hasDesc || hasContent || hasInternal || hasComment || hasLinks
+      );
+    }
     const descEq = String(description?.current ?? "") === String(proposalCard?.description ?? "");
     const contentEq = String(content?.current ?? "") === String(proposalCard?.content ?? "");
     const internalEq = String(internalContent?.current ?? "") === String(proposalCard?.internalContent ?? "");
@@ -99,8 +152,100 @@ export default function BuilderProposalCard({
     );
   };
 
+  const finishAfterCreate = async (cardId, cardMeta) => {
+    const openCreated = () => {
+      if (cardId) onCreated?.(cardId, cardMeta);
+    };
+
+    const proposalQuery = await client.query({
+      query: PROPOSAL_QUERY,
+      variables: { id: proposal?.id },
+      fetchPolicy: "network-only",
+    });
+    const board = proposalQuery?.data?.proposalBoard;
+    const hasClones = board?.prototypeFor?.length > 0;
+
+    if (hasClones) {
+      if (autoUpdateStudentBoards && propagateToClones) {
+        try {
+          await propagateToClones();
+        } catch (error) {
+          console.error("Auto-propagate after card add failed:", error);
+        }
+        openCreated();
+      } else {
+        onTemplateChangedWithoutPropagation?.();
+        openCreated();
+      }
+    } else {
+      openCreated();
+    }
+  };
+
+  const persistNewCard = async () => {
+    const trimmedTitle = String(inputs?.title ?? "").trim();
+    if (!trimmedTitle || !sectionId) {
+      alert(
+        tBuilder("section.enterNewTitle", {}, { default: "Please enter a title" })
+      );
+      return null;
+    }
+
+    const position =
+      sectionCards.length > 0
+        ? sectionCards[sectionCards.length - 1].position + 16384
+        : 16384;
+
+    const createResult = await createCard({
+      variables: {
+        title: trimmedTitle,
+        content: content?.current || "",
+        sectionId,
+        position,
+        publicId: uuidv1(),
+        type: inputs?.type || PROPOSAL_CARD_TYPE,
+        settings: inputs?.settings || { status: "Not started" },
+      },
+      refetchQueries: [
+        { query: PROPOSAL_QUERY, variables: { id: proposal?.id } },
+      ],
+      awaitRefetchQueries: true,
+    });
+
+    const createdId = createResult?.data?.createProposalCard?.id;
+    if (!createdId) {
+      throw new Error("Could not create card.");
+    }
+
+    await updateCard({
+      variables: {
+        id: createdId,
+        title: trimmedTitle,
+        description: description?.current || "",
+        internalContent: internalContent?.current || "",
+        content: content?.current || "",
+        comment: inputs?.comment || "",
+        settings: inputs?.settings || { status: "Not started" },
+        type: inputs?.type || PROPOSAL_CARD_TYPE,
+        assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
+        resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
+        assignments: inputs?.assignments?.map((assignment) => ({
+          id: assignment?.id,
+        })),
+        tasks: inputs?.tasks?.map((task) => ({ id: task?.id })),
+        studies: inputs?.studies?.map((study) => ({ id: study?.id })),
+      },
+    });
+
+    return { id: createdId, title: trimmedTitle, type: inputs?.type || PROPOSAL_CARD_TYPE };
+  };
+
   // Save card content only (no close, no clone dialog). Used before entering preview.
   const saveCardContentOnly = async () => {
+    if (isCreateMode) {
+      // Preview in create mode is local-only; nothing to persist yet.
+      return;
+    }
     await updateCard({
       variables: {
         ...inputs,
@@ -142,6 +287,24 @@ export default function BuilderProposalCard({
 
   // Trigger save: follow template banner setting (auto-update on = propagate; off = save only).
   const handleSave = async () => {
+    if (isCreateMode) {
+      if (creating) return;
+      setCreating(true);
+      try {
+        const created = await persistNewCard();
+        if (!created) return;
+        await finishAfterCreate(created.id, {
+          title: created.title,
+          type: created.type,
+        });
+      } catch (err) {
+        alert(err?.message);
+      } finally {
+        setCreating(false);
+      }
+      return;
+    }
+
     const hasClones = proposal?.prototypeFor?.length > 0;
     const shouldPropagate = hasClones && autoUpdateStudentBoards && propagateToClones;
     if (hasClones && !shouldPropagate) {
@@ -153,7 +316,9 @@ export default function BuilderProposalCard({
   // Enter preview: save current content then show read-only preview
   const handlePreviewAsUser = async () => {
     try {
-      await saveCardContentOnly();
+      if (!isCreateMode) {
+        await saveCardContentOnly();
+      }
       setPreviewMode(true);
     } catch (error) {
       // Leave in edit mode; mutation error handling applies
@@ -162,6 +327,7 @@ export default function BuilderProposalCard({
 
   // When linked items modal closes: save card then propagate if auto-mode on.
   const handleLinkedItemsClose = async () => {
+    if (isCreateMode) return;
     await saveCardContentOnly();
     const hasClones = proposal?.prototypeFor?.length > 0;
     const shouldPropagate = hasClones && autoUpdateStudentBoards && propagateToClones;
@@ -183,6 +349,11 @@ export default function BuilderProposalCard({
   ].length;
 
   const handleBackToBoard = async () => {
+    if (isCreateMode) {
+      // Discard unpersisted create — never leave a ghost card.
+      closeCard({ cardId: false, lockedByUser: false });
+      return;
+    }
     try {
       if (!hasCardChanges()) {
         closeCard({ cardId: proposalCard?.id, lockedByUser: false });
@@ -211,6 +382,11 @@ export default function BuilderProposalCard({
     }
   };
 
+  const savingBusy = updateLoading || createLoading || creating;
+  const createDisabled =
+    isCreateMode &&
+    (!String(inputs?.title ?? "").trim() || !sectionId || creating);
+
   useEffect(() => {
     if (!registerCloseHandler) return undefined;
     registerCloseHandler(handleBackToBoard);
@@ -227,7 +403,28 @@ export default function BuilderProposalCard({
     registerCardChrome({
       kind: "project",
       previewMode,
-      saving: updateLoading,
+      saving: savingBusy,
+      saveDisabled: createDisabled,
+      typeLabel: isCreateMode
+        ? tBuilder(
+            "section.createProposalCard.typeLabel",
+            {},
+            { default: "New card" }
+          )
+        : null,
+      saveLabel: isCreateMode
+        ? creating
+          ? tBuilder(
+              "section.createCardModal.creating",
+              {},
+              { default: "Creating..." }
+            )
+          : tBuilder(
+              "section.createProposalCard.addToBoard",
+              {},
+              { default: "Add to board" }
+            )
+        : null,
       onSave: () => handleSaveRef.current(),
       onPreview: () => handlePreviewRef.current(),
       onExitPreview: () => setPreviewMode(false),
@@ -236,7 +433,11 @@ export default function BuilderProposalCard({
     hideBoardChromeNav,
     registerCardChrome,
     previewMode,
-    updateLoading,
+    savingBusy,
+    createDisabled,
+    isCreateMode,
+    creating,
+    tBuilder,
   ]);
 
   useEffect(() => {
@@ -253,8 +454,8 @@ export default function BuilderProposalCard({
               className="icon"
               onClick={handleBackToBoard}
               style={{
-                opacity: updateLoading ? 0.6 : 1,
-                pointerEvents: updateLoading ? "none" : "auto",
+                opacity: savingBusy ? 0.6 : 1,
+                pointerEvents: savingBusy ? "none" : "auto",
               }}
             >
               <div className="selector">
@@ -289,7 +490,7 @@ export default function BuilderProposalCard({
                 <button
                   type="button"
                   onClick={handlePreviewAsUser}
-                  disabled={updateLoading}
+                  disabled={savingBusy}
                   className="narrowButtonSecondary"
                 >
                   {t("board.expendedCard.preview", "Preview")}
@@ -298,9 +499,21 @@ export default function BuilderProposalCard({
                   type="button"
                   onClick={handleSave}
                   className="narrowButton"
-                  disabled={updateLoading}
+                  disabled={savingBusy || createDisabled}
                 >
-                  {t("board.save", "Save")}
+                  {isCreateMode
+                    ? creating
+                      ? tBuilder(
+                          "section.createCardModal.creating",
+                          {},
+                          { default: "Creating..." }
+                        )
+                      : tBuilder(
+                          "section.createProposalCard.addToBoard",
+                          {},
+                          { default: "Add to board" }
+                        )
+                    : t("board.save", "Save")}
                 </button>
               </>
             )}
@@ -418,6 +631,16 @@ export default function BuilderProposalCard({
               name="title"
               value={inputs?.title}
               onChange={handleChange}
+              autoFocus={isCreateMode}
+              placeholder={
+                isCreateMode
+                  ? tBuilder(
+                      "section.createCardModal.titlePlaceholder",
+                      {},
+                      { default: "Enter a card title" }
+                    )
+                  : undefined
+              }
             />
           </label>
           <label htmlFor="description">

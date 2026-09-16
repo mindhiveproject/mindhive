@@ -15,6 +15,8 @@ import Tooltip from "../../../../DesignSystem/Tooltip";
 import { slugifyForFilename } from "../../../../../lib/opportunityExportMedia";
 import { CLASS_OPPORTUNITY_PREVIEW_LOGS } from "../../../../Queries/Log";
 import { CLASS_STUDENT_OPPORTUNITY_FAVORITES } from "../../../../Queries/Opportunity";
+import { TEACHER_ROUND_PREFERENCE_NAME_CONTEXT } from "../../../../Queries/ConnectMatch";
+import StudentNameDisplay from "./StudentNameDisplay";
 
 const VIEW_MODES = {
   table: "table",
@@ -196,14 +198,22 @@ const InterestCell = styled.span`
 `;
 
 const GridShell = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   width: 100%;
   min-width: 0;
-  padding: 16px;
-  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
-  border-radius: 12px;
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  padding: ${({ $embedded }) => ($embedded ? "0" : "16px")};
+  border: ${({ $embedded }) =>
+    $embedded ? "none" : "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)"};
+  border-radius: ${({ $embedded }) => ($embedded ? "0" : "12px")};
+  background: ${({ $embedded }) =>
+    $embedded
+      ? "transparent"
+      : "var(--MH-Theme-Neutrals-White, #ffffff)"};
 
   .matchingRoundStudentInterestEmpty {
     display: grid;
@@ -233,6 +243,7 @@ const GridShell = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    flex: 0 0 auto;
   }
 
   .matchingRoundStudentInterestHeaderText {
@@ -274,6 +285,7 @@ const GridShell = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 10px;
+    flex: 0 0 auto;
   }
 
   .matchingRoundStudentInterestSearchField {
@@ -310,7 +322,9 @@ const GridShell = styled.div`
 
   .ag-theme-quartz.matchingRoundStudentInterestGrid {
     width: 100%;
-    height: min(480px, max(240px, calc(var(--student-interest-rows, 4) * 42px + 48px)));
+    flex: 1 1 auto;
+    min-height: 240px;
+    height: 100%;
     --ag-font-family: Inter, system-ui, sans-serif;
     --ag-font-size: 13px;
 
@@ -332,6 +346,9 @@ const GridShell = styled.div`
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 12px;
     align-items: stretch;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
   }
 
   .matchingRoundStudentInterestCard {
@@ -510,6 +527,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     students = [],
     opportunities = [],
     enabled = false,
+    embedded = false,
   },
   ref,
 ) {
@@ -556,6 +574,26 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
       fetchPolicy: "cache-and-network",
     },
   );
+
+  const { data: preferenceNameData } = useQuery(
+    TEACHER_ROUND_PREFERENCE_NAME_CONTEXT,
+    {
+      variables: { roundId },
+      skip: !enabled || !roundId,
+      fetchPolicy: "cache-and-network",
+    },
+  );
+
+  const preferenceByStudentId = useMemo(() => {
+    const map = new Map();
+    (preferenceNameData?.connectRound?.preferences || []).forEach(
+      (preference) => {
+        const id = preference.submitter?.id;
+        if (id) map.set(id, preference);
+      },
+    );
+    return map;
+  }, [preferenceNameData?.connectRound?.preferences]);
 
   const loading = logsLoading || favoritesLoading;
 
@@ -638,6 +676,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
           }
           return {
             id: student.id,
+            student,
             studentName: displayName(student),
             interestByOpportunityId,
             totalDwellMs,
@@ -695,6 +734,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
 
       return {
         id: row.id,
+        student: row.student,
         studentName: row.studentName,
         topOpportunities,
       };
@@ -707,6 +747,16 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     { default: "Student" },
   );
 
+  const StudentNameCellRenderer = useCallback(
+    (params) => (
+      <StudentNameDisplay
+        student={params.data?.student}
+        preference={preferenceByStudentId.get(params.data?.id) || null}
+      />
+    ),
+    [preferenceByStudentId],
+  );
+
   const columnDefs = useMemo(() => {
     const cols = [
       {
@@ -717,6 +767,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
         pinned: "left",
         flex: 1.4,
         minWidth: 160,
+        cellRenderer: StudentNameCellRenderer,
       },
     ];
 
@@ -746,7 +797,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
     }
 
     return cols;
-  }, [filteredOpportunities, studentColumnHeader, t]);
+  }, [StudentNameCellRenderer, filteredOpportunities, studentColumnHeader, t]);
 
   const defaultColDef = useMemo(
     () => ({
@@ -872,16 +923,18 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
 
   if (!students?.length) {
     return (
-      <GridShell>
+      <GridShell $embedded={embedded}>
         <div className="matchingRoundStudentInterestHeader">
           <div className="matchingRoundStudentInterestHeaderText">
-            <h4 className="matchingRoundStudentInterestTitle">
-              {t(
-                "opportunities.matchingRound.studentInterest.title",
-                {},
-                { default: "Interest" },
-              )}
-            </h4>
+            {!embedded ? (
+              <h4 className="matchingRoundStudentInterestTitle">
+                {t(
+                  "opportunities.matchingRound.studentInterest.title",
+                  {},
+                  { default: "Interest" },
+                )}
+              </h4>
+            ) : null}
           </div>
           {headerActions}
         </div>
@@ -900,16 +953,18 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
 
   if (!opportunities?.length) {
     return (
-      <GridShell>
+      <GridShell $embedded={embedded}>
         <div className="matchingRoundStudentInterestHeader">
           <div className="matchingRoundStudentInterestHeaderText">
-            <h4 className="matchingRoundStudentInterestTitle">
-              {t(
-                "opportunities.matchingRound.studentInterest.title",
-                {},
-                { default: "Interest" },
-              )}
-            </h4>
+            {!embedded ? (
+              <h4 className="matchingRoundStudentInterestTitle">
+                {t(
+                  "opportunities.matchingRound.studentInterest.title",
+                  {},
+                  { default: "Interest" },
+                )}
+              </h4>
+            ) : null}
           </div>
           {headerActions}
         </div>
@@ -931,11 +986,7 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
   );
 
   return (
-    <GridShell
-      style={{
-        "--student-interest-rows": Math.min(tableRowData.length || 4, 12),
-      }}
-    >
+    <GridShell $embedded={embedded}>
       <div className="matchingRoundStudentInterestHeader">
         <div className="matchingRoundStudentInterestHeaderText">
           <p className="matchingRoundStudentInterestHint">
@@ -1013,7 +1064,10 @@ const MatchingRoundStudentInterestGrid = forwardRef(function MatchingRoundStuden
               className="matchingRoundStudentInterestCard"
             >
               <h5 className="matchingRoundStudentInterestCardName">
-                {card.studentName}
+                <StudentNameDisplay
+                  student={card.student}
+                  preference={preferenceByStudentId.get(card.id) || null}
+                />
               </h5>
               {card.topOpportunities.length > 0 ? (
                 <ul className="matchingRoundStudentInterestCardList">

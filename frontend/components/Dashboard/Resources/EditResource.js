@@ -10,6 +10,8 @@ import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 import StyledResource from "../../styles/StyledResource";
 import Button from "../../DesignSystem/Button";
+import IconButton from "../../DesignSystem/IconButton";
+import { CloseIcon } from "../../DesignSystem/Icons";
 import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 export default function EditResource({
@@ -37,20 +39,22 @@ export default function EditResource({
   });
 
   const [updateResource] = useMutation(UPDATE_RESOURCE, {
-    variables: {
-      id,
-      title: stripHtml(inputs?.title),
-      description: inputs?.description,
-      content: inputs?.content,
-      settings: inputs?.settings,
-      isPublic: inputs?.isPublic,
-    },
     refetchQueries: [{ query: GET_MY_RESOURCES, variables: { id: user?.id } }],
   });
 
   async function handleSave(e) {
     e.preventDefault();
-    await updateResource();
+    await updateResource({
+      variables: {
+        id,
+        title: stripHtml(inputs?.title),
+        description: inputs?.description,
+        content: inputs?.content,
+        settings: inputs?.settings,
+        isPublic: inputs?.isPublic,
+        updatedAt: new Date().toISOString(),
+      },
+    });
     alert(
       t("boardManagement.changesSaved", {}, { default: "Changes saved successfully" }),
     );
@@ -59,14 +63,12 @@ export default function EditResource({
 
   return (
     <StyledResource>
-      <Button
-        className="goBackBtn"
-        variant="outline"
-        onClick={goBack}
-        // leadingIcon={<img src="/assets/icons/back.svg" alt="" aria-hidden width={18} height={18} />}
-      >
-        {t("boardManagement.goBackToResourceArea")}
-      </Button>
+      <div className="headerEdit">
+        <Button onClick={handleSave} disabled={loading}>
+          {t("boardManagement.saveChanges")}
+        </Button>
+        <IconButton variant="subtle" icon={<CloseIcon />} onClick={goBack} />
+      </div>
       <h1>{t("boardManagement.editResource")}</h1>
       <ResourceForm
         user={user}
@@ -74,9 +76,6 @@ export default function EditResource({
         handleChange={handleChange}
         isAdmin={isAdmin} // Pass isAdmin to show/hide isPublic checkbox
       />
-      <Button onClick={handleSave} disabled={loading}>
-        {t("boardManagement.saveChanges")}
-      </Button>
     </StyledResource>
   );
 }

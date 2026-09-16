@@ -232,8 +232,8 @@ export default function BoardColumnScroller({ children }) {
         <IconButton
           variant="tonal"
           style={{
-            background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
-            border: "1px solid var(--MH-Theme-Neutrals-Light,#e6e6e6)",
+            background: "var(--MH-Theme-Neutrals-White, #ffffff)",
+            border: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
           }}
           disabled={!canScrollLeft}
           ariaLabel={t("proposal.scrollColumnsLeft", {}, {
@@ -259,8 +259,8 @@ export default function BoardColumnScroller({ children }) {
         <IconButton
           variant="tonal"
           style={{
-            background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
-            border: "1px solid var(--MH-Theme-Neutrals-Light,#e6e6e6)",
+            background: "var(--MH-Theme-Neutrals-White, #ffffff)",
+            border: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
           }}
           disabled={!canScrollRight}
           ariaLabel={t("proposal.scrollColumnsRight", {}, {

@@ -37,7 +37,7 @@ const Connector = styled.span`
   color: ${({ $done }) =>
     $done
       ? "var(--MH-Theme-Primary-Dark, #336f8a)"
-      : "var(--MH-Theme-Neutrals-Light, #c5cdd3)"};
+      : "#c5cdd3"};
 
   svg {
     display: block;

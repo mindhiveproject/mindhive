@@ -45,6 +45,11 @@ export function getNavPermissions(user) {
     isStudent,
     managesClasses,
     isAdmin: has("ADMIN"),
+    // Capability flag, not a role name — the backend gates the Ticket list
+    // on canManageTickets, so the nav has to ask the same question.
+    canManageTickets: !!user?.permissions?.some(
+      (permission) => permission?.canManageTickets
+    ),
     canDevelop: has("ADMIN", "SCIENTIST", "TEACHER", "STUDENT", "MENTOR"),
     canSeeResearch: has("ADMIN", "RESEARCHER"),
     canSeeLessons: has("ADMIN", "TEACHER", "MENTOR", "SCIENTIST"),
@@ -241,6 +246,15 @@ export const NAV_SECTIONS = [
         fallback: "Updates",
         Icon: NotificationsIcon,
         canView: (p) => p.isAdmin,
+      },
+      {
+        id: "tickets",
+        href: "/dashboard/tickets",
+        area: "tickets",
+        labelKey: "tickets",
+        fallback: "Tickets",
+        Icon: FeedbackIcon,
+        canView: (p) => p.canManageTickets,
       },
       {
         id: "proposals",

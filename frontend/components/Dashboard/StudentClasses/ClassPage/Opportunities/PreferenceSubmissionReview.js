@@ -39,7 +39,7 @@ const ReviewItem = styled.li`
   gap: 4px;
   padding: 12px 14px;
   border-radius: 12px;
-  border: 1px solid var(--MH-Theme-Neutrals-Medium, #e6e6e6);
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   background: var(--MH-Theme-Neutrals-White, #ffffff);
 
   ${({ $active }) =>

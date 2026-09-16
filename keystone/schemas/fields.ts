@@ -13,6 +13,15 @@ export const permissionFields = {
     defaultValue: false,
     label: "User can manage Connect form definitions",
   }),
+  // Deliberately separate from canManageUsers. Triaging platform tickets and
+  // editing user accounts are unrelated rights: a designer or mentor may need
+  // the first without the second, and nobody should inherit the ticket board
+  // (including every screenshot on it) by being granted account access for an
+  // unrelated reason.
+  canManageTickets: checkbox({
+    defaultValue: false,
+    label: "User can file and triage platform tickets",
+  }),
 };
 
 export type Permission = keyof typeof permissionFields;

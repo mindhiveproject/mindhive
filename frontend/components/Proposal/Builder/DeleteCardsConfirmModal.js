@@ -51,7 +51,7 @@ export default function DeleteCardsConfirmModal({
     margin: 0,
     font: 'var(--MH-Type-Body-Base)',
     letterSpacing: 0,
-    color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+    color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   };
 
   const noteBlockStyle = { margin: "0 0 12px" };

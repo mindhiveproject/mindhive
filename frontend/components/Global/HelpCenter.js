@@ -11,6 +11,8 @@ import { CURRENT_USER_QUERY } from '../Queries/User';
 import { UPDATE_USER } from '../Mutations/User';
 import useTranslation from "next-translate/useTranslation";
 import Button from "../DesignSystem/Button";
+import { openTicketPanel, onOpenTicketCount } from "../../lib/ticketPanel";
+import { isolateFromPage } from "../../lib/isolateFromPage";
 import {
   HelpButton,
   ActionsList,
@@ -26,11 +28,14 @@ import {
   DocSection,
   Support,
   fadeInUp,
-  scaleIn
+  scaleIn,
+  TicketCountBadge
 } from './HelpCenter/HelpCenterStyles';
 
 export default function HelpCenter() {
   const [isOpen, setIsOpen] = useState(false);
+  const [openTicketCount, setOpenTicketCount] = useState(0);
+  useEffect(() => onOpenTicketCount(setOpenTicketCount), []);
   const [modalType, setModalType] = useState(null);
   const [modalTitle, setModalTitle] = useState('');
   const [modalColor, setModalColor] = useState('');
@@ -102,7 +107,24 @@ export default function HelpCenter() {
         tooltip: t('helpCenter.reportIssue'),
         bgColor: theme.primaryRed,
         action: () => openModal(t('helpCenter.reportIssue'), 'report'),
-        allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER", "SPONSOR"]
+        // visible to all
+        // allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER", "SPONSOR"]
+      },
+      {
+        icon: '/assets/helpCenter/ticket.svg',
+        tooltip: openTicketCount
+          ? `${t('helpCenter.fileTicket', {}, { default: 'File a ticket' })} (${openTicketCount} open here)`
+          : t('helpCenter.fileTicket', {}, { default: 'File a ticket' }),
+        bgColor: theme.primaryCalyspo,
+        action: () => {
+          setIsOpen(false);
+          openTicketPanel();
+        },
+        // Every other action gates on a role NAME; this one gates on the
+        // capability flag, which is what the backend actually enforces on the
+        // Ticket list. `canView` is honoured by the filter below.
+        canView: (viewer) =>
+          !!viewer?.permissions?.some((permission) => permission?.canManageTickets),
       },
       {
         icon: '/assets/helpCenter/aichat.svg',
@@ -120,6 +142,9 @@ export default function HelpCenter() {
       }
     ];
     return actions.filter(action => {
+      if (action.canView) {
+        return action.canView(user);
+      }
       if (action.allowedRoles) {
         return permissions.some(p => action.allowedRoles.includes(p));
       }
@@ -193,27 +218,31 @@ export default function HelpCenter() {
               </div>
             </div>
             
-            <div className="report-item">
-                <div className="report-icon">🧱</div>
-                <div className="report-details">
-                <div>
-                    <a href="https://mindhive.notion.site/18bd80abf4c480749952e3c0498fab29?pvs=105" target="_blank">
-                    <Button variant="filled">
-                        {t("helpCenter.fillRequestForm")}
-                    </Button>
-                    </a>
+            {user?.permissions?.some(p => ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER", "SPONSOR"].includes(p?.name)) && (
+              <>
+                <div className="report-item">
+                    <div className="report-icon">🧱</div>
+                    <div className="report-details">
+                    <div>
+                        <a href="https://mindhive.notion.site/18bd80abf4c480749952e3c0498fab29?pvs=105" target="_blank">
+                        <Button variant="filled">
+                            {t("helpCenter.fillRequestForm")}
+                        </Button>
+                        </a>
+                    </div>
+                    </div>
                 </div>
+                <div className="report-item">
+                  <div className="report-icon">📮</div>
+                  <div className="report-details">
+                    <h4>{t('helpCenter.urgentMattersEmail')}</h4>
+                    <p>
+                        <a href="mailto:support.mindhive@nyu.edu">support.mindhive@nyu.edu</a><br />
+                    </p>
+                  </div>
                 </div>
-            </div>
-            <div className="report-item">
-              <div className="report-icon">📮</div>
-              <div className="report-details">
-                <h4>{t('helpCenter.urgentMattersEmail')}</h4>
-                <p>
-                    <a href="mailto:support.mindhive@nyu.edu">support.mindhive@nyu.edu</a><br />
-                </p>
-              </div>
-            </div>
+              </>
+            )}
           </Support>
         );
       case 'aiassist':
@@ -246,7 +275,9 @@ export default function HelpCenter() {
   };
 
   return (
-    <>
+    // Clicks in here must not count as "outside" to a page modal, or opening
+    // help over a modal closes it. See lib/isolateFromPage.js.
+    <div {...isolateFromPage}>
       {/* Speed Dial Actions */}
       {isOpen && (
         <ActionsList>
@@ -269,8 +300,18 @@ export default function HelpCenter() {
       <HelpButton 
         isOpen={isOpen}
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={
+          openTicketCount
+            ? `Help Center — ${openTicketCount} open ticket${openTicketCount === 1 ? '' : 's'} on this page`
+            : 'Help Center'
+        }
       >
         {isOpen ? '✕' : '?'}
+        {/* Visible before anyone opens anything — the original ask was to see
+            ticket status next to the actual state of the page. */}
+        {!isOpen && openTicketCount > 0 && (
+          <TicketCountBadge aria-hidden="true">{openTicketCount}</TicketCountBadge>
+        )}
       </HelpButton>
 
       {/* Modal */}
@@ -294,6 +335,6 @@ export default function HelpCenter() {
           </ModalContent>
         </Modal>
       )}
-    </>
+    </div>
   );
 }

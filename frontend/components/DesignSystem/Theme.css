@@ -1,0 +1,88 @@
+/*
+ * Colour and elevation tokens — the companion to Typography.css.
+ *
+ * Every `--MH-Theme-*` custom property referenced anywhere in the app is
+ * defined here, once. Before this file existed the names were referenced 969
+ * times across 112 files and defined nowhere, so every usage silently fell
+ * back to the hex literal written inline beside it — which meant there was no
+ * single place a colour decision could land, and no way for a Figma change to
+ * reach the product except by editing hex literals by hand.
+ *
+ * Palette source: Figma Design System node 2275-1249 (the same node
+ * `Global/Site.js` cites for its theme object). Values here were seeded from
+ * the fallbacks already shipping in the codebase so that defining them changed
+ * nothing visually — see `scripts/check-tokens.mjs`, which fails the build if a
+ * fallback ever disagrees with its definition again.
+ *
+ * Components must keep writing the fallback: `var(--MH-Theme-Primary-Dark,
+ * #336f8a)`. The fallback is what the check script verifies against, and it
+ * keeps a component readable on its own. The definition is what wins.
+ *
+ * Known redundancies, left as-is because both names ship and renaming is a
+ * design decision, not a mechanical one. Resolve against Figma, then collapse:
+ *   Error            == Error-Dark          (#b3261e)
+ *   Warning-Dark     == Danger-Dark         (#8f1f14)
+ *   Neutrals-Light   == Neutrals-Light-Grey (#e6e6e6)
+ *   Accent-Medium    == Primary-Yellow      (#f9d978)
+ *   Tertiary-Light   == Neutrals-Light-Green (#f6f9f8)
+ */
+:root {
+  /* Primary — calypso. Primary-Dark is the workhorse (136 uses). */
+  --MH-Theme-Primary-Dark: #336f8a;
+  --MH-Theme-Primary-Base: #69bbc4;
+  --MH-Theme-Primary-Medium: #a3d6db;
+  --MH-Theme-Primary-Light: #def8fb;
+  --MH-Theme-Primary-Lighter: #f4f8f7;
+  --MH-Theme-Primary-Green: #357a70;
+  --MH-Theme-Primary-Yellow: #f9d978;
+
+  /* Secondary — purple. */
+  --MH-Theme-Secondary-Dark: #6f26ce;
+
+  /* Tertiary — muted teal. */
+  --MH-Theme-Tertiary-Dark: #0d3944;
+  --MH-Theme-Tertiary-Medium: #d3e0e3;
+  --MH-Theme-Tertiary-Light: #f6f9f8;
+
+  /* Accent — yellow, plus a grey-violet dark step. */
+  --MH-Theme-Accent-Base: #f2be42;
+  --MH-Theme-Accent-Medium: #f9d978;
+  --MH-Theme-Accent-Light: #fdf2d0;
+  --MH-Theme-Accent-Dark: #5d5763;
+
+  /* Additional accent — violet. */
+  --MH-Theme-Additional-Accent-Dark: #3f288f;
+  --MH-Theme-Additional-Accent-Medium: #d8d3e7;
+  --MH-Theme-Additional-Accent-Light: #f5f2ff;
+
+  /* Neutrals, darkest to lightest. */
+  --MH-Theme-Neutrals-Black: #171717;
+  --MH-Theme-Neutrals-Grey-2: #5f6871;
+  --MH-Theme-Neutrals-Dark: #6a6a6a;
+  --MH-Theme-Neutrals-Grey-3: #888888;
+  --MH-Theme-Neutrals-Medium: #a1a1a1;
+  --MH-Theme-Neutrals-Light: #e6e6e6;
+  --MH-Theme-Neutrals-Light-Grey: #e6e6e6;
+  --MH-Theme-Neutrals-Lighter: #f3f3f3;
+  --MH-Theme-Neutrals-Soft: #f7f9f8;
+  --MH-Theme-Neutrals-Light-Green: #f6f9f8;
+  --MH-Theme-Neutrals-Extra-Light: #f8fafb;
+  --MH-Theme-Neutrals-White: #ffffff;
+
+  /* Status. Error/Danger/Warning overlap; see the note above. */
+  --MH-Theme-Success: #e3f4ec;
+  --MH-Theme-Success-Dark: #1d6b3a;
+  --MH-Theme-Warning-Base: #b9261a;
+  --MH-Theme-Warning-Light: #edcecd;
+  --MH-Theme-Warning-Dark: #8f1f14;
+  --MH-Theme-Danger-Light: #fdecea;
+  --MH-Theme-Danger-Dark: #8f1f14;
+  --MH-Theme-Error: #b3261e;
+  --MH-Theme-Error-Dark: #b3261e;
+
+  /* Elevation — full box-shadow values, so one declaration sets the shadow. */
+  --MH-Theme-Elevation-Small: 1px 1px 4px rgba(0, 0, 0, 0.08);
+  --MH-Theme-Elevation-Low: 0px 4px 24px rgba(0, 0, 0, 0.05);
+  --MH-Theme-Elevation-Medium: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  --MH-Theme-Elevation-High: 2px 2px 12px rgba(0, 0, 0, 0.19);
+}

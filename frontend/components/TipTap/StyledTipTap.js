@@ -47,7 +47,7 @@ export const StyledTipTap = styled.div`
     width: fit-content;
     border-radius: 32px;
     border: 1px solid #A1A1A1;
-    background: var(--MH-Theme-Neutrals-Light-Green, #F6F9F8);
+    background: var(--MH-Theme-Neutrals-Light-Green, #f6f9f8);
 
     /* MH-Theme/Elevation/High */
     box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
@@ -84,8 +84,8 @@ export const StyledTipTap = styled.div`
       padding: 24px;
       outline: none;
       border-radius: 8px;
-      border: 1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1);
-      background: var(--MH-Theme-Neutrals-White, #FFF);
+      border: 1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
       width: 100%;
       max-height: 600px; 
       overflow-y: auto;

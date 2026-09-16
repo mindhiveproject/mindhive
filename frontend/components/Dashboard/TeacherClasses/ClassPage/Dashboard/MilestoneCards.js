@@ -17,8 +17,8 @@ const SCROLL_ARROW_BUTTON_STYLE = {
   height: "36px",
   padding: "6px",
   background: "var(--MH-Theme-Neutrals-White, #ffffff)",
-  border: "1.5px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
-  color: "var(--MH-Theme-Accent-Dark, #5D5763)",
+  border: "1.5px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  color: "var(--MH-Theme-Accent-Dark, #5d5763)",
 };
 
 function ScrollArrowIcon({ direction }) {

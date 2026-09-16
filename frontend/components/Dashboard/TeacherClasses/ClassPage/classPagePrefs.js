@@ -68,6 +68,7 @@ const MATCHING_ROUND_PERSISTABLE_PANELS = new Set([
   "selected",
   "forms",
   "studentInterest",
+  "matches",
 ]);
 
 export function readClassMatchingRoundPanelPref(classId, roundId) {

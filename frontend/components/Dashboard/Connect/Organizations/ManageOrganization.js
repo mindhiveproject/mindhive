@@ -87,7 +87,7 @@ const AdminToolbar = styled.div`
   .tabsHint {
     margin: 0;
     max-width: 560px;
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }

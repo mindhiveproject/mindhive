@@ -23,6 +23,7 @@ import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import { isClassTeacherOrMentor as classUserIsTeacherOrMentor } from "../../../../../lib/classTeacherUtils";
 import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
 
 // Toggle/filter chrome — not a CTA. Keep as local styled button.
@@ -419,9 +420,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     const assignment = params?.data;
     const isPublished = assignment?.public || false;
     const isOwner = assignment?.author?.id === user?.id;
-    const isClassTeacherOrMentor =
-      myclass?.creator?.id === user?.id ||
-      (myclass?.mentors || []).some((m) => m?.id === user?.id);
+    const isClassTeacherOrMentor = classUserIsTeacherOrMentor(myclass, user?.id);
     const canManageAssignment = isOwner || isClassTeacherOrMentor;
     const router = useRouter();
 

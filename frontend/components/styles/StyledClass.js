@@ -8,7 +8,7 @@ const StyledClass = styled.div`
   min-width: 0;
   /* clip avoids the overflow-x:hidden → overflow-y:auto pairing that breaks
      position:sticky descendants against the dashboard scroll wrapper */
-  overflow-x: clip;
+  // overflow-x: clip;
   box-sizing: border-box;
 
   &.isProjectsFullscreen,
@@ -124,13 +124,14 @@ const StyledClass = styled.div`
     .matchingRoundWorkspaceSlot {
       flex: 1 1 0;
       min-height: 0;
-      overflow: auto;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
 
       > * {
         flex: 1 1 0;
         min-height: 0;
+        height: 100%;
       }
     }
   }
@@ -941,12 +942,13 @@ const StyledClass = styled.div`
     }
 
     &.isMatchingRoundWorkspace {
+      display: flex;
+      flex-direction: column;
       height: 100%;
       min-height: 0;
       gap: 16px;
-      padding-bottom: 16px;
-      overflow: auto;
-      align-content: start;
+      padding-bottom: 0;
+      overflow: hidden;
     }
 
     .matchingRoundEntryCard {
@@ -1028,16 +1030,20 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundWorkspace {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 16px;
       min-width: 0;
+      min-height: 0;
       width: 100%;
-      align-content: start;
+      height: 100%;
+      flex: 1 1 auto;
     }
 
     .matchingRoundWorkspaceChrome {
       display: grid;
       gap: 12px;
+      flex: 0 0 auto;
       min-width: 0;
       width: 100%;
       padding: 16px 20px;
@@ -1108,10 +1114,13 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundWorkspaceBody {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 16px;
       min-width: 0;
-      align-content: start;
+      min-height: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
     }
 
     .classTabSection {
@@ -1595,7 +1604,7 @@ const StyledClass = styled.div`
         width: 40px;
         height: 40px;
         border-radius: 10px;
-        background: var(--MH-Theme-Neutrals-Light, #E6E6E6);
+        background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
 
         img {
           width: 20px;
@@ -1661,14 +1670,21 @@ const StyledClass = styled.div`
     }
 
     .classTabMatchingRoundForm {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 18px;
-      align-content: start;
+      min-height: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
     }
 
     .classTabMatchingRoundPanel {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 18px;
+      min-height: 0;
+      flex: 1 1 auto;
+      overflow: auto;
     }
 
     .matchingRoundFormPicker {
@@ -1766,9 +1782,12 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFollowUpCompletion {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 12px;
       width: 100%;
+      min-height: 0;
+      flex: 1 1 auto;
       padding: 16px;
       border: 1px solid #e6e6e6;
       border-radius: 12px;
@@ -1781,6 +1800,7 @@ const StyledClass = styled.div`
       align-items: flex-start;
       justify-content: space-between;
       gap: 12px 16px;
+      flex: 0 0 auto;
     }
 
     .matchingRoundFollowUpCompletionCopy {
@@ -1816,6 +1836,7 @@ const StyledClass = styled.div`
       grid-template-columns: minmax(180px, 360px);
       width: 100%;
       min-width: 0;
+      flex: 0 0 auto;
     }
 
     .matchingRoundFollowUpCompletionSearchInput {
@@ -1885,7 +1906,9 @@ const StyledClass = styled.div`
 
     .matchingRoundFollowUpCompletionGrid {
       width: 100%;
-      min-height: 280px;
+      flex: 1 1 auto;
+      min-height: 240px;
+      height: 100%;
     }
 
     .matchingRoundFollowUpCompletionGrid .ag-root-wrapper {
@@ -2042,8 +2065,8 @@ const StyledClass = styled.div`
     .matchingRoundFormPickerLibraryVisibility.isVisible
       .matchingRoundFormPickerVisibilityButton:not(:disabled) {
       background: #F3F3F3 !important;
-      color: var(--MH-Theme-Neutrals-Dark, #6A6A6A) !important;
-      border: 1px solid var(--MH-Theme-Neutrals-Dark, #6A6A6A) !important;
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a) !important;
+      border: 1px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a) !important;
     }
 
     .matchingRoundFormPickerLibraryActions {
@@ -2067,7 +2090,7 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundFormPickerLibraryRow.selected {
-      border-color: var(--MH-Theme-Primary-Base, #337c84);
+      border-color: #337c84;
       background: #f0f7f9;
     }
 
@@ -2182,25 +2205,6 @@ const StyledClass = styled.div`
       background-color: #ffffff !important;
       border-color: #a1a1a1 !important;
       color: #5f6871 !important;
-    }
-
-    .classTabMatchingRoundFooter {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 12px 16px;
-      padding-top: 8px;
-      margin-top: 4px;
-      border-top: 1px solid #ece9e6;
-
-      .matchingRoundUnsavedHint {
-        margin: 0;
-        margin-right: auto;
-        font: var(--MH-Type-Label-Small);
-        letter-spacing: 0;
-        color: #8a6d3b;
-      }
     }
 
     .classTabFormGrid {
@@ -2362,16 +2366,20 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundOpportunitiesGridShell {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
       width: 100%;
       min-width: 0;
+      min-height: 0;
+      flex: 1 1 auto;
     }
 
     .matchingRoundOpportunitiesSearchRow {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 10px;
+      flex: 0 0 auto;
     }
 
     .matchingRoundOpportunitiesSearchField {
@@ -2397,7 +2405,9 @@ const StyledClass = styled.div`
     }
 
     .matchingRoundOpportunitiesGrid {
-      min-height: 200px;
+      flex: 1 1 auto;
+      min-height: 240px;
+      height: 100%;
       width: 100%;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -3099,6 +3109,63 @@ const StyledClass = styled.div`
       font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
       color: #625b71;
+    }
+
+    .teachingTeamRoster {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .teachingTeamRosterItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid #ece9e6;
+      border-radius: 12px;
+      background: #ffffff;
+
+      div {
+        display: grid;
+        gap: 2px;
+      }
+
+      span {
+        font: var(--MH-Type-Body-Base);
+        color: #625b71;
+      }
+    }
+
+    .teachingTeamAddRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+
+      input[type="email"] {
+        flex: 1 1 240px;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1px solid #d6d3d1;
+        border-radius: 12px;
+        font: var(--MH-Type-Body-Base);
+      }
+    }
+
+    .teachingTeamFeedbackError {
+      margin: 0;
+      color: #b62524;
+      font: var(--MH-Type-Body-Base);
+    }
+
+    .teachingTeamFeedbackOk {
+      margin: 0;
+      color: var(--MH-Theme-Primary-Dark, #336f8a);
+      font: var(--MH-Type-Body-Base);
     }
 
     .settingsDangerSection {

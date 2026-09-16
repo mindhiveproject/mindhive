@@ -27,45 +27,45 @@ const CHIP_BASE_STYLES = {
 // Assignment chip styles (Disabled, Public, Completed)
 const ASSIGNMENT_STYLES = {
   disabled: {
-    border: "1px solid var(--MH-Theme-Additional-Accent-Medium, #D8D3E7)",
-    background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+    border: "1px solid var(--MH-Theme-Additional-Accent-Medium, #d8d3e7)",
+    background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
   },
   public: {
-    border: "1px solid var(--MH-Theme-Additional-Accent-Medium, #D8D3E7)",
-    background: "var(--MH-Theme-Accent-Light, #FDF2D0)",
+    border: "1px solid var(--MH-Theme-Additional-Accent-Medium, #d8d3e7)",
+    background: "var(--MH-Theme-Accent-Light, #fdf2d0)",
   },
   completed: {
-    border: "2px solid var(--MH-Theme-Accent-Dark, #5D5763)",
-    background: "var(--MH-Theme-Primary-Light, #DEF8FB)",
+    border: "2px solid var(--MH-Theme-Accent-Dark, #5d5763)",
+    background: "var(--MH-Theme-Primary-Light, #def8fb)",
   },
 };
 
 // Resource/Study chip styles
 const RESOURCE_STUDY_STYLES = {
-  border: "1px solid var(--MH-Theme-Accent-Dark, #5D5763)",
+  border: "1px solid var(--MH-Theme-Accent-Dark, #5d5763)",
   // boxShadow: "2px 2px 12px 0 rgba(0, 0, 0, 0.15)",
 };
 
 // Task chip styles (Figma: favorited = 2244-2325, not favorited = 2303-2309)
 const TASK_STYLES = {
   accent: {
-    border: "1px solid var(--MH-Theme-Additional-Accent-Medium, #D8D3E7)",
-    background: "var(--MH-Theme-Accent-Light, #FDF2D0)",
+    border: "1px solid var(--MH-Theme-Additional-Accent-Medium, #d8d3e7)",
+    background: "var(--MH-Theme-Accent-Light, #fdf2d0)",
     color: "#171717",
   },
   plain: {
-    border: "1px solid var(--MH-Theme-Accent-Dark, #5D5763)",
+    border: "1px solid var(--MH-Theme-Accent-Dark, #5d5763)",
     background: "#FFFFFF",
     color: "#171717",
   },
   favorited: {
-    border: "1px solid var(--MH-Theme-Accent-Dark, #5D5763)",
-    background: "var(--MH-Theme-Accent-Light, #FDF2D0)",
+    border: "1px solid var(--MH-Theme-Accent-Dark, #5d5763)",
+    background: "var(--MH-Theme-Accent-Light, #fdf2d0)",
     color: "#5D5763",
     starColor: "#F2BE42",
   },
   notFavorited: {
-    border: "1px solid var(--MH-Theme-Accent-Dark, #5D5763)",
+    border: "1px solid var(--MH-Theme-Accent-Dark, #5d5763)",
     background: "#FFFFFF",
     color: "#171717",
     starColor: "#5D5763",

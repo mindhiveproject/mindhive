@@ -47,43 +47,48 @@ export interface ToggleSwitchProps {
   className?: string;
 }
 
+/* `&&&` triples specificity: legacy page-level `button` rules (e.g. the proposal
+   board's form-control defaults) otherwise restyle the track into an input. */
 const StyledToggleSwitch = styled.button`
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  width: 52px;
-  height: 32px;
-  padding: 0;
-  border: none;
-  border-radius: 100px;
-  box-sizing: border-box;
-  cursor: pointer;
-  background: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
-  transition: background-color 0.2s ease;
+  &&& {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 32px;
+    max-width: none;
+    padding: 0;
+    border: none;
+    border-radius: 100px;
+    box-sizing: border-box;
+    cursor: pointer;
+    background: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    transition: background-color 0.2s ease;
+  }
 
-  &:hover:not(:disabled) {
+  &&&:hover:not(:disabled) {
     background: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
-  &:focus-visible {
+  &&&:focus-visible {
     outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
     outline-offset: 2px;
   }
 
-  &.DesignSystem-ToggleSwitch--checked {
+  &&&.DesignSystem-ToggleSwitch--checked {
     background: var(--MH-Theme-Primary-Dark, #336f8a);
-
-    &:hover:not(:disabled) {
-      background: #265568;
-    }
   }
 
-  &.DesignSystem-ToggleSwitch--disabled {
+  &&&.DesignSystem-ToggleSwitch--checked:hover:not(:disabled) {
+    background: #265568;
+  }
+
+  &&&.DesignSystem-ToggleSwitch--disabled {
     background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
     cursor: default;
   }
 
-  &.DesignSystem-ToggleSwitch--loading {
+  &&&.DesignSystem-ToggleSwitch--loading {
     cursor: default;
   }
 
@@ -98,7 +103,7 @@ const StyledToggleSwitch = styled.button`
     transition: transform 0.2s ease;
   }
 
-  &.DesignSystem-ToggleSwitch--checked .DesignSystem-ToggleSwitch__thumb {
+  &&&.DesignSystem-ToggleSwitch--checked .DesignSystem-ToggleSwitch__thumb {
     transform: translateX(20px);
   }
 `;

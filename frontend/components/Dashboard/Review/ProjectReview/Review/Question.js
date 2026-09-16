@@ -103,17 +103,22 @@ export default function Question({ stage, item, handleItemChange, answer }) {
           className="answer"
           onChange={({ target }) => updateSubAnswer("subA", target.value)}
         />
+        {/* Only ask for a second answer when a sub-prompt actually asks
+            something — board-scoped form copies can lose their sub-labels,
+            leaving a stray unlabelled box. */}
         {item.subQuestionB && (
-          <div className="subtitle">{item.subQuestionB}</div>
+          <>
+            <div className="subtitle">{item.subQuestionB}</div>
+            <textarea
+              type="text"
+              id={`${item.name}-subB`}
+              name={`${item.name}-subB`}
+              value={answerObj.subB}
+              className="answer"
+              onChange={({ target }) => updateSubAnswer("subB", target.value)}
+            />
+          </>
         )}
-        <textarea
-          type="text"
-          id={`${item.name}-subB`}
-          name={`${item.name}-subB`}
-          value={answerObj.subB}
-          className="answer"
-          onChange={({ target }) => updateSubAnswer("subB", target.value)}
-        />
       </div>
     );
   }

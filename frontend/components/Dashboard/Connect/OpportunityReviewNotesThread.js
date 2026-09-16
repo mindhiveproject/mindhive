@@ -57,7 +57,7 @@ const Header = styled.div`
     margin: 0;
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
   }
 `;
 
@@ -122,7 +122,7 @@ const Avatar = styled.div`
     p.$kind === REVIEW_NOTE_KIND.SPONSOR_REPLY
       ? "var(--MH-Theme-Primary-Dark, #336f8a)"
       : p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_REQUEST
-        ? "var(--MH-Theme-Error-Dark, #b9261a)"
+        ? "var(--MH-Theme-Warning-Base, #b9261a)"
         : p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED
           ? "var(--MH-Theme-Primary-Dark, #336f8a)"
           : "var(--MH-Theme-Secondary-Dark, #6f26ce)"};
@@ -159,7 +159,7 @@ const MetaRow = styled.div`
   flex-wrap: wrap;
   font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
-  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
   padding: 0 4px;
   justify-content: ${(p) => (p.$alignEnd ? "flex-end" : "flex-start")};
   text-align: ${(p) => (p.$alignEnd ? "right" : "left")};
@@ -168,7 +168,7 @@ const MetaRow = styled.div`
     font-weight: ${(p) => (p.$panel ? 500 : 600)};
     color: ${(p) =>
       p.$panel
-        ? "var(--MH-Theme-Neutrals-Dark, #5f6871)"
+        ? "var(--MH-Theme-Neutrals-Grey-2, #5f6871)"
         : "var(--MH-Theme-Neutrals-Black, #171717)"};
   }
 
@@ -213,10 +213,10 @@ const MessageBubble = styled.div`
         return "rgba(185, 38, 26, 0.28)";
       }
       if (p.$kind === REVIEW_NOTE_KIND.APPOINTMENT_SCHEDULED) {
-        return "var(--MH-Theme-Neutrals-Light, #d3dae0)";
+        return "#d3dae0";
       }
       return p.$panel
-        ? "var(--MH-Theme-Neutrals-Light, #d3dae0)"
+        ? "#d3dae0"
         : "rgba(160, 144, 224, 0.35)";
     }};
   box-shadow: ${(p) =>
@@ -282,7 +282,7 @@ const EmptyState = styled.p`
     p.$panel
       ? "var(--MH-Theme-Neutrals-White, #ffffff)"
       : "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)"};
-  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
   font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
   ${(p) =>
@@ -293,7 +293,7 @@ const EmptyState = styled.p`
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    border: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+    border: 1px solid #d3dae0;
 
     &::-webkit-scrollbar {
       display: none;
@@ -313,7 +313,7 @@ const InviteText = styled.p`
   margin: 0;
   font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
-  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
 `;
 
 const VisuallyHidden = styled.span`
@@ -533,7 +533,7 @@ function MessageItem({
                   minHeight: panel ? 56 : 72,
                   padding: "8px 10px",
                   borderRadius: 8,
-                  border: "1px solid var(--MH-Theme-Neutrals-Light, #d3dae0)",
+                  border: "1px solid #d3dae0",
                   font: 'var(--MH-Type-Body-Base)',
                   letterSpacing: 0,
                 }}
@@ -570,7 +570,7 @@ function MessageItem({
                         panel
                           ? {
                               ...PANEL_ACTION_STYLE,
-                            color: "var(--MH-Theme-Neutrals-Dark, #5F6871)",
+                            color: "var(--MH-Theme-Neutrals-Grey-2, #5f6871)",
                           }
                           : {
                               padding: 0,

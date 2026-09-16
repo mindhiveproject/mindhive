@@ -371,6 +371,51 @@ export const CLASS_STUDENT_OPPORTUNITIES = gql`
             }
           }
         }
+        connectMatches(
+          where: {
+            round: {
+              classNetwork: {
+                classes: { some: { code: { equals: $code } } }
+              }
+            }
+            status: { in: ["active", "completed", "proposed"] }
+          }
+        ) {
+          id
+          status
+          round {
+            id
+          }
+          students {
+            id
+            username
+            firstName
+            lastName
+          }
+          opportunity {
+            id
+            title
+            sponsors {
+              id
+              username
+              firstName
+              lastName
+            }
+            mentors {
+              id
+              username
+              firstName
+              lastName
+            }
+            sponsorIsMentor
+            mentor {
+              id
+              username
+              firstName
+              lastName
+            }
+          }
+        }
       }
     }
   }

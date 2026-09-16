@@ -6,6 +6,7 @@ import {
   select,
   json,
 } from "@keystone-6/core/fields";
+import { syncNetworkClassStaffAsRoundReviewers } from "../lib/classStaff";
 
 export const ConnectRound = list({
   access: {
@@ -52,6 +53,7 @@ export const ConnectRound = list({
     // JSON bag. Known shape:
     // {
     //   sponsorFormsVisible?: boolean,
+    //   preferenceWindowTimeZone?: IANA zone string (default America/Los_Angeles),
     //   schedule?: {
     //     introductionAt?: "YYYY-MM-DD",
     //     matchingStartAt?: "YYYY-MM-DD",
@@ -61,7 +63,7 @@ export const ConnectRound = list({
     //     sponsorIntroAt?: "YYYY-MM-DD",
     //   }
     // }
-    // Preference window remains openAt / closeAt (not duplicated here).
+    // Preference window remains openAt / closeAt (UTC instants; not duplicated here).
     settings: json(),
 
     opportunities: relationship({
@@ -124,11 +126,11 @@ export const ConnectRound = list({
     }),
 
     // Reviewers: Profiles invited to oversee opportunities in this round
-    // (per-round assignment; no global REVIEWER permission). On create,
-    // teachers and mentors on classes linked to the round's network are
-    // auto-connected (see list hooks). Reviewers can read opportunities,
-    // change status, and leave OpportunityReviewNote records — not edit
-    // opportunity content.
+    // (per-round assignment; no global REVIEWER permission). Class creator,
+    // teaching team, and mentors on linked classes are auto-connected when
+    // a round is created and when those associations change (see list hooks).
+    // Reviewers can read opportunities, change status, and leave
+    // OpportunityReviewNote records — not edit opportunity content.
     reviewers: relationship({
       ref: "Profile.connectRoundsReviewing",
       many: true,
@@ -161,57 +163,40 @@ export const ConnectRound = list({
       return resolvedData;
     },
     // When a round is created on a class network, auto-add as reviewers:
-    // - teachers (class.creator) and mentors on classes linked to that network
-    // - the round creator
-    // Network-only sponsors are not auto-added; a sponsor is included only
-    // if they are also a teacher/mentor on a linked class.
+    // class creator, teaching team, mentors on linked classes, and the
+    // round creator. Network-only sponsors are not auto-added.
     async afterOperation({ operation, item, context }) {
       if (operation !== "create" || !item?.id) return;
 
       try {
         const round = await context.sudo().query.ConnectRound.findOne({
           where: { id: String(item.id) },
-          query: `
-            id
-            createdBy { id }
-            reviewers { id }
-            classNetwork {
-              id
-              classes {
-                creator { id }
-                mentors { id }
-              }
-            }
-          `,
+          query: "id createdBy { id } classNetwork { id }",
         });
+        if (!round?.classNetwork?.id) return;
 
-        if (!round?.classNetwork) return;
+        await syncNetworkClassStaffAsRoundReviewers(
+          context,
+          String(round.classNetwork.id)
+        );
 
-        const reviewerIds = new Set<string>();
-
-        for (const cls of round.classNetwork.classes || []) {
-          if (cls?.creator?.id) reviewerIds.add(cls.creator.id);
-          for (const mentor of cls?.mentors || []) {
-            if (mentor?.id) reviewerIds.add(mentor.id);
+        if (round.createdBy?.id) {
+          const withCreator = await context.sudo().query.ConnectRound.findOne({
+            where: { id: String(item.id) },
+            query: "id reviewers { id }",
+          });
+          const alreadyReviewer = (withCreator?.reviewers || []).some(
+            (reviewer: { id?: string }) => reviewer?.id === round.createdBy.id
+          );
+          if (!alreadyReviewer) {
+            await context.sudo().query.ConnectRound.updateOne({
+              where: { id: String(item.id) },
+              data: {
+                reviewers: { connect: [{ id: round.createdBy.id }] },
+              },
+            });
           }
         }
-
-        if (round.createdBy?.id) reviewerIds.add(round.createdBy.id);
-
-        for (const existing of round.reviewers || []) {
-          if (existing?.id) reviewerIds.delete(existing.id);
-        }
-
-        if (reviewerIds.size === 0) return;
-
-        await context.sudo().query.ConnectRound.updateOne({
-          where: { id: String(item.id) },
-          data: {
-            reviewers: {
-              connect: Array.from(reviewerIds).map((id) => ({ id })),
-            },
-          },
-        });
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("ConnectRound auto-reviewers hook failed:", error);

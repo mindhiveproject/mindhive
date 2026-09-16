@@ -33,7 +33,7 @@ const OVERLAY_STYLE = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+  background: "var(--MH-Theme-Neutrals-White, #ffffff)",
   opacity: 0,
   animation: "mh-fullScreenLoading-fadeIn 200ms ease-out 150ms forwards",
 };
@@ -71,7 +71,7 @@ const DOT_STYLE = {
   width: 8,
   height: 8,
   borderRadius: "50%",
-  background: "var(--MH-Theme-Primary-Green, #357A70)",
+  background: "var(--MH-Theme-Primary-Green, #357a70)",
   animation: "mh-fullScreenLoading-pulse 1200ms ease-in-out infinite",
 };
 

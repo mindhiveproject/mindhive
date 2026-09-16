@@ -233,5 +233,9 @@ export const Study = list({
       ref: "Log.study",
       many: true,
     }),
+    tickets: relationship({
+      ref: "Ticket.study",
+      many: true,
+    }),
   },
 });

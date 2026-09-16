@@ -1,32 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactHTMLParser from "react-html-parser";
-import { useMutation, useApolloClient } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import sortBy from "lodash/sortBy";
 import { Container } from "react-smooth-dnd";
-import { v1 as uuidv1 } from "uuid";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
 
 import Card from "./Card";
 import ActionCard from "./ActionCard";
-import CreateCardModal from "./CreateCardModal";
 import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import { MilestoneIcon, ProjectCardIcon } from "../../DesignSystem/Icons";
-import { CARD_CATEGORY_ACTION, CARD_CATEGORY_PROPOSAL } from "./cardTypeOptions";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
-import {
-  CREATE_TEMPLATE_MILESTONE,
-  RESOLVE_MILESTONES_FOR_BOARD,
-} from "../../Queries/Milestone";
 import { isActionCard } from "../../../lib/milestones";
 
-import {
-  CREATE_CARD,
-  UPDATE_CARD_POSITION,
-} from "../../Mutations/Proposal";
+import { UPDATE_CARD_POSITION } from "../../Mutations/Proposal";
 
 const Section = ({
   board,
@@ -60,29 +50,25 @@ const Section = ({
   const numOfCards = cards.length;
   // const sortedCards = sortBy(cards, item => item.position);
 
-  const [createCardModalOpen, setCreateCardModalOpen] = useState(false);
-  const [createCardInitialCategory, setCreateCardInitialCategory] = useState("");
   const addMilestoneOpenedRef = useRef(false);
 
-  const openCreateCardModal = (category) => {
-    setCreateCardInitialCategory(category);
-    setCreateCardModalOpen(true);
+  const openCreateProposalCard = () => {
+    openCard?.({ createProposalCard: true, sectionId: section.id });
+  };
+
+  const openCreateMilestone = () => {
+    openCard?.({ createMilestone: true, sectionId: section.id });
   };
 
   useEffect(() => {
     if (!autoOpenCreateCardAction || addMilestoneOpenedRef.current) return;
     addMilestoneOpenedRef.current = true;
-    openCreateCardModal(CARD_CATEGORY_ACTION);
+    openCreateMilestone();
     onAddMilestoneModalOpened?.();
   }, [autoOpenCreateCardAction, onAddMilestoneModalOpened]);
   const [isEditingSectionTitle, setIsEditingSectionTitle] = useState(false);
   const [editingSectionTitle, setEditingSectionTitle] = useState("");
 
-  const client = useApolloClient();
-  const [createCard, createCardState] = useMutation(CREATE_CARD);
-  const [createTemplateMilestone, createTemplateMilestoneState] = useMutation(
-    CREATE_TEMPLATE_MILESTONE
-  );
   const [updateCard, updateCardState] = useMutation(UPDATE_CARD_POSITION);
 
   const isSectionSelected = selectedSectionIds.includes(section.id);
@@ -264,194 +250,6 @@ const Section = ({
       onCardChange(columnId, newCards);
       onUpdateCard(payload, columnId, updatedPOS, true);
     }
-  };
-
-  const finishAfterCardCreate = async (cardId) => {
-    const openCreatedCard = () => {
-      if (cardId) {
-        openCard({ id: cardId });
-      }
-    };
-
-    const proposalQuery = await client.query({
-      query: PROPOSAL_QUERY,
-      variables: { id: boardId },
-      fetchPolicy: "network-only",
-    });
-    const proposal = proposalQuery?.data?.proposalBoard;
-
-    if (proposalBuildMode && proposal?.prototypeFor?.length > 0) {
-      if (autoUpdateStudentBoards && propagateToClones) {
-        try {
-          await propagateToClones();
-        } catch (error) {
-          console.error("Auto-propagate after card add failed:", error);
-        }
-        openCreatedCard();
-      } else {
-        onTemplateChangedWithoutPropagation?.();
-        openCreatedCard();
-      }
-    } else {
-      openCreatedCard();
-    }
-  };
-
-  const addCardMutation = async ({ sectionId, title, type, milestoneId }) => {
-    if (!title) {
-      return alert(
-        t("section.enterNewTitle", {}, { default: "Please enter a title" })
-      );
-    }
-
-    const publicId = uuidv1();
-    const position =
-      cards && cards.length > 0
-        ? cards[cards.length - 1].position + 16384
-        : 16384;
-
-    const newCard = await createCard({
-      variables: {
-        boardId,
-        title,
-        sectionId,
-        position,
-        publicId,
-        type,
-        milestone: milestoneId ? { connect: { id: milestoneId } } : null,
-        settings: { status: "Not started" },
-      },
-      update: (cache, { data: { createProposalCard } }) => {
-        const data = cache.readQuery({
-          query: PROPOSAL_QUERY,
-          variables: { id: boardId },
-        });
-        if (data) {
-          const sections = data.proposalBoard.sections.map((section) => {
-            if (section.id === sectionId) {
-              if (!section.cards) {
-                section.cards = [];
-              }
-              const newSection = {
-                ...section,
-                cards: [...section.cards, createProposalCard],
-              };
-              return newSection;
-            }
-            return section;
-          });
-
-          cache.writeQuery({
-            query: PROPOSAL_QUERY,
-            variables: { id: boardId },
-            data: {
-              proposalBoard: {
-                ...data?.proposalBoard,
-                sections,
-              },
-            },
-          });
-        }
-      },
-      optimisticResponse: {
-        // PROPOSAL_QUERY.sections.cards selects many fields on ProposalCard.
-        // We enumerate them here so Apollo's cache write doesn't emit
-        // "Missing field" warnings and downstream Card / ActionCard render
-        // paths don't crash on `card.milestone.key` etc. during the
-        // optimistic window. Nested Milestone fields are given null
-        // placeholders; the real values arrive via the mutation response
-        // (and via refetchQueries if configured).
-        __typename: "Mutation",
-        createProposalCard: {
-          __typename: "ProposalCard",
-          id: uuidv1(),
-          boardId,
-          publicId,
-          title,
-          content: null,
-          revisedContent: null,
-          comment: null,
-          type,
-          position,
-          settings: { status: "Not started" },
-          section: {
-            __typename: "ProposalSection",
-            id: sectionId,
-            title: null,
-          },
-          milestone: milestoneId
-            ? {
-                __typename: "Milestone",
-                id: milestoneId,
-                key: null,
-                actionCardType: null,
-                reviewStage: null,
-                statusTarget: null,
-                legacyBoardStatusField: null,
-                legacyOpenForCommentsField: null,
-                logEventName: null,
-                formDefinitionKeyPattern: null,
-                title: null,
-                formDefinition: null,
-              }
-            : null,
-          assignedTo: [],
-          isEditedBy: null,
-        },
-      },
-    });
-
-    setCreateCardModalOpen(false);
-    await finishAfterCardCreate(newCard?.data?.createProposalCard?.id);
-  };
-
-  const createCustomMilestone = async ({
-    title,
-    description,
-    sectionId,
-    clonedFromMilestoneId,
-    sourceFormDefinitionKey,
-    canReviewPermissionNames,
-  }) => {
-    if (!title) {
-      alert(
-        t("section.enterNewTitle", {}, { default: "Please enter a title" })
-      );
-      return null;
-    }
-
-    const result = await createTemplateMilestone({
-      variables: {
-        input: {
-          templateBoardId: boardId,
-          title,
-          description,
-          sectionId,
-          clonedFromMilestoneId,
-          sourceFormDefinitionKey,
-          canReviewPermissionNames,
-          showInFeedbackCenter: true,
-          statusTarget: "board",
-        },
-      },
-      refetchQueries: [
-        { query: PROPOSAL_QUERY, variables: { id: boardId } },
-        { query: RESOLVE_MILESTONES_FOR_BOARD, variables: { boardId } },
-      ],
-      awaitRefetchQueries: true,
-    });
-
-    // Return the created milestone (including formDefinition.id) so the
-    // modal can transition to the embedded form-editor step. The modal
-    // stays open; final close + finishAfterCardCreate happens once the
-    // user clicks Finish (via onFinishCustomMilestoneEdit below).
-    return result?.data?.createTemplateMilestone || null;
-  };
-
-  const finishCustomMilestoneEdit = async (milestone) => {
-    const actionCardId = milestone?.actionCards?.[0]?.id || null;
-    setCreateCardModalOpen(false);
-    await finishAfterCardCreate(actionCardId);
   };
 
   const startSectionTitleEdit = () => {
@@ -670,7 +468,7 @@ const Section = ({
                   {},
                   { default: "Card" }
                 ),
-                onClick: () => openCreateCardModal(CARD_CATEGORY_PROPOSAL),
+                onClick: () => openCreateProposalCard(),
               },
               {
                 key: "milestone",
@@ -680,29 +478,12 @@ const Section = ({
                   {},
                   { default: "Milestone" }
                 ),
-                onClick: () => openCreateCardModal(CARD_CATEGORY_ACTION),
+                onClick: () => openCreateMilestone(),
               },
             ]}
           />
         </div>
       )}
-      <CreateCardModal
-        board={board}
-        creating={
-          createCardState.loading || createTemplateMilestoneState.loading
-        }
-        onClose={() => {
-          setCreateCardModalOpen(false);
-          setCreateCardInitialCategory("");
-        }}
-        onCreateCard={addCardMutation}
-        onCreateCustomMilestone={createCustomMilestone}
-        onFinishCustomMilestoneEdit={finishCustomMilestoneEdit}
-        open={createCardModalOpen}
-        sectionId={section.id}
-        sections={sections}
-        initialCardCategory={createCardInitialCategory}
-      />
     </div>
   );
 };

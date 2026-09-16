@@ -10,6 +10,7 @@ import {
   getBoardStudentsCanAssignToCards,
   mergeBoardSettings,
 } from "../../../../../../lib/proposalBoardSettings";
+import { isClassTeacherOrMentor } from "../../../../../../lib/classTeacherUtils";
 import moment from "moment";
 import Head from "next/head";
 import Preview from "./Preview/Main";
@@ -43,10 +44,7 @@ export default function ProposalPDF({
   // Permission checks for Assigned People Filters (teachers/mentors of board's class)
   const usedInClass = proposal?.usedInClass;
   const isTeacherOrMentorOfClass =
-    usedInClass &&
-    user?.id &&
-    (usedInClass?.creator?.id === user?.id ||
-      usedInClass?.mentors?.some((m) => m?.id === user?.id));
+    usedInClass && isClassTeacherOrMentor(usedInClass, user?.id);
   const assignableToStudents = getBoardAssignableToStudents(
     proposal,
     usedInClass

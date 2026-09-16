@@ -27,7 +27,7 @@ const CELLS = {
   blue: { x: 118.509, y: 16.51 },
 };
 
-const STROKE = "var(--MH-Theme-Neutrals-Medium, #A1A1A1)";
+const STROKE = "var(--MH-Theme-Neutrals-Medium, #a1a1a1)";
 
 /**
  * @param {{ size?: number, className?: string }} props

@@ -17,6 +17,17 @@ export const GET_PUBLIC_RESOURCES = gql`
         id
         username
       }
+      classes {
+        id
+      }
+      proposalCards {
+        id
+        section {
+          board {
+            id
+          }
+        }
+      }
       createdAt
       updatedAt
       parent {
@@ -71,6 +82,14 @@ export const GET_MY_RESOURCES = gql`
       collaborators {
         id
         username
+      }
+      proposalCards {
+        id
+        section {
+          board {
+            id
+          }
+        }
       }
       createdAt
       updatedAt

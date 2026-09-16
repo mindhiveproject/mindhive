@@ -1,10 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import gql from "graphql-tag";
-import { Icon } from "semantic-ui-react";
-import Tooltip from "../../DesignSystem/Tooltip";
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../DesignSystem/Button";
+import Chip from "../../DesignSystem/Chip";
+import IconButton from "../../DesignSystem/IconButton";
+import Modal from "../../DesignSystem/Modal";
+import { CloseIcon } from "../../DesignSystem/Icons";
 import { GET_RESOURCE, GET_MY_RESOURCES } from "../../Queries/Resource";
 import { UPDATE_RESOURCE } from "../../Mutations/Resource";
 
@@ -30,13 +33,34 @@ export const SEARCH_USERS = gql`
   }
 `;
 
+const SEARCH_STYLE = {
+  flex: 1,
+  minWidth: 0,
+  minHeight: 40,
+  padding: "8px 14px",
+  boxSizing: "border-box",
+  border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  borderRadius: 8,
+  background: "var(--MH-Theme-Neutrals-White, #ffffff)",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+  font: "var(--MH-Type-Body-Base)",
+  letterSpacing: 0,
+};
+
+const SECTION_TITLE = {
+  margin: "0 0 8px",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+};
+
 export default function ShareCollaborators({ id, user, onClose }) {
   const { t } = useTranslation("classes");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState([]);
-  const modalRef = useRef(null);
 
-  const { data: resourceData } = useQuery(GET_RESOURCE, { variables: { id } });
+  const { data: resourceData } = useQuery(GET_RESOURCE, {
+    variables: { id },
+    skip: !id,
+  });
   const currentCollaborators = resourceData?.resource?.collaborators || [];
 
   useEffect(() => {
@@ -79,114 +103,142 @@ export default function ShareCollaborators({ id, user, onClose }) {
       await updateResource({ variables: mutationVariables });
       onClose();
     } catch (err) {
-      // Localized alert message
       alert(t("boardManagement.updateCollaboratorsFailed"));
-      // Keep console detail for debugging
       // eslint-disable-next-line no-console
       console.error("Error updating collaborators:", err);
     }
   };
 
-  const handleClearSearch = () => setSearch("");
-
-  useEffect(() => {
-    const handleEsc = (e) => e.key === "Escape" && onClose();
-    const handleClickOutside = (e) => {
-      if (modalRef.current && !modalRef.current.contains(e.target)) onClose();
-    };
-    window.addEventListener("keydown", handleEsc);
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      window.removeEventListener("keydown", handleEsc);
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onClose]);
-
   return (
-    <div className="shareModalWrapper">
-      <div className="shareModal" ref={modalRef}>
-        <button className="closeBtn" onClick={onClose}>
-          <Icon name="close" />
-        </button>
-
-        <h2>{t("boardManagement.shareResourceTitle")}</h2>
-
-        <div className="searchSection">
-          <div className="searchInputWrapper">
-            <input
-              type="text"
-              placeholder={t("boardManagement.searchPlaceholderUser")}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+    <Modal
+      open={Boolean(id)}
+      onClose={onClose}
+      title={t("boardManagement.shareResourceTitle")}
+      maxWidth={560}
+      actions={
+        <>
+          <Button type="button" variant="outline" onClick={onClose}>
+            {t("boardManagement.cancel")}
+          </Button>
+          <Button
+            type="button"
+            variant="filled"
+            onClick={handleSave}
+            disabled={loading}
+          >
+            {t("boardManagement.saveChanges")}
+          </Button>
+        </>
+      }
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <input
+            type="search"
+            style={SEARCH_STYLE}
+            placeholder={t("boardManagement.searchPlaceholderUser")}
+            aria-label={t("boardManagement.searchPlaceholderUser")}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {search ? (
+            <IconButton
+              variant="subtle"
+              icon={<CloseIcon />}
+              ariaLabel={t("boardManagement.cancel")}
+              onClick={() => setSearch("")}
             />
-            {search && (
-              <button className="clearSearchBtn" onClick={handleClearSearch}>
-                <Icon name="close" />
-              </button>
-            )}
-          </div>
+          ) : null}
+        </div>
 
-          {users.length > 0 && (
-            <div className="userList">
-              <h3>{t("boardManagement.searchResults")}</h3>
+        {users.length > 0 && (
+          <div>
+            <h3 className="MH-Type-Title-Base" style={SECTION_TITLE}>
+              {t("boardManagement.searchResults")}
+            </h3>
+            <div
+              style={{
+                maxHeight: 200,
+                overflowY: "auto",
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+              }}
+            >
               {users.map((u) => (
-                <div key={u.id} className="userItem">
-                  <span>{u.username}</span>
-                  <Tooltip content={t("boardManagement.addCollaborator")}>
-                    <button
-                      className="actionBtn add"
-                      onClick={() => handleAdd(u.id)}
-                    >
-                      <Icon name="plus" />
-                    </button>
-                  </Tooltip>
+                <div
+                  key={u.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "4px 0",
+                    borderBottom:
+                      "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+                  }}
+                >
+                  <span
+                    className="MH-Type-Body-Base"
+                    style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)" }}
+                  >
+                    {u.username}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="text"
+                    onClick={() => handleAdd(u.id)}
+                  >
+                    {t("boardManagement.addCollaborator")}
+                  </Button>
                 </div>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {selected.length > 0 && (
-          <div className="collaboratorsSection">
-            <h3>{t("boardManagement.collaborators")}</h3>
-            <div className="collaboratorsList">
+          <div>
+            <h3 className="MH-Type-Title-Base" style={SECTION_TITLE}>
+              {t("boardManagement.collaborators")}
+            </h3>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 4,
+              }}
+            >
               {selected.map((s) => {
                 const userObj =
                   usersData?.profiles?.find((u) => u.id === s) ||
                   currentCollaborators.find((c) => c.id === s);
+                const label = userObj?.username || s;
                 return (
-                  <div key={s} className="collaboratorTag">
-                    <span>{userObj?.username || s}</span>
-                    <Tooltip content={t("boardManagement.removeCollaborator")}>
-                      <button
-                        className="actionBtn remove"
-                        onClick={() => handleRemove(s)}
-                      >
-                        <Icon name="minus" />
-                      </button>
-                    </Tooltip>
-                  </div>
+                  <Chip
+                    key={s}
+                    label={label}
+                    onClose={() => handleRemove(s)}
+                    ariaLabel={t("boardManagement.removeCollaborator")}
+                  />
                 );
               })}
             </div>
           </div>
         )}
 
-        <div className="modalActions">
-          <button className="saveBtn" onClick={handleSave} disabled={loading}>
-            {t("boardManagement.saveChanges")}
-          </button>
-          <button className="cancelBtn" onClick={onClose}>
-            {t("boardManagement.cancel")}
-          </button>
-        </div>
-
         {error && (
-          <p className="error">
+          <p
+            className="MH-Type-Body-Base"
+            style={{
+              margin: 0,
+              color: "var(--MH-Theme-Danger-Dark, #b3261e)",
+            }}
+          >
             {t("boardManagement.error")}: {error.message}
           </p>
         )}
       </div>
-    </div>
+    </Modal>
   );
 }

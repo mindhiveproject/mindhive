@@ -10,8 +10,8 @@ const ROOT_BASE_STYLE = {
   height: "30px",
   padding: "0 4px",
   borderRadius: "8px",
-  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  background: "var(--MH-Theme-Neutrals-White, #ffffff)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   boxSizing: "border-box",
   cursor: "pointer",
@@ -49,7 +49,7 @@ const DELETE_HOVER_STYLE = {
 };
 
 const PRESSED_STYLE = {
-  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
 };
 
 const DISABLED_STYLE = {
@@ -78,7 +78,7 @@ const KIND_STYLES = {
     background: "transparent",
   },
   delete: {
-    color: "var(--MH-Theme-Warning-Base, #B9261A)",
+    color: "var(--MH-Theme-Warning-Base, #b9261a)",
   },
 };
 
@@ -103,7 +103,7 @@ const LABEL_ICON_WRAPPER_STYLE = {
 
 const FOCUS_VISIBLE_STYLE = `
 .DesignSystem-CompactActionButton:focus-visible {
-  outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
+  outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
   outline-offset: 2px;
 }
 `;

@@ -13,8 +13,10 @@ import {
   EditDocumentIcon,
 } from "../../../../DesignSystem/Icons";
 import {
-  formatScheduleDate,
+  formatPreferenceWindowInstant,
   isPreferenceTimeWindowOpen,
+  readPreferenceWindowTimeZone,
+  resolvePreferenceWindowInstantMs,
   visibleSchedulePhases,
 } from "../../../../../lib/connectRoundSettings";
 import { isRoundRankingEditable } from "../../../../../lib/opportunityFavoriteRanking";
@@ -159,14 +161,21 @@ export default function StudentRankActionCard({
   const hasDraft = Boolean(preference) && !submitted;
 
   const rankingEditable = isRoundRankingEditable(round);
+  const isPublished = round.status === "published";
 
   let title;
   let helper = null;
-  let ctaLabel;
+  let ctaLabel = null;
   let buttonVariant = "filled";
   let showSteps = false;
 
-  if (submitted) {
+  if (isPublished) {
+    title = t(
+      "opportunities.studentView.rankCard.titleSubmitted",
+      { roundTitle },
+      { default: "You submitted your ranking for {{roundTitle}}" },
+    );
+  } else if (submitted) {
     title = t(
       "opportunities.studentView.rankCard.titleSubmitted",
       { roundTitle },
@@ -225,26 +234,38 @@ export default function StudentRankActionCard({
       { roundTitle },
       { default: "Rank your opportunities for {{roundTitle}}" },
     );
-    helper = hasOpportunities
-      ? t(
-          "opportunities.studentView.rankCard.helperBrowse",
-          {},
-          { default: "This is how you get matched." },
-        )
-      : t(
-          "opportunities.studentView.rankCard.helperEmpty",
-          {},
-          {
-            default:
-              "When opportunities appear, come back here to rank them.",
-          },
-        );
-    showSteps = hasOpportunities;
-    ctaLabel = t(
-      "opportunities.studentView.rankCard.ctaRankNow",
-      {},
-      { default: "Start ranking" },
-    );
+    if (rankingEditable) {
+      helper = hasOpportunities
+        ? t(
+            "opportunities.studentView.rankCard.helperBrowse",
+            {},
+            { default: "This is how you get matched." },
+          )
+        : t(
+            "opportunities.studentView.rankCard.helperEmpty",
+            {},
+            {
+              default:
+                "When opportunities appear, come back here to rank them.",
+            },
+          );
+      showSteps = hasOpportunities;
+      ctaLabel = t(
+        "opportunities.studentView.rankCard.ctaRankNow",
+        {},
+        { default: "Start ranking" },
+      );
+    } else {
+      helper = t(
+        "opportunities.studentView.rankCard.helperRankingNotOpen",
+        {},
+        {
+          default:
+            "Ranking is not open right now. You can still browse the opportunities below.",
+        },
+      );
+      ctaLabel = null;
+    }
   }
 
   const steps = showSteps
@@ -291,9 +312,20 @@ export default function StudentRankActionCard({
       : null;
 
   const closeAt = round.closeAt;
-  const showDue = closeAt && !submitted && isPreferenceTimeWindowOpen(round);
-  const dueDate = showDue ? formatScheduleDate(closeAt) : null;
-  const dueLine = showDue
+  const showDue =
+    closeAt && !submitted && !isPublished && isPreferenceTimeWindowOpen(round);
+  const timeZone = readPreferenceWindowTimeZone(round.settings);
+  const closeMs = showDue
+    ? resolvePreferenceWindowInstantMs(closeAt, "close", timeZone)
+    : null;
+  const dueDate =
+    closeMs != null
+      ? formatPreferenceWindowInstant(
+          new Date(closeMs).toISOString(),
+          timeZone,
+        )
+      : null;
+  const dueLine = showDue && dueDate
     ? t(
         "opportunities.studentView.rankCard.due",
         { date: dueDate },
@@ -301,7 +333,10 @@ export default function StudentRankActionCard({
       )
     : null;
 
+  const canOpenRanking = rankingEditable || submitted || hasDraft;
+
   const handleRank = () => {
+    if (!canOpenRanking) return;
     if (typeof onRank === "function") {
       onRank(round.id);
     }
@@ -383,11 +418,13 @@ export default function StudentRankActionCard({
         </StepList>
       ) : null}
       {dueLine ? <Due>{dueLine}</Due> : null}
-      <Actions>
-        <Button type="button" variant={buttonVariant} onClick={handleRank}>
-          {ctaLabel}
-        </Button>
-      </Actions>
+      {ctaLabel ? (
+        <Actions>
+          <Button type="button" variant={buttonVariant} onClick={handleRank}>
+            {ctaLabel}
+          </Button>
+        </Actions>
+      ) : null}
     </Card>
   );
 }

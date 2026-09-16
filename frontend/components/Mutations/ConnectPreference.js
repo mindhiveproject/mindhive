@@ -14,6 +14,8 @@ export const UPDATE_PREFERENCE = gql`
     updateConnectPreference(where: { id: $id }, data: $input) {
       id
       status
+      teachingTeamNote
+      studentMatchingPreference
     }
   }
 `;

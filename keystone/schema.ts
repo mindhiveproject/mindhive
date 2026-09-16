@@ -46,6 +46,8 @@ import { VizChapter } from "./schemas/VizChapter";
 import { VizSection } from "./schemas/VizSection";
 import { Resource } from "./schemas/Resource";
 import { Log } from "./schemas/Log";
+import { Ticket } from "./schemas/Ticket";
+import { TicketAnnotation } from "./schemas/TicketAnnotation";
 import { Datasource } from "./schemas/Datasource";
 import { Visual } from "./schemas/YQVisual";
 import { JsPsychExperiment } from "./schemas/JsPsychExperiment";
@@ -126,6 +128,8 @@ export const lists: Lists = {
   VizSection,
   Resource,
   Log,
+  Ticket,
+  TicketAnnotation,
   Datasource,
   Visual,
   JsPsychExperiment,

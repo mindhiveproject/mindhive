@@ -449,14 +449,14 @@ const EDIT_PANEL_STYLE = {
   padding: 16,
   border: "1px solid #A1A1A1",
   borderRadius: 8,
-  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
   flexShrink: 0,
 };
 
 const EDIT_TITLE_STYLE = {
   font: 'var(--MH-Type-Title-Small)',
   letterSpacing: 0,
-  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  color: "var(--MH-Theme-Primary-Dark, #336f8a)",
   marginBottom: 14,
 };
 

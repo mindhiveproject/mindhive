@@ -25,7 +25,7 @@ function buildAppointmentRequestsWhere(networkIds) {
 
 function collectReviewClasses(profile) {
   const byId = new Map();
-  [...(profile?.teacherIn || []), ...(profile?.mentorIn || [])]
+  [...(profile?.teacherIn || []), ...(profile?.teachingTeamIn || []), ...(profile?.mentorIn || [])]
     .filter((cls) => cls?.id && cls?.code)
     .forEach((cls) => {
       if (!byId.has(cls.id)) {
@@ -90,7 +90,7 @@ const Strip = styled.div`
 
     button {
       color: ${({ $collapsed }) =>
-        $collapsed ? "#5f6871" : "var(--MH-Theme-Primary-Base, #337C84)"};
+        $collapsed ? "#5f6871" : "#337C84"};
     }
   }
 

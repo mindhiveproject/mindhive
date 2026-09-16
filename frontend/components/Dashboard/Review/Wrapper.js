@@ -15,9 +15,10 @@ export default function Wrapper({ user, page }) {
   const us = data?.authenticatedItem || {
     studentIn: [],
     teacherIn: [],
+    teachingTeamIn: [],
     mentorIn: [],
   };
-  const myClasses = [...us?.studentIn, ...us?.teacherIn, ...us?.mentorIn] || [];
+  const myClasses = [...us?.studentIn, ...us?.teacherIn, ...us?.teachingTeamIn, ...us?.mentorIn] || [];
   const networkClasses =
     myClasses
       .map((myClass) => {

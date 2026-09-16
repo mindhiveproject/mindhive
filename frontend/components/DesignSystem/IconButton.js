@@ -21,23 +21,23 @@ const BASE_STYLE = {
 // --- Filled (Figma Icon Button 1049:4895)
 const FILLED_BASE = {
   ...BASE_STYLE,
-  background: "var(--MH-Theme-Primary-Dark, #336F8A)",
-  color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+  background: "var(--MH-Theme-Primary-Dark, #336f8a)",
+  color: "var(--MH-Theme-Neutrals-White, #ffffff)",
 };
 // Matches Button's FILLED_HOVER: a 20% Primary Light state layer over the
 // resting fill, plus Elevation Medium. Was an Accent-yellow colour flip.
 const FILLED_HOVER = {
   background:
-    "linear-gradient(0deg, rgba(222, 248, 251, 0.2), rgba(222, 248, 251, 0.2)), var(--MH-Theme-Primary-Dark, #336F8A)",
-  boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0,0,0,0.1))",
+    "linear-gradient(0deg, rgba(222, 248, 251, 0.2), rgba(222, 248, 251, 0.2)), var(--MH-Theme-Primary-Dark, #336f8a)",
+  boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1))",
 };
 const FILLED_PRESSED = {
-  background: "var(--MH-Theme-Primary-Medium, #A3D6DB)",
+  background: "var(--MH-Theme-Primary-Medium, #a3d6db)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 const FILLED_DISABLED = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   cursor: "default",
   boxShadow: "none",
 };
@@ -46,52 +46,52 @@ const FILLED_DISABLED = {
 const OUTLINE_BASE = {
   ...BASE_STYLE,
   background: "transparent",
-  color: "var(--MH-Theme-Primary-Base, #69BBC4)",
-  border: "1px solid var(--MH-Theme-Primary-Base, #69BBC4)",
+  color: "var(--MH-Theme-Primary-Base, #69bbc4)",
+  border: "1px solid var(--MH-Theme-Primary-Base, #69bbc4)",
 };
 // Matches Button's OUTLINE_HOVER background. Was opacity: 0.8 — a dip on the
 // whole control rather than a designed hover fill.
 const OUTLINE_HOVER = {
-  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
-  border: "1px solid var(--MH-Theme-Primary-Base, #69BBC4)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+  border: "1px solid var(--MH-Theme-Primary-Base, #69bbc4)",
 };
 // Matches Button's OUTLINE_PRESSED — a step deeper than hover.
 const OUTLINE_PRESSED = {
-  background: "var(--MH-Theme-Primary-Light, #DEF8FB)",
-  border: "1px solid var(--MH-Theme-Primary-Base, #69BBC4)",
+  background: "var(--MH-Theme-Primary-Light, #def8fb)",
+  border: "1px solid var(--MH-Theme-Primary-Base, #69bbc4)",
 };
 const OUTLINE_DISABLED = {
   background: "transparent",
-  color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
-  border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  color: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   cursor: "default",
 };
 
 // --- Tonal (Primary Light — Icon Button DS, not Accent)
 const TONAL_BASE = {
   ...BASE_STYLE,
-  background: "var(--MH-Theme-Primary-Light, #DEF8FB)",
-  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  background: "var(--MH-Theme-Primary-Light, #def8fb)",
+  color: "var(--MH-Theme-Primary-Dark, #336f8a)",
 };
 // KNOWN ISSUE: this hover repeats the base fill, so a drop shadow is the only
 // feedback — and `elevated={false}` removes that, leaving no hover state at
 // all. Material deepens the fill instead (a state layer of the content colour
 // over the container). Connect's ManageFavorite tries that as a local override
 // — Primary Light → Primary Medium, no shadow. If it holds up, fold it in here
-// as `{ background: "var(--MH-Theme-Primary-Medium, #A3D6DB)" }` and drop the
+// as `{ background: "var(--MH-Theme-Primary-Medium, #a3d6db)" }` and drop the
 // override. Contrast checked: #336F8A on #A3D6DB is 3.45:1, over the 3:1 bar
 // for icons. Do not go on to Primary Base #69BBC4 — that falls to 2.47:1.
 const TONAL_HOVER = {
-  background: "var(--MH-Theme-Primary-Light, #DEF8FB)",
-  boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0,0,0,0.1))",
+  background: "var(--MH-Theme-Primary-Light, #def8fb)",
+  boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1))",
 };
 const TONAL_PRESSED = {
   background: "#F4F8F7",
   boxShadow: "none",
 };
 const TONAL_DISABLED = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   cursor: "default",
   boxShadow: "none",
 };
@@ -100,18 +100,18 @@ const TONAL_DISABLED = {
 // for close and dismiss actions, and by the menu bar's own icon buttons)
 const SUBTLE_BASE = {
   ...BASE_STYLE,
-  background: "var(--MH-Theme-Primary-Lighter, #F4F8F7)",
+  background: "var(--MH-Theme-Primary-Lighter, #f4f8f7)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 const SUBTLE_HOVER = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
 };
 const SUBTLE_PRESSED = {
-  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
 };
 const SUBTLE_DISABLED = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   cursor: "default",
 };
 
@@ -119,17 +119,17 @@ const SUBTLE_DISABLED = {
 const TEXT_BASE = {
   ...BASE_STYLE,
   background: "transparent",
-  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  color: "var(--MH-Theme-Primary-Dark, #336f8a)",
 };
 const TEXT_HOVER = {
-  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
 };
 const TEXT_PRESSED = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
 };
 const TEXT_DISABLED = {
   background: "transparent",
-  color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  color: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   cursor: "default",
 };
 
@@ -176,7 +176,7 @@ function getVariantStyles(variant) {
 
 const FOCUS_VISIBLE_STYLE =
   ".DesignSystem-IconButton:focus-visible {" +
-  "outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);" +
+  "outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);" +
   "outline-offset: 2px;" +
   "}" +
   ".DesignSystem-IconButton-Icon svg {" +

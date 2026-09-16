@@ -140,8 +140,8 @@ const StyledProject = styled.div`
     grid-template-columns: auto 1fr auto;
     grid-gap: 20px;
     height: 64px;
-    border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
-    background: var(--MH-Theme-Neutrals-White, #FFF);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
     .left {
       display: grid;
       .icon {
@@ -204,9 +204,9 @@ const StyledProject = styled.div`
         padding: 10px 24px;
       }
       .off {
-        background: var(--MH-Theme-Neutrals-Light, #E6E6E6);
-        color: var(--MH-Theme-Neutrals-Dark, #6A6A6A);
-        border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+        background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
       }
     }
   }

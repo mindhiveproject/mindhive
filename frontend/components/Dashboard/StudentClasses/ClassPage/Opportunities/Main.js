@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -20,7 +20,10 @@ import {
   getDistinctProjectCategories,
   getProjectCategoryDisplay,
 } from "../../../../../lib/opportunityCategory";
-import { getBrowseDraftDriftEntries } from "../../../../../lib/opportunityFavoriteRanking";
+import {
+  getBrowseDraftDriftEntries,
+  isRoundRankingEditable,
+} from "../../../../../lib/opportunityFavoriteRanking";
 import {
   BrowseCardsGrid,
   BrowseSearchField,
@@ -28,6 +31,7 @@ import {
 import OpportunityConnectCard from "../../../Connect/OpportunityConnectCard";
 import StudentOpportunityPreview from "./StudentOpportunityPreview";
 import StudentPreferenceSubmission from "./StudentPreferenceSubmission";
+import StudentMatchCard from "./StudentMatchCard";
 import StudentRankActionCard from "./StudentRankActionCard";
 import RankingDriftRepairModal from "./RankingDriftRepairModal";
 import {
@@ -38,7 +42,12 @@ import {
   readStudentOpportunityBrowsePrefs,
   writeStudentOpportunityBrowsePrefs,
 } from "../studentClassPagePrefs";
-const STUDENT_OPEN_ROUND_STATUS = "preferences_open";
+
+/** Students may browse opportunities once a round leaves Draft. */
+function isRoundVisibleToStudents(status) {
+  return Boolean(status) && status !== "draft";
+}
+
 const MIN_DWELL_MS = 1000;
 
 function opportunitySearchHaystack(opportunity) {
@@ -94,7 +103,7 @@ const Filters = styled.div`
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 12px;
-  border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
 `;
 
 const FilterRow = styled.div`
@@ -167,54 +176,54 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
   );
 
   const {
-    isOpenForStudents,
+    hasVisibleRound,
     opportunities,
     opportunityRoundIds,
-    openRounds,
+    visibleRounds,
     classRoundIds,
     opportunityIds,
   } = useMemo(() => {
     const byId = new Map();
     const roundByOpportunityId = new Map();
-    const openById = new Map();
+    const visibleById = new Map();
     const allRoundIds = new Set();
-    let hasOpenRound = false;
+    let foundVisibleRound = false;
 
     for (const network of networks) {
       for (const round of network?.connectRounds || []) {
         if (!round?.id) continue;
         allRoundIds.add(round.id);
 
-        if (round.status === STUDENT_OPEN_ROUND_STATUS) {
-          hasOpenRound = true;
-          if (!openById.has(round.id)) {
-            openById.set(round.id, {
-              id: round.id,
-              title: round.title || "",
-              status: round.status || STUDENT_OPEN_ROUND_STATUS,
-              openAt: round.openAt || null,
-              closeAt: round.closeAt || null,
-              settings: round.settings || null,
-            });
+        if (!isRoundVisibleToStudents(round.status)) continue;
+
+        foundVisibleRound = true;
+        if (!visibleById.has(round.id)) {
+          visibleById.set(round.id, {
+            id: round.id,
+            title: round.title || "",
+            status: round.status,
+            openAt: round.openAt || null,
+            closeAt: round.closeAt || null,
+            settings: round.settings || null,
+          });
+        }
+        for (const opportunity of round.opportunities || []) {
+          if (!opportunity?.id) continue;
+          if (!byId.has(opportunity.id)) {
+            byId.set(opportunity.id, opportunity);
           }
-          for (const opportunity of round.opportunities || []) {
-            if (!opportunity?.id) continue;
-            if (!byId.has(opportunity.id)) {
-              byId.set(opportunity.id, opportunity);
-            }
-            if (!roundByOpportunityId.has(opportunity.id)) {
-              roundByOpportunityId.set(opportunity.id, round.id);
-            }
+          if (!roundByOpportunityId.has(opportunity.id)) {
+            roundByOpportunityId.set(opportunity.id, round.id);
           }
         }
       }
     }
 
     return {
-      isOpenForStudents: hasOpenRound,
+      hasVisibleRound: foundVisibleRound,
       opportunities: Array.from(byId.values()),
       opportunityRoundIds: roundByOpportunityId,
-      openRounds: Array.from(openById.values()),
+      visibleRounds: Array.from(visibleById.values()),
       classRoundIds: allRoundIds,
       opportunityIds: new Set(byId.keys()),
     };
@@ -235,6 +244,19 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     }
     return map;
   }, [data?.authenticatedItem?.connectPreferences]);
+
+  const matchesByRoundId = useMemo(() => {
+    const map = new Map();
+    const matches = data?.authenticatedItem?.connectMatches || [];
+    for (const match of matches) {
+      const roundId = match?.round?.id;
+      if (!roundId || !match?.id) continue;
+      const list = map.get(roundId) || [];
+      list.push(match);
+      map.set(roundId, list);
+    }
+    return map;
+  }, [data?.authenticatedItem?.connectMatches]);
 
   const draftRankedOppIds = useMemo(() => {
     const ids = new Set();
@@ -257,16 +279,22 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     [classCode],
   );
 
-  const openRoundsById = useMemo(
-    () => new Map(openRounds.map((round) => [round.id, round])),
-    [openRounds],
-  );
+  // Drift repair only applies while ranking is editable (preferences_open + window).
+  const rankingEditableRoundsById = useMemo(() => {
+    const map = new Map();
+    for (const round of visibleRounds) {
+      if (isRoundRankingEditable(round)) {
+        map.set(round.id, round);
+      }
+    }
+    return map;
+  }, [visibleRounds]);
 
   const roundOpportunityIdsByRoundId = useMemo(() => {
     const map = new Map();
     for (const network of networks) {
       for (const round of network?.connectRounds || []) {
-        if (round?.status !== STUDENT_OPEN_ROUND_STATUS || !round?.id) continue;
+        if (!round?.id || !isRoundRankingEditable(round)) continue;
         const ids = new Set(
           (round.opportunities || []).map((opp) => opp?.id).filter(Boolean),
         );
@@ -282,14 +310,19 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
         connectPreferences: data?.authenticatedItem?.connectPreferences,
         favoriteOpportunities: user?.favoriteOpportunities,
         roundOpportunityIdsByRoundId,
-        openRoundsById,
+        openRoundsById: rankingEditableRoundsById,
       }),
     [
       data?.authenticatedItem?.connectPreferences,
-      openRoundsById,
+      rankingEditableRoundsById,
       roundOpportunityIdsByRoundId,
       user?.favoriteOpportunities,
     ],
+  );
+
+  const visibleRoundsById = useMemo(
+    () => new Map(visibleRounds.map((round) => [round.id, round])),
+    [visibleRounds],
   );
 
   const showBrowseDriftRepairModal =
@@ -437,8 +470,34 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
   // the class chrome (already hidden by ClassPage) is not replaced by the list.
   const showPreviewSubview = Boolean(requestedOpportunityId);
 
+  const requestedRound = requestedRoundId
+    ? visibleRoundsById.get(requestedRoundId) || null
+    : null;
+  const canOpenRankSubview =
+    Boolean(requestedRoundId) &&
+    (isRoundRankingEditable(requestedRound) ||
+      preferenceByRoundId.has(requestedRoundId));
+
   const showRankSubview =
-    !showPreviewSubview && Boolean(requestedRoundId);
+    !showPreviewSubview && Boolean(requestedRoundId) && canOpenRankSubview;
+
+  // Strip ?round= when ranking is closed and the student has no preference yet.
+  useEffect(() => {
+    if (!requestedRoundId || loading || showPreviewSubview) return;
+    if (!data?.class && !myclass?.networks) return;
+    if (!classRoundIds.has(requestedRoundId)) return;
+    if (canOpenRankSubview) return;
+    stripInvalidOpportunitiesQuery();
+  }, [
+    requestedRoundId,
+    loading,
+    showPreviewSubview,
+    data?.class,
+    myclass?.networks,
+    classRoundIds,
+    canOpenRankSubview,
+    stripInvalidOpportunitiesQuery,
+  ]);
 
   const categoryOptions = useMemo(
     () => getDistinctProjectCategories(opportunities),
@@ -618,6 +677,12 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
   }, [flushPreviewSession, requestedOpportunityId, showPreviewSubview]);
 
   if (showPreviewSubview) {
+    const previewRoundId =
+      opportunityRoundIds.get(requestedOpportunityId) || null;
+    const previewRound = previewRoundId
+      ? visibleRoundsById.get(previewRoundId)
+      : null;
+    const favoritesEnabled = isRoundRankingEditable(previewRound);
     return (
       <>
         <StudentOpportunityPreview
@@ -625,8 +690,9 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
           onClose={handleClosePreview}
           user={user}
           classId={classId}
-          roundId={opportunityRoundIds.get(requestedOpportunityId) || null}
+          roundId={previewRoundId}
           hasDraftRanking={draftRankedOppIds.has(requestedOpportunityId)}
+          favoritesEnabled={favoritesEnabled}
           favoriteRefetchQueries={classFavoriteRefetchQueries}
         />
         {browseDriftRepairModal}
@@ -657,7 +723,7 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     );
   }
 
-  if (!isOpenForStudents) {
+  if (!hasVisibleRound) {
     const title = t("opportunities.studentView.notAvailableTitle", {}, {
       default: "Opportunities aren’t available yet",
     });
@@ -669,8 +735,8 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
       <div className="classTabPage opportunities">
         <MessageCard
           variant="neutral"
-          message={`${title} ${hint}`}
-          ariaLabel={`${title} ${hint}`}
+          message={`${title}. ${hint}`}
+          ariaLabel={`${title}. ${hint}`}
         />
       </div>
     );
@@ -686,9 +752,9 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
     });
     return (
       <div className="classTabPage opportunities">
-        {openRounds.length > 0 ? (
+        {visibleRounds.length > 0 ? (
           <RankBanners>
-            {openRounds.map((round) => (
+            {visibleRounds.map((round) => (
               <StudentRankActionCard
                 key={round.id}
                 round={round}
@@ -779,17 +845,31 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
 
   return (
     <div className="classTabPage opportunities">
-      {openRounds.length > 0 ? (
+      {visibleRounds.length > 0 ? (
         <RankBanners>
-          {openRounds.map((round) => (
-            <StudentRankActionCard
-              key={round.id}
-              round={round}
-              preference={preferenceByRoundId.get(round.id)}
-              hasOpportunities={true}
-              onRank={openRankRound}
-            />
-          ))}
+          {visibleRounds.map((round) => {
+            const publishedMatches =
+              round.status === "published"
+                ? matchesByRoundId.get(round.id) || []
+                : [];
+            return (
+              <Fragment key={round.id}>
+                <StudentRankActionCard
+                  round={round}
+                  preference={preferenceByRoundId.get(round.id)}
+                  hasOpportunities={true}
+                  onRank={openRankRound}
+                />
+                {publishedMatches.map((match) => (
+                  <StudentMatchCard
+                    key={match.id}
+                    match={match}
+                    onOpenOpportunity={handleOpenPreview}
+                  />
+                ))}
+              </Fragment>
+            );
+          })}
         </RankBanners>
       ) : null}
 
@@ -870,17 +950,22 @@ export default function StudentClassOpportunities({ myclass, user, query }) {
           />
         ) : (
           <BrowseCardsGrid>
-            {filteredOpportunities.map((opportunity) => (
-              <OpportunityConnectCard
-                key={opportunity.id}
-                opportunity={opportunity}
-                onOpen={handleOpenPreview}
-                user={user}
-                roundId={opportunityRoundIds.get(opportunity.id) || null}
-                hasDraftRanking={draftRankedOppIds.has(opportunity.id)}
-                favoriteRefetchQueries={classFavoriteRefetchQueries}
-              />
-            ))}
+            {filteredOpportunities.map((opportunity) => {
+              const roundId = opportunityRoundIds.get(opportunity.id) || null;
+              const round = roundId ? visibleRoundsById.get(roundId) : null;
+              return (
+                <OpportunityConnectCard
+                  key={opportunity.id}
+                  opportunity={opportunity}
+                  onOpen={handleOpenPreview}
+                  user={user}
+                  roundId={roundId}
+                  hasDraftRanking={draftRankedOppIds.has(opportunity.id)}
+                  favoritesEnabled={isRoundRankingEditable(round)}
+                  favoriteRefetchQueries={classFavoriteRefetchQueries}
+                />
+              );
+            })}
           </BrowseCardsGrid>
         )}
       </Page>

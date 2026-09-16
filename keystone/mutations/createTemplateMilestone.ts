@@ -259,6 +259,12 @@ type CreateTemplateMilestoneInput = {
   showInFeedbackCenter?: boolean;
   statusTarget?: "board" | "study";
   sectionId?: string;
+  /**
+   * Link an existing action card to the new milestone instead of creating a
+   * card. Used by the milestone editor when a custom ACTION card has no
+   * Milestone row yet, so starting a review form does not duplicate the card.
+   */
+  attachToCardId?: string;
 };
 
 async function createTemplateMilestone(
@@ -378,6 +384,26 @@ async function createTemplateMilestone(
     },
     "id"
   );
+
+  if (input.attachToCardId) {
+    const card = await context.query.ProposalCard.findOne({
+      where: { id: input.attachToCardId },
+      query: "id section { board { id } }",
+    });
+    if (!card?.id) {
+      throw new Error("Card to attach not found.");
+    }
+    if (card.section?.board?.id !== input.templateBoardId) {
+      throw new Error("That card is not on this template board.");
+    }
+    await context.db.ProposalCard.updateOne({
+      where: { id: String(card.id) },
+      data: { milestone: { connect: { id: milestone.id } } },
+    });
+    return context.db.Milestone.findOne({
+      where: { id: String(milestone.id) },
+    });
+  }
 
   let sectionId = input.sectionId;
   if (!sectionId) {

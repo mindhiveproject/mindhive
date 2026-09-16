@@ -157,9 +157,26 @@ export default function LinkedItems({
       return;
     }
 
+    const isAdmin = user?.permissions?.some(
+      (permission) => permission?.name === "ADMIN"
+    );
+    const canEditOriginal =
+      isAdmin ||
+      resource?.author?.id === user?.id ||
+      resource?.collaborators?.some(
+        (collaborator) => collaborator?.id === user?.id
+      );
+    const isPublicOriginal =
+      resource?.isPublic || context.sourceType === "public";
+
+    // Public originals are copy-only unless the current user owns or
+    // collaborates on them. Context supplied by the caller cannot weaken this.
     const derivedSourceType =
-      context.sourceType ||
-      (resource?.parent?.id ? "custom" : resource?.isPublic ? "public" : "mine");
+      isPublicOriginal && !canEditOriginal
+        ? "public"
+        : resource?.parent?.id
+          ? "custom"
+          : "mine";
 
     const templateId =
       derivedSourceType === "public"

@@ -42,7 +42,10 @@ export const EMPTY_FORM = {
   description: "",
   status: "draft",
   openAt: "",
+  openAtTime: "00:00",
   closeAt: "",
+  closeAtTime: "23:59",
+  preferenceWindowTimeZone: "America/New_York",
   introductionAt: "",
   matchingStartAt: "",
   matchingEndAt: "",
@@ -106,7 +109,10 @@ export function buildSuggestedRoundDefaults(classTitle, networkTitle) {
     description: "",
     status: "draft",
     openAt: toDateInputValueFromDate(today),
+    openAtTime: "00:00",
     closeAt: toDateInputValueFromDate(closeDate),
+    closeAtTime: "23:59",
+    preferenceWindowTimeZone: "America/Los_Angeles",
     matchingAlgorithm: "stable_matching",
   };
 }

@@ -534,7 +534,7 @@ function Inner(props) {
                     hasSelection
                       ? {
                           background: "#FEECEB",
-                          color: "var(--MH-Theme-Danger-Dark, #8F1F14)",
+                          color: "var(--MH-Theme-Danger-Dark, #8f1f14)",
                         }
                       : undefined
                   }

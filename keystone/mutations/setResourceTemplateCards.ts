@@ -4,14 +4,27 @@ import {
 } from "./utils/templateCloneMatch";
 import {
   CLASS_TEMPLATE_QUERY,
+  getClassTemplateBoards,
   getPrimaryTemplateBoardId,
 } from "./utils/classTemplateBoards";
+
+function isMilestoneOrActionCard(card: {
+  type?: string | null;
+  milestone?: { id?: string } | null;
+}): boolean {
+  if (card?.milestone?.id) return true;
+  return (
+    card?.type === "ACTION" ||
+    Boolean(card?.type && card.type.startsWith("ACTION_"))
+  );
+}
 
 /**
  * Sets a resource's linked template cards to the given list, and propagates
  * to all student boards. Clone cards are matched by publicId, or section publicId + position,
  * or by section/card index when publicId is missing (avoids wrong matches when position is duplicated).
  * Empty templateCardIds = unlink from all cards on this class's template and clones.
+ * Optional templateBoardId targets a specific class template board; otherwise primary is used.
  */
 async function setResourceTemplateCards(
   _root: unknown,
@@ -19,10 +32,12 @@ async function setResourceTemplateCards(
     resourceId,
     templateCardIds,
     classId,
+    templateBoardId: requestedTemplateBoardId,
   }: {
     resourceId: string;
     templateCardIds: string[];
     classId: string;
+    templateBoardId?: string | null;
   },
   context: any
 ): Promise<{ id: string } | null> {
@@ -36,7 +51,19 @@ async function setResourceTemplateCards(
     query:
       `${CLASS_TEMPLATE_QUERY} studentProposals { id clonedFrom { id } sections { id publicId position cards { id publicId position } } }`,
   });
-  const templateBoardId = getPrimaryTemplateBoardId(classData);
+  const classTemplateBoards = getClassTemplateBoards(classData);
+  const classTemplateBoardIds = new Set(
+    classTemplateBoards.map((b) => b.id).filter(Boolean)
+  );
+  let templateBoardId: string | null = null;
+  if (
+    requestedTemplateBoardId &&
+    classTemplateBoardIds.has(requestedTemplateBoardId)
+  ) {
+    templateBoardId = requestedTemplateBoardId;
+  } else {
+    templateBoardId = getPrimaryTemplateBoardId(classData);
+  }
   if (!templateBoardId) {
     throw new Error("Class has no template board.");
   }
@@ -60,10 +87,16 @@ async function setResourceTemplateCards(
   for (const templateCardId of uniqueTemplateCardIds) {
     const templateCard = await context.query.ProposalCard.findOne({
       where: { id: templateCardId },
-      query: "id publicId position section { id publicId position board { id } }",
+      query:
+        "id publicId position type milestone { id } section { id publicId position board { id } }",
     });
     if (!templateCard) continue;
     if (templateCard.section?.board?.id !== templateBoardId) continue;
+    if (isMilestoneOrActionCard(templateCard)) {
+      throw new Error(
+        "Milestone and action cards cannot be linked to resources."
+      );
+    }
 
     toConnect.push({ id: templateCardId });
 

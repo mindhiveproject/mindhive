@@ -19,36 +19,33 @@ function formatCsvCellValue(value) {
   return String(value);
 }
 
-function formatClassmatesList(
+function formatClassmateCell(
   studentId,
-  classmateIds,
+  classmateId,
   studentById,
   classmateListsByStudent,
   activePickCount = 0,
 ) {
-  return (classmateIds || [])
-    .map((classmateId, index) => {
-      const classmate = studentById.get(classmateId);
-      const name = studentDisplayName(classmate) || classmateId;
-      const status = getClassmateMutualStatus(
-        studentId,
-        classmateId,
-        classmateListsByStudent,
-        activePickCount,
-      );
-      const statusSuffix =
-        status === "mutual"
-          ? " (mutual)"
-          : status === "one_way"
-            ? " (one-way)"
-            : "";
-      return `#${index + 1} ${name}${statusSuffix}`;
-    })
-    .join("; ");
+  if (!classmateId) return "";
+  const classmate = studentById.get(classmateId);
+  const name = studentDisplayName(classmate) || classmateId;
+  const status = getClassmateMutualStatus(
+    studentId,
+    classmateId,
+    classmateListsByStudent,
+    activePickCount,
+  );
+  const statusSuffix =
+    status === "mutual"
+      ? " (mutual)"
+      : status === "one_way"
+        ? " (one-way)"
+        : "";
+  return `${name}${statusSuffix}`;
 }
 
-function formatRankedOpportunitiesList(preference) {
-  const items = (preference?.items || [])
+function getRankedOpportunityItems(preference) {
+  return (preference?.items || [])
     .filter(
       (item) =>
         item.opportunity?.id &&
@@ -57,21 +54,28 @@ function formatRankedOpportunitiesList(preference) {
         item.rank !== undefined,
     )
     .sort((a, b) => Number(a.rank) - Number(b.rank));
+}
 
-  return items
-    .map((item) => {
-      const title = item.opportunity?.title || item.opportunity?.id || "—";
-      const stars =
-        item.starRating == null || item.starRating === ""
-          ? null
-          : Number(item.starRating);
-      const comment = (item.comment || "").trim();
-      const parts = [`#${item.rank} ${title}`];
-      if (stars > 0) parts.push(`${stars}★`);
-      if (comment) parts.push(comment);
-      return parts.join(" | ");
-    })
-    .join("; ");
+function formatOpportunityCell(item) {
+  if (!item) return "";
+  const title = item.opportunity?.title || item.opportunity?.id || "—";
+  const stars =
+    item.starRating == null || item.starRating === ""
+      ? null
+      : Number(item.starRating);
+  const comment = (item.comment || "").trim();
+  const parts = [title];
+  if (stars > 0) parts.push(`${stars}★`);
+  if (comment) parts.push(comment);
+  return parts.join(" | ");
+}
+
+function rankColumnLabel(labelOrFn, n, fallbackPrefix) {
+  if (typeof labelOrFn === "function") return labelOrFn(n);
+  if (typeof labelOrFn === "string" && labelOrFn.includes("{{n}}")) {
+    return labelOrFn.replace(/\{\{n\}\}/g, String(n));
+  }
+  return `${fallbackPrefix} ${n}`;
 }
 
 function collectAssessmentFieldKeys(ballotRows, assessmentFormDefinitionId) {
@@ -116,8 +120,8 @@ export function buildStudentBallotCsvRows({
     mutualClassmates = "Mutual classmates",
     oneWayClassmates = "One-way classmates",
     receivedClassmates = "Received classmates",
-    preferredClassmates = "Preferred classmates",
-    rankedOpportunities = "Ranked opportunities",
+    preferredClassmateRank,
+    rankedOpportunityRank,
     additionalNotes = "Additional notes",
     matchedOpportunity = "Matched opportunity",
     submittedAt = "Submitted at",
@@ -146,6 +150,42 @@ export function buildStudentBallotCsvRows({
     assessmentFormDefinitionId,
   );
 
+  const rows = ballotRows || [];
+  const rankedItemsByStudent = rows.map((row) =>
+    getRankedOpportunityItems(row.preference),
+  );
+  const classmateIdsByStudent = rows.map((row) => {
+    const studentId = row.student?.id;
+    return classmateListsByStudent?.get(studentId) || [];
+  });
+  const maxClassmateCount = classmateIdsByStudent.reduce(
+    (max, ids) => Math.max(max, ids.length),
+    0,
+  );
+  const maxOpportunityCount = rankedItemsByStudent.reduce(
+    (max, items) => Math.max(max, items.length),
+    0,
+  );
+
+  const preferredClassmateFields = Array.from(
+    { length: maxClassmateCount },
+    (_, index) =>
+      rankColumnLabel(
+        preferredClassmateRank,
+        index + 1,
+        "Preferred classmate",
+      ),
+  );
+  const rankedOpportunityFields = Array.from(
+    { length: maxOpportunityCount },
+    (_, index) =>
+      rankColumnLabel(
+        rankedOpportunityRank,
+        index + 1,
+        "Ranked opportunity",
+      ),
+  );
+
   const fields = [
     studentName,
     username,
@@ -154,17 +194,18 @@ export function buildStudentBallotCsvRows({
     mutualClassmates,
     oneWayClassmates,
     receivedClassmates,
-    preferredClassmates,
-    rankedOpportunities,
+    ...preferredClassmateFields,
+    ...rankedOpportunityFields,
     additionalNotes,
     matchedOpportunity,
     submittedAt,
     ...assessmentFieldKeys.map((key) => `${ASSESSMENT_COLUMN_PREFIX}${key}`),
   ];
 
-  const data = (ballotRows || []).map((row) => {
+  const data = rows.map((row, rowIndex) => {
     const studentId = row.student?.id;
-    const classmateIds = classmateListsByStudent.get(studentId) || [];
+    const classmateIds = classmateIdsByStudent[rowIndex];
+    const rankedItems = rankedItemsByStudent[rowIndex];
     const mutualSummary = summarizeMutualClassmates(
       studentId,
       classmateIds,
@@ -184,20 +225,25 @@ export function buildStudentBallotCsvRows({
       [mutualClassmates]: String(mutualSummary.mutual),
       [oneWayClassmates]: String(mutualSummary.oneWay),
       [receivedClassmates]: String(mutualSummary.received),
-      [preferredClassmates]: formatClassmatesList(
-        studentId,
-        classmateIds,
-        studentById,
-        classmateListsByStudent,
-        activePickCount,
-      ),
-      [rankedOpportunities]: formatRankedOpportunitiesList(row.preference),
       [additionalNotes]: (row.preference?.notes || "").trim(),
       [matchedOpportunity]: row.match?.opportunity?.title || "",
       [submittedAt]: row.preference?.submittedAt
         ? new Date(row.preference.submittedAt).toLocaleString()
         : "",
     };
+
+    preferredClassmateFields.forEach((field, index) => {
+      out[field] = formatClassmateCell(
+        studentId,
+        classmateIds[index],
+        studentById,
+        classmateListsByStudent,
+        activePickCount,
+      );
+    });
+    rankedOpportunityFields.forEach((field, index) => {
+      out[field] = formatOpportunityCell(rankedItems[index]);
+    });
 
     for (const key of assessmentFieldKeys) {
       out[`${ASSESSMENT_COLUMN_PREFIX}${key}`] = formatCsvCellValue(

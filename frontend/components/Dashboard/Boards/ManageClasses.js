@@ -17,6 +17,7 @@ export default function ManageTemplateClasses({ user, boardId }) {
 
   const userClasses = [
     ...user?.teacherIn.map((cl) => cl?.id),
+    ...(user?.teachingTeamIn || []).map((cl) => cl?.id),
     ...user?.mentorIn.map((cl) => cl?.id),
     ...user?.studentIn.map((cl) => cl?.id),
   ];
@@ -90,6 +91,7 @@ export default function ManageTemplateClasses({ user, boardId }) {
           { permissions: { some: { name: { equals: "ADMIN" } } } },
           { studentIn: { some: { id: { in: userClasses } } } },
           { teacherIn: { some: { id: { in: userClasses } } } },
+          { teachingTeamIn: { some: { id: { in: userClasses } } } },
           { mentorIn: { some: { id: { in: userClasses } } } },
         ],
       },

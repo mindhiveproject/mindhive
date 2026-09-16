@@ -179,6 +179,10 @@ export const ProposalBoard = list({
       ref: "Log.proposal",
       many: true,
     }),
+    tickets: relationship({
+      ref: "Ticket.proposal",
+      many: true,
+    }),
     vizJournals: relationship({
       ref: "VizJournal.project",
       many: true,

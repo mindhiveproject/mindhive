@@ -8,17 +8,43 @@ export const StyledResource = styled.div`
   box-sizing: border-box;
   margin: 0 auto;
   position: relative;
+  
+  .headerEdit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 900px;
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #d1d1d1);
+    border-radius: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 16px 24px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+  }
 
   h1 {
     font: var(--MH-Type-Heading-Base);
     letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
     margin-bottom: 0.5rem;
   }
 
   h2 {
     font: var(--MH-Type-Heading-Small);
     letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
     margin-bottom: 0.5rem;
+  }
+
+  p {
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    margin: 0;
   }
 
   .header {
@@ -26,18 +52,7 @@ export const StyledResource = styled.div`
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    button {
-      padding: 0.75rem 1.5rem;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
-      &:hover {
-        background: #0056b3;
-      }
-    }
+    flex-wrap: wrap;
   }
 
   .goBackBtn {
@@ -58,101 +73,49 @@ export const StyledResource = styled.div`
 
   .searchBar {
     display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 1rem;
     width: 100%;
-    input {
-      flex: 1;
-      padding: 0.75rem;
-      border: 1px solid #ced4da;
-      border-radius: 4px;
-      font: var(--MH-Type-Body-Base);
-      letter-spacing: 0;
-    }
-    select {
-      padding: 0.75rem;
-      border: 1px solid #ced4da;
-      border-radius: 4px;
-      font: var(--MH-Type-Body-Base);
-      letter-spacing: 0;
-    }
+  }
+
+  .resourceSearch {
+    flex: 1;
+    min-width: 200px;
+    max-width: 400px;
+    min-height: 40px;
+    padding: 8px 14px;
+    box-sizing: border-box;
+    border: 1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    border-radius: 8px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .resourceSearch::placeholder {
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
+
+  .resourceSearch:hover {
+    border-color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
+
+  .resourceSearch:focus {
+    outline: none;
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    box-shadow: 0 0 0 2px rgba(51, 111, 138, 0.2);
   }
 
   .board {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    grid-gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-gap: 1.5rem;
     width: 100%;
-  }
-
-  .card {
-    background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-    .card-title {
-      font: var(--MH-Type-Title-Base);
-      letter-spacing: 0;
-      margin: 0;
-    }
-    .card-meta {
-      font: var(--MH-Type-Body-Base);
-      letter-spacing: 0;
-      color: #6c757d;
-      margin: 0;
-    }
-    .card-collaborators {
-      font: var(--MH-Type-Body-Base);
-      letter-spacing: 0;
-      color: #495057;
-      margin: 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      span {
-        background: #e9ecef;
-        padding: 0.3rem 0.6rem;
-        border-radius: 4px;
-      }
-    }
-    .card-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: auto;
-      .action-icon {
-        font-size: 2rem;
-        width: 2rem;
-        height: 2rem;
-        cursor: pointer;
-        transition: color 0.2s;
-        &.preview {
-          color: #007bff;
-        }
-        &.edit {
-          color: #ffc107;
-        }
-        &.copy {
-          color: #28a745;
-        }
-        &.share {
-          color: #17a2b8;
-        }
-        &.delete {
-          color: #dc3545;
-        }
-        &:hover {
-          filter: brightness(80%);
-        }
-      }
-    }
+    align-items: stretch;
   }
 
   .previewModalWrapper,

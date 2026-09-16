@@ -65,6 +65,9 @@ export const GET_CHAT = gql`
           id
           username
         }
+        teachingTeam {
+          id
+        }
         mentors {
           id
           username
@@ -155,6 +158,9 @@ export const GET_OPPORTUNITY_CLASS_FORUM = gql`
       classes {
         id
         creator {
+          id
+        }
+        teachingTeam {
           id
         }
         mentors {

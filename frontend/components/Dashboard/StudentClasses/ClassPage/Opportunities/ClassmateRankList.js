@@ -79,7 +79,7 @@ const RankRow = styled.div`
   gap: 10px;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid var(--MH-Theme-Neutrals-Medium, #e6e6e6);
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   min-width: 0;
   box-sizing: border-box;
@@ -139,7 +139,7 @@ const PoolBody = styled.div`
 const SearchInput = styled.input`
   width: 100%;
   padding: 10px 14px;
-  border: 1px solid var(--MH-Theme-Neutrals-Medium, #d3dae0);
+  border: 1px solid #d3dae0;
   border-radius: 12px;
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   font: var(--MH-Type-Body-Base, 400 14px/20px "Inter", sans-serif);

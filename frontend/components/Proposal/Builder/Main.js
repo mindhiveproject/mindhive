@@ -94,16 +94,20 @@ export default function ProposalBuilder({
         kind: config.kind,
         previewMode: !!config.previewMode,
         saving: !!config.saving,
+        saveDisabled: !!config.saveDisabled,
         typeLabel: config.typeLabel || null,
         isDefaultAction: !!config.isDefaultAction,
+        saveLabel: config.saveLabel || null,
       };
       if (
         prev &&
         prev.kind === next.kind &&
         prev.previewMode === next.previewMode &&
         prev.saving === next.saving &&
+        prev.saveDisabled === next.saveDisabled &&
         prev.typeLabel === next.typeLabel &&
-        prev.isDefaultAction === next.isDefaultAction
+        prev.isDefaultAction === next.isDefaultAction &&
+        prev.saveLabel === next.saveLabel
       ) {
         return prev;
       }
@@ -136,11 +140,21 @@ export default function ProposalBuilder({
     onClose?.();
   };
 
-  const cardTitle = card
-    ? isActionCard(card)
-      ? getActionCardLabel(card, t)
-      : card?.title
-    : "";
+  const isCreateMilestone = !!card?.createMilestone;
+  const isCreateProposalCard = !!card?.createProposalCard;
+  const cardTitle = isCreateMilestone
+    ? t(
+        "section.createMilestone.title",
+        {},
+        { default: "New milestone" }
+      )
+    : isCreateProposalCard
+      ? t("section.createProposalCard.title", {}, { default: "New card" })
+      : card
+        ? isActionCard(card)
+          ? getActionCardLabel(card, t)
+          : card?.title
+        : "";
   const hideBoardChromeNav = !isPreview && !!proposalBuildMode;
   const showChrome = !isPreview;
 
@@ -208,6 +222,10 @@ export default function ProposalBuilder({
               user={user}
               proposal={proposal}
               cardId={card?.id}
+              isCreateMilestone={isCreateMilestone}
+              isCreateProposalCard={isCreateProposalCard}
+              sectionId={card?.sectionId || null}
+              openCard={openCard}
               closeCard={closeCard}
               proposalBuildMode={proposalBuildMode}
               isPreview={isPreview}

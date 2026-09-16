@@ -150,7 +150,7 @@ export default function BoardEditorChrome({
         {onBack ? (
           <IconButton
             variant="tonal"
-            style={{background:"var(--MH-Theme-Neutrals-Lighter, #F3F3F3)"}}
+            style={{background:"var(--MH-Theme-Neutrals-Lighter, #f3f3f3)"}}
             ariaLabel={backLabel}
             title={backLabel}
             onClick={onBack}
@@ -171,9 +171,9 @@ export default function BoardEditorChrome({
               <h1 className="boardEditorChromeTitle">{displayTitle}</h1>
               {isCardMode && cardChrome?.typeLabel ? (
                 <Chip
-                  className="boardEditorChromeTypeBadge"
                   label={cardChrome.typeLabel}
-                  style={{ cursor: "default", pointerEvents: "none", fontSize: 12 }}
+                  variant="static"
+                  tone="neutral"
                 />
               ) : null}
             </div>
@@ -199,7 +199,7 @@ export default function BoardEditorChrome({
               <IconButton
                 variant="subtle"
                 style={{
-                  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+                  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
                 }}
                 ariaLabel={t("proposal.editTitle", {}, {
                   default: "Edit board title",
@@ -244,9 +244,10 @@ export default function BoardEditorChrome({
             <Button
               variant="filled"
               onClick={onCardSave}
-              disabled={cardChrome.saving}
+              disabled={cardChrome.saving || cardChrome.saveDisabled}
             >
-              {tClasses("board.save", {}, { default: "Save" })}
+              {cardChrome.saveLabel ||
+                tClasses("board.save", {}, { default: "Save" })}
             </Button>
           </>
         ) : null}
@@ -268,7 +269,7 @@ export default function BoardEditorChrome({
             <span ref={settingsRef} tabIndex={-1} style={{ display: "inline-flex" }}>
               <IconButton
                 variant="subtle"
-                style={{ background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)" }}
+                style={{ background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)" }}
                 ariaLabel={settingsLabel}
                 title={settingsLabel}
                 aria-expanded={settingsOpen}

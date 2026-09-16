@@ -16,6 +16,11 @@ export const ROUND_MATCH_VIEW = gql`
         title
         studentCapacity
         teamSize
+        allowsTeamPreferences
+        organization {
+          id
+          name
+        }
         sponsors {
           id
           username
@@ -41,7 +46,7 @@ export const ROUND_MATCH_VIEW = gql`
         status
         matchScore
         teacherNotes
-        student {
+        students {
           id
           username
           firstName
@@ -57,6 +62,8 @@ export const ROUND_MATCH_VIEW = gql`
       preferences {
         id
         status
+        teachingTeamNote
+        studentMatchingPreference
         submitter {
           id
           username
@@ -67,6 +74,7 @@ export const ROUND_MATCH_VIEW = gql`
           id
           opportunity {
             id
+            title
           }
           rank
           starRating
@@ -77,6 +85,8 @@ export const ROUND_MATCH_VIEW = gql`
         id
         opportunity {
           id
+          allowsTeamPreferences
+          teamSize
         }
         submitter {
           id
@@ -88,6 +98,23 @@ export const ROUND_MATCH_VIEW = gql`
           lastName
         }
         priority
+      }
+    }
+  }
+`;
+
+/** Slim preference context for teacher name display (queue chip + notes). */
+export const TEACHER_ROUND_PREFERENCE_NAME_CONTEXT = gql`
+  query TEACHER_ROUND_PREFERENCE_NAME_CONTEXT($roundId: ID!) {
+    connectRound(where: { id: $roundId }) {
+      id
+      preferences {
+        id
+        teachingTeamNote
+        studentMatchingPreference
+        submitter {
+          id
+        }
       }
     }
   }
@@ -127,6 +154,7 @@ export const TEACHER_STUDENT_BALLOT_VIEW = gql`
         id
         status
         notes
+        teachingTeamNote
         submittedAt
         assessmentData
         studentMatchingPreference
@@ -183,7 +211,7 @@ export const TEACHER_STUDENT_BALLOT_VIEW = gql`
       matches {
         id
         status
-        student {
+        students {
           id
         }
         opportunity {

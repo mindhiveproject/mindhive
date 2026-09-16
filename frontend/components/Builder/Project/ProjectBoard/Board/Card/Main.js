@@ -594,7 +594,7 @@ export default function ProposalCard({
       minWidth: "20px",
       padding: "8px 12px",
       borderRadius: "8px",
-      border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+      border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
       marginTop: "4px",
       font: "var(--MH-Type-Body-Base)",
       letterSpacing: 0,
@@ -914,7 +914,7 @@ export default function ProposalCard({
               {homeworks.length > 0 && (
                 <div
                   className="MH-Type-Title-Small"
-                  style={{ marginBottom: "16px", color: "var(--MH-Theme-Primary-Dark, #336F8A)" }}
+                  style={{ marginBottom: "16px", color: "var(--MH-Theme-Primary-Dark, #336f8a)" }}
                 >
                   {isMentorOrTeacher
                     ? t("homework.allEntries", "All entries")

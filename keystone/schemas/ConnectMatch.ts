@@ -13,6 +13,77 @@ import {
   studentOpportunitiesUrl,
 } from "../lib/connectRoundLinks";
 
+const INACTIVE_MATCH_STATUSES = ["cancelled", "declined"];
+
+/**
+ * Resolve the set of student profile IDs that will be on this match after the
+ * current create/update resolves. Handles connect / disconnect / set on the
+ * many-to-many `students` field.
+ */
+async function resolveNextStudentIds({
+  operation,
+  resolvedData,
+  item,
+  context,
+}: {
+  operation: string;
+  resolvedData: any;
+  item: any;
+  context: any;
+}): Promise<string[]> {
+  const studentsInput = resolvedData?.students;
+  if (operation === "create") {
+    const connected = studentsInput?.connect;
+    if (!connected) return [];
+    const ids: string[] = [];
+    (Array.isArray(connected) ? connected : [connected]).forEach(
+      (c: { id?: string }) => {
+        if (c?.id) ids.push(c.id);
+      },
+    );
+    return ids;
+  }
+
+  // Update: start from current join, then apply connect / disconnect / set.
+  let currentIds: string[] = [];
+  if (item?.id) {
+    const current = await context.sudo().query.ConnectMatch.findOne({
+      where: { id: item.id as string },
+      query: "students { id }",
+    });
+    currentIds = (current?.students || []).map((s: { id: string }) => s.id);
+  }
+
+  if (studentsInput?.set) {
+    const ids: string[] = [];
+    (Array.isArray(studentsInput.set) ? studentsInput.set : [studentsInput.set]).forEach(
+      (c: { id?: string }) => {
+        if (c?.id) ids.push(c.id);
+      },
+    );
+    return ids;
+  }
+
+  let next = new Set(currentIds);
+  if (studentsInput?.connect) {
+    const toAdd = Array.isArray(studentsInput.connect)
+      ? studentsInput.connect
+      : [studentsInput.connect];
+    toAdd.forEach((c: { id?: string }) => {
+      if (c?.id) next.add(c.id);
+    });
+  }
+  if (studentsInput?.disconnect) {
+    const toRemove = Array.isArray(studentsInput.disconnect)
+      ? studentsInput.disconnect
+      : [studentsInput.disconnect];
+    toRemove.forEach((c: { id?: string }) => {
+      if (c?.id) next.delete(c.id);
+    });
+  }
+  return Array.from(next);
+}
+
 export const ConnectMatch = list({
   access: {
     operation: {
@@ -28,43 +99,51 @@ export const ConnectMatch = list({
     },
   },
   hooks: {
-    // Enforce uniqueness on (round, student, opportunity). Prisma doesn't
-    // express compound-unique across relation FKs through Keystone field
-    // decorators, so we guard at the resolver layer instead. Client already
-    // dedupes, but a browser double-click or a network retry can still
-    // race two createConnectMatch requests through; this hook catches them
-    // before both rows land.
+    // Enforce uniqueness on (round, student, opportunity) across the many
+    // students on a match. Prisma doesn't express compound-unique across
+    // relation FKs through Keystone field decorators, so we guard at the
+    // resolver layer. Cancelled/declined matches are ignored (same as
+    // frontend isStudentInActiveMatch).
     async validateInput({ operation, resolvedData, item, addValidationError, context }) {
       if (operation !== "create" && operation !== "update") return;
       const nextRoundId =
         resolvedData?.round?.connect?.id ?? item?.roundId ?? null;
-      const nextStudentId =
-        resolvedData?.student?.connect?.id ?? item?.studentId ?? null;
       const nextOpportunityId =
         resolvedData?.opportunity?.connect?.id ?? item?.opportunityId ?? null;
-      // Skip when we don't have all three legs yet (partial update, or a
-      // create that omits one of them will fail elsewhere anyway).
-      if (!nextRoundId || !nextStudentId || !nextOpportunityId) return;
-      const existing = await context.sudo().query.ConnectMatch.findMany({
-        where: {
-          round: { id: { equals: nextRoundId } },
-          student: { id: { equals: nextStudentId } },
-          opportunity: { id: { equals: nextOpportunityId } },
-          ...(operation === "update" && item?.id
-            ? { id: { not: { equals: item.id } } }
-            : {}),
-        },
-        query: "id",
+      const nextStudentIds = await resolveNextStudentIds({
+        operation,
+        resolvedData,
+        item,
+        context,
       });
-      if (existing.length > 0) {
-        addValidationError(
-          "This student is already matched to that opportunity in this round.",
-        );
+      if (!nextRoundId || !nextOpportunityId || nextStudentIds.length === 0) {
+        return;
+      }
+
+      for (const studentId of nextStudentIds) {
+        const existing = await context.sudo().query.ConnectMatch.findMany({
+          where: {
+            round: { id: { equals: nextRoundId } },
+            opportunity: { id: { equals: nextOpportunityId } },
+            students: { some: { id: { equals: studentId } } },
+            status: { notIn: INACTIVE_MATCH_STATUSES },
+            ...(operation === "update" && item?.id
+              ? { id: { not: { equals: item.id } } }
+              : {}),
+          },
+          query: "id",
+        });
+        if (existing.length > 0) {
+          addValidationError(
+            "This student is already matched to that opportunity in this round.",
+          );
+          return;
+        }
       }
     },
-    // Notify the student when their match becomes active (e.g. when a teacher
-    // publishes a round). Best-effort — swallows errors so a flaky email
-    // service can't break the mutation.
+    // Notify each matched student when the match becomes active (e.g. when a
+    // teacher publishes a round). Best-effort — swallows errors so a flaky
+    // email service can't break the mutation.
     async afterOperation({ operation, item, originalItem, context }) {
       try {
         if (!item) return;
@@ -73,9 +152,9 @@ export const ConnectMatch = list({
           (operation === "create" || originalItem?.status !== "active");
         if (!becameActive) return;
         const match = await context.sudo().query.ConnectMatch.findOne({
-          where: { id: item.id },
+          where: { id: item.id as string },
           query: `
-            student {
+            students {
               email
               firstName
               username
@@ -91,26 +170,31 @@ export const ConnectMatch = list({
             }
           `,
         });
-        const email = match?.student?.email;
-        if (!email) return;
+        const students = match?.students || [];
+        if (!students.length) return;
         const oppTitle = match?.opportunity?.title || "an opportunity";
         const roundTitle = match?.round?.title || "your matching round";
-        const studentName =
-          match?.student?.firstName || match?.student?.username || "there";
-        const targetClass = pickStudentClassForRound(
-          match?.student?.studentIn,
-          match?.round?.classNetwork?.classes,
-        );
-        const dashboardUrl = studentOpportunitiesUrl(
-          targetClass?.code,
-          match?.round?.id,
-        );
-        await sendNotificationEmail(
-          email,
-          `You're matched: ${oppTitle}`,
-          `Hi ${studentName}, your match for "${roundTitle}" is now active — you've been placed on "${oppTitle}". Open your dashboard for details, and remember to rate the experience when the project wraps up.`,
-          dashboardUrl,
-        );
+        const networkClasses = match?.round?.classNetwork?.classes;
+        for (const student of students) {
+          const email = student?.email;
+          if (!email) continue;
+          const studentName =
+            student?.firstName || student?.username || "there";
+          const targetClass = pickStudentClassForRound(
+            student?.studentIn,
+            networkClasses,
+          );
+          const dashboardUrl = studentOpportunitiesUrl(
+            targetClass?.code,
+            match?.round?.id,
+          );
+          await sendNotificationEmail(
+            email,
+            `You're matched: ${oppTitle}`,
+            `Hi ${studentName}, your match for "${roundTitle}" is now active — you've been placed on "${oppTitle}". Open your dashboard for details, and remember to rate the experience when the project wraps up.`,
+            dashboardUrl,
+          );
+        }
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error("ConnectMatch notification email failed:", e);
@@ -127,8 +211,9 @@ export const ConnectMatch = list({
     opportunity: relationship({
       ref: "Opportunity.matches",
     }),
-    student: relationship({
+    students: relationship({
       ref: "Profile.connectMatches",
+      many: true,
     }),
 
     status: select({

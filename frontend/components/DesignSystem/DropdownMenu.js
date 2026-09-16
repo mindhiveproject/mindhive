@@ -24,7 +24,7 @@ const TRASH_ICON = (
 
 const DEFAULT_TRIGGER_STYLE = {
   borderRadius: "100px",
-  border: "1px solid var(--MH-Theme-Primary-Dark, #336F8A)",
+  border: "1px solid var(--MH-Theme-Primary-Dark, #336f8a)",
   background: "#ffffff",
   color: "#0D3944",
   padding: "4px 12px",
@@ -36,7 +36,7 @@ const DEFAULT_TRIGGER_STYLE = {
 
 const ICON_TRIGGER_STYLE = {
   borderRadius: "8px",
-  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
   background: "#ffffff",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
   padding: "4px 6px",

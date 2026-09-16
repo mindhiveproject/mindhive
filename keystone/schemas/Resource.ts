@@ -11,6 +11,46 @@ import {
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
 import uniqid from "uniqid";
+import { Session } from "../types";
+
+function isResourceOwner(session: Session | undefined, item: any) {
+  if (!session?.itemId || item?.authorId == null) return false;
+  return String(item.authorId) === String(session.itemId);
+}
+
+function isAdmin(session?: Session) {
+  return !!session?.data?.permissions?.some((p) => p.canAccessAdminUI);
+}
+
+async function canEditResourceContent({
+  session,
+  item,
+  context,
+}: {
+  session?: Session;
+  item: any;
+  context: any;
+}) {
+  if (!session?.itemId) return false;
+  if (isAdmin(session) || isResourceOwner(session, item)) return true;
+
+  const resource = await context.sudo().query.Resource.findOne({
+    where: { id: String(item.id) },
+    query: "collaborators { id }",
+  });
+  return !!resource?.collaborators?.some(
+    (collaborator: { id: string }) =>
+      String(collaborator.id) === String(session.itemId)
+  );
+}
+
+const ownerOnlyUpdate = ({
+  session,
+  item,
+}: {
+  session?: Session;
+  item: any;
+}) => isAdmin(session) || isResourceOwner(session, item);
 
 export const Resource = list({
   access: {
@@ -22,7 +62,10 @@ export const Resource = list({
     },
   },
   fields: {
-    title: text({ validation: { isRequired: true } }),
+    title: text({
+      validation: { isRequired: true },
+      access: { update: canEditResourceContent },
+    }),
     slug: text({
       validation: { isRequired: true },
       isIndexed: "unique",
@@ -52,15 +95,17 @@ export const Resource = list({
         },
       },
     }),
-    description: text(),
-    content: json(),
+    description: text({ access: { update: canEditResourceContent } }),
+    content: json({ access: { update: canEditResourceContent } }),
     settings: json({
       defaultValue: {
         publishedToClassIds: [],
       },
+      access: { update: canEditResourceContent },
     }),
     author: relationship({
       ref: "Profile.authorOfResource",
+      access: { update: ownerOnlyUpdate },
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
@@ -74,6 +119,7 @@ export const Resource = list({
     collaborators: relationship({
       ref: "Profile.collaboratorInResource",
       many: true,
+      access: { update: ownerOnlyUpdate },
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
@@ -84,7 +130,10 @@ export const Resource = list({
         },
       },
     }),
-    isPublic: checkbox({ isFilterable: true }),
+    isPublic: checkbox({
+      isFilterable: true,
+      access: { update: ownerOnlyUpdate },
+    }),
     isFeatured: checkbox({ isFilterable: true }),
     tags: relationship({
       ref: "Tag.resources",
@@ -118,5 +167,21 @@ export const Resource = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+  },
+  hooks: {
+    resolveInput({ operation, resolvedData }) {
+      if (
+        operation === "update" &&
+        (Object.prototype.hasOwnProperty.call(resolvedData, "title") ||
+          Object.prototype.hasOwnProperty.call(resolvedData, "content"))
+      ) {
+        resolvedData.updatedAt = new Date().toISOString();
+      } else if (operation === "update") {
+        // Relationship and metadata changes (for example linking a resource to
+        // a card or class) must not make the resource content look newly edited.
+        delete resolvedData.updatedAt;
+      }
+      return resolvedData;
+    },
   },
 });

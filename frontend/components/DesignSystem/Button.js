@@ -36,21 +36,21 @@ const WITH_TRAILING_ICON = {
 // --- Filled
 const FILLED_BASE = {
   ...BASE_STYLE,
-  background: "var(--MH-Theme-Primary-Dark, #336F8A)",
-  color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+  background: "var(--MH-Theme-Primary-Dark, #336f8a)",
+  color: "var(--MH-Theme-Neutrals-White, #ffffff)",
 };
 // Figma hover: resting fill + a 20% Primary Light state layer, plus Elevation Medium.
 const FILLED_HOVER = {
   background:
-    "linear-gradient(0deg, rgba(222, 248, 251, 0.2), rgba(222, 248, 251, 0.2)), var(--MH-Theme-Primary-Dark, #336F8A)",
-  boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0,0,0,0.1))",
+    "linear-gradient(0deg, rgba(222, 248, 251, 0.2), rgba(222, 248, 251, 0.2)), var(--MH-Theme-Primary-Dark, #336f8a)",
+  boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1))",
 };
 // Figma pressed — a mid calypso, softer than Primary Base so the drop from the
 // hover tint doesn't read as harsh without a Material-style fill animation.
 const FILLED_PRESSED = { background: "#559BBB" };
 const FILLED_DISABLED = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   cursor: "default",
   boxShadow: "none",
 };
@@ -59,14 +59,14 @@ const FILLED_DISABLED = {
 const OUTLINE_BASE = {
   ...BASE_STYLE,
   background: "transparent",
-  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
-  border: "1px solid var(--MH-Theme-Primary-Dark, #336F8A)",
+  color: "var(--MH-Theme-Primary-Dark, #336f8a)",
+  border: "1px solid var(--MH-Theme-Primary-Dark, #336f8a)",
 };
-const OUTLINE_HOVER = { background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)" };
-const OUTLINE_PRESSED = { background: "var(--MH-Theme-Primary-Light, #DEF8FB)" };
+const OUTLINE_HOVER = { background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)" };
+const OUTLINE_PRESSED = { background: "var(--MH-Theme-Primary-Light, #def8fb)" };
 const OUTLINE_DISABLED = {
-  border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
-  color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  color: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "transparent",
   cursor: "default",
 };
@@ -74,15 +74,15 @@ const OUTLINE_DISABLED = {
 // --- Tonal (calypso: Primary Light container behind a Primary Dark label — Figma node 1049-3662)
 const TONAL_BASE = {
   ...BASE_STYLE,
-  background: "var(--MH-Theme-Primary-Light, #DEF8FB)",
-  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  background: "var(--MH-Theme-Primary-Light, #def8fb)",
+  color: "var(--MH-Theme-Primary-Dark, #336f8a)",
 };
 // Figma literal — one step deeper than Primary Light, short of Primary Medium.
 const TONAL_HOVER = { background: "#C0EAEF" };
-const TONAL_PRESSED = { background: "var(--MH-Theme-Primary-Medium, #A3D6DB)" };
+const TONAL_PRESSED = { background: "var(--MH-Theme-Primary-Medium, #a3d6db)" };
 const TONAL_DISABLED = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   cursor: "default",
   boxShadow: "none",
 };
@@ -91,16 +91,16 @@ const TONAL_DISABLED = {
 // variant so a label and an icon button can sit side by side in one group)
 const SUBTLE_BASE = {
   ...BASE_STYLE,
-  background: "var(--MH-Theme-Primary-Lighter, #F4F8F7)",
+  background: "var(--MH-Theme-Primary-Lighter, #f4f8f7)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
-const SUBTLE_HOVER = { background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)" };
+const SUBTLE_HOVER = { background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)" };
 const SUBTLE_PRESSED = {
-  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
 };
 const SUBTLE_DISABLED = {
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   cursor: "default",
 };
 
@@ -110,12 +110,12 @@ const SUBTLE_DISABLED = {
 const TEXT_BASE = {
   ...BASE_STYLE,
   background: "transparent",
-  color: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  color: "var(--MH-Theme-Primary-Dark, #336f8a)",
 };
-const TEXT_HOVER = { background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)" };
-const TEXT_PRESSED = { background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)" };
+const TEXT_HOVER = { background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)" };
+const TEXT_PRESSED = { background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)" };
 const TEXT_DISABLED = {
-  color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  color: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   background: "transparent",
   cursor: "default",
 };
@@ -138,7 +138,7 @@ function getVariantStyles(variant) {
 
 const FOCUS_VISIBLE_STYLE = `
 .DesignSystem-Button:focus-visible {
-  outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
+  outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
   outline-offset: 2px;
 }
 .DesignSystem-Button-LeadingIcon svg,

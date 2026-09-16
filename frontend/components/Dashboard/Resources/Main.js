@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Icon } from "semantic-ui-react";
+import { useRouter } from "next/router";
 
 import AddResource from "./AddResource";
 import ViewResource from "./ViewResource";
@@ -13,17 +13,23 @@ import PublicResourcesList from "./PublicResourcesList";
 import ResourcePreviewModal from "./ResourcePreviewModal";
 
 import StyledResource from "../../styles/StyledResource";
+import Button from "../../DesignSystem/Button";
+import ButtonGroup from "../../DesignSystem/ButtonGroup";
 import { NavbarItem, SectionNavbar } from "../../DesignSystem/Navbar";
+import { AddIcon } from "../../DesignSystem/Icons";
 
 import useTranslation from "next-translate/useTranslation";
 
 export default function ResourcesMain({ query, user }) {
   const { selector } = query;
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
   const [previewId, setPreviewId] = useState(null);
   const [shareId, setShareId] = useState(null);
   const { t } = useTranslation("classes");
+
+  const isPublicTab = selector === "public";
 
   // Hide header for action routes, but show for 'public' and overview
   const isActionRoute =
@@ -33,6 +39,23 @@ export default function ResourcesMain({ query, user }) {
   const goBack = () => {
     window.location.href = "/dashboard/resources";
   };
+
+  useEffect(() => {
+    if (isPublicTab && filter === "public") {
+      setFilter("all");
+    }
+  }, [isPublicTab, filter]);
+
+  const filterItems = [
+    {
+      value: "all",
+      label: t("boardManagement.filter.all"),
+    },
+    {
+      value: "public",
+      label: t("boardManagement.filter.publicOnly"),
+    },
+  ];
 
   return (
     <StyledResource>
@@ -62,24 +85,37 @@ export default function ResourcesMain({ query, user }) {
                 {t("boardManagement.publicResources")}
               </NavbarItem>
             </SectionNavbar>
-            <Link href="/dashboard/resources/add">
-              <button>{t("boardManagement.createNewResource")}</button>
-            </Link>
+            <Button
+              variant="filled"
+              leadingIcon={<AddIcon />}
+              onClick={() => router.push("/dashboard/resources/add")}
+            >
+              {t("boardManagement.createNewResource")}
+            </Button>
           </div>
           <div className="searchBar">
             <input
-              type="text"
+              type="search"
+              className="resourceSearch"
               placeholder={t("boardManagement.searchPlaceholder")}
+              aria-label={t("boardManagement.searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-              <option value="all">{t("boardManagement.filter.all")}</option>
-              <option value="recent">{t("boardManagement.filter.recent")}</option>
-              {selector !== "public" && (
-                <option value="public">{t("boardManagement.filter.publicOnly")}</option>
-              )}
-            </select>
+            {!isPublicTab && (
+              <ButtonGroup
+                type="Round"
+                size="Small"
+                selectionMode="single"
+                selectionRequired
+                items={filterItems}
+                value={filter}
+                onChange={(next) => setFilter(next || "all")}
+                aria-label={t("boardManagement.filterAriaLabel", {}, {
+                  default: "Filter resources",
+                })}
+              />
+            )}
           </div>
         </>
       )}
@@ -87,7 +123,6 @@ export default function ResourcesMain({ query, user }) {
       {!selector && (
         <>
           <h2>{t("boardManagement.myResources")}</h2>
-          <p>{t("boardManagement.myResourcesDescription")}</p>
           <MyResourcesList
             query={query}
             user={user}

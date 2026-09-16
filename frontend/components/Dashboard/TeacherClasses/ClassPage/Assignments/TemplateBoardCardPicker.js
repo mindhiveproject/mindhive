@@ -2,19 +2,15 @@ import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import { GET_TEMPLATE_BOARD_SECTIONS_CARDS } from "../../../../Queries/Proposal";
 import Chip from "../../../../DesignSystem/Chip";
-
-const EXCLUDED_CARD_TYPES = new Set([
-  "ACTION_SUBMIT",
-  "ACTION_PEER_FEEDBACK",
-  "ACTION_COLLECTING_DATA",
-  "ACTION_PROJECT_REPORT",
-]);
+import { isActionCard } from "../../../../../lib/milestones";
 
 /**
  * Reusable template board card picker. Renders sections and cards for a given template board.
  * Single-select: selectedCardId + onSelectCard (assignments).
  * Multi-select: selectedCardIds + onToggleCard (resources); cards rendered as Chips.
- * Used by ConnectAssignmentToCardModal, BulkActionsModal, ConnectResourceToCardModal.
+ * Milestone/action cards are shown disabled — only project cards can be targeted.
+ * Used by ConnectAssignmentToCardModal, BulkActionsModal, ConnectResourceToCardModal,
+ * and LinkResourceToProjectCardModal.
  */
 export default function TemplateBoardCardPicker({
   templateBoardId,
@@ -44,10 +40,21 @@ export default function TemplateBoardCardPicker({
     (a, b) => (a?.position ?? 0) - (b?.position ?? 0)
   );
 
+  const milestoneTooltip = t(
+    "boardManagement.linkToProjectCard.milestoneDisabledTooltip",
+    {},
+    {
+      default:
+        "Milestone cards cannot be linked to resources or assignments.",
+    }
+  );
+
   if (!templateBoardId) {
     return (
       <p>
-        {t("assignment.connectModal.noTemplate", "No template board for this class.")}
+        {t("assignment.connectModal.noTemplate", {}, {
+          default: "No template board for this class.",
+        })}
       </p>
     );
   }
@@ -55,7 +62,7 @@ export default function TemplateBoardCardPicker({
   if (loading) {
     return (
       <p>
-        {t("assignment.connectModal.loading", "Loading...")}
+        {t("assignment.connectModal.loading", {}, { default: "Loading..." })}
       </p>
     );
   }
@@ -63,7 +70,10 @@ export default function TemplateBoardCardPicker({
   if (error) {
     return (
       <p>
-        {t("assignment.connectModal.error", "Error loading board")}: {error.message}
+        {t("assignment.connectModal.error", {}, {
+          default: "Error loading board",
+        })}
+        : {error.message}
       </p>
     );
   }
@@ -71,21 +81,23 @@ export default function TemplateBoardCardPicker({
   const descriptionText =
     description != null
       ? description
-      : t(
-          "assignment.connectModal.description",
-          "Select a card on the class template board. The assignment will be linked to this card and to the same card on all student boards."
-        );
+      : t("assignment.connectModal.description", {}, {
+          default:
+            "Select a card on the class template board. The assignment will be linked to this card and to the same card on all student boards.",
+        });
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       {showDescription && <p style={{ marginBottom: 0 }}>{descriptionText}</p>}
       {sectionsSorted.map((section) => {
-        const cards = [...(section.cards || [])]
-          .filter((card) => !EXCLUDED_CARD_TYPES.has(card?.type))
-          .sort((a, b) => (a?.position ?? 0) - (b?.position ?? 0));
+        const cards = [...(section.cards || [])].sort(
+          (a, b) => (a?.position ?? 0) - (b?.position ?? 0)
+        );
         const sectionTitle =
           section.title ||
-          t("assignment.connectModal.untitledSection", "Untitled section");
+          t("assignment.connectModal.untitledSection", {}, {
+            default: "Untitled section",
+          });
         return (
           <div key={section.id}>
             <div
@@ -105,18 +117,34 @@ export default function TemplateBoardCardPicker({
                 }}
               >
                 {cards.map((card) => {
+                  const isMilestone = isActionCard(card);
                   const isSelected = selectedCardIds.includes(card.id);
+                  const cardLabel =
+                    card.title ||
+                    t("assignment.connectModal.untitledCard", {}, {
+                      default: "Untitled card",
+                    });
+                  if (isMilestone) {
+                    return (
+                      <Chip
+                        key={card.id}
+                        label={cardLabel}
+                        disabled
+                        title={milestoneTooltip}
+                        ariaLabel={`${cardLabel}. ${milestoneTooltip}`}
+                      />
+                    );
+                  }
                   return (
                     <Chip
                       key={card.id}
-                      label={
-                        card.title ||
-                        t("assignment.connectModal.untitledCard", "Untitled card")
-                      }
-                      selected={false}
+                      label={cardLabel}
+                      selected={isSelected}
                       disabled={disabled}
                       onClick={() => onToggleCard(card.id)}
-                      onClose={isSelected ? () => onToggleCard(card.id) : undefined}
+                      onClose={
+                        isSelected ? () => onToggleCard(card.id) : undefined
+                      }
                     />
                   );
                 })}
@@ -124,11 +152,20 @@ export default function TemplateBoardCardPicker({
             ) : (
               <ul style={{ listStyle: "none", paddingLeft: 0, margin: 0 }}>
                 {cards.map((card) => {
+                  const isMilestone = isActionCard(card);
                   const isSelected = selectedCardId === card.id;
+                  const cardLabel =
+                    card.title ||
+                    t("assignment.connectModal.untitledCard", {}, {
+                      default: "Untitled card",
+                    });
+                  const canSelect = !disabled && !isMilestone;
                   return (
                     <li
                       key={card.id}
                       className="MH-Type-Label-Base"
+                      title={isMilestone ? milestoneTooltip : undefined}
+                      aria-disabled={isMilestone || disabled}
                       style={{
                         marginBottom: "4px",
                         padding: "8px 12px",
@@ -137,16 +174,12 @@ export default function TemplateBoardCardPicker({
                         border: isSelected
                           ? "1px solid #336F8A"
                           : "1px solid #e0e0e0",
-                        cursor: disabled ? "default" : "pointer",
-                        opacity: disabled ? 0.7 : 1,
+                        cursor: canSelect ? "pointer" : "default",
+                        opacity: isMilestone || disabled ? 0.55 : 1,
                       }}
-                      onClick={() => !disabled && onSelectCard?.(card.id)}
+                      onClick={() => canSelect && onSelectCard?.(card.id)}
                     >
-                      {card.title ||
-                        t(
-                          "assignment.connectModal.untitledCard",
-                          "Untitled card"
-                        )}
+                      {cardLabel}
                     </li>
                   );
                 })}
@@ -157,10 +190,9 @@ export default function TemplateBoardCardPicker({
       })}
       {sectionsSorted.length === 0 && (
         <p>
-          {t(
-            "assignment.connectModal.noSections",
-            "This board has no sections or cards yet."
-          )}
+          {t("assignment.connectModal.noSections", {}, {
+            default: "This board has no sections or cards yet.",
+          })}
         </p>
       )}
     </div>

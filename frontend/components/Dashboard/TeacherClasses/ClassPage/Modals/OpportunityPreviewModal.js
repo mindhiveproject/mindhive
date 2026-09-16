@@ -184,13 +184,13 @@ const ChatPane = styled.aside`
   padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM};
   padding-left: 16px;
   padding-right: 16px;
-  border-left: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+  border-left: 1px solid #d3dae0;
   background: transparent;
   box-sizing: border-box;
 
   @media (max-width: 900px) {
     border-left: none;
-    border-top: 1px solid var(--MH-Theme-Neutrals-Light, #d3dae0);
+    border-top: 1px solid #d3dae0;
     padding-left: 0;
     padding-right: 0;
     padding-top: 16px;
@@ -328,8 +328,8 @@ const FIELD_VALUE_HIGHLIGHT_STYLE = {
 
 /** Messages: tonal variant with tertiary fill. */
 const TOOLBAR_TONAL_STYLE = {
-  border: "0 solid var(--MH-Theme-Tertiary-Medium, #D3E0E3)",
-  background: "var(--MH-Theme-Tertiary-Medium, #D3E0E3)",
+  border: "0 solid var(--MH-Theme-Tertiary-Medium, #d3e0e3)",
+  background: "var(--MH-Theme-Tertiary-Medium, #d3e0e3)",
 };
 
 const PROPOSAL_SECTION_STYLE = {

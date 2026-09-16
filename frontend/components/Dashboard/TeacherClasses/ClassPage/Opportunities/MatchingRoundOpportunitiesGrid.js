@@ -127,7 +127,7 @@ const OpportunityInfoTooltip = styled.div`
     font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
     text-transform: uppercase;
-    color: var(--MH-Theme-Neutrals-Grey-3, #888);
+    color: var(--MH-Theme-Neutrals-Grey-3, #888888);
     white-space: nowrap;
   }
 
@@ -153,11 +153,11 @@ const OpportunityInfoTooltip = styled.div`
   }
 
   .matchingRoundOppInfoTooltipValue.appointmentRequested {
-    color: var(--MH-Theme-Error-Dark, #b9261a);
+    color: var(--MH-Theme-Warning-Base, #b9261a);
   }
 
   .matchingRoundOppInfoTooltipValue.returned {
-    color: var(--MH-Theme-Secondary-Dark, #3f288f);
+    color: var(--MH-Theme-Additional-Accent-Dark, #3f288f);
   }
 
   .matchingRoundOppInfoTooltipDismiss {
