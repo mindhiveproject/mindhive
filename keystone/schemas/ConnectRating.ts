@@ -54,7 +54,7 @@ export const ConnectRating = list({
                   classes { id code }
                 }
               }
-              student {
+              students {
                 email
                 username
                 firstName
@@ -91,22 +91,26 @@ export const ConnectRating = list({
             );
           }
         } else if (rating.raterRole === "mentor") {
-          const to = rating.match?.student?.email;
-          if (!to) return;
-          const targetClass = pickStudentClassForRound(
-            rating.match?.student?.studentIn,
-            rating.match?.round?.classNetwork?.classes,
-          );
-          const dashboardUrl = studentOpportunitiesUrl(
-            targetClass?.code,
-            rating.match?.round?.id,
-          );
-          await sendNotificationEmail(
-            to,
-            `Your mentor left feedback`,
-            `${raterName} rated your work on "${oppTitle}". You can review the feedback in your dashboard.`,
-            dashboardUrl,
-          );
+          const students = rating.match?.students || [];
+          const networkClasses = rating.match?.round?.classNetwork?.classes;
+          for (const student of students) {
+            const to = student?.email;
+            if (!to) continue;
+            const targetClass = pickStudentClassForRound(
+              student?.studentIn,
+              networkClasses,
+            );
+            const dashboardUrl = studentOpportunitiesUrl(
+              targetClass?.code,
+              rating.match?.round?.id,
+            );
+            await sendNotificationEmail(
+              to,
+              `Your mentor left feedback`,
+              `${raterName} rated your work on "${oppTitle}". You can review the feedback in your dashboard.`,
+              dashboardUrl,
+            );
+          }
         }
       } catch (e) {
         // eslint-disable-next-line no-console

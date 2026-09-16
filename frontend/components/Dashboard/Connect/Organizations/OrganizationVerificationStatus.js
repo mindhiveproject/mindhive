@@ -17,7 +17,7 @@ const Wrap = styled.span`
 const VERIFIED_CHIP_STYLE = {
   background: "#eef8f1",
   backgroundColor: "#eef8f1",
-  color: "var(--MH-Theme-Success, #1d6b3a)",
+  color: "var(--MH-Theme-Success-Dark, #1d6b3a)",
 };
 
 const UNVERIFIED_CHIP_STYLE = {

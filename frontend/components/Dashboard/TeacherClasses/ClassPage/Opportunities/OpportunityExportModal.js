@@ -45,7 +45,7 @@ const LEGEND_STYLE = {
   padding: "0 4px",
   font: 'var(--MH-Type-Title-Small)',
   letterSpacing: 0,
-  color: "var(--MH-Theme-Neutrals-Black, #1a1a1a)",
+  color: "#1a1a1a",
 };
 const COLUMNS_STYLE = {
   display: "grid",

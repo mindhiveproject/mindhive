@@ -73,6 +73,7 @@ export const CURRENT_USER_QUERY = gql`
         permissions {
           name
           canManageForms
+          canManageTickets
         }
         image {
           id
@@ -92,6 +93,9 @@ export const CURRENT_USER_QUERY = gql`
           id
         }
         teacherIn {
+          id
+        }
+        teachingTeamIn {
           id
         }
         mentorIn {
@@ -126,6 +130,9 @@ export const CURRENT_USER_QUERY = gql`
           id
         }
         favoriteOpportunities {
+          id
+        }
+        favoriteClasses {
           id
         }
         bio
@@ -179,6 +186,28 @@ export const GET_USER_CLASSES = gql`
           }
           templateProposal {
             id
+            title
+          }
+          classTemplateBoards {
+            id
+            title
+          }
+        }
+        teachingTeamIn {
+          id
+          title
+          code
+          createdAt
+          networks {
+            classes {
+              id
+              title
+              code
+            }
+          }
+          templateProposal {
+            id
+            title
           }
           classTemplateBoards {
             id
@@ -199,6 +228,7 @@ export const GET_USER_CLASSES = gql`
           }
           templateProposal {
             id
+            title
           }
           classTemplateBoards {
             id
@@ -1082,6 +1112,9 @@ export const GET_PROFILE = gql`
           id
         }
         teacherIn {
+          id
+        }
+        teachingTeamIn {
           id
         }
         mentorIn {

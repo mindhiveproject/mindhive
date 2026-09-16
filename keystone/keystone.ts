@@ -66,6 +66,7 @@ const LOCAL_STORAGE_PATHS = [
   "opportunity-videos",
   "profile-videos",
   "jspsych-archives",
+  "ticket-screenshots",
 ];
 
 for (const storagePath of LOCAL_STORAGE_PATHS) {
@@ -220,6 +221,18 @@ export default withAuth(
           path: "/study-images",
         },
         storagePath: `study-images`,
+      },
+      // Filing-time captures for platform tickets. Its own bucket rather than
+      // media-library because retention differs: a capture of a live class or
+      // board can contain student names and responses, so these are pruned
+      // once the ticket is resolved. See mutations/pruneTicketScreenshots.
+      ticketScreenshots: {
+        kind: "local",
+        type: "image",
+        generateUrl: (path) => `${assetBaseUrl}/ticket-screenshots${path}`,
+        serverRoute: { path: "/ticket-screenshots" },
+        storagePath: "ticket-screenshots",
+        transformName: makeDatePartitionedName("ticket-screenshots", false),
       },
       opportunity_covers: {
         kind: "local",

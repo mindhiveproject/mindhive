@@ -360,7 +360,6 @@
 		"multipleClassesWarning": "Tenga en cuenta que todas las tareas asociadas a este tablero estarán vinculadas a la misma clase mencionada anteriormente. Esto significa que todas las tareas de los estudiantes de estas clases se agruparán.",
 		"multipleClassesWarningTitle": "Varias clases seleccionadas",
 		"myResources": "Mis recursos",
-		"myResourcesDescription": "Crea desde cero, duplica el tuyo o compártelo con colaboradores.",
 		"newBoard": "Nueva Junta de Proyecto",
 		"newBoardDesc": "Un nuevo tablero de proyecto creado desde cero",
 		"noBoardAssociated": "No tienes un tablero de proyecto asociado a esta clase. Primero, crea uno.",

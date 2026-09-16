@@ -11,6 +11,7 @@ import {
 } from "@keystone-6/core/fields";
 import uniqid from "uniqid";
 import { rules, isSignedIn, canAdminManageNetworks } from "../access";
+import { syncNetworkClassStaffAsRoundReviewers } from "../lib/classStaff";
 
 export const ClassNetwork = list({
   access: {
@@ -178,6 +179,11 @@ export const ClassNetwork = list({
       if (operation === "create" && !context.session?.itemId) {
         addValidationError("You must be signed in to create a class network.");
       }
+    },
+    async afterOperation({ operation, inputData, item, context }) {
+      if (operation !== "create" && operation !== "update") return;
+      if (!inputData?.classes || !item?.id) return;
+      await syncNetworkClassStaffAsRoundReviewers(context, String(item.id));
     },
   },
 });

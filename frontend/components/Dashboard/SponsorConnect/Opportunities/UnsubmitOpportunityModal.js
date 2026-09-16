@@ -142,7 +142,7 @@ export default function UnsubmitOpportunityModal({
         <p style={{ margin: "12px 0 0" }}>
           {t("myOpportunitiesList.unsubmit.helperHeld", {}, {
             default:
-              "This opportunity is already selected for a matching round. Unsubmitting does not remove it — students may still see it until a teacher removes it. Ask the teacher if you want it hidden. If they remove it, they will need to re-select it later for students to see it again.",
+              "This opportunity is already selected for a matching round. Turning back to draft removes it from matching rounds so students will not see it. It stays in the class network — a teacher can add it again from Available after you submit for review.",
           })}
         </p>
       ) : null}

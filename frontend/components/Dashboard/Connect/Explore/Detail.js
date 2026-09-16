@@ -29,7 +29,7 @@ const Shell = styled.div`
   flex-direction: column;
   gap: 24px;
   padding: 32px clamp(16px, 6vw, 64px);
-  background-color: var(--MH-Theme-Neutrals-Lighter, #f7f9f8);
+  background-color: var(--MH-Theme-Neutrals-Soft, #f7f9f8);
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 `;

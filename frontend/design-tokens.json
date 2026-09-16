@@ -1,0 +1,496 @@
+{
+  "$description": "Generated from Theme.css and Typography.css — do not edit by hand.",
+  "color": {
+    "Primary": {
+      "Dark": {
+        "$type": "color",
+        "$value": "#336f8a",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Primary-Dark"
+        }
+      },
+      "Base": {
+        "$type": "color",
+        "$value": "#69bbc4",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Primary-Base"
+        }
+      },
+      "Medium": {
+        "$type": "color",
+        "$value": "#a3d6db",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Primary-Medium"
+        }
+      },
+      "Light": {
+        "$type": "color",
+        "$value": "#def8fb",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Primary-Light"
+        }
+      },
+      "Lighter": {
+        "$type": "color",
+        "$value": "#f4f8f7",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Primary-Lighter"
+        }
+      },
+      "Green": {
+        "$type": "color",
+        "$value": "#357a70",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Primary-Green"
+        }
+      },
+      "Yellow": {
+        "$type": "color",
+        "$value": "#f9d978",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Primary-Yellow"
+        }
+      }
+    },
+    "Secondary": {
+      "Dark": {
+        "$type": "color",
+        "$value": "#6f26ce",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Secondary-Dark"
+        }
+      }
+    },
+    "Tertiary": {
+      "Dark": {
+        "$type": "color",
+        "$value": "#0d3944",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Tertiary-Dark"
+        }
+      },
+      "Medium": {
+        "$type": "color",
+        "$value": "#d3e0e3",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Tertiary-Medium"
+        }
+      },
+      "Light": {
+        "$type": "color",
+        "$value": "#f6f9f8",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Tertiary-Light"
+        }
+      }
+    },
+    "Accent": {
+      "Base": {
+        "$type": "color",
+        "$value": "#f2be42",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Accent-Base"
+        }
+      },
+      "Medium": {
+        "$type": "color",
+        "$value": "#f9d978",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Accent-Medium"
+        }
+      },
+      "Light": {
+        "$type": "color",
+        "$value": "#fdf2d0",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Accent-Light"
+        }
+      },
+      "Dark": {
+        "$type": "color",
+        "$value": "#5d5763",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Accent-Dark"
+        }
+      }
+    },
+    "Additional-Accent": {
+      "Dark": {
+        "$type": "color",
+        "$value": "#3f288f",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Additional-Accent-Dark"
+        }
+      },
+      "Medium": {
+        "$type": "color",
+        "$value": "#d8d3e7",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Additional-Accent-Medium"
+        }
+      },
+      "Light": {
+        "$type": "color",
+        "$value": "#f5f2ff",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Additional-Accent-Light"
+        }
+      }
+    },
+    "Neutrals": {
+      "Black": {
+        "$type": "color",
+        "$value": "#171717",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Black"
+        }
+      },
+      "Grey-2": {
+        "$type": "color",
+        "$value": "#5f6871",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Grey-2"
+        }
+      },
+      "Dark": {
+        "$type": "color",
+        "$value": "#6a6a6a",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Dark"
+        }
+      },
+      "Grey-3": {
+        "$type": "color",
+        "$value": "#888888",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Grey-3"
+        }
+      },
+      "Medium": {
+        "$type": "color",
+        "$value": "#a1a1a1",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Medium"
+        }
+      },
+      "Light": {
+        "$type": "color",
+        "$value": "#e6e6e6",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Light"
+        }
+      },
+      "Light-Grey": {
+        "$type": "color",
+        "$value": "#e6e6e6",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Light-Grey"
+        }
+      },
+      "Lighter": {
+        "$type": "color",
+        "$value": "#f3f3f3",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Lighter"
+        }
+      },
+      "Soft": {
+        "$type": "color",
+        "$value": "#f7f9f8",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Soft"
+        }
+      },
+      "Light-Green": {
+        "$type": "color",
+        "$value": "#f6f9f8",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Light-Green"
+        }
+      },
+      "Extra-Light": {
+        "$type": "color",
+        "$value": "#f8fafb",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-Extra-Light"
+        }
+      },
+      "White": {
+        "$type": "color",
+        "$value": "#ffffff",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Neutrals-White"
+        }
+      }
+    },
+    "Success": {
+      "Base": {
+        "$type": "color",
+        "$value": "#e3f4ec",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Success"
+        }
+      },
+      "Dark": {
+        "$type": "color",
+        "$value": "#1d6b3a",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Success-Dark"
+        }
+      }
+    },
+    "Warning": {
+      "Base": {
+        "$type": "color",
+        "$value": "#b9261a",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Warning-Base"
+        }
+      },
+      "Light": {
+        "$type": "color",
+        "$value": "#edcecd",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Warning-Light"
+        }
+      },
+      "Dark": {
+        "$type": "color",
+        "$value": "#8f1f14",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Warning-Dark"
+        }
+      }
+    },
+    "Danger": {
+      "Light": {
+        "$type": "color",
+        "$value": "#fdecea",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Danger-Light"
+        }
+      },
+      "Dark": {
+        "$type": "color",
+        "$value": "#8f1f14",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Danger-Dark"
+        }
+      }
+    },
+    "Error": {
+      "Base": {
+        "$type": "color",
+        "$value": "#b3261e",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Error"
+        }
+      },
+      "Dark": {
+        "$type": "color",
+        "$value": "#b3261e",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Error-Dark"
+        }
+      }
+    }
+  },
+  "shadow": {
+    "Elevation": {
+      "Small": {
+        "$type": "shadow",
+        "$value": "1px 1px 4px rgba(0, 0, 0, 0.08)",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Elevation-Small"
+        }
+      },
+      "Low": {
+        "$type": "shadow",
+        "$value": "0px 4px 24px rgba(0, 0, 0, 0.05)",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Elevation-Low"
+        }
+      },
+      "Medium": {
+        "$type": "shadow",
+        "$value": "2px 2px 8px rgba(0, 0, 0, 0.1)",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Elevation-Medium"
+        }
+      },
+      "High": {
+        "$type": "shadow",
+        "$value": "2px 2px 12px rgba(0, 0, 0, 0.19)",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Elevation-High"
+        }
+      }
+    }
+  },
+  "typography": {
+    "Heading": {
+      "Large": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 600,
+          "fontSize": "46px",
+          "lineHeight": "52px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Heading-Large"
+        }
+      },
+      "Base": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 600,
+          "fontSize": "36px",
+          "lineHeight": "44px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Heading-Base"
+        }
+      },
+      "Small": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 600,
+          "fontSize": "28px",
+          "lineHeight": "36px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Heading-Small"
+        }
+      }
+    },
+    "Title": {
+      "Large": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 500,
+          "fontSize": "22px",
+          "lineHeight": "28px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Title-Large"
+        }
+      },
+      "Base": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 500,
+          "fontSize": "16px",
+          "lineHeight": "24px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Title-Base"
+        }
+      },
+      "Small": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 500,
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Title-Small"
+        }
+      }
+    },
+    "Body": {
+      "Large": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 400,
+          "fontSize": "22px",
+          "lineHeight": "28px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Body-Large"
+        }
+      },
+      "Base": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 400,
+          "fontSize": "16px",
+          "lineHeight": "24px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Body-Base"
+        }
+      },
+      "Small": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 400,
+          "fontSize": "12px",
+          "lineHeight": "16px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Body-Small"
+        }
+      }
+    },
+    "Label": {
+      "Large": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 500,
+          "fontSize": "16px",
+          "lineHeight": "24px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Label-Large"
+        }
+      },
+      "Base": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 500,
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Label-Base"
+        }
+      },
+      "Small": {
+        "$type": "typography",
+        "$value": {
+          "fontWeight": 500,
+          "fontSize": "12px",
+          "lineHeight": "16px",
+          "fontFamily": "Inter, sans-serif",
+          "letterSpacing": "0"
+        },
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Type-Label-Small"
+        }
+      }
+    }
+  }
+}

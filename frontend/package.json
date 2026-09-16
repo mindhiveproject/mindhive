@@ -8,8 +8,13 @@
     "dev": "next dev -p 3000",
     "build": "NODE_OPTIONS=--max-old-space-size=4096 next build",
     "start": "next start -p 3000",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint": "npm run lint:tokens && npm run lint:tokens-export && npm run lint:surfaces && eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:tokens": "node scripts/check-tokens.mjs",
+    "lint:surfaces": "node scripts/check-surfaces.mjs",
+    "lint:tokens-export": "node scripts/build-tokens.mjs --check",
+    "tokens:build": "node scripts/build-tokens.mjs",
+    "check:graphql": "node scripts/check-graphql.mjs"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",

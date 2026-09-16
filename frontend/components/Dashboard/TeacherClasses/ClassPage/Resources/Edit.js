@@ -55,6 +55,7 @@ export default function EditResource({ resourceId, myclass, user }) {
           content: inputs?.content,
           settings: inputs?.settings,
           isPublic: inputs?.isPublic,
+          updatedAt: new Date().toISOString(),
         },
       });
       router.push({

@@ -3,9 +3,18 @@ import { ThemeProvider, createGlobalStyle } from "styled-components";
 
 import Meta from "./Meta";
 
-const theme = {
+// The styled-components theme, kept for the ~15 `Styled*.js` files that read
+// `props.theme.*`. It is NOT a second palette: every key with a design-system
+// equivalent now references its `--MH-Theme-*` token, so the value has one home
+// in `DesignSystem/Theme.css` and changing it there moves both. Keys still
+// holding a literal have no token equivalent yet — add one to Theme.css and
+// point the key at it rather than editing the hex here.
+//
+// Values reach the DOM through styled-components CSS and React inline styles
+// (HelpCenter's ModalHeader), both of which resolve `var()` normally.
+//
 // Design System: https://www.figma.com/design/AODZL5Cne8QAt0Yy9ZcKkM/Design-System?node-id=2275-1249&t=i5eXhFYKPtMSetWj-1
-
+const theme = {
   // Colors
 
   primaryBlue:   "#265390",  
@@ -16,34 +25,34 @@ const theme = {
   secondaryGreen: "#55808C",  
   accentGreen:    "#E0FAF8",  
   //Calypsos
-  primaryCalyspo:   "#336F8A",  
-  secondaryCalyspo: "#69BBC4",  
-  accentCalyspo:    "#DEF8FB",  
+  primaryCalyspo:   "var(--MH-Theme-Primary-Dark, #336f8a)",  
+  secondaryCalyspo: "var(--MH-Theme-Primary-Base, #69bbc4)",  
+  accentCalyspo:    "var(--MH-Theme-Primary-Light, #def8fb)",  
   //Yellows
-  primaryYellow:   "#F2BE42",  
-  secondaryYellow: "#F9D978",  
-  accentYellow:    "#FDF2D0",  
+  primaryYellow:   "var(--MH-Theme-Accent-Base, #f2be42)",  
+  secondaryYellow: "var(--MH-Theme-Accent-Medium, #f9d978)",  
+  accentYellow:    "var(--MH-Theme-Accent-Light, #fdf2d0)",  
   //Reds
-  primaryRed:   "#B9261A",  
+  primaryRed:   "var(--MH-Theme-Warning-Base, #b9261a)",  
   secondaryRed: "#CF6D6A",  
-  accentRed:    "#EDCECD",  
+  accentRed:    "var(--MH-Theme-Warning-Light, #edcecd)",  
   //Purples
   primaryPurple:   "#8A2CF6",  
   secondaryPurple: "#7D70AD",  
-  accentPurple:    "#D8D3E7",  
+  accentPurple:    "var(--MH-Theme-Additional-Accent-Medium, #d8d3e7)",  
   //Neutrals (darker >> ligher)
-  neutral1: "#171717",  
+  neutral1: "var(--MH-Theme-Neutrals-Black, #171717)",  
   neutral2: "#434343",  
   neutral3: "#625B71",  
   neutral4: "#EFEFEF",  
-  neutral5: "#F3F3F3",  
-  neutral6: "#FFFFFF",  
+  neutral5: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",  
+  neutral6: "var(--MH-Theme-Neutrals-White, #ffffff)",  
   
   //Old color scheme //////////////////
   red: "#FF0000",
   black: "#393939",
   grey: "#666666",
-  white: "#FFFFFF",
+  white: "var(--MH-Theme-Neutrals-White, #ffffff)",
   yellow: "yellow",
   lightgrey: "#E1E1E1",
   darkgreen: "#007C70",

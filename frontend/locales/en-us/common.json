@@ -44,6 +44,7 @@
 		"next": "Next",
 		"password": "Password",
 		"requestReset": "Request reset",
+		"requestResetConfirmation": "If this email is associated with a user, we have sent a password reset email. For students, the link may go to their teacher(s) with the student CC’d, depending on each class’s password-reset setting. Otherwise the student receives the link directly.",
 		"reset": "Reset",
 		"resetTitle": "Reset password",
 		"username": "Username"

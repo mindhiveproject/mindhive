@@ -12,6 +12,8 @@ import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 import StyledResource from "../../styles/StyledResource";
 import Button from "../../DesignSystem/Button";
+import IconButton from "../../DesignSystem/IconButton";
+import { CloseIcon } from "../../DesignSystem/Icons";
 import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 export default function CopyResource({ query, user, goBack }) {
@@ -55,17 +57,19 @@ export default function CopyResource({ query, user, goBack }) {
 
   return (
     <StyledResource>
-      <Button
-        className="goBackBtn"
-        variant="outline"
-        onClick={goBack}
-        // leadingIcon={<img src="/assets/icons/back.svg" alt="" aria-hidden width={18} height={18} />}
-      >
-        {t("boardManagement.goBackToResourceArea")}
-      </Button>
+      <div className="headerEdit">
+        <Button onClick={handleSave}>{t("boardManagement.saveOwnRessource")}</Button>
+        <IconButton
+          className="goBackBtn"
+          variant="subtle"
+          onClick={goBack}
+          icon={<CloseIcon />}
+        >
+          {t("boardManagement.goBackToResourceArea")}
+        </IconButton>
+      </div>
       <h1>{t("boardManagement.customizeRessource")}</h1>
       <ResourceForm user={user} inputs={inputs} handleChange={handleChange} />
-      <Button onClick={handleSave}>{t("boardManagement.saveOwnRessource")}</Button>
     </StyledResource>
   );
 }

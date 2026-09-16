@@ -18,6 +18,8 @@ import ClassSettings from "./Settings";
 import { GET_CLASS } from "../../../Queries/Classes";
 import RestrictedAccess from "../../../Global/Restricted";
 import { NavbarItem, SectionNavbar } from "../../../DesignSystem/Navbar";
+import JustOneSecondNotice from "../../../DesignSystem/JustOneSecondNotice";
+import { taughtClassIds } from "../../../../lib/classTeacherUtils";
 
 import StyledClass from "../../../styles/StyledClass";
 
@@ -91,11 +93,12 @@ export default function ClassPage({ code, user, query }) {
   const router = useRouter();
   const { action, board } = query || {};
 
-  const { data } = useQuery(GET_CLASS, {
+  const { data, loading } = useQuery(GET_CLASS, {
     variables: { code },
   });
 
   const myclass = data?.class || { title: "", description: "" };
+  const isClassQueryPending = loading && !data;
   const hasNyuCusp = classHasNyuCusp(myclass?.settings);
   const isNyuCuspOnly = classIsNyuCuspOnly(myclass?.settings);
   const showOpportunitiesTab = hasNyuCusp;
@@ -193,6 +196,23 @@ export default function ClassPage({ code, user, query }) {
     return null;
   }
 
+  if (isClassQueryPending) {
+    return (
+      <StyledClass>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <JustOneSecondNotice
+            message={{
+              h1: t("main.loadingClassTitle", {}, { default: "Loading class" }),
+              p: t("main.loadingClassBody", {}, {
+                default: "Fetching this class and its content.",
+              }),
+            }}
+          />
+        </div>
+      </StyledClass>
+    );
+  }
+
   if (isProjectsFullscreen) {
     return (
       <StyledClass className="isProjectsFullscreen">
@@ -207,8 +227,8 @@ export default function ClassPage({ code, user, query }) {
     >
       <RestrictedAccess
         userCanAccess={[
-          ...user?.teacherIn.map((c) => c?.id),
-          ...user?.mentorIn.map((c) => c?.id),
+          ...taughtClassIds(user),
+          ...(user?.mentorIn || []).map((c) => c?.id),
         ]}
         whatToAccess={myclass?.id}
       >

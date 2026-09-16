@@ -2,7 +2,12 @@ import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
 import Chip from "../../../DesignSystem/Chip";
+import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import {
+  DEFAULT_PREFERENCE_WINDOW_CLOSE_TIME,
+  DEFAULT_PREFERENCE_WINDOW_OPEN_TIME,
+  DEFAULT_PREFERENCE_WINDOW_TIMEZONE,
+  PREFERENCE_WINDOW_TIMEZONE_OPTIONS,
   ROUND_SCHEDULE_PHASES,
   SCHEDULE_PHASE_COPY_DEFAULTS,
 } from "../../../../lib/connectRoundSettings";
@@ -77,6 +82,16 @@ const FieldLabel = styled.span`
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;
 
+const DateTimeRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 8px;
+
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 const DateInput = styled.input`
   width: 100%;
   padding: 10px 14px;
@@ -131,7 +146,15 @@ function TimelineDateField({ name, value, onChange, t }) {
   );
 }
 
-function PreferenceWindowDateField({ name, value, onChange, t, boundary }) {
+function PreferenceWindowDateField({
+  dateName,
+  timeName,
+  dateValue,
+  timeValue,
+  onChange,
+  t,
+  boundary,
+}) {
   const isOpen = boundary === "open";
   const label = isOpen
     ? t("opportunities.matchingRound.schedule.preferenceWindowOpenLabel", {}, {
@@ -142,16 +165,24 @@ function PreferenceWindowDateField({ name, value, onChange, t, boundary }) {
       });
   const effect = isOpen
     ? t("opportunities.matchingRound.schedule.preferenceWindowOpenEffect", {}, {
-        default: "Students can submit from this date",
+        default: "Students can submit from this moment",
       })
     : t("opportunities.matchingRound.schedule.preferenceWindowCloseEffect", {}, {
-        default: "Submissions close after this date",
+        default: "Submissions close at this moment for everyone",
       });
   const ariaLabel = t(
     "opportunities.matchingRound.schedule.preferenceWindowDateAria",
     { label, effect },
     { default: "{{label}}. {{effect}}" },
   );
+  const timeAria = t(
+    "opportunities.matchingRound.schedule.preferenceWindowTimeAria",
+    { label },
+    { default: "{{label}} time" },
+  );
+  const defaultTime = isOpen
+    ? DEFAULT_PREFERENCE_WINDOW_OPEN_TIME
+    : DEFAULT_PREFERENCE_WINDOW_CLOSE_TIME;
 
   return (
     <Control>
@@ -165,12 +196,58 @@ function PreferenceWindowDateField({ name, value, onChange, t, boundary }) {
           truncate={false}
         />
       </FieldLabel>
-      <DateInput
-        type="date"
-        name={name}
-        value={value || ""}
-        onChange={onChange}
-        aria-label={ariaLabel}
+      <DateTimeRow>
+        <DateInput
+          type="date"
+          name={dateName}
+          value={dateValue || ""}
+          onChange={onChange}
+          aria-label={ariaLabel}
+        />
+        <DateInput
+          type="time"
+          name={timeName}
+          value={timeValue || defaultTime}
+          onChange={onChange}
+          aria-label={timeAria}
+        />
+      </DateTimeRow>
+    </Control>
+  );
+}
+
+function PreferenceWindowTimeZoneField({ value, onChange, t }) {
+  const label = t(
+    "opportunities.matchingRound.schedule.preferenceWindowTimeZoneLabel",
+    {},
+    { default: "Timezone for ranking open and close" },
+  );
+  const ariaLabel = t(
+    "opportunities.matchingRound.schedule.preferenceWindowTimeZoneAria",
+    {},
+    {
+      default:
+        "Timezone used to interpret ranking open and close. All students close at the same instant.",
+    },
+  );
+
+  return (
+    <Control as="div">
+      <FieldLabel id="preference-window-timezone-label">{label}</FieldLabel>
+      <DropdownSelect
+        value={value || DEFAULT_PREFERENCE_WINDOW_TIMEZONE}
+        onChange={(next) =>
+          onChange({
+            target: {
+              name: "preferenceWindowTimeZone",
+              value: next,
+              type: "text",
+            },
+          })
+        }
+        options={PREFERENCE_WINDOW_TIMEZONE_OPTIONS}
+        ariaLabel={ariaLabel}
+        searchableSingle
       />
     </Control>
   );
@@ -192,7 +269,7 @@ export default function MatchingRoundScheduleFields({
       <Hint>
         {t("opportunities.matchingRound.schedule.hint", {}, {
           default:
-            "Dates appear on the student matching timeline. Project selection open and close dates also control when students can submit rankings. Set round status to Preferences open separately; other dates do not change status automatically.",
+            "Dates appear on the student matching timeline. Project selection open and close are a single shared deadline in the timezone you choose — every student locks at the same moment. Set round status to Preferences open separately; other dates do not change status automatically.",
         })}
       </Hint>
 
@@ -212,7 +289,7 @@ export default function MatchingRoundScheduleFields({
                 <PhaseNote>
                   {t("opportunities.matchingRound.schedule.selectionWindowNote", {}, {
                     default:
-                      "Ranking submission is only allowed between these dates when the round status is Preferences open. Students can still browse opportunities before ranking opens.",
+                      "Ranking submission is only allowed between these moments when the round status is Preferences open. Students can still browse opportunities before ranking opens.",
                   })}
                 </PhaseNote>
               ) : null}
@@ -222,16 +299,25 @@ export default function MatchingRoundScheduleFields({
               <Fields>
                 {enforcesWindow ? (
                   <>
+                    <PreferenceWindowTimeZoneField
+                      value={inputs.preferenceWindowTimeZone}
+                      onChange={onChange}
+                      t={t}
+                    />
                     <PreferenceWindowDateField
-                      name={phase.startAt}
-                      value={inputs[phase.startAt]}
+                      dateName={phase.startAt}
+                      timeName="openAtTime"
+                      dateValue={inputs[phase.startAt]}
+                      timeValue={inputs.openAtTime}
                       onChange={onChange}
                       t={t}
                       boundary="open"
                     />
                     <PreferenceWindowDateField
-                      name={phase.endAt}
-                      value={inputs[phase.endAt]}
+                      dateName={phase.endAt}
+                      timeName="closeAtTime"
+                      dateValue={inputs[phase.endAt]}
+                      timeValue={inputs.closeAtTime}
                       onChange={onChange}
                       t={t}
                       boundary="close"

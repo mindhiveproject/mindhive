@@ -20,6 +20,7 @@ import Button from "../../../../DesignSystem/Button";
 import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
 import Chip from "../../../../DesignSystem/Chip";
 import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
+import { isClassTeacherOrMentor as classUserIsTeacherOrMentor } from "../../../../../lib/classTeacherUtils";
 
 // Toggle/filter chrome — not a CTA. Keep as local styled button.
 const LinkedCardsToggleButton = styled.button`
@@ -553,9 +554,10 @@ export default function ResourceTab({ resources, myclass, user }) {
     const isOwner = resource?.author?.id === user?.id;
     const isCollaborator = (resource?.collaborators || []).some((c) => c?.id === user?.id);
     const canEditResource = isOwner || isCollaborator;
-    const isClassTeacherOrMentor =
-      myclass?.creator?.id === user?.id ||
-      (myclass?.mentors || []).some((m) => m?.id === user?.id);
+    const isClassTeacherOrMentor = classUserIsTeacherOrMentor(
+      myclass,
+      user?.id
+    );
     const canManage = isOwner || isClassTeacherOrMentor;
     const isCopying = params?.context?.copyingResourceId === resource?.id;
 

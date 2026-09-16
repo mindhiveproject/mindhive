@@ -11,6 +11,7 @@ import { useRouter } from "next/dist/client/router";
 // import { GET_MY_PROJECT_BOARDS } from "../../Queries/Proposal";
 import { GET_USER_CLASSES } from "../../Queries/User";
 import { getPrimaryTemplateBoardId } from "../../../lib/classTemplateBoards";
+import { taughtClasses } from "../../../lib/classTeacherUtils";
 
 import CopyResource from "./CopyResource";
 import EditResource from "./EditResource";
@@ -22,7 +23,7 @@ export default function TeacherView({ query, user }) {
   const { t } = useTranslation("classes");
 
   const { data, loading, error } = useQuery(GET_USER_CLASSES);
-  const classes = data?.authenticatedItem?.teacherIn || [];
+  const classes = taughtClasses(data?.authenticatedItem);
 
   const options = classes.map((project) => ({
     key: project?.id,

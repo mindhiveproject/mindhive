@@ -37,7 +37,7 @@ const Card = styled.section`
 
   .helper {
     margin: 0;
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
@@ -138,7 +138,7 @@ const LogoRow = styled.div`
 
   .hint {
     margin: 0;
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }

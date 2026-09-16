@@ -209,6 +209,12 @@ const StyledNavbar = styled.div`
 
       /* A right-edge rule reads oddly on a centered icon button; the collapsed
          rail marks the selected item with a fill instead. */
+      &:hover,
+      &.selected,
+      &:active {
+        border-radius: 8px;
+      }
+
       &.selected,
       &:active {
         border-right-color: transparent;

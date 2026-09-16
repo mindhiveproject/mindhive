@@ -34,12 +34,14 @@ export default function LinkClass({ study, handleChange }) {
     const user = data?.authenticatedItem || {
       studentIn: [],
       teacherIn: [],
+      teachingTeamIn: [],
       mentorIn: [],
     };
     return sortYoungestFirst(
       dedupeClasses([
         ...(user.studentIn || []),
         ...(user.teacherIn || []),
+        ...(user.teachingTeamIn || []),
         ...(user.mentorIn || []),
       ])
     );

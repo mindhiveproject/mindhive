@@ -8,6 +8,8 @@ study-images
 yq-visuals
 opportunity-covers
 opportunity-videos
+profile-videos
+ticket-screenshots
 keystone.db
 *.log
 .env

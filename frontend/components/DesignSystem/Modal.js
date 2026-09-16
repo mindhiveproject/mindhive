@@ -28,7 +28,7 @@ const DIALOG_STYLE = {
 
 const TITLE_STYLE = {
   margin: "0 0 12px",
-  color: "var(--MH-Theme-Neutrals-Black, #1a1a1a)",
+  color: "#1a1a1a",
   flexShrink: 0,
   display: "flex",
   alignItems: "center",
@@ -38,7 +38,7 @@ const TITLE_STYLE = {
 
 const BODY_STYLE = {
   margin: 0,
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
   minHeight: 0,
   flex: 1,
   overflowY: "auto",

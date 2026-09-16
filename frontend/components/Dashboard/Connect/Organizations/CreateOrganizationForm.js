@@ -51,7 +51,7 @@ const Card = styled.section`
 
   .helper {
     margin: 0;
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
@@ -113,7 +113,7 @@ const Field = styled.label`
 
   .hint {
     margin: 0;
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
   }
@@ -171,7 +171,7 @@ const Feedback = styled.p`
   letter-spacing: 0;
   color: ${({ $error }) =>
     $error
-      ? "var(--MH-Theme-Error, #b42318)"
+      ? "#b42318"
       : "var(--MH-Theme-Primary-Dark, #336f8a)"};
 `;
 

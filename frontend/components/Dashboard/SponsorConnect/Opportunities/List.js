@@ -706,7 +706,7 @@ export default function OpportunitiesList({ user }) {
                                       variant="text"
                                       style={{
                                         color:
-                                          "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+                                          "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
                                       }}
                                       onClick={() =>
                                         handleOpenForm(opportunity, form)
@@ -724,7 +724,7 @@ export default function OpportunitiesList({ user }) {
                                       variant="text"
                                       style={{
                                         color:
-                                          "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+                                          "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
                                       }}
                                       onClick={() =>
                                         handleOpenForm(opportunity, form)

@@ -42,6 +42,7 @@ export const GET_PARTICIPATE_VIEW = gql`
       status
       openAt
       closeAt
+      settings
       classNetwork {
         id
         title
@@ -221,7 +222,7 @@ export const GET_PARTICIPATE_VIEW = gql`
               }
             ) {
               id
-              student {
+              students {
                 id
                 username
                 firstName

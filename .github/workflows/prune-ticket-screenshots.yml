@@ -1,0 +1,73 @@
+name: Prune ticket screenshots
+
+# Filing-time captures can contain student names, responses and consent state.
+# They are removed 90 days after their ticket is resolved — but retention that
+# depends on someone remembering to click a button is not retention, so it runs
+# on a schedule.
+#
+# Weekly rather than daily: the window is 90 days, so a few days of jitter is
+# irrelevant, and a weekly job that visibly succeeds is easier to trust than a
+# daily one nobody reads.
+#
+# Needs the same two secrets as close-tickets.yml:
+#   TICKET_BACKEND_URL     e.g. https://backend.mindhive.science/api/graphql
+#   TICKET_WEBHOOK_SECRET  must match the backend's env var of the same name
+
+on:
+  schedule:
+    - cron: "17 3 * * 1" # Mondays 03:17 UTC — off the hour, load is spread
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: "Report what would be deleted without deleting it"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prune resolved tickets' screenshots
+        env:
+          BACKEND_URL: ${{ secrets.TICKET_BACKEND_URL }}
+          WEBHOOK_SECRET: ${{ secrets.TICKET_WEBHOOK_SECRET }}
+          # The scheduled run always deletes; a manual run defaults to a dry run
+          # so it can be used to preview.
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dryRun || 'false' }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${BACKEND_URL:-}" ] || [ -z "${WEBHOOK_SECRET:-}" ]; then
+            echo "TICKET_BACKEND_URL or TICKET_WEBHOOK_SECRET is not set — skipping."
+            echo "Set both repository secrets to enable screenshot pruning."
+            exit 0
+          fi
+
+          # Secrets go through jq --arg, never interpolated into the JSON body.
+          BODY=$(jq -n \
+            --arg secret "$WEBHOOK_SECRET" \
+            --argjson dryRun "$DRY_RUN" \
+            '{
+              query: "mutation($secret: String!, $dryRun: Boolean) { pruneTicketScreenshots(secret: $secret, dryRun: $dryRun) { dryRun retentionDays cutoff prunedCount pruned orphanCount orphans } }",
+              variables: { secret: $secret, dryRun: $dryRun }
+            }')
+
+          RESPONSE=$(curl -sS --fail-with-body -X POST "$BACKEND_URL" \
+            -H "Content-Type: application/json" \
+            --data-binary "$BODY")
+
+          echo "$RESPONSE" | jq -e '.errors' >/dev/null 2>&1 && {
+            echo "Backend returned errors:"
+            echo "$RESPONSE" | jq '.errors'
+            exit 1
+          }
+
+          echo "$RESPONSE" | jq -r '
+            .data.pruneTicketScreenshots
+            | "dryRun=\(.dryRun)  retention=\(.retentionDays)d  cutoff=\(.cutoff)  pruned=\(.prunedCount)  orphaned files=\(.orphanCount)",
+              (.pruned[] | "  - \(.)"),
+              (.orphans[] | "  - unreferenced: \(.)")
+          '

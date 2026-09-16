@@ -1,0 +1,86 @@
+name: Close tickets from commit trailers
+
+# Closes platform tickets named by a `Fixes-Ticket:` trailer on merge, so the
+# ticket board decays in step with the work rather than by hand.
+#
+#     Fixes-Ticket: cmf3x9k2p0001
+#
+# Setup — two repository secrets:
+#   TICKET_BACKEND_URL     e.g. https://backend.mindhive.science/api/graphql
+#   TICKET_WEBHOOK_SECRET  the same value as the backend's env var
+#
+# Until both are set the job exits early rather than failing, so merges are
+# never blocked on this being configured.
+
+on:
+  push:
+    branches: [main]
+
+# Nothing here needs write access to the repo.
+permissions:
+  contents: read
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect commits and close the tickets they name
+        env:
+          BACKEND_URL: ${{ secrets.TICKET_BACKEND_URL }}
+          WEBHOOK_SECRET: ${{ secrets.TICKET_WEBHOOK_SECRET }}
+          # Passed via env rather than interpolated into the script, so a commit
+          # message can never be evaluated as shell.
+          COMMITS_JSON: ${{ toJSON(github.event.commits) }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${BACKEND_URL:-}" ] || [ -z "${WEBHOOK_SECRET:-}" ]; then
+            echo "TICKET_BACKEND_URL or TICKET_WEBHOOK_SECRET is not set — skipping."
+            exit 0
+          fi
+
+          # Only send commits that actually carry the trailer, so a routine push
+          # is not a round trip.
+          payload=$(printf '%s' "$COMMITS_JSON" | node -e '
+            const fs = require("fs");
+            const commits = JSON.parse(fs.readFileSync(0, "utf8") || "[]");
+            const relevant = commits
+              .filter((c) => /^\s*Fixes-Ticket:/im.test(c.message || ""))
+              .map((c) => ({ sha: c.id, message: c.message }));
+            if (!relevant.length) process.exit(3);
+            process.stdout.write(JSON.stringify({
+              query: `mutation Close($secret: String!, $commits: [TicketCommitInput!]!) {
+                closeTicketsFromCommit(secret: $secret, commits: $commits) {
+                  closed
+                  skipped
+                }
+              }`,
+              variables: { secret: process.env.WEBHOOK_SECRET, commits: relevant },
+            }));
+          ') || {
+            status=$?
+            if [ "$status" -eq 3 ]; then
+              echo "No commit in this push names a ticket — nothing to do."
+              exit 0
+            fi
+            exit "$status"
+          }
+
+          response=$(curl -sS --fail-with-body -X POST "$BACKEND_URL" \
+            -H "Content-Type: application/json" \
+            --data-binary "$payload")
+
+          echo "$response"
+
+          # A GraphQL error comes back inside a 200, so check the body.
+          printf '%s' "$response" | node -e '
+            const fs = require("fs");
+            const body = JSON.parse(fs.readFileSync(0, "utf8"));
+            if (body.errors) {
+              console.error("Backend rejected the request:", JSON.stringify(body.errors));
+              process.exit(1);
+            }
+            const result = body.data?.closeTicketsFromCommit ?? {};
+            for (const line of result.closed ?? []) console.log("closed  " + line);
+            for (const line of result.skipped ?? []) console.log("skipped " + line);
+          '

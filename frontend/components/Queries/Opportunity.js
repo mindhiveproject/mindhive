@@ -351,6 +351,13 @@ export const EXPLORE_CONTEXT = gql`
             title
           }
         }
+        teachingTeamIn {
+          id
+          networks {
+            id
+            title
+          }
+        }
       }
     }
   }
@@ -581,7 +588,7 @@ export const MY_MENTOR_MATCHES = gql`
             matchScore
             activatedAt
             completedAt
-            student {
+            students {
               id
               username
               firstName
@@ -627,7 +634,7 @@ export const MY_MENTOR_MATCHES = gql`
             matchScore
             activatedAt
             completedAt
-            student {
+            students {
               id
               username
               firstName
@@ -673,7 +680,7 @@ export const MY_MENTOR_MATCHES = gql`
             matchScore
             activatedAt
             completedAt
-            student {
+            students {
               id
               username
               firstName
@@ -835,6 +842,16 @@ export const MY_CLASSES_FOR_APPOINTMENT_REQUESTS = gql`
       ... on Profile {
         id
         teacherIn {
+          id
+          title
+          code
+          networks {
+            id
+            publicId
+            title
+          }
+        }
+        teachingTeamIn {
           id
           title
           code

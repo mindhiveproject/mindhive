@@ -106,6 +106,9 @@ export const OVERVIEW_PROPOSAL_BOARD_QUERY = gql`
           id
           username
         }
+        teachingTeam {
+          id
+        }
         mentors {
           id
           username
@@ -154,6 +157,9 @@ export const GET_TEMPLATE_BOARD_SECTIONS_CARDS = gql`
           publicId
           position
           type
+          milestone {
+            id
+          }
         }
       }
     }
@@ -190,6 +196,9 @@ export const PROPOSAL_QUERY = gql`
         title
         settings
         creator {
+          id
+        }
+        teachingTeam {
           id
         }
         mentors {
@@ -351,6 +360,16 @@ export const GET_CARD_CONTENT = gql`
         title
         content
         settings
+        isPublic
+        parent {
+          id
+        }
+        author {
+          id
+        }
+        collaborators {
+          id
+        }
       }
       assignments {
         id
@@ -678,10 +697,22 @@ export const TEACHER_PROJECT_BOARDS = gql`
               { collaborators: { some: { id: { equals: $userId } } } }
               {
                 templateForClasses: {
-                  some: { creator: { id: { equals: $userId } } }
+                  some: {
+                    OR: [
+                      { creator: { id: { equals: $userId } } },
+                      { teachingTeam: { some: { id: { equals: $userId } } } },
+                    ],
+                  },
                 }
               }
-              { usedInClass: { creator: { id: { equals: $userId } } } }
+              {
+                usedInClass: {
+                  OR: [
+                    { creator: { id: { equals: $userId } } },
+                    { teachingTeam: { some: { id: { equals: $userId } } } },
+                  ],
+                }
+              }
             ]
           }
         ]

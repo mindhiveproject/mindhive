@@ -38,6 +38,11 @@ export default function DualTextarea({
     onChange({ ...current, [part]: text });
   };
 
+  // The second box is only meaningful when its own sub-prompt asks something.
+  // Board-scoped copies can lose their sub-labels, and rendering a second
+  // unlabelled box there just reads as a stray empty field.
+  const showSubB = Boolean(subBLabel);
+
   return (
     <FieldShell as="div" className="reviewItem">
       {label ? (
@@ -57,17 +62,21 @@ export default function DualTextarea({
         disabled={disabled}
         maxLength={field?.validation?.maxLength || undefined}
       />
-      {subBLabel ? <div className="subtitle">{subBLabel}</div> : null}
-      <textarea
-        type="text"
-        id={`${field.name}-subB`}
-        name={`${field.name}-subB`}
-        value={current.subB}
-        className="answer"
-        onChange={(e) => updatePart("subB", e.target.value)}
-        disabled={disabled}
-        maxLength={field?.validation?.maxLength || undefined}
-      />
+      {showSubB ? (
+        <>
+          <div className="subtitle">{subBLabel}</div>
+          <textarea
+            type="text"
+            id={`${field.name}-subB`}
+            name={`${field.name}-subB`}
+            value={current.subB}
+            className="answer"
+            onChange={(e) => updatePart("subB", e.target.value)}
+            disabled={disabled}
+            maxLength={field?.validation?.maxLength || undefined}
+          />
+        </>
+      ) : null}
       <ErrorRow error={error} />
     </FieldShell>
   );

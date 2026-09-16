@@ -59,26 +59,26 @@ const INACTIVE: React.CSSProperties = {
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 const INACTIVE_HOVER: React.CSSProperties = {
-  background: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
 };
 
 const ACTIVE: React.CSSProperties = {
   background: "transparent",
-  color: "var(--MH-Theme-Accent-Base, #F2BE42)",
+  color: "var(--MH-Theme-Accent-Base, #f2be42)",
 };
 const ACTIVE_HOVER: React.CSSProperties = {
-  background: "var(--MH-Theme-Accent-Light, #FDF2D0)",
+  background: "var(--MH-Theme-Accent-Light, #fdf2d0)",
 };
 
 const DISABLED: React.CSSProperties = {
   background: "transparent",
-  color: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  color: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   cursor: "default",
 };
 
 const FOCUS_STYLE = `
 .DesignSystem-FavoriteButton:focus-visible {
-  outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
+  outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
   outline-offset: 2px;
 }
 .DesignSystem-FavoriteButton svg {

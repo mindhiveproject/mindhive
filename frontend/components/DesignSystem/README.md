@@ -84,6 +84,7 @@ Components are being moved from `.js` to `.tsx` as they're touched, newest first
 | `Chip` | ✅ `.tsx` |
 | `FavoriteButton` | ✅ `.tsx` |
 | `Navbar` | ✅ `.tsx` |
+| `ToggleSwitch` | ✅ `.tsx` |
 | `lib/taskTypeColors` | ✅ `.ts` |
 | `Button`, `IconButton`, `Modal`, `Popover`, `Tooltip`, `DropdownMenu`, `DropdownSelect`, `MessageCard`, `InfoPopover`, `PanelHeader`, `CopyButton`, `CompactActionButton`, `Icons/` | ⏳ still `.js` |
 

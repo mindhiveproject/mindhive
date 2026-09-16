@@ -123,8 +123,229 @@ export const ROUND_STATUS_I18N_KEYS = {
   archived: "archived",
 };
 
+/** IANA zone used when teachers pin ranking open/close to one shared instant. */
+export const DEFAULT_PREFERENCE_WINDOW_TIMEZONE = "America/Los_Angeles";
+
+export const PREFERENCE_WINDOW_TIMEZONE_OPTIONS = [
+  { value: "America/Los_Angeles", label: "Pacific Time (PT)" },
+  { value: "America/Denver", label: "Mountain Time (MT)" },
+  { value: "America/Chicago", label: "Central Time (CT)" },
+  { value: "America/New_York", label: "Eastern Time (ET)" },
+  { value: "UTC", label: "UTC" },
+];
+
+export const DEFAULT_PREFERENCE_WINDOW_OPEN_TIME = "00:00";
+export const DEFAULT_PREFERENCE_WINDOW_CLOSE_TIME = "23:59";
+
 function isPlainObject(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+export function readPreferenceWindowTimeZone(settings) {
+  if (!isPlainObject(settings)) return DEFAULT_PREFERENCE_WINDOW_TIMEZONE;
+  const raw = settings.preferenceWindowTimeZone;
+  if (typeof raw !== "string" || !raw.trim()) {
+    return DEFAULT_PREFERENCE_WINDOW_TIMEZONE;
+  }
+  return raw.trim();
+}
+
+function parseTimeParts(timeStr) {
+  const match = String(timeStr || "").match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return null;
+  const hour = Number(match[1]);
+  const minute = Number(match[2]);
+  if (
+    !Number.isFinite(hour) ||
+    !Number.isFinite(minute) ||
+    hour < 0 ||
+    hour > 23 ||
+    minute < 0 ||
+    minute > 59
+  ) {
+    return null;
+  }
+  return { hour, minute };
+}
+
+function getZonedParts(utcMs, timeZone) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(new Date(utcMs));
+  const get = (type) => {
+    const part = parts.find((entry) => entry.type === type);
+    return part ? Number(part.value) : NaN;
+  };
+  let hour = get("hour");
+  // Some engines report midnight as 24 under hourCycle h23.
+  if (hour === 24) hour = 0;
+  return {
+    year: get("year"),
+    month: get("month"),
+    day: get("day"),
+    hour,
+    minute: get("minute"),
+    second: get("second"),
+  };
+}
+
+/**
+ * Convert a wall-clock date+time in `timeZone` to a UTC ISO string.
+ * Uses Intl only (no date libraries).
+ */
+export function zonedWallTimeToUtcIso(
+  dateStr,
+  timeStr,
+  timeZone = DEFAULT_PREFERENCE_WINDOW_TIMEZONE,
+) {
+  const day = toDateOnly(dateStr);
+  const time = parseTimeParts(timeStr);
+  if (!day || !time) return null;
+  const [year, month, date] = day.split("-").map(Number);
+  if (!year || !month || !date) return null;
+
+  const zone =
+    typeof timeZone === "string" && timeZone.trim()
+      ? timeZone.trim()
+      : DEFAULT_PREFERENCE_WINDOW_TIMEZONE;
+
+  let utcMs = Date.UTC(year, month - 1, date, time.hour, time.minute, 0, 0);
+  for (let i = 0; i < 3; i += 1) {
+    const parts = getZonedParts(utcMs, zone);
+    const asUtc = Date.UTC(
+      parts.year,
+      parts.month - 1,
+      parts.day,
+      parts.hour,
+      parts.minute,
+      parts.second,
+      0,
+    );
+    const desiredAsUtc = Date.UTC(
+      year,
+      month - 1,
+      date,
+      time.hour,
+      time.minute,
+      0,
+      0,
+    );
+    const delta = desiredAsUtc - asUtc;
+    if (delta === 0) break;
+    utcMs += delta;
+  }
+
+  return new Date(utcMs).toISOString();
+}
+
+function isExactUtcMidnight(date) {
+  return (
+    date instanceof Date &&
+    !Number.isNaN(date.getTime()) &&
+    date.getUTCHours() === 0 &&
+    date.getUTCMinutes() === 0 &&
+    date.getUTCSeconds() === 0 &&
+    date.getUTCMilliseconds() === 0
+  );
+}
+
+/**
+ * Hydrate teacher date/time inputs from a stored openAt/closeAt.
+ * Legacy date-only saves are UTC midnight of the ISO calendar day — do not
+ * shift those through the browser timezone.
+ */
+export function hydratePreferenceWindowBound(
+  iso,
+  boundary,
+  timeZone = DEFAULT_PREFERENCE_WINDOW_TIMEZONE,
+) {
+  const defaultTime =
+    boundary === "close"
+      ? DEFAULT_PREFERENCE_WINDOW_CLOSE_TIME
+      : DEFAULT_PREFERENCE_WINDOW_OPEN_TIME;
+  if (!iso) return { date: "", time: defaultTime };
+
+  const date = iso instanceof Date ? iso : new Date(iso);
+  if (Number.isNaN(date.getTime())) return { date: "", time: defaultTime };
+
+  if (isExactUtcMidnight(date)) {
+    return {
+      date: date.toISOString().slice(0, 10),
+      time: defaultTime,
+    };
+  }
+
+  const zone =
+    typeof timeZone === "string" && timeZone.trim()
+      ? timeZone.trim()
+      : DEFAULT_PREFERENCE_WINDOW_TIMEZONE;
+  const parts = getZonedParts(date.getTime(), zone);
+  return {
+    date: `${String(parts.year).padStart(4, "0")}-${String(parts.month).padStart(2, "0")}-${String(parts.day).padStart(2, "0")}`,
+    time: `${String(parts.hour).padStart(2, "0")}:${String(parts.minute).padStart(2, "0")}`,
+  };
+}
+
+/**
+ * Resolve openAt/closeAt to an epoch ms instant.
+ * Legacy UTC-midnight values expand to 00:00 / 23:59 in the round timezone.
+ */
+export function resolvePreferenceWindowInstantMs(
+  iso,
+  boundary,
+  timeZone = DEFAULT_PREFERENCE_WINDOW_TIMEZONE,
+) {
+  if (!iso) return null;
+  const date = iso instanceof Date ? iso : new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+
+  if (isExactUtcMidnight(date)) {
+    const dateOnly = date.toISOString().slice(0, 10);
+    const time =
+      boundary === "close"
+        ? DEFAULT_PREFERENCE_WINDOW_CLOSE_TIME
+        : DEFAULT_PREFERENCE_WINDOW_OPEN_TIME;
+    const resolved = zonedWallTimeToUtcIso(dateOnly, time, timeZone);
+    return resolved ? new Date(resolved).getTime() : null;
+  }
+
+  return date.getTime();
+}
+
+/** Format a pinned preference-window instant in the round timezone. */
+export function formatPreferenceWindowInstant(
+  iso,
+  timeZone = DEFAULT_PREFERENCE_WINDOW_TIMEZONE,
+) {
+  if (!iso) return "";
+  const date = iso instanceof Date ? iso : new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const zone =
+    typeof timeZone === "string" && timeZone.trim()
+      ? timeZone.trim()
+      : DEFAULT_PREFERENCE_WINDOW_TIMEZONE;
+
+  try {
+    return new Intl.DateTimeFormat(undefined, {
+      timeZone: zone,
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZoneName: "short",
+    }).format(date);
+  } catch {
+    return date.toLocaleString();
+  }
 }
 
 /** Keep calendar dates timezone-stable (store/read YYYY-MM-DD only). */
@@ -152,6 +373,35 @@ export function parseDateOnly(value) {
   const [year, month, date] = day.split("-").map(Number);
   if (!year || !month || !date) return null;
   return new Date(year, month - 1, date);
+}
+
+/**
+ * Instant bounds for openAt / closeAt (shared deadline for all students).
+ * Legacy UTC-midnight values expand to 00:00 / 23:59 in the round timezone.
+ */
+export function getPreferenceTimeWindowState(roundLike, now = Date.now()) {
+  const timeZone = readPreferenceWindowTimeZone(roundLike?.settings);
+  const openAtMs = resolvePreferenceWindowInstantMs(
+    roundLike?.openAt,
+    "open",
+    timeZone,
+  );
+  const closeAtMs = resolvePreferenceWindowInstantMs(
+    roundLike?.closeAt,
+    "close",
+    timeZone,
+  );
+  const beforeOpen = openAtMs != null && now < openAtMs;
+  const afterClose = closeAtMs != null && now > closeAtMs;
+  return {
+    beforeOpen,
+    afterClose,
+    isOpen: !beforeOpen && !afterClose,
+  };
+}
+
+export function isPreferenceTimeWindowOpen(roundLike, now = Date.now()) {
+  return getPreferenceTimeWindowState(roundLike, now).isOpen;
 }
 
 export function readSponsorFormsVisible(settings) {
@@ -189,7 +439,7 @@ export function serializeSchedule(schedule) {
 
 export function mergeRoundSettings(
   existing,
-  { sponsorFormsVisible, schedule } = {},
+  { sponsorFormsVisible, schedule, preferenceWindowTimeZone } = {},
 ) {
   const base = isPlainObject(existing) ? { ...existing } : {};
   if (sponsorFormsVisible !== undefined) {
@@ -197,6 +447,14 @@ export function mergeRoundSettings(
   }
   if (schedule !== undefined) {
     base.schedule = serializeSchedule(schedule);
+  }
+  if (preferenceWindowTimeZone !== undefined) {
+    const zone =
+      typeof preferenceWindowTimeZone === "string" &&
+      preferenceWindowTimeZone.trim()
+        ? preferenceWindowTimeZone.trim()
+        : DEFAULT_PREFERENCE_WINDOW_TIMEZONE;
+    base.preferenceWindowTimeZone = zone;
   }
   return base;
 }
@@ -241,6 +499,7 @@ export function formatScheduleRange(startValue, endValue) {
 
 export function collectSchedulePhases(roundLike) {
   const schedule = readRoundSchedule(roundLike?.settings);
+  const timeZone = readPreferenceWindowTimeZone(roundLike?.settings);
   const values = {
     ...schedule,
     openAt: roundLike?.openAt || "",
@@ -262,7 +521,28 @@ export function collectSchedulePhases(roundLike) {
 
     const startAt = values[phase.startAt] || "";
     const endAt = values[phase.endAt] || "";
-    const dateLabel = formatScheduleRange(startAt, endAt);
+    let dateLabel = "";
+    if (phase.enforcesPreferenceWindow) {
+      const openMs = resolvePreferenceWindowInstantMs(startAt, "open", timeZone);
+      const closeMs = resolvePreferenceWindowInstantMs(
+        endAt,
+        "close",
+        timeZone,
+      );
+      const openLabel = openMs
+        ? formatPreferenceWindowInstant(new Date(openMs).toISOString(), timeZone)
+        : "";
+      const closeLabel = closeMs
+        ? formatPreferenceWindowInstant(
+            new Date(closeMs).toISOString(),
+            timeZone,
+          )
+        : "";
+      if (openLabel && closeLabel) dateLabel = `${openLabel} – ${closeLabel}`;
+      else dateLabel = openLabel || closeLabel;
+    } else {
+      dateLabel = formatScheduleRange(startAt, endAt);
+    }
     return {
       key: phase.key,
       kind: phase.kind,

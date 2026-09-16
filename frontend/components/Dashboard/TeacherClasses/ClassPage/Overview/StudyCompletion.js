@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { GET_STUDENTS_DATA } from "../../../../Queries/Classes";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -70,6 +71,23 @@ export default function StudyCompletionOverview({ myclass, user, query }) {
     { field: "lastName" },
     ...studies.map((a) => ({ field: a?.id, headerName: a?.title })),
   ]);
+
+  if (loading && !data) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <JustOneSecondNotice
+          message={{
+            h1: t("students.loadingStudyCompletionTitle", {}, {
+              default: "Loading study completion",
+            }),
+            p: t("students.loadingStudyCompletionBody", {}, {
+              default: "Fetching students and their study progress.",
+            }),
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="selector">

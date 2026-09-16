@@ -12,7 +12,14 @@ import {
   ClockIcon,
   EditDocumentIcon,
 } from "../../../../DesignSystem/Icons";
-import { visibleSchedulePhases } from "../../../../../lib/connectRoundSettings";
+import {
+  formatPreferenceWindowInstant,
+  isPreferenceTimeWindowOpen,
+  readPreferenceWindowTimeZone,
+  resolvePreferenceWindowInstantMs,
+  visibleSchedulePhases,
+} from "../../../../../lib/connectRoundSettings";
+import { isRoundRankingEditable } from "../../../../../lib/opportunityFavoriteRanking";
 import MatchingRoundSchedule from "./MatchingRoundSchedule";
 
 const Card = styled.article`
@@ -153,22 +160,22 @@ export default function StudentRankActionCard({
   const submitted = preference?.status === "submitted";
   const hasDraft = Boolean(preference) && !submitted;
 
-  const now = Date.now();
-  const openAtMs = round.openAt ? new Date(round.openAt).getTime() : null;
-  const closeAtMs = round.closeAt ? new Date(round.closeAt).getTime() : null;
-  const beforeOpen = openAtMs && now < openAtMs;
-  const afterClose = closeAtMs && now > closeAtMs;
-  const inTimeWindow = !beforeOpen && !afterClose;
-  const rankingEditable =
-    round.status === "preferences_open" && inTimeWindow;
+  const rankingEditable = isRoundRankingEditable(round);
+  const isPublished = round.status === "published";
 
   let title;
   let helper = null;
-  let ctaLabel;
+  let ctaLabel = null;
   let buttonVariant = "filled";
   let showSteps = false;
 
-  if (submitted) {
+  if (isPublished) {
+    title = t(
+      "opportunities.studentView.rankCard.titleSubmitted",
+      { roundTitle },
+      { default: "You submitted your ranking for {{roundTitle}}" },
+    );
+  } else if (submitted) {
     title = t(
       "opportunities.studentView.rankCard.titleSubmitted",
       { roundTitle },
@@ -195,6 +202,11 @@ export default function StudentRankActionCard({
       { default: "Finish your ranking for {{roundTitle}}" },
     );
     if (rankingEditable) {
+      helper = t(
+        "opportunities.studentView.rankCard.helperDraft",
+        {},
+        { default: "You have a draft saved. Continue to submit." },
+      );
       ctaLabel = t(
         "opportunities.studentView.rankCard.ctaContinue",
         {},
@@ -222,26 +234,38 @@ export default function StudentRankActionCard({
       { roundTitle },
       { default: "Rank your opportunities for {{roundTitle}}" },
     );
-    helper = hasOpportunities
-      ? t(
-          "opportunities.studentView.rankCard.helperBrowse",
-          {},
-          { default: "This is how you get matched." },
-        )
-      : t(
-          "opportunities.studentView.rankCard.helperEmpty",
-          {},
-          {
-            default:
-              "When opportunities appear, come back here to rank them.",
-          },
-        );
-    showSteps = hasOpportunities;
-    ctaLabel = t(
-      "opportunities.studentView.rankCard.ctaRankNow",
-      {},
-      { default: "Start ranking" },
-    );
+    if (rankingEditable) {
+      helper = hasOpportunities
+        ? t(
+            "opportunities.studentView.rankCard.helperBrowse",
+            {},
+            { default: "This is how you get matched." },
+          )
+        : t(
+            "opportunities.studentView.rankCard.helperEmpty",
+            {},
+            {
+              default:
+                "When opportunities appear, come back here to rank them.",
+            },
+          );
+      showSteps = hasOpportunities;
+      ctaLabel = t(
+        "opportunities.studentView.rankCard.ctaRankNow",
+        {},
+        { default: "Start ranking" },
+      );
+    } else {
+      helper = t(
+        "opportunities.studentView.rankCard.helperRankingNotOpen",
+        {},
+        {
+          default:
+            "Ranking is not open right now. You can still browse the opportunities below.",
+        },
+      );
+      ctaLabel = null;
+    }
   }
 
   const steps = showSteps
@@ -288,9 +312,20 @@ export default function StudentRankActionCard({
       : null;
 
   const closeAt = round.closeAt;
-  const showDue = closeAt && !submitted;
-  const dueDate = showDue ? new Date(closeAt).toLocaleDateString() : null;
-  const dueLine = showDue
+  const showDue =
+    closeAt && !submitted && !isPublished && isPreferenceTimeWindowOpen(round);
+  const timeZone = readPreferenceWindowTimeZone(round.settings);
+  const closeMs = showDue
+    ? resolvePreferenceWindowInstantMs(closeAt, "close", timeZone)
+    : null;
+  const dueDate =
+    closeMs != null
+      ? formatPreferenceWindowInstant(
+          new Date(closeMs).toISOString(),
+          timeZone,
+        )
+      : null;
+  const dueLine = showDue && dueDate
     ? t(
         "opportunities.studentView.rankCard.due",
         { date: dueDate },
@@ -298,7 +333,10 @@ export default function StudentRankActionCard({
       )
     : null;
 
+  const canOpenRanking = rankingEditable || submitted || hasDraft;
+
   const handleRank = () => {
+    if (!canOpenRanking) return;
     if (typeof onRank === "function") {
       onRank(round.id);
     }
@@ -380,11 +418,13 @@ export default function StudentRankActionCard({
         </StepList>
       ) : null}
       {dueLine ? <Due>{dueLine}</Due> : null}
-      <Actions>
-        <Button type="button" variant={buttonVariant} onClick={handleRank}>
-          {ctaLabel}
-        </Button>
-      </Actions>
+      {ctaLabel ? (
+        <Actions>
+          <Button type="button" variant={buttonVariant} onClick={handleRank}>
+            {ctaLabel}
+          </Button>
+        </Actions>
+      ) : null}
     </Card>
   );
 }

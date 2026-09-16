@@ -28,7 +28,7 @@ const SURFACE_STYLE = {
   flexDirection: "column",
   overflow: "hidden",
   background: "var(--MH-Theme-Neutrals-White, #ffffff)",
-  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
   borderRadius: 12,
   boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",

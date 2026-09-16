@@ -27,7 +27,12 @@ export default function RequestReset() {
     const res = await requestreset({
       variables: normalizedInputs,
     });
-    alert("If this email is associated to a user, we have sent them a password reset email. If this user is a student, we have sent the password reset email to their teacher(s).");
+    alert(
+      t("auth.requestResetConfirmation", {}, {
+        default:
+          "If this email is associated with a user, we have sent a password reset email. For students, the link may go to their teacher(s) with the student CC’d, depending on each class’s password-reset setting. Otherwise the student receives the link directly.",
+      })
+    );
     resetForm();
   }
 
@@ -36,7 +41,7 @@ export default function RequestReset() {
       <h1>{t("auth.requestReset")}</h1>
       <DisplayError error={error} />
       <fieldset>
-        {data?.sendUserPasswordResetLink === null && (
+        {data?.sendProfilePasswordResetLink === null && (
           <p>{t("auth.checkYourMail")}</p>
         )}
         <label htmlFor="email">

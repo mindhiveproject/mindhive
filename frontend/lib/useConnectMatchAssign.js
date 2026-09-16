@@ -3,6 +3,11 @@ import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import { CREATE_MATCH } from "../components/Mutations/ConnectMatch";
+import {
+  countPlacedStudents,
+  getMatchStudents,
+  isStudentInActiveMatch,
+} from "./connectBallotUtils";
 
 export default function useConnectMatchAssign({
   round,
@@ -19,9 +24,9 @@ export default function useConnectMatchAssign({
 
       const opp = (opportunities || []).find((o) => o.id === opportunityId);
       const cap = opp?.studentCapacity || 1;
-      const currentCount = (matches || []).filter(
-        (m) => m.opportunity?.id === opportunityId,
-      ).length;
+      const currentCount = countPlacedStudents(
+        (matches || []).filter((m) => m.opportunity?.id === opportunityId),
+      );
 
       if (currentCount >= cap) {
         window.alert(
@@ -35,8 +40,9 @@ export default function useConnectMatchAssign({
 
       const duplicate = (matches || []).some(
         (m) =>
-          m.student?.id === studentId &&
-          m.opportunity?.id === opportunityId,
+          isStudentInActiveMatch(m) &&
+          m.opportunity?.id === opportunityId &&
+          getMatchStudents(m).some((s) => s?.id === studentId),
       );
       if (duplicate) return false;
 
@@ -48,7 +54,7 @@ export default function useConnectMatchAssign({
               ? { connect: { id: round.classNetwork.id } }
               : undefined,
             opportunity: { connect: { id: opportunityId } },
-            student: { connect: { id: studentId } },
+            students: { connect: [{ id: studentId }] },
             status: "proposed",
             proposedAt: new Date().toISOString(),
           },

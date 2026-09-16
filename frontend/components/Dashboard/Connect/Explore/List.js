@@ -26,7 +26,7 @@ const Shell = styled.div`
   flex-direction: column;
   gap: 32px;
   padding: 32px clamp(16px, 6vw, 64px);
-  background-color: var(--MH-Theme-Neutrals-Lighter, #f7f9f8);
+  background-color: var(--MH-Theme-Neutrals-Soft, #f7f9f8);
   min-height: 100vh;
   border-radius: 32px 0 0 32px;
 `;
@@ -40,7 +40,7 @@ const Header = styled.div`
   }
   p {
     margin: 4px 0 0;
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     max-width: 640px;
@@ -65,7 +65,7 @@ const Card = styled.div`
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: var(--MH-Theme-Elevation-Medium, 0px 8px 32px rgba(0, 0, 0, 0.1));
+    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -82,8 +82,8 @@ const Cover = styled.div`
   height: 140px;
   background: ${({ $src }) =>
     $src
-      ? `url(${$src}) center/cover no-repeat var(--MH-Theme-Neutrals-Light, #eef1f2)`
-      : "var(--MH-Theme-Neutrals-Light, #eef1f2)"};
+      ? `url(${$src}) center/cover no-repeat #eef1f2`
+      : "#eef1f2"};
   position: relative;
 `;
 
@@ -115,7 +115,7 @@ const Body = styled.div`
   }
   p {
     margin: 0;
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     display: -webkit-box;
@@ -133,7 +133,7 @@ const Meta = styled.div`
   gap: 8px;
   font: var(--MH-Type-Body-Base);
   letter-spacing: 0;
-  color: var(--MH-Theme-Neutrals-Medium, #888);
+  color: var(--MH-Theme-Neutrals-Grey-3, #888888);
 
   span {
     display: inline-flex;
@@ -141,7 +141,7 @@ const Meta = styled.div`
     gap: 4px;
   }
   .rating {
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
     font: var(--MH-Type-Label-Small);
     letter-spacing: 0;
   }
@@ -159,7 +159,7 @@ const Empty = styled.div`
   text-align: center;
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   border-radius: 16px;
-  color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+  color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
 `;
 
 const Pagination = styled.nav`
@@ -173,7 +173,7 @@ const Pagination = styled.nav`
   .info {
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Dark, #5f6871);
+    color: var(--MH-Theme-Neutrals-Grey-2, #5f6871);
   }
 `;
 
@@ -202,7 +202,7 @@ export default function ExploreList() {
 
   const networkIds = useMemo(() => {
     const set = new Set();
-    const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || []];
+    const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || [], me?.teachingTeamIn || []];
     groups.forEach((classes) => {
       classes.forEach((cls) => {
         (cls.networks || []).forEach((n) => {
@@ -215,7 +215,7 @@ export default function ExploreList() {
 
   const networkOptions = useMemo(() => {
     const seen = new Map();
-    const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || []];
+    const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || [], me?.teachingTeamIn || []];
     groups.forEach((classes) => {
       classes.forEach((cls) => {
         (cls.networks || []).forEach((n) => {

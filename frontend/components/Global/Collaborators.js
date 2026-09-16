@@ -30,6 +30,7 @@ export default function Collaborators({
     orConditions.push(
       { studentIn: { some: { id: { in: classesToFilter } } } },
       { teacherIn: { some: { id: { in: classesToFilter } } } },
+      { teachingTeamIn: { some: { id: { in: classesToFilter } } } },
       { mentorIn: { some: { id: { in: classesToFilter } } } }
     );
   }

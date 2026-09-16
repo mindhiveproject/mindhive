@@ -96,7 +96,7 @@ export default function OpportunityIntroVideoPlayer({
           minHeight: 120,
           padding: 24,
           ...(borderRadius != null ? { borderRadius } : {}),
-          background: "var(--MH-Theme-Neutrals-Lighter, #f7f9f8)",
+          background: "var(--MH-Theme-Neutrals-Soft, #f7f9f8)",
         }}
       >
         <Button

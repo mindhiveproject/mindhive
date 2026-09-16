@@ -43,37 +43,38 @@ export default function useForm(initial = {}, { freezeInitialSync = false } = {}
       value = dataURItoBlob(value);
     }
 
-    setInputs({
-      ...inputs,
+    // Functional update: avoid stale-closure wipes when spreading `inputs`.
+    setInputs((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   }
 
   // update several key-values at once, obj is an object
   function handleMultipleUpdate(obj) {
-    setInputs({
-      ...inputs,
+    setInputs((prev) => ({
+      ...prev,
       ...obj,
-    });
+    }));
   }
 
   function toggleBoolean(e) {
     let { name } = e.target;
-    setInputs({
-      ...inputs,
-      [name]: !inputs[name],
-    });
+    setInputs((prev) => ({
+      ...prev,
+      [name]: !prev[name],
+    }));
   }
 
   function toggleSettingsBoolean(e) {
     let { name, checked } = e.target;
-    setInputs({
-      ...inputs,
+    setInputs((prev) => ({
+      ...prev,
       settings: {
-        ...inputs.settings,
+        ...prev.settings,
         [name]: checked,
       },
-    });
+    }));
   }
 
   // function handleObjectChange(e, obj) {

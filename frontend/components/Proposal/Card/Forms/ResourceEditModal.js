@@ -109,6 +109,21 @@ export default function ResourceEditModal({
     skip: !open || !activeResourceId || needsChoice,
     fetchPolicy: "network-only",
   });
+  const loadedResource = data?.resource;
+  const userIsAdmin = user?.permissions
+    ?.map((permission) => permission?.name)
+    .includes("ADMIN");
+  const canEditLoadedOriginal =
+    userIsAdmin ||
+    loadedResource?.author?.id === user?.id ||
+    loadedResource?.collaborators?.some(
+      (collaborator) => collaborator?.id === user?.id
+    );
+  // Defense in depth: fetched ownership data wins even if a caller supplied
+  // an incorrect sourceType.
+  const shouldCreateCopy =
+    isCreatingCopy ||
+    Boolean(loadedResource?.isPublic && !canEditLoadedOriginal);
 
   useEffect(() => {
     if (!open || needsChoice) {
@@ -123,11 +138,11 @@ export default function ResourceEditModal({
         content: resource.content?.main || "",
         settings: mergeResourceSettings(resource.settings),
         isPublic:
-          !isCreatingCopy && resource.isPublic ? resource.isPublic : false,
+          !shouldCreateCopy && resource.isPublic ? resource.isPublic : false,
       });
       setHasChanges(false);
     }
-  }, [data, open, needsChoice, isCreatingCopy]);
+  }, [data, open, needsChoice, shouldCreateCopy]);
 
   const [createResource, { loading: creating }] = useMutation(CREATE_RESOURCE);
   const [updateResource, { loading: updating }] = useMutation(UPDATE_RESOURCE);
@@ -142,14 +157,14 @@ export default function ResourceEditModal({
   };
 
   const handleSave = async () => {
-    if (!onSaved || (!isCreatingCopy && !activeResourceId)) {
+    if (!onSaved || (!shouldCreateCopy && !activeResourceId)) {
       return;
     }
 
     setMutationError(null);
 
     try {
-      if (isCreatingCopy) {
+      if (shouldCreateCopy) {
         const input = {
           title: formState.title,
           description: formState.description,
@@ -219,10 +234,6 @@ export default function ResourceEditModal({
 
   if (!resourceId) return null;
 
-  const userIsAdmin = user?.permissions
-    ?.map((permission) => permission?.name)
-    .includes("ADMIN");
-
   return (
     <Modal
       open={open}
@@ -242,10 +253,10 @@ export default function ResourceEditModal({
         }}
       >
         <span style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
-          {isCreatingCopy
+          {shouldCreateCopy
             ? t("boardManagement.customizeRessource", "Customize Resource")
             : t("boardManagement.editResource", "Edit Resource")}
-          {!isCreatingCopy && hasChanges && (
+          {!shouldCreateCopy && hasChanges && (
             <span style={{ ...TYPO.caption, color: "#8A2CF6" }}>
               {t("assignment.unsavedChanges", "(Unsaved changes)")}
             </span>
@@ -346,7 +357,7 @@ export default function ResourceEditModal({
                 )}
               </div>
             )}
-            {isCreatingCopy && (
+            {shouldCreateCopy && (
               <div
                 style={{
                   background: "#EEF6FB",
@@ -405,7 +416,7 @@ export default function ResourceEditModal({
                   />
                 </div>
 
-                {userIsAdmin && !isCreatingCopy && (
+                {userIsAdmin && !shouldCreateCopy && (
                   <div
                     style={{
                       display: "flex",
@@ -476,7 +487,7 @@ export default function ResourceEditModal({
           <Button
             loading={saving}
             disabled={
-              saving || (!isCreatingCopy && !hasChanges) || loading || !!error
+              saving || (!shouldCreateCopy && !hasChanges) || loading || !!error
             }
             style={{
               borderRadius: "100px",
@@ -488,7 +499,7 @@ export default function ResourceEditModal({
             }}
             onClick={handleSave}
           >
-            {isCreatingCopy
+            {shouldCreateCopy
               ? t("boardManagement.saveOwnRessource", "Save my copy")
               : t("assignment.save", "Save Changes")}
           </Button>

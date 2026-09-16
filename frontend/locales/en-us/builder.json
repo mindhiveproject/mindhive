@@ -1334,6 +1334,7 @@
 		"copyLink": "Copy study link",
 		"createYourStudyProposal": "Create your study proposal here to begin your research journey ",
 		"descriptionPlaceholder": "Enter project board description",
+		"editTitle": "Edit title",
 		"error": "Error",
 		"linkCopied": "The link is copied",
 		"linked": "Linked",
@@ -2131,6 +2132,19 @@
 				"custom": "Create your own review step",
 				"proposal": "Card"
 			}
+		},
+		"createMilestone": {
+			"addToBoard": "Add to board",
+			"scratchPreview": "Creates an empty review form linked to this step. After you add it to the board you can build the form's questions. The form linked to this milestone is the one reviewers see, and student clones inherit it.",
+			"sidePanelHelper": "Choose a MindHive default checkpoint or create a custom milestone. Nothing is added to the board until you click Add to board.",
+			"sidePanelTitle": "Create a milestone",
+			"title": "New milestone",
+			"typeLabel": "New milestone"
+		},
+		"createProposalCard": {
+			"addToBoard": "Add to board",
+			"title": "New card",
+			"typeLabel": "New card"
 		},
 		"deleteSectionConfirm": "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone.",
 		"editTitle": "Edit section title",

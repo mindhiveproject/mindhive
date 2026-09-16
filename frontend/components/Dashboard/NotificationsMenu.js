@@ -25,7 +25,7 @@ const EMPTY_STYLE = {
   margin: 0,
   font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
 };
 
 /**

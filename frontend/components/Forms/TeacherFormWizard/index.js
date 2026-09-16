@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
+import { Container, Draggable } from "react-smooth-dnd";
 
 import Button from "../../DesignSystem/Button";
 import Modal from "../../DesignSystem/Modal";
+import { AddIcon } from "../../DesignSystem/Icons";
 import CardRenderer from "../DefinitionForm/CardRenderer";
 import { FieldShell } from "../DefinitionForm/styles";
 import {
@@ -18,19 +20,25 @@ import QuestionEditor, { REVIEW_HIDDEN_TYPE_KEYS } from "./QuestionEditor";
 import {
   buildPreviewDefinition,
   createBlankQuestion,
+  insertQuestionAt,
   isIntroVideoQuestion,
   questionsFromDefinition,
   questionsToMutationFields,
+  reorderArray,
 } from "./questionUtils";
 import {
-  EditorColumn,
+  BuilderColumn,
   ErrorText,
+  FooterActions,
   MetaActions,
   MetaHeader,
-  PreviewPane,
-  PreviewPaneContent,
+  PageBody,
+  PageFooter,
+  PageHeader,
+  PageShell,
+  PageTitle,
+  PreviewStack,
   QuestionList,
-  Split,
   StepMeta,
   WizardBody,
 } from "./styles";
@@ -44,19 +52,22 @@ export default function TeacherFormWizard({
   mode = "opportunity",
   definitionId: initialDefinitionId = null,
   onSaved,
+  presentation = "modal",
 }) {
   const isReview = mode === "review";
   const isStudentAssessment = mode === "student_assessment";
+  const isPage = presentation === "page";
   const { t } = useTranslation("classes");
   const router = useRouter();
   const locale = router?.locale || "en-us";
+  const listEndRef = useRef(null);
 
   const [definitionId, setDefinitionId] = useState(initialDefinitionId);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState([createBlankQuestion()]);
-  const [expandedQuestionId, setExpandedQuestionId] = useState(null);
   const [showClone, setShowClone] = useState(false);
+  const [isPreviewing, setIsPreviewing] = useState(false);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
 
@@ -84,8 +95,8 @@ export default function TeacherFormWizard({
     setTitle("");
     setDescription("");
     setQuestions([first]);
-    setExpandedQuestionId(first.localId);
     setShowClone(false);
+    setIsPreviewing(false);
     setError(null);
     setSaving(false);
   }, []);
@@ -94,6 +105,7 @@ export default function TeacherFormWizard({
     if (!open) return;
     if (initialDefinitionId) {
       setDefinitionId(initialDefinitionId);
+      setIsPreviewing(false);
       return;
     }
     resetBlank();
@@ -108,8 +120,8 @@ export default function TeacherFormWizard({
     setTitle(definition.title || "");
     setDescription(definition.description || "");
     setQuestions(nextQuestions);
-    setExpandedQuestionId(nextQuestions[0]?.localId || null);
     setShowClone(false);
+    setIsPreviewing(false);
     setError(null);
   }, [open, initialDefinitionId, existingData?.formDefinition]);
 
@@ -119,7 +131,7 @@ export default function TeacherFormWizard({
         title,
         description,
         questions: questions.filter((q) => q.typeChosen),
-        omitCardHeader: true,
+        omitCardHeader: false,
       }),
     [title, description, questions]
   );
@@ -128,6 +140,33 @@ export default function TeacherFormWizard({
     () => questions.some((q) => q.typeChosen && isIntroVideoQuestion(q)),
     [questions]
   );
+
+  const hasPreviewCards = (previewDefinition.cards || []).some(
+    (card) => (card.fields || []).length > 0
+  );
+
+  const scrollToListEnd = useCallback(() => {
+    requestAnimationFrame(() => {
+      listEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }, []);
+
+  const appendQuestion = useCallback(() => {
+    const next = createBlankQuestion();
+    setQuestions((list) => [...list, next]);
+    scrollToListEnd();
+  }, [scrollToListEnd]);
+
+  const insertQuestion = useCallback((index) => {
+    const next = createBlankQuestion();
+    setQuestions((list) => insertQuestionAt(list, index, next));
+  }, []);
+
+  const handleQuestionDrop = useCallback(({ removedIndex, addedIndex }) => {
+    if (removedIndex == null || addedIndex == null) return;
+    if (removedIndex === addedIndex) return;
+    setQuestions((list) => reorderArray(list, removedIndex, addedIndex));
+  }, []);
 
   const validateName = () => {
     if (!title.trim()) {
@@ -301,8 +340,8 @@ export default function TeacherFormWizard({
       setDescription(cloned.description || "");
       const clonedQuestions = questionsFromDefinition(cloned);
       setQuestions(clonedQuestions);
-      setExpandedQuestionId(clonedQuestions[0]?.localId || null);
       setShowClone(false);
+      setIsPreviewing(false);
     } catch (err) {
       setError(
         err?.message ||
@@ -331,22 +370,65 @@ export default function TeacherFormWizard({
             default: "Create a questionnaire",
           });
 
-  const actions = showClone ? (
-    <>
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handleBackFromClone}
-        disabled={saving}
-      >
-        {t("opportunities.matchingRound.formWizard.back", {}, { default: "Back" })}
-      </Button>
-    </>
+  // Preview lives in the footer next to the save actions so the title and note
+  // fields keep the full width of the panel.
+  const previewAction = isPreviewing ? (
+    <Button
+      type="button"
+      variant="outline"
+      onClick={() => setIsPreviewing(false)}
+      disabled={saving}
+    >
+      {t(
+        "opportunities.matchingRound.formWizard.exitPreview",
+        {},
+        { default: "Exit preview" },
+      )}
+    </Button>
+  ) : (
+    <Button
+      type="button"
+      variant="outline"
+      onClick={() => {
+        setError(null);
+        setIsPreviewing(true);
+      }}
+      disabled={saving}
+    >
+      {t(
+        "opportunities.matchingRound.formWizard.previewForm",
+        {},
+        { default: "Preview" },
+      )}
+    </Button>
+  );
+
+  const closeAction = (
+    <Button type="button" variant="outline" onClick={onClose} disabled={saving}>
+      {isPage
+        ? t("opportunities.matchingRound.formWizard.back", {}, {
+            default: "Back",
+          })
+        : t("opportunities.matchingRound.formWizard.cancel", {}, {
+            default: "Cancel",
+          })}
+    </Button>
+  );
+
+  // Review forms are governed by whether the teacher links them to a milestone,
+  // so they get a single Save instead of a draft / publish choice. Saving still
+  // publishes so the linked form resolves for reviewers.
+  const saveActions = isReview ? (
+    <Button
+      type="button"
+      variant="filled"
+      onClick={() => persist({ publish: true })}
+      disabled={saving}
+    >
+      {t("projects.formWizard.save", {}, { default: "Save" })}
+    </Button>
   ) : (
     <>
-      <Button type="button" variant="outline" onClick={onClose} disabled={saving}>
-        {t("opportunities.matchingRound.formWizard.cancel", {}, { default: "Cancel" })}
-      </Button>
       <Button
         type="button"
         variant="outline"
@@ -370,16 +452,266 @@ export default function TeacherFormWizard({
     </>
   );
 
-  const hasPreviewCards = (previewDefinition.cards || []).some(
-    (card) => (card.fields || []).length > 0
+  const actions = showClone ? (
+    <FooterActions>
+      <div className="footer-actions-right">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleBackFromClone}
+          disabled={saving}
+        >
+          {t("opportunities.matchingRound.formWizard.back", {}, {
+            default: "Back",
+          })}
+        </Button>
+      </div>
+    </FooterActions>
+  ) : (
+    <FooterActions>
+      <div className="footer-actions-left">{previewAction}</div>
+      <div className="footer-actions-right">
+        {closeAction}
+        {saveActions}
+      </div>
+    </FooterActions>
   );
+
+  const dragDisabled = saving || isPreviewing;
+
+  useEffect(() => {
+    if (!open || !isPage || saving || typeof onClose !== "function") {
+      return undefined;
+    }
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, isPage, saving, onClose]);
+
+  const wizardContent = (
+    <WizardBody>
+      {loadingExisting && initialDefinitionId ? (
+        <StepMeta>
+          {t("opportunities.matchingRound.formWizard.loading", {}, {
+            default: "Loading form…",
+          })}
+        </StepMeta>
+      ) : null}
+
+      {showClone ? (
+        <>
+          <StepMeta>
+            {t("opportunities.matchingRound.formWizard.cloneHint", {}, {
+              default:
+                "Copy a published public questionnaire into your class, then edit it.",
+            })}
+          </StepMeta>
+          <ClonePublicFormPicker onPick={handleClone} disabled={saving} />
+        </>
+      ) : isPreviewing ? (
+        <>
+          {hasPreviewCards ? (
+            <PreviewStack>
+              {(previewDefinition.cards || []).map((card) => (
+                <CardRenderer
+                  key={card.id}
+                  card={card}
+                  values={{}}
+                  errors={{}}
+                  onFieldChange={() => {}}
+                  locale={locale}
+                  disabled
+                  quiet
+                />
+              ))}
+            </PreviewStack>
+          ) : (
+            <StepMeta>
+              {t(
+                "opportunities.matchingRound.formWizard.previewEmpty",
+                {},
+                {
+                  default:
+                    "Pick a question type and add a prompt to see a live preview.",
+                },
+              )}
+            </StepMeta>
+          )}
+        </>
+      ) : (
+        <>
+          <MetaHeader>
+            <FieldShell>
+              <div className="field-label-block">
+                <span className="label-text">
+                  {t(
+                    isReview
+                      ? "projects.formWizard.nameLabel"
+                      : "opportunities.matchingRound.formWizard.nameLabel",
+                    {},
+                    {
+                      default: isReview
+                        ? "Form title"
+                        : "Title of Form",
+                    },
+                  )}
+                  <span className="required">*</span>
+                </span>
+              </div>
+              <input
+                type="text"
+                className="field-control-block"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder={t(
+                  isReview
+                    ? "projects.formWizard.namePlaceholder"
+                    : "opportunities.matchingRound.formWizard.namePlaceholder",
+                  {},
+                  {
+                    default: isReview
+                      ? "e.g. Proposal feedback"
+                      : "e.g. Sponsor visit follow-up",
+                  },
+                )}
+                disabled={saving}
+              />
+            </FieldShell>
+            <FieldShell>
+              <div className="field-label-block">
+                <span className="label-text">
+                  {t(
+                    isReview
+                      ? "projects.formWizard.descriptionLabel"
+                      : "opportunities.matchingRound.formWizard.descriptionLabel",
+                    {},
+                    {
+                      default: isReview
+                        ? "Optional note for reviewers"
+                        : "Optional note for respondents",
+                    },
+                  )}
+                </span>
+              </div>
+              <textarea
+                className="field-control-block"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={2}
+                placeholder={t(
+                  "opportunities.matchingRound.formWizard.descriptionPlaceholder",
+                  {},
+                  {
+                    default: "Shown at the top of the form. Keep it short.",
+                  },
+                )}
+                disabled={saving}
+              />
+            </FieldShell>
+            {!isReview && !isStudentAssessment && !initialDefinitionId ? (
+              <MetaActions>
+                <Button
+                  type="button"
+                  variant="text"
+                  onClick={() => {
+                    setError(null);
+                    setShowClone(true);
+                  }}
+                  disabled={saving}
+                >
+                  {t(
+                    "opportunities.matchingRound.formWizard.startFromPublic",
+                    {},
+                    {
+                      default: "Start from a public form",
+                    },
+                  )}
+                </Button>
+              </MetaActions>
+            ) : null}
+          </MetaHeader>
+
+          <BuilderColumn>
+            <QuestionList>
+              <Container
+                onDrop={handleQuestionDrop}
+                dragHandleSelector=".question-drag-handle"
+                nonDragAreaSelector="input, textarea, button:not(.question-drag-handle), label, .DesignSystem-CompactActionButton"
+                dropPlaceholder={{ animationDuration: 150, showOnTop: true }}
+                getChildPayload={(i) => questions[i]}
+              >
+                {questions.map((q, index) => (
+                  <Draggable key={q.localId}>
+                    <QuestionEditor
+                      question={q}
+                      index={index}
+                      canRemove={questions.length > 1}
+                      showInsertBefore={index > 0}
+                      dragDisabled={dragDisabled}
+                      introVideoTaken={introVideoTaken}
+                      hiddenTypeKeys={hiddenTypeKeys}
+                      onInsertBefore={() => insertQuestion(index)}
+                      onChange={(next) =>
+                        setQuestions((list) =>
+                          list.map((item) =>
+                            item.localId === q.localId ? next : item
+                          )
+                        )
+                      }
+                      onRemove={() => {
+                        setQuestions((list) =>
+                          list.filter((item) => item.localId !== q.localId)
+                        );
+                      }}
+                    />
+                  </Draggable>
+                ))}
+              </Container>
+              <div className="question-list-add">
+                <Button
+                  type="button"
+                  variant="outline"
+                  leadingIcon={<AddIcon />}
+                  onClick={appendQuestion}
+                  disabled={saving}
+                >
+                  {t("opportunities.matchingRound.formWizard.addQuestion", {}, {
+                    default: "Add question",
+                  })}
+                </Button>
+              </div>
+              <div ref={listEndRef} />
+            </QuestionList>
+          </BuilderColumn>
+        </>
+      )}
+
+      {error ? <ErrorText>{error}</ErrorText> : null}
+    </WizardBody>
+  );
+
+  if (!open) return null;
+
+  if (isPage) {
+    return (
+      <PageShell aria-label={titleText}>
+        <PageHeader>
+          <PageTitle>{titleText}</PageTitle>
+        </PageHeader>
+        <PageBody>{wizardContent}</PageBody>
+        <PageFooter>{actions}</PageFooter>
+      </PageShell>
+    );
+  }
 
   return (
     <Modal
       open={open}
       onClose={saving ? undefined : onClose}
       title={titleText}
-      maxWidth={1120}
+      maxWidth={800}
       maxHeight="92vh"
       height="92vh"
       size="large"
@@ -391,202 +723,7 @@ export default function TeacherFormWizard({
         flex: "1 1 auto",
       }}
     >
-      <WizardBody>
-        {loadingExisting && initialDefinitionId ? (
-          <StepMeta>
-            {t("opportunities.matchingRound.formWizard.loading", {}, {
-              default: "Loading form…",
-            })}
-          </StepMeta>
-        ) : null}
-
-        {showClone ? (
-          <>
-            <StepMeta>
-              {t("opportunities.matchingRound.formWizard.cloneHint", {}, {
-                default:
-                  "Copy a published public questionnaire into your class, then edit it.",
-              })}
-            </StepMeta>
-            <ClonePublicFormPicker onPick={handleClone} disabled={saving} />
-          </>
-        ) : (
-          <>
-            <MetaHeader>
-              <FieldShell>
-                <div className="field-label-block">
-                  <span className="label-text">
-                    {t(
-                      isReview
-                        ? "projects.formWizard.nameLabel"
-                        : "opportunities.matchingRound.formWizard.nameLabel",
-                      {},
-                      {
-                        default: isReview
-                          ? "Form title"
-                          : "Title of Form",
-                      },
-                    )}
-                    <span className="required">*</span>
-                  </span>
-                </div>
-                <input
-                  type="text"
-                  className="field-control-block"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder={t(
-                    isReview
-                      ? "projects.formWizard.namePlaceholder"
-                      : "opportunities.matchingRound.formWizard.namePlaceholder",
-                    {},
-                    {
-                      default: isReview
-                        ? "e.g. Proposal feedback"
-                        : "e.g. Sponsor visit follow-up",
-                    },
-                  )}
-                  disabled={saving}
-                />
-              </FieldShell>
-              <FieldShell>
-                <div className="field-label-block">
-                  <span className="label-text">
-                    {t(
-                      isReview
-                        ? "projects.formWizard.descriptionLabel"
-                        : "opportunities.matchingRound.formWizard.descriptionLabel",
-                      {},
-                      {
-                        default: isReview
-                          ? "Optional note for reviewers"
-                          : "Optional note for respondents",
-                      },
-                    )}
-                  </span>
-                </div>
-                <textarea
-                  className="field-control-block"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={2}
-                  placeholder={t(
-                    "opportunities.matchingRound.formWizard.descriptionPlaceholder",
-                    {},
-                    {
-                      default: "Shown at the top of the form. Keep it short.",
-                    },
-                  )}
-                  disabled={saving}
-                />
-              </FieldShell>
-              {!isReview && !isStudentAssessment && !initialDefinitionId ? (
-                <MetaActions>
-                  <Button
-                    type="button"
-                    variant="text"
-                    onClick={() => {
-                      setError(null);
-                      setShowClone(true);
-                    }}
-                    disabled={saving}
-                  >
-                    {t(
-                      "opportunities.matchingRound.formWizard.startFromPublic",
-                      {},
-                      {
-                        default: "Start from a public form",
-                      },
-                    )}
-                  </Button>
-                </MetaActions>
-              ) : null}
-            </MetaHeader>
-
-            <Split>
-              <EditorColumn>
-                <QuestionList>
-                  {questions.map((q, index) => (
-                    <QuestionEditor
-                      key={q.localId}
-                      question={q}
-                      index={index}
-                      canRemove={questions.length > 1}
-                      expanded={expandedQuestionId === q.localId}
-                      introVideoTaken={introVideoTaken}
-                      hiddenTypeKeys={hiddenTypeKeys}
-                      onExpand={() => setExpandedQuestionId(q.localId)}
-                      onCollapse={() => setExpandedQuestionId(null)}
-                      onChange={(next) =>
-                        setQuestions((list) =>
-                          list.map((item) =>
-                            item.localId === q.localId ? next : item
-                          )
-                        )
-                      }
-                      onRemove={() => {
-                        setQuestions((list) => {
-                          const next = list.filter(
-                            (item) => item.localId !== q.localId
-                          );
-                          if (expandedQuestionId === q.localId) {
-                            setExpandedQuestionId(next[0]?.localId || null);
-                          }
-                          return next;
-                        });
-                      }}
-                    />
-                  ))}
-                </QuestionList>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    const next = createBlankQuestion();
-                    setQuestions((list) => [...list, next]);
-                    setExpandedQuestionId(next.localId);
-                  }}
-                >
-                  {t("opportunities.matchingRound.formWizard.addQuestion", {}, {
-                    default: "Add question",
-                  })}
-                </Button>
-              </EditorColumn>
-              <PreviewPane>
-                {hasPreviewCards ? (
-                  <PreviewPaneContent>
-                    {(previewDefinition.cards || []).map((card) => (
-                      <CardRenderer
-                        key={card.id}
-                        card={card}
-                        values={{}}
-                        errors={{}}
-                        onFieldChange={() => {}}
-                        locale={locale}
-                        disabled
-                        quiet
-                      />
-                    ))}
-                  </PreviewPaneContent>
-                ) : (
-                  <StepMeta>
-                    {t(
-                      "opportunities.matchingRound.formWizard.previewEmpty",
-                      {},
-                      {
-                        default:
-                          "Pick a question type and add a prompt to see a live preview.",
-                      },
-                    )}
-                  </StepMeta>
-                )}
-              </PreviewPane>
-            </Split>
-          </>
-        )}
-
-        {error ? <ErrorText>{error}</ErrorText> : null}
-      </WizardBody>
+      {wizardContent}
     </Modal>
   );
 }

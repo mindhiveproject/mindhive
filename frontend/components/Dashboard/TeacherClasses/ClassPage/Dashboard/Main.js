@@ -27,6 +27,7 @@ import { useBoardMilestones } from "../../../../../lib/useBoardMilestones";
 
 import Button from "../../../../DesignSystem/Button";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 import DashboardAssetIcon from "./DashboardAssetIcon";
 import MilestoneCards from "./MilestoneCards";
 import {
@@ -82,18 +83,21 @@ export default function Dashboard({ myclass }) {
   const stepFromQuery = firstQueryValue(router.query?.step);
   const templateFromQuery = firstQueryValue(router.query?.template);
 
-  const { data } = useQuery(GET_STUDENTS_DASHBOARD_DATA, {
-    variables: { classId: myclass?.id },
-    skip: !myclass?.id,
-  });
-
-  const { data: templateProjectsData } = useQuery(
-    CLASS_TEMPLATE_PROJECTS_QUERY,
+  const { data, loading: studentsLoading } = useQuery(
+    GET_STUDENTS_DASHBOARD_DATA,
     {
       variables: { classId: myclass?.id },
       skip: !myclass?.id,
     }
   );
+
+  const {
+    data: templateProjectsData,
+    loading: templateProjectsLoading,
+  } = useQuery(CLASS_TEMPLATE_PROJECTS_QUERY, {
+    variables: { classId: myclass?.id },
+    skip: !myclass?.id,
+  });
   const templateBoards = useMemo(() => {
     const boardsFromQuery = templateProjectsData?.proposalBoards || [];
     const listed = getClassTemplateBoards(myclass).filter((board) => board?.id);
@@ -559,7 +563,29 @@ export default function Dashboard({ myclass }) {
   const statusManagerValue = statusRow?.milestoneStatusValue;
   const statusManagerOpen = Boolean(statusRow && selectedMilestone);
   const showCards = Boolean(selectedBoardId) && milestonesReady;
-  const showChooserPrompt = persistTemplate && !selectedBoardId;
+  const showChooserPrompt =
+    persistTemplate && !selectedBoardId && !boardsLoading;
+  const isDashboardQueryPending =
+    (studentsLoading && !data) ||
+    (templateProjectsLoading && !templateProjectsData);
+
+  if (isDashboardQueryPending) {
+    return (
+      <StyledDashboard className="dashboard">
+        <JustOneSecondNotice
+          message={{
+            h1: t("dashboard.loadingTitle", {}, {
+              default: "Loading dashboard",
+            }),
+            p: t("dashboard.loadingBody", {}, {
+              default:
+                "Fetching students and project templates for this dashboard.",
+            }),
+          }}
+        />
+      </StyledDashboard>
+    );
+  }
 
   return (
     <StyledDashboard className="dashboard">
@@ -570,6 +596,19 @@ export default function Dashboard({ myclass }) {
           onMilestones={onBoardMilestones}
         />
       ))}
+
+      {templateBoards.length > 0 && boardsLoading ? (
+        <JustOneSecondNotice
+          message={{
+            h1: t("dashboard.loadingMilestonesTitle", {}, {
+              default: "Loading class milestones",
+            }),
+            p: t("dashboard.loadingMilestonesBody", {}, {
+              default: "Fetching milestones from the class project templates.",
+            }),
+          }}
+        />
+      ) : null}
 
       {templateBoards.length === 0 ? (
         <div className="dashboardSourceBar">

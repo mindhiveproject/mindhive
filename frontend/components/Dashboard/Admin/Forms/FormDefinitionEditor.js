@@ -2,10 +2,7 @@
 // selected card/field editor (middle) + live PreviewPanel (right).
 //
 // The full admin EditorPage wraps this with a top bar (back link,
-// publish/revert/archive) and a version-history panel. The
-// CreateCardModal embeds this on its own so admins can build the
-// milestone's project-board-scoped form inline without leaving the
-// wizard.
+// publish/revert/archive) and a version-history panel.
 import { useMemo, useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import styled from "styled-components";

@@ -43,11 +43,6 @@ const NYU_CUSP_NAV_ITEMS = [
     labelKey: "main.opportunities",
     defaultLabel: "Opportunities",
   },
-  {
-    value: "projects",
-    labelKey: "main.projects",
-    defaultLabel: "Projects",
-  },
 ];
 
 const NYU_CUSP_ALLOWED_PAGES = new Set(
@@ -93,6 +88,8 @@ export default function ClassPage({ code, user, query }) {
       ? MIXED_ALLOWED_PAGES
       : DEFAULT_ALLOWED_PAGES;
   const page = query?.page || (hasClassData ? defaultPage : undefined);
+  // One accessible section: skip tabs (e.g. NYU CUSP-only → Opportunities).
+  const showSectionNav = navItems.length > 1;
 
   useEffect(() => {
     if (!hasClassData) return;
@@ -122,28 +119,30 @@ export default function ClassPage({ code, user, query }) {
   return (
     <div>
       <Header myclass={myclass} />
-      <SectionNavbar
-        className="classPageNav"
-        variant="underline"
-        showRule
-        aria-label={t("main.classSectionsNav", {}, {
-          default: "Class sections",
-        })}
-      >
-        {navItems.map((item) => (
-          <NavbarItem
-            key={item.value}
-            as={Link}
-            href={{
-              pathname: `/dashboard/classes/${code}`,
-              query: { page: item.value },
-            }}
-            selected={page === item.value}
-          >
-            {t(item.labelKey, {}, { default: item.defaultLabel })}
-          </NavbarItem>
-        ))}
-      </SectionNavbar>
+      {showSectionNav && (
+        <SectionNavbar
+          className="classPageNav"
+          variant="underline"
+          showRule
+          aria-label={t("main.classSectionsNav", {}, {
+            default: "Class sections",
+          })}
+        >
+          {navItems.map((item) => (
+            <NavbarItem
+              key={item.value}
+              as={Link}
+              href={{
+                pathname: `/dashboard/classes/${code}`,
+                query: { page: item.value },
+              }}
+              selected={page === item.value}
+            >
+              {t(item.labelKey, {}, { default: item.defaultLabel })}
+            </NavbarItem>
+          ))}
+        </SectionNavbar>
+      )}
 
       {!hideDisallowedPage && page === "assignments" && (
         <div>

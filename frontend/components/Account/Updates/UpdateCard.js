@@ -28,7 +28,7 @@ const Row = styled.div`
   box-sizing: border-box;
   opacity: ${({ $unread }) => ($unread ? 1 : 0.78)};
   box-shadow: ${({ $unread }) =>
-    $unread ? "inset 3px 0 0 0 var(--MH-Theme-Primary-Base, #337C84)" : "none"};
+    $unread ? "inset 3px 0 0 0 #337C84" : "none"};
 
   .body {
     display: flex;
@@ -50,7 +50,7 @@ const Row = styled.div`
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--MH-Theme-Primary-Base, #337C84);
+    background: #337C84;
   }
 
   .title {

@@ -1,9 +1,14 @@
+import { useMemo } from "react";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_CLASSES } from "../../Queries/Classes";
+import ClassFavoriteButton, {
+  compareClassesByFavoriteThenDate,
+  getFavoriteClassIds,
+} from "../ClassFavoriteButton";
 
 export default function ClassesList({ query, user }) {
   const { t } = useTranslation("classes");
@@ -16,6 +21,12 @@ export default function ClassesList({ query, user }) {
   });
 
   const classes = data?.classes || [];
+  const favoriteIds = useMemo(() => getFavoriteClassIds(user), [user]);
+  const sortedClasses = useMemo(() => {
+    return [...classes].sort((a, b) =>
+      compareClassesByFavoriteThenDate(a, b, favoriteIds, "newest")
+    );
+  }, [classes, favoriteIds]);
 
   if (error) {
     return (
@@ -53,10 +64,11 @@ export default function ClassesList({ query, user }) {
           {t("classesList.numberOfStudents", {}, { default: "Students" })}
         </div>
         <div>{t("classesList.dateCreated", {}, { default: "Date created" })}</div>
+        <div aria-hidden="true" />
       </div>
 
       <div className="classListBoard">
-        {classes.map((myclass) => {
+        {sortedClasses.map((myclass) => {
           const title = (myclass?.title ?? "").trim();
           const code = myclass?.code ?? "";
           const ariaLabel =
@@ -81,6 +93,7 @@ export default function ClassesList({ query, user }) {
                 <div className="classListRowMeta">
                   {moment(myclass?.createdAt).format("MMMM D, YYYY")}
                 </div>
+                <ClassFavoriteButton user={user} classId={myclass.id} />
               </div>
             </Link>
           );

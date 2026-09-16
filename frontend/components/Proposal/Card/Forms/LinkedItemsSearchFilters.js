@@ -9,7 +9,7 @@ const styledChip = {
   alignItems: "center",
   flexShrink: "0",
   borderRadius: "8px",
-  border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   maxWidth: "100%",
   wordBreak: "break-word",
 };
@@ -37,7 +37,7 @@ const styledChipUnpublished = {
   flexShrink: "0",
   borderRadius: "8px",
   background: "#F3F3F3",
-  border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  border: "1px solid var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
   maxWidth: "100%",
   wordBreak: "break-word",
 };

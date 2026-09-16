@@ -62,7 +62,9 @@ export function countProfileOwnedOpportunities(network, profileId) {
 export function findUserClassInNetwork(user, network) {
   if (!user?.id || !network) return null;
   const teacherIds = new Set(
-    (user?.teacherIn || []).map((cls) => cls?.id).filter(Boolean)
+    [...(user?.teacherIn || []), ...(user?.teachingTeamIn || [])]
+      .map((cls) => cls?.id)
+      .filter(Boolean)
   );
   const mentorIds = new Set(
     (user?.mentorIn || []).map((cls) => cls?.id).filter(Boolean)

@@ -46,6 +46,8 @@ import { VizChapter } from "./schemas/VizChapter";
 import { VizSection } from "./schemas/VizSection";
 import { Resource } from "./schemas/Resource";
 import { Log } from "./schemas/Log";
+import { Ticket } from "./schemas/Ticket";
+import { TicketAnnotation } from "./schemas/TicketAnnotation";
 import { Datasource } from "./schemas/Datasource";
 import { DataSourceBlock } from "./schemas/DataSourceBlock";
 import { StudyDataSource } from "./schemas/StudyDataSource";
@@ -130,6 +132,8 @@ export const lists: Lists = {
   VizSection,
   Resource,
   Log,
+  Ticket,
+  TicketAnnotation,
   Datasource,
   DataSourceBlock,
   StudyDataSource,

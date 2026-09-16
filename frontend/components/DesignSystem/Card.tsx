@@ -63,7 +63,7 @@ const ELEVATION_SM =
   "var(--MH-Theme-Elevation-Small, 1px 1px 4px rgba(0, 0, 0, 0.08))";
 const ELEVATION_HIGH =
   "var(--MH-Theme-Elevation-High, 2px 2px 12px rgba(0, 0, 0, 0.19))";
-const OUTLINE_BORDER = "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)";
+const OUTLINE_BORDER = "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)";
 
 const StyledCard = styled.article`
   position: relative;

@@ -56,10 +56,13 @@ export function appointmentReviewLink(
     for (const cls of network.classes || []) {
       if (!cls?.code) continue;
       const isCreator = cls.creator?.id === recipientId;
+      const isTeachingTeam = (cls.teachingTeam || []).some(
+        (m: { id: string }) => m.id === recipientId
+      );
       const isMentor = (cls.mentors || []).some(
         (m: { id: string }) => m.id === recipientId
       );
-      if (!isCreator && !isMentor) continue;
+      if (!isCreator && !isTeachingTeam && !isMentor) continue;
       const params = new URLSearchParams({
         page: "opportunities",
         matchingPanel: "review",
@@ -123,6 +126,7 @@ async function loadNetworkRounds(context: any, opportunity: any) {
           classes {
             code
             creator { id }
+            teachingTeam { id }
             mentors { id }
           }
         }

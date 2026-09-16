@@ -21,6 +21,7 @@
     "@keystone-6/cloudinary": "^7.0.2",
     "@keystone-6/core": "^5.7.0",
     "@keystone-6/fields-document": "^8.0.2",
+    "@notionhq/client": "^5.26.0",
     "@tiptap/core": "^3.4.4",
     "@tiptap/extension-image": "^3.4.4",
     "@tiptap/extension-link": "^3.4.4",

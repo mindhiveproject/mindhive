@@ -6,8 +6,8 @@ const rowStyle = {
   gap: 16,
   padding: "12px 16px",
   borderRadius: 12,
-  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  background: "var(--MH-Theme-Neutrals-White, #ffffff)",
   cursor: "pointer",
   textAlign: "left",
   width: "100%",
@@ -35,7 +35,7 @@ const supportingStyle = {
   margin: "4px 0 0",
   font: 'var(--MH-Type-Body-Base)',
   letterSpacing: 0,
-  color: "var(--MH-Theme-Neutrals-Dark, #5D5763)",
+  color: "var(--MH-Theme-Accent-Dark, #5d5763)",
 };
 
 export default function MilestoneCapabilityRow({
@@ -74,10 +74,10 @@ export default function MilestoneCapabilityRow({
         opacity: disabled ? 0.55 : 1,
         cursor: disabled ? "not-allowed" : "pointer",
         borderColor: checked
-          ? "var(--MH-Theme-Primary-Dark, #336F8A)"
+          ? "var(--MH-Theme-Primary-Dark, #336f8a)"
           : rowStyle.border,
         background: checked
-          ? "var(--MH-Theme-Primary-Light, #DEF8FB)"
+          ? "var(--MH-Theme-Primary-Light, #def8fb)"
           : rowStyle.background,
       }}
       onClick={handleClick}
@@ -96,7 +96,7 @@ export default function MilestoneCapabilityRow({
             width: 20,
             height: 20,
             margin: 0,
-            accentColor: "var(--MH-Theme-Primary-Dark, #336F8A)",
+            accentColor: "var(--MH-Theme-Primary-Dark, #336f8a)",
             pointerEvents: "none",
           }}
         />

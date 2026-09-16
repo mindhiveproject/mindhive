@@ -6,17 +6,16 @@ import { useMutation, useApolloClient } from "@apollo/client";
 
 import useForm from "../../../../../../lib/useForm";
 
-import { Icon, Radio } from "semantic-ui-react";
-
 import useTranslation from "next-translate/useTranslation";
 
 import exportPDF from "../PDF/exportPDF";
-import clsx from "clsx";
 
 import Button from "../../../../../DesignSystem/Button";
+import ButtonGroup from "../../../../../DesignSystem/ButtonGroup";
 import Chip from "../../../../../DesignSystem/Chip";
+import IconButton from "../../../../../DesignSystem/IconButton";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
-import { PencilIcon } from "../../../../../DesignSystem/Icons";
+import { AddIcon, PencilIcon } from "../../../../../DesignSystem/Icons";
 
 import { useRef, useState } from "react";
 
@@ -112,7 +111,8 @@ export default function ProposalHeader({
     const userHasClasses = 
       (user?.studentIn?.length > 0) ||
       (user?.mentorIn?.length > 0) ||
-      (user?.teacherIn?.length > 0);
+      (user?.teacherIn?.length > 0) ||
+      (user?.teachingTeamIn?.length > 0);
     
     if (userHasClasses) {
       setShowCollaboratorModal(true);
@@ -165,17 +165,12 @@ export default function ProposalHeader({
                     )}
                   </button>
                 ) : (
-                  <button 
-                    className="headerEditIcon" 
+                  <IconButton
+                    variant="text"
+                    icon={<PencilIcon style={{ color: "#171717" }} />}
                     onClick={handleEditIconClick}
-                    aria-label="Edit title"
-                  >
-                    <img 
-                        src="/assets/icons/pencil.svg"
-                        alt="Edit"
-                        className="headerEditIcon"
-                      />
-                  </button>
+                    ariaLabel={t("header.editTitle", {}, { default: "Edit title" })}
+                  />
                 )}
                 {isTitleEditing ? (
                   <input
@@ -237,40 +232,36 @@ export default function ProposalHeader({
               
               <div className="headerInfoRow">
                 <div className="headerViewControls">
-                  <div className="viewToggleGroup" role="group">
-                    <button
-                      type="button"
-                      onClick={handleSwitchToBoardView}
-                      aria-pressed={!isPDF}
-                      className={clsx(
-                        "viewToggleButton",
-                        "left",
-                        "MH-Type-Label-Base",
-                        !isPDF ? "active" : "inactive"
-                      )}
-                    >
-                      <PencilIcon width={18} height={18} />
-                      <span>
-                        {t("proposalPage.viewBoard", {}, { default: "Board View" })}
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsPDF(true)}
-                      aria-pressed={!!isPDF}
-                      className={clsx(
-                        "viewToggleButton",
-                        "right",
-                        "MH-Type-Label-Base",
-                        isPDF ? "active" : "inactive"
-                      )}
-                    >
-                      {ListViewIcon}
-                      <span>
-                        {t("proposalPage.viewFlattenBoard", {}, { default: "List View" })}
-                      </span>
-                    </button>
-                  </div>
+                  <ButtonGroup
+                    type="Round"
+                    size="Small"
+                    selectionMode="single"
+                    selectionRequired
+                    value={isPDF ? "list" : "board"}
+                    onChange={(next) => {
+                      if (next === "list") {
+                        setIsPDF(true);
+                      } else {
+                        handleSwitchToBoardView();
+                      }
+                    }}
+                    items={[
+                      {
+                        value: "board",
+                        label: t("proposalPage.viewBoard", {}, { default: "Board View" }),
+                        // icon: <PencilIcon />,
+                      },
+                      {
+                        value: "list",
+                        label: t(
+                          "proposalPage.viewFlattenBoard",
+                          {},
+                          { default: "List View" }
+                        ),
+                        // icon: ListViewIcon,
+                      },
+                    ]}
+                  />
                   {isPDF && (
                     <div className="headerDownloadTrigger">
                       <Tooltip
@@ -327,16 +318,16 @@ export default function ProposalHeader({
                     const userHasClasses = 
                       (user?.studentIn?.length > 0) ||
                       (user?.mentorIn?.length > 0) ||
-                      (user?.teacherIn?.length > 0);
+                      (user?.teacherIn?.length > 0) ||
+                      (user?.teachingTeamIn?.length > 0);
                     
                     return userHasClasses ? (
-                      <button
-                        className="addCollaboratorButton"
-                        aria-label="Add collaborator"
+                      <IconButton
+                        variant="text"
+                        icon={<AddIcon style={{ color: NEUTRAL_LABEL_COLOR, width: "18px", height: "18px" }} />}
+                        ariaLabel={t("header.addCollaborator", {}, { default: "Add collaborator" })}
                         onClick={handleAddCollaboratorClick}
-                      >
-                        <img src="/assets/icons/plus.svg" alt="Add" />
-                      </button>
+                      />
                     ) : null;
                   })()}
                 </div>
@@ -351,13 +342,12 @@ export default function ProposalHeader({
         {proposalBuildMode && (
           <div>
             <div className="headerTitleRow">
-              <button 
-                className="headerEditIcon" 
+              <IconButton
+                variant="text"
+                icon={<PencilIcon />}
                 onClick={handleEditIconClick}
-                aria-label="Edit title"
-              >
-                <Icon name="pencil" />
-              </button>
+                ariaLabel={t("header.editTitle", {}, { default: "Edit title" })}
+              />
               <label htmlFor="title" style={{ flex: 1 }}>
                 <input
                   ref={titleInputRef}

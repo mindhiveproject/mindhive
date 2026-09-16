@@ -26,6 +26,7 @@ import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import IconButton from "../../../../DesignSystem/IconButton";
 import MessageCard from "../../../../DesignSystem/MessageCard";
 import { MilestoneIcon } from "../../../../DesignSystem/Icons";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 import { getActionCardsFromBoard } from "../../../../../lib/templateBoardActionCards";
 import TemplateBoardPreviewModal from "../Modals/TemplateBoardPreviewModal";
 import TemplateBoardSettingsModal from "../Modals/TemplateBoardSettingsModal";
@@ -41,19 +42,30 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [libraryCategory, setLibraryCategory] = useState(null);
 
-  const { data: classTemplatesData } = useQuery(CLASS_TEMPLATE_PROJECTS_QUERY, {
-    variables: { classId },
-    skip: !classId,
-  });
+  const { data: classTemplatesData, loading: classTemplatesLoading } = useQuery(
+    CLASS_TEMPLATE_PROJECTS_QUERY,
+    {
+      variables: { classId },
+      skip: !classId,
+    }
+  );
 
-  const { data: libraryData } = useQuery(PROPOSAL_TEMPLATES_QUERY);
+  const { data: libraryData, loading: libraryLoading } = useQuery(
+    PROPOSAL_TEMPLATES_QUERY
+  );
 
-  const { data: authoredData } = useQuery(GET_MY_AUTHORED_PROJECT_BOARDS, {
-    variables: { userId: user?.id },
-    skip: !user?.id,
-  });
+  const { data: authoredData, loading: authoredLoading } = useQuery(
+    GET_MY_AUTHORED_PROJECT_BOARDS,
+    {
+      variables: { userId: user?.id },
+      skip: !user?.id,
+    }
+  );
 
-  const [syncClassTemplateBoards] = useMutation(SYNC_CLASS_TEMPLATE_BOARDS, {
+  const [
+    syncClassTemplateBoards,
+    { loading: classTemplatesSyncing },
+  ] = useMutation(SYNC_CLASS_TEMPLATE_BOARDS, {
     refetchQueries: [
       {
         query: CLASS_TEMPLATE_PROJECTS_QUERY,
@@ -77,6 +89,9 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   });
 
   const classTemplates = classTemplatesData?.proposalBoards || [];
+  const isClassTemplatesPending =
+    (classTemplatesLoading && !classTemplatesData) ||
+    (classTemplatesSyncing && classTemplates.length === 0);
 
   const classTemplateIds = useMemo(
     () => new Set(classTemplates.map((board) => board.id)),
@@ -101,6 +116,9 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
       : libraryCategory === "public"
         ? publicTemplates
         : [];
+  const isSelectedLibraryPending =
+    (libraryCategory === "mine" && authoredLoading && !authoredData) ||
+    (libraryCategory === "public" && libraryLoading && !libraryData);
 
   const toggleLibraryCategory = (next) => {
     setLibraryCategory((current) => (current === next ? null : next));
@@ -269,27 +287,43 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             )}
           </p>
 
-        {classTemplates.length === 0 ? (
-          <MessageCard
-            variant="neutral"
-            message={t("projects.noClassTemplatesYet", {}, {
-              default: "You haven't created any class template boards yet.",
-            })}
-            onClick={() => router.push(createHref)}
-            ariaLabel={t("projects.createTemplateBoard", {}, {
-              default: "Create template board",
-            })}
-          />
-        ) : (
-          <div className="classTabTemplateList">
-            {classTemplates.map((board) => {
-              const isVisible = isTemplateVisibleToStudents(board, classId, {
-                ...myclass,
-                classTemplateBoards: classTemplates,
-              });
-              const canDelete = canDeleteProposalBoard(board, user?.id, { isAdmin });
-              const copyStatusLabel = getCopyStatusLabel(isVisible);
-              return (
+          {isClassTemplatesPending ? (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <JustOneSecondNotice
+                message={{
+                  h1: t("projects.loadingClassTemplatesTitle", {}, {
+                    default: "Loading class templates",
+                  }),
+                  p: t("projects.loadingClassTemplatesBody", {}, {
+                    default:
+                      "Fetching the project templates available to this class.",
+                  }),
+                }}
+              />
+            </div>
+          ) : classTemplates.length === 0 ? (
+            <MessageCard
+              variant="neutral"
+              message={t("projects.noClassTemplatesYet", {}, {
+                default: "You haven't created any class template boards yet.",
+              })}
+              onClick={() => router.push(createHref)}
+              ariaLabel={t("projects.createTemplateBoard", {}, {
+                default: "Create template board",
+              })}
+            />
+          ) : (
+            <div className="classTabTemplateList">
+              {classTemplates.map((board) => {
+                const isVisible = isTemplateVisibleToStudents(board, classId, {
+                  ...myclass,
+                  classTemplateBoards: classTemplates,
+                });
+                const canDelete = canDeleteProposalBoard(board, user?.id, {
+                  isAdmin,
+                });
+                const copyStatusLabel = getCopyStatusLabel(isVisible);
+                return (
                 <div
                   key={board.id}
                   className={clsx(
@@ -376,10 +410,10 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                     />
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -438,7 +472,26 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
         </div>
 
         {libraryCategory ? (
-          displayedTemplates.length === 0 ? (
+          isSelectedLibraryPending ? (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <JustOneSecondNotice
+                message={{
+                  h1: t("projects.loadingTemplateLibraryTitle", {}, {
+                    default: "Loading template library",
+                  }),
+                  p:
+                    libraryCategory === "mine"
+                      ? t("projects.loadingMyTemplatesBody", {}, {
+                          default:
+                            "Fetching project templates from your other classes.",
+                        })
+                      : t("projects.loadingPublicTemplatesBody", {}, {
+                          default: "Fetching public project templates.",
+                        }),
+                }}
+              />
+            </div>
+          ) : displayedTemplates.length === 0 ? (
             <div className="classTabEmpty">
               <div>
                 {libraryCategory === "mine"

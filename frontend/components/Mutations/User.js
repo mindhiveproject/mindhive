@@ -232,6 +232,18 @@ export const UPDATE_PROFILE = gql`
 `;
 
 // manage profile
+export const MANAGE_FAVORITE_CLASSES = gql`
+  mutation MANAGE_FAVORITE_CLASSES(
+    $id: ID!
+    $action: ClassRelateToManyForUpdateInput!
+  ) {
+    updateProfile(where: { id: $id }, data: { favoriteClasses: $action }) {
+      id
+    }
+  }
+`;
+
+// manage profile
 export const MANAGE_FAVORITE_PEOPLE = gql`
   mutation MANAGE_FAVORITE_PEOPLE(
     $id: ID!

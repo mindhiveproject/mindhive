@@ -226,3 +226,25 @@ export const Support = styled.div`
     }
   }
 `; 
+/*
+ * Open-ticket count on the launcher. Only rendered for canManageTickets
+ * holders, and only while the speed dial is closed — once open, the count sits
+ * on the "File a ticket" action itself.
+ */
+export const TicketCountBadge = styled.span`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 100px;
+  border: 2px solid var(--MH-Theme-Neutrals-White, #ffffff);
+  background: var(--MH-Theme-Accent-Base, #f2be42);
+  color: var(--MH-Theme-Neutrals-Black, #171717);
+  font: var(--MH-Type-Label-Small);
+  line-height: 16px;
+  text-align: center;
+  box-sizing: border-box;
+  pointer-events: none;
+`;

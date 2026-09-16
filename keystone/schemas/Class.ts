@@ -9,6 +9,11 @@ import {
   checkbox,
   json,
 } from "@keystone-6/core/fields";
+import {
+  ensureTeacherPermission,
+  relationshipConnectIds,
+  syncClassStaffAsRoundReviewers,
+} from "../lib/classStaff";
 
 export const Class = list({
   access: {
@@ -16,7 +21,13 @@ export const Class = list({
       query: () => true,
       create: () => true,
       update: () => true,
-      delete: () => true,
+      delete: ({ session }) => !!session?.itemId,
+    },
+    filter: {
+      delete: ({ session }) =>
+        session?.itemId
+          ? { creator: { id: { equals: session.itemId } } }
+          : false,
     },
   },
   fields: {
@@ -32,8 +43,16 @@ export const Class = list({
       ref: "Profile.mentorIn",
       many: true,
     }),
+    teachingTeam: relationship({
+      ref: "Profile.teachingTeamIn",
+      many: true,
+    }),
     students: relationship({
       ref: "Profile.studentIn",
+      many: true,
+    }),
+    favoriteBy: relationship({
+      ref: "Profile.favoriteClasses",
       many: true,
     }),
     networks: relationship({ ref: "ClassNetwork.classes", many: true }),
@@ -80,9 +99,29 @@ export const Class = list({
       ref: "Log.class",
       many: true,
     }),
+    tickets: relationship({
+      ref: "Ticket.class",
+      many: true,
+    }),
     formDefinitions: relationship({
       ref: "FormDefinition.class",
       many: true,
     }),
+  },
+  hooks: {
+    async afterOperation({ operation, inputData, item, context }) {
+      if (operation !== "create" && operation !== "update") return;
+      const profileIds = relationshipConnectIds(inputData?.teachingTeam);
+      for (const profileId of profileIds) {
+        await ensureTeacherPermission(context, profileId);
+      }
+      if (
+        inputData?.teachingTeam ||
+        inputData?.mentors ||
+        inputData?.networks
+      ) {
+        await syncClassStaffAsRoundReviewers(context, item?.id ? String(item.id) : "");
+      }
+    },
   },
 });

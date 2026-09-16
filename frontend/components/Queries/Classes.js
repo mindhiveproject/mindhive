@@ -49,6 +49,13 @@ export const GET_CLASS = gql`
         id
         username
       }
+      teachingTeam {
+        id
+        username
+        email
+        firstName
+        lastName
+      }
       students {
         id
         publicId
@@ -234,7 +241,14 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
 
 export const GET_TEACHER_CLASSES = gql`
   query GET_TEACHER_CLASSES($userId: ID!) {
-    classes(where: { creator: { id: { equals: $userId } } }) {
+    classes(
+      where: {
+        OR: [
+          { creator: { id: { equals: $userId } } }
+          { teachingTeam: { some: { id: { equals: $userId } } } }
+        ]
+      }
+    ) {
       id
       title
       code

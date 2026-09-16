@@ -17,7 +17,7 @@ export default function DeleteResource({
 
   return (
     <div
-      style={{ cursor: "pointer" }}
+      style={{ cursor: "pointer", display: "inline-flex" }}
       onClick={() => {
         if (confirm(t("boardManagement.deleteResource"))) {
           deleteResource().catch((err) => {

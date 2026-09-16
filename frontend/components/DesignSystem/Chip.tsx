@@ -82,8 +82,8 @@ const StyledChip = styled.div`
     color: var(--MH-Theme-Success-Dark, #1d6b3a);
   }
   &.DesignSystem-Chip--tone-warning {
-    background: var(--MH-Theme-Warning-Light, #fdf6e8);
-    color: var(--MH-Theme-Warning-Dark, #8a6d3b);
+    background: #fdf6e8;
+    color: #8a6d3b;
   }
   &.DesignSystem-Chip--tone-info {
     background: var(--MH-Theme-Primary-Light, #def8fb);
@@ -91,7 +91,7 @@ const StyledChip = styled.div`
   }
   &.DesignSystem-Chip--tone-danger {
     background: var(--MH-Theme-Danger-Light, #fdecea);
-    color: var(--MH-Theme-Danger-Dark, #b3261e);
+    color: var(--MH-Theme-Error-Dark, #b3261e);
   }
 
   &.DesignSystem-Chip--selected {

@@ -25,7 +25,7 @@ const Card = styled.article`
 
 const Title = styled.h3`
   margin: 0;
-  font: var(--MH-Type-Title-Small, 600 16px/22px "Inter", sans-serif);
+  font: var(--MH-Type-Title-Base, 600 16px/24px "Inter", sans-serif);
   letter-spacing: 0;
   color: var(--MH-Theme-Neutrals-Black, #171717);
 `;

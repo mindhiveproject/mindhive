@@ -11,36 +11,33 @@ import styled from "styled-components";
 
 import Chip from "../../../../DesignSystem/Chip";
 import Button from "../../../../DesignSystem/Button";
-import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
-import IconButton from "../../../../DesignSystem/IconButton";
 import DefinitionForm from "../../../../Forms/DefinitionForm";
-import { StarFilledIcon, StarIcon, UnlockIcon } from "../../../../DesignSystem/Icons";
-import Navbar, { NavbarItem } from "../../../../DesignSystem/Navbar";
+import {
+  PencilIcon,
+  StarFilledIcon,
+  StarIcon,
+  UnlockIcon,
+} from "../../../../DesignSystem/Icons";
+import ButtonGroup from "../../../../DesignSystem/ButtonGroup";
 import { TEACHER_STUDENT_BALLOT_VIEW } from "../../../../Queries/ConnectMatch";
 import { UPDATE_PREFERENCE } from "../../../../Mutations/ConnectPreference";
-import useConnectMatchAssign from "../../../../../lib/useConnectMatchAssign";
 import { isAssessmentFormAnswerComplete } from "../../../../../lib/connectPreferenceAssessmentData";
 import {
   buildClassmateListsByStudent,
-  buildPrefIndex,
   buildTeamPrefsByStudent,
   displayName,
-  formatPreferenceSummary,
   getClassmateMutualStatus,
   getMaxActiveClassmatePicks,
   getSubmissionStatus,
   getTeamEligibleOpportunities,
   inferBallotQueue,
-  prefForStudentOpp,
-  scoreForStudentOpp,
-  studentDisplayName,
   summarizeMutualClassmates,
 } from "../../../../../lib/connectBallotUtils";
-import { getMatchingQueue } from "../../../../../lib/connectPreferenceMatchingPreference";
 import { downloadStudentBallotCsv } from "../../../../../lib/downloadStudentBallotCsv";
 import MessageCard from "../../../../DesignSystem/MessageCard";
-import MatchingAlgorithmInfoModal from "../../../shared/MatchingAlgorithmInfoModal";
 import Modal from "../../../../DesignSystem/Modal";
+import StudentNameDisplay from "./StudentNameDisplay";
+import StudentPreferenceSubmission from "../../../StudentClasses/ClassPage/Opportunities/StudentPreferenceSubmission";
 
 const STUDENT_RANKING_SUB_MODES = {
   ballot: "ballot",
@@ -48,10 +45,36 @@ const STUDENT_RANKING_SUB_MODES = {
 };
 
 const Shell = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: hidden;
+`;
+
+const RankingCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  > *:not(:last-child) {
+    flex-shrink: 0;
+  }
 `;
 
 const PanelHeader = styled.div`
@@ -60,7 +83,7 @@ const PanelHeader = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px 16px;
-  margin-left: 14px;
+  flex: 0 0 auto;
 `;
 
 const HeaderText = styled.div`
@@ -86,13 +109,13 @@ const SearchRow = styled.div`
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  flex: 0 0 auto;
 `;
 
 const SearchInput = styled.input`
   width: 100%;
-  max-width: 280px;
   padding: 10px 14px;
-  border: 1px solid var(--MH-Theme-Neutrals-Medium, #d3dae0);
+  border: 1px solid #d3dae0;
   border-radius: 12px;
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   font: var(--MH-Type-Body-Base);
@@ -105,50 +128,32 @@ const SearchInput = styled.input`
   }
 `;
 
-const QueueSection = styled.section`
+const BallotList = styled.div`
   display: grid;
   gap: 10px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
-`;
-
-const QueueTitle = styled.h5`
-  margin: 0;
-  font: var(--MH-Type-Title-Small);
-  color: var(--MH-Theme-Neutrals-Black, #171717);
-`;
-
-const QueueHint = styled.p`
-  margin: 0;
-  font: var(--MH-Type-Body-Base);
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  align-content: start;
+  grid-auto-rows: max-content;
 `;
 
 const StudentRow = styled.div`
   border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   border-radius: 12px;
-  background: var(--MH-Theme-Neutrals-Lighter, #f9f9f9);
+  background: #f9f9f9;
   overflow: hidden;
+  min-height: min-content;
 `;
 
-const RowSummary = styled.button`
+const RowSummary = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
   width: 100%;
   padding: 12px 14px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-
-  &:focus-visible {
-    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
-    outline-offset: -2px;
-  }
+  box-sizing: border-box;
 `;
 
 const RowMain = styled.div`
@@ -172,7 +177,7 @@ const RowActions = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 8px;
 `;
 
@@ -186,6 +191,7 @@ const RowDetail = styled.div`
 const DetailSection = styled.section`
   display: grid;
   gap: 8px;
+  padding-top: 16px;
 `;
 
 const DetailTitle = styled.h6`
@@ -208,7 +214,7 @@ const ActiveZoneGroup = styled.div`
   gap: 8px;
   padding: 12px;
   border-radius: 12px;
-  background: var(--MH-Theme-Neutrals-Lighter, #f9f9f9);
+  background: #f9f9f9;
   border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   box-shadow: 0 1px 2px rgba(23, 23, 23, 0.06);
 `;
@@ -220,7 +226,7 @@ const DetailItem = styled.li`
   gap: 8px 12px;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid var(--MH-Theme-Neutrals-Medium, #e6e6e6);
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   background: var(--MH-Theme-Neutrals-White, #ffffff);
 `;
 
@@ -234,7 +240,7 @@ const RankBadge = styled.span`
   border-radius: 999px;
   font: var(--MH-Type-Label-Base);
   background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
-  border: 1px solid var(--MH-Theme-Neutrals-Medium, #e6e6e6);
+  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
 `;
 
 const ItemTitle = styled.span`
@@ -257,13 +263,6 @@ const StarRow = styled.span`
 const EmptyNote = styled.p`
   margin: 0;
   font: var(--MH-Type-Body-Base);
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-`;
-
-const Chevron = styled.span`
-  display: inline-flex;
-  transition: transform 0.2s ease;
-  transform: ${({ $open }) => ($open ? "rotate(180deg)" : "rotate(0deg)")};
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
@@ -298,20 +297,15 @@ const ZoneLabel = styled.p`
 function StudentBallotRow({
   row,
   studentById,
+  preferenceByStudentId,
   classmateListsByStudent,
   activePickCount = 0,
-  opportunities,
-  matchesByOpp,
-  prefIndex,
-  totalOpps,
   assessmentFormDefinition,
-  isCurated,
-  handleAssign,
-  assigning,
   handleReopenBallot,
+  handleEditBallot,
   reopeningPreferenceId,
+  ballotWindowActive = true,
   t,
-  tConnect,
 }) {
   const [expanded, setExpanded] = useState(false);
   const studentId = row.student.id;
@@ -322,43 +316,6 @@ function StudentBallotRow({
     classmateListsByStudent,
     activePickCount,
   );
-
-  const assignOptions = useMemo(() => {
-    if (!isCurated || row.match) return [];
-    return [...opportunities]
-      .filter((opp) => {
-        const cap = opp.studentCapacity || 1;
-        const used = (matchesByOpp.get(opp.id) || []).length;
-        return used < cap;
-      })
-      .sort((a, b) => {
-        const scoreDiff =
-          scoreForStudentOpp(studentId, b.id, prefIndex, totalOpps) -
-          scoreForStudentOpp(studentId, a.id, prefIndex, totalOpps);
-        if (scoreDiff !== 0) return scoreDiff;
-        return (a.title || "").localeCompare(b.title || "");
-      })
-      .map((opp) => {
-        const cap = opp.studentCapacity || 1;
-        const used = (matchesByOpp.get(opp.id) || []).length;
-        const pref = prefForStudentOpp(studentId, opp.id, prefIndex);
-        const summary = formatPreferenceSummary(pref, tConnect);
-        const prefLabel = summary ? ` · ${summary}` : "";
-        return {
-          value: opp.id,
-          label: `${opp.title} (${used}/${cap})${prefLabel}`,
-        };
-      });
-  }, [
-    isCurated,
-    row.match,
-    opportunities,
-    matchesByOpp,
-    studentId,
-    prefIndex,
-    totalOpps,
-    tConnect,
-  ]);
 
   const rankedOpps = (row.preference?.items || [])
     .filter(
@@ -393,24 +350,6 @@ function StudentBallotRow({
     },
   );
 
-  const matchingQueue =
-    getMatchingQueue(row.preference?.studentMatchingPreference) ||
-    (row.preference ? row.queue : null);
-  const matchingQueueLabel =
-    matchingQueue === "team_first"
-      ? t(
-          "opportunities.matchingRound.studentRanking.choiceTeamFirst",
-          {},
-          { default: "Team first" },
-        )
-      : matchingQueue === "project_first"
-        ? t(
-            "opportunities.matchingRound.studentRanking.choiceProjectFirst",
-            {},
-            { default: "Project first" },
-          )
-        : null;
-
   const mutualLabel =
     mutualSummary.mutual + mutualSummary.oneWay + mutualSummary.received > 0
       ? t(
@@ -425,74 +364,62 @@ function StudentBallotRow({
 
   const canReopenBallot =
     row.preference?.status === "submitted" && Boolean(row.preference?.id);
+  const isMatched = row.submissionStatus === "matched";
+  const canEditBallot = !isMatched;
   const isReopening = reopeningPreferenceId === row.preference?.id;
+  const reopenDisabled = isReopening || !ballotWindowActive;
 
-  const handleReopenClick = (event) => {
-    event.stopPropagation();
-    if (!canReopenBallot || isReopening) return;
+  const handleReopenClick = () => {
+    if (!canReopenBallot || reopenDisabled) return;
     handleReopenBallot(row.preference.id, displayName(row.student));
   };
 
+  const handleEditClick = () => {
+    if (!canEditBallot) return;
+    handleEditBallot(row);
+  };
+
+  const expandLabel = expanded
+    ? t(
+        "opportunities.matchingRound.studentRanking.hideFullBallot",
+        {},
+        { default: "Hide full ballot" },
+      )
+    : t(
+        "opportunities.matchingRound.studentRanking.viewFullBallot",
+        {},
+        { default: "View full ballot" },
+      );
+
   return (
     <StudentRow>
-      <RowSummary
-        type="button"
-        aria-expanded={expanded}
-        onClick={() => setExpanded((open) => !open)}
-      >
+      <RowSummary>
         <RowMain>
-          <RowName>{displayName(row.student)}</RowName>
+          <RowName>
+            <StudentNameDisplay
+              student={row.student}
+              preference={row.preference}
+            />
+          </RowName>
           <Chip
             variant="static"
             tone={STATUS_TONE[row.submissionStatus] || "neutral"}
             label={statusLabel}
           />
-          {matchingQueueLabel ? (
-            <Chip
-              variant="static"
-              label={matchingQueueLabel}
-            />
-          ) : null}
           {mutualLabel ? (
             <Chip variant="static" tone="neutral" label={mutualLabel} />
           ) : null}
-          {row.match ? (
-            <Meta>
-              {t(
-                "opportunities.matchingRound.studentRanking.currentMatch",
-                { title: row.match.opportunity?.title || "—" },
-                { default: "Matched to {{title}}" },
-              )}
-            </Meta>
-          ) : null}
         </RowMain>
-        <RowActions onClick={(e) => e.stopPropagation()}>
-          {isCurated && !row.match ? (
-            <DropdownSelect
-              value=""
-              onChange={(value) => value && handleAssign(studentId, value)}
-              options={assignOptions}
-              searchableSingle
-              disabled={assigning || assignOptions.length === 0}
-              placeholder={
-                assignOptions.length === 0
-                  ? tConnect("matchingRound.allFull", {}, {
-                      default: "All opportunities full",
-                    })
-                  : tConnect("matchingRound.assignToOpportunity", {}, {
-                      default: "Assign to opportunity…",
-                    })
-              }
-              ariaLabel={tConnect("matchingRound.assignToOpportunity", {}, {
-                default: "Assign to opportunity…",
-              })}
-              triggerStyle={{ minWidth: 220 }}
-              fitContent
-            />
-          ) : null}
-          <Chevron $open={expanded} aria-hidden>
-            ▾
-          </Chevron>
+        <RowActions>
+          <Button
+            type="button"
+            variant="text"
+            style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)" }}
+            aria-expanded={expanded}
+            onClick={() => setExpanded((open) => !open)}
+          >
+            {expandLabel}
+          </Button>
         </RowActions>
       </RowSummary>
 
@@ -554,7 +481,18 @@ function StudentBallotRow({
                         <DetailItem key={classmateId}>
                           <RankBadge>{index + 1}</RankBadge>
                           <ItemTitle>
-                            {studentDisplayName(classmate) || classmateId}
+                            <StudentNameDisplay
+                              student={
+                                classmate || {
+                                  id: classmateId,
+                                  username: classmateId,
+                                }
+                              }
+                              preference={
+                                preferenceByStudentId?.get?.(classmateId) ||
+                                null
+                              }
+                            />
                           </ItemTitle>
                           {mutualChip ? (
                             <Chip
@@ -606,7 +544,18 @@ function StudentBallotRow({
                           <DetailItem key={classmateId}>
                             <RankBadge>{activePickCount + index + 1}</RankBadge>
                             <ItemTitle>
-                              {studentDisplayName(classmate) || classmateId}
+                              <StudentNameDisplay
+                                student={
+                                  classmate || {
+                                    id: classmateId,
+                                    username: classmateId,
+                                  }
+                                }
+                                preference={
+                                  preferenceByStudentId?.get?.(classmateId) ||
+                                  null
+                                }
+                              />
                             </ItemTitle>
                             {mutualChip ? (
                               <Chip
@@ -650,7 +599,18 @@ function StudentBallotRow({
                         <DetailItem key={classmateId}>
                           <RankBadge>{index + 1}</RankBadge>
                           <ItemTitle>
-                            {studentDisplayName(classmate) || classmateId}
+                            <StudentNameDisplay
+                              student={
+                                classmate || {
+                                  id: classmateId,
+                                  username: classmateId,
+                                }
+                              }
+                              preference={
+                                preferenceByStudentId?.get?.(classmateId) ||
+                                null
+                              }
+                            />
                           </ItemTitle>
                           {mutualChip ? (
                             <Chip
@@ -724,7 +684,70 @@ function StudentBallotRow({
               </DetailList>
             )}
           </DetailSection>
-
+          {canReopenBallot || canEditBallot ? (
+            <RowActions>
+              {canReopenBallot ? (
+                <Button
+                  type="button"
+                  variant="tonal"
+                  leadingIcon={<UnlockIcon />}
+                  onClick={handleReopenClick}
+                  disabled={reopenDisabled}
+                  title={
+                    !ballotWindowActive
+                      ? t(
+                          "opportunities.matchingRound.studentRanking.reopenBallotDisabledWindowClosed",
+                          {},
+                          {
+                            default:
+                              "Cannot reopen a ballot after the student ranking window has closed. Use Edit ballot instead.",
+                          },
+                        )
+                      : undefined
+                  }
+                >
+                  {t("opportunities.matchingRound.studentRanking.reopenBallot", {}, {
+                    default: "Reopen ballot",
+                  })}
+                </Button>
+              ) : null}
+              {canEditBallot ? (
+                <Button
+                  type="button"
+                  variant="tonal"
+                  leadingIcon={<PencilIcon />}
+                  onClick={handleEditClick}
+                  title={
+                    isMatched
+                      ? t(
+                          "opportunities.matchingRound.studentRanking.editBallotDisabledMatched",
+                          {},
+                          {
+                            default:
+                              "Cannot edit a ballot after the student has been matched.",
+                          },
+                        )
+                      : undefined
+                  }
+                >
+                  {t("opportunities.matchingRound.studentRanking.editBallot", {}, {
+                    default: "Edit ballot",
+                  })}
+                </Button>
+              ) : null}
+            </RowActions>
+          ) : null}
+          {row.preference?.submittedAt ? (
+            <Meta>
+              {t(
+                "opportunities.matchingRound.studentRanking.submittedAt",
+                {
+                  date: new Date(row.preference.submittedAt).toLocaleString(),
+                },
+                { default: "Submitted {{date}}" },
+              )}
+            </Meta>
+          ) : null}
           <DetailSection>
             <DetailTitle>
               {t("opportunities.studentView.rankForm.reviewNotesLabel", {}, {
@@ -781,30 +804,6 @@ function StudentBallotRow({
               />
             )}
           </DetailSection>
-          {canReopenBallot ? (
-            <Button
-              type="button"
-              variant="tonal"
-              leadingIcon={<UnlockIcon />}
-              onClick={handleReopenClick}
-              disabled={isReopening || assigning}
-            >
-              {t("opportunities.matchingRound.studentRanking.reopenBallot", {}, {
-                default: "Reopen ballot",
-              })}
-            </Button>
-          ) : null}
-          {row.preference?.submittedAt ? (
-            <Meta>
-              {t(
-                "opportunities.matchingRound.studentRanking.submittedAt",
-                {
-                  date: new Date(row.preference.submittedAt).toLocaleString(),
-                },
-                { default: "Submitted {{date}}" },
-              )}
-            </Meta>
-          ) : null}
         </RowDetail>
       ) : null}
     </StudentRow>
@@ -829,16 +828,11 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     ref,
   ) {
   const { t } = useTranslation("classes");
-  const { t: tConnect } = useTranslation("connect");
   const [search, setSearch] = useState("");
-  const [matchingInfoOpen, setMatchingInfoOpen] = useState(false);
   const [reopeningPreferenceId, setReopeningPreferenceId] = useState(null);
   const [reopenFeedback, setReopenFeedback] = useState(null);
   const [reopenTarget, setReopenTarget] = useState(null);
-  const [expandedQueue, setExpandedQueue] = useState({
-    project_first: true,
-    team_first: true,
-  });
+  const [editTarget, setEditTarget] = useState(null);
 
   const { data, loading, refetch } = useQuery(TEACHER_STUDENT_BALLOT_VIEW, {
     variables: { roundId },
@@ -891,8 +885,9 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   const matchByStudentId = useMemo(() => {
     const map = new Map();
     matches.forEach((m) => {
-      const id = m.student?.id;
-      if (id) map.set(id, m);
+      (m.students || []).forEach((s) => {
+        if (s?.id) map.set(s.id, m);
+      });
     });
     return map;
   }, [matches]);
@@ -962,48 +957,69 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     });
   }, [ballotRows, search]);
 
-  const projectFirstRows = useMemo(
-    () =>
-      filteredRows
-        .filter((r) => r.queue === "project_first")
-        .sort(sortStudents),
+  const sortedRows = useMemo(
+    () => [...filteredRows].sort(sortStudents),
     [filteredRows],
   );
-  const teamFirstRows = useMemo(
-    () =>
-      filteredRows.filter((r) => r.queue === "team_first").sort(sortStudents),
-    [filteredRows],
-  );
-
-  const prefIndex = useMemo(
-    () => buildPrefIndex(preferences, { submittedOnly: false }),
-    [preferences],
-  );
-  const totalOpps = opportunities.length;
-
-  const matchesByOpp = useMemo(() => {
-    const map = new Map();
-    matches.forEach((m) => {
-      const oppId = m.opportunity?.id;
-      if (!oppId) return;
-      if (!map.has(oppId)) map.set(oppId, []);
-      map.get(oppId).push(m);
-    });
-    return map;
-  }, [matches]);
-
-  const isCurated = round?.matchingAlgorithm === "teacher_curated";
-  const { handleAssign, assigning } = useConnectMatchAssign({
-    round,
-    opportunities,
-    matches,
-    refetch,
-  });
 
   const handleReopenBallot = useCallback((preferenceId, studentName) => {
+    if (!ballotWindowActive) return;
     setReopenFeedback(null);
     setReopenTarget({ preferenceId, studentName });
+  }, [ballotWindowActive]);
+
+  const handleEditBallot = useCallback((row) => {
+    if (!row?.student?.id || row.submissionStatus === "matched") return;
+    setEditTarget({
+      student: row.student,
+      preference: row.preference || null,
+    });
   }, []);
+
+  const closeEditBallotModal = useCallback(() => {
+    setEditTarget(null);
+  }, []);
+
+  const handleEditBallotSaved = useCallback(async () => {
+    await refetch();
+    setEditTarget(null);
+    setReopenFeedback({
+      variant: "success",
+      message: t(
+        "opportunities.matchingRound.studentRanking.editBallotSubmitSuccess",
+        {},
+        { default: "Student ballot saved." },
+      ),
+    });
+  }, [refetch, t]);
+
+  const handleEditBallotStaffRefetch = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
+
+  const editStaffForStudent = useMemo(() => {
+    if (!editTarget?.student?.id) return null;
+    const studentId = editTarget.student.id;
+    const preference =
+      prefByStudentId.get(studentId) || editTarget.preference || null;
+    const studentTeamPreferences = (teamPreferences || []).filter(
+      (tp) => tp.submitter?.id === studentId,
+    );
+    const questionAnswers = (round?.questionAnswers || []).filter(
+      (qa) => qa.respondent?.id === studentId,
+    );
+    return {
+      id: studentId,
+      preference,
+      teamPreferences: studentTeamPreferences,
+      questionAnswers,
+    };
+  }, [
+    editTarget,
+    prefByStudentId,
+    round?.questionAnswers,
+    teamPreferences,
+  ]);
 
   const closeReopenModal = useCallback(() => {
     if (reopeningPreferenceId) return;
@@ -1012,7 +1028,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
 
   const confirmReopenBallot = useCallback(async () => {
     const preferenceId = reopenTarget?.preferenceId;
-    if (!preferenceId) return;
+    if (!preferenceId || !ballotWindowActive) return;
 
     setReopenFeedback(null);
     setReopeningPreferenceId(preferenceId);
@@ -1053,7 +1069,7 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     } finally {
       setReopeningPreferenceId(null);
     }
-  }, [refetch, reopenTarget, t, updatePreference]);
+  }, [ballotWindowActive, refetch, reopenTarget, t, updatePreference]);
 
   const submittedCount = ballotRows.filter(
     (r) => r.submissionStatus === "submitted",
@@ -1061,13 +1077,15 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   const matchedCount = ballotRows.filter(
     (r) => r.submissionStatus === "matched",
   ).length;
-
-  const toggleQueue = useCallback((queueKey) => {
-    setExpandedQueue((prev) => ({
-      ...prev,
-      [queueKey]: !prev[queueKey],
-    }));
-  }, []);
+  const draftCount = ballotRows.filter(
+    (r) => r.submissionStatus === "draft",
+  ).length;
+  const projectFirstCount = ballotRows.filter(
+    (r) => r.queue === "project_first",
+  ).length;
+  const teamFirstCount = ballotRows.filter(
+    (r) => r.queue === "team_first",
+  ).length;
 
   const canDownloadBallotCsv = rosterStudents.length > 0;
 
@@ -1116,16 +1134,18 @@ const MatchingRoundStudentBallotPanel = forwardRef(
           {},
           { default: "Received classmates" },
         ),
-        preferredClassmates: t(
-          "opportunities.matchingRound.studentBallotExport.columns.preferredClassmates",
-          {},
-          { default: "Preferred classmates" },
-        ),
-        rankedOpportunities: t(
-          "opportunities.matchingRound.studentBallotExport.columns.rankedOpportunities",
-          {},
-          { default: "Ranked opportunities" },
-        ),
+        preferredClassmateRank: (n) =>
+          t(
+            "opportunities.matchingRound.studentBallotExport.columns.preferredClassmateRank",
+            { n },
+            { default: "Preferred classmate {{n}}" },
+          ),
+        rankedOpportunityRank: (n) =>
+          t(
+            "opportunities.matchingRound.studentBallotExport.columns.rankedOpportunityRank",
+            { n },
+            { default: "Ranked opportunity {{n}}" },
+          ),
         additionalNotes: t(
           "opportunities.matchingRound.studentBallotExport.columns.additionalNotes",
           {},
@@ -1195,56 +1215,76 @@ const MatchingRoundStudentBallotPanel = forwardRef(
     [canDownloadBallotCsv, handleDownloadBallotCsv],
   );
 
-  const subModeNav =
-    onSubModeChange ? (
-      <Navbar style={{ paddingLeft: 0, paddingRight: 0 }}>
-        <NavbarItem
-          selected={subMode === STUDENT_RANKING_SUB_MODES.ballot}
-          onClick={() => onSubModeChange(STUDENT_RANKING_SUB_MODES.ballot)}
-        >
-          {t("opportunities.matchingRound.studentRanking.modeBallot", {}, {
-            default: "Ballots",
-          })}
-        </NavbarItem>
-        <NavbarItem
-          selected={subMode === STUDENT_RANKING_SUB_MODES.interest}
-          onClick={() => onSubModeChange(STUDENT_RANKING_SUB_MODES.interest)}
-        >
-          {t("opportunities.matchingRound.studentRanking.modeInterest", {}, {
-            default: "Interest",
-          })}
-        </NavbarItem>
-      </Navbar>
-    ) : null;
+  const subModeNav = onSubModeChange ? (
+    <ButtonGroup
+      type="Round"
+      size="Medium"
+      selectionMode="single"
+      selectionRequired
+      value={subMode}
+      onChange={(value) => {
+        if (typeof value === "string") {
+          onSubModeChange(value);
+        }
+      }}
+      items={[
+        {
+          value: STUDENT_RANKING_SUB_MODES.ballot,
+          label: t(
+            "opportunities.matchingRound.studentRanking.modeBallot",
+            {},
+            { default: "Ballots" },
+          ),
+        },
+        {
+          value: STUDENT_RANKING_SUB_MODES.interest,
+          label: t(
+            "opportunities.matchingRound.studentRanking.modeInterest",
+            {},
+            { default: "Interest" },
+          ),
+        },
+      ]}
+      aria-label={t(
+        "opportunities.matchingRound.studentRanking.modeAria",
+        {},
+        { default: "Student ranking view" },
+      )}
+    />
+  ) : null;
 
   if (subMode === STUDENT_RANKING_SUB_MODES.interest) {
     return (
       <Shell className="matchingRoundStudentBallotPanel">
-        {subModeNav ? (
-          <PanelHeader>
-            <HeaderText>
-              <h4>
-                {t("opportunities.matchingRound.studentInterest.title", {}, {
-                  default: "Interest",
-                })}
-              </h4>
-            </HeaderText>
-            {subModeNav}
-          </PanelHeader>
-        ) : null}
-        {renderInterestGrid?.() || null}
+        <RankingCard>
+          {subModeNav ? (
+            <PanelHeader>
+              <HeaderText>
+                <h4>
+                  {t("opportunities.matchingRound.studentInterest.title", {}, {
+                    default: "Interest",
+                  })}
+                </h4>
+              </HeaderText>
+              {subModeNav}
+            </PanelHeader>
+          ) : null}
+          {renderInterestGrid?.() || null}
+        </RankingCard>
       </Shell>
     );
   }
 
   if (loading && !round) {
     return (
-      <Shell>
-        <EmptyNote>
-          {t("opportunities.matchingRound.studentRanking.loading", {}, {
-            default: "Loading student ballots…",
-          })}
-        </EmptyNote>
+      <Shell className="matchingRoundStudentBallotPanel">
+        <RankingCard>
+          <EmptyNote>
+            {t("opportunities.matchingRound.studentRanking.loading", {}, {
+              default: "Loading student ballots…",
+            })}
+          </EmptyNote>
+        </RankingCard>
       </Shell>
     );
   }
@@ -1252,6 +1292,26 @@ const MatchingRoundStudentBallotPanel = forwardRef(
   if (!ballotWindowActive && inactiveBallotMessage && roundStatus === "draft") {
     return (
       <Shell className="matchingRoundStudentBallotPanel">
+        <RankingCard>
+          <PanelHeader>
+            <HeaderText>
+              <h4>
+                {t("opportunities.matchingRound.studentRanking.title", {}, {
+                  default: "Student ballots",
+                })}
+              </h4>
+            </HeaderText>
+            {subModeNav}
+          </PanelHeader>
+          <MessageCard variant="neutral" message={inactiveBallotMessage} />
+        </RankingCard>
+      </Shell>
+    );
+  }
+
+  return (
+    <Shell className="matchingRoundStudentBallotPanel">
+      <RankingCard>
         <PanelHeader>
           <HeaderText>
             <h4>
@@ -1259,250 +1319,166 @@ const MatchingRoundStudentBallotPanel = forwardRef(
                 default: "Student ballots",
               })}
             </h4>
+            <p>
+              {t(
+                "opportunities.matchingRound.studentRanking.summary",
+                {
+                  total: rosterStudents.length,
+                  submitted: submittedCount,
+                  matched: matchedCount,
+                  drafts: draftCount,
+                  projectFirst: projectFirstCount,
+                  teamFirst: teamFirstCount,
+                },
+                {
+                  default:
+                    "{{submitted}} submitted · {{matched}} matched · {{drafts}} drafts · {{projectFirst}} project-first · {{teamFirst}} team-first",
+                },
+              )}
+            </p>
           </HeaderText>
           {subModeNav}
         </PanelHeader>
-        <MessageCard variant="neutral" message={inactiveBallotMessage} />
-      </Shell>
-    );
-  }
 
-  const renderQueue = (queueKey, title, hint, rows) => (
-    <QueueSection key={queueKey}>
-      <button
-        type="button"
-        onClick={() => toggleQueue(queueKey)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-          padding: 0,
-          border: "none",
-          background: "transparent",
-          cursor: "pointer",
-          textAlign: "left",
-        }}
-      >
-        <div>
-          <QueueTitle>{title}</QueueTitle>
-          <QueueHint>{hint}</QueueHint>
-        </div>
-        <Chevron $open={expandedQueue[queueKey]} aria-hidden>
-          ▾
-        </Chevron>
-      </button>
-      {expandedQueue[queueKey] ? (
-        rows.length === 0 ? (
-          <EmptyNote>
-            {t(
-              "opportunities.matchingRound.studentRanking.queueEmpty",
+        {!ballotWindowActive && inactiveBallotMessage ? (
+          <MessageCard variant="neutral" message={inactiveBallotMessage} />
+        ) : null}
+        {reopenFeedback ? (
+          <MessageCard
+            variant={reopenFeedback.variant}
+            message={reopenFeedback.message}
+            onClose={() => setReopenFeedback(null)}
+            closeAriaLabel={t(
+              "opportunities.matchingRound.studentRanking.reopenBallotDismiss",
               {},
-              { default: "No students in this queue." },
+              { default: "Dismiss" },
             )}
-          </EmptyNote>
-        ) : (
-          rows.map((row) => (
-            <StudentBallotRow
-              key={row.student.id}
-              row={row}
-              studentById={studentById}
-              classmateListsByStudent={classmateListsByStudent}
-              activePickCount={activePickCount}
-              opportunities={opportunities}
-              matchesByOpp={matchesByOpp}
-              prefIndex={prefIndex}
-              totalOpps={totalOpps}
-              assessmentFormDefinition={assessmentFormDefinition}
-              isCurated={isCurated}
-              handleAssign={handleAssign}
-              assigning={assigning}
-              handleReopenBallot={handleReopenBallot}
-              reopeningPreferenceId={reopeningPreferenceId}
-              t={t}
-              tConnect={tConnect}
-            />
-          ))
-        )
-      ) : null}
-    </QueueSection>
-  );
+          />
+        ) : null}
 
-  return (
-    <Shell className="matchingRoundStudentBallotPanel">
-      <PanelHeader>
-        <HeaderText>
-          <h4>
-            {t("opportunities.matchingRound.studentRanking.title", {}, {
-              default: "Student ballots",
-            })}
-          </h4>
-          <p>
+        <SearchRow>
+          <SearchInput
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t(
+              "opportunities.matchingRound.studentRanking.searchPlaceholder",
+              {},
+              { default: "Search students…" },
+            )}
+            aria-label={t(
+              "opportunities.matchingRound.studentRanking.searchPlaceholder",
+              {},
+              { default: "Search students…" },
+            )}
+          />
+        </SearchRow>
+
+        <Modal
+          open={Boolean(reopenTarget)}
+          onClose={reopeningPreferenceId ? undefined : closeReopenModal}
+          title={t(
+            "opportunities.matchingRound.studentRanking.reopenBallotConfirmTitle",
+            { name: reopenTarget?.studentName || "" },
+            { default: "Reopen {{name}}’s ballot?" },
+          )}
+          actions={
+            <>
+              <Button
+                type="button"
+                variant="text"
+                onClick={closeReopenModal}
+                disabled={Boolean(reopeningPreferenceId)}
+              >
+                {t("cancel", {}, { default: "Cancel" })}
+              </Button>
+              <Button
+                type="button"
+                variant="filled"
+                onClick={confirmReopenBallot}
+                disabled={Boolean(reopeningPreferenceId)}
+              >
+                {reopeningPreferenceId
+                  ? t(
+                      "opportunities.matchingRound.studentRanking.reopenBallotWorking",
+                      {},
+                      { default: "Reopening…" },
+                    )
+                  : t(
+                      "opportunities.matchingRound.studentRanking.reopenBallotConfirmAction",
+                      {},
+                      { default: "Reopen ballot" },
+                    )}
+              </Button>
+            </>
+          }
+        >
+          <p style={{ margin: 0 }}>
             {t(
-              "opportunities.matchingRound.studentRanking.summary",
-              {
-                total: rosterStudents.length,
-                submitted: submittedCount,
-                matched: matchedCount,
-                projectFirst: projectFirstRows.length,
-                teamFirst: teamFirstRows.length,
-              },
+              "opportunities.matchingRound.studentRanking.reopenBallotConfirm",
+              { name: reopenTarget?.studentName || "" },
               {
                 default:
-                  "{{submitted}} submitted · {{matched}} matched · {{projectFirst}} project-first · {{teamFirst}} team-first",
+                  "This student will be able to edit and resubmit their preferences.",
               },
             )}
           </p>
-        </HeaderText>
-        {subModeNav}
-      </PanelHeader>
+        </Modal>
 
-      {!ballotWindowActive && inactiveBallotMessage ? (
-        <MessageCard variant="neutral" message={inactiveBallotMessage} />
-      ) : null}
-      {reopenFeedback ? (
-        <MessageCard
-          variant={reopenFeedback.variant}
-          message={reopenFeedback.message}
-        />
-      ) : null}
-
-      <SearchRow>
-        <SearchInput
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder={t(
-            "opportunities.matchingRound.studentRanking.searchPlaceholder",
-            {},
-            { default: "Search students…" },
-          )}
-          aria-label={t(
-            "opportunities.matchingRound.studentRanking.searchPlaceholder",
-            {},
-            { default: "Search students…" },
-          )}
-        />
-        <IconButton
-          variant="text"
-          elevated={false}
-          style={{ background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)" }}
-          ariaLabel={t(
-            "opportunities.matchingRound.matchingInfo.infoAria",
-            {},
-            { default: "How student matching works" },
-          )}
+        <Modal
+          open={Boolean(editTarget)}
+          onClose={closeEditBallotModal}
+          size="large"
+          maxWidth={1100}
+          maxHeight="92vh"
+          height="92vh"
           title={t(
-            "opportunities.matchingRound.matchingInfo.infoAria",
-            {},
-            { default: "How student matching works" },
+            "opportunities.matchingRound.studentRanking.editBallotTitle",
+            { name: displayName(editTarget?.student) },
+            { default: "Edit {{name}}’s ballot" },
           )}
-          onClick={() => setMatchingInfoOpen(true)}
-          icon={
-            <img
-              src="/assets/icons/info.svg"
-              alt=""
-              width={20}
-              height={20}
-              style={{ width: 20, height: 20 }}
+          bodyStyle={{ display: "flex", flexDirection: "column", minHeight: 0 }}
+        >
+          {editStaffForStudent && roundId ? (
+            <StudentPreferenceSubmission
+              roundId={roundId}
+              staffForStudent={editStaffForStudent}
+              onBack={closeEditBallotModal}
+              onSaved={handleEditBallotSaved}
+              onStaffRefetch={handleEditBallotStaffRefetch}
             />
-          }
-        />
-      </SearchRow>
+          ) : null}
+        </Modal>
 
-      <MatchingAlgorithmInfoModal
-        open={matchingInfoOpen}
-        onClose={() => setMatchingInfoOpen(false)}
-        matchingAlgorithm={round?.matchingAlgorithm}
-        showBallotWorkflow
-      />
-
-      <Modal
-        open={Boolean(reopenTarget)}
-        onClose={reopeningPreferenceId ? undefined : closeReopenModal}
-        title={t(
-          "opportunities.matchingRound.studentRanking.reopenBallotConfirmTitle",
-          { name: reopenTarget?.studentName || "" },
-          { default: "Reopen {{name}}’s ballot?" },
-        )}
-        actions={
-          <>
-            <Button
-              type="button"
-              variant="text"
-              onClick={closeReopenModal}
-              disabled={Boolean(reopeningPreferenceId)}
-            >
-              {t("cancel", {}, { default: "Cancel" })}
-            </Button>
-            <Button
-              type="button"
-              variant="filled"
-              onClick={confirmReopenBallot}
-              disabled={Boolean(reopeningPreferenceId)}
-            >
-              {reopeningPreferenceId
-                ? t(
-                    "opportunities.matchingRound.studentRanking.reopenBallotWorking",
-                    {},
-                    { default: "Reopening…" },
-                  )
-                : t(
-                    "opportunities.matchingRound.studentRanking.reopenBallotConfirmAction",
-                    {},
-                    { default: "Reopen ballot" },
-                  )}
-            </Button>
-          </>
-        }
-      >
-        <p style={{ margin: 0 }}>
-          {t(
-            "opportunities.matchingRound.studentRanking.reopenBallotConfirm",
-            { name: reopenTarget?.studentName || "" },
-            {
-              default:
-                "This student will be able to edit and resubmit their preferences.",
-            },
+        <BallotList>
+          {sortedRows.length === 0 ? (
+            <EmptyNote>
+              {t(
+                "opportunities.matchingRound.studentRanking.ballotListEmpty",
+                {},
+                { default: "No students match this search." },
+              )}
+            </EmptyNote>
+          ) : (
+            sortedRows.map((row) => (
+              <StudentBallotRow
+                key={row.student.id}
+                row={row}
+                studentById={studentById}
+                preferenceByStudentId={prefByStudentId}
+                classmateListsByStudent={classmateListsByStudent}
+                activePickCount={activePickCount}
+                assessmentFormDefinition={assessmentFormDefinition}
+                handleReopenBallot={handleReopenBallot}
+                handleEditBallot={handleEditBallot}
+                reopeningPreferenceId={reopeningPreferenceId}
+                ballotWindowActive={ballotWindowActive}
+                t={t}
+              />
+            ))
           )}
-        </p>
-      </Modal>
-
-      {renderQueue(
-        "project_first",
-        t(
-          "opportunities.matchingRound.studentRanking.queueProjectFirst",
-          {},
-          { default: "Project-first queue" },
-        ),
-        t(
-          "opportunities.matchingRound.studentRanking.queueProjectFirstHint",
-          {},
-          {
-            default:
-              "Students who chose Project first. Process these first.",
-          },
-        ),
-        projectFirstRows,
-      )}
-
-      {renderQueue(
-        "team_first",
-        t(
-          "opportunities.matchingRound.studentRanking.queueTeamFirst",
-          {},
-          { default: "Team-first queue" },
-        ),
-        t(
-          "opportunities.matchingRound.studentRanking.queueTeamFirstHint",
-          {},
-          {
-            default:
-              "Students who chose Team first. Review mutual picks here.",
-          },
-        ),
-        teamFirstRows,
-      )}
+        </BallotList>
+      </RankingCard>
     </Shell>
   );
   },

@@ -5,6 +5,10 @@ import styled from "styled-components";
 import { Icon, Label } from "semantic-ui-react";
 
 import { mergeOpportunityLists } from "../../../../lib/opportunityPeople";
+import {
+  formatMatchStudentNames,
+  getMatchStudents,
+} from "../../../../lib/connectBallotUtils";
 import { MY_MENTOR_MATCHES } from "../../../Queries/Opportunity";
 import {
   CREATE_RATING,
@@ -247,9 +251,14 @@ function StudentMatchCard({ match, opportunity, me, onSaved }) {
     <StudentRow>
       <div className="student-header">
         <div>
-          <div className="name">{displayName(match.student)}</div>
+          <div className="name">{formatMatchStudentNames(match)}</div>
           <div className="meta">
-            {match.student?.email && <>{match.student.email} · </>}
+            {(() => {
+              const emails = getMatchStudents(match)
+                .map((s) => s?.email)
+                .filter(Boolean);
+              return emails.length ? <>{emails.join(", ")} · </> : null;
+            })()}
             {proposedDate && <>Matched {proposedDate} · </>}
             score{" "}
             {typeof match.matchScore === "number"

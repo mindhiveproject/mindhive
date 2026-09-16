@@ -81,11 +81,13 @@ export const SET_RESOURCE_TEMPLATE_CARDS = gql`
     $resourceId: ID!
     $templateCardIds: [ID!]!
     $classId: ID!
+    $templateBoardId: ID
   ) {
     setResourceTemplateCards(
       resourceId: $resourceId
       templateCardIds: $templateCardIds
       classId: $classId
+      templateBoardId: $templateBoardId
     ) {
       id
     }

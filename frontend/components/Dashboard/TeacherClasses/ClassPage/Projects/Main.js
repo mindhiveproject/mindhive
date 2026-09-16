@@ -45,6 +45,7 @@ import ProjectsBoardEditor from "./ProjectsBoardEditor";
 import CreateTemplateBoardModal from "../Modals/CreateTemplateBoardModal";
 import OwnedItemsShowcase from "../utils/OwnedItemsShowcase";
 import { filterOwnedClassItems } from "../utils/ownedClassItems";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 
 export default function ClassProjects({
   myclass,
@@ -69,9 +70,9 @@ export default function ClassProjects({
   // hook itself unconditional — otherwise toggling `action` between renders
   // changes the hook count and React throws "Rendered more hooks than during
   // the previous render.".
-  const { data } = useQuery(CLASS_PROJECTS_QUERY, {
+  const { data, loading } = useQuery(CLASS_PROJECTS_QUERY, {
     variables: { classId: myclass?.id },
-    skip: isEditing,
+    skip: isEditing || !myclass?.id,
   });
 
   if (isEditing) {
@@ -85,6 +86,7 @@ export default function ClassProjects({
   }
 
   const projects = data?.proposalBoards || [];
+  const isProjectsQueryPending = loading && !data;
   const ownedProjects =
     readOnly && user?.id
       ? filterOwnedClassItems(projects, user.id)
@@ -224,7 +226,21 @@ export default function ClassProjects({
           }
           actionLabel={t("projects.viewBoard", {}, { default: "View board" })}
         />
-        {projects.length === 0 ? (
+        {isProjectsQueryPending ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <JustOneSecondNotice
+              message={{
+                h1: t("projects.loadingStudentBoardsTitle", {}, {
+                  default: "Loading student projects",
+                }),
+                p: t("projects.loadingStudentBoardsBody", {}, {
+                  default:
+                    "Fetching the student project boards linked to this class.",
+                }),
+              }}
+            />
+          </div>
+        ) : projects.length === 0 ? (
           <div className="classTabEmpty">
             <div>{t("projects.noProjectsYet")}</div>
           </div>

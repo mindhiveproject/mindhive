@@ -452,6 +452,13 @@ export const Opportunity = list({
         data.acceptedAt = null;
       }
 
+      // Sponsor "Turn back to draft" (and any other path to draft): leave the
+      // class network, but drop matching-round membership so students no longer
+      // see it. Teachers can re-add from Available after resubmit.
+      if (nextStatus === "draft" && prevStatus !== "draft") {
+        data.rounds = { set: [] };
+      }
+
       // When sponsorIsMentor toggles, sync the editing sponsor in/out of mentors.
       if (data.sponsorIsMentor !== undefined && context.session?.itemId) {
         const profileId = String(context.session.itemId);
