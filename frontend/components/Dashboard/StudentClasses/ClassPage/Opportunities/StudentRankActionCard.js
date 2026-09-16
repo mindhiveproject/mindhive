@@ -164,7 +164,7 @@ export default function StudentRankActionCard({
 
   let title;
   let helper = null;
-  let ctaLabel;
+  let ctaLabel = null;
   let buttonVariant = "filled";
   let showSteps = false;
 
@@ -227,26 +227,38 @@ export default function StudentRankActionCard({
       { roundTitle },
       { default: "Rank your opportunities for {{roundTitle}}" },
     );
-    helper = hasOpportunities
-      ? t(
-          "opportunities.studentView.rankCard.helperBrowse",
-          {},
-          { default: "This is how you get matched." },
-        )
-      : t(
-          "opportunities.studentView.rankCard.helperEmpty",
-          {},
-          {
-            default:
-              "When opportunities appear, come back here to rank them.",
-          },
-        );
-    showSteps = hasOpportunities;
-    ctaLabel = t(
-      "opportunities.studentView.rankCard.ctaRankNow",
-      {},
-      { default: "Start ranking" },
-    );
+    if (rankingEditable) {
+      helper = hasOpportunities
+        ? t(
+            "opportunities.studentView.rankCard.helperBrowse",
+            {},
+            { default: "This is how you get matched." },
+          )
+        : t(
+            "opportunities.studentView.rankCard.helperEmpty",
+            {},
+            {
+              default:
+                "When opportunities appear, come back here to rank them.",
+            },
+          );
+      showSteps = hasOpportunities;
+      ctaLabel = t(
+        "opportunities.studentView.rankCard.ctaRankNow",
+        {},
+        { default: "Start ranking" },
+      );
+    } else {
+      helper = t(
+        "opportunities.studentView.rankCard.helperRankingNotOpen",
+        {},
+        {
+          default:
+            "Ranking is not open right now. You can still browse the opportunities below.",
+        },
+      );
+      ctaLabel = null;
+    }
   }
 
   const steps = showSteps
@@ -313,7 +325,10 @@ export default function StudentRankActionCard({
       )
     : null;
 
+  const canOpenRanking = rankingEditable || submitted || hasDraft;
+
   const handleRank = () => {
+    if (!canOpenRanking) return;
     if (typeof onRank === "function") {
       onRank(round.id);
     }
@@ -395,11 +410,13 @@ export default function StudentRankActionCard({
         </StepList>
       ) : null}
       {dueLine ? <Due>{dueLine}</Due> : null}
-      <Actions>
-        <Button type="button" variant={buttonVariant} onClick={handleRank}>
-          {ctaLabel}
-        </Button>
-      </Actions>
+      {ctaLabel ? (
+        <Actions>
+          <Button type="button" variant={buttonVariant} onClick={handleRank}>
+            {ctaLabel}
+          </Button>
+        </Actions>
+      ) : null}
     </Card>
   );
 }

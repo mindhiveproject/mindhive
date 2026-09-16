@@ -1862,6 +1862,7 @@
 				"helperSubmitted": "You can review what you sent.",
 				"helperSubmittedReopen": "You can review what you sent. Need to change something? Ask your teacher to reopen your submission.",
 				"helperDraftWindowClosed": "Your ranking window has closed. You can review your draft, but changes are no longer accepted.",
+				"helperRankingNotOpen": "Ranking is not open right now. You can still browse the opportunities below.",
 				"stepsAria": "How ranking works",
 				"stepBrowse": "Browse the opportunities below and star your favorite. You can only rank opportunities you have chosen here.",
 				"stepAssessment": "Complete skills assessment",

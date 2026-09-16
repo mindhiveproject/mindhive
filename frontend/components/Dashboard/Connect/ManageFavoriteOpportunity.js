@@ -9,6 +9,7 @@ export default function ManageFavoriteOpportunity({
   opportunityId,
   roundId = null,
   hasDraftRanking = false,
+  favoritesEnabled = true,
   refetchQueries: extraRefetchQueries = [],
 }) {
   const isFavorite = user?.favoriteOpportunities
@@ -32,6 +33,7 @@ export default function ManageFavoriteOpportunity({
       isFavorite={!!isFavorite}
       hasDraftRanking={hasDraftRanking}
       refetchQueries={refetchQueries}
+      disabled={!favoritesEnabled}
       data-card-action
     />
   );

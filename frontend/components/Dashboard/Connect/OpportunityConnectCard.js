@@ -31,6 +31,7 @@ export default function OpportunityConnectCard({
   user = null,
   roundId = null,
   hasDraftRanking = false,
+  favoritesEnabled = true,
   favoriteRefetchQueries = [],
 }) {
   const { t } = useTranslation("connect");
@@ -133,6 +134,7 @@ export default function OpportunityConnectCard({
             opportunityId={opportunity.id}
             roundId={roundId}
             hasDraftRanking={hasDraftRanking}
+            favoritesEnabled={favoritesEnabled}
             refetchQueries={favoriteRefetchQueries}
           />
           <Button
