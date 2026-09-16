@@ -6,6 +6,7 @@ import clsx from "clsx";
 
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import MessageCard from "../../../../DesignSystem/MessageCard";
 import Modal from "../../../../DesignSystem/Modal";
 import { CREATE_MATCH, UPDATE_MATCH } from "../../../../Mutations/ConnectMatch";
 import {
@@ -39,7 +40,7 @@ const Layout = styled.div`
 const Columns = styled.div`
   display: grid;
   gap: 20px;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   min-height: 0;
   flex: 1;
 
@@ -103,7 +104,7 @@ const ResultList = styled.ul`
 const ResultButton = styled.div`
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 8px;
   text-align: left;
@@ -169,11 +170,9 @@ const ErrorNote = styled.p`
   color: #b3261e;
 `;
 
-const WarningNote = styled.p`
-  flex-shrink: 0;
-  margin: 0;
-  font: var(--MH-Type-Body-Base);
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+const OpportunityCopy = styled.span`
+  min-width: 0;
+  flex: 1 1 auto;
 `;
 
 const EmptyNote = styled.p`
@@ -317,6 +316,16 @@ export default function MatchingRoundCreateMatchModal({
       .sort((a, b) => displayName(a).localeCompare(displayName(b)));
   }, [students, peopleQ, existingMatch]);
 
+  const matchCountByOpportunityId = useMemo(() => {
+    const counts = new Map();
+    (matches || []).forEach((match) => {
+      const opportunityId = match?.opportunity?.id;
+      if (!opportunityId) return;
+      counts.set(opportunityId, (counts.get(opportunityId) || 0) + 1);
+    });
+    return counts;
+  }, [matches]);
+
   const filteredOpportunities = useMemo(() => {
     return (opportunities || [])
       .filter((opportunity) => opportunity?.id)
@@ -334,12 +343,15 @@ export default function MatchingRoundCreateMatchModal({
           .toLowerCase();
         return haystack.includes(opportunityQ);
       })
-      .sort((a, b) =>
-        (a.title || "").localeCompare(b.title || "", undefined, {
+      .sort((a, b) => {
+        const aMatched = (matchCountByOpportunityId.get(a.id) || 0) > 0;
+        const bMatched = (matchCountByOpportunityId.get(b.id) || 0) > 0;
+        if (aMatched !== bMatched) return aMatched ? 1 : -1;
+        return (a.title || "").localeCompare(b.title || "", undefined, {
           sensitivity: "base",
-        }),
-      );
-  }, [opportunities, opportunityQ]);
+        });
+      });
+  }, [opportunities, opportunityQ, matchCountByOpportunityId]);
 
   const selectedStudents = selectedStudentIds
     .map((id) => studentById.get(id))
@@ -607,6 +619,24 @@ export default function MatchingRoundCreateMatchModal({
         className={clsx({ isSaving: saving })}
         aria-busy={saving}
       >
+        {capacityWarning ? (
+          <MessageCard
+            variant="warning"
+            style={{ flexShrink: 0 }}
+            message={t(
+              "opportunities.matchingRound.matching.createMatchModal.capacityWarning",
+              {
+                projected: capacityWarning.projected,
+                capacity: capacityWarning.capacity,
+              },
+              {
+                default:
+                  "Warning: this would place {{projected}} students on an opportunity with capacity {{capacity}}.",
+              },
+            )}
+          />
+        ) : null}
+
         <StatusCallout>{statusCallout}</StatusCallout>
 
         <Columns>
@@ -766,6 +796,8 @@ export default function MatchingRoundCreateMatchModal({
             ) : (
               filteredOpportunities.map((opportunity) => {
                 const selected = opportunity.id === selectedOpportunityId;
+                const matchCount =
+                  matchCountByOpportunityId.get(opportunity.id) || 0;
                 const people = [
                   ...(opportunity.sponsors || []),
                   ...(opportunity.mentors || []),
@@ -800,14 +832,32 @@ export default function MatchingRoundCreateMatchModal({
                       aria-pressed={selected}
                       aria-disabled={saving}
                     >
-                      <span>
+                      <OpportunityCopy>
                         <strong>{opportunity.title || "—"}</strong>
                         {uniquePeople.length > 0 ? (
                           <Meta as="span" style={{ display: "block" }}>
                             {uniquePeople.join(", ")}
                           </Meta>
                         ) : null}
-                      </span>
+                      </OpportunityCopy>
+                      {matchCount > 0 ? (
+                        <Chip
+                          variant="static"
+                          tone="info"
+                          truncate={false}
+                          style={{ flexShrink: 0 }}
+                          label={t(
+                            "opportunities.matchingRound.matching.createMatchModal.matchedGroupsChip",
+                            { count: matchCount },
+                            {
+                              default:
+                                matchCount === 1
+                                  ? "Matched with {{count}} group"
+                                  : "Matched with {{count}} groups",
+                            },
+                          )}
+                        />
+                      ) : null}
                     </ResultButton>
                   </li>
                 );
@@ -816,22 +866,6 @@ export default function MatchingRoundCreateMatchModal({
           </ResultList>
         </Column>
         </Columns>
-
-        {capacityWarning ? (
-          <WarningNote>
-            {t(
-              "opportunities.matchingRound.matching.createMatchModal.capacityWarning",
-              {
-                projected: capacityWarning.projected,
-                capacity: capacityWarning.capacity,
-              },
-              {
-                default:
-                  "Warning: this would place {{projected}} students on an opportunity with capacity {{capacity}}.",
-              },
-            )}
-          </WarningNote>
-        ) : null}
 
         {errorMessage ? <ErrorNote>{errorMessage}</ErrorNote> : null}
       </Layout>

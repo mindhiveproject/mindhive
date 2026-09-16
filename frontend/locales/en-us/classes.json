@@ -1454,6 +1454,8 @@
 					"statusProposed": "This match will be created as Proposed because the round is {{roundStatus}} (not published yet).",
 					"statusActive": "This match will be created as Active because the round is {{roundStatus}}.",
 					"capacityWarning": "Warning: this would place {{projected}} students on an opportunity with capacity {{capacity}}.",
+					"matchedGroupsChip": "Matched with {{count}} group",
+					"matchedGroupsChip_plural": "Matched with {{count}} groups",
 					"duplicateError": "Already matched to this opportunity: {{names}}. Remove them or pick another opportunity.",
 					"createFailed": "Could not create the match. Try again.",
 					"editTitle": "Edit match",
