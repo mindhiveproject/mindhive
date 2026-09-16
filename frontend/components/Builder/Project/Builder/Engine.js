@@ -5,7 +5,6 @@ import uniqid from "uniqid";
 
 import createEngine, {
   DiagramModel,
-  DefaultDiagramState,
 } from "@projectstorm/react-diagrams";
 
 // factories
@@ -27,6 +26,10 @@ import Navigation from "../Navigation/Main";
 import Builder from "./Builder";
 import { setCycleWarningHandler } from "../../shared/diagramCycle";
 import CycleLinkPreventedModal from "../../shared/CycleLinkPreventedModal";
+import {
+  configureStrictDiagramLinks,
+  removeDanglingLinks,
+} from "../../shared/strictDiagramLinks";
 
 export default function Engine({
   query,
@@ -199,15 +202,12 @@ export default function Engine({
 
       // disable creating new nodes when clicking on the link
       nextEngine.maxNumberPointsPerLink = 0;
-      // disable loose links
-      const state = nextEngine.getStateMachine().getCurrentState();
-      if (state instanceof DefaultDiagramState) {
-        state.dragNewLink.config.allowLooseLinks = false;
-      }
+      configureStrictDiagramLinks(nextEngine);
       // load the saved model
       if (study?.diagram) {
         const model = new DiagramModel();
         model.deserializeModel(JSON.parse(study?.diagram), nextEngine);
+        removeDanglingLinks(model);
         nextEngine.setModel(model);
       } else {
         const anchor = new AnchorModel({});
@@ -348,6 +348,7 @@ export default function Engine({
     withHistorySnapshot(() => {
       const model = new DiagramModel();
       model.deserializeModel(parsed, engine);
+      removeDanglingLinks(model);
       replaceModel(model);
     });
 
