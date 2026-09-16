@@ -45,22 +45,36 @@ const STUDENT_RANKING_SUB_MODES = {
 };
 
 const Shell = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: hidden;
 `;
 
 const RankingCard = styled.div`
-  display: grid;
-  gap: 16px;
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 16px;
   border-radius: 12px;
   border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: hidden;
   box-sizing: border-box;
+
+  > *:not(:last-child) {
+    flex-shrink: 0;
+  }
 `;
 
 const PanelHeader = styled.div`
@@ -69,6 +83,7 @@ const PanelHeader = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px 16px;
+  flex: 0 0 auto;
 `;
 
 const HeaderText = styled.div`
@@ -94,6 +109,7 @@ const SearchRow = styled.div`
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  flex: 0 0 auto;
 `;
 
 const SearchInput = styled.input`
@@ -115,6 +131,11 @@ const SearchInput = styled.input`
 const BallotList = styled.div`
   display: grid;
   gap: 10px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  align-content: start;
+  grid-auto-rows: max-content;
 `;
 
 const StudentRow = styled.div`
@@ -122,6 +143,7 @@ const StudentRow = styled.div`
   border-radius: 12px;
   background: #f9f9f9;
   overflow: hidden;
+  min-height: min-content;
 `;
 
 const RowSummary = styled.div`

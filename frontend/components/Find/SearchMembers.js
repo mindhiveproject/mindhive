@@ -73,6 +73,7 @@ export default function FindMembersWhere({ members, handleChange }) {
             OR: [
               { studentIn: { some: { id: { in: userClasses } } } },
               { teacherIn: { some: { id: { in: userClasses } } } },
+              { teachingTeamIn: { some: { id: { in: userClasses } } } },
               { mentorIn: { some: { id: { in: userClasses } } } },
             ],
           },

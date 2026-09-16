@@ -303,6 +303,7 @@ export default function StudentOpportunityPreview({
   /** Matching round that surfaces this opportunity to the student class. */
   roundId = null,
   hasDraftRanking = false,
+  favoritesEnabled = true,
   favoriteRefetchQueries = [],
 }) {
   const { t } = useTranslation("classes");
@@ -520,6 +521,7 @@ export default function StudentOpportunityPreview({
             opportunityId={opportunityId}
             roundId={roundId}
             hasDraftRanking={hasDraftRanking}
+            favoritesEnabled={favoritesEnabled}
             refetchQueries={favoriteRefetchQueries}
           />
           <IconButton

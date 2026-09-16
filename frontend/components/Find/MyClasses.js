@@ -40,6 +40,7 @@ export default function FindClasses({ user, classes, handleChange }) {
       input: {
         OR: [
           { creator: { id: { equals: user?.id } } },
+          { teachingTeam: { some: { id: { equals: user?.id } } } },
           { students: { some: { id: { equals: user?.id } } } },
           { mentors: { some: { id: { equals: user?.id } } } },
         ],

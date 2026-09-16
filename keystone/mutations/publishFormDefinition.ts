@@ -54,7 +54,7 @@ async function publishFormDefinition(
         members { id }
       }
       classNetwork { id }
-      class { id creator { id } mentors { id } }
+      class { id creator { id } teachingTeam { id } mentors { id } }
       proposalBoard {
         ${CLASS_TEMPLATE_BOARD_ACCESS_QUERY}
       }

@@ -15,10 +15,15 @@ import {
 import MatchingRoundCreateMatchModal from "./MatchingRoundCreateMatchModal";
 
 const Shell = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: auto;
 `;
 
 const List = styled.div`

@@ -27,6 +27,11 @@ export default function ClassesList({
             },
           },
           {
+            teachingTeam: {
+              some: { id: { equals: user?.id } },
+            },
+          },
+          {
             mentors: {
               some: { id: { equals: user?.id } },
             },

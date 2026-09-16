@@ -608,7 +608,7 @@ export default function MatchingRoundFollowUpCompletionGrid({
       ) : (
         <div
           className="ag-theme-quartz matchingRoundFollowUpCompletionGrid"
-          style={{ width: "100%", height: "420px" }}
+          style={{ width: "100%", height: "100%" }}
         >
           <AgGridReact
             ref={gridRef}

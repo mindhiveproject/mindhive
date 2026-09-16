@@ -46,6 +46,7 @@ export default function DevelopProjectBank({ user }) {
     const objs = [
       ...(u.studentIn || []),
       ...(u.teacherIn || []),
+      ...(u.teachingTeamIn || []),
       ...(u.mentorIn || []),
     ];
     const byId = new Map();

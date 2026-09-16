@@ -19,6 +19,7 @@ const SetupShell = styled.div`
   gap: 12px;
   width: 100%;
   min-width: 0;
+  flex: 0 0 auto;
 `;
 
 const SetupRow = styled.div`
@@ -30,15 +31,22 @@ const SetupRow = styled.div`
 
 const AssessmentCard = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 12px;
   border-radius: 12px;
   border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   background: var(--MH-Theme-Neutrals-White, #ffffff);
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+
+  .DesignSystem-MessageCard {
+    flex: 1 1 240px;
+    min-width: 0;
+    width: auto;
+  }
 `;
 
 export default function MatchingRoundStudentAssessmentSetup({

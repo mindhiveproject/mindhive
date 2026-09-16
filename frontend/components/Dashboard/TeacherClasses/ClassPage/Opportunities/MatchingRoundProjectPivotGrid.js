@@ -19,7 +19,9 @@ const EmptyNote = styled.p`
 const GridShell = styled.div`
   width: 100%;
   min-width: 0;
-  height: 520px;
+  min-height: 240px;
+  flex: 1 1 auto;
+  height: 100%;
 
   &.ag-theme-quartz .ag-root-wrapper {
     border-radius: 8px;

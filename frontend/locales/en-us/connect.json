@@ -2,7 +2,8 @@
 	"a11y": {
 		"favorite": {
 			"add": "Add to favorites",
-			"remove": "Remove from favorites"
+			"remove": "Remove from favorites",
+			"rankingNotOpen": "Favoriting is only available while ranking preferences are open."
 		},
 		"opensInNewTab": "(opens in new tab)",
 		"verified": "Verified"

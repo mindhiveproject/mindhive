@@ -22,6 +22,8 @@ import DesignSystemButton from "../../../DesignSystem/Button";
 import ToggleSwitch from "../../../DesignSystem/ToggleSwitch";
 import TipTapEditor from "../../../TipTap/Main";
 import CurriculumTypeSelector from "./CurriculumTypeSelector";
+import TeachingTeamSettings from "./TeachingTeamSettings";
+import { isClassCreator } from "../../../../lib/classTeacherUtils";
 import {
   getClassCurriculumFallback,
   getClassCurriculumTypes,
@@ -227,6 +229,11 @@ export default function Settings({ myclass, user }) {
               {
                 creator: {
                   id: { equals: user?.id },
+                },
+              },
+              {
+                teachingTeam: {
+                  some: { id: { equals: user?.id } },
                 },
               },
               {
@@ -854,6 +861,9 @@ export default function Settings({ myclass, user }) {
         </div>
       </section>
 
+      <TeachingTeamSettings myclass={myclass} user={user} />
+
+      {isClassCreator(myclass, user?.id) ? (
       <section className="settingsSection settingsDangerSection">
         <div className="settingsSectionHeader">
           <h3>{t("deleteYourClass")}</h3>
@@ -927,6 +937,7 @@ export default function Settings({ myclass, user }) {
           </Modal.Actions>
         </Modal>
       </section>
+      ) : null}
     </div>
   );
 }

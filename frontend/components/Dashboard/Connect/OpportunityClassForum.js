@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import moment from "moment";
 import { isOpportunityStakeholder } from "../../../lib/opportunityPeople";
+import { isClassTeacherOrMentor } from "../../../lib/classTeacherUtils";
 
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
@@ -376,9 +377,7 @@ function compareQuestions(a, b) {
 }
 
 function isClassTeacher(cls, viewerId) {
-  if (!cls || !viewerId) return false;
-  if (cls.creator?.id === viewerId) return true;
-  return (cls.mentors || []).some((mentor) => mentor?.id === viewerId);
+  return isClassTeacherOrMentor(cls, viewerId);
 }
 
 /**

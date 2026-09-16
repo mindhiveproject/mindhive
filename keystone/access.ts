@@ -49,10 +49,25 @@ function connectRoundStaffRoundClauses(me: string) {
     },
     {
       classNetwork: {
+        classes: { some: { teachingTeam: { some: { id: { equals: me } } } } },
+      },
+    },
+    {
+      classNetwork: {
         classes: { some: { mentors: { some: { id: { equals: me } } } } },
       },
     },
   ];
+}
+
+function classStaffSome(me: string) {
+  return {
+    OR: [
+      { creator: { id: { equals: me } } },
+      { teachingTeam: { some: { id: { equals: me } } } },
+      { mentors: { some: { id: { equals: me } } } },
+    ],
+  };
 }
 
 /**
@@ -288,6 +303,7 @@ export const rules = {
         { NOT: { event: visitEvent } },
         { user: { id: { equals: me } } },
         { class: { creator: { id: { equals: me } } } },
+        { class: { teachingTeam: { some: { id: { equals: me } } } } },
         { class: { mentors: { some: { id: { equals: me } } } } },
       ],
     };
@@ -348,6 +364,11 @@ export const rules = {
         {
           classNetwork: {
             classes: { some: { creator: { id: { equals: me } } } },
+          },
+        },
+        {
+          classNetwork: {
+            classes: { some: { teachingTeam: { some: { id: { equals: me } } } } },
           },
         },
         {
@@ -453,6 +474,15 @@ export const rules = {
         {
           round: {
             classNetwork: {
+              classes: {
+                some: { teachingTeam: { some: { id: { equals: me } } } },
+              },
+            },
+          },
+        },
+        {
+          round: {
+            classNetwork: {
               classes: { some: { mentors: { some: { id: { equals: me } } } } },
             },
           },
@@ -547,15 +577,15 @@ export const CLASS_TEMPLATE_BOARD_ACCESS_QUERY = `
   creator { id }
   author { id }
   collaborators { id }
-  templateForClasses { id creator { id } mentors { id } }
-  templatesForClass { id creator { id } mentors { id } }
+  templateForClasses { id creator { id } teachingTeam { id } mentors { id } }
+  templatesForClass { id creator { id } teachingTeam { id } mentors { id } }
 `;
 
 const FORM_DEFINITION_ACCESS_QUERY = `
   id
   scope
   organization { members { id } }
-  class { creator { id } mentors { id } }
+  class { creator { id } teachingTeam { id } mentors { id } }
   proposalBoard {
     ${CLASS_TEMPLATE_BOARD_ACCESS_QUERY}
   }
@@ -564,6 +594,7 @@ const FORM_DEFINITION_ACCESS_QUERY = `
 type ClassLink = {
   id?: string | null;
   creator?: { id?: string | null } | null;
+  teachingTeam?: { id?: string | null }[] | null;
   mentors?: { id?: string | null }[] | null;
 };
 
@@ -610,6 +641,7 @@ export function canMutateClassTemplateBoard(
   return getLinkedClasses(board).some(
     (klass) =>
       klass?.creator?.id === userId ||
+      (klass?.teachingTeam || []).some((m) => m?.id === userId) ||
       (klass?.mentors || []).some((m) => m?.id === userId)
   );
 }
@@ -620,12 +652,7 @@ export function canMutateClassTemplateBoard(
  * board creator/author/collaborator.
  */
 function classTemplateBoardFilter(me: string) {
-  const classStaffSome = {
-    OR: [
-      { creator: { id: { equals: me } } },
-      { mentors: { some: { id: { equals: me } } } },
-    ],
-  };
+  const classStaffSomeFilter = classStaffSome(me);
   return {
     AND: [
       { isTemplate: { equals: false } },
@@ -634,8 +661,8 @@ function classTemplateBoardFilter(me: string) {
           { creator: { id: { equals: me } } },
           { author: { id: { equals: me } } },
           { collaborators: { some: { id: { equals: me } } } },
-          { templateForClasses: { some: classStaffSome } },
-          { templatesForClass: { some: classStaffSome } },
+          { templateForClasses: { some: classStaffSomeFilter } },
+          { templatesForClass: { some: classStaffSomeFilter } },
         ],
       },
       {
@@ -658,12 +685,7 @@ function projectBoardFormScopeFilter(me: string) {
 function classFormScopeFilter(me: string) {
   return {
     scope: { equals: "class" },
-    class: {
-      OR: [
-        { creator: { id: { equals: me } } },
-        { mentors: { some: { id: { equals: me } } } },
-      ],
-    },
+    class: classStaffSome(me),
   };
 }
 
@@ -780,10 +802,17 @@ async function canCreateScopedFormDefinition({
     if (!classId || !context) return false;
     const klass = await context.query.Class.findOne({
       where: { id: classId },
-      query: "id creator { id } mentors { id }",
+      query: "id creator { id } teachingTeam { id } mentors { id }",
     });
     if (!klass) return false;
     if (klass.creator?.id === session.itemId) return true;
+    if (
+      (klass.teachingTeam || []).some(
+        (m: { id?: string }) => m?.id === session.itemId
+      )
+    ) {
+      return true;
+    }
     return (klass.mentors || []).some(
       (m: { id?: string }) => m?.id === session.itemId
     );

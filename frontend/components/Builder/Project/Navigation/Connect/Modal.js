@@ -19,6 +19,7 @@ export default function ConnectModal({
 
   const userClasses = [
     ...user?.teacherIn.map((cl) => cl?.id),
+    ...(user?.teachingTeamIn || []).map((cl) => cl?.id),
     ...user?.mentorIn.map((cl) => cl?.id),
     ...user?.studentIn.map((cl) => cl?.id),
   ];

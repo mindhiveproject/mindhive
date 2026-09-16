@@ -13,6 +13,7 @@ export default function FindUser({ userClasses, authorId, setAuthorId }) {
           { permissions: { some: { name: { equals: "ADMIN" } } } }, // get all admins
           { studentIn: { some: { id: { in: userClasses } } } },
           { teacherIn: { some: { id: { in: userClasses } } } },
+          { teachingTeamIn: { some: { id: { in: userClasses } } } },
           { mentorIn: { some: { id: { in: userClasses } } } },
         ],
       },

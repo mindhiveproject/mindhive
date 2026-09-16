@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 import { ROUND_MATCH_VIEW } from "../../../../Queries/ConnectMatch";
 import {
   buildClassmateListsByStudent,
@@ -32,10 +33,15 @@ import {
 } from "./matchingViewModes";
 
 const Shell = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: hidden;
 `;
 
 const List = styled.div`
@@ -43,6 +49,10 @@ const List = styled.div`
   gap: 12px;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+  align-content: start;
 `;
 
 const ItemCard = styled.section`
@@ -446,7 +456,7 @@ function ProjectFirstOpportunityCard({
             {toggleLabel}
           </Button>
         </ItemHeader>
-        {placedStudents.length > 0 ? (
+        {hideMatched ? null : placedStudents.length > 0 ? (
           <MemberRow>
             {placedStudents.map(({ matchId, student }) => (
               <StudentNameDisplay
@@ -916,13 +926,15 @@ export default function MatchingRoundMatchingPanel({
   if (loading && !round) {
     return (
       <Shell className="classTabMatchingRoundPanel">
-        <EmptyNote>
-          {t(
-            "opportunities.matchingRound.matching.loading",
-            {},
-            { default: "Loading matching…" },
-          )}
-        </EmptyNote>
+        <JustOneSecondNotice>
+          <p>
+            {t(
+              "opportunities.matchingRound.matching.loading",
+              {},
+              { default: "Loading matching…" },
+            )}
+          </p>
+        </JustOneSecondNotice>
       </Shell>
     );
   }

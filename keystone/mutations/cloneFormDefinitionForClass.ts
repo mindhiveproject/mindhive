@@ -15,7 +15,7 @@ async function assertClassTeacherOrMentor(context: any, classId: string) {
   }
   const klass = await context.query.Class.findOne({
     where: { id: classId },
-    query: "id creator { id } mentors { id }",
+    query: "id creator { id } teachingTeam { id } mentors { id }",
   });
   if (!klass) {
     throw new Error("Class not found.");
@@ -30,11 +30,12 @@ async function assertClassTeacherOrMentor(context: any, classId: string) {
   if (!isAdmin) {
     const authorizedIds = [
       klass.creator?.id,
+      ...(klass.teachingTeam || []).map((m: any) => m?.id),
       ...(klass.mentors || []).map((m: any) => m?.id),
     ].filter(Boolean);
     if (!authorizedIds.includes(session.itemId)) {
       throw new Error(
-        "Forbidden: only class creators or mentors can clone forms for this class."
+        "Forbidden: only class teachers or mentors can clone forms for this class."
       );
     }
   }

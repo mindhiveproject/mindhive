@@ -18,11 +18,12 @@ export default function JournalPage({ code, user, query }) {
   // check whether the user is a journal author
   const isCreator = user?.id === journal?.creator?.id;
   // check whether the user is a teacher or a mentor of the class of the journal author
-  const isTeacher =
-    user?.teacherIn
-      .map((cl) => cl?.id)
-      .filter((id) => journal?.creator?.studentIn.map((cl) => cl?.id)).length >
-    0;
+  const taughtIds = [
+    ...(user?.teacherIn || []),
+    ...(user?.teachingTeamIn || []),
+  ].map((cl) => cl?.id);
+  const studentClassIds = journal?.creator?.studentIn?.map((cl) => cl?.id) || [];
+  const isTeacher = taughtIds.some((id) => studentClassIds.includes(id));
   const isMentor =
     user?.mentorIn
       .map((cl) => cl?.id)

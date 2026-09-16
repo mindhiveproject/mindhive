@@ -95,6 +95,9 @@ export const CURRENT_USER_QUERY = gql`
         teacherIn {
           id
         }
+        teachingTeamIn {
+          id
+        }
         mentorIn {
           id
         }
@@ -170,6 +173,27 @@ export const GET_USER_CLASSES = gql`
           }
         }
         teacherIn {
+          id
+          title
+          code
+          createdAt
+          networks {
+            classes {
+              id
+              title
+              code
+            }
+          }
+          templateProposal {
+            id
+            title
+          }
+          classTemplateBoards {
+            id
+            title
+          }
+        }
+        teachingTeamIn {
           id
           title
           code
@@ -1080,6 +1104,9 @@ export const GET_PROFILE = gql`
           id
         }
         teacherIn {
+          id
+        }
+        teachingTeamIn {
           id
         }
         mentorIn {

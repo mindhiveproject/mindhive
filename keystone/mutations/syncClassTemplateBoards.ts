@@ -26,18 +26,19 @@ async function syncClassTemplateBoards(
   if (!isAdmin) {
     const cls = await context.query.Class.findOne({
       where: { id: classId },
-      query: "id creator { id } mentors { id }",
+      query: "id creator { id } teachingTeam { id } mentors { id }",
     });
     if (!cls) {
       throw new Error("Class not found.");
     }
     const authorizedIds = [
       cls.creator?.id,
+      ...(cls.teachingTeam || []).map((m: any) => m?.id),
       ...(cls.mentors || []).map((m: any) => m?.id),
     ].filter(Boolean);
     if (!authorizedIds.includes(sesh.itemId)) {
       throw new Error(
-        "Forbidden: only class creators, mentors, or admins can sync class template boards."
+        "Forbidden: only class teachers, mentors, or admins can sync class template boards."
       );
     }
   }

@@ -19,6 +19,7 @@ import { GET_CLASS } from "../../../Queries/Classes";
 import RestrictedAccess from "../../../Global/Restricted";
 import { NavbarItem, SectionNavbar } from "../../../DesignSystem/Navbar";
 import JustOneSecondNotice from "../../../DesignSystem/JustOneSecondNotice";
+import { taughtClassIds } from "../../../../lib/classTeacherUtils";
 
 import StyledClass from "../../../styles/StyledClass";
 
@@ -226,8 +227,8 @@ export default function ClassPage({ code, user, query }) {
     >
       <RestrictedAccess
         userCanAccess={[
-          ...user?.teacherIn.map((c) => c?.id),
-          ...user?.mentorIn.map((c) => c?.id),
+          ...taughtClassIds(user),
+          ...(user?.mentorIn || []).map((c) => c?.id),
         ]}
         whatToAccess={myclass?.id}
       >

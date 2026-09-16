@@ -70,7 +70,7 @@ async function getPairActors(
         id
         creator { id }
         admins { id }
-        classes { id creator { id } mentors { id } }
+        classes { id creator { id } teachingTeam { id } mentors { id } }
       }
     `,
   });
@@ -91,8 +91,13 @@ async function getPairActors(
       (admin: { id: string }) => admin.id === userId
     ) ||
     (round.classNetwork?.classes || []).some(
-      (c: { creator?: { id: string }; mentors?: { id: string }[] }) =>
+      (c: {
+        creator?: { id: string };
+        teachingTeam?: { id: string }[];
+        mentors?: { id: string }[];
+      }) =>
         c.creator?.id === userId ||
+        (c.teachingTeam || []).some((m) => m.id === userId) ||
         (c.mentors || []).some((m) => m.id === userId)
     );
 
