@@ -199,7 +199,8 @@ export default function SettingsPanel({ user }) {
       <Section title={t("participation", "Participation")}>
         <div role="radiogroup" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           <Card
-            variant="subtle"
+            variant="filled"
+            padding={0}
             style={
               draft.participationMode === "sandbox" ? OPTION_CHOSEN_STYLE : null
             }
@@ -245,7 +246,8 @@ export default function SettingsPanel({ user }) {
           </Card>
 
           <Card
-            variant="subtle"
+            variant="filled"
+            padding={0}
             style={
               draft.participationMode === "authored" ? OPTION_CHOSEN_STYLE : null
             }

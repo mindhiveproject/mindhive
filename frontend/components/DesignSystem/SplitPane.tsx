@@ -1,28 +1,59 @@
 "use client";
 
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { motion, type Transition } from "motion/react";
+import styled from "styled-components";
 
 /**
  * The curve the collapse runs on. Exported so anything a caller animates in the
  * same gesture — a rail taking the collapsed pane's place, say — moves with the
  * pane rather than beside it.
  */
-export const COLLAPSE_TRANSITION = {
+export const COLLAPSE_TRANSITION: Transition = {
   duration: 0.28,
   ease: [0.22, 0.61, 0.36, 1],
 };
 
-const ROOT_STYLE = {
-  display: "flex",
-  alignItems: "stretch",
-  width: "100%",
-  height: "100%",
-  minWidth: 0,
-  minHeight: 0,
-};
+/** Props for {@link SplitPane}. */
+export interface SplitPaneProps {
+  /** Left region. */
+  start: React.ReactNode;
+  /** Right region. */
+  end: React.ReactNode;
+  /** Initial share of the width given to `start`. @default 0.5 */
+  defaultFraction?: number;
+  /** Minimum px width of the start region. @default 280 */
+  minStart?: number;
+  /** Minimum px width of the end region. @default 280 */
+  minEnd?: number;
+  /** Squeezes `end` and the divider shut; `start` takes the full width. @default false */
+  collapsed?: boolean;
+  /**
+   * Fires when a drag carries the divider far enough past `minEnd` to shut
+   * `end`, and when the shut divider is clicked to bring it back. Passing it
+   * is what enables drag-to-collapse at all.
+   */
+  onCollapsedChange?: (collapsed: boolean) => void;
+  /** Fires as the divider moves. */
+  onFractionChange?: (fraction: number) => void;
+  /** Accessible name for the divider. @default "Resize panels" */
+  ariaLabel?: string;
+  /** Accessible name for the divider while `end` is shut, when it acts as a button rather than a separator. @default "Expand panel" */
+  expandLabel?: string;
+  /** Optional style override for the root. */
+  style?: React.CSSProperties;
+}
 
-const PANE_STYLE = {
+const StyledRoot = styled.div`
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+`;
+
+const PANE_STYLE: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
   minWidth: 0,
@@ -34,38 +65,37 @@ const PANE_STYLE = {
 // hit; the handle itself is the 8x40 pill from the mockup.
 const GUTTER = 12;
 
-const GUTTER_STYLE = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexShrink: 0,
-  width: GUTTER,
-  alignSelf: "stretch",
-  cursor: "col-resize",
-  touchAction: "none",
-  background: "transparent",
-  border: "none",
-  padding: 0,
-};
+const StyledDivider = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: ${GUTTER}px;
+  align-self: stretch;
+  touch-action: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+`;
+
+const StyledHandle = styled.span`
+  flex-shrink: 0;
+  width: 8px;
+  height: 40px;
+  border-radius: 100px;
+  background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  transition: background-color 0.2s;
+
+  &.DesignSystem-SplitPane-Handle--active {
+    background: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+`;
 
 // How far past `minEnd` the pointer has to keep going before the drag reads as
 // "close it" rather than "make it small". Long enough that an overshoot doesn't
 // shut the pane, short enough that the pane isn't sitting still while the
 // pointer runs away from it.
 const COLLAPSE_OVERDRAG = 64;
-
-const HANDLE_STYLE = {
-  flexShrink: 0,
-  width: 8,
-  height: 40,
-  borderRadius: 100,
-  background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  transition: "background-color 0.2s",
-};
-
-const HANDLE_ACTIVE_STYLE = {
-  background: "var(--MH-Theme-Primary-Dark, #336F8A)",
-};
 
 /**
  * Two resizable side-by-side regions with a draggable divider.
@@ -85,22 +115,6 @@ const HANDLE_ACTIVE_STYLE = {
  * re-expanding restarts whatever it was doing. It is inert while shut, so
  * nothing inside it is reachable by tab.
  *
- * @param {React.ReactNode} start - Left region.
- * @param {React.ReactNode} end - Right region.
- * @param {number} [defaultFraction=0.5] - Initial share of the width given to `start`.
- * @param {number} [minStart=280] - Minimum px width of the start region.
- * @param {number} [minEnd=280] - Minimum px width of the end region.
- * @param {boolean} [collapsed=false] - Squeezes `end` and the divider shut; `start` takes the full width.
- * @param {(collapsed: boolean) => void} [onCollapsedChange] - Fires when a drag
- *   carries the divider far enough past `minEnd` to shut `end`, and when the
- *   shut divider is clicked to bring it back. Passing it is what enables
- *   drag-to-collapse at all.
- * @param {(fraction: number) => void} [onFractionChange] - Fires as the divider moves.
- * @param {string} [ariaLabel="Resize panels"] - Accessible name for the divider.
- * @param {string} [expandLabel="Expand panel"] - Accessible name for the divider
- *   while `end` is shut, when it acts as a button rather than a separator.
- * @param {React.CSSProperties} [style] - Override for the root.
- *
  * @example
  * <SplitPane start={<WorkPanels />} end={<Preview />} defaultFraction={0.5} />
  */
@@ -115,9 +129,9 @@ export default function SplitPane({
   onFractionChange,
   ariaLabel = "Resize panels",
   expandLabel = "Expand panel",
-  style = {},
-}) {
-  const rootRef = useRef(null);
+  style,
+}: SplitPaneProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const [fraction, setFraction] = useState(defaultFraction);
   const [dragging, setDragging] = useState(false);
 
@@ -125,7 +139,7 @@ export default function SplitPane({
   const shutByDragRef = useRef(false);
 
   const applyClientX = useCallback(
-    (clientX) => {
+    (clientX: number) => {
       const root = rootRef.current;
       if (!root) return;
       const rect = root.getBoundingClientRect();
@@ -163,13 +177,13 @@ export default function SplitPane({
       setFraction(next);
       onFractionChange?.(next);
     },
-    [minStart, minEnd, collapsed, onCollapsedChange, onFractionChange]
+    [minStart, minEnd, collapsed, onCollapsedChange, onFractionChange],
   );
 
   // Keep the split honest when the container itself changes width.
   useLayoutEffect(() => {
     const root = rootRef.current;
-    if (!root || typeof ResizeObserver === "undefined") return;
+    if (!root || typeof ResizeObserver === "undefined") return undefined;
     const observer = new ResizeObserver(() => {
       const total = root.getBoundingClientRect().width;
       if (total <= 0) return;
@@ -185,7 +199,7 @@ export default function SplitPane({
     return () => observer.disconnect();
   }, [minStart, minEnd]);
 
-  const onPointerDown = (e) => {
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (collapsed) return; // Shut: the divider is a button, not a handle.
     e.currentTarget.setPointerCapture?.(e.pointerId);
     shutByDragRef.current = false;
@@ -193,18 +207,18 @@ export default function SplitPane({
     e.preventDefault();
   };
 
-  const onPointerMove = (e) => {
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragging) return;
     applyClientX(e.clientX);
   };
 
-  const endDrag = (e) => {
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragging) return;
     e.currentTarget.releasePointerCapture?.(e.pointerId);
     setDragging(false);
   };
 
-  const onKeyDown = (e) => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const root = rootRef.current;
     if (!root) return;
 
@@ -232,15 +246,10 @@ export default function SplitPane({
   // pointermove would leave the divider trailing behind the cursor. Shutting is
   // the exception — the pane is no longer tracking anything at that point, and
   // snapping it closed after the overdrag is what made it feel abrupt.
-  const transition =
-    dragging && !collapsed ? { duration: 0 } : COLLAPSE_TRANSITION;
+  const transition: Transition = dragging && !collapsed ? { duration: 0 } : COLLAPSE_TRANSITION;
 
   return (
-    <div
-      ref={rootRef}
-      className="DesignSystem-SplitPane"
-      style={{ ...ROOT_STYLE, ...style }}
-    >
+    <StyledRoot className="DesignSystem-SplitPane" ref={rootRef} style={style}>
       {/* Shrinkable, deliberately. While the pane is animating to `100%` the
           space around the split can be changing too — a rail arriving beside
           it — and a pane that refused to shrink would hold the stale width and
@@ -256,17 +265,14 @@ export default function SplitPane({
       {/* The divider stays put when the pane shuts. It is the one bit of the
           split that never moves, so leaving it there is what makes the collapse
           read as the pane sliding behind it — and it doubles as the way back. */}
-      <div
+      <StyledDivider
         role={collapsed ? "button" : "separator"}
         aria-orientation={collapsed ? undefined : "vertical"}
         aria-label={collapsed ? expandLabel : ariaLabel}
         aria-valuenow={collapsed ? undefined : Math.round(fraction * 100)}
         tabIndex={0}
         className="DesignSystem-SplitPane-Divider"
-        style={{
-          ...GUTTER_STYLE,
-          cursor: collapsed ? "pointer" : "col-resize",
-        }}
+        style={{ cursor: collapsed ? "pointer" : "col-resize" }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
@@ -274,23 +280,22 @@ export default function SplitPane({
         onKeyDown={onKeyDown}
         onClick={collapsed ? () => onCollapsedChange?.(false) : undefined}
       >
-        <span
-          style={{
-            ...HANDLE_STYLE,
-            ...(dragging ? HANDLE_ACTIVE_STYLE : null),
-          }}
+        <StyledHandle
+          className={
+            dragging ? "DesignSystem-SplitPane-Handle DesignSystem-SplitPane-Handle--active" : "DesignSystem-SplitPane-Handle"
+          }
         />
-      </div>
+      </StyledDivider>
       {/* `end` takes whatever the start pane and the divider leave behind, so it
           needs no animation of its own — at full collapse that remainder is 0. */}
       <div
         className="DesignSystem-SplitPane-End"
         style={{ ...PANE_STYLE, flex: "1 1 0%" }}
         aria-hidden={collapsed || undefined}
-        {...(collapsed ? { inert: "" } : null)}
+        inert={collapsed || undefined}
       >
         {end}
       </div>
-    </div>
+    </StyledRoot>
   );
 }

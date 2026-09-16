@@ -129,7 +129,7 @@ export function EditingFields({ visual, draft, setDraft, isOwner }) {
         ?.filter((p) => p.id !== visual.author?.id)
         .filter((p) => !people.some((existing) => existing.id === p.id))
         .map((profile) => (
-          <Card key={profile.id} variant="subtle">
+          <Card key={profile.id} variant="filled" padding={0}>
             <div style={COLLABORATOR_ROW_STYLE}>
               <span style={{ flex: "1 1 auto", ...FIELD_LABEL_STYLE }}>
                 {profile.username}
@@ -142,7 +142,7 @@ export function EditingFields({ visual, draft, setDraft, isOwner }) {
         ))}
 
       {people.map((profile) => (
-        <Card key={profile.id} variant="subtle">
+        <Card key={profile.id} variant="filled" padding={0}>
           <div style={COLLABORATOR_ROW_STYLE}>
             <div style={{ flex: "1 1 auto", minWidth: 0 }}>
               <p style={{ ...FIELD_LABEL_STYLE, margin: 0, font: "var(--MH-Type-Title-Base)" }}>

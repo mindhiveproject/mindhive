@@ -80,11 +80,17 @@ Components are being moved from `.js` to `.tsx` as they're touched, newest first
 
 | Component | Status |
 |---|---|
-| `Card` | ✅ `.tsx` |
+| `Card` (+ `CardSection`) | ✅ `.tsx` |
 | `Chip` | ✅ `.tsx` |
 | `FavoriteButton` | ✅ `.tsx` |
 | `Navbar` | ✅ `.tsx` |
 | `ToggleSwitch` | ✅ `.tsx` |
+| `Panel` | ✅ `.tsx` |
+| `Input` | ✅ `.tsx` |
+| `Checkbox` | ✅ `.tsx` |
+| `Radio` | ✅ `.tsx` |
+| `Slider` | ✅ `.tsx` |
+| `SplitPane` | ✅ `.tsx` |
 | `lib/taskTypeColors` | ✅ `.ts` |
 | `Button`, `IconButton`, `Modal`, `Popover`, `Tooltip`, `DropdownMenu`, `DropdownSelect`, `MessageCard`, `InfoPopover`, `PanelHeader`, `CopyButton`, `CompactActionButton`, `Icons/` | ⏳ still `.js` |
 

@@ -162,6 +162,45 @@ const VISUALLY_HIDDEN_STYLE: React.CSSProperties = {
   border: 0,
 };
 
+/** Props for {@link CardSection}. */
+export interface CardSectionProps {
+  /** Section contents. */
+  children: React.ReactNode;
+  /** Draws a hairline above the section — pass on every section after the first. @default false */
+  divided?: boolean;
+  /** Optional style override for the section. */
+  style?: React.CSSProperties;
+  /** Optional extra class on the section. */
+  className?: string;
+}
+
+const StyledCardSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 16px;
+
+  &.DesignSystem-Card-Section--divided {
+    border-top: ${OUTLINE_BORDER};
+  }
+`;
+
+/**
+ * A padded band inside a {@link Card}, for a card whose content is a stack of
+ * rows rather than one free-form block — pass `padding={0}` on the enclosing
+ * `Card` so its own padding doesn't stack with each section's.
+ */
+export function CardSection({ children, divided = false, style, className }: CardSectionProps) {
+  return (
+    <StyledCardSection
+      className={clsx("DesignSystem-Card-Section", divided && "DesignSystem-Card-Section--divided", className)}
+      style={style}
+    >
+      {children}
+    </StyledCardSection>
+  );
+}
+
 export default function Card({
   variant = "elevated",
   href = null,

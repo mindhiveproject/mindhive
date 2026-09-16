@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import Card, { CardSection } from "../../DesignSystem/Card";
@@ -41,6 +40,8 @@ const COVER_STYLE = {
   background: "var(--MH-Theme-Neutrals-Black, #171717)",
   backgroundSize: "cover",
   backgroundPosition: "center",
+  borderTopLeftRadius: 12,
+  borderTopRightRadius: 12,
 };
 
 const CARD_TITLE_STYLE = {
@@ -86,7 +87,6 @@ const PRIVACY_LABELS = {
  */
 export default function VisualsBank({ user }) {
   const { t } = useTranslation("visuals");
-  const router = useRouter();
   const [search, setSearch] = useState("");
 
   const { data, loading, refetch } = useQuery(MY_VISUALS, {
@@ -154,7 +154,9 @@ export default function VisualsBank({ user }) {
             return (
               <Card
                 key={visual.id}
-                onClick={() => router.push(`/builder/visuals/${visual.id}`)}
+                href={`/builder/visuals/${visual.id}`}
+                ariaLabel={visual.title}
+                padding={0}
               >
                 <div
                   style={{
@@ -172,20 +174,18 @@ export default function VisualsBank({ user }) {
                       {visual.title}
                     </p>
                     {isOwner ? (
-                      <span onClick={(e) => e.stopPropagation()}>
-                        <DropdownMenu
-                          trigger={<MoreVertIcon />}
-                          ariaLabel={t("visualActions", "Visual actions")}
-                          items={[
-                            {
-                              key: "delete",
-                              label: t("delete", "Delete"),
-                              danger: true,
-                              onClick: () => onDelete(visual),
-                            },
-                          ]}
-                        />
-                      </span>
+                      <DropdownMenu
+                        trigger={<MoreVertIcon />}
+                        ariaLabel={t("visualActions", "Visual actions")}
+                        items={[
+                          {
+                            key: "delete",
+                            label: t("delete", "Delete"),
+                            danger: true,
+                            onClick: () => onDelete(visual),
+                          },
+                        ]}
+                      />
                     ) : null}
                   </div>
                   {visual.description ? (

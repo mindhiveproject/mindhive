@@ -62,7 +62,7 @@ export default function DataSourcesPanel() {
 
   return (
     <Panel title={t("dataSource", "Data Source")}>
-      <Card>
+      <Card padding={0}>
         <CardSection style={EMPTY_STYLE}>
           <span style={ICON_STYLE}>
             <WaveformIcon />
