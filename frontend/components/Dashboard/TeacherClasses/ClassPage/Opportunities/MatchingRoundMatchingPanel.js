@@ -456,7 +456,7 @@ function ProjectFirstOpportunityCard({
             {toggleLabel}
           </Button>
         </ItemHeader>
-        {placedStudents.length > 0 ? (
+        {hideMatched ? null : placedStudents.length > 0 ? (
           <MemberRow>
             {placedStudents.map(({ matchId, student }) => (
               <StudentNameDisplay

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
@@ -16,7 +16,27 @@ import {
 } from "../../../../../lib/connectBallotUtils";
 import StudentNameDisplay from "./StudentNameDisplay";
 
+const FROSTED_CHROME_PAD_TOP = "var(--ds-modal-frosted-pad-top, 64px)";
+const FROSTED_CHROME_PAD_BOTTOM = "var(--ds-modal-frosted-pad-bottom, 96px)";
+
 const Layout = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  flex: 1;
+  height: 100%;
+  padding-top: ${FROSTED_CHROME_PAD_TOP};
+  padding-bottom: ${FROSTED_CHROME_PAD_BOTTOM};
+  box-sizing: border-box;
+
+  &.isSaving {
+    pointer-events: none;
+    opacity: 0.72;
+  }
+`;
+
+const Columns = styled.div`
   display: grid;
   gap: 20px;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -25,6 +45,7 @@ const Layout = styled.div`
 
   @media (max-width: 800px) {
     grid-template-columns: minmax(0, 1fr);
+    overflow-y: auto;
   }
 `;
 
@@ -56,6 +77,12 @@ const SearchInput = styled.input`
   &:focus {
     border-color: var(--MH-Theme-Primary-Dark, #336f8a);
   }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
+    background: var(--MH-Theme-Neutrals-Lighter, #f7f9f8);
+  }
 `;
 
 const ResultList = styled.ul`
@@ -66,8 +93,8 @@ const ResultList = styled.ul`
   flex-direction: column;
   gap: 6px;
   overflow-y: auto;
-  max-height: 320px;
-  min-height: 120px;
+  flex: 1;
+  min-height: 160px;
   border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
   border-radius: 12px;
   background: var(--MH-Theme-Neutrals-Lighter, #f7f9f8);
@@ -99,13 +126,24 @@ const ResultButton = styled.div`
     border-color: var(--MH-Theme-Primary-Dark, #336f8a);
     background: rgba(51, 111, 138, 0.08);
   }
+
+  &.isDisabled {
+    cursor: default;
+    pointer-events: none;
+  }
+`;
+
+const SelectedRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  min-height: 40px;
 `;
 
 const SelectedChips = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  min-height: 28px;
+  width: 100%;
 `;
 
 const Meta = styled.p`
@@ -115,7 +153,7 @@ const Meta = styled.p`
 `;
 
 const StatusCallout = styled.div`
-  grid-column: 1 / -1;
+  flex-shrink: 0;
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
@@ -125,14 +163,14 @@ const StatusCallout = styled.div`
 `;
 
 const ErrorNote = styled.p`
-  grid-column: 1 / -1;
+  flex-shrink: 0;
   margin: 0;
   font: var(--MH-Type-Body-Base);
   color: #b3261e;
 `;
 
 const WarningNote = styled.p`
-  grid-column: 1 / -1;
+  flex-shrink: 0;
   margin: 0;
   font: var(--MH-Type-Body-Base);
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
@@ -208,7 +246,9 @@ export default function MatchingRoundCreateMatchModal({
 
   const [createMatch, { loading: creating }] = useMutation(CREATE_MATCH);
   const [updateMatch, { loading: updating }] = useMutation(UPDATE_MATCH);
-  const saving = creating || updating;
+  const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
+  const saving = creating || updating || submitting;
 
   const preferenceBySubmitterId = useMemo(() => {
     const map = new Map();
@@ -237,6 +277,8 @@ export default function MatchingRoundCreateMatchModal({
     setPeopleQuery("");
     setOpportunityQuery("");
     setErrorMessage("");
+    setSubmitting(false);
+    submittingRef.current = false;
     if (existingMatch?.id) {
       setSelectedStudentIds(
         getMatchStudents(existingMatch)
@@ -323,28 +365,51 @@ export default function MatchingRoundCreateMatchModal({
   }, [selectedOpportunity, selectedStudentIds, matches, existingMatch?.id]);
 
   const toggleStudent = useCallback((studentId) => {
-    if (!studentId) return;
+    if (!studentId || saving) return;
     setSelectedStudentIds((prev) =>
       prev.includes(studentId)
         ? prev.filter((id) => id !== studentId)
         : [...prev, studentId],
     );
     setErrorMessage("");
-  }, []);
+  }, [saving]);
 
   const removeStudent = useCallback((studentId) => {
+    if (saving) return;
     setSelectedStudentIds((prev) => prev.filter((id) => id !== studentId));
-  }, []);
+  }, [saving]);
+
+  const isSelectionUnchanged = useMemo(() => {
+    if (!isEdit) return false;
+    const current = [...selectedStudentIds].sort().join("\0");
+    const original = getMatchStudents(existingMatch)
+      .map((s) => s?.id)
+      .filter(Boolean)
+      .sort()
+      .join("\0");
+    return (
+      current === original &&
+      selectedOpportunityId === (existingMatch?.opportunity?.id || null)
+    );
+  }, [isEdit, selectedStudentIds, selectedOpportunityId, existingMatch]);
 
   const canSubmit =
     Boolean(round?.id) &&
     selectedStudentIds.length > 0 &&
     Boolean(selectedOpportunityId) &&
-    !saving;
+    !saving &&
+    !isSelectionUnchanged;
+
+  const handleRequestClose = useCallback(() => {
+    if (saving) return;
+    onClose?.();
+  }, [saving, onClose]);
 
   const handleSubmit = async () => {
-    if (!canSubmit) return;
+    if (!canSubmit || submittingRef.current) return;
+    submittingRef.current = true;
     setErrorMessage("");
+    setSubmitting(true);
 
     const duplicates = selectedStudentIds.filter((studentId) =>
       (matches || []).some(
@@ -370,6 +435,8 @@ export default function MatchingRoundCreateMatchModal({
           },
         ),
       );
+      setSubmitting(false);
+      submittingRef.current = false;
       return;
     }
 
@@ -425,6 +492,9 @@ export default function MatchingRoundCreateMatchModal({
           },
         );
       setErrorMessage(message);
+    } finally {
+      submittingRef.current = false;
+      setSubmitting(false);
     }
   };
 
@@ -494,18 +564,28 @@ export default function MatchingRoundCreateMatchModal({
   return (
     <Modal
       open={open}
-      onClose={() => {
-        if (!saving) onClose?.();
-      }}
+      onClose={saving ? undefined : handleRequestClose}
       size="large"
       maxWidth={960}
       maxHeight="90vh"
       height="90vh"
       title={modalTitle}
-      bodyStyle={{ display: "flex", flexDirection: "column", minHeight: 0 }}
+      frostedChrome
+      hideScrollbar
+      bodyStyle={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+        overflow: "hidden",
+      }}
       actions={
         <>
-          <Button variant="text" onClick={onClose} disabled={saving}>
+          <Button
+            type="button"
+            variant="text"
+            onClick={handleRequestClose}
+            disabled={saving}
+          >
             {t(
               "opportunities.matchingRound.matching.createMatchModal.cancel",
               {},
@@ -513,6 +593,7 @@ export default function MatchingRoundCreateMatchModal({
             )}
           </Button>
           <Button
+            type="button"
             variant="filled"
             onClick={handleSubmit}
             disabled={!canSubmit}
@@ -522,9 +603,13 @@ export default function MatchingRoundCreateMatchModal({
         </>
       }
     >
-      <Layout>
+      <Layout
+        className={clsx({ isSaving: saving })}
+        aria-busy={saving}
+      >
         <StatusCallout>{statusCallout}</StatusCallout>
 
+        <Columns>
         <Column>
           <ColumnTitle>
             {t(
@@ -536,6 +621,7 @@ export default function MatchingRoundCreateMatchModal({
           <SearchInput
             type="search"
             value={peopleQuery}
+            disabled={saving}
             onChange={(event) => setPeopleQuery(event.target.value)}
             placeholder={t(
               "opportunities.matchingRound.matching.createMatchModal.searchStudents",
@@ -548,6 +634,7 @@ export default function MatchingRoundCreateMatchModal({
               { default: "Search students…" },
             )}
           />
+          <SelectedRow>
           <SelectedChips>
             {selectedStudents.length === 0 ? (
               <Meta>
@@ -562,7 +649,9 @@ export default function MatchingRoundCreateMatchModal({
                 <Chip
                   key={student.id}
                   label={displayName(student)}
-                  onClose={() => removeStudent(student.id)}
+                  onClose={
+                    saving ? undefined : () => removeStudent(student.id)
+                  }
                   ariaLabel={t(
                     "opportunities.matchingRound.matching.createMatchModal.removeStudentAria",
                     { name: displayName(student) },
@@ -572,6 +661,7 @@ export default function MatchingRoundCreateMatchModal({
               ))
             )}
           </SelectedChips>
+          </SelectedRow>
           <ResultList>
             {filteredStudents.length === 0 ? (
               <EmptyNote>
@@ -591,8 +681,11 @@ export default function MatchingRoundCreateMatchModal({
                   <li key={student.id}>
                     <ResultButton
                       role="button"
-                      tabIndex={0}
-                      className={clsx({ isSelected: selected })}
+                      tabIndex={saving ? -1 : 0}
+                      className={clsx({
+                        isSelected: selected,
+                        isDisabled: saving,
+                      })}
                       onClick={() => toggleStudent(student.id)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter" || event.key === " ") {
@@ -601,6 +694,7 @@ export default function MatchingRoundCreateMatchModal({
                         }
                       }}
                       aria-pressed={selected}
+                      aria-disabled={saving}
                     >
                       <StudentNameDisplay
                         student={student}
@@ -628,6 +722,7 @@ export default function MatchingRoundCreateMatchModal({
           <SearchInput
             type="search"
             value={opportunityQuery}
+            disabled={saving}
             onChange={(event) => setOpportunityQuery(event.target.value)}
             placeholder={t(
               "opportunities.matchingRound.matching.createMatchModal.searchOpportunities",
@@ -640,6 +735,7 @@ export default function MatchingRoundCreateMatchModal({
               { default: "Search opportunities…" },
             )}
           />
+          <SelectedRow>
           {selectedOpportunity ? (
             <Meta>
               {t(
@@ -657,6 +753,7 @@ export default function MatchingRoundCreateMatchModal({
               )}
             </Meta>
           )}
+          </SelectedRow>
           <ResultList>
             {filteredOpportunities.length === 0 ? (
               <EmptyNote>
@@ -682,20 +779,26 @@ export default function MatchingRoundCreateMatchModal({
                   <li key={opportunity.id}>
                     <ResultButton
                       role="button"
-                      tabIndex={0}
-                      className={clsx({ isSelected: selected })}
+                      tabIndex={saving ? -1 : 0}
+                      className={clsx({
+                        isSelected: selected,
+                        isDisabled: saving,
+                      })}
                       onClick={() => {
+                        if (saving) return;
                         setSelectedOpportunityId(opportunity.id);
                         setErrorMessage("");
                       }}
                       onKeyDown={(event) => {
                         if (event.key === "Enter" || event.key === " ") {
                           event.preventDefault();
+                          if (saving) return;
                           setSelectedOpportunityId(opportunity.id);
                           setErrorMessage("");
                         }
                       }}
                       aria-pressed={selected}
+                      aria-disabled={saving}
                     >
                       <span>
                         <strong>{opportunity.title || "—"}</strong>
@@ -712,6 +815,7 @@ export default function MatchingRoundCreateMatchModal({
             )}
           </ResultList>
         </Column>
+        </Columns>
 
         {capacityWarning ? (
           <WarningNote>

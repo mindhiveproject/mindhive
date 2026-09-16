@@ -174,7 +174,7 @@ export default function MatchingRoundMatchingHeaderBar({
           </Tooltip>
         ) : null}
         {typeof onCreateMatch === "function" ? (
-          <Button variant="filled" onClick={onCreateMatch}>
+          <Button type="button" variant="filled" onClick={onCreateMatch}>
             {t(
               "opportunities.matchingRound.matching.createMatch",
               {},
