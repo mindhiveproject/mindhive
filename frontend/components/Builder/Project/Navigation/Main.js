@@ -33,6 +33,8 @@ export default function Navigation({
   hasStudyChanged,
   cardId,
   isCanvasLocked,
+  connectModalOpen,
+  onConnectModalOpenChange,
 }) {
   const router = useRouter();
   const { t } = useTranslation("builder");
@@ -60,8 +62,7 @@ export default function Navigation({
     talks: [],
   };
 
-  const linkedBoardId = study?.proposalMain?.id || study?.proposal?.[0]?.id;
-  const navItems = getNavTabs({ mode, t, linkedBoardId });
+  const navItems = getNavTabs({ mode, t });
 
   const title =
     mode === "project"
@@ -123,7 +124,12 @@ export default function Navigation({
 
           {mode === "study" && (
             <>
-              <ConnectStudyOnly study={study} user={user} />
+              <ConnectStudyOnly
+                study={study}
+                user={user}
+                modalOpen={connectModalOpen}
+                onModalOpenChange={onConnectModalOpenChange}
+              />
               {study?.talks?.length > 0 && (
                 <div className="icon" onClick={toggleChatSidebar}>
                   <img src="/assets/icons/chat.svg" alt="" />

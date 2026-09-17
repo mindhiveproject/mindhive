@@ -12,15 +12,26 @@ export default function ConnectModal({
   user,
   handleChange,
   updateStudy,
+  open: openProp,
+  onOpenChange,
 }) {
   const { t } = useTranslation("builder");
-  const [open, setOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const isControlled = openProp !== undefined;
+  const open = isControlled ? openProp : uncontrolledOpen;
+
+  const setOpen = (nextOpen) => {
+    if (!isControlled) {
+      setUncontrolledOpen(nextOpen);
+    }
+    onOpenChange?.(nextOpen);
+  };
 
   const userClasses = [
-    ...user?.teacherIn.map((cl) => cl?.id),
+    ...(user?.teacherIn || []).map((cl) => cl?.id),
     ...(user?.teachingTeamIn || []).map((cl) => cl?.id),
-    ...user?.mentorIn.map((cl) => cl?.id),
-    ...user?.studentIn.map((cl) => cl?.id),
+    ...(user?.mentorIn || []).map((cl) => cl?.id),
+    ...(user?.studentIn || []).map((cl) => cl?.id),
   ];
   const collaborators =
     (study && study?.collaborators?.map((c) => c?.id)) || [];

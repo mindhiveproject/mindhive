@@ -55,26 +55,14 @@ export function collectHref({ area, selector, extraQuery = {} }) {
   });
 }
 
-export function getNavTabs({ mode, t, linkedBoardId }) {
+export function getNavTabs({ mode, t }) {
   if (mode === "cloneofstudy") {
     return [{ value: "page", name: t("participantPage") }];
   }
 
   const tabs = [];
 
-  if (mode === "project") {
-    tabs.push({ value: "board", name: t("projectBoard") });
-  } else if (linkedBoardId) {
-    tabs.push({
-      value: "board",
-      name: t("projectBoard"),
-      href: builderHref({
-        area: "projects",
-        selector: linkedBoardId,
-        tab: "board",
-      }),
-    });
-  }
+  tabs.push({ value: "board", name: t("projectBoard") });
 
   if (mode === "project") {
     tabs.push({ value: "builder", name: t("studyBuilder") });

@@ -4,13 +4,18 @@ import useForm from "../../../../../lib/useForm";
 
 import ConnectModal from "./Modal";
 
-import { MY_STUDY } from "../../../../Queries/Study";
+import { MY_STUDY, STUDY_PROPOSALS_QUERY } from "../../../../Queries/Study";
 import { UPDATE_STUDY } from "../../../../Mutations/Study";
 
 import { Image } from "semantic-ui-react";
 import Tooltip from "../../../../DesignSystem/Tooltip";
 
-export default function Connect({ study, user }) {
+export default function Connect({
+  study,
+  user,
+  modalOpen,
+  onModalOpenChange,
+}) {
   // save and edit the study information
   const { inputs, handleChange, handleMultipleUpdate, captureFile, clearForm } =
     useForm({
@@ -25,12 +30,19 @@ export default function Connect({ study, user }) {
       id: study?.id,
       input: {
         collaborators: {
-          set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
+          set: (inputs?.collaborators || []).map((col) => ({ id: col?.id })),
         },
-        classes: { set: inputs?.classes?.map((cl) => ({ id: cl?.id })) },
+        classes: {
+          set: Array.isArray(inputs?.classes)
+            ? inputs.classes.filter((cl) => cl?.id).map((cl) => ({ id: cl.id }))
+            : [],
+        },
       },
     },
-    refetchQueries: [{ query: MY_STUDY, variables: { id: study?.id } }],
+    refetchQueries: [
+      { query: MY_STUDY, variables: { id: study?.id } },
+      { query: STUDY_PROPOSALS_QUERY, variables: { id: study?.id } },
+    ],
   });
 
   const collaborators = inputs?.collaborators || [];
@@ -57,6 +69,8 @@ export default function Connect({ study, user }) {
         user={user}
         handleChange={handleChange}
         updateStudy={updateStudy}
+        open={modalOpen}
+        onOpenChange={onModalOpenChange}
       />
     </div>
   );

@@ -47,13 +47,23 @@ export default function LinkClass({ study, handleChange }) {
     );
   }, [data]);
 
-  const isDisconnected = study?.classes === NO_CLASS_VALUE;
-  const selectedId = isDisconnected ? null : (study?.classes?.[0]?.id ?? null);
+  const isExistingStudy = Boolean(study?.id);
+  const connectedClasses = Array.isArray(study?.classes) ? study.classes : [];
+  const isDisconnected =
+    study?.classes === NO_CLASS_VALUE ||
+    (isExistingStudy && connectedClasses.length === 0);
+  const selectedId = isDisconnected ? null : (connectedClasses[0]?.id ?? null);
   const hasValidClassSelection =
     Boolean(selectedId) && myClasses.some((cl) => cl.id === selectedId);
 
   useEffect(() => {
     if (loading || data === undefined) return;
+
+    // Existing studies keep the saved class (or none). Do not invent a selection.
+    if (isExistingStudy) {
+      didApplyDefault.current = true;
+      return;
+    }
 
     // Already have a real selection (class or explicit disconnect).
     if (isDisconnected || hasValidClassSelection) {
@@ -62,7 +72,7 @@ export default function LinkClass({ study, handleChange }) {
     }
 
     // Parent may have wiped state back to []; allow re-applying the default.
-    if (didApplyDefault.current && Array.isArray(study?.classes) && study.classes.length > 0) {
+    if (didApplyDefault.current && connectedClasses.length > 0) {
       return;
     }
 
@@ -84,7 +94,15 @@ export default function LinkClass({ study, handleChange }) {
         value: NO_CLASS_VALUE,
       },
     });
-  }, [loading, data, myClasses, hasValidClassSelection, isDisconnected, study?.classes]);
+  }, [
+    loading,
+    data,
+    myClasses,
+    hasValidClassSelection,
+    isDisconnected,
+    isExistingStudy,
+    connectedClasses.length,
+  ]);
 
   const onSelectClass = (cl) => {
     didApplyDefault.current = true;
@@ -110,13 +128,14 @@ export default function LinkClass({ study, handleChange }) {
     default: "Do not connect to class",
   });
 
-  // Show youngest as selected while form state is still empty / settling.
   const displaySelectedId =
     selectedId
-    || (!isDisconnected && myClasses[0]?.id)
+    || (!isExistingStudy && !isDisconnected && myClasses[0]?.id)
     || null;
   const displayDisconnected =
-    isDisconnected || (!loading && data !== undefined && myClasses.length === 0);
+    isDisconnected
+    || (isExistingStudy && !displaySelectedId)
+    || (!loading && data !== undefined && myClasses.length === 0);
 
   return (
     <div

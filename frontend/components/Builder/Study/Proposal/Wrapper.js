@@ -6,15 +6,19 @@ import CreateProposal from "./Create";
 import ProposalPage from "./ProposalPage";
 
 import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
+import { PROPOSAL_TEMPLATES_QUERY } from "../../../Queries/Proposal";
 
-export default function ProposalWrapper({ query, user, templates }) {
+export default function ProposalWrapper({ query, user, onRequestConnectClass }) {
   const studyId = query?.selector;
 
-  const { data, loading, error } = useQuery(STUDY_PROPOSALS_QUERY, {
+  const { data, loading } = useQuery(STUDY_PROPOSALS_QUERY, {
     variables: {
       id: studyId,
     },
   });
+
+  const { data: templatesData } = useQuery(PROPOSAL_TEMPLATES_QUERY);
+  const templates = templatesData?.proposalBoards || [];
 
   const refetchQueries = [
     {
@@ -32,23 +36,19 @@ export default function ProposalWrapper({ query, user, templates }) {
   const [proposalId, setProposalId] = useState(null);
 
   useEffect(() => {
-    async function updateProposals() {
+    if (data) {
       setProposals(data?.study?.proposal);
       setProposalMain(data?.study?.proposalMain);
     }
-    if (data) {
-      updateProposals();
-    }
   }, [data]);
 
-  // redirect to the project builder
-  const openProposal = (proposalId) => {
-    const url = `/builder/projects?selector=${proposalId}`;
+  const openProposal = (nextProposalId) => {
+    const url = `/builder/projects?selector=${nextProposalId}`;
     window.open(url, "_blank");
   };
 
-  const copyProposal = (proposalId) => {
-    setProposalId(proposalId);
+  const copyProposal = (nextProposalId) => {
+    setProposalId(nextProposalId);
     setPage("create");
     setIsCopy(true);
   };
@@ -89,14 +89,15 @@ export default function ProposalWrapper({ query, user, templates }) {
 
   return (
     <ProposalOverview
-      user={user}
       studyId={studyId}
-      templates={templates}
+      studyClasses={data?.study?.classes || []}
+      classesLoading={loading && !data}
       proposals={proposals}
       proposalMain={proposalMain}
       openProposal={openProposal}
       copyProposal={copyProposal}
       createProposal={createProposal}
+      onRequestConnectClass={onRequestConnectClass}
     />
   );
 }

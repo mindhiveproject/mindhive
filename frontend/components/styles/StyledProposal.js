@@ -12,6 +12,15 @@ export const StyledProposal = styled.div`
   align-items: ${(props) => (props.$cardFullView ? "stretch" : "baseline")};
   min-height: ${(props) => (props.$cardFullView ? "0" : "unset")};
 
+  &.studyBoardPane {
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+    align-content: stretch;
+    display: grid;
+    grid-template-rows: 1fr;
+  }
+
   i.icon {
     font-family: Icons !important; /* or the exact name from semantic.min.css */
   }
@@ -97,13 +106,23 @@ export const StyledProposal = styled.div`
 
   .empty {
     display: grid;
-    margin: 10px 0px 20px 0px;
+    margin: 0;
+    padding: 24px 16px;
     grid-gap: 1rem;
     align-content: center;
     justify-content: center;
     justify-items: center;
     text-align: center;
     width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+
+    .classChipRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
   }
 
   .dropdown {

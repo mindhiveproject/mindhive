@@ -610,6 +610,20 @@ export const STUDY_PROPOSALS_QUERY = gql`
         createdAt
         updatedAt
       }
+      classes {
+        id
+        title
+        templateProposal {
+          id
+          title
+          settings
+        }
+        classTemplateBoards {
+          id
+          title
+          settings
+        }
+      }
       reviews {
         id
         stage

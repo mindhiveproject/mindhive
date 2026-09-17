@@ -1,43 +1,54 @@
-import { useQuery } from "@apollo/client";
+import { useState } from "react";
+import styled from "styled-components";
+import { Sidebar } from "semantic-ui-react";
 
 import Navigation from "../../Project/Navigation/Main";
-import InDev from "../../../Global/InDev";
 import ProposalWrapper from "./Wrapper";
-
-import { PROPOSAL_TEMPLATES_QUERY } from "../../../Queries/Proposal";
 
 import { StyledProposal } from "../../../styles/StyledProposal";
 
-import { Sidebar } from "semantic-ui-react";
+const StudyBoardShell = styled(Sidebar.Pushable)`
+  display: flex;
+  flex-direction: column;
+  grid-row: 1 / -1;
+  align-self: stretch;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
 
-export default function Proposal({ query, user, tab, toggleSidebar }) {
-  const { data, error, loading } = useQuery(PROPOSAL_TEMPLATES_QUERY);
-
-  const templates = data?.proposalBoards || [];
-
-  if (templates.length === 0) {
-    return (
-      <>
-        <Navigation query={query} user={user} tab={tab} />
-        <InDev
-          header="🤷🏻 Sorry, there are no proposal templates"
-          message="If you need help, please contact the tech support at info@mindhive.science"
-        />
-      </>
-    );
+  .navigation {
+    flex-shrink: 0;
   }
 
+  .studyBoardPane {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+    align-items: stretch;
+    align-content: stretch;
+  }
+`;
+
+export default function Proposal({ query, user, tab, toggleSidebar }) {
+  const [connectModalOpen, setConnectModalOpen] = useState(false);
+
   return (
-    <Sidebar.Pushable>
+    <StudyBoardShell>
       <Navigation
         query={query}
         user={user}
         tab={tab}
         toggleSidebar={toggleSidebar}
+        connectModalOpen={connectModalOpen}
+        onConnectModalOpenChange={setConnectModalOpen}
       />
-      <StyledProposal>
-        <ProposalWrapper query={query} user={user} templates={templates} />
+      <StyledProposal className="studyBoardPane">
+        <ProposalWrapper
+          query={query}
+          user={user}
+          onRequestConnectClass={() => setConnectModalOpen(true)}
+        />
       </StyledProposal>
-    </Sidebar.Pushable>
+    </StudyBoardShell>
   );
 }

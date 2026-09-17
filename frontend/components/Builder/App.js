@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { Sidebar } from "semantic-ui-react";
 import ChatPage from "../Dashboard/Chat/ChatPage";
 import StyledSlidebar from "../styles/StyledSlidebar";
@@ -9,9 +10,22 @@ import TabRouter from "./TabRouter";
 import { defaultBuilderTab, getBuilderMode } from "./shared/identity";
 
 export default function BuilderApp({ query, user }) {
+  const router = useRouter();
   const { area, selector } = query;
   const mode = getBuilderMode(area);
   const tab = query?.tab || defaultBuilderTab(area);
+
+  useEffect(() => {
+    if (query?.tab !== "proposal") return;
+    const { tab: _legacyTab, ...rest } = query;
+    router.replace({
+      pathname: `/builder/${area}`,
+      query: {
+        ...rest,
+        tab: "board",
+      },
+    });
+  }, [query, area, router]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chatId, setChatId] = useState(undefined);
