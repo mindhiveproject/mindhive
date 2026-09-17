@@ -12,7 +12,7 @@ import Navigation from "../Navigation/Main";
 import Preview from "./Preview/Main";
 import Settings from "./Settings/Main";
 
-import { MY_STUDIES } from "../../../Queries/Study";
+import { MY_STUDIES, MY_STUDY } from "../../../Queries/Study";
 import { GET_PROJECT_STUDY } from "../../../Queries/Proposal";
 
 import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
@@ -20,14 +20,15 @@ import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
 import { StyledParticipantPage } from "../../../styles/StyledBuilder";
 
 import InDev from "../../../Global/InDev";
-import { disconnect } from "process";
 import { participantPageTours } from "./tours";
+import { builderHref, isProjectArea } from "../../shared/identity";
 
 export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
   const { t } = useTranslation("builder");
   const { area } = query;
-  const projectId = query?.selector;
+  const selector = query?.selector;
+  const projectMode = isProjectArea(area);
 
   const [hasStudyChanged, setHasStudyChanged] = useState(false);
 
@@ -110,11 +111,18 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
     };
   }, []);
 
-  const { data, error, loading } = useQuery(GET_PROJECT_STUDY, {
-    variables: { id: projectId },
+  const { data: projectData } = useQuery(GET_PROJECT_STUDY, {
+    variables: { id: selector },
+    skip: !projectMode || !selector,
+  });
+  const { data: studyQueryData } = useQuery(MY_STUDY, {
+    variables: { id: selector },
+    skip: projectMode || !selector,
   });
 
-  const study = data?.proposalBoard?.study || {};
+  const study = projectMode
+    ? projectData?.proposalBoard?.study || {}
+    : studyQueryData?.study || {};
 
   // Default settings if study doesn't have settings
   const defaultSettings = {
@@ -154,6 +162,8 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         consent: [],
         collaborators: [],
         classes,
+        diagram: study?.diagram,
+        flow: study?.flow,
       });
     }
     if (area === "cloneofstudy" && study?.id) {
@@ -167,7 +177,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
       handleChange({ target: { name: "classes", value: user?.studentIn } });
     }
     if (
-      projectId === "add" &&
+      selector === "add" &&
       user &&
       user?.permissions.map((p) => p?.name).includes("STUDENT") &&
       user?.studentIn &&
@@ -265,20 +275,21 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           : { disconnect: study?.consent?.map((c) => ({ id: c?.id })) },
       },
     },
-    refetchQueries: [
-      { query: GET_PROJECT_STUDY, variables: { id: projectId } },
-    ],
+    refetchQueries: projectMode
+      ? [{ query: GET_PROJECT_STUDY, variables: { id: selector } }]
+      : [{ query: MY_STUDY, variables: { id: selector } }],
   });
 
   const saveStudy = async () => {
-    if (projectId === "add" || area === "cloneofstudy") {
+    if (selector === "add" || area === "cloneofstudy") {
       const newStudy = await createStudy();
-      router.push({
-        pathname: `/builder/studies/`,
-        query: {
+      router.push(
+        builderHref({
+          area: "studies",
           selector: newStudy?.data?.createStudy?.id,
-        },
-      });
+          tab: "page",
+        })
+      );
       setHasStudyChanged(false);
     } else {
       updateStudy();

@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 
-import Navigation from "../Navigation/Main";
+import Navigation from "../../Project/Navigation/Main";
 import InDev from "../../../Global/InDev";
 import ProposalWrapper from "./Wrapper";
 

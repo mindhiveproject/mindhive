@@ -156,6 +156,10 @@ export const MY_STUDY = gql`
         id
         title
       }
+      proposalMain {
+        id
+        title
+      }
       author {
         id
         username
