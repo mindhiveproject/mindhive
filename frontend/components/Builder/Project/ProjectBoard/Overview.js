@@ -5,7 +5,6 @@ import DeleteProposal from "./Delete";
 
 import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 import MakeMain from "./MakeMain";
-import Button from "../../../DesignSystem/Button";
 
 export default function ProposalOverview({
   user,
@@ -14,8 +13,6 @@ export default function ProposalOverview({
   proposals,
   proposalMain,
   openProposal,
-  copyProposal,
-  createProposal,
 }) {
   const { t } = useTranslation("builder");
 
@@ -24,34 +21,22 @@ export default function ProposalOverview({
   ];
 
   if (proposals?.length === 0) {
-    return (
-      <div className="empty">
-        <h3>{t("overview.zeroState1", "You haven’t created any proposals yet.")}</h3>
-        <p>{t("overview.zeroState2", "Once you create a proposal, it will appear here.")}</p>
-        <Button variant="filled" onClick={() => createProposal()}>
-          {t("overview.createNewProposal", {}, { default: "Create a new proposal" })}
-        </Button>
-      </div>
-    );
+    return null;
   }
+
+  if (proposals?.length === 1) {
+    return null;
+  }
+
   return (
     <div className="overview" id="overview">
-      <div className="navigationHeader">
-        <div></div>
-        <div>
-          <Button variant="filled" onClick={() => createProposal()}>
-            {t("proposal.create", {}, { default: "Create a new proposal" })}
-          </Button>
-        </div>
-      </div>
-
       <div>
         <div className="row">
           <div className="proposalHeader">
-            <div>{t("overview.proposalName", "Proposal name")}</div>
-            <div>{t("overview.dateCreated", "Date created")}</div>
-            <div>{t("overview.status", "Status")}</div>
-            <div>{t("overview.actions", "Actions")}</div>
+            <div>{t("overview.proposalName", {}, { default: "Proposal name" })}</div>
+            <div>{t("overview.dateCreated", {}, { default: "Date created" })}</div>
+            <div>{t("overview.status", {}, { default: "Status" })}</div>
+            <div>{t("overview.actions", {}, { default: "Actions" })}</div>
           </div>
           <div></div>
         </div>
@@ -70,19 +55,28 @@ export default function ProposalOverview({
                   <p>{moment(prop?.createdAt).format("MMMM D, YYYY")}</p>
                 </div>
                 <div>
-                  <p>{prop?.isSubmitted ? t("overview.submitted", "Submitted") : t("overview.notSubmitted", "Not submitted")}</p>
+                  <p>
+                    {prop?.isSubmitted
+                      ? t("overview.submitted", {}, { default: "Submitted" })
+                      : t("overview.notSubmitted", {}, { default: "Not submitted" })}
+                  </p>
                 </div>
 
                 <div className="actionLinks">
-                  <button onClick={() => openProposal(prop?.id)}>{t("overview.open", "Open")}</button>
-                  <button onClick={() => copyProposal(prop?.id)}>{t("overview.copy", "Copy")}</button>
+                  <button onClick={() => openProposal(prop?.id)}>
+                    {t("overview.open", {}, { default: "Open" })}
+                  </button>
                   {prop?.id !== proposalMain?.id && (
                     <MakeMain
                       studyId={studyId}
                       proposalId={prop?.id}
                       refetchQueries={refetchQueries}
                     >
-                      <button>{t("overview.selectAsMain", "Select as main")}</button>
+                      <button>
+                        {t("overview.selectAsMain", {}, {
+                          default: "Select as main",
+                        })}
+                      </button>
                     </MakeMain>
                   )}
 
@@ -91,7 +85,9 @@ export default function ProposalOverview({
                       proposalId={prop?.id}
                       refetchQueries={refetchQueries}
                     >
-                      <button>{t("overview.delete", "Delete")}</button>
+                      <button>
+                        {t("overview.delete", {}, { default: "Delete" })}
+                      </button>
                     </DeleteProposal>
                   )}
                 </div>
