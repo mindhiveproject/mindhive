@@ -5,34 +5,50 @@ import useForm from "../../../../../lib/useForm";
 import ConnectModal from "./Modal";
 
 import { MY_STUDY } from "../../../../Queries/Study";
+import { PROPOSAL_QUERY } from "../../../../Queries/Proposal";
 import { UPDATE_STUDY } from "../../../../Mutations/Study";
 
 import ConnectFacepile from "../ConnectFacepile";
 
-export default function Connect({ study, user }) {
+export default function Connect({ study, user, projectId }) {
   // save and edit the study information
   const { inputs, handleChange, handleMultipleUpdate, captureFile, clearForm } =
     useForm({
       ...study,
     });
 
-  const [
-    updateStudy,
-    { data: studyData, loading: studyLoading, error: studyError },
-  ] = useMutation(UPDATE_STUDY, {
-    variables: {
-      id: study?.id,
-      input: {
-        collaborators: {
-          set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
+  const studyId = study?.id || inputs?.id;
+
+  const [updateStudy] = useMutation(UPDATE_STUDY);
+
+  const saveStudy = () => {
+    if (!studyId) return Promise.resolve();
+    return updateStudy({
+      variables: {
+        id: studyId,
+        input: {
+          collaborators: {
+            set: (inputs?.collaborators || []).map((col) => ({ id: col?.id })),
+          },
+          classes: inputs?.classes
+            ? {
+                set: inputs.classes
+                  .filter((cl) => cl?.id)
+                  .map((cl) => ({ id: cl.id })),
+              }
+            : {
+                disconnect: (study?.classes || []).map((cl) => ({
+                  id: cl?.id,
+                })),
+              },
         },
-        classes: inputs?.classes
-          ? { set: inputs?.classes?.map((cl) => ({ id: cl?.id })) }
-          : { disconnect: study?.classes?.map((cl) => ({ id: cl?.id })) },
       },
-    },
-    refetchQueries: [{ query: MY_STUDY, variables: { id: study?.id } }],
-  });
+      refetchQueries: [
+        { query: MY_STUDY, variables: { id: studyId } },
+        projectId && { query: PROPOSAL_QUERY, variables: { id: projectId } },
+      ].filter(Boolean),
+    });
+  };
 
   const collaborators = study?.collaborators || [];
 
@@ -43,7 +59,7 @@ export default function Connect({ study, user }) {
           study={inputs}
           user={user}
           handleChange={handleChange}
-          updateStudy={updateStudy}
+          updateStudy={saveStudy}
         />
       </ConnectFacepile>
     </div>

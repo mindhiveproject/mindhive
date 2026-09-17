@@ -126,7 +126,11 @@ export default function Navigation({
             (tab === "board" ? (
               <ConnectProject project={project} user={user} />
             ) : (
-              <ConnectStudy study={project?.study} user={user} />
+              <ConnectStudy
+                study={project?.study}
+                user={user}
+                projectId={project?.id}
+              />
             ))}
 
           {mode === "study" && (
