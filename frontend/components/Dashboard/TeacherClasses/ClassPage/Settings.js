@@ -790,23 +790,16 @@ export default function Settings({ myclass, user }) {
           <h3>
             {t("classCurriculum", {}, { default: "Class Curriculum" })}
           </h3>
-          <p>
-            {t("classCurriculumDescription", {}, {
-              default: "Select which curricula apply to this class.",
-            })}
-          </p>
         </div>
-        <div className="informationBlock">
-          <div className="block curriculumTypeBlock">
-            <CurriculumTypeSelector
-              multiple
-              curriculumType={curriculumTypes}
-              disabled={updatingSettings}
-              onChange={updateCurriculumTypes}
-              questionKey="classCurriculumTypeQuestion"
-              questionDefault="Which curriculum types apply to this class?"
-            />
-          </div>
+        <div className="block curriculumTypeBlock">
+          <CurriculumTypeSelector
+            multiple
+            curriculumType={curriculumTypes}
+            disabled={updatingSettings}
+            onChange={updateCurriculumTypes}
+            questionKey="classCurriculumTypeQuestion"
+            questionDefault="Which curriculum types apply to this class?"
+          />
         </div>
       </section>
 

@@ -374,7 +374,7 @@ export const SURFACES = [
     label: "Project builder",
     routes: BUILDER,
     areas: ["projects"],
-    root: "components/Builder/Project/Main",
+    root: "components/Builder/App",
     figmaNodeId: null,
   },
   {
@@ -391,7 +391,7 @@ export const SURFACES = [
     label: "Study builder",
     routes: BUILDER,
     areas: ["studies", "cloneofstudy"],
-    root: "components/Builder/Study/Main",
+    root: "components/Builder/App",
     figmaNodeId: null,
   },
   {

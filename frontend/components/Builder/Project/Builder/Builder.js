@@ -202,7 +202,7 @@ export default function Builder({
             id="commentButton"
             type="button"
             variant="filled"
-            style={{ backgroundColor: "#5D5763" }}
+            style={{ background: "#5D5763" }}
             onClick={lockedAddFunctions.addComment}
             disabled={isCanvasLocked}
           >

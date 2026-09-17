@@ -156,6 +156,10 @@ export const MY_STUDY = gql`
         id
         title
       }
+      proposalMain {
+        id
+        title
+      }
       author {
         id
         username
@@ -605,6 +609,20 @@ export const STUDY_PROPOSALS_QUERY = gql`
         checklist
         createdAt
         updatedAt
+      }
+      classes {
+        id
+        title
+        templateProposal {
+          id
+          title
+          settings
+        }
+        classTemplateBoards {
+          id
+          title
+          settings
+        }
       }
       reviews {
         id

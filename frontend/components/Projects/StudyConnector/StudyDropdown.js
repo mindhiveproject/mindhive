@@ -1,15 +1,16 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Dropdown, Modal, Button } from "semantic-ui-react";
-import styled from "styled-components";
 import { useState } from "react";
-import useTranslation from 'next-translate/useTranslation';
+import useTranslation from "next-translate/useTranslation";
 
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
-import { GET_PROJECT_STUDY } from "../../Queries/Proposal";
+import { GET_PROJECT_STUDY, PROPOSAL_QUERY } from "../../Queries/Proposal";
 import { MY_STUDIES, TEACHER_STUDIES } from "../../Queries/Study";
+import Button from "../../DesignSystem/Button";
+import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import Modal from "../../DesignSystem/Modal";
 
 export default function StudyDropdown({ user, project }) {
-  const { t } = useTranslation('builder');
+  const { t } = useTranslation("builder");
   const isTeacher = user?.permissions?.map((p) => p?.name).includes("TEACHER");
   const { data: studiesData } = useQuery(
     isTeacher ? TEACHER_STUDIES : MY_STUDIES,
@@ -24,6 +25,10 @@ export default function StudyDropdown({ user, project }) {
         query: GET_PROJECT_STUDY,
         variables: { id: project?.id },
       },
+      {
+        query: PROPOSAL_QUERY,
+        variables: { id: project?.id },
+      },
     ],
   });
 
@@ -33,29 +38,28 @@ export default function StudyDropdown({ user, project }) {
   const studies = studiesData?.studies || [];
 
   const studyOptions = [
-    // Include existing studies from studiesData
     ...studies.map((study) => ({
-      key: study?.id,
-      text: study?.title,
       value: study?.id,
+      label: study?.title,
     })),
-    // Add the connected study if it exists and is not in the studies list
     ...(project?.study &&
     !studies.some((study) => study?.id === project?.study?.id)
       ? [
           {
-            key: project?.study?.id,
-            text: project?.study?.title || t('project.connectedStudy'),
             value: project?.study?.id,
+            label:
+              project?.study?.title ||
+              t("project.connectedStudy", {}, {
+                default: "Connected Study",
+              }),
           },
         ]
       : []),
   ];
 
-  const handleStudyChange = (e, { value }) => {
-    // Only open modal if the selected study is different from the current one
-    if (value !== project?.study?.id) {
-      setSelectedStudyId(value);
+  const handleStudyChange = (next) => {
+    if (next && next !== project?.study?.id) {
+      setSelectedStudyId(next);
       setIsModalOpen(true);
     }
   };
@@ -79,7 +83,11 @@ export default function StudyDropdown({ user, project }) {
       window.location.reload();
     } catch (error) {
       console.error("Error updating study:", error);
-      alert(t('project.failedToUpdateStudy'));
+      alert(
+        t("project.failedToUpdateStudy", {}, {
+          default: "Failed to update study connection",
+        })
+      );
       setIsModalOpen(false);
       setSelectedStudyId(null);
     }
@@ -91,154 +99,68 @@ export default function StudyDropdown({ user, project }) {
   };
 
   return (
-    <StyledStudyDropdown>
-      <Label>{t('project.study')}</Label>
-      <Dropdown
-        selection
-        options={studyOptions}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        minWidth: 0,
+        border: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+        borderRadius: 8,
+        padding: 8,
+        marginTop: 8,
+        boxShadow: "0px 4px 12px 0px rgba(0, 0, 0, 0.05)",
+      }}
+    >
+      <span
+        style={{
+          font: "var(--MH-Type-Label-Base, 400 13px/18px Inter, sans-serif)",
+          letterSpacing: 0,
+          color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+        }}
+      >
+        {t(
+          "project.selectOwnedStudyForProject",
+          { title: project?.title || t("header.myProjectBoard", {}, { default: "My Project Board" }) },
+          {
+            default:
+              "You can select another study you own to associate with {{title}}.",
+          }
+        )}
+      </span>
+      <DropdownSelect
         value={project?.study?.id || ""}
+        options={studyOptions}
+        searchableSingle
+        disabled={!studies.length && !project?.study?.id}
+        placeholder={t("project.noStudyConnected", {}, {
+          default: "No study connected",
+        })}
+        ariaLabel={t("project.chooseStudy", {}, { default: "Choose a study..." })}
         onChange={handleStudyChange}
-        placeholder={t('project.noStudyConnected')}
-        disabled={!studies.length}
-        className="study-selector"
-        fluid
       />
-      <StyledModal open={isModalOpen} onClose={handleCancel} size="tiny">
-        <Modal.Header>{t('project.confirmStudyChange')}</Modal.Header>
-        <Modal.Content>
-          <Modal.Description>
-            {t('project.confirmStudyChangeDescription')}
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button onClick={handleCancel} className="cancel-button">
-            {t('project.cancel')}
-          </Button>
-          <Button onClick={handleConfirm} className="confirm-button" primary>
-            {t('project.confirm')}
-          </Button>
-        </Modal.Actions>
-      </StyledModal>
-    </StyledStudyDropdown>
+      <Modal
+        open={isModalOpen}
+        onClose={handleCancel}
+        title={t("project.confirmStudyChange", {}, {
+          default: "Confirm Study Change",
+        })}
+        actions={
+          <>
+            <Button variant="outline" onClick={handleCancel}>
+              {t("project.cancel", {}, { default: "Cancel" })}
+            </Button>
+            <Button variant="filled" onClick={handleConfirm}>
+              {t("project.confirm", {}, { default: "Confirm" })}
+            </Button>
+          </>
+        }
+      >
+        {t("project.confirmStudyChangeDescription", {}, {
+          default:
+            "Are you sure you want to switch the study for this project? This action may affect related data.",
+        })}
+      </Modal>
+    </div>
   );
 }
-
-const StyledStudyDropdown = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 12px;
-  width: 350px;
-
-  .study-selector {
-    width: 100%;
-
-    &.ui.dropdown {
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      background: #ffffff;
-      position: relative;
-
-      .dropdown.icon {
-        margin: 0;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #666666;
-      }
-
-      .text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding-right: 24px;
-      }
-
-      .menu {
-        max-width: 100%;
-        width: auto;
-        min-width: 100%;
-        border: 1px solid #e0e0e0;
-        margin-top: 4px;
-      }
-
-      &:hover {
-        border-color: #3d85b0;
-
-        .dropdown.icon {
-          color: #3d85b0;
-        }
-      }
-
-      &.active,
-      &.selected {
-        .dropdown.icon {
-          top: 50%;
-        }
-      }
-    }
-
-    &.disabled {
-      opacity: 0.6;
-
-      .dropdown.icon {
-        color: #999999;
-      }
-    }
-  }
-`;
-
-const Label = styled.span`
-  font: var(--MH-Type-Title-Small);
-  letter-spacing: 0;
-  color: #00635a;
-  flex-shrink: 0;
-`;
-
-const StyledModal = styled(Modal)`
-  .header {
-    font: var(--MH-Type-Title-Large) !important;
-    letter-spacing: 0;
-    color: #333333 !important;
-    border-bottom: 1px solid #e0e0e0 !important;
-    padding-bottom: 12px !important;
-  }
-
-  .content {
-    padding: 20px !important;
-    color: #666666 !important;
-    font: var(--MH-Type-Body-Base) !important;
-    letter-spacing: 0;
-  }
-
-  .actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    padding: 12px !important;
-    border-top: 1px solid #e0e0e0 !important;
-
-    .cancel-button {
-      background: #ffffff !important;
-      color: #666666 !important;
-      border: 1px solid #e0e0e0 !important;
-      font: var(--MH-Type-Label-Base) !important;
-      letter-spacing: 0;
-
-      &:hover {
-        background: #f5f5f5 !important;
-        color: #333333 !important;
-      }
-    }
-
-    .confirm-button {
-      font: var(--MH-Type-Label-Base) !important;
-      letter-spacing: 0;
-      background: #3d85b0 !important;
-
-      &:hover {
-        background: #326d94 !important;
-      }
-    }
-  }
-`;

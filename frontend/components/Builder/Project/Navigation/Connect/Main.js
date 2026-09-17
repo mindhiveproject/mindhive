@@ -7,8 +7,7 @@ import ConnectModal from "./Modal";
 import { PROPOSAL_QUERY } from "../../../../Queries/Proposal";
 import { UPDATE_PROJECT_BOARD } from "../../../../Mutations/Proposal";
 
-import { Image } from "semantic-ui-react";
-import Tooltip from "../../../../DesignSystem/Tooltip";
+import ConnectFacepile from "../ConnectFacepile";
 
 export default function Connect({ project, user }) {
   // save and edit the study information
@@ -44,27 +43,14 @@ export default function Connect({ project, user }) {
 
   return (
     <div className="connectArea" id="connectArea">
-      <div className="icons">
-        {collaborators.map((collaborator, num) => (
-          <Tooltip content={collaborator?.username} key={num}>
-            {collaborator?.image?.image?.publicUrlTransformed ? (
-              <Image
-                src={collaborator?.image?.image?.publicUrlTransformed}
-                avatar
-              />
-            ) : (
-              <Image src="/assets/icons/builder/page.svg" avatar />
-            )}
-          </Tooltip>
-        ))}
-      </div>
-
-      <ConnectModal
-        project={inputs}
-        user={user}
-        handleChange={handleChange}
-        updateProject={updateProject}
-      />
+      <ConnectFacepile collaborators={collaborators}>
+        <ConnectModal
+          project={inputs}
+          user={user}
+          handleChange={handleChange}
+          updateProject={updateProject}
+        />
+      </ConnectFacepile>
     </div>
   );
 }

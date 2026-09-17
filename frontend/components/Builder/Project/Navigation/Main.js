@@ -3,14 +3,25 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
-import Connect from "./Connect/Main";
+import ConnectProject from "./Connect/Main";
 import ConnectStudy from "./ConnectStudy/Main";
+import ConnectStudyOnly from "../../Study/Navigation/Connect/Main";
 
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
-import StudyDropdown from "../../../Projects/StudyConnector/StudyDropdown";
+import { MY_STUDY } from "../../../Queries/Study";
+import StudyOptions from "../../../Studies/Bank/StudyOptions";
 import Tooltip from "../../../DesignSystem/Tooltip";
 import Button from "../../../DesignSystem/Button";
+import IconButton from "../../../DesignSystem/IconButton";
 import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
+import { NavigateBackIcon } from "../../../DesignSystem/Icons";
+import {
+  builderHref,
+  dashboardBackPath,
+  getBuilderMode,
+  getNavTabs,
+  isProjectArea,
+} from "../../shared/identity";
 
 export default function Navigation({
   proposalId,
@@ -22,25 +33,42 @@ export default function Navigation({
   toggleSidebar,
   hasStudyChanged,
   cardId,
-  onUpdateCard,
   isCanvasLocked,
+  connectModalOpen,
+  onConnectModalOpenChange,
 }) {
   const router = useRouter();
   const { t } = useTranslation("builder");
 
   const { area, selector } = query;
+  const mode = getBuilderMode(area);
+  const projectSelector = isProjectArea(area) ? proposalId || selector : null;
+  const studySelector = isProjectArea(area) ? null : selector;
 
-  const { data, error, loading } = useQuery(PROPOSAL_QUERY, {
-    variables: { id: proposalId },
+  const { data: projectData } = useQuery(PROPOSAL_QUERY, {
+    variables: { id: projectSelector },
+    skip: !projectSelector,
   });
-  const project = data?.proposalBoard || {
+  const project = projectData?.proposalBoard || { title: "" };
+
+  const { data: studyData } = useQuery(MY_STUDY, {
+    variables: { id: studySelector },
+    skip: !studySelector,
+  });
+  const study = studyData?.study || {
     title: "",
+    collaborators: [],
+    classes: [],
+    consent: [],
+    talks: [],
   };
 
-  // Check if user has Admin permission
-  const isAdmin = user?.permissions?.some(
-    (permission) => permission.name === "ADMIN"
-  );
+  const navItems = getNavTabs({ mode, t });
+
+  const title =
+    mode === "project"
+      ? project?.title || t("header.myProjectBoard", "My Project Board")
+      : study?.title || t("myStudies", "My Studies");
 
   const tryToLeave = (e) => {
     if (hasStudyChanged) {
@@ -50,77 +78,87 @@ export default function Navigation({
     }
   };
 
-  const items = [
-    {
-      value: "board",
-      name: t("projectBoard"),
-    },
-    {
-      value: "builder",
-      name: t("studyBuilder"),
-    },
-    {
-      value: "page",
-      name: t("participantPage"),
-    },
-    // {
-    //   value: "review",
-    //   name: t("review.review"),
-    // },
-    {
-      value: "collect",
-      name: t("testAndCollect"),
-    },
-    {
-      value: "journal",
-      name: t("visualize"),
-      requiresAdmin: false, // made public March 20th 2026
-    },
-  ];
+  const studyForNav = mode === "project" ? project?.study : study;
 
-  // Filter items based on admin permission
-  const filteredItems = items.filter(
-    (item) => !item.requiresAdmin || (item.requiresAdmin && isAdmin)
-  );
+  const toggleChatSidebar = () => {
+    const [talk] = studyForNav?.talks || [];
+    toggleSidebar?.({ chatId: talk?.id, studyId: studyForNav?.id });
+  };
 
   return (
     <div className="navigation">
       <div className="firstLine">
         <div className="leftPanel">
-          <div className="goBackBtn">
-            <Link
-              href={{
-                pathname: `/dashboard/develop/projects`,
-              }}
-              onClick={tryToLeave}
-            >
-              ←
-            </Link>
-          </div>
+          <IconButton
+            variant="subtle"
+            elevated={false}
+            ariaLabel={t("navigation.goBack", {}, { default: "Go back" })}
+            title={t("navigation.goBack", {}, { default: "Go back" })}
+            icon={<NavigateBackIcon />}
+            size="large"
+            onClick={(e) => {
+              if (hasStudyChanged) {
+                if (!confirm(t("unsavedChangesWarning"))) {
+                  e.preventDefault();
+                  return;
+                }
+              }
+              router.push({ pathname: dashboardBackPath(area) });
+            }}
+          />
         </div>
         <div className="middle">
-          <Tooltip
-            content={
-              project?.title || t("header.myProjectBoard", "My Project Board")
-            }
-            side="bottom"
-            delayMs={650}
-            maxWidth={400}
-          >
-            <span className="studyTitle">{project?.title ?? ""}</span>
+          <Tooltip content={title} side="bottom" delayMs={650} maxWidth={400}>
+            <span className="studyTitle">{title}</span>
           </Tooltip>
-          {project?.study && (
-            <div className="studyTitle">
-              <StudyDropdown user={user} project={project} />
-            </div>
-          )}
         </div>
         <div className="right">
-          {tab === "board" ? (
-            <Connect project={project} user={user} />
-          ) : (
-            <ConnectStudy study={project?.study} user={user} />
+          {mode === "cloneofstudy" && studySelector && (
+            <span className="saveFirstMessage">
+              {t(
+                "navigation.cloneSavePrompt",
+                "Change the study name and click the Save button"
+              )}
+            </span>
           )}
+
+          {mode === "project" &&
+            (tab === "board" ? (
+              <ConnectProject project={project} user={user} />
+            ) : (
+              <ConnectStudy
+                study={project?.study}
+                user={user}
+                projectId={project?.id}
+              />
+            ))}
+
+          {mode === "study" && (
+            <ConnectStudyOnly
+              study={study}
+              user={user}
+              modalOpen={connectModalOpen}
+              onModalOpenChange={onConnectModalOpenChange}
+            />
+          )}
+
+          {studyForNav?.talks?.length > 0 && (
+            <IconButton
+              variant="subtle"
+              elevated={false}
+              ariaLabel={t("navigation.chat", {}, { default: "Chat" })}
+              title={t("navigation.chat", {}, { default: "Chat" })}
+              icon={<img src="/assets/icons/chat.svg" alt="" />}
+              onClick={toggleChatSidebar}
+            />
+          )}
+
+          <StudyOptions
+            user={user}
+            study={studyForNav}
+            project={mode === "project" ? project : undefined}
+            variant="popover"
+          />
 
           {cardId && (
             <Button
@@ -129,12 +167,12 @@ export default function Navigation({
               disabled={!(hasStudyChanged || area === "cloneofstudy")}
               onClick={async () => {
                 await saveBtnFunction();
-                router.push({
-                  pathname: `/builder/projects/`,
-                  query: {
-                    selector: proposalId,
-                  },
-                });
+                router.push(
+                  builderHref({
+                    area,
+                    selector,
+                  })
+                );
               }}
             >
               {saveBtnName}
@@ -156,29 +194,30 @@ export default function Navigation({
 
       <div className="secondLine">
         <Navbar variant="underline" dense hoverUnderline id="menue">
-          {filteredItems.map((item) => (
+          {navItems.map((item) => (
             <NavbarItem
               key={item.value}
               as={Link}
-              href={{
-                pathname: `/builder/${area}`,
-                query: {
+              href={
+                item.href ||
+                builderHref({
+                  area,
                   selector,
-                  tab: item?.value,
-                },
-              }}
+                  tab: item.value,
+                })
+              }
               onClick={tryToLeave}
-              selected={tab === item?.value}
+              selected={tab === item.value}
               leadingIcon={
                 <img
-                  src={`/assets/icons/project/${item?.value}.svg`}
+                  src={`/assets/icons/project/${item.value}.svg`}
                   alt=""
                   width="24"
                   height="24"
                 />
               }
             >
-              {item?.name}
+              {item.name}
             </NavbarItem>
           ))}
         </Navbar>

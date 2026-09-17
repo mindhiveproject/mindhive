@@ -5,7 +5,6 @@ import uniqid from "uniqid";
 
 import createEngine, {
   DiagramModel,
-  DefaultDiagramState,
 } from "@projectstorm/react-diagrams";
 
 // factories
@@ -27,6 +26,9 @@ import Navigation from "../Navigation/Main";
 import Builder from "./Builder";
 import { setCycleWarningHandler } from "../../shared/diagramCycle";
 import CycleLinkPreventedModal from "../../shared/CycleLinkPreventedModal";
+import {
+  configureStrictDiagramLinks,
+} from "../../shared/strictDiagramLinks";
 
 export default function Engine({
   query,
@@ -199,11 +201,7 @@ export default function Engine({
 
       // disable creating new nodes when clicking on the link
       nextEngine.maxNumberPointsPerLink = 0;
-      // disable loose links
-      const state = nextEngine.getStateMachine().getCurrentState();
-      if (state instanceof DefaultDiagramState) {
-        state.dragNewLink.config.allowLooseLinks = false;
-      }
+      configureStrictDiagramLinks(nextEngine);
       // load the saved model
       if (study?.diagram) {
         const model = new DiagramModel();
@@ -240,9 +238,17 @@ export default function Engine({
   }, [engine]); // eslint-disable-line react-hooks/exhaustive-deps -- register once when engine mounts
 
   useEffect(() => {
-    if (engine && study?.diagram) {
-      engine.repaintCanvas();
-    }
+    if (!engine) return;
+    const id = requestAnimationFrame(() => {
+      const model = engine.getModel?.();
+      model?.getNodes?.().forEach((node) => {
+        Object.values(node.getPorts?.() || {}).forEach((port) => {
+          port.reportPosition?.();
+        });
+      });
+      engine.repaintCanvas?.();
+    });
+    return () => cancelAnimationFrame(id);
   }, [engine, study?.diagram]);
 
   const getRandomIntInclusive = (min, max) => {

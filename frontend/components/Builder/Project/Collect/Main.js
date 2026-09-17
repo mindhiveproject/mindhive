@@ -81,6 +81,7 @@ export default function Collect({ query, user, tab, toggleSidebar, studyId }) {
           />
         ) : (
           <Table
+            query={query}
             study={study}
             components={components}
             users={users}

@@ -1,20 +1,32 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 
 import ProposalOverview from "./Overview";
 import CreateProposal from "./Create";
 import ProposalPage from "./ProposalPage";
 
 import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
+import { PROPOSAL_TEMPLATES_QUERY } from "../../../Queries/Proposal";
 
-export default function ProposalWrapper({ query, user, templates }) {
+function boardToOpen(study) {
+  const boards = study?.proposal || [];
+  if (boards.length !== 1) return null;
+  return study?.proposalMain?.id || boards[0]?.id || null;
+}
+
+export default function ProposalWrapper({ query, user, onRequestConnectClass }) {
+  const router = useRouter();
   const studyId = query?.selector;
 
-  const { data, loading, error } = useQuery(STUDY_PROPOSALS_QUERY, {
+  const { data, loading } = useQuery(STUDY_PROPOSALS_QUERY, {
     variables: {
       id: studyId,
     },
   });
+
+  const { data: templatesData } = useQuery(PROPOSAL_TEMPLATES_QUERY);
+  const templates = templatesData?.proposalBoards || [];
 
   const refetchQueries = [
     {
@@ -32,31 +44,26 @@ export default function ProposalWrapper({ query, user, templates }) {
   const [proposalId, setProposalId] = useState(null);
 
   useEffect(() => {
-    async function updateProposals() {
+    if (data) {
       setProposals(data?.study?.proposal);
       setProposalMain(data?.study?.proposalMain);
     }
-    if (data) {
-      updateProposals();
-    }
   }, [data]);
 
-  // redirect to the project builder
-  const openProposal = (proposalId) => {
-    const url = `/builder/projects?selector=${proposalId}`;
-    window.open(url, "_blank");
-  };
+  useEffect(() => {
+    const selector = boardToOpen(data?.study);
+    if (!selector) return;
+    router.replace({
+      pathname: "/builder/projects",
+      query: { selector },
+    });
+  }, [data, router]);
 
-  const copyProposal = (proposalId) => {
-    setProposalId(proposalId);
-    setPage("create");
-    setIsCopy(true);
-  };
-
-  const createProposal = () => {
-    setProposalId(null);
-    setPage("create");
-    setIsCopy(false);
+  const openProposal = (nextProposalId) => {
+    router.push({
+      pathname: "/builder/projects",
+      query: { selector: nextProposalId },
+    });
   };
 
   const goToOverview = () => {
@@ -87,16 +94,23 @@ export default function ProposalWrapper({ query, user, templates }) {
     );
   }
 
+  if (loading && !data) {
+    return null;
+  }
+
+  if (boardToOpen(data?.study)) {
+    return null;
+  }
+
   return (
     <ProposalOverview
-      user={user}
       studyId={studyId}
-      templates={templates}
+      studyClasses={data?.study?.classes || []}
+      classesLoading={loading && !data}
       proposals={proposals}
       proposalMain={proposalMain}
       openProposal={openProposal}
-      copyProposal={copyProposal}
-      createProposal={createProposal}
+      onRequestConnectClass={onRequestConnectClass}
     />
   );
 }

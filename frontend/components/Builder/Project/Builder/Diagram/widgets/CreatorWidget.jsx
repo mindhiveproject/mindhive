@@ -7,6 +7,7 @@ import { DiagramCanvas } from '../DiagramCanvas';
 import { TaskModel } from '../models/TaskModel';
 import { DesignModel } from '../models/DesignModel';
 import { StyledCreatorWidget } from './my-creator-widget';
+import { removeDanglingLinks } from '../../../../shared/strictDiagramLinks';
 
 export const CreatorWidget = props => {
   // force update canvas
@@ -74,6 +75,7 @@ export const CreatorWidget = props => {
       const { diagram } = data;
       const model = new DiagramModel();
       model.deserializeModel(JSON.parse(diagram), diagramEngine);
+      removeDanglingLinks(model);
       if (props.onModelReplaced) {
         props.onModelReplaced(model);
       } else {

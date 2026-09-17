@@ -10,21 +10,21 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 // React Data Grid Component
 import { AgGridReact } from "ag-grid-react";
 import ChangeDatasetStatuses from "./ChangeStatuses";
+import { collectHref } from "../../../shared/identity";
 
-export default function Grid({ studyId, participants }) {
+export default function Grid({ query, studyId, participants }) {
   const { t } = useTranslation("builder");
   const OpenButtonRenderer = (props) => {
     return (
       <Link
-        href={{
-          pathname: `/builder/studies`,
-          query: {
-            selector: studyId,
-            tab: `collect`,
+        href={collectHref({
+          area: query?.area,
+          selector: query?.selector,
+          extraQuery: {
             id: props?.data?.publicId,
             type: props?.data?.accountType?.toLowerCase(),
           },
-        }}
+        })}
       >
         <div>
           <a>{t("grid.open", "Open")}</a>
