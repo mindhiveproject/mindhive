@@ -104,6 +104,54 @@ export const StyledProposal = styled.div`
     }
   }
 
+  .studyBoardList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    box-sizing: border-box;
+  }
+  .studyBoardListFooter {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .studyBoardListRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border-radius: 8px;
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  }
+  .studyBoardListRow.isMain {
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+  .studyBoardListTitle {
+    font: var(--MH-Type-Title-Small, 600 16px/24px Inter, sans-serif);
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+  .studyBoardListMeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    font: var(--MH-Type-Body-Small, 400 14px/20px Inter, sans-serif);
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
+  .studyBoardListActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
   .empty {
     display: grid;
     margin: 0;
