@@ -421,7 +421,6 @@
 	"cardAssignmentDisabled": "Las tarjetas no se pueden asignar a estudiantes",
 	"cardAssignmentEnabled": "Las tarjetas se pueden asignar a los estudiantes.",
 	"classCurriculum": "Currículo de la clase",
-	"classCurriculumDescription": "Selecciona qué currículo se aplica a esta clase.",
 	"classCurriculumTypeQuestion": "¿Qué tipo de currículo se aplica a esta clase?",
 	"classDescriptionSettingsDescription": "Agrega la descripción que los estudiantes y mentores verán en el encabezado de la clase.",
 	"classDescriptionSettingsEmptyHint": "Deja esto en blanco para ocultar la descripción del encabezado de la clase.",

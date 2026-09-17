@@ -435,7 +435,7 @@ export const StyledCanvasBuilder = styled.div`
       z-index: 3;
       width: 100%;
       min-width: 0;
-      padding: 16px 0 8px;
+      padding: 16px 0 7px;
       background: #ffffff;
       box-sizing: border-box;
 

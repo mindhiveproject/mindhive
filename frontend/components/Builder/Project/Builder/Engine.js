@@ -28,7 +28,6 @@ import { setCycleWarningHandler } from "../../shared/diagramCycle";
 import CycleLinkPreventedModal from "../../shared/CycleLinkPreventedModal";
 import {
   configureStrictDiagramLinks,
-  removeDanglingLinks,
 } from "../../shared/strictDiagramLinks";
 
 export default function Engine({
@@ -207,7 +206,6 @@ export default function Engine({
       if (study?.diagram) {
         const model = new DiagramModel();
         model.deserializeModel(JSON.parse(study?.diagram), nextEngine);
-        removeDanglingLinks(model);
         nextEngine.setModel(model);
       } else {
         const anchor = new AnchorModel({});
@@ -240,9 +238,17 @@ export default function Engine({
   }, [engine]); // eslint-disable-line react-hooks/exhaustive-deps -- register once when engine mounts
 
   useEffect(() => {
-    if (engine && study?.diagram) {
-      engine.repaintCanvas();
-    }
+    if (!engine) return;
+    const id = requestAnimationFrame(() => {
+      const model = engine.getModel?.();
+      model?.getNodes?.().forEach((node) => {
+        Object.values(node.getPorts?.() || {}).forEach((port) => {
+          port.reportPosition?.();
+        });
+      });
+      engine.repaintCanvas?.();
+    });
+    return () => cancelAnimationFrame(id);
   }, [engine, study?.diagram]);
 
   const getRandomIntInclusive = (min, max) => {
@@ -348,7 +354,6 @@ export default function Engine({
     withHistorySnapshot(() => {
       const model = new DiagramModel();
       model.deserializeModel(parsed, engine);
-      removeDanglingLinks(model);
       replaceModel(model);
     });
 
