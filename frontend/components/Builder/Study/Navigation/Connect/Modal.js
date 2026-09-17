@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { Modal } from "semantic-ui-react";
-import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
 import Button from "../../../../DesignSystem/Button";
+import IconButton from "../../../../DesignSystem/IconButton";
+import Modal from "../../../../DesignSystem/Modal";
+import {
+  CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE,
+  ConnectFacepileChevron,
+} from "../../../Project/Navigation/ConnectFacepile";
+
+function isAdminUser(user) {
+  return (user?.permissions || []).some((p) => p?.name === "ADMIN");
+}
 
 export default function ConnectModal({
   study,
@@ -36,16 +44,44 @@ export default function ConnectModal({
   const collaborators =
     (study && study?.collaborators?.map((c) => c?.id)) || [];
 
+  const title = t("connectModal.title", {}, { default: "Connect" });
+  const closeLabel = t("connectModal.close", {}, { default: "Close" });
+
   return (
-    <Modal
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
-      open={open}
-      trigger={<Icon size="large" name="dropdown" />}
-    >
-      {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
-        <Modal.Header>
-          <div>
+    <>
+      <IconButton
+        variant="subtle"
+        elevated={false}
+        ariaLabel={t("connectModal.open", {}, { default: "Connect" })}
+        title={t("connectModal.open", {}, { default: "Connect" })}
+        icon={<ConnectFacepileChevron />}
+        style={CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE}
+        onClick={() => setOpen(true)}
+      />
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth={560}
+        title={title}
+        actions={
+          <>
+            <Button variant="tonal" style={{ color: "var(--MH-Theme-Neutral-Black)" }} onClick={() => setOpen(false)} >
+              {closeLabel}
+            </Button>
+            <Button
+              variant="filled"
+              onClick={() => {
+                updateStudy();
+                setOpen(false);
+              }}
+            >
+              {t("connectModal.saveAndClose", {}, { default: "Save & Close" })}
+            </Button>
+          </>
+        }
+      >
+        {isAdminUser(user) && (
+          <p>
             {t("connectModal.studyAuthor", {
               username:
                 study?.author?.username ||
@@ -58,47 +94,23 @@ export default function ConnectModal({
               })}
             </em>
             )
-          </div>
-        </Modal.Header>
-      )}
-      <Modal.Content>
-        <Modal.Description>
-          <div>
-            <h2>
-              {t("connectModal.selectClass", {}, { default: "Select the class" })}
-            </h2>
-            <LinkClass study={study} handleChange={handleChange} />
-            <h2>
-              {t("connectModal.addCollaborators", {}, {
-                default: "Add collaborators",
-              })}
-            </h2>
-            <Collaborators
-              userClasses={userClasses}
-              collaborators={collaborators}
-              handleChange={handleChange}
-            />
-          </div>
-        </Modal.Description>
-      </Modal.Content>
-
-      <Modal.Actions>
-        <div className="modalButtons">
-          <Button variant="text" onClick={() => setOpen(false)}>
-            {t("connectModal.close", {}, { default: "Close" })}
-          </Button>
-
-          <Button
-            variant="filled"
-            onClick={() => {
-              updateStudy();
-              setOpen(false);
-            }}
-          >
-            {t("connectModal.saveAndClose", {}, { default: "Save & Close" })}
-          </Button>
-        </div>
-      </Modal.Actions>
-    </Modal>
+          </p>
+        )}
+        <h2 className="MH-Type-Title-Small">
+          {t("connectModal.selectClass", {}, { default: "Select the class" })}
+        </h2>
+        <LinkClass study={study} handleChange={handleChange} />
+        <h2 className="MH-Type-Title-Small">
+          {t("connectModal.addCollaborators", {}, {
+            default: "Add collaborators",
+          })}
+        </h2>
+        <Collaborators
+          userClasses={userClasses}
+          collaborators={collaborators}
+          handleChange={handleChange}
+        />
+      </Modal>
+    </>
   );
 }

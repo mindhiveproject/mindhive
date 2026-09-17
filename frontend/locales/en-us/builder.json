@@ -182,12 +182,14 @@
 		"close": "Close",
 		"linkedClass": "Linked class",
 		"noAuthor": "No Author",
+		"open": "Connect",
 		"projectBoardCollaborators": "Project board collaborators",
 		"projectCreator": "Project creator is {{username}}",
 		"projectTitle": "Project title",
 		"saveAndClose": "Save & Close",
 		"selectClass": "Select the class",
-		"studyAuthor": "Study author is {{username}}"
+		"studyAuthor": "Study author is {{username}}",
+		"title": "Connect"
 	},
 	"connectStudyModal": {
 		"adminInfo": "This information is visible only for ADMIN",
@@ -196,10 +198,12 @@
 		"linkedProjects": "Linked projects",
 		"linkedProjectsDescription": "Projects that share access to your study {{title}}",
 		"noAuthor": "No Author",
+		"open": "Connect",
 		"openInNewTab": "Open in a new tab",
 		"saveAndClose": "Save & Close",
 		"studyAuthor": "Study author is {{username}}",
-		"studyCollaborators": "Study collaborators"
+		"studyCollaborators": "Study collaborators",
+		"title": "Connect"
 	},
 	"consentSelector": {
 		"typeConsentProtocol": "Type consent protocol"
@@ -1426,7 +1430,10 @@
 	"myVisuals": "Visuals",
 	"navigation": {
 		"back": "back",
+		"chat": "Chat",
 		"cloneSavePrompt": "Change the study name and click the Save button",
+		"goBack": "Go back",
+		"settings": "Settings",
 		"enoughComments": "Enough comments? Let reviewers know",
 		"enoughParticipants": "Enough participants?",
 		"lockFeedback": "Lock Feedback",
@@ -1602,6 +1609,7 @@
 		"giveProjectNameFirst": "Give the project a name first",
 		"noStudyConnected": "No study connected",
 		"selectExistingStudy": "Select Existing Study",
+		"selectOwnedStudyForProject": "You can select another study you own to associate with {{title}}.",
 		"selectStudyFirst": "Select the study first",
 		"study": "Study:",
 		"studyNotLinkedToClassBody": "This project board is not connected to a class. The study you create will not be linked to a class either. You can still create and connect a study.",

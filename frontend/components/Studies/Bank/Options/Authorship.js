@@ -11,7 +11,7 @@ import StyledModal from "../../../styles/StyledModal";
 import { CHANGE_STUDY_AUTHOR } from "../../../Mutations/Study";
 import { MY_STUDIES } from "../../../Queries/Study";
 
-export default function Authorship({ user, study }) {
+export default function Authorship({ user, study, trigger }) {
   const { t } = useTranslation('common');
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -37,15 +37,17 @@ export default function Authorship({ user, study }) {
       open={open}
       size="small"
       trigger={
-        <Dropdown.Item
-          className="dropdownItem"
-          text={
-            <div className="iconTitle">
-              <Icon name="signup" />
-              <p>{t('study.transferAuthorship', 'Transfer the authorship')}</p>
-            </div>
-          }
-        />
+        trigger ?? (
+          <Dropdown.Item
+            className="dropdownItem"
+            text={
+              <div className="iconTitle">
+                <Icon name="signup" />
+                <p>{t('study.transferAuthorship', 'Transfer the authorship')}</p>
+              </div>
+            }
+          />
+        )
       }
     >
       <Modal.Content>

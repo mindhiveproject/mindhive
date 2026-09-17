@@ -1,12 +1,14 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER_CLASSES } from "../../../../Queries/User";
-
-import { Dropdown } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
+import { GET_USER_CLASSES } from "../../../../Queries/User";
+import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+
+const NOT_CONNECTED = "$$$-class-not-connected-$$$";
+
 export default function LinkClass({ project, handleChange }) {
-  const { t } = useTranslation();
-  const { data, error, loading } = useQuery(GET_USER_CLASSES);
+  const { t } = useTranslation("builder");
+  const { data } = useQuery(GET_USER_CLASSES);
 
   const user = data?.authenticatedItem || {
     studentIn: [],
@@ -15,46 +17,44 @@ export default function LinkClass({ project, handleChange }) {
     mentorIn: [],
   };
 
-  const myClassObjects =
-    [...user?.studentIn, ...user?.teacherIn, ...user?.teachingTeamIn, ...user?.mentorIn] || [];
-  const myClasses = myClassObjects.map((cl) => ({
-    key: cl.id,
-    text: cl.title,
-    value: cl.id,
-  }));
-  const myClassesIncludingEmpty = [
-    {
-      key: 0,
-      text: t('builder:linkClass.doNotConnectClass'),
-      value: "$$$-class-not-connected-$$$",
-    },
-    ...myClasses,
+  const myClassObjects = [
+    ...(user.studentIn || []),
+    ...(user.teacherIn || []),
+    ...(user.teachingTeamIn || []),
+    ...(user.mentorIn || []),
   ];
 
-  const selectedClass = project?.usedInClass?.id;
+  const notConnectedLabel = t("linkClass.doNotConnectClass", {}, {
+    default: "Do not connect to class",
+  });
 
-  const selectedClassIncludingEmpty =
-    selectedClass || "$$$-class-not-connected-$$$";
+  const options = [
+    {
+      value: NOT_CONNECTED,
+      label: notConnectedLabel,
+    },
+    ...myClassObjects.map((cl) => ({
+      value: cl.id,
+      label: cl.title,
+    })),
+  ];
 
-  const onChange = (event, data) => {
-    handleChange({
-      target: {
-        name: "usedInClass",
-        value: { id: data?.value },
-      },
-    });
-  };
+  const value = project?.usedInClass?.id || NOT_CONNECTED;
 
   return (
-    <Dropdown
-      placeholder=""
-      fluid
-      search
-      selection
-      lazyLoad
-      options={myClassesIncludingEmpty}
-      onChange={onChange}
-      value={selectedClassIncludingEmpty}
+    <DropdownSelect
+      value={value}
+      options={options}
+      searchableSingle
+      ariaLabel={t("connectModal.linkedClass", {}, { default: "Linked class" })}
+      onChange={(next) => {
+        handleChange({
+          target: {
+            name: "usedInClass",
+            value: { id: next },
+          },
+        });
+      }}
     />
   );
 }

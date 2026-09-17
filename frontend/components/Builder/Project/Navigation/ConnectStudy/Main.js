@@ -7,8 +7,7 @@ import ConnectModal from "./Modal";
 import { MY_STUDY } from "../../../../Queries/Study";
 import { UPDATE_STUDY } from "../../../../Mutations/Study";
 
-import { Image } from "semantic-ui-react";
-import Tooltip from "../../../../DesignSystem/Tooltip";
+import ConnectFacepile from "../ConnectFacepile";
 
 export default function Connect({ study, user }) {
   // save and edit the study information
@@ -35,31 +34,18 @@ export default function Connect({ study, user }) {
     refetchQueries: [{ query: MY_STUDY, variables: { id: study?.id } }],
   });
 
-  const collaborators = inputs?.collaborators || [];
+  const collaborators = study?.collaborators || [];
 
   return (
     <div className="connectArea">
-      <div className="icons">
-        {collaborators.map((collaborator, num) => (
-          <Tooltip content={collaborator?.username} key={num}>
-            {collaborator?.image?.image?.publicUrlTransformed ? (
-              <Image
-                src={collaborator?.image?.image?.publicUrlTransformed}
-                avatar
-              />
-            ) : (
-              <Image src="/assets/icons/builder/page.svg" avatar />
-            )}
-          </Tooltip>
-        ))}
-      </div>
-
-      <ConnectModal
-        study={inputs}
-        user={user}
-        handleChange={handleChange}
-        updateStudy={updateStudy}
-      />
+      <ConnectFacepile collaborators={collaborators}>
+        <ConnectModal
+          study={inputs}
+          user={user}
+          handleChange={handleChange}
+          updateStudy={updateStudy}
+        />
+      </ConnectFacepile>
     </div>
   );
 }

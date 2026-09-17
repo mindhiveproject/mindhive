@@ -1,8 +1,14 @@
 import { useQuery } from "@apollo/client";
-import { GET_USERNAMES_WHERE } from "../Queries/User";
+import useTranslation from "next-translate/useTranslation";
 
-import { Dropdown } from "semantic-ui-react";
-import useTranslation from 'next-translate/useTranslation';
+import { GET_USERNAMES_WHERE } from "../Queries/User";
+import DropdownSelect from "../DesignSystem/DropdownSelect";
+
+function toId(item) {
+  if (item == null) return null;
+  if (typeof item === "object") return item.id || null;
+  return item;
+}
 
 export default function Collaborators({
   userClasses,
@@ -12,20 +18,16 @@ export default function Collaborators({
   isStudent,
   excludeUserId,
 }) {
-  const { t } = useTranslation('common');
-  
-  // Build the OR conditions for the query
+  const { t } = useTranslation("common");
+
   const orConditions = [];
-  
-  // Only show admins if user doesn't have STUDENT permission
+
   if (!isStudent) {
     orConditions.push({ permissions: { some: { name: { equals: "ADMIN" } } } });
   }
-  
-  // If a class is selected, restrict to that class only
-  // Otherwise, show users from all userClasses (cross-class visibility)
+
   const classesToFilter = selectedClass?.id ? [selectedClass.id] : userClasses;
-  
+
   if (classesToFilter && classesToFilter.length > 0) {
     orConditions.push(
       { studentIn: { some: { id: { in: classesToFilter } } } },
@@ -34,8 +36,8 @@ export default function Collaborators({
       { mentorIn: { some: { id: { in: classesToFilter } } } }
     );
   }
-  
-  const { data, loading, error } = useQuery(GET_USERNAMES_WHERE, {
+
+  const { data } = useQuery(GET_USERNAMES_WHERE, {
     variables: {
       input: {
         OR: orConditions,
@@ -45,39 +47,42 @@ export default function Collaborators({
   });
   const profiles = data?.profiles || [];
 
-  const usernames = profiles
+  const options = profiles
     .filter((user) => !excludeUserId || user.id !== excludeUserId)
     .map((user) => ({
-      key: user.username,
-      text: user.username,
       value: user.id,
+      label: user.username,
     }));
 
-  const onChange = (event, data) => {
-    handleChange({
-      target: {
-        name: "collaborators",
-        value: data.value.map((id) => ({
-          id,
-          username: data.options
-            .filter((o) => o.value === id)
-            .map((o) => o.key)[0],
-        })),
-      },
-    });
-  };
+  const selectedIds = (collaborators || []).map(toId).filter(Boolean);
+
+  const placeholder = t("collaborators.typeUsername", {}, {
+    default: "Type username",
+  });
 
   return (
-    <Dropdown
-      placeholder={t('collaborators.typeUsername', 'Type username')}
-      fluid
+    <DropdownSelect
       multiple
-      search
-      selection
-      lazyLoad
-      options={usernames}
-      onChange={onChange}
-      value={collaborators}
+      value={selectedIds}
+      options={options}
+      placeholder={placeholder}
+      ariaLabel={placeholder}
+      onChange={(nextIds) => {
+        handleChange({
+          target: {
+            name: "collaborators",
+            value: (nextIds || []).map((id) => {
+              const option = options.find(
+                (o) => String(o.value) === String(id)
+              );
+              return {
+                id,
+                username: option?.label,
+              };
+            }),
+          },
+        });
+      }}
     />
   );
 }

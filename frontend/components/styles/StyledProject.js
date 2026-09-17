@@ -103,14 +103,13 @@ const StyledProject = styled.div`
       }
     }
     .right {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      grid-gap: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       .connectArea {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        grid-gap: 5px;
+        display: flex;
         align-items: center;
+        gap: 0;
       }
     }
     .secondLine {

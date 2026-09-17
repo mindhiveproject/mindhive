@@ -230,6 +230,16 @@ export const PROPOSAL_QUERY = gql`
       collaborators {
         id
         username
+        image {
+          id
+          keystoneImage {
+            id
+            url
+          }
+          image {
+            publicUrlTransformed
+          }
+        }
       }
       study {
         id
@@ -240,10 +250,30 @@ export const PROPOSAL_QUERY = gql`
         author {
           id
           username
+          image {
+            id
+            keystoneImage {
+              id
+              url
+            }
+            image {
+              publicUrlTransformed
+            }
+          }
         }
         collaborators {
           id
           username
+          image {
+            id
+            keystoneImage {
+              id
+              url
+            }
+            image {
+              publicUrlTransformed
+            }
+          }
         }
         classes {
           id

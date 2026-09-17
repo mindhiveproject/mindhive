@@ -9,11 +9,12 @@ import ConnectStudyOnly from "../../Study/Navigation/Connect/Main";
 
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import { MY_STUDY } from "../../../Queries/Study";
-import StudyDropdown from "../../../Projects/StudyConnector/StudyDropdown";
 import StudyOptions from "../../../Studies/Bank/StudyOptions";
 import Tooltip from "../../../DesignSystem/Tooltip";
 import Button from "../../../DesignSystem/Button";
+import IconButton from "../../../DesignSystem/IconButton";
 import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
+import { NavigateBackIcon } from "../../../DesignSystem/Icons";
 import {
   builderHref,
   dashboardBackPath,
@@ -77,33 +78,39 @@ export default function Navigation({
     }
   };
 
+  const studyForNav = mode === "project" ? project?.study : study;
+
   const toggleChatSidebar = () => {
-    const [talk] = study?.talks || [];
-    toggleSidebar?.({ chatId: talk?.id, studyId: study?.id });
+    const [talk] = studyForNav?.talks || [];
+    toggleSidebar?.({ chatId: talk?.id, studyId: studyForNav?.id });
   };
 
   return (
     <div className="navigation">
       <div className="firstLine">
         <div className="leftPanel">
-          <div className="goBackBtn">
-            <Link
-              href={{ pathname: dashboardBackPath(area) }}
-              onClick={tryToLeave}
-            >
-              ←
-            </Link>
-          </div>
+          <IconButton
+            variant="subtle"
+            elevated={false}
+            ariaLabel={t("navigation.goBack", {}, { default: "Go back" })}
+            title={t("navigation.goBack", {}, { default: "Go back" })}
+            icon={<NavigateBackIcon />}
+            size="large"
+            onClick={(e) => {
+              if (hasStudyChanged) {
+                if (!confirm(t("unsavedChangesWarning"))) {
+                  e.preventDefault();
+                  return;
+                }
+              }
+              router.push({ pathname: dashboardBackPath(area) });
+            }}
+          />
         </div>
         <div className="middle">
           <Tooltip content={title} side="bottom" delayMs={650} maxWidth={400}>
             <span className="studyTitle">{title}</span>
           </Tooltip>
-          {mode === "project" && project?.study && (
-            <div className="studyTitle">
-              <StudyDropdown user={user} project={project} />
-            </div>
-          )}
         </div>
         <div className="right">
           {mode === "cloneofstudy" && studySelector && (
@@ -123,23 +130,31 @@ export default function Navigation({
             ))}
 
           {mode === "study" && (
-            <>
-              <ConnectStudyOnly
-                study={study}
-                user={user}
-                modalOpen={connectModalOpen}
-                onModalOpenChange={onConnectModalOpenChange}
-              />
-              {study?.talks?.length > 0 && (
-                <div className="icon" onClick={toggleChatSidebar}>
-                  <img src="/assets/icons/chat.svg" alt="" />
-                </div>
-              )}
-              <div className="icon">
-                <StudyOptions user={user} study={study} />
-              </div>
-            </>
+            <ConnectStudyOnly
+              study={study}
+              user={user}
+              modalOpen={connectModalOpen}
+              onModalOpenChange={onConnectModalOpenChange}
+            />
           )}
+
+          {studyForNav?.talks?.length > 0 && (
+            <IconButton
+              variant="subtle"
+              elevated={false}
+              ariaLabel={t("navigation.chat", {}, { default: "Chat" })}
+              title={t("navigation.chat", {}, { default: "Chat" })}
+              icon={<img src="/assets/icons/chat.svg" alt="" />}
+              onClick={toggleChatSidebar}
+            />
+          )}
+
+          <StudyOptions
+            user={user}
+            study={studyForNav}
+            project={mode === "project" ? project : undefined}
+            variant="popover"
+          />
 
           {cardId && (
             <Button
