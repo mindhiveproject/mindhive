@@ -50,6 +50,7 @@ import { Ticket } from "./schemas/Ticket";
 import { TicketAnnotation } from "./schemas/TicketAnnotation";
 import { Datasource } from "./schemas/Datasource";
 import { Visual } from "./schemas/YQVisual";
+import { JsPsychExperiment } from "./schemas/JsPsychExperiment";
 import { Friendship } from "./schemas/YQFriendship";
 import { YQGenAI } from "./schemas/YQGenAI";
 import { YQTag } from "./schemas/YQTag";
@@ -131,6 +132,7 @@ export const lists: Lists = {
   TicketAnnotation,
   Datasource,
   Visual,
+  JsPsychExperiment,
   Friendship,
   YQTag,
   YQGenAI,

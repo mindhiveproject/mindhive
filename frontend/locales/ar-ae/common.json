@@ -372,6 +372,16 @@
 	"reviewed": {
 		"menuTitle": "تمت المراجعة"
 	},
+	"runtime": {
+		"configurationError": "",
+		"jsPsychFrameTitle": "",
+		"jsPsychShellLoading": "",
+		"jsPsychShellReady": "",
+		"loadingLabJs": "",
+		"loadingLabJsDescription": "",
+		"p5Shell": "",
+		"starting": ""
+	},
 	"save": "يحفظ",
 	"searchMembers": {
 		"admin": "مسؤل",
