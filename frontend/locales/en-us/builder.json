@@ -1187,6 +1187,7 @@
 		"settings": {
 			"advancedOptions": "Advanced Options",
 			"close": "Close",
+			"confirmUnlink": "Unlink this data source from the study?",
 			"copyAndEdit": "Copy & Edit",
 			"downloadToComputer": "Download to computer",
 			"editNotice": "To change how the data is aggregated, add more inputs, or add more analysis steps, you must edit this block.",

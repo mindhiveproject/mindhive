@@ -10,7 +10,7 @@ import Checkbox from "../../../../DesignSystem/Checkbox";
 import Chip from "../../../../DesignSystem/Chip";
 import Input from "../../../../DesignSystem/Input";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
-import { ArrowDropDownIcon, CloseIcon, DeleteIcon, EditIcon } from "../../../../DesignSystem/Icons";
+import { ArrowDropDownIcon, CloseIcon, EditIcon, LinkOffIcon } from "../../../../DesignSystem/Icons";
 
 import { STUDY_DATA_SOURCES } from "../../../../Queries/DataSourceBlock";
 import {
@@ -167,10 +167,6 @@ const FIELD_UNIT_STYLE = {
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
-const DELETE_BUTTON_STYLE = {
-  color: "var(--MH-Theme-Warning-Base, #B9261A)",
-};
-
 /**
  * Per-instance settings for one linked data source (Figma node 430-2782).
  * Lives in the study builder's right sidebar as its own tab, appearing while
@@ -244,14 +240,12 @@ export default function DataSourceSettingsTab({ study, studyDataSourceId, onClos
     patchSettings({ advanced: { ...settings.advanced, [field.key]: value } });
   };
 
-  const deleteLabel = t("dataSources.settings.delete", {}, {
-    default: "Remove Data Source",
-  });
+  const unlinkLabel = t("dataSources.unlinkLabel", {}, { default: "Unlink" });
   const handleDelete = async () => {
     if (
       !window.confirm(
-        t("dataSources.settings.confirmDelete", {}, {
-          default: "Remove this data source from the study?",
+        t("dataSources.settings.confirmUnlink", {}, {
+          default: "Unlink this data source from the study?",
         })
       )
     )
@@ -539,11 +533,11 @@ export default function DataSourceSettingsTab({ study, studyDataSourceId, onClos
       <div>
         <Button
           variant="text"
-          leadingIcon={<DeleteIcon />}
+          tone="tertiary"
+          leadingIcon={<LinkOffIcon />}
           onClick={handleDelete}
-          style={DELETE_BUTTON_STYLE}
         >
-          {deleteLabel}
+          {unlinkLabel}
         </Button>
       </div>
     </div>

@@ -47,17 +47,20 @@ export const StudyDataSourceRecord = list({
         { label: "User", value: "USER" },
       ],
     }),
-    // One entry per (source, step) window AggregateRecorder closed:
-    //   [{ sourceId, blockSlug, label, stepId, startedAt, endedAt,
+    // One entry per (segment, source, step) window AggregateRecorder closed:
+    //   [{ segmentId, sourceId, blockSlug, label, stepId, startedAt, endedAt,
     //      markers: [{ label, count, firstAt, lastAt }],
     //      streams: [{ streamID, modality, samplingRate,
     //        channels: [{ index, label, unit, n, mean, sd, min, max }] }] }]
-    // Replaced wholesale on every save — the client always sends the
-    // recorder's full running list, not a delta.
+    // Merged per window on every save rather than replaced (see mergeWindows
+    // in keystone/mutations/dataSourceRecords.ts): the client sends one
+    // recorder's full running list, and a participation spans several
+    // recorders because the runner reloads the page between tasks.
     steps: json({ defaultValue: [] }),
-    // The same shape, one entry per source, for the whole participation
-    // rather than one step. Updated as the session progresses so a save
-    // mid-study is never a total loss if the participant leaves early.
+    // The same shape, one entry per (segment, source), covering that
+    // recorder's whole lifetime rather than one step. Consumers combine the
+    // segments — `n`/`mean`/`sd`/`min`/`max` are enough to pool them — since
+    // no single entry spans the full participation once a reload has split it.
     session: json({ defaultValue: [] }),
     createdAt: timestamp({ defaultValue: { kind: "now" } }),
     updatedAt: timestamp({

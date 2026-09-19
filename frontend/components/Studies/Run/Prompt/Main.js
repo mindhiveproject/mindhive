@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation } from "@apollo/client";
 
 import { useRouter } from "next/dist/client/router";
@@ -14,6 +14,7 @@ import { UPDATE_USER_STUDY_INFO } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { GET_GUEST } from "../../../Queries/Guest";
 import Button from "../../../DesignSystem/Button";
+import { DataSourceFlushContext } from "../DataSources/Main";
 
 export default function Prompt({
   user,
@@ -27,6 +28,7 @@ export default function Prompt({
 }) {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const flushDataSources = useContext(DataSourceFlushContext);
 
   // ToDo: find whether the user already gave data usage consent to this study
   // If the study changed the consent should be given again
@@ -106,6 +108,13 @@ export default function Prompt({
     await updateRunDataPolicy({
       variables: { runToken, dataPolicy: dataUse || "UNSPECIFIED" },
     });
+
+    // Both exits below destroy the page, and with it the recorder holding this
+    // task's data source aggregates — store them before leaving rather than
+    // relying on the pagehide backstop.
+    if (flushDataSources) {
+      await flushDataSources();
+    }
 
     // proceed to the next task or to the main page
     if (proceedToNextTask) {

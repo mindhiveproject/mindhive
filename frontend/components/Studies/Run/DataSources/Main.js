@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useMutation, useQuery } from "@apollo/client";
 
 import { STUDY_DATA_SOURCES } from "../../../Queries/DataSourceBlock";
@@ -10,6 +17,13 @@ import useSourceRuntime from "./useSourceRuntime";
 import ConnectScreen from "./ConnectScreen";
 import StatusBar from "./StatusBar";
 import PreviewPanel from "./PreviewPanel";
+
+/**
+ * Lets a descendant that is about to navigate away (the post-task prompt,
+ * which reloads the page to reach the next task) await the participant's
+ * aggregates being written first. Null outside a study run.
+ */
+export const DataSourceFlushContext = createContext(null);
 
 function isActiveForStep(scope, stepId) {
   if (!scope || scope === "study") return true;
@@ -90,16 +104,21 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
   const guestPublicId = user?.type === "GUEST" ? user?.publicId : undefined;
 
   const saveSnapshot = useCallback(
-    (snapshot) => {
-      if (!study?.id || !snapshot) return;
-      if (!snapshot.steps?.length && !snapshot.session?.length) return;
-      saveRecord({
+    (snapshot, { keepalive = false } = {}) => {
+      if (!study?.id || !snapshot) return Promise.resolve();
+      if (!snapshot.steps?.length && !snapshot.session?.length) {
+        return Promise.resolve();
+      }
+      return saveRecord({
         variables: {
           studyId: study.id,
           guestPublicId,
           steps: snapshot.steps,
           session: snapshot.session,
         },
+        // A save fired while the page is being torn down is cancelled with the
+        // document unless it's allowed to outlive it.
+        ...(keepalive ? { context: { fetchOptions: { keepalive: true } } } : {}),
       }).catch((err) => {
         // Best-effort: a dropped save shouldn't block the participant, and
         // the next step close (or the final flush) tries again with the
@@ -161,16 +180,42 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gatePassed, currentStepId]);
 
+  // Closes the recorder and resolves once its aggregates have been stored.
+  // Idempotent — `stop()` clears `running`, so whichever exit path reaches it
+  // first wins and the others become no-ops.
+  const flush = useCallback(
+    (options) => {
+      if (!recorderRef.current.running) return Promise.resolve();
+      return saveSnapshot(recorderRef.current.stop(), options);
+    },
+    [saveSnapshot]
+  );
+
+  // Backstop for the exits that can't await `flush`: a closed tab, a
+  // back-navigation, or any reload that doesn't go through the prompt. React
+  // cleanup doesn't run on page unload, so this can't fold into the unmount
+  // effect below — without it a task's last window dies with the document.
+  useEffect(() => {
+    const flushOnHide = () => flush({ keepalive: true });
+    window.addEventListener("pagehide", flushOnHide);
+    return () => window.removeEventListener("pagehide", flushOnHide);
+  }, [flush]);
+
   // Final flush on unmount — the participant finished the study or left it.
   useEffect(() => {
     return () => {
-      if (!recorderRef.current.running) return;
-      saveSnapshot(recorderRef.current.stop());
+      flush();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!activeRows.length) return children;
+  if (!activeRows.length) {
+    return (
+      <DataSourceFlushContext.Provider value={flush}>
+        {children}
+      </DataSourceFlushContext.Provider>
+    );
+  }
 
   const allRequiredConnected = activeRows.every((row) => apis[row.id]?.requiredConnected);
   const previewRow = activeRows.find((row) => row.id === previewRowId);
@@ -182,7 +227,7 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
   };
 
   return (
-    <>
+    <DataSourceFlushContext.Provider value={flush}>
       {activeRows.map((row) => (
         <SourceRuntime key={row.id} row={row} onStatus={onStatus} />
       ))}
@@ -213,6 +258,6 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
       {previewRow && apis[previewRow.id] && canViewSignal(previewRow) && (
         <PreviewPanel row={previewRow} api={apis[previewRow.id]} onClose={() => setPreviewRowId(null)} />
       )}
-    </>
+    </DataSourceFlushContext.Provider>
   );
 }

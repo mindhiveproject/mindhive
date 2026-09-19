@@ -8,6 +8,32 @@ const STUDY_QUERY =
   "id author { id } collaborators { id } participants { id }";
 
 /**
+ * Folds a client snapshot into what's already stored, keyed per window.
+ *
+ * A save is never a delta *within* one recorder — the client always sends that
+ * recorder's full running list, so an entry it sends again replaces the stored
+ * copy and the save stays idempotent. But a participation spans several
+ * recorders, because the study runner reloads the page between tasks, and a
+ * fresh recorder knows nothing about the windows saved before the reload.
+ * Keying on the recorder's own `segmentId` keeps both true at once: re-sent
+ * windows overwrite, windows from an earlier segment survive.
+ */
+function mergeWindows(
+  stored: unknown,
+  incoming: unknown,
+  keyOf: (entry: any) => string,
+) {
+  const base = Array.isArray(stored) ? stored : [];
+  const next = Array.isArray(incoming) ? incoming : [];
+  const replaced = new Set(next.map(keyOf));
+  return [...base.filter((entry) => !replaced.has(keyOf(entry))), ...next];
+}
+
+const stepKey = (entry: any) =>
+  `${entry?.segmentId}|${entry?.sourceId}|${entry?.stepId}`;
+const sessionKey = (entry: any) => `${entry?.segmentId}|${entry?.sourceId}`;
+
+/**
  * Upserts the calling participant's StudyDataSourceRecord for one study: the
  * AggregateRecorder's running `steps`/`session` snapshots, sent whenever a
  * step closes and once more when the participant finishes or leaves.
@@ -47,7 +73,7 @@ export async function saveStudyDataSourceRecord(
         ? { profile: { id: { equals: participant.profileId } } }
         : { guest: { id: { equals: participant.guestId } } }),
     },
-    query: "id",
+    query: "id steps session",
   });
 
   const data = {
@@ -62,7 +88,11 @@ export async function saveStudyDataSourceRecord(
   if (existing[0]?.id) {
     await context.sudo().query.StudyDataSourceRecord.updateOne({
       where: { id: existing[0].id },
-      data,
+      data: {
+        ...data,
+        steps: mergeWindows(existing[0].steps, steps, stepKey),
+        session: mergeWindows(existing[0].session, session, sessionKey),
+      },
     });
     return existing[0].id;
   }

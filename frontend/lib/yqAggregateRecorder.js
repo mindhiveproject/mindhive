@@ -165,6 +165,12 @@ export default class AggregateRecorder {
     this.running = false;
     // Finalized per-step windows, in the order they closed.
     this.steps = [];
+    // Identifies the windows this recorder instance produced. The study runner
+    // reloads the page between tasks (Prompt's router.reload), so one
+    // participation spans several recorders, each of which only ever knows its
+    // own windows — the server keys on this to merge them instead of letting a
+    // fresh instance's short list replace everything saved before the reload.
+    this.segmentId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   }
 
   /**
@@ -278,6 +284,7 @@ export default class AggregateRecorder {
     this.sources.forEach((source) => {
       if (source.step.startedAt === null) return;
       this.steps.push({
+        segmentId: this.segmentId,
         sourceId: source.id,
         blockSlug: source.blockSlug,
         label: source.label,
@@ -298,6 +305,7 @@ export default class AggregateRecorder {
       session: this.sources
         .filter((source) => source.session.startedAt !== null)
         .map((source) => ({
+          segmentId: this.segmentId,
           sourceId: source.id,
           blockSlug: source.blockSlug,
           label: source.label,
