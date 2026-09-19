@@ -9,7 +9,7 @@ import { MY_STUDY } from "../../../Queries/Study";
 
 import StyledModal from "../../../styles/StyledModal";
 
-export default function Archive({ user, study, studiesInfo }) {
+export default function Archive({ user, study, studiesInfo, trigger }) {
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
   const isArchived = studiesInfo && studiesInfo[study?.id]?.hideInDevelop;
@@ -32,32 +32,19 @@ export default function Archive({ user, study, studiesInfo }) {
       open={open}
       size="small"
       trigger={
-        <Dropdown.Item
-          className="dropdownItem"
-          text={
-            <>
-              <div className="iconTitle">
-                <Icon name="archive" />
-                <p>{isArchived ? t('study.unarchive', 'Unarchive study') : t('study.archive', 'Archive Study')}</p>
-              </div>
-              {/* {isArchived ? (
-                <p style={{ padding: "5px" }}>
-                  Unarchiving a study will return it
-                  <br /> to the "Active" section in your
-                  <br /> develop area. It will not impact <br />
-                  how others see the study
-                </p>
-              ) : (
-                <p style={{ padding: "5px" }}>
-                  Archiving a study moves it to the <br />
-                  "Archived" section in your <br />
-                  Develop area. It will not impact <br />
-                  how others see the study.
-                </p>
-              )} */}
-            </>
-          }
-        />
+        trigger ?? (
+          <Dropdown.Item
+            className="dropdownItem"
+            text={
+              <>
+                <div className="iconTitle">
+                  <Icon name="archive" />
+                  <p>{isArchived ? t('study.unarchive', 'Unarchive study') : t('study.archive', 'Archive Study')}</p>
+                </div>
+              </>
+            }
+          />
+        )
       }
     >
       <Modal.Content>

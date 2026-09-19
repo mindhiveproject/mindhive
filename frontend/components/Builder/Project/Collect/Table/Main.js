@@ -15,6 +15,7 @@ function getUnique(array) {
 }
 
 export default function ParticipantsTable({
+  query,
   study,
   components,
   users,
@@ -134,7 +135,7 @@ export default function ParticipantsTable({
         participants={participants}
         components={components}
       />
-      <Grid studyId={study?.id} participants={participants} />
+      <Grid query={query} studyId={study?.id} participants={participants} />
     </div>
   );
 }

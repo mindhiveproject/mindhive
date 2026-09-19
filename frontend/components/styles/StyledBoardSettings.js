@@ -118,14 +118,6 @@ const StyledBoardSettings = styled.div`
     padding: 0;
   }
 
-  .curriculumTypeLegend {
-    font: var(--MH-Type-Title-Base);
-    letter-spacing: 0;
-    color: #171717;
-    margin: 0 0 4px 0;
-    padding: 0;
-  }
-
   .curriculumTypeHelp {
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;

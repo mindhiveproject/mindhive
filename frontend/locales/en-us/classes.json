@@ -483,7 +483,6 @@
 	"cardAssignmentDisabled": "Cards cannot be assigned to students",
 	"cardAssignmentEnabled": "Cards can be assigned to students",
 	"classCurriculum": "Class Curriculum",
-	"classCurriculumDescription": "Select which curricula apply to this class.",
 	"classCurriculumTypeQuestion": "Which curriculum types apply to this class?",
 	"classDescriptionSettingsDescription": "Add the description students and mentors will see in the class header.",
 	"classDescriptionSettingsEmptyHint": "Leave this blank to hide the description from the class header.",

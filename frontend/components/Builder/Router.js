@@ -4,13 +4,10 @@ import { useRouter } from "next/router";
 import { UserContext } from "../Global/Authorized";
 import AddComponent from "./Component/Add";
 import EditComponent from "./Component/Edit";
-import StudyBuilder from "./Study/Main";
 import CloneTask from "./Component/Clone";
 import NewStudy from "./Study/New/Main";
-
-// projects
 import StartProject from "./Project/New/Start";
-import ProjectBuilder from "./Project/Main";
+import BuilderApp from "./App";
 
 // visuals
 import VisualBuilder from "../Visuals/Builder/Main";
@@ -28,7 +25,7 @@ export default function BuilderRouter({ query }) {
   };
 
   if (area === "cloneofstudy" && selector) {
-    return <StudyBuilder query={query} user={user} />;
+    return <BuilderApp query={query} user={user} />;
   }
 
   if (area === "visuals") {
@@ -39,14 +36,14 @@ export default function BuilderRouter({ query }) {
     if (selector === "start") {
       return <StartProject query={query} user={user} />;
     }
-    return <ProjectBuilder query={query} user={user} />;
+    return <BuilderApp query={query} user={user} />;
   }
 
   if (area === "studies") {
     if (selector === "add") {
       return <NewStudy query={query} user={user} />;
     }
-    return <StudyBuilder query={query} user={user} />;
+    return <BuilderApp query={query} user={user} />;
   }
 
   if (["cloneoftask", "cloneofsurvey", "cloneofblock"].includes(area)) {

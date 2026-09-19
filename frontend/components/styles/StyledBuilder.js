@@ -285,10 +285,10 @@ export const StyledBuilderArea = styled.div`
       }
     }
     .right {
-      display: grid;
-      grid-template-columns: auto auto auto auto;
-      grid-gap: 10px;
+      display: flex;
       align-items: center;
+      gap: 8px;
+      padding-right: 8px;
 
       .saveFirstMessage {
         padding: 10px 10px;
@@ -296,16 +296,6 @@ export const StyledBuilderArea = styled.div`
         background: white;
         color: #b9261a;
         border: solid 1px #b9261a;
-      }
-      .icon {
-        display: grid;
-        align-items: center;
-        justify-items: center;
-        width: 42px;
-        height: 42px;
-        background: #f3f5f6;
-        border-radius: 20px;
-        cursor: pointer;
       }
     }
     .secondLine {
@@ -333,22 +323,9 @@ export const StyledBuilderArea = styled.div`
     height: 100%;
   }
   .connectArea {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-gap: 5px;
-    justify-content: center;
-    align-content: center;
+    display: flex;
     align-items: center;
-    cursor: pointer;
-    .icons {
-    }
-    .buttons {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      justify-items: end;
-      grid-gap: 10px;
-    }
+    gap: 0;
   }
   .pyodideLoadingMessage {
     position: absolute;
@@ -435,7 +412,7 @@ export const StyledCanvasBuilder = styled.div`
       z-index: 3;
       width: 100%;
       min-width: 0;
-      padding: 16px 0 8px;
+      padding: 16px 0 7px;
       background: #ffffff;
       box-sizing: border-box;
 

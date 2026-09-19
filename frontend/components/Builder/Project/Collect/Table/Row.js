@@ -3,8 +3,9 @@ import "moment-duration-format";
 import Link from "next/link";
 import ChangeDatasetStatuses from "./ChangeStatuses";
 import useTranslation from "next-translate/useTranslation";
+import { collectHref } from "../../../shared/identity";
 
-export default function Row({ studyId, participant, consents, type }) {
+export default function Row({ query, studyId, participant, consents, type }) {
   const { t } = useTranslation("builder");
   const studyInfo = (participant?.studiesInfo &&
     participant?.studiesInfo[studyId]) || { info: { path: [] } };
@@ -54,15 +55,14 @@ export default function Row({ studyId, participant, consents, type }) {
   return (
     <div className="tableRow">
       <Link
-        href={{
-          pathname: `/builder/studies`,
-          query: {
-            selector: studyId,
-            tab: `collect`,
+        href={collectHref({
+          area: query?.area,
+          selector: query?.selector,
+          extraQuery: {
             id: participant?.publicId,
             type: participant?.type?.toLowerCase(),
           },
-        }}
+        })}
       >
         <div>
           <a>{participant?.publicId}</a>

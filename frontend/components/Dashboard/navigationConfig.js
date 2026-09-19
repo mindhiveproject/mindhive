@@ -156,7 +156,7 @@ export const NAV_SECTIONS = [
         labelKey: "lessons",
         fallback: "Lessons",
         Icon: LessonsIcon,
-        canView: (p) => p.canSeeLessons,
+        canView: (p) => p.isAdmin,
       },
     ],
   },

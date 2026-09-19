@@ -9,7 +9,7 @@ import StyledModal, { StyledModalButtons } from "../../../styles/StyledModal";
 import { HIDE_STUDY } from "../../../Mutations/Study";
 import { MY_STUDIES } from "../../../Queries/Study";
 
-export default function Delete({ study, user }) {
+export default function Delete({ study, user, trigger }) {
   const { t } = useTranslation('common');
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -31,17 +31,19 @@ export default function Delete({ study, user }) {
       open={open}
       size="small"
       trigger={
-        <Dropdown.Item
-          className="dropdownItem"
-          text={
-            <>
-              <div className="iconTitle">
-                <Icon name="trash" className="red" />
-                <p className="red">{t('study.delete', 'Delete Study')}</p>
-              </div>
-            </>
-          }
-        />
+        trigger ?? (
+          <Dropdown.Item
+            className="dropdownItem"
+            text={
+              <>
+                <div className="iconTitle">
+                  <Icon name="trash" className="red" />
+                  <p className="red">{t('study.delete', 'Delete Study')}</p>
+                </div>
+              </>
+            }
+          />
+        )
       }
     >
       <Modal.Content>

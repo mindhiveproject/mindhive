@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 
-import Navigation from "../Navigation/Main";
+import Navigation from "../../Project/Navigation/Main";
 import Proposal from "./Proposal";
 
 import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
@@ -20,7 +20,12 @@ export default function Review({ query, user, tab, toggleSidebar }) {
 
   return (
     <>
-      <Navigation query={query} user={user} tab={tab} />
+      <Navigation
+        query={query}
+        user={user}
+        tab={tab}
+        toggleSidebar={toggleSidebar}
+      />
       <StyledReviewPage>
         <Proposal query={query} user={user} study={study} />
       </StyledReviewPage>

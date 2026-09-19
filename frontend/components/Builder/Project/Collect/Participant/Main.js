@@ -1,5 +1,6 @@
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
+import { collectHref } from "../../../shared/identity";
 
 import UserWrapper from "./StudyInfo/UserWrapper";
 import GuestWrapper from "./StudyInfo/GuestWrapper";
@@ -17,13 +18,10 @@ export default function ParticipantPage({
   return (
     <div className="participantPage">
       <Link
-        href={{
-          pathname: `/builder/studies`,
-          query: {
-            selector: study?.id,
-            tab: `collect`,
-          },
-        }}
+        href={collectHref({
+          area: query?.area,
+          selector: query?.selector,
+        })}
       >
         <p>{t("participant.goBack", "← Go back")}</p>
       </Link>

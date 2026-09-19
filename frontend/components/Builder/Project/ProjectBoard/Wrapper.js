@@ -32,13 +32,15 @@ export default function ProposalWrapper({ query, user, templates }) {
   const [proposalId, setProposalId] = useState(null);
 
   useEffect(() => {
-    async function updateProposals() {
-      setProposals(data?.study?.proposal);
-      setProposalMain(data?.study?.proposalMain);
-    }
-    if (data) {
-      updateProposals();
-    }
+    if (!data) return;
+    const boards = data?.study?.proposal || [];
+    setProposals(boards);
+    setProposalMain(data?.study?.proposalMain);
+    if (boards.length !== 1) return;
+    const nextId = data?.study?.proposalMain?.id || boards[0]?.id;
+    if (!nextId) return;
+    setProposalId(nextId);
+    setPage("proposal");
   }, [data]);
 
   const openProposal = (proposalId) => {

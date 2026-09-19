@@ -88,11 +88,8 @@ export default function CurriculumTypeSelector({
 
   return (
     <fieldset className="curriculumTypeSelector">
-      <legend className="curriculumTypeLegend">
+      <p>
         {t(questionKey, {}, { default: questionDefault })}
-      </legend>
-      <p id="curriculumTypeHelp" className="curriculumTypeHelp">
-        {/* TODO: Add help text */}
       </p>
       <div
         className="curriculumTypeOptions"

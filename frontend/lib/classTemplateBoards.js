@@ -87,6 +87,25 @@ export function getOptionKey(option) {
   return getTemplateOptionKey(option?.board, option?.class);
 }
 
+export function getAssociatedTemplateOptionsForClasses(classes) {
+  if (!Array.isArray(classes)) return [];
+  const seen = new Set();
+  const options = [];
+
+  for (const myclass of classes) {
+    if (!myclass?.id) continue;
+    const boards = getClassTemplateBoards(myclass);
+    for (const board of boards) {
+      const key = getTemplateOptionKey(board, myclass);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      options.push({ board, class: myclass, origin: "class" });
+    }
+  }
+
+  return options;
+}
+
 export function getVisibleTemplateOptionsForClasses(classes) {
   if (!Array.isArray(classes)) return [];
   const seen = new Set();

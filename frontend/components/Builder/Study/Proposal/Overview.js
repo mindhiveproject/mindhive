@@ -1,105 +1,288 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import moment from "moment";
-
-import DeleteProposal from "./Delete";
+import clsx from "clsx";
 
 import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
-import MakeMain from "./MakeMain";
+import { COPY_PROPOSAL_MUTATION, DELETE_COMPLETE_PROPOSAL } from "../../../Mutations/Proposal";
+import { UPDATE_STUDY } from "../../../Mutations/Study";
 import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
+import IconButton from "../../../DesignSystem/IconButton";
+import MessageCard from "../../../DesignSystem/MessageCard";
+import Tooltip from "../../../DesignSystem/Tooltip";
+import {
+  getAssociatedTemplateOptionsForClasses,
+  getOptionKey,
+} from "../../../../lib/classTemplateBoards";
 
 export default function ProposalOverview({
-  user,
   studyId,
-  templates,
+  studyClasses,
+  classesLoading,
   proposals,
   proposalMain,
   openProposal,
-  copyProposal,
-  createProposal,
+  onRequestConnectClass,
 }) {
   const { t } = useTranslation("builder");
+  const router = useRouter();
 
   const refetchQueries = [
     { query: STUDY_PROPOSALS_QUERY, variables: { id: studyId } },
   ];
 
+  const [selectedKey, setSelectedKey] = useState(null);
+
+  const templateOptions = useMemo(
+    () => getAssociatedTemplateOptionsForClasses(studyClasses),
+    [studyClasses]
+  );
+  const hasConnectedClass = (studyClasses || []).length > 0;
+  const didPromptConnect = useRef(false);
+
+  useEffect(() => {
+    if (didPromptConnect.current) return;
+    if (classesLoading) return;
+    if (proposals?.length !== 0) return;
+    if (hasConnectedClass) return;
+    didPromptConnect.current = true;
+    onRequestConnectClass?.();
+  }, [
+    classesLoading,
+    proposals?.length,
+    hasConnectedClass,
+    onRequestConnectClass,
+  ]);
+
+  useEffect(() => {
+    if (templateOptions.length === 1) {
+      setSelectedKey(getOptionKey(templateOptions[0]));
+    }
+  }, [templateOptions]);
+
+  const selectedOption =
+    templateOptions.find((option) => getOptionKey(option) === selectedKey) ||
+    null;
+
+  const [copyProposalBoard, { loading: creating }] = useMutation(
+    COPY_PROPOSAL_MUTATION
+  );
+  const [updateStudy] = useMutation(UPDATE_STUDY);
+  const [deleteProposal] = useMutation(DELETE_COMPLETE_PROPOSAL);
+
+  const createFromClassTemplate = async () => {
+    const templateId = selectedOption?.board?.id;
+    if (!templateId) return;
+    const res = await copyProposalBoard({
+      variables: {
+        id: templateId,
+        study: studyId,
+        classIdUsed: selectedOption?.class?.id,
+      },
+      refetchQueries,
+    });
+    const newId = res?.data?.copyProposalBoard?.id;
+    if (newId) {
+      router.push({
+        pathname: "/builder/projects",
+        query: { selector: newId },
+      });
+    }
+  };
   if (proposals?.length === 0) {
+    if (classesLoading) {
+      return null;
+    }
+
+    const canCreate = templateOptions.length > 0;
+    const needsClassConnection = !hasConnectedClass;
+
+    let emptyMessage;
+    if (canCreate) {
+      emptyMessage = t(
+        "overview.noBoardYet",
+        {},
+        {
+          default:
+            "You haven't created a project board yet. Once you create a project board, it will appear here.",
+        }
+      );
+    } else if (needsClassConnection) {
+      emptyMessage = t(
+        "overview.connectStudyToClass",
+        {},
+        {
+          default:
+            "Connect this study to a class to create a project board.",
+        }
+      );
+    } else {
+      emptyMessage = t(
+        "overview.noClassTemplate",
+        {},
+        {
+          default:
+            "You cannot create a project board yet, because your class does not have a project board associated with it. If you think this is an error, please check with your teacher.",
+        }
+      );
+    }
+
     return (
       <div className="empty">
-        <h3>{t("proposal.zeroState1")}</h3>
-        <p>{t("proposal.zeroState2")}</p>
-        <Button variant="filled" onClick={() => createProposal()}>
-          {t("proposal.create", {}, { default: "Create a new proposal" })}
-        </Button>
+        <MessageCard
+          style={{ width: "100%" }}
+          variant="neutral"
+          message={emptyMessage}
+        />
+        {canCreate && templateOptions.length > 1 && (
+          <div
+            className="classChipRow"
+            role="radiogroup"
+            aria-label={t("newProject.selectTemplate", {}, {
+              default: "Select template",
+            })}
+          >
+            {templateOptions.map((option) => {
+              const key = getOptionKey(option);
+              return (
+                <Chip
+                  key={key}
+                  label={option.board?.title}
+                  selected={key === selectedKey}
+                  onClick={() => setSelectedKey(key)}
+                />
+              );
+            })}
+          </div>
+        )}
+        {canCreate && (
+          <Button
+            variant="filled"
+            disabled={!selectedOption || creating}
+            onClick={createFromClassTemplate}
+          >
+            {t("overview.createProjectBoard", {}, {
+              default: "Create project board",
+            })}
+          </Button>
+        )}
+        {needsClassConnection && (
+          <Button variant="filled" onClick={() => onRequestConnectClass?.()}>
+            {t("overview.connectToClass", {}, { default: "Connect to class" })}
+          </Button>
+        )}
       </div>
     );
   }
+
   return (
-    <div className="overview" id="overview">
-      <div className="navigationHeader">
-        <div></div>
-        <div>
-          <Button variant="filled" onClick={() => createProposal()}>
-            {t("proposal.create", {}, { default: "Create a new proposal" })}
-          </Button>
-        </div>
-      </div>
+    <div className="studyBoardList">
+      {proposals.map((prop) => {
+        const isMain = prop?.id === proposalMain?.id;
 
-      <div>
-        <div className="row">
-          <div className="proposalHeader">
-            <div>{t("proposal.name", "Proposal name")}</div>
-            <div>{t("proposal.dateCreated", "Date created")}</div>
-            <div>{t("proposal.status", "Status")}</div>
-            <div>{t("proposal.actions", "Actions")}</div>
-          </div>
-          <div></div>
-        </div>
-        {proposals?.map((prop) => (
-          <div key={prop?.id}>
-            <div className="row">
-              <div
-                className={
-                  prop?.id === proposalMain?.id ? `itemRow main` : `itemRow`
+        const setAsMain = () => {
+          if (isMain) return;
+          if (
+            !confirm(
+              t(
+                "overview.confirmMain",
+                {},
+                {
+                  default:
+                    "Are you sure you want to make this proposal the main one?",
                 }
-              >
-                <div>
-                  <p>{prop?.title}</p>
-                </div>
-                <div>
-                  <p>{moment(prop?.createdAt).format("MMMM D, YYYY")}</p>
-                </div>
-                <div>
-                  <p>{prop?.isSubmitted ? t("proposal.submitted", "Submitted") : t("proposal.notSubmitted", "Not submitted")}</p>
-                </div>
+              )
+            )
+          ) {
+            return;
+          }
+          updateStudy({
+            variables: {
+              id: studyId,
+              input: { proposalMain: { connect: { id: prop.id } } },
+            },
+            refetchQueries,
+          }).catch((err) => alert(err.message));
+        };
 
-                <div className="actionLinks">
-                  <button onClick={() => openProposal(prop?.id)}>{t("proposal.open", "Open")}</button>
-                  <button onClick={() => copyProposal(prop?.id)}>{t("proposal.copy", "Copy")}</button>
-                  {prop?.id !== proposalMain?.id && (
-                    <MakeMain
-                      studyId={studyId}
-                      proposalId={prop?.id}
-                      refetchQueries={refetchQueries}
-                    >
-                      <button>{t("proposal.selectAsMain", "Select as main")}</button>
-                    </MakeMain>
-                  )}
+        const onDelete = () => {
+          if (
+            !confirm(
+              t("deleteProposal.confirm", {}, {
+                default:
+                  "Are you sure you want to delete this proposal? All sections and cards in this proposal will be deleted as well.",
+              })
+            )
+          ) {
+            return;
+          }
+          deleteProposal({
+            variables: { id: prop.id },
+            refetchQueries,
+          }).catch((err) => alert(err.message));
+        };
 
-                  {!prop?.isSubmitted && (
-                    <DeleteProposal
-                      proposalId={prop?.id}
-                      refetchQueries={refetchQueries}
-                    >
-                      <button>{t("proposal.delete", "Delete")}</button>
-                    </DeleteProposal>
-                  )}
-                </div>
+        return (
+          <div
+            key={prop?.id}
+            className={clsx("studyBoardListRow", isMain && "isMain")}
+          >
+            <div>
+              <div className="studyBoardListTitle">{prop?.title}</div>
+              <div className="studyBoardListMeta">
+                <span>{moment(prop?.createdAt).format("MMMM D, YYYY")}</span>
+                {isMain && (
+                  <Chip
+                    variant="static"
+                    tone="info"
+                    label={t("overview.mainBoard", {}, { default: "Main" })}
+                  />
+                )}
               </div>
             </div>
+            <div className="studyBoardListActions">
+              <Button
+                variant="tonal"
+                onClick={() => openProposal(prop?.id)}
+              >
+                {t("overview.open", {}, { default: "Open" })}
+              </Button>
+              <Tooltip
+                side="top"
+                content={t("overview.favoriteRequiredForTeacher", {}, {
+                  default:
+                    "There must always be a proposal selected as favorite for the teacher to see.",
+                })}
+              >
+                <IconButton
+                  variant={isMain ? "tonal" : "text"}
+                  ariaLabel={t("overview.favoriteRequiredForTeacher", {}, {
+                    default:
+                      "There must always be a proposal selected as favorite for the teacher to see.",
+                  })}
+                  icon={
+                    <img
+                      src={
+                        isMain
+                          ? "/assets/icons/builder/medium-star-filled.svg"
+                          : "/assets/icons/builder/medium-star.svg"
+                      }
+                      alt=""
+                    />
+                  }
+                  onClick={setAsMain}
+                />
+              </Tooltip>
+              <Button variant="tonal" style={{ color: "var(--MH-Theme-Danger-Dark)", backgroundColor: "var(--MH-Theme-Danger-Light)" }} onClick={onDelete}>
+                {t("overview.delete", {}, { default: "Delete" })}
+              </Button>
+            </div>
           </div>
-        ))}
-      </div>
+        );
+      })}
     </div>
   );
 }
