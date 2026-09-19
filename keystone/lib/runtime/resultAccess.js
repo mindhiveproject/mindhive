@@ -1,3 +1,22 @@
+// Whoever works on the study through its project board — the board's author
+// or any collaborator on it. Students run a study this way (the study itself
+// belongs to their teacher), so they are researchers of it even though they
+// are neither Study.author nor in Study.collaborators.
+function boardMemberClause(id) {
+  return {
+    study: {
+      proposal: {
+        some: {
+          OR: [
+            { author: { id: { equals: id } } },
+            { collaborators: { some: { id: { equals: id } } } },
+          ],
+        },
+      },
+    },
+  };
+}
+
 function buildResultAccessFilter(session, isAdmin) {
   if (!session?.itemId) return false;
   if (isAdmin) return true;
@@ -9,6 +28,7 @@ function buildResultAccessFilter(session, isAdmin) {
       { assetAuthor: { id: { equals: id } } },
       { study: { author: { id: { equals: id } } } },
       { study: { collaborators: { some: { id: { equals: id } } } } },
+      boardMemberClause(id),
     ],
   };
 }
@@ -35,11 +55,13 @@ function buildResultManageFilter(session, isAdmin) {
       { assetAuthor: { id: { equals: id } } },
       { study: { author: { id: { equals: id } } } },
       { study: { collaborators: { some: { id: { equals: id } } } } },
+      boardMemberClause(id),
     ],
   };
 }
 
 module.exports = {
+  boardMemberClause,
   buildResultAccessFilter,
   buildResultManageFilter,
   buildSummaryAccessFilter,

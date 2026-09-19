@@ -5,14 +5,24 @@ import { saveAs } from "file-saver";
 import { jsonToCSV } from "react-papaparse";
 import useTranslation from "next-translate/useTranslation";
 
+import buildAggregateColumns from "../../../../../lib/yqParticipantAggregates";
+
 export default function DownloadRawData({
   slug,
   fileDirs,
   components,
   datasets,
+  dataSourceRecords,
 }) {
   const { t } = useTranslation("builder");
   const [loading, setLoading] = useState(false);
+
+  // the physiological aggregates collected while the participant was on each
+  // task, flattened into one column per device channel and statistic
+  const aggregateColumns = buildAggregateColumns({
+    records: dataSourceRecords || [],
+    components,
+  });
 
   const download = async () => {
     setLoading(true);
@@ -43,6 +53,12 @@ export default function DownloadRawData({
           dataPolicy: datasets
             .filter((d) => d?.token === result?.metadata?.id)
             .map((d) => d?.dataPolicy),
+          // constant across every row of the task — the aggregate covers the
+          // whole step, not one trial
+          ...aggregateColumns({
+            publicId: result?.metadata?.publicId,
+            testVersion: result?.metadata?.testVersion,
+          }),
         }))
       )
       .reduce((a, b) => a.concat(b), []);

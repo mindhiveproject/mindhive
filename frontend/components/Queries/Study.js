@@ -402,6 +402,15 @@ export const GET_STUDY_RESULTS = gql`
         metadataId
         createdAt
       }
+      dataSourceRecords {
+        profile {
+          publicId
+        }
+        guest {
+          publicId
+        }
+        steps
+      }
       consent {
         id
         title

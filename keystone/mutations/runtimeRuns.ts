@@ -183,6 +183,11 @@ export async function startRun(
     requestedTestVersion,
   );
   const datasetToken = randomBytes(18).toString("base64url");
+  // Unpadded ("2026-9-19"): this doubles as the raw-data folder name
+  // (data/2026/9/19/<token>), which api/save.ts writes and every Collect reader
+  // rebuilds from Dataset.date, so the format has to match theirs.
+  const now = new Date();
+  const runDate = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
   const assetAuthorId = runtime.asset.author?.id || null;
   const taskAuthorId = task.author?.id || null;
   if (!assetAuthorId || !taskAuthorId) {
@@ -192,7 +197,7 @@ export async function startRun(
   const dataset = await context.sudo().query.Dataset.createOne({
     data: {
       token: datasetToken,
-      date: new Date().toISOString().slice(0, 10),
+      date: runDate,
       profile: connect(participant.profileId),
       guest: connect(participant.guestId),
       type: participant.type,

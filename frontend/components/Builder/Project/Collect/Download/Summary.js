@@ -5,6 +5,8 @@ import moment from "moment";
 import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
+import buildAggregateColumns from "../../../../../lib/yqParticipantAggregates";
+
 export default function DownloadSummaryData({
   by,
   study,
@@ -15,6 +17,13 @@ export default function DownloadSummaryData({
 }) {
   const { t } = useTranslation("builder");
   const [loading, setLoading] = useState(false);
+
+  // the physiological aggregates collected while the participant was on each
+  // task, flattened into one column per device channel and statistic
+  const aggregateColumns = buildAggregateColumns({
+    records: study?.dataSourceRecords || [],
+    components,
+  });
 
   // pre-process and aggregate data on the subject level
   const process = ({ data }) => {
@@ -63,6 +72,10 @@ export default function DownloadSummaryData({
           condition: participant?.condition,
           dataPolicy,
           ...result.data,
+          ...aggregateColumns({
+            publicId: personalID,
+            testVersion: result.testVersion,
+          }),
         };
       });
 

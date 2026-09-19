@@ -176,7 +176,8 @@ export default class AggregateRecorder {
   /**
    * Builds a pipeline per linked data source and starts them.
    *
-   * `studyDataSources` are the rows from STUDY_DATA_SOURCES, already ordered.
+   * `studyDataSources` are the rows from STUDY_DATA_SOURCES, already ordered;
+   * `stepId` is the flow step the participant is on right now.
    * A row whose settings turn off "Record participant data" is skipped
    * entirely — no pipeline is even built for it, since its purpose here is
    * exclusively to produce data that reaches the server.
@@ -188,8 +189,14 @@ export default class AggregateRecorder {
    * `start()` (an optional input, paired post-gate) is attached later
    * through `attachReceiver`.
    */
-  async start(studyDataSources, receivers = {}) {
+  async start(studyDataSources, receivers = {}, stepId = null) {
     if (this.running) return;
+    // The step is taken here rather than via `setStep` afterwards: this method
+    // is async (yq-data is imported dynamically), so a `setStep` issued in the
+    // same tick finds `running` still false and is dropped — and because the
+    // runner reloads between tasks, the step never changes again within this
+    // recorder's life, so nothing would ever open a step window.
+    this.stepId = stepId;
     const { Pipeline, getChannelCount, isCategorical } = await import("yq-data");
     this.getChannelCount = getChannelCount;
     this.isCategorical = isCategorical;

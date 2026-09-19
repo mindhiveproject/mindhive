@@ -79,7 +79,7 @@ function defaultLeave(study, user) {
  * reconnect devices partway through.
  */
 export default function StudyDataSourcesRuntime({ study, user, currentStepId, children }) {
-  const { data } = useQuery(STUDY_DATA_SOURCES, {
+  const { data, loading } = useQuery(STUDY_DATA_SOURCES, {
     variables: { studyId: study?.id },
     skip: !study?.id,
   });
@@ -142,7 +142,7 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
       });
       receivers[row.id] = rowReceivers;
     });
-    recorderRef.current.start(activeRows, receivers);
+    recorderRef.current.start(activeRows, receivers, currentStepId ?? null);
     // Deliberately only re-runs when the gate itself changes — activeRows
     // and apis are read at that moment, not tracked afterward.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -208,6 +208,12 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Until the linked sources are known, whether the connect gate will replace
+  // `children` is unknown too. Rendering them now would mount the task, which
+  // starts a run (and creates its Dataset), only for the gate to unmount it
+  // straight away — leaving an empty Dataset behind for every participation.
+  if (loading && !data) return null;
 
   if (!activeRows.length) {
     return (

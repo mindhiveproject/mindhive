@@ -6,6 +6,8 @@ import { jsonToCSV } from "react-papaparse";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
+import buildAggregateColumns from "../../../../../lib/yqParticipantAggregates";
+
 export default function DownloadByComponent({
   studyId,
   study,
@@ -19,6 +21,13 @@ export default function DownloadByComponent({
 
   const [loadingSummary, setLoadingSummary] = useState(false);
   const [loadingRaw, setLoadingRaw] = useState(false);
+
+  // the physiological aggregates collected while the participant was on each
+  // task, flattened into one column per device channel and statistic
+  const aggregateColumns = buildAggregateColumns({
+    records: study?.dataSourceRecords || [],
+    components,
+  });
 
   const options = components.map((c) => ({
     ...c,
@@ -79,6 +88,10 @@ export default function DownloadByComponent({
           condition: participant?.condition,
           dataPolicy,
           ...result.data,
+          ...aggregateColumns({
+            publicId: personalID,
+            testVersion: result.testVersion,
+          }),
         };
       });
     return dataByTask;
@@ -104,6 +117,12 @@ export default function DownloadByComponent({
           dataPolicy: datasets
             .filter((d) => d?.token === result?.metadata?.id)
             .map((d) => d?.dataPolicy),
+          // constant across every row of the task — the aggregate covers the
+          // whole step, not one trial
+          ...aggregateColumns({
+            publicId: result?.metadata?.publicId,
+            testVersion: result?.metadata?.testVersion,
+          }),
         }))
       )
       .reduce((a, b) => a.concat(b), []);

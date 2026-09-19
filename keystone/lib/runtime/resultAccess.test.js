@@ -39,3 +39,23 @@ test("result ACL includes participant and both server-derived authors", () => {
     user: { id: { equals: "profile-1" } },
   });
 });
+
+test("project board members can read and manage their study's results", () => {
+  const session = { itemId: "student-1" };
+  const boardClause = {
+    study: {
+      proposal: {
+        some: {
+          OR: [
+            { author: { id: { equals: "student-1" } } },
+            { collaborators: { some: { id: { equals: "student-1" } } } },
+          ],
+        },
+      },
+    },
+  };
+  assert.deepEqual(buildResultAccessFilter(session, false).OR.at(-1), boardClause);
+  assert.deepEqual(buildResultManageFilter(session, false).OR.at(-1), boardClause);
+  // SummaryResult also has `study`, so the clause passes through unchanged
+  assert.deepEqual(buildSummaryAccessFilter(session, false).OR.at(-1), boardClause);
+});
