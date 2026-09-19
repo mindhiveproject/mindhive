@@ -28,7 +28,9 @@ export default function Manager({
   const components = { ...studyComponentsData?.study?.components } || {};
 
   const { path } = info;
-  const [currentStep, setCurrentStep] = useState({});
+  // null until the step is resolved below: the task must not mount (and start
+  // a run) with a step-less, version-less first render.
+  const [currentStep, setCurrentStep] = useState(null);
 
   // find out the current step
   useEffect(() => {
@@ -44,7 +46,7 @@ export default function Manager({
         }
         setCurrentStep(step);
       } else {
-        setCurrentStep(path[path.length - 1]);
+        setCurrentStep(path[path.length - 1] ?? {});
       }
     }
     if (info) {
@@ -303,8 +305,9 @@ export default function Manager({
   // aggregate recorder, both of which need to survive the test -> post
   // transition, not reconnect/restart at the worst possible moment.
   if (
-    (page === "test" && (task || currentStep?.componentID)) ||
-    page === "post"
+    currentStep &&
+    ((page === "test" && (task || currentStep?.componentID)) ||
+      page === "post")
   ) {
     return (
       <StudyDataSourcesRuntime study={study} user={user} currentStepId={currentStep?.id}>

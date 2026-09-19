@@ -391,6 +391,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       type RuntimeRunContext {
         runToken: String!
         datasetToken: String!
+        date: String
         runtimeType: String!
         testVersion: String
         studyVersion: String

@@ -80,40 +80,47 @@ export default function Prompt({
   const isStudent = user?.permissions?.map((p) => p.name).includes("STUDENT");
 
   const saveResponsesAndProceed = async ({ proceedToNextTask }) => {
-    // save the data usage consent response given by user
-    if (!dataUsageConsentWasGiven && dataUse) {
-      const updatedStudiesInfo = {
-        ...studiesInfo,
-        [study?.id]: {
-          ...studiesInfo[study?.id],
-          dataPolicy: {
-            ...studiesInfo[study?.id]?.dataPolicy,
-            [study?.currentVersion]: dataUse,
+    // These saves are best effort: a participant who has finished must never be
+    // stranded on this screen because one of them failed, so the navigation
+    // below runs regardless.
+    try {
+      // save the data usage consent response given by user
+      if (!dataUsageConsentWasGiven && dataUse) {
+        const updatedStudiesInfo = {
+          ...studiesInfo,
+          [study?.id]: {
+            ...studiesInfo[study?.id],
+            dataPolicy: {
+              ...studiesInfo[study?.id]?.dataPolicy,
+              [study?.currentVersion]: dataUse,
+            },
           },
-        },
-      };
+        };
 
-      if (user.type === "GUEST") {
-        await updateGuestStudyInfo({
-          variables: { studiesInfo: updatedStudiesInfo },
-        });
-      } else {
-        await updateUserStudyInfo({
-          variables: { studiesInfo: updatedStudiesInfo },
-        });
+        if (user.type === "GUEST") {
+          await updateGuestStudyInfo({
+            variables: { studiesInfo: updatedStudiesInfo },
+          });
+        } else {
+          await updateUserStudyInfo({
+            variables: { studiesInfo: updatedStudiesInfo },
+          });
+        }
       }
-    }
 
-    // save responses by updating the dataset
-    await updateRunDataPolicy({
-      variables: { runToken, dataPolicy: dataUse || "UNSPECIFIED" },
-    });
+      // save responses by updating the dataset
+      await updateRunDataPolicy({
+        variables: { runToken, dataPolicy: dataUse || "UNSPECIFIED" },
+      });
 
-    // Both exits below destroy the page, and with it the recorder holding this
-    // task's data source aggregates — store them before leaving rather than
-    // relying on the pagehide backstop.
-    if (flushDataSources) {
-      await flushDataSources();
+      // Both exits below destroy the page, and with it the recorder holding
+      // this task's data source aggregates — store them before leaving rather
+      // than relying on the pagehide backstop.
+      if (flushDataSources) {
+        await flushDataSources();
+      }
+    } catch (error) {
+      console.error("Could not save the responses before leaving", error);
     }
 
     // proceed to the next task or to the main page

@@ -22,6 +22,7 @@ const RUN_CONTEXT_QUERY = `
   query RuntimeRunContext($runToken: String!) {
     runtimeRunContext(runToken: $runToken) {
       datasetToken
+      date
       runtimeType
       testVersion
       studyVersion
@@ -136,13 +137,16 @@ export default async function handler(
       .json({ error: 'The run token is invalid or expired.' });
   }
 
-  const curDate = new Date();
-  const year = String(curDate.getFullYear());
-  const month = String(curDate.getMonth() + 1);
-  const day = String(curDate.getDate());
-  const { datasetToken } = runContext;
+  // The folder is the Dataset's own date, which is what every reader rebuilds
+  // the path from — not this request's clock, which disagrees with it on
+  // padding and across midnight.
+  const { datasetToken, date } = runContext;
+  const [year, month, day] = String(date ?? '').split('-');
   try {
     validatePathSegment(datasetToken, 'dataset token');
+    validatePathSegment(year, 'year');
+    validatePathSegment(month, 'month');
+    validatePathSegment(day, 'day');
   } catch {
     return res.status(401).json({ error: 'The run token is invalid.' });
   }

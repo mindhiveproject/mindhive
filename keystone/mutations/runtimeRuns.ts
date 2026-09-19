@@ -183,9 +183,9 @@ export async function startRun(
     requestedTestVersion,
   );
   const datasetToken = randomBytes(18).toString("base64url");
-  // Unpadded ("2026-9-19"): this doubles as the raw-data folder name
-  // (data/2026/9/19/<token>), which api/save.ts writes and every Collect reader
-  // rebuilds from Dataset.date, so the format has to match theirs.
+  // Unpadded ("2026-9-19"), matching how the run date has always been
+  // written: it is also the raw-data folder name (data/2026/9/19/<token>) that
+  // every Collect reader rebuilds from Dataset.date.
   const now = new Date();
   const runDate = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
   const assetAuthorId = runtime.asset.author?.id || null;
@@ -457,7 +457,7 @@ export async function runtimeRunContext(
   const dataset = await context.sudo().query.Dataset.findOne({
     where: { id: claims.datasetId },
     query:
-      `id token type runtimeType testVersion studyVersion runtimeAssetId
+      `id token date type runtimeType testVersion studyVersion runtimeAssetId
        runtimeAssetVersion profile { id publicId } guest { id publicId }
        study { id } task { id } template { id }`,
   });
@@ -468,6 +468,7 @@ export async function runtimeRunContext(
   return {
     runToken,
     datasetToken: dataset.token,
+    date: dataset.date,
     runtimeType: dataset.runtimeType,
     testVersion: dataset.testVersion,
     studyVersion: dataset.studyVersion,
