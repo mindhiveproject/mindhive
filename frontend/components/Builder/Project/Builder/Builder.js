@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import Widget from "./Widget";
@@ -11,6 +12,7 @@ import Modal from "./Modal/Main";
 import StudyPreview from "../../../Studies/Preview/Main";
 
 import InDev from "../../../Global/InDev";
+import { GET_CLASSES } from "../../../Queries/Classes";
 import StudyConnector from "../../../Projects/StudyConnector/Main";
 import Button from "../../../DesignSystem/Button";
 import IconButton from "../../../DesignSystem/IconButton";
@@ -42,6 +44,19 @@ export default function Builder({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStudyPreviewOpen, setStudyPreviewOpen] = useState(false);
   const [dataSourceSettingsId, setDataSourceSettingsId] = useState(null);
+
+  // Physiological data is opt-in per class; a study gets the data sources
+  // panel when at least one of its classes has turned the setting on. Read
+  // from the server rather than study.classes, which only holds ids after a
+  // class is linked in the builder.
+  const classIds = (study?.classes || []).map((cl) => cl?.id).filter(Boolean);
+  const { data: classesData } = useQuery(GET_CLASSES, {
+    variables: { input: { id: { in: classIds } } },
+    skip: !classIds.length,
+  });
+  const physiologicalDataEnabled = (classesData?.classes || []).some(
+    (cl) => cl?.settings?.physiologicalDataEnabled === true
+  );
 
   if (isCanvasLocked && engine?.getModel()) {
     engine.getModel().setLocked(true);
@@ -201,12 +216,14 @@ export default function Builder({
             onCloseDataSourceSettings={() => setDataSourceSettingsId(null)}
           />
         </div>
-        <DataSources
-          study={study}
-          user={user}
-          dataSourceSettingsId={dataSourceSettingsId}
-          onOpenSettings={setDataSourceSettingsId}
-        />
+        {physiologicalDataEnabled && (
+          <DataSources
+            study={study}
+            user={user}
+            dataSourceSettingsId={dataSourceSettingsId}
+            onOpenSettings={setDataSourceSettingsId}
+          />
+        )}
         <div className="boardTopActions">
           <Button
             id="commentButton"

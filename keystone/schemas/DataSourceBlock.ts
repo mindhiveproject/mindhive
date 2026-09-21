@@ -96,7 +96,7 @@ export const DataSourceBlock = list({
     //     record?: { nodes: [nodeId] } }
     // `record` is the passive "which outputs a session captures" selection the
     // package carries in the graph itself; only aggregates of those reach the
-    // server, and the raw values are a client-side download for now.
+    // server. Future: let researchers download the raw values to their computer.
     graph: json({ defaultValue: { nodes: [], edges: [] } }),
 
     // Declares the "Advanced Options" fields the study builder's data source

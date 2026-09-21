@@ -381,20 +381,6 @@ export default function DataSourceSettingsTab({ study, studyDataSourceId, onClos
                   })}
                 />
               </div>
-              <div style={TOGGLE_ROW_STYLE}>
-                <div style={TOGGLE_TEXT_STYLE}>
-                  <p className="MH-Type-Body-Base" style={TOGGLE_LABEL_STYLE}>
-                    {t("dataSources.settings.downloadToComputer", {}, {
-                      default: "Download to computer",
-                    })}
-                  </p>
-                </div>
-                <Checkbox checked={false} disabled ariaLabel={t(
-                  "dataSources.settings.downloadToComputer",
-                  {},
-                  { default: "Download to computer" }
-                )} />
-              </div>
             </div>
           </>
         )}
