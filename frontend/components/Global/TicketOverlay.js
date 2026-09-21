@@ -5,7 +5,11 @@ import styled from "styled-components";
 
 import { UserContext } from "./Authorized";
 import Button from "../DesignSystem/Button";
-import { surfaceForRoute } from "../../lib/surfaces";
+import Chip from "../DesignSystem/Chip";
+import IconButton from "../DesignSystem/IconButton";
+import Tooltip from "../DesignSystem/Tooltip";
+import { ArrowOutwardIcon, CloseIcon } from "../DesignSystem/Icons";
+import { surfaceForRoute, designKeysFor, getSurface } from "../../lib/surfaces";
 import { parseFigmaUrl, describeFigmaUrl } from "../../lib/figmaUrl";
 import { parseNotionPageUrl } from "../../lib/notionUrl";
 import { onOpenTicketPanel, announceOpenTicketCount } from "../../lib/ticketPanel";
@@ -21,7 +25,7 @@ import {
   CREATE_TICKET_WITH_SCREENSHOT,
   SET_TICKET_STATUS,
 } from "../Mutations/Ticket";
-import { GET_TICKETS_FOR_SURFACE } from "../Queries/Ticket";
+import { GET_TICKETS_FOR_SURFACE, GET_SURFACE_DESIGNS } from "../Queries/Ticket";
 
 /**
  * File a ticket against the page you are looking at.
@@ -64,19 +68,30 @@ const OPEN_STATUSES = ["OPEN", "ACCEPTED", "IN_PROGRESS"];
  * because the two drifted: figmaDesignUrl was added to the start but not to the
  * reset, so after filing it became undefined and "File another" crashed on
  * `.trim()`. One constant cannot drift from itself.
+ *
+ * `figmaDesignUrl: null` is "untouched", which shows the suggested link for
+ * this surface; "" is "cleared on purpose" and stays empty. See `figmaValue`.
  */
 const EMPTY_FORM = {
   title: "",
   kind: "BUG",
   priority: "NORMAL",
   description: "",
-  figmaDesignUrl: "",
+  figmaDesignUrl: null,
   supportTicketUrl: "",
   withScreenshot: true,
 };
 
 // Capitalised, and rendered as a chip: a bare lowercase "open" beside a link
-// read as the verb — as if it opened the ticket.
+// read as the verb — as if it opened the ticket. The tone is the design system
+// chip's, chosen to stay legible on the yellow "already open" callout.
+const STATUS_TONES = {
+  OPEN: "danger",
+  ACCEPTED: "neutral",
+  IN_PROGRESS: "info",
+  SHIPPED: "success",
+  WONTFIX: "neutral",
+};
 const STATUS_LABELS = {
   OPEN: "Open",
   ACCEPTED: "Accepted",
@@ -144,10 +159,31 @@ export default function TicketOverlay() {
   const surfaceKey = surface?.key ?? null;
   const noCapture = captureForbidden(surfaceKey);
 
-  const figmaParsed = parseFigmaUrl(form.figmaDesignUrl);
-  const figmaSummary = describeFigmaUrl(form.figmaDesignUrl);
+  // The link last filed for this surface, else the nearest ancestor's. Only a
+  // suggestion: it fills the field until the reporter types, and is filed like
+  // anything they pasted. Tickets themselves are never filled in server-side.
+  const { data: designData, refetch: refetchDesigns } = useQuery(GET_SURFACE_DESIGNS, {
+    variables: { keys: surfaceKey ? designKeysFor(surfaceKey) : [] },
+    skip: !canManageTickets || !surfaceKey,
+    fetchPolicy: "cache-and-network",
+  });
+  const suggestion = surfaceKey
+    ? designKeysFor(surfaceKey)
+        .map((key) => designData?.surfaceDesigns?.find((row) => row.surface === key))
+        .find(Boolean)
+    : null;
+  const figmaSuggestedFrom =
+    form.figmaDesignUrl === null && suggestion
+      ? suggestion.surface === surfaceKey
+        ? "The design file last used on this page."
+        : `The design file for ${getSurface(suggestion.surface)?.label ?? suggestion.surface}.`
+      : null;
+  const figmaValue = form.figmaDesignUrl ?? suggestion?.figmaDesignUrl ?? "";
+
+  const figmaParsed = parseFigmaUrl(figmaValue);
+  const figmaSummary = describeFigmaUrl(figmaValue);
   const figmaHasNode = !!figmaParsed?.nodeId;
-  const figmaInvalid = form.figmaDesignUrl.trim() !== "" && !figmaSummary;
+  const figmaInvalid = figmaValue.trim() !== "" && !figmaSummary;
 
   // One support ticket at filing; more can be linked on the ticket page.
   const supportUrl = form.supportTicketUrl.trim();
@@ -207,6 +243,16 @@ export default function TicketOverlay() {
     router.events.on("routeChangeStart", close);
     return () => router.events.off("routeChangeStart", close);
   }, [router.events]);
+
+  // The Figma field is per surface: what was typed (or cleared) on one page is
+  // not an answer for the next. Back to "untouched", so the new surface shows
+  // its own suggestion. Keyed on the surface rather than on every route change,
+  // so a link typed here survives a reload of the same page's query string.
+  useEffect(() => {
+    setForm((current) =>
+      current.figmaDesignUrl === null ? current : { ...current, figmaDesignUrl: null }
+    );
+  }, [surfaceKey]);
 
   // Tell the Help Center how many are open here, so its launcher can show it
   // before anyone opens the panel. Zero when the viewer cannot see tickets.
@@ -317,7 +363,7 @@ export default function TicketOverlay() {
         // already skips empty values. (An earlier version sent null here on
         // the mistaken belief that "" would fail that check — it failed
         // every ticket filed without a link instead.)
-        figmaDesignUrl: form.figmaDesignUrl.trim(),
+        figmaDesignUrl: figmaValue.trim(),
         supportTickets: supportUrl ? [supportUrl] : [],
       };
       const result = screenshot
@@ -331,7 +377,7 @@ export default function TicketOverlay() {
       });
       setForm(EMPTY_FORM);
       setShot(null);
-      await refetch();
+      await Promise.all([refetch(), refetchDesigns()]);
     } catch (submitError) {
       setError(submitError.message || "Could not file the ticket.");
     }
@@ -375,9 +421,12 @@ export default function TicketOverlay() {
               <SurfaceKey>{surfaceKey ?? router.pathname}</SurfaceKey>
             </div>
             <Chord aria-hidden="true">{TOGGLE_HINT}</Chord>
-            <CloseButton type="button" onClick={() => setOpen(false)} aria-label="Close">
-              ×
-            </CloseButton>
+            <IconButton
+              variant="subtle"
+              icon={<CloseIcon />}
+              ariaLabel="Close"
+              onClick={() => setOpen(false)}
+            />
           </PanelHead>
 
           {!surfaceKey && (
@@ -413,33 +462,50 @@ export default function TicketOverlay() {
 
                   {/* New tab, deliberately: you are part-way through filing on
                       this page, and navigating away would lose the form. */}
-                  <ViewButton
-                    href={`/dashboard/tickets/${ticket.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Button
+                    variant="outline"
+                    trailingIcon={<ArrowOutwardIcon />}
+                    onClick={() =>
+                      window.open(`/dashboard/tickets/${ticket.id}`, "_blank", "noopener,noreferrer")
+                    }
                     aria-label={`View "${ticket.title}" — opens in a new tab`}
+                    style={{ justifySelf: "end" }}
                   >
-                    View details <span aria-hidden="true">↗</span>
-                  </ViewButton>
+                    View details
+                  </Button>
 
                   <ExistingMeta>
-                    <StatusChip data-status={ticket.status}>
-                      <VisuallyHidden>Status: </VisuallyHidden>
-                      {STATUS_LABELS[ticket.status] ?? ticket.status}
-                    </StatusChip>
-                    <Tag data-claimed={ticket.assignee ? "yes" : "no"}>
-                      {ticket.assignee ? `${ticket.assignee.username} is on it` : "Unclaimed"}
-                    </Tag>
+                    <Chip
+                      variant="static"
+                      tone={STATUS_TONES[ticket.status] ?? "neutral"}
+                      label={STATUS_LABELS[ticket.status] ?? ticket.status}
+                      ariaLabel={`Status: ${STATUS_LABELS[ticket.status] ?? ticket.status}`}
+                    />
+                    <Tooltip
+                      maxWidth={280}
+                      content={
+                        ticket.assignee
+                          ? `${ticket.assignee.username} has claimed this ticket and is working on it. Check with them before starting.`
+                          : "Nobody is working on this yet. Open the ticket and choose “I’m taking this” to claim it, so two people don’t fix the same thing."
+                      }
+                    >
+                      <Chip
+                        variant="static"
+                        tone={ticket.assignee ? "info" : "neutral"}
+                        label={ticket.assignee ? `${ticket.assignee.username} is on it` : "Unclaimed"}
+                      />
+                    </Tooltip>
                     <FigmaLink url={ticket.figmaDesignUrl} />
                   </ExistingMeta>
 
-                  <MarkShipped
-                    type="button"
+                  <Button
+                    variant="text"
                     onClick={() => markShipped(ticket.id)}
                     title="Mark this ticket as shipped — it will close here and in Notion"
+                    style={{ justifySelf: "end" }}
                   >
                     Mark as shipped
-                  </MarkShipped>
+                  </Button>
                 </ExistingRow>
               ))}
             </Existing>
@@ -448,9 +514,9 @@ export default function TicketOverlay() {
           {filed ? (
             <Notice tone="ok">
               Filed{filed.withScreenshot ? " with a screenshot" : " without a screenshot"}.{" "}
-              <LinkButton type="button" onClick={() => setFiled(null)}>
+              <Button variant="text" onClick={() => setFiled(null)}>
                 File another
-              </LinkButton>
+              </Button>
             </Notice>
           ) : (
             <form onSubmit={submit}>
@@ -510,19 +576,45 @@ export default function TicketOverlay() {
                 <label htmlFor="mh-ticket-figma">
                   Where is the intended design? <Optional>optional</Optional>
                 </label>
-                <input
-                  id="mh-ticket-figma"
-                  type="url"
-                  value={form.figmaDesignUrl}
-                  onChange={set("figmaDesignUrl")}
-                  placeholder="Paste a Figma link"
-                  aria-describedby="mh-ticket-figma-hint"
-                  aria-invalid={figmaInvalid || undefined}
-                />
+                {figmaSuggestedFrom && figmaSummary ? (
+                  <>
+                    {/* A suggestion, shown as the link it is rather than as
+                        text to edit. Untouched, it is filed as-is. */}
+                    <SuggestedLink>
+                      <FigmaLink url={figmaValue} detail copyable />
+                      <Button
+                        variant="text"
+                        onClick={() => setForm((current) => ({ ...current, figmaDesignUrl: "" }))}
+                      >
+                        Use a different link
+                      </Button>
+                    </SuggestedLink>
+                    <Hint id="mh-ticket-figma-hint">{figmaSuggestedFrom}</Hint>
+                  </>
+                ) : (
+                  <input
+                    id="mh-ticket-figma"
+                    type="url"
+                    value={figmaValue}
+                    onChange={set("figmaDesignUrl")}
+                    placeholder="Paste a Figma link"
+                    aria-describedby="mh-ticket-figma-hint"
+                    aria-invalid={figmaInvalid || undefined}
+                  />
+                )}
+                {suggestion && form.figmaDesignUrl !== null && (
+                  <Button
+                    variant="text"
+                    onClick={() => setForm((current) => ({ ...current, figmaDesignUrl: null }))}
+                    style={{ alignSelf: "flex-start" }}
+                  >
+                    Use the suggested link
+                  </Button>
+                )}
                 {/* Parsed live so a wrong paste — a prototype link, a URL with
                     no node-id, a page that is not Figma — is visible here
                     rather than months later when someone clicks it. */}
-                {form.figmaDesignUrl.trim() !== "" &&
+                {!figmaSuggestedFrom && figmaValue.trim() !== "" &&
                   (figmaSummary ? (
                     <Hint id="mh-ticket-figma-hint">Links to {figmaSummary}</Hint>
                   ) : (
@@ -530,7 +622,7 @@ export default function TicketOverlay() {
                       That does not look like a figma.com link.
                     </Hint>
                   ))}
-                {form.figmaDesignUrl.trim() !== "" && figmaSummary && !figmaHasNode && (
+                {figmaValue.trim() !== "" && figmaSummary && !figmaHasNode && (
                   <Hint id="mh-ticket-figma-hint" tone="warn">
                     No frame selected — the link opens the whole file. Select the
                     frame in Figma and copy the link again to point at it.
@@ -588,17 +680,17 @@ export default function TicketOverlay() {
                         </Thumb>
                       )}
                       <ShotActions>
-                        <ShotButton type="button" onClick={previewAndMarkUp} disabled={capturing}>
+                        <Button variant="outline" onClick={previewAndMarkUp} disabled={capturing}>
                           {capturing
                             ? "Capturing…"
                             : shot?.shapes?.length
                               ? "Edit markup"
                               : "Preview & mark up"}
-                        </ShotButton>
+                        </Button>
                         {shot && (
-                          <LinkButton type="button" onClick={() => setShot(null)}>
+                          <Button variant="text" onClick={() => setShot(null)}>
                             Retake
-                          </LinkButton>
+                          </Button>
                         )}
                         {!shot && (
                           <ShotHint>Optional — circle what is wrong, add arrows and notes.</ShotHint>
@@ -698,8 +790,6 @@ const PanelHead = styled.div`
 const Eyebrow = styled.p`
   margin: 0 0 2px;
   font: var(--MH-Type-Label-Small);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
   color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
 `;
 
@@ -717,21 +807,6 @@ const SurfaceKey = styled.p`
   word-break: break-all;
 `;
 
-const CloseButton = styled.button`
-  flex: none;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 24px;
-  line-height: 1;
-  padding: 0 4px;
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-
-  &:hover {
-    color: var(--MH-Theme-Neutrals-Black, #171717);
-  }
-`;
-
 const Field = styled.div`
   display: flex;
   flex-direction: column;
@@ -743,6 +818,13 @@ const Field = styled.div`
     font: var(--MH-Type-Label-Base);
     color: var(--MH-Theme-Neutrals-Black, #171717);
   }
+`;
+
+const SuggestedLink = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 `;
 
 const Optional = styled.span`
@@ -806,24 +888,6 @@ const ShotActions = styled.div`
   align-items: center;
   flex-wrap: wrap;
   gap: 4px 12px;
-`;
-
-const ShotButton = styled.button`
-  padding: 6px 12px;
-  border-radius: 100px;
-  border: 1px solid var(--MH-Theme-Primary-Dark, #336f8a);
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
-  color: var(--MH-Theme-Primary-Dark, #336f8a);
-  font: var(--MH-Type-Label-Small);
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    background: var(--MH-Theme-Primary-Light, #def8fb);
-  }
-  &:disabled {
-    opacity: 0.6;
-    cursor: progress;
-  }
 `;
 
 const ShotHint = styled.span`
@@ -933,114 +997,6 @@ const ExistingMeta = styled.div`
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-`;
-
-/* A bordered button, not underlined text: unmistakably "go and read this",
-   and visually unlike the status chip beside it. */
-const ViewButton = styled.a`
-  justify-self: end;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 12px;
-  border-radius: 100px;
-  border: 1px solid var(--MH-Theme-Primary-Dark, #336f8a);
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
-  color: var(--MH-Theme-Primary-Dark, #336f8a);
-  font: var(--MH-Type-Label-Small);
-  text-decoration: none;
-  white-space: nowrap;
-
-  &:hover {
-    background: var(--MH-Theme-Primary-Light, #def8fb);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
-    outline-offset: 2px;
-  }
-`;
-
-/* The ticket's state. White with a coloured dot, NOT the board's tinted pill:
-   the board's OPEN pill is Accent-Light, the same yellow as this callout, and
-   would vanish against it. */
-const StatusChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 10px;
-  border-radius: 100px;
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
-  color: var(--MH-Theme-Neutrals-Black, #171717);
-  font: var(--MH-Type-Label-Small);
-  white-space: nowrap;
-
-  &::before {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
-  }
-  &[data-status="OPEN"]::before {
-    background: var(--MH-Theme-Warning-Base, #b9261a);
-  }
-  &[data-status="ACCEPTED"]::before {
-    background: var(--MH-Theme-Accent-Dark, #5d5763);
-  }
-  &[data-status="IN_PROGRESS"]::before {
-    background: var(--MH-Theme-Primary-Dark, #336f8a);
-  }
-`;
-
-/* A verb, capitalised, so it reads as something you do — not as a state. */
-const MarkShipped = styled.button`
-  justify-self: end;
-  border: none;
-  background: none;
-  padding: 0;
-  font: var(--MH-Type-Label-Small);
-  color: var(--MH-Theme-Accent-Dark, #5d5763);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  cursor: pointer;
-  white-space: nowrap;
-
-  &:hover {
-    color: var(--MH-Theme-Success-Dark, #1d6b3a);
-  }
-`;
-
-const VisuallyHidden = styled.span`
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-`;
-
-
-const Tag = styled.span`
-  font: var(--MH-Type-Label-Small);
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-  white-space: nowrap;
-
-  &[data-claimed="yes"] {
-    color: var(--MH-Theme-Primary-Dark, #336f8a);
-  }
-`;
-
-const LinkButton = styled.button`
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-  font: var(--MH-Type-Label-Small);
-  color: var(--MH-Theme-Primary-Dark, #336f8a);
-  text-decoration: underline;
 `;
 
 const NOTICE_TONES = {

@@ -48,6 +48,7 @@ import { Resource } from "./schemas/Resource";
 import { Log } from "./schemas/Log";
 import { Ticket } from "./schemas/Ticket";
 import { TicketAnnotation } from "./schemas/TicketAnnotation";
+import { SurfaceDesign } from "./schemas/SurfaceDesign";
 import { Datasource } from "./schemas/Datasource";
 import { DataSourceBlock } from "./schemas/DataSourceBlock";
 import { StudyDataSource } from "./schemas/StudyDataSource";
@@ -134,6 +135,7 @@ export const lists: Lists = {
   Log,
   Ticket,
   TicketAnnotation,
+  SurfaceDesign,
   Datasource,
   DataSourceBlock,
   StudyDataSource,

@@ -42,6 +42,18 @@ export const GET_TICKETS_FOR_SURFACE = gql`
   }
 `;
 
+// The Figma links on record for a surface and its ancestors — the overlay picks
+// the most specific one to suggest. See SurfaceDesign in keystone/schemas.
+export const GET_SURFACE_DESIGNS = gql`
+  query GET_SURFACE_DESIGNS($keys: [String!]!) {
+    surfaceDesigns(where: { surface: { in: $keys } }) {
+      id
+      surface
+      figmaDesignUrl
+    }
+  }
+`;
+
 export const GET_TICKET = gql`
   query GET_TICKET($id: ID!) {
     ticket(where: { id: $id }) {

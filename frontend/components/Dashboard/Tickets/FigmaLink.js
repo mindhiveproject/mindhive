@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
 import { describeFigmaUrl, parseFigmaUrl } from "../../../lib/figmaUrl";
+import Chip from "../../DesignSystem/Chip";
+import CopyButton from "../../DesignSystem/CopyButton";
+import { ArrowOutwardIcon } from "../../DesignSystem/Icons";
 
 /**
  * A compact link to where a ticket's intended design lives.
@@ -8,7 +11,8 @@ import { describeFigmaUrl, parseFigmaUrl } from "../../../lib/figmaUrl";
  * Used in the filing panel's open-ticket rows and on the ticket page, so the
  * same link looks the same in both. The Figma mark does the recognising, which
  * is what lets the chip stay small; the file and node it points at are in the
- * tooltip and the accessible name rather than taking up the row.
+ * tooltip and the accessible name rather than taking up the row (or, with
+ * `detail`, in the label — where it is the thing being confirmed).
  *
  * Always opens in a new tab — in the panel you are part-way through filing,
  * and on the ticket page you almost certainly want both side by side.
@@ -16,61 +20,78 @@ import { describeFigmaUrl, parseFigmaUrl } from "../../../lib/figmaUrl";
  * Renders nothing for an empty or non-Figma URL, so callers can pass the field
  * straight through without guarding it.
  *
+ * `copyable` adds a "Copy link" chip beside it. Figma often will not open from a
+ * click — a file the browser cannot hand to the desktop app, a link that has to
+ * be pasted into a fresh tab — so copying the link this points at is sometimes
+ * the only way to use it.
+ *
  * Two variants, because the two places want opposite things:
  *   - "chip" (default): the filing panel's rows, where it must stay small
  *     beside the status and assignee
  *   - "card": the ticket page, where for a design ticket the intended design
  *     IS the argument, so it should be the first thing under the title
  */
-export default function FigmaLink({ url, detail = false, variant = "chip" }) {
+export default function FigmaLink({ url, detail = false, copyable = false, variant = "chip" }) {
   const description = describeFigmaUrl(url);
   if (!description) return null;
 
   if (variant === "card") {
     const parsed = parseFigmaUrl(url);
     return (
-      // The whole card is the link — a larger target than a button inside it,
-      // and nothing else in the card is interactive, so there is no nesting.
-      <Card
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Open the intended design in Figma: ${description} — opens in a new tab`}
-      >
-        <MarkTile aria-hidden="true">
-          <FigmaMark size={22} />
-        </MarkTile>
-        <CardText>
-          <CardEyebrow>Intended design</CardEyebrow>
-          <CardName>{parsed?.name || parsed?.fileKey}</CardName>
-          {parsed?.nodeId ? (
-            <CardSub>Frame {parsed.nodeId}</CardSub>
-          ) : (
-            <CardSub data-tone="warn">
-              Links to the whole file, not a specific frame
-            </CardSub>
-          )}
-        </CardText>
-        <CardAction aria-hidden="true" data-card-action>
-          Open in Figma <span>↗</span>
-        </CardAction>
-      </Card>
+      <CardRow>
+        {/* The whole card is the link — a larger target than a button inside it,
+            and nothing else in the card is interactive, so there is no nesting.
+            The copy chip sits beside it, not inside, for the same reason. */}
+        <Card
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Open the intended design in Figma: ${description} — opens in a new tab`}
+        >
+          <MarkTile aria-hidden="true">
+            <FigmaMark size={22} />
+          </MarkTile>
+          <CardText>
+            <CardEyebrow>Intended design</CardEyebrow>
+            <CardName>{parsed?.name || parsed?.fileKey}</CardName>
+            {parsed?.nodeId ? (
+              <CardSub>Frame {parsed.nodeId}</CardSub>
+            ) : (
+              <CardSub data-tone="warn">
+                Links to the whole file, not a specific frame
+              </CardSub>
+            )}
+          </CardText>
+          <CardAction aria-hidden="true" data-card-action>
+            Open in Figma <ArrowOutwardIcon width={18} height={18} />
+          </CardAction>
+        </Card>
+        {copyable && <CopyLink url={url} />}
+      </CardRow>
     );
   }
 
+  // The design system's chip is a button, not an anchor, so the link is opened
+  // from onClick — in a new tab, for the reason in the note above.
   return (
-    <Chip
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      title={`Intended design — ${description}`}
-      aria-label={`Intended design in Figma: ${description} — opens in a new tab`}
-    >
-      <FigmaMark />
-      <span>Figma</span>
-      {detail && <Detail>{description}</Detail>}
-      <span aria-hidden="true">↗</span>
-    </Chip>
+    <>
+      <Chip
+        label={detail ? description : "Figma"}
+        leading={<FigmaMark size={18} />}
+        onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
+        title={`Intended design — ${description}`}
+        ariaLabel={`Intended design in Figma: ${description} — opens in a new tab`}
+      />
+      {copyable && <CopyLink url={url} />}
+    </>
+  );
+}
+
+function CopyLink({ url }) {
+  return (
+    <CopyButton value={url} ariaLabel="Copy the Figma link">
+      Copy link
+    </CopyButton>
   );
 }
 
@@ -89,62 +110,33 @@ function FigmaMark({ size = 13 }) {
   );
 }
 
-const Chip = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  max-width: 100%;
-  padding: 2px 8px;
-  border-radius: 100px;
-  border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
-  background: var(--MH-Theme-Neutrals-White, #ffffff);
-  color: var(--MH-Theme-Neutrals-Black, #171717);
-  font: var(--MH-Type-Label-Small);
-  text-decoration: none;
-  white-space: nowrap;
-
-  svg {
-    flex: none;
-  }
-
-  &:hover {
-    border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
-    outline-offset: 2px;
-  }
-`;
-
-/* The file and node, on the ticket page where there is room for them. Truncates
-   rather than wrapping, so a long file name never breaks the chip onto two
-   lines. */
-const Detail = styled.span`
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-  font: var(--MH-Type-Body-Small);
-`;
-
 /* ---- card variant ------------------------------------------------------ */
+
+const CardRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 24px;
+`;
 
 const Card = styled.a`
   display: flex;
   align-items: center;
   gap: 16px;
-  margin: 0 0 24px;
+  flex: 1 1 auto;
+  min-width: 0;
   padding: 16px 20px;
   border-radius: 12px;
-  border: 1px solid var(--MH-Theme-Primary-Medium, #a3d6db);
   background: var(--MH-Theme-Primary-Light, #def8fb);
   color: var(--MH-Theme-Neutrals-Black, #171717);
   text-decoration: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: background-color 0.2s;
 
+  /* A fill, not an outline: the card has no border, and hover deepens the fill
+     (the same step as a selected chip's) rather than adding one. */
   &:hover {
-    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
-    box-shadow: var(--MH-Theme-Elevation-Small, 1px 1px 4px rgba(0, 0, 0, 0.08));
+    background: #c0eaef;
   }
   /* A data attribute rather than a component reference to CardAction: it is declared
      below, so interpolating it here would read it before it exists and throw
@@ -169,9 +161,8 @@ const MarkTile = styled.span`
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--MH-Theme-Neutrals-White, #ffffff);
-  box-shadow: var(--MH-Theme-Elevation-Small, 1px 1px 4px rgba(0, 0, 0, 0.08));
 `;
 
 const CardText = styled.span`
@@ -184,8 +175,6 @@ const CardText = styled.span`
 
 const CardEyebrow = styled.span`
   font: var(--MH-Type-Label-Small);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
   color: var(--MH-Theme-Primary-Dark, #336f8a);
 `;
 
