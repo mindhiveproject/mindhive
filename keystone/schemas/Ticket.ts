@@ -39,6 +39,46 @@ import { assertSupportTicketLinks } from "../lib/notionUrl";
 const canManageTickets = ({ session }: any) =>
   permissions.canManageTickets({ session });
 
+/**
+ * Keep the surface → Figma map (SurfaceDesign) current from filed tickets.
+ * Called on create only — later edits to a ticket's link leave the map alone.
+ *
+ * Writes only when the link differs from what the ticket panel would already
+ * have suggested for this surface — its own row, else the nearest ancestor's
+ * (`builder.projects.start` → `builder.projects` → `builder`, mirroring
+ * `designKeysFor` in the frontend's lib/surfaces.js). So a ticket that kept
+ * the suggestion changes nothing, and a child never gets a frozen copy of its
+ * parent's link. Like the Notion mirror, a failure here must never undo or
+ * block a ticket.
+ */
+async function rememberSurfaceDesign(context: any, surface: string, url: string) {
+  if (!surface || !url) return;
+  try {
+    const parts = surface.split(".");
+    const keys = parts.map((_, i) => parts.slice(0, parts.length - i).join("."));
+    const rows = await context.sudo().db.SurfaceDesign.findMany({
+      where: { surface: { in: keys } },
+    });
+    const byKey = new Map<string, any>(rows.map((row: any) => [row.surface, row]));
+    const suggested = keys.map((key) => byKey.get(key)).find(Boolean);
+    if (suggested?.figmaDesignUrl === url) return;
+
+    const own = byKey.get(surface);
+    if (own) {
+      await context.sudo().db.SurfaceDesign.updateOne({
+        where: { id: own.id },
+        data: { figmaDesignUrl: url },
+      });
+    } else {
+      await context.sudo().db.SurfaceDesign.createOne({
+        data: { surface, figmaDesignUrl: url },
+      });
+    }
+  } catch (error) {
+    console.warn("Could not update the surface design map:", error);
+  }
+}
+
 export const Ticket = list({
   access: {
     operation: {
@@ -254,6 +294,10 @@ export const Ticket = list({
 
       const id = (item as any)?.id;
       if (!id) return;
+
+      if (operation === "create") {
+        await rememberSurfaceDesign(context, (item as any).surface, (item as any).figmaDesignUrl);
+      }
 
       if (operation === "create") {
         await mirrorCreate(context, String(id));
