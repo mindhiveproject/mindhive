@@ -6,6 +6,7 @@ import { SUPPORT_TICKET_PREVIEWS } from "../../Queries/Ticket";
 import { SET_TICKET_SUPPORT_TICKETS } from "../../Mutations/Ticket";
 import { parseNotionPageUrl, sameNotionPage } from "../../../lib/notionUrl";
 import Button from "../../DesignSystem/Button";
+import { ArrowOutwardIcon } from "../../DesignSystem/Icons";
 
 /**
  * The support tickets a ticket answers: pages in the Notion Support tickets
@@ -121,7 +122,7 @@ export default function SupportTickets({ ticket }) {
                 >
                   <span aria-hidden="true">🎟️</span>
                   <ItemName>{name}</ItemName>
-                  <span aria-hidden="true">↗</span>
+                  <ArrowOutwardIcon width={18} height={18} />
                 </ItemLink>
                 <Unlink
                   type="button"

@@ -18,6 +18,7 @@ import ScreenshotAnnotator from "./ScreenshotAnnotator";
 import SupportTickets from "./SupportTickets";
 import DeleteTicket from "./DeleteTicket";
 import BeehiveLoading from "../../DesignSystem/BeehiveLoading";
+import { ArrowOutwardIcon } from "../../DesignSystem/Icons";
 import Button from "../../DesignSystem/Button";
 import CopyButton from "../../DesignSystem/CopyButton";
 
@@ -105,7 +106,7 @@ export default function TicketPage({ id }) {
       <h1 className="MH-Type-Heading-Small">{ticket.title}</h1>
       {/* Seen first rather than buried in the facts grid below: for a design
           ticket, where the intended design lives is the argument. */}
-      <FigmaLink url={ticket.figmaDesignUrl} variant="card" />
+      <FigmaLink url={ticket.figmaDesignUrl} variant="card" copyable />
 
       <Facts>
         <Fact>
@@ -158,7 +159,7 @@ export default function TicketPage({ id }) {
             <dt>Notion</dt>
             <dd>
               <a href={notionUrl(ticket.notionPageId)} target="_blank" rel="noopener noreferrer">
-                Open the mirrored page ↗
+                Open the mirrored page <ArrowOutwardIcon width={18} height={18} style={{ verticalAlign: "middle" }} />
               </a>
             </dd>
           </Fact>
@@ -412,8 +413,6 @@ const Facts = styled.dl`
 const Fact = styled.div`
   dt {
     font: var(--MH-Type-Label-Small);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     margin-bottom: 2px;
   }

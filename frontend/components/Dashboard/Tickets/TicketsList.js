@@ -37,8 +37,8 @@ const KIND_LABELS = {
 };
 
 /**
- * Areas are the first segment of a surface key. `dashboard` alone holds 26
- * surfaces, so area narrows and the surface filter picks one out of it.
+ * Areas are the first segment of a surface key. `dashboard` alone holds dozens
+ * of surfaces, so area narrows and the surface filter picks one out of it.
  */
 const AREA_LABELS = {
   front: "Public site",
