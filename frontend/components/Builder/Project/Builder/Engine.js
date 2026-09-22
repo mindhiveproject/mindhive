@@ -1,4 +1,5 @@
-import { useState, useEffect, useReducer, useRef, useCallback } from "react";
+import { useState, useEffect, useReducer, useRef, useCallback, useMemo } from "react";
+import debounce from "lodash.debounce";
 import useTranslation from "next-translate/useTranslation";
 
 import uniqid from "uniqid";
@@ -60,6 +61,30 @@ export default function Engine({
   const structuralChangePendingRef = useRef(false);
   const isCanvasLockedRef = useRef(isCanvasLocked);
   isCanvasLockedRef.current = isCanvasLocked;
+
+  // Storm listens for keyup/keydown on document and does event.key.toLowerCase().
+  // Typing in the sidepanel (or any field) must not reach that handler.
+  useEffect(() => {
+    const ignoreCanvasKeysWhenEditing = (event) => {
+      const el = event.target;
+      if (!(el instanceof Element)) return;
+      if (
+        el.closest(".sidepanel") ||
+        el.tagName === "INPUT" ||
+        el.tagName === "TEXTAREA" ||
+        el.tagName === "SELECT" ||
+        el.isContentEditable
+      ) {
+        event.stopImmediatePropagation();
+      }
+    };
+    document.addEventListener("keydown", ignoreCanvasKeysWhenEditing, true);
+    document.addEventListener("keyup", ignoreCanvasKeysWhenEditing, true);
+    return () => {
+      document.removeEventListener("keydown", ignoreCanvasKeysWhenEditing, true);
+      document.removeEventListener("keyup", ignoreCanvasKeysWhenEditing, true);
+    };
+  }, []);
 
   const serializeModel = useCallback((model) => {
     if (!model) return null;
@@ -620,6 +645,41 @@ export default function Engine({
     clearUndo();
   };
 
+  const persistStudyQuietlyRef = useRef(async () => {});
+  persistStudyQuietlyRef.current = async () => {
+    if (isCanvasLocked) return;
+    const { flow, diagram } = saveDiagramState();
+    try {
+      await saveStudy({
+        flow,
+        diagram,
+        descriptionInProposalCardId: study?.descriptionInProposalCardId,
+        tags: study?.tags?.map((tag) => ({ id: tag?.id })) || [],
+        status: study?.status,
+      });
+      setHasStudyChanged(false);
+      clearUndo();
+    } catch (error) {
+      // Keep Save enabled so the user can retry from the header.
+    }
+  };
+
+  const persistStudy = useMemo(
+    () =>
+      debounce(() => {
+        persistStudyQuietlyRef.current?.();
+      }, 1000),
+    []
+  );
+
+  useEffect(
+    () => () => {
+      persistStudy.flush();
+      persistStudy.cancel();
+    },
+    [persistStudy]
+  );
+
   const handleStudyChange = (props) => {
     setHasStudyChanged(true);
     handleChange(props);
@@ -660,6 +720,7 @@ export default function Engine({
         onBeforeCanvasMutation={onBeforeCanvasMutation}
         onAfterCanvasMutation={onAfterCanvasMutation}
         onModelReplaced={onModelReplaced}
+        persistStudy={persistStudy}
       />
       <CycleLinkPreventedModal
         open={cycleWarningOpen}

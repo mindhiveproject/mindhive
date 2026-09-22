@@ -2558,6 +2558,13 @@
 		"useForDataCollection": "Use for data collection"
 	},
 	"videoNotSupported": "Video not supported",
+	"blockPanel": {
+		"autosave": "Autosave on",
+		"close": "Close",
+		"loading": "Loading…",
+		"saved": "Saved",
+		"saving": "Saving…"
+	},
 	"viewer": {
 		"afterParticipation": "What participants see after taking the {{taskType}}",
 		"aggregateVariables": "Aggregate Variables",
@@ -2568,13 +2575,17 @@
 		"defaultValues": "Default values are shown (can clone {{taskType}} and modify these)",
 		"duration": "Duration",
 		"format": "Format",
+		"keyVariables": "Key Variables",
 		"freeTextInput": "Free text input",
 		"likertScale": "Likert scale",
 		"mobileCompatible": "Mobile compatible",
 		"moreInfo": "more info",
 		"parameters": "Parameters",
 		"preview": "Preview {{taskType}}",
+		"references": "References",
 		"resources": "Resources",
+		"seeAfter": "What participants see after",
+		"seeBefore": "What participants see before",
 		"scoring": "Scoring",
 		"screenshot": "Screenshot",
 		"selectMany": "Select many",
@@ -2582,6 +2593,10 @@
 		"surveyParameters": "Survey parameters",
 		"text": "Text",
 		"tweakableFeatures": "The following features of this {{taskType}} can be tweaked:",
+		"typeBlock": "Block",
+		"typeDesign": "Design",
+		"typeSurvey": "Survey",
+		"typeTask": "Task",
 		"visualAnalogueScale": "Visual analogue scale"
 	},
 	"visualize": "Visualize",

@@ -1,6 +1,6 @@
-import { useQuery, useMutation } from "@apollo/client";
-import { useRouter } from "next/router";
-
+import { useMutation } from "@apollo/client";
+import { useEffect, useMemo, useRef, useState } from "react";
+import debounce from "lodash.debounce";
 import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../../lib/useForm";
@@ -11,95 +11,194 @@ import ComponentForm from "../../../Component/Form";
 
 import { MY_TASK } from "../../../../Queries/Task";
 
+function valueFromEvent(e) {
+  let { value, name, type } = e.target;
+  if (type === "number") {
+    value = parseFloat(value);
+  }
+  if (type === "checkbox") {
+    value = e.target.checked;
+  }
+  return { name, value };
+}
+
 export default function EditComponent({
   user,
   isAuthor,
   createCopy,
   task,
   updateCanvas,
+  persistStudy,
   close,
 }) {
-  const router = useRouter();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("builder");
+  const { inputs, handleChange, handleMultipleUpdate } = useForm(
+    { ...task },
+    { freezeInitialSync: true }
+  );
 
-  const { inputs, handleChange, handleMultipleUpdate, clearForm } = useForm({
-    ...task,
-  });
-
-  // do not allow to edit template in the study builder
   const isTemplateAuthor = false;
+  const inputsRef = useRef(inputs);
+  inputsRef.current = inputs;
+  const dirtyTaskRef = useRef(false);
+  const createdIdRef = useRef(isAuthor && !createCopy ? task?.id : null);
+  const [saveState, setSaveState] = useState("idle");
 
-  const [
-    createTask,
-    {
-      data: createTaskData,
-      loading: createTaskLoading,
-      error: createTaskError,
-    },
-  ] = useMutation(CREATE_TASK, {
-    variables: inputs,
-    // refetchQueries: [{ query: MY_TASK, variables: { id: task?.id } }],
-  });
+  const [createTask, { error: createTaskError }] = useMutation(CREATE_TASK);
+  const [updateTask, { error: taskError }] = useMutation(UPDATE_TASK);
 
-  const [
-    updateTask,
-    { data: taskData, loading: taskLoading, error: taskError },
-  ] = useMutation(UPDATE_TASK, {
-    variables: inputs,
-    refetchQueries: [{ query: MY_TASK, variables: { id: task?.id } }],
-  });
+  const persistFnRef = useRef(async () => {});
 
-  async function handleSubmit() {
-    if (isAuthor && !createCopy) {
-      // update the task
-      await updateTask({
-        variables: {
-          collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
-        },
-      });
+  persistFnRef.current = async () => {
+    const current = inputsRef.current;
+    const collaborators = (current?.collaborators || [])
+      .filter((col) => col?.id)
+      .map((col) => ({ id: col.id }));
 
-      // update the canvas in the study builder
-      updateCanvas({
-        task: {
-          ...inputs,
-        },
-        operation: "update",
-      });
-    } else {
-      // create the new task
-      const res = await createTask({
-        variables: {
-          collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
-        },
-      });
-      const newTask = {
-        ...res?.data?.createTask,
-        subtitle: inputs?.subtitle,
-        askDataUsageQuestion: inputs?.askDataUsageQuestion,
-      };
-      // update the canvas with the new task in the study builder
-      updateCanvas({
-        task: {
-          ...newTask,
-        },
-        operation: "create",
-      });
+    updateCanvas({
+      task: { ...current, id: createdIdRef.current || current?.id },
+      operation: "update",
+    });
+    persistStudy?.();
+
+    if (!dirtyTaskRef.current) {
+      setSaveState("saved");
+      return;
     }
+
+    setSaveState("saving");
+    try {
+      if (createdIdRef.current) {
+        await updateTask({
+          variables: {
+            id: createdIdRef.current,
+            title: current?.title,
+            description: current?.description,
+            descriptionForParticipants: current?.descriptionForParticipants,
+            link: current?.link,
+            parameters: current?.parameters,
+            settings: current?.settings,
+            i18nContent: current?.i18nContent,
+            collaborators,
+          },
+          refetchQueries: [
+            { query: MY_TASK, variables: { id: createdIdRef.current } },
+          ],
+        });
+      } else {
+        const res = await createTask({
+          variables: {
+            title: current?.title,
+            description: current?.description,
+            descriptionForParticipants: current?.descriptionForParticipants,
+            templateId: current?.templateId,
+            taskType: current?.taskType,
+            isExternal: current?.isExternal,
+            link: current?.link,
+            parameters: current?.parameters,
+            settings: current?.settings,
+            i18nContent: current?.i18nContent,
+            collaborators,
+          },
+        });
+        const newId = res?.data?.createTask?.id;
+        createdIdRef.current = newId;
+        handleMultipleUpdate({ id: newId });
+        inputsRef.current = { ...current, id: newId };
+        updateCanvas({
+          task: {
+            ...current,
+            id: newId,
+            subtitle: current?.subtitle,
+            askDataUsageQuestion: current?.askDataUsageQuestion,
+          },
+          operation: "create",
+        });
+        persistStudy?.();
+      }
+      dirtyTaskRef.current = false;
+      setSaveState("saved");
+    } catch (e) {
+      setSaveState("idle");
+    }
+  };
+
+  const debouncedSave = useMemo(
+    () =>
+      debounce(() => {
+        persistFnRef.current?.();
+      }, 600),
+    []
+  );
+
+  useEffect(
+    () => () => {
+      debouncedSave.flush();
+      debouncedSave.cancel();
+    },
+    [debouncedSave]
+  );
+
+  const markDirtyAndChange = (e) => {
+    const { name, value } = valueFromEvent(e);
+    inputsRef.current = { ...inputsRef.current, [name]: value };
+    if (name !== "subtitle" && name !== "askDataUsageQuestion") {
+      dirtyTaskRef.current = true;
+    }
+    setSaveState("idle");
+    handleChange(e);
+    updateCanvas({
+      task: {
+        ...inputsRef.current,
+        id: createdIdRef.current || inputsRef.current?.id,
+      },
+      operation: "update",
+    });
+    persistStudy?.();
+    debouncedSave();
+  };
+
+  const markDirtyAndMultiple = (obj) => {
+    dirtyTaskRef.current = true;
+    inputsRef.current = { ...inputsRef.current, ...obj };
+    setSaveState("idle");
+    handleMultipleUpdate(obj);
+    updateCanvas({
+      task: {
+        ...inputsRef.current,
+        id: createdIdRef.current || inputsRef.current?.id,
+      },
+      operation: "update",
+    });
+    persistStudy?.();
+    debouncedSave();
+  };
+
+  const handleClose = async () => {
+    debouncedSave.cancel();
+    await persistFnRef.current?.();
     close();
-  }
+  };
+
+  const saveLabel =
+    saveState === "saving"
+      ? t("blockPanel.saving", {}, { default: "Saving…" })
+      : saveState === "saved"
+        ? t("blockPanel.saved", {}, { default: "Saved" })
+        : t("blockPanel.autosave", {}, { default: "Autosave on" });
 
   return (
     <ComponentForm
       user={user}
       inputs={inputs}
-      handleChange={handleChange}
-      handleMultipleUpdate={handleMultipleUpdate}
-      handleSubmit={handleSubmit}
-      submitBtnName={"Update"}
-      loading={taskLoading}
-      error={taskError}
+      handleChange={markDirtyAndChange}
+      handleMultipleUpdate={markDirtyAndMultiple}
+      handleSubmit={handleClose}
+      submitBtnName={saveLabel}
+      loading={saveState === "saving"}
+      error={taskError || createTaskError}
       isTemplateAuthor={isTemplateAuthor}
-      close={close}
+      close={handleClose}
       isInStudyBuilder
     />
   );

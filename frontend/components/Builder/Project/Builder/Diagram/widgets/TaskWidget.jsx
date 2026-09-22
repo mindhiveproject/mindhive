@@ -27,9 +27,6 @@ export const TaskWidget = props => {
           aria-hidden="true"
           id="blockSettings"
           onClick={() => {
-            // lock the model
-            props.engine.getModel().setLocked(true);
-            // open the modal
             props.engine.openComponentModal({
               node: props?.node,
               isEditorOpen: true,
@@ -46,9 +43,6 @@ export const TaskWidget = props => {
           aria-hidden="true"
           id="blockInfo"
           onClick={() => {
-            // lock the model
-            props.engine.getModel().setLocked(true);
-            // open the modal
             props.engine.openComponentModal({
               node: props?.node,
               isEditorOpen: false,
@@ -65,9 +59,6 @@ export const TaskWidget = props => {
           aria-hidden="true"
           id="blockPlay"
           onClick={() => {
-            // lock the model
-            props.engine.getModel().setLocked(true);
-            // open the preview
             props.engine.openComponentModal({
               node: props?.node,
               isEditorOpen: false,

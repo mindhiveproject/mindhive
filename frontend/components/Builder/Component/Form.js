@@ -47,9 +47,8 @@ export default function ComponentForm({
     );
   }
 
-  return (
-    <StyledBuilderArea>
-      <StyledTaskBuilder>
+  const form = (
+      <StyledTaskBuilder className={isInStudyBuilder ? "inStudyBuilderPanel" : undefined}>
         <Navigation
           task={inputs}
           user={user}
@@ -108,6 +107,11 @@ export default function ComponentForm({
           )}
         </div>
       </StyledTaskBuilder>
-    </StyledBuilderArea>
   );
+
+  if (isInStudyBuilder) {
+    return form;
+  }
+
+  return <StyledBuilderArea>{form}</StyledBuilderArea>;
 }
