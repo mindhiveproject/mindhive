@@ -370,7 +370,7 @@ export default function ConnectNavigationBar() {
         ariaLabelDefault="Organizations"
         options={organizationOptions}
         active={activeSection === "organizations"}
-        icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.organizations} width={22} height={16} />}
+        // icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.organizations} width={22} height={16} />}
       />
       <ConnectNavDropdown
         placeholderKey="nav.classNetworks"
@@ -379,13 +379,7 @@ export default function ConnectNavigationBar() {
         ariaLabelDefault="Networks"
         options={classNetworkOptions}
         active={activeSection === "classNetworks"}
-        icon={
-          <NavDropdownIcon
-            src={CONNECT_NAV_ICONS.classNetworks}
-            width={16}
-            height={16}
-          />
-        }
+        // icon={ <NavDropdownIcon src={CONNECT_NAV_ICONS.classNetworks} width={16} height={16} /> }
       />
       <ConnectNavDropdown
         placeholderKey="nav.opportunities"
@@ -394,7 +388,7 @@ export default function ConnectNavigationBar() {
         ariaLabelDefault="Opportunities"
         options={opportunityOptions}
         active={activeSection === "opportunities"}
-        icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.opportunities} width={22} height={16} />}
+        // icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.opportunities} width={22} height={16} />}
       />
       <ConnectNavDropdown
         placeholderKey="nav.connect"
@@ -403,7 +397,7 @@ export default function ConnectNavigationBar() {
         ariaLabelDefault="Connect"
         options={connectOptions}
         active={activeSection === "connect"}
-        icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.connect} width={22} height={16} />}
+        // icon={<NavDropdownIcon src={CONNECT_NAV_ICONS.connect} width={22} height={16} />}
       />
     </NavigationBar>
   );
