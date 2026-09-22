@@ -1,6 +1,67 @@
 import styled from "styled-components";
 
 const StyledTaskBuilder = styled.div`
+  &.inStudyBuilderPanel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    width: 100%;
+
+    .navigation {
+      display: grid;
+      width: 100%;
+      min-width: 0;
+
+      .firstLine {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        grid-gap: 8px;
+        padding: 12px 0 8px;
+        box-shadow: none;
+        min-height: 0;
+        background: transparent;
+      }
+
+      .leftPanel {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .studyTitle {
+        display: block;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font: var(--MH-Type-Title-Small);
+      }
+
+      .goBackBtn {
+        margin: 0;
+        cursor: pointer;
+      }
+
+      .autosaveStatus {
+        font: var(--MH-Type-Label-Base);
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        white-space: nowrap;
+      }
+    }
+
+    .buildArea {
+      height: auto;
+      flex: 1;
+      min-height: 0;
+      margin: 0 0 12px;
+      grid-gap: 12px;
+    }
+  }
+
   .buildArea {
     display: grid;
     align-content: baseline;

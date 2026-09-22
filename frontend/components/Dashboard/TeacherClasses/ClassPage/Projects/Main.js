@@ -100,6 +100,10 @@ export default function ClassProjects({
     return [...new Set(names)].join(", ");
   };
 
+  const canSeeStaffProjectColumns = (user?.permissions || []).some(
+    (p) => p?.name === "TEACHER" || p?.name === "MENTOR"
+  );
+
   const ProjectBoardRenderer = (params) => {
     const project = params?.data;
     if (!project?.id) return null;
@@ -150,32 +154,36 @@ export default function ClassProjects({
         wordBreak: "break-word",
       },
     },
-    {
-      field: "createdAt",
-      headerName: t("projects.dateCreated"),
-      valueGetter: (params) => params?.data?.createdAt || null,
-      valueFormatter: (params) =>
-        params.value ? moment(params.value).format("MMMM D, YYYY") : "",
-      filter: "agDateColumnFilter",
-      sortable: true,
-      flex: 1,
-      minWidth: 150,
-    },
-    {
-      field: "viewBoard",
-      headerName: t("projects.viewBoard", {}, { default: "View board" }),
-      cellRenderer: ProjectBoardRenderer,
-      suppressFilter: true,
-      sortable: false,
-      flex: 0,
-      minWidth: 130,
-      maxWidth: 150,
-      cellStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      },
-    },
+    ...(canSeeStaffProjectColumns
+      ? [
+          {
+            field: "createdAt",
+            headerName: t("projects.dateCreated"),
+            valueGetter: (params) => params?.data?.createdAt || null,
+            valueFormatter: (params) =>
+              params.value ? moment(params.value).format("MMMM D, YYYY") : "",
+            filter: "agDateColumnFilter",
+            sortable: true,
+            flex: 1,
+            minWidth: 150,
+          },
+          {
+            field: "viewBoard",
+            headerName: t("projects.viewBoard", {}, { default: "View board" }),
+            cellRenderer: ProjectBoardRenderer,
+            suppressFilter: true,
+            sortable: false,
+            flex: 0,
+            minWidth: 130,
+            maxWidth: 150,
+            cellStyle: {
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          },
+        ]
+      : []),
   ];
 
   return (

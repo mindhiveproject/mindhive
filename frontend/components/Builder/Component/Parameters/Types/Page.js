@@ -1,5 +1,5 @@
 import uniqid from "uniqid";
-import JoditEditor from "../../../../Jodit/Editor";
+import TipTapEditor from "../../../../TipTap/Main";
 import useTranslation from "next-translate/useTranslation";
 
 export default function Page({ items, timeout, hideContinueBtn, onChange }) {
@@ -454,13 +454,15 @@ function Item({
         )}
 
         {type === "block" && (
-          <JoditEditor
-            content={text}
-            setContent={(value) =>
+          <TipTapEditor
+            content={typeof text === "string" ? text : ""}
+            onUpdate={(value) =>
               handleItemChange({
                 target: { value, id, className: "text", name: id },
               })
             }
+            isEditable
+            toolbarVisible
           />
         )}
       </div>
