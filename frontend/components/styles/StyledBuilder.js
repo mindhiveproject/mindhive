@@ -425,7 +425,7 @@ export const StyledCanvasBuilder = styled.div`
       .navbar-container {
         padding: 0;
         flex-wrap: nowrap;
-        justify-content: center;
+        justify-content: start;
         width: 100%;
         min-width: 0;
         box-sizing: border-box;
@@ -474,7 +474,7 @@ export const StyledCanvasBuilder = styled.div`
 
     .blockPanelHeader {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       gap: 12px;
       padding: 16px 0 8px;
@@ -541,6 +541,12 @@ export const StyledCanvasBuilder = styled.div`
     .blockPanelSection {
       display: grid;
       gap: 8px;
+      .onLineHeader {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+      }
       h2 {
         margin: 0;
         font: var(--MH-Type-Title-Base);

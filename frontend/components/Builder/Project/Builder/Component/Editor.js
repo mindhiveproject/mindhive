@@ -8,6 +8,7 @@ export default function Editor({
   updateCanvas,
   persistStudy,
   close,
+  openPreview,
 }) {
   return (
     <EditComponent
@@ -18,6 +19,7 @@ export default function Editor({
       updateCanvas={updateCanvas}
       persistStudy={persistStudy}
       close={close}
+      openPreview={openPreview}
     />
   );
 }

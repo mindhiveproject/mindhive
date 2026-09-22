@@ -1,7 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import uniqid from "uniqid";
 import Page from "./Page";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../../../DesignSystem/Button";
+import IconButton from "../../../../DesignSystem/IconButton";
+import CompactActionButton from "../../../../DesignSystem/CompactActionButton";
+import { AddIcon } from "../../../../DesignSystem/Icons";
+
+const PageNumberIcon = ({ number }) => (
+  <span className="MH-Type-Label-Base" aria-hidden>
+    {number}
+  </span>
+);
 
 const buildExamplePage = () => [
   {
@@ -103,17 +113,27 @@ const buildExamplePage = () => [
   },
 ];
 
+function parseSurveyPages(content) {
+  if (Array.isArray(content)) return content;
+  if (typeof content !== "string" || !content.trim()) return [];
+  try {
+    const parsed = JSON.parse(content);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 // it holds all pages and displays the currently active page on the screen with surveyPageBuilder
 export default function SurveyBuilder({ name, content, onChange }) {
   const { t } = useTranslation("builder");
-  const [pages, setPages] = useState(() => {
-    try {
-      return JSON.parse(content) || [];
-    } catch {
-      return [];
-    }
-  });
+  const [pages, setPages] = useState(() => parseSurveyPages(content));
   const [currentPageNumber, setCurrentPageNumber] = useState(0);
+
+  useEffect(() => {
+    const parsed = parseSurveyPages(content);
+    setPages((current) => (current.length === 0 && parsed.length > 0 ? parsed : current));
+  }, [content]);
 
   const packThePages = (value) => ({
     target: {
@@ -168,40 +188,65 @@ export default function SurveyBuilder({ name, content, onChange }) {
     <div onKeyDown={(e) => e.nativeEvent.stopImmediatePropagation()}>
       <div className="surveyPageNav">
         <span className="surveyPageNavLabel">
-          {t("surveyBuilder.pages", "Pages")}
+          {t("surveyBuilder.pages", {}, { default: "Pages" })}
         </span>
 
         {pages.map((_page, number) => (
-          <button
-            onClick={(e) => moveToPage(e, number)}
+          <IconButton
             key={number}
-            className={`pageTabButton${number === currentPageNumber ? " active" : ""}`}
-          >
-            {number + 1}
-          </button>
+            type="button"
+            variant={number === currentPageNumber ? "tonal" : "text"}
+            elevated={false}
+            ariaLabel={t("surveyBuilder.page", { number: number + 1 }, {
+              default: "Page {{number}}",
+            })}
+            title={t("surveyBuilder.page", { number: number + 1 }, {
+              default: "Page {{number}}",
+            })}
+            onClick={(e) => moveToPage(e, number)}
+            icon={<PageNumberIcon number={number + 1} />}
+          />
         ))}
 
-        <button className="addPageButton" onClick={(e) => addNewPage(e)}>
-          + {t("surveyBuilder.addPage", "Add page")}
-        </button>
+        <Button
+          variant="tonal"
+          type="button"
+          leadingIcon={<AddIcon />}
+          onClick={addNewPage}
+        >
+          {t("surveyBuilder.addPage", {}, { default: "Add page" })}
+        </Button>
 
-        <button className="addPageButton examplePageButton" onClick={(e) => addExamplePage(e)}>
-          {t("surveyBuilder.addExamplePage", "Show example")}
-        </button>
+        <Button variant="text" type="button" onClick={addExamplePage}>
+          {t("surveyBuilder.addExamplePage", {}, { default: "Show example" })}
+        </Button>
 
-{pages.length > 0 && (
-          <button
-            className="deletePageButton"
-            onClick={(e) => deletePage(e, currentPageNumber)}
-          >
-            {t("surveyBuilder.deletePage", "Delete page")} {currentPageNumber + 1}
-          </button>
+        {pages.length > 0 && (
+          <span className="surveyPageNavDelete">
+            <CompactActionButton
+              kind="delete"
+              type="button"
+              onClick={(e) => deletePage(e, currentPageNumber)}
+              ariaLabel={t(
+                "surveyBuilder.deletePage",
+                { number: currentPageNumber + 1 },
+                { default: "Delete page" }
+              )}
+              title={t(
+                "surveyBuilder.deletePage",
+                { number: currentPageNumber + 1 },
+                { default: "Delete page" }
+              )}
+            />
+          </span>
         )}
       </div>
 
       {pages.length === 0 ? (
         <div className="surveyEmptyState">
-          {t("surveyBuilder.addFirstPage", "Add your first page to start building the survey")}
+          {t("surveyBuilder.addFirstPage", {}, {
+            default: "Add your first page to start building the survey",
+          })}
         </div>
       ) : (
         <Page

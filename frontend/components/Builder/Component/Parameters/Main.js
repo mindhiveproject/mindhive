@@ -1,8 +1,16 @@
 import Vas from "./Types/Vas";
 import SelectOne from "./Types/SelectOne";
 import SurveyBuilder from "./Types/SurveyBuilder";
-import Array from "./Types/Array";
+import ArrayParameter from "./Types/Array";
 import useTranslation from "next-translate/useTranslation";
+import Chip from "../../../DesignSystem/Chip";
+
+function isEmptySurveyValue(value) {
+  if (value == null || value === "") return true;
+  if (value === "[]") return true;
+  if (Array.isArray(value) && value.length === 0) return true;
+  return false;
+}
 
 export default function TaskParameters({
   user,
@@ -11,7 +19,32 @@ export default function TaskParameters({
   isInStudyBuilder,
 }) {
   const { t } = useTranslation("builder");
-  const parameters = task?.parameters || task?.template?.parameters || [];
+  const templateParameters = task?.template?.parameters || [];
+  const rawParameters = task?.parameters?.length
+    ? task.parameters
+    : templateParameters;
+  const parameters = rawParameters.map((parameter) => {
+    const fromTemplate =
+      templateParameters.find((tp) => tp.name === parameter.name) || {};
+    const type =
+      parameter.name === "pages" || fromTemplate.type === "survey"
+        ? "survey"
+        : parameter.type || fromTemplate.type;
+    const value =
+      type === "survey" && isEmptySurveyValue(parameter.value)
+        ? fromTemplate.value ?? parameter.value
+        : parameter.value;
+    return {
+      ...fromTemplate,
+      ...parameter,
+      type,
+      value,
+      help: parameter.help || fromTemplate.help,
+      example: parameter.example || fromTemplate.example,
+      options: parameter.options || fromTemplate.options,
+      array: parameter.array || fromTemplate.array,
+    };
+  });
 
   const handleParameterChange = (e) => {
     const { name, type, value } = e.target;
@@ -73,7 +106,7 @@ export default function TaskParameters({
         );
       case "array":
         return (
-          <Array name={name} content={value} onChange={handleParameterChange} />
+          <ArrayParameter name={name} content={value} onChange={handleParameterChange} />
         );
       default:
         return (
@@ -92,13 +125,16 @@ export default function TaskParameters({
     return (
       <div>
         <label>
-          {t("parameters.templateParameters", "Template parameters")}
+        {t("parameters.templateParameters", {}, {
+          default: "Template parameters",
+        })}
         </label>
         {!task?.template?.file && (
           <p>
             {t(
               "parameters.uploadLabjs",
-              "Please upload a lab.js json file first"
+              {},
+              { default: "Please upload a lab.js json file first" }
             )}
           </p>
         )}
@@ -106,7 +142,8 @@ export default function TaskParameters({
           <p>
             {t(
               "parameters.noParameters",
-              "The template does not contain any parameters."
+              {},
+              { default: "The template does not contain any parameters." }
             )}
           </p>
         )}
@@ -118,23 +155,33 @@ export default function TaskParameters({
     <fieldset>
       {isInStudyBuilder && (
         <>
-          <div className="block">
-            <label htmlFor="subtitle">
-              {t("parameters.subtitle", "Subtitle")}
+          <section className="blockPanelSection">
+            <div className="onLineHeader">
+              <h2>{t("parameters.subtitle", {}, { default: "Subtitle" })}</h2>
               <input
                 type="text"
+                id="subtitle"
                 name="subtitle"
-                value={task?.subtitle}
+                value={task?.subtitle ?? ""}
                 onChange={handleChange}
               />
-            </label>
-          </div>
+            </div>
+          </section>
 
           {task?.testId && (
-            <div>
-              <label>{t("parameters.versionId", "Version ID")}</label>
-              <p>{task?.testId}</p>
-            </div>
+            <section className="blockPanelSection">
+              <div className="onLineHeader">
+                <h2>
+                  {t("parameters.versionId", {}, { default: "Version ID" })}
+                </h2>
+                <Chip
+                  variant="static"
+                  tone="neutral"
+                  label={task.testId}
+                  truncate={false}
+                />
+              </div>
+            </section>
           )}
 
           {user &&
@@ -153,7 +200,11 @@ export default function TaskParameters({
                   <label htmlFor="askDataUsageQuestion">
                     {t(
                       "parameters.askDataUsage",
-                      "Ask students a data usage question after the task"
+                      {},
+                      {
+                        default:
+                          "Ask students a data usage question after the task",
+                      }
                     )}
                   </label>
                 </div>
@@ -164,14 +215,32 @@ export default function TaskParameters({
 
       {parameters.length > 0 && (
         <>
-          <label>{t("parameters.taskParameters", "Task parameters")}</label>
+          <section className="blockPanelSection">
+            <h2>
+              {t("parameters.taskParameters", {}, {
+                default: "Task parameters",
+              })}
+            </h2>
+          </section>
           {parameters.map(
             ({ name, value, type, help, example, options, array }) => (
               <div className="wideBlock" key={name}>
-                <div className="taskBlock" htmlFor={name}>
+                <div className="taskBlock">
                   {help && <div className="help">{help}</div>}
-                  {name && <div className="example">Name: {name}</div>}
-                  {example && <div className="example">Example: {example}</div>}
+                  {name && (
+                    <div className="example">
+                      {t("parameters.paramName", { name }, {
+                        default: "Name: {{name}}",
+                      })}
+                    </div>
+                  )}
+                  {example && (
+                    <div className="example">
+                      {t("parameters.paramExample", { example }, {
+                        default: "Example: {{example}}",
+                      })}
+                    </div>
+                  )}
 
                   <div className="input">
                     {renderInput({ type, name, value, options, array })}
@@ -185,7 +254,8 @@ export default function TaskParameters({
               <button className="secondaryActionBtn" onClick={setParametersFromTemplate}>
                 {t(
                   "parameters.getFromTemplate",
-                  "Get parameters from the template"
+                  {},
+                  { default: "Get parameters from the template" }
                 )}
               </button>
             </div>

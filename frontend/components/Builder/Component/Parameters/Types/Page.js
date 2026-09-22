@@ -1,6 +1,23 @@
 import uniqid from "uniqid";
 import TipTapEditor from "../../../../TipTap/Main";
 import useTranslation from "next-translate/useTranslation";
+import Button from "../../../../DesignSystem/Button";
+import CompactActionButton from "../../../../DesignSystem/CompactActionButton";
+
+const ArrowUpIcon = () => (
+  <img src="/assets/icons/project/arrow_up.svg" alt="" width="20" height="20" aria-hidden />
+);
+
+const ArrowDownIcon = () => (
+  <img
+    src="/assets/icons/project/arrow_up.svg"
+    alt=""
+    width="20"
+    height="20"
+    aria-hidden
+    style={{ transform: "rotate(180deg)" }}
+  />
+);
 
 export default function Page({ items, timeout, hideContinueBtn, onChange }) {
   const { t } = useTranslation("builder");
@@ -164,11 +181,17 @@ export default function Page({ items, timeout, hideContinueBtn, onChange }) {
             onChange={handleHideContinueBtnChange}
           />
           <label htmlFor="hideContinueBtn">
-            {t("surveyBuilder.hideContinueBtn", "Hide Continue button")}
+            {t("surveyBuilder.hideContinueBtn", {}, {
+              default: "Hide Continue button",
+            })}
           </label>
         </div>
         <div className="pageSettingItem">
-          <label>{t("surveyBuilder.pageTimeout", "Timeout")}</label>
+          <label>
+            {t("surveyBuilder.pageTimeout", {}, {
+              default: "Page timeout (in milliseconds)",
+            })}
+          </label>
           <input
             type="number"
             min="0"
@@ -200,9 +223,9 @@ export default function Page({ items, timeout, hideContinueBtn, onChange }) {
         </div>
       )}
 
-      <button className="addItemButton" onClick={addItem}>
-        + {t("surveyBuilder.addItem", "Add question")}
-      </button>
+      <Button variant="outline" type="button" onClick={addItem}>
+        {t("surveyBuilder.addItem", {}, { default: "Add question" })}
+      </Button>
     </div>
   );
 }
@@ -262,29 +285,35 @@ function Item({
         </select>
 
         <div className="itemCardControls">
-          <button
-            className="itemMoveBtn"
-            onClick={(e) => moveUp(e, number)}
+          <CompactActionButton
+            kind="ghost"
+            type="button"
             disabled={number === 0}
-            title="Move up"
-          >
-            ↑
-          </button>
-          <button
-            className="itemMoveBtn"
-            onClick={(e) => moveDown(e, number)}
+            icon={<ArrowUpIcon />}
+            onClick={(e) => moveUp(e, number)}
+            ariaLabel={t("surveyBuilder.moveUp", {}, { default: "Move up" })}
+            title={t("surveyBuilder.moveUp", {}, { default: "Move up" })}
+          />
+          <CompactActionButton
+            kind="ghost"
+            type="button"
             disabled={number === totalItems - 1}
-            title="Move down"
-          >
-            ↓
-          </button>
-          <button
-            className="itemDeleteBtn"
+            icon={<ArrowDownIcon />}
+            onClick={(e) => moveDown(e, number)}
+            ariaLabel={t("surveyBuilder.moveDown", {}, { default: "Move down" })}
+            title={t("surveyBuilder.moveDown", {}, { default: "Move down" })}
+          />
+          <CompactActionButton
+            kind="delete"
+            type="button"
             onClick={(e) => deleteItem(e, number)}
-            title="Delete"
-          >
-            ×
-          </button>
+            ariaLabel={t("surveyBuilder.deleteQuestion", {}, {
+              default: "Delete question",
+            })}
+            title={t("surveyBuilder.deleteQuestion", {}, {
+              default: "Delete question",
+            })}
+          />
         </div>
       </div>
 
@@ -355,19 +384,30 @@ function Item({
                   value={option}
                   onChange={handleItemChange}
                   className="options"
-                  placeholder={t("surveyBuilder.optionPlaceholder", "Option text")}
+                  placeholder={t("surveyBuilder.optionPlaceholder", {}, {
+                    default: "Option text",
+                  })}
                 />
-                <button onClick={(e) => deleteOption(e, id, num, "options")}>
-                  ×
-                </button>
+                <CompactActionButton
+                  kind="delete"
+                  type="button"
+                  onClick={(e) => deleteOption(e, id, num, "options")}
+                  ariaLabel={t("surveyBuilder.deleteOption", {}, {
+                    default: "Delete option",
+                  })}
+                  title={t("surveyBuilder.deleteOption", {}, {
+                    default: "Delete option",
+                  })}
+                />
               </div>
             ))}
-            <button
+            <Button
+              variant="text"
+              type="button"
               onClick={(e) => addNewOption(e, id, "options")}
-              className="addOptionLink"
             >
-              {t("surveyBuilder.addOption", "+ Add option")}
-            </button>
+              {t("surveyBuilder.addOption", {}, { default: "Add option" })}
+            </Button>
           </>
         )}
 
@@ -385,19 +425,30 @@ function Item({
                   value={item}
                   onChange={handleItemChange}
                   className="items"
-                  placeholder={t("surveyBuilder.likertItemPlaceholder", "Statement to rate")}
+                  placeholder={t("surveyBuilder.likertItemPlaceholder", {}, {
+                    default: "Statement to rate",
+                  })}
                 />
-                <button onClick={(e) => deleteOption(e, id, num, "items")}>
-                  ×
-                </button>
+                <CompactActionButton
+                  kind="delete"
+                  type="button"
+                  onClick={(e) => deleteOption(e, id, num, "items")}
+                  ariaLabel={t("surveyBuilder.deleteOption", {}, {
+                    default: "Delete option",
+                  })}
+                  title={t("surveyBuilder.deleteOption", {}, {
+                    default: "Delete option",
+                  })}
+                />
               </div>
             ))}
-            <button
+            <Button
+              variant="text"
+              type="button"
               onClick={(e) => addNewOption(e, id, "items")}
-              className="addOptionLink"
             >
-              {t("surveyBuilder.addItemBtn", "+ Add item")}
-            </button>
+              {t("surveyBuilder.addItemBtn", {}, { default: "Add item" })}
+            </Button>
           </>
         )}
 
