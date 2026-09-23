@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useLayoutEffect, useReducer } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useReducer, useCallback, useId } from "react";
 import { createPortal } from "react-dom";
 
 import {
@@ -108,8 +108,7 @@ function renderLeadingIcon(item) {
 }
 
 /**
- * Reusable dropdown menu with portal (avoids clipping in AG Grid / overflow containers).
- * Renders trigger button and, when open, a panel in document.body with position: fixed.
+ * Reusable dropdown menu.
  *
  * @param {string} [triggerLabel] - Label when using default trigger (with ellipsis). Omit when `trigger` is set.
  * @param {React.ReactNode} [trigger] - Custom trigger content inside the button (e.g. icon). When set, `triggerLabel` and default ellipsis are not shown; provide `ariaLabel` for a11y.
@@ -122,6 +121,7 @@ function renderLeadingIcon(item) {
  * @param {React.CSSProperties} [panelStyle] - Optional override for portaled panel styles.
  * @param {(open: boolean) => void} [onOpenChange] - Called when the menu opens or closes.
  * @param {'auto'|'below'|'above'} [placement='auto'] - Vertical placement; `auto` flips when there is not enough space below.
+ * @param {boolean} [portal=false] - When true, mount the panel in document.body to avoid overflow clipping.
  */
 export default function DropdownMenu({
   triggerLabel,
@@ -135,12 +135,14 @@ export default function DropdownMenu({
   panelStyle = {},
   onOpenChange = null,
   placement = "auto",
+  portal = false,
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [panelLayout, setPanelLayout] = useState(null);
   const [panelLayoutTick, bumpPanelLayout] = useReducer((n) => n + 1, 0);
   const dropdownRef = useRef(null);
   const dropdownPanelRef = useRef(null);
+  const dropdownId = useId();
 
   const useRenderTrigger = typeof renderTrigger === "function";
   const useCustomTrigger = trigger != null;
@@ -194,6 +196,38 @@ export default function DropdownMenu({
   }, [dropdownOpen]);
 
   useEffect(() => {
+    if (!dropdownOpen) return undefined;
+    const frame = requestAnimationFrame(() => {
+      dropdownPanelRef.current
+        ?.querySelector('[role="menuitem"]:not(:disabled)')
+        ?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [dropdownOpen]);
+
+  const closeAndRestoreFocus = useCallback(() => {
+    setDropdownOpen(false);
+    requestAnimationFrame(() => {
+      dropdownRef.current?.querySelector('button:not(:disabled)')?.focus();
+    });
+  }, []);
+
+  const moveMenuItemFocus = (key) => {
+    const menuItems = Array.from(
+      dropdownPanelRef.current?.querySelectorAll('[role="menuitem"]:not(:disabled)') ?? []
+    );
+    if (menuItems.length === 0) return;
+    const currentIndex = menuItems.indexOf(document.activeElement);
+    const lastIndex = menuItems.length - 1;
+    let nextIndex = currentIndex < 0 ? 0 : currentIndex;
+    if (key === "Home") nextIndex = 0;
+    if (key === "End") nextIndex = lastIndex;
+    if (key === "ArrowUp") nextIndex = Math.max(0, currentIndex - 1);
+    if (key === "ArrowDown") nextIndex = Math.min(lastIndex, currentIndex + 1);
+    menuItems[nextIndex]?.focus();
+  };
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       const target = event.target;
       const inTrigger = dropdownRef.current?.contains(target);
@@ -239,12 +273,16 @@ export default function DropdownMenu({
           onClick: () => setDropdownOpen((prev) => !prev),
           open: dropdownOpen,
           ariaLabel,
+          ariaControls: `${dropdownId}-menu`,
         })
       ) : (
         <button
           type="button"
           className="MH-Type-Label-Base"
           aria-label={ariaLabel}
+          aria-haspopup="menu"
+          aria-expanded={dropdownOpen}
+          aria-controls={`${dropdownId}-menu`}
           onClick={() => setDropdownOpen((prev) => !prev)}
           style={mergedTriggerStyle}
         >
@@ -269,16 +307,34 @@ export default function DropdownMenu({
             right: provisionalRight,
           };
           const fixed = panelLayout ?? provisional;
+          const panelPosition = portal ? "fixed" : "absolute";
+          const panelTop = portal ? fixed.top : fixed.top - tr.top;
+          const panelRight = portal
+            ? fixed.right
+            : tr.right - window.innerWidth + fixed.right;
           return createPortal(
             <div
               ref={dropdownPanelRef}
+              id={`${dropdownId}-menu`}
+              role="menu"
+              tabIndex={-1}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  e.preventDefault();
+                  closeAndRestoreFocus();
+                }
+                if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) {
+                  e.preventDefault();
+                  moveMenuItemFocus(e.key);
+                }
+              }}
               onMouseDown={(e) => e.stopPropagation()}
               style={{
                 ...PANEL_STYLE,
                 ...panelStyle,
-                position: "fixed",
-                top: fixed.top,
-                right: fixed.right,
+                position: panelPosition,
+                top: panelTop,
+                right: panelRight,
                 maxHeight: fixed.maxHeight,
                 display: "flex",
                 flexDirection: "column",
@@ -320,10 +376,10 @@ export default function DropdownMenu({
                   }
 
                   return (
-                    <div
+                    <button
                       key={item.key}
-                      role="button"
-                      tabIndex={0}
+                      type="button"
+                      role="menuitem"
                       className={typeClassName}
                       style={style}
                       onClick={(e) => {
@@ -332,12 +388,6 @@ export default function DropdownMenu({
                         // the row before Journal’s onClick (e.g. delete) runs.
                         e.stopPropagation();
                         handleItemClick(item);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          handleItemClick(item);
-                        }
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor = "#f5f5f5";
@@ -348,12 +398,12 @@ export default function DropdownMenu({
                     >
                       {leadingIcon}
                       <span>{item.label}</span>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
             </div>,
-            document.body
+            portal ? document.body : dropdownRef.current
           );
         })()}
     </div>
