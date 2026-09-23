@@ -46,6 +46,7 @@ import CreateTemplateBoardModal from "../Modals/CreateTemplateBoardModal";
 import OwnedItemsShowcase from "../utils/OwnedItemsShowcase";
 import { filterOwnedClassItems } from "../utils/ownedClassItems";
 import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
+import { useClassTablePrefs } from "../useClassTablePrefs";
 
 export default function ClassProjects({
   myclass,
@@ -73,6 +74,9 @@ export default function ClassProjects({
   const { data, loading } = useQuery(CLASS_PROJECTS_QUERY, {
     variables: { classId: myclass?.id },
     skip: isEditing || !myclass?.id,
+  });
+  const tablePrefs = useClassTablePrefs(myclass?.id, "projects", {
+    defaultPageSize: 20,
   });
 
   if (isEditing) {
@@ -259,10 +263,9 @@ export default function ClassProjects({
               columnDefs={columnDefs}
               getRowId={(params) => params.data?.id}
               pagination
-              paginationPageSize={20}
               paginationPageSizeSelector={[10, 20, 50, 100]}
-              autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
               defaultColDef={{ resizable: true, sortable: true, filter: true }}
+              {...tablePrefs}
             />
           </div>
         )}

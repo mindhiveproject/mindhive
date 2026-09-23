@@ -14,10 +14,14 @@ import { GET_CLASS } from "../../../Queries/Classes";
 import DropdownMenu from "../../../DesignSystem/DropdownMenu";
 import Button from "../../../DesignSystem/Button";
 import CopyButton from "../../../DesignSystem/CopyButton";
+import { useClassTablePrefs } from "./useClassTablePrefs";
 
 export default function ClassMentors({ myclass, user }) {
   const { t } = useTranslation("classes");
   const { origin } = absoluteUrl();
+  const tablePrefs = useClassTablePrefs(myclass?.id, "mentors", {
+    defaultPageSize: 20,
+  });
 
   const [updateClass, { loading }] = useMutation(EDIT_CLASS, {
     variables: {
@@ -251,10 +255,9 @@ export default function ClassMentors({ myclass, user }) {
               columnDefs={columnDefs}
               getRowId={(params) => params.data?.id}
               pagination
-              paginationPageSize={20}
               paginationPageSizeSelector={[10, 20, 50, 100]}
-              autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
               defaultColDef={{ resizable: true, sortable: true, filter: true }}
+              {...tablePrefs}
             />
           </div>
         )}

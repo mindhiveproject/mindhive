@@ -16,12 +16,16 @@ import StudyCompletionOverview from "./Overview/StudyCompletion";
 import DropdownMenu from "../../../DesignSystem/DropdownMenu";
 import Button from "../../../DesignSystem/Button";
 import CopyButton from "../../../DesignSystem/CopyButton";
+import { useClassTablePrefs } from "./useClassTablePrefs";
 
 export default function ClassStudents({ myclass, user, query }) {
   const { action } = query;
   const { origin } = absoluteUrl();
   const { t } = useTranslation("classes");
   const students = myclass?.students || [];
+  const tablePrefs = useClassTablePrefs(myclass?.id, "students", {
+    defaultPageSize: 20,
+  });
 
   const { data } = useQuery(GET_CLASSES, {
     variables: {
@@ -319,10 +323,9 @@ export default function ClassStudents({ myclass, user, query }) {
               columnDefs={columnDefs}
               getRowId={(params) => params.data?.id}
               pagination
-              paginationPageSize={20}
               paginationPageSizeSelector={[10, 20, 50, 100]}
-              autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
               defaultColDef={{ resizable: true, sortable: true, filter: true }}
+              {...tablePrefs}
             />
           </div>
         )}
