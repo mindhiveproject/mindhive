@@ -44,6 +44,12 @@ export default function Wrapper({
 
   const createCopy = node?.options?.createCopy;
 
+  const canvasFields = {
+    subtitle: node?.options?.subtitle,
+    testId: node?.options?.testId,
+    askDataUsageQuestion: node?.options?.askDataUsageQuestion,
+  };
+
   let task;
 
   if (isAuthor && !createCopy) {
@@ -51,9 +57,7 @@ export default function Wrapper({
       ...theTask,
       templateId: theTask?.template?.id,
       consent: theTask?.consent?.id,
-      subtitle: node?.options?.subtitle,
-      testId: node?.options?.testId,
-      askDataUsageQuestion: node?.options?.askDataUsageQuestion,
+      ...canvasFields,
     };
   } else if (createCopy) {
     task = {
@@ -62,7 +66,7 @@ export default function Wrapper({
       consent: null,
       collaborators: [],
       isOriginal: false,
-      subtitle: node?.options?.subtitle,
+      ...canvasFields,
     };
   } else {
     task = {
@@ -71,6 +75,7 @@ export default function Wrapper({
       consent: null,
       collaborators: [],
       isOriginal: false,
+      ...canvasFields,
     };
   }
 
@@ -94,6 +99,7 @@ export default function Wrapper({
         updateCanvas={updateCanvas}
         persistStudy={persistStudy}
         close={close}
+        openPreview={() => onOpenPreview?.()}
       />
     );
   }

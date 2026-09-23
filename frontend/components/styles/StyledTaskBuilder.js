@@ -9,56 +9,84 @@ const StyledTaskBuilder = styled.div`
     min-width: 0;
     width: 100%;
 
-    .navigation {
-      display: grid;
-      width: 100%;
-      min-width: 0;
-
-      .firstLine {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        align-items: center;
-        grid-gap: 8px;
-        padding: 12px 0 8px;
-        box-shadow: none;
-        min-height: 0;
-        background: transparent;
-      }
-
-      .leftPanel {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        min-width: 0;
-      }
-
-      .studyTitle {
-        display: block;
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font: var(--MH-Type-Title-Small);
-      }
-
-      .goBackBtn {
-        margin: 0;
-        cursor: pointer;
-      }
-
-      .autosaveStatus {
-        font: var(--MH-Type-Label-Base);
-        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-        white-space: nowrap;
-      }
-    }
-
     .buildArea {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       height: auto;
       flex: 1;
       min-height: 0;
-      margin: 0 0 12px;
-      grid-gap: 12px;
+      margin: 0;
+      width: 100%;
+      overflow: visible;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
+
+      .block,
+      .wideBlock {
+        display: grid;
+        max-width: none;
+      }
+
+      .wideBlock {
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+        border-radius: 12px;
+        padding: 16px;
+        box-sizing: border-box;
+      }
+
+      .help {
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+
+      .example {
+        font: var(--MH-Type-Body-Small, 400 12px/16px Inter, sans-serif);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      }
+
+      label {
+        display: block;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        margin-bottom: 4px;
+      }
+
+      input,
+      textarea,
+      select {
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
+        border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+        border-radius: 8px;
+        width: 100%;
+        padding: 10px 12px;
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        &:focus {
+          outline: 0;
+          border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+          box-shadow: 0 0 0 3px rgba(51, 111, 138, 0.12);
+        }
+      }
+
+      fieldset {
+        display: grid;
+        grid-gap: 20px;
+        border: 0;
+        padding: 0;
+        &[disabled] {
+          opacity: 0.5;
+        }
+      }
+
+      .hideContinueBtn input[type="checkbox"] {
+        width: auto;
+      }
     }
   }
 
@@ -275,75 +303,22 @@ const StyledTaskBuilder = styled.div`
     flex-wrap: wrap;
     gap: 8px;
     padding: 12px 16px;
-    background: #f7fafc;
-    border: 1px solid #e2e8f0;
+    background: var(--MH-Theme-Neutrals-Light-Green, #f6f9f8);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
     border-radius: 8px;
     margin-bottom: 20px;
   }
 
   .surveyPageNavLabel {
     font: var(--MH-Type-Label-Small);
-    color: #718096;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     text-transform: uppercase;
     letter-spacing: 0;
     margin-right: 4px;
   }
 
-  .pageTabButton {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid #007c70;
-    background: white;
-    color: #007c70;
-    font: var(--MH-Type-Label-Small);
-    letter-spacing: 0;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-    transition: background 0.15s, color 0.15s;
-    &:hover {
-      background: #e6f4f3;
-    }
-    &.active {
-      background: #007c70;
-      color: white;
-    }
-  }
-
-  .addPageButton {
-    height: 36px;
-    padding: 0 14px;
-    border-radius: 18px;
-    border: 2px dashed #007c70;
-    background: white;
-    color: #007c70;
-    font: var(--MH-Type-Label-Base);
-    letter-spacing: 0;
-    cursor: pointer;
-    transition: background 0.15s;
-    &:hover {
-      background: #e6f4f3;
-    }
-  }
-
-  .deletePageButton {
+  .surveyPageNavDelete {
     margin-left: auto;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: 4px;
-    border: 1px solid #e2e8f0;
-    background: white;
-    color: #a0aec0;
-    font: var(--MH-Type-Label-Base);
-    letter-spacing: 0;
-    cursor: pointer;
-    transition: all 0.15s;
-    &:hover {
-      border-color: #e53e3e;
-      color: #e53e3e;
-      background: #fff5f5;
-    }
   }
 
   .surveyEmptyState {
@@ -527,38 +502,6 @@ const StyledTaskBuilder = styled.div`
       gap: 6px;
       align-items: center;
       margin-bottom: 4px;
-
-      button {
-        width: 28px;
-        height: 28px;
-        border-radius: 4px;
-        border: 1px solid transparent;
-        background: transparent;
-        color: #a0aec0;
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0;
-        line-height: 1;
-        transition: color 0.15s;
-        &:hover {
-          color: #e53e3e;
-        }
-      }
-    }
-
-    .addOptionLink {
-      background: none;
-      border: none;
-      color: #007c70;
-      font: var(--MH-Type-Label-Base);
-      letter-spacing: 0;
-      cursor: pointer;
-      padding: 4px 0;
-      text-align: left;
-      &:hover {
-        color: #005a52;
-        text-decoration: underline;
-      }
     }
   }
 

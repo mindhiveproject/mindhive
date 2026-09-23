@@ -1,7 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import debounce from "lodash.debounce";
-import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../../lib/useForm";
 
@@ -9,7 +8,7 @@ import { CREATE_TASK, UPDATE_TASK } from "../../../../Mutations/Task";
 
 import ComponentForm from "../../../Component/Form";
 
-import { MY_TASK } from "../../../../Queries/Task";
+import { MY_TASK, TASK_TO_EDIT, TASK_TO_PARTICIPATE } from "../../../../Queries/Task";
 
 function valueFromEvent(e) {
   let { value, name, type } = e.target;
@@ -30,8 +29,8 @@ export default function EditComponent({
   updateCanvas,
   persistStudy,
   close,
+  openPreview,
 }) {
-  const { t } = useTranslation("builder");
   const { inputs, handleChange, handleMultipleUpdate } = useForm(
     { ...task },
     { freezeInitialSync: true }
@@ -83,7 +82,13 @@ export default function EditComponent({
           },
           refetchQueries: [
             { query: MY_TASK, variables: { id: createdIdRef.current } },
+            { query: TASK_TO_EDIT, variables: { id: createdIdRef.current } },
+            {
+              query: TASK_TO_PARTICIPATE,
+              variables: { id: createdIdRef.current },
+            },
           ],
+          awaitRefetchQueries: true,
         });
       } else {
         const res = await createTask({
@@ -174,18 +179,20 @@ export default function EditComponent({
     debouncedSave();
   };
 
-  const handleClose = async () => {
+  const flushSave = async () => {
     debouncedSave.cancel();
     await persistFnRef.current?.();
+  };
+
+  const handleClose = async () => {
+    await flushSave();
     close();
   };
 
-  const saveLabel =
-    saveState === "saving"
-      ? t("blockPanel.saving", {}, { default: "Saving…" })
-      : saveState === "saved"
-        ? t("blockPanel.saved", {}, { default: "Saved" })
-        : t("blockPanel.autosave", {}, { default: "Autosave on" });
+  const handlePreview = async () => {
+    await flushSave();
+    openPreview?.();
+  };
 
   return (
     <ComponentForm
@@ -194,11 +201,11 @@ export default function EditComponent({
       handleChange={markDirtyAndChange}
       handleMultipleUpdate={markDirtyAndMultiple}
       handleSubmit={handleClose}
-      submitBtnName={saveLabel}
       loading={saveState === "saving"}
       error={taskError || createTaskError}
       isTemplateAuthor={isTemplateAuthor}
       close={handleClose}
+      openPreview={handlePreview}
       isInStudyBuilder
     />
   );
