@@ -18,6 +18,26 @@ const BASE_STYLE = {
     "background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, opacity 0.2s",
 };
 
+// The colour families an icon button can be painted in — the same two Button
+// carries, so a label and an icon button in one row stay in step. Only filled
+// and text take a brand colour; the rest are neutral surfaces.
+const TONES = {
+  primary: {
+    fill: "var(--MH-Theme-Primary-Dark, #336F8A)",
+    label: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  },
+  accent: {
+    fill: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+    label: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+  },
+  // Matches Button's `tertiary` tone — the data sources mockups' link/unlink
+  // and catalog actions.
+  tertiary: {
+    fill: "var(--MH-Theme-Tertiary-Base, #55808C)",
+    label: "var(--MH-Theme-Tertiary-Base, #55808C)",
+  },
+};
+
 // --- Filled (Figma Icon Button 1049:4895)
 const FILLED_BASE = {
   ...BASE_STYLE,
@@ -115,12 +135,27 @@ const SUBTLE_DISABLED = {
   cursor: "default",
 };
 
-// --- Text
-const TEXT_BASE = {
+// --- Neutral (Neutrals Lighter behind a black glyph — Figma's default "Icon
+// Button": row actions like star/settings on a card, where subtle's Primary
+// tint would read as branded rather than a plain utility control)
+const NEUTRAL_BASE = {
   ...BASE_STYLE,
-  background: "transparent",
-  color: "var(--MH-Theme-Primary-Dark, #336f8a)",
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
+const NEUTRAL_HOVER = {
+  background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+};
+const NEUTRAL_PRESSED = {
+  background: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  color: "var(--MH-Theme-Neutrals-White, #ffffff)",
+};
+const NEUTRAL_DISABLED = {
+  background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
+  color: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+  cursor: "default",
+};
+
 const TEXT_HOVER = {
   background: "var(--MH-Theme-Neutrals-Lighter, #f3f3f3)",
 };
@@ -133,7 +168,8 @@ const TEXT_DISABLED = {
   cursor: "default",
 };
 
-function getVariantStyles(variant) {
+function getVariantStyles(variant, tone) {
+  const palette = TONES[tone] || TONES.primary;
   switch (variant) {
     case "outline":
       return {
@@ -156,9 +192,16 @@ function getVariantStyles(variant) {
         pressed: SUBTLE_PRESSED,
         disabled: SUBTLE_DISABLED,
       };
+    case "neutral":
+      return {
+        base: NEUTRAL_BASE,
+        hover: NEUTRAL_HOVER,
+        pressed: NEUTRAL_PRESSED,
+        disabled: NEUTRAL_DISABLED,
+      };
     case "text":
       return {
-        base: TEXT_BASE,
+        base: { ...BASE_STYLE, background: "transparent", color: palette.label },
         hover: TEXT_HOVER,
         pressed: TEXT_PRESSED,
         disabled: TEXT_DISABLED,
@@ -166,7 +209,11 @@ function getVariantStyles(variant) {
     case "filled":
     default:
       return {
-        base: FILLED_BASE,
+        base: {
+          ...BASE_STYLE,
+          background: palette.fill,
+          color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+        },
         hover: FILLED_HOVER,
         pressed: FILLED_PRESSED,
         disabled: FILLED_DISABLED,
@@ -204,10 +251,14 @@ const ICON_WRAPPER_STYLE = {
  * Design System Icon Button. Circular 40px control for icon-only actions.
  * Matches Figma (node 1049-4895).
  *
- * Variants: filled, outline, tonal, text, and subtle — a quiet light chip
- * (Primary Lighter behind a black glyph) for close and dismiss actions.
+ * Variants: filled, outline, tonal, text, subtle, and neutral. Subtle is a
+ * quiet light chip (Primary Lighter behind a black glyph) for close and
+ * dismiss actions; neutral (Neutrals Lighter behind a black glyph) is Figma's
+ * default row-action Icon Button — star, edit, settings on a card.
  *
- * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
+ * @param {"filled"|"outline"|"tonal"|"text"|"subtle"|"neutral"} [variant="filled"] - Visual style.
+ * @param {"primary"|"accent"|"tertiary"} [tone="primary"] - Colour family for the filled
+ *   and text variants; the neutral variants ignore it.
  * @param {React.ReactNode} icon - 24px icon (required).
  * @param {boolean} [elevated=true] - Hover elevation. Set false to drop the
  *   hover drop shadow on the filled and tonal variants.
@@ -222,6 +273,7 @@ const ICON_WRAPPER_STYLE = {
  */
 export default function IconButton({
   variant = "filled",
+  tone = "primary",
   icon = null,
   elevated = true,
   disabled = false,
@@ -236,7 +288,7 @@ export default function IconButton({
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
 
-  const styles = getVariantStyles(variant);
+  const styles = getVariantStyles(variant, tone);
   let buttonStyle = { ...styles.base };
 
   if (disabled) {

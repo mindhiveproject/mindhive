@@ -80,13 +80,22 @@ Components are being moved from `.js` to `.tsx` as they're touched, newest first
 
 | Component | Status |
 |---|---|
-| `Card` | ✅ `.tsx` |
+| `Card` (+ `CardSection`) | ✅ `.tsx` |
 | `Chip` | ✅ `.tsx` |
 | `FavoriteButton` | ✅ `.tsx` |
 | `Navbar` | ✅ `.tsx` |
 | `ToggleSwitch` | ✅ `.tsx` |
+| `Panel` | ✅ `.tsx` |
+| `Input` | ✅ `.tsx` |
+| `Checkbox` | ✅ `.tsx` |
+| `Radio` | ✅ `.tsx` |
+| `Slider` | ✅ `.tsx` |
+| `SplitPane` | ✅ `.tsx` |
+| `DropdownSelect` | ✅ `.tsx` |
+| `DropdownMenu` | ✅ `.tsx` |
+| `dropdownViewportPlacement` | ✅ `.ts` |
 | `lib/taskTypeColors` | ✅ `.ts` |
-| `Button`, `IconButton`, `Modal`, `Popover`, `Tooltip`, `DropdownMenu`, `DropdownSelect`, `MessageCard`, `InfoPopover`, `PanelHeader`, `CopyButton`, `CompactActionButton`, `Icons/` | ⏳ still `.js` |
+| `Button`, `IconButton`, `Modal`, `Popover`, `Tooltip`, `MessageCard`, `InfoPopover`, `PanelHeader`, `CopyButton`, `CompactActionButton`, `Icons/` | ⏳ still `.js` |
 
 When converting a `.js` component that another `.tsx` file already imports, watch
 for TS mis-inferring its JSDoc-typed props — see the `RawTooltip` cast in

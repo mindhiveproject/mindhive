@@ -33,9 +33,10 @@ export default function Menu({
   handleChange,
   handleMultipleUpdate,
   hasStudyChanged,
+  tab,
+  setTab,
 }) {
   const { t } = useTranslation("builder");
-  const [tab, setTab] = useState("addBlock");
 
   const labels = {
     addBlock: t("menu.addBlock", {}, { default: "Add a block" }),

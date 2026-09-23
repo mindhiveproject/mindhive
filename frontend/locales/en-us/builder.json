@@ -281,6 +281,7 @@
 			"unsupportedType": "Unsupported component type: {{type}}",
 			"untitled": "Untitled"
 		},
+		"dataSourceGroup": "{{task}} · Data sources",
 		"datasetForm": {
 			"actions": {
 				"cancel": "Cancel",
@@ -472,7 +473,7 @@
 				},
 				"intro": {
 					"classNetwork": "Datasets on this project or study from classes in your class networks.",
-					"me": "All datasets you can see — uploaded, shared with you, from your class, class network, or public.",
+					"me": "All datasets you can see — study, uploaded, shared with you, from your class, class network, or public.",
 					"myClass": "Datasets linked to studies or projects in your classes.",
 					"public": "Datasets from public journal templates.",
 					"sharedWithMe": "Datasets others shared with you as a collaborator.",
@@ -499,7 +500,16 @@
 				"tooltipRow": "{{name}} — {{roles}}",
 				"whoTooltipAria": "Who will receive access"
 			},
-			"untitled": "Untitled Dataset"
+			"untitled": "Untitled Dataset",
+			"view": {
+				"empty": {
+					"generic": "There are no rows to display.",
+					"noneIncluded": "No participants are included in the analysis yet. Include them in Test & Collect, then return here.",
+					"title": "This dataset is empty"
+				},
+				"error": "Error: {{message}}",
+				"loading": "Loading dataset…"
+			}
 		},
 		"export": {
 			"button": "Export canva to PDF",
@@ -1155,6 +1165,57 @@
 			"submittedAsProposal": "Submitted as Proposal",
 			"working": "Work in progress"
 		}
+	},
+	"dataSources": {
+		"canvas": {
+			"recordingMany": "Recording · {{count}} devices",
+			"recordingOne": "Recording · {{name}}"
+		},
+		"favoriteAddLabel": "Add to favorites",
+		"favoriteRemoveLabel": "Remove from favorites",
+		"linkLabel": "Link",
+		"linkModal": {
+			"catalogEmpty": "No data sources match your search.",
+			"catalogHeading": "All Data Sources",
+			"close": "Close",
+			"continue": "Continue",
+			"description": "Add external data sources to collect physiological data while a study is happening.",
+			"filterMine": "Created by you",
+			"filterOfficial": "Created by MindHive",
+			"filterShowOutputs": "Show Outputs",
+			"linkedHeading": "Linked Data Sources",
+			"noneLinkedYet": "You haven't linked any data sources yet.",
+			"searchPlaceholder": "Search for data sources",
+			"title": "Link a Data Source",
+			"warning": "Proceed only if you know what you're doing or if you need external data sources in your study."
+		},
+		"more": "More",
+		"panelEmpty": "No data sources linked to this study yet.",
+		"panelSubtitle": "This study collects data from external devices",
+		"panelTitle": "External data sources",
+		"settings": {
+			"advancedOptions": "Advanced Options",
+			"close": "Close",
+			"confirmUnlink": "Unlink this data source from the study?",
+			"copyAndEdit": "Copy & Edit",
+			"editNotice": "To change how the data is aggregated, add more inputs, or add more analysis steps, you must edit this block.",
+			"general": "General",
+			"goToStudyFlow": "Go to Study Flow",
+			"linkedBlocksHint": "Change which blocks this data source is linked to from the Study Flow.",
+			"notFound": "This data source is no longer linked to the study.",
+			"outputs": "Outputs",
+			"outputsHint": "Review the outputs of the device and filter out the ones you won't be using.",
+			"recordParticipantData": "Record participant data",
+			"recordParticipantDataHint": "Save the device's output as part of your dataset.",
+			"streamToNextBlock": "Stream the output to the next block",
+			"streamToNextBlockHint": "After calculating aggregate data, stream the output to the next block",
+			"title": "{{title}} Settings",
+			"viewSignal": "Allow participants to view the signal",
+			"viewSignalHint": "View the raw signal during participation."
+		},
+		"settingsLabel": "Settings",
+		"tab": "Data source",
+		"unlinkLabel": "Unlink"
 	},
 	"dataUpload": {
 		"chooseDataFile": "Choose the data file",
@@ -2255,6 +2316,7 @@
 			"defaultPath": "Default path",
 			"expandAria": "Expand path {{name}}",
 			"legend": "Simulated over 100 participant runs. Paths are sorted by how often they occur.",
+			"previewBlock": "Preview",
 			"probabilityAria": "{{frequency}} percent of simulated runs",
 			"taskCount": "{{count}} tasks"
 		}

@@ -50,7 +50,12 @@ import { Ticket } from "./schemas/Ticket";
 import { TicketAnnotation } from "./schemas/TicketAnnotation";
 import { SurfaceDesign } from "./schemas/SurfaceDesign";
 import { Datasource } from "./schemas/Datasource";
+import { DataSourceBlock } from "./schemas/DataSourceBlock";
+import { StudyDataSource } from "./schemas/StudyDataSource";
+import { StudyDataSourceRecord } from "./schemas/StudyDataSourceRecord";
 import { Visual } from "./schemas/YQVisual";
+import { VisualCodeFile } from "./schemas/YQVisualCodeFile";
+import { JsPsychExperiment } from "./schemas/JsPsychExperiment";
 import { Friendship } from "./schemas/YQFriendship";
 import { YQGenAI } from "./schemas/YQGenAI";
 import { YQTag } from "./schemas/YQTag";
@@ -132,7 +137,12 @@ export const lists: Lists = {
   TicketAnnotation,
   SurfaceDesign,
   Datasource,
+  DataSourceBlock,
+  StudyDataSource,
+  StudyDataSourceRecord,
   Visual,
+  VisualCodeFile,
+  JsPsychExperiment,
   Friendship,
   YQTag,
   YQGenAI,

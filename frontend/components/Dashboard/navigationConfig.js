@@ -138,7 +138,8 @@ export const NAV_SECTIONS = [
         labelKey: "boards",
         fallback: "Project Boards",
         Icon: AssignmentIcon,
-        canView: (p) => p.isAdmin,
+        // canDevelop minus STUDENT — boards live in the teacher section.
+        canView: (p) => p.has("ADMIN", "SCIENTIST", "TEACHER", "MENTOR"),
       },
       {
         id: "resources",

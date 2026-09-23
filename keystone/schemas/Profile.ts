@@ -342,8 +342,28 @@ export const Profile = list({
       ref: "Dataset.profile",
       many: true,
     }),
+    dataSourceRecords: relationship({
+      ref: "StudyDataSourceRecord.profile",
+      many: true,
+    }),
     summaryResults: relationship({
       ref: "SummaryResult.user",
+      many: true,
+    }),
+    datasetsAsAssetAuthor: relationship({
+      ref: "Dataset.assetAuthor",
+      many: true,
+    }),
+    datasetsAsTaskAuthor: relationship({
+      ref: "Dataset.taskAuthor",
+      many: true,
+    }),
+    summaryResultsAsAssetAuthor: relationship({
+      ref: "SummaryResult.assetAuthor",
+      many: true,
+    }),
+    summaryResultsAsTaskAuthor: relationship({
+      ref: "SummaryResult.taskAuthor",
       many: true,
     }),
     authoredSpecs: relationship({
@@ -591,8 +611,29 @@ export const Profile = list({
     }),
     // YQ-related properties
     visuals: relationship({ ref: "Visual.author", many: true }),
+    jsPsychExperiments: relationship({
+      ref: "JsPsychExperiment.author",
+      many: true,
+    }),
+    collaboratorInJsPsychExperiment: relationship({
+      ref: "JsPsychExperiment.collaborators",
+      many: true,
+    }),
     collaboratorInVisual: relationship({ ref: "Visual.collaborators", many: true }),
+    viewerInVisual: relationship({ ref: "Visual.viewers", many: true }),
     liked: relationship({ ref: "Visual.likes", many: true }),
+    authoredDataSourceBlocks: relationship({
+      ref: "DataSourceBlock.author",
+      many: true,
+    }),
+    collaboratorInDataSourceBlock: relationship({
+      ref: "DataSourceBlock.collaborators",
+      many: true,
+    }),
+    favoriteDataSourceBlocks: relationship({
+      ref: "DataSourceBlock.favoritedBy",
+      many: true,
+    }),
     following: relationship({ ref: "Friendship.requester", many: true }),
     followers: relationship({ ref: "Friendship.recipient", many: true }),
     yqGenAI: relationship({ ref: "YQGenAI.author", many: true }),

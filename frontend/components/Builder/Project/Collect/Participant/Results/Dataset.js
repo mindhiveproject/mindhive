@@ -5,10 +5,12 @@ import { Icon } from "semantic-ui-react";
 import useSWR from "swr";
 
 import { saveAs } from "file-saver";
-import { jsonToCSV } from "react-papaparse";
+import csvWithPlainNumbers from "../../../../../../lib/csvWithPlainNumbers";
 import ChangeDatasetStatus from "./ChangeStatus";
 import DeleteRecord from "./DeleteRecord";
 import useTranslation from "next-translate/useTranslation";
+
+import buildAggregateColumns from "../../../../../../lib/yqParticipantAggregates";
 
 // A fetcher function to wrap the native fetch function and return the result of a call to url in json format
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -130,6 +132,13 @@ export default function Dataset({
   const subtitle = component?.subtitle;
   const condition = component?.condition;
 
+  // the physiological aggregates collected while the participant was on this
+  // task, flattened into one column per device channel and statistic
+  const aggregateColumns = buildAggregateColumns({
+    records: study?.dataSourceRecords || [],
+    components,
+  });
+
   // aggregate all data together
   const rows = results
     .filter((result) => result?.data)
@@ -145,6 +154,12 @@ export default function Dataset({
         condition: components
           .filter((c) => c?.testId === result?.metadata?.testVersion)
           .map((c) => c?.conditionLabel),
+        // constant across every row of the task — the aggregate covers the
+        // whole step, not one trial
+        ...aggregateColumns({
+          publicId: result?.metadata?.publicId,
+          testVersion: result?.metadata?.testVersion,
+        }),
       }))
     )
     .reduce((a, b) => a.concat(b), []);
@@ -164,7 +179,7 @@ export default function Dataset({
       }
       return newRow;
     });
-    const csv = jsonToCSV({ fields: keys, data: processedRows });
+    const csv = csvWithPlainNumbers({ fields: keys, data: processedRows });
     const blob = new Blob([csv], { type: "text/csv" });
     saveAs(blob, `${token}.csv`);
   };

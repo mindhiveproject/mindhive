@@ -35,18 +35,29 @@ async function visual(prisma, itemId, profileId) {
   if (!profileId) return nonEditor;
   if (item.authorId === profileId) return "write";
 
-  const editor = await prisma.profile.findFirst({
+  const invited = await prisma.profile.findFirst({
     where: {
       id: profileId,
       OR: [
         { collaboratorInVisual: { some: { id: itemId } } },
         { permissions: { some: { canAccessAdminUI: true } } },
+        // Invited as a Viewer. Without this a Viewer on a *private* visual
+        // would be refused the connection outright by `nonEditor` above, even
+        // though the whole point of the role is that they may open it.
+        { viewerInVisual: { some: { id: itemId } } },
       ],
     },
-    select: { id: true },
+    select: {
+      id: true,
+      collaboratorInVisual: { where: { id: itemId }, select: { id: true } },
+      permissions: { where: { canAccessAdminUI: true }, select: { id: true } },
+    },
   });
 
-  return editor ? "write" : nonEditor;
+  if (!invited) return nonEditor;
+  const mayWrite =
+    invited.collaboratorInVisual.length > 0 || invited.permissions.length > 0;
+  return mayWrite ? "write" : "read";
 }
 
 // Keyed by Prisma model name, i.e. the part before ":" in the document name.

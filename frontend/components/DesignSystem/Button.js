@@ -33,6 +33,50 @@ const WITH_TRAILING_ICON = {
   paddingRight: "16px",
 };
 
+// The colour families a button can be painted in. `primary` is the platform
+// default; `accent` is the hue the mockups give the Parameters area, so a
+// parameter's own actions read as one group set apart from the chrome round it.
+// Only filled, outline and text carry a brand colour and vary by tone — tonal
+// and subtle are neutral surfaces and ignore it.
+const TONES = {
+  primary: {
+    fill: "var(--MH-Theme-Primary-Dark, #336F8A)",
+    // Figma pressed — a mid calypso, softer than Primary Base so the drop from
+    // the hover tint doesn't read as harsh without a fill animation.
+    fillPressed: "#559BBB",
+    edge: "var(--MH-Theme-Primary-Dark, #336F8A)",
+    edgePressed: "var(--MH-Theme-Primary-Light, #DEF8FB)",
+    // Figma draws the text label at Primary Base (~2:1 on white); the DS keeps
+    // the accessible Primary Dark instead.
+    label: "var(--MH-Theme-Primary-Dark, #336F8A)",
+  },
+  accent: {
+    fill: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+    fillPressed: "var(--MH-Theme-Additional-Accent-Dark, #3F288F)",
+    edge: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+    edgePressed: "var(--MH-Theme-Additional-Accent-Light, #F5F2FF)",
+    label: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+  },
+  // The hue the data sources mockups give link/unlink and catalog actions, so
+  // that area reads as one group set apart from the platform's Primary chrome.
+  tertiary: {
+    fill: "var(--MH-Theme-Tertiary-Base, #55808C)",
+    fillPressed: "var(--MH-Theme-Tertiary-Dark, #0D3944)",
+    edge: "var(--MH-Theme-Tertiary-Base, #55808C)",
+    edgePressed: "var(--MH-Theme-Tertiary-Light, #F6F9F8)",
+    label: "var(--MH-Theme-Tertiary-Base, #55808C)",
+  },
+  // Muted grey, for a secondary action that sits beside a primary one and
+  // should read as quieter — e.g. "Disconnect" next to a connected device.
+  neutral: {
+    fill: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+    fillPressed: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+    edge: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+    edgePressed: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
+    label: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  },
+};
+
 // --- Filled
 const FILLED_BASE = {
   ...BASE_STYLE,
@@ -45,9 +89,6 @@ const FILLED_HOVER = {
     "linear-gradient(0deg, rgba(222, 248, 251, 0.2), rgba(222, 248, 251, 0.2)), var(--MH-Theme-Primary-Dark, #336f8a)",
   boxShadow: "var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.1))",
 };
-// Figma pressed — a mid calypso, softer than Primary Base so the drop from the
-// hover tint doesn't read as harsh without a Material-style fill animation.
-const FILLED_PRESSED = { background: "#559BBB" };
 const FILLED_DISABLED = {
   background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
@@ -120,19 +161,44 @@ const TEXT_DISABLED = {
   cursor: "default",
 };
 
-function getVariantStyles(variant) {
+function getVariantStyles(variant, tone) {
+  const palette = TONES[tone] || TONES.primary;
   switch (variant) {
     case "outline":
-      return { base: OUTLINE_BASE, hover: OUTLINE_HOVER, pressed: OUTLINE_PRESSED, disabled: OUTLINE_DISABLED };
+      return {
+        base: {
+          ...BASE_STYLE,
+          background: "transparent",
+          color: palette.edge,
+          border: `1px solid ${palette.edge}`,
+        },
+        hover: OUTLINE_HOVER,
+        pressed: { background: palette.edgePressed },
+        disabled: OUTLINE_DISABLED,
+      };
     case "tonal":
       return { base: TONAL_BASE, hover: TONAL_HOVER, pressed: TONAL_PRESSED, disabled: TONAL_DISABLED };
     case "subtle":
       return { base: SUBTLE_BASE, hover: SUBTLE_HOVER, pressed: SUBTLE_PRESSED, disabled: SUBTLE_DISABLED };
     case "text":
-      return { base: TEXT_BASE, hover: TEXT_HOVER, pressed: TEXT_PRESSED, disabled: TEXT_DISABLED };
+      return {
+        base: { ...BASE_STYLE, background: "transparent", color: palette.label },
+        hover: TEXT_HOVER,
+        pressed: TEXT_PRESSED,
+        disabled: TEXT_DISABLED,
+      };
     case "filled":
     default:
-      return { base: FILLED_BASE, hover: FILLED_HOVER, pressed: FILLED_PRESSED, disabled: FILLED_DISABLED };
+      return {
+        base: {
+          ...BASE_STYLE,
+          background: palette.fill,
+          color: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+        },
+        hover: FILLED_HOVER,
+        pressed: { background: palette.fillPressed },
+        disabled: FILLED_DISABLED,
+      };
   }
 }
 
@@ -165,6 +231,11 @@ const ICON_WRAPPER_STYLE = {
  * pairs with IconButton's subtle variant.
  *
  * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
+ * @param {"primary"|"accent"|"tertiary"|"neutral"} [tone="primary"] - Colour family. `accent` paints
+ *   the filled, outline and text variants in Additional Accent, `tertiary` in
+ *   Tertiary (the data sources area's link/unlink actions), `neutral` in grey
+ *   (a quieter secondary action, e.g. "Disconnect"); tonal and subtle are
+ *   neutral surfaces already and ignore this prop.
  * @param {React.ReactNode} children - Button label (required).
  * @param {React.ReactNode} [leadingIcon] - Optional 24px icon left of label.
  * @param {React.ReactNode} [trailingIcon] - Optional 24px icon right of label (e.g. a dropdown caret).
@@ -184,6 +255,7 @@ const ICON_WRAPPER_STYLE = {
  */
 export default function Button({
   variant = "filled",
+  tone = "primary",
   children,
   leadingIcon = null,
   trailingIcon = null,
@@ -197,7 +269,7 @@ export default function Button({
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
 
-  const styles = getVariantStyles(variant);
+  const styles = getVariantStyles(variant, tone);
   let buttonStyle = { ...styles.base };
 
   if (disabled) {

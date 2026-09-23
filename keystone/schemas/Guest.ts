@@ -87,6 +87,10 @@ export const Guest = list({
       ref: "Dataset.guest",
       many: true,
     }),
+    dataSourceRecords: relationship({
+      ref: "StudyDataSourceRecord.guest",
+      many: true,
+    }),
     summaryResults: relationship({
       ref: "SummaryResult.guest",
       many: true,

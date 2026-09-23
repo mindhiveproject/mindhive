@@ -182,6 +182,21 @@ export const MANAGE_FAVORITE_TASKS = gql`
   }
 `;
 
+// Star toggle on a data source block, in the study builder's link-a-source catalog.
+export const MANAGE_FAVORITE_DATA_SOURCE_BLOCKS = gql`
+  mutation MANAGE_FAVORITE_DATA_SOURCE_BLOCKS(
+    $id: ID!
+    $dataSourceBlockAction: DataSourceBlockRelateToManyForUpdateInput!
+  ) {
+    updateProfile(
+      where: { id: $id }
+      data: { favoriteDataSourceBlocks: $dataSourceBlockAction }
+    ) {
+      id
+    }
+  }
+`;
+
 // follow user
 export const FOLLOW_USER_MUTATION = gql`
   mutation FOLLOW_USER_MUTATION($userId: ID!) {

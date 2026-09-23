@@ -1,10 +1,13 @@
 import { useCallback, useState } from "react";
+import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
 
 import Widget from "./Widget";
 import Menu from "./Menu";
 import Component from "./Component/Main";
+import DataSources from "./DataSources/Main";
+import DataSourceSettings from "./DataSources/Settings";
 import TaskPreview from "../../../Tasks/Preview/Main";
 
 import { StyledCanvasBuilder } from "../../../styles/StyledBuilder";
@@ -12,6 +15,7 @@ import Modal from "./Modal/Main";
 import StudyPreview from "../../../Studies/Preview/Main";
 
 import InDev from "../../../Global/InDev";
+import { GET_CLASSES } from "../../../Queries/Classes";
 import StudyConnector from "../../../Projects/StudyConnector/Main";
 import Button from "../../../DesignSystem/Button";
 import IconButton from "../../../DesignSystem/IconButton";
@@ -43,7 +47,27 @@ export default function Builder({
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStudyPreviewOpen, setStudyPreviewOpen] = useState(false);
+  const [dataSourceSettingsId, setDataSourceSettingsId] = useState(null);
+
+  // Physiological data is opt-in per class; a study gets the data sources
+  // panel when at least one of its classes has turned the setting on. Read
+  // from the server rather than study.classes, which only holds ids after a
+  // class is linked in the builder.
+  const classIds = (study?.classes || []).map((cl) => cl?.id).filter(Boolean);
+  const { data: classesData } = useQuery(GET_CLASSES, {
+    variables: { input: { id: { in: classIds } } },
+    skip: !classIds.length,
+  });
+  const physiologicalDataEnabled = (classesData?.classes || []).some(
+    (cl) => cl?.settings?.physiologicalDataEnabled === true
+  );
+  // "default" shows the Menu tabs; "block" and "dataSource" swap in a detail
+  // panel for the selected block or linked data source (Menu stays mounted,
+  // just hidden, so its tab survives the round trip).
   const [sidepanelMode, setSidepanelMode] = useState("default");
+  // Held here rather than in Menu so the data source settings panel can send
+  // the user to the Study Flow tab.
+  const [menuTab, setMenuTab] = useState("addBlock");
 
   if (isCanvasLocked && engine?.getModel()) {
     engine.getModel().setLocked(true);
@@ -62,6 +86,7 @@ export default function Builder({
     setIsEditorOpen(!!isEditorOpen);
     setComponentId(node?.options?.componentID);
     if (isInfoOpen || isEditorOpen) {
+      setDataSourceSettingsId(null);
       setSidepanelMode("block");
     }
   };
@@ -72,6 +97,22 @@ export default function Builder({
     setIsEditorOpen(false);
     setIsPreviewOpen(false);
     setSidepanelMode("default");
+  };
+
+  const openDataSourceSettings = (id) => {
+    closeComponentModal();
+    setDataSourceSettingsId(id);
+    setSidepanelMode("dataSource");
+  };
+
+  const closeDataSourceSettings = () => {
+    setDataSourceSettingsId(null);
+    setSidepanelMode("default");
+  };
+
+  const openStudyFlowTab = () => {
+    closeDataSourceSettings();
+    setMenuTab("flow");
   };
 
   const openBlockPreview = useCallback(() => {
@@ -189,6 +230,7 @@ export default function Builder({
       >
         <Widget
           engine={engine}
+          studyId={study?.id}
           openComponentModal={openComponentModal}
           openModal={openModal}
           openStudyPreview={openStudyPreview}
@@ -206,7 +248,7 @@ export default function Builder({
         >
           <div
             className="sidepanelDefaultHost"
-            hidden={sidepanelMode === "block"}
+            hidden={sidepanelMode !== "default"}
           >
             <Menu
               user={user}
@@ -217,6 +259,8 @@ export default function Builder({
               handleMultipleUpdate={handleMultipleUpdate}
               hasStudyChanged={hasStudyChanged}
               isCanvasLocked={isCanvasLocked}
+              tab={menuTab}
+              setTab={setMenuTab}
             />
           </div>
           {sidepanelMode === "block" && componentId && (
@@ -237,7 +281,24 @@ export default function Builder({
               persistStudy={persistStudy}
             />
           )}
+          {sidepanelMode === "dataSource" && dataSourceSettingsId && (
+            <DataSourceSettings
+              key={dataSourceSettingsId}
+              study={study}
+              studyDataSourceId={dataSourceSettingsId}
+              onClose={closeDataSourceSettings}
+              onOpenStudyFlow={openStudyFlowTab}
+            />
+          )}
         </div>
+        {physiologicalDataEnabled && (
+          <DataSources
+            study={study}
+            user={user}
+            dataSourceSettingsId={dataSourceSettingsId}
+            onOpenSettings={openDataSourceSettings}
+          />
+        )}
         <div className="boardTopActions">
           <Button
             id="commentButton"

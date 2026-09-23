@@ -104,6 +104,7 @@ export default function Header({ study, slug, participants, components }) {
               fileDirs={fileDirs}
               components={components}
               datasets={study?.datasets || []}
+              dataSourceRecords={study?.dataSourceRecords || []}
             />
           )}
         </div>

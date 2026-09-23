@@ -79,6 +79,13 @@ import {
   searchConnectUsersCount,
 } from "./searchConnectUsers";
 import { GraphQLSchema } from "graphql";
+import {
+  ingestRunMessage,
+  runtimeRunContext,
+  startRun,
+  updateRunDataPolicy,
+} from "./runtimeRuns";
+import { saveStudyDataSourceRecord } from "./dataSourceRecords";
 
 // make a fake gql tagged template literal
 const graphql = String.raw;
@@ -129,6 +136,30 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         draftPreferenceId: ID
       }
       type Mutation {
+        startRun(
+          taskId: ID!
+          studyId: ID!
+          requestedTestVersion: String
+          guestPublicId: String
+        ): RuntimeRunContext!
+        ingestRunMessage(
+          runToken: String!
+          sequence: Int!
+          messageType: RuntimeMessageType!
+          data: JSON
+          aggregated: JSON
+          error: String
+        ): RuntimeAcknowledgement!
+        updateRunDataPolicy(runToken: String!, dataPolicy: String!): Boolean!
+        # Upserts the calling participant's StudyDataSourceRecord for a study
+        # with the AggregateRecorder's current running snapshot. Called on
+        # every step close and once more on finish/leave.
+        saveStudyDataSourceRecord(
+          studyId: ID!
+          guestPublicId: String
+          steps: JSON
+          session: JSON
+        ): ID
         sendEmail(
           receiverId: ID!
           title: String
@@ -351,6 +382,34 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         updateTemplateMilestone(input: UpdateTemplateMilestoneInput!): Milestone
         deleteTemplateMilestone(id: ID!): Milestone
       }
+      enum RuntimeMessageType {
+        BATCH
+        FINAL
+        COMPLETE
+        FAILURE
+      }
+      type RuntimeRunContext {
+        runToken: String!
+        datasetToken: String!
+        date: String
+        runtimeType: String!
+        testVersion: String
+        studyVersion: String
+        assetId: ID!
+        assetVersion: String!
+        participantType: String!
+        participantPublicId: String
+        studyId: ID!
+        taskId: ID!
+        templateId: ID
+      }
+      type RuntimeAcknowledgement {
+        accepted: Boolean!
+        duplicate: Boolean!
+        sequence: Int!
+        datasetToken: String!
+        completed: Boolean!
+      }
       input CreateTemplateMilestoneInput {
         templateBoardId: ID!
         title: String!
@@ -421,6 +480,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       }
 
       extend type Query {
+        runtimeRunContext(runToken: String!): RuntimeRunContext!
         """
         One ticket, for a CLI or agent with no session. Shared-secret
         authenticated, read-only, single-id. See mutations/ticketForAgent.ts.
@@ -485,6 +545,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
     resolvers: {
       Opportunity: opportunityMultiselectResolvers,
       Query: {
+        runtimeRunContext,
         ticketForAgent,
         supportTicketPreviews,
         resolveFormDefinition,
@@ -494,6 +555,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         searchConnectUsersCount,
       },
       Mutation: {
+        startRun,
+        ingestRunMessage,
+        updateRunDataPolicy,
+        saveStudyDataSourceRecord,
         sendEmail,
         copyProposalBoard,
         deleteProposal,

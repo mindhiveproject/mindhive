@@ -372,7 +372,7 @@ export const StyledDasboardReview = styled.div`
         grid-gap: 16px;
         grid-template-columns: 3fr 1fr 1fr 1fr;
       }
-      /* !important: DropdownSelect sets these inline for its clamp-and-wrap
+      /* !important: DropdownSelect sets these on its label for its clamp-and-wrap
          full-width case. Here the trigger is a compact filter — keep it to one
          line and ellipsize instead. */
       .searchTopArea [data-dropdown-label] {

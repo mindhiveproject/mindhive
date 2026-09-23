@@ -119,7 +119,9 @@ const CURSOR_COLORS = [
   "#3b82f6",
 ];
 
-function getUserColor(userId) {
+// Exported so every collaborative editor in the app (the visual builder's docs
+// tab included) draws the same person in the same colour.
+export function getUserColor(userId) {
   if (!userId) return CURSOR_COLORS[0];
   let hash = 0;
   const str = String(userId);

@@ -2756,6 +2756,15 @@ const StyledClass = styled.div`
       color: #171717;
     }
 
+    .settingsCheckboxRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
+      color: #171717;
+    }
+
     .classDescriptionSettingsHint {
       margin: 0;
       color: #625b71;

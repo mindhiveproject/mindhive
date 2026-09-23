@@ -9,6 +9,9 @@ import NewStudy from "./Study/New/Main";
 import StartProject from "./Project/New/Start";
 import BuilderApp from "./App";
 
+// visuals
+import VisualBuilder from "../Visuals/Builder/Main";
+
 export default function BuilderRouter({ query }) {
   const router = useRouter();
 
@@ -23,6 +26,10 @@ export default function BuilderRouter({ query }) {
 
   if (area === "cloneofstudy" && selector) {
     return <BuilderApp query={query} user={user} />;
+  }
+
+  if (area === "visuals") {
+    return <VisualBuilder query={query} user={user} />;
   }
 
   if (area === "projects") {

@@ -67,6 +67,7 @@ export default function AxesHistogram({
     key: variable?.field,
     value: variable?.displayName || variable?.field,
     text: variable?.displayName || variable?.field,
+    group: variable?.group,
   }));
 
   const onSelectorChange = ({ target }) => {

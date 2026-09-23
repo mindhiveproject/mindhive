@@ -43,6 +43,9 @@ export default function Collect({ query, user, tab, toggleSidebar, studyId }) {
     flow?.forEach((stage) => {
       if (stage?.type === "my-node") {
         components.push({
+          // the flow node id, which is what the data source recorder keys its
+          // per-step aggregate windows on
+          id: stage?.id,
           testId: stage?.testId,
           name: stage?.name,
           subtitle: stage?.subtitle,

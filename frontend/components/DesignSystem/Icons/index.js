@@ -462,3 +462,286 @@ export function ConnectIcon(props) {
     </IconBox>
   );
 }
+
+// ── Visual builder ───────────────────────────────────────────────────────────
+//
+// Material Symbols (outlined) at their native 24x24, so these take no translate
+// offset — unlike the navigation glyphs above, which were exported from Figma
+// frames at their designed size and have to be nudged into the box.
+
+export const ChevronLeftIcon = filledIcon(
+  "ChevronLeftIcon",
+  0,
+  0,
+  "M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z",
+);
+
+export const ChevronRightIcon = filledIcon(
+  "ChevronRightIcon",
+  0,
+  0,
+  "M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z",
+);
+
+// Adding a parameter or block uses AddIcon, defined with the navigation glyphs
+// above.
+
+export const DeleteIcon = filledIcon(
+  "DeleteIcon",
+  0,
+  0,
+  "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4h-3.5z",
+);
+
+export const EditIcon = filledIcon(
+  "EditIcon",
+  0,
+  0,
+  "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z",
+);
+
+export const MoreVertIcon = filledIcon(
+  "MoreVertIcon",
+  0,
+  0,
+  "M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z",
+);
+
+export const InfoIcon = filledIcon(
+  "InfoIcon",
+  0,
+  0,
+  "M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z",
+);
+
+/** The Documentation tab. */
+export const DescriptionIcon = filledIcon(
+  "DescriptionIcon",
+  0,
+  0,
+  "M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z",
+);
+
+// The Code tab and inline `code` mark use CodeIcon, defined with the navigation
+// glyphs above.
+
+/** The Parameters tab, and the per-parameter controls toggle. */
+export const TuneIcon = filledIcon(
+  "TuneIcon",
+  0,
+  0,
+  "M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z",
+);
+
+/**
+ * The Data Source tab, and the liveness indicator on a stream. Rendered flat
+ * when idle and animated when a stream is running — see the `Streaming` chip.
+ */
+export const WaveformIcon = filledIcon(
+  "WaveformIcon",
+  0,
+  0,
+  "M7 18H5V6h2v12zm4 4H9V2h2v20zm4-4h-2V6h2v12zm4-8h-2v4h2v-4zM3 14H1v-4h2v4z",
+);
+
+/** Connecting a device input. */
+export const PlugIcon = filledIcon(
+  "PlugIcon",
+  0,
+  0,
+  "M16.01 7 16 3h-2v4h-4V3H8v4h-.01C7 6.99 6 7.99 6 8.99v5.49L9.5 18v3h5v-3l3.5-3.51v-5.5c0-1-1-2-1.99-1.99z",
+);
+
+/** A live recording in progress — the filled dot on the "Recording" chip. */
+export function RecordDotIcon(props) {
+  return (
+    <IconBox {...props}>
+      <circle cx="12" cy="12" r="6" fill="currentColor" />
+    </IconBox>
+  );
+}
+
+/** Where a parameter's value comes from — the Mapping side of a parameter. */
+export const CableIcon = filledIcon(
+  "CableIcon",
+  3,
+  3,
+  "M2 18C1.71667 18 1.47917 17.9042 1.2875 17.7125C1.09583 17.5208 1 17.2833 1 17V16H0V12C0 11.7167 0.0958333 11.4792 0.2875 11.2875C0.479167 11.0958 0.716667 11 1 11H2V4C2 2.9 2.39167 1.95833 3.175 1.175C3.95833 0.391667 4.9 0 6 0C7.1 0 8.04167 0.391667 8.825 1.175C9.60833 1.95833 10 2.9 10 4V14C10 14.55 10.1958 15.0208 10.5875 15.4125C10.9792 15.8042 11.45 16 12 16C12.55 16 13.0208 15.8042 13.4125 15.4125C13.8042 15.0208 14 14.55 14 14V7H13C12.7167 7 12.4792 6.90417 12.2875 6.7125C12.0958 6.52083 12 6.28333 12 6V2H13V1C13 0.716667 13.0958 0.479167 13.2875 0.2875C13.4792 0.0958333 13.7167 0 14 0H16C16.2833 0 16.5208 0.0958333 16.7125 0.2875C16.9042 0.479167 17 0.716667 17 1V2H18V6C18 6.28333 17.9042 6.52083 17.7125 6.7125C17.5208 6.90417 17.2833 7 17 7H16V14C16 15.1 15.6083 16.0417 14.825 16.825C14.0417 17.6083 13.1 18 12 18C10.9 18 9.95833 17.6083 9.175 16.825C8.39167 16.0417 8 15.1 8 14V4C8 3.45 7.80417 2.97917 7.4125 2.5875C7.02083 2.19583 6.55 2 6 2C5.45 2 4.97917 2.19583 4.5875 2.5875C4.19583 2.97917 4 3.45 4 4V11H5C5.28333 11 5.52083 11.0958 5.7125 11.2875C5.90417 11.4792 6 11.7167 6 12V16H5V17C5 17.2833 4.90417 17.5208 4.7125 17.7125C4.52083 17.9042 4.28333 18 4 18H2Z",
+);
+
+/** Releasing a parameter's binding back to manual control. */
+export const LinkOffIcon = filledIcon(
+  "LinkOffIcon",
+  0,
+  0,
+  "M17 7h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.43-.98 2.63-2.31 2.98l1.46 1.46C20.88 15.61 22 13.95 22 12c0-2.76-2.24-5-5-5zm-1 4h-2.19l2 2H16v-2zM2 4.27l3.11 3.11C3.29 8.12 2 9.91 2 12c0 2.76 2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1 0-1.59 1.21-2.9 2.76-3.07L8.73 11H8v2h2.73L13 15.27V17h1.73l4.01 4L20 19.74 3.27 3 2 4.27z",
+);
+
+// Favouriting a data source block uses StarIcon / StarFilledIcon, defined with
+// the rest of the navigation glyphs above.
+
+export const FullscreenIcon = filledIcon(
+  "FullscreenIcon",
+  0,
+  0,
+  "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z",
+);
+
+export const FullscreenExitIcon = filledIcon(
+  "FullscreenExitIcon",
+  0,
+  0,
+  "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z",
+);
+
+/** Collapsing the Preview pane; the filled column is the pane being closed. */
+export const SidePanelIcon = filledIcon(
+  "SidePanelIcon",
+  0,
+  0,
+  "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM5 19V5h9v14H5zm14 0h-3V5h3v14z",
+);
+
+export const DownloadIcon = filledIcon(
+  "DownloadIcon",
+  0,
+  0,
+  "M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z",
+);
+
+/** The visual builder's console: output from the sketch running in the preview. */
+export const TerminalIcon = filledIcon(
+  "TerminalIcon",
+  0,
+  0,
+  "M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zM7.5 17l-1.41-1.41L8.67 13l-2.59-2.59L7.5 9l4 4-4 4z",
+);
+
+export const ShareIcon = filledIcon(
+  "ShareIcon",
+  0,
+  0,
+  "M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z",
+);
+
+// ── Rich text ────────────────────────────────────────────────────────────────
+//
+// The documentation editor's toolbar. Several of these already existed as flat
+// SVG files under `public/assets/tiptapIcons` for the TipTap floating toolbar;
+// the glyphs are the same Material Symbols, lifted here so a toolbar built from
+// IconButton paints them with `currentColor` like every other control does.
+
+export const UndoIcon = filledIcon(
+  "UndoIcon",
+  0,
+  0,
+  "M7 19V17H14.1C15.15 17 16.0625 16.6667 16.8375 16C17.6125 15.3333 18 14.5 18 13.5C18 12.5 17.6125 11.6667 16.8375 11C16.0625 10.3333 15.15 10 14.1 10H7.8L10.4 12.6L9 14L4 9L9 4L10.4 5.4L7.8 8H14.1C15.7167 8 17.1042 8.525 18.2625 9.575C19.4208 10.625 20 11.9333 20 13.5C20 15.0667 19.4208 16.375 18.2625 17.425C17.1042 18.475 15.7167 19 14.1 19H7Z",
+);
+
+export const RedoIcon = filledIcon(
+  "RedoIcon",
+  0,
+  0,
+  "M9.9 19C8.28333 19 6.89583 18.475 5.7375 17.425C4.57917 16.375 4 15.0667 4 13.5C4 11.9333 4.57917 10.625 5.7375 9.575C6.89583 8.525 8.28333 8 9.9 8H16.2L13.6 5.4L15 4L20 9L15 14L13.6 12.6L16.2 10H9.9C8.85 10 7.9375 10.3333 7.1625 11C6.3875 11.6667 6 12.5 6 13.5C6 14.5 6.3875 15.3333 7.1625 16C7.9375 16.6667 8.85 17 9.9 17H17V19H9.9Z",
+);
+
+export const FormatH1Icon = filledIcon(
+  "FormatH1Icon",
+  0,
+  0,
+  "M5 17V7H7V11H11V7H13V17H11V13H7V17H5ZM17 17V9H15V7H19V17H17Z",
+);
+
+export const FormatH2Icon = filledIcon(
+  "FormatH2Icon",
+  0,
+  0,
+  "M5 17V7H7V11H11V7H13V17H11V13H7V17H5Zm9 0v-4q0-0.825 0.5875-1.4125T16 11h3V9h-5V7h5q0.825 0 1.4125 0.5875T21 9v2q0 0.825-0.5875 1.4125T19 13h-3v2h5v2h-7Z",
+);
+
+export const FormatParagraphIcon = filledIcon(
+  "FormatParagraphIcon",
+  0,
+  0,
+  "M9 20v-6q-2.075 0-3.5375-1.4625T4 9q0-2.075 1.4625-3.5375T9 4h9v2h-2v14h-2V6h-3v14H9Z",
+);
+
+export const FormatBoldIcon = filledIcon(
+  "FormatBoldIcon",
+  0,
+  0,
+  "M6.79999 19V5H12.325C13.4083 5 14.4083 5.33333 15.325 6C16.2417 6.66667 16.7 7.59167 16.7 8.775C16.7 9.625 16.5083 10.2792 16.125 10.7375C15.7417 11.1958 15.3833 11.525 15.05 11.725C15.4667 11.9083 15.9292 12.25 16.4375 12.75C16.9458 13.25 17.2 14 17.2 15C17.2 16.4833 16.6583 17.5208 15.575 18.1125C14.4917 18.7042 13.475 19 12.525 19H6.79999ZM9.82499 16.2H12.425C13.225 16.2 13.7125 15.9958 13.8875 15.5875C14.0625 15.1792 14.15 14.8833 14.15 14.7C14.15 14.5167 14.0625 14.2208 13.8875 13.8125C13.7125 13.4042 13.2 13.2 12.35 13.2H9.82499V16.2ZM9.82499 10.5H12.15C12.7 10.5 13.1 10.3583 13.35 10.075C13.6 9.79167 13.725 9.475 13.725 9.125C13.725 8.725 13.5833 8.4 13.3 8.15C13.0167 7.9 12.65 7.775 12.2 7.775H9.82499V10.5Z",
+);
+
+export const FormatItalicIcon = filledIcon(
+  "FormatItalicIcon",
+  0,
+  0,
+  "M5 19V16.5H9L12 7.5H8V5H18V7.5H14.5L11.5 16.5H15V19H5Z",
+);
+
+export const FormatUnderlinedIcon = filledIcon(
+  "FormatUnderlinedIcon",
+  0,
+  0,
+  "M5 21V19H19V21H5ZM12 17C10.3167 17 9.00833 16.475 8.075 15.425C7.14167 14.375 6.675 12.9833 6.675 11.25V3H9.25V11.4C9.25 12.3333 9.48333 13.0917 9.95 13.675C10.4167 14.2583 11.1 14.55 12 14.55C12.9 14.55 13.5833 14.2583 14.05 13.675C14.5167 13.0917 14.75 12.3333 14.75 11.4V3H17.325V11.25C17.325 12.9833 16.8583 14.375 15.925 15.425C14.9917 16.475 13.6833 17 12 17Z",
+);
+
+export const LinkIcon = filledIcon(
+  "LinkIcon",
+  0,
+  0,
+  "M11 17H7C5.61667 17 4.4375 16.5125 3.4625 15.5375C2.4875 14.5625 2 13.3833 2 12C2 10.6167 2.4875 9.4375 3.4625 8.4625C4.4375 7.4875 5.61667 7 7 7H11V9H7C6.16667 9 5.45833 9.29167 4.875 9.875C4.29167 10.4583 4 11.1667 4 12C4 12.8333 4.29167 13.5417 4.875 14.125C5.45833 14.7083 6.16667 15 7 15H11V17ZM8 13V11H16V13H8ZM13 17V15H17C17.8333 15 18.5417 14.7083 19.125 14.125C19.7083 13.5417 20 12.8333 20 12C20 11.1667 19.7083 10.4583 19.125 9.875C18.5417 9.29167 17.8333 9 17 9H13V7H17C18.3833 7 19.5625 7.4875 20.5375 8.4625C21.5125 9.4375 22 10.6167 22 12C22 13.3833 21.5125 14.5625 20.5375 15.5375C19.5625 16.5125 18.3833 17 17 17H13Z",
+);
+
+/** A fenced code block, as opposed to the inline `code` mark's CodeIcon. */
+export const DataObjectIcon = filledIcon(
+  "DataObjectIcon",
+  0,
+  0,
+  "M15 20v-2h2q0.425 0 0.7125-0.2875T18 17v-2q0-0.95 0.55-1.725t1.45-1.05v-0.45q-0.9-0.275-1.45-1.05T18 9V7q0-0.425-0.2875-0.7125T17 6h-2V4h2q1.25 0 2.125 0.875t0.875 2.125v2q0 0.425 0.2875 0.7125T21 10h1v4h-1q-0.425 0-0.7125 0.2875T20 15v2q0 1.25-0.875 2.125t-2.125 0.875h-2Zm-8 0q-1.25 0-2.125-0.875t-0.875-2.125v-2q0-0.425-0.2875-0.7125T3 14H2v-4h1q0.425 0 0.7125-0.2875T4 9V7q0-1.25 0.875-2.125t2.125-0.875h2v2H7q-0.425 0-0.7125 0.2875T6 7v2q0 0.95-0.55 1.725T4 11.775v0.45q0.9 0.275 1.45 1.05T6 15v2q0 0.425 0.2875 0.7125T7 18h2v2H7Z",
+);
+
+export const FormatListBulletedIcon = filledIcon(
+  "FormatListBulletedIcon",
+  0,
+  0,
+  "M9 19V17H21V19H9ZM9 13V11H21V13H9ZM9 7V5H21V7H9ZM5 20C4.45 20 3.97917 19.8042 3.5875 19.4125C3.19583 19.0208 3 18.55 3 18C3 17.45 3.19583 16.9792 3.5875 16.5875C3.97917 16.1958 4.45 16 5 16C5.55 16 6.02083 16.1958 6.4125 16.5875C6.80417 16.9792 7 17.45 7 18C7 18.55 6.80417 19.0208 6.4125 19.4125C6.02083 19.8042 5.55 20 5 20ZM5 14C4.45 14 3.97917 13.8042 3.5875 13.4125C3.19583 13.0208 3 12.55 3 12C3 11.45 3.19583 10.9792 3.5875 10.5875C3.97917 10.1958 4.45 10 5 10C5.55 10 6.02083 10.1958 6.4125 10.5875C6.80417 10.9792 7 11.45 7 12C7 12.55 6.80417 13.0208 6.4125 13.4125C6.02083 13.8042 5.55 14 5 14ZM5 8C4.45 8 3.97917 7.80417 3.5875 7.4125C3.19583 7.02083 3 6.55 3 6C3 5.45 3.19583 4.97917 3.5875 4.5875C3.97917 4.19583 4.45 4 5 4C5.55 4 6.02083 4.19583 6.4125 4.5875C6.80417 4.97917 7 5.45 7 6C7 6.55 6.80417 7.02083 6.4125 7.4125C6.02083 7.80417 5.55 8 5 8Z",
+);
+
+export const FormatListNumberedIcon = filledIcon(
+  "FormatListNumberedIcon",
+  0,
+  0,
+  "M3 22V20.5H5.5V19.75H4V18.25H5.5V17.5H3V16H6C6.28333 16 6.52083 16.0958 6.7125 16.2875C6.90417 16.4792 7 16.7167 7 17V18C7 18.2833 6.90417 18.5208 6.7125 18.7125C6.52083 18.9042 6.28333 19 6 19C6.28333 19 6.52083 19.0958 6.7125 19.2875C6.90417 19.4792 7 19.7167 7 20V21C7 21.2833 6.90417 21.5208 6.7125 21.7125C6.52083 21.9042 6.28333 22 6 22H3ZM3 15V12.25C3 11.9667 3.09583 11.7292 3.2875 11.5375C3.47917 11.3458 3.71667 11.25 4 11.25H5.5V10.5H3V9H6C6.28333 9 6.52083 9.09583 6.7125 9.2875C6.90417 9.47917 7 9.71667 7 10V11.75C7 12.0333 6.90417 12.2708 6.7125 12.4625C6.52083 12.6542 6.28333 12.75 6 12.75H4.5V13.5H7V15H3ZM4.5 8V3.5H3V2H6V8H4.5ZM9 19V17H21V19H9ZM9 13V11H21V13H9ZM9 7V5H21V7H9Z",
+);
+
+export const FormatQuoteIcon = filledIcon(
+  "FormatQuoteIcon",
+  0,
+  0,
+  "M5.7 18L8 14C6.9 14 5.95833 13.6083 5.175 12.825C4.39167 12.0417 4 11.1 4 10C4 8.9 4.39167 7.95833 5.175 7.175C5.95833 6.39167 6.9 6 8 6C9.1 6 10.0417 6.39167 10.825 7.175C11.6083 7.95833 12 8.9 12 10C12 10.3833 11.9542 10.7375 11.8625 11.0625C11.7708 11.3875 11.6333 11.7 11.45 12L8 18H5.7ZM14.7 18L17 14C15.9 14 14.9583 13.6083 14.175 12.825C13.3917 12.0417 13 11.1 13 10C13 8.9 13.3917 7.95833 14.175 7.175C14.9583 6.39167 15.9 6 17 6C18.1 6 19.0417 6.39167 19.825 7.175C20.6083 7.95833 21 8.9 21 10C21 10.3833 20.9542 10.7375 20.8625 11.0625C20.7708 11.3875 20.6333 11.7 20.45 12L17 18H14.7Z",
+);
+
+/** Play / preview — Material Symbols "play_arrow" (outlined), the glyph the builder canvas's block play button uses. */
+export const PlayIcon = filledIcon(
+  "PlayIcon",
+  0,
+  0,
+  "M8 19V5L19 12L8 19ZM9.5 16.275L16.225 12L9.5 7.725V16.275Z",
+);
+
+/** Whether a visual's documentation is shown to the people it is shared with. */
+export const VisibilityIcon = filledIcon(
+  "VisibilityIcon",
+  0,
+  0,
+  "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z",
+);
+
+export const VisibilityOffIcon = filledIcon(
+  "VisibilityOffIcon",
+  0,
+  0,
+  "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z",
+);

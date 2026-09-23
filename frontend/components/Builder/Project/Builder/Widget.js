@@ -2,6 +2,7 @@ import { CreatorWidget } from "./Diagram/widgets/CreatorWidget";
 
 export default function Widget({
   engine,
+  studyId,
   openComponentModal,
   openModal,
   openStudyPreview,
@@ -13,6 +14,7 @@ export default function Widget({
     return (
       <CreatorWidget
         engine={engine}
+        studyId={studyId}
         openComponentModal={openComponentModal}
         openModal={openModal}
         openStudyPreview={openStudyPreview}

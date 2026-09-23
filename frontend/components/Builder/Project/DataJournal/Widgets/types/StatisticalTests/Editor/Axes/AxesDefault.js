@@ -18,6 +18,7 @@ export default function AxesDefault({
     key: variable?.field,
     value: variable?.field,
     text: variable?.displayName || variable?.field,
+    group: variable?.group,
   }));
 
   const onSelectorChange = ({ target }) => {
