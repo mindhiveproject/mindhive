@@ -65,6 +65,7 @@ const LOCAL_STORAGE_PATHS = [
   "opportunity-covers",
   "opportunity-videos",
   "profile-videos",
+  "jspsych-archives",
   "ticket-screenshots",
 ];
 
@@ -174,6 +175,16 @@ export default withAuth(
           path: "/yq-code",
         },
         storagePath: `yq-visuals/yq-code`,
+      },
+      jspsych_archives: {
+        kind: "local",
+        type: "file",
+        generateUrl: (path) => `${assetBaseUrl}/jspsych-archives${path}`,
+        serverRoute: {
+          path: "/jspsych-archives",
+        },
+        storagePath: "jspsych-archives",
+        transformName: makeDatePartitionedName("jspsych-archives", true),
       },
       media_library_images: {
         kind: "local",
