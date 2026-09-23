@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { useEffect } from 'react';
@@ -10,6 +11,7 @@ import Button from "../../DesignSystem/Button";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import { ArrowDropDownIcon } from "../../DesignSystem/Icons";
 import { StyledSelector } from "../../styles/StyledSelector";
+import { CREATE_VISUAL } from "../../Mutations/YQVisual";
 
 export default function DevelopMain({ query, user }) {
   const { t } = useTranslation("builder");
@@ -20,6 +22,26 @@ export default function DevelopMain({ query, user }) {
   const userPermissions = user.permissions.map(
     (permission) => permission?.name
   );
+
+  const [createVisual] = useMutation(CREATE_VISUAL);
+
+  async function onCreateVisual() {
+    const result = await createVisual({
+      variables: {
+        data: {
+          title: t("visuals:untitledVisual", {}, { default: "Untitled Visual" }),
+          author: { connect: { id: user.id } },
+          privacy: "private",
+          participationMode: "sandbox",
+          // A new visual declares its parameters in code; the legacy array
+          // default would be read as a set of YQ-era parameters.
+          parameters: { schemaVersion: 3, bindings: {} },
+        },
+      },
+    });
+    const id = result.data?.createVisual?.id;
+    if (id) router.push(`/builder/visuals/${id}`);
+  }
 
   const developNewItems = [
     { key: "study", label: t("developNewMenu.project", {}, { default: "Project" }) },
@@ -39,12 +61,13 @@ export default function DevelopMain({ query, user }) {
       }),
   }));
 
-  // Visuals has no builder yet, so its entry points at the (empty) bank.
+  // Visuals skip the shared /develop/new selector — there's nothing to pick, so
+  // this entry creates one straight away and opens it in the builder.
   if (userPermissions.includes("ADMIN")) {
     developNewItems.push({
       key: "visual",
       label: t("developNewMenu.visual", {}, { default: "Visual" }),
-      onClick: () => router.push("/dashboard/develop/visuals"),
+      onClick: onCreateVisual,
     });
   }
 

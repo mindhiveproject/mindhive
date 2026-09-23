@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 
 import TaskRun from "../../Tasks/Run/Main";
 import Prompt from "./Prompt/Main";
+import StudyDataSourcesRuntime from "./DataSources/Main";
 
 import { UPDATE_USER_STUDY_INFO } from "../../Mutations/User";
 import { UPDATE_GUEST_STUDY_INFO } from "../../Mutations/Guest";
@@ -27,7 +28,9 @@ export default function Manager({
   const components = { ...studyComponentsData?.study?.components } || {};
 
   const { path } = info;
-  const [currentStep, setCurrentStep] = useState({});
+  // null until the step is resolved below: the task must not mount (and start
+  // a run) with a step-less, version-less first render.
+  const [currentStep, setCurrentStep] = useState(null);
 
   // find out the current step
   useEffect(() => {
@@ -43,7 +46,7 @@ export default function Manager({
         }
         setCurrentStep(step);
       } else {
-        setCurrentStep(path[path.length - 1]);
+        setCurrentStep(path[path.length - 1] ?? {});
       }
     }
     if (info) {
@@ -52,7 +55,7 @@ export default function Manager({
   }, [info]);
 
   const [page, setPage] = useState("test"); // two pages: test and post
-  const [token, setToken] = useState(undefined); // token is used to find saved data in the dataset to modify them if needed
+  const [runToken, setRunToken] = useState(undefined);
   const [nextStep, setNextStep] = useState(undefined); // next task for participant
 
   const [updateUserStudyInfo] = useMutation(UPDATE_USER_STUDY_INFO, {
@@ -208,7 +211,11 @@ export default function Manager({
     return nextSteps;
   };
 
-  const onTaskFinish = async ({ token, currentStep, isTaskRetaken }) => {
+  const onTaskFinish = async ({
+    runToken: completedRunToken,
+    currentStep,
+    isTaskRetaken,
+  }) => {
     let updatedPath = path.map((step) => {
       if (step?.id === currentStep?.id) {
         if (isTaskRetaken) {
@@ -289,37 +296,45 @@ export default function Manager({
       window.location = redirectPage;
     } else {
       setPage("post");
-      setToken(token);
+      setRunToken(completedRunToken);
     }
   };
 
-  if (page === "test" && (task || currentStep?.componentID)) {
+  // One StudyDataSourcesRuntime wraps the whole participation rather than
+  // being remounted per page: it owns live device connections and the
+  // aggregate recorder, both of which need to survive the test -> post
+  // transition, not reconnect/restart at the worst possible moment.
+  if (
+    currentStep &&
+    ((page === "test" && (task || currentStep?.componentID)) ||
+      page === "post")
+  ) {
     return (
-      <TaskRun
-        user={user}
-        study={study}
-        id={task || currentStep?.componentID}
-        testVersion={version || currentStep?.testId}
-        currentStep={currentStep}
-        isTaskRetaken={task && version}
-        onFinish={onTaskFinish}
-        isSavingData
-      />
-    );
-  }
-
-  if (page === "post") {
-    return (
-      <Prompt
-        user={user}
-        study={study}
-        studiesInfo={studiesInfo}
-        info={info}
-        currentStep={currentStep}
-        nextStep={nextStep}
-        closePrompt={closePrompt}
-        token={token}
-      />
+      <StudyDataSourcesRuntime study={study} user={user} currentStepId={currentStep?.id}>
+        {page === "test" ? (
+          <TaskRun
+            user={user}
+            study={study}
+            id={task || currentStep?.componentID}
+            testVersion={version || currentStep?.testId}
+            currentStep={currentStep}
+            isTaskRetaken={task && version}
+            onFinish={onTaskFinish}
+            isSavingData
+          />
+        ) : (
+          <Prompt
+            user={user}
+            study={study}
+            studiesInfo={studiesInfo}
+            info={info}
+            currentStep={currentStep}
+            nextStep={nextStep}
+            closePrompt={closePrompt}
+            runToken={runToken}
+          />
+        )}
+      </StudyDataSourcesRuntime>
     );
   }
 }

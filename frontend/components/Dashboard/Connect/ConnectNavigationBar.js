@@ -84,7 +84,7 @@ const NavigationBar = styled(Navbar)`
     flex-shrink: 0;
   }
 
-  /* !important: DropdownSelect sets these inline for its full-width case, where
+  /* !important: DropdownSelect sets these on its label for its full-width case, where
      the label is expected to clamp and shrink. A nav trigger is the opposite. */
   .navbar-item [data-dropdown-label] {
     flex: 0 0 auto !important;

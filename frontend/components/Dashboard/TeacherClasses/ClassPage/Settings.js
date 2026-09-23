@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 
 import Chip from "../../../DesignSystem/Chip";
 import DesignSystemButton from "../../../DesignSystem/Button";
+import Checkbox from "../../../DesignSystem/Checkbox";
 import ToggleSwitch from "../../../DesignSystem/ToggleSwitch";
 import TipTapEditor from "../../../TipTap/Main";
 import CurriculumTypeSelector from "./CurriculumTypeSelector";
@@ -33,6 +34,10 @@ import { deriveRoles } from "../../Connect/useConnectRole";
 function getNotifyTeachersOfStudentPasswordReset(settings) {
   if (!settings || typeof settings !== "object") return true;
   return settings.notifyTeachersOfStudentPasswordReset !== false;
+}
+
+function getPhysiologicalDataEnabled(settings) {
+  return settings?.physiologicalDataEnabled === true;
 }
 
 function stripHtml(html) {
@@ -67,6 +72,9 @@ export default function Settings({ myclass, user }) {
   );
   const [notifyTeachersOfStudentPasswordReset, setNotifyTeachersOfStudentPasswordReset] =
     useState(() => getNotifyTeachersOfStudentPasswordReset(myclass?.settings));
+  const [physiologicalDataEnabled, setPhysiologicalDataEnabled] = useState(() =>
+    getPhysiologicalDataEnabled(myclass?.settings)
+  );
 
   // Sync from server when myclass (e.g. after refetch) changes
   useEffect(() => {
@@ -78,6 +86,12 @@ export default function Settings({ myclass, user }) {
       getNotifyTeachersOfStudentPasswordReset(myclass?.settings)
     );
   }, [myclass?.settings?.notifyTeachersOfStudentPasswordReset]);
+
+  useEffect(() => {
+    setPhysiologicalDataEnabled(
+      getPhysiologicalDataEnabled(myclass?.settings)
+    );
+  }, [myclass?.settings?.physiologicalDataEnabled]);
 
   useEffect(() => {
     setClassDescription(myclass?.description || "");
@@ -194,6 +208,31 @@ export default function Settings({ myclass, user }) {
         err?.message ||
           t("passwordResetEmailUpdateError", {}, {
             default: "Failed to update password reset email setting",
+          })
+      );
+    });
+  };
+
+  const updatePhysiologicalDataEnabled = (enabled) => {
+    const previousValue = physiologicalDataEnabled;
+    setPhysiologicalDataEnabled(enabled);
+    const existingSettings =
+      myclass?.settings && typeof myclass.settings === "object"
+        ? myclass.settings
+        : {};
+    updateClassSettings({
+      variables: {
+        settings: {
+          ...existingSettings,
+          physiologicalDataEnabled: enabled,
+        },
+      },
+    }).catch((err) => {
+      setPhysiologicalDataEnabled(previousValue);
+      alert(
+        err?.message ||
+          t("physiologicalDataUpdateError", {}, {
+            default: "Failed to update physiological data setting",
           })
       );
     });
@@ -853,6 +892,36 @@ export default function Settings({ myclass, user }) {
           </div>
         </div>
       </section>
+
+      {isAdmin && (
+        <section className="settingsSection">
+          <div className="settingsSectionHeader">
+            <h3>
+              {t("physiologicalDataSettingsTitle", {}, {
+                default: "Physiological data",
+              })}
+            </h3>
+          </div>
+          <div className="informationBlock">
+            <div className="block curriculumTypeBlock">
+              <div className="settingsCheckboxRow">
+                <Checkbox
+                  checked={physiologicalDataEnabled}
+                  disabled={updatingSettings}
+                  onChange={updatePhysiologicalDataEnabled}
+                  ariaLabelledBy="physiologicalDataSettingLabel"
+                />
+                <span id="physiologicalDataSettingLabel">
+                  {t("physiologicalDataSettingLabel", {}, {
+                    default:
+                      "Enable physiological data collection and recording for this class within the study builder",
+                  })}
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <TeachingTeamSettings myclass={myclass} user={user} />
 

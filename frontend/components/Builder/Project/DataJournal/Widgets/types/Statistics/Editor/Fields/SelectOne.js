@@ -35,6 +35,7 @@ export default function SelectOne({
       .map((o) => ({
         value: String(o?.value ?? ""),
         label: o?.text ?? String(o?.value ?? ""),
+        group: o?.group,
       }));
     return [clearRow, ...rows];
   }, [options, t]);

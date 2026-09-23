@@ -80,7 +80,9 @@ const ownerOnlyUpdate = ({ session, item }: { session?: Session; item: any }) =>
   isOwner(session, item);
 
 // Will have to modify to new profile fields
-function getVisualFilterQuery(session?: Session) {
+// Exported so child lists (VisualCodeFile) can be readable exactly when their
+// parent is, without restating the privacy model.
+export function getVisualFilterQuery(session?: Session) {
   if (isAdmin(session)) return true;
 
   // Every clause below keys off the caller's id. Without a session that becomes
@@ -102,6 +104,9 @@ function getVisualFilterQuery(session?: Session) {
       // You've been invited to edit it — collaborators can always reach the
       // visual, whatever its privacy setting.
       { collaborators: { some: { id: { equals: session.itemId } } } },
+      // Invited to watch rather than edit. Same reach, no write: the item
+      // update rule below only lets through the author and collaborators.
+      { viewers: { some: { id: { equals: session.itemId } } } },
       // Public visuals
       { privacy: { equals: "public" } },
       // Unlisted visuals
@@ -207,6 +212,17 @@ export const Visual = list({
       many: true,
       access: { update: ownerOnlyUpdate },
     }),
+    // The Settings tab draws one collaborator list with a per-row Editor /
+    // Viewer role. `collaborators` is the Editor set — both the YQ frontend and
+    // collab/access.js already read it as "may write" — so the Viewer role is a
+    // parallel relationship rather than a role column, and changing someone's
+    // role moves them between the two. Worth revisiting as a join list once YQ
+    // is retired.
+    viewers: relationship({
+      ref: "Profile.viewerInVisual",
+      many: true,
+      access: { update: ownerOnlyUpdate },
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
@@ -218,6 +234,8 @@ export const Visual = list({
         },
       ],
     }),
+    version: text({ defaultValue: "1" }),
+    tasks: relationship({ ref: "Task.visual", many: true }),
     likes: relationship({ ref: "Profile.liked", many: true }),
     extensions: json({ defaultValue: [] }),
     docs: json(),
@@ -244,5 +262,21 @@ export const Visual = list({
       access: { update: ownerOnlyUpdate },
     }),
     yqGenAI: relationship({ ref: "YQGenAI.visual", many: false }),
+    codeFiles: relationship({ ref: "VisualCodeFile.visual", many: true }),
+    // How the visual behaves when someone *participates* in it, as opposed to
+    // who it is shared with (`privacy`) or who may edit it (`collaborators`).
+    // Sandbox keeps the panel and lets a participant retune mappings for their
+    // own session; Authored gates on connecting the listed data sources and
+    // then goes full screen with no panel at all.
+    //
+    // This is deliberately a property of the block rather than of a share link:
+    // it has to hold when the visual is later run as a step inside a study.
+    participationMode: select({
+      options: [
+        { label: "Sandbox", value: "sandbox" },
+        { label: "Authored", value: "authored" },
+      ],
+      defaultValue: "sandbox",
+    }),
   },
 });

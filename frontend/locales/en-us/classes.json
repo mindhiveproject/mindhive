@@ -2077,6 +2077,9 @@
 		"untitled": "Untitled"
 	},
 	"participants": "Participants",
+	"physiologicalDataSettingLabel": "Enable physiological data collection and recording for this class within the study builder",
+	"physiologicalDataSettingsTitle": "Physiological data",
+	"physiologicalDataUpdateError": "Failed to update physiological data setting",
 	"passwordResetEmailSettingsDescription": "When enabled, this class’s teacher receives student password-reset emails (student CC’d). Turn off to stop notifying this class’s teacher; the student only gets the link directly when every class they belong to has this setting off.",
 	"passwordResetEmailSettingsDisabledLabel": "Teacher is not notified of student password resets",
 	"passwordResetEmailSettingsEnabledLabel": "Notify teacher of student password resets",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation } from "@apollo/client";
 
 import { useRouter } from "next/dist/client/router";
@@ -7,13 +7,14 @@ import useTranslation from "next-translate/useTranslation";
 import DataUsageForParticipant from "./DataUsage/Participant";
 import DataUsageForStudent from "./DataUsage/Student";
 
-import { UPDATE_DATASET } from "../../../Mutations/Dataset";
+import { UPDATE_RUN_DATA_POLICY } from "../../../Mutations/Runtime";
 import { UPDATE_GUEST_STUDY_INFO } from "../../../Mutations/Guest";
 import { UPDATE_USER_STUDY_INFO } from "../../../Mutations/User";
 
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { GET_GUEST } from "../../../Queries/Guest";
 import Button from "../../../DesignSystem/Button";
+import { DataSourceFlushContext } from "../DataSources/Main";
 
 export default function Prompt({
   user,
@@ -23,10 +24,11 @@ export default function Prompt({
   currentStep,
   nextStep,
   closePrompt,
-  token,
+  runToken,
 }) {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const flushDataSources = useContext(DataSourceFlushContext);
 
   // ToDo: find whether the user already gave data usage consent to this study
   // If the study changed the consent should be given again
@@ -63,7 +65,7 @@ export default function Prompt({
     ],
   });
 
-  const [updateDataset] = useMutation(UPDATE_DATASET, {
+  const [updateRunDataPolicy] = useMutation(UPDATE_RUN_DATA_POLICY, {
     ignoreResults: true,
   });
 
@@ -78,32 +80,49 @@ export default function Prompt({
   const isStudent = user?.permissions?.map((p) => p.name).includes("STUDENT");
 
   const saveResponsesAndProceed = async ({ proceedToNextTask }) => {
-    // save the data usage consent response given by user
-    if (!dataUsageConsentWasGiven && dataUse) {
-      const updatedStudiesInfo = {
-        ...studiesInfo,
-        [study?.id]: {
-          ...studiesInfo[study?.id],
-          dataPolicy: {
-            ...studiesInfo[study?.id]?.dataPolicy,
-            [study?.currentVersion]: dataUse,
+    // These saves are best effort: a participant who has finished must never be
+    // stranded on this screen because one of them failed, so the navigation
+    // below runs regardless.
+    try {
+      // save the data usage consent response given by user
+      if (!dataUsageConsentWasGiven && dataUse) {
+        const updatedStudiesInfo = {
+          ...studiesInfo,
+          [study?.id]: {
+            ...studiesInfo[study?.id],
+            dataPolicy: {
+              ...studiesInfo[study?.id]?.dataPolicy,
+              [study?.currentVersion]: dataUse,
+            },
           },
-        },
-      };
+        };
 
-      if (user.type === "GUEST") {
-        await updateGuestStudyInfo({
-          variables: { studiesInfo: updatedStudiesInfo },
-        });
-      } else {
-        await updateUserStudyInfo({
-          variables: { studiesInfo: updatedStudiesInfo },
-        });
+        if (user.type === "GUEST") {
+          await updateGuestStudyInfo({
+            variables: { studiesInfo: updatedStudiesInfo },
+          });
+        } else {
+          await updateUserStudyInfo({
+            variables: { studiesInfo: updatedStudiesInfo },
+          });
+        }
       }
-    }
 
-    // save responses by updating the dataset
-    await updateDataset({ variables: { token: token, dataPolicy: dataUse } });
+      // save responses by updating the dataset
+      await updateRunDataPolicy({
+        variables: { runToken, dataPolicy: dataUse || "UNSPECIFIED" },
+      });
+
+      // Both exits below destroy the page, and with it the recorder holding
+      // this task's data source aggregates — store them before leaving rather
+      // than relying on the pagehide backstop. Leaving the study also shuts the
+      // live sources down now; between tasks they stay up until the reload.
+      if (flushDataSources) {
+        await flushDataSources({ release: !proceedToNextTask });
+      }
+    } catch (error) {
+      console.error("Could not save the responses before leaving", error);
+    }
 
     // proceed to the next task or to the main page
     if (proceedToNextTask) {

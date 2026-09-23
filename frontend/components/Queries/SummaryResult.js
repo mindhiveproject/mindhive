@@ -11,6 +11,15 @@ export const STUDY_SUMMARY_RESULTS = gql`
         token
         isIncluded
       }
+      dataSourceRecords {
+        profile {
+          publicId
+        }
+        guest {
+          publicId
+        }
+        steps
+      }
       summaryResults {
         id
         metadataId
@@ -18,6 +27,7 @@ export const STUDY_SUMMARY_RESULTS = gql`
         type
         user {
           id
+          publicId
           publicReadableId
           studiesInfo
           studentIn {

@@ -19,6 +19,9 @@ const Tooltip = RawTooltip as unknown as React.FC<{
   className?: string;
 }>;
 
+/** Colour family a selected interactive {@link Chip} is filled with. */
+export type ChipAccent = "primary" | "tertiary";
+
 /** Interaction model for a {@link Chip}. */
 export type ChipVariant = "interactive" | "static";
 
@@ -97,6 +100,16 @@ const StyledChip = styled.div`
   &.DesignSystem-Chip--selected {
     background: var(--MH-Theme-Primary-Light, #def8fb);
     border: 1px solid var(--MH-Theme-Primary-Base, #69bbc4);
+  }
+  /* Tertiary accent: same fill + outline move as primary, one family over —
+     for on/off chips that shouldn't read as a primary selection. */
+  &.DesignSystem-Chip--selected.DesignSystem-Chip--accent-tertiary {
+    background: var(--MH-Theme-Tertiary-Medium, #d3e0e3);
+    border-color: var(--MH-Theme-Tertiary-Base, #55808c);
+    color: var(--MH-Theme-Tertiary-Dark, #0d3944);
+  }
+  &.DesignSystem-Chip--selected.DesignSystem-Chip--accent-tertiary.DesignSystem-Chip--hoverable:hover {
+    background-color: #c2d3d7;
   }
   /* Deepen the primary-light fill on hover rather than dropping to grey — same
      move as Button's tonal hover (one step past Primary Light, short of Primary
@@ -210,6 +223,12 @@ export interface ChipProps {
   tone?: ChipTone;
   /** Selected state (interactive only): primary-light fill + primary border. @default false */
   selected?: boolean;
+  /**
+   * Colour family of the selected state (interactive only): `"primary"` fills
+   * primary-light with a primary border; `"tertiary"` fills tertiary-medium
+   * with a tertiary border, for on/off toggles. @default "primary"
+   */
+  accent?: ChipAccent;
   /** Optional toggle pressed state; when provided, sets `aria-pressed`. */
   pressed?: boolean;
   /** Disabled state (interactive only): greyed, not clickable. @default false */
@@ -251,6 +270,7 @@ export default function Chip({
   variant = "interactive",
   tone = "default",
   selected = false,
+  accent = "primary",
   pressed,
   disabled = false,
   onClick,
@@ -361,6 +381,7 @@ export default function Chip({
         isStatic && "DesignSystem-Chip--static",
         isStatic && `DesignSystem-Chip--tone-${tone}`,
         isSelected && "DesignSystem-Chip--selected",
+        isSelected && `DesignSystem-Chip--accent-${accent}`,
         canHover && "DesignSystem-Chip--hoverable",
         hasLeading && "DesignSystem-Chip--with-leading",
         hasClose && "DesignSystem-Chip--with-close",

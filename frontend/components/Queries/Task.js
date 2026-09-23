@@ -213,11 +213,44 @@ export const TASK_TO_PARTICIPATE = gql`
       image
       description
       parameters
+      aggregateVariables
+      runtimeType
+      author {
+        id
+      }
       template {
         id
         slug
         style
         scriptAddress
+        version
+        author {
+          id
+        }
+      }
+      visual {
+        id
+        version
+        privacy
+        published
+        author {
+          id
+        }
+      }
+      jsPsychExperiment {
+        id
+        version
+        privacy
+        published
+        entryPoint
+        manifest
+        archive {
+          filename
+          url
+        }
+        author {
+          id
+        }
       }
       taskType
       settings

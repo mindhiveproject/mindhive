@@ -8,7 +8,7 @@ import {
 import { Accordion } from "semantic-ui-react";
 import { saveAs } from "file-saver";
 import moment from "moment";
-import { jsonToCSV } from "react-papaparse";
+import csvWithPlainNumbers from "../../../../../../lib/csvWithPlainNumbers";
 import useTranslation from "next-translate/useTranslation";
 
 import Tooltip from "../../../../../DesignSystem/Tooltip";
@@ -294,7 +294,7 @@ export default function Menu({
         });
         return visibleRow;
       });
-      const csv = jsonToCSV({ fields: visibleColumns, data: visibleData });
+      const csv = csvWithPlainNumbers({ fields: visibleColumns, data: visibleData });
       const blob = new Blob([csv], {
         type: "text/csv",
       });
