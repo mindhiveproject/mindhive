@@ -2,8 +2,10 @@
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import useSWR from "swr";
+import useTranslation from "next-translate/useTranslation";
 
 import { STUDY_SUMMARY_RESULTS } from "../../../../Queries/SummaryResult";
+import buildAggregateColumns from "../../../../../lib/yqParticipantAggregates";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -14,6 +16,8 @@ export function processRawData({
   modifiedData = [],
   modifiedVariables = [],
   modifiedSettings = {},
+  aggregateColumns = () => ({}),
+  dataSourceGroup = (taskLabel) => taskLabel,
 }) {
   const res = rawdata.map((result) => {
     const userID =
@@ -34,11 +38,20 @@ export function processRawData({
     const component = components
       .filter((c) => c?.testId === result?.testVersion)
       .map((c) => ({
+        name: c?.name,
         subtitle: c?.subtitle,
         condition: c?.conditionLabel,
       }))[0];
     const subtitle = component?.subtitle;
     const condition = component?.condition;
+
+    // the physiological aggregates collected while this participant was on
+    // this task (see lib/yqParticipantAggregates.js), joined by publicId
+    const aggregates = aggregateColumns({
+      publicId:
+        result?.type === "GUEST" ? result?.guest?.publicId : result?.user?.publicId,
+      testVersion: result?.testVersion,
+    });
 
     return {
       general: {
@@ -51,9 +64,12 @@ export function processRawData({
         task: result.task.title,
         testVersion: result.testVersion,
         subtitle,
+        group: dataSourceGroup(subtitle || component?.name),
+        dataSourceFields: Object.keys(aggregates),
       },
       data: {
         ...result.data,
+        ...aggregates,
       },
     };
   });
@@ -84,6 +100,10 @@ export function processRawData({
         testVersion: row?.task?.testVersion,
         subtitle: row?.task?.subtitle,
         type: "task",
+        // aggregates are grouped under their task in the variable pickers
+        group: row?.task?.dataSourceFields?.includes(k)
+          ? row?.task?.group
+          : undefined,
       }));
       resultKeys.forEach((key) => {
         let keyExtended = { ...key };
@@ -125,7 +145,9 @@ export function processRawData({
         const modifiedVariable = modifiedVariables.find(
           (v) => v?.field === variable?.field
         );
-        return modifiedVariable;
+        return variable?.group
+          ? { ...modifiedVariable, group: variable.group }
+          : modifiedVariable;
       } else {
         return {
           field: variable?.field,
@@ -133,6 +155,7 @@ export function processRawData({
           testId: variable?.testVersion,
           subtitle: variable?.subtitle,
           type: variable?.type,
+          group: variable?.group,
           editable: false,
         };
       }
@@ -150,6 +173,7 @@ export function processRawData({
       testId: variable?.testVersion,
       subtitle: variable?.subtitle,
       type: variable?.type,
+      group: variable?.group,
       editable: false,
     }));
   }
@@ -170,6 +194,7 @@ function parseFilePayload(raw, { isModifiedSlice }) {
 }
 
 export default function useDatasourceData({ datasource, user }) {
+  const { t } = useTranslation("builder");
   const username = user?.publicReadableId || user?.publicId || user?.id;
   const { dataOrigin, study, content, settings: dsSettings, title, id } =
     datasource || {};
@@ -274,6 +299,9 @@ export default function useDatasourceData({ datasource, user }) {
         flow?.forEach((stage) => {
           if (stage?.type === "my-node") {
             components.push({
+              // the flow node id, which is what the data source recorder keys
+              // its per-step aggregate windows on
+              id: stage?.id,
               testId: stage?.testId,
               name: stage?.name,
               subtitle: stage?.subtitle,
@@ -315,6 +343,16 @@ export default function useDatasourceData({ datasource, user }) {
         modifiedData,
         modifiedVariables,
         modifiedSettings,
+        aggregateColumns: buildAggregateColumns({
+          records: studyObj?.dataSourceRecords || [],
+          components,
+        }),
+        dataSourceGroup: (taskLabel) =>
+          t(
+            "dataJournal.dataSourceGroup",
+            { task: taskLabel },
+            { default: "{{task}} · Data sources" },
+          ),
       });
 
       return {
@@ -428,5 +466,6 @@ export default function useDatasourceData({ datasource, user }) {
     uploadedUrl,
     uploadedFileRaw,
     uploadedFileErr,
+    t,
   ]);
 }

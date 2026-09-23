@@ -20,6 +20,7 @@ Group = js.document.getElementById("groupVariable-${sectionId}").value`;
     key: variable?.field,
     value: variable?.displayName || variable?.field,
     text: variable?.displayName || variable?.field,
+    group: variable?.group,
   }));
 
   const updateCode = async ({ code }) => {

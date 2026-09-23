@@ -81,6 +81,7 @@ export default function AxesAnova({
     key: variable?.field,
     value: variable?.field,
     text: variable?.displayName || variable?.field,
+    group: variable?.group,
   }));
 
   const onSelectorChoice = (option) => {

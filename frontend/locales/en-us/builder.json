@@ -281,6 +281,7 @@
 			"unsupportedType": "Unsupported component type: {{type}}",
 			"untitled": "Untitled"
 		},
+		"dataSourceGroup": "{{task}} · Data sources",
 		"datasetForm": {
 			"actions": {
 				"cancel": "Cancel",

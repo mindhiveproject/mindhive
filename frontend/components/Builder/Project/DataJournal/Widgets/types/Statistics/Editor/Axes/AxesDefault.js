@@ -54,6 +54,7 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
     key: variable?.field,
     value: variable?.displayName || variable?.field,
     text: variable?.displayName || variable?.field,
+    group: variable?.group,
   }));
 
   const onSelectorChange = ({ target }) => {

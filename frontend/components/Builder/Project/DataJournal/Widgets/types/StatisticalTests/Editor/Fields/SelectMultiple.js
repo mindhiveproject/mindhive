@@ -37,6 +37,7 @@ export default function SelectMultiple({
       (options || []).map((o) => ({
         value: String(o?.value ?? ""),
         label: o?.text ?? String(o?.value ?? ""),
+        group: o?.group,
       })),
     [options],
   );

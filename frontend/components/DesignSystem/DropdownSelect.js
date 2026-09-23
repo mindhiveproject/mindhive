@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useReducer } from "react";
+import { Fragment, useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useReducer } from "react";
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
@@ -59,6 +59,13 @@ const ITEM_STYLE = {
   wordBreak: "break-word",
 };
 
+const GROUP_HEADER_STYLE = {
+  padding: "8px 12px 4px",
+  fontWeight: 600,
+  color: "#6a6a6a",
+  overflowWrap: "anywhere",
+};
+
 const PANEL_STYLE = {
   backgroundColor: "#ffffff",
   border: "1px solid #a1a1a1",
@@ -106,7 +113,7 @@ function getOptionLabelString(opt) {
  *
  * @param {string|string[]} value - Selected value(s). When `multiple`, use `string[]`.
  * @param {(next: string) => void | (next: string[]) => void} onChange - Called with the new value or array when user picks option(s).
- * @param {Array<{ value: string, label: React.ReactNode, labelText?: string, disabled?: boolean }>} options - Selectable options. When `label` is a ReactNode, pass `labelText` for search/trigger stringification.
+ * @param {Array<{ value: string, label: React.ReactNode, labelText?: string, group?: string, disabled?: boolean }>} options - Selectable options. When `label` is a ReactNode, pass `labelText` for search/trigger stringification. Options with a `group` are listed under a header of that name, after the ungrouped ones.
  * @param {string} [ariaLabel] - Accessible name for the trigger (required for a11y if no visible label).
  * @param {React.CSSProperties} [triggerStyle] - Optional override for trigger button styles.
  * @param {string} [triggerClassName] - Class for the trigger button. When set, the default
@@ -193,6 +200,27 @@ export default function DropdownSelect({
       getOptionLabelString(opt).toLowerCase().includes(q)
     );
   }, [searchEnabled, options, searchQuery]);
+
+  // Ungrouped options keep their order at the top; each group follows, in the
+  // order it first appears, so a group is one block even if its options weren't
+  // contiguous in `options`.
+  const optionSections = useMemo(() => {
+    const sections = [{ group: null, options: [] }];
+    const byGroup = new Map();
+    filteredOptions.forEach((opt) => {
+      if (!opt.group) {
+        sections[0].options.push(opt);
+        return;
+      }
+      if (!byGroup.has(opt.group)) {
+        const section = { group: opt.group, options: [] };
+        byGroup.set(opt.group, section);
+        sections.push(section);
+      }
+      byGroup.get(opt.group).options.push(opt);
+    });
+    return sections;
+  }, [filteredOptions]);
 
   useLayoutEffect(() => {
     if (!open) {
@@ -540,39 +568,52 @@ export default function DropdownSelect({
                   {t("dropdownSelect.noMatchingOptions", {}, { default: "No matching options" })}
                 </div>
               ) : (
-                filteredOptions.map((opt) => {
-                  const isSelected = multiple
-                    ? (selectedIds ?? []).some((id) => String(id) === String(opt.value))
-                    : opt.value === value;
-                  const isDisabled = !!opt.disabled;
-                  return (
-                    <button
-                      key={String(opt.value)}
-                      type="button"
-                      className="MH-Type-Label-Base"
-                      disabled={isDisabled}
-                      role="option"
-                      aria-selected={isSelected}
-                      aria-disabled={isDisabled}
-                      style={{
-                        ...ITEM_STYLE,
-                        fontWeight: isSelected ? 600 : 500,
-                        backgroundColor: isSelected ? "#def8fb" : "transparent",
-                        color: isDisabled ? "#A1A1A1" : ITEM_STYLE.color,
-                        cursor: isDisabled ? "not-allowed" : ITEM_STYLE.cursor,
-                      }}
-                      onClick={() => handleSelect(opt.value)}
-                      onMouseEnter={(e) => {
-                        if (!isSelected && !isDisabled) e.currentTarget.style.backgroundColor = "#f5f5f5";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = isSelected ? "#def8fb" : "transparent";
-                      }}
-                    >
-                      {opt.label}
-                    </button>
-                  );
-                })
+                optionSections.map((section) => (
+                  <Fragment key={section.group ?? "__ungrouped"}>
+                    {section.group ? (
+                      <div
+                        role="presentation"
+                        className="MH-Type-Label-Base"
+                        style={GROUP_HEADER_STYLE}
+                      >
+                        {section.group}
+                      </div>
+                    ) : null}
+                    {section.options.map((opt) => {
+                      const isSelected = multiple
+                        ? (selectedIds ?? []).some((id) => String(id) === String(opt.value))
+                        : opt.value === value;
+                      const isDisabled = !!opt.disabled;
+                      return (
+                        <button
+                          key={String(opt.value)}
+                          type="button"
+                          className="MH-Type-Label-Base"
+                          disabled={isDisabled}
+                          role="option"
+                          aria-selected={isSelected}
+                          aria-disabled={isDisabled}
+                          style={{
+                            ...ITEM_STYLE,
+                            fontWeight: isSelected ? 600 : 500,
+                            backgroundColor: isSelected ? "#def8fb" : "transparent",
+                            color: isDisabled ? "#A1A1A1" : ITEM_STYLE.color,
+                            cursor: isDisabled ? "not-allowed" : ITEM_STYLE.cursor,
+                          }}
+                          onClick={() => handleSelect(opt.value)}
+                          onMouseEnter={(e) => {
+                            if (!isSelected && !isDisabled) e.currentTarget.style.backgroundColor = "#f5f5f5";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = isSelected ? "#def8fb" : "transparent";
+                          }}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </Fragment>
+                ))
               )}
             </div>
           </div>,
