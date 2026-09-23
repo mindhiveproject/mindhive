@@ -1,21 +1,19 @@
 import { list } from "@keystone-6/core";
 import { json, relationship, select, timestamp } from "@keystone-6/core/fields";
 import { permissions } from "../access";
-const { boardMemberClause } = require("../lib/runtime/resultAccess");
+const { researcherStudyClause } = require("../lib/runtime/resultAccess");
 
 // Read/manage access mirrors Dataset's resultAccess/resultManageAccess, minus
 // the task/asset authorship clauses that don't apply here — this record is
 // study-wide, not tied to one task.
-const canReadRecord = ({ session }: any) => {
+const canReadRecord = async ({ session, context }: any) => {
   if (!session?.itemId) return false;
   if (permissions.canManageUsers({ session })) return true;
   const id = session.itemId;
   return {
     OR: [
       { profile: { id: { equals: id } } },
-      { study: { author: { id: { equals: id } } } },
-      { study: { collaborators: { some: { id: { equals: id } } } } },
-      boardMemberClause(id),
+      await researcherStudyClause(context, id),
     ],
   };
 };

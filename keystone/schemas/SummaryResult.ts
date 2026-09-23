@@ -13,17 +13,19 @@ const {
   buildSummaryAccessFilter,
 } = require("../lib/runtime/resultAccess");
 
-const resultAccess = ({ session }: any) => {
+const resultAccess = ({ session, context }: any) => {
   return buildSummaryAccessFilter(
     session,
     !!permissions.canManageUsers({ session }),
+    context,
   );
 };
 
-const resultManageAccess = ({ session }: any) =>
+const resultManageAccess = ({ session, context }: any) =>
   buildResultManageFilter(
     session,
     !!permissions.canManageUsers({ session }),
+    context,
   );
 
 export const SummaryResult = list({
