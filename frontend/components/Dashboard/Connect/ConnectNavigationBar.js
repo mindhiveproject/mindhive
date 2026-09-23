@@ -187,6 +187,7 @@ function ConnectNavDropdown({
             </span>
           ) : null
         }
+        portal={false}
       />
     </li>
   );
