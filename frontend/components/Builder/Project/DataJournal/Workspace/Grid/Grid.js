@@ -432,7 +432,7 @@ export default function Grid({
               <aside
                 className="journalLeftRail"
                 aria-hidden={!sidebarVisible}
-                inert={!sidebarVisible ? true : undefined}
+                inert={!sidebarVisible ? "" : undefined}
               >
                 <div className="sidebarModeShell">
                   {renderSidebarHeader()}
