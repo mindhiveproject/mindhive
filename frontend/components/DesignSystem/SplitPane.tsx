@@ -292,7 +292,9 @@ export default function SplitPane({
         className="DesignSystem-SplitPane-End"
         style={{ ...PANE_STYLE, flex: "1 1 0%" }}
         aria-hidden={collapsed || undefined}
-        inert={collapsed || undefined}
+        // React 18 has no `inert` prop: its types reject it and it drops `true`.
+        // An empty string reaches the DOM as `inert=""`.
+        {...({ inert: collapsed ? "" : undefined } as {})}
       >
         {end}
       </div>
