@@ -230,6 +230,7 @@ export default function Builder({
       >
         <Widget
           engine={engine}
+          studyId={study?.id}
           openComponentModal={openComponentModal}
           openModal={openModal}
           openStudyPreview={openStudyPreview}

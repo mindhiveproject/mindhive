@@ -1167,6 +1167,10 @@
 		}
 	},
 	"dataSources": {
+		"canvas": {
+			"recordingMany": "Recording · {{count}} devices",
+			"recordingOne": "Recording · {{name}}"
+		},
 		"favoriteAddLabel": "Add to favorites",
 		"favoriteRemoveLabel": "Remove from favorites",
 		"linkLabel": "Link",

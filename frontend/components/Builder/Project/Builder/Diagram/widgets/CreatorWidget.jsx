@@ -17,6 +17,7 @@ export const CreatorWidget = props => {
   diagramEngine.openComponentModal = props.openComponentModal;
   diagramEngine.openModal = props.openModal;
   diagramEngine.openStudyPreview = props.openStudyPreview;
+  diagramEngine.studyId = props.studyId;
 
   // disable touchpad zooming
   const scrollRef = React.useRef();

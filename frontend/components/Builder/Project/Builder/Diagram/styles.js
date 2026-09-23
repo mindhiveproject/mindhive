@@ -118,6 +118,27 @@ export const StyledNode = styled.div`
     text-align: left;
   }
 
+  /* "Recording · …" line under the subtitle when a data source runs during
+     this block (TaskWidget). */
+  .node-recording {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .node-recording-text {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .node-recording-dot {
+    flex-shrink: 0;
+    color: var(--MH-Theme-Error-Dark, #b3261e);
+  }
+
   .icon {
     cursor: pointer;
   }
