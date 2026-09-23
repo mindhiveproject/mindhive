@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
+import clsx from "clsx";
 
 import Widget from "./Widget";
 import Menu from "./Menu";
 import Component from "./Component/Main";
 import DataSources from "./DataSources/Main";
+import TaskPreview from "../../../Tasks/Preview/Main";
 
 import { StyledCanvasBuilder } from "../../../styles/StyledBuilder";
 import Modal from "./Modal/Main";
@@ -34,6 +36,7 @@ export default function Builder({
   onBeforeCanvasMutation,
   onAfterCanvasMutation,
   onModelReplaced,
+  persistStudy,
 }) {
   const { t } = useTranslation("builder");
   const [node, setNode] = useState(null);
@@ -57,6 +60,7 @@ export default function Builder({
   const physiologicalDataEnabled = (classesData?.classes || []).some(
     (cl) => cl?.settings?.physiologicalDataEnabled === true
   );
+  const [sidepanelMode, setSidepanelMode] = useState("default");
 
   if (isCanvasLocked && engine?.getModel()) {
     engine.getModel().setLocked(true);
@@ -70,18 +74,26 @@ export default function Builder({
   }) => {
     if (isCanvasLocked) return; // Prevent opening modals when locked
     setNode(node);
-    setIsInfoOpen(isInfoOpen);
-    setIsPreviewOpen(isPreviewOpen);
-    setIsEditorOpen(isEditorOpen);
+    setIsInfoOpen(!!isInfoOpen);
+    setIsPreviewOpen(!!isPreviewOpen);
+    setIsEditorOpen(!!isEditorOpen);
     setComponentId(node?.options?.componentID);
+    if (isInfoOpen || isEditorOpen) {
+      setSidepanelMode("block");
+    }
   };
 
   const closeComponentModal = () => {
     setComponentId(null);
-    if (!isCanvasLocked && engine?.getModel()) {
-      engine.getModel().setLocked(false); // Unlock only if not SUBMITTED
-    }
+    setIsInfoOpen(false);
+    setIsEditorOpen(false);
+    setIsPreviewOpen(false);
+    setSidepanelMode("default");
   };
+
+  const openBlockPreview = useCallback(() => {
+    setIsPreviewOpen(true);
+  }, []);
 
   const openModal = ({ node }) => {
     if (isCanvasLocked) return; // Prevent opening modals when locked
@@ -202,19 +214,46 @@ export default function Builder({
           onAfterCanvasMutation={onAfterCanvasMutation}
           onModelReplaced={onModelReplaced}
         />
-        <div className="sidepanel" id="sidepanel">
-          <Menu
-            user={user}
-            engine={engine}
-            addFunctions={lockedAddFunctions}
-            study={study}
-            handleChange={handleChange}
-            handleMultipleUpdate={handleMultipleUpdate}
-            hasStudyChanged={hasStudyChanged}
-            isCanvasLocked={isCanvasLocked}
-            dataSourceSettingsId={dataSourceSettingsId}
-            onCloseDataSourceSettings={() => setDataSourceSettingsId(null)}
-          />
+        <div
+          className={clsx(
+            "sidepanel",
+            sidepanelMode === "block" && "sidepanel--block"
+          )}
+          id="sidepanel"
+        >
+          <div
+            className="sidepanelDefaultHost"
+            hidden={sidepanelMode === "block"}
+          >
+            <Menu
+              user={user}
+              engine={engine}
+              addFunctions={lockedAddFunctions}
+              study={study}
+              handleChange={handleChange}
+              handleMultipleUpdate={handleMultipleUpdate}
+              hasStudyChanged={hasStudyChanged}
+              isCanvasLocked={isCanvasLocked}
+            />
+          </div>
+          {sidepanelMode === "block" && componentId && (
+            <Component
+              key={componentId}
+              query={query}
+              user={user}
+              study={study}
+              componentId={componentId}
+              close={() => closeComponentModal()}
+              isInfoOpen={isInfoOpen}
+              isPreviewOpen={false}
+              isEditorOpen={isEditorOpen}
+              updateCanvas={updateCanvas}
+              addFunctions={lockedAddFunctions}
+              node={node}
+              onOpenPreview={openBlockPreview}
+              persistStudy={persistStudy}
+            />
+          )}
         </div>
         {physiologicalDataEnabled && (
           <DataSources
@@ -270,19 +309,17 @@ export default function Builder({
         </div>
       </div>
 
-      {componentId && (
-        <Component
-          query={query}
+      {isPreviewOpen && componentId && (
+        <TaskPreview
           user={user}
           study={study}
-          componentId={componentId}
-          close={() => closeComponentModal()}
-          isInfoOpen={isInfoOpen}
-          isPreviewOpen={isPreviewOpen}
-          isEditorOpen={isEditorOpen}
-          updateCanvas={updateCanvas}
-          addFunctions={lockedAddFunctions}
-          node={node}
+          id={componentId}
+          close={() => {
+            setIsPreviewOpen(false);
+            if (sidepanelMode !== "block") {
+              closeComponentModal();
+            }
+          }}
         />
       )}
 

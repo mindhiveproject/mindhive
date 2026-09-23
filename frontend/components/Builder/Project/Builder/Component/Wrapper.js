@@ -1,11 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 import { TASK_TO_EDIT } from "../../../../Queries/Task.js";
 
 import Viewer from "./Viewer.js";
 import Editor from "./Editor.js";
-
-import TaskPreview from "../../../../Tasks/Preview/Main.js";
 
 export default function Wrapper({
   query,
@@ -19,21 +18,18 @@ export default function Wrapper({
   updateCanvas,
   addFunctions,
   node,
+  onOpenPreview,
+  persistStudy,
 }) {
-  const [showInfo, setShowInfo] = useState(isInfoOpen);
-  const [showPreview, setShowPreview] = useState(isPreviewOpen);
+  const { t } = useTranslation("builder");
   const [showEditor, setShowEditor] = useState(isEditorOpen);
+
+  useEffect(() => {
+    setShowEditor(isEditorOpen);
+  }, [componentId, isEditorOpen]);
 
   const openEditor = () => {
     setShowEditor(true);
-  };
-
-  const openPreview = () => {
-    setShowPreview(true);
-  };
-
-  const closePreview = () => {
-    setShowPreview(false);
   };
 
   const { data, error, loading } = useQuery(TASK_TO_EDIT, {
@@ -42,13 +38,17 @@ export default function Wrapper({
 
   const theTask = data?.task || {};
 
-  // check whether the current user is the author of the task or the collaborator on the task
   const isAuthor =
     user?.id === theTask?.author?.id ||
-    theTask?.collaborators?.map((c) => c.id).includes(user.id);
+    (theTask?.collaborators?.map((c) => c.id) || []).includes(user.id);
 
-  // check whether the task should be cloned
   const createCopy = node?.options?.createCopy;
+
+  const canvasFields = {
+    subtitle: node?.options?.subtitle,
+    testId: node?.options?.testId,
+    askDataUsageQuestion: node?.options?.askDataUsageQuestion,
+  };
 
   let task;
 
@@ -57,9 +57,7 @@ export default function Wrapper({
       ...theTask,
       templateId: theTask?.template?.id,
       consent: theTask?.consent?.id,
-      subtitle: node?.options?.subtitle,
-      testId: node?.options?.testId,
-      askDataUsageQuestion: node?.options?.askDataUsageQuestion,
+      ...canvasFields,
     };
   } else if (createCopy) {
     task = {
@@ -67,8 +65,8 @@ export default function Wrapper({
       templateId: theTask?.template?.id,
       consent: null,
       collaborators: [],
-      isOriginal: false, // switch to false as it should be cloned
-      subtitle: node?.options?.subtitle,
+      isOriginal: false,
+      ...canvasFields,
     };
   } else {
     task = {
@@ -76,53 +74,42 @@ export default function Wrapper({
       templateId: theTask?.template?.id,
       consent: null,
       collaborators: [],
-      isOriginal: false, // switch to false as it should be cloned
+      isOriginal: false,
+      ...canvasFields,
     };
   }
 
-  if (showEditor) {
+  if (loading || !theTask?.id) {
     return (
-      <div className="background">
-        <div className="modal">
-          <Editor
-            user={user}
-            isAuthor={isAuthor}
-            createCopy={createCopy}
-            task={task}
-            updateCanvas={updateCanvas}
-            close={close}
-          />
-        </div>
+      <div className="blockPanel">
+        <p className="blockPanelLoading">
+          {t("blockPanel.loading", {}, { default: "Loading…" })}
+        </p>
       </div>
     );
   }
 
-  if (showPreview) {
+  if (showEditor) {
     return (
-      <TaskPreview
+      <Editor
         user={user}
-        study={study}
-        id={task?.id}
-        close={() => {
-          closePreview();
-          if (!showInfo) {
-            close();
-          }
-        }}
+        isAuthor={isAuthor}
+        createCopy={createCopy}
+        task={task}
+        updateCanvas={updateCanvas}
+        persistStudy={persistStudy}
+        close={close}
+        openPreview={() => onOpenPreview?.()}
       />
     );
   }
 
   return (
-    <div className="background">
-      <div className="modal">
-        <Viewer
-          task={task}
-          close={close}
-          openEditor={openEditor}
-          openPreview={openPreview}
-        />
-      </div>
-    </div>
+    <Viewer
+      task={task}
+      close={close}
+      openEditor={openEditor}
+      openPreview={() => onOpenPreview?.()}
+    />
   );
 }

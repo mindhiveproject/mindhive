@@ -7,7 +7,7 @@ export const CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE = {
   width: CONNECT_FACEPILE_SIZE_PX,
   height: CONNECT_FACEPILE_SIZE_PX,
   padding: 0,
-  background: "var(--MH-Theme-Neutrals-Lighter, #f5f5f5)",
+  background: "var(--MH-Theme-Tertiary-Light, #F6F9F8)",
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
 };
 

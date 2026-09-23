@@ -25,6 +25,7 @@ import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import { isClassTeacherOrMentor as classUserIsTeacherOrMentor } from "../../../../../lib/classTeacherUtils";
 import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
+import { useClassTablePrefs } from "../useClassTablePrefs";
 
 // Toggle/filter chrome — not a CTA. Keep as local styled button.
 const LinkedCardsToggleButton = styled.button`
@@ -130,6 +131,9 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   const [selectedAssignments, setSelectedAssignments] = useState([]);
   const [bulkActionsModalOpen, setBulkActionsModalOpen] = useState(false);
   const gridRef = useRef(null);
+  const tablePrefs = useClassTablePrefs(myclass?.id, "assignments", {
+    defaultPageSize: 20,
+  });
 
   const canManageAssignmentsBulk =
     myclass?.creator?.id === user?.id ||
@@ -629,13 +633,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
 
   // Grid settings
   const pagination = true;
-  const paginationPageSize = 20;
   const paginationPageSizeSelector = [10, 20, 50, 100];
-
-  const autoSizeStrategy = {
-    type: "fitGridWidth",
-    defaultMinWidth: 100,
-  };
 
   if (!assignments || assignments.length === 0) {
     return null;
@@ -732,14 +730,13 @@ export default function AssignmentTab({ assignments, myclass, user }) {
               onLinkedCardFilterClick: (type, value) => setLinkedCardFilter({ type, value }),
             }}
             pagination={pagination}
-            paginationPageSize={paginationPageSize}
             paginationPageSizeSelector={paginationPageSizeSelector}
-            autoSizeStrategy={autoSizeStrategy}
             defaultColDef={{
               resizable: true,
               sortable: true,
               filter: true,
             }}
+            {...tablePrefs}
           />
         </div>
       </div>

@@ -113,16 +113,16 @@ export const BrowseSearchField = styled.label`
 export const BrowseCardsGrid = styled.div`
   display: grid;
   gap: 16px;
-  justify-content: start;
+  justify-content: center;
   align-items: stretch;
-  /* Fixed tracks: spare room becomes gutter on the trailing edge rather than
-     padding every card out to a width its content cannot fill. */
+  /* Fixed tracks: spare room is distributed equally on both sides to center the cards. */
   grid-template-columns: repeat(
     auto-fill,
     minmax(min(100%, ${CARD_WIDTH}), ${CARD_WIDTH})
   );
 
   @media (max-width: ${SINGLE_COLUMN}) {
+    justify-content: center;
     grid-template-columns: minmax(0, ${CARD_MAX_WIDTH});
   }
 `;

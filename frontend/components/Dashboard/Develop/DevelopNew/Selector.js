@@ -101,6 +101,9 @@ export default function Selector({ query, user }) {
           </Link>
 
           {(userPermissions.includes("ADMIN") ||
+            userPermissions.includes("TEACHER") ||
+            userPermissions.includes("RESEARCHER") ||
+            userPermissions.includes("MENTOR") ||
             userPermissions.includes("STUDENT")) && (
             <Link
               className="option"

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useReducer } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useReducer, useId } from "react";
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
@@ -127,6 +127,7 @@ function getOptionLabelString(opt) {
  * @param {React.ReactNode} [leadingIcon] - Optional icon before the label; leaves the trailing chevron in place.
  * @param {'auto'|'below'|'above'} [placement='auto'] - Vertical placement; `auto` flips when there is not enough space below.
  * @param {boolean} [disabled=false] - Disables trigger interactions and closes the menu when true.
+ * @param {boolean} [portal=false] - When true, mount the panel in document.body to avoid overflow clipping.
  */
 export default function DropdownSelect({
   value,
@@ -144,6 +145,7 @@ export default function DropdownSelect({
   leadingIcon,
   placement = "auto",
   disabled = false,
+  portal = false,
 }) {
   const { t } = useTranslation("common");
   const [open, setOpen] = useState(false);
@@ -155,6 +157,7 @@ export default function DropdownSelect({
   const panelRef = useRef(null);
   const searchInputRef = useRef(null);
   const labelRef = useRef(null);
+  const dropdownId = useId();
 
   const selectedIds = useMemo(() => {
     if (!multiple) return null;
@@ -287,6 +290,16 @@ export default function DropdownSelect({
   }, [open, searchEnabled]);
 
   useEffect(() => {
+    if (!open || searchEnabled) return undefined;
+    const frame = requestAnimationFrame(() => {
+      panelRef.current
+        ?.querySelector('[role="option"][aria-selected="true"]:not(:disabled), button:not(:disabled)')
+        ?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [open, searchEnabled]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       const target = event.target;
       const inTrigger = triggerRef.current?.contains(target);
@@ -335,15 +348,40 @@ export default function DropdownSelect({
     setOpen(false);
   }, [disabled]);
 
+  const closeAndRestoreFocus = useCallback(() => {
+    setOpen(false);
+    requestAnimationFrame(() => {
+      triggerRef.current?.querySelector('button:not(:disabled)')?.focus();
+    });
+  }, []);
+
+  const moveOptionFocus = (key) => {
+    const optionButtons = Array.from(
+      panelRef.current?.querySelectorAll('[role="option"]:not(:disabled)') ?? []
+    );
+    if (optionButtons.length === 0) return;
+    const currentIndex = optionButtons.indexOf(document.activeElement);
+    const lastIndex = optionButtons.length - 1;
+    let nextIndex = currentIndex < 0 ? 0 : currentIndex;
+    if (key === "Home") nextIndex = 0;
+    if (key === "End") nextIndex = lastIndex;
+    if (key === "ArrowUp") nextIndex = Math.max(0, currentIndex - 1);
+    if (key === "ArrowDown") nextIndex = Math.min(lastIndex, currentIndex + 1);
+    optionButtons[nextIndex]?.focus();
+  };
+
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeAndRestoreFocus();
+      }
     };
     if (open) {
       document.addEventListener("keydown", onKey);
     }
     return () => document.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, closeAndRestoreFocus]);
 
   const handleSelect = (next) => {
     const selectedOption = options.find((opt) => String(opt.value) === String(next));
@@ -445,7 +483,9 @@ export default function DropdownSelect({
       aria-disabled={disabled}
       aria-haspopup="listbox"
       aria-expanded={open}
+      aria-controls={`${dropdownId}-listbox`}
       aria-label={ariaLabel}
+      id={`${dropdownId}-trigger`}
       onClick={() => {
         if (disabled) return;
         setOpen((prev) => !prev);
@@ -512,15 +552,18 @@ export default function DropdownSelect({
             width: panelWidth,
           };
           const fixed = panelLayout ?? provisional;
+          const panelPosition = portal ? "fixed" : "absolute";
+          const panelTop = portal ? fixed.top : fixed.top - tr.top;
+          const panelLeft = portal ? fixed.left : fixed.left - tr.left;
           return createPortal(
           <div
             ref={panelRef}
             className="DesignSystem-DropdownSelect-Panel"
             style={{
               ...PANEL_STYLE,
-              position: "fixed",
-              top: fixed.top,
-              left: fixed.left,
+              position: panelPosition,
+              top: panelTop,
+              left: panelLeft,
               width: fixed.width,
               maxHeight: fixed.maxHeight,
               display: "flex",
@@ -547,8 +590,17 @@ export default function DropdownSelect({
               />
             )}
             <div
+              id={`${dropdownId}-listbox`}
               role="listbox"
+              tabIndex={-1}
+              aria-labelledby={`${dropdownId}-trigger`}
               aria-multiselectable={multiple ? true : undefined}
+              onKeyDown={(e) => {
+                if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) {
+                  e.preventDefault();
+                  moveOptionFocus(e.key);
+                }
+              }}
               style={{
                 overflowY: "auto",
                 flex: 1,
@@ -617,7 +669,7 @@ export default function DropdownSelect({
               )}
             </div>
           </div>,
-          document.body
+          portal ? document.body : triggerRef.current
           );
         })()}
     </div>

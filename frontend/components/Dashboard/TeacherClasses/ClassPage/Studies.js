@@ -8,6 +8,7 @@ import { AgGridReact } from "ag-grid-react";
 
 import OwnedItemsShowcase from "./utils/OwnedItemsShowcase";
 import { filterOwnedClassItems } from "./utils/ownedClassItems";
+import { useClassTablePrefs } from "./useClassTablePrefs";
 
 const LinkButton = styled.a`
   display: inline-flex;
@@ -39,6 +40,9 @@ const LinkButton = styled.a`
 
 export default function Studies({ myclass, user, readOnly = false }) {
   const { t } = useTranslation("classes");
+  const tablePrefs = useClassTablePrefs(myclass?.id, "studies", {
+    defaultPageSize: 20,
+  });
 
   const studies = myclass?.studies || [];
   const ownedStudies =
@@ -224,10 +228,9 @@ export default function Studies({ myclass, user, readOnly = false }) {
               columnDefs={columnDefs}
               getRowId={(params) => params.data?.id}
               pagination
-              paginationPageSize={20}
               paginationPageSizeSelector={[10, 20, 50, 100]}
-              autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
               defaultColDef={{ resizable: true, sortable: true, filter: true }}
+              {...tablePrefs}
             />
           </div>
         )}

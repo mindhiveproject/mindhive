@@ -6,7 +6,9 @@ export default function Editor({
   createCopy,
   task,
   updateCanvas,
+  persistStudy,
   close,
+  openPreview,
 }) {
   return (
     <EditComponent
@@ -15,7 +17,9 @@ export default function Editor({
       createCopy={createCopy}
       task={task}
       updateCanvas={updateCanvas}
+      persistStudy={persistStudy}
       close={close}
+      openPreview={openPreview}
     />
   );
 }

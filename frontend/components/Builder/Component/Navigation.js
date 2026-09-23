@@ -100,9 +100,13 @@ export default function Navigation({
         </div>
         <div className="rightPanel">
           <div className="submitButton">
-            <Button variant="filled" type="button" onClick={() => handleSubmit()}>
-              {submitBtnName || t("submit", {}, { default: "Submit" })}
-            </Button>
+            {isInStudyBuilder ? (
+              <span className="autosaveStatus">{submitBtnName}</span>
+            ) : (
+              <Button variant="filled" type="button" onClick={() => handleSubmit()}>
+                {submitBtnName || t("submit", {}, { default: "Submit" })}
+              </Button>
+            )}
           </div>
 
           {/* {openFullscreenPreview && (
@@ -120,6 +124,7 @@ export default function Navigation({
         </div>
       </div>
 
+      {items.length > 1 && (
       <div className="secondLine">
         <div className="menu">
           {items.map((item, i) => (
@@ -141,6 +146,7 @@ export default function Navigation({
           ))}
         </div>
       </div>
+      )}
     </div>
   );
 }

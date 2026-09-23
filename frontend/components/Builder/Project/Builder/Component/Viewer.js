@@ -1,31 +1,38 @@
-import { Icon, Accordion } from "semantic-ui-react";
-import InfoPopover from "../../../../DesignSystem/InfoPopover";
+import Button from "../../../../DesignSystem/Button";
+import Chip from "../../../../DesignSystem/Chip";
+import IconButton from "../../../../DesignSystem/IconButton";
 import ReactHtmlParser from "react-html-parser";
-import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
+import { getTaskTypeLabelColors } from "../../../../../lib/taskTypeColors";
+
+function plainText(value) {
+  if (value == null) return "";
+  return String(value)
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 export default function Viewer({ task, close, openEditor, openPreview }) {
   const { t } = useTranslation("builder");
-  const [active, setActive] = useState(false);
   const router = useRouter();
   const { locale } = router;
   const taskType = task?.taskType?.toLowerCase();
   const settings = task?.i18nContent?.[locale]?.settings || task?.settings;
   const resources =
     (settings?.resources && JSON.parse(settings?.resources)) || [];
-  const aggregateVariables =
-    (settings?.aggregateVariables &&
-      JSON.parse(settings?.aggregateVariables)) ||
-    [];
+  const title = task?.i18nContent?.[locale]?.title || task?.title;
+  const description =
+    task?.i18nContent?.[locale]?.description || task?.description;
+  const backgroundHtml = settings?.background;
+  const backgroundText = plainText(backgroundHtml) || description;
 
-  // parameters not from the survey builder
   const parameters =
     task?.parameters?.filter((p) => p?.type !== "survey") ||
     task?.template?.parameters ||
     [];
 
-  // parameters from the survey builder
   const surveyItems =
     task?.parameters
       ?.filter((param) => param?.type === "survey")
@@ -34,281 +41,260 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
       .map((page) => page?.page)
       .flat() || [];
 
+  const surveyItemLabel = (item) => {
+    if (item?.type === "text") return t("viewer.text", {}, { default: "Text" });
+    if (item?.type === "vas")
+      return t("viewer.visualAnalogueScale", {}, {
+        default: "Visual analogue scale",
+      });
+    if (item?.type === "likert")
+      return t("viewer.likertScale", {}, { default: "Likert scale" });
+    if (item?.type === "freeinput")
+      return t("viewer.freeTextInput", {}, { default: "Free text input" });
+    if (item?.type === "select")
+      return t("viewer.selectOne", {}, { default: "Select one" });
+    if (item?.type === "checkbox")
+      return t("viewer.selectMany", {}, { default: "Select many" });
+    return "";
+  };
+
+  let aggregateVariables = [];
+  try {
+    aggregateVariables = settings?.aggregateVariables
+      ? JSON.parse(settings.aggregateVariables)
+      : [];
+  } catch (e) {
+    console.warn("Invalid aggregateVariables JSON", e);
+  }
+
+  const durationLabel = plainText(settings?.duration);
+  const formatLabel = plainText(settings?.format);
+  const rawTaskType = task?.taskType;
+  const typeLabelColors = getTaskTypeLabelColors(rawTaskType);
+  const typeLabel = (() => {
+    const type = String(rawTaskType || "").toUpperCase();
+    if (type === "SURVEY")
+      return t("viewer.typeSurvey", {}, { default: "Survey" });
+    if (type === "TASK")
+      return t("viewer.typeTask", {}, { default: "Task" });
+    if (type === "BLOCK")
+      return t("viewer.typeBlock", {}, { default: "Block" });
+    if (type === "DESIGN")
+      return t("viewer.typeDesign", {}, { default: "Design" });
+    return rawTaskType
+      ? String(rawTaskType).charAt(0) +
+          String(rawTaskType).slice(1).toLowerCase()
+      : "";
+  })();
+
   return (
-    <>
-      <div className="taskViewerHeader">
-        <div>
-          <h1>{task?.i18nContent?.[locale]?.title || task?.title}</h1>
-          <p>{task?.i18nContent?.[locale]?.description || task?.description}</p>
+    <div className="blockPanel">
+      <div className="blockPanelHeader">
+        <div className="blockPanelTitle">
+          <h1>{title}</h1>
         </div>
-        <div className="rightPanel">
-          <div className="taskViewerButtons">
-            <div className="closeBtn" onClick={() => close()}>
-              &times;
-            </div>
-            <div>
-              <button
-                className="previewBtn"
-                onClick={() => {
-                  openEditor();
-                }}
-              >
-                {t("viewer.customize", "Customize")}
-              </button>
-            </div>
-            <div>
-              <button
-                className="previewBtn"
-                onClick={() => {
-                  openPreview();
-                }}
-              >
-                {t("viewer.preview", { taskType }, "Preview {{taskType}}")}
-              </button>
-            </div>
+        <div className="blockPanelHeaderMain">
+          <div className="blockPanelActions">
+            <Button variant="filled" type="button" onClick={() => openEditor()}>
+              {t("viewer.customize", {}, { default: "Customize" })}
+            </Button>
+            <Button variant="tonal" type="button" onClick={() => openPreview()}>
+              {t("viewer.preview", { taskType }, { default: "Preview {{taskType}}" })}
+            </Button>
           </div>
+          <IconButton
+            variant="subtle"
+            elevated={false}
+            ariaLabel={t("blockPanel.close", {}, { default: "Close" })}
+            title={t("blockPanel.close", {}, { default: "Close" })}
+            onClick={() => close()}
+            icon={<span aria-hidden>&times;</span>}
+          />
         </div>
       </div>
-      <div className="taskViewerContent">
-        <div className="leftPanel">
-          {task?.image && (
-            <div className="contentBlock">
-              <h2>{t("viewer.screenshot", "Screenshot")}</h2>
-              <img src={task?.image} />
+      <div className="blockPanelBody">
+        {backgroundText && (
+          <section className="blockPanelSection">
+            <h2>{t("viewer.background", {}, { default: "Background" })}</h2>
+            <div className="blockPanelMuted">
+              {backgroundHtml
+                ? ReactHtmlParser(backgroundHtml)
+                : backgroundText}
             </div>
-          )}
+          </section>
+        )}
 
-          {settings?.background && (
-            <div className="contentBlock">
-              <h2>{t("viewer.background", "Background")}</h2>
-              <div>
-                {settings?.background && (
-                  <p>{ReactHtmlParser(settings?.background)}</p>
-                )}
+        {(durationLabel || formatLabel || task?.settings?.mobileCompatible) && (
+          <div className="blockPanelMetaRow">
+            {durationLabel && (
+              <div className="blockPanelDuration">
+                <p className="blockPanelDurationLabel">
+                  {t("viewer.duration", {}, { default: "Duration" })}
+                </p>
+                <p className="blockPanelDurationValue">{durationLabel}</p>
               </div>
-            </div>
-          )}
-
-          {parameters.length > 0 && (
-            <div>
-              <h2>{t("viewer.parameters", "Parameters")}</h2>
-              <p>
-                {t(
-                  "viewer.tweakableFeatures",
-                  { taskType },
-                  "The following features of this {{taskType}} can be tweaked:"
-                )}
-              </p>
-              <p className="MH-Type-Body-Base">
-                *{" "}
-                {t(
-                  "viewer.defaultValues",
-                  { taskType },
-                  "Default values are shown (can clone {{taskType}} and modify these)"
-                )}
-              </p>
-              <div className="symbolBlock">
-                {parameters.map((parameter, num) => (
-                  <div style={{ padding: "5px" }} key={num}>
-                    <p>
-                      <Icon
-                        name={parameter?.icon || "clipboard outline"}
-                        style={{ color: "#556AEB" }}
-                      />
-                      <span className="MH-Type-Title-Small">
-                        {parameter.help}
-                      </span>
-                    </p>
-                    <p className="MH-Type-Body-Base">
-                      {ReactHtmlParser(parameter.value)}
-                    </p>
-                  </div>
-                ))}
+            )}
+            {formatLabel && (
+              <div className="blockPanelDuration">
+                <p className="blockPanelDurationLabel">
+                  {t("viewer.format", {}, { default: "Format" })}
+                </p>
+                <p className="blockPanelDurationValue">{formatLabel}</p>
               </div>
-            </div>
-          )}
-
-          {surveyItems.length > 0 && (
-            <div>
-              <h2>{t("viewer.surveyParameters", "Survey parameters")}</h2>
-              <p>
-                {t(
-                  "viewer.tweakableFeatures",
-                  { taskType },
-                  "The following features of this {{taskType}} can be tweaked:"
-                )}
-              </p>
-              <p className="MH-Type-Body-Base">
-                *{" "}
-                {t(
-                  "viewer.defaultValues",
-                  { taskType },
-                  "Default values are shown (can clone {{taskType}} and modify these)"
-                )}
-              </p>
-              <div className="symbolBlock">
-                {surveyItems.map((item, num) => (
-                  <div style={{ padding: "5px" }} key={num}>
-                    <p>
-                      <Icon
-                        name={item?.icon || "clipboard outline"}
-                        style={{ color: "#556AEB" }}
-                      />
-                      <span className="MH-Type-Title-Small">
-                        {item?.type === "text" && t("viewer.text", "Text")}
-                        {item?.type === "vas" &&
-                          t(
-                            "viewer.visualAnalogueScale",
-                            "Visual analogue scale"
-                          )}
-                        {item?.type === "likert" &&
-                          t("viewer.likertScale", "Likert scale")}
-                        {item?.type === "freeinput" &&
-                          t("viewer.freeTextInput", "Free text input")}
-                        {item?.type === "select" &&
-                          t("viewer.selectOne", "Select one")}
-                        {item?.type === "checkbox" &&
-                          t("viewer.selectMany", "Select many")}
-                      </span>
-                    </p>
-                    <p className="MH-Type-Body-Base">
-                      {ReactHtmlParser(item?.header)}
-                    </p>
-                    <p className="MH-Type-Body-Base">
-                      {ReactHtmlParser(item?.text)}
-                    </p>
-                  </div>
-                ))}
+            )}
+            {task?.settings?.mobileCompatible && (
+              <div className="blockPanelDuration">
+                <p className="blockPanelDurationValue">
+                  {t("viewer.mobileCompatible", {}, {
+                    default: "Mobile compatible",
+                  })}
+                </p>
               </div>
-            </div>
-          )}
+            )}
+            {typeLabel ? (
+              <div className="blockPanelType">
+                <p className="blockPanelDurationLabel">
+                  {t("viewer.type", {}, { default: "Type" })}
+                </p>
+                <Chip
+                  variant="static"
+                  label={typeLabel}
+                  style={{
+                    alignSelf: "flex-start",
+                    background: typeLabelColors.bg,
+                    backgroundColor: typeLabelColors.bg,
+                    color: typeLabelColors.fg,
+                  }}
+                />
+              </div>
+            ) : null}
+          </div>
+        )}
 
-          {settings?.descriptionBefore && (
-            <div>
-              <h2>
-                {t(
-                  "viewer.beforeParticipation",
-                  { taskType },
-                  "What participants see before taking the {{taskType}}"
-                )}
-              </h2>
-              <p className="symbolBlock">{settings?.descriptionBefore}</p>
-            </div>
-          )}
+        {aggregateVariables.length > 0 && (
+          <section className="blockPanelSection">
+            <h2>
+              {t("viewer.keyVariables", {}, { default: "Key Variables" })}
+            </h2>
+            <ul className="blockPanelVarList">
+              {aggregateVariables.map((variable, idx) => (
+                <li key={variable.varName || idx}>
+                  <span className="blockPanelVarName">
+                    {ReactHtmlParser(variable.varName || "")}
+                  </span>
+                  {variable.varDesc ? (
+                    <span className="blockPanelVarDesc">
+                      {ReactHtmlParser(variable.varDesc)}
+                    </span>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-          {settings?.descriptionAfter && (
-            <div>
-              <h2>
-                {t(
-                  "viewer.afterParticipation",
-                  { taskType },
-                  "What participants see after taking the {{taskType}}"
-                )}
-              </h2>
-              <p className="symbolBlock">{settings?.descriptionAfter}</p>
-            </div>
-          )}
-        </div>
+        {task?.image && (
+          <section className="blockPanelSection">
+            <h2>{t("viewer.screenshot", {}, { default: "Screenshot" })}</h2>
+            <img src={task?.image} alt="" />
+          </section>
+        )}
 
-        <div className="rightPanel">
-          {task?.settings?.mobileCompatible && (
-            <div>
-              <Icon
-                id="favoriteButton"
-                name="mobile alternate"
-                color="teal"
-                size="large"
-              />
-              <span>{t("viewer.mobileCompatible", "Mobile compatible")}</span>
+        {settings?.scoring && (
+          <section className="blockPanelSection">
+            <h2>{t("viewer.scoring", {}, { default: "Scoring" })}</h2>
+            <div className="blockPanelMuted">
+              {ReactHtmlParser(settings?.scoring)}
             </div>
-          )}
-          {settings?.aggregateVariables && (
-            <div className="contentBlock">
-              <h2>{t("viewer.aggregateVariables", "Aggregate Variables")}</h2>
-              <p>
-                {t(
-                  "viewer.aggregateVariablesDesc",
-                  { taskType },
-                  "These data are automatically written to a csv file upon completion of the {{taskType}}"
-                )}
-              </p>
+          </section>
+        )}
 
-              {settings?.addInfo && (
-                <Accordion>
-                  <Accordion.Title
-                    active={active}
-                    onClick={() => setActive(!active)}
-                  >
-                    <Icon name="dropdown" />
-                    {t("viewer.moreInfo", "more info")}
-                  </Accordion.Title>
-                  <Accordion.Content active={active}>
-                    <p>{ReactHtmlParser(settings?.addInfo)}</p>
-                  </Accordion.Content>
-                </Accordion>
+        {settings?.descriptionBefore && (
+          <section className="blockPanelSection">
+            <h2>
+              {t("viewer.seeBefore", {}, {
+                default: "What participants see before",
+              })}
+            </h2>
+            <div className="blockPanelParticipantCard">
+              <p>{settings?.descriptionBefore}</p>
+            </div>
+          </section>
+        )}
+
+        {settings?.descriptionAfter && (
+          <section className="blockPanelSection">
+            <h2>
+              {t("viewer.seeAfter", {}, {
+                default: "What participants see after",
+              })}
+            </h2>
+            <div className="blockPanelParticipantCard">
+              <p>{settings?.descriptionAfter}</p>
+            </div>
+          </section>
+        )}
+
+        {parameters.length > 0 && (
+          <section className="blockPanelSection blockPanelCard">
+            <h2>{t("viewer.parameters", {}, { default: "Parameters" })}</h2>
+            <p className="blockPanelMuted">
+              {t(
+                "viewer.tweakableFeatures",
+                { taskType },
+                {
+                  default:
+                    "The following features of this {{taskType}} can be tweaked:",
+                }
               )}
+            </p>
+            <ul className="blockPanelList">
+              {parameters.map((parameter, num) => (
+                <li key={num}>
+                  <strong>{parameter.help}</strong>
+                  <div className="blockPanelMuted">
+                    {ReactHtmlParser(parameter.value)}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-              <ul>
-                {(() => {
-                  let parsed = [];
-                  try {
-                    parsed = JSON.parse(settings.aggregateVariables);
-                  } catch (e) {
-                    console.warn("Invalid aggregateVariables JSON", e);
-                  }
+        {surveyItems.length > 0 && (
+          <section className="blockPanelSection">
+            <h2>
+              {t("viewer.surveyParameters", {}, {
+                default: "Survey parameters",
+              })}
+            </h2>
+            <ul className="blockPanelList">
+              {surveyItems.map((item, num) => (
+                <li key={num}>
+                  <strong>{surveyItemLabel(item)}</strong>
+                  <div>{ReactHtmlParser(item?.header)}</div>
+                  <div className="blockPanelMuted">
+                    {ReactHtmlParser(item?.text)}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-                  return parsed.map((variable, idx) => (
-                    <li
-                      key={variable.varName || idx}
-                      style={{ marginBottom: "0.5rem" }}
-                    >
-                      {ReactHtmlParser(variable.varName || "")}{" "}
-                      {variable.varDesc && (
-                        <InfoPopover
-                          content={ReactHtmlParser(variable.varDesc)}
-                          ariaLabel={variable.name}
-                        />
-                      )}
-                    </li>
-                  ));
-                })()}
-              </ul>
-            </div>
-          )}
-
-          {settings?.scoring && (
-            <div className="contentBlock">
-              <h2>{t("viewer.scoring", "Scoring")}</h2>
-              <p>{ReactHtmlParser(settings?.scoring)}</p>
-            </div>
-          )}
-
-          {settings?.format && (
-            <div className="contentBlock">
-              <h2>{t("viewer.format", "Format")}</h2>
-              <p>{ReactHtmlParser(settings?.format)}</p>
-            </div>
-          )}
-
-          {settings?.duration && (
-            <div className="contentBlock">
-              <h2>{t("viewer.duration", "Duration")}</h2>
-              <p>{settings?.duration}</p>
-            </div>
-          )}
-
-          {resources.length > 0 && (
-            <div className="contentBlock">
-              <h2>{t("viewer.resources", "Resources")}</h2>
-              <ul>
-                {resources.map((resource, num) => (
-                  <li key={num}>{ReactHtmlParser(resource)}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
+        {resources.length > 0 && (
+          <section className="blockPanelSection">
+            <h2>
+              {t("viewer.references", {}, { default: "References" })}
+            </h2>
+            <ul className="blockPanelReferences">
+              {resources.map((resource, num) => (
+                <li key={num}>{ReactHtmlParser(resource)}</li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
-    </>
+    </div>
   );
 }

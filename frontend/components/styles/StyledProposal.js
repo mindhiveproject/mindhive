@@ -184,6 +184,7 @@ export const StyledProposal = styled.div`
     align-content: start;
     margin: 20px;
     min-height: 0;
+    grid-gap: 8px;
     --proposal-section-width: 500px;
     --proposal-section-margin: 15px;
 
@@ -802,7 +803,7 @@ export const StyledProposal = styled.div`
 
   .header {
     display: grid;
-    margin-bottom: 16px;
+    // margin-bottom: 16px;
     height: fit-content;
     .headerContent {
       width: 100%;
@@ -815,6 +816,11 @@ export const StyledProposal = styled.div`
       justify-content: space-between;
       align-items: flex-start;
       width: 100%;
+      border: 1.5px solid var(--MH-Theme-Neutrals-Light,#e6e6e6);
+      border-radius: 8px;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      padding: 16px;
+      box-sizing: border-box;
     }
     .headerLeftSection {
       display: flex;

@@ -21,6 +21,7 @@ import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
 import Chip from "../../../../DesignSystem/Chip";
 import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 import { isClassTeacherOrMentor as classUserIsTeacherOrMentor } from "../../../../../lib/classTeacherUtils";
+import { useClassTablePrefs } from "../useClassTablePrefs";
 
 // Toggle/filter chrome — not a CTA. Keep as local styled button.
 const LinkedCardsToggleButton = styled.button`
@@ -113,6 +114,9 @@ export default function ResourceTab({ resources, myclass, user }) {
   const [selectedResources, setSelectedResources] = useState([]);
   const [bulkActionsModalOpen, setBulkActionsModalOpen] = useState(false);
   const gridRef = useRef(null);
+  const tablePrefs = useClassTablePrefs(classId, "resources", {
+    defaultPageSize: 20,
+  });
   const client = useApolloClient();
 
   const canManageResourcesBulk =
@@ -789,9 +793,7 @@ export default function ResourceTab({ resources, myclass, user }) {
   ];
 
   const pagination = true;
-  const paginationPageSize = 20;
   const paginationPageSizeSelector = [10, 20, 50, 100];
-  const autoSizeStrategy = { type: "fitGridWidth", defaultMinWidth: 100 };
 
   if (!resources || resources.length === 0) return null;
 
@@ -894,10 +896,9 @@ export default function ResourceTab({ resources, myclass, user }) {
               onLinkedCardFilterClick: (type, value) => setLinkedCardFilter({ type, value }),
             }}
             pagination={pagination}
-            paginationPageSize={paginationPageSize}
             paginationPageSizeSelector={paginationPageSizeSelector}
-            autoSizeStrategy={autoSizeStrategy}
             defaultColDef={{ resizable: true, sortable: true, filter: true }}
+            {...tablePrefs}
           />
         </div>
       </div>

@@ -112,8 +112,37 @@ export const Class = list({
     async afterOperation({ operation, inputData, item, context }) {
       if (operation !== "create" && operation !== "update") return;
       const profileIds = relationshipConnectIds(inputData?.teachingTeam);
+      const actorId = context.session?.itemId
+        ? String(context.session.itemId)
+        : "";
+      const classTitle = (item as { title?: string } | undefined)?.title || "a class";
+      const classCode = (item as { code?: string } | undefined)?.code;
+      const classLink = classCode
+        ? `/dashboard/myclasses/${classCode}`
+        : "/dashboard/myclasses";
       for (const profileId of profileIds) {
         await ensureTeacherPermission(context, profileId);
+        if (actorId && String(profileId) === actorId) continue;
+        try {
+          await context.sudo().db.Update.createOne({
+            data: {
+              user: { connect: { id: profileId } },
+              updateArea: "CLASS",
+              link: classLink,
+              content: {
+                title: "Added to a class",
+                message: `You were added as a co-teacher of "${classTitle}".`,
+                linkTitle: "Open class",
+              },
+            },
+          });
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `Failed to create teaching-team Update for user ${profileId}:`,
+            e
+          );
+        }
       }
       if (
         inputData?.teachingTeam ||

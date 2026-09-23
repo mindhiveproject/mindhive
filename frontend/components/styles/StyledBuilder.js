@@ -10,7 +10,10 @@ export const StyledBuilderArea = styled.div`
   display: grid;
   height: 100vh;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   grid-template-rows: auto 1fr;
+  overflow-x: hidden;
   .newProject {
     background: #f7f9f8;
     display: grid;
@@ -214,6 +217,51 @@ export const StyledBuilderArea = styled.div`
   }
   .navigation {
     display: grid;
+    &.navigationUnified {
+      display: flex;
+      align-items: center;
+      column-gap: 20px;
+      padding: 8px 8px 8px 16px;
+      min-height: 55px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+
+      .navTitle {
+        flex: 0 1 auto;
+        min-width: 0;
+        max-width: 25%;
+        overflow: hidden;
+      }
+      span.studyTitle {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        text-align: left;
+      }
+      .builderNavbar {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 0 8px;
+        overflow: hidden;
+      }
+      .right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 0 0 auto;
+      }
+    }
     .on {
     }
     .off {
@@ -383,6 +431,12 @@ export const StyledCanvasBuilder = styled.div`
     height: auto;
     min-width: 280px;
     max-width: 100%;
+    transition: width 220ms ease, max-width 220ms ease;
+
+    &.sidepanel--block {
+      width: min(700px, 65%);
+      max-width: 66%;
+    }
     overflow-x: hidden;
     overflow-y: auto;
     scrollbar-width: none;
@@ -419,20 +473,269 @@ export const StyledCanvasBuilder = styled.div`
       .navbar-container {
         padding: 0;
         flex-wrap: nowrap;
-        justify-content: center;
+        justify-content: start;
         width: 100%;
         min-width: 0;
         box-sizing: border-box;
       }
     }
 
+    .sidepanelDefaultHost {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .sidepanelDefaultHost[hidden] {
+      display: none;
+    }
+
     > .editPane,
     > .studyFlow,
-    > .studySettings {
+    > .studySettings,
+    .sidepanelDefaultHost > .editPane,
+    .sidepanelDefaultHost > .studyFlow,
+    .sidepanelDefaultHost > .studySettings {
       flex: 1;
       width: 100%;
       min-width: 0;
       max-width: 100%;
+    }
+
+    .blockPanel {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .blockPanelLoading {
+      margin: 16px 0;
+      font: var(--MH-Type-Body-Base);
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    }
+
+    .blockPanelHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 0 8px;
+      border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    }
+
+    .blockPanelTitle {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+      h1 {
+        margin: 0;
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+    }
+
+    .blockPanelHeaderMain {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .blockPanelActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .blockPanelBody {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 8px 4px;
+
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      &::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+      }
+    }
+
+    .blockPanelMetaRow {
+      display: flex;
+      gap: 12px;
+      min-width: 0;
+      align-items: stretch;
+    }
+
+    .blockPanelSection {
+      display: grid;
+      gap: 8px;
+      .onLineHeader {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+      }
+      h2 {
+        margin: 0;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+      p,
+      li,
+      div {
+        font: var(--MH-Type-Body-Base, 400 14px/16px Inter, sans-serif);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+    }
+
+    .blockPanelMuted {
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      font: var(--MH-Type-Body-Base, 400 14px/20px Inter, sans-serif);
+      letter-spacing: 0;
+    }
+
+    .blockPanelCard {
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 12px;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .blockPanelParticipantCard {
+      background: var(--MH-Theme-Neutrals-Light-Green, #f6f9f8);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 8px;
+      padding: 16px;
+      box-sizing: border-box;
+      p {
+        margin: 0;
+        font: var(--MH-Type-Body-Base, 400 14px/20px Inter, sans-serif);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+    }
+
+    .blockPanelDuration {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+      width: max-content;
+      background: var(--MH-Theme-Neutrals-Light-Green, #f6f9f8);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-sizing: border-box;
+    }
+
+    .blockPanelType {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+      width: content-fit;
+      // border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-sizing: border-box;
+    }
+
+    .blockPanelDurationLabel,
+    .blockPanelDurationValue {
+      margin: 0;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
+      color: var(--MH-Theme-Tertiary-Dark, #0d3944);
+      overflow-wrap: anywhere;
+    }
+
+    .blockPanelVarList {
+      list-style: disc;
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .blockPanelVarName {
+      display: block;
+      font: var(--MH-Type-Body-Base, 400 14px/20px Inter, sans-serif);
+      letter-spacing: 0;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+    }
+
+    .blockPanelVarDesc {
+      display: block;
+      font: var(--MH-Type-Body-Base, 400 14px/20px Inter, sans-serif);
+      letter-spacing: 0;
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    }
+
+    .blockPanelList {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .blockPanelReferences {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+      li {
+        font: var(--MH-Type-Body-Small, 400 12px/16px Inter, sans-serif);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        overflow-wrap: anywhere;
+      }
+    }
+
+    .blockPanelList {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .blockPanelMoreInfo button {
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      font: var(--MH-Type-Label-Base);
+      color: var(--MH-Theme-Primary-Dark, #336f8a);
     }
 
     .studyFlow {

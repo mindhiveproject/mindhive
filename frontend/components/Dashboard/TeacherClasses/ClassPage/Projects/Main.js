@@ -46,6 +46,7 @@ import CreateTemplateBoardModal from "../Modals/CreateTemplateBoardModal";
 import OwnedItemsShowcase from "../utils/OwnedItemsShowcase";
 import { filterOwnedClassItems } from "../utils/ownedClassItems";
 import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
+import { useClassTablePrefs } from "../useClassTablePrefs";
 
 export default function ClassProjects({
   myclass,
@@ -74,6 +75,9 @@ export default function ClassProjects({
     variables: { classId: myclass?.id },
     skip: isEditing || !myclass?.id,
   });
+  const tablePrefs = useClassTablePrefs(myclass?.id, "projects", {
+    defaultPageSize: 20,
+  });
 
   if (isEditing) {
     return (
@@ -99,6 +103,10 @@ export default function ClassProjects({
     ].filter(Boolean);
     return [...new Set(names)].join(", ");
   };
+
+  const canSeeStaffProjectColumns = (user?.permissions || []).some(
+    (p) => p?.name === "TEACHER" || p?.name === "MENTOR"
+  );
 
   const ProjectBoardRenderer = (params) => {
     const project = params?.data;
@@ -150,32 +158,36 @@ export default function ClassProjects({
         wordBreak: "break-word",
       },
     },
-    {
-      field: "createdAt",
-      headerName: t("projects.dateCreated"),
-      valueGetter: (params) => params?.data?.createdAt || null,
-      valueFormatter: (params) =>
-        params.value ? moment(params.value).format("MMMM D, YYYY") : "",
-      filter: "agDateColumnFilter",
-      sortable: true,
-      flex: 1,
-      minWidth: 150,
-    },
-    {
-      field: "viewBoard",
-      headerName: t("projects.viewBoard", {}, { default: "View board" }),
-      cellRenderer: ProjectBoardRenderer,
-      suppressFilter: true,
-      sortable: false,
-      flex: 0,
-      minWidth: 130,
-      maxWidth: 150,
-      cellStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      },
-    },
+    ...(canSeeStaffProjectColumns
+      ? [
+          {
+            field: "createdAt",
+            headerName: t("projects.dateCreated"),
+            valueGetter: (params) => params?.data?.createdAt || null,
+            valueFormatter: (params) =>
+              params.value ? moment(params.value).format("MMMM D, YYYY") : "",
+            filter: "agDateColumnFilter",
+            sortable: true,
+            flex: 1,
+            minWidth: 150,
+          },
+          {
+            field: "viewBoard",
+            headerName: t("projects.viewBoard", {}, { default: "View board" }),
+            cellRenderer: ProjectBoardRenderer,
+            suppressFilter: true,
+            sortable: false,
+            flex: 0,
+            minWidth: 130,
+            maxWidth: 150,
+            cellStyle: {
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -251,10 +263,9 @@ export default function ClassProjects({
               columnDefs={columnDefs}
               getRowId={(params) => params.data?.id}
               pagination
-              paginationPageSize={20}
               paginationPageSizeSelector={[10, 20, 50, 100]}
-              autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
               defaultColDef={{ resizable: true, sortable: true, filter: true }}
+              {...tablePrefs}
             />
           </div>
         )}
