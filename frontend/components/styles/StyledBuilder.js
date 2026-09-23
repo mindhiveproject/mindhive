@@ -847,6 +847,12 @@ export const StyledCanvasBuilder = styled.div`
       max-width: 100%;
       box-sizing: border-box;
 
+      /* One path per row in the side panel — the review page's two-column
+         grid (StyledTasksPreview) squeezes the cards and their chips. */
+      .studyTasksPreview {
+        grid-template-columns: 1fr;
+      }
+
       .studyFlowEmpty {
         display: flex;
         flex-direction: column;

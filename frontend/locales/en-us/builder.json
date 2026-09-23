@@ -1196,6 +1196,8 @@
 			"copyAndEdit": "Copy & Edit",
 			"editNotice": "To change how the data is aggregated, add more inputs, or add more analysis steps, you must edit this block.",
 			"general": "General",
+			"goToStudyFlow": "Go to Study Flow",
+			"linkedBlocksHint": "Change which blocks this data source is linked to from the Study Flow.",
 			"notFound": "This data source is no longer linked to the study.",
 			"outputs": "Outputs",
 			"outputsHint": "Review the outputs of the device and filter out the ones you won't be using.",
@@ -2310,6 +2312,7 @@
 			"defaultPath": "Default path",
 			"expandAria": "Expand path {{name}}",
 			"legend": "Simulated over 100 participant runs. Paths are sorted by how often they occur.",
+			"previewBlock": "Preview",
 			"probabilityAria": "{{frequency}} percent of simulated runs",
 			"taskCount": "{{count}} tasks"
 		}

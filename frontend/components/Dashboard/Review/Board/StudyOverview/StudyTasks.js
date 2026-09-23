@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../../../DesignSystem/Chip";
 import InfoPopover from "../../../../DesignSystem/InfoPopover";
+import { CheckIcon } from "../../../../DesignSystem/Icons";
 import TaskBlock from "./Blocks/TaskBlock";
 import { StyledTasksPreview } from "../../../../styles/StyledStudyPage";
+
+import { STUDY_DATA_SOURCES } from "../../../../Queries/DataSourceBlock";
+import { UPDATE_STUDY_DATA_SOURCE } from "../../../../Mutations/DataSourceBlock";
 
 function hasInterpretableFlow(flow) {
   return Array.isArray(flow) && flow.length > 0;
@@ -14,6 +19,24 @@ function pathsHaveTasks(paths) {
   return Object.values(paths).some(({ path }) =>
     path?.some((block) => block?.type === "task")
   );
+}
+
+// Every task step id in the flow, including those inside between-subjects
+// branches — the ids a data source's `scope.steps` refers to.
+function flowTaskIds(flow) {
+  return (flow || []).flatMap((stage) => {
+    if (stage?.type === "my-node") return [stage.id];
+    if (stage?.type === "design") {
+      return (stage.conditions || []).flatMap((c) => flowTaskIds(c?.flow));
+    }
+    return [];
+  });
+}
+
+// A data source's `scope` is "study" (every step) or { steps: [...] } (only
+// those steps).
+function isSourceActive(source, stepId) {
+  return !Array.isArray(source.scope?.steps) || source.scope.steps.includes(stepId);
 }
 
 function buildPathSequence(path) {
@@ -48,6 +71,28 @@ export default function StudyTasks({ study }) {
   const flow = study?.flow;
   const [paths, setPaths] = useState({});
   const [expandedKeys, setExpandedKeys] = useState(() => new Set());
+
+  const { data: sourcesData } = useQuery(STUDY_DATA_SOURCES, {
+    variables: { studyId: study?.id },
+    skip: !study?.id,
+  });
+  const [updateStudyDataSource] = useMutation(UPDATE_STUDY_DATA_SOURCE);
+  const sources = sourcesData?.studyDataSources || [];
+
+  // Turning every step back on collapses the scope to "study", so steps added
+  // later pick the source up by default.
+  const toggleSource = (source, stepId) => {
+    const allIds = [...new Set(flowTaskIds(flow))];
+    const steps = allIds.filter((id) =>
+      id === stepId ? !isSourceActive(source, id) : isSourceActive(source, id)
+    );
+    updateStudyDataSource({
+      variables: {
+        id: source.id,
+        data: { scope: steps.length === allIds.length ? "study" : { steps } },
+      },
+    });
+  };
 
   const getRandomInt = (min, max) => {
     min = Math.ceil(min);
@@ -367,7 +412,32 @@ export default function StudyTasks({ study }) {
                         <span className="stepNumber" aria-hidden="true">
                           {item.step}
                         </span>
-                        <TaskBlock task={item.block} />
+                        <TaskBlock task={item.block}>
+                          {sources.length > 0 && (
+                            <div className="cardChips">
+                              {sources.map((source) => {
+                                const active = isSourceActive(source, item.block?.id);
+                                return (
+                                  <Chip
+                                    key={source.id}
+                                    label={source.label || source.block?.title}
+                                    selected={active}
+                                    pressed={active}
+                                    accent="tertiary"
+                                    leading={
+                                      active ? (
+                                        <CheckIcon width={18} height={18} />
+                                      ) : undefined
+                                    }
+                                    onClick={() =>
+                                      toggleSource(source, item.block?.id)
+                                    }
+                                  />
+                                );
+                              })}
+                            </div>
+                          )}
+                        </TaskBlock>
                       </div>
                     );
                   })}

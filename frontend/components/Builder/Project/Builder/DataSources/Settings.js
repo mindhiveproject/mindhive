@@ -11,7 +11,7 @@ import Checkbox from "../../../../DesignSystem/Checkbox";
 import Chip from "../../../../DesignSystem/Chip";
 import Input from "../../../../DesignSystem/Input";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
-import { ArrowDropDownIcon, CloseIcon, EditIcon, LinkOffIcon } from "../../../../DesignSystem/Icons";
+import { ArrowDropDownIcon, CheckIcon, CloseIcon, EditIcon, LinkOffIcon } from "../../../../DesignSystem/Icons";
 
 import { STUDY_DATA_SOURCES } from "../../../../Queries/DataSourceBlock";
 import {
@@ -50,7 +50,12 @@ function flattenOutputs(block) {
  * using the same blockPanel header/body shell as a block's panel. Closing it
  * returns the side panel to its regular tabs.
  */
-export default function DataSourceSettings({ study, studyDataSourceId, onClose }) {
+export default function DataSourceSettings({
+  study,
+  studyDataSourceId,
+  onClose,
+  onOpenStudyFlow,
+}) {
   const { t } = useTranslation("builder");
   const [openSections, setOpenSections] = useState({
     general: true,
@@ -203,21 +208,30 @@ export default function DataSourceSettings({ study, studyDataSourceId, onClose }
         </div>
 
         <section className="dataSourceSettingsSection">
+          <p className="blockPanelMuted">
+            {t("dataSources.settings.linkedBlocksHint", {}, {
+              default:
+                "Change which blocks this data source is linked to from the Study Flow.",
+            })}
+          </p>
+          <div>
+            <Button variant="outline" onClick={onOpenStudyFlow}>
+              {t("dataSources.settings.goToStudyFlow", {}, {
+                default: "Go to Study Flow",
+              })}
+            </Button>
+          </div>
+        </section>
+
+        <section className="dataSourceSettingsSection">
           {sectionHeader(
             "general",
             t("dataSources.settings.general", {}, { default: "General" })
           )}
           {openSections.general && (
             <>
-              {toggleRow(
-                "viewSignal",
-                t("dataSources.settings.viewSignal", {}, {
-                  default: "Allow participants to view the signal",
-                }),
-                t("dataSources.settings.viewSignalHint", {}, {
-                  default: "View the raw signal during participation.",
-                })
-              )}
+              {/* viewSignal toggle hidden (stays false) until the participant
+                  data preview is finished. */}
               {toggleRow(
                 "streamToNextBlock",
                 t("dataSources.settings.streamToNextBlock", {}, {
@@ -259,24 +273,18 @@ export default function DataSourceSettings({ study, studyDataSourceId, onClose }
                 </p>
                 <div className="dataSourceSettingsChips">
                   {channels.map((channel) => {
-                    const excluded = excludedChannels.has(channel.key);
+                    const included = !excludedChannels.has(channel.key);
                     return (
                       <Chip
                         key={channel.key}
                         label={channel.label}
+                        selected={included}
+                        pressed={included}
+                        accent="tertiary"
+                        leading={
+                          included ? <CheckIcon width={18} height={18} /> : undefined
+                        }
                         onClick={() => toggleChannel(channel.key)}
-                        style={{
-                          background: excluded
-                            ? "var(--MH-Theme-Neutrals-White, #FFFFFF)"
-                            : "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
-                          borderColor: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
-                        }}
-                        labelStyle={{
-                          textDecoration: excluded ? "line-through" : "none",
-                          color: excluded
-                            ? "var(--MH-Theme-Neutrals-Medium, #A1A1A1)"
-                            : "var(--MH-Theme-Neutrals-Black, #171717)",
-                        }}
                       />
                     );
                   })}

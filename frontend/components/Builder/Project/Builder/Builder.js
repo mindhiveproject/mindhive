@@ -65,6 +65,9 @@ export default function Builder({
   // panel for the selected block or linked data source (Menu stays mounted,
   // just hidden, so its tab survives the round trip).
   const [sidepanelMode, setSidepanelMode] = useState("default");
+  // Held here rather than in Menu so the data source settings panel can send
+  // the user to the Study Flow tab.
+  const [menuTab, setMenuTab] = useState("addBlock");
 
   if (isCanvasLocked && engine?.getModel()) {
     engine.getModel().setLocked(true);
@@ -105,6 +108,11 @@ export default function Builder({
   const closeDataSourceSettings = () => {
     setDataSourceSettingsId(null);
     setSidepanelMode("default");
+  };
+
+  const openStudyFlowTab = () => {
+    closeDataSourceSettings();
+    setMenuTab("flow");
   };
 
   const openBlockPreview = useCallback(() => {
@@ -250,6 +258,8 @@ export default function Builder({
               handleMultipleUpdate={handleMultipleUpdate}
               hasStudyChanged={hasStudyChanged}
               isCanvasLocked={isCanvasLocked}
+              tab={menuTab}
+              setTab={setMenuTab}
             />
           </div>
           {sidepanelMode === "block" && componentId && (
@@ -276,6 +286,7 @@ export default function Builder({
               study={study}
               studyDataSourceId={dataSourceSettingsId}
               onClose={closeDataSourceSettings}
+              onOpenStudyFlow={openStudyFlowTab}
             />
           )}
         </div>

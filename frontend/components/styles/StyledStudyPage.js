@@ -310,17 +310,40 @@ export const StyledTaskCardReview = styled.div`
     ${(props) => getTaskTypeColor(props.taskType, TASK_TYPE_COLORS.BLOCK)};
   box-shadow: none;
   transition: border-color 200ms ease-out, background-color 200ms ease-out;
-  cursor: pointer;
 
-  :hover {
-    background-color: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
-    border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+  /* The whole card opens the preview unless the caller gives it its own
+     preview button ($clickable={false}, the builder's Study Flow). */
+  ${(props) =>
+    props.$clickable !== false &&
+    `
+    cursor: pointer;
+
+    :hover {
+      background-color: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    }
+  `}
+
+  .cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 8px;
   }
 
   .cardInfo {
+    flex: 1;
+    min-width: 0;
     padding: 10px 12px;
     display: grid;
     gap: 2px;
+  }
+
+  .cardChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0 12px 12px;
   }
   a {
     letter-spacing: 0.04em;
@@ -333,7 +356,7 @@ export const StyledTaskCardReview = styled.div`
     color: var(--MH-Theme-Neutrals-Black, #171717);
     margin: 0;
   }
-  span {
+  .cardInfo span {
     font: var(--MH-Type-Body-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);

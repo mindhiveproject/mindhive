@@ -893,33 +893,35 @@ export default function Settings({ myclass, user }) {
         </div>
       </section>
 
-      <section className="settingsSection">
-        <div className="settingsSectionHeader">
-          <h3>
-            {t("physiologicalDataSettingsTitle", {}, {
-              default: "Physiological data",
-            })}
-          </h3>
-        </div>
-        <div className="informationBlock">
-          <div className="block curriculumTypeBlock">
-            <div className="settingsCheckboxRow">
-              <Checkbox
-                checked={physiologicalDataEnabled}
-                disabled={updatingSettings}
-                onChange={updatePhysiologicalDataEnabled}
-                ariaLabelledBy="physiologicalDataSettingLabel"
-              />
-              <span id="physiologicalDataSettingLabel">
-                {t("physiologicalDataSettingLabel", {}, {
-                  default:
-                    "Enable physiological data collection and recording for this class within the study builder",
-                })}
-              </span>
+      {isAdmin && (
+        <section className="settingsSection">
+          <div className="settingsSectionHeader">
+            <h3>
+              {t("physiologicalDataSettingsTitle", {}, {
+                default: "Physiological data",
+              })}
+            </h3>
+          </div>
+          <div className="informationBlock">
+            <div className="block curriculumTypeBlock">
+              <div className="settingsCheckboxRow">
+                <Checkbox
+                  checked={physiologicalDataEnabled}
+                  disabled={updatingSettings}
+                  onChange={updatePhysiologicalDataEnabled}
+                  ariaLabelledBy="physiologicalDataSettingLabel"
+                />
+                <span id="physiologicalDataSettingLabel">
+                  {t("physiologicalDataSettingLabel", {}, {
+                    default:
+                      "Enable physiological data collection and recording for this class within the study builder",
+                  })}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <TeachingTeamSettings myclass={myclass} user={user} />
 
