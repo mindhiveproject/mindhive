@@ -52,7 +52,7 @@ export default function Manager({
   }, [info]);
 
   const [page, setPage] = useState("test"); // two pages: test and post
-  const [runToken, setRunToken] = useState(undefined);
+  const [token, setToken] = useState(undefined); // token is used to find saved data in the dataset to modify them if needed
   const [nextStep, setNextStep] = useState(undefined); // next task for participant
 
   const [updateUserStudyInfo] = useMutation(UPDATE_USER_STUDY_INFO, {
@@ -208,11 +208,7 @@ export default function Manager({
     return nextSteps;
   };
 
-  const onTaskFinish = async ({
-    runToken: completedRunToken,
-    currentStep,
-    isTaskRetaken,
-  }) => {
+  const onTaskFinish = async ({ token, currentStep, isTaskRetaken }) => {
     let updatedPath = path.map((step) => {
       if (step?.id === currentStep?.id) {
         if (isTaskRetaken) {
@@ -293,7 +289,7 @@ export default function Manager({
       window.location = redirectPage;
     } else {
       setPage("post");
-      setRunToken(completedRunToken);
+      setToken(token);
     }
   };
 
@@ -322,7 +318,7 @@ export default function Manager({
         currentStep={currentStep}
         nextStep={nextStep}
         closePrompt={closePrompt}
-        runToken={runToken}
+        token={token}
       />
     );
   }

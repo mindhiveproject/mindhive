@@ -6,39 +6,16 @@ import {
   relationship,
   checkbox,
   select,
-  integer,
 } from "@keystone-6/core/fields";
-import { permissions } from "../access";
-const {
-  buildResultAccessFilter,
-  buildResultManageFilter,
-} = require("../lib/runtime/resultAccess");
-
-const resultAccess = ({ session }: any) => {
-  return buildResultAccessFilter(
-    session,
-    !!permissions.canManageUsers({ session }),
-  );
-};
-
-const resultManageAccess = ({ session }: any) =>
-  buildResultManageFilter(
-    session,
-    !!permissions.canManageUsers({ session }),
-  );
+// import { rules } from "../access";
 
 export const Dataset = list({
   access: {
     operation: {
-      query: ({ session }) => !!session,
-      create: () => false,
-      update: ({ session }) => !!session,
-      delete: ({ session }) => !!session,
-    },
-    filter: {
-      query: resultAccess,
-      update: resultManageAccess,
-      delete: resultManageAccess,
+      query: () => true,
+      create: () => true,
+      update: () => true,
+      delete: () => true,
     },
   },
   fields: {
@@ -65,20 +42,6 @@ export const Dataset = list({
     task: relationship({
       ref: "Task.datasets",
     }),
-    runtimeType: select({
-      options: [
-        { label: "Lab.js", value: "LABJS" },
-        { label: "p5.js", value: "P5" },
-        { label: "jsPsych", value: "JSPSYCH" },
-      ],
-    }),
-    runtimeAssetId: text(),
-    runtimeAssetVersion: text(),
-    assetAuthor: relationship({ ref: "Profile.datasetsAsAssetAuthor" }),
-    taskAuthor: relationship({ ref: "Profile.datasetsAsTaskAuthor" }),
-    lastSequence: integer({ defaultValue: 0 }),
-    messageLog: json({ defaultValue: [] }),
-    runtimeData: json({ defaultValue: [] }),
     testVersion: text(),
     study: relationship({
       ref: "Study.datasets",

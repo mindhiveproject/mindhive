@@ -372,16 +372,6 @@
 	"reviewed": {
 		"menuTitle": "Beoordeeld"
 	},
-	"runtime": {
-		"configurationError": "",
-		"jsPsychFrameTitle": "",
-		"jsPsychShellLoading": "",
-		"jsPsychShellReady": "",
-		"loadingLabJs": "",
-		"loadingLabJsDescription": "",
-		"p5Shell": "",
-		"starting": ""
-	},
 	"save": "Redden",
 	"searchMembers": {
 		"admin": "Beheerder",

@@ -51,7 +51,6 @@ import { TicketAnnotation } from "./schemas/TicketAnnotation";
 import { SurfaceDesign } from "./schemas/SurfaceDesign";
 import { Datasource } from "./schemas/Datasource";
 import { Visual } from "./schemas/YQVisual";
-import { JsPsychExperiment } from "./schemas/JsPsychExperiment";
 import { Friendship } from "./schemas/YQFriendship";
 import { YQGenAI } from "./schemas/YQGenAI";
 import { YQTag } from "./schemas/YQTag";
@@ -134,7 +133,6 @@ export const lists: Lists = {
   SurfaceDesign,
   Datasource,
   Visual,
-  JsPsychExperiment,
   Friendship,
   YQTag,
   YQGenAI,

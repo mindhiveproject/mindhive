@@ -372,16 +372,6 @@
 	"reviewed": {
 		"menuTitle": "Revisado"
 	},
-	"runtime": {
-		"configurationError": "",
-		"jsPsychFrameTitle": "",
-		"jsPsychShellLoading": "",
-		"jsPsychShellReady": "",
-		"loadingLabJs": "",
-		"loadingLabJsDescription": "",
-		"p5Shell": "",
-		"starting": ""
-	},
 	"save": "Salvar",
 	"searchMembers": {
 		"admin": "Administrador",
