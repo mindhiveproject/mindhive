@@ -258,16 +258,13 @@ export default function useDatasourceData({ datasource, user }) {
       }
 
       const studyObj = studyData?.study || {};
-      const studyDatasets = studyObj?.datasets || [];
-      const includedTokens = studyDatasets
-        .filter((d) => d?.isIncluded)
-        .map((d) => d?.token);
+      const includedDatasets =
+        studyObj?.datasets?.filter((d) => d?.isIncluded).map((d) => d?.token) ||
+        [];
       const summaryResults =
         studyObj?.summaryResults?.filter((s) =>
-          includedTokens.includes(s?.metadataId)
+          includedDatasets.includes(s?.metadataId)
         ) || [];
-      const emptyReason =
-        includedTokens.length === 0 ? "noneIncluded" : null;
 
       const components = [];
       const findComponents = ({ flow, conditionLabel }) => {
@@ -317,15 +314,7 @@ export default function useDatasourceData({ datasource, user }) {
         modifiedSettings,
       });
 
-      return {
-        data,
-        variables,
-        settings,
-        components,
-        loading: false,
-        error: null,
-        emptyReason: data?.length ? null : emptyReason || "empty",
-      };
+      return { data, variables, settings, components, loading: false, error: null };
     }
 
     if (isUploadLike) {
@@ -401,7 +390,6 @@ export default function useDatasourceData({ datasource, user }) {
         components: [],
         loading: false,
         error: null,
-        emptyReason: data?.length ? null : "empty",
       };
     }
 

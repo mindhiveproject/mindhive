@@ -7,7 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import DataUsageForParticipant from "./DataUsage/Participant";
 import DataUsageForStudent from "./DataUsage/Student";
 
-import { UPDATE_RUN_DATA_POLICY } from "../../../Mutations/Runtime";
+import { UPDATE_DATASET } from "../../../Mutations/Dataset";
 import { UPDATE_GUEST_STUDY_INFO } from "../../../Mutations/Guest";
 import { UPDATE_USER_STUDY_INFO } from "../../../Mutations/User";
 
@@ -23,7 +23,7 @@ export default function Prompt({
   currentStep,
   nextStep,
   closePrompt,
-  runToken,
+  token,
 }) {
   const router = useRouter();
   const { t } = useTranslation('common');
@@ -63,7 +63,7 @@ export default function Prompt({
     ],
   });
 
-  const [updateRunDataPolicy] = useMutation(UPDATE_RUN_DATA_POLICY, {
+  const [updateDataset] = useMutation(UPDATE_DATASET, {
     ignoreResults: true,
   });
 
@@ -103,9 +103,7 @@ export default function Prompt({
     }
 
     // save responses by updating the dataset
-    await updateRunDataPolicy({
-      variables: { runToken, dataPolicy: dataUse || "UNSPECIFIED" },
-    });
+    await updateDataset({ variables: { token: token, dataPolicy: dataUse } });
 
     // proceed to the next task or to the main page
     if (proceedToNextTask) {

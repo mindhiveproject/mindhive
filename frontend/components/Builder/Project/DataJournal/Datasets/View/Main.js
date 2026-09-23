@@ -42,14 +42,12 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
     components: fetchedComponents = [],
     loading: fetchLoading,
     error: fetchError,
-    emptyReason: fetchedEmptyReason,
   } = useDatasourceData({ datasource: dataset, user: effectiveUser });
 
   const [data, setData] = useState([]);
   const [variables, setVariables] = useState([]);
   const [settings, setSettings] = useState({ filter: {} });
   const [components, setComponents] = useState([]);
-  const [emptyReason, setEmptyReason] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copyModalOpen, setCopyModalOpen] = useState(false);
@@ -80,7 +78,6 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
     setVariables(fetchedVariables);
     setSettings(fetchedSettings);
     setComponents(Array.isArray(fetchedComponents) ? fetchedComponents : []);
-    setEmptyReason(fetchedEmptyReason || null);
     setHydratedForId(dataset?.id ?? null);
     setLoading(false);
   }, [
@@ -89,7 +86,6 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
     fetchedVariables,
     fetchedSettings,
     fetchedComponents,
-    fetchedEmptyReason,
     fetchLoading,
     hydratedForId,
   ]);
@@ -227,28 +223,16 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
 
   const gridReadOnly = writeMode === "readOnly";
   const awaitingInitialHydration = hydratedForId !== dataset?.id;
-  const isGridEmpty = !data?.length;
 
   if ((loading || fetchLoading) && awaitingInitialHydration) {
-    return (
-      <div>
-        {t("dataJournal.datasets.view.loading", {}, {
-          default: "Loading dataset…",
-        })}
-      </div>
-    );
+    return <div>Loading dataset...</div>;
   }
-  if (error || fetchError) {
+  if (error || fetchError)
     return (
       <div style={{ color: "red" }}>
-        {t(
-          "dataJournal.datasets.view.error",
-          { message: error?.message || fetchError?.message },
-          { default: "Error: {{message}}" },
-        )}
+        Error: {error?.message || fetchError?.message}
       </div>
     );
-  }
 
   return (
     <StyledDatasetView>
@@ -272,33 +256,13 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
         </div>
 
         <div className="right-panel">
-          {isGridEmpty ? (
-            <div className="datasetEmpty">
-              <p className="datasetEmptyTitle">
-                {t("dataJournal.datasets.view.empty.title", {}, {
-                  default: "This dataset is empty",
-                })}
-              </p>
-              <p className="datasetEmptyBody">
-                {emptyReason === "noneIncluded"
-                  ? t("dataJournal.datasets.view.empty.noneIncluded", {}, {
-                      default:
-                        "No participants are included in the analysis yet. Include them in Test & Collect, then return here.",
-                    })
-                  : t("dataJournal.datasets.view.empty.generic", {}, {
-                      default: "There are no rows to display.",
-                    })}
-              </p>
-            </div>
-          ) : (
-            <Table
-              data={data}
-              variables={variables}
-              settings={settings}
-              updateDataset={updateDataset}
-              readOnly={gridReadOnly}
-            />
-          )}
+          <Table
+            data={data}
+            variables={variables}
+            settings={settings}
+            updateDataset={updateDataset}
+            readOnly={gridReadOnly}
+          />
         </div>
       </div>
     </StyledDatasetView>
