@@ -116,7 +116,7 @@ export default function Navigation({
     navState === "icons" || (navState === "compact" && tab !== key);
 
   return (
-    <div className="navigation">
+    <div className="navigation navigationUnified">
       <IconButton
         variant="subtle"
         elevated={false}

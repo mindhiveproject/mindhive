@@ -1,4 +1,5 @@
 const STORAGE_PREFIX = "mindhive.classPrefs.";
+// Per-class localStorage: page, dashboard, matchingRound, tables.
 
 function storageKey(classId) {
   return `${STORAGE_PREFIX}${classId}`;
@@ -42,6 +43,14 @@ export function writeClassPrefs(classId, patch) {
       };
     } else {
       next.matchingRound = current.matchingRound || {};
+    }
+    if (patch.tables) {
+      next.tables = {
+        ...(current.tables || {}),
+        ...patch.tables,
+      };
+    } else {
+      next.tables = current.tables || {};
     }
     window.localStorage.setItem(storageKey(classId), JSON.stringify(next));
   } catch {
@@ -96,6 +105,53 @@ export function writeClassMatchingRoundPanelPref(classId, roundId, panel) {
     matchingRound: {
       panelByRoundId: {
         [roundId]: panel,
+      },
+    },
+  });
+}
+
+export function readClassTablePrefs(classId, tableId) {
+  if (!classId || !tableId) return null;
+  const table = readClassPrefs(classId)?.tables?.[tableId];
+  if (!table || typeof table !== "object") return null;
+  const columnState = Array.isArray(table.columnState) ? table.columnState : null;
+  const filterModel =
+    table.filterModel &&
+    typeof table.filterModel === "object" &&
+    !Array.isArray(table.filterModel)
+      ? table.filterModel
+      : null;
+  const pageSize =
+    typeof table.pageSize === "number" &&
+    Number.isFinite(table.pageSize) &&
+    table.pageSize > 0
+      ? table.pageSize
+      : null;
+  if (!columnState && !filterModel && !pageSize) return null;
+  return { columnState, filterModel, pageSize };
+}
+
+export function writeClassTablePrefs(classId, tableId, state) {
+  if (!classId || !tableId || typeof tableId !== "string" || !state) return;
+  const columnState = Array.isArray(state.columnState) ? state.columnState : [];
+  const filterModel =
+    state.filterModel &&
+    typeof state.filterModel === "object" &&
+    !Array.isArray(state.filterModel)
+      ? state.filterModel
+      : {};
+  const pageSize =
+    typeof state.pageSize === "number" &&
+    Number.isFinite(state.pageSize) &&
+    state.pageSize > 0
+      ? state.pageSize
+      : undefined;
+  writeClassPrefs(classId, {
+    tables: {
+      [tableId]: {
+        columnState,
+        filterModel,
+        ...(pageSize != null ? { pageSize } : {}),
       },
     },
   });

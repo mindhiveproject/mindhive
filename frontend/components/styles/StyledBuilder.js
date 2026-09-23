@@ -10,7 +10,10 @@ export const StyledBuilderArea = styled.div`
   display: grid;
   height: 100vh;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   grid-template-rows: auto 1fr;
+  overflow-x: hidden;
   .newProject {
     background: #f7f9f8;
     display: grid;
@@ -214,6 +217,51 @@ export const StyledBuilderArea = styled.div`
   }
   .navigation {
     display: grid;
+    &.navigationUnified {
+      display: flex;
+      align-items: center;
+      column-gap: 20px;
+      padding: 8px 8px 8px 16px;
+      min-height: 55px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+
+      .navTitle {
+        flex: 0 1 auto;
+        min-width: 0;
+        max-width: 25%;
+        overflow: hidden;
+      }
+      span.studyTitle {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+        font: var(--MH-Type-Title-Large);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        text-align: left;
+      }
+      .builderNavbar {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 0 8px;
+        overflow: hidden;
+      }
+      .right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 0 0 auto;
+      }
+    }
     .on {
     }
     .off {

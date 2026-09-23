@@ -46,6 +46,7 @@ import {
   readClassPrefs,
   writeClassDashboardPrefs,
 } from "../classPagePrefs";
+import { useClassTablePrefs } from "../useClassTablePrefs";
 
 const CELL_ALIGN = {
   display: "flex",
@@ -560,6 +561,12 @@ export default function Dashboard({ myclass }) {
     []
   );
 
+  const tablePrefs = useClassTablePrefs(
+    myclass?.id,
+    `dashboard.${selectedMilestone?.key || DASHBOARD_PROJECTS_CARD_KEY}`,
+    { fitToWidth: false }
+  );
+
   const statusManagerValue = statusRow?.milestoneStatusValue;
   const statusManagerOpen = Boolean(statusRow && selectedMilestone);
   const showCards = Boolean(selectedBoardId) && milestonesReady;
@@ -766,6 +773,7 @@ export default function Dashboard({ myclass }) {
           onSelectionChanged={(event) => {
             setSelectedStudents(event.api.getSelectedRows());
           }}
+          {...tablePrefs}
         />
       </div>
     </StyledDashboard>
