@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Icon } from "semantic-ui-react";
 
 import { saveAs } from "file-saver";
-import { jsonToCSV } from "react-papaparse";
+import csvWithPlainNumbers from "../../../../../lib/csvWithPlainNumbers";
 import useTranslation from "next-translate/useTranslation";
 
 import buildAggregateColumns from "../../../../../lib/yqParticipantAggregates";
@@ -67,7 +67,7 @@ export default function DownloadRawData({
       .map((line) => Object.keys(line))
       .reduce((a, b) => a.concat(b), []);
     const keys = Array.from(new Set(allKeys));
-    const csv = jsonToCSV({ fields: keys, data: rows });
+    const csv = csvWithPlainNumbers({ fields: keys, data: rows });
     const blob = new Blob([csv], {
       type: "text/csv",
     });

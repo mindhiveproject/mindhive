@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Dropdown, Icon } from "semantic-ui-react";
 
 import { saveAs } from "file-saver";
-import { jsonToCSV } from "react-papaparse";
+import csvWithPlainNumbers from "../../../../../lib/csvWithPlainNumbers";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
@@ -139,7 +139,7 @@ export default function DownloadByComponent({
       .map((line) => Object.keys(line))
       .reduce((a, b) => a.concat(b), []);
     const keys = Array.from(new Set(allKeys));
-    const csv = jsonToCSV({ fields: keys, data });
+    const csv = csvWithPlainNumbers({ fields: keys, data });
     const blob = new Blob([csv], {
       type: "text/csv",
     });

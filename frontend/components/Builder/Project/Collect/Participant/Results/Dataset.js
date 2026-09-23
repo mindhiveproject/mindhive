@@ -5,7 +5,7 @@ import { Icon } from "semantic-ui-react";
 import useSWR from "swr";
 
 import { saveAs } from "file-saver";
-import { jsonToCSV } from "react-papaparse";
+import csvWithPlainNumbers from "../../../../../../lib/csvWithPlainNumbers";
 import ChangeDatasetStatus from "./ChangeStatus";
 import DeleteRecord from "./DeleteRecord";
 import useTranslation from "next-translate/useTranslation";
@@ -179,7 +179,7 @@ export default function Dataset({
       }
       return newRow;
     });
-    const csv = jsonToCSV({ fields: keys, data: processedRows });
+    const csv = csvWithPlainNumbers({ fields: keys, data: processedRows });
     const blob = new Blob([csv], { type: "text/csv" });
     saveAs(blob, `${token}.csv`);
   };
