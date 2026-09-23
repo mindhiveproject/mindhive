@@ -7,6 +7,7 @@ import Widget from "./Widget";
 import Menu from "./Menu";
 import Component from "./Component/Main";
 import DataSources from "./DataSources/Main";
+import DataSourceSettings from "./DataSources/Settings";
 import TaskPreview from "../../../Tasks/Preview/Main";
 
 import { StyledCanvasBuilder } from "../../../styles/StyledBuilder";
@@ -60,6 +61,9 @@ export default function Builder({
   const physiologicalDataEnabled = (classesData?.classes || []).some(
     (cl) => cl?.settings?.physiologicalDataEnabled === true
   );
+  // "default" shows the Menu tabs; "block" and "dataSource" swap in a detail
+  // panel for the selected block or linked data source (Menu stays mounted,
+  // just hidden, so its tab survives the round trip).
   const [sidepanelMode, setSidepanelMode] = useState("default");
 
   if (isCanvasLocked && engine?.getModel()) {
@@ -79,6 +83,7 @@ export default function Builder({
     setIsEditorOpen(!!isEditorOpen);
     setComponentId(node?.options?.componentID);
     if (isInfoOpen || isEditorOpen) {
+      setDataSourceSettingsId(null);
       setSidepanelMode("block");
     }
   };
@@ -88,6 +93,17 @@ export default function Builder({
     setIsInfoOpen(false);
     setIsEditorOpen(false);
     setIsPreviewOpen(false);
+    setSidepanelMode("default");
+  };
+
+  const openDataSourceSettings = (id) => {
+    closeComponentModal();
+    setDataSourceSettingsId(id);
+    setSidepanelMode("dataSource");
+  };
+
+  const closeDataSourceSettings = () => {
+    setDataSourceSettingsId(null);
     setSidepanelMode("default");
   };
 
@@ -223,7 +239,7 @@ export default function Builder({
         >
           <div
             className="sidepanelDefaultHost"
-            hidden={sidepanelMode === "block"}
+            hidden={sidepanelMode !== "default"}
           >
             <Menu
               user={user}
@@ -254,13 +270,21 @@ export default function Builder({
               persistStudy={persistStudy}
             />
           )}
+          {sidepanelMode === "dataSource" && dataSourceSettingsId && (
+            <DataSourceSettings
+              key={dataSourceSettingsId}
+              study={study}
+              studyDataSourceId={dataSourceSettingsId}
+              onClose={closeDataSourceSettings}
+            />
+          )}
         </div>
         {physiologicalDataEnabled && (
           <DataSources
             study={study}
             user={user}
             dataSourceSettingsId={dataSourceSettingsId}
-            onOpenSettings={setDataSourceSettingsId}
+            onOpenSettings={openDataSourceSettings}
           />
         )}
         <div className="boardTopActions">

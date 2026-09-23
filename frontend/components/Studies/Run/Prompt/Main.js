@@ -115,9 +115,10 @@ export default function Prompt({
 
       // Both exits below destroy the page, and with it the recorder holding
       // this task's data source aggregates — store them before leaving rather
-      // than relying on the pagehide backstop.
+      // than relying on the pagehide backstop. Leaving the study also shuts the
+      // live sources down now; between tasks they stay up until the reload.
       if (flushDataSources) {
-        await flushDataSources();
+        await flushDataSources({ release: !proceedToNextTask });
       }
     } catch (error) {
       console.error("Could not save the responses before leaving", error);

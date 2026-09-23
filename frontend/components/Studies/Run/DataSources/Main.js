@@ -180,13 +180,23 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gatePassed, currentStepId]);
 
+  // Set once the participant is leaving the study: unmounts every
+  // SourceRuntime, whose cleanup closes the devices, camera and pipelines, so
+  // they stop competing with the exit for the main thread.
+  const [released, setReleased] = useState(false);
+
   // Closes the recorder and resolves once its aggregates have been stored.
   // Idempotent — `stop()` clears `running`, so whichever exit path reaches it
-  // first wins and the others become no-ops.
+  // first wins and the others become no-ops. `release: true` also shuts the
+  // live sources down; the recorder is stopped synchronously first, so this
+  // doesn't wait on the save.
   const flush = useCallback(
     (options) => {
-      if (!recorderRef.current.running) return Promise.resolve();
-      return saveSnapshot(recorderRef.current.stop(), options);
+      const saved = recorderRef.current.running
+        ? saveSnapshot(recorderRef.current.stop(), options)
+        : Promise.resolve();
+      if (options?.release) setReleased(true);
+      return saved;
     },
     [saveSnapshot]
   );
@@ -234,9 +244,10 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
 
   return (
     <DataSourceFlushContext.Provider value={flush}>
-      {activeRows.map((row) => (
-        <SourceRuntime key={row.id} row={row} onStatus={onStatus} />
-      ))}
+      {!released &&
+        activeRows.map((row) => (
+          <SourceRuntime key={row.id} row={row} onStatus={onStatus} />
+        ))}
 
       {!gatePassed ? (
         <ConnectScreen
@@ -248,6 +259,8 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
           onPreview={togglePreview}
           onLeave={() => defaultLeave(study, user)}
         />
+      ) : released ? (
+        children
       ) : (
         <>
           <StatusBar
@@ -261,7 +274,7 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
         </>
       )}
 
-      {previewRow && apis[previewRow.id] && canViewSignal(previewRow) && (
+      {!released && previewRow && apis[previewRow.id] && canViewSignal(previewRow) && (
         <PreviewPanel row={previewRow} api={apis[previewRow.id]} onClose={() => setPreviewRowId(null)} />
       )}
     </DataSourceFlushContext.Provider>

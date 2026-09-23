@@ -170,6 +170,12 @@ const nextConfig = {
         "lib/maplibreGlPlotlyCssNoop.js",
       ),
     };
+    // face-api (pulled in by yq-data) has a Node-only `require` branch webpack
+    // can't analyse; harmless in the browser, but it's logged on every compile.
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      { module: /@vladmandic\/face-api/ },
+    ];
     return config;
   },
   i18n: {

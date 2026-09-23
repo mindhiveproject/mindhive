@@ -4,7 +4,6 @@ import useTranslation from "next-translate/useTranslation";
 import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import ComponentSelector from "./Selector/Main";
 import StudySettings from "./Settings/Main";
-import DataSourceSettingsTab from "./DataSources/SettingsTab";
 import StudyTasks from "../../../Dashboard/Review/Board/StudyOverview/StudyTasks";
 
 const ICON_MASK = (src) => ({
@@ -34,45 +33,9 @@ export default function Menu({
   handleChange,
   handleMultipleUpdate,
   hasStudyChanged,
-  dataSourceSettingsId,
-  onCloseDataSourceSettings,
 }) {
   const { t } = useTranslation("builder");
   const [tab, setTab] = useState("addBlock");
-
-  const dataSourceOpen = Boolean(dataSourceSettingsId);
-
-  // Opening a data source's settings (from the persistent panel or the link
-  // modal's gear icon) doesn't add a tab to this bar — the settings tab has
-  // its own close button, so this bar just steps aside. Closing it returns
-  // to whichever of the three regular tabs was showing before, since `tab`
-  // was never touched.
-  const closeDataSourceTab = () => onCloseDataSourceSettings?.();
-
-  // The navbar has three responsive states, driven by how much room the
-  // widened sidepanel has for the labels:
-  //   "full"    – every item shows its label
-  //   "compact" – only the selected item shows its label; the rest are icons
-  //   "icons"   – every item is an icon, with the label on hover
-  // Always exactly 3 items (data source mode swaps the whole row out instead
-  // of adding a 4th), so these breakpoints are fixed.
-  const [navState, setNavState] = useState("full");
-  useEffect(() => {
-    const fitsAll = window.matchMedia("(min-width: 1121px)");
-    const fitsOne = window.matchMedia("(min-width: 761px)");
-    const sync = () => {
-      if (fitsAll.matches) setNavState("full");
-      else if (fitsOne.matches) setNavState("compact");
-      else setNavState("icons");
-    };
-    sync();
-    fitsAll.addEventListener("change", sync);
-    fitsOne.addEventListener("change", sync);
-    return () => {
-      fitsAll.removeEventListener("change", sync);
-      fitsOne.removeEventListener("change", sync);
-    };
-  }, []);
 
   const labels = {
     addBlock: t("menu.addBlock", {}, { default: "Add a block" }),
@@ -110,86 +73,74 @@ export default function Menu({
 
   return (
     <>
-      {!dataSourceOpen && (
-        <div className="sidepanelNavbar" ref={navRef}>
-          <Navbar variant="underline">
-            <NavbarItem
-              selected={tab === "addBlock"}
-              collapsed={isItemCollapsed("addBlock")}
-              onClick={() => setTab("addBlock")}
-              leadingIcon={
-                isItemCollapsed("addBlock") ? <MediumIcon src="/assets/icons/builder/medium-add.svg" /> : undefined
+      <div className="sidepanelNavbar" ref={navRef}>
+        <Navbar variant="underline">
+          <NavbarItem
+            selected={tab === "addBlock"}
+            collapsed={isItemCollapsed("addBlock")}
+            onClick={() => setTab("addBlock")}
+            leadingIcon={
+              isItemCollapsed("addBlock") ? <MediumIcon src="/assets/icons/builder/medium-add.svg" /> : undefined
          
-              }
-              tooltipContent={
-                isItemCollapsed("addBlock") ? labels.addBlock : undefined
-              }
-              id="addBlock"
-            >
-              {labels.addBlock}
-            </NavbarItem>
-            <NavbarItem
-              selected={tab === "flow"}
-              collapsed={isItemCollapsed("flow")}
-              onClick={() => setTab("flow")}
-              leadingIcon={
-                isItemCollapsed("flow") ? <MediumIcon src="/assets/icons/builder/medium-study-flow.svg" /> : undefined
-              }
-              tooltipContent={isItemCollapsed("flow") ? labels.flow : undefined}
-              id="flow"
-            >
-              {labels.flow}
-            </NavbarItem>
-            <NavbarItem
-              selected={tab === "study"}
-              collapsed={isItemCollapsed("study")}
-              onClick={() => setTab("study")}
-              leadingIcon={
-                isItemCollapsed("study") ? <MediumIcon src="/assets/icons/builder/medium-settings.svg" /> : undefined
-              }
-              tooltipContent={isItemCollapsed("study") ? labels.study : undefined}
-              id="studySettings"
-            >
-              {labels.study}
-            </NavbarItem>
-          </Navbar>
+            }
+            tooltipContent={
+              isItemCollapsed("addBlock") ? labels.addBlock : undefined
+            }
+            id="addBlock"
+          >
+            {labels.addBlock}
+          </NavbarItem>
+          <NavbarItem
+            selected={tab === "flow"}
+            collapsed={isItemCollapsed("flow")}
+            onClick={() => setTab("flow")}
+            leadingIcon={
+              isItemCollapsed("flow") ? <MediumIcon src="/assets/icons/builder/medium-study-flow.svg" /> : undefined
+            }
+            tooltipContent={isItemCollapsed("flow") ? labels.flow : undefined}
+            id="flow"
+          >
+            {labels.flow}
+          </NavbarItem>
+          <NavbarItem
+            selected={tab === "study"}
+            collapsed={isItemCollapsed("study")}
+            onClick={() => setTab("study")}
+            leadingIcon={
+              isItemCollapsed("study") ? <MediumIcon src="/assets/icons/builder/medium-settings.svg" /> : undefined
+            }
+            tooltipContent={isItemCollapsed("study") ? labels.study : undefined}
+            id="studySettings"
+          >
+            {labels.study}
+          </NavbarItem>
+        </Navbar>
+      </div>
+
+      {tab === "addBlock" && (
+        <ComponentSelector
+          engine={engine}
+          user={user}
+          addFunctions={addFunctions}
+        />
+      )}
+
+      {tab === "flow" && (
+        <div className="studyFlow" id="studyFlow">
+          <StudyTasks study={study} />
         </div>
       )}
 
-      {dataSourceOpen ? (
-        <DataSourceSettingsTab
+      {tab === "study" && (
+        <StudySettings
+          engine={engine}
+          user={user}
+          addFunctions={addFunctions}
           study={study}
-          studyDataSourceId={dataSourceSettingsId}
-          onClose={closeDataSourceTab}
+          handleChange={handleChange}
+          handleMultipleUpdate={handleMultipleUpdate}
+          hasStudyChanged={hasStudyChanged}
         />
-      ) : (
-        <>
-          {tab === "addBlock" && (
-            <ComponentSelector
-              engine={engine}
-              user={user}
-              addFunctions={addFunctions}
-            />
-          )}
-
-          {tab === "flow" && (
-            <div className="studyFlow" id="studyFlow">
-              <StudyTasks study={study} />
-            </div>
-          )}
-
-          {tab === "study" && (
-            <StudySettings
-              engine={engine}
-              user={user}
-              addFunctions={addFunctions}
-              study={study}
-              handleChange={handleChange}
-              handleMultipleUpdate={handleMultipleUpdate}
-              hasStudyChanged={hasStudyChanged}
-            />
-          )}
-        </>
       )}
     </>
   );

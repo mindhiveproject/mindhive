@@ -16,9 +16,9 @@ import LinkDataSourceModal from "./LinkModal";
  * Owns the study's linked data sources end to end: the persistent bottom-left
  * panel (always visible — linking real-time devices into a study is a big
  * commitment, not something to bury in a menu tab) and the link-a-source
- * modal it opens. Settings for one linked source live in the sidebar instead
- * (see Menu.js + DataSources/SettingsTab), so opening them here just hands
- * the selection up and gets out of the way.
+ * modal it opens. Settings for one linked source live in the side panel
+ * instead (Builder.js swaps DataSources/Settings in, like a block's panel),
+ * so opening them here just hands the selection up and gets out of the way.
  */
 export default function DataSources({
   study,

@@ -738,6 +738,107 @@ export const StyledCanvasBuilder = styled.div`
       color: var(--MH-Theme-Primary-Dark, #336f8a);
     }
 
+    /* Data source settings (DataSources/Settings.js) — sits in the same
+       blockPanel shell as a block's panel. */
+    .dataSourceSettingsTitle {
+      gap: 0;
+      p {
+        margin: 0;
+      }
+    }
+
+    .dataSourceSettingsNotice {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: var(--MH-Theme-Tertiary-Light, #f6f9f8);
+      p {
+        margin: 0;
+        font: var(--MH-Type-Body-Base);
+        color: var(--MH-Theme-Tertiary-Dark, #0d3944);
+      }
+    }
+
+    .dataSourceSettingsSection {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 20px;
+      border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      p {
+        margin: 0;
+        font: var(--MH-Type-Body-Base);
+      }
+    }
+
+    .dataSourceSettingsSectionHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: left;
+      h2 {
+        margin: 0;
+        font: var(--MH-Type-Title-Base);
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+    }
+
+    .dataSourceSettingsChevron {
+      display: flex;
+    }
+
+    .dataSourceSettingsChevron--open {
+      transform: rotate(180deg);
+    }
+
+    .dataSourceSettingsToggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dataSourceSettingsToggleText {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .dataSourceSettingsRecord {
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--MH-Theme-Neutrals-Light-Green, #f6f9f8);
+    }
+
+    .dataSourceSettingsChips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .dataSourceSettingsField {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .dataSourceSettingsFieldRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      p {
+        flex-shrink: 0;
+      }
+    }
+
     .studyFlow {
       margin: 0;
       padding: 0;
