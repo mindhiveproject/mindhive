@@ -2189,7 +2189,9 @@
 			"title": "Basic Blocks"
 		},
 		"filter": {
+			"all": "All",
 			"createdByAnyone": "All blocks",
+			"favorite": "Favorite",
 			"myFavorite": "My favorite",
 			"ownedByMe": "Owned by me"
 		},
@@ -2197,6 +2199,7 @@
 		"previewAria": "Preview block",
 		"removeFavoriteAria": "Remove from favorites",
 		"searchPlaceholder": "Search for blocks",
+		"sectionTabs": "Block types",
 		"studyDesign": {
 			"betweenSubjects": "Between-subjects design",
 			"conditionProbabilityInfo": "The probability that a participant is in this between-subjects condition (based on a simulated run of the study for 100 times).",
