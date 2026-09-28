@@ -11,11 +11,11 @@ function createClient({ initialState }) {
     // the server is meant to render now that getDataFromTree is gone.
     ssrMode: typeof window === "undefined",
     link: ApolloLink.from([
-      onError(({ graphQLErrors, networkError }) => {
+      onError(({ graphQLErrors, networkError, operation }) => {
         if (graphQLErrors)
           graphQLErrors.forEach(({ message, locations, path }) =>
             console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+              `[GraphQL error]: Operation: ${operation?.operationName}, Message: ${message}, Location: ${JSON.stringify(locations)}, Path: ${path}`
             )
           );
         if (networkError)
