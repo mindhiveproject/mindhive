@@ -1,7 +1,7 @@
 // Grants `canManageTickets` to the permission rows that should triage tickets.
 //
 // The flag ships defaulting to false so no existing role gains anything on
-// deploy. This turns it on for ADMIN, reproducibly, so dev / staging /
+// deploy. This turns it on for ADMIN and TESTER, reproducibly, so dev / staging /
 // production end up in the same state without anyone remembering to tick a box
 // in the Admin UI three times.
 //
@@ -11,7 +11,7 @@
 // something stronger than the right being granted.
 
 /** Rows that should be able to file and triage. Add to this list and re-run. */
-const ROLES_THAT_TRIAGE = ["ADMIN"];
+const ROLES_THAT_TRIAGE = ["ADMIN", "TESTER"];
 
 async function backfillTicketPermissions(
   root: any,

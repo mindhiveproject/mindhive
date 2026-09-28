@@ -151,7 +151,13 @@ export default function TicketOverlay() {
   const [thumbUrl, setThumbUrl] = useState(null);
 
   const canManageTickets = useMemo(
-    () => !!user?.permissions?.some((permission) => permission?.canManageTickets),
+    () =>
+      !!user?.permissions?.some(
+        (permission) =>
+          permission?.canManageTickets ||
+          permission?.name === "ADMIN" ||
+          permission?.name === "TESTER"
+      ),
     [user]
   );
 

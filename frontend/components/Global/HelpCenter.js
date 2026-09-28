@@ -124,7 +124,12 @@ export default function HelpCenter() {
         // capability flag, which is what the backend actually enforces on the
         // Ticket list. `canView` is honoured by the filter below.
         canView: (viewer) =>
-          !!viewer?.permissions?.some((permission) => permission?.canManageTickets),
+          !!viewer?.permissions?.some(
+            (permission) =>
+              permission?.canManageTickets ||
+              permission?.name === "ADMIN" ||
+              permission?.name === "TESTER"
+          ),
       },
       {
         icon: '/assets/helpCenter/aichat.svg',
