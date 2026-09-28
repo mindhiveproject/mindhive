@@ -942,9 +942,6 @@ export const GET_PROJECT_STUDY = gql`
         consent {
           id
         }
-        talks {
-          id
-        }
         diagram
         components
         flow

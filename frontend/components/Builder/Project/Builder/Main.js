@@ -16,7 +16,7 @@ import { builderHref, isProjectArea } from "../../shared/identity";
 import Router, { BuilderLoading } from "./Router";
 import { builderTours } from "./tours";
 
-export default function Builder({ query, user, tab, toggleSidebar }) {
+export default function Builder({ query, user, tab }) {
   const { t } = useTranslation("builder");
   const router = useRouter();
   const { area } = query;
@@ -280,7 +280,6 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
       handleChange={handleChange}
       handleMultipleUpdate={handleMultipleUpdate}
       saveStudy={saveStudy}
-      toggleSidebar={toggleSidebar}
     />
   );
 }

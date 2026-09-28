@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import { Sidebar } from "semantic-ui-react";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 
@@ -12,7 +11,7 @@ import { projectBoardTours } from "./tours";
 
 import { StyledProposal } from "../../../styles/StyledProposal";
 
-const ProjectBoardShell = styled(Sidebar.Pushable)`
+const ProjectBoardShell = styled.div`
   display: flex;
   flex-direction: column;
   grid-row: 1 / -1;
@@ -32,7 +31,7 @@ const ProjectBoardShell = styled(Sidebar.Pushable)`
   }
 `;
 
-export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
+export default function ProjectBoard({ query, user, tab }) {
   const proposalId = query?.selector;
   const cardId = query?.card;
 
@@ -147,7 +146,6 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
             query={query}
             user={user}
             tab={tab}
-            toggleSidebar={toggleSidebar}
           />
           <StyledProposal
             className="projectsBoardEditorProposal"

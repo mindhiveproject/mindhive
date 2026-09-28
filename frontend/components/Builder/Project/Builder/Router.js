@@ -45,7 +45,6 @@ export default function Router({
   handleChange,
   handleMultipleUpdate,
   saveStudy,
-  toggleSidebar,
 }) {
   return (
     <BrowserEngine
@@ -57,7 +56,6 @@ export default function Router({
       handleChange={handleChange}
       handleMultipleUpdate={handleMultipleUpdate}
       saveStudy={saveStudy}
-      toggleSidebar={toggleSidebar}
     />
   );
 }

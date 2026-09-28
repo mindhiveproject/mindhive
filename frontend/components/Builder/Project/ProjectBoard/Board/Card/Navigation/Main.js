@@ -12,7 +12,6 @@ export default function Navigation({
   tab,
   user,
   saveBtnFunction,
-  toggleSidebar,
   hasContentChanged,
   cardId,
   onUpdateCard,

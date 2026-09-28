@@ -113,7 +113,6 @@ export default function IndividualCard({
         query={query}
         user={user}
         tab={tab}
-        toggleSidebar={() => {}}
         proposalId={proposalId}
         cardId={cardId}
         saveBtnFunction={() => {

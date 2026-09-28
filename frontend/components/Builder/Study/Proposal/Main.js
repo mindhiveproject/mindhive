@@ -1,13 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Sidebar } from "semantic-ui-react";
 
 import Navigation from "../../Project/Navigation/Main";
 import ProposalWrapper from "./Wrapper";
 
 import { StyledProposal } from "../../../styles/StyledProposal";
 
-const StudyBoardShell = styled(Sidebar.Pushable)`
+const StudyBoardShell = styled.div`
   display: flex;
   flex-direction: column;
   grid-row: 1 / -1;
@@ -29,7 +28,7 @@ const StudyBoardShell = styled(Sidebar.Pushable)`
   }
 `;
 
-export default function Proposal({ query, user, tab, toggleSidebar }) {
+export default function Proposal({ query, user, tab }) {
   const [connectModalOpen, setConnectModalOpen] = useState(false);
 
   return (
@@ -38,7 +37,6 @@ export default function Proposal({ query, user, tab, toggleSidebar }) {
         query={query}
         user={user}
         tab={tab}
-        toggleSidebar={toggleSidebar}
         connectModalOpen={connectModalOpen}
         onConnectModalOpenChange={setConnectModalOpen}
       />

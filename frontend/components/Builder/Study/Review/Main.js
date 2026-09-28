@@ -7,7 +7,7 @@ import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 
 import { StyledReviewPage } from "../../../styles/StyledReview";
 
-export default function Review({ query, user, tab, toggleSidebar }) {
+export default function Review({ query, user, tab }) {
   const studyId = query?.selector;
 
   const { data, loading, error } = useQuery(STUDY_PROPOSALS_QUERY, {
@@ -24,7 +24,6 @@ export default function Review({ query, user, tab, toggleSidebar }) {
         query={query}
         user={user}
         tab={tab}
-        toggleSidebar={toggleSidebar}
       />
       <StyledReviewPage>
         <Proposal query={query} user={user} study={study} />

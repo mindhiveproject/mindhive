@@ -40,7 +40,6 @@ export default function Engine({
   handleChange,
   handleMultipleUpdate,
   saveStudy,
-  toggleSidebar,
 }) {
   const { t } = useTranslation("builder");
 
@@ -699,7 +698,6 @@ export default function Engine({
         tab={tab}
         saveBtnName={t("engine.save", "Save")}
         saveBtnFunction={buildStudy}
-        toggleSidebar={toggleSidebar}
         hasStudyChanged={hasStudyChanged}
         isCanvasLocked={isCanvasLocked}
       />

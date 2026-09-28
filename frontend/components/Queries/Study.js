@@ -184,9 +184,6 @@ export const MY_STUDY = gql`
       consent {
         id
       }
-      talks {
-        id
-      }
       diagram
       components
       flow
