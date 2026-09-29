@@ -68,7 +68,6 @@ export default function ProjectManager(props) {
     proposalData?.proposalBoards?.map((p) => p?.id)[0] || [];
 
   const [assignStudent] = useMutation(ASSIGN_STUDENT_TO_PROJECT, {
-    variables: { studentId: props?.data?.id },
     refetchQueries: [
       {
         query: GET_STUDENTS_DASHBOARD_DATA,
@@ -155,9 +154,8 @@ export default function ProjectManager(props) {
     }
     await assignStudent({
       variables: {
-        input: {
-          collaboratorInProposal: { connect: { id: projectId } },
-        },
+        projectId,
+        input: { connect: { id: props?.data?.id } },
       },
     });
     setProjectId(null);
@@ -166,9 +164,8 @@ export default function ProjectManager(props) {
   const disconnectFromProject = async (projectId) => {
     await assignStudent({
       variables: {
-        input: {
-          collaboratorInProposal: { disconnect: { id: projectId } },
-        },
+        projectId,
+        input: { disconnect: { id: props?.data?.id } },
       },
     });
   };

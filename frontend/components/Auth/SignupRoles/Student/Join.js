@@ -6,10 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { GET_CLASS } from "../../../Queries/Classes";
 import { GET_CLASSES } from "../../../Queries/Classes";
 
-import {
-  JOIN_CLASS_AS_STUDENT_MUTATION,
-  JOIN_CLASS_AS_MENTOR_MUTATION,
-} from "../../../Mutations/User";
+import { JOIN_CLASS_MUTATION } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { SignupForm } from "../../../styles/StyledForm";
 import Button from "../../../DesignSystem/Button";
@@ -28,10 +25,10 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
   });
 
   const [joinClassAsStudent, { loading: joinClassAsStudentLoading }] =
-    useMutation(JOIN_CLASS_AS_STUDENT_MUTATION, {
+    useMutation(JOIN_CLASS_MUTATION, {
       variables: {
-        id: user?.id,
         classCode: classCode,
+        role: "student",
       },
       refetchQueries: [
         { query: CURRENT_USER_QUERY },
@@ -47,10 +44,10 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
     });
 
   const [joinClassAsMentor, { loading: joinClassAsMentorLoading }] =
-    useMutation(JOIN_CLASS_AS_MENTOR_MUTATION, {
+    useMutation(JOIN_CLASS_MUTATION, {
       variables: {
-        id: user?.id,
         classCode: classCode,
+        role: "mentor",
       },
       refetchQueries: [{ query: CURRENT_USER_QUERY }],
     });

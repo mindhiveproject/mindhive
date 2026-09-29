@@ -41,6 +41,7 @@ import {
 import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectResolvers";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
+import joinClass from "./joinClass";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
 import recordOpportunityPreviewVisit from "./recordOpportunityPreviewVisit";
 import toggleFavoriteOpportunity from "./toggleFavoriteOpportunity";
@@ -265,6 +266,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite(inviteId: ID!): NetworkInvite
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
+        # Join a class by code as "student" or "mentor"; grants the matching role.
+        joinClass(classCode: String!, role: String!): Profile
         # Connect the session user to OpportunityReviewNote.readBy for
         # notes they can see. Needed because list update is author-only.
         markOpportunityReviewNotesRead(noteIds: [ID!]!): [OpportunityReviewNote!]!
@@ -594,6 +597,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite,
         followUser,
         unfollowUser,
+        joinClass,
         markOpportunityReviewNotesRead,
         recordOpportunityPreviewVisit,
         toggleFavoriteOpportunity,

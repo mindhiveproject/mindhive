@@ -60,7 +60,10 @@ export const Profile = list({
       // is human and then create with sudo. Leaving this open let bots POST
       // straight to /api/graphql and skip the signup UI entirely.
       create: ({ session }) => permissions.canManageUsers({ session }),
-      update: () => true,
+      // Only the profile owner or a user admin. Changes to other people's
+      // class/project memberships go through the Class / ProposalBoard side
+      // or sudo custom mutations (e.g. joinClass).
+      update: rules.canManageUsers,
       delete: rules.canManageUsers,
     },
   },
@@ -124,6 +127,12 @@ export const Profile = list({
     permissions: relationship({
       ref: "Permission.assignedTo",
       many: true,
+      // Role grants are admin-only. Signup, joinClass and teaching-team hooks
+      // assign roles through sudo.
+      access: {
+        create: ({ session }) => permissions.canManageUsers({ session }),
+        update: ({ session }) => permissions.canManageUsers({ session }),
+      },
     }),
     info: json(),
     generalInfo: json(),
@@ -136,7 +145,7 @@ export const Profile = list({
       access: {
         read: () => true,
         create: () => true,
-        update: () => true,
+        update: rules.canManageUsers,
       },
     }),
     facebook: text(),
@@ -168,7 +177,16 @@ export const Profile = list({
       many: true,
     }),
     teacherIn: relationship({ ref: "Class.creator", many: true }),
-    teachingTeamIn: relationship({ ref: "Class.teachingTeam", many: true }),
+    // Joining a teaching team grants the TEACHER role (see afterOperation), so
+    // it is not self-service here; class staff add co-teachers via Class.
+    teachingTeamIn: relationship({
+      ref: "Class.teachingTeam",
+      many: true,
+      access: {
+        create: ({ session }) => permissions.canManageUsers({ session }),
+        update: ({ session }) => permissions.canManageUsers({ session }),
+      },
+    }),
     mentorIn: relationship({ ref: "Class.mentors", many: true }),
     studentIn: relationship({ ref: "Class.students", many: true }),
     classNetworksCreated: relationship({

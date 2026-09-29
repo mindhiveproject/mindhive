@@ -19,8 +19,8 @@ async function googleLogin(
   });
   const payload = await ticket.getPayload();
   const { email } = payload;
-  // update a profile with the new password
-  const profile = await context.db.Profile.updateOne({
+  // update a profile with the new password (sudo: caller has no session yet)
+  const profile = await context.sudo().db.Profile.updateOne({
     where: { email: email?.toLowerCase().trim() },
     data: { password: token },
   });
