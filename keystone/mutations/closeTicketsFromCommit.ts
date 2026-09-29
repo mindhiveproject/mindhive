@@ -11,6 +11,16 @@ import { createHash, timingSafeEqual } from "node:crypto";
 //
 //     Fixes-Ticket: cmf3x9k2p0001
 //
+// The id on its own counts too, anywhere in the message, because that is how
+// people write it once the ceremony wears off:
+//
+//     (ticket) centred the Connect grid (cmf3x9k2p0001)
+//
+// So naming a ticket in a commit on the default branch marks it Shipped. That
+// is deliberate: a ticket closed early is one status click from being open
+// again, while a board that only closes for people who remember a special
+// syntax goes back to being tidied by hand — the thing this exists to end.
+//
 // Called by .github/workflows/close-tickets.yml on push to the default branch.
 //
 // AUTHENTICATION
@@ -39,6 +49,15 @@ const CLOSEABLE = ["OPEN", "ACCEPTED", "IN_PROGRESS"];
 /** `Fixes-Ticket: <id>` — one per line, case-insensitive on the key. */
 const TRAILER = /^\s*Fixes-Ticket:\s*([A-Za-z0-9_-]+)\s*$/gim;
 
+/**
+ * A ticket id standing on its own anywhere in the message. Keystone ids are
+ * cuids — `c` and 24 more lowercase alphanumerics — so a token of that shape
+ * is not something a commit message says by accident, and one that belongs to
+ * no ticket is reported as skipped rather than acted on. Long hex shas do not
+ * match: the word boundary has to fall right after the 25th character.
+ */
+const BARE_ID = /\bc[a-z0-9]{24}\b/gi;
+
 function secretMatches(provided: string): boolean {
   const expected = process.env.TICKET_WEBHOOK_SECRET;
   if (!expected) return false; // fail closed
@@ -64,8 +83,12 @@ async function closeTicketsFromCommit(
   for (const commit of commits || []) {
     const message = commit?.message ?? "";
     const sha = commit?.sha ?? "unknown";
-    for (const match of message.matchAll(TRAILER)) {
-      const id = match[1];
+    // Deduped per commit: a trailer's id also matches as a bare id, and one
+    // commit should not count twice against the same ticket.
+    const named = new Set<string>();
+    for (const match of message.matchAll(TRAILER)) named.add(match[1]);
+    for (const match of message.matchAll(BARE_ID)) named.add(match[0]);
+    for (const id of named) {
       if (!requested.has(id)) requested.set(id, []);
       requested.get(id)!.push(sha);
     }

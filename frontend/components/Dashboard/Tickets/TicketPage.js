@@ -250,13 +250,22 @@ export default function TicketPage({ id }) {
         <Section>
           <h2 className="MH-Type-Title-Base">Close it from the commit that fixes it</h2>
           <TrailerRow>
+            <Trailer>{ticket.id}</Trailer>
+            <CopyButton value={ticket.id}>Copy id</CopyButton>
+          </TrailerRow>
+          <Caption>
+            Put the id anywhere in the commit message: a subject like “(ticket)
+            centred the grid ({ticket.id})” is enough. On merge to main the ticket moves to Shipped
+            here and in Notion, and the commit sha is recorded below, so the board
+            empties in step with the work rather than by hand.
+          </Caption>
+          <TrailerRow>
             <Trailer>{`Fixes-Ticket: ${ticket.id}`}</Trailer>
             <CopyButton value={`Fixes-Ticket: ${ticket.id}`}>Copy trailer</CopyButton>
           </TrailerRow>
           <Caption>
-            Paste this line into the commit message. On merge to main the ticket moves
-            to Shipped here and in Notion, and the commit sha is recorded below — so
-            the board empties in step with the work rather than by hand.
+            The explicit form, for a commit whose message would otherwise say nothing
+            about the ticket.
           </Caption>
         </Section>
       )}

@@ -5,6 +5,10 @@ name: Close tickets from commit trailers
 #
 #     Fixes-Ticket: cmf3x9k2p0001
 #
+# or by writing the ticket's id anywhere in the message:
+#
+#     (ticket) centred the Connect grid (cmf3x9k2p0001)
+#
 # Setup — two repository secrets:
 #   TICKET_BACKEND_URL     e.g. https://backend.mindhive.science/api/graphql
 #   TICKET_WEBHOOK_SECRET  the same value as the backend's env var
@@ -44,8 +48,12 @@ jobs:
           payload=$(printf '%s' "$COMMITS_JSON" | node -e '
             const fs = require("fs");
             const commits = JSON.parse(fs.readFileSync(0, "utf8") || "[]");
+            // Both forms the backend understands: the trailer, or a ticket id
+            // (a cuid) written anywhere in the message.
+            const names = (m) =>
+              /^\s*Fixes-Ticket:/im.test(m) || /\bc[a-z0-9]{24}\b/i.test(m);
             const relevant = commits
-              .filter((c) => /^\s*Fixes-Ticket:/im.test(c.message || ""))
+              .filter((c) => names(c.message || ""))
               .map((c) => ({ sha: c.id, message: c.message }));
             if (!relevant.length) process.exit(3);
             process.stdout.write(JSON.stringify({
