@@ -13,6 +13,7 @@ import slugify from "slugify";
 import uniqid from "uniqid";
 import { Session } from "../types";
 
+import { signedInWrites } from "../access";
 function isResourceOwner(session: Session | undefined, item: any) {
   if (!session?.itemId || item?.authorId == null) return false;
   return String(item.authorId) === String(session.itemId);
@@ -54,12 +55,8 @@ const ownerOnlyUpdate = ({
 
 export const Resource = list({
   access: {
-    operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
-    },
+    // Anyone may read; changes need a signed-in user.
+    operation: signedInWrites,
   },
   fields: {
     title: text({

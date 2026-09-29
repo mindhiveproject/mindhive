@@ -3,11 +3,11 @@ import {
   text,
   relationship,
 } from "@keystone-6/core/fields";
-import { allowAll } from "@keystone-6/core/access";
+import { signedInWrites } from "../access";
 
 export const YQTag = list({
   access: {
-    operation: allowAll,
+    operation: signedInWrites,
   },
   fields: {
     label: text(),

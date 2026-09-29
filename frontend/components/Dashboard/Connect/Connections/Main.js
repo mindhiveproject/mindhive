@@ -39,7 +39,7 @@ export default function Connections({ query, user }) {
       profile?.lastName,
       profile?.publicId,
       profile?.publicReadableId,
-      profile?.email,
+      profile?.publicMail,
       organizationSearchText(profile?.organization),
       profile?.location,
     ]

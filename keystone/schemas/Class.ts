@@ -14,13 +14,13 @@ import {
   relationshipConnectIds,
   syncClassStaffAsRoundReviewers,
 } from "../lib/classStaff";
-import { classStaffFilter } from "../access";
+import { classStaffFilter, isSignedIn } from "../access";
 
 export const Class = list({
   access: {
     operation: {
       query: () => true,
-      create: () => true,
+      create: isSignedIn,
       update: () => true,
       delete: ({ session }) => !!session?.itemId,
     },

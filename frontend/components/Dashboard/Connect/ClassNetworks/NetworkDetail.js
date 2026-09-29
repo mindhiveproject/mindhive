@@ -504,7 +504,7 @@ function NetworkDetailPage({ query, user }) {
       memberProfiles.map((profile) => ({
         id: profile.id,
         name: displayProfileName(profile),
-        email: profile.email || "",
+        email: profile.email || profile.publicMail || "",
         ownedClasses: countProfileOwnedClasses(network, profile.id),
         ownedOpportunities: countProfileOwnedOpportunities(
           network,
@@ -525,7 +525,11 @@ function NetworkDetailPage({ query, user }) {
         return {
           id: invite.id,
           person,
-          email: invite.profile?.email || invite.email || "",
+          email:
+            invite.profile?.email ||
+            invite.profile?.publicMail ||
+            invite.email ||
+            "",
           direction: invite.direction || "",
           directionLabel:
             invite.direction === "invite"
@@ -575,7 +579,7 @@ function NetworkDetailPage({ query, user }) {
       networkAdmins.map((admin) => ({
         id: admin.id,
         name: displayProfileName(admin),
-        email: admin.email || "",
+        email: admin.email || admin.publicMail || "",
       })),
     [networkAdmins]
   );

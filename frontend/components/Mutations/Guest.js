@@ -10,10 +10,11 @@ export const CREATE_GUEST = gql`
   }
 `;
 
-// update guest study information
+// update guest study information (custom mutation: guests have no session,
+// so they are identified by their publicId)
 export const UPDATE_GUEST_STUDY_INFO = gql`
-  mutation UPDATE_GUEST_STUDY_INFO($id: ID!, $studiesInfo: JSON) {
-    updateGuest(where: { id: $id }, data: { studiesInfo: $studiesInfo }) {
+  mutation UPDATE_GUEST_STUDY_INFO($publicId: String!, $studiesInfo: JSON!) {
+    updateGuestStudiesInfo(publicId: $publicId, studiesInfo: $studiesInfo) {
       id
     }
   }

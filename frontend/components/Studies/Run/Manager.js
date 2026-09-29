@@ -7,7 +7,7 @@ import StudyDataSourcesRuntime from "./DataSources/Main";
 
 import { UPDATE_USER_STUDY_INFO } from "../../Mutations/User";
 import { UPDATE_GUEST_STUDY_INFO } from "../../Mutations/Guest";
-import { UPDATE_STUDY } from "../../Mutations/Study";
+import { RECORD_STUDY_CONDITIONS } from "../../Mutations/Study";
 
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { GET_GUEST } from "../../Queries/Guest";
@@ -64,16 +64,13 @@ export default function Manager({
   });
 
   const [updateGuestStudyInfo] = useMutation(UPDATE_GUEST_STUDY_INFO, {
-    variables: { id: user?.id },
+    variables: { publicId: user?.publicId },
     refetchQueries: [
       { query: GET_GUEST, variables: { publicId: user?.publicId } },
     ],
   });
 
-  const [
-    updateStudyConditionsInfo,
-    { data: studyData, loading: studyLoading, error: studyError },
-  ] = useMutation(UPDATE_STUDY, {
+  const [recordStudyConditions] = useMutation(RECORD_STUDY_CONDITIONS, {
     refetchQueries: [
       { query: STUDY_COMPONENTS, variables: { studyId: study?.id } },
     ],
@@ -253,16 +250,11 @@ export default function Manager({
           .filter((stage) => stage?.type === "branching")
           .map((stage) => stage?.conditionLabel);
         if (takenConditions?.length) {
-          takenConditions.map((taken) => {
-            components[taken] = components[taken] + 1 || 1;
-          });
-          // save study info
-          await updateStudyConditionsInfo({
+          // the server increments the counters (refetched for the next run)
+          await recordStudyConditions({
             variables: {
-              id: study?.id,
-              input: {
-                components,
-              },
+              studyId: study?.id,
+              conditionLabels: takenConditions.filter(Boolean),
             },
           });
         }

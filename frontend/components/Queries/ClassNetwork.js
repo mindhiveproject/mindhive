@@ -19,6 +19,7 @@ export const GET_ALL_NETWORKS = gql`
         firstName
         lastName
         email
+        publicMail
       }
       settings
       classes {
@@ -45,6 +46,7 @@ export const GET_ALL_NETWORKS = gql`
         firstName
         lastName
         email
+        publicMail
       }
       connectRounds {
         id
@@ -121,6 +123,7 @@ export const GET_NETWORK = gql`
         firstName
         lastName
         email
+        publicMail
       }
       settings
       classes {
@@ -179,6 +182,7 @@ const NETWORK_INVITE_FIELDS = `
     firstName
     lastName
     email
+    publicMail
   }
   requestedBy {
     id
@@ -186,6 +190,7 @@ const NETWORK_INVITE_FIELDS = `
     firstName
     lastName
     email
+    publicMail
   }
   reviewedBy {
     id

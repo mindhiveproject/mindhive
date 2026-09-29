@@ -11,13 +11,16 @@ import {
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
 
+import { signedInWrites, authorOrCollaboratorFilter, authorFilter } from "../access";
+
 export const Template = list({
   access: {
-    operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+    // Anyone may read (participants need studies/tasks); changes need a
+    // signed-in owner.
+    operation: signedInWrites,
+    filter: {
+      update: authorOrCollaboratorFilter,
+      delete: authorFilter,
     },
   },
   fields: {

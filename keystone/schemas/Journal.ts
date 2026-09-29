@@ -10,14 +10,12 @@ import {
   json,
 } from "@keystone-6/core/fields";
 
+import { signedInWrites } from "../access";
+
 export const Journal = list({
   access: {
-    operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
-    },
+    // Anyone may read; changes need a signed-in user.
+    operation: signedInWrites,
   },
   fields: {
     code: text({ isIndexed: "unique" }),

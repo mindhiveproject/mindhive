@@ -149,6 +149,7 @@ export const GET_CONNECT_ROUND = gql`
         firstName
         lastName
         email
+        publicMail
       }
       createdAt
       updatedAt

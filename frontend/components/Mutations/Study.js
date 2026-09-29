@@ -19,6 +19,14 @@ export const UPDATE_STUDY = gql`
   }
 `;
 
+// count the between-subjects conditions a participant was assigned to
+// (participants cannot update the study itself)
+export const RECORD_STUDY_CONDITIONS = gql`
+  mutation RECORD_STUDY_CONDITIONS($studyId: ID!, $conditionLabels: [String!]!) {
+    recordStudyConditions(studyId: $studyId, conditionLabels: $conditionLabels)
+  }
+`;
+
 // change the author of a study
 export const CHANGE_STUDY_AUTHOR = gql`
   mutation CHANGE_STUDY_AUTHOR($studyId: ID!, $authorId: ID!) {

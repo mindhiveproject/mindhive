@@ -500,6 +500,7 @@ export const PUBLIC_USER_QUERY = gql`
       id
       username
       email
+      publicMail
       publicId
       publicReadableId
       type
@@ -615,6 +616,7 @@ export const GET_CONNECT_USERS = gql`
       id
       username
       email
+      publicMail
       publicId
       publicReadableId
       permissions {
@@ -864,6 +866,7 @@ export const GET_PUBLIC_PROFILE = gql`
       id
       username
       email
+      publicMail
       publicId
       publicReadableId
       type
@@ -901,6 +904,7 @@ export const MY_FAVORITE_PEOPLE = gql`
           id
           username
           email
+          publicMail
           publicId
           publicReadableId
           permissions {
@@ -1173,6 +1177,7 @@ export const GET_PROFILE = gql`
             firstName
             lastName
             email
+            publicMail
             image {
               keystoneImage {
                 url
@@ -1226,6 +1231,7 @@ export const GET_PROFILE = gql`
             firstName
             lastName
             email
+            publicMail
             image {
               keystoneImage {
                 url

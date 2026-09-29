@@ -96,10 +96,12 @@ export default function ProfilePage({ query, user }) {
               </NameRow>
               {profile?.tagline && <Tagline>{profile?.tagline}</Tagline>}
               <ContactInfoRow>
-                {profile?.email && (
+                {profile?.publicMail && (
                   <MetaItem>
                     <Icon name="send" />
-                    <a href={`mailto:${profile?.email}`}>{profile?.email}</a>
+                    <a href={`mailto:${profile?.publicMail}`}>
+                      {profile?.publicMail}
+                    </a>
                   </MetaItem>
                 )}
                 {hasOrgMeta && (

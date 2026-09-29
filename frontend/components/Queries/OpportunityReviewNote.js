@@ -43,6 +43,7 @@ export const REVIEW_OPPORTUNITY = gql`
         lastName
         username
         email
+        publicMail
       }
       mentors {
         id
@@ -50,6 +51,7 @@ export const REVIEW_OPPORTUNITY = gql`
         lastName
         username
         email
+        publicMail
       }
       sponsorIsMentor
       mentor {
@@ -58,6 +60,7 @@ export const REVIEW_OPPORTUNITY = gql`
         lastName
         username
         email
+        publicMail
       }
       organization {
         id

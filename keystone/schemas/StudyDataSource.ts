@@ -7,6 +7,7 @@ import {
   timestamp,
 } from "@keystone-6/core/fields";
 
+import { signedInWrites, studyEditorFilter } from "../access";
 // One DataSourceBlock instantiated into one study. The block holds the reusable
 // graph and the declared inputs/outputs; this row holds everything specific to
 // this study's use of it. A study may link several.
@@ -15,11 +16,12 @@ import {
 // permissions are enforced upstream.
 export const StudyDataSource = list({
   access: {
-    operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+    // Anyone may read (participants need studies/tasks); changes need a
+    // signed-in owner.
+    operation: signedInWrites,
+    filter: {
+      update: studyEditorFilter,
+      delete: studyEditorFilter,
     },
   },
   fields: {

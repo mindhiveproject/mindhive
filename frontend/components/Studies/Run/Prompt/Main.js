@@ -59,7 +59,7 @@ export default function Prompt({
   });
 
   const [updateGuestStudyInfo] = useMutation(UPDATE_GUEST_STUDY_INFO, {
-    variables: { id: user?.id },
+    variables: { publicId: user?.publicId },
     refetchQueries: [
       { query: GET_GUEST, variables: { publicId: user?.publicId } },
     ],

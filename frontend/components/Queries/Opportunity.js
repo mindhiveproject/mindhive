@@ -24,6 +24,7 @@ const OPPORTUNITY_MENTOR_DETAIL_FIELDS = `
   bio
   bioInformal
   email
+  publicMail
   tagline
   occupation
   organizations {
@@ -594,6 +595,7 @@ export const MY_MENTOR_MATCHES = gql`
               firstName
               lastName
               email
+              publicMail
               image {
                 keystoneImage {
                   url
@@ -640,6 +642,7 @@ export const MY_MENTOR_MATCHES = gql`
               firstName
               lastName
               email
+              publicMail
               image {
                 keystoneImage {
                   url
@@ -686,6 +689,7 @@ export const MY_MENTOR_MATCHES = gql`
               firstName
               lastName
               email
+              publicMail
               image {
                 keystoneImage {
                   url
@@ -915,6 +919,7 @@ export const OPPORTUNITIES_FOR_CSV_EXPORT = gql`
       sponsors {
         id
         email
+        publicMail
         firstName
         lastName
         username
@@ -922,6 +927,7 @@ export const OPPORTUNITIES_FOR_CSV_EXPORT = gql`
       mentors {
         id
         email
+        publicMail
         firstName
         lastName
         username
@@ -929,6 +935,7 @@ export const OPPORTUNITIES_FOR_CSV_EXPORT = gql`
       mentor {
         id
         email
+        publicMail
         firstName
         lastName
         username

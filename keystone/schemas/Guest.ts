@@ -19,6 +19,7 @@ import {
   animals,
 } from "unique-names-generator";
 
+import { isAdmin } from "../access";
 const customConfig: Config = {
   dictionaries: [adjectives, colors, animals],
   separator: "-",
@@ -29,9 +30,12 @@ export const Guest = list({
   access: {
     operation: {
       query: () => true,
+      // Guests are anonymous participants: createGuest stays open. Later
+      // writes go through updateGuestStudiesInfo (keyed by publicId, sudo),
+      // so generated updates and deletes are admin-only.
       create: () => true,
-      update: () => true,
-      delete: () => true,
+      update: isAdmin,
+      delete: isAdmin,
     },
   },
   fields: {

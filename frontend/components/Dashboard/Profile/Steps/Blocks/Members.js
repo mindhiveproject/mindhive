@@ -316,8 +316,10 @@ export default function Members({ user, organization }) {
                 )}
                 <div className="info">
                   <span className="name">{displayName(member)}</span>
-                  {member.email && (
-                    <span className="email">{member.email}</span>
+                  {(member.email || member.publicMail) && (
+                    <span className="email">
+                      {member.email || member.publicMail}
+                    </span>
                   )}
                 </div>
                 {isYou && <span className="you">You</span>}

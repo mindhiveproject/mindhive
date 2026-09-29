@@ -255,7 +255,7 @@ function StudentMatchCard({ match, opportunity, me, onSaved }) {
           <div className="meta">
             {(() => {
               const emails = getMatchStudents(match)
-                .map((s) => s?.email)
+                .map((s) => s?.email || s?.publicMail)
                 .filter(Boolean);
               return emails.length ? <>{emails.join(", ")} · </> : null;
             })()}

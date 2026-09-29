@@ -200,6 +200,7 @@ export const EXPLORE_ORGANIZATION_DETAIL = gql`
         firstName
         lastName
         email
+        publicMail
         publicId
         tagline
         occupation
@@ -218,6 +219,7 @@ export const EXPLORE_ORGANIZATION_DETAIL = gql`
         firstName
         lastName
         email
+        publicMail
         publicId
         tagline
         occupation

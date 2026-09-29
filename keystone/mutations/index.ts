@@ -42,6 +42,10 @@ import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectRe
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
 import joinClass from "./joinClass";
+import {
+  recordStudyConditions,
+  updateGuestStudiesInfo,
+} from "./participantRun";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
 import recordOpportunityPreviewVisit from "./recordOpportunityPreviewVisit";
 import toggleFavoriteOpportunity from "./toggleFavoriteOpportunity";
@@ -273,6 +277,11 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite(inviteId: ID!): NetworkInvite
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
+        # Participant run writes (guests and signed-in participants).
+        # Increments Study.components condition counters.
+        recordStudyConditions(studyId: ID!, conditionLabels: [String!]!): Boolean
+        # Saves a guest's studiesInfo, identified by the guest publicId.
+        updateGuestStudiesInfo(publicId: String!, studiesInfo: JSON!): Guest
         # Join a class by code as "student" or "mentor"; grants the matching role.
         # Mentors must also pass the class's mentor invitation code.
         joinClass(
@@ -610,6 +619,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         followUser,
         unfollowUser,
         joinClass,
+        recordStudyConditions,
+        updateGuestStudiesInfo,
         markOpportunityReviewNotesRead,
         recordOpportunityPreviewVisit,
         toggleFavoriteOpportunity,

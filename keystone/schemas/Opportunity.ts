@@ -28,6 +28,7 @@ import {
   SPONSOR_LOCK_ALLOWED_UPDATE_KEYS,
 } from "../lib/opportunitySponsorLock";
 
+import { signedInWrites } from "../access";
 const frontendUrl = () =>
   (process.env.NODE_ENV === "development"
     ? process.env.FRONTEND_URL_DEV
@@ -76,12 +77,8 @@ async function seedAppointmentRequestNotes(context: any, opportunity: any) {
 
 export const Opportunity = list({
   access: {
-    operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
-    },
+    // Anyone may read; changes need a signed-in user.
+    operation: signedInWrites,
   },
   fields: {
     title: text({ validation: { isRequired: true } }),

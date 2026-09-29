@@ -8,14 +8,12 @@ import {
 } from "@keystone-6/core/fields";
 import { syncNetworkClassStaffAsRoundReviewers } from "../lib/classStaff";
 
+import { signedInWrites } from "../access";
+
 export const ConnectRound = list({
   access: {
-    operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
-    },
+    // Anyone may read; changes need a signed-in user.
+    operation: signedInWrites,
   },
   fields: {
     title: text({ validation: { isRequired: true } }),

@@ -12,7 +12,12 @@ import {
   multiselect,
   file,
 } from "@keystone-6/core/fields";
-import { permissions, rules } from "../access";
+import {
+  permissions,
+  rules,
+  canViewParticipantData,
+  canViewPrivateProfile,
+} from "../access";
 import {
   ensureTeacherPermission,
   relationshipAssignedIds,
@@ -36,6 +41,21 @@ const customConfig: Config = {
   dictionaries: [adjectives, colors, animals],
   separator: "-",
   length: 3,
+};
+
+// Read rules for private profile fields. Denied reads resolve to null.
+// Contact details for other users belong in publicMail, which stays public.
+const ownerOrStaffRead = {
+  read: ({ context, item }: any) => canViewPrivateProfile(context, item?.id),
+};
+const participantDataRead = {
+  read: ({ context, item }: any) => canViewParticipantData(context, item?.id),
+};
+const ownerOnlyRead = {
+  read: ({ session, item }: any) =>
+    !!session?.itemId &&
+    (String(item?.id) === String(session.itemId) ||
+      !!permissions.canManageUsers({ session })),
 };
 
 export const Profile = list({
@@ -110,7 +130,7 @@ export const Profile = list({
       isIndexed: "unique",
       isFilterable: true,
       access: {
-        read: () => true,
+        ...ownerOrStaffRead,
         create: () => true,
         update: rules.canManageUsers,
       },
@@ -134,11 +154,11 @@ export const Profile = list({
         update: ({ session }) => permissions.canManageUsers({ session }),
       },
     }),
-    info: json(),
-    generalInfo: json(),
-    studiesInfo: json(),
-    consentsInfo: json(),
-    tasksInfo: json(),
+    info: json({ access: participantDataRead }),
+    generalInfo: json({ access: participantDataRead }),
+    studiesInfo: json({ access: participantDataRead }),
+    consentsInfo: json({ access: ownerOnlyRead }),
+    tasksInfo: json({ access: ownerOnlyRead }),
     isPublic: checkbox({ isFilterable: true }),
     password: password({
       validation: { isRequired: true },

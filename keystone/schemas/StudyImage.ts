@@ -2,6 +2,7 @@ import { list } from "@keystone-6/core";
 import { text, relationship, image } from "@keystone-6/core/fields";
 
 import { cloudinaryImage } from "@keystone-6/cloudinary";
+import { signedInWrites, studyEditorFilter } from "../access";
 // import { rules, permissions } from "../access";
 
 const cloudinary = {
@@ -13,11 +14,12 @@ const cloudinary = {
 
 export const StudyImage = list({
   access: {
-    operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+    // Anyone may read (participants need studies/tasks); changes need a
+    // signed-in owner.
+    operation: signedInWrites,
+    filter: {
+      update: studyEditorFilter,
+      delete: studyEditorFilter,
     },
   },
   fields: {

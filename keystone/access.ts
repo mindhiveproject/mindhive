@@ -96,6 +96,70 @@ export function classStaffFilter({ session }: ListAccessArgs) {
   return classStaffSome(session.itemId);
 }
 
+/**
+ * Operation access for lists anyone may read but only signed-in users may
+ * change. Per-item ownership is added with filters where it applies.
+ */
+export const signedInWrites = {
+  query: () => true,
+  create: isSignedIn,
+  update: isSignedIn,
+  delete: isSignedIn,
+};
+
+function authorOrCollaboratorWhere(me: string) {
+  return {
+    OR: [
+      { author: { id: { equals: me } } },
+      { collaborators: { some: { id: { equals: me } } } },
+    ],
+  };
+}
+
+/** Filter: items the session user authored or collaborates on; admins: all. */
+export function authorOrCollaboratorFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  return authorOrCollaboratorWhere(String(session.itemId));
+}
+
+/** Filter: items the session user authored; admins: all. */
+export function authorFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  return { author: { id: { equals: String(session.itemId) } } };
+}
+
+/**
+ * Filter for records owned through their `study` relation (StudyImage,
+ * StudyVersion, StudyDataSource): the study's author or collaborators.
+ */
+export function studyEditorFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  return { study: authorOrCollaboratorWhere(String(session.itemId)) };
+}
+
+/**
+ * Study updates: author, collaborators, and staff of a class the study is
+ * linked to or whose students author it (class dashboards assign students to
+ * studies and change submission status).
+ */
+export function studyUpdateFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const me = String(session.itemId);
+  const staffClass = { some: classStaffSome(me) };
+  return {
+    OR: [
+      ...authorOrCollaboratorWhere(me).OR,
+      { classes: staffClass },
+      { author: { studentIn: staffClass } },
+      { collaborators: { some: { studentIn: staffClass } } },
+    ],
+  };
+}
+
 // Keyed by the HTTP request (one session per request), so repeated field
 // checks while resolving one GraphQL response share a single lookup.
 const staffClassIdsCache = new WeakMap<object, Promise<string[]>>();
@@ -115,33 +179,89 @@ export function staffClassIds(context: any): Promise<string[]> {
   return lookup;
 }
 
+// Per-request memo for async access checks. Field access runs once per item
+// and field, so a profile list with several private fields would otherwise
+// repeat the same lookup many times in one GraphQL response.
+const requestMemo = new WeakMap<object, Map<string, Promise<boolean>>>();
+
+function memoPerRequest(
+  context: any,
+  key: string,
+  compute: () => Promise<boolean>
+): Promise<boolean> {
+  const scope = context?.req ?? context;
+  if (!scope) return compute();
+  let memo = requestMemo.get(scope);
+  if (!memo) {
+    memo = new Map();
+    requestMemo.set(scope, memo);
+  }
+  const cached = memo.get(key);
+  if (cached) return cached;
+  const result = compute();
+  memo.set(key, result);
+  return result;
+}
+
 /**
  * Private profile data (email, study/consent info, personal work) is visible
  * to the profile owner, admins, and staff of a class the profile belongs to.
  */
-export async function canViewPrivateProfile(
+export function canViewPrivateProfile(
   context: any,
   profileId: string | null | undefined
 ): Promise<boolean> {
   const session = context?.session;
   const me = session?.itemId;
-  if (!me || !profileId) return false;
-  if (String(profileId) === String(me)) return true;
-  if (isAdmin({ session })) return true;
-  const classIds = await staffClassIds(context);
-  if (classIds.length === 0) return false;
-  const inStaffClass = { some: { id: { in: classIds } } };
-  const matches = await context.sudo().db.Profile.count({
-    where: {
-      id: { equals: String(profileId) },
-      OR: [
-        { studentIn: inStaffClass },
-        { mentorIn: inStaffClass },
-        { teachingTeamIn: inStaffClass },
-      ],
-    },
+  if (!me || !profileId) return Promise.resolve(false);
+  if (String(profileId) === String(me)) return Promise.resolve(true);
+  if (isAdmin({ session })) return Promise.resolve(true);
+  return memoPerRequest(context, `privateProfile:${profileId}`, async () => {
+    const classIds = await staffClassIds(context);
+    if (classIds.length === 0) return false;
+    const inStaffClass = { some: { id: { in: classIds } } };
+    const matches = await context.sudo().db.Profile.count({
+      where: {
+        id: { equals: String(profileId) },
+        OR: [
+          { studentIn: inStaffClass },
+          { mentorIn: inStaffClass },
+          { teachingTeamIn: inStaffClass },
+        ],
+      },
+    });
+    return matches > 0;
   });
-  return matches > 0;
+}
+
+/**
+ * Participant data (info, generalInfo, studiesInfo: demographics and consent
+ * answers) is also visible to the author and collaborators of a study the
+ * profile took part in, for Test & Collect.
+ */
+export function canViewParticipantData(
+  context: any,
+  profileId: string | null | undefined
+): Promise<boolean> {
+  const me = context?.session?.itemId;
+  if (!me || !profileId) return Promise.resolve(false);
+  return memoPerRequest(context, `participantData:${profileId}`, async () => {
+    if (await canViewPrivateProfile(context, profileId)) return true;
+    const matches = await context.sudo().db.Profile.count({
+      where: {
+        id: { equals: String(profileId) },
+        participantIn: {
+          some: {
+            OR: [
+              { author: { id: { equals: String(me) } } },
+              { collaborators: { some: { id: { equals: String(me) } } } },
+            ],
+          },
+        },
+      },
+    });
+    return matches > 0;
+  });
 }
 
 /**

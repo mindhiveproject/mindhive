@@ -7,17 +7,19 @@ import {
   checkbox,
 } from "@keystone-6/core/fields";
 
+import { signedInWrites, studyEditorFilter } from "../access";
 // A snapshot of a study design, created every time the study is saved with a
 // changed diagram. Snapshots are append-only: loading an older snapshot puts it
 // back on the canvas, and saving it creates a new snapshot rather than
 // rewriting history.
 export const StudyVersion = list({
   access: {
-    operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+    // Anyone may read (participants need studies/tasks); changes need a
+    // signed-in owner.
+    operation: signedInWrites,
+    filter: {
+      update: studyEditorFilter,
+      delete: studyEditorFilter,
     },
   },
   fields: {

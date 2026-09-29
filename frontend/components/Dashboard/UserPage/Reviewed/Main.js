@@ -9,7 +9,7 @@ export default function Reviewed({ query, user, profile }) {
   const { origin } = absoluteUrl();
 
   const reviews = [
-    ...profile?.reviews.map((review) => ({
+    ...(profile?.reviews || []).map((review) => ({
       id: review?.id,
       title: review?.study?.title,
       reviewedAt: review?.createdAt,

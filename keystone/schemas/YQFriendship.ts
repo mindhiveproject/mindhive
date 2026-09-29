@@ -4,10 +4,30 @@ import {
   timestamp,
   select,
 } from "@keystone-6/core/fields";
-import { allowAll } from "@keystone-6/core/access";
+import { signedInWrites } from "../access";
+import { Session } from "../types";
+
+// Either side of a follow may change or remove it; admins may manage all.
+function ownFriendshipFilter({ session }: { session?: Session }) {
+  if (!session?.itemId) return false;
+  if (session.data?.permissions?.some((p: any) => p?.canManageUsers)) return true;
+  const me = String(session.itemId);
+  return {
+    OR: [
+      { requester: { id: { equals: me } } },
+      { recipient: { id: { equals: me } } },
+    ],
+  };
+}
 
 export const Friendship = list({
-  access: allowAll,
+  access: {
+    operation: signedInWrites,
+    filter: {
+      update: ownFriendshipFilter,
+      delete: ownFriendshipFilter,
+    },
+  },
   fields: {
     requester: relationship({ ref: "Profile.following", many: false }),
     recipient: relationship({ ref: "Profile.followers", many: false }),
