@@ -74,12 +74,15 @@ export const DELETE_CLASS = gql`
   }
 `;
 
+// Roster and project changes update the Class / ProposalBoard side: a
+// student's Profile is only writable by its owner (or an admin).
+
 // remove a student from class
 export const REMOVE_STUDENT_FROM_CLASS = gql`
   mutation REMOVE_STUDENT_FROM_CLASS($studentId: ID!, $classId: ID!) {
-    updateProfile(
-      where: { id: $studentId }
-      data: { studentIn: { disconnect: { id: $classId } } }
+    updateClass(
+      where: { id: $classId }
+      data: { students: { disconnect: { id: $studentId } } }
     ) {
       id
     }
@@ -89,9 +92,9 @@ export const REMOVE_STUDENT_FROM_CLASS = gql`
 // assign a student to a class
 export const ASSIGN_STUDENT_TO_CLASS = gql`
   mutation ASSIGN_STUDENT_TO_CLASS($studentId: ID!, $classId: ID!) {
-    updateProfile(
-      where: { id: $studentId }
-      data: { studentIn: { connect: { id: $classId } } }
+    updateClass(
+      where: { id: $classId }
+      data: { students: { connect: { id: $studentId } } }
     ) {
       id
     }
@@ -101,22 +104,26 @@ export const ASSIGN_STUDENT_TO_CLASS = gql`
 // remove a mentor from class
 export const REMOVE_MENTOR_FROM_CLASS = gql`
   mutation REMOVE_MENTOR_FROM_CLASS($mentorId: ID!, $classId: ID!) {
-    updateProfile(
-      where: { id: $mentorId }
-      data: { mentorIn: { disconnect: { id: $classId } } }
+    updateClass(
+      where: { id: $classId }
+      data: { mentors: { disconnect: { id: $mentorId } } }
     ) {
       id
     }
   }
 `;
 
-// assign a student to a project
+// assign a student to a project, or remove them ($input is the
+// ProposalBoard.collaborators relation update)
 export const ASSIGN_STUDENT_TO_PROJECT = gql`
   mutation ASSIGN_STUDENT_TO_PROJECT(
-    $studentId: ID!
-    $input: ProfileUpdateInput!
+    $projectId: ID!
+    $input: ProfileRelateToManyForUpdateInput!
   ) {
-    updateProfile(where: { id: $studentId }, data: $input) {
+    updateProposalBoard(
+      where: { id: $projectId }
+      data: { collaborators: $input }
+    ) {
       id
     }
   }

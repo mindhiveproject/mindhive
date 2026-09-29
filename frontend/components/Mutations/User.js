@@ -122,31 +122,11 @@ export const JOIN_STUDY_MUTATION = gql`
   }
 `;
 
-// join the class as a student
-export const JOIN_CLASS_AS_STUDENT_MUTATION = gql`
-  mutation JOIN_CLASS_AS_STUDENT_MUTATION($id: ID!, $classCode: String!) {
-    updateProfile(
-      where: { id: $id }
-      data: {
-        permissions: { connect: { name: "STUDENT" } }
-        studentIn: { connect: { code: $classCode } }
-      }
-    ) {
-      id
-    }
-  }
-`;
-
-// join the class as a mentor
-export const JOIN_CLASS_AS_MENTOR_MUTATION = gql`
-  mutation JOIN_CLASS_AS_MENTOR_MUTATION($id: ID!, $classCode: String!) {
-    updateProfile(
-      where: { id: $id }
-      data: {
-        permissions: { connect: { name: "MENTOR" } }
-        mentorIn: { connect: { code: $classCode } }
-      }
-    ) {
+// join a class by code as a student or mentor (grants the matching role
+// server-side; Profile.permissions is not writable from the client)
+export const JOIN_CLASS_MUTATION = gql`
+  mutation JOIN_CLASS_MUTATION($classCode: String!, $role: String!) {
+    joinClass(classCode: $classCode, role: $role) {
       id
     }
   }

@@ -8,16 +8,16 @@ import {
   integer,
   checkbox,
 } from "@keystone-6/core/fields";
-// import { permissions, rules } from "../access";
+import { permissions } from "../access";
 import { permissionFields } from "./fields";
 
 export const Permission = list({
   access: {
     operation: {
       query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      create: ({ session }) => permissions.canManageUsers({ session }),
+      update: ({ session }) => permissions.canManageUsers({ session }),
+      delete: ({ session }) => permissions.canManageUsers({ session }),
     },
   },
   fields: {
