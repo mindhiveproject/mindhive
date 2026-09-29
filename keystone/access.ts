@@ -81,6 +81,69 @@ function classStaffSome(me: string) {
   };
 }
 
+/** Platform user admins (the canManageUsers permission). */
+export function isAdmin({ session }: ListAccessArgs) {
+  return !!permissions.canManageUsers({ session });
+}
+
+/**
+ * Class filter: classes where the session user is creator, co-teacher or
+ * mentor. Admins match every class; anonymous callers match none.
+ */
+export function classStaffFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  return classStaffSome(session.itemId);
+}
+
+// Keyed by the HTTP request (one session per request), so repeated field
+// checks while resolving one GraphQL response share a single lookup.
+const staffClassIdsCache = new WeakMap<object, Promise<string[]>>();
+
+/** Ids of classes where the session user is staff, cached per request. */
+export function staffClassIds(context: any): Promise<string[]> {
+  const me = context?.session?.itemId;
+  if (!me) return Promise.resolve([]);
+  const key = context.req ?? context;
+  const cached = staffClassIdsCache.get(key);
+  if (cached) return cached;
+  const lookup: Promise<string[]> = context
+    .sudo()
+    .db.Class.findMany({ where: classStaffSome(String(me)) })
+    .then((rows: { id: string }[]) => rows.map((row) => String(row.id)));
+  staffClassIdsCache.set(key, lookup);
+  return lookup;
+}
+
+/**
+ * Private profile data (email, study/consent info, personal work) is visible
+ * to the profile owner, admins, and staff of a class the profile belongs to.
+ */
+export async function canViewPrivateProfile(
+  context: any,
+  profileId: string | null | undefined
+): Promise<boolean> {
+  const session = context?.session;
+  const me = session?.itemId;
+  if (!me || !profileId) return false;
+  if (String(profileId) === String(me)) return true;
+  if (isAdmin({ session })) return true;
+  const classIds = await staffClassIds(context);
+  if (classIds.length === 0) return false;
+  const inStaffClass = { some: { id: { in: classIds } } };
+  const matches = await context.sudo().db.Profile.count({
+    where: {
+      id: { equals: String(profileId) },
+      OR: [
+        { studentIn: inStaffClass },
+        { mentorIn: inStaffClass },
+        { teachingTeamIn: inStaffClass },
+      ],
+    },
+  });
+  return matches > 0;
+}
+
 /**
  * Field access for ConnectPreference.teachingTeamNote: platform admins or
  * teaching-team staff on the preference's round. Students (including the

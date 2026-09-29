@@ -21,8 +21,8 @@ async function sendEmail(
     throw new Error("You must be logged in to do this!");
   }
 
-  // get the email of the receiver
-  const user = await context.query.Profile.findOne({
+  // get the email of the receiver (sudo: email is not readable by every caller)
+  const user = await context.sudo().query.Profile.findOne({
     where: { id: receiverId },
     query: "email",
   });

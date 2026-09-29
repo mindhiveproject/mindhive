@@ -178,7 +178,13 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         ): ProposalBoard
         deleteProposal(id: ID!): ProposalBoard
         archiveStudy(study: ID!, isArchived: Boolean!): Profile
-        googleSignup(token: String!, role: String, classCode: String): Profile
+        # invitationCode: the class's mentor invitation code (mentors only).
+        googleSignup(
+          token: String!
+          role: String
+          classCode: String
+          invitationCode: String
+        ): Profile
         googleLogin(token: String!): Profile
         # Public signup. Gated by Cloudflare Turnstile + bot heuristics;
         # Profile.create is closed to anonymous callers so this is the only
@@ -189,6 +195,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           password: String!
           role: String
           classCode: String
+          invitationCode: String
           info: JSON
           turnstileToken: String
         ): Profile
@@ -267,7 +274,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
         # Join a class by code as "student" or "mentor"; grants the matching role.
-        joinClass(classCode: String!, role: String!): Profile
+        # Mentors must also pass the class's mentor invitation code.
+        joinClass(
+          classCode: String!
+          role: String!
+          invitationCode: String
+        ): Profile
         # Connect the session user to OpportunityReviewNote.readBy for
         # notes they can see. Needed because list update is author-only.
         markOpportunityReviewNotesRead(noteIds: [ID!]!): [OpportunityReviewNote!]!

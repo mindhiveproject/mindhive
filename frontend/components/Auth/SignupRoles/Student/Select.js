@@ -32,7 +32,11 @@ export default function Select({ role, classCode, invitationCode }) {
               <div>Sign up with email/username</div>
             </SignupButton>
           </Link>
-          <GoogleSignup role={role} classCode={classCode} />
+          <GoogleSignup
+            role={role}
+            classCode={classCode}
+            invitationCode={invitationCode}
+          />
           <TermsConditions btnName={`"Sign up with Google"`} />
         </div>
       </StyledForm>

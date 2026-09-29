@@ -14,6 +14,7 @@ import {
   relationshipConnectIds,
   syncClassStaffAsRoundReviewers,
 } from "../lib/classStaff";
+import { classStaffFilter } from "../access";
 
 export const Class = list({
   access: {
@@ -24,6 +25,9 @@ export const Class = list({
       delete: ({ session }) => !!session?.itemId,
     },
     filter: {
+      // Only class staff (creator, co-teachers, mentors) or admins change a
+      // class: settings, rosters, teaching team. Joining uses joinClass (sudo).
+      update: classStaffFilter,
       delete: ({ session }) =>
         session?.itemId
           ? { creator: { id: { equals: session.itemId } } }

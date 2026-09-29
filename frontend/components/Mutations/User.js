@@ -12,6 +12,7 @@ export const SIGNUP_MUTATION = gql`
     $password: String!
     $role: String
     $classCode: String
+    $invitationCode: String
     $info: JSON
     $turnstileToken: String
   ) {
@@ -21,6 +22,7 @@ export const SIGNUP_MUTATION = gql`
       password: $password
       role: $role
       classCode: $classCode
+      invitationCode: $invitationCode
       info: $info
       turnstileToken: $turnstileToken
     ) {
@@ -123,10 +125,19 @@ export const JOIN_STUDY_MUTATION = gql`
 `;
 
 // join a class by code as a student or mentor (grants the matching role
-// server-side; Profile.permissions is not writable from the client)
+// server-side; Profile.permissions is not writable from the client).
+// Mentors also pass the class's mentor invitation code.
 export const JOIN_CLASS_MUTATION = gql`
-  mutation JOIN_CLASS_MUTATION($classCode: String!, $role: String!) {
-    joinClass(classCode: $classCode, role: $role) {
+  mutation JOIN_CLASS_MUTATION(
+    $classCode: String!
+    $role: String!
+    $invitationCode: String
+  ) {
+    joinClass(
+      classCode: $classCode
+      role: $role
+      invitationCode: $invitationCode
+    ) {
       id
     }
   }

@@ -8,6 +8,14 @@ import {
 import { allowAll } from "@keystone-6/core/access";
 import { Session } from "../types";
 
+// Admin UI users see every thread; everyone else only their own. Anonymous
+// callers get nothing (an `equals: undefined` filter would match every row).
+function ownThreadsFilter({ session }: { session?: Session }) {
+  if (session?.data?.permissions?.some((p) => p.canAccessAdminUI)) return true;
+  if (!session?.itemId) return false;
+  return { author: { id: { equals: session.itemId } } };
+}
+
 export const YQGenAI = list({
   access: {
     operation: {
@@ -17,16 +25,9 @@ export const YQGenAI = list({
       delete: () => true,
     },
     filter: {
-      query: ({ session }: {session?: Session}) => {
-        if (session?.data?.permissions?.some(p => p.canAccessAdminUI)) return true;
-        return {
-          author: {
-            id: {
-              equals: session?.itemId,
-            },
-          },
-        };
-      },
+      query: ownThreadsFilter,
+      update: ownThreadsFilter,
+      delete: ownThreadsFilter,
     },
   },
   fields: {

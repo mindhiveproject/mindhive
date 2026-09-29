@@ -1,11 +1,12 @@
 import { verifyTurnstile } from "../lib/turnstile";
 import { isSuspiciousEmail, REJECTION_HINT } from "../lib/emailHeuristics";
+import { normalizeClassJoinRole, resolveClassToJoin } from "../lib/classJoin";
 
 // Roles a visitor is allowed to self-assign at signup. ADMIN and RESEARCHER
 // are deliberately absent — this mutation creates the profile with sudo, so
 // the whitelist is the only thing standing between an anonymous caller and an
 // arbitrary permission grant. Never widen this without thinking that through.
-const SELF_ASSIGNABLE_ROLES = new Set([
+export const SELF_ASSIGNABLE_ROLES = new Set([
   "STUDENT",
   "MENTOR",
   "TEACHER",
@@ -32,6 +33,7 @@ async function signupWithTurnstile(
     password,
     role,
     classCode,
+    invitationCode,
     info,
     turnstileToken,
   }: {
@@ -40,6 +42,7 @@ async function signupWithTurnstile(
     password: string;
     role?: string;
     classCode?: string;
+    invitationCode?: string;
     info?: any;
     turnstileToken?: string;
   },
@@ -70,6 +73,17 @@ async function signupWithTurnstile(
     throw new Error("Invalid role.");
   }
 
+  // Mentors joining a class need its mentor invitation code.
+  const joinRole = normalizeClassJoinRole(requestedRole);
+  const classId =
+    joinRole && classCode
+      ? await resolveClassToJoin(context, {
+          classCode,
+          role: joinRole,
+          invitationCode,
+        })
+      : null;
+
   const existing = await context.sudo().db.Profile.findOne({
     where: { email: normalizedEmail },
   });
@@ -88,13 +102,9 @@ async function signupWithTurnstile(
       info: info ?? {},
       permissions: requestedRole ? { connect: { name: requestedRole } } : null,
       studentIn:
-        requestedRole === "STUDENT" && classCode
-          ? { connect: { code: classCode } }
-          : null,
+        joinRole === "student" && classId ? { connect: { id: classId } } : null,
       mentorIn:
-        requestedRole === "MENTOR" && classCode
-          ? { connect: { code: classCode } }
-          : null,
+        joinRole === "mentor" && classId ? { connect: { id: classId } } : null,
     },
   });
 }

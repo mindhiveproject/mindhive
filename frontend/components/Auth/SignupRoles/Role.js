@@ -153,7 +153,7 @@ export default function RoleSignup(query) {
   const [acceptInvite] = useMutation(ACCEPT_ORG_INVITE);
   const [attachToOrg] = useMutation(UPDATE_ORGANIZATION);
 
-  async function handleSubmit({ e, classCode }) {
+  async function handleSubmit({ e, classCode, invitationCode }) {
     e.preventDefault();
     if (isClassNetworkInvalid || isNetworkInviteInvalid) return;
     // Normalize email to lowercase
@@ -171,6 +171,7 @@ export default function RoleSignup(query) {
           password: inputs.password,
           role,
           classCode: classCode || null,
+          invitationCode: invitationCode || null,
           info: inputs.info || {},
           turnstileToken,
         },

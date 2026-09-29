@@ -187,8 +187,25 @@ export const Profile = list({
         update: ({ session }) => permissions.canManageUsers({ session }),
       },
     }),
-    mentorIn: relationship({ ref: "Class.mentors", many: true }),
-    studentIn: relationship({ ref: "Class.students", many: true }),
+    // Class membership decides who counts as class staff (mentors) and whose
+    // private data staff can see, so it is not self-service. Joining goes
+    // through joinClass / signup (sudo); staff manage rosters via Class.
+    mentorIn: relationship({
+      ref: "Class.mentors",
+      many: true,
+      access: {
+        create: ({ session }) => permissions.canManageUsers({ session }),
+        update: ({ session }) => permissions.canManageUsers({ session }),
+      },
+    }),
+    studentIn: relationship({
+      ref: "Class.students",
+      many: true,
+      access: {
+        create: ({ session }) => permissions.canManageUsers({ session }),
+        update: ({ session }) => permissions.canManageUsers({ session }),
+      },
+    }),
     classNetworksCreated: relationship({
       ref: "ClassNetwork.creator",
       many: true,

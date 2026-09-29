@@ -48,6 +48,7 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
       variables: {
         classCode: classCode,
         role: "mentor",
+        invitationCode: invitationCode || null,
       },
       refetchQueries: [{ query: CURRENT_USER_QUERY }],
     });
@@ -99,17 +100,22 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
               style={{ width: "100%" }}
               disabled={joinClassAsStudentLoading || joinClassAsMentorLoading}
               onClick={async () => {
-                if (role === "mentor") {
-                  await joinClassAsMentor();
-                  router.push({
-                    pathname: "/dashboard/myclasses",
-                  });
-                }
-                if (role === "student") {
-                  await joinClassAsStudent();
-                  router.push({
-                    pathname: "/dashboard/classes",
-                  });
+                try {
+                  if (role === "mentor") {
+                    await joinClassAsMentor();
+                    router.push({
+                      pathname: "/dashboard/myclasses",
+                    });
+                  }
+                  if (role === "student") {
+                    await joinClassAsStudent();
+                    router.push({
+                      pathname: "/dashboard/classes",
+                    });
+                  }
+                } catch (err) {
+                  // e.g. a mentor link without a valid invitation code
+                  alert(err.message);
                 }
               }}
             >

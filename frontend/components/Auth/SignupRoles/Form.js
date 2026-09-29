@@ -15,6 +15,7 @@ export default function Form({
   loading,
   error,
   classCode,
+  invitationCode,
   submitDisabled = false,
   turnstileRef,
   onTurnstileVerify,
@@ -25,7 +26,7 @@ export default function Form({
     <SignupForm>
       <StyledForm
         method="POST"
-        onSubmit={(e) => handleSubmit({ e, classCode })}
+        onSubmit={(e) => handleSubmit({ e, classCode, invitationCode })}
       >
         <DisplayError error={error} />
 
@@ -125,7 +126,11 @@ export default function Form({
         </fieldset>
 
         {["scientist", "teacher"].includes(role) && (
-          <GoogleSignup role={role} classCode={classCode} />
+          <GoogleSignup
+            role={role}
+            classCode={classCode}
+            invitationCode={invitationCode}
+          />
         )}
 
         <TermsConditions btnName={`"Create account"`} />

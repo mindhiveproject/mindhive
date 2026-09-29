@@ -44,14 +44,15 @@ async function findTeacherEmailsForStudent(
   const normalizedEmail = studentEmail?.toLowerCase().trim();
   console.log(`[Password Reset] Checking student status for a user.`);
 
-  if (!context || !context.query) {
+  if (!context || !context.sudo) {
     console.log(`[Password Reset] WARNING: No context available. Cannot check student status.`);
     return [];
   }
 
   try {
-    // Find the student profile using context.query (for reading data)
-    const profile = await context.query.Profile.findOne({
+    // Find the student profile with sudo: the reset request is anonymous and
+    // teacher emails are not readable by anonymous callers.
+    const profile = await context.sudo().query.Profile.findOne({
       where: { email: normalizedEmail },
       query: `
         id
