@@ -288,14 +288,15 @@ export default function TicketPage({ id }) {
           />
           <ShotActions>
             <Button variant="outline" onClick={() => setAnnotating(true)} disabled={savingAnnotation}>
-              {savingAnnotation ? "Saving…" : "Add annotation"}
+              {savingAnnotation ? "Saving…" : "Draw on this screenshot"}
             </Button>
             {/* 90 days mirrors SCREENSHOT_RETENTION_DAYS in the backend's
                 mutations/pruneTicketScreenshots.ts — keep the two in step. */}
             <Caption>
-              Draw on it to show what should change. Everything here is also copied
-              to the ticket&apos;s Notion page, and deleted automatically 90 days
-              after the ticket is resolved.
+              Marks are saved as your own copy of this screenshot, so several people
+              can each mark the same one. It never takes a new screenshot. Everything
+              here is also copied to the ticket&apos;s Notion page, and deleted
+              automatically 90 days after the ticket is resolved.
             </Caption>
           </ShotActions>
           {annotationError && <ErrorLine role="alert">{annotationError}</ErrorLine>}
@@ -304,7 +305,8 @@ export default function TicketPage({ id }) {
 
       {ticket.annotations?.length > 0 && (
         <Section>
-          <h2 className="MH-Type-Title-Base">Annotations ({ticket.annotations.length})</h2>
+          <h2 className="MH-Type-Title-Base">Markups ({ticket.annotations.length})</h2>
+          <Caption>The same screenshot as above, with each person&apos;s marks on it.</Caption>
           <Annotations>
             {ticket.annotations.map((annotation) => (
               <AnnotationCard key={annotation.id}>
@@ -347,7 +349,7 @@ export default function TicketPage({ id }) {
           // one draws over — or has to work around — anyone else's marks.
           source={ticket.screenshot.url}
           withNote
-          title="Annotate the screenshot"
+          title="Draw on the screenshot"
           onCancel={() => setAnnotating(false)}
           onDone={async (file, _shapes, note) => {
             setAnnotating(false);
