@@ -2077,6 +2077,8 @@
 		"untitled": "Untitled"
 	},
 	"participants": "Participants",
+	"physiologicalDataDisabledLabel": "Physiological data collection disabled",
+	"physiologicalDataEnabledLabel": "Physiological data collection enabled",
 	"physiologicalDataSettingLabel": "Enable physiological data collection and recording for this class within the study builder",
 	"physiologicalDataSettingsTitle": "Physiological data",
 	"physiologicalDataUpdateError": "Failed to update physiological data setting",
