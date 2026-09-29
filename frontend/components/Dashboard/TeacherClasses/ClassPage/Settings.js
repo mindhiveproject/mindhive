@@ -19,7 +19,6 @@ import { useRouter } from "next/router";
 
 import Chip from "../../../DesignSystem/Chip";
 import DesignSystemButton from "../../../DesignSystem/Button";
-import Checkbox from "../../../DesignSystem/Checkbox";
 import ToggleSwitch from "../../../DesignSystem/ToggleSwitch";
 import TipTapEditor from "../../../TipTap/Main";
 import CurriculumTypeSelector from "./CurriculumTypeSelector";
@@ -906,20 +905,26 @@ export default function Settings({ myclass, user }) {
           </div>
           <div className="informationBlock">
             <div className="block curriculumTypeBlock">
-              <div className="settingsCheckboxRow">
-                <Checkbox
-                  checked={physiologicalDataEnabled}
-                  disabled={updatingSettings}
-                  onChange={updatePhysiologicalDataEnabled}
-                  ariaLabelledBy="physiologicalDataSettingLabel"
-                />
-                <span id="physiologicalDataSettingLabel">
-                  {t("physiologicalDataSettingLabel", {}, {
-                    default:
-                      "Enable physiological data collection and recording for this class within the study builder",
-                  })}
-                </span>
-              </div>
+              <ToggleSwitch
+                checked={physiologicalDataEnabled}
+                loading={updatingSettings}
+                onChange={updatePhysiologicalDataEnabled}
+                label={
+                  physiologicalDataEnabled
+                    ? t("physiologicalDataEnabledLabel", {}, {
+                        default: "Physiological data collection enabled",
+                      })
+                    : t("physiologicalDataDisabledLabel", {}, {
+                        default: "Physiological data collection disabled",
+                      })
+                }
+              />
+              <p className="classDescriptionSettingsHint">
+                {t("physiologicalDataSettingLabel", {}, {
+                  default:
+                    "Enable physiological data collection and recording for this class within the study builder",
+                })}
+              </p>
             </div>
           </div>
         </section>
