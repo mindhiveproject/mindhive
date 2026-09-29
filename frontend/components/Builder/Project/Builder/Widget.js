@@ -4,7 +4,7 @@ export default function Widget({
   engine,
   studyId,
   openComponentModal,
-  openModal,
+  openDesignSettings,
   openStudyPreview,
   onBeforeCanvasMutation,
   onAfterCanvasMutation,
@@ -16,7 +16,7 @@ export default function Widget({
         engine={engine}
         studyId={studyId}
         openComponentModal={openComponentModal}
-        openModal={openModal}
+        openDesignSettings={openDesignSettings}
         openStudyPreview={openStudyPreview}
         onBeforeCanvasMutation={onBeforeCanvasMutation}
         onAfterCanvasMutation={onAfterCanvasMutation}

@@ -45,7 +45,6 @@ export default function Builder({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStudyPreviewOpen, setStudyPreviewOpen] = useState(false);
   const [dataSourceSettingsId, setDataSourceSettingsId] = useState(null);
 
@@ -61,9 +60,8 @@ export default function Builder({
   const physiologicalDataEnabled = (classesData?.classes || []).some(
     (cl) => cl?.settings?.physiologicalDataEnabled === true
   );
-  // "default" shows the Menu tabs; "block" and "dataSource" swap in a detail
-  // panel for the selected block or linked data source (Menu stays mounted,
-  // just hidden, so its tab survives the round trip).
+  // "default" shows the Menu tabs; "block", "design", and "dataSource" swap
+  // in a detail panel (Menu stays mounted, just hidden, so its tab survives).
   const [sidepanelMode, setSidepanelMode] = useState("default");
   // Held here rather than in Menu so the data source settings panel can send
   // the user to the Study Flow tab.
@@ -72,6 +70,12 @@ export default function Builder({
   if (isCanvasLocked && engine?.getModel()) {
     engine.getModel().setLocked(true);
   }
+
+  const unlockCanvasIfEditable = () => {
+    if (!isCanvasLocked && engine?.getModel()) {
+      engine.getModel().setLocked(false);
+    }
+  };
 
   const openComponentModal = ({
     node,
@@ -87,6 +91,7 @@ export default function Builder({
     setComponentId(node?.options?.componentID);
     if (isInfoOpen || isEditorOpen) {
       setDataSourceSettingsId(null);
+      unlockCanvasIfEditable();
       setSidepanelMode("block");
     }
   };
@@ -100,7 +105,11 @@ export default function Builder({
   };
 
   const openDataSourceSettings = (id) => {
-    closeComponentModal();
+    setComponentId(null);
+    setIsInfoOpen(false);
+    setIsEditorOpen(false);
+    setIsPreviewOpen(false);
+    unlockCanvasIfEditable();
     setDataSourceSettingsId(id);
     setSidepanelMode("dataSource");
   };
@@ -108,6 +117,22 @@ export default function Builder({
   const closeDataSourceSettings = () => {
     setDataSourceSettingsId(null);
     setSidepanelMode("default");
+  };
+
+  const openDesignSettings = ({ node }) => {
+    if (isCanvasLocked) return;
+    setComponentId(null);
+    setIsInfoOpen(false);
+    setIsEditorOpen(false);
+    setIsPreviewOpen(false);
+    setDataSourceSettingsId(null);
+    setNode(node);
+    setSidepanelMode("design");
+  };
+
+  const closeDesignSettings = () => {
+    setSidepanelMode("default");
+    unlockCanvasIfEditable();
   };
 
   const openStudyFlowTab = () => {
@@ -118,19 +143,6 @@ export default function Builder({
   const openBlockPreview = useCallback(() => {
     setIsPreviewOpen(true);
   }, []);
-
-  const openModal = ({ node }) => {
-    if (isCanvasLocked) return; // Prevent opening modals when locked
-    setNode(node);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    if (!isCanvasLocked && engine?.getModel()) {
-      engine.getModel().setLocked(false); // Unlock only if not SUBMITTED
-    }
-  };
 
   const updateCanvas = ({ task, operation }) => {
     if (isCanvasLocked) return; // Prevent updates when locked
@@ -232,7 +244,7 @@ export default function Builder({
           engine={engine}
           studyId={study?.id}
           openComponentModal={openComponentModal}
-          openModal={openModal}
+          openDesignSettings={openDesignSettings}
           openStudyPreview={openStudyPreview}
           isCanvasLocked={isCanvasLocked}
           onBeforeCanvasMutation={onBeforeCanvasMutation}
@@ -242,7 +254,8 @@ export default function Builder({
         <div
           className={clsx(
             "sidepanel",
-            sidepanelMode === "block" && "sidepanel--block"
+            (sidepanelMode === "block" || sidepanelMode === "design") &&
+              "sidepanel--block"
           )}
           id="sidepanel"
         >
@@ -279,6 +292,17 @@ export default function Builder({
               node={node}
               onOpenPreview={openBlockPreview}
               persistStudy={persistStudy}
+            />
+          )}
+          {sidepanelMode === "design" && node && (
+            <Modal
+              key={node?.getID?.() || node?.options?.id || "design"}
+              user={user}
+              node={node}
+              engine={engine}
+              close={() => closeDesignSettings()}
+              setHasStudyChanged={setHasStudyChanged}
+              study={study}
             />
           )}
           {sidepanelMode === "dataSource" && dataSourceSettingsId && (
@@ -356,17 +380,6 @@ export default function Builder({
               closeComponentModal();
             }
           }}
-        />
-      )}
-
-      {isModalOpen && (
-        <Modal
-          user={user}
-          node={node}
-          engine={engine}
-          close={() => closeModal()}
-          setHasStudyChanged={setHasStudyChanged}
-          study={study}
         />
       )}
     </StyledCanvasBuilder>

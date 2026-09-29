@@ -1342,38 +1342,70 @@ export const StyledCanvasBuilder = styled.div`
 
   .portsEditor {
     display: grid;
-    margin: 20px 30px;
-    .navigation {
-      display: grid;
-      grid-gap: 10px;
-      grid-template-columns: 50px 1fr auto;
-      align-items: center;
-      .goBackBtn {
-        font-size: 30px;
-        cursor: pointer;
-      }
-    }
+    margin: 0;
+    width: 100%;
+    min-width: 0;
+    gap: 4px;
+
     .port {
       display: grid;
-      grid-gap: 10px;
-      grid-template-columns: 100px 2fr 1fr 1fr 1fr;
-      margin: 10px 0px;
+      grid-gap: 8px;
+      grid-template-columns:
+        minmax(140px, 1.6fr) minmax(72px, 0.7fr) 24px minmax(72px, 0.8fr) auto;
+      margin: 0;
+      padding: 8px 0;
       align-items: center;
+      border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      box-sizing: border-box;
+
+      p {
+        margin: 0;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        overflow-wrap: anywhere;
+      }
+
       input,
       select {
         width: 100%;
-        height: 46px;
+        min-width: 0;
+        height: 40px;
         font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
-        background: #ffffff;
-        border: 1px solid #cccccc;
-        border-radius: 4px;
-        padding: 0px 0px 0px 10px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        border: 1px solid var(--MH-Theme-Neutrals-Dark, #a1a1a1);
+        border-radius: 8px;
+        padding: 0 12px;
+        box-sizing: border-box;
       }
     }
+
+    .portChance {
+      min-width: 0;
+    }
+
+    .portPercent span {
+      font: var(--MH-Type-Label-Base);
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    }
+
+    .portParticipants {
+      min-width: 0;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
+    }
+
+    .portActions {
+      display: flex;
+      justify-content: flex-end;
+      min-width: 0;
+    }
+
     .footer {
-      display: grid;
-      margin: 30px 0px;
+      display: flex;
+      margin: 12px 0 0;
     }
   }
 

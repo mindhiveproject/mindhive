@@ -15,7 +15,7 @@ export const CreatorWidget = props => {
 
   const diagramEngine = props.engine;
   diagramEngine.openComponentModal = props.openComponentModal;
-  diagramEngine.openModal = props.openModal;
+  diagramEngine.openDesignSettings = props.openDesignSettings;
   diagramEngine.openStudyPreview = props.openStudyPreview;
   diagramEngine.studyId = props.studyId;
 

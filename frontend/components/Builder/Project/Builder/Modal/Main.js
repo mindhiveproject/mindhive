@@ -3,11 +3,30 @@ import { OutCustomPort } from "../Diagram/models/OutPortModel";
 import useTranslation from "next-translate/useTranslation";
 
 import uniqid from "uniqid";
-import generate from "project-name-generator";
 import Button from "../../../../DesignSystem/Button";
+import IconButton from "../../../../DesignSystem/IconButton";
+
+const ADD_ICON = {
+  display: "block",
+  width: 18,
+  height: 18,
+  backgroundColor: "currentColor",
+  WebkitMaskImage: "url(/assets/icons/builder/medium-add.svg)",
+  WebkitMaskSize: "contain",
+  WebkitMaskRepeat: "no-repeat",
+  WebkitMaskPosition: "center",
+  maskImage: "url(/assets/icons/builder/medium-add.svg)",
+  maskSize: "contain",
+  maskRepeat: "no-repeat",
+  maskPosition: "center",
+};
+
+const DANGER_TONAL = {
+  background: "var(--MH-Theme-Danger-Light, #f9dedc)",
+  color: "var(--MH-Theme-Danger-Dark, #8f1f14)",
+};
 
 export default function Modal({
-  user,
   node,
   engine,
   close,
@@ -37,38 +56,40 @@ export default function Modal({
           ...port,
           [name]: value,
         };
-      } else {
-        return port;
       }
+      return port;
     });
     setPorts(newPorts);
   };
 
   const removePort = ({ name }) => {
-    const newPorts = ports.filter((port) => port?.name !== name);
-    setPorts(newPorts);
+    setPorts((prev) => prev.filter((port) => port?.name !== name));
   };
 
   const addPort = () => {
-    const newPorts = [
-      ...ports,
-      { name: uniqid.time(), label: generate().dashed, probability: 1 },
-    ];
-    setPorts(newPorts);
+    setPorts((prev) => [
+      ...prev,
+      {
+        name: uniqid.time(),
+        label: t(
+          "modal.conditionDefault",
+          { number: prev.length + 1 },
+          { default: "Condition {{number}}" }
+        ),
+        probability: 50,
+      },
+    ]);
   };
 
   const update = () => {
     const outPorts = Object.values(node?.ports).filter(
       (port) => port?.options?.type === "outCustomPort"
     );
-    // update the number of ports if required
     if (ports.length !== outPorts.length) {
-      // remove all ports
       outPorts.forEach((port) => {
         node.removePort(node?.ports[port?.options?.name]);
       });
-      // re-add all ports
-      ports.forEach((port, num) => {
+      ports.forEach((port) => {
         node.addPort(
           new OutCustomPort({
             in: false,
@@ -82,8 +103,7 @@ export default function Modal({
         );
       });
     }
-    // update content of ports
-    ports.forEach((port, num) => {
+    ports.forEach((port) => {
       node.ports[port?.name].options = {
         ...node.ports[port?.name].options,
         label: port?.label,
@@ -98,95 +118,95 @@ export default function Modal({
   };
 
   return (
-    <div className="background">
-      <div className="modal">
-        <div className="portsEditor">
-          <div className="navigation">
-            <div className="goBackBtn" onClick={() => close()}>
-              {t("modal.back", "←")}
-            </div>
-            <div>
-              <h1>{node?.options?.name}</h1>
-              <p>{node?.options?.details}</p>
-            </div>
-            <div>
-              <Button variant="filled" onClick={update}>
-                {t("modal.update", {}, { default: "Update" })}
-              </Button>
-            </div>
+    <div className="blockPanel">
+      <div className="blockPanelHeader">
+        <div className="blockPanelTitle">
+          <h1>{node?.options?.name}</h1>
+          {node?.options?.details ? (
+            <p className="blockPanelMuted">{node.options.details}</p>
+          ) : null}
+        </div>
+        <div className="blockPanelHeaderMain">
+          <div className="blockPanelActions">
+            <Button variant="filled" type="button" onClick={update}>
+              {t("modal.update", {}, { default: "Update" })}
+            </Button>
           </div>
-          <div>
-            <div className="port">
+          <IconButton
+            variant="subtle"
+            elevated={false}
+            ariaLabel={t("blockPanel.close", {}, { default: "Close" })}
+            title={t("blockPanel.close", {}, { default: "Close" })}
+            onClick={() => close()}
+            icon={<span aria-hidden>&times;</span>}
+          />
+        </div>
+      </div>
+      <div className="blockPanelBody">
+        <div className="portsEditor">
+          {ports.map((port, num) => (
+            <div key={port?.name || num} className="port">
               <div>
-                <p>{t("modal.id", "ID")}</p>
+                <input
+                  type="text"
+                  name="label"
+                  aria-label={t("modal.name", {}, { default: "Condition name" })}
+                  value={port?.label}
+                  onChange={({ target }) =>
+                    handleChange({
+                      portNumber: num,
+                      name: target?.name,
+                      value: target?.value,
+                    })
+                  }
+                />
               </div>
-              <div>
-                <p>{t("modal.name", "Name")}</p>
+              <div className="portChance">
+                <input
+                  type="number"
+                  name="probability"
+                  aria-label={t("modal.probability", {}, {
+                    default: "Probability (0 - 100%)",
+                  })}
+                  value={port?.probability ?? 50}
+                  min={0}
+                  max={100}
+                  onChange={({ target }) =>
+                    handleChange({
+                      portNumber: num,
+                      name: target?.name,
+                      value: target?.value,
+                    })
+                  }
+                />
               </div>
-              <div>
-                <p>{t("modal.probability", "Probability (0 - 100%)")}</p>
+              <div className="portPercent">
+                <span aria-hidden>%</span>
               </div>
-              <div>
-                <p>{t("modal.participants", "Participants")}</p>
+              <div className="portParticipants">
+                {components[port?.label]}
               </div>
-              <div>
-                <p></p>
-              </div>
-            </div>
-            {ports.map((port, num) => (
-              <div key={num} className="port">
-                <div>
-                  <p>{port?.name}</p>
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    name="label"
-                    value={port?.label}
-                    onChange={({ target }) =>
-                      handleChange({
-                        portNumber: num,
-                        name: target?.name,
-                        value: target?.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="number"
-                    name="probability"
-                    value={port?.probability}
-                    min={0}
-                    max={100}
-                    onChange={({ target }) =>
-                      handleChange({
-                        portNumber: num,
-                        name: target?.name,
-                        value: target?.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div>{components[port?.label]}</div>
-
-                <div>
-                  <Button variant="text" onClick={() => removePort({ name: port?.name })}>
-                    {t("modal.removeCondition", {}, { default: "Remove condition" })}
-                  </Button>
-                </div>
-              </div>
-            ))}
-
-            <div className="footer">
-              <div>
-                <Button variant="outline" onClick={() => addPort()}>
-                  {t("modal.addCondition", {}, { default: "Add condition" })}
+              <div className="portActions">
+                <Button
+                  variant="tonal"
+                  type="button"
+                  style={DANGER_TONAL}
+                  onClick={() => removePort({ name: port?.name })}
+                >
+                  {t("modal.removeCondition", {}, { default: "Remove" })}
                 </Button>
               </div>
             </div>
+          ))}
+          <div className="footer">
+            <Button
+              variant="subtle"
+              type="button"
+              leadingIcon={<span aria-hidden style={ADD_ICON} />}
+              onClick={() => addPort()}
+            >
+              {t("modal.addCondition", {}, { default: "Add condition" })}
+            </Button>
           </div>
         </div>
       </div>

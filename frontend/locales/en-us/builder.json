@@ -1474,12 +1474,14 @@
 	"modal": {
 		"addCondition": "Add condition",
 		"back": "←",
+		"conditionDefault": "Condition {{number}}",
 		"delete": "Delete",
 		"id": "ID",
-		"name": "Name",
-		"participants": "Participants",
+		"name": "Condition name",
+		"noneAssigned": "None yet",
+		"participants": "Assigned",
 		"probability": "Probability (0 - 100%)",
-		"removeCondition": "Remove condition",
+		"removeCondition": "Remove",
 		"update": "Update"
 	},
 	"my-studies": "My studies",
