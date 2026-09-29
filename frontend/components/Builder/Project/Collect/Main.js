@@ -13,7 +13,7 @@ import Navigation from "../Navigation/Main";
 import ParticipantPage from "./Participant/Main";
 import Table from "./Table/Main";
 
-export default function Collect({ query, user, tab, toggleSidebar, studyId }) {
+export default function Collect({ query, user, tab, studyId }) {
   const { t } = useTranslation("builder");
   const participantId = query?.id;
   const { type } = query;
@@ -71,7 +71,6 @@ export default function Collect({ query, user, tab, toggleSidebar, studyId }) {
         query={query}
         user={user}
         tab={tab}
-        toggleSidebar={toggleSidebar}
       />
       <StyledCollectPage>
         {participantId ? (

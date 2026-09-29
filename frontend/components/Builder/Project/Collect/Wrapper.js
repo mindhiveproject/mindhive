@@ -9,7 +9,7 @@ import InDev from "../../../Global/InDev";
 import { collectTours } from "./tours";
 import { isProjectArea } from "../../shared/identity";
 
-export default function ProjectWrapper({ query, user, tab, toggleSidebar }) {
+export default function ProjectWrapper({ query, user, tab }) {
   const { t } = useTranslation("builder");
   const selector = query?.selector;
   const projectMode = isProjectArea(query?.area);
@@ -108,7 +108,6 @@ export default function ProjectWrapper({ query, user, tab, toggleSidebar }) {
         query={query}
         user={user}
         tab={tab}
-        toggleSidebar={toggleSidebar}
         studyId={studyId}
       />
     );
@@ -121,7 +120,6 @@ export default function ProjectWrapper({ query, user, tab, toggleSidebar }) {
         query={query}
         user={user}
         tab={tab}
-        toggleSidebar={toggleSidebar}
       />
       <InDev
         header={t(

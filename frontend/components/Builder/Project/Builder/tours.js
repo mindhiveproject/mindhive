@@ -50,8 +50,8 @@ export const builderTours = {
         disableInteraction: false
       },
       {
-        element: '#createdBy',
-        intro: "... and filter the blocks by created by here.<br><br>Make sure to select 'Owned by me' to see the blocks you have created yourself.",
+        element: '#favoritesOnly',
+        intro: "... and turn on My favorite to see only the blocks you have saved.",
         position: "auto",
         disableInteraction: false
       },

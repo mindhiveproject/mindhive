@@ -48,7 +48,10 @@ export function getNavPermissions(user) {
     // Capability flag, not a role name — the backend gates the Ticket list
     // on canManageTickets, so the nav has to ask the same question.
     canManageTickets: !!user?.permissions?.some(
-      (permission) => permission?.canManageTickets
+      (permission) =>
+        permission?.canManageTickets ||
+        permission?.name === "ADMIN" ||
+        permission?.name === "TESTER"
     ),
     canDevelop: has("ADMIN", "SCIENTIST", "TEACHER", "STUDENT", "MENTOR"),
     canSeeResearch: has("ADMIN", "RESEARCHER"),

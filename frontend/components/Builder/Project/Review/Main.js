@@ -9,7 +9,7 @@ import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 import { StyledReviewPage } from "../../../styles/StyledReview";
 import { reviewTours } from "./tours";
 
-export default function Review({ query, user, tab, toggleSidebar }) {
+export default function Review({ query, user, tab }) {
   const projectId = query?.selector;
 
   const { data, loading, error } = useQuery(PROPOSAL_REVIEWS_QUERY, {

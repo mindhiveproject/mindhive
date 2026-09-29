@@ -1,16 +1,10 @@
 import absoluteUrl from "next-absolute-url";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
-import { UPDATE_PROPOSAL_BOARD } from "../../../../../Mutations/Proposal";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
 import { cardIncludedInReviewStep } from "../../../../../../lib/milestones";
-import {
-  getBoardAssignableToStudents,
-  getBoardStudentsCanAssignToCards,
-  mergeBoardSettings,
-} from "../../../../../../lib/proposalBoardSettings";
-import { isClassTeacherOrMentor } from "../../../../../../lib/classTeacherUtils";
+import { getBoardAssignableToStudents } from "../../../../../../lib/proposalBoardSettings";
 import moment from "moment";
 import Head from "next/head";
 import Preview from "./Preview/Main";
@@ -41,56 +35,11 @@ export default function ProposalPDF({
   const sections = proposal?.sections || [];
   const study = proposal?.study || {};
 
-  // Permission checks for Assigned People Filters (teachers/mentors of board's class)
   const usedInClass = proposal?.usedInClass;
-  const isTeacherOrMentorOfClass =
-    usedInClass && isClassTeacherOrMentor(usedInClass, user?.id);
   const assignableToStudents = getBoardAssignableToStudents(
     proposal,
     usedInClass
   );
-  const studentsCanAssignToCards = getBoardStudentsCanAssignToCards(
-    proposal,
-    usedInClass
-  );
-
-  const [updateProposalBoard, { loading: updatingAssignable }] = useMutation(
-    UPDATE_PROPOSAL_BOARD,
-    {
-      refetchQueries: [
-        { query: PROPOSAL_QUERY, variables: { id: proposalId } },
-      ],
-    }
-  );
-
-  const handleToggleAssignable = () => {
-    const newAssignableToStudents = !assignableToStudents;
-    const patch = { assignableToStudents: newAssignableToStudents };
-    if (newAssignableToStudents) {
-      patch.studentsCanAssignToCards = false;
-    }
-    updateProposalBoard({
-      variables: {
-        id: proposalId,
-        settings: mergeBoardSettings(proposal.settings, patch),
-      },
-    }).catch((err) =>
-      alert(err?.message || "Failed to update settings")
-    );
-  };
-
-  const handleToggleStudentsCanAssign = () => {
-    updateProposalBoard({
-      variables: {
-        id: proposalId,
-        settings: mergeBoardSettings(proposal.settings, {
-          studentsCanAssignToCards: !studentsCanAssignToCards,
-        }),
-      },
-    }).catch((err) =>
-      alert(err?.message || "Failed to update settings")
-    );
-  };
 
   // If props are not provided, use local state as fallback (for backwards compatibility)
   const [localSelectedStatuses, setLocalSelectedStatuses] = useState(["Not started", "In progress"]);
@@ -620,8 +569,8 @@ export default function ProposalPDF({
               </div>
             </div>
 
-            {/* Assigned People Filters - only for students when assignableToStudents is on */}
-            {(assignableToStudents || isTeacherOrMentorOfClass) && (
+            {/* Assigned People Filters - only when assignableToStudents is on */}
+            {assignableToStudents && (
             <div
               style={{
                 display: "flex",
@@ -629,8 +578,6 @@ export default function ProposalPDF({
                 gap: "4px",
               }}
             >
-              {assignableToStudents && (
-              <>
               <label
                 className="MH-Type-Title-Base"
                 style={{
@@ -731,76 +678,7 @@ export default function ProposalPDF({
                   })
                 )}
               </div>
-              </>
-              )}
             </div>
-            )}
-            {isTeacherOrMentorOfClass && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                  marginBottom: "4px",
-                }}
-              >
-                <button
-                  onClick={handleToggleAssignable}
-                  className="MH-Type-Label-Base"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "8px",
-                    padding: "4px 8px",
-                    height: "fit-content",
-                    border: "1px solid #0D3944",
-                    borderRadius: "8px",
-                    backgroundColor: "#ffffff",
-                    cursor: "pointer",
-                    color: "#0D3944",
-                    transition: "background-color 0.2s, border-color 0.2s, color 0.2s",
-                    width: "fit-content",
-                    marginBottom: "4px",
-                  }}
-                >
-                  {assignableToStudents
-                    ? t("proposalPDF.filters.assignedTo.disable", "Disable assigning students to cards")
-                    : t("proposalPDF.filters.assignedTo.enable", "Enable assigning students to cards")}
-                </button>
-                {assignableToStudents && (
-                  <button
-                    onClick={handleToggleStudentsCanAssign}
-                    disabled={updatingAssignable}
-                    className="MH-Type-Label-Base"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "fit-content",
-                      gap: "8px",
-                      padding: "4px 8px",
-                      border: "1px solid #0D3944",
-                      borderRadius: "8px",
-                      backgroundColor: "#ffffff",
-                      cursor: "pointer",
-                      color: "#0D3944",
-                      transition: "background-color 0.2s, border-color 0.2s, color 0.2s",
-                      width: "fit-content",
-                    }}
-                  >
-                    {studentsCanAssignToCards
-                      ? t(
-                          "proposalPDF.filters.assignedTo.disableStudentsAssign",
-                          "Only teachers/mentors can assign"
-                        )
-                      : t(
-                          "proposalPDF.filters.assignedTo.enableStudentsAssign",
-                          "Allow students to assign cards"
-                        )}
-                  </button>
-                )}
-              </div>
             )}
           </div>
 

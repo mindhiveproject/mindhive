@@ -25,8 +25,8 @@ export const DesignWidget = props => {
             onClick={() => {
               // lock the model
               props.engine.getModel().setLocked(true);
-              // open the modal
-              props.engine.openModal({
+              // open design settings in the side panel
+              props.engine.openDesignSettings({
                 node: props?.node
               });
             }}

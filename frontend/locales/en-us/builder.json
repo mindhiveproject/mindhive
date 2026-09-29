@@ -1474,12 +1474,14 @@
 	"modal": {
 		"addCondition": "Add condition",
 		"back": "←",
+		"conditionDefault": "Condition {{number}}",
 		"delete": "Delete",
 		"id": "ID",
-		"name": "Name",
-		"participants": "Participants",
+		"name": "Condition name",
+		"noneAssigned": "None yet",
+		"participants": "Assigned",
 		"probability": "Probability (0 - 100%)",
-		"removeCondition": "Remove condition",
+		"removeCondition": "Remove",
 		"update": "Update"
 	},
 	"my-studies": "My studies",
@@ -2189,7 +2191,9 @@
 			"title": "Basic Blocks"
 		},
 		"filter": {
+			"all": "All",
 			"createdByAnyone": "All blocks",
+			"favorite": "Favorite",
 			"myFavorite": "My favorite",
 			"ownedByMe": "Owned by me"
 		},
@@ -2197,6 +2201,7 @@
 		"previewAria": "Preview block",
 		"removeFavoriteAria": "Remove from favorites",
 		"searchPlaceholder": "Search for blocks",
+		"sectionTabs": "Block types",
 		"studyDesign": {
 			"betweenSubjects": "Between-subjects design",
 			"conditionProbabilityInfo": "The probability that a participant is in this between-subjects condition (based on a simulated run of the study for 100 times).",

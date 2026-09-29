@@ -31,7 +31,6 @@ export default function Navigation({
   user,
   saveBtnName,
   saveBtnFunction,
-  toggleSidebar,
   hasStudyChanged,
   cardId,
   isCanvasLocked,
@@ -61,7 +60,6 @@ export default function Navigation({
     collaborators: [],
     classes: [],
     consent: [],
-    talks: [],
   };
 
   const navItems = getNavTabs({ mode, t });
@@ -80,11 +78,6 @@ export default function Navigation({
   };
 
   const studyForNav = mode === "project" ? project?.study : study;
-
-  const toggleChatSidebar = () => {
-    const [talk] = studyForNav?.talks || [];
-    toggleSidebar?.({ chatId: talk?.id, studyId: studyForNav?.id });
-  };
 
   // Collapse from the navbar's own width, not the viewport — same pattern as
   // the study-builder side panel (Builder/Project/Builder/Menu.js). Thresholds
@@ -201,17 +194,6 @@ export default function Navigation({
             user={user}
             modalOpen={connectModalOpen}
             onModalOpenChange={onConnectModalOpenChange}
-          />
-        )}
-
-        {studyForNav?.talks?.length > 0 && (
-          <IconButton
-            variant="subtle"
-            elevated={false}
-            ariaLabel={t("navigation.chat", {}, { default: "Chat" })}
-            title={t("navigation.chat", {}, { default: "Chat" })}
-            icon={<img src="/assets/icons/chat.svg" alt="" />}
-            onClick={toggleChatSidebar}
           />
         )}
 

@@ -1342,38 +1342,70 @@ export const StyledCanvasBuilder = styled.div`
 
   .portsEditor {
     display: grid;
-    margin: 20px 30px;
-    .navigation {
-      display: grid;
-      grid-gap: 10px;
-      grid-template-columns: 50px 1fr auto;
-      align-items: center;
-      .goBackBtn {
-        font-size: 30px;
-        cursor: pointer;
-      }
-    }
+    margin: 0;
+    width: 100%;
+    min-width: 0;
+    gap: 4px;
+
     .port {
       display: grid;
-      grid-gap: 10px;
-      grid-template-columns: 100px 2fr 1fr 1fr 1fr;
-      margin: 10px 0px;
+      grid-gap: 8px;
+      grid-template-columns:
+        minmax(140px, 1.6fr) minmax(72px, 0.7fr) 24px minmax(72px, 0.8fr) auto;
+      margin: 0;
+      padding: 8px 0;
       align-items: center;
+      border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      box-sizing: border-box;
+
+      p {
+        margin: 0;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        overflow-wrap: anywhere;
+      }
+
       input,
       select {
         width: 100%;
-        height: 46px;
+        min-width: 0;
+        height: 40px;
         font: var(--MH-Type-Body-Base);
         letter-spacing: 0;
-        background: #ffffff;
-        border: 1px solid #cccccc;
-        border-radius: 4px;
-        padding: 0px 0px 0px 10px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        border: 1px solid var(--MH-Theme-Neutrals-Dark, #a1a1a1);
+        border-radius: 8px;
+        padding: 0 12px;
+        box-sizing: border-box;
       }
     }
+
+    .portChance {
+      min-width: 0;
+    }
+
+    .portPercent span {
+      font: var(--MH-Type-Label-Base);
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    }
+
+    .portParticipants {
+      min-width: 0;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
+    }
+
+    .portActions {
+      display: flex;
+      justify-content: flex-end;
+      min-width: 0;
+    }
+
     .footer {
-      display: grid;
-      margin: 30px 0px;
+      display: flex;
+      margin: 12px 0 0;
     }
   }
 
@@ -1391,11 +1423,12 @@ export const StyledCanvasBuilder = styled.div`
       top: calc(var(--sidepanel-nav-h) - 1px);
       z-index: 2;
       display: flex;
-      flex-direction: column;
-      gap: 16px;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
       width: 100%;
       min-width: 0;
-      padding: 0 0 16px;
+      padding: 8px 0;
       background: #ffffff;
       box-sizing: border-box;
     }
@@ -1404,7 +1437,7 @@ export const StyledCanvasBuilder = styled.div`
       display: flex;
       align-items: center;
       gap: 8px;
-      width: 100%;
+      flex: 2;
       min-width: 0;
       height: 40px;
       padding: 4px 16px 4px 8px;
@@ -1432,6 +1465,14 @@ export const StyledCanvasBuilder = styled.div`
       }
     }
 
+    .addBlockFavorite {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: flex-start;
+      min-width: 0;
+    }
+
     .addBlockChips {
       display: flex;
       flex-wrap: wrap;
@@ -1444,53 +1485,35 @@ export const StyledCanvasBuilder = styled.div`
     .blocksMenu {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 16px;
       width: 100%;
       min-width: 0;
       max-width: 100%;
-      border-top: 1px solid #e6e6e6;
-      padding-bottom: 8px;
+      padding: 8px 0;
       box-sizing: border-box;
 
-      .blocksMenuSection {
-        display: flex;
-        flex-direction: column;
+      .blocksMenuTabs {
         width: 100%;
         min-width: 0;
-        border-bottom: 1px solid #e6e6e6;
-      }
+        overflow-x: auto;
 
-      .blocksMenuTrigger {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        width: 100%;
-        min-width: 0;
-        padding: 8px 0;
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        text-align: left;
-        box-sizing: border-box;
-      }
+        .DesignSystem-ButtonGroup
+          button.DesignSystem-ButtonGroup__segment.DesignSystem-ButtonGroup__segment--selected,
+        .DesignSystem-ButtonGroup
+          button.DesignSystem-ButtonGroup__segment.DesignSystem-ButtonGroup__segment--selected:hover:not(
+            :disabled
+          ) {
+          background: #fdf2d0;
+          color: #5d5763;
+        }
+        scrollbar-width: none;
+        -ms-overflow-style: none;
 
-      .blocksMenuTriggerTitle {
-        flex: 1;
-        min-width: 0;
-        font: var(--MH-Type-Title-Base);
-        letter-spacing: 0;
-        color: #171717;
-      }
-
-      .blocksMenuChevron {
-        display: inline-flex;
-        color: #171717;
-        transition: transform 0.2s ease;
-      }
-
-      .blocksMenuChevronOpen {
-        transform: rotate(180deg);
+        &::-webkit-scrollbar {
+          display: none;
+          width: 0;
+          height: 0;
+        }
       }
 
       .blocksMenuContent {
@@ -1500,17 +1523,7 @@ export const StyledCanvasBuilder = styled.div`
         width: 100%;
         min-width: 0;
         padding: 0 0 16px;
-        overflow-y: auto;
-        max-height: 50vh;
         box-sizing: border-box;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-
-        &::-webkit-scrollbar {
-          display: none;
-          width: 0;
-          height: 0;
-        }
       }
 
       .blocksMenuDescription {

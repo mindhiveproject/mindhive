@@ -23,7 +23,7 @@ import InDev from "../../../Global/InDev";
 import { participantPageTours } from "./tours";
 import { builderHref, isProjectArea } from "../../shared/identity";
 
-export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
+export default function ParticipantPage({ query, user, tab }) {
   const router = useRouter();
   const { t } = useTranslation("builder");
   const { area } = query;
@@ -307,7 +307,6 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           tab={tab}
           saveBtnName={t('participantPageMain.save')}
           saveBtnFunction={saveStudy}
-          toggleSidebar={toggleSidebar}
           hasStudyChanged={hasStudyChanged}
         />
         <InDev
@@ -327,7 +326,6 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         tab={tab}
         saveBtnName={t('participantPageMain.save')}
         saveBtnFunction={saveStudy}
-        toggleSidebar={toggleSidebar}
         hasStudyChanged={hasStudyChanged}
       />
       <StyledParticipantPage>

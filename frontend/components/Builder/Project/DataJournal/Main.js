@@ -12,7 +12,7 @@ import { journalTours } from "./Tours/journalTours";
 import { GET_PROJECT_STUDY_ID } from "../../../Queries/Proposal";
 import { isProjectArea } from "../../shared/identity";
 
-export default function DataJournals({ user, query, tab, toggleSidebar }) {
+export default function DataJournals({ user, query, tab }) {
   const selector = query?.selector;
   const projectMode = isProjectArea(query?.area);
 
@@ -40,7 +40,6 @@ export default function DataJournals({ user, query, tab, toggleSidebar }) {
         query={query}
         user={user}
         tab={tab}
-        toggleSidebar={toggleSidebar}
       />
       <DataJournalProvider
         initialProps={{

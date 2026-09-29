@@ -110,6 +110,8 @@ export default function Settings({ myclass, user }) {
     (network) => getClassNetworkType(network) === CLASS_NETWORK_TYPES.FEEDBACK
   );
   const { isAdmin, isClassNetworkAdmin } = deriveRoles(user);
+  const canConfigurePhysiologicalData =
+    isAdmin || user?.permissions?.some((permission) => permission?.name === "TESTER");
   const canAccessNetworkManagement = isAdmin || isClassNetworkAdmin;
   const linkedNetworkIds = new Set(
     classNetworks.map((network) => network?.id).filter(Boolean)
@@ -893,7 +895,7 @@ export default function Settings({ myclass, user }) {
         </div>
       </section>
 
-      {isAdmin && (
+      {canConfigurePhysiologicalData && (
         <section className="settingsSection">
           <div className="settingsSectionHeader">
             <h3>

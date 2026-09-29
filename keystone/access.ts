@@ -23,8 +23,19 @@ const generatedPermissions = Object.fromEntries(
 // Permissions check if someone meets a criteria - yes or no
 // Issue #7: removed hardcoded `isAwesome` username bypass; use the
 // canAccessAdminUI permission flag stored on the user's Role instead.
+const TICKET_ROLE_NAMES = ["ADMIN", "TESTER"];
+
 export const permissions = {
   ...generatedPermissions,
+  // ADMIN keeps the stored flag. TESTER is granted the same ticket access by name.
+  canManageTickets({ session }: ListAccessArgs) {
+    return (
+      generatedPermissions.canManageTickets({ session }) ||
+      !!session?.data.permissions?.some((role) =>
+        TICKET_ROLE_NAMES.includes(role?.name)
+      )
+    );
+  },
 };
 
 /** Admin UI operators who may manage network memberships and invites. */
