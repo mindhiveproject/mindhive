@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { PUBLIC_TASKS } from "../../../../../Queries/Task";
+import { MY_TASKS, PUBLIC_TASKS } from "../../../../../Queries/Task";
 import Card from "./Card";
 
 export default function PublicBlocks({
@@ -13,27 +13,71 @@ export default function PublicBlocks({
   const router = useRouter();
   const currentLocale = router.locale || "en-us"; // fallback to en-us
 
-  const { data, error, loading } = useQuery(PUBLIC_TASKS, {
-    variables: {
-      where:
-        process.env.NODE_ENV === "development"
-          ? {
-              taskType: { equals: componentType },
-              public: { equals: true },
+  const publicWhere =
+    process.env.NODE_ENV === "development"
+      ? {
+          taskType: { equals: componentType },
+          public: { equals: true },
+          OR: [
+            { title: { contains: search } },
+            { description: { contains: search } },
+          ],
+        }
+      : {
+          taskType: { equals: componentType },
+          public: { equals: true },
+          OR: [
+            { title: { contains: search, mode: "insensitive" } },
+            { description: { contains: search, mode: "insensitive" } },
+          ],
+        };
+
+  const ownedWhere =
+    process.env.NODE_ENV === "development"
+      ? {
+          AND: [
+            { taskType: { equals: componentType } },
+            { public: { equals: false } },
+            {
+              OR: [
+                { author: { id: { equals: user?.id } } },
+                { collaborators: { some: { id: { equals: user?.id } } } },
+              ],
+            },
+            {
               OR: [
                 { title: { contains: search } },
                 { description: { contains: search } },
               ],
-            }
-          : {
-              taskType: { equals: componentType },
-              public: { equals: true },
+            },
+          ],
+        }
+      : {
+          AND: [
+            { taskType: { equals: componentType } },
+            { public: { equals: false } },
+            {
+              OR: [
+                { author: { id: { equals: user?.id } } },
+                { collaborators: { some: { id: { equals: user?.id } } } },
+              ],
+            },
+            {
               OR: [
                 { title: { contains: search, mode: "insensitive" } },
                 { description: { contains: search, mode: "insensitive" } },
               ],
             },
-    },
+          ],
+        };
+
+  const { data, error, loading } = useQuery(PUBLIC_TASKS, {
+    variables: { where: publicWhere },
+  });
+
+  const { data: ownedData } = useQuery(MY_TASKS, {
+    variables: { where: ownedWhere },
+    skip: !user?.id || isSurveyBuilder,
   });
 
   const getLocalizedField = (component, fieldName) => {
@@ -83,7 +127,13 @@ export default function PublicBlocks({
     });
   };
 
-  const tasks = data?.tasks || [];
+  const publicTasks = data?.tasks || [];
+  const ownedTasks = isSurveyBuilder ? [] : ownedData?.tasks || [];
+  const seen = new Set(publicTasks.map((task) => task?.id));
+  const tasks = [
+    ...publicTasks,
+    ...ownedTasks.filter((task) => task?.id && !seen.has(task.id)),
+  ];
   const localizedTasks = processComponentsWithI18n(tasks);
 
   return (
