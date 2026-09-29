@@ -11,12 +11,22 @@ import {
 } from "@keystone-6/core/fields";
 import uniqid from "uniqid";
 
-import { signedInWrites } from "../access";
+import {
+  signedInWrites,
+  assignmentQueryFilter,
+  assignmentUpdateFilter,
+  authorFilter,
+} from "../access";
 
 export const Assignment = list({
   access: {
-    // Anyone may read; changes need a signed-in user.
+    // Author, class staff, published to class students, templates; see access.ts.
     operation: signedInWrites,
+    filter: {
+      query: assignmentQueryFilter,
+      update: assignmentUpdateFilter,
+      delete: authorFilter,
+    },
   },
   fields: {
     code: text({

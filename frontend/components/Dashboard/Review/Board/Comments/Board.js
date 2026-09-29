@@ -5,7 +5,7 @@ import ReactStars from "react-rating-stars-component"; // https://www.npmjs.com/
 import { Icon } from "semantic-ui-react";
 
 import { useMutation } from "@apollo/client";
-import { EDIT_REVIEW } from "../../../../Mutations/Review";
+import { TOGGLE_REVIEW_UPVOTE } from "../../../../Mutations/Review";
 import { STUDY_TO_REVIEW } from "../../../../Queries/Study";
 
 const StyledBoard = styled.div`
@@ -56,18 +56,11 @@ const StyledBoard = styled.div`
 `;
 
 export default function Board({ studyId, sections, user }) {
-  const [editReview, { data }] = useMutation(EDIT_REVIEW, {});
+  const [editReview, { data }] = useMutation(TOGGLE_REVIEW_UPVOTE, {});
 
   const voteReview = async ({ id, votedBefore }) => {
     await editReview({
-      variables: {
-        id: id,
-        input: {
-          upvotedBy: votedBefore
-            ? { disconnect: { id: user?.id } }
-            : { connect: { id: user?.id } },
-        },
-      },
+      variables: { id: id, upvote: !votedBefore },
       refetchQueries: [{ query: STUDY_TO_REVIEW, variables: { id: studyId } }],
     });
   };

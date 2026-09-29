@@ -38,6 +38,19 @@ export const GET_ALL_CLASSES = gql`
 `;
 
 // get class with a unique code
+// public preview of a class by join code (title and teacher only; class
+// details are limited to members)
+export const CLASS_JOIN_PREVIEW = gql`
+  query CLASS_JOIN_PREVIEW($code: String!) {
+    classJoinPreview(code: $code) {
+      id
+      code
+      title
+      creatorUsername
+    }
+  }
+`;
+
 export const GET_CLASS = gql`
   query GET_CLASS($code: String!) {
     class(where: { code: $code }) {

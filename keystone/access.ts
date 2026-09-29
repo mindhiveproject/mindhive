@@ -160,6 +160,211 @@ export function studyUpdateFilter({ session }: ListAccessArgs) {
   };
 }
 
+/** Anyone in a class: creator, co-teachers, mentors or students. */
+function classMemberWhere(me: string) {
+  return {
+    OR: [
+      ...classStaffSome(me).OR,
+      { students: { some: { id: { equals: me } } } },
+    ],
+  };
+}
+
+/** Profiles that are students or mentors in a class the session user staffs. */
+function profileInStaffClassWhere(me: string) {
+  const staffClass = { some: classStaffSome(me) };
+  return { OR: [{ studentIn: staffClass }, { mentorIn: staffClass }] };
+}
+
+/**
+ * Class reads: members, plus people connected through the class's networks
+ * (network creators/admins/members, classes in the same network, public
+ * networks). Roster emails are protected separately by Profile field rules.
+ */
+export function classQueryFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const me = String(session.itemId);
+  return {
+    OR: [
+      ...classMemberWhere(me).OR,
+      {
+        networks: {
+          some: {
+            OR: [
+              { creator: { id: { equals: me } } },
+              { admins: { some: { id: { equals: me } } } },
+              { memberProfiles: { some: { id: { equals: me } } } },
+              { isPublic: { equals: true } },
+              { classes: { some: classMemberWhere(me) } },
+            ],
+          },
+        },
+      },
+    ],
+  };
+}
+
+/** Journal reads: the owner and staff of the owner's classes. */
+export function journalQueryFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const me = String(session.itemId);
+  return {
+    OR: [
+      { creator: { id: { equals: me } } },
+      { creator: profileInStaffClassWhere(me) },
+    ],
+  };
+}
+
+/** Journal writes: the owner. */
+export function journalOwnerFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  return { creator: { id: { equals: String(session.itemId) } } };
+}
+
+/** Post reads: the author or journal owner, and staff of their classes. */
+export function postQueryFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const me = String(session.itemId);
+  return {
+    OR: [
+      { author: { id: { equals: me } } },
+      { journal: { creator: { id: { equals: me } } } },
+      { author: profileInStaffClassWhere(me) },
+      { journal: { creator: profileInStaffClassWhere(me) } },
+    ],
+  };
+}
+
+/** Post writes: the author or the journal owner. */
+export function postOwnerFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const me = String(session.itemId);
+  return {
+    OR: [
+      { author: { id: { equals: me } } },
+      { journal: { creator: { id: { equals: me } } } },
+    ],
+  };
+}
+
+function homeworkStaffWhere(me: string) {
+  return [
+    { author: profileInStaffClassWhere(me) },
+    { assignment: { classes: { some: classStaffSome(me) } } },
+  ];
+}
+
+/**
+ * Homework reads: the author, class staff, and (peer review) any signed-in
+ * user when the homework sits on a card of a study's main project board.
+ */
+export function homeworkQueryFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const me = String(session.itemId);
+  return {
+    OR: [
+      { author: { id: { equals: me } } },
+      ...homeworkStaffWhere(me),
+      { proposalCard: { section: { board: { NOT: [{ studyMain: null }] } } } },
+    ],
+  };
+}
+
+/** Homework updates: the author, and class staff (grading). */
+export function homeworkUpdateFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const me = String(session.itemId);
+  return {
+    OR: [{ author: { id: { equals: me } } }, ...homeworkStaffWhere(me)],
+  };
+}
+
+/**
+ * Boards whose cards (and linked assignments) a user may use: their own, a
+ * class board of a class they belong to, and templates they can copy.
+ */
+function usableBoardWhere(me: string) {
+  const memberClass = classMemberWhere(me);
+  return {
+    OR: [
+      { author: { id: { equals: me } } },
+      { collaborators: { some: { id: { equals: me } } } },
+      { usedInClass: memberClass },
+      { isTemplate: { equals: true } },
+      { isDefault: { equals: true } },
+      { templatesForClass: { some: memberClass } },
+      { templateForClasses: { some: memberClass } },
+    ],
+  };
+}
+
+/**
+ * Assignment reads: the author, class staff, students of the class once the
+ * assignment is published, platform templates, and assignments linked to
+ * cards on boards the user can use (copyProposalBoard reads and connects
+ * these as the caller).
+ */
+export function assignmentQueryFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const me = String(session.itemId);
+  return {
+    OR: [
+      { author: { id: { equals: me } } },
+      { classes: { some: classStaffSome(me) } },
+      {
+        classes: { some: { students: { some: { id: { equals: me } } } } },
+        public: { equals: true },
+      },
+      { isTemplate: { equals: true } },
+      {
+        proposalCards: {
+          some: { section: { board: usableBoardWhere(me) } },
+        },
+      },
+    ],
+  };
+}
+
+/**
+ * Assignment updates: the author, staff of its classes, and owners of a
+ * board it is linked to (template boards re-point linked assignments).
+ */
+export function assignmentUpdateFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const me = String(session.itemId);
+  return {
+    OR: [
+      { author: { id: { equals: me } } },
+      { classes: { some: classStaffSome(me) } },
+      {
+        proposalCards: {
+          some: {
+            section: {
+              board: {
+                OR: [
+                  { author: { id: { equals: me } } },
+                  { collaborators: { some: { id: { equals: me } } } },
+                  { templatesForClass: { some: classStaffSome(me) } },
+                ],
+              },
+            },
+          },
+        },
+      },
+    ],
+  };
+}
+
 // Keyed by the HTTP request (one session per request), so repeated field
 // checks while resolving one GraphQL response share a single lookup.
 const staffClassIdsCache = new WeakMap<object, Promise<string[]>>();

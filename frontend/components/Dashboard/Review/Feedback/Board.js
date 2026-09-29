@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
-import { EDIT_REVIEW } from "../../../Mutations/Review";
+import { TOGGLE_REVIEW_UPVOTE } from "../../../Mutations/Review";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
 
@@ -97,18 +97,11 @@ export default function Board({
   const { data: publicTasksData } = useQuery(ALL_PUBLIC_TASKS);
   const publicTasks = publicTasksData?.tasks || [];
 
-  const [editReview] = useMutation(EDIT_REVIEW, {});
+  const [editReview] = useMutation(TOGGLE_REVIEW_UPVOTE, {});
 
   const voteReview = async ({ id, votedBefore }) => {
     await editReview({
-      variables: {
-        id: id,
-        input: {
-          upvotedBy: votedBefore
-            ? { disconnect: { id: user?.id } }
-            : { connect: { id: user?.id } },
-        },
-      },
+      variables: { id: id, upvote: !votedBefore },
       refetchQueries: [
         { query: PROPOSAL_REVIEWS_QUERY, variables: { id: projectId } },
       ],

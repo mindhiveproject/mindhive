@@ -42,6 +42,8 @@ import { opportunityMultiselectResolvers } from "../lib/opportunityMultiselectRe
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
 import joinClass from "./joinClass";
+import toggleReviewUpvote from "./toggleReviewUpvote";
+import classJoinPreview from "./classJoinPreview";
 import {
   recordStudyConditions,
   updateGuestStudiesInfo,
@@ -277,6 +279,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         cancelNetworkInvite(inviteId: ID!): NetworkInvite
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
+        # Upvote (true) or un-upvote (false) a review as the session user.
+        toggleReviewUpvote(reviewId: ID!, upvote: Boolean!): Review
         # Participant run writes (guests and signed-in participants).
         # Increments Study.components condition counters.
         recordStudyConditions(studyId: ID!, conditionLabels: [String!]!): Boolean
@@ -460,6 +464,13 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         isActive: Boolean
         position: Int
       }
+      # Public preview of a class for the join-by-code page.
+      type ClassJoinPreview {
+        id: ID!
+        code: String
+        title: String
+        creatorUsername: String
+      }
       type NetworkInviteContextNetwork {
         id: ID!
         publicId: String
@@ -528,6 +539,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Public-safe invite context for login/signup. Returns only
         # non-sensitive display fields for a tokenized NetworkInvite.
         networkInviteContext(token: String!): NetworkInviteContext
+        # Title and teacher of a class, by join code. Public; no roster.
+        classJoinPreview(code: String!): ClassJoinPreview
         # Connect Bank people search. Case-insensitive on Postgres via
         # Prisma mode; plain contains on local SQLite (ASCII CI).
         searchConnectUsers(
@@ -575,6 +588,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         resolveFormDefinition,
         resolveMilestonesForBoard,
         networkInviteContext,
+        classJoinPreview,
         searchConnectUsers,
         searchConnectUsersCount,
       },
@@ -621,6 +635,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         joinClass,
         recordStudyConditions,
         updateGuestStudiesInfo,
+        toggleReviewUpvote,
         markOpportunityReviewNotesRead,
         recordOpportunityPreviewVisit,
         toggleFavoriteOpportunity,

@@ -3,8 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 import useTranslation from "next-translate/useTranslation";
 
-import { GET_CLASS } from "../../../Queries/Classes";
-import { GET_CLASSES } from "../../../Queries/Classes";
+import { CLASS_JOIN_PREVIEW, GET_CLASSES } from "../../../Queries/Classes";
 
 import { JOIN_CLASS_MUTATION } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
@@ -20,7 +19,7 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
       ? { action: "select", code: classCode, i: invitationCode }
       : { action: "select", code: classCode };
 
-  const { data, loading, error } = useQuery(GET_CLASS, {
+  const { data, loading, error } = useQuery(CLASS_JOIN_PREVIEW, {
     variables: { code: classCode },
   });
 
@@ -53,7 +52,7 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
       refetchQueries: [{ query: CURRENT_USER_QUERY }],
     });
 
-  const myclass = data?.class || undefined;
+  const myclass = data?.classJoinPreview || undefined;
 
   if (!myclass) {
     return (
@@ -84,7 +83,7 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
         </h1>
 
         <div className="classInformation">
-          {myclass.title} - {myclass.creator.username}
+          {myclass.title} - {myclass.creatorUsername}
         </div>
 
         <div className="navigationBtns">

@@ -14,7 +14,7 @@ import {
   relationshipConnectIds,
   syncClassStaffAsRoundReviewers,
 } from "../lib/classStaff";
-import { classStaffFilter, isSignedIn } from "../access";
+import { classQueryFilter, classStaffFilter, isSignedIn } from "../access";
 
 export const Class = list({
   access: {
@@ -27,6 +27,9 @@ export const Class = list({
     filter: {
       // Only class staff (creator, co-teachers, mentors) or admins change a
       // class: settings, rosters, teaching team. Joining uses joinClass (sudo).
+      // Members and network-connected users read a class; joining by code
+      // uses the classJoinPreview query instead.
+      query: classQueryFilter,
       update: classStaffFilter,
       delete: ({ session }) =>
         session?.itemId

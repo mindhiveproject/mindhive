@@ -11,16 +11,35 @@ import {
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
 
-import { signedInWrites } from "../access";
+import { authorFilter, isSignedIn } from "../access";
 
 export const Review = list({
   access: {
-    // Anyone may read; changes need a signed-in user.
-    operation: signedInWrites,
+    // Reviews are shared with signed-in users (Feedback Center). Only the
+    // author edits a review; upvotes go through toggleReviewUpvote (sudo).
+    operation: {
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      update: authorFilter,
+      delete: authorFilter,
+    },
   },
   fields: {
     author: relationship({
       ref: "Profile.reviews",
+      hooks: {
+        // A review is always filed by the signed-in user.
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create" && context.session?.itemId) {
+            return { connect: { id: context.session.itemId } };
+          }
+          return inputData.author;
+        },
+      },
     }),
     study: relationship({
       ref: "Study.reviews",

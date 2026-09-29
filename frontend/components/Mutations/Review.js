@@ -27,9 +27,11 @@ export const UPDATE_REVIEW = gql`
 `;
 
 // edit review
-export const EDIT_REVIEW = gql`
-  mutation EDIT_REVIEW($id: ID!, $input: ReviewUpdateInput!) {
-    updateReview(where: { id: $id }, data: $input) {
+// upvote (or remove an upvote from) someone's review as the current user;
+// reviews themselves are only editable by their author
+export const TOGGLE_REVIEW_UPVOTE = gql`
+  mutation TOGGLE_REVIEW_UPVOTE($id: ID!, $upvote: Boolean!) {
+    toggleReviewUpvote(reviewId: $id, upvote: $upvote) {
       id
     }
   }
