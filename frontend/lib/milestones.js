@@ -253,6 +253,17 @@ export function expandReviewStepAliases(stepKey, milestones = []) {
   return aliases;
 }
 
+/**
+ * Milestone.reviewStage / key are lowercase. Match either spelling.
+ */
+export function reviewStageMatches(reviewStage, expectedStages = []) {
+  if (reviewStage == null) return false;
+  const needle = String(reviewStage).toLowerCase();
+  return expectedStages.some(
+    (stage) => stage != null && String(stage).toLowerCase() === needle
+  );
+}
+
 export function cardIncludedInReviewStep(card, actionCardOrMilestone, milestones = []) {
   const settings = parseCardSettings(card);
   const steps = settings?.includeInReviewSteps || [];

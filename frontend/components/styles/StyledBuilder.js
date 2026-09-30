@@ -1597,6 +1597,9 @@ export const StyledCanvasBuilder = styled.div`
     }
 
     .blockCardTitle {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       flex: 1;
       min-width: 0;
 

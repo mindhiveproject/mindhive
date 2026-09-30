@@ -12,12 +12,10 @@ const StyledFeedback = styled.div`
     display: grid;
     grid-gap: 1rem;
     min-width: 300px;
-    padding: 20px 24px;
+    padding: 0 0 8px;
 
     align-content: baseline;
-    background: var(--MH-Theme-Neutrals-White, #ffffff);
-    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
-    border-radius: 12px;
+    background: transparent;
 
     .topLine {
       display: grid;
@@ -78,30 +76,28 @@ const StyledFeedback = styled.div`
 
   .cards {
     display: grid;
-    padding: 8px;
-    grid-gap: 1rem;
+    padding: 0;
+    grid-gap: 1.25rem;
 
     .reviewerComment {
       font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
-      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
-      padding: 16px 20px;
-      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
-      border-radius: 12px;
-      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      color: var(--MH-Theme-Neutrals-Black, #171717);
 
       .reviewAnswerPart + .reviewAnswerPart {
         margin-top: 12px;
       }
     }
     .questionTitle {
-      font: var(--MH-Type-Title-Base);
+      font: var(--MH-Type-Label-Large);
       letter-spacing: 0;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
     }
     .questionAnswer {
-      font-weight: 700;
+      font: var(--MH-Type-Body-Base);
       font-style: normal;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
     }
   }
 

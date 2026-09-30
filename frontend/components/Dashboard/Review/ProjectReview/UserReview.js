@@ -23,6 +23,7 @@ import {
   getCurriculumType,
   mergeReviewContentWithTemplate,
 } from "../../../../lib/curriculumTypes";
+import { reviewStageMatches } from "../../../../lib/milestones";
 import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 
 export default function UserReview({
@@ -130,8 +131,16 @@ export default function UserReview({
     });
   };
 
+  const stageCandidates = [
+    status,
+    milestone?.key,
+    milestone?.reviewStage,
+    actionCardType,
+  ];
   const commentsCount =
-    project?.reviews?.filter((r) => r?.stage === status).length || 0;
+    project?.reviews?.filter((r) =>
+      reviewStageMatches(r?.stage, stageCandidates)
+    ).length || 0;
 
   const tabHref = (nextTab) => ({
     pathname: "/dashboard/review/project",
@@ -210,8 +219,8 @@ export default function UserReview({
                   status={status}
                   curriculumType={curriculumType}
                   reviews={
-                    project?.reviews?.filter(
-                      (item) => item.stage === status
+                    project?.reviews?.filter((item) =>
+                      reviewStageMatches(item?.stage, stageCandidates)
                     ) || []
                   }
                 />

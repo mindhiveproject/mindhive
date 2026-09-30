@@ -20,6 +20,7 @@ import {
   cardIncludedInReviewStep,
   milestoneHasReviewQuestionnaire,
   resolveMilestoneFromCard,
+  reviewStageMatches,
 } from "../../../../../../../lib/milestones";
 
 import Navigation from "./Navigation";
@@ -754,8 +755,13 @@ export default function Proposal({
                     projectId={project?.id}
                     status={reviewStage}
                     reviews={
-                      project?.reviews?.filter(
-                        (review) => review.stage === reviewStage
+                      project?.reviews?.filter((review) =>
+                        reviewStageMatches(review?.stage, [
+                          reviewStage,
+                          milestone?.key,
+                          milestone?.reviewStage,
+                          cardTypes[proposalCard?.type]?.reviewStage,
+                        ])
                       ) || []
                     }
                   />

@@ -128,7 +128,8 @@ export default function Board({
         return (
           <div key={num} className="section">
             <div className="topLine">
-              {status === "SUBMITTED_AS_PROPOSAL" ? (
+              {String(status || "").toLowerCase() ===
+              "submitted_as_proposal" ? (
                 <div className="reviewer">
                   {review?.author?.image?.image?.publicUrlTransformed ? (
                     <img

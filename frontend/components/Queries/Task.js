@@ -22,6 +22,7 @@ export const PUBLIC_TASKS = gql`
       taskType
       slug
       image
+      public
       description
       descriptionForParticipants
       author {
@@ -46,6 +47,7 @@ export const MY_TASKS = gql`
       i18nContent
       slug
       image
+      public
       description
       taskType
       author {
@@ -71,6 +73,7 @@ export const FAVORITE_TASKS = gql`
       taskType
       slug
       image
+      public
       description
       descriptionForParticipants
       author {

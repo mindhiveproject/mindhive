@@ -47,7 +47,9 @@ export const StyledProposal = styled.div`
     }
   }
 
-  button:not(.DesignSystem-Button) {
+  // Extra exclusions go inside :where() so they add no specificity; otherwise this
+  // rule outranks nested button styles (e.g. ButtonGroup segments, .studyLinkChip).
+  button:not(.DesignSystem-Button):not(:where(.DesignSystem-DropdownSelect-trigger, .DesignSystem-DropdownSelect-option)) {
     display: grid;
     align-content: center;
     max-width: 300px;
@@ -398,8 +400,7 @@ export const StyledProposal = styled.div`
       gap: 8px;
       padding: 0 15px 8px;
       .boardInnerToolbarSelect {
-        min-width: 220px;
-        max-width: 280px;
+        width: 320px;
       }
     }
     .scrollable {
