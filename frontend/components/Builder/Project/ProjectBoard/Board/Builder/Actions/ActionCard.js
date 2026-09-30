@@ -3,7 +3,10 @@ import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
-import { resolveMilestoneFromCard } from "../../../../../../../lib/milestones";
+import {
+  resolveMilestoneFromCard,
+  reviewStageMatches,
+} from "../../../../../../../lib/milestones";
 import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../../lib/milestoneStatus";
 
@@ -87,8 +90,13 @@ export default function ActionCard({
   const isSubmitted = variant === "ACTION_SUBMITTED";
 
   const cardMeta = getCardMeta();
-  const comments = project?.reviews?.filter(
-    (review) => review.stage === cardMeta.reviewStage
+  const comments = project?.reviews?.filter((review) =>
+    reviewStageMatches(review?.stage, [
+      cardMeta.reviewStage,
+      cardMilestone?.key,
+      cardMilestone?.reviewStage,
+      cardTypes[card?.type]?.reviewStage,
+    ])
   );
 
   const cardTitle = {
