@@ -166,9 +166,9 @@ export const GET_TEMPLATE_BOARD_SECTIONS_CARDS = gql`
   }
 `;
 
-// get the full content of a proposal
-export const PROPOSAL_QUERY = gql`
-  query PROPOSAL_QUERY($id: ID!) {
+// Board selection shared by PROPOSAL_QUERY and PROPOSAL_BOARD_VIEW_QUERY.
+// `cardTextFields` is the cards' HTML, which only the full query loads.
+const proposalBoardSelection = (cardTextFields) => `
     proposalBoard(where: { id: $id }) {
       id
       title
@@ -311,10 +311,7 @@ export const PROPOSAL_QUERY = gql`
               scope
             }
           }
-          content
-          revisedContent
-          comment
-          settings
+${cardTextFields}          settings
           position
           section {
             id
@@ -340,6 +337,25 @@ export const PROPOSAL_QUERY = gql`
         }
       }
     }
+`;
+
+// get the full content of a proposal
+export const PROPOSAL_QUERY = gql`
+  query PROPOSAL_QUERY($id: ID!) {
+    ${proposalBoardSelection(`
+          content
+          revisedContent
+          comment
+`)}
+  }
+`;
+
+// Same as PROPOSAL_QUERY without the cards' content/revisedContent/comment.
+// The board view polls this every 20s; the tiles don't show card text, and
+// shipping every card's HTML on each poll made large boards slow.
+export const PROPOSAL_BOARD_VIEW_QUERY = gql`
+  query PROPOSAL_BOARD_VIEW_QUERY($id: ID!) {
+    ${proposalBoardSelection("")}
   }
 `;
 

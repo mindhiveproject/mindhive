@@ -3,7 +3,7 @@ import sortBy from "lodash/sortBy";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import { PROPOSAL_BOARD_VIEW_QUERY } from "../../Queries/Proposal";
 
 import Inner from "./Inner";
 import useTranslation from "next-translate/useTranslation";
@@ -32,7 +32,7 @@ const Board = ({
   const [addMilestoneTargetSectionId, setAddMilestoneTargetSectionId] =
     useState(null);
   const addMilestoneHandledRef = useRef(false);
-  const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
+  const { loading, error, data } = useQuery(PROPOSAL_BOARD_VIEW_QUERY, {
     variables: { id: proposalId },
     pollInterval: 20000, // get new data every 20 seconds
   });

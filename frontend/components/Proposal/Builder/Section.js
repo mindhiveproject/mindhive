@@ -13,7 +13,7 @@ import IconButton from "../../DesignSystem/IconButton";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import { MilestoneIcon, ProjectCardIcon } from "../../DesignSystem/Icons";
 
-import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import { PROPOSAL_BOARD_VIEW_QUERY } from "../../Queries/Proposal";
 import { isActionCard } from "../../../lib/milestones";
 
 import { UPDATE_CARD_POSITION } from "../../Mutations/Proposal";
@@ -100,7 +100,7 @@ const Section = ({
       update: (cache, { data: { updateProposalCard } }) => {
         // Read the data from the cache for this query.
         const data = cache.readQuery({
-          query: PROPOSAL_QUERY,
+          query: PROPOSAL_BOARD_VIEW_QUERY,
           variables: { id: boardId },
         });
         if (data) {
@@ -144,7 +144,7 @@ const Section = ({
           }
 
           cache.writeQuery({
-            query: PROPOSAL_QUERY,
+            query: PROPOSAL_BOARD_VIEW_QUERY,
             variables: { id: boardId },
             data: {
               proposalBoard: {

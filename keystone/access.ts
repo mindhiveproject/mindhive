@@ -160,19 +160,171 @@ export function studyUpdateFilter({ session }: ListAccessArgs) {
   };
 }
 
-/** Anyone in a class: creator, co-teachers, mentors or students. */
-function classMemberWhere(me: string) {
+// ---------------------------------------------------------------------------
+// Per-request id lookups for the read filters below.
+//
+// These filters used to express membership as nested relation chains (e.g.
+// assignment → card → section → board → class → students). Prisma turns each
+// chain into nested subqueries that run for every row, and again for every
+// relation a response resolves, which made board and card loads slow. Instead
+// each filter looks up the session user's ids once — classes they staff or
+// study in, networks they are connected to, boards they can use — and filters
+// with `id in [...]`. The rules are unchanged; only the SQL is cheaper.
+//
+// Lookups are cached per HTTP request, but only for read-only (query)
+// operations, which accessCachePlugin marks. A mutation can change
+// memberships and then read in the same request, so mutations always look up
+// fresh.
+// ---------------------------------------------------------------------------
+
+const readOnlyRequests = new WeakSet<object>();
+
+/** Apollo plugin: marks query (read-only) requests so id lookups are cached. */
+export const accessCachePlugin = {
+  async requestDidStart() {
+    return {
+      async didResolveOperation({ operation, contextValue }: any) {
+        if (operation?.operation === "query" && contextValue?.req) {
+          readOnlyRequests.add(contextValue.req);
+        }
+      },
+    };
+  },
+};
+
+const idLookupCache = new WeakMap<object, Map<string, Promise<string[]>>>();
+
+function cachedIds(
+  context: any,
+  key: string,
+  compute: () => Promise<string[]>
+): Promise<string[]> {
+  const req = context?.req;
+  if (!req || !readOnlyRequests.has(req)) return compute();
+  let cache = idLookupCache.get(req);
+  if (!cache) {
+    cache = new Map();
+    idLookupCache.set(req, cache);
+  }
+  const cached = cache.get(key);
+  if (cached) return cached;
+  const lookup = compute();
+  cache.set(key, lookup);
+  return lookup;
+}
+
+/** Ids of `listKey` items matching `where`, read as sudo. */
+async function findIds(context: any, listKey: string, where: any) {
+  const rows = await context.sudo().query[listKey].findMany({
+    where,
+    query: "id",
+  });
+  return rows.map((row: { id: string }) => String(row.id));
+}
+
+/** Ids of classes where the session user is creator, co-teacher or mentor. */
+export function staffClassIds(context: any): Promise<string[]> {
+  const me = context?.session?.itemId;
+  if (!me) return Promise.resolve([]);
+  return cachedIds(context, "staffClasses", () =>
+    findIds(context, "Class", classStaffSome(String(me)))
+  );
+}
+
+/** Ids of classes where the session user is a student. */
+function studentClassIds(context: any): Promise<string[]> {
+  const me = context?.session?.itemId;
+  if (!me) return Promise.resolve([]);
+  return cachedIds(context, "studentClasses", () =>
+    findIds(context, "Class", {
+      students: { some: { id: { equals: String(me) } } },
+    })
+  );
+}
+
+/** Ids of classes the session user belongs to (classMemberWhere). */
+async function memberClassIds(context: any): Promise<string[]> {
+  const [staff, student] = await Promise.all([
+    staffClassIds(context),
+    studentClassIds(context),
+  ]);
+  return [...new Set([...staff, ...student])];
+}
+
+/**
+ * Ids of class networks the session user is connected to: creator, admin,
+ * member profile, public networks, and networks of their classes.
+ */
+function connectedNetworkIds(context: any): Promise<string[]> {
+  const me = context?.session?.itemId;
+  if (!me) return Promise.resolve([]);
+  return cachedIds(context, "connectedNetworks", async () => {
+    const memberIds = await memberClassIds(context);
+    const meId = String(me);
+    return findIds(context, "ClassNetwork", {
+      OR: [
+        { creator: { id: { equals: meId } } },
+        { admins: { some: { id: { equals: meId } } } },
+        { memberProfiles: { some: { id: { equals: meId } } } },
+        { isPublic: { equals: true } },
+        ...(memberIds.length
+          ? [{ classes: { some: { id: { in: memberIds } } } }]
+          : []),
+      ],
+    });
+  });
+}
+
+/**
+ * Ids of boards whose cards (and linked assignments) the session user may
+ * use: their own, collaborations, and class boards / class templates of a
+ * class they belong to. Platform templates and default boards are also
+ * usable; filters match those by flag (see usableBoardWhere) rather than
+ * listing them here.
+ */
+function usableBoardIds(context: any): Promise<string[]> {
+  const me = context?.session?.itemId;
+  if (!me) return Promise.resolve([]);
+  return cachedIds(context, "usableBoards", async () => {
+    const memberIds = await memberClassIds(context);
+    const meId = String(me);
+    const inMemberClass = { some: { id: { in: memberIds } } };
+    return findIds(context, "ProposalBoard", {
+      OR: [
+        { author: { id: { equals: meId } } },
+        { collaborators: { some: { id: { equals: meId } } } },
+        ...(memberIds.length
+          ? [
+              { usedInClass: { id: { in: memberIds } } },
+              { templatesForClass: inMemberClass },
+              { templateForClasses: inMemberClass },
+            ]
+          : []),
+      ],
+    });
+  });
+}
+
+/** Board filter for usableBoardIds plus platform templates and defaults. */
+async function usableBoardWhere(context: any) {
+  const boardIds = await usableBoardIds(context);
   return {
     OR: [
-      ...classStaffSome(me).OR,
-      { students: { some: { id: { equals: me } } } },
+      ...(boardIds.length ? [{ id: { in: boardIds } }] : []),
+      { isTemplate: { equals: true } },
+      { isDefault: { equals: true } },
     ],
   };
 }
 
-/** Profiles that are students or mentors in a class the session user staffs. */
-function profileInStaffClassWhere(me: string) {
-  const staffClass = { some: classStaffSome(me) };
+/**
+ * Profiles that are students or mentors in a class the session user staffs,
+ * or null when the user staffs no class (the clause can never match).
+ */
+async function profileInStaffClassWhere(context: any) {
+  const classIds = await staffClassIds(context);
+  if (classIds.length === 0) return null;
+  const staffClass = { some: { id: { in: classIds } } };
   return { OR: [{ studentIn: staffClass }, { mentorIn: staffClass }] };
 }
 
@@ -181,39 +333,36 @@ function profileInStaffClassWhere(me: string) {
  * (network creators/admins/members, classes in the same network, public
  * networks). Roster emails are protected separately by Profile field rules.
  */
-export function classQueryFilter({ session }: ListAccessArgs) {
+export async function classQueryFilter({ session, context }: ListAccessArgs) {
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
-  const me = String(session.itemId);
+  const [memberIds, networkIds] = await Promise.all([
+    memberClassIds(context),
+    connectedNetworkIds(context),
+  ]);
   return {
     OR: [
-      ...classMemberWhere(me).OR,
-      {
-        networks: {
-          some: {
-            OR: [
-              { creator: { id: { equals: me } } },
-              { admins: { some: { id: { equals: me } } } },
-              { memberProfiles: { some: { id: { equals: me } } } },
-              { isPublic: { equals: true } },
-              { classes: { some: classMemberWhere(me) } },
-            ],
-          },
-        },
-      },
+      { id: { in: memberIds } },
+      ...(networkIds.length
+        ? [{ networks: { some: { id: { in: networkIds } } } }]
+        : []),
     ],
   };
 }
 
 /** Journal reads: the owner and staff of the owner's classes. */
-export function journalQueryFilter({ session }: ListAccessArgs) {
+export async function journalQueryFilter({
+  session,
+  context,
+}: ListAccessArgs) {
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
+  const inStaffClass = await profileInStaffClassWhere(context);
   return {
     OR: [
       { creator: { id: { equals: me } } },
-      { creator: profileInStaffClassWhere(me) },
+      ...(inStaffClass ? [{ creator: inStaffClass }] : []),
     ],
   };
 }
@@ -226,16 +375,21 @@ export function journalOwnerFilter({ session }: ListAccessArgs) {
 }
 
 /** Post reads: the author or journal owner, and staff of their classes. */
-export function postQueryFilter({ session }: ListAccessArgs) {
+export async function postQueryFilter({ session, context }: ListAccessArgs) {
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
+  const inStaffClass = await profileInStaffClassWhere(context);
   return {
     OR: [
       { author: { id: { equals: me } } },
       { journal: { creator: { id: { equals: me } } } },
-      { author: profileInStaffClassWhere(me) },
-      { journal: { creator: profileInStaffClassWhere(me) } },
+      ...(inStaffClass
+        ? [
+            { author: inStaffClass },
+            { journal: { creator: inStaffClass } },
+          ]
+        : []),
     ],
   };
 }
@@ -253,10 +407,14 @@ export function postOwnerFilter({ session }: ListAccessArgs) {
   };
 }
 
-function homeworkStaffWhere(me: string) {
+/** Homework clauses for class staff (grading); empty for non-staff. */
+async function homeworkStaffWhere(context: any) {
+  const classIds = await staffClassIds(context);
+  if (classIds.length === 0) return [];
+  const staffClass = { some: { id: { in: classIds } } };
   return [
-    { author: profileInStaffClassWhere(me) },
-    { assignment: { classes: { some: classStaffSome(me) } } },
+    { author: { OR: [{ studentIn: staffClass }, { mentorIn: staffClass }] } },
+    { assignment: { classes: staffClass } },
   ];
 }
 
@@ -264,44 +422,34 @@ function homeworkStaffWhere(me: string) {
  * Homework reads: the author, class staff, and (peer review) any signed-in
  * user when the homework sits on a card of a study's main project board.
  */
-export function homeworkQueryFilter({ session }: ListAccessArgs) {
+export async function homeworkQueryFilter({
+  session,
+  context,
+}: ListAccessArgs) {
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
   return {
     OR: [
       { author: { id: { equals: me } } },
-      ...homeworkStaffWhere(me),
+      ...(await homeworkStaffWhere(context)),
       { proposalCard: { section: { board: { NOT: [{ studyMain: null }] } } } },
     ],
   };
 }
 
 /** Homework updates: the author, and class staff (grading). */
-export function homeworkUpdateFilter({ session }: ListAccessArgs) {
+export async function homeworkUpdateFilter({
+  session,
+  context,
+}: ListAccessArgs) {
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
   return {
-    OR: [{ author: { id: { equals: me } } }, ...homeworkStaffWhere(me)],
-  };
-}
-
-/**
- * Boards whose cards (and linked assignments) a user may use: their own, a
- * class board of a class they belong to, and templates they can copy.
- */
-function usableBoardWhere(me: string) {
-  const memberClass = classMemberWhere(me);
-  return {
     OR: [
       { author: { id: { equals: me } } },
-      { collaborators: { some: { id: { equals: me } } } },
-      { usedInClass: memberClass },
-      { isTemplate: { equals: true } },
-      { isDefault: { equals: true } },
-      { templatesForClass: { some: memberClass } },
-      { templateForClasses: { some: memberClass } },
+      ...(await homeworkStaffWhere(context)),
     ],
   };
 }
@@ -312,24 +460,34 @@ function usableBoardWhere(me: string) {
  * cards on boards the user can use (copyProposalBoard reads and connects
  * these as the caller).
  */
-export function assignmentQueryFilter({ session }: ListAccessArgs) {
+export async function assignmentQueryFilter({
+  session,
+  context,
+}: ListAccessArgs) {
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
+  const [staffIds, studentIds, boardWhere] = await Promise.all([
+    staffClassIds(context),
+    studentClassIds(context),
+    usableBoardWhere(context),
+  ]);
   return {
     OR: [
       { author: { id: { equals: me } } },
-      { classes: { some: classStaffSome(me) } },
-      {
-        classes: { some: { students: { some: { id: { equals: me } } } } },
-        public: { equals: true },
-      },
+      ...(staffIds.length
+        ? [{ classes: { some: { id: { in: staffIds } } } }]
+        : []),
+      ...(studentIds.length
+        ? [
+            {
+              classes: { some: { id: { in: studentIds } } },
+              public: { equals: true },
+            },
+          ]
+        : []),
       { isTemplate: { equals: true } },
-      {
-        proposalCards: {
-          some: { section: { board: usableBoardWhere(me) } },
-        },
-      },
+      { proposalCards: { some: { section: { board: boardWhere } } } },
     ],
   };
 }
@@ -338,14 +496,19 @@ export function assignmentQueryFilter({ session }: ListAccessArgs) {
  * Assignment updates: the author, staff of its classes, and owners of a
  * board it is linked to (template boards re-point linked assignments).
  */
-export function assignmentUpdateFilter({ session }: ListAccessArgs) {
+export async function assignmentUpdateFilter({
+  session,
+  context,
+}: ListAccessArgs) {
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
+  const staffIds = await staffClassIds(context);
+  const staffClass = { some: { id: { in: staffIds } } };
   return {
     OR: [
       { author: { id: { equals: me } } },
-      { classes: { some: classStaffSome(me) } },
+      ...(staffIds.length ? [{ classes: staffClass }] : []),
       {
         proposalCards: {
           some: {
@@ -354,7 +517,9 @@ export function assignmentUpdateFilter({ session }: ListAccessArgs) {
                 OR: [
                   { author: { id: { equals: me } } },
                   { collaborators: { some: { id: { equals: me } } } },
-                  { templatesForClass: { some: classStaffSome(me) } },
+                  ...(staffIds.length
+                    ? [{ templatesForClass: staffClass }]
+                    : []),
                 ],
               },
             },
@@ -363,25 +528,6 @@ export function assignmentUpdateFilter({ session }: ListAccessArgs) {
       },
     ],
   };
-}
-
-// Keyed by the HTTP request (one session per request), so repeated field
-// checks while resolving one GraphQL response share a single lookup.
-const staffClassIdsCache = new WeakMap<object, Promise<string[]>>();
-
-/** Ids of classes where the session user is staff, cached per request. */
-export function staffClassIds(context: any): Promise<string[]> {
-  const me = context?.session?.itemId;
-  if (!me) return Promise.resolve([]);
-  const key = context.req ?? context;
-  const cached = staffClassIdsCache.get(key);
-  if (cached) return cached;
-  const lookup: Promise<string[]> = context
-    .sudo()
-    .db.Class.findMany({ where: classStaffSome(String(me)) })
-    .then((rows: { id: string }[]) => rows.map((row) => String(row.id)));
-  staffClassIdsCache.set(key, lookup);
-  return lookup;
 }
 
 // Per-request memo for async access checks. Field access runs once per item

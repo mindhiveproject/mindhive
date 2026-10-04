@@ -4,7 +4,7 @@ import Sections from "./Sections";
 import AddSectionModal from "../../../../../Proposal/Builder/AddSectionModal";
 import BoardColumnScroller from "../../../../../Proposal/Builder/BoardColumnScroller";
 import Button from "../../../../../DesignSystem/Button";
-import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import { PROPOSAL_BOARD_VIEW_QUERY } from "../../../../../Queries/Proposal";
 import useTranslation from "next-translate/useTranslation";
 
 export default function Inner(props) {
@@ -23,12 +23,12 @@ export default function Inner(props) {
       },
       update: (cache, { data: { createProposalSection } }) => {
         const data = cache.readQuery({
-          query: PROPOSAL_QUERY,
+          query: PROPOSAL_BOARD_VIEW_QUERY,
           variables: { id: boardId },
         });
         if (data) {
           cache.writeQuery({
-            query: PROPOSAL_QUERY,
+            query: PROPOSAL_BOARD_VIEW_QUERY,
             variables: { id: boardId },
             data: {
               proposalBoard: {

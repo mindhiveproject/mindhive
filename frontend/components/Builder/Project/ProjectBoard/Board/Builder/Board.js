@@ -3,7 +3,7 @@ import sortBy from "lodash/sortBy";
 import useTranslation from "next-translate/useTranslation";
 
 import { useQuery, useMutation } from "@apollo/client";
-import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import { PROPOSAL_BOARD_VIEW_QUERY } from "../../../../../Queries/Proposal";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
 
@@ -26,7 +26,7 @@ const Board = ({
   onTemplateChangedWithoutPropagation,
 }) => {
   const { t } = useTranslation("builder");
-  const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
+  const { loading, error, data } = useQuery(PROPOSAL_BOARD_VIEW_QUERY, {
     variables: { id: proposalId },
     pollInterval: 20000, // get new data every 20 seconds
   });

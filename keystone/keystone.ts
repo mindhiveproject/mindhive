@@ -11,6 +11,7 @@ import { config } from "@keystone-6/core";
 import depthLimit from "graphql-depth-limit";
 
 import { extendGraphqlSchema } from "./mutations/index";
+import { slowOperationLogger } from "./lib/slowOperationLogger";
 
 // to keep this file tidy, we define our schema in a different file
 import { lists } from "./schema";
@@ -33,7 +34,7 @@ process.on("unhandledRejection", (reason: any) => {
 // authentication is configured separately here too, but you might move this elsewhere
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from "./auth";
-import { permissions } from "./access";
+import { permissions, accessCachePlugin } from "./access";
 
 const baseUrl =
   process.env.NODE_ENV === "development"
@@ -154,6 +155,10 @@ export default withAuth(
       apolloConfig: {
         introspection: process.env.NODE_ENV !== "production",
         validationRules: [depthLimit(10)],
+        // accessCachePlugin: lets read-only requests reuse access id lookups
+        // (see access.ts). slowOperationLogger: logs operations slower than
+        // SLOW_GQL_MS (default 300ms) as [slow-gql].
+        plugins: [accessCachePlugin, slowOperationLogger],
       },
     },
     session,

@@ -8,7 +8,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Card from "./Card";
 
-import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import { PROPOSAL_BOARD_VIEW_QUERY } from "../../../../../Queries/Proposal";
 
 import {
   CREATE_CARD,
@@ -67,7 +67,7 @@ const Section = ({
       update: (cache, { data: { updateProposalCard } }) => {
         // Read the data from the cache for this query.
         const data = cache.readQuery({
-          query: PROPOSAL_QUERY,
+          query: PROPOSAL_BOARD_VIEW_QUERY,
           variables: { id: boardId },
         });
         if (data) {
@@ -111,7 +111,7 @@ const Section = ({
           }
 
           cache.writeQuery({
-            query: PROPOSAL_QUERY,
+            query: PROPOSAL_BOARD_VIEW_QUERY,
             variables: { id: boardId },
             data: {
               proposalBoard: {
@@ -239,7 +239,7 @@ const Section = ({
       },
       update: (cache, { data: { createProposalCard } }) => {
         const data = cache.readQuery({
-          query: PROPOSAL_QUERY,
+          query: PROPOSAL_BOARD_VIEW_QUERY,
           variables: { id: boardId },
         });
         if (data) {
@@ -258,7 +258,7 @@ const Section = ({
           });
 
           cache.writeQuery({
-            query: PROPOSAL_QUERY,
+            query: PROPOSAL_BOARD_VIEW_QUERY,
             variables: { id: boardId },
             data: {
               proposalBoard: {
@@ -270,7 +270,7 @@ const Section = ({
         }
       },
       optimisticResponse: {
-        // PROPOSAL_QUERY selects many nested fields on each card. Enumerate
+        // PROPOSAL_BOARD_VIEW_QUERY selects many nested fields on each card. Enumerate
         // them here (nulls for what we can't derive locally) so Apollo's
         // cache write doesn't emit "Missing field" warnings and downstream
         // Card / ActionCard render paths don't crash on `card.milestone.key`

@@ -11,7 +11,7 @@ import Button from "../../DesignSystem/Button";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
 import { MilestoneIcon, TrashIcon } from "../../DesignSystem/Icons";
 
-import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import { PROPOSAL_BOARD_VIEW_QUERY } from "../../Queries/Proposal";
 import { DELETE_CARD, UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 import { DELETE_TEMPLATE_MILESTONE } from "../../Mutations/Milestone";
 import { RESOLVE_MILESTONES_FOR_BOARD } from "../../Queries/Milestone";
@@ -55,12 +55,12 @@ function Inner(props) {
       },
       update: (cache, { data: { createProposalSection } }) => {
         const data = cache.readQuery({
-          query: PROPOSAL_QUERY,
+          query: PROPOSAL_BOARD_VIEW_QUERY,
           variables: { id: boardId },
         });
         if (data) {
           cache.writeQuery({
-            query: PROPOSAL_QUERY,
+            query: PROPOSAL_BOARD_VIEW_QUERY,
             variables: { id: boardId },
             data: {
               proposalBoard: {

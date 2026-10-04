@@ -4,7 +4,7 @@ import sortBy from "lodash/sortBy";
 
 import Section from "./Section";
 
-import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import { PROPOSAL_BOARD_VIEW_QUERY } from "../../Queries/Proposal";
 
 class Sections extends Component {
   calculatePosition = (removedIndex, addedIndex, arr) => {
@@ -68,7 +68,7 @@ class Sections extends Component {
         },
         update: (cache, { data: { updateProposalSection } }) => {
           const data = cache.readQuery({
-            query: PROPOSAL_QUERY,
+            query: PROPOSAL_BOARD_VIEW_QUERY,
             variables: { id: this.props.boardId },
           });
           if (data) {
@@ -83,7 +83,7 @@ class Sections extends Component {
               return section;
             });
             cache.writeQuery({
-              query: PROPOSAL_QUERY,
+              query: PROPOSAL_BOARD_VIEW_QUERY,
               variables: { id: this.props.boardId },
               data: {
                 proposalBoard: {
