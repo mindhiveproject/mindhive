@@ -2,6 +2,36 @@ import uniqid from "uniqid";
 import { provisionFormDefinitionForMilestone } from "./createTemplateMilestone";
 import { syncClassTemplateBoards } from "./utils/classTemplateBoards";
 
+// Copies run with limited parallelism. Creating every section, card and
+// assignment at once (each insert also access-checks what it connects)
+// exhausted the database connection pool on large boards: the copy failed
+// after Prisma's 10s pool timeout, and every other request stalled meanwhile.
+const CARD_CONCURRENCY = 4;
+
+/** Runs fn over items with at most `limit` in flight; stops on first error. */
+async function forEachLimited<T>(
+  items: T[],
+  limit: number,
+  fn: (item: T, index: number) => Promise<void>
+): Promise<void> {
+  let next = 0;
+  let failed = false;
+  const worker = async () => {
+    while (!failed && next < items.length) {
+      const index = next++;
+      try {
+        await fn(items[index], index);
+      } catch (error) {
+        failed = true;
+        throw error;
+      }
+    }
+  };
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, worker)
+  );
+}
+
 const TEMPLATE_MILESTONES_QUERY =
   "templateMilestones { id key title description scope actionCardType reviewStage statusTarget logEventName position showInFeedbackCenter isActive formDefinition { id } canReview { id } }";
 
@@ -253,8 +283,10 @@ async function copyProposalBoard(
     : new Map<string, string>();
 
   // create new sections
-  await Promise.all(
-    template.sections.map(async (section: any, i: number) => {
+  await forEachLimited(
+    template.sections || [],
+    1,
+    async (section: any, i: number) => {
       const templateSection = template.sections[i];
       const newSection = await context.db.ProposalSection.createOne(
         {
@@ -274,8 +306,10 @@ async function copyProposalBoard(
       // - Global milestones are always reused by id.
       // - Independent copies remap template-scope ids to the clones created above.
       // - Student boards keep the source template's milestone ids (resolve via clonedFrom).
-      await Promise.all(
-        templateSection.cards.map(async (card: any, i: number) => {
+      await forEachLimited(
+        templateSection.cards || [],
+        CARD_CONCURRENCY,
+        async (card: any, i: number) => {
           const templateCard = section.cards[i];
           const sourceMilestoneId = templateCard.milestone?.id;
           const connectMilestoneId =
@@ -365,8 +399,10 @@ async function copyProposalBoard(
               // Teacher copying from platform template: create new assignments.
               // If this copy is being used as a class template (classIdTemplate),
               // also associate the new assignments with that class.
-              await Promise.all(
-                templateCard.assignments.map(async (a: any) => {
+              await forEachLimited(
+                templateCard.assignments,
+                1,
+                async (a: any) => {
                   await context.db.Assignment.createOne(
                     {
                       data: {
@@ -395,13 +431,13 @@ async function copyProposalBoard(
                     },
                     "id"
                   );
-                })
+                }
               );
             }
           }
-        })
+        }
       );
-    })
+    }
   );
 
   // If this copy is being used as a class template (classIdTemplate),
@@ -423,16 +459,14 @@ async function copyProposalBoard(
 
     if (resourceIdsSet.size > 0) {
       const resourceIds = Array.from(resourceIdsSet);
-      await Promise.all(
-        resourceIds.map((resourceId) =>
-          context.db.Resource.updateOne({
-            where: { id: resourceId },
-            data: {
-              classes: { connect: [{ id: classIdTemplate }] },
-            },
-          })
-        )
-      );
+      await forEachLimited(resourceIds, CARD_CONCURRENCY, async (resourceId) => {
+        await context.db.Resource.updateOne({
+          where: { id: resourceId },
+          data: {
+            classes: { connect: [{ id: classIdTemplate }] },
+          },
+        });
+      });
     }
   }
 

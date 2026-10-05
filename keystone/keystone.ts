@@ -11,7 +11,8 @@ import { config } from "@keystone-6/core";
 import depthLimit from "graphql-depth-limit";
 
 import { extendGraphqlSchema } from "./mutations/index";
-import { slowOperationLogger } from "./lib/slowOperationLogger";
+import { slowOperationLogger, attachPrismaTiming } from "./lib/slowOperationLogger";
+import { trackRequestScope } from "./lib/requestScope";
 
 // to keep this file tidy, we define our schema in a different file
 import { lists } from "./schema";
@@ -34,7 +35,7 @@ process.on("unhandledRejection", (reason: any) => {
 // authentication is configured separately here too, but you might move this elsewhere
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from "./auth";
-import { permissions, accessCachePlugin } from "./access";
+import { permissions, attachAccessCacheInvalidation } from "./access";
 
 const baseUrl =
   process.env.NODE_ENV === "development"
@@ -124,6 +125,8 @@ export default withAuth(
       // credentials so the old cookie is gone before iron-session tries to read it.
       // TODO: remove this route after 2026-06-15 (30-day cookie max-age has expired).
       extendExpressApp: (app: any) => {
+        // Per-request scope: access id cache invalidation + [slow-gql] db stats.
+        app.use(trackRequestScope);
         app.get("/api/clear-legacy-session", (_req: any, res: any) => {
           res.setHeader(
             "Set-Cookie",
@@ -134,6 +137,12 @@ export default withAuth(
       },
     },
     db: {
+      // Prisma middleware: clears per-request access caches after membership
+      // writes (access.ts), and times queries for the [slow-db]/[slow-gql] logs.
+      onConnect: async (context: any) => {
+        attachAccessCacheInvalidation(context.prisma);
+        attachPrismaTiming(context.prisma);
+      },
       provider:
         process.env.NODE_ENV === "development" ? "sqlite" : "postgresql",
       url:
@@ -155,10 +164,8 @@ export default withAuth(
       apolloConfig: {
         introspection: process.env.NODE_ENV !== "production",
         validationRules: [depthLimit(10)],
-        // accessCachePlugin: lets read-only requests reuse access id lookups
-        // (see access.ts). slowOperationLogger: logs operations slower than
-        // SLOW_GQL_MS (default 300ms) as [slow-gql].
-        plugins: [accessCachePlugin, slowOperationLogger],
+        // Logs operations slower than SLOW_GQL_MS (default 300ms) as [slow-gql].
+        plugins: [slowOperationLogger],
       },
     },
     session,

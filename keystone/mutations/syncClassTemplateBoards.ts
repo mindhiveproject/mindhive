@@ -43,7 +43,10 @@ async function syncClassTemplateBoards(
     }
   }
 
-  await syncClassTemplateBoardsUtil(context, classId);
+  // The caller is authorized above, so the backfill runs as sudo: it only
+  // links boards already tied to this class, and per-record access checks
+  // on every linked board made this (run on each class page view) slow.
+  await syncClassTemplateBoardsUtil(context.sudo(), classId);
 
   return context.query.Class.findOne({
     where: { id: classId },

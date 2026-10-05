@@ -2,6 +2,7 @@
 
 import { permissionsList } from "./schemas/fields";
 import { ListAccessArgs, Session } from "./types";
+import { requestScope } from "./lib/requestScope";
 
 export function isSignedIn({ session }: ListAccessArgs) {
   return !!session; // if undefinened, return false
@@ -168,29 +169,19 @@ export function studyUpdateFilter({ session }: ListAccessArgs) {
 // chain into nested subqueries that run for every row, and again for every
 // relation a response resolves, which made board and card loads slow. Instead
 // each filter looks up the session user's ids once — classes they staff or
-// study in, networks they are connected to, boards they can use — and filters
+// study in, networks they are connected to — and filters
 // with `id in [...]`. The rules are unchanged; only the SQL is cheaper.
 //
-// Lookups are cached per HTTP request, but only for read-only (query)
-// operations, which accessCachePlugin marks. A mutation can change
-// memberships and then read in the same request, so mutations always look up
-// fresh.
+// Lookups are cached per HTTP request (queries and mutations). Any write to a
+// model that holds class or network membership (Class, ClassNetwork, Profile)
+// or any raw SQL write clears that request's cache once the write completes,
+// so a mutation that changes memberships and then reads in the same request
+// sees the new state. Clearing happens in Prisma middleware
+// (attachAccessCacheInvalidation), which sees every write: context.db,
+// context.query, sudo and raw. Without the cache, mutations that run many
+// access checks (copyProposalBoard: hundreds) re-ran these lookups for each
+// check and exhausted the database connection pool.
 // ---------------------------------------------------------------------------
-
-const readOnlyRequests = new WeakSet<object>();
-
-/** Apollo plugin: marks query (read-only) requests so id lookups are cached. */
-export const accessCachePlugin = {
-  async requestDidStart() {
-    return {
-      async didResolveOperation({ operation, contextValue }: any) {
-        if (operation?.operation === "query" && contextValue?.req) {
-          readOnlyRequests.add(contextValue.req);
-        }
-      },
-    };
-  },
-};
 
 const idLookupCache = new WeakMap<object, Map<string, Promise<string[]>>>();
 
@@ -200,7 +191,7 @@ function cachedIds(
   compute: () => Promise<string[]>
 ): Promise<string[]> {
   const req = context?.req;
-  if (!req || !readOnlyRequests.has(req)) return compute();
+  if (!req) return compute();
   let cache = idLookupCache.get(req);
   if (!cache) {
     cache = new Map();
@@ -211,6 +202,35 @@ function cachedIds(
   const lookup = compute();
   cache.set(key, lookup);
   return lookup;
+}
+
+const MEMBERSHIP_MODELS = new Set(["Class", "ClassNetwork", "Profile"]);
+const WRITE_ACTIONS = new Set([
+  "create",
+  "createMany",
+  "update",
+  "updateMany",
+  "upsert",
+  "delete",
+  "deleteMany",
+  "executeRaw",
+  "executeRawUnsafe",
+]);
+
+/** Prisma middleware: clears the request's id cache after membership writes. */
+export function attachAccessCacheInvalidation(prisma: any) {
+  prisma.$use(async (params: any, next: (p: any) => Promise<any>) => {
+    try {
+      return await next(params);
+    } finally {
+      const isWrite = WRITE_ACTIONS.has(params.action);
+      const touchesMembership = !params.model || MEMBERSHIP_MODELS.has(params.model);
+      if (isWrite && touchesMembership) {
+        const req = requestScope.getStore()?.req;
+        if (req) idLookupCache.delete(req);
+      }
+    }
+  });
 }
 
 /** Ids of `listKey` items matching `where`, read as sudo. */
@@ -276,41 +296,29 @@ function connectedNetworkIds(context: any): Promise<string[]> {
 }
 
 /**
- * Ids of boards whose cards (and linked assignments) the session user may
- * use: their own, collaborations, and class boards / class templates of a
- * class they belong to. Platform templates and default boards are also
- * usable; filters match those by flag (see usableBoardWhere) rather than
- * listing them here.
+ * Boards whose cards (and linked assignments) the session user may use:
+ * their own, collaborations, class boards and class templates of a class
+ * they belong to, platform templates and default boards.
+ *
+ * Matched by the user's class ids rather than by a list of board ids: a
+ * teacher's usable boards include every student board in every class they
+ * ever taught (thousands of ids), while their class list stays short.
  */
-function usableBoardIds(context: any): Promise<string[]> {
-  const me = context?.session?.itemId;
-  if (!me) return Promise.resolve([]);
-  return cachedIds(context, "usableBoards", async () => {
-    const memberIds = await memberClassIds(context);
-    const meId = String(me);
-    const inMemberClass = { some: { id: { in: memberIds } } };
-    return findIds(context, "ProposalBoard", {
-      OR: [
-        { author: { id: { equals: meId } } },
-        { collaborators: { some: { id: { equals: meId } } } },
-        ...(memberIds.length
-          ? [
-              { usedInClass: { id: { in: memberIds } } },
-              { templatesForClass: inMemberClass },
-              { templateForClasses: inMemberClass },
-            ]
-          : []),
-      ],
-    });
-  });
-}
-
-/** Board filter for usableBoardIds plus platform templates and defaults. */
 async function usableBoardWhere(context: any) {
-  const boardIds = await usableBoardIds(context);
+  const me = String(context?.session?.itemId);
+  const memberIds = await memberClassIds(context);
+  const inMemberClass = { some: { id: { in: memberIds } } };
   return {
     OR: [
-      ...(boardIds.length ? [{ id: { in: boardIds } }] : []),
+      { author: { id: { equals: me } } },
+      { collaborators: { some: { id: { equals: me } } } },
+      ...(memberIds.length
+        ? [
+            { usedInClass: { id: { in: memberIds } } },
+            { templatesForClass: inMemberClass },
+            { templateForClasses: inMemberClass },
+          ]
+        : []),
       { isTemplate: { equals: true } },
       { isDefault: { equals: true } },
     ],

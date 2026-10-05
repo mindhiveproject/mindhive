@@ -314,7 +314,7 @@ export const TASK_TO_EDIT = gql`
 
 // query all users that a user follows
 export const MY_FAVORITE_TASKS = gql`
-  query {
+  query MY_FAVORITE_TASKS {
     authenticatedItem {
       ... on Profile {
         id
