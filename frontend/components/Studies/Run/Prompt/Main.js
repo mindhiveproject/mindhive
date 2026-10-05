@@ -20,7 +20,6 @@ export default function Prompt({
   user,
   study,
   studiesInfo,
-  info,
   currentStep,
   nextStep,
   closePrompt,
@@ -53,6 +52,10 @@ export default function Prompt({
       !dataUsageConsentWasGiven
   );
 
+  // Both exits reload or leave the page; a second click would run every save
+  // below again while the first is still in flight.
+  const [isLeaving, setIsLeaving] = useState(false);
+
   const [updateUserStudyInfo] = useMutation(UPDATE_USER_STUDY_INFO, {
     variables: { id: user?.id },
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
@@ -80,6 +83,8 @@ export default function Prompt({
   const isStudent = user?.permissions?.map((p) => p.name).includes("STUDENT");
 
   const saveResponsesAndProceed = async ({ proceedToNextTask }) => {
+    if (isLeaving) return;
+    setIsLeaving(true);
     // These saves are best effort: a participant who has finished must never be
     // stranded on this screen because one of them failed, so the navigation
     // below runs regardless.
@@ -164,6 +169,7 @@ export default function Prompt({
           <Button
             variant="filled"
             style={{ width: "100%" }}
+            disabled={isLeaving}
             onClick={() => saveResponsesAndProceed({ proceedToNextTask: true })}
           >
             {t("prompt.proceedNextTask", {}, { default: "Proceed to the next task" })}

@@ -25,7 +25,7 @@ export default function Manager({
   const { data: studyComponentsData } = useQuery(STUDY_COMPONENTS, {
     variables: { studyId: study?.id },
   });
-  const components = { ...studyComponentsData?.study?.components } || {};
+  const components = { ...studyComponentsData?.study?.components };
 
   const { path } = info;
   // null until the step is resolved below: the task must not mount (and start
@@ -319,7 +319,6 @@ export default function Manager({
             user={user}
             study={study}
             studiesInfo={studiesInfo}
-            info={info}
             currentStep={currentStep}
             nextStep={nextStep}
             closePrompt={closePrompt}
