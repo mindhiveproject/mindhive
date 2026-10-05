@@ -8,6 +8,7 @@ const clientID =
 import { GOOGLE_SIGNUP } from "../../Mutations/Auth";
 import { SIGNIN_MUTATION } from "../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
+import { googleAccountEmail } from "../../../lib/googleAccountEmail";
 
 export default function GoogleSignup({ role, classCode, invitationCode }) {
   const router = useRouter();
@@ -28,9 +29,13 @@ export default function GoogleSignup({ role, classCode, invitationCode }) {
         invitationCode: invitationCode || null,
       },
     });
-    const email = res?.data?.googleSignup?.email;
+    const email = res?.data?.googleSignup?.email || googleAccountEmail(e);
     // Normalize email to lowercase
     const normalizedEmail = email?.toLowerCase().trim();
+    if (!normalizedEmail) {
+      handleFailure();
+      return;
+    }
     // log in user
     const login = await signin({
       variables: {

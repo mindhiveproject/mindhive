@@ -10,6 +10,7 @@ const clientID =
 import { GOOGLE_LOGIN } from "../Mutations/Auth";
 import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
+import { googleAccountEmail } from "../../lib/googleAccountEmail";
 import {
   acceptNetworkInviteAfterAuth,
   completeClassNetworkInviteAfterAuth,
@@ -38,8 +39,12 @@ export default function LoginWithGoogle({
     const res = await googleLogin({
       variables: { token: e.tokenId },
     });
-    const email = res?.data?.googleLogin?.email;
+    const email = res?.data?.googleLogin?.email || googleAccountEmail(e);
     const normalizedEmail = email?.toLowerCase().trim();
+    if (!normalizedEmail) {
+      handleFailure();
+      return;
+    }
     const login = await signin({
       variables: {
         email: normalizedEmail,
