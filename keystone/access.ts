@@ -89,6 +89,17 @@ export function isAdmin({ session }: ListAccessArgs) {
 }
 
 /**
+ * Users with the RESEARCHER permission (granted by admins only — it is not
+ * self-assignable at signup). The Research dashboard exports classes and
+ * their boards, so researchers read all classes and assignments.
+ */
+export function isResearcher({ session }: ListAccessArgs) {
+  return !!session?.data?.permissions?.some(
+    (role) => role?.name === "RESEARCHER"
+  );
+}
+
+/**
  * Class filter: classes where the session user is creator, co-teacher or
  * mentor. Admins match every class; anonymous callers match none.
  */
@@ -134,32 +145,45 @@ export function authorFilter({ session }: ListAccessArgs) {
 
 /**
  * Filter for records owned through their `study` relation (StudyImage,
- * StudyVersion, StudyDataSource): the study's author or collaborators.
+ * StudyVersion, StudyDataSource): whoever may edit the study itself
+ * (studyUpdateWhere). Class staff who can edit a student's study can also
+ * edit its versions and data sources.
  */
-export function studyEditorFilter({ session }: ListAccessArgs) {
-  if (!session?.itemId) return false;
-  if (isAdmin({ session })) return true;
-  return { study: authorOrCollaboratorWhere(String(session.itemId)) };
-}
-
-/**
- * Study updates: author, collaborators, and staff of a class the study is
- * linked to or whose students author it (class dashboards assign students to
- * studies and change submission status).
- */
-export function studyUpdateFilter({ session }: ListAccessArgs) {
+export async function studyEditorFilter({ session, context }: ListAccessArgs) {
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
+  const studyIds = await cachedIds(context, "editableStudies", () =>
+    findIds(context, "Study", studyUpdateWhere(me))
+  );
+  return { study: { id: { in: studyIds } } };
+}
+
+/**
+ * Studies the user may edit: author, collaborators, the team of a project
+ * board the study belongs to (board author and collaborators — group
+ * projects create the study without collaborators), and staff of a class the
+ * study is linked to or whose students author it (class dashboards assign
+ * students to studies and change submission status).
+ */
+function studyUpdateWhere(me: string) {
   const staffClass = { some: classStaffSome(me) };
   return {
     OR: [
       ...authorOrCollaboratorWhere(me).OR,
+      { proposal: { some: authorOrCollaboratorWhere(me) } },
       { classes: staffClass },
       { author: { studentIn: staffClass } },
       { collaborators: { some: { studentIn: staffClass } } },
     ],
   };
+}
+
+/** Study updates: see studyUpdateWhere. */
+export function studyUpdateFilter({ session }: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  return studyUpdateWhere(String(session.itemId));
 }
 
 // ---------------------------------------------------------------------------
@@ -297,6 +321,18 @@ function connectedNetworkIds(context: any): Promise<string[]> {
         { creator: { id: { equals: meId } } },
         { admins: { some: { id: { equals: meId } } } },
         { memberProfiles: { some: { id: { equals: meId } } } },
+        // Members of an organization that belongs to the network.
+        {
+          memberOrganizations: {
+            some: {
+              OR: [
+                { members: { some: { id: { equals: meId } } } },
+                { admins: { some: { id: { equals: meId } } } },
+                { createdBy: { id: { equals: meId } } },
+              ],
+            },
+          },
+        },
         { isPublic: { equals: true } },
         ...(memberIds.length
           ? [{ classes: { some: { id: { in: memberIds } } } }]
@@ -366,7 +402,11 @@ function ownedBoardAssignmentIds(context: any): Promise<string[]> {
         { author: { id: { equals: me } } },
         { collaborators: { some: { id: { equals: me } } } },
         ...(staffIds.length
-          ? [{ templatesForClass: { some: { id: { in: staffIds } } } }]
+          ? [
+              { templatesForClass: { some: { id: { in: staffIds } } } },
+              // Legacy class templates linked only through Class.templateProposal.
+              { templateForClasses: { some: { id: { in: staffIds } } } },
+            ]
           : []),
       ],
     });
@@ -440,7 +480,7 @@ function staffClassAssignmentIds(context: any): Promise<string[]> {
  */
 export async function classQueryFilter({ session, context }: ListAccessArgs) {
   if (!session?.itemId) return false;
-  if (isAdmin({ session })) return true;
+  if (isAdmin({ session }) || isResearcher({ session })) return true;
   const [memberIds, networkIds] = await Promise.all([
     memberClassIds(context),
     connectedNetworkIds(context),
@@ -499,6 +539,30 @@ export async function postQueryFilter({ session, context }: ListAccessArgs) {
   };
 }
 
+/**
+ * Post creation: only into the caller's own journal (admins: any). Journals
+ * are read-only for class staff — they may read a student's journal but not
+ * post in it.
+ */
+export async function postCreateRule({
+  session,
+  context,
+  inputData,
+}: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const journalId = inputData?.journal?.connect?.id;
+  if (!journalId) return true;
+  // Sudo: only feeds this ownership check.
+  const owned = await context.sudo().db.Journal.count({
+    where: {
+      id: { equals: String(journalId) },
+      creator: { id: { equals: String(session.itemId) } },
+    },
+  });
+  return owned > 0;
+}
+
 /** Post writes: the author or the journal owner. */
 export function postOwnerFilter({ session }: ListAccessArgs) {
   if (!session?.itemId) return false;
@@ -550,8 +614,54 @@ function peerReviewHomeworkIds(context: any): Promise<string[]> {
 }
 
 /**
- * Homework reads: the author, class staff, and (peer review) any signed-in
- * user when the homework sits on a card of a study's main project board.
+ * Ids of homework a project-board team works on together: homework for an
+ * assignment linked to a card on a board the session user authors or
+ * collaborates on, written by that board's author or a collaborator. Lets
+ * teammates and board mentors (collaborators who are not class staff) see
+ * the team's card homework. Homework created from a card links only its
+ * assignment, so the board is reached through the assignment's cards.
+ */
+function boardTeamHomeworkIds(context: any): Promise<string[]> {
+  const me = context?.session?.itemId;
+  if (!me) return Promise.resolve([]);
+  return cachedIds(context, "boardTeamHomework", async () => {
+    const meId = String(me);
+    const rows: { id: string }[] = await context.prisma.$queryRaw(Prisma.sql`
+      SELECT DISTINCT h."id" AS "id"
+      FROM "ProposalBoard" b
+      JOIN "ProposalSection" s ON s."board" = b."id"
+      JOIN "ProposalCard" c ON c."section" = s."id"
+      JOIN "_Assignment_proposalCards" l ON l."B" = c."id"
+      JOIN "Homework" h ON h."assignment" = l."A"
+      WHERE (
+        b."author" = ${meId}
+        OR EXISTS (
+          SELECT 1 FROM "_Profile_collaboratorInProposal" me_c
+          WHERE me_c."B" = b."id" AND me_c."A" = ${meId}
+        )
+      ) AND (
+        h."author" = b."author"
+        OR EXISTS (
+          SELECT 1 FROM "_Profile_collaboratorInProposal" team
+          WHERE team."B" = b."id" AND team."A" = h."author"
+        )
+      )
+    `);
+    return rows.map((row) => String(row.id));
+  });
+}
+
+/** Holders of the TEACHER or MENTOR permission (grading roles). */
+function hasGradingRole({ session }: ListAccessArgs) {
+  return !!session?.data?.permissions?.some((role) =>
+    ["TEACHER", "MENTOR"].includes(role?.name)
+  );
+}
+
+/**
+ * Homework reads: the author, class staff, the project-board team
+ * (boardTeamHomeworkIds), and (peer review) any signed-in user when the
+ * homework sits on a card of a study's main project board.
  */
 export async function homeworkQueryFilter({
   session,
@@ -560,9 +670,10 @@ export async function homeworkQueryFilter({
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
-  const [staffWhere, peerIds] = await Promise.all([
+  const [staffWhere, peerIds, teamIds] = await Promise.all([
     homeworkStaffWhere(context),
     peerReviewHomeworkIds(context),
+    boardTeamHomeworkIds(context),
   ]);
   // Past the limit an id list risks database parameter limits, so fall back
   // to the (slow but equivalent) relation filter.
@@ -573,11 +684,21 @@ export async function homeworkQueryFilter({
         ? [{ id: { in: peerIds } }]
         : [];
   return {
-    OR: [{ author: { id: { equals: me } } }, ...staffWhere, ...peerWhere],
+    OR: [
+      { author: { id: { equals: me } } },
+      ...staffWhere,
+      ...peerWhere,
+      ...(teamIds.length ? [{ id: { in: teamIds } }] : []),
+    ],
   };
 }
 
-/** Homework updates: the author, and class staff (grading). */
+/**
+ * Homework updates: the author, class staff (grading), and board
+ * collaborators with a grading role (TEACHER/MENTOR) for their board team's
+ * homework — e.g. a mentor giving feedback on a student board. Student
+ * teammates cannot edit each other's homework.
+ */
 export async function homeworkUpdateFilter({
   session,
   context,
@@ -585,10 +706,15 @@ export async function homeworkUpdateFilter({
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
+  const [staffWhere, teamIds] = await Promise.all([
+    homeworkStaffWhere(context),
+    hasGradingRole({ session }) ? boardTeamHomeworkIds(context) : [],
+  ]);
   return {
     OR: [
       { author: { id: { equals: me } } },
-      ...(await homeworkStaffWhere(context)),
+      ...staffWhere,
+      ...(teamIds.length ? [{ id: { in: teamIds } }] : []),
     ],
   };
 }
@@ -604,7 +730,7 @@ export async function assignmentQueryFilter({
   context,
 }: ListAccessArgs) {
   if (!session?.itemId) return false;
-  if (isAdmin({ session })) return true;
+  if (isAdmin({ session }) || isResearcher({ session })) return true;
   const me = String(session.itemId);
   const [staffIds, studentIds, boardAssignments] = await Promise.all([
     staffClassIds(context),
@@ -687,7 +813,8 @@ function memoPerRequest(
 
 /**
  * Private profile data (email, study/consent info, personal work) is visible
- * to the profile owner, admins, and staff of a class the profile belongs to.
+ * to the profile owner, admins, and staff of a class the profile belongs to
+ * (as student, mentor, co-teacher or creator).
  */
 export function canViewPrivateProfile(
   context: any,
@@ -709,6 +836,69 @@ export function canViewPrivateProfile(
           { studentIn: inStaffClass },
           { mentorIn: inStaffClass },
           { teachingTeamIn: inStaffClass },
+          { teacherIn: inStaffClass },
+        ],
+      },
+    });
+    return matches > 0;
+  });
+}
+
+/**
+ * Contact email: everyone who may see private profile data, plus people who
+ * run something the profile takes part in and need to reach them —
+ * network creators/admins (their network's members and admins),
+ * organization creators/admins (their organization's members and admins),
+ * opportunity sponsors/mentors (students matched to their opportunity), and
+ * staff of a matching round or of a class in an opportunity's network
+ * (the opportunity's sponsors and mentors, e.g. for the CSV export).
+ * Only the email field uses this; demographics stay with
+ * canViewParticipantData.
+ */
+export function canViewContactEmail(
+  context: any,
+  profileId: string | null | undefined
+): Promise<boolean> {
+  const me = context?.session?.itemId;
+  if (!me || !profileId) return Promise.resolve(false);
+  return memoPerRequest(context, `contactEmail:${profileId}`, async () => {
+    if (await canViewPrivateProfile(context, profileId)) return true;
+    const meId = String(me);
+    const isMe = { some: { id: { equals: meId } } };
+    const myNetwork = {
+      some: { OR: [{ creator: { id: { equals: meId } } }, { admins: isMe }] },
+    };
+    const myOrganization = {
+      some: { OR: [{ createdBy: { id: { equals: meId } } }, { admins: isMe }] },
+    };
+    const myOpportunity = {
+      OR: [
+        { sponsors: isMe },
+        { mentors: isMe },
+        { mentor: { id: { equals: meId } } },
+      ],
+    };
+    const runByMe = {
+      some: {
+        OR: [
+          { rounds: { some: { OR: connectRoundStaffRoundClauses(meId) } } },
+          { classNetworks: { some: { classes: { some: classStaffSome(meId) } } } },
+        ],
+      },
+    };
+    const matches = await context.sudo().db.Profile.count({
+      where: {
+        id: { equals: String(profileId) },
+        OR: [
+          { memberOfClassNetworks: myNetwork },
+          { adminOfClassNetworks: myNetwork },
+          { classNetworksCreated: myNetwork },
+          { organizations: myOrganization },
+          { adminOfOrganizations: myOrganization },
+          { connectMatches: { some: { opportunity: myOpportunity } } },
+          { opportunitiesSponsored: runByMe },
+          { opportunitiesMentoring: runByMe },
+          { opportunitiesCreated: runByMe },
         ],
       },
     });
@@ -718,8 +908,10 @@ export function canViewPrivateProfile(
 
 /**
  * Participant data (info, generalInfo, studiesInfo: demographics and consent
- * answers) is also visible to the author and collaborators of a study the
- * profile took part in, for Test & Collect.
+ * answers) is also visible to the researchers of a study the profile took
+ * part in, for Test & Collect: the study's author and collaborators, and the
+ * team of its project board (board author and collaborators) — the same
+ * people lib/runtime/resultAccess.js lets see the study's datasets.
  */
 export function canViewParticipantData(
   context: any,
@@ -735,8 +927,8 @@ export function canViewParticipantData(
         participantIn: {
           some: {
             OR: [
-              { author: { id: { equals: String(me) } } },
-              { collaborators: { some: { id: { equals: String(me) } } } },
+              ...authorOrCollaboratorWhere(String(me)).OR,
+              { proposal: { some: authorOrCollaboratorWhere(String(me)) } },
             ],
           },
         },
@@ -1426,7 +1618,10 @@ async function loadClassTemplateBoard(
   boardId: string | null | undefined
 ) {
   if (!boardId || !context) return null;
-  return context.query.ProposalBoard.findOne({
+  // Sudo: the class links only feed the permission decision. Read as the
+  // caller, a board collaborator outside the linked class would not see them
+  // and the board would look like it is no class template.
+  return context.sudo().query.ProposalBoard.findOne({
     where: { id: boardId },
     query: CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
   });
@@ -1514,7 +1709,8 @@ async function canCreateFormCard({
   if (!definitionId || !context) {
     return !!permissions.canManageForms({ session });
   }
-  const definition = await context.query.FormDefinition.findOne({
+  // Sudo: only feeds canMutateFormDefinition (see loadClassTemplateBoard).
+  const definition = await context.sudo().query.FormDefinition.findOne({
     where: { id: definitionId },
     query: FORM_DEFINITION_ACCESS_QUERY,
   });
@@ -1532,7 +1728,8 @@ async function canCreateFormField({
   if (!cardId || !context) {
     return !!permissions.canManageForms({ session });
   }
-  const card = await context.query.FormCard.findOne({
+  // Sudo: only feeds canMutateFormDefinition (see loadClassTemplateBoard).
+  const card = await context.sudo().query.FormCard.findOne({
     where: { id: cardId },
     query: `definition { ${FORM_DEFINITION_ACCESS_QUERY} }`,
   });

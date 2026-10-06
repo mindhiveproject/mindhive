@@ -44,7 +44,12 @@ async function applyTemplateBoardChanges(
   // Resource.classes for any classes that use this board as their template.
   // This ensures that any resource linked on the template's cards is
   // associated with the class(es) whose templateProposal is this board.
-  const { template } = await getTemplateAndClones(context, templateBoardId);
+  // The class links and resource writes run as sudo: this is bookkeeping
+  // after a propagation the caller was allowed to run, and as the caller a
+  // co-teacher of only some of the template's classes would link resources
+  // to those classes only.
+  const sudo = context.sudo();
+  const { template } = await getTemplateAndClones(sudo, templateBoardId);
   if (template) {
     const templateClasses = [
       ...(template.templateForClasses ?? []),
@@ -77,7 +82,7 @@ async function applyTemplateBoardChanges(
 
           await Promise.all(
             resourceIds.map((resourceId) =>
-              context.db.Resource.updateOne({
+              sudo.db.Resource.updateOne({
                 where: { id: resourceId },
                 data: {
                   classes: { connect: classConnect },

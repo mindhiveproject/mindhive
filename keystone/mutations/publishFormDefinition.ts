@@ -41,7 +41,10 @@ async function publishFormDefinition(
     (p: any) => p.canManageUsers || p.canManageForms
   );
 
-  const target = await context.query.FormDefinition.findOne({
+  // Loaded as sudo so the board's class links are complete for the
+  // canMutateFormDefinition check below (a board collaborator outside the
+  // class could not read them). Writes below still run as the caller.
+  const target = await context.sudo().query.FormDefinition.findOne({
     where: { id },
     query: `
       id

@@ -61,7 +61,8 @@ async function saveBoardReviewFormDefinition(
   let defId = definitionId || null;
 
   if (defId) {
-    const existing = await context.query.FormDefinition.findOne({
+    // Sudo: complete class links for the canMutateFormDefinition check below.
+    const existing = await sudo.query.FormDefinition.findOne({
       where: { id: defId },
       query: `
         id

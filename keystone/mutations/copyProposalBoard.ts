@@ -1,6 +1,7 @@
 import uniqid from "uniqid";
 import { provisionFormDefinitionForMilestone } from "./createTemplateMilestone";
 import { syncClassTemplateBoards } from "./utils/classTemplateBoards";
+import { isAdmin } from "../access";
 
 // Copies run with limited parallelism. Creating every section, card and
 // assignment at once (each insert also access-checks what it connects)
@@ -125,6 +126,28 @@ async function copyProposalBoard(
     throw new Error("You must be logged in to do this!");
   }
 
+  // Only class staff (or admins) may create a class template. Checked before
+  // anything is written: the copy used to fail on the Class update further
+  // down, after the new board had already been created.
+  if (classIdTemplate && !isAdmin({ session: sesh })) {
+    const me = String(sesh.itemId);
+    const staffOfClass = await context.sudo().db.Class.count({
+      where: {
+        id: { equals: classIdTemplate },
+        OR: [
+          { creator: { id: { equals: me } } },
+          { teachingTeam: { some: { id: { equals: me } } } },
+          { mentors: { some: { id: { equals: me } } } },
+        ],
+      },
+    });
+    if (!staffOfClass) {
+      throw new Error(
+        "Forbidden: only the class's teachers and mentors can create its templates."
+      );
+    }
+  }
+
   // Determine if this should be the first (main) board for this user in the given class
   let shouldBeMain = false;
   if (classIdUsed) {
@@ -154,6 +177,19 @@ async function copyProposalBoard(
     query:
       `id publicId slug title description isTemplate settings resources { id } templateForClasses { id } templatesForClass { id } ${TEMPLATE_MILESTONES_QUERY} sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } studies { id } tasks { id } milestone { id } } }`,
   });
+
+  // Whether the source is a class template depends on its class links, which
+  // a caller outside those classes cannot read (they would come back empty
+  // and the copy would duplicate assignments instead of reusing them). Only
+  // the link ids are read, as sudo.
+  if (template) {
+    const links = await context.sudo().query.ProposalBoard.findOne({
+      where: { id },
+      query: "templateForClasses { id } templatesForClass { id }",
+    });
+    template.templateForClasses = links?.templateForClasses ?? [];
+    template.templatesForClass = links?.templatesForClass ?? [];
+  }
 
   // The template cards' assignments, read as the caller in one query: the
   // assignment access filter is expensive, and selecting `assignments` on each
@@ -289,7 +325,10 @@ async function copyProposalBoard(
   }
 
   if (classIdTemplate) {
-    await syncClassTemplateBoards(context, classIdTemplate);
+    // The caller is class staff (checked above); the backfill only links
+    // boards already tied to this class, so it runs as sudo like the
+    // syncClassTemplateBoards mutation does.
+    await syncClassTemplateBoards(context.sudo(), classIdTemplate);
   }
 
   // Independent copies (class-template copy, or a generic teacher copy with

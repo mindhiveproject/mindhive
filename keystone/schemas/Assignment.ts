@@ -17,6 +17,7 @@ import {
   assignmentUpdateFilter,
   authorFilter,
 } from "../access";
+import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
 
 export const Assignment = list({
   access: {
@@ -64,6 +65,8 @@ export const Assignment = list({
     classes: relationship({
       ref: "Class.assignments",
       many: true,
+      // Saving with `set` keeps links the editor cannot see (lib/keepHiddenLinks).
+      hooks: { resolveInput: keepHiddenLinksOnSet("Class") },
     }),
     homework: relationship({
       ref: "Homework.assignment",

@@ -12,6 +12,7 @@ import {
 import uniqid from "uniqid";
 import { rules, isSignedIn, canAdminManageNetworks } from "../access";
 import { syncNetworkClassStaffAsRoundReviewers } from "../lib/classStaff";
+import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
 
 export const ClassNetwork = list({
   access: {
@@ -100,7 +101,12 @@ export const ClassNetwork = list({
         },
       },
     }),
-    classes: relationship({ ref: "Class.networks", many: true }),
+    classes: relationship({
+      ref: "Class.networks",
+      many: true,
+      // Saving with `set` keeps links the editor cannot see (lib/keepHiddenLinks).
+      hooks: { resolveInput: keepHiddenLinksOnSet("Class") },
+    }),
     memberProfiles: relationship({
       ref: "Profile.memberOfClassNetworks",
       many: true,

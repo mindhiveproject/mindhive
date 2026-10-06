@@ -12,6 +12,7 @@ import {
 import slugify from "slugify";
 
 import { signedInWrites, studyUpdateFilter, authorFilter } from "../access";
+import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
 
 export const Study = list({
   access: {
@@ -129,6 +130,8 @@ export const Study = list({
     classes: relationship({
       ref: "Class.studies",
       many: true,
+      // Saving with `set` keeps links the editor cannot see (lib/keepHiddenLinks).
+      hooks: { resolveInput: keepHiddenLinksOnSet("Class") },
     }),
     // messages: relationship to messages
     reviews: relationship({

@@ -14,6 +14,7 @@ import uniqid from "uniqid";
 import { Session } from "../types";
 
 import { signedInWrites } from "../access";
+import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
 function isResourceOwner(session: Session | undefined, item: any) {
   if (!session?.itemId || item?.authorId == null) return false;
   return String(item.authorId) === String(session.itemId);
@@ -154,6 +155,8 @@ export const Resource = list({
     classes: relationship({
       ref: "Class.resources",
       many: true,
+      // Saving with `set` keeps links the editor cannot see (lib/keepHiddenLinks).
+      hooks: { resolveInput: keepHiddenLinksOnSet("Class") },
     }),
     mediaAssetsUsed: relationship({
       ref: "MediaAsset.usedInResources",

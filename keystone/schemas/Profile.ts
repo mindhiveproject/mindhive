@@ -16,7 +16,7 @@ import {
   permissions,
   rules,
   canViewParticipantData,
-  canViewPrivateProfile,
+  canViewContactEmail,
 } from "../access";
 import {
   ensureTeacherPermission,
@@ -45,8 +45,10 @@ const customConfig: Config = {
 
 // Read rules for private profile fields. Denied reads resolve to null.
 // Contact details for other users belong in publicMail, which stays public.
-const ownerOrStaffRead = {
-  read: ({ context, item }: any) => canViewPrivateProfile(context, item?.id),
+// Email: private-profile readers plus the contacts that run the profile's
+// networks, organizations, opportunities and matching rounds (see access.ts).
+const contactEmailRead = {
+  read: ({ context, item }: any) => canViewContactEmail(context, item?.id),
 };
 const participantDataRead = {
   read: ({ context, item }: any) => canViewParticipantData(context, item?.id),
@@ -130,7 +132,7 @@ export const Profile = list({
       isIndexed: "unique",
       isFilterable: true,
       access: {
-        ...ownerOrStaffRead,
+        ...contactEmailRead,
         create: () => true,
         update: rules.canManageUsers,
       },

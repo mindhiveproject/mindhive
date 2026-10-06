@@ -24,18 +24,18 @@ export default function JournalPage({ code, user, query }) {
   ].map((cl) => cl?.id);
   const studentClassIds = journal?.creator?.studentIn?.map((cl) => cl?.id) || [];
   const isTeacher = taughtIds.some((id) => studentClassIds.includes(id));
-  const isMentor =
-    user?.mentorIn
-      .map((cl) => cl?.id)
-      .filter((id) => journal?.creator?.studentIn.map((cl) => cl?.id)).length >
-    0;
+  const isMentor = (user?.mentorIn || []).some((cl) =>
+    studentClassIds.includes(cl?.id)
+  );
   // check whether the user is an admin
   const isAdmin = user?.permissions?.map((p) => p?.name).includes("ADMIN");
   // do not show the journal, if the user is not one of those
   if (!(isCreator || isTeacher || isMentor || isAdmin)) {
     return <div></div>;
   }
-  if (action === "edit" && post) {
+  // Journals are read-only for staff: only the owner (or an admin) writes.
+  const canWrite = isCreator || isAdmin;
+  if (action === "edit" && post && canWrite) {
     return (
       <EditPost
         code={code}
@@ -49,15 +49,18 @@ export default function JournalPage({ code, user, query }) {
   return (
     <div>
       <h1>{journal?.title}</h1>
-      <CreatePost journal={journal} user={user}>
-        <button>{t("journal.createNewPost")}</button>
-      </CreatePost>
+      {canWrite && (
+        <CreatePost journal={journal} user={user}>
+          <button>{t("journal.createNewPost")}</button>
+        </CreatePost>
+      )}
       <h2>{t("journal.notes")}</h2>
       <JournalPosts
         code={code}
         journalId={journal?.id}
         posts={posts}
         index={index}
+        canWrite={canWrite}
       />
     </div>
   );

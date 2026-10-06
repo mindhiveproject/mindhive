@@ -292,8 +292,14 @@ export default function ParticipantPage({ query, user, tab }) {
       );
       setHasStudyChanged(false);
     } else {
-      updateStudy();
-      setHasStudyChanged(false);
+      // Keep the unsaved-changes flag when the save fails, so edits aren't
+      // silently dropped.
+      try {
+        await updateStudy();
+        setHasStudyChanged(false);
+      } catch (err) {
+        alert(err?.message);
+      }
     }
   };
 

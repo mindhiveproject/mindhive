@@ -44,7 +44,10 @@ async function resolveMilestonesForBoard(
   { boardId }: { boardId: string },
   context: any
 ) {
-  const board = await context.query.ProposalBoard.findOne({
+  // Sudo: whether the board is a class template depends on its class links,
+  // which a viewer outside the class cannot read; as the caller, the board
+  // would resolve milestones from clonedFrom instead of its own template.
+  const board = await context.sudo().query.ProposalBoard.findOne({
     where: { id: boardId },
     query: "id clonedFrom { id } templateForClasses { id } templatesForClass { id }",
   });
@@ -105,7 +108,9 @@ export async function assertCanMutateClassTemplateBoard(
   );
   if (isAdmin) return;
 
-  const board = await context.query.ProposalBoard.findOne({
+  // Sudo: only feeds the permission checks below (a board collaborator
+  // outside the linked class could not read the class links).
+  const board = await context.sudo().query.ProposalBoard.findOne({
     where: { id: templateBoardId },
     query: CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
   });

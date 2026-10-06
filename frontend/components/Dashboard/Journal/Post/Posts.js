@@ -2,7 +2,13 @@ import { Tab } from "semantic-ui-react";
 import Post from "./SinglePost";
 import { useRouter } from "next/router";
 
-export default function JournalNotes({ code, journalId, posts, index }) {
+export default function JournalNotes({
+  code,
+  journalId,
+  posts,
+  index,
+  canWrite,
+}) {
   const router = useRouter();
 
   const handleChange = (e, data) => {
@@ -32,6 +38,7 @@ export default function JournalNotes({ code, journalId, posts, index }) {
                 code={code}
                 journalId={journalId}
                 index={index}
+                canWrite={canWrite}
               />
             </Tab.Pane>
           ),
