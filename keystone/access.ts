@@ -347,27 +347,52 @@ async function usableBoardWhere(context: any) {
  * per card open in production, and minutes on larger data.
  */
 function boardAssignmentIds(context: any): Promise<string[]> {
-  return cachedIds(context, "boardAssignments", async () => {
-    const boardIds = await findIds(
-      context,
-      "ProposalBoard",
-      await usableBoardWhere(context)
-    );
-    const ids = new Set<string>();
-    // Chunked to stay well under database bind-parameter limits.
-    for (let i = 0; i < boardIds.length; i += 5000) {
-      const chunk = boardIds.slice(i, i + 5000);
-      const rows: { id: string }[] = await context.prisma.$queryRaw(Prisma.sql`
-        SELECT DISTINCT l."A" AS "id"
-        FROM "ProposalSection" s
-        JOIN "ProposalCard" c ON c."section" = s."id"
-        JOIN "_Assignment_proposalCards" l ON l."B" = c."id"
-        WHERE s."board" IN (${Prisma.join(chunk)})
-      `);
-      rows.forEach((row) => ids.add(String(row.id)));
-    }
-    return [...ids];
+  return cachedIds(context, "boardAssignments", async () =>
+    assignmentIdsOnBoards(context, await usableBoardWhere(context))
+  );
+}
+
+/**
+ * Ids of assignments linked to a card on a board the session user owns or
+ * collaborates on, or a class template board of a class they staff — the
+ * boards whose linked assignments they may edit (assignmentUpdateFilter).
+ */
+function ownedBoardAssignmentIds(context: any): Promise<string[]> {
+  return cachedIds(context, "ownedBoardAssignments", async () => {
+    const me = String(context?.session?.itemId);
+    const staffIds = await staffClassIds(context);
+    return assignmentIdsOnBoards(context, {
+      OR: [
+        { author: { id: { equals: me } } },
+        { collaborators: { some: { id: { equals: me } } } },
+        ...(staffIds.length
+          ? [{ templatesForClass: { some: { id: { in: staffIds } } } }]
+          : []),
+      ],
+    });
   });
+}
+
+/** Ids of assignments linked to a card on any board matching `boardWhere`. */
+async function assignmentIdsOnBoards(
+  context: any,
+  boardWhere: any
+): Promise<string[]> {
+  const boardIds = await findIds(context, "ProposalBoard", boardWhere);
+  const ids = new Set<string>();
+  // Chunked to stay well under database bind-parameter limits.
+  for (let i = 0; i < boardIds.length; i += 5000) {
+    const chunk = boardIds.slice(i, i + 5000);
+    const rows: { id: string }[] = await context.prisma.$queryRaw(Prisma.sql`
+      SELECT DISTINCT l."A" AS "id"
+      FROM "ProposalSection" s
+      JOIN "ProposalCard" c ON c."section" = s."id"
+      JOIN "_Assignment_proposalCards" l ON l."B" = c."id"
+      WHERE s."board" IN (${Prisma.join(chunk)})
+    `);
+    rows.forEach((row) => ids.add(String(row.id)));
+  }
+  return [...ids];
 }
 
 /**
@@ -619,29 +644,19 @@ export async function assignmentUpdateFilter({
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
-  const staffIds = await staffClassIds(context);
-  const staffClass = { some: { id: { in: staffIds } } };
+  const [staffIds, boardAssignments] = await Promise.all([
+    staffClassIds(context),
+    ownedBoardAssignmentIds(context),
+  ]);
   return {
     OR: [
       { author: { id: { equals: me } } },
-      ...(staffIds.length ? [{ classes: staffClass }] : []),
-      {
-        proposalCards: {
-          some: {
-            section: {
-              board: {
-                OR: [
-                  { author: { id: { equals: me } } },
-                  { collaborators: { some: { id: { equals: me } } } },
-                  ...(staffIds.length
-                    ? [{ templatesForClass: staffClass }]
-                    : []),
-                ],
-              },
-            },
-          },
-        },
-      },
+      ...(staffIds.length
+        ? [{ classes: { some: { id: { in: staffIds } } } }]
+        : []),
+      ...(boardAssignments.length
+        ? [{ id: { in: boardAssignments } }]
+        : []),
     ],
   };
 }
