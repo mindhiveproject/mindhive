@@ -152,8 +152,31 @@ async function copyProposalBoard(
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      `id publicId slug title description isTemplate settings resources { id } templateForClasses { id } templatesForClass { id } ${TEMPLATE_MILESTONES_QUERY} sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } milestone { id } } }`,
+      `id publicId slug title description isTemplate settings resources { id } templateForClasses { id } templatesForClass { id } ${TEMPLATE_MILESTONES_QUERY} sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } studies { id } tasks { id } milestone { id } } }`,
   });
+
+  // The template cards' assignments, read as the caller in one query: the
+  // assignment access filter is expensive, and selecting `assignments` on each
+  // card ran it once per card (48 times for a 48-card board). Same rows, same
+  // access check, just batched.
+  if (template?.sections?.length) {
+    const linkedAssignments = await context.query.Assignment.findMany({
+      where: {
+        proposalCards: {
+          some: { section: { board: { id: { equals: id } } } },
+        },
+      },
+      query:
+        "id title content placeholder settings public isTemplate tags { id } proposalCards { id }",
+    });
+    for (const section of template.sections) {
+      for (const card of section.cards || []) {
+        card.assignments = linkedAssignments
+          .filter((a: any) => a.proposalCards?.some((pc: any) => pc.id === card.id))
+          .map(({ proposalCards, ...a }: any) => a);
+      }
+    }
+  }
 
   let boardSettings = template.settings;
   if (classIdTemplate) {
@@ -379,6 +402,12 @@ async function copyProposalBoard(
           // (classIdTemplate is provided, template.templateForClasses is empty),
           // any new assignments should be associated with that class so they
           // immediately appear in the class assignment context.
+          // The assignment writes below run as sudo (approved by the project
+          // owner, 2026-10-06). Every assignment id here came from `template`,
+          // which was read as the caller, so it is one the caller may read.
+          // Re-checking each id via connect ran the expensive assignment
+          // access filter once per link and timed out copies of large boards.
+          // sudo keeps the session, so author hooks still credit the caller.
           if (templateCard.assignments?.length > 0) {
             // Check if the template board is a class template (has templateForClasses set)
             const isClassTemplate =
@@ -387,7 +416,7 @@ async function copyProposalBoard(
             
             if (isClassTemplate) {
               // Student copying from teacher's template: reuse the same assignment IDs
-              await context.db.ProposalCard.updateOne({
+              await context.sudo().db.ProposalCard.updateOne({
                 where: { id: newCard.id },
                 data: {
                   assignments: {
@@ -403,7 +432,7 @@ async function copyProposalBoard(
                 templateCard.assignments,
                 1,
                 async (a: any) => {
-                  await context.db.Assignment.createOne(
+                  await context.sudo().db.Assignment.createOne(
                     {
                       data: {
                         title: a.title,

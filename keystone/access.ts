@@ -2,6 +2,7 @@
 
 import { permissionsList } from "./schemas/fields";
 import { ListAccessArgs, Session } from "./types";
+import { Prisma } from "@prisma/client";
 import { requestScope } from "./lib/requestScope";
 
 export function isSignedIn({ session }: ListAccessArgs) {
@@ -173,10 +174,10 @@ export function studyUpdateFilter({ session }: ListAccessArgs) {
 // with `id in [...]`. The rules are unchanged; only the SQL is cheaper.
 //
 // Lookups are cached per HTTP request (queries and mutations). Any write to a
-// model that holds class or network membership (Class, ClassNetwork, Profile)
-// or any raw SQL write clears that request's cache once the write completes,
-// so a mutation that changes memberships and then reads in the same request
-// sees the new state. Clearing happens in Prisma middleware
+// model these lookups read — class/network membership (Class, ClassNetwork,
+// Profile) and the board → section → card → assignment chain — or any raw SQL
+// write clears that request's cache once the write completes, so a mutation
+// that changes them and then reads in the same request sees the new state. Clearing happens in Prisma middleware
 // (attachAccessCacheInvalidation), which sees every write: context.db,
 // context.query, sudo and raw. Without the cache, mutations that run many
 // access checks (copyProposalBoard: hundreds) re-ran these lookups for each
@@ -204,7 +205,17 @@ function cachedIds(
   return lookup;
 }
 
-const MEMBERSHIP_MODELS = new Set(["Class", "ClassNetwork", "Profile"]);
+const ACCESS_INPUT_MODELS = new Set([
+  "Class",
+  "ClassNetwork",
+  "Profile",
+  "ProposalBoard",
+  "ProposalSection",
+  "ProposalCard",
+  "Assignment",
+  "Homework",
+  "Study",
+]);
 const WRITE_ACTIONS = new Set([
   "create",
   "createMany",
@@ -217,15 +228,15 @@ const WRITE_ACTIONS = new Set([
   "executeRawUnsafe",
 ]);
 
-/** Prisma middleware: clears the request's id cache after membership writes. */
+/** Prisma middleware: clears the request's id cache after writes it depends on. */
 export function attachAccessCacheInvalidation(prisma: any) {
   prisma.$use(async (params: any, next: (p: any) => Promise<any>) => {
     try {
       return await next(params);
     } finally {
       const isWrite = WRITE_ACTIONS.has(params.action);
-      const touchesMembership = !params.model || MEMBERSHIP_MODELS.has(params.model);
-      if (isWrite && touchesMembership) {
+      const touchesInputs = !params.model || ACCESS_INPUT_MODELS.has(params.model);
+      if (isWrite && touchesInputs) {
         const req = requestScope.getStore()?.req;
         if (req) idLookupCache.delete(req);
       }
@@ -326,14 +337,75 @@ async function usableBoardWhere(context: any) {
 }
 
 /**
+ * Ids of assignments linked to a card on a board the session user may use
+ * (usableBoardWhere).
+ *
+ * Computed in two plain steps — the usable board ids, then one indexed join
+ * section → card → assignment link — rather than as a Prisma relation filter
+ * on Assignment (proposalCards → section → board). Postgres ran that nested
+ * filter by re-joining every card with every section for each card row: 5–10 s
+ * per card open in production, and minutes on larger data.
+ */
+function boardAssignmentIds(context: any): Promise<string[]> {
+  return cachedIds(context, "boardAssignments", async () => {
+    const boardIds = await findIds(
+      context,
+      "ProposalBoard",
+      await usableBoardWhere(context)
+    );
+    const ids = new Set<string>();
+    // Chunked to stay well under database bind-parameter limits.
+    for (let i = 0; i < boardIds.length; i += 5000) {
+      const chunk = boardIds.slice(i, i + 5000);
+      const rows: { id: string }[] = await context.prisma.$queryRaw(Prisma.sql`
+        SELECT DISTINCT l."A" AS "id"
+        FROM "ProposalSection" s
+        JOIN "ProposalCard" c ON c."section" = s."id"
+        JOIN "_Assignment_proposalCards" l ON l."B" = c."id"
+        WHERE s."board" IN (${Prisma.join(chunk)})
+      `);
+      rows.forEach((row) => ids.add(String(row.id)));
+    }
+    return [...ids];
+  });
+}
+
+/**
  * Profiles that are students or mentors in a class the session user staffs,
  * or null when the user staffs no class (the clause can never match).
  */
 async function profileInStaffClassWhere(context: any) {
-  const classIds = await staffClassIds(context);
-  if (classIds.length === 0) return null;
-  const staffClass = { some: { id: { in: classIds } } };
-  return { OR: [{ studentIn: staffClass }, { mentorIn: staffClass }] };
+  const profileIds = await staffClassMemberIds(context);
+  if (profileIds.length === 0) return null;
+  return { id: { in: profileIds } };
+}
+
+/**
+ * Ids of profiles that are students or mentors in a class the session user
+ * staffs. A plain id list lets Postgres use the author/creator indexes; the
+ * equivalent relation filter (author → studentIn/mentorIn → class) made it
+ * scan every homework, journal or post row.
+ */
+function staffClassMemberIds(context: any): Promise<string[]> {
+  return cachedIds(context, "staffClassMembers", async () => {
+    const classIds = await staffClassIds(context);
+    if (classIds.length === 0) return [];
+    const staffClass = { some: { id: { in: classIds } } };
+    return findIds(context, "Profile", {
+      OR: [{ studentIn: staffClass }, { mentorIn: staffClass }],
+    });
+  });
+}
+
+/** Ids of assignments of classes the session user staffs. */
+function staffClassAssignmentIds(context: any): Promise<string[]> {
+  return cachedIds(context, "staffClassAssignments", async () => {
+    const classIds = await staffClassIds(context);
+    if (classIds.length === 0) return [];
+    return findIds(context, "Assignment", {
+      classes: { some: { id: { in: classIds } } },
+    });
+  });
 }
 
 /**
@@ -417,13 +489,39 @@ export function postOwnerFilter({ session }: ListAccessArgs) {
 
 /** Homework clauses for class staff (grading); empty for non-staff. */
 async function homeworkStaffWhere(context: any) {
-  const classIds = await staffClassIds(context);
-  if (classIds.length === 0) return [];
-  const staffClass = { some: { id: { in: classIds } } };
+  const [memberIds, assignmentIds] = await Promise.all([
+    staffClassMemberIds(context),
+    staffClassAssignmentIds(context),
+  ]);
   return [
-    { author: { OR: [{ studentIn: staffClass }, { mentorIn: staffClass }] } },
-    { assignment: { classes: staffClass } },
+    ...(memberIds.length ? [{ author: { id: { in: memberIds } } }] : []),
+    ...(assignmentIds.length
+      ? [{ assignment: { id: { in: assignmentIds } } }]
+      : []),
   ];
+}
+
+/**
+ * Ids of homework on a card of a study's main project board (peer reviewers
+ * may read these). One indexed join per request: as a relation filter on
+ * Homework (proposalCard → section → board → studyMain), Prisma's SQL made
+ * Postgres scan every homework row through that chain — and again for its
+ * "relation is set" checks — on every homework query.
+ */
+const PEER_HOMEWORK_LIST_LIMIT = 20000;
+
+function peerReviewHomeworkIds(context: any): Promise<string[]> {
+  return cachedIds(context, "peerReviewHomework", async () => {
+    const rows: { id: string }[] = await context.prisma.$queryRaw(Prisma.sql`
+      SELECT h."id" AS "id"
+      FROM "ProposalBoard" b
+      JOIN "ProposalSection" s ON s."board" = b."id"
+      JOIN "ProposalCard" c ON c."section" = s."id"
+      JOIN "Homework" h ON h."proposalCard" = c."id"
+      WHERE b."studyMain" IS NOT NULL
+    `);
+    return rows.map((row) => String(row.id));
+  });
 }
 
 /**
@@ -437,12 +535,20 @@ export async function homeworkQueryFilter({
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
+  const [staffWhere, peerIds] = await Promise.all([
+    homeworkStaffWhere(context),
+    peerReviewHomeworkIds(context),
+  ]);
+  // Past the limit an id list risks database parameter limits, so fall back
+  // to the (slow but equivalent) relation filter.
+  const peerWhere =
+    peerIds.length > PEER_HOMEWORK_LIST_LIMIT
+      ? [{ proposalCard: { section: { board: { NOT: [{ studyMain: null }] } } } }]
+      : peerIds.length
+        ? [{ id: { in: peerIds } }]
+        : [];
   return {
-    OR: [
-      { author: { id: { equals: me } } },
-      ...(await homeworkStaffWhere(context)),
-      { proposalCard: { section: { board: { NOT: [{ studyMain: null }] } } } },
-    ],
+    OR: [{ author: { id: { equals: me } } }, ...staffWhere, ...peerWhere],
   };
 }
 
@@ -475,10 +581,10 @@ export async function assignmentQueryFilter({
   if (!session?.itemId) return false;
   if (isAdmin({ session })) return true;
   const me = String(session.itemId);
-  const [staffIds, studentIds, boardWhere] = await Promise.all([
+  const [staffIds, studentIds, boardAssignments] = await Promise.all([
     staffClassIds(context),
     studentClassIds(context),
-    usableBoardWhere(context),
+    boardAssignmentIds(context),
   ]);
   return {
     OR: [
@@ -495,7 +601,9 @@ export async function assignmentQueryFilter({
           ]
         : []),
       { isTemplate: { equals: true } },
-      { proposalCards: { some: { section: { board: boardWhere } } } },
+      ...(boardAssignments.length
+        ? [{ id: { in: boardAssignments } }]
+        : []),
     ],
   };
 }
