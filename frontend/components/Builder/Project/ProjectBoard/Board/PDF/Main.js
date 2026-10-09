@@ -1,6 +1,9 @@
 import absoluteUrl from "next-absolute-url";
 import { useQuery } from "@apollo/client";
-import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import {
+  PROPOSAL_QUERY,
+  PROPOSAL_LIST_VIEW_SYNC_QUERY,
+} from "../../../../../Queries/Proposal";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
 import { cardIncludedInReviewStep } from "../../../../../../lib/milestones";
@@ -8,8 +11,10 @@ import { getBoardAssignableToStudents } from "../../../../../../lib/proposalBoar
 import moment from "moment";
 import Head from "next/head";
 import Preview from "./Preview/Main";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
+
+const LIST_VIEW_SYNC_INTERVAL_MS = 30000;
 
 export default function ProposalPDF({ 
   proposalId, 
@@ -28,6 +33,36 @@ export default function ProposalPDF({
     variables: { id: proposalId },
   });
   const { milestones } = useBoardMilestones(proposalId);
+
+  // Cards that aren't connected to the collab server only see others' edits
+  // through this poll; its results land on the same cached cards.
+  const { startPolling, stopPolling, refetch: refetchListViewSync } = useQuery(
+    PROPOSAL_LIST_VIEW_SYNC_QUERY,
+    {
+      variables: { id: proposalId },
+      fetchPolicy: "network-only",
+      skip: !proposalId,
+    }
+  );
+  useEffect(() => {
+    if (!proposalId) return undefined;
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refetchListViewSync().catch(() => {});
+        startPolling(LIST_VIEW_SYNC_INTERVAL_MS);
+      } else {
+        stopPolling();
+      }
+    };
+    if (document.visibilityState === "visible") {
+      startPolling(LIST_VIEW_SYNC_INTERVAL_MS);
+    }
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      stopPolling();
+    };
+  }, [proposalId, startPolling, stopPolling, refetchListViewSync]);
 
   const proposal = data?.proposalBoard || {};
   const title = proposal?.title || "";

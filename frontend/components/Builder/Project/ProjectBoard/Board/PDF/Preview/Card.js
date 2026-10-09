@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useMutation } from "@apollo/client";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useMutation, useApolloClient } from "@apollo/client";
 import { Icon, Accordion } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import ReactHtmlParser from "react-html-parser";
@@ -10,199 +10,386 @@ import TipTapEditor from "../../../../../../TipTap/Main";
 import { UPDATE_CARD_EDIT, UPDATE_CARD_CONTENT } from "../../../../../../Mutations/Proposal";
 import { GET_CARD_CONTENT, PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { getRegularCardVariant } from "../../../../../../Utils/cardVariants";
+import { useCardCollabSession } from "../../../../../../../lib/useCardCollabSession";
 import StatusChip from "./StatusChip";
 import InfoPopover from "../../../../../../DesignSystem/InfoPopover";
 
-export default function Card({ card, cardId, user, submitStatuses = {}, proposalId, onUnsavedChange }) {
+// Save the HTML columns this long after the last keystroke.
+const AUTOSAVE_DELAY_MS = 2000;
+// Close the card's collaboration connection after this long without activity.
+const IDLE_DISCONNECT_MS = 30000;
+// How recent `lastTimeEdited` must be for "Being edited by" to show.
+const EDITING_BADGE_WINDOW_MS = 90000;
+
+const TEXT_FIELDS = ["content", "revisedContent", "comment"];
+
+// An empty editor serializes to "<p></p>"; treat that like an empty column.
+const isEmptyHtml = (html) =>
+  !html ||
+  String(html)
+    .replace(/<p>(\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, "")
+    .replace(/\s/g, "") === "";
+const sameHtml = (a, b) => a === b || (isEmptyHtml(a) && isEmptyHtml(b));
+
+const savedValuesFrom = (card) => ({
+  content: card?.content || "",
+  revisedContent: card?.revisedContent || "",
+  comment: card?.comment || "",
+});
+
+// The revised entry starts as a copy of the original until it is edited.
+const displayValuesFrom = (card) => ({
+  content: card?.content || "",
+  revisedContent: card?.revisedContent || card?.content || "",
+  comment: card?.comment || "",
+});
+
+export default function Card({
+  card,
+  cardId,
+  user,
+  submitStatuses = {},
+  proposalId,
+  isActive = false,
+  onActivate,
+  onDeactivate,
+  onSaveStateChange,
+}) {
   const { t } = useTranslation("builder");
-  const [content, setContent] = useState(card?.content || "");
-  const [revised, setRevised] = useState(
-    card?.revisedContent || card?.content || ""
-  );
-  const [comment, setComment] = useState(card?.comment || "");
-  const [hasContentChanged, setHasContentChanged] = useState(false);
-  const [saveStatus, setSaveStatus] = useState("idle"); // idle, loading, success
+  const client = useApolloClient();
+  const [values, setValues] = useState(() => displayValuesFrom(card));
+  const [saveState, setSaveState] = useState("idle"); // idle, pending, saving, saved, error
+  const [focusRequest, setFocusRequest] = useState(null); // { field, x, y } of the click that activated the card
+  const [peerNames, setPeerNames] = useState([]);
+  const [, setBadgeTick] = useState(0);
   const [originalActive, setOriginalActive] = useState(false); // For accordion state, default collapsed
   const [commentsActive, setCommentsActive] = useState(false); // For comments accordion state, default collapsed
-  const prevCardId = useRef(cardId); // Track previous cardId
-  // After save, skip syncing content/revised from card briefly so we don't overwrite with stale cache (card comes from PROPOSAL_QUERY)
-  const skipContentSyncUntilRef = useRef(0);
+
+  const containerRef = useRef(null);
+  const valuesRef = useRef(values);
+  // What we believe the HTML columns currently hold, per field.
+  const lastSavedRef = useRef(savedValuesFrom(card));
+  const dirtyRef = useRef(new Set());
+  const saveTimerRef = useRef(null);
+  const inFlightRef = useRef(null);
+  const saveQueuedRef = useRef(false);
+  const idleTimerRef = useRef(null);
+  const mountedRef = useRef(true);
 
   const isUsedLoggedIn = user;
 
-  // Report unsaved state to parent so List View can show leave confirmation when needed
-  useEffect(() => {
-    onUnsavedChange?.(hasContentChanged);
-    return () => onUnsavedChange?.(false);
-  }, [hasContentChanged, onUnsavedChange]);
+  const editableFields = {
+    content: !!isUsedLoggedIn && !card.isLocked,
+    revisedContent:
+      !!isUsedLoggedIn && card.isLocked && !!card.settings?.includeInReport,
+    comment: !!isUsedLoggedIn,
+  };
+  const canEditAnyField = TEXT_FIELDS.some((field) => editableFields[field]);
+
+  const session = useCardCollabSession({
+    documentName: cardId ? `proposalCard:${cardId}` : null,
+    active: isActive && canEditAnyField,
+  });
+  const collabProvider = session.status === "synced" ? session.provider : null;
+  // Editors stay read-only until we know whether Yjs or the HTML columns own them,
+  // so nothing typed in between can be dropped when the editors rebind.
+  const editorsReady = !!collabProvider || session.status === "unavailable";
+  // Saving HTML while the shared document can't receive the same edit leaves it
+  // stale; clearing yjsState makes every editor re-seed from this HTML instead.
+  const collabLiveRef = useRef(false);
+  collabLiveRef.current = !!collabProvider && session.connected;
+
+  const collaborationUser = {
+    id: user?.id || null,
+    name:
+      user?.username ||
+      [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
+      "Editor",
+  };
 
   const refetchQueries = [
     { query: GET_CARD_CONTENT, variables: { id: cardId } },
     ...(proposalId ? [{ query: PROPOSAL_QUERY, variables: { id: proposalId } }] : []),
   ];
 
-  const [updateCard, { loading }] = useMutation(UPDATE_CARD_EDIT, {
-    refetchQueries,
-  });
-
   const [updateCardStatus, { loading: statusLoading }] = useMutation(UPDATE_CARD_CONTENT, {
     refetchQueries,
   });
 
-  // Permission check: can edit if card is not locked
-  // Exception: Cards with multiple review steps can be edited until project report is submitted
+  // Status can be changed until the card is locked. Cards used in several review
+  // steps stay editable until the project report is submitted.
   const hasMultipleReviewSteps = card?.settings?.includeInReviewSteps?.length > 1;
   const isProjectReportSubmitted = submitStatuses?.ACTION_PROJECT_REPORT === "SUBMITTED";
-  const canEditStatus = isUsedLoggedIn && (
-    true || 
-    // !card.isLocked || 
-    (hasMultipleReviewSteps && !isProjectReportSubmitted)
-  );
+  const canEditStatus =
+    !!isUsedLoggedIn &&
+    (!card.isLocked || (hasMultipleReviewSteps && !isProjectReportSubmitted));
 
-useEffect(() => {
-    // Sync content and comment only when cardId changes or on initial mount
-    if (prevCardId.current !== cardId) {
-      setContent(card?.content || "");
-      setRevised(card?.revisedContent || card?.content || "");
-      setComment(card?.comment || "");
-      setHasContentChanged(false);
-      setSaveStatus("idle");
-      prevCardId.current = cardId;
-    } else {
-      // Sync when card prop updates, but only if we haven't made local changes
-      // This handles both external updates and refetches after save
-      const skipContentSync = Date.now() < skipContentSyncUntilRef.current;
-      if (!hasContentChanged) {
-        // Only sync comment if it changes
-        if (card?.comment !== comment) {
-          setComment(card?.comment || "");
-        }
-        // Skip syncing content/revised briefly after save so we don't overwrite with stale card (parent gets card from PROPOSAL_QUERY; refetch may not have updated yet)
-        if (!skipContentSync) {
-          // Sync content for unlocked cards if it changes
-          if (!card.isLocked && card?.content !== content) {
-            setContent(card?.content || "");
-          }
-          // Sync revised content for locked cards if it changes
-          if (card.isLocked && card?.revisedContent !== undefined && card?.revisedContent !== null && revised !== card.revisedContent) {
-            setRevised(card.revisedContent);
-          }
-        }
-      } else {
-        // Even if we have local changes, sync comment if it changed externally
-        // (comments can be updated independently)
-        if (card?.comment !== comment && card?.comment !== undefined) {
-          setComment(card?.comment || "");
-        }
-      }
+  // ── Autosave of the HTML columns ───────────────────────────────────────────
+
+  const flushSave = useCallback(() => {
+    clearTimeout(saveTimerRef.current);
+    if (inFlightRef.current) {
+      saveQueuedRef.current = true;
+      return inFlightRef.current;
     }
-  }, [card, cardId, saveStatus]);
+    const fields = [...dirtyRef.current];
+    if (!fields.length || !cardId) return Promise.resolve();
 
-  const saveChanges = async () => {
-    if (!hasContentChanged || loading) return;
+    const input = {};
+    fields.forEach((field) => {
+      input[field] = valuesRef.current[field];
+    });
+    if (!collabLiveRef.current) {
+      input.yjsState = "";
+    }
+    dirtyRef.current = new Set();
+    if (mountedRef.current) setSaveState("saving");
 
-    setSaveStatus("loading");
-    try {
-      const input = { comment };
-      if (isUsedLoggedIn && card.settings?.includeInReport) {
-        input.revisedContent = revised;
-      }
-      if (!card.isLocked) {
-        input.content = content;
-      }
-      await updateCard({
-        variables: {
-          id: cardId,
-          input,
+    // client.mutate (not useMutation) so a save started on unmount still lands.
+    const request = client
+      .mutate({
+        mutation: UPDATE_CARD_EDIT,
+        variables: { id: cardId, input },
+        update(cache) {
+          cache.modify({
+            id: cache.identify({ __typename: "ProposalCard", id: cardId }),
+            fields: Object.fromEntries(fields.map((field) => [field, () => input[field]])),
+          });
         },
+      })
+      .then(() => {
+        fields.forEach((field) => {
+          lastSavedRef.current[field] = input[field];
+        });
+        if (mountedRef.current) {
+          setSaveState(dirtyRef.current.size ? "pending" : "saved");
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to save card:", error);
+        fields.forEach((field) => dirtyRef.current.add(field));
+        if (mountedRef.current) setSaveState("error");
+      })
+      .finally(() => {
+        inFlightRef.current = null;
+        if (saveQueuedRef.current) {
+          saveQueuedRef.current = false;
+          flushSave();
+        }
       });
-      setHasContentChanged(false);
-      // Prevent useEffect from syncing content/revised from card for 3s so we don't overwrite with stale cache before PROPOSAL_QUERY refetch lands
-      skipContentSyncUntilRef.current = Date.now() + 3000;
-      setSaveStatus("success");
-      setTimeout(() => setSaveStatus("idle"), 2000);
-    } catch (error) {
-      console.error("Failed to save changes:", error);
-      setSaveStatus("idle");
-    }
+    inFlightRef.current = request;
+    return request;
+  }, [client, cardId]);
+
+  const handleFieldUpdate = (field, html, { origin = "local" } = {}) => {
+    valuesRef.current = { ...valuesRef.current, [field]: html };
+    setValues(valuesRef.current);
+
+    // A peer's edit is mirrored to HTML by that peer; polling brings it back.
+    if (origin === "remote") return;
+    // "sync" is the shared document as loaded: if it differs from the HTML
+    // columns they had drifted apart, and saving realigns them.
+    if (sameHtml(html, lastSavedRef.current[field])) return;
+
+    dirtyRef.current.add(field);
+    setSaveState((state) => (state === "saving" ? state : "pending"));
+    clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(flushSave, AUTOSAVE_DELAY_MS);
   };
 
-  // Helper function to build specialButton config for TipTap toolbar
-  const getSaveButtonConfig = (isRevised = false) => {
-    if (!isUsedLoggedIn) return null;
-    
-    // For revised content button - only show when card is locked and includeInReport is true
-    if (isRevised && (!card.isLocked || !card.settings?.includeInReport)) {
-      return null;
+  // Adopt content saved elsewhere (polling, cache updates) while this card
+  // isn't bound to the shared document, which is otherwise the source of truth.
+  useEffect(() => {
+    if (collabProvider) return;
+    const saved = savedValuesFrom(card);
+    const display = displayValuesFrom(card);
+    let next = null;
+    TEXT_FIELDS.forEach((field) => {
+      if (dirtyRef.current.has(field)) return;
+      if (saved[field] === lastSavedRef.current[field]) return;
+      lastSavedRef.current[field] = saved[field];
+      next = { ...(next || valuesRef.current), [field]: display[field] };
+    });
+    if (next) {
+      valuesRef.current = next;
+      setValues(next);
     }
-    
-    // For regular content button - only show when card is not locked
-    if (!isRevised && card.isLocked) {
-      return null;
+  }, [card?.content, card?.revisedContent, card?.comment, collabProvider]);
+
+  useEffect(() => {
+    onSaveStateChange?.({
+      pending: saveState === "pending" || saveState === "saving" || saveState === "error",
+      failed: saveState === "error",
+    });
+  }, [saveState, onSaveStateChange]);
+
+  useEffect(() => {
+    if (saveState !== "saved") return undefined;
+    const timer = setTimeout(() => setSaveState("idle"), 2000);
+    return () => clearTimeout(timer);
+  }, [saveState]);
+
+  // ── Connection lifecycle ───────────────────────────────────────────────────
+
+  const latestRef = useRef({});
+  latestRef.current = { flushSave, onDeactivate, onSaveStateChange };
+
+  const checkIdle = () => {
+    if (containerRef.current?.contains(document.activeElement)) {
+      idleTimerRef.current = setTimeout(checkIdle, IDLE_DISCONNECT_MS);
+      return;
     }
-
-    const getLabel = () => {
-      if (saveStatus === "success") {
-        return "Saved";
-      }
-      if (loading) {
-        return "Saving...";
-      }
-      return isRevised ? "Save Revised" : "Save";
-    };
-
-    const getIcon = () => {
-      return saveStatus === "success" ? "check" : undefined;
-    };
-
-    return {
-      label: getLabel(),
-      icon: getIcon(),
-      onClick: (editor, event) => {
-        // Wrap saveChanges to match specialButton onClick signature
-        saveChanges();
-      },
-      disabled: loading || !hasContentChanged,
-      loading: loading,
-      positive: saveStatus === "success",
-      primary: saveStatus !== "success",
-      color: saveStatus === "success" ? "#1C8F36" : "#274E5B",
-      colorBackground: saveStatus === "success" ? "#E8F7EC" : "#f0f5f5",
-    };
+    latestRef.current.flushSave();
+    latestRef.current.onDeactivate?.();
   };
 
-  // Helper function to build save button config for comment editor
-  const getCommentSaveButtonConfig = () => {
-    if (!isUsedLoggedIn) return null;
+  const touchActivity = () => {
+    clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(checkIdle, IDLE_DISCONNECT_MS);
+  };
 
-    const getLabel = () => {
-      if (saveStatus === "success") {
-        return "Saved";
-      }
-      if (loading) {
-        return "Saving...";
-      }
-      return "Save";
-    };
+  // Only reaching for an editor connects the card; anything else just keeps
+  // an open connection alive.
+  const handleActivity = (event) => {
+    if (!canEditAnyField) return;
+    touchActivity();
+    if (isActive) return;
+    const fieldEl = event.target?.closest?.("[data-collab-field]");
+    const field = fieldEl?.dataset.collabField;
+    if (!field || !editableFields[field]) return;
+    setFocusRequest({ field, x: event.clientX, y: event.clientY });
+    onActivate?.();
+  };
 
-    const getIcon = () => {
-      return saveStatus === "success" ? "check" : undefined;
-    };
+  // The request is consumed once the editors have rebound and become editable.
+  useEffect(() => {
+    if (!editorsReady || !focusRequest) return undefined;
+    const timer = setTimeout(() => setFocusRequest(null), 500);
+    return () => clearTimeout(timer);
+  }, [editorsReady, focusRequest]);
 
-    return {
-      label: getLabel(),
-      icon: getIcon(),
-      onClick: (editor, event) => {
-        // Wrap saveChanges to match specialButton onClick signature
-        saveChanges();
-      },
-      disabled: loading || !hasContentChanged,
-      loading: loading,
-      positive: saveStatus === "success",
-      primary: saveStatus !== "success",
-      color: saveStatus === "success" ? "#1C8F36" : "#274E5B",
-      colorBackground: saveStatus === "success" ? "#E8F7EC" : "#f0f5f5",
+  // Evicted by another card, or idle: save before the connection closes.
+  useEffect(() => {
+    if (!isActive) {
+      clearTimeout(idleTimerRef.current);
+      flushSave();
+    }
+  }, [isActive, flushSave]);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    const onPageHide = () => latestRef.current.flushSave();
+    window.addEventListener("pagehide", onPageHide);
+    return () => {
+      window.removeEventListener("pagehide", onPageHide);
+      mountedRef.current = false;
+      clearTimeout(idleTimerRef.current);
+      latestRef.current.flushSave();
+      latestRef.current.onDeactivate?.();
+      latestRef.current.onSaveStateChange?.(null);
     };
+  }, []);
+
+  // ── Who else is editing ────────────────────────────────────────────────────
+
+  useEffect(() => {
+    const awareness = collabProvider?.awareness;
+    if (!awareness) {
+      setPeerNames([]);
+      return undefined;
+    }
+    const update = () => {
+      const names = new Set();
+      awareness.getStates().forEach((state, clientId) => {
+        const name = state?.user?.name;
+        if (clientId !== awareness.clientID && name && name !== collaborationUser.name) {
+          names.add(name);
+        }
+      });
+      setPeerNames([...names]);
+    };
+    update();
+    awareness.on("change", update);
+    return () => awareness.off("change", update);
+  }, [collabProvider, collaborationUser.name]);
+
+  // Between connections, fall back to the last edit the server recorded.
+  const lastEditor = card?.isEditedBy?.username;
+  const lastEditedAt = card?.lastTimeEdited ? new Date(card.lastTimeEdited).getTime() : 0;
+  const recentEditRemainingMs = lastEditedAt + EDITING_BADGE_WINDOW_MS - Date.now();
+  const recentEditByOther =
+    !!lastEditor && lastEditor !== user?.username && recentEditRemainingMs > 0;
+
+  // Re-render when the badge should expire, even if no new data arrives.
+  useEffect(() => {
+    if (!recentEditByOther) return undefined;
+    const timer = setTimeout(() => setBadgeTick((tick) => tick + 1), recentEditRemainingMs + 100);
+    return () => clearTimeout(timer);
+  }, [recentEditByOther, lastEditedAt]);
+
+  let otherEditors = [];
+  if (collabProvider) otherEditors = peerNames;
+  else if (recentEditByOther) otherEditors = [lastEditor];
+
+  const editorProps = (field) => ({
+    content: values[field],
+    onUpdate: (html, meta) => handleFieldUpdate(field, html, meta),
+    isEditable: editableFields[field] && editorsReady,
+    collaboration: collabProvider ? { provider: collabProvider, field } : null,
+    collaborationUser,
+    focusRequest: focusRequest?.field === field ? focusRequest : null,
+    toolbarVisible: true,
+  });
+
+  // Until the card is connected, its editors are read-only; let keyboard users
+  // reach them so focusing one connects the card.
+  const editorWrapperProps = (field) => ({
+    "data-collab-field": field,
+    tabIndex: editableFields[field] && !editorsReady ? 0 : undefined,
+  });
+
+  const mediaLibraryProps = {
+    mediaLibraryId: proposalId,
+    mediaLibrarySource: {
+      sourceType: "projectCard",
+      sourceId: cardId ?? null,
+      createdWith: "upload",
+    },
+    mediaDisplayedInProposalCardId: cardId ?? null,
+  };
+
+  const renderSaveIndicator = () => {
+    if (!canEditAnyField) return null;
+    let label = null;
+    let color = "#6a6a6a";
+    if (saveState === "error") {
+      return (
+        <span className="MH-Type-Body-Base" style={{ color: "#B3261E", display: "flex", gap: "6px", alignItems: "center" }}>
+          {t("proposalPDF.autosave.failed", "Not saved")}
+          <button
+            type="button"
+            onClick={() => flushSave()}
+            style={{ border: "none", background: "none", padding: 0, color: "#274E5B", textDecoration: "underline", cursor: "pointer" }}
+          >
+            {t("proposalPDF.autosave.retry", "Retry")}
+          </button>
+        </span>
+      );
+    }
+    if (saveState === "saving" || saveState === "pending") {
+      label = t("proposalPDF.autosave.saving", "Saving…");
+    } else if (saveState === "saved") {
+      label = t("proposalPDF.autosave.saved", "Saved");
+      color = "#1C8F36";
+    } else if (session.status === "connecting") {
+      label = t("proposalPDF.autosave.connecting", "Connecting…");
+    }
+    if (!label) return null;
+    return (
+      <span className="MH-Type-Body-Base" style={{ color }} aria-live="polite">
+        {label}
+      </span>
+    );
   };
 
   // Get card variant based on settings and statuses (same mechanism as Builder/Card.js)
@@ -267,11 +454,15 @@ useEffect(() => {
     if (card.isLocked) {
       return card?.revisedContent || card?.content || "";
     }
-    return content || "";
+    return values.content || "";
   };
 
   return (
     <div
+      ref={containerRef}
+      onPointerDownCapture={handleActivity}
+      onFocusCapture={handleActivity}
+      onKeyDownCapture={canEditAnyField ? touchActivity : undefined}
       style={{
         backgroundColor: "#ffffff",
         borderRadius: "12px",
@@ -362,16 +553,37 @@ useEffect(() => {
               )}
               {card?.title || ""}
             </div>
+            {otherEditors.length > 0 && (
+              <span
+                className="MH-Type-Label-Base"
+                style={{
+                  marginTop: "6px",
+                  padding: "2px 8px",
+                  borderRadius: "8px",
+                  backgroundColor: "#FDF2D0",
+                  color: "#171717",
+                }}
+              >
+                {t(
+                  "proposalPDF.autosave.beingEditedBy",
+                  { names: otherEditors.join(", ") },
+                  { default: "Being edited by {{names}}" }
+                )}
+              </span>
+            )}
           </div>
         </div>
 
-        {/* Right side - Status Chip */}
-        <StatusChip
-          value={statusText}
-          onStatusChange={handleStatusChange}
-          canEdit={canEditStatus}
-          loading={statusLoading}
-        />
+        {/* Right side - Save indicator and Status Chip */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {renderSaveIndicator()}
+          <StatusChip
+            value={statusText}
+            onStatusChange={handleStatusChange}
+            canEdit={canEditStatus}
+            loading={statusLoading}
+          />
+        </div>
       </div>
 
       {/* Card Content - Submission */}
@@ -418,23 +630,12 @@ useEffect(() => {
                   <h2 className="MH-Type-Title-Base" style={{ margin: 0 }}>{t("mainCard.revisedContent", "Revised Content")}</h2>
                   {/* <h2>{t("mainCard.newSubmission", "New Submission")}</h2> */}
                   {isUsedLoggedIn ? (
+                    <div {...editorWrapperProps("revisedContent")}>
                       <TipTapEditor
-                        content={revised}
-                        onUpdate={(newRevised) => {
-                          setRevised(newRevised);
-                          setHasContentChanged(
-                            newRevised !== (card?.revisedContent || card?.content) ||
-                              content !== card?.content ||
-                              comment !== card?.comment
-                          );
-                          setSaveStatus("idle");
-                        }}
-                        isEditable={
-                          isUsedLoggedIn && card.settings?.includeInReport
-                        }
-                        toolbarVisible={true}
-                        specialButton={getSaveButtonConfig(true)}
+                        {...editorProps("revisedContent")}
+                        {...mediaLibraryProps}
                       />
+                    </div>
                   ) : (
                     <div>{ReactHtmlParser(getCardContent())}</div>
                   )}
@@ -444,21 +645,12 @@ useEffect(() => {
           ) : (
             <>
               {isUsedLoggedIn ? (
+                <div {...editorWrapperProps("content")}>
                   <TipTapEditor
-                    content={content}
-                    onUpdate={(newContent) => {
-                      setContent(newContent);
-                      setHasContentChanged(
-                        newContent !== card?.content ||
-                          revised !== (card?.revisedContent || card?.content) ||
-                          comment !== card?.comment
-                      );
-                      setSaveStatus("idle");
-                    }}
-                    isEditable={!card.isLocked}
-                    toolbarVisible={true}
-                    specialButton={getSaveButtonConfig(false)}
+                    {...editorProps("content")}
+                    {...mediaLibraryProps}
                   />
+                </div>
               ) : (
                 <div>{ReactHtmlParser(getCardContent())}</div>
               )}
@@ -477,20 +669,10 @@ useEffect(() => {
               </Accordion.Title>
               <Accordion.Content active={commentsActive} style={{ border: "none" }}>
                 {isUsedLoggedIn ? (
+                  <div {...editorWrapperProps("comment")}>
                     <TipTapEditor
-                      content={comment}
-                      onUpdate={(newComment) => {
-                        setComment(newComment);
-                        setHasContentChanged(
-                          newComment !== card?.comment ||
-                            content !== card?.content ||
-                            revised !== (card?.revisedContent || card?.content)
-                        );
-                      }}
-                      isEditable={isUsedLoggedIn}
-                      toolbarVisible={true}
+                      {...editorProps("comment")}
                       limitedToolbar={true}
-                      specialButton={getCommentSaveButtonConfig()}
                       placeholder={t("mainCard.commentsPlaceholder", "Add your comment here...")}
                       style={{
                         flex: 1,
@@ -501,6 +683,7 @@ useEffect(() => {
                         padding: "10px",
                       }}
                     />
+                  </div>
                 ) : (
                   <div
                     style={{
@@ -510,7 +693,9 @@ useEffect(() => {
                       border: "none",
                     }}
                   >
-                    {comment || t("mainCard.noComments", "No comments available.")}
+                    {values.comment
+                      ? ReactHtmlParser(values.comment)
+                      : t("mainCard.noComments", "No comments available.")}
                   </div>
                 )}
               </Accordion.Content>

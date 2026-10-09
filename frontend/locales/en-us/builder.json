@@ -1787,6 +1787,14 @@
 		"viewFlattenBoard": "List View"
 	},
 	"proposalPDF": {
+		"autosave": {
+			"beingEditedBy": "Being edited by {{names}}",
+			"connecting": "Connecting…",
+			"failed": "Not saved",
+			"retry": "Retry",
+			"saved": "Saved",
+			"saving": "Saving…"
+		},
 		"filters": {
 			"assignedTo": {
 				"disable": "Disable assigning students to cards",
