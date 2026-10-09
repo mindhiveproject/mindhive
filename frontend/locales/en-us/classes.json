@@ -772,6 +772,7 @@
 		"teacher": "Teacher",
 		"teacherAccountTooltip": "Class teacher.",
 		"titleFallback": "Untitled class",
+		"titleLoading": "Loading class",
 		"viewLess": "View less",
 		"viewMore": "View more"
 	},
@@ -821,6 +822,7 @@
 	},
 	"main": {
 		"assignments": "Assignments",
+		"backToMyClasses": "Back to my classes",
 		"classSectionsNav": "Class sections",
 		"dashboard": "Dashboard",
 		"loadingClassBody": "Fetching this class and its content.",
@@ -830,6 +832,9 @@
 		"projects": "Projects",
 		"resources": "Resources",
 		"settings": "Settings",
+		"studentLoadClassError": "We couldn’t load this class. It may have been removed, or you may no longer have access to it.",
+		"studentLoadingClassBody": "We’re getting your class ready.",
+		"studentLoadingClassTitle": "Just one second",
 		"students": "Students",
 		"studies": "Studies"
 	},
