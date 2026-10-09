@@ -3,7 +3,11 @@ import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 import useTranslation from "next-translate/useTranslation";
 
-import { CLASS_JOIN_PREVIEW, GET_CLASSES } from "../../../Queries/Classes";
+import {
+  CLASS_JOIN_PREVIEW,
+  studentClassesRefetch,
+  teacherClassesRefetch,
+} from "../../../Queries/Classes";
 
 import { JOIN_CLASS_MUTATION } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
@@ -31,14 +35,7 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
       },
       refetchQueries: [
         { query: CURRENT_USER_QUERY },
-        {
-          query: GET_CLASSES,
-          variables: {
-            input: {
-              students: { some: { id: { equals: user?.id } } },
-            },
-          },
-        },
+        studentClassesRefetch(user?.id),
       ],
     });
 
@@ -49,7 +46,10 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
         role: "mentor",
         invitationCode: invitationCode || null,
       },
-      refetchQueries: [{ query: CURRENT_USER_QUERY }],
+      refetchQueries: [
+        { query: CURRENT_USER_QUERY },
+        teacherClassesRefetch(user?.id),
+      ],
     });
 
   const myclass = data?.classJoinPreview || undefined;

@@ -22,6 +22,32 @@ export const GET_CLASSES = gql`
   }
 `;
 
+// GET_CLASSES filters for the "My classes" lists. Apollo caches results per
+// exact filter, so every list and refetch must use these helpers: a refetch
+// with a slightly different filter updates a different cache entry and leaves
+// the list stale.
+export const teacherClassesWhere = (userId) => ({
+  OR: [
+    { creator: { id: { equals: userId } } },
+    { teachingTeam: { some: { id: { equals: userId } } } },
+    { mentors: { some: { id: { equals: userId } } } },
+  ],
+});
+
+export const studentClassesWhere = (userId) => ({
+  students: { some: { id: { equals: userId } } },
+});
+
+export const teacherClassesRefetch = (userId) => ({
+  query: GET_CLASSES,
+  variables: { input: teacherClassesWhere(userId) },
+});
+
+export const studentClassesRefetch = (userId) => ({
+  query: GET_CLASSES,
+  variables: { input: studentClassesWhere(userId) },
+});
+
 // get all classes
 export const GET_ALL_CLASSES = gql`
   query GET_ALL_CLASSES {

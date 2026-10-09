@@ -8,7 +8,7 @@ import {
   ASSOCIATE_CLASS_WITH_PUBLIC_NETWORK,
   REMOVE_CLASS_FROM_NETWORK,
 } from "../../../Mutations/ClassNetwork";
-import { GET_CLASSES, GET_CLASS } from "../../../Queries/Classes";
+import { GET_CLASS, teacherClassesRefetch } from "../../../Queries/Classes";
 import { GET_PUBLIC_CLASS_NETWORKS } from "../../../Queries/ClassNetwork";
 
 import { Modal, Button as SemanticButton } from "semantic-ui-react";
@@ -260,32 +260,7 @@ export default function Settings({ myclass, user }) {
 
   const [deleteClass, { loading }] = useMutation(DELETE_CLASS, {
     variables: { id: myclass?.id },
-    refetchQueries: [
-      {
-        query: GET_CLASSES,
-        variables: {
-          input: {
-            OR: [
-              {
-                creator: {
-                  id: { equals: user?.id },
-                },
-              },
-              {
-                teachingTeam: {
-                  some: { id: { equals: user?.id } },
-                },
-              },
-              {
-                mentors: {
-                  some: { id: { equals: user?.id } },
-                },
-              },
-            ],
-          },
-        },
-      },
-    ],
+    refetchQueries: [teacherClassesRefetch(user?.id)],
   });
 
   const formatNetworkClassCount = (count) =>
