@@ -6,7 +6,6 @@ import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
-import { UPDATE_CARD_CONTENT } from "../../../../../Mutations/Proposal";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
 
@@ -30,6 +29,10 @@ import {
 } from "../../../../../../lib/proposalBoardSettings";
 
 import Navigation from "./Navigation/Main";
+import SaveIndicator from "../SaveIndicator";
+import { useCardCollabSession } from "../../../../../../lib/useCardCollabSession";
+import { useCardHtmlAutosave } from "../../../../../../lib/useCardHtmlAutosave";
+import { useUnsavedChangesGuard } from "../../../../../../lib/useUnsavedChangesGuard";
 import Assigned from "./Forms/Assigned";
 import TipTapEditor from "../../../../../TipTap/Main";
 import { PreviewSection } from "../../../../../Proposal/Card/Forms/PreviewSection";
@@ -97,7 +100,6 @@ export default function ProposalCard({
   // card concurrently, so edits are always allowed.
   const [lockedByUser, setLockedByUser] = useState(false);
   const [wasLockedOnFocus, setWasLockedOnFocus] = useState(false);
-  const [hasContentChanged, setHasContentChanged] = useState(false);
   const areEditsAllowed = true;
 
   // useEffect
@@ -109,22 +111,39 @@ export default function ProposalCard({
     ...proposalCard,
   });
 
-  const content = useRef(proposalCard?.content);
-  const internalContent = useRef(proposalCard?.internalContent);
-  const revisedContent = useRef(
-    proposalCard?.revisedContent || proposalCard?.content,
-  );
-  const contentGetHtmlRef = useRef(null);
-  const revisedGetHtmlRef = useRef(null);
-  const commentGetHtmlRef = useRef(null);
-
   // Collaborative editing: the ProposalCard-backed editors (content,
-  // revisedContent, comment) share one Yjs doc per card; each binds its own
-  // named fragment. Homework editors below write to per-student Homework
-  // records, so they are intentionally NOT collaborative here.
+  // revisedContent, comment) share one Yjs doc per card — and one connection —
+  // each binding its own named fragment. Homework editors below write to
+  // per-student Homework records, so they are intentionally NOT collaborative.
   const collabDocumentName = proposalCard?.id
     ? `proposalCard:${proposalCard?.id}`
     : null;
+  const session = useCardCollabSession({
+    documentName: collabDocumentName,
+    active: true,
+  });
+  const collabProvider = session.status === "synced" ? session.provider : null;
+  // Editors stay read-only until Yjs (or, if the collab server is down, the
+  // HTML columns) owns them, so nothing typed in between is dropped.
+  const editorsReady = !!collabProvider || session.status === "unavailable";
+
+  // Everything on the card saves as it changes — there is no Save button.
+  const {
+    values,
+    saveState,
+    hasPendingSave,
+    handleFieldUpdate,
+    flushAll,
+    hasUnsavedChanges,
+    trackSave,
+    retry,
+  } = useCardHtmlAutosave({
+    card: proposalCard,
+    cardId,
+    collabLive: !!collabProvider && session.connected,
+    bound: !!collabProvider,
+  });
+  useUnsavedChangesGuard(hasPendingSave);
   const collaborationUser = {
     id: user?.id || null,
     name:
@@ -133,19 +152,17 @@ export default function ProposalCard({
       "Editor",
   };
 
-  const [updateCard, { loading: updateLoading }] = useMutation(
-    UPDATE_CARD_CONTENT,
-    {
-      refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }],
-    },
-  );
-
   const [updateEdit, { loading: updateEditLoading }] = useMutation(
     UPDATE_CARD_EDIT,
     {
       ignoreResults: true,
     },
   );
+
+  // Status and assignees save on change; refetch so the card reflects them.
+  const [saveCardFields] = useMutation(UPDATE_CARD_EDIT, {
+    refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }],
+  });
 
   // Assignment visibility & permissions for "Assigned to" section
   const assignedCount = inputs?.assignedTo?.length || 0;
@@ -225,28 +242,43 @@ export default function ProposalCard({
 
   const activeResource = resourceModalData?.resource;
 
-  // update the assignedTo in the local state
+  // update the assignedTo and save it
   const handleAssignedToChange = (assignedTo) => {
+    const assigned = assignedTo.map((a) => ({ id: a }));
     handleChange({
       target: {
         name: "assignedTo",
-        value: assignedTo.map((a) => ({
-          id: a,
-        })),
+        value: assigned,
       },
     });
-    if (!hasContentChanged) setHasContentChanged(true);
+    trackSave(() =>
+      saveCardFields({
+        variables: { id: cardId, input: { assignedTo: { set: assigned } } },
+      }),
+    );
   };
 
-  // update the settings in the local state
+  // update the settings and save them
   const handleSettingsChange = (name, value) => {
+    const settings = { ...inputs.settings, [name]: value };
     handleChange({
       target: {
         name: "settings",
-        value: { ...inputs.settings, [name]: value },
+        value: settings,
       },
     });
-    if (!hasContentChanged) setHasContentChanged(true);
+    // Merge with the card's current settings so properties edited elsewhere
+    // (includeInReport, includeInReviewSteps…) aren't overwritten.
+    trackSave(() =>
+      saveCardFields({
+        variables: {
+          id: cardId,
+          input: {
+            settings: mergeCardSettings(proposalCard?.settings, settings),
+          },
+        },
+      }),
+    );
   };
 
   // Send update to the server when the editor gains focus
@@ -267,92 +299,19 @@ export default function ProposalCard({
     setWasLockedOnFocus(true);
   };
 
-  // update card content in the local state
-  const handleContentChange = async ({ contentType, newContent }) => {
-    if (contentType === "internalContent") {
-      internalContent.current = newContent;
-      if (!hasContentChanged && newContent !== inputs?.internalContent)
-        setHasContentChanged(true);
-    } else if (contentType === "content") {
-      content.current = newContent;
-      if (!hasContentChanged && newContent !== inputs?.content)
-        setHasContentChanged(true);
-    } else if (contentType === "revisedContent") {
-      revisedContent.current = newContent;
-      if (!hasContentChanged && newContent !== inputs?.revisedContent)
-        setHasContentChanged(true);
-    }
-  };
-
-  // update the card and close the modal
-  const onUpdateCard = async ({ shoudBeSaved }) => {
-    // update the content of the card
-    if (shoudBeSaved) {
-      // Merge settings to ensure we don't lose existing properties like includeInReport and includeInReviewSteps
-      // Always merge with the current card's settings from props to avoid overwriting with stale local state
-      const mergedSettings = mergeCardSettings(
-        proposalCard?.settings,
-        inputs?.settings,
-      );
-
-      // content/revisedContent/comment are edited collaboratively (Yjs is the
-      // source of truth on reload), but the server stays DOM-free and does not
-      // mirror them to these HTML columns. Read live HTML from the editors so
-      // Save cannot persist an empty/stale ref from before Yjs synced.
-      const isEmptyHtml = (html) => {
-        if (!html) return true;
-        return (
-          String(html)
-            .replace(/<p>(\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, "")
-            .replace(/\s/g, "") === ""
-        );
-      };
-      const readLiveHtml = (getHtmlRef, fallback) => {
-        const live = getHtmlRef.current?.();
-        const fallbackHtml = fallback || "";
-        if (typeof live !== "string") return fallbackHtml;
-        if (isEmptyHtml(live) && !isEmptyHtml(fallbackHtml)) return fallbackHtml;
-        return live;
-      };
-      const liveContent = readLiveHtml(contentGetHtmlRef, content?.current);
-      const liveRevisedContent = readLiveHtml(
-        revisedGetHtmlRef,
-        revisedContent?.current,
-      );
-      const liveComment = readLiveHtml(commentGetHtmlRef, inputs?.comment);
-      content.current = liveContent;
-      revisedContent.current = liveRevisedContent;
-
-      await updateCard({
-        variables: {
-          ...inputs,
-          internalContent: internalContent?.current,
-          content: liveContent,
-          revisedContent: liveRevisedContent,
-          comment: liveComment,
-          settings: mergedSettings,
-          assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
-          resources: inputs?.resources?.map((resource) => ({
-            id: resource?.id,
-          })),
-          // Add these three lines to fix the error:
-          assignments: inputs?.assignments?.map((assignment) => ({
-            id: assignment?.id,
-          })),
-          tasks: inputs?.tasks?.map((task) => ({ id: task?.id })),
-          studies: inputs?.studies?.map((study) => ({ id: study?.id })),
-        },
-      });
-    } else {
-      if (hasContentChanged) {
-        if (
-          !confirm(
-            "Your unsaved changes will be lost. Click Cancel to return and save the changes.",
-          )
-        ) {
-          return;
-        }
-      }
+  // Wait for outstanding saves, release the card, and go back to the board.
+  const handleBack = async () => {
+    await flushAll();
+    if (
+      hasUnsavedChanges() &&
+      !confirm(
+        t(
+          "mainCard.leaveWithFailedSave",
+          "Some changes could not be saved. Leave anyway?",
+        ),
+      )
+    ) {
+      return;
     }
 
     // unlock the card
@@ -1320,10 +1279,16 @@ export default function ProposalCard({
         tab={tab}
         proposalId={proposalId}
         cardId={cardId}
-        saveBtnFunction={onUpdateCard}
+        onBack={handleBack}
         inputs={inputs}
         handleSettingsChange={handleSettingsChange}
-        hasContentChanged={hasContentChanged}
+        saveIndicator={
+          <SaveIndicator
+            saveState={saveState}
+            connecting={session.status === "connecting"}
+            onRetry={retry}
+          />
+        }
       />
       <StyledProposal>
         <div className="post">
@@ -1393,7 +1358,7 @@ export default function ProposalCard({
                         <div className="originalEntryBlockContent">
                           <ReadOnlyTipTap>
                             <div className="ProseMirror">
-                              {ReactHtmlParser(content?.current || "")}
+                              {ReactHtmlParser(values.content || "")}
                             </div>
                           </ReadOnlyTipTap>
                         </div>
@@ -1402,22 +1367,16 @@ export default function ProposalCard({
                   ) : (
                     <div onFocus={handleFocus}>
                       <TipTapEditor
-                        content={content?.current}
+                        content={values.content}
                         collaboration={
-                          collabDocumentName
-                            ? {
-                                documentName: collabDocumentName,
-                                field: "content",
-                              }
+                          collabProvider
+                            ? { provider: collabProvider, field: "content" }
                             : null
                         }
                         collaborationUser={collaborationUser}
-                        getContentRef={contentGetHtmlRef}
-                        onUpdate={(newContent) =>
-                          handleContentChange({
-                            contentType: "content",
-                            newContent,
-                          })
+                        isEditable={editorsReady}
+                        onUpdate={(html, meta) =>
+                          handleFieldUpdate("content", html, meta)
                         }
                         mediaLibraryId={
                           proposal?.id || proposalId
@@ -1443,22 +1402,16 @@ export default function ProposalCard({
                   </div>
                     <div onFocus={handleFocus}>
                       <TipTapEditor
-                        content={revisedContent?.current}
+                        content={values.revisedContent}
                         collaboration={
-                          collabDocumentName
-                            ? {
-                                documentName: collabDocumentName,
-                                field: "revisedContent",
-                              }
+                          collabProvider
+                            ? { provider: collabProvider, field: "revisedContent" }
                             : null
                         }
                         collaborationUser={collaborationUser}
-                        getContentRef={revisedGetHtmlRef}
-                        onUpdate={(newContent) =>
-                          handleContentChange({
-                            contentType: "revisedContent",
-                            newContent,
-                          })
+                        isEditable={editorsReady}
+                        onUpdate={(html, meta) =>
+                          handleFieldUpdate("revisedContent", html, meta)
                         }
                         mediaLibraryId={
                           proposal?.id || proposalId
@@ -1533,26 +1486,17 @@ export default function ProposalCard({
                   {t("mainCard.comments", "Comments")}
                 </div>
                 <TipTapEditor
-                  content={inputs.comment}
+                  content={values.comment}
                   collaboration={
-                    collabDocumentName
-                      ? { documentName: collabDocumentName, field: "comment" }
+                    collabProvider
+                      ? { provider: collabProvider, field: "comment" }
                       : null
                   }
                   collaborationUser={collaborationUser}
-                  getContentRef={commentGetHtmlRef}
-                  onUpdate={(newContent) => {
-                    if (!hasContentChanged) {
-                      setHasContentChanged(true);
-                    }
-                    handleChange({
-                      target: {
-                        name: "comment",
-                        value: newContent,
-                      },
-                    });
-                  }}
-                  editable={true}
+                  isEditable={editorsReady}
+                  onUpdate={(html, meta) =>
+                    handleFieldUpdate("comment", html, meta)
+                  }
                   limitedToolbar={true}
                   mediaLibraryId={
                     proposal?.id || proposalId
