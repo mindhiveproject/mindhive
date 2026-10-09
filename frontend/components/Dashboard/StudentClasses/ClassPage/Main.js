@@ -12,6 +12,9 @@ import ClassOpportunities from "./Opportunities/Main";
 
 import { GET_CLASS } from "../../../Queries/Classes";
 import { NavbarItem, SectionNavbar } from "../../../DesignSystem/Navbar";
+import JustOneSecondNotice from "../../../DesignSystem/JustOneSecondNotice";
+import MessageCard from "../../../DesignSystem/MessageCard";
+import Button from "../../../DesignSystem/Button";
 import {
   classHasNyuCusp,
   classIsNyuCuspOnly,
@@ -65,12 +68,17 @@ export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
 
-  const { data } = useQuery(GET_CLASS, {
+  const { data, loading, error } = useQuery(GET_CLASS, {
     variables: { code },
   });
 
   const myclass = data?.class || { title: "", description: "" };
   const hasClassData = Boolean(data?.class);
+  const isClassQueryPending = loading && !data;
+  // Failed, or finished with no class (bad code / no access): without this the
+  // header sat on "Untitled class" forever.
+  const classLoadFailed =
+    !hasClassData && !isClassQueryPending && (!!error || !!data);
   const isNyuCuspOnly = hasClassData && classIsNyuCuspOnly(myclass?.settings);
   const hasNyuCusp = hasClassData && classHasNyuCusp(myclass?.settings);
   // Wait for class settings before choosing nav — avoids flashing non-Capstone tabs on NYU classes.
@@ -101,15 +109,53 @@ export default function ClassPage({ code, user, query }) {
     }
   }, [hasClassData, allowedPages, defaultPage, query?.page, code, router]);
 
+  // Also hide tabs while the class is pending: they would render empty states
+  // ("No projects yet") from the placeholder class.
   const hideDisallowedPage =
-    hasClassData && query?.page && !allowedPages.has(query.page);
+    isClassQueryPending ||
+    (hasClassData && query?.page && !allowedPages.has(query.page));
 
   const isOpportunitiesFullscreen =
     page === "opportunities" &&
     (!!query?.opportunity || !!query?.round);
 
+  const loadingNotice = (
+    <div className="studentClassLoading">
+      <JustOneSecondNotice
+        message={{
+          h1: t("main.studentLoadingClassTitle", {}, {
+            default: "Just one second",
+          }),
+          p: t("main.studentLoadingClassBody", {}, {
+            default: "We’re getting your class ready.",
+          }),
+        }}
+      />
+    </div>
+  );
+
+  if (classLoadFailed) {
+    return (
+      <div className="studentClassLoadError">
+        <MessageCard
+          variant="warning"
+          message={t("main.studentLoadClassError", {}, {
+            default:
+              "We couldn’t load this class. It may have been removed, or you may no longer have access to it.",
+          })}
+        />
+        <Link href="/dashboard/classes">
+          <Button variant="tonal">
+            {t("main.backToMyClasses", {}, { default: "Back to my classes" })}
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
   // Full-page opportunity preview / ranking: skip class header + tab nav
   // (left dashboard nav stays). Preview vs rank is decided inside ClassOpportunities.
+  if (isOpportunitiesFullscreen && isClassQueryPending) return loadingNotice;
   if (isOpportunitiesFullscreen && !hideDisallowedPage) {
     return (
       <ClassOpportunities myclass={myclass} user={user} query={query} />
@@ -118,7 +164,8 @@ export default function ClassPage({ code, user, query }) {
 
   return (
     <div>
-      <Header myclass={myclass} />
+      <Header myclass={myclass} loading={isClassQueryPending} />
+      {isClassQueryPending && loadingNotice}
       {showSectionNav && (
         <SectionNavbar
           className="classPageNav"

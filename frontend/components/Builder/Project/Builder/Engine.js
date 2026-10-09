@@ -261,10 +261,48 @@ export default function Engine({
     captureBaseline(model);
   }, [engine]); // eslint-disable-line react-hooks/exhaustive-deps -- register once when engine mounts
 
+  // Zero state: a new study (or a legacy save) holds only the anchor, parked at
+  // the canvas origin under the top actions. Move it to the middle of the
+  // visible board (the sidepanel overlays the right side of the canvas).
+  const hasCenteredZeroStateRef = useRef(false);
+  const centerZeroStateAnchor = useCallback(
+    (model) => {
+      if (hasCenteredZeroStateRef.current || isCanvasLockedRef.current) return;
+      const nodes = model?.getNodes?.() || [];
+      const [anchor] = nodes;
+      if (
+        nodes.length !== 1 ||
+        anchor?.getType?.() !== "my-anchor" ||
+        anchor.getX() !== 0 ||
+        anchor.getY() !== 0
+      ) {
+        hasCenteredZeroStateRef.current = true;
+        return;
+      }
+      const canvas = engine?.getCanvas?.();
+      if (!canvas?.clientWidth) return;
+      hasCenteredZeroStateRef.current = true;
+      const sidepanelWidth =
+        document.getElementById("sidepanel")?.offsetWidth || 0;
+      const visibleWidth = Math.max(canvas.clientWidth - sidepanelWidth, 0);
+      const nodeWidth = anchor.width || 378;
+      const nodeHeight = anchor.height || 200;
+      const zoom = (model.getZoomLevel?.() || 100) / 100;
+      anchor.setPosition(
+        Math.max((visibleWidth - nodeWidth) / 2 - model.getOffsetX(), 0) / zoom,
+        Math.max((canvas.clientHeight - nodeHeight) / 2 - model.getOffsetY(), 0) /
+          zoom
+      );
+      captureBaseline(model);
+    },
+    [engine, captureBaseline]
+  );
+
   useEffect(() => {
     if (!engine) return;
     const id = requestAnimationFrame(() => {
       const model = engine.getModel?.();
+      centerZeroStateAnchor(model);
       model?.getNodes?.().forEach((node) => {
         Object.values(node.getPorts?.() || {}).forEach((port) => {
           port.reportPosition?.();
@@ -273,7 +311,7 @@ export default function Engine({
       engine.repaintCanvas?.();
     });
     return () => cancelAnimationFrame(id);
-  }, [engine, study?.diagram]);
+  }, [engine, study?.diagram, centerZeroStateAnchor]);
 
   const getRandomIntInclusive = (min, max) => {
     min = Math.ceil(min);

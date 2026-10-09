@@ -321,6 +321,7 @@ ${cardTextFields}          settings
             id
             username
           }
+          lastTimeEdited
           isEditedBy {
             username
             image {
@@ -356,6 +357,41 @@ export const PROPOSAL_QUERY = gql`
 export const PROPOSAL_BOARD_VIEW_QUERY = gql`
   query PROPOSAL_BOARD_VIEW_QUERY($id: ID!) {
     ${proposalBoardSelection("")}
+  }
+`;
+
+// Polled by the List View so cards nobody here is editing pick up other
+// people's changes. Same normalized cards as PROPOSAL_QUERY, text fields and
+// edit markers only; isEditedBy keeps PROPOSAL_QUERY's shape so the cached
+// card stays complete for it.
+export const PROPOSAL_LIST_VIEW_SYNC_QUERY = gql`
+  query PROPOSAL_LIST_VIEW_SYNC_QUERY($id: ID!) {
+    proposalBoard(where: { id: $id }) {
+      id
+      sections {
+        id
+        cards {
+          id
+          content
+          revisedContent
+          comment
+          lastTimeEdited
+          isEditedBy {
+            username
+            image {
+              id
+              keystoneImage {
+                id
+                url
+              }
+              image {
+                publicUrlTransformed
+              }
+            }
+          }
+        }
+      }
+    }
   }
 `;
 

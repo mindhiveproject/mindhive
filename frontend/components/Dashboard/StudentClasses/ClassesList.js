@@ -4,7 +4,7 @@ import Link from "next/link";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
-import { GET_CLASSES } from "../../Queries/Classes";
+import { GET_CLASSES, studentClassesWhere } from "../../Queries/Classes";
 import ClassFavoriteButton, {
   compareClassesByFavoriteThenDate,
   getFavoriteClassIds,
@@ -13,11 +13,10 @@ import ClassFavoriteButton, {
 export default function ClassesList({ query, user }) {
   const { t } = useTranslation("classes");
   const { data, error, loading } = useQuery(GET_CLASSES, {
-    variables: {
-      input: {
-        students: { some: { id: { equals: user?.id } } },
-      },
-    },
+    variables: { input: studentClassesWhere(user?.id) },
+    // Show cached classes instantly, then refresh so newly joined classes
+    // always appear.
+    fetchPolicy: "cache-and-network",
   });
 
   const classes = data?.classes || [];

@@ -7,7 +7,12 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
-import { GET_CLASSES, GET_CLASS } from "../../../Queries/Classes";
+import {
+  GET_CLASSES,
+  GET_CLASS,
+  teacherClassesWhere,
+  teacherClassesRefetch,
+} from "../../../Queries/Classes";
 import {
   ASSIGN_STUDENT_TO_CLASS,
   REMOVE_STUDENT_FROM_CLASS,
@@ -28,27 +33,7 @@ export default function ClassStudents({ myclass, user, query }) {
   });
 
   const { data } = useQuery(GET_CLASSES, {
-    variables: {
-      input: {
-        OR: [
-          {
-            creator: {
-              id: { equals: user?.id },
-            },
-          },
-          {
-            teachingTeam: {
-              some: { id: { equals: user?.id } },
-            },
-          },
-          {
-            mentors: {
-              some: { id: { equals: user?.id } },
-            },
-          },
-        ],
-      },
-    },
+    variables: { input: teacherClassesWhere(user?.id) },
   });
 
   const classes = data?.classes || [];
@@ -59,36 +44,14 @@ export default function ClassStudents({ myclass, user, query }) {
       classId: myclass?.id,
     },
     refetchQueries: [
-      {
-        query: GET_CLASSES,
-        variables: {
-          input: {
-            OR: [
-              { creator: { id: { equals: user?.id } } },
-              { teachingTeam: { some: { id: { equals: user?.id } } } },
-              { mentors: { some: { id: { equals: user?.id } } } },
-            ],
-          },
-        },
-      },
+      teacherClassesRefetch(user?.id),
       { query: GET_CLASS, variables: { code: myclass?.code } },
     ],
   });
 
   const [assignStudentToClass] = useMutation(ASSIGN_STUDENT_TO_CLASS, {
     refetchQueries: [
-      {
-        query: GET_CLASSES,
-        variables: {
-          input: {
-            OR: [
-              { creator: { id: { equals: user?.id } } },
-              { teachingTeam: { some: { id: { equals: user?.id } } } },
-              { mentors: { some: { id: { equals: user?.id } } } },
-            ],
-          },
-        },
-      },
+      teacherClassesRefetch(user?.id),
     ],
   });
 

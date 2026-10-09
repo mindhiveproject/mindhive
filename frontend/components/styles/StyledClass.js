@@ -1,4 +1,14 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const skeletonPulse = keyframes`
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+`;
 
 const StyledClass = styled.div`
   display: grid;
@@ -285,11 +295,47 @@ const StyledClass = styled.div`
     }
   }
 
+  .studentClassLoading {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0 40px;
+  }
+
+  .studentClassLoadError {
+    display: grid;
+    justify-items: start;
+    gap: 16px;
+    max-width: 640px;
+    padding: 24px 10px;
+  }
+
   .editableClassHeader {
     display: grid;
     width: 100%;
     // margin-bottom: 20px;
     padding: 10px;
+    /* Placeholder bars while the class query is pending (student class page). */
+    .classHeaderSkeleton {
+      display: block;
+      border-radius: 8px;
+      background: #ececec;
+      animation: ${skeletonPulse} 1.4s ease-in-out infinite;
+    }
+    .classHeaderSkeletonTitle {
+      width: min(360px, 70%);
+      height: 1.1em;
+      margin: 0.15em 0;
+    }
+    .classHeaderSkeletonChip {
+      width: 140px;
+      height: 32px;
+      border-radius: 16px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .classHeaderSkeleton {
+        animation: none;
+      }
+    }
     .infoPane {
       display: grid;
       // gap: 8px;

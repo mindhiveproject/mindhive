@@ -12,6 +12,7 @@ import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
 import Collaboration from "@tiptap/extension-collaboration";
 import { HocuspocusProvider } from "@hocuspocus/provider";
+import { ySyncPluginKey } from "@tiptap/y-tiptap";
 import { useApolloClient } from "@apollo/client";
 
 import CollaborationCursorExtension from "./CollaborationCursorExtension";
@@ -132,7 +133,13 @@ export function getUserColor(userId) {
 }
 
 export default function TipTapEditor(props) {
-  const collabDocumentName = props.collaboration?.documentName || null;
+  // A parent that manages the connection itself (e.g. one provider shared by
+  // every editor of a card) passes `collaboration.provider`, already synced.
+  const externalProvider = props.collaboration?.provider || null;
+  const collabDocumentName =
+    props.collaboration?.documentName ||
+    externalProvider?.configuration?.name ||
+    null;
   const collabField = props.collaboration?.field || null;
   const [provider, setProvider] = useState(null);
   const [collabSynced, setCollabSynced] = useState(false);
@@ -141,7 +148,7 @@ export default function TipTapEditor(props) {
   // If the collab server is down, we keep a normal HTML editor so Save and
   // reload still work from the HTML columns.
   useEffect(() => {
-    if (!collabDocumentName || !collabField) {
+    if (externalProvider || !collabDocumentName || !collabField) {
       setProvider(null);
       setCollabSynced(false);
       return undefined;
@@ -162,15 +169,16 @@ export default function TipTapEditor(props) {
       setProvider(null);
       setCollabSynced(false);
     };
-  }, [collabDocumentName, collabField]);
+  }, [externalProvider, collabDocumentName, collabField]);
 
-  const collabReady = !!(provider && collabSynced);
+  const activeProvider = externalProvider || (collabSynced ? provider : null);
+  const collabReady = !!(activeProvider && collabField);
 
   return (
     <TipTapEditorInner
       key={collabReady ? "collab" : "html"}
       {...props}
-      provider={collabReady ? provider : null}
+      provider={collabReady ? activeProvider : null}
       collabDocumentName={collabReady ? collabDocumentName : null}
       collabField={collabReady ? collabField : null}
     />
@@ -194,6 +202,8 @@ function TipTapEditorInner({
   emptyInvite = null,
   floatingToolbarTop = null,
   floatingToolbarAutoOffset = false,
+  /** { x, y } client coordinates (or true for the end): focus there once the editor is editable. */
+  focusRequest = null,
   collaborationUser = null,
   provider = null,
   collabDocumentName = null,
@@ -220,6 +230,15 @@ function TipTapEditorInner({
 
   // Guards one-time seeding of an empty shared document from the initial HTML.
   const collabSeededRef = useRef(false);
+  // True while the seeding setContent runs, so its update is reported as "sync".
+  const seedingRef = useRef(false);
+  // Pass a stable object: a new identity is treated as a new request.
+  const pendingFocusRef = useRef(null);
+  const lastFocusRequestRef = useRef(null);
+  if (focusRequest && focusRequest !== lastFocusRequestRef.current) {
+    lastFocusRequestRef.current = focusRequest;
+    pendingFocusRef.current = focusRequest;
+  }
   useEffect(() => {
     collabSeededRef.current = false;
   }, [collabDocumentName, collabField]);
@@ -323,15 +342,20 @@ function TipTapEditorInner({
     [collabEnabled, provider, collabField, collabUserName, collabUserColor],
   );
 
-  const emitHtmlToParent = (html) => {
-    onUpdateRef.current?.(html);
+  // `origin` tells the parent where a change came from: "local" (this user),
+  // "remote" (a peer, via Yjs) or "sync" (loaded/seeded from the shared doc).
+  const emitHtmlToParent = (html, origin = "local") => {
+    onUpdateRef.current?.(html, { origin });
   };
 
   const editor = useEditor({
     extensions,
     content: "",
-    onUpdate: ({ editor }) => {
-      emitHtmlToParent(editor.getHTML());
+    onUpdate: ({ editor, transaction }) => {
+      let origin = "local";
+      if (seedingRef.current) origin = "sync";
+      else if (transaction?.getMeta(ySyncPluginKey)?.isChangeOrigin) origin = "remote";
+      emitHtmlToParent(editor.getHTML(), origin);
     },
     editable: isEditable,
     immediatelyRender: false,
@@ -363,6 +387,32 @@ function TipTapEditorInner({
     editor.on("blur", handleBlur);
     return () => editor.off("blur", handleBlur);
   }, [editor]);
+
+  // `editable` is only read when the editor is created; follow later changes.
+  useEffect(() => {
+    if (editor && !editor.isDestroyed && editor.isEditable !== isEditable) {
+      editor.setEditable(isEditable, false);
+    }
+  }, [editor, isEditable]);
+
+  // Honour a focus request once the editor can take it. The timeout lets the
+  // Yjs binding render the shared content first, so click coordinates map to
+  // the right position.
+  useEffect(() => {
+    if (!editor || !isEditable || !pendingFocusRef.current) return undefined;
+    const request = pendingFocusRef.current;
+    pendingFocusRef.current = null;
+    const timer = setTimeout(() => {
+      if (editor.isDestroyed) return;
+      let position = "end";
+      if (typeof request === "object" && request.x != null) {
+        const hit = editor.view.posAtCoords({ left: request.x, top: request.y });
+        if (hit) position = hit.pos;
+      }
+      editor.commands.focus(position);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [editor, isEditable, focusRequest]);
 
   // Set content when editor + content are ready.
   // In collaborative mode Yjs owns the document — never hydrate from the `content`
@@ -398,12 +448,17 @@ function TipTapEditorInner({
         // Still push HTML to the parent so Save writes the live document,
         // not an empty ref from before sync.
         collabSeededRef.current = true;
-        emitHtmlToParent(editor.getHTML());
+        emitHtmlToParent(editor.getHTML(), "sync");
         return;
       }
       const seedHtml = contentSeedRef.current;
       if (!seedHtml) return; // initial HTML not available yet; retry on change
-      editor.commands.setContent(seedHtml, { emitUpdate: true });
+      seedingRef.current = true;
+      try {
+        editor.commands.setContent(seedHtml, { emitUpdate: true });
+      } finally {
+        seedingRef.current = false;
+      }
       collabSeededRef.current = true;
     };
 

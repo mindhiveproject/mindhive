@@ -15,6 +15,7 @@ export default function CardWrapper({
   user,
   proposal,
   cardId,
+  initialFormEditor = null,
   isCreateMilestone = false,
   isCreateProposalCard = false,
   sectionId = null,
@@ -136,9 +137,14 @@ export default function CardWrapper({
         if (isActionCard(proposalCard)) {
           return (
             <MilestoneCardBuilder
+              // Remount per card so switching to a freshly copied milestone
+              // starts from that card's state, not the source card's.
+              key={proposalCard.id}
               user={user}
               proposal={proposal}
               proposalCard={proposalCard}
+              initialFormEditor={initialFormEditor}
+              openCard={openCard}
               closeCard={closeCard}
               autoUpdateStudentBoards={autoUpdateStudentBoards}
               propagateToClones={propagateToClones}
