@@ -1797,6 +1797,7 @@
 			"saving": "Saving…"
 		},
 		"filters": {
+			"milestones": "Filter by milestone",
 			"assignedTo": {
 				"disable": "Disable assigning students to cards",
 				"disableStudentsAssign": "Restrict to teachers and mentors",
