@@ -4,17 +4,14 @@ import StatusChip from "../../PDF/Preview/StatusChip";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
-import Button from "../../../../../../DesignSystem/Button";
 
 export default function Navigation({
   proposalId,
   query,
   tab,
   user,
-  saveBtnFunction,
-  hasContentChanged,
-  cardId,
-  onUpdateCard,
+  onBack,
+  saveIndicator,
   inputs,
   handleSettingsChange,
 }) {
@@ -32,9 +29,7 @@ export default function Navigation({
         <div className="icon">
           <div
             className="selector"
-            onClick={async () => {
-              await saveBtnFunction({ shoudBeSaved: false });
-            }}
+            onClick={onBack}
           >
             <img src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
           </div>
@@ -51,6 +46,8 @@ export default function Navigation({
         </div>
       </Tooltip>
       <div className="right">
+        {/* Always rendered so the status chip keeps the grid's last column. */}
+        <span style={{ justifySelf: "end" }}>{saveIndicator}</span>
         <StatusChip
           value={inputs?.settings?.status}
           onStatusChange={(newValue) => handleSettingsChange("status", newValue)}
@@ -61,16 +58,6 @@ export default function Navigation({
           onSettingsChange={handleSettingsChange}
         /> */}
 
-        {cardId && (
-          <Button
-            variant="filled"
-            onClick={async () => {
-              await saveBtnFunction({ shoudBeSaved: true });
-            }}
-          >
-            {t("cardNavigation.save", "Save")}
-          </Button>
-        )}
       </div>
     </div>
   );

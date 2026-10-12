@@ -57,7 +57,11 @@ const HEADER_META_CHIP_STYLE = {
   maxWidth: "100%",
 };
 
-export default function Header({ myclass, readOnly = false }) {
+/**
+ * @param {boolean} [loading] — Class query still pending: render placeholder
+ * bars instead of the "Untitled class" fallback and an empty teacher chip.
+ */
+export default function Header({ myclass, readOnly = false, loading: classLoading = false }) {
   const { t } = useTranslation("classes");
 
   const { inputs, handleChange } = useForm({
@@ -91,7 +95,8 @@ export default function Header({ myclass, readOnly = false }) {
     refetchQueries: refetchClass,
   });
 
-  const canEditTitle = !readOnly && !loading && Boolean(myclass?.id);
+  const canEditTitle =
+    !readOnly && !classLoading && !loading && Boolean(myclass?.id);
 
   const persistIfDirty = useCallback(() => {
     if (!myclass?.id) return;
@@ -165,9 +170,21 @@ export default function Header({ myclass, readOnly = false }) {
   return (
     <div className="editableClassHeader">
       <DisplayError error={error} />
-      <div className="infoPane" aria-busy={loading}>
+      <div className="infoPane" aria-busy={loading || classLoading}>
         <div className="classHeaderTitleBlock">
-          {isTitleEditing ? (
+          {classLoading ? (
+            <h1
+              className="title classHeaderTitleDisplay"
+              aria-label={t("header.titleLoading", {}, {
+                default: "Loading class",
+              })}
+            >
+              <span
+                className="classHeaderSkeleton classHeaderSkeletonTitle"
+                aria-hidden
+              />
+            </h1>
+          ) : isTitleEditing ? (
             <input
               type="text"
               name="title"
@@ -228,31 +245,38 @@ export default function Header({ myclass, readOnly = false }) {
         </div>
 
         <div className="classHeaderMetaRow">
-          <Tooltip
-            content={t("header.teacherAccountTooltip", {}, { default: "Class teacher." })}
-            side="bottom"
-            delayMs={300}
-          >
-            <Chip
-              label={teacherUsername}
-              leading={
-                creatorImageUrl ? (
-                  <img
-                    src={creatorImageUrl}
-                    alt={teacherUsername}
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                ) : null
-              }
-              style={HEADER_META_CHIP_STYLE}
-              labelLines={2}
+          {classLoading ? (
+            <span
+              className="classHeaderSkeleton classHeaderSkeletonChip"
+              aria-hidden
             />
-          </Tooltip>
+          ) : (
+            <Tooltip
+              content={t("header.teacherAccountTooltip", {}, { default: "Class teacher." })}
+              side="bottom"
+              delayMs={300}
+            >
+              <Chip
+                label={teacherUsername}
+                leading={
+                  creatorImageUrl ? (
+                    <img
+                      src={creatorImageUrl}
+                      alt={teacherUsername}
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : null
+                }
+                style={HEADER_META_CHIP_STYLE}
+                labelLines={2}
+              />
+            </Tooltip>
+          )}
           {mentors.length > 0 && (
             <>
               <span className="classHeaderMetaBullet" aria-hidden>

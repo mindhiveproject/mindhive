@@ -1,15 +1,25 @@
 import absoluteUrl from "next-absolute-url";
 import { useQuery } from "@apollo/client";
-import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import {
+  PROPOSAL_QUERY,
+  PROPOSAL_LIST_VIEW_SYNC_QUERY,
+} from "../../../../../Queries/Proposal";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
-import { cardIncludedInReviewStep } from "../../../../../../lib/milestones";
+import {
+  cardIncludedInReviewStep,
+  getMilestoneFromCard,
+  getReviewStepOptions,
+  isActionCard,
+} from "../../../../../../lib/milestones";
 import { getBoardAssignableToStudents } from "../../../../../../lib/proposalBoardSettings";
 import moment from "moment";
 import Head from "next/head";
 import Preview from "./Preview/Main";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
+
+const LIST_VIEW_SYNC_INTERVAL_MS = 30000;
 
 export default function ProposalPDF({ 
   proposalId, 
@@ -28,6 +38,36 @@ export default function ProposalPDF({
     variables: { id: proposalId },
   });
   const { milestones } = useBoardMilestones(proposalId);
+
+  // Cards that aren't connected to the collab server only see others' edits
+  // through this poll; its results land on the same cached cards.
+  const { startPolling, stopPolling, refetch: refetchListViewSync } = useQuery(
+    PROPOSAL_LIST_VIEW_SYNC_QUERY,
+    {
+      variables: { id: proposalId },
+      fetchPolicy: "network-only",
+      skip: !proposalId,
+    }
+  );
+  useEffect(() => {
+    if (!proposalId) return undefined;
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refetchListViewSync().catch(() => {});
+        startPolling(LIST_VIEW_SYNC_INTERVAL_MS);
+      } else {
+        stopPolling();
+      }
+    };
+    if (document.visibilityState === "visible") {
+      startPolling(LIST_VIEW_SYNC_INTERVAL_MS);
+    }
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      stopPolling();
+    };
+  }, [proposalId, startPolling, stopPolling, refetchListViewSync]);
 
   const proposal = data?.proposalBoard || {};
   const title = proposal?.title || "";
@@ -99,35 +139,34 @@ export default function ProposalPDF({
     },
   ];
 
-  // Review steps options for dropdown
-  const reviewStepOptions = [
-    {
-      key: "actionSubmit",
-      text: t("mainCard.reviewOptions.proposal", "Proposal"),
-      value: "ACTION_SUBMIT",
-    },
-    {
-      key: "actionPeerFeedback",
-      text: t("mainCard.reviewOptions.peerFeedback", "Peer Feedback"),
-      value: "ACTION_PEER_FEEDBACK",
-    },
-    {
-      key: "actionCollectingData",
-      text: t("mainCard.reviewOptions.collectingData", "Collecting Data"),
-      value: "ACTION_COLLECTING_DATA",
-    },
-    {
-      key: "actionProjectReport",
-      text: t("mainCard.reviewOptions.projectReport", "Project Report"),
-      value: "ACTION_PROJECT_REPORT",
-    },
-  ];
-
   // Submit statuses from proposal (milestone-aware, dual-keyed for legacy steps)
   const submitStatuses = buildSubmitStatuses(proposal, milestones);
 
   // Order sections by position
   const orderedSections = [...sections].sort((a, b) => a.position - b.position);
+
+  // Milestone filter: the milestones that have a card on this board, in board
+  // order, limited to those cards can be included in (same list as the card
+  // editor's review-step picker, so e.g. data collection is left out).
+  const includableMilestones = getReviewStepOptions(milestones, t);
+  const milestoneOptions = [];
+  orderedSections.forEach((section) => {
+    [...(section?.cards || [])]
+      .sort((a, b) => a.position - b.position)
+      .forEach((card) => {
+        if (!isActionCard(card)) return;
+        const milestone = getMilestoneFromCard(card, milestones);
+        const option = includableMilestones.find((o) =>
+          milestone
+            ? (o.milestoneId && o.milestoneId === milestone.id) ||
+              o.value === milestone.key
+            : o.actionCardType === card.type
+        );
+        if (option && !milestoneOptions.some((o) => o.value === option.value)) {
+          milestoneOptions.push(option);
+        }
+      });
+  });
 
   // Unique assigned users across the whole board (used for filter UI)
   const assignedUserOptions = orderedSections
@@ -266,19 +305,6 @@ export default function ProposalPDF({
     );
   };
 
-  // Get review step icon
-  const getReviewStepIcon = (step) => {
-    // These icons would need to be created or mapped to existing assets
-    // For now, using a placeholder approach
-    const iconMap = {
-      ACTION_SUBMIT: "/assets/icons/status/publicTemplate.svg",
-      ACTION_PEER_FEEDBACK: "/assets/icons/status/publicTemplate.svg",
-      ACTION_COLLECTING_DATA: "/assets/icons/status/publicTemplate.svg",
-      ACTION_PROJECT_REPORT: "/assets/icons/status/publicTemplate.svg",
-    };
-    return iconMap[step] || "/assets/icons/status/publicTemplate.svg";
-  };
-
   return (
     <>
       <Head>
@@ -343,13 +369,15 @@ export default function ProposalPDF({
           <div
             className="proposal-pdf-filter-sidebar"
             style={{
-              width: "250px",
+              width: "100%",
+              maxWidth: "300px",
+              padding: "16px 0 16px 0",
               flexShrink: 0,
               display: "flex",
               flexDirection: "column",
               gap: "16px",
               overflowY: "auto",
-              overflowX: "hidden",
+              overflowX: "auto",
               position: "relative",
               zIndex: 0,
             }}
@@ -459,7 +487,8 @@ export default function ProposalPDF({
               </div>
             </div>
 
-            {/* Review Steps Filters */}
+            {/* Milestone Filters - only the milestones on this board */}
+            {milestoneOptions.length > 0 && (
             <div
               style={{
                 display: "flex",
@@ -474,7 +503,7 @@ export default function ProposalPDF({
                   marginBottom: "4px",
                 }}
               >
-                {t("proposalPDF.filters.reviewSteps", "Review Steps")}
+                {t("proposalPDF.filters.milestones", "Filter by milestone")}
               </label>
               <div
                 style={{
@@ -484,7 +513,7 @@ export default function ProposalPDF({
                   gap: "8px",
                 }}
               >
-                {reviewStepOptions.map((option) => {
+                {milestoneOptions.map((option) => {
                   const isSelected = effectiveSelectedReviewSteps.includes(
                     option.value
                   );
@@ -522,7 +551,7 @@ export default function ProposalPDF({
                       }}
                     >
                       <img
-                        src={getReviewStepIcon(option.value)}
+                        src={option.icon}
                         alt=""
                         style={{
                           width: "18px",
@@ -568,6 +597,7 @@ export default function ProposalPDF({
                 })}
               </div>
             </div>
+            )}
 
             {/* Assigned People Filters - only when assignableToStudents is on */}
             {assignableToStudents && (

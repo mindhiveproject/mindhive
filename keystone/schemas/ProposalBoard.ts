@@ -12,6 +12,10 @@ import {
 import slugify from "slugify";
 
 import { signedInWrites } from "../access";
+import {
+  keepHiddenLinksOnSet,
+  keepHiddenLinkOnDisconnect,
+} from "../lib/keepHiddenLinks";
 
 export const ProposalBoard = list({
   access: {
@@ -24,7 +28,12 @@ export const ProposalBoard = list({
         return;
       }
 
-      const board = await context.query.ProposalBoard.findOne({
+      // Bookkeeping after an edit that already passed access control: make
+      // the board's resources visible in its class. Runs as sudo — as the
+      // editor, a board collaborator outside the class could not read the
+      // class link (the hook returned early) or connect to it.
+      const sudo = context.sudo();
+      const board = await sudo.query.ProposalBoard.findOne({
         where: { id: item.id },
         query:
           "id usedInClass { id } sections { cards { resources { id } } }",
@@ -55,7 +64,7 @@ export const ProposalBoard = list({
 
       await Promise.all(
         resourceIds.map((resourceId) =>
-          context.db.Resource.updateOne({
+          sudo.db.Resource.updateOne({
             where: { id: resourceId },
             data: {
               classes: { connect: { id: classId } },
@@ -159,9 +168,14 @@ export const ProposalBoard = list({
     templatesForClass: relationship({
       ref: "Class.classTemplateBoards",
       many: true,
+      // Saving with `set` keeps links the editor cannot see (lib/keepHiddenLinks).
+      hooks: { resolveInput: keepHiddenLinksOnSet("Class") },
     }),
     usedInClass: relationship({
       ref: "Class.studentProposals",
+      // A disconnect of a class the editor cannot see is ignored
+      // (lib/keepHiddenLinks).
+      hooks: { resolveInput: keepHiddenLinkOnDisconnect("Class") },
     }),
     clonedFrom: relationship({ ref: "ProposalBoard.prototypeFor" }),
     prototypeFor: relationship({ ref: "ProposalBoard.clonedFrom", many: true }),
@@ -239,6 +253,8 @@ export const ProposalBoard = list({
       label: "Template For Classes (legacy, still writing, but not used)",
       ref: "Class.templateProposal",
       many: true,
+      // Saving with `set` keeps links the editor cannot see (lib/keepHiddenLinks).
+      hooks: { resolveInput: keepHiddenLinksOnSet("Class") },
     }),
   },
 });

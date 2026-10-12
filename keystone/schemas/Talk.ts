@@ -11,6 +11,7 @@ import {
 } from "@keystone-6/core/fields";
 
 import { signedInWrites } from "../access";
+import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
 // chat forum
 export const Talk = list({
   access: {
@@ -45,6 +46,8 @@ export const Talk = list({
     classes: relationship({
       ref: "Class.talks",
       many: true,
+      // Saving with `set` keeps links the editor cannot see (lib/keepHiddenLinks).
+      hooks: { resolveInput: keepHiddenLinksOnSet("Class") },
     }),
     opportunities: relationship({
       ref: "Opportunity.talks",

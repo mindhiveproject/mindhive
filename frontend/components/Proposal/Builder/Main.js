@@ -222,6 +222,7 @@ export default function ProposalBuilder({
               user={user}
               proposal={proposal}
               cardId={card?.id}
+              initialFormEditor={card?.openFormEditor || null}
               isCreateMilestone={isCreateMilestone}
               isCreateProposalCard={isCreateProposalCard}
               sectionId={card?.sectionId || null}

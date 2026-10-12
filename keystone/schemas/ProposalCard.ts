@@ -12,6 +12,7 @@ import {
 import slugify from "slugify";
 
 import { signedInWrites } from "../access";
+import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
 
 export const ProposalCard = list({
   access: {
@@ -115,6 +116,8 @@ export const ProposalCard = list({
     assignments: relationship({
       ref: "Assignment.proposalCards",
       many: true,
+      // Saving with `set` keeps links the editor cannot see (lib/keepHiddenLinks).
+      hooks: { resolveInput: keepHiddenLinksOnSet("Assignment") },
     }),
     studies: relationship({
       ref: "Study.proposalCards",

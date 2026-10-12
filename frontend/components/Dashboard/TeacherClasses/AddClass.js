@@ -11,7 +11,7 @@ import ClassForm from "./ClassForm";
 import { stripHtml } from "../../Proposal/Card/Forms/utils";
 
 import { CREATE_CLASS } from "../../Mutations/Classes";
-import { GET_CLASSES } from "../../Queries/Classes";
+import { teacherClassesRefetch } from "../../Queries/Classes";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 
 const ADD_CLASS_INITIAL_INPUTS = { title: "", description: "" };
@@ -39,25 +39,7 @@ export default function AddClass({ user }) {
 
   const [createClass, { data, loading, error }] = useMutation(CREATE_CLASS, {
     refetchQueries: [
-      {
-        query: GET_CLASSES,
-        variables: {
-          input: {
-            OR: [
-              {
-                creator: {
-                  id: { equals: user?.id },
-                },
-              },
-              {
-                mentors: {
-                  some: { id: { equals: user?.id } },
-                },
-              },
-            ],
-          },
-        },
-      },
+      teacherClassesRefetch(user?.id),
       {
         query: CURRENT_USER_QUERY,
       },

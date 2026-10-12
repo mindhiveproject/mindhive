@@ -1,19 +1,64 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState, useMemo } from "react";
+import { useUnsavedChangesGuard } from "../../../../../../../lib/useUnsavedChangesGuard";
 import Card from "./Card";
 
-export default function Preview({ cards, user, submitStatuses = {}, proposalId, onUnsavedChangesChange }) {
-  const cardUnsavedRef = useRef({});
+// Cards holding a collaboration connection at once; the least recently used
+// one is closed when another card is opened.
+const MAX_ACTIVE_CARDS = 3;
 
-  const handleUnsavedChange = useCallback(
-    (cardId, hasChanges) => {
-      if (cardId != null) {
-        cardUnsavedRef.current[cardId] = hasChanges;
+export default function Preview({ cards, user, submitStatuses = {}, proposalId, onUnsavedChangesChange }) {
+  const cardSaveStateRef = useRef({});
+  const [anyPending, setAnyPending] = useState(false);
+  const [activeCardIds, setActiveCardIds] = useState([]);
+
+  // Autosave makes most changes safe to leave; only failed saves need a warning
+  // when switching views. Closing the tab also warns while a save is pending.
+  const handleSaveStateChange = useCallback(
+    (cardId, state) => {
+      if (cardId == null) return;
+      if (state) {
+        cardSaveStateRef.current[cardId] = state;
+      } else {
+        delete cardSaveStateRef.current[cardId];
       }
-      const hasAny = Object.values(cardUnsavedRef.current).some(Boolean);
-      onUnsavedChangesChange?.(hasAny);
+      const states = Object.values(cardSaveStateRef.current);
+      setAnyPending(states.some((s) => s.pending));
+      onUnsavedChangesChange?.(states.some((s) => s.failed));
     },
     [onUnsavedChangesChange]
   );
+  useUnsavedChangesGuard(anyPending);
+
+  const activateCard = useCallback((cardId) => {
+    setActiveCardIds((prev) =>
+      prev[0] === cardId
+        ? prev
+        : [cardId, ...prev.filter((id) => id !== cardId)].slice(0, MAX_ACTIVE_CARDS)
+    );
+  }, []);
+
+  const deactivateCard = useCallback((cardId) => {
+    setActiveCardIds((prev) =>
+      prev.includes(cardId) ? prev.filter((id) => id !== cardId) : prev
+    );
+  }, []);
+
+  // Stable per-card callbacks so cards don't re-run their effects every render.
+  const callbacks = useMemo(() => {
+    const byId = {};
+    cards.forEach((card) => {
+      const id = card?.id;
+      if (id == null) return;
+      byId[id] = {
+        onActivate: () => activateCard(id),
+        onDeactivate: () => deactivateCard(id),
+        onSaveStateChange: (state) => handleSaveStateChange(id, state),
+      };
+    });
+    return byId;
+    // Recompute only when the set of card ids changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cards.map((card) => card?.id).join(","), activateCard, deactivateCard, handleSaveStateChange]);
 
   return (
     <div
@@ -46,7 +91,8 @@ export default function Preview({ cards, user, submitStatuses = {}, proposalId, 
           user={user}
           submitStatuses={submitStatuses}
           proposalId={proposalId}
-          onUnsavedChange={onUnsavedChangesChange ? (hasChanges) => handleUnsavedChange(card?.id, hasChanges) : undefined}
+          isActive={activeCardIds.includes(card?.id)}
+          {...(callbacks[card?.id] || {})}
         />
       ))}
     </div>

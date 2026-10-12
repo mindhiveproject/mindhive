@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
-// Board resolver returns milestone scalars from context.query; requesting
-// formDefinition or clonedFrom on that path triggers a Keystone batching bug.
+// Board resolver returns raw context.db rows, so relationships (formDefinition,
+// clonedFrom, actionCards) resolve through Keystone's field resolvers.
 export const MILESTONE_BOARD_FIELDS = `
   id
   key
@@ -18,6 +18,9 @@ export const MILESTONE_BOARD_FIELDS = `
   showInFeedbackCenter
   formDefinitionKeyPattern
   isActive
+  clonedFrom {
+    id
+  }
   canReview {
     id
     name

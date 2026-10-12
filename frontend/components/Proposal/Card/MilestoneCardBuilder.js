@@ -116,6 +116,8 @@ function resolveCapability(milestone, proposalCard) {
 export default function MilestoneCardBuilder({
   proposal,
   proposalCard,
+  initialFormEditor = null,
+  openCard,
   closeCard,
   autoUpdateStudentBoards,
   propagateToClones,
@@ -261,15 +263,24 @@ export default function MilestoneCardBuilder({
     milestoneDescription: initialDescription,
   });
 
-  const [wizardOpen, setWizardOpen] = useState(false);
-  const [wizardDefinitionId, setWizardDefinitionId] = useState(null);
-  const [wizardMilestoneKey, setWizardMilestoneKey] = useState(null);
+  // A card opened right after "Copy milestone to customize" lands with its
+  // review form editor already open.
+  const [wizardOpen, setWizardOpen] = useState(
+    !!initialFormEditor?.definitionId
+  );
+  const [wizardDefinitionId, setWizardDefinitionId] = useState(
+    initialFormEditor?.definitionId || null
+  );
+  const [wizardMilestoneKey, setWizardMilestoneKey] = useState(
+    initialFormEditor?.milestoneKey || null
+  );
   const [editBusy, setEditBusy] = useState(false);
   const [confirmDataCollectionOpen, setConfirmDataCollectionOpen] =
     useState(false);
   const [capabilityBusy, setCapabilityBusy] = useState(false);
   const [formPreviewOpen, setFormPreviewOpen] = useState(false);
   const [confirmRemoveFormOpen, setConfirmRemoveFormOpen] = useState(false);
+  const [existingCopyPromptOpen, setExistingCopyPromptOpen] = useState(false);
 
   const sectionId = useMemo(() => {
     for (const section of boardWithSections?.sections || []) {
@@ -279,6 +290,30 @@ export default function MilestoneCardBuilder({
     }
     return null;
   }, [boardWithSections?.sections, proposalCard?.id]);
+
+  const boardCards = useMemo(
+    () =>
+      (boardWithSections?.sections || []).flatMap(
+        (section) => section?.cards || []
+      ),
+    [boardWithSections?.sections]
+  );
+
+  // A custom copy of this milestone that is still on this board. Copies whose
+  // card was removed from the board do not count.
+  const existingCopy = useMemo(() => {
+    if (!milestone?.id) return null;
+    const boardCardIds = new Set(boardCards.map((card) => card?.id));
+    for (const candidate of milestones || []) {
+      if (candidate?.clonedFrom?.id !== milestone.id) continue;
+      if (candidate.scope !== "template") continue;
+      const card = (candidate.actionCards || []).find((c) =>
+        boardCardIds.has(c?.id)
+      );
+      if (card) return { milestone: candidate, card };
+    }
+    return null;
+  }, [milestone?.id, milestones, boardCards]);
 
   const [updateCard, { loading: updateLoading }] =
     useMutation(UPDATE_CARD_CONTENT);
@@ -550,8 +585,66 @@ export default function MilestoneCardBuilder({
     }
   };
 
-  const copyMilestoneToCustomize = async () => {
+  // "Title (copy)", then "Title (copy 2)", "Title (copy 3)", … so repeated
+  // copies stay distinguishable on the board.
+  const uniqueCopyTitle = (sourceTitle) => {
+    const taken = new Set(
+      [...boardCards, ...(milestones || [])]
+        .map((item) => (item?.title || "").trim().toLowerCase())
+        .filter(Boolean)
+    );
+    const first = t(
+      "board.expendedCard.actionCard.copyTitle",
+      { title: sourceTitle },
+      { default: "{{title}} (copy)" }
+    );
+    if (!taken.has(first.trim().toLowerCase())) return first;
+    for (let n = 2; ; n += 1) {
+      const candidate = t(
+        "board.expendedCard.actionCard.copyTitleNumbered",
+        { title: sourceTitle, number: n },
+        { default: "{{title}} (copy {{number}})" }
+      );
+      if (!taken.has(candidate.trim().toLowerCase())) return candidate;
+    }
+  };
+
+  // Switch the card view to the custom milestone so the teacher keeps working
+  // on the copy instead of landing back on the read-only default.
+  const openMilestoneCard = (cardId, targetMilestone) => {
+    const definitionId = targetMilestone?.formDefinition?.id || null;
+    if (!cardId || !openCard) {
+      if (definitionId) openWizard(definitionId, targetMilestone.key);
+      return;
+    }
+    openCard({
+      id: cardId,
+      title: targetMilestone?.title || "",
+      type: "ACTION",
+      openFormEditor: definitionId
+        ? { definitionId, milestoneKey: targetMilestone.key }
+        : null,
+    });
+  };
+
+  const openExistingCopy = () => {
+    if (!existingCopy) return;
+    setExistingCopyPromptOpen(false);
+    openMilestoneCard(existingCopy.card.id, existingCopy.milestone);
+  };
+
+  const copyMilestoneToCustomize = () => {
     if (!canCopyForm || !proposal?.id || !milestone?.id || editBusy) return;
+    if (existingCopy) {
+      setExistingCopyPromptOpen(true);
+      return;
+    }
+    createMilestoneCopy();
+  };
+
+  const createMilestoneCopy = async () => {
+    if (!canCopyForm || !proposal?.id || !milestone?.id || editBusy) return;
+    setExistingCopyPromptOpen(false);
     if (!sectionId) {
       alert(
         t(
@@ -569,11 +662,7 @@ export default function MilestoneCardBuilder({
         variables: {
           input: {
             templateBoardId: proposal.id,
-            title: t(
-              "board.expendedCard.actionCard.copyTitle",
-              { title: sourceTitle },
-              { default: "{{title}} (copy)" }
-            ),
+            title: uniqueCopyTitle(sourceTitle),
             description: milestone.description || "",
             sectionId,
             clonedFromMilestoneId: milestone.id,
@@ -595,7 +684,7 @@ export default function MilestoneCardBuilder({
       if (!created?.formDefinition?.id) {
         throw new Error("Could not copy this milestone.");
       }
-      openWizard(created.formDefinition.id, created.key);
+      openMilestoneCard(created.actionCards?.[0]?.id, created);
     } catch (err) {
       alert(err?.message);
     } finally {
@@ -1602,6 +1691,62 @@ export default function MilestoneCardBuilder({
             {
               default:
                 "This unlinks the form from this milestone. The form stays on this template board so you can re-link it later.",
+            }
+          )}
+        </p>
+      </Modal>
+
+      <Modal
+        open={existingCopyPromptOpen}
+        onClose={() => !editBusy && setExistingCopyPromptOpen(false)}
+        title={t(
+          "board.expendedCard.actionCard.existingCopyTitle",
+          {},
+          { default: "This milestone was already copied" }
+        )}
+        maxWidth={480}
+        actions={
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={editBusy}
+              onClick={createMilestoneCopy}
+            >
+              {editBusy
+                ? t(
+                    "projects.milestonesMenu.copyingMilestone",
+                    {},
+                    { default: "Copying…" }
+                  )
+                : t(
+                    "board.expendedCard.actionCard.createAnotherCopy",
+                    {},
+                    { default: "Make another copy" }
+                  )}
+            </Button>
+            <Button
+              type="button"
+              variant="filled"
+              disabled={editBusy}
+              onClick={openExistingCopy}
+            >
+              {t(
+                "board.expendedCard.actionCard.openExistingCopy",
+                {},
+                { default: "Open existing copy" }
+              )}
+            </Button>
+          </>
+        }
+      >
+        <p style={{ margin: 0, font: 'var(--MH-Type-Body-Base)', letterSpacing: 0 }}>
+          {t(
+            "board.expendedCard.actionCard.existingCopyBody",
+            { title: existingCopy?.milestone?.title || "" },
+            {
+              default:
+                "This board already has a custom copy of this milestone: “{{title}}”. Open it to keep customizing, or make another copy.",
             }
           )}
         </p>

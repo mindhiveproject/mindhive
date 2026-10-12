@@ -14,6 +14,7 @@ import {
   signedInWrites,
   postQueryFilter,
   postOwnerFilter,
+  postCreateRule,
 } from "../access";
 
 export const Post = list({
@@ -25,6 +26,8 @@ export const Post = list({
       update: postOwnerFilter,
       delete: postOwnerFilter,
     },
+    // Posts go only into the caller's own journal (staff read-only).
+    item: { create: postCreateRule },
   },
   fields: {
     title: text(),

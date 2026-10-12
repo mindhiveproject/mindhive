@@ -1430,6 +1430,7 @@
 		"projectChat": "Project chat"
 	},
 	"mainCard": {
+		"leaveWithFailedSave": "Some changes could not be saved. Leave anyway?",
 		"askToClose": "Ask the user to close the card or wait until the card is released.",
 		"assignedTo": "Assigned to",
 		"cardWillBeReleased": "The card will be released",
@@ -1787,7 +1788,16 @@
 		"viewFlattenBoard": "List View"
 	},
 	"proposalPDF": {
+		"autosave": {
+			"beingEditedBy": "Being edited by {{names}}",
+			"connecting": "Connecting…",
+			"failed": "Not saved",
+			"retry": "Retry",
+			"saved": "Saved",
+			"saving": "Saving…"
+		},
 		"filters": {
+			"milestones": "Filter by milestone",
 			"assignedTo": {
 				"disable": "Disable assigning students to cards",
 				"disableStudentsAssign": "Restrict to teachers and mentors",

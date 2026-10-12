@@ -1,6 +1,11 @@
 import absoluteUrl from "next-absolute-url";
 import moment from "moment";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import { RESOLVE_MILESTONES_FOR_BOARD } from "../../../../../Queries/Milestone";
+import {
+  cardIncludedInReviewStep,
+  resolveMilestonesFromQuery,
+} from "../../../../../../lib/milestones";
 
 // Accept t as optional third argument; filters are optional following arguments
 export default async function exportPDF(
@@ -19,6 +24,14 @@ export default async function exportPDF(
     variables: { id: proposalId },
     fetchPolicy: "network-only"
   });
+
+  // The List View filters by milestone key; resolve the board's milestones so
+  // cards that store legacy step names (ACTION_*) still match.
+  const { data: milestoneData } = await client.query({
+    query: RESOLVE_MILESTONES_FOR_BOARD,
+    variables: { boardId: proposalId },
+  });
+  const milestones = resolveMilestonesFromQuery(milestoneData);
 
   const proposal = proposalData?.proposalBoard || {};
   const title = proposal?.title || "";
@@ -68,10 +81,10 @@ export default async function exportPDF(
             selectedStatuses.includes(card?.settings?.status)) &&
           // Must be included in report
           card?.settings?.includeInReport &&
-          // Review steps filter: empty array means show all, otherwise check if any selected step matches
+          // Milestone filter: empty array means show all, otherwise check if any selected milestone matches
           (selectedReviewSteps.length === 0 ||
             selectedReviewSteps.some((step) =>
-              card?.settings?.includeInReviewSteps?.includes(step)
+              cardIncludedInReviewStep(card, step, milestones)
             )) &&
           // Assigned users filter: empty array means show all, otherwise check if any selected assignee matches
           (selectedAssignedUsers.length === 0 ||

@@ -6,7 +6,14 @@ import Link from "next/link";
 import ReactHtmlParser from "react-html-parser";
 import DeletePost from "./Delete";
 
-export default function Post({ code, journalId, post, editPost, index }) {
+export default function Post({
+  code,
+  journalId,
+  post,
+  editPost,
+  index,
+  canWrite,
+}) {
   return (
     <div className="singlePost">
       <div className="header">
@@ -25,21 +32,25 @@ export default function Post({ code, journalId, post, editPost, index }) {
               </div>
             )}
           </div>
-          <Link
-            href={{
-              pathname: `/dashboard/journals/${code}`,
-              query: {
-                post: post?.id,
-                action: "edit",
-                index: index || 0,
-              },
-            }}
-          >
-            <span>
-              <Icon size="large" name="edit" />
-            </span>
-          </Link>
-          <DeletePost postId={post?.id} code={code} index={index} />
+          {canWrite && (
+            <>
+              <Link
+                href={{
+                  pathname: `/dashboard/journals/${code}`,
+                  query: {
+                    post: post?.id,
+                    action: "edit",
+                    index: index || 0,
+                  },
+                }}
+              >
+                <span>
+                  <Icon size="large" name="edit" />
+                </span>
+              </Link>
+              <DeletePost postId={post?.id} code={code} index={index} />
+            </>
+          )}
         </div>
       </div>
 
