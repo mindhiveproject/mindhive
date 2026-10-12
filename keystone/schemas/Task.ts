@@ -113,6 +113,9 @@ export const Task = list({
     aggregateVariables: json(),
     link: text(),
     public: checkbox(),
+    // Shown on the signed-out discover page. Independent of `public`, which
+    // stays the publishing gate; signed-out visitors see public AND featured.
+    featured: checkbox({ isFilterable: true }),
     submitForPublishing: checkbox(),
     isOriginal: checkbox(),
     isExternal: checkbox(),

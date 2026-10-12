@@ -136,6 +136,13 @@
 		"title": "Sponsor setup"
 	},
 	"surveys": "Surveys",
+	"taskBankEmpty": "No tasks or surveys to show here yet.",
+	"taskBankPreview": {
+		"login": "Log in",
+		"message": "Log in or sign up to access the full repository of tasks and surveys.",
+		"signup": "Sign up",
+		"title": "You're viewing a selection of featured tasks and surveys"
+	},
 	"tasks": "Tasks",
 	"tasksAndSurveysDescriptions": "Tasks and Surveys descriptions",
 	"teachers": "Teachers",

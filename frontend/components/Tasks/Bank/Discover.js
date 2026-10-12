@@ -1,7 +1,13 @@
+import { useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { PUBLIC_TASKS } from "../../Queries/Task";
 import TaskCard from "./TaskCard";
+import { UserContext } from "../../Global/Authorized";
+import Button from "../../DesignSystem/Button";
+import MessageCard from "../../DesignSystem/MessageCard";
+import { buildTaskBankWhere } from "../../../lib/taskBankFilter";
 
 import { Dropdown } from "semantic-ui-react";
 import { StyledDiscover } from "../../styles/StyledDiscover";
@@ -11,19 +17,21 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
   const { t } = useTranslation("home");
   const router = useRouter();
   const tab = query?.tab || "all";
+  // Wait until we know whether someone is signed in, so a signed-in user never
+  // flashes the signed-out preview (and its query) first.
+  const { loading: userLoading } = useContext(UserContext);
 
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
     variables: {
-      where:
-        tab === "all"
-          ? { public: { equals: true } }
-          : {
-              taskType: { equals: tab.toUpperCase() },
-              public: { equals: true },
-            },
+      where: buildTaskBankWhere({
+        user,
+        taskType: tab === "all" ? null : tab.toUpperCase(),
+      }),
     },
+    skip: userLoading,
   });
   const tasks = data?.tasks || [];
+  const isPreview = !user && !userLoading;
 
   const setTab = (tab) => {
     router.push({
@@ -36,6 +44,45 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
 
   return (
     <StyledDiscover>
+      {isPreview && (
+        <div className="repositoryNotice">
+          <div className="repositoryNoticeText">
+            <span className="MH-Type-Title-Base">
+              {t(
+                "taskBankPreview.title",
+                {},
+                {
+                  default:
+                    "You're viewing a selection of featured tasks and surveys",
+                }
+              )}
+            </span>
+            <span className="MH-Type-Body-Base">
+              {t(
+                "taskBankPreview.message",
+                {},
+                {
+                  default:
+                    "Log in or sign up to access the full repository of tasks and surveys.",
+                }
+              )}
+            </span>
+          </div>
+          <div className="repositoryNoticeActions">
+            <Link href="/login">
+              <Button variant="outline">
+                {t("taskBankPreview.login", {}, { default: "Log in" })}
+              </Button>
+            </Link>
+            <Link href="/signup">
+              <Button variant="filled">
+                {t("taskBankPreview.signup", {}, { default: "Sign up" })}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
+
       <div className="filterHeader">
         <div>
           <Dropdown
@@ -78,6 +125,19 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
           </a>
         </div>
       </div>
+      {!userLoading && !loading && !error && tasks.length === 0 && (
+        <MessageCard
+          variant="neutral"
+          message={t(
+            "taskBankEmpty",
+            {},
+            {
+              default: "No tasks or surveys to show here yet.",
+            }
+          )}
+        />
+      )}
+
       <div className="tasks">
         {tasks.map((task) => (
           <TaskCard

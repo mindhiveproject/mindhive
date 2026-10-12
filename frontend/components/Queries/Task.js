@@ -23,6 +23,7 @@ export const PUBLIC_TASKS = gql`
       slug
       image
       public
+      featured
       description
       descriptionForParticipants
       author {
