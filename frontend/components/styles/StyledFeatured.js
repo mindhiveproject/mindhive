@@ -8,9 +8,9 @@ export const StyledFeaturedStudies = styled.div`
     padding: 0rem 2rem;
   }
 
-  .featuredContainerWrapper {
+  .featuredCarousel {
     display: grid;
-    grid-gap: 2rem;
+    grid-gap: 1rem;
   }
 
   .featuredContainer {
@@ -19,54 +19,44 @@ export const StyledFeaturedStudies = styled.div`
     min-height: 400px;
   }
 
-  .buttonsWrapper {
-    display: grid;
+  .featuredControls {
+    display: flex;
+    align-items: center;
     justify-content: center;
+    gap: 12px;
+
+    /* IconButton sizes every icon <img> to 24px; the arrow reads better small. */
+    .DesignSystem-IconButton-Icon img {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .featuredPosition {
+    min-width: 48px;
+    text-align: center;
+    font: var(--MH-Type-Label-Base);
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .featuredCard {
     width: 100%;
   }
 
-  .buttons {
-    display: grid;
-    justify-content: center;
-    margin: 1rem 0rem;
-    grid-template-columns: repeat(auto-fit, 20px);
-    grid-gap: 1rem;
-    width: 300px;
-    input[type="radio"] {
-      cursor: pointer;
-      display: inline-block;
-      height: 20px;
-      width: 20px;
-      position: relative;
-      -webkit-appearance: none;
-      -webkit-transition: all 0.3s ease;
-      -moz-transition: all 0.3s ease;
-      -o-transition: all 0.3s ease;
-      -ms-transition: all 0.3s ease;
-      border-radius: 20px;
-      background-color: white;
-      border: 1px solid #117c70;
-      outline: none;
-    }
-    input[type='radio']: checked {
-      background-color: #117c70;
-    }
-  }
-
-  .card {
+  .featuredCardBody {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 3rem;
+    flex: 1 1 auto;
     width: 100%;
-    height: 100%;
+    min-height: 400px;
 
     .cardInfo {
       display: grid;
       grid-template-rows: 1fr auto;
-      grid-gap: 1rem;
       align-content: baseline;
       grid-gap: 2rem;
-      height: 100%;
+      padding: 2rem;
 
       .cardMain {
         display: grid;
@@ -82,21 +72,43 @@ export const StyledFeaturedStudies = styled.div`
       }
 
       .studyLink {
-        display: grid;
-        width: fit-content;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
       }
     }
 
+    /* Bleeds to the card edge; clips to the card's 12px radius (minus the
+       1px border) on the right-hand corners. The image is never cropped: it
+       scales to fit the panel, letterboxed on the neutral fill. */
     .studyImage {
+      overflow: hidden;
+      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      border-radius: 0 11px 11px 0;
+      > div {
+        height: 100%;
+      }
       .noImage {
         width: 100%;
         height: 100%;
-        background: lightgrey;
+        background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
       }
       img {
+        display: block;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
+      }
+    }
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+      min-height: 0;
+
+      .studyImage {
+        order: -1;
+        height: 220px;
+        border-radius: 11px 11px 0 0;
       }
     }
 

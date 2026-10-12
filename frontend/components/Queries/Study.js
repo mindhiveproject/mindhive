@@ -7,6 +7,12 @@ export const FEATURED_STUDIES = gql`
       id
       title
       slug
+      author {
+        id
+      }
+      collaborators {
+        id
+      }
       image {
         id
         keystoneImage {
