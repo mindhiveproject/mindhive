@@ -3,8 +3,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { AnimatePresence, motion } from "motion/react";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../DesignSystem/Button";
+import Modal from "../../DesignSystem/Modal";
 import Navbar, { NavbarItem } from "../../DesignSystem/Navbar";
 import SplitPane, { COLLAPSE_TRANSITION } from "../../DesignSystem/SplitPane";
 import {
@@ -212,6 +215,25 @@ export default function VisualBuilder({ query, user }) {
   const [focusFileId, setFocusFileId] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(true);
   const [shareOpen, setShareOpen] = useState(false);
+
+  // Settings are saved by an explicit Save, unlike the code, so they are the one
+  // thing leaving the builder (or the tab) can lose. The panel reports its
+  // draft; `pendingLeave` holds where the author was headed while they decide.
+  const router = useRouter();
+  const [settingsDirty, setSettingsDirty] = useState(false);
+  const [pendingLeave, setPendingLeave] = useState(null);
+
+  function leaveUnlessDirty(go) {
+    if (settingsDirty) setPendingLeave(() => go);
+    else go();
+  }
+
+  useEffect(() => {
+    if (!settingsDirty) return undefined;
+    const warn = (e) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [settingsDirty]);
 
   // Local drafts of the code files. The server copy is the source of truth on
   // load; from then on this is, until the debounced save catches up.
@@ -681,14 +703,23 @@ export default function VisualBuilder({ query, user }) {
     dataSource: <DataSourcesPanel />,
     parameters: <ParametersPanel />,
     code: <CodePanel />,
-    settings: <SettingsPanel user={user} />,
+    settings: <SettingsPanel user={user} onDirtyChange={setSettingsDirty} />,
   }[tab];
 
   return (
     <VisualBuilderContext.Provider value={contextValue}>
       {sourceRuntimes}
       <div className="Visuals-Builder" style={SHELL_STYLE}>
-        <TopBar title={visual.title} onShare={() => setShareOpen(true)} />
+        <TopBar
+          title={visual.title}
+          onShare={() => setShareOpen(true)}
+          onBack={(event) => {
+            // The link navigates on its own when there is nothing to lose.
+            if (!settingsDirty) return;
+            event.preventDefault();
+            leaveUnlessDirty(() => router.push("/dashboard/develop/visuals"));
+          }}
+        />
 
         <Navbar style={NAVBAR_STYLE}>
           {TABS.map((entry) => (
@@ -696,7 +727,7 @@ export default function VisualBuilder({ query, user }) {
               key={entry.id}
               leadingIcon={entry.icon}
               selected={tab === entry.id}
-              onClick={() => setTab(entry.id)}
+              onClick={() => leaveUnlessDirty(() => setTab(entry.id))}
             >
               {t(entry.id, entry.label)}
             </NavbarItem>
@@ -778,7 +809,50 @@ export default function VisualBuilder({ query, user }) {
         </div>
 
         <ShareModal open={shareOpen} onClose={() => setShareOpen(false)} />
+        <DiscardChangesModal
+          open={!!pendingLeave}
+          onKeep={() => setPendingLeave(null)}
+          onDiscard={() => {
+            pendingLeave();
+            setPendingLeave(null);
+          }}
+        />
       </div>
     </VisualBuilderContext.Provider>
+  );
+}
+
+/** Staying is the primary action; leaving without saving is the quiet one. */
+function DiscardChangesModal({ open, onKeep, onDiscard }) {
+  const { t } = useTranslation("visuals");
+
+  return (
+    <Modal
+      open={open}
+      onClose={onKeep}
+      maxWidth={400}
+      title={t("discardChangesTitle", "Discard unsaved changes?")}
+      actions={
+        <>
+          <Button
+            variant="text"
+            style={{ color: "var(--MH-Theme-Warning-Base, #b9261a)" }}
+            onClick={onDiscard}
+          >
+            {t("discard", "Discard")}
+          </Button>
+          <Button variant="filled" onClick={onKeep}>
+            {t("keepEditing", "Keep Editing")}
+          </Button>
+        </>
+      }
+    >
+      <p style={{ margin: 0 }}>
+        {t(
+          "discardChangesBody",
+          "Your changes to the settings haven't been saved. If you leave now, they will be lost."
+        )}
+      </p>
+    </Modal>
   );
 }

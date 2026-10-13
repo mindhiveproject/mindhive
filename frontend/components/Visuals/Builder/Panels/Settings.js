@@ -9,6 +9,7 @@ import Button from "../../../DesignSystem/Button";
 import Card, { CardSection } from "../../../DesignSystem/Card";
 import Checkbox from "../../../DesignSystem/Checkbox";
 import Input from "../../../DesignSystem/Input";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import Radio from "../../../DesignSystem/Radio";
 import { ArrowDropDownIcon, DeleteIcon } from "../../../DesignSystem/Icons";
 
@@ -29,6 +30,7 @@ const SECTION_HEADER_STYLE = {
   justifyContent: "space-between",
   gap: 8,
   width: "100%",
+  flexShrink: 0,
   padding: 0,
   border: "none",
   background: "transparent",
@@ -37,7 +39,10 @@ const SECTION_HEADER_STYLE = {
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
+// flexShrink: the panel body is a scrolling flex column, so once the sections
+// outgrow it a 1px rule with no content is the first thing squeezed to 0.
 const RULE_STYLE = {
+  flexShrink: 0,
   height: 1,
   width: "100%",
   background: "var(--MH-Theme-Neutrals-Light, #E6E6E6)",
@@ -68,14 +73,6 @@ const OPTION_ROW_STYLE = {
 // outline — an outline here would read as a second, separate object.
 const OPTION_CHOSEN_STYLE = {
   background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
-};
-
-const FOOTER_STYLE = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: 8,
-  paddingTop: 8,
 };
 
 /** A collapsible titled block. The three sections are separate on purpose — see below. */
@@ -126,7 +123,7 @@ function Section({ title, children, defaultOpen = true }) {
  * Editing and Block Sharing render the same fields the Share modal does, so the
  * two places an author can change them stay one control.
  */
-export default function SettingsPanel({ user }) {
+export default function SettingsPanel({ user, onDirtyChange }) {
   const { t } = useTranslation("visuals");
   const router = useRouter();
   const { visual, canEdit } = useVisualBuilder();
@@ -140,6 +137,14 @@ export default function SettingsPanel({ user }) {
 
   const isOwner = visual?.author?.id === user?.id;
   const dirty = JSON.stringify(draft) !== JSON.stringify(fromVisual(visual));
+
+  // The draft lives here, so the shell can't see it. Reported up so leaving
+  // with unsaved settings can ask first; unmounting clears it, which is what
+  // lets a confirmed "discard" go through without asking twice.
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+  }, [dirty]);
+  useEffect(() => () => onDirtyChange?.(false), []);
 
   async function onSave() {
     await updateVisual({
@@ -164,7 +169,19 @@ export default function SettingsPanel({ user }) {
   }
 
   return (
-    <Panel title={t("settings", "Settings")}>
+    <Panel
+      title={t("settings", "Settings")}
+      hideScrollbar
+      actions={
+        <Button
+          variant="filled"
+          disabled={!canEdit || !dirty || saving}
+          onClick={onSave}
+        >
+          {t("save", "Save")}
+        </Button>
+      }
+    >
       <Section title={t("properties", "Properties")}>
         <Input
           label={t("name", "Name")}
@@ -287,33 +304,26 @@ export default function SettingsPanel({ user }) {
       </Section>
 
       <hr style={RULE_STYLE} />
-      <div style={FOOTER_STYLE}>
-        <Button
-          variant="text"
-          leadingIcon={<DeleteIcon />}
-          disabled={!isOwner}
-          onClick={onDelete}
-          style={{ color: "var(--MH-Theme-Warning-Base, #b9261a)" }}
-        >
-          {t("deleteVisual", "Delete Visual")}
-        </Button>
-        <div style={{ display: "flex", gap: 8 }}>
+      <MessageCard
+        variant="warning"
+        message={t(
+          "deleteVisualHelp",
+          "Deleting this visual permanently removes it and everything in it. This can't be undone."
+        )}
+        action={
           <Button
-            variant="outline"
-            disabled={!dirty}
-            onClick={() => setDraft(fromVisual(visual))}
+            variant="text"
+            leadingIcon={<DeleteIcon />}
+            disabled={!isOwner}
+            onClick={onDelete}
+            // Only while it can be used: an override would otherwise paint a
+            // disabled button as live, with no hover or click to match.
+            style={isOwner ? { color: "var(--MH-Theme-Warning-Dark, #8F1F14)" } : undefined}
           >
-            {t("discardChanges", "Discard Changes")}
+            {t("deleteVisual", "Delete Visual")}
           </Button>
-          <Button
-            variant="filled"
-            disabled={!canEdit || !dirty || saving}
-            onClick={onSave}
-          >
-            {t("save", "Save")}
-          </Button>
-        </div>
-      </div>
+        }
+      />
     </Panel>
   );
 }
