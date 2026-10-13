@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import Panel from "../Panel";
@@ -11,6 +11,7 @@ import Chip from "../../../DesignSystem/Chip";
 import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import IconButton from "../../../DesignSystem/IconButton";
 import Input from "../../../DesignSystem/Input";
+import Modal from "../../../DesignSystem/Modal";
 import Slider from "../../../DesignSystem/Slider";
 import {
   AddIcon,
@@ -24,14 +25,15 @@ import {
 import { useVisualBuilder } from "../../Context/VisualBuilderContext";
 import {
   bindingFor,
+  isStreamMappable,
   isToggle,
   labelFor,
   typeLabel,
 } from "../../Helpers/bindings";
-import { addParameter } from "../../Runtime/parametersFile";
+import { addParameter, keyFromName } from "../../Runtime/parametersFile";
 import { outputKey } from "../../../../lib/yqOutputs";
 
-// MH-Theme/Additional Accent — the banner is the Parameters tab talking about
+// MH-Theme/Additional Accent — a notice is the Parameters tab talking about
 // itself, so it is painted in the tab's own hue rather than the platform's.
 const BANNER_STYLE = {
   display: "flex",
@@ -163,10 +165,11 @@ const CHIP_LIVE_STYLE = {
 /**
  * The Parameters tab.
  *
- * The list renders the sketch's declaration — name, data type and default are
- * the code's to own, so they appear here but aren't edited here. What *is*
- * edited here is everything the code can't know: where a parameter's value
- * comes from, and the plumbing around it.
+ * The list renders the sketch's declaration. Adding a parameter, and editing
+ * its name, type and default in the detail panel, write straight back into
+ * `parameters.js`, which stays the one place they are defined. What the code
+ * can't know is kept here instead: where a parameter's value comes from, and
+ * the plumbing around it.
  *
  * A row carries two independent states. *Selected* means the detail panel to
  * the right is pointed at it. *Expanded* means its own controls are open below
@@ -179,47 +182,51 @@ export default function ParametersPanel() {
     canEdit,
     declared,
     hasDeclaration,
+    declarationWarnings = [],
     bindings,
     updateBinding,
     bus,
     files,
     updateFile,
     openPanel,
-    revealFile,
     detailKey,
     dataSources,
     sourceApis,
   } = useVisualBuilder();
 
   const [expanded, setExpanded] = useState(null);
+  const [adding, setAdding] = useState(false);
 
   const keys = Object.keys(declared || {});
   const unmapped = keys.filter((key) => !bindingFor(bindings, key).mapping);
   const showAuthoredBanner =
     visual?.participationMode === "authored" && unmapped.length > 0;
 
+  // A stream mapping the parameter can no longer receive: it was retyped in
+  // code, or Allow Mapping was switched off after the fact. Nothing feeds it,
+  // yet its control stays locked as if something did.
+  const stuckMappings = keys.filter((key) => {
+    const binding = bindingFor(bindings, key);
+    return (
+      binding.mapping?.kind === "stream" &&
+      !isStreamMappable(declared[key], binding)
+    );
+  });
+
   const parametersFile = files.find((file) => file.role === "parameters");
 
-  function onAddNew() {
-    if (!parametersFile) return;
-    // Names live in code, so a new parameter gets a placeholder key here and is
-    // renamed where it is declared — rather than this panel owning a name the
-    // file would then have to be kept in sync with.
-    let index = keys.length + 1;
-    while (keys.includes(`parameter${index}`)) index += 1;
-    const key = `parameter${index}`;
-
+  function onAdd(name, key) {
     updateFile(
       parametersFile.id,
       addParameter(parametersFile.content || "", key, {
         type: "number",
-        label: `Parameter ${index}`,
+        label: name,
         default: 0,
         min: 0,
         max: 1,
       })
     );
-    revealFile(parametersFile.id);
+    setAdding(false);
   }
 
   return (
@@ -231,7 +238,7 @@ export default function ParametersPanel() {
             variant="filled"
             tone="accent"
             leadingIcon={<AddIcon />}
-            onClick={onAddNew}
+            onClick={() => setAdding(true)}
             disabled={!parametersFile}
           >
             {t("addNew", "Add New")}
@@ -240,18 +247,32 @@ export default function ParametersPanel() {
       }
     >
       {showAuthoredBanner ? (
-        <div style={BANNER_STYLE} role="status">
-          <span style={{ flex: "1 1 auto", minWidth: 0 }}>
-            {t(
-              "authoredNeedsMapping",
-              "Authored mode requires all parameters to have a default mapping to work properly."
-            )}
-          </span>
-          <span style={{ flexShrink: 0, display: "flex" }} aria-hidden>
-            <InfoIcon />
-          </span>
-        </div>
+        <Notice>
+          {t(
+            "authoredNeedsMapping",
+            "Authored mode requires all parameters to have a default mapping to work properly."
+          )}
+        </Notice>
       ) : null}
+
+      {declarationWarnings.map((message) => (
+        <Notice key={message}>{message}</Notice>
+      ))}
+
+      {stuckMappings.map((key) => (
+        <Notice key={key}>
+          {(bindingFor(bindings, key).allowMapping === false
+            ? t(
+                "stuckMappingOff",
+                "“{{name}}” is mapped to a data source, but Allow Mapping is off, so nothing reaches it. Unmap it, or turn Allow Mapping back on."
+              )
+            : t(
+                "stuckMappingType",
+                "“{{name}}” is mapped to a data source, but only number parameters can receive one. Unmap it to set it by hand."
+              )
+          ).replace("{{name}}", labelFor(key, declared[key]))}
+        </Notice>
+      ))}
 
       {!hasDeclaration ? (
         <p style={EMPTY_STYLE}>
@@ -340,7 +361,128 @@ export default function ParametersPanel() {
           );
         })
       )}
+
+      <AddParameterModal
+        open={adding}
+        keys={keys}
+        onAdd={onAdd}
+        onClose={() => setAdding(false)}
+      />
     </Panel>
+  );
+}
+
+/**
+ * Asks what a new parameter is called before anything is written. The name is
+ * what the author calls it; the key the sketch reads it by is spelled from it,
+ * and shown, so there is nothing left to rename in the code afterwards.
+ */
+function AddParameterModal({ open, keys, onAdd, onClose }) {
+  const { t } = useTranslation("visuals");
+  const [name, setName] = useState("");
+
+  // Every opening starts empty rather than with the last name typed.
+  useEffect(() => {
+    if (open) setName("");
+  }, [open]);
+
+  const trimmed = name.trim();
+  const key = keyFromName(trimmed);
+  const error = !trimmed
+    ? null
+    : !key
+    ? t("nameNeedsLetter", "Start the name with a letter.")
+    : keys.includes(key)
+    ? t("nameTaken", "There is already a parameter called “{{key}}”.").replace(
+        "{{key}}",
+        key
+      )
+    : null;
+  const ready = !!key && !error;
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={t("addParameter", "Add Parameter")}
+      actions={
+        <>
+          <Button variant="text" onClick={onClose}>
+            {t("cancel", "Cancel")}
+          </Button>
+          <Button
+            variant="filled"
+            tone="accent"
+            disabled={!ready}
+            onClick={() => onAdd(trimmed, key)}
+          >
+            {t("add", "Add")}
+          </Button>
+        </>
+      }
+    >
+      <Input
+        label={t("name", "Name")}
+        autoFocus
+        value={name}
+        invalid={!!error}
+        hint={
+          error ||
+          (ready
+            ? t("usedInCode", "Read in your sketch as params.{{key}}").replace(
+                "{{key}}",
+                key
+              )
+            : undefined)
+        }
+        onChange={setName}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && ready) onAdd(trimmed, key);
+        }}
+      />
+    </Modal>
+  );
+}
+
+/** One line of the panel talking about itself, in the panel's own hue. */
+function Notice({ children }) {
+  return (
+    <div style={BANNER_STYLE} role="status">
+      <span style={{ flex: "1 1 auto", minWidth: 0 }}>{children}</span>
+      <span style={{ flexShrink: 0, display: "flex" }} aria-hidden>
+        <InfoIcon />
+      </span>
+    </div>
+  );
+}
+
+/**
+ * A number field that lets a half-typed value be half-typed.
+ *
+ * What the author is typing is held here as text and only a value that parses
+ * is committed, so clearing the field to retype it doesn't snap to 0 and a
+ * partial entry never reaches the sketch. An empty field says so rather than
+ * quietly keeping the old number; leaving it puts the committed value back.
+ */
+function NumberField({ value, step, onChange, ...rest }) {
+  const { t } = useTranslation("visuals");
+  const [draft, setDraft] = useState(null);
+  const empty = draft === "";
+
+  return (
+    <Input
+      type="number"
+      step={step ?? "any"}
+      value={draft ?? (value == null ? "" : String(value))}
+      invalid={empty}
+      hint={empty ? t("enterNumber", "Enter a number.") : undefined}
+      onChange={(next) => {
+        setDraft(next);
+        if (next !== "" && Number.isFinite(Number(next))) onChange(Number(next));
+      }}
+      onBlur={() => setDraft(null)}
+      {...rest}
+    />
   );
 }
 
@@ -472,9 +614,16 @@ const MAX_SEGMENTS = 4;
  *   a range resolves. Unity's inspector is the model: a vector is a row of
  *   numbers that share one range.
  */
-function ValueControl({ declaration, binding, value, disabled, onChange }) {
+export function ValueControl({
+  declaration,
+  binding,
+  value,
+  disabled,
+  onChange,
+  label: given,
+}) {
   const { t } = useTranslation("visuals");
-  const label = t("value", "Value");
+  const label = given ?? t("value", "Value");
   const type = declaration?.type || "number";
 
   // An override set in the detail panel is the range the author means; the
@@ -623,15 +772,14 @@ function ValueControl({ declaration, binding, value, disabled, onChange }) {
         <span style={FIELD_LABEL_STYLE}>{label}</span>
         <div style={{ display: "flex", gap: 12 }}>
           {axes.map((axis, index) => (
-            <Input
+            <NumberField
               key={axis}
-              type="number"
-              step={step ?? "any"}
+              step={step}
               placeholder={axis.toUpperCase()}
               aria-label={`${label} ${axis.toUpperCase()}`}
-              value={current[index] == null ? "" : String(current[index])}
+              value={current[index]}
               disabled={disabled}
-              onChange={(next) => setAxis(index, next === "" ? 0 : Number(next))}
+              onChange={(next) => setAxis(index, next)}
             />
           ))}
         </div>
@@ -660,13 +808,12 @@ function ValueControl({ declaration, binding, value, disabled, onChange }) {
   return (
     <div style={FIELD_STYLE}>
       <span style={FIELD_LABEL_STYLE}>{label}</span>
-      <Input
-        type="number"
-        step={step ?? "any"}
+      <NumberField
+        step={step}
         aria-label={label}
-        value={value == null ? "" : String(value)}
+        value={value}
         disabled={disabled}
-        onChange={(next) => onChange(next === "" ? 0 : Number(next))}
+        onChange={onChange}
       />
     </div>
   );

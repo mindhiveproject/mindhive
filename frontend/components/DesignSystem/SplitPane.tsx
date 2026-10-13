@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion, type Transition } from "motion/react";
 import styled from "styled-components";
 
@@ -30,8 +30,8 @@ export interface SplitPaneProps {
   collapsed?: boolean;
   /**
    * Fires when a drag carries the divider far enough past `minEnd` to shut
-   * `end`, and when the shut divider is clicked to bring it back. Passing it
-   * is what enables drag-to-collapse at all.
+   * `end`, and when the shut divider is clicked or dragged back to bring it
+   * back. Passing it is what enables drag-to-collapse and drag-to-expand.
    */
   onCollapsedChange?: (collapsed: boolean) => void;
   /** Fires as the divider moves. */
@@ -138,6 +138,20 @@ export default function SplitPane({
   // Whether the gesture in progress has already shut the pane.
   const shutByDragRef = useRef(false);
 
+  // Whether the gesture in progress has already reopened the pane.
+  const openedByDragRef = useRef(false);
+
+  // Whether the gesture in progress has flipped the pane open or shut. The
+  // divider changes role mid-drag, and the click that follows the release would
+  // land on whichever it has become — reopening what the drag just closed.
+  const suppressClickRef = useRef(false);
+
+  // The first stretch after a drag reopens the pane, which has to travel from
+  // full width to the pointer. Tracking the pointer instantly would make it jump.
+  const [easing, setEasing] = useState(false);
+  const easingTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(easingTimerRef.current), []);
+
   const applyClientX = useCallback(
     (clientX: number) => {
       const root = rootRef.current;
@@ -146,13 +160,32 @@ export default function SplitPane({
       const total = rect.width;
       if (total <= 0) return;
 
-      // Dragging a shut divider does nothing — it reopens on click instead.
-      // Reopening by drag would mean deciding the threshold against a width
-      // that the collapse itself has already changed, and the two states end up
-      // straddling the boundary and chattering.
-      if (collapsed) return;
-
       const raw = clientX - rect.left;
+
+      // Dragging a shut divider back reopens it, once the pointer is where the
+      // pane would be at least `minEnd` wide. Shutting takes `COLLAPSE_OVERDRAG`
+      // more than that, so the two thresholds never meet — and a gesture only
+      // reopens once, so a pointer hovering near the line can't flip it back and
+      // forth.
+      if (collapsed) {
+        const reopenAt = total - GUTTER - minEnd;
+        if (!onCollapsedChange || openedByDragRef.current) return;
+        if (reopenAt < minStart || raw >= reopenAt) return;
+        openedByDragRef.current = true;
+        shutByDragRef.current = false;
+        suppressClickRef.current = true;
+        setEasing(true);
+        clearTimeout(easingTimerRef.current);
+        easingTimerRef.current = setTimeout(
+          () => setEasing(false),
+          (COLLAPSE_TRANSITION.duration ?? 0) * 1000,
+        );
+        onCollapsedChange(false);
+        const next = Math.max(raw, minStart) / total;
+        setFraction(next);
+        onFractionChange?.(next);
+        return;
+      }
 
       // Past `minEnd` the divider stops following the pointer, and that travel
       // is what separates "make it small" from "close it". Once it has shut,
@@ -161,6 +194,7 @@ export default function SplitPane({
       if (onCollapsedChange && !shutByDragRef.current) {
         if (raw > total - GUTTER - minEnd + COLLAPSE_OVERDRAG) {
           shutByDragRef.current = true;
+          suppressClickRef.current = true;
           onCollapsedChange(true);
           // The fraction it had is worth keeping for when it comes back.
           return;
@@ -200,9 +234,12 @@ export default function SplitPane({
   }, [minStart, minEnd]);
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (collapsed) return; // Shut: the divider is a button, not a handle.
+    // Shut or open, the press may become a drag: a click that never moves still
+    // reopens, and one that does is picked up by `applyClientX`.
     e.currentTarget.setPointerCapture?.(e.pointerId);
     shutByDragRef.current = false;
+    openedByDragRef.current = false;
+    suppressClickRef.current = false;
     setDragging(true);
     e.preventDefault();
   };
@@ -216,6 +253,21 @@ export default function SplitPane({
     if (!dragging) return;
     e.currentTarget.releasePointerCapture?.(e.pointerId);
     setDragging(false);
+  };
+
+  // A cancelled press never produces a click, so nothing would consume the flag.
+  const cancelDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    suppressClickRef.current = false;
+    endDrag(e);
+  };
+
+  const onDividerClick = () => {
+    if (!collapsed) return;
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
+    onCollapsedChange?.(false);
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -243,10 +295,10 @@ export default function SplitPane({
   };
 
   // A drag is the pointer's width to set, not an animation's: easing every
-  // pointermove would leave the divider trailing behind the cursor. Shutting is
-  // the exception — the pane is no longer tracking anything at that point, and
-  // snapping it closed after the overdrag is what made it feel abrupt.
-  const transition: Transition = dragging && !collapsed ? { duration: 0 } : COLLAPSE_TRANSITION;
+  // pointermove would leave the divider trailing behind the cursor. Shutting and
+  // reopening are the exceptions — the pane is travelling the full width at that
+  // point, and snapping it there is what made it feel abrupt.
+  const transition: Transition = dragging && !collapsed && !easing ? { duration: 0 } : COLLAPSE_TRANSITION;
 
   return (
     <StyledRoot className="DesignSystem-SplitPane" ref={rootRef} style={style}>
@@ -276,9 +328,9 @@ export default function SplitPane({
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
-        onPointerCancel={endDrag}
+        onPointerCancel={cancelDrag}
         onKeyDown={onKeyDown}
-        onClick={collapsed ? () => onCollapsedChange?.(false) : undefined}
+        onClick={onDividerClick}
       >
         <StyledHandle
           className={

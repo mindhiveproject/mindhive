@@ -230,8 +230,15 @@ export default function DataSourceSettings({
           )}
           {openSections.general && (
             <>
-              {/* viewSignal toggle hidden (stays false) until the participant
-                  data preview is finished. */}
+              {toggleRow(
+                "viewSignal",
+                t("dataSources.settings.viewSignal", {}, {
+                  default: "Allow participants to view the signal",
+                }),
+                t("dataSources.settings.viewSignalHint", {}, {
+                  default: "View the raw signal during participation.",
+                })
+              )}
               {toggleRow(
                 "streamToNextBlock",
                 t("dataSources.settings.streamToNextBlock", {}, {

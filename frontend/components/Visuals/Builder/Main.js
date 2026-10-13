@@ -213,6 +213,7 @@ export default function VisualBuilder({ query, user }) {
   const [runFiles, setRunFiles] = useState([]);
   const [declared, setDeclared] = useState({});
   const [hasDeclaration, setHasDeclaration] = useState(false);
+  const [declarationWarnings, setDeclarationWarnings] = useState([]);
   const [bindings, setBindings] = useState({});
   const [bus] = useState(() => new ParameterBus());
 
@@ -470,6 +471,7 @@ export default function VisualBuilder({ query, user }) {
       const { parameters, warnings } = normalizeDeclarations(raw);
       setDeclared(parameters);
       setHasDeclaration(true);
+      setDeclarationWarnings(warnings);
       warnings.forEach((message) => pushLog({ kind: "warn", message }));
     },
     [pushLog]
@@ -601,6 +603,7 @@ export default function VisualBuilder({ query, user }) {
       removeFile,
       declared,
       hasDeclaration,
+      declarationWarnings,
       bindings,
       updateBinding,
       setDocsVisible,
@@ -632,6 +635,7 @@ export default function VisualBuilder({ query, user }) {
       removeFile,
       declared,
       hasDeclaration,
+      declarationWarnings,
       bindings,
       updateBinding,
       setDocsVisible,

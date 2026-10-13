@@ -5,15 +5,16 @@ import useTranslation from "next-translate/useTranslation";
 
 import MonacoEditor from "../../../Builder/Project/DataJournal/Helpers/MonacoPythonEditor";
 import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
 import Input from "../../../DesignSystem/Input";
 import Modal from "../../../DesignSystem/Modal";
+import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import PanelHeader from "../../../DesignSystem/PanelHeader";
 import Popover from "../../../DesignSystem/Popover";
 import {
   AddIcon,
   CloseIcon,
+  DeleteIcon,
   DownloadIcon,
   TerminalIcon,
 } from "../../../DesignSystem/Icons";
@@ -24,10 +25,12 @@ const STRIP_STYLE = {
   display: "flex",
   alignItems: "center",
   gap: 8,
-  flexWrap: "wrap",
   flexShrink: 0,
-  padding: "0 16px 12px",
+  padding: "0 16px 8px",
 };
+
+// More files than fit scroll the tabs; the add button stays in view beside them.
+const TABS_STYLE = { minWidth: 0, overflowX: "auto" };
 
 const EDITOR_WRAP_STYLE = {
   flex: "1 1 0%",
@@ -37,7 +40,9 @@ const EDITOR_WRAP_STYLE = {
   // its minimum and stops being able to shrink.
   minWidth: 0,
   overflow: "hidden",
-  borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  borderRadius: 12,
+  background: "var(--MH-Theme-Tertiary-Light, #F6F9F8)",
 };
 
 // On top of the Data Journal defaults, which are tuned for a short Python cell.
@@ -50,6 +55,8 @@ const EDITOR_OPTIONS = {
   bracketPairColorization: { enabled: true },
   find: { seedSearchStringFromSelection: "selection" },
   tabSize: 2,
+  // The gliding caret trails the text while typing; a sketch is typed in bulk.
+  cursorSmoothCaretAnimation: "off",
 };
 
 const ANCHOR_STYLE = { position: "relative", display: "inline-flex" };
@@ -200,6 +207,15 @@ export default function CodePanel() {
       title={t("code", "Code")}
       actions={
         <>
+          {canEdit && !contract.has(selected.id) ? (
+            <IconButton
+              variant="subtle"
+              icon={<DeleteIcon />}
+              ariaLabel={t("deleteFile", "Delete this file")}
+              title={t("deleteFile", "Delete this file")}
+              onClick={() => setPendingDelete(selected)}
+            />
+          ) : null}
           <IconButton
             variant="subtle"
             icon={<DownloadIcon />}
@@ -234,23 +250,27 @@ export default function CodePanel() {
       }
     >
       <div style={STRIP_STYLE}>
-        {ordered.map((file) => (
-          <Chip
-            key={file.id}
-            label={file.name}
-            selected={file.id === selected.id}
-            onClick={() => setSelectedId(file.id)}
-            onClose={
-              canEdit && !contract.has(file.id)
-                ? () => setPendingDelete(file)
-                : undefined
-            }
-          />
-        ))}
+        <Navbar
+          accent="tertiary"
+          aria-label={t("codeFiles", "Code files")}
+          style={TABS_STYLE}
+        >
+          {ordered.map((file) => (
+            <NavbarItem
+              key={file.id}
+              selected={file.id === selected.id}
+              onClick={() => setSelectedId(file.id)}
+            >
+              {file.name}
+            </NavbarItem>
+          ))}
+        </Navbar>
         {canEdit ? (
-          <Chip
-            leading={<AddIcon />}
-            label={t("newFile", "New file")}
+          <IconButton
+            variant="subtle"
+            icon={<AddIcon />}
+            ariaLabel={t("newFile", "New file")}
+            title={t("newFile", "New file")}
             onClick={() => setAddOpen(true)}
           />
         ) : null}

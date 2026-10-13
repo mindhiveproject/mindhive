@@ -129,6 +129,42 @@ const StyledNavbar = styled.div`
     border-bottom-width: 2px;
   }
 
+  /* Tertiary accent — the Figma "Text Button" tab: fixed 40px, a 2px rule under
+     every tab (light on the resting ones, Tertiary-Base on the selected one),
+     Tertiary-Dark labels in label/base Semi Bold. The rule is always drawn, so
+     showRule has nothing to add. The container drops its own padding because
+     the strip this sits in supplies it. */
+  .navbar-container.underline.accent-tertiary {
+    padding: 0;
+    gap: 8px;
+  }
+
+  /* Tabs keep their label's width when the bar is narrower than they are, so a
+     caller can scroll the bar instead of crushing them. */
+  .navbar-container.underline.accent-tertiary > li {
+    flex-shrink: 0;
+  }
+
+  .navbar-container.underline.accent-tertiary .navbar-item {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 2px 16px;
+    border-bottom: 2px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    color: var(--MH-Theme-Tertiary-Dark, #0d3944);
+    font: var(--MH-Type-Label-Base);
+    font-weight: 600;
+    white-space: nowrap;
+
+    &.selected,
+    &:active {
+      border-color: var(--MH-Theme-Tertiary-Base, #55808c);
+      background: none;
+    }
+    &:hover:not(.selected) {
+      background-color: var(--MH-Theme-Tertiary-Light, #f6f9f8);
+    }
+  }
+
   /* Dense — for a tab bar embedded in a fixed-height chrome strip that already
      supplies its own padding (e.g. a builder page's second-line navigation).
      Drops the container's own padding/gap and tightens each item's horizontal
@@ -260,6 +296,9 @@ const StyledNavbar = styled.div`
 /** Visual style for a horizontal {@link Navbar}. Ignored when `orientation="vertical"`. */
 export type NavbarVariant = "underline" | "tonal";
 
+/** Colour family of the underline variant's selected tab. */
+export type NavbarAccent = "default" | "tertiary";
+
 /** Layout direction for {@link Navbar}. */
 export type NavbarOrientation = "horizontal" | "vertical";
 
@@ -293,6 +332,8 @@ export interface NavbarProps
   extends Omit<React.ComponentPropsWithoutRef<"nav">, "children"> {
   /** Visual style for a horizontal bar. Ignored when orientation is "vertical". @default "underline" */
   variant?: NavbarVariant;
+  /** Underline variant only. "tertiary" swaps the yellow selected rule and hover fill for the muted-teal 40px tab from Figma, with a 2px rule under every tab. `showRule` is ignored, since the rule is always drawn. @default "default" */
+  accent?: NavbarAccent;
   /** Layout direction. @default "horizontal" */
   orientation?: NavbarOrientation;
   /** Renders an icon-only rail; item labels become accessible names instead of visible text. Works in both orientations. @default false */
@@ -323,6 +364,7 @@ export interface NavbarProps
  */
 export default function Navbar({
   variant = "underline",
+  accent = "default",
   orientation = "horizontal",
   collapsed = false,
   showRule = false,
@@ -343,9 +385,10 @@ export default function Navbar({
           className={clsx(
             "navbar-container",
             !isVertical && variant,
+            accent === "tertiary" && "accent-tertiary",
             isVertical && "vertical",
             collapsed && "collapsed",
-            showRule && "show-rule",
+            showRule && accent !== "tertiary" && "show-rule",
             gapless && "gapless",
             dense && "dense",
             hoverUnderline && "hover-underline",

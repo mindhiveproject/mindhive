@@ -32,6 +32,10 @@ const ROOT_STYLE = {
   flexDirection: "column",
   flex: "1 1 0%",
   minHeight: 0,
+  overflow: "hidden",
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  borderRadius: 12,
+  background: "var(--MH-Theme-Tertiary-Light, #F6F9F8)",
 };
 
 const TOOLBAR_STYLE = {
@@ -41,7 +45,6 @@ const TOOLBAR_STYLE = {
   flexWrap: "wrap",
   flexShrink: 0,
   padding: "4px 12px",
-  borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
   borderBottom: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
 };
 
@@ -203,7 +206,11 @@ export default function DocsEditor({
   return (
     <div className="Visuals-DocsEditor" style={ROOT_STYLE}>
       <style dangerouslySetInnerHTML={{ __html: CONTENT_STYLE }} />
-      {editable ? <MenuBar editor={editor} /> : null}
+      {/* `immediatelyRender: false` leaves `editor` null on the first render.
+          MenuBar can't be mounted against that: `useEditorState` keeps the
+          snapshot it was created with until the next transaction, so the bar
+          would stay empty until the author's first click. */}
+      {editable && editor ? <MenuBar editor={editor} /> : null}
       <div style={SCROLL_STYLE}>
         {/* The document is usually shorter than the panel; stretching it to
             fill means clicking the empty space below the text still lands in
@@ -230,28 +237,23 @@ function MenuBar({ editor }) {
   // below have to be pulled out of the editor explicitly.
   const state = useEditorState({
     editor,
-    selector: ({ editor: instance }) =>
-      instance
-        ? {
-            canUndo: instance.can().undo(),
-            canRedo: instance.can().redo(),
-            h1: instance.isActive("heading", { level: 1 }),
-            h2: instance.isActive("heading", { level: 2 }),
-            paragraph: instance.isActive("paragraph"),
-            bold: instance.isActive("bold"),
-            italic: instance.isActive("italic"),
-            underline: instance.isActive("underline"),
-            link: instance.isActive("link"),
-            code: instance.isActive("code"),
-            codeBlock: instance.isActive("codeBlock"),
-            bulletList: instance.isActive("bulletList"),
-            orderedList: instance.isActive("orderedList"),
-            blockquote: instance.isActive("blockquote"),
-          }
-        : null,
+    selector: ({ editor: instance }) => ({
+      canUndo: instance.can().undo(),
+      canRedo: instance.can().redo(),
+      h1: instance.isActive("heading", { level: 1 }),
+      h2: instance.isActive("heading", { level: 2 }),
+      paragraph: instance.isActive("paragraph"),
+      bold: instance.isActive("bold"),
+      italic: instance.isActive("italic"),
+      underline: instance.isActive("underline"),
+      link: instance.isActive("link"),
+      code: instance.isActive("code"),
+      codeBlock: instance.isActive("codeBlock"),
+      bulletList: instance.isActive("bulletList"),
+      orderedList: instance.isActive("orderedList"),
+      blockquote: instance.isActive("blockquote"),
+    }),
   });
-
-  if (!editor || !state) return null;
 
   const setLink = () => {
     const previous = editor.getAttributes("link").href;

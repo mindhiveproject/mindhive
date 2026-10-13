@@ -20,6 +20,7 @@ import { createContext, useContext } from "react";
  * @property {(fileId: string) => void} removeFile
  * @property {Record<string, object>} declared - The running sketch's declaration, normalized to the panel's kinds.
  * @property {boolean} hasDeclaration - False until the sketch has announced itself.
+ * @property {string[]} [declarationWarnings] - What normalizing the declaration had to correct; builder only, a participant has no code to fix.
  * @property {object} bindings - Per-parameter binding + authoring overrides.
  * @property {(key: string, patch: object) => void} updateBinding
  * @property {?(next: boolean) => void} setDocsVisible - Builder only; absent in the Viewer.

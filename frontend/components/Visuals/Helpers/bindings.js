@@ -146,6 +146,17 @@ function normalizeDeclaration(entry, warn) {
       declaration.default = type === "color" ? "#000000" : "";
     }
     declaration.default = String(declaration.default);
+    if (type === "color") {
+      // The swatch only takes `#rrggbb`, so any other spelling would leave it
+      // showing black while the sketch received something else.
+      const short = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec(declaration.default);
+      if (short) {
+        declaration.default = `#${short[1]}${short[1]}${short[2]}${short[2]}${short[3]}${short[3]}`;
+      } else if (!/^#[0-9a-f]{6}$/i.test(declaration.default)) {
+        warn("a color's default must be a hex value like #ec40de; using #000000.");
+        declaration.default = "#000000";
+      }
+    }
   } else if (VECTOR_SIZES[type]) {
     const size = VECTOR_SIZES[type];
     const given = Array.isArray(declaration.default) ? declaration.default : [];
@@ -251,8 +262,13 @@ export function labelFor(key, declaration) {
   return declaration?.label || key;
 }
 
-const TYPE_LABELS = {
+// What an author picks from, in the order they are offered. A kind is a
+// declared `type` plus the two spellings the panel tells apart on sight: a
+// number that steps by 1, and a category of exactly `[false, true]`.
+export const KIND_LABELS = {
   number: "Number",
+  integer: "Whole Number",
+  checkbox: "Checkbox",
   category: "Category",
   text: "Text",
   color: "Color",
@@ -260,7 +276,7 @@ const TYPE_LABELS = {
   vector3: "3D Vector",
 };
 
-/** Whether a category is the two-option on/off kind, which renders as a toggle. */
+/** Whether a category is the two-option on/off kind, which renders as a checkbox. */
 export function isToggle(declaration) {
   const options = declaration?.options;
   return (
@@ -271,13 +287,87 @@ export function isToggle(declaration) {
   );
 }
 
+/** The kind of a normalized declaration — a key of `KIND_LABELS`. */
+export function kindOf(declaration) {
+  if (isToggle(declaration)) return "checkbox";
+  if (declaration?.type === "number" && declaration.step === 1) return "integer";
+  return KIND_LABELS[declaration?.type] ? declaration.type : "number";
+}
+
 /** Human label for a declaration's kind. */
 export function typeLabel(declaration) {
-  if (isToggle(declaration)) return "Toggle";
-  if (declaration?.type === "number" && declaration.step === 1) {
-    return "Whole Number";
+  return KIND_LABELS[kindOf(declaration)];
+}
+
+const CLEARED = { min: undefined, max: undefined, step: undefined, options: undefined };
+
+const toNumber = (value) => (Number.isFinite(Number(value)) ? Number(value) : 0);
+
+/**
+ * The declaration fields that make `declaration` a `kind` instead, for
+ * `updateParameter`. Fields that only belong to the old kind are `undefined`,
+ * which removes them from the file. What carries over does: a range between
+ * numbers and vectors, a default that still means something (a number's
+ * magnitude, a text, a `#rrggbb`). Anything that doesn't gets the kind's
+ * neutral value rather than a guess.
+ *
+ * @param {object} declaration - The normalized declaration being changed.
+ * @param {string} kind - A key of `KIND_LABELS`.
+ * @returns {Record<string, any>}
+ */
+export function retype(declaration, kind) {
+  const given = declaration?.default;
+  const range = isNumeric(declaration)
+    ? { min: declaration.min, max: declaration.max }
+    : {};
+
+  if (kind === "number") {
+    return { ...CLEARED, ...range, type: "number", default: toNumber(given) };
   }
-  return TYPE_LABELS[declaration?.type] || "Number";
+  if (kind === "integer") {
+    return {
+      ...CLEARED,
+      ...range,
+      type: "number",
+      step: 1,
+      default: Math.round(toNumber(given)),
+    };
+  }
+  if (kind === "checkbox") {
+    return { ...CLEARED, type: "boolean", default: false };
+  }
+  if (kind === "category") {
+    return {
+      ...CLEARED,
+      type: "category",
+      options: ["Option 1", "Option 2"],
+      default: "Option 1",
+    };
+  }
+  if (kind === "text") {
+    return {
+      ...CLEARED,
+      type: "text",
+      default: typeof given === "string" ? given : "",
+    };
+  }
+  if (kind === "color") {
+    return {
+      ...CLEARED,
+      type: "color",
+      default: /^#[0-9a-f]{6}$/i.test(given) ? given : "#000000",
+    };
+  }
+
+  const size = VECTOR_SIZES[kind];
+  return {
+    ...CLEARED,
+    ...range,
+    type: kind,
+    default: Array.from({ length: size }, (_, index) =>
+      toNumber(Array.isArray(given) ? given[index] : 0)
+    ),
+  };
 }
 
 /** Numbers and vectors are the kinds that have a range to override or normalize. */

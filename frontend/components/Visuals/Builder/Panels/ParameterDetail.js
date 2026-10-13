@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../../DesignSystem/Button";
 import Checkbox from "../../../DesignSystem/Checkbox";
 import Chip from "../../../DesignSystem/Chip";
+import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import IconButton from "../../../DesignSystem/IconButton";
 import Input from "../../../DesignSystem/Input";
 import {
@@ -19,13 +20,18 @@ import {
 
 import { useVisualBuilder } from "../../Context/VisualBuilderContext";
 import {
+  EMPTY_BINDING,
+  KIND_LABELS,
   bindingFor,
   isNumeric,
   isStreamMappable,
+  kindOf,
   labelFor,
-  typeLabel,
+  normalizeDeclarations,
+  retype,
 } from "../../Helpers/bindings";
-import { removeParameter } from "../../Runtime/parametersFile";
+import { removeParameter, updateParameter } from "../../Runtime/parametersFile";
+import { ValueControl } from "./Parameters";
 import { StatusIndicator } from "../../../Studies/Run/DataSources/ConnectScreen";
 import { channelKey, outputKey } from "../../../../lib/yqOutputs";
 
@@ -204,10 +210,12 @@ function Section({ title, children, defaultOpen = true }) {
  * The per-parameter side panel — another entry in the work area rather than a
  * modal, so the list it was opened from stays visible beside it.
  *
- * Name, Data Type and Default Value are shown but not editable: the sketch
- * declares them, and the honest affordance is a jump to where they live.
- * Everything below that line — normalize, range, whether mapping is allowed at
- * all — is data plumbing the dashboard owns.
+ * Name, Data Type and Default Value belong to the sketch's declaration, so
+ * Save writes them back into `parameters.js` rather than keeping a copy of its
+ * own — the file stays the one place they are defined. A declaration the
+ * panel can't edit safely (a spread, a computed entry) leaves them read-only
+ * with the jump to the file. Everything below that line — normalize, range,
+ * whether mapping is allowed at all — is data plumbing the dashboard owns.
  */
 export default function ParameterDetailPanel({ paramKey, initialTab }) {
   const { t } = useTranslation("visuals");
@@ -230,6 +238,11 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
   const parametersFile = files.find((file) => file.role === "parameters");
 
   const [tab, setTab] = useState(initialTab || "settings");
+  const [name, setName] = useState(labelFor(paramKey, declaration));
+  // What the author has changed in the declaration and not yet saved: field →
+  // value, in the form `updateParameter` takes. Empty until they touch the
+  // type or the default.
+  const [fields, setFields] = useState({});
   const [draft, setDraft] = useState({
     normalize: binding.normalize,
     clamp: binding.clamp,
@@ -241,6 +254,8 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
   // Re-seed when the panel is pointed at a different parameter without
   // unmounting, so the draft never belongs to the previous one.
   useEffect(() => {
+    setName(labelFor(paramKey, declaration));
+    setFields({});
     setDraft({
       normalize: binding.normalize,
       clamp: binding.clamp,
@@ -252,6 +267,27 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paramKey]);
 
+  // Saving rewrites the file and the sketch re-declares itself a moment later;
+  // that declaration is what the changes were waiting to become.
+  useEffect(() => setFields({}), [declaration]);
+
+  // Whether the file's entry for this parameter is something that can be
+  // edited from here: an empty patch is a dry run of exactly that.
+  const content = parametersFile?.content;
+  const hasFile = !!parametersFile;
+  const editable = useMemo(
+    () => hasFile && updateParameter(content || "", paramKey, {}) !== null,
+    [content, paramKey, hasFile]
+  );
+
+  // The declaration as it will be once saved, so the default's control follows
+  // a type picked a moment ago.
+  const shown = useMemo(() => {
+    if (!declaration) return declaration;
+    const merged = { ...declaration, ...fields };
+    return normalizeDeclarations({ [paramKey]: merged }).parameters[paramKey];
+  }, [declaration, fields, paramKey]);
+
   // The parameter can vanish underneath this panel — deleted from the file, or
   // renamed in code, which is the same thing as far as the declared key goes.
   useEffect(() => {
@@ -260,15 +296,45 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
 
   if (!declaration) return null;
 
+  function onKind(kind) {
+    if (kind === kindOf(shown)) return;
+    setFields(retype(shown, kind));
+  }
+
   function onSave() {
     const min = draft.min === "" ? null : Number(draft.min);
     const max = draft.max === "" ? null : Number(draft.max);
-    updateBinding(paramKey, {
+    const patch = {
       normalize: draft.normalize,
       clamp: draft.clamp,
       allowMapping: draft.allowMapping,
       rangeOverride: min === null && max === null ? null : { min, max },
-    });
+    };
+
+    const declarationPatch = { ...fields };
+    if (name.trim() !== labelFor(paramKey, declaration)) {
+      declarationPatch.label = name.trim() || undefined;
+    }
+    const next = editable
+      ? updateParameter(parametersFile.content || "", paramKey, declarationPatch)
+      : null;
+    if (next !== null && Object.keys(declarationPatch).length > 0) {
+      updateFile(parametersFile.id, next);
+      // A value set by hand would keep winning over the default just changed,
+      // and a stream can't feed a parameter retyped to something other than a
+      // number.
+      if (binding.mapping?.kind === "manual" && "default" in fields) {
+        patch.mapping = null;
+      } else if (
+        binding.mapping?.kind === "stream" &&
+        "type" in fields &&
+        shown.type !== "number"
+      ) {
+        patch.mapping = null;
+      }
+    }
+
+    updateBinding(paramKey, patch);
   }
 
   function onDelete() {
@@ -329,35 +395,35 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
                 <span style={LABEL_STYLE}>{t("name", "Name")}</span>
                 <Input
                   aria-label={t("name", "Name")}
-                  value={labelFor(paramKey, declaration)}
-                  disabled
-                  onChange={() => {}}
+                  value={name}
+                  disabled={!editable}
+                  onChange={setName}
                 />
               </div>
               <div style={FIELD_STYLE}>
                 <span style={LABEL_STYLE}>{t("dataType", "Data Type")}</span>
-                <Input
-                  aria-label={t("dataType", "Data Type")}
-                  value={typeLabel(declaration)}
-                  disabled
-                  onChange={() => {}}
+                <DropdownSelect
+                  portal
+                  ariaLabel={t("dataType", "Data Type")}
+                  disabled={!editable}
+                  value={kindOf(shown)}
+                  options={Object.entries(KIND_LABELS).map(([value, label]) => ({
+                    value,
+                    label: t(`kind_${value}`, label),
+                  }))}
+                  onChange={onKind}
                 />
               </div>
-              <div style={FIELD_STYLE}>
-                <span style={LABEL_STYLE}>
-                  {t("defaultValue", "Default Value")}
-                </span>
-                <Input
-                  aria-label={t("defaultValue", "Default Value")}
-                  value={
-                    declaration.default === undefined
-                      ? ""
-                      : String(declaration.default)
-                  }
-                  disabled
-                  onChange={() => {}}
-                />
-              </div>
+              <ValueControl
+                label={t("defaultValue", "Default Value")}
+                declaration={shown}
+                binding={EMPTY_BINDING}
+                value={shown.default}
+                disabled={!editable}
+                onChange={(next) =>
+                  setFields((current) => ({ ...current, default: next }))
+                }
+              />
 
               <div style={FROM_CODE_STYLE}>
                 <span>{t("definedInCode", "Defined in parameters.js")}</span>
@@ -373,9 +439,9 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
                 ) : null}
               </div>
 
-              {/* Normalizing and ranging only mean something for numbers; a
-                  category or a colour has no scale to stretch. */}
-              {isNumeric(declaration) ? (
+              {/* Ranging means something for numbers and vectors alike. Normalize
+                  and Clamp shape a stream sample, and only a number takes one. */}
+              {declaration.type === "number" ? (
                 <>
                   <div style={TOGGLE_ROW_STYLE}>
                     <div style={{ flex: "1 1 auto", minWidth: 0 }}>
@@ -422,33 +488,35 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
                       }
                     />
                   </div>
-
-                  <div style={FIELD_STYLE}>
-                    <span style={LABEL_STYLE}>{t("range", "Range")}</span>
-                    <div style={{ display: "flex", gap: 12 }}>
-                      <Input
-                        type="number"
-                        placeholder={t("min", "Min")}
-                        aria-label={t("min", "Min")}
-                        value={draft.min}
-                        disabled={!canEdit}
-                        onChange={(next) =>
-                          setDraft((current) => ({ ...current, min: next }))
-                        }
-                      />
-                      <Input
-                        type="number"
-                        placeholder={t("max", "Max")}
-                        aria-label={t("max", "Max")}
-                        value={draft.max}
-                        disabled={!canEdit}
-                        onChange={(next) =>
-                          setDraft((current) => ({ ...current, max: next }))
-                        }
-                      />
-                    </div>
-                  </div>
                 </>
+              ) : null}
+
+              {isNumeric(declaration) ? (
+                <div style={FIELD_STYLE}>
+                  <span style={LABEL_STYLE}>{t("range", "Range")}</span>
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <Input
+                      type="number"
+                      placeholder={t("min", "Min")}
+                      aria-label={t("min", "Min")}
+                      value={draft.min}
+                      disabled={!canEdit}
+                      onChange={(next) =>
+                        setDraft((current) => ({ ...current, min: next }))
+                      }
+                    />
+                    <Input
+                      type="number"
+                      placeholder={t("max", "Max")}
+                      aria-label={t("max", "Max")}
+                      value={draft.max}
+                      disabled={!canEdit}
+                      onChange={(next) =>
+                        setDraft((current) => ({ ...current, max: next }))
+                      }
+                    />
+                  </div>
+                </div>
               ) : null}
             </Section>
 

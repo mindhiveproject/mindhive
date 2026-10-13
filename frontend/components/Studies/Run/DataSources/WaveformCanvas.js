@@ -3,6 +3,9 @@
 import { useEffect, useRef } from "react";
 
 const STROKE = "#171717";
+// Keeps the trace's peaks and troughs clear of the canvas edge, where half the
+// stroke would otherwise be clipped.
+const INSET = 2;
 
 // Draws a rolling line trace of a raw output channel straight off the ring
 // buffer `getBuffer` returns, in its own requestAnimationFrame loop — decoupled
@@ -40,14 +43,16 @@ export default function WaveformCanvas({ getBuffer, height = 64 }) {
           }
         }
         const range = max > min ? max - min : 1;
+        const plotH = height - INSET * 2;
 
         ctx.beginPath();
         ctx.strokeStyle = STROKE;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1;
+        ctx.lineJoin = "round";
         for (let i = 0; i < buf.length; i += 1) {
           const x = (i / (buf.length - 1)) * width;
           const v = buf[i];
-          const y = Number.isNaN(v) ? height / 2 : height - ((v - min) / range) * height;
+          const y = Number.isNaN(v) ? height / 2 : INSET + plotH - ((v - min) / range) * plotH;
           if (i === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
