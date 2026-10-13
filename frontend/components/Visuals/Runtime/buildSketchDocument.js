@@ -15,34 +15,29 @@ const P5_URL = "https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js";
  * splices a parameter in or out, and makes the handshake literal: calling it is
  * what posts the declaration up to the app.
  */
-export const PARAMETERS_TEMPLATE = `
+export const PARAMETERS_TEMPLATE = `// You can write your parameters here or in the dedicated tab
 
-// This holds the parameters declared in the "Parameters" tab
-
-// Each key declared below becomes a value in your sketch: params.size, or
-// params["size"]. The key is the name, and label is only what the Parameters
-// tab shows. (data["size"] also works, for sketches brought over from
-// YouQuantified.)
-
-// Kinds:
+// Types of parameters:
 //   { type: "number", default: 0.5, min: 0, max: 1, step: 0.01 }
 //   { type: "category", options: ["calm", "busy"], default: "calm" }
 //   { type: "boolean", default: true }
-//   { type: "text", default: "Hello" }
+//   { type: "text", default: "Hi!" }
 //   { type: "color", default: "#ec40de" }
 //   { type: "vector2", default: [0, 0], min: -1, max: 1 }
 //   { type: "vector3", default: [0, 0, 0] }
+
 declareParameters({
   size: { type: "number", label: "Size", default: 0.5, min: 0, max: 1 },
 });
 `;
 
-export const ENTRY_TEMPLATE = `// Available in your sketch, besides p5:
-//   params.<name>       the live value of a parameter declared in parameters.js.
-//                       Read it inside draw(): it updates in place, so a copy
-//                       taken in setup() goes stale.
+export const ENTRY_TEMPLATE = `
+
+// Hey! This is a normal p5-sketch with a few custom functions
+//   params.<name>       References the parameters declared in code or dashboard
 //   sources             the linked data sources and whether each is connected.
-//   sendEvent(label, v) reports something that happened in the sketch.
+//   sendEvent(label, v) used to send event markers.
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
