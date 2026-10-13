@@ -64,10 +64,16 @@ const TABS = [
 // Viewport units rather than 100%: nothing between here and <body> carries a
 // height, so a percentage would collapse onto the content. The rest of the
 // builder areas size themselves the same way.
+//
+// `minWidth: 0` because the shell is a grid item in StyledBuilder: without it
+// the column grows to the shell's content, and Monaco lays itself out in pixels
+// to whatever it is given — so collapsing the preview widens the editor, which
+// widens the column, which widens the editor, until it runs off the page.
 const SHELL_STYLE = {
   display: "flex",
   flexDirection: "column",
   height: "100vh",
+  minWidth: 0,
   minHeight: 0,
   background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
 };
