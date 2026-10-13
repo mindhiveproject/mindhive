@@ -11,11 +11,7 @@ import {
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
 
-import {
-  signedInWrites,
-  canMutateClassTemplateBoard,
-  CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
-} from "../access";
+import { signedInWrites } from "../access";
 import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
 import { connectAssignmentsToTemplateClasses } from "../mutations/utils/classTemplateBoards";
 
@@ -40,26 +36,24 @@ export const ProposalCard = list({
           (links.connect?.length ?? 0) +
           (links.create?.length ?? 0) >
         0;
-      if (!linksSomething) return;
-      const me = context.session?.itemId;
-      if (!me) return;
+      if (!linksSomething || !context.session?.itemId) return;
 
       // Sudo: as the editor, a board collaborator outside the class could
-      // not read the class links the permission check needs.
+      // not read the class links. The helper checks the editor may edit
+      // the class template before connecting anything.
       const sudo = context.sudo();
       const card = await sudo.query.ProposalCard.findOne({
         where: { id: String(item.id) },
-        query: `id assignments { id } section { board { ${CLASS_TEMPLATE_BOARD_ACCESS_QUERY} } }`,
+        query: "id assignments { id } section { board { id } }",
       });
-      const board = card?.section?.board;
-      if (!board?.id || !canMutateClassTemplateBoard(String(me), board)) {
-        return;
-      }
+      const boardId = card?.section?.board?.id;
+      if (!boardId) return;
 
       await connectAssignmentsToTemplateClasses(
         sudo,
-        board.id,
-        (card.assignments || []).map((a: { id: string }) => a.id)
+        boardId,
+        (card.assignments || []).map((a: { id: string }) => a.id),
+        context.session
       );
     },
   },

@@ -1,3 +1,9 @@
+import {
+  canMutateClassTemplateBoard,
+  CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
+  isAdmin,
+} from "../../access";
+
 type ClassTemplateData = {
   id?: string;
   templateProposal?: { id: string; title?: string; settings?: unknown } | null;
@@ -54,21 +60,37 @@ export function resolveClassTemplateBoardId(
  * Connects assignments to every class that uses the board as a template, so
  * an assignment linked on a class template card shows up in that class
  * (class Assignments tab, published to its students). Mirrors what
- * applyTemplateBoardChanges does for resources. Pass a sudo context: the
- * caller already passed access checks for the link itself.
+ * applyTemplateBoardChanges does for resources.
+ *
+ * Writes as sudo, so it is gated here: only someone who may edit the class
+ * template (class creator, teaching team, mentors, board collaborators) can
+ * pull an assignment into the class. Otherwise a student or a network member
+ * who can read the class could publish their own assignment to it through
+ * the linking mutations. Admins pass. Pass session: null only from callers
+ * that already checked admin rights themselves (backfill).
  */
 export async function connectAssignmentsToTemplateClasses(
   sudo: any,
   templateBoardId: string,
-  assignmentIds: string[]
+  assignmentIds: string[],
+  session: any
 ): Promise<void> {
   const ids = [...new Set(assignmentIds.filter(Boolean))];
   if (!templateBoardId || ids.length === 0) return;
 
   const board = await sudo.query.ProposalBoard.findOne({
     where: { id: templateBoardId },
-    query: "id templateForClasses { id } templatesForClass { id }",
+    query: CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
   });
+  if (session !== null) {
+    const allowed =
+      isAdmin({ session } as any) ||
+      canMutateClassTemplateBoard(
+        session?.itemId ? String(session.itemId) : null,
+        board
+      );
+    if (!allowed) return;
+  }
   const classIds = [
     ...new Set(
       [...(board?.templateForClasses ?? []), ...(board?.templatesForClass ?? [])]

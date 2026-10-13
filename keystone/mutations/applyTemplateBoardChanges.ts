@@ -106,7 +106,8 @@ async function applyTemplateBoardChanges(
     await connectAssignmentsToTemplateClasses(
       sudo,
       templateBoardId,
-      assignmentIds
+      assignmentIds,
+      context.session
     );
   }
 

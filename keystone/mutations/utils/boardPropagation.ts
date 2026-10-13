@@ -76,6 +76,7 @@ const CLONE_BOARD_QUERY = `
       position
       section { id }
       settings
+      milestone { id }
       resources { id }
       assignments { id }
       studies { id }
@@ -128,6 +129,7 @@ export type CloneBoard = {
       position: number | null;
       section: { id: string };
       settings?: Record<string, unknown> | null;
+      milestone?: { id: string } | null;
       resources?: Array<{ id: string }>;
       assignments?: Array<{ id: string }>;
       studies?: Array<{ id: string }>;
@@ -344,7 +346,8 @@ export type SyncCardsOptions = {
  * Creates/updates/deletes cards and syncs template-owned fields and linked items.
  * When updating an existing clone card: preserves student-owned fields (content
  * unless in cardIdsWithContentUpdate; settings.status). Template card settings
- * (all keys except status) are merged into clone card settings.
+ * (all keys except status) are merged into clone card settings. The milestone
+ * link follows the template card, including removal.
  *
  * Matching uses the same claimed leftover pairing as sections (see
  * boardPropagationMatch.ts). Shared publicIds are stamped on both sides when
@@ -436,9 +439,15 @@ export async function syncCardsToClone(
             },
             studies: { set: (tc.studies ?? []).map((s) => ({ id: s.id })) },
             tasks: { set: (tc.tasks ?? []).map((t) => ({ id: t.id })) },
+            // Template-owned: follow the template card, including when the
+            // teacher removed its milestone (the clone would otherwise keep
+            // reporting a review step the template no longer has).
             ...((tc as any).milestone?.id
               ? { milestone: { connect: { id: (tc as any).milestone.id } } }
-              : {}),
+              : (existing as { milestone?: { id: string } | null }).milestone
+                    ?.id
+                ? { milestone: { disconnect: true } }
+                : {}),
           },
         });
         continue;

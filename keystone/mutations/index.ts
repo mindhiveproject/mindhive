@@ -16,6 +16,7 @@ import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
 import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
 import backfillOpportunityMultiselectFields from "./backfillOpportunityMultiselectFields";
 import backfillClassNetworkAdmins from "./backfillClassNetworkAdmins";
+import backfillTemplateAssignmentClasses from "./backfillTemplateAssignmentClasses";
 import backfillClassNetworkPublicIds from "./backfillClassNetworkPublicIds";
 import {
   addClassNetworkAdmin,
@@ -237,6 +238,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityProposalData(limit: Int, dryRun: Boolean): Int!
         backfillOpportunityMultiselectFields(limit: Int, dryRun: Boolean): Int!
         backfillClassNetworkAdmins(limit: Int, dryRun: Boolean): Int!
+        backfillTemplateAssignmentClasses(dryRun: Boolean): Int!
         addClassNetworkAdmin(
           networkId: ID!
           profileId: ID
@@ -617,6 +619,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityProposalData,
         backfillOpportunityMultiselectFields,
         backfillClassNetworkAdmins,
+        backfillTemplateAssignmentClasses,
         addClassNetworkAdmin,
         addClassNetworkMemberProfile,
         associateClassWithPublicNetwork,

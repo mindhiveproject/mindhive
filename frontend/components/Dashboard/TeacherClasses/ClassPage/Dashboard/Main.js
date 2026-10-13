@@ -22,8 +22,7 @@ import {
   isOpenForComments,
   readMilestoneStatus,
 } from "../../../../../lib/milestoneStatus";
-import { getMilestonesForTemplateBoard } from "../../../../../lib/templateBoardActionCards";
-import { useBoardMilestones } from "../../../../../lib/useBoardMilestones";
+import BoardMilestonesSync from "../../../BoardMilestonesSync";
 
 import Button from "../../../../DesignSystem/Button";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
@@ -52,24 +51,6 @@ const CELL_ALIGN = {
   display: "flex",
   alignItems: "center",
 };
-
-function BoardMilestonesSync({ board, onMilestones }) {
-  const { milestones, loading } = useBoardMilestones(board?.id);
-  const hasCardInventory = Array.isArray(board?.sections);
-  const listed = useMemo(
-    () =>
-      hasCardInventory
-        ? getMilestonesForTemplateBoard(board, milestones)
-        : [],
-    [board, milestones, hasCardInventory]
-  );
-
-  useEffect(() => {
-    onMilestones(board?.id, listed, loading || !hasCardInventory);
-  }, [board?.id, listed, loading, hasCardInventory, onMilestones]);
-
-  return null;
-}
 
 function buildDashboardQuery({ template, step, persistTemplate }) {
   const query = { page: "dashboard" };

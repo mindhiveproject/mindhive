@@ -25,7 +25,7 @@ Scenario checks: `node mutations/utils/boardPropagationMatch.scenarios.js` (from
 
 ### Cards
 
-- **Existing clone cards**: Sync `title`, `description`, `type`, `shareType`, `position`, `publicId`, relations (`resources`, `assignments`, `studies`, `tasks`), and **settings** (merged; see below). **Do not** overwrite `content` unless see below.
+- **Existing clone cards**: Sync `title`, `description`, `type`, `shareType`, `position`, `publicId`, relations (`resources`, `assignments`, `studies`, `tasks`), the `milestone` link (connected to the template card's milestone, or disconnected when the template card has none), and **settings** (merged; see below). **Do not** overwrite `content` unless see below.
 - **Content**: Overwrite clone card `content` only when the template card id is in `cardIdsWithContentUpdate` (teacher changed the placeholder in this run). Otherwise preserve student’s content.
 - **Settings**: On existing clone cards, merge template card settings into clone settings. Add or update any key from the template; **only `settings.status`** is never overwritten (student progress status is preserved). All other setting keys (e.g. `includeInReport`, `includeInReviewSteps`) come from the template.
 - **New clone cards** (card added on template): Create with template’s title, description, type, shareType, position, content, settings (status "Not started"), publicId, and relations.

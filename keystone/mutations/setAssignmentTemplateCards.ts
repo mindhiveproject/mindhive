@@ -218,9 +218,12 @@ async function setAssignmentTemplateCards(
   });
 
   if (connectDeduped.length > 0) {
-    await connectAssignmentsToTemplateClasses(context.sudo(), templateBoardId, [
-      assignmentId,
-    ]);
+    await connectAssignmentsToTemplateClasses(
+      context.sudo(),
+      templateBoardId,
+      [assignmentId],
+      context.session
+    );
   }
 
   return { id: assignmentId };
