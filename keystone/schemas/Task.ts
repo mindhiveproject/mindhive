@@ -113,6 +113,9 @@ export const Task = list({
     aggregateVariables: json(),
     link: text(),
     public: checkbox(),
+    // Shown on the signed-out discover page. Independent of `public`, which
+    // stays the publishing gate; signed-out visitors see public AND featured.
+    featured: checkbox({ isFilterable: true }),
     submitForPublishing: checkbox(),
     isOriginal: checkbox(),
     isExternal: checkbox(),
@@ -133,6 +136,17 @@ export const Task = list({
     proposalCards: relationship({
       ref: "ProposalCard.tasks",
       many: true,
+    }),
+    // Set from the class side only (Class.hiddenTasks, class staff), so a
+    // task's authors can't change which classes hide it.
+    hiddenInClasses: relationship({
+      ref: "Class.hiddenTasks",
+      many: true,
+      graphql: { omit: { create: true, update: true } },
+      ui: {
+        createView: { fieldMode: "hidden" },
+        itemView: { fieldMode: "read" },
+      },
     }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },

@@ -1,6 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { PUBLIC_TASKS } from "../../Queries/Task";
 import TaskCard from "./TaskCard";
+import useHiddenTaskIds from "./useHiddenTaskIds";
+import { excludeHiddenTasks } from "../../../lib/taskBankFilter";
 import useTranslation from "next-translate/useTranslation";
 
 import { StyledSelector } from "../../styles/StyledSelector";
@@ -8,12 +10,17 @@ import { StyledBank } from "../../styles/StyledBank";
 
 export default function CloneTaskBank({ taskType }) {
   const { t } = useTranslation("builder");
+  // Public tasks the student's classes hide can't be cloned from here either.
+  const hiddenTaskIds = useHiddenTaskIds();
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
     variables: {
-      where: {
-        taskType: { equals: taskType.toUpperCase() },
-        public: { equals: true },
-      },
+      where: excludeHiddenTasks(
+        {
+          taskType: { equals: taskType.toUpperCase() },
+          public: { equals: true },
+        },
+        hiddenTaskIds
+      ),
     },
   });
   const tasks = data?.tasks || [];

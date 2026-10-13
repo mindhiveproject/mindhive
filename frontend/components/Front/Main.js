@@ -1,6 +1,5 @@
 import Footer from "../Global/Footer";
 import Header from "../Global/Header";
-import FeaturedStudies from "../Studies/Featured";
 import StyledFront from "../styles/StyledFront";
 import Library from "./Library";
 
@@ -14,7 +13,6 @@ export default function FrontMain(props) {
     <>
       <Header user={user} />
       <StyledFront>
-        <FeaturedStudies user={user} />
         <Library {...props} user={user} />
       </StyledFront>
       <Footer />

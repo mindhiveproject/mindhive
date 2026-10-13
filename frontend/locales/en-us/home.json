@@ -136,6 +136,31 @@
 		"title": "Sponsor setup"
 	},
 	"surveys": "Surveys",
+	"taskBankEmpty": "No tasks or surveys to show here yet.",
+	"taskDescriptionsExport": {
+		"close": "Close",
+		"description": "Description",
+		"descriptionForParticipants": "Description for participants",
+		"download": "Download PDF",
+		"generatedOn": "Generated on {{date}}",
+		"inBrief": "In brief",
+		"index": "Index",
+		"intro": "Below you will find descriptions of the tasks and surveys available to you on MindHive. Click a title in the index to jump to it.",
+		"no": "No",
+		"title": "MindHive Task & Survey Descriptions",
+		"yes": "Yes"
+	},
+	"taskBankFilters": {
+		"searchPlaceholder": "Search tasks and surveys",
+		"typeLabel": "Filter by type"
+	},
+	"taskBankNoMatches": "No tasks or surveys match these filters.",
+	"taskBankPreview": {
+		"login": "Log in",
+		"message": "Log in or sign up to access the full repository of tasks and surveys.",
+		"signup": "Sign up",
+		"title": "You're viewing a selection of featured tasks and surveys"
+	},
 	"tasks": "Tasks",
 	"tasksAndSurveysDescriptions": "Tasks and Surveys descriptions",
 	"teachers": "Teachers",

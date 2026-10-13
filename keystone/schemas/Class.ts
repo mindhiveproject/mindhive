@@ -102,6 +102,13 @@ export const Class = list({
       ref: "Resource.classes",
       many: true,
     }),
+    // Block list for the class's students: public tasks/surveys hidden from
+    // their discover page, descriptions PDF and builder pickers. Empty means
+    // everything public is visible, including tasks published later.
+    hiddenTasks: relationship({
+      ref: "Task.hiddenInClasses",
+      many: true,
+    }),
     logs: relationship({
       ref: "Log.class",
       many: true,

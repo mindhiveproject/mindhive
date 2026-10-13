@@ -2426,5 +2426,29 @@
 	"theirWorkspaceAndStudies": "Their workspace and any studies, tasks or surveys they created during your class",
 	"typeDeleteToConfirm": "Type \"DELETE\" to confirm",
 	"whoCanAssignCards": "Who can assign profiles to cards?",
-	"yourClass": "Your class"
+	"yourClass": "Your class",
+	"taskVisibility": {
+		"cancel": "Cancel",
+		"description": "Choose which public tasks and surveys your students see on the discover page, in the descriptions PDF and in the study builder.",
+		"error": "Something went wrong. Please try again.",
+		"groupBlocks": "Blocks",
+		"groupSurveys": "Surveys",
+		"groupTasks": "Tasks",
+		"hidden": "Hidden",
+		"hideAll": "Hide all",
+		"loading": "Loading…",
+		"manage": "Manage",
+		"modalDescription": "Switch off anything you don't want your students to see on the discover page, in the descriptions PDF or in the study builder. Tasks and surveys published later are visible until you hide them.",
+		"modalTitle": "Tasks & surveys your students can see",
+		"noMatches": "No tasks or surveys match your search.",
+		"save": "Save",
+		"saving": "Saving…",
+		"searchPlaceholder": "Search tasks and surveys",
+		"showAll": "Show all",
+		"summaryAll": "All public tasks and surveys are visible to your students.",
+		"summaryHidden": "{{count}} hidden from your students. Everything else, including anything published later, is visible.",
+		"title": "Tasks & surveys",
+		"visible": "Visible",
+		"visibleCount": "{{visible}} of {{total}} visible"
+	}
 }

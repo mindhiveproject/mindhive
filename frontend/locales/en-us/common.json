@@ -179,6 +179,12 @@
 		"oops": "Oops!"
 	},
 	"featured": "Featured",
+	"featuredCarousel": {
+		"label": "Featured studies",
+		"next": "Next featured study",
+		"position": "{{current}} of {{total}}",
+		"previous": "Previous featured study"
+	},
 	"favorite": {
 		"add": "Add to favorites",
 		"remove": "Remove from favorites"

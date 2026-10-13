@@ -6,6 +6,8 @@ import { MY_TASKS } from "../../Queries/Task";
 import TaskCard from "./TaskCard";
 import Chip from "../../DesignSystem/Chip";
 import MessageCard from "../../DesignSystem/MessageCard";
+import useHiddenTaskIds from "./useHiddenTaskIds";
+import { excludeHiddenTasks } from "../../../lib/taskBankFilter";
 
 const EMPTY_MESSAGE_BY_TYPE = {
   TASK: {
@@ -25,15 +27,24 @@ const EMPTY_MESSAGE_BY_TYPE = {
 // These banks are mostly used to get back to items you've starred, not to browse
 // everything you've ever authored, so "favorited" is the default view.
 const FILTERS = [
-  { key: "favorited", labelKey: "developTasks.filterFavorited", default: "Favorited" },
+  {
+    key: "favorited",
+    labelKey: "developTasks.filterFavorited",
+    default: "Favorited",
+  },
   { key: "public", labelKey: "developTasks.filterPublic", default: "Public" },
-  { key: "mine", labelKey: "developTasks.filterCreatedByMe", default: "Created by me" },
+  {
+    key: "mine",
+    labelKey: "developTasks.filterCreatedByMe",
+    default: "Created by me",
+  },
 ];
 
-function buildWhere({ filter, taskType, userId }) {
+function buildWhere({ filter, taskType, userId, hiddenTaskIds }) {
   const byFilter = {
     favorited: { favoriteBy: { some: { id: { equals: userId } } } },
-    public: { public: { equals: true } },
+    // Browsing public tasks respects the student's class block lists.
+    public: excludeHiddenTasks({ public: { equals: true } }, hiddenTaskIds),
     mine: {
       OR: [
         { author: { id: { equals: userId } } },
@@ -49,9 +60,12 @@ function buildWhere({ filter, taskType, userId }) {
 export default function DevelopTaskBank({ user, taskType }) {
   const { t } = useTranslation("builder");
   const [filter, setFilter] = useState("favorited");
+  const hiddenTaskIds = useHiddenTaskIds();
 
   const { data } = useQuery(MY_TASKS, {
-    variables: { where: buildWhere({ filter, taskType, userId: user?.id }) },
+    variables: {
+      where: buildWhere({ filter, taskType, userId: user?.id, hiddenTaskIds }),
+    },
   });
   const tasks = data?.tasks || [];
   const emptyCopy =

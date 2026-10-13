@@ -22,6 +22,22 @@ export const CREATE_CLASS = gql`
 `;
 
 // edit class
+// replace the tasks hidden from a class's students (block list)
+export const UPDATE_CLASS_HIDDEN_TASKS = gql`
+  mutation UPDATE_CLASS_HIDDEN_TASKS(
+    $id: ID!
+    $hiddenTasks: [TaskWhereUniqueInput!]!
+  ) {
+    updateClass(where: { id: $id }, data: { hiddenTasks: { set: $hiddenTasks } }) {
+      id
+      hiddenTasks {
+        id
+        public
+      }
+    }
+  }
+`;
+
 export const EDIT_CLASS = gql`
   mutation EDIT_CLASS(
     $id: ID!

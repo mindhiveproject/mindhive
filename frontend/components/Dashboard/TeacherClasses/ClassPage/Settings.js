@@ -23,6 +23,7 @@ import ToggleSwitch from "../../../DesignSystem/ToggleSwitch";
 import TipTapEditor from "../../../TipTap/Main";
 import CurriculumTypeSelector from "./CurriculumTypeSelector";
 import TeachingTeamSettings from "./TeachingTeamSettings";
+import TaskVisibilitySettings from "./TaskVisibilitySettings";
 import { isClassCreator } from "../../../../lib/classTeacherUtils";
 import {
   getClassCurriculumFallback,
@@ -817,6 +818,8 @@ export default function Settings({ myclass, user }) {
           />
         </div>
       </section>
+
+      <TaskVisibilitySettings myclass={myclass} />
 
       <section className="settingsSection">
         <div className="settingsSectionHeader">
