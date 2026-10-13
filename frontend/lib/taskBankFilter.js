@@ -1,8 +1,8 @@
 // Which tasks the discover page's task bank shows. `public` is the publishing
 // gate for everyone; signed-out visitors only get the `featured` preview, while
-// signed-in users see every published task. A teacher's per-class selection
-// will narrow this further later (shared with the descriptions PDF export).
-export function buildTaskBankWhere({ user, taskType }) {
+// signed-in users see every published task minus what their classes hide
+// (see hiddenTaskIdsFor). The descriptions PDF exports the same set.
+export function buildTaskBankWhere({ user, taskType, hiddenTaskIds = [] }) {
   const where = { public: { equals: true } };
   if (!user) {
     where.featured = { equals: true };
@@ -10,5 +10,35 @@ export function buildTaskBankWhere({ user, taskType }) {
   if (taskType) {
     where.taskType = { equals: taskType };
   }
-  return where;
+  return excludeHiddenTasks(where, hiddenTaskIds);
+}
+
+// Roles that see every task regardless of class block lists.
+const CLASS_STAFF_ROLES = ["teacherIn", "teachingTeamIn", "mentorIn"];
+
+// Tasks hidden from this user by their classes' block lists
+// (Class.hiddenTasks). Only students are affected, and a task is hidden only
+// when every one of their classes hides it: one class allowing it is enough.
+// Admins and class staff anywhere see everything.
+export function hiddenTaskIdsFor(user) {
+  if (!user) return [];
+  if (user.permissions?.some((permission) => permission?.name === "ADMIN")) {
+    return [];
+  }
+  if (CLASS_STAFF_ROLES.some((role) => user[role]?.length)) return [];
+
+  const classes = user.studentIn || [];
+  if (!classes.length) return [];
+
+  const [first, ...rest] = classes.map(
+    (cls) => new Set((cls?.hiddenTasks || []).map((task) => task?.id))
+  );
+  return [...first].filter((id) => rest.every((ids) => ids.has(id)));
+}
+
+// Adds the block list to a TaskWhereInput.
+export function excludeHiddenTasks(where, hiddenTaskIds) {
+  return hiddenTaskIds?.length
+    ? { ...where, id: { notIn: hiddenTaskIds } }
+    : where;
 }

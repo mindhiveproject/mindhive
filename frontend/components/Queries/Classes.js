@@ -84,6 +84,10 @@ export const GET_CLASS = gql`
       title
       description
       code
+      hiddenTasks {
+        id
+        public
+      }
       creator {
         id
         username

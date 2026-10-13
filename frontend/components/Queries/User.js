@@ -91,6 +91,9 @@ export const CURRENT_USER_QUERY = gql`
         }
         studentIn {
           id
+          hiddenTasks {
+            id
+          }
         }
         teacherIn {
           id

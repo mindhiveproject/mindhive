@@ -12,6 +12,18 @@ export const ALL_PUBLIC_TASKS = gql`
   }
 `;
 
+// every public task, light: for a class's task visibility (block list) picker
+export const PUBLIC_TASKS_FOR_CLASS_VISIBILITY = gql`
+  query PUBLIC_TASKS_FOR_CLASS_VISIBILITY {
+    tasks(where: { public: { equals: true } }, orderBy: { title: asc }) {
+      id
+      title
+      i18nContent
+      taskType
+    }
+  }
+`;
+
 // get public tasks
 export const PUBLIC_TASKS = gql`
   query PUBLIC_TASKS($where: TaskWhereInput!) {

@@ -137,6 +137,17 @@ export const Task = list({
       ref: "ProposalCard.tasks",
       many: true,
     }),
+    // Set from the class side only (Class.hiddenTasks, class staff), so a
+    // task's authors can't change which classes hide it.
+    hiddenInClasses: relationship({
+      ref: "Class.hiddenTasks",
+      many: true,
+      graphql: { omit: { create: true, update: true } },
+      ui: {
+        createView: { fieldMode: "hidden" },
+        itemView: { fieldMode: "read" },
+      },
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

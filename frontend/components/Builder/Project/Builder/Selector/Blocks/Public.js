@@ -1,6 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { MY_TASKS, PUBLIC_TASKS } from "../../../../../Queries/Task";
+import useHiddenTaskIds from "../../../../../Tasks/Bank/useHiddenTaskIds";
+import { excludeHiddenTasks } from "../../../../../../lib/taskBankFilter";
 import Card from "./Card";
 
 export default function PublicBlocks({
@@ -12,6 +14,8 @@ export default function PublicBlocks({
 }) {
   const router = useRouter();
   const currentLocale = router.locale || "en-us"; // fallback to en-us
+  // Public tasks the student's classes hide; their own tasks are unaffected.
+  const hiddenTaskIds = useHiddenTaskIds();
 
   const publicWhere =
     process.env.NODE_ENV === "development"
@@ -72,7 +76,7 @@ export default function PublicBlocks({
         };
 
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
-    variables: { where: publicWhere },
+    variables: { where: excludeHiddenTasks(publicWhere, hiddenTaskIds) },
   });
 
   const { data: ownedData } = useQuery(MY_TASKS, {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PUBLIC_TASKS } from "../../Queries/Task";
 import TaskCard from "./TaskCard";
 import TaskDescriptionsExport from "./DescriptionsExport";
+import useHiddenTaskIds from "./useHiddenTaskIds";
 import { UserContext } from "../../Global/Authorized";
 import Button from "../../DesignSystem/Button";
 import MessageCard from "../../DesignSystem/MessageCard";
@@ -47,10 +48,13 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
   // flashes the signed-out preview (and its query) first.
   const { loading: userLoading } = useContext(UserContext);
 
+  // Tasks this user's classes hide from them (students only).
+  const hiddenTaskIds = useHiddenTaskIds();
+
   // One query for every type; the type chips and search filter it locally so
   // each chip can show its count and switching chips needs no refetch.
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
-    variables: { where: buildTaskBankWhere({ user }) },
+    variables: { where: buildTaskBankWhere({ user, hiddenTaskIds }) },
     skip: userLoading,
   });
   const allTasks = useMemo(() => data?.tasks || [], [data]);
@@ -187,6 +191,7 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
           <TaskDescriptionsExport user={user} tasks={allTasks} />
         </div>
       </div>
+
       {!userLoading && !loading && !error && tasks.length === 0 && (
         <MessageCard
           variant="neutral"
