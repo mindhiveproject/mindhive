@@ -33,8 +33,9 @@ const ROOT_STYLE = {
   flex: "1 1 0%",
   minHeight: 0,
   overflow: "hidden",
-  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
-  borderRadius: 12,
+  // Both editors run edge to edge in a flush panel, so the panel's own border
+  // already closes the sides and bottom; only the divider under the tabs is ours.
+  borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
   background: "var(--MH-Theme-Tertiary-Light, #F6F9F8)",
 };
 

@@ -5,7 +5,6 @@ import useTranslation from "next-translate/useTranslation";
 
 import Panel from "../Panel";
 import Button from "../../../DesignSystem/Button";
-import Card, { CardSection } from "../../../DesignSystem/Card";
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
 import {
@@ -168,27 +167,25 @@ export default function DataSourcesPanel() {
       }
     >
       {dataSources.length === 0 ? (
-        <Card padding={0}>
-          <CardSection style={EMPTY_STYLE}>
-            <span style={EMPTY_ICON_STYLE}>
-              <WaveformIcon />
-            </span>
-            <h3 style={EMPTY_TITLE_STYLE}>
-              {t("noDataSources", "No data sources linked yet")}
-            </h3>
-            <p style={EMPTY_BODY_STYLE}>
-              {canEdit
-                ? t(
-                    "noDataSourcesBody",
-                    "Link a data source to connect a device, then map its outputs onto this visual's parameters from the Parameters tab."
-                  )
-                : t(
-                    "noDataSourcesViewer",
-                    "This visual doesn't use any devices. Its parameters are set by hand."
-                  )}
-            </p>
-          </CardSection>
-        </Card>
+        <div style={EMPTY_STYLE}>
+          <span style={EMPTY_ICON_STYLE}>
+            <WaveformIcon />
+          </span>
+          <h3 style={EMPTY_TITLE_STYLE}>
+            {t("noDataSources", "No data sources linked yet")}
+          </h3>
+          <p style={EMPTY_BODY_STYLE}>
+            {canEdit
+              ? t(
+                  "noDataSourcesBody",
+                  "Link a data source to connect a device, then map its outputs onto this visual's parameters from the Parameters tab."
+                )
+              : t(
+                  "noDataSourcesViewer",
+                  "This visual doesn't use any devices. Its parameters are set by hand."
+                )}
+          </p>
+        </div>
       ) : (
         dataSources.map((source) => (
           <DataSourceBlock
