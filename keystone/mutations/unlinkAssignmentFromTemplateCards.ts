@@ -1,11 +1,14 @@
 import {
   CLASS_TEMPLATE_QUERY,
-  getPrimaryTemplateBoardId,
+  getClassTemplateBoards,
+  resolveClassTemplateBoardId,
 } from "./utils/classTemplateBoards";
 
 /**
- * Unlinks an assignment from all cards on the class template board
- * and all corresponding cloned student boards for that class.
+ * Unlinks an assignment from all cards on a class template board and all
+ * corresponding cloned student boards for that class. With templateBoardId,
+ * only that template board (and its student boards) is affected; without it,
+ * every template board of the class is.
  *
  * The assignment itself and its class relationships are left untouched;
  * only the `proposalCards` relation is updated.
@@ -15,9 +18,11 @@ async function unlinkAssignmentFromTemplateCards(
   {
     assignmentId,
     classId,
+    templateBoardId: requestedTemplateBoardId,
   }: {
     assignmentId: string;
     classId: string;
+    templateBoardId?: string | null;
   },
   context: any
 ): Promise<{ id: string } | null> {
@@ -31,13 +36,17 @@ async function unlinkAssignmentFromTemplateCards(
     query: `${CLASS_TEMPLATE_QUERY} studentProposals { id clonedFrom { id } }`,
   });
 
-  const templateBoardId = getPrimaryTemplateBoardId(classData);
-  if (!templateBoardId) {
+  const templateBoardIds = new Set(
+    requestedTemplateBoardId
+      ? [resolveClassTemplateBoardId(classData, requestedTemplateBoardId)]
+      : getClassTemplateBoards(classData).map((b) => b.id).filter(Boolean)
+  );
+  if (templateBoardIds.size === 0) {
     throw new Error("Class has no template board.");
   }
 
-  const studentBoards = (classData.studentProposals || []).filter(
-    (b: any) => b?.clonedFrom?.id === templateBoardId
+  const studentBoards = (classData.studentProposals || []).filter((b: any) =>
+    templateBoardIds.has(b?.clonedFrom?.id)
   );
   const studentBoardIds = new Set((studentBoards || []).map((b: any) => b.id));
 
@@ -53,9 +62,9 @@ async function unlinkAssignmentFromTemplateCards(
 
   const proposalCards = assignment.proposalCards || [];
 
-  // Cards on the class template board
+  // Cards on the targeted class template board(s)
   const templateBoardCardIds = proposalCards
-    .filter((c: any) => c?.section?.board?.id === templateBoardId)
+    .filter((c: any) => templateBoardIds.has(c?.section?.board?.id))
     .map((c: any) => c.id);
 
   // Cards on any cloned student boards for this class

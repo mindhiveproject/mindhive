@@ -19,7 +19,11 @@ import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import Button from "../../../../DesignSystem/Button";
 import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
 import Chip from "../../../../DesignSystem/Chip";
-import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
+import {
+  getCardsOnClassTemplateBoards,
+  getClassTemplateBoards,
+  getClassTemplateBoardTitle,
+} from "../../../../../lib/classTemplateBoards";
 import { isClassTeacherOrMentor as classUserIsTeacherOrMentor } from "../../../../../lib/classTeacherUtils";
 import { useClassTablePrefs } from "../useClassTablePrefs";
 
@@ -149,7 +153,12 @@ export default function ResourceTab({ resources, myclass, user }) {
     return html.replace(/<[^>]*>/g, "").trim();
   };
 
-  const templateBoardId = getPrimaryTemplateBoardId(myclass);
+  const templateBoardIds = getClassTemplateBoards(myclass)
+    .map((board) => board?.id)
+    .filter(Boolean);
+  const templateBoardCount = templateBoardIds.length;
+  // With several template boards, links are labelled with their board.
+  const showBoardTitles = templateBoardCount > 1;
 
   const filteredResources = (() => {
     let list =
@@ -158,11 +167,12 @@ export default function ResourceTab({ resources, myclass, user }) {
         : (resources || []).filter(
             (r) => getIsPublishedForThisClass(r) === selectedPublishedFilter
           );
-    if (linkedCardFilter && templateBoardId) {
+    if (linkedCardFilter) {
       list = list.filter((r) => {
-        const templateCards = (r?.proposalCards || []).filter(
-          (c) => c?.section?.board?.id === templateBoardId
-        );
+        const templateCards = getCardsOnClassTemplateBoards(
+          r?.proposalCards,
+          myclass
+        ).filter((c) => c?.section?.board?.id === linkedCardFilter.boardId);
         return templateCards.some((c) =>
           linkedCardFilter.type === "section"
             ? (c?.section?.title ?? "") === linkedCardFilter.value
@@ -178,16 +188,19 @@ export default function ResourceTab({ resources, myclass, user }) {
     setSelectedPublishedFilter((prev) => (prev === value ? null : value));
   };
 
-  const getTemplateCardIdsForClass = (resource) => {
-    if (!resource?.proposalCards || !templateBoardId) return [];
-    return (resource.proposalCards || [])
-      .filter((c) => c?.section?.board?.id === templateBoardId)
-      .map((c) => c.id)
-      .filter(Boolean);
+  // Template card ids the resource is linked to, grouped by template board.
+  const getTemplateCardIdsByBoard = (resource) => {
+    const byBoard = new Map();
+    for (const card of getCardsOnClassTemplateBoards(resource?.proposalCards, myclass)) {
+      const boardId = card.section.board.id;
+      if (!card?.id) continue;
+      byBoard.set(boardId, [...(byBoard.get(boardId) || []), card.id]);
+    }
+    return byBoard;
   };
 
   const handleMakeCopyAndEdit = async (resource) => {
-    if (!resource?.id || !myclass?.id || !templateBoardId) {
+    if (!resource?.id || !myclass?.id || templateBoardCount === 0) {
       alert(t("resource.connectModal.noTemplate", "No template board for this class."));
       return;
     }
@@ -203,7 +216,7 @@ export default function ResourceTab({ resources, myclass, user }) {
         alert(t("resource.errorLoading", "Error loading resource."));
         return;
       }
-      const templateCardIds = getTemplateCardIdsForClass(resource);
+      const templateCardIdsByBoard = getTemplateCardIdsByBoard(resource);
 
       const createRes = await createResource({
         variables: {
@@ -229,12 +242,14 @@ export default function ResourceTab({ resources, myclass, user }) {
         },
       });
 
-      if (templateCardIds.length > 0) {
+      // Move the original's links to the copy, board by board.
+      for (const [boardId, templateCardIds] of templateCardIdsByBoard) {
         await setResourceTemplateCards({
           variables: {
             resourceId: newId,
             templateCardIds,
             classId: myclass.id,
+            templateBoardId: boardId,
           },
         });
         await setResourceTemplateCards({
@@ -242,6 +257,7 @@ export default function ResourceTab({ resources, myclass, user }) {
             resourceId: resource.id,
             templateCardIds: [],
             classId: myclass.id,
+            templateBoardId: boardId,
           },
         });
       }
@@ -362,22 +378,22 @@ export default function ResourceTab({ resources, myclass, user }) {
 
   const LinkedToCardRenderer = (params) => {
     const resource = params?.data;
-    const boardId = params?.context?.templateBoardId ?? getPrimaryTemplateBoardId(myclass);
-    const templateCards = !boardId
-      ? []
-      : (resource?.proposalCards || []).filter(
-          (c) => c?.section?.board?.id === boardId
-        );
+    const hasTemplateBoard = params?.context?.templateBoardCount > 0;
+    const showBoardTitle = params?.context?.showBoardTitles;
+    const templateCards = getCardsOnClassTemplateBoards(
+      resource?.proposalCards,
+      myclass
+    );
     const onLinkedCardFilterClick = params?.context?.onLinkedCardFilterClick;
     const handleConnectClick = () => {
-      if (!boardId) {
+      if (!hasTemplateBoard) {
         alert(t("resource.connectModal.noTemplate", "No template board for this class."));
         return;
       }
       setResourceForConnectModal(resource);
     };
     if (templateCards.length === 0) {
-      if (!boardId) {
+      if (!hasTemplateBoard) {
         return (
           <Link
             href={{
@@ -451,11 +467,16 @@ export default function ResourceTab({ resources, myclass, user }) {
             }}
           >
             {i > 0 && separator}
+            {showBoardTitle && (
+              <span className="MH-Type-Body-Base" style={{ marginRight: "4px", color: "#616161" }}>
+                {getClassTemplateBoardTitle(myclass, c?.section?.board?.id)} /
+              </span>
+            )}
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onLinkedCardFilterClick?.("section", c?.section?.title ?? "");
+                onLinkedCardFilterClick?.("section", c?.section?.title ?? "", c?.section?.board?.id);
               }}
               style={chipButtonStyle}
             >
@@ -466,7 +487,7 @@ export default function ResourceTab({ resources, myclass, user }) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onLinkedCardFilterClick?.("card", c?.title ?? "");
+                onLinkedCardFilterClick?.("card", c?.title ?? "", c?.section?.board?.id);
               }}
               style={chipButtonStyle}
             >
@@ -480,9 +501,9 @@ export default function ResourceTab({ resources, myclass, user }) {
 
   const ChangeLinkRenderer = (params) => {
     const resource = params?.data;
-    const templateBoardId = params?.context?.templateBoardId ?? getPrimaryTemplateBoardId(myclass);
+    const hasTemplateBoard = params?.context?.templateBoardCount > 0;
     const handleClick = () => {
-      if (!templateBoardId) {
+      if (!hasTemplateBoard) {
         router.push({
           pathname: `/dashboard/myclasses/${myclass?.code}`,
           query: { page: "projects" },
@@ -519,14 +540,14 @@ export default function ResourceTab({ resources, myclass, user }) {
     },
     valueGetter: (params) => {
       const r = params?.data;
-      const templateBoardId = params?.context?.templateBoardId;
-      if (!templateBoardId) return "";
-      const templateCards = (r?.proposalCards || []).filter(
-        (c) => c?.section?.board?.id === templateBoardId
-      );
-      return templateCards.length > 0
-        ? templateCards.map((c) => `${c?.section?.title} > ${c?.title}`).join(", ")
-        : "";
+      const templateCards = getCardsOnClassTemplateBoards(r?.proposalCards, myclass);
+      const boardPrefix = (c) =>
+        params?.context?.showBoardTitles
+          ? `${getClassTemplateBoardTitle(myclass, c?.section?.board?.id)} > `
+          : "";
+      return templateCards
+        .map((c) => `${boardPrefix(c)}${c?.section?.title} > ${c?.title}`)
+        .join(", ");
     },
   };
 
@@ -662,12 +683,14 @@ export default function ResourceTab({ resources, myclass, user }) {
                       )
                         return;
                       try {
-                        if (templateBoardId && resource?.id) {
+                        // Unlink from every template board of the class.
+                        for (const boardId of resource?.id ? templateBoardIds : []) {
                           await setResourceTemplateCards({
                             variables: {
                               resourceId: resource.id,
                               templateCardIds: [],
                               classId,
+                              templateBoardId: boardId,
                             },
                           });
                         }
@@ -889,11 +912,13 @@ export default function ResourceTab({ resources, myclass, user }) {
               if (e.api) setSelectedResources(e.api.getSelectedRows());
             }}
             context={{
-              templateBoardId: getPrimaryTemplateBoardId(myclass),
+              templateBoardCount,
+              showBoardTitles,
               onTogglePublishStatus: handleOpenPublishConfirm,
               updatingStatusResourceId,
               copyingResourceId,
-              onLinkedCardFilterClick: (type, value) => setLinkedCardFilter({ type, value }),
+              onLinkedCardFilterClick: (type, value, boardId) =>
+                setLinkedCardFilter({ type, value, boardId }),
             }}
             pagination={pagination}
             paginationPageSizeSelector={paginationPageSizeSelector}

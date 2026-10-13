@@ -209,15 +209,18 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           assignmentId: ID!
           templateCardId: ID!
           classId: ID!
+          templateBoardId: ID
         ): Assignment
         unlinkAssignmentFromTemplateCards(
           assignmentId: ID!
           classId: ID!
+          templateBoardId: ID
         ): Assignment
         setAssignmentTemplateCards(
           assignmentId: ID!
           templateCardIds: [ID!]!
           classId: ID!
+          templateBoardId: ID
         ): Assignment
         setResourceTemplateCards(
           resourceId: ID!

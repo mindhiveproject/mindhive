@@ -22,6 +22,30 @@ export function getPrimaryTemplateBoardId(myclass) {
   );
 }
 
+/**
+ * Cards (of an assignment or resource) that sit on any of the class's template
+ * boards, ordered by board (primary first) so lists read the same everywhere.
+ */
+export function getCardsOnClassTemplateBoards(proposalCards, myclass) {
+  const boardOrder = new Map(
+    getClassTemplateBoards(myclass).map((board, i) => [board.id, i])
+  );
+  return (proposalCards || [])
+    .filter((card) => boardOrder.has(card?.section?.board?.id))
+    .sort(
+      (a, b) =>
+        boardOrder.get(a.section.board.id) - boardOrder.get(b.section.board.id)
+    );
+}
+
+/** Title of one of the class's template boards (empty when unknown). */
+export function getClassTemplateBoardTitle(myclass, boardId) {
+  return (
+    getClassTemplateBoards(myclass).find((board) => board.id === boardId)
+      ?.title || ""
+  );
+}
+
 export function mergeTemplateBoardSettings(settings) {
   return {
     ...DEFAULT_TEMPLATE_BOARD_SETTINGS,

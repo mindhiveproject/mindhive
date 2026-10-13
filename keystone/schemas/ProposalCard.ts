@@ -11,13 +11,57 @@ import {
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
 
-import { signedInWrites } from "../access";
+import {
+  signedInWrites,
+  canMutateClassTemplateBoard,
+  CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
+} from "../access";
 import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
+import { connectAssignmentsToTemplateClasses } from "../mutations/utils/classTemplateBoards";
 
 export const ProposalCard = list({
   access: {
     // Anyone may read; changes need a signed-in user.
     operation: signedInWrites,
+  },
+  hooks: {
+    // An assignment linked on a class template card must belong to the
+    // class(es) using that template, or it never shows in the class and
+    // the board warns "not connected to a class". Only runs on writes that
+    // touch `assignments`, and only for editors of the class template.
+    async afterOperation({ operation, inputData, item, context }) {
+      if (operation !== "create" && operation !== "update") return;
+      if (!item?.id || !inputData?.assignments) return;
+      // Template propagation writes `assignments: { set: [] }` on every clone
+      // card; skip writes that link nothing before paying for a lookup.
+      const links = inputData.assignments;
+      const linksSomething =
+        (links.set?.length ?? 0) +
+          (links.connect?.length ?? 0) +
+          (links.create?.length ?? 0) >
+        0;
+      if (!linksSomething) return;
+      const me = context.session?.itemId;
+      if (!me) return;
+
+      // Sudo: as the editor, a board collaborator outside the class could
+      // not read the class links the permission check needs.
+      const sudo = context.sudo();
+      const card = await sudo.query.ProposalCard.findOne({
+        where: { id: String(item.id) },
+        query: `id assignments { id } section { board { ${CLASS_TEMPLATE_BOARD_ACCESS_QUERY} } }`,
+      });
+      const board = card?.section?.board;
+      if (!board?.id || !canMutateClassTemplateBoard(String(me), board)) {
+        return;
+      }
+
+      await connectAssignmentsToTemplateClasses(
+        sudo,
+        board.id,
+        (card.assignments || []).map((a: { id: string }) => a.id)
+      );
+    },
   },
   fields: {
     title: text({ validation: { isRequired: true } }),

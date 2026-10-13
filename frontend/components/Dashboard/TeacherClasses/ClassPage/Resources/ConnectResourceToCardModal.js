@@ -5,8 +5,10 @@ import useTranslation from "next-translate/useTranslation";
 import StyledModal from "../../../../styles/StyledModal";
 import { UPDATE_RESOURCE, SET_RESOURCE_TEMPLATE_CARDS } from "../../../../Mutations/Resource";
 import { GET_CLASS_RESOURCES } from "../../../../Queries/Resource";
-import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 import TemplateBoardCardPicker from "../Assignments/TemplateBoardCardPicker";
+import TemplateBoardSelect, {
+  getDefaultTemplateBoardId,
+} from "../TemplateBoardSelect";
 
 function getTemplateCardIds(resource, templateBoardId) {
   if (!resource?.proposalCards || !templateBoardId) return [];
@@ -25,8 +27,17 @@ export default function ConnectResourceToCardModal({
 }) {
   const { t } = useTranslation("classes");
   const client = useApolloClient();
-  const templateBoardId = getPrimaryTemplateBoardId(myclass);
+  // The teacher's board choice; until they pick one, open on the board the
+  // resource is linked on (or the primary board). Cleared on close.
+  const [pickedBoardId, setPickedBoardId] = useState(null);
+  const templateBoardId =
+    pickedBoardId ||
+    getDefaultTemplateBoardId(myclass, resource?.proposalCards);
   const [selectedCardIds, setSelectedCardIds] = useState([]);
+
+  useEffect(() => {
+    if (!open) setPickedBoardId(null);
+  }, [open]);
 
   useEffect(() => {
     if (open && resource && templateBoardId) {
@@ -61,6 +72,7 @@ export default function ConnectResourceToCardModal({
           resourceId: resource.id,
           templateCardIds: selectedCardIds,
           classId: myclass.id,
+          templateBoardId,
         },
       });
       if (selectedCardIds.length > 0 && !alreadyInClass) {
@@ -94,6 +106,7 @@ export default function ConnectResourceToCardModal({
           resourceId: resource.id,
           templateCardIds: [],
           classId: myclass.id,
+          templateBoardId,
         },
       });
       await client.refetchQueries({
@@ -170,6 +183,12 @@ export default function ConnectResourceToCardModal({
 
       <Modal.Content scrolling>
         <StyledModal>
+          <TemplateBoardSelect
+            myclass={myclass}
+            value={templateBoardId}
+            onChange={setPickedBoardId}
+            disabled={isBusy}
+          />
           <TemplateBoardCardPicker
             templateBoardId={templateBoardId}
             selectedCardIds={selectedCardIds}

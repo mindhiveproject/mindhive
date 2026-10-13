@@ -33,26 +33,31 @@ export const LINK_ASSIGNMENT_TO_TEMPLATE_CARD = gql`
     $assignmentId: ID!
     $templateCardId: ID!
     $classId: ID!
+    $templateBoardId: ID
   ) {
     linkAssignmentToTemplateCard(
       assignmentId: $assignmentId
       templateCardId: $templateCardId
       classId: $classId
+      templateBoardId: $templateBoardId
     ) {
       id
     }
   }
 `;
 
-// unlink assignment from all cards on the class template board and its student boards
+// unlink assignment from all cards on a class template board and its student boards
+// (every template board of the class when templateBoardId is omitted)
 export const UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS = gql`
   mutation UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS(
     $assignmentId: ID!
     $classId: ID!
+    $templateBoardId: ID
   ) {
     unlinkAssignmentFromTemplateCards(
       assignmentId: $assignmentId
       classId: $classId
+      templateBoardId: $templateBoardId
     ) {
       id
     }
@@ -65,11 +70,13 @@ export const SET_ASSIGNMENT_TEMPLATE_CARDS = gql`
     $assignmentId: ID!
     $templateCardIds: [ID!]!
     $classId: ID!
+    $templateBoardId: ID
   ) {
     setAssignmentTemplateCards(
       assignmentId: $assignmentId
       templateCardIds: $templateCardIds
       classId: $classId
+      templateBoardId: $templateBoardId
     ) {
       id
     }

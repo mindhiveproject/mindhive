@@ -8,9 +8,11 @@
  * classes (templateForClasses), ensure that any resources linked on its cards
  * are associated with those classes via Resource.classes. Clones that
  * themselves become templates for other classes are handled independently via
- * their own templateForClasses relationship.
+ * their own templateForClasses relationship. Assignments linked on its cards
+ * are connected to those classes the same way.
  */
 import { applyTemplateToClones, getTemplateAndClones } from "./utils/boardPropagation";
+import { connectAssignmentsToTemplateClasses } from "./utils/classTemplateBoards";
 
 async function applyTemplateBoardChanges(
   _root: unknown,
@@ -93,6 +95,19 @@ async function applyTemplateBoardChanges(
         }
       }
     }
+
+    // Same for assignments linked on the template's cards, so they show up
+    // in (and can be published to) the class(es) using this template.
+    const assignmentIds = (template.sections || []).flatMap((section) =>
+      (section.cards || []).flatMap((card) =>
+        (card.assignments || []).map((a) => a.id)
+      )
+    );
+    await connectAssignmentsToTemplateClasses(
+      sudo,
+      templateBoardId,
+      assignmentIds
+    );
   }
 
   return {

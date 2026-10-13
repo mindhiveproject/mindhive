@@ -28,6 +28,77 @@ export function getPrimaryTemplateBoardId(
   );
 }
 
+/**
+ * Picks the class template board a class-page linking mutation works on: the
+ * requested board when it is one of the class's template boards, otherwise
+ * the primary board. Throws when a board is requested that does not belong
+ * to the class, rather than quietly working on a different board.
+ */
+export function resolveClassTemplateBoardId(
+  classData: ClassTemplateData | null | undefined,
+  requestedTemplateBoardId?: string | null
+): string | null {
+  if (requestedTemplateBoardId) {
+    const belongsToClass = getClassTemplateBoards(classData).some(
+      (board) => board.id === requestedTemplateBoardId
+    );
+    if (!belongsToClass) {
+      throw new Error("That board is not a template board of this class.");
+    }
+    return requestedTemplateBoardId;
+  }
+  return getPrimaryTemplateBoardId(classData);
+}
+
+/**
+ * Connects assignments to every class that uses the board as a template, so
+ * an assignment linked on a class template card shows up in that class
+ * (class Assignments tab, published to its students). Mirrors what
+ * applyTemplateBoardChanges does for resources. Pass a sudo context: the
+ * caller already passed access checks for the link itself.
+ */
+export async function connectAssignmentsToTemplateClasses(
+  sudo: any,
+  templateBoardId: string,
+  assignmentIds: string[]
+): Promise<void> {
+  const ids = [...new Set(assignmentIds.filter(Boolean))];
+  if (!templateBoardId || ids.length === 0) return;
+
+  const board = await sudo.query.ProposalBoard.findOne({
+    where: { id: templateBoardId },
+    query: "id templateForClasses { id } templatesForClass { id }",
+  });
+  const classIds = [
+    ...new Set(
+      [...(board?.templateForClasses ?? []), ...(board?.templatesForClass ?? [])]
+        .map((c: { id: string }) => c?.id)
+        .filter(Boolean)
+    ),
+  ];
+  if (classIds.length === 0) return;
+
+  // Platform template assignments are shared by every class that copies
+  // them; they must not collect class links.
+  const classAssignments = await sudo.query.Assignment.findMany({
+    where: {
+      id: { in: ids },
+      NOT: [{ isTemplate: { equals: true } }],
+    },
+    query: "id",
+  });
+
+  const classConnect = classIds.map((id) => ({ id }));
+  await Promise.all(
+    classAssignments.map(({ id: assignmentId }: { id: string }) =>
+      sudo.db.Assignment.updateOne({
+        where: { id: assignmentId },
+        data: { classes: { connect: classConnect } },
+      })
+    )
+  );
+}
+
 export function isClassTemplateBoard(board: {
   templateForClasses?: Array<{ id: string }> | null;
   templatesForClass?: Array<{ id: string }> | null;

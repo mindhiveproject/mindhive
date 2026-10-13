@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
@@ -12,6 +12,7 @@ import {
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 import TemplateBoardCardPicker from "./TemplateBoardCardPicker";
+import TemplateBoardSelect from "../TemplateBoardSelect";
 
 const Section = styled.div`
   margin-bottom: 20px;
@@ -46,7 +47,17 @@ export default function BulkActionsModal({
   const [applying, setApplying] = useState(false);
 
   const classId = myclass?.id;
-  const templateBoardId = getPrimaryTemplateBoardId(myclass);
+  const [pickedBoardId, setPickedBoardId] = useState(null);
+  const templateBoardId = pickedBoardId || getPrimaryTemplateBoardId(myclass);
+
+  useEffect(() => {
+    if (!open) setPickedBoardId(null);
+  }, [open]);
+
+  const handleBoardChange = (boardId) => {
+    setPickedBoardId(boardId);
+    setSelectedCardId(null);
+  };
 
   const [editAssignment] = useMutation(EDIT_ASSIGNMENT, {
     refetchQueries: [{ query: GET_CLASS_ASSIGNMENTS, variables: { classId } }],
@@ -108,6 +119,7 @@ export default function BulkActionsModal({
               assignmentId: a.id,
               templateCardId: selectedCardId,
               classId,
+              templateBoardId,
             },
           });
         }
@@ -115,6 +127,7 @@ export default function BulkActionsModal({
     });
   };
 
+  // No templateBoardId: unlinks from every template board of the class.
   const handleDisconnectAll = () => {
     if ((selectedAssignments || []).length === 0) return;
     if (!confirm(t("assignment.bulkActionsModal.confirmDisconnectAll", "Disconnect all selected assignments from their project cards?"))) return;
@@ -220,6 +233,12 @@ export default function BulkActionsModal({
               </Button>
               </div>
               <CardPickerContainer>
+                <TemplateBoardSelect
+                  myclass={myclass}
+                  value={templateBoardId}
+                  onChange={handleBoardChange}
+                  disabled={applying}
+                />
                 <TemplateBoardCardPicker
                   templateBoardId={templateBoardId}
                   selectedCardId={selectedCardId}

@@ -276,16 +276,6 @@ export const GET_AN_ASSIGNMENT = gql`
       author {
         id
       }
-      homework {
-        id
-        title
-        code
-        content
-        comment
-        updatedAt
-        settings
-        placeholder
-      }
       classes {
         id
       }
