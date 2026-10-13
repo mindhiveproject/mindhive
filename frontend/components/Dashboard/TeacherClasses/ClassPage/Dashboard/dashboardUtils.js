@@ -1,5 +1,3 @@
-export const DASHBOARD_PROJECTS_CARD_KEY = "projects";
-
 export const STATUS_ICON_SRC = {
   NOT_STARTED: "/assets/icons/status/notStarted.svg",
   IN_PROGRESS: "/assets/icons/status/inProgress.svg",
@@ -20,38 +18,19 @@ export function reviewAliasesForMilestone(milestone) {
   );
 }
 
-const countAndFormat = (arr) => {
-  const counts = arr.reduce((acc, val) => {
-    acc[val] = (acc[val] || 0) + 1;
-    return acc;
-  }, {});
-  return Object.entries(counts)
-    .map(([value, count]) => `${value}:${count}`)
-    .join(", ");
-};
-
-export function aggregateReviewsForMilestone(project, milestone) {
+export function countReviewsForMilestone(project, milestone) {
   const aliases = reviewAliasesForMilestone(milestone);
-  if (!aliases.size || !project?.reviews?.length) return null;
+  if (!aliases.size || !project?.reviews?.length) return 0;
 
-  const statuses = project.reviews
-    .filter((review) => {
-      const stage =
-        review?.stage != null ? String(review.stage).toLowerCase() : "";
-      const key =
-        review?.milestone?.key != null
-          ? String(review.milestone.key).toLowerCase()
-          : "";
-      return (stage && aliases.has(stage)) || (key && aliases.has(key));
-    })
-    .flatMap((review) =>
-      (review?.content || [])
-        .filter((question) => question?.responseType === "selectOne")
-        .map((question) => question?.answer)
-        .filter(Boolean)
-    );
-
-  return statuses.length ? countAndFormat(statuses) : null;
+  return project.reviews.filter((review) => {
+    const stage =
+      review?.stage != null ? String(review.stage).toLowerCase() : "";
+    const key =
+      review?.milestone?.key != null
+        ? String(review.milestone.key).toLowerCase()
+        : "";
+    return (stage && aliases.has(stage)) || (key && aliases.has(key));
+  }).length;
 }
 
 export function milestoneShowsReviews(milestone) {
@@ -59,6 +38,12 @@ export function milestoneShowsReviews(milestone) {
   if (milestone.statusTarget === "study") return false;
   if (milestone.actionCardType === "ACTION_COLLECTING_DATA") return false;
   return true;
+}
+
+// `?steps=a,b` (or the legacy single `?step=a`) → ["a", "b"].
+export function parseStepKeys(value) {
+  const raw = Array.isArray(value) ? value.join(",") : value || "";
+  return [...new Set(raw.split(",").map((key) => key.trim()).filter(Boolean))];
 }
 
 export function firstQueryValue(value) {

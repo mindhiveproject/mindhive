@@ -249,6 +249,9 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
         usedInClass {
           id
         }
+        clonedFrom {
+          id
+        }
         collaborators {
           id
           username

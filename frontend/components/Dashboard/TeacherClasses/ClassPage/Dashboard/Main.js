@@ -10,8 +10,9 @@ import useTranslation from "next-translate/useTranslation";
 import { StudentPageLink } from "./Renderers/StudentPageLink";
 import { ManageProjectCell } from "./Renderers/ManageProjectCell";
 import { ManageStudyCell } from "./Renderers/ManageStudyCell";
-import { StatusChipCell } from "./Renderers/StatusChipCell";
-import { OpenChipCell } from "./Renderers/OpenChipCell";
+import { MainProjectCell } from "./Renderers/MainProjectCell";
+import { MilestoneStatusCell } from "./Renderers/MilestoneStatusCell";
+import { MilestoneColumnHeader } from "./Renderers/MilestoneColumnHeader";
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../Queries/Classes";
 import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../../Queries/Proposal";
 import {
@@ -25,16 +26,18 @@ import {
 import BoardMilestonesSync from "../../../BoardMilestonesSync";
 
 import Button from "../../../../DesignSystem/Button";
+import Card from "../../../../DesignSystem/Card";
+import Chip from "../../../../DesignSystem/Chip";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import Input from "../../../../DesignSystem/Input";
 import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 import DashboardAssetIcon from "./DashboardAssetIcon";
-import MilestoneCards from "./MilestoneCards";
 import {
-  aggregateReviewsForMilestone,
-  DASHBOARD_PROJECTS_CARD_KEY,
+  countReviewsForMilestone,
   firstQueryValue,
   isCompleteStatus,
   milestoneShowsReviews,
+  parseStepKeys,
 } from "./dashboardUtils";
 import { SelectedStudentsModal } from "./Modals/SelectedStudents";
 import ProjectManager from "./Modals/ProjectManager";
@@ -52,17 +55,29 @@ const CELL_ALIGN = {
   alignItems: "center",
 };
 
-function buildDashboardQuery({ template, step, persistTemplate }) {
+// Selected milestones live in `?steps=a,b`; the table keeps a saved column
+// layout per combination, under the "projects" key when none is selected.
+const NO_MILESTONES_TABLE_KEY = "projects";
+
+function buildDashboardQuery({ template, steps, persistTemplate }) {
   const query = { page: "dashboard" };
   if (persistTemplate && template) query.template = template;
-  if (step) query.step = step;
+  if (steps?.length) query.steps = steps.join(",");
   return query;
 }
 
 export default function Dashboard({ myclass }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
-  const stepFromQuery = firstQueryValue(router.query?.step);
+  // `?step=` is the pre-multi-select param; read it, then rewrite to `?steps=`.
+  const hasLegacyStepParam = router.query?.step != null;
+  const stepsKeyFromQuery = parseStepKeys(
+    router.query?.steps ?? router.query?.step
+  ).join(",");
+  const stepsFromQuery = useMemo(
+    () => (stepsKeyFromQuery ? stepsKeyFromQuery.split(",") : []),
+    [stepsKeyFromQuery]
+  );
   const templateFromQuery = firstQueryValue(router.query?.template);
 
   const { data, loading: studentsLoading } = useQuery(
@@ -118,20 +133,24 @@ export default function Dashboard({ myclass }) {
   );
 
   const inferredTemplateId = useMemo(() => {
-    if (validTemplateId || templateBoards.length < 2 || !stepFromQuery) {
+    if (
+      validTemplateId ||
+      templateBoards.length < 2 ||
+      !stepsFromQuery.length
+    ) {
       return undefined;
     }
     if (boardsLoading) return undefined;
     const owner = templateBoards.find((board) =>
-      (milestonesByBoard[board.id] || []).some(
-        (milestone) => milestone.key === stepFromQuery
+      (milestonesByBoard[board.id] || []).some((milestone) =>
+        stepsFromQuery.includes(milestone.key)
       )
     );
     return owner?.id;
   }, [
     validTemplateId,
     templateBoards,
-    stepFromQuery,
+    stepsFromQuery,
     boardsLoading,
     milestonesByBoard,
   ]);
@@ -141,16 +160,22 @@ export default function Dashboard({ myclass }) {
     return validTemplateId || inferredTemplateId || undefined;
   }, [templateBoards, validTemplateId, inferredTemplateId]);
 
-  const milestones = selectedBoardId
-    ? milestonesByBoard[selectedBoardId] || []
-    : [];
+  const milestones = useMemo(
+    () => (selectedBoardId ? milestonesByBoard[selectedBoardId] || [] : []),
+    [selectedBoardId, milestonesByBoard]
+  );
   const milestonesReady =
     !templateBoards.length || (selectedBoardId && loadingByBoard[selectedBoardId] === false);
 
-  const selectedMilestone = useMemo(() => {
-    if (!stepFromQuery || !milestones.length) return null;
-    return milestones.find((milestone) => milestone.key === stepFromQuery) || null;
-  }, [milestones, stepFromQuery]);
+  // Board order, not click order, so columns line up with the chip row.
+  const selectedMilestones = useMemo(
+    () =>
+      milestones.filter((milestone) => stepsFromQuery.includes(milestone.key)),
+    [milestones, stepsFromQuery]
+  );
+  const selectedStepsKey = selectedMilestones
+    .map((milestone) => milestone.key)
+    .join(",");
 
   const replaceDashboardQuery = useCallback(
     (next) => {
@@ -162,7 +187,7 @@ export default function Dashboard({ myclass }) {
       if (myclass?.id) {
         writeClassDashboardPrefs(myclass.id, {
           template: query.template,
-          step: query.step,
+          steps: next.steps,
         });
       }
       router.replace(
@@ -185,12 +210,14 @@ export default function Dashboard({ myclass }) {
     }
     if (hasRestoredDashboardPrefs.current) return;
 
-    const hasExplicitQuery = Boolean(templateFromQuery || stepFromQuery);
+    const hasExplicitQuery = Boolean(
+      templateFromQuery || stepsFromQuery.length
+    );
     if (hasExplicitQuery) {
       hasRestoredDashboardPrefs.current = true;
       writeClassDashboardPrefs(myclass.id, {
         template: templateFromQuery,
-        step: stepFromQuery,
+        steps: stepsFromQuery,
       });
       return;
     }
@@ -219,16 +246,15 @@ export default function Dashboard({ myclass }) {
     const boardMilestones = boardIdForStep
       ? milestonesByBoard[boardIdForStep] || []
       : [];
-    const storedStep =
-      stored.step && boardMilestones.some((m) => m.key === stored.step)
-        ? stored.step
-        : undefined;
+    const storedSteps = parseStepKeys(stored.steps ?? stored.step).filter(
+      (key) => boardMilestones.some((m) => m.key === key)
+    );
 
-    if (!storedTemplate && !storedStep) return;
+    if (!storedTemplate && !storedSteps.length) return;
 
     replaceDashboardQuery({
       template: persistTemplate ? storedTemplate : undefined,
-      step: storedStep,
+      steps: storedSteps,
     });
   }, [
     router.isReady,
@@ -236,7 +262,7 @@ export default function Dashboard({ myclass }) {
     boardsLoading,
     loadingByBoard,
     templateFromQuery,
-    stepFromQuery,
+    stepsFromQuery,
     templateBoards,
     milestonesByBoard,
     persistTemplate,
@@ -247,20 +273,25 @@ export default function Dashboard({ myclass }) {
     if (!router.isReady || !myclass?.code || boardsLoading) return;
 
     const desiredTemplate = persistTemplate ? selectedBoardId : undefined;
-    const desiredStep = selectedMilestone?.key;
 
     if (
       (templateFromQuery || undefined) === (desiredTemplate || undefined) &&
-      (stepFromQuery || undefined) === (desiredStep || undefined)
+      stepsKeyFromQuery === selectedStepsKey &&
+      !hasLegacyStepParam
     ) {
       return;
     }
 
-    if (!desiredTemplate && persistTemplate && stepFromQuery && !desiredStep) {
+    if (
+      !desiredTemplate &&
+      persistTemplate &&
+      stepsFromQuery.length &&
+      !selectedStepsKey
+    ) {
       if (templateFromQuery && !validTemplateId) {
         replaceDashboardQuery({
           template: undefined,
-          step: stepFromQuery,
+          steps: stepsFromQuery,
         });
       }
       return;
@@ -268,7 +299,7 @@ export default function Dashboard({ myclass }) {
 
     replaceDashboardQuery({
       template: desiredTemplate,
-      step: desiredStep,
+      steps: selectedStepsKey ? selectedStepsKey.split(",") : [],
     });
   }, [
     router.isReady,
@@ -276,9 +307,11 @@ export default function Dashboard({ myclass }) {
     boardsLoading,
     persistTemplate,
     selectedBoardId,
-    selectedMilestone?.key,
+    selectedStepsKey,
     templateFromQuery,
-    stepFromQuery,
+    stepsKeyFromQuery,
+    stepsFromQuery,
+    hasLegacyStepParam,
     validTemplateId,
     replaceDashboardQuery,
   ]);
@@ -287,50 +320,61 @@ export default function Dashboard({ myclass }) {
     (boardId) => {
       if (!boardId) return;
       const nextMilestones = milestonesByBoard[boardId] || [];
-      const keepStep =
-        stepFromQuery &&
-        nextMilestones.some((milestone) => milestone.key === stepFromQuery);
       replaceDashboardQuery({
         template: boardId,
-        step: keepStep ? stepFromQuery : undefined,
+        steps: stepsFromQuery.filter((key) =>
+          nextMilestones.some((milestone) => milestone.key === key)
+        ),
       });
     },
-    [milestonesByBoard, replaceDashboardQuery, stepFromQuery]
+    [milestonesByBoard, replaceDashboardQuery, stepsFromQuery]
   );
 
-  const selectStep = useCallback(
+  const toggleStep = useCallback(
     (key) => {
       if (!key) return;
-      if (key === DASHBOARD_PROJECTS_CARD_KEY) {
-        replaceDashboardQuery({
-          template: selectedBoardId,
-          step: undefined,
-        });
-        return;
-      }
-      const nextStep = stepFromQuery === key ? undefined : key;
+      const isSelected = stepsFromQuery.includes(key);
+      const steps = milestones
+        .map((milestone) => milestone.key)
+        .filter((k) =>
+          k === key ? !isSelected : stepsFromQuery.includes(k)
+        );
       replaceDashboardQuery({
         template: selectedBoardId,
-        step: nextStep,
+        steps,
       });
     },
-    [replaceDashboardQuery, selectedBoardId, stepFromQuery]
+    [milestones, replaceDashboardQuery, selectedBoardId, stepsFromQuery]
   );
 
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [isBulkOpen, setIsBulkOpen] = useState(false);
   const [projectRow, setProjectRow] = useState(null);
   const [studyRow, setStudyRow] = useState(null);
-  const [statusRow, setStatusRow] = useState(null);
+  const [statusTarget, setStatusTarget] = useState(null);
+  const [search, setSearch] = useState("");
+
+  const openStatusManager = useCallback(
+    (row, milestone) => setStatusTarget({ row, milestone }),
+    []
+  );
 
   const students = data?.profiles || [];
 
   const studentsProcessed = useMemo(
     () =>
-      students.map((student) => {
+      students.flatMap((student) => {
         const classProjects = student?.collaboratorInProposal?.filter(
           (project) => project?.usedInClass?.id === myclass?.id
         );
+        // With a template board selected, only boards cloned from it count, and
+        // students without one are left out of the table.
+        const boardProjects = selectedBoardId
+          ? (classProjects || []).filter(
+              (project) => project?.clonedFrom?.id === selectedBoardId
+            )
+          : classProjects;
+        if (selectedBoardId && !boardProjects.length) return [];
 
         let project;
         let projects;
@@ -339,9 +383,9 @@ export default function Dashboard({ myclass }) {
         let studyId;
         let studyTitle;
 
-        if (classProjects && classProjects.length) {
-          const mainProjects = classProjects.filter((p) => p?.isMain);
-          project = (mainProjects.length && mainProjects[0]) || classProjects[0];
+        if (boardProjects && boardProjects.length) {
+          const mainProjects = boardProjects.filter((p) => p?.isMain);
+          project = (mainProjects.length && mainProjects[0]) || boardProjects[0];
           projects = classProjects;
           projectId = project?.id;
           projectTitle = project?.title;
@@ -353,11 +397,20 @@ export default function Dashboard({ myclass }) {
           study?.classes?.map((cl) => cl?.id).includes(myclass?.id)
         );
 
-        const statusEntry = selectedMilestone
-          ? readMilestoneStatus(project, selectedMilestone.key, milestones)
-          : { status: "NOT_STARTED" };
+        const milestoneEntries = {};
+        for (const milestone of selectedMilestones) {
+          milestoneEntries[milestone.key] = {
+            status:
+              readMilestoneStatus(project, milestone.key, milestones)?.status ||
+              "NOT_STARTED",
+            isOpen: isOpenForComments(project, milestone, milestones),
+            reviewCount: milestoneShowsReviews(milestone)
+              ? countReviewsForMilestone(project, milestone)
+              : 0,
+          };
+        }
 
-        return {
+        return [{
           id: student?.id,
           publicId: student?.publicId,
           username: student?.username,
@@ -368,40 +421,21 @@ export default function Dashboard({ myclass }) {
           studies,
           studyId,
           studyTitle,
-          milestoneStatusValue: statusEntry?.status || "NOT_STARTED",
-          milestoneIsOpen: selectedMilestone
-            ? isOpenForComments(project, selectedMilestone, milestones)
-            : false,
-          commentsReceived: aggregateReviewsForMilestone(
-            project,
-            selectedMilestone
-          ),
-        };
+          milestones: milestoneEntries,
+        }];
       }),
-    [students, myclass?.id, selectedMilestone, milestones]
+    [students, myclass?.id, selectedBoardId, selectedMilestones, milestones]
   );
 
   const completionByKey = useMemo(() => {
     const totals = {};
-    for (const milestone of milestones) {
-      totals[milestone.key] = studentsProcessed.filter((student) => {
-        const entry = readMilestoneStatus(
-          student.project,
-          milestone.key,
-          milestones
-        );
-        return isCompleteStatus(entry?.status);
-      }).length;
+    for (const milestone of selectedMilestones) {
+      totals[milestone.key] = studentsProcessed.filter((student) =>
+        isCompleteStatus(student.milestones[milestone.key]?.status)
+      ).length;
     }
     return totals;
-  }, [milestones, studentsProcessed]);
-
-  const showReviewsColumn = milestoneShowsReviews(selectedMilestone);
-  const isStudyMilestone = selectedMilestone?.statusTarget === "study";
-  const projectsAssignedCount = useMemo(
-    () => studentsProcessed.filter((student) => student.projectId).length,
-    [studentsProcessed]
-  );
+  }, [selectedMilestones, studentsProcessed]);
 
   const boardOptions = useMemo(
     () =>
@@ -445,89 +479,78 @@ export default function Dashboard({ myclass }) {
       },
     ];
 
-    if (!selectedMilestone) {
-      cols.push(
-        {
-          field: "projectTitle",
-          headerName: t("dashboard.mainProject", {}, {
-            default: "Main Project",
-          }),
-          minWidth: 160,
-          flex: 1,
-        },
-        {
-          colId: "manageProject",
-          field: "projectTitle",
-          headerName: t("dashboard.manageProject", {}, {
-            default: "Manage project",
-          }),
-          cellRenderer: ManageProjectCell,
-          cellRendererParams: {
-            onManageProject: setProjectRow,
-          },
-          sortable: false,
-          filter: false,
-          minWidth: 200,
-          width: 220,
-        },
-        {
-          colId: "manageStudy",
-          field: "studyTitle",
-          headerName: t("dashboard.manageStudy", {}, {
-            default: "Manage study",
-          }),
-          cellRenderer: ManageStudyCell,
-          cellRendererParams: {
-            onManageStudy: setStudyRow,
-          },
-          sortable: false,
-          filter: false,
-          minWidth: 200,
-          width: 220,
-        }
-      );
-      return cols;
-    }
-
     cols.push({
-      field: "milestoneStatusValue",
-      headerName: t("dashboard.statusColumn", {}, { default: "Status" }),
-      cellRenderer: StatusChipCell,
-      cellRendererParams: {
-        onManageStatus: setStatusRow,
-        statusTarget: selectedMilestone.statusTarget,
-      },
-      minWidth: 180,
-      width: 200,
-    });
-    cols.push({
-      field: "milestoneIsOpen",
-      headerName: isStudyMilestone
-        ? t("dashboard.participationSetting", {}, {
-            default: "Open for participation",
-          })
-        : t("dashboard.openSetting", {}, { default: "Open for comments" }),
-      cellRenderer: OpenChipCell,
-      cellRendererParams: {
-        statusTarget: selectedMilestone.statusTarget,
-        onManageStatus: setStatusRow,
-      },
+      field: "projectTitle",
+      headerName: t("dashboard.mainProject", {}, {
+        default: "Main Project",
+      }),
+      cellRenderer: MainProjectCell,
       minWidth: 200,
-      width: 220,
+      width: 260,
     });
-    if (showReviewsColumn) {
+
+    for (const milestone of selectedMilestones) {
       cols.push({
-        field: "commentsReceived",
-        headerName: t("dashboard.commentsReceived", {}, {
-          default: "Comments received",
-        }),
-        minWidth: 160,
-        flex: 1,
+        colId: `milestone:${milestone.key}`,
+        headerName: milestone.title || milestone.key,
+        headerComponent: MilestoneColumnHeader,
+        headerComponentParams: {
+          completed: completionByKey[milestone.key] || 0,
+          total: studentsProcessed.length,
+        },
+        valueGetter: (params) =>
+          params.data?.milestones?.[milestone.key]?.status || "NOT_STARTED",
+        cellRenderer: MilestoneStatusCell,
+        cellRendererParams: {
+          milestone,
+          onManageStatus: openStatusManager,
+        },
+        minWidth: 200,
+        width: 260,
       });
     }
 
+    cols.push(
+      {
+        colId: "manageProject",
+        field: "projectTitle",
+        headerName: t("dashboard.manageProject", {}, {
+          default: "Manage project",
+        }),
+        cellRenderer: ManageProjectCell,
+        cellRendererParams: {
+          onManageProject: setProjectRow,
+        },
+        sortable: false,
+        filter: false,
+        minWidth: 200,
+        width: 220,
+      },
+      {
+        colId: "manageStudy",
+        field: "studyTitle",
+        headerName: t("dashboard.manageStudy", {}, {
+          default: "Manage study",
+        }),
+        cellRenderer: ManageStudyCell,
+        cellRendererParams: {
+          onManageStudy: setStudyRow,
+        },
+        sortable: false,
+        filter: false,
+        minWidth: 200,
+        width: 220,
+      }
+    );
+
     return cols;
-  }, [t, selectedMilestone, isStudyMilestone, showReviewsColumn]);
+  }, [
+    t,
+    selectedMilestones,
+    completionByKey,
+    studentsProcessed.length,
+    openStatusManager,
+  ]);
 
   const defaultColDef = useMemo(
     () => ({
@@ -544,12 +567,14 @@ export default function Dashboard({ myclass }) {
 
   const tablePrefs = useClassTablePrefs(
     myclass?.id,
-    `dashboard.${selectedMilestone?.key || DASHBOARD_PROJECTS_CARD_KEY}`,
+    `dashboard.${selectedStepsKey || NO_MILESTONES_TABLE_KEY}`,
     { fitToWidth: false }
   );
 
-  const statusManagerValue = statusRow?.milestoneStatusValue;
-  const statusManagerOpen = Boolean(statusRow && selectedMilestone);
+  const statusRow = statusTarget?.row;
+  const statusMilestone = statusTarget?.milestone;
+  const statusEntry = statusRow?.milestones?.[statusMilestone?.key];
+  const isStudyStatus = statusMilestone?.statusTarget === "study";
   const showCards = Boolean(selectedBoardId) && milestonesReady;
   const showChooserPrompt =
     persistTemplate && !selectedBoardId && !boardsLoading;
@@ -598,68 +623,110 @@ export default function Dashboard({ myclass }) {
         />
       ) : null}
 
-      {templateBoards.length === 0 ? (
-        <div className="dashboardSourceBar">
+      <Card variant="outline" as="section" className="dashboardTools">
+        {templateBoards.length === 0 ? (
+          <div className="dashboardSourceBar">
+            <p className="dashboardEmpty">
+              {t("dashboard.noTemplateBoards", {}, {
+                default:
+                  "This class has no template boards, so there are no class milestones to show.",
+              })}
+            </p>
+          </div>
+        ) : null}
+
+        {templateBoards.length > 1 ? (
+          <div className="dashboardSourceBar">
+            <span className="dashboardSourceLabel">
+              {t("dashboard.templateBoardLabel", {}, {
+                default: "Template board",
+              })}
+              :
+            </span>
+            <DropdownSelect
+              value={selectedBoardId || ""}
+              onChange={selectTemplateBoard}
+              options={boardOptions}
+              placeholder={t("dashboard.selectTemplateBoard", {}, {
+                default: "Select a template board",
+              })}
+              ariaLabel={t("dashboard.templateBoardLabel", {}, {
+                default: "Template board",
+              })}
+              fitContent
+            />
+          </div>
+        ) : null}
+
+        {showChooserPrompt ? (
           <p className="dashboardEmpty">
-            {t("dashboard.noTemplateBoards", {}, {
-              default:
-                "This class has no template boards, so there are no class milestones to show.",
+            {t("dashboard.chooseTemplateBoard", {}, {
+              default: "Choose a template board to see its milestones.",
             })}
           </p>
+        ) : null}
+
+        {showCards && milestones.length === 0 ? (
+          <p className="dashboardEmpty">
+            {t("dashboard.noTemplateMilestones", {}, {
+              default: "This template board has no class milestones yet.",
+            })}
+          </p>
+        ) : null}
+
+        {showCards && milestones.length > 0 ? (
+          <p className="dashboardHint">
+            {t("dashboard.milestoneFilterHint", {}, {
+              default:
+                "Select milestones to add them as columns, then click a student's status to change it.",
+            })}
+          </p>
+        ) : null}
+
+        <div className="dashboardFilterBar">
+          {showCards && milestones.length > 0 ? (
+            <div
+              className="dashboardFilterChips"
+              role="group"
+              aria-label={t("dashboard.milestoneCardsNav", {}, {
+                default: "Class milestones",
+              })}
+            >
+              <span className="dashboardFilterLabel">
+                {t("dashboard.milestoneFilter", {}, {
+                  default: "Milestone filter",
+                })}
+              </span>
+              {milestones.map((milestone) => {
+                const selected = stepsFromQuery.includes(milestone.key);
+                return (
+                  <Chip
+                    key={milestone.id || milestone.key}
+                    label={milestone.title || milestone.key}
+                    pressed={selected}
+                    onClick={() => toggleStep(milestone.key)}
+                    onClose={
+                      selected ? () => toggleStep(milestone.key) : undefined
+                    }
+                  />
+                );
+              })}
+            </div>
+          ) : null}
+          <div className="dashboardSearch">
+            <Input
+              value={search}
+              onChange={setSearch}
+              placeholder={t("dashboard.searchStudents", {}, {
+                default: "Search students or projects",
+              })}
+              aria-label={t("dashboard.searchStudents", {}, {
+                default: "Search students or projects",
+              })}
+            />
+          </div>
         </div>
-      ) : null}
-
-      {templateBoards.length > 1 ? (
-        <div className="dashboardSourceBar">
-          <span className="dashboardSourceLabel">
-            {t("dashboard.templateBoardLabel", {}, {
-              default: "Template board",
-            })}
-            :
-          </span>
-          <DropdownSelect
-            value={selectedBoardId || ""}
-            onChange={selectTemplateBoard}
-            options={boardOptions}
-            placeholder={t("dashboard.selectTemplateBoard", {}, {
-              default: "Select a template board",
-            })}
-            ariaLabel={t("dashboard.templateBoardLabel", {}, {
-              default: "Template board",
-            })}
-            fitContent
-          />
-        </div>
-      ) : null}
-
-      {showChooserPrompt ? (
-        <p className="dashboardEmpty">
-          {t("dashboard.chooseTemplateBoard", {}, {
-            default: "Choose a template board to see its milestones.",
-          })}
-        </p>
-      ) : null}
-
-      {showCards && milestones.length === 0 ? (
-        <p className="dashboardEmpty">
-          {t("dashboard.noTemplateMilestones", {}, {
-            default: "This template board has no class milestones yet.",
-          })}
-        </p>
-      ) : null}
-
-      {showCards ? (
-        <MilestoneCards
-          milestones={milestones}
-          selectedKey={
-            selectedMilestone?.key || DASHBOARD_PROJECTS_CARD_KEY
-          }
-          onSelect={selectStep}
-          completionByKey={completionByKey}
-          totalStudents={studentsProcessed.length}
-          projectsAssignedCount={projectsAssignedCount}
-        />
-      ) : null}
+      </Card>
 
       {selectedStudents.length > 1 ? (
         <div className="dashboardToolbar">
@@ -684,7 +751,7 @@ export default function Dashboard({ myclass }) {
         onClose={() => setIsBulkOpen(false)}
         selectedStudents={selectedStudents}
         classId={myclass?.id}
-        milestone={selectedMilestone}
+        milestone={selectedMilestones[0]}
       />
 
       {projectRow ? (
@@ -709,31 +776,31 @@ export default function Dashboard({ myclass }) {
         />
       ) : null}
 
-      {statusManagerOpen && isStudyMilestone ? (
+      {statusEntry && isStudyStatus ? (
         <StudySubmissionStatusManager
-          key={statusRow.id}
+          key={`${statusRow.id}:${statusMilestone.key}`}
           open
-          onClose={() => setStatusRow(null)}
+          onClose={() => setStatusTarget(null)}
           data={statusRow}
-          value={statusManagerValue}
-          openForParticipation={statusRow.milestoneIsOpen}
+          value={statusEntry.status}
+          openForParticipation={statusEntry.isOpen}
           classId={myclass?.id}
-          milestone={selectedMilestone}
-          stage={selectedMilestone.title || selectedMilestone.key}
+          milestone={statusMilestone}
+          stage={statusMilestone.title || statusMilestone.key}
         />
       ) : null}
 
-      {statusManagerOpen && !isStudyMilestone ? (
+      {statusEntry && !isStudyStatus ? (
         <SubmissionStatusManager
-          key={statusRow.id}
+          key={`${statusRow.id}:${statusMilestone.key}`}
           open
-          onClose={() => setStatusRow(null)}
+          onClose={() => setStatusTarget(null)}
           data={statusRow}
-          value={statusManagerValue}
-          openForComments={statusRow.milestoneIsOpen}
+          value={statusEntry.status}
+          openForComments={statusEntry.isOpen}
           classId={myclass?.id}
-          milestone={selectedMilestone}
-          stage={selectedMilestone.title || selectedMilestone.key}
+          milestone={statusMilestone}
+          stage={statusMilestone.title || statusMilestone.key}
         />
       ) : null}
 
@@ -744,10 +811,18 @@ export default function Dashboard({ myclass }) {
           defaultColDef={defaultColDef}
           rowSelection="multiple"
           suppressRowClickSelection
-          rowHeight={48}
-          overlayNoRowsTemplate={t("dashboard.noStudentsYet", {}, {
-            default: "No students have joined this class yet.",
-          })}
+          rowHeight={56}
+          quickFilterText={search}
+          overlayNoRowsTemplate={
+            students.length
+              ? t("dashboard.noStudentsOnTemplateBoard", {}, {
+                  default:
+                    "No students have a project from this template board yet.",
+                })
+              : t("dashboard.noStudentsYet", {}, {
+                  default: "No students have joined this class yet.",
+                })
+          }
           getRowId={(params) =>
             params.data.id || params.data.publicId || params.data.username
           }
@@ -772,6 +847,15 @@ const StyledDashboard = styled.div`
   box-sizing: border-box;
   min-height: min(70vh, calc(100vh - 280px));
 
+  /* Board picker, hint, milestone filter and search share one outline card. */
+  .dashboardTools {
+    height: auto;
+  }
+
+  .dashboardTools > .DesignSystem-Card-content {
+    gap: 12px;
+  }
+
   .dashboardSourceBar {
     display: flex;
     align-items: center;
@@ -792,6 +876,44 @@ const StyledDashboard = styled.div`
     font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
+
+  .dashboardHint {
+    margin: 0;
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
+
+  .dashboardFilterBar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .dashboardFilterChips {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    /* Basis 0 lets the chips wrap inside this track, keeping the search
+       field on the same row instead of pushing it onto its own line. */
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .dashboardFilterLabel {
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+
+  .dashboardSearch {
+    width: 260px;
+    max-width: 100%;
+    margin-left: auto;
   }
 
   .dashboardToolbar {

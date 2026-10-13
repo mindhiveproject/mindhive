@@ -63,11 +63,12 @@ export function writeClassPagePref(classId, page) {
   writeClassPrefs(classId, { page });
 }
 
-export function writeClassDashboardPrefs(classId, { template, step } = {}) {
+export function writeClassDashboardPrefs(classId, { template, steps } = {}) {
   writeClassPrefs(classId, {
     dashboard: {
       template: template || null,
-      step: step || null,
+      steps: steps?.length ? steps : null,
+      step: null,
     },
   });
 }
