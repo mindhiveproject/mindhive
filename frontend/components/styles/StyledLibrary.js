@@ -6,6 +6,7 @@ const StyledLibrary = styled.div`
   width: 100%;
   max-width: 1200px;
   justify-self: center;
+  margin-bottom: 4rem;
 `;
 
 export default StyledLibrary;

@@ -66,11 +66,6 @@ function DisplayFeatured({ user, studies, isDashboard }) {
 
   return (
     <StyledFeaturedStudies>
-      <div className="featuredHeader">
-        <h1>{t("discoverHeader")}</h1>
-        <p>{t("discoverDescription")}</p>
-      </div>
-
       <section
         className="featuredCarousel"
         aria-roledescription="carousel"

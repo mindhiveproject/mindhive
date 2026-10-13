@@ -4,10 +4,6 @@ export const StyledFeaturedStudies = styled.div`
   display: grid;
   grid-gap: 2rem;
 
-  @media (max-width: 1200px) {
-    padding: 0rem 2rem;
-  }
-
   .featuredCarousel {
     display: grid;
     grid-gap: 1rem;
@@ -16,7 +12,6 @@ export const StyledFeaturedStudies = styled.div`
   .featuredContainer {
     display: grid;
     width: 100%;
-    min-height: 400px;
   }
 
   .featuredControls {
@@ -49,7 +44,6 @@ export const StyledFeaturedStudies = styled.div`
     grid-template-columns: 1fr 1fr;
     flex: 1 1 auto;
     width: 100%;
-    min-height: 400px;
 
     .cardInfo {
       display: grid;
@@ -78,37 +72,44 @@ export const StyledFeaturedStudies = styled.div`
       }
     }
 
-    /* Bleeds to the card edge; clips to the card's 12px radius (minus the
-       1px border) on the right-hand corners. The image is never cropped: it
-       scales to fit the panel, letterboxed on the neutral fill. */
+    /* The neutral panel bleeds to the card edge and clips to the card's 12px
+       radius (minus the 1px border) on the right-hand corners. The image is
+       never cropped: it scales to fit, capped at 320px tall, and sits centred
+       on the panel. The panel keeps that height on every slide so the
+       carousel doesn't jump as you page through it. */
     .studyImage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 320px;
       overflow: hidden;
       background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
       border-radius: 0 11px 11px 0;
       > div {
-        height: 100%;
-      }
-      .noImage {
+        display: flex;
+        justify-content: center;
         width: 100%;
-        height: 100%;
-        background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
       }
       img {
         display: block;
         width: 100%;
-        height: 100%;
+        height: auto;
+        max-height: 420px;
         object-fit: contain;
       }
     }
 
     @media (max-width: 900px) {
       grid-template-columns: 1fr;
-      min-height: 0;
 
       .studyImage {
         order: -1;
+        min-height: 0;
         height: 220px;
         border-radius: 11px 11px 0 0;
+        img {
+          max-height: 220px;
+        }
       }
     }
 

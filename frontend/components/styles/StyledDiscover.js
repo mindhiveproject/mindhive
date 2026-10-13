@@ -29,15 +29,40 @@ export const StyledDiscover = styled.div`
   }
 
   .filterHeader {
-    display: grid;
-    grid-gap: 20px;
-    grid-template-columns: 1fr auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
     margin: 20px 0px;
   }
 
+  .typeFilters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .searchAndActions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .taskSearch {
+    width: 280px;
+    max-width: 100%;
+  }
+
+  /* Same responsive rule as the study bank: 3 columns at desktop width,
+     fewer as the page narrows, one column on phones. */
   .tasks {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-gap: 10px;
+    @media (max-width: 500px) {
+      grid-template-columns: 1fr;
+    }
   }
 `;

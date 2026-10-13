@@ -1,6 +1,7 @@
 import DiscoverStudyBank from "../Studies/Bank/Discover";
 import StyledLibrary from "../styles/StyledLibrary";
 import DiscoverTaskBank from "../Tasks/Bank/Discover";
+import FeaturedStudies from "../Studies/Featured";
 import { NavbarItem, SectionNavbar } from "../DesignSystem/Navbar";
 
 import Link from "next/link";
@@ -12,7 +13,12 @@ export default function Library({ query, user, isDashboard }) {
   const basePath = `${isDashboard ? "/dashboard" : ""}/discover`;
 
   return (
-    <StyledLibrary>
+    <StyledLibrary className="discoverLibrary">
+      <div className="discoverHeader">
+        <h1>{t("discoverHeader")}</h1>
+        <p>{t("discoverDescription")}</p>
+      </div>
+
       <SectionNavbar
         variant="underline"
         showRule
@@ -37,11 +43,14 @@ export default function Library({ query, user, isDashboard }) {
       </SectionNavbar>
 
       {selector === "study" && (
-        <DiscoverStudyBank
-          query={query}
-          user={user}
-          isDashboard={isDashboard}
-        />
+        <>
+          <FeaturedStudies user={user} isDashboard={isDashboard} />
+          <DiscoverStudyBank
+            query={query}
+            user={user}
+            isDashboard={isDashboard}
+          />
+        </>
       )}
 
       {selector === "task" && (

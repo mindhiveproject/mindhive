@@ -10,29 +10,11 @@ const StyledFront = styled.div`
   margin: 5rem 0rem;
   padding: 2rem 0rem;
 
-  .featuredHeader {
-    display: grid;
-    width: 100%;
-    max-width: 1200px;
-    justify-self: center;
-  }
-
-  .featuredContainerWrapper {
-    background: #f6f9f8;
-    width: 100%;
-    padding: 7rem 0rem 2rem 0rem;
-    @media (max-width: 1300px) {
-      padding: 7rem 2rem;
+  /* Keep a gutter once the window is narrower than the 1200px column. */
+  .discoverLibrary {
+    @media (max-width: 1264px) {
+      padding: 0rem 2rem;
     }
-  }
-
-  .featuredContainer {
-    display: grid;
-    width: 100%;
-    max-width: 1200px;
-    justify-self: center;
-    min-height: 400px;
-    background: #f6f9f8;
   }
 
   .centered {
