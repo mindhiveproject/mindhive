@@ -1,20 +1,33 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import Navbar, { NavbarItem } from "../../DesignSystem/Navbar";
 import SplitPane from "../../DesignSystem/SplitPane";
-import { DescriptionIcon, TuneIcon } from "../../DesignSystem/Icons";
+import {
+  DescriptionIcon,
+  TuneIcon,
+  WaveformIcon,
+} from "../../DesignSystem/Icons";
 
 import { VISUAL } from "../../Queries/YQVisual";
 import { VisualBuilderContext } from "../Context/VisualBuilderContext";
-import { readBindings, resolveValues } from "../Helpers/bindings";
+import {
+  normalizeDeclarations,
+  readBindings,
+  resolveValues,
+} from "../Helpers/bindings";
 import P5Frame from "../Runtime/P5Frame";
+import ParameterBus from "../Runtime/parameterBus";
+import useVisualDataSources from "../Runtime/useVisualDataSources";
 import Preview from "../Builder/Preview";
 import DocumentationPanel from "../Builder/Panels/Documentation";
+import DataSourcesPanel from "../Builder/Panels/DataSources";
 import ParametersPanel from "../Builder/Panels/Parameters";
+import ConnectScreen from "../../Studies/Run/DataSources/ConnectScreen";
+import DisconnectedToasts from "./DisconnectedToasts";
 
 const SHELL_STYLE = {
   display: "flex",
@@ -76,16 +89,26 @@ export default function VisualViewer({
   const [declared, setDeclared] = useState({});
   const [hasDeclaration, setHasDeclaration] = useState(false);
   const [tab, setTab] = useState("parameters");
+  const [bus] = useState(() => new ParameterBus());
+  const [gatePassed, setGatePassed] = useState(false);
 
   // Seeded from the author's bindings, then owned entirely by this session.
   // Memoized because `readBindings` builds a fresh object each call, which would
-  // otherwise change identity every render and push a new value message into the
-  // frame on each one.
+  // otherwise change identity every render and re-resolve every value on each
+  // one.
   const authoredBindings = useMemo(
     () => readBindings(visual?.parameters).bindings,
     [visual?.parameters]
   );
   const bindings = sessionBindings ?? authoredBindings;
+
+  const {
+    sources: dataSources,
+    apis: sourceApis,
+    status: sourceStatus,
+    runtimes: sourceRuntimes,
+    loading: sourcesLoading,
+  } = useVisualDataSources(id, bus, declared, bindings);
 
   const files = useMemo(
     () => [...(visual?.codeFiles || [])].sort((a, b) => a.order - b.order),
@@ -99,15 +122,16 @@ export default function VisualViewer({
     }));
   }, []);
 
-  const onDeclare = useCallback((parameters) => {
-    setDeclared(parameters);
+  // Declaration warnings are the author's business; a participant has no
+  // console to read them in.
+  const onDeclare = useCallback((raw) => {
+    setDeclared(normalizeDeclarations(raw).parameters);
     setHasDeclaration(true);
   }, []);
 
-  const values = useMemo(
-    () => resolveValues(declared, bindings),
-    [declared, bindings]
-  );
+  useEffect(() => {
+    bus.replace(resolveValues(declared, bindings, bus.values));
+  }, [bus, declared, bindings]);
 
   const noop = useCallback(() => {}, []);
 
@@ -122,7 +146,10 @@ export default function VisualViewer({
       hasDeclaration,
       bindings,
       updateBinding,
-      values,
+      bus,
+      dataSources,
+      sourceApis,
+      detailSourceId: null,
       openPanel: noop,
       closePanel: noop,
       revealFile: noop,
@@ -137,11 +164,13 @@ export default function VisualViewer({
       hasDeclaration,
       bindings,
       updateBinding,
-      values,
+      bus,
+      dataSources,
+      sourceApis,
     ]
   );
 
-  if (loading && !visual) {
+  if ((loading && !visual) || sourcesLoading) {
     return <div style={{ padding: 24 }}>{t("loading", "Loading…")}</div>;
   }
   if (!visual) {
@@ -152,14 +181,43 @@ export default function VisualViewer({
     );
   }
 
-  // Authored mode: connect, then experience. There is nothing to connect *to*
-  // until data sources land, so this is the experience half only — the connect
-  // checklist is built from the visual's data sources and arrives with them.
+  // Authored mode: connect, then experience. The connect half is the study
+  // run's own gate, so a visual asks for its devices exactly the way a study
+  // does; the sources keep running underneath it once it is passed.
   if (visual.participationMode === "authored") {
+    const allRequiredConnected = dataSources.every(
+      (source) => sourceApis[source.id]?.requiredConnected
+    );
     return (
-      <div style={FULLSCREEN_STYLE}>
-        <P5Frame files={files} values={values} onDeclare={onDeclare} />
-      </div>
+      <>
+        {sourceRuntimes}
+        {dataSources.length && !gatePassed ? (
+          <ConnectScreen
+            study={visual}
+            rows={dataSources}
+            apis={sourceApis}
+            allRequiredConnected={allRequiredConnected}
+            onContinue={() => setGatePassed(true)}
+            onPreview={noop}
+            onLeave={() => window.history.back()}
+            heading={t(
+              "visualCollectsData",
+              "This visual uses data from other devices"
+            )}
+            leaveLabel={t("leave", "Leave")}
+          />
+        ) : (
+          <div style={FULLSCREEN_STYLE}>
+            <P5Frame
+              files={files}
+              bus={bus}
+              sources={sourceStatus}
+              onDeclare={onDeclare}
+            />
+            <DisconnectedToasts rows={dataSources} apis={sourceApis} />
+          </div>
+        )}
+      </>
     );
   }
 
@@ -173,11 +231,21 @@ export default function VisualViewer({
           },
         ]
       : []),
+    ...(dataSources.length
+      ? [
+          {
+            id: "dataSource",
+            label: t("dataSource", "Data Source"),
+            icon: <WaveformIcon />,
+          },
+        ]
+      : []),
     { id: "parameters", label: t("parameters", "Parameters"), icon: <TuneIcon /> },
   ];
 
   return (
     <VisualBuilderContext.Provider value={contextValue}>
+      {sourceRuntimes}
       <div style={SHELL_STYLE}>
         <Navbar style={{ flexShrink: 0, padding: "8px" }}>
           {tabs.map((entry) => (
@@ -199,12 +267,19 @@ export default function VisualViewer({
             start={
               tab === "documentation" ? (
                 <DocumentationPanel />
+              ) : tab === "dataSource" ? (
+                <DataSourcesPanel />
               ) : (
                 <ParametersPanel />
               )
             }
             end={
-              <Preview files={files} values={values} onDeclare={onDeclare} />
+              <Preview
+                files={files}
+                bus={bus}
+                sources={sourceStatus}
+                onDeclare={onDeclare}
+              />
             }
           />
         </div>

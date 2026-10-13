@@ -18,12 +18,20 @@ import { createContext, useContext } from "react";
  * @property {(fileId: string, content: string) => void} updateFile
  * @property {(name: string) => Promise<object>} addFile - Creates a module file.
  * @property {(fileId: string) => void} removeFile
- * @property {Record<string, object>} declared - Parameters as declared by the running sketch.
+ * @property {Record<string, object>} declared - The running sketch's declaration, normalized to the panel's kinds.
  * @property {boolean} hasDeclaration - False until the sketch has announced itself.
+ * @property {string[]} [declarationWarnings] - What normalizing the declaration had to correct; builder only, a participant has no code to fix.
  * @property {object} bindings - Per-parameter binding + authoring overrides.
  * @property {(key: string, patch: object) => void} updateBinding
  * @property {?(next: boolean) => void} setDocsVisible - Builder only; absent in the Viewer.
- * @property {Record<string, any>} values - Resolved values currently driving the sketch.
+ * @property {import("../Runtime/parameterBus").default} bus - Current parameter values, held outside React; read one with `bus.subscribe` / `bus.get`.
+ * @property {Array} dataSources - Linked VisualDataSource rows, block included.
+ * @property {Record<string, object>} sourceApis - Live `useSourceRuntime` API per linked source id: status, connect/disconnect, `streaming`.
+ * @property {?(blockId: string) => Promise<void>} linkSource - Builder only.
+ * @property {?(source: object) => Promise<void>} unlinkSource - Builder only; also clears mappings onto it.
+ * @property {?(sourceId: string) => void} openSourceSettings - Builder only; opens the source's settings in the detail slot.
+ * @property {?() => void} showDataSources - Builder only; switches to the Data Source tab.
+ * @property {?string} detailSourceId - Which source's settings the detail panel shows.
  * @property {(panel: object) => void} openPanel - Pushes a panel to the right of the work area.
  * @property {(id: string) => void} closePanel
  * @property {Array<{kind, message, stack, line}>} logs - Output from the running sketch.

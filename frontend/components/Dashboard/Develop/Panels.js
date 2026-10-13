@@ -15,9 +15,10 @@ export default function Panels({ query, user }) {
     (permission) => permission?.name
   );
 
-  // The visuals section is real now, but early — it stays behind ADMIN until
-  // data sources land. Drop this gate to open it up.
-  const isAdmin = userPermissions.includes("ADMIN");
+  // The visuals section is real now, but early — it stays behind ADMIN and
+  // TESTER until data sources land. Drop this gate to open it up.
+  const canSeeVisuals =
+    userPermissions.includes("ADMIN") || userPermissions.includes("TESTER");
 
   // choose default selector for user dependent on user permissions
   const selectorForUser = userPermissions.includes("SCIENTIST")
@@ -73,7 +74,7 @@ export default function Panels({ query, user }) {
           {t("developTasks.tabBlocks", {}, { default: "Blocks" })}
         </NavbarItem>
 
-        {isAdmin && (
+        {canSeeVisuals && (
           <NavbarItem
             as={Link}
             href="/dashboard/develop/visuals"
@@ -100,7 +101,9 @@ export default function Panels({ query, user }) {
         <DevelopTaskBank user={user} taskType="BLOCK" />
       )}
 
-      {isAdmin && selectorForUser == "visuals" && <VisualsBank user={user} />}
+      {canSeeVisuals && selectorForUser == "visuals" && (
+        <VisualsBank user={user} />
+      )}
     </>
   );
 }

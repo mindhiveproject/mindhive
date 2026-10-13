@@ -63,7 +63,7 @@ export default function DevelopMain({ query, user }) {
 
   // Visuals skip the shared /develop/new selector — there's nothing to pick, so
   // this entry creates one straight away and opens it in the builder.
-  if (userPermissions.includes("ADMIN")) {
+  if (userPermissions.includes("ADMIN") || userPermissions.includes("TESTER")) {
     developNewItems.push({
       key: "visual",
       label: t("developNewMenu.visual", {}, { default: "Visual" }),

@@ -47,12 +47,16 @@ const NAME_STYLE = {
  * The builder's top bar: back out of the editor, what you're editing, and the
  * actions that apply to the visual as a whole.
  */
-export default function TopBar({ title, onShare }) {
+export default function TopBar({ title, onShare, onBack }) {
   const { t } = useTranslation("visuals");
 
   return (
     <div className="Visuals-TopBar" style={ROOT_STYLE}>
-      <Link href="/dashboard/develop/visuals" aria-label={t("back", "Back to visuals")}>
+      <Link
+        href="/dashboard/develop/visuals"
+        aria-label={t("back", "Back to visuals")}
+        onClick={onBack}
+      >
         <IconButton
           variant="text"
           icon={<ChevronLeftIcon />}

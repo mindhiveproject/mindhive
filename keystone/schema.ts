@@ -55,6 +55,7 @@ import { StudyDataSource } from "./schemas/StudyDataSource";
 import { StudyDataSourceRecord } from "./schemas/StudyDataSourceRecord";
 import { Visual } from "./schemas/YQVisual";
 import { VisualCodeFile } from "./schemas/YQVisualCodeFile";
+import { VisualDataSource } from "./schemas/YQVisualDataSource";
 import { JsPsychExperiment } from "./schemas/JsPsychExperiment";
 import { Friendship } from "./schemas/YQFriendship";
 import { YQGenAI } from "./schemas/YQGenAI";
@@ -142,6 +143,7 @@ export const lists: Lists = {
   StudyDataSourceRecord,
   Visual,
   VisualCodeFile,
+  VisualDataSource,
   JsPsychExperiment,
   Friendship,
   YQTag,

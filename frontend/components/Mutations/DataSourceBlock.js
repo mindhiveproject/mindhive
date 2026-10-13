@@ -56,3 +56,37 @@ export const SAVE_STUDY_DATA_SOURCE_RECORD = gql`
     )
   }
 `;
+
+// Link a catalog block into a visual.
+export const CREATE_VISUAL_DATA_SOURCE = gql`
+  mutation CREATE_VISUAL_DATA_SOURCE($data: VisualDataSourceCreateInput!) {
+    createVisualDataSource(data: $data) {
+      id
+    }
+  }
+`;
+
+// Returns the changed fields so the cached row updates everywhere it's read,
+// same as UPDATE_STUDY_DATA_SOURCE.
+export const UPDATE_VISUAL_DATA_SOURCE = gql`
+  mutation UPDATE_VISUAL_DATA_SOURCE(
+    $id: ID!
+    $data: VisualDataSourceUpdateInput!
+  ) {
+    updateVisualDataSource(where: { id: $id }, data: $data) {
+      id
+      label
+      order
+      inputBindings
+      settings
+    }
+  }
+`;
+
+export const DELETE_VISUAL_DATA_SOURCE = gql`
+  mutation DELETE_VISUAL_DATA_SOURCE($id: ID!) {
+    deleteVisualDataSource(where: { id: $id }) {
+      id
+    }
+  }
+`;

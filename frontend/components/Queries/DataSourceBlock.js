@@ -62,3 +62,38 @@ export const STUDY_DATA_SOURCES = gql`
     }
   }
 `;
+
+// The data sources linked into one visual. Same block selection as the study's,
+// so the participant runtime (useSourceRuntime) can run either kind of row.
+export const VISUAL_DATA_SOURCES = gql`
+  query VISUAL_DATA_SOURCES($visualId: ID!) {
+    visualDataSources(
+      where: { visual: { id: { equals: $visualId } } }
+      orderBy: [{ order: asc }]
+    ) {
+      id
+      label
+      order
+      inputBindings
+      settings
+      block {
+        id
+        title
+        slug
+        description
+        requirementLabel
+        inputs
+        outputs
+        settingsSchema
+        graph
+        version
+        author {
+          id
+        }
+        favoritedBy {
+          id
+        }
+      }
+    }
+  }
+`;

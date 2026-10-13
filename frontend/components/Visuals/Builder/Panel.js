@@ -50,8 +50,13 @@ const BODY_STYLE = {
   flex: "1 1 0%",
   overflowY: "auto",
   overflowX: "hidden",
-  padding: "12px 16px 8px",
+  padding: "12px 16px 16px",
 };
+
+// Same trick the Modal body uses: still scrolls, just without the gutter.
+const HIDE_SCROLLBAR_STYLE =
+  ".Visuals-Panel-Body--hideScrollbar { scrollbar-width: none; -ms-overflow-style: none; }" +
+  ".Visuals-Panel-Body--hideScrollbar::-webkit-scrollbar { display: none; }";
 
 /**
  * The white 12px-radius surface every work panel and the Preview share: a
@@ -62,6 +67,7 @@ const BODY_STYLE = {
  * @param {React.ReactNode} children - Panel body.
  * @param {boolean} [flush=false] - Drops the body's padding and gap, for panels
  *   whose content owns its own edges (the code editor, the preview canvas).
+ * @param {boolean} [hideScrollbar=false] - Hides the body's scrollbar; it still scrolls.
  * @param {React.CSSProperties} [style] - Override for the root.
  */
 export default function Panel({
@@ -69,6 +75,7 @@ export default function Panel({
   actions = null,
   children,
   flush = false,
+  hideScrollbar = false,
   style = {},
 }) {
   return (
@@ -77,7 +84,11 @@ export default function Panel({
         <h2 style={TITLE_STYLE}>{title}</h2>
         {actions ? <div style={ACTIONS_STYLE}>{actions}</div> : null}
       </header>
+      {hideScrollbar ? (
+        <style dangerouslySetInnerHTML={{ __html: HIDE_SCROLLBAR_STYLE }} />
+      ) : null}
       <div
+        className={hideScrollbar ? "Visuals-Panel-Body--hideScrollbar" : undefined}
         style={
           flush
             ? { ...BODY_STYLE, gap: 0, padding: "12px 0 0", overflow: "hidden" }

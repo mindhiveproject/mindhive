@@ -116,6 +116,10 @@ export const DataSourceBlock = list({
       ref: "StudyDataSource.block",
       many: true,
     }),
+    visualInstances: relationship({
+      ref: "VisualDataSource.block",
+      many: true,
+    }),
 
     createdAt: timestamp({ defaultValue: { kind: "now" } }),
     updatedAt: timestamp({

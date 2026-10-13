@@ -18,9 +18,10 @@
  * made here, delete the existing row first and re-run.
  *
  * `inputs`/`outputs`/`graph`/`settingsSchema` are Keystone `json()` fields but
- * land as plain TEXT columns on SQLite, so they're written pre-stringified —
- * Prisma won't serialize them for you here the way Keystone's own query layer
- * does.
+ * land as plain TEXT columns on SQLite, so they're written pre-stringified
+ * there. On Postgres they're real jsonb columns and must be passed as objects —
+ * a pre-stringified value gets stored as a JSON *string*, which the frontend
+ * then can't iterate.
  */
 
 const { PrismaClient } = require("@prisma/client");
@@ -223,6 +224,8 @@ const BLOCKS = [
 
 async function main() {
   const prisma = new PrismaClient();
+  const isSqlite = process.env.DATABASE_URL.startsWith("file:");
+  const toJson = (value) => (isSqlite ? JSON.stringify(value) : value);
 
   let created = 0;
   let skipped = 0;
@@ -252,10 +255,10 @@ async function main() {
           requirementLabel: block.requirementLabel,
           isOfficial: true,
           published: true,
-          inputs: JSON.stringify(block.inputs),
-          outputs: JSON.stringify(block.outputs),
-          graph: JSON.stringify(block.graph),
-          settingsSchema: JSON.stringify(block.settingsSchema),
+          inputs: toJson(block.inputs),
+          outputs: toJson(block.outputs),
+          graph: toJson(block.graph),
+          settingsSchema: toJson(block.settingsSchema),
         },
       });
       console.log(`Created "${block.title}" (${block.slug}).`);

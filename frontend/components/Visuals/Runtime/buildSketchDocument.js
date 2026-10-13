@@ -15,14 +15,31 @@ const P5_URL = "https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js";
  * splices a parameter in or out, and makes the handshake literal: calling it is
  * what posts the declaration up to the app.
  */
-export const PARAMETERS_TEMPLATE = `// Every parameter this sketch exposes. The Parameters tab renders whatever you
-// declare here, and \`params.<key>\` holds the live value inside the sketch.
+export const PARAMETERS_TEMPLATE = `// You can write your parameters here or in the dedicated tab
+
+// Types of parameters:
+//   { type: "number", default: 0.5, min: 0, max: 1, step: 0.01 }
+//   { type: "category", options: ["calm", "busy"], default: "calm" }
+//   { type: "boolean", default: true }
+//   { type: "text", default: "Hi!" }
+//   { type: "color", default: "#ec40de" }
+//   { type: "vector2", default: [0, 0], min: -1, max: 1 }
+//   { type: "vector3", default: [0, 0, 0] }
+
 declareParameters({
   size: { type: "number", label: "Size", default: 0.5, min: 0, max: 1 },
 });
 `;
 
-export const ENTRY_TEMPLATE = `function setup() {
+export const ENTRY_TEMPLATE = `
+
+// Hey! This is a normal p5-sketch with a few custom functions
+//   params.<name>       References the parameters declared in code or dashboard
+//   sources             the linked data sources and whether each is connected.
+//   sendEvent(label, v) used to send event markers.
+
+
+function setup() {
   createCanvas(windowWidth, windowHeight);
   noStroke();
 }
@@ -38,24 +55,41 @@ function windowResized() {
 }
 `;
 
+/** Tag on every message between the app and the frame, in the style of yq-data's `yq-data/1`. */
+export const PROTOCOL = "yq-visual/1";
+
 /**
- * Runs before any user code. Sets up the two things the sketch talks to — the
- * live `params` object and `declareParameters` — plus the log/error relay and
- * the message channel back to the app.
+ * Runs before any user code. Sets up the things the sketch talks to — the live
+ * `params` object, `declareParameters` and `sendEvent` — plus the log/error
+ * relay and the channel back to the app.
  *
- * Posts to "*" rather than a fixed origin on purpose: the frame is sandboxed
- * *without* `allow-same-origin`, so it has an opaque origin and cannot name
- * ours. The nonce, not the origin, is what makes a message trustworthy — and
- * dropping `allow-same-origin` is what stops a shared visual's code from
- * reaching into the parent page in the first place.
+ * The channel is a private `MessagePort`. The frame is sandboxed *without*
+ * `allow-same-origin`, so its origin is opaque: it can only reach the parent
+ * with `postMessage(…, "*")`, and a BroadcastChannel can't reach it at all.
+ * So the window is used exactly once, for the handshake — the frame says
+ * `hello` with its nonce, the app answers `connect` carrying a port — and
+ * everything after that travels on the port, where only the two ends can hear
+ * it. Dropping `allow-same-origin` is what stops a shared visual's code from
+ * reaching into the page around it.
  */
 function preamble(nonce) {
   return `
 (function () {
   var NONCE = ${JSON.stringify(nonce)};
+  var PROTOCOL = ${JSON.stringify(PROTOCOL)};
+  var port = null;
+  // Declarations and logs happen while the scripts run, before the app has had
+  // a chance to answer — they wait here until the port exists.
+  var outbox = [];
+
   function post(message) {
+    var envelope = Object.assign({ protocol: PROTOCOL }, message);
+    if (!port) {
+      if (outbox.length < 200) outbox.push(envelope);
+      return;
+    }
     try {
-      parent.postMessage(Object.assign({ nonce: NONCE }, message), "*");
+      port.postMessage(envelope);
     } catch (e) {}
   }
   window.__post = post;
@@ -63,7 +97,19 @@ function preamble(nonce) {
   // Live parameter values. The app overwrites entries as mappings resolve; the
   // sketch only ever reads them.
   window.params = {};
+  // YQ sketches read their values from data. Same object, so it stays live as
+  // params is updated in place — and plain assignment, so a sketch that
+  // declares its own data is free to.
+  window.data = window.params;
+  // The linked data sources' connection state, replaced whole whenever a device
+  // connects or drops: [{ id, label, streaming, ready, inputs: [{ id, label,
+  // required, status, device }] }]. Read-only, like params.
+  window.sources = [];
   window.__paused = false;
+  window.__crashed = false;
+  // Whether the loop was running when the app paused it, so resuming doesn't
+  // start a loop in a sketch that stopped its own.
+  var resumeLoop = true;
 
   window.declareParameters = function (declaration) {
     var decl = declaration || {};
@@ -72,6 +118,78 @@ function preamble(nonce) {
     });
     post({ type: "declare", parameters: decl });
   };
+
+  // Lets a sketch report something that happened in it — a click, a trial, a
+  // stimulus shown. The app can later turn these into event markers.
+  window.sendEvent = function (label, value) {
+    post({ type: "event", label: String(label), value: value, time: Date.now() });
+  };
+
+  function apply(values) {
+    Object.assign(window.params, values);
+    // A sketch that called noLoop() itself only draws when asked, so a changed
+    // value would otherwise never reach the canvas.
+    if (window.__paused || window.__crashed) return;
+    try {
+      if (typeof isLooping === "function" && !isLooping()) redraw();
+    } catch (e) {}
+  }
+
+  function setPaused(paused) {
+    if (paused === window.__paused) return;
+    window.__paused = paused;
+    // Before p5 has started there is no loop to stop; the draw wrapper honours
+    // the flag on its first frame instead.
+    if (typeof noLoop !== "function" || typeof loop !== "function") return;
+    if (paused) {
+      resumeLoop = typeof isLooping === "function" ? isLooping() : true;
+      noLoop();
+    } else if (!window.__crashed) {
+      if (resumeLoop) loop();
+      else redraw();
+    }
+  }
+
+  function onPortMessage(event) {
+    var data = event.data;
+    if (!data || data.protocol !== PROTOCOL) return;
+    if (data.type === "init" || data.type === "params") {
+      apply(data.values || {});
+    } else if (data.type === "sources") {
+      window.sources = data.sources || [];
+      // Same as a changed value: a sketch that stopped its own loop would never
+      // show the new state otherwise.
+      if (window.__paused || window.__crashed) return;
+      try {
+        if (typeof isLooping === "function" && !isLooping()) redraw();
+      } catch (e) {}
+    } else if (data.type === "pause") {
+      setPaused(!!data.paused);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    var data = event.data;
+    if (port || event.source !== parent) return;
+    if (!data || data.protocol !== PROTOCOL || data.type !== "connect") return;
+    if (data.nonce !== NONCE || !event.ports || !event.ports[0]) return;
+    port = event.ports[0];
+    port.onmessage = onPortMessage;
+    clearInterval(helloTimer);
+    outbox.splice(0).forEach(function (message) {
+      try { port.postMessage(message); } catch (e) {}
+    });
+  });
+
+  // Repeated until answered: the app's listener may not be attached yet when
+  // this runs, and a lost hello would leave the frame deaf for good.
+  function sayHello() {
+    try {
+      parent.postMessage({ protocol: PROTOCOL, type: "hello", nonce: NONCE }, "*");
+    } catch (e) {}
+  }
+  var helloTimer = setInterval(sayHello, 200);
+  sayHello();
 
   ["log", "warn", "error", "info"].forEach(function (level) {
     var original = console[level];
@@ -100,16 +218,6 @@ function preamble(nonce) {
       column: event.colno || 0,
     });
   });
-
-  window.addEventListener("message", function (event) {
-    var data = event.data;
-    if (!data || data.nonce !== NONCE) return;
-    if (data.type === "params" && data.values) {
-      Object.assign(window.params, data.values);
-    } else if (data.type === "pause") {
-      window.__paused = !!data.paused;
-    }
-  });
 })();
 `;
 }
@@ -133,6 +241,7 @@ const POSTAMBLE = `
           message: name + ": " + (error.message || String(error)),
           stack: error.stack || "",
         });
+        window.__crashed = true;
         if (typeof noLoop === "function") noLoop();
       }
     };
@@ -154,11 +263,11 @@ const POSTAMBLE = `
           message: "draw: " + (error.message || String(error)),
           stack: error.stack || "",
         });
+        window.__crashed = true;
         if (typeof noLoop === "function") noLoop();
       }
     };
   }
-  window.__post({ type: "ready" });
 })();
 `;
 

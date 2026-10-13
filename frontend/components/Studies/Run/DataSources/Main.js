@@ -42,7 +42,9 @@ function canViewSignal(row) {
 // Runs one linked data source's live pipeline and reports its status up to
 // the orchestrator below — a bare controller component rather than a hook
 // called in a loop, so the number of linked sources can change safely.
-function SourceRuntime({ row, onStatus }) {
+// Exported for the visual builder and viewer, which run their linked sources
+// the same way.
+export function SourceRuntime({ row, onStatus }) {
   const api = useSourceRuntime(row);
   const statusSignature = JSON.stringify(api.inputStatus);
 

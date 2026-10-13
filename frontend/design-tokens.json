@@ -69,6 +69,13 @@
           "science.mindhive.cssVariable": "--MH-Theme-Tertiary-Dark"
         }
       },
+      "Base": {
+        "$type": "color",
+        "$value": "#55808c",
+        "$extensions": {
+          "science.mindhive.cssVariable": "--MH-Theme-Tertiary-Base"
+        }
+      },
       "Medium": {
         "$type": "color",
         "$value": "#d3e0e3",

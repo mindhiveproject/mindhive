@@ -117,6 +117,14 @@ export default function MonacoPythonEditor({
   options: optionOverrides,
 }) {
   const beforeMount = useCallback((monaco) => {
+    // Monaco's AMD loader leaves a global `define` with `define.amd` set, so
+    // every UMD script the page injects afterwards registers itself with it.
+    // MediaPipe's wasm glue (yq-data's camera receivers) is one, injected each
+    // time a visual starts its sources; the second injection trips "Can only
+    // have one anonymous define call per script file". Monaco's own modules
+    // call `define` directly and never read `.amd`, so hiding it is safe.
+    if (window.define?.amd) delete window.define.amd;
+
     monaco.editor.defineTheme(DATA_JOURNAL_MONACO_THEME, {
       base: "vs",
       inherit: true,

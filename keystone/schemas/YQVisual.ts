@@ -263,6 +263,9 @@ export const Visual = list({
     }),
     yqGenAI: relationship({ ref: "YQGenAI.visual", many: false }),
     codeFiles: relationship({ ref: "VisualCodeFile.visual", many: true }),
+    // Catalog data sources linked into this visual; parameters map onto their
+    // outputs through `stream` bindings in `parameters`.
+    dataSources: relationship({ ref: "VisualDataSource.visual", many: true }),
     // How the visual behaves when someone *participates* in it, as opposed to
     // who it is shared with (`privacy`) or who may edit it (`collaborators`).
     // Sandbox keeps the panel and lets a participant retune mappings for their

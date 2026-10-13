@@ -97,6 +97,13 @@ const StyledChip = styled.div`
     color: var(--MH-Theme-Error-Dark, #b3261e);
   }
 
+  /* An empty slot rather than a value — "nothing set here yet". Only the
+     outline's style changes; selected and disabled, declared after, restore a
+     solid edge because they redeclare the whole border. */
+  &.DesignSystem-Chip--dashed {
+    border-style: dashed;
+  }
+
   &.DesignSystem-Chip--selected {
     background: var(--MH-Theme-Primary-Light, #def8fb);
     border: 1px solid var(--MH-Theme-Primary-Base, #69bbc4);
@@ -231,6 +238,12 @@ export interface ChipProps {
   accent?: ChipAccent;
   /** Optional toggle pressed state; when provided, sets `aria-pressed`. */
   pressed?: boolean;
+  /**
+   * Interactive only: draws the outline dashed, for a chip standing in for a
+   * value that isn't set yet (e.g. a parameter with no data source mapped).
+   * @default false
+   */
+  dashed?: boolean;
   /** Disabled state (interactive only): greyed, not clickable. @default false */
   disabled?: boolean;
   /** Fired when the chip body is clicked; ignored for static chips and when close/trailing is clicked. */
@@ -272,6 +285,7 @@ export default function Chip({
   selected = false,
   accent = "primary",
   pressed,
+  dashed = false,
   disabled = false,
   onClick,
   onClose,
@@ -380,6 +394,7 @@ export default function Chip({
         "MH-Type-Label-Base",
         isStatic && "DesignSystem-Chip--static",
         isStatic && `DesignSystem-Chip--tone-${tone}`,
+        dashed && !isStatic && "DesignSystem-Chip--dashed",
         isSelected && "DesignSystem-Chip--selected",
         isSelected && `DesignSystem-Chip--accent-${accent}`,
         canHover && "DesignSystem-Chip--hoverable",

@@ -4,6 +4,7 @@ import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import { WaveformIcon, PlugIcon } from "../../../DesignSystem/Icons";
 import { channelKey } from "../../../../lib/yqOutputs";
+import CameraCanvas from "./CameraCanvas";
 
 const PAGE_STYLE = {
   minHeight: "100vh",
@@ -53,7 +54,9 @@ const DIVIDER_STYLE = {
   margin: "8px 0",
 };
 
-function StatusIndicator({ streaming }) {
+// Exported with InputRow for the visual builder's data source cards, which are
+// this screen's cards with a builder footer.
+export function StatusIndicator({ streaming }) {
   return (
     <div
       className="MH-Type-Label-Base"
@@ -73,42 +76,72 @@ function StatusIndicator({ streaming }) {
   );
 }
 
-function InputRow({ input, status, onConnect, onDisconnect }) {
+/**
+ * One device input: its name, what it is connected to, and the connect toggle.
+ *
+ * @param {HTMLVideoElement} [videoElement] - A connected camera's feed. When
+ *   given, the row opens up to show it, with the device name under it.
+ * @param {boolean} [nested=false] - The row sits on a Light-Green card (the
+ *   visual builder's) rather than a white one, so it takes the grey surface
+ *   instead to stay visible.
+ */
+export function InputRow({ input, status, onConnect, onDisconnect, videoElement, nested = false }) {
   const connected = status?.status === "connected";
   const connecting = status?.status === "connecting";
+  const showCamera = connected && !!videoElement;
+  const button = (
+    <Button
+      variant={connected ? "outline" : "filled"}
+      tone={connected ? "neutral" : "primary"}
+      leadingIcon={<PlugIcon />}
+      onClick={() => (connected ? onDisconnect?.(input.id) : onConnect?.(input.id))}
+      disabled={connecting || !onConnect}
+    >
+      {connecting ? "Connecting…" : connected ? "Disconnect" : "Connect"}
+    </Button>
+  );
   return (
     <div
       style={{
         display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 16,
-        padding: 16,
+        flexDirection: "column",
+        gap: 8,
+        padding: showCamera ? "16px 16px 12px" : 16,
         borderRadius: 12,
-        background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
+        background: nested
+          ? "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)"
+          : "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <span className="MH-Type-Title-Base" style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>
-          {input.label}
-        </span>
-        <span className="MH-Type-Body-Base" style={{ color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)" }}>
-          {connected
-            ? status.deviceLabel || "Connected"
-            : status?.status === "error"
-              ? status.error || "Could not connect"
-              : `No ${input.label.toLowerCase()} connected`}
-        </span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+        <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+          <span className="MH-Type-Title-Base" style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>
+            {input.label}
+          </span>
+          {showCamera ? null : (
+            <span className="MH-Type-Body-Base" style={{ color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)" }}>
+              {connected
+                ? status.deviceLabel || "Connected"
+                : status?.status === "error"
+                  ? status.error || "Could not connect"
+                  : status?.status === "lost"
+                    ? `Lost connection to ${status.deviceLabel || input.label}`
+                    : `No ${input.label.toLowerCase()} connected`}
+            </span>
+          )}
+        </div>
+        {button}
       </div>
-      <Button
-        variant={connected ? "outline" : "filled"}
-        tone={connected ? "neutral" : "primary"}
-        leadingIcon={<PlugIcon />}
-        onClick={() => (connected ? onDisconnect?.(input.id) : onConnect?.(input.id))}
-        disabled={connecting || !onConnect}
-      >
-        {connecting ? "Connecting…" : connected ? "Disconnect" : "Connect"}
-      </Button>
+      {showCamera && (
+        <>
+          <div style={{ borderRadius: 12, overflow: "hidden" }}>
+            <CameraCanvas videoElement={videoElement} />
+          </div>
+          {status.deviceLabel && (
+            <Chip variant="static" tone="neutral" label={status.deviceLabel} style={{ alignSelf: "flex-start" }} />
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -225,7 +258,17 @@ const FOOTER_STYLE = {
  * required inputs are connected — whether that's ever optional per-study is
  * still being worked out on the builder side.
  */
-export default function ConnectScreen({ study, rows, apis, allRequiredConnected, onContinue, onPreview, onLeave }) {
+export default function ConnectScreen({
+  study,
+  rows,
+  apis,
+  allRequiredConnected,
+  onContinue,
+  onPreview,
+  onLeave,
+  heading = "This study will collect data from other devices",
+  leaveLabel = "Leave the Study",
+}) {
   return (
     <div style={PAGE_STYLE}>
       <div style={TOP_BAR_STYLE}>
@@ -239,7 +282,7 @@ export default function ConnectScreen({ study, rows, apis, allRequiredConnected,
         <div style={COLUMN_STYLE}>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <h2 className="MH-Type-Title-Large" style={{ margin: 0, color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>
-              This study will collect data from other devices
+              {heading}
             </h2>
             <p className="MH-Type-Body-Base" style={{ margin: 0, color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>
               You will be connecting to the devices listed below. To learn more about the data
@@ -255,7 +298,7 @@ export default function ConnectScreen({ study, rows, apis, allRequiredConnected,
 
       <div style={FOOTER_STYLE}>
         <button type="button" style={LEAVE_BUTTON_STYLE} className="MH-Type-Label-Base" onClick={onLeave}>
-          Leave the Study
+          {leaveLabel}
         </button>
         <div style={{ display: "flex", gap: 8 }}>
           <Button variant="tonal" disabled>

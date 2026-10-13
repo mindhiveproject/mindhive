@@ -3,8 +3,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { AnimatePresence, motion } from "motion/react";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../DesignSystem/Button";
+import Modal from "../../DesignSystem/Modal";
 import Navbar, { NavbarItem } from "../../DesignSystem/Navbar";
 import SplitPane, { COLLAPSE_TRANSITION } from "../../DesignSystem/SplitPane";
 import {
@@ -23,13 +26,24 @@ import {
   UPDATE_VISUAL,
   UPDATE_VISUAL_CODE_FILE,
 } from "../../Mutations/YQVisual";
+import {
+  CREATE_VISUAL_DATA_SOURCE,
+  DELETE_VISUAL_DATA_SOURCE,
+} from "../../Mutations/DataSourceBlock";
 
 import { VisualBuilderContext } from "../Context/VisualBuilderContext";
-import { readBindings, resolveValues, writeBindings } from "../Helpers/bindings";
+import {
+  normalizeDeclarations,
+  readBindings,
+  resolveValues,
+  writeBindings,
+} from "../Helpers/bindings";
 import {
   ENTRY_TEMPLATE,
   PARAMETERS_TEMPLATE,
 } from "../Runtime/buildSketchDocument";
+import ParameterBus from "../Runtime/parameterBus";
+import useVisualDataSources from "../Runtime/useVisualDataSources";
 
 import TopBar from "./TopBar";
 import Preview from "./Preview";
@@ -38,6 +52,7 @@ import DocumentationPanel from "./Panels/Documentation";
 import DataSourcesPanel from "./Panels/DataSources";
 import ParametersPanel from "./Panels/Parameters";
 import ParameterDetailPanel from "./Panels/ParameterDetail";
+import DataSourceSettingsPanel from "./Panels/DataSourceSettings";
 import CodePanel from "./Panels/Code";
 import SettingsPanel from "./Panels/Settings";
 
@@ -52,10 +67,16 @@ const TABS = [
 // Viewport units rather than 100%: nothing between here and <body> carries a
 // height, so a percentage would collapse onto the content. The rest of the
 // builder areas size themselves the same way.
+//
+// `minWidth: 0` because the shell is a grid item in StyledBuilder: without it
+// the column grows to the shell's content, and Monaco lays itself out in pixels
+// to whatever it is given — so collapsing the preview widens the editor, which
+// widens the column, which widens the editor, until it runs off the page.
 const SHELL_STYLE = {
   display: "flex",
   flexDirection: "column",
   height: "100vh",
+  minWidth: 0,
   minHeight: 0,
   background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
 };
@@ -180,6 +201,8 @@ export default function VisualBuilder({ query, user }) {
   const [createCodeFile] = useMutation(CREATE_VISUAL_CODE_FILE);
   const [updateCodeFile] = useMutation(UPDATE_VISUAL_CODE_FILE);
   const [deleteCodeFile] = useMutation(DELETE_VISUAL_CODE_FILE);
+  const [createDataSource] = useMutation(CREATE_VISUAL_DATA_SOURCE);
+  const [deleteDataSource] = useMutation(DELETE_VISUAL_DATA_SOURCE);
 
   const visual = data?.visual;
   const canEdit =
@@ -187,11 +210,30 @@ export default function VisualBuilder({ query, user }) {
     (visual?.author?.id === user.id ||
       !!visual?.collaborators?.some((c) => c.id === user.id));
 
-  const [tab, setTab] = useState("code");
+  const [tab, setTab] = useState("parameters");
   const [detailPanel, setDetailPanel] = useState(null);
   const [focusFileId, setFocusFileId] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(true);
   const [shareOpen, setShareOpen] = useState(false);
+
+  // Settings are saved by an explicit Save, unlike the code, so they are the one
+  // thing leaving the builder (or the tab) can lose. The panel reports its
+  // draft; `pendingLeave` holds where the author was headed while they decide.
+  const router = useRouter();
+  const [settingsDirty, setSettingsDirty] = useState(false);
+  const [pendingLeave, setPendingLeave] = useState(null);
+
+  function leaveUnlessDirty(go) {
+    if (settingsDirty) setPendingLeave(() => go);
+    else go();
+  }
+
+  useEffect(() => {
+    if (!settingsDirty) return undefined;
+    const warn = (e) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [settingsDirty]);
 
   // Local drafts of the code files. The server copy is the source of truth on
   // load; from then on this is, until the debounced save catches up.
@@ -199,7 +241,19 @@ export default function VisualBuilder({ query, user }) {
   const [runFiles, setRunFiles] = useState([]);
   const [declared, setDeclared] = useState({});
   const [hasDeclaration, setHasDeclaration] = useState(false);
+  const [declarationWarnings, setDeclarationWarnings] = useState([]);
   const [bindings, setBindings] = useState({});
+  const [bus] = useState(() => new ParameterBus());
+
+  // The linked devices run here, in the shell, so they stay connected while
+  // the author moves between tabs.
+  const {
+    sources: dataSources,
+    apis: sourceApis,
+    status: sourceStatus,
+    runtimes: sourceRuntimes,
+    refetch: refetchSources,
+  } = useVisualDataSources(visualId, bus, declared, bindings);
 
   // Console output from the running sketch. It lives here rather than in the
   // Preview because the author reads it while looking at the code, and the
@@ -211,10 +265,13 @@ export default function VisualBuilder({ query, user }) {
 
   // ── Load ───────────────────────────────────────────────────────────────────
 
+  // Seeded once per visual, never re-read from the cache after that. Every save
+  // writes `parameters` back into the cached visual, and re-seeding from it
+  // would snap a value being dragged back to whatever the last save carried.
   useEffect(() => {
     if (!visual) return;
     setBindings(readBindings(visual.parameters).bindings);
-  }, [visual?.id, visual?.parameters]);
+  }, [visual?.id]);
 
   useEffect(() => {
     if (!visual) return;
@@ -362,25 +419,64 @@ export default function VisualBuilder({ query, user }) {
   useEffect(
     () => () => {
       Object.values(saveTimers.current).forEach(clearTimeout);
+      // A value set just before leaving would otherwise never be saved.
+      saveBindingsRef.current();
     },
     []
   );
 
-  const updateBinding = useCallback(
-    (key, patch) => {
-      // Computed outside the state updater on purpose: React may invoke an
-      // updater twice, and a mutation fired from inside one would go with it.
-      const next = {
-        ...bindings,
-        [key]: { ...(bindings[key] || {}), ...patch },
-      };
-      setBindings(next);
-      updateVisual({
-        variables: { id: visualId, data: { parameters: writeBindings(next) } },
-      }).catch(() => {});
-    },
-    [bindings, updateVisual, visualId]
-  );
+  // The save reads the latest bindings when it fires, not the ones it was
+  // scheduled with — a drag schedules it dozens of times.
+  const bindingsRef = useRef(bindings);
+  bindingsRef.current = bindings;
+  const bindingsDirty = useRef(false);
+  const saveBindingsRef = useRef(null);
+  saveBindingsRef.current = () => {
+    if (!bindingsDirty.current) return;
+    bindingsDirty.current = false;
+    updateVisual({
+      variables: {
+        id: visualId,
+        data: {
+          parameters: writeBindings(
+            bindingsRef.current,
+            hasDeclaration ? declared : null
+          ),
+        },
+      },
+    }).catch(() => {});
+  };
+
+  // YQ lists a visual's parameters from this column, so a key declared in code
+  // has to reach it even if its binding is never touched. The update's response
+  // refreshes the cached `parameters`, which is what stops this repeating.
+  useEffect(() => {
+    if (!canEdit || !hasDeclaration) return;
+    const stored = readBindings(visual?.parameters).bindings;
+    if (
+      Array.isArray(visual?.parameters) &&
+      Object.keys(declared).every((key) => key in stored)
+    ) {
+      return;
+    }
+    bindingsDirty.current = true;
+    saveBindingsRef.current();
+  }, [declared]);
+
+  // Local state moves on every call so the sketch follows the control; the
+  // write to the database waits until the control has been let go of.
+  const updateBinding = useCallback((key, patch) => {
+    setBindings((current) => ({
+      ...current,
+      [key]: { ...(current[key] || {}), ...patch },
+    }));
+    bindingsDirty.current = true;
+    clearTimeout(saveTimers.current.bindings);
+    saveTimers.current.bindings = setTimeout(
+      () => saveBindingsRef.current(),
+      SAVE_DEBOUNCE_MS
+    );
+  }, []);
 
   // Whether the people a visual is shared with see its documentation at all.
   // Lives on the visual rather than in the Yjs room: it is a sharing decision,
@@ -394,14 +490,20 @@ export default function VisualBuilder({ query, user }) {
     [updateVisual, visualId]
   );
 
-  const onDeclare = useCallback((parameters) => {
-    setDeclared(parameters);
-    setHasDeclaration(true);
-  }, []);
-
   const pushLog = useCallback((entry) => {
     setLogs((current) => [...current.slice(-49), entry]);
   }, []);
+
+  const onDeclare = useCallback(
+    (raw) => {
+      const { parameters, warnings } = normalizeDeclarations(raw);
+      setDeclared(parameters);
+      setHasDeclaration(true);
+      setDeclarationWarnings(warnings);
+      warnings.forEach((message) => pushLog({ kind: "warn", message }));
+    },
+    [pushLog]
+  );
 
   const clearLogs = useCallback(() => setLogs([]), []);
 
@@ -409,13 +511,57 @@ export default function VisualBuilder({ query, user }) {
   // leave a fixed mistake on screen.
   useEffect(() => setLogs([]), [runFiles]);
 
-  const values = useMemo(
-    () => resolveValues(declared, bindings),
-    [declared, bindings]
-  );
+  useEffect(() => {
+    bus.replace(resolveValues(declared, bindings, bus.values));
+  }, [bus, declared, bindings]);
 
   const openPanel = useCallback((panel) => setDetailPanel(panel), []);
   const closePanel = useCallback(() => setDetailPanel(null), []);
+
+  // ── Data sources ───────────────────────────────────────────────────────────
+
+  const linkSource = useCallback(
+    async (blockId) => {
+      if (!blockId) return;
+      await createDataSource({
+        variables: {
+          data: {
+            visual: { connect: { id: visualId } },
+            block: { connect: { id: blockId } },
+            order: dataSources.length,
+          },
+        },
+      }).catch(() => {});
+      refetchSources();
+    },
+    [createDataSource, visualId, dataSources.length, refetchSources]
+  );
+
+  // Parameters mapped onto the source go back to their defaults with it,
+  // rather than keeping a mapping that points at nothing.
+  const unlinkSource = useCallback(
+    async (source) => {
+      for (const [key, binding] of Object.entries(bindingsRef.current)) {
+        if (binding?.mapping?.sourceId === source.id) {
+          updateBinding(key, { mapping: null });
+        }
+      }
+      await deleteDataSource({ variables: { id: source.id } }).catch(() => {});
+      refetchSources();
+    },
+    [deleteDataSource, updateBinding, refetchSources]
+  );
+
+  const openSourceSettings = useCallback(
+    (sourceId) => setDetailPanel({ sourceId }),
+    []
+  );
+
+  // From a parameter's empty mapping list to where sources are linked.
+  const showDataSources = useCallback(() => {
+    setDetailPanel(null);
+    setTab("dataSource");
+  }, []);
 
   // ── Preview drawer ─────────────────────────────────────────────────────────
 
@@ -485,15 +631,23 @@ export default function VisualBuilder({ query, user }) {
       removeFile,
       declared,
       hasDeclaration,
+      declarationWarnings,
       bindings,
       updateBinding,
       setDocsVisible,
-      values,
+      bus,
+      dataSources,
+      sourceApis,
+      linkSource,
+      unlinkSource,
+      openSourceSettings,
+      showDataSources,
       openPanel,
       closePanel,
       // Which parameter the detail panel is pointed at, so the row it came from
       // can show itself as the selected one.
       detailKey: detailPanel?.paramKey ?? null,
+      detailSourceId: detailPanel?.sourceId ?? null,
       revealFile,
       focusFileId,
       logs,
@@ -509,10 +663,17 @@ export default function VisualBuilder({ query, user }) {
       removeFile,
       declared,
       hasDeclaration,
+      declarationWarnings,
       bindings,
       updateBinding,
       setDocsVisible,
-      values,
+      bus,
+      dataSources,
+      sourceApis,
+      linkSource,
+      unlinkSource,
+      openSourceSettings,
+      showDataSources,
       openPanel,
       closePanel,
       detailPanel,
@@ -542,13 +703,23 @@ export default function VisualBuilder({ query, user }) {
     dataSource: <DataSourcesPanel />,
     parameters: <ParametersPanel />,
     code: <CodePanel />,
-    settings: <SettingsPanel user={user} />,
+    settings: <SettingsPanel user={user} onDirtyChange={setSettingsDirty} />,
   }[tab];
 
   return (
     <VisualBuilderContext.Provider value={contextValue}>
+      {sourceRuntimes}
       <div className="Visuals-Builder" style={SHELL_STYLE}>
-        <TopBar title={visual.title} onShare={() => setShareOpen(true)} />
+        <TopBar
+          title={visual.title}
+          onShare={() => setShareOpen(true)}
+          onBack={(event) => {
+            // The link navigates on its own when there is nothing to lose.
+            if (!settingsDirty) return;
+            event.preventDefault();
+            leaveUnlessDirty(() => router.push("/dashboard/develop/visuals"));
+          }}
+        />
 
         <Navbar style={NAVBAR_STYLE}>
           {TABS.map((entry) => (
@@ -556,7 +727,7 @@ export default function VisualBuilder({ query, user }) {
               key={entry.id}
               leadingIcon={entry.icon}
               selected={tab === entry.id}
-              onClick={() => setTab(entry.id)}
+              onClick={() => leaveUnlessDirty(() => setTab(entry.id))}
             >
               {t(entry.id, entry.label)}
             </NavbarItem>
@@ -585,10 +756,14 @@ export default function VisualBuilder({ query, user }) {
                       exit={{ flexGrow: 0, marginLeft: 0 }}
                       transition={COLLAPSE_TRANSITION}
                     >
-                      <ParameterDetailPanel
-                        paramKey={detailPanel.paramKey}
-                        initialTab={detailPanel.initialTab}
-                      />
+                      {detailPanel.sourceId ? (
+                        <DataSourceSettingsPanel sourceId={detailPanel.sourceId} />
+                      ) : (
+                        <ParameterDetailPanel
+                          paramKey={detailPanel.paramKey}
+                          initialTab={detailPanel.initialTab}
+                        />
+                      )}
                     </motion.div>
                   ) : null}
                 </AnimatePresence>
@@ -597,7 +772,8 @@ export default function VisualBuilder({ query, user }) {
             end={
               <Preview
                 files={runFiles}
-                values={values}
+                bus={bus}
+                sources={sourceStatus}
                 logs={logs}
                 paused={previewPaused}
                 onDeclare={onDeclare}
@@ -633,7 +809,50 @@ export default function VisualBuilder({ query, user }) {
         </div>
 
         <ShareModal open={shareOpen} onClose={() => setShareOpen(false)} />
+        <DiscardChangesModal
+          open={!!pendingLeave}
+          onKeep={() => setPendingLeave(null)}
+          onDiscard={() => {
+            pendingLeave();
+            setPendingLeave(null);
+          }}
+        />
       </div>
     </VisualBuilderContext.Provider>
+  );
+}
+
+/** Staying is the primary action; leaving without saving is the quiet one. */
+function DiscardChangesModal({ open, onKeep, onDiscard }) {
+  const { t } = useTranslation("visuals");
+
+  return (
+    <Modal
+      open={open}
+      onClose={onKeep}
+      maxWidth={400}
+      title={t("discardChangesTitle", "Discard unsaved changes?")}
+      actions={
+        <>
+          <Button
+            variant="text"
+            style={{ color: "var(--MH-Theme-Warning-Base, #b9261a)" }}
+            onClick={onDiscard}
+          >
+            {t("discard", "Discard")}
+          </Button>
+          <Button variant="filled" onClick={onKeep}>
+            {t("keepEditing", "Keep Editing")}
+          </Button>
+        </>
+      }
+    >
+      <p style={{ margin: 0 }}>
+        {t(
+          "discardChangesBody",
+          "Your changes to the settings haven't been saved. If you leave now, they will be lost."
+        )}
+      </p>
+    </Modal>
   );
 }

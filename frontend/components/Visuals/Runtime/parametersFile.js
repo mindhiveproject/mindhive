@@ -158,6 +158,135 @@ export function removeParameter(source, key) {
 }
 
 /**
+ * A declared key spelled from what the author called the parameter —
+ * "Particle Size" becomes `particleSize`, which is what `params.particleSize`
+ * will read in the sketch.
+ *
+ * @param {string} name
+ * @returns {string} The key, or "" when nothing usable is left of the name.
+ */
+export function keyFromName(name) {
+  const words = String(name).match(/[\p{L}\p{N}]+/gu) || [];
+  const key = words
+    .map((word, index) => {
+      const first = index === 0 ? word[0].toLowerCase() : word[0].toUpperCase();
+      return first + word.slice(1);
+    })
+    .join("");
+  return /^[\p{L}_$]/u.test(key) ? key : "";
+}
+
+/**
+ * Changes fields of one parameter's declaration in place.
+ *
+ * Works field by field, like `removeParameter` works entry by entry: a field in
+ * the patch has its value replaced where it stands, a field that isn't there
+ * yet is appended, and a field set to `undefined` is cut out. Every other byte
+ * of the entry — comments, expressions like `max: Math.PI * 2` in fields the
+ * patch doesn't name — is left as the author wrote it.
+ *
+ * @param {string} source
+ * @param {string} key
+ * @param {Record<string, any>} patch - Field → new JSON-able value, or `undefined` to remove it.
+ * @returns {string | null} The edited source. `null` when the entry can't be
+ *   edited safely: it isn't a plain object literal (a spread, a variable, a
+ *   call), or the edit wouldn't leave one that parses. An empty patch is a dry
+ *   run that answers exactly that.
+ */
+export function updateParameter(source, key, patch) {
+  const body = findDeclarationBody(source);
+  if (!body) return null;
+
+  const innerStart = body.open + 1;
+  const inner = source.slice(innerStart, body.close);
+  const range = splitTopLevelEntries(inner).find(
+    (entry) => topLevelKey(inner.slice(entry.start, entry.end)) === key
+  );
+  if (!range) return null;
+
+  const text = inner.slice(range.start, range.end);
+  const valueStart = entryValueStart(text);
+  if (valueStart === -1) return null;
+
+  const literal = text.slice(valueStart).trimEnd();
+  if (!literal.startsWith("{") || !literal.endsWith("}")) return null;
+
+  let edited = literal;
+  for (const [field, value] of Object.entries(patch)) {
+    edited = setField(edited, field, value);
+  }
+
+  // Parsed, never run. Anything the splice got wrong, or a literal this scanner
+  // misread, shows up here rather than as a syntax error in the author's file.
+  try {
+    new Function(`return (${edited});`);
+  } catch (e) {
+    return null;
+  }
+
+  const from = innerStart + range.start + valueStart;
+  return source.slice(0, from) + edited + source.slice(from + literal.length);
+}
+
+/** Where the value begins in one `key: value` entry, past any comment above it. */
+function entryValueStart(entry) {
+  const match =
+    /^(?:\s|\/\/[^\n]*\n|\/\*[\s\S]*?\*\/)*["']?[A-Za-z_$][\w$]*["']?\s*:\s*/.exec(
+      entry
+    );
+  return match ? match[0].length : -1;
+}
+
+/** Sets, adds or (for `undefined`) removes one field of an object literal. */
+function setField(literal, name, value) {
+  const inner = literal.slice(1, -1);
+  const fields = splitTopLevelEntries(inner);
+  const range = fields.find(
+    (field) => topLevelKey(inner.slice(field.start, field.end)) === name
+  );
+
+  if (value === undefined) {
+    if (!range) return literal;
+    const contentEnd = range.start + inner.slice(range.start, range.end).trimEnd().length;
+    const hasComma = inner[contentEnd] === ",";
+    return `{${inner.slice(0, range.start)}${inner.slice(
+      contentEnd + (hasComma ? 1 : 0)
+    )}}`;
+  }
+
+  const json = JSON.stringify(value);
+
+  if (range) {
+    const text = inner.slice(range.start, range.end);
+    const valueFrom = range.start + entryValueStart(text);
+    const valueTo = range.start + text.trimEnd().length;
+    return `{${inner.slice(0, valueFrom)}${json}${inner.slice(valueTo)}}`;
+  }
+
+  if (fields.length === 0) return `{ ${name}: ${json} }`;
+
+  // The new field takes the last one's indentation, so it lands on its own line
+  // in a multi-line object and beside it in a one-line one. A comment written
+  // above the last field is looked past: it is not the indentation.
+  const last = fields[fields.length - 1];
+  const text = inner.slice(last.start, last.end);
+  const blanked = text
+    .replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, " "))
+    .replace(/\/\/[^\n]*/g, (comment) => " ".repeat(comment.length));
+  const gap = /^\s*/.exec(blanked)[0];
+  const lead = gap.includes("\n") ? gap.slice(gap.lastIndexOf("\n")) : " ";
+  if (inner[last.end] === ",") {
+    return `{${inner.slice(0, last.end + 1)}${lead}${name}: ${json},${inner.slice(
+      last.end + 1
+    )}}`;
+  }
+  const contentEnd = last.start + text.trimEnd().length;
+  return `{${inner.slice(0, contentEnd)},${lead}${name}: ${json}${inner.slice(
+    contentEnd
+  )}}`;
+}
+
+/**
  * Splits an object literal's interior on top-level commas, as `{start, end}`
  * ranges into `inner`. `end` is the index of the comma that terminates the
  * entry, or the end of the interior for a final entry with no trailing comma.

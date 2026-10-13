@@ -5,13 +5,14 @@ import { HocuspocusProvider } from "@hocuspocus/provider";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
 import Input from "../../../DesignSystem/Input";
 import Modal from "../../../DesignSystem/Modal";
+import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import {
   AddIcon,
   CloseIcon,
+  DeleteIcon,
   VisibilityIcon,
   VisibilityOffIcon,
 } from "../../../DesignSystem/Icons";
@@ -25,10 +26,12 @@ const STRIP_STYLE = {
   display: "flex",
   alignItems: "center",
   gap: 8,
-  flexWrap: "wrap",
   flexShrink: 0,
-  padding: "0 16px 12px",
+  padding: "0 16px 8px",
 };
+
+// More pages than fit scroll the tabs; the add button stays in view beside them.
+const TABS_STYLE = { minWidth: 0, overflowX: "auto" };
 
 const EMPTY_STYLE = {
   flex: "1 1 0%",
@@ -117,42 +120,66 @@ export default function DocumentationPanel() {
   };
 
   const docsVisible = !!visual?.docsVisible;
+  // The overview always exists, so only an added page can be deleted.
+  const selectedPage = pages.find((page) => `docs:${page.id}` === field);
 
   return (
     <Panel
       flush
       title={t("documentation", "Documentation")}
       actions={
-        canEdit && setDocsVisible ? (
-          <Button
-            variant={docsVisible ? "tonal" : "outline"}
-            leadingIcon={docsVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-            onClick={() => setDocsVisible(!docsVisible)}
-          >
-            {docsVisible ? t("visible", "Visible") : t("hidden", "Hidden")}
-          </Button>
+        canEdit ? (
+          <>
+            {selectedPage ? (
+              <IconButton
+                variant="subtle"
+                icon={<DeleteIcon />}
+                ariaLabel={t("deletePage", "Delete this page")}
+                title={t("deletePage", "Delete this page")}
+                onClick={() => setPendingDelete(selectedPage)}
+              />
+            ) : null}
+            {setDocsVisible ? (
+              <Button
+                variant={docsVisible ? "tonal" : "outline"}
+                leadingIcon={docsVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                onClick={() => setDocsVisible(!docsVisible)}
+              >
+                {docsVisible ? t("visible", "Visible") : t("hidden", "Hidden")}
+              </Button>
+            ) : null}
+          </>
         ) : null
       }
     >
       <div style={STRIP_STYLE}>
-        <Chip
-          label={t("overview", "Overview")}
-          selected={field === MAIN_FIELD}
-          onClick={() => setField(MAIN_FIELD)}
-        />
-        {pages.map((page) => (
-          <Chip
-            key={page.id}
-            label={page.title}
-            selected={field === `docs:${page.id}`}
-            onClick={() => setField(`docs:${page.id}`)}
-            onClose={canEdit ? () => setPendingDelete(page) : undefined}
-          />
-        ))}
+        <Navbar
+          accent="tertiary"
+          aria-label={t("documentationPages", "Documentation pages")}
+          style={TABS_STYLE}
+        >
+          <NavbarItem
+            selected={field === MAIN_FIELD}
+            onClick={() => setField(MAIN_FIELD)}
+          >
+            {t("overview", "Overview")}
+          </NavbarItem>
+          {pages.map((page) => (
+            <NavbarItem
+              key={page.id}
+              selected={field === `docs:${page.id}`}
+              onClick={() => setField(`docs:${page.id}`)}
+            >
+              {page.title}
+            </NavbarItem>
+          ))}
+        </Navbar>
         {canEdit ? (
-          <Chip
-            leading={<AddIcon />}
-            label={t("newPage", "New page")}
+          <IconButton
+            variant="subtle"
+            icon={<AddIcon />}
+            ariaLabel={t("newPage", "New page")}
+            title={t("newPage", "New page")}
             onClick={() => setAddOpen(true)}
           />
         ) : null}

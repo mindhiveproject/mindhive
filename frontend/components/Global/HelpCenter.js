@@ -279,6 +279,12 @@ export default function HelpCenter() {
     }
   };
 
+  // A visual being participated in owns the whole screen; a launcher floating
+  // over the canvas would be part of the picture.
+  if (router.pathname === '/preview/[type]/[id]' && router.query.type === 'visual') {
+    return null;
+  }
+
   return (
     // Clicks in here must not count as "outside" to a page modal, or opening
     // help over a modal closes it. See lib/isolateFromPage.js.

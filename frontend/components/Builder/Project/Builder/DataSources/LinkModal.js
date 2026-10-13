@@ -167,6 +167,13 @@ function isFavoritedBy(block, userId) {
  * plus the full catalog to link more from. Clicking a linked source's
  * settings gear hands off to `onOpenSettings` and closes this modal — editing
  * an instance's settings happens back in the study builder's sidebar, not here.
+ *
+ * The visual builder links sources through this same modal. Its copy differs
+ * and it has no warning gate, which is all `description` and `warning` are for.
+ *
+ * @param {string} [description] - Replaces the study-flavoured intro line.
+ * @param {string|null} [warning] - Replaces the warning note; `null` skips the
+ *   warning step and opens straight on the catalog.
  */
 export default function LinkDataSourceModal({
   open,
@@ -177,9 +184,12 @@ export default function LinkDataSourceModal({
   onAddSource,
   onRemoveSource,
   onOpenSettings,
+  description,
+  warning,
 }) {
   const { t } = useTranslation("builder");
-  const [step, setStep] = useState("warning");
+  const firstStep = warning === null ? "browse" : "warning";
+  const [step, setStep] = useState(firstStep);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState(() => new Set());
   const [showOutputs, setShowOutputs] = useState(false);
@@ -188,7 +198,7 @@ export default function LinkDataSourceModal({
   // doing" gate, not a one-time dismissal.
   useEffect(() => {
     if (open) {
-      setStep("warning");
+      setStep(firstStep);
       setSearch("");
       setFilters(new Set());
       setShowOutputs(false);
@@ -275,14 +285,14 @@ export default function LinkDataSourceModal({
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {headerRow}
           <p className="MH-Type-Body-Base" style={BODY_TEXT_STYLE}>
-            {t("dataSources.linkModal.description", {}, {
+            {description ?? t("dataSources.linkModal.description", {}, {
               default:
                 "Add external data sources to collect physiological data while a study is happening.",
             })}
           </p>
           <div style={WARNING_BOX_STYLE}>
             <p className="MH-Type-Body-Base" style={WARNING_TEXT_STYLE}>
-              {t("dataSources.linkModal.warning", {}, {
+              {warning ?? t("dataSources.linkModal.warning", {}, {
                 default:
                   "Proceed only if you know what you're doing or if you need external data sources in your study.",
               })}
@@ -303,7 +313,7 @@ export default function LinkDataSourceModal({
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {headerRow}
         <p className="MH-Type-Body-Base" style={BODY_TEXT_STYLE}>
-          {t("dataSources.linkModal.description", {}, {
+          {description ?? t("dataSources.linkModal.description", {}, {
             default:
               "Add external data sources to collect physiological data while a study is happening.",
           })}

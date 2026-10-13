@@ -27,7 +27,8 @@ import { getVisualFilterQuery } from "./YQVisual";
 // ask Keystone whether the caller can see the parent — the Visual list's query
 // filter already encodes the whole privacy model — and then whether they are
 // the author or a collaborator.
-async function canWriteParent(
+// Exported for VisualDataSource, whose rows belong to a Visual the same way.
+export async function canWriteParent(
   session: Session | undefined,
   visualId: string | null | undefined,
   context: any

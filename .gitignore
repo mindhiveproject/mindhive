@@ -7,7 +7,12 @@ pydantic/.env
 # Claude Code local config
 .claude/*
 
-# ...but share project commands with the team; only local settings stay out.
+# ...but share the /ticket command with the team; everything else stays local.
 !.claude/commands/
+.claude/commands/*
+!.claude/commands/ticket.md
+
+# Working plans are local, not repo docs
+docs/*-plan.md
 
 frontend/public/four in a row original codebase/*

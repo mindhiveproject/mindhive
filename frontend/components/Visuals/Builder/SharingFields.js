@@ -8,6 +8,7 @@ import Button from "../../DesignSystem/Button";
 import Card from "../../DesignSystem/Card";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import IconButton from "../../DesignSystem/IconButton";
 import Input from "../../DesignSystem/Input";
 import { MoreVertIcon } from "../../DesignSystem/Icons";
 
@@ -38,7 +39,7 @@ const COLLABORATOR_ROW_STYLE = {
   display: "flex",
   alignItems: "center",
   gap: 8,
-  padding: "4px 4px 4px 12px",
+  padding: 12,
 };
 
 const RIGHT_ALIGN_STYLE = { display: "flex", justifyContent: "flex-end" };
@@ -155,8 +156,17 @@ export function EditingFields({ visual, draft, setDraft, isOwner }) {
               </p>
             </div>
             <DropdownMenu
-              trigger={<MoreVertIcon />}
               ariaLabel={t("changeRole", "Change role")}
+              renderTrigger={({ onClick, open, ariaLabel }) => (
+                <IconButton
+                  variant="neutral"
+                  icon={<MoreVertIcon />}
+                  ariaLabel={ariaLabel}
+                  aria-haspopup="menu"
+                  aria-expanded={open}
+                  onClick={onClick}
+                />
+              )}
               // The menu portals to the body at a z-index below the Modal
               // overlay's, so inside the Share modal it would open behind the
               // backdrop. Lifted to where DropdownSelect already sits, so both
