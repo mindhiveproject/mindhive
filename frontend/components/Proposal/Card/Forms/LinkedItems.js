@@ -21,6 +21,8 @@ import AssignmentCopyModal from "../../../TipTap/AssignmentCopyModal";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import { PreviewSection } from "./PreviewSection";
+import { useTemplateAssignmentCompletion } from "../../../../lib/assignmentCompletion";
+import { getBoardTemplateClassIds } from "../../../../lib/classTemplateBoards";
 import ResourceEditModal from "./ResourceEditModal";
 import AssignmentModal from "./AssignmentModal";
 import ItemTab from "./ItemTab";
@@ -38,6 +40,11 @@ export default function LinkedItems({
   onLinkedItemsClose,
 }) {
   const { t } = useTranslation("classes");
+  // Class template boards: per-assignment completion count of its students.
+  const assignmentCompletion = useTemplateAssignmentCompletion(
+    proposal,
+    selectedAssignments
+  );
 
   // // Track selectedResources changes
   // useEffect(() => {
@@ -602,6 +609,7 @@ export default function LinkedItems({
           classId={proposal?.usedInClass?.id}
           openAssignmentModal={openAssignmentModalHandler}
           user={user}
+          completionByAssignmentId={assignmentCompletion}
         />
       )}
       {/* Combined Resources section: resources, then 24px gap, then tasks and studies */}
@@ -618,6 +626,7 @@ export default function LinkedItems({
           openAssignmentModal={openAssignmentModalHandler}
           openResourceModal={openResourceModalHandler}
           user={user}
+          templateClassIds={getBoardTemplateClassIds(proposal)}
         />
       )}
     </>

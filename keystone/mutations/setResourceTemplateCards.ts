@@ -4,6 +4,7 @@ import {
 } from "./utils/templateCloneMatch";
 import {
   CLASS_TEMPLATE_QUERY,
+  publishResourcesToTemplateClasses,
   resolveClassTemplateBoardId,
 } from "./utils/classTemplateBoards";
 
@@ -24,7 +25,8 @@ function isMilestoneOrActionCard(card: {
  * or by section/card index when publicId is missing (avoids wrong matches when position is duplicated).
  * Empty templateCardIds = unlink from all cards on this class's template and clones.
  * Optional templateBoardId targets a specific class template board (it must belong to the
- * class); otherwise primary is used.
+ * class); otherwise primary is used. Linking it to a template card it was not on before
+ * publishes the resource to the template's classes.
  */
 async function setResourceTemplateCards(
   _root: unknown,
@@ -74,6 +76,7 @@ async function setResourceTemplateCards(
 
   const uniqueTemplateCardIds = [...new Set(templateCardIds)].filter(Boolean);
   const toConnect: { id: string }[] = [];
+  const linkedTemplateCardIds: string[] = [];
 
   for (const templateCardId of uniqueTemplateCardIds) {
     const templateCard = await context.query.ProposalCard.findOne({
@@ -90,6 +93,7 @@ async function setResourceTemplateCards(
     }
 
     toConnect.push({ id: templateCardId });
+    linkedTemplateCardIds.push(templateCardId);
 
     const newPublicId = templateCard.publicId;
     const templateSectionPublicId = templateCard.section?.publicId;
@@ -230,6 +234,18 @@ async function setResourceTemplateCards(
       },
     },
   });
+
+  // A new link to a template card publishes the resource to the template's
+  // classes (re-saving existing links leaves an unpublished resource alone).
+  const previouslyLinked = new Set(templateBoardCards.map((c: any) => c.id));
+  if (linkedTemplateCardIds.some((id) => !previouslyLinked.has(id))) {
+    await publishResourcesToTemplateClasses(
+      context.sudo(),
+      templateBoardId,
+      [resourceId],
+      context.session
+    );
+  }
 
   return { id: resourceId };
 }

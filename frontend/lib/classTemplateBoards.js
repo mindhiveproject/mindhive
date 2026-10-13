@@ -38,6 +38,15 @@ export function getCardsOnClassTemplateBoards(proposalCards, myclass) {
     );
 }
 
+/** Ids of the classes a board is a template for (empty for other boards). */
+export function getBoardTemplateClassIds(board) {
+  const ids = [
+    ...(board?.templateForClasses || []),
+    ...(board?.templatesForClass || []),
+  ].map((klass) => klass?.id);
+  return [...new Set(ids.filter(Boolean))];
+}
+
 /** Title of one of the class's template boards (empty when unknown). */
 export function getClassTemplateBoardTitle(myclass, boardId) {
   return (

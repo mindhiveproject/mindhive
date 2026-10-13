@@ -74,10 +74,13 @@ const TASK_STYLES = {
 
 // Assignment chip (Disabled, Public, Completed states)
 // Teachers and mentors can click disabled (unpublished) chips; style stays greyed.
+// On a class template (edit mode) `completion` adds a "completed / total"
+// count of the template's students; the chip colour does not change.
 const AssignmentChip = ({
   item,
   index,
   homeworkStatusByAssignmentId,
+  completion: completionProp,
   t,
   openAssignmentModal,
   hoveredItemId,
@@ -103,13 +106,26 @@ const AssignmentChip = ({
   };
 
   const typeLabel = t("board.expendedCard.myAssignments", "Assignments");
-  const tooltipContent = isDisabled
-    ? t("board.expendedCard.assignmentNotPublished", "Not published")
-    : (
-        <>
-          <span style={TOOLTIP_LABEL_STYLE}>{typeLabel}:</span> {fullTitle}
-        </>
-      );
+  // No count until the template has students (avoids "0/0" while setting up).
+  const completion = completionProp?.total > 0 ? completionProp : null;
+  const completionLabel = completion
+    ? t(
+        "board.expendedCard.assignmentCompletion",
+        { completed: completion.completed, total: completion.total },
+        { default: "{{completed}} of {{total}} students completed" }
+      )
+    : null;
+  const tooltipContent = isDisabled ? (
+    <>
+      {t("board.expendedCard.assignmentNotPublished", "Not published")}
+      {completionLabel && <div>{completionLabel}</div>}
+    </>
+  ) : (
+    <>
+      <span style={TOOLTIP_LABEL_STYLE}>{typeLabel}:</span> {fullTitle}
+      {completionLabel && <div>{completionLabel}</div>}
+    </>
+  );
   const isHovered = hoveredItemId === item.id;
 
   return (
@@ -136,12 +152,23 @@ const AssignmentChip = ({
         }}
       >
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{fullTitle}</span>
+        {completion && (
+          <span
+            aria-label={completionLabel}
+            style={{ marginLeft: "8px", flexShrink: 0, opacity: 0.7, whiteSpace: "nowrap" }}
+          >
+            {completion.completed}/{completion.total}
+          </span>
+        )}
       </div>
     </Tooltip>
   );
 };
 
 // Resource/Study chip (plain, border + box-shadow)
+// `notPublished` (class template edit mode): the resource is linked but not
+// published to the class, so students won't see it; greyed like an
+// unpublished assignment chip.
 const ResourceStudyChip = ({
   item,
   type,
@@ -150,6 +177,7 @@ const ResourceStudyChip = ({
   openResourceModal,
   hoveredItemId,
   setHoveredItemId,
+  notPublished = false,
 }) => {
   const fullTitle = stripHtml(item?.title) || "Untitled";
   const isHovered = hoveredItemId === item.id;
@@ -159,6 +187,15 @@ const ResourceStudyChip = ({
   const tooltipContent = (
     <>
       <span style={TOOLTIP_LABEL_STYLE}>{typeLabel}:</span> {fullTitle}
+      {notPublished && (
+        <div>
+          {t(
+            "board.expendedCard.resourceNotPublishedToClass",
+            {},
+            { default: "Not published to the class: students won't see it" }
+          )}
+        </div>
+      )}
     </>
   );
 
@@ -181,6 +218,7 @@ const ResourceStudyChip = ({
           alignItems: "center",
           ...RESOURCE_STUDY_STYLES,
           background: "#FFFFFF",
+          ...(notPublished ? ASSIGNMENT_STYLES.disabled : {}),
           color: "#171717",
           cursor: "pointer",
           transition: "box-shadow 0.2s ease",
@@ -188,6 +226,7 @@ const ResourceStudyChip = ({
           ...TYPO.label,
           maxWidth: "320px",
           minWidth: 0,
+          opacity: notPublished ? 0.55 : 1,
         }}
       >
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, ...TYPO.label, color: "#171717" }}>{fullTitle}</span>
@@ -349,13 +388,14 @@ const TaskSurveyChip = ({
 };
 
 // Render chip by type
-const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceModal, homeworkStatusByAssignmentId, hoveredItemId, setHoveredItemId, user }) => {
+const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceModal, homeworkStatusByAssignmentId, completionByAssignmentId, hoveredItemId, setHoveredItemId, user, notPublished }) => {
   if (type === "assignment") {
     return (
       <AssignmentChip
         item={item}
         index={index}
         homeworkStatusByAssignmentId={homeworkStatusByAssignmentId}
+        completion={completionByAssignmentId?.[item?.id]}
         t={t}
         openAssignmentModal={openAssignmentModal}
         hoveredItemId={hoveredItemId}
@@ -385,6 +425,7 @@ const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceMod
       openResourceModal={openResourceModal}
       hoveredItemId={hoveredItemId}
       setHoveredItemId={setHoveredItemId}
+      notPublished={notPublished}
     />
   );
 };
@@ -405,12 +446,23 @@ export const PreviewSection = ({
   openResourceModal,
   user,
   homeworkStatusByAssignmentId,
+  completionByAssignmentId,
+  templateClassIds,
 }) => {
   const { t } = useTranslation("classes");
   const [hoveredItemId, setHoveredItemId] = useState(null);
 
+  // Student boards (classId): unpublished resources are hidden.
   const isPublishedToClass = (item) =>
     classId ? isPublishedToClassId(item?.settings, classId) : true;
+  // Class template boards (templateClassIds, edit mode): unpublished
+  // resources stay visible but greyed, so the teacher knows students won't
+  // see them — published means published to every class using the template.
+  const isUnpublishedOnTemplate = (item, itemType) =>
+    itemType === "resource" &&
+    !classId &&
+    (templateClassIds || []).length > 0 &&
+    !templateClassIds.every((id) => isPublishedToClassId(item?.settings, id));
   const filterItemsByType = (itemsToRender, itemType) => {
     const list = itemsToRender || [];
     if (itemType === "resource") return list.filter(isPublishedToClass);
@@ -428,9 +480,11 @@ export const PreviewSection = ({
         openAssignmentModal={openAssignmentModal}
         openResourceModal={openResourceModal}
         homeworkStatusByAssignmentId={homeworkStatusByAssignmentId}
+        completionByAssignmentId={completionByAssignmentId}
         hoveredItemId={hoveredItemId}
         setHoveredItemId={setHoveredItemId}
         user={user}
+        notPublished={isUnpublishedOnTemplate(item, itemType)}
       />
     ));
 

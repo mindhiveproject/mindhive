@@ -14,15 +14,15 @@ import {
   UPDATE_HOMEWORK,
 } from "../../../../../Mutations/Homework"; // Adjust path as needed
 import {
-  GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
-  GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
-  GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS,
-  GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS,
+  GET_BOARD_STUDENT_MEMBERS,
+  GET_HOMEWORK_FOR_CARD_ASSIGNMENTS_BY_AUTHORS,
+  GET_HOMEWORKS_FOR_ASSIGNMENT_BY_AUTHORS,
 } from "../../../../../Queries/Homework";
 import { GET_AN_ASSIGNMENT } from "../../../../../Queries/Assignment"; // Adjust path as needed
 import { GET_RESOURCE } from "../../../../../Queries/Resource";
 
 import useForm from "../../../../../../lib/useForm";
+import { statusByAssignmentForAuthors } from "../../../../../../lib/assignmentCompletion";
 import {
   getBoardAssignableToStudents,
   getBoardStudentsCanAssignToCards,
@@ -170,33 +170,57 @@ export default function ProposalCard({
     ["TEACHER", "MENTOR"].includes(p?.name),
   );
 
+  // Whose homework the assignment chips and the assignment modal show. A
+  // student sees only their own. A teacher or mentor visiting a student board
+  // sees that board's students, i.e. what those students see — not everyone
+  // who ever answered the assignment (homework only links its assignment, so
+  // an unscoped query spans every class and past year). On a board with no
+  // students of its class (e.g. their own board) they see their own.
+  const boardMemberIds = [
+    ...new Set(
+      [proposal?.author?.id, ...(proposal?.collaborators || []).map((c) => c?.id)]
+        .filter(Boolean)
+    ),
+  ];
+  const boardClassId = proposal?.usedInClass?.id;
+  const lookUpBoardStudents =
+    isTeacherOrMentor && !!boardClassId && boardMemberIds.length > 0;
+  const { data: boardStudentsData } = useQuery(GET_BOARD_STUDENT_MEMBERS, {
+    variables: { memberIds: boardMemberIds, classId: boardClassId },
+    skip: !lookUpBoardStudents,
+  });
+  const boardStudentIds = (boardStudentsData?.profiles || []).map((p) => p.id);
+  const homeworkAuthorsReady = !lookUpBoardStudents || !!boardStudentsData;
+  const homeworkAuthorIds =
+    isTeacherOrMentor && boardStudentIds.length > 0
+      ? boardStudentIds
+      : user?.id
+        ? [user.id]
+        : [];
+  const homeworkAuthorsKey = homeworkAuthorIds.join(",");
+
   // Homework status per assignment for chip styling (homework belongs to assignment, not card)
   const assignmentIds = (inputs?.assignments || proposalCard?.assignments || [])
     .map((a) => a?.id)
     .filter(Boolean);
-  const { data: myCardHomeworkData } = useQuery(GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS, {
-    variables: { userId: user?.id, assignmentIds },
-    skip: isTeacherOrMentor || !user?.id || assignmentIds.length === 0,
-  });
-  const { data: allCardHomeworkData } = useQuery(GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS, {
-    variables: { assignmentIds },
-    skip: !isTeacherOrMentor || assignmentIds.length === 0,
-  });
-  const cardHomeworks = isTeacherOrMentor
-    ? allCardHomeworkData?.homeworks || []
-    : myCardHomeworkData?.homeworks || [];
-  const homeworkStatusByAssignmentId = useMemo(() => {
-    const map = {};
-    cardHomeworks.forEach((hw) => {
-      const aid = hw?.assignment?.id;
-      if (aid && hw?.settings?.status) {
-        if (!map[aid] || hw.settings.status === "Completed") {
-          map[aid] = hw.settings.status;
-        }
-      }
-    });
-    return map;
-  }, [cardHomeworks]);
+  const { data: cardHomeworkData } = useQuery(
+    GET_HOMEWORK_FOR_CARD_ASSIGNMENTS_BY_AUTHORS,
+    {
+      variables: { assignmentIds, authorIds: homeworkAuthorIds },
+      skip:
+        !homeworkAuthorsReady ||
+        homeworkAuthorIds.length === 0 ||
+        assignmentIds.length === 0,
+    },
+  );
+  const homeworkStatusByAssignmentId = useMemo(
+    () =>
+      statusByAssignmentForAuthors(
+        cardHomeworkData?.homeworks,
+        homeworkAuthorsKey ? homeworkAuthorsKey.split(",") : [],
+      ),
+    [cardHomeworkData, homeworkAuthorsKey],
+  );
   const studentsCanAssignToCards = getBoardStudentsCanAssignToCards(
     proposal,
     proposal?.usedInClass
@@ -385,22 +409,23 @@ export default function ProposalCard({
     const assignment = assignmentData?.assignments?.[0] || null;
     // console.log(assignmentData);
 
-    // Query for existing homeworks: all for Mentor/Teacher, only own for others
-    const { data: myHomeworkData } = useQuery(GET_MY_HOMEWORKS_FOR_ASSIGNMENT, {
-      variables: { userId: user?.id, assignmentCode: assignment?.code },
-      skip: isMentorOrTeacher || !assignment?.code || !user?.id,
-    });
-    const { data: allHomeworkData } = useQuery(
-      GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
+    // Existing homeworks of the same authors as the chips (homeworkAuthorIds):
+    // the student's own, or the visited board's students for a teacher.
+    const { data: homeworkData } = useQuery(
+      GET_HOMEWORKS_FOR_ASSIGNMENT_BY_AUTHORS,
       {
-        variables: { assignmentCode: assignment?.code },
-        skip: !isMentorOrTeacher || !assignment?.code,
+        variables: {
+          assignmentCode: assignment?.code,
+          authorIds: homeworkAuthorIds,
+        },
+        skip:
+          !assignment?.code ||
+          !homeworkAuthorsReady ||
+          homeworkAuthorIds.length === 0,
       },
     );
 
-    const homeworks = isMentorOrTeacher
-      ? allHomeworkData?.homeworks || []
-      : myHomeworkData?.homeworks || [];
+    const homeworks = homeworkData?.homeworks || [];
 
     // New homework form state
     const { inputs, handleChange, handleMultipleUpdate, clearForm } = useForm({
@@ -427,20 +452,15 @@ export default function ProposalCard({
       {
         refetchQueries: [
           {
-            query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
-            variables: { userId: user?.id, assignmentCode: assignment?.code },
+            query: GET_HOMEWORKS_FOR_ASSIGNMENT_BY_AUTHORS,
+            variables: {
+              assignmentCode: assignment?.code,
+              authorIds: homeworkAuthorIds,
+            },
           },
           {
-            query: GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
-            variables: { assignmentCode: assignment?.code },
-          },
-          {
-            query: GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS,
-            variables: { userId: user?.id, assignmentIds },
-          },
-          {
-            query: GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS,
-            variables: { assignmentIds },
+            query: GET_HOMEWORK_FOR_CARD_ASSIGNMENTS_BY_AUTHORS,
+            variables: { assignmentIds, authorIds: homeworkAuthorIds },
           },
         ],
       },
@@ -452,20 +472,15 @@ export default function ProposalCard({
       {
         refetchQueries: [
           {
-            query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
-            variables: { userId: user?.id, assignmentCode: assignment?.code },
+            query: GET_HOMEWORKS_FOR_ASSIGNMENT_BY_AUTHORS,
+            variables: {
+              assignmentCode: assignment?.code,
+              authorIds: homeworkAuthorIds,
+            },
           },
           {
-            query: GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
-            variables: { assignmentCode: assignment?.code },
-          },
-          {
-            query: GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS,
-            variables: { userId: user?.id, assignmentIds },
-          },
-          {
-            query: GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS,
-            variables: { assignmentIds },
+            query: GET_HOMEWORK_FOR_CARD_ASSIGNMENTS_BY_AUTHORS,
+            variables: { assignmentIds, authorIds: homeworkAuthorIds },
           },
         ],
       },

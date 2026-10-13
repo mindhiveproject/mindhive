@@ -144,13 +144,19 @@ export const GET_ALL_HOMEWORK_FOR_PROPOSAL_CARD = gql`
   }
 `;
 
-// get student homework for assignments attached to a card (for chip status)
-export const GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS = gql`
-  query GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS($userId: ID!, $assignmentIds: [ID!]!) {
+// Homework on a card's assignments, limited to the given authors: the viewing
+// student, or the students of the board a teacher is visiting. Homework only
+// links its assignment, so without the author filter a chip would reflect
+// anyone who ever answered the assignment, in any class.
+export const GET_HOMEWORK_FOR_CARD_ASSIGNMENTS_BY_AUTHORS = gql`
+  query GET_HOMEWORK_FOR_CARD_ASSIGNMENTS_BY_AUTHORS(
+    $assignmentIds: [ID!]!
+    $authorIds: [ID!]!
+  ) {
     homeworks(
       where: {
-        author: { id: { equals: $userId } }
         assignment: { id: { in: $assignmentIds } }
+        author: { id: { in: $authorIds } }
       }
     ) {
       id
@@ -161,16 +167,82 @@ export const GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS = gql`
       author {
         id
         username
-        publicReadableId
       }
     }
   }
 `;
 
-// get all homework for assignments attached to a card (for Mentor/Teacher chip status)
-export const GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS = gql`
-  query GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS($assignmentIds: [ID!]!) {
-    homeworks(where: { assignment: { id: { in: $assignmentIds } } }) {
+// Full homework for one assignment, limited to the given authors (see above).
+export const GET_HOMEWORKS_FOR_ASSIGNMENT_BY_AUTHORS = gql`
+  query GET_HOMEWORKS_FOR_ASSIGNMENT_BY_AUTHORS(
+    $assignmentCode: String!
+    $authorIds: [ID!]!
+  ) {
+    homeworks(
+      where: {
+        assignment: { code: { equals: $assignmentCode } }
+        author: { id: { in: $authorIds } }
+      }
+    ) {
+      id
+      code
+      title
+      content
+      placeholder
+      settings
+      public
+      author {
+        id
+        username
+        publicReadableId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+// Which of a board's members are students of its class.
+export const GET_BOARD_STUDENT_MEMBERS = gql`
+  query GET_BOARD_STUDENT_MEMBERS($memberIds: [ID!]!, $classId: ID!) {
+    profiles(
+      where: {
+        id: { in: $memberIds }
+        studentIn: { some: { id: { equals: $classId } } }
+      }
+    ) {
+      id
+    }
+  }
+`;
+
+// Students working from a class template board (members of its student
+// boards who are students of the template's classes), with their homework on
+// the given assignments. Used for the completion count in edit mode.
+export const GET_TEMPLATE_ASSIGNMENT_COMPLETION = gql`
+  query GET_TEMPLATE_ASSIGNMENT_COMPLETION(
+    $templateBoardId: ID!
+    $classIds: [ID!]!
+    $assignmentIds: [ID!]!
+  ) {
+    proposalBoards(where: { clonedFrom: { id: { equals: $templateBoardId } } }) {
+      id
+      author {
+        id
+      }
+      collaborators {
+        id
+      }
+    }
+    profiles(where: { studentIn: { some: { id: { in: $classIds } } } }) {
+      id
+    }
+    homeworks(
+      where: {
+        assignment: { id: { in: $assignmentIds } }
+        author: { studentIn: { some: { id: { in: $classIds } } } }
+      }
+    ) {
       id
       settings
       assignment {
@@ -178,7 +250,6 @@ export const GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS = gql`
       }
       author {
         id
-        username
       }
     }
   }

@@ -130,7 +130,11 @@ export const GET_CLASS_ASSIGNMENTS = gql`
         username
       }
       public
-      homework {
+      # Only this class's students: an assignment can be shared by several
+      # classes (and years), and homework only links its assignment.
+      homework(
+        where: { author: { studentIn: { some: { id: { equals: $classId } } } } }
+      ) {
         id
         public
         settings
