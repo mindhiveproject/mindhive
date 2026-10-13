@@ -313,12 +313,10 @@ export default function SettingsPanel({ user, onDirtyChange }) {
         action={
           <Button
             variant="text"
+            tone="warning"
             leadingIcon={<DeleteIcon />}
             disabled={!isOwner}
             onClick={onDelete}
-            // Only while it can be used: an override would otherwise paint a
-            // disabled button as live, with no hover or click to match.
-            style={isOwner ? { color: "var(--MH-Theme-Warning-Dark, #8F1F14)" } : undefined}
           >
             {t("deleteVisual", "Delete Visual")}
           </Button>

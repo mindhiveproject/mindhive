@@ -85,6 +85,18 @@ const TONES = {
     edgePressed: "var(--MH-Theme-Neutrals-Lighter, #F3F3F3)",
     label: "var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
   },
+  // A destructive action. The text variant's hover and pressed are a Warning
+  // Dark tint instead of the shared grey, so it reads on the pink Warning
+  // Light of a MessageCard as well as on white.
+  warning: {
+    fill: "var(--MH-Theme-Warning-Base, #B9261A)",
+    fillPressed: "var(--MH-Theme-Warning-Dark, #8F1F14)",
+    edge: "var(--MH-Theme-Warning-Base, #B9261A)",
+    edgePressed: "var(--MH-Theme-Warning-Light, #EDCECD)",
+    label: "var(--MH-Theme-Warning-Dark, #8F1F14)",
+    textHover: "rgba(143, 31, 20, 0.08)",
+    textPressed: "rgba(143, 31, 20, 0.16)",
+  },
 };
 
 // --- Filled
@@ -201,8 +213,8 @@ function getVariantStyles(variant, tone) {
     case "text":
       return {
         base: { ...BASE_STYLE, background: "transparent", color: palette.label },
-        hover: TEXT_HOVER,
-        pressed: TEXT_PRESSED,
+        hover: palette.textHover ? { background: palette.textHover } : TEXT_HOVER,
+        pressed: palette.textPressed ? { background: palette.textPressed } : TEXT_PRESSED,
         disabled: TEXT_DISABLED,
       };
     case "filled":
@@ -249,10 +261,12 @@ const ICON_WRAPPER_STYLE = {
  * pairs with IconButton's subtle variant.
  *
  * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
- * @param {"primary"|"accent"|"tertiary"|"neutral"} [tone="primary"] - Colour family. `accent` paints
+ * @param {"primary"|"accent"|"tertiary"|"neutral"|"warning"} [tone="primary"] - Colour family. `accent` paints
  *   the filled, outline and text variants in Additional Accent, `tertiary` in
  *   Tertiary (the data sources area's link/unlink actions), `neutral` in grey
- *   (a quieter secondary action, e.g. "Disconnect"). Subtle ignores this
+ *   (a quieter secondary action, e.g. "Disconnect"), `warning` in Warning
+ *   (a destructive action; its text variant hovers with a Warning tint so it
+ *   also reads on a warning MessageCard). Subtle ignores this
  *   prop; tonal ignores it except for `tertiary`, which swaps the calypso
  *   container for Tertiary Medium behind a black label.
  * @param {React.ReactNode} children - Button label (required).

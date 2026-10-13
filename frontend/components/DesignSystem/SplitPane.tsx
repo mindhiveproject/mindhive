@@ -324,7 +324,7 @@ export default function SplitPane({
         aria-valuenow={collapsed ? undefined : Math.round(fraction * 100)}
         tabIndex={0}
         className="DesignSystem-SplitPane-Divider"
-        style={{ cursor: collapsed ? "pointer" : "col-resize" }}
+        style={{ cursor: "col-resize" }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
