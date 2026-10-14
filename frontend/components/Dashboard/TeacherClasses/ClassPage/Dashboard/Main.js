@@ -19,10 +19,7 @@ import {
   getClassTemplateBoards,
   getPrimaryTemplateBoardId,
 } from "../../../../../lib/classTemplateBoards";
-import {
-  isOpenForComments,
-  readMilestoneStatus,
-} from "../../../../../lib/milestoneStatus";
+import { isOpenForComments } from "../../../../../lib/milestoneStatus";
 import BoardMilestonesSync from "../../../BoardMilestonesSync";
 
 import Button from "../../../../DesignSystem/Button";
@@ -34,6 +31,7 @@ import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 import DashboardAssetIcon from "./DashboardAssetIcon";
 import {
   countReviewsForMilestone,
+  deriveMilestoneStatus,
   firstQueryValue,
   isCompleteStatus,
   milestoneShowsReviews,
@@ -55,9 +53,11 @@ const CELL_ALIGN = {
   alignItems: "center",
 };
 
-// Selected milestones live in `?steps=a,b`; the table keeps a saved column
-// layout per combination, under the "projects" key when none is selected.
-const NO_MILESTONES_TABLE_KEY = "projects";
+// One saved column layout for the whole dashboard, restored once when the grid
+// loads. A key per milestone combination made the hook re-apply a layout while
+// AG Grid was still adding/removing columns, which left the header offset from
+// the body.
+const DASHBOARD_TABLE_ID = "dashboard";
 
 function buildDashboardQuery({ template, steps, persistTemplate }) {
   const query = { page: "dashboard" };
@@ -400,9 +400,7 @@ export default function Dashboard({ myclass }) {
         const milestoneEntries = {};
         for (const milestone of selectedMilestones) {
           milestoneEntries[milestone.key] = {
-            status:
-              readMilestoneStatus(project, milestone.key, milestones)?.status ||
-              "NOT_STARTED",
+            status: deriveMilestoneStatus(project, milestone, milestones),
             isOpen: isOpenForComments(project, milestone, milestones),
             reviewCount: milestoneShowsReviews(milestone)
               ? countReviewsForMilestone(project, milestone)
@@ -567,7 +565,7 @@ export default function Dashboard({ myclass }) {
 
   const tablePrefs = useClassTablePrefs(
     myclass?.id,
-    `dashboard.${selectedStepsKey || NO_MILESTONES_TABLE_KEY}`,
+    DASHBOARD_TABLE_ID,
     { fitToWidth: false }
   );
 
@@ -885,10 +883,11 @@ const StyledDashboard = styled.div`
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
+  /* Milestone chips on top, search underneath. */
   .dashboardFilterBar {
     display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 12px;
     min-width: 0;
   }
@@ -898,9 +897,7 @@ const StyledDashboard = styled.div`
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    /* Basis 0 lets the chips wrap inside this track, keeping the search
-       field on the same row instead of pushing it onto its own line. */
-    flex: 1 1 0;
+    width: 100%;
     min-width: 0;
   }
 
@@ -911,9 +908,7 @@ const StyledDashboard = styled.div`
   }
 
   .dashboardSearch {
-    width: 260px;
-    max-width: 100%;
-    margin-left: auto;
+    width: 100%;
   }
 
   .dashboardToolbar {

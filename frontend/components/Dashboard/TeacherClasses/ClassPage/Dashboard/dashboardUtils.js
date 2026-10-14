@@ -1,3 +1,9 @@
+import {
+  cardIncludedInReviewStep,
+  parseCardSettings,
+} from "../../../../../lib/milestones";
+import { readMilestoneStatus } from "../../../../../lib/milestoneStatus";
+
 export const STATUS_ICON_SRC = {
   NOT_STARTED: "/assets/icons/status/notStarted.svg",
   IN_PROGRESS: "/assets/icons/status/inProgress.svg",
@@ -7,6 +13,53 @@ export const STATUS_ICON_SRC = {
 
 export function isCompleteStatus(status) {
   return status === "SUBMITTED" || status === "FINISHED";
+}
+
+export function milestoneStatusLabel(status, t, isStudy) {
+  // A study is either submitted for data collection (locked) or not.
+  if (isStudy) {
+    return status === "SUBMITTED"
+      ? t("dashboard.submittedForDataCollection", {}, {
+          default: "Submitted for data collection",
+        })
+      : t("dashboard.notSubmitted", {}, { default: "Not submitted" });
+  }
+  switch (status) {
+    case "IN_PROGRESS":
+      return t("dashboard.inProgress", {}, { default: "In progress" });
+    case "SUBMITTED":
+      return t("dashboard.submitted", {}, { default: "Submitted" });
+    case "FINISHED":
+      return t("dashboard.reviewFinished", {}, { default: "Review is finished" });
+    case "NOT_STARTED":
+    default:
+      return t("dashboard.notStarted", {}, { default: "Not started" });
+  }
+}
+
+// Study milestones are two-state: SUBMITTED (study locked) or NOT_STARTED.
+// Otherwise a stored status wins; a board still at NOT_STARTED reads as
+// IN_PROGRESS once any card included in the milestone has moved off
+// "Not started".
+export function deriveMilestoneStatus(project, milestone, milestones = []) {
+  const stored =
+    readMilestoneStatus(project, milestone?.key, milestones)?.status ||
+    "NOT_STARTED";
+  if (milestone?.statusTarget === "study") {
+    return stored === "SUBMITTED" ? "SUBMITTED" : "NOT_STARTED";
+  }
+  if (stored !== "NOT_STARTED") return stored;
+
+  const started = (project?.sections || []).some((section) =>
+    (section?.cards || []).some((card) => {
+      if (!cardIncludedInReviewStep(card, milestone?.key, milestones)) {
+        return false;
+      }
+      const cardStatus = parseCardSettings(card)?.status;
+      return Boolean(cardStatus) && cardStatus !== "Not started";
+    })
+  );
+  return started ? "IN_PROGRESS" : "NOT_STARTED";
 }
 
 export function reviewAliasesForMilestone(milestone) {
