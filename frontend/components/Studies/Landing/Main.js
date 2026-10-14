@@ -14,6 +14,9 @@ export default function StudyLandingMain({ query, isDashboard, isRun }) {
 
   const { data, error, loading } = useQuery(STUDY_TO_DISCOVER, {
     variables: { slug: name },
+    // router.query is empty until the router is ready (e.g. right after the
+    // reload between tasks)
+    skip: !name,
   });
 
   const study = data?.study;
