@@ -5,7 +5,8 @@ import DashboardAssetIcon from "../DashboardAssetIcon";
 import { STATUS_ICON_SRC, milestoneStatusLabel } from "../dashboardUtils";
 
 // One cell per milestone: status, plus the open state and comment count when
-// they apply, joined into a single chip label.
+// they apply, joined into a single chip label. Clicking opens the status modal,
+// which explains the status and offers a reopen when the work is submitted.
 export function MilestoneStatusCell(props) {
   const { t } = useTranslation("classes");
   const { milestone } = props;

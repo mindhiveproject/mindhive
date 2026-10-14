@@ -19,7 +19,7 @@ import ToggleSwitch from "../../../../../DesignSystem/ToggleSwitch";
 import DashboardAssetIcon from "../DashboardAssetIcon";
 import {
   STATUS_ICON_SRC,
-  isCompleteStatus,
+  canReopenMilestone,
   milestoneStatusLabel,
 } from "../dashboardUtils";
 
@@ -48,9 +48,7 @@ export default function MilestoneStatusModal({
   const storedStatus =
     readMilestoneStatus(project, milestone?.key, milestone ? [milestone] : [])
       ?.status || "NOT_STARTED";
-  const canReopen = isStudy
-    ? displayStatus === "SUBMITTED"
-    : isCompleteStatus(displayStatus);
+  const canReopen = canReopenMilestone(displayStatus, isStudy);
 
   const refetchQueries = [
     { query: GET_STUDENTS_DASHBOARD_DATA, variables: { classId } },
@@ -124,6 +122,8 @@ export default function MilestoneStatusModal({
     <>
       <div className="milestoneStatusRow">
         <Chip
+          variant="static"
+          tone="neutral"
           label={milestoneStatusLabel(displayStatus, t, isStudy)}
           leading={
             <DashboardAssetIcon
@@ -136,6 +136,17 @@ export default function MilestoneStatusModal({
 
       {canReopen ? (
         <>
+          {isStudy ? null : (
+            <ToggleSwitch
+              checked={isOpenNow}
+              onChange={toggleOpen}
+              loading={pending === "toggle"}
+              disabled={busy && pending !== "toggle"}
+              label={t("dashboard.openForComments", {}, {
+                default: "Open for comments",
+              })}
+            />
+          )}
           <MessageCard
             variant="information"
             message={
@@ -150,17 +161,6 @@ export default function MilestoneStatusModal({
                   })
             }
           />
-          {isStudy ? null : (
-            <ToggleSwitch
-              checked={isOpenNow}
-              onChange={toggleOpen}
-              loading={pending === "toggle"}
-              disabled={busy && pending !== "toggle"}
-              label={t("dashboard.openForComments", {}, {
-                default: "Open for comments",
-              })}
-            />
-          )}
         </>
       ) : (
         <MessageCard

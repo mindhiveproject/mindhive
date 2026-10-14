@@ -15,6 +15,11 @@ export function isCompleteStatus(status) {
   return status === "SUBMITTED" || status === "FINISHED";
 }
 
+// Submitted work can be reopened; a study only while it's submitted (locked).
+export function canReopenMilestone(status, isStudy) {
+  return isStudy ? status === "SUBMITTED" : isCompleteStatus(status);
+}
+
 export function milestoneStatusLabel(status, t, isStudy) {
   // A study is either submitted for data collection (locked) or not.
   if (isStudy) {

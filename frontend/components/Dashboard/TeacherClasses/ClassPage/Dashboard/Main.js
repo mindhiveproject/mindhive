@@ -28,8 +28,8 @@ import Chip from "../../../../DesignSystem/Chip";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import Input from "../../../../DesignSystem/Input";
 import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
-import DashboardAssetIcon from "./DashboardAssetIcon";
 import {
+  canReopenMilestone,
   countReviewsForMilestone,
   deriveMilestoneStatus,
   firstQueryValue,
@@ -58,6 +58,8 @@ const CELL_ALIGN = {
 // AG Grid was still adding/removing columns, which left the header offset from
 // the body.
 const DASHBOARD_TABLE_ID = "dashboard";
+
+const rowKey = (row) => row?.id || row?.publicId || row?.username;
 
 function buildDashboardQuery({ template, steps, persistTemplate }) {
   const query = { page: "dashboard" };
@@ -347,15 +349,17 @@ export default function Dashboard({ myclass }) {
     [milestones, replaceDashboardQuery, selectedBoardId, stepsFromQuery]
   );
 
-  const [selectedStudents, setSelectedStudents] = useState([]);
-  const [isBulkOpen, setIsBulkOpen] = useState(false);
+  // Selection and the status modal hold row keys, not rows, so they always read
+  // the latest data after a refetch.
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [bulkMilestoneKey, setBulkMilestoneKey] = useState(null);
   const [projectRow, setProjectRow] = useState(null);
   const [studyRow, setStudyRow] = useState(null);
   const [statusTarget, setStatusTarget] = useState(null);
   const [search, setSearch] = useState("");
 
   const openStatusManager = useCallback(
-    (row, milestone) => setStatusTarget({ row, milestone }),
+    (row, milestone) => setStatusTarget({ rowKey: rowKey(row), milestone }),
     []
   );
 
@@ -434,6 +438,30 @@ export default function Dashboard({ myclass }) {
     }
     return totals;
   }, [selectedMilestones, studentsProcessed]);
+
+  const selectedStudents = useMemo(() => {
+    const keys = new Set(selectedRowKeys);
+    return studentsProcessed.filter((row) => keys.has(rowKey(row)));
+  }, [selectedRowKeys, studentsProcessed]);
+
+  // One bulk action per milestone column, each counting only the selected
+  // students who have submitted that milestone.
+  const bulkActions = useMemo(
+    () =>
+      selectedMilestones.map((milestone) => {
+        const isStudy = milestone.statusTarget === "study";
+        const eligible = selectedStudents.filter(
+          (row) =>
+            row.projectId &&
+            canReopenMilestone(row.milestones[milestone.key]?.status, isStudy)
+        ).length;
+        return { milestone, isStudy, eligible };
+      }),
+    [selectedMilestones, selectedStudents]
+  );
+  const bulkMilestone = selectedMilestones.find(
+    (milestone) => milestone.key === bulkMilestoneKey
+  );
 
   const boardOptions = useMemo(
     () =>
@@ -569,7 +597,9 @@ export default function Dashboard({ myclass }) {
     { fitToWidth: false }
   );
 
-  const statusRow = statusTarget?.row;
+  const statusRow = statusTarget
+    ? studentsProcessed.find((row) => rowKey(row) === statusTarget.rowKey)
+    : null;
   const statusMilestone = statusTarget?.milestone;
   const statusEntry = statusRow?.milestones?.[statusMilestone?.key];
   const isStudyStatus = statusMilestone?.statusTarget === "study";
@@ -674,9 +704,9 @@ export default function Dashboard({ myclass }) {
 
         {showCards && milestones.length > 0 ? (
           <p className="dashboardHint">
-            {t("dashboard.milestoneFilterHint", {}, {
+            {t("dashboard.milestoneReopenHint", {}, {
               default:
-                "Select milestones to add them as columns, then click a student's status to change it.",
+                "Select milestones to add them as columns. Submitting a milestone locks the student's work; click a student's status to see what it means or to reopen submitted work so they can edit and submit again.",
             })}
           </p>
         ) : null}
@@ -726,31 +756,68 @@ export default function Dashboard({ myclass }) {
         </div>
       </Card>
 
-      {selectedStudents.length > 1 ? (
+      {selectedStudents.length > 0 ? (
         <div className="dashboardToolbar">
-          <Button
-            variant="subtle"
-            leadingIcon={
-              <DashboardAssetIcon src="/assets/icons/profile/people.svg" />
-            }
-            onClick={() => setIsBulkOpen(true)}
-          >
-            {t("dashboard.manageSelectedStudents", {
+          <span className="dashboardToolbarLabel">
+            {t("dashboard.selectedCount", {
               count: selectedStudents.length,
             }, {
-              default: "Manage selected students ({{count}})",
+              default: "{{count}} selected",
             })}
-          </Button>
+          </span>
+          {bulkActions.length === 0 ? (
+            <span className="dashboardToolbarHint">
+              {t("dashboard.bulkNeedsMilestone", {}, {
+                default: "Add a milestone column to reopen it for these students.",
+              })}
+            </span>
+          ) : (
+            bulkActions.map(({ milestone, isStudy, eligible }) => {
+              const stage = milestone.title || milestone.key;
+              const vars = {
+                stage,
+                eligible,
+                count: selectedStudents.length,
+              };
+              return (
+                <Button
+                  key={milestone.key}
+                  variant="outline"
+                  disabled={eligible === 0}
+                  title={
+                    eligible === 0
+                      ? t("dashboard.bulkNoneSubmitted", { stage }, {
+                          default:
+                            "None of the selected students has submitted {{stage}}.",
+                        })
+                      : undefined
+                  }
+                  onClick={() => setBulkMilestoneKey(milestone.key)}
+                >
+                  {isStudy
+                    ? t("dashboard.bulkUnlockButton", vars, {
+                        default: "Unlock {{stage}} ({{eligible}} of {{count}})",
+                      })
+                    : t("dashboard.bulkReopenButton", vars, {
+                        default: "Reopen {{stage}} ({{eligible}} of {{count}})",
+                      })}
+                </Button>
+              );
+            })
+          )}
         </div>
       ) : null}
 
-      <SelectedStudentsModal
-        isOpen={isBulkOpen}
-        onClose={() => setIsBulkOpen(false)}
-        selectedStudents={selectedStudents}
-        classId={myclass?.id}
-        milestone={selectedMilestones[0]}
-      />
+      {bulkMilestone ? (
+        <SelectedStudentsModal
+          key={bulkMilestone.key}
+          isOpen
+          onClose={() => setBulkMilestoneKey(null)}
+          selectedStudents={selectedStudents}
+          classId={myclass?.id}
+          milestone={bulkMilestone}
+        />
+      ) : null}
 
       {projectRow ? (
         <ProjectManager
@@ -821,11 +888,9 @@ export default function Dashboard({ myclass }) {
                   default: "No students have joined this class yet.",
                 })
           }
-          getRowId={(params) =>
-            params.data.id || params.data.publicId || params.data.username
-          }
+          getRowId={(params) => rowKey(params.data)}
           onSelectionChanged={(event) => {
-            setSelectedStudents(event.api.getSelectedRows());
+            setSelectedRowKeys(event.api.getSelectedRows().map(rowKey));
           }}
           {...tablePrefs}
         />
@@ -914,6 +979,20 @@ const StyledDashboard = styled.div`
   .dashboardToolbar {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dashboardToolbarLabel {
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+
+  .dashboardToolbarHint {
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
   .dashboardGrid {
