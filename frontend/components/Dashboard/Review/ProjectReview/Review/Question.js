@@ -10,7 +10,13 @@ import ReactStars from "react-rating-stars-component"; // https://www.npmjs.com/
 import TaskSelector from "./TaskSelector";
 import useTranslation from "next-translate/useTranslation";
 
-export default function Question({ stage, item, handleItemChange, answer }) {
+export default function Question({
+  stage,
+  item,
+  handleItemChange,
+  answer,
+  hiddenTaskIds,
+}) {
   const { t } = useTranslation("builder");
   const { responseType } = item;
 
@@ -70,6 +76,7 @@ export default function Question({ stage, item, handleItemChange, answer }) {
           name={item?.name}
           handleItemChange={handleItemChange}
           answer={answer || []}
+          hiddenTaskIds={hiddenTaskIds}
         />
       </div>
     );

@@ -49,6 +49,13 @@ export default function UserReview({
     [project]
   );
 
+  // Blocks the student's teacher hid from the class; the task suggestion
+  // field grays these out so mentors don't recommend what students can't use.
+  const hiddenTaskIds = useMemo(
+    () => (project?.usedInClass?.hiddenTasks || []).map((task) => task?.id),
+    [project?.usedInClass?.hiddenTasks]
+  );
+
   const { definition, loading: definitionLoading } = useReviewFormDefinition(
     status,
     curriculumType,
@@ -235,6 +242,7 @@ export default function UserReview({
               reviewContent={inputs?.content || []}
               status={status}
               handleItemChange={handleItemChange}
+              hiddenTaskIds={hiddenTaskIds}
             />
           ) : null}
         </div>

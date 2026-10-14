@@ -1881,6 +1881,9 @@
 	},
 	"reviewDetail": {
 		"addTaskSuggestion": "Add MindHive survey or task suggestions",
+		"taskHiddenForClass": "Hidden for this class",
+		"hiddenTasksNote_one": "1 grayed-out block is hidden from this student's class by their teacher, so they can't use it in their study.",
+		"hiddenTasksNote_other": "{{count}} grayed-out blocks are hidden from this student's class by their teacher, so they can't use them in their study.",
 		"backToFeedbackCenter": "Back to Feedback Center",
 		"milestoneContext": "{{milestone}}",
 		"reviewNavLabel": "Review sections",

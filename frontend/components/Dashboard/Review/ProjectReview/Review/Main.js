@@ -8,6 +8,7 @@ export default function QuestionsMain({
   reviewContent,
   status,
   handleItemChange,
+  hiddenTaskIds,
 }) {
   const { t } = useTranslation("builder");
   return (
@@ -32,6 +33,7 @@ export default function QuestionsMain({
               stage={status}
               item={item}
               handleItemChange={handleItemChange}
+              hiddenTaskIds={hiddenTaskIds}
               answer={
                 item?.responseType === "dualTextarea"
                   ? item?.answer || { subA: "", subB: "" }
