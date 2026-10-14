@@ -854,6 +854,7 @@
 		"numberOfNotes": "Number of notes"
 	},
 	"main": {
+		"projectBoards": "Project boards",
 		"assignments": "Assignments",
 		"backToMyClasses": "Back to my classes",
 		"classSectionsNav": "Class sections",

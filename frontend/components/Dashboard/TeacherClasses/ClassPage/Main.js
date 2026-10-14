@@ -22,6 +22,7 @@ import JustOneSecondNotice from "../../../DesignSystem/JustOneSecondNotice";
 import { taughtClassIds } from "../../../../lib/classTeacherUtils";
 
 import StyledClass from "../../../styles/StyledClass";
+import ClassTemplateBoardPicker from "./ClassTemplateBoardPicker";
 
 import Dashboard from "./Dashboard/Main";
 import {
@@ -240,6 +241,9 @@ export default function ClassPage({ code, user, query }) {
           {isMatchingRoundFullscreen ? null : (
             <>
               <Header user={user} myclass={myclass} />
+              <div className="classPageNavActions">
+                <ClassTemplateBoardPicker myclass={myclass} page={page} />
+              </div>
               <SectionNavbar
                 className="classPageNav"
                 variant="underline"

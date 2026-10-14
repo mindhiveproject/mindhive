@@ -25,7 +25,6 @@ import BoardMilestonesSync from "../../../BoardMilestonesSync";
 import Button from "../../../../DesignSystem/Button";
 import Card from "../../../../DesignSystem/Card";
 import Chip from "../../../../DesignSystem/Chip";
-import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import Input from "../../../../DesignSystem/Input";
 import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 import {
@@ -318,20 +317,6 @@ export default function Dashboard({ myclass }) {
     replaceDashboardQuery,
   ]);
 
-  const selectTemplateBoard = useCallback(
-    (boardId) => {
-      if (!boardId) return;
-      const nextMilestones = milestonesByBoard[boardId] || [];
-      replaceDashboardQuery({
-        template: boardId,
-        steps: stepsFromQuery.filter((key) =>
-          nextMilestones.some((milestone) => milestone.key === key)
-        ),
-      });
-    },
-    [milestonesByBoard, replaceDashboardQuery, stepsFromQuery]
-  );
-
   const toggleStep = useCallback(
     (key) => {
       if (!key) return;
@@ -461,19 +446,6 @@ export default function Dashboard({ myclass }) {
   );
   const bulkMilestone = selectedMilestones.find(
     (milestone) => milestone.key === bulkMilestoneKey
-  );
-
-  const boardOptions = useMemo(
-    () =>
-      templateBoards.map((board) => ({
-        value: board.id,
-        label:
-          board?.title ||
-          t("dashboard.untitledTemplateBoard", {}, {
-            default: "Untitled template",
-          }),
-      })),
-    [templateBoards, t]
   );
 
   const columnDefs = useMemo(() => {
@@ -660,29 +632,6 @@ export default function Dashboard({ myclass }) {
                   "This class has no template boards, so there are no class milestones to show.",
               })}
             </p>
-          </div>
-        ) : null}
-
-        {templateBoards.length > 1 ? (
-          <div className="dashboardSourceBar">
-            <span className="dashboardSourceLabel">
-              {t("dashboard.templateBoardLabel", {}, {
-                default: "Template board",
-              })}
-              :
-            </span>
-            <DropdownSelect
-              value={selectedBoardId || ""}
-              onChange={selectTemplateBoard}
-              options={boardOptions}
-              placeholder={t("dashboard.selectTemplateBoard", {}, {
-                default: "Select a template board",
-              })}
-              ariaLabel={t("dashboard.templateBoardLabel", {}, {
-                default: "Template board",
-              })}
-              fitContent
-            />
           </div>
         ) : null}
 
@@ -926,12 +875,6 @@ const StyledDashboard = styled.div`
     gap: 12px;
     max-width: 100%;
     min-width: 0;
-  }
-
-  .dashboardSourceLabel {
-    font: var(--MH-Type-Title-Small);
-    letter-spacing: 0;
-    color: var(--MH-Theme-Neutrals-Black, #171717);
   }
 
   .dashboardEmpty {
