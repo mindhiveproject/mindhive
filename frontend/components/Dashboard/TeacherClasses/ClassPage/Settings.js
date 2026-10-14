@@ -30,6 +30,8 @@ import {
   getClassCurriculumTypes,
 } from "../../../../lib/curriculumTypes";
 import { deriveRoles } from "../../Connect/useConnectRole";
+import ProjectsTemplatePanel from "./Projects/ProjectsTemplatePanel";
+import ClassMentors from "./Mentors";
 
 function getNotifyTeachersOfStudentPasswordReset(settings) {
   if (!settings || typeof settings !== "object") return true;
@@ -522,6 +524,12 @@ export default function Settings({ myclass, user }) {
 
   return (
     <div className="settings">
+      <div className="classTabPage" id="project-boards">
+        <ProjectsTemplatePanel myclass={myclass} user={user} />
+      </div>
+
+      <ClassMentors myclass={myclass} user={user} />
+
       <section className="settingsSection">
         <div className="settingsSectionHeader">
           <h3>

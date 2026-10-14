@@ -15,6 +15,7 @@ import {
   DELETE_COMPLETE_PROPOSAL,
   SYNC_CLASS_TEMPLATE_BOARDS,
 } from "../../../../Mutations/Proposal";
+import { GET_CLASS } from "../../../../Queries/Classes";
 import { isTemplateVisibleToStudents } from "../../../../../lib/classTemplateBoards";
 import {
   canDeleteProposalBoard,
@@ -85,6 +86,8 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
         query: CLASS_TEMPLATE_PROJECTS_QUERY,
         variables: { classId },
       },
+      // The class's own board list feeds the "Project boards" bar.
+      { query: GET_CLASS, variables: { code } },
     ],
   });
 
@@ -124,19 +127,21 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
     setLibraryCategory((current) => (current === next ? null : next));
   };
 
+  // Lives in the Settings tab; the class page opens the create modal and the
+  // board editor from these params.
   const createHref = {
     pathname: `/dashboard/myclasses/${code}`,
-    query: { page: "projects", action: "create" },
+    query: { page: "settings", createBoard: "1" },
   };
 
   const editHref = (boardId) => ({
     pathname: `/dashboard/myclasses/${code}`,
-    query: { page: "projects", action: "edit", board: boardId },
+    query: { page: "settings", editBoard: boardId },
   });
 
   const addTemplateHref = (templateId) => ({
     pathname: `/dashboard/myclasses/${code}`,
-    query: { page: "projects", action: "create", template: templateId },
+    query: { page: "settings", createBoard: "1", fromTemplate: templateId },
   });
 
   const formatDate = (value) =>
@@ -415,15 +420,13 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             </div>
           )}
         </div>
-      </section>
 
-      <section className="classTabSection">
+        <div className="classTabSubsectionDivider" />
+
         <div className="classTabSubsectionHeaderRow">
-          <div className="classTabSectionHeader">
-            <h3>
-              {t("projects.templateLibrary", {}, { default: "Template library" })}
-            </h3>
-          </div>
+          <h4 className="classTabSubsectionTitle">
+            {t("projects.templateLibrary", {}, { default: "Template library" })}
+          </h4>
           <Link href={createHref} style={{ textDecoration: "none" }}>
             <Button variant="filled">
               {t("projects.newTemplate", {}, {

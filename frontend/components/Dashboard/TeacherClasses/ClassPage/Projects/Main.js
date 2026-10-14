@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
@@ -40,54 +39,27 @@ const LinkButton = styled.a`
 import {
   CLASS_PROJECTS_QUERY,
 } from "../../../../Queries/Proposal";
-import ProjectsTemplatePanel from "./ProjectsTemplatePanel";
-import ProjectsBoardEditor from "./ProjectsBoardEditor";
-import CreateTemplateBoardModal from "../Modals/CreateTemplateBoardModal";
 import OwnedItemsShowcase from "../utils/OwnedItemsShowcase";
 import { filterOwnedClassItems } from "../utils/ownedClassItems";
 import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 import { useClassTablePrefs } from "../useClassTablePrefs";
 
+// Class project boards list, used read-only by the student class page. The
+// teacher's Projects tab is gone: board management lives in Settings.
 export default function ClassProjects({
   myclass,
   user,
-  query,
   readOnly = false,
 }) {
   const { t } = useTranslation("classes");
-  const router = useRouter();
-  const { action, board, template } = query || {};
-  const isEditing = !readOnly && action === "edit" && !!board;
 
-  const closeCreateModal = () => {
-    router.replace({
-      pathname: `/dashboard/myclasses/${myclass?.code}`,
-      query: { page: "projects" },
-    });
-  };
-
-  // useQuery must run on every render (Rules of Hooks). Skip the network call
-  // when we're in edit mode so we don't fire an unused query, but keep the
-  // hook itself unconditional — otherwise toggling `action` between renders
-  // changes the hook count and React throws "Rendered more hooks than during
-  // the previous render.".
   const { data, loading } = useQuery(CLASS_PROJECTS_QUERY, {
     variables: { classId: myclass?.id },
-    skip: isEditing || !myclass?.id,
+    skip: !myclass?.id,
   });
   const tablePrefs = useClassTablePrefs(myclass?.id, "projects", {
     defaultPageSize: 20,
   });
-
-  if (isEditing) {
-    return (
-      <ProjectsBoardEditor
-        myclass={myclass}
-        user={user}
-        boardId={board}
-      />
-    );
-  }
 
   const projects = data?.proposalBoards || [];
   const isProjectsQueryPending = loading && !data;
@@ -192,18 +164,6 @@ export default function ClassProjects({
 
   return (
     <div className="classTabPage projects">
-      {!readOnly && (
-        <CreateTemplateBoardModal
-          open={action === "create"}
-          onClose={closeCreateModal}
-          myclass={myclass}
-          user={user}
-          initialTemplateId={template || null}
-        />
-      )}
-
-      {!readOnly && <ProjectsTemplatePanel myclass={myclass} user={user} />}
-
       <section className="classTabSection">
         <div className="classTabSectionHeader">
           <h3>

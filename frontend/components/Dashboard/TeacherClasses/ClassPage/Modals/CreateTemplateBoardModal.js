@@ -24,6 +24,7 @@ import {
   SYNC_CLASS_TEMPLATE_BOARDS,
 } from "../../../../Mutations/Proposal";
 import { EDIT_CLASS } from "../../../../Mutations/Classes";
+import { GET_CLASS } from "../../../../Queries/Classes";
 
 const MODE_LIBRARY = "library";
 const MODE_BLANK = "blank";
@@ -109,6 +110,8 @@ export default function CreateTemplateBoardModal({
   myclass,
   user,
   initialTemplateId,
+  // Class tab the new board's editor opens over.
+  page = "settings",
 }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
@@ -200,6 +203,8 @@ export default function CreateTemplateBoardModal({
       query: CLASS_TEMPLATE_PROJECTS_QUERY,
       variables: { classId },
     },
+    // The class's own board list feeds the "Project boards" picker.
+    { query: GET_CLASS, variables: { code } },
   ];
 
   const [copyProposal, { loading: copyLoading }] = useMutation(
@@ -215,9 +220,13 @@ export default function CreateTemplateBoardModal({
     UPDATE_PROJECT_BOARD
   );
 
-  const [syncClassTemplateBoards] = useMutation(SYNC_CLASS_TEMPLATE_BOARDS);
+  const [syncClassTemplateBoards] = useMutation(SYNC_CLASS_TEMPLATE_BOARDS, {
+    refetchQueries,
+  });
 
-  const [editClass, { loading: editClassLoading }] = useMutation(EDIT_CLASS);
+  const [editClass, { loading: editClassLoading }] = useMutation(EDIT_CLASS, {
+    refetchQueries,
+  });
 
   const isBusy = copyLoading || createLoading || linkLoading || editClassLoading;
 
@@ -284,7 +293,7 @@ export default function CreateTemplateBoardModal({
 
       router.replace({
         pathname: `/dashboard/myclasses/${code}`,
-        query: { page: "projects", action: "edit", board: newBoardId },
+        query: { page, editBoard: newBoardId },
       });
     } catch (err) {
       alert(err?.message);

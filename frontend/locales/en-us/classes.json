@@ -605,6 +605,10 @@
 	"curriculumTypeUpdateError": "Failed to update curriculum type",
 	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
+		"chooseProjectBoardAbove": "Choose a project board above to see its milestones.",
+		"addClassProjectBoard": "Add a class project board",
+		"zeroStateBody": "Project boards help you guide your students through their projects in a step-by-step way, following milestones like “expert feedback” and “peer feedback.” You can also add resources and assignments to project cards.",
+		"zeroStateTitle": "Add your class project board to get started",
 		"allowed": "Allowed",
 		"assignToExistingProject": "Assign to Existing Project",
 		"assignToProject": "Assign to Project",
@@ -785,7 +789,7 @@
 		"bulkUnlockButton": "Unlock {{stage}} ({{eligible}} of {{count}})",
 		"bulkWillReopen": "Will be reopened ({{count}})",
 		"bulkWillUnlock": "Will be unlocked ({{count}})",
-		"milestoneReopenHint": "Select milestones to add them as columns. Submitting a milestone locks the student's work; click a student's status to see what it means or to reopen submitted work so they can edit and submit again.",
+		"milestoneReopenHint": "Select milestones to add them as columns. ",
 		"selectedCount": "{{count}} selected",
 		"yesUpdateCards": "Yes, Update Cards"
 	},
@@ -854,6 +858,9 @@
 		"numberOfNotes": "Number of notes"
 	},
 	"main": {
+		"editBoardNamed": "Edit {{board}}",
+		"showOnDashboard": "Show {{board}} on the dashboard",
+		"classBoardSettings": "Class board settings",
 		"projectBoards": "Project boards",
 		"assignments": "Assignments",
 		"backToMyClasses": "Back to my classes",

@@ -27,6 +27,7 @@ import Card from "../../../../DesignSystem/Card";
 import Chip from "../../../../DesignSystem/Chip";
 import Input from "../../../../DesignSystem/Input";
 import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
+import { AddIcon } from "../../../../DesignSystem/Icons";
 import {
   canReopenMilestone,
   countReviewsForMilestone,
@@ -625,20 +626,40 @@ export default function Dashboard({ myclass }) {
 
       <Card variant="outline" as="section" className="dashboardTools">
         {templateBoards.length === 0 ? (
-          <div className="dashboardSourceBar">
+          <div className="dashboardZeroState">
+            <h3>
+              {t("dashboard.zeroStateTitle", {}, {
+                default: "Add your class project board to get started",
+              })}
+            </h3>
             <p className="dashboardEmpty">
-              {t("dashboard.noTemplateBoards", {}, {
+              {t("dashboard.zeroStateBody", {}, {
                 default:
-                  "This class has no template boards, so there are no class milestones to show.",
+                  "Project boards help you guide your students through their projects in a step-by-step way, following milestones like \u201cexpert feedback\u201d and \u201cpeer feedback.\u201d You can also add resources and assignments to project cards.",
               })}
             </p>
+            <Button
+              variant="filled"
+              leadingIcon={<AddIcon />}
+              onClick={() =>
+                router.push({
+                  pathname: `/dashboard/myclasses/${myclass?.code}`,
+                  query: { page: "settings", createBoard: "1" },
+                })
+              }
+            >
+              {t("dashboard.addClassProjectBoard", {}, {
+                default: "Add a class project board",
+              })}
+            </Button>
           </div>
         ) : null}
 
         {showChooserPrompt ? (
           <p className="dashboardEmpty">
-            {t("dashboard.chooseTemplateBoard", {}, {
-              default: "Choose a template board to see its milestones.",
+            {t("dashboard.chooseProjectBoardAbove", {}, {
+              default:
+                "Choose a project board above to see its milestones.",
             })}
           </p>
         ) : null}
@@ -651,14 +672,28 @@ export default function Dashboard({ myclass }) {
           </p>
         ) : null}
 
-        {showCards && milestones.length > 0 ? (
-          <p className="dashboardHint">
-            {t("dashboard.milestoneReopenHint", {}, {
-              default:
-                "Select milestones to add them as columns. Submitting a milestone locks the student's work; click a student's status to see what it means or to reopen submitted work so they can edit and submit again.",
-            })}
-          </p>
-        ) : null}
+        <div className="dashboardHintRow">
+          {showCards && milestones.length > 0 ? (
+            <p className="dashboardHint">
+              {t("dashboard.milestoneReopenHint", {}, {
+                default:
+                  "Select milestones to add them as columns. ",
+              })}
+            </p>
+          ) : null}
+          <div className="dashboardSearch">
+            <Input
+              value={search}
+              onChange={setSearch}
+              placeholder={t("dashboard.searchStudents", {}, {
+                default: "Search students or projects",
+              })}
+              aria-label={t("dashboard.searchStudents", {}, {
+                default: "Search students or projects",
+              })}
+            />
+          </div>
+        </div>
 
         <div className="dashboardFilterBar">
           {showCards && milestones.length > 0 ? (
@@ -690,18 +725,6 @@ export default function Dashboard({ myclass }) {
               })}
             </div>
           ) : null}
-          <div className="dashboardSearch">
-            <Input
-              value={search}
-              onChange={setSearch}
-              placeholder={t("dashboard.searchStudents", {}, {
-                default: "Search students or projects",
-              })}
-              aria-label={t("dashboard.searchStudents", {}, {
-                default: "Search students or projects",
-              })}
-            />
-          </div>
         </div>
       </Card>
 
@@ -868,13 +891,20 @@ const StyledDashboard = styled.div`
     gap: 12px;
   }
 
-  .dashboardSourceBar {
+  .dashboardZeroState {
     display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 12px;
-    max-width: 100%;
-    min-width: 0;
+    max-width: 720px;
+    padding: 16px 0;
+
+    h3 {
+      margin: 0;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+    }
   }
 
   .dashboardEmpty {
@@ -891,7 +921,27 @@ const StyledDashboard = styled.div`
     color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 
-  /* Milestone chips on top, search underneath. */
+  /* Hint and search share a row (search takes a third), stacking on narrow
+     screens. */
+  .dashboardHintRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    min-width: 0;
+  }
+
+  .dashboardHintRow .dashboardHint {
+    flex: 2 1 420px;
+    min-width: 0;
+  }
+
+  .dashboardHintRow .dashboardSearch {
+    flex: 1 1 260px;
+    min-width: 0;
+  }
+
+  /* Milestone chips. */
   .dashboardFilterBar {
     display: flex;
     flex-direction: column;
@@ -913,10 +963,6 @@ const StyledDashboard = styled.div`
     font: var(--MH-Type-Label-Base);
     letter-spacing: 0;
     color: var(--MH-Theme-Neutrals-Black, #171717);
-  }
-
-  .dashboardSearch {
-    width: 100%;
   }
 
   .dashboardToolbar {

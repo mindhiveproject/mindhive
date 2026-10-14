@@ -302,7 +302,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           <Link
             href={{
               pathname: `/dashboard/myclasses/${myclass?.code}`,
-              query: { page: "projects" },
+              query: { page: "settings" },
             }}
             style={{ ...chipButtonStyle, display: "flex", alignItems: "center", textDecoration: "none" }}
           >
@@ -418,7 +418,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       if (!hasTemplateBoard) {
         router.push({
           pathname: `/dashboard/myclasses/${myclass?.code}`,
-          query: { page: "projects" },
+          query: { page: "settings" },
         });
         return;
       }

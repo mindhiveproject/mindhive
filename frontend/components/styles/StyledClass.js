@@ -150,11 +150,7 @@ const StyledClass = styled.div`
      such as the class project board picker (ClassPage/ClassTemplateBoardPicker). */
   .classPageNavActions {
     display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    /* Line up with the header's 10px inset. */
-    padding: 0 10px;
+    flex-direction: column;
     margin-bottom: 16px;
 
     &:empty {

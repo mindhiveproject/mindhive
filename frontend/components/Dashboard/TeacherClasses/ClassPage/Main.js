@@ -7,9 +7,7 @@ import clsx from "clsx";
 
 import Header from "./Header";
 import ClassStudents from "./Students";
-import ClassMentors from "./Mentors";
 import ClassStudies from "./Studies";
-import ClassProjects from "./Projects/Main";
 import ClassAssignments from "./Assignments/Main";
 import ClassResources from "./Resources/Main";
 import ClassOpportunities from "./Opportunities/Main";
@@ -23,6 +21,8 @@ import { taughtClassIds } from "../../../../lib/classTeacherUtils";
 
 import StyledClass from "../../../styles/StyledClass";
 import ClassTemplateBoardPicker from "./ClassTemplateBoardPicker";
+import ProjectsBoardEditor from "./Projects/ProjectsBoardEditor";
+import CreateTemplateBoardModal from "./Modals/CreateTemplateBoardModal";
 
 import Dashboard from "./Dashboard/Main";
 import {
@@ -51,16 +51,6 @@ const CLASS_PAGE_NAV_ITEMS = [
     value: "students",
     labelKey: "main.students",
     iconSrc: "/assets/icons/profile/people.svg",
-  },
-  {
-    value: "mentors",
-    labelKey: "main.mentors",
-    iconSrc: "/assets/icons/user.svg",
-  },
-  {
-    value: "projects",
-    labelKey: "main.projects",
-    iconSrc: "/assets/icons/project.svg",
   },
   {
     value: "studies",
@@ -92,7 +82,9 @@ const CLASS_PAGE_NAV_ITEMS = [
 export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
-  const { action, board } = query || {};
+  // `editBoard` opens a class project board's editor full screen over any tab;
+  // `createBoard` opens the create-board modal (Settings tab).
+  const { editBoard, createBoard } = query || {};
 
   const { data, loading } = useQuery(GET_CLASS, {
     variables: { code },
@@ -148,11 +140,15 @@ export default function ClassPage({ code, user, query }) {
   ]);
 
   useEffect(() => {
-    if (page === "board") {
-      router.replace({
-        pathname: `/dashboard/myclasses/${code}`,
-        query: { page: "projects" },
-      });
+    // The Projects and Mentors tabs moved into Settings; keep old links working.
+    if (page === "board" || page === "projects" || page === "mentors") {
+      const next = { page: "settings" };
+      if (query?.action === "edit" && query?.board) next.editBoard = query.board;
+      if (query?.action === "create") {
+        next.createBoard = "1";
+        if (query?.template) next.fromTemplate = query.template;
+      }
+      router.replace({ pathname: `/dashboard/myclasses/${code}`, query: next });
       return;
     }
     if (isNyuCuspOnly && NYU_CUSP_HIDDEN_TABS.has(page)) {
@@ -186,14 +182,22 @@ export default function ClassPage({ code, user, query }) {
     allowedPageValues,
   ]);
 
-  const isProjectsFullscreen =
-    page === "projects" && action === "edit" && board;
+  const closeCreateBoard = () =>
+    router.replace({
+      pathname: `/dashboard/myclasses/${code}`,
+      query: { page: "settings" },
+    });
   const isMatchingRoundFullscreen =
     page === "opportunities" &&
     typeof query?.round === "string" &&
     Boolean(query.round);
 
-  if (page === "board" || (isNyuCuspOnly && NYU_CUSP_HIDDEN_TABS.has(page))) {
+  if (
+    page === "board" ||
+    page === "projects" ||
+    page === "mentors" ||
+    (isNyuCuspOnly && NYU_CUSP_HIDDEN_TABS.has(page))
+  ) {
     return null;
   }
 
@@ -214,10 +218,15 @@ export default function ClassPage({ code, user, query }) {
     );
   }
 
-  if (isProjectsFullscreen) {
+  if (typeof editBoard === "string" && editBoard) {
     return (
       <StyledClass className="isProjectsFullscreen">
-        <ClassProjects myclass={myclass} user={user} query={query} />
+        <ProjectsBoardEditor
+          myclass={myclass}
+          user={user}
+          boardId={editBoard}
+          page={page}
+        />
       </StyledClass>
     );
   }
@@ -279,16 +288,6 @@ export default function ClassPage({ code, user, query }) {
             )}
           </div>
           <div>
-            {page === "mentors" && (
-              <ClassMentors myclass={myclass} user={user} query={query} />
-            )}
-          </div>
-          <div>
-            {page === "projects" && (
-              <ClassProjects myclass={myclass} user={user} query={query} />
-            )}
-          </div>
-          <div>
             {page === "studies" && !isNyuCuspOnly && (
               <ClassStudies myclass={myclass} user={user} query={query} />
             )}
@@ -314,7 +313,17 @@ export default function ClassPage({ code, user, query }) {
           </div>
           <div>
             {page === "settings" && (
-              <ClassSettings myclass={myclass} user={user} query={query} />
+              <>
+                <CreateTemplateBoardModal
+                  open={createBoard === "1"}
+                  onClose={closeCreateBoard}
+                  myclass={myclass}
+                  user={user}
+                  initialTemplateId={query?.fromTemplate || null}
+                  page="settings"
+                />
+                <ClassSettings myclass={myclass} user={user} query={query} />
+              </>
             )}
           </div>
         </div>

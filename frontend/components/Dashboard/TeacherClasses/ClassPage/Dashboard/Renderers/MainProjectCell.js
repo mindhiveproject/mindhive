@@ -26,7 +26,7 @@ export function MainProjectCell(props) {
 
   return (
     <Button
-      variant="outline"
+      variant="subtle"
       leadingIcon={<OpenInNewIcon />}
       title={title}
       style={FIT_CELL_STYLE}
