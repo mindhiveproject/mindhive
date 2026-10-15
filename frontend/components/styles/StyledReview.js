@@ -471,6 +471,13 @@ export const StyledDasboardReview = styled.div`
         grid-template-columns: auto 1fr;
       }
 
+      .suggestedTasks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        min-width: 0;
+      }
+
       .lowPanel {
         display: grid;
         grid-template-columns: 2fr 1fr;

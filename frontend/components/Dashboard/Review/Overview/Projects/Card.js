@@ -2,6 +2,7 @@ import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import { isOpenForComments } from "../../../../../lib/milestoneStatus";
+import Chip from "../../../../DesignSystem/Chip";
 
 export default function Card({
   stage,
@@ -9,6 +10,7 @@ export default function Card({
   status,
   isOpenForCommentsQuery,
   milestones = [],
+  matchedTasks = [],
   onClick,
   className = "",
   style,
@@ -63,6 +65,19 @@ export default function Card({
         </div>
       </div>
       <div className="p13">{shortenTitle(project?.title)}</div>
+      {/* Filtered tasks & surveys mentors suggested to this proposal. */}
+      {matchedTasks.length > 0 ? (
+        <div className="suggestedTasks">
+          {matchedTasks.map((task) => (
+            <Chip
+              key={task.id}
+              label={task.title}
+              variant="static"
+              style={{ maxWidth: "100%" }}
+            />
+          ))}
+        </div>
+      ) : null}
       <div className="imageContainer">
         {imageURL ? (
           <img src={imageURL} alt={project?.title} />

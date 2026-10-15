@@ -1,12 +1,16 @@
 import { useQuery } from "@apollo/client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROJECTS_QUERY } from "../../../../Queries/Proposal";
 import { getProjectsQueryFilterForTab, isMilestoneSubmitted, isOpenForComments } from "../../../../../lib/milestoneStatus";
+import { getMilestoneByKey } from "../../../../../lib/milestones";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import { ArrowDropDownIcon } from "../../../../DesignSystem/Icons";
 import Card from "./Card";
+import TaskSuggestionFilter from "./TaskSuggestionFilter";
+import useTaskSuggestions from "./useTaskSuggestions";
 
 function containsAny(arr1, arr2) {
   return arr1.some((item) => arr2.includes(item));
@@ -38,6 +42,7 @@ export default function ProjectsBoard({
   milestones = [],
 }) {
   const { t } = useTranslation("builder");
+  const { locale } = useRouter();
   const scopedClassId = selectedClassId || null;
   const classIdsForQuery = scopedClassId
     ? [scopedClassId]
@@ -47,6 +52,7 @@ export default function ProjectsBoard({
   const [sortBy, setSortBy] = useState("");
   const [filteredClasses, setFilteredClasses] = useState([]);
   const [showMyClassOnly, setShowMyClassOnly] = useState(false);
+  const [selectedTaskIds, setSelectedTaskIds] = useState([]);
   const [filterSortMessage, setFilterSortMessage] = useState(
     t("review.showingAllProjects")
   );
@@ -82,16 +88,36 @@ export default function ProjectsBoard({
     isMilestoneSubmitted(project, status, milestones)
   );
 
+  // Task & survey filter: only on milestones whose review form has a task
+  // selector. Picked tasks are kept (and in the URL) but ignored elsewhere.
+  const {
+    enabled: taskFilterEnabled,
+    suggestedTasks,
+    tasksByProject,
+    taskTitles,
+  } = useTaskSuggestions({
+    classId: scopedClassId,
+    milestone: getMilestoneByKey(status, milestones),
+    status,
+    projects,
+  });
+  const activeTaskIds = useMemo(
+    () => (taskFilterEnabled ? selectedTaskIds : []),
+    [taskFilterEnabled, selectedTaskIds]
+  );
+
   // Initialize state from URL on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const classesParam = params.get("classes");
     const keywordParam = params.get("keyword");
     const sortParam = params.get("sort");
+    const tasksParam = params.get("tasks");
 
     if (classesParam) setFilteredClasses(classesParam.split(","));
     if (keywordParam) setKeyword(keywordParam);
     if (sortParam) setSortBy(sortParam);
+    if (tasksParam) setSelectedTaskIds(tasksParam.split(","));
 
     // After initial mount, set isInitialMount to false
     isInitialMount.current = false;
@@ -121,8 +147,30 @@ export default function ProjectsBoard({
     if (keyword) {
       message += t("review.matchingKeyword", { keyword });
     }
+    const taskNames = activeTaskIds
+      .map((id) => taskTitles.get(id))
+      .filter(Boolean);
+    if (taskNames.length) {
+      const tasks = new Intl.ListFormat(locale, {
+        type: "disjunction",
+      }).format(taskNames.map((name) => `"${name}"`));
+      message += t(
+        "review.matchingSuggestedTasks",
+        { tasks },
+        { default: ` that were suggested ${tasks}` }
+      );
+    }
     setFilterSortMessage(message);
-  }, [filteredClasses, sortBy, keyword, allUniqueClasses, t]);
+  }, [
+    filteredClasses,
+    sortBy,
+    keyword,
+    allUniqueClasses,
+    activeTaskIds,
+    taskTitles,
+    locale,
+    t,
+  ]);
 
   // Reset filters only when selector changes (not on initial mount)
   useEffect(() => {
@@ -138,6 +186,7 @@ export default function ProjectsBoard({
       setSortBy("");
       setFilteredClasses([]);
       setShowMyClassOnly(false);
+      setSelectedTaskIds([]);
       setFilterSortMessage(t("review.showingAllProjects"));
       const newUrl = window.location.pathname;
       window.history.pushState({}, document.title, newUrl);
@@ -168,17 +217,22 @@ export default function ProjectsBoard({
     } else {
       queryParams.delete("sort");
     }
+    if (selectedTaskIds.length > 0) {
+      queryParams.set("tasks", selectedTaskIds.join(","));
+    } else {
+      queryParams.delete("tasks");
+    }
 
     const queryString = queryParams.toString();
     const newUrl = queryString
       ? `${window.location.pathname}?${queryString}`
       : window.location.pathname;
     window.history.pushState(
-      { filteredClasses, keyword, sortBy },
+      { filteredClasses, keyword, sortBy, selectedTaskIds },
       document.title,
       newUrl
     );
-  }, [filteredClasses, keyword, sortBy, scopedClassId]);
+  }, [filteredClasses, keyword, sortBy, selectedTaskIds, scopedClassId]);
 
   // Restore state on popstate (back/forward navigation)
   useEffect(() => {
@@ -187,10 +241,12 @@ export default function ProjectsBoard({
       const classesParam = params.get("classes");
       const keywordParam = params.get("keyword");
       const sortParam = params.get("sort");
+      const tasksParam = params.get("tasks");
 
       setFilteredClasses(classesParam ? classesParam.split(",") : []);
       setKeyword(keywordParam || "");
       setSortBy(sortParam || "");
+      setSelectedTaskIds(tasksParam ? tasksParam.split(",") : []);
     };
 
     window.addEventListener("popstate", handlePopState);
@@ -203,22 +259,24 @@ export default function ProjectsBoard({
       const projectsFiltered = projects.filter((project) => {
         let isMatchingKeyword = true;
         let isInFilteredClasses = true;
-        if (keyword || filteredClasses.length) {
-          if (keyword) {
-            isMatchingKeyword = project.title
-              .toLowerCase()
-              .includes(keyword.toLowerCase());
-          }
-          if (filteredClasses.length) {
-            isInFilteredClasses = containsAny(
-              [project?.usedInClass?.id],
-              filteredClasses
-            );
-          }
-          return isMatchingKeyword && isInFilteredClasses;
-        } else {
-          return true;
+        let isMatchingTasks = true;
+        if (keyword) {
+          isMatchingKeyword = project.title
+            .toLowerCase()
+            .includes(keyword.toLowerCase());
         }
+        if (filteredClasses.length) {
+          isInFilteredClasses = containsAny(
+            [project?.usedInClass?.id],
+            filteredClasses
+          );
+        }
+        // Any picked task suggested to the proposal (OR).
+        if (activeTaskIds.length) {
+          const suggested = tasksByProject.get(project.id);
+          isMatchingTasks = activeTaskIds.some((id) => suggested?.has(id));
+        }
+        return isMatchingKeyword && isInFilteredClasses && isMatchingTasks;
       });
       if (sortBy) {
         const projectsFilteredAndSorted = projectsFiltered.sort((a, b) => {
@@ -270,6 +328,8 @@ export default function ProjectsBoard({
     sortBy,
     filteredClasses,
     status,
+    activeTaskIds,
+    tasksByProject,
   ]);
 
   // Function to navigate to a project page
@@ -327,6 +387,15 @@ export default function ProjectsBoard({
         </div>
       </div>
 
+      {taskFilterEnabled ? (
+        <TaskSuggestionFilter
+          tasks={suggestedTasks}
+          taskTitles={taskTitles}
+          value={selectedTaskIds}
+          onChange={setSelectedTaskIds}
+        />
+      ) : null}
+
       <div className="p16_500">{filterSortMessage}</div>
 
       <div className="cardsArea">
@@ -337,6 +406,9 @@ export default function ProjectsBoard({
             status={status}
             isOpenForCommentsQuery={isOpenForCommentsQuery}
             milestones={milestones}
+            matchedTasks={activeTaskIds
+              .filter((id) => tasksByProject.get(project.id)?.has(id))
+              .map((id) => ({ id, title: taskTitles.get(id) || id }))}
             key={project?.id}
             onClick={() =>
               navigateToProject({ id: project.id, stage: selector })

@@ -29,37 +29,44 @@ export default function Overview({ query, user }) {
   const router = useRouter();
 
   const { data: classesData } = useQuery(GET_USER_CLASSES);
-  const us = classesData?.authenticatedItem || {
-    studentIn: [],
-    teacherIn: [],
-    teachingTeamIn: [],
-    mentorIn: [],
-  };
 
-  const myClasses = [...us?.studentIn, ...us?.teacherIn, ...us?.teachingTeamIn, ...us?.mentorIn] || [];
-
-  const networkClasses =
-    myClasses
-      .map((myClass) => {
-        if (myClass?.networks) {
-          return myClass?.networks?.map((net) => net.classes).flat();
-        }
-        return [];
-      })
-      .flat() || [];
-  const allClasses = [...myClasses, ...networkClasses];
-  const allClassIds = allClasses.map((theclass) => theclass.id);
-  const allUniqueClassIds = [...new Set([...allClassIds])];
-  const allUniqueClasses = allUniqueClassIds.map((id) => {
-    const cl = allClasses.find((item) => item?.id === id);
-    return {
-      id,
-      title: cl?.title,
-      code: cl?.code,
-      templateProposal: cl?.templateProposal,
-      classTemplateBoards: cl?.classTemplateBoards,
+  // Memoized on the query result: a fresh `selectedClass` each render gave
+  // fresh template boards, so BoardMilestonesSync reported "new" milestones
+  // and the state update looped (Maximum update depth exceeded).
+  const { myClasses, allUniqueClassIds, allUniqueClasses } = useMemo(() => {
+    const us = classesData?.authenticatedItem || {
+      studentIn: [],
+      teacherIn: [],
+      teachingTeamIn: [],
+      mentorIn: [],
     };
-  });
+
+    const myClasses = [...us?.studentIn, ...us?.teacherIn, ...us?.teachingTeamIn, ...us?.mentorIn] || [];
+
+    const networkClasses =
+      myClasses
+        .map((myClass) => {
+          if (myClass?.networks) {
+            return myClass?.networks?.map((net) => net.classes).flat();
+          }
+          return [];
+        })
+        .flat() || [];
+    const allClasses = [...myClasses, ...networkClasses];
+    const allClassIds = allClasses.map((theclass) => theclass.id);
+    const allUniqueClassIds = [...new Set([...allClassIds])];
+    const allUniqueClasses = allUniqueClassIds.map((id) => {
+      const cl = allClasses.find((item) => item?.id === id);
+      return {
+        id,
+        title: cl?.title,
+        code: cl?.code,
+        templateProposal: cl?.templateProposal,
+        classTemplateBoards: cl?.classTemplateBoards,
+      };
+    });
+    return { myClasses, allUniqueClassIds, allUniqueClasses };
+  }, [classesData]);
 
   const classFromQuery =
     (router.isReady && router.query?.class) || query?.class;
@@ -238,6 +245,7 @@ export default function Overview({ query, user }) {
               ariaLabel={t("review.selectClass", {}, { default: "Select a class" })}
               placeholder={t("review.selectClass", {}, { default: "Select a class" })}
               value={selectedClassId || ""}
+              searchableSingle
               options={allUniqueClasses.map((cl) => ({
                 value: cl.id,
                 label: cl.title,
