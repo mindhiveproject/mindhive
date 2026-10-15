@@ -4,13 +4,19 @@ import {
 } from "./utils/templateCloneMatch";
 import {
   CLASS_TEMPLATE_QUERY,
-  getPrimaryTemplateBoardId,
+  connectAssignmentsToTemplateClasses,
+  resolveClassTemplateBoardId,
 } from "./utils/classTemplateBoards";
 
 /**
  * Sets an assignment's linked template cards to the given list, and propagates
  * to all student boards. Clone cards are matched by publicId, or section publicId + position,
  * or by section/card index when publicId is missing (avoids wrong matches when position is duplicated).
+ * Only links on the chosen template board and its student boards change; links on
+ * the class's other template boards are kept.
+ * Optional templateBoardId targets a specific class template board; otherwise primary is used.
+ * When cards are linked, the assignment is also connected to the classes that use
+ * the board as a template.
  */
 async function setAssignmentTemplateCards(
   _root: unknown,
@@ -18,10 +24,12 @@ async function setAssignmentTemplateCards(
     assignmentId,
     templateCardIds,
     classId,
+    templateBoardId: requestedTemplateBoardId,
   }: {
     assignmentId: string;
     templateCardIds: string[];
     classId: string;
+    templateBoardId?: string | null;
   },
   context: any
 ): Promise<{ id: string } | null> {
@@ -35,7 +43,10 @@ async function setAssignmentTemplateCards(
     query:
       `${CLASS_TEMPLATE_QUERY} studentProposals { id clonedFrom { id } sections { id publicId position cards { id publicId position } } }`,
   });
-  const templateBoardId = getPrimaryTemplateBoardId(classData);
+  const templateBoardId = resolveClassTemplateBoardId(
+    classData,
+    requestedTemplateBoardId
+  );
   if (!templateBoardId) {
     throw new Error("Class has no template board.");
   }
@@ -205,6 +216,15 @@ async function setAssignmentTemplateCards(
       },
     },
   });
+
+  if (connectDeduped.length > 0) {
+    await connectAssignmentsToTemplateClasses(
+      context.sudo(),
+      templateBoardId,
+      [assignmentId],
+      context.session
+    );
+  }
 
   return { id: assignmentId };
 }

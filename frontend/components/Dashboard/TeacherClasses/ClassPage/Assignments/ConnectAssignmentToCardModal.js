@@ -8,8 +8,10 @@ import {
   UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS,
 } from "../../../../Mutations/Assignment";
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
-import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 import TemplateBoardCardPicker from "./TemplateBoardCardPicker";
+import TemplateBoardSelect, {
+  getDefaultTemplateBoardId,
+} from "../TemplateBoardSelect";
 
 function getTemplateCardIds(assignment, templateBoardId) {
   if (!assignment?.proposalCards || !templateBoardId) return [];
@@ -27,8 +29,17 @@ export default function ConnectAssignmentToCardModal({
   onSuccess,
 }) {
   const { t } = useTranslation("classes");
-  const templateBoardId = getPrimaryTemplateBoardId(myclass);
+  // The teacher's board choice; until they pick one, open on the board the
+  // assignment is linked on (or the primary board). Cleared on close.
+  const [pickedBoardId, setPickedBoardId] = useState(null);
+  const templateBoardId =
+    pickedBoardId ||
+    getDefaultTemplateBoardId(myclass, assignment?.proposalCards);
   const [selectedCardIds, setSelectedCardIds] = useState([]);
+
+  useEffect(() => {
+    if (!open) setPickedBoardId(null);
+  }, [open]);
 
   useEffect(() => {
     if (open && assignment && templateBoardId) {
@@ -87,6 +98,7 @@ export default function ConnectAssignmentToCardModal({
         assignmentId: assignment.id,
         templateCardIds: selectedCardIds,
         classId: myclass.id,
+        templateBoardId,
       },
     });
   };
@@ -102,6 +114,7 @@ export default function ConnectAssignmentToCardModal({
       variables: {
         assignmentId: assignment.id,
         classId: myclass.id,
+        templateBoardId,
       },
     });
   };
@@ -182,6 +195,12 @@ export default function ConnectAssignmentToCardModal({
 
       <Modal.Content scrolling>
         <StyledModal>
+          <TemplateBoardSelect
+            myclass={myclass}
+            value={templateBoardId}
+            onChange={setPickedBoardId}
+            disabled={isBusy}
+          />
           <TemplateBoardCardPicker
             templateBoardId={templateBoardId}
             selectedCardIds={selectedCardIds}

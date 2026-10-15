@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
@@ -11,8 +11,12 @@ import {
   SET_RESOURCE_TEMPLATE_CARDS,
 } from "../../../../Mutations/Resource";
 import { GET_CLASS_RESOURCES } from "../../../../Queries/Resource";
-import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
+import {
+  getClassTemplateBoards,
+  getPrimaryTemplateBoardId,
+} from "../../../../../lib/classTemplateBoards";
 import TemplateBoardCardPicker from "../Assignments/TemplateBoardCardPicker";
+import TemplateBoardSelect from "../TemplateBoardSelect";
 
 const Section = styled.div`
   margin-bottom: 20px;
@@ -47,7 +51,17 @@ export default function BulkActionsModal({
   const [applying, setApplying] = useState(false);
 
   const classId = myclass?.id;
-  const templateBoardId = getPrimaryTemplateBoardId(myclass);
+  const [pickedBoardId, setPickedBoardId] = useState(null);
+  const templateBoardId = pickedBoardId || getPrimaryTemplateBoardId(myclass);
+
+  useEffect(() => {
+    if (!open) setPickedBoardId(null);
+  }, [open]);
+
+  const handleBoardChange = (boardId) => {
+    setPickedBoardId(boardId);
+    setSelectedCardId(null);
+  };
 
   const refetch = [{ query: GET_CLASS_RESOURCES, variables: { classId } }];
 
@@ -147,6 +161,7 @@ export default function BulkActionsModal({
               resourceId: r.id,
               templateCardIds: [selectedCardId],
               classId,
+              templateBoardId,
             },
           });
         }
@@ -165,14 +180,20 @@ export default function BulkActionsModal({
       )
     )
       return;
+    // Disconnect from every template board of the class, not only one.
+    const boardIds = getClassTemplateBoards(myclass)
+      .map((board) => board?.id)
+      .filter(Boolean);
     runSequentially(async () => {
       for (const r of selectedResources) {
-        if (r?.id) {
+        if (!r?.id) continue;
+        for (const boardId of boardIds) {
           await setResourceTemplateCards({
             variables: {
               resourceId: r.id,
               templateCardIds: [],
               classId,
+              templateBoardId: boardId,
             },
           });
         }
@@ -322,6 +343,12 @@ export default function BulkActionsModal({
                 </Button>
               </div>
               <CardPickerContainer>
+                <TemplateBoardSelect
+                  myclass={myclass}
+                  value={templateBoardId}
+                  onChange={handleBoardChange}
+                  disabled={applying}
+                />
                 <TemplateBoardCardPicker
                   templateBoardId={templateBoardId}
                   selectedCardId={selectedCardId}

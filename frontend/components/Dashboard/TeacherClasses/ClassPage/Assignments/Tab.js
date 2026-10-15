@@ -7,7 +7,11 @@ import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
-import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
+import {
+  getCardsOnClassTemplateBoards,
+  getClassTemplateBoards,
+  getClassTemplateBoardTitle,
+} from "../../../../../lib/classTemplateBoards";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -123,7 +127,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
 
   // Filter state: Published/Unpublished chips only
   const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null); // null = all, true = published, false = unpublished
-  const [linkedCardFilter, setLinkedCardFilter] = useState(null); // { type: 'section'|'card', value: string } | null
+  const [linkedCardFilter, setLinkedCardFilter] = useState(null); // { type: 'section'|'card', value: string, boardId: string } | null
   const [showLinkedToCardColumn, setShowLinkedToCardColumn] = useState(false); // default: hide "Linked to card" column
   const [assignmentForConnectModal, setAssignmentForConnectModal] = useState(null);
   const [assignmentForPublishModal, setAssignmentForPublishModal] = useState(null);
@@ -163,18 +167,21 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     return html.replace(/<[^>]*>/g, '').trim();
   };
 
-  const templateBoardId = getPrimaryTemplateBoardId(myclass);
+  const templateBoardCount = getClassTemplateBoards(myclass).length;
+  // With several template boards, links are labelled with their board.
+  const showBoardTitles = templateBoardCount > 1;
 
   // Filter assignments by published state, then by linked card (section/card) if set
   const filteredAssignments = (() => {
     let list = selectedPublishedFilter === null
       ? (assignments || [])
       : (assignments || []).filter((a) => a?.public === selectedPublishedFilter);
-    if (linkedCardFilter && templateBoardId) {
+    if (linkedCardFilter) {
       list = list.filter((a) => {
-        const templateCards = (a?.proposalCards || []).filter(
-          (c) => c?.section?.board?.id === templateBoardId
-        );
+        const templateCards = getCardsOnClassTemplateBoards(
+          a?.proposalCards,
+          myclass
+        ).filter((c) => c?.section?.board?.id === linkedCardFilter.boardId);
         return templateCards.some((c) =>
           linkedCardFilter.type === "section"
             ? (c?.section?.title ?? "") === linkedCardFilter.value
@@ -275,27 +282,27 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   // Linked to card renderer: [Section] > [Card] (section and card each in its own button; clicking filters by that section/card)
   const LinkedToCardRenderer = (params) => {
     const assignment = params?.data;
-    const boardId = params?.context?.templateBoardId ?? getPrimaryTemplateBoardId(myclass);
-    const templateCards = !boardId
-      ? []
-      : (assignment?.proposalCards || []).filter(
-          (c) => c?.section?.board?.id === boardId
-        );
+    const hasTemplateBoard = params?.context?.templateBoardCount > 0;
+    const showBoardTitle = params?.context?.showBoardTitles;
+    const templateCards = getCardsOnClassTemplateBoards(
+      assignment?.proposalCards,
+      myclass
+    );
     const onLinkedCardFilterClick = params?.context?.onLinkedCardFilterClick;
     const handleConnectClick = () => {
-      if (!boardId) {
+      if (!hasTemplateBoard) {
         alert(t("assignment.connectModal.noTemplate", "No template board for this class."));
         return;
       }
       setAssignmentForConnectModal(assignment);
     };
     if (templateCards.length === 0) {
-      if (!boardId) {
+      if (!hasTemplateBoard) {
         return (
           <Link
             href={{
               pathname: `/dashboard/myclasses/${myclass?.code}`,
-              query: { page: "projects" },
+              query: { page: "settings" },
             }}
             style={{ ...chipButtonStyle, display: "flex", alignItems: "center", textDecoration: "none" }}
           >
@@ -371,11 +378,16 @@ export default function AssignmentTab({ assignments, myclass, user }) {
             }}
           >
             {i > 0 && separator}
+            {showBoardTitle && (
+              <span className="MH-Type-Body-Base" style={{ marginRight: "4px", color: "#616161" }}>
+                {getClassTemplateBoardTitle(myclass, c?.section?.board?.id)} /
+              </span>
+            )}
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onLinkedCardFilterClick?.("section", c?.section?.title ?? "");
+                onLinkedCardFilterClick?.("section", c?.section?.title ?? "", c?.section?.board?.id);
               }}
               style={chipButtonStyle}
             >
@@ -386,7 +398,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onLinkedCardFilterClick?.("card", c?.title ?? "");
+                onLinkedCardFilterClick?.("card", c?.title ?? "", c?.section?.board?.id);
               }}
               style={chipButtonStyle}
             >
@@ -401,12 +413,12 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   // Change link: opens connect-to-card modal for this row (only shown when Linked to card column is visible)
   const ChangeLinkRenderer = (params) => {
     const assignment = params?.data;
-    const templateBoardId = params?.context?.templateBoardId ?? getPrimaryTemplateBoardId(myclass);
+    const hasTemplateBoard = params?.context?.templateBoardCount > 0;
     const handleClick = () => {
-      if (!templateBoardId) {
+      if (!hasTemplateBoard) {
         router.push({
           pathname: `/dashboard/myclasses/${myclass?.code}`,
-          query: { page: "projects" },
+          query: { page: "settings" },
         });
         return;
       }
@@ -521,14 +533,14 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     },
     valueGetter: (params) => {
       const a = params?.data;
-      const templateBoardId = params?.context?.templateBoardId;
-      if (!templateBoardId) return "";
-      const templateCards = (a?.proposalCards || []).filter(
-        (c) => c?.section?.board?.id === templateBoardId
-      );
-      return templateCards.length > 0
-        ? templateCards.map((c) => `${c?.section?.title} > ${c?.title}`).join(", ")
-        : "";
+      const templateCards = getCardsOnClassTemplateBoards(a?.proposalCards, myclass);
+      const boardPrefix = (c) =>
+        params?.context?.showBoardTitles
+          ? `${getClassTemplateBoardTitle(myclass, c?.section?.board?.id)} > `
+          : "";
+      return templateCards
+        .map((c) => `${boardPrefix(c)}${c?.section?.title} > ${c?.title}`)
+        .join(", ");
     },
   };
 
@@ -724,10 +736,12 @@ export default function AssignmentTab({ assignments, myclass, user }) {
               if (e.api) setSelectedAssignments(e.api.getSelectedRows());
             }}
             context={{
-              templateBoardId: getPrimaryTemplateBoardId(myclass),
+              templateBoardCount,
+              showBoardTitles,
               onTogglePublishStatus: handleOpenPublishConfirm,
               updatingStatusAssignmentId,
-              onLinkedCardFilterClick: (type, value) => setLinkedCardFilter({ type, value }),
+              onLinkedCardFilterClick: (type, value, boardId) =>
+                setLinkedCardFilter({ type, value, boardId }),
             }}
             pagination={pagination}
             paginationPageSizeSelector={paginationPageSizeSelector}

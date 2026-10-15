@@ -9,6 +9,8 @@ import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import ReactHtmlParser from "react-html-parser";
 
 import useForm from "../../../lib/useForm";
+import { useTemplateAssignmentCompletion } from "../../../lib/assignmentCompletion";
+import { getBoardTemplateClassIds } from "../../../lib/classTemplateBoards";
 import TipTapEditor from "../../TipTap/Main";
 import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 
@@ -61,6 +63,12 @@ export default function BuilderProposalCard({
   const { inputs, handleChange } = useForm({
     ...initialCard,
   });
+  // Edit mode on a class template: how many of its students completed each
+  // linked assignment (null on other boards).
+  const assignmentCompletion = useTemplateAssignmentCompletion(
+    proposal,
+    inputs?.assignments
+  );
 
   const description = useRef(initialCard?.description || "");
   const content = useRef(initialCard?.content || "");
@@ -575,6 +583,7 @@ export default function BuilderProposalCard({
                 proposal={proposal}
                 openAssignmentModal={openViewAssignmentModal}
                 user={user}
+                completionByAssignmentId={assignmentCompletion}
               />
             )}
             {(inputs?.resources?.length > 0 || inputs?.tasks?.length > 0 || inputs?.studies?.length > 0) && (
@@ -589,6 +598,7 @@ export default function BuilderProposalCard({
                 openAssignmentModal={openViewAssignmentModal}
                 openResourceModal={openViewResourceModal}
                 user={user}
+                templateClassIds={getBoardTemplateClassIds(proposal)}
               />
             )}
             {[

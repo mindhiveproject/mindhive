@@ -155,7 +155,8 @@ export default function ClassMentors({ myclass, user }) {
   ];
 
   return (
-    <div className="classTabPage mentors">
+    // One "Mentors" section (invitation link + roster), shown in the Settings tab.
+    <div className="classTabPage mentors" id="mentors">
       <section className="classTabSection">
         <div className="classTabSectionHeader">
           <h3>{t("navigation.mentors", {}, { default: "Mentors" })}</h3>
@@ -222,14 +223,14 @@ export default function ClassMentors({ myclass, user }) {
             </div>
           </div>
         </div>
-      </section>
 
-      <section className="classTabSection">
-        <div className="classTabSectionHeader">
-          <h3>
+        <div className="classTabSubsectionDivider" />
+
+        <div>
+          <h4 className="classTabSubsectionTitle">
             {t("mentors.roster", {}, { default: "Mentor roster" })}
-          </h3>
-          <p>
+          </h4>
+          <p className="classTabSubsectionDescription">
             {t(
               "mentors.rosterDescription",
               { count: mentors.length },

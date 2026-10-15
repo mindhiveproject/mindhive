@@ -12,7 +12,7 @@ import { AgGridReact } from "ag-grid-react";
 import Button from "../../../../DesignSystem/Button";
 import { GET_MY_RESOURCES, GET_PUBLIC_RESOURCES, GET_CLASS_RESOURCES } from "../../../../Queries/Resource";
 import { UPDATE_RESOURCE, SET_RESOURCE_TEMPLATE_CARDS } from "../../../../Mutations/Resource";
-import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
+import { getClassTemplateBoards } from "../../../../../lib/classTemplateBoards";
 
 const SectionContainer = styled.div`
   margin-bottom: 48px;
@@ -112,12 +112,15 @@ export default function AddResource({ myclass, user, query }) {
   const handleUnlinkFromClass = async (resourceId) => {
     if (!resourceId || !myclass?.id) return;
     try {
-      if (getPrimaryTemplateBoardId(myclass)) {
+      // Unlink from every template board of the class.
+      for (const board of getClassTemplateBoards(myclass)) {
+        if (!board?.id) continue;
         await setResourceTemplateCards({
           variables: {
             resourceId,
             templateCardIds: [],
             classId: myclass.id,
+            templateBoardId: board.id,
           },
         });
       }

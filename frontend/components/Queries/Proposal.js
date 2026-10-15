@@ -513,6 +513,9 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
       usedInClass {
         id
         settings
+        hiddenTasks {
+          id
+        }
       }
       clonedFrom {
         id

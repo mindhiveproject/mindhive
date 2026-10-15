@@ -146,6 +146,18 @@ const StyledClass = styled.div`
     }
   }
 
+  /* Between the class header and the tabs, on every tab: class-level controls
+     such as the class project board picker (ClassPage/ClassTemplateBoardPicker). */
+  .classPageNavActions {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+
+    &:empty {
+      display: none;
+    }
+  }
+
   /* Class detail tabs — Design System Navbar (see DesignSystem/Navbar SectionNavbar) */
   .classPageNav {
     margin-bottom: 30px;
@@ -2729,9 +2741,15 @@ const StyledClass = styled.div`
 
   .settings {
     display: grid;
-    gap: 28px;
+    gap: 16px;
     max-width: 980px;
     padding-bottom: 40px;
+
+    /* Sections moved in from other tabs keep the Settings rhythm. */
+    > .classTabPage {
+      gap: 16px;
+      padding-bottom: 0;
+    }
 
     .settingsSection {
       display: grid;
@@ -2741,6 +2759,12 @@ const StyledClass = styled.div`
       border-radius: 18px;
       background: linear-gradient(180deg, #ffffff 0%, #fbfbfa 100%);
       box-shadow: 0 10px 30px rgba(23, 23, 23, 0.06);
+    }
+
+    .curriculumTypeChips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .settingsSectionHeader {

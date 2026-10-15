@@ -542,6 +542,25 @@ export default function MilestoneCardBuilder({
   };
 
   /**
+   * After a change that adds a milestone card to the template or links a
+   * milestone to one of its cards, bring student boards along the same way
+   * handleSave does (or flag the change when auto-update is off).
+   */
+  const syncStudentBoardsAfterTemplateChange = async () => {
+    const hasClones = proposal?.prototypeFor?.length > 0;
+    if (!hasClones) return;
+    if (!autoUpdateStudentBoards || !propagateToClones) {
+      onTemplateChangedWithoutPropagation?.();
+      return;
+    }
+    try {
+      await propagateToClones({ contentChangedCardIds: [] });
+    } catch (error) {
+      console.error("Propagate to clones after milestone change failed:", error);
+    }
+  };
+
+  /**
    * Custom ACTION cards can exist without a Milestone row, which left the
    * teacher with no way to start a review form. Create the milestone for this
    * board, link it to the card that is already on the board, then open the
@@ -577,6 +596,7 @@ export default function MilestoneCardBuilder({
       if (!created?.formDefinition?.id) {
         throw new Error("Could not start a review form for this milestone.");
       }
+      await syncStudentBoardsAfterTemplateChange();
       openWizard(created.formDefinition.id, created.key);
     } catch (err) {
       alert(err?.message);
@@ -684,6 +704,7 @@ export default function MilestoneCardBuilder({
       if (!created?.formDefinition?.id) {
         throw new Error("Could not copy this milestone.");
       }
+      await syncStudentBoardsAfterTemplateChange();
       openMilestoneCard(created.actionCards?.[0]?.id, created);
     } catch (err) {
       alert(err?.message);

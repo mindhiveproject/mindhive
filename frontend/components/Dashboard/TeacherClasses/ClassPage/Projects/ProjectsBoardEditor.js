@@ -29,17 +29,21 @@ const StyledProjectsBoardEditor = styled.div`
   }
 `;
 
-export default function ProjectsBoardEditor({ myclass, user, boardId }) {
+export default function ProjectsBoardEditor({
+  myclass,
+  user,
+  boardId,
+  // Class tab to return to when leaving the editor.
+  page = "settings",
+}) {
   const router = useRouter();
   const autoOpenAddMilestone = router.query.addMilestone === "1";
 
-  const projectsHref = {
-    pathname: `/dashboard/myclasses/${myclass?.code}`,
-    query: { page: "projects" },
-  };
-
   const onBack = () => {
-    router.push(projectsHref);
+    router.push({
+      pathname: `/dashboard/myclasses/${myclass?.code}`,
+      query: { page },
+    });
   };
 
   const refetchQueries = [

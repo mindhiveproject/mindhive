@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import { useQuery } from "@apollo/client";
 import { GET_USER_CLASSES } from "../../../Queries/User";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import ProjectsBoard from "./Projects/Main";
 import StudiesBoard from "./Studies/Main";
@@ -14,12 +14,8 @@ import { reviewOverviewTours } from "./tours";
 import { buildClassTemplateTabs } from "../../../../lib/feedbackCenterTabs";
 import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../Queries/Proposal";
 import { isStudyStatusMilestone } from "../../../../lib/milestones";
-import {
-  getClassTemplateBoards,
-  getPrimaryTemplateBoardId,
-} from "../../../../lib/classTemplateBoards";
-import { getMilestonesForTemplateBoard } from "../../../../lib/templateBoardActionCards";
-import { useBoardMilestones } from "../../../../lib/useBoardMilestones";
+import { getClassTemplateBoards } from "../../../../lib/classTemplateBoards";
+import BoardMilestonesSync from "../../BoardMilestonesSync";
 
 function reviewHref(selector, classId) {
   if (!selector) return "/dashboard/review";
@@ -33,37 +29,44 @@ export default function Overview({ query, user }) {
   const router = useRouter();
 
   const { data: classesData } = useQuery(GET_USER_CLASSES);
-  const us = classesData?.authenticatedItem || {
-    studentIn: [],
-    teacherIn: [],
-    teachingTeamIn: [],
-    mentorIn: [],
-  };
 
-  const myClasses = [...us?.studentIn, ...us?.teacherIn, ...us?.teachingTeamIn, ...us?.mentorIn] || [];
-
-  const networkClasses =
-    myClasses
-      .map((myClass) => {
-        if (myClass?.networks) {
-          return myClass?.networks?.map((net) => net.classes).flat();
-        }
-        return [];
-      })
-      .flat() || [];
-  const allClasses = [...myClasses, ...networkClasses];
-  const allClassIds = allClasses.map((theclass) => theclass.id);
-  const allUniqueClassIds = [...new Set([...allClassIds])];
-  const allUniqueClasses = allUniqueClassIds.map((id) => {
-    const cl = allClasses.find((item) => item?.id === id);
-    return {
-      id,
-      title: cl?.title,
-      code: cl?.code,
-      templateProposal: cl?.templateProposal,
-      classTemplateBoards: cl?.classTemplateBoards,
+  // Memoized on the query result: a fresh `selectedClass` each render gave
+  // fresh template boards, so BoardMilestonesSync reported "new" milestones
+  // and the state update looped (Maximum update depth exceeded).
+  const { myClasses, allUniqueClassIds, allUniqueClasses } = useMemo(() => {
+    const us = classesData?.authenticatedItem || {
+      studentIn: [],
+      teacherIn: [],
+      teachingTeamIn: [],
+      mentorIn: [],
     };
-  });
+
+    const myClasses = [...us?.studentIn, ...us?.teacherIn, ...us?.teachingTeamIn, ...us?.mentorIn] || [];
+
+    const networkClasses =
+      myClasses
+        .map((myClass) => {
+          if (myClass?.networks) {
+            return myClass?.networks?.map((net) => net.classes).flat();
+          }
+          return [];
+        })
+        .flat() || [];
+    const allClasses = [...myClasses, ...networkClasses];
+    const allClassIds = allClasses.map((theclass) => theclass.id);
+    const allUniqueClassIds = [...new Set([...allClassIds])];
+    const allUniqueClasses = allUniqueClassIds.map((id) => {
+      const cl = allClasses.find((item) => item?.id === id);
+      return {
+        id,
+        title: cl?.title,
+        code: cl?.code,
+        templateProposal: cl?.templateProposal,
+        classTemplateBoards: cl?.classTemplateBoards,
+      };
+    });
+    return { myClasses, allUniqueClassIds, allUniqueClasses };
+  }, [classesData]);
 
   const classFromQuery =
     (router.isReady && router.query?.class) || query?.class;
@@ -96,24 +99,40 @@ export default function Overview({ query, user }) {
     });
   }, [selectedClass, templateProjectsData?.proposalBoards]);
 
-  const primaryBoardId = useMemo(() => {
-    if (templateBoards.length === 1) return templateBoards[0]?.id;
-    return (
-      getPrimaryTemplateBoardId(selectedClass) || templateBoards[0]?.id || null
-    );
-  }, [templateBoards, selectedClass]);
+  // Milestones of every template board of the class (one
+  // BoardMilestonesSync per board reports into these maps).
+  const [milestonesByBoard, setMilestonesByBoard] = useState({});
+  const [loadingByBoard, setLoadingByBoard] = useState({});
 
-  const primaryBoard = templateBoards.find(
-    (board) => board.id === primaryBoardId
+  const onBoardMilestones = useCallback((boardId, milestones, loading) => {
+    if (!boardId) return;
+    setMilestonesByBoard((prev) =>
+      prev[boardId] === milestones ? prev : { ...prev, [boardId]: milestones }
+    );
+    setLoadingByBoard((prev) =>
+      prev[boardId] === loading ? prev : { ...prev, [boardId]: loading }
+    );
+  }, []);
+
+  const milestonesLoading = templateBoards.some(
+    (board) => loadingByBoard[board.id] !== false
   );
 
-  const { milestones: resolvedMilestones, loading: milestonesLoading } =
-    useBoardMilestones(primaryBoardId);
-
+  // One tab per milestone key across boards, in board order (primary
+  // first). Tabs filter projects by milestone key, so a key shared by two
+  // boards is one review step for the class.
   const classTemplateSteps = useMemo(() => {
-    if (!primaryBoard) return [];
-    return getMilestonesForTemplateBoard(primaryBoard, resolvedMilestones);
-  }, [primaryBoard, resolvedMilestones]);
+    const seen = new Set();
+    const steps = [];
+    for (const board of templateBoards) {
+      for (const milestone of milestonesByBoard[board.id] || []) {
+        if (!milestone?.key || seen.has(milestone.key)) continue;
+        seen.add(milestone.key);
+        steps.push(milestone);
+      }
+    }
+    return steps;
+  }, [templateBoards, milestonesByBoard]);
 
   const feedbackTabs = buildClassTemplateTabs(classTemplateSteps, t);
 
@@ -209,6 +228,14 @@ export default function Overview({ query, user }) {
 
   return (
     <div className="overview" id="overview">
+      {selectedClassId &&
+        templateBoards.map((board) => (
+          <BoardMilestonesSync
+            key={board.id}
+            board={board}
+            onMilestones={onBoardMilestones}
+          />
+        ))}
       <header className="overviewHeader">
         <h1 className="MH-Type-Heading-Base">{t("review.feedbackCenter")}</h1>
         <p>{t("review.overviewIntro")}</p>
@@ -218,6 +245,7 @@ export default function Overview({ query, user }) {
               ariaLabel={t("review.selectClass", {}, { default: "Select a class" })}
               placeholder={t("review.selectClass", {}, { default: "Select a class" })}
               value={selectedClassId || ""}
+              searchableSingle
               options={allUniqueClasses.map((cl) => ({
                 value: cl.id,
                 label: cl.title,

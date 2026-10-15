@@ -471,6 +471,13 @@ export const StyledDasboardReview = styled.div`
         grid-template-columns: auto 1fr;
       }
 
+      .suggestedTasks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        min-width: 0;
+      }
+
       .lowPanel {
         display: grid;
         grid-template-columns: 2fr 1fr;
@@ -1120,6 +1127,18 @@ export const StyledDasboardReview = styled.div`
             color: #5d5763;
           }
         }
+        .menu > .disabled.item {
+          pointer-events: none;
+        }
+        .dropdownOption {
+          grid-template-columns: 1fr;
+          grid-gap: 2px;
+        }
+      }
+      .taskSelectorNote {
+        font: var(--MH-Type-Body-Small, var(--MH-Type-Body-Base));
+        letter-spacing: 0;
+        color: #6c6c6c;
       }
     }
   }

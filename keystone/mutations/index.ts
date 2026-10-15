@@ -16,6 +16,8 @@ import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
 import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
 import backfillOpportunityMultiselectFields from "./backfillOpportunityMultiselectFields";
 import backfillClassNetworkAdmins from "./backfillClassNetworkAdmins";
+import backfillTemplateAssignmentClasses from "./backfillTemplateAssignmentClasses";
+import backfillTemplateResourcePublishing from "./backfillTemplateResourcePublishing";
 import backfillClassNetworkPublicIds from "./backfillClassNetworkPublicIds";
 import {
   addClassNetworkAdmin,
@@ -209,15 +211,18 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           assignmentId: ID!
           templateCardId: ID!
           classId: ID!
+          templateBoardId: ID
         ): Assignment
         unlinkAssignmentFromTemplateCards(
           assignmentId: ID!
           classId: ID!
+          templateBoardId: ID
         ): Assignment
         setAssignmentTemplateCards(
           assignmentId: ID!
           templateCardIds: [ID!]!
           classId: ID!
+          templateBoardId: ID
         ): Assignment
         setResourceTemplateCards(
           resourceId: ID!
@@ -234,6 +239,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityProposalData(limit: Int, dryRun: Boolean): Int!
         backfillOpportunityMultiselectFields(limit: Int, dryRun: Boolean): Int!
         backfillClassNetworkAdmins(limit: Int, dryRun: Boolean): Int!
+        backfillTemplateAssignmentClasses(dryRun: Boolean): Int!
+        backfillTemplateResourcePublishing(dryRun: Boolean): Int!
         addClassNetworkAdmin(
           networkId: ID!
           profileId: ID
@@ -614,6 +621,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityProposalData,
         backfillOpportunityMultiselectFields,
         backfillClassNetworkAdmins,
+        backfillTemplateAssignmentClasses,
+        backfillTemplateResourcePublishing,
         addClassNetworkAdmin,
         addClassNetworkMemberProfile,
         associateClassWithPublicNetwork,

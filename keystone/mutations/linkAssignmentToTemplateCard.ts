@@ -4,7 +4,8 @@ import {
 } from "./utils/templateCloneMatch";
 import {
   CLASS_TEMPLATE_QUERY,
-  getPrimaryTemplateBoardId,
+  connectAssignmentsToTemplateClasses,
+  resolveClassTemplateBoardId,
 } from "./utils/classTemplateBoards";
 
 /**
@@ -12,6 +13,8 @@ import {
  * and propagates that link to all student boards for the class.
  * Clone cards are matched by publicId when set, or section publicId + card position,
  * or by section/card index when publicId is missing (avoids wrong matches when position is duplicated).
+ * Optional templateBoardId targets a specific class template board; otherwise primary is used.
+ * The assignment is also connected to the classes that use the board as a template.
  */
 async function linkAssignmentToTemplateCard(
   _root: unknown,
@@ -19,10 +22,12 @@ async function linkAssignmentToTemplateCard(
     assignmentId,
     templateCardId,
     classId,
+    templateBoardId: requestedTemplateBoardId,
   }: {
     assignmentId: string;
     templateCardId: string;
     classId: string;
+    templateBoardId?: string | null;
   },
   context: any
 ): Promise<{ id: string } | null> {
@@ -36,7 +41,10 @@ async function linkAssignmentToTemplateCard(
     query:
       `${CLASS_TEMPLATE_QUERY} studentProposals { id clonedFrom { id } sections { id publicId position cards { id publicId position } } }`,
   });
-  const templateBoardId = getPrimaryTemplateBoardId(classData);
+  const templateBoardId = resolveClassTemplateBoardId(
+    classData,
+    requestedTemplateBoardId
+  );
   if (!templateBoardId) {
     throw new Error("Class has no template board.");
   }
@@ -196,6 +204,13 @@ async function linkAssignmentToTemplateCard(
       },
     },
   });
+
+  await connectAssignmentsToTemplateClasses(
+    context.sudo(),
+    templateBoardId,
+    [assignmentId],
+    context.session
+  );
 
   return { id: assignmentId };
 }
