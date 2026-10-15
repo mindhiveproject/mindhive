@@ -205,6 +205,7 @@
 				"associatedCardsHelper": "The following cards are associated with this milestone. When students submit them, their content is published in Feedback Center so mentors and peers can review it.",
 				"associatedCardsTitle": "Cards associated with this milestone",
 				"linkMoreCards": "Link more cards",
+				"reviewFormAudience": "This is what the reviewers will see in the feedback center.",
 				"capabilityDataDescription": "Let your student submit their study for data collection and lock their study builder with this milestone.",
 				"capabilityDataTitle": "Allow student to start data collection.",
 				"capabilityReviewDescription": "Define a form for Mentor and Peers to use when reviewing your student project.",

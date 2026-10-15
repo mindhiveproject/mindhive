@@ -1241,11 +1241,22 @@ export default function MilestoneCardBuilder({
                   // panel: no preview toggle and no actions on the form. Copying
                   // to a custom milestone stays below, outside the preview.
                   <>
+                    <p style={{ ...helperTextStyle, margin: 0 }}>
+                      {t(
+                        "board.expendedCard.milestoneCard.reviewFormAudience",
+                        {},
+                        {
+                          default:
+                            "This is what the reviewers will see in the feedback center.",
+                        }
+                      )}
+                    </p>
                     <FormDefinitionPreview
                       board={boardWithSections}
                       milestone={milestone}
                       proposalBoardId={proposal?.id}
                       maxHeight="none"
+                      bare
                     />
                     {canCopyForm ? (
                       <div style={formActionsStyle}>
