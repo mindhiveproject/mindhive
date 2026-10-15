@@ -87,8 +87,7 @@ export default function ClassTemplateBoardPicker({ myclass, page }) {
       })}
       <Button
         variant="text"
-        className="classBoardSettingsButton"
-        trailingIcon={<SettingsIcon />}
+        leadingIcon={<SettingsIcon />}
         style={{ color: "#171717" }}
         onClick={() => goTo({ page: "settings" })}
       >
@@ -103,11 +102,8 @@ export default function ClassTemplateBoardPicker({ myclass, page }) {
 const StyledBar = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: 8px;
   min-width: 0;
-
-  .classBoardSettingsButton {
-    margin-left: auto;
-  }
 `;

@@ -152,6 +152,19 @@ export function isActionCard(card) {
   );
 }
 
+/**
+ * Whether a student opening this action card lands on the study-submission
+ * page (SubmitStudy) rather than the review-submission page (SubmitAction).
+ * Custom data-collection milestones carry only statusTarget "study".
+ */
+export function isDataCollectionActionCard(card, milestone) {
+  return (
+    card?.type === "ACTION_COLLECTING_DATA" ||
+    milestone?.key === "DATA_COLLECTION" ||
+    isStudyStatusMilestone(milestone)
+  );
+}
+
 export function cardTypeMatchesMilestone(
   cardType,
   milestoneKey,

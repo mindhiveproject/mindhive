@@ -16,6 +16,7 @@ export default function CardWrapper({
   proposal,
   cardId,
   initialFormEditor = null,
+  startInPreview = false,
   isCreateMilestone = false,
   isCreateProposalCard = false,
   sectionId = null,
@@ -26,9 +27,9 @@ export default function CardWrapper({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
-  hideBoardChromeNav = false,
   registerCloseHandler,
   registerCardChrome,
+  onLinkMoreCards,
 }) {
   const skipCardQuery =
     (isCreateMilestone || isCreateProposalCard) && !cardId;
@@ -57,6 +58,7 @@ export default function CardWrapper({
   if (skipCardQuery && proposalBuildMode && isCreateMilestone) {
     return (
       <MilestoneCreateMode
+        user={user}
         proposal={proposal}
         sectionId={sectionId}
         onCreated={(createdCardId, cardMeta = {}) => {
@@ -74,7 +76,6 @@ export default function CardWrapper({
         onTemplateChangedWithoutPropagation={
           onTemplateChangedWithoutPropagation
         }
-        hideBoardChromeNav={hideBoardChromeNav}
         registerCloseHandler={registerCloseHandler}
         registerCardChrome={registerCardChrome}
       />
@@ -104,7 +105,6 @@ export default function CardWrapper({
         onTemplateChangedWithoutPropagation={
           onTemplateChangedWithoutPropagation
         }
-        hideBoardChromeNav={hideBoardChromeNav}
         registerCloseHandler={registerCloseHandler}
         registerCardChrome={registerCardChrome}
       />
@@ -144,6 +144,7 @@ export default function CardWrapper({
               proposal={proposal}
               proposalCard={proposalCard}
               initialFormEditor={initialFormEditor}
+              startInPreview={startInPreview}
               openCard={openCard}
               closeCard={closeCard}
               autoUpdateStudentBoards={autoUpdateStudentBoards}
@@ -151,9 +152,9 @@ export default function CardWrapper({
               onTemplateChangedWithoutPropagation={
                 onTemplateChangedWithoutPropagation
               }
-              hideBoardChromeNav={hideBoardChromeNav}
               registerCloseHandler={registerCloseHandler}
               registerCardChrome={registerCardChrome}
+              onLinkMoreCards={onLinkMoreCards}
             />
           );
         }
@@ -162,13 +163,13 @@ export default function CardWrapper({
             user={user}
             proposal={proposal}
             proposalCard={proposalCard}
+            startInPreview={startInPreview}
             closeCard={closeCard}
             autoUpdateStudentBoards={autoUpdateStudentBoards}
             propagateToClones={propagateToClones}
             onTemplateChangedWithoutPropagation={
               onTemplateChangedWithoutPropagation
             }
-            hideBoardChromeNav={hideBoardChromeNav}
             registerCloseHandler={registerCloseHandler}
             registerCardChrome={registerCardChrome}
           />

@@ -134,16 +134,16 @@ export const NAV_SECTIONS = [
         // sees lessons, so dual-role users do not get a duplicate link.
         canView: (p) => p.managesClasses || p.canSeeLessons,
       },
-      {
-        id: "boards",
-        href: "/dashboard/boards",
-        area: "boards",
-        labelKey: "boards",
-        fallback: "Project Boards",
-        Icon: AssignmentIcon,
-        // canDevelop minus STUDENT — boards live in the teacher section.
-        canView: (p) => p.has("ADMIN", "SCIENTIST", "TEACHER", "MENTOR"),
-      },
+      // {
+      //   id: "boards",
+      //   href: "/dashboard/boards",
+      //   area: "boards",
+      //   labelKey: "boards",
+      //   fallback: "Project Boards",
+      //   Icon: AssignmentIcon,
+      //   // canDevelop minus STUDENT — boards live in the teacher section.
+      //   canView: (p) => p.has("ADMIN", "SCIENTIST", "TEACHER", "MENTOR"),
+      // },
       {
         id: "resources",
         href: "/dashboard/resources",

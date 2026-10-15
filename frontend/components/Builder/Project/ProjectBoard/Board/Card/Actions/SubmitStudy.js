@@ -1,9 +1,13 @@
 import { useQuery, useMutation } from "@apollo/client";
 import absoluteUrl from "next-absolute-url";
 import { UPDATE_STUDY } from "../../../../../../Mutations/Study";
+import { UPDATE_PROJECT_BOARD } from "../../../../../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { CREATE_LOG } from "../../../../../../Mutations/Log";
 import useTranslation from "next-translate/useTranslation";
+import { buildDualWriteUpdate } from "../../../../../../../lib/milestoneStatus";
+import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
+import { resolveMilestoneFromCard } from "../../../../../../../lib/milestones";
 
 import NavigationSubmitStudy from "./NavigationSubmitStudy";
 import { cardTypes } from "../../Builder/Actions/ActionCard";
@@ -19,13 +23,30 @@ export default function Proposal({
   proposal,
   cardId,
   proposalCard,
+  // Teacher preview from the template editor: render the student page
+  // read-only, without the student nav bar.
+  isPreview = false,
 }) {
   const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
   const study = proposal?.study || {};
 
+  const { milestones } = useBoardMilestones(proposal?.id || proposalId);
+  const milestone = resolveMilestoneFromCard(proposalCard, milestones);
+  // Write through the milestone (board milestoneStatus + linked study) so the
+  // teacher dashboard sees the change — custom milestones have no legacy
+  // study column to fall back on.
+  const writesThroughMilestone =
+    !!milestone?.key && milestone?.statusTarget === "study";
+  const defaultStep = cardTypes[proposalCard?.type];
+  const heading =
+    (!defaultStep && milestone?.title) ||
+    t("submitStudy.dataCollection", "Data Collection");
+  const stepTitle = defaultStep?.title || heading;
+
   const allCardsCompleted = true;
-  const isStudySubmitted = study?.dataCollectionStatus === "SUBMITTED";
+  const isStudySubmitted =
+    !isPreview && study?.dataCollectionStatus === "SUBMITTED";
   const isParticipationLocked = !study?.dataCollectionOpenForParticipation;
   const [updateStudy, { loading }] = useMutation(UPDATE_STUDY, {
     refetchQueries: [
@@ -36,23 +57,56 @@ export default function Proposal({
     ],
   });
 
+  const [updateProposal] = useMutation(UPDATE_PROJECT_BOARD, {
+    refetchQueries: [
+      {
+        query: PROPOSAL_QUERY,
+        variables: { id: proposal?.id },
+      },
+    ],
+  });
+
   const [createLog] = useMutation(CREATE_LOG);
 
-  const submitStudy = async () => {
+  // Returns true once the write lands.
+  const writeDataCollectionStatus = async ({ status, openForParticipation }) => {
+    if (writesThroughMilestone) {
+      const input = buildDualWriteUpdate(
+        milestone,
+        { status, openForParticipation },
+        proposal?.milestoneStatus
+      );
+      if (status === "SUBMITTED") {
+        input.study.update.status = "COLLECTING_DATA";
+      }
+      const res = await updateProposal({
+        variables: { id: proposal?.id, input },
+      });
+      return !!res?.data?.updateProposalBoard?.id;
+    }
     const res = await updateStudy({
       variables: {
         id: study?.id,
         input: {
-          status: "COLLECTING_DATA",
-          dataCollectionStatus: "SUBMITTED",
-          dataCollectionOpenForParticipation: true,
+          ...(status === "SUBMITTED" ? { status: "COLLECTING_DATA" } : {}),
+          dataCollectionStatus: status,
+          dataCollectionOpenForParticipation: openForParticipation,
         },
       },
+    });
+    return !!res?.data?.updateStudy?.id;
+  };
+
+  const submitStudy = async () => {
+    const submitted = await writeDataCollectionStatus({
+      status: "SUBMITTED",
+      openForParticipation: true,
     });
     await createLog({
       variables: {
         input: {
-          event: "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
+          event:
+            milestone?.logEventName || "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
           user: {
             connect: { id: user?.id },
           },
@@ -68,21 +122,17 @@ export default function Proposal({
         },
       },
     });
-    if (res?.data?.updateProposalBoard?.id) {
+    if (submitted) {
       alert(t("submitStudy.submittedForReview", "The proposal was submitted for review"));
     }
   };
 
   const switchFeedbackLock = async () => {
-    const res = await updateStudy({
-      variables: {
-        id: study?.id,
-        input: {
-          dataCollectionOpenForParticipation: isParticipationLocked,
-        },
-      },
+    const updated = await writeDataCollectionStatus({
+      status: study?.dataCollectionStatus || "SUBMITTED",
+      openForParticipation: isParticipationLocked,
     });
-    if (res?.data?.updateStudy?.id) {
+    if (updated) {
       if (isParticipationLocked) {
         alert(t("submitStudy.unlockedForParticipation", "The study was unlocked for participation"));
       } else {
@@ -93,26 +143,28 @@ export default function Proposal({
 
   return (
     <>
-      <NavigationSubmitStudy
-        query={query}
-        user={user}
-        tab={tab}
-        proposalId={proposalId}
-        cardId={cardId}
-        saveBtnName={t("submitStudy.submitFor", { title: cardTypes[proposalCard?.type].title }, `Submit for ${cardTypes[proposalCard?.type].title}`)}
-        saveBtnFunction={() => {
-          submitStudy();
-        }}
-        isStudySubmitted={isStudySubmitted}
-        switchFeedbackLock={switchFeedbackLock}
-        isParticipationLocked={isParticipationLocked}
-      />
+      {isPreview ? null : (
+        <NavigationSubmitStudy
+          query={query}
+          user={user}
+          tab={tab}
+          proposalId={proposalId}
+          cardId={cardId}
+          saveBtnName={t("submitStudy.submitFor", { title: stepTitle }, `Submit for ${stepTitle}`)}
+          saveBtnFunction={() => {
+            submitStudy();
+          }}
+          isStudySubmitted={isStudySubmitted}
+          switchFeedbackLock={switchFeedbackLock}
+          isParticipationLocked={isParticipationLocked}
+        />
+      )}
       <StyledActionPage>
         <div className="board">
           <div className="proposal">
             <div className="iconTitle">
               <img src="/assets/icons/project.svg" />
-              <div className="title MH-Type-Title-Base">{t("submitStudy.dataCollection", "Data Collection")}</div>
+              <div className="title MH-Type-Title-Base">{heading}</div>
             </div>
             <div className="card">
               <h3>{t("submitStudy.studyUrl", "Study url")}</h3>

@@ -6,6 +6,7 @@ import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 import {
   resolveMilestoneFromCard,
   reviewStageMatches,
+  isDataCollectionActionCard,
 } from "../../../../../../../lib/milestones";
 import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../../lib/milestoneStatus";
@@ -50,6 +51,7 @@ export default function ActionCard({
   adminMode,
   openCard,
   onDeleteCard,
+  isPreview,
   settings,
   boardId,
   submitStatuses: submitStatusesProp,
@@ -138,6 +140,11 @@ export default function ActionCard({
       variant={variant}
       proposalBuildMode={proposalBuildMode}
       onClick={() => {
+        // Teacher preview opens the card in place instead of navigating
+        if (isPreview) {
+          openCard?.(card);
+          return;
+        }
         router.push({
           pathname: `/builder/projects`,
           query: {
@@ -158,7 +165,7 @@ export default function ActionCard({
             </div>
             <div className="card-subtitle">
               {isSubmitted 
-                ? (card?.type !== "ACTION_COLLECTING_DATA" && comments?.length > 0
+                ? (!isDataCollectionActionCard(card, cardMilestone) && comments?.length > 0
                     ? t("actionCard.viewCountComments", { count: comments.length })
                     : t("actionCard.viewComments"))
                 : t("actionCard.clickToSubmit", { title: displayTitle })}
@@ -169,7 +176,7 @@ export default function ActionCard({
           </div>
         </div>
       </div>
-      {settings?.allowAddingCards && (
+      {!isPreview && settings?.allowAddingCards && (
         <div className="deleteCardBtn">
           <img
             src="/assets/icons/proposal/delete.svg"

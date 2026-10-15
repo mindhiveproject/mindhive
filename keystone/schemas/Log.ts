@@ -3,7 +3,7 @@ import {
   relationship,
   json,
   timestamp,
-  select,
+  text,
 } from "@keystone-6/core/fields";
 import { rules } from "../access";
 
@@ -45,30 +45,12 @@ export const Log = list({
     opportunity: relationship({
       ref: "Opportunity.logs",
     }),
-    event: select({
-      options: [
-        {
-          label: "Proposal is submitted for expert review",
-          value: "PROPOSAL_SUBMITTED_FOR_REVIEW",
-        },
-        {
-          label: "Proposal is submitted for peer review",
-          value: "PROPOSAL_SUBMITTED_FOR_PEER_REVIEW",
-        },
-        {
-          label: "Study is submitted for data collection",
-          value: "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
-        },
-        {
-          label: "Project is submitted for report",
-          value: "PROJECT_SUBMITTED_FOR_REPORT",
-        },
-        {
-          label: "Student previewed an opportunity",
-          value: OPPORTUNITY_PREVIEW_VISIT,
-        },
-      ],
-    }),
+    // Free text so each milestone's own logEventName (e.g.
+    // MILESTONE_SUBMITTED_<KEY> for teacher-made milestones) can be logged.
+    // Built-in events: PROPOSAL_SUBMITTED_FOR_REVIEW,
+    // PROPOSAL_SUBMITTED_FOR_PEER_REVIEW, STUDY_SUBMITTED_FOR_DATA_COLLECTION,
+    // PROJECT_SUBMITTED_FOR_REPORT, OPPORTUNITY_PREVIEW_VISIT.
+    event: text({ db: { isNullable: true } }),
     content: json(),
     createdAt: timestamp({
       defaultValue: { kind: "now" },

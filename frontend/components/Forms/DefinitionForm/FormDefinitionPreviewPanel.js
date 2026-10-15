@@ -122,11 +122,27 @@ export default function FormDefinitionPreviewPanel({
         closeLabel={t("main.close", {}, { default: "Close" })}
       />
       <PanelBody>
+        {hasQuestionnaire ? (
+          <p
+            style={{
+              margin: "0 0 12px",
+              color: "#5D5763",
+              font: "var(--MH-Type-Body-Base)",
+              letterSpacing: 0,
+            }}
+          >
+            {t("board.expendedCard.milestoneCard.reviewFormAudience", {}, {
+              default:
+                "This is what the reviewers will see in the feedback center.",
+            })}
+          </p>
+        ) : null}
         <FormDefinitionPreview
           board={board}
           milestone={milestone}
           proposalBoardId={board?.id}
           maxHeight="none"
+          bare
         />
       </PanelBody>
       {footerAction ? (

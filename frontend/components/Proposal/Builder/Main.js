@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import BoardEditorChrome from "./BoardEditorChrome";
 import ProposalBoard from "./Board";
+import StudentBoard from "../../Builder/Project/ProjectBoard/Board/Builder/Board";
 import ProposalCardWrapper from "../Card/Wrapper";
 import useTemplatePropagation from "./useTemplatePropagation";
 
@@ -21,6 +22,8 @@ export default function ProposalBuilder({
   hidePreviewHeader = false,
   refetchQueries,
   autoOpenAddMilestone = false,
+  boardSettings = null,
+  openSettingsOnMount = false,
 }) {
   const { t } = useTranslation("builder");
   const {
@@ -49,11 +52,20 @@ export default function ProposalBuilder({
 
   const [page, setPage] = useState("board");
   const [card, setCard] = useState(null);
+  // Board shown as students see it; cards opened from it start in preview
+  // and closing them returns here.
+  const [boardPreview, setBoardPreview] = useState(false);
+  // Milestone whose "Link more cards" was clicked; the board opens its link
+  // flow on it once the card has closed.
+  const [linkCardsMilestoneKey, setLinkCardsMilestoneKey] = useState(null);
 
   const openCard = (nextCard) => {
     setCard(nextCard);
     setPage("card");
   };
+
+  const openCardFromBoardPreview = (nextCard) =>
+    openCard({ ...nextCard, openInPreview: true });
 
   const closeCard = async ({ cardId, lockedByUser }) => {
     if (cardId && lockedByUser) {
@@ -92,6 +104,8 @@ export default function ProposalBuilder({
     setCardChrome((prev) => {
       const next = {
         kind: config.kind,
+        canPreview: typeof config.onPreview === "function",
+        previewDisabled: !!config.previewDisabled,
         previewMode: !!config.previewMode,
         saving: !!config.saving,
         saveDisabled: !!config.saveDisabled,
@@ -102,6 +116,8 @@ export default function ProposalBuilder({
       if (
         prev &&
         prev.kind === next.kind &&
+        prev.canPreview === next.canPreview &&
+        prev.previewDisabled === next.previewDisabled &&
         prev.previewMode === next.previewMode &&
         prev.saving === next.saving &&
         prev.saveDisabled === next.saveDisabled &&
@@ -125,6 +141,21 @@ export default function ProposalBuilder({
   );
   const handleCardExitPreview = useCallback(
     () => cardChromeHandlersRef.current.onExitPreview?.(),
+    []
+  );
+
+  const handleLinkMoreCards = async (milestoneKey) => {
+    // Leave the card the usual way so pending edits are saved first.
+    if (cardCloseHandlerRef.current) {
+      await cardCloseHandlerRef.current();
+    } else {
+      await closeCard({ cardId: card?.id, lockedByUser: false });
+    }
+    setBoardPreview(false);
+    setLinkCardsMilestoneKey(milestoneKey);
+  };
+  const clearLinkCardsMilestoneKey = useCallback(
+    () => setLinkCardsMilestoneKey(null),
     []
   );
 
@@ -155,7 +186,6 @@ export default function ProposalBuilder({
           ? getActionCardLabel(card, t)
           : card?.title
         : "";
-  const hideBoardChromeNav = !isPreview && !!proposalBuildMode;
   const showChrome = !isPreview;
 
   return (
@@ -177,6 +207,13 @@ export default function ProposalBuilder({
           onCardSave={handleCardSave}
           onCardPreview={handleCardPreview}
           onCardExitPreview={handleCardExitPreview}
+          boardPreviewMode={boardPreview}
+          onBoardPreview={
+            proposalBuildMode ? () => setBoardPreview(true) : undefined
+          }
+          onExitBoardPreview={() => setBoardPreview(false)}
+          boardSettings={boardSettings}
+          openSettingsOnMount={openSettingsOnMount}
         />
       ) : null}
       {page === "board" ? (
@@ -194,7 +231,16 @@ export default function ProposalBuilder({
               {proposal.description ? <p>{proposal.description}</p> : null}
             </>
           ) : null}
-          {proposal && (
+          {proposal && boardPreview ? (
+            <div className="boardPreview">
+              <StudentBoard
+                proposalId={proposal?.id}
+                openCard={openCardFromBoardPreview}
+                proposalBuildMode={false}
+                isPreview
+              />
+            </div>
+          ) : proposal ? (
             <ProposalBoard
               proposalId={proposal?.id}
               openCard={openCard}
@@ -204,8 +250,10 @@ export default function ProposalBuilder({
               propagateToClones={propagateToClones}
               onTemplateChangedWithoutPropagation={markUnpropagatedChange}
               autoOpenAddMilestone={autoOpenAddMilestone}
+              initialAssociateMilestoneKey={linkCardsMilestoneKey}
+              onInitialAssociateHandled={clearLinkCardsMilestoneKey}
             />
-          )}
+          ) : null}
         </>
       ) : (
         card && (
@@ -223,6 +271,7 @@ export default function ProposalBuilder({
               proposal={proposal}
               cardId={card?.id}
               initialFormEditor={card?.openFormEditor || null}
+              startInPreview={!!card?.openInPreview}
               isCreateMilestone={isCreateMilestone}
               isCreateProposalCard={isCreateProposalCard}
               sectionId={card?.sectionId || null}
@@ -233,9 +282,9 @@ export default function ProposalBuilder({
               autoUpdateStudentBoards={autoUpdateStudentBoards}
               propagateToClones={propagateToClones}
               onTemplateChangedWithoutPropagation={markUnpropagatedChange}
-              hideBoardChromeNav={hideBoardChromeNav}
               registerCloseHandler={registerCloseHandler}
               registerCardChrome={registerCardChrome}
+              onLinkMoreCards={handleLinkMoreCards}
             />
           </div>
         )

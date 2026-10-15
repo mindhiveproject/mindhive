@@ -2,7 +2,11 @@ import { useQuery } from "@apollo/client";
 
 import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
 import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
-import { resolveMilestoneFromCard, isActionCard } from "../../../../../../lib/milestones";
+import {
+  resolveMilestoneFromCard,
+  isActionCard,
+  isDataCollectionActionCard,
+} from "../../../../../../lib/milestones";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 
 import ProposalCard from "./Main";
@@ -62,10 +66,10 @@ export default function CardWrapper({
 
   if (proposalCard && Object.values(proposalCard).length) {
     const cardMilestone = resolveMilestoneFromCard(proposalCard, milestones);
-    const isCollectingData =
-      proposalCard?.type === "ACTION_COLLECTING_DATA" ||
-      cardMilestone?.actionCardType === "ACTION_COLLECTING_DATA" ||
-      cardMilestone?.key === "DATA_COLLECTION";
+    const isCollectingData = isDataCollectionActionCard(
+      proposalCard,
+      cardMilestone
+    );
 
     if (
       !proposalBuildMode &&

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import styled from 'styled-components';
@@ -9,8 +10,9 @@ import {
   StyledProposalCard,
 } from '../../../../styles/StyledProposal';
 import ProposalPage from "./ProjectBoard/ProposalPage";
+import ClassBoardSettingsPanel from "./ClassBoardSettingsPanel";
 
-const StyledProjectsBoardEditor = styled.div`
+export const StyledProjectsBoardEditor = styled.div`
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -38,6 +40,21 @@ export default function ProjectsBoardEditor({
 }) {
   const router = useRouter();
   const autoOpenAddMilestone = router.query.addMilestone === "1";
+  // `boardSettings=1` (the settings gear on a board tile) opens the editor
+  // with its settings popover open. Read once, then drop it from the URL so a
+  // reload doesn't reopen it.
+  const [openSettingsOnMount] = useState(
+    () => router.query.boardSettings === "1"
+  );
+  useEffect(() => {
+    const { boardSettings, ...restQuery } = router.query;
+    if (!boardSettings) return;
+    router.replace(
+      { pathname: router.pathname, query: restQuery },
+      undefined,
+      { shallow: true }
+    );
+  }, [router]);
 
   const onBack = () => {
     router.push({
@@ -55,7 +72,7 @@ export default function ProjectsBoardEditor({
 
   return (
     <StyledProjectsBoardEditor className="projectsBoardEditor">
-      <StyledProposal className="projectsBoardEditorProposal">
+      <StyledProposal className="projectsBoardEditorProposal" $flush>
         <ProposalPage
           user={user}
           proposalId={boardId}
@@ -64,6 +81,15 @@ export default function ProjectsBoardEditor({
           proposalBuildMode
           refetchQueries={refetchQueries}
           autoOpenAddMilestone={autoOpenAddMilestone}
+          openSettingsOnMount={openSettingsOnMount}
+          boardSettings={
+            <ClassBoardSettingsPanel
+              myclass={myclass}
+              boardId={boardId}
+              user={user}
+              onDeleted={onBack}
+            />
+          }
         />
       </StyledProposal>
     </StyledProjectsBoardEditor>

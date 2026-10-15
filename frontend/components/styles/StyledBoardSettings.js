@@ -10,11 +10,6 @@ const StyledBoardSettings = styled.div`
     padding: 0;
   }
 
-  .boardSettingsSection + .boardSettingsSection {
-    padding-top: 28px;
-    border-top: 1px solid #ece9e6;
-  }
-
   .boardSettingsSectionTitle {
     margin: 0;
     font: var(--MH-Type-Title-Base);
@@ -32,22 +27,6 @@ const StyledBoardSettings = styled.div`
   .boardSettingsPanel {
     display: grid;
     gap: 16px;
-  }
-
-  .boardSettingsBlockRow {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-
-    .boardSettingsBlock:only-child {
-      grid-column: 1 / -1;
-    }
-  }
-
-  @media (max-width: 720px) {
-    .boardSettingsBlockRow {
-      grid-template-columns: 1fr;
-    }
   }
 
   .boardSettingsBlock {
@@ -70,46 +49,27 @@ const StyledBoardSettings = styled.div`
     color: #171717;
   }
 
-  .settingsChoiceGroup {
+  .boardSettingsConfirm {
     display: grid;
-    gap: 10px;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--MH-Theme-Warning-Light, #edcecd);
+    border-radius: 12px;
+    background: #fdf6f5;
 
-    label {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-height: 48px;
-      padding: 12px 14px;
-      border: 1px solid #d9d6d2;
-      border-radius: 14px;
-      background: #f9faf9;
-      color: #333333;
-      cursor: pointer;
-      font: var(--MH-Type-Label-Base);
+    p {
+      margin: 0;
+      font: var(--MH-Type-Body-Base);
       letter-spacing: 0;
-      transition: border-color 0.2s ease, background-color 0.2s ease,
-        box-shadow 0.2s ease, color 0.2s ease;
-
-      input {
-        flex-shrink: 0;
-        width: 17px;
-        height: 17px;
-        margin: 0;
-        accent-color: var(--MH-Theme-Primary-Dark, #336f8a);
-      }
-
-      &:hover {
-        border-color: rgba(51, 111, 138, 0.45);
-        background: #f6f9f8;
-      }
-
-      &.active {
-        border-color: var(--MH-Theme-Primary-Dark, #336f8a);
-        background: rgba(51, 111, 138, 0.08);
-        color: #265568;
-        box-shadow: 0 8px 20px rgba(51, 111, 138, 0.14);
-      }
+      color: #171717;
     }
+  }
+
+  .boardSettingsConfirmActions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
   }
 
   .curriculumTypeSelector {

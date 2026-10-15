@@ -18,6 +18,7 @@ import {
   resolveMilestoneFromCard,
   cardIncludedInReviewStep,
   isActionCard,
+  isDataCollectionActionCard,
   parseCardSettings,
   milestoneHasReviewQuestionnaire,
   resolveReviewFormKey,
@@ -40,9 +41,12 @@ import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPrev
 import FormDefinitionPreviewPanel from "../../Forms/DefinitionForm/FormDefinitionPreviewPanel";
 import MilestoneCapabilityRow from "./MilestoneCapabilityRow";
 import ReviewFormAttachmentCard from "./ReviewFormAttachmentCard";
+import StudentSubmitActionPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/Proposal";
+import StudentSubmitStudyPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/SubmitStudy";
 import Tooltip from "../../DesignSystem/Tooltip";
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
+import { AddIcon } from "../../DesignSystem/Icons";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import Modal from "../../DesignSystem/Modal";
 import { BOARD_REVIEW_FORM_DEFINITIONS } from "../../Queries/FormDefinition";
@@ -114,17 +118,20 @@ function resolveCapability(milestone, proposalCard) {
 }
 
 export default function MilestoneCardBuilder({
+  user,
   proposal,
   proposalCard,
   initialFormEditor = null,
+  startInPreview = false,
   openCard,
   closeCard,
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
-  hideBoardChromeNav = false,
   registerCloseHandler,
   registerCardChrome,
+  // Opens the board's "Link a milestone to cards" flow on this milestone.
+  onLinkMoreCards,
 }) {
   const { t } = useTranslation("classes");
   const { t: tBuilder } = useTranslation("builder");
@@ -279,6 +286,7 @@ export default function MilestoneCardBuilder({
     useState(false);
   const [capabilityBusy, setCapabilityBusy] = useState(false);
   const [formPreviewOpen, setFormPreviewOpen] = useState(false);
+  const [previewMode, setPreviewMode] = useState(startInPreview);
   const [confirmRemoveFormOpen, setConfirmRemoveFormOpen] = useState(false);
   const [existingCopyPromptOpen, setExistingCopyPromptOpen] = useState(false);
 
@@ -722,19 +730,21 @@ export default function MilestoneCardBuilder({
     return !titleEq || !descEq;
   };
 
+  // Set when Preview saved title/description edits that student boards
+  // haven't received yet; saving updates the cache, so hasChanges() can't
+  // see them any more.
+  const savedNotPropagated = useRef(false);
+
   const handleClose = async () => {
-    if (!hasChanges()) {
+    if (!hasChanges() && !savedNotPropagated.current) {
       closeCard({ cardId: proposalCard?.id, lockedByUser: false });
       return;
     }
     await handleSave();
   };
 
-  const handleSave = async () => {
-    const hasClones = proposal?.prototypeFor?.length > 0;
-    const shouldPropagate =
-      hasClones && autoUpdateStudentBoards && propagateToClones;
-
+  // Persist title/description edits without leaving the card.
+  const saveFieldChanges = async () => {
     if (canEditFields && milestone?.id) {
       const trimmedTitle = (inputs?.title || "").trim();
       const trimmedDesc = (inputs?.milestoneDescription || "").trim();
@@ -776,6 +786,14 @@ export default function MilestoneCardBuilder({
         });
       }
     }
+  };
+
+  const handleSave = async () => {
+    const hasClones = proposal?.prototypeFor?.length > 0;
+    const shouldPropagate =
+      hasClones && autoUpdateStudentBoards && propagateToClones;
+
+    await saveFieldChanges();
 
     if (hasClones && !shouldPropagate) {
       onTemplateChangedWithoutPropagation?.();
@@ -800,25 +818,61 @@ export default function MilestoneCardBuilder({
     return () => registerCloseHandler(null);
   });
 
+  // Enter preview: save pending edits, then show the student's page
+  const handlePreviewAsStudent = async () => {
+    try {
+      if (hasChanges()) {
+        await saveFieldChanges();
+        savedNotPropagated.current = true;
+      }
+      setPreviewMode(true);
+    } catch (err) {
+      alert(err?.message);
+    }
+  };
+
   const handleSaveRef = useRef(handleSave);
   handleSaveRef.current = handleSave;
+  const handlePreviewRef = useRef(handlePreviewAsStudent);
+  handlePreviewRef.current = handlePreviewAsStudent;
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     registerCardChrome({
       kind: "milestone",
-      previewMode: false,
+      previewMode,
       saving,
       typeLabel: getActionCardTypeLabel(proposalCard, t),
       isDefaultAction: isDefault,
       onSave: () => handleSaveRef.current(),
+      onPreview: () => handlePreviewRef.current(),
+      onExitPreview: () => setPreviewMode(false),
     });
-  }, [hideBoardChromeNav, registerCardChrome, saving, proposalCard, t, isDefault]);
+  }, [
+    registerCardChrome,
+    previewMode,
+    saving,
+    proposalCard,
+    t,
+    isDefault,
+  ]);
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     return () => registerCardChrome(null);
-  }, [hideBoardChromeNav, registerCardChrome]);
+  }, [registerCardChrome]);
+
+  const linkMoreCardsChip =
+    onLinkMoreCards && milestone?.key ? (
+      <Chip
+        leading={<AddIcon />}
+        label={t("board.expendedCard.milestoneCard.linkMoreCards", {}, {
+          default: "Link more cards",
+        })}
+        disabled={saving}
+        onClick={() => onLinkMoreCards(milestone.key)}
+      />
+    ) : null;
 
   const displayTitle = canEditFields
     ? inputs?.title || actionLabel
@@ -828,53 +882,26 @@ export default function MilestoneCardBuilder({
     ? inputs?.milestoneDescription
     : milestone?.description || "";
 
-  return (
-    <div
-      className={clsx("post", {
-        milestoneCardEditorPost: hideBoardChromeNav,
-      })}
-    >
-      {!hideBoardChromeNav ? (
-        <div className="navigation-build-mode">
-          <div className="left">
-            <div
-              className="icon"
-              onClick={handleClose}
-              style={{
-                opacity: saving ? 0.6 : 1,
-                pointerEvents: saving ? "none" : "auto",
-              }}
-            >
-              <div className="selector">
-                <img src="/assets/icons/back.svg" alt="back" />
-              </div>
-            </div>
-          </div>
-          <Tooltip
-            content={proposal?.title || ""}
-            side="bottom"
-            maxWidth={400}
-          >
-            <div className="middle">
-              <span className="studyTitle">{proposal?.title}</span>
-            </div>
-          </Tooltip>
-          <div className="right">
-            <div className="editModeMessage">
-              {t("board.editMode", {}, { default: "You are in Edit Mode" })}
-            </div>
-            <Button
-              type="button"
-              variant="filled"
-              onClick={handleSave}
-              disabled={saving}
-            >
-              {t("board.save", {}, { default: "Save" })}
-            </Button>
-          </div>
-        </div>
-      ) : null}
+  if (previewMode) {
+    const StudentPage = isDataCollectionActionCard(proposalCard, milestone)
+      ? StudentSubmitStudyPage
+      : StudentSubmitActionPage;
+    return (
+      <div className="post">
+        <StudentPage
+          user={user}
+          proposalId={proposal?.id}
+          proposal={boardWithSections}
+          cardId={proposalCard?.id}
+          proposalCard={proposalCard}
+          isPreview
+        />
+      </div>
+    );
+  }
 
+  return (
+    <div className="post milestoneCardEditorPost">
       <div className="proposalCardBoard">
         <div className="textBoard">
           <section style={sectionStyle}>
@@ -1087,6 +1114,7 @@ export default function MilestoneCardBuilder({
                       </li>
                     );
                   })}
+                  {linkMoreCardsChip ? <li>{linkMoreCardsChip}</li> : null}
                 </ul>
               ) : (
                 <p style={{ ...helperTextStyle, fontStyle: "italic" }}>
@@ -1100,6 +1128,11 @@ export default function MilestoneCardBuilder({
                   )}
                 </p>
               )}
+              {!includedCardsLoading &&
+              includedCards.length === 0 &&
+              linkMoreCardsChip ? (
+                <div style={{ marginTop: 12 }}>{linkMoreCardsChip}</div>
+              ) : null}
             </section>
           ) : null}
         </div>
@@ -1154,7 +1187,7 @@ export default function MilestoneCardBuilder({
         ) : (
           <div
             className={clsx("infoBoard", {
-              infoBoardEdit: hideBoardChromeNav,
+              infoBoardEdit: true,
               milestoneReviewFormPanel: capability === CAPABILITY_REVIEW,
             })}
           >
@@ -1208,11 +1241,22 @@ export default function MilestoneCardBuilder({
                   // panel: no preview toggle and no actions on the form. Copying
                   // to a custom milestone stays below, outside the preview.
                   <>
+                    <p style={{ ...helperTextStyle, margin: 0 }}>
+                      {t(
+                        "board.expendedCard.milestoneCard.reviewFormAudience",
+                        {},
+                        {
+                          default:
+                            "This is what the reviewers will see in the feedback center.",
+                        }
+                      )}
+                    </p>
                     <FormDefinitionPreview
                       board={boardWithSections}
                       milestone={milestone}
                       proposalBoardId={proposal?.id}
                       maxHeight="none"
+                      bare
                     />
                     {canCopyForm ? (
                       <div style={formActionsStyle}>

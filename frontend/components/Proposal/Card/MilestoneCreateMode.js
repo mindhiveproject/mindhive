@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import clsx from "clsx";
 import { useMutation, useQuery, useApolloClient } from "@apollo/client";
 import { v1 as uuidv1 } from "uuid";
 import useTranslation from "next-translate/useTranslation";
@@ -12,6 +11,7 @@ import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import { CREATE_CARD } from "../../Mutations/Proposal";
 import { useBoardMilestones } from "../../../lib/useBoardMilestones";
 import {
+  isDataCollectionActionCard,
   milestoneHasReviewQuestionnaire,
   resolveReviewFormKey,
 } from "../../../lib/milestones";
@@ -29,8 +29,9 @@ import {
 
 import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPreview";
 import MilestoneCapabilityRow from "./MilestoneCapabilityRow";
+import StudentSubmitActionPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/Proposal";
+import StudentSubmitStudyPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/SubmitStudy";
 import MessageCard from "../../DesignSystem/MessageCard";
-import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
 import Tooltip from "../../DesignSystem/Tooltip";
 
@@ -92,7 +93,11 @@ const newActionCardChipStyle = {
   fontWeight: 700,
 };
 
+// Stand-in id/key for a milestone that does not exist yet; matches no cards.
+const DRAFT_MILESTONE_ID = "draft-milestone";
+
 export default function MilestoneCreateMode({
+  user,
   proposal,
   sectionId,
   onCreated,
@@ -100,7 +105,6 @@ export default function MilestoneCreateMode({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
-  hideBoardChromeNav = false,
   registerCloseHandler,
   registerCardChrome,
 }) {
@@ -152,6 +156,7 @@ export default function MilestoneCreateMode({
   );
   const [capability, setCapability] = useState(CAPABILITY_REVIEW);
   const [creating, setCreating] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
 
   const resolvedCheckpointChoice = forceCustomMilestone
     ? NEW_CHECKPOINT_VALUE
@@ -342,6 +347,46 @@ export default function MilestoneCreateMode({
     closeCard({ cardId: false, lockedByUser: false });
   };
 
+  // The action card students would open once this milestone is added,
+  // built from the unsaved form so the preview needs no write.
+  const draftPreviewCard = useMemo(() => {
+    if (isDefaultCheckpoint) {
+      if (!selectedMilestone) return null;
+      return {
+        id: null,
+        title: selectedMilestone.title,
+        type: resolvedCheckpointChoice,
+        milestone: selectedMilestone,
+      };
+    }
+    if (!isNewCheckpoint) return null;
+    const draftTitle =
+      trimmedTitle ||
+      tBuilder("section.createMilestone.title", {}, { default: "New milestone" });
+    return {
+      id: null,
+      title: draftTitle,
+      type: "ACTION",
+      milestone: {
+        id: DRAFT_MILESTONE_ID,
+        key: DRAFT_MILESTONE_ID,
+        title: draftTitle,
+        description: description.trim(),
+        statusTarget:
+          capability === CAPABILITY_DATA_COLLECTION ? "study" : "board",
+      },
+    };
+  }, [
+    isDefaultCheckpoint,
+    isNewCheckpoint,
+    selectedMilestone,
+    resolvedCheckpointChoice,
+    trimmedTitle,
+    description,
+    capability,
+    tBuilder,
+  ]);
+
   const handleCreateRef = useRef(handleCreate);
   handleCreateRef.current = handleCreate;
 
@@ -352,10 +397,11 @@ export default function MilestoneCreateMode({
   });
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     registerCardChrome({
       kind: "milestone",
-      previewMode: false,
+      previewMode,
+      previewDisabled: !draftPreviewCard,
       saving: creating,
       saveDisabled: createDisabled && !creating,
       typeLabel: tBuilder(
@@ -376,77 +422,46 @@ export default function MilestoneCreateMode({
             { default: "Add to board" }
           ),
       onSave: () => handleCreateRef.current(),
+      onPreview: () => setPreviewMode(true),
+      onExitPreview: () => setPreviewMode(false),
     });
   }, [
-    hideBoardChromeNav,
     registerCardChrome,
+    previewMode,
+    draftPreviewCard,
     creating,
     createDisabled,
     tBuilder,
   ]);
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     return () => registerCardChrome(null);
-  }, [hideBoardChromeNav, registerCardChrome]);
+  }, [registerCardChrome]);
+
+  if (previewMode && draftPreviewCard) {
+    const StudentPage = isDataCollectionActionCard(
+      draftPreviewCard,
+      draftPreviewCard.milestone
+    )
+      ? StudentSubmitStudyPage
+      : StudentSubmitActionPage;
+    return (
+      <div className="post">
+        <StudentPage
+          user={user}
+          proposalId={proposal?.id}
+          proposal={boardWithSections}
+          cardId={null}
+          proposalCard={draftPreviewCard}
+          isPreview
+        />
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={clsx("post", {
-        milestoneCardEditorPost: hideBoardChromeNav,
-      })}
-    >
-      {!hideBoardChromeNav ? (
-        <div className="navigation-build-mode">
-          <div className="left">
-            <div
-              className="icon"
-              onClick={handleClose}
-              style={{
-                opacity: creating ? 0.6 : 1,
-                pointerEvents: creating ? "none" : "auto",
-              }}
-            >
-              <div className="selector">
-                <img src="/assets/icons/back.svg" alt="back" />
-              </div>
-            </div>
-          </div>
-          <Tooltip
-            content={proposal?.title || ""}
-            side="bottom"
-            maxWidth={400}
-          >
-            <div className="middle">
-              <span className="studyTitle">{proposal?.title}</span>
-            </div>
-          </Tooltip>
-          <div className="right">
-            <div className="editModeMessage">
-              {t("board.editMode", {}, { default: "You are in Edit Mode" })}
-            </div>
-            <Button
-              type="button"
-              variant="filled"
-              onClick={handleCreate}
-              disabled={createDisabled}
-            >
-              {creating
-                ? tBuilder(
-                    "section.createCardModal.creating",
-                    {},
-                    { default: "Creating..." }
-                  )
-                : tBuilder(
-                    "section.createMilestone.addToBoard",
-                    {},
-                    { default: "Add to board" }
-                  )}
-            </Button>
-          </div>
-        </div>
-      ) : null}
-
+    <div className="post milestoneCardEditorPost">
       <div className="proposalCardBoard">
         <div className="textBoard">
           {forceCustomMilestone ? (
@@ -766,11 +781,7 @@ export default function MilestoneCreateMode({
           ) : null}
         </div>
 
-        <div
-          className={clsx("infoBoard", {
-            infoBoardEdit: hideBoardChromeNav,
-          })}
-        >
+        <div className="infoBoard infoBoardEdit">
           <div className="cardHeader">
             {tBuilder(
               "section.createMilestone.sidePanelTitle",

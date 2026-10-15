@@ -28,6 +28,9 @@ export default function FormDefinitionPreview({
   milestone,
   proposalBoardId = null,
   maxHeight = 260,
+  // Drop the grey shell and its label when the caller already frames the
+  // form (a titled panel), so cards don't sit in a box inside a box.
+  bare = false,
 }) {
   const { t } = useTranslation("builder");
   const router = useRouter();
@@ -54,7 +57,13 @@ export default function FormDefinitionPreview({
 
   if (!milestone) return null;
 
-  const shellStyle = { ...previewShellStyle, maxHeight };
+  const shellStyle = bare
+    ? {
+        color: "#5D5763",
+        font: "var(--MH-Type-Body-Base)",
+        letterSpacing: 0,
+      }
+    : { ...previewShellStyle, maxHeight };
 
   if (!hasQuestionnaire) {
     return (
@@ -97,20 +106,22 @@ export default function FormDefinitionPreview({
   }
 
   return (
-    <div style={shellStyle}>
-      <div
-        style={{
-          font: 'var(--MH-Type-Label-Small)',
-          letterSpacing: 0,
-          marginBottom: 12,
-        }}
-      >
-        {t(
-          "section.createCardModal.previewLabel",
-          {},
-          { default: "Review form preview" }
-        )}
-      </div>
+    <div style={bare ? undefined : shellStyle}>
+      {bare ? null : (
+        <div
+          style={{
+            font: 'var(--MH-Type-Label-Small)',
+            letterSpacing: 0,
+            marginBottom: 12,
+          }}
+        >
+          {t(
+            "section.createCardModal.previewLabel",
+            {},
+            { default: "Review form preview" }
+          )}
+        </div>
+      )}
       <div style={{ display: "grid", gap: 12, pointerEvents: "none" }}>
         {definition.cards.map((card) => (
           <CardRenderer
