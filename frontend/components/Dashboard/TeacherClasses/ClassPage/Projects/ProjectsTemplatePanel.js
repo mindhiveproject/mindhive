@@ -75,7 +75,7 @@ export default function ProjectsTemplatePanel({ myclass }) {
       <section className="classTabSection">
         <div className="classTabSectionHeader">
           <h3>
-            {t("projects.templateManagement", {}, { default: "Project board" })}
+            {t("projects.templateManagement", {}, { default: "Class board" })}
           </h3>
         </div>
 

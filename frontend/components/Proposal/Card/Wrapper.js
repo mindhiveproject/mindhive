@@ -29,6 +29,7 @@ export default function CardWrapper({
   onTemplateChangedWithoutPropagation,
   registerCloseHandler,
   registerCardChrome,
+  onLinkMoreCards,
 }) {
   const skipCardQuery =
     (isCreateMilestone || isCreateProposalCard) && !cardId;
@@ -153,6 +154,7 @@ export default function CardWrapper({
               }
               registerCloseHandler={registerCloseHandler}
               registerCardChrome={registerCardChrome}
+              onLinkMoreCards={onLinkMoreCards}
             />
           );
         }

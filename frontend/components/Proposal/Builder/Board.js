@@ -26,6 +26,8 @@ const Board = ({
   propagateToClones,
   onTemplateChangedWithoutPropagation,
   autoOpenAddMilestone = false,
+  initialAssociateMilestoneKey = null,
+  onInitialAssociateHandled,
 }) => {
   const { t } = useTranslation("builder");
   const router = useRouter();
@@ -212,6 +214,8 @@ const Board = ({
         propagateToClones={propagateToClones}
         onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
         hasClones={hasClones}
+        initialAssociateMilestoneKey={initialAssociateMilestoneKey}
+        onInitialAssociateHandled={onInitialAssociateHandled}
         addMilestoneTargetSectionId={addMilestoneTargetSectionId}
         onAddMilestoneModalOpened={handleAddMilestoneModalOpened}
       />

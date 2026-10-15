@@ -491,7 +491,7 @@ export default function Settings({ myclass, user }) {
   const navSections = [
     {
       id: "project-boards",
-      label: t("projects.templateManagement", {}, { default: "Project board" }),
+      label: t("projects.templateManagement", {}, { default: "Class board" }),
     },
     {
       id: "mentors",

@@ -55,6 +55,9 @@ export default function ProposalBuilder({
   // Board shown as students see it; cards opened from it start in preview
   // and closing them returns here.
   const [boardPreview, setBoardPreview] = useState(false);
+  // Milestone whose "Link more cards" was clicked; the board opens its link
+  // flow on it once the card has closed.
+  const [linkCardsMilestoneKey, setLinkCardsMilestoneKey] = useState(null);
 
   const openCard = (nextCard) => {
     setCard(nextCard);
@@ -138,6 +141,21 @@ export default function ProposalBuilder({
   );
   const handleCardExitPreview = useCallback(
     () => cardChromeHandlersRef.current.onExitPreview?.(),
+    []
+  );
+
+  const handleLinkMoreCards = async (milestoneKey) => {
+    // Leave the card the usual way so pending edits are saved first.
+    if (cardCloseHandlerRef.current) {
+      await cardCloseHandlerRef.current();
+    } else {
+      await closeCard({ cardId: card?.id, lockedByUser: false });
+    }
+    setBoardPreview(false);
+    setLinkCardsMilestoneKey(milestoneKey);
+  };
+  const clearLinkCardsMilestoneKey = useCallback(
+    () => setLinkCardsMilestoneKey(null),
     []
   );
 
@@ -232,6 +250,8 @@ export default function ProposalBuilder({
               propagateToClones={propagateToClones}
               onTemplateChangedWithoutPropagation={markUnpropagatedChange}
               autoOpenAddMilestone={autoOpenAddMilestone}
+              initialAssociateMilestoneKey={linkCardsMilestoneKey}
+              onInitialAssociateHandled={clearLinkCardsMilestoneKey}
             />
           ) : null}
         </>
@@ -264,6 +284,7 @@ export default function ProposalBuilder({
               onTemplateChangedWithoutPropagation={markUnpropagatedChange}
               registerCloseHandler={registerCloseHandler}
               registerCardChrome={registerCardChrome}
+              onLinkMoreCards={handleLinkMoreCards}
             />
           </div>
         )

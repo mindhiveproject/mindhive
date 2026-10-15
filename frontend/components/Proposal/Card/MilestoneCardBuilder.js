@@ -46,6 +46,7 @@ import StudentSubmitStudyPage from "../../Builder/Project/ProjectBoard/Board/Car
 import Tooltip from "../../DesignSystem/Tooltip";
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
+import { AddIcon } from "../../DesignSystem/Icons";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import Modal from "../../DesignSystem/Modal";
 import { BOARD_REVIEW_FORM_DEFINITIONS } from "../../Queries/FormDefinition";
@@ -129,6 +130,8 @@ export default function MilestoneCardBuilder({
   onTemplateChangedWithoutPropagation,
   registerCloseHandler,
   registerCardChrome,
+  // Opens the board's "Link a milestone to cards" flow on this milestone.
+  onLinkMoreCards,
 }) {
   const { t } = useTranslation("classes");
   const { t: tBuilder } = useTranslation("builder");
@@ -859,6 +862,18 @@ export default function MilestoneCardBuilder({
     return () => registerCardChrome(null);
   }, [registerCardChrome]);
 
+  const linkMoreCardsChip =
+    onLinkMoreCards && milestone?.key ? (
+      <Chip
+        leading={<AddIcon />}
+        label={t("board.expendedCard.milestoneCard.linkMoreCards", {}, {
+          default: "Link more cards",
+        })}
+        disabled={saving}
+        onClick={() => onLinkMoreCards(milestone.key)}
+      />
+    ) : null;
+
   const displayTitle = canEditFields
     ? inputs?.title || actionLabel
     : actionLabel || milestone?.title || "";
@@ -1099,6 +1114,7 @@ export default function MilestoneCardBuilder({
                       </li>
                     );
                   })}
+                  {linkMoreCardsChip ? <li>{linkMoreCardsChip}</li> : null}
                 </ul>
               ) : (
                 <p style={{ ...helperTextStyle, fontStyle: "italic" }}>
@@ -1112,6 +1128,11 @@ export default function MilestoneCardBuilder({
                   )}
                 </p>
               )}
+              {!includedCardsLoading &&
+              includedCards.length === 0 &&
+              linkMoreCardsChip ? (
+                <div style={{ marginTop: 12 }}>{linkMoreCardsChip}</div>
+              ) : null}
             </section>
           ) : null}
         </div>

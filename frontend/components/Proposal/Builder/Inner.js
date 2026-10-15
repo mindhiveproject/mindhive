@@ -230,6 +230,29 @@ function Inner(props) {
     [memberCardIdsForStep]
   );
 
+  // Opened from a milestone editor's "Link more cards": start the link flow
+  // with that milestone already picked.
+  const { initialAssociateMilestoneKey, onInitialAssociateHandled } = props;
+  useEffect(() => {
+    if (!initialAssociateMilestoneKey || !canAssociateCards) return;
+    // Wait for the board's cards so the milestone's linked cards come pre-ticked.
+    if (!allCards.length) return;
+    const known = reviewStepOptions.some(
+      (option) => option.value === initialAssociateMilestoneKey
+    );
+    if (!known) return;
+    setBoardSelectMode("associate");
+    applyAssociateMilestone(initialAssociateMilestoneKey);
+    onInitialAssociateHandled?.();
+  }, [
+    initialAssociateMilestoneKey,
+    canAssociateCards,
+    allCards,
+    reviewStepOptions,
+    applyAssociateMilestone,
+    onInitialAssociateHandled,
+  ]);
+
   const handleAssociateMilestoneChange = useCallback(
     (nextKey) => {
       if (nextKey === associateMilestoneKey) return;

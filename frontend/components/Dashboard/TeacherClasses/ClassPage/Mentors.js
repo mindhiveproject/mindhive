@@ -249,7 +249,7 @@ export default function ClassMentors({ myclass, user }) {
             <div>
               {t("mentors.noMentorsYet", {}, {
                 default:
-                  "No mentors have joined this class yet. Create an invitation link above.",
+                  "No mentors have joined this class yet. Create an invitation link above and share it.",
               })}
             </div>
           </div>
