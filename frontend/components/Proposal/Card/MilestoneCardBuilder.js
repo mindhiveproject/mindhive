@@ -18,6 +18,7 @@ import {
   resolveMilestoneFromCard,
   cardIncludedInReviewStep,
   isActionCard,
+  isDataCollectionActionCard,
   parseCardSettings,
   milestoneHasReviewQuestionnaire,
   resolveReviewFormKey,
@@ -40,6 +41,8 @@ import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPrev
 import FormDefinitionPreviewPanel from "../../Forms/DefinitionForm/FormDefinitionPreviewPanel";
 import MilestoneCapabilityRow from "./MilestoneCapabilityRow";
 import ReviewFormAttachmentCard from "./ReviewFormAttachmentCard";
+import StudentSubmitActionPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/Proposal";
+import StudentSubmitStudyPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/SubmitStudy";
 import Tooltip from "../../DesignSystem/Tooltip";
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
@@ -114,6 +117,7 @@ function resolveCapability(milestone, proposalCard) {
 }
 
 export default function MilestoneCardBuilder({
+  user,
   proposal,
   proposalCard,
   initialFormEditor = null,
@@ -279,6 +283,7 @@ export default function MilestoneCardBuilder({
     useState(false);
   const [capabilityBusy, setCapabilityBusy] = useState(false);
   const [formPreviewOpen, setFormPreviewOpen] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
   const [confirmRemoveFormOpen, setConfirmRemoveFormOpen] = useState(false);
   const [existingCopyPromptOpen, setExistingCopyPromptOpen] = useState(false);
 
@@ -730,11 +735,8 @@ export default function MilestoneCardBuilder({
     await handleSave();
   };
 
-  const handleSave = async () => {
-    const hasClones = proposal?.prototypeFor?.length > 0;
-    const shouldPropagate =
-      hasClones && autoUpdateStudentBoards && propagateToClones;
-
+  // Persist title/description edits without leaving the card.
+  const saveFieldChanges = async () => {
     if (canEditFields && milestone?.id) {
       const trimmedTitle = (inputs?.title || "").trim();
       const trimmedDesc = (inputs?.milestoneDescription || "").trim();
@@ -776,6 +778,14 @@ export default function MilestoneCardBuilder({
         });
       }
     }
+  };
+
+  const handleSave = async () => {
+    const hasClones = proposal?.prototypeFor?.length > 0;
+    const shouldPropagate =
+      hasClones && autoUpdateStudentBoards && propagateToClones;
+
+    await saveFieldChanges();
 
     if (hasClones && !shouldPropagate) {
       onTemplateChangedWithoutPropagation?.();
@@ -800,20 +810,42 @@ export default function MilestoneCardBuilder({
     return () => registerCloseHandler(null);
   });
 
+  // Enter preview: save pending edits, then show the student's page
+  const handlePreviewAsStudent = async () => {
+    try {
+      await saveFieldChanges();
+      setPreviewMode(true);
+    } catch (err) {
+      alert(err?.message);
+    }
+  };
+
   const handleSaveRef = useRef(handleSave);
   handleSaveRef.current = handleSave;
+  const handlePreviewRef = useRef(handlePreviewAsStudent);
+  handlePreviewRef.current = handlePreviewAsStudent;
 
   useEffect(() => {
     if (!hideBoardChromeNav || !registerCardChrome) return undefined;
     registerCardChrome({
       kind: "milestone",
-      previewMode: false,
+      previewMode,
       saving,
       typeLabel: getActionCardTypeLabel(proposalCard, t),
       isDefaultAction: isDefault,
       onSave: () => handleSaveRef.current(),
+      onPreview: () => handlePreviewRef.current(),
+      onExitPreview: () => setPreviewMode(false),
     });
-  }, [hideBoardChromeNav, registerCardChrome, saving, proposalCard, t, isDefault]);
+  }, [
+    hideBoardChromeNav,
+    registerCardChrome,
+    previewMode,
+    saving,
+    proposalCard,
+    t,
+    isDefault,
+  ]);
 
   useEffect(() => {
     if (!hideBoardChromeNav || !registerCardChrome) return undefined;
@@ -827,6 +859,24 @@ export default function MilestoneCardBuilder({
   const displayDescription = canEditFields
     ? inputs?.milestoneDescription
     : milestone?.description || "";
+
+  if (previewMode) {
+    const StudentPage = isDataCollectionActionCard(proposalCard, milestone)
+      ? StudentSubmitStudyPage
+      : StudentSubmitActionPage;
+    return (
+      <div className="post">
+        <StudentPage
+          user={user}
+          proposalId={proposal?.id}
+          proposal={boardWithSections}
+          cardId={proposalCard?.id}
+          proposalCard={proposalCard}
+          isPreview
+        />
+      </div>
+    );
+  }
 
   return (
     <div

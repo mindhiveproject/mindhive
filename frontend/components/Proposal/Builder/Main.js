@@ -92,6 +92,7 @@ export default function ProposalBuilder({
     setCardChrome((prev) => {
       const next = {
         kind: config.kind,
+        canPreview: typeof config.onPreview === "function",
         previewMode: !!config.previewMode,
         saving: !!config.saving,
         saveDisabled: !!config.saveDisabled,
@@ -102,6 +103,7 @@ export default function ProposalBuilder({
       if (
         prev &&
         prev.kind === next.kind &&
+        prev.canPreview === next.canPreview &&
         prev.previewMode === next.previewMode &&
         prev.saving === next.saving &&
         prev.saveDisabled === next.saveDisabled &&

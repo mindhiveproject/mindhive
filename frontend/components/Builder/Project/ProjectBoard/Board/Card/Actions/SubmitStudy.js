@@ -19,13 +19,17 @@ export default function Proposal({
   proposal,
   cardId,
   proposalCard,
+  // Teacher preview from the template editor: render the student page
+  // read-only, without the student nav bar.
+  isPreview = false,
 }) {
   const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
   const study = proposal?.study || {};
 
   const allCardsCompleted = true;
-  const isStudySubmitted = study?.dataCollectionStatus === "SUBMITTED";
+  const isStudySubmitted =
+    !isPreview && study?.dataCollectionStatus === "SUBMITTED";
   const isParticipationLocked = !study?.dataCollectionOpenForParticipation;
   const [updateStudy, { loading }] = useMutation(UPDATE_STUDY, {
     refetchQueries: [
@@ -93,20 +97,22 @@ export default function Proposal({
 
   return (
     <>
-      <NavigationSubmitStudy
-        query={query}
-        user={user}
-        tab={tab}
-        proposalId={proposalId}
-        cardId={cardId}
-        saveBtnName={t("submitStudy.submitFor", { title: cardTypes[proposalCard?.type].title }, `Submit for ${cardTypes[proposalCard?.type].title}`)}
-        saveBtnFunction={() => {
-          submitStudy();
-        }}
-        isStudySubmitted={isStudySubmitted}
-        switchFeedbackLock={switchFeedbackLock}
-        isParticipationLocked={isParticipationLocked}
-      />
+      {isPreview ? null : (
+        <NavigationSubmitStudy
+          query={query}
+          user={user}
+          tab={tab}
+          proposalId={proposalId}
+          cardId={cardId}
+          saveBtnName={t("submitStudy.submitFor", { title: cardTypes[proposalCard?.type].title }, `Submit for ${cardTypes[proposalCard?.type].title}`)}
+          saveBtnFunction={() => {
+            submitStudy();
+          }}
+          isStudySubmitted={isStudySubmitted}
+          switchFeedbackLock={switchFeedbackLock}
+          isParticipationLocked={isParticipationLocked}
+        />
+      )}
       <StyledActionPage>
         <div className="board">
           <div className="proposal">

@@ -230,7 +230,7 @@ export default function BoardEditorChrome({
                 default: "You are in Edit Mode",
               })}
             </span>
-            {cardChrome.kind === "project" ? (
+            {cardChrome.canPreview ? (
               <Button
                 variant="outline"
                 onClick={onCardPreview}
