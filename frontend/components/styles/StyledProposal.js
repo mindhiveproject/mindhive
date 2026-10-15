@@ -541,7 +541,9 @@ export const StyledProposal = styled.div`
     min-width: 0;
     height: 100%;
     margin: 0;
-    padding: ${(props) => (props.$cardFullView ? "0" : "20px")};
+    /* $flush: the class board editor sits on the dashboard inset itself. */
+    padding: ${(props) =>
+      props.$cardFullView || props.$flush ? "0" : "20px"};
     box-sizing: border-box;
     overflow: hidden;
   }

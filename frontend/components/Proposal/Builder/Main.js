@@ -22,6 +22,8 @@ export default function ProposalBuilder({
   hidePreviewHeader = false,
   refetchQueries,
   autoOpenAddMilestone = false,
+  boardSettings = null,
+  openSettingsOnMount = false,
 }) {
   const { t } = useTranslation("builder");
   const {
@@ -192,6 +194,8 @@ export default function ProposalBuilder({
             proposalBuildMode ? () => setBoardPreview(true) : undefined
           }
           onExitBoardPreview={() => setBoardPreview(false)}
+          boardSettings={boardSettings}
+          openSettingsOnMount={openSettingsOnMount}
         />
       ) : null}
       {page === "board" ? (
