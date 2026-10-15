@@ -226,6 +226,31 @@ export default function BuilderProposalCard({
     return { id: createdId, title: trimmedTitle, type: inputs?.type || PROPOSAL_CARD_TYPE };
   };
 
+  // Edits already saved without leaving the card (Preview, linked-items
+  // dialog) that student boards haven't received yet. Saving updates the
+  // cached card, so hasCardChanges() no longer sees them.
+  const savedNotPropagated = useRef({ any: false, contentChanged: false });
+
+  const contentDiffersFromSaved = () =>
+    String(content?.current ?? "") !== String(proposalCard?.content ?? "");
+
+  // Save without leaving the card, remembering what still has to reach
+  // student boards.
+  const saveAndRemember = async () => {
+    const contentChanged = contentDiffersFromSaved();
+    await saveCardContentOnly();
+    savedNotPropagated.current = {
+      any: true,
+      contentChanged: savedNotPropagated.current.contentChanged || contentChanged,
+    };
+  };
+
+  const contentChangedCardIds = (contentChanged) =>
+    (contentChanged || savedNotPropagated.current.contentChanged) &&
+    proposalCard?.id
+      ? [proposalCard.id]
+      : [];
+
   // Save card content only (no close, no clone dialog). Used before entering preview.
   const saveCardContentOnly = async () => {
     if (isCreateMode) {
@@ -252,21 +277,19 @@ export default function BuilderProposalCard({
   // Update logic with clone check: use backend propagateToClones when user chooses to update clones.
   // If the teacher changed the content field (placeholder), pass that card id so clones get the new placeholder.
   const onUpdateCard = async (updateClonesToo = false) => {
+    const contentChanged = contentDiffersFromSaved();
     await saveCardContentOnly();
 
     if (updateClonesToo && propagateToClones) {
       try {
-        const contentChanged =
-          String(content?.current ?? "") !==
-          String(proposalCard?.content ?? "");
         await propagateToClones({
-          contentChangedCardIds:
-            contentChanged && proposalCard?.id ? [proposalCard.id] : [],
+          contentChangedCardIds: contentChangedCardIds(contentChanged),
         });
       } catch (e) {
         console.error("Propagate to clones failed:", e);
       }
     }
+    savedNotPropagated.current = { any: false, contentChanged: false };
 
     closeCard({ cardId: proposalCard?.id, lockedByUser: false });
   };
@@ -302,8 +325,8 @@ export default function BuilderProposalCard({
   // Enter preview: save current content then show read-only preview
   const handlePreviewAsUser = async () => {
     try {
-      if (!isCreateMode) {
-        await saveCardContentOnly();
+      if (!isCreateMode && hasCardChanges()) {
+        await saveAndRemember();
       }
       setPreviewMode(true);
     } catch (error) {
@@ -314,12 +337,16 @@ export default function BuilderProposalCard({
   // When linked items modal closes: save card then propagate if auto-mode on.
   const handleLinkedItemsClose = async () => {
     if (isCreateMode) return;
-    await saveCardContentOnly();
+    if (hasCardChanges()) await saveAndRemember();
+    if (!savedNotPropagated.current.any) return;
     const hasClones = proposal?.prototypeFor?.length > 0;
     const shouldPropagate = hasClones && autoUpdateStudentBoards && propagateToClones;
     if (shouldPropagate) {
       try {
-        await propagateToClones({ contentChangedCardIds: [] });
+        await propagateToClones({
+          contentChangedCardIds: contentChangedCardIds(false),
+        });
+        savedNotPropagated.current = { any: false, contentChanged: false };
       } catch (e) {
         console.error("Propagate to clones failed:", e);
       }
@@ -341,22 +368,20 @@ export default function BuilderProposalCard({
       return;
     }
     try {
-      if (!hasCardChanges()) {
+      const hasUnsaved = hasCardChanges();
+      if (!hasUnsaved && !savedNotPropagated.current.any) {
         closeCard({ cardId: proposalCard?.id, lockedByUser: false });
         return;
       }
-      await saveCardContentOnly();
+      const contentChanged = contentDiffersFromSaved();
+      if (hasUnsaved) await saveCardContentOnly();
       closeCard({ cardId: proposalCard?.id, lockedByUser: false });
       const hasClones = proposal?.prototypeFor?.length > 0;
       const shouldPropagate =
         hasClones && autoUpdateStudentBoards && propagateToClones;
       if (shouldPropagate) {
-        const contentChanged =
-          String(content?.current ?? "") !==
-          String(proposalCard?.content ?? "");
         propagateToClones({
-          contentChangedCardIds:
-            contentChanged && proposalCard?.id ? [proposalCard.id] : [],
+          contentChangedCardIds: contentChangedCardIds(contentChanged),
         }).catch((e) => {
           console.error("Propagate to clones failed:", e);
         });

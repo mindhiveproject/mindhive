@@ -727,8 +727,13 @@ export default function MilestoneCardBuilder({
     return !titleEq || !descEq;
   };
 
+  // Set when Preview saved title/description edits that student boards
+  // haven't received yet; saving updates the cache, so hasChanges() can't
+  // see them any more.
+  const savedNotPropagated = useRef(false);
+
   const handleClose = async () => {
-    if (!hasChanges()) {
+    if (!hasChanges() && !savedNotPropagated.current) {
       closeCard({ cardId: proposalCard?.id, lockedByUser: false });
       return;
     }
@@ -813,7 +818,10 @@ export default function MilestoneCardBuilder({
   // Enter preview: save pending edits, then show the student's page
   const handlePreviewAsStudent = async () => {
     try {
-      await saveFieldChanges();
+      if (hasChanges()) {
+        await saveFieldChanges();
+        savedNotPropagated.current = true;
+      }
       setPreviewMode(true);
     } catch (err) {
       alert(err?.message);
