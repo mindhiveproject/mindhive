@@ -234,7 +234,7 @@ export default function BoardEditorChrome({
               <Button
                 variant="outline"
                 onClick={onCardPreview}
-                disabled={cardChrome.saving}
+                disabled={cardChrome.saving || cardChrome.previewDisabled}
               >
                 {tClasses("board.expendedCard.preview", {}, {
                   default: "Preview",

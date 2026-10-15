@@ -93,6 +93,7 @@ export default function ProposalBuilder({
       const next = {
         kind: config.kind,
         canPreview: typeof config.onPreview === "function",
+        previewDisabled: !!config.previewDisabled,
         previewMode: !!config.previewMode,
         saving: !!config.saving,
         saveDisabled: !!config.saveDisabled,
@@ -104,6 +105,7 @@ export default function ProposalBuilder({
         prev &&
         prev.kind === next.kind &&
         prev.canPreview === next.canPreview &&
+        prev.previewDisabled === next.previewDisabled &&
         prev.previewMode === next.previewMode &&
         prev.saving === next.saving &&
         prev.saveDisabled === next.saveDisabled &&

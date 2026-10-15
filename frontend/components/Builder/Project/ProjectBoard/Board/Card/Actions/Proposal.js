@@ -816,7 +816,7 @@ export default function Proposal({
 
                 <div className="lists">
                   {cards?.map((card) => (
-                    <div className="list">
+                    <div className="list" key={card?.id || card?.title}>
                       <div className="listIconTitle">
                         <img
                           src={`/assets/icons/status/${

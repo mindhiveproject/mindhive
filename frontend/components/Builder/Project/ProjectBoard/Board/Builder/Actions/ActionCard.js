@@ -6,6 +6,7 @@ import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 import {
   resolveMilestoneFromCard,
   reviewStageMatches,
+  isDataCollectionActionCard,
 } from "../../../../../../../lib/milestones";
 import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../../lib/milestoneStatus";
@@ -158,7 +159,7 @@ export default function ActionCard({
             </div>
             <div className="card-subtitle">
               {isSubmitted 
-                ? (card?.type !== "ACTION_COLLECTING_DATA" && comments?.length > 0
+                ? (!isDataCollectionActionCard(card, cardMilestone) && comments?.length > 0
                     ? t("actionCard.viewCountComments", { count: comments.length })
                     : t("actionCard.viewComments"))
                 : t("actionCard.clickToSubmit", { title: displayTitle })}

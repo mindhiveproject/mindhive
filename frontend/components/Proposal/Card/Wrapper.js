@@ -57,6 +57,7 @@ export default function CardWrapper({
   if (skipCardQuery && proposalBuildMode && isCreateMilestone) {
     return (
       <MilestoneCreateMode
+        user={user}
         proposal={proposal}
         sectionId={sectionId}
         onCreated={(createdCardId, cardMeta = {}) => {

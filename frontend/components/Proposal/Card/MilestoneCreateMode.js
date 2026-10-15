@@ -12,6 +12,7 @@ import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import { CREATE_CARD } from "../../Mutations/Proposal";
 import { useBoardMilestones } from "../../../lib/useBoardMilestones";
 import {
+  isDataCollectionActionCard,
   milestoneHasReviewQuestionnaire,
   resolveReviewFormKey,
 } from "../../../lib/milestones";
@@ -29,6 +30,8 @@ import {
 
 import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPreview";
 import MilestoneCapabilityRow from "./MilestoneCapabilityRow";
+import StudentSubmitActionPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/Proposal";
+import StudentSubmitStudyPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/SubmitStudy";
 import MessageCard from "../../DesignSystem/MessageCard";
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
@@ -92,7 +95,11 @@ const newActionCardChipStyle = {
   fontWeight: 700,
 };
 
+// Stand-in id/key for a milestone that does not exist yet; matches no cards.
+const DRAFT_MILESTONE_ID = "draft-milestone";
+
 export default function MilestoneCreateMode({
+  user,
   proposal,
   sectionId,
   onCreated,
@@ -152,6 +159,7 @@ export default function MilestoneCreateMode({
   );
   const [capability, setCapability] = useState(CAPABILITY_REVIEW);
   const [creating, setCreating] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
 
   const resolvedCheckpointChoice = forceCustomMilestone
     ? NEW_CHECKPOINT_VALUE
@@ -342,6 +350,46 @@ export default function MilestoneCreateMode({
     closeCard({ cardId: false, lockedByUser: false });
   };
 
+  // The action card students would open once this milestone is added,
+  // built from the unsaved form so the preview needs no write.
+  const draftPreviewCard = useMemo(() => {
+    if (isDefaultCheckpoint) {
+      if (!selectedMilestone) return null;
+      return {
+        id: null,
+        title: selectedMilestone.title,
+        type: resolvedCheckpointChoice,
+        milestone: selectedMilestone,
+      };
+    }
+    if (!isNewCheckpoint) return null;
+    const draftTitle =
+      trimmedTitle ||
+      tBuilder("section.createMilestone.title", {}, { default: "New milestone" });
+    return {
+      id: null,
+      title: draftTitle,
+      type: "ACTION",
+      milestone: {
+        id: DRAFT_MILESTONE_ID,
+        key: DRAFT_MILESTONE_ID,
+        title: draftTitle,
+        description: description.trim(),
+        statusTarget:
+          capability === CAPABILITY_DATA_COLLECTION ? "study" : "board",
+      },
+    };
+  }, [
+    isDefaultCheckpoint,
+    isNewCheckpoint,
+    selectedMilestone,
+    resolvedCheckpointChoice,
+    trimmedTitle,
+    description,
+    capability,
+    tBuilder,
+  ]);
+
   const handleCreateRef = useRef(handleCreate);
   handleCreateRef.current = handleCreate;
 
@@ -355,7 +403,8 @@ export default function MilestoneCreateMode({
     if (!hideBoardChromeNav || !registerCardChrome) return undefined;
     registerCardChrome({
       kind: "milestone",
-      previewMode: false,
+      previewMode,
+      previewDisabled: !draftPreviewCard,
       saving: creating,
       saveDisabled: createDisabled && !creating,
       typeLabel: tBuilder(
@@ -376,10 +425,14 @@ export default function MilestoneCreateMode({
             { default: "Add to board" }
           ),
       onSave: () => handleCreateRef.current(),
+      onPreview: () => setPreviewMode(true),
+      onExitPreview: () => setPreviewMode(false),
     });
   }, [
     hideBoardChromeNav,
     registerCardChrome,
+    previewMode,
+    draftPreviewCard,
     creating,
     createDisabled,
     tBuilder,
@@ -389,6 +442,27 @@ export default function MilestoneCreateMode({
     if (!hideBoardChromeNav || !registerCardChrome) return undefined;
     return () => registerCardChrome(null);
   }, [hideBoardChromeNav, registerCardChrome]);
+
+  if (previewMode && draftPreviewCard) {
+    const StudentPage = isDataCollectionActionCard(
+      draftPreviewCard,
+      draftPreviewCard.milestone
+    )
+      ? StudentSubmitStudyPage
+      : StudentSubmitActionPage;
+    return (
+      <div className="post">
+        <StudentPage
+          user={user}
+          proposalId={proposal?.id}
+          proposal={boardWithSections}
+          cardId={null}
+          proposalCard={draftPreviewCard}
+          isPreview
+        />
+      </div>
+    );
+  }
 
   return (
     <div
