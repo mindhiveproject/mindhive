@@ -14,6 +14,8 @@ export default function ProposalPage({
   proposalBuildMode,
   refetchQueries,
   autoOpenAddMilestone = false,
+  boardSettings = null,
+  openSettingsOnMount = false,
 }) {
   const { t } = useTranslation("classes");
   const handleBack = onBack || goToOverview;
@@ -45,6 +47,8 @@ export default function ProposalPage({
           proposalBuildMode={proposalBuildMode}
           refetchQueries={refetchQueries}
           autoOpenAddMilestone={autoOpenAddMilestone}
+          boardSettings={boardSettings}
+          openSettingsOnMount={openSettingsOnMount}
         />
       )}
     </div>

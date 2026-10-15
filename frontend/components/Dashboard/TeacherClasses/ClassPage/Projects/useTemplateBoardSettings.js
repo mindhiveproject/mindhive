@@ -133,24 +133,6 @@ export default function useTemplateBoardSettings({
   const setCopyVisibility = async (nextVisible) => {
     if (!classId || !boardId || updating) return;
 
-    const isVisible = isTemplateVisibleToStudents(board, classId, classContext);
-    if (isVisible && !nextVisible) {
-      const visibleCount = getVisibleTemplateBoards(classContext).length;
-      if (visibleCount <= 1) {
-        const confirmed = window.confirm(
-          t(
-            "projects.confirmHideLastTemplate",
-            {},
-            {
-              default:
-                "This is the only template students can copy. Prevent copy anyway? Students will not be able to start new projects until you allow copy for at least one template.",
-            }
-          )
-        );
-        if (!confirmed) return;
-      }
-    }
-
     const previousVisible = copyVisible;
     setCopyVisible(nextVisible);
 
@@ -220,9 +202,15 @@ export default function useTemplateBoardSettings({
     }
   };
 
+  // Callers confirm before turning copy off here: it would leave the class
+  // with no template students can copy.
+  const hidingCopyNeedsConfirm =
+    copyVisible && getVisibleTemplateBoards(classContext).length <= 1;
+
   return {
     updating,
     disabled: updating,
+    hidingCopyNeedsConfirm,
     curriculumType,
     classCurriculumTypes,
     assignableToStudents,

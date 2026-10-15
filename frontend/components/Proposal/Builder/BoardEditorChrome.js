@@ -37,15 +37,18 @@ export default function BoardEditorChrome({
   boardPreviewMode = false,
   onBoardPreview,
   onExitBoardPreview,
+  boardSettings = null,
+  openSettingsOnMount = false,
 }) {
   const { t } = useTranslation("builder");
   const { t: tClasses } = useTranslation("classes");
   const settingsRef = useRef(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(openSettingsOnMount);
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const [applyLoading, setApplyLoading] = useState(false);
-  const [templateBannerSection, setTemplateBannerSection] =
-    useState("autoUpdate");
+  const [templateBannerSection, setTemplateBannerSection] = useState(
+    boardSettings ? "boardSettings" : "autoUpdate"
+  );
 
   const isClassTemplate = isClassTemplateBoard(proposal);
   const isTemplateWithClones =
@@ -334,6 +337,7 @@ export default function BoardEditorChrome({
                 onAutoUpdateChange={onAutoUpdateChange}
                 applyLoading={applyLoading}
                 onSaveAndUpdateStudentBoards={handleSaveAndUpdateStudentBoards}
+                boardSettings={boardSettings}
               />
             </Popover>
           </>

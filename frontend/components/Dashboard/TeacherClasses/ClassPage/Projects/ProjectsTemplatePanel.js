@@ -1,37 +1,26 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
 import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../../Queries/Proposal";
-import {
-  DELETE_COMPLETE_PROPOSAL,
-  SYNC_CLASS_TEMPLATE_BOARDS,
-} from "../../../../Mutations/Proposal";
+import { SYNC_CLASS_TEMPLATE_BOARDS } from "../../../../Mutations/Proposal";
 import { GET_CLASS } from "../../../../Queries/Classes";
-import {
-  canDeleteProposalBoard,
-  userIsProposalAdmin,
-} from "../../../../Utils/proposalBoard";
 import Button from "../../../../DesignSystem/Button";
 import IconButton from "../../../../DesignSystem/IconButton";
 import { AddIcon, SettingsIcon } from "../../../../DesignSystem/Icons";
 import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
-import TemplateBoardSettingsModal from "../Modals/TemplateBoardSettingsModal";
 
 // "Project boards" section of the Settings tab: a grid of the class's boards,
-// each with a settings button, plus a "New board" tile that opens the create
-// modal (library copy or blank). Editing happens from the board row above the
-// class tabs.
-export default function ProjectsTemplatePanel({ myclass, user }) {
+// each with Edit and a settings button (opens the editor with its settings
+// popover), plus a "New board" tile that opens the create modal (library copy
+// or blank).
+export default function ProjectsTemplatePanel({ myclass }) {
   const { t } = useTranslation("classes");
-  const { t: tBuilder } = useTranslation("builder");
   const router = useRouter();
   const classId = myclass?.id;
   const code = myclass?.code;
-  const isAdmin = userIsProposalAdmin(user);
-  const [settingsBoardId, setSettingsBoardId] = useState(null);
 
   const refetchQueries = [
     { query: CLASS_TEMPLATE_PROJECTS_QUERY, variables: { classId } },
@@ -54,13 +43,8 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
     syncClassTemplateBoards({ variables: { classId } }).catch(() => {});
   }, [classId]);
 
-  const [deleteProposalBoard] = useMutation(DELETE_COMPLETE_PROPOSAL, {
-    refetchQueries,
-  });
-
   const boards = data?.proposalBoards || [];
   const isPending = (loading && !data) || (syncing && boards.length === 0);
-  const settingsBoard = boards.find((board) => board.id === settingsBoardId);
 
   const openCreate = () =>
     router.push({
@@ -68,15 +52,15 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
       query: { page: "settings", createBoard: "1" },
     });
 
-  const deleteBoard = async (boardId) => {
-    if (!boardId || !confirm(tBuilder("deleteProposal.confirm"))) return;
-    try {
-      await deleteProposalBoard({ variables: { id: boardId } });
-      setSettingsBoardId(null);
-    } catch (err) {
-      alert(err?.message);
-    }
-  };
+  const openEditor = (boardId, { withSettings = false } = {}) =>
+    router.push({
+      pathname: `/dashboard/myclasses/${code}`,
+      query: {
+        page: "settings",
+        editBoard: boardId,
+        ...(withSettings ? { boardSettings: "1" } : {}),
+      },
+    });
 
   const settingsLabel = t("projects.boardSettingsAndPermissions", {}, {
     default: "Board settings & permissions",
@@ -84,20 +68,6 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
 
   return (
     <>
-      <TemplateBoardSettingsModal
-        open={!!settingsBoardId}
-        onClose={() => setSettingsBoardId(null)}
-        boardId={settingsBoardId}
-        myclass={myclass}
-        classTemplates={boards}
-        onDelete={
-          settingsBoard &&
-          canDeleteProposalBoard(settingsBoard, user?.id, { isAdmin })
-            ? () => deleteBoard(settingsBoard.id)
-            : undefined
-        }
-      />
-
       <section className="classTabSection">
         <div className="classTabSectionHeader">
           <h3>
@@ -132,12 +102,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                 <div className="boardTileActions">
                   <Button
                     variant="filled"
-                    onClick={() =>
-                      router.push({
-                        pathname: `/dashboard/myclasses/${code}`,
-                        query: { page: "settings", editBoard: board.id },
-                      })
-                    }
+                    onClick={() => openEditor(board.id)}
                   >
                     {t("projects.edit", {}, { default: "Edit" })}
                   </Button>
@@ -146,7 +111,9 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                     icon={<SettingsIcon />}
                     ariaLabel={`${settingsLabel}: ${board.title || ""}`}
                     title={settingsLabel}
-                    onClick={() => setSettingsBoardId(board.id)}
+                    onClick={() =>
+                      openEditor(board.id, { withSettings: true })
+                    }
                   />
                 </div>
               </div>

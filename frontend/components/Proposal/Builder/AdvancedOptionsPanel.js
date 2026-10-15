@@ -35,13 +35,26 @@ export default function AdvancedOptionsPanel({
   onAutoUpdateChange,
   applyLoading,
   onSaveAndUpdateStudentBoards,
+  // Class-level board settings (copy permission, curriculum, assignment),
+  // supplied by the class editor; shown as the first tab when present.
+  boardSettings = null,
 }) {
   const { t } = useTranslation("builder");
+  const { t: tClasses } = useTranslation("classes");
   const isAdmin = user?.permissions?.map((p) => p?.name).includes("ADMIN");
 
   return (
     <div className="advancedOptionsPanel" style={BODY_STYLE}>
       <div style={TABS_STYLE}>
+        {boardSettings ? (
+          <Chip
+            label={tClasses("boardSettings", {}, {
+              default: "Board settings",
+            })}
+            selected={section === "boardSettings"}
+            onClick={() => onSectionChange("boardSettings")}
+          />
+        ) : null}
         <Chip
           label={t("proposal.templateSectionAutoUpdate", {}, {
             default: "Auto-update",
@@ -68,6 +81,8 @@ export default function AdvancedOptionsPanel({
           />
         )}
       </div>
+
+      {section === "boardSettings" && boardSettings}
 
       {section === "autoUpdate" && (
         <>

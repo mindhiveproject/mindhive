@@ -2195,6 +2195,8 @@
 	"projects": {
 		"edit": "Edit",
 		"deleteBoard": "Delete board",
+		"deleteBoardDescription": "Delete this board with all of its sections and cards. This can't be undone.",
+		"deleteBoardConfirm": "Delete this board? Its sections and cards will be deleted too.",
 		"newBoard": "New board",
 		"addTemplateToClass": "Copy template to class",
 		"backToProjects": "Back to projects",
@@ -2203,6 +2205,7 @@
 		"boardSettingsModalClose": "Close",
 		"boardSettingsModalDescription": "These settings apply to projects students start from \"{{title}}\".",
 		"boardSettingsSectionDescription": "Configure curriculum and card assignment for projects created from this template.",
+		"boardSettingsSectionDescriptionNoCurriculum": "Configure card assignment for projects created from this template.",
 		"cannotDeleteTemplate": "Only the creator can remove this template from the class.",
 		"classTemplates": "Available class templates",
 		"classTemplatesDescription": "Choose which templates students can copy when starting a new project.",
