@@ -12,7 +12,7 @@ import {
 import ProposalPage from "./ProjectBoard/ProposalPage";
 import ClassBoardSettingsPanel from "./ClassBoardSettingsPanel";
 
-const StyledProjectsBoardEditor = styled.div`
+export const StyledProjectsBoardEditor = styled.div`
   width: 100%;
   max-width: 100%;
   min-width: 0;

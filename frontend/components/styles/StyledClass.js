@@ -2739,11 +2739,69 @@ const StyledClass = styled.div`
     }
   }
 
+  /* Settings tab: one continuous page plus a slim "on this page" rail. */
+  .settingsLayout {
+    display: grid;
+    grid-template-columns: minmax(0, 980px) 188px;
+    gap: 40px;
+    align-items: start;
+    padding-bottom: 40px;
+  }
+
+  .settingsSectionNav {
+    position: sticky;
+    top: 24px;
+
+    ul {
+      display: grid;
+      gap: 2px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border-left: 2px solid #ece9e6;
+    }
+
+    a {
+      display: block;
+      margin-left: -2px;
+      padding: 6px 0 6px 14px;
+      border-left: 2px solid transparent;
+      color: #625b71;
+      font: var(--MH-Type-Label-Base);
+      letter-spacing: 0;
+      text-decoration: none;
+      transition: color 0.2s ease, border-color 0.2s ease;
+
+      &:hover {
+        color: #171717;
+      }
+
+      &.active {
+        color: var(--MH-Theme-Primary-Dark, #336f8a);
+        border-left-color: var(--MH-Theme-Primary-Dark, #336f8a);
+      }
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .settingsLayout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .settingsSectionNav {
+      display: none;
+    }
+  }
+
   .settings {
     display: grid;
     gap: 16px;
-    max-width: 980px;
-    padding-bottom: 40px;
+    min-width: 0;
+
+    /* Leave a little air above a section the rail jumps to. */
+    > * {
+      scroll-margin-top: 16px;
+    }
 
     /* Sections moved in from other tabs keep the Settings rhythm. */
     > .classTabPage {

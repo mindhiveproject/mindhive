@@ -36,7 +36,8 @@ export default function Dashboard({ children, area, selector }) {
   const router = useRouter();
   const showFooter = shouldShowDashboardFooter(area);
   const boardEditorFullscreen =
-    (area === "myclasses" && !!router.query.editBoard) ||
+    (area === "myclasses" &&
+      (!!router.query.editBoard || router.query.createBoard === "1")) ||
     (area === "classes" &&
       router.query.page === "opportunities" &&
       (!!router.query.opportunity || !!router.query.round)) ||

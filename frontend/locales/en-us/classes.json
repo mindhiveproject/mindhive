@@ -2303,6 +2303,8 @@
 		"templatePreviewModal": {
 			"title": "Preview — {{title}}"
 		},
+		"templateSourceOwned": "Your board",
+		"templateSourcePublic": "Public template",
 		"templateUses": "{{count}} uses",
 		"toggleVisibilityError": "Failed to update template copy setting.",
 		"viewBoard": "View board",
@@ -2312,6 +2314,7 @@
 		"yourProjectsDescription": "{{count}} project boards in this class that you authored or collaborate on."
 	},
 	"proposalCardsAssignableQuestion": "Should cards be assignable to students?",
+	"settingsSectionNavLabel": "Settings sections",
 	"resource": {
 		"action": "Action",
 		"actions": "Actions",

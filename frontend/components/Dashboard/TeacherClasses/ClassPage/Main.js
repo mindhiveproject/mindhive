@@ -22,7 +22,7 @@ import { taughtClassIds } from "../../../../lib/classTeacherUtils";
 import StyledClass from "../../../styles/StyledClass";
 import ClassTemplateBoardPicker from "./ClassTemplateBoardPicker";
 import ProjectsBoardEditor from "./Projects/ProjectsBoardEditor";
-import CreateTemplateBoardModal from "./Modals/CreateTemplateBoardModal";
+import ProjectsBoardCreator from "./Projects/ProjectsBoardCreator";
 
 import Dashboard from "./Dashboard/Main";
 import {
@@ -83,7 +83,7 @@ export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
   // `editBoard` opens a class project board's editor full screen over any tab;
-  // `createBoard` opens the create-board modal (Settings tab).
+  // `createBoard` opens the same full-screen shell in create mode.
   const { editBoard, createBoard } = query || {};
 
   const { data, loading } = useQuery(GET_CLASS, {
@@ -182,11 +182,6 @@ export default function ClassPage({ code, user, query }) {
     allowedPageValues,
   ]);
 
-  const closeCreateBoard = () =>
-    router.replace({
-      pathname: `/dashboard/myclasses/${code}`,
-      query: { page: "settings" },
-    });
   const isMatchingRoundFullscreen =
     page === "opportunities" &&
     typeof query?.round === "string" &&
@@ -214,6 +209,19 @@ export default function ClassPage({ code, user, query }) {
             }}
           />
         </div>
+      </StyledClass>
+    );
+  }
+
+  if (createBoard === "1") {
+    return (
+      <StyledClass className="isProjectsFullscreen">
+        <ProjectsBoardCreator
+          myclass={myclass}
+          user={user}
+          initialTemplateId={query?.fromTemplate || null}
+          page={page}
+        />
       </StyledClass>
     );
   }
@@ -313,17 +321,7 @@ export default function ClassPage({ code, user, query }) {
           </div>
           <div>
             {page === "settings" && (
-              <>
-                <CreateTemplateBoardModal
-                  open={createBoard === "1"}
-                  onClose={closeCreateBoard}
-                  myclass={myclass}
-                  user={user}
-                  initialTemplateId={query?.fromTemplate || null}
-                  page="settings"
-                />
-                <ClassSettings myclass={myclass} user={user} query={query} />
-              </>
+              <ClassSettings myclass={myclass} user={user} query={query} />
             )}
           </div>
         </div>
