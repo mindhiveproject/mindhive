@@ -13,6 +13,7 @@ import { EDIT_CLASS, REMOVE_MENTOR_FROM_CLASS } from "../../../Mutations/Classes
 import { GET_CLASS } from "../../../Queries/Classes";
 import DropdownMenu from "../../../DesignSystem/DropdownMenu";
 import Button from "../../../DesignSystem/Button";
+import IconButton from "../../../DesignSystem/IconButton";
 import CopyButton from "../../../DesignSystem/CopyButton";
 import { useClassTablePrefs } from "./useClassTablePrefs";
 
@@ -77,27 +78,30 @@ export default function ClassMentors({ myclass, user }) {
     return (
       <DropdownMenu
         ariaLabel={t("assignment.action", {}, { default: "Action" })}
-        renderTrigger={({ onClick, open, ariaLabel }) => (
-          <Button
-            variant="subtle"
-            className="MH-Type-Label-Small"
-            leadingIcon={
+        // Portal: AG Grid clips overflow and stacks each row separately, so an
+        // in-cell panel gets cut off and painted over by the rows below it.
+        portal
+        renderTrigger={({ onClick, open, ariaLabel, ariaControls }) => (
+          <IconButton
+            variant="neutral"
+            elevated={false}
+            icon={
               <img
                 src="/assets/dataviz/three-dots.svg"
                 alt=""
-                width={14}
-                height={14}
+                width={16}
+                height={16}
                 aria-hidden
               />
             }
-            type="button"
-            aria-label={ariaLabel}
+            ariaLabel={ariaLabel}
+            title={ariaLabel}
             aria-expanded={open}
             aria-haspopup="menu"
+            aria-controls={ariaControls}
             onClick={onClick}
-          >
-            {t("assignment.action", {}, { default: "Action" })}
-          </Button>
+            style={{ width: 32, height: 32, padding: 4 }}
+          />
         )}
         items={[
           {
@@ -143,7 +147,7 @@ export default function ClassMentors({ myclass, user }) {
       cellRenderer: ActionsRenderer,
       suppressFilter: true,
       sortable: false,
-      width: 150,
+      width: 72,
       pinned: "right",
       cellStyle: {
         display: "flex",

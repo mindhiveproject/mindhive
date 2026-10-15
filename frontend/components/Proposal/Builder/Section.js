@@ -446,6 +446,10 @@ const Section = ({
               {},
               { default: "Add a card or milestone" }
             )}
+            // Portal: the board's scroll wrapper clips the panel, and the
+            // proposal styles' bare `button` rule would restyle its rows.
+            portal
+            align="start"
             renderTrigger={({ onClick, open, ariaLabel }) => (
               <Button
                 variant="subtle"

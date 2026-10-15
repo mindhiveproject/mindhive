@@ -6,6 +6,7 @@ import styled from "styled-components";
 import clsx from "clsx";
 
 import {
+  clampDropdownPanelLeft,
   clampDropdownPanelRight,
   computeDropdownVerticalPlacement,
   DROPDOWN_VIEWPORT_GAP,
@@ -226,6 +227,12 @@ export interface DropdownMenuProps {
    * @default false
    */
   portal?: boolean;
+  /**
+   * Horizontal anchor: `end` lines the panel's right edge up with the
+   * trigger's, `start` its left edge (for triggers at the left of a column).
+   * @default "end"
+   */
+  align?: "start" | "end";
 }
 
 interface PanelLayout {
@@ -248,7 +255,20 @@ function renderLeadingIcon(item: DropdownMenuItem) {
   return null;
 }
 
-/** Reusable dropdown menu of actions, right-aligned to its trigger. */
+/** CSS `right` offset for the panel, kept inside the viewport. */
+function getPanelRight(
+  tr: DOMRect,
+  panelWidth: number,
+  innerW: number,
+  align: "start" | "end",
+): number {
+  if (align === "start") {
+    return innerW - clampDropdownPanelLeft(tr.left, panelWidth, innerW) - panelWidth;
+  }
+  return clampDropdownPanelRight(tr.right, panelWidth, innerW);
+}
+
+/** Reusable dropdown menu of actions, aligned to its trigger's right (or left) edge. */
 export default function DropdownMenu({
   triggerLabel,
   trigger = null,
@@ -262,6 +282,7 @@ export default function DropdownMenu({
   onOpenChange = null,
   placement = "auto",
   portal = false,
+  align = "end",
 }: DropdownMenuProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [panelLayout, setPanelLayout] = useState<PanelLayout | null>(null);
@@ -295,9 +316,9 @@ export default function DropdownMenu({
       placement,
     );
     const panelWidth = panel.offsetWidth;
-    const right = clampDropdownPanelRight(tr.right, panelWidth, innerW);
+    const right = getPanelRight(tr, panelWidth, innerW, align);
     setPanelLayout({ top, maxHeight, right });
-  }, [dropdownOpen, items, panelHeader, dividerAfterHeader, placement, panelLayoutTick]);
+  }, [dropdownOpen, items, panelHeader, dividerAfterHeader, placement, align, panelLayoutTick]);
 
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -382,7 +403,7 @@ export default function DropdownMenu({
     const provisional: PanelLayout = {
       top: tr.bottom + DROPDOWN_VIEWPORT_GAP,
       maxHeight: getIdealMaxPanelHeight(innerH),
-      right: clampDropdownPanelRight(tr.right, 200, innerW),
+      right: getPanelRight(tr, 200, innerW, align),
     };
     const fixed = panelLayout ?? provisional;
     return createPortal(
