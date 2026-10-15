@@ -2761,6 +2761,12 @@ const StyledClass = styled.div`
       box-shadow: 0 10px 30px rgba(23, 23, 23, 0.06);
     }
 
+    .curriculumTypeChips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
     .settingsSectionHeader {
       display: grid;
       gap: 6px;

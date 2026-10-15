@@ -71,6 +71,7 @@ async function getEditableClass(context: any, classId: string) {
     query: `
       id
       creator { id }
+      teachingTeam { id }
       networks { id }
     `,
   });
@@ -86,6 +87,20 @@ function assertCanManageClass(context: any, classItem: any) {
     permissions.canManageUsers({ session: context.session }) ||
     classItem.creator?.id === context.session.itemId;
   if (!canManageClass) {
+    throw new Error("You are not allowed to update this class.");
+  }
+}
+
+// Leaving a network is open to the whole teaching team, not just the creator.
+function assertCanLeaveNetwork(context: any, classItem: any) {
+  const userId = context.session.itemId;
+  const canLeave =
+    permissions.canManageUsers({ session: context.session }) ||
+    classItem.creator?.id === userId ||
+    (classItem.teachingTeam || []).some(
+      (member: { id: string }) => member.id === userId
+    );
+  if (!canLeave) {
     throw new Error("You are not allowed to update this class.");
   }
 }
@@ -283,7 +298,7 @@ export async function removeClassFromNetwork(
   }
 
   const classItem = await getEditableClass(context, classId);
-  assertCanManageClass(context, classItem);
+  assertCanLeaveNetwork(context, classItem);
 
   const linked = (classItem.networks || []).some(
     (network: { id: string }) => network.id === networkId

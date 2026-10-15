@@ -26,11 +26,13 @@ import TeachingTeamSettings from "./TeachingTeamSettings";
 import TaskVisibilitySettings from "./TaskVisibilitySettings";
 import { isClassCreator } from "../../../../lib/classTeacherUtils";
 import {
+  CURRICULUM_TYPES,
   getClassCurriculumFallback,
   getClassCurriculumTypes,
 } from "../../../../lib/curriculumTypes";
 import { deriveRoles } from "../../Connect/useConnectRole";
 import ProjectsTemplatePanel from "./Projects/ProjectsTemplatePanel";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import ClassMentors from "./Mentors";
 
 function getNotifyTeachersOfStudentPasswordReset(settings) {
@@ -46,6 +48,10 @@ function stripHtml(html) {
   if (!html) return "";
   return html.replace(/<[^>]*>/g, "").trim();
 }
+
+// Help center support ticket form; teachers request network membership there.
+const SUPPORT_TICKET_URL =
+  "https://mindhive.notion.site/153d80abf4c48093b13cc8d50807c7b8?pvs=105";
 
 const CLASS_NETWORK_TYPES = {
   SCHOOL: "school_network",
@@ -105,12 +111,6 @@ export default function Settings({ myclass, user }) {
 
   const router = useRouter();
   const classNetworks = myclass?.networks || [];
-  const schoolClassNetworks = classNetworks.filter(
-    (network) => getClassNetworkType(network) === CLASS_NETWORK_TYPES.SCHOOL
-  );
-  const feedbackClassNetworks = classNetworks.filter(
-    (network) => getClassNetworkType(network) === CLASS_NETWORK_TYPES.FEEDBACK
-  );
   const { isAdmin, isClassNetworkAdmin } = deriveRoles(user);
   const canConfigurePhysiologicalData =
     isAdmin || user?.permissions?.some((permission) => permission?.name === "TESTER");
@@ -345,11 +345,11 @@ export default function Settings({ myclass, user }) {
       t("classNetworkUntitled", {}, { default: "Untitled network" });
     const confirmed = window.confirm(
       t(
-        "classNetworkRemoveConfirm",
+        "classNetworkLeaveConfirm",
         { title },
         {
           default:
-            "Remove {{title}} from this class? It will no longer appear in this class's network list.",
+            "Take this class out of {{title}}? To rejoin later, you\'ll need to contact the MindHive team.",
         }
       )
     );
@@ -416,109 +416,72 @@ export default function Settings({ myclass, user }) {
           default: "There are no public networks available to associate.",
         });
 
-  const renderNetworkSection = ({
-    title: sectionTitle,
-    description,
-    networks,
-    emptyMessage,
-    networkType,
-    associateButtonLabel,
-    iconSrc,
-    sectionVariant,
-  }) => (
-    <div
-      className={`networkTypeSection networkTypeSection--${sectionVariant}`}
-    >
-      <div className="networkTypeSectionHeader">
-        <div className="networkTypeSectionTitleRow">
-          {iconSrc ? (
-            <span className="networkTypeSectionIcon" aria-hidden>
-              <img src={iconSrc} alt="" />
-            </span>
-          ) : null}
-          <h4>{sectionTitle}</h4>
-        </div>
-        <p>{description}</p>
-      </div>
-      {networks.length > 0 ? (
-        <div className="networkCardGrid">
-          {networks.map((network) => {
-            const networkClasses = network?.classes || [];
-            const networkOrganizations = network?.memberOrganizations || [];
-            const networkTitle =
-              network?.title ||
-              t("classNetworkUntitled", {}, { default: "Untitled network" });
+  const networkCards = (
+    <div className="networkCardGrid">
+      {classNetworks.map((network) => {
+        const networkClasses = network?.classes || [];
+        const networkOrganizations = network?.memberOrganizations || [];
+        const networkTitle =
+          network?.title ||
+          t("classNetworkUntitled", {}, { default: "Untitled network" });
 
-            return (
-              <div className="networkCard" key={network?.id || networkTitle}>
-                <div className="networkCardHeader">
-                  <h4 className="networkCardTitle">{networkTitle}</h4>
-                </div>
-                {network?.description ? (
-                  <p className="networkCardDescription">{network.description}</p>
-                ) : null}
-                <div className="networkCardMeta">
-                  <span>{formatNetworkClassCount(networkClasses.length)}</span>
-                  {networkOrganizations.length > 0 ? (
-                    <>
-                      <span aria-hidden>•</span>
-                      <span>
-                        {formatNetworkOrganizationCount(
-                          networkOrganizations.length
-                        )}
-                      </span>
-                    </>
-                  ) : null}
-                </div>
-                <div className="networkCardActions">
-                  <DesignSystemButton
-                    variant="outline"
-                    type="button"
-                    className="networkCardAction"
-                    onClick={() => handleSelectNetwork(network)}
-                    aria-label={t(
-                      "classNetworkOpenDetailsAria",
-                      { title: networkTitle },
-                      { default: "Open details for {{title}}" }
+        return (
+          <div className="networkCard" key={network?.id || networkTitle}>
+            <div className="networkCardHeader">
+              <h4 className="networkCardTitle">{networkTitle}</h4>
+            </div>
+            {network?.description ? (
+              <p className="networkCardDescription">{network.description}</p>
+            ) : null}
+            <div className="networkCardMeta">
+              <span>{formatNetworkClassCount(networkClasses.length)}</span>
+              {networkOrganizations.length > 0 ? (
+                <>
+                  <span aria-hidden>•</span>
+                  <span>
+                    {formatNetworkOrganizationCount(
+                      networkOrganizations.length
                     )}
-                  >
-                    {t("classNetworkViewDetails", {}, {
-                      default: "View details",
-                    })}
-                  </DesignSystemButton>
-                  <DesignSystemButton
-                    variant="text"
-                    type="button"
-                    className="networkCardAction"
-                    disabled={removingNetwork}
-                    onClick={() => handleRemoveNetwork(network)}
-                    aria-label={t(
-                      "classNetworkRemoveAria",
-                      { title: networkTitle },
-                      { default: "Remove {{title}} from this class" }
-                    )}
-                  >
-                    {t("classNetworkRemoveFromClass", {}, {
-                      default: "Remove from class",
-                    })}
-                  </DesignSystemButton>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <p className="networkEmptyState">{emptyMessage}</p>
-      )}
-      <div className="networkTypeSectionActions">
-        <DesignSystemButton
-          variant="filled"
-          type="button"
-          onClick={() => handleOpenAssociateNetwork(networkType)}
-        >
-          {associateButtonLabel}
-        </DesignSystemButton>
-      </div>
+                  </span>
+                </>
+              ) : null}
+            </div>
+            <div className="networkCardActions">
+              <DesignSystemButton
+                variant="outline"
+                type="button"
+                className="networkCardAction"
+                onClick={() => handleSelectNetwork(network)}
+                aria-label={t(
+                  "classNetworkOpenDetailsAria",
+                  { title: networkTitle },
+                  { default: "Open details for {{title}}" }
+                )}
+              >
+                {t("classNetworkViewDetails", {}, {
+                  default: "View details",
+                })}
+              </DesignSystemButton>
+              <DesignSystemButton
+                variant="text"
+                type="button"
+                className="networkCardAction"
+                disabled={removingNetwork}
+                onClick={() => handleRemoveNetwork(network)}
+                aria-label={t(
+                  "classNetworkLeaveAria",
+                  { title: networkTitle },
+                  { default: "Take this class out of {{title}}" }
+                )}
+              >
+                {t("classNetworkLeave", {}, {
+                  default: "Leave network",
+                })}
+              </DesignSystemButton>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 
@@ -539,8 +502,7 @@ export default function Settings({ myclass, user }) {
           </h3>
           <p>
             {t("classNetworksSettingsDescription", {}, {
-              default:
-                "Associate this class with public networks, or review the networks already connected to this class.",
+              default: "The networks this class belongs to.",
             })}
           </p>
           {classNetworks.length > 0 && canAccessNetworkManagement ? (
@@ -557,47 +519,48 @@ export default function Settings({ myclass, user }) {
             </div>
           ) : null}
         </div>
-        <div className="networkTypeSections">
-          {renderNetworkSection({
-            title: t("classNetworkSchoolSectionTitle", {}, {
-              default: "Class networks",
-            }),
-            description: t("classNetworkSchoolSectionDescription", {}, {
-              default:
-                "A class network is meant to connect classes of the same high school or universities together with the goal of sharing project board templates, resources, and assignments.",
-            }),
-            networks: schoolClassNetworks,
-            emptyMessage: t("classNetworkSchoolSectionEmpty", {}, {
-              default: "This class is not associated with a class network yet.",
-            }),
-            networkType: CLASS_NETWORK_TYPES.SCHOOL,
-            associateButtonLabel: t("classNetworkAssociateSchoolButton", {}, {
-              default: "Associate class network",
-            }),
-            iconSrc: "/assets/connect/building.svg",
-            sectionVariant: "school",
+        {classNetworks.length > 0 ? (
+          networkCards
+        ) : (
+          <p className="networkEmptyState">
+            {t("classNetworkNoneYet", {}, {
+              default: "This class isn't part of a network yet.",
+            })}
+          </p>
+        )}
+        <MessageCard
+          variant="information"
+          message={t("classNetworkRequestAccess", {}, {
+            default:
+              "Want this class to join a network? Contact the MindHive team and we'll add it for you.",
           })}
-          {renderNetworkSection({
-            title: t("classNetworkFeedbackSectionTitle", {}, {
-              default: "Feedback networks",
-            }),
-            description: t("classNetworkFeedbackSectionDescription", {}, {
-              default:
-                "A feedback network is a temporary link between classes of any institution to find reviewers, and opportunities.",
-            }),
-            networks: feedbackClassNetworks,
-            emptyMessage: t("classNetworkFeedbackSectionEmpty", {}, {
-              default:
-                "This class is not associated with a feedback network yet.",
-            }),
-            networkType: CLASS_NETWORK_TYPES.FEEDBACK,
-            associateButtonLabel: t("classNetworkAssociateFeedbackButton", {}, {
-              default: "Associate feedback network",
-            }),
-            iconSrc: "/assets/connect/group.svg",
-            sectionVariant: "feedback",
-          })}
-        </div>
+          action={
+            <DesignSystemButton
+              variant="text"
+              type="button"
+              onClick={() =>
+                window.open(SUPPORT_TICKET_URL, "_blank", "noopener,noreferrer")
+              }
+            >
+              {t("classNetworkContactTeam", {}, {
+                default: "Contact the MindHive team",
+              })}
+            </DesignSystemButton>
+          }
+        />
+        {isAdmin ? (
+          <div className="networkSectionActions">
+            <DesignSystemButton
+              variant="text"
+              type="button"
+              onClick={() => handleOpenAssociateNetwork(null)}
+            >
+              {t("classNetworkAssociateAdmin", {}, {
+                default: "Associate network (admin)",
+              })}
+            </DesignSystemButton>
+          </div>
+        ) : null}
       </section>
 
       <section className="settingsSection">
@@ -814,17 +777,57 @@ export default function Settings({ myclass, user }) {
           <h3>
             {t("classCurriculum", {}, { default: "Class Curriculum" })}
           </h3>
+          <p>
+            {t("classCurriculumReadOnlyDescription", {}, {
+              default: "The curricula this class follows.",
+            })}
+          </p>
         </div>
-        <div className="block curriculumTypeBlock">
-          <CurriculumTypeSelector
-            multiple
-            curriculumType={curriculumTypes}
-            disabled={updatingSettings}
-            onChange={updateCurriculumTypes}
-            questionKey="classCurriculumTypeQuestion"
-            questionDefault="Which curriculum types apply to this class?"
-          />
-        </div>
+        {isAdmin ? (
+          <div className="block curriculumTypeBlock">
+            <CurriculumTypeSelector
+              multiple
+              curriculumType={curriculumTypes}
+              disabled={updatingSettings}
+              onChange={updateCurriculumTypes}
+              questionKey="classCurriculumTypeQuestion"
+              questionDefault="Which curriculum types apply to this class?"
+            />
+          </div>
+        ) : (
+          <div className="curriculumTypeChips">
+            {CURRICULUM_TYPES.filter((type) =>
+              curriculumTypes.includes(type.value)
+            ).map((type) => (
+              <Chip
+                key={type.value}
+                variant="static"
+                tone="neutral"
+                label={t(type.labelKey, {}, { default: type.defaultLabel })}
+              />
+            ))}
+          </div>
+        )}
+        <MessageCard
+          variant="information"
+          message={t("classCurriculumRequest", {}, {
+            default:
+              "Need a different curriculum for this class? Contact the MindHive team and we'll add it for you.",
+          })}
+          action={
+            <DesignSystemButton
+              variant="text"
+              type="button"
+              onClick={() =>
+                window.open(SUPPORT_TICKET_URL, "_blank", "noopener,noreferrer")
+              }
+            >
+              {t("classNetworkContactTeam", {}, {
+                default: "Contact the MindHive team",
+              })}
+            </DesignSystemButton>
+          }
+        />
       </section>
 
       <TaskVisibilitySettings myclass={myclass} />
