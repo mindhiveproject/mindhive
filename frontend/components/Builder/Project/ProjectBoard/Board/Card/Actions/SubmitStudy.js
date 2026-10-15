@@ -105,7 +105,8 @@ export default function Proposal({
     await createLog({
       variables: {
         input: {
-          event: "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
+          event:
+            milestone?.logEventName || "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
           user: {
             connect: { id: user?.id },
           },
