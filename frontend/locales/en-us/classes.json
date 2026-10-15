@@ -2184,6 +2184,9 @@
 		"submittedAndLocked": "The proposal has been submitted and locked 🔒"
 	},
 	"projects": {
+		"edit": "Edit",
+		"deleteBoard": "Delete board",
+		"newBoard": "New board",
 		"addTemplateToClass": "Copy template to class",
 		"backToProjects": "Back to projects",
 		"boardCurriculumTypeQuestion": "Which curriculum type applies to this template board?",

@@ -2741,9 +2741,15 @@ const StyledClass = styled.div`
 
   .settings {
     display: grid;
-    gap: 28px;
+    gap: 16px;
     max-width: 980px;
     padding-bottom: 40px;
+
+    /* Sections moved in from other tabs keep the Settings rhythm. */
+    > .classTabPage {
+      gap: 16px;
+      padding-bottom: 0;
+    }
 
     .settingsSection {
       display: grid;

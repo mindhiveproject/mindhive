@@ -9,6 +9,7 @@ import useTemplateBoardSettings from "../Projects/useTemplateBoardSettings";
 const modalActionsStyle = {
   display: "flex",
   justifyContent: "flex-end",
+  gap: 8,
   padding: "1.25rem 1.5rem",
   borderTop: "1px solid #e6e6e6",
   background: "#fafafa",
@@ -27,6 +28,8 @@ export default function TemplateBoardSettingsModal({
   boardId,
   myclass,
   classTemplates,
+  // Shown as "Delete board" when set (only for people allowed to delete).
+  onDelete,
 }) {
   const { t } = useTranslation("classes");
 
@@ -75,6 +78,17 @@ export default function TemplateBoardSettingsModal({
       </Modal.Content>
 
       <Modal.Actions style={modalActionsStyle}>
+        {onDelete ? (
+          <Button
+            type="button"
+            variant="text"
+            tone="warning"
+            style={{ marginRight: "auto" }}
+            onClick={onDelete}
+          >
+            {t("projects.deleteBoard", {}, { default: "Delete board" })}
+          </Button>
+        ) : null}
         <Button type="button" variant="outline" onClick={onClose}>
           {t("projects.boardSettingsModalClose", {}, { default: "Close" })}
         </Button>

@@ -1,37 +1,29 @@
 import { useMutation, useQuery } from "@apollo/client";
-import clsx from "clsx";
-import moment from "moment";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
-import {
-  CLASS_TEMPLATE_PROJECTS_QUERY,
-  GET_MY_AUTHORED_PROJECT_BOARDS,
-  PROPOSAL_TEMPLATES_QUERY,
-} from "../../../../Queries/Proposal";
+import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../../Queries/Proposal";
 import {
   DELETE_COMPLETE_PROPOSAL,
   SYNC_CLASS_TEMPLATE_BOARDS,
 } from "../../../../Mutations/Proposal";
 import { GET_CLASS } from "../../../../Queries/Classes";
-import { isTemplateVisibleToStudents } from "../../../../../lib/classTemplateBoards";
 import {
   canDeleteProposalBoard,
   userIsProposalAdmin,
 } from "../../../../Utils/proposalBoard";
 import Button from "../../../../DesignSystem/Button";
-import Chip from "../../../../DesignSystem/Chip";
-import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import IconButton from "../../../../DesignSystem/IconButton";
-import MessageCard from "../../../../DesignSystem/MessageCard";
-import { MilestoneIcon } from "../../../../DesignSystem/Icons";
+import { AddIcon, SettingsIcon } from "../../../../DesignSystem/Icons";
 import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
-import { getActionCardsFromBoard } from "../../../../../lib/templateBoardActionCards";
-import TemplateBoardPreviewModal from "../Modals/TemplateBoardPreviewModal";
 import TemplateBoardSettingsModal from "../Modals/TemplateBoardSettingsModal";
 
+// "Project boards" section of the Settings tab: a grid of the class's boards,
+// each with a settings button, plus a "New board" tile that opens the create
+// modal (library copy or blank). Editing happens from the board row above the
+// class tabs.
 export default function ProjectsTemplatePanel({ myclass, user }) {
   const { t } = useTranslation("classes");
   const { t: tBuilder } = useTranslation("builder");
@@ -39,41 +31,23 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   const classId = myclass?.id;
   const code = myclass?.code;
   const isAdmin = userIsProposalAdmin(user);
-  const [settingsModalBoardId, setSettingsModalBoardId] = useState(null);
-  const [previewTemplate, setPreviewTemplate] = useState(null);
-  const [libraryCategory, setLibraryCategory] = useState(null);
+  const [settingsBoardId, setSettingsBoardId] = useState(null);
 
-  const { data: classTemplatesData, loading: classTemplatesLoading } = useQuery(
-    CLASS_TEMPLATE_PROJECTS_QUERY,
-    {
-      variables: { classId },
-      skip: !classId,
-    }
-  );
+  const refetchQueries = [
+    { query: CLASS_TEMPLATE_PROJECTS_QUERY, variables: { classId } },
+    // The class's own board list feeds the board row above the tabs.
+    { query: GET_CLASS, variables: { code } },
+  ];
 
-  const { data: libraryData, loading: libraryLoading } = useQuery(
-    PROPOSAL_TEMPLATES_QUERY
-  );
-
-  const { data: authoredData, loading: authoredLoading } = useQuery(
-    GET_MY_AUTHORED_PROJECT_BOARDS,
-    {
-      variables: { userId: user?.id },
-      skip: !user?.id,
-    }
-  );
-
-  const [
-    syncClassTemplateBoards,
-    { loading: classTemplatesSyncing },
-  ] = useMutation(SYNC_CLASS_TEMPLATE_BOARDS, {
-    refetchQueries: [
-      {
-        query: CLASS_TEMPLATE_PROJECTS_QUERY,
-        variables: { classId },
-      },
-    ],
+  const { data, loading } = useQuery(CLASS_TEMPLATE_PROJECTS_QUERY, {
+    variables: { classId },
+    skip: !classId,
   });
+
+  const [syncClassTemplateBoards, { loading: syncing }] = useMutation(
+    SYNC_CLASS_TEMPLATE_BOARDS,
+    { refetchQueries }
+  );
 
   useEffect(() => {
     if (!classId) return;
@@ -81,193 +55,47 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   }, [classId]);
 
   const [deleteProposalBoard] = useMutation(DELETE_COMPLETE_PROPOSAL, {
-    refetchQueries: [
-      {
-        query: CLASS_TEMPLATE_PROJECTS_QUERY,
-        variables: { classId },
-      },
-      // The class's own board list feeds the "Project boards" bar.
-      { query: GET_CLASS, variables: { code } },
-    ],
+    refetchQueries,
   });
 
-  const classTemplates = classTemplatesData?.proposalBoards || [];
-  const isClassTemplatesPending =
-    (classTemplatesLoading && !classTemplatesData) ||
-    (classTemplatesSyncing && classTemplates.length === 0);
+  const boards = data?.proposalBoards || [];
+  const isPending = (loading && !data) || (syncing && boards.length === 0);
+  const settingsBoard = boards.find((board) => board.id === settingsBoardId);
 
-  const classTemplateIds = useMemo(
-    () => new Set(classTemplates.map((board) => board.id)),
-    [classTemplates]
-  );
+  const openCreate = () =>
+    router.push({
+      pathname: `/dashboard/myclasses/${code}`,
+      query: { page: "settings", createBoard: "1" },
+    });
 
-  const publicTemplates = libraryData?.proposalBoards || [];
-
-  const mineTemplates = useMemo(() => {
-    const authoredBoards = authoredData?.proposalBoards || [];
-    return authoredBoards.filter(
-      (board) =>
-        !board.isTemplate
-        && board.templateForClasses?.length > 0
-        && !classTemplateIds.has(board.id)
-    );
-  }, [authoredData, classTemplateIds]);
-
-  const displayedTemplates =
-    libraryCategory === "mine"
-      ? mineTemplates
-      : libraryCategory === "public"
-        ? publicTemplates
-        : [];
-  const isSelectedLibraryPending =
-    (libraryCategory === "mine" && authoredLoading && !authoredData) ||
-    (libraryCategory === "public" && libraryLoading && !libraryData);
-
-  const toggleLibraryCategory = (next) => {
-    setLibraryCategory((current) => (current === next ? null : next));
-  };
-
-  // Lives in the Settings tab; the class page opens the create modal and the
-  // board editor from these params.
-  const createHref = {
-    pathname: `/dashboard/myclasses/${code}`,
-    query: { page: "settings", createBoard: "1" },
-  };
-
-  const editHref = (boardId) => ({
-    pathname: `/dashboard/myclasses/${code}`,
-    query: { page: "settings", editBoard: boardId },
-  });
-
-  const addTemplateHref = (templateId) => ({
-    pathname: `/dashboard/myclasses/${code}`,
-    query: { page: "settings", createBoard: "1", fromTemplate: templateId },
-  });
-
-  const formatDate = (value) =>
-    value ? moment(value).format("M/D/YYYY") : "";
-
-  const handleDeleteTemplate = async (boardId) => {
-    if (!boardId) return;
-    if (!confirm(tBuilder("deleteProposal.confirm"))) return;
+  const deleteBoard = async (boardId) => {
+    if (!boardId || !confirm(tBuilder("deleteProposal.confirm"))) return;
     try {
       await deleteProposalBoard({ variables: { id: boardId } });
+      setSettingsBoardId(null);
     } catch (err) {
       alert(err?.message);
     }
   };
 
-  const getCopyStatusLabel = (isVisible) =>
-    isVisible
-      ? t("projects.visibleToStudents", {}, {
-          default: "Students can copy this template",
-        })
-      : t("projects.notVisibleToStudents", {}, {
-          default: "Students cannot copy this template",
-        });
-
-  const buildTemplateMenuItems = (board, canDelete) => {
-    const items = [
-      {
-        key: "preview",
-        icon: (
-          <img
-            src="/assets/icons/eye_open.svg"
-            alt=""
-            width={18}
-            height={18}
-            aria-hidden
-            style={{ display: "block" }}
-          />
-        ),
-        label: t("projectBoard.preview", {}, { default: "Preview" }),
-        onClick: () => setPreviewTemplate(board),
-      },
-      {
-        key: "boardSettings",
-        icon: (
-          <img
-            src="/assets/icons/settings.svg"
-            alt=""
-            width={18}
-            height={18}
-            aria-hidden
-            style={{ display: "block" }}
-          />
-        ),
-        label: t("projects.boardSettingsAndPermissions", {}, {
-          default: "Board settings & permissions",
-        }),
-        onClick: () => setSettingsModalBoardId(board.id),
-      },
-    ];
-
-    if (canDelete) {
-      items.push({
-        key: "delete",
-        label: t("projectBoard.delete", {}, { default: "Delete" }),
-        danger: true,
-        onClick: () => handleDeleteTemplate(board.id),
-      });
-    }
-
-    return items;
-  };
-
-  const buildMilestonesPanelHeader = (board) => (
-    <span
-      style={{
-        display: "flex",
-        alignItems: "flex-start",
-        gap: 8,
-      }}
-    >
-      <MilestoneIcon width={18} height={18} style={{ flexShrink: 0 }} />
-      <span
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          minWidth: 0,
-        }}
-      >
-        <span
-          className="MH-Type-Label-Base"
-          style={{
-            color: "var(--MH-Theme-Neutrals-Black, #171717)",
-          }}
-        >
-          {t(
-            "projects.milestonesMenu.trigger",
-            { count: getActionCardsFromBoard(board).length },
-            { default: "{{count}} milestones" }
-          )}
-        </span>
-        <span>
-          {t(
-            "projects.templateMoreMilestonesHint",
-            {},
-            { default: "Manage them on the board" }
-          )}
-        </span>
-      </span>
-    </span>
-  );
+  const settingsLabel = t("projects.boardSettingsAndPermissions", {}, {
+    default: "Board settings & permissions",
+  });
 
   return (
     <>
       <TemplateBoardSettingsModal
-        open={!!settingsModalBoardId}
-        onClose={() => setSettingsModalBoardId(null)}
-        boardId={settingsModalBoardId}
+        open={!!settingsBoardId}
+        onClose={() => setSettingsBoardId(null)}
+        boardId={settingsBoardId}
         myclass={myclass}
-        classTemplates={classTemplates}
-      />
-
-      <TemplateBoardPreviewModal
-        open={!!previewTemplate}
-        onClose={() => setPreviewTemplate(null)}
-        board={previewTemplate}
+        classTemplates={boards}
+        onDelete={
+          settingsBoard &&
+          canDeleteProposalBoard(settingsBoard, user?.id, { isAdmin })
+            ? () => deleteBoard(settingsBoard.id)
+            : undefined
+        }
       />
 
       <section className="classTabSection">
@@ -277,287 +105,118 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
           </h3>
         </div>
 
-        <div className="classTabSubsection">
-          <h4 className="classTabSubsectionTitle">
-            {t("projects.classTemplates", {}, { default: "Available class templates" })}
-          </h4>
-          <p className="classTabSubsectionDescription">
-            {t(
-              "projects.classTemplatesDescription",
-              {},
-              {
-                default:
-                  "Choose which templates students can copy when starting a new project.",
-              }
-            )}
-          </p>
-
-          {isClassTemplatesPending ? (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <JustOneSecondNotice
-                message={{
-                  h1: t("projects.loadingClassTemplatesTitle", {}, {
-                    default: "Loading class templates",
-                  }),
-                  p: t("projects.loadingClassTemplatesBody", {}, {
-                    default:
-                      "Fetching the project templates available to this class.",
-                  }),
-                }}
-              />
-            </div>
-          ) : classTemplates.length === 0 ? (
-            <MessageCard
-              variant="neutral"
-              message={t("projects.noClassTemplatesYet", {}, {
-                default: "You haven't created any class template boards yet.",
-              })}
-              onClick={() => router.push(createHref)}
-              ariaLabel={t("projects.createTemplateBoard", {}, {
-                default: "Create template board",
-              })}
+        {isPending ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <JustOneSecondNotice
+              message={{
+                h1: t("projects.loadingClassTemplatesTitle", {}, {
+                  default: "Loading class templates",
+                }),
+                p: t("projects.loadingClassTemplatesBody", {}, {
+                  default:
+                    "Fetching the project templates available to this class.",
+                }),
+              }}
             />
-          ) : (
-            <div className="classTabTemplateList">
-              {classTemplates.map((board) => {
-                const isVisible = isTemplateVisibleToStudents(board, classId, {
-                  ...myclass,
-                  classTemplateBoards: classTemplates,
-                });
-                const canDelete = canDeleteProposalBoard(board, user?.id, {
-                  isAdmin,
-                });
-                const copyStatusLabel = getCopyStatusLabel(isVisible);
-                return (
-                <div
-                  key={board.id}
-                  className={clsx(
-                    "classTabTemplateCard",
-                    "classTabTemplateCardClickable",
-                    isVisible && "classTabTemplateCardActive"
-                  )}
-                >
-                  <Link
-                    href={editHref(board.id)}
-                    className="classTabTemplateCardHit"
-                    aria-label={board.title}
+          </div>
+        ) : (
+          <StyledBoardGrid>
+            {boards.map((board) => (
+              <div key={board.id} className="boardTile">
+                <h5 className="boardTileTitle">
+                  {board.title ||
+                    t("dashboard.untitledTemplateBoard", {}, {
+                      default: "Untitled template",
+                    })}
+                </h5>
+                <div className="boardTileActions">
+                  <Button
+                    variant="filled"
+                    onClick={() =>
+                      router.push({
+                        pathname: `/dashboard/myclasses/${code}`,
+                        query: { page: "settings", editBoard: board.id },
+                      })
+                    }
                   >
-                    <h5 className="classTabTemplateCardTitle">{board.title}</h5>
-                    <Chip
-                      className="MH-Type-Label-Small"
-                      style={{
-                        backgroundColor: isVisible ? "#FFFFFF" : "#F3F3F3",
-                        fontWeight: isVisible ? 500 : 400,
-                        color: isVisible ? "#1C1B1F" : "#666666",
-                        pointerEvents: "none",
-                      }}
-                      label={copyStatusLabel}
-                    />
-                    <div className="classTabTemplateCardMeta">
-                      {board.updatedAt ? (
-                        <span>
-                          {t("projects.dateUpdated", {}, { default: "Updated" })}{" "}
-                          {formatDate(board.updatedAt)}
-                        </span>
-                      ) : null}
-                      {board.createdAt ? (
-                        <span>
-                          {t("projects.dateCreated", {}, { default: "Date created" })}{" "}
-                          {formatDate(board.createdAt)}
-                        </span>
-                      ) : null}
-                    </div>
-                  </Link>
-                  <div className="classTabTemplateCardActions">
-                    <Button
-                      variant="tonal"
-                      style={{ background: "transparent" }}
-                      leadingIcon={
-                        <img
-                          src="/assets/icons/pencil.svg"
-                          alt=""
-                          width={18}
-                          height={18}
-                          aria-hidden
-                          style={{ display: "block" }}
-                        />
-                      }
-                      onClick={() => router.push(editHref(board.id))}
-                    >
-                      {t("projects.editTemplate", {}, {
-                        default: "Edit template",
-                      })}
-                    </Button>
-                    <DropdownMenu
-                      ariaLabel={t("projects.templateOptions", {}, {
-                        default: "Template options",
-                      })}
-                      panelHeader={buildMilestonesPanelHeader(board)}
-                      renderTrigger={({ onClick, open, ariaLabel }) => (
-                        <IconButton
-                          variant="tonal"
-                          style={{ background: "transparent" }}
-                          ariaLabel={ariaLabel}
-                          aria-expanded={open}
-                          aria-haspopup="menu"
-                          onClick={onClick}
-                          icon={
-                            <img
-                              src="/assets/dataviz/three-dots.svg"
-                              alt=""
-                              width={24}
-                              height={24}
-                            />
-                          }
-                        />
-                      )}
-                      items={buildTemplateMenuItems(board, canDelete)}
-                    />
-                  </div>
+                    {t("projects.edit", {}, { default: "Edit" })}
+                  </Button>
+                  <IconButton
+                    variant="text"
+                    icon={<SettingsIcon />}
+                    ariaLabel={`${settingsLabel}: ${board.title || ""}`}
+                    title={settingsLabel}
+                    onClick={() => setSettingsBoardId(board.id)}
+                  />
                 </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        <div className="classTabSubsectionDivider" />
-
-        <div className="classTabSubsectionHeaderRow">
-          <h4 className="classTabSubsectionTitle">
-            {t("projects.templateLibrary", {}, { default: "Template library" })}
-          </h4>
-          <Link href={createHref} style={{ textDecoration: "none" }}>
-            <Button variant="filled">
-              {t("projects.newTemplate", {}, {
-                default: "Create new class template",
-              })}
-            </Button>
-          </Link>
-        </div>
-        <div
-          style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
-          role="group"
-        >
-          <Chip
-            selected={libraryCategory === "public"}
-            pressed={libraryCategory === "public"}
-            onClick={() => toggleLibraryCategory("public")}
-            label={t(
-              "projects.templateLibraryCategory.public",
-              { count: publicTemplates.length },
-              { default: "Public ({{count}})" }
-            )}
-          />
-          <Chip
-            selected={libraryCategory === "mine"}
-            pressed={libraryCategory === "mine"}
-            onClick={() => toggleLibraryCategory("mine")}
-            label={t(
-              "projects.templateLibraryCategory.myBoards",
-              { count: mineTemplates.length },
-              { default: "My boards ({{count}})" }
-            )}
-          />
-          <Chip
-            disabled
-            label={t(
-              "projects.templateLibraryCategory.network",
-              { count: 0 },
-              { default: "Network ({{count}})" }
-            )}
-            title={t(
-              "projects.templateLibraryCategory.networkDisabledHint",
-              {},
-              { default: "Network templates coming soon" }
-            )}
-          />
-        </div>
-
-        {libraryCategory ? (
-          isSelectedLibraryPending ? (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <JustOneSecondNotice
-                message={{
-                  h1: t("projects.loadingTemplateLibraryTitle", {}, {
-                    default: "Loading template library",
-                  }),
-                  p:
-                    libraryCategory === "mine"
-                      ? t("projects.loadingMyTemplatesBody", {}, {
-                          default:
-                            "Fetching project templates from your other classes.",
-                        })
-                      : t("projects.loadingPublicTemplatesBody", {}, {
-                          default: "Fetching public project templates.",
-                        }),
-                }}
-              />
-            </div>
-          ) : displayedTemplates.length === 0 ? (
-            <div className="classTabEmpty">
-              <div>
-                {libraryCategory === "mine"
-                  ? t("projects.templateLibraryNoMine", {}, {
-                      default:
-                        "You don't have any class templates in your other classes yet.",
-                    })
-                  : t("projectBoard.noTemplatesHeader")}
               </div>
-            </div>
-          ) : (
-            <div className="classTabTemplateList">
-              {displayedTemplates.map((template) => (
-                <div key={template.id} className="classTabTemplateCard">
-                  <div className="classTabTemplateCardRow">
-                    <div className="classTabTemplateCardTitleGroup">
-                      <h5 className="classTabTemplateCardTitle">{template.title}</h5>
-                      {template.description ? (
-                        <p className="classTabTemplateCardDescription">
-                          {template.description}
-                        </p>
-                      ) : null}
-                    </div>
-                    <div className="classTabTemplateCardActions">
-                      <Button
-                        type="button"
-                        variant="text"
-                        onClick={() => setPreviewTemplate(template)}
-                      >
-                        {t("projectBoard.preview", {}, { default: "Preview" })}
-                      </Button>
-                      <Link
-                        href={addTemplateHref(template.id)}
-                        style={{ textDecoration: "none" }}
-                      >
-                        <Button variant="outline">
-                          {t("projects.addTemplateToClass", {}, {
-                            default: "Copy template to class",
-                          })}
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                  <div className="classTabTemplateCardMeta">
-                    {template.updatedAt ? (
-                      <span>
-                        {t("projects.dateUpdated", {}, { default: "Updated" })}{" "}
-                        {formatDate(template.updatedAt)}
-                      </span>
-                    ) : null}
-                    {template.createdAt ? (
-                      <span>
-                        {t("projects.dateCreated", {}, { default: "Date created" })}{" "}
-                        {formatDate(template.createdAt)}
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )
-        ) : null}
+            ))}
+            <button type="button" className="boardTile newBoardTile" onClick={openCreate}>
+              <AddIcon />
+              <span>{t("projects.newBoard", {}, { default: "New board" })}</span>
+            </button>
+          </StyledBoardGrid>
+        )}
       </section>
     </>
   );
 }
+
+const StyledBoardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+
+  .boardTile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 112px;
+    padding: 16px;
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border-radius: 12px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    box-sizing: border-box;
+  }
+
+  .boardTileTitle {
+    margin: 0;
+    font: var(--MH-Type-Title-Small);
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+    overflow-wrap: anywhere;
+  }
+
+  .boardTileActions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  /* \`&&&\` beats legacy page-level button rules. */
+  &&& .newBoardTile {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    border: 1px dashed var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    background: transparent;
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: var(--MH-Theme-Primary-Light, #def8fb);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+      outline-offset: 2px;
+    }
+  }
+`;

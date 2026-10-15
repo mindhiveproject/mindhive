@@ -76,7 +76,12 @@ export default function UserReview({
   const review = reviews.length ? reviews[0] : {};
 
   const templates = useTemplateQuestions(curriculumType);
-  const templateFallback = templates[status] || [];
+  // Memoized so a status with no template (milestone keys) doesn't produce a
+  // new [] each render; that re-ran the sync effect below and wiped answers.
+  const templateFallback = useMemo(
+    () => templates[status] || [],
+    [templates, status]
+  );
   const defaultContent = useMemo(() => {
     if (definition) {
       return reviewContentFromFormDefinition(
