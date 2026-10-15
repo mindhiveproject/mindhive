@@ -330,7 +330,7 @@ const Section = ({
       <div className="column-drag-handle">
         <div className="firstLine">
           <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
-          {settings?.allowAddingCards && (
+          {!isPreview && settings?.allowAddingCards && (
             <img
               src="/assets/icons/proposal/edit.svg"
               onClick={() => {
@@ -445,7 +445,7 @@ const Section = ({
         </div>
       )}
 
-      {settings?.allowAddingSections && (
+      {!isPreview && settings?.allowAddingSections && (
         <div className="deleteBtn">
           <img
             src="/assets/icons/proposal/delete.svg"

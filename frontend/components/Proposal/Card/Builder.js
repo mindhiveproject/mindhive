@@ -44,6 +44,7 @@ export default function BuilderProposalCard({
   proposal,
   proposalCard,
   isCreateMode = false,
+  startInPreview = false,
   sectionId = null,
   onCreated = null,
   closeCard,
@@ -91,7 +92,7 @@ export default function BuilderProposalCard({
   }, [boardData?.proposalBoard?.sections, proposal?.sections, sectionId]);
 
   const [showWarningBox, setShowWarningBox] = useState(false);
-  const [previewMode, setPreviewMode] = useState(false);
+  const [previewMode, setPreviewMode] = useState(startInPreview);
 
   // Preview modals: assignment view + resource view (when user clicks items in preview mode)
   const [viewAssignmentModalOpen, setViewAssignmentModalOpen] = useState(false);

@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import BoardEditorChrome from "./BoardEditorChrome";
 import ProposalBoard from "./Board";
+import StudentBoard from "../../Builder/Project/ProjectBoard/Board/Builder/Board";
 import ProposalCardWrapper from "../Card/Wrapper";
 import useTemplatePropagation from "./useTemplatePropagation";
 
@@ -49,11 +50,17 @@ export default function ProposalBuilder({
 
   const [page, setPage] = useState("board");
   const [card, setCard] = useState(null);
+  // Board shown as students see it; cards opened from it start in preview
+  // and closing them returns here.
+  const [boardPreview, setBoardPreview] = useState(false);
 
   const openCard = (nextCard) => {
     setCard(nextCard);
     setPage("card");
   };
+
+  const openCardFromBoardPreview = (nextCard) =>
+    openCard({ ...nextCard, openInPreview: true });
 
   const closeCard = async ({ cardId, lockedByUser }) => {
     if (cardId && lockedByUser) {
@@ -181,6 +188,11 @@ export default function ProposalBuilder({
           onCardSave={handleCardSave}
           onCardPreview={handleCardPreview}
           onCardExitPreview={handleCardExitPreview}
+          boardPreviewMode={boardPreview}
+          onBoardPreview={
+            proposalBuildMode ? () => setBoardPreview(true) : undefined
+          }
+          onExitBoardPreview={() => setBoardPreview(false)}
         />
       ) : null}
       {page === "board" ? (
@@ -198,7 +210,16 @@ export default function ProposalBuilder({
               {proposal.description ? <p>{proposal.description}</p> : null}
             </>
           ) : null}
-          {proposal && (
+          {proposal && boardPreview ? (
+            <div className="boardPreview">
+              <StudentBoard
+                proposalId={proposal?.id}
+                openCard={openCardFromBoardPreview}
+                proposalBuildMode={false}
+                isPreview
+              />
+            </div>
+          ) : proposal ? (
             <ProposalBoard
               proposalId={proposal?.id}
               openCard={openCard}
@@ -209,7 +230,7 @@ export default function ProposalBuilder({
               onTemplateChangedWithoutPropagation={markUnpropagatedChange}
               autoOpenAddMilestone={autoOpenAddMilestone}
             />
-          )}
+          ) : null}
         </>
       ) : (
         card && (
@@ -227,6 +248,7 @@ export default function ProposalBuilder({
               proposal={proposal}
               cardId={card?.id}
               initialFormEditor={card?.openFormEditor || null}
+              startInPreview={!!card?.openInPreview}
               isCreateMilestone={isCreateMilestone}
               isCreateProposalCard={isCreateProposalCard}
               sectionId={card?.sectionId || null}

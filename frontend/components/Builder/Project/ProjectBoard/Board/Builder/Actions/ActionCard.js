@@ -51,6 +51,7 @@ export default function ActionCard({
   adminMode,
   openCard,
   onDeleteCard,
+  isPreview,
   settings,
   boardId,
   submitStatuses: submitStatusesProp,
@@ -139,6 +140,11 @@ export default function ActionCard({
       variant={variant}
       proposalBuildMode={proposalBuildMode}
       onClick={() => {
+        // Teacher preview opens the card in place instead of navigating
+        if (isPreview) {
+          openCard?.(card);
+          return;
+        }
         router.push({
           pathname: `/builder/projects`,
           query: {
@@ -170,7 +176,7 @@ export default function ActionCard({
           </div>
         </div>
       </div>
-      {settings?.allowAddingCards && (
+      {!isPreview && settings?.allowAddingCards && (
         <div className="deleteCardBtn">
           <img
             src="/assets/icons/proposal/delete.svg"

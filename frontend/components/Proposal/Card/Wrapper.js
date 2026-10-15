@@ -16,6 +16,7 @@ export default function CardWrapper({
   proposal,
   cardId,
   initialFormEditor = null,
+  startInPreview = false,
   isCreateMilestone = false,
   isCreateProposalCard = false,
   sectionId = null,
@@ -145,6 +146,7 @@ export default function CardWrapper({
               proposal={proposal}
               proposalCard={proposalCard}
               initialFormEditor={initialFormEditor}
+              startInPreview={startInPreview}
               openCard={openCard}
               closeCard={closeCard}
               autoUpdateStudentBoards={autoUpdateStudentBoards}
@@ -163,6 +165,7 @@ export default function CardWrapper({
             user={user}
             proposal={proposal}
             proposalCard={proposalCard}
+            startInPreview={startInPreview}
             closeCard={closeCard}
             autoUpdateStudentBoards={autoUpdateStudentBoards}
             propagateToClones={propagateToClones}

@@ -34,6 +34,9 @@ export default function BoardEditorChrome({
   onCardSave,
   onCardPreview,
   onCardExitPreview,
+  boardPreviewMode = false,
+  onBoardPreview,
+  onExitBoardPreview,
 }) {
   const { t } = useTranslation("builder");
   const { t: tClasses } = useTranslation("classes");
@@ -166,7 +169,7 @@ export default function BoardEditorChrome({
           />
         ) : null}
         <div className="boardEditorChromeTitleWrap">
-          {isCardMode || !proposalBuildMode ? (
+          {isCardMode || !proposalBuildMode || boardPreviewMode ? (
             <div className="boardEditorChromeTitleRow">
               <h1 className="boardEditorChromeTitle">{displayTitle}</h1>
               {isCardMode && cardChrome?.typeLabel ? (
@@ -216,6 +219,20 @@ export default function BoardEditorChrome({
       </div>
 
       <div className="boardEditorChromeRight">
+        {!isCardMode && boardPreviewMode ? (
+          <Button variant="primary" onClick={onExitBoardPreview}>
+            {tClasses("board.expendedCard.backToEditing", {}, {
+              default: "Back to editing",
+            })}
+          </Button>
+        ) : null}
+        {!isCardMode && !boardPreviewMode && onBoardPreview ? (
+          <Button variant="primary" onClick={onBoardPreview}>
+            {tClasses("board.expendedCard.preview", {}, {
+              default: "Preview",
+            })}
+          </Button>
+        ) : null}
         {isCardMode && cardChrome?.previewMode ? (
           <Button variant="outline" onClick={onCardExitPreview}>
             {tClasses("board.expendedCard.backToEditing", {}, {
@@ -251,7 +268,7 @@ export default function BoardEditorChrome({
             </Button>
           </>
         ) : null}
-        {hasUnsavedChanges && (
+        {hasUnsavedChanges && !boardPreviewMode && (
           <Button
             variant="tonal"
             onClick={async () => {
@@ -264,7 +281,7 @@ export default function BoardEditorChrome({
               : t("proposal.save", {}, { default: "Save" })}
           </Button>
         )}
-        {!isCardMode && isTemplateWithClones && (
+        {!isCardMode && !boardPreviewMode && isTemplateWithClones && (
           <>
             <span ref={settingsRef} tabIndex={-1} style={{ display: "inline-flex" }}>
               <IconButton

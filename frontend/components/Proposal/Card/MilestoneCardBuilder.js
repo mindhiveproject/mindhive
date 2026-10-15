@@ -121,6 +121,7 @@ export default function MilestoneCardBuilder({
   proposal,
   proposalCard,
   initialFormEditor = null,
+  startInPreview = false,
   openCard,
   closeCard,
   autoUpdateStudentBoards,
@@ -283,7 +284,7 @@ export default function MilestoneCardBuilder({
     useState(false);
   const [capabilityBusy, setCapabilityBusy] = useState(false);
   const [formPreviewOpen, setFormPreviewOpen] = useState(false);
-  const [previewMode, setPreviewMode] = useState(false);
+  const [previewMode, setPreviewMode] = useState(startInPreview);
   const [confirmRemoveFormOpen, setConfirmRemoveFormOpen] = useState(false);
   const [existingCopyPromptOpen, setExistingCopyPromptOpen] = useState(false);
 
