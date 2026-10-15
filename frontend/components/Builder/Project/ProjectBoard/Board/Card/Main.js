@@ -56,6 +56,11 @@ export default function ProposalCard({
   refreshPage,
   isLocked,
   submitStatuses,
+  // Teacher preview from the template editor: render read-only with no
+  // collab session, card lock, or homework writes. Assignment clicks go to
+  // onOpenAssignment instead of the homework modal.
+  isPreview = false,
+  onOpenAssignment,
 }) {
   const { t } = useTranslation("builder");
   const [originalActive, setOriginalActive] = useState(false); // For accordion state, default collapsed
@@ -120,12 +125,13 @@ export default function ProposalCard({
     : null;
   const session = useCardCollabSession({
     documentName: collabDocumentName,
-    active: true,
+    active: !isPreview,
   });
   const collabProvider = session.status === "synced" ? session.provider : null;
   // Editors stay read-only until Yjs (or, if the collab server is down, the
   // HTML columns) owns them, so nothing typed in between is dropped.
-  const editorsReady = !!collabProvider || session.status === "unavailable";
+  const editorsReady =
+    !isPreview && (!!collabProvider || session.status === "unavailable");
 
   // Everything on the card saves as it changes — there is no Save button.
   const {
@@ -144,6 +150,8 @@ export default function ProposalCard({
     bound: !!collabProvider,
   });
   useUnsavedChangesGuard(hasPendingSave);
+  // Preview never writes, even if an editor reports a change.
+  const updateField = isPreview ? () => {} : handleFieldUpdate;
   const collaborationUser = {
     id: user?.id || null,
     name:
@@ -307,6 +315,7 @@ export default function ProposalCard({
 
   // Send update to the server when the editor gains focus
   const handleFocus = async () => {
+    if (isPreview) return;
     // lock the card if needed
     if (!wasLockedOnFocus && areEditsAllowed && !lockedByUser) {
       await updateEdit({
@@ -364,6 +373,10 @@ export default function ProposalCard({
   const openAssignmentModalHandler = (assignment) => {
     if (!assignment) {
       console.error("No assignment provided to openAssignmentModalHandler");
+      return;
+    }
+    if (isPreview) {
+      onOpenAssignment?.(assignment);
       return;
     }
     // console.log("Opening modal with assignment:", {
@@ -1288,23 +1301,25 @@ export default function ProposalCard({
 
   return (
     <>
-      <Navigation
-        query={query}
-        user={user}
-        tab={tab}
-        proposalId={proposalId}
-        cardId={cardId}
-        onBack={handleBack}
-        inputs={inputs}
-        handleSettingsChange={handleSettingsChange}
-        saveIndicator={
-          <SaveIndicator
-            saveState={saveState}
-            connecting={session.status === "connecting"}
-            onRetry={retry}
-          />
-        }
-      />
+      {isPreview ? null : (
+        <Navigation
+          query={query}
+          user={user}
+          tab={tab}
+          proposalId={proposalId}
+          cardId={cardId}
+          onBack={handleBack}
+          inputs={inputs}
+          handleSettingsChange={handleSettingsChange}
+          saveIndicator={
+            <SaveIndicator
+              saveState={saveState}
+              connecting={session.status === "connecting"}
+              onRetry={retry}
+            />
+          }
+        />
+      )}
       <StyledProposal>
         <div className="post">
           <div className="proposalCardBoard">
@@ -1315,7 +1330,8 @@ export default function ProposalCard({
                   {ReactHtmlParser(inputs?.description)}
                 </div>
               </ReadOnlyTipTap>
-              {assignableToStudents &&
+              {!isPreview &&
+                assignableToStudents &&
                 (assignedCount > 0 || canAddAssignment) && (
                   <div>
                     <div className="cardSubheaderAssign" style={{ display: "flex", alignItems: "center", gap: "8px"}}>
@@ -1391,7 +1407,7 @@ export default function ProposalCard({
                         collaborationUser={collaborationUser}
                         isEditable={editorsReady}
                         onUpdate={(html, meta) =>
-                          handleFieldUpdate("content", html, meta)
+                          updateField("content", html, meta)
                         }
                         mediaLibraryId={
                           proposal?.id || proposalId
@@ -1426,7 +1442,7 @@ export default function ProposalCard({
                         collaborationUser={collaborationUser}
                         isEditable={editorsReady}
                         onUpdate={(html, meta) =>
-                          handleFieldUpdate("revisedContent", html, meta)
+                          updateField("revisedContent", html, meta)
                         }
                         mediaLibraryId={
                           proposal?.id || proposalId
@@ -1510,7 +1526,7 @@ export default function ProposalCard({
                   collaborationUser={collaborationUser}
                   isEditable={editorsReady}
                   onUpdate={(html, meta) =>
-                    handleFieldUpdate("comment", html, meta)
+                    updateField("comment", html, meta)
                   }
                   limitedToolbar={true}
                   mediaLibraryId={

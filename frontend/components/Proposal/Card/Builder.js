@@ -1,26 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import clsx from "clsx";
 import { useMutation, useQuery, useApolloClient } from "@apollo/client";
-import { Icon } from "semantic-ui-react";
 import { v1 as uuidv1 } from "uuid";
 import { CREATE_CARD, UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
-import ReactHtmlParser from "react-html-parser";
 
 import useForm from "../../../lib/useForm";
-import { useTemplateAssignmentCompletion } from "../../../lib/assignmentCompletion";
-import { getBoardTemplateClassIds } from "../../../lib/classTemplateBoards";
 import TipTapEditor from "../../TipTap/Main";
-import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 
 import CardType from "./Forms/Type";
 import LinkedItems from "./Forms/LinkedItems";
-import { PreviewSection } from "./Forms/PreviewSection";
 import AssignmentViewModal from "../../TipTap/AssignmentViewModal";
-import ResourceViewModal from "../../TipTap/ResourceViewModal";
+import StudentProjectCard from "../../Builder/Project/ProjectBoard/Board/Card/Main";
 import InfoPopover from "../../DesignSystem/InfoPopover";
-import Tooltip from "../../DesignSystem/Tooltip";
 import useTranslation from "next-translate/useTranslation";
 import { PROPOSAL_CARD_TYPE } from "../Builder/cardTypeOptions";
 
@@ -51,7 +43,6 @@ export default function BuilderProposalCard({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
-  hideBoardChromeNav = false,
   registerCloseHandler,
   registerCardChrome,
 }) {
@@ -64,12 +55,6 @@ export default function BuilderProposalCard({
   const { inputs, handleChange } = useForm({
     ...initialCard,
   });
-  // Edit mode on a class template: how many of its students completed each
-  // linked assignment (null on other boards).
-  const assignmentCompletion = useTemplateAssignmentCompletion(
-    proposal,
-    inputs?.assignments
-  );
 
   const description = useRef(initialCard?.description || "");
   const content = useRef(initialCard?.content || "");
@@ -94,22 +79,14 @@ export default function BuilderProposalCard({
   const [showWarningBox, setShowWarningBox] = useState(false);
   const [previewMode, setPreviewMode] = useState(startInPreview);
 
-  // Preview modals: assignment view + resource view (when user clicks items in preview mode)
+  // Read-only assignment view for assignment clicks in preview
   const [viewAssignmentModalOpen, setViewAssignmentModalOpen] = useState(false);
   const [viewAssignmentId, setViewAssignmentId] = useState(null);
-  const [viewResourceModalOpen, setViewResourceModalOpen] = useState(false);
-  const [viewResourceId, setViewResourceId] = useState(null);
 
   const openViewAssignmentModal = (assignment) => {
     if (!assignment?.id) return;
     setViewAssignmentId(assignment.id);
     setViewAssignmentModalOpen(true);
-  };
-
-  const openViewResourceModal = (resource) => {
-    if (!resource?.id) return;
-    setViewResourceId(resource.id);
-    setViewResourceModalOpen(true);
   };
 
   // Update card content in the local state
@@ -408,7 +385,7 @@ export default function BuilderProposalCard({
   handlePreviewRef.current = handlePreviewAsUser;
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     registerCardChrome({
       kind: "project",
       previewMode,
@@ -439,7 +416,6 @@ export default function BuilderProposalCard({
       onExitPreview: () => setPreviewMode(false),
     });
   }, [
-    hideBoardChromeNav,
     registerCardChrome,
     previewMode,
     savingBusy,
@@ -450,174 +426,43 @@ export default function BuilderProposalCard({
   ]);
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     return () => registerCardChrome(null);
-  }, [hideBoardChromeNav, registerCardChrome]);
+  }, [registerCardChrome]);
+
+  if (previewMode) {
+    // The student card page itself, read-only, fed from the unsaved form.
+    return (
+      <div className="post">
+        <AssignmentViewModal
+          user={user}
+          open={viewAssignmentModalOpen}
+          t={t}
+          onClose={() => setViewAssignmentModalOpen(false)}
+          assignmentId={viewAssignmentId}
+        />
+        <StudentProjectCard
+          user={user}
+          proposal={proposal}
+          proposalId={proposal?.id}
+          cardId={proposalCard?.id ?? null}
+          proposalCard={{
+            ...(proposalCard || {}),
+            ...inputs,
+            description: description.current,
+            content: content.current,
+          }}
+          isLocked={false}
+          submitStatuses={{}}
+          isPreview
+          onOpenAssignment={openViewAssignmentModal}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="post">
-      {!hideBoardChromeNav ? (
-        <div className="navigation-build-mode">
-          <div className="left">
-            <div
-              className="icon"
-              onClick={handleBackToBoard}
-              style={{
-                opacity: savingBusy ? 0.6 : 1,
-                pointerEvents: savingBusy ? "none" : "auto",
-              }}
-            >
-              <div className="selector">
-                <img src="/assets/icons/back.svg" alt="back" />
-              </div>
-            </div>
-          </div>
-          <Tooltip
-            content={proposal?.title || ""}
-            side="bottom"
-            maxWidth={400}
-          >
-            <div className="middle">
-              <span className="studyTitle">{proposal?.title}</span>
-            </div>
-          </Tooltip>
-          <div className={`right${previewMode ? " rightPreviewMode" : ""}`}>
-            {previewMode ? (
-              <button
-                type="button"
-                onClick={() => setPreviewMode(false)}
-                className="narrowButton"
-                style={{ marginRight: "10px" }}
-              >
-                <Icon name="angle left" /> {t("board.expendedCard.backToEditing", "Back to editing")}
-              </button>
-            ) : (
-              <>
-                <div className="editModeMessage">
-                  {t("board.editMode", "You are in Edit Mode")}
-                </div>
-                <button
-                  type="button"
-                  onClick={handlePreviewAsUser}
-                  disabled={savingBusy}
-                  className="narrowButtonSecondary"
-                >
-                  {t("board.expendedCard.preview", "Preview")}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSave}
-                  className="narrowButton"
-                  disabled={savingBusy || createDisabled}
-                >
-                  {isCreateMode
-                    ? creating
-                      ? tBuilder(
-                          "section.createCardModal.creating",
-                          {},
-                          { default: "Creating..." }
-                        )
-                      : tBuilder(
-                          "section.createProposalCard.addToBoard",
-                          {},
-                          { default: "Add to board" }
-                        )
-                    : t("board.save", "Save")}
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      ) : null}
-
-      {/* Preview modals: open when user clicks linked items in preview mode */}
-      <AssignmentViewModal
-        user={user}
-        open={viewAssignmentModalOpen}
-        t={t}
-        onClose={() => setViewAssignmentModalOpen(false)}
-        assignmentId={viewAssignmentId}
-      />
-      <ResourceViewModal
-        open={viewResourceModalOpen}
-        t={t}
-        onClose={() => setViewResourceModalOpen(false)}
-        resourceId={viewResourceId}
-      />
-
-      {previewMode ? (
-        <div className="proposalCardBoard">
-          <div className="textBoard">
-            <div className="cardHeader">{inputs?.title || proposalCard?.title}</div>
-            <div className="cardSubheader">
-              {t("assignment.instructions", "Instructions")}
-            </div>
-            <ReadOnlyTipTap>
-              <div className="ProseMirror">
-                {ReactHtmlParser(description?.current || inputs?.description || "")}
-              </div>
-            </ReadOnlyTipTap>
-            {inputs?.settings?.includeInReport && (
-              <>
-                <div className="cardSubheader">
-                  {t("mainCard.forMindHiveNetwork", "Your entry")}
-                </div>
-                <ReadOnlyTipTap>
-                  <div className="ProseMirror">
-                    {ReactHtmlParser(content?.current || inputs?.content || "")}
-                  </div>
-                </ReadOnlyTipTap>
-              </>
-            )}
-          </div>
-          <div
-            className={clsx("infoBoard", {
-              infoBoardEdit: hideBoardChromeNav,
-            })}
-          >
-            {/* Display Linked Items: Assignments first, then combined Resources */}
-            {inputs?.assignments?.length > 0 && (
-              <PreviewSection
-                title={t("board.expendedCard.previewLinkedAssignments")}
-                items={inputs?.assignments}
-                type="assignment"
-                proposal={proposal}
-                openAssignmentModal={openViewAssignmentModal}
-                user={user}
-                completionByAssignmentId={assignmentCompletion}
-              />
-            )}
-            {(inputs?.resources?.length > 0 || inputs?.tasks?.length > 0 || inputs?.studies?.length > 0) && (
-              <PreviewSection
-                title={t("board.expendedCard.previewLinkedResources")}
-                sections={[
-                  ...(inputs?.resources?.length > 0 ? [{ items: inputs.resources, type: "resource" }] : []),
-                  ...(inputs?.tasks?.length > 0 ? [{ items: inputs.tasks, type: "task" }] : []),
-                  ...(inputs?.studies?.length > 0 ? [{ items: inputs.studies, type: "study" }] : []),
-                ]}
-                proposal={proposal}
-                openAssignmentModal={openViewAssignmentModal}
-                openResourceModal={openViewResourceModal}
-                user={user}
-                templateClassIds={getBoardTemplateClassIds(proposal)}
-              />
-            )}
-            {[
-              ...(inputs?.resources || []),
-              ...(inputs?.assignments || []),
-              ...(inputs?.tasks || []),
-              ...(inputs?.studies || []),
-            ].length === 0 && (
-              <div>
-                <div className="cardHeader">{t("board.expendedCard.linkedItems", "Linked Items")}</div>
-                <div className="cardSubheaderComment">
-                  {t("board.expendedCard.addLinkedItems", "Add existing assignments, tasks, studies, or resources")}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
       <div className="proposalCardBoard">
         <div className="textBoard">
           <label htmlFor="title">
@@ -800,11 +645,7 @@ export default function BuilderProposalCard({
             </>
           )}
         </div>
-        <div
-          className={clsx("infoBoard", {
-            infoBoardEdit: hideBoardChromeNav,
-          })}
-        >
+        <div className="infoBoard infoBoardEdit">
           <>
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.linkedItems", "Linked Items")}
@@ -878,7 +719,6 @@ export default function BuilderProposalCard({
           )}
         </div>
       </div>
-      )}
     </div>
   );
 }

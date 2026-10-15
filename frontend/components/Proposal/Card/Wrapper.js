@@ -27,7 +27,6 @@ export default function CardWrapper({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
-  hideBoardChromeNav = false,
   registerCloseHandler,
   registerCardChrome,
 }) {
@@ -76,7 +75,6 @@ export default function CardWrapper({
         onTemplateChangedWithoutPropagation={
           onTemplateChangedWithoutPropagation
         }
-        hideBoardChromeNav={hideBoardChromeNav}
         registerCloseHandler={registerCloseHandler}
         registerCardChrome={registerCardChrome}
       />
@@ -106,7 +104,6 @@ export default function CardWrapper({
         onTemplateChangedWithoutPropagation={
           onTemplateChangedWithoutPropagation
         }
-        hideBoardChromeNav={hideBoardChromeNav}
         registerCloseHandler={registerCloseHandler}
         registerCardChrome={registerCardChrome}
       />
@@ -154,7 +151,6 @@ export default function CardWrapper({
               onTemplateChangedWithoutPropagation={
                 onTemplateChangedWithoutPropagation
               }
-              hideBoardChromeNav={hideBoardChromeNav}
               registerCloseHandler={registerCloseHandler}
               registerCardChrome={registerCardChrome}
             />
@@ -172,7 +168,6 @@ export default function CardWrapper({
             onTemplateChangedWithoutPropagation={
               onTemplateChangedWithoutPropagation
             }
-            hideBoardChromeNav={hideBoardChromeNav}
             registerCloseHandler={registerCloseHandler}
             registerCardChrome={registerCardChrome}
           />

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import clsx from "clsx";
 import { useMutation, useQuery, useApolloClient } from "@apollo/client";
 import { v1 as uuidv1 } from "uuid";
 import useTranslation from "next-translate/useTranslation";
@@ -33,7 +32,6 @@ import MilestoneCapabilityRow from "./MilestoneCapabilityRow";
 import StudentSubmitActionPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/Proposal";
 import StudentSubmitStudyPage from "../../Builder/Project/ProjectBoard/Board/Card/Actions/SubmitStudy";
 import MessageCard from "../../DesignSystem/MessageCard";
-import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
 import Tooltip from "../../DesignSystem/Tooltip";
 
@@ -107,7 +105,6 @@ export default function MilestoneCreateMode({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
-  hideBoardChromeNav = false,
   registerCloseHandler,
   registerCardChrome,
 }) {
@@ -400,7 +397,7 @@ export default function MilestoneCreateMode({
   });
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     registerCardChrome({
       kind: "milestone",
       previewMode,
@@ -429,7 +426,6 @@ export default function MilestoneCreateMode({
       onExitPreview: () => setPreviewMode(false),
     });
   }, [
-    hideBoardChromeNav,
     registerCardChrome,
     previewMode,
     draftPreviewCard,
@@ -439,9 +435,9 @@ export default function MilestoneCreateMode({
   ]);
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     return () => registerCardChrome(null);
-  }, [hideBoardChromeNav, registerCardChrome]);
+  }, [registerCardChrome]);
 
   if (previewMode && draftPreviewCard) {
     const StudentPage = isDataCollectionActionCard(
@@ -465,62 +461,7 @@ export default function MilestoneCreateMode({
   }
 
   return (
-    <div
-      className={clsx("post", {
-        milestoneCardEditorPost: hideBoardChromeNav,
-      })}
-    >
-      {!hideBoardChromeNav ? (
-        <div className="navigation-build-mode">
-          <div className="left">
-            <div
-              className="icon"
-              onClick={handleClose}
-              style={{
-                opacity: creating ? 0.6 : 1,
-                pointerEvents: creating ? "none" : "auto",
-              }}
-            >
-              <div className="selector">
-                <img src="/assets/icons/back.svg" alt="back" />
-              </div>
-            </div>
-          </div>
-          <Tooltip
-            content={proposal?.title || ""}
-            side="bottom"
-            maxWidth={400}
-          >
-            <div className="middle">
-              <span className="studyTitle">{proposal?.title}</span>
-            </div>
-          </Tooltip>
-          <div className="right">
-            <div className="editModeMessage">
-              {t("board.editMode", {}, { default: "You are in Edit Mode" })}
-            </div>
-            <Button
-              type="button"
-              variant="filled"
-              onClick={handleCreate}
-              disabled={createDisabled}
-            >
-              {creating
-                ? tBuilder(
-                    "section.createCardModal.creating",
-                    {},
-                    { default: "Creating..." }
-                  )
-                : tBuilder(
-                    "section.createMilestone.addToBoard",
-                    {},
-                    { default: "Add to board" }
-                  )}
-            </Button>
-          </div>
-        </div>
-      ) : null}
-
+    <div className="post milestoneCardEditorPost">
       <div className="proposalCardBoard">
         <div className="textBoard">
           {forceCustomMilestone ? (
@@ -840,11 +781,7 @@ export default function MilestoneCreateMode({
           ) : null}
         </div>
 
-        <div
-          className={clsx("infoBoard", {
-            infoBoardEdit: hideBoardChromeNav,
-          })}
-        >
+        <div className="infoBoard infoBoardEdit">
           <div className="cardHeader">
             {tBuilder(
               "section.createMilestone.sidePanelTitle",

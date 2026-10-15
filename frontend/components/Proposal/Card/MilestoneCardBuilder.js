@@ -127,7 +127,6 @@ export default function MilestoneCardBuilder({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
-  hideBoardChromeNav = false,
   registerCloseHandler,
   registerCardChrome,
 }) {
@@ -827,7 +826,7 @@ export default function MilestoneCardBuilder({
   handlePreviewRef.current = handlePreviewAsStudent;
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     registerCardChrome({
       kind: "milestone",
       previewMode,
@@ -839,7 +838,6 @@ export default function MilestoneCardBuilder({
       onExitPreview: () => setPreviewMode(false),
     });
   }, [
-    hideBoardChromeNav,
     registerCardChrome,
     previewMode,
     saving,
@@ -849,9 +847,9 @@ export default function MilestoneCardBuilder({
   ]);
 
   useEffect(() => {
-    if (!hideBoardChromeNav || !registerCardChrome) return undefined;
+    if (!registerCardChrome) return undefined;
     return () => registerCardChrome(null);
-  }, [hideBoardChromeNav, registerCardChrome]);
+  }, [registerCardChrome]);
 
   const displayTitle = canEditFields
     ? inputs?.title || actionLabel
@@ -880,52 +878,7 @@ export default function MilestoneCardBuilder({
   }
 
   return (
-    <div
-      className={clsx("post", {
-        milestoneCardEditorPost: hideBoardChromeNav,
-      })}
-    >
-      {!hideBoardChromeNav ? (
-        <div className="navigation-build-mode">
-          <div className="left">
-            <div
-              className="icon"
-              onClick={handleClose}
-              style={{
-                opacity: saving ? 0.6 : 1,
-                pointerEvents: saving ? "none" : "auto",
-              }}
-            >
-              <div className="selector">
-                <img src="/assets/icons/back.svg" alt="back" />
-              </div>
-            </div>
-          </div>
-          <Tooltip
-            content={proposal?.title || ""}
-            side="bottom"
-            maxWidth={400}
-          >
-            <div className="middle">
-              <span className="studyTitle">{proposal?.title}</span>
-            </div>
-          </Tooltip>
-          <div className="right">
-            <div className="editModeMessage">
-              {t("board.editMode", {}, { default: "You are in Edit Mode" })}
-            </div>
-            <Button
-              type="button"
-              variant="filled"
-              onClick={handleSave}
-              disabled={saving}
-            >
-              {t("board.save", {}, { default: "Save" })}
-            </Button>
-          </div>
-        </div>
-      ) : null}
-
+    <div className="post milestoneCardEditorPost">
       <div className="proposalCardBoard">
         <div className="textBoard">
           <section style={sectionStyle}>
@@ -1205,7 +1158,7 @@ export default function MilestoneCardBuilder({
         ) : (
           <div
             className={clsx("infoBoard", {
-              infoBoardEdit: hideBoardChromeNav,
+              infoBoardEdit: true,
               milestoneReviewFormPanel: capability === CAPABILITY_REVIEW,
             })}
           >

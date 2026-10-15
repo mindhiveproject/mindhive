@@ -166,7 +166,6 @@ export default function ProposalBuilder({
           ? getActionCardLabel(card, t)
           : card?.title
         : "";
-  const hideBoardChromeNav = !isPreview && !!proposalBuildMode;
   const showChrome = !isPreview;
 
   return (
@@ -259,7 +258,6 @@ export default function ProposalBuilder({
               autoUpdateStudentBoards={autoUpdateStudentBoards}
               propagateToClones={propagateToClones}
               onTemplateChangedWithoutPropagation={markUnpropagatedChange}
-              hideBoardChromeNav={hideBoardChromeNav}
               registerCloseHandler={registerCloseHandler}
               registerCardChrome={registerCardChrome}
             />
