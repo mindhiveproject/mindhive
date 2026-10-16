@@ -571,6 +571,13 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
             username
           }
           type
+          tasks {
+            id
+            title
+            slug
+            i18nContent
+            taskType
+          }
         }
       }
       reviews {

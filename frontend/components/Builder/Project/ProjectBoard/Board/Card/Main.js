@@ -1629,7 +1629,9 @@ export default function ProposalCard({
                   proposalCard={inputs}
                   classId={proposal?.usedInClass?.id}
                   user={user}
-                  disabled={isPreview || isLocked}
+                  // Submitted cards stay editable (the student revises them),
+                  // so only the teacher preview is read-only.
+                  disabled={isPreview}
                   onChange={handleStudentTasksChange}
                 />
               )}

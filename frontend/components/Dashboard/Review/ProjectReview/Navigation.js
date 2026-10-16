@@ -9,6 +9,9 @@ import { getTabByMilestoneKey } from "../../../../lib/feedbackCenterTabs";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
+import Modal from "../../../DesignSystem/Modal";
+
+const MAX_VISIBLE_COLLABORATORS = 3;
 
 function getProfileDisplayName(profile) {
   const username = profile?.username?.trim();
@@ -37,6 +40,10 @@ export default function Navigation({
 }) {
   const { t } = useTranslation("builder");
   const [returnUrl, setReturnUrl] = useState("/projects");
+  // In-page dialogs instead of window.confirm/alert, which some embedded
+  // browsers block (confirm then returns false and Submit does nothing).
+  const [pendingSubmit, setPendingSubmit] = useState(null); // "create" | "update"
+  const [notice, setNotice] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -68,6 +75,14 @@ export default function Navigation({
       label: getProfileDisplayName(profile),
     }))
     .filter((entry) => Boolean(entry.label));
+  // Keep the header to one row: a few names, the rest behind a "+N" chip.
+  const visibleCollaborators = collaboratorChips.slice(
+    0,
+    MAX_VISIBLE_COLLABORATORS
+  );
+  const hiddenCollaborators = collaboratorChips.slice(
+    MAX_VISIBLE_COLLABORATORS
+  );
 
   const [
     createReview,
@@ -119,157 +134,170 @@ export default function Navigation({
     ],
   });
 
+  const submitReview = async () => {
+    const action = pendingSubmit;
+    setPendingSubmit(null);
+    try {
+      if (action === "update") {
+        await updateReview();
+        setNotice(
+          t("reviewDetail.updated", {}, {
+            default: "The review has been updated",
+          })
+        );
+      } else {
+        const res = await createReview();
+        const id = res?.data?.createReview?.id || null;
+        handleChange({ target: { name: "id", value: id } });
+        setNotice(
+          t("reviewDetail.submitted", {}, {
+            default: "The review has been submitted",
+          })
+        );
+      }
+    } catch (error) {
+      setNotice(error?.message || String(error));
+    }
+  };
+
   return (
     <header className="reviewPageHeader">
-      <div className="reviewPageHeaderMain">
-        <IconButton
-          type="button"
-          variant="subtle"
-          elevated={false}
-          ariaLabel={t("reviewDetail.backToFeedbackCenter")}
-          title={t("reviewDetail.backToFeedbackCenter")}
-          onClick={goBackToFeedbackCenter}
-          icon={
-            <img src="/assets/icons/review/expand_left.svg" alt="" />
-          }
-        />
+      <Modal
+        open={!!pendingSubmit}
+        onClose={() => setPendingSubmit(null)}
+        title={
+          pendingSubmit === "update"
+            ? t("reviewDetail.resubmitFeedback", {}, {
+                default: "Resubmit Feedback",
+              })
+            : t("reviewDetail.submitFeedback", {}, {
+                default: "Submit Feedback",
+              })
+        }
+        actions={
+          <>
+            <Button variant="outline" onClick={() => setPendingSubmit(null)}>
+              {t("reviewDetail.cancel", {}, { default: "Cancel" })}
+            </Button>
+            <Button variant="filled" onClick={submitReview}>
+              {pendingSubmit === "update"
+                ? t("reviewDetail.resubmitFeedback", {}, {
+                    default: "Resubmit Feedback",
+                  })
+                : t("reviewDetail.submitFeedback", {}, {
+                    default: "Submit Feedback",
+                  })}
+            </Button>
+          </>
+        }
+      >
+        {pendingSubmit === "update"
+          ? t("reviewDetail.resubmitConfirm", {}, {
+              default:
+                "Are you sure you want to resubmit? Your feedback will be updated.",
+            })
+          : t("reviewDetail.submitConfirm", {}, {
+              default:
+                "Are you sure you want to submit? Your feedback will be visible for others. You can edit your feedback after submission.",
+            })}
+      </Modal>
+      <Modal
+        open={!!notice}
+        onClose={() => setNotice(null)}
+        actions={
+          <Button variant="filled" onClick={() => setNotice(null)}>
+            {t("reviewDetail.ok", {}, { default: "OK" })}
+          </Button>
+        }
+      >
+        {notice}
+      </Modal>
+      <IconButton
+        type="button"
+        variant="subtle"
+        elevated={false}
+        ariaLabel={t("reviewDetail.backToFeedbackCenter")}
+        title={t("reviewDetail.backToFeedbackCenter")}
+        onClick={goBackToFeedbackCenter}
+        icon={
+          <img src="/assets/icons/review/expand_left.svg" alt="" />
+        }
+      />
 
-        <div className="reviewPageHeaderActions">
-          {status === "PEER_REVIEW" && project?.study ? (
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`/studies/${project.study.slug}`}
-            >
-              <Button variant="outline">
-                {t(
-                  "reviewDetail.participateInStudy",
-                  {},
-                  { default: "Participate in the study" }
-                )}
-              </Button>
-            </a>
+      <div className="reviewPageHeaderTitles">
+        {displayTitle ? (
+          <h1 className="reviewPageTitle" title={displayTitle}>
+            {displayTitle}
+          </h1>
+        ) : null}
+        {milestoneLabel ? (
+          <p className="reviewPageMilestone">
+            {t(
+              "reviewDetail.milestoneContext",
+              { milestone: milestoneLabel },
+              { default: "{{milestone}}" }
+            )}
+          </p>
+        ) : null}
+      </div>
+
+      {collaboratorChips.length > 0 ? (
+        <div
+          className="reviewPageCollaborators"
+          aria-label={t("reviewDetail.collaborators")}
+        >
+          {visibleCollaborators.map(({ key, label }) => (
+            <Chip key={key} variant="static" tone="neutral" label={label} />
+          ))}
+          {hiddenCollaborators.length > 0 ? (
+            <Chip
+              variant="static"
+              tone="neutral"
+              label={`+${hiddenCollaborators.length}`}
+              title={hiddenCollaborators.map(({ label }) => label).join(", ")}
+            />
           ) : null}
+        </div>
+      ) : null}
 
-          {canReview ? (
-            inputs?.id ? (
-              <Button
-                variant="filled"
-                type="button"
-                disabled={updateLoading}
-                onClick={async () => {
-                  if (
-                    confirm(
-                      t(
-                        "reviewDetail.resubmitConfirm",
-                        {},
-                        {
-                          default:
-                            "Are you sure you want to resubmit? Your feedback will be updated.",
-                        }
-                      )
-                    )
-                  ) {
-                    updateReview();
-                    alert(
-                      t(
-                        "reviewDetail.updated",
-                        {},
-                        { default: "The review has been updated" }
-                      )
-                    );
-                  }
-                }}
-              >
-                {t(
+      <div className="reviewPageHeaderActions">
+        {status === "PEER_REVIEW" && project?.study ? (
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`/studies/${project.study.slug}`}
+          >
+            <Button variant="outline">
+              {t(
+                "reviewDetail.participateInStudy",
+                {},
+                { default: "Participate in the study" }
+              )}
+            </Button>
+          </a>
+        ) : null}
+
+        {canReview ? (
+          <Button
+            variant="filled"
+            type="button"
+            disabled={createLoading || updateLoading}
+            onClick={() => setPendingSubmit(inputs?.id ? "update" : "create")}
+          >
+            {inputs?.id
+              ? t(
                   "reviewDetail.resubmitFeedback",
                   {},
                   { default: "Resubmit Feedback" }
-                )}
-              </Button>
-            ) : (
-              <Button
-                variant="filled"
-                type="button"
-                disabled={createLoading}
-                onClick={async () => {
-                  if (
-                    confirm(
-                      t(
-                        "reviewDetail.submitConfirm",
-                        {},
-                        {
-                          default:
-                            "Are you sure you want to submit? Your feedback will be visible for others. You can edit your feedback after submission.",
-                        }
-                      )
-                    )
-                  ) {
-                    const res = await createReview();
-                    const id = res?.data?.createReview?.id || null;
-                    handleChange({
-                      target: {
-                        name: "id",
-                        value: id,
-                      },
-                    });
-                    alert(
-                      t(
-                        "reviewDetail.submitted",
-                        {},
-                        { default: "The review has been submitted" }
-                      )
-                    );
-                  }
-                }}
-              >
-                {t(
+                )
+              : t(
                   "reviewDetail.submitFeedback",
                   {},
                   { default: "Submit Feedback" }
                 )}
-              </Button>
-            )
-          ) : null}
-        </div>
+          </Button>
+        ) : null}
       </div>
-
-      {displayTitle || milestoneLabel || collaboratorChips.length > 0 ? (
-        <div className="reviewPageHeaderMeta">
-          {displayTitle || milestoneLabel ? (
-            <div className="reviewPageHeaderTitles">
-              {displayTitle ? (
-                <h1 className="reviewPageTitle">{displayTitle}</h1>
-              ) : null}
-              {milestoneLabel ? (
-                <p className="reviewPageMilestone">
-                  {t(
-                    "reviewDetail.milestoneContext",
-                    { milestone: milestoneLabel },
-                    { default: "{{milestone}}" }
-                  )}
-                </p>
-              ) : null}
-            </div>
-          ) : null}
-
-          {collaboratorChips.length > 0 ? (
-            <div
-              className="reviewPageCollaborators"
-              aria-label={t("reviewDetail.collaborators")}
-            >
-              {collaboratorChips.map(({ key, label }) => (
-                <Chip
-                  key={key}
-                  variant="static"
-                  tone="neutral"
-                  label={label}
-                />
-              ))}
-            </div>
-          ) : null}
-        </div>
-      ) : null}
     </header>
   );
 }

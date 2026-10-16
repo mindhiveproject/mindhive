@@ -64,13 +64,14 @@ export const StyledDashboardWrapper = styled.div`
 export const StyledDashboardContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${(props) => (props.$boardEditorFullscreen ? "0" : "20px")};
-  margin: ${(props) => (props.$boardEditorFullscreen ? "0" : "50px")};
+  gap: ${(props) => (props.$fullBleed ? "0" : "20px")};
+  margin: ${(props) => (props.$fullBleed ? "0" : "50px")};
   max-width: ${(props) => props.theme.maxWidth};
-  /* In board editor fullscreen, pin to the wrapper height so the wrapper
-     cannot scroll vertically. Normal pages use min-height to push the footer. */
+  /* Full-bleed workspaces (board editor, feedback center, …) pin to the
+     wrapper height so the wrapper cannot scroll vertically; their own panes
+     scroll instead. Normal pages use min-height to push the footer. */
   ${(props) =>
-    props.$boardEditorFullscreen
+    props.$fullBleed
       ? "height: 100%; min-height: 0; overflow: hidden;"
       : `min-height: ${
           props.$withFooter
@@ -93,12 +94,15 @@ export const StyledDashboardContent = styled.div`
         : "unset"};
 
     ${(props) =>
-      props.$boardEditorFullscreen
+      props.$fullBleed
         ? `
       flex: 1 1 0;
       min-height: 0;
       overflow: hidden;
       align-content: stretch;
+      /* Cap the row at the available height so the page's own panes scroll
+         rather than growing the row past the viewport. */
+      grid-template-rows: minmax(0, 1fr);
     `
         : ""}
   }

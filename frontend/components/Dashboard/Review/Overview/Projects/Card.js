@@ -3,7 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { isOpenForComments } from "../../../../../lib/milestoneStatus";
 import Chip from "../../../../DesignSystem/Chip";
-import { StarFilledIcon } from "../../../../DesignSystem/Icons";
+import StudentTaskChips from "../../StudentTaskChips";
 
 export default function Card({
   stage,
@@ -76,28 +76,7 @@ export default function Card({
       <div className="p13">{shortenTitle(project?.title)}</div>
       {/* Tasks & surveys students picked on the cards submitted with this
           milestone; the ones matching the task filter are highlighted. */}
-      {studentTasks.length > 0 ? (
-        <div
-          className="suggestedTasks studentTasks"
-          aria-label={t("review.studentPickedTasks", {}, {
-            default: "Tasks and surveys picked by students",
-          })}
-        >
-          {studentTasks.map((task) => (
-            <Chip
-              key={task.id}
-              label={task.title}
-              variant="static"
-              tone={matchedTaskIds.has(task.id) ? "info" : "default"}
-              leading={<StarFilledIcon width={16} height={16} />}
-              title={t("review.studentPickedTask", {}, {
-                default: "Picked by students",
-              })}
-              style={{ maxWidth: "100%" }}
-            />
-          ))}
-        </div>
-      ) : null}
+      <StudentTaskChips tasks={studentTasks} highlightedIds={matchedTaskIds} />
       {/* Filtered tasks & surveys mentors suggested to this proposal. */}
       {matchedSuggestions.length > 0 ? (
         <div className="suggestedTasks">

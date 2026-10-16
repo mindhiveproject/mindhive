@@ -1459,7 +1459,7 @@
 	"mainCard": {
 		"studentTasks": {
 			"description": "Pick the tasks and surveys you plan to use for this part of your project.",
-			"none": "No tasks or surveys picked yet.",
+			"favoritesGroup": "Your favorites",
 			"placeholder": "Add a task or survey",
 			"surveysGroup": "Surveys",
 			"tasksGroup": "Tasks",
@@ -1884,6 +1884,7 @@
 		"matchingSuggestedTasks": " that were suggested {{tasks}}",
 		"matchingStudentTasks": " whose students picked {{tasks}}",
 		"matchingSuggestedOrStudentTasks": " that were suggested or picked {{tasks}}",
+		"noStudentPickedTasks": "No tasks or surveys picked",
 		"studentPickedTask": "Picked by students",
 		"studentPickedTasks": "Tasks and surveys picked by students",
 		"taskFilterNoMatchAll": "No task or survey matches",
@@ -1939,6 +1940,9 @@
 		"undefined": "Undefined"
 	},
 	"reviewDetail": {
+		"cancel": "Cancel",
+		"resizeColumns": "Resize columns",
+		"ok": "OK",
 		"addTaskSuggestion": "Add MindHive survey or task suggestions",
 		"taskHiddenForClass": "Hidden for this class",
 		"hiddenTasksNote_one": "1 grayed-out block is hidden from this student's class by their teacher, so they can't use it in their study.",

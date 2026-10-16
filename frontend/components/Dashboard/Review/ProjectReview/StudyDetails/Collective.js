@@ -1,7 +1,15 @@
 import ReactHtmlParser from "react-html-parser";
+import useTranslation from "next-translate/useTranslation";
+
 import { StyledActionPage } from "../../../../styles/StyledReview";
+import {
+  allowsStudentTaskSelection,
+  getStudentPickedTasks,
+} from "../../../../../lib/studentTaskSelection";
+import StudentTaskChips from "../../StudentTaskChips";
 
 export default function CollectivePresentation({ project, actionCardType }) {
+  const { t } = useTranslation("builder");
   const proposal = project || { sections: [] };
 
   // Filter cards to show only those that are included in this specific review step
@@ -28,6 +36,20 @@ export default function CollectivePresentation({ project, actionCardType }) {
                 <div className="cardTitle">{card?.title}</div>
               </div>
               <div className="cardText">{ReactHtmlParser(card?.content)}</div>
+              {/* Only the students' picks; tasks from the template don't show. */}
+              {allowsStudentTaskSelection(card) ? (
+                <div className="cardStudentTasks">
+                  <div className="cardStudentTasksLabel">
+                    {t("review.studentPickedTasks", {}, {
+                      default: "Tasks and surveys picked by students",
+                    })}
+                  </div>
+                  <StudentTaskChips
+                    tasks={getStudentPickedTasks(card)}
+                    showEmpty
+                  />
+                </div>
+              ) : null}
             </div>
           ))}
         </div>

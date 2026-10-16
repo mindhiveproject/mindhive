@@ -10,7 +10,7 @@ import {
   getTemplateLinkedTasks,
 } from "../../../../../../lib/studentTaskSelection";
 import DropdownSelect from "../../../../../DesignSystem/DropdownSelect";
-import { PreviewSection } from "../../../../../Proposal/Card/Forms/PreviewSection";
+import { StarFilledIcon } from "../../../../../DesignSystem/Icons";
 
 // Tasks and surveys the students picked for their copy of a card, when the
 // teacher turned on settings.studentTaskSelection on the template card.
@@ -58,6 +58,36 @@ export default function StudentTaskPicker({
     TASK: t("mainCard.studentTasks.tasksGroup", {}, { default: "Tasks" }),
     SURVEY: t("mainCard.studentTasks.surveysGroup", {}, { default: "Surveys" }),
   };
+  // The student's favorites come first, under their own header, starred.
+  const favoriteIds = new Set(
+    (user?.favoriteTasks || []).map((task) => task?.id)
+  );
+  const favoritesGroup = t(
+    "mainCard.studentTasks.favoritesGroup",
+    {},
+    { default: "Your favorites" }
+  );
+  const taskOption = (task) => {
+    const title = taskTitle(task);
+    if (!favoriteIds.has(task.id)) {
+      return { value: task.id, label: title, group: groupLabels[task.taskType] };
+    }
+    return {
+      value: task.id,
+      label: (
+        <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+          <StarFilledIcon
+            width={16}
+            height={16}
+            style={{ color: "#F2BE42", flexShrink: 0 }}
+          />
+          {title}
+        </span>
+      ),
+      labelText: title,
+      group: favoritesGroup,
+    };
+  };
   // Picks the class has blocked since stay on the card, but can only be removed.
   const pickedTasks = getStudentPickedTasks(proposalCard);
   const selectableIds = new Set(selectableTasks.map((task) => task.id));
@@ -71,13 +101,15 @@ export default function StudentTaskPicker({
         { default: "Hidden for this class" }
       )}`,
     }));
+  // Favorites first so their group heads the list.
   const options = [
     ...blockedPickOptions,
-    ...selectableTasks.map((task) => ({
-      value: task.id,
-      label: taskTitle(task),
-      group: groupLabels[task.taskType],
-    })),
+    ...selectableTasks
+      .filter((task) => favoriteIds.has(task.id))
+      .map(taskOption),
+    ...selectableTasks
+      .filter((task) => !favoriteIds.has(task.id))
+      .map(taskOption),
   ];
 
   const handleChange = (nextIds) => {
@@ -103,36 +135,24 @@ export default function StudentTaskPicker({
           }
         )}
       </div>
-      {!disabled && (
-        <DropdownSelect
-          multiple
-          value={pickedTasks.map((task) => task.id)}
-          onChange={handleChange}
-          options={options}
-          placeholder={t(
-            "mainCard.studentTasks.placeholder",
-            {},
-            { default: "Add a task or survey" }
-          )}
-          ariaLabel={t(
-            "mainCard.studentTasks.title",
-            {},
-            { default: "Your tasks & surveys" }
-          )}
-        />
-      )}
-      {pickedTasks.length > 0 && (
-        <PreviewSection items={pickedTasks} type="task" user={user} />
-      )}
-      {pickedTasks.length === 0 && disabled && (
-        <div className="cardSubheaderComment">
-          {t(
-            "mainCard.studentTasks.none",
-            {},
-            { default: "No tasks or surveys picked yet." }
-          )}
-        </div>
-      )}
+      {/* The trigger lists the picks, so there are no chips below it. */}
+      <DropdownSelect
+        multiple
+        value={pickedTasks.map((task) => task.id)}
+        onChange={handleChange}
+        options={options}
+        placeholder={t(
+          "mainCard.studentTasks.placeholder",
+          {},
+          { default: "Add a task or survey" }
+        )}
+        ariaLabel={t(
+          "mainCard.studentTasks.title",
+          {},
+          { default: "Your tasks & surveys" }
+        )}
+        disabled={disabled}
+      />
     </div>
   );
 }
