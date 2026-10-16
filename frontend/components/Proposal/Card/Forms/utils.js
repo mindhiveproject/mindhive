@@ -24,3 +24,7 @@ export const TYPO = {
   // Section label (e.g. modal section headings) — MH-Type/heading/small
   sectionLabel: { font: 'var(--MH-Type-Heading-Small)', letterSpacing: 0, color: "#274E5B" },
 };
+
+// Semantic UI modals opened from inside a DesignSystem Modal (z-index 20050)
+// need their dimmer lifted above it, or they open behind the dialog.
+export const ABOVE_DS_MODAL_DIMMER = { style: { zIndex: 20055 } };

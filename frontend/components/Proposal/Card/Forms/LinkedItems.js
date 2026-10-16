@@ -1,31 +1,74 @@
 import { useQuery } from "@apollo/client";
-import { Modal, Tab } from "semantic-ui-react";
-import { useState, useEffect } from "react";
+import { useLinkableItems } from "../../../../lib/linkableItems";
+import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { TYPO } from "./utils";
-
-import {
-  GET_PUBLIC_RESOURCES,
-  GET_MY_RESOURCES,
-  GET_TEMPLATE_ASSIGNMENT,
-} from "../../../Queries/Resource";
+import { stripHtml, TYPO } from "./utils";
 
 import { PUBLIC_STUDIES } from "../../../Queries/Study";
 import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
 
-import { GET_MY_ASSIGNMENTS } from "../../../Queries/Assignment";
-
-import AssignmentEditModal from "../../../TipTap/AssignmentEditModal"
-import AssignmentViewModal from "../../../TipTap/AssignmentViewModal"
-import AssignmentCopyModal from "../../../TipTap/AssignmentCopyModal";
+import ResourcePreviewModal from "../../../Dashboard/Resources/ResourcePreviewModal";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
+import Input from "../../../DesignSystem/Input";
+import MessageCard from "../../../DesignSystem/MessageCard";
+import Modal from "../../../DesignSystem/Modal";
+import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import { PreviewSection } from "./PreviewSection";
 import { useTemplateAssignmentCompletion } from "../../../../lib/assignmentCompletion";
 import { getBoardTemplateClassIds } from "../../../../lib/classTemplateBoards";
+import {
+  canEditLinkedItem,
+  getLinkedItemActions,
+  getLinkedItemPreviewUrl,
+} from "../../../../lib/linkedItemActions";
 import ResourceEditModal from "./ResourceEditModal";
 import AssignmentModal from "./AssignmentModal";
-import ItemTab from "./ItemTab";
+import LinkedItemsList from "./LinkedItemsList";
+
+const TOOLBAR_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "12px",
+  marginBottom: "16px",
+};
+
+const FILTER_ROW_STYLE = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: "8px",
+};
+
+// Light panel grouping the linked-item previews under the Link Items button.
+const PREVIEW_CONTAINER_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "16px",
+  width: "100%",
+  padding: "16px",
+  borderRadius: "12px",
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  background: "#F6F9F8",
+};
+
+// Clears the Modal's frosted footer so the list scrolls underneath it.
+const FROSTED_BODY_STYLE = {
+  paddingTop: "24px",
+  paddingBottom: "var(--ds-modal-frosted-pad-bottom, 96px)",
+};
+
+const FOOTER_BUTTONS_STYLE = {
+  display: "flex",
+  gap: "8px",
+};
+
+const FOOTER_STYLE = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  width: "100%",
+};
 
 export default function LinkedItems({
   proposal,
@@ -46,62 +89,22 @@ export default function LinkedItems({
     selectedAssignments
   );
 
-  // // Track selectedResources changes
-  // useEffect(() => {
-  //   console.log("📊 [selectedResources Changed]:", {
-  //     count: selectedResources.length,
-  //     resources: selectedResources.map(r => ({
-  //       id: r.id,
-  //       title: r.title,
-  //       isPublic: r.isPublic,
-  //       parentId: r.parent?.id
-  //     }))
-  //   });
-  // }, [selectedResources]);
+  // Resources and assignments scoped to the board's classes + mine + public.
+  const {
+    classIds,
+    resources: linkableResources,
+    assignments: linkableAssignments,
+    resourcesLoading,
+    assignmentsLoading,
+    refetchResources,
+    refetchAssignments,
+  } = useLinkableItems(proposal, user);
 
-  // Queries for Resources
-  const {
-    data: publicData,
-    error: publicError,
-    loading: publicLoading,
-    refetch: refetchPublicResources,
-  } = useQuery(GET_PUBLIC_RESOURCES);
-  
-  // Queries for assignment
-  const {
-    data: publicAssignment,
-    error: publicAssignmentError,
-    loading: publicAssignmentLoading,
-  } = useQuery(GET_TEMPLATE_ASSIGNMENT);
-  
-  // Queries for ressource
-  const {
-    data: myData,
-    error: myError,
-    loading: myLoading,
-    refetch: refetchMyResources,
-  } = useQuery(GET_MY_RESOURCES, {
-    variables: { id: user?.id },
-  });
-
-  const publicResources = {
-    assignments: publicAssignment?.assignments || {},
-    resources: publicData?.resources || {}
-  } || {};
-  const myResources = myData?.resources || [];
-  const myResourcesForTab = myResources.filter(
-    (resource) => resource?.author?.id === user?.id || !resource?.parent
-  );
-
-  // Queries for Assignments
-  const {
-    data: myAssignmentsData,
-    error: myAssignmentsError,
-    loading: myAssignmentsLoading,
-  } = useQuery(GET_MY_ASSIGNMENTS, {
-    variables: { id: user?.id },
-  });
-  const myAssignments = myAssignmentsData?.assignments || [];
+  const myResources = linkableResources.filter((r) => r.sources.includes("mine"));
+  // LinkedItemCard reads `myAssignments.assignments` to spot existing copies.
+  const myAssignmentsData = {
+    assignments: linkableAssignments.filter((a) => a.sources.includes("mine")),
+  };
 
   // Queries for Tasks
   const {
@@ -122,18 +125,18 @@ export default function LinkedItems({
   const [open, setOpen] = useState(false);
 
   const handleCloseModal = () => {
+    setNotice(null);
+    setSummaryDismissed(false);
     onLinkedItemsClose?.();
     setOpen(false);
   };
 
-  const [assignmentModalOpen, setAssignmentModalOpen] = useState(false);
-  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
-  const [viewAssignmentModalOpen, setViewAssignmentModalOpen] = useState(false);
-  const [editAssignmentModalOpen, setEditAssignmentModalOpen] = useState(false);
-  const [viewAssignmentId, setViewAssignmentId] = useState(null);
-  const [editAssignmentId, setEditAssignmentId] = useState(null);
-  const [copyModalOpen, setCopyModalOpen] = useState(false);
-  const [copyAssignment, setCopyAssignment] = useState(null);
+  // One assignment modal: { id, mode: "view" | "edit" | "copy" } or null.
+  const [assignmentModal, setAssignmentModal] = useState(null);
+  // Success line shown at the top of the picker.
+  const [notice, setNotice] = useState(null);
+  // Linked-count summary at the top; dismissed until the picker reopens.
+  const [summaryDismissed, setSummaryDismissed] = useState(false);
 
   const createInitialResourceModalState = () => ({
     open: false,
@@ -150,47 +153,20 @@ export default function LinkedItems({
   const closeResourceModal = () =>
     setResourceModalState(createInitialResourceModalState());
 
-  const openResourceModalHandler = (resource, context = {}) => {
-    console.log("📝 [openResourceModalHandler] Called with:", {
-      resourceId: resource?.id,
-      resourceTitle: resource?.title,
-      resourceIsPublic: resource?.isPublic,
-      resourceParentId: resource?.parent?.id,
-      context
-    });
-    
+  // `intent` is "edit" or "copy". Someone else's resource can only be
+  // copied, whatever the caller asks for.
+  const openResourceModalHandler = (resource, intent = "edit") => {
     if (!resource?.id) {
-      console.error("❌ [openResourceModalHandler] No resource provided");
+      console.error("[openResourceModalHandler] No resource provided");
       return;
     }
 
-    const isAdmin = user?.permissions?.some(
-      (permission) => permission?.name === "ADMIN"
-    );
-    const canEditOriginal =
-      isAdmin ||
-      resource?.author?.id === user?.id ||
-      resource?.collaborators?.some(
-        (collaborator) => collaborator?.id === user?.id
-      );
-    const isPublicOriginal =
-      resource?.isPublic || context.sourceType === "public";
+    const isCopy = intent === "copy" || !canEditLinkedItem(resource, user);
+    const templateId = isCopy
+      ? resource.id
+      : resource?.parent?.id || resource.id;
 
-    // Public originals are copy-only unless the current user owns or
-    // collaborates on them. Context supplied by the caller cannot weaken this.
-    const derivedSourceType =
-      isPublicOriginal && !canEditOriginal
-        ? "public"
-        : resource?.parent?.id
-          ? "custom"
-          : "mine";
-
-    const templateId =
-      derivedSourceType === "public"
-        ? resource.id
-        : resource?.parent?.id || resource.id;
-
-    const existingCustom = templateId
+    const existingCustom = isCopy
       ? myResources.find(
           (myResource) =>
             myResource?.parent?.id === templateId &&
@@ -198,17 +174,11 @@ export default function LinkedItems({
         )
       : null;
 
-    console.log("📝 [openResourceModalHandler] Derived values:", {
-      derivedSourceType,
-      templateId,
-      existingCustomId: existingCustom?.id,
-      existingCustomTitle: existingCustom?.title
-    });
-
     setResourceModalState({
       open: true,
       resourceId: resource.id,
-      sourceType: derivedSourceType,
+      // ResourceEditModal treats "public" as copy mode.
+      sourceType: isCopy ? "public" : "mine",
       templateId,
       existingCustomResourceId: existingCustom?.id || null,
     });
@@ -219,19 +189,11 @@ export default function LinkedItems({
     resourceId: savedResourceId,
     templateId,
   }) => {
-    try {
-      await refetchPublicResources?.();
-    } catch (err) {
-      console.error("Failed to refetch public resources after saving:", err);
-    }
-
     let myResourcesResult;
     try {
-      if (refetchMyResources) {
-        myResourcesResult = await refetchMyResources();
-      }
+      myResourcesResult = await refetchResources?.();
     } catch (err) {
-      console.error("Failed to refetch my resources after saving:", err);
+      console.error("Failed to refetch resources after saving:", err);
     }
 
     if (!myResourcesResult?.data?.resources || !savedResourceId) {
@@ -247,128 +209,50 @@ export default function LinkedItems({
     }
 
     const currentSelected = selectedResources || [];
-    console.log("💾 [handleResourceModalSaved] Current selection:", {
-      mode,
-      savedResourceId,
-      templateId,
-      currentSelectedIds: currentSelected.map(r => r.id),
-      currentSelectedDetails: currentSelected.map(r => ({
-        id: r.id,
-        title: r.title,
-        isPublic: r.isPublic,
-        parentId: r.parent?.id
-      })),
-      updatedResourceId: updatedResource?.id,
-      updatedResourceTitle: updatedResource?.title,
-      updatedResourceIsPublic: updatedResource?.isPublic,
-      updatedResourceParentId: updatedResource?.parent?.id
-    });
-    
-    let shouldUpdateSelection = false;
-
-    const updatedSelection = currentSelected.map((res) => {
-      if (mode === "createCopy" && templateId && res.id === templateId) {
-        console.log("🔄 [handleResourceModalSaved] Replacing template with copy:", {
-          templateId: res.id,
-          newResourceId: updatedResource.id
-        });
-        shouldUpdateSelection = true;
-        return updatedResource;
-      }
-      if (mode === "update" && res.id === savedResourceId) {
-        console.log("🔄 [handleResourceModalSaved] Updating existing resource:", {
-          resourceId: res.id,
-          newResourceId: updatedResource.id
-        });
-        shouldUpdateSelection = true;
-        return updatedResource;
-      }
-      return res;
-    });
-
-    if (shouldUpdateSelection) {
-      console.log("✅ [handleResourceModalSaved] Updating selection:", {
-        newSelectionIds: updatedSelection.map(r => r.id),
-        newSelectionDetails: updatedSelection.map(r => ({
-          id: r.id,
-          title: r.title,
-          isPublic: r.isPublic,
-          parentId: r.parent?.id
-        }))
-      });
-      handleChange({
-        target: { name: "resources", value: updatedSelection },
-      });
-    } else {
-      console.log("⚠️ [handleResourceModalSaved] No selection update needed");
+    // Copy & link: the copy replaces the original if it was linked,
+    // otherwise it is added. An edit refreshes the linked entry in place.
+    const isTarget = (res) =>
+      mode === "createCopy" ? res.id === templateId : res.id === savedResourceId;
+    const replaced = currentSelected.some(isTarget);
+    let updatedSelection = currentSelected.map((res) =>
+      isTarget(res) ? updatedResource : res
+    );
+    if (mode === "createCopy" && !replaced) {
+      updatedSelection = [...updatedSelection, updatedResource];
     }
+    if (mode === "createCopy" || replaced) {
+      handleChange({ target: { name: "resources", value: updatedSelection } });
+    }
+    setNotice(
+      mode === "createCopy"
+        ? t("board.expendedCard.copyLinked", "Your copy was created and linked to this card.")
+        : t("assignment.changeSuccess", "Changes saved successfully")
+    );
   };
 
-  const openCopyModal = (assignment) => {
-    if (!assignment) return;
-    setCopyAssignment(assignment);
-    setCopyModalOpen(true);
-  };
-
-  const openViewAssignmentModal = (assignment) => {
-    setViewAssignmentId(assignment.id);
-    setViewAssignmentModalOpen(true);
-  };
-
-  const openEditAssignmentModal = (assignment) => {
-    setEditAssignmentId(assignment.id);
-    setEditAssignmentModalOpen(true);
-  };
-
-
-  // Resource-specific merging for selected
-  // NOTE: We do NOT merge public resources with custom copies here.
-  // When a user clicks "Connect" on a public resource, we want to keep the public resource.
-  // Custom copies are only relevant when using the "Copy" button flow.
-  const selectedResourcesMerged = selectedResources.map((selectedResource) => {
-    // Keep the original resource as-is - don't replace with custom copy
-    // This ensures that when connecting a public resource, it stays as the public resource
-    console.log("🔄 [selectedResourcesMerged] Keeping original resource (no merge):", {
-      selectedResourceId: selectedResource?.id,
-      selectedResourceTitle: selectedResource?.title,
-      selectedResourceIsPublic: selectedResource?.isPublic,
-      selectedResourceParentId: selectedResource?.parent?.id
+  // Copy & link for assignments: link the new copy in place of the original.
+  const handleAssignmentCopied = async ({ id, originalId }) => {
+    let copy = { id };
+    try {
+      const result = await refetchAssignments?.();
+      copy = result?.data?.assignments?.find((a) => a.id === id) || copy;
+    } catch (err) {
+      console.error("Failed to refetch assignments after copying:", err);
+    }
+    const withoutOriginal = selectedAssignments.filter((a) => a.id !== originalId);
+    handleChange({
+      target: { name: "assignments", value: [...withoutOriginal, copy] },
     });
-    return selectedResource;
-  });
-
+    setNotice(
+      t("board.expendedCard.copyLinked", "Your copy was created and linked to this card.")
+    );
+  };
 
   // Generic connect/disconnect
   const connectItem = (item, fieldName, selectedArray) => {
-    console.log("🔗 [connectItem] Called with:", {
-      itemId: item?.id,
-      itemTitle: item?.title,
-      itemIsPublic: item?.isPublic,
-      itemParentId: item?.parent?.id,
-      fieldName,
-      selectedArrayIds: selectedArray.map(s => s.id),
-      selectedArrayDetails: selectedArray.map(s => ({
-        id: s.id,
-        title: s.title,
-        isPublic: s.isPublic,
-        parentId: s.parent?.id
-      }))
-    });
-    
     if (!selectedArray.some((s) => s.id === item.id)) {
       const newSelected = [...selectedArray, item];
-      console.log("✅ [connectItem] Adding item to selection:", {
-        newSelectedIds: newSelected.map(s => s.id),
-        newSelectedDetails: newSelected.map(s => ({
-          id: s.id,
-          title: s.title,
-          isPublic: s.isPublic,
-          parentId: s.parent?.id
-        }))
-      });
       handleChange({ target: { name: fieldName, value: newSelected } });
-    } else {
-      console.log("⚠️ [connectItem] Item already in selection, skipping");
     }
   };
 
@@ -377,128 +261,146 @@ export default function LinkedItems({
     handleChange({ target: { name: fieldName, value: newSelected } });
   };
 
-  const openAssignmentModalHandler = (assignment) => {
-    if (!assignment) {
-      console.error("No assignment provided to openAssignmentModalHandler");
-      return;
-    }
-  
-    console.log("Opening modal for assignment ID:", assignment.id);
-    setSelectedAssignmentId(assignment.id); // <-- just store the ID
-    setAssignmentModalOpen(true);
-  };  
+  const openAssignmentModal = (assignment, mode) => {
+    if (!assignment?.id) return;
+    setAssignmentModal({ id: assignment.id, mode });
+  };
 
-  const panes = [
+  // The resource being previewed (the item, so ownership can offer Edit).
+  const [previewResource, setPreviewResource] = useState(null);
+
+  const previewItem = (item, type) => {
+    if (type === "assignment") openAssignmentModal(item, "view");
+    else if (type === "resource") setPreviewResource(item);
+    else {
+      const url = getLinkedItemPreviewUrl(item, type);
+      if (url) window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  const editItem = (item, type) => {
+    if (type === "assignment") openAssignmentModal(item, "edit");
+    else if (type === "resource") openResourceModalHandler(item, "edit");
+  };
+
+  const copyItem = (item, type) => {
+    if (type === "assignment") openAssignmentModal(item, "copy");
+    else if (type === "resource") openResourceModalHandler(item, "copy");
+  };
+
+  // Plain click on a linked chip: edit what you own, preview the rest.
+  const openLinkedItem = (item, type) => {
+    if (getLinkedItemActions(item, type, user).open === "edit") editItem(item, type);
+    else previewItem(item, type);
+  };
+
+  // --- Picker state: one kind at a time, filtered by source and search ---
+  const [kind, setKind] = useState("resources");
+  const [sourceFilter, setSourceFilter] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const selectedByField = {
+    resources: selectedResources,
+    assignments: selectedAssignments,
+    tasks: selectedTasks,
+    studies: selectedStudies,
+  };
+  const fieldForType = {
+    resource: "resources",
+    assignment: "assignments",
+    task: "tasks",
+    study: "studies",
+  };
+  const isLinked = (item, type) =>
+    (selectedByField[fieldForType[type]] || []).some((s) => s.id === item.id);
+  const linkItem = (item, type) => {
+    const field = fieldForType[type];
+    connectItem(item, field, selectedByField[field] || []);
+  };
+  const unlinkItem = (item, type) => {
+    const field = fieldForType[type];
+    disconnectItem(item, field, selectedByField[field] || []);
+  };
+
+  const sourceOptions = [
+    ...(classIds.length > 0
+      ? [{ value: "class", label: t("board.expendedCard.thisClass", "This class") }]
+      : []),
+    { value: "mine", label: t("board.expendedCard.sourceMine", "Mine") },
+    { value: "public", label: t("board.expendedCard.sourcePublic", "Public") },
+  ];
+  const toggleSource = (value) =>
+    setSourceFilter((prev) =>
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+    );
+
+  const matchesSearch = (item) => {
+    const query = searchQuery.trim().toLowerCase();
+    return !query || stripHtml(item?.title || "").toLowerCase().includes(query);
+  };
+  // No source selected means every source.
+  const matchesSource = (item) =>
+    sourceFilter.length === 0 ||
+    item.sources?.some((source) => sourceFilter.includes(source));
+
+  const entriesByKind = {
+    resources: linkableResources.map((item) => ({ item, type: "resource" })),
+    assignments: linkableAssignments.map((item) => ({ item, type: "assignment" })),
+    tasks: publicTasks.map((item) => ({ item, type: "task" })),
+    studies: publicStudies.map((item) => ({ item, type: "study" })),
+  };
+  const showSources = kind === "resources" || kind === "assignments";
+  const visibleEntries = entriesByKind[kind].filter(
+    ({ item }) => matchesSearch(item) && (!showSources || matchesSource(item))
+  );
+  const kindLoading = {
+    resources: resourcesLoading,
+    assignments: assignmentsLoading,
+    tasks: publicTasksLoading,
+    studies: publicStudiesLoading,
+  }[kind];
+
+  const linkedCount = {
+    resources: selectedResources.length,
+    assignments: selectedAssignments.length,
+    tasks: selectedTasks.length,
+    studies: selectedStudies.length,
+  };
+  const kindItems = [
     {
-      menuItem: t("board.expendedCard.publicResources"),
-      render: () => (
-        <ItemTab
-          user={user}
-          items={publicResources}
-          selected={selectedResources}
-          connect={(item) => connectItem(item, "resources", selectedResources)}
-          disconnect={(item) =>
-            disconnectItem(item, "resources", selectedResources)
-          }
-          myItems={myResources}
-          myAssignments={myAssignmentsData}
-          proposal={proposal}
-          type="public"
-          isPublic={true}
-          loading={publicLoading}
-          openAssignmentModal={openAssignmentModalHandler}
-          openViewAssignmentModal={openViewAssignmentModal}
-          openCopyModal={openCopyModal}
-          openResourceModal={openResourceModalHandler}
-        />
-      ),
+      value: "resources",
+      label: t("board.expendedCard.resources", "Resources"),
     },
     {
-      menuItem: t("board.expendedCard.myResources"),
-      render: () => (
-        <ItemTab
-          user={user}
-          items={myResourcesForTab}
-          selected={selectedResources}
-          connect={(item) => connectItem(item, "resources", selectedResources)}
-          disconnect={(item) =>
-            disconnectItem(item, "resources", selectedResources)
-          }
-          myItems={[]}
-          proposal={proposal}
-          type="resource"
-          isPublic={false}
-          loading={myLoading}
-          openAssignmentModal={openAssignmentModalHandler}
-          openResourceModal={openResourceModalHandler}
-        />
-      ),
+      value: "assignments",
+      label: t("board.expendedCard.assignments", "Assignments"),
     },
     {
-      menuItem: t("board.expendedCard.myAssignments"),
-      render: () => (
-        <ItemTab
-          user={user}
-          items={myAssignments}
-          selected={selectedAssignments}
-          connect={(item) =>
-            connectItem(item, "assignments", selectedAssignments)
-          }
-          disconnect={(item) =>
-            disconnectItem(item, "assignments", selectedAssignments)
-          }
-          myItems={[]}
-          proposal={proposal}
-          type="assignment"
-          isPublic={false}
-          loading={myAssignmentsLoading}
-          openAssignmentModal={openAssignmentModalHandler}
-          openEditAssignmentModal={openEditAssignmentModal}
-          openResourceModal={openResourceModalHandler}
-        />
-      ),
+      value: "tasks",
+      label: t("board.expendedCard.tasksAndSurveys", "Tasks & surveys"),
     },
     {
-      menuItem: t("board.expendedCard.tasks"),
-      render: () => (
-        <ItemTab
-          user={user}
-          items={publicTasks}
-          selected={selectedTasks}
-          connect={(item) => connectItem(item, "tasks", selectedTasks)}
-          disconnect={(item) => disconnectItem(item, "tasks", selectedTasks)}
-          myItems={[]}
-          proposal={proposal}
-          type="task"
-          isPublic={true}
-          loading={publicTasksLoading}
-          openAssignmentModal={openAssignmentModalHandler}
-          openResourceModal={openResourceModalHandler}
-        />
-      ),
-    },
-    {
-      menuItem: t("board.expendedCard.studies"),
-      render: () => (
-        <ItemTab
-          user={user}
-          items={publicStudies}
-          selected={selectedStudies}
-          connect={(item) => connectItem(item, "studies", selectedStudies)}
-          disconnect={(item) =>
-            disconnectItem(item, "studies", selectedStudies)
-          }
-          myItems={[]}
-          proposal={proposal}
-          type="study"
-          isPublic={true}
-          loading={publicStudiesLoading}
-          openAssignmentModal={openAssignmentModalHandler}
-          openResourceModal={openResourceModalHandler}
-        />
-      ),
+      value: "studies",
+      label: t("board.expendedCard.studies", "Studies"),
     },
   ];
+
+  const emptyLabel = searchQuery || (showSources && sourceFilter.length > 0)
+    ? t("board.expendedCard.noSearchResults", "No items found matching your search.")
+    : t("board.expendedCard.noItems", "No items available.");
+
+  // Semantic sub-modals (edit / copy) sit above the picker; while one is
+  // open, Escape and backdrop clicks belong to it, not the picker.
+  const totalLinkedPreview =
+    selectedAssignments.length +
+    selectedResources.length +
+    selectedTasks.length +
+    selectedStudies.length;
+
+  const subModalOpen =
+    Boolean(assignmentModal) ||
+    resourceModalState.open ||
+    Boolean(previewResource);
 
   return (
     <>
@@ -512,76 +414,135 @@ export default function LinkedItems({
 
       <Modal
         open={open}
-        onClose={handleCloseModal}
+        onClose={subModalOpen ? undefined : handleCloseModal}
         size="large"
-        style={{ borderRadius: "12px", overflow: "hidden" }}
+        maxWidth={1040}
+        height="90vh"
+        frostedChrome
+        actions={
+          <div style={FOOTER_STYLE}>
+            <span style={{ ...TYPO.body, color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}>
+              {t(
+                "board.expendedCard.linkedCount",
+                { count: totalLinked },
+                { default: "{{count}} linked" }
+              )}
+            </span>
+            <div style={FOOTER_BUTTONS_STYLE}>
+              <Button variant="outline" onClick={handleCloseModal}>
+                {t("board.expendedCard.close", "Close")}
+              </Button>
+              <Button variant="filled" onClick={handleCloseModal}>
+                {t("board.expendedCard.done", {}, { default: "Done" })}
+              </Button>
+            </div>
+          </div>
+        }
       >
-        <Modal.Header
-          style={{
-            background: "#f9fafb",
-            borderBottom: "1px solid #e0e0e0",
-            ...TYPO.titleS,
-          }}
-        >
-          {t(
-            "board.expendedCard.selectItemsToConnect",
-            "Select Items to Connect"
+        <div style={FROSTED_BODY_STYLE}>
+          {!summaryDismissed && (
+            <div style={{ marginBottom: "16px" }}>
+              <MessageCard
+                variant="information"
+                message={t(
+                  "board.expendedCard.linkedSummary",
+                  linkedCount,
+                  {
+                    default:
+                      "Linked to this card: {{resources}} resources, {{assignments}} assignments, {{tasks}} tasks & surveys, {{studies}} studies",
+                  }
+                )}
+                onClose={() => setSummaryDismissed(true)}
+                closeAriaLabel={t("board.expendedCard.close", "Close")}
+              />
+            </div>
           )}
-        </Modal.Header>
-        <Modal.Content scrolling style={{ background: "#ffffff", padding: 0, ...TYPO.body }}>
-          <Tab panes={panes} style={{ fontFamily: TYPO.fontFamily }} />
-        </Modal.Content>
-        <Modal.Actions
-          style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
-        >
-
-          <Button variant="filled" onClick={handleCloseModal}>
-            {t("board.expendedCard.done", {}, { default: "Done" })}
-          </Button>
-        </Modal.Actions>
+          <div style={TOOLBAR_STYLE}>
+            <Navbar
+              variant="underline"
+              showRule
+              aria-label={t("board.expendedCard.linkItemsTitle", "Link items to this card")}
+            >
+              {kindItems.map((option) => (
+                <NavbarItem
+                  key={option.value}
+                  selected={kind === option.value}
+                  onClick={() => setKind(option.value)}
+                >
+                  {option.label}
+                </NavbarItem>
+              ))}
+            </Navbar>
+            <div style={FILTER_ROW_STYLE}>
+              <Input
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder={t("board.expendedCard.searchPlaceholder", "Search by title...")}
+                aria-label={t("board.expendedCard.searchPlaceholder", "Search by title...")}
+                wrapperStyle={{ flex: "1 1 240px", width: "auto" }}
+              />
+              {showSources &&
+                sourceOptions.map((option) => (
+                  <Chip
+                    key={option.value}
+                    label={option.label}
+                    selected={sourceFilter.includes(option.value)}
+                    onClick={() => toggleSource(option.value)}
+                  />
+                ))}
+            </div>
+          </div>
+          {notice && (
+            <div style={{ marginBottom: "16px" }}>
+              <MessageCard
+                variant="success"
+                message={notice}
+                onClose={() => setNotice(null)}
+                closeAriaLabel={t("board.expendedCard.close", "Close")}
+              />
+            </div>
+          )}
+          <LinkedItemsList
+            entries={visibleEntries}
+            loading={kindLoading}
+            isLinked={isLinked}
+            onLink={linkItem}
+            onUnlink={unlinkItem}
+            onPreview={previewItem}
+            onEdit={editItem}
+            onCopy={copyItem}
+            myAssignments={myAssignmentsData}
+            showSources={showSources}
+            emptyLabel={emptyLabel}
+            user={user}
+            t={t}
+          />
+        </div>
       </Modal>
 
       <AssignmentModal
-        open={assignmentModalOpen}
-        t={t}
-        onClose={() => {
-          setAssignmentModalOpen(false);
-          // setSelectedAssignment(null);
-        }}
-        assignmentId={selectedAssignmentId}
+        open={Boolean(assignmentModal)}
+        mode={assignmentModal?.mode}
+        assignmentId={assignmentModal?.id}
         user={user}
+        classIds={classIds}
+        t={t}
+        onClose={() => setAssignmentModal(null)}
+        onCopied={handleAssignmentCopied}
         onAssignmentPublicChange={onAssignmentPublicChange}
       />
-  
-      <AssignmentViewModal
-        user={user}
-        open={viewAssignmentModalOpen}
-        t={t}
-        onClose={() => setViewAssignmentModalOpen(false)}
-        assignmentId={viewAssignmentId}
-      />
-      
-      <AssignmentEditModal
-        open={editAssignmentModalOpen}
-        onClose={() => setEditAssignmentModalOpen(false)}
-        assignmentId={editAssignmentId}
-        user={user}
-        onSaved={() => {
-          setEditAssignmentModalOpen(false);
-          setEditAssignmentId(null);
-        }}
-      />
 
-      <AssignmentCopyModal
-        open={copyModalOpen}
-        onClose={() => setCopyModalOpen(false)}
-        assignment={copyAssignment}
-        user={user}
-        onCopied={() => {
-          // optional: refresh lists / refetch queries if needed
-          setCopyModalOpen(false);
-          setCopyAssignment(null);
-        }}
+      <ResourcePreviewModal
+        id={previewResource?.id}
+        onClose={() => setPreviewResource(null)}
+        onEdit={
+          canEditLinkedItem(previewResource, user)
+            ? () => {
+                openResourceModalHandler(previewResource, "edit");
+                setPreviewResource(null);
+              }
+            : undefined
+        }
       />
 
       <ResourceEditModal
@@ -597,8 +558,8 @@ export default function LinkedItems({
         onSaved={handleResourceModalSaved}
       />
 
-
-
+      {totalLinkedPreview > 0 && (
+      <div style={PREVIEW_CONTAINER_STYLE}>
       {/* Assignments first (top section) */}
       {selectedAssignments.length > 0 && (
         <PreviewSection
@@ -607,27 +568,29 @@ export default function LinkedItems({
           type="assignment"
           proposal={proposal}
           classId={proposal?.usedInClass?.id}
-          openAssignmentModal={openAssignmentModalHandler}
+          openAssignmentModal={(item) => openLinkedItem(item, "assignment")}
           user={user}
           completionByAssignmentId={assignmentCompletion}
         />
       )}
       {/* Combined Resources section: resources, then 24px gap, then tasks and studies */}
-      {(selectedResourcesMerged.length > 0 || selectedTasks.length > 0 || selectedStudies.length > 0) && (
+      {(selectedResources.length > 0 || selectedTasks.length > 0 || selectedStudies.length > 0) && (
         <PreviewSection
           title={t("board.expendedCard.previewLinkedResources")}
           sections={[
-            ...(selectedResourcesMerged.length > 0 ? [{ items: selectedResourcesMerged, type: "resource" }] : []),
+            ...(selectedResources.length > 0 ? [{ items: selectedResources, type: "resource" }] : []),
             ...(selectedTasks.length > 0 ? [{ items: selectedTasks, type: "task" }] : []),
             ...(selectedStudies.length > 0 ? [{ items: selectedStudies, type: "study" }] : []),
           ]}
           proposal={proposal}
           classId={proposal?.usedInClass?.id}
-          openAssignmentModal={openAssignmentModalHandler}
-          openResourceModal={openResourceModalHandler}
+          openAssignmentModal={(item) => openLinkedItem(item, "assignment")}
+          openResourceModal={(item) => openLinkedItem(item, "resource")}
           user={user}
           templateClassIds={getBoardTemplateClassIds(proposal)}
         />
+      )}
+      </div>
       )}
     </>
   );

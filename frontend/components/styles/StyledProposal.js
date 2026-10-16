@@ -1757,6 +1757,17 @@ export const StyledProposal = styled.div`
       &.infoBoardEdit {
         border-radius: 8px;
         border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+
+        /* Settings rows below Linked Items: divider above, room between rows */
+        & > .proposalCardComments {
+          gap: 12px;
+          padding-top: 24px;
+          border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+
+          .cardHeader {
+            margin-bottom: 0;
+          }
+        }
       }
 
       &.milestoneReviewFormPanel {

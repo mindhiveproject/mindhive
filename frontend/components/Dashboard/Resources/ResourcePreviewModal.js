@@ -4,6 +4,7 @@ import moment from "moment";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
 import Modal from "../../DesignSystem/Modal";
 import { CloseIcon } from "../../DesignSystem/Icons";
@@ -38,7 +39,9 @@ const META_VALUE = {
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
-export default function ResourcePreviewModal({ id, onClose }) {
+// `onEdit`, when given, adds an Edit button so an owner can switch from
+// previewing to editing.
+export default function ResourcePreviewModal({ id, onClose, onEdit }) {
   const { data, loading, error } = useQuery(GET_RESOURCE, {
     variables: { id },
     skip: !id,
@@ -69,6 +72,13 @@ export default function ResourcePreviewModal({ id, onClose }) {
       }
       size="large"
       bodyStyle={{ minWidth: 0 }}
+      actions={
+        onEdit && (
+          <Button variant="filled" onClick={onEdit}>
+            {t("boardManagement.edit", {}, { default: "Edit" })}
+          </Button>
+        )
+      }
     >
       {loading && (
         <p style={META_LABEL}>{t("boardManagement.loadingPreview")}</p>
