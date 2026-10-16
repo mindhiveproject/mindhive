@@ -181,6 +181,35 @@ const StyledPanel = styled.div`
     cursor: not-allowed;
   }
 
+  .DesignSystem-DropdownSelect-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 12px;
+  }
+  .DesignSystem-DropdownSelect-row .DesignSystem-DropdownSelect-option {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+  .DesignSystem-DropdownSelect-rowAction {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    border: 1px solid #a1a1a1;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #5d5763;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .DesignSystem-DropdownSelect-rowAction:hover:not(:disabled) {
+    background-color: #f5f5f5;
+  }
+  .DesignSystem-DropdownSelect-rowAction:disabled {
+    color: #a1a1a1;
+    cursor: not-allowed;
+  }
+
   .DesignSystem-DropdownSelect-group {
     padding: 8px 12px 4px;
     font-weight: 600;
@@ -210,6 +239,20 @@ export interface DropdownSelectOption {
    */
   group?: string;
   /** Shows the row but blocks selecting it. */
+  disabled?: boolean;
+  /**
+   * Secondary button at the end of the row (e.g. "Add to board"). Clicking it
+   * runs `onClick` and closes the panel without selecting the option.
+   */
+  action?: DropdownSelectOptionAction;
+}
+
+/** A secondary button shown at the end of a {@link DropdownSelectOption} row. */
+export interface DropdownSelectOptionAction {
+  label: React.ReactNode;
+  onClick: () => void;
+  /** Accessible name when `label` alone is ambiguous out of context. */
+  ariaLabel?: string;
   disabled?: boolean;
 }
 
@@ -736,7 +779,7 @@ export default function DropdownSelect(props: DropdownSelectProps) {
                     ? (selectedIds ?? []).some((id) => String(id) === String(opt.value))
                     : opt.value === value;
                   const isDisabled = !!opt.disabled;
-                  return (
+                  const optionButton = (
                     <button
                       key={String(opt.value)}
                       type="button"
@@ -752,6 +795,29 @@ export default function DropdownSelect(props: DropdownSelectProps) {
                     >
                       {opt.label}
                     </button>
+                  );
+                  if (!opt.action) return optionButton;
+                  const { action } = opt;
+                  return (
+                    <div
+                      key={String(opt.value)}
+                      role="presentation"
+                      className="DesignSystem-DropdownSelect-row"
+                    >
+                      {optionButton}
+                      <button
+                        type="button"
+                        className="DesignSystem-DropdownSelect-rowAction MH-Type-Label-Small"
+                        disabled={!!action.disabled}
+                        aria-label={action.ariaLabel}
+                        onClick={() => {
+                          setOpen(false);
+                          action.onClick();
+                        }}
+                      >
+                        {action.label}
+                      </button>
+                    </div>
                   );
                 })}
               </Fragment>
