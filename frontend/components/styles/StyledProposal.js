@@ -937,7 +937,7 @@ export const StyledProposal = styled.div`
       gap: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
-      border: 1.5px solid;
+      border: 1px;
       white-space: nowrap;
       font-family: inherit;
       width: fit-content;
@@ -946,17 +946,17 @@ export const StyledProposal = styled.div`
         outline: none;
       }
       &.board {
-        background: #F9D978;
-        border-color: #5D5763;
+        background: #FDF2D0;
+        border-color: #F3F3F3;
         color: #171717;
         &:hover:not(:disabled) {
-          background: #F5D165;
+          background: #FDF2D0;
           border-color: #4A4550;
         }
       }
       &.list {
         background: #DEF8FB;
-        border-color: #336F8A;
+        border-color: #F3F3F3;
         color: #171717;
         width: max-content;
         max-width: 100%;

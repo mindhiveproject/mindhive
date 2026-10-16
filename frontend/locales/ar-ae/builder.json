@@ -2240,6 +2240,9 @@
 	},
 	"submit": "يُقدِّم",
 	"submitStudy": {
+		"goToStudyBuilder": "الانتقال إلى منشئ الدراسة",
+		"createStudyFirst": "أنشئ دراستك قبل إرسالها لجمع البيانات.",
+		"noStudyYet": "لا يحتوي مشروعك على دراسة بعد.",
 		"appearInFeedbackCenter": "ستظهر دراستك في مركز الملاحظات.",
 		"completeAllRequired": "يرجى استكمال جميع البطاقات المطلوبة قبل تقديم اقتراحك للحصول على ردود الفعل.",
 		"dataCollection": "جمع البيانات",

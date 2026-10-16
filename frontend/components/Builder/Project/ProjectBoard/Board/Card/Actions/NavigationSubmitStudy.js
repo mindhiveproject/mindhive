@@ -16,6 +16,7 @@ export default function Navigation({
   saveBtnFunction,
   allCardsCompleted,
   isStudySubmitted,
+  canSubmit = true,
   switchFeedbackLock,
   isParticipationLocked,
 }) {
@@ -52,7 +53,9 @@ export default function Navigation({
         {cardId && !isStudySubmitted && (
           <Button
             variant="filled"
+            disabled={!canSubmit}
             onClick={async () => {
+              if (!canSubmit) return;
               if (
                 confirm(
                   t(

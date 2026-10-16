@@ -2240,6 +2240,9 @@
 	},
 	"submit": "Enviar",
 	"submitStudy": {
+		"goToStudyBuilder": "Ir para o Construtor de estudos",
+		"createStudyFirst": "Crie seu estudo antes de enviá-lo para a coleta de dados.",
+		"noStudyYet": "Seu projeto ainda não tem um estudo.",
 		"appearInFeedbackCenter": "Seu estudo aparecerá no Centro de Feedback.",
 		"completeAllRequired": "Preencha todos os cartões necessários antes de enviar sua proposta para feedback.",
 		"dataCollection": "Coleta de dados",

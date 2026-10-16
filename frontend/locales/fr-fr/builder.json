@@ -2240,6 +2240,9 @@
 	},
 	"submit": "Soumettre",
 	"submitStudy": {
+		"goToStudyBuilder": "Aller au Constructeur d'études",
+		"createStudyFirst": "Créez votre étude avant de la soumettre pour la collecte de données.",
+		"noStudyYet": "Votre projet n'a pas encore d'étude.",
 		"appearInFeedbackCenter": "Votre étude apparaîtra dans le Centre de commentaires.",
 		"completeAllRequired": "Veuillez remplir toutes les cartes requises avant de soumettre votre proposition pour commentaires.",
 		"dataCollection": "Collecte de données",

@@ -2240,6 +2240,9 @@
 	},
 	"submit": "提交",
 	"submitStudy": {
+		"goToStudyBuilder": "前往学习建设者",
+		"createStudyFirst": "请先创建研究，再提交以进行数据收集。",
+		"noStudyYet": "您的项目还没有研究。",
 		"appearInFeedbackCenter": "您的研究将出现在反馈中心。",
 		"completeAllRequired": "在提交您的提案以获得反馈之前，请填写所有必需的卡片。",
 		"dataCollection": "数据收集",

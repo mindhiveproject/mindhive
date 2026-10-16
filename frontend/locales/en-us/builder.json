@@ -2390,6 +2390,9 @@
 	},
 	"submit": "Submit",
 	"submitStudy": {
+		"goToStudyBuilder": "Go to Study builder",
+		"createStudyFirst": "Create your study before submitting it for data collection.",
+		"noStudyYet": "Your project doesn't have a study yet.",
 		"appearInFeedbackCenter": "Your study will appear in the Feedback Center.",
 		"completeAllRequired": "Please complete all required cards before submitting your proposal for feedback.",
 		"dataCollection": "Data Collection",

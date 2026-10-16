@@ -2240,6 +2240,9 @@
 	},
 	"submit": "Indienen",
 	"submitStudy": {
+		"goToStudyBuilder": "Naar de Studiebouwer",
+		"createStudyFirst": "Maak je studie aan voordat je die indient voor gegevensverzameling.",
+		"noStudyYet": "Je project heeft nog geen studie.",
 		"appearInFeedbackCenter": "Uw studie verschijnt in het Feedback Center.",
 		"completeAllRequired": "Vul alle vereiste kaarten in voordat u uw voorstel ter feedback indient.",
 		"dataCollection": "Gegevensverzameling",
