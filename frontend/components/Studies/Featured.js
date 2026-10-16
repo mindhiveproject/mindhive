@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { FEATURED_STUDIES } from "../Queries/Study";
+import useHiddenStudyIds from "../Tasks/Bank/useHiddenStudyIds";
 
 import FeaturedCard from "./FeaturedCard";
 import IconButton from "../DesignSystem/IconButton";
@@ -127,7 +128,10 @@ function DisplayFeatured({ user, studies, isDashboard }) {
 }
 
 export default function FeaturedStudies({ user, isDashboard }) {
-  const { data, error, loading } = useQuery(FEATURED_STUDIES);
+  const hiddenIds = useHiddenStudyIds();
+  const { data, error, loading } = useQuery(FEATURED_STUDIES, {
+    variables: { hiddenIds },
+  });
   const studies = data?.studies || [];
 
   if (studies?.length) {

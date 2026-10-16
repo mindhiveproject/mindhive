@@ -1,9 +1,21 @@
 import gql from "graphql-tag";
 
+// featured studies a teacher can hide from their class's students
+export const FEATURED_STUDIES_FOR_CLASS_VISIBILITY = gql`
+  query FEATURED_STUDIES_FOR_CLASS_VISIBILITY {
+    studies(where: { featured: { equals: true } }, orderBy: { title: asc }) {
+      id
+      title
+    }
+  }
+`;
+
 // get featured studies
 export const FEATURED_STUDIES = gql`
-  query FEATURED_STUDIES {
-    studies(where: { featured: { equals: true } }) {
+  query FEATURED_STUDIES($hiddenIds: [ID!] = []) {
+    studies(
+      where: { featured: { equals: true }, id: { notIn: $hiddenIds } }
+    ) {
       id
       title
       slug

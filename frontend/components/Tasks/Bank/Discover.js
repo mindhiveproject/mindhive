@@ -9,6 +9,7 @@ import useHiddenTaskIds from "./useHiddenTaskIds";
 import { UserContext } from "../../Global/Authorized";
 import Button from "../../DesignSystem/Button";
 import MessageCard from "../../DesignSystem/MessageCard";
+import JustOneSecondNotice from "../../DesignSystem/JustOneSecondNotice";
 import Chip from "../../DesignSystem/Chip";
 import Input from "../../DesignSystem/Input";
 import { buildTaskBankWhere } from "../../../lib/taskBankFilter";
@@ -191,6 +192,19 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
           <TaskDescriptionsExport user={user} tasks={allTasks} />
         </div>
       </div>
+
+      {(userLoading || loading) && (
+        <JustOneSecondNotice
+          message={{
+            h1: t("taskBankLoading.title", {}, { default: "Just one second" }),
+            p: t(
+              "taskBankLoading.message",
+              {},
+              { default: "Tasks and surveys are loading." }
+            ),
+          }}
+        />
+      )}
 
       {!userLoading && !loading && !error && tasks.length === 0 && (
         <MessageCard

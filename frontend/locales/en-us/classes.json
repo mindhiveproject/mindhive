@@ -2511,5 +2511,26 @@
 		"title": "Tasks & surveys",
 		"visible": "Visible",
 		"visibleCount": "{{visible}} of {{total}} visible"
+	},
+	"studyVisibility": {
+		"cancel": "Cancel",
+		"description": "Choose which featured studies your students see on the discover page and as templates in the study builder.",
+		"error": "Something went wrong. Please try again.",
+		"hidden": "Hidden",
+		"hideAll": "Hide all",
+		"loading": "Loading…",
+		"manage": "Manage",
+		"modalDescription": "Switch off any featured study you don't want your students to see on the discover page or as a template in the study builder. Studies featured later are visible until you hide them.",
+		"modalTitle": "Featured studies your students can see",
+		"noMatches": "No featured studies match your search.",
+		"save": "Save",
+		"saving": "Saving…",
+		"searchPlaceholder": "Search featured studies",
+		"showAll": "Show all",
+		"summaryAll": "All featured studies are visible to your students.",
+		"summaryHidden": "{{count}} hidden from your students. Everything else, including studies featured later, is visible.",
+		"title": "Featured studies",
+		"visible": "Visible",
+		"visibleCount": "{{visible}} of {{total}} visible"
 	}
 }

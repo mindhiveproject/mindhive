@@ -24,6 +24,7 @@ import TipTapEditor from "../../../TipTap/Main";
 import CurriculumTypeSelector from "./CurriculumTypeSelector";
 import TeachingTeamSettings from "./TeachingTeamSettings";
 import TaskVisibilitySettings from "./TaskVisibilitySettings";
+import StudyVisibilitySettings from "./StudyVisibilitySettings";
 import { isClassCreator } from "../../../../lib/classTeacherUtils";
 import {
   CURRICULUM_TYPES,
@@ -516,6 +517,10 @@ export default function Settings({ myclass, user }) {
       label: t("taskVisibility.title", {}, { default: "Tasks & surveys" }),
     },
     {
+      id: "settings-studies",
+      label: t("studyVisibility.title", {}, { default: "Featured studies" }),
+    },
+    {
       id: "settings-password-reset",
       label: t("passwordResetEmailSettingsTitle", {}, {
         default: "Student password reset emails",
@@ -882,6 +887,10 @@ export default function Settings({ myclass, user }) {
 
         <div id="settings-tasks">
           <TaskVisibilitySettings myclass={myclass} />
+        </div>
+
+        <div id="settings-studies">
+          <StudyVisibilitySettings myclass={myclass} />
         </div>
 
         <section className="settingsSection" id="settings-password-reset">

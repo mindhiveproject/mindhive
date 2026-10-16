@@ -189,6 +189,16 @@ export const Study = list({
       ref: "MediaAsset.usedInStudies",
       many: true,
     }),
+    // Set from the class side only (Class.hiddenStudies, class staff).
+    hiddenInClasses: relationship({
+      ref: "Class.hiddenStudies",
+      many: true,
+      graphql: { omit: { create: true, update: true } },
+      ui: {
+        createView: { fieldMode: "hidden" },
+        itemView: { fieldMode: "read" },
+      },
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

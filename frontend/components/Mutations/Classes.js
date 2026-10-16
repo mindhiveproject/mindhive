@@ -38,6 +38,25 @@ export const UPDATE_CLASS_HIDDEN_TASKS = gql`
   }
 `;
 
+// replace the featured studies hidden from a class's students (block list)
+export const UPDATE_CLASS_HIDDEN_STUDIES = gql`
+  mutation UPDATE_CLASS_HIDDEN_STUDIES(
+    $id: ID!
+    $hiddenStudies: [StudyWhereUniqueInput!]!
+  ) {
+    updateClass(
+      where: { id: $id }
+      data: { hiddenStudies: { set: $hiddenStudies } }
+    ) {
+      id
+      hiddenStudies {
+        id
+        featured
+      }
+    }
+  }
+`;
+
 export const EDIT_CLASS = gql`
   mutation EDIT_CLASS(
     $id: ID!
