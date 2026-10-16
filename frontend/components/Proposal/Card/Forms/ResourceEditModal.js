@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
+import ReactHtmlParser from "react-html-parser";
 import { Button, Modal } from "semantic-ui-react";
 import TipTapEditor from "../../../TipTap/Main";
+import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import Chip from "../../../DesignSystem/Chip";
 import { GET_RESOURCE } from "../../../Queries/Resource";
 import {
@@ -9,7 +11,7 @@ import {
   UPDATE_RESOURCE,
   mergeResourceSettings,
 } from "../../../Mutations/Resource";
-import { TYPO } from "./utils";
+import { ABOVE_DS_MODAL_DIMMER, stripHtml, TYPO } from "./utils";
 
 export default function ResourceEditModal({
   open,
@@ -36,6 +38,8 @@ export default function ResourceEditModal({
   const [formState, setFormState] = useState(getDefaultFormState);
   const [hasChanges, setHasChanges] = useState(false);
   const [mutationError, setMutationError] = useState(null);
+  // Read-only view of the current (possibly unsaved) form content.
+  const [previewing, setPreviewing] = useState(false);
 
   const isPublicTemplate = sourceType === "public";
   const effectiveTemplateId = templateId || resourceId || null;
@@ -45,6 +49,7 @@ export default function ResourceEditModal({
     isPublicTemplate && choice !== "existing" && !needsChoice;
 
   useEffect(() => {
+    setPreviewing(false);
     if (open) {
       if (isPublicTemplate) {
         if (existingCustomResourceId) {
@@ -201,7 +206,6 @@ export default function ResourceEditModal({
           templateId: effectiveTemplateId,
         });
 
-        alert(t("boardManagement.savedRessource", "Resource saved"));
       } else {
         await updateResource({
           variables: {
@@ -221,7 +225,6 @@ export default function ResourceEditModal({
           templateId: effectiveTemplateId,
         });
 
-        alert(t("assignment.changeSuccess", "Changes saved successfully"));
       }
 
       setHasChanges(false);
@@ -236,6 +239,7 @@ export default function ResourceEditModal({
 
   return (
     <Modal
+      dimmer={ABOVE_DS_MODAL_DIMMER}
       open={open}
       onClose={onClose}
       size="large"
@@ -263,7 +267,11 @@ export default function ResourceEditModal({
           )}
         </span>
         <Chip
-          label={t("board.editMode", "You are in Edit Mode")}
+          label={
+            previewing
+              ? t("board.expendedCard.preview", "Preview")
+              : t("board.editMode", "You are in Edit Mode")
+          }
           selected={false}
         />
       </Modal.Header>
@@ -376,6 +384,30 @@ export default function ResourceEditModal({
             )}
             {loading ? (
               <p>{t("common.loading", "Loading...")}</p>
+            ) : previewing ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                <h3 style={{ ...TYPO.titleS, color: "#274E5B", margin: 0 }}>
+                  {stripHtml(formState.title) || "Untitled"}
+                </h3>
+                {formState.description && (
+                  <p style={{ ...TYPO.body, color: "#274E5B", margin: 0, whiteSpace: "pre-wrap" }}>
+                    {formState.description}
+                  </p>
+                )}
+                <div
+                  style={{
+                    padding: "16px",
+                    border: "1px solid #D3E0E3",
+                    borderRadius: "12px",
+                  }}
+                >
+                  <ReadOnlyTipTap>
+                    <div className="ProseMirror">
+                      {ReactHtmlParser(formState.content || "")}
+                    </div>
+                  </ReadOnlyTipTap>
+                </div>
+              </div>
             ) : (
               <>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -483,6 +515,24 @@ export default function ResourceEditModal({
       <Modal.Actions
         style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
       >
+        {!needsChoice && (
+          <Button
+            disabled={loading || !!error}
+            onClick={() => setPreviewing((prev) => !prev)}
+            style={{
+              borderRadius: "100px",
+              background: "white",
+              ...TYPO.bodyMedium,
+              color: "#336F8A",
+              border: "1px solid #336F8A",
+              marginRight: "10px",
+            }}
+          >
+            {previewing
+              ? t("board.expendedCard.backToEditing", "Back to editing")
+              : t("board.expendedCard.preview", "Preview")}
+          </Button>
+        )}
         {!needsChoice && (
           <Button
             loading={saving}

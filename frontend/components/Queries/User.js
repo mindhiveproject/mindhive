@@ -94,6 +94,9 @@ export const CURRENT_USER_QUERY = gql`
           hiddenTasks {
             id
           }
+          hiddenStudies {
+            id
+          }
         }
         teacherIn {
           id

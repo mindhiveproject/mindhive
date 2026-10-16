@@ -88,6 +88,10 @@ export const GET_CLASS = gql`
         id
         public
       }
+      hiddenStudies {
+        id
+        featured
+      }
       creator {
         id
         username

@@ -13,15 +13,29 @@ import { isPublishedToClassId } from "../../../Mutations/Resource";
 // tooltip or popover it sits in, so it never outgrows the title beside it.
 const TOOLTIP_LABEL_STYLE = { fontWeight: 600 };
 
-// Base chip layout (all chips)
+// Base chip layout (all chips): one row that shrinks to its container and
+// ellipsises the title, never wider than 320px.
 const CHIP_BASE_STYLES = {
   display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: "8px",
   padding: "6px 12px",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "flex-start",
-  gap: "10px",
   borderRadius: "8px",
+  boxSizing: "border-box",
+  maxWidth: "min(320px, 100%)",
+  minWidth: 0,
+};
+
+// Chip title: takes the room left over and ellipsises, keeping a full line height.
+const CHIP_TITLE_STYLE = {
+  flex: "0 1 auto",
+  minWidth: 0,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  ...TYPO.label,
+  color: "#171717",
 };
 
 // Assignment chip styles (Disabled, Public, Completed)
@@ -138,24 +152,20 @@ const AssignmentChip = ({
         style={{
           position: "relative",
           ...CHIP_BASE_STYLES,
-          flexDirection: "row",
-          alignItems: "center",
           ...chipStyle,
           cursor: canClick ? "pointer" : "not-allowed",
           transition: "box-shadow 0.2s ease",
           boxShadow: isHovered && canClick ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
           ...TYPO.label,
           color: chipStyle.color || "#171717",
-          maxWidth: "320px",
-          minWidth: 0,
           opacity: isDisabled ? 0.55 : 1,
         }}
       >
-        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{fullTitle}</span>
+        <span style={CHIP_TITLE_STYLE}>{fullTitle}</span>
         {completion && (
           <span
             aria-label={completionLabel}
-            style={{ marginLeft: "8px", flexShrink: 0, opacity: 0.7, whiteSpace: "nowrap" }}
+            style={{ flexShrink: 0, opacity: 0.7, whiteSpace: "nowrap" }}
           >
             {completion.completed}/{completion.total}
           </span>
@@ -214,8 +224,6 @@ const ResourceStudyChip = ({
         style={{
           position: "relative",
           ...CHIP_BASE_STYLES,
-          flexDirection: "row",
-          alignItems: "center",
           ...RESOURCE_STUDY_STYLES,
           background: "#FFFFFF",
           ...(notPublished ? ASSIGNMENT_STYLES.disabled : {}),
@@ -224,12 +232,10 @@ const ResourceStudyChip = ({
           transition: "box-shadow 0.2s ease",
           boxShadow: isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
           ...TYPO.label,
-          maxWidth: "320px",
-          minWidth: 0,
           opacity: notPublished ? 0.55 : 1,
         }}
       >
-        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, ...TYPO.label, color: "#171717" }}>{fullTitle}</span>
+        <span style={CHIP_TITLE_STYLE}>{fullTitle}</span>
       </div>
     </Tooltip>
   );
@@ -316,19 +322,15 @@ const TaskSurveyChip = ({
         style={{
           position: "relative",
           ...CHIP_BASE_STYLES,
-          flexDirection: "row",
-          alignItems: "center",
-          gap: "8px",
           border: style.border,
           background: style.background,
           color: style.color,
           transition: "all 0.2s ease",
           boxShadow: isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
           ...TYPO.label,
-          maxWidth: "320px",
-          minWidth: 0,
         }}
       >
+        {/* Star only: the title lives in the span beside it so it can shrink. */}
         <button
           type="button"
           onClick={handleStarClick}
@@ -337,9 +339,10 @@ const TaskSurveyChip = ({
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "left",
-            width: "fit-content",
-            gap: "8px",
+            justifyContent: "center",
+            // Parent board styles give every button `width: 100%`.
+            width: "auto",
+            maxWidth: "none",
             padding: 0,
             margin: 0,
             border: "none",
@@ -347,38 +350,16 @@ const TaskSurveyChip = ({
             cursor: canToggleFavorite ? "pointer" : "default",
             color: starColor,
             flexShrink: 0,
-            ...TYPO.label,
           }}
         >
-          <Icon name="star" style={{ margin: 0, height: "20px", width: "20px" }} />
-          <p
-            style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              minWidth: 0,
-              width: "fit-content",
-              maxWidth: "100%",
-              ...TYPO.label,
-              color: "#171717",
-              margin: 0,
-            }}
-          >
-            {fullTitle}
-          </p>
+          <Icon name="star" style={{ margin: 0, fontSize: "16px", lineHeight: 1, height: "auto", width: "auto" }} />
         </button>
         <span
           role="button"
           tabIndex={0}
           onClick={handleTitleClick}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleTitleClick(e); } }}
-          style={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            minWidth: 0,
-            cursor: "pointer",
-          }}
+          style={{ ...CHIP_TITLE_STYLE, color: style.color, cursor: "pointer" }}
         >
           {fullTitle}
         </span>

@@ -63,6 +63,29 @@ export const StyledActionPage = styled.div`
     letter-spacing: 0;
     color: #171717;
   }
+  /* Tasks & surveys the students picked on the card (StudentTaskChips). */
+  .cardStudentTasks {
+    display: grid;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  }
+  .cardStudentTasksLabel {
+    font: var(--MH-Type-Label-Base);
+    letter-spacing: 0;
+    color: #5d5763;
+  }
+  .cardStudentTasks .studentTasks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+  }
+  .cardStudentTasks .studentTasksEmpty {
+    font: var(--MH-Type-Body-Base);
+    letter-spacing: 0;
+    color: #6a6a6a;
+  }
   .lists {
     display: grid;
   }
@@ -340,6 +363,8 @@ export const StyledReviewCard = styled.div`
 `;
 
 export const StyledDasboardReview = styled.div`
+  min-height: 0;
+
   .overview {
     display: grid;
     grid-gap: 16px;
@@ -375,7 +400,20 @@ export const StyledDasboardReview = styled.div`
       /* !important: DropdownSelect sets these on its label for its clamp-and-wrap
          full-width case. Here the trigger is a compact filter — keep it to one
          line and ellipsize instead. */
-      .searchTopArea [data-dropdown-label] {
+      /* Task & survey filter, with the source picker beside it when both
+         mentor suggestions and student picks exist. */
+      .taskFilterArea {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 16px;
+      }
+      .taskFilterSearch {
+        grid-column: 1;
+        min-width: 0;
+      }
+      .searchTopArea [data-dropdown-label],
+      #filterByTaskSource [data-dropdown-label] {
         white-space: nowrap !important;
         -webkit-line-clamp: 1 !important;
         line-clamp: 1 !important;
@@ -698,40 +736,34 @@ export const StyledDasboardReview = styled.div`
     }
   }
 
+  /*
+   * Feedback center: renders full-bleed in the dashboard shell, so it fills the
+   * viewport height and owns its scrolling. Header and tab bar stay put; the
+   * content column and the review form each scroll on their own.
+   */
   .reviewContainer {
     display: grid;
-    grid-template-rows: auto 1fr;
-    min-height: calc(100vh - 64px);
-    align-content: baseline;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 12px;
+    height: 100%;
+    min-height: 0;
 
-    /* Project review page header */
     .reviewPageHeader {
-      display: grid;
-      gap: 12px;
-      padding: 8px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 16px;
+      min-width: 0;
+      padding: 8px 16px 8px 8px;
       background: var(--MH-Theme-Neutrals-White, #ffffff);
       border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
       border-radius: 12px;
     }
 
-    .reviewPageHeaderMain {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .reviewPageHeaderMeta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 16px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
     .reviewPageHeaderTitles {
       display: grid;
       gap: 2px;
+      flex: 1 1 240px;
       min-width: 0;
     }
 
@@ -743,7 +775,6 @@ export const StyledDasboardReview = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 100%;
     }
 
     .reviewPageMilestone {
@@ -751,6 +782,21 @@ export const StyledDasboardReview = styled.div`
       font: var(--MH-Type-Label-Small);
       letter-spacing: 0;
       color: var(--MH-Theme-Primary-Dark, #336f8a);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .reviewPageCollaborators {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+
+      > * {
+        max-width: 160px;
+      }
     }
 
     .reviewPageHeaderActions {
@@ -759,43 +805,93 @@ export const StyledDasboardReview = styled.div`
       gap: 12px;
       align-items: center;
       justify-content: flex-end;
-    }
-
-    .reviewPageCollaborators {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
+      margin-left: auto;
     }
 
     .reviewBody {
-      display: grid;
+      display: flex;
       min-height: 0;
-      padding: 16px;
-    }
-
-    .reviewLayout {
-      display: grid;
-      min-height: calc(100vh - 180px);
       border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
       border-radius: 12px;
       overflow: hidden;
       background: var(--MH-Theme-Neutrals-White, #ffffff);
+
+      > .reviewMainColumn {
+        flex: 1 1 auto;
+      }
     }
 
-    .reviewLayout--contentOnly {
-      grid-template-columns: 1fr;
+    /* Too narrow for both column minimums: the form sits under the content
+       and the card scrolls as one. */
+    .reviewBody--stacked {
+      flex-direction: column;
+      overflow-y: auto;
+
+      > .reviewMainColumn,
+      > .panelRight {
+        flex: 0 0 auto;
+        height: auto;
+      }
+
+      .reviewMainColumn {
+        grid-template-rows: auto auto;
+      }
+
+      .reviewContentColumn,
+      .reviewQuestions {
+        overflow: visible;
+      }
+
+      .panelRight {
+        border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      }
     }
 
-    .reviewLayout--withForm {
-      grid-template-columns: 1fr minmax(320px, 420px);
+    /* The split's gutter doubles as the column rule: white on the content
+       side, the form's grey on the other, a 1px line between, with the grab
+       handle sitting on that line. */
+    .DesignSystem-SplitPane-Divider {
+      position: relative;
+      background: linear-gradient(
+        to right,
+        var(--MH-Theme-Neutrals-White, #ffffff) 50%,
+        var(--MH-Theme-Neutrals-Lighter, #f3f3f3) 50%
+      );
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 1px;
+        background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      }
+
+      .DesignSystem-SplitPane-Handle {
+        position: relative;
+        width: 6px;
+        border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+      }
+
+      &:hover .DesignSystem-SplitPane-Handle,
+      &:focus-visible .DesignSystem-SplitPane-Handle {
+        border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+      }
+
+      .DesignSystem-SplitPane-Handle--active {
+        border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+        background: var(--MH-Theme-Primary-Dark, #336f8a);
+      }
     }
 
     .reviewMainColumn {
       display: grid;
-      grid-template-rows: auto 1fr;
+      grid-template-rows: auto minmax(0, 1fr);
+      height: 100%;
+      min-width: 0;
       min-height: 0;
-      overflow: hidden;
     }
 
     .reviewTabBar {
@@ -991,9 +1087,8 @@ export const StyledDasboardReview = styled.div`
       }
     }
     .panelRight {
-      height: 90vh;
-      overflow-y: scroll;
-      border-left: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      height: 100%;
+      min-height: 0;
       background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
     }
   }
@@ -1108,32 +1203,6 @@ export const StyledDasboardReview = styled.div`
         overflow-y: visible !important;
         position: absolute !important;
         top: 100% !important;
-      }
-      .dropdownSelectedTask {
-        .ui.label {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          grid-gap: 30px;
-          align-items: center;
-          background: #fdf2d0 !important;
-          border: 1px solid #cccccc !important;
-          border-radius: 20px !important;
-          padding: 10px 20px !important;
-          width: fit-content !important;
-          .title {
-            font: var(--MH-Type-Body-Base);
-            letter-spacing: 0;
-            display: flex;
-            color: #5d5763;
-          }
-        }
-        .menu > .disabled.item {
-          pointer-events: none;
-        }
-        .dropdownOption {
-          grid-template-columns: 1fr;
-          grid-gap: 2px;
-        }
       }
       .taskSelectorNote {
         font: var(--MH-Type-Body-Small, var(--MH-Type-Body-Base));

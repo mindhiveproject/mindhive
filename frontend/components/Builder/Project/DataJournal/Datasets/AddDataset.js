@@ -8,6 +8,7 @@ import { CREATE_DATASOURCE } from "../../../../Mutations/Datasource";
 import { PROPOSAL_BOARD_SHARING } from "../../../../Queries/Proposal";
 import { STUDY_TO_JOIN } from "../../../../Queries/Study";
 import { useDataJournal } from "../Context/DataJournalContext";
+import { isTesterUser } from "../../../../../lib/dataJournalDatasources";
 
 export default function AddDataset({
   projectId,
@@ -71,6 +72,7 @@ export default function AddDataset({
       projectBoardForSharing={boardSharingData?.proposalBoard}
       selectedVizPartId={selectedJournal?.id}
       currentUserId={user?.id}
+      canSimulate={isTesterUser(user)}
       loading={loading}
       error={error}
       onCancel={onCancel}

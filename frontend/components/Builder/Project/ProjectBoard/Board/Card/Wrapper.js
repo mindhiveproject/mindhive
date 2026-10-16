@@ -7,6 +7,7 @@ import {
   isActionCard,
   isDataCollectionActionCard,
 } from "../../../../../../lib/milestones";
+import { isCardLocked } from "../../../../../../lib/cardPreviousEntries";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 
 import ProposalCard from "./Main";
@@ -47,17 +48,11 @@ export default function CardWrapper({
     section?.cards?.map((c) => c?.id).includes(cardId)
   );
   const section = sectionsWithCard?.length && sectionsWithCard[0];
-  const actionCards = section?.cards?.filter((card) => isActionCard(card)) || [];
-  const firstAction = actionCards[0];
-  const submissionStage =
-    firstAction?.milestone?.key || firstAction?.type;
-  const submissionStatus =
-    submitStatuses[submissionStage] ||
-    (firstAction?.type && submitStatuses[firstAction.type]);
-  const isCardSubmitted = proposalCard?.settings?.includeInReviewSteps?.some(
-    (step) => submitStatuses[step] === "SUBMITTED"
+  const isLocked = isCardLocked(
+    proposalCard,
+    section?.cards || [],
+    submitStatuses
   );
-  const isLocked = submissionStatus === "SUBMITTED" || isCardSubmitted;
 
   // TODO also check whether the teacher/mentor is a teacher/mentor of the particular class
   const hasOverviewAccess =

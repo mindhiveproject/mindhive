@@ -21,6 +21,16 @@ const CLASS_STAFF_ROLES = ["teacherIn", "teachingTeamIn", "mentorIn"];
 // when every one of their classes hides it: one class allowing it is enough.
 // Admins and class staff anywhere see everything.
 export function hiddenTaskIdsFor(user) {
+  return hiddenIdsFor(user, "hiddenTasks");
+}
+
+// Featured studies hidden from this user by their classes
+// (Class.hiddenStudies), with the same rules as hiddenTaskIdsFor.
+export function hiddenStudyIdsFor(user) {
+  return hiddenIdsFor(user, "hiddenStudies");
+}
+
+function hiddenIdsFor(user, field) {
   if (!user) return [];
   if (user.permissions?.some((permission) => permission?.name === "ADMIN")) {
     return [];
@@ -31,7 +41,7 @@ export function hiddenTaskIdsFor(user) {
   if (!classes.length) return [];
 
   const [first, ...rest] = classes.map(
-    (cls) => new Set((cls?.hiddenTasks || []).map((task) => task?.id))
+    (cls) => new Set((cls?.[field] || []).map((item) => item?.id))
   );
   return [...first].filter((id) => rest.every((ids) => ids.has(id)));
 }

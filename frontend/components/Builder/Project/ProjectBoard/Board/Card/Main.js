@@ -27,6 +27,19 @@ import {
   getBoardAssignableToStudents,
   getBoardStudentsCanAssignToCards,
 } from "../../../../../../lib/proposalBoardSettings";
+import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
+import {
+  actionCardMatchesReviewStep,
+  cardIncludedInReviewStep,
+  isActionCard,
+  isStudyStatusMilestone,
+} from "../../../../../../lib/milestones";
+import { isMilestoneSubmitted } from "../../../../../../lib/milestoneStatus";
+import { listPreviousEntries } from "../../../../../../lib/cardPreviousEntries";
+import {
+  allowsStudentTaskSelection,
+  getTemplateLinkedTasks,
+} from "../../../../../../lib/studentTaskSelection";
 
 import Navigation from "./Navigation/Main";
 import SaveIndicator from "../SaveIndicator";
@@ -34,11 +47,16 @@ import { useCardCollabSession } from "../../../../../../lib/useCardCollabSession
 import { useCardHtmlAutosave } from "../../../../../../lib/useCardHtmlAutosave";
 import { useUnsavedChangesGuard } from "../../../../../../lib/useUnsavedChangesGuard";
 import Assigned from "./Forms/Assigned";
+import StudentTaskPicker from "./StudentTaskPicker";
 import TipTapEditor from "../../../../../TipTap/Main";
 import { PreviewSection } from "../../../../../Proposal/Card/Forms/PreviewSection";
 import { Modal, Icon } from "semantic-ui-react";
 import Button from "../../../../../DesignSystem/Button";
 import Chip from "../../../../../DesignSystem/Chip";
+import {
+  MilestoneCompletedIcon,
+  MilestoneIcon,
+} from "../../../../../DesignSystem/Icons";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
@@ -63,7 +81,11 @@ export default function ProposalCard({
   onOpenAssignment,
 }) {
   const { t } = useTranslation("builder");
-  const [originalActive, setOriginalActive] = useState(false); // For accordion state, default collapsed
+  const [openEntryKeys, setOpenEntryKeys] = useState([]); // Expanded previous entries, all collapsed by default
+  const toggleEntry = (key) =>
+    setOpenEntryKeys((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
   const [assignmentModalOpen, setAssignmentModalOpen] = useState(false); // For assignment modal
   const [selectedAssignment, setSelectedAssignment] = useState(null); // For selected assignment
   const [resourceModalState, setResourceModalState] = useState({
@@ -150,6 +172,51 @@ export default function ProposalCard({
     bound: !!collabProvider,
   });
   useUnsavedChangesGuard(hasPendingSave);
+
+  // Milestones this card is submitted with, so the student knows where its
+  // content goes; a milestone already submitted reads as done. Only milestones
+  // with an action card on this board count: a card's settings can still name
+  // a step the board doesn't have.
+  const { milestones: boardMilestones } = useBoardMilestones(
+    proposal?.id || proposalId
+  );
+  const cardMilestones = useMemo(
+    () =>
+      (boardMilestones || [])
+        .filter((milestone) =>
+          cardIncludedInReviewStep(proposalCard, milestone?.key, boardMilestones)
+        )
+        .map((milestone) => {
+          // The milestone's own action card on this board, opened from the chip.
+          const actionCard = (proposal?.sections || [])
+            .flatMap((section) => section?.cards || [])
+            .find(
+              (card) =>
+                isActionCard(card) &&
+                ((milestone?.id && card?.milestone?.id === milestone.id) ||
+                  actionCardMatchesReviewStep(
+                    card,
+                    milestone?.key,
+                    boardMilestones
+                  ))
+            );
+          return {
+            milestone,
+            actionCardId: actionCard?.id ?? null,
+            // Data collection is done once the study is submitted (and with
+            // it locked); other milestones once the board submitted them.
+            completed: isStudyStatusMilestone(milestone)
+              ? proposal?.study?.dataCollectionStatus === "SUBMITTED"
+              : isMilestoneSubmitted(proposal, milestone, boardMilestones),
+          };
+        })
+        .filter(({ actionCardId }) => !!actionCardId),
+    [boardMilestones, proposalCard, proposal]
+  );
+  const previousEntries = useMemo(
+    () => listPreviousEntries({ ...proposalCard, content: values.content }, isLocked),
+    [proposalCard, values.content, isLocked]
+  );
   // Preview never writes, even if an editor reports a change.
   const updateField = isPreview ? () => {} : handleFieldUpdate;
   const collaborationUser = {
@@ -313,6 +380,31 @@ export default function ProposalCard({
     );
   };
 
+  // Student-picked tasks & surveys: saved with the teacher-linked tasks, and
+  // listed in settings.studentTaskIds so template propagation keeps them.
+  const showStudentTaskPicker = allowsStudentTaskSelection(proposalCard);
+  const linkedTasks = getTemplateLinkedTasks(inputs);
+  const handleStudentTasksChange = (picks) => {
+    const tasks = [...getTemplateLinkedTasks(inputs), ...picks];
+    const settings = {
+      ...inputs.settings,
+      studentTaskIds: picks.map((task) => task.id),
+    };
+    handleChange({ target: { name: "tasks", value: tasks } });
+    handleChange({ target: { name: "settings", value: settings } });
+    trackSave(() =>
+      saveCardFields({
+        variables: {
+          id: cardId,
+          input: {
+            tasks: { set: tasks.map((task) => ({ id: task.id })) },
+            settings: mergeCardSettings(proposalCard?.settings, settings),
+          },
+        },
+      }),
+    );
+  };
+
   // Send update to the server when the editor gains focus
   const handleFocus = async () => {
     if (isPreview) return;
@@ -333,7 +425,9 @@ export default function ProposalCard({
   };
 
   // Wait for outstanding saves, release the card, and go back to the board.
-  const handleBack = async () => {
+  // Leave this card for `query` (the board, or another card) once everything
+  // typed here is saved and the card is released.
+  const leaveCard = async (query) => {
     await flushAll();
     if (
       hasUnsavedChanges() &&
@@ -360,14 +454,13 @@ export default function ProposalCard({
       });
     }
 
-    // move to the project board
-    router.push({
-      pathname: `/builder/projects/`,
-      query: {
-        selector: proposalId,
-      },
-    });
+    router.push({ pathname: `/builder/projects/`, query });
   };
+
+  const handleBack = () => leaveCard({ selector: proposalId });
+
+  const openMilestoneCard = (actionCardId) =>
+    leaveCard({ selector: proposalId, card: actionCardId });
 
   // Handler to open assignment modal
   const openAssignmentModalHandler = (assignment) => {
@@ -1363,39 +1456,59 @@ export default function ProposalCard({
                     />
                   </div>
                 )}
-              {proposalCard?.settings?.includeInReport && (
+              {proposalCard?.settings?.includeInReport &&
+                previousEntries.length > 0 && (
+                <>
+                  <div className="cardSubheader">
+                    {t("mainCard.previousEntries", "Your previous entries")}
+                  </div>
+                  {previousEntries.map((entry) => {
+                    const open = openEntryKeys.includes(entry.key);
+                    const label = entry.isOriginal
+                      ? t("mainCard.originalEntry", "Your original entry")
+                      : entry.title;
+                    return (
+                      <div className="originalEntryBlock" key={entry.key}>
+                        <button
+                          type="button"
+                          className="originalEntryBlockHeader"
+                          onClick={() => toggleEntry(entry.key)}
+                          aria-expanded={open}
+                          aria-label={label}
+                        >
+                          <span>
+                            {label}
+                            {entry.submittedAt && (
+                              <span className="originalEntryBlockDate">
+                                {moment(entry.submittedAt).format("YYYY-MM-DD")}
+                              </span>
+                            )}
+                          </span>
+                          <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                            <img style={{ transform: `${open ? 'rotate(270deg)' : 'rotate(90deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
+                            <img style={{ transform: `${open ? 'rotate(90deg)' : 'rotate(270deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
+                          </span>
+                        </button>
+                        {open && (
+                          <div className="originalEntryBlockContent">
+                            <ReadOnlyTipTap>
+                              <div className="ProseMirror">
+                                {ReactHtmlParser(entry.content || "")}
+                              </div>
+                            </ReadOnlyTipTap>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+
+              {proposalCard?.settings?.includeInReport && !isLocked && (
                 <>
                   <div className="cardSubheader">
                     {t("mainCard.yourEntry", "Your entry")}
                   </div>
-                  {isLocked ? (
-                    <div className="originalEntryBlock">
-                      <button
-                        type="button"
-                        className="originalEntryBlockHeader"
-                        onClick={() => setOriginalActive(!originalActive)}
-                        aria-expanded={originalActive}
-                        aria-label={t("mainCard.expandOriginalEntry", "Expand to see your original entry")}
-                      >
-                        <span>{t("mainCard.expandOriginalEntry", "Expand to see your original entry")}</span>
-                        <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                          <img style={{ transform: `${originalActive ? 'rotate(270deg)' : 'rotate(90deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
-                          <img style={{ transform: `${originalActive ? 'rotate(90deg)' : 'rotate(270deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
-                          {/* <Icon name="chevron up" />
-                          <Icon name="chevron down" /> */}
-                        </span>
-                      </button>
-                      {originalActive && (
-                        <div className="originalEntryBlockContent">
-                          <ReadOnlyTipTap>
-                            <div className="ProseMirror">
-                              {ReactHtmlParser(values.content || "")}
-                            </div>
-                          </ReadOnlyTipTap>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
                     <div onFocus={handleFocus}>
                       <TipTapEditor
                         content={values.content}
@@ -1422,7 +1535,6 @@ export default function ProposalCard({
                         }
                       />
                     </div>
-                  )}
                 </>
               )}
 
@@ -1464,7 +1576,7 @@ export default function ProposalCard({
               {/* Display Linked Items: Assignments first, then combined Resources */}
               {(inputs?.assignments?.length > 0 ||
                 inputs?.resources?.length > 0 ||
-                inputs?.tasks?.length > 0 ||
+                linkedTasks.length > 0 ||
                 inputs?.studies?.length > 0) && (
                 <div className="linkedItemsSection">
                   {inputs?.assignments?.length > 0 && (
@@ -1480,7 +1592,7 @@ export default function ProposalCard({
                     />  
                   )}
                   {(inputs?.resources?.length > 0 ||
-                    inputs?.tasks?.length > 0 ||
+                    linkedTasks.length > 0 ||
                     inputs?.studies?.length > 0) && (
                     <PreviewSection
                       title={t("board.expendedCard.previewLinkedResources", "Linked Resources")}
@@ -1488,8 +1600,8 @@ export default function ProposalCard({
                         ...(inputs?.resources?.length > 0
                           ? [{ items: inputs.resources, type: "resource" }]
                           : []),
-                        ...(inputs?.tasks?.length > 0
-                          ? [{ items: inputs.tasks, type: "task" }]
+                        ...(linkedTasks.length > 0
+                          ? [{ items: linkedTasks, type: "task" }]
                           : []),
                         ...(inputs?.studies?.length > 0
                           ? [{ items: inputs.studies, type: "study" }]
@@ -1511,6 +1623,17 @@ export default function ProposalCard({
                 />
                 </div>
 
+              )}
+              {showStudentTaskPicker && (
+                <StudentTaskPicker
+                  proposalCard={inputs}
+                  classId={proposal?.usedInClass?.id}
+                  user={user}
+                  // Submitted cards stay editable (the student revises them),
+                  // so only the teacher preview is read-only.
+                  disabled={isPreview}
+                  onChange={handleStudentTasksChange}
+                />
               )}
               <div className="proposalCardComments">
                 <div className="cardSubheader">
@@ -1546,6 +1669,66 @@ export default function ProposalCard({
                   )}
                 />
               </div>
+              {cardMilestones.length > 0 ? (
+                <div
+                  className="proposalCardMilestones"
+                  style={{ display: "grid", gap: "8px", marginTop: "16px" }}
+                >
+                  <div className="cardSubheader">
+                    {t("mainCard.milestones", "Milestones")}
+                  </div>
+                  <div
+                    style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}
+                  >
+                    {cardMilestones.map(({ milestone, actionCardId, completed }) => {
+                      const open =
+                        !isPreview && actionCardId
+                          ? () => openMilestoneCard(actionCardId)
+                          : undefined;
+                      const icon = completed ? (
+                        <MilestoneCompletedIcon width={18} height={18} />
+                      ) : (
+                        <MilestoneIcon width={18} height={18} />
+                      );
+                      const label = milestone.title || milestone.key;
+                      if (!completed) {
+                        return (
+                          <Chip
+                            key={milestone.id || milestone.key}
+                            label={label}
+                            leading={icon}
+                            onClick={open}
+                          />
+                        );
+                      }
+                      // Completed: static look, but still opens the milestone.
+                      // Static chips ignore clicks, so a bare button carries it.
+                      const chip = (
+                        <Chip variant="static" tone="neutral" label={label} leading={icon} />
+                      );
+                      return open ? (
+                        <button
+                          key={milestone.id || milestone.key}
+                          type="button"
+                          onClick={open}
+                          style={{
+                            display: "inline-flex",
+                            margin: 0,
+                            padding: 0,
+                            border: "none",
+                            background: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {chip}
+                        </button>
+                      ) : (
+                        <span key={milestone.id || milestone.key}>{chip}</span>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
               <Modal
                 open={resourceModalState.open}
                 onClose={closeResourceModalHandler}

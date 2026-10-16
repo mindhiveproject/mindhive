@@ -5,13 +5,18 @@ import { useRouter } from "next/router";
 import {
   CLASS_REVIEW_FORM_SCOPE,
   CLASS_REVIEW_TASK_SUGGESTIONS,
+  PROJECT_CARDS_STUDENT_TASKS,
 } from "../../../../Queries/Review";
 import {
   FORM_DEFINITION_BY_ID,
   RESOLVE_FORM_DEFINITION,
 } from "../../../../Queries/FormDefinition";
 import { ALL_PUBLIC_TASKS } from "../../../../Queries/Task";
-import { resolveReviewFormKey } from "../../../../../lib/milestones";
+import {
+  cardIncludedInReviewStep,
+  resolveReviewFormKey,
+} from "../../../../../lib/milestones";
+import { getStudentPickedTasks } from "../../../../../lib/studentTaskSelection";
 import {
   getClassCurriculumTypes,
   getCurriculumType,
@@ -34,20 +39,51 @@ function suggestedTaskIds(review) {
     .flatMap((item) => item.answer);
 }
 
+export const TASK_SOURCES = {
+  ALL: "all",
+  MENTOR: "mentor",
+  STUDENT: "student",
+};
+
+// Ranks the tasks found on at least one of `projects`, most frequent first;
+// `count` is the number of proposals each is on.
+function rankTasks(projects, tasksByProject, taskTitles) {
+  const counts = new Map();
+  for (const project of projects) {
+    for (const taskId of tasksByProject.get(project.id) || []) {
+      counts.set(taskId, (counts.get(taskId) || 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .filter(([id]) => taskTitles.has(id))
+    .map(([id, count]) => ({ id, title: taskTitles.get(id), count }))
+    .sort((a, b) => b.count - a.count || a.title.localeCompare(b.title));
+}
+
 /**
- * Task & survey suggestions mentors made on a class's proposals at one
- * milestone, for the Feedback Center task filter.
+ * Tasks & surveys tied to the proposals at one milestone, for the Feedback
+ * Center task filter, from two sources:
  *
- * `enabled` is true only when the milestone's review form has a
- * task_selector field: the milestone's own linked form when it has one
- * (teacher-customised forms), otherwise the form its key resolves to for
- * each curriculum type in play.
+ * - mentor: suggestions mentors made in their reviews of a class's
+ *   proposals. Available only when the milestone's review form has a
+ *   task_selector field: the milestone's own linked form when it has one
+ *   (teacher-customised forms), otherwise the form its key resolves to for
+ *   each curriculum type in play.
+ * - student: tasks students picked on the cards they submit with the
+ *   milestone (settings.studentTaskIds). Tasks the teacher linked on the
+ *   template card don't count. Available when any proposal has one.
+ *
+ * `source` picks which of them `suggestedTasks` and `tasksByProject` cover
+ * when both are available; `activeSource` is the one in effect.
+ * `studentTasksByProject` (project id → picked tasks) feeds the card chips.
  */
 export default function useTaskSuggestions({
   classId,
   milestone,
+  milestones = [],
   status,
   projects,
+  source = TASK_SOURCES.ALL,
 }) {
   const client = useApolloClient();
   const { locale } = useRouter();
@@ -75,11 +111,11 @@ export default function useTaskSuggestions({
     return [...types].filter(Boolean).sort().join(",");
   }, [theClass, projects]);
 
-  const [enabled, setEnabled] = useState(false);
+  const [mentorEnabled, setMentorEnabled] = useState(false);
 
   useEffect(() => {
     if (!milestone || !theClass) {
-      setEnabled(false);
+      setMentorEnabled(false);
       return undefined;
     }
     let cancelled = false;
@@ -110,10 +146,10 @@ export default function useTaskSuggestions({
 
     Promise.all(requests)
       .then((definitions) => {
-        if (!cancelled) setEnabled(definitions.some(hasTaskSelectorField));
+        if (!cancelled) setMentorEnabled(definitions.some(hasTaskSelectorField));
       })
       .catch(() => {
-        if (!cancelled) setEnabled(false);
+        if (!cancelled) setMentorEnabled(false);
       });
     return () => {
       cancelled = true;
@@ -132,11 +168,52 @@ export default function useTaskSuggestions({
 
   const { data: reviewsData } = useQuery(CLASS_REVIEW_TASK_SUGGESTIONS, {
     variables: { classId, stages },
-    skip: !enabled || !classId || !stages.length,
+    skip: !mentorEnabled || !classId || !stages.length,
   });
-  const { data: tasksData } = useQuery(ALL_PUBLIC_TASKS, { skip: !enabled });
+  const { data: tasksData } = useQuery(ALL_PUBLIC_TASKS, {
+    skip: !mentorEnabled,
+  });
 
-  const tasksByProject = useMemo(() => {
+  // Joined so a new `projects` array each render doesn't refetch.
+  const projectIdsKey = projects
+    .map((project) => project.id)
+    .sort()
+    .join(",");
+  const { data: studentCardsData } = useQuery(PROJECT_CARDS_STUDENT_TASKS, {
+    variables: { projectIds: projectIdsKey.split(",") },
+    skip: !projectIdsKey || !status,
+  });
+
+  // Project id → tasks students picked on the cards submitted with this
+  // milestone.
+  const studentTasksByProject = useMemo(() => {
+    const map = new Map();
+    for (const card of studentCardsData?.proposalCards || []) {
+      const projectId = card?.section?.board?.id;
+      if (!projectId) continue;
+      if (!cardIncludedInReviewStep(card, status, milestones)) continue;
+      const picked = getStudentPickedTasks(card);
+      if (!picked.length) continue;
+      if (!map.has(projectId)) map.set(projectId, new Map());
+      const tasks = map.get(projectId);
+      picked.forEach((task) => tasks.set(task.id, task));
+    }
+    return new Map(
+      [...map.entries()].map(([projectId, tasks]) => [
+        projectId,
+        [...tasks.values()],
+      ])
+    );
+  }, [studentCardsData, status, milestones]);
+  const studentEnabled = projects.some(
+    (project) => studentTasksByProject.get(project.id)?.length
+  );
+  // The requested source when both are available, else the available one.
+  let activeSource = TASK_SOURCES.STUDENT;
+  if (mentorEnabled && studentEnabled) activeSource = source;
+  else if (mentorEnabled) activeSource = TASK_SOURCES.MENTOR;
+
+  const mentorTasksByProject = useMemo(() => {
     const map = new Map();
     for (const review of reviewsData?.reviews || []) {
       const projectId = review?.proposal?.id;
@@ -150,29 +227,52 @@ export default function useTaskSuggestions({
 
   const taskTitles = useMemo(() => {
     const titles = new Map();
-    for (const task of tasksData?.tasks || []) {
+    const pickedTasks = [...studentTasksByProject.values()].flat();
+    for (const task of [...(tasksData?.tasks || []), ...pickedTasks]) {
       titles.set(
         task.id,
         task?.i18nContent?.[locale]?.title || task?.title || ""
       );
     }
     return titles;
-  }, [tasksData, locale]);
+  }, [tasksData, studentTasksByProject, locale]);
 
-  // Tasks suggested to at least one proposal in this tab, most suggested
-  // first; `count` is the number of proposals each was suggested to.
-  const suggestedTasks = useMemo(() => {
-    const counts = new Map();
-    for (const project of projects) {
-      for (const taskId of tasksByProject.get(project.id) || []) {
-        counts.set(taskId, (counts.get(taskId) || 0) + 1);
+  // Project id → Set of task ids, for the chosen source.
+  const tasksByProject = useMemo(() => {
+    const studentIds = new Map(
+      [...studentTasksByProject.entries()].map(([projectId, tasks]) => [
+        projectId,
+        new Set(tasks.map((task) => task.id)),
+      ])
+    );
+    const useMentor = mentorEnabled && activeSource !== TASK_SOURCES.STUDENT;
+    const useStudent = activeSource !== TASK_SOURCES.MENTOR;
+    const map = new Map();
+    const add = (byProject) => {
+      for (const [projectId, ids] of byProject) {
+        if (!map.has(projectId)) map.set(projectId, new Set());
+        ids.forEach((id) => map.get(projectId).add(id));
       }
-    }
-    return [...counts.entries()]
-      .filter(([id]) => taskTitles.has(id))
-      .map(([id, count]) => ({ id, title: taskTitles.get(id), count }))
-      .sort((a, b) => b.count - a.count || a.title.localeCompare(b.title));
-  }, [projects, tasksByProject, taskTitles]);
+    };
+    if (useMentor) add(mentorTasksByProject);
+    if (useStudent) add(studentIds);
+    return map;
+  }, [mentorEnabled, activeSource, mentorTasksByProject, studentTasksByProject]);
 
-  return { enabled, suggestedTasks, tasksByProject, taskTitles };
+  // Tasks on at least one proposal in this tab, for the chosen source.
+  const suggestedTasks = useMemo(
+    () => rankTasks(projects, tasksByProject, taskTitles),
+    [projects, tasksByProject, taskTitles]
+  );
+
+  return {
+    enabled: mentorEnabled || studentEnabled,
+    mentorEnabled,
+    studentEnabled,
+    activeSource,
+    suggestedTasks,
+    tasksByProject,
+    studentTasksByProject,
+    taskTitles,
+  };
 }

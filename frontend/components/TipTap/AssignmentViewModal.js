@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Modal, Button } from "semantic-ui-react";
+import { ABOVE_DS_MODAL_DIMMER } from "../Proposal/Card/Forms/utils";
 import styled from "styled-components";
 import ReactHtmlParser from "react-html-parser";
 import { GET_AN_ASSIGNMENT } from "../Queries/Assignment";
@@ -95,7 +96,7 @@ const AssignmentViewModal = ({ user, open, t, onClose, assignmentId }) => {
   const placeholder = assignment?.placeholder || "";
 
   return (
-    <StyledModal open={open} onClose={onClose} size="large">
+    <StyledModal open={open} onClose={onClose} size="large" dimmer={ABOVE_DS_MODAL_DIMMER}>
       <StyledHeader>
         {t("board.expendedCard.viewingAssignment", "Viewing Assignment:")}
         <Title>{stripHtml(assignment?.title || '')}</Title>

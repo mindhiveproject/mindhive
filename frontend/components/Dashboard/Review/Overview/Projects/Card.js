@@ -3,6 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { isOpenForComments } from "../../../../../lib/milestoneStatus";
 import Chip from "../../../../DesignSystem/Chip";
+import StudentTaskChips from "../../StudentTaskChips";
 
 export default function Card({
   stage,
@@ -11,6 +12,7 @@ export default function Card({
   isOpenForCommentsQuery,
   milestones = [],
   matchedTasks = [],
+  studentTasks = [],
   onClick,
   className = "",
   style,
@@ -31,6 +33,13 @@ export default function Card({
     const lastSpaceIndex = truncated.lastIndexOf(" ");
     return title.substr(0, lastSpaceIndex) + "...";
   };
+
+  // Filter matches that are student picks already show as student chips.
+  const studentTaskIds = new Set(studentTasks.map((task) => task.id));
+  const matchedTaskIds = new Set(matchedTasks.map((task) => task.id));
+  const matchedSuggestions = matchedTasks.filter(
+    (task) => !studentTaskIds.has(task.id)
+  );
 
   const reviewCount = project?.reviews?.filter((r) => r?.stage === status).length;
 
@@ -65,10 +74,13 @@ export default function Card({
         </div>
       </div>
       <div className="p13">{shortenTitle(project?.title)}</div>
+      {/* Tasks & surveys students picked on the cards submitted with this
+          milestone; the ones matching the task filter are highlighted. */}
+      <StudentTaskChips tasks={studentTasks} highlightedIds={matchedTaskIds} />
       {/* Filtered tasks & surveys mentors suggested to this proposal. */}
-      {matchedTasks.length > 0 ? (
+      {matchedSuggestions.length > 0 ? (
         <div className="suggestedTasks">
-          {matchedTasks.map((task) => (
+          {matchedSuggestions.map((task) => (
             <Chip
               key={task.id}
               label={task.title}

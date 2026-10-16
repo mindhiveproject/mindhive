@@ -11,11 +11,17 @@ import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 import { CREATE_LOG } from "../../../../../../Mutations/Log";
 import {
   buildDualWriteUpdate,
+  buildSubmitStatuses,
   isMilestoneSubmitted,
   isOpenForComments,
   readMilestoneStatus,
 } from "../../../../../../../lib/milestoneStatus";
 import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
+import {
+  editableCardContent,
+  isCardLocked,
+  withPreviousEntry,
+} from "../../../../../../../lib/cardPreviousEntries";
 import {
   cardIncludedInReviewStep,
   milestoneHasReviewQuestionnaire,
@@ -188,6 +194,32 @@ export default function Proposal({
           : card.settings,
       };
     });
+
+    // Keep a copy of each card's current entry, labeled with this
+    // milestone, under the card's "Your previous entries". Written before
+    // the board update so its refetch already carries the snapshots.
+    const submitStatuses = buildSubmitStatuses(proposal, milestones);
+    await Promise.all(
+      snapshotCards.map((card) => {
+        const sectionCards =
+          proposal?.sections?.find((section) =>
+            section?.cards?.some((c) => c?.id === card?.id)
+          )?.cards || [];
+        const locked = isCardLocked(card, sectionCards, submitStatuses);
+        return updateCardContent({
+          variables: {
+            id: card.id,
+            input: {
+              previousEntries: withPreviousEntry(
+                card,
+                milestone,
+                editableCardContent(card, locked)
+              ),
+            },
+          },
+        });
+      })
+    );
 
     const updateInput = buildDualWriteUpdate(
       milestone,

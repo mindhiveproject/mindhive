@@ -422,12 +422,9 @@ export const StyledTopNavigation = styled.div`
     .datasetScopeNav {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 12px;
       align-items: center;
       min-width: 0;
-    }
-    .datasetScopeChip {
-      flex-shrink: 0;
     }
   }
   .buttons {

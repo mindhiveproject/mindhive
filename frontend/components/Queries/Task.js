@@ -24,6 +24,29 @@ export const PUBLIC_TASKS_FOR_CLASS_VISIBILITY = gql`
   }
 `;
 
+// public tasks and surveys a student may pick on a project card, plus the
+// board's class block list (filtered out client side)
+export const STUDENT_SELECTABLE_TASKS = gql`
+  query STUDENT_SELECTABLE_TASKS($classId: ID!, $skipClass: Boolean!) {
+    tasks(
+      where: { public: { equals: true }, taskType: { in: [TASK, SURVEY] } }
+      orderBy: { title: asc }
+    ) {
+      id
+      title
+      i18nContent
+      taskType
+      slug
+    }
+    class(where: { id: $classId }) @skip(if: $skipClass) {
+      id
+      hiddenTasks {
+        id
+      }
+    }
+  }
+`;
+
 // get public tasks
 export const PUBLIC_TASKS = gql`
   query PUBLIC_TASKS($where: TaskWhereInput!) {

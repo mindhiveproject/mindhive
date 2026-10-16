@@ -226,11 +226,17 @@ export default function useDatasourceData({ datasource, user }) {
     fetcher
   );
 
-  const isUploadLike = dataOrigin === "UPLOADED" || dataOrigin === "SIMULATED";
+  const isInlineSimulated =
+    dataOrigin === "SIMULATED" &&
+    Boolean(content?.simulated) &&
+    !content?.isModified;
+  const isUploadLike =
+    !isInlineSimulated &&
+    (dataOrigin === "UPLOADED" || dataOrigin === "SIMULATED");
   const uploadedAddr = isUploadLike ? content?.uploaded?.address : null;
   const uploadType = content?.isModified
     ? "modified"
-    : content?.dataOrigin === "SIMULATED"
+    : dataOrigin === "SIMULATED"
       ? "simulated"
       : "upload";
   const uploadedUrl =
@@ -247,6 +253,20 @@ export default function useDatasourceData({ datasource, user }) {
   );
 
   return useMemo(() => {
+    if (isInlineSimulated) {
+      const simulated = content.simulated;
+      const data = simulated?.data || [];
+      return {
+        data,
+        variables: simulated?.metadata?.variables || [],
+        settings: simulated?.metadata?.settings || dsSettings || {},
+        components: simulated?.components || [],
+        loading: false,
+        error: null,
+        emptyReason: data.length ? null : "empty",
+      };
+    }
+
     if (isStudyLike) {
       if (studyLoading || studyError || !studyData) {
         return {
@@ -452,6 +472,7 @@ export default function useDatasourceData({ datasource, user }) {
       error: null,
     };
   }, [
+    isInlineSimulated,
     isStudyLike,
     isUploadLike,
     studyData,

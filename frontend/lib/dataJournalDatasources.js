@@ -2,7 +2,19 @@
  * Data Journal datasource list filters and delete eligibility helpers.
  */
 
-/** @typedef {"me" | "uploaded" | "sharedWithMe" | "myClass" | "classNetwork" | "public"} DatasetScope */
+/** @typedef {"me" | "uploaded" | "sharedWithMe" | "myClass" | "classNetwork" | "public" | "simulated"} DatasetScope */
+
+/** Roles that may create and see SIMULATED datasets (mirrors the Keystone Datasource access filter). */
+const SIMULATED_DATASET_ROLES = ["TESTER", "ADMIN"];
+
+/**
+ * @param {{ permissions?: Array<{ name?: string | null }> | null } | null | undefined} user
+ */
+export function isTesterUser(user) {
+  return (user?.permissions || []).some((p) =>
+    SIMULATED_DATASET_ROLES.includes(p?.name),
+  );
+}
 
 /** Atomic scopes that compose {@link DatasetScope} `"me"` (everything the user can see). */
 /** @type {Exclude<DatasetScope, "me">[]} */
@@ -151,6 +163,15 @@ export function buildDatasourcesWhereForScope({
         return { id: { equals: "__no_matching_class_network__" } };
       }
       return { AND: [contextFilter, networkFilter] };
+    }
+
+    case "simulated": {
+      const meWhere = buildDatasourcesWhereForScope({
+        ...scopeParams,
+        scope: "me",
+      });
+      const simulated = { dataOrigin: { equals: "SIMULATED" } };
+      return meWhere ? { AND: [meWhere, simulated] } : simulated;
     }
 
     case "public":

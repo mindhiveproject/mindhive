@@ -21,6 +21,14 @@ function addConnectIds(
   }
 }
 
+const SIMULATED_DATASET_ROLES = ["TESTER", "ADMIN"];
+
+function canUseSimulatedDatasets(session: any) {
+  return !!session?.data?.permissions?.some((role: { name?: string }) =>
+    SIMULATED_DATASET_ROLES.includes(role?.name ?? "")
+  );
+}
+
 export const Datasource = list({
   access: {
     operation: {
@@ -28,6 +36,12 @@ export const Datasource = list({
       create: ({ session }) => !!session?.itemId,
       update: ({ session }) => !!session?.itemId,
       delete: ({ session }) => !!session?.itemId,
+    },
+    filter: {
+      query: ({ session }) =>
+        canUseSimulatedDatasets(session)
+          ? true
+          : { dataOrigin: { not: { equals: "SIMULATED" } } },
     },
     item: {
       update: async ({ session, item, context }) => {
@@ -49,6 +63,17 @@ export const Datasource = list({
     },
   },
   hooks: {
+    validateInput({ operation, resolvedData, context, addValidationError }) {
+      if (operation !== "create" && operation !== "update") return;
+      if (
+        resolvedData?.dataOrigin === "SIMULATED" &&
+        !canUseSimulatedDatasets(context.session)
+      ) {
+        addValidationError(
+          "Only testers can create simulated datasets."
+        );
+      }
+    },
     async resolveInput({ operation, resolvedData, context, inputData }) {
       if (operation === "create" || operation === "update") {
         resolvedData.updatedAt = new Date().toISOString();

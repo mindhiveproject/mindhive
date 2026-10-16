@@ -1,4 +1,5 @@
 import { useQuery, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 import absoluteUrl from "next-absolute-url";
 import { UPDATE_STUDY } from "../../../../../../Mutations/Study";
 import { UPDATE_PROJECT_BOARD } from "../../../../../../Mutations/Proposal";
@@ -11,6 +12,8 @@ import { resolveMilestoneFromCard } from "../../../../../../../lib/milestones";
 
 import NavigationSubmitStudy from "./NavigationSubmitStudy";
 import { cardTypes } from "../../Builder/Actions/ActionCard";
+import { builderHref } from "../../../../../shared/identity";
+import Button from "../../../../../../DesignSystem/Button";
 
 import { StyledActionPage } from "../../../../../../styles/StyledReview";
 import { StyledStudyPreview } from "../../../../../../styles/StyledStudyPage";
@@ -29,7 +32,11 @@ export default function Proposal({
 }) {
   const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
+  const router = useRouter();
   const study = proposal?.study || {};
+  // A board may reach data collection before any study is linked to it:
+  // there is then no URL to share and nothing to submit.
+  const hasStudy = !!study?.id;
 
   const { milestones } = useBoardMilestones(proposal?.id || proposalId);
   const milestone = resolveMilestoneFromCard(proposalCard, milestones);
@@ -98,6 +105,7 @@ export default function Proposal({
   };
 
   const submitStudy = async () => {
+    if (!hasStudy) return;
     const submitted = await writeDataCollectionStatus({
       status: "SUBMITTED",
       openForParticipation: true,
@@ -155,6 +163,7 @@ export default function Proposal({
             submitStudy();
           }}
           isStudySubmitted={isStudySubmitted}
+          canSubmit={hasStudy}
           switchFeedbackLock={switchFeedbackLock}
           isParticipationLocked={isParticipationLocked}
         />
@@ -168,15 +177,21 @@ export default function Proposal({
             </div>
             <div className="card">
               <h3>{t("submitStudy.studyUrl", "Study url")}</h3>
-              <label htmlFor="slug">
-                <a href={`${origin}/studies/${study.slug}`} target="_blank">
-                  <p className="accessLink">
-                    {origin}
-                    /studies/
-                    {study.slug}
-                  </p>
-                </a>
-              </label>
+              {hasStudy ? (
+                <label htmlFor="slug">
+                  <a href={`${origin}/studies/${study.slug}`} target="_blank">
+                    <p className="accessLink">
+                      {origin}
+                      /studies/
+                      {study.slug}
+                    </p>
+                  </a>
+                </label>
+              ) : (
+                <p className="MH-Type-Body-Base">
+                  {t("submitStudy.noStudyYet", "Your project doesn't have a study yet.")}
+                </p>
+              )}
             </div>
           </div>
 
@@ -201,7 +216,32 @@ export default function Proposal({
                   </ul>
                 </div>
 
-                {allCardsCompleted ? (
+                {!hasStudy && (
+                  <>
+                    <div className="subtitle warning MH-Type-Body-Base">
+                      {t("submitStudy.createStudyFirst", "Create your study before submitting it for data collection.")}
+                    </div>
+                    {!isPreview && (
+                      <div>
+                        <Button
+                          variant="filled"
+                          onClick={() =>
+                            router.push(
+                              builderHref({
+                                area: query?.area || "projects",
+                                selector: proposal?.id || proposalId,
+                                tab: "builder",
+                              })
+                            )
+                          }
+                        >
+                          {t("submitStudy.goToStudyBuilder", "Go to Study builder")}
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                )}
+                {hasStudy && (allCardsCompleted ? (
                   <div className="subtitle MH-Type-Body-Base">
                     {t("submitStudy.readyToSubmit", "The study is ready to be submitted for feedback!")}
                   </div>
@@ -209,7 +249,7 @@ export default function Proposal({
                   <div className="subtitle warning MH-Type-Body-Base">
                     {t("submitStudy.completeAllRequired", "Please complete all required cards before submitting your proposal for feedback.")}
                   </div>
-                )}
+                ))}
               </>
             )}
           </div>

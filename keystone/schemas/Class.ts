@@ -109,6 +109,12 @@ export const Class = list({
       ref: "Task.hiddenInClasses",
       many: true,
     }),
+    // Block list for featured studies: hidden from the class's students on
+    // the discover page and in the study builder's templates.
+    hiddenStudies: relationship({
+      ref: "Study.hiddenInClasses",
+      many: true,
+    }),
     logs: relationship({
       ref: "Log.class",
       many: true,

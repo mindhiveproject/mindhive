@@ -298,3 +298,47 @@ export const SEARCH_USERS = gql`
     }
   }
 `;
+
+// Resources a teacher can link on a board card: the board's classes,
+// their own (author or collaborator), and public ones.
+// TODO(class-networks): add resources shared through the class's networks.
+export const GET_LINKABLE_RESOURCES = gql`
+  query GET_LINKABLE_RESOURCES($userId: ID!, $classIds: [ID!]) {
+    resources(
+      where: {
+        OR: [
+          { isPublic: { equals: true } }
+          { author: { id: { equals: $userId } } }
+          { collaborators: { some: { id: { equals: $userId } } } }
+          { classes: { some: { id: { in: $classIds } } } }
+        ]
+      }
+      orderBy: [{ createdAt: desc }]
+    ) {
+      id
+      title
+      slug
+      description
+      content
+      settings
+      classes {
+        id
+      }
+      isPublic
+      isCustom
+      author {
+        id
+        username
+      }
+      collaborators {
+        id
+        username
+      }
+      createdAt
+      updatedAt
+      parent {
+        id
+      }
+    }
+  }
+`;

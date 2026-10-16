@@ -131,6 +131,16 @@
 			"notStarted": "Not started"
 		}
 	},
+	"cardBuilder": {
+		"milestones": "Milestones",
+		"milestonesNone": "No milestones on the board yet",
+		"milestonesPlaceholder": "Add a milestone",
+		"milestonesText": "Students submit this card's content with these milestones. Only milestones on the board are listed.",
+		"studentTaskSelection": "Student task & survey selection",
+		"studentTaskSelectionOff": "Off",
+		"studentTaskSelectionOn": "Students can pick tasks and surveys",
+		"studentTaskSelectionText": "Let students pick tasks and surveys for their copy of this card, from the ones their class can use."
+	},
 	"cardNavigation": {
 		"back": "back",
 		"save": "Save"
@@ -287,6 +297,15 @@
 				"cancel": "Cancel",
 				"create": "Create dataset"
 			},
+			"blockers": {
+				"file": "Choose a CSV or JSON file to upload.",
+				"name": "Add a dataset name to continue.",
+				"noStudy": "This project has no linked study.",
+				"participants": "The number of participants must be a whole number from 1 to {{max}}.",
+				"source": "Choose a data source to continue.",
+				"studyLoading": "Loading the study flow…",
+				"variables": "Fix the settings of {{count}} variable(s) marked in red."
+			},
 			"dataSourceLabel": "Data source",
 			"errorCreatingDataset": "Error creating dataset:",
 			"errorLoadingStudy": "Error loading study:",
@@ -294,6 +313,60 @@
 			"nameHelp": "You can rename this later from the dataset settings.",
 			"nameLabel": "Dataset name",
 			"namePlaceholder": "e.g. Pre-test responses, Spring 2026",
+			"simulated": {
+				"conditionProbability": "{{probability}}% of participants",
+				"emptyFlow": "This study has no blocks in its flow yet.",
+				"errors": {
+					"maxBelowMin": "The maximum must be greater than or equal to the minimum.",
+					"meanOutsideRange": "The mean must be between the minimum and the maximum.",
+					"negativeSd": "The standard deviation cannot be negative.",
+					"noIntegerInRange": "There is no whole number between the minimum and the maximum.",
+					"notNumber": "Every value must be a number."
+				},
+				"loading": "Loading study flow…",
+				"locked": "Locked",
+				"lockedHint": "Data collection was submitted, so the study design will not change.",
+				"modal": {
+					"apply": "Apply",
+					"applyToBlock": "Apply to all {{count}} variables in {{block}}",
+					"modeLabel": "Mode",
+					"previewStats": "Mean {{mean}} · SD {{sd}} · Lowest {{min}} · Highest {{max}}",
+					"previewTitle": "Preview of {{count}} draws",
+					"previewUnavailable": "Fix the values above to see a preview.",
+					"title": "How should {{name}} be simulated?"
+				},
+				"modeSettings": "Simulation mode",
+				"modeSettingsAria": "Simulation mode for {{name}}",
+				"modes": {
+					"integer": {
+						"description": "Whole numbers between the minimum and maximum, each equally likely — e.g. a 1–7 Likert item.",
+						"label": "Integer range (Likert, counts)",
+						"shortLabel": "Integer range"
+					},
+					"normal": {
+						"description": "Values cluster around the mean; about 68% fall within one standard deviation. Draws outside the minimum and maximum are redrawn.",
+						"label": "Normal distribution",
+						"shortLabel": "Normal"
+					},
+					"uniform": {
+						"description": "Every decimal value between the minimum and maximum is equally likely.",
+						"label": "Uniform",
+						"shortLabel": "Uniform"
+					}
+				},
+				"noVariables": "This block has no key variables to simulate.",
+				"optionDescription": "Generate a sham dataset showing what the current study could produce. Only testers can see it.",
+				"optionTitle": "Simulated",
+				"params": {
+					"max": "Maximum",
+					"mean": "Mean (μ)",
+					"min": "Minimum",
+					"sd": "SD (σ)"
+				},
+				"participants": "Number of participants",
+				"unlocked": "Not locked",
+				"unlockedHint": "The study design can still change; regenerate the simulated data if it does."
+			},
 			"study": {
 				"currentStudy": "Study: {{title}}",
 				"currentStudyMissing": "No study linked to this project",
@@ -462,6 +535,7 @@
 			"saveChanges": "Save changes",
 			"saving": "Saving…",
 			"scopes": {
+				"ariaLabel": "Filter datasets",
 				"classNetwork": "Class network",
 				"empty": {
 					"classNetwork": "No datasets from your class network for this project or study.",
@@ -469,20 +543,24 @@
 					"myClass": "No datasets from your classes yet.",
 					"public": "No public datasets found.",
 					"sharedWithMe": "No datasets have been shared with you.",
+					"simulated": "No simulated datasets yet.",
 					"uploaded": "No uploaded datasets yet."
 				},
+				"filterBy": "Filter by:",
 				"intro": {
 					"classNetwork": "Datasets on this project or study from classes in your class networks.",
 					"me": "All datasets you can see — study, uploaded, shared with you, from your class, class network, or public.",
 					"myClass": "Datasets linked to studies or projects in your classes.",
 					"public": "Datasets from public journal templates.",
 					"sharedWithMe": "Datasets others shared with you as a collaborator.",
+					"simulated": "Sham datasets generated from a study design. Only testers can see them.",
 					"uploaded": "Datasets you uploaded."
 				},
 				"me": "Me",
 				"myClass": "My class",
 				"public": "Public",
 				"sharedWithMe": "Shared with me",
+				"simulated": "Simulated",
 				"uploaded": "Uploaded"
 			},
 			"sharing": {
@@ -1391,27 +1469,44 @@
 		"status": "Status"
 	},
 	"inner": {
+		"addMilestoneToBoard": "Add to board",
+		"addMilestoneToBoardAria": "Add {{title}} to the board",
+		"addMilestoneToBoardFailed": "Failed to add the milestone to the board.",
 		"addSection": "Add section",
+		"addingMilestoneToBoard": "Adding…",
 		"associateCardsFailed": "Failed to update review step cards.",
 		"associateCardsPlaceholder": "Choose a review step",
 		"associateCardsSaving": "Saving…",
+		"associateCardsUnsavedLeave": "You have unsaved card changes for this review step. Leave anyway and discard them?",
 		"associateCardsUnsavedSwitch": "You have unsaved card changes for this review step. Switch anyway and discard them?",
 		"cancel": "Cancel",
-		"deleteItems": "Delete items",
+		"close": "Close",
+		"deleteItems": "Remove items",
 		"deleteItemsConfirmBody": "Permanently delete {{count}} <0>board item(s)</0>? This cannot be undone.",
 		"deleteItemsConfirmCardsOnlyNote": "The <0>sections</0> these items belong to will remain on the board.",
-		"deleteItemsConfirmMilestonesCustom": "The <0>review step item</0> and the <1>custom review step</1> are deleted. The <2>review form you created for this board</2> will become unavailable on this board—it is not deleted. Past student submissions or reviews tied to <3>that form</3> may no longer have a matching review step on this board.",
-		"deleteItemsConfirmMilestonesCustomHeading": "Custom review steps on this board",
-		"deleteItemsConfirmMilestonesDefault": "Only the <0>review step item on this board</0> is deleted. The shared review step and its default review form stay available for other boards.",
-		"deleteItemsConfirmMilestonesDefaultHeading": "MindHive default review steps",
 		"deleteItemsConfirmMixedBody": "Permanently delete {{sectionCount}} <0>section(s)</0> (and all items in them) and {{cardCount}} additional <1>board item(s)</1>? Empty sections for individually removed items will remain. This cannot be undone.",
-		"deleteItemsConfirmReviewStepsHeading": "Selected review step items",
 		"deleteItemsConfirmSectionsBody": "Permanently delete {{sectionCount}} <0>section(s)</0> and all items in them? This cannot be undone.",
-		"deleteItemsConfirmTitle": "Delete items?",
-		"deleteItemsDeleting": "Deleting…",
+		"deleteItemsConfirmTitle": "Remove items",
 		"deleteItemsFailed": "Failed to delete items.",
+		"deleteMilestones": "Delete milestones",
+		"deleteMilestonesBody": "the same, and the milestones are deleted too.",
+		"deleteMilestonesCustomNote": "<0>Custom milestones</0> are deleted. The <1>review forms you created for them</1> are kept but become unavailable on this board, and past student submissions or reviews may no longer have a matching milestone.",
+		"deleteMilestonesDefaultNote": "MindHive default milestones are shared with other boards, so they can't be deleted and stay available to add back.",
+		"editAddedMilestone": "Edit milestone",
+		"firstSectionTitle": "Column 1",
+		"linkCardsToAddedMilestone": "Link cards",
 		"linkMilestoneToCards": "Link a milestone to cards",
+		"milestoneAddedToBoard": "{{title}} added to the board.",
+		"milestonesNotOnBoard": "Not on the board",
 		"newSection": "New section",
+		"removeItemsCardsHeading": "Cards and sections",
+		"removeItemsDelete": "Delete",
+		"removeItemsDeleted": "✓ Deleted",
+		"removeItemsMilestonesHeading": "Milestones",
+		"removeItemsMilestonesInSectionsNote": "Milestone cards inside these sections go with them, and cards are unlinked from those milestones. You can still delete the milestones below.",
+		"removeItemsRemovedFromBoard": "✓ Removed from the board",
+		"removeMilestonesFromBoard": "Remove from board",
+		"removeMilestonesFromBoardBody": "the milestone cards leave the board and every card is unlinked from these milestones. The milestones are kept, and you can put them back from \"Link a milestone to cards\" → \"Add to board\".",
 		"save": "Save",
 		"sectionTitlePlaceholder": "Enter section title",
 		"selectItem": "Select item",
@@ -1430,14 +1525,25 @@
 		"projectChat": "Project chat"
 	},
 	"mainCard": {
+		"studentTasks": {
+			"description": "Pick the tasks and surveys you plan to use for this part of your project.",
+			"favoritesGroup": "Your favorites",
+			"placeholder": "Add a task or survey",
+			"surveysGroup": "Surveys",
+			"tasksGroup": "Tasks",
+			"title": "Your tasks & surveys"
+		},
 		"leaveWithFailedSave": "Some changes could not be saved. Leave anyway?",
 		"askToClose": "Ask the user to close the card or wait until the card is released.",
 		"assignedTo": "Assigned to",
 		"cardWillBeReleased": "The card will be released",
 		"chooseReviewStep": "Choose which step of the peer review a card should go in",
 		"comments": "Comments",
+		"milestones": "Milestones",
 		"commentsPlaceholder": "Add your comment here...",
 		"expandOriginalEntry": "Expand to see your original entry",
+		"originalEntry": "Your original entry",
+		"previousEntries": "Your previous entries",
 		"forTeacherAndCollaborators": "For my teacher and project collaborators only",
 		"instructions": "Instructions",
 		"lockedMessage": "The card is currently being edited by",
@@ -1844,6 +1950,21 @@
 		"locked": "Locked",
 		"matchingKeyword": " matching \"{{keyword}}\"",
 		"matchingSuggestedTasks": " that were suggested {{tasks}}",
+		"matchingStudentTasks": " whose students picked {{tasks}}",
+		"matchingSuggestedOrStudentTasks": " that were suggested or picked {{tasks}}",
+		"noStudentPickedTasks": "No tasks or surveys picked",
+		"studentPickedTask": "Picked by students",
+		"studentPickedTasks": "Tasks and surveys picked by students",
+		"taskFilterNoMatchAll": "No task or survey matches",
+		"taskFilterNoMatchStudent": "No task or survey students picked matches",
+		"taskFilterNoStudentPicks": "Students haven't picked tasks or surveys at this milestone",
+		"taskFilterNoTasks": "No tasks or surveys at this milestone yet",
+		"taskFilterPlaceholderAll": "Filter by task or survey suggested or picked",
+		"taskFilterPlaceholderStudent": "Filter by task or survey students picked",
+		"taskSourceAll": "All sources",
+		"taskSourceLabel": "Task & survey source",
+		"taskSourceMentor": "Suggested by mentors",
+		"taskSourceStudent": "Picked by students",
 		"taskFilterLabel": "Filter by tasks and surveys suggested in reviews",
 		"taskFilterPlaceholder": "Filter by suggested task or survey",
 		"taskFilterNoMatch": "No suggested task or survey matches",
@@ -1887,6 +2008,9 @@
 		"undefined": "Undefined"
 	},
 	"reviewDetail": {
+		"cancel": "Cancel",
+		"resizeColumns": "Resize columns",
+		"ok": "OK",
 		"addTaskSuggestion": "Add MindHive survey or task suggestions",
 		"taskHiddenForClass": "Hidden for this class",
 		"hiddenTasksNote_one": "1 grayed-out block is hidden from this student's class by their teacher, so they can't use it in their study.",
@@ -2387,6 +2511,9 @@
 	},
 	"submit": "Submit",
 	"submitStudy": {
+		"goToStudyBuilder": "Go to Study builder",
+		"createStudyFirst": "Create your study before submitting it for data collection.",
+		"noStudyYet": "Your project doesn't have a study yet.",
 		"appearInFeedbackCenter": "Your study will appear in the Feedback Center.",
 		"completeAllRequired": "Please complete all required cards before submitting your proposal for feedback.",
 		"dataCollection": "Data Collection",

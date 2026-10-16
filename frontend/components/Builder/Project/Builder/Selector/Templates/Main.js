@@ -2,6 +2,7 @@ import { STUDY_TEMPLATES } from "../../../../../Queries/Study";
 import { useQuery } from "@apollo/client";
 
 import StudyCard from "./StudyCard";
+import useHiddenStudyIds from "../../../../../Tasks/Bank/useHiddenStudyIds";
 
 export default function StudyTemplates({
   user,
@@ -13,13 +14,16 @@ export default function StudyTemplates({
     variables: { id: user?.id },
   });
 
+  const hiddenIds = useHiddenStudyIds();
   const studies = data?.studies || [];
   const filteredStudies = studies
     .filter((study) => !!study.diagram)
     .filter(
       (study) =>
         (study?.slug?.includes(search) || study?.title?.includes(search)) &&
-        ((createdBy === "anyone" && study?.public) ||
+        ((createdBy === "anyone" &&
+          study?.public &&
+          !hiddenIds.includes(study?.id)) ||
           (createdBy === "me" &&
             (study?.author?.id === user?.id ||
               study?.collaborators

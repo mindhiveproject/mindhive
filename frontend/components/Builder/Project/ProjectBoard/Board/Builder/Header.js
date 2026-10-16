@@ -18,6 +18,7 @@ import Tooltip from "../../../../../DesignSystem/Tooltip";
 import { AddIcon, PencilIcon } from "../../../../../DesignSystem/Icons";
 
 import { useRef, useState } from "react";
+import { useRouter } from "next/router";
 
 import AddCollaboratorModal from "./AddCollaboratorModal";
 import { isClassTemplateBoard } from "../../../../../Utils/proposalBoard";
@@ -57,14 +58,12 @@ export default function ProposalHeader({
   selectedAssignedUsers = [],
 }) {
   const { t } = useTranslation("builder");
+  const router = useRouter();
   const client = useApolloClient();
   const titleInputRef = useRef(null);
-  const studyId = proposal?.study?.id;
   const isLinked = !!proposal?.study?.id;
-  const studyTitle = proposal?.study?.title || "";
   const collaborators = proposal?.collaborators || [];
   const proposalId = proposal?.id;
-  const [showFullStudyName, setShowFullStudyName] = useState(false);
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const [showCollaboratorModal, setShowCollaboratorModal] = useState(false);
 
@@ -280,29 +279,26 @@ export default function ProposalHeader({
                     </div>
                   )}
                 </div>
-                <button 
-                  className={`studyLinkChip ${isLinked ? "list" : "board"}`}
-                  onClick={() => {
-                    setShowFullStudyName(!showFullStudyName);
-                  }}
-                  disabled={false}
-                >
-                  <div className="studyLinkChipContent">
-                    <img 
-                      src={isLinked ? "/assets/icons/link.svg" : "/assets/icons/unlink.svg"} 
-                      alt={isLinked ? "Link" : "Unlink"}
-                      className="studyLinkIcon"
-                    />
-                    <span className="studyLinkText">
-                      {isLinked 
-                        ? (showFullStudyName 
-                          ? studyTitle
-                          : t("header.linked", "Linked"))
-                        : t("header.unlinked", "Unlinked")
-                      }
-                    </span>
-                  </div>
-                </button>
+                {!isLinked && (
+                  <button
+                    className="studyLinkChip board"
+                    onClick={() => router.push({
+                      pathname: router.pathname,
+                      query: { ...router.query, tab: "builder" },
+                    })}
+                  >
+                    <div className="studyLinkChipContent">
+                      <img
+                        src="/assets/icons/unlink.svg"
+                        alt="Unlink"
+                        className="studyLinkIcon"
+                      />
+                      <span className="studyLinkText">
+                        {t("header.unlinked", "Unlinked")}
+                      </span>
+                    </div>
+                  </button>
+                )}
                 
                 <div className="collaboratorArray">
                   {collaborators.map((collab) => (
