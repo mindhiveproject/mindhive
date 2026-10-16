@@ -27,6 +27,14 @@ import {
   getBoardAssignableToStudents,
   getBoardStudentsCanAssignToCards,
 } from "../../../../../../lib/proposalBoardSettings";
+import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
+import {
+  actionCardMatchesReviewStep,
+  cardIncludedInReviewStep,
+  isActionCard,
+  isStudyStatusMilestone,
+} from "../../../../../../lib/milestones";
+import { isMilestoneSubmitted } from "../../../../../../lib/milestoneStatus";
 
 import Navigation from "./Navigation/Main";
 import SaveIndicator from "../SaveIndicator";
@@ -39,6 +47,10 @@ import { PreviewSection } from "../../../../../Proposal/Card/Forms/PreviewSectio
 import { Modal, Icon } from "semantic-ui-react";
 import Button from "../../../../../DesignSystem/Button";
 import Chip from "../../../../../DesignSystem/Chip";
+import {
+  MilestoneCompletedIcon,
+  MilestoneIcon,
+} from "../../../../../DesignSystem/Icons";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
@@ -150,6 +162,47 @@ export default function ProposalCard({
     bound: !!collabProvider,
   });
   useUnsavedChangesGuard(hasPendingSave);
+
+  // Milestones this card is submitted with, so the student knows where its
+  // content goes; a milestone already submitted reads as done. Only milestones
+  // with an action card on this board count: a card's settings can still name
+  // a step the board doesn't have.
+  const { milestones: boardMilestones } = useBoardMilestones(
+    proposal?.id || proposalId
+  );
+  const cardMilestones = useMemo(
+    () =>
+      (boardMilestones || [])
+        .filter((milestone) =>
+          cardIncludedInReviewStep(proposalCard, milestone?.key, boardMilestones)
+        )
+        .map((milestone) => {
+          // The milestone's own action card on this board, opened from the chip.
+          const actionCard = (proposal?.sections || [])
+            .flatMap((section) => section?.cards || [])
+            .find(
+              (card) =>
+                isActionCard(card) &&
+                ((milestone?.id && card?.milestone?.id === milestone.id) ||
+                  actionCardMatchesReviewStep(
+                    card,
+                    milestone?.key,
+                    boardMilestones
+                  ))
+            );
+          return {
+            milestone,
+            actionCardId: actionCard?.id ?? null,
+            // Data collection is done once the study is submitted (and with
+            // it locked); other milestones once the board submitted them.
+            completed: isStudyStatusMilestone(milestone)
+              ? proposal?.study?.dataCollectionStatus === "SUBMITTED"
+              : isMilestoneSubmitted(proposal, milestone, boardMilestones),
+          };
+        })
+        .filter(({ actionCardId }) => !!actionCardId),
+    [boardMilestones, proposalCard, proposal]
+  );
   // Preview never writes, even if an editor reports a change.
   const updateField = isPreview ? () => {} : handleFieldUpdate;
   const collaborationUser = {
@@ -333,7 +386,9 @@ export default function ProposalCard({
   };
 
   // Wait for outstanding saves, release the card, and go back to the board.
-  const handleBack = async () => {
+  // Leave this card for `query` (the board, or another card) once everything
+  // typed here is saved and the card is released.
+  const leaveCard = async (query) => {
     await flushAll();
     if (
       hasUnsavedChanges() &&
@@ -360,14 +415,13 @@ export default function ProposalCard({
       });
     }
 
-    // move to the project board
-    router.push({
-      pathname: `/builder/projects/`,
-      query: {
-        selector: proposalId,
-      },
-    });
+    router.push({ pathname: `/builder/projects/`, query });
   };
+
+  const handleBack = () => leaveCard({ selector: proposalId });
+
+  const openMilestoneCard = (actionCardId) =>
+    leaveCard({ selector: proposalId, card: actionCardId });
 
   // Handler to open assignment modal
   const openAssignmentModalHandler = (assignment) => {
@@ -1546,6 +1600,66 @@ export default function ProposalCard({
                   )}
                 />
               </div>
+              {cardMilestones.length > 0 ? (
+                <div
+                  className="proposalCardMilestones"
+                  style={{ display: "grid", gap: "8px", marginTop: "16px" }}
+                >
+                  <div className="cardSubheader">
+                    {t("mainCard.milestones", "Milestones")}
+                  </div>
+                  <div
+                    style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}
+                  >
+                    {cardMilestones.map(({ milestone, actionCardId, completed }) => {
+                      const open =
+                        !isPreview && actionCardId
+                          ? () => openMilestoneCard(actionCardId)
+                          : undefined;
+                      const icon = completed ? (
+                        <MilestoneCompletedIcon width={18} height={18} />
+                      ) : (
+                        <MilestoneIcon width={18} height={18} />
+                      );
+                      const label = milestone.title || milestone.key;
+                      if (!completed) {
+                        return (
+                          <Chip
+                            key={milestone.id || milestone.key}
+                            label={label}
+                            leading={icon}
+                            onClick={open}
+                          />
+                        );
+                      }
+                      // Completed: static look, but still opens the milestone.
+                      // Static chips ignore clicks, so a bare button carries it.
+                      const chip = (
+                        <Chip variant="static" tone="neutral" label={label} leading={icon} />
+                      );
+                      return open ? (
+                        <button
+                          key={milestone.id || milestone.key}
+                          type="button"
+                          onClick={open}
+                          style={{
+                            display: "inline-flex",
+                            margin: 0,
+                            padding: 0,
+                            border: "none",
+                            background: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {chip}
+                        </button>
+                      ) : (
+                        <span key={milestone.id || milestone.key}>{chip}</span>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
               <Modal
                 open={resourceModalState.open}
                 onClose={closeResourceModalHandler}
