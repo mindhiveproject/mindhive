@@ -135,7 +135,11 @@
 		"milestones": "Milestones",
 		"milestonesNone": "No milestones on the board yet",
 		"milestonesPlaceholder": "Add a milestone",
-		"milestonesText": "Students submit this card's content with these milestones. Only milestones on the board are listed."
+		"milestonesText": "Students submit this card's content with these milestones. Only milestones on the board are listed.",
+		"studentTaskSelection": "Student task & survey selection",
+		"studentTaskSelectionOff": "Off",
+		"studentTaskSelectionOn": "Students can pick tasks and surveys",
+		"studentTaskSelectionText": "Let students pick tasks and surveys for their copy of this card, from the ones their class can use."
 	},
 	"cardNavigation": {
 		"back": "back",
@@ -1453,6 +1457,14 @@
 		"projectChat": "Project chat"
 	},
 	"mainCard": {
+		"studentTasks": {
+			"description": "Pick the tasks and surveys you plan to use for this part of your project.",
+			"none": "No tasks or surveys picked yet.",
+			"placeholder": "Add a task or survey",
+			"surveysGroup": "Surveys",
+			"tasksGroup": "Tasks",
+			"title": "Your tasks & surveys"
+		},
 		"leaveWithFailedSave": "Some changes could not be saved. Leave anyway?",
 		"askToClose": "Ask the user to close the card or wait until the card is released.",
 		"assignedTo": "Assigned to",

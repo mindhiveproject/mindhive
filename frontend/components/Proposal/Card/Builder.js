@@ -17,6 +17,7 @@ import AssignmentViewModal from "../../TipTap/AssignmentViewModal";
 import StudentProjectCard from "../../Builder/Project/ProjectBoard/Board/Card/Main";
 import InfoPopover from "../../DesignSystem/InfoPopover";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import ToggleSwitch from "../../DesignSystem/ToggleSwitch";
 import { useBoardMilestones } from "../../../lib/useBoardMilestones";
 import {
   cardIncludedInReviewStep,
@@ -807,6 +808,64 @@ export default function BuilderProposalCard({
               onLinkedItemsClose={handleLinkedItemsClose}
             />
           </>
+
+          <div className="proposalCardComments">
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {tBuilder(
+                "cardBuilder.studentTaskSelection",
+                {},
+                { default: "Student task & survey selection" }
+              )}
+              <InfoPopover
+                content={tBuilder(
+                  "cardBuilder.studentTaskSelectionText",
+                  {},
+                  {
+                    default:
+                      "Let students pick tasks and surveys for their copy of this card, from the ones their class can use.",
+                  }
+                )}
+                ariaLabel={tBuilder(
+                  "cardBuilder.studentTaskSelection",
+                  {},
+                  { default: "Student task & survey selection" }
+                )}
+                width={240}
+              />
+            </div>
+            <ToggleSwitch
+              checked={!!inputs?.settings?.studentTaskSelection}
+              onChange={(checked) =>
+                handleChange({
+                  target: {
+                    name: "settings",
+                    value: {
+                      ...(inputs?.settings || {}),
+                      studentTaskSelection: checked,
+                    },
+                  },
+                })
+              }
+              aria-label={tBuilder(
+                "cardBuilder.studentTaskSelection",
+                {},
+                { default: "Student task & survey selection" }
+              )}
+              label={
+                inputs?.settings?.studentTaskSelection
+                  ? tBuilder(
+                      "cardBuilder.studentTaskSelectionOn",
+                      {},
+                      { default: "Students can pick tasks and surveys" }
+                    )
+                  : tBuilder(
+                      "cardBuilder.studentTaskSelectionOff",
+                      {},
+                      { default: "Off" }
+                    )
+              }
+            />
+          </div>
 
           <div className="proposalCardComments">
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>

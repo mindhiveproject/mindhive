@@ -36,6 +36,10 @@ import {
 } from "../../../../../../lib/milestones";
 import { isMilestoneSubmitted } from "../../../../../../lib/milestoneStatus";
 import { listPreviousEntries } from "../../../../../../lib/cardPreviousEntries";
+import {
+  allowsStudentTaskSelection,
+  getTemplateLinkedTasks,
+} from "../../../../../../lib/studentTaskSelection";
 
 import Navigation from "./Navigation/Main";
 import SaveIndicator from "../SaveIndicator";
@@ -43,6 +47,7 @@ import { useCardCollabSession } from "../../../../../../lib/useCardCollabSession
 import { useCardHtmlAutosave } from "../../../../../../lib/useCardHtmlAutosave";
 import { useUnsavedChangesGuard } from "../../../../../../lib/useUnsavedChangesGuard";
 import Assigned from "./Forms/Assigned";
+import StudentTaskPicker from "./StudentTaskPicker";
 import TipTapEditor from "../../../../../TipTap/Main";
 import { PreviewSection } from "../../../../../Proposal/Card/Forms/PreviewSection";
 import { Modal, Icon } from "semantic-ui-react";
@@ -368,6 +373,31 @@ export default function ProposalCard({
         variables: {
           id: cardId,
           input: {
+            settings: mergeCardSettings(proposalCard?.settings, settings),
+          },
+        },
+      }),
+    );
+  };
+
+  // Student-picked tasks & surveys: saved with the teacher-linked tasks, and
+  // listed in settings.studentTaskIds so template propagation keeps them.
+  const showStudentTaskPicker = allowsStudentTaskSelection(proposalCard);
+  const linkedTasks = getTemplateLinkedTasks(inputs);
+  const handleStudentTasksChange = (picks) => {
+    const tasks = [...getTemplateLinkedTasks(inputs), ...picks];
+    const settings = {
+      ...inputs.settings,
+      studentTaskIds: picks.map((task) => task.id),
+    };
+    handleChange({ target: { name: "tasks", value: tasks } });
+    handleChange({ target: { name: "settings", value: settings } });
+    trackSave(() =>
+      saveCardFields({
+        variables: {
+          id: cardId,
+          input: {
+            tasks: { set: tasks.map((task) => ({ id: task.id })) },
             settings: mergeCardSettings(proposalCard?.settings, settings),
           },
         },
@@ -1546,7 +1576,7 @@ export default function ProposalCard({
               {/* Display Linked Items: Assignments first, then combined Resources */}
               {(inputs?.assignments?.length > 0 ||
                 inputs?.resources?.length > 0 ||
-                inputs?.tasks?.length > 0 ||
+                linkedTasks.length > 0 ||
                 inputs?.studies?.length > 0) && (
                 <div className="linkedItemsSection">
                   {inputs?.assignments?.length > 0 && (
@@ -1562,7 +1592,7 @@ export default function ProposalCard({
                     />  
                   )}
                   {(inputs?.resources?.length > 0 ||
-                    inputs?.tasks?.length > 0 ||
+                    linkedTasks.length > 0 ||
                     inputs?.studies?.length > 0) && (
                     <PreviewSection
                       title={t("board.expendedCard.previewLinkedResources", "Linked Resources")}
@@ -1570,8 +1600,8 @@ export default function ProposalCard({
                         ...(inputs?.resources?.length > 0
                           ? [{ items: inputs.resources, type: "resource" }]
                           : []),
-                        ...(inputs?.tasks?.length > 0
-                          ? [{ items: inputs.tasks, type: "task" }]
+                        ...(linkedTasks.length > 0
+                          ? [{ items: linkedTasks, type: "task" }]
                           : []),
                         ...(inputs?.studies?.length > 0
                           ? [{ items: inputs.studies, type: "study" }]
@@ -1593,6 +1623,15 @@ export default function ProposalCard({
                 />
                 </div>
 
+              )}
+              {showStudentTaskPicker && (
+                <StudentTaskPicker
+                  proposalCard={inputs}
+                  classId={proposal?.usedInClass?.id}
+                  user={user}
+                  disabled={isPreview || isLocked}
+                  onChange={handleStudentTasksChange}
+                />
               )}
               <div className="proposalCardComments">
                 <div className="cardSubheader">

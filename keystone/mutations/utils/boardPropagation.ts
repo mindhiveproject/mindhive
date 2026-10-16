@@ -166,11 +166,41 @@ function mergeSettingsPreservingStatus(
     status?: unknown;
     [k: string]: unknown;
   };
+  // Student-owned: which of the clone's tasks the students picked.
+  const { studentTaskIds: _templateStudentTaskIds, ...templateOwned } =
+    templateRest as { studentTaskIds?: unknown; [k: string]: unknown };
   return {
     ...cloneRest,
-    ...templateRest,
+    ...templateOwned,
     ...(cloneStatus !== undefined ? { status: cloneStatus } : {}),
   };
+}
+
+/**
+ * Tasks for a clone card: the template card's tasks plus, while the template
+ * card lets students pick tasks (settings.studentTaskSelection), the clone
+ * tasks the students picked (clone settings.studentTaskIds). Picks no longer
+ * linked on the clone (e.g. a deleted task) are dropped.
+ */
+function cloneCardTaskIds(
+  templateCard: {
+    settings?: Record<string, unknown> | null;
+    tasks?: Array<{ id: string }>;
+  },
+  cloneCard: {
+    settings?: Record<string, unknown> | null;
+    tasks?: Array<{ id: string }>;
+  }
+): string[] {
+  const ids = new Set((templateCard.tasks ?? []).map((t) => t.id));
+  if (templateCard.settings?.studentTaskSelection) {
+    const picked = cloneCard.settings?.studentTaskIds;
+    const pickedIds = new Set(Array.isArray(picked) ? picked : []);
+    for (const t of cloneCard.tasks ?? []) {
+      if (pickedIds.has(t.id)) ids.add(t.id);
+    }
+  }
+  return [...ids];
 }
 
 /**
@@ -438,7 +468,15 @@ export async function syncCardsToClone(
               set: (tc.assignments ?? []).map((a) => ({ id: a.id })),
             },
             studies: { set: (tc.studies ?? []).map((s) => ({ id: s.id })) },
-            tasks: { set: (tc.tasks ?? []).map((t) => ({ id: t.id })) },
+            tasks: {
+              set: cloneCardTaskIds(
+                tc,
+                existing as {
+                  settings?: Record<string, unknown> | null;
+                  tasks?: Array<{ id: string }>;
+                }
+              ).map((id) => ({ id })),
+            },
             // Template-owned: follow the template card, including when the
             // teacher removed its milestone (the clone would otherwise keep
             // reporting a review step the template no longer has).
