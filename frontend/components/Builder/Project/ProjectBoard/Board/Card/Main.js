@@ -35,6 +35,7 @@ import {
   isStudyStatusMilestone,
 } from "../../../../../../lib/milestones";
 import { isMilestoneSubmitted } from "../../../../../../lib/milestoneStatus";
+import { listPreviousEntries } from "../../../../../../lib/cardPreviousEntries";
 
 import Navigation from "./Navigation/Main";
 import SaveIndicator from "../SaveIndicator";
@@ -75,7 +76,11 @@ export default function ProposalCard({
   onOpenAssignment,
 }) {
   const { t } = useTranslation("builder");
-  const [originalActive, setOriginalActive] = useState(false); // For accordion state, default collapsed
+  const [openEntryKeys, setOpenEntryKeys] = useState([]); // Expanded previous entries, all collapsed by default
+  const toggleEntry = (key) =>
+    setOpenEntryKeys((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
   const [assignmentModalOpen, setAssignmentModalOpen] = useState(false); // For assignment modal
   const [selectedAssignment, setSelectedAssignment] = useState(null); // For selected assignment
   const [resourceModalState, setResourceModalState] = useState({
@@ -202,6 +207,10 @@ export default function ProposalCard({
         })
         .filter(({ actionCardId }) => !!actionCardId),
     [boardMilestones, proposalCard, proposal]
+  );
+  const previousEntries = useMemo(
+    () => listPreviousEntries({ ...proposalCard, content: values.content }, isLocked),
+    [proposalCard, values.content, isLocked]
   );
   // Preview never writes, even if an editor reports a change.
   const updateField = isPreview ? () => {} : handleFieldUpdate;
@@ -1417,39 +1426,59 @@ export default function ProposalCard({
                     />
                   </div>
                 )}
-              {proposalCard?.settings?.includeInReport && (
+              {proposalCard?.settings?.includeInReport &&
+                previousEntries.length > 0 && (
+                <>
+                  <div className="cardSubheader">
+                    {t("mainCard.previousEntries", "Your previous entries")}
+                  </div>
+                  {previousEntries.map((entry) => {
+                    const open = openEntryKeys.includes(entry.key);
+                    const label = entry.isOriginal
+                      ? t("mainCard.originalEntry", "Your original entry")
+                      : entry.title;
+                    return (
+                      <div className="originalEntryBlock" key={entry.key}>
+                        <button
+                          type="button"
+                          className="originalEntryBlockHeader"
+                          onClick={() => toggleEntry(entry.key)}
+                          aria-expanded={open}
+                          aria-label={label}
+                        >
+                          <span>
+                            {label}
+                            {entry.submittedAt && (
+                              <span className="originalEntryBlockDate">
+                                {moment(entry.submittedAt).format("YYYY-MM-DD")}
+                              </span>
+                            )}
+                          </span>
+                          <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                            <img style={{ transform: `${open ? 'rotate(270deg)' : 'rotate(90deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
+                            <img style={{ transform: `${open ? 'rotate(90deg)' : 'rotate(270deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
+                          </span>
+                        </button>
+                        {open && (
+                          <div className="originalEntryBlockContent">
+                            <ReadOnlyTipTap>
+                              <div className="ProseMirror">
+                                {ReactHtmlParser(entry.content || "")}
+                              </div>
+                            </ReadOnlyTipTap>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+
+              {proposalCard?.settings?.includeInReport && !isLocked && (
                 <>
                   <div className="cardSubheader">
                     {t("mainCard.yourEntry", "Your entry")}
                   </div>
-                  {isLocked ? (
-                    <div className="originalEntryBlock">
-                      <button
-                        type="button"
-                        className="originalEntryBlockHeader"
-                        onClick={() => setOriginalActive(!originalActive)}
-                        aria-expanded={originalActive}
-                        aria-label={t("mainCard.expandOriginalEntry", "Expand to see your original entry")}
-                      >
-                        <span>{t("mainCard.expandOriginalEntry", "Expand to see your original entry")}</span>
-                        <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                          <img style={{ transform: `${originalActive ? 'rotate(270deg)' : 'rotate(90deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
-                          <img style={{ transform: `${originalActive ? 'rotate(90deg)' : 'rotate(270deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
-                          {/* <Icon name="chevron up" />
-                          <Icon name="chevron down" /> */}
-                        </span>
-                      </button>
-                      {originalActive && (
-                        <div className="originalEntryBlockContent">
-                          <ReadOnlyTipTap>
-                            <div className="ProseMirror">
-                              {ReactHtmlParser(values.content || "")}
-                            </div>
-                          </ReadOnlyTipTap>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
                     <div onFocus={handleFocus}>
                       <TipTapEditor
                         content={values.content}
@@ -1476,7 +1505,6 @@ export default function ProposalCard({
                         }
                       />
                     </div>
-                  )}
                 </>
               )}
 

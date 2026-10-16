@@ -142,6 +142,15 @@ export const ProposalCard = list({
      * The frontend ensures that when updating settings, existing properties are preserved.
      */
     settings: json(),
+    /**
+     * Snapshots of the card's entry, one per milestone that submitted it to
+     * the feedback center, keyed by milestone key. Resubmitting a milestone
+     * overwrites its snapshot. Student-owned: template propagation leaves it
+     * alone.
+     *
+     * { [milestoneKey]: { milestoneId?, title, content, submittedAt } }
+     */
+    previousEntries: json(),
     section: relationship({
       ref: "ProposalSection.cards",
     }),

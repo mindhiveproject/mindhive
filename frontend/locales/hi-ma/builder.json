@@ -1359,6 +1359,8 @@
 		"comments": "टिप्पणियाँ",
 		"commentsPlaceholder": "",
 		"expandOriginalEntry": "",
+		"originalEntry": "",
+		"previousEntries": "",
 		"forTeacherAndCollaborators": "केवल मेरे शिक्षक और परियोजना सहयोगियों के लिए",
 		"instructions": "निर्देश",
 		"lockedMessage": "कार्ड का संपादन वर्तमान में किया जा रहा है",

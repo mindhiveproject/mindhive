@@ -1359,6 +1359,8 @@
 		"comments": "Commentaires",
 		"commentsPlaceholder": "Ajoutez votre commentaire ici...",
 		"expandOriginalEntry": "Déroulez pour voir votre entrée originale",
+		"originalEntry": "Votre entrée originale",
+		"previousEntries": "Vos entrées précédentes",
 		"forTeacherAndCollaborators": "Réservé à mon professeur et aux collaborateurs du projet",
 		"instructions": "Instructions",
 		"lockedMessage": "La carte est actuellement en cours d'édition par",

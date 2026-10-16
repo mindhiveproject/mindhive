@@ -1359,6 +1359,8 @@
 		"comments": "Комментарии",
 		"commentsPlaceholder": "Оставьте свой комментарий здесь...",
 		"expandOriginalEntry": "Разверните, чтобы увидеть исходную запись.",
+		"originalEntry": "Ваша исходная запись",
+		"previousEntries": "Ваши предыдущие записи",
 		"forTeacherAndCollaborators": "Только для моего учителя и соавторов проекта",
 		"instructions": "Инструкции",
 		"lockedMessage": "Карточка в настоящее время редактируется",

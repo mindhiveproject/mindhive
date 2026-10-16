@@ -1359,6 +1359,8 @@
 		"comments": "टिप्पणियाँ",
 		"commentsPlaceholder": "अपनी टिप्पणी यहाँ लिखें...",
 		"expandOriginalEntry": "अपनी मूल प्रविष्टि देखने के लिए विस्तार करें",
+		"originalEntry": "आपकी मूल प्रविष्टि",
+		"previousEntries": "आपकी पिछली प्रविष्टियाँ",
 		"forTeacherAndCollaborators": "केवल मेरे शिक्षक और परियोजना सहयोगियों के लिए",
 		"instructions": "निर्देश",
 		"lockedMessage": "कार्ड का संपादन वर्तमान में किया जा रहा है",

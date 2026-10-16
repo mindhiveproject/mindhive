@@ -1439,6 +1439,8 @@
 		"milestones": "Milestones",
 		"commentsPlaceholder": "Add your comment here...",
 		"expandOriginalEntry": "Expand to see your original entry",
+		"originalEntry": "Your original entry",
+		"previousEntries": "Your previous entries",
 		"forTeacherAndCollaborators": "For my teacher and project collaborators only",
 		"instructions": "Instructions",
 		"lockedMessage": "The card is currently being edited by",

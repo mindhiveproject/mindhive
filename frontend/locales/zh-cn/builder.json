@@ -1359,6 +1359,8 @@
 		"comments": "评论",
 		"commentsPlaceholder": "请在此处添加您的评论……",
 		"expandOriginalEntry": "展开查看您的原始条目",
+		"originalEntry": "您的原始条目",
+		"previousEntries": "您之前的条目",
 		"forTeacherAndCollaborators": "仅供我的老师和项目合作者使用",
 		"instructions": "指示",
 		"lockedMessage": "该卡片目前正在被编辑",

@@ -1359,6 +1359,8 @@
 		"comments": "تعليقات",
 		"commentsPlaceholder": "أضف تعليقك هنا...",
 		"expandOriginalEntry": "قم بالتوسيع لرؤية إدخالك الأصلي",
+		"originalEntry": "إدخالك الأصلي",
+		"previousEntries": "إدخالاتك السابقة",
 		"forTeacherAndCollaborators": "للمعلمين وزملاء المشروع فقط",
 		"instructions": "تعليمات",
 		"lockedMessage": "يتم تحرير البطاقة حاليًا بواسطة",

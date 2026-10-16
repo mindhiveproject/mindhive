@@ -1596,6 +1596,9 @@ export const StyledProposal = styled.div`
       // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
       overflow: hidden;
       width: 100%;
+      & + .originalEntryBlock {
+        margin-top: 8px;
+      }
       .originalEntryBlockHeader {
         display: flex;
         flex-direction: row;
@@ -1618,6 +1621,10 @@ export const StyledProposal = styled.div`
           outline: 2px solid var(--MH-Theme-Neutrals-Dark, #6a6a6a);
           outline-offset: 2px;
         }
+      }
+      .originalEntryBlockDate {
+        margin-left: 8px;
+        color: var(--MH-Theme-Neutrals-Dark, #6f6f6f);
       }
       .originalEntryBlockContent {
         padding: 16px;

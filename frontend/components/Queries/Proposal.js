@@ -347,6 +347,7 @@ export const PROPOSAL_QUERY = gql`
           content
           revisedContent
           comment
+          previousEntries
 `)}
   }
 `;
@@ -427,6 +428,7 @@ export const GET_CARD_CONTENT = gql`
       revisedContent
       content
       comment
+      previousEntries
       settings
       assignedTo {
         id

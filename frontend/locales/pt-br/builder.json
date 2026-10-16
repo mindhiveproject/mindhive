@@ -1359,6 +1359,8 @@
 		"comments": "Comentários",
 		"commentsPlaceholder": "Adicione seu comentário aqui...",
 		"expandOriginalEntry": "Expanda para ver sua entrada original.",
+		"originalEntry": "Sua entrada original",
+		"previousEntries": "Suas entradas anteriores",
 		"forTeacherAndCollaborators": "Somente para meus professores e colaboradores do projeto",
 		"instructions": "Instruções",
 		"lockedMessage": "O cartão está sendo editado por",

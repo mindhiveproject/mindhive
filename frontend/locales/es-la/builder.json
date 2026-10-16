@@ -1359,6 +1359,8 @@
 		"comments": "Comentarios",
 		"commentsPlaceholder": "Añade tu comentario aquí...",
 		"expandOriginalEntry": "Expandir para ver tu entrada original",
+		"originalEntry": "Tu entrada original",
+		"previousEntries": "Tus entradas anteriores",
 		"forTeacherAndCollaborators": "Solo para mi profesor y colaboradores del proyecto.",
 		"instructions": "Instrucciones",
 		"lockedMessage": "La tarjeta está siendo editada actualmente por",
