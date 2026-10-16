@@ -294,23 +294,45 @@ export default function Engine({
           zoom
       );
       captureBaseline(model);
+      return anchor;
     },
     [engine, captureBaseline]
   );
 
   useEffect(() => {
     if (!engine) return;
+    let cancelled = false;
     const id = requestAnimationFrame(() => {
       const model = engine.getModel?.();
-      centerZeroStateAnchor(model);
+      const centeredAnchor = centerZeroStateAnchor(model);
       model?.getNodes?.().forEach((node) => {
         Object.values(node.getPorts?.() || {}).forEach((port) => {
           port.reportPosition?.();
         });
       });
-      engine.repaintCanvas?.();
+      if (!centeredAnchor) {
+        engine.repaintCanvas?.();
+        return;
+      }
+      // Storm's ResizeObserver fires in this same frame, before React renders
+      // the move, and re-measures the anchor's ports from the old DOM position.
+      // Measure them again once the centered anchor is actually on screen.
+      engine.repaintCanvas(true).then(() => {
+        if (cancelled || !engine.getCanvas?.()) return;
+        Object.values(centeredAnchor.getPorts?.() || {}).forEach((port) => {
+          try {
+            port.updateCoords(engine.getPortCoords(port));
+          } catch (e) {
+            // port element not mounted
+          }
+        });
+        engine.repaintCanvas();
+      });
     });
-    return () => cancelAnimationFrame(id);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(id);
+    };
   }, [engine, study?.diagram, centerZeroStateAnchor]);
 
   const getRandomIntInclusive = (min, max) => {
