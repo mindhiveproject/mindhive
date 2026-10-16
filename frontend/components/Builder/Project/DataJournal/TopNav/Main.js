@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { StyledTopNavigation } from "../styles/StyledDataJournal"; // Adjust path
 import Button from "../../../../DesignSystem/Button";
+import ButtonGroup from "../../../../DesignSystem/ButtonGroup";
 import Chip from "../../../../DesignSystem/Chip";
 import { AddIcon } from "../../../../DesignSystem/Icons";
 import Breadcrumbs from "./Breadcrumbs/Main";
@@ -15,7 +16,10 @@ import { GET_WORKSPACE } from "../../../../Queries/DataWorkspace";
 import { GET_DATA_JOURNAL } from "../../../../Queries/DataJournal";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 
-import { DATASET_SCOPES } from "../../../../../lib/dataJournalDatasources";
+import {
+  DATASET_SCOPES,
+  isTesterUser,
+} from "../../../../../lib/dataJournalDatasources";
 import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
 
 import AddWorkspace from "../SideNav/AddWorkspace";
@@ -68,6 +72,11 @@ const DATASET_SCOPE_META = {
     defaultLabel: "Public",
     iconSrc: "/assets/icons/status/publicTemplate.svg",
   },
+  simulated: {
+    i18nKey: "dataJournal.datasets.scopes.simulated",
+    defaultLabel: "Simulated",
+    iconSrc: "/assets/icons/code.svg",
+  },
 };
 
 export default function TopNavigation() {
@@ -85,7 +94,22 @@ export default function TopNavigation() {
     workspace,
     projectId,
     studyId,
+    user,
   } = useDataJournal();
+
+  const visibleScopes = isTesterUser(user)
+    ? [...DATASET_SCOPES, "simulated"]
+    : DATASET_SCOPES;
+  const scopeItems = visibleScopes
+    .filter((scope) => DATASET_SCOPE_META[scope])
+    .map((scope) => {
+      const meta = DATASET_SCOPE_META[scope];
+      return {
+        value: scope,
+        label: tBuilder(meta.i18nKey, {}, { default: meta.defaultLabel }),
+        icon: <img src={meta.iconSrc} alt="" width="18" height="18" />,
+      };
+    });
 
   const [editingTarget, setEditingTarget] = useState(null);
   const [draftTitle, setDraftTitle] = useState("");
@@ -257,39 +281,21 @@ export default function TopNavigation() {
                 default: "Add dataset",
               })}
             </Button>
-            <div className="datasetScopeNav" role="tablist">
-              <span className="MH-Type-Label-Base" style={{ color: "#5D5763" }}>Filter by:</span>
-            {DATASET_SCOPES.map((scope) => {
-              const meta = DATASET_SCOPE_META[scope];
-              if (!meta) return null;
-              return (
-              <Chip
-                key={scope}
-                className="datasetScopeChip"
-                role="tab"
-                aria-selected={datasetScope === scope}
-                label={tBuilder(meta.i18nKey, {}, { default: meta.defaultLabel })}
-                selected={datasetScope === scope}
-                onClick={() => setDatasetScope(scope)}
-                leading={
-                  <img
-                    src={meta.iconSrc}
-                    alt=""
-                    width="20"
-                    height="20"
-                    aria-hidden
-                  />
-                }
-                style={{
-                  border: "none",
-                  background:
-                    datasetScope === scope ? LEFT_NAV_SELECTED_BG : "transparent",
-                  backgroundColor:
-                    datasetScope === scope ? LEFT_NAV_SELECTED_BG : "transparent",
-                }}
+            <div className="datasetScopeNav">
+              <span className="MH-Type-Label-Base" style={{ color: "#5D5763" }}>
+                {tBuilder("dataJournal.datasets.scopes.filterBy", {}, {
+                  default: "Filter by:",
+                })}
+              </span>
+              <ButtonGroup
+                size="XSmall"
+                aria-label={tBuilder("dataJournal.datasets.scopes.ariaLabel", {}, {
+                  default: "Filter datasets",
+                })}
+                items={scopeItems}
+                value={datasetScope}
+                onChange={setDatasetScope}
               />
-            );
-            })}
             </div>
           </div>
         )}

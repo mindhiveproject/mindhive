@@ -297,6 +297,15 @@
 				"cancel": "Cancel",
 				"create": "Create dataset"
 			},
+			"blockers": {
+				"file": "Choose a CSV or JSON file to upload.",
+				"name": "Add a dataset name to continue.",
+				"noStudy": "This project has no linked study.",
+				"participants": "The number of participants must be a whole number from 1 to {{max}}.",
+				"source": "Choose a data source to continue.",
+				"studyLoading": "Loading the study flow…",
+				"variables": "Fix the settings of {{count}} variable(s) marked in red."
+			},
 			"dataSourceLabel": "Data source",
 			"errorCreatingDataset": "Error creating dataset:",
 			"errorLoadingStudy": "Error loading study:",
@@ -304,6 +313,60 @@
 			"nameHelp": "You can rename this later from the dataset settings.",
 			"nameLabel": "Dataset name",
 			"namePlaceholder": "e.g. Pre-test responses, Spring 2026",
+			"simulated": {
+				"conditionProbability": "{{probability}}% of participants",
+				"emptyFlow": "This study has no blocks in its flow yet.",
+				"errors": {
+					"maxBelowMin": "The maximum must be greater than or equal to the minimum.",
+					"meanOutsideRange": "The mean must be between the minimum and the maximum.",
+					"negativeSd": "The standard deviation cannot be negative.",
+					"noIntegerInRange": "There is no whole number between the minimum and the maximum.",
+					"notNumber": "Every value must be a number."
+				},
+				"loading": "Loading study flow…",
+				"locked": "Locked",
+				"lockedHint": "Data collection was submitted, so the study design will not change.",
+				"modal": {
+					"apply": "Apply",
+					"applyToBlock": "Apply to all {{count}} variables in {{block}}",
+					"modeLabel": "Mode",
+					"previewStats": "Mean {{mean}} · SD {{sd}} · Lowest {{min}} · Highest {{max}}",
+					"previewTitle": "Preview of {{count}} draws",
+					"previewUnavailable": "Fix the values above to see a preview.",
+					"title": "How should {{name}} be simulated?"
+				},
+				"modeSettings": "Simulation mode",
+				"modeSettingsAria": "Simulation mode for {{name}}",
+				"modes": {
+					"integer": {
+						"description": "Whole numbers between the minimum and maximum, each equally likely — e.g. a 1–7 Likert item.",
+						"label": "Integer range (Likert, counts)",
+						"shortLabel": "Integer range"
+					},
+					"normal": {
+						"description": "Values cluster around the mean; about 68% fall within one standard deviation. Draws outside the minimum and maximum are redrawn.",
+						"label": "Normal distribution",
+						"shortLabel": "Normal"
+					},
+					"uniform": {
+						"description": "Every decimal value between the minimum and maximum is equally likely.",
+						"label": "Uniform",
+						"shortLabel": "Uniform"
+					}
+				},
+				"noVariables": "This block has no key variables to simulate.",
+				"optionDescription": "Generate a sham dataset showing what the current study could produce. Only testers can see it.",
+				"optionTitle": "Simulated",
+				"params": {
+					"max": "Maximum",
+					"mean": "Mean (μ)",
+					"min": "Minimum",
+					"sd": "SD (σ)"
+				},
+				"participants": "Number of participants",
+				"unlocked": "Not locked",
+				"unlockedHint": "The study design can still change; regenerate the simulated data if it does."
+			},
 			"study": {
 				"currentStudy": "Study: {{title}}",
 				"currentStudyMissing": "No study linked to this project",
@@ -472,6 +535,7 @@
 			"saveChanges": "Save changes",
 			"saving": "Saving…",
 			"scopes": {
+				"ariaLabel": "Filter datasets",
 				"classNetwork": "Class network",
 				"empty": {
 					"classNetwork": "No datasets from your class network for this project or study.",
@@ -479,20 +543,24 @@
 					"myClass": "No datasets from your classes yet.",
 					"public": "No public datasets found.",
 					"sharedWithMe": "No datasets have been shared with you.",
+					"simulated": "No simulated datasets yet.",
 					"uploaded": "No uploaded datasets yet."
 				},
+				"filterBy": "Filter by:",
 				"intro": {
 					"classNetwork": "Datasets on this project or study from classes in your class networks.",
 					"me": "All datasets you can see — study, uploaded, shared with you, from your class, class network, or public.",
 					"myClass": "Datasets linked to studies or projects in your classes.",
 					"public": "Datasets from public journal templates.",
 					"sharedWithMe": "Datasets others shared with you as a collaborator.",
+					"simulated": "Sham datasets generated from a study design. Only testers can see them.",
 					"uploaded": "Datasets you uploaded."
 				},
 				"me": "Me",
 				"myClass": "My class",
 				"public": "Public",
 				"sharedWithMe": "Shared with me",
+				"simulated": "Simulated",
 				"uploaded": "Uploaded"
 			},
 			"sharing": {

@@ -669,7 +669,10 @@ export const STUDY_PROPOSALS_QUERY = gql`
 export const GET_STUDY_FLOW = gql`
   query Studies($where: StudyWhereInput!) {
     studies(where: $where) {
+      id
+      title
       flow
+      dataCollectionStatus
     }
   }
 `;
@@ -678,6 +681,7 @@ export const GET_STUDY_FLOW = gql`
 export const GET_BLOCK_AGGVAR = gql`
   query Tasks($where: TaskWhereInput!) {
     tasks(where: $where) {
+      id
       settings
       i18nContent
     }

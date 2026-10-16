@@ -8,7 +8,7 @@ import TaskPreview from "../../../../../Tasks/Preview/Main";
 
 // `children` renders under the title row — the Study Flow uses it for the
 // block's data source chips.
-export default function TaskBlock({ task, children }) {
+export default function TaskBlock({ task, children, showPreview = true }) {
   const { t } = useTranslation("builder");
   const [isFullscreenPreviewOpen, setIsFullscreenPreviewOpen] = useState(false);
 
@@ -32,13 +32,15 @@ export default function TaskBlock({ task, children }) {
           <h2>{task?.name}</h2>
           <span>{task?.subtitle}</span>
         </div>
-        <IconButton
-          variant="neutral"
-          icon={<PlayIcon />}
-          ariaLabel={previewLabel}
-          title={previewLabel}
-          onClick={() => setIsFullscreenPreviewOpen(true)}
-        />
+        {showPreview && (
+          <IconButton
+            variant="neutral"
+            icon={<PlayIcon />}
+            ariaLabel={previewLabel}
+            title={previewLabel}
+            onClick={() => setIsFullscreenPreviewOpen(true)}
+          />
+        )}
       </div>
       {children}
     </StyledTaskCardReview>

@@ -3,7 +3,11 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import { useState, useMemo, useEffect, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import { buildDatasourcesWhereForScope, sortDatasourcesByMostRecent } from "../../../../../lib/dataJournalDatasources";
+import {
+  buildDatasourcesWhereForScope,
+  isTesterUser,
+  sortDatasourcesByMostRecent,
+} from "../../../../../lib/dataJournalDatasources";
 import { useDataJournal } from "../Context/DataJournalContext";
 import { useUserDatasetClassContext } from "../Hooks/useUserDatasetClassContext";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
@@ -18,6 +22,8 @@ import {
   StyledDatasetGrid,
 } from "../styles/StyledDataJournal";
 
+const CLASS_DEPENDENT_SCOPES = ["myClass", "classNetwork", "me", "simulated"];
+
 const SCOPE_INTRO_KEYS = {
   me: "dataJournal.datasets.scopes.intro.me",
   uploaded: "dataJournal.datasets.scopes.intro.uploaded",
@@ -25,6 +31,7 @@ const SCOPE_INTRO_KEYS = {
   myClass: "dataJournal.datasets.scopes.intro.myClass",
   classNetwork: "dataJournal.datasets.scopes.intro.classNetwork",
   public: "dataJournal.datasets.scopes.intro.public",
+  simulated: "dataJournal.datasets.scopes.intro.simulated",
 };
 
 const SCOPE_INTRO_DEFAULTS = {
@@ -35,6 +42,8 @@ const SCOPE_INTRO_DEFAULTS = {
   classNetwork:
     "Datasets on this project or study from classes in your class networks.",
   public: "Datasets from public journal templates.",
+  simulated:
+    "Sham datasets generated from a study design.",
 };
 
 const SCOPE_EMPTY_KEYS = {
@@ -44,6 +53,7 @@ const SCOPE_EMPTY_KEYS = {
   myClass: "dataJournal.datasets.scopes.empty.myClass",
   classNetwork: "dataJournal.datasets.scopes.empty.classNetwork",
   public: "dataJournal.datasets.scopes.empty.public",
+  simulated: "dataJournal.datasets.scopes.empty.simulated",
 };
 
 const SCOPE_EMPTY_DEFAULTS = {
@@ -54,6 +64,7 @@ const SCOPE_EMPTY_DEFAULTS = {
   classNetwork:
     "No datasets from your class network for this project or study.",
   public: "No public datasets found.",
+  simulated: "No simulated datasets yet.",
 };
 
 export default function Datasets() {
@@ -71,6 +82,11 @@ export default function Datasets() {
 
   const { directClassIds, networkClassIds, loading: classesLoading } =
     useUserDatasetClassContext();
+
+  const isTester = isTesterUser(user);
+  useEffect(() => {
+    if (datasetScope === "simulated" && !isTester) setDatasetScope("me");
+  }, [datasetScope, isTester, setDatasetScope]);
 
   const datasourcesWhere = useMemo(
     () =>
@@ -94,7 +110,7 @@ export default function Datasets() {
 
   const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
     variables: { where: datasourcesWhere },
-    skip: classesLoading && (datasetScope === "myClass" || datasetScope === "classNetwork" || datasetScope === "me"),
+    skip: classesLoading && CLASS_DEPENDENT_SCOPES.includes(datasetScope),
   });
 
   const datasources = useMemo(
@@ -167,6 +183,9 @@ export default function Datasets() {
     if (datasetScope === "uploaded" && createdDataOrigin === "UPLOADED") {
       return true;
     }
+    if (datasetScope === "simulated" && createdDataOrigin === "SIMULATED") {
+      return true;
+    }
     return false;
   };
 
@@ -218,7 +237,8 @@ export default function Datasets() {
     if (newId) setViewingDatasetId(newId);
   };
 
-  const isListLoading = loading || (classesLoading && (datasetScope === "myClass" || datasetScope === "classNetwork" || datasetScope === "me"));
+  const isListLoading =
+    loading || (classesLoading && CLASS_DEPENDENT_SCOPES.includes(datasetScope));
 
   if (isListLoading) {
     return (
