@@ -9,7 +9,7 @@ import { assertCanMutateClassTemplateBoard } from "./resolveMilestonesForBoard";
  *
  * FUTURE: When teachers can reassociate review forms to milestones, revisit
  * deleteTemplateMilestone and the bulk-delete copy in
- * frontend/components/Proposal/Builder/DeleteCardsConfirmModal.js.
+ * frontend/components/Proposal/Builder/DeleteCardsConfirmModal.js (inner.deleteMilestonesCustomNote).
  */
 async function deleteTemplateMilestone(
   _root: unknown,

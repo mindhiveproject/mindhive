@@ -2,7 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useApolloClient } from "@apollo/client";
 import { v1 as uuidv1 } from "uuid";
 import { CREATE_CARD, UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
-import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import {
+  PROPOSAL_BOARD_VIEW_QUERY,
+  PROPOSAL_QUERY,
+} from "../../Queries/Proposal";
 
 
 import useForm from "../../../lib/useForm";
@@ -13,6 +16,16 @@ import LinkedItems from "./Forms/LinkedItems";
 import AssignmentViewModal from "../../TipTap/AssignmentViewModal";
 import StudentProjectCard from "../../Builder/Project/ProjectBoard/Board/Card/Main";
 import InfoPopover from "../../DesignSystem/InfoPopover";
+import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import { useBoardMilestones } from "../../../lib/useBoardMilestones";
+import {
+  cardIncludedInReviewStep,
+  getMilestoneFromCard,
+  getReviewStepOptions,
+  isActionCard,
+  parseCardSettings,
+  setCardReviewStepMembership,
+} from "../../../lib/milestones";
 import useTranslation from "next-translate/useTranslation";
 import { PROPOSAL_CARD_TYPE } from "../Builder/cardTypeOptions";
 
@@ -55,6 +68,57 @@ export default function BuilderProposalCard({
   const { inputs, handleChange } = useForm({
     ...initialCard,
   });
+
+  // Milestones the card's content is submitted with. Only milestones with a
+  // card on the board are offered, in board reading order, so a card can't
+  // carry a label for a milestone that isn't there.
+  const { milestones } = useBoardMilestones(proposal?.id, {
+    skip: !proposal?.id,
+  });
+  // The board view keeps this query cached; `proposal` may not carry cards.
+  const { data: boardViewData } = useQuery(PROPOSAL_BOARD_VIEW_QUERY, {
+    variables: { id: proposal?.id },
+    skip: !proposal?.id,
+  });
+  const boardSections =
+    boardViewData?.proposalBoard?.sections || proposal?.sections;
+  const milestoneOptions = useMemo(() => {
+    const byPosition = (a, b) => (a?.position ?? 0) - (b?.position ?? 0);
+    const boardCards = [...(boardSections || [])]
+      .sort(byPosition)
+      .flatMap((section) => [...(section?.cards || [])].sort(byPosition));
+    const boardOrder = new Map();
+    boardCards.forEach((card) => {
+      if (!isActionCard(card)) return;
+      const milestone = getMilestoneFromCard(card, milestones);
+      if (milestone?.id && !boardOrder.has(milestone.id)) {
+        boardOrder.set(milestone.id, boardOrder.size);
+      }
+    });
+    return getReviewStepOptions(milestones, tBuilder)
+      .filter((option) => boardOrder.has(option.milestoneId))
+      .sort(
+        (a, b) => boardOrder.get(a.milestoneId) - boardOrder.get(b.milestoneId)
+      );
+  }, [boardSections, milestones, tBuilder]);
+  const selectedMilestoneKeys = milestoneOptions
+    .filter((option) =>
+      cardIncludedInReviewStep(
+        { settings: inputs?.settings },
+        option.value,
+        milestones
+      )
+    )
+    .map((option) => option.value);
+  const handleMilestonesChange = (nextKeys) => {
+    const next = new Set(nextKeys);
+    const settings = milestoneOptions.reduce((acc, option) => {
+      const included = next.has(option.value);
+      if (included === selectedMilestoneKeys.includes(option.value)) return acc;
+      return setCardReviewStepMembership(acc, option, included, milestones);
+    }, parseCardSettings({ settings: inputs?.settings }));
+    handleChange({ target: { name: "settings", value: settings } });
+  };
 
   const description = useRef(initialCard?.description || "");
   const content = useRef(initialCard?.content || "");
@@ -524,6 +588,48 @@ export default function BuilderProposalCard({
               }
             />
           </label>
+          <div>
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {tBuilder("cardBuilder.milestones", {}, { default: "Milestones" })}
+              <InfoPopover
+                content={tBuilder(
+                  "cardBuilder.milestonesText",
+                  {},
+                  {
+                    default:
+                      "Students submit this card's content with these milestones. Only milestones on the board are listed.",
+                  }
+                )}
+                ariaLabel={tBuilder("cardBuilder.milestones", {}, { default: "Milestones" })}
+              />
+            </div>
+            <p></p>
+            <DropdownSelect
+              multiple
+              value={selectedMilestoneKeys}
+              onChange={handleMilestonesChange}
+              options={milestoneOptions.map((option) => ({
+                value: option.value,
+                label: option.text,
+                labelText: option.text,
+              }))}
+              placeholder={
+                milestoneOptions.length
+                  ? tBuilder(
+                      "cardBuilder.milestonesPlaceholder",
+                      {},
+                      { default: "Add a milestone" }
+                    )
+                  : tBuilder(
+                      "cardBuilder.milestonesNone",
+                      {},
+                      { default: "No milestones on the board yet" }
+                    )
+              }
+              ariaLabel={tBuilder("cardBuilder.milestones", {}, { default: "Milestones" })}
+              disabled={!milestoneOptions.length}
+            />
+          </div>
           <label htmlFor="description">
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.instructions")}

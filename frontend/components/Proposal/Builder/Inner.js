@@ -12,12 +12,18 @@ import DropdownSelect from "../../DesignSystem/DropdownSelect";
 import { MilestoneIcon, TrashIcon } from "../../DesignSystem/Icons";
 
 import { PROPOSAL_BOARD_VIEW_QUERY } from "../../Queries/Proposal";
-import { DELETE_CARD, UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
+import {
+  CREATE_CARD,
+  CREATE_SECTION,
+  DELETE_CARD,
+  UPDATE_CARD_EDIT,
+} from "../../Mutations/Proposal";
 import { DELETE_TEMPLATE_MILESTONE } from "../../Mutations/Milestone";
 import { RESOLVE_MILESTONES_FOR_BOARD } from "../../Queries/Milestone";
 import {
   actionCardMatchesReviewStep,
   cardIncludedInReviewStep,
+  getMilestoneFromCard,
   getReviewStepOptions,
   isActionCard,
   parseCardSettings,
@@ -34,12 +40,22 @@ function Inner(props) {
   const [associateMilestoneKey, setAssociateMilestoneKey] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  // Milestones in the selection, captured when the remove modal opens:
+  // deleting a section first can take their cards with it, and the teacher
+  // can still choose to delete the milestones afterwards.
+  const [removalMilestones, setRemovalMilestones] = useState([]);
   const [savingAssociate, setSavingAssociate] = useState(false);
+  const [addingMilestoneKey, setAddingMilestoneKey] = useState("");
+  // Milestone just added from the link dropdown: the bar then offers to link
+  // cards to it or to edit it. { key, name, card }
+  const [addedMilestone, setAddedMilestone] = useState(null);
   const { t } = useTranslation("builder");
 
   const [deleteCardMut] = useMutation(DELETE_CARD);
   const [deleteTemplateMilestoneMut] = useMutation(DELETE_TEMPLATE_MILESTONE);
   const [updateCardEdit] = useMutation(UPDATE_CARD_EDIT);
+  const [createSectionMut] = useMutation(CREATE_SECTION);
+  const [createCardMut] = useMutation(CREATE_CARD);
 
   const createSection = (boardId, sectionTitle) => {
     const publicId = uuidv1();
@@ -215,6 +231,7 @@ function Inner(props) {
   ]);
 
   const exitCardSelectMode = useCallback(() => {
+    setAddedMilestone(null);
     setBoardSelectMode("idle");
     setSelectedCardIds([]);
     setSelectedSectionIds([]);
@@ -255,6 +272,7 @@ function Inner(props) {
 
   const handleAssociateMilestoneChange = useCallback(
     (nextKey) => {
+      setAddedMilestone(null);
       if (nextKey === associateMilestoneKey) return;
       if (isAssociateDirty) {
         const confirmed = window.confirm(
@@ -343,110 +361,203 @@ function Inner(props) {
     [associateMilestoneKey, boardSelectMode]
   );
 
-  const handleConfirmDelete = async () => {
-    if (!hasSelection) return;
+  // Deletes sections and cards, optionally unlinking the remaining cards from
+  // milestones and deleting template milestones, then syncs student boards.
+  const deleteBoardItems = async ({
+    sectionIds = [],
+    cardIds = [],
+    unlinkMilestoneKeys = [],
+    templateMilestoneIds = [],
+  }) => {
+    const cardIdsInSections = new Set(sectionIds.flatMap(getSectionCardIds));
+    const cardIdsToDelete = cardIds.filter((id) => !cardIdsInSections.has(id));
+    const deletedCardSet = new Set([...cardIdsInSections, ...cardIdsToDelete]);
 
+    // Unlink before deleting, while the milestones still resolve.
+    const unlinkedSettings = new Map();
+    if (unlinkMilestoneKeys.length) {
+      for (const { card } of allCards) {
+        if (isActionCard(card) || deletedCardSet.has(card.id)) continue;
+        const keys = unlinkMilestoneKeys.filter((key) =>
+          cardIncludedInReviewStep(card, key, milestones)
+        );
+        if (!keys.length) continue;
+        const settings = parseCardSettings(card);
+        const nextSettings = keys.reduce(
+          (acc, key) => setCardReviewStepMembership(acc, key, false, milestones),
+          settings
+        );
+        const merged = mergeCardSettings(settings, nextSettings);
+        await updateCardEdit({
+          variables: { id: card.id, input: { settings: merged } },
+        });
+        unlinkedSettings.set(card.id, merged);
+      }
+    }
+
+    for (const sectionId of sectionIds) {
+      await deleteSection(sectionId, { skipPropagate: true });
+    }
+
+    for (const id of cardIdsToDelete) {
+      await deleteCardMut({
+        variables: { id },
+        update: (cache, payload) => {
+          cache.evict({
+            id: cache.identify(payload.data.deleteProposalCard),
+          });
+        },
+        optimisticResponse: {
+          __typename: "Mutation",
+          deleteProposalCard: {
+            id,
+            __typename: "ProposalCard",
+            section: null,
+          },
+        },
+      });
+    }
+
+    // Removes template milestones only; linked review forms are kept but
+    // become unavailable on this board. See deleteTemplateMilestone.ts and
+    // DeleteCardsConfirmModal.js — update both when teachers can reassociate
+    // forms to milestones.
+    for (const milestoneId of templateMilestoneIds) {
+      await deleteTemplateMilestoneMut({
+        variables: { id: milestoneId },
+        refetchQueries: [
+          {
+            query: RESOLVE_MILESTONES_FOR_BOARD,
+            variables: { boardId: board.id },
+          },
+        ],
+      });
+    }
+
+    const deletedSectionSet = new Set(sectionIds);
+    props.onSetSections(
+      sections
+        .filter((section) => !deletedSectionSet.has(section.id))
+        .map((section) => ({
+          ...section,
+          cards: (section.cards || [])
+            .filter((card) => !deletedCardSet.has(card.id))
+            .map((card) =>
+              unlinkedSettings.has(card.id)
+                ? { ...card, settings: unlinkedSettings.get(card.id) }
+                : card
+            ),
+        }))
+    );
+
+    if (props.autoUpdateStudentBoards && props.propagateToClones) {
+      try {
+        await props.propagateToClones();
+      } catch (e) {
+        console.error("Auto-propagate after bulk delete failed:", e);
+      }
+    } else if (props.hasClones && props.onTemplateChangedWithoutPropagation) {
+      props.onTemplateChangedWithoutPropagation();
+    }
+
+    return deletedCardSet;
+  };
+
+  // Each part of the remove modal runs on its own; true when it succeeded.
+  const runRemoval = async (work) => {
     setDeleting(true);
     try {
-      const templateMilestoneIds = new Set();
-      for (const card of selectedCards) {
-        if (
-          isActionCard(card) &&
-          card?.milestone?.scope === "template" &&
-          card?.milestone?.id
-        ) {
-          templateMilestoneIds.add(card.milestone.id);
-        }
-      }
-
-      const sectionIdsToDelete = [...selectedSectionIds];
-      const cardIdsRemovedBySectionDelete = new Set();
-      for (const sectionId of sectionIdsToDelete) {
-        getSectionCardIds(sectionId).forEach((id) =>
-          cardIdsRemovedBySectionDelete.add(id)
-        );
-      }
-
-      for (const sectionId of sectionIdsToDelete) {
-        await deleteSection(sectionId, { skipPropagate: true });
-      }
-
-      const cardIdsToDelete = selectedCardIds.filter(
-        (id) => !cardIdsRemovedBySectionDelete.has(id)
-      );
-      for (const id of cardIdsToDelete) {
-        await deleteCardMut({
-          variables: { id },
-          update: (cache, payload) => {
-            cache.evict({
-              id: cache.identify(payload.data.deleteProposalCard),
-            });
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            deleteProposalCard: {
-              id,
-              __typename: "ProposalCard",
-              section: null,
-            },
-          },
-        });
-      }
-
-      const milestoneRefetch =
-        board?.id && templateMilestoneIds.size
-          ? [
-              {
-                query: RESOLVE_MILESTONES_FOR_BOARD,
-                variables: { boardId: board.id },
-              },
-            ]
-          : [];
-
-      // Removes template milestones only; linked review forms are kept but
-      // become unavailable on this board. See deleteTemplateMilestone.ts and
-      // DeleteCardsConfirmModal.js — update both when teachers can reassociate
-      // forms to milestones.
-      for (const milestoneId of templateMilestoneIds) {
-        await deleteTemplateMilestoneMut({
-          variables: { id: milestoneId },
-          refetchQueries: milestoneRefetch,
-        });
-      }
-
-      const deletedSectionSet = new Set(sectionIdsToDelete);
-      const deletedCardSet = new Set(cardIdsToDelete);
-      props.onSetSections(
-        sections
-          .filter((section) => !deletedSectionSet.has(section.id))
-          .map((section) => ({
-            ...section,
-            cards: (section.cards || []).filter(
-              (card) => !deletedCardSet.has(card.id)
-            ),
-          }))
-      );
-
-      if (props.autoUpdateStudentBoards && props.propagateToClones) {
-        try {
-          await props.propagateToClones();
-        } catch (e) {
-          console.error("Auto-propagate after bulk delete failed:", e);
-        }
-      } else if (props.hasClones && props.onTemplateChangedWithoutPropagation) {
-        props.onTemplateChangedWithoutPropagation();
-      }
-
-      exitCardSelectMode();
+      await work();
+      return true;
     } catch (err) {
       alert(
         err?.message ||
           t("inner.deleteItemsFailed", {}, { default: "Failed to delete items." })
       );
+      return false;
     } finally {
       setDeleting(false);
     }
   };
+
+  const openRemoveModal = () => {
+    const inSelectedSections = new Set(
+      selectedSectionIds.flatMap(getSectionCardIds)
+    );
+    setRemovalMilestones(
+      selectedCards
+        .filter((card) => isActionCard(card))
+        .map((card) => {
+          const milestone = getMilestoneFromCard(card, milestones);
+          const option = reviewStepOptions.find((item) =>
+            item.milestoneId
+              ? item.milestoneId === milestone?.id
+              : item.value === milestone?.key
+          );
+          return {
+            cardId: card.id,
+            milestone,
+            name: option?.text || milestone?.title || card.title,
+            inSelectedSection: inSelectedSections.has(card.id),
+          };
+        })
+    );
+    setConfirmOpen(true);
+  };
+
+  const handleDeleteSelectedItems = () =>
+    runRemoval(async () => {
+      const cardIds = cardsOnlyForDeletion
+        .filter((card) => !isActionCard(card))
+        .map((card) => card.id);
+      // Milestone cards inside deleted sections go with them; unlink their
+      // milestones now so no card keeps a label for a milestone off the board.
+      const deleted = await deleteBoardItems({
+        sectionIds: [...selectedSectionIds],
+        cardIds,
+        unlinkMilestoneKeys: [
+          ...new Set(
+            removalMilestones
+              .filter((item) => item.inSelectedSection)
+              .map((item) => item.milestone?.key)
+              .filter(Boolean)
+          ),
+        ],
+      });
+      setSelectedSectionIds([]);
+      setSelectedCardIds((prev) => prev.filter((id) => !deleted.has(id)));
+    });
+
+  // Both choices remove the milestone cards and unlink every remaining card
+  // from those milestones. deleteMilestones: false keeps the milestones
+  // available to add back from the link dropdown; true also deletes custom
+  // (template) ones.
+  const handleResolveMilestones = (deleteMilestones) =>
+    runRemoval(async () => {
+      const existingCardIds = new Set(allCards.map(({ card }) => card.id));
+      const milestoneCardIds = removalMilestones.map((item) => item.cardId);
+      const removalMilestoneList = removalMilestones
+        .map((item) => item.milestone)
+        .filter(Boolean);
+      await deleteBoardItems({
+        cardIds: milestoneCardIds.filter((id) => existingCardIds.has(id)),
+        unlinkMilestoneKeys: [
+          ...new Set(removalMilestoneList.map((m) => m.key).filter(Boolean)),
+        ],
+        templateMilestoneIds: deleteMilestones
+          ? [
+              ...new Set(
+                removalMilestoneList
+                  .filter((m) => m.scope === "template" && m.id)
+                  .map((m) => m.id)
+              ),
+            ]
+          : [],
+      });
+      setSelectedCardIds((prev) =>
+        prev.filter((id) => !milestoneCardIds.includes(id))
+      );
+    });
 
   const handleSaveAssociate = async () => {
     if (!associateMilestoneKey || boardSelectMode !== "associate") return;
@@ -532,11 +643,153 @@ function Inner(props) {
 
   const trashIcon = <TrashIcon />;
   const milestoneIcon = <MilestoneIcon />;
-  const associateDropdownOptions = reviewStepOptions.map((option) => ({
-    value: option.value,
-    label: option.text,
-    labelText: option.text,
-  }));
+  // Save a milestone's action card at the bottom of the board's last section
+  // (creating "Column 1" on an empty board); the bar then asks whether to
+  // link cards to it or edit it.
+  const handleAddMilestoneToBoard = async (option) => {
+    const milestone = milestones.find((m) => m.id === option.milestoneId);
+    if (!milestone || !board?.id || addingMilestoneKey) return;
+
+    setAddedMilestone(null);
+    setAddingMilestoneKey(option.value);
+    try {
+      let lastSection = sections?.[sections.length - 1];
+      if (!lastSection) {
+        const result = await createSectionMut({
+          variables: {
+            boardId: board.id,
+            title: t("inner.firstSectionTitle", {}, { default: "Column 1" }),
+            position: 16384,
+            publicId: uuidv1(),
+          },
+        });
+        lastSection = { ...result?.data?.createProposalSection, cards: [] };
+      }
+
+      const lastCards = lastSection.cards || [];
+      const created = await createCardMut({
+        variables: {
+          title: milestone.title || option.text,
+          sectionId: lastSection.id,
+          position: lastCards.length
+            ? lastCards[lastCards.length - 1].position + 16384
+            : 16384,
+          publicId: uuidv1(),
+          type: milestone.actionCardType || "ACTION",
+          milestone: { connect: { id: milestone.id } },
+          settings: { status: "Not started" },
+        },
+        refetchQueries: [
+          { query: PROPOSAL_BOARD_VIEW_QUERY, variables: { id: board.id } },
+          {
+            query: RESOLVE_MILESTONES_FOR_BOARD,
+            variables: { boardId: board.id },
+          },
+        ],
+        awaitRefetchQueries: true,
+      });
+
+      if (props.autoUpdateStudentBoards && props.propagateToClones) {
+        try {
+          await props.propagateToClones();
+        } catch (e) {
+          console.error("Auto-propagate after adding a milestone failed:", e);
+        }
+      } else if (props.hasClones && props.onTemplateChangedWithoutPropagation) {
+        props.onTemplateChangedWithoutPropagation();
+      }
+
+      setAddedMilestone({
+        key: option.value,
+        name: option.text,
+        card: created?.data?.createProposalCard,
+      });
+    } catch (err) {
+      alert(
+        err?.message ||
+          t(
+            "inner.addMilestoneToBoardFailed",
+            {},
+            { default: "Failed to add the milestone to the board." }
+          )
+      );
+    } finally {
+      setAddingMilestoneKey("");
+    }
+  };
+
+  const handleEditAddedMilestone = () => {
+    if (!addedMilestone?.card) return;
+    if (
+      isAssociateDirty &&
+      !window.confirm(
+        t(
+          "inner.associateCardsUnsavedLeave",
+          {},
+          {
+            default:
+              "You have unsaved card changes for this review step. Leave anyway and discard them?",
+          }
+        )
+      )
+    ) {
+      return;
+    }
+    const { card } = addedMilestone;
+    exitCardSelectMode();
+    props.openCard?.(card);
+  };
+
+  // Order milestones as the teacher reads the board: by their action card,
+  // section by section, top to bottom. Milestones without an action card on
+  // the board come last, keeping their order, with a button to add one.
+  const firstActionCardIndex = (option) => {
+    const index = allCards.findIndex(({ card }) => {
+      if (!isActionCard(card)) return false;
+      const milestone = getMilestoneFromCard(card, milestones);
+      return option.milestoneId
+        ? milestone?.id === option.milestoneId
+        : milestone?.key === option.value;
+    });
+    return index === -1 ? Infinity : index;
+  };
+  const notOnBoardGroup = t(
+    "inner.milestonesNotOnBoard",
+    {},
+    { default: "Not on the board" }
+  );
+  const associateDropdownOptions = reviewStepOptions
+    .map((option, order) => ({
+      option,
+      order,
+      index: firstActionCardIndex(option),
+    }))
+    .sort((a, b) => a.index - b.index || a.order - b.order)
+    .map(({ option, index }) => {
+      const entry = {
+        value: option.value,
+        label: option.text,
+        labelText: option.text,
+      };
+      if (index !== Infinity || !option.milestoneId) return entry;
+      return {
+        ...entry,
+        group: notOnBoardGroup,
+        action: {
+          label:
+            addingMilestoneKey === option.value
+              ? t("inner.addingMilestoneToBoard", {}, { default: "Adding…" })
+              : t("inner.addMilestoneToBoard", {}, { default: "Add to board" }),
+          ariaLabel: t(
+            "inner.addMilestoneToBoardAria",
+            { title: option.text },
+            { default: "Add {{title}} to the board" }
+          ),
+          disabled: !!addingMilestoneKey,
+          onClick: () => handleAddMilestoneToBoard(option),
+        },
+      };
+    });
 
   return (
     <>
@@ -550,7 +803,7 @@ function Inner(props) {
                 </Button>
                 <Button
                   variant="filled"
-                  onClick={() => setConfirmOpen(true)}
+                  onClick={openRemoveModal}
                   disabled={!hasSelection}
                   leadingIcon={trashIcon}
                   style={
@@ -585,18 +838,44 @@ function Inner(props) {
                       {},
                       { default: "Choose a milestone" }
                     )}
-                    disabled={savingAssociate}
+                    disabled={savingAssociate || !!addingMilestoneKey}
                   />
                 </div>
-                <Button
-                  variant="filled"
-                  onClick={handleSaveAssociate}
-                  disabled={!associateMilestoneKey || savingAssociate || !isAssociateDirty}
-                >
-                  {savingAssociate
-                    ? t("inner.associateCardsSaving", {}, { default: "Saving…" })
-                    : t("inner.save", {}, { default: "Save" })}
-                </Button>
+                {addedMilestone && (
+                  <>
+                    <span className="boardInnerToolbarNote MH-Type-Body-Base">
+                      {t(
+                        "inner.milestoneAddedToBoard",
+                        { title: addedMilestone.name },
+                        { default: "{{title}} added to the board." }
+                      )}
+                    </span>
+                    <Button
+                      variant="filled"
+                      onClick={() =>
+                        handleAssociateMilestoneChange(addedMilestone.key)
+                      }
+                    >
+                      {t("inner.linkCardsToAddedMilestone", {}, { default: "Link cards" })}
+                    </Button>
+                    <Button variant="outline" onClick={handleEditAddedMilestone}>
+                      {t("inner.editAddedMilestone", {}, { default: "Edit milestone" })}
+                    </Button>
+                  </>
+                )}
+                {/* While the added-milestone choice shows, Save only appears
+                    if there are ticks to save. */}
+                {(!addedMilestone || isAssociateDirty) && (
+                  <Button
+                    variant="filled"
+                    onClick={handleSaveAssociate}
+                    disabled={!associateMilestoneKey || savingAssociate || !isAssociateDirty}
+                  >
+                    {savingAssociate
+                      ? t("inner.associateCardsSaving", {}, { default: "Saving…" })
+                      : t("inner.save", {}, { default: "Save" })}
+                  </Button>
+                )}
               </>
             ) : (
               <>
@@ -671,10 +950,14 @@ function Inner(props) {
       <DeleteCardsConfirmModal
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={handleConfirmDelete}
-        selectedCards={selectedCards}
-        cardsOnlyForDeletion={cardsOnlyForDeletion}
-        selectedSectionIds={selectedSectionIds}
+        onFinished={exitCardSelectMode}
+        sectionCount={selectedSectionIds.length}
+        cardCount={
+          cardsOnlyForDeletion.filter((card) => !isActionCard(card)).length
+        }
+        milestones={removalMilestones}
+        onDeleteItems={handleDeleteSelectedItems}
+        onResolveMilestones={handleResolveMilestones}
         deleting={deleting}
       />
     </>

@@ -49,7 +49,7 @@ export const StyledProposal = styled.div`
 
   // Extra exclusions go inside :where() so they add no specificity; otherwise this
   // rule outranks nested button styles (e.g. ButtonGroup segments, .studyLinkChip).
-  button:not(.DesignSystem-Button):not(:where(.DesignSystem-DropdownSelect-trigger, .DesignSystem-DropdownSelect-option, .DesignSystem-DropdownMenu-item, .DesignSystem-InfoPopover-trigger)) {
+  button:not(.DesignSystem-Button):not(:where(.DesignSystem-DropdownSelect-trigger, .DesignSystem-DropdownSelect-option, .DesignSystem-DropdownSelect-rowAction, .DesignSystem-DropdownMenu-item, .DesignSystem-InfoPopover-trigger)) {
     display: grid;
     align-content: center;
     max-width: 300px;
@@ -401,6 +401,10 @@ export const StyledProposal = styled.div`
       padding: 0 15px 8px;
       .boardInnerToolbarSelect {
         width: 320px;
+      }
+      .boardInnerToolbarNote {
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+        white-space: nowrap;
       }
     }
     .scrollable {

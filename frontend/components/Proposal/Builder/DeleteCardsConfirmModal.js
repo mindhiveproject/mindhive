@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import Trans from "next-translate/Trans";
 
 import Modal from "../../DesignSystem/Modal";
 import Button from "../../DesignSystem/Button";
-import { isActionCard } from "../../../lib/milestones";
 
 function Owned({ children }) {
   return <span style={{ textDecoration: "underline" }}>{children}</span>;
@@ -14,63 +14,125 @@ const ownedComponentsPair = [
   <Owned key="owned-0" />,
   <Owned key="owned-1" />,
 ];
-const ownedComponentsQuad = [
-  <Owned key="owned-0" />,
-  <Owned key="owned-1" />,
-  <Owned key="owned-2" />,
-  <Owned key="owned-3" />,
-];
 
+const headingStyle = {
+  margin: "0 0 4px",
+  font: "var(--MH-Type-Title-Small)",
+  letterSpacing: 0,
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+};
+
+const bodyStyle = {
+  margin: 0,
+  font: "var(--MH-Type-Body-Base)",
+  letterSpacing: 0,
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+};
+
+const partStyle = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 12,
+  padding: 16,
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)",
+  borderRadius: 8,
+};
+
+const partActionsStyle = {
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "flex-end",
+  gap: 8,
+};
+
+const doneStyle = {
+  ...bodyStyle,
+  textAlign: "right",
+  color: "var(--MH-Theme-Success-Dark, #1f6b3a)",
+};
+
+/**
+ * Remove modal for the board's select mode. Regular cards/sections and
+ * milestones are separate parts the teacher handles independently; the modal
+ * closes itself (onFinished) once every part present is done, and can be
+ * closed halfway (onClose), keeping what was already done.
+ *
+ * milestones: [{ cardId, name, milestone, inSelectedSection }], captured by
+ * Inner when the modal opens. onDeleteItems() and
+ * onResolveMilestones(deleteMilestones) resolve to true on success.
+ */
 export default function DeleteCardsConfirmModal({
   open,
   onClose,
-  onConfirm,
-  selectedCards = [],
-  cardsOnlyForDeletion = [],
-  selectedSectionIds = [],
+  onFinished,
+  sectionCount = 0,
+  cardCount = 0,
+  milestones = [],
+  onDeleteItems,
+  onResolveMilestones,
   deleting = false,
 }) {
   const { t } = useTranslation("builder");
-  const sectionCount = selectedSectionIds.length;
-  const cardOnlyCount = cardsOnlyForDeletion.length;
-  const hasDefaultMilestoneCards = selectedCards.some(
-    (card) => isActionCard(card) && card?.milestone?.scope !== "template"
-  );
-  const hasCustomTemplateMilestones = selectedCards.some(
-    (card) => isActionCard(card) && card?.milestone?.scope === "template"
-  );
 
-  const noteHeadingStyle = {
-    margin: "0 0 4px",
-    font: 'var(--MH-Type-Title-Small)',
-    letterSpacing: 0,
-    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+  // Counts change as parts complete, so describe the selection as it was on
+  // opening.
+  const [snapshot, setSnapshot] = useState(null);
+  const [itemsDone, setItemsDone] = useState(false);
+  const [milestonesDone, setMilestonesDone] = useState(null); // "removed" | "deleted"
+  useEffect(() => {
+    if (!open) return;
+    setSnapshot({ sectionCount, cardCount });
+    setItemsDone(false);
+    setMilestonesDone(null);
+    // Only on opening.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  const view = snapshot ?? { sectionCount, cardCount };
+  const hasItems = view.sectionCount + view.cardCount > 0;
+  const hasMilestones = milestones.length > 0;
+  const hasCustomMilestones = milestones.some(
+    (item) => item.milestone?.scope === "template"
+  );
+  const hasDefaultMilestones = milestones.some(
+    (item) => item.milestone?.scope !== "template"
+  );
+  const milestonesInSections = milestones.some((item) => item.inSelectedSection);
+
+  useEffect(() => {
+    if (!open || (!itemsDone && !milestonesDone)) return;
+    if ((!hasItems || itemsDone) && (!hasMilestones || milestonesDone)) {
+      onFinished?.();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemsDone, milestonesDone]);
+
+  const handleDeleteItems = async () => {
+    if (await onDeleteItems?.()) setItemsDone(true);
   };
 
-  const noteBodyStyle = {
-    margin: 0,
-    font: 'var(--MH-Type-Body-Base)',
-    letterSpacing: 0,
-    color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+  const handleMilestones = async (deleteMilestones) => {
+    if (await onResolveMilestones?.(deleteMilestones)) {
+      setMilestonesDone(deleteMilestones ? "deleted" : "removed");
+    }
   };
 
-  const noteBlockStyle = { margin: "0 0 12px" };
-
-  const renderConfirmBody = () => {
-    if (sectionCount > 0 && cardOnlyCount > 0) {
+  const renderItemsBody = () => {
+    const { sectionCount: sections, cardCount: cards } = view;
+    if (sections > 0 && cards > 0) {
       return (
         <Trans
           i18nKey="builder:inner.deleteItemsConfirmMixedBody"
-          values={{ sectionCount, cardCount: cardOnlyCount }}
+          values={{ sectionCount: sections, cardCount: cards }}
           components={ownedComponentsPair}
         />
       );
     }
-    if (sectionCount > 0) {
+    if (sections > 0) {
       return (
         <Trans
           i18nKey="builder:inner.deleteItemsConfirmSectionsBody"
-          values={{ sectionCount }}
+          values={{ sectionCount: sections }}
           components={ownedComponents}
         />
       );
@@ -78,98 +140,193 @@ export default function DeleteCardsConfirmModal({
     return (
       <Trans
         i18nKey="builder:inner.deleteItemsConfirmBody"
-        values={{ count: cardOnlyCount }}
+        values={{ count: cards }}
         components={ownedComponents}
       />
     );
   };
 
+  const anyDone = itemsDone || !!milestonesDone;
+
   return (
     <Modal
       open={open}
       onClose={onClose}
-      maxWidth={520}
-      title={t("inner.deleteItemsConfirmTitle", {}, { default: "Delete items?" })}
+      maxWidth={560}
+      title={t("inner.deleteItemsConfirmTitle", {}, { default: "Remove items" })}
       actions={
-        <>
-          <Button
-            variant="subtle"
-            type="button"
-            onClick={onClose}
-            disabled={deleting}
-          >
-            {t("inner.cancel", {}, { default: "Cancel" })}
-          </Button>
-          <Button
-            variant="filled"
-            type="button"
-            onClick={onConfirm}
-            disabled={deleting}
-          >
-            {deleting
-              ? t("inner.deleteItemsDeleting", {}, { default: "Deleting…" })
-              : t("inner.deleteItems", {}, { default: "Delete items" })}
-          </Button>
-        </>
+        <Button
+          variant="subtle"
+          type="button"
+          onClick={onClose}
+          disabled={deleting}
+        >
+          {anyDone
+            ? t("inner.close", {}, { default: "Close" })
+            : t("inner.cancel", {}, { default: "Cancel" })}
+        </Button>
       }
     >
-      <p style={noteBodyStyle}>{renderConfirmBody()}</p>
-      {cardOnlyCount > 0 && sectionCount === 0 ? (
-        <p style={{ ...noteBodyStyle, marginTop: 12 }}>
-          <Trans
-            i18nKey="builder:inner.deleteItemsConfirmCardsOnlyNote"
-            components={ownedComponents}
-          />
-        </p>
-      ) : null}
-      {hasDefaultMilestoneCards || hasCustomTemplateMilestones ? (
-        <div style={{ marginTop: 16 }}>
-          <p style={{ ...noteHeadingStyle, marginBottom: 8 }}>
-            {t(
-              "inner.deleteItemsConfirmReviewStepsHeading",
-              {},
-              { default: "Selected review step items" }
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {hasItems ? (
+          <section style={partStyle}>
+            <div>
+              <p style={headingStyle}>
+                {t(
+                  "inner.removeItemsCardsHeading",
+                  {},
+                  { default: "Cards and sections" }
+                )}
+              </p>
+              <p style={bodyStyle}>{renderItemsBody()}</p>
+              {view.cardCount > 0 && view.sectionCount === 0 ? (
+                <p style={{ ...bodyStyle, marginTop: 8 }}>
+                  <Trans
+                    i18nKey="builder:inner.deleteItemsConfirmCardsOnlyNote"
+                    components={ownedComponents}
+                  />
+                </p>
+              ) : null}
+              {milestonesInSections ? (
+                <p style={{ ...bodyStyle, marginTop: 8 }}>
+                  {t(
+                    "inner.removeItemsMilestonesInSectionsNote",
+                    {},
+                    {
+                      default:
+                        "Milestone cards inside these sections go with them, and cards are unlinked from those milestones. You can still delete the milestones below.",
+                    }
+                  )}
+                </p>
+              ) : null}
+            </div>
+            {itemsDone ? (
+              <p style={doneStyle}>
+                {t("inner.removeItemsDeleted", {}, { default: "✓ Deleted" })}
+              </p>
+            ) : (
+              <div style={partActionsStyle}>
+                <Button
+                  variant="filled"
+                  tone="warning"
+                  type="button"
+                  onClick={handleDeleteItems}
+                  disabled={deleting}
+                >
+                  {t("inner.removeItemsDelete", {}, { default: "Delete" })}
+                </Button>
+              </div>
             )}
-          </p>
-          {hasDefaultMilestoneCards ? (
-            <div style={noteBlockStyle}>
-              <p style={noteHeadingStyle}>
+          </section>
+        ) : null}
+
+        {hasMilestones ? (
+          <section style={partStyle}>
+            <div>
+              <p style={headingStyle}>
+                {t("inner.removeItemsMilestonesHeading", {}, { default: "Milestones" })}
+              </p>
+              <ul style={{ ...bodyStyle, margin: "0 0 8px", paddingLeft: 20 }}>
+                {milestones.map((item) => (
+                  <li key={item.cardId}>{item.name}</li>
+                ))}
+              </ul>
+              <p style={bodyStyle}>
+                <strong>
+                  {t(
+                    "inner.removeMilestonesFromBoard",
+                    {},
+                    { default: "Remove from board" }
+                  )}
+                </strong>
+                {": "}
                 {t(
-                  "inner.deleteItemsConfirmMilestonesDefaultHeading",
+                  "inner.removeMilestonesFromBoardBody",
                   {},
-                  { default: "MindHive default review steps" }
+                  {
+                    default:
+                      "the milestone cards leave the board and every card is unlinked from these milestones. The milestones are kept, and you can put them back from \"Link a milestone to cards\" → \"Add to board\".",
+                  }
                 )}
               </p>
-              <p style={noteBodyStyle}>
-                <Trans
-                  i18nKey="builder:inner.deleteItemsConfirmMilestonesDefault"
-                  components={ownedComponents}
-                />
-              </p>
-            </div>
-          ) : null}
-          {hasCustomTemplateMilestones ? (
-            <div style={hasDefaultMilestoneCards ? noteBlockStyle : undefined}>
-              <p style={noteHeadingStyle}>
+              <p style={{ ...bodyStyle, marginTop: 8 }}>
+                <strong>
+                  {t("inner.deleteMilestones", {}, { default: "Delete milestones" })}
+                </strong>
+                {": "}
                 {t(
-                  "inner.deleteItemsConfirmMilestonesCustomHeading",
+                  "inner.deleteMilestonesBody",
                   {},
-                  { default: "Custom review steps on this board" }
+                  {
+                    default:
+                      "the same, and the milestones are deleted too.",
+                  }
                 )}
-              </p>
-              {/* Form-unavailability copy: forms are not deleted today. When
-                  teachers can reassociate forms to milestones, update this
-                  block and inner.deleteItemsConfirmMilestonesCustom. */}
-              <p style={noteBodyStyle}>
-                <Trans
-                  i18nKey="builder:inner.deleteItemsConfirmMilestonesCustom"
-                  components={ownedComponentsQuad}
-                />
+                {hasCustomMilestones ? (
+                  <>
+                    {" "}
+                    {/* Form-unavailability copy: forms are not deleted today.
+                        When teachers can reassociate forms to milestones,
+                        update this and inner.deleteMilestonesCustomNote. */}
+                    <Trans
+                      i18nKey="builder:inner.deleteMilestonesCustomNote"
+                      components={ownedComponentsPair}
+                    />
+                  </>
+                ) : null}
+                {hasDefaultMilestones ? (
+                  <>
+                    {" "}
+                    {t(
+                      "inner.deleteMilestonesDefaultNote",
+                      {},
+                      {
+                        default:
+                          "MindHive default milestones are shared with other boards, so they can't be deleted and stay available to add back.",
+                      }
+                    )}
+                  </>
+                ) : null}
               </p>
             </div>
-          ) : null}
-        </div>
-      ) : null}
+            {milestonesDone ? (
+              <p style={doneStyle}>
+                {milestonesDone === "deleted"
+                  ? t("inner.removeItemsDeleted", {}, { default: "✓ Deleted" })
+                  : t(
+                      "inner.removeItemsRemovedFromBoard",
+                      {},
+                      { default: "✓ Removed from the board" }
+                    )}
+              </p>
+            ) : (
+              <div style={partActionsStyle}>
+                <Button
+                  variant="outline"
+                  tone="warning"
+                  type="button"
+                  onClick={() => handleMilestones(true)}
+                  disabled={deleting}
+                >
+                  {t("inner.deleteMilestones", {}, { default: "Delete milestones" })}
+                </Button>
+                <Button
+                  variant="filled"
+                  type="button"
+                  onClick={() => handleMilestones(false)}
+                  disabled={deleting}
+                >
+                  {t(
+                    "inner.removeMilestonesFromBoard",
+                    {},
+                    { default: "Remove from board" }
+                  )}
+                </Button>
+              </div>
+            )}
+          </section>
+        ) : null}
+      </div>
     </Modal>
   );
 }
