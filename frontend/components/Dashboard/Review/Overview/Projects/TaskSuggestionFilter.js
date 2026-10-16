@@ -73,15 +73,55 @@ const StyledTaskFilter = styled.div`
 /**
  * Search bar that adds the picked suggested tasks as removable chips.
  * `tasks` are `{ id, title, count }`; `taskTitles` labels selected ids that
- * are no longer in `tasks`.
+ * are no longer in `tasks`. `source` ("all" | "mentor" | "student", see
+ * useTaskSuggestions) words the placeholder and empty state.
  */
 export default function TaskSuggestionFilter({
   tasks,
   taskTitles,
   value,
   onChange,
+  source = "mentor",
 }) {
   const { t } = useTranslation("builder");
+  const copy = {
+    mentor: {
+      label: t("review.taskFilterLabel", {}, {
+        default: "Filter by tasks and surveys suggested in reviews",
+      }),
+      placeholder: t("review.taskFilterPlaceholder", {}, {
+        default: "Filter by suggested task or survey",
+      }),
+      noMatch: t("review.taskFilterNoMatch", {}, {
+        default: "No suggested task or survey matches",
+      }),
+      none: t("review.taskFilterNoSuggestions", {}, {
+        default: "No tasks or surveys suggested at this milestone yet",
+      }),
+    },
+    student: {
+      placeholder: t("review.taskFilterPlaceholderStudent", {}, {
+        default: "Filter by task or survey students picked",
+      }),
+      noMatch: t("review.taskFilterNoMatchStudent", {}, {
+        default: "No task or survey students picked matches",
+      }),
+      none: t("review.taskFilterNoStudentPicks", {}, {
+        default: "Students haven't picked tasks or surveys at this milestone",
+      }),
+    },
+    all: {
+      placeholder: t("review.taskFilterPlaceholderAll", {}, {
+        default: "Filter by task or survey suggested or picked",
+      }),
+      noMatch: t("review.taskFilterNoMatchAll", {}, {
+        default: "No task or survey matches",
+      }),
+      none: t("review.taskFilterNoTasks", {}, {
+        default: "No tasks or surveys at this milestone yet",
+      }),
+    },
+  }[source] || {};
   const listId = useId();
   const inputRef = useRef(null);
   const [query, setQuery] = useState("");
@@ -128,13 +168,7 @@ export default function TaskSuggestionFilter({
     }
   };
 
-  const emptyMessage = tasks.length
-    ? t("review.taskFilterNoMatch", {}, {
-        default: "No suggested task or survey matches",
-      })
-    : t("review.taskFilterNoSuggestions", {}, {
-        default: "No tasks or surveys suggested at this milestone yet",
-      });
+  const emptyMessage = tasks.length ? copy.noMatch : copy.none;
 
   return (
     <StyledTaskFilter id="filterBySuggestedTasks">
@@ -158,16 +192,8 @@ export default function TaskSuggestionFilter({
           type="text"
           className="TaskFilter-input MH-Type-Body-Base"
           value={query}
-          placeholder={
-            value.length
-              ? ""
-              : t("review.taskFilterPlaceholder", {}, {
-                  default: "Filter by suggested task or survey",
-                })
-          }
-          aria-label={t("review.taskFilterLabel", {}, {
-            default: "Filter by tasks and surveys suggested in reviews",
-          })}
+          placeholder={value.length ? "" : copy.placeholder}
+          aria-label={copy.label || copy.placeholder}
           role="combobox"
           aria-expanded={open}
           aria-controls={listId}

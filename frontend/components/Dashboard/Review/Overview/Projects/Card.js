@@ -3,6 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { isOpenForComments } from "../../../../../lib/milestoneStatus";
 import Chip from "../../../../DesignSystem/Chip";
+import { StarFilledIcon } from "../../../../DesignSystem/Icons";
 
 export default function Card({
   stage,
@@ -11,6 +12,7 @@ export default function Card({
   isOpenForCommentsQuery,
   milestones = [],
   matchedTasks = [],
+  studentTasks = [],
   onClick,
   className = "",
   style,
@@ -31,6 +33,13 @@ export default function Card({
     const lastSpaceIndex = truncated.lastIndexOf(" ");
     return title.substr(0, lastSpaceIndex) + "...";
   };
+
+  // Filter matches that are student picks already show as student chips.
+  const studentTaskIds = new Set(studentTasks.map((task) => task.id));
+  const matchedTaskIds = new Set(matchedTasks.map((task) => task.id));
+  const matchedSuggestions = matchedTasks.filter(
+    (task) => !studentTaskIds.has(task.id)
+  );
 
   const reviewCount = project?.reviews?.filter((r) => r?.stage === status).length;
 
@@ -65,10 +74,34 @@ export default function Card({
         </div>
       </div>
       <div className="p13">{shortenTitle(project?.title)}</div>
+      {/* Tasks & surveys students picked on the cards submitted with this
+          milestone; the ones matching the task filter are highlighted. */}
+      {studentTasks.length > 0 ? (
+        <div
+          className="suggestedTasks studentTasks"
+          aria-label={t("review.studentPickedTasks", {}, {
+            default: "Tasks and surveys picked by students",
+          })}
+        >
+          {studentTasks.map((task) => (
+            <Chip
+              key={task.id}
+              label={task.title}
+              variant="static"
+              tone={matchedTaskIds.has(task.id) ? "info" : "default"}
+              leading={<StarFilledIcon width={16} height={16} />}
+              title={t("review.studentPickedTask", {}, {
+                default: "Picked by students",
+              })}
+              style={{ maxWidth: "100%" }}
+            />
+          ))}
+        </div>
+      ) : null}
       {/* Filtered tasks & surveys mentors suggested to this proposal. */}
-      {matchedTasks.length > 0 ? (
+      {matchedSuggestions.length > 0 ? (
         <div className="suggestedTasks">
-          {matchedTasks.map((task) => (
+          {matchedSuggestions.map((task) => (
             <Chip
               key={task.id}
               label={task.title}

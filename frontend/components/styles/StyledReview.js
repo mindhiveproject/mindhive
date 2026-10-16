@@ -375,7 +375,20 @@ export const StyledDasboardReview = styled.div`
       /* !important: DropdownSelect sets these on its label for its clamp-and-wrap
          full-width case. Here the trigger is a compact filter — keep it to one
          line and ellipsize instead. */
-      .searchTopArea [data-dropdown-label] {
+      /* Task & survey filter, with the source picker beside it when both
+         mentor suggestions and student picks exist. */
+      .taskFilterArea {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 16px;
+      }
+      .taskFilterSearch {
+        grid-column: 1;
+        min-width: 0;
+      }
+      .searchTopArea [data-dropdown-label],
+      #filterByTaskSource [data-dropdown-label] {
         white-space: nowrap !important;
         -webkit-line-clamp: 1 !important;
         line-clamp: 1 !important;

@@ -10,7 +10,7 @@ import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import { ArrowDropDownIcon } from "../../../../DesignSystem/Icons";
 import Card from "./Card";
 import TaskSuggestionFilter from "./TaskSuggestionFilter";
-import useTaskSuggestions from "./useTaskSuggestions";
+import useTaskSuggestions, { TASK_SOURCES } from "./useTaskSuggestions";
 
 function containsAny(arr1, arr2) {
   return arr1.some((item) => arr2.includes(item));
@@ -53,6 +53,7 @@ export default function ProjectsBoard({
   const [filteredClasses, setFilteredClasses] = useState([]);
   const [showMyClassOnly, setShowMyClassOnly] = useState(false);
   const [selectedTaskIds, setSelectedTaskIds] = useState([]);
+  const [taskSource, setTaskSource] = useState(TASK_SOURCES.ALL);
   const [filterSortMessage, setFilterSortMessage] = useState(
     t("review.showingAllProjects")
   );
@@ -88,19 +89,44 @@ export default function ProjectsBoard({
     isMilestoneSubmitted(project, status, milestones)
   );
 
-  // Task & survey filter: only on milestones whose review form has a task
-  // selector. Picked tasks are kept (and in the URL) but ignored elsewhere.
+  // Task & survey filter: on milestones whose review form has a task
+  // selector (mentor suggestions) or whose cards carry tasks students picked.
+  // Picked tasks are kept (and in the URL) but ignored elsewhere.
   const {
     enabled: taskFilterEnabled,
+    mentorEnabled,
+    studentEnabled,
+    activeSource,
     suggestedTasks,
     tasksByProject,
+    studentTasksByProject,
     taskTitles,
   } = useTaskSuggestions({
     classId: scopedClassId,
     milestone: getMilestoneByKey(status, milestones),
+    milestones,
     status,
     projects,
+    source: taskSource,
   });
+  const taskSourceOptions = [
+    {
+      value: TASK_SOURCES.ALL,
+      label: t("review.taskSourceAll", {}, { default: "All sources" }),
+    },
+    {
+      value: TASK_SOURCES.MENTOR,
+      label: t("review.taskSourceMentor", {}, {
+        default: "Suggested by mentors",
+      }),
+    },
+    {
+      value: TASK_SOURCES.STUDENT,
+      label: t("review.taskSourceStudent", {}, {
+        default: "Picked by students",
+      }),
+    },
+  ];
   const activeTaskIds = useMemo(
     () => (taskFilterEnabled ? selectedTaskIds : []),
     [taskFilterEnabled, selectedTaskIds]
@@ -113,11 +139,13 @@ export default function ProjectsBoard({
     const keywordParam = params.get("keyword");
     const sortParam = params.get("sort");
     const tasksParam = params.get("tasks");
+    const taskSourceParam = params.get("taskSource");
 
     if (classesParam) setFilteredClasses(classesParam.split(","));
     if (keywordParam) setKeyword(keywordParam);
     if (sortParam) setSortBy(sortParam);
     if (tasksParam) setSelectedTaskIds(tasksParam.split(","));
+    if (taskSourceParam) setTaskSource(taskSourceParam);
 
     // After initial mount, set isInitialMount to false
     isInitialMount.current = false;
@@ -154,11 +182,25 @@ export default function ProjectsBoard({
       const tasks = new Intl.ListFormat(locale, {
         type: "disjunction",
       }).format(taskNames.map((name) => `"${name}"`));
-      message += t(
-        "review.matchingSuggestedTasks",
-        { tasks },
-        { default: ` that were suggested ${tasks}` }
-      );
+      if (activeSource === TASK_SOURCES.STUDENT) {
+        message += t(
+          "review.matchingStudentTasks",
+          { tasks },
+          { default: ` whose students picked ${tasks}` }
+        );
+      } else if (activeSource === TASK_SOURCES.ALL) {
+        message += t(
+          "review.matchingSuggestedOrStudentTasks",
+          { tasks },
+          { default: ` that were suggested or picked ${tasks}` }
+        );
+      } else {
+        message += t(
+          "review.matchingSuggestedTasks",
+          { tasks },
+          { default: ` that were suggested ${tasks}` }
+        );
+      }
     }
     setFilterSortMessage(message);
   }, [
@@ -167,6 +209,7 @@ export default function ProjectsBoard({
     keyword,
     allUniqueClasses,
     activeTaskIds,
+    activeSource,
     taskTitles,
     locale,
     t,
@@ -187,6 +230,7 @@ export default function ProjectsBoard({
       setFilteredClasses([]);
       setShowMyClassOnly(false);
       setSelectedTaskIds([]);
+      setTaskSource(TASK_SOURCES.ALL);
       setFilterSortMessage(t("review.showingAllProjects"));
       const newUrl = window.location.pathname;
       window.history.pushState({}, document.title, newUrl);
@@ -222,17 +266,29 @@ export default function ProjectsBoard({
     } else {
       queryParams.delete("tasks");
     }
+    if (taskSource !== TASK_SOURCES.ALL) {
+      queryParams.set("taskSource", taskSource);
+    } else {
+      queryParams.delete("taskSource");
+    }
 
     const queryString = queryParams.toString();
     const newUrl = queryString
       ? `${window.location.pathname}?${queryString}`
       : window.location.pathname;
     window.history.pushState(
-      { filteredClasses, keyword, sortBy, selectedTaskIds },
+      { filteredClasses, keyword, sortBy, selectedTaskIds, taskSource },
       document.title,
       newUrl
     );
-  }, [filteredClasses, keyword, sortBy, selectedTaskIds, scopedClassId]);
+  }, [
+    filteredClasses,
+    keyword,
+    sortBy,
+    selectedTaskIds,
+    taskSource,
+    scopedClassId,
+  ]);
 
   // Restore state on popstate (back/forward navigation)
   useEffect(() => {
@@ -247,6 +303,7 @@ export default function ProjectsBoard({
       setKeyword(keywordParam || "");
       setSortBy(sortParam || "");
       setSelectedTaskIds(tasksParam ? tasksParam.split(",") : []);
+      setTaskSource(params.get("taskSource") || TASK_SOURCES.ALL);
     };
 
     window.addEventListener("popstate", handlePopState);
@@ -388,12 +445,31 @@ export default function ProjectsBoard({
       </div>
 
       {taskFilterEnabled ? (
-        <TaskSuggestionFilter
-          tasks={suggestedTasks}
-          taskTitles={taskTitles}
-          value={selectedTaskIds}
-          onChange={setSelectedTaskIds}
-        />
+        <div className="taskFilterArea">
+          <div className="taskFilterSearch">
+            <TaskSuggestionFilter
+              tasks={suggestedTasks}
+              taskTitles={taskTitles}
+              value={selectedTaskIds}
+              onChange={setSelectedTaskIds}
+              source={activeSource}
+            />
+          </div>
+          {mentorEnabled && studentEnabled ? (
+            <div id="filterByTaskSource">
+              <DropdownSelect
+                ariaLabel={t("review.taskSourceLabel", {}, {
+                  default: "Task & survey source",
+                })}
+                value={taskSource}
+                options={taskSourceOptions}
+                triggerStyle={FILTER_TRIGGER_STYLE}
+                icon={DROPDOWN_GLYPH}
+                onChange={(next) => setTaskSource(next)}
+              />
+            </div>
+          ) : null}
+        </div>
       ) : null}
 
       <div className="p16_500">{filterSortMessage}</div>
@@ -409,6 +485,9 @@ export default function ProjectsBoard({
             matchedTasks={activeTaskIds
               .filter((id) => tasksByProject.get(project.id)?.has(id))
               .map((id) => ({ id, title: taskTitles.get(id) || id }))}
+            studentTasks={(studentTasksByProject.get(project.id) || []).map(
+              (task) => ({ id: task.id, title: taskTitles.get(task.id) || task.title })
+            )}
             key={project?.id}
             onClick={() =>
               navigateToProject({ id: project.id, stage: selector })
