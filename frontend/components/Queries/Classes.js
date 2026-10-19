@@ -240,7 +240,13 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
         sections {
           cards {
             id
+            type
             settings
+            milestone {
+              id
+              key
+              actionCardType
+            }
           }
         }
         milestoneStatus
