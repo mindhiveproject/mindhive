@@ -1,11 +1,16 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Modal, Dropdown, Button, Message } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import DesignSystemButton from "../../../../../DesignSystem/Button";
+import Modal from "../../../../../DesignSystem/Modal";
+import MessageCard from "../../../../../DesignSystem/MessageCard";
+import Chip from "../../../../../DesignSystem/Chip";
+import Radio from "../../../../../DesignSystem/Radio";
+import Input from "../../../../../DesignSystem/Input";
+import DropdownSelect from "../../../../../DesignSystem/DropdownSelect";
+import { OpenInNewIcon, TrashIcon } from "../../../../../DesignSystem/Icons";
 import DashboardAssetIcon from "../DashboardAssetIcon";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
@@ -15,7 +20,10 @@ import { ASSIGN_STUDENT_TO_PROJECT } from "../../../../../Mutations/Classes";
 import { COPY_PROPOSAL_MUTATION } from "../../../../../Mutations/Proposal";
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 
-import StyledClass from "../../../../../styles/StyledClass";
+const getMentors = (project) =>
+  project?.study?.collaborators?.filter((c) =>
+    c.permissions?.some((p) => p.name === "MENTOR")
+  ) || [];
 
 export default function ProjectManager(props) {
   const { t } = useTranslation("classes");
@@ -27,6 +35,7 @@ export default function ProjectManager(props) {
   const [localProjects, setLocalProjects] = useState(
     props?.data?.projects || []
   );
+  const studentId = props?.data?.id;
 
   const closeModal = () => {
     if (isControlled) {
@@ -54,14 +63,16 @@ export default function ProjectManager(props) {
   });
   const availableProjects = classProjectsData?.proposalBoards || [];
 
-  const projectOptions =
-    availableProjects
-      ?.filter((project) => !localProjects.some((p) => p.id === project.id))
-      ?.map((project) => ({
-        key: project?.id,
-        text: project?.title,
-        value: project?.id,
-      })) || [];
+  const projectOptions = availableProjects
+    .filter((project) => !localProjects.some((p) => p.id === project.id))
+    .map((project) => ({ value: project.id, label: project.title }));
+
+  // Class roster, used to add other students as collaborators on a project
+  const { data: rosterData } = useQuery(GET_STUDENTS_DASHBOARD_DATA, {
+    variables: { classId: props?.classId },
+    skip: !props?.classId,
+  });
+  const roster = rosterData?.profiles || [];
 
   const { data: proposalData } = useQuery(DEFAULT_PROJECT_BOARDS);
   const defaultProposalBoardId =
@@ -73,6 +84,7 @@ export default function ProjectManager(props) {
         query: GET_STUDENTS_DASHBOARD_DATA,
         variables: { classId: props?.classId },
       },
+      { query: CLASS_PROJECTS_QUERY, variables: { classId: props?.classId } },
     ],
   });
 
@@ -141,23 +153,36 @@ export default function ProjectManager(props) {
         : [],
     });
 
+  // The modal works from a snapshot of the row, so mirror each change locally
+  const patchProject = (id, patch) =>
+    setLocalProjects((prev) =>
+      prev.map((proj) => (proj.id === id ? { ...proj, ...patch(proj) } : proj))
+    );
+
   const assignToProject = async () => {
     if (!projectId) {
       return alert(t("dashboard.selectProjectFirst"));
     }
-    let studyId;
-    const p = availableProjects
-      .filter((p) => p?.id === projectId)
-      .map((p) => p?.study?.id);
-    if (p && p.length) {
-      studyId = p[0];
-    }
     await assignStudent({
       variables: {
         projectId,
-        input: { connect: { id: props?.data?.id } },
+        input: { connect: { id: studentId } },
       },
     });
+    const added = availableProjects.find((p) => p.id === projectId);
+    if (added) {
+      setLocalProjects((prev) => [
+        ...prev,
+        {
+          ...added,
+          isMain: false,
+          collaborators: [
+            ...(added.collaborators || []),
+            { id: studentId, username: props?.data?.username },
+          ],
+        },
+      ]);
+    }
     setProjectId(null);
   };
 
@@ -165,9 +190,34 @@ export default function ProjectManager(props) {
     await assignStudent({
       variables: {
         projectId,
-        input: { disconnect: { id: props?.data?.id } },
+        input: { disconnect: { id: studentId } },
       },
     });
+    setLocalProjects((prev) => prev.filter((p) => p.id !== projectId));
+  };
+
+  const addCollaborator = async (projectId, profileId) => {
+    await assignStudent({
+      variables: { projectId, input: { connect: { id: profileId } } },
+    });
+    const profile = roster.find((p) => p.id === profileId);
+    patchProject(projectId, (proj) => ({
+      collaborators: [
+        ...(proj.collaborators || []),
+        { id: profileId, username: profile?.username },
+      ],
+    }));
+  };
+
+  const removeCollaborator = async (projectId, profileId) => {
+    await assignStudent({
+      variables: { projectId, input: { disconnect: { id: profileId } } },
+    });
+    patchProject(projectId, (proj) => ({
+      collaborators: (proj.collaborators || []).filter(
+        (c) => c.id !== profileId
+      ),
+    }));
   };
 
   const createNewProject = async () => {
@@ -179,7 +229,7 @@ export default function ProjectManager(props) {
         id: props?.classProposalBoardId || defaultProposalBoardId,
         title: projectName,
         classIdUsed: props?.classId,
-        collaborators: [props?.data?.id],
+        collaborators: [studentId],
       },
     });
     setProjectName("");
@@ -218,466 +268,294 @@ export default function ProjectManager(props) {
     }
   };
 
-  return (
-    <Modal
-      onClose={closeModal}
-      onOpen={() => {
-        if (!isControlled) setInternalOpen(true);
-      }}
-      open={isOpen}
-      trigger={
-        isControlled ? undefined : (
-          <DesignSystemButton
-            variant="outline"
-            leadingIcon={<DashboardAssetIcon src="/assets/icons/project.svg" />}
-          >
-            {t("dashboard.manageProjects", { count: localProjects.length }, {
-              default: "Manage Projects ({{count}})",
-            })}
-          </DesignSystemButton>
-        )
+  // Radio semantics: exactly one main project, so unset any other
+  const setMainProject = async (projectId) => {
+    for (const proj of localProjects) {
+      const isMain = proj.id === projectId;
+      if (!!proj.isMain !== isMain) {
+        await toggleProjectAsMain({ projectId: proj.id, isMain });
       }
-      dimmer="blurring"
-      size="large"
-      closeIcon
-    >
-      <StyledModal>
-        <Modal.Content>
-          <div className="modalHeader">
-            <h1>{t("dashboard.manageProjectsFor", { username: props?.data?.username })}</h1>
-            <p>{t("dashboard.viewCreateOrAssignProjects")}</p>
-          </div>
+    }
+  };
+
+  const openBoard = (projectId) =>
+    window.open(`/builder/projects?selector=${projectId}`, "_blank");
+
+  return (
+    <>
+      {!isControlled && (
+        <DesignSystemButton
+          variant="outline"
+          leadingIcon={<DashboardAssetIcon src="/assets/icons/project.svg" />}
+          onClick={() => setInternalOpen(true)}
+        >
+          {t("dashboard.manageProjects", { count: localProjects.length }, {
+            default: "Manage Projects ({{count}})",
+          })}
+        </DesignSystemButton>
+      )}
+      <Modal
+        open={isOpen}
+        onClose={closeModal}
+        maxWidth="95vw"
+        maxHeight="95vh"
+      >
+        <StyledProjectManager>
+          <h1>
+            {t(
+              "dashboard.studentProjects",
+              { username: props?.data?.username },
+              { default: "{{username}}'s projects" }
+            )}
+          </h1>
+          <p>
+            {t("dashboard.projectManagerIntro", null, {
+              default:
+                "Select the main project, open a board, or add a student to another project below.",
+            })}
+          </p>
+
           {updateError && (
-            <Message negative>
-              <Message.Header>{t("dashboard.error")}</Message.Header>
-              <p>{t("dashboard.failedToUpdateProjectStatus")}</p>
-            </Message>
+            <MessageCard
+              variant="warning"
+              message={t("dashboard.failedToUpdateProjectStatus")}
+            />
           )}
-          <StyledClass>
-            <div className="dashboard">
-              <div className="manageModal">
-                {hasProjects ? (
-                  <div className="section">
-                    <h2>{t("dashboard.currentProjects")}</h2>
-                    <div className="project-list">
-                      {sortedProjects.map((project) => (
-                        <div
-                          key={project.id}
-                          className={
-                            project?.isMain
-                              ? `project-item main-project`
-                              : `project-item`
-                          }
-                          isMain={project.isMain}
-                        >
-                          <div className="project-header">
-                            <h3>{project.title}</h3>
-                            <div className="tooltip-container">
-                              <div className="main-toggle-container">
-                                <Button
-                                  toggle
-                                  active={project?.isMain}
-                                  onClick={() =>
-                                    toggleProjectAsMain({
-                                      projectId: project?.id,
-                                      isMain: !project?.isMain,
-                                    })
-                                  }
-                                  disabled={updateLoading}
-                                  aria-label={t("dashboard.setAsMainAria", { title: project?.title })}
-                                  className="main-toggle"
-                                />
-                                <span className="toggle-label">
-                                  {project.isMain
-                                    ? t("dashboard.mainProject")
-                                    : t("dashboard.setAsMain")}
-                                </span>
-                              </div>
-                              <div className="tooltip">
-                                {project.isMain
-                                  ? t("dashboard.thisIsMainProject")
-                                  : t("dashboard.setAsMainTooltip")}
-                              </div>
-                            </div>
+
+          <div className="actions">
+            <section>
+              <h2>
+                {t("dashboard.chooseExistingProject", null, {
+                  default: "Choose and assign to an existing project",
+                })}
+              </h2>
+              <DropdownSelect
+                searchableSingle
+                value={projectId}
+                placeholder={t("dashboard.selectAProject")}
+                options={projectOptions}
+                onChange={setProjectId}
+                disabled={projectOptions.length === 0}
+              />
+              <DesignSystemButton
+                variant="filled"
+                onClick={assignToProject}
+                disabled={!projectId}
+              >
+                {t("dashboard.assignToExistingProject")}
+              </DesignSystemButton>
+            </section>
+            <section>
+              <h2>{t("dashboard.createNewProject")}</h2>
+              <Input
+                value={projectName}
+                onChange={setProjectName}
+                placeholder={t("dashboard.enterNewProjectName")}
+              />
+              <DesignSystemButton
+                variant="filled"
+                onClick={createNewProject}
+                disabled={!projectName}
+              >
+                {t("dashboard.createProject")}
+              </DesignSystemButton>
+            </section>
+          </div>
+
+          {hasProjects ? (
+            <div className="tableScroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th colSpan={3}>{t("dashboard.mainProject")}</th>
+                    <th>{t("dashboard.collaborator", null, { default: "Collaborator" })}</th>
+                    <th>{t("dashboard.mentor", null, { default: "Mentor" })}</th>
+                    <th>{t("dashboard.study", null, { default: "Study" })}</th>
+                    <th />
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedProjects.map((project) => {
+                    const collaborators = (project.collaborators || []).filter(
+                      (c) => c.id !== studentId
+                    );
+                    const mentors = getMentors(project);
+                    const addOptions = roster
+                      .filter(
+                        (s) =>
+                          s.id !== studentId &&
+                          !collaborators.some((c) => c.id === s.id)
+                      )
+                      .map((s) => ({ value: s.id, label: s.username }));
+                    return (
+                      <tr key={project.id}>
+                        <td className="tight">
+                          <Radio
+                            checked={!!project.isMain}
+                            onChange={() => setMainProject(project.id)}
+                            disabled={updateLoading}
+                            ariaLabel={t("dashboard.setAsMainAria", {
+                              title: project.title,
+                            })}
+                          />
+                        </td>
+                        <td>
+                          <Chip variant="static" tone="neutral" label={project.title} />
+                        </td>
+                        <td>
+                          <DesignSystemButton
+                            variant="primary"
+                            leadingIcon={<OpenInNewIcon />}
+                            onClick={() => openBoard(project.id)}
+                          >
+                            {t("dashboard.viewProjectBoard")}
+                          </DesignSystemButton>
+                        </td>
+                        <td>
+                          <div className="chips">
+                            {collaborators.map((c) => (
+                              <Chip
+                                key={c.id}
+                                label={c.username}
+                                onClose={() =>
+                                  removeCollaborator(project.id, c.id)
+                                }
+                              />
+                            ))}
+                            {addOptions.length > 0 && (
+                              <DropdownSelect
+                                fitContent
+                                portal
+                                searchableSingle
+                                value={null}
+                                placeholder={t("dashboard.addCollaborator", null, {
+                                  default: "Add",
+                                })}
+                                options={addOptions}
+                                onChange={(id) => addCollaborator(project.id, id)}
+                              />
+                            )}
                           </div>
-                          <div className="project-info">
-                            <p>{project.study?.title || t("dashboard.noStudyAssigned")}</p>
-                            <div className="collaborators">
-                              <strong>{t("dashboard.collaborators")}</strong>{" "}
-                              {project.collaborators?.length > 0
-                                ? project.collaborators
-                                    .map((c) => c.username)
-                                    .join(", ")
-                                : t("dashboard.none")}
-                            </div>
-                            <div className="mentors">
-                              <strong>{t("dashboard.mentors")}</strong>{" "}
-                              {project.study?.collaborators?.filter((c) =>
-                                c.permissions.some((p) => p.name === "MENTOR")
-                              ).length > 0
-                                ? project.study.collaborators
-                                    .filter((c) =>
-                                      c.permissions.some(
-                                        (p) => p.name === "MENTOR"
-                                      )
-                                    )
-                                    .map((c) => c.username)
-                                    .join(", ")
-                                : t("dashboard.none")}
-                            </div>
-                            <Link
-                              href={{
-                                pathname: `/builder/projects`,
-                                query: { selector: project.id }
-                              }}
-                              target="_blank"
-                              className="project-link"
-                            >
-                              {t("dashboard.viewProjectBoard")}
-                            </Link>
-                          </div>
-                          <button
-                            className="disconnect-button"
+                        </td>
+                        <td>
+                          {mentors.length > 0
+                            ? mentors.map((m) => m.username).join(", ")
+                            : t("dashboard.none")}
+                        </td>
+                        <td>
+                          <Chip variant="static" tone={project.study?.title ? "success" : "warning"} label={project.study?.title || t("dashboard.noStudyAssigned")} />
+                        </td>
+                        <td>
+                          <DesignSystemButton
+                            variant="text"
+                            tone="warning"
+                            leadingIcon={<TrashIcon />}
                             onClick={() => disconnectFromProject(project.id)}
                           >
                             {t("dashboard.removeAsCollaborator")}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="section empty-state">
-                    <h2>{t("dashboard.noProjectsAssigned")}</h2>
-                    <p>{t("dashboard.notAssignedToAnyProjects")}</p>
-                  </div>
-                )}
-                <div>
-                  <div className="section">
-                    <h2>{t("dashboard.assignToExistingProject")}</h2>
-                    <Dropdown
-                      selection
-                      options={projectOptions}
-                      value={projectId}
-                      onChange={(e, data) => setProjectId(data?.value)}
-                      fluid
-                      className="project-dropdown"
-                      placeholder={t("dashboard.selectAProject")}
-                      disabled={projectOptions.length === 0}
-                    />
-                  </div>
-                  <div className="section">
-                    <h2>{t("dashboard.createNewProject")}</h2>
-                    <input
-                      type="text"
-                      name="projectName"
-                      placeholder={t("dashboard.enterNewProjectName")}
-                      value={projectName}
-                      onChange={(e) => setProjectName(e?.target?.value)}
-                      className="project-input"
-                    />
-                  </div>
-                </div>
-              </div>
+                          </DesignSystemButton>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          </StyledClass>
-          <div className="footer">
-            <DesignSystemButton variant="outline" onClick={closeModal}>
-              {t("dashboard.cancel")}
-            </DesignSystemButton>
-            <DesignSystemButton
-              variant="filled"
-              onClick={assignToProject}
-              disabled={!projectId}
-            >
-              {t("dashboard.assignToProject")}
-            </DesignSystemButton>
-            <DesignSystemButton
-              variant="filled"
-              onClick={createNewProject}
-              disabled={!projectName}
-            >
-              {t("dashboard.createProject")}
-            </DesignSystemButton>
-          </div>
-        </Modal.Content>
-      </StyledModal>
-    </Modal>
+          ) : (
+            <p>{t("dashboard.notAssignedToAnyProjects")}</p>
+          )}
+        </StyledProjectManager>
+      </Modal>
+    </>
   );
 }
 
-const StyledModal = styled.div`
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 24px;
-  margin: 0 auto;
+// Layout only — typography, colour and controls come from the design system
+const StyledProjectManager = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  text-align: left;
 
-  .modalHeader {
-    text-align: center;
-    margin-bottom: 24px;
-
-    h1 {
-      font: var(--MH-Type-Heading-Small);
-      letter-spacing: 0;
-      color: #333333;
-      margin: 0 0 8px;
-    }
-
-    p {
-      font: var(--MH-Type-Body-Base);
-      letter-spacing: 0;
-      color: #666666;
-      margin: 0;
-    }
+  h1 {
+    font: var(--MH-Type-Heading-Large);
+    margin: 0;
   }
 
-  .dashboard {
-    .section {
-      margin-bottom: 32px;
-      padding: 20px;
-      border-radius: 8px;
-      background: #f9f9f9;
-
-      h2 {
-        font: var(--MH-Type-Title-Large);
-        letter-spacing: 0;
-        color: #333333;
-        margin-bottom: 16px;
-      }
-
-      &.empty-state {
-        text-align: center;
-        p {
-          font: var(--MH-Type-Body-Base);
-          letter-spacing: 0;
-          color: #666666;
-        }
-      }
-
-      .project-list {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-      }
-
-      .project-item {
-        display: flex;
-        flex-direction: column;
-        padding: 16px;
-        border: 1px solid #e0e0e0;
-        border-radius: 6px;
-        background: ${(props) => (props.isMain ? "#e6f0fa" : "#ffffff")};
-        transition: background 0.2s ease;
-
-        &:hover {
-          background: ${(props) => (props.isMain ? "#d6e4f5" : "#f5f5f5")};
-        }
-
-        .project-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 12px;
-
-          h3 {
-            font: var(--MH-Type-Title-Base);
-            letter-spacing: 0;
-            color: #333333;
-            margin: 0;
-          }
-
-          .tooltip-container {
-            position: relative;
-            display: inline-block;
-
-            .main-toggle-container {
-              display: flex;
-              align-items: center;
-              gap: 8px;
-
-              .main-toggle {
-                .ui.toggle.button {
-                  width: 60px;
-                  height: 30px;
-                  background-color: ${(props) =>
-                    props.active ? "#3d85b0" : "#b0b0b0"};
-                  color: #ffffff;
-                  font: var(--MH-Type-Label-Base);
-                  letter-spacing: 0;
-                  padding: 6px 12px;
-
-                  &:hover {
-                    background-color: ${(props) =>
-                      props.active ? "#326d94" : "#999999"};
-                  }
-
-                  &.disabled {
-                    background-color: #d0d0d0;
-                    cursor: not-allowed;
-                  }
-                }
-              }
-
-              .toggle-label {
-                font: var(--MH-Type-Label-Base);
-                letter-spacing: 0;
-                color: ${(props) => (props.isMain ? "#3d85b0" : "#666666")};
-              }
-            }
-
-            .tooltip {
-              visibility: hidden;
-              background-color: #333333;
-              color: #ffffff;
-              font: var(--MH-Type-Body-Base);
-              letter-spacing: 0;
-              text-align: center;
-              border-radius: 4px;
-              padding: 8px;
-              position: absolute;
-              z-index: 1000;
-              top: -40px;
-              left: 50%;
-              transform: translateX(-50%);
-              width: 200px;
-              opacity: 0;
-              transition: opacity 0.2s ease;
-            }
-
-            &:hover .tooltip {
-              visibility: visible;
-              opacity: 1;
-            }
-          }
-        }
-
-        .project-info {
-          p {
-            font: var(--MH-Type-Body-Base);
-            letter-spacing: 0;
-            color: #666666;
-            margin: 0 0 8px;
-          }
-
-          .collaborators,
-          .mentors {
-            font: var(--MH-Type-Body-Base);
-            letter-spacing: 0;
-            color: #333333;
-            margin: 0 0 8px;
-
-            strong {
-              color: #3d85b0;
-            }
-          }
-
-          .project-link {
-            display: inline-block;
-            background: #3d85b0;
-            border-radius: 6px;
-            padding: 8px 16px;
-            font: var(--MH-Type-Label-Base);
-            letter-spacing: 0;
-            color: #ffffff;
-            text-decoration: none;
-            transition: all 0.2s ease;
-
-            &:hover {
-              background: #326d94;
-            }
-          }
-        }
-
-        .disconnect-button {
-          background: #d32f2f;
-          border: none;
-          border-radius: 6px;
-          padding: 8px 16px;
-          font: var(--MH-Type-Label-Base);
-          letter-spacing: 0;
-          color: #ffffff;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          align-self: flex-end;
-          margin-top: 12px;
-
-          &:hover {
-            background: #b71c1c;
-          }
-        }
-
-        &.main-project {
-          background: #e6f0fa;
-          border: 2px solid #3d85b0;
-
-          &:hover {
-            background: #d6e4f5;
-          }
-        }
-      }
-
-      .project-dropdown {
-        &.ui.dropdown {
-          border: 1px solid #d0d0d0;
-          border-radius: 6px;
-          background: #ffffff;
-          font: var(--MH-Type-Label-Base);
-          letter-spacing: 0;
-          color: #333333;
-          padding: 10px;
-
-          .dropdown.icon {
-            color: #666666;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 10px;
-          }
-
-          .menu {
-            .item {
-              font: var(--MH-Type-Label-Base);
-              letter-spacing: 0;
-            }
-          }
-
-          &:hover {
-            border-color: #3d85b0;
-
-            .dropdown.icon {
-              color: #3d85b0;
-            }
-          }
-
-          &.disabled {
-            background: #f0f0f0;
-            cursor: not-allowed;
-          }
-        }
-      }
-
-      .project-input {
-        width: 100%;
-        border: 1px solid #d0d0d0;
-        border-radius: 6px;
-        padding: 10px;
-        font: var(--MH-Type-Body-Base);
-        letter-spacing: 0;
-        color: #333333;
-
-        &:focus {
-          outline: none;
-          border-color: #3d85b0;
-        }
-      }
-    }
+  h2 {
+    font: var(--MH-Type-Title-Base);
+    margin: 0;
   }
 
-  .footer {
+  p {
+    font: var(--MH-Type-Body-Base);
+    margin: 0;
+  }
+
+  .actions {
     display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid #e0e0e0;
+    flex-wrap: wrap;
+    gap: 48px;
+    width: 100%;
+
+    section {
+      flex: 1 1 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  }
+
+  .tableScroll {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font: var(--MH-Type-Body-Base);
+
+    th {
+      font: var(--MH-Type-Label-Base);
+      text-align: left;
+      padding: 12px 24px 12px 0;
+    }
+
+    thead tr {
+      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+    }
+
+    th:first-child {
+      padding-left: 16px;
+    }
+
+    td {
+      padding: 16px 24px 16px 0;
+      vertical-align: middle;
+      white-space: nowrap;
+      border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    }
+
+    td.tight {
+      padding-right: 8px;
+    }
+
+    td:last-child,
+    th:last-child {
+      padding-right: 0;
+      text-align: right;
+    }
+  }
+
+  /* Chips flow in a row and only wrap once the column is genuinely full */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-width: 360px;
   }
 `;
