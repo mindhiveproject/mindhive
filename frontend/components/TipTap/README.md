@@ -11,6 +11,13 @@ Toolbar:
 
 Includes only styling controls (bold, italic, underline, heading).
 Maintains the same styling and accessibility features (e.g., aria-label for buttons).
+Sits inside the top of the editor box as a slim strip rather than floating above it.
+Its height is always reserved (padding-top on .ProseMirror, sized from the measured
+toolbar via --tiptap-toolbar-height), and it only fades in while the editor is focused
+and editable, so clicking into the editor never shifts the layout.
+The strip is position: sticky, so it stays pinned to the top of the scrolling area
+while a long editor is scrolled (set --tiptap-toolbar-sticky-top to clear a fixed header).
+Use toolbarVisible={false} to drop the strip and its reserved space entirely.
 
 Editor:
 

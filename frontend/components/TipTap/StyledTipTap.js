@@ -10,55 +10,53 @@ export const StyledTipTap = styled.div`
     margin-top: 10px;
   }
 
-  .floatingToolbar {
-    position: absolute;
-    top: -60px;
-    left: 0;
-    right: 0;
-    max-width: 100%;
-    z-index: 10000;
-    pointer-events: auto;
+  .tiptapEditorHost {
+    position: relative;
+  }
+
+  /* Toolbar strip inside the top of the editor box. Its space is always
+     reserved (padding-top below), so fading it in on focus moves nothing. */
+  &&.hasInlineToolbar .tiptapEditor .ProseMirror {
+    padding-top: calc(var(--tiptap-toolbar-height, 36px) + 12px);
+  }
+
+  /* Sticky so it stays reachable while a long editor is scrolled past (by
+     the page or any scrolling ancestor). The negative bottom margin keeps it
+     out of the flow, so the text still starts in the reserved padding.
+     Set --tiptap-toolbar-sticky-top to clear a fixed header. */
+  .inlineToolbar {
+    position: sticky;
+    top: var(--tiptap-toolbar-sticky-top, 0px);
+    margin: 1px 1px calc(-1px - var(--tiptap-toolbar-height, 36px));
+    z-index: 2;
+    border-bottom: 1px solid transparent;
+    border-radius: 7px 7px 0 0;
+    background: transparent;
     opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease, visibility 0.15s, background-color 0.15s,
+      border-color 0.15s;
 
     &.visible {
       opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  &[data-toolbar-align="right"] {
-    .floatingToolbar {
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .toolbar {
-      width: auto;
-      margin-left: auto;
+      visibility: visible;
+      pointer-events: auto;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border-bottom-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
     }
   }
 
   .toolbar {
     display: flex;
-    // grid-gap: 4px;
-    padding: 0px 8px 0px 16px;
-    width: fit-content;
-    border-radius: 32px;
-    border: 1px solid #A1A1A1;
-    background: var(--MH-Theme-Neutrals-Light-Green, #f6f9f8);
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 2px 8px;
 
-    /* MH-Theme/Elevation/High */
-    box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
-    
     .toolbarGroup {
-      // border-radius: 8px;
-      // background: #336F8A0a;
-      padding: 4px 4px;
+      padding: 1px 0;
       display: flex;
-      grid-template-rows: repeat(auto-fill, minmax(40px, 1fr)); /* Vertical (column) layout */
-      grid-gap: -1px;
+      align-items: center;
       width: fit-content;
 
       .tiptap-toolbar-icon {
@@ -66,10 +64,23 @@ export const StyledTipTap = styled.div`
         flex-shrink: 0;
         object-fit: contain;
       }
+    }
 
-      .specialButtonGroup {
-        margin-left: auto;
-        padding-right: 4px;
+    .toolbarDivider {
+      width: 1px;
+      height: 18px;
+      margin: 0 6px;
+      background: #d3e0e3;
+    }
+
+    .specialButtonGroup {
+      margin-left: auto;
+
+      /* Fit the 40px design-system button into the slim strip */
+      .DesignSystem-Button {
+        height: 28px !important;
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
       }
     }
   }
