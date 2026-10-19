@@ -352,7 +352,6 @@ const StyledClass = styled.div`
       display: grid;
       // gap: 8px;
       width: 100%;
-      margin-bottom: 8px;
     }
     .infoPane label {
       margin-bottom: 8px;

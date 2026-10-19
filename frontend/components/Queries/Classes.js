@@ -110,6 +110,18 @@ export const GET_CLASS = gql`
         email
         firstName
         lastName
+        collaboratorInProposal {
+          id
+          title
+          isMain
+          usedInClass {
+            id
+          }
+          clonedFrom {
+            id
+            title
+          }
+        }
       }
       mentors {
         id

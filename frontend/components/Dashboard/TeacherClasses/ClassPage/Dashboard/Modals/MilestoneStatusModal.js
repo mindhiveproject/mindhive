@@ -209,7 +209,7 @@ export default function MilestoneStatusModal({
               })}
               action={
                 data?.projectId ? (
-                  <Button variant="tonal" onClick={goToMilestoneCard}>
+                  <Button variant="outline" onClick={goToMilestoneCard}>
                     {t("dashboard.goToMilestone", {}, {
                       default: "Go to milestone",
                     })}
