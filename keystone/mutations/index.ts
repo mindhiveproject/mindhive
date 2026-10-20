@@ -82,6 +82,7 @@ import backfillTicketScreenshotsToNotion from "./backfillTicketScreenshotsToNoti
 import backfillSupportTicketsToNotion from "./backfillSupportTicketsToNotion";
 import backfillProjectBoardFormScope from "./backfillProjectBoardFormScope";
 import backfillProposalBoardPublicIds from "./backfillProposalBoardPublicIds";
+import backfillDetachClassTemplateClones from "./backfillDetachClassTemplateClones";
 import syncClassTemplateBoards from "./syncClassTemplateBoards";
 import {
   searchConnectUsers,
@@ -413,6 +414,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # share/deep-link URLs can use the public identifier. Dry-run by
         # default. Returns a list of change descriptions.
         backfillClassNetworkPublicIds(limit: Int, dryRun: Boolean): [String!]!
+        # One-shot: remove clonedFrom from boards that are class templates so
+        # admin template edits stop propagating onto teachers' boards. Dry-run
+        # by default. Returns a list of change descriptions.
+        backfillDetachClassTemplateClones(limit: Int, dryRun: Boolean): [String!]!
         createTemplateMilestone(input: CreateTemplateMilestoneInput!): Milestone
         updateTemplateMilestone(input: UpdateTemplateMilestoneInput!): Milestone
         deleteTemplateMilestone(id: ID!): Milestone
@@ -671,6 +676,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillProjectBoardFormScope,
         backfillProposalBoardPublicIds,
         backfillClassNetworkPublicIds,
+        backfillDetachClassTemplateClones,
         createTemplateMilestone,
         updateTemplateMilestone,
         deleteTemplateMilestone,
