@@ -10,6 +10,10 @@ import {
   buildDualWriteUpdate,
   readMilestoneStatus,
 } from "../../../../../../lib/milestoneStatus";
+import {
+  actionCardMatchesReviewStep,
+  isActionCard,
+} from "../../../../../../lib/milestones";
 
 import Button from "../../../../../DesignSystem/Button";
 import Chip from "../../../../../DesignSystem/Chip";
@@ -111,6 +115,24 @@ export default function MilestoneStatusModal({
     if (ok) onClose?.();
   };
 
+  // The student's own action card for this milestone, opened in a new tab so
+  // the teacher can submit it from there; falls back to the board itself.
+  const milestoneCardId = (project?.sections || [])
+    .flatMap((section) => section?.cards || [])
+    .find(
+      (card) =>
+        isActionCard(card) &&
+        ((milestone?.id && card?.milestone?.id === milestone.id) ||
+          actionCardMatchesReviewStep(card, milestone?.key, [milestone]))
+    )?.id;
+
+  const goToMilestoneCard = () => {
+    if (!data?.projectId) return;
+    const params = new URLSearchParams({ selector: data.projectId });
+    if (milestoneCardId) params.set("card", milestoneCardId);
+    window.open(`/builder/projects?${params}`, "_blank");
+  };
+
   const busy = Boolean(pending);
   const vars = {
     stage,
@@ -163,20 +185,40 @@ export default function MilestoneStatusModal({
           />
         </>
       ) : (
-        <MessageCard
-          variant="neutral"
-          message={
-            isStudy
-              ? t("dashboard.studyNotSubmittedYet", vars, {
-                  default:
-                    "{{student}} hasn't submitted their study for data collection yet, so it's still editable.",
-                })
-              : t("dashboard.notSubmittedYet", vars, {
-                  default:
-                    "{{student}} hasn't submitted {{stage}} yet. Once they do, you can reopen it here for edits.",
-                })
-          }
-        />
+        <>
+          <MessageCard
+            variant="neutral"
+            message={
+              isStudy
+                ? t("dashboard.studyNotSubmittedYet", vars, {
+                    default:
+                      "{{student}} hasn't submitted their study for data collection yet, so it's still editable.",
+                  })
+                : t("dashboard.notSubmittedYet", vars, {
+                    default:
+                      "{{student}} hasn't submitted {{stage}} yet. Once they do, you can reopen it here for edits.",
+                  })
+            }
+          />
+          {isStudy ? null : (
+            <MessageCard
+              variant="information"
+              message={t("dashboard.submitFromBoardInfo", vars, {
+                default:
+                  "Go to {{student}}'s {{stage}} milestone to submit it.",
+              })}
+              action={
+                data?.projectId ? (
+                  <Button variant="outline" onClick={goToMilestoneCard}>
+                    {t("dashboard.goToMilestone", {}, {
+                      default: "Go to milestone",
+                    })}
+                  </Button>
+                ) : null
+              }
+            />
+          )}
+        </>
       )}
 
       {failed ? (

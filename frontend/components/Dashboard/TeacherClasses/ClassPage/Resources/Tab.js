@@ -210,6 +210,8 @@ export default function ResourceTab({ resources, myclass, user }) {
       const { data: fullData } = await client.query({
         query: GET_RESOURCE,
         variables: { id: resource.id },
+        // Copy what's saved, not a possibly stale cached copy.
+        fetchPolicy: "network-only",
       });
       const full = fullData?.resource;
       if (!full) {

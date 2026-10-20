@@ -945,6 +945,7 @@ export const CLASS_PROJECTS_QUERY = gql`
       }
       study {
         id
+        title
       }
       createdAt
       updatedAt

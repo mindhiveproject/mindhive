@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { Button, Modal } from "semantic-ui-react";
@@ -40,6 +40,10 @@ export default function ResourceEditModal({
   const [mutationError, setMutationError] = useState(null);
   // Read-only view of the current (possibly unsaved) form content.
   const [previewing, setPreviewing] = useState(false);
+  // Which resource the form was last filled from. Once filled, later updates to
+  // the cached resource (board polling, a collaborator's save) must not wipe
+  // unsaved edits.
+  const seededKeyRef = useRef(null);
 
   const isPublicTemplate = sourceType === "public";
   const effectiveTemplateId = templateId || resourceId || null;
@@ -50,6 +54,7 @@ export default function ResourceEditModal({
 
   useEffect(() => {
     setPreviewing(false);
+    seededKeyRef.current = null;
     if (open) {
       if (isPublicTemplate) {
         if (existingCustomResourceId) {
@@ -136,7 +141,10 @@ export default function ResourceEditModal({
     }
 
     const resource = data?.resource;
-    if (resource) {
+    if (resource && !loading) {
+      const seedKey = `${resource.id}:${shouldCreateCopy}`;
+      if (seededKeyRef.current === seedKey) return;
+      seededKeyRef.current = seedKey;
       setFormState({
         title: resource.title || "",
         description: resource.description || "",
@@ -147,7 +155,7 @@ export default function ResourceEditModal({
       });
       setHasChanges(false);
     }
-  }, [data, open, needsChoice, shouldCreateCopy]);
+  }, [data, loading, open, needsChoice, shouldCreateCopy]);
 
   const [createResource, { loading: creating }] = useMutation(CREATE_RESOURCE);
   const [updateResource, { loading: updating }] = useMutation(UPDATE_RESOURCE);
@@ -500,11 +508,21 @@ export default function ResourceEditModal({
                       handleFieldChange("content", newContent)
                     }
                     mediaLibraryId={proposal?.id}
-                    mediaLibrarySource={{
-                      sourceType: "resourceContent",
-                      sourceId: activeResourceId || resourceId || null,
-                      createdWith: "upload",
-                    }}
+                    mediaLibrarySource={
+                      // A copy has no id until saved; don't attribute its media
+                      // to the template it's copied from.
+                      shouldCreateCopy
+                        ? {
+                            sourceType: "proposalBoard",
+                            sourceId: proposal?.id || null,
+                            createdWith: "upload",
+                          }
+                        : {
+                            sourceType: "resourceContent",
+                            sourceId: activeResourceId || resourceId || null,
+                            createdWith: "upload",
+                          }
+                    }
                   />
                 </div>
               </>

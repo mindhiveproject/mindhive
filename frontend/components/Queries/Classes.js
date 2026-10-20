@@ -110,6 +110,18 @@ export const GET_CLASS = gql`
         email
         firstName
         lastName
+        collaboratorInProposal {
+          id
+          title
+          isMain
+          usedInClass {
+            id
+          }
+          clonedFrom {
+            id
+            title
+          }
+        }
       }
       mentors {
         id
@@ -240,7 +252,13 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
         sections {
           cards {
             id
+            type
             settings
+            milestone {
+              id
+              key
+              actionCardType
+            }
           }
         }
         milestoneStatus

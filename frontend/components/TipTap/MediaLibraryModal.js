@@ -80,7 +80,7 @@ function MediaThumbPreviewPortal({ url, open, anchorRect }) {
         position: "fixed",
         left,
         top,
-        zIndex: 10100,
+        zIndex: 20058,
         width: maxW,
         padding: 10,
         background: "#ffffff",
@@ -335,10 +335,13 @@ function MediaLibraryActionsCell(params) {
   );
 }
 
+// Above Semantic UI modals lifted over the DesignSystem Modal (20055, e.g. the
+// card's resource editor) so the library doesn't open behind them; below the
+// DesignSystem Popover/Tooltip (20060) so its own info popover stays on top.
 const BACKDROP_STYLE = {
   position: "fixed",
   inset: 0,
-  zIndex: 10050,
+  zIndex: 20057,
   background: "rgba(23, 23, 23, 0.45)",
   display: "flex",
   alignItems: "center",

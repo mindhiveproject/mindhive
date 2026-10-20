@@ -48,11 +48,6 @@ const CLASS_PAGE_NAV_ITEMS = [
     iconSrc: "/assets/icons/visualize/bar_chart.svg",
   },
   {
-    value: "students",
-    labelKey: "main.students",
-    iconSrc: "/assets/icons/profile/people.svg",
-  },
-  {
     value: "studies",
     labelKey: "main.studies",
     iconSrc: "/assets/icons/education.svg",
@@ -71,6 +66,11 @@ const CLASS_PAGE_NAV_ITEMS = [
     value: "opportunities",
     labelKey: "main.opportunities",
     iconSrc: "/assets/icons/group.svg",
+  },
+  {
+    value: "students",
+    labelKey: "main.students",
+    iconSrc: "/assets/icons/profile/people.svg",
   },
   {
     value: "settings",
