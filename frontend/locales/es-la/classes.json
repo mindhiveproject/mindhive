@@ -136,7 +136,10 @@
 		"unpublished": "Inédito",
 		"unsavedChanges": "¡Cambios no guardados!",
 		"view": "",
-		"visibleForStudents": "La tarea es visible para los estudiantes."
+		"visibleForStudents": "La tarea es visible para los estudiantes.",
+		"linkCopy": "Link a copy",
+		"makeCopyAndEdit": "Make a copy and edit",
+		"notFound": "Assignment not found"
 	},
 	"assignments": {
 		"noAssignments": "No hay tareas disponibles",
@@ -522,7 +525,8 @@
 	"collaborators": "Colaborador(es)",
 	"common": {
 		"errorLoading": "Error al cargar la asignación",
-		"loading": "Cargando..."
+		"loading": "Cargando...",
+		"saving": "Saving..."
 	},
 	"create": {
 		"create": "Crear nueva clase",

@@ -33,6 +33,9 @@ export const GET_MY_HOMEWORK = gql`
       content
       placeholder
       settings
+      assignment {
+        id
+      }
       author {
         id
         username

@@ -113,7 +113,7 @@
 		"placeholderDescription": "Placeholder presented to students",
 		"placeholderInstructions": "Template for your students to fill in (you can leave this blank):",
 		"preview": "Preview",
-		"projectCard": "Project card",
+		"projectCard": "Link project card",
 		"publish": "Publish",
 		"published": "Published",
 		"publishToStudents": "Publish to students",
@@ -145,7 +145,10 @@
 		"unpublished": "Unpublished",
 		"unsavedChanges": "Unsaved changes!",
 		"view": "View",
-		"visibleForStudents": "The assignment is visible for students"
+		"visibleForStudents": "The assignment is visible for students",
+		"linkCopy": "Link a copy",
+		"makeCopyAndEdit": "Make a copy and edit",
+		"notFound": "Assignment not found"
 	},
 	"assignments": {
 		"noAssignments": "No assignments available",
@@ -615,7 +618,8 @@
 	"collaborators": "Collaborator(s)",
 	"common": {
 		"errorLoading": "Error loading assignment",
-		"loading": "Loading..."
+		"loading": "Loading...",
+		"saving": "Saving..."
 	},
 	"create": {
 		"create": "Create new class",
@@ -2406,7 +2410,7 @@
 		"notFound": "Resource not found.",
 		"owner": "Owner",
 		"preview": "Preview",
-		"projectCard": "Project card",
+		"projectCard": "Link project card",
 		"public": "Public",
 		"publicResourcesDescription": "Link public resources shared by the community to this class.",
 		"publicResourcesTitle": "Add a public resource",

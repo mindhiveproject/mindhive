@@ -7,6 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { StyledInput } from "../../../styles/StyledForm";
 import TipTapEditor from "../../../TipTap/Main";
+import { assignmentMediaLibraryProps } from "../../../Mutations/MediaAsset";
 import { StyledTipTap } from "../../../TipTap/StyledTipTap";
 import Button from "../../../DesignSystem/Button";
 
@@ -16,6 +17,7 @@ import Status from "../../TeacherClasses/ClassPage/Assignments/Homework/Status";
 export default function Editor({
   user,
   assignmentCode,
+  assignmentId,
   homeworkCode,
   btnName,
   inputs,
@@ -62,6 +64,10 @@ export default function Editor({
                       onUpdate={(newContent) => {
                         content.current = newContent;
                       }}
+                      {...assignmentMediaLibraryProps({
+                        userId: user?.id,
+                        assignmentId,
+                      })}
                     />
                   </StyledTipTap>
                 </div>

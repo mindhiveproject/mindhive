@@ -136,7 +136,10 @@
 		"unpublished": "अप्रकाशित",
 		"unsavedChanges": "सहेजे नहीं गए परिवर्तन!",
 		"view": "",
-		"visibleForStudents": "असाइनमेंट छात्रों के लिए दृश्यमान है"
+		"visibleForStudents": "असाइनमेंट छात्रों के लिए दृश्यमान है",
+		"linkCopy": "Link a copy",
+		"makeCopyAndEdit": "Make a copy and edit",
+		"notFound": "Assignment not found"
 	},
 	"assignments": {
 		"noAssignments": "कोई असाइनमेंट उपलब्ध नहीं हैं",
@@ -522,7 +525,8 @@
 	"collaborators": "सहयोगी",
 	"common": {
 		"errorLoading": "असाइनमेंट लोड करने में त्रुटि",
-		"loading": "लोड हो रहा है..."
+		"loading": "लोड हो रहा है...",
+		"saving": "Saving..."
 	},
 	"create": {
 		"create": "नया वर्ग बनाएँ",

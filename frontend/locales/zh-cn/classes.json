@@ -136,7 +136,10 @@
 		"unpublished": "未发表",
 		"unsavedChanges": "未保存的更改！",
 		"view": "",
-		"visibleForStudents": "学生可以看到作业"
+		"visibleForStudents": "学生可以看到作业",
+		"linkCopy": "Link a copy",
+		"makeCopyAndEdit": "Make a copy and edit",
+		"notFound": "Assignment not found"
 	},
 	"assignments": {
 		"noAssignments": "暂无任务分配",
@@ -522,7 +525,8 @@
 	"collaborators": "合作者",
 	"common": {
 		"errorLoading": "加载分配时出错",
-		"loading": "加载中..."
+		"loading": "加载中...",
+		"saving": "Saving..."
 	},
 	"create": {
 		"create": "创建新类",

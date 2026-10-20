@@ -242,6 +242,16 @@ async function copyProposalBoard(
     )}`,
   };
 
+  // Independent copies (class-template copy, or a generic teacher copy with
+  // no classIdUsed) get their own template-scope Milestone rows + forms and
+  // no clonedFrom link: clonedFrom is what applyTemplateBoardChanges
+  // propagates along, and a teacher's board must not receive (or relay to its
+  // students) edits made to the admin/platform board it was copied from.
+  // Student/working boards (classIdUsed without classIdTemplate) keep
+  // clonedFrom so they follow their class template, and keep sharing the
+  // source template's milestone ids (resolved via clonedFrom).
+  const isIndependentCopy = !!classIdTemplate || !classIdUsed;
+
   // create a new board
   const board = await context.db.ProposalBoard.createOne(
     {
@@ -277,13 +287,14 @@ async function copyProposalBoard(
             }
           : null,
         isMain: shouldBeMain,
-        clonedFrom: id
-          ? {
-              connect: {
-                id: id,
-              },
-            }
-          : null,
+        clonedFrom:
+          id && !isIndependentCopy
+            ? {
+                connect: {
+                  id: id,
+                },
+              }
+            : null,
         study: study
           ? {
               connect: {
@@ -331,11 +342,6 @@ async function copyProposalBoard(
     await syncClassTemplateBoards(context.sudo(), classIdTemplate);
   }
 
-  // Independent copies (class-template copy, or a generic teacher copy with
-  // no classIdUsed) get their own template-scope Milestone rows + forms.
-  // Student/working boards (classIdUsed without classIdTemplate) keep sharing
-  // the source template's milestone ids and resolve via clonedFrom.
-  const isIndependentCopy = !!classIdTemplate || !classIdUsed;
   const milestoneIdMap = isIndependentCopy
     ? await cloneTemplateMilestonesOntoBoard(
         context,

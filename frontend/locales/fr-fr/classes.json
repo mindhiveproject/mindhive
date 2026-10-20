@@ -136,7 +136,10 @@
 		"unpublished": "Inédit",
 		"unsavedChanges": "Changements non sauvegardés !",
 		"view": "",
-		"visibleForStudents": "Le devoir est visible pour les étudiants"
+		"visibleForStudents": "Le devoir est visible pour les étudiants",
+		"linkCopy": "Link a copy",
+		"makeCopyAndEdit": "Make a copy and edit",
+		"notFound": "Assignment not found"
 	},
 	"assignments": {
 		"noAssignments": "Aucune mission disponible",
@@ -522,7 +525,8 @@
 	"collaborators": "Collaborateur(s)",
 	"common": {
 		"errorLoading": "Erreur lors du chargement de l'affectation",
-		"loading": "Chargement..."
+		"loading": "Chargement...",
+		"saving": "Saving..."
 	},
 	"create": {
 		"create": "Créer une nouvelle classe",
