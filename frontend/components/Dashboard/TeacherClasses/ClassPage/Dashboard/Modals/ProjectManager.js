@@ -12,8 +12,9 @@ import Input from "../../../../../DesignSystem/Input";
 import DropdownSelect from "../../../../../DesignSystem/DropdownSelect";
 import { OpenInNewIcon, TrashIcon } from "../../../../../DesignSystem/Icons";
 import DashboardAssetIcon from "../DashboardAssetIcon";
+import { classDashboardRefetchQueries } from "../useClassDashboardData";
 
-import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
+import { CLASS_ROSTER_QUERY } from "../../../../../Queries/Classes";
 import { CLASS_PROJECTS_QUERY } from "../../../../../Queries/Proposal";
 import { DEFAULT_PROJECT_BOARDS } from "../../../../../Queries/Proposal";
 import { ASSIGN_STUDENT_TO_PROJECT } from "../../../../../Mutations/Classes";
@@ -68,7 +69,7 @@ export default function ProjectManager(props) {
     .map((project) => ({ value: project.id, label: project.title }));
 
   // Class roster, used to add other students as collaborators on a project
-  const { data: rosterData } = useQuery(GET_STUDENTS_DASHBOARD_DATA, {
+  const { data: rosterData } = useQuery(CLASS_ROSTER_QUERY, {
     variables: { classId: props?.classId },
     skip: !props?.classId,
   });
@@ -80,10 +81,7 @@ export default function ProjectManager(props) {
 
   const [assignStudent] = useMutation(ASSIGN_STUDENT_TO_PROJECT, {
     refetchQueries: [
-      {
-        query: GET_STUDENTS_DASHBOARD_DATA,
-        variables: { classId: props?.classId },
-      },
+      ...classDashboardRefetchQueries(props?.classId),
       { query: CLASS_PROJECTS_QUERY, variables: { classId: props?.classId } },
     ],
   });
@@ -92,65 +90,13 @@ export default function ProjectManager(props) {
     variables: {},
     refetchQueries: [
       { query: CLASS_PROJECTS_QUERY, variables: { classId: props?.classId } },
-      {
-        query: GET_STUDENTS_DASHBOARD_DATA,
-        variables: { classId: props?.classId },
-      },
+      ...classDashboardRefetchQueries(props?.classId),
     ],
   });
 
   const [updateProject, { loading: updateLoading, error: updateError }] =
     useMutation(UPDATE_PROJECT_BOARD, {
-      update(cache, { data: { updateProposalBoard } }) {
-        // Only update cache if classId is valid
-        if (!props?.classId) return;
-
-        try {
-          // Read the current cache for GET_STUDENTS_DASHBOARD_DATA
-          const cacheData = cache.readQuery({
-            query: GET_STUDENTS_DASHBOARD_DATA,
-            variables: { classId: props?.classId },
-          });
-
-          // Skip if cache data is not available
-          if (!cacheData || !cacheData.profiles) return;
-
-          const { profiles } = cacheData;
-
-          // Update the cache with the new isMain value
-          const updatedProfiles = profiles.map((profile) => {
-            if (profile.id === props?.data?.id) {
-              return {
-                ...profile,
-                collaboratorInProposal: profile.collaboratorInProposal.map(
-                  (proj) =>
-                    proj.id === updateProposalBoard.id
-                      ? { ...proj, isMain: updateProposalBoard.isMain }
-                      : proj
-                ),
-              };
-            }
-            return profile;
-          });
-
-          // Write the updated data back to the cache
-          cache.writeQuery({
-            query: GET_STUDENTS_DASHBOARD_DATA,
-            variables: { classId: props?.classId },
-            data: { profiles: updatedProfiles },
-          });
-        } catch (err) {
-          console.warn("Cache update skipped due to missing data:", err);
-        }
-      },
-      refetchQueries: props?.classId
-        ? [
-            {
-              query: GET_STUDENTS_DASHBOARD_DATA,
-              variables: { classId: props?.classId },
-            },
-          ]
-        : [],
+      refetchQueries: classDashboardRefetchQueries(props?.classId),
     });
 
   // The modal works from a snapshot of the row, so mirror each change locally

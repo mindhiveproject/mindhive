@@ -3,7 +3,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
-import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import { buildDualWriteUpdate } from "../../../../../../lib/milestoneStatus";
 import Button from "../../../../../DesignSystem/Button";
@@ -11,6 +10,7 @@ import Chip from "../../../../../DesignSystem/Chip";
 import MessageCard from "../../../../../DesignSystem/MessageCard";
 import Modal from "../../../../../DesignSystem/Modal";
 import DashboardAssetIcon from "../DashboardAssetIcon";
+import { classDashboardRefetchQueries } from "../useClassDashboardData";
 import {
   STATUS_ICON_SRC,
   canReopenMilestone,
@@ -44,7 +44,7 @@ export const SelectedStudentsModal = ({
   );
 
   const [updateProject, { loading }] = useMutation(UPDATE_PROJECT_BOARD, {
-    refetchQueries: [{ query: GET_STUDENTS_DASHBOARD_DATA, variables: { classId } }],
+    refetchQueries: classDashboardRefetchQueries(classId),
   });
 
   const close = () => {

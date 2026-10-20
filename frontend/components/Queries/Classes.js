@@ -223,83 +223,136 @@ export const GET_STUDENTS_DATA = gql`
   }
 `;
 
-// get student data of a particular class
-export const GET_STUDENTS_DASHBOARD_DATA = gql`
-  query GET_STUDENTS_DASHBOARD_DATA($classId: ID!) {
+// The teacher's class dashboard loads its students, the class's project boards
+// and the class's studies as three flat lists, and useClassDashboardData groups
+// them per student. Nesting boards and studies under each student resolved a
+// shared board once per collaborator, and every board and study from the
+// students' other classes too: up to ~1,900 database queries per view.
+export const CLASS_ROSTER_QUERY = gql`
+  query CLASS_ROSTER_QUERY($classId: ID!) {
     profiles(where: { studentIn: { some: { id: { equals: $classId } } } }) {
       id
       username
       publicId
-      collaboratorInStudy {
+    }
+  }
+`;
+
+export const CLASS_DASHBOARD_PROJECTS_QUERY = gql`
+  query CLASS_DASHBOARD_PROJECTS_QUERY($classId: ID!) {
+    proposalBoards(where: { usedInClass: { id: { equals: $classId } } }) {
+      id
+      title
+      isMain
+      sections {
         id
-        title
-        classes {
+        cards {
           id
-          title
-        }
-        collaborators {
-          id
-          username
-          permissions {
-            name
-          }
+          type
+          settings
         }
       }
-      collaboratorInProposal {
+      milestoneStatus
+      submitProposalStatus
+      submitProposalOpenForComments
+      peerFeedbackStatus
+      peerFeedbackOpenForComments
+      projectReportStatus
+      projectReportOpenForComments
+      usedInClass {
+        id
+      }
+      clonedFrom {
+        id
+      }
+      collaborators {
+        id
+        username
+      }
+      study {
         id
         title
-        isMain
-        sections {
-          cards {
-            id
-            type
-            settings
-            milestone {
-              id
-              key
-              actionCardType
-            }
-          }
-        }
-        milestoneStatus
-        submitProposalStatus
-        submitProposalOpenForComments
-        peerFeedbackStatus
-        peerFeedbackOpenForComments
-        projectReportStatus
-        projectReportOpenForComments
-        usedInClass {
-          id
-        }
-        clonedFrom {
-          id
-        }
+        status
         collaborators {
           id
           username
-          permissions {
-            name
-          }
         }
-        study {
+        dataCollectionStatus
+        dataCollectionOpenForParticipation
+      }
+      reviews {
+        stage
+        milestone {
+          key
+        }
+      }
+    }
+  }
+`;
+
+// Collaborators on this class's projects and studies who are mentors; the
+// dashboard's modals list them apart. One query instead of every collaborator's
+// permissions.
+export const CLASS_DASHBOARD_MENTORS_QUERY = gql`
+  query CLASS_DASHBOARD_MENTORS_QUERY($classId: ID!) {
+    profiles(
+      where: {
+        AND: [
+          { permissions: { some: { name: { equals: "MENTOR" } } } }
+          {
+            OR: [
+              {
+                collaboratorInProposal: {
+                  some: { usedInClass: { id: { equals: $classId } } }
+                }
+              }
+              {
+                collaboratorInStudy: {
+                  some: { classes: { some: { id: { equals: $classId } } } }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ) {
+      id
+    }
+  }
+`;
+
+export const CLASS_DASHBOARD_STUDIES_QUERY = gql`
+  query CLASS_DASHBOARD_STUDIES_QUERY($classId: ID!) {
+    studies(where: { classes: { some: { id: { equals: $classId } } } }) {
+      id
+      title
+      classes {
+        id
+        title
+      }
+      collaborators {
+        id
+        username
+      }
+    }
+  }
+`;
+
+// A project's cards with their milestones, for the dashboard's milestone status
+// modal to link to the student's action card. Loaded only when it opens.
+export const DASHBOARD_PROJECT_CARDS_QUERY = gql`
+  query DASHBOARD_PROJECT_CARDS_QUERY($id: ID!) {
+    proposalBoard(where: { id: $id }) {
+      id
+      sections {
+        id
+        cards {
           id
-          title
-          status
-          collaborators {
-            id
-            username
-            permissions {
-              name
-            }
-          }
-          dataCollectionStatus
-          dataCollectionOpenForParticipation
-        }
-        reviews {
-          stage
-          content
+          type
           milestone {
+            id
             key
+            actionCardType
           }
         }
       }

@@ -11,9 +11,10 @@ import Input from "../../../../../DesignSystem/Input";
 import DropdownSelect from "../../../../../DesignSystem/DropdownSelect";
 import { OpenInNewIcon, TrashIcon } from "../../../../../DesignSystem/Icons";
 import DashboardAssetIcon from "../DashboardAssetIcon";
+import { classDashboardRefetchQueries } from "../useClassDashboardData";
 
 import {
-  GET_STUDENTS_DASHBOARD_DATA,
+  CLASS_ROSTER_QUERY,
   GET_CLASS,
 } from "../../../../../Queries/Classes";
 import { UPDATE_STUDY, CREATE_STUDY } from "../../../../../Mutations/Study";
@@ -89,18 +90,13 @@ export default function StudyManager(props) {
     .map((study) => ({ value: study.id, label: study.title }));
 
   // Class roster, used to add other students as collaborators on a study
-  const { data: rosterData } = useQuery(GET_STUDENTS_DASHBOARD_DATA, {
+  const { data: rosterData } = useQuery(CLASS_ROSTER_QUERY, {
     variables: { classId: props?.classId },
     skip: !props?.classId,
   });
   const roster = rosterData?.profiles || [];
 
-  const refetchQueries = [
-    {
-      query: GET_STUDENTS_DASHBOARD_DATA,
-      variables: { classId: props?.classId },
-    },
-  ];
+  const refetchQueries = classDashboardRefetchQueries(props?.classId);
 
   const [updateStudy, { loading: updateLoading }] = useMutation(UPDATE_STUDY, {
     refetchQueries,

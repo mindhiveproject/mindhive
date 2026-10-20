@@ -1,9 +1,9 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
-import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
+import { DASHBOARD_PROJECT_CARDS_QUERY } from "../../../../../Queries/Classes";
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import { UPDATE_STUDY } from "../../../../../Mutations/Study";
 import {
@@ -21,6 +21,7 @@ import MessageCard from "../../../../../DesignSystem/MessageCard";
 import Modal from "../../../../../DesignSystem/Modal";
 import ToggleSwitch from "../../../../../DesignSystem/ToggleSwitch";
 import DashboardAssetIcon from "../DashboardAssetIcon";
+import { classDashboardRefetchQueries } from "../useClassDashboardData";
 import {
   STATUS_ICON_SRC,
   canReopenMilestone,
@@ -54,9 +55,7 @@ export default function MilestoneStatusModal({
       ?.status || "NOT_STARTED";
   const canReopen = canReopenMilestone(displayStatus, isStudy);
 
-  const refetchQueries = [
-    { query: GET_STUDENTS_DASHBOARD_DATA, variables: { classId } },
-  ];
+  const refetchQueries = classDashboardRefetchQueries(classId);
   const [updateBoard] = useMutation(UPDATE_PROJECT_BOARD, { refetchQueries });
   const [updateStudy] = useMutation(UPDATE_STUDY, { refetchQueries });
 
@@ -117,7 +116,12 @@ export default function MilestoneStatusModal({
 
   // The student's own action card for this milestone, opened in a new tab so
   // the teacher can submit it from there; falls back to the board itself.
-  const milestoneCardId = (project?.sections || [])
+  // The dashboard loads cards without their milestones, so fetch them here.
+  const { data: cardsData } = useQuery(DASHBOARD_PROJECT_CARDS_QUERY, {
+    variables: { id: data?.projectId },
+    skip: !open || !data?.projectId,
+  });
+  const milestoneCardId = (cardsData?.proposalBoard?.sections || [])
     .flatMap((section) => section?.cards || [])
     .find(
       (card) =>

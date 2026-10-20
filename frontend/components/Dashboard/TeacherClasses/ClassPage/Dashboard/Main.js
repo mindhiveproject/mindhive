@@ -13,7 +13,6 @@ import { ManageStudyCell } from "./Renderers/ManageStudyCell";
 import { MainProjectCell } from "./Renderers/MainProjectCell";
 import { MilestoneStatusCell } from "./Renderers/MilestoneStatusCell";
 import { MilestoneColumnHeader } from "./Renderers/MilestoneColumnHeader";
-import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../Queries/Classes";
 import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../../Queries/Proposal";
 import {
   getClassTemplateBoards,
@@ -42,6 +41,7 @@ import ProjectManager from "./Modals/ProjectManager";
 import StudyManager from "./Modals/StudyManager";
 import SubmissionStatusManager from "./Modals/SubmissionStatusManager";
 import StudySubmissionStatusManager from "./Modals/StudySubmissionStatusManager";
+import useClassDashboardData from "./useClassDashboardData";
 import {
   readClassPrefs,
   writeClassDashboardPrefs,
@@ -82,13 +82,7 @@ export default function Dashboard({ myclass }) {
   );
   const templateFromQuery = firstQueryValue(router.query?.template);
 
-  const { data, loading: studentsLoading } = useQuery(
-    GET_STUDENTS_DASHBOARD_DATA,
-    {
-      variables: { classId: myclass?.id },
-      skip: !myclass?.id,
-    }
-  );
+  const { data, loading: studentsLoading } = useClassDashboardData(myclass?.id);
 
   const {
     data: templateProjectsData,
