@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 
-import ReactHtmlParser from "react-html-parser";
+import parseSafeHtml from "../../../../../../lib/safeHtml";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
@@ -986,7 +986,7 @@ export default function ProposalCard({
             <div className="MH-Type-Title-Large" style={h1}>{title}</div>
             <ReadOnlyTipTap>
               <div className="ProseMirror">
-                {ReactHtmlParser(content || "")}
+                {parseSafeHtml(content || "")}
               </div>
             </ReadOnlyTipTap>
             {/* Homework Section */}
@@ -1420,7 +1420,7 @@ export default function ProposalCard({
               <div className="cardHeader">{inputs?.title}</div>
               <ReadOnlyTipTap>
                 <div className="ProseMirror">
-                  {ReactHtmlParser(inputs?.description)}
+                  {parseSafeHtml(inputs?.description)}
                 </div>
               </ReadOnlyTipTap>
               {!isPreview &&
@@ -1493,7 +1493,7 @@ export default function ProposalCard({
                           <div className="originalEntryBlockContent">
                             <ReadOnlyTipTap>
                               <div className="ProseMirror">
-                                {ReactHtmlParser(entry.content || "")}
+                                {parseSafeHtml(entry.content || "")}
                               </div>
                             </ReadOnlyTipTap>
                           </div>
@@ -1754,7 +1754,7 @@ export default function ProposalCard({
                   ) : activeResource ? (
                     <ReadOnlyTipTap>
                       <div className="ProseMirror">
-                        {ReactHtmlParser(activeResource?.content?.main || "")}
+                        {parseSafeHtml(activeResource?.content?.main || "")}
                       </div>
                     </ReadOnlyTipTap>
                   ) : (

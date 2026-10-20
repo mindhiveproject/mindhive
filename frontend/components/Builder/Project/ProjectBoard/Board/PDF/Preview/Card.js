@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useMutation } from "@apollo/client";
 import { Icon, Accordion } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
-import ReactHtmlParser from "react-html-parser";
+import parseSafeHtml from "../../../../../../../lib/safeHtml";
 import TipTapEditor from "../../../../../../TipTap/Main";
 
 import { UPDATE_CARD_CONTENT } from "../../../../../../Mutations/Proposal";
@@ -465,7 +465,7 @@ export default function Card({
                   {t("mainCard.seeOriginalSubmission", "Click to see your original submission")}
                 </Accordion.Title>
                 <Accordion.Content active={originalActive}>
-                  <div>{ReactHtmlParser(card?.content || "")}</div>
+                  <div>{parseSafeHtml(card?.content || "")}</div>
                 </Accordion.Content>
               </Accordion>
               {card.settings?.includeInReport && (
@@ -480,7 +480,7 @@ export default function Card({
                       />
                     </div>
                   ) : (
-                    <div>{ReactHtmlParser(getCardContent())}</div>
+                    <div>{parseSafeHtml(getCardContent())}</div>
                   )}
                 </div>
               )}
@@ -495,7 +495,7 @@ export default function Card({
                   />
                 </div>
               ) : (
-                <div>{ReactHtmlParser(getCardContent())}</div>
+                <div>{parseSafeHtml(getCardContent())}</div>
               )}
             </>
           )}
@@ -537,7 +537,7 @@ export default function Card({
                     }}
                   >
                     {values.comment
-                      ? ReactHtmlParser(values.comment)
+                      ? parseSafeHtml(values.comment)
                       : t("mainCard.noComments", "No comments available.")}
                   </div>
                 )}

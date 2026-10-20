@@ -16,3 +16,4 @@ pydantic/.env
 docs/*-plan.md
 
 frontend/public/four in a row original codebase/*
+scripts/debug/inspectBoardMilestones.js

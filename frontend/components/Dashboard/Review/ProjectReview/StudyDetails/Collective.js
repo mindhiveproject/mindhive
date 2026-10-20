@@ -7,21 +7,27 @@ import {
   getStudentPickedTasks,
 } from "../../../../../lib/studentTaskSelection";
 import StudentTaskChips from "../../StudentTaskChips";
+import { cardIncludedInReviewStep } from "../../../../../lib/milestones";
 
-export default function CollectivePresentation({ project, actionCardType }) {
+export default function CollectivePresentation({
+  project,
+  actionCardType,
+  milestone,
+}) {
   const { t } = useTranslation("builder");
   const proposal = project || { sections: [] };
 
-  // Filter cards to show only those that are included in this specific review step
-  // Cards must have this action card type in their includeInReviewSteps array
+  // Show the cards included in this review step. includeInReviewSteps mixes
+  // legacy ACTION_* values and milestone keys, so match on the milestone's
+  // aliases like the student's submit page does (Card/Actions/Proposal.js).
   // The includeInReport flag is for the final project report, not for intermediate review steps
+  const stepKey = milestone?.key || actionCardType;
+  const stepMilestones = milestone ? [milestone] : [];
   const cards = [...proposal?.sections]
     ?.sort((a, b) => a?.position - b?.position)
     .map((section) =>
-      section?.cards.filter(
-        (card) =>
-          // Only show cards that explicitly include this action card type in their review steps
-          card?.settings?.includeInReviewSteps?.includes(actionCardType)
+      section?.cards.filter((card) =>
+        cardIncludedInReviewStep(card, stepKey, stepMilestones)
       )
     )
     .flat();

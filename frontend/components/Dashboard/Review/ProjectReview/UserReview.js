@@ -278,6 +278,7 @@ export default function UserReview({
             project={project}
             status={status}
             actionCardType={actionCardType}
+            milestone={milestone}
           />
         ) : null}
         {tab === "reviews" ? (
