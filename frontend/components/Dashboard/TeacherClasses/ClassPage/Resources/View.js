@@ -24,6 +24,8 @@ export default function ViewResource({ resourceId, myclass, user, query }) {
   const { data, loading, error } = useQuery(GET_RESOURCE, {
     variables: { id: resourceId },
     skip: !resourceId,
+    // Other screens save resources without refreshing the cached content.
+    fetchPolicy: "cache-and-network",
   });
   const resource = data?.resource || {};
 
@@ -35,7 +37,7 @@ export default function ViewResource({ resourceId, myclass, user, query }) {
   };
 
   if (!resourceId) return <p>{t("resource.notFound", "Resource not found.")}</p>;
-  if (loading) return <p>{t("common.loading", "Loading…")}</p>;
+  if (loading && !data) return <p>{t("common.loading", "Loading…")}</p>;
   if (error) return <p>{t("resource.errorLoading", "Error loading resource.")}</p>;
 
   return (
