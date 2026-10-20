@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import styled from "styled-components";
 import TipTapEditor from "../../../../TipTap/Main";
+import { assignmentMediaLibraryProps } from "../../../../Mutations/MediaAsset";
 
 import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../../../lib/useForm";
@@ -55,6 +56,10 @@ const ButtonContainer = styled.div`
 `;
 
 export default function CopyAssignment({ code, myclass, user }) {
+  const mediaLibraryProps = assignmentMediaLibraryProps({
+    userId: user?.id,
+    assignmentId: null,
+  });
   const { t } = useTranslation("classes");
   const router = useRouter();
 
@@ -157,6 +162,7 @@ export default function CopyAssignment({ code, myclass, user }) {
             onUpdate={handleContentChange}
             isEditable={true}
             toolbarVisible={true}
+            {...mediaLibraryProps}
           />
         </FormSection>
 
@@ -169,6 +175,7 @@ export default function CopyAssignment({ code, myclass, user }) {
             onUpdate={handlePlaceholderChange}
             isEditable={true}
             toolbarVisible={true}
+            {...mediaLibraryProps}
           />
         </FormSection>
 

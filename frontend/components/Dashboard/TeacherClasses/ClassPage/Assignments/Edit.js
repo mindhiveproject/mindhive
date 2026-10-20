@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import styled from "styled-components";
 import TipTapEditor from "../../../../TipTap/Main";
+import { assignmentMediaLibraryProps } from "../../../../Mutations/MediaAsset";
 
 import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../../../lib/useForm";
@@ -63,6 +64,10 @@ export default function EditAssignment({ code, myclass, user }) {
     skip: !code,
   });
   const assignment = data?.assignment;
+  const mediaLibraryProps = assignmentMediaLibraryProps({
+    userId: user?.id,
+    assignmentId: assignment?.id,
+  });
 
   // Ensure classes is always an array and includes the current class
   const getInitialClasses = () => {
@@ -181,6 +186,7 @@ export default function EditAssignment({ code, myclass, user }) {
             onUpdate={handleContentChange}
             isEditable={true}
             toolbarVisible={true}
+            {...mediaLibraryProps}
           />
         </FormSection>
 
@@ -193,6 +199,7 @@ export default function EditAssignment({ code, myclass, user }) {
             onUpdate={handlePlaceholderChange}
             isEditable={true}
             toolbarVisible={true}
+            {...mediaLibraryProps}
           />
         </FormSection>
 
