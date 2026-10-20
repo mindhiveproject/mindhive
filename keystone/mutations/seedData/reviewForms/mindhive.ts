@@ -32,7 +32,7 @@ const PROPOSAL_READY_OPTIONS: SelectOneIconOption[] = [
     label: "Needs Minor Adjustments",
     icon: "inProgress",
     subtitle:
-      "The proposal is mostly complete but could benefit from small improvements or refinements, such as clarifying the investigation question or addressing minor gaps.",
+      "The proposal is mostly complete but could benefit from small improvements or refinements, such as clarifying the research question or addressing minor gaps.",
   },
   {
     value: "needsSignificantWork",
@@ -72,7 +72,7 @@ const SUBMITTED_AS_PROPOSAL: FormSeed = buildReviewFormSeed({
       ),
       fieldTextarea(
         "3",
-        "Is the investigation question answerable using MindHive tools? Do the proposed tasks and surveys align with the investigation question? Do you have any suggestions for additional or alternative tasks and surveys that might be suitable for this investigation question?",
+        "Is the research question answerable using MindHive tools? Do the proposed tasks and surveys align with the research question? Do you have any suggestions for additional or alternative tasks and surveys that might be suitable for this research question?",
         reviewI18nKey(PREFIX, "isQuestionAnswerable")
       ),
       fieldTaskSelector("4"),
@@ -80,7 +80,7 @@ const SUBMITTED_AS_PROPOSAL: FormSeed = buildReviewFormSeed({
         "5",
         "Use the space below for any additional comments or suggestions.",
         reviewI18nKey(PREFIX, "additionalComments"),
-        "You can mention anything here, but you might consider: clarity and/or relevance of the investigation question, feasibility within the scope of MindHive, ethical obstacles, study motivation/background research, alignment of participant population with the investigation question.",
+        "You can mention anything here, but you might consider: clarity and/or relevance of the research question, feasibility within the scope of MindHive, ethical obstacles, study motivation/background research, alignment of participant population with the research question.",
         reviewI18nKey(PREFIX, "additionalCommentsSubtitle")
       ),
     ]),
@@ -96,27 +96,27 @@ const PEER_REVIEW: FormSeed = buildReviewFormSeed({
     reviewQuestionsCard("Peer review", [
       fieldDualTextarea(
         "1",
-        "How important is the investigation question?",
+        "How important is the research question?",
         reviewI18nKey(PREFIX, "importanceQuestion"),
         "Consider whether it addresses a problem that is relevant to society or fills a knowledge gap in a particular field.",
         reviewI18nKey(PREFIX, "importanceSubA"),
-        "How would you revise the investigation question to clarify its importance? Explain your answer.",
+        "How would you revise the research question to clarify its importance? Explain your answer.",
         reviewI18nKey(PREFIX, "importanceSubB")
       ),
       fieldDualTextarea(
         "2",
         "How well-defined is the hypothesis?",
         reviewI18nKey(PREFIX, "hypothesisQuestion"),
-        "Consider whether the independent and dependent variables are identified in the hypothesis and whether they are aligned with the investigation question.",
+        "Consider whether the independent and dependent variables are identified in the hypothesis and whether they are aligned with the research question.",
         reviewI18nKey(PREFIX, "hypothesisSubA"),
         "How would you improve the hypothesis? Explain your answer.",
         reviewI18nKey(PREFIX, "hypothesisSubB")
       ),
       fieldDualTextarea(
         "3",
-        "How well does the study design address the investigation question?",
+        "How well does the study design address the research question?",
         reviewI18nKey(PREFIX, "designQuestion"),
-        "Consider whether the study design (i.e. tasks and surveys used; study flow) would generate the data necessary to answer the investigation question.",
+        "Consider whether the study design (i.e. tasks and surveys used; study flow) would generate the data necessary to answer the research question.",
         reviewI18nKey(PREFIX, "designSubA"),
         "How might you improve on the study design? Explain your answer.",
         reviewI18nKey(PREFIX, "designSubB")
