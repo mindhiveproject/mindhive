@@ -136,7 +136,10 @@
 		"unpublished": "Niet gepubliceerd",
 		"unsavedChanges": "Niet-opgeslagen wijzigingen!",
 		"view": "",
-		"visibleForStudents": "De opdracht is zichtbaar voor studenten"
+		"visibleForStudents": "De opdracht is zichtbaar voor studenten",
+		"linkCopy": "Link a copy",
+		"makeCopyAndEdit": "Make a copy and edit",
+		"notFound": "Assignment not found"
 	},
 	"assignments": {
 		"noAssignments": "Geen opdrachten beschikbaar",
@@ -522,7 +525,8 @@
 	"collaborators": "Medewerker(s)",
 	"common": {
 		"errorLoading": "Fout bij het laden van de toewijzing",
-		"loading": "Bezig met laden..."
+		"loading": "Bezig met laden...",
+		"saving": "Saving..."
 	},
 	"create": {
 		"create": "Nieuwe klasse maken",

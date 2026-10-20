@@ -24,7 +24,7 @@ import { EDIT_ASSIGNMENT, DELETE_ASSIGNMENT } from "../../../../Mutations/Assign
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import ConnectAssignmentToCardModal from "./ConnectAssignmentToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
-import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import RowActionsMenu from "../RowActionsMenu";
 import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import { isClassTeacherOrMentor as classUserIsTeacherOrMentor } from "../../../../../lib/classTeacherUtils";
@@ -441,19 +441,6 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     const router = useRouter();
 
     const items = [
-      ...(canManageAssignment
-        ? [
-            {
-              key: "edit",
-              label: t("assignment.edit"),
-              onClick: () =>
-                router.push({
-                  pathname: `/dashboard/myclasses/${myclass?.code}`,
-                  query: { page: "assignments", action: "edit", assignment: assignment?.code },
-                }),
-            },
-          ]
-        : []),
       {
         key: "preview",
         label: t("assignment.preview"),
@@ -507,8 +494,25 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     ];
 
     return (
-      <DropdownMenu
-        triggerLabel={t("assignment.more", "More")}
+      <RowActionsMenu
+        ariaLabel={t("assignment.actions", {}, { default: "Actions" })}
+        editLabel={t("assignment.edit", {}, { default: "Edit" })}
+        onEdit={
+          canManageAssignment
+            ? () =>
+                router.push({
+                  pathname: `/dashboard/myclasses/${myclass?.code}`,
+                  query: { page: "assignments", action: "edit", assignment: assignment?.code },
+                })
+            : null
+        }
+        copyLabel={t("assignment.makeCopyAndEdit", {}, { default: "Make a copy and edit" })}
+        onCopy={() =>
+          router.push({
+            pathname: `/dashboard/myclasses/${myclass?.code}`,
+            query: { page: "assignments", action: "copy", assignment: assignment?.code },
+          })
+        }
         items={items}
       />
     );
@@ -631,7 +635,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       cellRenderer: ActionsRenderer,
       suppressFilter: true,
       sortable: false,
-      width: 150,
+      width: 120,
       pinned: "right",
       cellStyle: { 
         whiteSpace: 'nowrap',
@@ -664,14 +668,13 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           marginBottom: "16px",
         }}
       >
-        {/* <p style={{ margin: 0 }}>{t("assignment.filter")}</p> */}
         <LinkedCardsToggleButton
           type="button"
           $active={showLinkedToCardColumn}
           onClick={() => setShowLinkedToCardColumn((prev) => !prev)}
           style={{ gap: 12, marginRight: 0, paddingRight: 12 }}
         >
-          <span>{t("assignment.projectCard", "Project card")}</span>
+          <span>{t("assignment.projectCard", "Link project card")}</span>
           <ProjectCardIcon
             width={24}
             height={24}
@@ -690,6 +693,9 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           </Button>
         </BulkActionsButtonWrapper>
         <span style={{ flexShrink: 0 }} aria-hidden>|</span>
+        <span className="MH-Type-Label-Base" style={{ flexShrink: 0, color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}>
+          {t("assignment.filter", "Filter:")}
+        </span>
         <Chip
           label={t("assignment.published") || "Published"}
           selected={selectedPublishedFilter === true}
