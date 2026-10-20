@@ -15,6 +15,7 @@ import Navigation from "../../../../Navigation/Main";
 import { StyledProposal } from "../../../../../../styles/StyledProposal";
 import Button from "../../../../../../DesignSystem/Button";
 import Status from "../../../../../../Dashboard/TeacherClasses/ClassPage/Assignments/Homework/Status";
+import CardColumns from "../../../../../../Proposal/Card/CardColumns";
 
 export default function IndividualCard({
   query,
@@ -138,7 +139,7 @@ export default function IndividualCard({
             </div>
           </div>
 
-          <div className="proposalCardBoard">
+          <CardColumns>
             <div className="textBoard">
               <div className="cardHeader">{proposalCard?.title}</div>
               <div className="cardDescription">
@@ -192,7 +193,7 @@ export default function IndividualCard({
                 </div>
               </div>
             )}
-          </div>
+          </CardColumns>
         </div>
       </StyledProposal>
     </>

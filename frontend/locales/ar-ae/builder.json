@@ -283,6 +283,7 @@
 				"create": "إنشاء مجموعة بيانات"
 			},
 			"dataSourceLabel": "مصدر البيانات",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "خطأ في إنشاء مجموعة البيانات:",
 			"errorLoadingStudy": "خطأ في تحميل الدراسة:",
 			"loadingDataSources": "جارٍ تحميل مصادر البيانات…",

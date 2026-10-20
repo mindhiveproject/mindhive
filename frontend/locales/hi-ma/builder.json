@@ -283,6 +283,7 @@
 				"create": ""
 			},
 			"dataSourceLabel": "",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "",
 			"errorLoadingStudy": "",
 			"loadingDataSources": "",

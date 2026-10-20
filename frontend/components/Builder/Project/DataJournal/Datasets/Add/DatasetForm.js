@@ -55,6 +55,7 @@ export default function DatasetForm({
   const { t } = useTranslation("builder");
   const [collaboratorsCanEdit, setCollaboratorsCanEdit] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
   const [simulationConfig, setSimulationConfig] = useState(() => ({
     participants: DEFAULT_SIMULATED_PARTICIPANTS,
     seed: createSimulationSeed(),
@@ -198,6 +199,7 @@ export default function DatasetForm({
     };
 
     setSubmitting(true);
+    setUploadError(null);
     try {
       let createResult = null;
 
@@ -248,14 +250,23 @@ export default function DatasetForm({
           day: parseInt(curDate.getDate()),
         };
 
-        await fetch(`/api/save?y=${date.year}&m=${date.month}&d=${date.day}`, {
-          method: "POST",
-          body: JSON.stringify(dataFile),
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
+        const saveRes = await fetch(
+          `/api/journal-data?y=${date.year}&m=${date.month}&d=${date.day}`,
+          {
+            method: "POST",
+            body: JSON.stringify(dataFile),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
           },
-        });
+        );
+        // Never create a datasource that points at a file that was not stored.
+        if (!saveRes.ok) {
+          const body = await saveRes.json().catch(() => ({}));
+          setUploadError(body?.error || saveRes.statusText);
+          return;
+        }
 
         const fileAddress = {
           ...date,
@@ -453,6 +464,20 @@ export default function DatasetForm({
             default: "Error creating dataset:",
           })}{" "}
           {error.message}
+        </p>
+      )}
+      {uploadError && (
+        <p
+          className="MH-Type-Body-Base"
+          style={{
+            color: "#c53030",
+            marginBottom: "10px",
+          }}
+        >
+          {t("dataJournal.datasetForm.errorUploadingFile", {}, {
+            default: "Error uploading file:",
+          })}{" "}
+          {uploadError}
         </p>
       )}
       {studyError && (

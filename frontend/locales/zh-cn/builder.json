@@ -283,6 +283,7 @@
 				"create": "创建数据集"
 			},
 			"dataSourceLabel": "数据源",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "创建数据集时出错：",
 			"errorLoadingStudy": "加载研究数据时出错：",
 			"loadingDataSources": "正在加载数据源…",

@@ -62,6 +62,7 @@ import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 import { mergeCardSettings } from "../../../../../Utils/mergeCardSettings";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
+import CardColumns from "../../../../../Proposal/Card/CardColumns";
 
 export default function ProposalCard({
   proposalCard,
@@ -1415,7 +1416,7 @@ export default function ProposalCard({
       )}
       <StyledProposal>
         <div className="post">
-          <div className="proposalCardBoard">
+          <CardColumns>
             <div className="textBoard">
               <div className="cardHeader">{inputs?.title}</div>
               <ReadOnlyTipTap>
@@ -1786,7 +1787,7 @@ export default function ProposalCard({
                 </Modal.Actions>
               </Modal>
             </div>
-          </div>
+          </CardColumns>
         </div>
       </StyledProposal>
 

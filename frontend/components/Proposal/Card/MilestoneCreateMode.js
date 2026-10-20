@@ -34,6 +34,7 @@ import StudentSubmitStudyPage from "../../Builder/Project/ProjectBoard/Board/Car
 import MessageCard from "../../DesignSystem/MessageCard";
 import Chip from "../../DesignSystem/Chip";
 import Tooltip from "../../DesignSystem/Tooltip";
+import CardColumns from "./CardColumns";
 
 const CAPABILITY_REVIEW = "review";
 const CAPABILITY_DATA_COLLECTION = "data_collection";
@@ -462,7 +463,7 @@ export default function MilestoneCreateMode({
 
   return (
     <div className="post milestoneCardEditorPost">
-      <div className="proposalCardBoard">
+      <CardColumns>
         <div className="textBoard">
           {forceCustomMilestone ? (
             <section style={sectionStyle}>
@@ -800,7 +801,7 @@ export default function MilestoneCreateMode({
             )}
           </p>
         </div>
-      </div>
+      </CardColumns>
     </div>
   );
 }

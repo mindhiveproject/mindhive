@@ -283,6 +283,7 @@
 				"create": "Créer un jeu de données"
 			},
 			"dataSourceLabel": "La source de données",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "Erreur lors de la création du jeu de données :",
 			"errorLoadingStudy": "Étude sur les erreurs de chargement :",
 			"loadingDataSources": "Chargement des sources de données…",

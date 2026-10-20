@@ -18,6 +18,7 @@ import Status from "./Forms/Status";
 import CardType from "./Forms/Type";
 import Resources from "./Forms/Resources";
 import { stripHtml } from "./Forms/utils";
+import CardColumns from "./CardColumns";
 
 function truncateHtml(html, wordLimit = 10) {
   const div = document.createElement("div");
@@ -294,7 +295,7 @@ export default function ProposalCard({
           )}
         </div>
       ) : (
-        <div className="proposalCardBoard">
+        <CardColumns>
           <div className="textBoard">
             {proposalBuildMode && (
               <label htmlFor="title">
@@ -628,7 +629,7 @@ export default function ProposalCard({
               </div>
             </div>
           )}
-        </div>
+        </CardColumns>
       )}
     </div>
   );
