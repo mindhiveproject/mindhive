@@ -11,6 +11,11 @@ function getTemplateBoardId(board: any): string | null {
   if (board.templateForClasses?.length || board.templatesForClass?.length) {
     return board.id;
   }
+  // Independent copies (copyProposalBoard) own their template milestones, so
+  // they resolve from themselves rather than from the board they came from.
+  if (board.templateMilestones?.length) {
+    return board.id;
+  }
   return board.clonedFrom?.id || null;
 }
 
@@ -49,7 +54,8 @@ async function resolveMilestonesForBoard(
   // would resolve milestones from clonedFrom instead of its own template.
   const board = await context.sudo().query.ProposalBoard.findOne({
     where: { id: boardId },
-    query: "id clonedFrom { id } templateForClasses { id } templatesForClass { id }",
+    query:
+      "id clonedFrom { id } templateForClasses { id } templatesForClass { id } templateMilestones(take: 1) { id }",
   });
   if (!board) return [];
 
