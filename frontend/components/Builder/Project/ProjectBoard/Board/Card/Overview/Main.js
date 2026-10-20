@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import ReactHtmlParser from "react-html-parser";
+import parseSafeHtml from "../../../../../../../lib/safeHtml";
 import { GET_ALL_HOMEWORK_FOR_PROPOSAL_CARD } from "../../../../../../Queries/Homework";
 import DropdownSelect from "../../../../../../DesignSystem/DropdownSelect";
 import { useState } from "react";
@@ -56,7 +56,7 @@ export default function OverviewOfIndividualCards({
             <div className="textBoard">
               <div className="cardHeader">{proposalCard?.title}</div>
               <div className="cardDescription">
-                {ReactHtmlParser(proposalCard?.description)}
+                {parseSafeHtml(proposalCard?.description)}
               </div>
 
               <DropdownSelect

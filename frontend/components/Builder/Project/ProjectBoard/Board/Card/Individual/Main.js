@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useRef } from "react";
-import ReactHtmlParser from "react-html-parser";
+import parseSafeHtml from "../../../../../../../lib/safeHtml";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_MY_HOMEWORK_FOR_PROPOSAL_CARD } from "../../../../../../Queries/Homework";
@@ -142,7 +142,7 @@ export default function IndividualCard({
             <div className="textBoard">
               <div className="cardHeader">{proposalCard?.title}</div>
               <div className="cardDescription">
-                {ReactHtmlParser(proposalCard?.description)}
+                {parseSafeHtml(proposalCard?.description)}
               </div>
 
               {!isPreview && (

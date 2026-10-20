@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import ReactHtmlParser from "react-html-parser";
+import parseSafeHtml from "../../../../../../../lib/safeHtml";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_PUBLIC_AND_PROJECT_RESOURCES } from "../../../../../../Queries/Resource";
@@ -60,7 +60,7 @@ export default function Resources({ proposal, selectedResources }) {
                   </div>
                 </div>
                 {/* <div>
-                  {ReactHtmlParser(truncateHtml(resource?.content?.main))}
+                  {parseSafeHtml(truncateHtml(resource?.content?.main))}
                 </div> */}
               </div>
             ))}

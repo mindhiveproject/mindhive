@@ -83,6 +83,7 @@ import backfillSupportTicketsToNotion from "./backfillSupportTicketsToNotion";
 import backfillProjectBoardFormScope from "./backfillProjectBoardFormScope";
 import backfillProposalBoardPublicIds from "./backfillProposalBoardPublicIds";
 import backfillDetachClassTemplateClones from "./backfillDetachClassTemplateClones";
+import backfillNormalizeReviewSteps from "./backfillNormalizeReviewSteps";
 import syncClassTemplateBoards from "./syncClassTemplateBoards";
 import {
   searchConnectUsers,
@@ -418,6 +419,11 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # admin template edits stop propagating onto teachers' boards. Dry-run
         # by default. Returns a list of change descriptions.
         backfillDetachClassTemplateClones(limit: Int, dryRun: Boolean): [String!]!
+        # One-shot: rewrite ProposalCard.settings.includeInReviewSteps to
+        # milestone keys (legacy ACTION_* values, ids, uppercase keys). Pages
+        # over boards (pass the returned nextSkip as skip); boardId targets one
+        # board. Dry-run by default. Returns a list of change descriptions.
+        backfillNormalizeReviewSteps(boardId: ID, limit: Int, skip: Int, dryRun: Boolean): [String!]!
         createTemplateMilestone(input: CreateTemplateMilestoneInput!): Milestone
         updateTemplateMilestone(input: UpdateTemplateMilestoneInput!): Milestone
         deleteTemplateMilestone(id: ID!): Milestone
@@ -677,6 +683,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillProposalBoardPublicIds,
         backfillClassNetworkPublicIds,
         backfillDetachClassTemplateClones,
+        backfillNormalizeReviewSteps,
         createTemplateMilestone,
         updateTemplateMilestone,
         deleteTemplateMilestone,
