@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 
 import { GET_REVIEW } from "../../../Queries/Review";
@@ -25,48 +25,10 @@ import {
 import { reviewStageMatches } from "../../../../lib/milestones";
 import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import SplitPane from "../../../DesignSystem/SplitPane";
+import useStoredSplitFraction from "../../../../lib/useStoredSplitFraction";
 
 const SPLIT_STORAGE_KEY = "mh.feedbackCenter.splitFraction";
 const DEFAULT_SPLIT_FRACTION = 0.64;
-
-// The reviewer's preferred column split, kept per browser. `null` until the
-// stored value has been read, so the split mounts once at the right width
-// instead of hydrating at the default and jumping.
-function useStoredSplitFraction() {
-  const [fraction, setFraction] = useState(null);
-  // Latest dragged value, so a split that remounts (after the card was
-  // stacked) comes back where the reviewer left it.
-  const latestRef = useRef(null);
-  const saveTimerRef = useRef();
-
-  useEffect(() => {
-    let stored = NaN;
-    try {
-      stored = parseFloat(window.localStorage.getItem(SPLIT_STORAGE_KEY));
-    } catch {
-      // storage blocked; fall back to the default
-    }
-    const initial = stored > 0 && stored < 1 ? stored : DEFAULT_SPLIT_FRACTION;
-    latestRef.current = initial;
-    setFraction(initial);
-    return () => clearTimeout(saveTimerRef.current);
-  }, []);
-
-  // The divider reports every pointer move; only the resting value matters.
-  const saveFraction = useCallback((next) => {
-    latestRef.current = next;
-    clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => {
-      try {
-        window.localStorage.setItem(SPLIT_STORAGE_KEY, String(next));
-      } catch {
-        // ignore storage errors
-      }
-    }, 200);
-  }, []);
-
-  return [fraction === null ? null : latestRef.current, saveFraction];
-}
 
 // Below this card width the two column minimums can't both fit, so the form
 // stacks under the content instead of sitting beside it.
@@ -98,7 +60,10 @@ export default function UserReview({
 }) {
   const { t } = useTranslation("builder");
   const router = useRouter();
-  const [splitFraction, saveSplitFraction] = useStoredSplitFraction();
+  const [splitFraction, saveSplitFraction] = useStoredSplitFraction(
+    SPLIT_STORAGE_KEY,
+    DEFAULT_SPLIT_FRACTION
+  );
   const reviewBodyRef = useRef(null);
   const stacked = useIsNarrow(reviewBodyRef, STACKED_BELOW);
   const locale = router.locale || "en-us";

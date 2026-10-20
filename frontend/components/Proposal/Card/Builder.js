@@ -29,6 +29,7 @@ import {
 } from "../../../lib/milestones";
 import useTranslation from "next-translate/useTranslation";
 import { PROPOSAL_CARD_TYPE } from "../Builder/cardTypeOptions";
+import CardColumns from "./CardColumns";
 
 const EMPTY_CARD = {
   title: "",
@@ -553,7 +554,7 @@ export default function BuilderProposalCard({
 
   return (
     <div className="post">
-      <div className="proposalCardBoard">
+      <CardColumns>
         <div className="textBoard">
           <label htmlFor="title">
             <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -908,7 +909,7 @@ export default function BuilderProposalCard({
             </div>
           )}
         </div>
-      </div>
+      </CardColumns>
     </div>
   );
 }
