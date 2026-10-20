@@ -283,6 +283,7 @@
 				"create": "Crear conjunto de datos"
 			},
 			"dataSourceLabel": "Fuente de datos",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "Error al crear el conjunto de datos:",
 			"errorLoadingStudy": "Estudio de carga de errores:",
 			"loadingDataSources": "Cargando fuentes de datos…",

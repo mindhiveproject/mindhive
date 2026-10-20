@@ -307,6 +307,7 @@
 				"variables": "Fix the settings of {{count}} variable(s) marked in red."
 			},
 			"dataSourceLabel": "Data source",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "Error creating dataset:",
 			"errorLoadingStudy": "Error loading study:",
 			"loadingDataSources": "Loading data sources…",

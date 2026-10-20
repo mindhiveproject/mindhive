@@ -283,6 +283,7 @@
 				"create": "डेटासेट बनाएं"
 			},
 			"dataSourceLabel": "डेटा स्रोत",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "डेटासेट बनाने में त्रुटि:",
 			"errorLoadingStudy": "अध्ययन लोड करने में त्रुटि:",
 			"loadingDataSources": "डेटा स्रोत लोड हो रहे हैं…",

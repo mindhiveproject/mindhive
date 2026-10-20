@@ -283,6 +283,7 @@
 				"create": "Gegevensset maken"
 			},
 			"dataSourceLabel": "Databron",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "Fout bij het maken van de dataset:",
 			"errorLoadingStudy": "Fout bij het laden van gegevens: onderzoek",
 			"loadingDataSources": "Gegevensbronnen laden…",

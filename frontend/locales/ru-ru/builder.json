@@ -283,6 +283,7 @@
 				"create": "Создать набор данных"
 			},
 			"dataSourceLabel": "Источник данных",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "Ошибка при создании набора данных:",
 			"errorLoadingStudy": "Исследование ошибок загрузки:",
 			"loadingDataSources": "Загрузка источников данных…",
