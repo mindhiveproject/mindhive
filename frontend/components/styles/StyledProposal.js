@@ -1657,15 +1657,19 @@ export const StyledProposal = styled.div`
       padding: 24px 24px 24px 24px;
       flex-direction: column;
       justify-content: flex-start;
-      align-items: flex-start;
+      align-items: center;
       gap: 10px;
       flex: 1 0 0;
       width: 100%;
       min-width: 0;
       overflow-y: visible;
 
-      & > div {
+      /* Every block shares the TipTap editor's width cap (.tiptapEditorHost)
+         and is centered in the column, in both edit and view mode. */
+      & > * {
         width: 100%;
+        max-width: 900px;
+        box-sizing: border-box;
       }
       & > label {
         width: 100%;

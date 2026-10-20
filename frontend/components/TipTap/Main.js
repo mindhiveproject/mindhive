@@ -210,6 +210,9 @@ function TipTapEditorInner({
   const { t } = useTranslation("builder");
   const apolloClient = useApolloClient();
   const [isFocused, setIsFocused] = useState(false);
+  // Opening a toolbar menu moves focus into it (blurring the editor); keep the
+  // toolbar shown meanwhile so the menu isn't hidden along with it.
+  const [toolbarMenuOpen, setToolbarMenuOpen] = useState(false);
   const [docEmpty, setDocEmpty] = useState(true);
   const [mediaLibraryModalOpen, setMediaLibraryModalOpen] = useState(false);
   const editorRef = useRef(null);
@@ -487,7 +490,7 @@ function TipTapEditorInner({
   const renderToolbar = () => {
     if (!editor || !toolbarVisible) return null;
 
-    const toolbarShown = isFocused && editor.isEditable;
+    const toolbarShown = (isFocused || toolbarMenuOpen) && editor.isEditable;
 
     const handleStyleClick = (command, e) => {
       e.preventDefault();
@@ -961,6 +964,7 @@ function TipTapEditorInner({
             <DropdownMenu
               ariaLabel={t("tiptap.toolbar.tableOptions", {}, { default: "Table options" })}
               items={tableMenuItems}
+              onOpenChange={setToolbarMenuOpen}
               renderTrigger={({ onClick, open, ariaLabel: triggerAriaLabel }) => (
                 <TipTapToolbarButton
                   icon={<TipTapToolbarIcon file="table" />}

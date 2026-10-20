@@ -10,8 +10,11 @@ export const StyledTipTap = styled.div`
     margin-top: 10px;
   }
 
+  /* Width cap lives here (not on .tiptapEditor) so the toolbar strip and the
+     text box share it. */
   .tiptapEditorHost {
     position: relative;
+    max-width: 900px;
   }
 
   /* Toolbar strip inside the top of the editor box. Its space is always
@@ -88,7 +91,6 @@ export const StyledTipTap = styled.div`
   .tiptapEditor {
     display: flex;
     width: 100%;
-    max-width: 900px;
     border-radius: 16px;
 
     .ProseMirror {
