@@ -204,7 +204,8 @@ function cloneCardTaskIds(
 }
 
 /**
- * Fetch the template board and all clone boards (boards that have clonedFrom = boardId).
+ * Fetch the template board and all clone boards (boards that have clonedFrom =
+ * boardId and are not themselves class templates).
  */
 export async function getTemplateAndClones(
   context: any,
@@ -232,7 +233,30 @@ export async function getTemplateAndClones(
     query: CLONE_BOARD_QUERY,
   });
 
-  const normalizedClones = (clones ?? []).map((c: any) => ({
+  // A board that is itself a class template is a teacher's own copy, not a
+  // student clone: it diverges on purpose and must not be overwritten (nor
+  // relay the change to its students). Excluded even if it still carries a
+  // legacy clonedFrom link (see backfillDetachClassTemplateClones). Read as
+  // sudo: as the caller, class links outside their classes would come back
+  // empty and the teacher's board would be treated as a student clone.
+  const classTemplateCloneIds = new Set(
+    (
+      await context.sudo().query.ProposalBoard.findMany({
+        where: {
+          clonedFrom: { id: { equals: templateBoardId } },
+          OR: [
+            { templatesForClass: { some: {} } },
+            { templateForClasses: { some: {} } },
+          ],
+        },
+        query: "id",
+      })
+    ).map((b: { id: string }) => b.id)
+  );
+
+  const normalizedClones = (clones ?? [])
+    .filter((c: any) => !classTemplateCloneIds.has(c.id))
+    .map((c: any) => ({
     ...c,
     sections: sortByPosition(
       (c.sections ?? []).map((s: any) => ({

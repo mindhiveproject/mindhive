@@ -1,23 +1,14 @@
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { useQuery, useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
-import styled from "styled-components";
 
 import { GET_RESOURCE, GET_CLASS_RESOURCES } from "../../../../Queries/Resource";
 import { UPDATE_RESOURCE, mergeResourceSettings } from "../../../../Mutations/Resource";
 import ResourceForm from "../../../Resources/ResourceForm";
-import StyledResource from "../../../../styles/StyledResource";
 import useForm from "../../../../../lib/useForm";
 import { stripHtml } from "../../../../Proposal/Card/Forms/utils";
 import Button from "../../../../DesignSystem/Button";
-
-const TopSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 32px;
-`;
+import { EditorPage, EditorHeader } from "../ContentEditorLayout";
 
 export default function EditResource({ resourceId, myclass, user }) {
   const { t } = useTranslation("classes");
@@ -99,22 +90,25 @@ function EditResourceForm({ resource, myclass, user }) {
   };
 
   return (
-    <StyledResource>
-      <TopSection>
-        <Button variant="outline" type="button" onClick={goBack}>
-          {t("resource.goBackToResources", {}, { default: "Back to class resources" })}
-        </Button>
-      </TopSection>
-      <h1>{t("resource.editResource", {}, { default: "Edit resource" })}</h1>
+    <EditorPage>
+      <EditorHeader
+        title={t("resource.editResource", {}, { default: "Edit resource" })}
+        onClose={goBack}
+        closeLabel={t("resource.goBackToResources", {}, { default: "Back to class resources" })}
+        actions={
+          <Button variant="filled" type="button" onClick={handleSave} disabled={saving}>
+            {saving
+              ? t("common.saving", {}, { default: "Saving..." })
+              : t("resource.saveChanges", {}, { default: "Save changes" })}
+          </Button>
+        }
+      />
       <ResourceForm
         user={user}
         inputs={inputs}
         handleChange={handleChange}
         isAdmin={user?.permissions?.map((p) => p.name).includes("ADMIN")}
       />
-      <Button variant="filled" onClick={handleSave} disabled={saving}>
-        {t("resource.saveChanges", {}, { default: "Save changes" })}
-      </Button>
-    </StyledResource>
+    </EditorPage>
   );
 }

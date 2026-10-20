@@ -1,6 +1,11 @@
 import TipTapEditor from "../../../TipTap/Main";
+import { assignmentMediaLibraryProps } from "../../../Mutations/MediaAsset";
 
-export default function AssignmentForm({ inputs, handleChange }) {
+export default function AssignmentForm({ inputs, handleChange, user, assignmentId }) {
+  const mediaLibraryProps = assignmentMediaLibraryProps({
+    userId: user?.id,
+    assignmentId,
+  });
   
   // update content in the local state
   const handleContentChange = (content) => {
@@ -39,6 +44,7 @@ export default function AssignmentForm({ inputs, handleChange }) {
         onUpdate={handleContentChange}
         isEditable={true}
         toolbarVisible={true}
+        {...mediaLibraryProps}
       />
 
       <p><br />Placeholder for your students:</p>
@@ -47,6 +53,7 @@ export default function AssignmentForm({ inputs, handleChange }) {
         onUpdate={handlePlaceholderChange}
         isEditable={true}
         toolbarVisible={true}
+        {...mediaLibraryProps}
       />
     </div>
   );

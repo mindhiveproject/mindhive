@@ -8,6 +8,7 @@ import ReactHtmlParser from "react-html-parser";
 
 import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 import TipTapEditor from "../../TipTap/Main";
+import { assignmentMediaLibraryProps } from "../../Mutations/MediaAsset";
 import Chip from "../../DesignSystem/Chip";
 
 import { EDIT_HOMEWORK } from "../../Mutations/Homework";
@@ -434,6 +435,10 @@ export default function HomeworkTab({ user, assignment, homework }) {
               onUpdate={(newContent) => {
                 setEditingContent(newContent);
               }}
+              {...assignmentMediaLibraryProps({
+                userId: user?.id,
+                assignmentId: assignment?.id,
+              })}
             />
           </EditorWrapper>
         ) : (

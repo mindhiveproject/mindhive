@@ -15,7 +15,7 @@ import { UPDATE_RESOURCE, DELETE_RESOURCE, CREATE_RESOURCE, SET_RESOURCE_TEMPLAT
 import { GET_CLASS_RESOURCES, GET_RESOURCE } from "../../../../Queries/Resource";
 import ConnectResourceToCardModal from "./ConnectResourceToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
-import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import RowActionsMenu from "../RowActionsMenu";
 import Button from "../../../../DesignSystem/Button";
 import { ProjectCardIcon } from "../../../../DesignSystem/Icons";
 import Chip from "../../../../DesignSystem/Chip";
@@ -589,26 +589,6 @@ export default function ResourceTab({ resources, myclass, user }) {
     const isCopying = params?.context?.copyingResourceId === resource?.id;
 
     const items = [
-      ...(canEditResource
-        ? [
-            {
-              key: "edit",
-              label: t("resource.edit", "Edit"),
-              onClick: () =>
-                router.push({
-                  pathname: `/dashboard/myclasses/${myclass?.code}`,
-                  query: { page: "resources", action: "edit", resource: resource?.id },
-                }),
-            },
-          ]
-        : [
-            {
-              key: "makeCopyAndEdit",
-              label: t("resource.makeCopyAndEdit", "Make a copy and edit"),
-              onClick: () => handleMakeCopyAndEdit(resource),
-              disabled: isCopying,
-            },
-          ]),
       {
         key: "preview",
         label: t("resource.preview", "Preview"),
@@ -717,8 +697,21 @@ export default function ResourceTab({ resources, myclass, user }) {
     ];
 
     return (
-      <DropdownMenu
-        triggerLabel={isCopying ? t("common.loading", "Loading…") : t("resource.more", "More")}
+      <RowActionsMenu
+        ariaLabel={isCopying ? t("common.loading", "Loading…") : t("resource.actions", "Actions")}
+        disabled={isCopying}
+        editLabel={t("resource.edit", "Edit")}
+        onEdit={
+          canEditResource
+            ? () =>
+                router.push({
+                  pathname: `/dashboard/myclasses/${myclass?.code}`,
+                  query: { page: "resources", action: "edit", resource: resource?.id },
+                })
+            : null
+        }
+        copyLabel={t("resource.makeCopyAndEdit", "Make a copy and edit")}
+        onCopy={() => handleMakeCopyAndEdit(resource)}
         items={items}
       />
     );
@@ -805,7 +798,7 @@ export default function ResourceTab({ resources, myclass, user }) {
       cellRenderer: ActionsRenderer,
       suppressFilter: true,
       sortable: false,
-      width: 150,
+      width: 120,
       pinned: "right",
       cellStyle: {
         whiteSpace: "nowrap",
@@ -841,7 +834,7 @@ export default function ResourceTab({ resources, myclass, user }) {
           onClick={() => setShowLinkedToCardColumn((prev) => !prev)}
           style={{ gap: 12, marginRight: 0, paddingRight: 12 }}
         >
-          <span>{t("resource.projectCard", "Project card")}</span>
+          <span>{t("resource.projectCard", "Link project card")}</span>
           <ProjectCardIcon
             width={24}
             height={24}
@@ -868,6 +861,9 @@ export default function ResourceTab({ resources, myclass, user }) {
           </Button>
         </BulkActionsButtonWrapper>
         <span style={{ flexShrink: 0 }} aria-hidden>|</span>
+        <span className="MH-Type-Label-Base" style={{ flexShrink: 0, color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}>
+          {t("assignment.filter", "Filter:")}
+        </span>
         <Chip
           label={t("resource.published", "Published")}
           selected={selectedPublishedFilter === true}

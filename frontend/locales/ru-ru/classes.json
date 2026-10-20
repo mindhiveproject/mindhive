@@ -136,7 +136,10 @@
 		"unpublished": "Неопубликовано",
 		"unsavedChanges": "Несохраненные изменения!",
 		"view": "",
-		"visibleForStudents": "Задание видно студентам"
+		"visibleForStudents": "Задание видно студентам",
+		"linkCopy": "Link a copy",
+		"makeCopyAndEdit": "Make a copy and edit",
+		"notFound": "Assignment not found"
 	},
 	"assignments": {
 		"noAssignments": "Заданий нет",
@@ -522,7 +525,8 @@
 	"collaborators": "Соавторы",
 	"common": {
 		"errorLoading": "Ошибка загрузки задания",
-		"loading": "Загрузка..."
+		"loading": "Загрузка...",
+		"saving": "Saving..."
 	},
 	"create": {
 		"create": "Создать новый класс",
