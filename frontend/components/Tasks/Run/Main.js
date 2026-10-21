@@ -40,19 +40,27 @@ export default function TaskRun({
   const resolved = useMemo(() => {
     if (!task) return null;
     try {
-      return resolveRuntimeConfiguration(task);
+      // A participant can't read a private visual, so a p5 task's visual
+      // may come back empty. startRun (or the preview token) checks it with
+      // full access instead, and the frame gets its code through the token.
+      return resolveRuntimeConfiguration(
+        task.runtimeType === 'P5' && !task.visual
+          ? { ...task, visual: { id: null } }
+          : task
+      );
     } catch (configurationError) {
       return { error: configurationError };
     }
   }, [task]);
-  // p5 study runs join in Phase 4.
   const needsPersistedRun =
     !!isSavingData &&
-    ['LABJS', 'JSPSYCH'].includes(resolved?.runtimeType) &&
+    ['LABJS', 'JSPSYCH', 'P5'].includes(resolved?.runtimeType) &&
     !resolved.error;
-  // A jsPsych preview runs without a run, but its files still need a token.
+  // A framed preview runs without a run, but its asset still needs a token.
   const needsPreviewToken =
-    !isSavingData && resolved?.runtimeType === 'JSPSYCH' && !resolved.error;
+    !isSavingData &&
+    ['JSPSYCH', 'P5'].includes(resolved?.runtimeType) &&
+    !resolved.error;
   const { data: previewData, error: previewError } = useQuery(
     RUNTIME_ASSET_PREVIEW_TOKEN,
     {
@@ -161,7 +169,19 @@ export default function TaskRun({
     );
   }
 
-  if (resolved.runtimeType === 'P5') return <P5Shell task={task} />;
+  if (resolved.runtimeType === 'P5') {
+    return (
+      <P5Shell
+        task={task}
+        runContext={runContext}
+        assetToken={runContext?.assetToken || previewToken}
+        isSavingData={isSavingData}
+        onFinish={onFinish}
+        currentStep={currentStep}
+        isTaskRetaken={isTaskRetaken}
+      />
+    );
+  }
   if (resolved.runtimeType === 'JSPSYCH') {
     return (
       <JsPsychShell

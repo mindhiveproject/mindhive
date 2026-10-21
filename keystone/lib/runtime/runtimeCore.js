@@ -189,16 +189,18 @@ function assetSignature(payload, secret) {
 }
 
 /**
- * A short-lived token that lets the frontend's task route serve one jsPsych
- * version's files. It travels in the frame's URL, so it carries no participant
- * or run identity, and it can't save anything.
+ * A short-lived token that lets the frontend's task routes serve one runtime
+ * asset: a jsPsych version's files or a p5 visual's code. It travels in the
+ * frame's URL, so it carries no participant or run identity, and it can't
+ * save anything. `runtime` says which route may use it.
  */
-function signAssetToken(assetId, secret, now = Date.now()) {
+function signAssetToken(assetId, secret, now = Date.now(), runtime = null) {
   if (!secret) throw new Error("Runtime token secret is not configured");
   const payload = Buffer.from(
     JSON.stringify({
       typ: "asset",
       assetId: String(assetId),
+      ...(runtime ? { runtime } : {}),
       iat: now,
       exp: now + ASSET_TOKEN_TTL_MS,
     })

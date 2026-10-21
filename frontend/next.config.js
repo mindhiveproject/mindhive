@@ -158,12 +158,12 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // jsPsych task documents and the pinned jsPsych files are loaded by
-        // a sandboxed frame with a null origin. They set their own headers
-        // (pages/api/runtime/task, pages/api/runtime/jspsych): the app's CSP
+        // Task documents (jsPsych and p5) and the pinned jsPsych and p5 files
+        // are loaded by a sandboxed frame with a null origin. They set their
+        // own headers (pages/api/runtime/*): the app's CSP
         // would cut tasks off the network, and its same-site CORP would block
         // the frame from loading them at all.
-        source: "/((?!api/runtime/(?:task|jspsych)/).*)",
+        source: "/((?!api/runtime/(?:task|visual|jspsych|p5)/).*)",
         headers: securityHeaders,
       },
     ];

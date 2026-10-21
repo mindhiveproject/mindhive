@@ -164,6 +164,12 @@ function createTaskFileHandler({ assetRoot, verifyAssetToken, readManifest }) {
         .status(403)
         .json({ error: 'This task link is invalid or has expired.' });
     }
+    // Tokens from before runtimes were named carry none; those are jsPsych's.
+    if (claims.runtime && claims.runtime !== 'JSPSYCH') {
+      return res
+        .status(403)
+        .json({ error: 'This task link is not for jsPsych.' });
+    }
     const segments = [].concat(req.query.path || []);
     const file = segments.join('/');
     if (!isSafeArchivePath(file)) {
@@ -225,26 +231,38 @@ function envelopeFile(name) {
   return match[2] === 'js' ? packageScript(match[1]) : packageStyle(match[1]);
 }
 
-/** @param {{modulesRoot: string}} deps - The frontend's node_modules. */
-function createEnvelopeFileHandler({ modulesRoot }) {
+/** Maps a /api/runtime/p5 file name onto its node_modules path. */
+function p5File(name) {
+  return name === 'p5.js' ? 'p5/lib/p5.min.js' : null;
+}
+
+/**
+ * Serves pinned runtime libraries from node_modules.
+ *
+ * @param {object} deps
+ * @param {string} deps.modulesRoot - The frontend's node_modules.
+ * @param {(name: string) => string | null} [deps.resolveFile] - File name to
+ *   package path; the jsPsych envelope by default.
+ */
+function createEnvelopeFileHandler({
+  modulesRoot,
+  resolveFile = envelopeFile,
+}) {
   return async function handler(req, res) {
     setCrossOriginHeaders(res);
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       res.setHeader('Allow', 'GET, HEAD');
       return res.status(405).end();
     }
-    const relative = envelopeFile(req.query.file);
-    if (!relative)
-      return res
-        .status(404)
-        .json({ error: 'Not part of the jsPsych envelope.' });
+    const relative = resolveFile(req.query.file);
+    if (!relative) {
+      return res.status(404).json({ error: 'Not a pinned runtime file.' });
+    }
     let data;
     try {
       data = await fs.promises.readFile(path.join(modulesRoot, relative));
     } catch {
-      return res
-        .status(404)
-        .json({ error: 'Not part of the jsPsych envelope.' });
+      return res.status(404).json({ error: 'Not a pinned runtime file.' });
     }
     res.setHeader('Content-Type', contentType(relative));
     // The URL carries the pinned version, so a new pin is a new URL.
@@ -253,10 +271,70 @@ function createEnvelopeFileHandler({ modulesRoot }) {
   };
 }
 
+/**
+ * /api/runtime/visual/<asset token>?n=<nonce>: a p5 task's document, built
+ * from the visual's code, which Keystone returns only for a p5 asset token.
+ *
+ * @param {object} deps
+ * @param {(token: string) => {assetId: string, runtime?: string}} deps.verifyAssetToken
+ * @param {(token: string) => Promise<Array<object>>} deps.loadVisualFiles
+ * @param {(files: Array<object>, nonce: string) => string} deps.buildDocument
+ */
+function createVisualTaskHandler({
+  verifyAssetToken,
+  loadVisualFiles,
+  buildDocument,
+}) {
+  return async function handler(req, res) {
+    setCrossOriginHeaders(res);
+    res.setHeader(
+      'Content-Security-Policy',
+      taskContentSecurityPolicy(requestOrigin(req))
+    );
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      res.setHeader('Allow', 'GET, HEAD');
+      return res.status(405).end();
+    }
+    const token = String(req.query.token || '');
+    // Checked here too, so a bad link never reaches the backend.
+    let claims;
+    try {
+      claims = verifyAssetToken(token);
+    } catch {
+      return res
+        .status(403)
+        .json({ error: 'This task link is invalid or has expired.' });
+    }
+    if (claims.runtime !== 'P5') {
+      return res.status(403).json({ error: 'This task link is not for p5.' });
+    }
+    const nonce = String(req.query.n || '');
+    if (!NONCE_RE.test(nonce)) {
+      return res
+        .status(400)
+        .json({ error: 'The task frame nonce is missing.' });
+    }
+    let files;
+    try {
+      files = await loadVisualFiles(token);
+    } catch {
+      return res.status(404).json({ error: 'This task is not available.' });
+    }
+    if (!files?.some((file) => file.role === 'entry')) {
+      return res.status(404).json({ error: 'This task has no sketch to run.' });
+    }
+    res.setHeader('Content-Type', CONTENT_TYPES.html);
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).send(buildDocument(files, nonce));
+  };
+}
+
 module.exports = {
   createEnvelopeFileHandler,
   createTaskFileHandler,
+  createVisualTaskHandler,
   envelopeFile,
   injectRuntime,
+  p5File,
   taskContentSecurityPolicy,
 };

@@ -264,3 +264,13 @@ test("asset tokens name one asset, expire, and are not run tokens", () => {
   assert.throws(() => verifyAssetToken(runToken, secret, 2000), /Invalid asset token/);
   assert.throws(() => verifyRunToken(token, secret, 2000));
 });
+
+test("an asset token says which runtime's route may use it", () => {
+  const { signAssetToken, verifyAssetToken } = require("./runtimeCore");
+  const token = signAssetToken("visual-1", "secret", 1000, "P5");
+  assert.equal(verifyAssetToken(token, "secret", 2000).runtime, "P5");
+  assert.equal(
+    verifyAssetToken(signAssetToken("v", "secret", 1000), "secret", 2000).runtime,
+    undefined
+  );
+});

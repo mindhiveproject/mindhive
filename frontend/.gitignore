@@ -12,12 +12,19 @@ yarn.lock
 
 # next.js
 /.next/
+/.next-build/
+/.next-prev/
 /out/
 tsconfig.tsbuildinfo
 next-env.d.ts
 
 # production
 /build
+# unpacked jsPsych versions (lib/runtime/jspsychArchive.js)
+/runtime-assets/
+
+# debug
+scripts/debug/*
 
 # misc
 .DS_Store

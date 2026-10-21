@@ -8,8 +8,12 @@ const {
   signAssetToken,
   signRunClaims,
   validateRunMessage,
+  verifyAssetToken,
   verifyRunToken,
 } = require("../lib/runtime/runtimeCore");
+
+// Runtimes whose task frame loads its asset through a frontend task route.
+const FRAMED_RUNTIMES = ["JSPSYCH", "P5"];
 
 const RUN_QUERY = `
   id
@@ -253,17 +257,22 @@ export async function startRun(
     taskId: task.id,
     templateId:
       runtime.runtimeType === "LABJS" ? runtime.asset.id : null,
-    // Lets the frontend serve this jsPsych version's files to the task frame.
-    assetToken:
-      runtime.runtimeType === "JSPSYCH"
-        ? signAssetToken(runtime.asset.id, tokenSecret())
-        : null,
+    // Lets the frontend serve this run's asset to the task frame.
+    assetToken: FRAMED_RUNTIMES.includes(runtime.runtimeType)
+      ? signAssetToken(
+          runtime.asset.id,
+          tokenSecret(),
+          Date.now(),
+          runtime.runtimeType,
+        )
+      : null,
   };
 }
 
 /**
- * An asset token for previewing a jsPsych task without a run, for anyone
- * who can see the task. Nothing is saved in preview, so no run is started.
+ * An asset token for previewing a jsPsych or p5 task without a run, for
+ * anyone who can see the task. Nothing is saved in preview, so no run is
+ * started.
  */
 export async function runtimeAssetPreviewToken(
   _root: unknown,
@@ -279,12 +288,48 @@ export async function runtimeAssetPreviewToken(
   // a task that uses it, as in startRun.
   const task = await context.sudo().query.Task.findOne({
     where: { id: taskId },
-    query: "id runtimeType jsPsychExperiment { id }",
+    query: "id runtimeType jsPsychExperiment { id } visual { id }",
   });
-  if (task?.runtimeType !== "JSPSYCH" || !task.jsPsychExperiment?.id) {
-    throw new Error("Only jsPsych tasks have a previewable asset");
+  const asset =
+    task?.runtimeType === "JSPSYCH"
+      ? task.jsPsychExperiment
+      : task?.runtimeType === "P5"
+        ? task.visual
+        : null;
+  if (!asset?.id) {
+    throw new Error("Only jsPsych and p5 tasks have a previewable asset");
   }
-  return signAssetToken(task.jsPsychExperiment.id, tokenSecret());
+  return signAssetToken(asset.id, tokenSecret(), Date.now(), task.runtimeType);
+}
+
+/**
+ * A p5 task's code, for the frontend's task route. The asset token is the
+ * permission: the visual's own privacy still hides it everywhere else, and a
+ * participant only ever receives the code their task runs.
+ */
+export async function runtimeVisualSource(
+  _root: unknown,
+  { assetToken }: { assetToken: string },
+  context: any,
+) {
+  let claims;
+  try {
+    claims = verifyAssetToken(assetToken, tokenSecret());
+  } catch {
+    throw new Error("The asset token is invalid or expired");
+  }
+  if (claims.runtime !== "P5") throw new Error("Not a p5 asset token");
+  const files = await context.sudo().query.VisualCodeFile.findMany({
+    where: { visual: { id: { equals: claims.assetId } } },
+    orderBy: [{ order: "asc" }],
+    query: "name role language content",
+  });
+  return files.map((file: any) => ({
+    name: file.name,
+    role: file.role,
+    language: file.language,
+    content: file.content || "",
+  }));
 }
 
 export async function ingestRunMessage(

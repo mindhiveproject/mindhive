@@ -94,6 +94,7 @@ import {
   ingestRunMessage,
   runtimeAssetPreviewToken,
   runtimeRunContext,
+  runtimeVisualSource,
   startRun,
   updateRunDataPolicy,
 } from "./runtimeRuns";
@@ -449,8 +450,14 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         studyId: ID!
         taskId: ID!
         templateId: ID
-        # Only on startRun, and only for jsPsych runs.
+        # Only on startRun, and only for jsPsych and p5 runs.
         assetToken: String
+      }
+      type RuntimeVisualFile {
+        name: String!
+        role: String!
+        language: String!
+        content: String!
       }
       type RuntimeAcknowledgement {
         accepted: Boolean!
@@ -537,8 +544,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
 
       extend type Query {
         runtimeRunContext(runToken: String!): RuntimeRunContext!
-        # Lets a jsPsych task be previewed without starting a run.
+        # Lets a jsPsych or p5 task be previewed without starting a run.
         runtimeAssetPreviewToken(taskId: ID!): String!
+        # A p5 task's code, for the frontend task route; needs a p5 asset token.
+        runtimeVisualSource(assetToken: String!): [RuntimeVisualFile!]!
         """
         One ticket, for a CLI or agent with no session. Shared-secret
         authenticated, read-only, single-id. See mutations/ticketForAgent.ts.
@@ -607,6 +616,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       Query: {
         runtimeRunContext,
         runtimeAssetPreviewToken,
+        runtimeVisualSource,
         ticketForAgent,
         supportTicketPreviews,
         resolveFormDefinition,

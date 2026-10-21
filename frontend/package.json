@@ -124,6 +124,7 @@
     "next-translate": "^2.6.2",
     "next-with-apollo": "^5.3.0",
     "nprogress": "^0.2.0",
+    "p5": "2.3.4",
     "papaparse": "^5.4.1",
     "pathfinding": "^0.4.18",
     "paths-js": "^0.4.11",
