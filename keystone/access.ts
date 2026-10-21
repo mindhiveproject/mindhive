@@ -26,6 +26,13 @@ const generatedPermissions = Object.fromEntries(
 // Issue #7: removed hardcoded `isAwesome` username bypass; use the
 // canAccessAdminUI permission flag stored on the user's Role instead.
 const TICKET_ROLE_NAMES = ["ADMIN", "TESTER"];
+// Who may upload and change jsPsych runtime assets. Using one in a Task stays
+// open to every researcher.
+const RUNTIME_ASSET_ROLE_NAMES = ["ADMIN", "TESTER"];
+
+function hasRoleNamed(session: Session | undefined, names: string[]) {
+  return !!session?.data.permissions?.some((role) => names.includes(role?.name));
+}
 
 export const permissions = {
   ...generatedPermissions,
@@ -33,9 +40,14 @@ export const permissions = {
   canManageTickets({ session }: ListAccessArgs) {
     return (
       generatedPermissions.canManageTickets({ session }) ||
-      !!session?.data.permissions?.some((role) =>
-        TICKET_ROLE_NAMES.includes(role?.name)
-      )
+      hasRoleNamed(session, TICKET_ROLE_NAMES)
+    );
+  },
+  // Admin UI operators count as ADMIN even if their role has another name.
+  canManageRuntimeAssets({ session }: ListAccessArgs) {
+    return (
+      generatedPermissions.canAccessAdminUI({ session }) ||
+      hasRoleNamed(session, RUNTIME_ASSET_ROLE_NAMES)
     );
   },
 };

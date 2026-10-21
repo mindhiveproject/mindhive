@@ -65,8 +65,63 @@ function resolveRuntimeConfiguration(task) {
     runtimeType,
     assetField: field,
     asset,
-    assetVersion: asset.version || "1",
+    // A jsPsych row is immutable once used, so its id names exactly what ran;
+    // the other assets still carry a free-text label.
+    assetVersion:
+      runtimeType === "JSPSYCH" ? String(asset.id) : asset.version || "1",
   };
+}
+
+// Fields that define what a jsPsych version runs. Once a Task uses a row,
+// these never change: a new upload creates a new row in the same family.
+const JSPSYCH_LOCKED_FIELDS = [
+  "archive",
+  "manifest",
+  "entryPoint",
+  "parameters",
+  "family",
+];
+
+const MAX_PARAMETER_DEFINITIONS = 200;
+
+/**
+ * Checks parameter definitions in the Template.parameters format, so the Lab.js
+ * Parameters editor can edit a jsPsych task's values too:
+ * `[{ name, type?, value?, help?, example?, options?, array? }]`.
+ */
+function validateParameterDefinitions(parameters) {
+  if (parameters == null) return;
+  if (!Array.isArray(parameters)) {
+    throw new Error("Parameters must be a list of definitions");
+  }
+  if (parameters.length > MAX_PARAMETER_DEFINITIONS) {
+    throw new Error(
+      `Parameters are limited to ${MAX_PARAMETER_DEFINITIONS} definitions`
+    );
+  }
+  const names = new Set();
+  for (const parameter of parameters) {
+    if (!parameter || typeof parameter !== "object" || Array.isArray(parameter)) {
+      throw new Error("Each parameter must be an object");
+    }
+    const { name, type, help, example, options } = parameter;
+    if (typeof name !== "string" || !name.trim()) {
+      throw new Error("Each parameter needs a name");
+    }
+    if (names.has(name)) throw new Error(`Duplicate parameter name: ${name}`);
+    names.add(name);
+    if (type !== undefined && typeof type !== "string") {
+      throw new Error(`Parameter ${name} has an invalid type`);
+    }
+    for (const [key, value] of Object.entries({ help, example })) {
+      if (value !== undefined && value !== null && typeof value !== "string") {
+        throw new Error(`Parameter ${name} has an invalid ${key}`);
+      }
+    }
+    if (options !== undefined && options !== null && !Array.isArray(options)) {
+      throw new Error(`Parameter ${name} options must be a list`);
+    }
+  }
 }
 
 function signRunClaims(claims, secret, now = Date.now()) {
@@ -241,6 +296,7 @@ function findTaskVersion(flow, taskId, requestedVersion) {
 }
 
 module.exports = {
+  JSPSYCH_LOCKED_FIELDS,
   MAX_RUN_MESSAGE_BYTES,
   RUNTIME_ASSET_FIELDS,
   acceptSequence,
@@ -249,6 +305,7 @@ module.exports = {
   resolveRuntimeConfiguration,
   signRunClaims,
   validateJsPsychManifest,
+  validateParameterDefinitions,
   validateRunMessage,
   verifyRunToken,
 };

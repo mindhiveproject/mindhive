@@ -5,6 +5,7 @@ import ReactHtmlParser from "react-html-parser";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { getTaskTypeLabelColors } from "../../../../../lib/taskTypeColors";
+import { assetParameterDefinitions } from "../../../../../lib/runtime/runtimeAsset";
 
 function plainText(value) {
   if (value == null) return "";
@@ -30,8 +31,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
 
   const parameters =
     task?.parameters?.filter((p) => p?.type !== "survey") ||
-    task?.template?.parameters ||
-    [];
+    assetParameterDefinitions(task);
 
   const surveyItems =
     task?.parameters

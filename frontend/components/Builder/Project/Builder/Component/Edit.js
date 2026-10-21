@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import debounce from "lodash.debounce";
 
 import useForm from "../../../../../lib/useForm";
+import { runtimeAssetVariables } from "../../../../../lib/runtime/runtimeAsset";
 
 import { CREATE_TASK, UPDATE_TASK } from "../../../../Mutations/Task";
 
@@ -96,7 +97,7 @@ export default function EditComponent({
             title: current?.title,
             description: current?.description,
             descriptionForParticipants: current?.descriptionForParticipants,
-            templateId: current?.templateId,
+            ...runtimeAssetVariables(current),
             taskType: current?.taskType,
             isExternal: current?.isExternal,
             link: current?.link,

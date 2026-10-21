@@ -6,6 +6,7 @@ const {
   findTaskVersion,
   resolveRuntimeConfiguration,
   signRunClaims,
+  validateParameterDefinitions,
   validateRunMessage,
   verifyRunToken,
 } = require("./runtimeCore");
@@ -55,6 +56,43 @@ test("requires complete jsPsych package metadata", () => {
         },
       }),
     /declared in manifest.files/
+  );
+});
+
+test("a jsPsych run records the pinned row id; other runtimes keep their label", () => {
+  const jsPsych = resolveRuntimeConfiguration({
+    runtimeType: "JSPSYCH",
+    jsPsychExperiment: {
+      ...authoredAsset,
+      archive: { filename: "experiment.zip" },
+      entryPoint: "index.html",
+      manifest: { files: ["index.html"] },
+    },
+  });
+  assert.equal(jsPsych.assetVersion, "asset-1");
+  assert.equal(
+    resolveRuntimeConfiguration({ template: authoredAsset }).assetVersion,
+    "7"
+  );
+});
+
+test("parameter definitions follow the Template.parameters format", () => {
+  assert.doesNotThrow(() => validateParameterDefinitions(undefined));
+  assert.doesNotThrow(() =>
+    validateParameterDefinitions([
+      { name: "trials", type: "number", value: 20, help: "How many" },
+      { name: "hand", type: "select", value: "left", options: ["left", "right"] },
+    ])
+  );
+  assert.throws(() => validateParameterDefinitions({}), /list of definitions/);
+  assert.throws(() => validateParameterDefinitions([{ type: "text" }]), /needs a name/);
+  assert.throws(
+    () => validateParameterDefinitions([{ name: "a" }, { name: "a" }]),
+    /Duplicate parameter name: a/
+  );
+  assert.throws(
+    () => validateParameterDefinitions([{ name: "a", options: "x" }]),
+    /options must be a list/
   );
 });
 

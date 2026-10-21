@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 // get all public tasks
 export const ALL_PUBLIC_TASKS = gql`
@@ -129,17 +129,14 @@ export const FAVORITE_TASKS = gql`
 export function buildFavoriteTasksWhere({
   userId,
   componentType,
-  search = "",
+  search = '',
 }) {
   const titleDescriptionOr =
-    process.env.NODE_ENV === "development"
-      ? [
-          { title: { contains: search } },
-          { description: { contains: search } },
-        ]
+    process.env.NODE_ENV === 'development'
+      ? [{ title: { contains: search } }, { description: { contains: search } }]
       : [
-          { title: { contains: search, mode: "insensitive" } },
-          { description: { contains: search, mode: "insensitive" } },
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
         ];
 
   return {
@@ -221,6 +218,18 @@ export const TASK_TO_CLONE = gql`
       taskType
       parameters
       settings
+      runtimeType
+      visual {
+        id
+        title
+      }
+      jsPsychExperiment {
+        id
+        title
+        version
+        family
+        parameters
+      }
       template {
         id
         slug
@@ -313,6 +322,18 @@ export const TASK_TO_EDIT = gql`
       link
       author {
         id
+      }
+      runtimeType
+      visual {
+        id
+        title
+      }
+      jsPsychExperiment {
+        id
+        title
+        version
+        family
+        parameters
       }
       template {
         id

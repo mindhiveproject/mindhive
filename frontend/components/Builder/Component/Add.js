@@ -4,6 +4,7 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../lib/useForm";
+import { runtimeAssetVariables } from "../../../lib/runtime/runtimeAsset";
 import DisplayError from "../../ErrorMessage";
 
 import { CREATE_TEMPLATE, UPDATE_TEMPLATE } from "../../Mutations/Template";
@@ -146,7 +147,10 @@ export default function AddComponent({ query, user, redirect, isExternal }) {
       // create a new task with connection to the new template
       await createTask({
         variables: {
-          templateId: template?.data?.createTemplate?.id,
+          ...runtimeAssetVariables({
+            runtimeType: "LABJS",
+            templateId: template?.data?.createTemplate?.id,
+          }),
           collaborators:
             inputs?.collaborators?.map((col) => ({ id: col?.id })) || [],
           template: null,
