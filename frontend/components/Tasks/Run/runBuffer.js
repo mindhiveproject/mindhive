@@ -16,14 +16,16 @@
  * @param {(kind: "incremental", payload: object) => void} [options.beacon] -
  *   Fire-and-forget send for page unload (e.g. `navigator.sendBeacon`).
  * @param {number} [options.batchSize=50] - Rows that trigger an immediate flush.
- * @param {number} [options.flushIntervalMs=2000] - Longest a row waits to go out.
+ * @param {number} [options.flushIntervalMs=10000] - Longest a row waits to go
+ *   out. Incremental saves are only a safety net, and /api/runtime/save is
+ *   rate-limited per address, which a classroom shares.
  * @param {number[]} [options.retryDelaysMs] - Waits between `full` attempts.
  */
 function createRunBuffer({
   save,
   beacon,
   batchSize = 50,
-  flushIntervalMs = 2000,
+  flushIntervalMs = 10000,
   retryDelaysMs = [1000, 3000, 10000],
 }) {
   const collected = [];
