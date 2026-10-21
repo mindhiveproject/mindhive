@@ -20,7 +20,15 @@ export const START_RUN = gql`
       studyVersion
       assetId
       assetVersion
+      assetToken
     }
+  }
+`;
+
+// An asset token to preview a jsPsych task without starting a run.
+export const RUNTIME_ASSET_PREVIEW_TOKEN = gql`
+  query RUNTIME_ASSET_PREVIEW_TOKEN($taskId: ID!) {
+    runtimeAssetPreviewToken(taskId: $taskId)
   }
 `;
 

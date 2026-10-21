@@ -5,10 +5,12 @@
 //   incremental  rows appended to incremental.json as they arrive
 //   full         every row, written once to full.json, then FINAL and
 //                COMPLETE to the run service
+//   failure      `{kind, error}`: the task broke, so FAILURE ends the run
 // Files use the Lab.js `{metadata, data}` layout, so Collect reads them as is.
 
 const {
   finalIngestPayload,
+  ingestFailure,
   ingestFinalAndComplete,
   loadRunContext,
   runDirectory,
@@ -17,7 +19,9 @@ const {
 } = require('./runResultStore');
 
 const RUNTIMES = ['JSPSYCH', 'P5'];
-const KINDS = ['incremental', 'full'];
+const KINDS = ['incremental', 'full', 'failure'];
+// The run service's cap on a FAILURE message.
+const MAX_ERROR_LENGTH = 16 * 1024;
 
 function isPlainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -67,11 +71,14 @@ function createRuntimeSaveHandler({
     const kind = body?.kind;
     const rows = body?.rows;
     const aggregated = body?.aggregated ?? {};
+    const isFailure = kind === 'failure';
     if (
       !KINDS.includes(kind) ||
-      !Array.isArray(rows) ||
-      !rows.every(isPlainObject) ||
-      !isPlainObject(aggregated)
+      (isFailure
+        ? typeof body.error !== 'string' || !body.error
+        : !Array.isArray(rows) ||
+          !rows.every(isPlainObject) ||
+          !isPlainObject(aggregated))
     ) {
       return res.status(400).json({ error: 'Invalid runtime result payload.' });
     }
@@ -89,6 +96,21 @@ function createRuntimeSaveHandler({
         error:
           'Only jsPsych and p5 runs are saved here; Lab.js uses /api/save.',
       });
+    }
+
+    if (isFailure) {
+      try {
+        await ingestFailure(
+          graphql,
+          runToken,
+          body.error.slice(0, MAX_ERROR_LENGTH)
+        );
+      } catch (error) {
+        return res.status(409).json({
+          error: error?.message || 'The failure could not be recorded.',
+        });
+      }
+      return res.status(200).json({ saved: true, kind });
     }
 
     let dir;

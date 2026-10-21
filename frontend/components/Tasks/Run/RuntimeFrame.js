@@ -26,14 +26,21 @@ function createNonce() {
  * This component only connects and relays: saving is the caller's job,
  * usually through `createRunBuffer`.
  *
- * @param {(nonce: string) => string} buildDocument - Returns the task's HTML,
- *   which must run `frameClientSource(nonce)` before any experiment code. A
- *   new function identity rebuilds the frame.
+ * Give it either `buildDocument` (inline HTML, as p5 does) or `buildSrc` (a
+ * URL whose document already runs the frame client, as the jsPsych task route
+ * does). A new function identity rebuilds the frame.
+ *
+ * @param {(nonce: string) => string} [buildDocument] - Returns the task's
+ *   HTML, which must run `frameClientSource(nonce)` before any experiment code.
+ * @param {(nonce: string) => string} [buildSrc] - Returns the document's URL.
+ * @param {string} [sandbox="allow-scripts"] - Never add `allow-same-origin`.
  * @param {"JSPSYCH" | "P5"} runtime
  * @param {"persist" | "preview"} mode
  * @param {object} [params] - Task parameter values, sent once in `init`.
  * @param {boolean} [paused=false]
  * @param {string} [title] - Accessible name of the frame.
+ * @param {boolean} [autoFocus=false] - Focus the frame once it has loaded, so
+ *   keyboard responses reach the task without a click first.
  * @param {() => void} [onReady]
  * @param {(rows: object[]) => void} [onRows]
  * @param {(marker: {label, value, time}) => void} [onMarker]
@@ -44,11 +51,14 @@ function createNonce() {
  */
 export default function RuntimeFrame({
   buildDocument,
+  buildSrc,
+  sandbox = 'allow-scripts',
   runtime,
   mode,
   params,
   paused = false,
   title = 'Task',
+  autoFocus = false,
   onReady,
   onRows,
   onMarker,
@@ -62,10 +72,12 @@ export default function RuntimeFrame({
 
   // A fresh nonce per rebuild, so a stale frame that hasn't been torn down
   // yet can't connect in place of the new one.
-  const { html, nonce } = useMemo(() => {
+  const { html, src, nonce } = useMemo(() => {
     const value = createNonce();
-    return { html: buildDocument(value), nonce: value };
-  }, [buildDocument]);
+    return buildSrc
+      ? { src: buildSrc(value), nonce: value }
+      : { html: buildDocument(value), nonce: value };
+  }, [buildDocument, buildSrc]);
 
   // One stable object whose handlers are swapped every render, so inline
   // callbacks don't tear down the connection — or the frame.
@@ -108,9 +120,10 @@ export default function RuntimeFrame({
     <iframe
       ref={frameRef}
       title={title}
-      srcDoc={html}
-      sandbox="allow-scripts"
+      {...(src ? { src } : { srcDoc: html })}
+      sandbox={sandbox}
       allow="fullscreen"
+      onLoad={autoFocus ? () => frameRef.current?.focus() : undefined}
       referrerPolicy="no-referrer"
       style={FRAME_STYLE}
     />

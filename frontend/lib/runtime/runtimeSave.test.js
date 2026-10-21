@@ -6,6 +6,7 @@ const path = require('node:path');
 const { createRuntimeSaveHandler } = require('./runtimeSaveHandler');
 const {
   INGEST_COMPLETE_MUTATION,
+  INGEST_FAILURE_MUTATION,
   INGEST_FINAL_MUTATION,
   RUN_CONTEXT_QUERY,
 } = require('./runResultStore');
@@ -253,4 +254,20 @@ test('the beacon falls back to a request when the browser refuses it', async () 
   });
   assert.equal(beacons.length, 1);
   assert.deepEqual(fetched, [{ kind: 'incremental', rows: [{ a: 1 }] }]);
+});
+
+test('a failure ends the run with FAILURE and writes no file', async () => {
+  const { handler, calls, runDir } = setup();
+  const res = await post(handler, {
+    kind: 'failure',
+    error: 'draw: x is undefined',
+  });
+  assert.equal(res.statusCode, 200);
+  const failure = calls.find((call) => call.query === INGEST_FAILURE_MUTATION);
+  assert.deepEqual(failure.variables, {
+    runToken: 'good-token',
+    error: 'draw: x is undefined',
+  });
+  assert.equal(fs.existsSync(runDir), false);
+  assert.equal((await post(handler, { kind: 'failure' })).statusCode, 400);
 });

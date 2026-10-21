@@ -292,6 +292,7 @@ export const TASK_TO_PARTICIPATE = gql`
         published
         entryPoint
         manifest
+        parameters
         archive {
           filename
           url

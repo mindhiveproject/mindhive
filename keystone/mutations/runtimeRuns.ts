@@ -5,6 +5,7 @@ const {
   assertRunClaimsMatchDataset,
   findTaskVersion,
   resolveRuntimeConfiguration,
+  signAssetToken,
   signRunClaims,
   validateRunMessage,
   verifyRunToken,
@@ -252,7 +253,38 @@ export async function startRun(
     taskId: task.id,
     templateId:
       runtime.runtimeType === "LABJS" ? runtime.asset.id : null,
+    // Lets the frontend serve this jsPsych version's files to the task frame.
+    assetToken:
+      runtime.runtimeType === "JSPSYCH"
+        ? signAssetToken(runtime.asset.id, tokenSecret())
+        : null,
   };
+}
+
+/**
+ * An asset token for previewing a jsPsych task without a run, for anyone
+ * who can see the task. Nothing is saved in preview, so no run is started.
+ */
+export async function runtimeAssetPreviewToken(
+  _root: unknown,
+  { taskId }: { taskId: string },
+  context: any,
+) {
+  const visible = await context.query.Task.findOne({
+    where: { id: taskId },
+    query: "id",
+  });
+  if (!visible) throw new Error("Task was not found");
+  // The task's access decides; the asset's own privacy doesn't hide it from
+  // a task that uses it, as in startRun.
+  const task = await context.sudo().query.Task.findOne({
+    where: { id: taskId },
+    query: "id runtimeType jsPsychExperiment { id }",
+  });
+  if (task?.runtimeType !== "JSPSYCH" || !task.jsPsychExperiment?.id) {
+    throw new Error("Only jsPsych tasks have a previewable asset");
+  }
+  return signAssetToken(task.jsPsychExperiment.id, tokenSecret());
 }
 
 export async function ingestRunMessage(

@@ -92,6 +92,7 @@ import {
 import { GraphQLSchema } from "graphql";
 import {
   ingestRunMessage,
+  runtimeAssetPreviewToken,
   runtimeRunContext,
   startRun,
   updateRunDataPolicy,
@@ -448,6 +449,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         studyId: ID!
         taskId: ID!
         templateId: ID
+        # Only on startRun, and only for jsPsych runs.
+        assetToken: String
       }
       type RuntimeAcknowledgement {
         accepted: Boolean!
@@ -534,6 +537,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
 
       extend type Query {
         runtimeRunContext(runToken: String!): RuntimeRunContext!
+        # Lets a jsPsych task be previewed without starting a run.
+        runtimeAssetPreviewToken(taskId: ID!): String!
         """
         One ticket, for a CLI or agent with no session. Shared-secret
         authenticated, read-only, single-id. See mutations/ticketForAgent.ts.
@@ -601,6 +606,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       Opportunity: opportunityMultiselectResolvers,
       Query: {
         runtimeRunContext,
+        runtimeAssetPreviewToken,
         ticketForAgent,
         supportTicketPreviews,
         resolveFormDefinition,

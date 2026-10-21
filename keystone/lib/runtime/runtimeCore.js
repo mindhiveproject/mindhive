@@ -177,6 +177,62 @@ function verifyRunToken(token, secret, now = Date.now()) {
   return claims;
 }
 
+const ASSET_TOKEN_TTL_MS = 12 * 60 * 60 * 1000;
+
+function assetSignature(payload, secret) {
+  // Signed under its own prefix, so a run token can never pass as an asset
+  // token or the other way round.
+  return crypto
+    .createHmac("sha256", secret)
+    .update(`asset.${payload}`)
+    .digest("base64url");
+}
+
+/**
+ * A short-lived token that lets the frontend's task route serve one jsPsych
+ * version's files. It travels in the frame's URL, so it carries no participant
+ * or run identity, and it can't save anything.
+ */
+function signAssetToken(assetId, secret, now = Date.now()) {
+  if (!secret) throw new Error("Runtime token secret is not configured");
+  const payload = Buffer.from(
+    JSON.stringify({
+      typ: "asset",
+      assetId: String(assetId),
+      iat: now,
+      exp: now + ASSET_TOKEN_TTL_MS,
+    })
+  ).toString("base64url");
+  return `${payload}.${assetSignature(payload, secret)}`;
+}
+
+function verifyAssetToken(token, secret, now = Date.now()) {
+  if (!secret || typeof token !== "string") throw new Error("Invalid asset token");
+  const [payload, supplied, extra] = token.split(".");
+  if (!payload || !supplied || extra) throw new Error("Invalid asset token");
+  const expected = Buffer.from(assetSignature(payload, secret), "utf8");
+  const given = Buffer.from(supplied, "utf8");
+  if (given.length !== expected.length || !crypto.timingSafeEqual(given, expected)) {
+    throw new Error("Invalid asset token");
+  }
+  let claims;
+  try {
+    claims = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+  } catch {
+    throw new Error("Invalid asset token");
+  }
+  if (
+    claims?.typ !== "asset" ||
+    typeof claims.assetId !== "string" ||
+    !claims.assetId ||
+    !Number.isFinite(claims.exp) ||
+    claims.exp <= now
+  ) {
+    throw new Error("Expired or incomplete asset token");
+  }
+  return claims;
+}
+
 function assertRunClaimsMatchDataset(claims, dataset) {
   const expected = {
     datasetId: dataset?.id,
@@ -303,9 +359,11 @@ module.exports = {
   assertRunClaimsMatchDataset,
   findTaskVersion,
   resolveRuntimeConfiguration,
+  signAssetToken,
   signRunClaims,
   validateJsPsychManifest,
   validateParameterDefinitions,
   validateRunMessage,
+  verifyAssetToken,
   verifyRunToken,
 };

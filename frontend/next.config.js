@@ -98,6 +98,9 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // The deploy script builds into a side directory (NEXT_DIST_DIR) so the
+  // live server keeps serving .next, then swaps it in just before restart.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   // Replaces the deleted .babelrc (next/babel + babel-plugin-styled-components):
   // SWC's styled-components transform provides the same ssr/displayName behavior.
   compiler: {
@@ -155,7 +158,12 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        // jsPsych task documents and the pinned jsPsych files are loaded by
+        // a sandboxed frame with a null origin. They set their own headers
+        // (pages/api/runtime/task, pages/api/runtime/jspsych): the app's CSP
+        // would cut tasks off the network, and its same-site CORP would block
+        // the frame from loading them at all.
+        source: "/((?!api/runtime/(?:task|jspsych)/).*)",
         headers: securityHeaders,
       },
     ];

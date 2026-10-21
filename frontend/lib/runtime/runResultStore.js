@@ -67,6 +67,23 @@ const INGEST_COMPLETE_MUTATION = `
   }
 `;
 
+// A run that broke before finishing. Nothing was ingested before it (rows go
+// to disk only), so it is the run's first message.
+const INGEST_FAILURE_MUTATION = `
+  mutation IngestRunFailure($runToken: String!, $error: String!) {
+    ingestRunMessage(
+      runToken: $runToken
+      sequence: 1
+      messageType: FAILURE
+      error: $error
+    ) {
+      accepted
+      duplicate
+      datasetToken
+    }
+  }
+`;
+
 /** Run metadata stamped on every stored result file, for any runtime. */
 function stampRunMetadata(runContext, metadata) {
   return {
@@ -100,6 +117,10 @@ function finalIngestPayload(rows, aggregated) {
 async function loadRunContext(graphql, runToken) {
   const result = await graphql(RUN_CONTEXT_QUERY, { runToken });
   return result.runtimeRunContext;
+}
+
+async function ingestFailure(graphql, runToken, error) {
+  await graphql(INGEST_FAILURE_MUTATION, { runToken, error });
 }
 
 async function ingestFinalAndComplete(graphql, runToken, { data, aggregated }) {
@@ -159,9 +180,11 @@ async function writeRawResult({ dir, payload, body }) {
 module.exports = {
   GRAPHQL_INGEST_BUDGET_BYTES,
   INGEST_COMPLETE_MUTATION,
+  INGEST_FAILURE_MUTATION,
   INGEST_FINAL_MUTATION,
   RUN_CONTEXT_QUERY,
   finalIngestPayload,
+  ingestFailure,
   ingestFinalAndComplete,
   loadRunContext,
   runDirectory,

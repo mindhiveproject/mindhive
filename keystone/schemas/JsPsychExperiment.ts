@@ -27,6 +27,11 @@ const isOwner = ({ session, item }: any) =>
   !!session?.itemId &&
   (isAdmin({ session }) || String(item?.authorId) === String(session.itemId));
 
+// A version some Task uses is readable by anyone, as Templates are:
+// participants load it through the task they run. Unused private uploads stay
+// with their authors.
+const usedByATask = { tasks: { some: {} } };
+
 const visibleExperiments = ({ session }: any) => {
   if (isAdmin({ session })) return true;
   if (!session?.itemId) {
@@ -34,6 +39,7 @@ const visibleExperiments = ({ session }: any) => {
       OR: [
         { privacy: { equals: "public" } },
         { privacy: { equals: "unlisted" } },
+        usedByATask,
       ],
     };
   }
@@ -43,6 +49,7 @@ const visibleExperiments = ({ session }: any) => {
       { collaborators: { some: { id: { equals: session.itemId } } } },
       { privacy: { equals: "public" } },
       { privacy: { equals: "unlisted" } },
+      usedByATask,
     ],
   };
 };

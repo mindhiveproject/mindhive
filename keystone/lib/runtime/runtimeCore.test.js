@@ -245,3 +245,22 @@ test("test version is derived from unchanged nested study flow", () => {
   assert.equal(findTaskVersion(flow, "task-1", "v2"), "v2");
   assert.throws(() => findTaskVersion(flow, "task-1", "v3"), /not part/);
 });
+
+test("asset tokens name one asset, expire, and are not run tokens", () => {
+  const { signAssetToken, verifyAssetToken } = require("./runtimeCore");
+  const secret = "test-secret";
+  const token = signAssetToken("version-7", secret, 1000);
+  assert.equal(verifyAssetToken(token, secret, 2000).assetId, "version-7");
+  assert.throws(() => verifyAssetToken(token, "other", 2000), /Invalid asset token/);
+  assert.throws(
+    () => verifyAssetToken(token, secret, 1000 + 13 * 60 * 60 * 1000),
+    /Expired/
+  );
+  const runToken = signRunClaims(
+    { datasetId: "d", datasetToken: "t", assetId: "version-7" },
+    secret,
+    1000
+  );
+  assert.throws(() => verifyAssetToken(runToken, secret, 2000), /Invalid asset token/);
+  assert.throws(() => verifyRunToken(token, secret, 2000));
+});

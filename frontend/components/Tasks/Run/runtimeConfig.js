@@ -74,4 +74,8 @@ function resolveRuntimeConfiguration(task) {
   };
 }
 
-module.exports = { RUNTIME_ASSET_FIELDS, resolveRuntimeConfiguration };
+module.exports = {
+  RUNTIME_ASSET_FIELDS,
+  isSafeArchivePath,
+  resolveRuntimeConfiguration,
+};

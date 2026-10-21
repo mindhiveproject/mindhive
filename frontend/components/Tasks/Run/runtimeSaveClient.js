@@ -48,7 +48,18 @@ function createRuntimeSaveClient({
     if (!sendBeacon?.(url, data)) save(kind, payload).catch(() => {});
   }
 
-  return { save, beacon };
+  /** Ends the run with FAILURE when the task broke before finishing. */
+  async function fail(error) {
+    const response = await fetchImpl(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ kind: 'failure', error: String(error) }),
+    });
+    if (!response.ok)
+      throw new Error(`Recording the failure failed (${response.status})`);
+  }
+
+  return { save, beacon, fail };
 }
 
 module.exports = { createRuntimeSaveClient };
