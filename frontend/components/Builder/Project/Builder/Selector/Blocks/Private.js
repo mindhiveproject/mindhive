@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { MY_TASKS } from "../../../../../Queries/Task";
 import Card from "./Card";
+import { getLocalizedField } from "../../../../../../lib/i18nContent";
 
 export default function PrivateBlocks({
   user,
@@ -53,29 +54,6 @@ export default function PrivateBlocks({
     },
   });
 
-  const getLocalizedField = (component, fieldName) => {
-    // If no i18nContent, return original field value
-    if (!component.i18nContent || !component[fieldName]) {
-      return component[fieldName];
-    }
-
-    // Try to get localized content for current locale
-    const localizedContent = component.i18nContent[currentLocale];
-    if (localizedContent && localizedContent[fieldName] !== undefined) {
-      return localizedContent[fieldName];
-    }
-
-    // Fallback to en-us if current locale not found
-    if (currentLocale !== 'en-us') {
-      const fallbackContent = component.i18nContent['en-us'];
-      if (fallbackContent && fallbackContent[fieldName] !== undefined) {
-        return fallbackContent[fieldName];
-      }
-    }
-
-    // Final fallback to original field value
-    return component[fieldName];
-  };
 
   const processComponentsWithI18n = (components) => {
     const i18nFields = [
@@ -93,7 +71,7 @@ export default function PrivateBlocks({
       const localizedComponent = { ...component };
       
       i18nFields.forEach(fieldName => {
-        localizedComponent[fieldName] = getLocalizedField(component, fieldName);
+        localizedComponent[fieldName] = getLocalizedField(component, fieldName, currentLocale);
       });
 
       return localizedComponent;

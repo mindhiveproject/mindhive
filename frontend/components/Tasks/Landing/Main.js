@@ -10,6 +10,7 @@ import { GET_TASK } from "../../Queries/Task";
 import TaskPage from "./TaskPage";
 import ManageFavorite from "../../User/ManageFavorite";
 import Button from "../../DesignSystem/Button";
+import { getLocalizedField } from "../../../lib/i18nContent";
 
 export default function TaskLandingMain({ slug }) {
   const { user } = useContext(UserContext);
@@ -25,12 +26,12 @@ export default function TaskLandingMain({ slug }) {
   return (
     <>
       <div className="titleIcon">
-        <h1>{task?.i18nContent?.[locale]?.title || task?.title}</h1>
+        <h1>{getLocalizedField(task, "title", locale)}</h1>
         <div>{user && <ManageFavorite user={user} id={task?.id} />}</div>
       </div>
 
       <div>
-        <h3>{ReactHtmlParser(task?.i18nContent?.[locale]?.descriptionForParticipants || task?.descriptionForParticipants)}</h3>
+        <h3>{ReactHtmlParser(getLocalizedField(task, "descriptionForParticipants", locale))}</h3>
       </div>
       <div className="controlBtns">
         <a

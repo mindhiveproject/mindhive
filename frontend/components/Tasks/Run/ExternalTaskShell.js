@@ -2,6 +2,7 @@ import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 
 import Button from '../../DesignSystem/Button';
+import { getLocalizedField } from "../../../lib/i18nContent";
 
 // Only web links open: a stored `javascript:` or `data:` URL never does.
 function safeLink(link) {
@@ -25,10 +26,9 @@ export default function ExternalTaskShell({
 }) {
   const { t } = useTranslation('common');
   const { locale } = useRouter();
-  const title = task?.i18nContent?.[locale]?.title || task?.title;
+  const title = getLocalizedField(task, "title", locale);
   const description =
-    task?.i18nContent?.[locale]?.descriptionForParticipants ||
-    task?.descriptionForParticipants;
+    getLocalizedField(task, "descriptionForParticipants", locale);
   const link = safeLink(task?.link);
 
   return (

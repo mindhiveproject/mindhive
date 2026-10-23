@@ -13,6 +13,7 @@ import ComponentForm from "./Form";
 import { MY_TASK } from "../../Queries/Task";
 
 import UploadFile from "./Template/UploadFile";
+import { cleanI18nContent } from "../../../lib/i18nContent";
 
 export default function EditComponent({
   query,
@@ -123,6 +124,7 @@ export default function EditComponent({
     await updateTask({
       variables: {
         collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
+        i18nContent: cleanI18nContent(inputs),
         template: null,
       },
     });
