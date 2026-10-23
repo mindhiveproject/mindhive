@@ -6,7 +6,7 @@
     "postinstall": "node scripts/copy-monaco-assets.cjs",
     "prebuild": "node scripts/copy-monaco-assets.cjs",
     "dev": "next dev -p 3000",
-    "build": "NODE_OPTIONS=--max-old-space-size=4096 next build",
+    "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
     "start": "next start -p 3000",
     "lint": "npm run lint:tokens && npm run lint:tokens-export && npm run lint:surfaces && eslint .",
     "lint:fix": "eslint . --fix",
