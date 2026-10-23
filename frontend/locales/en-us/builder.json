@@ -1721,6 +1721,7 @@
 	},
 	"participantPage": "Participant Page",
 	"participantPageMain": {
+		"locked": "Participant Page Locked",
 		"settingsTitle": "Page settings",
 		"cloneOf": "Clone of",
 		"noStudyHeader": "🤷🏻 Your project has no Study attached to it.",

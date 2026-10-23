@@ -30,6 +30,7 @@ import CycleLinkPreventedModal from "../../shared/CycleLinkPreventedModal";
 import {
   configureStrictDiagramLinks,
 } from "../../shared/strictDiagramLinks";
+import { isStudyLocked } from "../../../../lib/studyLock";
 
 export default function Engine({
   query,
@@ -43,8 +44,8 @@ export default function Engine({
 }) {
   const { t } = useTranslation("builder");
 
-  // Lock the canvas if dataCollectionStatus is SUBMITTED
-  const isCanvasLocked = study?.dataCollectionStatus === "SUBMITTED";
+  // Lock the canvas once the study is submitted
+  const isCanvasLocked = isStudyLocked(study);
 
   const [hasStudyChanged, setHasStudyChanged] = useState(false);
   const [canUndo, setCanUndo] = useState(false);

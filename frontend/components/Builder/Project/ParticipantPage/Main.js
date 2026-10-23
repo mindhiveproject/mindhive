@@ -22,6 +22,7 @@ import { StyledParticipantPage } from "../../../styles/StyledBuilder";
 import InDev from "../../../Global/InDev";
 import { participantPageTours } from "./tours";
 import { builderHref, isProjectArea } from "../../shared/identity";
+import { isStudyLocked } from "../../../../lib/studyLock";
 
 export default function ParticipantPage({ query, user, tab }) {
   const router = useRouter();
@@ -124,6 +125,9 @@ export default function ParticipantPage({ query, user, tab }) {
     ? projectData?.proposalBoard?.study || {}
     : studyQueryData?.study || {};
 
+  // A submitted study is read-only here too, as in the Study Builder
+  const isLocked = isStudyLocked(study, { isClone: area === "cloneofstudy" });
+
   // Default settings if study doesn't have settings
   const defaultSettings = {
     forbidRetake: true,
@@ -188,16 +192,19 @@ export default function ParticipantPage({ query, user, tab }) {
   }, [user]);
 
   const handleStudyChange = (props) => {
+    if (isLocked) return;
     setHasStudyChanged(true);
     handleChange(props);
   };
 
   const handleStudyMultipleUpdate = (props) => {
+    if (isLocked) return;
     setHasStudyChanged(true);
     handleMultipleUpdate(props);
   };
 
   const captureStudyFile = (props) => {
+    if (isLocked) return;
     setHasStudyChanged(true);
     captureFile(props);
   };
@@ -281,6 +288,7 @@ export default function ParticipantPage({ query, user, tab }) {
   });
 
   const saveStudy = async () => {
+    if (isLocked) return;
     if (selector === "add" || area === "cloneofstudy") {
       const newStudy = await createStudy();
       router.push(
@@ -333,11 +341,13 @@ export default function ParticipantPage({ query, user, tab }) {
         saveBtnName={t('participantPageMain.save')}
         saveBtnFunction={saveStudy}
         hasStudyChanged={hasStudyChanged}
+        isCanvasLocked={isLocked}
       />
       <StyledParticipantPage>
         <Preview
           user={user}
           study={inputs}
+          isLocked={isLocked}
           handleChange={handleStudyChange}
           handleMultipleUpdate={handleStudyMultipleUpdate}
           captureFile={captureStudyFile}
@@ -345,6 +355,7 @@ export default function ParticipantPage({ query, user, tab }) {
         <Settings
           user={user}
           study={inputs}
+          isLocked={isLocked}
           handleChange={handleStudyChange}
           handleMultipleUpdate={handleStudyMultipleUpdate}
         />

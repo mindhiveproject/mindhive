@@ -6,6 +6,7 @@ export default function Parameters({
   study,
   handleChange,
   handleMultipleUpdate,
+  isLocked,
 }) {
   const { t } = useTranslation("builder");
 
@@ -85,6 +86,7 @@ export default function Parameters({
               value={settings?.[name]}
               isReverse={reverseScales.includes(name)}
               hasIRBAccess={hasIRBAccess}
+              isLocked={isLocked}
             />
           ))}
       </div>

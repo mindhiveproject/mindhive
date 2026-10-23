@@ -8,6 +8,7 @@ export default function Settings({
   study,
   handleChange,
   handleMultipleUpdate,
+  isLocked,
 }) {
   const { t } = useTranslation("builder");
   return (
@@ -19,7 +20,8 @@ export default function Settings({
           })}
         </h1>
       </div>
-      <div className="studySettings">
+      {/* Disabling the fieldset makes every control below read-only at once */}
+      <fieldset className="studySettings" disabled={isLocked}>
         <section className="settingsCard">
           <ShareStudy study={study} handleChange={handleChange} />
         </section>
@@ -29,9 +31,10 @@ export default function Settings({
             study={study}
             handleChange={handleChange}
             handleMultipleUpdate={handleMultipleUpdate}
+            isLocked={isLocked}
           />
         </section>
-      </div>
+      </fieldset>
     </aside>
   );
 }

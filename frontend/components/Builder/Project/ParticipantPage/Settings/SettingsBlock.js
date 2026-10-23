@@ -27,6 +27,7 @@ export default function SettingBlock({
   value,
   isReverse,
   hasIRBAccess,
+  isLocked,
 }) {
   const { t } = useTranslation("builder");
   const key = SETTING_KEYS[name];
@@ -48,6 +49,7 @@ export default function SettingBlock({
           id={`setting-${name}`}
           aria-label={title}
           checked={!!checked}
+          disabled={isLocked}
           onChange={() => handleSettingsChange({ target: { name } })}
         />
       </div>
@@ -59,6 +61,7 @@ export default function SettingBlock({
               user={user}
               study={study}
               handleChange={handleChange}
+              disabled={isLocked}
             />
           ) : (
             <p className="settingsSectionNote">

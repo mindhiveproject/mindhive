@@ -1820,6 +1820,73 @@ export const StyledParticipantPage = styled.div`
     margin: 0 auto;
   }
 
+  /* Same look as the Study Builder's lockedMessageOverlay, but in the flow so
+     it does not cover the page */
+  .lockedBanner {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 24px;
+    padding: 16px 20px;
+    box-sizing: border-box;
+    background: rgba(255, 230, 230, 0.95);
+    border: 1px solid #cc0000;
+    border-radius: 8px;
+    color: #cc0000;
+    h3 {
+      margin: 0 0 4px;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
+    }
+    p {
+      margin: 0;
+      font: var(--MH-Type-Body-Base);
+      letter-spacing: 0;
+    }
+  }
+
+  .previewFields,
+  .studySettings {
+    margin: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .previewFields {
+    padding: 0;
+  }
+
+  /* Locked: read like the published page, with no editing affordances */
+  .preview--locked {
+    .editable,
+    .editable:hover {
+      border-color: transparent;
+      background: transparent;
+      cursor: default;
+    }
+    .editable:disabled {
+      color: inherit;
+      opacity: 1;
+      -webkit-text-fill-color: currentColor;
+    }
+    .editable::placeholder {
+      color: transparent;
+    }
+    .imageSlot {
+      cursor: default;
+    }
+    .imageSlotAction,
+    .imageSlot input[type="file"],
+    .infoTabDelete,
+    .infoTabAdd,
+    .infoTabsEmpty {
+      display: none;
+    }
+    /* Disabled inputs swallow clicks; let them reach the tab to switch it */
+    .infoTab .editable {
+      pointer-events: none;
+    }
+  }
+
   /* The landing page grid already defines the column; drop its tall min-height */
   .participantPagePreview {
     min-height: 0;
