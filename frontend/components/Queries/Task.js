@@ -275,6 +275,9 @@ export const TASK_TO_PARTICIPATE = gql`
       slug
       image
       description
+      descriptionForParticipants
+      isExternal
+      link
       parameters
       aggregateVariables
       runtimeType

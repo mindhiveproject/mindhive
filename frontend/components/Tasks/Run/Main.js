@@ -10,6 +10,7 @@ import DynamicExperimentWindow from '../../Labjs/Run/Wrapper';
 import Labjs from '../../Global/Labjs';
 import P5Shell from './P5Shell';
 import JsPsychShell from './JsPsychShell';
+import ExternalTaskShell from './ExternalTaskShell';
 import { resolveRuntimeConfiguration } from './runtimeConfig';
 
 export default function TaskRun({
@@ -141,6 +142,17 @@ export default function TaskRun({
 
   const combinedError =
     queryError || resolved?.error || startError || previewError;
+  // An external task has no runtime asset: it is a link to another site.
+  if (task?.isExternal) {
+    return (
+      <ExternalTaskShell
+        task={task}
+        onFinish={onFinish}
+        currentStep={currentStep}
+        isTaskRetaken={isTaskRetaken}
+      />
+    );
+  }
   if (combinedError) {
     return (
       <div role="alert">
