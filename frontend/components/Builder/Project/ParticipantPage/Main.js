@@ -1,12 +1,13 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import { customAlphabet } from "nanoid";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 4);
 
 import useForm from "../../../../lib/useForm";
+import useAutoSave from "../../../../lib/useAutoSave";
 
 import Navigation from "../Navigation/Main";
 import Preview from "./Preview/Main";
@@ -30,8 +31,6 @@ export default function ParticipantPage({ query, user, tab }) {
   const { area } = query;
   const selector = query?.selector;
   const projectMode = isProjectArea(area);
-
-  const [hasStudyChanged, setHasStudyChanged] = useState(false);
 
   useEffect(() => {
     let currentTour = null;
@@ -143,12 +142,24 @@ export default function ParticipantPage({ query, user, tab }) {
     minorsBlocked: false,
   };
 
-  // save and edit the study information
+  // save and edit the study information. Once the study is in the form, the
+  // form stops following the fetched study: the refetch after an auto-save
+  // would otherwise drop what was typed while the save was running
+  const loadedStudyIdRef = useRef(null);
   const { inputs, handleChange, handleMultipleUpdate, captureFile, clearForm } =
-    useForm({
-      ...study,
-      settings: study?.settings || defaultSettings,
-    });
+    useForm(
+      {
+        ...study,
+        settings: study?.settings || defaultSettings,
+      },
+      {
+        freezeInitialSync:
+          !!study?.id && loadedStudyIdRef.current === study?.id,
+      }
+    );
+  if (inputs?.id && inputs?.id === study?.id) {
+    loadedStudyIdRef.current = study.id;
+  }
 
   // modify the study if it has to be cloned
   useEffect(() => {
@@ -191,23 +202,18 @@ export default function ParticipantPage({ query, user, tab }) {
     }
   }, [user]);
 
-  const handleStudyChange = (props) => {
-    if (isLocked) return;
-    setHasStudyChanged(true);
-    handleChange(props);
-  };
+  // A study that does not exist yet (new or clone) is created with the Save
+  // button; changes to an existing one are auto-saved
+  const isAutoSaveEnabled =
+    !isLocked && !!study?.id && area !== "cloneofstudy";
 
-  const handleStudyMultipleUpdate = (props) => {
-    if (isLocked) return;
-    setHasStudyChanged(true);
-    handleMultipleUpdate(props);
-  };
-
-  const captureStudyFile = (props) => {
-    if (isLocked) return;
-    setHasStudyChanged(true);
-    captureFile(props);
-  };
+  const inputsRef = useRef(inputs);
+  inputsRef.current = inputs;
+  const studyRef = useRef(study);
+  studyRef.current = study;
+  // the image that has been uploaded already, so that later saves do not
+  // upload it again while it is still in the form
+  const uploadedFileRef = useRef(null);
 
   const [
     createStudy,
@@ -253,63 +259,119 @@ export default function ParticipantPage({ query, user, tab }) {
     refetchQueries: [{ query: MY_STUDIES, variables: { id: user?.id } }],
   });
 
-  const [
-    updateStudy,
-    {
-      data: updateStudyData,
-      loading: updateStudyLoading,
-      error: updateStudyError,
-    },
-  ] = useMutation(UPDATE_STUDY, {
-    variables: {
-      id: study?.id,
-      input: {
-        title: inputs?.title,
-        slug: inputs?.slug,
-        description: inputs?.description,
-        settings: inputs?.settings,
-        info: inputs?.info,
-        image: inputs?.file
-          ? {
-              create: {
-                keystoneImage: { upload: inputs?.file },
-                altText: inputs?.title,
-              },
-            }
-          : null,
-        consent: inputs?.consent?.length
-          ? { connect: inputs?.consent.map((c) => ({ id: c?.id })) }
-          : { disconnect: study?.consent?.map((c) => ({ id: c?.id })) },
-      },
-    },
+  const [updateStudy] = useMutation(UPDATE_STUDY, {
     refetchQueries: projectMode
       ? [{ query: GET_PROJECT_STUDY, variables: { id: selector } }]
       : [{ query: MY_STUDY, variables: { id: selector } }],
   });
 
-  const saveStudy = async () => {
-    if (isLocked) return;
-    if (selector === "add" || area === "cloneofstudy") {
-      const newStudy = await createStudy();
-      router.push(
-        builderHref({
-          area: "studies",
-          selector: newStudy?.data?.createStudy?.id,
-          tab: "page",
-        })
-      );
-      setHasStudyChanged(false);
-    } else {
-      // Keep the unsaved-changes flag when the save fails, so edits aren't
-      // silently dropped.
-      try {
-        await updateStudy();
-        setHasStudyChanged(false);
-      } catch (err) {
-        alert(err?.message);
-      }
-    }
+  // reads the form when the save runs, not when it was scheduled
+  const saveStudyPage = async () => {
+    const current = inputsRef.current;
+    const savedStudy = studyRef.current;
+    const file =
+      current?.file && current.file !== uploadedFileRef.current
+        ? current.file
+        : null;
+    await updateStudy({
+      variables: {
+        id: savedStudy?.id,
+        input: {
+          title: current?.title,
+          slug: current?.slug,
+          description: current?.description,
+          settings: current?.settings,
+          info: current?.info,
+          image: file
+            ? {
+                create: {
+                  keystoneImage: { upload: file },
+                  altText: current?.title,
+                },
+              }
+            : null,
+          consent: current?.consent?.length
+            ? { connect: current?.consent.map((c) => ({ id: c?.id })) }
+            : { disconnect: savedStudy?.consent?.map((c) => ({ id: c?.id })) },
+        },
+      },
+    });
+    if (file) uploadedFileRef.current = file;
   };
+
+  const {
+    hasUnsavedChanges: hasStudyChanged,
+    saveState,
+    saveError,
+    markChanged,
+    retry: retrySave,
+  } = useAutoSave({
+    save: saveStudyPage,
+    isEnabled: isAutoSaveEnabled,
+    // text fields change on every keystroke
+    delay: 1500,
+  });
+
+  const handleStudyChange = (props) => {
+    if (isLocked) return;
+    handleChange(props);
+    markChanged();
+  };
+
+  const handleStudyMultipleUpdate = (props) => {
+    if (isLocked) return;
+    handleMultipleUpdate(props);
+    markChanged();
+  };
+
+  const captureStudyFile = async (props) => {
+    if (isLocked) return;
+    // the image is resized before it is put in the form
+    await captureFile(props);
+    markChanged();
+  };
+
+  // The Save button, shown until the study exists
+  const createStudyFromPage = async () => {
+    if (isLocked) return;
+    const newStudy = await createStudy();
+    router.push(
+      builderHref({
+        area: "studies",
+        selector: newStudy?.data?.createStudy?.id,
+        tab: "page",
+      })
+    );
+  };
+
+  // another study already uses this url
+  const isSlugTaken =
+    /unique constraint/i.test(saveError?.message || "") &&
+    /slug/i.test(saveError?.message || "");
+
+  const navigationSaveProps = isAutoSaveEnabled
+    ? {
+        // auto-saved changes only need a warning when saving them failed
+        hasStudyChanged: saveState === "error",
+        saveStatus: {
+          state: saveState,
+          errorLabel: isSlugTaken
+            ? t(
+                "participantPageMain.slugTaken",
+                {},
+                { default: "This study URL is already taken" }
+              )
+            : undefined,
+          errorMessage: saveError?.message,
+          lastSavedAt: study?.updatedAt,
+          onRetry: retrySave,
+        },
+      }
+    : {
+        saveBtnName: t("participantPageMain.save"),
+        saveBtnFunction: createStudyFromPage,
+        hasStudyChanged,
+      };
 
   if (!study?.id) {
     return (
@@ -319,9 +381,7 @@ export default function ParticipantPage({ query, user, tab }) {
           query={query}
           user={user}
           tab={tab}
-          saveBtnName={t('participantPageMain.save')}
-          saveBtnFunction={saveStudy}
-          hasStudyChanged={hasStudyChanged}
+          {...navigationSaveProps}
         />
         <InDev
           header={t('participantPageMain.noStudyHeader')}
@@ -338,9 +398,7 @@ export default function ParticipantPage({ query, user, tab }) {
         query={query}
         user={user}
         tab={tab}
-        saveBtnName={t('participantPageMain.save')}
-        saveBtnFunction={saveStudy}
-        hasStudyChanged={hasStudyChanged}
+        {...navigationSaveProps}
         isCanvasLocked={isLocked}
       />
       <StyledParticipantPage>

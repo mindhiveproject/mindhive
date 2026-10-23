@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
 import ConnectProject from "./Connect/Main";
@@ -32,6 +33,7 @@ export default function Navigation({
   saveBtnName,
   saveBtnFunction,
   hasStudyChanged,
+  saveStatus,
   cardId,
   isCanvasLocked,
   connectModalOpen,
@@ -223,11 +225,17 @@ export default function Navigation({
           </Button>
         )}
 
+        {saveStatus && !isCanvasLocked && <SaveStatus {...saveStatus} />}
+
         {saveBtnFunction && !isCanvasLocked && (
           <Button
             type="button"
             variant="tonal"
-            disabled={!(hasStudyChanged || area === "cloneofstudy")}
+            disabled={
+              saveStatus
+                ? saveStatus.state === "saving"
+                : !(hasStudyChanged || area === "cloneofstudy")
+            }
             onClick={() => saveBtnFunction()}
           >
             {saveBtnName}
@@ -235,5 +243,75 @@ export default function Navigation({
         )}
       </div>
     </div>
+  );
+}
+
+// Shows that the page is saved automatically: when it was last saved, a save
+// in progress, a failed save with a retry, or the outcome of saving a version
+function SaveStatus({
+  state,
+  errorLabel,
+  errorMessage,
+  lastSavedAt,
+  versionNotice,
+  onRetry,
+}) {
+  const { t } = useTranslation("builder");
+
+  // refresh the label once a save is no longer recent
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setTick((tick) => tick + 1), 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (state === "error") {
+    return (
+      <span
+        className="saveStatus saveStatus--error"
+        role="status"
+        title={errorMessage || undefined}
+      >
+        {errorLabel ||
+          t("navigation.saveFailed", {}, { default: "Couldn't save" })}
+        <button type="button" className="saveStatusRetry" onClick={onRetry}>
+          {t("navigation.retrySave", {}, { default: "Retry" })}
+        </button>
+      </span>
+    );
+  }
+
+  let label = null;
+  if (state === "saving") {
+    label = t("navigation.saving", {}, { default: "Saving…" });
+  } else if (versionNotice === "saved") {
+    label = t("navigation.versionSaved", {}, { default: "Version saved" });
+  } else if (versionNotice === "unchanged") {
+    label = t(
+      "navigation.versionUnchanged",
+      {},
+      { default: "No changes since the last version" }
+    );
+  } else if (lastSavedAt && moment().diff(lastSavedAt, "hours") < 1) {
+    // auto-saves keep the time within seconds while someone is working, so
+    // the exact age is only shown on hover
+    label = t("navigation.savedRecently", {}, { default: "Saved recently" });
+  } else if (lastSavedAt) {
+    label = t(
+      "navigation.lastSaved",
+      { time: moment(lastSavedAt).fromNow() },
+      { default: "Saved {{time}}" }
+    );
+  }
+  if (!label) return null;
+
+  return (
+    <span
+      className="saveStatus"
+      role="status"
+      title={lastSavedAt ? moment(lastSavedAt).format("LLL") : undefined}
+    >
+      {label}
+    </span>
   );
 }

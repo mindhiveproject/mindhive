@@ -345,6 +345,30 @@ export const StyledBuilderArea = styled.div`
         color: #b9261a;
         border: solid 1px #b9261a;
       }
+
+      .saveStatus {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+        font: var(--MH-Type-Label-Small);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Dark, #5d5763);
+
+        &.saveStatus--error {
+          color: #b9261a;
+        }
+
+        .saveStatusRetry {
+          padding: 0;
+          border: none;
+          background: none;
+          font: inherit;
+          color: inherit;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
     }
     .secondLine {
       /* Study journey tab bar — rendered via the shared Navbar component
@@ -1055,16 +1079,6 @@ export const StyledCanvasBuilder = styled.div`
         &:hover {
           background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
         }
-      }
-
-      .versionLoadedNote {
-        margin: 0;
-        padding: 6px 10px;
-        border-radius: 8px;
-        background: var(--MH-Theme-Primary-Light, #def8fb);
-        font: var(--MH-Type-Label-Small);
-        letter-spacing: 0;
-        color: var(--MH-Theme-Primary-Dark, #336f8a);
       }
 
       .versionFilterRow {

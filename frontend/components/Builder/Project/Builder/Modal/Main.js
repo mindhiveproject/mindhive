@@ -30,7 +30,7 @@ export default function Modal({
   node,
   engine,
   close,
-  setHasStudyChanged,
+  markStudyChanged,
   study,
 }) {
   const { t } = useTranslation("builder");
@@ -113,7 +113,7 @@ export default function Modal({
       };
     });
     engine.repaintCanvas();
-    setHasStudyChanged(true);
+    markStudyChanged();
     close();
   };
 

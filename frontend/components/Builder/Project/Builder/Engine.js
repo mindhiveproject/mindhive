@@ -1,5 +1,4 @@
-import { useState, useEffect, useReducer, useRef, useCallback, useMemo } from "react";
-import debounce from "lodash.debounce";
+import { useState, useEffect, useReducer, useRef, useCallback } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import uniqid from "uniqid";
@@ -31,6 +30,7 @@ import {
   configureStrictDiagramLinks,
 } from "../../shared/strictDiagramLinks";
 import { isStudyLocked } from "../../../../lib/studyLock";
+import useAutoSave from "../../../../lib/useAutoSave";
 
 export default function Engine({
   query,
@@ -46,8 +46,13 @@ export default function Engine({
 
   // Lock the canvas once the study is submitted
   const isCanvasLocked = isStudyLocked(study);
+  // A study that does not exist yet (new, clone, project without a study) is
+  // created with the Save button; changes to an existing one are auto-saved
+  const isAutoSaveEnabled =
+    !isCanvasLocked && !!study?.id && query?.area !== "cloneofstudy";
 
-  const [hasStudyChanged, setHasStudyChanged] = useState(false);
+  // "saved" or "unchanged" after the Save version button, shown for a moment
+  const [versionNotice, setVersionNotice] = useState(null);
   const [canUndo, setCanUndo] = useState(false);
   const [cycleWarningOpen, setCycleWarningOpen] = useState(false);
   // force update canvas
@@ -61,6 +66,25 @@ export default function Engine({
   const structuralChangePendingRef = useRef(false);
   const isCanvasLockedRef = useRef(isCanvasLocked);
   isCanvasLockedRef.current = isCanvasLocked;
+  const saveDesignRef = useRef(async () => null);
+
+  const {
+    hasUnsavedChanges: hasStudyChanged,
+    saveState,
+    saveError,
+    markChanged,
+    saveNow,
+    autoSave,
+    retry: retrySave,
+  } = useAutoSave({
+    save: (options) => saveDesignRef.current(options),
+    isEnabled: isAutoSaveEnabled,
+  });
+
+  const markStudyChanged = useCallback(() => {
+    if (isCanvasLockedRef.current) return;
+    markChanged();
+  }, [markChanged]);
 
   // Storm listens for keyup/keydown on document and does event.key.toLowerCase().
   // Typing in the sidepanel (or any field) must not reach that handler.
@@ -128,26 +152,45 @@ export default function Engine({
       structuralChangePendingRef.current = true;
       queueMicrotask(() => {
         captureBaseline();
-        setHasStudyChanged(true);
+        markStudyChanged();
         structuralChangePendingRef.current = false;
       });
     }
-  }, [captureBaseline]);
+  }, [captureBaseline, markStudyChanged]);
+
+  // Moving a block or editing a comment is saved, but is not an undo step
+  const registerNodeListeners = useCallback(
+    (node) => {
+      node?.registerListener?.({
+        positionChanged: () => markStudyChanged(),
+        contentChanged: () => markStudyChanged(),
+      });
+    },
+    [markStudyChanged]
+  );
 
   // Undo only for block structure changes (add/remove/connect), not pan or node drag.
   const registerModelListeners = useCallback(
     (model) => {
       if (!model) return;
+      model.getNodes?.().forEach(registerNodeListeners);
       model.registerListener({
-        linksUpdated: () => {
+        linksUpdated: (event) => {
+          // a new link is dragged out loose and connected when it is dropped
+          if (event?.isCreated) {
+            event.link?.registerListener?.({
+              targetPortChanged: () => markStudyChanged(),
+            });
+          }
           markStructuralChange();
         },
-        nodesUpdated: () => {
+        nodesUpdated: (event) => {
+          if (event?.isCreated) registerNodeListeners(event.node);
           markStructuralChange();
         },
       });
     },
-    [markStructuralChange]
+    [markStructuralChange, markStudyChanged, registerNodeListeners]
   );
 
   const replaceModel = useCallback(
@@ -173,10 +216,10 @@ export default function Engine({
       } finally {
         captureBaseline();
         skipHistoryRef.current = false;
-        setHasStudyChanged(true);
+        markStudyChanged();
       }
     },
-    [pushUndoFromCurrent, captureBaseline]
+    [pushUndoFromCurrent, captureBaseline, markStudyChanged]
   );
 
   const undoCanvas = useCallback(() => {
@@ -192,13 +235,13 @@ export default function Engine({
       undoSlotRef.current = null;
       setCanUndo(false);
       captureBaseline(model);
-      setHasStudyChanged(true);
+      markStudyChanged();
       forceUpdate();
       eng.repaintCanvas?.();
     } finally {
       skipHistoryRef.current = false;
     }
-  }, [captureBaseline, registerModelListeners, forceUpdate]);
+  }, [captureBaseline, registerModelListeners, forceUpdate, markStudyChanged]);
 
   const clearUndo = useCallback(() => {
     undoSlotRef.current = null;
@@ -353,8 +396,20 @@ export default function Engine({
   // save the state of the diagram to the more general study state
   const saveDiagramState = () => {
     const model = engine?.model;
-    // Serializing
-    const diagram = JSON.stringify(model?.serialize());
+    // Serializing. A link that is not connected on both ends (one that is
+    // being dragged while an auto-save runs) is left out
+    const serialized = model?.serialize();
+    const linkLayer = serialized?.layers?.find(
+      (layer) => layer?.type === "diagram-links"
+    );
+    if (linkLayer?.models) {
+      linkLayer.models = Object.fromEntries(
+        Object.entries(linkLayer.models).filter(
+          ([, link]) => link?.sourcePort && link?.targetPort
+        )
+      );
+    }
+    const diagram = JSON.stringify(serialized);
     // Get the study flow
     const flow = createStudyFlow();
     return {
@@ -509,14 +564,14 @@ export default function Engine({
   const onAfterCanvasMutation = () => {
     captureBaseline(getActiveModel());
     skipHistoryRef.current = false;
-    setHasStudyChanged(true);
+    markStudyChanged();
     forceUpdate();
   };
 
   const onModelReplaced = (model) => {
     replaceModel(model);
     skipHistoryRef.current = false;
-    setHasStudyChanged(true);
+    markStudyChanged();
   };
 
   const addFunctions = {
@@ -628,7 +683,30 @@ export default function Engine({
     return flow;
   };
 
-  const buildStudy = async () => {
+  saveDesignRef.current = async ({ createVersion = false } = {}) => {
+    const { flow, diagram } = saveDiagramState();
+    // saveStudy creates the study when it does not exist yet, and stores the
+    // design as a new version when createVersion is set and it differs from
+    // the most recent one
+    return saveStudy({
+      flow,
+      diagram,
+      descriptionInProposalCardId: study?.descriptionInProposalCardId,
+      tags: study?.tags?.map((tag) => ({ id: tag?.id })) || [],
+      status: study?.status,
+      createVersion,
+    });
+  };
+
+  useEffect(() => {
+    if (!versionNotice) return undefined;
+    const timeout = setTimeout(() => setVersionNotice(null), 4000);
+    return () => clearTimeout(timeout);
+  }, [versionNotice]);
+
+  // The Save button: stores the design as a new version, or creates the study
+  // when it does not exist yet
+  const saveVersion = async () => {
     const model = engine?.model;
 
     // CLEANUP: Remove any dangling/loose links before saving
@@ -676,18 +754,10 @@ export default function Engine({
       engine.repaintCanvas();
     }
 
-    const { flow, diagram } = saveDiagramState();
-    // saveStudy stores the design as a new study version when it differs from
-    // the most recent one, so the study is only marked as saved once both the
-    // version and the study itself have been written
+    autoSave.cancel();
+    let result;
     try {
-      await saveStudy({
-        flow,
-        diagram,
-        descriptionInProposalCardId: study?.descriptionInProposalCardId,
-        tags: study?.tags.map((tag) => ({ id: tag?.id })),
-        status: study?.status,
-      });
+      result = await saveNow({ createVersion: true, force: true });
     } catch (error) {
       alert(
         t(
@@ -701,52 +771,19 @@ export default function Engine({
       );
       return;
     }
-    setHasStudyChanged(false);
+    if (isAutoSaveEnabled) {
+      setVersionNotice(result?.versionCreated ? "saved" : "unchanged");
+    }
     clearUndo();
   };
 
-  const persistStudyQuietlyRef = useRef(async () => {});
-  persistStudyQuietlyRef.current = async () => {
-    if (isCanvasLocked) return;
-    const { flow, diagram } = saveDiagramState();
-    try {
-      await saveStudy({
-        flow,
-        diagram,
-        descriptionInProposalCardId: study?.descriptionInProposalCardId,
-        tags: study?.tags?.map((tag) => ({ id: tag?.id })) || [],
-        status: study?.status,
-      });
-      setHasStudyChanged(false);
-      clearUndo();
-    } catch (error) {
-      // Keep Save enabled so the user can retry from the header.
-    }
-  };
-
-  const persistStudy = useMemo(
-    () =>
-      debounce(() => {
-        persistStudyQuietlyRef.current?.();
-      }, 1000),
-    []
-  );
-
-  useEffect(
-    () => () => {
-      persistStudy.flush();
-      persistStudy.cancel();
-    },
-    [persistStudy]
-  );
-
   const handleStudyChange = (props) => {
-    setHasStudyChanged(true);
+    markStudyChanged();
     handleChange(props);
   };
 
   const handleStudyMultipleUpdate = (props) => {
-    setHasStudyChanged(true);
+    markStudyChanged();
     handleMultipleUpdate(props);
   };
 
@@ -757,9 +794,27 @@ export default function Engine({
         query={query}
         user={user}
         tab={tab}
-        saveBtnName={t("engine.save", "Save")}
-        saveBtnFunction={buildStudy}
-        hasStudyChanged={hasStudyChanged}
+        saveBtnName={
+          isAutoSaveEnabled
+            ? t("engine.saveVersion", {}, { default: "Save version" })
+            : t("engine.save", "Save")
+        }
+        saveBtnFunction={saveVersion}
+        // auto-saved changes only need a warning when saving them failed
+        hasStudyChanged={
+          isAutoSaveEnabled ? saveState === "error" : hasStudyChanged
+        }
+        saveStatus={
+          isAutoSaveEnabled
+            ? {
+                state: saveState,
+                errorMessage: saveError?.message,
+                lastSavedAt: study?.updatedAt,
+                versionNotice,
+                onRetry: retrySave,
+              }
+            : undefined
+        }
         isCanvasLocked={isCanvasLocked}
       />
       <Builder
@@ -771,15 +826,14 @@ export default function Engine({
         handleMultipleUpdate={handleStudyMultipleUpdate}
         engine={engine}
         addFunctions={addFunctions}
-        hasStudyChanged={hasStudyChanged}
-        setHasStudyChanged={setHasStudyChanged}
+        markStudyChanged={markStudyChanged}
         isCanvasLocked={isCanvasLocked}
         canUndo={canUndo}
         undoCanvas={undoCanvas}
         onBeforeCanvasMutation={onBeforeCanvasMutation}
         onAfterCanvasMutation={onAfterCanvasMutation}
         onModelReplaced={onModelReplaced}
-        persistStudy={persistStudy}
+        persistStudy={autoSave}
       />
       <CycleLinkPreventedModal
         open={cycleWarningOpen}

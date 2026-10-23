@@ -36,11 +36,15 @@ export const CommentWidget = props => {
                 props.engine.getModel().setLocked(true); // lock the model
               }}
               onBlur={() => {
-                if (props.node.options.content != ref.current.value) {
+                const hasChanged =
+                  props.node.options.content != ref.current.value;
+                if (hasChanged) {
                   props.node.options.time = Date.now();
                 }
                 props.node.options.content = ref.current.value;
                 props.engine.getModel().setLocked(false); // unlock the model
+                // lets the builder auto-save the comment
+                if (hasChanged) props.node.fireEvent({}, 'contentChanged');
               }}
               defaultValue={props.node?.options?.content}
             ></textarea>
