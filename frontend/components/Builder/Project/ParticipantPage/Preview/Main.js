@@ -3,6 +3,10 @@ import useTranslation from "next-translate/useTranslation";
 import { getStudyImageUrl } from "../../../../../lib/profileStudyImageUrls";
 import Button from "../../../../DesignSystem/Button";
 
+import { StyledStudyPage } from "../../../../styles/StyledStudyPage";
+
+// The canvas renders the study landing page (Studies/Landing/StudyPage) on
+// the page surface, with its texts editable in place.
 export default function Preview({
   user,
   study,
@@ -20,12 +24,15 @@ export default function Preview({
   const handleParameterChange = (e, classType) => {
     const { name, type, value, className } = e.target;
     const val = type === "number" ? parseFloat(value) : value;
+    // Editable fields carry extra classes for styling; the first one is the
+    // info key to write (`header` or `text`).
+    const key = (className || "").split(" ")[0];
     const currentInfo = study?.info ? [...study?.info] : [];
     if (currentInfo.filter((el) => el.name === name).length === 0) {
       currentInfo.push({ name });
     }
     const info = currentInfo.map((el) =>
-      el.name === name ? { ...el, [className]: val } : el
+      el.name === name ? { ...el, [key]: val } : el
     );
     handleMultipleUpdate({
       info,
@@ -45,97 +52,113 @@ export default function Preview({
 
   return (
     <div className="preview">
-      <div className="studyInformation">
-        <div className="uploadImageContainer">
-          <div
-            className={
-              studyImageUrl
-                ? "upload-btn-wrapper-with-image"
-                : "upload-btn-wrapper"
-            }
-          >
-            <Button variant="filled" type="button">
-              {studyImageUrl
-                ? t("preview.updateStudyImage")
-                : t("preview.uploadStudyImage")}
-            </Button>
-            <input
-              type="file"
-              id="file"
-              name="file"
-              onChange={(e) => captureFile(e)}
-            />
-            <div>
-              {studyImageUrl && (
-                <img
-                  width="213"
-                  src={studyImageUrl}
-                  alt={t('preview.uploadPreview')}
+      <div className="previewSurface">
+        <StyledStudyPage className="participantPagePreview">
+          {/* Single wrapper, like StudyPage, so the content takes the same column */}
+          <div>
+            <div className="studyImage uploadImageContainer">
+              <label
+                className={
+                  studyImageUrl ? "imageSlot imageSlot--filled" : "imageSlot"
+                }
+              >
+                {studyImageUrl && (
+                  <img src={studyImageUrl} alt={t("preview.uploadPreview")} />
+                )}
+                <span className="imageSlotAction">
+                  <Button
+                    variant={studyImageUrl ? "tonal" : "outline"}
+                    type="button"
+                    tabIndex={-1}
+                  >
+                    {studyImageUrl
+                      ? t("preview.updateStudyImage")
+                      : t("preview.uploadStudyImage")}
+                  </Button>
+                </span>
+                <input
+                  type="file"
+                  id="file"
+                  name="file"
+                  accept="image/*"
+                  onChange={(e) => captureFile(e)}
                 />
-              )}
-            </div>
-          </div>
-        </div>
-        <div id="studyTitle">
-          <label htmlFor="title">
-            <textarea
-              id="title"
-              name="title"
-              placeholder={t('preview.title')}
-              value={study.title}
-              onChange={handleChange}
-              required
-              className="title"
-            />
-          </label>
-        </div>
-
-        <div>
-          <label htmlFor="description">
-            <textarea
-              id="description"
-              name="description"
-              placeholder={t('preview.description')}
-              value={study.description}
-              onChange={handleChange}
-              rows="7"
-              className="description"
-            />
-          </label>
-        </div>
-      </div>
-
-      <div className="details">
-        <div className="leftPanel">
-          <Tabs
-            user={user}
-            study={study}
-            infoBlocks={infoBlocks}
-            handleParameterChange={handleParameterChange}
-            deleteParameter={deleteParameter}
-          />
-        </div>
-
-        <div className="rightPanel">
-          <div className="timeInformationBlock">
-            <div>
-              <label htmlFor="time">
-                {t('preview.timeToComplete')}
-                <div className="completeTimeLine">
-                  <img src="/assets/icons/time.svg" alt="icon" width="24" />
-                  <input
-                    type="text"
-                    id="time"
-                    name="time"
-                    value={infoBlocks.time}
-                    onChange={handleParameterChange}
-                    className="text"
-                  />
-                </div>
               </label>
             </div>
+
+            <div className="studyTitleDescriptionBtns">
+              <div id="studyTitle">
+                <textarea
+                  id="title"
+                  name="title"
+                  aria-label={t("preview.title")}
+                  placeholder={t("preview.title")}
+                  value={study.title || ""}
+                  onChange={handleChange}
+                  required
+                  rows={1}
+                  className="editable title"
+                />
+              </div>
+
+              <div className="studyDescription">
+                <textarea
+                  id="description"
+                  name="description"
+                  aria-label={t("preview.description")}
+                  placeholder={t("preview.description")}
+                  value={study.description || ""}
+                  onChange={handleChange}
+                  rows={2}
+                  className="editable description"
+                />
+              </div>
+
+              <div className="studyInfoTimePartners">
+                <div className="timeFrequency timeInformationBlock">
+                  <label htmlFor="time">
+                    <div className="studyInformationHeader">
+                      {t("preview.timeToComplete")}
+                    </div>
+                    <input
+                      type="text"
+                      id="time"
+                      name="time"
+                      placeholder={t(
+                        "preview.timePlaceholder",
+                        {},
+                        {
+                          default: "e.g. 15 minutes",
+                        }
+                      )}
+                      value={infoBlocks.time || ""}
+                      onChange={handleParameterChange}
+                      className="text editable"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div className="studyWhatWhoHow">
+                <Tabs
+                  user={user}
+                  study={study}
+                  infoBlocks={infoBlocks}
+                  handleParameterChange={handleParameterChange}
+                  deleteParameter={deleteParameter}
+                />
+              </div>
+            </div>
+
+            <div className="studyContent">
+              <div className="controlBtns">
+                <Button variant="filled" type="button" tabIndex={-1}>
+                  {t("participate", {}, { default: "Participate" })}
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
+        </StyledStudyPage>
       </div>
     </div>
   );

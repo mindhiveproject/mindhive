@@ -1,29 +1,20 @@
 import absoluteUrl from "next-absolute-url";
-import { useState } from "react";
-import { Radio } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
+
+import CopyButton from "../../../../DesignSystem/CopyButton";
 
 export default function ShareStudy({ study, handleChange }) {
   const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
-  const [isCustomize, setIsCustomize] = useState(true);
-
-  const copyLink = () => {
-    const copyLink = `${origin}/studies/${study.slug}`;
-    const temp = document.createElement("input");
-    document.body.append(temp);
-    temp.value = copyLink;
-    temp.select();
-    document.execCommand("copy");
-    temp.remove();
-    alert(t('share.linkCopied'));
-  };
+  const studyUrl = study?.slug ? `${origin}/studies/${study.slug}` : "";
 
   const sanitizeInput = (e) => {
+    // Spaces turn into hyphens as they are typed (no trim, or the space
+    // would vanish before it could be converted).
     const cleanedValue = e.target.value
-      .trim()
       .replace(/\s+/g, "-")
-      .replace(/[^\w-]/g, "");
+      .replace(/[^\w-]/g, "")
+      .replace(/-{2,}/g, "-");
     handleChange({
       target: {
         name: e.target.name,
@@ -33,56 +24,44 @@ export default function ShareStudy({ study, handleChange }) {
   };
 
   return (
-    <div id="shareStudy">
-      <h2>{t('share.shareYourStudy')}</h2>
+    <div id="shareStudy" className="settingsSection">
+      <div className="settingsSectionHeader">
+        <h2>{t("share.shareYourStudy")}</h2>
+      </div>
 
-      <div className="card">
-        <h3>{t('share.studyUrl')}</h3>
-        {study?.slug ? (
-          <label htmlFor="slug" onClick={() => copyLink()}>
-            <p className="accessLink">
-              {origin}
-              /studies/
-              {study.slug}
-            </p>
-          </label>
+      <div className="settingsField">
+        <p className="settingsFieldLabel">{t("share.studyUrl")}</p>
+        {studyUrl ? (
+          <CopyButton
+            value={studyUrl}
+            className="studyUrlCopy"
+            title={studyUrl}
+            // Let the label fill the chip so "Copied" centres on its full width
+            labelStyle={{ flex: 1 }}
+          >
+            <span className="studyUrl">{studyUrl}</span>
+          </CopyButton>
         ) : (
-          <p className="accessLink highlight">{t('share.customizeBelow')}</p>
+          <p className="settingsSectionNote">{t("share.customizeBelow")}</p>
         )}
       </div>
 
-      <div className="card" id="customizeUrl">
-        <div className="settingsBlock">
-          <div>
-            <h3>{t('share.customizeUrl')}</h3>
-            <p>{t('share.customizeUrlDesc')}</p>
-            {isCustomize && (
-              <div>
-                <div>
-                  <input
-                    type="text"
-                    id="slug"
-                    name="slug"
-                    value={study.slug}
-                    onChange={sanitizeInput}
-                    required
-                  />
-                </div>
-                <div>
-                  {t('share.tip')}
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="input">
-            <Radio
-              toggle
-              label={isCustomize ? t('share.on') : t('share.off')}
-              checked={isCustomize}
-              onChange={() => setIsCustomize(!isCustomize)}
-            />
-          </div>
+      <div className="settingsField" id="customizeUrl">
+        <label className="settingsFieldLabel" htmlFor="slug">
+          {t("share.customizeUrl")}
+        </label>
+        <div className="slugInput">
+          <span className="slugPrefix">/studies/</span>
+          <input
+            type="text"
+            id="slug"
+            name="slug"
+            value={study.slug || ""}
+            onChange={sanitizeInput}
+            required
+          />
         </div>
+        <p className="settingsSectionNote">{t("share.tip")}</p>
       </div>
     </div>
   );

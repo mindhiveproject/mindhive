@@ -1795,224 +1795,369 @@ export const StyledCard = styled.div`
 `;
 
 export const StyledParticipantPage = styled.div`
+  /* Same shell as the Study Builder: neutral canvas + floating white side panel */
   display: grid;
-  grid-template-columns: 1fr auto;
-  padding: 0px;
-  height: 90vh;
-  .preview {
-    background: #fbfaf7;
-    display: grid;
-    height: 100%;
-    grid-template-columns: 1fr;
-    overflow: auto;
-    grid-gap: 3rem;
-    padding: 30px 50px;
-    overflow-y: scroll;
+  grid-template-columns: minmax(0, 1fr) clamp(380px, 38%, 580px);
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  background: #f4f5f5;
 
-    input,
-    textarea,
-    select {
-      background: #fbfaf7;
+  /* ---------- Canvas: framed participant view ---------- */
+  .preview {
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 40px clamp(16px, 4vw, 56px) 64px;
+    box-sizing: border-box;
+  }
+
+  /* The landing page sits straight on the canvas, at the public page's width */
+  .previewSurface {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* The landing page grid already defines the column; drop its tall min-height */
+  .participantPagePreview {
+    min-height: 0;
+  }
+
+  /* Editable fields look like the final page; an outline reveals them on hover */
+  .editable {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 4px 8px;
+    margin-left: -8px;
+    background: transparent;
+    border: 1px dashed transparent;
+    border-radius: 6px;
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    resize: none;
+    field-sizing: content;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    &::placeholder {
+      color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    }
+    &:hover {
+      border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    }
+    &:focus {
+      outline: 0;
+      border-style: solid;
+      border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+      background: #ffffff;
+    }
+  }
+
+  .editable.title {
+    font: var(--MH-Type-Heading-Large);
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  .editable.description {
+    font: var(--MH-Type-Body-Large);
+    color: #4a4a4a;
+    min-height: 3em;
+  }
+  .studyDescription {
+    margin-bottom: 24px;
+  }
+
+  .studyImage {
+    padding: 0 0 16px;
+  }
+  .imageSlot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 140px;
+    border: 1px dashed var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    border-radius: 8px;
+    background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+    cursor: pointer;
+    overflow: hidden;
+    img {
+      display: block;
       width: 100%;
-      border: 1px solid #e6e6e6;
-      border-radius: 4px;
+      max-height: 360px;
+      object-fit: cover;
+    }
+    input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+  .imageSlot--filled {
+    border: 0;
+    background: transparent;
+    .imageSlotAction {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    &:hover .imageSlotAction,
+    &:focus-within .imageSlotAction {
+      opacity: 1;
+    }
+  }
+
+  .timeInformationBlock {
+    display: block;
+    label {
+      display: block;
+      max-width: 280px;
+    }
+    .editable {
+      font: var(--MH-Type-Body-Base);
+    }
+  }
+
+  .infoTabsContainer {
+    display: grid;
+    gap: 16px;
+  }
+  .infoTabsMenu {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 4px;
+    border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+  }
+  .infoTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 4px 6px 12px;
+    margin-bottom: -1px;
+    border: 1px solid transparent;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    font: var(--MH-Type-Body-Base);
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    .editable {
+      width: auto;
+      margin-left: 0;
+      padding: 2px 4px;
+      field-sizing: content;
+    }
+  }
+  .infoTab--active {
+    background: #ffffff;
+    border-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border-bottom-color: #ffffff;
+    color: #1a1a1a;
+  }
+  .infoTabDelete,
+  .infoTabAdd {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    border-radius: 4px;
+    &:hover {
+      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      color: #1a1a1a;
+    }
+  }
+  .infoTabDelete {
+    width: 22px;
+    height: 22px;
+    font-size: 16px;
+    line-height: 1;
+    opacity: 0;
+  }
+  .infoTab:hover .infoTabDelete,
+  .infoTab--active .infoTabDelete {
+    opacity: 1;
+  }
+  .infoTabAdd {
+    padding: 6px 10px;
+    margin-bottom: 4px;
+    font: var(--MH-Type-Label-Base);
+  }
+  .infoTabContent {
+    font: var(--MH-Type-Body-Base);
+    min-height: 5em;
+  }
+  .infoTabsEmpty {
+    margin: 0;
+    font: var(--MH-Type-Body-Base);
+    color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+  }
+
+  /* The Participate button is shown, not used, in the preview */
+  .studyContent {
+    margin: 24px 0 0;
+    padding: 0;
+  }
+  .controlBtns {
+    pointer-events: none;
+    margin-bottom: 0;
+  }
+
+  /* ---------- Side panel (mirrors the Study Builder's .sidepanel) ---------- */
+  .settings {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    margin: 8px;
+    padding: 0 16px 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #ffffff;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    box-sizing: border-box;
+    box-shadow: -4px 0px 7.5px rgba(0, 0, 0, 0.02);
+  }
+  .settingsPanelHeader {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 16px 0 12px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    h1 {
+      margin: 0;
+      font: var(--MH-Type-Title-Large);
+      letter-spacing: 0;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+    }
+  }
+
+  .studySettings {
+    display: grid;
+    gap: 12px;
+    padding: 12px 0 8px;
+    min-width: 0;
+  }
+  .settingsCard {
+    display: grid;
+    gap: 12px;
+    padding: 20px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border-radius: 8px;
+    min-width: 0;
+  }
+  .settingsSection {
+    display: grid;
+    gap: 16px;
+    min-width: 0;
+  }
+  .settingsSectionHeader h2 {
+    margin: 0;
+    font: 500 18px/26px "Inter", sans-serif;
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+  .settingsSectionNote {
+    margin: 0;
+    font: 400 14px/20px "Inter", sans-serif;
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+  }
+  .settingsField {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+  .settingsFieldLabel {
+    margin: 0;
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+
+  /* CopyButton's label grid sizes to its text; let it shrink so the URL ellipsises */
+  .studyUrlCopy {
+    width: 100%;
+    max-width: 100%;
+    justify-content: flex-start;
+    span {
+      min-width: 0;
+    }
+  }
+  .studyUrl {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .slugInput {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    overflow: hidden;
+    &:focus-within {
+      border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    }
+    .slugPrefix {
+      padding: 10px 0 10px 12px;
+      font: var(--MH-Type-Body-Base);
+      color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+    }
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 12px 10px 2px;
+      border: 0;
+      font: var(--MH-Type-Body-Base);
       &:focus {
         outline: 0;
-        background: white;
-        border-color: mintcream;
-      }
-    }
-
-    .studyInformation {
-      display: grid;
-      justify-items: center;
-      grid-gap: 1rem;
-
-      .title {
-        font-style: normal;
-        font: var(--MH-Type-Heading-Large);
-        letter-spacing: 0;
-        text-align: center;
-        color: #1a1a1a;
-        width: 953px;
-      }
-
-      .description {
-        font-style: normal;
-        font: var(--MH-Type-Body-Large);
-        letter-spacing: 0;
-        text-align: center;
-        color: #666666;
-        width: 758px;
-      }
-    }
-
-    .details {
-      display: grid;
-      align-items: baseline;
-      width: 1125px;
-      justify-self: center;
-      grid-template-columns: 5fr 2fr;
-      grid-gap: 10rem;
-      /* border-opacity: 0.5; */
-      border-top: 14px solid #f2f2f2;
-      .leftPanel {
-        display: grid;
-      }
-      .rightPanel {
-        display: grid;
-      }
-    }
-
-    .timeInformationBlock {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      margin: 40px 0px 30px 0px;
-      .completeTimeLine {
-        display: grid;
-        grid-template-columns: 24px auto;
-      }
-    }
-
-    .infoTabsContainer {
-      display: grid;
-      align-items: center;
-      grid-template-columns: auto 100px;
-      grid-gap: 5px;
-      .tabHeaderContainer {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-gap: 5px;
-      }
-      input {
-        font-style: normal;
-        font: var(--MH-Type-Body-Base);
-        letter-spacing: 0;
-        color: #666666;
-        border: 0px solid;
-      }
-      input: focus {
-        border: 1px solid red;
-      }
-      .menu {
-        width: 100%;
-        display: grid;
-        grid-gap: 10px;
-        grid-template-columns: repeat(auto-fill, 100px);
-        margin: 10px 0px 0px 0px;
-        .menuTitle {
-          display: grid;
-          align-items: center;
-          justify-items: center;
-          grid-template-columns: 1fr;
-          border-bottom: 2px solid #e8ebef;
-          padding-bottom: 10px;
-          cursor: pointer;
-        }
-        .titleWithIcon {
-          display: grid;
-          grid-gap: 5px;
-          grid-template-columns: auto 1fr;
-        }
-        .selectedMenuTitle {
-          border-bottom: 4px solid #ffc107;
-        }
-      }
-    }
-
-    .uploadImageContainer {
-      .upload-btn-wrapper {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-        background: #f2f2f2;
-        padding: 65px 52px 65px 52px;
-        margin-bottom: 10px;
-      }
-
-      .upload-btn-wrapper-with-image {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-        margin-bottom: 10px;
-      }
-
-      .upload-btn-wrapper input[type="file"] {
-        font-size: 100px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        opacity: 0;
-      }
-      .upload-btn-wrapper-with-image input[type="file"] {
-        font-size: 100px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        opacity: 0;
       }
     }
   }
-  .settings {
+
+  .settingsList {
     display: grid;
-    align-content: baseline;
-    grid-gap: 18px;
-    background: #f4f5f5;
-    box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
-    padding: 30px;
-    overflow-y: scroll;
-    width: 494px;
-    .studyDescription {
-      display: grid;
-      .selector {
-        margin: 10px 0px;
-        font-style: normal;
-        font: var(--MH-Type-Label-Large);
-        letter-spacing: 0;
-        color: #1a1a1a;
-      }
+  }
+  .settingsRow {
+    display: grid;
+    gap: 10px;
+    padding: 16px 0;
+    border-top: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    &:first-child {
+      border-top: 0;
+      padding-top: 0;
     }
-    .card {
-      display: grid;
-      padding: 20px 30px;
-      background: #ffffff;
-      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.07);
-      border-radius: 8px;
-      margin: 10px 0px;
-      .accessLink {
-        cursor: pointer;
-        padding: 15px 10px 15px 10px;
-        background: #ffffff;
-        border: 1px solid #ced4da;
-        box-shadow: 0px 2px 2px rgba(33, 37, 41, 0.06),
-          0px 0px 1px rgba(33, 37, 41, 0.08);
-        border-radius: 8px;
-      }
-      .highlight {
-        background: #fff3cd;
-      }
-      input {
-        padding: 10px 10px 10px 10px;
-        background: #ffffff;
-        border: 1px solid #ced4da;
-        box-shadow: 0px 2px 2px rgba(33, 37, 41, 0.06),
-          0px 0px 1px rgba(33, 37, 41, 0.08);
-        border-radius: 8px;
-        width: 100%;
-        margin-bottom: 5px;
-      }
+    &:last-child {
+      padding-bottom: 0;
     }
-    .settingsBlock {
-      display: grid;
-      grid-template-columns: 1fr 70px;
-      grid-gap: 16px;
-      justify-items: start;
-      border-radius: 5px;
-      .ui.toggle.checkbox input:checked ~ .box:before,
-      .ui.toggle.checkbox input:checked ~ label:before {
-        background-color: #007c70 !important;
-      }
-    }
+  }
+  .settingsRowMain {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .settingsRowText {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .settingsRowTitle {
+    font: var(--MH-Type-Label-Large);
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+  .settingsRowDesc {
+    font: 400 14px/20px "Inter", sans-serif;
+    letter-spacing: 0;
+    color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
   }
 `;
 

@@ -66,15 +66,18 @@ export default function Parameters({
     user.permissions.map((p) => p.name).includes("STUDENT");
 
   return (
-    <div>
-      <h2>{t('parameters.participationSettings')}</h2>
+    <div className="settingsSection">
+      <div className="settingsSectionHeader">
+        <h2>{t("parameters.participationSettings")}</h2>
+      </div>
 
-      <div>
+      <div className="settingsList">
         {Object.keys(settings)
           .filter((name) => !isStudent || settingsOnlyStudents.includes(name))
-          .map((name, i) => (
+          .map((name) => (
             <SettingsBlock
-              key={i}
+              key={name}
+              user={user}
               study={study}
               handleChange={handleChange}
               handleSettingsChange={handleSettingsChange}
