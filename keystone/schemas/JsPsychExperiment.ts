@@ -115,6 +115,16 @@ export const JsPsychExperiment = list({
     updatedAt: timestamp({ db: { updatedAt: true } }),
   },
   hooks: {
+    // A new upload into an existing family is its next version number.
+    async resolveInput({ operation, resolvedData, context }) {
+      if (operation === "create" && resolvedData.family) {
+        const count = await context.sudo().query.JsPsychExperiment.count({
+          where: { family: { equals: resolvedData.family } },
+        });
+        return { ...resolvedData, version: String(count + 1) };
+      }
+      return resolvedData;
+    },
     async validateInput({
       operation,
       resolvedData,

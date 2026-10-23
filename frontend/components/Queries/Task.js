@@ -181,6 +181,20 @@ export const MY_TASK = gql`
       isExternal
       taskType
       link
+      runtimeType
+      jsPsychExperiment {
+        id
+        title
+        version
+        family
+        parameters
+        author {
+          id
+        }
+        collaborators {
+          id
+        }
+      }
       template {
         id
         title
@@ -336,6 +350,12 @@ export const TASK_TO_EDIT = gql`
         version
         family
         parameters
+        author {
+          id
+        }
+        collaborators {
+          id
+        }
       }
       template {
         id

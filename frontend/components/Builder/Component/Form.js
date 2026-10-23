@@ -15,6 +15,7 @@ import Sharing from "./Sharing";
 
 import Template from "./Template/Main";
 import JsPsychArchive from "./Template/JsPsychArchive";
+import JsPsychVersion from "./Template/JsPsychVersion";
 import TaskPreview from "../../Tasks/Preview/Main";
 
 export default function ComponentForm({
@@ -95,7 +96,11 @@ export default function ComponentForm({
         />
       )}
 
-      {tab === "template" && inputs?.runtimeType === "JSPSYCH" && (
+      {tab === "template" && inputs?.runtimeType === "JSPSYCH" && inputs?.id && (
+        <JsPsychVersion task={inputs} user={user} allowUpload />
+      )}
+
+      {tab === "template" && inputs?.runtimeType === "JSPSYCH" && !inputs?.id && (
         <JsPsychArchive
           jsPsych={inputs?.jsPsych}
           handleMultipleUpdate={handleMultipleUpdate}

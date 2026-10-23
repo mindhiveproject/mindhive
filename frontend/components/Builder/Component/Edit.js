@@ -140,7 +140,9 @@ export default function EditComponent({
       submitBtnName={t("update.update")}
       loading={templateLoading || taskLoading}
       error={templateError || taskError}
-      isTemplateAuthor={isTemplateAuthor}
+      // jsPsych blocks have no Lab.js template, but their version panel
+      // lives on the same tab.
+      isTemplateAuthor={isTemplateAuthor || inputs?.runtimeType === "JSPSYCH"}
       close={close}
     />
   );

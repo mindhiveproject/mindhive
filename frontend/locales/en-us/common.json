@@ -393,7 +393,11 @@
 		"loadingLabJs": "Loading experiment…",
 		"loadingLabJsDescription": "The experiment is loading and should start in a few seconds.",
 		"p5Shell": "This p5.js task is configured, but execution is not enabled yet.",
-		"starting": "Starting task…"
+		"starting": "Starting task…",
+		"taskFailed": "This task stopped because of an error. Your earlier answers in this study are saved.",
+		"continue": "Continue",
+		"savingResults": "Saving your responses…",
+		"p5FrameTitle": "p5 task"
 	},
 	"save": "Save",
 	"searchMembers": {

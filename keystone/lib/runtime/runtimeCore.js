@@ -335,6 +335,68 @@ function validateRunMessage({ messageType, data, aggregated, error }) {
   }
 }
 
+/**
+ * The parameters a Task gets when it moves to a newer version (D11, W35),
+ * merged by name against the new version's definitions:
+ *   kept      the researcher's value stays;
+ *   added     a new parameter takes the new default;
+ *   removed   a parameter the new version dropped goes;
+ *   reset     a kept parameter whose type or allowed options changed takes
+ *             the new default, since the old value may no longer fit.
+ * `current` is the Task's own list; when it is empty the Task was using the
+ * old version's defaults, so those stand in for it.
+ */
+function mergeParameters(current, previousDefinitions, nextDefinitions) {
+  const previous = new Map(
+    (previousDefinitions || []).map((parameter) => [parameter.name, parameter])
+  );
+  const source =
+    Array.isArray(current) && current.length ? current : previousDefinitions || [];
+  const values = new Map(source.map((parameter) => [parameter.name, parameter]));
+  const added = [];
+  const reset = [];
+  const parameters = (nextDefinitions || []).map((definition) => {
+    const had = values.get(definition.name);
+    if (!had) {
+      added.push(definition.name);
+      return { ...definition };
+    }
+    const before = previous.get(definition.name) || had;
+    const changed =
+      (before.type ?? null) !== (definition.type ?? null) ||
+      JSON.stringify(before.options ?? null) !==
+        JSON.stringify(definition.options ?? null);
+    if (changed) {
+      reset.push(definition.name);
+      return { ...definition };
+    }
+    return { ...definition, value: had.value };
+  });
+  const names = new Set(parameters.map((parameter) => parameter.name));
+  const removed = [...values.keys()].filter((name) => !names.has(name));
+  return { parameters, added, removed, reset };
+}
+
+/** Whether a study's flow, including its conditions, contains the task. */
+function studyFlowUsesTask(flow, taskId) {
+  let stages = flow;
+  if (typeof stages === "string") {
+    try {
+      stages = JSON.parse(stages);
+    } catch {
+      return false;
+    }
+  }
+  const visit = (list) =>
+    (list || []).some(
+      (stage) =>
+        (stage?.type === "my-node" &&
+          String(stage.componentID) === String(taskId)) ||
+        (stage?.conditions || []).some((condition) => visit(condition.flow))
+    );
+  return visit(stages);
+}
+
 function findTaskVersion(flow, taskId, requestedVersion) {
   const matches = [];
   function visit(stages) {
@@ -367,9 +429,11 @@ module.exports = {
   acceptSequence,
   assertRunClaimsMatchDataset,
   findTaskVersion,
+  mergeParameters,
   resolveRuntimeConfiguration,
   signAssetToken,
   signRunClaims,
+  studyFlowUsesTask,
   validateJsPsychManifest,
   validateParameterDefinitions,
   validateRunMessage,

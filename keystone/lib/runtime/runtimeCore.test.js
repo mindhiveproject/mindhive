@@ -279,3 +279,57 @@ test("an asset token says which runtime's route may use it", () => {
     undefined
   );
 });
+
+test("a version update merges parameters by name", () => {
+  const { mergeParameters } = require("./runtimeCore");
+  const previous = [
+    { name: "trials", type: "number", value: 10 },
+    { name: "hand", type: "select", value: "left", options: ["left", "right"] },
+    { name: "speed", type: "number", value: 1 },
+    { name: "label", type: "text", value: "A" },
+  ];
+  const next = [
+    { name: "trials", type: "number", value: 20 },
+    { name: "hand", type: "select", value: "left", options: ["left", "right", "both"] },
+    { name: "label", type: "textarea", value: "B" },
+    { name: "feedback", type: "select", value: "on", options: ["on", "off"] },
+  ];
+  const current = [
+    { name: "trials", type: "number", value: 40 },
+    { name: "hand", type: "select", value: "right", options: ["left", "right"] },
+    { name: "speed", type: "number", value: 2 },
+    { name: "label", type: "text", value: "mine" },
+  ];
+  const merged = mergeParameters(current, previous, next);
+  assert.deepEqual(
+    merged.parameters.map((p) => [p.name, p.value]),
+    [["trials", 40], ["hand", "left"], ["label", "B"], ["feedback", "on"]]
+  );
+  assert.deepEqual(merged.added, ["feedback"]);
+  assert.deepEqual(merged.removed, ["speed"]);
+  assert.deepEqual(merged.reset, ["hand", "label"]);
+  assert.deepEqual(merged.parameters[1].options, ["left", "right", "both"]);
+});
+
+test("a task on the old defaults is merged against those defaults", () => {
+  const { mergeParameters } = require("./runtimeCore");
+  const previous = [{ name: "trials", type: "number", value: 10 }];
+  const next = [{ name: "trials", type: "number", value: 20 }];
+  const merged = mergeParameters(null, previous, next);
+  assert.deepEqual(merged.parameters, [{ name: "trials", type: "number", value: 10 }]);
+  assert.deepEqual([merged.added, merged.removed, merged.reset], [[], [], []]);
+});
+
+test("a study flow uses a task directly or inside a condition", () => {
+  const { studyFlowUsesTask } = require("./runtimeCore");
+  const flow = [
+    { type: "my-anchor" },
+    { type: "my-node", componentID: "a" },
+    { type: "my-condition", conditions: [{ flow: [{ type: "my-node", componentID: "b" }] }] },
+  ];
+  assert.equal(studyFlowUsesTask(flow, "a"), true);
+  assert.equal(studyFlowUsesTask(flow, "b"), true);
+  assert.equal(studyFlowUsesTask(JSON.stringify(flow), "b"), true);
+  assert.equal(studyFlowUsesTask(flow, "c"), false);
+  assert.equal(studyFlowUsesTask("not json", "a"), false);
+});

@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { getTaskTypeLabelColors } from "../../../../../lib/taskTypeColors";
 import { assetParameterDefinitions } from "../../../../../lib/runtime/runtimeAsset";
+import JsPsychVersion from "../../../Component/Template/JsPsychVersion";
 
 function plainText(value) {
   if (value == null) return "";
@@ -15,7 +16,13 @@ function plainText(value) {
     .trim();
 }
 
-export default function Viewer({ task, close, openEditor, openPreview }) {
+export default function Viewer({
+  task,
+  user,
+  close,
+  openEditor,
+  openPreview,
+}) {
   const { t } = useTranslation("builder");
   const router = useRouter();
   const { locale } = router;
@@ -113,6 +120,11 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
         </div>
       </div>
       <div className="blockPanelBody">
+        {task?.runtimeType === "JSPSYCH" && task?.id && (
+          <section className="blockPanelSection">
+            <JsPsychVersion task={task} user={user} />
+          </section>
+        )}
         {backgroundText && (
           <section className="blockPanelSection">
             <h2>{t("viewer.background", {}, { default: "Background" })}</h2>

@@ -2837,5 +2837,28 @@
 		"ruleAggregate": "Return an object from on_finish to save summary results.",
 		"pluginsAvailable": "{{count}} plugins available",
 		"pluginsExcluded": "Not available: plugins that need a camera, microphone or eye tracker"
+	},
+	"runtime": {
+		"choose": "What runs this block?",
+		"labjs": "A lab.js script",
+		"jspsych": "A jsPsych experiment"
+	},
+	"jsPsychVersion": {
+		"title": "Experiment version",
+		"current": "This block runs version {{version}}.",
+		"newer": "A newer version ({{version}}) is available.",
+		"locked": "It can't be updated while a study that uses it is collecting data ({{studies}}). Duplicate the study or the block to use the new version.",
+		"notEditor": "Only the block's author or a collaborator can update it.",
+		"update": "Update to the latest version",
+		"changes": "Your parameter values are kept where they still fit. Updating will change:",
+		"noChanges": "Your parameters stay as they are; only the experiment's code changes.",
+		"added": "Added (new default)",
+		"removed": "Removed",
+		"reset": "Reset to the new default",
+		"confirm": "Update",
+		"cancel": "Cancel",
+		"upload": "Upload a new version (zip)",
+		"uploadHint": "Blocks keep the version they run until someone updates them.",
+		"uploadButton": "Upload version"
 	}
 }
