@@ -53,28 +53,29 @@ export default function I18nContentEditor({ task, handleChange }) {
     task.i18nContent = {};
   }
 
-  // Ensure all languages exist in i18nContent
+  // Ensure every language has every editable field (saved content omits blanks)
   Object.keys(SUPPORTED_LANGUAGES).forEach(lang => {
-    if (!task.i18nContent[lang]) {
-      task.i18nContent[lang] = {
-        title: '',
-        description: '',
-        descriptionForParticipants: '',
-        settings: {
-            mobileCompatible: false,
-            descriptionBefore: "",
-            descriptionAfter: "",
-            background: "",
-            duration: "",
-            scoring: "",
-            format: "",
-            resources: "[]",
-            aggregateVariables: "[]",
-            addInfo: "",
-          },
-          parameters: null,
-      };
-    }
+    const existing = task.i18nContent[lang] || {};
+    task.i18nContent[lang] = {
+      title: '',
+      description: '',
+      descriptionForParticipants: '',
+      parameters: null,
+      ...existing,
+      settings: {
+        mobileCompatible: false,
+        descriptionBefore: "",
+        descriptionAfter: "",
+        background: "",
+        duration: "",
+        scoring: "",
+        format: "",
+        resources: "[]",
+        aggregateVariables: "[]",
+        addInfo: "",
+        ...existing.settings,
+      },
+    };
   });
 
   // Handle changes to i18n content

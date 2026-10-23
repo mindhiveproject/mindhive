@@ -225,6 +225,7 @@ export const MY_STUDY = gql`
       currentVersion
       versionHistory
       dataCollectionStatus
+      updatedAt
     }
   }
 `;

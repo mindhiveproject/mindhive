@@ -10,6 +10,7 @@ import {
   getTaskTypeColor,
   getTaskTypeLabelColors,
 } from "../../../lib/taskTypeColors";
+import { getLocalizedField } from "../../../lib/i18nContent";
 
 /**
  * @param {object} [user] - Shows the favorite button when given.
@@ -29,7 +30,7 @@ export default function TaskCard({
   const router = useRouter();
   const { locale } = router;
 
-  const title = task?.i18nContent?.[locale]?.title || task?.title;
+  const title = getLocalizedField(task, "title", locale);
   const subtitle =
     task?.i18nContent?.[locale]?.settings?.addInfo || task?.settings?.addInfo;
 

@@ -1032,6 +1032,7 @@ export const GET_PROJECT_STUDY = gql`
         status
         currentVersion
         dataCollectionStatus
+        updatedAt
       }
     }
   }

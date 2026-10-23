@@ -14,6 +14,7 @@ import { MY_TASKS } from "../../Queries/Task";
 import ComponentForm from "./Form";
 
 import UploadFile from "./Template/UploadFile";
+import { cleanI18nContent } from "../../../lib/i18nContent";
 
 // Who may create jsPsych blocks (D10); Keystone checks the same on upload.
 const JSPSYCH_ROLES = ["ADMIN", "TESTER"];
@@ -177,6 +178,7 @@ export default function AddComponent({ query, user, redirect, isExternal }) {
             }),
             // A jsPsych experiment is always stored as a Task.
             taskType: "TASK",
+            i18nContent: cleanI18nContent(inputs),
             collaborators:
               inputs?.collaborators?.map((col) => ({ id: col?.id })) || [],
             // Not GraphQL variables: the zip must not be uploaded twice.
@@ -260,6 +262,7 @@ export default function AddComponent({ query, user, redirect, isExternal }) {
             runtimeType: "LABJS",
             templateId: template?.data?.createTemplate?.id,
           }),
+          i18nContent: cleanI18nContent(inputs),
           collaborators:
             inputs?.collaborators?.map((col) => ({ id: col?.id })) || [],
           template: null,

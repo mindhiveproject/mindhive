@@ -32,7 +32,6 @@ export default function Menu({
   study,
   handleChange,
   handleMultipleUpdate,
-  hasStudyChanged,
   tab,
   setTab,
 }) {
@@ -140,7 +139,6 @@ export default function Menu({
           study={study}
           handleChange={handleChange}
           handleMultipleUpdate={handleMultipleUpdate}
-          hasStudyChanged={hasStudyChanged}
         />
       )}
     </>

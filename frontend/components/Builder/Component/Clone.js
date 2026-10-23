@@ -11,6 +11,7 @@ import ComponentForm from "./Form";
 
 import useForm from "../../../lib/useForm";
 import { runtimeAssetVariables } from "../../../lib/runtime/runtimeAsset";
+import { cleanI18nContent } from "../../../lib/i18nContent";
 
 export default function CloneTask({ query, user, taskSlug, redirect }) {
   const { t } = useTranslation("classes");
@@ -78,6 +79,7 @@ export default function CloneTask({ query, user, taskSlug, redirect }) {
     await createTask({
       variables: {
         ...runtimeAssetVariables(inputs),
+        i18nContent: cleanI18nContent(inputs),
         collaborators:
           inputs?.collaborators?.map((col) => ({ id: col?.id })) || [],
       },

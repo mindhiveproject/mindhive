@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { getTaskTypeLabelColors } from "../../../../../lib/taskTypeColors";
 import { assetParameterDefinitions } from "../../../../../lib/runtime/runtimeAsset";
 import JsPsychVersion from "../../../Component/Template/JsPsychVersion";
+import { getLocalizedField } from "../../../../../lib/i18nContent";
 
 function plainText(value) {
   if (value == null) return "";
@@ -30,9 +31,9 @@ export default function Viewer({
   const settings = task?.i18nContent?.[locale]?.settings || task?.settings;
   const resources =
     (settings?.resources && JSON.parse(settings?.resources)) || [];
-  const title = task?.i18nContent?.[locale]?.title || task?.title;
+  const title = getLocalizedField(task, "title", locale);
   const description =
-    task?.i18nContent?.[locale]?.description || task?.description;
+    getLocalizedField(task, "description", locale);
   const backgroundHtml = settings?.background;
   const backgroundText = plainText(backgroundHtml) || description;
 
