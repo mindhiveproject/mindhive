@@ -90,9 +90,14 @@ test("parameter definitions follow the Template.parameters format", () => {
     () => validateParameterDefinitions([{ name: "a" }, { name: "a" }]),
     /Duplicate parameter name: a/
   );
+  assert.doesNotThrow(() =>
+    validateParameterDefinitions([
+      { name: "sections", type: "select", value: "Both", options: "Both\nFree play only" },
+    ])
+  );
   assert.throws(
-    () => validateParameterDefinitions([{ name: "a", options: "x" }]),
-    /options must be a list/
+    () => validateParameterDefinitions([{ name: "a", options: 3 }]),
+    /options must be text or a list/
   );
 });
 

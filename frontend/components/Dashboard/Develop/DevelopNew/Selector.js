@@ -206,6 +206,24 @@ export default function Selector({ query, user }) {
             <h3>{t("addExternalWithLink", { develop: t(develop) })}</h3>
             <p>{t("addExternalLinkInstruction")}</p>
           </Link>
+
+          {develop === "task" &&
+            (userPermissions.includes("ADMIN") ||
+              userPermissions.includes("TESTER")) && (
+              <Link
+                className="option"
+                href={{
+                  pathname: "/builder/tasks/add",
+                  query: { runtime: "jspsych" },
+                }}
+              >
+                <div className="iconSelect">
+                  <img src={`/assets/develop/task.svg`} alt="icon" width="50" />
+                </div>
+                <h3>{t("createFromJsPsych")}</h3>
+                <p>{t("createFromJsPsychDescription")}</p>
+              </Link>
+            )}
         </div>
       </div>
     );

@@ -14,6 +14,7 @@ import Parameters from "./Parameters/Main";
 import Sharing from "./Sharing";
 
 import Template from "./Template/Main";
+import JsPsychArchive from "./Template/JsPsychArchive";
 import TaskPreview from "../../Tasks/Preview/Main";
 
 export default function ComponentForm({
@@ -94,7 +95,16 @@ export default function ComponentForm({
         />
       )}
 
-      {tab === "template" && (
+      {tab === "template" && inputs?.runtimeType === "JSPSYCH" && (
+        <JsPsychArchive
+          jsPsych={inputs?.jsPsych}
+          handleMultipleUpdate={handleMultipleUpdate}
+          loading={loading}
+          error={error}
+        />
+      )}
+
+      {tab === "template" && inputs?.runtimeType !== "JSPSYCH" && (
         <Template
           template={inputs?.template}
           handleChange={handleChange}

@@ -122,7 +122,17 @@ export const JsPsychExperiment = list({
       context,
       addValidationError,
     }) {
-      let manifest = resolvedData.manifest;
+      // On SQLite (development) Keystone's json fields reach hooks already
+      // stringified; Postgres passes the value itself.
+      const decode = (value: any) => {
+        if (typeof value !== "string") return value;
+        try {
+          return JSON.parse(value);
+        } catch {
+          return value;
+        }
+      };
+      let manifest = decode(resolvedData.manifest);
       let entryPoint = resolvedData.entryPoint;
       if (
         operation === "update" &&
@@ -137,7 +147,7 @@ export const JsPsychExperiment = list({
       }
       try {
         validateJsPsychManifest(manifest, entryPoint);
-        validateParameterDefinitions(resolvedData.parameters);
+        validateParameterDefinitions(decode(resolvedData.parameters));
       } catch (error: any) {
         addValidationError(error.message);
       }

@@ -529,6 +529,7 @@
 		"saving": "Saving..."
 	},
 	"create": {
+		"jsPsychArchiveMissing": "",
 		"create": "创建新类",
 		"createHeader": "添加新课程",
 		"description": "新课程描述",

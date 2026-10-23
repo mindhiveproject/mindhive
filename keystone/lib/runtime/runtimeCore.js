@@ -118,8 +118,15 @@ function validateParameterDefinitions(parameters) {
         throw new Error(`Parameter ${name} has an invalid ${key}`);
       }
     }
-    if (options !== undefined && options !== null && !Array.isArray(options)) {
-      throw new Error(`Parameter ${name} options must be a list`);
+    // The Parameters editor stores a select's options as one string, one
+    // option per line (SelectOne splits it on "\n"); a list is accepted too.
+    if (
+      options !== undefined &&
+      options !== null &&
+      typeof options !== "string" &&
+      !Array.isArray(options)
+    ) {
+      throw new Error(`Parameter ${name} options must be text or a list`);
     }
   }
 }

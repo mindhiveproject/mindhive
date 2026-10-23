@@ -104,7 +104,11 @@ export default function RuntimeTaskShell({
             wait(SAVE_TIMEOUT),
           ])
         : Promise.resolve();
-      stored.then(complete);
+      stored.then(() => {
+        // A standalone preview has nowhere to go next.
+        if (!finishRef.current.onFinish) setState('finished');
+        complete();
+      });
     },
     [buffer, complete, runToken]
   );
@@ -137,6 +141,20 @@ export default function RuntimeTaskShell({
         <button type="button" onClick={complete}>
           {t('runtime.continue', {}, { default: 'Continue' })}
         </button>
+      </div>
+    );
+  }
+
+  if (state === 'finished') {
+    return (
+      <div role="status" data-runtime-shell={runtime}>
+        <p>
+          {t(
+            'runtime.previewFinished',
+            {},
+            { default: 'The task has finished. Nothing was saved in preview.' }
+          )}
+        </p>
       </div>
     );
   }

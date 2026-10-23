@@ -529,6 +529,7 @@
 		"saving": "Saving..."
 	},
 	"create": {
+		"jsPsychArchiveMissing": "Choose the experiment's zip file first.",
 		"create": "إنشاء فئة جديدة",
 		"createHeader": "إضافة فصل جديد",
 		"description": "وصف الفصل الجديد",

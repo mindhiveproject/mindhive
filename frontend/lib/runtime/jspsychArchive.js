@@ -29,6 +29,43 @@ const MAX_TOTAL_BYTES = 200 * 1024 * 1024;
 const SCANNED = /\.(html?|m?js)$/i;
 const IGNORED = /(^|\/)(__MACOSX\/|\.DS_Store$|Thumbs\.db$)/;
 
+// Optional, at the archive root: what MindHive needs to know about the
+// experiment beyond its code. Today that is its parameters, in the
+// Template.parameters format: [{ name, type?, value?, help?, options? }].
+const CONFIG_FILE = 'mindhive.json';
+
+/** Reads mindhive.json, returning its settings or the problems with it. */
+function readConfig(file) {
+  if (!file) return { config: { parameters: [] }, problems: [] };
+  let config;
+  try {
+    config = JSON.parse(file.data.toString('utf8'));
+  } catch {
+    return { problems: [`${CONFIG_FILE} is not valid JSON.`] };
+  }
+  if (!config || typeof config !== 'object' || Array.isArray(config)) {
+    return { problems: [`${CONFIG_FILE} must hold a JSON object.`] };
+  }
+  const parameters = config.parameters ?? [];
+  const problems = [];
+  if (!Array.isArray(parameters)) {
+    problems.push(`${CONFIG_FILE}: "parameters" must be a list.`);
+  } else {
+    const names = new Set();
+    parameters.forEach((parameter, i) => {
+      const name = parameter?.name;
+      if (typeof name !== 'string' || !name.trim()) {
+        problems.push(`${CONFIG_FILE}: parameter ${i + 1} needs a "name".`);
+      } else if (names.has(name)) {
+        problems.push(`${CONFIG_FILE}: parameter "${name}" is listed twice.`);
+      } else {
+        names.add(name);
+      }
+    });
+  }
+  return { config: { parameters }, problems };
+}
+
 class ArchiveError extends Error {
   constructor(problems) {
     super(problems.join(' '));
@@ -128,7 +165,8 @@ function envelopeProblems(paths, texts) {
  *
  * @param {Buffer} buffer - The zip file.
  * @param {{entryPoint?: string}} [options] - Defaults to index.html.
- * @returns {Promise<{files: Array<{path: string, data: Buffer}>, manifest: object}>}
+ * @returns {Promise<{files: Array<{path: string, data: Buffer}>, manifest: object, config: {parameters: Array}}>}
+ *   `config` comes from an optional mindhive.json at the archive root.
  * @throws {ArchiveError} listing every problem found.
  */
 async function unpackJsPsychArchive(
@@ -196,10 +234,15 @@ async function unpackJsPsychArchive(
     problems.push(`The archive needs an HTML entry point at ${entryPoint}.`);
   }
   problems.push(...envelopeProblems(paths, texts));
+  const { config, problems: configProblems } = readConfig(
+    files.find((f) => f.path === CONFIG_FILE)
+  );
+  problems.push(...configProblems);
   if (problems.length) throw new ArchiveError(problems);
 
   return {
     files,
+    config,
     manifest: {
       files: paths.sort(),
       entryPoint,
@@ -259,6 +302,7 @@ async function readStoredManifest(assetRoot, versionId) {
 
 module.exports = {
   ArchiveError,
+  CONFIG_FILE,
   readStoredManifest,
   storeUnpackedArchive,
   unpackJsPsychArchive,

@@ -2556,5 +2556,20 @@
 	},
 	"visualize": "可视化",
 	"visualsComingSoon": "",
-	"whatWouldYouLikeToDevelop": "您想开发什么？"
+	"whatWouldYouLikeToDevelop": "您想开发什么？",
+	"createFromJsPsych": "",
+	"createFromJsPsychDescription": "",
+	"jsPsych": {
+		"title": "",
+		"description": "",
+		"archive": "",
+		"refused": "",
+		"envelopeTitle": "",
+		"ruleEntry": "",
+		"ruleNoBundle": "",
+		"ruleParams": "",
+		"ruleAggregate": "",
+		"pluginsAvailable": "",
+		"pluginsExcluded": "r"
+	}
 }
