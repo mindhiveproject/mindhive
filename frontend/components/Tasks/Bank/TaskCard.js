@@ -5,12 +5,26 @@ import Card from "../../DesignSystem/Card";
 import Chip from "../../DesignSystem/Chip";
 import FavoriteButton from "../../DesignSystem/FavoriteButton";
 import ManageFavorite from "../../User/ManageFavorite";
+import BlockTags from "./BlockTags";
 import {
   getTaskTypeColor,
   getTaskTypeLabelColors,
 } from "../../../lib/taskTypeColors";
 
-export default function TaskCard({ user, task, url, id, name, domain }) {
+/**
+ * @param {object} [user] - Shows the favorite button when given.
+ * @param {object} [viewer] - Whose "Created by you" / "Collaborator" tags to
+ *   show on the Develop page, without turning favorites on.
+ */
+export default function TaskCard({
+  user,
+  viewer,
+  task,
+  url,
+  id,
+  name,
+  domain,
+}) {
   const { t } = useTranslation("common");
   const router = useRouter();
   const { locale } = router;
@@ -50,18 +64,22 @@ export default function TaskCard({ user, task, url, id, name, domain }) {
           padding: "12px 16px 16px",
         }}
       >
-        {typeLabel && (
-          <Chip
-            variant="static"
-            label={typeLabel}
-            style={{
-              alignSelf: "flex-start",
-              background: labelColors.bg,
-              backgroundColor: labelColors.bg,
-              color: labelColors.fg,
-            }}
-          />
-        )}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {typeLabel && (
+            <Chip
+              variant="static"
+              label={typeLabel}
+              style={{
+                background: labelColors.bg,
+                backgroundColor: labelColors.bg,
+                color: labelColors.fg,
+              }}
+            />
+          )}
+          {domain === "develop" && (
+            <BlockTags task={task} user={viewer || user} showRuntime />
+          )}
+        </div>
 
         <div
           style={{

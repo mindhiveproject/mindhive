@@ -2556,5 +2556,20 @@
 	},
 	"visualize": "कल्पना",
 	"visualsComingSoon": "",
-	"whatWouldYouLikeToDevelop": "आप क्या विकसित करना चाहेंगे?"
+	"whatWouldYouLikeToDevelop": "आप क्या विकसित करना चाहेंगे?",
+	"createFromJsPsych": "Create from a jsPsych experiment",
+	"createFromJsPsychDescription": "Upload a jsPsych experiment as a zip. MindHive provides jsPsych and its plugins.",
+	"jsPsych": {
+		"title": "Experiment title",
+		"description": "Experiment description",
+		"archive": "jsPsych experiment (zip)",
+		"refused": "This archive can't be used yet:",
+		"envelopeTitle": "What MindHive provides: jsPsych {{version}}",
+		"ruleEntry": "Put an index.html at the top of the zip; it is the page the task opens.",
+		"ruleNoBundle": "Don't include jsPsych or its plugins, or load them from a CDN: MindHive adds them. Use the globals, such as initJsPsych and jsPsychHtmlKeyboardResponse.",
+		"ruleParams": "Build and run your timeline inside MindHive.onInit(…) and read settings from MindHive.params. Declare them in an optional mindhive.json: { \"parameters\": [{ \"name\": \"trials\", \"type\": \"number\", \"value\": 20 }] }.",
+		"ruleAggregate": "Return an object from on_finish to save summary results.",
+		"pluginsAvailable": "{{count}} plugins available",
+		"pluginsExcluded": "Not available: plugins that need a camera, microphone or eye tracker"
+	}
 }

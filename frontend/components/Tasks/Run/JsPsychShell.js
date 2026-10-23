@@ -1,92 +1,49 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import useTranslation from 'next-translate/useTranslation';
-import { createShellDocument, isTrustedBridgeMessage } from './jsPsychBridge';
+import RuntimeTaskShell, { parameterValues } from './RuntimeTaskShell';
 
-export default function JsPsychShell({ runContext, onLifecycle }) {
+// jsPsych surveys submit forms; same-origin access is never granted.
+const SANDBOX = 'allow-scripts allow-forms';
+
+function taskUrl(assetToken, entryPoint, nonce) {
+  const file = entryPoint.split('/').map(encodeURIComponent).join('/');
+  return `/api/runtime/task/${encodeURIComponent(
+    assetToken
+  )}/${file}?n=${encodeURIComponent(nonce)}`;
+}
+
+/**
+ * Runs a jsPsych task: the version's files come from the task route with the
+ * pinned jsPsych injected (see RuntimeTaskShell for saving and finishing).
+ *
+ * @param {object} task - From TASK_TO_PARTICIPATE.
+ * @param {string} assetToken - Lets the frame load this version's files.
+ */
+export default function JsPsychShell({ task, assetToken, ...run }) {
   const { t } = useTranslation('common');
-  const iframeRef = useRef(null);
-  const [handshakeComplete, setHandshakeComplete] = useState(false);
-  const channelToken = useMemo(
+  const { entryPoint } = task.jsPsychExperiment;
+  // The task's own values, else the version's defaults.
+  const params = useMemo(
     () =>
-      typeof crypto !== 'undefined' && crypto.randomUUID
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random()}`,
-    []
+      parameterValues(
+        task?.parameters?.length
+          ? task.parameters
+          : task?.jsPsychExperiment?.parameters
+      ),
+    [task]
   );
-  const shellDocument = useMemo(
-    () => createShellDocument(channelToken),
-    [channelToken]
+  const buildSrc = useCallback(
+    (nonce) => taskUrl(assetToken, entryPoint, nonce),
+    [assetToken, entryPoint]
   );
-
-  useEffect(() => {
-    const expectedOrigin = window.location.origin;
-    function onMessage(event) {
-      if (
-        !isTrustedBridgeMessage({
-          event,
-          iframeWindow: iframeRef.current?.contentWindow,
-          expectedOrigin,
-          channelToken,
-        })
-      ) {
-        onLifecycle?.('message-rejected');
-        return;
-      }
-      if (event.data.type === 'handshake') {
-        iframeRef.current?.contentWindow?.postMessage(
-          {
-            protocol: 'mindhive-runtime-v1',
-            channelToken,
-            type: 'acknowledgement',
-            ...(runContext?.runToken ? { runToken: runContext.runToken } : {}),
-          },
-          expectedOrigin
-        );
-      }
-      if (event.data.type === 'acknowledged') {
-        setHandshakeComplete(true);
-        onLifecycle?.('acknowledged');
-      }
-    }
-    window.addEventListener('message', onMessage);
-    onLifecycle?.('mounted');
-    return () => {
-      window.removeEventListener('message', onMessage);
-      onLifecycle?.('cleanup');
-    };
-  }, [channelToken, onLifecycle, runContext?.runToken]);
-
   return (
-    <div data-runtime-shell="JSPSYCH" role="status">
-      <iframe
-        ref={iframeRef}
-        title={t(
-          'runtime.jsPsychFrameTitle',
-          {},
-          {
-            default: 'jsPsych runtime shell',
-          }
-        )}
-        sandbox="allow-scripts allow-same-origin"
-        srcDoc={shellDocument}
-        style={{ display: 'none' }}
-      />
-      {handshakeComplete
-        ? t(
-            'runtime.jsPsychShellReady',
-            {},
-            {
-              default:
-                'The jsPsych bridge is ready, but experiment execution is not enabled yet.',
-            }
-          )
-        : t(
-            'runtime.jsPsychShellLoading',
-            {},
-            {
-              default: 'Preparing the jsPsych runtime bridge…',
-            }
-          )}
-    </div>
+    <RuntimeTaskShell
+      {...run}
+      runtime="JSPSYCH"
+      buildSrc={buildSrc}
+      sandbox={SANDBOX}
+      params={params}
+      title={t('runtime.jsPsychFrameTitle', {}, { default: 'jsPsych task' })}
+    />
   );
 }

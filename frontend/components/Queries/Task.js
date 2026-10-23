@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 // get all public tasks
 export const ALL_PUBLIC_TASKS = gql`
@@ -86,6 +86,7 @@ export const MY_TASKS = gql`
       public
       description
       taskType
+      runtimeType
       author {
         id
       }
@@ -129,17 +130,14 @@ export const FAVORITE_TASKS = gql`
 export function buildFavoriteTasksWhere({
   userId,
   componentType,
-  search = "",
+  search = '',
 }) {
   const titleDescriptionOr =
-    process.env.NODE_ENV === "development"
-      ? [
-          { title: { contains: search } },
-          { description: { contains: search } },
-        ]
+    process.env.NODE_ENV === 'development'
+      ? [{ title: { contains: search } }, { description: { contains: search } }]
       : [
-          { title: { contains: search, mode: "insensitive" } },
-          { description: { contains: search, mode: "insensitive" } },
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
         ];
 
   return {
@@ -183,6 +181,20 @@ export const MY_TASK = gql`
       isExternal
       taskType
       link
+      runtimeType
+      jsPsychExperiment {
+        id
+        title
+        version
+        family
+        parameters
+        author {
+          id
+        }
+        collaborators {
+          id
+        }
+      }
       template {
         id
         title
@@ -221,6 +233,18 @@ export const TASK_TO_CLONE = gql`
       taskType
       parameters
       settings
+      runtimeType
+      visual {
+        id
+        title
+      }
+      jsPsychExperiment {
+        id
+        title
+        version
+        family
+        parameters
+      }
       template {
         id
         slug
@@ -251,6 +275,9 @@ export const TASK_TO_PARTICIPATE = gql`
       slug
       image
       description
+      descriptionForParticipants
+      isExternal
+      link
       parameters
       aggregateVariables
       runtimeType
@@ -283,6 +310,7 @@ export const TASK_TO_PARTICIPATE = gql`
         published
         entryPoint
         manifest
+        parameters
         archive {
           filename
           url
@@ -313,6 +341,24 @@ export const TASK_TO_EDIT = gql`
       link
       author {
         id
+      }
+      runtimeType
+      visual {
+        id
+        title
+      }
+      jsPsychExperiment {
+        id
+        title
+        version
+        family
+        parameters
+        author {
+          id
+        }
+        collaborators {
+          id
+        }
       }
       template {
         id

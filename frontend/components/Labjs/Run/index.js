@@ -4,6 +4,7 @@ import { convert } from './functions';
 import * as lab from './lib/lab.js';
 
 import Plugin from './Plugin.js';
+import { stopExperiment } from './stopExperiment';
 
 const DONE = 3; // lab.js's Status.done, which it doesn't export
 const endComponent = lab.core.Component.prototype.end;
@@ -20,19 +21,6 @@ const wait = (milliseconds) =>
   new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
   });
-
-function stopExperiment(experiment) {
-  const timelineItems = experiment?.internals?.timeline?.items;
-  const canEnd =
-    typeof experiment?.end === 'function' && Array.isArray(timelineItems);
-  if (!canEnd) return;
-  // Ending runs lab.js's epilogue, where Transmit would store whatever was
-  // collected so far as the run's final result. An abandoned run has none.
-  experiment.plugins.plugins
-    .filter((plugin) => plugin instanceof lab.plugins.Transmit)
-    .forEach((plugin) => experiment.plugins.remove(plugin));
-  Promise.resolve(experiment.end()).catch(() => {});
-}
 
 export default function ExperimentWindow({
   study,
@@ -121,11 +109,23 @@ export default function ExperimentWindow({
     });
 
     setExperiment(nextExperiment);
-    nextExperiment?.run();
+    // Started on the next task, not here: in development React's StrictMode
+    // mounts, cleans up and remounts this effect at once, and an experiment
+    // started by that first mount is still preparing when it is cleaned up,
+    // too early to end. It would run alongside the real one and post a
+    // second `full` result for the same run token.
+    let started = false;
+    const start = setTimeout(() => {
+      started = true;
+      nextExperiment?.run();
+    }, 0);
     return () => {
       active = false;
+      clearTimeout(start);
       styleNode?.remove();
-      if (!completedRef.current) stopExperiment(nextExperiment);
+      if (started && !completedRef.current) {
+        stopExperiment(nextExperiment, lab.plugins.Transmit);
+      }
     };
   }, [
     isSavingData,

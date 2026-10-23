@@ -65,8 +65,70 @@ function resolveRuntimeConfiguration(task) {
     runtimeType,
     assetField: field,
     asset,
-    assetVersion: asset.version || "1",
+    // A jsPsych row is immutable once used, so its id names exactly what ran;
+    // the other assets still carry a free-text label.
+    assetVersion:
+      runtimeType === "JSPSYCH" ? String(asset.id) : asset.version || "1",
   };
+}
+
+// Fields that define what a jsPsych version runs. Once a Task uses a row,
+// these never change: a new upload creates a new row in the same family.
+const JSPSYCH_LOCKED_FIELDS = [
+  "archive",
+  "manifest",
+  "entryPoint",
+  "parameters",
+  "family",
+];
+
+const MAX_PARAMETER_DEFINITIONS = 200;
+
+/**
+ * Checks parameter definitions in the Template.parameters format, so the Lab.js
+ * Parameters editor can edit a jsPsych task's values too:
+ * `[{ name, type?, value?, help?, example?, options?, array? }]`.
+ */
+function validateParameterDefinitions(parameters) {
+  if (parameters == null) return;
+  if (!Array.isArray(parameters)) {
+    throw new Error("Parameters must be a list of definitions");
+  }
+  if (parameters.length > MAX_PARAMETER_DEFINITIONS) {
+    throw new Error(
+      `Parameters are limited to ${MAX_PARAMETER_DEFINITIONS} definitions`
+    );
+  }
+  const names = new Set();
+  for (const parameter of parameters) {
+    if (!parameter || typeof parameter !== "object" || Array.isArray(parameter)) {
+      throw new Error("Each parameter must be an object");
+    }
+    const { name, type, help, example, options } = parameter;
+    if (typeof name !== "string" || !name.trim()) {
+      throw new Error("Each parameter needs a name");
+    }
+    if (names.has(name)) throw new Error(`Duplicate parameter name: ${name}`);
+    names.add(name);
+    if (type !== undefined && typeof type !== "string") {
+      throw new Error(`Parameter ${name} has an invalid type`);
+    }
+    for (const [key, value] of Object.entries({ help, example })) {
+      if (value !== undefined && value !== null && typeof value !== "string") {
+        throw new Error(`Parameter ${name} has an invalid ${key}`);
+      }
+    }
+    // The Parameters editor stores a select's options as one string, one
+    // option per line (SelectOne splits it on "\n"); a list is accepted too.
+    if (
+      options !== undefined &&
+      options !== null &&
+      typeof options !== "string" &&
+      !Array.isArray(options)
+    ) {
+      throw new Error(`Parameter ${name} options must be text or a list`);
+    }
+  }
 }
 
 function signRunClaims(claims, secret, now = Date.now()) {
@@ -118,6 +180,64 @@ function verifyRunToken(token, secret, now = Date.now()) {
     claims.iat > now + clockSkewMs
   ) {
     throw new Error("Expired or incomplete run token");
+  }
+  return claims;
+}
+
+const ASSET_TOKEN_TTL_MS = 12 * 60 * 60 * 1000;
+
+function assetSignature(payload, secret) {
+  // Signed under its own prefix, so a run token can never pass as an asset
+  // token or the other way round.
+  return crypto
+    .createHmac("sha256", secret)
+    .update(`asset.${payload}`)
+    .digest("base64url");
+}
+
+/**
+ * A short-lived token that lets the frontend's task routes serve one runtime
+ * asset: a jsPsych version's files or a p5 visual's code. It travels in the
+ * frame's URL, so it carries no participant or run identity, and it can't
+ * save anything. `runtime` says which route may use it.
+ */
+function signAssetToken(assetId, secret, now = Date.now(), runtime = null) {
+  if (!secret) throw new Error("Runtime token secret is not configured");
+  const payload = Buffer.from(
+    JSON.stringify({
+      typ: "asset",
+      assetId: String(assetId),
+      ...(runtime ? { runtime } : {}),
+      iat: now,
+      exp: now + ASSET_TOKEN_TTL_MS,
+    })
+  ).toString("base64url");
+  return `${payload}.${assetSignature(payload, secret)}`;
+}
+
+function verifyAssetToken(token, secret, now = Date.now()) {
+  if (!secret || typeof token !== "string") throw new Error("Invalid asset token");
+  const [payload, supplied, extra] = token.split(".");
+  if (!payload || !supplied || extra) throw new Error("Invalid asset token");
+  const expected = Buffer.from(assetSignature(payload, secret), "utf8");
+  const given = Buffer.from(supplied, "utf8");
+  if (given.length !== expected.length || !crypto.timingSafeEqual(given, expected)) {
+    throw new Error("Invalid asset token");
+  }
+  let claims;
+  try {
+    claims = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+  } catch {
+    throw new Error("Invalid asset token");
+  }
+  if (
+    claims?.typ !== "asset" ||
+    typeof claims.assetId !== "string" ||
+    !claims.assetId ||
+    !Number.isFinite(claims.exp) ||
+    claims.exp <= now
+  ) {
+    throw new Error("Expired or incomplete asset token");
   }
   return claims;
 }
@@ -215,6 +335,68 @@ function validateRunMessage({ messageType, data, aggregated, error }) {
   }
 }
 
+/**
+ * The parameters a Task gets when it moves to a newer version (D11, W35),
+ * merged by name against the new version's definitions:
+ *   kept      the researcher's value stays;
+ *   added     a new parameter takes the new default;
+ *   removed   a parameter the new version dropped goes;
+ *   reset     a kept parameter whose type or allowed options changed takes
+ *             the new default, since the old value may no longer fit.
+ * `current` is the Task's own list; when it is empty the Task was using the
+ * old version's defaults, so those stand in for it.
+ */
+function mergeParameters(current, previousDefinitions, nextDefinitions) {
+  const previous = new Map(
+    (previousDefinitions || []).map((parameter) => [parameter.name, parameter])
+  );
+  const source =
+    Array.isArray(current) && current.length ? current : previousDefinitions || [];
+  const values = new Map(source.map((parameter) => [parameter.name, parameter]));
+  const added = [];
+  const reset = [];
+  const parameters = (nextDefinitions || []).map((definition) => {
+    const had = values.get(definition.name);
+    if (!had) {
+      added.push(definition.name);
+      return { ...definition };
+    }
+    const before = previous.get(definition.name) || had;
+    const changed =
+      (before.type ?? null) !== (definition.type ?? null) ||
+      JSON.stringify(before.options ?? null) !==
+        JSON.stringify(definition.options ?? null);
+    if (changed) {
+      reset.push(definition.name);
+      return { ...definition };
+    }
+    return { ...definition, value: had.value };
+  });
+  const names = new Set(parameters.map((parameter) => parameter.name));
+  const removed = [...values.keys()].filter((name) => !names.has(name));
+  return { parameters, added, removed, reset };
+}
+
+/** Whether a study's flow, including its conditions, contains the task. */
+function studyFlowUsesTask(flow, taskId) {
+  let stages = flow;
+  if (typeof stages === "string") {
+    try {
+      stages = JSON.parse(stages);
+    } catch {
+      return false;
+    }
+  }
+  const visit = (list) =>
+    (list || []).some(
+      (stage) =>
+        (stage?.type === "my-node" &&
+          String(stage.componentID) === String(taskId)) ||
+        (stage?.conditions || []).some((condition) => visit(condition.flow))
+    );
+  return visit(stages);
+}
+
 function findTaskVersion(flow, taskId, requestedVersion) {
   const matches = [];
   function visit(stages) {
@@ -241,14 +423,20 @@ function findTaskVersion(flow, taskId, requestedVersion) {
 }
 
 module.exports = {
+  JSPSYCH_LOCKED_FIELDS,
   MAX_RUN_MESSAGE_BYTES,
   RUNTIME_ASSET_FIELDS,
   acceptSequence,
   assertRunClaimsMatchDataset,
   findTaskVersion,
+  mergeParameters,
   resolveRuntimeConfiguration,
+  signAssetToken,
   signRunClaims,
+  studyFlowUsesTask,
   validateJsPsychManifest,
+  validateParameterDefinitions,
   validateRunMessage,
+  verifyAssetToken,
   verifyRunToken,
 };

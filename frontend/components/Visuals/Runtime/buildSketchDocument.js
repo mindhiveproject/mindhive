@@ -3,7 +3,10 @@
 //
 // Nothing here may import from Builder/ — the Viewer runs the same document.
 
-const P5_URL = "https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js";
+import { P5_VERSION } from "../../../lib/runtime/p5Version";
+
+// The same release study tasks run (lib/runtime/p5Version.js).
+const P5_URL = `https://cdn.jsdelivr.net/npm/p5@${P5_VERSION}/lib/p5.min.js`;
 
 /**
  * The parameter declaration is a *call*, not an export.
@@ -229,21 +232,32 @@ function preamble(nonce) {
  */
 const POSTAMBLE = `
 (function () {
+  function crash(name, error) {
+    window.__post({
+      type: "error",
+      message: name + ": " + ((error && error.message) || String(error)),
+      stack: (error && error.stack) || "",
+    });
+    window.__crashed = true;
+    if (typeof noLoop === "function") noLoop();
+  }
+  // p5 2.x awaits an async setup, so a failure there is a rejection rather
+  // than a throw; both are reported the same way.
   function guard(name) {
     var original = window[name];
     if (typeof original !== "function") return;
     window[name] = function () {
+      var result;
       try {
-        return original.apply(this, arguments);
+        result = original.apply(this, arguments);
       } catch (error) {
-        window.__post({
-          type: "error",
-          message: name + ": " + (error.message || String(error)),
-          stack: error.stack || "",
-        });
-        window.__crashed = true;
-        if (typeof noLoop === "function") noLoop();
+        crash(name, error);
+        return undefined;
       }
+      if (result && typeof result.then === "function") {
+        return result.then(null, function (error) { crash(name, error); });
+      }
+      return result;
     };
   }
   guard("setup");
@@ -258,13 +272,7 @@ const POSTAMBLE = `
       try {
         return originalDraw.apply(this, arguments);
       } catch (error) {
-        window.__post({
-          type: "error",
-          message: "draw: " + (error.message || String(error)),
-          stack: error.stack || "",
-        });
-        window.__crashed = true;
-        if (typeof noLoop === "function") noLoop();
+        crash("draw", error);
       }
     };
   }

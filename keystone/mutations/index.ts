@@ -92,10 +92,16 @@ import {
 import { GraphQLSchema } from "graphql";
 import {
   ingestRunMessage,
+  runtimeAssetPreviewToken,
   runtimeRunContext,
+  runtimeVisualSource,
   startRun,
   updateRunDataPolicy,
 } from "./runtimeRuns";
+import {
+  runtimeVersionStatus,
+  updateTaskRuntimeVersion,
+} from "./runtimeVersions";
 import { saveStudyDataSourceRecord } from "./dataSourceRecords";
 
 // make a fake gql tagged template literal
@@ -162,6 +168,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           error: String
         ): RuntimeAcknowledgement!
         updateRunDataPolicy(runToken: String!, dataPolicy: String!): Boolean!
+        # Moves a jsPsych block to its experiment's latest version (W35).
+        updateTaskRuntimeVersion(taskId: ID!): RuntimeVersionStatus!
         # Upserts the calling participant's StudyDataSourceRecord for a study
         # with the AggregateRecorder's current running snapshot. Called on
         # every step close and once more on finish/leave.
@@ -448,6 +456,31 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         studyId: ID!
         taskId: ID!
         templateId: ID
+        # Only on startRun, and only for jsPsych and p5 runs.
+        assetToken: String
+      }
+      type RuntimeParameterChanges {
+        added: [String!]!
+        removed: [String!]!
+        reset: [String!]!
+      }
+      type RuntimeVersionStatus {
+        currentVersionId: ID!
+        currentVersion: String
+        latestVersionId: ID!
+        latestVersion: String
+        latestTitle: String
+        isLatest: Boolean!
+        locked: Boolean!
+        lockingStudies: [String!]!
+        canUpdate: Boolean!
+        changes: RuntimeParameterChanges!
+      }
+      type RuntimeVisualFile {
+        name: String!
+        role: String!
+        language: String!
+        content: String!
       }
       type RuntimeAcknowledgement {
         accepted: Boolean!
@@ -534,6 +567,13 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
 
       extend type Query {
         runtimeRunContext(runToken: String!): RuntimeRunContext!
+        # Lets a jsPsych or p5 task be previewed without starting a run.
+        runtimeAssetPreviewToken(taskId: ID!): String!
+        # Whether a jsPsych block's experiment has a newer version, and what
+        # updating would change.
+        runtimeVersionStatus(taskId: ID!): RuntimeVersionStatus!
+        # A p5 task's code, for the frontend task route; needs a p5 asset token.
+        runtimeVisualSource(assetToken: String!): [RuntimeVisualFile!]!
         """
         One ticket, for a CLI or agent with no session. Shared-secret
         authenticated, read-only, single-id. See mutations/ticketForAgent.ts.
@@ -601,6 +641,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       Opportunity: opportunityMultiselectResolvers,
       Query: {
         runtimeRunContext,
+        runtimeAssetPreviewToken,
+        runtimeVisualSource,
+        runtimeVersionStatus,
         ticketForAgent,
         supportTicketPreviews,
         resolveFormDefinition,
@@ -614,6 +657,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         startRun,
         ingestRunMessage,
         updateRunDataPolicy,
+        updateTaskRuntimeVersion,
         saveStudyDataSourceRecord,
         sendEmail,
         copyProposalBoard,

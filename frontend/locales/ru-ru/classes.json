@@ -529,6 +529,7 @@
 		"saving": "Saving..."
 	},
 	"create": {
+		"jsPsychArchiveMissing": "",
 		"create": "Создать новый класс",
 		"createHeader": "Добавить новый класс",
 		"description": "Описание нового класса",

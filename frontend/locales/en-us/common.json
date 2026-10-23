@@ -392,8 +392,15 @@
 		"jsPsychShellReady": "The jsPsych bridge is ready, but experiment execution is not enabled yet.",
 		"loadingLabJs": "Loading experiment…",
 		"loadingLabJsDescription": "The experiment is loading and should start in a few seconds.",
-		"p5Shell": "This p5.js task is configured, but execution is not enabled yet.",
-		"starting": "Starting task…"
+		"starting": "Starting task…",
+		"taskFailed": "This task stopped because of an error. Your earlier answers in this study are saved.",
+		"continue": "Continue",
+		"savingResults": "Saving your responses…",
+		"p5FrameTitle": "p5 task",
+		"externalTaskIntro": "This step happens on another website. Open it, complete it there, then come back to continue.",
+		"externalTaskOpen": "Open the task",
+		"externalTaskNoLink": "This step's link is missing or invalid.",
+		"externalTaskDone": "I've finished"
 	},
 	"save": "Save",
 	"searchMembers": {
@@ -526,5 +533,12 @@
 	"userPath": {
 		"guestMessage": "You participate as a guest. Your public readable id is {{id}}",
 		"startNextTask": "Start the next task"
+	},
+	"blockTags": {
+		"createdByYou": "Created by you",
+		"collaborator": "Collaborator",
+		"runtimeLabjs": "Lab.js",
+		"runtimeJspsych": "jsPsych",
+		"runtimeP5": "p5.js"
 	}
 }
