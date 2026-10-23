@@ -86,6 +86,7 @@ export const MY_TASKS = gql`
       public
       description
       taskType
+      runtimeType
       author {
         id
       }

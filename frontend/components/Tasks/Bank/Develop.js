@@ -111,6 +111,7 @@ export default function DevelopTaskBank({ user, taskType }) {
           {tasks.map((task) => (
             <TaskCard
               key={task?.id}
+              viewer={user}
               task={task}
               url={`/builder/${taskType?.toLowerCase()}s/`}
               id="id"
